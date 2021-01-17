@@ -39,25 +39,25 @@
                       v-for="(method, index) in apiMethods"
                       :key="index"><span v-if="method.methodPrefix" style="color:#9CDCFE">{{
                         method.methodPrefix
-                      }}</span><span v-if="!linkedExamples[method.method + '(']">{{ method.method }}</span><a
+                      }}</span><span v-if="!linkedExamples[languageSelection][method.method + '(']">{{ method.method }}</span><a
                       @click="loadExamples(method.method)" href="javascript:void(0);"
-                      v-if="linkedExamples[method.method + '(']">{{ method.method }}</a>({{
+                      v-if="linkedExamples[languageSelection][method.method + '(']">{{ method.method }}</a>({{
                         method.params.join(", ")
                       }}); <span
                         v-if="method.comments" style="color: #57A64A">{{ method.comments }}</span></div></pre>
                   </div>
 
-                  <div class="col-6 example-preview">
+                  <div class="col-6 example-preview" v-if="displayExamples.length > 0">
 
-                    <eq-window title="Examples" v-if="displayExamples">
+                    <eq-window title="Examples">
 
                       <div class="example-preview-inner">
                         <div v-for="example in displayExamples.slice(0,50)">
-                          <span style="font-weight: bold">{{ example.file_name }}</span>
+                          <span style="font-weight: bold">{{ example.file_name }} Line: {{ example.line_number }}</span>
                           <pre
                             class="highlight html bg-dark hljs mb-4 code-display"
                             style="padding-left: 20px !important; padding-top: 10px !important; padding-bottom: 10px !important"
-                          >{{ example.full_example.trim() }}</pre>
+                          >{{ example.full_example.replace(/^\s*[\r\n]/gm, "") }}</pre>
                         </div>
                       </div>
 
@@ -127,7 +127,10 @@ export default {
       loaded: false,
 
       // linked method examples
-      linkedExamples: {},
+      linkedExamples: {
+        perl: {},
+        lua: {}
+      },
       // examples being displayed for current method
       displayExamples: []
     }
@@ -230,7 +233,7 @@ export default {
       this.methodTypeSelect()
     },
     loadExamples: function (method) {
-      this.displayExamples = this.linkedExamples[method + '(']
+      this.displayExamples = this.linkedExamples[this.languageSelection][method + '(']
     },
     methodTypeSelect: function () {
 
@@ -304,13 +307,13 @@ export default {
             // console.log(response.data.data)
 
             response.data.data.forEach((result) => {
-              if (typeof this.linkedExamples[result.search_term] === "undefined") {
-                this.linkedExamples[result.search_term] = []
+              if (typeof this.linkedExamples[this.languageSelection][result.search_term] === "undefined") {
+                this.linkedExamples[this.languageSelection][result.search_term] = []
               }
 
-              result.full_example = " " + result.before_content + result.line_match + result.after_content
+              result.full_example = result.before_content + result.line_match + result.after_content
 
-              this.linkedExamples[result.search_term].push(result)
+              this.linkedExamples[this.languageSelection][result.search_term].push(result)
             })
           }
           this.$forceUpdate()

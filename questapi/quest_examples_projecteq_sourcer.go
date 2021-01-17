@@ -40,6 +40,7 @@ func (q *QuestExamplesProjectEqSourcer) Source() *QuestExamplesProjectEqSourcer 
 	if found || len(projectEqQuests) > 0 {
 		return &QuestExamplesProjectEqSourcer{}
 	}
+
 	// set operation lock
 	q.cache.Set(peqQuestReadLock, 1, time.Minute*10)
 
@@ -102,7 +103,7 @@ type SearchResultSnippet struct {
 	FileName        string `json:"file_name"`
 	BeforeContent   string `json:"before_content"`
 	LineMatch       string `json:"line_match"`
-	LineNumberMatch int    `json:"line_number_match"`
+	LineNumberMatch int    `json:"line_number"`
 	FullContents    string `json:"full_contents,omitempty"`
 	AfterContent    string `json:"after_content"`
 	SearchTerm      string `json:"search_term"`
