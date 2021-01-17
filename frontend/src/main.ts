@@ -51,7 +51,6 @@ Vue.component('eq-item-preview', () => import('@/components/eq-ui/EQItemPreview.
 Vue.use(VueFormGenerator)
 Vue.component('vue-form-generator', VueFormGenerator.component);
 
-
 /**
  * App loader
  */

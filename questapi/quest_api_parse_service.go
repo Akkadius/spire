@@ -20,9 +20,17 @@ func NewParseService(logger *logrus.Logger, cache *gocache.Cache) *ParseService 
 	return &ParseService{logger: logger, cache: cache}
 }
 
-type QuestApiMethods struct {
-	PerlApi map[string][]PerlMethod `json:"perl_api"`
-	LuaApi  map[string][]LuaMethod  `json:"lua_api"`
+type QuestApiResponse struct {
+	PerlApi `json:"perl_api"`
+	LuaApi  `json:"lua_api"`
+}
+
+type PerlApi struct {
+	PerlMethods map[string][]PerlMethod `json:"methods"`
+}
+
+type LuaApi struct {
+	LuaMethods map[string][]LuaMethod `json:"methods"`
 }
 
 type PerlMethod struct {
@@ -49,7 +57,7 @@ var luaMethods = map[string][]LuaMethod{}
 const lockKey = "quest-api-lock"
 
 // parses methods from our source
-func (c *ParseService) Parse(forceRefresh bool) QuestApiMethods {
+func (c *ParseService) Parse(forceRefresh bool) QuestApiResponse {
 
 	// return cached copy
 	if len(perlMethods) > 0 && len(luaMethods) > 0 && !forceRefresh {
@@ -135,9 +143,13 @@ func (c *ParseService) Parse(forceRefresh bool) QuestApiMethods {
 }
 
 // response method
-func (c *ParseService) apiResponse() QuestApiMethods {
-	return QuestApiMethods{
-		PerlApi: perlMethods,
-		LuaApi:  luaMethods,
+func (c *ParseService) apiResponse() QuestApiResponse {
+	return QuestApiResponse{
+		PerlApi: PerlApi{
+			PerlMethods: perlMethods,
+		},
+		LuaApi: LuaApi{
+			LuaMethods: luaMethods,
+		},
 	}
 }

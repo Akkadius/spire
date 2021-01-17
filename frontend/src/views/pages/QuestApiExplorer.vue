@@ -5,13 +5,15 @@
       <div class="panel panel-default">
         <div class="row">
           <div class="col-12">
-            <eq-window title="Quest API Explorer" style="margin-top: 30px">
+            <eq-window style="margin-top: 30px">
 
-              <app-loader :is-loading="!loaded" padding="6"/>
+              <h1 class="eq-header text-center mt-5" v-if="!loaded">LOADING... PLEASE WAIT...</h1>
+
+              <app-loader :is-loading="!loaded" padding="4"/>
 
               <div v-if="loaded">
 
-                <div class="row justify-content-center">
+                <div class="row">
                   <div class="col-2 text-center">
                     Language
                     <b-form-select
@@ -28,18 +30,42 @@
                   </div>
 
                 </div>
-                <div class="row mt-5 justify-content-center" v-if="apiMethods.length > 0">
-                  <div class="col-10">
-                    <h4 class="eq-header text-center" v-if="methodTypeSelection">Type: {{ methodTypeSelection }}</h4>
+                <div class="row mt-2" v-if="apiMethods.length > 0">
+                  <div class="col-12">
                     <pre
                       class="highlight html bg-dark hljs mb-4 code-display"
                       style="padding-left: 20px !important; padding-top: 10px !important; padding-bottom: 10px !important"
                       v-if="apiMethods.length > 0"><div
                       v-for="(method, index) in apiMethods"
-                      :key="index">{{ method.methodPrefix }}{{
-                        method.method
-                      }}({{ method.params.join(", ") }}); {{ method.comments }}</div></pre>
+                      :key="index"><span v-if="method.methodPrefix" style="color:#9CDCFE">{{
+                        method.methodPrefix
+                      }}</span><span v-if="!linkedExamples[method.method + '(']">{{ method.method }}</span><a
+                      @click="loadExamples(method.method)" href="javascript:void(0);"
+                      v-if="linkedExamples[method.method + '(']">{{ method.method }}</a>({{
+                        method.params.join(", ")
+                      }}); <span
+                        v-if="method.comments" style="color: #57A64A">{{ method.comments }}</span></div></pre>
                   </div>
+
+                  <div class="col-6 example-preview">
+
+                    <eq-window title="Examples" v-if="displayExamples">
+
+                      <div class="example-preview-inner">
+                        <div v-for="example in displayExamples.slice(0,50)">
+                          <span style="font-weight: bold">{{ example.file_name }}</span>
+                          <pre
+                            class="highlight html bg-dark hljs mb-4 code-display"
+                            style="padding-left: 20px !important; padding-top: 10px !important; padding-bottom: 10px !important"
+                          >{{ example.full_example.trim() }}</pre>
+                        </div>
+                      </div>
+
+
+                    </eq-window>
+
+                  </div>
+
                 </div>
               </div>
 
@@ -62,10 +88,13 @@ import DebugDisplayComponent from "@/components/DebugDisplayComponent.vue";
 import {SpireApiClient}      from "@/app/api/spire-api-client";
 import axios                 from "axios";
 import EqWindowSimple        from "@/components/eq-ui/EQWindowSimple.vue";
-
+import EqTabs                from "@/components/eq-ui/EQTabs.vue";
+import EqTab                 from "@/components/eq-ui/EQTab.vue";
 
 export default {
   components: {
+    EqTab,
+    EqTabs,
     EqWindowSimple,
     DebugDisplayComponent,
     EqWindow,
@@ -96,6 +125,11 @@ export default {
       routeWatcher: null,
 
       loaded: false,
+
+      // linked method examples
+      linkedExamples: {},
+      // examples being displayed for current method
+      displayExamples: []
     }
   },
   deactivated() {
@@ -117,9 +151,8 @@ export default {
         if (response.data && response.data.data) {
           this.methods = response.data.data
 
-          this.languageSelect()
-          this.methodTypeSelect()
           this.loaded = true
+          this.languageSelect()
         }
 
       }, (error) => {
@@ -134,18 +167,21 @@ export default {
         }
       });
 
-      // reset
-      this.languageSelection   = null
-      this.methodTypeSelection = null
-
       this.loadQueryParams()
     },
     loadQueryParams() {
+      this.languageSelection   = null
+      this.methodTypeSelection = null
+
       if (this.$route.query.lang) {
         this.languageSelection = this.$route.query.lang
       }
       if (this.$route.query.type) {
         this.methodTypeSelection = this.$route.query.type
+      }
+
+      if (!this.$route.query.lang && !this.$route.query.type) {
+        this.apiMethods = []
       }
     },
     formChange() {
@@ -175,10 +211,10 @@ export default {
       return ""
     },
     languageSelect: function () {
-      if (this.methods[this.getLanguageKey()]) {
+      if (this.methods[this.getLanguageKey()].methods) {
         let options = []
         options.push({value: null, text: "Select a type"})
-        Object.keys(this.methods[this.getLanguageKey()]).sort().filter((item) => {
+        Object.keys(this.methods[this.getLanguageKey()].methods).sort().filter((item) => {
           return !item.includes("Deprecated")
         }).forEach((option) => {
           options.push({value: option, text: option})
@@ -193,15 +229,21 @@ export default {
       this.methodDisplay = ""
       this.methodTypeSelect()
     },
+    loadExamples: function (method) {
+      this.displayExamples = this.linkedExamples[method + '(']
+    },
     methodTypeSelect: function () {
 
       this.apiMethods = []
       let apiMethods  = []
 
-      if (this.methods[this.getLanguageKey()]) {
+      // used to search sources for examples
+      let methodSearchTerms = []
+
+      if (this.methods[this.getLanguageKey()].methods) {
         let methodDisplay = ""
         this.codeClass    = this.getLanguageKey()
-        const methods     = this.methods[this.getLanguageKey()][this.methodTypeSelection]
+        const methods     = this.methods[this.getLanguageKey()].methods[this.methodTypeSelection]
         const snakeCase   = string => {
           return string.replace(/\W+/g, " ")
                        .split(/ |\B(?=[A-Z])/)
@@ -244,11 +286,37 @@ export default {
               comments: comment,
             })
 
+            // we use the bracket after the method to grep in searches because
+            // we can pick up false positives in comments and other unrelated things
+            methodSearchTerms.push(method.method + "(")
+
           })
         }
 
         this.apiMethods    = apiMethods
         this.methodDisplay = methodDisplay
+
+        SpireApiClient.v1().post('/quest-api/examples/search-projecteq', {
+          "search_terms": methodSearchTerms,
+          "language": this.languageSelection
+        }).then((response) => {
+          if (response.data && response.data.data) {
+            // console.log(response.data.data)
+
+            response.data.data.forEach((result) => {
+              if (typeof this.linkedExamples[result.search_term] === "undefined") {
+                this.linkedExamples[result.search_term] = []
+              }
+
+              result.full_example = " " + result.before_content + result.line_match + result.after_content
+
+              this.linkedExamples[result.search_term].push(result)
+            })
+          }
+          this.$forceUpdate()
+        });
+
+
       }
     }
   }
@@ -258,9 +326,19 @@ export default {
 
 <style>
 .code-display {
-  font-size:  14px !important;
-  max-width:  100% !important;
-  width:      100%;
-  min-height: 300px;
+  font-size: 14px !important;
+  max-width: 100% !important;
+  width:     100%;
+}
+
+.example-preview {
+  position: fixed;
+  right:    30px;
+  top:      2%;
+}
+
+.example-preview-inner {
+  max-height: 90vh;
+  overflow-y: scroll;
 }
 </style>

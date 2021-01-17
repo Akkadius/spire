@@ -45,7 +45,7 @@ func (c *QuestApiParseCommand) Handle(_ *cobra.Command, args []string) {
 	methods := c.parser.Parse(true)
 
 	fmt.Printf("# Perl\n")
-	for methodType, methods := range methods.PerlApi {
+	for methodType, methods := range methods.PerlApi.PerlMethods {
 		for _, method := range methods {
 			returnType := ""
 			if method.ReturnType != "" {
@@ -59,7 +59,7 @@ func (c *QuestApiParseCommand) Handle(_ *cobra.Command, args []string) {
 	fmt.Printf("\n\n")
 
 	fmt.Printf("# Lua\n")
-	for methodType, methods := range methods.LuaApi {
+	for methodType, methods := range methods.LuaApi.LuaMethods {
 		for _, method := range methods {
 			returnType := ""
 			if method.ReturnType != "" {

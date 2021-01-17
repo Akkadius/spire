@@ -10,4 +10,5 @@ var serviceSet = wire.NewSet(
 	connection.NewDbConnectionCreateService,
 	connection.NewDbConnectionCheckService,
 	questapi.NewParseService,
+	questapi.NewQuestExamplesProjectEqSourcer,
 )

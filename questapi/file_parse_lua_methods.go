@@ -134,7 +134,7 @@ func parseLuaMethods(fs billy.Filesystem, fileName string, luaMethods map[string
 					// method name parsed from the function itself, this is what is
 					// actually used in the quest api
 					if val, ok := luaDefinitionMap[methodName]; ok {
-						fmt.Printf("Found override map replacing [%v] in [%v] for [%v]\n", methodFull, methodName, val)
+						//fmt.Printf("Found override map replacing [%v] in [%v] for [%v]\n", methodFull, methodName, val)
 						methodFull = strings.ReplaceAll(methodFull, methodName, val)
 					}
 
@@ -188,7 +188,7 @@ func parseLuaMethods(fs billy.Filesystem, fileName string, luaMethods map[string
 					// method name parsed from the function itself, this is what is
 					// actually used in the quest api
 					if val, ok := luaDefinitionMap[methodName]; ok {
-						fmt.Printf("Found override map replacing [%v] in [%v] for [%v]\n", methodFull, methodName, val)
+						//fmt.Printf("Found override map replacing [%v] in [%v] for [%v]\n", methodFull, methodName, val)
 						methodFull = strings.ReplaceAll(methodFull, methodName, val)
 					}
 
