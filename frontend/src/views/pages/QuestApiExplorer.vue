@@ -271,7 +271,7 @@ export default {
     },
     editorInit: async function (slug, lineNumber) {
 
-      this.$refs[slug][0].editor.setFontSize(16)
+      this.$refs[slug][0].editor.setFontSize(14)
 
       setTimeout(() => {
         // console.log(slug)
@@ -282,7 +282,6 @@ export default {
         this.$refs[slug][0].editor.scrollToLine(lineNumber, true, true, function () {
         });
         this.$refs[slug][0].editor.gotoLine(lineNumber, 0, true);
-        this.$refs[slug][0].editor.setFontSize(14)
 
         const Range = ace.acequire('ace/range').Range;
 
