@@ -27,15 +27,19 @@ type QuestApiMethods struct {
 
 type PerlMethod struct {
 	Method     string   `json:"method"`
+	Params     []string `json:"params"`
 	MethodType string   `json:"method_type"`
 	ReturnType string   `json:"return_type"`
+	MethodFull string   `json:"method_full"`
 	Categories []string `json:"categories"`
 }
 
 type LuaMethod struct {
 	Method     string   `json:"method"`
+	Params     []string `json:"params"`
 	MethodType string   `json:"method_type"`
 	ReturnType string   `json:"return_type"`
+	MethodFull string   `json:"method_full"`
 	Categories []string `json:"categories"`
 }
 

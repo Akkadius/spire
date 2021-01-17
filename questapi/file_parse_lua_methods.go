@@ -115,10 +115,10 @@ func parseLuaMethods(fs billy.Filesystem, fileName string, luaMethods map[string
 				if strings.Contains(l, "::") {
 					split := strings.Split(l, "::")
 					methodType := strings.TrimSpace(split[0])
-					method := strings.TrimSpace(split[1])
+					methodFull := strings.TrimSpace(split[1])
 
 					methodName := ""
-					methodNameSplit := strings.Split(method, "(")
+					methodNameSplit := strings.Split(methodFull, "(")
 					if len(methodNameSplit) > 1 {
 						methodName = strings.TrimSpace(methodNameSplit[0])
 					}
@@ -134,14 +134,31 @@ func parseLuaMethods(fs billy.Filesystem, fileName string, luaMethods map[string
 					// method name parsed from the function itself, this is what is
 					// actually used in the quest api
 					if val, ok := luaDefinitionMap[methodName]; ok {
-						//fmt.Printf("Found override map [%v] for [%v]\n", val, methodName)
-						method = strings.ReplaceAll(method, methodName, val)
+						fmt.Printf("Found override map replacing [%v] in [%v] for [%v]\n", methodFull, methodName, val)
+						methodFull = strings.ReplaceAll(methodFull, methodName, val)
+					}
+
+					// params
+					methodFull = strings.ReplaceAll(methodFull, "lua_", "")
+					paramSplit := strings.Split(methodFull, "(")
+					params := strings.ReplaceAll(paramSplit[1], ")", "")
+					method := paramSplit[0]
+
+					// split and zero if empty
+					p := strings.Split(strings.TrimSpace(params), ",")
+					for i := range p {
+						p[i] = strings.TrimSpace(p[i])
+					}
+					if params == "" {
+						p = []string{}
 					}
 
 					// add to functions
 					luaMethods[methodType] = append(
 						luaMethods[methodType], LuaMethod{
 							Method:     method,
+							MethodFull: methodFull,
+							Params:     p,
 							MethodType: methodType,
 							ReturnType: returnType,
 							Categories: nil,
@@ -159,10 +176,10 @@ func parseLuaMethods(fs billy.Filesystem, fileName string, luaMethods map[string
 				if strings.Contains(fileName, "lua_general") {
 					//fmt.Println(l)
 
-					method := l
+					methodFull := l
 					methodType := "eq"
 					methodName := ""
-					methodNameSplit := strings.Split(method, "(")
+					methodNameSplit := strings.Split(methodFull, "(")
 					if len(methodNameSplit) > 1 {
 						methodName = strings.TrimSpace(methodNameSplit[0])
 					}
@@ -171,14 +188,31 @@ func parseLuaMethods(fs billy.Filesystem, fileName string, luaMethods map[string
 					// method name parsed from the function itself, this is what is
 					// actually used in the quest api
 					if val, ok := luaDefinitionMap[methodName]; ok {
-						//fmt.Printf("Found override map [%v] for [%v]\n", val, methodName)
-						method = strings.ReplaceAll(method, methodName, val)
+						fmt.Printf("Found override map replacing [%v] in [%v] for [%v]\n", methodFull, methodName, val)
+						methodFull = strings.ReplaceAll(methodFull, methodName, val)
+					}
+
+					// params
+					methodFull = strings.ReplaceAll(methodFull, "lua_", "")
+					paramSplit := strings.Split(methodFull, "(")
+					params := strings.ReplaceAll(paramSplit[1], ")", "")
+					method := paramSplit[0]
+
+					// split and zero if empty
+					p := strings.Split(strings.TrimSpace(params), ",")
+					for i := range p {
+						p[i] = strings.TrimSpace(p[i])
+					}
+					if params == "" {
+						p = []string{}
 					}
 
 					// add to functions
 					luaMethods[methodType] = append(
 						luaMethods[methodType], LuaMethod{
+							MethodFull: methodFull,
 							Method:     method,
+							Params:     p,
 							MethodType: methodType,
 							ReturnType: returnType,
 							Categories: nil,

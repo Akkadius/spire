@@ -28,15 +28,18 @@
                   </div>
 
                 </div>
-                <div class="row mt-5 justify-content-center" v-if="methodDisplay !== ''">
+                <div class="row mt-5 justify-content-center" v-if="apiMethods.length > 0">
                   <div class="col-10">
                     <h4 class="eq-header text-center" v-if="methodTypeSelection">Type: {{ methodTypeSelection }}</h4>
                     <pre
                       class="highlight html bg-dark hljs mb-4 code-display"
                       style="padding-left: 20px !important; padding-top: 10px !important; padding-bottom: 10px !important"
-                      v-if="methodDisplay !== ''">{{ methodDisplay }}</pre>
+                      v-if="apiMethods.length > 0"><div
+                      v-for="(method, index) in apiMethods"
+                      :key="index">{{ method.methodPrefix }}{{
+                        method.method
+                      }}({{ method.params.join(", ") }}); {{ method.comments }}</div></pre>
                   </div>
-
                 </div>
               </div>
 
@@ -58,7 +61,6 @@ import EqWindow              from "@/components/eq-ui/EQWindow.vue";
 import DebugDisplayComponent from "@/components/DebugDisplayComponent.vue";
 import {SpireApiClient}      from "@/app/api/spire-api-client";
 import axios                 from "axios";
-import * as util             from "util";
 import EqWindowSimple        from "@/components/eq-ui/EQWindowSimple.vue";
 
 
@@ -85,7 +87,7 @@ export default {
       methodTypeSelection: null,
       methodTypeOptions: [],
 
-      methods: {},
+      apiMethods: [],
 
       // actual code that gets highlighted
       methodDisplay: "",
@@ -95,9 +97,6 @@ export default {
 
       loaded: false,
     }
-  },
-  mounted() {
-    this.init()
   },
   deactivated() {
     // remove route watcher
@@ -195,8 +194,11 @@ export default {
       this.methodTypeSelect()
     },
     methodTypeSelect: function () {
-      if (this.methods[this.getLanguageKey()]) {
 
+      this.apiMethods = []
+      let apiMethods  = []
+
+      if (this.methods[this.getLanguageKey()]) {
         let methodDisplay = ""
         this.codeClass    = this.getLanguageKey()
         const methods     = this.methods[this.getLanguageKey()][this.methodTypeSelection]
@@ -209,36 +211,45 @@ export default {
 
         if (methods && methods.length > 0) {
           methods.forEach((method) => {
-            let methodType = method.method_type
-            methodType     = methodType.replace("NPC", "Npc")
+            let prefix = method.method_type
+            prefix     = prefix.replace("NPC", "Npc")
+            let comment;
 
             // perl
             if (this.languageSelection === "perl") {
-              if (methodType == "quest") {
-                methodType = methodType.replace(methodType, "quest::")
+              if (prefix == "quest") {
+                prefix = prefix.replace(prefix, "quest::")
               } else {
-                methodType = methodType.replace(methodType, "$" + snakeCase(methodType).toLowerCase() + "->")
+                prefix = prefix.replace(prefix, "$" + snakeCase(prefix).toLowerCase() + "->")
               }
             }
 
             // lua
             if (this.languageSelection === "lua") {
-              if (methodType == "eq") {
-                methodType = methodType.replace(methodType, "eq.")
+              if (prefix == "eq") {
+                prefix = prefix.replace(prefix, "eq.")
               } else {
-                methodType = methodType.replace(methodType, snakeCase(methodType).toLowerCase() + ":")
+                prefix = prefix.replace(prefix, snakeCase(prefix).toLowerCase() + ":")
+              }
+
+              if (method.return_type !== "") {
+                comment = "-- return " + method.return_type
               }
             }
 
-            methodDisplay += util.format(
-              "%s%s;\n", methodType, method.method
-            )
+            apiMethods.push({
+              method: method.method,
+              methodPrefix: prefix,
+              params: method.params,
+              comments: comment,
+            })
+
           })
         }
 
+        this.apiMethods    = apiMethods
         this.methodDisplay = methodDisplay
       }
-
     }
   }
 }
@@ -247,9 +258,9 @@ export default {
 
 <style>
 .code-display {
-  font-size: 14px !important;
-  max-width: 100% !important;
-  width: 100%;
+  font-size:  14px !important;
+  max-width:  100% !important;
+  width:      100%;
   min-height: 300px;
 }
 </style>
