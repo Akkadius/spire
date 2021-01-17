@@ -53,10 +53,11 @@
 
                     <eq-window title="Examples">
 
-                      <button class='eq-button-wrap' @click="closeExample" style="right: 30px; top: 10px; position: absolute">X </button>
+                      <button class="btn btn-white btn-sm" @click="closeExample" style="right: 30px; top: 10px; position: absolute">X</button>
 
                       <div class="example-preview-inner">
-                        <div v-for="(example, index) in displayExamples.slice(0,50)" :key="example.file_name + index + example.line_number">
+                        <div v-for="(example, index) in displayExamples.slice(0,50)"
+                             :key="example.file_name + index + example.line_number">
                           <span style="font-weight: bold">{{ example.file_name }} Line: {{ example.line_number }}</span>
                           <editor
                             v-model="example.full_contents"
@@ -231,7 +232,7 @@ export default {
       }
       return ""
     },
-    closeExample: function() {
+    closeExample: function () {
       this.displayExamples = []
     },
     languageSelect: function () {
