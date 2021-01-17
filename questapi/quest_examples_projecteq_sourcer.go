@@ -122,6 +122,7 @@ func (q *QuestExamplesProjectEqSourcer) Search(searchStrings []string, language 
 	}
 
 	var results []SearchResultSnippet
+	resultCount := 0
 	for file, contents := range q.Files() {
 		for _, searchString := range searchStrings {
 
@@ -162,6 +163,7 @@ func (q *QuestExamplesProjectEqSourcer) Search(searchStrings []string, language 
 								AfterContent:    afterContent,
 								LineMatch:       line + "\n",
 								LineNumberMatch: lineNumber,
+								FullContents:    contents,
 							},
 						)
 
@@ -174,6 +176,12 @@ func (q *QuestExamplesProjectEqSourcer) Search(searchStrings []string, language 
 					}
 
 				}
+
+				if resultCount > 50 {
+					break
+				}
+
+				resultCount++
 			}
 		}
 	}

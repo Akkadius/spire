@@ -39,7 +39,9 @@
                       v-for="(method, index) in apiMethods"
                       :key="index"><span v-if="method.methodPrefix" style="color:#9CDCFE">{{
                         method.methodPrefix
-                      }}</span><span v-if="!linkedExamples[languageSelection][method.method + '(']">{{ method.method }}</span><a
+                      }}</span><span v-if="!linkedExamples[languageSelection][method.method + '(']">{{
+                        method.method
+                      }}</span><a
                       @click="loadExamples(method.method)" href="javascript:void(0);"
                       v-if="linkedExamples[languageSelection][method.method + '(']">{{ method.method }}</a>({{
                         method.params.join(", ")
@@ -52,12 +54,24 @@
                     <eq-window title="Examples">
 
                       <div class="example-preview-inner">
-                        <div v-for="example in displayExamples.slice(0,50)">
+                        <div v-for="(example, index) in displayExamples.slice(0,50)" :key="example.file_name + index">
                           <span style="font-weight: bold">{{ example.file_name }} Line: {{ example.line_number }}</span>
-                          <pre
-                            class="highlight html bg-dark hljs mb-4 code-display"
-                            style="padding-left: 20px !important; padding-top: 10px !important; padding-bottom: 10px !important"
-                          >{{ example.full_example.replace(/^\s*[\r\n]/gm, "") }}</pre>
+                          <editor
+                            v-model="example.full_contents"
+                            @init="editorInit(slug(example.file_name), example.line_number)"
+                            :id="slug(example.file_name)"
+                            :lang="languageSelection"
+                            theme="terminal"
+                            width="100%"
+                            :ref="slug(example.file_name)"
+                            height="200px"
+                            class="mt-3 mb-3"
+                          ></editor>
+
+                          <!--                          <pre-->
+                          <!--                            class="highlight html bg-dark hljs mb-4 code-display"-->
+                          <!--                            style="padding-left: 20px !important; padding-top: 10px !important; padding-bottom: 10px !important"-->
+                          <!--                          >{{ example.full_example }}</pre>-->
                         </div>
                       </div>
 
@@ -90,6 +104,7 @@ import axios                 from "axios";
 import EqWindowSimple        from "@/components/eq-ui/EQWindowSimple.vue";
 import EqTabs                from "@/components/eq-ui/EQTabs.vue";
 import EqTab                 from "@/components/eq-ui/EQTab.vue";
+import slugify               from "slugify";
 
 export default {
   components: {
@@ -98,6 +113,7 @@ export default {
     EqWindowSimple,
     DebugDisplayComponent,
     EqWindow,
+    editor: require('vue2-ace-editor'),
     "page-header": () => import("@/views/layout/PageHeader")
   },
   data() {
@@ -232,8 +248,57 @@ export default {
       this.methodDisplay = ""
       this.methodTypeSelect()
     },
+    slug: function (toSlug) {
+      return slugify(toSlug.replace(/[&\/\\#, +()$~%.'":*?<>{}]/g, "-"))
+    },
     loadExamples: function (method) {
+      // destroy old editors
+      // for (let refsKey in this.$refs) {
+      //   console.log(refsKey)
+      //   console.log(this.$refs[refsKey][0])
+      //   if (this.$refs[refsKey] && this.$refs[refsKey][0].editor) {
+      //     this.$refs[refsKey][0].editor.destroy()
+      //   }
+      // }
+
       this.displayExamples = this.linkedExamples[this.languageSelection][method + '(']
+
+    },
+    editorInit: async function (slug, lineNumber) {
+
+      this.$refs[slug][0].editor.setFontSize(16)
+
+      setTimeout(() => {
+        // console.log(slug)
+        // console.log(this.$refs[slug][0].editor)
+        // console.log(lineNumber)
+
+        this.$refs[slug][0].editor.setReadOnly(true);
+        this.$refs[slug][0].editor.scrollToLine(lineNumber, true, true, function () {
+        });
+        this.$refs[slug][0].editor.gotoLine(lineNumber, 0, true);
+
+        const Range = ace.acequire('ace/range').Range;
+
+        this.$refs[slug][0].editor.selection.setRange(
+          new Range(
+            lineNumber - 1,
+            0,
+            lineNumber,
+            0
+          )
+        );
+      }, 10)
+
+
+      // this.loaded = false;
+      require('brace/ext/language_tools')
+      require('brace/theme/terminal')
+      require('brace/mode/lua')
+      require('brace/mode/perl')
+      // this.$refs.myEditor.editor.setFontSize(16)
+      // this.$refs.editorslug.editor.setReadOnly(true);
+      // this.$refs.editorslug.editor.gotoLine(1, lineNumber, true);
     },
     methodTypeSelect: function () {
 
@@ -311,7 +376,8 @@ export default {
                 this.linkedExamples[this.languageSelection][result.search_term] = []
               }
 
-              result.full_example = result.before_content + result.line_match + result.after_content
+              result.full_example = (result.before_content + result.line_match + result.after_content)
+              // .replace(/^\s*[\r\n]/gm, "")
 
               this.linkedExamples[this.languageSelection][result.search_term].push(result)
             })
