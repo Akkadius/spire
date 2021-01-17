@@ -1,9 +1,9 @@
 package controllers
 
 import (
-	"eoc/database"
-	"eoc/http/routes"
-	"eoc/models"
+	"github.com/Akkadius/spire/database"
+	"github.com/Akkadius/spire/http/routes"
+	"github.com/Akkadius/spire/models"
 	"fmt"
 	"github.com/danilopolani/gocialite"
 	"github.com/davecgh/go-spew/spew"

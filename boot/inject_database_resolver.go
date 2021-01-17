@@ -1,7 +1,7 @@
 package boot
 
 import (
-	"eoc/database"
+	"github.com/Akkadius/spire/database"
 	"github.com/google/wire"
 )
 

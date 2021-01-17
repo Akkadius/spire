@@ -2,7 +2,7 @@ package integration
 
 import (
 	"encoding/json"
-	"eoc/models"
+	"github.com/Akkadius/spire/models"
 	"fmt"
 	"github.com/stretchr/testify/assert"
 	"log"

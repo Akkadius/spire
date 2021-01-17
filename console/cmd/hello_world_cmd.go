@@ -2,7 +2,7 @@ package cmd
 
 import (
 	"encoding/json"
-	"eoc/models"
+	"github.com/Akkadius/spire/models"
 	"fmt"
 	"github.com/jinzhu/gorm"
 	"github.com/sirupsen/logrus"

@@ -1,7 +1,7 @@
 package request
 
 import (
-	"eoc/models"
+	"github.com/Akkadius/spire/models"
 	"github.com/labstack/echo/v4"
 )
 

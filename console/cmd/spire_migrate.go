@@ -1,7 +1,7 @@
 package cmd
 
 import (
-	"eoc/database"
+	"github.com/Akkadius/spire/database"
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
 )

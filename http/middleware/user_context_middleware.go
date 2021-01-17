@@ -1,8 +1,8 @@
 package middleware
 
 import (
-	"eoc/database"
-	"eoc/models"
+	"github.com/Akkadius/spire/database"
+	"github.com/Akkadius/spire/models"
 	"fmt"
 	"github.com/dgrijalva/jwt-go"
 	"github.com/labstack/echo/v4"

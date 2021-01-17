@@ -1,9 +1,9 @@
 package crudcontrollers
 
 import (
-	"eoc/database"
-	"eoc/http/routes"
-	"eoc/models"
+	"github.com/Akkadius/spire/database"
+	"github.com/Akkadius/spire/http/routes"
+	"github.com/Akkadius/spire/models"
 	"fmt"
 	"github.com/labstack/echo/v4"
 	"github.com/sirupsen/logrus"

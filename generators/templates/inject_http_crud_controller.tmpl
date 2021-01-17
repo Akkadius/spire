@@ -1,8 +1,8 @@
 package boot
 
 import (
-	"eoc/http/crudcontrollers"
-	"eoc/http/routes"
+	"github.com/Akkadius/spire/http/crudcontrollers"
+	"github.com/Akkadius/spire/http/routes"
 	"github.com/google/wire"
 )
 

@@ -1,7 +1,7 @@
 package controllers
 
 import (
-	"eoc/http/routes"
+	"github.com/Akkadius/spire/http/routes"
 	"fmt"
 	"github.com/jinzhu/gorm"
 	"github.com/labstack/echo/v4"

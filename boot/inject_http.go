@@ -1,9 +1,9 @@
 package boot
 
 import (
-	"eoc/http/controllers"
-	appmiddleware "eoc/http/middleware"
-	"eoc/http/routes"
+	"github.com/Akkadius/spire/http/controllers"
+	appmiddleware "github.com/Akkadius/spire/http/middleware"
+	"github.com/Akkadius/spire/http/routes"
 	"github.com/google/wire"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"

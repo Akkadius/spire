@@ -1,9 +1,9 @@
 package cmd
 
 import (
-	"eoc/http"
-	"eoc/http/routes"
-	"eoc/util"
+	"github.com/Akkadius/spire/http"
+	"github.com/Akkadius/spire/http/routes"
+	"github.com/Akkadius/spire/util"
 	"github.com/sirupsen/logrus"
 
 	"errors"

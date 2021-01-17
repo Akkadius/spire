@@ -1,12 +1,12 @@
 package controllers
 
 import (
-	"eoc/database"
-	"eoc/http/request"
-	"eoc/http/routes"
-	"eoc/internal/connection"
-	"eoc/internal/connection/contexts"
-	"eoc/models"
+	"github.com/Akkadius/spire/database"
+	"github.com/Akkadius/spire/http/request"
+	"github.com/Akkadius/spire/http/routes"
+	"github.com/Akkadius/spire/internal/connection"
+	"github.com/Akkadius/spire/internal/connection/contexts"
+	"github.com/Akkadius/spire/models"
 	"errors"
 	"fmt"
 	"github.com/labstack/echo/v4"

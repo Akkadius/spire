@@ -1,8 +1,8 @@
 package boot
 
 import (
-	"eoc/database"
-	"eoc/util"
+	"github.com/Akkadius/spire/database"
+	"github.com/Akkadius/spire/util"
 	"errors"
 	"log"
 	"os"

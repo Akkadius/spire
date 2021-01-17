@@ -1,8 +1,8 @@
 package boot
 
 import (
-	"eoc/internal/connection"
-	"eoc/questapi"
+	"github.com/Akkadius/spire/internal/connection"
+	"github.com/Akkadius/spire/questapi"
 	"github.com/google/wire"
 )
 

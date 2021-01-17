@@ -1,8 +1,8 @@
 package controllers
 
 import (
-	"eoc/http/routes"
-	"eoc/models"
+	"github.com/Akkadius/spire/http/routes"
+	"github.com/Akkadius/spire/models"
 	"github.com/labstack/echo/v4"
 	"net/http"
 )

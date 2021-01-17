@@ -1,8 +1,8 @@
 package controllers
 
 import (
-	"eoc/database"
-	"eoc/http/routes"
+	"github.com/Akkadius/spire/database"
+	"github.com/Akkadius/spire/http/routes"
 	"fmt"
 	"github.com/labstack/echo/v4"
 	"github.com/sirupsen/logrus"

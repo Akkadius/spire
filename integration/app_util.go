@@ -1,9 +1,9 @@
 package integration
 
 import (
-	"eoc/boot"
-	"eoc/models"
-	"eoc/util"
+	"github.com/Akkadius/spire/boot"
+	"github.com/Akkadius/spire/models"
+	"github.com/Akkadius/spire/util"
 	"log"
 )
 

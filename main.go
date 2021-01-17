@@ -1,9 +1,9 @@
 package main
 
 import (
-	"eoc/boot"
-	"eoc/console"
-	"eoc/util"
+	"github.com/Akkadius/spire/boot"
+	"github.com/Akkadius/spire/console"
+	"github.com/Akkadius/spire/util"
 	"log"
 )
 

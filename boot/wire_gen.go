@@ -6,14 +6,14 @@
 package boot
 
 import (
-	"eoc/console/cmd"
-	"eoc/database"
-	"eoc/http/controllers"
-	"eoc/http/crudcontrollers"
-	"eoc/http/middleware"
-	"eoc/internal/connection"
-	"eoc/internal/encryption"
-	"eoc/questapi"
+	"github.com/Akkadius/spire/console/cmd"
+	"github.com/Akkadius/spire/database"
+	"github.com/Akkadius/spire/http/controllers"
+	"github.com/Akkadius/spire/http/crudcontrollers"
+	"github.com/Akkadius/spire/http/middleware"
+	"github.com/Akkadius/spire/internal/connection"
+	"github.com/Akkadius/spire/internal/encryption"
+	"github.com/Akkadius/spire/questapi"
 )
 
 import (

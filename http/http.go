@@ -1,8 +1,8 @@
 package http
 
 import (
-	"eoc/docs"
-	"eoc/http/routes"
+	"github.com/Akkadius/spire/docs"
+	"github.com/Akkadius/spire/http/routes"
 	"errors"
 	"fmt"
 	"github.com/labstack/echo/v4"
@@ -10,7 +10,7 @@ import (
 	"net/http"
 	"unicode"
 
-	_ "eoc/docs"
+	_ "github.com/Akkadius/spire/docs"
 )
 
 // @title Spire

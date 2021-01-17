@@ -1,7 +1,7 @@
 package boot
 
 import (
-	"eoc/util"
+	"github.com/Akkadius/spire/util"
 	"github.com/go-errors/errors"
 	"github.com/google/wire"
 	"github.com/sirupsen/logrus"

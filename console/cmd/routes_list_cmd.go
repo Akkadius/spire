@@ -1,9 +1,9 @@
 package cmd
 
 import (
-	"eoc/console"
-	"eoc/http"
-	"eoc/http/routes"
+	"github.com/Akkadius/spire/console"
+	"github.com/Akkadius/spire/http"
+	"github.com/Akkadius/spire/http/routes"
 	"fmt"
 	"github.com/labstack/echo/v4"
 	"github.com/sirupsen/logrus"

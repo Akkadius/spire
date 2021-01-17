@@ -1,7 +1,7 @@
 package cmd
 
 import (
-	"eoc/generators"
+	"github.com/Akkadius/spire/generators"
 	"errors"
 	"github.com/jinzhu/gorm"
 	"github.com/sirupsen/logrus"

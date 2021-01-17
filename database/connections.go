@@ -1,7 +1,7 @@
 package database
 
 import (
-	"eoc/models"
+	"github.com/Akkadius/spire/models"
 	"github.com/jinzhu/gorm"
 )
 

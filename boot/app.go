@@ -2,8 +2,8 @@ package boot
 
 import (
 	"context"
-	"eoc/database"
-	"eoc/http/routes"
+	"github.com/Akkadius/spire/database"
+	"github.com/Akkadius/spire/http/routes"
 	"github.com/jinzhu/gorm"
 	gocache "github.com/patrickmn/go-cache"
 	"github.com/sirupsen/logrus"

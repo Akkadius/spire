@@ -2,10 +2,10 @@ package connection
 
 import (
 	"database/sql"
-	"eoc/database"
-	"eoc/internal/encryption"
-	"eoc/models"
-	"eoc/util"
+	"github.com/Akkadius/spire/database"
+	"github.com/Akkadius/spire/internal/encryption"
+	"github.com/Akkadius/spire/models"
+	"github.com/Akkadius/spire/util"
 	"errors"
 	"fmt"
 	"github.com/sirupsen/logrus"

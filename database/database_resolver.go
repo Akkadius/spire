@@ -1,10 +1,10 @@
 package database
 
 import (
-	"eoc/http/request"
-	"eoc/internal/encryption"
-	"eoc/models"
-	"eoc/util"
+	"github.com/Akkadius/spire/http/request"
+	"github.com/Akkadius/spire/internal/encryption"
+	"github.com/Akkadius/spire/models"
+	"github.com/Akkadius/spire/util"
 	"fmt"
 	"github.com/jinzhu/gorm"
 	"github.com/labstack/echo/v4"
