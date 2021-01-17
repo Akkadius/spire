@@ -30,7 +30,7 @@ input[type=checkbox].eq-checkbox:checked + label {
 [class*="eq-window"] select {
     border:           2px #555555 solid !important;
     background-color: #0b0b10 !important;
-    color:            #FFFFFF;
+    color:            #FFFFFF !important;
     padding:          5px !important;
     padding-left:     15px !important;
     margin:           5px;

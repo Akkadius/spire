@@ -53,6 +53,8 @@
 
                     <eq-window title="Examples">
 
+                      <button class='eq-button-wrap' @click="closeExample" style="right: 30px; top: 10px; position: absolute">X </button>
+
                       <div class="example-preview-inner">
                         <div v-for="(example, index) in displayExamples.slice(0,50)" :key="example.file_name + index">
                           <span style="font-weight: bold">{{ example.file_name }} Line: {{ example.line_number }}</span>
@@ -64,7 +66,7 @@
                             theme="terminal"
                             width="100%"
                             :ref="slug(example.file_name)"
-                            height="200px"
+                            height="250px"
                             class="mt-3 mb-3"
                           ></editor>
 
@@ -229,6 +231,9 @@ export default {
       }
       return ""
     },
+    closeExample: function() {
+      this.displayExamples = []
+    },
     languageSelect: function () {
       if (this.methods[this.getLanguageKey()].methods) {
         let options = []
@@ -277,6 +282,7 @@ export default {
         this.$refs[slug][0].editor.scrollToLine(lineNumber, true, true, function () {
         });
         this.$refs[slug][0].editor.gotoLine(lineNumber, 0, true);
+        this.$refs[slug][0].editor.setFontSize(14)
 
         const Range = ace.acequire('ace/range').Range;
 

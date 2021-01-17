@@ -177,11 +177,11 @@ func (q *QuestExamplesProjectEqSourcer) Search(searchStrings []string, language 
 
 				}
 
+				resultCount++
+
 				if resultCount > 50 {
 					break
 				}
-
-				resultCount++
 			}
 		}
 	}

@@ -6,6 +6,7 @@ import (
 	"errors"
 	"fmt"
 	"github.com/labstack/echo/v4"
+	"github.com/labstack/echo/v4/middleware"
 	"github.com/sirupsen/logrus"
 	"net/http"
 	"unicode"
@@ -40,6 +41,10 @@ func Serve(port uint, logger *logrus.Logger, router *routes.Router) error {
 	e.GET("/api/v1/routes", listRoutes)
 
 	e.HTTPErrorHandler = errorHandler
+
+	e.Use(middleware.GzipWithConfig(middleware.GzipConfig{
+		Level: 1,
+	}))
 
 	go func() {
 		imageProxyHandler()
