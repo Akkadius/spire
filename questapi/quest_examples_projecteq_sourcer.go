@@ -122,9 +122,10 @@ func (q *QuestExamplesProjectEqSourcer) Search(searchStrings []string, language 
 	}
 
 	var results []SearchResultSnippet
-	resultCount := 0
-	for file, contents := range q.Files() {
-		for _, searchString := range searchStrings {
+
+	for _, searchString := range searchStrings {
+		resultCount := 0
+		for file, contents := range q.Files() {
 
 			// match file extension and contents
 			if strings.Contains(file, fileExt) && strings.Contains(contents, searchString) {
