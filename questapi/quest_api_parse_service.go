@@ -74,8 +74,6 @@ func (c *ParseService) Parse(forceRefresh bool) QuestApiMethods {
 		c.logger.Fatal(err)
 	}
 
-	zonePath := "./zone"
-
 	// empty maps
 	for k := range perlMethods {
 		delete(perlMethods, k)
@@ -85,7 +83,7 @@ func (c *ParseService) Parse(forceRefresh bool) QuestApiMethods {
 	}
 
 	// read through memory file system
-	files, err := fs.ReadDir(zonePath)
+	files, err := fs.ReadDir("./zone")
 	if err != nil {
 		c.logger.Fatal(err)
 	}
@@ -132,6 +130,7 @@ func (c *ParseService) Parse(forceRefresh bool) QuestApiMethods {
 	return c.apiResponse()
 }
 
+// response method
 func (c *ParseService) apiResponse() QuestApiMethods {
 	return QuestApiMethods{
 		PerlApi: perlMethods,
