@@ -1,0 +1,35 @@
+#############################################
+# custom aliases
+#############################################
+alias dc="docker-compose"
+alias awslocal='aws --endpoint-url=http://localhost:4566'
+
+#############################################
+# help
+#############################################
+alias \?="bd && ./scripts/terminal-help.sh"
+alias help="bd && ./scripts/terminal-help.sh"
+alias alr="bd && make aliases && source ~/.zshrc"
+
+#############################################
+# navigate home
+#############################################
+alias h="bd"
+alias dev="bd"
+
+#############################################
+# misc shells
+#############################################
+alias b="bd && make bash"
+alias mc="bd && make mc"
+alias rc="bd && make rc"
+
+#############################################
+# environment
+#############################################
+alias up='bd && make up detached'
+alias down='bd && make down'
+alias restart='bd && down && up'
+alias logs='bd && docker-compose logs -f'
+
+# Leave this here

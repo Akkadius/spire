@@ -1,0 +1,184 @@
+package crudcontrollers
+
+import (
+	"eoc/database"
+	"eoc/http/routes"
+	"eoc/models"
+	"fmt"
+	"github.com/labstack/echo/v4"
+	"github.com/sirupsen/logrus"
+	"net/http"
+	"strconv"
+)
+
+type Spawn2Controller struct {
+	db     *database.DatabaseResolver
+	logger *logrus.Logger
+}
+
+func NewSpawn2Controller(
+	db *database.DatabaseResolver,
+	logger *logrus.Logger,
+) *Spawn2Controller {
+	return &Spawn2Controller {
+		db:     db,
+		logger: logger,
+	}
+}
+
+func (e *Spawn2Controller) Routes() []*routes.Route {
+	return []*routes.Route{
+		routes.RegisterRoute(http.MethodDelete, "spawn_2/:spawn_2", e.deleteSpawn2, nil),
+		routes.RegisterRoute(http.MethodGet, "spawn_2/:spawn_2", e.getSpawn2, nil),
+		routes.RegisterRoute(http.MethodGet, "spawn_2s", e.listSpawn2s, nil),
+		routes.RegisterRoute(http.MethodPatch, "spawn_2/:spawn_2", e.updateSpawn2, nil),
+		routes.RegisterRoute(http.MethodPut, "spawn_2", e.createSpawn2, nil),
+	}
+}
+
+// listSpawn2s godoc
+// @Id listSpawn2s
+// @Summary Lists Spawn2s
+// @Accept json
+// @Produce json
+// @Tags Spawn2
+// @Param includes query string false "Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names "
+// @Param where query string false "Filter on specific fields. Multiple conditions [.] separated Example: col_like_value.col2__val2"
+// @Param limit query string false "Rows to limit in response (Default: 10,000)"
+// @Param orderBy query string false "Order by [field]"
+// @Param orderDirection query string false "Order by field direction"
+// @Param select query string false "Column names [.] separated to fetch specific fields in response"
+// @Success 200 {array} models.Spawn2
+// @Failure 500 {string} string "Bad query request"
+// @Router /spawn_2s [get]
+func (e *Spawn2Controller) listSpawn2s(c echo.Context) error {
+	var results []models.Spawn2
+	err := e.db.QueryContext(models.Spawn2{}, c).Find(&results).Error
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err})
+	}
+
+	return c.JSON(http.StatusOK, results)
+}
+
+// getSpawn2 godoc
+// @Id getSpawn2
+// @Summary Gets Spawn2
+// @Accept json
+// @Produce json
+// @Tags Spawn2
+// @Param id path int true "Id"
+// @Param includes query string false "Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names "
+// @Param select query string false "Column names [.] separated to fetch specific fields in response"
+// @Success 200 {array} models.Spawn2
+// @Failure 404 {string} string "Entity not found"
+// @Failure 500 {string} string "Cannot find param"
+// @Failure 500 {string} string "Bad query request"
+// @Router /spawn_2/{id} [get]
+func (e *Spawn2Controller) getSpawn2(c echo.Context) error {
+	spawn2Id, err := strconv.Atoi(c.Param("spawn_2"))
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Cannot find param"})
+	}
+
+	var result models.Spawn2
+	err = e.db.QueryContext(models.Spawn2{}, c).First(&result, spawn2Id).Error
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err})
+	}
+
+	if result.ID == 0 {
+		return c.JSON(http.StatusNotFound, echo.Map{"error": "Cannot find entity"})
+	}
+
+	return c.JSON(http.StatusOK, result)
+}
+
+// updateSpawn2 godoc
+// @Id updateSpawn2
+// @Summary Updates Spawn2
+// @Accept json
+// @Produce json
+// @Tags Spawn2
+// @Param id path int true "Id"
+// @Param spawn_2 body models.Spawn2 true "Spawn2"
+// @Success 200 {array} models.Spawn2
+// @Failure 404 {string} string "Cannot find entity"
+// @Failure 500 {string} string "Error binding to entity"
+// @Failure 500 {string} string "Error updating entity"
+// @Router /spawn_2/{id} [patch]
+func (e *Spawn2Controller) updateSpawn2(c echo.Context) error {
+	spawn2 := new(models.Spawn2)
+	if err := c.Bind(spawn2); err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error binding to entity: [%v]", err)})
+	}
+
+	err := e.db.Get(models.Spawn2{}, c).Model(&models.Spawn2{}).First(&models.Spawn2{}, spawn2.ID).Error
+	if err != nil || spawn2.ID == 0 {
+		return c.JSON(http.StatusNotFound, echo.Map{"error": "Cannot find entity"})
+	}
+
+	err = e.db.Get(models.Spawn2{}, c).Model(&models.Spawn2{}).Update(&spawn2).Error
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error updating entity: [%v]", err)})
+	}
+
+	return c.JSON(http.StatusOK, spawn2)
+}
+
+// createSpawn2 godoc
+// @Id createSpawn2
+// @Summary Creates Spawn2
+// @Accept json
+// @Produce json
+// @Param spawn_2 body models.Spawn2 true "Spawn2"
+// @Tags Spawn2
+// @Success 200 {array} models.Spawn2
+// @Failure 500 {string} string "Error binding to entity"
+// @Failure 500 {string} string "Error inserting entity"
+// @Router /spawn_2 [put]
+func (e *Spawn2Controller) createSpawn2(c echo.Context) error {
+	spawn2 := new(models.Spawn2)
+	if err := c.Bind(spawn2); err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error binding to entity: [%v]", err)})
+	}
+
+	err := e.db.Get(models.Spawn2{}, c).Model(&models.Spawn2{}).Create(&spawn2).Error
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error inserting entity: [%v]", err)})
+	}
+
+	return c.JSON(http.StatusOK, spawn2)
+}
+
+// deleteSpawn2 godoc
+// @Id deleteSpawn2
+// @Summary Deletes Spawn2
+// @Accept json
+// @Produce json
+// @Tags Spawn2
+// @Param id path int true "Id"
+// @Success 200 {string} string "Entity deleted successfully"
+// @Failure 404 {string} string "Cannot find entity"
+// @Failure 500 {string} string "Error binding to entity"
+// @Failure 500 {string} string "Error deleting entity"
+// @Router /spawn_2/{id} [delete]
+func (e *Spawn2Controller) deleteSpawn2(c echo.Context) error {
+	spawn2Id, err := strconv.Atoi(c.Param("spawn_2"))
+	if err != nil {
+		e.logger.Error(err)
+	}
+
+	spawn2 := new(models.Spawn2)
+	err = e.db.Get(models.Spawn2{}, c).Model(&models.Spawn2{}).First(&spawn2, spawn2Id).Error
+	if err != nil || spawn2.ID == 0 {
+		return c.JSON(http.StatusNotFound, echo.Map{"error": "Cannot find entity"})
+	}
+
+	err = e.db.Get(models.Spawn2{}, c).Model(&models.Spawn2{}).Delete(&spawn2).Error
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Error deleting entity"})
+	}
+
+	return c.JSON(http.StatusOK, echo.Map{"success": "Entity deleted successfully"})
+}

@@ -1,0 +1,12 @@
+Interact with your environment via Makefile
+
+To see the help menu type "make"
+
+# Up environment
+
+make up
+
+# Down environment
+
+make down
+

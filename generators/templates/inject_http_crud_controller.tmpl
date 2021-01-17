@@ -1,0 +1,26 @@
+package boot
+
+import (
+	"eoc/http/crudcontrollers"
+	"eoc/http/routes"
+	"github.com/google/wire"
+)
+
+type crudControllers struct {
+	routes []routes.Controller
+}
+
+var httpCrudControllerSet = wire.NewSet(
+{{.NewControllers}}
+	provideCrudControllers,
+)
+
+func provideCrudControllers(
+{{.ControllersParam}}
+) *crudControllers {
+	return &crudControllers{
+		routes: []routes.Controller{
+{{.ControllersRegister}}
+		},
+	}
+}

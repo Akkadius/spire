@@ -1,0 +1,53 @@
+package boot
+
+import (
+	"context"
+	"eoc/database"
+	"eoc/http/routes"
+	"github.com/jinzhu/gorm"
+	gocache "github.com/patrickmn/go-cache"
+	"github.com/sirupsen/logrus"
+	"github.com/spf13/cobra"
+)
+
+// App is the root App resource
+type App struct {
+	context       context.Context
+	mysql         *gorm.DB
+	dbConnections *database.Connections
+	logger        *logrus.Logger
+	cache         *gocache.Cache
+	commands      []*cobra.Command
+	db            *database.DatabaseResolver
+	router        *routes.Router
+}
+
+func (a App) DbConnections() *database.Connections {
+	return a.dbConnections
+}
+
+func (a App) Commands() []*cobra.Command {
+	return a.commands
+}
+
+// Create new App
+func NewApplication(
+	mysql *gorm.DB,
+	logger *logrus.Logger,
+	cache *gocache.Cache,
+	commands []*cobra.Command,
+	db *database.DatabaseResolver,
+	dbConnections *database.Connections,
+	router *routes.Router,
+) App {
+	return App{
+		context:       context.Background(),
+		mysql:         mysql,
+		logger:        logger,
+		cache:         cache,
+		commands:      commands,
+		db:            db,
+		dbConnections: dbConnections,
+		router:        router,
+	}
+}

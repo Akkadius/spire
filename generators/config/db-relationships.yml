@@ -1,0 +1,111 @@
+account:
+  - 1-* id->account_flags:p_accid
+  - 1-* id->account_rewards:account_id
+  - 1-* id->sharedbank:acctid
+  - 1-* id->bug_reports:account_id
+  - 1-* id->account_ip:accid
+character_data:
+  - 1-1 id->guilds:id
+  - 1-* id->char_recipe_list:char_id
+  - 1-* id->character_alt_currency:char_id
+  - 1-* id->character_pet_buffs:char_id
+  - 1-* id->character_pet_info:char_id
+  - 1-* id->character_pet_inventory:char_id
+  - 1-* id->faction_values:char_id
+  - 1-* id->guild_members:char_id
+  - 1-* id->keyring:char_id
+  - 1-* id->player_titlesets:char_id
+  - 1-* id->titles:char_id
+  - 1-* id->trader:char_id
+  - 1-* id->character_buffs:character_id
+  - 1-* id->buyer:charid
+  - 1-* id->character_activities:charid
+  - 1-* id->character_enabledtasks:charid
+  - 1-* id->character_tasks:charid
+  - 1-* id->completed_tasks:charid
+  - 1-* id->friends:charid
+  - 1-* id->inventory:charid
+  - 1-* id->mail:charid
+  - 1-* id->quest_globals:charid
+  - 1-* id->zone_flags:charID
+  - 1-* id->character_alternate_abilities:id
+  - 1-* id->character_auras:id
+  - 1-* id->character_bandolier:id
+  - 1-* id->character_bind:id
+  - 1-* id->character_corpses:id
+  - 1-* id->character_currency:id
+  - 1-* id->character_disciplines:id
+  - 1-* id->character_inspect_messages:id
+  - 1-* id->character_item_recast:id
+  - 1-* id->character_languages:id
+  - 1-* id->character_leadership_abilities:id
+  - 1-* id->character_material:id
+  - 1-* id->character_memmed_spells:id
+  - 1-* id->character_potionbelt:id
+  - 1-* id->character_skills:id
+  - 1-* id->character_spells:id
+  - 1-* id->character_tribute:id
+  - 1-* id->data_buckets:id
+  - 1-* id->instance_list_player:id
+  - 1-* id->adventure_stats:player_id
+  - 1-* id->timers:char_id
+grid:
+  - 1-* id->grid_entries:gridid
+guilds:
+  - 1-* id->guild_bank:guildid
+  - 1-* id->guild_ranks:guild_id
+  - 1-* id->guild_members:guild_id
+instance_list:
+  - 1-* id->instance_list_player:id
+  - 1-* zone->zone:zoneidunumber
+inventory:
+  - 1-1 itemid->items:id
+items:
+  - 1-* id->discovered_items:item_id
+lootdrop:
+  - 1-* id->lootdrop_entries:lootdrop_id
+lootdrop_entries:
+  - 1-1 item_id->items:id
+loottable:
+  - 1-* id->loottable_entries:loottable_id
+loottable_entries:
+  - 1-* lootdrop_id->lootdrop_entries:lootdrop_id
+npc_faction:
+  - 1-* id->npc_faction_entries:npc_faction_id
+npc_spells:
+  - 1-* id->npc_spells_entries:npc_spells_id
+npc_spells_effects:
+  - 1-* id->npc_spells_effects_entries:npc_spells_effects_id
+npc_types:
+  - 1-1 alt_currency_id->alternate_currency:id
+  - 1-* merchant_id->merchantlist:merchantid
+  - 1-* npc_faction_id->npc_faction:id
+  - 1-* npc_spells_id->npc_spells:id
+  - 1-* id->spawnentry:npcID
+  - 1-* emoteid->npc_emotes:emoteid
+  - 1-1 armortint_id->npc_types_tint:id
+pets:
+  - 1-1 npcID->npc_types:id
+pets_equipmentset:
+  - 1-* set_id->pets_equipmentset_entries:set_id
+raid_details:
+  - 1-* raidid->raid_leaders:rid
+  - 1-* raidid->raid_members:raidid
+rule_sets:
+  - 1-* ruleset_id->rule_values:ruleset_id
+spawnentry:
+  - 1-1 spawngroupID->spawngroup:id
+spawngroup:
+  - 1-1 id->spawn2:spawngroupID
+spells_new:
+  - 1-1 id->auras:spell_id
+  - 1-* id->damageshieldtypes:spellid
+  - 1-* id->spell_buckets:spellid
+  - 1-* id->spell_globals:spellid
+  - 1-* id->blocked_spells:spellid
+task_activities:
+  - 1-1 delivertonpc->npc_types:id
+  - 1-* goalid->goallists:listid
+tasks:
+  - 1-* id->task_activities:taskid
+  - 1-* id->tasksets:taskid
