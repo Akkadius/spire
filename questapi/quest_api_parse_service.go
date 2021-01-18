@@ -21,6 +21,8 @@ func NewParseService(logger *logrus.Logger, cache *gocache.Cache) *ParseService 
 }
 
 type QuestApiResponse struct {
+	LastRefreshed time.Time `json:"last_refreshed"`
+
 	PerlApi `json:"perl_api"`
 	LuaApi  `json:"lua_api"`
 }
@@ -53,6 +55,7 @@ type LuaMethod struct {
 
 var perlMethods = map[string][]PerlMethod{}
 var luaMethods = map[string][]LuaMethod{}
+var lastRefeshed time.Time
 
 const lockKey = "quest-api-lock"
 
@@ -136,6 +139,8 @@ func (c *ParseService) Parse(forceRefresh bool) QuestApiResponse {
 		)
 	}
 
+	lastRefeshed = time.Now()
+
 	// delete lock
 	c.cache.Delete(lockKey)
 
@@ -145,6 +150,7 @@ func (c *ParseService) Parse(forceRefresh bool) QuestApiResponse {
 // response method
 func (c *ParseService) apiResponse() QuestApiResponse {
 	return QuestApiResponse{
+		LastRefreshed: lastRefeshed,
 		PerlApi: PerlApi{
 			PerlMethods: perlMethods,
 		},

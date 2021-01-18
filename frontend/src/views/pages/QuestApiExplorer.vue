@@ -29,6 +29,11 @@
                       :options="methodTypeOptions"/>
                   </div>
 
+                  <div class="col text-center align-middle ">
+                    <div class="float-right">
+                      Last Updated: {{ fromNow(methods.last_refreshed) }}
+                    </div>
+                  </div>
                 </div>
                 <div class="row mt-2" v-if="apiMethods.length > 0">
                   <div class="col-12">
@@ -53,7 +58,9 @@
 
                     <eq-window title="Examples">
 
-                      <button class="btn btn-white btn-sm" @click="closeExample" style="right: 30px; top: 10px; position: absolute">X</button>
+                      <button class="btn btn-white btn-sm" @click="closeExample"
+                              style="right: 30px; top: 10px; position: absolute">X
+                      </button>
 
                       <div class="example-preview-inner">
                         <div v-for="(example, index) in displayExamples.slice(0,50)"
@@ -108,6 +115,7 @@ import EqWindowSimple        from "@/components/eq-ui/EQWindowSimple.vue";
 import EqTabs                from "@/components/eq-ui/EQTabs.vue";
 import EqTab                 from "@/components/eq-ui/EQTab.vue";
 import slugify               from "slugify";
+import moment                from "moment";
 
 export default {
   components: {
@@ -162,6 +170,9 @@ export default {
     this.init()
   },
   methods: {
+    fromNow(time) {
+      return moment(time).fromNow()
+    },
     init() {
       this.routeWatcher = this.$watch('$route.query', () => {
         this.loadQueryParams()
@@ -391,6 +402,8 @@ export default {
           this.$forceUpdate()
         });
 
+
+        this.displayExamples = []
 
       }
     }
