@@ -1,8 +1,8 @@
 package cmd
 
 import (
-	"github.com/Akkadius/spire/questapi"
 	"fmt"
+	"github.com/Akkadius/spire/questapi"
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
 	"time"

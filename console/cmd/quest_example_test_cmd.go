@@ -11,7 +11,7 @@ import (
 type QuestExampleTestCommand struct {
 	logger  *logrus.Logger
 	command *cobra.Command
-	sourcer *questapi.QuestExamplesProjectEqSourcer
+	sourcer *questapi.QuestExamplesGithubSourcer
 }
 
 func (g *QuestExampleTestCommand) Command() *cobra.Command {
@@ -21,9 +21,11 @@ func (g *QuestExampleTestCommand) Command() *cobra.Command {
 // new instance of command
 func NewQuestExampleTestCommand(
 	logger *logrus.Logger,
+	sourcer *questapi.QuestExamplesGithubSourcer,
 ) *QuestExampleTestCommand {
 	i := &QuestExampleTestCommand{
-		logger: logger,
+		logger:  logger,
+		sourcer: sourcer,
 		command: &cobra.Command{
 			Use:   "quest:example-test",
 			Short: "Parses ProjectEQ repo for examples",
@@ -43,7 +45,14 @@ func (c *QuestExampleTestCommand) Handle(_ *cobra.Command, args []string) {
 		searchTerms = strings.Split(args[0], ",")
 	}
 
-	c.sourcer.Search(searchTerms, "lua")
+	language := args[1]
+
+	// inputs
+	org := "ProjectEQ"
+	repo := "projecteqquests"
+	branch := "master"
+
+	c.sourcer.Search(org, repo, branch, searchTerms, language)
 }
 
 // Validate

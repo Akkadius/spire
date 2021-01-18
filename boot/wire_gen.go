@@ -13,6 +13,7 @@ import (
 	"github.com/Akkadius/spire/http/middleware"
 	"github.com/Akkadius/spire/internal/connection"
 	"github.com/Akkadius/spire/internal/encryption"
+	"github.com/Akkadius/spire/internal/github"
 	"github.com/Akkadius/spire/questapi"
 )
 
@@ -47,8 +48,9 @@ func InitializeApplication() (App, error) {
 	connectionsController := controllers.NewConnectionsController(databaseResolver, logger, cache, dbConnectionCreateService, dbConnectionCheckService)
 	docsController := controllers.NewDocsController(databaseResolver, logger)
 	parseService := questapi.NewParseService(logger, cache)
-	questExamplesProjectEqSourcer := questapi.NewQuestExamplesProjectEqSourcer(logger, cache)
-	questApiController := controllers.NewQuestApiController(logger, parseService, questExamplesProjectEqSourcer)
+	githubSourceDownloader := github.NewGithubSourceDownloader(logger)
+	questExamplesGithubSourcer := questapi.NewQuestExamplesGithubSourcer(logger, cache, githubSourceDownloader)
+	questApiController := controllers.NewQuestApiController(logger, parseService, questExamplesGithubSourcer)
 	bootAppControllerGroups := provideControllers(helloWorldController, authController, meController, connectionsController, docsController, questApiController)
 	aaAbilityController := crudcontrollers.NewAaAbilityController(databaseResolver, logger)
 	aaRankController := crudcontrollers.NewAaRankController(databaseResolver, logger)
@@ -144,7 +146,7 @@ func InitializeApplication() (App, error) {
 	generateConfigurationCommand := cmd.NewGenerateConfigurationCommand(databaseResolver, logger)
 	spireMigrateCommand := cmd.NewSpireMigrateCommand(connections, logger)
 	questApiParseCommand := cmd.NewQuestApiParseCommand(logger, parseService)
-	questExampleTestCommand := cmd.NewQuestExampleTestCommand(logger)
+	questExampleTestCommand := cmd.NewQuestExampleTestCommand(logger, questExamplesGithubSourcer)
 	v := ProvideCommands(helloWorldCommand, generateModelsCommand, generateControllersCommand, generateVueFormsCommand, httpServeCommand, routesListCommand, generateConfigurationCommand, spireMigrateCommand, questApiParseCommand, questExampleTestCommand)
 	app := NewApplication(db, logger, cache, v, databaseResolver, connections, router)
 	return app, nil

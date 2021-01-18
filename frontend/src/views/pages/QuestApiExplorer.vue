@@ -62,10 +62,16 @@
                               style="right: 30px; top: 10px; position: absolute">X
                       </button>
 
-                      <div class="example-preview-inner">
+                      <div class="example-preview-inner text-center">
                         <div v-for="(example, index) in displayExamples.slice(0,50)"
                              :key="example.file_name + index + example.line_number">
-                          <span style="font-weight: bold">{{ example.file_name }} Line: {{ example.line_number }}</span>
+                          <button
+                            @click="navigateTo('https://github.com/' + example.org + '/' + example.repo + '/blob/' + example.branch + '/' + encodeURIComponent(example.file_name) + '#L' + example.line_number, example.file_name)"
+                            class="btn btn-primary btn-sm mr-2">
+                            <i class="fe fe-github"></i>
+                            {{ example.org + " / " + example.repo + " / " }} {{ example.file_name + ":" + example.line_number }}
+                          </button>
+
                           <editor
                             v-model="example.full_contents"
                             @init="editorInit(slug(example.file_name), example.line_number)"
@@ -116,6 +122,7 @@ import EqTabs                from "@/components/eq-ui/EQTabs.vue";
 import EqTab                 from "@/components/eq-ui/EQTab.vue";
 import slugify               from "slugify";
 import moment                from "moment";
+import * as util             from "util";
 
 export default {
   components: {
@@ -233,6 +240,9 @@ export default {
         }
       ).catch(() => {
       })
+    },
+    navigateTo(url, name) {
+      window.open(url, name);
     },
     getLanguageKey() {
       if (this.languageSelection == "perl") {
@@ -381,7 +391,14 @@ export default {
         this.apiMethods    = apiMethods
         this.methodDisplay = methodDisplay
 
-        SpireApiClient.v1().post('/quest-api/examples/search-projecteq', {
+        // quest-api/source-examples/org/:org/repo/:repo/:branch
+
+        // fixed for now, but designed to be able to source from multiple locations
+        const org    = "ProjectEQ"
+        const repo   = "projecteqquests"
+        const branch = "master"
+
+        SpireApiClient.v1().post(util.format('/quest-api/source-examples/org/%s/repo/%s/branch/%s', org, repo, branch), {
           "search_terms": methodSearchTerms,
           "language": this.languageSelection
         }).then((response) => {
@@ -393,8 +410,9 @@ export default {
                 this.linkedExamples[this.languageSelection][result.search_term] = []
               }
 
-              result.full_example = (result.before_content + result.line_match + result.after_content)
-              // .replace(/^\s*[\r\n]/gm, "")
+              result.org    = org
+              result.repo   = repo
+              result.branch = branch
 
               this.linkedExamples[this.languageSelection][result.search_term].push(result)
             })
