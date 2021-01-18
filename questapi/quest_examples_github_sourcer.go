@@ -22,11 +22,6 @@ func NewQuestExamplesGithubSourcer(
 	return &QuestExamplesGithubSourcer{logger: logger, cache: cache, downloader: downloader}
 }
 
-// return files from memory
-func (q *QuestExamplesGithubSourcer) Files() map[string]string {
-	return q.files
-}
-
 const (
 	searchResultLinesBefore = 3
 	searchResultLinesAfter  = 6
@@ -41,6 +36,11 @@ type SearchResultSnippet struct {
 	FullContents    string `json:"full_contents,omitempty"`
 	AfterContent    string `json:"after_content"`
 	SearchTerm      string `json:"search_term"`
+}
+
+// return files from memory
+func (q *QuestExamplesGithubSourcer) Files() map[string]string {
+	return q.files
 }
 
 // source files

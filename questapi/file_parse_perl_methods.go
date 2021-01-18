@@ -1,25 +1,13 @@
 package questapi
 
 import (
-	"bufio"
 	"fmt"
-	"github.com/go-git/go-billy/v5"
-	"log"
 	"strings"
 )
 
 // parses perl methods
-func parsePerlMethods(fs billy.Filesystem, fileName string, perlMethods map[string][]PerlMethod) {
-	file, err := fs.Open(fmt.Sprintf("%v/%v", "./zone", fileName))
-	if err != nil {
-		log.Fatal(err)
-	}
-	defer file.Close()
-
-	scanner := bufio.NewScanner(file)
-	for scanner.Scan() {
-		l := scanner.Text()
-
+func parsePerlMethods(contents string, perlMethods map[string][]PerlMethod) {
+	for _, l := range strings.Split(contents, "\n") {
 		filterLine := strings.Contains(l, "Perl_croak") &&
 			strings.Contains(l, "Usa") &&
 			strings.Contains(l, "::") &&
@@ -64,9 +52,4 @@ func parsePerlMethods(fs billy.Filesystem, fileName string, perlMethods map[stri
 			)
 		}
 	}
-
-	if err := scanner.Err(); err != nil {
-		log.Fatal(err)
-	}
-
 }

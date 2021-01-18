@@ -1,31 +1,16 @@
 package questapi
 
 import (
-	"bufio"
-	"fmt"
-	"github.com/go-git/go-billy/v5"
-	"log"
 	"strings"
 )
 
 // parses lua methods
-func parseLuaMethods(fs billy.Filesystem, fileName string, luaMethods map[string][]LuaMethod) {
-	// open file
-	file, err := fs.Open(fmt.Sprintf("%v/%v", "./zone", fileName))
-	if err != nil {
-		log.Fatal(err)
-	}
-	defer file.Close()
-
-	// file scanner
-	scanner := bufio.NewScanner(file)
+func parseLuaMethods(contents string, fileName string, luaMethods map[string][]LuaMethod) {
 
 	// first pass over file to build a list of definitions and map then to the actual functions themselves
 	// definitions are not always 1:1 with the actual source function names
 	luaDefinitionMap := map[string]string{}
-	for scanner.Scan() {
-		l := scanner.Text()
-
+	for _, l := range strings.Split(contents, "\n") {
 		if strings.Contains(l, ".def(\"") || strings.Contains(l, "luabind::def(\"") {
 			l = strings.TrimSpace(l)
 			l = strings.ReplaceAll(l, ".def(\"", "")
@@ -73,17 +58,7 @@ func parseLuaMethods(fs billy.Filesystem, fileName string, luaMethods map[string
 		}
 	}
 
-	//fmt.Printf("%+v\n", luaDefinitionMap)
-	file, err = fs.Open(fmt.Sprintf("%v/%v", "./zone", fileName))
-	if err != nil {
-		log.Fatal(err)
-	}
-	defer file.Close()
-
-	scanner = bufio.NewScanner(file)
-	for scanner.Scan() {
-		l := scanner.Text()
-
+	for _, l := range strings.Split(contents, "\n") {
 		lineSplit := strings.Split(strings.TrimSpace(l), " ")
 
 		// int Lua_Inventory::CalcSlotFromMaterial(int material)
@@ -223,9 +198,5 @@ func parseLuaMethods(fs billy.Filesystem, fileName string, luaMethods map[string
 				//fmt.Println(methodIdentifier)
 			}
 		}
-	}
-
-	if err := scanner.Err(); err != nil {
-		log.Fatal(err)
 	}
 }

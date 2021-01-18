@@ -1,9 +1,7 @@
 package questapi
 
 import (
-	"github.com/go-git/go-billy/v5/memfs"
-	"github.com/go-git/go-git/v5"
-	"github.com/go-git/go-git/v5/storage/memory"
+	"github.com/Akkadius/spire/internal/github"
 	gocache "github.com/patrickmn/go-cache"
 	"github.com/sirupsen/logrus"
 	"sort"
@@ -12,12 +10,18 @@ import (
 )
 
 type ParseService struct {
-	logger *logrus.Logger
-	cache  *gocache.Cache
+	logger     *logrus.Logger
+	cache      *gocache.Cache
+	downloader *github.GithubSourceDownloader
+	files      map[string]string
 }
 
-func NewParseService(logger *logrus.Logger, cache *gocache.Cache) *ParseService {
-	return &ParseService{logger: logger, cache: cache}
+func NewParseService(
+	logger *logrus.Logger,
+	cache *gocache.Cache,
+	downloader *github.GithubSourceDownloader,
+) *ParseService {
+	return &ParseService{logger: logger, cache: cache, downloader: downloader}
 }
 
 type QuestApiResponse struct {
@@ -59,8 +63,36 @@ var lastRefeshed time.Time
 
 const lockKey = "quest-api-lock"
 
+// return files from memory
+func (c *ParseService) Files() map[string]string {
+	return c.files
+}
+
+// source files
+func (c *ParseService) Source(
+	org string,
+	repo string,
+	branch string,
+	forceRefresh bool,
+) map[string]string {
+
+	// return cache if not refresh
+	if !forceRefresh && len(c.files) > 0 {
+		return c.files
+	}
+
+	// set to memory
+	c.files = c.downloader.Source(org, repo, branch, forceRefresh)
+
+	// return local reference
+	return c.files
+}
+
 // parses methods from our source
 func (c *ParseService) Parse(forceRefresh bool) QuestApiResponse {
+
+	// pull files in
+	c.Source("EQEmu", "Server", "master", false)
 
 	// return cached copy
 	if len(perlMethods) > 0 && len(luaMethods) > 0 && !forceRefresh {
@@ -76,19 +108,6 @@ func (c *ParseService) Parse(forceRefresh bool) QuestApiResponse {
 	// set operation lock
 	c.cache.Set(lockKey, 1, time.Minute*10)
 
-	fs := memfs.New()
-	_, err := git.Clone(
-		memory.NewStorage(), fs, &git.CloneOptions{
-			URL:               "https://github.com/EQEmu/Server.git",
-			ReferenceName:     "refs/heads/master",
-			RecurseSubmodules: 0,
-			Depth:             1,
-		},
-	)
-	if err != nil {
-		c.logger.Fatal(err)
-	}
-
 	// empty maps
 	for k := range perlMethods {
 		delete(perlMethods, k)
@@ -97,29 +116,23 @@ func (c *ParseService) Parse(forceRefresh bool) QuestApiResponse {
 		delete(luaMethods, k)
 	}
 
-	// read through memory file system
-	files, err := fs.ReadDir("./zone")
-	if err != nil {
-		c.logger.Fatal(err)
-	}
-
 	// loop through files
-	for _, f := range files {
+	for fileName, contents := range c.Files() {
 
 		// perl files
-		isPerlFile := strings.Contains(f.Name(), "perl_") ||
-			strings.Contains(f.Name(), "embparser_api")
+		isPerlFile := strings.Contains(fileName, "perl_") ||
+			strings.Contains(fileName, "embparser_api")
 
 		if isPerlFile {
-			parsePerlMethods(fs, f.Name(), perlMethods)
+			parsePerlMethods(contents, perlMethods)
 		}
 
 		// lua files
-		isLuaFile := strings.Contains(f.Name(), "lua_") &&
-			strings.Contains(f.Name(), "cpp")
+		isLuaFile := strings.Contains(fileName, "lua_") &&
+			strings.Contains(fileName, "cpp")
 
 		if isLuaFile {
-			parseLuaMethods(fs, f.Name(), luaMethods)
+			parseLuaMethods(contents, fileName, luaMethods)
 		}
 	}
 
