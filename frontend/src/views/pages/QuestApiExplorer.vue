@@ -62,15 +62,31 @@
                               style="right: 30px; top: 10px; position: absolute">X
                       </button>
 
-                      <div class="example-preview-inner text-center">
+                      <div class="example-preview-inner">
+
                         <div v-for="(example, index) in displayExamples.slice(0,50)"
                              :key="example.file_name + index + example.line_number">
+                          <div class="row">
+                          <div class="col">
                           <button
                             @click="navigateTo('https://github.com/' + example.org + '/' + example.repo + '/blob/' + example.branch + '/' + encodeURIComponent(example.file_name) + '#L' + example.line_number, example.file_name)"
+                            class="btn btn-light btn-sm mr-2">
+                            <i class="fe fe-github"></i>
+                             {{ example.file_name + ":" + example.line_number }}
+                          </button>
+                            </div>
+
+                          <div class="col">
+                            <div class="float-right">
+                          <button
+                            @click="navigateTo('https://github.com/' + example.org + '/' + example.repo)"
                             class="btn btn-primary btn-sm mr-2">
                             <i class="fe fe-github"></i>
-                            {{ example.org + " / " + example.repo + " / " }} {{ example.file_name + ":" + example.line_number }}
+                            {{ example.org + " / " + example.repo }}
                           </button>
+                            </div>
+                          </div>
+                          </div>
 
                           <editor
                             v-model="example.full_contents"
