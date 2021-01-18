@@ -58,9 +58,9 @@
                         style="color: #57A64A"
                         v-if="linkedExamples[languageSelection][method.method + '('] && linkedExamples[languageSelection][method.method + '('].length > 0">{{
                           (languageSelection === "perl" ? "#" : "--")
-                        }} ({{
+                        }} {{
                           linkedExamples[languageSelection][method.method + "("].length
-                        }} Example(s))</span></div></pre>
+                        }} Example(s)</span></div></pre>
                   </div>
 
                   <div class="col-6 example-preview" v-if="displayExamples.length > 0">

@@ -120,17 +120,13 @@ func (c *ParseService) Parse(forceRefresh bool) QuestApiResponse {
 	for fileName, contents := range c.Files() {
 
 		// perl files
-		isPerlFile := strings.Contains(fileName, "perl_") ||
-			strings.Contains(fileName, "embparser_api")
-
+		isPerlFile := strings.Contains(fileName, "perl_") || strings.Contains(fileName, "embparser_api")
 		if isPerlFile {
 			parsePerlMethods(contents, perlMethods)
 		}
 
 		// lua files
-		isLuaFile := strings.Contains(fileName, "lua_") &&
-			strings.Contains(fileName, "cpp")
-
+		isLuaFile := strings.Contains(fileName, "lua_") && strings.Contains(fileName, "cpp")
 		if isLuaFile {
 			parseLuaMethods(contents, fileName, luaMethods)
 		}
