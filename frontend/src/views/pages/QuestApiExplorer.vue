@@ -425,6 +425,12 @@ export default {
         const repo   = "projecteqquests"
         const branch = "master"
 
+        // reset
+        this.linkedExamples = {
+          perl: {},
+          lua: {}
+        }
+
         SpireApiClient.v1().post(util.format('/quest-api/source-examples/org/%s/repo/%s/branch/%s', org, repo, branch), {
           "search_terms": methodSearchTerms,
           "language": this.languageSelection
