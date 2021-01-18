@@ -9,23 +9,28 @@ import (
 )
 
 type QuestApiController struct {
-	logger     *logrus.Logger
-	parser     *questapi.ParseService
-	peqSourcer *questapi.QuestExamplesGithubSourcer
+	logger *logrus.Logger
+	parser *questapi.ParseService
+	sourcer *questapi.QuestExamplesGithubSourcer
 }
 
 func NewQuestApiController(
 	logger *logrus.Logger,
 	parser *questapi.ParseService,
-	peqSourcer *questapi.QuestExamplesGithubSourcer,
+	sourcer *questapi.QuestExamplesGithubSourcer,
 ) *QuestApiController {
-	return &QuestApiController{logger: logger, parser: parser, peqSourcer: peqSourcer}
+	return &QuestApiController{logger: logger, parser: parser, sourcer: sourcer}
 }
 
 func (d *QuestApiController) Routes() []*routes.Route {
 	return []*routes.Route{
 		routes.RegisterRoute(http.MethodGet, "quest-api/methods", d.methods, nil),
-		routes.RegisterRoute(http.MethodPost, "quest-api/source-examples/org/:org/repo/:repo/branch/:branch", d.searchProjectEqExamples, nil),
+		routes.RegisterRoute(
+			http.MethodPost,
+			"quest-api/source-examples/org/:org/repo/:repo/branch/:branch",
+			d.searchGithubExamples,
+			nil,
+		),
 	}
 }
 
@@ -33,15 +38,15 @@ func (d *QuestApiController) methods(c echo.Context) error {
 	return c.JSON(http.StatusOK, echo.Map{"data": d.parser.Parse(false)})
 }
 
-type ProjectEqSearchTermRequest struct {
+type SearchTermRequest struct {
 	SearchTerms []string `json:"search_terms"`
 	Language    string   `json:"language"`
 }
 
-// searches projecteq quest examples
-func (d *QuestApiController) searchProjectEqExamples(c echo.Context) error {
+// searches quest examples
+func (d *QuestApiController) searchGithubExamples(c echo.Context) error {
 	// body - bind
-	p := new(ProjectEqSearchTermRequest)
+	p := new(SearchTermRequest)
 	if err := c.Bind(p); err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}
@@ -55,7 +60,7 @@ func (d *QuestApiController) searchProjectEqExamples(c echo.Context) error {
 	return c.JSON(
 		http.StatusOK,
 		echo.Map{
-			"data": d.peqSourcer.Search(org, repo, branch, p.SearchTerms, p.Language),
+			"data": d.sourcer.Search(org, repo, branch, p.SearchTerms, p.Language),
 		},
 	)
 }
