@@ -65,7 +65,7 @@ func NewRouter(
 		[]*routes.ControllerGroup{
 			routes.NewControllerGroup("/auth/", cg.authControllers, []echo.MiddlewareFunc{}...),
 			routes.NewControllerGroup("/api/v1/", cg.v1controllers, userContextMiddleware.Handle()),
-			routes.NewControllerGroup("/api/v1/", cg.v1controllersNoAuth, []echo.MiddlewareFunc{}...),
+			routes.NewControllerGroup("/api/v1/", cg.v1controllersNoAuth, middleware.GzipWithConfig(middleware.GzipConfig{Level: 1})),
 			routes.NewControllerGroup("/api/v1/", crudc.routes, userContextMiddleware.Handle()),
 		},
 	)
