@@ -25,7 +25,7 @@ func NewQuestExamplesGithubSourcer(
 const (
 	searchResultLinesBefore = 3
 	searchResultLinesAfter  = 6
-	maxResultsPerSearchTerm = 50
+	maxResultsPerSearchTerm = 49
 )
 
 type SearchResultSnippet struct {

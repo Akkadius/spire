@@ -37,6 +37,9 @@
                 </div>
                 <div class="row mt-2" v-if="apiMethods.length > 0">
                   <div class="col-12">
+
+                    <!-- Everthing below will look a bit messy because things need -->
+                    <!-- to be on the same line for proper pre formatting -->
                     <pre
                       class="highlight html bg-dark hljs mb-4 code-display"
                       style="padding-left: 20px !important; padding-top: 10px !important; padding-bottom: 10px !important"
@@ -51,7 +54,13 @@
                       v-if="linkedExamples[languageSelection][method.method + '(']">{{ method.method }}</a>({{
                         method.params.join(", ")
                       }}); <span
-                        v-if="method.comments" style="color: #57A64A">{{ method.comments }}</span></div></pre>
+                        v-if="method.comments" style="color: #57A64A">{{ method.comments }}</span> <span
+                        style="color: #57A64A"
+                        v-if="linkedExamples[languageSelection][method.method + '('] && linkedExamples[languageSelection][method.method + '('].length > 0">{{
+                          (languageSelection === "perl" ? "#" : "--")
+                        }} ({{
+                          linkedExamples[languageSelection][method.method + "("].length
+                        }} Example(s))</span></div></pre>
                   </div>
 
                   <div class="col-6 example-preview" v-if="displayExamples.length > 0">
@@ -67,25 +76,27 @@
                         <div v-for="(example, index) in displayExamples.slice(0,50)"
                              :key="example.file_name + index + example.line_number">
                           <div class="row">
-                          <div class="col">
-                          <button
-                            @click="navigateTo('https://github.com/' + example.org + '/' + example.repo + '/blob/' + example.branch + '/' + encodeURIComponent(example.file_name) + '#L' + example.line_number, example.file_name)"
-                            class="btn btn-light btn-sm mr-2">
-                            <i class="fe fe-github"></i>
-                             {{ example.file_name + ":" + example.line_number }}
-                          </button>
+                            <div class="col">
+                              <a href="javascript:;"
+                                 @click="navigateTo('https://github.com/' + example.org + '/' + example.repo + '/blob/' + example.branch + '/' + encodeURIComponent(example.file_name) + '#L' + example.line_number, example.file_name)"
+                                 style="color: #b9b194"
+                              >
+                                <i class="fe fe-github"></i>
+                                {{ example.file_name + ":" + example.line_number }}
+                              </a>
                             </div>
 
-                          <div class="col">
-                            <div class="float-right">
-                          <button
-                            @click="navigateTo('https://github.com/' + example.org + '/' + example.repo)"
-                            class="btn btn-primary btn-sm mr-2">
-                            <i class="fe fe-github"></i>
-                            {{ example.org + " / " + example.repo }}
-                          </button>
+                            <div class="col">
+                              <div class="float-right">
+                                <button
+                                  @click="navigateTo('https://github.com/' + example.org + '/' + example.repo)"
+                                  style="line-height: 1.40;"
+                                  class="btn btn-primary btn-sm mr-2">
+                                  <i class="fe fe-github"></i>
+                                  {{ example.org + " / " + example.repo }}
+                                </button>
+                              </div>
                             </div>
-                          </div>
                           </div>
 
                           <editor
@@ -100,13 +111,8 @@
                             class="mt-3 mb-3"
                           ></editor>
 
-                          <!--                          <pre-->
-                          <!--                            class="highlight html bg-dark hljs mb-4 code-display"-->
-                          <!--                            style="padding-left: 20px !important; padding-top: 10px !important; padding-bottom: 10px !important"-->
-                          <!--                          >{{ example.full_example }}</pre>-->
                         </div>
                       </div>
-
 
                     </eq-window>
 
@@ -349,7 +355,9 @@ export default {
       let apiMethods  = []
 
       // used to search sources for examples
-      let methodSearchTerms = []
+      let methodSearchTerms  = []
+      // keeps track of duplicate search terms
+      let declaredSearchTerm = {}
 
       if (this.methods[this.getLanguageKey()].methods) {
         let methodDisplay = ""
@@ -399,7 +407,10 @@ export default {
 
             // we use the bracket after the method to grep in searches because
             // we can pick up false positives in comments and other unrelated things
-            methodSearchTerms.push(method.method + "(")
+            if (!declaredSearchTerm[method.method]) {
+              methodSearchTerms.push(method.method + "(")
+              declaredSearchTerm[method.method] = true
+            }
 
           })
         }
