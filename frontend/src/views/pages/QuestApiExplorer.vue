@@ -19,20 +19,20 @@
                     <b-form-select
                       v-model="languageSelection"
                       :options="languageOptions"
-                      @change="formChange(); languageSelect()"/>
+                      @change="formChange(); languageSelect();"/>
                   </div>
                   <div class="col-2 text-center">
                     Types
                     <b-form-select
                       v-model="methodTypeSelection"
-                      @change="formChange(); methodTypeSelect()"
+                      @change="formChange(); methodTypeSelect();"
                       :options="methodTypeOptions"/>
                   </div>
-                  <div class="col-2 text-center">
+                  <div class="col-3 text-center">
                     Events
                     <b-form-select
                       v-model="eventSelection"
-                      @change="formChange();"
+                      @change="formChange(); eventSelect();"
                       :options="eventOptions"/>
                   </div>
 
@@ -42,6 +42,8 @@
                     </div>
                   </div>
                 </div>
+
+                <!-- Display Quest API Methods -->
                 <div class="row mt-2" v-if="apiMethods.length > 0">
                   <div class="col-12">
 
@@ -126,6 +128,38 @@
                   </div>
 
                 </div>
+
+                <!-- Events -->
+                <div
+                  class="row mt-2 pl-2"
+                  v-if="eventSelection"
+                  style="display:inline-block"
+                >
+                  <div class="col-12">
+
+                    <!-- Lua -->
+                  <pre
+                    v-if="languageSelection === 'lua'"
+                    class="highlight html bg-dark ml-0 mb-4 code-display"
+                    style="width: 50vw; display: inline-block; padding-left: 20px !important; padding-top: 10px !important; padding-bottom: 10px !important"
+                  ><span style="color: #57A64A">-- {{ eventSelectionFormatName() }}</span>
+function {{ getSelectedEvent().event_identifier }}(e)
+	<span style="color: #57A64A">-- Exported event variables</span>
+<span v-for="(e, index) in eventVars()" :key="index">	eq.debug("{{e}} " .. e.{{ e }});
+</span>end</pre>
+                    <!-- Perl -->
+                  <pre
+                    v-if="languageSelection === 'perl'"
+                    class="highlight html bg-dark ml-0 mb-4 code-display"
+                    style="width: 50vw; display: inline-block; padding-left: 20px !important; padding-top: 10px !important; padding-bottom: 10px !important"
+                  ><span style="color: #57A64A"># {{ eventSelectionFormatName() }}</span>
+sub {{ getSelectedEvent().event_identifier }} {
+	<span style="color: #57A64A"># Exported event variables</span>
+<span v-for="(e, index) in eventVars()" :key="index">	quest::debug("{{e}} " . e.{{ e }});
+</span>}</pre>
+                  </div>
+
+                </div>
               </div>
 
 
@@ -185,8 +219,6 @@ export default {
 
       apiMethods: [],
 
-      // actual code that gets highlighted
-      methodDisplay: "",
 
       // route watcher
       routeWatcher: null,
@@ -225,9 +257,8 @@ export default {
           this.methods = response.data.data
 
           this.loaded = true
-          this.languageSelect()
+          this.loadQueryParams()
         }
-
       }, (error) => {
         // this.errorMessage = "Unknown error trying to contact the database"
         if (error.response && error.response.data) {
@@ -239,18 +270,22 @@ export default {
           // this.errorMessage = "Unknown error trying to contact the database"
         }
       });
-
-      this.loadQueryParams()
     },
     loadQueryParams() {
       this.languageSelection   = null
       this.methodTypeSelection = null
+      this.eventSelection      = null
 
       if (this.$route.query.lang) {
         this.languageSelection = this.$route.query.lang
+        this.languageSelect()
       }
       if (this.$route.query.type) {
         this.methodTypeSelection = this.$route.query.type
+        this.methodTypeSelect()
+      }
+      if (this.$route.query.event) {
+        this.eventSelection = this.$route.query.event
       }
 
       if (!this.$route.query.lang && !this.$route.query.type) {
@@ -264,6 +299,9 @@ export default {
       }
       if (this.methodTypeSelection) {
         query.type = this.methodTypeSelection
+      }
+      if (this.eventSelection) {
+        query.event = this.eventSelection
       }
 
       this.$router.push(
@@ -289,6 +327,32 @@ export default {
     closeExample: function () {
       this.displayExamples = []
     },
+    eventSelectionFormatName() {
+      const entity = this.eventSelection.split("-")[0]
+      const event  = this.eventSelection.split("-")[1]
+      return util.format("[%s] %s", entity, event)
+    },
+    getSelectedEvent() {
+      const entity = this.eventSelection.split("-")[0]
+      const event  = this.eventSelection.split("-")[1]
+      let events   = this.methods[this.getLanguageKey()].events
+      let e        = []
+      events.forEach(row => {
+        if (row.event_identifier === "event_") {
+          return
+        }
+
+        if (row.event_identifier == event && row.entity_type == entity) {
+          e = row
+        }
+
+      })
+
+      return e
+    },
+    eventVars() {
+      return this.getSelectedEvent().event_vars
+    },
     languageSelect: function () {
 
       // methods
@@ -305,33 +369,29 @@ export default {
         })
 
         this.methodTypeOptions = options
-
         if (!this.methodTypeSelection) {
           this.methodTypeSelection = null
         }
       }
-      this.methodDisplay = ""
 
       // events
       if (this.methods[this.getLanguageKey()].events) {
         let events       = this.methods[this.getLanguageKey()].events
         let eventSize    = events.length
         let selectOption = '--- Select Event (' + eventSize + ') ---'
-        let options      = [selectOption]
-        events.forEach((option) => {
-          if (option.event_identifier === "") {
+        let options      = [{value: null, text: selectOption}]
+        events.forEach((option, index) => {
+          if (option.event_identifier === "event_") {
             return
           }
 
           let text = "[" + option.entity_type + "] " + option.event_identifier;
-          options.push({value: option, text: text})
+          options.push({value: option.entity_type + '-' + option.event_identifier, text: text})
         })
         this.eventOptions   = options
-        this.eventSelection = selectOption
+        this.eventSelection = null
       }
 
-
-      this.methodTypeSelect()
     },
     slug: function (toSlug) {
       return slugify(toSlug.replace(/[&\/\\#, +()$~%.'":*?<>{}]/g, "-"))
@@ -387,8 +447,11 @@ export default {
     },
     methodTypeSelect: function () {
 
-      this.apiMethods = []
-      let apiMethods  = []
+      // reset other displays
+      this.apiMethods     = []
+      let apiMethods      = []
+      this.eventSelection = null
+      this.formChange()
 
       // used to search sources for examples
       let methodSearchTerms  = []
@@ -397,10 +460,9 @@ export default {
 
       // methods
       if (this.methods[this.getLanguageKey()].methods) {
-        let methodDisplay = ""
-        this.codeClass    = this.getLanguageKey()
-        const methods     = this.methods[this.getLanguageKey()].methods[this.methodTypeSelection]
-        const snakeCase   = string => {
+        this.codeClass  = this.getLanguageKey()
+        const methods   = this.methods[this.getLanguageKey()].methods[this.methodTypeSelection]
+        const snakeCase = string => {
           return string.replace(/\W+/g, " ")
                        .split(/ |\B(?=[A-Z])/)
                        .map(word => word.toLowerCase())
@@ -431,7 +493,7 @@ export default {
               }
 
               if (method.return_type !== "") {
-                comment = "-- return " + method.return_type
+                comment = "-- @return " + method.return_type
               }
             }
 
@@ -452,8 +514,7 @@ export default {
           })
         }
 
-        this.apiMethods    = apiMethods
-        this.methodDisplay = methodDisplay
+        this.apiMethods = apiMethods
 
         // quest-api/source-examples/org/:org/repo/:repo/:branch
 
@@ -494,6 +555,15 @@ export default {
         this.displayExamples = []
 
       }
+    },
+    eventSelect: function () {
+
+      // reset other displays
+      this.apiMethods          = []
+      this.methodTypeSelection = null
+      this.formChange()
+
+
     }
   }
 }

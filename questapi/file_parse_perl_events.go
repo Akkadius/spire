@@ -49,6 +49,10 @@ func parsePerlEvents(files map[string]string) []PerlEvent {
 							}
 						}
 
+						if entity == "Encounter" {
+							continue
+						}
+
 						eventEntityMappings = append(
 							eventEntityMappings, PerlEventEntityMapping{
 								Entity: entity,
