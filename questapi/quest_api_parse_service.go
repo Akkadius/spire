@@ -130,12 +130,6 @@ func (c *ParseService) Parse(forceRefresh bool) QuestApiResponse {
 		isPerlFile := strings.Contains(fileName, "perl_") || strings.Contains(fileName, "embparser")
 		if isPerlFile {
 			parsePerlMethods(contents, perlMethods)
-
-			// events
-			events := parsePerlEvents(contents, fileName)
-			if len(events) > 0 {
-				perlEvents = events
-			}
 		}
 
 		// lua files
@@ -144,6 +138,9 @@ func (c *ParseService) Parse(forceRefresh bool) QuestApiResponse {
 			parseLuaMethods(contents, fileName, luaMethods)
 		}
 	}
+
+	// events
+	perlEvents = parsePerlEvents(c.Files())
 
 	// lua events
 	luaEvents = parseLuaEvents(c.Files())
