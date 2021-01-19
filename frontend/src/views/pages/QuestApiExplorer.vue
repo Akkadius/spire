@@ -28,6 +28,13 @@
                       @change="formChange(); methodTypeSelect()"
                       :options="methodTypeOptions"/>
                   </div>
+                  <div class="col-2 text-center">
+                    Events
+                    <b-form-select
+                      v-model="eventSelection"
+                      @change="formChange();"
+                      :options="eventOptions"/>
+                  </div>
 
                   <div class="col text-center align-middle ">
                     <div class="float-right">
@@ -172,6 +179,10 @@ export default {
       methodTypeSelection: null,
       methodTypeOptions: [],
 
+      // select
+      eventSelection: null,
+      eventOptions: [],
+
       apiMethods: [],
 
       // actual code that gets highlighted
@@ -279,22 +290,47 @@ export default {
       this.displayExamples = []
     },
     languageSelect: function () {
+
+      // methods
       if (this.methods[this.getLanguageKey()].methods) {
-        let options = []
-        options.push({value: null, text: "Select a type"})
-        Object.keys(this.methods[this.getLanguageKey()].methods).sort().filter((item) => {
+        let options  = []
+        let types    = Object.keys(this.methods[this.getLanguageKey()].methods).sort().filter((item) => {
           return !item.includes("Deprecated") && !item.includes("EQDB")
-        }).forEach((option) => {
-          options.push({value: option, text: option})
+        })
+        let typeSize = types.length
+        options.push({value: null, text: "--- Select a Type (" + typeSize + ") ---"})
+        types.forEach((option) => {
+          let methodCount = this.methods[this.getLanguageKey()].methods[option].length
+          options.push({value: option, text: option + ' (' + methodCount + ')'})
         })
 
         this.methodTypeOptions = options
 
         if (!this.methodTypeSelection) {
-          this.methodTypeSelection = this.methodTypeOptions[0]
+          this.methodTypeSelection = null
         }
       }
       this.methodDisplay = ""
+
+      // events
+      if (this.methods[this.getLanguageKey()].events) {
+        let events       = this.methods[this.getLanguageKey()].events
+        let eventSize    = events.length
+        let selectOption = '--- Select Event (' + eventSize + ') ---'
+        let options      = [selectOption]
+        events.forEach((option) => {
+          if (option.event_identifier === "") {
+            return
+          }
+
+          let text = "[" + option.entity_type + "] " + option.event_identifier;
+          options.push({value: option, text: text})
+        })
+        this.eventOptions   = options
+        this.eventSelection = selectOption
+      }
+
+
       this.methodTypeSelect()
     },
     slug: function (toSlug) {
@@ -359,6 +395,7 @@ export default {
       // keeps track of duplicate search terms
       let declaredSearchTerm = {}
 
+      // methods
       if (this.methods[this.getLanguageKey()].methods) {
         let methodDisplay = ""
         this.codeClass    = this.getLanguageKey()

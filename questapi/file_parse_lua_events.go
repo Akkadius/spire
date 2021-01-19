@@ -204,7 +204,7 @@ func parseLuaEvents(files map[string]string) []LuaEvent {
 					e := LuaEvent{
 						EntityType:      entity,
 						EventName:       event,
-						EventIdentifier: identifier,
+						EventIdentifier: "event_" + identifier,
 						EventVars:       eventVars,
 					}
 
