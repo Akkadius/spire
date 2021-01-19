@@ -145,7 +145,7 @@ func (c *ParseService) Parse(forceRefresh bool) QuestApiResponse {
 	// lua events
 	luaEvents = parseLuaEvents(c.Files())
 
-	// sort
+	// sort perl methods
 	for _, methods := range perlMethods {
 		sort.Slice(
 			methods[:], func(i, j int) bool {
@@ -153,6 +153,18 @@ func (c *ParseService) Parse(forceRefresh bool) QuestApiResponse {
 			},
 		)
 	}
+	// sort perl events
+	sort.Slice(
+		perlEvents, func(i, j int) bool {
+			if perlEvents[i].EntityType != perlEvents[j].EntityType {
+				return perlEvents[i].EntityType < perlEvents[j].EntityType
+			}
+
+			return perlEvents[i].EventName < perlEvents[j].EventName
+		},
+	)
+
+	// sort lua methods
 	for _, methods := range luaMethods {
 		sort.Slice(
 			methods[:], func(i, j int) bool {
@@ -160,6 +172,17 @@ func (c *ParseService) Parse(forceRefresh bool) QuestApiResponse {
 			},
 		)
 	}
+
+	// sort lua events
+	sort.Slice(
+		luaEvents, func(i, j int) bool {
+			if luaEvents[i].EntityType != luaEvents[j].EntityType {
+				return luaEvents[i].EntityType < luaEvents[j].EntityType
+			}
+
+			return luaEvents[i].EventName < luaEvents[j].EventName
+		},
+	)
 
 	lastRefreshed = time.Now()
 
