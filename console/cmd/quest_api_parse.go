@@ -42,34 +42,33 @@ func NewQuestApiParseCommand(
 func (c *QuestApiParseCommand) Handle(_ *cobra.Command, args []string) {
 	start := time.Now()
 
-	methods := c.parser.Parse(true)
-
-	fmt.Printf("# Perl\n")
-	for methodType, methods := range methods.PerlApi.PerlMethods {
-		for _, method := range methods {
-			returnType := ""
-			if method.ReturnType != "" {
-				returnType = fmt.Sprintf(" # %v", method.ReturnType)
-			}
-
-			fmt.Printf("%v::%v;%v\n", methodType, method.Method, returnType)
-		}
-	}
-
-	fmt.Printf("\n\n")
-
-	fmt.Printf("# Lua\n")
-	for methodType, methods := range methods.LuaApi.LuaMethods {
-		for _, method := range methods {
-			returnType := ""
-			if method.ReturnType != "" {
-				returnType = fmt.Sprintf(" -- %v", method.ReturnType)
-			}
-
-			fmt.Printf("%v::%v%v\n", methodType, method.Method, returnType)
-		}
-	}
-
+	_ = c.parser.Parse(true)
+	//
+	//fmt.Printf("# Perl\n")
+	//for methodType, methods := range methods.PerlApi.PerlMethods {
+	//	for _, method := range methods {
+	//		returnType := ""
+	//		if method.ReturnType != "" {
+	//			returnType = fmt.Sprintf(" # %v", method.ReturnType)
+	//		}
+	//
+	//		fmt.Printf("%v::%v;%v\n", methodType, method.Method, returnType)
+	//	}
+	//}
+	//
+	//fmt.Printf("\n\n")
+	//
+	//fmt.Printf("# Lua\n")
+	//for methodType, methods := range methods.LuaApi.LuaMethods {
+	//	for _, method := range methods {
+	//		returnType := ""
+	//		if method.ReturnType != "" {
+	//			returnType = fmt.Sprintf(" -- %v", method.ReturnType)
+	//		}
+	//
+	//		fmt.Printf("%v::%v%v\n", methodType, method.Method, returnType)
+	//	}
+	//}
 
 	fmt.Printf("took %v\n", time.Since(start))
 }

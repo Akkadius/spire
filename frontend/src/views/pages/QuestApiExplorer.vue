@@ -283,7 +283,7 @@ export default {
         let options = []
         options.push({value: null, text: "Select a type"})
         Object.keys(this.methods[this.getLanguageKey()].methods).sort().filter((item) => {
-          return !item.includes("Deprecated")
+          return !item.includes("Deprecated") && !item.includes("EQDB")
         }).forEach((option) => {
           options.push({value: option, text: option})
         })

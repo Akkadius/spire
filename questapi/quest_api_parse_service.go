@@ -33,10 +33,12 @@ type QuestApiResponse struct {
 
 type PerlApi struct {
 	PerlMethods map[string][]PerlMethod `json:"methods"`
+	PerlEvents  []PerlEvent             `json:"events"`
 }
 
 type LuaApi struct {
 	LuaMethods map[string][]LuaMethod `json:"methods"`
+	LuaEvents  []LuaEvent             `json:"events"`
 }
 
 type PerlMethod struct {
@@ -59,7 +61,9 @@ type LuaMethod struct {
 
 var perlMethods = map[string][]PerlMethod{}
 var luaMethods = map[string][]LuaMethod{}
-var lastRefeshed time.Time
+var lastRefreshed time.Time
+var perlEvents []PerlEvent
+var luaEvents []LuaEvent
 
 const lockKey = "quest-api-lock"
 
@@ -116,13 +120,22 @@ func (c *ParseService) Parse(forceRefresh bool) QuestApiResponse {
 		delete(luaMethods, k)
 	}
 
+	// reset
+	perlEvents = []PerlEvent{}
+
 	// loop through files
 	for fileName, contents := range c.Files() {
 
 		// perl files
-		isPerlFile := strings.Contains(fileName, "perl_") || strings.Contains(fileName, "embparser_api")
+		isPerlFile := strings.Contains(fileName, "perl_") || strings.Contains(fileName, "embparser")
 		if isPerlFile {
 			parsePerlMethods(contents, perlMethods)
+
+			// events
+			events := parsePerlEvents(contents, fileName)
+			if len(events) > 0 {
+				perlEvents = events
+			}
 		}
 
 		// lua files
@@ -131,6 +144,9 @@ func (c *ParseService) Parse(forceRefresh bool) QuestApiResponse {
 			parseLuaMethods(contents, fileName, luaMethods)
 		}
 	}
+
+	// lua events
+	luaEvents = parseLuaEvents(c.Files())
 
 	// sort
 	for _, methods := range perlMethods {
@@ -148,7 +164,7 @@ func (c *ParseService) Parse(forceRefresh bool) QuestApiResponse {
 		)
 	}
 
-	lastRefeshed = time.Now()
+	lastRefreshed = time.Now()
 
 	// delete lock
 	c.cache.Delete(lockKey)
@@ -159,12 +175,14 @@ func (c *ParseService) Parse(forceRefresh bool) QuestApiResponse {
 // response method
 func (c *ParseService) apiResponse() QuestApiResponse {
 	return QuestApiResponse{
-		LastRefreshed: lastRefeshed,
+		LastRefreshed: lastRefreshed,
 		PerlApi: PerlApi{
 			PerlMethods: perlMethods,
+			PerlEvents:  perlEvents,
 		},
 		LuaApi: LuaApi{
 			LuaMethods: luaMethods,
+			LuaEvents:  luaEvents,
 		},
 	}
 }
