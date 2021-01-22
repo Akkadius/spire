@@ -70,8 +70,9 @@ func (q *QuestExamplesGithubSourcer) Search(
 	branch string,
 	searchStrings []string,
 	language string,
+	forceRefresh bool,
 ) []SearchResultSnippet {
-	q.Source(org, repo, branch, false)
+	q.Source(org, repo, branch, forceRefresh)
 
 	fileExt := ""
 	if language == "perl" {

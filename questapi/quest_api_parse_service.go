@@ -96,7 +96,7 @@ func (c *ParseService) Source(
 func (c *ParseService) Parse(forceRefresh bool) QuestApiResponse {
 
 	// pull files in
-	c.Source("EQEmu", "Server", "master", false)
+	c.Source("EQEmu", "Server", "master", forceRefresh)
 
 	// return cached copy
 	if len(perlMethods) > 0 && len(luaMethods) > 0 && !forceRefresh {

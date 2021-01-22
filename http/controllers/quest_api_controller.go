@@ -60,7 +60,7 @@ func (d *QuestApiController) searchGithubExamples(c echo.Context) error {
 	return c.JSON(
 		http.StatusOK,
 		echo.Map{
-			"data": d.sourcer.Search(org, repo, branch, p.SearchTerms, p.Language),
+			"data": d.sourcer.Search(org, repo, branch, p.SearchTerms, p.Language, false),
 		},
 	)
 }

@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"errors"
+	fmt "fmt"
 	"github.com/Akkadius/spire/questapi"
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
@@ -52,7 +53,9 @@ func (c *QuestExampleTestCommand) Handle(_ *cobra.Command, args []string) {
 	repo := "projecteqquests"
 	branch := "master"
 
-	c.sourcer.Search(org, repo, branch, searchTerms, language)
+	result := c.sourcer.Search(org, repo, branch, searchTerms, language, true)
+
+	fmt.Println(result)
 }
 
 // Validate
