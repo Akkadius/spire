@@ -155,7 +155,7 @@ function {{ getSelectedEvent().event_identifier }}(e)
                   ><span style="color: #57A64A"># {{ eventSelectionFormatName() }}</span>
 sub {{ getSelectedEvent().event_identifier }} {
 	<span style="color: #57A64A"># Exported event variables</span>
-<span v-for="(e, index) in eventVars()" :key="index">	quest::debug("{{e}} " . e.{{ e }});
+<span v-for="(e, index) in eventVars()" :key="index">	quest::debug("{{e}} " . ${{ e }});
 </span>}</pre>
                   </div>
 
