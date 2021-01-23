@@ -2,12 +2,12 @@ package connection
 
 import (
 	"database/sql"
-	"github.com/Akkadius/spire/database"
-	"github.com/Akkadius/spire/internal/encryption"
-	"github.com/Akkadius/spire/models"
-	"github.com/Akkadius/spire/util"
 	"errors"
 	"fmt"
+	"github.com/Akkadius/spire/database"
+	"github.com/Akkadius/spire/env"
+	"github.com/Akkadius/spire/internal/encryption"
+	"github.com/Akkadius/spire/models"
 	"github.com/sirupsen/logrus"
 )
 
@@ -26,7 +26,7 @@ func NewDbConnectionCheckService(
 }
 
 func (c *DbConnectionCheckService) GetEncKey(userId uint) string {
-	return fmt.Sprintf("%v-%v", util.GetEnv("APP_KEY", ""), userId)
+	return fmt.Sprintf("%v-%v", env.Get("APP_KEY", ""), userId)
 }
 
 func (c *DbConnectionCheckService) Handle(userId uint, connectionId string) error {

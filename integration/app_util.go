@@ -2,8 +2,8 @@ package integration
 
 import (
 	"github.com/Akkadius/spire/boot"
+	"github.com/Akkadius/spire/env"
 	"github.com/Akkadius/spire/models"
-	"github.com/Akkadius/spire/util"
 	"log"
 )
 
@@ -16,7 +16,7 @@ func bootApp() *boot.App {
 	}
 
 	// load env
-	if err := util.LoadEnvFileIfExists(); err != nil {
+	if err := env.LoadEnvFileIfExists(); err != nil {
 		log.Fatal(err)
 	}
 

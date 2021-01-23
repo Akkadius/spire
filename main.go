@@ -3,13 +3,13 @@ package main
 import (
 	"github.com/Akkadius/spire/boot"
 	"github.com/Akkadius/spire/console"
-	"github.com/Akkadius/spire/util"
+	"github.com/Akkadius/spire/env"
 	"log"
 )
 
 func main() {
 	// load env
-	if err := util.LoadEnvFileIfExists(); err != nil {
+	if err := env.LoadEnvFileIfExists(); err != nil {
 		log.Fatal(err)
 	}
 

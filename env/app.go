@@ -1,48 +1,11 @@
-package util
+package env
 
 import (
 	"flag"
-	"fmt"
-	"os"
-	"runtime"
-	"strconv"
-	"strings"
-
 	"github.com/joho/godotenv"
+	"os"
+	"strings"
 )
-
-// Get environment variable with a fallback (string)
-// Example: GetEnv("LOGGING_FORMAT", "text")
-func GetEnv(key, fallback string) string {
-	value := os.Getenv(key)
-	if len(value) == 0 {
-		return fallback
-	}
-
-	return value
-}
-
-// Get environment variable with a fallback (int)
-// Example: GetIntEnv("MYSQL_MAX_OPEN_CONNECTIONS", "150")
-func GetIntEnv(key, fallback string) int {
-	val := GetEnv(key, fallback)
-	ret, err := strconv.Atoi(val)
-	if err != nil {
-		panic(err)
-	}
-	return ret
-}
-
-// Get environment variable with a fallback (bool)
-// Example: GetBoolEnv("MYSQL_QUERY_LOGGING", "false")
-func GetBoolEnv(key, fallback string) bool {
-	val := GetEnv(key, fallback)
-	ret, err := strconv.ParseBool(val)
-	if err != nil {
-		panic(err)
-	}
-	return ret
-}
 
 // EnvMaxDirectorySeekLevels is the number of directory
 // levels a .env file needs to be searched in

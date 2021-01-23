@@ -1,7 +1,7 @@
 package boot
 
 import (
-	"github.com/Akkadius/spire/util"
+	"github.com/Akkadius/spire/env"
 	"github.com/go-errors/errors"
 	"github.com/google/wire"
 	"github.com/sirupsen/logrus"
@@ -56,8 +56,8 @@ type LoggerConfig struct {
 func getLoggerConfig() (*LoggerConfig, error) {
 	c := &LoggerConfig{
 		Application: os.Getenv("APP_NAME"),
-		Environment: util.GetEnv("LOGGING_APP_ENVIRONMENT", "local"),
-		Formatter:   util.GetEnv("LOGGING_FORMAT", "text"),
+		Environment: env.Get("LOGGING_APP_ENVIRONMENT", "local"),
+		Formatter:   env.Get("LOGGING_FORMAT", "text"),
 	}
 
 	if len(c.Application) == 0 {

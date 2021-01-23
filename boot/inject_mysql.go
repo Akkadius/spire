@@ -1,9 +1,9 @@
 package boot
 
 import (
-	"github.com/Akkadius/spire/database"
-	"github.com/Akkadius/spire/util"
 	"errors"
+	"github.com/Akkadius/spire/database"
+	"github.com/Akkadius/spire/env"
 	"log"
 	"os"
 
@@ -58,11 +58,11 @@ func getEQEmuLocalMySQLConfig() (*MySQLConfig, error) {
 		Username:           os.Getenv("MYSQL_EQEMU_USERNAME"),
 		Database:           os.Getenv("MYSQL_EQEMU_DATABASE"),
 		Host:               os.Getenv("MYSQL_EQEMU_HOST"),
-		Port:               util.GetIntEnv("MYSQL_EQEMU_PORT", "3306"),
-		MaxIdleConnections: util.GetIntEnv("MYSQL_MAX_IDLE_CONNECTIONS", "10"),
-		MaxOpenConnections: util.GetIntEnv("MYSQL_MAX_OPEN_CONNECTIONS", "150"),
-		EnableLogging:      util.GetBoolEnv("MYSQL_QUERY_LOGGING", "false"),
-		ConnMaxLifetime:    util.GetIntEnv("MYSQL_CONNECTION_MAX_LIFE_TIME", "5"),
+		Port:               env.GetInt("MYSQL_EQEMU_PORT", "3306"),
+		MaxIdleConnections: env.GetInt("MYSQL_MAX_IDLE_CONNECTIONS", "10"),
+		MaxOpenConnections: env.GetInt("MYSQL_MAX_OPEN_CONNECTIONS", "150"),
+		EnableLogging:      env.GetBool("MYSQL_QUERY_LOGGING", "false"),
+		ConnMaxLifetime:    env.GetInt("MYSQL_CONNECTION_MAX_LIFE_TIME", "5"),
 	}
 
 	const errorPrefix string = "eqemu Server Local"
@@ -130,11 +130,11 @@ func getSpireMySQLConfig() (*MySQLConfig, error) {
 		Username:           os.Getenv("MYSQL_SPIRE_USERNAME"),
 		Database:           os.Getenv("MYSQL_SPIRE_DATABASE"),
 		Host:               os.Getenv("MYSQL_SPIRE_HOST"),
-		Port:               util.GetIntEnv("MYSQL_SPIRE_PORT", "3306"),
-		MaxIdleConnections: util.GetIntEnv("MYSQL_MAX_IDLE_CONNECTIONS", "10"),
-		MaxOpenConnections: util.GetIntEnv("MYSQL_MAX_OPEN_CONNECTIONS", "150"),
-		EnableLogging:      util.GetBoolEnv("MYSQL_QUERY_LOGGING", "false"),
-		ConnMaxLifetime:    util.GetIntEnv("MYSQL_CONNECTION_MAX_LIFE_TIME", "5"),
+		Port:               env.GetInt("MYSQL_SPIRE_PORT", "3306"),
+		MaxIdleConnections: env.GetInt("MYSQL_MAX_IDLE_CONNECTIONS", "10"),
+		MaxOpenConnections: env.GetInt("MYSQL_MAX_OPEN_CONNECTIONS", "150"),
+		EnableLogging:      env.GetBool("MYSQL_QUERY_LOGGING", "false"),
+		ConnMaxLifetime:    env.GetInt("MYSQL_CONNECTION_MAX_LIFE_TIME", "5"),
 	}
 
 	const errorPrefix string = "eqemu Server Local"

@@ -1,11 +1,11 @@
 package database
 
 import (
+	"fmt"
+	"github.com/Akkadius/spire/env"
 	"github.com/Akkadius/spire/http/request"
 	"github.com/Akkadius/spire/internal/encryption"
 	"github.com/Akkadius/spire/models"
-	"github.com/Akkadius/spire/util"
-	"fmt"
 	"github.com/jinzhu/gorm"
 	"github.com/labstack/echo/v4"
 	gocache "github.com/patrickmn/go-cache"
@@ -62,7 +62,7 @@ func (d *DatabaseResolver) GetEqemuDb() *gorm.DB {
 }
 
 func (d *DatabaseResolver) GetEncKey(userId uint) string {
-	return fmt.Sprintf("%v-%v", util.GetEnv("APP_KEY", ""), userId)
+	return fmt.Sprintf("%v-%v", env.Get("APP_KEY", ""), userId)
 }
 
 func (d *DatabaseResolver) ResolveUserEqemuConnection(model models.Modelable, user models.User) *gorm.DB {
@@ -182,9 +182,9 @@ func (d *DatabaseResolver) ResolveUserEqemuConnection(model models.Modelable, us
 
 	// set params
 	mysql.DB().SetConnMaxLifetime(time.Minute * 3)
-	mysql.DB().SetMaxIdleConns(util.GetIntEnv("MYSQL_MAX_IDLE_CONNECTIONS", "10"))
-	mysql.DB().SetMaxOpenConns(util.GetIntEnv("MYSQL_MAX_OPEN_CONNECTIONS", "150"))
-	mysql.LogMode(util.GetBoolEnv("MYSQL_QUERY_LOGGING", "false"))
+	mysql.DB().SetMaxIdleConns(env.GetInt("MYSQL_MAX_IDLE_CONNECTIONS", "10"))
+	mysql.DB().SetMaxOpenConns(env.GetInt("MYSQL_MAX_OPEN_CONNECTIONS", "150"))
+	mysql.LogMode(env.GetBool("MYSQL_QUERY_LOGGING", "false"))
 
 	// cache instance pointer to memory
 	d.remoteDatabases[connectionType][conn.ServerDatabaseConnection.ID] = mysql
