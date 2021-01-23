@@ -63,7 +63,7 @@
                       v-if="linkedExamples[languageSelection][method.method + '(']">{{ method.method }}</a>({{
                         method.params.join(", ")
                       }}); <span
-                        v-if="method.comments" style="color: #57A64A">{{ method.comments }}</span> <span
+                        v-if="method.comments" style="color: #57A64A">{{ method.comments }}</span><span
                         style="color: #57A64A"
                         v-if="linkedExamples[languageSelection][method.method + '('] && linkedExamples[languageSelection][method.method + '('].length > 0">{{
                           (languageSelection === "perl" ? "#" : "--")
