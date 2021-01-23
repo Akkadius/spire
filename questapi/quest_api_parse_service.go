@@ -32,13 +32,15 @@ type QuestApiResponse struct {
 }
 
 type PerlApi struct {
-	PerlMethods map[string][]PerlMethod `json:"methods"`
-	PerlEvents  []PerlEvent             `json:"events"`
+	PerlMethods   map[string][]PerlMethod `json:"methods"`
+	PerlEvents    []PerlEvent             `json:"events"`
+	PerlConstants []PerlConstants         `json:"constants"`
 }
 
 type LuaApi struct {
-	LuaMethods map[string][]LuaMethod `json:"methods"`
-	LuaEvents  []LuaEvent             `json:"events"`
+	LuaMethods   map[string][]LuaMethod `json:"methods"`
+	LuaEvents    []LuaEvent             `json:"events"`
+	LuaConstants []LuaConstants         `json:"constants"`
 }
 
 type PerlMethod struct {
@@ -64,6 +66,8 @@ var luaMethods = map[string][]LuaMethod{}
 var lastRefreshed time.Time
 var perlEvents []PerlEvent
 var luaEvents []LuaEvent
+var perlConstants []PerlConstants
+var luaConstants []LuaConstants
 
 const lockKey = "quest-api-lock"
 
@@ -141,13 +145,11 @@ func (c *ParseService) Parse(forceRefresh bool) QuestApiResponse {
 
 	// events
 	perlEvents = parsePerlEvents(c.Files())
-
-	// lua events
 	luaEvents = parseLuaEvents(c.Files())
 
 	// constants
-	_ = parsePerlConstants(c.Files())
-	_ = parseLuaConstants(c.Files())
+	perlConstants = parsePerlConstants(c.Files())
+	luaConstants = parseLuaConstants(c.Files())
 
 	// sort perl methods
 	for _, methods := range perlMethods {
@@ -165,6 +167,16 @@ func (c *ParseService) Parse(forceRefresh bool) QuestApiResponse {
 			}
 
 			return perlEvents[i].EventName < perlEvents[j].EventName
+		},
+	)
+	// sort perl constants
+	sort.Slice(
+		perlConstants, func(i, j int) bool {
+			if perlConstants[i].ConstantType != perlConstants[j].ConstantType {
+				return perlConstants[i].ConstantType < perlConstants[j].ConstantType
+			}
+
+			return perlConstants[i].Constant < perlConstants[j].Constant
 		},
 	)
 
@@ -188,6 +200,17 @@ func (c *ParseService) Parse(forceRefresh bool) QuestApiResponse {
 		},
 	)
 
+	// sort lua constants
+	sort.Slice(
+		luaConstants, func(i, j int) bool {
+			if luaConstants[i].ConstantType != luaConstants[j].ConstantType {
+				return luaConstants[i].ConstantType < luaConstants[j].ConstantType
+			}
+
+			return luaConstants[i].Constant < luaConstants[j].Constant
+		},
+	)
+
 	lastRefreshed = time.Now()
 
 	// delete lock
@@ -201,12 +224,14 @@ func (c *ParseService) apiResponse() QuestApiResponse {
 	return QuestApiResponse{
 		LastRefreshed: lastRefreshed,
 		PerlApi: PerlApi{
-			PerlMethods: perlMethods,
-			PerlEvents:  perlEvents,
+			PerlMethods:   perlMethods,
+			PerlEvents:    perlEvents,
+			PerlConstants: perlConstants,
 		},
 		LuaApi: LuaApi{
-			LuaMethods: luaMethods,
-			LuaEvents:  luaEvents,
+			LuaMethods:   luaMethods,
+			LuaEvents:    luaEvents,
+			LuaConstants: luaConstants,
 		},
 	}
 }
