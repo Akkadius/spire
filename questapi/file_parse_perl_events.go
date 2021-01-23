@@ -19,6 +19,62 @@ type PerlEventEntityMapping struct {
 
 func parsePerlEvents(files map[string]string) []PerlEvent {
 
+	// we need to parse the event code constants so we can line them up with the actual
+	// strings that are used in the perl api
+	// constants used in the code != what is used in the quest api in some circumstances
+	// this is to map the two together
+	// @example source: EVENT_TRADE perl usage: EVENT_ITEM
+	eventCodes := []string{}
+	perlEventCodes := []string{}
+	for fileName, contents := range files {
+
+		// source event names
+		if strings.Contains(fileName, "event_codes.h") {
+			for _, l := range strings.Split(contents, "\n") {
+
+				// grep
+				// @example EVENT_TRADE,		//being given an item or money
+				if strings.Contains(l, "EVENT_") && strings.Contains(l, ",") {
+					event := ""
+					eventCodeSplit := strings.Split(l, ",")
+					if len(eventCodeSplit) > 0 {
+						event = strings.TrimSpace(eventCodeSplit[0])
+						event = strings.ReplaceAll(event, "0", "")
+						event = strings.ReplaceAll(event, "=", "")
+						event = strings.TrimSpace(event)
+					}
+
+					eventCodes = append(eventCodes, event)
+				}
+			}
+		}
+
+		// perl event names
+		if strings.Contains(fileName, "embparser.cpp") {
+			for _, l := range strings.Split(contents, "\n") {
+
+				// grep
+				// @example EVENT_TRADE,		//being given an item or money
+				if strings.Contains(l, "EVENT_") && strings.Contains(l, ",") && strings.Contains(l, "\"") {
+
+					fmt.Println(l)
+
+					event := l
+					event = strings.ReplaceAll(event, "\"", "")
+					event = strings.ReplaceAll(event, ",", "")
+					event = strings.TrimSpace(event)
+
+					perlEventCodes = append(perlEventCodes, event)
+				}
+			}
+		}
+	}
+
+	//fmt.Printf("%+v\n", perlEventCodes)
+	//fmt.Printf("%+v\n", len(perlEventCodes))
+	//fmt.Printf("%+v\n", eventCodes)
+	//fmt.Printf("%+v\n", len(eventCodes))
+
 	// first pass; fetch all events and what entity they relate to (Player, NPC, Item etc.)
 	eventEntityMappings := []PerlEventEntityMapping{}
 	for fileName, contents := range files {
@@ -95,11 +151,22 @@ func parsePerlEvents(files map[string]string) []PerlEvent {
 
 							//fmt.Printf("[%v] [%v]\n", mapping.Event, event)
 							if mapping.Event == event && !Find(hasMapped, mapKey) {
+
+								// get the perl script-used event name if exists
+								// @example source: EVENT_TRADE perl usage: EVENT_ITEM
+								finalEvent := event
+								eventIndex := indexOf(event, eventCodes)
+								if eventIndex >= 0 {
+									if len(perlEventCodes) > eventIndex {
+										finalEvent = perlEventCodes[eventIndex]
+									}
+								}
+
 								perlEvents = append(
 									perlEvents, PerlEvent{
 										EntityType:      mapping.Entity,
-										EventName:       event,
-										EventIdentifier: event,
+										EventName:       finalEvent,
+										EventIdentifier: finalEvent,
 										EventVars:       eventVars,
 									},
 								)

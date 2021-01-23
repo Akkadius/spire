@@ -10,3 +10,13 @@ func Find(slice []string, val string) bool {
 	}
 	return false
 }
+
+// finds slice index in a slice
+func indexOf(element string, data []string) int {
+	for k, v := range data {
+		if element == v {
+			return k
+		}
+	}
+	return -1 //not found.
+}
