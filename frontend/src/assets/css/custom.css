@@ -6,5 +6,13 @@
 /* Vue Form generator post layering */
 .vue-form-generator .icon {
     -webkit-filter: invert(100%);
-    filter: invert(100%);
+    filter:         invert(100%);
+}
+
+.content-pop {
+    background-color: white;
+    border-radius:    15px;
+    margin-top:       30px;
+    margin-bottom:    30px;
+    padding-bottom:   30px;
 }

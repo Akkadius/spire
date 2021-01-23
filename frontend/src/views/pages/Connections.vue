@@ -1,6 +1,6 @@
 <template>
   <div class="row justify-content-center" v-if="connections">
-    <div class="col-12 col-lg-10 col-xl-8">
+    <div class="col-12 col-lg-10 col-xl-8 content-pop">
       <!-- CONTENT -->
       <div class="container-fluid">
 

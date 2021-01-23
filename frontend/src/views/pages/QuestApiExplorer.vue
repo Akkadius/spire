@@ -356,7 +356,6 @@ export default {
     // when language is selected
     languageSelect: function () {
 
-
       // methods
       if (this.methods[this.getLanguageKey()].methods) {
         let options  = []
