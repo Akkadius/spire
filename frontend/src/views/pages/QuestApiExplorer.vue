@@ -19,20 +19,20 @@
                     <b-form-select
                       v-model="languageSelection"
                       :options="languageOptions"
-                      @change="formChange(); languageSelect();"/>
+                      @change="languageSelect();"/>
                   </div>
                   <div class="col-2 text-center">
                     Types
                     <b-form-select
                       v-model="methodTypeSelection"
-                      @change="formChange(); methodTypeSelect();"
+                      @change="methodTypeSelect();"
                       :options="methodTypeOptions"/>
                   </div>
                   <div class="col-3 text-center">
                     Events
                     <b-form-select
                       v-model="eventSelection"
-                      @change="formChange(); eventSelect();"
+                      @change="eventSelect();"
                       :options="eventOptions"/>
                   </div>
 
@@ -219,7 +219,6 @@ export default {
 
       apiMethods: [],
 
-
       // route watcher
       routeWatcher: null,
 
@@ -353,7 +352,10 @@ export default {
     eventVars() {
       return this.getSelectedEvent().event_vars
     },
+
+    // when language is selected
     languageSelect: function () {
+
 
       // methods
       if (this.methods[this.getLanguageKey()].methods) {
@@ -392,22 +394,17 @@ export default {
         this.eventSelection = null
       }
 
+      // update browser / route state
+      setTimeout(() => {
+        this.formChange(), 100
+      });
     },
     slug: function (toSlug) {
       return slugify(toSlug.replace(/[&\/\\#, +()$~%.'":*?<>{}]/g, "-"))
     },
+    // when method is clicked; loads editor examples
     loadExamples: function (method) {
-      // destroy old editors
-      // for (let refsKey in this.$refs) {
-      //   console.log(refsKey)
-      //   console.log(this.$refs[refsKey][0])
-      //   if (this.$refs[refsKey] && this.$refs[refsKey][0].editor) {
-      //     this.$refs[refsKey][0].editor.destroy()
-      //   }
-      // }
-
       this.displayExamples = this.linkedExamples[this.languageSelection][method + '(']
-
     },
     editorInit: async function (slug, lineNumber) {
 
@@ -445,13 +442,13 @@ export default {
       // this.$refs.editorslug.editor.setReadOnly(true);
       // this.$refs.editorslug.editor.gotoLine(1, lineNumber, true);
     },
+    // when a method type is selected
     methodTypeSelect: function () {
 
       // reset other displays
       this.apiMethods     = []
       let apiMethods      = []
       this.eventSelection = null
-      this.formChange()
 
       // used to search sources for examples
       let methodSearchTerms  = []
@@ -556,15 +553,23 @@ export default {
         this.displayExamples = []
 
       }
+
+      // update browser / route state
+      setTimeout(() => {
+        this.formChange(), 100
+      });
     },
+    // when an event type is selected
     eventSelect: function () {
 
       // reset other displays
       this.apiMethods          = []
       this.methodTypeSelection = null
-      this.formChange()
 
-
+      // update browser / route state
+      setTimeout(() => {
+        this.formChange(), 100
+      });
     }
   }
 }
