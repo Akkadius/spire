@@ -138,24 +138,24 @@
                   <div class="col-12">
 
                     <!-- Lua -->
-                  <pre
-                    v-if="languageSelection === 'lua'"
-                    class="highlight html bg-dark ml-0 mb-4 code-display"
-                    style="width: 50vw; display: inline-block; padding-left: 20px !important; padding-top: 10px !important; padding-bottom: 10px !important"
-                  ><span style="color: #57A64A">-- {{ eventSelectionFormatName() }}</span>
+                    <pre
+                      v-if="languageSelection === 'lua'"
+                      class="highlight html bg-dark ml-0 mb-4 code-display"
+                      style="width: 50vw; display: inline-block; padding-left: 20px !important; padding-top: 10px !important; padding-bottom: 10px !important"
+                    ><span style="color: #57A64A">-- {{ eventSelectionFormatName() }}</span>
 function {{ getSelectedEvent().event_identifier }}(e)
 	<span style="color: #57A64A">-- Exported event variables</span>
-<span v-for="(e, index) in eventVars()" :key="index">	eq.debug("{{e}} " .. e.{{ e }});
+<span v-for="(e, index) in eventVars()" :key="index">	eq.debug("{{ e }} " .. e.{{ e }});
 </span>end</pre>
                     <!-- Perl -->
-                  <pre
-                    v-if="languageSelection === 'perl'"
-                    class="highlight html bg-dark ml-0 mb-4 code-display"
-                    style="width: 50vw; display: inline-block; padding-left: 20px !important; padding-top: 10px !important; padding-bottom: 10px !important"
-                  ><span style="color: #57A64A"># {{ eventSelectionFormatName() }}</span>
+                    <pre
+                      v-if="languageSelection === 'perl'"
+                      class="highlight html bg-dark ml-0 mb-4 code-display"
+                      style="width: 50vw; display: inline-block; padding-left: 20px !important; padding-top: 10px !important; padding-bottom: 10px !important"
+                    ><span style="color: #57A64A"># {{ eventSelectionFormatName() }}</span>
 sub {{ getSelectedEvent().event_identifier }} {
 	<span style="color: #57A64A"># Exported event variables</span>
-<span v-for="(e, index) in eventVars()" :key="index">	quest::debug("{{e}} " . ${{ e }});
+<span v-for="(e, index) in eventVars()" :key="index">	quest::debug("{{ e }} " . ${{ e }});
 </span>}</pre>
                   </div>
 

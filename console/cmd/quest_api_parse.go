@@ -42,9 +42,9 @@ func NewQuestApiParseCommand(
 func (c *QuestApiParseCommand) Handle(_ *cobra.Command, args []string) {
 	start := time.Now()
 
-	response := c.parser.Parse(true)
+	_ = c.parser.Parse(false)
 
-	fmt.Println(response)
+	//fmt.Println(response)
 
 	//
 	//fmt.Printf("# Perl\n")

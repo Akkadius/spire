@@ -145,6 +145,10 @@ func (c *ParseService) Parse(forceRefresh bool) QuestApiResponse {
 	// lua events
 	luaEvents = parseLuaEvents(c.Files())
 
+	// constants
+	_ = parsePerlConstants(c.Files())
+	_ = parseLuaConstants(c.Files())
+
 	// sort perl methods
 	for _, methods := range perlMethods {
 		sort.Slice(
