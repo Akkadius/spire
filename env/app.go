@@ -2,8 +2,10 @@ package env
 
 import (
 	"flag"
+	"fmt"
 	"github.com/joho/godotenv"
 	"os"
+	"runtime"
 	"strings"
 )
 

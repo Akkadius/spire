@@ -1,9 +1,9 @@
 package cmd
 
 import (
+	"github.com/Akkadius/spire/console"
 	"github.com/Akkadius/spire/http"
 	"github.com/Akkadius/spire/http/routes"
-	"github.com/Akkadius/spire/util"
 	"github.com/sirupsen/logrus"
 
 	"errors"
@@ -49,7 +49,7 @@ func (hs *HttpServeCommand) Handle(_ *cobra.Command, _ []string) {
 
 // Validate implementation of the Command interface
 func (hs *HttpServeCommand) Validate(cmd *cobra.Command, _ []string) error {
-	port := util.UintFromFlags(cmd.Flags(), "port")
+	port := console.UintFromFlags(cmd.Flags(), "port")
 	if port < 0 || port > 99999 {
 		return errors.New("port is out of range")
 	}
