@@ -524,7 +524,7 @@ export default {
         const branch = "master"
 
         // reset
-        this.linkedExamples = {
+        let linkedExamples = {
           perl: {},
           lua: {}
         }
@@ -537,17 +537,18 @@ export default {
             // console.log(response.data.data)
 
             response.data.data.forEach((result) => {
-              if (typeof this.linkedExamples[this.languageSelection][result.search_term] === "undefined") {
-                this.linkedExamples[this.languageSelection][result.search_term] = []
+              if (typeof linkedExamples[this.languageSelection][result.search_term] === "undefined") {
+                linkedExamples[this.languageSelection][result.search_term] = []
               }
 
               result.org    = org
               result.repo   = repo
               result.branch = branch
 
-              this.linkedExamples[this.languageSelection][result.search_term].push(result)
+              linkedExamples[this.languageSelection][result.search_term].push(result)
             })
           }
+          this.linkedExamples = linkedExamples
           this.$forceUpdate()
         });
 
