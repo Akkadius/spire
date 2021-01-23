@@ -5,7 +5,7 @@ import (
 )
 
 // parses lua methods
-func parseLuaMethods(contents string, fileName string, luaMethods map[string][]LuaMethod) {
+func (c *ParseService) parseLuaMethods(contents string, fileName string, luaMethods map[string][]LuaMethod) {
 
 	// first pass over file to build a list of definitions and map then to the actual functions themselves
 	// definitions are not always 1:1 with the actual source function names

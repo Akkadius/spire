@@ -9,7 +9,7 @@ type PerlConstants struct {
 	Constant     string `json:"constant"`      // @eg $variable
 }
 
-func parsePerlConstants(files map[string]string) []PerlConstants {
+func (c *ParseService) parsePerlConstants(files map[string]string) []PerlConstants {
 
 	typeLabel := "" // Mob, Client, Item etc.
 	var perlConstants []PerlConstants

@@ -9,7 +9,7 @@ type LuaConstants struct {
 	Constant     string `json:"constant"`      // @eg var
 }
 
-func parseLuaConstants(files map[string]string) []LuaConstants {
+func (c *ParseService) parseLuaConstants(files map[string]string) []LuaConstants {
 
 	typeLabel := "" // Mob, Client, Item etc.
 	isInConstants := false

@@ -21,7 +21,7 @@ type LuaEventMapping struct {
 	Event                 string // @eg EVENT_SAY
 }
 
-func parseLuaEvents(files map[string]string) []LuaEvent {
+func (c *ParseService) parseLuaEvents(files map[string]string) []LuaEvent {
 
 	// #1 Handler needs to be mapped from lua_parser_events.cpp eg: void handle_npc_popup
 	// #2 Parse lua_general.cpp#L2984 to map event identifiers (event_say(e)) to sub events EVENT_SAY

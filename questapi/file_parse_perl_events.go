@@ -17,7 +17,7 @@ type PerlEventEntityMapping struct {
 	Event  string // @eg EVENT_SAY
 }
 
-func parsePerlEvents(files map[string]string) []PerlEvent {
+func (c *ParseService) parsePerlEvents(files map[string]string) []PerlEvent {
 
 	// we need to parse the event code constants so we can line them up with the actual
 	// strings that are used in the perl api

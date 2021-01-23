@@ -6,7 +6,7 @@ import (
 )
 
 // parses perl methods
-func parsePerlMethods(contents string, perlMethods map[string][]PerlMethod) {
+func (c *ParseService) parsePerlMethods(contents string, perlMethods map[string][]PerlMethod) {
 	for _, l := range strings.Split(contents, "\n") {
 		filterLine := strings.Contains(l, "Perl_croak") &&
 			strings.Contains(l, "Usa") &&

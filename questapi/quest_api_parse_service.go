@@ -133,23 +133,23 @@ func (c *ParseService) Parse(forceRefresh bool) QuestApiResponse {
 		// perl files
 		isPerlFile := strings.Contains(fileName, "perl_") || strings.Contains(fileName, "embparser")
 		if isPerlFile {
-			parsePerlMethods(contents, perlMethods)
+			c.parsePerlMethods(contents, perlMethods)
 		}
 
 		// lua files
 		isLuaFile := strings.Contains(fileName, "lua_") && strings.Contains(fileName, "cpp")
 		if isLuaFile {
-			parseLuaMethods(contents, fileName, luaMethods)
+			c.parseLuaMethods(contents, fileName, luaMethods)
 		}
 	}
 
 	// events
-	perlEvents = parsePerlEvents(c.Files())
-	luaEvents = parseLuaEvents(c.Files())
+	perlEvents = c.parsePerlEvents(c.Files())
+	luaEvents = c.parseLuaEvents(c.Files())
 
 	// constants
-	perlConstants = parsePerlConstants(c.Files())
-	luaConstants = parseLuaConstants(c.Files())
+	perlConstants = c.parsePerlConstants(c.Files())
+	luaConstants = c.parseLuaConstants(c.Files())
 
 	// sort perl methods
 	for _, methods := range perlMethods {
