@@ -56,9 +56,6 @@ func parsePerlEvents(files map[string]string) []PerlEvent {
 				// grep
 				// @example EVENT_TRADE,		//being given an item or money
 				if strings.Contains(l, "EVENT_") && strings.Contains(l, ",") && strings.Contains(l, "\"") {
-
-					fmt.Println(l)
-
 					event := l
 					event = strings.ReplaceAll(event, "\"", "")
 					event = strings.ReplaceAll(event, ",", "")
