@@ -56,7 +56,7 @@ type LoggerConfig struct {
 func getLoggerConfig() (*LoggerConfig, error) {
 	c := &LoggerConfig{
 		Application: os.Getenv("APP_NAME"),
-		Environment: env.Get("LOGGING_APP_ENVIRONMENT", "local"),
+		Environment: env.Get("APP_ENV", "local"),
 		Formatter:   env.Get("LOGGING_FORMAT", "text"),
 	}
 
