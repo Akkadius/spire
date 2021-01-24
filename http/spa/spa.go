@@ -71,7 +71,7 @@ func (s PackedSpaService) MiddlewareHandler() echo.MiddlewareFunc {
 			if err != nil {
 				return
 			}
-			
+
 			name := filepath.Join(s.config.BasePath, path.Clean("/"+p)) // "/"+ for security
 			if name == "/" {
 				index, err := s.box.Find(s.config.SpaIndex)
