@@ -5,7 +5,7 @@ export class SpireApiClient {
   static getBasePath() {
     return process.env.VUE_APP_BACKEND_BASE_URL ?
       process.env.VUE_APP_BACKEND_BASE_URL :
-      window.location.host
+      window.location.origin
   }
 
   static getBaseV1Path() {
