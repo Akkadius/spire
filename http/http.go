@@ -43,7 +43,7 @@ func Serve(port uint, logger *logrus.Logger, router *routes.Router) error {
 
 	// embed static assets
 	box := packr.NewBox("../public")
-	_, err := box.FindString("./spa-index.html")
+	_, err := box.FindString("./index.html")
 	if err != nil {
 		logger.Fatal(err)
 	}
@@ -52,7 +52,7 @@ func Serve(port uint, logger *logrus.Logger, router *routes.Router) error {
 		middleware.StaticWithConfig(
 			middleware.StaticConfig{
 				Root:  "public",
-				Index: "spa-index.html",
+				Index: "index.html",
 				HTML5: true,
 			},
 		),

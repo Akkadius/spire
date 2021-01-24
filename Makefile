@@ -82,6 +82,16 @@ test: ##@dev Runs local tests
 	docker-compose exec workspace bash -c "go test -count=1 -cover ./... | grep -v 'no test files'"
 
 #----------------------
+# build
+#----------------------
+
+build-prod: ##@build Runs frontend watcher
+	packr clean
+	cd ./frontend && npm run build
+	cp ./frontend/dist/* ./public/ -R
+	packr build
+
+#----------------------
 # dev-watch
 #----------------------
 
