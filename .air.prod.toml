@@ -7,7 +7,7 @@ tmp_dir = "/tmp/"
 
 [build]
 # Just plain old shell command. You could use `make` as well.
-cmd = "cd ./frontend && npm install && npm run build && cd ../ packr build"
+cmd = "cd ./frontend && npm install && npm run build && cd ../ && packr build"
 # Binary file yields from `cmd`.
 bin = "./spire"
 # Customize binary.
