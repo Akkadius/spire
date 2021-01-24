@@ -1,7 +1,6 @@
 package spa
 
 import (
-	"fmt"
 	"github.com/Akkadius/spire/env"
 	"github.com/gobuffalo/packr"
 	"github.com/sirupsen/logrus"
@@ -29,9 +28,6 @@ func NewSpirePackagedSpaService(logger *logrus.Logger) *SpirePackagedSpaService 
 	// This is merely a no-op and simply informs the packr CLI utility what it needs to bundle
 	// since it parses the code separately on its own to know where to bundle
 	_ = packr.NewBox(SpireLocalBasePath)
-
-	fmt.Println(env.Get("SPA_SKIP_PATH_PREFIXES", "/auth,/api,/swagger"))
-	fmt.Println(strings.Split(env.Get("SPA_SKIP_PATH_PREFIXES", "/auth,/api,/swagger"), ","))
 
 	return &SpirePackagedSpaService{
 		logger: logger,
