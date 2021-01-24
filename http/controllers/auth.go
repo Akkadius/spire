@@ -3,7 +3,6 @@ package controllers
 import (
 	"fmt"
 	"github.com/Akkadius/spire/database"
-	"github.com/Akkadius/spire/env"
 	"github.com/Akkadius/spire/http/routes"
 	"github.com/Akkadius/spire/models"
 	"github.com/danilopolani/gocialite"
@@ -43,9 +42,7 @@ func createJwtToken(userId string) (string, error) {
 	atClaims["authorized"] = true
 	atClaims["userId"] = userId
 
-	expirationHours := time.Duration(env.GetInt("JWT_EXPIRATION_HOURS", "87600"))
-
-	atClaims["exp"] = time.Now().Add(time.Hour * expirationHours).Unix()
+	atClaims["exp"] = time.Now().Add(time.Hour * 87600).Unix()
 	at := jwt.NewWithClaims(jwt.SigningMethodHS256, atClaims)
 	token, err := at.SignedString([]byte(os.Getenv("JWT_SECRET_KEY")))
 	if err != nil {

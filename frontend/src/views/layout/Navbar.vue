@@ -9,10 +9,10 @@
       </button>
 
       <!-- Brand -->
-      <a class="ml-3 mt-3" href="./index.html">
+      <router-link class="ml-3 mt-3" to="/">
         <img src="~@/assets/img/eqemu-logo-1.png" class="navbar-brand-img mx-auto d-none d-sm-block mb-3" alt="..."
              style="max-height: 7rem">
-      </a>
+      </router-link>
 
       <hr class="dropdown-divider">
 
