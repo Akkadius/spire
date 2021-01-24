@@ -59,7 +59,7 @@ services:
       - ${IP_ADDRESS:-0.0.0.0}:3001:3001
     networks:
       - backend
-    command: "air -c .air.prod.toml"
+    command: "bash -c 'cd ./frontend && npm install && npm run build && cd ../ packr build'"
 
   #############################################
   # mysql
