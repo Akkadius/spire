@@ -18,7 +18,6 @@ include_ext = ["go", "tpl", "tmpl", "html"]
 exclude_dir = [
 	"bin",
 	"build",
-	"frontend",
 	"assets",
 	"tmp",
 	"vendor",
