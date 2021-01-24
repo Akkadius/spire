@@ -43,7 +43,7 @@ func createJwtToken(userId string) (string, error) {
 	atClaims["authorized"] = true
 	atClaims["userId"] = userId
 
-	expirationHours, _ := time.ParseDuration(env.Get("JWT_EXPIRATION_HOURS", "87600"))
+	expirationHours := time.Duration(env.GetInt("JWT_EXPIRATION_HOURS", "87600"))
 
 	atClaims["exp"] = time.Now().Add(time.Hour * expirationHours).Unix()
 	at := jwt.NewWithClaims(jwt.SigningMethodHS256, atClaims)
