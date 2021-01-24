@@ -55,6 +55,7 @@ RUN chsh -s /bin/bash go
 USER go
 
 RUN go get -u github.com/cosmtrek/air
+RUN go get -u github.com/gobuffalo/packr/packr
 
 #############################################
 # bash
