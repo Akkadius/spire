@@ -47,14 +47,14 @@ ENV GOROOT=/usr/local/go/
 ENV PATH=$PATH:/usr/local/go/bin:$GOPATH/bin
 ENV CGO_ENABLED 0
 
-RUN go get -u github.com/cosmtrek/air
-
 #######################################################################
 # default shell
 #######################################################################
 RUN chsh -s /bin/bash go
 
 USER go
+
+RUN go get -u github.com/cosmtrek/air
 
 #############################################
 # bash
