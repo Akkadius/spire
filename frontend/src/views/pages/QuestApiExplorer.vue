@@ -251,6 +251,7 @@ export default {
       // languages:select
       languageSelection: null,
       languageOptions: [
+        {value: null, text: ''},
         {value: 'perl', text: 'Perl'},
         {value: 'lua', text: 'Lua'},
       ],

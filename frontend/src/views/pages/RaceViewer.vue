@@ -1,16 +1,18 @@
 <template>
   <div>
-    <page-header title="Race Viewer" pre-title="Search and view races..."/>
+    <!--    <page-header title="Race Viewer" pre-title="Search and view races..."/>-->
 
     <!-- CONTENT -->
     <div>
       <div class="container-fluid">
 
-        <div class="row mb-4">
-          <div class="col">
 
-            <!-- Form -->
-            <div class="input-group input-group-lg input-group-merge">
+        <eq-window title="Race Viewer" class="mt-5 text-center">
+
+          <div class="row mb-4">
+            <div class="col">
+
+              <!-- Form -->
 
               <!-- Input -->
               <input
@@ -20,35 +22,27 @@
                 @keyup.enter="doRaceSearch()"
                 placeholder="Filter by Race name">
 
-              <!-- Prepend -->
-              <div class="input-group-prepend">
-                <div class="input-group-text">
-                  <span class="fe fe-search"></span>
-                </div>
-              </div>
 
             </div>
+            <div class="col-auto">
 
+            </div>
           </div>
-          <div class="col-auto">
 
-          </div>
-        </div>
+          <app-loader :is-loading="!loaded" padding="6"/>
 
-        <app-loader :is-loading="!loaded" padding="6"/>
-
-        <eq-window title="Race Viewer" v-if="loaded" class="mt-5 text-center">
           <span v-if="filteredRaces.length === 0">
             No races found...
           </span>
 
-          <div v-for="race in filteredRaces"
-               :key="race"
-               v-lazy-container="{ selector: 'img' }"
-               style="padding-bottom: 15px"
-          >
-            <h6 class="eq-header"> {{ (raceConstants[race] ? raceConstants[race] : "") }} ({{ race }}) </h6>
-            <div class="inner-window mt-3">
+          <div v-if="loaded">
+            <div v-for="race in filteredRaces"
+                 :key="race"
+                 v-lazy-container="{ selector: 'img' }"
+                 style="padding-bottom: 15px"
+            >
+              <h6 class="eq-header"> {{ (raceConstants[race] ? raceConstants[race] : "") }} ({{ race }}) </h6>
+              <div class="inner-window mt-3">
 
             <span v-for="img in raceImages[race]" :key="img">
             <img :src="initialLoad === false ? '' : img" :data-src="img" :id="slug(img)" class="fade-in p-1">
@@ -83,8 +77,9 @@
             </b-popover>
 
             </span>
-            </div>
+              </div>
 
+            </div>
           </div>
 
           <div class="mt-5">Images courtesy of Maudigan <3</div>

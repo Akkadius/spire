@@ -1,56 +1,58 @@
 <template>
   <div>
-    <page-header title="Item Icon Viewer" pre-title="Search and view item icons..."/>
+<!--    <page-header title="Item Icon Viewer" pre-title="Search and view item icons..."/>-->
 
     <!-- CONTENT -->
     <div>
       <div class="container-fluid">
 
-        <div class="row mb-4">
 
-          <!-- Item Slot -->
-          <div class="col-5">
-
-            <!-- Input -->
-            <select
-              class="form-control list-search"
-              v-model.lazy="iconSlotSearch"
-              @change="doIconSlotSearch()"
-            >
-              <option value="0">Select Slot Filter</option>
-
-              <option v-for="option in iconSlotOptions" v-bind:value="option.value">
-                {{ option.text }}
-              </option>
-
-            </select>
-
-          </div>
-
-          <!-- Item Type -->
-          <div class="col-6">
-            <!-- Input -->
-            <select
-              class="form-control list-search"
-              v-model.lazy="iconItemTypeSearch"
-              @change="doIconItemTypeSearch()"
-            >
-              <option value="0">Select Type Filter</option>
-
-              <option v-for="option in iconItemTypeOptions" v-bind:value="option.value">
-                {{ option.text }}
-              </option>
-
-            </select>
-          </div>
-
-          <div class="col-auto">
-            <b-button variant="primary" @click="reset">Reset</b-button>
-          </div>
-        </div>
 
 
         <eq-window title="Icons" v-lazy-container="{ selector: 'img' }" class="mt-5 text-center">
+          <div class="row mb-4">
+
+            <!-- Item Slot -->
+            <div class="col-5">
+
+              <!-- Input -->
+              <select
+                class="form-control list-search"
+                v-model.lazy="iconSlotSearch"
+                @change="doIconSlotSearch()"
+              >
+                <option value="0">Select Slot Filter</option>
+
+                <option v-for="option in iconSlotOptions" v-bind:value="option.value">
+                  {{ option.text }}
+                </option>
+
+              </select>
+
+            </div>
+
+            <!-- Item Type -->
+            <div class="col-6">
+              <!-- Input -->
+              <select
+                class="form-control list-search"
+                v-model.lazy="iconItemTypeSearch"
+                @change="doIconItemTypeSearch()"
+              >
+                <option value="0">Select Type Filter</option>
+
+                <option v-for="option in iconItemTypeOptions" v-bind:value="option.value">
+                  {{ option.text }}
+                </option>
+
+              </select>
+            </div>
+
+            <div class="col-auto">
+              <b-button variant="primary" @click="reset">Reset</b-button>
+            </div>
+          </div>
+
           <app-loader :is-loading="!loaded" padding="8"/>
 
           <span v-if="filteredIcons && filteredIcons.length === 0">

@@ -1,56 +1,58 @@
 <template>
   <div>
-    <page-header title="Item Model Viewer" pre-title="Search and view item models..."/>
+<!--    <page-header title="Item Model Viewer" pre-title="Search and view item models..."/>-->
 
     <!-- CONTENT -->
     <div>
       <div class="container-fluid">
 
-        <div class="row mb-4">
 
-          <!-- Item Slot -->
-          <div class="col-5">
-
-            <!-- Input -->
-            <select
-              class="form-control form-control-prepended list-search"
-              v-model.lazy="itemSlotSearch"
-              @change="doItemSlotSearch()"
-            >
-              <option value="0">Select Slot Filter</option>
-
-              <option v-for="option in itemSlotOptions" v-bind:value="option.value">
-                {{ option.text }}
-              </option>
-
-            </select>
-          </div>
-
-          <!-- Item Type -->
-          <div class="col-6">
-
-            <!-- Input -->
-            <select
-              class="form-control form-control-prepended list-search"
-              v-model.lazy="itemTypeSearch"
-              @change="doItemTypeSearch()"
-            >
-              <option value="0">Select Item Type Filter</option>
-
-              <option v-for="option in itemTypeOptions" v-bind:value="option.value">
-                {{ option.text }}
-              </option>
-
-            </select>
-          </div>
-          <div class="col-auto">
-            <b-button variant="primary" @click="reset">Reset</b-button>
-          </div>
-        </div>
-
-        <app-loader :is-loading="!loaded" padding="8"/>
 
         <eq-window title="Item Models" v-if="loaded" class="mt-5 text-center" v-lazy-container="{ selector: 'img' }">
+
+          <div class="row mb-4">
+
+            <!-- Item Slot -->
+            <div class="col-5">
+
+              <!-- Input -->
+              <select
+                class="form-control form-control-prepended list-search"
+                v-model.lazy="itemSlotSearch"
+                @change="doItemSlotSearch()"
+              >
+                <option value="0">Select Slot Filter</option>
+
+                <option v-for="option in itemSlotOptions" v-bind:value="option.value">
+                  {{ option.text }}
+                </option>
+
+              </select>
+            </div>
+
+            <!-- Item Type -->
+            <div class="col-6">
+
+              <!-- Input -->
+              <select
+                class="form-control form-control-prepended list-search"
+                v-model.lazy="itemTypeSearch"
+                @change="doItemTypeSearch()"
+              >
+                <option value="0">Select Item Type Filter</option>
+
+                <option v-for="option in itemTypeOptions" v-bind:value="option.value">
+                  {{ option.text }}
+                </option>
+
+              </select>
+            </div>
+            <div class="col-auto">
+              <b-button variant="primary" @click="reset">Reset</b-button>
+            </div>
+          </div>
+
+          <app-loader :is-loading="!loaded" padding="8"/>
 
           <span v-if="filteredItemModels.length === 0">
             No models found...
