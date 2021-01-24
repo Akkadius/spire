@@ -15,7 +15,7 @@
 
                 <!-- Form -->
                 <div class="row">
-                  <div class="col-2 text-center">
+                  <div class="col-1 text-center">
                     Language
                     <b-form-select
                       v-model="languageSelection"
@@ -251,7 +251,6 @@ export default {
       // languages:select
       languageSelection: null,
       languageOptions: [
-        {value: null, text: 'Select a Language'},
         {value: 'perl', text: 'Perl'},
         {value: 'lua', text: 'Lua'},
       ],
@@ -441,7 +440,7 @@ export default {
           return !item.includes("Deprecated") && !item.includes("EQDB")
         })
         let typeSize = types.length
-        options.push({value: null, text: "--- Select a Type (" + typeSize + ") ---"})
+        options.push({value: null, text: "--- Types (" + typeSize + ") ---"})
         types.forEach((option) => {
           let methodCount = this.api[this.getLanguageKey()].methods[option].length
           options.push({value: option, text: option + ' (' + methodCount + ')'})
@@ -457,7 +456,7 @@ export default {
       if (this.api[this.getLanguageKey()].events) {
         let events       = this.api[this.getLanguageKey()].events
         let eventSize    = events.length
-        let selectOption = '--- Select Event (' + eventSize + ') ---'
+        let selectOption = '--- Events (' + eventSize + ') ---'
         let options      = [{value: null, text: selectOption}]
         events.forEach((option, index) => {
           if (option.event_identifier === "event_") {
