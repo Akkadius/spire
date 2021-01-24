@@ -57,7 +57,7 @@ func createJwtToken(userId string) (string, error) {
 func (a *AuthController) githubRedirectHandler(c echo.Context) error {
 	authURL, err := a.gocial.New().
 		Driver("github").
-		Scopes([]string{"public_repo"}).
+		Scopes([]string{""}).
 		Redirect(
 			os.Getenv("GITHUB_CLIENT_ID"),
 			os.Getenv("GITHUB_CLIENT_SECRET"),
