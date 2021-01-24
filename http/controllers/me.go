@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"github.com/Akkadius/spire/http/request"
 	"github.com/Akkadius/spire/http/routes"
 	"github.com/Akkadius/spire/models"
 	"github.com/labstack/echo/v4"
@@ -29,5 +30,10 @@ func (a *MeController) Routes() []*routes.Route {
 // @Failure 500 {string} string "Bad query request"
 // @Router /me [get]
 func (a *MeController) me(c echo.Context) error {
-	return c.JSON(http.StatusOK, c.Get("user").(models.User))
+	user := request.GetUser(c)
+	if user.ID > 0 {
+		return c.JSON(http.StatusOK, c.Get("user").(models.User))
+	}
+
+	return c.JSON(http.StatusNotFound, echo.Map{"error": "User context not found"})
 }
