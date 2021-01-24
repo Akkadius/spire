@@ -100,7 +100,7 @@ export default new Router({
       meta: {title: "Login"},
     },
     {
-      path: '/fe/auth/callback',
+      path: '/fe-auth-callback',
       component: () => import('./views/pages/AuthCallback.vue'),
       meta: {title: "Authentication Callback"},
     },
