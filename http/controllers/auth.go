@@ -108,7 +108,7 @@ func (a *AuthController) githubCallbackHandler(c echo.Context) error {
 	)
 
 	newToken, _ := createJwtToken(fmt.Sprintf("%v", newUser.ID))
-	callbackUrl := fmt.Sprintf("%s/auth/callback?jwt=%s", os.Getenv("VUE_APP_FRONTEND_BASE_URL"), newToken)
+	callbackUrl := fmt.Sprintf("%s/fe/auth/callback?jwt=%s", os.Getenv("VUE_APP_FRONTEND_BASE_URL"), newToken)
 
 	fmt.Println(callbackUrl)
 
