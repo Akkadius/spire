@@ -83,7 +83,7 @@ export default {
   },
   methods: {
     listItems: function() {
-      const api = (new ItemApi({baseOptions: SpireApiClient.getAxiosConfig()}))
+      const api = (new ItemApi(SpireApiClient.getOpenApiConfig()))
 
       let filters = [
         ["id", "_lte_", this.endRange],

@@ -16,6 +16,7 @@ require (
 	github.com/go-openapi/jsonreference v0.19.3 // indirect
 	github.com/go-openapi/spec v0.19.4 // indirect
 	github.com/go-sql-driver/mysql v1.5.0
+	github.com/gobuffalo/packr v1.30.1
 	github.com/gomarkdown/markdown v0.0.0-20201030010234-8ba61b39d0e4
 	github.com/google/wire v0.4.0
 	github.com/gorilla/mux v1.8.0

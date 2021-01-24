@@ -1,8 +1,8 @@
 /* tslint:disable */
 /* eslint-disable */
 /**
- * spire
- * spire API documentation
+ * Spire
+ * Spire API documentation
  *
  * The version of the OpenAPI document: 3.0
  * Contact: akkadius1@gmail.com

@@ -85,7 +85,7 @@ export default {
   },
   methods: {
     listSpells: function () {
-      const api = (new SpellsNewApi({baseOptions: SpireApiClient.getAxiosConfig()}))
+      const api = (new SpellsNewApi(SpireApiClient.getOpenApiConfig()))
 
       let filters = [
         ["id", "_lte_", this.endRange],

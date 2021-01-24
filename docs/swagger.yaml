@@ -171,13 +171,6 @@ definitions:
       time_zoned:
         type: integer
     type: object
-  models.AdventureMember:
-    properties:
-      charid:
-        type: integer
-      id:
-        type: integer
-    type: object
   models.AdventureStat:
     properties:
       guk_losses:
@@ -1245,6 +1238,8 @@ definitions:
         type: number
       spell_id:
         type: integer
+      taunting:
+        type: integer
     type: object
   models.CharacterPetInventory:
     properties:
@@ -1441,6 +1436,43 @@ definitions:
       zone:
         type: string
     type: object
+  models.DynamicZone:
+    properties:
+      compass_x:
+        type: number
+      compass_y:
+        type: number
+      compass_z:
+        type: number
+      compass_zone_id:
+        type: integer
+      has_zone_in:
+        type: integer
+      id:
+        type: integer
+      instance_id:
+        type: integer
+      safe_return_heading:
+        type: number
+      safe_return_x:
+        type: number
+      safe_return_y:
+        type: number
+      safe_return_z:
+        type: number
+      safe_return_zone_id:
+        type: integer
+      type:
+        type: integer
+      zone_in_heading:
+        type: number
+      zone_in_x:
+        type: number
+      zone_in_y:
+        type: number
+      zone_in_z:
+        type: number
+    type: object
   models.Eventlog:
     properties:
       accountid:
@@ -1464,19 +1496,51 @@ definitions:
       time:
         type: string
     type: object
-  models.FactionBaseDatum:
+  models.Expedition:
     properties:
-      client_faction_id:
+      add_replay_on_join:
         type: integer
-      max:
+      dynamic_zone_id:
         type: integer
-      min:
+      expedition_name:
+        type: string
+      id:
         type: integer
-      unk_hero_1:
+      is_locked:
         type: integer
-      unk_hero_2:
+      leader_id:
         type: integer
-      unk_hero_3:
+      max_players:
+        type: integer
+      min_players:
+        type: integer
+      uuid:
+        type: string
+    type: object
+  models.ExpeditionLockout:
+    properties:
+      duration:
+        type: integer
+      event_name:
+        type: string
+      expedition_id:
+        type: integer
+      expire_time:
+        type: string
+      from_expedition_uuid:
+        type: string
+      id:
+        type: integer
+    type: object
+  models.ExpeditionMember:
+    properties:
+      character_id:
+        type: integer
+      expedition_id:
+        type: integer
+      id:
+        type: integer
+      is_current_member:
         type: integer
     type: object
   models.FactionList:
@@ -1699,17 +1763,6 @@ definitions:
       zoneid:
         type: integer
     type: object
-  models.GroupId:
-    properties:
-      charid:
-        type: integer
-      groupid:
-        type: integer
-      ismerc:
-        type: integer
-      name:
-        type: string
-    type: object
   models.Guild:
     properties:
       channel:
@@ -1891,15 +1944,6 @@ definitions:
         type: integer
       slotid:
         type: integer
-    type: object
-  models.IpExemption:
-    properties:
-      exemption_amount:
-        type: integer
-      exemption_id:
-        type: integer
-      exemption_ip:
-        type: string
     type: object
   models.Item:
     properties:
@@ -2505,15 +2549,6 @@ definitions:
       type:
         type: integer
     type: object
-  models.LevelExpMod:
-    properties:
-      aa_exp_mod:
-        type: number
-      exp_mod:
-        type: number
-      level:
-        type: integer
-    type: object
   models.LoginAccount:
     properties:
       account_email:
@@ -2598,19 +2633,6 @@ definitions:
         type: string
       tag_description:
         type: string
-    type: object
-  models.LogsysCategory:
-    properties:
-      log_category_description:
-        type: string
-      log_category_id:
-        type: integer
-      log_to_console:
-        type: integer
-      log_to_file:
-        type: integer
-      log_to_gmsay:
-        type: integer
     type: object
   models.Lootdrop:
     properties:
@@ -2796,65 +2818,6 @@ definitions:
       temp:
         type: integer
       value:
-        type: integer
-    type: object
-  models.NpcScaleGlobalBase:
-    properties:
-      ac:
-        type: integer
-      accuracy:
-        type: integer
-      agility:
-        type: integer
-      attack:
-        type: integer
-      attack_delay:
-        type: integer
-      charisma:
-        type: integer
-      cold_resist:
-        type: integer
-      corruption_resist:
-        type: integer
-      dexterity:
-        type: integer
-      disease_resist:
-        type: integer
-      fire_resist:
-        type: integer
-      heal_scale:
-        type: integer
-      hp:
-        type: integer
-      hp_regen_rate:
-        type: integer
-      intelligence:
-        type: integer
-      level:
-        type: integer
-      magic_resist:
-        type: integer
-      max_dmg:
-        type: integer
-      min_dmg:
-        type: integer
-      physical_resist:
-        type: integer
-      poison_resist:
-        type: integer
-      slow_mitigation:
-        type: integer
-      special_abilities:
-        type: string
-      spell_scale:
-        type: integer
-      stamina:
-        type: integer
-      strength:
-        type: integer
-      type:
-        type: integer
-      wisdom:
         type: integer
     type: object
   models.NpcSpell:
@@ -3360,45 +3323,6 @@ definitions:
       zpos:
         type: number
     type: object
-  models.PerlEventExportSetting:
-    properties:
-      event_description:
-        type: string
-      event_id:
-        type: integer
-      export_event:
-        type: integer
-      export_item:
-        type: integer
-      export_mob:
-        type: integer
-      export_qglobals:
-        type: integer
-      export_zone:
-        type: integer
-    type: object
-  models.PetsEquipmentset:
-    properties:
-      nested_set:
-        type: integer
-      pets_equipmentset_entries:
-        items:
-          $ref: '#/definitions/models.PetsEquipmentsetEntry'
-        type: array
-      set_id:
-        type: integer
-      setname:
-        type: string
-    type: object
-  models.PetsEquipmentsetEntry:
-    properties:
-      item_id:
-        type: integer
-      set_id:
-        type: integer
-      slot:
-        type: integer
-    type: object
   models.PlayerTitleset:
     properties:
       char_id:
@@ -3421,69 +3345,6 @@ definitions:
       value:
         type: string
       zoneid:
-        type: integer
-    type: object
-  models.RaidDetail:
-    properties:
-      locked:
-        type: integer
-      loottype:
-        type: integer
-      motd:
-        type: string
-      raid_leaders:
-        items:
-          $ref: '#/definitions/models.RaidLeader'
-        type: array
-      raid_members:
-        items:
-          $ref: '#/definitions/models.RaidMember'
-        type: array
-      raidid:
-        type: integer
-    type: object
-  models.RaidLeader:
-    properties:
-      assist:
-        type: string
-      gid:
-        type: integer
-      leadershipaa:
-        items:
-          type: integer
-        type: array
-      maintank:
-        type: string
-      marknpc:
-        type: string
-      mentor_percent:
-        type: integer
-      mentoree:
-        type: string
-      puller:
-        type: string
-      rid:
-        type: integer
-    type: object
-  models.RaidMember:
-    properties:
-      _class:
-        type: integer
-      charid:
-        type: integer
-      groupid:
-        type: integer
-      isgroupleader:
-        type: integer
-      islooter:
-        type: integer
-      israidleader:
-        type: integer
-      level:
-        type: integer
-      name:
-        type: string
-      raidid:
         type: integer
     type: object
   models.Report:
@@ -4560,6 +4421,8 @@ definitions:
     type: object
   models.UserServerDatabaseConnection:
     properties:
+      active:
+        type: integer
       created_at:
         type: string
       created_by:
@@ -4749,6 +4612,8 @@ definitions:
         type: integer
       underworld:
         type: number
+      underworld_teleport_index:
+        type: integer
       version:
         type: integer
       walkspeed:
@@ -4818,17 +4683,16 @@ definitions:
       zoneinst:
         type: integer
     type: object
-host: localhost:3000
 info:
   contact:
     email: akkadius1@gmail.com
     name: Akkadius
     url: TODO
-  description: spire API documentation
+  description: Spire API documentation
   license:
     name: Apache 2.0
     url: http://www.apache.org/licenses/LICENSE-2.0.html
-  title: spire
+  title: Spire
   version: "3.0"
 paths:
   /aa_abilities:
@@ -5323,186 +5187,6 @@ paths:
       summary: Updates Account
       tags:
       - Account
-  /account_ip:
-    put:
-      consumes:
-      - application/json
-      operationId: createAccountIp
-      parameters:
-      - description: AccountIp
-        in: body
-        name: account_ip
-        required: true
-        schema:
-          $ref: '#/definitions/models.AccountIp'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            items:
-              $ref: '#/definitions/models.AccountIp'
-            type: array
-        "500":
-          description: Error inserting entity
-          schema:
-            type: string
-      summary: Creates AccountIp
-      tags:
-      - AccountIp
-  /account_ip/{id}:
-    delete:
-      consumes:
-      - application/json
-      operationId: deleteAccountIp
-      parameters:
-      - description: Id
-        in: path
-        name: id
-        required: true
-        type: integer
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: Entity deleted successfully
-          schema:
-            type: string
-        "404":
-          description: Cannot find entity
-          schema:
-            type: string
-        "500":
-          description: Error deleting entity
-          schema:
-            type: string
-      summary: Deletes AccountIp
-      tags:
-      - AccountIp
-    get:
-      consumes:
-      - application/json
-      operationId: getAccountIp
-      parameters:
-      - description: Id
-        in: path
-        name: id
-        required: true
-        type: integer
-      - description: 'Relationships [all] for all [number] for depth of relationships
-          to load or [.] separated relationship names '
-        in: query
-        name: includes
-        type: string
-      - description: Column names [.] separated to fetch specific fields in response
-        in: query
-        name: select
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            items:
-              $ref: '#/definitions/models.AccountIp'
-            type: array
-        "404":
-          description: Entity not found
-          schema:
-            type: string
-        "500":
-          description: Bad query request
-          schema:
-            type: string
-      summary: Gets AccountIp
-      tags:
-      - AccountIp
-    patch:
-      consumes:
-      - application/json
-      operationId: updateAccountIp
-      parameters:
-      - description: Id
-        in: path
-        name: id
-        required: true
-        type: integer
-      - description: AccountIp
-        in: body
-        name: account_ip
-        required: true
-        schema:
-          $ref: '#/definitions/models.AccountIp'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            items:
-              $ref: '#/definitions/models.AccountIp'
-            type: array
-        "404":
-          description: Cannot find entity
-          schema:
-            type: string
-        "500":
-          description: Error updating entity
-          schema:
-            type: string
-      summary: Updates AccountIp
-      tags:
-      - AccountIp
-  /account_ips:
-    get:
-      consumes:
-      - application/json
-      operationId: listAccountIps
-      parameters:
-      - description: 'Relationships [all] for all [number] for depth of relationships
-          to load or [.] separated relationship names '
-        in: query
-        name: includes
-        type: string
-      - description: 'Filter on specific fields. Multiple conditions [.] separated
-          Example: col_like_value.col2__val2'
-        in: query
-        name: where
-        type: string
-      - description: 'Rows to limit in response (Default: 10,000)'
-        in: query
-        name: limit
-        type: string
-      - description: Order by [field]
-        in: query
-        name: orderBy
-        type: string
-      - description: Order by field direction
-        in: query
-        name: orderDirection
-        type: string
-      - description: Column names [.] separated to fetch specific fields in response
-        in: query
-        name: select
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            items:
-              $ref: '#/definitions/models.AccountIp'
-            type: array
-        "500":
-          description: Bad query request
-          schema:
-            type: string
-      summary: Lists AccountIps
-      tags:
-      - AccountIp
   /accounts:
     get:
       consumes:
@@ -5731,186 +5415,6 @@ paths:
       summary: Lists AdventureDetails
       tags:
       - AdventureDetail
-  /adventure_member:
-    put:
-      consumes:
-      - application/json
-      operationId: createAdventureMember
-      parameters:
-      - description: AdventureMember
-        in: body
-        name: adventure_member
-        required: true
-        schema:
-          $ref: '#/definitions/models.AdventureMember'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            items:
-              $ref: '#/definitions/models.AdventureMember'
-            type: array
-        "500":
-          description: Error inserting entity
-          schema:
-            type: string
-      summary: Creates AdventureMember
-      tags:
-      - AdventureMember
-  /adventure_member/{id}:
-    delete:
-      consumes:
-      - application/json
-      operationId: deleteAdventureMember
-      parameters:
-      - description: Id
-        in: path
-        name: id
-        required: true
-        type: integer
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: Entity deleted successfully
-          schema:
-            type: string
-        "404":
-          description: Cannot find entity
-          schema:
-            type: string
-        "500":
-          description: Error deleting entity
-          schema:
-            type: string
-      summary: Deletes AdventureMember
-      tags:
-      - AdventureMember
-    get:
-      consumes:
-      - application/json
-      operationId: getAdventureMember
-      parameters:
-      - description: Id
-        in: path
-        name: id
-        required: true
-        type: integer
-      - description: 'Relationships [all] for all [number] for depth of relationships
-          to load or [.] separated relationship names '
-        in: query
-        name: includes
-        type: string
-      - description: Column names [.] separated to fetch specific fields in response
-        in: query
-        name: select
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            items:
-              $ref: '#/definitions/models.AdventureMember'
-            type: array
-        "404":
-          description: Entity not found
-          schema:
-            type: string
-        "500":
-          description: Bad query request
-          schema:
-            type: string
-      summary: Gets AdventureMember
-      tags:
-      - AdventureMember
-    patch:
-      consumes:
-      - application/json
-      operationId: updateAdventureMember
-      parameters:
-      - description: Id
-        in: path
-        name: id
-        required: true
-        type: integer
-      - description: AdventureMember
-        in: body
-        name: adventure_member
-        required: true
-        schema:
-          $ref: '#/definitions/models.AdventureMember'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            items:
-              $ref: '#/definitions/models.AdventureMember'
-            type: array
-        "404":
-          description: Cannot find entity
-          schema:
-            type: string
-        "500":
-          description: Error updating entity
-          schema:
-            type: string
-      summary: Updates AdventureMember
-      tags:
-      - AdventureMember
-  /adventure_members:
-    get:
-      consumes:
-      - application/json
-      operationId: listAdventureMembers
-      parameters:
-      - description: 'Relationships [all] for all [number] for depth of relationships
-          to load or [.] separated relationship names '
-        in: query
-        name: includes
-        type: string
-      - description: 'Filter on specific fields. Multiple conditions [.] separated
-          Example: col_like_value.col2__val2'
-        in: query
-        name: where
-        type: string
-      - description: 'Rows to limit in response (Default: 10,000)'
-        in: query
-        name: limit
-        type: string
-      - description: Order by [field]
-        in: query
-        name: orderBy
-        type: string
-      - description: Order by field direction
-        in: query
-        name: orderDirection
-        type: string
-      - description: Column names [.] separated to fetch specific fields in response
-        in: query
-        name: select
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            items:
-              $ref: '#/definitions/models.AdventureMember'
-            type: array
-        "500":
-          description: Bad query request
-          schema:
-            type: string
-      summary: Lists AdventureMembers
-      tags:
-      - AdventureMember
   /adventure_template:
     put:
       consumes:
@@ -6631,186 +6135,6 @@ paths:
       summary: Updates AlternateCurrency
       tags:
       - AlternateCurrency
-  /aura:
-    put:
-      consumes:
-      - application/json
-      operationId: createAura
-      parameters:
-      - description: Aura
-        in: body
-        name: aura
-        required: true
-        schema:
-          $ref: '#/definitions/models.Aura'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            items:
-              $ref: '#/definitions/models.Aura'
-            type: array
-        "500":
-          description: Error inserting entity
-          schema:
-            type: string
-      summary: Creates Aura
-      tags:
-      - Aura
-  /aura/{id}:
-    delete:
-      consumes:
-      - application/json
-      operationId: deleteAura
-      parameters:
-      - description: Id
-        in: path
-        name: id
-        required: true
-        type: integer
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: Entity deleted successfully
-          schema:
-            type: string
-        "404":
-          description: Cannot find entity
-          schema:
-            type: string
-        "500":
-          description: Error deleting entity
-          schema:
-            type: string
-      summary: Deletes Aura
-      tags:
-      - Aura
-    get:
-      consumes:
-      - application/json
-      operationId: getAura
-      parameters:
-      - description: Id
-        in: path
-        name: id
-        required: true
-        type: integer
-      - description: 'Relationships [all] for all [number] for depth of relationships
-          to load or [.] separated relationship names '
-        in: query
-        name: includes
-        type: string
-      - description: Column names [.] separated to fetch specific fields in response
-        in: query
-        name: select
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            items:
-              $ref: '#/definitions/models.Aura'
-            type: array
-        "404":
-          description: Entity not found
-          schema:
-            type: string
-        "500":
-          description: Bad query request
-          schema:
-            type: string
-      summary: Gets Aura
-      tags:
-      - Aura
-    patch:
-      consumes:
-      - application/json
-      operationId: updateAura
-      parameters:
-      - description: Id
-        in: path
-        name: id
-        required: true
-        type: integer
-      - description: Aura
-        in: body
-        name: aura
-        required: true
-        schema:
-          $ref: '#/definitions/models.Aura'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            items:
-              $ref: '#/definitions/models.Aura'
-            type: array
-        "404":
-          description: Cannot find entity
-          schema:
-            type: string
-        "500":
-          description: Error updating entity
-          schema:
-            type: string
-      summary: Updates Aura
-      tags:
-      - Aura
-  /auras:
-    get:
-      consumes:
-      - application/json
-      operationId: listAuras
-      parameters:
-      - description: 'Relationships [all] for all [number] for depth of relationships
-          to load or [.] separated relationship names '
-        in: query
-        name: includes
-        type: string
-      - description: 'Filter on specific fields. Multiple conditions [.] separated
-          Example: col_like_value.col2__val2'
-        in: query
-        name: where
-        type: string
-      - description: 'Rows to limit in response (Default: 10,000)'
-        in: query
-        name: limit
-        type: string
-      - description: Order by [field]
-        in: query
-        name: orderBy
-        type: string
-      - description: Order by field direction
-        in: query
-        name: orderDirection
-        type: string
-      - description: Column names [.] separated to fetch specific fields in response
-        in: query
-        name: select
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            items:
-              $ref: '#/definitions/models.Aura'
-            type: array
-        "500":
-          description: Bad query request
-          schema:
-            type: string
-      summary: Lists Auras
-      tags:
-      - Aura
   /blocked_spell:
     put:
       consumes:
@@ -7351,186 +6675,6 @@ paths:
       summary: Lists Bugs
       tags:
       - Bug
-  /buyer:
-    put:
-      consumes:
-      - application/json
-      operationId: createBuyer
-      parameters:
-      - description: Buyer
-        in: body
-        name: buyer
-        required: true
-        schema:
-          $ref: '#/definitions/models.Buyer'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            items:
-              $ref: '#/definitions/models.Buyer'
-            type: array
-        "500":
-          description: Error inserting entity
-          schema:
-            type: string
-      summary: Creates Buyer
-      tags:
-      - Buyer
-  /buyer/{id}:
-    delete:
-      consumes:
-      - application/json
-      operationId: deleteBuyer
-      parameters:
-      - description: Id
-        in: path
-        name: id
-        required: true
-        type: integer
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: Entity deleted successfully
-          schema:
-            type: string
-        "404":
-          description: Cannot find entity
-          schema:
-            type: string
-        "500":
-          description: Error deleting entity
-          schema:
-            type: string
-      summary: Deletes Buyer
-      tags:
-      - Buyer
-    get:
-      consumes:
-      - application/json
-      operationId: getBuyer
-      parameters:
-      - description: Id
-        in: path
-        name: id
-        required: true
-        type: integer
-      - description: 'Relationships [all] for all [number] for depth of relationships
-          to load or [.] separated relationship names '
-        in: query
-        name: includes
-        type: string
-      - description: Column names [.] separated to fetch specific fields in response
-        in: query
-        name: select
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            items:
-              $ref: '#/definitions/models.Buyer'
-            type: array
-        "404":
-          description: Entity not found
-          schema:
-            type: string
-        "500":
-          description: Bad query request
-          schema:
-            type: string
-      summary: Gets Buyer
-      tags:
-      - Buyer
-    patch:
-      consumes:
-      - application/json
-      operationId: updateBuyer
-      parameters:
-      - description: Id
-        in: path
-        name: id
-        required: true
-        type: integer
-      - description: Buyer
-        in: body
-        name: buyer
-        required: true
-        schema:
-          $ref: '#/definitions/models.Buyer'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            items:
-              $ref: '#/definitions/models.Buyer'
-            type: array
-        "404":
-          description: Cannot find entity
-          schema:
-            type: string
-        "500":
-          description: Error updating entity
-          schema:
-            type: string
-      summary: Updates Buyer
-      tags:
-      - Buyer
-  /buyers:
-    get:
-      consumes:
-      - application/json
-      operationId: listBuyers
-      parameters:
-      - description: 'Relationships [all] for all [number] for depth of relationships
-          to load or [.] separated relationship names '
-        in: query
-        name: includes
-        type: string
-      - description: 'Filter on specific fields. Multiple conditions [.] separated
-          Example: col_like_value.col2__val2'
-        in: query
-        name: where
-        type: string
-      - description: 'Rows to limit in response (Default: 10,000)'
-        in: query
-        name: limit
-        type: string
-      - description: Order by [field]
-        in: query
-        name: orderBy
-        type: string
-      - description: Order by field direction
-        in: query
-        name: orderDirection
-        type: string
-      - description: Column names [.] separated to fetch specific fields in response
-        in: query
-        name: select
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            items:
-              $ref: '#/definitions/models.Buyer'
-            type: array
-        "500":
-          description: Bad query request
-          schema:
-            type: string
-      summary: Lists Buyers
-      tags:
-      - Buyer
   /char_create_point_allocation:
     put:
       consumes:
@@ -7711,186 +6855,6 @@ paths:
       summary: Lists CharCreatePointAllocations
       tags:
       - CharCreatePointAllocation
-  /char_recipe_list:
-    put:
-      consumes:
-      - application/json
-      operationId: createCharRecipeList
-      parameters:
-      - description: CharRecipeList
-        in: body
-        name: char_recipe_list
-        required: true
-        schema:
-          $ref: '#/definitions/models.CharRecipeList'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            items:
-              $ref: '#/definitions/models.CharRecipeList'
-            type: array
-        "500":
-          description: Error inserting entity
-          schema:
-            type: string
-      summary: Creates CharRecipeList
-      tags:
-      - CharRecipeList
-  /char_recipe_list/{id}:
-    delete:
-      consumes:
-      - application/json
-      operationId: deleteCharRecipeList
-      parameters:
-      - description: Id
-        in: path
-        name: id
-        required: true
-        type: integer
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: Entity deleted successfully
-          schema:
-            type: string
-        "404":
-          description: Cannot find entity
-          schema:
-            type: string
-        "500":
-          description: Error deleting entity
-          schema:
-            type: string
-      summary: Deletes CharRecipeList
-      tags:
-      - CharRecipeList
-    get:
-      consumes:
-      - application/json
-      operationId: getCharRecipeList
-      parameters:
-      - description: Id
-        in: path
-        name: id
-        required: true
-        type: integer
-      - description: 'Relationships [all] for all [number] for depth of relationships
-          to load or [.] separated relationship names '
-        in: query
-        name: includes
-        type: string
-      - description: Column names [.] separated to fetch specific fields in response
-        in: query
-        name: select
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            items:
-              $ref: '#/definitions/models.CharRecipeList'
-            type: array
-        "404":
-          description: Entity not found
-          schema:
-            type: string
-        "500":
-          description: Bad query request
-          schema:
-            type: string
-      summary: Gets CharRecipeList
-      tags:
-      - CharRecipeList
-    patch:
-      consumes:
-      - application/json
-      operationId: updateCharRecipeList
-      parameters:
-      - description: Id
-        in: path
-        name: id
-        required: true
-        type: integer
-      - description: CharRecipeList
-        in: body
-        name: char_recipe_list
-        required: true
-        schema:
-          $ref: '#/definitions/models.CharRecipeList'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            items:
-              $ref: '#/definitions/models.CharRecipeList'
-            type: array
-        "404":
-          description: Cannot find entity
-          schema:
-            type: string
-        "500":
-          description: Error updating entity
-          schema:
-            type: string
-      summary: Updates CharRecipeList
-      tags:
-      - CharRecipeList
-  /char_recipe_lists:
-    get:
-      consumes:
-      - application/json
-      operationId: listCharRecipeLists
-      parameters:
-      - description: 'Relationships [all] for all [number] for depth of relationships
-          to load or [.] separated relationship names '
-        in: query
-        name: includes
-        type: string
-      - description: 'Filter on specific fields. Multiple conditions [.] separated
-          Example: col_like_value.col2__val2'
-        in: query
-        name: where
-        type: string
-      - description: 'Rows to limit in response (Default: 10,000)'
-        in: query
-        name: limit
-        type: string
-      - description: Order by [field]
-        in: query
-        name: orderBy
-        type: string
-      - description: Order by field direction
-        in: query
-        name: orderDirection
-        type: string
-      - description: Column names [.] separated to fetch specific fields in response
-        in: query
-        name: select
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            items:
-              $ref: '#/definitions/models.CharRecipeList'
-            type: array
-        "500":
-          description: Bad query request
-          schema:
-            type: string
-      summary: Lists CharRecipeLists
-      tags:
-      - CharRecipeList
   /character_alternate_abilities:
     get:
       consumes:
@@ -10411,546 +9375,6 @@ paths:
       summary: Lists CharacterMemmedSpells
       tags:
       - CharacterMemmedSpell
-  /character_pet_buff:
-    put:
-      consumes:
-      - application/json
-      operationId: createCharacterPetBuff
-      parameters:
-      - description: CharacterPetBuff
-        in: body
-        name: character_pet_buff
-        required: true
-        schema:
-          $ref: '#/definitions/models.CharacterPetBuff'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            items:
-              $ref: '#/definitions/models.CharacterPetBuff'
-            type: array
-        "500":
-          description: Error inserting entity
-          schema:
-            type: string
-      summary: Creates CharacterPetBuff
-      tags:
-      - CharacterPetBuff
-  /character_pet_buff/{id}:
-    delete:
-      consumes:
-      - application/json
-      operationId: deleteCharacterPetBuff
-      parameters:
-      - description: Id
-        in: path
-        name: id
-        required: true
-        type: integer
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: Entity deleted successfully
-          schema:
-            type: string
-        "404":
-          description: Cannot find entity
-          schema:
-            type: string
-        "500":
-          description: Error deleting entity
-          schema:
-            type: string
-      summary: Deletes CharacterPetBuff
-      tags:
-      - CharacterPetBuff
-    get:
-      consumes:
-      - application/json
-      operationId: getCharacterPetBuff
-      parameters:
-      - description: Id
-        in: path
-        name: id
-        required: true
-        type: integer
-      - description: 'Relationships [all] for all [number] for depth of relationships
-          to load or [.] separated relationship names '
-        in: query
-        name: includes
-        type: string
-      - description: Column names [.] separated to fetch specific fields in response
-        in: query
-        name: select
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            items:
-              $ref: '#/definitions/models.CharacterPetBuff'
-            type: array
-        "404":
-          description: Entity not found
-          schema:
-            type: string
-        "500":
-          description: Bad query request
-          schema:
-            type: string
-      summary: Gets CharacterPetBuff
-      tags:
-      - CharacterPetBuff
-    patch:
-      consumes:
-      - application/json
-      operationId: updateCharacterPetBuff
-      parameters:
-      - description: Id
-        in: path
-        name: id
-        required: true
-        type: integer
-      - description: CharacterPetBuff
-        in: body
-        name: character_pet_buff
-        required: true
-        schema:
-          $ref: '#/definitions/models.CharacterPetBuff'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            items:
-              $ref: '#/definitions/models.CharacterPetBuff'
-            type: array
-        "404":
-          description: Cannot find entity
-          schema:
-            type: string
-        "500":
-          description: Error updating entity
-          schema:
-            type: string
-      summary: Updates CharacterPetBuff
-      tags:
-      - CharacterPetBuff
-  /character_pet_buffs:
-    get:
-      consumes:
-      - application/json
-      operationId: listCharacterPetBuffs
-      parameters:
-      - description: 'Relationships [all] for all [number] for depth of relationships
-          to load or [.] separated relationship names '
-        in: query
-        name: includes
-        type: string
-      - description: 'Filter on specific fields. Multiple conditions [.] separated
-          Example: col_like_value.col2__val2'
-        in: query
-        name: where
-        type: string
-      - description: 'Rows to limit in response (Default: 10,000)'
-        in: query
-        name: limit
-        type: string
-      - description: Order by [field]
-        in: query
-        name: orderBy
-        type: string
-      - description: Order by field direction
-        in: query
-        name: orderDirection
-        type: string
-      - description: Column names [.] separated to fetch specific fields in response
-        in: query
-        name: select
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            items:
-              $ref: '#/definitions/models.CharacterPetBuff'
-            type: array
-        "500":
-          description: Bad query request
-          schema:
-            type: string
-      summary: Lists CharacterPetBuffs
-      tags:
-      - CharacterPetBuff
-  /character_pet_info:
-    put:
-      consumes:
-      - application/json
-      operationId: createCharacterPetInfo
-      parameters:
-      - description: CharacterPetInfo
-        in: body
-        name: character_pet_info
-        required: true
-        schema:
-          $ref: '#/definitions/models.CharacterPetInfo'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            items:
-              $ref: '#/definitions/models.CharacterPetInfo'
-            type: array
-        "500":
-          description: Error inserting entity
-          schema:
-            type: string
-      summary: Creates CharacterPetInfo
-      tags:
-      - CharacterPetInfo
-  /character_pet_info/{id}:
-    delete:
-      consumes:
-      - application/json
-      operationId: deleteCharacterPetInfo
-      parameters:
-      - description: Id
-        in: path
-        name: id
-        required: true
-        type: integer
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: Entity deleted successfully
-          schema:
-            type: string
-        "404":
-          description: Cannot find entity
-          schema:
-            type: string
-        "500":
-          description: Error deleting entity
-          schema:
-            type: string
-      summary: Deletes CharacterPetInfo
-      tags:
-      - CharacterPetInfo
-    get:
-      consumes:
-      - application/json
-      operationId: getCharacterPetInfo
-      parameters:
-      - description: Id
-        in: path
-        name: id
-        required: true
-        type: integer
-      - description: 'Relationships [all] for all [number] for depth of relationships
-          to load or [.] separated relationship names '
-        in: query
-        name: includes
-        type: string
-      - description: Column names [.] separated to fetch specific fields in response
-        in: query
-        name: select
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            items:
-              $ref: '#/definitions/models.CharacterPetInfo'
-            type: array
-        "404":
-          description: Entity not found
-          schema:
-            type: string
-        "500":
-          description: Bad query request
-          schema:
-            type: string
-      summary: Gets CharacterPetInfo
-      tags:
-      - CharacterPetInfo
-    patch:
-      consumes:
-      - application/json
-      operationId: updateCharacterPetInfo
-      parameters:
-      - description: Id
-        in: path
-        name: id
-        required: true
-        type: integer
-      - description: CharacterPetInfo
-        in: body
-        name: character_pet_info
-        required: true
-        schema:
-          $ref: '#/definitions/models.CharacterPetInfo'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            items:
-              $ref: '#/definitions/models.CharacterPetInfo'
-            type: array
-        "404":
-          description: Cannot find entity
-          schema:
-            type: string
-        "500":
-          description: Error updating entity
-          schema:
-            type: string
-      summary: Updates CharacterPetInfo
-      tags:
-      - CharacterPetInfo
-  /character_pet_infos:
-    get:
-      consumes:
-      - application/json
-      operationId: listCharacterPetInfos
-      parameters:
-      - description: 'Relationships [all] for all [number] for depth of relationships
-          to load or [.] separated relationship names '
-        in: query
-        name: includes
-        type: string
-      - description: 'Filter on specific fields. Multiple conditions [.] separated
-          Example: col_like_value.col2__val2'
-        in: query
-        name: where
-        type: string
-      - description: 'Rows to limit in response (Default: 10,000)'
-        in: query
-        name: limit
-        type: string
-      - description: Order by [field]
-        in: query
-        name: orderBy
-        type: string
-      - description: Order by field direction
-        in: query
-        name: orderDirection
-        type: string
-      - description: Column names [.] separated to fetch specific fields in response
-        in: query
-        name: select
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            items:
-              $ref: '#/definitions/models.CharacterPetInfo'
-            type: array
-        "500":
-          description: Bad query request
-          schema:
-            type: string
-      summary: Lists CharacterPetInfos
-      tags:
-      - CharacterPetInfo
-  /character_pet_inventories:
-    get:
-      consumes:
-      - application/json
-      operationId: listCharacterPetInventories
-      parameters:
-      - description: 'Relationships [all] for all [number] for depth of relationships
-          to load or [.] separated relationship names '
-        in: query
-        name: includes
-        type: string
-      - description: 'Filter on specific fields. Multiple conditions [.] separated
-          Example: col_like_value.col2__val2'
-        in: query
-        name: where
-        type: string
-      - description: 'Rows to limit in response (Default: 10,000)'
-        in: query
-        name: limit
-        type: string
-      - description: Order by [field]
-        in: query
-        name: orderBy
-        type: string
-      - description: Order by field direction
-        in: query
-        name: orderDirection
-        type: string
-      - description: Column names [.] separated to fetch specific fields in response
-        in: query
-        name: select
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            items:
-              $ref: '#/definitions/models.CharacterPetInventory'
-            type: array
-        "500":
-          description: Bad query request
-          schema:
-            type: string
-      summary: Lists CharacterPetInventories
-      tags:
-      - CharacterPetInventory
-  /character_pet_inventory:
-    put:
-      consumes:
-      - application/json
-      operationId: createCharacterPetInventory
-      parameters:
-      - description: CharacterPetInventory
-        in: body
-        name: character_pet_inventory
-        required: true
-        schema:
-          $ref: '#/definitions/models.CharacterPetInventory'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            items:
-              $ref: '#/definitions/models.CharacterPetInventory'
-            type: array
-        "500":
-          description: Error inserting entity
-          schema:
-            type: string
-      summary: Creates CharacterPetInventory
-      tags:
-      - CharacterPetInventory
-  /character_pet_inventory/{id}:
-    delete:
-      consumes:
-      - application/json
-      operationId: deleteCharacterPetInventory
-      parameters:
-      - description: Id
-        in: path
-        name: id
-        required: true
-        type: integer
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: Entity deleted successfully
-          schema:
-            type: string
-        "404":
-          description: Cannot find entity
-          schema:
-            type: string
-        "500":
-          description: Error deleting entity
-          schema:
-            type: string
-      summary: Deletes CharacterPetInventory
-      tags:
-      - CharacterPetInventory
-    get:
-      consumes:
-      - application/json
-      operationId: getCharacterPetInventory
-      parameters:
-      - description: Id
-        in: path
-        name: id
-        required: true
-        type: integer
-      - description: 'Relationships [all] for all [number] for depth of relationships
-          to load or [.] separated relationship names '
-        in: query
-        name: includes
-        type: string
-      - description: Column names [.] separated to fetch specific fields in response
-        in: query
-        name: select
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            items:
-              $ref: '#/definitions/models.CharacterPetInventory'
-            type: array
-        "404":
-          description: Entity not found
-          schema:
-            type: string
-        "500":
-          description: Bad query request
-          schema:
-            type: string
-      summary: Gets CharacterPetInventory
-      tags:
-      - CharacterPetInventory
-    patch:
-      consumes:
-      - application/json
-      operationId: updateCharacterPetInventory
-      parameters:
-      - description: Id
-        in: path
-        name: id
-        required: true
-        type: integer
-      - description: CharacterPetInventory
-        in: body
-        name: character_pet_inventory
-        required: true
-        schema:
-          $ref: '#/definitions/models.CharacterPetInventory'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            items:
-              $ref: '#/definitions/models.CharacterPetInventory'
-            type: array
-        "404":
-          description: Cannot find entity
-          schema:
-            type: string
-        "500":
-          description: Error updating entity
-          schema:
-            type: string
-      summary: Updates CharacterPetInventory
-      tags:
-      - CharacterPetInventory
   /character_potionbelt:
     put:
       consumes:
@@ -11491,186 +9915,6 @@ paths:
       summary: Lists CharacterSpells
       tags:
       - CharacterSpell
-  /character_tribute:
-    put:
-      consumes:
-      - application/json
-      operationId: createCharacterTribute
-      parameters:
-      - description: CharacterTribute
-        in: body
-        name: character_tribute
-        required: true
-        schema:
-          $ref: '#/definitions/models.CharacterTribute'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            items:
-              $ref: '#/definitions/models.CharacterTribute'
-            type: array
-        "500":
-          description: Error inserting entity
-          schema:
-            type: string
-      summary: Creates CharacterTribute
-      tags:
-      - CharacterTribute
-  /character_tribute/{id}:
-    delete:
-      consumes:
-      - application/json
-      operationId: deleteCharacterTribute
-      parameters:
-      - description: Id
-        in: path
-        name: id
-        required: true
-        type: integer
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: Entity deleted successfully
-          schema:
-            type: string
-        "404":
-          description: Cannot find entity
-          schema:
-            type: string
-        "500":
-          description: Error deleting entity
-          schema:
-            type: string
-      summary: Deletes CharacterTribute
-      tags:
-      - CharacterTribute
-    get:
-      consumes:
-      - application/json
-      operationId: getCharacterTribute
-      parameters:
-      - description: Id
-        in: path
-        name: id
-        required: true
-        type: integer
-      - description: 'Relationships [all] for all [number] for depth of relationships
-          to load or [.] separated relationship names '
-        in: query
-        name: includes
-        type: string
-      - description: Column names [.] separated to fetch specific fields in response
-        in: query
-        name: select
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            items:
-              $ref: '#/definitions/models.CharacterTribute'
-            type: array
-        "404":
-          description: Entity not found
-          schema:
-            type: string
-        "500":
-          description: Bad query request
-          schema:
-            type: string
-      summary: Gets CharacterTribute
-      tags:
-      - CharacterTribute
-    patch:
-      consumes:
-      - application/json
-      operationId: updateCharacterTribute
-      parameters:
-      - description: Id
-        in: path
-        name: id
-        required: true
-        type: integer
-      - description: CharacterTribute
-        in: body
-        name: character_tribute
-        required: true
-        schema:
-          $ref: '#/definitions/models.CharacterTribute'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            items:
-              $ref: '#/definitions/models.CharacterTribute'
-            type: array
-        "404":
-          description: Cannot find entity
-          schema:
-            type: string
-        "500":
-          description: Error updating entity
-          schema:
-            type: string
-      summary: Updates CharacterTribute
-      tags:
-      - CharacterTribute
-  /character_tributes:
-    get:
-      consumes:
-      - application/json
-      operationId: listCharacterTributes
-      parameters:
-      - description: 'Relationships [all] for all [number] for depth of relationships
-          to load or [.] separated relationship names '
-        in: query
-        name: includes
-        type: string
-      - description: 'Filter on specific fields. Multiple conditions [.] separated
-          Example: col_like_value.col2__val2'
-        in: query
-        name: where
-        type: string
-      - description: 'Rows to limit in response (Default: 10,000)'
-        in: query
-        name: limit
-        type: string
-      - description: Order by [field]
-        in: query
-        name: orderBy
-        type: string
-      - description: Order by field direction
-        in: query
-        name: orderDirection
-        type: string
-      - description: Column names [.] separated to fetch specific fields in response
-        in: query
-        name: select
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            items:
-              $ref: '#/definitions/models.CharacterTribute'
-            type: array
-        "500":
-          description: Bad query request
-          schema:
-            type: string
-      summary: Lists CharacterTributes
-      tags:
-      - CharacterTribute
   /content_flag:
     put:
       consumes:
@@ -12391,6 +10635,186 @@ paths:
       summary: Lists Doors
       tags:
       - Door
+  /dynamic_zone:
+    put:
+      consumes:
+      - application/json
+      operationId: createDynamicZone
+      parameters:
+      - description: DynamicZone
+        in: body
+        name: dynamic_zone
+        required: true
+        schema:
+          $ref: '#/definitions/models.DynamicZone'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.DynamicZone'
+            type: array
+        "500":
+          description: Error inserting entity
+          schema:
+            type: string
+      summary: Creates DynamicZone
+      tags:
+      - DynamicZone
+  /dynamic_zone/{id}:
+    delete:
+      consumes:
+      - application/json
+      operationId: deleteDynamicZone
+      parameters:
+      - description: Id
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Entity deleted successfully
+          schema:
+            type: string
+        "404":
+          description: Cannot find entity
+          schema:
+            type: string
+        "500":
+          description: Error deleting entity
+          schema:
+            type: string
+      summary: Deletes DynamicZone
+      tags:
+      - DynamicZone
+    get:
+      consumes:
+      - application/json
+      operationId: getDynamicZone
+      parameters:
+      - description: Id
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: 'Relationships [all] for all [number] for depth of relationships
+          to load or [.] separated relationship names '
+        in: query
+        name: includes
+        type: string
+      - description: Column names [.] separated to fetch specific fields in response
+        in: query
+        name: select
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.DynamicZone'
+            type: array
+        "404":
+          description: Entity not found
+          schema:
+            type: string
+        "500":
+          description: Bad query request
+          schema:
+            type: string
+      summary: Gets DynamicZone
+      tags:
+      - DynamicZone
+    patch:
+      consumes:
+      - application/json
+      operationId: updateDynamicZone
+      parameters:
+      - description: Id
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: DynamicZone
+        in: body
+        name: dynamic_zone
+        required: true
+        schema:
+          $ref: '#/definitions/models.DynamicZone'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.DynamicZone'
+            type: array
+        "404":
+          description: Cannot find entity
+          schema:
+            type: string
+        "500":
+          description: Error updating entity
+          schema:
+            type: string
+      summary: Updates DynamicZone
+      tags:
+      - DynamicZone
+  /dynamic_zones:
+    get:
+      consumes:
+      - application/json
+      operationId: listDynamicZones
+      parameters:
+      - description: 'Relationships [all] for all [number] for depth of relationships
+          to load or [.] separated relationship names '
+        in: query
+        name: includes
+        type: string
+      - description: 'Filter on specific fields. Multiple conditions [.] separated
+          Example: col_like_value.col2__val2'
+        in: query
+        name: where
+        type: string
+      - description: 'Rows to limit in response (Default: 10,000)'
+        in: query
+        name: limit
+        type: string
+      - description: Order by [field]
+        in: query
+        name: orderBy
+        type: string
+      - description: Order by field direction
+        in: query
+        name: orderDirection
+        type: string
+      - description: Column names [.] separated to fetch specific fields in response
+        in: query
+        name: select
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.DynamicZone'
+            type: array
+        "500":
+          description: Bad query request
+          schema:
+            type: string
+      summary: Lists DynamicZones
+      tags:
+      - DynamicZone
   /eventlog:
     put:
       consumes:
@@ -12571,11 +10995,275 @@ paths:
       summary: Lists Eventlogs
       tags:
       - Eventlog
-  /faction_base_data:
+  /expedition:
+    put:
+      consumes:
+      - application/json
+      operationId: createExpedition
+      parameters:
+      - description: Expedition
+        in: body
+        name: expedition
+        required: true
+        schema:
+          $ref: '#/definitions/models.Expedition'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Expedition'
+            type: array
+        "500":
+          description: Error inserting entity
+          schema:
+            type: string
+      summary: Creates Expedition
+      tags:
+      - Expedition
+  /expedition/{id}:
+    delete:
+      consumes:
+      - application/json
+      operationId: deleteExpedition
+      parameters:
+      - description: Id
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Entity deleted successfully
+          schema:
+            type: string
+        "404":
+          description: Cannot find entity
+          schema:
+            type: string
+        "500":
+          description: Error deleting entity
+          schema:
+            type: string
+      summary: Deletes Expedition
+      tags:
+      - Expedition
     get:
       consumes:
       - application/json
-      operationId: listFactionBaseData
+      operationId: getExpedition
+      parameters:
+      - description: Id
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: 'Relationships [all] for all [number] for depth of relationships
+          to load or [.] separated relationship names '
+        in: query
+        name: includes
+        type: string
+      - description: Column names [.] separated to fetch specific fields in response
+        in: query
+        name: select
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Expedition'
+            type: array
+        "404":
+          description: Entity not found
+          schema:
+            type: string
+        "500":
+          description: Bad query request
+          schema:
+            type: string
+      summary: Gets Expedition
+      tags:
+      - Expedition
+    patch:
+      consumes:
+      - application/json
+      operationId: updateExpedition
+      parameters:
+      - description: Id
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Expedition
+        in: body
+        name: expedition
+        required: true
+        schema:
+          $ref: '#/definitions/models.Expedition'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Expedition'
+            type: array
+        "404":
+          description: Cannot find entity
+          schema:
+            type: string
+        "500":
+          description: Error updating entity
+          schema:
+            type: string
+      summary: Updates Expedition
+      tags:
+      - Expedition
+  /expedition_lockout:
+    put:
+      consumes:
+      - application/json
+      operationId: createExpeditionLockout
+      parameters:
+      - description: ExpeditionLockout
+        in: body
+        name: expedition_lockout
+        required: true
+        schema:
+          $ref: '#/definitions/models.ExpeditionLockout'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.ExpeditionLockout'
+            type: array
+        "500":
+          description: Error inserting entity
+          schema:
+            type: string
+      summary: Creates ExpeditionLockout
+      tags:
+      - ExpeditionLockout
+  /expedition_lockout/{id}:
+    delete:
+      consumes:
+      - application/json
+      operationId: deleteExpeditionLockout
+      parameters:
+      - description: Id
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Entity deleted successfully
+          schema:
+            type: string
+        "404":
+          description: Cannot find entity
+          schema:
+            type: string
+        "500":
+          description: Error deleting entity
+          schema:
+            type: string
+      summary: Deletes ExpeditionLockout
+      tags:
+      - ExpeditionLockout
+    get:
+      consumes:
+      - application/json
+      operationId: getExpeditionLockout
+      parameters:
+      - description: Id
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: 'Relationships [all] for all [number] for depth of relationships
+          to load or [.] separated relationship names '
+        in: query
+        name: includes
+        type: string
+      - description: Column names [.] separated to fetch specific fields in response
+        in: query
+        name: select
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.ExpeditionLockout'
+            type: array
+        "404":
+          description: Entity not found
+          schema:
+            type: string
+        "500":
+          description: Bad query request
+          schema:
+            type: string
+      summary: Gets ExpeditionLockout
+      tags:
+      - ExpeditionLockout
+    patch:
+      consumes:
+      - application/json
+      operationId: updateExpeditionLockout
+      parameters:
+      - description: Id
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: ExpeditionLockout
+        in: body
+        name: expedition_lockout
+        required: true
+        schema:
+          $ref: '#/definitions/models.ExpeditionLockout'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.ExpeditionLockout'
+            type: array
+        "404":
+          description: Cannot find entity
+          schema:
+            type: string
+        "500":
+          description: Error updating entity
+          schema:
+            type: string
+      summary: Updates ExpeditionLockout
+      tags:
+      - ExpeditionLockout
+  /expedition_lockouts:
+    get:
+      consumes:
+      - application/json
+      operationId: listExpeditionLockouts
       parameters:
       - description: 'Relationships [all] for all [number] for depth of relationships
           to load or [.] separated relationship names '
@@ -12610,27 +11298,27 @@ paths:
           description: OK
           schema:
             items:
-              $ref: '#/definitions/models.FactionBaseDatum'
+              $ref: '#/definitions/models.ExpeditionLockout'
             type: array
         "500":
           description: Bad query request
           schema:
             type: string
-      summary: Lists FactionBaseData
+      summary: Lists ExpeditionLockouts
       tags:
-      - FactionBaseDatum
-  /faction_base_datum:
+      - ExpeditionLockout
+  /expedition_member:
     put:
       consumes:
       - application/json
-      operationId: createFactionBaseDatum
+      operationId: createExpeditionMember
       parameters:
-      - description: FactionBaseDatum
+      - description: ExpeditionMember
         in: body
-        name: faction_base_datum
+        name: expedition_member
         required: true
         schema:
-          $ref: '#/definitions/models.FactionBaseDatum'
+          $ref: '#/definitions/models.ExpeditionMember'
       produces:
       - application/json
       responses:
@@ -12638,20 +11326,20 @@ paths:
           description: OK
           schema:
             items:
-              $ref: '#/definitions/models.FactionBaseDatum'
+              $ref: '#/definitions/models.ExpeditionMember'
             type: array
         "500":
           description: Error inserting entity
           schema:
             type: string
-      summary: Creates FactionBaseDatum
+      summary: Creates ExpeditionMember
       tags:
-      - FactionBaseDatum
-  /faction_base_datum/{id}:
+      - ExpeditionMember
+  /expedition_member/{id}:
     delete:
       consumes:
       - application/json
-      operationId: deleteFactionBaseDatum
+      operationId: deleteExpeditionMember
       parameters:
       - description: Id
         in: path
@@ -12673,13 +11361,13 @@ paths:
           description: Error deleting entity
           schema:
             type: string
-      summary: Deletes FactionBaseDatum
+      summary: Deletes ExpeditionMember
       tags:
-      - FactionBaseDatum
+      - ExpeditionMember
     get:
       consumes:
       - application/json
-      operationId: getFactionBaseDatum
+      operationId: getExpeditionMember
       parameters:
       - description: Id
         in: path
@@ -12702,7 +11390,7 @@ paths:
           description: OK
           schema:
             items:
-              $ref: '#/definitions/models.FactionBaseDatum'
+              $ref: '#/definitions/models.ExpeditionMember'
             type: array
         "404":
           description: Entity not found
@@ -12712,25 +11400,25 @@ paths:
           description: Bad query request
           schema:
             type: string
-      summary: Gets FactionBaseDatum
+      summary: Gets ExpeditionMember
       tags:
-      - FactionBaseDatum
+      - ExpeditionMember
     patch:
       consumes:
       - application/json
-      operationId: updateFactionBaseDatum
+      operationId: updateExpeditionMember
       parameters:
       - description: Id
         in: path
         name: id
         required: true
         type: integer
-      - description: FactionBaseDatum
+      - description: ExpeditionMember
         in: body
-        name: faction_base_datum
+        name: expedition_member
         required: true
         schema:
-          $ref: '#/definitions/models.FactionBaseDatum'
+          $ref: '#/definitions/models.ExpeditionMember'
       produces:
       - application/json
       responses:
@@ -12738,7 +11426,7 @@ paths:
           description: OK
           schema:
             items:
-              $ref: '#/definitions/models.FactionBaseDatum'
+              $ref: '#/definitions/models.ExpeditionMember'
             type: array
         "404":
           description: Cannot find entity
@@ -12748,9 +11436,105 @@ paths:
           description: Error updating entity
           schema:
             type: string
-      summary: Updates FactionBaseDatum
+      summary: Updates ExpeditionMember
       tags:
-      - FactionBaseDatum
+      - ExpeditionMember
+  /expedition_members:
+    get:
+      consumes:
+      - application/json
+      operationId: listExpeditionMembers
+      parameters:
+      - description: 'Relationships [all] for all [number] for depth of relationships
+          to load or [.] separated relationship names '
+        in: query
+        name: includes
+        type: string
+      - description: 'Filter on specific fields. Multiple conditions [.] separated
+          Example: col_like_value.col2__val2'
+        in: query
+        name: where
+        type: string
+      - description: 'Rows to limit in response (Default: 10,000)'
+        in: query
+        name: limit
+        type: string
+      - description: Order by [field]
+        in: query
+        name: orderBy
+        type: string
+      - description: Order by field direction
+        in: query
+        name: orderDirection
+        type: string
+      - description: Column names [.] separated to fetch specific fields in response
+        in: query
+        name: select
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.ExpeditionMember'
+            type: array
+        "500":
+          description: Bad query request
+          schema:
+            type: string
+      summary: Lists ExpeditionMembers
+      tags:
+      - ExpeditionMember
+  /expeditions:
+    get:
+      consumes:
+      - application/json
+      operationId: listExpeditions
+      parameters:
+      - description: 'Relationships [all] for all [number] for depth of relationships
+          to load or [.] separated relationship names '
+        in: query
+        name: includes
+        type: string
+      - description: 'Filter on specific fields. Multiple conditions [.] separated
+          Example: col_like_value.col2__val2'
+        in: query
+        name: where
+        type: string
+      - description: 'Rows to limit in response (Default: 10,000)'
+        in: query
+        name: limit
+        type: string
+      - description: Order by [field]
+        in: query
+        name: orderBy
+        type: string
+      - description: Order by field direction
+        in: query
+        name: orderDirection
+        type: string
+      - description: Column names [.] separated to fetch specific fields in response
+        in: query
+        name: select
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Expedition'
+            type: array
+        "500":
+          description: Bad query request
+          schema:
+            type: string
+      summary: Lists Expeditions
+      tags:
+      - Expedition
   /faction_list:
     put:
       consumes:
@@ -13111,186 +11895,6 @@ paths:
       summary: Lists FactionLists
       tags:
       - FactionList
-  /faction_value:
-    put:
-      consumes:
-      - application/json
-      operationId: createFactionValue
-      parameters:
-      - description: FactionValue
-        in: body
-        name: faction_value
-        required: true
-        schema:
-          $ref: '#/definitions/models.FactionValue'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            items:
-              $ref: '#/definitions/models.FactionValue'
-            type: array
-        "500":
-          description: Error inserting entity
-          schema:
-            type: string
-      summary: Creates FactionValue
-      tags:
-      - FactionValue
-  /faction_value/{id}:
-    delete:
-      consumes:
-      - application/json
-      operationId: deleteFactionValue
-      parameters:
-      - description: Id
-        in: path
-        name: id
-        required: true
-        type: integer
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: Entity deleted successfully
-          schema:
-            type: string
-        "404":
-          description: Cannot find entity
-          schema:
-            type: string
-        "500":
-          description: Error deleting entity
-          schema:
-            type: string
-      summary: Deletes FactionValue
-      tags:
-      - FactionValue
-    get:
-      consumes:
-      - application/json
-      operationId: getFactionValue
-      parameters:
-      - description: Id
-        in: path
-        name: id
-        required: true
-        type: integer
-      - description: 'Relationships [all] for all [number] for depth of relationships
-          to load or [.] separated relationship names '
-        in: query
-        name: includes
-        type: string
-      - description: Column names [.] separated to fetch specific fields in response
-        in: query
-        name: select
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            items:
-              $ref: '#/definitions/models.FactionValue'
-            type: array
-        "404":
-          description: Entity not found
-          schema:
-            type: string
-        "500":
-          description: Bad query request
-          schema:
-            type: string
-      summary: Gets FactionValue
-      tags:
-      - FactionValue
-    patch:
-      consumes:
-      - application/json
-      operationId: updateFactionValue
-      parameters:
-      - description: Id
-        in: path
-        name: id
-        required: true
-        type: integer
-      - description: FactionValue
-        in: body
-        name: faction_value
-        required: true
-        schema:
-          $ref: '#/definitions/models.FactionValue'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            items:
-              $ref: '#/definitions/models.FactionValue'
-            type: array
-        "404":
-          description: Cannot find entity
-          schema:
-            type: string
-        "500":
-          description: Error updating entity
-          schema:
-            type: string
-      summary: Updates FactionValue
-      tags:
-      - FactionValue
-  /faction_values:
-    get:
-      consumes:
-      - application/json
-      operationId: listFactionValues
-      parameters:
-      - description: 'Relationships [all] for all [number] for depth of relationships
-          to load or [.] separated relationship names '
-        in: query
-        name: includes
-        type: string
-      - description: 'Filter on specific fields. Multiple conditions [.] separated
-          Example: col_like_value.col2__val2'
-        in: query
-        name: where
-        type: string
-      - description: 'Rows to limit in response (Default: 10,000)'
-        in: query
-        name: limit
-        type: string
-      - description: Order by [field]
-        in: query
-        name: orderBy
-        type: string
-      - description: Order by field direction
-        in: query
-        name: orderDirection
-        type: string
-      - description: Column names [.] separated to fetch specific fields in response
-        in: query
-        name: select
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            items:
-              $ref: '#/definitions/models.FactionValue'
-            type: array
-        "500":
-          description: Bad query request
-          schema:
-            type: string
-      summary: Lists FactionValues
-      tags:
-      - FactionValue
   /fishing:
     put:
       consumes:
@@ -14143,186 +12747,6 @@ paths:
       summary: Updates Grid
       tags:
       - Grid
-  /grid_entries:
-    get:
-      consumes:
-      - application/json
-      operationId: listGridEntries
-      parameters:
-      - description: 'Relationships [all] for all [number] for depth of relationships
-          to load or [.] separated relationship names '
-        in: query
-        name: includes
-        type: string
-      - description: 'Filter on specific fields. Multiple conditions [.] separated
-          Example: col_like_value.col2__val2'
-        in: query
-        name: where
-        type: string
-      - description: 'Rows to limit in response (Default: 10,000)'
-        in: query
-        name: limit
-        type: string
-      - description: Order by [field]
-        in: query
-        name: orderBy
-        type: string
-      - description: Order by field direction
-        in: query
-        name: orderDirection
-        type: string
-      - description: Column names [.] separated to fetch specific fields in response
-        in: query
-        name: select
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            items:
-              $ref: '#/definitions/models.GridEntry'
-            type: array
-        "500":
-          description: Bad query request
-          schema:
-            type: string
-      summary: Lists GridEntries
-      tags:
-      - GridEntry
-  /grid_entry:
-    put:
-      consumes:
-      - application/json
-      operationId: createGridEntry
-      parameters:
-      - description: GridEntry
-        in: body
-        name: grid_entry
-        required: true
-        schema:
-          $ref: '#/definitions/models.GridEntry'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            items:
-              $ref: '#/definitions/models.GridEntry'
-            type: array
-        "500":
-          description: Error inserting entity
-          schema:
-            type: string
-      summary: Creates GridEntry
-      tags:
-      - GridEntry
-  /grid_entry/{id}:
-    delete:
-      consumes:
-      - application/json
-      operationId: deleteGridEntry
-      parameters:
-      - description: Id
-        in: path
-        name: id
-        required: true
-        type: integer
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: Entity deleted successfully
-          schema:
-            type: string
-        "404":
-          description: Cannot find entity
-          schema:
-            type: string
-        "500":
-          description: Error deleting entity
-          schema:
-            type: string
-      summary: Deletes GridEntry
-      tags:
-      - GridEntry
-    get:
-      consumes:
-      - application/json
-      operationId: getGridEntry
-      parameters:
-      - description: Id
-        in: path
-        name: id
-        required: true
-        type: integer
-      - description: 'Relationships [all] for all [number] for depth of relationships
-          to load or [.] separated relationship names '
-        in: query
-        name: includes
-        type: string
-      - description: Column names [.] separated to fetch specific fields in response
-        in: query
-        name: select
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            items:
-              $ref: '#/definitions/models.GridEntry'
-            type: array
-        "404":
-          description: Entity not found
-          schema:
-            type: string
-        "500":
-          description: Bad query request
-          schema:
-            type: string
-      summary: Gets GridEntry
-      tags:
-      - GridEntry
-    patch:
-      consumes:
-      - application/json
-      operationId: updateGridEntry
-      parameters:
-      - description: Id
-        in: path
-        name: id
-        required: true
-        type: integer
-      - description: GridEntry
-        in: body
-        name: grid_entry
-        required: true
-        schema:
-          $ref: '#/definitions/models.GridEntry'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            items:
-              $ref: '#/definitions/models.GridEntry'
-            type: array
-        "404":
-          description: Cannot find entity
-          schema:
-            type: string
-        "500":
-          description: Error updating entity
-          schema:
-            type: string
-      summary: Updates GridEntry
-      tags:
-      - GridEntry
   /grids:
     get:
       consumes:
@@ -14551,186 +12975,6 @@ paths:
       summary: Lists GroundSpawns
       tags:
       - GroundSpawn
-  /group_id:
-    put:
-      consumes:
-      - application/json
-      operationId: createGroupId
-      parameters:
-      - description: GroupId
-        in: body
-        name: group_id
-        required: true
-        schema:
-          $ref: '#/definitions/models.GroupId'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            items:
-              $ref: '#/definitions/models.GroupId'
-            type: array
-        "500":
-          description: Error inserting entity
-          schema:
-            type: string
-      summary: Creates GroupId
-      tags:
-      - GroupId
-  /group_id/{id}:
-    delete:
-      consumes:
-      - application/json
-      operationId: deleteGroupId
-      parameters:
-      - description: Id
-        in: path
-        name: id
-        required: true
-        type: integer
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: Entity deleted successfully
-          schema:
-            type: string
-        "404":
-          description: Cannot find entity
-          schema:
-            type: string
-        "500":
-          description: Error deleting entity
-          schema:
-            type: string
-      summary: Deletes GroupId
-      tags:
-      - GroupId
-    get:
-      consumes:
-      - application/json
-      operationId: getGroupId
-      parameters:
-      - description: Id
-        in: path
-        name: id
-        required: true
-        type: integer
-      - description: 'Relationships [all] for all [number] for depth of relationships
-          to load or [.] separated relationship names '
-        in: query
-        name: includes
-        type: string
-      - description: Column names [.] separated to fetch specific fields in response
-        in: query
-        name: select
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            items:
-              $ref: '#/definitions/models.GroupId'
-            type: array
-        "404":
-          description: Entity not found
-          schema:
-            type: string
-        "500":
-          description: Bad query request
-          schema:
-            type: string
-      summary: Gets GroupId
-      tags:
-      - GroupId
-    patch:
-      consumes:
-      - application/json
-      operationId: updateGroupId
-      parameters:
-      - description: Id
-        in: path
-        name: id
-        required: true
-        type: integer
-      - description: GroupId
-        in: body
-        name: group_id
-        required: true
-        schema:
-          $ref: '#/definitions/models.GroupId'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            items:
-              $ref: '#/definitions/models.GroupId'
-            type: array
-        "404":
-          description: Cannot find entity
-          schema:
-            type: string
-        "500":
-          description: Error updating entity
-          schema:
-            type: string
-      summary: Updates GroupId
-      tags:
-      - GroupId
-  /group_ids:
-    get:
-      consumes:
-      - application/json
-      operationId: listGroupIds
-      parameters:
-      - description: 'Relationships [all] for all [number] for depth of relationships
-          to load or [.] separated relationship names '
-        in: query
-        name: includes
-        type: string
-      - description: 'Filter on specific fields. Multiple conditions [.] separated
-          Example: col_like_value.col2__val2'
-        in: query
-        name: where
-        type: string
-      - description: 'Rows to limit in response (Default: 10,000)'
-        in: query
-        name: limit
-        type: string
-      - description: Order by [field]
-        in: query
-        name: orderBy
-        type: string
-      - description: Order by field direction
-        in: query
-        name: orderDirection
-        type: string
-      - description: Column names [.] separated to fetch specific fields in response
-        in: query
-        name: select
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            items:
-              $ref: '#/definitions/models.GroupId'
-            type: array
-        "500":
-          description: Bad query request
-          schema:
-            type: string
-      summary: Lists GroupIds
-      tags:
-      - GroupId
   /guild:
     put:
       consumes:
@@ -14863,186 +13107,6 @@ paths:
       summary: Updates Guild
       tags:
       - Guild
-  /guild_member:
-    put:
-      consumes:
-      - application/json
-      operationId: createGuildMember
-      parameters:
-      - description: GuildMember
-        in: body
-        name: guild_member
-        required: true
-        schema:
-          $ref: '#/definitions/models.GuildMember'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            items:
-              $ref: '#/definitions/models.GuildMember'
-            type: array
-        "500":
-          description: Error inserting entity
-          schema:
-            type: string
-      summary: Creates GuildMember
-      tags:
-      - GuildMember
-  /guild_member/{id}:
-    delete:
-      consumes:
-      - application/json
-      operationId: deleteGuildMember
-      parameters:
-      - description: Id
-        in: path
-        name: id
-        required: true
-        type: integer
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: Entity deleted successfully
-          schema:
-            type: string
-        "404":
-          description: Cannot find entity
-          schema:
-            type: string
-        "500":
-          description: Error deleting entity
-          schema:
-            type: string
-      summary: Deletes GuildMember
-      tags:
-      - GuildMember
-    get:
-      consumes:
-      - application/json
-      operationId: getGuildMember
-      parameters:
-      - description: Id
-        in: path
-        name: id
-        required: true
-        type: integer
-      - description: 'Relationships [all] for all [number] for depth of relationships
-          to load or [.] separated relationship names '
-        in: query
-        name: includes
-        type: string
-      - description: Column names [.] separated to fetch specific fields in response
-        in: query
-        name: select
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            items:
-              $ref: '#/definitions/models.GuildMember'
-            type: array
-        "404":
-          description: Entity not found
-          schema:
-            type: string
-        "500":
-          description: Bad query request
-          schema:
-            type: string
-      summary: Gets GuildMember
-      tags:
-      - GuildMember
-    patch:
-      consumes:
-      - application/json
-      operationId: updateGuildMember
-      parameters:
-      - description: Id
-        in: path
-        name: id
-        required: true
-        type: integer
-      - description: GuildMember
-        in: body
-        name: guild_member
-        required: true
-        schema:
-          $ref: '#/definitions/models.GuildMember'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            items:
-              $ref: '#/definitions/models.GuildMember'
-            type: array
-        "404":
-          description: Cannot find entity
-          schema:
-            type: string
-        "500":
-          description: Error updating entity
-          schema:
-            type: string
-      summary: Updates GuildMember
-      tags:
-      - GuildMember
-  /guild_members:
-    get:
-      consumes:
-      - application/json
-      operationId: listGuildMembers
-      parameters:
-      - description: 'Relationships [all] for all [number] for depth of relationships
-          to load or [.] separated relationship names '
-        in: query
-        name: includes
-        type: string
-      - description: 'Filter on specific fields. Multiple conditions [.] separated
-          Example: col_like_value.col2__val2'
-        in: query
-        name: where
-        type: string
-      - description: 'Rows to limit in response (Default: 10,000)'
-        in: query
-        name: limit
-        type: string
-      - description: Order by [field]
-        in: query
-        name: orderBy
-        type: string
-      - description: Order by field direction
-        in: query
-        name: orderDirection
-        type: string
-      - description: Column names [.] separated to fetch specific fields in response
-        in: query
-        name: select
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            items:
-              $ref: '#/definitions/models.GuildMember'
-            type: array
-        "500":
-          description: Bad query request
-          schema:
-            type: string
-      summary: Lists GuildMembers
-      tags:
-      - GuildMember
   /guilds:
     get:
       consumes:
@@ -15631,186 +13695,6 @@ paths:
       summary: Lists InstanceLists
       tags:
       - InstanceList
-  /ip_exemption:
-    put:
-      consumes:
-      - application/json
-      operationId: createIpExemption
-      parameters:
-      - description: IpExemption
-        in: body
-        name: ip_exemption
-        required: true
-        schema:
-          $ref: '#/definitions/models.IpExemption'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            items:
-              $ref: '#/definitions/models.IpExemption'
-            type: array
-        "500":
-          description: Error inserting entity
-          schema:
-            type: string
-      summary: Creates IpExemption
-      tags:
-      - IpExemption
-  /ip_exemption/{id}:
-    delete:
-      consumes:
-      - application/json
-      operationId: deleteIpExemption
-      parameters:
-      - description: Id
-        in: path
-        name: id
-        required: true
-        type: integer
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: Entity deleted successfully
-          schema:
-            type: string
-        "404":
-          description: Cannot find entity
-          schema:
-            type: string
-        "500":
-          description: Error deleting entity
-          schema:
-            type: string
-      summary: Deletes IpExemption
-      tags:
-      - IpExemption
-    get:
-      consumes:
-      - application/json
-      operationId: getIpExemption
-      parameters:
-      - description: Id
-        in: path
-        name: id
-        required: true
-        type: integer
-      - description: 'Relationships [all] for all [number] for depth of relationships
-          to load or [.] separated relationship names '
-        in: query
-        name: includes
-        type: string
-      - description: Column names [.] separated to fetch specific fields in response
-        in: query
-        name: select
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            items:
-              $ref: '#/definitions/models.IpExemption'
-            type: array
-        "404":
-          description: Entity not found
-          schema:
-            type: string
-        "500":
-          description: Bad query request
-          schema:
-            type: string
-      summary: Gets IpExemption
-      tags:
-      - IpExemption
-    patch:
-      consumes:
-      - application/json
-      operationId: updateIpExemption
-      parameters:
-      - description: Id
-        in: path
-        name: id
-        required: true
-        type: integer
-      - description: IpExemption
-        in: body
-        name: ip_exemption
-        required: true
-        schema:
-          $ref: '#/definitions/models.IpExemption'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            items:
-              $ref: '#/definitions/models.IpExemption'
-            type: array
-        "404":
-          description: Cannot find entity
-          schema:
-            type: string
-        "500":
-          description: Error updating entity
-          schema:
-            type: string
-      summary: Updates IpExemption
-      tags:
-      - IpExemption
-  /ip_exemptions:
-    get:
-      consumes:
-      - application/json
-      operationId: listIpExemptions
-      parameters:
-      - description: 'Relationships [all] for all [number] for depth of relationships
-          to load or [.] separated relationship names '
-        in: query
-        name: includes
-        type: string
-      - description: 'Filter on specific fields. Multiple conditions [.] separated
-          Example: col_like_value.col2__val2'
-        in: query
-        name: where
-        type: string
-      - description: 'Rows to limit in response (Default: 10,000)'
-        in: query
-        name: limit
-        type: string
-      - description: Order by [field]
-        in: query
-        name: orderBy
-        type: string
-      - description: Order by field direction
-        in: query
-        name: orderDirection
-        type: string
-      - description: Column names [.] separated to fetch specific fields in response
-        in: query
-        name: select
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            items:
-              $ref: '#/definitions/models.IpExemption'
-            type: array
-        "500":
-          description: Bad query request
-          schema:
-            type: string
-      summary: Lists IpExemptions
-      tags:
-      - IpExemption
   /item:
     put:
       consumes:
@@ -16351,186 +14235,6 @@ paths:
       summary: Lists LdonTrapTemplates
       tags:
       - LdonTrapTemplate
-  /level_exp_mod:
-    put:
-      consumes:
-      - application/json
-      operationId: createLevelExpMod
-      parameters:
-      - description: LevelExpMod
-        in: body
-        name: level_exp_mod
-        required: true
-        schema:
-          $ref: '#/definitions/models.LevelExpMod'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            items:
-              $ref: '#/definitions/models.LevelExpMod'
-            type: array
-        "500":
-          description: Error inserting entity
-          schema:
-            type: string
-      summary: Creates LevelExpMod
-      tags:
-      - LevelExpMod
-  /level_exp_mod/{id}:
-    delete:
-      consumes:
-      - application/json
-      operationId: deleteLevelExpMod
-      parameters:
-      - description: Id
-        in: path
-        name: id
-        required: true
-        type: integer
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: Entity deleted successfully
-          schema:
-            type: string
-        "404":
-          description: Cannot find entity
-          schema:
-            type: string
-        "500":
-          description: Error deleting entity
-          schema:
-            type: string
-      summary: Deletes LevelExpMod
-      tags:
-      - LevelExpMod
-    get:
-      consumes:
-      - application/json
-      operationId: getLevelExpMod
-      parameters:
-      - description: Id
-        in: path
-        name: id
-        required: true
-        type: integer
-      - description: 'Relationships [all] for all [number] for depth of relationships
-          to load or [.] separated relationship names '
-        in: query
-        name: includes
-        type: string
-      - description: Column names [.] separated to fetch specific fields in response
-        in: query
-        name: select
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            items:
-              $ref: '#/definitions/models.LevelExpMod'
-            type: array
-        "404":
-          description: Entity not found
-          schema:
-            type: string
-        "500":
-          description: Bad query request
-          schema:
-            type: string
-      summary: Gets LevelExpMod
-      tags:
-      - LevelExpMod
-    patch:
-      consumes:
-      - application/json
-      operationId: updateLevelExpMod
-      parameters:
-      - description: Id
-        in: path
-        name: id
-        required: true
-        type: integer
-      - description: LevelExpMod
-        in: body
-        name: level_exp_mod
-        required: true
-        schema:
-          $ref: '#/definitions/models.LevelExpMod'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            items:
-              $ref: '#/definitions/models.LevelExpMod'
-            type: array
-        "404":
-          description: Cannot find entity
-          schema:
-            type: string
-        "500":
-          description: Error updating entity
-          schema:
-            type: string
-      summary: Updates LevelExpMod
-      tags:
-      - LevelExpMod
-  /level_exp_mods:
-    get:
-      consumes:
-      - application/json
-      operationId: listLevelExpMods
-      parameters:
-      - description: 'Relationships [all] for all [number] for depth of relationships
-          to load or [.] separated relationship names '
-        in: query
-        name: includes
-        type: string
-      - description: 'Filter on specific fields. Multiple conditions [.] separated
-          Example: col_like_value.col2__val2'
-        in: query
-        name: where
-        type: string
-      - description: 'Rows to limit in response (Default: 10,000)'
-        in: query
-        name: limit
-        type: string
-      - description: Order by [field]
-        in: query
-        name: orderBy
-        type: string
-      - description: Order by field direction
-        in: query
-        name: orderDirection
-        type: string
-      - description: Column names [.] separated to fetch specific fields in response
-        in: query
-        name: select
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            items:
-              $ref: '#/definitions/models.LevelExpMod'
-            type: array
-        "500":
-          description: Bad query request
-          schema:
-            type: string
-      summary: Lists LevelExpMods
-      tags:
-      - LevelExpMod
   /login_account:
     put:
       consumes:
@@ -17431,186 +15135,6 @@ paths:
       summary: Lists LoginWorldServers
       tags:
       - LoginWorldServer
-  /logsys_categories:
-    get:
-      consumes:
-      - application/json
-      operationId: listLogsysCategories
-      parameters:
-      - description: 'Relationships [all] for all [number] for depth of relationships
-          to load or [.] separated relationship names '
-        in: query
-        name: includes
-        type: string
-      - description: 'Filter on specific fields. Multiple conditions [.] separated
-          Example: col_like_value.col2__val2'
-        in: query
-        name: where
-        type: string
-      - description: 'Rows to limit in response (Default: 10,000)'
-        in: query
-        name: limit
-        type: string
-      - description: Order by [field]
-        in: query
-        name: orderBy
-        type: string
-      - description: Order by field direction
-        in: query
-        name: orderDirection
-        type: string
-      - description: Column names [.] separated to fetch specific fields in response
-        in: query
-        name: select
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            items:
-              $ref: '#/definitions/models.LogsysCategory'
-            type: array
-        "500":
-          description: Bad query request
-          schema:
-            type: string
-      summary: Lists LogsysCategories
-      tags:
-      - LogsysCategory
-  /logsys_category:
-    put:
-      consumes:
-      - application/json
-      operationId: createLogsysCategory
-      parameters:
-      - description: LogsysCategory
-        in: body
-        name: logsys_category
-        required: true
-        schema:
-          $ref: '#/definitions/models.LogsysCategory'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            items:
-              $ref: '#/definitions/models.LogsysCategory'
-            type: array
-        "500":
-          description: Error inserting entity
-          schema:
-            type: string
-      summary: Creates LogsysCategory
-      tags:
-      - LogsysCategory
-  /logsys_category/{id}:
-    delete:
-      consumes:
-      - application/json
-      operationId: deleteLogsysCategory
-      parameters:
-      - description: Id
-        in: path
-        name: id
-        required: true
-        type: integer
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: Entity deleted successfully
-          schema:
-            type: string
-        "404":
-          description: Cannot find entity
-          schema:
-            type: string
-        "500":
-          description: Error deleting entity
-          schema:
-            type: string
-      summary: Deletes LogsysCategory
-      tags:
-      - LogsysCategory
-    get:
-      consumes:
-      - application/json
-      operationId: getLogsysCategory
-      parameters:
-      - description: Id
-        in: path
-        name: id
-        required: true
-        type: integer
-      - description: 'Relationships [all] for all [number] for depth of relationships
-          to load or [.] separated relationship names '
-        in: query
-        name: includes
-        type: string
-      - description: Column names [.] separated to fetch specific fields in response
-        in: query
-        name: select
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            items:
-              $ref: '#/definitions/models.LogsysCategory'
-            type: array
-        "404":
-          description: Entity not found
-          schema:
-            type: string
-        "500":
-          description: Bad query request
-          schema:
-            type: string
-      summary: Gets LogsysCategory
-      tags:
-      - LogsysCategory
-    patch:
-      consumes:
-      - application/json
-      operationId: updateLogsysCategory
-      parameters:
-      - description: Id
-        in: path
-        name: id
-        required: true
-        type: integer
-      - description: LogsysCategory
-        in: body
-        name: logsys_category
-        required: true
-        schema:
-          $ref: '#/definitions/models.LogsysCategory'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            items:
-              $ref: '#/definitions/models.LogsysCategory'
-            type: array
-        "404":
-          description: Cannot find entity
-          schema:
-            type: string
-        "500":
-          description: Error updating entity
-          schema:
-            type: string
-      summary: Updates LogsysCategory
-      tags:
-      - LogsysCategory
   /lootdrop:
     put:
       consumes:
@@ -17992,186 +15516,6 @@ paths:
       summary: Returns current logged in user information
       tags:
       - Me
-  /merchantlist:
-    put:
-      consumes:
-      - application/json
-      operationId: createMerchantlist
-      parameters:
-      - description: Merchantlist
-        in: body
-        name: merchantlist
-        required: true
-        schema:
-          $ref: '#/definitions/models.Merchantlist'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            items:
-              $ref: '#/definitions/models.Merchantlist'
-            type: array
-        "500":
-          description: Error inserting entity
-          schema:
-            type: string
-      summary: Creates Merchantlist
-      tags:
-      - Merchantlist
-  /merchantlist/{id}:
-    delete:
-      consumes:
-      - application/json
-      operationId: deleteMerchantlist
-      parameters:
-      - description: Id
-        in: path
-        name: id
-        required: true
-        type: integer
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: Entity deleted successfully
-          schema:
-            type: string
-        "404":
-          description: Cannot find entity
-          schema:
-            type: string
-        "500":
-          description: Error deleting entity
-          schema:
-            type: string
-      summary: Deletes Merchantlist
-      tags:
-      - Merchantlist
-    get:
-      consumes:
-      - application/json
-      operationId: getMerchantlist
-      parameters:
-      - description: Id
-        in: path
-        name: id
-        required: true
-        type: integer
-      - description: 'Relationships [all] for all [number] for depth of relationships
-          to load or [.] separated relationship names '
-        in: query
-        name: includes
-        type: string
-      - description: Column names [.] separated to fetch specific fields in response
-        in: query
-        name: select
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            items:
-              $ref: '#/definitions/models.Merchantlist'
-            type: array
-        "404":
-          description: Entity not found
-          schema:
-            type: string
-        "500":
-          description: Bad query request
-          schema:
-            type: string
-      summary: Gets Merchantlist
-      tags:
-      - Merchantlist
-    patch:
-      consumes:
-      - application/json
-      operationId: updateMerchantlist
-      parameters:
-      - description: Id
-        in: path
-        name: id
-        required: true
-        type: integer
-      - description: Merchantlist
-        in: body
-        name: merchantlist
-        required: true
-        schema:
-          $ref: '#/definitions/models.Merchantlist'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            items:
-              $ref: '#/definitions/models.Merchantlist'
-            type: array
-        "404":
-          description: Cannot find entity
-          schema:
-            type: string
-        "500":
-          description: Error updating entity
-          schema:
-            type: string
-      summary: Updates Merchantlist
-      tags:
-      - Merchantlist
-  /merchantlists:
-    get:
-      consumes:
-      - application/json
-      operationId: listMerchantlists
-      parameters:
-      - description: 'Relationships [all] for all [number] for depth of relationships
-          to load or [.] separated relationship names '
-        in: query
-        name: includes
-        type: string
-      - description: 'Filter on specific fields. Multiple conditions [.] separated
-          Example: col_like_value.col2__val2'
-        in: query
-        name: where
-        type: string
-      - description: 'Rows to limit in response (Default: 10,000)'
-        in: query
-        name: limit
-        type: string
-      - description: Order by [field]
-        in: query
-        name: orderBy
-        type: string
-      - description: Order by field direction
-        in: query
-        name: orderDirection
-        type: string
-      - description: Column names [.] separated to fetch specific fields in response
-        in: query
-        name: select
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            items:
-              $ref: '#/definitions/models.Merchantlist'
-            type: array
-        "500":
-          description: Bad query request
-          schema:
-            type: string
-      summary: Lists Merchantlists
-      tags:
-      - Merchantlist
   /name_filter:
     put:
       consumes:
@@ -18712,186 +16056,6 @@ paths:
       summary: Lists NpcFactions
       tags:
       - NpcFaction
-  /npc_scale_global_base:
-    put:
-      consumes:
-      - application/json
-      operationId: createNpcScaleGlobalBase
-      parameters:
-      - description: NpcScaleGlobalBase
-        in: body
-        name: npc_scale_global_base
-        required: true
-        schema:
-          $ref: '#/definitions/models.NpcScaleGlobalBase'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            items:
-              $ref: '#/definitions/models.NpcScaleGlobalBase'
-            type: array
-        "500":
-          description: Error inserting entity
-          schema:
-            type: string
-      summary: Creates NpcScaleGlobalBase
-      tags:
-      - NpcScaleGlobalBase
-  /npc_scale_global_base/{id}:
-    delete:
-      consumes:
-      - application/json
-      operationId: deleteNpcScaleGlobalBase
-      parameters:
-      - description: Id
-        in: path
-        name: id
-        required: true
-        type: integer
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: Entity deleted successfully
-          schema:
-            type: string
-        "404":
-          description: Cannot find entity
-          schema:
-            type: string
-        "500":
-          description: Error deleting entity
-          schema:
-            type: string
-      summary: Deletes NpcScaleGlobalBase
-      tags:
-      - NpcScaleGlobalBase
-    get:
-      consumes:
-      - application/json
-      operationId: getNpcScaleGlobalBase
-      parameters:
-      - description: Id
-        in: path
-        name: id
-        required: true
-        type: integer
-      - description: 'Relationships [all] for all [number] for depth of relationships
-          to load or [.] separated relationship names '
-        in: query
-        name: includes
-        type: string
-      - description: Column names [.] separated to fetch specific fields in response
-        in: query
-        name: select
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            items:
-              $ref: '#/definitions/models.NpcScaleGlobalBase'
-            type: array
-        "404":
-          description: Entity not found
-          schema:
-            type: string
-        "500":
-          description: Bad query request
-          schema:
-            type: string
-      summary: Gets NpcScaleGlobalBase
-      tags:
-      - NpcScaleGlobalBase
-    patch:
-      consumes:
-      - application/json
-      operationId: updateNpcScaleGlobalBase
-      parameters:
-      - description: Id
-        in: path
-        name: id
-        required: true
-        type: integer
-      - description: NpcScaleGlobalBase
-        in: body
-        name: npc_scale_global_base
-        required: true
-        schema:
-          $ref: '#/definitions/models.NpcScaleGlobalBase'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            items:
-              $ref: '#/definitions/models.NpcScaleGlobalBase'
-            type: array
-        "404":
-          description: Cannot find entity
-          schema:
-            type: string
-        "500":
-          description: Error updating entity
-          schema:
-            type: string
-      summary: Updates NpcScaleGlobalBase
-      tags:
-      - NpcScaleGlobalBase
-  /npc_scale_global_bases:
-    get:
-      consumes:
-      - application/json
-      operationId: listNpcScaleGlobalBases
-      parameters:
-      - description: 'Relationships [all] for all [number] for depth of relationships
-          to load or [.] separated relationship names '
-        in: query
-        name: includes
-        type: string
-      - description: 'Filter on specific fields. Multiple conditions [.] separated
-          Example: col_like_value.col2__val2'
-        in: query
-        name: where
-        type: string
-      - description: 'Rows to limit in response (Default: 10,000)'
-        in: query
-        name: limit
-        type: string
-      - description: Order by [field]
-        in: query
-        name: orderBy
-        type: string
-      - description: Order by field direction
-        in: query
-        name: orderDirection
-        type: string
-      - description: Column names [.] separated to fetch specific fields in response
-        in: query
-        name: select
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            items:
-              $ref: '#/definitions/models.NpcScaleGlobalBase'
-            type: array
-        "500":
-          description: Bad query request
-          schema:
-            type: string
-      summary: Lists NpcScaleGlobalBases
-      tags:
-      - NpcScaleGlobalBase
   /npc_spell:
     put:
       consumes:
@@ -20152,546 +17316,6 @@ paths:
       summary: Lists Objects
       tags:
       - Object
-  /perl_event_export_setting:
-    put:
-      consumes:
-      - application/json
-      operationId: createPerlEventExportSetting
-      parameters:
-      - description: PerlEventExportSetting
-        in: body
-        name: perl_event_export_setting
-        required: true
-        schema:
-          $ref: '#/definitions/models.PerlEventExportSetting'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            items:
-              $ref: '#/definitions/models.PerlEventExportSetting'
-            type: array
-        "500":
-          description: Error inserting entity
-          schema:
-            type: string
-      summary: Creates PerlEventExportSetting
-      tags:
-      - PerlEventExportSetting
-  /perl_event_export_setting/{id}:
-    delete:
-      consumes:
-      - application/json
-      operationId: deletePerlEventExportSetting
-      parameters:
-      - description: Id
-        in: path
-        name: id
-        required: true
-        type: integer
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: Entity deleted successfully
-          schema:
-            type: string
-        "404":
-          description: Cannot find entity
-          schema:
-            type: string
-        "500":
-          description: Error deleting entity
-          schema:
-            type: string
-      summary: Deletes PerlEventExportSetting
-      tags:
-      - PerlEventExportSetting
-    get:
-      consumes:
-      - application/json
-      operationId: getPerlEventExportSetting
-      parameters:
-      - description: Id
-        in: path
-        name: id
-        required: true
-        type: integer
-      - description: 'Relationships [all] for all [number] for depth of relationships
-          to load or [.] separated relationship names '
-        in: query
-        name: includes
-        type: string
-      - description: Column names [.] separated to fetch specific fields in response
-        in: query
-        name: select
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            items:
-              $ref: '#/definitions/models.PerlEventExportSetting'
-            type: array
-        "404":
-          description: Entity not found
-          schema:
-            type: string
-        "500":
-          description: Bad query request
-          schema:
-            type: string
-      summary: Gets PerlEventExportSetting
-      tags:
-      - PerlEventExportSetting
-    patch:
-      consumes:
-      - application/json
-      operationId: updatePerlEventExportSetting
-      parameters:
-      - description: Id
-        in: path
-        name: id
-        required: true
-        type: integer
-      - description: PerlEventExportSetting
-        in: body
-        name: perl_event_export_setting
-        required: true
-        schema:
-          $ref: '#/definitions/models.PerlEventExportSetting'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            items:
-              $ref: '#/definitions/models.PerlEventExportSetting'
-            type: array
-        "404":
-          description: Cannot find entity
-          schema:
-            type: string
-        "500":
-          description: Error updating entity
-          schema:
-            type: string
-      summary: Updates PerlEventExportSetting
-      tags:
-      - PerlEventExportSetting
-  /perl_event_export_settings:
-    get:
-      consumes:
-      - application/json
-      operationId: listPerlEventExportSettings
-      parameters:
-      - description: 'Relationships [all] for all [number] for depth of relationships
-          to load or [.] separated relationship names '
-        in: query
-        name: includes
-        type: string
-      - description: 'Filter on specific fields. Multiple conditions [.] separated
-          Example: col_like_value.col2__val2'
-        in: query
-        name: where
-        type: string
-      - description: 'Rows to limit in response (Default: 10,000)'
-        in: query
-        name: limit
-        type: string
-      - description: Order by [field]
-        in: query
-        name: orderBy
-        type: string
-      - description: Order by field direction
-        in: query
-        name: orderDirection
-        type: string
-      - description: Column names [.] separated to fetch specific fields in response
-        in: query
-        name: select
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            items:
-              $ref: '#/definitions/models.PerlEventExportSetting'
-            type: array
-        "500":
-          description: Bad query request
-          schema:
-            type: string
-      summary: Lists PerlEventExportSettings
-      tags:
-      - PerlEventExportSetting
-  /pets_equipmentset:
-    put:
-      consumes:
-      - application/json
-      operationId: createPetsEquipmentset
-      parameters:
-      - description: PetsEquipmentset
-        in: body
-        name: pets_equipmentset
-        required: true
-        schema:
-          $ref: '#/definitions/models.PetsEquipmentset'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            items:
-              $ref: '#/definitions/models.PetsEquipmentset'
-            type: array
-        "500":
-          description: Error inserting entity
-          schema:
-            type: string
-      summary: Creates PetsEquipmentset
-      tags:
-      - PetsEquipmentset
-  /pets_equipmentset/{id}:
-    delete:
-      consumes:
-      - application/json
-      operationId: deletePetsEquipmentset
-      parameters:
-      - description: Id
-        in: path
-        name: id
-        required: true
-        type: integer
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: Entity deleted successfully
-          schema:
-            type: string
-        "404":
-          description: Cannot find entity
-          schema:
-            type: string
-        "500":
-          description: Error deleting entity
-          schema:
-            type: string
-      summary: Deletes PetsEquipmentset
-      tags:
-      - PetsEquipmentset
-    get:
-      consumes:
-      - application/json
-      operationId: getPetsEquipmentset
-      parameters:
-      - description: Id
-        in: path
-        name: id
-        required: true
-        type: integer
-      - description: Relationships [all] for all [number] for depth of relationships
-          to load or [.] separated relationship names <h4>Relationships</h4>PetsEquipmentsetEntries
-        in: query
-        name: includes
-        type: string
-      - description: Column names [.] separated to fetch specific fields in response
-        in: query
-        name: select
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            items:
-              $ref: '#/definitions/models.PetsEquipmentset'
-            type: array
-        "404":
-          description: Entity not found
-          schema:
-            type: string
-        "500":
-          description: Bad query request
-          schema:
-            type: string
-      summary: Gets PetsEquipmentset
-      tags:
-      - PetsEquipmentset
-    patch:
-      consumes:
-      - application/json
-      operationId: updatePetsEquipmentset
-      parameters:
-      - description: Id
-        in: path
-        name: id
-        required: true
-        type: integer
-      - description: PetsEquipmentset
-        in: body
-        name: pets_equipmentset
-        required: true
-        schema:
-          $ref: '#/definitions/models.PetsEquipmentset'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            items:
-              $ref: '#/definitions/models.PetsEquipmentset'
-            type: array
-        "404":
-          description: Cannot find entity
-          schema:
-            type: string
-        "500":
-          description: Error updating entity
-          schema:
-            type: string
-      summary: Updates PetsEquipmentset
-      tags:
-      - PetsEquipmentset
-  /pets_equipmentset_entries:
-    get:
-      consumes:
-      - application/json
-      operationId: listPetsEquipmentsetEntries
-      parameters:
-      - description: 'Relationships [all] for all [number] for depth of relationships
-          to load or [.] separated relationship names '
-        in: query
-        name: includes
-        type: string
-      - description: 'Filter on specific fields. Multiple conditions [.] separated
-          Example: col_like_value.col2__val2'
-        in: query
-        name: where
-        type: string
-      - description: 'Rows to limit in response (Default: 10,000)'
-        in: query
-        name: limit
-        type: string
-      - description: Order by [field]
-        in: query
-        name: orderBy
-        type: string
-      - description: Order by field direction
-        in: query
-        name: orderDirection
-        type: string
-      - description: Column names [.] separated to fetch specific fields in response
-        in: query
-        name: select
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            items:
-              $ref: '#/definitions/models.PetsEquipmentsetEntry'
-            type: array
-        "500":
-          description: Bad query request
-          schema:
-            type: string
-      summary: Lists PetsEquipmentsetEntries
-      tags:
-      - PetsEquipmentsetEntry
-  /pets_equipmentset_entry:
-    put:
-      consumes:
-      - application/json
-      operationId: createPetsEquipmentsetEntry
-      parameters:
-      - description: PetsEquipmentsetEntry
-        in: body
-        name: pets_equipmentset_entry
-        required: true
-        schema:
-          $ref: '#/definitions/models.PetsEquipmentsetEntry'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            items:
-              $ref: '#/definitions/models.PetsEquipmentsetEntry'
-            type: array
-        "500":
-          description: Error inserting entity
-          schema:
-            type: string
-      summary: Creates PetsEquipmentsetEntry
-      tags:
-      - PetsEquipmentsetEntry
-  /pets_equipmentset_entry/{id}:
-    delete:
-      consumes:
-      - application/json
-      operationId: deletePetsEquipmentsetEntry
-      parameters:
-      - description: Id
-        in: path
-        name: id
-        required: true
-        type: integer
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: Entity deleted successfully
-          schema:
-            type: string
-        "404":
-          description: Cannot find entity
-          schema:
-            type: string
-        "500":
-          description: Error deleting entity
-          schema:
-            type: string
-      summary: Deletes PetsEquipmentsetEntry
-      tags:
-      - PetsEquipmentsetEntry
-    get:
-      consumes:
-      - application/json
-      operationId: getPetsEquipmentsetEntry
-      parameters:
-      - description: Id
-        in: path
-        name: id
-        required: true
-        type: integer
-      - description: 'Relationships [all] for all [number] for depth of relationships
-          to load or [.] separated relationship names '
-        in: query
-        name: includes
-        type: string
-      - description: Column names [.] separated to fetch specific fields in response
-        in: query
-        name: select
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            items:
-              $ref: '#/definitions/models.PetsEquipmentsetEntry'
-            type: array
-        "404":
-          description: Entity not found
-          schema:
-            type: string
-        "500":
-          description: Bad query request
-          schema:
-            type: string
-      summary: Gets PetsEquipmentsetEntry
-      tags:
-      - PetsEquipmentsetEntry
-    patch:
-      consumes:
-      - application/json
-      operationId: updatePetsEquipmentsetEntry
-      parameters:
-      - description: Id
-        in: path
-        name: id
-        required: true
-        type: integer
-      - description: PetsEquipmentsetEntry
-        in: body
-        name: pets_equipmentset_entry
-        required: true
-        schema:
-          $ref: '#/definitions/models.PetsEquipmentsetEntry'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            items:
-              $ref: '#/definitions/models.PetsEquipmentsetEntry'
-            type: array
-        "404":
-          description: Cannot find entity
-          schema:
-            type: string
-        "500":
-          description: Error updating entity
-          schema:
-            type: string
-      summary: Updates PetsEquipmentsetEntry
-      tags:
-      - PetsEquipmentsetEntry
-  /pets_equipmentsets:
-    get:
-      consumes:
-      - application/json
-      operationId: listPetsEquipmentsets
-      parameters:
-      - description: Relationships [all] for all [number] for depth of relationships
-          to load or [.] separated relationship names <h4>Relationships</h4>PetsEquipmentsetEntries
-        in: query
-        name: includes
-        type: string
-      - description: 'Filter on specific fields. Multiple conditions [.] separated
-          Example: col_like_value.col2__val2'
-        in: query
-        name: where
-        type: string
-      - description: 'Rows to limit in response (Default: 10,000)'
-        in: query
-        name: limit
-        type: string
-      - description: Order by [field]
-        in: query
-        name: orderBy
-        type: string
-      - description: Order by field direction
-        in: query
-        name: orderDirection
-        type: string
-      - description: Column names [.] separated to fetch specific fields in response
-        in: query
-        name: select
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            items:
-              $ref: '#/definitions/models.PetsEquipmentset'
-            type: array
-        "500":
-          description: Bad query request
-          schema:
-            type: string
-      summary: Lists PetsEquipmentsets
-      tags:
-      - PetsEquipmentset
   /player_titleset:
     put:
       consumes:
@@ -20872,366 +17496,6 @@ paths:
       summary: Lists PlayerTitlesets
       tags:
       - PlayerTitleset
-  /quest_global:
-    put:
-      consumes:
-      - application/json
-      operationId: createQuestGlobal
-      parameters:
-      - description: QuestGlobal
-        in: body
-        name: quest_global
-        required: true
-        schema:
-          $ref: '#/definitions/models.QuestGlobal'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            items:
-              $ref: '#/definitions/models.QuestGlobal'
-            type: array
-        "500":
-          description: Error inserting entity
-          schema:
-            type: string
-      summary: Creates QuestGlobal
-      tags:
-      - QuestGlobal
-  /quest_global/{id}:
-    delete:
-      consumes:
-      - application/json
-      operationId: deleteQuestGlobal
-      parameters:
-      - description: Id
-        in: path
-        name: id
-        required: true
-        type: integer
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: Entity deleted successfully
-          schema:
-            type: string
-        "404":
-          description: Cannot find entity
-          schema:
-            type: string
-        "500":
-          description: Error deleting entity
-          schema:
-            type: string
-      summary: Deletes QuestGlobal
-      tags:
-      - QuestGlobal
-    get:
-      consumes:
-      - application/json
-      operationId: getQuestGlobal
-      parameters:
-      - description: Id
-        in: path
-        name: id
-        required: true
-        type: integer
-      - description: 'Relationships [all] for all [number] for depth of relationships
-          to load or [.] separated relationship names '
-        in: query
-        name: includes
-        type: string
-      - description: Column names [.] separated to fetch specific fields in response
-        in: query
-        name: select
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            items:
-              $ref: '#/definitions/models.QuestGlobal'
-            type: array
-        "404":
-          description: Entity not found
-          schema:
-            type: string
-        "500":
-          description: Bad query request
-          schema:
-            type: string
-      summary: Gets QuestGlobal
-      tags:
-      - QuestGlobal
-    patch:
-      consumes:
-      - application/json
-      operationId: updateQuestGlobal
-      parameters:
-      - description: Id
-        in: path
-        name: id
-        required: true
-        type: integer
-      - description: QuestGlobal
-        in: body
-        name: quest_global
-        required: true
-        schema:
-          $ref: '#/definitions/models.QuestGlobal'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            items:
-              $ref: '#/definitions/models.QuestGlobal'
-            type: array
-        "404":
-          description: Cannot find entity
-          schema:
-            type: string
-        "500":
-          description: Error updating entity
-          schema:
-            type: string
-      summary: Updates QuestGlobal
-      tags:
-      - QuestGlobal
-  /quest_globals:
-    get:
-      consumes:
-      - application/json
-      operationId: listQuestGlobals
-      parameters:
-      - description: 'Relationships [all] for all [number] for depth of relationships
-          to load or [.] separated relationship names '
-        in: query
-        name: includes
-        type: string
-      - description: 'Filter on specific fields. Multiple conditions [.] separated
-          Example: col_like_value.col2__val2'
-        in: query
-        name: where
-        type: string
-      - description: 'Rows to limit in response (Default: 10,000)'
-        in: query
-        name: limit
-        type: string
-      - description: Order by [field]
-        in: query
-        name: orderBy
-        type: string
-      - description: Order by field direction
-        in: query
-        name: orderDirection
-        type: string
-      - description: Column names [.] separated to fetch specific fields in response
-        in: query
-        name: select
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            items:
-              $ref: '#/definitions/models.QuestGlobal'
-            type: array
-        "500":
-          description: Bad query request
-          schema:
-            type: string
-      summary: Lists QuestGlobals
-      tags:
-      - QuestGlobal
-  /raid_detail:
-    put:
-      consumes:
-      - application/json
-      operationId: createRaidDetail
-      parameters:
-      - description: RaidDetail
-        in: body
-        name: raid_detail
-        required: true
-        schema:
-          $ref: '#/definitions/models.RaidDetail'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            items:
-              $ref: '#/definitions/models.RaidDetail'
-            type: array
-        "500":
-          description: Error inserting entity
-          schema:
-            type: string
-      summary: Creates RaidDetail
-      tags:
-      - RaidDetail
-  /raid_detail/{id}:
-    delete:
-      consumes:
-      - application/json
-      operationId: deleteRaidDetail
-      parameters:
-      - description: Id
-        in: path
-        name: id
-        required: true
-        type: integer
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: Entity deleted successfully
-          schema:
-            type: string
-        "404":
-          description: Cannot find entity
-          schema:
-            type: string
-        "500":
-          description: Error deleting entity
-          schema:
-            type: string
-      summary: Deletes RaidDetail
-      tags:
-      - RaidDetail
-    get:
-      consumes:
-      - application/json
-      operationId: getRaidDetail
-      parameters:
-      - description: Id
-        in: path
-        name: id
-        required: true
-        type: integer
-      - description: Relationships [all] for all [number] for depth of relationships
-          to load or [.] separated relationship names <h4>Relationships</h4>RaidLeaders<br>RaidMembers
-        in: query
-        name: includes
-        type: string
-      - description: Column names [.] separated to fetch specific fields in response
-        in: query
-        name: select
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            items:
-              $ref: '#/definitions/models.RaidDetail'
-            type: array
-        "404":
-          description: Entity not found
-          schema:
-            type: string
-        "500":
-          description: Bad query request
-          schema:
-            type: string
-      summary: Gets RaidDetail
-      tags:
-      - RaidDetail
-    patch:
-      consumes:
-      - application/json
-      operationId: updateRaidDetail
-      parameters:
-      - description: Id
-        in: path
-        name: id
-        required: true
-        type: integer
-      - description: RaidDetail
-        in: body
-        name: raid_detail
-        required: true
-        schema:
-          $ref: '#/definitions/models.RaidDetail'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            items:
-              $ref: '#/definitions/models.RaidDetail'
-            type: array
-        "404":
-          description: Cannot find entity
-          schema:
-            type: string
-        "500":
-          description: Error updating entity
-          schema:
-            type: string
-      summary: Updates RaidDetail
-      tags:
-      - RaidDetail
-  /raid_details:
-    get:
-      consumes:
-      - application/json
-      operationId: listRaidDetails
-      parameters:
-      - description: Relationships [all] for all [number] for depth of relationships
-          to load or [.] separated relationship names <h4>Relationships</h4>RaidLeaders<br>RaidMembers
-        in: query
-        name: includes
-        type: string
-      - description: 'Filter on specific fields. Multiple conditions [.] separated
-          Example: col_like_value.col2__val2'
-        in: query
-        name: where
-        type: string
-      - description: 'Rows to limit in response (Default: 10,000)'
-        in: query
-        name: limit
-        type: string
-      - description: Order by [field]
-        in: query
-        name: orderBy
-        type: string
-      - description: Order by field direction
-        in: query
-        name: orderDirection
-        type: string
-      - description: Column names [.] separated to fetch specific fields in response
-        in: query
-        name: select
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            items:
-              $ref: '#/definitions/models.RaidDetail'
-            type: array
-        "500":
-          description: Bad query request
-          schema:
-            type: string
-      summary: Lists RaidDetails
-      tags:
-      - RaidDetail
   /report:
     put:
       consumes:
@@ -22492,186 +18756,6 @@ paths:
       summary: Lists SpawnEvents
       tags:
       - SpawnEvent
-  /spawnentries:
-    get:
-      consumes:
-      - application/json
-      operationId: listSpawnentries
-      parameters:
-      - description: Relationships [all] for all [number] for depth of relationships
-          to load or [.] separated relationship names <h4>Relationships</h4>Spawngroup<br>Spawngroup.Spawn2
-        in: query
-        name: includes
-        type: string
-      - description: 'Filter on specific fields. Multiple conditions [.] separated
-          Example: col_like_value.col2__val2'
-        in: query
-        name: where
-        type: string
-      - description: 'Rows to limit in response (Default: 10,000)'
-        in: query
-        name: limit
-        type: string
-      - description: Order by [field]
-        in: query
-        name: orderBy
-        type: string
-      - description: Order by field direction
-        in: query
-        name: orderDirection
-        type: string
-      - description: Column names [.] separated to fetch specific fields in response
-        in: query
-        name: select
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            items:
-              $ref: '#/definitions/models.Spawnentry'
-            type: array
-        "500":
-          description: Bad query request
-          schema:
-            type: string
-      summary: Lists Spawnentries
-      tags:
-      - Spawnentry
-  /spawnentry:
-    put:
-      consumes:
-      - application/json
-      operationId: createSpawnentry
-      parameters:
-      - description: Spawnentry
-        in: body
-        name: spawnentry
-        required: true
-        schema:
-          $ref: '#/definitions/models.Spawnentry'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            items:
-              $ref: '#/definitions/models.Spawnentry'
-            type: array
-        "500":
-          description: Error inserting entity
-          schema:
-            type: string
-      summary: Creates Spawnentry
-      tags:
-      - Spawnentry
-  /spawnentry/{id}:
-    delete:
-      consumes:
-      - application/json
-      operationId: deleteSpawnentry
-      parameters:
-      - description: Id
-        in: path
-        name: id
-        required: true
-        type: integer
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: Entity deleted successfully
-          schema:
-            type: string
-        "404":
-          description: Cannot find entity
-          schema:
-            type: string
-        "500":
-          description: Error deleting entity
-          schema:
-            type: string
-      summary: Deletes Spawnentry
-      tags:
-      - Spawnentry
-    get:
-      consumes:
-      - application/json
-      operationId: getSpawnentry
-      parameters:
-      - description: Id
-        in: path
-        name: id
-        required: true
-        type: integer
-      - description: Relationships [all] for all [number] for depth of relationships
-          to load or [.] separated relationship names <h4>Relationships</h4>Spawngroup<br>Spawngroup.Spawn2
-        in: query
-        name: includes
-        type: string
-      - description: Column names [.] separated to fetch specific fields in response
-        in: query
-        name: select
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            items:
-              $ref: '#/definitions/models.Spawnentry'
-            type: array
-        "404":
-          description: Entity not found
-          schema:
-            type: string
-        "500":
-          description: Bad query request
-          schema:
-            type: string
-      summary: Gets Spawnentry
-      tags:
-      - Spawnentry
-    patch:
-      consumes:
-      - application/json
-      operationId: updateSpawnentry
-      parameters:
-      - description: Id
-        in: path
-        name: id
-        required: true
-        type: integer
-      - description: Spawnentry
-        in: body
-        name: spawnentry
-        required: true
-        schema:
-          $ref: '#/definitions/models.Spawnentry'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            items:
-              $ref: '#/definitions/models.Spawnentry'
-            type: array
-        "404":
-          description: Cannot find entity
-          schema:
-            type: string
-        "500":
-          description: Error updating entity
-          schema:
-            type: string
-      summary: Updates Spawnentry
-      tags:
-      - Spawnentry
   /spawngroup:
     put:
       consumes:
@@ -22852,186 +18936,6 @@ paths:
       summary: Lists Spawngroups
       tags:
       - Spawngroup
-  /spell_global:
-    put:
-      consumes:
-      - application/json
-      operationId: createSpellGlobal
-      parameters:
-      - description: SpellGlobal
-        in: body
-        name: spell_global
-        required: true
-        schema:
-          $ref: '#/definitions/models.SpellGlobal'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            items:
-              $ref: '#/definitions/models.SpellGlobal'
-            type: array
-        "500":
-          description: Error inserting entity
-          schema:
-            type: string
-      summary: Creates SpellGlobal
-      tags:
-      - SpellGlobal
-  /spell_global/{id}:
-    delete:
-      consumes:
-      - application/json
-      operationId: deleteSpellGlobal
-      parameters:
-      - description: Id
-        in: path
-        name: id
-        required: true
-        type: integer
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: Entity deleted successfully
-          schema:
-            type: string
-        "404":
-          description: Cannot find entity
-          schema:
-            type: string
-        "500":
-          description: Error deleting entity
-          schema:
-            type: string
-      summary: Deletes SpellGlobal
-      tags:
-      - SpellGlobal
-    get:
-      consumes:
-      - application/json
-      operationId: getSpellGlobal
-      parameters:
-      - description: Id
-        in: path
-        name: id
-        required: true
-        type: integer
-      - description: 'Relationships [all] for all [number] for depth of relationships
-          to load or [.] separated relationship names '
-        in: query
-        name: includes
-        type: string
-      - description: Column names [.] separated to fetch specific fields in response
-        in: query
-        name: select
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            items:
-              $ref: '#/definitions/models.SpellGlobal'
-            type: array
-        "404":
-          description: Entity not found
-          schema:
-            type: string
-        "500":
-          description: Bad query request
-          schema:
-            type: string
-      summary: Gets SpellGlobal
-      tags:
-      - SpellGlobal
-    patch:
-      consumes:
-      - application/json
-      operationId: updateSpellGlobal
-      parameters:
-      - description: Id
-        in: path
-        name: id
-        required: true
-        type: integer
-      - description: SpellGlobal
-        in: body
-        name: spell_global
-        required: true
-        schema:
-          $ref: '#/definitions/models.SpellGlobal'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            items:
-              $ref: '#/definitions/models.SpellGlobal'
-            type: array
-        "404":
-          description: Cannot find entity
-          schema:
-            type: string
-        "500":
-          description: Error updating entity
-          schema:
-            type: string
-      summary: Updates SpellGlobal
-      tags:
-      - SpellGlobal
-  /spell_globals:
-    get:
-      consumes:
-      - application/json
-      operationId: listSpellGlobals
-      parameters:
-      - description: 'Relationships [all] for all [number] for depth of relationships
-          to load or [.] separated relationship names '
-        in: query
-        name: includes
-        type: string
-      - description: 'Filter on specific fields. Multiple conditions [.] separated
-          Example: col_like_value.col2__val2'
-        in: query
-        name: where
-        type: string
-      - description: 'Rows to limit in response (Default: 10,000)'
-        in: query
-        name: limit
-        type: string
-      - description: Order by [field]
-        in: query
-        name: orderBy
-        type: string
-      - description: Order by field direction
-        in: query
-        name: orderDirection
-        type: string
-      - description: Column names [.] separated to fetch specific fields in response
-        in: query
-        name: select
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            items:
-              $ref: '#/definitions/models.SpellGlobal'
-            type: array
-        "500":
-          description: Bad query request
-          schema:
-            type: string
-      summary: Lists SpellGlobals
-      tags:
-      - SpellGlobal
   /spells_new:
     put:
       consumes:
@@ -23752,186 +19656,6 @@ paths:
       summary: Lists Tasksets
       tags:
       - Taskset
-  /timer:
-    put:
-      consumes:
-      - application/json
-      operationId: createTimer
-      parameters:
-      - description: Timer
-        in: body
-        name: timer
-        required: true
-        schema:
-          $ref: '#/definitions/models.Timer'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            items:
-              $ref: '#/definitions/models.Timer'
-            type: array
-        "500":
-          description: Error inserting entity
-          schema:
-            type: string
-      summary: Creates Timer
-      tags:
-      - Timer
-  /timer/{id}:
-    delete:
-      consumes:
-      - application/json
-      operationId: deleteTimer
-      parameters:
-      - description: Id
-        in: path
-        name: id
-        required: true
-        type: integer
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: Entity deleted successfully
-          schema:
-            type: string
-        "404":
-          description: Cannot find entity
-          schema:
-            type: string
-        "500":
-          description: Error deleting entity
-          schema:
-            type: string
-      summary: Deletes Timer
-      tags:
-      - Timer
-    get:
-      consumes:
-      - application/json
-      operationId: getTimer
-      parameters:
-      - description: Id
-        in: path
-        name: id
-        required: true
-        type: integer
-      - description: 'Relationships [all] for all [number] for depth of relationships
-          to load or [.] separated relationship names '
-        in: query
-        name: includes
-        type: string
-      - description: Column names [.] separated to fetch specific fields in response
-        in: query
-        name: select
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            items:
-              $ref: '#/definitions/models.Timer'
-            type: array
-        "404":
-          description: Entity not found
-          schema:
-            type: string
-        "500":
-          description: Bad query request
-          schema:
-            type: string
-      summary: Gets Timer
-      tags:
-      - Timer
-    patch:
-      consumes:
-      - application/json
-      operationId: updateTimer
-      parameters:
-      - description: Id
-        in: path
-        name: id
-        required: true
-        type: integer
-      - description: Timer
-        in: body
-        name: timer
-        required: true
-        schema:
-          $ref: '#/definitions/models.Timer'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            items:
-              $ref: '#/definitions/models.Timer'
-            type: array
-        "404":
-          description: Cannot find entity
-          schema:
-            type: string
-        "500":
-          description: Error updating entity
-          schema:
-            type: string
-      summary: Updates Timer
-      tags:
-      - Timer
-  /timers:
-    get:
-      consumes:
-      - application/json
-      operationId: listTimers
-      parameters:
-      - description: 'Relationships [all] for all [number] for depth of relationships
-          to load or [.] separated relationship names '
-        in: query
-        name: includes
-        type: string
-      - description: 'Filter on specific fields. Multiple conditions [.] separated
-          Example: col_like_value.col2__val2'
-        in: query
-        name: where
-        type: string
-      - description: 'Rows to limit in response (Default: 10,000)'
-        in: query
-        name: limit
-        type: string
-      - description: Order by [field]
-        in: query
-        name: orderBy
-        type: string
-      - description: Order by field direction
-        in: query
-        name: orderDirection
-        type: string
-      - description: Column names [.] separated to fetch specific fields in response
-        in: query
-        name: select
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            items:
-              $ref: '#/definitions/models.Timer'
-            type: array
-        "500":
-          description: Bad query request
-          schema:
-            type: string
-      summary: Lists Timers
-      tags:
-      - Timer
   /title:
     put:
       consumes:
@@ -24964,186 +20688,6 @@ paths:
       summary: Updates Zone
       tags:
       - Zone
-  /zone_flag:
-    put:
-      consumes:
-      - application/json
-      operationId: createZoneFlag
-      parameters:
-      - description: ZoneFlag
-        in: body
-        name: zone_flag
-        required: true
-        schema:
-          $ref: '#/definitions/models.ZoneFlag'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            items:
-              $ref: '#/definitions/models.ZoneFlag'
-            type: array
-        "500":
-          description: Error inserting entity
-          schema:
-            type: string
-      summary: Creates ZoneFlag
-      tags:
-      - ZoneFlag
-  /zone_flag/{id}:
-    delete:
-      consumes:
-      - application/json
-      operationId: deleteZoneFlag
-      parameters:
-      - description: Id
-        in: path
-        name: id
-        required: true
-        type: integer
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: Entity deleted successfully
-          schema:
-            type: string
-        "404":
-          description: Cannot find entity
-          schema:
-            type: string
-        "500":
-          description: Error deleting entity
-          schema:
-            type: string
-      summary: Deletes ZoneFlag
-      tags:
-      - ZoneFlag
-    get:
-      consumes:
-      - application/json
-      operationId: getZoneFlag
-      parameters:
-      - description: Id
-        in: path
-        name: id
-        required: true
-        type: integer
-      - description: 'Relationships [all] for all [number] for depth of relationships
-          to load or [.] separated relationship names '
-        in: query
-        name: includes
-        type: string
-      - description: Column names [.] separated to fetch specific fields in response
-        in: query
-        name: select
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            items:
-              $ref: '#/definitions/models.ZoneFlag'
-            type: array
-        "404":
-          description: Entity not found
-          schema:
-            type: string
-        "500":
-          description: Bad query request
-          schema:
-            type: string
-      summary: Gets ZoneFlag
-      tags:
-      - ZoneFlag
-    patch:
-      consumes:
-      - application/json
-      operationId: updateZoneFlag
-      parameters:
-      - description: Id
-        in: path
-        name: id
-        required: true
-        type: integer
-      - description: ZoneFlag
-        in: body
-        name: zone_flag
-        required: true
-        schema:
-          $ref: '#/definitions/models.ZoneFlag'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            items:
-              $ref: '#/definitions/models.ZoneFlag'
-            type: array
-        "404":
-          description: Cannot find entity
-          schema:
-            type: string
-        "500":
-          description: Error updating entity
-          schema:
-            type: string
-      summary: Updates ZoneFlag
-      tags:
-      - ZoneFlag
-  /zone_flags:
-    get:
-      consumes:
-      - application/json
-      operationId: listZoneFlags
-      parameters:
-      - description: 'Relationships [all] for all [number] for depth of relationships
-          to load or [.] separated relationship names '
-        in: query
-        name: includes
-        type: string
-      - description: 'Filter on specific fields. Multiple conditions [.] separated
-          Example: col_like_value.col2__val2'
-        in: query
-        name: where
-        type: string
-      - description: 'Rows to limit in response (Default: 10,000)'
-        in: query
-        name: limit
-        type: string
-      - description: Order by [field]
-        in: query
-        name: orderBy
-        type: string
-      - description: Order by field direction
-        in: query
-        name: orderDirection
-        type: string
-      - description: Column names [.] separated to fetch specific fields in response
-        in: query
-        name: select
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            items:
-              $ref: '#/definitions/models.ZoneFlag'
-            type: array
-        "500":
-          description: Bad query request
-          schema:
-            type: string
-      summary: Lists ZoneFlags
-      tags:
-      - ZoneFlag
   /zone_point:
     put:
       consumes:

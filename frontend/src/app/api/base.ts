@@ -1,8 +1,8 @@
 /* tslint:disable */
 /* eslint-disable */
 /**
- * spire
- * spire API documentation
+ * Spire
+ * Spire API documentation
  *
  * The version of the OpenAPI document: 3.0
  * Contact: akkadius1@gmail.com
@@ -18,7 +18,7 @@ import { Configuration } from "./configuration";
 // @ts-ignore
 import globalAxios, { AxiosPromise, AxiosInstance } from 'axios';
 
-export const BASE_PATH = "http://localhost:3000/api/v1".replace(/\/+$/, "");
+export const BASE_PATH = "http://localhost/api/v1".replace(/\/+$/, "");
 
 /**
  *

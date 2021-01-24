@@ -532,7 +532,7 @@ export default {
     // spell loading
     this.effects.forEach((effect) => {
       if (this.itemData[effect.field] > 0) {
-        (new SpellsNewApi({ baseOptions: SpireApiClient.getAxiosConfig() })).getSpellsNew({ id: this.itemData[effect.field] }).then((result) => {
+        (new SpellsNewApi(SpireApiClient.getOpenApiConfig())).getSpellsNew({ id: this.itemData[effect.field] }).then((result) => {
           if (result.status === 200) {
             this.effectData[effect.field] = result.data
             this.$forceUpdate()

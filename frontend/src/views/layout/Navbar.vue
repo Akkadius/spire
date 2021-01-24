@@ -128,6 +128,22 @@
             </div>
           </li>
 
+          <!-- Test Pages -->
+          <li class="nav-item">
+            <a :class="'nav-link collapse ' + (hasRoute('-test') ? 'active' : 'collapsed')"
+               href="#test-pages" data-toggle="collapse" role="button"
+               aria-expanded="false" aria-controls="test-pages">
+              <i class="fe fe-box mr-1"></i> Test Pages
+            </a>
+            <div :class="'collapse ' + (hasRoute('components') ? 'show' : '')" id="test-pages">
+              <ul class="nav nav-sm flex-column">
+                <li v-for="nav in testPageNavs">
+                  <router-link class="nav-link" :to="nav.to">{{ nav.title }}</router-link>
+                </li>
+              </ul>
+            </div>
+          </li>
+
         </ul>
 
         <!-- Heading -->
@@ -214,6 +230,10 @@ export default {
         { title: "Tabs", to: "/components#tabs" },
         { title: "Form Elements", to: "/components#form-elements" },
         { title: "Windows", to: "/components#windows" },
+      ],
+      testPageNavs: [
+        { title: "Items Test", to: "/items-test" },
+        { title: "Spells Test", to: "/spells-test" },
       ]
     }
   },

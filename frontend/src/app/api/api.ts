@@ -1,8 +1,8 @@
 /* tslint:disable */
 /* eslint-disable */
 /**
- * spire
- * spire API documentation
+ * Spire
+ * Spire API documentation
  *
  * The version of the OpenAPI document: 3.0
  * Contact: akkadius1@gmail.com
@@ -487,25 +487,6 @@ export interface ModelsAdventureDetail {
      * @memberof ModelsAdventureDetail
      */
     time_zoned?: number;
-}
-/**
- * 
- * @export
- * @interface ModelsAdventureMember
- */
-export interface ModelsAdventureMember {
-    /**
-     * 
-     * @type {number}
-     * @memberof ModelsAdventureMember
-     */
-    charid?: number;
-    /**
-     * 
-     * @type {number}
-     * @memberof ModelsAdventureMember
-     */
-    id?: number;
 }
 /**
  * 
@@ -3388,6 +3369,12 @@ export interface ModelsCharacterPetInfo {
      * @memberof ModelsCharacterPetInfo
      */
     spell_id?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof ModelsCharacterPetInfo
+     */
+    taunting?: number;
 }
 /**
  * 
@@ -3951,6 +3938,115 @@ export interface ModelsDoor {
 /**
  * 
  * @export
+ * @interface ModelsDynamicZone
+ */
+export interface ModelsDynamicZone {
+    /**
+     * 
+     * @type {number}
+     * @memberof ModelsDynamicZone
+     */
+    compass_x?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof ModelsDynamicZone
+     */
+    compass_y?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof ModelsDynamicZone
+     */
+    compass_z?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof ModelsDynamicZone
+     */
+    compass_zone_id?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof ModelsDynamicZone
+     */
+    has_zone_in?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof ModelsDynamicZone
+     */
+    id?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof ModelsDynamicZone
+     */
+    instance_id?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof ModelsDynamicZone
+     */
+    safe_return_heading?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof ModelsDynamicZone
+     */
+    safe_return_x?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof ModelsDynamicZone
+     */
+    safe_return_y?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof ModelsDynamicZone
+     */
+    safe_return_z?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof ModelsDynamicZone
+     */
+    safe_return_zone_id?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof ModelsDynamicZone
+     */
+    type?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof ModelsDynamicZone
+     */
+    zone_in_heading?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof ModelsDynamicZone
+     */
+    zone_in_x?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof ModelsDynamicZone
+     */
+    zone_in_y?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof ModelsDynamicZone
+     */
+    zone_in_z?: number;
+}
+/**
+ * 
+ * @export
  * @interface ModelsEventlog
  */
 export interface ModelsEventlog {
@@ -4018,45 +4114,137 @@ export interface ModelsEventlog {
 /**
  * 
  * @export
- * @interface ModelsFactionBaseDatum
+ * @interface ModelsExpedition
  */
-export interface ModelsFactionBaseDatum {
+export interface ModelsExpedition {
     /**
      * 
      * @type {number}
-     * @memberof ModelsFactionBaseDatum
+     * @memberof ModelsExpedition
      */
-    client_faction_id?: number;
+    add_replay_on_join?: number;
     /**
      * 
      * @type {number}
-     * @memberof ModelsFactionBaseDatum
+     * @memberof ModelsExpedition
      */
-    max?: number;
+    dynamic_zone_id?: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof ModelsExpedition
+     */
+    expedition_name?: string;
     /**
      * 
      * @type {number}
-     * @memberof ModelsFactionBaseDatum
+     * @memberof ModelsExpedition
      */
-    min?: number;
+    id?: number;
     /**
      * 
      * @type {number}
-     * @memberof ModelsFactionBaseDatum
+     * @memberof ModelsExpedition
      */
-    unk_hero_1?: number;
+    is_locked?: number;
     /**
      * 
      * @type {number}
-     * @memberof ModelsFactionBaseDatum
+     * @memberof ModelsExpedition
      */
-    unk_hero_2?: number;
+    leader_id?: number;
     /**
      * 
      * @type {number}
-     * @memberof ModelsFactionBaseDatum
+     * @memberof ModelsExpedition
      */
-    unk_hero_3?: number;
+    max_players?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof ModelsExpedition
+     */
+    min_players?: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof ModelsExpedition
+     */
+    uuid?: string;
+}
+/**
+ * 
+ * @export
+ * @interface ModelsExpeditionLockout
+ */
+export interface ModelsExpeditionLockout {
+    /**
+     * 
+     * @type {number}
+     * @memberof ModelsExpeditionLockout
+     */
+    duration?: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof ModelsExpeditionLockout
+     */
+    event_name?: string;
+    /**
+     * 
+     * @type {number}
+     * @memberof ModelsExpeditionLockout
+     */
+    expedition_id?: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof ModelsExpeditionLockout
+     */
+    expire_time?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof ModelsExpeditionLockout
+     */
+    from_expedition_uuid?: string;
+    /**
+     * 
+     * @type {number}
+     * @memberof ModelsExpeditionLockout
+     */
+    id?: number;
+}
+/**
+ * 
+ * @export
+ * @interface ModelsExpeditionMember
+ */
+export interface ModelsExpeditionMember {
+    /**
+     * 
+     * @type {number}
+     * @memberof ModelsExpeditionMember
+     */
+    character_id?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof ModelsExpeditionMember
+     */
+    expedition_id?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof ModelsExpeditionMember
+     */
+    id?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof ModelsExpeditionMember
+     */
+    is_current_member?: number;
 }
 /**
  * 
@@ -4691,37 +4879,6 @@ export interface ModelsGroundSpawn {
 /**
  * 
  * @export
- * @interface ModelsGroupId
- */
-export interface ModelsGroupId {
-    /**
-     * 
-     * @type {number}
-     * @memberof ModelsGroupId
-     */
-    charid?: number;
-    /**
-     * 
-     * @type {number}
-     * @memberof ModelsGroupId
-     */
-    groupid?: number;
-    /**
-     * 
-     * @type {number}
-     * @memberof ModelsGroupId
-     */
-    ismerc?: number;
-    /**
-     * 
-     * @type {string}
-     * @memberof ModelsGroupId
-     */
-    name?: string;
-}
-/**
- * 
- * @export
  * @interface ModelsGuild
  */
 export interface ModelsGuild {
@@ -5218,31 +5375,6 @@ export interface ModelsInventory {
      * @memberof ModelsInventory
      */
     slotid?: number;
-}
-/**
- * 
- * @export
- * @interface ModelsIpExemption
- */
-export interface ModelsIpExemption {
-    /**
-     * 
-     * @type {number}
-     * @memberof ModelsIpExemption
-     */
-    exemption_amount?: number;
-    /**
-     * 
-     * @type {number}
-     * @memberof ModelsIpExemption
-     */
-    exemption_id?: number;
-    /**
-     * 
-     * @type {string}
-     * @memberof ModelsIpExemption
-     */
-    exemption_ip?: string;
 }
 /**
  * 
@@ -7045,31 +7177,6 @@ export interface ModelsLdonTrapTemplate {
 /**
  * 
  * @export
- * @interface ModelsLevelExpMod
- */
-export interface ModelsLevelExpMod {
-    /**
-     * 
-     * @type {number}
-     * @memberof ModelsLevelExpMod
-     */
-    aa_exp_mod?: number;
-    /**
-     * 
-     * @type {number}
-     * @memberof ModelsLevelExpMod
-     */
-    exp_mod?: number;
-    /**
-     * 
-     * @type {number}
-     * @memberof ModelsLevelExpMod
-     */
-    level?: number;
-}
-/**
- * 
- * @export
  * @interface ModelsLoginAccount
  */
 export interface ModelsLoginAccount {
@@ -7311,43 +7418,6 @@ export interface ModelsLoginWorldServer {
      * @memberof ModelsLoginWorldServer
      */
     tag_description?: string;
-}
-/**
- * 
- * @export
- * @interface ModelsLogsysCategory
- */
-export interface ModelsLogsysCategory {
-    /**
-     * 
-     * @type {string}
-     * @memberof ModelsLogsysCategory
-     */
-    log_category_description?: string;
-    /**
-     * 
-     * @type {number}
-     * @memberof ModelsLogsysCategory
-     */
-    log_category_id?: number;
-    /**
-     * 
-     * @type {number}
-     * @memberof ModelsLogsysCategory
-     */
-    log_to_console?: number;
-    /**
-     * 
-     * @type {number}
-     * @memberof ModelsLogsysCategory
-     */
-    log_to_file?: number;
-    /**
-     * 
-     * @type {number}
-     * @memberof ModelsLogsysCategory
-     */
-    log_to_gmsay?: number;
 }
 /**
  * 
@@ -7862,181 +7932,6 @@ export interface ModelsNpcFactionEntry {
      * @memberof ModelsNpcFactionEntry
      */
     value?: number;
-}
-/**
- * 
- * @export
- * @interface ModelsNpcScaleGlobalBase
- */
-export interface ModelsNpcScaleGlobalBase {
-    /**
-     * 
-     * @type {number}
-     * @memberof ModelsNpcScaleGlobalBase
-     */
-    ac?: number;
-    /**
-     * 
-     * @type {number}
-     * @memberof ModelsNpcScaleGlobalBase
-     */
-    accuracy?: number;
-    /**
-     * 
-     * @type {number}
-     * @memberof ModelsNpcScaleGlobalBase
-     */
-    agility?: number;
-    /**
-     * 
-     * @type {number}
-     * @memberof ModelsNpcScaleGlobalBase
-     */
-    attack?: number;
-    /**
-     * 
-     * @type {number}
-     * @memberof ModelsNpcScaleGlobalBase
-     */
-    attack_delay?: number;
-    /**
-     * 
-     * @type {number}
-     * @memberof ModelsNpcScaleGlobalBase
-     */
-    charisma?: number;
-    /**
-     * 
-     * @type {number}
-     * @memberof ModelsNpcScaleGlobalBase
-     */
-    cold_resist?: number;
-    /**
-     * 
-     * @type {number}
-     * @memberof ModelsNpcScaleGlobalBase
-     */
-    corruption_resist?: number;
-    /**
-     * 
-     * @type {number}
-     * @memberof ModelsNpcScaleGlobalBase
-     */
-    dexterity?: number;
-    /**
-     * 
-     * @type {number}
-     * @memberof ModelsNpcScaleGlobalBase
-     */
-    disease_resist?: number;
-    /**
-     * 
-     * @type {number}
-     * @memberof ModelsNpcScaleGlobalBase
-     */
-    fire_resist?: number;
-    /**
-     * 
-     * @type {number}
-     * @memberof ModelsNpcScaleGlobalBase
-     */
-    heal_scale?: number;
-    /**
-     * 
-     * @type {number}
-     * @memberof ModelsNpcScaleGlobalBase
-     */
-    hp?: number;
-    /**
-     * 
-     * @type {number}
-     * @memberof ModelsNpcScaleGlobalBase
-     */
-    hp_regen_rate?: number;
-    /**
-     * 
-     * @type {number}
-     * @memberof ModelsNpcScaleGlobalBase
-     */
-    intelligence?: number;
-    /**
-     * 
-     * @type {number}
-     * @memberof ModelsNpcScaleGlobalBase
-     */
-    level?: number;
-    /**
-     * 
-     * @type {number}
-     * @memberof ModelsNpcScaleGlobalBase
-     */
-    magic_resist?: number;
-    /**
-     * 
-     * @type {number}
-     * @memberof ModelsNpcScaleGlobalBase
-     */
-    max_dmg?: number;
-    /**
-     * 
-     * @type {number}
-     * @memberof ModelsNpcScaleGlobalBase
-     */
-    min_dmg?: number;
-    /**
-     * 
-     * @type {number}
-     * @memberof ModelsNpcScaleGlobalBase
-     */
-    physical_resist?: number;
-    /**
-     * 
-     * @type {number}
-     * @memberof ModelsNpcScaleGlobalBase
-     */
-    poison_resist?: number;
-    /**
-     * 
-     * @type {number}
-     * @memberof ModelsNpcScaleGlobalBase
-     */
-    slow_mitigation?: number;
-    /**
-     * 
-     * @type {string}
-     * @memberof ModelsNpcScaleGlobalBase
-     */
-    special_abilities?: string;
-    /**
-     * 
-     * @type {number}
-     * @memberof ModelsNpcScaleGlobalBase
-     */
-    spell_scale?: number;
-    /**
-     * 
-     * @type {number}
-     * @memberof ModelsNpcScaleGlobalBase
-     */
-    stamina?: number;
-    /**
-     * 
-     * @type {number}
-     * @memberof ModelsNpcScaleGlobalBase
-     */
-    strength?: number;
-    /**
-     * 
-     * @type {number}
-     * @memberof ModelsNpcScaleGlobalBase
-     */
-    type?: number;
-    /**
-     * 
-     * @type {number}
-     * @memberof ModelsNpcScaleGlobalBase
-     */
-    wisdom?: number;
 }
 /**
  * 
@@ -9494,111 +9389,6 @@ export interface ModelsObject {
 /**
  * 
  * @export
- * @interface ModelsPerlEventExportSetting
- */
-export interface ModelsPerlEventExportSetting {
-    /**
-     * 
-     * @type {string}
-     * @memberof ModelsPerlEventExportSetting
-     */
-    event_description?: string;
-    /**
-     * 
-     * @type {number}
-     * @memberof ModelsPerlEventExportSetting
-     */
-    event_id?: number;
-    /**
-     * 
-     * @type {number}
-     * @memberof ModelsPerlEventExportSetting
-     */
-    export_event?: number;
-    /**
-     * 
-     * @type {number}
-     * @memberof ModelsPerlEventExportSetting
-     */
-    export_item?: number;
-    /**
-     * 
-     * @type {number}
-     * @memberof ModelsPerlEventExportSetting
-     */
-    export_mob?: number;
-    /**
-     * 
-     * @type {number}
-     * @memberof ModelsPerlEventExportSetting
-     */
-    export_qglobals?: number;
-    /**
-     * 
-     * @type {number}
-     * @memberof ModelsPerlEventExportSetting
-     */
-    export_zone?: number;
-}
-/**
- * 
- * @export
- * @interface ModelsPetsEquipmentset
- */
-export interface ModelsPetsEquipmentset {
-    /**
-     * 
-     * @type {number}
-     * @memberof ModelsPetsEquipmentset
-     */
-    nested_set?: number;
-    /**
-     * 
-     * @type {Array<ModelsPetsEquipmentsetEntry>}
-     * @memberof ModelsPetsEquipmentset
-     */
-    pets_equipmentset_entries?: Array<ModelsPetsEquipmentsetEntry>;
-    /**
-     * 
-     * @type {number}
-     * @memberof ModelsPetsEquipmentset
-     */
-    set_id?: number;
-    /**
-     * 
-     * @type {string}
-     * @memberof ModelsPetsEquipmentset
-     */
-    setname?: string;
-}
-/**
- * 
- * @export
- * @interface ModelsPetsEquipmentsetEntry
- */
-export interface ModelsPetsEquipmentsetEntry {
-    /**
-     * 
-     * @type {number}
-     * @memberof ModelsPetsEquipmentsetEntry
-     */
-    item_id?: number;
-    /**
-     * 
-     * @type {number}
-     * @memberof ModelsPetsEquipmentsetEntry
-     */
-    set_id?: number;
-    /**
-     * 
-     * @type {number}
-     * @memberof ModelsPetsEquipmentsetEntry
-     */
-    slot?: number;
-}
-/**
- * 
- * @export
  * @interface ModelsPlayerTitleset
  */
 export interface ModelsPlayerTitleset {
@@ -9663,171 +9453,6 @@ export interface ModelsQuestGlobal {
      * @memberof ModelsQuestGlobal
      */
     zoneid?: number;
-}
-/**
- * 
- * @export
- * @interface ModelsRaidDetail
- */
-export interface ModelsRaidDetail {
-    /**
-     * 
-     * @type {number}
-     * @memberof ModelsRaidDetail
-     */
-    locked?: number;
-    /**
-     * 
-     * @type {number}
-     * @memberof ModelsRaidDetail
-     */
-    loottype?: number;
-    /**
-     * 
-     * @type {string}
-     * @memberof ModelsRaidDetail
-     */
-    motd?: string;
-    /**
-     * 
-     * @type {Array<ModelsRaidLeader>}
-     * @memberof ModelsRaidDetail
-     */
-    raid_leaders?: Array<ModelsRaidLeader>;
-    /**
-     * 
-     * @type {Array<ModelsRaidMember>}
-     * @memberof ModelsRaidDetail
-     */
-    raid_members?: Array<ModelsRaidMember>;
-    /**
-     * 
-     * @type {number}
-     * @memberof ModelsRaidDetail
-     */
-    raidid?: number;
-}
-/**
- * 
- * @export
- * @interface ModelsRaidLeader
- */
-export interface ModelsRaidLeader {
-    /**
-     * 
-     * @type {string}
-     * @memberof ModelsRaidLeader
-     */
-    assist?: string;
-    /**
-     * 
-     * @type {number}
-     * @memberof ModelsRaidLeader
-     */
-    gid?: number;
-    /**
-     * 
-     * @type {Array<number>}
-     * @memberof ModelsRaidLeader
-     */
-    leadershipaa?: Array<number>;
-    /**
-     * 
-     * @type {string}
-     * @memberof ModelsRaidLeader
-     */
-    maintank?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof ModelsRaidLeader
-     */
-    marknpc?: string;
-    /**
-     * 
-     * @type {number}
-     * @memberof ModelsRaidLeader
-     */
-    mentor_percent?: number;
-    /**
-     * 
-     * @type {string}
-     * @memberof ModelsRaidLeader
-     */
-    mentoree?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof ModelsRaidLeader
-     */
-    puller?: string;
-    /**
-     * 
-     * @type {number}
-     * @memberof ModelsRaidLeader
-     */
-    rid?: number;
-}
-/**
- * 
- * @export
- * @interface ModelsRaidMember
- */
-export interface ModelsRaidMember {
-    /**
-     * 
-     * @type {number}
-     * @memberof ModelsRaidMember
-     */
-    _class?: number;
-    /**
-     * 
-     * @type {number}
-     * @memberof ModelsRaidMember
-     */
-    charid?: number;
-    /**
-     * 
-     * @type {number}
-     * @memberof ModelsRaidMember
-     */
-    groupid?: number;
-    /**
-     * 
-     * @type {number}
-     * @memberof ModelsRaidMember
-     */
-    isgroupleader?: number;
-    /**
-     * 
-     * @type {number}
-     * @memberof ModelsRaidMember
-     */
-    islooter?: number;
-    /**
-     * 
-     * @type {number}
-     * @memberof ModelsRaidMember
-     */
-    israidleader?: number;
-    /**
-     * 
-     * @type {number}
-     * @memberof ModelsRaidMember
-     */
-    level?: number;
-    /**
-     * 
-     * @type {string}
-     * @memberof ModelsRaidMember
-     */
-    name?: string;
-    /**
-     * 
-     * @type {number}
-     * @memberof ModelsRaidMember
-     */
-    raidid?: number;
 }
 /**
  * 
@@ -12947,6 +12572,12 @@ export interface ModelsUser {
 export interface ModelsUserServerDatabaseConnection {
     /**
      * 
+     * @type {number}
+     * @memberof ModelsUserServerDatabaseConnection
+     */
+    active?: number;
+    /**
+     * 
      * @type {string}
      * @memberof ModelsUserServerDatabaseConnection
      */
@@ -13510,6 +13141,12 @@ export interface ModelsZone {
      * @memberof ModelsZone
      */
     underworld?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof ModelsZone
+     */
+    underworld_teleport_index?: number;
     /**
      * 
      * @type {number}
@@ -15600,635 +15237,6 @@ export class AccountApi extends BaseAPI {
 
 
 /**
- * AccountIpApi - axios parameter creator
- * @export
- */
-export const AccountIpApiAxiosParamCreator = function (configuration?: Configuration) {
-    return {
-        /**
-         * 
-         * @summary Creates AccountIp
-         * @param {ModelsAccountIp} accountIp AccountIp
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        createAccountIp: async (accountIp: ModelsAccountIp, options: any = {}): Promise<RequestArgs> => {
-            // verify required parameter 'accountIp' is not null or undefined
-            if (accountIp === null || accountIp === undefined) {
-                throw new RequiredError('accountIp','Required parameter accountIp was null or undefined when calling createAccountIp.');
-            }
-            const localVarPath = `/account_ip`;
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, 'https://example.com');
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'PUT', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-
-    
-            localVarHeaderParameter['Content-Type'] = 'application/json';
-
-            const queryParameters = new URLSearchParams(localVarUrlObj.search);
-            for (const key in localVarQueryParameter) {
-                queryParameters.set(key, localVarQueryParameter[key]);
-            }
-            for (const key in options.query) {
-                queryParameters.set(key, options.query[key]);
-            }
-            localVarUrlObj.search = (new URLSearchParams(queryParameters)).toString();
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            const nonString = typeof accountIp !== 'string';
-            const needsSerialization = nonString && configuration && configuration.isJsonMime
-                ? configuration.isJsonMime(localVarRequestOptions.headers['Content-Type'])
-                : nonString;
-            localVarRequestOptions.data =  needsSerialization
-                ? JSON.stringify(accountIp !== undefined ? accountIp : {})
-                : (accountIp || "");
-
-            return {
-                url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * 
-         * @summary Deletes AccountIp
-         * @param {number} id Id
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        deleteAccountIp: async (id: number, options: any = {}): Promise<RequestArgs> => {
-            // verify required parameter 'id' is not null or undefined
-            if (id === null || id === undefined) {
-                throw new RequiredError('id','Required parameter id was null or undefined when calling deleteAccountIp.');
-            }
-            const localVarPath = `/account_ip/{id}`
-                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, 'https://example.com');
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'DELETE', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-
-    
-            const queryParameters = new URLSearchParams(localVarUrlObj.search);
-            for (const key in localVarQueryParameter) {
-                queryParameters.set(key, localVarQueryParameter[key]);
-            }
-            for (const key in options.query) {
-                queryParameters.set(key, options.query[key]);
-            }
-            localVarUrlObj.search = (new URLSearchParams(queryParameters)).toString();
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-
-            return {
-                url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * 
-         * @summary Gets AccountIp
-         * @param {number} id Id
-         * @param {string} [includes] Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names 
-         * @param {string} [select] Column names [.] separated to fetch specific fields in response
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getAccountIp: async (id: number, includes?: string, select?: string, options: any = {}): Promise<RequestArgs> => {
-            // verify required parameter 'id' is not null or undefined
-            if (id === null || id === undefined) {
-                throw new RequiredError('id','Required parameter id was null or undefined when calling getAccountIp.');
-            }
-            const localVarPath = `/account_ip/{id}`
-                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, 'https://example.com');
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-            if (includes !== undefined) {
-                localVarQueryParameter['includes'] = includes;
-            }
-
-            if (select !== undefined) {
-                localVarQueryParameter['select'] = select;
-            }
-
-
-    
-            const queryParameters = new URLSearchParams(localVarUrlObj.search);
-            for (const key in localVarQueryParameter) {
-                queryParameters.set(key, localVarQueryParameter[key]);
-            }
-            for (const key in options.query) {
-                queryParameters.set(key, options.query[key]);
-            }
-            localVarUrlObj.search = (new URLSearchParams(queryParameters)).toString();
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-
-            return {
-                url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * 
-         * @summary Lists AccountIps
-         * @param {string} [includes] Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names 
-         * @param {string} [where] Filter on specific fields. Multiple conditions [.] separated Example: col_like_value.col2__val2
-         * @param {string} [limit] Rows to limit in response (Default: 10,000)
-         * @param {string} [orderBy] Order by [field]
-         * @param {string} [orderDirection] Order by field direction
-         * @param {string} [select] Column names [.] separated to fetch specific fields in response
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        listAccountIps: async (includes?: string, where?: string, limit?: string, orderBy?: string, orderDirection?: string, select?: string, options: any = {}): Promise<RequestArgs> => {
-            const localVarPath = `/account_ips`;
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, 'https://example.com');
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-            if (includes !== undefined) {
-                localVarQueryParameter['includes'] = includes;
-            }
-
-            if (where !== undefined) {
-                localVarQueryParameter['where'] = where;
-            }
-
-            if (limit !== undefined) {
-                localVarQueryParameter['limit'] = limit;
-            }
-
-            if (orderBy !== undefined) {
-                localVarQueryParameter['orderBy'] = orderBy;
-            }
-
-            if (orderDirection !== undefined) {
-                localVarQueryParameter['orderDirection'] = orderDirection;
-            }
-
-            if (select !== undefined) {
-                localVarQueryParameter['select'] = select;
-            }
-
-
-    
-            const queryParameters = new URLSearchParams(localVarUrlObj.search);
-            for (const key in localVarQueryParameter) {
-                queryParameters.set(key, localVarQueryParameter[key]);
-            }
-            for (const key in options.query) {
-                queryParameters.set(key, options.query[key]);
-            }
-            localVarUrlObj.search = (new URLSearchParams(queryParameters)).toString();
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-
-            return {
-                url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * 
-         * @summary Updates AccountIp
-         * @param {number} id Id
-         * @param {ModelsAccountIp} accountIp AccountIp
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        updateAccountIp: async (id: number, accountIp: ModelsAccountIp, options: any = {}): Promise<RequestArgs> => {
-            // verify required parameter 'id' is not null or undefined
-            if (id === null || id === undefined) {
-                throw new RequiredError('id','Required parameter id was null or undefined when calling updateAccountIp.');
-            }
-            // verify required parameter 'accountIp' is not null or undefined
-            if (accountIp === null || accountIp === undefined) {
-                throw new RequiredError('accountIp','Required parameter accountIp was null or undefined when calling updateAccountIp.');
-            }
-            const localVarPath = `/account_ip/{id}`
-                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, 'https://example.com');
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'PATCH', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-
-    
-            localVarHeaderParameter['Content-Type'] = 'application/json';
-
-            const queryParameters = new URLSearchParams(localVarUrlObj.search);
-            for (const key in localVarQueryParameter) {
-                queryParameters.set(key, localVarQueryParameter[key]);
-            }
-            for (const key in options.query) {
-                queryParameters.set(key, options.query[key]);
-            }
-            localVarUrlObj.search = (new URLSearchParams(queryParameters)).toString();
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            const nonString = typeof accountIp !== 'string';
-            const needsSerialization = nonString && configuration && configuration.isJsonMime
-                ? configuration.isJsonMime(localVarRequestOptions.headers['Content-Type'])
-                : nonString;
-            localVarRequestOptions.data =  needsSerialization
-                ? JSON.stringify(accountIp !== undefined ? accountIp : {})
-                : (accountIp || "");
-
-            return {
-                url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
-                options: localVarRequestOptions,
-            };
-        },
-    }
-};
-
-/**
- * AccountIpApi - functional programming interface
- * @export
- */
-export const AccountIpApiFp = function(configuration?: Configuration) {
-    return {
-        /**
-         * 
-         * @summary Creates AccountIp
-         * @param {ModelsAccountIp} accountIp AccountIp
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async createAccountIp(accountIp: ModelsAccountIp, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<ModelsAccountIp>>> {
-            const localVarAxiosArgs = await AccountIpApiAxiosParamCreator(configuration).createAccountIp(accountIp, options);
-            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
-                const axiosRequestArgs = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
-                return axios.request(axiosRequestArgs);
-            };
-        },
-        /**
-         * 
-         * @summary Deletes AccountIp
-         * @param {number} id Id
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async deleteAccountIp(id: number, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<string>> {
-            const localVarAxiosArgs = await AccountIpApiAxiosParamCreator(configuration).deleteAccountIp(id, options);
-            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
-                const axiosRequestArgs = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
-                return axios.request(axiosRequestArgs);
-            };
-        },
-        /**
-         * 
-         * @summary Gets AccountIp
-         * @param {number} id Id
-         * @param {string} [includes] Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names 
-         * @param {string} [select] Column names [.] separated to fetch specific fields in response
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async getAccountIp(id: number, includes?: string, select?: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<ModelsAccountIp>>> {
-            const localVarAxiosArgs = await AccountIpApiAxiosParamCreator(configuration).getAccountIp(id, includes, select, options);
-            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
-                const axiosRequestArgs = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
-                return axios.request(axiosRequestArgs);
-            };
-        },
-        /**
-         * 
-         * @summary Lists AccountIps
-         * @param {string} [includes] Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names 
-         * @param {string} [where] Filter on specific fields. Multiple conditions [.] separated Example: col_like_value.col2__val2
-         * @param {string} [limit] Rows to limit in response (Default: 10,000)
-         * @param {string} [orderBy] Order by [field]
-         * @param {string} [orderDirection] Order by field direction
-         * @param {string} [select] Column names [.] separated to fetch specific fields in response
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async listAccountIps(includes?: string, where?: string, limit?: string, orderBy?: string, orderDirection?: string, select?: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<ModelsAccountIp>>> {
-            const localVarAxiosArgs = await AccountIpApiAxiosParamCreator(configuration).listAccountIps(includes, where, limit, orderBy, orderDirection, select, options);
-            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
-                const axiosRequestArgs = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
-                return axios.request(axiosRequestArgs);
-            };
-        },
-        /**
-         * 
-         * @summary Updates AccountIp
-         * @param {number} id Id
-         * @param {ModelsAccountIp} accountIp AccountIp
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async updateAccountIp(id: number, accountIp: ModelsAccountIp, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<ModelsAccountIp>>> {
-            const localVarAxiosArgs = await AccountIpApiAxiosParamCreator(configuration).updateAccountIp(id, accountIp, options);
-            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
-                const axiosRequestArgs = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
-                return axios.request(axiosRequestArgs);
-            };
-        },
-    }
-};
-
-/**
- * AccountIpApi - factory interface
- * @export
- */
-export const AccountIpApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
-    return {
-        /**
-         * 
-         * @summary Creates AccountIp
-         * @param {ModelsAccountIp} accountIp AccountIp
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        createAccountIp(accountIp: ModelsAccountIp, options?: any): AxiosPromise<Array<ModelsAccountIp>> {
-            return AccountIpApiFp(configuration).createAccountIp(accountIp, options).then((request) => request(axios, basePath));
-        },
-        /**
-         * 
-         * @summary Deletes AccountIp
-         * @param {number} id Id
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        deleteAccountIp(id: number, options?: any): AxiosPromise<string> {
-            return AccountIpApiFp(configuration).deleteAccountIp(id, options).then((request) => request(axios, basePath));
-        },
-        /**
-         * 
-         * @summary Gets AccountIp
-         * @param {number} id Id
-         * @param {string} [includes] Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names 
-         * @param {string} [select] Column names [.] separated to fetch specific fields in response
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getAccountIp(id: number, includes?: string, select?: string, options?: any): AxiosPromise<Array<ModelsAccountIp>> {
-            return AccountIpApiFp(configuration).getAccountIp(id, includes, select, options).then((request) => request(axios, basePath));
-        },
-        /**
-         * 
-         * @summary Lists AccountIps
-         * @param {string} [includes] Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names 
-         * @param {string} [where] Filter on specific fields. Multiple conditions [.] separated Example: col_like_value.col2__val2
-         * @param {string} [limit] Rows to limit in response (Default: 10,000)
-         * @param {string} [orderBy] Order by [field]
-         * @param {string} [orderDirection] Order by field direction
-         * @param {string} [select] Column names [.] separated to fetch specific fields in response
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        listAccountIps(includes?: string, where?: string, limit?: string, orderBy?: string, orderDirection?: string, select?: string, options?: any): AxiosPromise<Array<ModelsAccountIp>> {
-            return AccountIpApiFp(configuration).listAccountIps(includes, where, limit, orderBy, orderDirection, select, options).then((request) => request(axios, basePath));
-        },
-        /**
-         * 
-         * @summary Updates AccountIp
-         * @param {number} id Id
-         * @param {ModelsAccountIp} accountIp AccountIp
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        updateAccountIp(id: number, accountIp: ModelsAccountIp, options?: any): AxiosPromise<Array<ModelsAccountIp>> {
-            return AccountIpApiFp(configuration).updateAccountIp(id, accountIp, options).then((request) => request(axios, basePath));
-        },
-    };
-};
-
-/**
- * Request parameters for createAccountIp operation in AccountIpApi.
- * @export
- * @interface AccountIpApiCreateAccountIpRequest
- */
-export interface AccountIpApiCreateAccountIpRequest {
-    /**
-     * AccountIp
-     * @type {ModelsAccountIp}
-     * @memberof AccountIpApiCreateAccountIp
-     */
-    readonly accountIp: ModelsAccountIp
-}
-
-/**
- * Request parameters for deleteAccountIp operation in AccountIpApi.
- * @export
- * @interface AccountIpApiDeleteAccountIpRequest
- */
-export interface AccountIpApiDeleteAccountIpRequest {
-    /**
-     * Id
-     * @type {number}
-     * @memberof AccountIpApiDeleteAccountIp
-     */
-    readonly id: number
-}
-
-/**
- * Request parameters for getAccountIp operation in AccountIpApi.
- * @export
- * @interface AccountIpApiGetAccountIpRequest
- */
-export interface AccountIpApiGetAccountIpRequest {
-    /**
-     * Id
-     * @type {number}
-     * @memberof AccountIpApiGetAccountIp
-     */
-    readonly id: number
-
-    /**
-     * Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names 
-     * @type {string}
-     * @memberof AccountIpApiGetAccountIp
-     */
-    readonly includes?: string
-
-    /**
-     * Column names [.] separated to fetch specific fields in response
-     * @type {string}
-     * @memberof AccountIpApiGetAccountIp
-     */
-    readonly select?: string
-}
-
-/**
- * Request parameters for listAccountIps operation in AccountIpApi.
- * @export
- * @interface AccountIpApiListAccountIpsRequest
- */
-export interface AccountIpApiListAccountIpsRequest {
-    /**
-     * Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names 
-     * @type {string}
-     * @memberof AccountIpApiListAccountIps
-     */
-    readonly includes?: string
-
-    /**
-     * Filter on specific fields. Multiple conditions [.] separated Example: col_like_value.col2__val2
-     * @type {string}
-     * @memberof AccountIpApiListAccountIps
-     */
-    readonly where?: string
-
-    /**
-     * Rows to limit in response (Default: 10,000)
-     * @type {string}
-     * @memberof AccountIpApiListAccountIps
-     */
-    readonly limit?: string
-
-    /**
-     * Order by [field]
-     * @type {string}
-     * @memberof AccountIpApiListAccountIps
-     */
-    readonly orderBy?: string
-
-    /**
-     * Order by field direction
-     * @type {string}
-     * @memberof AccountIpApiListAccountIps
-     */
-    readonly orderDirection?: string
-
-    /**
-     * Column names [.] separated to fetch specific fields in response
-     * @type {string}
-     * @memberof AccountIpApiListAccountIps
-     */
-    readonly select?: string
-}
-
-/**
- * Request parameters for updateAccountIp operation in AccountIpApi.
- * @export
- * @interface AccountIpApiUpdateAccountIpRequest
- */
-export interface AccountIpApiUpdateAccountIpRequest {
-    /**
-     * Id
-     * @type {number}
-     * @memberof AccountIpApiUpdateAccountIp
-     */
-    readonly id: number
-
-    /**
-     * AccountIp
-     * @type {ModelsAccountIp}
-     * @memberof AccountIpApiUpdateAccountIp
-     */
-    readonly accountIp: ModelsAccountIp
-}
-
-/**
- * AccountIpApi - object-oriented interface
- * @export
- * @class AccountIpApi
- * @extends {BaseAPI}
- */
-export class AccountIpApi extends BaseAPI {
-    /**
-     * 
-     * @summary Creates AccountIp
-     * @param {AccountIpApiCreateAccountIpRequest} requestParameters Request parameters.
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof AccountIpApi
-     */
-    public createAccountIp(requestParameters: AccountIpApiCreateAccountIpRequest, options?: any) {
-        return AccountIpApiFp(this.configuration).createAccountIp(requestParameters.accountIp, options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
-     * 
-     * @summary Deletes AccountIp
-     * @param {AccountIpApiDeleteAccountIpRequest} requestParameters Request parameters.
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof AccountIpApi
-     */
-    public deleteAccountIp(requestParameters: AccountIpApiDeleteAccountIpRequest, options?: any) {
-        return AccountIpApiFp(this.configuration).deleteAccountIp(requestParameters.id, options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
-     * 
-     * @summary Gets AccountIp
-     * @param {AccountIpApiGetAccountIpRequest} requestParameters Request parameters.
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof AccountIpApi
-     */
-    public getAccountIp(requestParameters: AccountIpApiGetAccountIpRequest, options?: any) {
-        return AccountIpApiFp(this.configuration).getAccountIp(requestParameters.id, requestParameters.includes, requestParameters.select, options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
-     * 
-     * @summary Lists AccountIps
-     * @param {AccountIpApiListAccountIpsRequest} requestParameters Request parameters.
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof AccountIpApi
-     */
-    public listAccountIps(requestParameters: AccountIpApiListAccountIpsRequest = {}, options?: any) {
-        return AccountIpApiFp(this.configuration).listAccountIps(requestParameters.includes, requestParameters.where, requestParameters.limit, requestParameters.orderBy, requestParameters.orderDirection, requestParameters.select, options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
-     * 
-     * @summary Updates AccountIp
-     * @param {AccountIpApiUpdateAccountIpRequest} requestParameters Request parameters.
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof AccountIpApi
-     */
-    public updateAccountIp(requestParameters: AccountIpApiUpdateAccountIpRequest, options?: any) {
-        return AccountIpApiFp(this.configuration).updateAccountIp(requestParameters.id, requestParameters.accountIp, options).then((request) => request(this.axios, this.basePath));
-    }
-}
-
-
-/**
  * AdventureDetailApi - axios parameter creator
  * @export
  */
@@ -16853,635 +15861,6 @@ export class AdventureDetailApi extends BaseAPI {
      */
     public updateAdventureDetail(requestParameters: AdventureDetailApiUpdateAdventureDetailRequest, options?: any) {
         return AdventureDetailApiFp(this.configuration).updateAdventureDetail(requestParameters.id, requestParameters.adventureDetail, options).then((request) => request(this.axios, this.basePath));
-    }
-}
-
-
-/**
- * AdventureMemberApi - axios parameter creator
- * @export
- */
-export const AdventureMemberApiAxiosParamCreator = function (configuration?: Configuration) {
-    return {
-        /**
-         * 
-         * @summary Creates AdventureMember
-         * @param {ModelsAdventureMember} adventureMember AdventureMember
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        createAdventureMember: async (adventureMember: ModelsAdventureMember, options: any = {}): Promise<RequestArgs> => {
-            // verify required parameter 'adventureMember' is not null or undefined
-            if (adventureMember === null || adventureMember === undefined) {
-                throw new RequiredError('adventureMember','Required parameter adventureMember was null or undefined when calling createAdventureMember.');
-            }
-            const localVarPath = `/adventure_member`;
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, 'https://example.com');
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'PUT', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-
-    
-            localVarHeaderParameter['Content-Type'] = 'application/json';
-
-            const queryParameters = new URLSearchParams(localVarUrlObj.search);
-            for (const key in localVarQueryParameter) {
-                queryParameters.set(key, localVarQueryParameter[key]);
-            }
-            for (const key in options.query) {
-                queryParameters.set(key, options.query[key]);
-            }
-            localVarUrlObj.search = (new URLSearchParams(queryParameters)).toString();
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            const nonString = typeof adventureMember !== 'string';
-            const needsSerialization = nonString && configuration && configuration.isJsonMime
-                ? configuration.isJsonMime(localVarRequestOptions.headers['Content-Type'])
-                : nonString;
-            localVarRequestOptions.data =  needsSerialization
-                ? JSON.stringify(adventureMember !== undefined ? adventureMember : {})
-                : (adventureMember || "");
-
-            return {
-                url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * 
-         * @summary Deletes AdventureMember
-         * @param {number} id Id
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        deleteAdventureMember: async (id: number, options: any = {}): Promise<RequestArgs> => {
-            // verify required parameter 'id' is not null or undefined
-            if (id === null || id === undefined) {
-                throw new RequiredError('id','Required parameter id was null or undefined when calling deleteAdventureMember.');
-            }
-            const localVarPath = `/adventure_member/{id}`
-                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, 'https://example.com');
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'DELETE', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-
-    
-            const queryParameters = new URLSearchParams(localVarUrlObj.search);
-            for (const key in localVarQueryParameter) {
-                queryParameters.set(key, localVarQueryParameter[key]);
-            }
-            for (const key in options.query) {
-                queryParameters.set(key, options.query[key]);
-            }
-            localVarUrlObj.search = (new URLSearchParams(queryParameters)).toString();
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-
-            return {
-                url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * 
-         * @summary Gets AdventureMember
-         * @param {number} id Id
-         * @param {string} [includes] Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names 
-         * @param {string} [select] Column names [.] separated to fetch specific fields in response
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getAdventureMember: async (id: number, includes?: string, select?: string, options: any = {}): Promise<RequestArgs> => {
-            // verify required parameter 'id' is not null or undefined
-            if (id === null || id === undefined) {
-                throw new RequiredError('id','Required parameter id was null or undefined when calling getAdventureMember.');
-            }
-            const localVarPath = `/adventure_member/{id}`
-                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, 'https://example.com');
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-            if (includes !== undefined) {
-                localVarQueryParameter['includes'] = includes;
-            }
-
-            if (select !== undefined) {
-                localVarQueryParameter['select'] = select;
-            }
-
-
-    
-            const queryParameters = new URLSearchParams(localVarUrlObj.search);
-            for (const key in localVarQueryParameter) {
-                queryParameters.set(key, localVarQueryParameter[key]);
-            }
-            for (const key in options.query) {
-                queryParameters.set(key, options.query[key]);
-            }
-            localVarUrlObj.search = (new URLSearchParams(queryParameters)).toString();
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-
-            return {
-                url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * 
-         * @summary Lists AdventureMembers
-         * @param {string} [includes] Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names 
-         * @param {string} [where] Filter on specific fields. Multiple conditions [.] separated Example: col_like_value.col2__val2
-         * @param {string} [limit] Rows to limit in response (Default: 10,000)
-         * @param {string} [orderBy] Order by [field]
-         * @param {string} [orderDirection] Order by field direction
-         * @param {string} [select] Column names [.] separated to fetch specific fields in response
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        listAdventureMembers: async (includes?: string, where?: string, limit?: string, orderBy?: string, orderDirection?: string, select?: string, options: any = {}): Promise<RequestArgs> => {
-            const localVarPath = `/adventure_members`;
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, 'https://example.com');
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-            if (includes !== undefined) {
-                localVarQueryParameter['includes'] = includes;
-            }
-
-            if (where !== undefined) {
-                localVarQueryParameter['where'] = where;
-            }
-
-            if (limit !== undefined) {
-                localVarQueryParameter['limit'] = limit;
-            }
-
-            if (orderBy !== undefined) {
-                localVarQueryParameter['orderBy'] = orderBy;
-            }
-
-            if (orderDirection !== undefined) {
-                localVarQueryParameter['orderDirection'] = orderDirection;
-            }
-
-            if (select !== undefined) {
-                localVarQueryParameter['select'] = select;
-            }
-
-
-    
-            const queryParameters = new URLSearchParams(localVarUrlObj.search);
-            for (const key in localVarQueryParameter) {
-                queryParameters.set(key, localVarQueryParameter[key]);
-            }
-            for (const key in options.query) {
-                queryParameters.set(key, options.query[key]);
-            }
-            localVarUrlObj.search = (new URLSearchParams(queryParameters)).toString();
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-
-            return {
-                url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * 
-         * @summary Updates AdventureMember
-         * @param {number} id Id
-         * @param {ModelsAdventureMember} adventureMember AdventureMember
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        updateAdventureMember: async (id: number, adventureMember: ModelsAdventureMember, options: any = {}): Promise<RequestArgs> => {
-            // verify required parameter 'id' is not null or undefined
-            if (id === null || id === undefined) {
-                throw new RequiredError('id','Required parameter id was null or undefined when calling updateAdventureMember.');
-            }
-            // verify required parameter 'adventureMember' is not null or undefined
-            if (adventureMember === null || adventureMember === undefined) {
-                throw new RequiredError('adventureMember','Required parameter adventureMember was null or undefined when calling updateAdventureMember.');
-            }
-            const localVarPath = `/adventure_member/{id}`
-                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, 'https://example.com');
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'PATCH', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-
-    
-            localVarHeaderParameter['Content-Type'] = 'application/json';
-
-            const queryParameters = new URLSearchParams(localVarUrlObj.search);
-            for (const key in localVarQueryParameter) {
-                queryParameters.set(key, localVarQueryParameter[key]);
-            }
-            for (const key in options.query) {
-                queryParameters.set(key, options.query[key]);
-            }
-            localVarUrlObj.search = (new URLSearchParams(queryParameters)).toString();
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            const nonString = typeof adventureMember !== 'string';
-            const needsSerialization = nonString && configuration && configuration.isJsonMime
-                ? configuration.isJsonMime(localVarRequestOptions.headers['Content-Type'])
-                : nonString;
-            localVarRequestOptions.data =  needsSerialization
-                ? JSON.stringify(adventureMember !== undefined ? adventureMember : {})
-                : (adventureMember || "");
-
-            return {
-                url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
-                options: localVarRequestOptions,
-            };
-        },
-    }
-};
-
-/**
- * AdventureMemberApi - functional programming interface
- * @export
- */
-export const AdventureMemberApiFp = function(configuration?: Configuration) {
-    return {
-        /**
-         * 
-         * @summary Creates AdventureMember
-         * @param {ModelsAdventureMember} adventureMember AdventureMember
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async createAdventureMember(adventureMember: ModelsAdventureMember, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<ModelsAdventureMember>>> {
-            const localVarAxiosArgs = await AdventureMemberApiAxiosParamCreator(configuration).createAdventureMember(adventureMember, options);
-            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
-                const axiosRequestArgs = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
-                return axios.request(axiosRequestArgs);
-            };
-        },
-        /**
-         * 
-         * @summary Deletes AdventureMember
-         * @param {number} id Id
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async deleteAdventureMember(id: number, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<string>> {
-            const localVarAxiosArgs = await AdventureMemberApiAxiosParamCreator(configuration).deleteAdventureMember(id, options);
-            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
-                const axiosRequestArgs = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
-                return axios.request(axiosRequestArgs);
-            };
-        },
-        /**
-         * 
-         * @summary Gets AdventureMember
-         * @param {number} id Id
-         * @param {string} [includes] Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names 
-         * @param {string} [select] Column names [.] separated to fetch specific fields in response
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async getAdventureMember(id: number, includes?: string, select?: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<ModelsAdventureMember>>> {
-            const localVarAxiosArgs = await AdventureMemberApiAxiosParamCreator(configuration).getAdventureMember(id, includes, select, options);
-            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
-                const axiosRequestArgs = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
-                return axios.request(axiosRequestArgs);
-            };
-        },
-        /**
-         * 
-         * @summary Lists AdventureMembers
-         * @param {string} [includes] Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names 
-         * @param {string} [where] Filter on specific fields. Multiple conditions [.] separated Example: col_like_value.col2__val2
-         * @param {string} [limit] Rows to limit in response (Default: 10,000)
-         * @param {string} [orderBy] Order by [field]
-         * @param {string} [orderDirection] Order by field direction
-         * @param {string} [select] Column names [.] separated to fetch specific fields in response
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async listAdventureMembers(includes?: string, where?: string, limit?: string, orderBy?: string, orderDirection?: string, select?: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<ModelsAdventureMember>>> {
-            const localVarAxiosArgs = await AdventureMemberApiAxiosParamCreator(configuration).listAdventureMembers(includes, where, limit, orderBy, orderDirection, select, options);
-            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
-                const axiosRequestArgs = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
-                return axios.request(axiosRequestArgs);
-            };
-        },
-        /**
-         * 
-         * @summary Updates AdventureMember
-         * @param {number} id Id
-         * @param {ModelsAdventureMember} adventureMember AdventureMember
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async updateAdventureMember(id: number, adventureMember: ModelsAdventureMember, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<ModelsAdventureMember>>> {
-            const localVarAxiosArgs = await AdventureMemberApiAxiosParamCreator(configuration).updateAdventureMember(id, adventureMember, options);
-            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
-                const axiosRequestArgs = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
-                return axios.request(axiosRequestArgs);
-            };
-        },
-    }
-};
-
-/**
- * AdventureMemberApi - factory interface
- * @export
- */
-export const AdventureMemberApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
-    return {
-        /**
-         * 
-         * @summary Creates AdventureMember
-         * @param {ModelsAdventureMember} adventureMember AdventureMember
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        createAdventureMember(adventureMember: ModelsAdventureMember, options?: any): AxiosPromise<Array<ModelsAdventureMember>> {
-            return AdventureMemberApiFp(configuration).createAdventureMember(adventureMember, options).then((request) => request(axios, basePath));
-        },
-        /**
-         * 
-         * @summary Deletes AdventureMember
-         * @param {number} id Id
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        deleteAdventureMember(id: number, options?: any): AxiosPromise<string> {
-            return AdventureMemberApiFp(configuration).deleteAdventureMember(id, options).then((request) => request(axios, basePath));
-        },
-        /**
-         * 
-         * @summary Gets AdventureMember
-         * @param {number} id Id
-         * @param {string} [includes] Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names 
-         * @param {string} [select] Column names [.] separated to fetch specific fields in response
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getAdventureMember(id: number, includes?: string, select?: string, options?: any): AxiosPromise<Array<ModelsAdventureMember>> {
-            return AdventureMemberApiFp(configuration).getAdventureMember(id, includes, select, options).then((request) => request(axios, basePath));
-        },
-        /**
-         * 
-         * @summary Lists AdventureMembers
-         * @param {string} [includes] Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names 
-         * @param {string} [where] Filter on specific fields. Multiple conditions [.] separated Example: col_like_value.col2__val2
-         * @param {string} [limit] Rows to limit in response (Default: 10,000)
-         * @param {string} [orderBy] Order by [field]
-         * @param {string} [orderDirection] Order by field direction
-         * @param {string} [select] Column names [.] separated to fetch specific fields in response
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        listAdventureMembers(includes?: string, where?: string, limit?: string, orderBy?: string, orderDirection?: string, select?: string, options?: any): AxiosPromise<Array<ModelsAdventureMember>> {
-            return AdventureMemberApiFp(configuration).listAdventureMembers(includes, where, limit, orderBy, orderDirection, select, options).then((request) => request(axios, basePath));
-        },
-        /**
-         * 
-         * @summary Updates AdventureMember
-         * @param {number} id Id
-         * @param {ModelsAdventureMember} adventureMember AdventureMember
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        updateAdventureMember(id: number, adventureMember: ModelsAdventureMember, options?: any): AxiosPromise<Array<ModelsAdventureMember>> {
-            return AdventureMemberApiFp(configuration).updateAdventureMember(id, adventureMember, options).then((request) => request(axios, basePath));
-        },
-    };
-};
-
-/**
- * Request parameters for createAdventureMember operation in AdventureMemberApi.
- * @export
- * @interface AdventureMemberApiCreateAdventureMemberRequest
- */
-export interface AdventureMemberApiCreateAdventureMemberRequest {
-    /**
-     * AdventureMember
-     * @type {ModelsAdventureMember}
-     * @memberof AdventureMemberApiCreateAdventureMember
-     */
-    readonly adventureMember: ModelsAdventureMember
-}
-
-/**
- * Request parameters for deleteAdventureMember operation in AdventureMemberApi.
- * @export
- * @interface AdventureMemberApiDeleteAdventureMemberRequest
- */
-export interface AdventureMemberApiDeleteAdventureMemberRequest {
-    /**
-     * Id
-     * @type {number}
-     * @memberof AdventureMemberApiDeleteAdventureMember
-     */
-    readonly id: number
-}
-
-/**
- * Request parameters for getAdventureMember operation in AdventureMemberApi.
- * @export
- * @interface AdventureMemberApiGetAdventureMemberRequest
- */
-export interface AdventureMemberApiGetAdventureMemberRequest {
-    /**
-     * Id
-     * @type {number}
-     * @memberof AdventureMemberApiGetAdventureMember
-     */
-    readonly id: number
-
-    /**
-     * Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names 
-     * @type {string}
-     * @memberof AdventureMemberApiGetAdventureMember
-     */
-    readonly includes?: string
-
-    /**
-     * Column names [.] separated to fetch specific fields in response
-     * @type {string}
-     * @memberof AdventureMemberApiGetAdventureMember
-     */
-    readonly select?: string
-}
-
-/**
- * Request parameters for listAdventureMembers operation in AdventureMemberApi.
- * @export
- * @interface AdventureMemberApiListAdventureMembersRequest
- */
-export interface AdventureMemberApiListAdventureMembersRequest {
-    /**
-     * Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names 
-     * @type {string}
-     * @memberof AdventureMemberApiListAdventureMembers
-     */
-    readonly includes?: string
-
-    /**
-     * Filter on specific fields. Multiple conditions [.] separated Example: col_like_value.col2__val2
-     * @type {string}
-     * @memberof AdventureMemberApiListAdventureMembers
-     */
-    readonly where?: string
-
-    /**
-     * Rows to limit in response (Default: 10,000)
-     * @type {string}
-     * @memberof AdventureMemberApiListAdventureMembers
-     */
-    readonly limit?: string
-
-    /**
-     * Order by [field]
-     * @type {string}
-     * @memberof AdventureMemberApiListAdventureMembers
-     */
-    readonly orderBy?: string
-
-    /**
-     * Order by field direction
-     * @type {string}
-     * @memberof AdventureMemberApiListAdventureMembers
-     */
-    readonly orderDirection?: string
-
-    /**
-     * Column names [.] separated to fetch specific fields in response
-     * @type {string}
-     * @memberof AdventureMemberApiListAdventureMembers
-     */
-    readonly select?: string
-}
-
-/**
- * Request parameters for updateAdventureMember operation in AdventureMemberApi.
- * @export
- * @interface AdventureMemberApiUpdateAdventureMemberRequest
- */
-export interface AdventureMemberApiUpdateAdventureMemberRequest {
-    /**
-     * Id
-     * @type {number}
-     * @memberof AdventureMemberApiUpdateAdventureMember
-     */
-    readonly id: number
-
-    /**
-     * AdventureMember
-     * @type {ModelsAdventureMember}
-     * @memberof AdventureMemberApiUpdateAdventureMember
-     */
-    readonly adventureMember: ModelsAdventureMember
-}
-
-/**
- * AdventureMemberApi - object-oriented interface
- * @export
- * @class AdventureMemberApi
- * @extends {BaseAPI}
- */
-export class AdventureMemberApi extends BaseAPI {
-    /**
-     * 
-     * @summary Creates AdventureMember
-     * @param {AdventureMemberApiCreateAdventureMemberRequest} requestParameters Request parameters.
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof AdventureMemberApi
-     */
-    public createAdventureMember(requestParameters: AdventureMemberApiCreateAdventureMemberRequest, options?: any) {
-        return AdventureMemberApiFp(this.configuration).createAdventureMember(requestParameters.adventureMember, options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
-     * 
-     * @summary Deletes AdventureMember
-     * @param {AdventureMemberApiDeleteAdventureMemberRequest} requestParameters Request parameters.
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof AdventureMemberApi
-     */
-    public deleteAdventureMember(requestParameters: AdventureMemberApiDeleteAdventureMemberRequest, options?: any) {
-        return AdventureMemberApiFp(this.configuration).deleteAdventureMember(requestParameters.id, options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
-     * 
-     * @summary Gets AdventureMember
-     * @param {AdventureMemberApiGetAdventureMemberRequest} requestParameters Request parameters.
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof AdventureMemberApi
-     */
-    public getAdventureMember(requestParameters: AdventureMemberApiGetAdventureMemberRequest, options?: any) {
-        return AdventureMemberApiFp(this.configuration).getAdventureMember(requestParameters.id, requestParameters.includes, requestParameters.select, options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
-     * 
-     * @summary Lists AdventureMembers
-     * @param {AdventureMemberApiListAdventureMembersRequest} requestParameters Request parameters.
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof AdventureMemberApi
-     */
-    public listAdventureMembers(requestParameters: AdventureMemberApiListAdventureMembersRequest = {}, options?: any) {
-        return AdventureMemberApiFp(this.configuration).listAdventureMembers(requestParameters.includes, requestParameters.where, requestParameters.limit, requestParameters.orderBy, requestParameters.orderDirection, requestParameters.select, options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
-     * 
-     * @summary Updates AdventureMember
-     * @param {AdventureMemberApiUpdateAdventureMemberRequest} requestParameters Request parameters.
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof AdventureMemberApi
-     */
-    public updateAdventureMember(requestParameters: AdventureMemberApiUpdateAdventureMemberRequest, options?: any) {
-        return AdventureMemberApiFp(this.configuration).updateAdventureMember(requestParameters.id, requestParameters.adventureMember, options).then((request) => request(this.axios, this.basePath));
     }
 }
 
@@ -20003,635 +18382,6 @@ export class AlternateCurrencyApi extends BaseAPI {
 
 
 /**
- * AuraApi - axios parameter creator
- * @export
- */
-export const AuraApiAxiosParamCreator = function (configuration?: Configuration) {
-    return {
-        /**
-         * 
-         * @summary Creates Aura
-         * @param {ModelsAura} aura Aura
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        createAura: async (aura: ModelsAura, options: any = {}): Promise<RequestArgs> => {
-            // verify required parameter 'aura' is not null or undefined
-            if (aura === null || aura === undefined) {
-                throw new RequiredError('aura','Required parameter aura was null or undefined when calling createAura.');
-            }
-            const localVarPath = `/aura`;
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, 'https://example.com');
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'PUT', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-
-    
-            localVarHeaderParameter['Content-Type'] = 'application/json';
-
-            const queryParameters = new URLSearchParams(localVarUrlObj.search);
-            for (const key in localVarQueryParameter) {
-                queryParameters.set(key, localVarQueryParameter[key]);
-            }
-            for (const key in options.query) {
-                queryParameters.set(key, options.query[key]);
-            }
-            localVarUrlObj.search = (new URLSearchParams(queryParameters)).toString();
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            const nonString = typeof aura !== 'string';
-            const needsSerialization = nonString && configuration && configuration.isJsonMime
-                ? configuration.isJsonMime(localVarRequestOptions.headers['Content-Type'])
-                : nonString;
-            localVarRequestOptions.data =  needsSerialization
-                ? JSON.stringify(aura !== undefined ? aura : {})
-                : (aura || "");
-
-            return {
-                url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * 
-         * @summary Deletes Aura
-         * @param {number} id Id
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        deleteAura: async (id: number, options: any = {}): Promise<RequestArgs> => {
-            // verify required parameter 'id' is not null or undefined
-            if (id === null || id === undefined) {
-                throw new RequiredError('id','Required parameter id was null or undefined when calling deleteAura.');
-            }
-            const localVarPath = `/aura/{id}`
-                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, 'https://example.com');
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'DELETE', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-
-    
-            const queryParameters = new URLSearchParams(localVarUrlObj.search);
-            for (const key in localVarQueryParameter) {
-                queryParameters.set(key, localVarQueryParameter[key]);
-            }
-            for (const key in options.query) {
-                queryParameters.set(key, options.query[key]);
-            }
-            localVarUrlObj.search = (new URLSearchParams(queryParameters)).toString();
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-
-            return {
-                url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * 
-         * @summary Gets Aura
-         * @param {number} id Id
-         * @param {string} [includes] Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names 
-         * @param {string} [select] Column names [.] separated to fetch specific fields in response
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getAura: async (id: number, includes?: string, select?: string, options: any = {}): Promise<RequestArgs> => {
-            // verify required parameter 'id' is not null or undefined
-            if (id === null || id === undefined) {
-                throw new RequiredError('id','Required parameter id was null or undefined when calling getAura.');
-            }
-            const localVarPath = `/aura/{id}`
-                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, 'https://example.com');
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-            if (includes !== undefined) {
-                localVarQueryParameter['includes'] = includes;
-            }
-
-            if (select !== undefined) {
-                localVarQueryParameter['select'] = select;
-            }
-
-
-    
-            const queryParameters = new URLSearchParams(localVarUrlObj.search);
-            for (const key in localVarQueryParameter) {
-                queryParameters.set(key, localVarQueryParameter[key]);
-            }
-            for (const key in options.query) {
-                queryParameters.set(key, options.query[key]);
-            }
-            localVarUrlObj.search = (new URLSearchParams(queryParameters)).toString();
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-
-            return {
-                url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * 
-         * @summary Lists Auras
-         * @param {string} [includes] Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names 
-         * @param {string} [where] Filter on specific fields. Multiple conditions [.] separated Example: col_like_value.col2__val2
-         * @param {string} [limit] Rows to limit in response (Default: 10,000)
-         * @param {string} [orderBy] Order by [field]
-         * @param {string} [orderDirection] Order by field direction
-         * @param {string} [select] Column names [.] separated to fetch specific fields in response
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        listAuras: async (includes?: string, where?: string, limit?: string, orderBy?: string, orderDirection?: string, select?: string, options: any = {}): Promise<RequestArgs> => {
-            const localVarPath = `/auras`;
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, 'https://example.com');
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-            if (includes !== undefined) {
-                localVarQueryParameter['includes'] = includes;
-            }
-
-            if (where !== undefined) {
-                localVarQueryParameter['where'] = where;
-            }
-
-            if (limit !== undefined) {
-                localVarQueryParameter['limit'] = limit;
-            }
-
-            if (orderBy !== undefined) {
-                localVarQueryParameter['orderBy'] = orderBy;
-            }
-
-            if (orderDirection !== undefined) {
-                localVarQueryParameter['orderDirection'] = orderDirection;
-            }
-
-            if (select !== undefined) {
-                localVarQueryParameter['select'] = select;
-            }
-
-
-    
-            const queryParameters = new URLSearchParams(localVarUrlObj.search);
-            for (const key in localVarQueryParameter) {
-                queryParameters.set(key, localVarQueryParameter[key]);
-            }
-            for (const key in options.query) {
-                queryParameters.set(key, options.query[key]);
-            }
-            localVarUrlObj.search = (new URLSearchParams(queryParameters)).toString();
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-
-            return {
-                url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * 
-         * @summary Updates Aura
-         * @param {number} id Id
-         * @param {ModelsAura} aura Aura
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        updateAura: async (id: number, aura: ModelsAura, options: any = {}): Promise<RequestArgs> => {
-            // verify required parameter 'id' is not null or undefined
-            if (id === null || id === undefined) {
-                throw new RequiredError('id','Required parameter id was null or undefined when calling updateAura.');
-            }
-            // verify required parameter 'aura' is not null or undefined
-            if (aura === null || aura === undefined) {
-                throw new RequiredError('aura','Required parameter aura was null or undefined when calling updateAura.');
-            }
-            const localVarPath = `/aura/{id}`
-                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, 'https://example.com');
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'PATCH', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-
-    
-            localVarHeaderParameter['Content-Type'] = 'application/json';
-
-            const queryParameters = new URLSearchParams(localVarUrlObj.search);
-            for (const key in localVarQueryParameter) {
-                queryParameters.set(key, localVarQueryParameter[key]);
-            }
-            for (const key in options.query) {
-                queryParameters.set(key, options.query[key]);
-            }
-            localVarUrlObj.search = (new URLSearchParams(queryParameters)).toString();
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            const nonString = typeof aura !== 'string';
-            const needsSerialization = nonString && configuration && configuration.isJsonMime
-                ? configuration.isJsonMime(localVarRequestOptions.headers['Content-Type'])
-                : nonString;
-            localVarRequestOptions.data =  needsSerialization
-                ? JSON.stringify(aura !== undefined ? aura : {})
-                : (aura || "");
-
-            return {
-                url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
-                options: localVarRequestOptions,
-            };
-        },
-    }
-};
-
-/**
- * AuraApi - functional programming interface
- * @export
- */
-export const AuraApiFp = function(configuration?: Configuration) {
-    return {
-        /**
-         * 
-         * @summary Creates Aura
-         * @param {ModelsAura} aura Aura
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async createAura(aura: ModelsAura, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<ModelsAura>>> {
-            const localVarAxiosArgs = await AuraApiAxiosParamCreator(configuration).createAura(aura, options);
-            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
-                const axiosRequestArgs = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
-                return axios.request(axiosRequestArgs);
-            };
-        },
-        /**
-         * 
-         * @summary Deletes Aura
-         * @param {number} id Id
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async deleteAura(id: number, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<string>> {
-            const localVarAxiosArgs = await AuraApiAxiosParamCreator(configuration).deleteAura(id, options);
-            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
-                const axiosRequestArgs = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
-                return axios.request(axiosRequestArgs);
-            };
-        },
-        /**
-         * 
-         * @summary Gets Aura
-         * @param {number} id Id
-         * @param {string} [includes] Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names 
-         * @param {string} [select] Column names [.] separated to fetch specific fields in response
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async getAura(id: number, includes?: string, select?: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<ModelsAura>>> {
-            const localVarAxiosArgs = await AuraApiAxiosParamCreator(configuration).getAura(id, includes, select, options);
-            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
-                const axiosRequestArgs = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
-                return axios.request(axiosRequestArgs);
-            };
-        },
-        /**
-         * 
-         * @summary Lists Auras
-         * @param {string} [includes] Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names 
-         * @param {string} [where] Filter on specific fields. Multiple conditions [.] separated Example: col_like_value.col2__val2
-         * @param {string} [limit] Rows to limit in response (Default: 10,000)
-         * @param {string} [orderBy] Order by [field]
-         * @param {string} [orderDirection] Order by field direction
-         * @param {string} [select] Column names [.] separated to fetch specific fields in response
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async listAuras(includes?: string, where?: string, limit?: string, orderBy?: string, orderDirection?: string, select?: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<ModelsAura>>> {
-            const localVarAxiosArgs = await AuraApiAxiosParamCreator(configuration).listAuras(includes, where, limit, orderBy, orderDirection, select, options);
-            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
-                const axiosRequestArgs = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
-                return axios.request(axiosRequestArgs);
-            };
-        },
-        /**
-         * 
-         * @summary Updates Aura
-         * @param {number} id Id
-         * @param {ModelsAura} aura Aura
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async updateAura(id: number, aura: ModelsAura, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<ModelsAura>>> {
-            const localVarAxiosArgs = await AuraApiAxiosParamCreator(configuration).updateAura(id, aura, options);
-            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
-                const axiosRequestArgs = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
-                return axios.request(axiosRequestArgs);
-            };
-        },
-    }
-};
-
-/**
- * AuraApi - factory interface
- * @export
- */
-export const AuraApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
-    return {
-        /**
-         * 
-         * @summary Creates Aura
-         * @param {ModelsAura} aura Aura
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        createAura(aura: ModelsAura, options?: any): AxiosPromise<Array<ModelsAura>> {
-            return AuraApiFp(configuration).createAura(aura, options).then((request) => request(axios, basePath));
-        },
-        /**
-         * 
-         * @summary Deletes Aura
-         * @param {number} id Id
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        deleteAura(id: number, options?: any): AxiosPromise<string> {
-            return AuraApiFp(configuration).deleteAura(id, options).then((request) => request(axios, basePath));
-        },
-        /**
-         * 
-         * @summary Gets Aura
-         * @param {number} id Id
-         * @param {string} [includes] Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names 
-         * @param {string} [select] Column names [.] separated to fetch specific fields in response
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getAura(id: number, includes?: string, select?: string, options?: any): AxiosPromise<Array<ModelsAura>> {
-            return AuraApiFp(configuration).getAura(id, includes, select, options).then((request) => request(axios, basePath));
-        },
-        /**
-         * 
-         * @summary Lists Auras
-         * @param {string} [includes] Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names 
-         * @param {string} [where] Filter on specific fields. Multiple conditions [.] separated Example: col_like_value.col2__val2
-         * @param {string} [limit] Rows to limit in response (Default: 10,000)
-         * @param {string} [orderBy] Order by [field]
-         * @param {string} [orderDirection] Order by field direction
-         * @param {string} [select] Column names [.] separated to fetch specific fields in response
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        listAuras(includes?: string, where?: string, limit?: string, orderBy?: string, orderDirection?: string, select?: string, options?: any): AxiosPromise<Array<ModelsAura>> {
-            return AuraApiFp(configuration).listAuras(includes, where, limit, orderBy, orderDirection, select, options).then((request) => request(axios, basePath));
-        },
-        /**
-         * 
-         * @summary Updates Aura
-         * @param {number} id Id
-         * @param {ModelsAura} aura Aura
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        updateAura(id: number, aura: ModelsAura, options?: any): AxiosPromise<Array<ModelsAura>> {
-            return AuraApiFp(configuration).updateAura(id, aura, options).then((request) => request(axios, basePath));
-        },
-    };
-};
-
-/**
- * Request parameters for createAura operation in AuraApi.
- * @export
- * @interface AuraApiCreateAuraRequest
- */
-export interface AuraApiCreateAuraRequest {
-    /**
-     * Aura
-     * @type {ModelsAura}
-     * @memberof AuraApiCreateAura
-     */
-    readonly aura: ModelsAura
-}
-
-/**
- * Request parameters for deleteAura operation in AuraApi.
- * @export
- * @interface AuraApiDeleteAuraRequest
- */
-export interface AuraApiDeleteAuraRequest {
-    /**
-     * Id
-     * @type {number}
-     * @memberof AuraApiDeleteAura
-     */
-    readonly id: number
-}
-
-/**
- * Request parameters for getAura operation in AuraApi.
- * @export
- * @interface AuraApiGetAuraRequest
- */
-export interface AuraApiGetAuraRequest {
-    /**
-     * Id
-     * @type {number}
-     * @memberof AuraApiGetAura
-     */
-    readonly id: number
-
-    /**
-     * Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names 
-     * @type {string}
-     * @memberof AuraApiGetAura
-     */
-    readonly includes?: string
-
-    /**
-     * Column names [.] separated to fetch specific fields in response
-     * @type {string}
-     * @memberof AuraApiGetAura
-     */
-    readonly select?: string
-}
-
-/**
- * Request parameters for listAuras operation in AuraApi.
- * @export
- * @interface AuraApiListAurasRequest
- */
-export interface AuraApiListAurasRequest {
-    /**
-     * Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names 
-     * @type {string}
-     * @memberof AuraApiListAuras
-     */
-    readonly includes?: string
-
-    /**
-     * Filter on specific fields. Multiple conditions [.] separated Example: col_like_value.col2__val2
-     * @type {string}
-     * @memberof AuraApiListAuras
-     */
-    readonly where?: string
-
-    /**
-     * Rows to limit in response (Default: 10,000)
-     * @type {string}
-     * @memberof AuraApiListAuras
-     */
-    readonly limit?: string
-
-    /**
-     * Order by [field]
-     * @type {string}
-     * @memberof AuraApiListAuras
-     */
-    readonly orderBy?: string
-
-    /**
-     * Order by field direction
-     * @type {string}
-     * @memberof AuraApiListAuras
-     */
-    readonly orderDirection?: string
-
-    /**
-     * Column names [.] separated to fetch specific fields in response
-     * @type {string}
-     * @memberof AuraApiListAuras
-     */
-    readonly select?: string
-}
-
-/**
- * Request parameters for updateAura operation in AuraApi.
- * @export
- * @interface AuraApiUpdateAuraRequest
- */
-export interface AuraApiUpdateAuraRequest {
-    /**
-     * Id
-     * @type {number}
-     * @memberof AuraApiUpdateAura
-     */
-    readonly id: number
-
-    /**
-     * Aura
-     * @type {ModelsAura}
-     * @memberof AuraApiUpdateAura
-     */
-    readonly aura: ModelsAura
-}
-
-/**
- * AuraApi - object-oriented interface
- * @export
- * @class AuraApi
- * @extends {BaseAPI}
- */
-export class AuraApi extends BaseAPI {
-    /**
-     * 
-     * @summary Creates Aura
-     * @param {AuraApiCreateAuraRequest} requestParameters Request parameters.
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof AuraApi
-     */
-    public createAura(requestParameters: AuraApiCreateAuraRequest, options?: any) {
-        return AuraApiFp(this.configuration).createAura(requestParameters.aura, options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
-     * 
-     * @summary Deletes Aura
-     * @param {AuraApiDeleteAuraRequest} requestParameters Request parameters.
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof AuraApi
-     */
-    public deleteAura(requestParameters: AuraApiDeleteAuraRequest, options?: any) {
-        return AuraApiFp(this.configuration).deleteAura(requestParameters.id, options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
-     * 
-     * @summary Gets Aura
-     * @param {AuraApiGetAuraRequest} requestParameters Request parameters.
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof AuraApi
-     */
-    public getAura(requestParameters: AuraApiGetAuraRequest, options?: any) {
-        return AuraApiFp(this.configuration).getAura(requestParameters.id, requestParameters.includes, requestParameters.select, options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
-     * 
-     * @summary Lists Auras
-     * @param {AuraApiListAurasRequest} requestParameters Request parameters.
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof AuraApi
-     */
-    public listAuras(requestParameters: AuraApiListAurasRequest = {}, options?: any) {
-        return AuraApiFp(this.configuration).listAuras(requestParameters.includes, requestParameters.where, requestParameters.limit, requestParameters.orderBy, requestParameters.orderDirection, requestParameters.select, options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
-     * 
-     * @summary Updates Aura
-     * @param {AuraApiUpdateAuraRequest} requestParameters Request parameters.
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof AuraApi
-     */
-    public updateAura(requestParameters: AuraApiUpdateAuraRequest, options?: any) {
-        return AuraApiFp(this.configuration).updateAura(requestParameters.id, requestParameters.aura, options).then((request) => request(this.axios, this.basePath));
-    }
-}
-
-
-/**
  * BlockedSpellApi - axios parameter creator
  * @export
  */
@@ -22519,635 +20269,6 @@ export class BugReportApi extends BaseAPI {
 
 
 /**
- * BuyerApi - axios parameter creator
- * @export
- */
-export const BuyerApiAxiosParamCreator = function (configuration?: Configuration) {
-    return {
-        /**
-         * 
-         * @summary Creates Buyer
-         * @param {ModelsBuyer} buyer Buyer
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        createBuyer: async (buyer: ModelsBuyer, options: any = {}): Promise<RequestArgs> => {
-            // verify required parameter 'buyer' is not null or undefined
-            if (buyer === null || buyer === undefined) {
-                throw new RequiredError('buyer','Required parameter buyer was null or undefined when calling createBuyer.');
-            }
-            const localVarPath = `/buyer`;
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, 'https://example.com');
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'PUT', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-
-    
-            localVarHeaderParameter['Content-Type'] = 'application/json';
-
-            const queryParameters = new URLSearchParams(localVarUrlObj.search);
-            for (const key in localVarQueryParameter) {
-                queryParameters.set(key, localVarQueryParameter[key]);
-            }
-            for (const key in options.query) {
-                queryParameters.set(key, options.query[key]);
-            }
-            localVarUrlObj.search = (new URLSearchParams(queryParameters)).toString();
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            const nonString = typeof buyer !== 'string';
-            const needsSerialization = nonString && configuration && configuration.isJsonMime
-                ? configuration.isJsonMime(localVarRequestOptions.headers['Content-Type'])
-                : nonString;
-            localVarRequestOptions.data =  needsSerialization
-                ? JSON.stringify(buyer !== undefined ? buyer : {})
-                : (buyer || "");
-
-            return {
-                url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * 
-         * @summary Deletes Buyer
-         * @param {number} id Id
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        deleteBuyer: async (id: number, options: any = {}): Promise<RequestArgs> => {
-            // verify required parameter 'id' is not null or undefined
-            if (id === null || id === undefined) {
-                throw new RequiredError('id','Required parameter id was null or undefined when calling deleteBuyer.');
-            }
-            const localVarPath = `/buyer/{id}`
-                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, 'https://example.com');
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'DELETE', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-
-    
-            const queryParameters = new URLSearchParams(localVarUrlObj.search);
-            for (const key in localVarQueryParameter) {
-                queryParameters.set(key, localVarQueryParameter[key]);
-            }
-            for (const key in options.query) {
-                queryParameters.set(key, options.query[key]);
-            }
-            localVarUrlObj.search = (new URLSearchParams(queryParameters)).toString();
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-
-            return {
-                url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * 
-         * @summary Gets Buyer
-         * @param {number} id Id
-         * @param {string} [includes] Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names 
-         * @param {string} [select] Column names [.] separated to fetch specific fields in response
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getBuyer: async (id: number, includes?: string, select?: string, options: any = {}): Promise<RequestArgs> => {
-            // verify required parameter 'id' is not null or undefined
-            if (id === null || id === undefined) {
-                throw new RequiredError('id','Required parameter id was null or undefined when calling getBuyer.');
-            }
-            const localVarPath = `/buyer/{id}`
-                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, 'https://example.com');
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-            if (includes !== undefined) {
-                localVarQueryParameter['includes'] = includes;
-            }
-
-            if (select !== undefined) {
-                localVarQueryParameter['select'] = select;
-            }
-
-
-    
-            const queryParameters = new URLSearchParams(localVarUrlObj.search);
-            for (const key in localVarQueryParameter) {
-                queryParameters.set(key, localVarQueryParameter[key]);
-            }
-            for (const key in options.query) {
-                queryParameters.set(key, options.query[key]);
-            }
-            localVarUrlObj.search = (new URLSearchParams(queryParameters)).toString();
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-
-            return {
-                url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * 
-         * @summary Lists Buyers
-         * @param {string} [includes] Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names 
-         * @param {string} [where] Filter on specific fields. Multiple conditions [.] separated Example: col_like_value.col2__val2
-         * @param {string} [limit] Rows to limit in response (Default: 10,000)
-         * @param {string} [orderBy] Order by [field]
-         * @param {string} [orderDirection] Order by field direction
-         * @param {string} [select] Column names [.] separated to fetch specific fields in response
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        listBuyers: async (includes?: string, where?: string, limit?: string, orderBy?: string, orderDirection?: string, select?: string, options: any = {}): Promise<RequestArgs> => {
-            const localVarPath = `/buyers`;
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, 'https://example.com');
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-            if (includes !== undefined) {
-                localVarQueryParameter['includes'] = includes;
-            }
-
-            if (where !== undefined) {
-                localVarQueryParameter['where'] = where;
-            }
-
-            if (limit !== undefined) {
-                localVarQueryParameter['limit'] = limit;
-            }
-
-            if (orderBy !== undefined) {
-                localVarQueryParameter['orderBy'] = orderBy;
-            }
-
-            if (orderDirection !== undefined) {
-                localVarQueryParameter['orderDirection'] = orderDirection;
-            }
-
-            if (select !== undefined) {
-                localVarQueryParameter['select'] = select;
-            }
-
-
-    
-            const queryParameters = new URLSearchParams(localVarUrlObj.search);
-            for (const key in localVarQueryParameter) {
-                queryParameters.set(key, localVarQueryParameter[key]);
-            }
-            for (const key in options.query) {
-                queryParameters.set(key, options.query[key]);
-            }
-            localVarUrlObj.search = (new URLSearchParams(queryParameters)).toString();
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-
-            return {
-                url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * 
-         * @summary Updates Buyer
-         * @param {number} id Id
-         * @param {ModelsBuyer} buyer Buyer
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        updateBuyer: async (id: number, buyer: ModelsBuyer, options: any = {}): Promise<RequestArgs> => {
-            // verify required parameter 'id' is not null or undefined
-            if (id === null || id === undefined) {
-                throw new RequiredError('id','Required parameter id was null or undefined when calling updateBuyer.');
-            }
-            // verify required parameter 'buyer' is not null or undefined
-            if (buyer === null || buyer === undefined) {
-                throw new RequiredError('buyer','Required parameter buyer was null or undefined when calling updateBuyer.');
-            }
-            const localVarPath = `/buyer/{id}`
-                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, 'https://example.com');
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'PATCH', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-
-    
-            localVarHeaderParameter['Content-Type'] = 'application/json';
-
-            const queryParameters = new URLSearchParams(localVarUrlObj.search);
-            for (const key in localVarQueryParameter) {
-                queryParameters.set(key, localVarQueryParameter[key]);
-            }
-            for (const key in options.query) {
-                queryParameters.set(key, options.query[key]);
-            }
-            localVarUrlObj.search = (new URLSearchParams(queryParameters)).toString();
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            const nonString = typeof buyer !== 'string';
-            const needsSerialization = nonString && configuration && configuration.isJsonMime
-                ? configuration.isJsonMime(localVarRequestOptions.headers['Content-Type'])
-                : nonString;
-            localVarRequestOptions.data =  needsSerialization
-                ? JSON.stringify(buyer !== undefined ? buyer : {})
-                : (buyer || "");
-
-            return {
-                url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
-                options: localVarRequestOptions,
-            };
-        },
-    }
-};
-
-/**
- * BuyerApi - functional programming interface
- * @export
- */
-export const BuyerApiFp = function(configuration?: Configuration) {
-    return {
-        /**
-         * 
-         * @summary Creates Buyer
-         * @param {ModelsBuyer} buyer Buyer
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async createBuyer(buyer: ModelsBuyer, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<ModelsBuyer>>> {
-            const localVarAxiosArgs = await BuyerApiAxiosParamCreator(configuration).createBuyer(buyer, options);
-            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
-                const axiosRequestArgs = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
-                return axios.request(axiosRequestArgs);
-            };
-        },
-        /**
-         * 
-         * @summary Deletes Buyer
-         * @param {number} id Id
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async deleteBuyer(id: number, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<string>> {
-            const localVarAxiosArgs = await BuyerApiAxiosParamCreator(configuration).deleteBuyer(id, options);
-            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
-                const axiosRequestArgs = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
-                return axios.request(axiosRequestArgs);
-            };
-        },
-        /**
-         * 
-         * @summary Gets Buyer
-         * @param {number} id Id
-         * @param {string} [includes] Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names 
-         * @param {string} [select] Column names [.] separated to fetch specific fields in response
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async getBuyer(id: number, includes?: string, select?: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<ModelsBuyer>>> {
-            const localVarAxiosArgs = await BuyerApiAxiosParamCreator(configuration).getBuyer(id, includes, select, options);
-            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
-                const axiosRequestArgs = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
-                return axios.request(axiosRequestArgs);
-            };
-        },
-        /**
-         * 
-         * @summary Lists Buyers
-         * @param {string} [includes] Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names 
-         * @param {string} [where] Filter on specific fields. Multiple conditions [.] separated Example: col_like_value.col2__val2
-         * @param {string} [limit] Rows to limit in response (Default: 10,000)
-         * @param {string} [orderBy] Order by [field]
-         * @param {string} [orderDirection] Order by field direction
-         * @param {string} [select] Column names [.] separated to fetch specific fields in response
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async listBuyers(includes?: string, where?: string, limit?: string, orderBy?: string, orderDirection?: string, select?: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<ModelsBuyer>>> {
-            const localVarAxiosArgs = await BuyerApiAxiosParamCreator(configuration).listBuyers(includes, where, limit, orderBy, orderDirection, select, options);
-            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
-                const axiosRequestArgs = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
-                return axios.request(axiosRequestArgs);
-            };
-        },
-        /**
-         * 
-         * @summary Updates Buyer
-         * @param {number} id Id
-         * @param {ModelsBuyer} buyer Buyer
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async updateBuyer(id: number, buyer: ModelsBuyer, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<ModelsBuyer>>> {
-            const localVarAxiosArgs = await BuyerApiAxiosParamCreator(configuration).updateBuyer(id, buyer, options);
-            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
-                const axiosRequestArgs = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
-                return axios.request(axiosRequestArgs);
-            };
-        },
-    }
-};
-
-/**
- * BuyerApi - factory interface
- * @export
- */
-export const BuyerApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
-    return {
-        /**
-         * 
-         * @summary Creates Buyer
-         * @param {ModelsBuyer} buyer Buyer
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        createBuyer(buyer: ModelsBuyer, options?: any): AxiosPromise<Array<ModelsBuyer>> {
-            return BuyerApiFp(configuration).createBuyer(buyer, options).then((request) => request(axios, basePath));
-        },
-        /**
-         * 
-         * @summary Deletes Buyer
-         * @param {number} id Id
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        deleteBuyer(id: number, options?: any): AxiosPromise<string> {
-            return BuyerApiFp(configuration).deleteBuyer(id, options).then((request) => request(axios, basePath));
-        },
-        /**
-         * 
-         * @summary Gets Buyer
-         * @param {number} id Id
-         * @param {string} [includes] Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names 
-         * @param {string} [select] Column names [.] separated to fetch specific fields in response
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getBuyer(id: number, includes?: string, select?: string, options?: any): AxiosPromise<Array<ModelsBuyer>> {
-            return BuyerApiFp(configuration).getBuyer(id, includes, select, options).then((request) => request(axios, basePath));
-        },
-        /**
-         * 
-         * @summary Lists Buyers
-         * @param {string} [includes] Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names 
-         * @param {string} [where] Filter on specific fields. Multiple conditions [.] separated Example: col_like_value.col2__val2
-         * @param {string} [limit] Rows to limit in response (Default: 10,000)
-         * @param {string} [orderBy] Order by [field]
-         * @param {string} [orderDirection] Order by field direction
-         * @param {string} [select] Column names [.] separated to fetch specific fields in response
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        listBuyers(includes?: string, where?: string, limit?: string, orderBy?: string, orderDirection?: string, select?: string, options?: any): AxiosPromise<Array<ModelsBuyer>> {
-            return BuyerApiFp(configuration).listBuyers(includes, where, limit, orderBy, orderDirection, select, options).then((request) => request(axios, basePath));
-        },
-        /**
-         * 
-         * @summary Updates Buyer
-         * @param {number} id Id
-         * @param {ModelsBuyer} buyer Buyer
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        updateBuyer(id: number, buyer: ModelsBuyer, options?: any): AxiosPromise<Array<ModelsBuyer>> {
-            return BuyerApiFp(configuration).updateBuyer(id, buyer, options).then((request) => request(axios, basePath));
-        },
-    };
-};
-
-/**
- * Request parameters for createBuyer operation in BuyerApi.
- * @export
- * @interface BuyerApiCreateBuyerRequest
- */
-export interface BuyerApiCreateBuyerRequest {
-    /**
-     * Buyer
-     * @type {ModelsBuyer}
-     * @memberof BuyerApiCreateBuyer
-     */
-    readonly buyer: ModelsBuyer
-}
-
-/**
- * Request parameters for deleteBuyer operation in BuyerApi.
- * @export
- * @interface BuyerApiDeleteBuyerRequest
- */
-export interface BuyerApiDeleteBuyerRequest {
-    /**
-     * Id
-     * @type {number}
-     * @memberof BuyerApiDeleteBuyer
-     */
-    readonly id: number
-}
-
-/**
- * Request parameters for getBuyer operation in BuyerApi.
- * @export
- * @interface BuyerApiGetBuyerRequest
- */
-export interface BuyerApiGetBuyerRequest {
-    /**
-     * Id
-     * @type {number}
-     * @memberof BuyerApiGetBuyer
-     */
-    readonly id: number
-
-    /**
-     * Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names 
-     * @type {string}
-     * @memberof BuyerApiGetBuyer
-     */
-    readonly includes?: string
-
-    /**
-     * Column names [.] separated to fetch specific fields in response
-     * @type {string}
-     * @memberof BuyerApiGetBuyer
-     */
-    readonly select?: string
-}
-
-/**
- * Request parameters for listBuyers operation in BuyerApi.
- * @export
- * @interface BuyerApiListBuyersRequest
- */
-export interface BuyerApiListBuyersRequest {
-    /**
-     * Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names 
-     * @type {string}
-     * @memberof BuyerApiListBuyers
-     */
-    readonly includes?: string
-
-    /**
-     * Filter on specific fields. Multiple conditions [.] separated Example: col_like_value.col2__val2
-     * @type {string}
-     * @memberof BuyerApiListBuyers
-     */
-    readonly where?: string
-
-    /**
-     * Rows to limit in response (Default: 10,000)
-     * @type {string}
-     * @memberof BuyerApiListBuyers
-     */
-    readonly limit?: string
-
-    /**
-     * Order by [field]
-     * @type {string}
-     * @memberof BuyerApiListBuyers
-     */
-    readonly orderBy?: string
-
-    /**
-     * Order by field direction
-     * @type {string}
-     * @memberof BuyerApiListBuyers
-     */
-    readonly orderDirection?: string
-
-    /**
-     * Column names [.] separated to fetch specific fields in response
-     * @type {string}
-     * @memberof BuyerApiListBuyers
-     */
-    readonly select?: string
-}
-
-/**
- * Request parameters for updateBuyer operation in BuyerApi.
- * @export
- * @interface BuyerApiUpdateBuyerRequest
- */
-export interface BuyerApiUpdateBuyerRequest {
-    /**
-     * Id
-     * @type {number}
-     * @memberof BuyerApiUpdateBuyer
-     */
-    readonly id: number
-
-    /**
-     * Buyer
-     * @type {ModelsBuyer}
-     * @memberof BuyerApiUpdateBuyer
-     */
-    readonly buyer: ModelsBuyer
-}
-
-/**
- * BuyerApi - object-oriented interface
- * @export
- * @class BuyerApi
- * @extends {BaseAPI}
- */
-export class BuyerApi extends BaseAPI {
-    /**
-     * 
-     * @summary Creates Buyer
-     * @param {BuyerApiCreateBuyerRequest} requestParameters Request parameters.
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof BuyerApi
-     */
-    public createBuyer(requestParameters: BuyerApiCreateBuyerRequest, options?: any) {
-        return BuyerApiFp(this.configuration).createBuyer(requestParameters.buyer, options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
-     * 
-     * @summary Deletes Buyer
-     * @param {BuyerApiDeleteBuyerRequest} requestParameters Request parameters.
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof BuyerApi
-     */
-    public deleteBuyer(requestParameters: BuyerApiDeleteBuyerRequest, options?: any) {
-        return BuyerApiFp(this.configuration).deleteBuyer(requestParameters.id, options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
-     * 
-     * @summary Gets Buyer
-     * @param {BuyerApiGetBuyerRequest} requestParameters Request parameters.
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof BuyerApi
-     */
-    public getBuyer(requestParameters: BuyerApiGetBuyerRequest, options?: any) {
-        return BuyerApiFp(this.configuration).getBuyer(requestParameters.id, requestParameters.includes, requestParameters.select, options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
-     * 
-     * @summary Lists Buyers
-     * @param {BuyerApiListBuyersRequest} requestParameters Request parameters.
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof BuyerApi
-     */
-    public listBuyers(requestParameters: BuyerApiListBuyersRequest = {}, options?: any) {
-        return BuyerApiFp(this.configuration).listBuyers(requestParameters.includes, requestParameters.where, requestParameters.limit, requestParameters.orderBy, requestParameters.orderDirection, requestParameters.select, options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
-     * 
-     * @summary Updates Buyer
-     * @param {BuyerApiUpdateBuyerRequest} requestParameters Request parameters.
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof BuyerApi
-     */
-    public updateBuyer(requestParameters: BuyerApiUpdateBuyerRequest, options?: any) {
-        return BuyerApiFp(this.configuration).updateBuyer(requestParameters.id, requestParameters.buyer, options).then((request) => request(this.axios, this.basePath));
-    }
-}
-
-
-/**
  * CharCreatePointAllocationApi - axios parameter creator
  * @export
  */
@@ -23772,635 +20893,6 @@ export class CharCreatePointAllocationApi extends BaseAPI {
      */
     public updateCharCreatePointAllocation(requestParameters: CharCreatePointAllocationApiUpdateCharCreatePointAllocationRequest, options?: any) {
         return CharCreatePointAllocationApiFp(this.configuration).updateCharCreatePointAllocation(requestParameters.id, requestParameters.charCreatePointAllocation, options).then((request) => request(this.axios, this.basePath));
-    }
-}
-
-
-/**
- * CharRecipeListApi - axios parameter creator
- * @export
- */
-export const CharRecipeListApiAxiosParamCreator = function (configuration?: Configuration) {
-    return {
-        /**
-         * 
-         * @summary Creates CharRecipeList
-         * @param {ModelsCharRecipeList} charRecipeList CharRecipeList
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        createCharRecipeList: async (charRecipeList: ModelsCharRecipeList, options: any = {}): Promise<RequestArgs> => {
-            // verify required parameter 'charRecipeList' is not null or undefined
-            if (charRecipeList === null || charRecipeList === undefined) {
-                throw new RequiredError('charRecipeList','Required parameter charRecipeList was null or undefined when calling createCharRecipeList.');
-            }
-            const localVarPath = `/char_recipe_list`;
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, 'https://example.com');
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'PUT', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-
-    
-            localVarHeaderParameter['Content-Type'] = 'application/json';
-
-            const queryParameters = new URLSearchParams(localVarUrlObj.search);
-            for (const key in localVarQueryParameter) {
-                queryParameters.set(key, localVarQueryParameter[key]);
-            }
-            for (const key in options.query) {
-                queryParameters.set(key, options.query[key]);
-            }
-            localVarUrlObj.search = (new URLSearchParams(queryParameters)).toString();
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            const nonString = typeof charRecipeList !== 'string';
-            const needsSerialization = nonString && configuration && configuration.isJsonMime
-                ? configuration.isJsonMime(localVarRequestOptions.headers['Content-Type'])
-                : nonString;
-            localVarRequestOptions.data =  needsSerialization
-                ? JSON.stringify(charRecipeList !== undefined ? charRecipeList : {})
-                : (charRecipeList || "");
-
-            return {
-                url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * 
-         * @summary Deletes CharRecipeList
-         * @param {number} id Id
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        deleteCharRecipeList: async (id: number, options: any = {}): Promise<RequestArgs> => {
-            // verify required parameter 'id' is not null or undefined
-            if (id === null || id === undefined) {
-                throw new RequiredError('id','Required parameter id was null or undefined when calling deleteCharRecipeList.');
-            }
-            const localVarPath = `/char_recipe_list/{id}`
-                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, 'https://example.com');
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'DELETE', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-
-    
-            const queryParameters = new URLSearchParams(localVarUrlObj.search);
-            for (const key in localVarQueryParameter) {
-                queryParameters.set(key, localVarQueryParameter[key]);
-            }
-            for (const key in options.query) {
-                queryParameters.set(key, options.query[key]);
-            }
-            localVarUrlObj.search = (new URLSearchParams(queryParameters)).toString();
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-
-            return {
-                url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * 
-         * @summary Gets CharRecipeList
-         * @param {number} id Id
-         * @param {string} [includes] Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names 
-         * @param {string} [select] Column names [.] separated to fetch specific fields in response
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getCharRecipeList: async (id: number, includes?: string, select?: string, options: any = {}): Promise<RequestArgs> => {
-            // verify required parameter 'id' is not null or undefined
-            if (id === null || id === undefined) {
-                throw new RequiredError('id','Required parameter id was null or undefined when calling getCharRecipeList.');
-            }
-            const localVarPath = `/char_recipe_list/{id}`
-                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, 'https://example.com');
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-            if (includes !== undefined) {
-                localVarQueryParameter['includes'] = includes;
-            }
-
-            if (select !== undefined) {
-                localVarQueryParameter['select'] = select;
-            }
-
-
-    
-            const queryParameters = new URLSearchParams(localVarUrlObj.search);
-            for (const key in localVarQueryParameter) {
-                queryParameters.set(key, localVarQueryParameter[key]);
-            }
-            for (const key in options.query) {
-                queryParameters.set(key, options.query[key]);
-            }
-            localVarUrlObj.search = (new URLSearchParams(queryParameters)).toString();
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-
-            return {
-                url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * 
-         * @summary Lists CharRecipeLists
-         * @param {string} [includes] Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names 
-         * @param {string} [where] Filter on specific fields. Multiple conditions [.] separated Example: col_like_value.col2__val2
-         * @param {string} [limit] Rows to limit in response (Default: 10,000)
-         * @param {string} [orderBy] Order by [field]
-         * @param {string} [orderDirection] Order by field direction
-         * @param {string} [select] Column names [.] separated to fetch specific fields in response
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        listCharRecipeLists: async (includes?: string, where?: string, limit?: string, orderBy?: string, orderDirection?: string, select?: string, options: any = {}): Promise<RequestArgs> => {
-            const localVarPath = `/char_recipe_lists`;
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, 'https://example.com');
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-            if (includes !== undefined) {
-                localVarQueryParameter['includes'] = includes;
-            }
-
-            if (where !== undefined) {
-                localVarQueryParameter['where'] = where;
-            }
-
-            if (limit !== undefined) {
-                localVarQueryParameter['limit'] = limit;
-            }
-
-            if (orderBy !== undefined) {
-                localVarQueryParameter['orderBy'] = orderBy;
-            }
-
-            if (orderDirection !== undefined) {
-                localVarQueryParameter['orderDirection'] = orderDirection;
-            }
-
-            if (select !== undefined) {
-                localVarQueryParameter['select'] = select;
-            }
-
-
-    
-            const queryParameters = new URLSearchParams(localVarUrlObj.search);
-            for (const key in localVarQueryParameter) {
-                queryParameters.set(key, localVarQueryParameter[key]);
-            }
-            for (const key in options.query) {
-                queryParameters.set(key, options.query[key]);
-            }
-            localVarUrlObj.search = (new URLSearchParams(queryParameters)).toString();
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-
-            return {
-                url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * 
-         * @summary Updates CharRecipeList
-         * @param {number} id Id
-         * @param {ModelsCharRecipeList} charRecipeList CharRecipeList
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        updateCharRecipeList: async (id: number, charRecipeList: ModelsCharRecipeList, options: any = {}): Promise<RequestArgs> => {
-            // verify required parameter 'id' is not null or undefined
-            if (id === null || id === undefined) {
-                throw new RequiredError('id','Required parameter id was null or undefined when calling updateCharRecipeList.');
-            }
-            // verify required parameter 'charRecipeList' is not null or undefined
-            if (charRecipeList === null || charRecipeList === undefined) {
-                throw new RequiredError('charRecipeList','Required parameter charRecipeList was null or undefined when calling updateCharRecipeList.');
-            }
-            const localVarPath = `/char_recipe_list/{id}`
-                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, 'https://example.com');
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'PATCH', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-
-    
-            localVarHeaderParameter['Content-Type'] = 'application/json';
-
-            const queryParameters = new URLSearchParams(localVarUrlObj.search);
-            for (const key in localVarQueryParameter) {
-                queryParameters.set(key, localVarQueryParameter[key]);
-            }
-            for (const key in options.query) {
-                queryParameters.set(key, options.query[key]);
-            }
-            localVarUrlObj.search = (new URLSearchParams(queryParameters)).toString();
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            const nonString = typeof charRecipeList !== 'string';
-            const needsSerialization = nonString && configuration && configuration.isJsonMime
-                ? configuration.isJsonMime(localVarRequestOptions.headers['Content-Type'])
-                : nonString;
-            localVarRequestOptions.data =  needsSerialization
-                ? JSON.stringify(charRecipeList !== undefined ? charRecipeList : {})
-                : (charRecipeList || "");
-
-            return {
-                url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
-                options: localVarRequestOptions,
-            };
-        },
-    }
-};
-
-/**
- * CharRecipeListApi - functional programming interface
- * @export
- */
-export const CharRecipeListApiFp = function(configuration?: Configuration) {
-    return {
-        /**
-         * 
-         * @summary Creates CharRecipeList
-         * @param {ModelsCharRecipeList} charRecipeList CharRecipeList
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async createCharRecipeList(charRecipeList: ModelsCharRecipeList, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<ModelsCharRecipeList>>> {
-            const localVarAxiosArgs = await CharRecipeListApiAxiosParamCreator(configuration).createCharRecipeList(charRecipeList, options);
-            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
-                const axiosRequestArgs = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
-                return axios.request(axiosRequestArgs);
-            };
-        },
-        /**
-         * 
-         * @summary Deletes CharRecipeList
-         * @param {number} id Id
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async deleteCharRecipeList(id: number, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<string>> {
-            const localVarAxiosArgs = await CharRecipeListApiAxiosParamCreator(configuration).deleteCharRecipeList(id, options);
-            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
-                const axiosRequestArgs = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
-                return axios.request(axiosRequestArgs);
-            };
-        },
-        /**
-         * 
-         * @summary Gets CharRecipeList
-         * @param {number} id Id
-         * @param {string} [includes] Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names 
-         * @param {string} [select] Column names [.] separated to fetch specific fields in response
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async getCharRecipeList(id: number, includes?: string, select?: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<ModelsCharRecipeList>>> {
-            const localVarAxiosArgs = await CharRecipeListApiAxiosParamCreator(configuration).getCharRecipeList(id, includes, select, options);
-            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
-                const axiosRequestArgs = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
-                return axios.request(axiosRequestArgs);
-            };
-        },
-        /**
-         * 
-         * @summary Lists CharRecipeLists
-         * @param {string} [includes] Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names 
-         * @param {string} [where] Filter on specific fields. Multiple conditions [.] separated Example: col_like_value.col2__val2
-         * @param {string} [limit] Rows to limit in response (Default: 10,000)
-         * @param {string} [orderBy] Order by [field]
-         * @param {string} [orderDirection] Order by field direction
-         * @param {string} [select] Column names [.] separated to fetch specific fields in response
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async listCharRecipeLists(includes?: string, where?: string, limit?: string, orderBy?: string, orderDirection?: string, select?: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<ModelsCharRecipeList>>> {
-            const localVarAxiosArgs = await CharRecipeListApiAxiosParamCreator(configuration).listCharRecipeLists(includes, where, limit, orderBy, orderDirection, select, options);
-            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
-                const axiosRequestArgs = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
-                return axios.request(axiosRequestArgs);
-            };
-        },
-        /**
-         * 
-         * @summary Updates CharRecipeList
-         * @param {number} id Id
-         * @param {ModelsCharRecipeList} charRecipeList CharRecipeList
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async updateCharRecipeList(id: number, charRecipeList: ModelsCharRecipeList, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<ModelsCharRecipeList>>> {
-            const localVarAxiosArgs = await CharRecipeListApiAxiosParamCreator(configuration).updateCharRecipeList(id, charRecipeList, options);
-            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
-                const axiosRequestArgs = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
-                return axios.request(axiosRequestArgs);
-            };
-        },
-    }
-};
-
-/**
- * CharRecipeListApi - factory interface
- * @export
- */
-export const CharRecipeListApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
-    return {
-        /**
-         * 
-         * @summary Creates CharRecipeList
-         * @param {ModelsCharRecipeList} charRecipeList CharRecipeList
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        createCharRecipeList(charRecipeList: ModelsCharRecipeList, options?: any): AxiosPromise<Array<ModelsCharRecipeList>> {
-            return CharRecipeListApiFp(configuration).createCharRecipeList(charRecipeList, options).then((request) => request(axios, basePath));
-        },
-        /**
-         * 
-         * @summary Deletes CharRecipeList
-         * @param {number} id Id
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        deleteCharRecipeList(id: number, options?: any): AxiosPromise<string> {
-            return CharRecipeListApiFp(configuration).deleteCharRecipeList(id, options).then((request) => request(axios, basePath));
-        },
-        /**
-         * 
-         * @summary Gets CharRecipeList
-         * @param {number} id Id
-         * @param {string} [includes] Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names 
-         * @param {string} [select] Column names [.] separated to fetch specific fields in response
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getCharRecipeList(id: number, includes?: string, select?: string, options?: any): AxiosPromise<Array<ModelsCharRecipeList>> {
-            return CharRecipeListApiFp(configuration).getCharRecipeList(id, includes, select, options).then((request) => request(axios, basePath));
-        },
-        /**
-         * 
-         * @summary Lists CharRecipeLists
-         * @param {string} [includes] Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names 
-         * @param {string} [where] Filter on specific fields. Multiple conditions [.] separated Example: col_like_value.col2__val2
-         * @param {string} [limit] Rows to limit in response (Default: 10,000)
-         * @param {string} [orderBy] Order by [field]
-         * @param {string} [orderDirection] Order by field direction
-         * @param {string} [select] Column names [.] separated to fetch specific fields in response
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        listCharRecipeLists(includes?: string, where?: string, limit?: string, orderBy?: string, orderDirection?: string, select?: string, options?: any): AxiosPromise<Array<ModelsCharRecipeList>> {
-            return CharRecipeListApiFp(configuration).listCharRecipeLists(includes, where, limit, orderBy, orderDirection, select, options).then((request) => request(axios, basePath));
-        },
-        /**
-         * 
-         * @summary Updates CharRecipeList
-         * @param {number} id Id
-         * @param {ModelsCharRecipeList} charRecipeList CharRecipeList
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        updateCharRecipeList(id: number, charRecipeList: ModelsCharRecipeList, options?: any): AxiosPromise<Array<ModelsCharRecipeList>> {
-            return CharRecipeListApiFp(configuration).updateCharRecipeList(id, charRecipeList, options).then((request) => request(axios, basePath));
-        },
-    };
-};
-
-/**
- * Request parameters for createCharRecipeList operation in CharRecipeListApi.
- * @export
- * @interface CharRecipeListApiCreateCharRecipeListRequest
- */
-export interface CharRecipeListApiCreateCharRecipeListRequest {
-    /**
-     * CharRecipeList
-     * @type {ModelsCharRecipeList}
-     * @memberof CharRecipeListApiCreateCharRecipeList
-     */
-    readonly charRecipeList: ModelsCharRecipeList
-}
-
-/**
- * Request parameters for deleteCharRecipeList operation in CharRecipeListApi.
- * @export
- * @interface CharRecipeListApiDeleteCharRecipeListRequest
- */
-export interface CharRecipeListApiDeleteCharRecipeListRequest {
-    /**
-     * Id
-     * @type {number}
-     * @memberof CharRecipeListApiDeleteCharRecipeList
-     */
-    readonly id: number
-}
-
-/**
- * Request parameters for getCharRecipeList operation in CharRecipeListApi.
- * @export
- * @interface CharRecipeListApiGetCharRecipeListRequest
- */
-export interface CharRecipeListApiGetCharRecipeListRequest {
-    /**
-     * Id
-     * @type {number}
-     * @memberof CharRecipeListApiGetCharRecipeList
-     */
-    readonly id: number
-
-    /**
-     * Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names 
-     * @type {string}
-     * @memberof CharRecipeListApiGetCharRecipeList
-     */
-    readonly includes?: string
-
-    /**
-     * Column names [.] separated to fetch specific fields in response
-     * @type {string}
-     * @memberof CharRecipeListApiGetCharRecipeList
-     */
-    readonly select?: string
-}
-
-/**
- * Request parameters for listCharRecipeLists operation in CharRecipeListApi.
- * @export
- * @interface CharRecipeListApiListCharRecipeListsRequest
- */
-export interface CharRecipeListApiListCharRecipeListsRequest {
-    /**
-     * Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names 
-     * @type {string}
-     * @memberof CharRecipeListApiListCharRecipeLists
-     */
-    readonly includes?: string
-
-    /**
-     * Filter on specific fields. Multiple conditions [.] separated Example: col_like_value.col2__val2
-     * @type {string}
-     * @memberof CharRecipeListApiListCharRecipeLists
-     */
-    readonly where?: string
-
-    /**
-     * Rows to limit in response (Default: 10,000)
-     * @type {string}
-     * @memberof CharRecipeListApiListCharRecipeLists
-     */
-    readonly limit?: string
-
-    /**
-     * Order by [field]
-     * @type {string}
-     * @memberof CharRecipeListApiListCharRecipeLists
-     */
-    readonly orderBy?: string
-
-    /**
-     * Order by field direction
-     * @type {string}
-     * @memberof CharRecipeListApiListCharRecipeLists
-     */
-    readonly orderDirection?: string
-
-    /**
-     * Column names [.] separated to fetch specific fields in response
-     * @type {string}
-     * @memberof CharRecipeListApiListCharRecipeLists
-     */
-    readonly select?: string
-}
-
-/**
- * Request parameters for updateCharRecipeList operation in CharRecipeListApi.
- * @export
- * @interface CharRecipeListApiUpdateCharRecipeListRequest
- */
-export interface CharRecipeListApiUpdateCharRecipeListRequest {
-    /**
-     * Id
-     * @type {number}
-     * @memberof CharRecipeListApiUpdateCharRecipeList
-     */
-    readonly id: number
-
-    /**
-     * CharRecipeList
-     * @type {ModelsCharRecipeList}
-     * @memberof CharRecipeListApiUpdateCharRecipeList
-     */
-    readonly charRecipeList: ModelsCharRecipeList
-}
-
-/**
- * CharRecipeListApi - object-oriented interface
- * @export
- * @class CharRecipeListApi
- * @extends {BaseAPI}
- */
-export class CharRecipeListApi extends BaseAPI {
-    /**
-     * 
-     * @summary Creates CharRecipeList
-     * @param {CharRecipeListApiCreateCharRecipeListRequest} requestParameters Request parameters.
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof CharRecipeListApi
-     */
-    public createCharRecipeList(requestParameters: CharRecipeListApiCreateCharRecipeListRequest, options?: any) {
-        return CharRecipeListApiFp(this.configuration).createCharRecipeList(requestParameters.charRecipeList, options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
-     * 
-     * @summary Deletes CharRecipeList
-     * @param {CharRecipeListApiDeleteCharRecipeListRequest} requestParameters Request parameters.
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof CharRecipeListApi
-     */
-    public deleteCharRecipeList(requestParameters: CharRecipeListApiDeleteCharRecipeListRequest, options?: any) {
-        return CharRecipeListApiFp(this.configuration).deleteCharRecipeList(requestParameters.id, options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
-     * 
-     * @summary Gets CharRecipeList
-     * @param {CharRecipeListApiGetCharRecipeListRequest} requestParameters Request parameters.
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof CharRecipeListApi
-     */
-    public getCharRecipeList(requestParameters: CharRecipeListApiGetCharRecipeListRequest, options?: any) {
-        return CharRecipeListApiFp(this.configuration).getCharRecipeList(requestParameters.id, requestParameters.includes, requestParameters.select, options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
-     * 
-     * @summary Lists CharRecipeLists
-     * @param {CharRecipeListApiListCharRecipeListsRequest} requestParameters Request parameters.
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof CharRecipeListApi
-     */
-    public listCharRecipeLists(requestParameters: CharRecipeListApiListCharRecipeListsRequest = {}, options?: any) {
-        return CharRecipeListApiFp(this.configuration).listCharRecipeLists(requestParameters.includes, requestParameters.where, requestParameters.limit, requestParameters.orderBy, requestParameters.orderDirection, requestParameters.select, options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
-     * 
-     * @summary Updates CharRecipeList
-     * @param {CharRecipeListApiUpdateCharRecipeListRequest} requestParameters Request parameters.
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof CharRecipeListApi
-     */
-    public updateCharRecipeList(requestParameters: CharRecipeListApiUpdateCharRecipeListRequest, options?: any) {
-        return CharRecipeListApiFp(this.configuration).updateCharRecipeList(requestParameters.id, requestParameters.charRecipeList, options).then((request) => request(this.axios, this.basePath));
     }
 }
 
@@ -33212,1893 +29704,6 @@ export class CharacterMemmedSpellApi extends BaseAPI {
 
 
 /**
- * CharacterPetBuffApi - axios parameter creator
- * @export
- */
-export const CharacterPetBuffApiAxiosParamCreator = function (configuration?: Configuration) {
-    return {
-        /**
-         * 
-         * @summary Creates CharacterPetBuff
-         * @param {ModelsCharacterPetBuff} characterPetBuff CharacterPetBuff
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        createCharacterPetBuff: async (characterPetBuff: ModelsCharacterPetBuff, options: any = {}): Promise<RequestArgs> => {
-            // verify required parameter 'characterPetBuff' is not null or undefined
-            if (characterPetBuff === null || characterPetBuff === undefined) {
-                throw new RequiredError('characterPetBuff','Required parameter characterPetBuff was null or undefined when calling createCharacterPetBuff.');
-            }
-            const localVarPath = `/character_pet_buff`;
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, 'https://example.com');
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'PUT', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-
-    
-            localVarHeaderParameter['Content-Type'] = 'application/json';
-
-            const queryParameters = new URLSearchParams(localVarUrlObj.search);
-            for (const key in localVarQueryParameter) {
-                queryParameters.set(key, localVarQueryParameter[key]);
-            }
-            for (const key in options.query) {
-                queryParameters.set(key, options.query[key]);
-            }
-            localVarUrlObj.search = (new URLSearchParams(queryParameters)).toString();
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            const nonString = typeof characterPetBuff !== 'string';
-            const needsSerialization = nonString && configuration && configuration.isJsonMime
-                ? configuration.isJsonMime(localVarRequestOptions.headers['Content-Type'])
-                : nonString;
-            localVarRequestOptions.data =  needsSerialization
-                ? JSON.stringify(characterPetBuff !== undefined ? characterPetBuff : {})
-                : (characterPetBuff || "");
-
-            return {
-                url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * 
-         * @summary Deletes CharacterPetBuff
-         * @param {number} id Id
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        deleteCharacterPetBuff: async (id: number, options: any = {}): Promise<RequestArgs> => {
-            // verify required parameter 'id' is not null or undefined
-            if (id === null || id === undefined) {
-                throw new RequiredError('id','Required parameter id was null or undefined when calling deleteCharacterPetBuff.');
-            }
-            const localVarPath = `/character_pet_buff/{id}`
-                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, 'https://example.com');
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'DELETE', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-
-    
-            const queryParameters = new URLSearchParams(localVarUrlObj.search);
-            for (const key in localVarQueryParameter) {
-                queryParameters.set(key, localVarQueryParameter[key]);
-            }
-            for (const key in options.query) {
-                queryParameters.set(key, options.query[key]);
-            }
-            localVarUrlObj.search = (new URLSearchParams(queryParameters)).toString();
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-
-            return {
-                url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * 
-         * @summary Gets CharacterPetBuff
-         * @param {number} id Id
-         * @param {string} [includes] Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names 
-         * @param {string} [select] Column names [.] separated to fetch specific fields in response
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getCharacterPetBuff: async (id: number, includes?: string, select?: string, options: any = {}): Promise<RequestArgs> => {
-            // verify required parameter 'id' is not null or undefined
-            if (id === null || id === undefined) {
-                throw new RequiredError('id','Required parameter id was null or undefined when calling getCharacterPetBuff.');
-            }
-            const localVarPath = `/character_pet_buff/{id}`
-                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, 'https://example.com');
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-            if (includes !== undefined) {
-                localVarQueryParameter['includes'] = includes;
-            }
-
-            if (select !== undefined) {
-                localVarQueryParameter['select'] = select;
-            }
-
-
-    
-            const queryParameters = new URLSearchParams(localVarUrlObj.search);
-            for (const key in localVarQueryParameter) {
-                queryParameters.set(key, localVarQueryParameter[key]);
-            }
-            for (const key in options.query) {
-                queryParameters.set(key, options.query[key]);
-            }
-            localVarUrlObj.search = (new URLSearchParams(queryParameters)).toString();
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-
-            return {
-                url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * 
-         * @summary Lists CharacterPetBuffs
-         * @param {string} [includes] Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names 
-         * @param {string} [where] Filter on specific fields. Multiple conditions [.] separated Example: col_like_value.col2__val2
-         * @param {string} [limit] Rows to limit in response (Default: 10,000)
-         * @param {string} [orderBy] Order by [field]
-         * @param {string} [orderDirection] Order by field direction
-         * @param {string} [select] Column names [.] separated to fetch specific fields in response
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        listCharacterPetBuffs: async (includes?: string, where?: string, limit?: string, orderBy?: string, orderDirection?: string, select?: string, options: any = {}): Promise<RequestArgs> => {
-            const localVarPath = `/character_pet_buffs`;
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, 'https://example.com');
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-            if (includes !== undefined) {
-                localVarQueryParameter['includes'] = includes;
-            }
-
-            if (where !== undefined) {
-                localVarQueryParameter['where'] = where;
-            }
-
-            if (limit !== undefined) {
-                localVarQueryParameter['limit'] = limit;
-            }
-
-            if (orderBy !== undefined) {
-                localVarQueryParameter['orderBy'] = orderBy;
-            }
-
-            if (orderDirection !== undefined) {
-                localVarQueryParameter['orderDirection'] = orderDirection;
-            }
-
-            if (select !== undefined) {
-                localVarQueryParameter['select'] = select;
-            }
-
-
-    
-            const queryParameters = new URLSearchParams(localVarUrlObj.search);
-            for (const key in localVarQueryParameter) {
-                queryParameters.set(key, localVarQueryParameter[key]);
-            }
-            for (const key in options.query) {
-                queryParameters.set(key, options.query[key]);
-            }
-            localVarUrlObj.search = (new URLSearchParams(queryParameters)).toString();
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-
-            return {
-                url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * 
-         * @summary Updates CharacterPetBuff
-         * @param {number} id Id
-         * @param {ModelsCharacterPetBuff} characterPetBuff CharacterPetBuff
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        updateCharacterPetBuff: async (id: number, characterPetBuff: ModelsCharacterPetBuff, options: any = {}): Promise<RequestArgs> => {
-            // verify required parameter 'id' is not null or undefined
-            if (id === null || id === undefined) {
-                throw new RequiredError('id','Required parameter id was null or undefined when calling updateCharacterPetBuff.');
-            }
-            // verify required parameter 'characterPetBuff' is not null or undefined
-            if (characterPetBuff === null || characterPetBuff === undefined) {
-                throw new RequiredError('characterPetBuff','Required parameter characterPetBuff was null or undefined when calling updateCharacterPetBuff.');
-            }
-            const localVarPath = `/character_pet_buff/{id}`
-                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, 'https://example.com');
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'PATCH', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-
-    
-            localVarHeaderParameter['Content-Type'] = 'application/json';
-
-            const queryParameters = new URLSearchParams(localVarUrlObj.search);
-            for (const key in localVarQueryParameter) {
-                queryParameters.set(key, localVarQueryParameter[key]);
-            }
-            for (const key in options.query) {
-                queryParameters.set(key, options.query[key]);
-            }
-            localVarUrlObj.search = (new URLSearchParams(queryParameters)).toString();
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            const nonString = typeof characterPetBuff !== 'string';
-            const needsSerialization = nonString && configuration && configuration.isJsonMime
-                ? configuration.isJsonMime(localVarRequestOptions.headers['Content-Type'])
-                : nonString;
-            localVarRequestOptions.data =  needsSerialization
-                ? JSON.stringify(characterPetBuff !== undefined ? characterPetBuff : {})
-                : (characterPetBuff || "");
-
-            return {
-                url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
-                options: localVarRequestOptions,
-            };
-        },
-    }
-};
-
-/**
- * CharacterPetBuffApi - functional programming interface
- * @export
- */
-export const CharacterPetBuffApiFp = function(configuration?: Configuration) {
-    return {
-        /**
-         * 
-         * @summary Creates CharacterPetBuff
-         * @param {ModelsCharacterPetBuff} characterPetBuff CharacterPetBuff
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async createCharacterPetBuff(characterPetBuff: ModelsCharacterPetBuff, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<ModelsCharacterPetBuff>>> {
-            const localVarAxiosArgs = await CharacterPetBuffApiAxiosParamCreator(configuration).createCharacterPetBuff(characterPetBuff, options);
-            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
-                const axiosRequestArgs = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
-                return axios.request(axiosRequestArgs);
-            };
-        },
-        /**
-         * 
-         * @summary Deletes CharacterPetBuff
-         * @param {number} id Id
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async deleteCharacterPetBuff(id: number, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<string>> {
-            const localVarAxiosArgs = await CharacterPetBuffApiAxiosParamCreator(configuration).deleteCharacterPetBuff(id, options);
-            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
-                const axiosRequestArgs = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
-                return axios.request(axiosRequestArgs);
-            };
-        },
-        /**
-         * 
-         * @summary Gets CharacterPetBuff
-         * @param {number} id Id
-         * @param {string} [includes] Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names 
-         * @param {string} [select] Column names [.] separated to fetch specific fields in response
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async getCharacterPetBuff(id: number, includes?: string, select?: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<ModelsCharacterPetBuff>>> {
-            const localVarAxiosArgs = await CharacterPetBuffApiAxiosParamCreator(configuration).getCharacterPetBuff(id, includes, select, options);
-            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
-                const axiosRequestArgs = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
-                return axios.request(axiosRequestArgs);
-            };
-        },
-        /**
-         * 
-         * @summary Lists CharacterPetBuffs
-         * @param {string} [includes] Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names 
-         * @param {string} [where] Filter on specific fields. Multiple conditions [.] separated Example: col_like_value.col2__val2
-         * @param {string} [limit] Rows to limit in response (Default: 10,000)
-         * @param {string} [orderBy] Order by [field]
-         * @param {string} [orderDirection] Order by field direction
-         * @param {string} [select] Column names [.] separated to fetch specific fields in response
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async listCharacterPetBuffs(includes?: string, where?: string, limit?: string, orderBy?: string, orderDirection?: string, select?: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<ModelsCharacterPetBuff>>> {
-            const localVarAxiosArgs = await CharacterPetBuffApiAxiosParamCreator(configuration).listCharacterPetBuffs(includes, where, limit, orderBy, orderDirection, select, options);
-            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
-                const axiosRequestArgs = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
-                return axios.request(axiosRequestArgs);
-            };
-        },
-        /**
-         * 
-         * @summary Updates CharacterPetBuff
-         * @param {number} id Id
-         * @param {ModelsCharacterPetBuff} characterPetBuff CharacterPetBuff
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async updateCharacterPetBuff(id: number, characterPetBuff: ModelsCharacterPetBuff, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<ModelsCharacterPetBuff>>> {
-            const localVarAxiosArgs = await CharacterPetBuffApiAxiosParamCreator(configuration).updateCharacterPetBuff(id, characterPetBuff, options);
-            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
-                const axiosRequestArgs = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
-                return axios.request(axiosRequestArgs);
-            };
-        },
-    }
-};
-
-/**
- * CharacterPetBuffApi - factory interface
- * @export
- */
-export const CharacterPetBuffApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
-    return {
-        /**
-         * 
-         * @summary Creates CharacterPetBuff
-         * @param {ModelsCharacterPetBuff} characterPetBuff CharacterPetBuff
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        createCharacterPetBuff(characterPetBuff: ModelsCharacterPetBuff, options?: any): AxiosPromise<Array<ModelsCharacterPetBuff>> {
-            return CharacterPetBuffApiFp(configuration).createCharacterPetBuff(characterPetBuff, options).then((request) => request(axios, basePath));
-        },
-        /**
-         * 
-         * @summary Deletes CharacterPetBuff
-         * @param {number} id Id
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        deleteCharacterPetBuff(id: number, options?: any): AxiosPromise<string> {
-            return CharacterPetBuffApiFp(configuration).deleteCharacterPetBuff(id, options).then((request) => request(axios, basePath));
-        },
-        /**
-         * 
-         * @summary Gets CharacterPetBuff
-         * @param {number} id Id
-         * @param {string} [includes] Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names 
-         * @param {string} [select] Column names [.] separated to fetch specific fields in response
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getCharacterPetBuff(id: number, includes?: string, select?: string, options?: any): AxiosPromise<Array<ModelsCharacterPetBuff>> {
-            return CharacterPetBuffApiFp(configuration).getCharacterPetBuff(id, includes, select, options).then((request) => request(axios, basePath));
-        },
-        /**
-         * 
-         * @summary Lists CharacterPetBuffs
-         * @param {string} [includes] Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names 
-         * @param {string} [where] Filter on specific fields. Multiple conditions [.] separated Example: col_like_value.col2__val2
-         * @param {string} [limit] Rows to limit in response (Default: 10,000)
-         * @param {string} [orderBy] Order by [field]
-         * @param {string} [orderDirection] Order by field direction
-         * @param {string} [select] Column names [.] separated to fetch specific fields in response
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        listCharacterPetBuffs(includes?: string, where?: string, limit?: string, orderBy?: string, orderDirection?: string, select?: string, options?: any): AxiosPromise<Array<ModelsCharacterPetBuff>> {
-            return CharacterPetBuffApiFp(configuration).listCharacterPetBuffs(includes, where, limit, orderBy, orderDirection, select, options).then((request) => request(axios, basePath));
-        },
-        /**
-         * 
-         * @summary Updates CharacterPetBuff
-         * @param {number} id Id
-         * @param {ModelsCharacterPetBuff} characterPetBuff CharacterPetBuff
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        updateCharacterPetBuff(id: number, characterPetBuff: ModelsCharacterPetBuff, options?: any): AxiosPromise<Array<ModelsCharacterPetBuff>> {
-            return CharacterPetBuffApiFp(configuration).updateCharacterPetBuff(id, characterPetBuff, options).then((request) => request(axios, basePath));
-        },
-    };
-};
-
-/**
- * Request parameters for createCharacterPetBuff operation in CharacterPetBuffApi.
- * @export
- * @interface CharacterPetBuffApiCreateCharacterPetBuffRequest
- */
-export interface CharacterPetBuffApiCreateCharacterPetBuffRequest {
-    /**
-     * CharacterPetBuff
-     * @type {ModelsCharacterPetBuff}
-     * @memberof CharacterPetBuffApiCreateCharacterPetBuff
-     */
-    readonly characterPetBuff: ModelsCharacterPetBuff
-}
-
-/**
- * Request parameters for deleteCharacterPetBuff operation in CharacterPetBuffApi.
- * @export
- * @interface CharacterPetBuffApiDeleteCharacterPetBuffRequest
- */
-export interface CharacterPetBuffApiDeleteCharacterPetBuffRequest {
-    /**
-     * Id
-     * @type {number}
-     * @memberof CharacterPetBuffApiDeleteCharacterPetBuff
-     */
-    readonly id: number
-}
-
-/**
- * Request parameters for getCharacterPetBuff operation in CharacterPetBuffApi.
- * @export
- * @interface CharacterPetBuffApiGetCharacterPetBuffRequest
- */
-export interface CharacterPetBuffApiGetCharacterPetBuffRequest {
-    /**
-     * Id
-     * @type {number}
-     * @memberof CharacterPetBuffApiGetCharacterPetBuff
-     */
-    readonly id: number
-
-    /**
-     * Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names 
-     * @type {string}
-     * @memberof CharacterPetBuffApiGetCharacterPetBuff
-     */
-    readonly includes?: string
-
-    /**
-     * Column names [.] separated to fetch specific fields in response
-     * @type {string}
-     * @memberof CharacterPetBuffApiGetCharacterPetBuff
-     */
-    readonly select?: string
-}
-
-/**
- * Request parameters for listCharacterPetBuffs operation in CharacterPetBuffApi.
- * @export
- * @interface CharacterPetBuffApiListCharacterPetBuffsRequest
- */
-export interface CharacterPetBuffApiListCharacterPetBuffsRequest {
-    /**
-     * Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names 
-     * @type {string}
-     * @memberof CharacterPetBuffApiListCharacterPetBuffs
-     */
-    readonly includes?: string
-
-    /**
-     * Filter on specific fields. Multiple conditions [.] separated Example: col_like_value.col2__val2
-     * @type {string}
-     * @memberof CharacterPetBuffApiListCharacterPetBuffs
-     */
-    readonly where?: string
-
-    /**
-     * Rows to limit in response (Default: 10,000)
-     * @type {string}
-     * @memberof CharacterPetBuffApiListCharacterPetBuffs
-     */
-    readonly limit?: string
-
-    /**
-     * Order by [field]
-     * @type {string}
-     * @memberof CharacterPetBuffApiListCharacterPetBuffs
-     */
-    readonly orderBy?: string
-
-    /**
-     * Order by field direction
-     * @type {string}
-     * @memberof CharacterPetBuffApiListCharacterPetBuffs
-     */
-    readonly orderDirection?: string
-
-    /**
-     * Column names [.] separated to fetch specific fields in response
-     * @type {string}
-     * @memberof CharacterPetBuffApiListCharacterPetBuffs
-     */
-    readonly select?: string
-}
-
-/**
- * Request parameters for updateCharacterPetBuff operation in CharacterPetBuffApi.
- * @export
- * @interface CharacterPetBuffApiUpdateCharacterPetBuffRequest
- */
-export interface CharacterPetBuffApiUpdateCharacterPetBuffRequest {
-    /**
-     * Id
-     * @type {number}
-     * @memberof CharacterPetBuffApiUpdateCharacterPetBuff
-     */
-    readonly id: number
-
-    /**
-     * CharacterPetBuff
-     * @type {ModelsCharacterPetBuff}
-     * @memberof CharacterPetBuffApiUpdateCharacterPetBuff
-     */
-    readonly characterPetBuff: ModelsCharacterPetBuff
-}
-
-/**
- * CharacterPetBuffApi - object-oriented interface
- * @export
- * @class CharacterPetBuffApi
- * @extends {BaseAPI}
- */
-export class CharacterPetBuffApi extends BaseAPI {
-    /**
-     * 
-     * @summary Creates CharacterPetBuff
-     * @param {CharacterPetBuffApiCreateCharacterPetBuffRequest} requestParameters Request parameters.
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof CharacterPetBuffApi
-     */
-    public createCharacterPetBuff(requestParameters: CharacterPetBuffApiCreateCharacterPetBuffRequest, options?: any) {
-        return CharacterPetBuffApiFp(this.configuration).createCharacterPetBuff(requestParameters.characterPetBuff, options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
-     * 
-     * @summary Deletes CharacterPetBuff
-     * @param {CharacterPetBuffApiDeleteCharacterPetBuffRequest} requestParameters Request parameters.
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof CharacterPetBuffApi
-     */
-    public deleteCharacterPetBuff(requestParameters: CharacterPetBuffApiDeleteCharacterPetBuffRequest, options?: any) {
-        return CharacterPetBuffApiFp(this.configuration).deleteCharacterPetBuff(requestParameters.id, options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
-     * 
-     * @summary Gets CharacterPetBuff
-     * @param {CharacterPetBuffApiGetCharacterPetBuffRequest} requestParameters Request parameters.
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof CharacterPetBuffApi
-     */
-    public getCharacterPetBuff(requestParameters: CharacterPetBuffApiGetCharacterPetBuffRequest, options?: any) {
-        return CharacterPetBuffApiFp(this.configuration).getCharacterPetBuff(requestParameters.id, requestParameters.includes, requestParameters.select, options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
-     * 
-     * @summary Lists CharacterPetBuffs
-     * @param {CharacterPetBuffApiListCharacterPetBuffsRequest} requestParameters Request parameters.
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof CharacterPetBuffApi
-     */
-    public listCharacterPetBuffs(requestParameters: CharacterPetBuffApiListCharacterPetBuffsRequest = {}, options?: any) {
-        return CharacterPetBuffApiFp(this.configuration).listCharacterPetBuffs(requestParameters.includes, requestParameters.where, requestParameters.limit, requestParameters.orderBy, requestParameters.orderDirection, requestParameters.select, options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
-     * 
-     * @summary Updates CharacterPetBuff
-     * @param {CharacterPetBuffApiUpdateCharacterPetBuffRequest} requestParameters Request parameters.
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof CharacterPetBuffApi
-     */
-    public updateCharacterPetBuff(requestParameters: CharacterPetBuffApiUpdateCharacterPetBuffRequest, options?: any) {
-        return CharacterPetBuffApiFp(this.configuration).updateCharacterPetBuff(requestParameters.id, requestParameters.characterPetBuff, options).then((request) => request(this.axios, this.basePath));
-    }
-}
-
-
-/**
- * CharacterPetInfoApi - axios parameter creator
- * @export
- */
-export const CharacterPetInfoApiAxiosParamCreator = function (configuration?: Configuration) {
-    return {
-        /**
-         * 
-         * @summary Creates CharacterPetInfo
-         * @param {ModelsCharacterPetInfo} characterPetInfo CharacterPetInfo
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        createCharacterPetInfo: async (characterPetInfo: ModelsCharacterPetInfo, options: any = {}): Promise<RequestArgs> => {
-            // verify required parameter 'characterPetInfo' is not null or undefined
-            if (characterPetInfo === null || characterPetInfo === undefined) {
-                throw new RequiredError('characterPetInfo','Required parameter characterPetInfo was null or undefined when calling createCharacterPetInfo.');
-            }
-            const localVarPath = `/character_pet_info`;
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, 'https://example.com');
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'PUT', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-
-    
-            localVarHeaderParameter['Content-Type'] = 'application/json';
-
-            const queryParameters = new URLSearchParams(localVarUrlObj.search);
-            for (const key in localVarQueryParameter) {
-                queryParameters.set(key, localVarQueryParameter[key]);
-            }
-            for (const key in options.query) {
-                queryParameters.set(key, options.query[key]);
-            }
-            localVarUrlObj.search = (new URLSearchParams(queryParameters)).toString();
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            const nonString = typeof characterPetInfo !== 'string';
-            const needsSerialization = nonString && configuration && configuration.isJsonMime
-                ? configuration.isJsonMime(localVarRequestOptions.headers['Content-Type'])
-                : nonString;
-            localVarRequestOptions.data =  needsSerialization
-                ? JSON.stringify(characterPetInfo !== undefined ? characterPetInfo : {})
-                : (characterPetInfo || "");
-
-            return {
-                url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * 
-         * @summary Deletes CharacterPetInfo
-         * @param {number} id Id
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        deleteCharacterPetInfo: async (id: number, options: any = {}): Promise<RequestArgs> => {
-            // verify required parameter 'id' is not null or undefined
-            if (id === null || id === undefined) {
-                throw new RequiredError('id','Required parameter id was null or undefined when calling deleteCharacterPetInfo.');
-            }
-            const localVarPath = `/character_pet_info/{id}`
-                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, 'https://example.com');
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'DELETE', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-
-    
-            const queryParameters = new URLSearchParams(localVarUrlObj.search);
-            for (const key in localVarQueryParameter) {
-                queryParameters.set(key, localVarQueryParameter[key]);
-            }
-            for (const key in options.query) {
-                queryParameters.set(key, options.query[key]);
-            }
-            localVarUrlObj.search = (new URLSearchParams(queryParameters)).toString();
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-
-            return {
-                url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * 
-         * @summary Gets CharacterPetInfo
-         * @param {number} id Id
-         * @param {string} [includes] Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names 
-         * @param {string} [select] Column names [.] separated to fetch specific fields in response
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getCharacterPetInfo: async (id: number, includes?: string, select?: string, options: any = {}): Promise<RequestArgs> => {
-            // verify required parameter 'id' is not null or undefined
-            if (id === null || id === undefined) {
-                throw new RequiredError('id','Required parameter id was null or undefined when calling getCharacterPetInfo.');
-            }
-            const localVarPath = `/character_pet_info/{id}`
-                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, 'https://example.com');
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-            if (includes !== undefined) {
-                localVarQueryParameter['includes'] = includes;
-            }
-
-            if (select !== undefined) {
-                localVarQueryParameter['select'] = select;
-            }
-
-
-    
-            const queryParameters = new URLSearchParams(localVarUrlObj.search);
-            for (const key in localVarQueryParameter) {
-                queryParameters.set(key, localVarQueryParameter[key]);
-            }
-            for (const key in options.query) {
-                queryParameters.set(key, options.query[key]);
-            }
-            localVarUrlObj.search = (new URLSearchParams(queryParameters)).toString();
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-
-            return {
-                url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * 
-         * @summary Lists CharacterPetInfos
-         * @param {string} [includes] Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names 
-         * @param {string} [where] Filter on specific fields. Multiple conditions [.] separated Example: col_like_value.col2__val2
-         * @param {string} [limit] Rows to limit in response (Default: 10,000)
-         * @param {string} [orderBy] Order by [field]
-         * @param {string} [orderDirection] Order by field direction
-         * @param {string} [select] Column names [.] separated to fetch specific fields in response
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        listCharacterPetInfos: async (includes?: string, where?: string, limit?: string, orderBy?: string, orderDirection?: string, select?: string, options: any = {}): Promise<RequestArgs> => {
-            const localVarPath = `/character_pet_infos`;
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, 'https://example.com');
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-            if (includes !== undefined) {
-                localVarQueryParameter['includes'] = includes;
-            }
-
-            if (where !== undefined) {
-                localVarQueryParameter['where'] = where;
-            }
-
-            if (limit !== undefined) {
-                localVarQueryParameter['limit'] = limit;
-            }
-
-            if (orderBy !== undefined) {
-                localVarQueryParameter['orderBy'] = orderBy;
-            }
-
-            if (orderDirection !== undefined) {
-                localVarQueryParameter['orderDirection'] = orderDirection;
-            }
-
-            if (select !== undefined) {
-                localVarQueryParameter['select'] = select;
-            }
-
-
-    
-            const queryParameters = new URLSearchParams(localVarUrlObj.search);
-            for (const key in localVarQueryParameter) {
-                queryParameters.set(key, localVarQueryParameter[key]);
-            }
-            for (const key in options.query) {
-                queryParameters.set(key, options.query[key]);
-            }
-            localVarUrlObj.search = (new URLSearchParams(queryParameters)).toString();
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-
-            return {
-                url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * 
-         * @summary Updates CharacterPetInfo
-         * @param {number} id Id
-         * @param {ModelsCharacterPetInfo} characterPetInfo CharacterPetInfo
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        updateCharacterPetInfo: async (id: number, characterPetInfo: ModelsCharacterPetInfo, options: any = {}): Promise<RequestArgs> => {
-            // verify required parameter 'id' is not null or undefined
-            if (id === null || id === undefined) {
-                throw new RequiredError('id','Required parameter id was null or undefined when calling updateCharacterPetInfo.');
-            }
-            // verify required parameter 'characterPetInfo' is not null or undefined
-            if (characterPetInfo === null || characterPetInfo === undefined) {
-                throw new RequiredError('characterPetInfo','Required parameter characterPetInfo was null or undefined when calling updateCharacterPetInfo.');
-            }
-            const localVarPath = `/character_pet_info/{id}`
-                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, 'https://example.com');
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'PATCH', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-
-    
-            localVarHeaderParameter['Content-Type'] = 'application/json';
-
-            const queryParameters = new URLSearchParams(localVarUrlObj.search);
-            for (const key in localVarQueryParameter) {
-                queryParameters.set(key, localVarQueryParameter[key]);
-            }
-            for (const key in options.query) {
-                queryParameters.set(key, options.query[key]);
-            }
-            localVarUrlObj.search = (new URLSearchParams(queryParameters)).toString();
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            const nonString = typeof characterPetInfo !== 'string';
-            const needsSerialization = nonString && configuration && configuration.isJsonMime
-                ? configuration.isJsonMime(localVarRequestOptions.headers['Content-Type'])
-                : nonString;
-            localVarRequestOptions.data =  needsSerialization
-                ? JSON.stringify(characterPetInfo !== undefined ? characterPetInfo : {})
-                : (characterPetInfo || "");
-
-            return {
-                url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
-                options: localVarRequestOptions,
-            };
-        },
-    }
-};
-
-/**
- * CharacterPetInfoApi - functional programming interface
- * @export
- */
-export const CharacterPetInfoApiFp = function(configuration?: Configuration) {
-    return {
-        /**
-         * 
-         * @summary Creates CharacterPetInfo
-         * @param {ModelsCharacterPetInfo} characterPetInfo CharacterPetInfo
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async createCharacterPetInfo(characterPetInfo: ModelsCharacterPetInfo, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<ModelsCharacterPetInfo>>> {
-            const localVarAxiosArgs = await CharacterPetInfoApiAxiosParamCreator(configuration).createCharacterPetInfo(characterPetInfo, options);
-            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
-                const axiosRequestArgs = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
-                return axios.request(axiosRequestArgs);
-            };
-        },
-        /**
-         * 
-         * @summary Deletes CharacterPetInfo
-         * @param {number} id Id
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async deleteCharacterPetInfo(id: number, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<string>> {
-            const localVarAxiosArgs = await CharacterPetInfoApiAxiosParamCreator(configuration).deleteCharacterPetInfo(id, options);
-            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
-                const axiosRequestArgs = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
-                return axios.request(axiosRequestArgs);
-            };
-        },
-        /**
-         * 
-         * @summary Gets CharacterPetInfo
-         * @param {number} id Id
-         * @param {string} [includes] Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names 
-         * @param {string} [select] Column names [.] separated to fetch specific fields in response
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async getCharacterPetInfo(id: number, includes?: string, select?: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<ModelsCharacterPetInfo>>> {
-            const localVarAxiosArgs = await CharacterPetInfoApiAxiosParamCreator(configuration).getCharacterPetInfo(id, includes, select, options);
-            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
-                const axiosRequestArgs = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
-                return axios.request(axiosRequestArgs);
-            };
-        },
-        /**
-         * 
-         * @summary Lists CharacterPetInfos
-         * @param {string} [includes] Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names 
-         * @param {string} [where] Filter on specific fields. Multiple conditions [.] separated Example: col_like_value.col2__val2
-         * @param {string} [limit] Rows to limit in response (Default: 10,000)
-         * @param {string} [orderBy] Order by [field]
-         * @param {string} [orderDirection] Order by field direction
-         * @param {string} [select] Column names [.] separated to fetch specific fields in response
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async listCharacterPetInfos(includes?: string, where?: string, limit?: string, orderBy?: string, orderDirection?: string, select?: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<ModelsCharacterPetInfo>>> {
-            const localVarAxiosArgs = await CharacterPetInfoApiAxiosParamCreator(configuration).listCharacterPetInfos(includes, where, limit, orderBy, orderDirection, select, options);
-            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
-                const axiosRequestArgs = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
-                return axios.request(axiosRequestArgs);
-            };
-        },
-        /**
-         * 
-         * @summary Updates CharacterPetInfo
-         * @param {number} id Id
-         * @param {ModelsCharacterPetInfo} characterPetInfo CharacterPetInfo
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async updateCharacterPetInfo(id: number, characterPetInfo: ModelsCharacterPetInfo, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<ModelsCharacterPetInfo>>> {
-            const localVarAxiosArgs = await CharacterPetInfoApiAxiosParamCreator(configuration).updateCharacterPetInfo(id, characterPetInfo, options);
-            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
-                const axiosRequestArgs = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
-                return axios.request(axiosRequestArgs);
-            };
-        },
-    }
-};
-
-/**
- * CharacterPetInfoApi - factory interface
- * @export
- */
-export const CharacterPetInfoApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
-    return {
-        /**
-         * 
-         * @summary Creates CharacterPetInfo
-         * @param {ModelsCharacterPetInfo} characterPetInfo CharacterPetInfo
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        createCharacterPetInfo(characterPetInfo: ModelsCharacterPetInfo, options?: any): AxiosPromise<Array<ModelsCharacterPetInfo>> {
-            return CharacterPetInfoApiFp(configuration).createCharacterPetInfo(characterPetInfo, options).then((request) => request(axios, basePath));
-        },
-        /**
-         * 
-         * @summary Deletes CharacterPetInfo
-         * @param {number} id Id
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        deleteCharacterPetInfo(id: number, options?: any): AxiosPromise<string> {
-            return CharacterPetInfoApiFp(configuration).deleteCharacterPetInfo(id, options).then((request) => request(axios, basePath));
-        },
-        /**
-         * 
-         * @summary Gets CharacterPetInfo
-         * @param {number} id Id
-         * @param {string} [includes] Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names 
-         * @param {string} [select] Column names [.] separated to fetch specific fields in response
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getCharacterPetInfo(id: number, includes?: string, select?: string, options?: any): AxiosPromise<Array<ModelsCharacterPetInfo>> {
-            return CharacterPetInfoApiFp(configuration).getCharacterPetInfo(id, includes, select, options).then((request) => request(axios, basePath));
-        },
-        /**
-         * 
-         * @summary Lists CharacterPetInfos
-         * @param {string} [includes] Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names 
-         * @param {string} [where] Filter on specific fields. Multiple conditions [.] separated Example: col_like_value.col2__val2
-         * @param {string} [limit] Rows to limit in response (Default: 10,000)
-         * @param {string} [orderBy] Order by [field]
-         * @param {string} [orderDirection] Order by field direction
-         * @param {string} [select] Column names [.] separated to fetch specific fields in response
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        listCharacterPetInfos(includes?: string, where?: string, limit?: string, orderBy?: string, orderDirection?: string, select?: string, options?: any): AxiosPromise<Array<ModelsCharacterPetInfo>> {
-            return CharacterPetInfoApiFp(configuration).listCharacterPetInfos(includes, where, limit, orderBy, orderDirection, select, options).then((request) => request(axios, basePath));
-        },
-        /**
-         * 
-         * @summary Updates CharacterPetInfo
-         * @param {number} id Id
-         * @param {ModelsCharacterPetInfo} characterPetInfo CharacterPetInfo
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        updateCharacterPetInfo(id: number, characterPetInfo: ModelsCharacterPetInfo, options?: any): AxiosPromise<Array<ModelsCharacterPetInfo>> {
-            return CharacterPetInfoApiFp(configuration).updateCharacterPetInfo(id, characterPetInfo, options).then((request) => request(axios, basePath));
-        },
-    };
-};
-
-/**
- * Request parameters for createCharacterPetInfo operation in CharacterPetInfoApi.
- * @export
- * @interface CharacterPetInfoApiCreateCharacterPetInfoRequest
- */
-export interface CharacterPetInfoApiCreateCharacterPetInfoRequest {
-    /**
-     * CharacterPetInfo
-     * @type {ModelsCharacterPetInfo}
-     * @memberof CharacterPetInfoApiCreateCharacterPetInfo
-     */
-    readonly characterPetInfo: ModelsCharacterPetInfo
-}
-
-/**
- * Request parameters for deleteCharacterPetInfo operation in CharacterPetInfoApi.
- * @export
- * @interface CharacterPetInfoApiDeleteCharacterPetInfoRequest
- */
-export interface CharacterPetInfoApiDeleteCharacterPetInfoRequest {
-    /**
-     * Id
-     * @type {number}
-     * @memberof CharacterPetInfoApiDeleteCharacterPetInfo
-     */
-    readonly id: number
-}
-
-/**
- * Request parameters for getCharacterPetInfo operation in CharacterPetInfoApi.
- * @export
- * @interface CharacterPetInfoApiGetCharacterPetInfoRequest
- */
-export interface CharacterPetInfoApiGetCharacterPetInfoRequest {
-    /**
-     * Id
-     * @type {number}
-     * @memberof CharacterPetInfoApiGetCharacterPetInfo
-     */
-    readonly id: number
-
-    /**
-     * Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names 
-     * @type {string}
-     * @memberof CharacterPetInfoApiGetCharacterPetInfo
-     */
-    readonly includes?: string
-
-    /**
-     * Column names [.] separated to fetch specific fields in response
-     * @type {string}
-     * @memberof CharacterPetInfoApiGetCharacterPetInfo
-     */
-    readonly select?: string
-}
-
-/**
- * Request parameters for listCharacterPetInfos operation in CharacterPetInfoApi.
- * @export
- * @interface CharacterPetInfoApiListCharacterPetInfosRequest
- */
-export interface CharacterPetInfoApiListCharacterPetInfosRequest {
-    /**
-     * Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names 
-     * @type {string}
-     * @memberof CharacterPetInfoApiListCharacterPetInfos
-     */
-    readonly includes?: string
-
-    /**
-     * Filter on specific fields. Multiple conditions [.] separated Example: col_like_value.col2__val2
-     * @type {string}
-     * @memberof CharacterPetInfoApiListCharacterPetInfos
-     */
-    readonly where?: string
-
-    /**
-     * Rows to limit in response (Default: 10,000)
-     * @type {string}
-     * @memberof CharacterPetInfoApiListCharacterPetInfos
-     */
-    readonly limit?: string
-
-    /**
-     * Order by [field]
-     * @type {string}
-     * @memberof CharacterPetInfoApiListCharacterPetInfos
-     */
-    readonly orderBy?: string
-
-    /**
-     * Order by field direction
-     * @type {string}
-     * @memberof CharacterPetInfoApiListCharacterPetInfos
-     */
-    readonly orderDirection?: string
-
-    /**
-     * Column names [.] separated to fetch specific fields in response
-     * @type {string}
-     * @memberof CharacterPetInfoApiListCharacterPetInfos
-     */
-    readonly select?: string
-}
-
-/**
- * Request parameters for updateCharacterPetInfo operation in CharacterPetInfoApi.
- * @export
- * @interface CharacterPetInfoApiUpdateCharacterPetInfoRequest
- */
-export interface CharacterPetInfoApiUpdateCharacterPetInfoRequest {
-    /**
-     * Id
-     * @type {number}
-     * @memberof CharacterPetInfoApiUpdateCharacterPetInfo
-     */
-    readonly id: number
-
-    /**
-     * CharacterPetInfo
-     * @type {ModelsCharacterPetInfo}
-     * @memberof CharacterPetInfoApiUpdateCharacterPetInfo
-     */
-    readonly characterPetInfo: ModelsCharacterPetInfo
-}
-
-/**
- * CharacterPetInfoApi - object-oriented interface
- * @export
- * @class CharacterPetInfoApi
- * @extends {BaseAPI}
- */
-export class CharacterPetInfoApi extends BaseAPI {
-    /**
-     * 
-     * @summary Creates CharacterPetInfo
-     * @param {CharacterPetInfoApiCreateCharacterPetInfoRequest} requestParameters Request parameters.
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof CharacterPetInfoApi
-     */
-    public createCharacterPetInfo(requestParameters: CharacterPetInfoApiCreateCharacterPetInfoRequest, options?: any) {
-        return CharacterPetInfoApiFp(this.configuration).createCharacterPetInfo(requestParameters.characterPetInfo, options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
-     * 
-     * @summary Deletes CharacterPetInfo
-     * @param {CharacterPetInfoApiDeleteCharacterPetInfoRequest} requestParameters Request parameters.
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof CharacterPetInfoApi
-     */
-    public deleteCharacterPetInfo(requestParameters: CharacterPetInfoApiDeleteCharacterPetInfoRequest, options?: any) {
-        return CharacterPetInfoApiFp(this.configuration).deleteCharacterPetInfo(requestParameters.id, options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
-     * 
-     * @summary Gets CharacterPetInfo
-     * @param {CharacterPetInfoApiGetCharacterPetInfoRequest} requestParameters Request parameters.
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof CharacterPetInfoApi
-     */
-    public getCharacterPetInfo(requestParameters: CharacterPetInfoApiGetCharacterPetInfoRequest, options?: any) {
-        return CharacterPetInfoApiFp(this.configuration).getCharacterPetInfo(requestParameters.id, requestParameters.includes, requestParameters.select, options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
-     * 
-     * @summary Lists CharacterPetInfos
-     * @param {CharacterPetInfoApiListCharacterPetInfosRequest} requestParameters Request parameters.
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof CharacterPetInfoApi
-     */
-    public listCharacterPetInfos(requestParameters: CharacterPetInfoApiListCharacterPetInfosRequest = {}, options?: any) {
-        return CharacterPetInfoApiFp(this.configuration).listCharacterPetInfos(requestParameters.includes, requestParameters.where, requestParameters.limit, requestParameters.orderBy, requestParameters.orderDirection, requestParameters.select, options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
-     * 
-     * @summary Updates CharacterPetInfo
-     * @param {CharacterPetInfoApiUpdateCharacterPetInfoRequest} requestParameters Request parameters.
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof CharacterPetInfoApi
-     */
-    public updateCharacterPetInfo(requestParameters: CharacterPetInfoApiUpdateCharacterPetInfoRequest, options?: any) {
-        return CharacterPetInfoApiFp(this.configuration).updateCharacterPetInfo(requestParameters.id, requestParameters.characterPetInfo, options).then((request) => request(this.axios, this.basePath));
-    }
-}
-
-
-/**
- * CharacterPetInventoryApi - axios parameter creator
- * @export
- */
-export const CharacterPetInventoryApiAxiosParamCreator = function (configuration?: Configuration) {
-    return {
-        /**
-         * 
-         * @summary Creates CharacterPetInventory
-         * @param {ModelsCharacterPetInventory} characterPetInventory CharacterPetInventory
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        createCharacterPetInventory: async (characterPetInventory: ModelsCharacterPetInventory, options: any = {}): Promise<RequestArgs> => {
-            // verify required parameter 'characterPetInventory' is not null or undefined
-            if (characterPetInventory === null || characterPetInventory === undefined) {
-                throw new RequiredError('characterPetInventory','Required parameter characterPetInventory was null or undefined when calling createCharacterPetInventory.');
-            }
-            const localVarPath = `/character_pet_inventory`;
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, 'https://example.com');
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'PUT', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-
-    
-            localVarHeaderParameter['Content-Type'] = 'application/json';
-
-            const queryParameters = new URLSearchParams(localVarUrlObj.search);
-            for (const key in localVarQueryParameter) {
-                queryParameters.set(key, localVarQueryParameter[key]);
-            }
-            for (const key in options.query) {
-                queryParameters.set(key, options.query[key]);
-            }
-            localVarUrlObj.search = (new URLSearchParams(queryParameters)).toString();
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            const nonString = typeof characterPetInventory !== 'string';
-            const needsSerialization = nonString && configuration && configuration.isJsonMime
-                ? configuration.isJsonMime(localVarRequestOptions.headers['Content-Type'])
-                : nonString;
-            localVarRequestOptions.data =  needsSerialization
-                ? JSON.stringify(characterPetInventory !== undefined ? characterPetInventory : {})
-                : (characterPetInventory || "");
-
-            return {
-                url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * 
-         * @summary Deletes CharacterPetInventory
-         * @param {number} id Id
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        deleteCharacterPetInventory: async (id: number, options: any = {}): Promise<RequestArgs> => {
-            // verify required parameter 'id' is not null or undefined
-            if (id === null || id === undefined) {
-                throw new RequiredError('id','Required parameter id was null or undefined when calling deleteCharacterPetInventory.');
-            }
-            const localVarPath = `/character_pet_inventory/{id}`
-                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, 'https://example.com');
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'DELETE', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-
-    
-            const queryParameters = new URLSearchParams(localVarUrlObj.search);
-            for (const key in localVarQueryParameter) {
-                queryParameters.set(key, localVarQueryParameter[key]);
-            }
-            for (const key in options.query) {
-                queryParameters.set(key, options.query[key]);
-            }
-            localVarUrlObj.search = (new URLSearchParams(queryParameters)).toString();
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-
-            return {
-                url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * 
-         * @summary Gets CharacterPetInventory
-         * @param {number} id Id
-         * @param {string} [includes] Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names 
-         * @param {string} [select] Column names [.] separated to fetch specific fields in response
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getCharacterPetInventory: async (id: number, includes?: string, select?: string, options: any = {}): Promise<RequestArgs> => {
-            // verify required parameter 'id' is not null or undefined
-            if (id === null || id === undefined) {
-                throw new RequiredError('id','Required parameter id was null or undefined when calling getCharacterPetInventory.');
-            }
-            const localVarPath = `/character_pet_inventory/{id}`
-                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, 'https://example.com');
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-            if (includes !== undefined) {
-                localVarQueryParameter['includes'] = includes;
-            }
-
-            if (select !== undefined) {
-                localVarQueryParameter['select'] = select;
-            }
-
-
-    
-            const queryParameters = new URLSearchParams(localVarUrlObj.search);
-            for (const key in localVarQueryParameter) {
-                queryParameters.set(key, localVarQueryParameter[key]);
-            }
-            for (const key in options.query) {
-                queryParameters.set(key, options.query[key]);
-            }
-            localVarUrlObj.search = (new URLSearchParams(queryParameters)).toString();
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-
-            return {
-                url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * 
-         * @summary Lists CharacterPetInventories
-         * @param {string} [includes] Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names 
-         * @param {string} [where] Filter on specific fields. Multiple conditions [.] separated Example: col_like_value.col2__val2
-         * @param {string} [limit] Rows to limit in response (Default: 10,000)
-         * @param {string} [orderBy] Order by [field]
-         * @param {string} [orderDirection] Order by field direction
-         * @param {string} [select] Column names [.] separated to fetch specific fields in response
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        listCharacterPetInventories: async (includes?: string, where?: string, limit?: string, orderBy?: string, orderDirection?: string, select?: string, options: any = {}): Promise<RequestArgs> => {
-            const localVarPath = `/character_pet_inventories`;
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, 'https://example.com');
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-            if (includes !== undefined) {
-                localVarQueryParameter['includes'] = includes;
-            }
-
-            if (where !== undefined) {
-                localVarQueryParameter['where'] = where;
-            }
-
-            if (limit !== undefined) {
-                localVarQueryParameter['limit'] = limit;
-            }
-
-            if (orderBy !== undefined) {
-                localVarQueryParameter['orderBy'] = orderBy;
-            }
-
-            if (orderDirection !== undefined) {
-                localVarQueryParameter['orderDirection'] = orderDirection;
-            }
-
-            if (select !== undefined) {
-                localVarQueryParameter['select'] = select;
-            }
-
-
-    
-            const queryParameters = new URLSearchParams(localVarUrlObj.search);
-            for (const key in localVarQueryParameter) {
-                queryParameters.set(key, localVarQueryParameter[key]);
-            }
-            for (const key in options.query) {
-                queryParameters.set(key, options.query[key]);
-            }
-            localVarUrlObj.search = (new URLSearchParams(queryParameters)).toString();
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-
-            return {
-                url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * 
-         * @summary Updates CharacterPetInventory
-         * @param {number} id Id
-         * @param {ModelsCharacterPetInventory} characterPetInventory CharacterPetInventory
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        updateCharacterPetInventory: async (id: number, characterPetInventory: ModelsCharacterPetInventory, options: any = {}): Promise<RequestArgs> => {
-            // verify required parameter 'id' is not null or undefined
-            if (id === null || id === undefined) {
-                throw new RequiredError('id','Required parameter id was null or undefined when calling updateCharacterPetInventory.');
-            }
-            // verify required parameter 'characterPetInventory' is not null or undefined
-            if (characterPetInventory === null || characterPetInventory === undefined) {
-                throw new RequiredError('characterPetInventory','Required parameter characterPetInventory was null or undefined when calling updateCharacterPetInventory.');
-            }
-            const localVarPath = `/character_pet_inventory/{id}`
-                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, 'https://example.com');
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'PATCH', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-
-    
-            localVarHeaderParameter['Content-Type'] = 'application/json';
-
-            const queryParameters = new URLSearchParams(localVarUrlObj.search);
-            for (const key in localVarQueryParameter) {
-                queryParameters.set(key, localVarQueryParameter[key]);
-            }
-            for (const key in options.query) {
-                queryParameters.set(key, options.query[key]);
-            }
-            localVarUrlObj.search = (new URLSearchParams(queryParameters)).toString();
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            const nonString = typeof characterPetInventory !== 'string';
-            const needsSerialization = nonString && configuration && configuration.isJsonMime
-                ? configuration.isJsonMime(localVarRequestOptions.headers['Content-Type'])
-                : nonString;
-            localVarRequestOptions.data =  needsSerialization
-                ? JSON.stringify(characterPetInventory !== undefined ? characterPetInventory : {})
-                : (characterPetInventory || "");
-
-            return {
-                url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
-                options: localVarRequestOptions,
-            };
-        },
-    }
-};
-
-/**
- * CharacterPetInventoryApi - functional programming interface
- * @export
- */
-export const CharacterPetInventoryApiFp = function(configuration?: Configuration) {
-    return {
-        /**
-         * 
-         * @summary Creates CharacterPetInventory
-         * @param {ModelsCharacterPetInventory} characterPetInventory CharacterPetInventory
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async createCharacterPetInventory(characterPetInventory: ModelsCharacterPetInventory, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<ModelsCharacterPetInventory>>> {
-            const localVarAxiosArgs = await CharacterPetInventoryApiAxiosParamCreator(configuration).createCharacterPetInventory(characterPetInventory, options);
-            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
-                const axiosRequestArgs = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
-                return axios.request(axiosRequestArgs);
-            };
-        },
-        /**
-         * 
-         * @summary Deletes CharacterPetInventory
-         * @param {number} id Id
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async deleteCharacterPetInventory(id: number, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<string>> {
-            const localVarAxiosArgs = await CharacterPetInventoryApiAxiosParamCreator(configuration).deleteCharacterPetInventory(id, options);
-            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
-                const axiosRequestArgs = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
-                return axios.request(axiosRequestArgs);
-            };
-        },
-        /**
-         * 
-         * @summary Gets CharacterPetInventory
-         * @param {number} id Id
-         * @param {string} [includes] Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names 
-         * @param {string} [select] Column names [.] separated to fetch specific fields in response
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async getCharacterPetInventory(id: number, includes?: string, select?: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<ModelsCharacterPetInventory>>> {
-            const localVarAxiosArgs = await CharacterPetInventoryApiAxiosParamCreator(configuration).getCharacterPetInventory(id, includes, select, options);
-            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
-                const axiosRequestArgs = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
-                return axios.request(axiosRequestArgs);
-            };
-        },
-        /**
-         * 
-         * @summary Lists CharacterPetInventories
-         * @param {string} [includes] Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names 
-         * @param {string} [where] Filter on specific fields. Multiple conditions [.] separated Example: col_like_value.col2__val2
-         * @param {string} [limit] Rows to limit in response (Default: 10,000)
-         * @param {string} [orderBy] Order by [field]
-         * @param {string} [orderDirection] Order by field direction
-         * @param {string} [select] Column names [.] separated to fetch specific fields in response
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async listCharacterPetInventories(includes?: string, where?: string, limit?: string, orderBy?: string, orderDirection?: string, select?: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<ModelsCharacterPetInventory>>> {
-            const localVarAxiosArgs = await CharacterPetInventoryApiAxiosParamCreator(configuration).listCharacterPetInventories(includes, where, limit, orderBy, orderDirection, select, options);
-            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
-                const axiosRequestArgs = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
-                return axios.request(axiosRequestArgs);
-            };
-        },
-        /**
-         * 
-         * @summary Updates CharacterPetInventory
-         * @param {number} id Id
-         * @param {ModelsCharacterPetInventory} characterPetInventory CharacterPetInventory
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async updateCharacterPetInventory(id: number, characterPetInventory: ModelsCharacterPetInventory, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<ModelsCharacterPetInventory>>> {
-            const localVarAxiosArgs = await CharacterPetInventoryApiAxiosParamCreator(configuration).updateCharacterPetInventory(id, characterPetInventory, options);
-            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
-                const axiosRequestArgs = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
-                return axios.request(axiosRequestArgs);
-            };
-        },
-    }
-};
-
-/**
- * CharacterPetInventoryApi - factory interface
- * @export
- */
-export const CharacterPetInventoryApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
-    return {
-        /**
-         * 
-         * @summary Creates CharacterPetInventory
-         * @param {ModelsCharacterPetInventory} characterPetInventory CharacterPetInventory
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        createCharacterPetInventory(characterPetInventory: ModelsCharacterPetInventory, options?: any): AxiosPromise<Array<ModelsCharacterPetInventory>> {
-            return CharacterPetInventoryApiFp(configuration).createCharacterPetInventory(characterPetInventory, options).then((request) => request(axios, basePath));
-        },
-        /**
-         * 
-         * @summary Deletes CharacterPetInventory
-         * @param {number} id Id
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        deleteCharacterPetInventory(id: number, options?: any): AxiosPromise<string> {
-            return CharacterPetInventoryApiFp(configuration).deleteCharacterPetInventory(id, options).then((request) => request(axios, basePath));
-        },
-        /**
-         * 
-         * @summary Gets CharacterPetInventory
-         * @param {number} id Id
-         * @param {string} [includes] Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names 
-         * @param {string} [select] Column names [.] separated to fetch specific fields in response
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getCharacterPetInventory(id: number, includes?: string, select?: string, options?: any): AxiosPromise<Array<ModelsCharacterPetInventory>> {
-            return CharacterPetInventoryApiFp(configuration).getCharacterPetInventory(id, includes, select, options).then((request) => request(axios, basePath));
-        },
-        /**
-         * 
-         * @summary Lists CharacterPetInventories
-         * @param {string} [includes] Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names 
-         * @param {string} [where] Filter on specific fields. Multiple conditions [.] separated Example: col_like_value.col2__val2
-         * @param {string} [limit] Rows to limit in response (Default: 10,000)
-         * @param {string} [orderBy] Order by [field]
-         * @param {string} [orderDirection] Order by field direction
-         * @param {string} [select] Column names [.] separated to fetch specific fields in response
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        listCharacterPetInventories(includes?: string, where?: string, limit?: string, orderBy?: string, orderDirection?: string, select?: string, options?: any): AxiosPromise<Array<ModelsCharacterPetInventory>> {
-            return CharacterPetInventoryApiFp(configuration).listCharacterPetInventories(includes, where, limit, orderBy, orderDirection, select, options).then((request) => request(axios, basePath));
-        },
-        /**
-         * 
-         * @summary Updates CharacterPetInventory
-         * @param {number} id Id
-         * @param {ModelsCharacterPetInventory} characterPetInventory CharacterPetInventory
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        updateCharacterPetInventory(id: number, characterPetInventory: ModelsCharacterPetInventory, options?: any): AxiosPromise<Array<ModelsCharacterPetInventory>> {
-            return CharacterPetInventoryApiFp(configuration).updateCharacterPetInventory(id, characterPetInventory, options).then((request) => request(axios, basePath));
-        },
-    };
-};
-
-/**
- * Request parameters for createCharacterPetInventory operation in CharacterPetInventoryApi.
- * @export
- * @interface CharacterPetInventoryApiCreateCharacterPetInventoryRequest
- */
-export interface CharacterPetInventoryApiCreateCharacterPetInventoryRequest {
-    /**
-     * CharacterPetInventory
-     * @type {ModelsCharacterPetInventory}
-     * @memberof CharacterPetInventoryApiCreateCharacterPetInventory
-     */
-    readonly characterPetInventory: ModelsCharacterPetInventory
-}
-
-/**
- * Request parameters for deleteCharacterPetInventory operation in CharacterPetInventoryApi.
- * @export
- * @interface CharacterPetInventoryApiDeleteCharacterPetInventoryRequest
- */
-export interface CharacterPetInventoryApiDeleteCharacterPetInventoryRequest {
-    /**
-     * Id
-     * @type {number}
-     * @memberof CharacterPetInventoryApiDeleteCharacterPetInventory
-     */
-    readonly id: number
-}
-
-/**
- * Request parameters for getCharacterPetInventory operation in CharacterPetInventoryApi.
- * @export
- * @interface CharacterPetInventoryApiGetCharacterPetInventoryRequest
- */
-export interface CharacterPetInventoryApiGetCharacterPetInventoryRequest {
-    /**
-     * Id
-     * @type {number}
-     * @memberof CharacterPetInventoryApiGetCharacterPetInventory
-     */
-    readonly id: number
-
-    /**
-     * Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names 
-     * @type {string}
-     * @memberof CharacterPetInventoryApiGetCharacterPetInventory
-     */
-    readonly includes?: string
-
-    /**
-     * Column names [.] separated to fetch specific fields in response
-     * @type {string}
-     * @memberof CharacterPetInventoryApiGetCharacterPetInventory
-     */
-    readonly select?: string
-}
-
-/**
- * Request parameters for listCharacterPetInventories operation in CharacterPetInventoryApi.
- * @export
- * @interface CharacterPetInventoryApiListCharacterPetInventoriesRequest
- */
-export interface CharacterPetInventoryApiListCharacterPetInventoriesRequest {
-    /**
-     * Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names 
-     * @type {string}
-     * @memberof CharacterPetInventoryApiListCharacterPetInventories
-     */
-    readonly includes?: string
-
-    /**
-     * Filter on specific fields. Multiple conditions [.] separated Example: col_like_value.col2__val2
-     * @type {string}
-     * @memberof CharacterPetInventoryApiListCharacterPetInventories
-     */
-    readonly where?: string
-
-    /**
-     * Rows to limit in response (Default: 10,000)
-     * @type {string}
-     * @memberof CharacterPetInventoryApiListCharacterPetInventories
-     */
-    readonly limit?: string
-
-    /**
-     * Order by [field]
-     * @type {string}
-     * @memberof CharacterPetInventoryApiListCharacterPetInventories
-     */
-    readonly orderBy?: string
-
-    /**
-     * Order by field direction
-     * @type {string}
-     * @memberof CharacterPetInventoryApiListCharacterPetInventories
-     */
-    readonly orderDirection?: string
-
-    /**
-     * Column names [.] separated to fetch specific fields in response
-     * @type {string}
-     * @memberof CharacterPetInventoryApiListCharacterPetInventories
-     */
-    readonly select?: string
-}
-
-/**
- * Request parameters for updateCharacterPetInventory operation in CharacterPetInventoryApi.
- * @export
- * @interface CharacterPetInventoryApiUpdateCharacterPetInventoryRequest
- */
-export interface CharacterPetInventoryApiUpdateCharacterPetInventoryRequest {
-    /**
-     * Id
-     * @type {number}
-     * @memberof CharacterPetInventoryApiUpdateCharacterPetInventory
-     */
-    readonly id: number
-
-    /**
-     * CharacterPetInventory
-     * @type {ModelsCharacterPetInventory}
-     * @memberof CharacterPetInventoryApiUpdateCharacterPetInventory
-     */
-    readonly characterPetInventory: ModelsCharacterPetInventory
-}
-
-/**
- * CharacterPetInventoryApi - object-oriented interface
- * @export
- * @class CharacterPetInventoryApi
- * @extends {BaseAPI}
- */
-export class CharacterPetInventoryApi extends BaseAPI {
-    /**
-     * 
-     * @summary Creates CharacterPetInventory
-     * @param {CharacterPetInventoryApiCreateCharacterPetInventoryRequest} requestParameters Request parameters.
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof CharacterPetInventoryApi
-     */
-    public createCharacterPetInventory(requestParameters: CharacterPetInventoryApiCreateCharacterPetInventoryRequest, options?: any) {
-        return CharacterPetInventoryApiFp(this.configuration).createCharacterPetInventory(requestParameters.characterPetInventory, options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
-     * 
-     * @summary Deletes CharacterPetInventory
-     * @param {CharacterPetInventoryApiDeleteCharacterPetInventoryRequest} requestParameters Request parameters.
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof CharacterPetInventoryApi
-     */
-    public deleteCharacterPetInventory(requestParameters: CharacterPetInventoryApiDeleteCharacterPetInventoryRequest, options?: any) {
-        return CharacterPetInventoryApiFp(this.configuration).deleteCharacterPetInventory(requestParameters.id, options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
-     * 
-     * @summary Gets CharacterPetInventory
-     * @param {CharacterPetInventoryApiGetCharacterPetInventoryRequest} requestParameters Request parameters.
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof CharacterPetInventoryApi
-     */
-    public getCharacterPetInventory(requestParameters: CharacterPetInventoryApiGetCharacterPetInventoryRequest, options?: any) {
-        return CharacterPetInventoryApiFp(this.configuration).getCharacterPetInventory(requestParameters.id, requestParameters.includes, requestParameters.select, options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
-     * 
-     * @summary Lists CharacterPetInventories
-     * @param {CharacterPetInventoryApiListCharacterPetInventoriesRequest} requestParameters Request parameters.
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof CharacterPetInventoryApi
-     */
-    public listCharacterPetInventories(requestParameters: CharacterPetInventoryApiListCharacterPetInventoriesRequest = {}, options?: any) {
-        return CharacterPetInventoryApiFp(this.configuration).listCharacterPetInventories(requestParameters.includes, requestParameters.where, requestParameters.limit, requestParameters.orderBy, requestParameters.orderDirection, requestParameters.select, options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
-     * 
-     * @summary Updates CharacterPetInventory
-     * @param {CharacterPetInventoryApiUpdateCharacterPetInventoryRequest} requestParameters Request parameters.
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof CharacterPetInventoryApi
-     */
-    public updateCharacterPetInventory(requestParameters: CharacterPetInventoryApiUpdateCharacterPetInventoryRequest, options?: any) {
-        return CharacterPetInventoryApiFp(this.configuration).updateCharacterPetInventory(requestParameters.id, requestParameters.characterPetInventory, options).then((request) => request(this.axios, this.basePath));
-    }
-}
-
-
-/**
  * CharacterPotionbeltApi - axios parameter creator
  * @export
  */
@@ -36981,635 +31586,6 @@ export class CharacterSpellApi extends BaseAPI {
      */
     public updateCharacterSpell(requestParameters: CharacterSpellApiUpdateCharacterSpellRequest, options?: any) {
         return CharacterSpellApiFp(this.configuration).updateCharacterSpell(requestParameters.id, requestParameters.characterSpell, options).then((request) => request(this.axios, this.basePath));
-    }
-}
-
-
-/**
- * CharacterTributeApi - axios parameter creator
- * @export
- */
-export const CharacterTributeApiAxiosParamCreator = function (configuration?: Configuration) {
-    return {
-        /**
-         * 
-         * @summary Creates CharacterTribute
-         * @param {ModelsCharacterTribute} characterTribute CharacterTribute
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        createCharacterTribute: async (characterTribute: ModelsCharacterTribute, options: any = {}): Promise<RequestArgs> => {
-            // verify required parameter 'characterTribute' is not null or undefined
-            if (characterTribute === null || characterTribute === undefined) {
-                throw new RequiredError('characterTribute','Required parameter characterTribute was null or undefined when calling createCharacterTribute.');
-            }
-            const localVarPath = `/character_tribute`;
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, 'https://example.com');
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'PUT', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-
-    
-            localVarHeaderParameter['Content-Type'] = 'application/json';
-
-            const queryParameters = new URLSearchParams(localVarUrlObj.search);
-            for (const key in localVarQueryParameter) {
-                queryParameters.set(key, localVarQueryParameter[key]);
-            }
-            for (const key in options.query) {
-                queryParameters.set(key, options.query[key]);
-            }
-            localVarUrlObj.search = (new URLSearchParams(queryParameters)).toString();
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            const nonString = typeof characterTribute !== 'string';
-            const needsSerialization = nonString && configuration && configuration.isJsonMime
-                ? configuration.isJsonMime(localVarRequestOptions.headers['Content-Type'])
-                : nonString;
-            localVarRequestOptions.data =  needsSerialization
-                ? JSON.stringify(characterTribute !== undefined ? characterTribute : {})
-                : (characterTribute || "");
-
-            return {
-                url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * 
-         * @summary Deletes CharacterTribute
-         * @param {number} id Id
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        deleteCharacterTribute: async (id: number, options: any = {}): Promise<RequestArgs> => {
-            // verify required parameter 'id' is not null or undefined
-            if (id === null || id === undefined) {
-                throw new RequiredError('id','Required parameter id was null or undefined when calling deleteCharacterTribute.');
-            }
-            const localVarPath = `/character_tribute/{id}`
-                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, 'https://example.com');
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'DELETE', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-
-    
-            const queryParameters = new URLSearchParams(localVarUrlObj.search);
-            for (const key in localVarQueryParameter) {
-                queryParameters.set(key, localVarQueryParameter[key]);
-            }
-            for (const key in options.query) {
-                queryParameters.set(key, options.query[key]);
-            }
-            localVarUrlObj.search = (new URLSearchParams(queryParameters)).toString();
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-
-            return {
-                url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * 
-         * @summary Gets CharacterTribute
-         * @param {number} id Id
-         * @param {string} [includes] Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names 
-         * @param {string} [select] Column names [.] separated to fetch specific fields in response
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getCharacterTribute: async (id: number, includes?: string, select?: string, options: any = {}): Promise<RequestArgs> => {
-            // verify required parameter 'id' is not null or undefined
-            if (id === null || id === undefined) {
-                throw new RequiredError('id','Required parameter id was null or undefined when calling getCharacterTribute.');
-            }
-            const localVarPath = `/character_tribute/{id}`
-                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, 'https://example.com');
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-            if (includes !== undefined) {
-                localVarQueryParameter['includes'] = includes;
-            }
-
-            if (select !== undefined) {
-                localVarQueryParameter['select'] = select;
-            }
-
-
-    
-            const queryParameters = new URLSearchParams(localVarUrlObj.search);
-            for (const key in localVarQueryParameter) {
-                queryParameters.set(key, localVarQueryParameter[key]);
-            }
-            for (const key in options.query) {
-                queryParameters.set(key, options.query[key]);
-            }
-            localVarUrlObj.search = (new URLSearchParams(queryParameters)).toString();
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-
-            return {
-                url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * 
-         * @summary Lists CharacterTributes
-         * @param {string} [includes] Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names 
-         * @param {string} [where] Filter on specific fields. Multiple conditions [.] separated Example: col_like_value.col2__val2
-         * @param {string} [limit] Rows to limit in response (Default: 10,000)
-         * @param {string} [orderBy] Order by [field]
-         * @param {string} [orderDirection] Order by field direction
-         * @param {string} [select] Column names [.] separated to fetch specific fields in response
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        listCharacterTributes: async (includes?: string, where?: string, limit?: string, orderBy?: string, orderDirection?: string, select?: string, options: any = {}): Promise<RequestArgs> => {
-            const localVarPath = `/character_tributes`;
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, 'https://example.com');
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-            if (includes !== undefined) {
-                localVarQueryParameter['includes'] = includes;
-            }
-
-            if (where !== undefined) {
-                localVarQueryParameter['where'] = where;
-            }
-
-            if (limit !== undefined) {
-                localVarQueryParameter['limit'] = limit;
-            }
-
-            if (orderBy !== undefined) {
-                localVarQueryParameter['orderBy'] = orderBy;
-            }
-
-            if (orderDirection !== undefined) {
-                localVarQueryParameter['orderDirection'] = orderDirection;
-            }
-
-            if (select !== undefined) {
-                localVarQueryParameter['select'] = select;
-            }
-
-
-    
-            const queryParameters = new URLSearchParams(localVarUrlObj.search);
-            for (const key in localVarQueryParameter) {
-                queryParameters.set(key, localVarQueryParameter[key]);
-            }
-            for (const key in options.query) {
-                queryParameters.set(key, options.query[key]);
-            }
-            localVarUrlObj.search = (new URLSearchParams(queryParameters)).toString();
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-
-            return {
-                url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * 
-         * @summary Updates CharacterTribute
-         * @param {number} id Id
-         * @param {ModelsCharacterTribute} characterTribute CharacterTribute
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        updateCharacterTribute: async (id: number, characterTribute: ModelsCharacterTribute, options: any = {}): Promise<RequestArgs> => {
-            // verify required parameter 'id' is not null or undefined
-            if (id === null || id === undefined) {
-                throw new RequiredError('id','Required parameter id was null or undefined when calling updateCharacterTribute.');
-            }
-            // verify required parameter 'characterTribute' is not null or undefined
-            if (characterTribute === null || characterTribute === undefined) {
-                throw new RequiredError('characterTribute','Required parameter characterTribute was null or undefined when calling updateCharacterTribute.');
-            }
-            const localVarPath = `/character_tribute/{id}`
-                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, 'https://example.com');
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'PATCH', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-
-    
-            localVarHeaderParameter['Content-Type'] = 'application/json';
-
-            const queryParameters = new URLSearchParams(localVarUrlObj.search);
-            for (const key in localVarQueryParameter) {
-                queryParameters.set(key, localVarQueryParameter[key]);
-            }
-            for (const key in options.query) {
-                queryParameters.set(key, options.query[key]);
-            }
-            localVarUrlObj.search = (new URLSearchParams(queryParameters)).toString();
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            const nonString = typeof characterTribute !== 'string';
-            const needsSerialization = nonString && configuration && configuration.isJsonMime
-                ? configuration.isJsonMime(localVarRequestOptions.headers['Content-Type'])
-                : nonString;
-            localVarRequestOptions.data =  needsSerialization
-                ? JSON.stringify(characterTribute !== undefined ? characterTribute : {})
-                : (characterTribute || "");
-
-            return {
-                url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
-                options: localVarRequestOptions,
-            };
-        },
-    }
-};
-
-/**
- * CharacterTributeApi - functional programming interface
- * @export
- */
-export const CharacterTributeApiFp = function(configuration?: Configuration) {
-    return {
-        /**
-         * 
-         * @summary Creates CharacterTribute
-         * @param {ModelsCharacterTribute} characterTribute CharacterTribute
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async createCharacterTribute(characterTribute: ModelsCharacterTribute, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<ModelsCharacterTribute>>> {
-            const localVarAxiosArgs = await CharacterTributeApiAxiosParamCreator(configuration).createCharacterTribute(characterTribute, options);
-            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
-                const axiosRequestArgs = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
-                return axios.request(axiosRequestArgs);
-            };
-        },
-        /**
-         * 
-         * @summary Deletes CharacterTribute
-         * @param {number} id Id
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async deleteCharacterTribute(id: number, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<string>> {
-            const localVarAxiosArgs = await CharacterTributeApiAxiosParamCreator(configuration).deleteCharacterTribute(id, options);
-            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
-                const axiosRequestArgs = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
-                return axios.request(axiosRequestArgs);
-            };
-        },
-        /**
-         * 
-         * @summary Gets CharacterTribute
-         * @param {number} id Id
-         * @param {string} [includes] Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names 
-         * @param {string} [select] Column names [.] separated to fetch specific fields in response
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async getCharacterTribute(id: number, includes?: string, select?: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<ModelsCharacterTribute>>> {
-            const localVarAxiosArgs = await CharacterTributeApiAxiosParamCreator(configuration).getCharacterTribute(id, includes, select, options);
-            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
-                const axiosRequestArgs = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
-                return axios.request(axiosRequestArgs);
-            };
-        },
-        /**
-         * 
-         * @summary Lists CharacterTributes
-         * @param {string} [includes] Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names 
-         * @param {string} [where] Filter on specific fields. Multiple conditions [.] separated Example: col_like_value.col2__val2
-         * @param {string} [limit] Rows to limit in response (Default: 10,000)
-         * @param {string} [orderBy] Order by [field]
-         * @param {string} [orderDirection] Order by field direction
-         * @param {string} [select] Column names [.] separated to fetch specific fields in response
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async listCharacterTributes(includes?: string, where?: string, limit?: string, orderBy?: string, orderDirection?: string, select?: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<ModelsCharacterTribute>>> {
-            const localVarAxiosArgs = await CharacterTributeApiAxiosParamCreator(configuration).listCharacterTributes(includes, where, limit, orderBy, orderDirection, select, options);
-            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
-                const axiosRequestArgs = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
-                return axios.request(axiosRequestArgs);
-            };
-        },
-        /**
-         * 
-         * @summary Updates CharacterTribute
-         * @param {number} id Id
-         * @param {ModelsCharacterTribute} characterTribute CharacterTribute
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async updateCharacterTribute(id: number, characterTribute: ModelsCharacterTribute, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<ModelsCharacterTribute>>> {
-            const localVarAxiosArgs = await CharacterTributeApiAxiosParamCreator(configuration).updateCharacterTribute(id, characterTribute, options);
-            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
-                const axiosRequestArgs = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
-                return axios.request(axiosRequestArgs);
-            };
-        },
-    }
-};
-
-/**
- * CharacterTributeApi - factory interface
- * @export
- */
-export const CharacterTributeApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
-    return {
-        /**
-         * 
-         * @summary Creates CharacterTribute
-         * @param {ModelsCharacterTribute} characterTribute CharacterTribute
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        createCharacterTribute(characterTribute: ModelsCharacterTribute, options?: any): AxiosPromise<Array<ModelsCharacterTribute>> {
-            return CharacterTributeApiFp(configuration).createCharacterTribute(characterTribute, options).then((request) => request(axios, basePath));
-        },
-        /**
-         * 
-         * @summary Deletes CharacterTribute
-         * @param {number} id Id
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        deleteCharacterTribute(id: number, options?: any): AxiosPromise<string> {
-            return CharacterTributeApiFp(configuration).deleteCharacterTribute(id, options).then((request) => request(axios, basePath));
-        },
-        /**
-         * 
-         * @summary Gets CharacterTribute
-         * @param {number} id Id
-         * @param {string} [includes] Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names 
-         * @param {string} [select] Column names [.] separated to fetch specific fields in response
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getCharacterTribute(id: number, includes?: string, select?: string, options?: any): AxiosPromise<Array<ModelsCharacterTribute>> {
-            return CharacterTributeApiFp(configuration).getCharacterTribute(id, includes, select, options).then((request) => request(axios, basePath));
-        },
-        /**
-         * 
-         * @summary Lists CharacterTributes
-         * @param {string} [includes] Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names 
-         * @param {string} [where] Filter on specific fields. Multiple conditions [.] separated Example: col_like_value.col2__val2
-         * @param {string} [limit] Rows to limit in response (Default: 10,000)
-         * @param {string} [orderBy] Order by [field]
-         * @param {string} [orderDirection] Order by field direction
-         * @param {string} [select] Column names [.] separated to fetch specific fields in response
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        listCharacterTributes(includes?: string, where?: string, limit?: string, orderBy?: string, orderDirection?: string, select?: string, options?: any): AxiosPromise<Array<ModelsCharacterTribute>> {
-            return CharacterTributeApiFp(configuration).listCharacterTributes(includes, where, limit, orderBy, orderDirection, select, options).then((request) => request(axios, basePath));
-        },
-        /**
-         * 
-         * @summary Updates CharacterTribute
-         * @param {number} id Id
-         * @param {ModelsCharacterTribute} characterTribute CharacterTribute
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        updateCharacterTribute(id: number, characterTribute: ModelsCharacterTribute, options?: any): AxiosPromise<Array<ModelsCharacterTribute>> {
-            return CharacterTributeApiFp(configuration).updateCharacterTribute(id, characterTribute, options).then((request) => request(axios, basePath));
-        },
-    };
-};
-
-/**
- * Request parameters for createCharacterTribute operation in CharacterTributeApi.
- * @export
- * @interface CharacterTributeApiCreateCharacterTributeRequest
- */
-export interface CharacterTributeApiCreateCharacterTributeRequest {
-    /**
-     * CharacterTribute
-     * @type {ModelsCharacterTribute}
-     * @memberof CharacterTributeApiCreateCharacterTribute
-     */
-    readonly characterTribute: ModelsCharacterTribute
-}
-
-/**
- * Request parameters for deleteCharacterTribute operation in CharacterTributeApi.
- * @export
- * @interface CharacterTributeApiDeleteCharacterTributeRequest
- */
-export interface CharacterTributeApiDeleteCharacterTributeRequest {
-    /**
-     * Id
-     * @type {number}
-     * @memberof CharacterTributeApiDeleteCharacterTribute
-     */
-    readonly id: number
-}
-
-/**
- * Request parameters for getCharacterTribute operation in CharacterTributeApi.
- * @export
- * @interface CharacterTributeApiGetCharacterTributeRequest
- */
-export interface CharacterTributeApiGetCharacterTributeRequest {
-    /**
-     * Id
-     * @type {number}
-     * @memberof CharacterTributeApiGetCharacterTribute
-     */
-    readonly id: number
-
-    /**
-     * Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names 
-     * @type {string}
-     * @memberof CharacterTributeApiGetCharacterTribute
-     */
-    readonly includes?: string
-
-    /**
-     * Column names [.] separated to fetch specific fields in response
-     * @type {string}
-     * @memberof CharacterTributeApiGetCharacterTribute
-     */
-    readonly select?: string
-}
-
-/**
- * Request parameters for listCharacterTributes operation in CharacterTributeApi.
- * @export
- * @interface CharacterTributeApiListCharacterTributesRequest
- */
-export interface CharacterTributeApiListCharacterTributesRequest {
-    /**
-     * Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names 
-     * @type {string}
-     * @memberof CharacterTributeApiListCharacterTributes
-     */
-    readonly includes?: string
-
-    /**
-     * Filter on specific fields. Multiple conditions [.] separated Example: col_like_value.col2__val2
-     * @type {string}
-     * @memberof CharacterTributeApiListCharacterTributes
-     */
-    readonly where?: string
-
-    /**
-     * Rows to limit in response (Default: 10,000)
-     * @type {string}
-     * @memberof CharacterTributeApiListCharacterTributes
-     */
-    readonly limit?: string
-
-    /**
-     * Order by [field]
-     * @type {string}
-     * @memberof CharacterTributeApiListCharacterTributes
-     */
-    readonly orderBy?: string
-
-    /**
-     * Order by field direction
-     * @type {string}
-     * @memberof CharacterTributeApiListCharacterTributes
-     */
-    readonly orderDirection?: string
-
-    /**
-     * Column names [.] separated to fetch specific fields in response
-     * @type {string}
-     * @memberof CharacterTributeApiListCharacterTributes
-     */
-    readonly select?: string
-}
-
-/**
- * Request parameters for updateCharacterTribute operation in CharacterTributeApi.
- * @export
- * @interface CharacterTributeApiUpdateCharacterTributeRequest
- */
-export interface CharacterTributeApiUpdateCharacterTributeRequest {
-    /**
-     * Id
-     * @type {number}
-     * @memberof CharacterTributeApiUpdateCharacterTribute
-     */
-    readonly id: number
-
-    /**
-     * CharacterTribute
-     * @type {ModelsCharacterTribute}
-     * @memberof CharacterTributeApiUpdateCharacterTribute
-     */
-    readonly characterTribute: ModelsCharacterTribute
-}
-
-/**
- * CharacterTributeApi - object-oriented interface
- * @export
- * @class CharacterTributeApi
- * @extends {BaseAPI}
- */
-export class CharacterTributeApi extends BaseAPI {
-    /**
-     * 
-     * @summary Creates CharacterTribute
-     * @param {CharacterTributeApiCreateCharacterTributeRequest} requestParameters Request parameters.
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof CharacterTributeApi
-     */
-    public createCharacterTribute(requestParameters: CharacterTributeApiCreateCharacterTributeRequest, options?: any) {
-        return CharacterTributeApiFp(this.configuration).createCharacterTribute(requestParameters.characterTribute, options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
-     * 
-     * @summary Deletes CharacterTribute
-     * @param {CharacterTributeApiDeleteCharacterTributeRequest} requestParameters Request parameters.
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof CharacterTributeApi
-     */
-    public deleteCharacterTribute(requestParameters: CharacterTributeApiDeleteCharacterTributeRequest, options?: any) {
-        return CharacterTributeApiFp(this.configuration).deleteCharacterTribute(requestParameters.id, options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
-     * 
-     * @summary Gets CharacterTribute
-     * @param {CharacterTributeApiGetCharacterTributeRequest} requestParameters Request parameters.
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof CharacterTributeApi
-     */
-    public getCharacterTribute(requestParameters: CharacterTributeApiGetCharacterTributeRequest, options?: any) {
-        return CharacterTributeApiFp(this.configuration).getCharacterTribute(requestParameters.id, requestParameters.includes, requestParameters.select, options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
-     * 
-     * @summary Lists CharacterTributes
-     * @param {CharacterTributeApiListCharacterTributesRequest} requestParameters Request parameters.
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof CharacterTributeApi
-     */
-    public listCharacterTributes(requestParameters: CharacterTributeApiListCharacterTributesRequest = {}, options?: any) {
-        return CharacterTributeApiFp(this.configuration).listCharacterTributes(requestParameters.includes, requestParameters.where, requestParameters.limit, requestParameters.orderBy, requestParameters.orderDirection, requestParameters.select, options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
-     * 
-     * @summary Updates CharacterTribute
-     * @param {CharacterTributeApiUpdateCharacterTributeRequest} requestParameters Request parameters.
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof CharacterTributeApi
-     */
-    public updateCharacterTribute(requestParameters: CharacterTributeApiUpdateCharacterTributeRequest, options?: any) {
-        return CharacterTributeApiFp(this.configuration).updateCharacterTribute(requestParameters.id, requestParameters.characterTribute, options).then((request) => request(this.axios, this.basePath));
     }
 }
 
@@ -40131,6 +34107,635 @@ export class DoorApi extends BaseAPI {
 
 
 /**
+ * DynamicZoneApi - axios parameter creator
+ * @export
+ */
+export const DynamicZoneApiAxiosParamCreator = function (configuration?: Configuration) {
+    return {
+        /**
+         * 
+         * @summary Creates DynamicZone
+         * @param {ModelsDynamicZone} dynamicZone DynamicZone
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        createDynamicZone: async (dynamicZone: ModelsDynamicZone, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'dynamicZone' is not null or undefined
+            if (dynamicZone === null || dynamicZone === undefined) {
+                throw new RequiredError('dynamicZone','Required parameter dynamicZone was null or undefined when calling createDynamicZone.');
+            }
+            const localVarPath = `/dynamic_zone`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, 'https://example.com');
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'PUT', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            const queryParameters = new URLSearchParams(localVarUrlObj.search);
+            for (const key in localVarQueryParameter) {
+                queryParameters.set(key, localVarQueryParameter[key]);
+            }
+            for (const key in options.query) {
+                queryParameters.set(key, options.query[key]);
+            }
+            localVarUrlObj.search = (new URLSearchParams(queryParameters)).toString();
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            const nonString = typeof dynamicZone !== 'string';
+            const needsSerialization = nonString && configuration && configuration.isJsonMime
+                ? configuration.isJsonMime(localVarRequestOptions.headers['Content-Type'])
+                : nonString;
+            localVarRequestOptions.data =  needsSerialization
+                ? JSON.stringify(dynamicZone !== undefined ? dynamicZone : {})
+                : (dynamicZone || "");
+
+            return {
+                url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @summary Deletes DynamicZone
+         * @param {number} id Id
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        deleteDynamicZone: async (id: number, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'id' is not null or undefined
+            if (id === null || id === undefined) {
+                throw new RequiredError('id','Required parameter id was null or undefined when calling deleteDynamicZone.');
+            }
+            const localVarPath = `/dynamic_zone/{id}`
+                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, 'https://example.com');
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'DELETE', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            const queryParameters = new URLSearchParams(localVarUrlObj.search);
+            for (const key in localVarQueryParameter) {
+                queryParameters.set(key, localVarQueryParameter[key]);
+            }
+            for (const key in options.query) {
+                queryParameters.set(key, options.query[key]);
+            }
+            localVarUrlObj.search = (new URLSearchParams(queryParameters)).toString();
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @summary Gets DynamicZone
+         * @param {number} id Id
+         * @param {string} [includes] Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names 
+         * @param {string} [select] Column names [.] separated to fetch specific fields in response
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getDynamicZone: async (id: number, includes?: string, select?: string, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'id' is not null or undefined
+            if (id === null || id === undefined) {
+                throw new RequiredError('id','Required parameter id was null or undefined when calling getDynamicZone.');
+            }
+            const localVarPath = `/dynamic_zone/{id}`
+                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, 'https://example.com');
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            if (includes !== undefined) {
+                localVarQueryParameter['includes'] = includes;
+            }
+
+            if (select !== undefined) {
+                localVarQueryParameter['select'] = select;
+            }
+
+
+    
+            const queryParameters = new URLSearchParams(localVarUrlObj.search);
+            for (const key in localVarQueryParameter) {
+                queryParameters.set(key, localVarQueryParameter[key]);
+            }
+            for (const key in options.query) {
+                queryParameters.set(key, options.query[key]);
+            }
+            localVarUrlObj.search = (new URLSearchParams(queryParameters)).toString();
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @summary Lists DynamicZones
+         * @param {string} [includes] Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names 
+         * @param {string} [where] Filter on specific fields. Multiple conditions [.] separated Example: col_like_value.col2__val2
+         * @param {string} [limit] Rows to limit in response (Default: 10,000)
+         * @param {string} [orderBy] Order by [field]
+         * @param {string} [orderDirection] Order by field direction
+         * @param {string} [select] Column names [.] separated to fetch specific fields in response
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        listDynamicZones: async (includes?: string, where?: string, limit?: string, orderBy?: string, orderDirection?: string, select?: string, options: any = {}): Promise<RequestArgs> => {
+            const localVarPath = `/dynamic_zones`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, 'https://example.com');
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            if (includes !== undefined) {
+                localVarQueryParameter['includes'] = includes;
+            }
+
+            if (where !== undefined) {
+                localVarQueryParameter['where'] = where;
+            }
+
+            if (limit !== undefined) {
+                localVarQueryParameter['limit'] = limit;
+            }
+
+            if (orderBy !== undefined) {
+                localVarQueryParameter['orderBy'] = orderBy;
+            }
+
+            if (orderDirection !== undefined) {
+                localVarQueryParameter['orderDirection'] = orderDirection;
+            }
+
+            if (select !== undefined) {
+                localVarQueryParameter['select'] = select;
+            }
+
+
+    
+            const queryParameters = new URLSearchParams(localVarUrlObj.search);
+            for (const key in localVarQueryParameter) {
+                queryParameters.set(key, localVarQueryParameter[key]);
+            }
+            for (const key in options.query) {
+                queryParameters.set(key, options.query[key]);
+            }
+            localVarUrlObj.search = (new URLSearchParams(queryParameters)).toString();
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @summary Updates DynamicZone
+         * @param {number} id Id
+         * @param {ModelsDynamicZone} dynamicZone DynamicZone
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        updateDynamicZone: async (id: number, dynamicZone: ModelsDynamicZone, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'id' is not null or undefined
+            if (id === null || id === undefined) {
+                throw new RequiredError('id','Required parameter id was null or undefined when calling updateDynamicZone.');
+            }
+            // verify required parameter 'dynamicZone' is not null or undefined
+            if (dynamicZone === null || dynamicZone === undefined) {
+                throw new RequiredError('dynamicZone','Required parameter dynamicZone was null or undefined when calling updateDynamicZone.');
+            }
+            const localVarPath = `/dynamic_zone/{id}`
+                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, 'https://example.com');
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'PATCH', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            const queryParameters = new URLSearchParams(localVarUrlObj.search);
+            for (const key in localVarQueryParameter) {
+                queryParameters.set(key, localVarQueryParameter[key]);
+            }
+            for (const key in options.query) {
+                queryParameters.set(key, options.query[key]);
+            }
+            localVarUrlObj.search = (new URLSearchParams(queryParameters)).toString();
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            const nonString = typeof dynamicZone !== 'string';
+            const needsSerialization = nonString && configuration && configuration.isJsonMime
+                ? configuration.isJsonMime(localVarRequestOptions.headers['Content-Type'])
+                : nonString;
+            localVarRequestOptions.data =  needsSerialization
+                ? JSON.stringify(dynamicZone !== undefined ? dynamicZone : {})
+                : (dynamicZone || "");
+
+            return {
+                url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
+                options: localVarRequestOptions,
+            };
+        },
+    }
+};
+
+/**
+ * DynamicZoneApi - functional programming interface
+ * @export
+ */
+export const DynamicZoneApiFp = function(configuration?: Configuration) {
+    return {
+        /**
+         * 
+         * @summary Creates DynamicZone
+         * @param {ModelsDynamicZone} dynamicZone DynamicZone
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async createDynamicZone(dynamicZone: ModelsDynamicZone, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<ModelsDynamicZone>>> {
+            const localVarAxiosArgs = await DynamicZoneApiAxiosParamCreator(configuration).createDynamicZone(dynamicZone, options);
+            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
+                const axiosRequestArgs = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
+                return axios.request(axiosRequestArgs);
+            };
+        },
+        /**
+         * 
+         * @summary Deletes DynamicZone
+         * @param {number} id Id
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async deleteDynamicZone(id: number, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<string>> {
+            const localVarAxiosArgs = await DynamicZoneApiAxiosParamCreator(configuration).deleteDynamicZone(id, options);
+            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
+                const axiosRequestArgs = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
+                return axios.request(axiosRequestArgs);
+            };
+        },
+        /**
+         * 
+         * @summary Gets DynamicZone
+         * @param {number} id Id
+         * @param {string} [includes] Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names 
+         * @param {string} [select] Column names [.] separated to fetch specific fields in response
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async getDynamicZone(id: number, includes?: string, select?: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<ModelsDynamicZone>>> {
+            const localVarAxiosArgs = await DynamicZoneApiAxiosParamCreator(configuration).getDynamicZone(id, includes, select, options);
+            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
+                const axiosRequestArgs = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
+                return axios.request(axiosRequestArgs);
+            };
+        },
+        /**
+         * 
+         * @summary Lists DynamicZones
+         * @param {string} [includes] Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names 
+         * @param {string} [where] Filter on specific fields. Multiple conditions [.] separated Example: col_like_value.col2__val2
+         * @param {string} [limit] Rows to limit in response (Default: 10,000)
+         * @param {string} [orderBy] Order by [field]
+         * @param {string} [orderDirection] Order by field direction
+         * @param {string} [select] Column names [.] separated to fetch specific fields in response
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async listDynamicZones(includes?: string, where?: string, limit?: string, orderBy?: string, orderDirection?: string, select?: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<ModelsDynamicZone>>> {
+            const localVarAxiosArgs = await DynamicZoneApiAxiosParamCreator(configuration).listDynamicZones(includes, where, limit, orderBy, orderDirection, select, options);
+            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
+                const axiosRequestArgs = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
+                return axios.request(axiosRequestArgs);
+            };
+        },
+        /**
+         * 
+         * @summary Updates DynamicZone
+         * @param {number} id Id
+         * @param {ModelsDynamicZone} dynamicZone DynamicZone
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async updateDynamicZone(id: number, dynamicZone: ModelsDynamicZone, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<ModelsDynamicZone>>> {
+            const localVarAxiosArgs = await DynamicZoneApiAxiosParamCreator(configuration).updateDynamicZone(id, dynamicZone, options);
+            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
+                const axiosRequestArgs = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
+                return axios.request(axiosRequestArgs);
+            };
+        },
+    }
+};
+
+/**
+ * DynamicZoneApi - factory interface
+ * @export
+ */
+export const DynamicZoneApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
+    return {
+        /**
+         * 
+         * @summary Creates DynamicZone
+         * @param {ModelsDynamicZone} dynamicZone DynamicZone
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        createDynamicZone(dynamicZone: ModelsDynamicZone, options?: any): AxiosPromise<Array<ModelsDynamicZone>> {
+            return DynamicZoneApiFp(configuration).createDynamicZone(dynamicZone, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @summary Deletes DynamicZone
+         * @param {number} id Id
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        deleteDynamicZone(id: number, options?: any): AxiosPromise<string> {
+            return DynamicZoneApiFp(configuration).deleteDynamicZone(id, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @summary Gets DynamicZone
+         * @param {number} id Id
+         * @param {string} [includes] Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names 
+         * @param {string} [select] Column names [.] separated to fetch specific fields in response
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getDynamicZone(id: number, includes?: string, select?: string, options?: any): AxiosPromise<Array<ModelsDynamicZone>> {
+            return DynamicZoneApiFp(configuration).getDynamicZone(id, includes, select, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @summary Lists DynamicZones
+         * @param {string} [includes] Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names 
+         * @param {string} [where] Filter on specific fields. Multiple conditions [.] separated Example: col_like_value.col2__val2
+         * @param {string} [limit] Rows to limit in response (Default: 10,000)
+         * @param {string} [orderBy] Order by [field]
+         * @param {string} [orderDirection] Order by field direction
+         * @param {string} [select] Column names [.] separated to fetch specific fields in response
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        listDynamicZones(includes?: string, where?: string, limit?: string, orderBy?: string, orderDirection?: string, select?: string, options?: any): AxiosPromise<Array<ModelsDynamicZone>> {
+            return DynamicZoneApiFp(configuration).listDynamicZones(includes, where, limit, orderBy, orderDirection, select, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @summary Updates DynamicZone
+         * @param {number} id Id
+         * @param {ModelsDynamicZone} dynamicZone DynamicZone
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        updateDynamicZone(id: number, dynamicZone: ModelsDynamicZone, options?: any): AxiosPromise<Array<ModelsDynamicZone>> {
+            return DynamicZoneApiFp(configuration).updateDynamicZone(id, dynamicZone, options).then((request) => request(axios, basePath));
+        },
+    };
+};
+
+/**
+ * Request parameters for createDynamicZone operation in DynamicZoneApi.
+ * @export
+ * @interface DynamicZoneApiCreateDynamicZoneRequest
+ */
+export interface DynamicZoneApiCreateDynamicZoneRequest {
+    /**
+     * DynamicZone
+     * @type {ModelsDynamicZone}
+     * @memberof DynamicZoneApiCreateDynamicZone
+     */
+    readonly dynamicZone: ModelsDynamicZone
+}
+
+/**
+ * Request parameters for deleteDynamicZone operation in DynamicZoneApi.
+ * @export
+ * @interface DynamicZoneApiDeleteDynamicZoneRequest
+ */
+export interface DynamicZoneApiDeleteDynamicZoneRequest {
+    /**
+     * Id
+     * @type {number}
+     * @memberof DynamicZoneApiDeleteDynamicZone
+     */
+    readonly id: number
+}
+
+/**
+ * Request parameters for getDynamicZone operation in DynamicZoneApi.
+ * @export
+ * @interface DynamicZoneApiGetDynamicZoneRequest
+ */
+export interface DynamicZoneApiGetDynamicZoneRequest {
+    /**
+     * Id
+     * @type {number}
+     * @memberof DynamicZoneApiGetDynamicZone
+     */
+    readonly id: number
+
+    /**
+     * Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names 
+     * @type {string}
+     * @memberof DynamicZoneApiGetDynamicZone
+     */
+    readonly includes?: string
+
+    /**
+     * Column names [.] separated to fetch specific fields in response
+     * @type {string}
+     * @memberof DynamicZoneApiGetDynamicZone
+     */
+    readonly select?: string
+}
+
+/**
+ * Request parameters for listDynamicZones operation in DynamicZoneApi.
+ * @export
+ * @interface DynamicZoneApiListDynamicZonesRequest
+ */
+export interface DynamicZoneApiListDynamicZonesRequest {
+    /**
+     * Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names 
+     * @type {string}
+     * @memberof DynamicZoneApiListDynamicZones
+     */
+    readonly includes?: string
+
+    /**
+     * Filter on specific fields. Multiple conditions [.] separated Example: col_like_value.col2__val2
+     * @type {string}
+     * @memberof DynamicZoneApiListDynamicZones
+     */
+    readonly where?: string
+
+    /**
+     * Rows to limit in response (Default: 10,000)
+     * @type {string}
+     * @memberof DynamicZoneApiListDynamicZones
+     */
+    readonly limit?: string
+
+    /**
+     * Order by [field]
+     * @type {string}
+     * @memberof DynamicZoneApiListDynamicZones
+     */
+    readonly orderBy?: string
+
+    /**
+     * Order by field direction
+     * @type {string}
+     * @memberof DynamicZoneApiListDynamicZones
+     */
+    readonly orderDirection?: string
+
+    /**
+     * Column names [.] separated to fetch specific fields in response
+     * @type {string}
+     * @memberof DynamicZoneApiListDynamicZones
+     */
+    readonly select?: string
+}
+
+/**
+ * Request parameters for updateDynamicZone operation in DynamicZoneApi.
+ * @export
+ * @interface DynamicZoneApiUpdateDynamicZoneRequest
+ */
+export interface DynamicZoneApiUpdateDynamicZoneRequest {
+    /**
+     * Id
+     * @type {number}
+     * @memberof DynamicZoneApiUpdateDynamicZone
+     */
+    readonly id: number
+
+    /**
+     * DynamicZone
+     * @type {ModelsDynamicZone}
+     * @memberof DynamicZoneApiUpdateDynamicZone
+     */
+    readonly dynamicZone: ModelsDynamicZone
+}
+
+/**
+ * DynamicZoneApi - object-oriented interface
+ * @export
+ * @class DynamicZoneApi
+ * @extends {BaseAPI}
+ */
+export class DynamicZoneApi extends BaseAPI {
+    /**
+     * 
+     * @summary Creates DynamicZone
+     * @param {DynamicZoneApiCreateDynamicZoneRequest} requestParameters Request parameters.
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof DynamicZoneApi
+     */
+    public createDynamicZone(requestParameters: DynamicZoneApiCreateDynamicZoneRequest, options?: any) {
+        return DynamicZoneApiFp(this.configuration).createDynamicZone(requestParameters.dynamicZone, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @summary Deletes DynamicZone
+     * @param {DynamicZoneApiDeleteDynamicZoneRequest} requestParameters Request parameters.
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof DynamicZoneApi
+     */
+    public deleteDynamicZone(requestParameters: DynamicZoneApiDeleteDynamicZoneRequest, options?: any) {
+        return DynamicZoneApiFp(this.configuration).deleteDynamicZone(requestParameters.id, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @summary Gets DynamicZone
+     * @param {DynamicZoneApiGetDynamicZoneRequest} requestParameters Request parameters.
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof DynamicZoneApi
+     */
+    public getDynamicZone(requestParameters: DynamicZoneApiGetDynamicZoneRequest, options?: any) {
+        return DynamicZoneApiFp(this.configuration).getDynamicZone(requestParameters.id, requestParameters.includes, requestParameters.select, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @summary Lists DynamicZones
+     * @param {DynamicZoneApiListDynamicZonesRequest} requestParameters Request parameters.
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof DynamicZoneApi
+     */
+    public listDynamicZones(requestParameters: DynamicZoneApiListDynamicZonesRequest = {}, options?: any) {
+        return DynamicZoneApiFp(this.configuration).listDynamicZones(requestParameters.includes, requestParameters.where, requestParameters.limit, requestParameters.orderBy, requestParameters.orderDirection, requestParameters.select, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @summary Updates DynamicZone
+     * @param {DynamicZoneApiUpdateDynamicZoneRequest} requestParameters Request parameters.
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof DynamicZoneApi
+     */
+    public updateDynamicZone(requestParameters: DynamicZoneApiUpdateDynamicZoneRequest, options?: any) {
+        return DynamicZoneApiFp(this.configuration).updateDynamicZone(requestParameters.id, requestParameters.dynamicZone, options).then((request) => request(this.axios, this.basePath));
+    }
+}
+
+
+/**
  * EventlogApi - axios parameter creator
  * @export
  */
@@ -40760,24 +35365,24 @@ export class EventlogApi extends BaseAPI {
 
 
 /**
- * FactionBaseDatumApi - axios parameter creator
+ * ExpeditionApi - axios parameter creator
  * @export
  */
-export const FactionBaseDatumApiAxiosParamCreator = function (configuration?: Configuration) {
+export const ExpeditionApiAxiosParamCreator = function (configuration?: Configuration) {
     return {
         /**
          * 
-         * @summary Creates FactionBaseDatum
-         * @param {ModelsFactionBaseDatum} factionBaseDatum FactionBaseDatum
+         * @summary Creates Expedition
+         * @param {ModelsExpedition} expedition Expedition
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        createFactionBaseDatum: async (factionBaseDatum: ModelsFactionBaseDatum, options: any = {}): Promise<RequestArgs> => {
-            // verify required parameter 'factionBaseDatum' is not null or undefined
-            if (factionBaseDatum === null || factionBaseDatum === undefined) {
-                throw new RequiredError('factionBaseDatum','Required parameter factionBaseDatum was null or undefined when calling createFactionBaseDatum.');
+        createExpedition: async (expedition: ModelsExpedition, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'expedition' is not null or undefined
+            if (expedition === null || expedition === undefined) {
+                throw new RequiredError('expedition','Required parameter expedition was null or undefined when calling createExpedition.');
             }
-            const localVarPath = `/faction_base_datum`;
+            const localVarPath = `/expedition`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, 'https://example.com');
             let baseOptions;
@@ -40803,13 +35408,13 @@ export const FactionBaseDatumApiAxiosParamCreator = function (configuration?: Co
             localVarUrlObj.search = (new URLSearchParams(queryParameters)).toString();
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            const nonString = typeof factionBaseDatum !== 'string';
+            const nonString = typeof expedition !== 'string';
             const needsSerialization = nonString && configuration && configuration.isJsonMime
                 ? configuration.isJsonMime(localVarRequestOptions.headers['Content-Type'])
                 : nonString;
             localVarRequestOptions.data =  needsSerialization
-                ? JSON.stringify(factionBaseDatum !== undefined ? factionBaseDatum : {})
-                : (factionBaseDatum || "");
+                ? JSON.stringify(expedition !== undefined ? expedition : {})
+                : (expedition || "");
 
             return {
                 url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
@@ -40818,17 +35423,17 @@ export const FactionBaseDatumApiAxiosParamCreator = function (configuration?: Co
         },
         /**
          * 
-         * @summary Deletes FactionBaseDatum
+         * @summary Deletes Expedition
          * @param {number} id Id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        deleteFactionBaseDatum: async (id: number, options: any = {}): Promise<RequestArgs> => {
+        deleteExpedition: async (id: number, options: any = {}): Promise<RequestArgs> => {
             // verify required parameter 'id' is not null or undefined
             if (id === null || id === undefined) {
-                throw new RequiredError('id','Required parameter id was null or undefined when calling deleteFactionBaseDatum.');
+                throw new RequiredError('id','Required parameter id was null or undefined when calling deleteExpedition.');
             }
-            const localVarPath = `/faction_base_datum/{id}`
+            const localVarPath = `/expedition/{id}`
                 .replace(`{${"id"}}`, encodeURIComponent(String(id)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, 'https://example.com');
@@ -40861,19 +35466,19 @@ export const FactionBaseDatumApiAxiosParamCreator = function (configuration?: Co
         },
         /**
          * 
-         * @summary Gets FactionBaseDatum
+         * @summary Gets Expedition
          * @param {number} id Id
          * @param {string} [includes] Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names 
          * @param {string} [select] Column names [.] separated to fetch specific fields in response
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getFactionBaseDatum: async (id: number, includes?: string, select?: string, options: any = {}): Promise<RequestArgs> => {
+        getExpedition: async (id: number, includes?: string, select?: string, options: any = {}): Promise<RequestArgs> => {
             // verify required parameter 'id' is not null or undefined
             if (id === null || id === undefined) {
-                throw new RequiredError('id','Required parameter id was null or undefined when calling getFactionBaseDatum.');
+                throw new RequiredError('id','Required parameter id was null or undefined when calling getExpedition.');
             }
-            const localVarPath = `/faction_base_datum/{id}`
+            const localVarPath = `/expedition/{id}`
                 .replace(`{${"id"}}`, encodeURIComponent(String(id)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, 'https://example.com');
@@ -40914,7 +35519,7 @@ export const FactionBaseDatumApiAxiosParamCreator = function (configuration?: Co
         },
         /**
          * 
-         * @summary Lists FactionBaseData
+         * @summary Lists Expeditions
          * @param {string} [includes] Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names 
          * @param {string} [where] Filter on specific fields. Multiple conditions [.] separated Example: col_like_value.col2__val2
          * @param {string} [limit] Rows to limit in response (Default: 10,000)
@@ -40924,8 +35529,8 @@ export const FactionBaseDatumApiAxiosParamCreator = function (configuration?: Co
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        listFactionBaseData: async (includes?: string, where?: string, limit?: string, orderBy?: string, orderDirection?: string, select?: string, options: any = {}): Promise<RequestArgs> => {
-            const localVarPath = `/faction_base_data`;
+        listExpeditions: async (includes?: string, where?: string, limit?: string, orderBy?: string, orderDirection?: string, select?: string, options: any = {}): Promise<RequestArgs> => {
+            const localVarPath = `/expeditions`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, 'https://example.com');
             let baseOptions;
@@ -40981,22 +35586,22 @@ export const FactionBaseDatumApiAxiosParamCreator = function (configuration?: Co
         },
         /**
          * 
-         * @summary Updates FactionBaseDatum
+         * @summary Updates Expedition
          * @param {number} id Id
-         * @param {ModelsFactionBaseDatum} factionBaseDatum FactionBaseDatum
+         * @param {ModelsExpedition} expedition Expedition
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        updateFactionBaseDatum: async (id: number, factionBaseDatum: ModelsFactionBaseDatum, options: any = {}): Promise<RequestArgs> => {
+        updateExpedition: async (id: number, expedition: ModelsExpedition, options: any = {}): Promise<RequestArgs> => {
             // verify required parameter 'id' is not null or undefined
             if (id === null || id === undefined) {
-                throw new RequiredError('id','Required parameter id was null or undefined when calling updateFactionBaseDatum.');
+                throw new RequiredError('id','Required parameter id was null or undefined when calling updateExpedition.');
             }
-            // verify required parameter 'factionBaseDatum' is not null or undefined
-            if (factionBaseDatum === null || factionBaseDatum === undefined) {
-                throw new RequiredError('factionBaseDatum','Required parameter factionBaseDatum was null or undefined when calling updateFactionBaseDatum.');
+            // verify required parameter 'expedition' is not null or undefined
+            if (expedition === null || expedition === undefined) {
+                throw new RequiredError('expedition','Required parameter expedition was null or undefined when calling updateExpedition.');
             }
-            const localVarPath = `/faction_base_datum/{id}`
+            const localVarPath = `/expedition/{id}`
                 .replace(`{${"id"}}`, encodeURIComponent(String(id)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, 'https://example.com');
@@ -41023,13 +35628,13 @@ export const FactionBaseDatumApiAxiosParamCreator = function (configuration?: Co
             localVarUrlObj.search = (new URLSearchParams(queryParameters)).toString();
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            const nonString = typeof factionBaseDatum !== 'string';
+            const nonString = typeof expedition !== 'string';
             const needsSerialization = nonString && configuration && configuration.isJsonMime
                 ? configuration.isJsonMime(localVarRequestOptions.headers['Content-Type'])
                 : nonString;
             localVarRequestOptions.data =  needsSerialization
-                ? JSON.stringify(factionBaseDatum !== undefined ? factionBaseDatum : {})
-                : (factionBaseDatum || "");
+                ? JSON.stringify(expedition !== undefined ? expedition : {})
+                : (expedition || "");
 
             return {
                 url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
@@ -41040,20 +35645,20 @@ export const FactionBaseDatumApiAxiosParamCreator = function (configuration?: Co
 };
 
 /**
- * FactionBaseDatumApi - functional programming interface
+ * ExpeditionApi - functional programming interface
  * @export
  */
-export const FactionBaseDatumApiFp = function(configuration?: Configuration) {
+export const ExpeditionApiFp = function(configuration?: Configuration) {
     return {
         /**
          * 
-         * @summary Creates FactionBaseDatum
-         * @param {ModelsFactionBaseDatum} factionBaseDatum FactionBaseDatum
+         * @summary Creates Expedition
+         * @param {ModelsExpedition} expedition Expedition
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async createFactionBaseDatum(factionBaseDatum: ModelsFactionBaseDatum, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<ModelsFactionBaseDatum>>> {
-            const localVarAxiosArgs = await FactionBaseDatumApiAxiosParamCreator(configuration).createFactionBaseDatum(factionBaseDatum, options);
+        async createExpedition(expedition: ModelsExpedition, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<ModelsExpedition>>> {
+            const localVarAxiosArgs = await ExpeditionApiAxiosParamCreator(configuration).createExpedition(expedition, options);
             return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
                 const axiosRequestArgs = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
                 return axios.request(axiosRequestArgs);
@@ -41061,13 +35666,13 @@ export const FactionBaseDatumApiFp = function(configuration?: Configuration) {
         },
         /**
          * 
-         * @summary Deletes FactionBaseDatum
+         * @summary Deletes Expedition
          * @param {number} id Id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async deleteFactionBaseDatum(id: number, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<string>> {
-            const localVarAxiosArgs = await FactionBaseDatumApiAxiosParamCreator(configuration).deleteFactionBaseDatum(id, options);
+        async deleteExpedition(id: number, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<string>> {
+            const localVarAxiosArgs = await ExpeditionApiAxiosParamCreator(configuration).deleteExpedition(id, options);
             return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
                 const axiosRequestArgs = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
                 return axios.request(axiosRequestArgs);
@@ -41075,15 +35680,15 @@ export const FactionBaseDatumApiFp = function(configuration?: Configuration) {
         },
         /**
          * 
-         * @summary Gets FactionBaseDatum
+         * @summary Gets Expedition
          * @param {number} id Id
          * @param {string} [includes] Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names 
          * @param {string} [select] Column names [.] separated to fetch specific fields in response
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async getFactionBaseDatum(id: number, includes?: string, select?: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<ModelsFactionBaseDatum>>> {
-            const localVarAxiosArgs = await FactionBaseDatumApiAxiosParamCreator(configuration).getFactionBaseDatum(id, includes, select, options);
+        async getExpedition(id: number, includes?: string, select?: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<ModelsExpedition>>> {
+            const localVarAxiosArgs = await ExpeditionApiAxiosParamCreator(configuration).getExpedition(id, includes, select, options);
             return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
                 const axiosRequestArgs = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
                 return axios.request(axiosRequestArgs);
@@ -41091,7 +35696,7 @@ export const FactionBaseDatumApiFp = function(configuration?: Configuration) {
         },
         /**
          * 
-         * @summary Lists FactionBaseData
+         * @summary Lists Expeditions
          * @param {string} [includes] Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names 
          * @param {string} [where] Filter on specific fields. Multiple conditions [.] separated Example: col_like_value.col2__val2
          * @param {string} [limit] Rows to limit in response (Default: 10,000)
@@ -41101,8 +35706,8 @@ export const FactionBaseDatumApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async listFactionBaseData(includes?: string, where?: string, limit?: string, orderBy?: string, orderDirection?: string, select?: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<ModelsFactionBaseDatum>>> {
-            const localVarAxiosArgs = await FactionBaseDatumApiAxiosParamCreator(configuration).listFactionBaseData(includes, where, limit, orderBy, orderDirection, select, options);
+        async listExpeditions(includes?: string, where?: string, limit?: string, orderBy?: string, orderDirection?: string, select?: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<ModelsExpedition>>> {
+            const localVarAxiosArgs = await ExpeditionApiAxiosParamCreator(configuration).listExpeditions(includes, where, limit, orderBy, orderDirection, select, options);
             return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
                 const axiosRequestArgs = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
                 return axios.request(axiosRequestArgs);
@@ -41110,14 +35715,14 @@ export const FactionBaseDatumApiFp = function(configuration?: Configuration) {
         },
         /**
          * 
-         * @summary Updates FactionBaseDatum
+         * @summary Updates Expedition
          * @param {number} id Id
-         * @param {ModelsFactionBaseDatum} factionBaseDatum FactionBaseDatum
+         * @param {ModelsExpedition} expedition Expedition
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async updateFactionBaseDatum(id: number, factionBaseDatum: ModelsFactionBaseDatum, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<ModelsFactionBaseDatum>>> {
-            const localVarAxiosArgs = await FactionBaseDatumApiAxiosParamCreator(configuration).updateFactionBaseDatum(id, factionBaseDatum, options);
+        async updateExpedition(id: number, expedition: ModelsExpedition, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<ModelsExpedition>>> {
+            const localVarAxiosArgs = await ExpeditionApiAxiosParamCreator(configuration).updateExpedition(id, expedition, options);
             return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
                 const axiosRequestArgs = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
                 return axios.request(axiosRequestArgs);
@@ -41127,46 +35732,46 @@ export const FactionBaseDatumApiFp = function(configuration?: Configuration) {
 };
 
 /**
- * FactionBaseDatumApi - factory interface
+ * ExpeditionApi - factory interface
  * @export
  */
-export const FactionBaseDatumApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
+export const ExpeditionApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
     return {
         /**
          * 
-         * @summary Creates FactionBaseDatum
-         * @param {ModelsFactionBaseDatum} factionBaseDatum FactionBaseDatum
+         * @summary Creates Expedition
+         * @param {ModelsExpedition} expedition Expedition
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        createFactionBaseDatum(factionBaseDatum: ModelsFactionBaseDatum, options?: any): AxiosPromise<Array<ModelsFactionBaseDatum>> {
-            return FactionBaseDatumApiFp(configuration).createFactionBaseDatum(factionBaseDatum, options).then((request) => request(axios, basePath));
+        createExpedition(expedition: ModelsExpedition, options?: any): AxiosPromise<Array<ModelsExpedition>> {
+            return ExpeditionApiFp(configuration).createExpedition(expedition, options).then((request) => request(axios, basePath));
         },
         /**
          * 
-         * @summary Deletes FactionBaseDatum
+         * @summary Deletes Expedition
          * @param {number} id Id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        deleteFactionBaseDatum(id: number, options?: any): AxiosPromise<string> {
-            return FactionBaseDatumApiFp(configuration).deleteFactionBaseDatum(id, options).then((request) => request(axios, basePath));
+        deleteExpedition(id: number, options?: any): AxiosPromise<string> {
+            return ExpeditionApiFp(configuration).deleteExpedition(id, options).then((request) => request(axios, basePath));
         },
         /**
          * 
-         * @summary Gets FactionBaseDatum
+         * @summary Gets Expedition
          * @param {number} id Id
          * @param {string} [includes] Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names 
          * @param {string} [select] Column names [.] separated to fetch specific fields in response
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getFactionBaseDatum(id: number, includes?: string, select?: string, options?: any): AxiosPromise<Array<ModelsFactionBaseDatum>> {
-            return FactionBaseDatumApiFp(configuration).getFactionBaseDatum(id, includes, select, options).then((request) => request(axios, basePath));
+        getExpedition(id: number, includes?: string, select?: string, options?: any): AxiosPromise<Array<ModelsExpedition>> {
+            return ExpeditionApiFp(configuration).getExpedition(id, includes, select, options).then((request) => request(axios, basePath));
         },
         /**
          * 
-         * @summary Lists FactionBaseData
+         * @summary Lists Expeditions
          * @param {string} [includes] Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names 
          * @param {string} [where] Filter on specific fields. Multiple conditions [.] separated Example: col_like_value.col2__val2
          * @param {string} [limit] Rows to limit in response (Default: 10,000)
@@ -41176,214 +35781,1472 @@ export const FactionBaseDatumApiFactory = function (configuration?: Configuratio
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        listFactionBaseData(includes?: string, where?: string, limit?: string, orderBy?: string, orderDirection?: string, select?: string, options?: any): AxiosPromise<Array<ModelsFactionBaseDatum>> {
-            return FactionBaseDatumApiFp(configuration).listFactionBaseData(includes, where, limit, orderBy, orderDirection, select, options).then((request) => request(axios, basePath));
+        listExpeditions(includes?: string, where?: string, limit?: string, orderBy?: string, orderDirection?: string, select?: string, options?: any): AxiosPromise<Array<ModelsExpedition>> {
+            return ExpeditionApiFp(configuration).listExpeditions(includes, where, limit, orderBy, orderDirection, select, options).then((request) => request(axios, basePath));
         },
         /**
          * 
-         * @summary Updates FactionBaseDatum
+         * @summary Updates Expedition
          * @param {number} id Id
-         * @param {ModelsFactionBaseDatum} factionBaseDatum FactionBaseDatum
+         * @param {ModelsExpedition} expedition Expedition
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        updateFactionBaseDatum(id: number, factionBaseDatum: ModelsFactionBaseDatum, options?: any): AxiosPromise<Array<ModelsFactionBaseDatum>> {
-            return FactionBaseDatumApiFp(configuration).updateFactionBaseDatum(id, factionBaseDatum, options).then((request) => request(axios, basePath));
+        updateExpedition(id: number, expedition: ModelsExpedition, options?: any): AxiosPromise<Array<ModelsExpedition>> {
+            return ExpeditionApiFp(configuration).updateExpedition(id, expedition, options).then((request) => request(axios, basePath));
         },
     };
 };
 
 /**
- * Request parameters for createFactionBaseDatum operation in FactionBaseDatumApi.
+ * Request parameters for createExpedition operation in ExpeditionApi.
  * @export
- * @interface FactionBaseDatumApiCreateFactionBaseDatumRequest
+ * @interface ExpeditionApiCreateExpeditionRequest
  */
-export interface FactionBaseDatumApiCreateFactionBaseDatumRequest {
+export interface ExpeditionApiCreateExpeditionRequest {
     /**
-     * FactionBaseDatum
-     * @type {ModelsFactionBaseDatum}
-     * @memberof FactionBaseDatumApiCreateFactionBaseDatum
+     * Expedition
+     * @type {ModelsExpedition}
+     * @memberof ExpeditionApiCreateExpedition
      */
-    readonly factionBaseDatum: ModelsFactionBaseDatum
+    readonly expedition: ModelsExpedition
 }
 
 /**
- * Request parameters for deleteFactionBaseDatum operation in FactionBaseDatumApi.
+ * Request parameters for deleteExpedition operation in ExpeditionApi.
  * @export
- * @interface FactionBaseDatumApiDeleteFactionBaseDatumRequest
+ * @interface ExpeditionApiDeleteExpeditionRequest
  */
-export interface FactionBaseDatumApiDeleteFactionBaseDatumRequest {
+export interface ExpeditionApiDeleteExpeditionRequest {
     /**
      * Id
      * @type {number}
-     * @memberof FactionBaseDatumApiDeleteFactionBaseDatum
+     * @memberof ExpeditionApiDeleteExpedition
      */
     readonly id: number
 }
 
 /**
- * Request parameters for getFactionBaseDatum operation in FactionBaseDatumApi.
+ * Request parameters for getExpedition operation in ExpeditionApi.
  * @export
- * @interface FactionBaseDatumApiGetFactionBaseDatumRequest
+ * @interface ExpeditionApiGetExpeditionRequest
  */
-export interface FactionBaseDatumApiGetFactionBaseDatumRequest {
+export interface ExpeditionApiGetExpeditionRequest {
     /**
      * Id
      * @type {number}
-     * @memberof FactionBaseDatumApiGetFactionBaseDatum
+     * @memberof ExpeditionApiGetExpedition
      */
     readonly id: number
 
     /**
      * Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names 
      * @type {string}
-     * @memberof FactionBaseDatumApiGetFactionBaseDatum
+     * @memberof ExpeditionApiGetExpedition
      */
     readonly includes?: string
 
     /**
      * Column names [.] separated to fetch specific fields in response
      * @type {string}
-     * @memberof FactionBaseDatumApiGetFactionBaseDatum
+     * @memberof ExpeditionApiGetExpedition
      */
     readonly select?: string
 }
 
 /**
- * Request parameters for listFactionBaseData operation in FactionBaseDatumApi.
+ * Request parameters for listExpeditions operation in ExpeditionApi.
  * @export
- * @interface FactionBaseDatumApiListFactionBaseDataRequest
+ * @interface ExpeditionApiListExpeditionsRequest
  */
-export interface FactionBaseDatumApiListFactionBaseDataRequest {
+export interface ExpeditionApiListExpeditionsRequest {
     /**
      * Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names 
      * @type {string}
-     * @memberof FactionBaseDatumApiListFactionBaseData
+     * @memberof ExpeditionApiListExpeditions
      */
     readonly includes?: string
 
     /**
      * Filter on specific fields. Multiple conditions [.] separated Example: col_like_value.col2__val2
      * @type {string}
-     * @memberof FactionBaseDatumApiListFactionBaseData
+     * @memberof ExpeditionApiListExpeditions
      */
     readonly where?: string
 
     /**
      * Rows to limit in response (Default: 10,000)
      * @type {string}
-     * @memberof FactionBaseDatumApiListFactionBaseData
+     * @memberof ExpeditionApiListExpeditions
      */
     readonly limit?: string
 
     /**
      * Order by [field]
      * @type {string}
-     * @memberof FactionBaseDatumApiListFactionBaseData
+     * @memberof ExpeditionApiListExpeditions
      */
     readonly orderBy?: string
 
     /**
      * Order by field direction
      * @type {string}
-     * @memberof FactionBaseDatumApiListFactionBaseData
+     * @memberof ExpeditionApiListExpeditions
      */
     readonly orderDirection?: string
 
     /**
      * Column names [.] separated to fetch specific fields in response
      * @type {string}
-     * @memberof FactionBaseDatumApiListFactionBaseData
+     * @memberof ExpeditionApiListExpeditions
      */
     readonly select?: string
 }
 
 /**
- * Request parameters for updateFactionBaseDatum operation in FactionBaseDatumApi.
+ * Request parameters for updateExpedition operation in ExpeditionApi.
  * @export
- * @interface FactionBaseDatumApiUpdateFactionBaseDatumRequest
+ * @interface ExpeditionApiUpdateExpeditionRequest
  */
-export interface FactionBaseDatumApiUpdateFactionBaseDatumRequest {
+export interface ExpeditionApiUpdateExpeditionRequest {
     /**
      * Id
      * @type {number}
-     * @memberof FactionBaseDatumApiUpdateFactionBaseDatum
+     * @memberof ExpeditionApiUpdateExpedition
      */
     readonly id: number
 
     /**
-     * FactionBaseDatum
-     * @type {ModelsFactionBaseDatum}
-     * @memberof FactionBaseDatumApiUpdateFactionBaseDatum
+     * Expedition
+     * @type {ModelsExpedition}
+     * @memberof ExpeditionApiUpdateExpedition
      */
-    readonly factionBaseDatum: ModelsFactionBaseDatum
+    readonly expedition: ModelsExpedition
 }
 
 /**
- * FactionBaseDatumApi - object-oriented interface
+ * ExpeditionApi - object-oriented interface
  * @export
- * @class FactionBaseDatumApi
+ * @class ExpeditionApi
  * @extends {BaseAPI}
  */
-export class FactionBaseDatumApi extends BaseAPI {
+export class ExpeditionApi extends BaseAPI {
     /**
      * 
-     * @summary Creates FactionBaseDatum
-     * @param {FactionBaseDatumApiCreateFactionBaseDatumRequest} requestParameters Request parameters.
+     * @summary Creates Expedition
+     * @param {ExpeditionApiCreateExpeditionRequest} requestParameters Request parameters.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof FactionBaseDatumApi
+     * @memberof ExpeditionApi
      */
-    public createFactionBaseDatum(requestParameters: FactionBaseDatumApiCreateFactionBaseDatumRequest, options?: any) {
-        return FactionBaseDatumApiFp(this.configuration).createFactionBaseDatum(requestParameters.factionBaseDatum, options).then((request) => request(this.axios, this.basePath));
+    public createExpedition(requestParameters: ExpeditionApiCreateExpeditionRequest, options?: any) {
+        return ExpeditionApiFp(this.configuration).createExpedition(requestParameters.expedition, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
      * 
-     * @summary Deletes FactionBaseDatum
-     * @param {FactionBaseDatumApiDeleteFactionBaseDatumRequest} requestParameters Request parameters.
+     * @summary Deletes Expedition
+     * @param {ExpeditionApiDeleteExpeditionRequest} requestParameters Request parameters.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof FactionBaseDatumApi
+     * @memberof ExpeditionApi
      */
-    public deleteFactionBaseDatum(requestParameters: FactionBaseDatumApiDeleteFactionBaseDatumRequest, options?: any) {
-        return FactionBaseDatumApiFp(this.configuration).deleteFactionBaseDatum(requestParameters.id, options).then((request) => request(this.axios, this.basePath));
+    public deleteExpedition(requestParameters: ExpeditionApiDeleteExpeditionRequest, options?: any) {
+        return ExpeditionApiFp(this.configuration).deleteExpedition(requestParameters.id, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
      * 
-     * @summary Gets FactionBaseDatum
-     * @param {FactionBaseDatumApiGetFactionBaseDatumRequest} requestParameters Request parameters.
+     * @summary Gets Expedition
+     * @param {ExpeditionApiGetExpeditionRequest} requestParameters Request parameters.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof FactionBaseDatumApi
+     * @memberof ExpeditionApi
      */
-    public getFactionBaseDatum(requestParameters: FactionBaseDatumApiGetFactionBaseDatumRequest, options?: any) {
-        return FactionBaseDatumApiFp(this.configuration).getFactionBaseDatum(requestParameters.id, requestParameters.includes, requestParameters.select, options).then((request) => request(this.axios, this.basePath));
+    public getExpedition(requestParameters: ExpeditionApiGetExpeditionRequest, options?: any) {
+        return ExpeditionApiFp(this.configuration).getExpedition(requestParameters.id, requestParameters.includes, requestParameters.select, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
      * 
-     * @summary Lists FactionBaseData
-     * @param {FactionBaseDatumApiListFactionBaseDataRequest} requestParameters Request parameters.
+     * @summary Lists Expeditions
+     * @param {ExpeditionApiListExpeditionsRequest} requestParameters Request parameters.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof FactionBaseDatumApi
+     * @memberof ExpeditionApi
      */
-    public listFactionBaseData(requestParameters: FactionBaseDatumApiListFactionBaseDataRequest = {}, options?: any) {
-        return FactionBaseDatumApiFp(this.configuration).listFactionBaseData(requestParameters.includes, requestParameters.where, requestParameters.limit, requestParameters.orderBy, requestParameters.orderDirection, requestParameters.select, options).then((request) => request(this.axios, this.basePath));
+    public listExpeditions(requestParameters: ExpeditionApiListExpeditionsRequest = {}, options?: any) {
+        return ExpeditionApiFp(this.configuration).listExpeditions(requestParameters.includes, requestParameters.where, requestParameters.limit, requestParameters.orderBy, requestParameters.orderDirection, requestParameters.select, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
      * 
-     * @summary Updates FactionBaseDatum
-     * @param {FactionBaseDatumApiUpdateFactionBaseDatumRequest} requestParameters Request parameters.
+     * @summary Updates Expedition
+     * @param {ExpeditionApiUpdateExpeditionRequest} requestParameters Request parameters.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof FactionBaseDatumApi
+     * @memberof ExpeditionApi
      */
-    public updateFactionBaseDatum(requestParameters: FactionBaseDatumApiUpdateFactionBaseDatumRequest, options?: any) {
-        return FactionBaseDatumApiFp(this.configuration).updateFactionBaseDatum(requestParameters.id, requestParameters.factionBaseDatum, options).then((request) => request(this.axios, this.basePath));
+    public updateExpedition(requestParameters: ExpeditionApiUpdateExpeditionRequest, options?: any) {
+        return ExpeditionApiFp(this.configuration).updateExpedition(requestParameters.id, requestParameters.expedition, options).then((request) => request(this.axios, this.basePath));
+    }
+}
+
+
+/**
+ * ExpeditionLockoutApi - axios parameter creator
+ * @export
+ */
+export const ExpeditionLockoutApiAxiosParamCreator = function (configuration?: Configuration) {
+    return {
+        /**
+         * 
+         * @summary Creates ExpeditionLockout
+         * @param {ModelsExpeditionLockout} expeditionLockout ExpeditionLockout
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        createExpeditionLockout: async (expeditionLockout: ModelsExpeditionLockout, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'expeditionLockout' is not null or undefined
+            if (expeditionLockout === null || expeditionLockout === undefined) {
+                throw new RequiredError('expeditionLockout','Required parameter expeditionLockout was null or undefined when calling createExpeditionLockout.');
+            }
+            const localVarPath = `/expedition_lockout`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, 'https://example.com');
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'PUT', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            const queryParameters = new URLSearchParams(localVarUrlObj.search);
+            for (const key in localVarQueryParameter) {
+                queryParameters.set(key, localVarQueryParameter[key]);
+            }
+            for (const key in options.query) {
+                queryParameters.set(key, options.query[key]);
+            }
+            localVarUrlObj.search = (new URLSearchParams(queryParameters)).toString();
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            const nonString = typeof expeditionLockout !== 'string';
+            const needsSerialization = nonString && configuration && configuration.isJsonMime
+                ? configuration.isJsonMime(localVarRequestOptions.headers['Content-Type'])
+                : nonString;
+            localVarRequestOptions.data =  needsSerialization
+                ? JSON.stringify(expeditionLockout !== undefined ? expeditionLockout : {})
+                : (expeditionLockout || "");
+
+            return {
+                url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @summary Deletes ExpeditionLockout
+         * @param {number} id Id
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        deleteExpeditionLockout: async (id: number, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'id' is not null or undefined
+            if (id === null || id === undefined) {
+                throw new RequiredError('id','Required parameter id was null or undefined when calling deleteExpeditionLockout.');
+            }
+            const localVarPath = `/expedition_lockout/{id}`
+                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, 'https://example.com');
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'DELETE', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            const queryParameters = new URLSearchParams(localVarUrlObj.search);
+            for (const key in localVarQueryParameter) {
+                queryParameters.set(key, localVarQueryParameter[key]);
+            }
+            for (const key in options.query) {
+                queryParameters.set(key, options.query[key]);
+            }
+            localVarUrlObj.search = (new URLSearchParams(queryParameters)).toString();
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @summary Gets ExpeditionLockout
+         * @param {number} id Id
+         * @param {string} [includes] Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names 
+         * @param {string} [select] Column names [.] separated to fetch specific fields in response
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getExpeditionLockout: async (id: number, includes?: string, select?: string, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'id' is not null or undefined
+            if (id === null || id === undefined) {
+                throw new RequiredError('id','Required parameter id was null or undefined when calling getExpeditionLockout.');
+            }
+            const localVarPath = `/expedition_lockout/{id}`
+                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, 'https://example.com');
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            if (includes !== undefined) {
+                localVarQueryParameter['includes'] = includes;
+            }
+
+            if (select !== undefined) {
+                localVarQueryParameter['select'] = select;
+            }
+
+
+    
+            const queryParameters = new URLSearchParams(localVarUrlObj.search);
+            for (const key in localVarQueryParameter) {
+                queryParameters.set(key, localVarQueryParameter[key]);
+            }
+            for (const key in options.query) {
+                queryParameters.set(key, options.query[key]);
+            }
+            localVarUrlObj.search = (new URLSearchParams(queryParameters)).toString();
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @summary Lists ExpeditionLockouts
+         * @param {string} [includes] Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names 
+         * @param {string} [where] Filter on specific fields. Multiple conditions [.] separated Example: col_like_value.col2__val2
+         * @param {string} [limit] Rows to limit in response (Default: 10,000)
+         * @param {string} [orderBy] Order by [field]
+         * @param {string} [orderDirection] Order by field direction
+         * @param {string} [select] Column names [.] separated to fetch specific fields in response
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        listExpeditionLockouts: async (includes?: string, where?: string, limit?: string, orderBy?: string, orderDirection?: string, select?: string, options: any = {}): Promise<RequestArgs> => {
+            const localVarPath = `/expedition_lockouts`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, 'https://example.com');
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            if (includes !== undefined) {
+                localVarQueryParameter['includes'] = includes;
+            }
+
+            if (where !== undefined) {
+                localVarQueryParameter['where'] = where;
+            }
+
+            if (limit !== undefined) {
+                localVarQueryParameter['limit'] = limit;
+            }
+
+            if (orderBy !== undefined) {
+                localVarQueryParameter['orderBy'] = orderBy;
+            }
+
+            if (orderDirection !== undefined) {
+                localVarQueryParameter['orderDirection'] = orderDirection;
+            }
+
+            if (select !== undefined) {
+                localVarQueryParameter['select'] = select;
+            }
+
+
+    
+            const queryParameters = new URLSearchParams(localVarUrlObj.search);
+            for (const key in localVarQueryParameter) {
+                queryParameters.set(key, localVarQueryParameter[key]);
+            }
+            for (const key in options.query) {
+                queryParameters.set(key, options.query[key]);
+            }
+            localVarUrlObj.search = (new URLSearchParams(queryParameters)).toString();
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @summary Updates ExpeditionLockout
+         * @param {number} id Id
+         * @param {ModelsExpeditionLockout} expeditionLockout ExpeditionLockout
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        updateExpeditionLockout: async (id: number, expeditionLockout: ModelsExpeditionLockout, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'id' is not null or undefined
+            if (id === null || id === undefined) {
+                throw new RequiredError('id','Required parameter id was null or undefined when calling updateExpeditionLockout.');
+            }
+            // verify required parameter 'expeditionLockout' is not null or undefined
+            if (expeditionLockout === null || expeditionLockout === undefined) {
+                throw new RequiredError('expeditionLockout','Required parameter expeditionLockout was null or undefined when calling updateExpeditionLockout.');
+            }
+            const localVarPath = `/expedition_lockout/{id}`
+                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, 'https://example.com');
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'PATCH', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            const queryParameters = new URLSearchParams(localVarUrlObj.search);
+            for (const key in localVarQueryParameter) {
+                queryParameters.set(key, localVarQueryParameter[key]);
+            }
+            for (const key in options.query) {
+                queryParameters.set(key, options.query[key]);
+            }
+            localVarUrlObj.search = (new URLSearchParams(queryParameters)).toString();
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            const nonString = typeof expeditionLockout !== 'string';
+            const needsSerialization = nonString && configuration && configuration.isJsonMime
+                ? configuration.isJsonMime(localVarRequestOptions.headers['Content-Type'])
+                : nonString;
+            localVarRequestOptions.data =  needsSerialization
+                ? JSON.stringify(expeditionLockout !== undefined ? expeditionLockout : {})
+                : (expeditionLockout || "");
+
+            return {
+                url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
+                options: localVarRequestOptions,
+            };
+        },
+    }
+};
+
+/**
+ * ExpeditionLockoutApi - functional programming interface
+ * @export
+ */
+export const ExpeditionLockoutApiFp = function(configuration?: Configuration) {
+    return {
+        /**
+         * 
+         * @summary Creates ExpeditionLockout
+         * @param {ModelsExpeditionLockout} expeditionLockout ExpeditionLockout
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async createExpeditionLockout(expeditionLockout: ModelsExpeditionLockout, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<ModelsExpeditionLockout>>> {
+            const localVarAxiosArgs = await ExpeditionLockoutApiAxiosParamCreator(configuration).createExpeditionLockout(expeditionLockout, options);
+            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
+                const axiosRequestArgs = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
+                return axios.request(axiosRequestArgs);
+            };
+        },
+        /**
+         * 
+         * @summary Deletes ExpeditionLockout
+         * @param {number} id Id
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async deleteExpeditionLockout(id: number, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<string>> {
+            const localVarAxiosArgs = await ExpeditionLockoutApiAxiosParamCreator(configuration).deleteExpeditionLockout(id, options);
+            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
+                const axiosRequestArgs = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
+                return axios.request(axiosRequestArgs);
+            };
+        },
+        /**
+         * 
+         * @summary Gets ExpeditionLockout
+         * @param {number} id Id
+         * @param {string} [includes] Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names 
+         * @param {string} [select] Column names [.] separated to fetch specific fields in response
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async getExpeditionLockout(id: number, includes?: string, select?: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<ModelsExpeditionLockout>>> {
+            const localVarAxiosArgs = await ExpeditionLockoutApiAxiosParamCreator(configuration).getExpeditionLockout(id, includes, select, options);
+            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
+                const axiosRequestArgs = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
+                return axios.request(axiosRequestArgs);
+            };
+        },
+        /**
+         * 
+         * @summary Lists ExpeditionLockouts
+         * @param {string} [includes] Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names 
+         * @param {string} [where] Filter on specific fields. Multiple conditions [.] separated Example: col_like_value.col2__val2
+         * @param {string} [limit] Rows to limit in response (Default: 10,000)
+         * @param {string} [orderBy] Order by [field]
+         * @param {string} [orderDirection] Order by field direction
+         * @param {string} [select] Column names [.] separated to fetch specific fields in response
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async listExpeditionLockouts(includes?: string, where?: string, limit?: string, orderBy?: string, orderDirection?: string, select?: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<ModelsExpeditionLockout>>> {
+            const localVarAxiosArgs = await ExpeditionLockoutApiAxiosParamCreator(configuration).listExpeditionLockouts(includes, where, limit, orderBy, orderDirection, select, options);
+            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
+                const axiosRequestArgs = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
+                return axios.request(axiosRequestArgs);
+            };
+        },
+        /**
+         * 
+         * @summary Updates ExpeditionLockout
+         * @param {number} id Id
+         * @param {ModelsExpeditionLockout} expeditionLockout ExpeditionLockout
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async updateExpeditionLockout(id: number, expeditionLockout: ModelsExpeditionLockout, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<ModelsExpeditionLockout>>> {
+            const localVarAxiosArgs = await ExpeditionLockoutApiAxiosParamCreator(configuration).updateExpeditionLockout(id, expeditionLockout, options);
+            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
+                const axiosRequestArgs = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
+                return axios.request(axiosRequestArgs);
+            };
+        },
+    }
+};
+
+/**
+ * ExpeditionLockoutApi - factory interface
+ * @export
+ */
+export const ExpeditionLockoutApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
+    return {
+        /**
+         * 
+         * @summary Creates ExpeditionLockout
+         * @param {ModelsExpeditionLockout} expeditionLockout ExpeditionLockout
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        createExpeditionLockout(expeditionLockout: ModelsExpeditionLockout, options?: any): AxiosPromise<Array<ModelsExpeditionLockout>> {
+            return ExpeditionLockoutApiFp(configuration).createExpeditionLockout(expeditionLockout, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @summary Deletes ExpeditionLockout
+         * @param {number} id Id
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        deleteExpeditionLockout(id: number, options?: any): AxiosPromise<string> {
+            return ExpeditionLockoutApiFp(configuration).deleteExpeditionLockout(id, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @summary Gets ExpeditionLockout
+         * @param {number} id Id
+         * @param {string} [includes] Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names 
+         * @param {string} [select] Column names [.] separated to fetch specific fields in response
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getExpeditionLockout(id: number, includes?: string, select?: string, options?: any): AxiosPromise<Array<ModelsExpeditionLockout>> {
+            return ExpeditionLockoutApiFp(configuration).getExpeditionLockout(id, includes, select, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @summary Lists ExpeditionLockouts
+         * @param {string} [includes] Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names 
+         * @param {string} [where] Filter on specific fields. Multiple conditions [.] separated Example: col_like_value.col2__val2
+         * @param {string} [limit] Rows to limit in response (Default: 10,000)
+         * @param {string} [orderBy] Order by [field]
+         * @param {string} [orderDirection] Order by field direction
+         * @param {string} [select] Column names [.] separated to fetch specific fields in response
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        listExpeditionLockouts(includes?: string, where?: string, limit?: string, orderBy?: string, orderDirection?: string, select?: string, options?: any): AxiosPromise<Array<ModelsExpeditionLockout>> {
+            return ExpeditionLockoutApiFp(configuration).listExpeditionLockouts(includes, where, limit, orderBy, orderDirection, select, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @summary Updates ExpeditionLockout
+         * @param {number} id Id
+         * @param {ModelsExpeditionLockout} expeditionLockout ExpeditionLockout
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        updateExpeditionLockout(id: number, expeditionLockout: ModelsExpeditionLockout, options?: any): AxiosPromise<Array<ModelsExpeditionLockout>> {
+            return ExpeditionLockoutApiFp(configuration).updateExpeditionLockout(id, expeditionLockout, options).then((request) => request(axios, basePath));
+        },
+    };
+};
+
+/**
+ * Request parameters for createExpeditionLockout operation in ExpeditionLockoutApi.
+ * @export
+ * @interface ExpeditionLockoutApiCreateExpeditionLockoutRequest
+ */
+export interface ExpeditionLockoutApiCreateExpeditionLockoutRequest {
+    /**
+     * ExpeditionLockout
+     * @type {ModelsExpeditionLockout}
+     * @memberof ExpeditionLockoutApiCreateExpeditionLockout
+     */
+    readonly expeditionLockout: ModelsExpeditionLockout
+}
+
+/**
+ * Request parameters for deleteExpeditionLockout operation in ExpeditionLockoutApi.
+ * @export
+ * @interface ExpeditionLockoutApiDeleteExpeditionLockoutRequest
+ */
+export interface ExpeditionLockoutApiDeleteExpeditionLockoutRequest {
+    /**
+     * Id
+     * @type {number}
+     * @memberof ExpeditionLockoutApiDeleteExpeditionLockout
+     */
+    readonly id: number
+}
+
+/**
+ * Request parameters for getExpeditionLockout operation in ExpeditionLockoutApi.
+ * @export
+ * @interface ExpeditionLockoutApiGetExpeditionLockoutRequest
+ */
+export interface ExpeditionLockoutApiGetExpeditionLockoutRequest {
+    /**
+     * Id
+     * @type {number}
+     * @memberof ExpeditionLockoutApiGetExpeditionLockout
+     */
+    readonly id: number
+
+    /**
+     * Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names 
+     * @type {string}
+     * @memberof ExpeditionLockoutApiGetExpeditionLockout
+     */
+    readonly includes?: string
+
+    /**
+     * Column names [.] separated to fetch specific fields in response
+     * @type {string}
+     * @memberof ExpeditionLockoutApiGetExpeditionLockout
+     */
+    readonly select?: string
+}
+
+/**
+ * Request parameters for listExpeditionLockouts operation in ExpeditionLockoutApi.
+ * @export
+ * @interface ExpeditionLockoutApiListExpeditionLockoutsRequest
+ */
+export interface ExpeditionLockoutApiListExpeditionLockoutsRequest {
+    /**
+     * Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names 
+     * @type {string}
+     * @memberof ExpeditionLockoutApiListExpeditionLockouts
+     */
+    readonly includes?: string
+
+    /**
+     * Filter on specific fields. Multiple conditions [.] separated Example: col_like_value.col2__val2
+     * @type {string}
+     * @memberof ExpeditionLockoutApiListExpeditionLockouts
+     */
+    readonly where?: string
+
+    /**
+     * Rows to limit in response (Default: 10,000)
+     * @type {string}
+     * @memberof ExpeditionLockoutApiListExpeditionLockouts
+     */
+    readonly limit?: string
+
+    /**
+     * Order by [field]
+     * @type {string}
+     * @memberof ExpeditionLockoutApiListExpeditionLockouts
+     */
+    readonly orderBy?: string
+
+    /**
+     * Order by field direction
+     * @type {string}
+     * @memberof ExpeditionLockoutApiListExpeditionLockouts
+     */
+    readonly orderDirection?: string
+
+    /**
+     * Column names [.] separated to fetch specific fields in response
+     * @type {string}
+     * @memberof ExpeditionLockoutApiListExpeditionLockouts
+     */
+    readonly select?: string
+}
+
+/**
+ * Request parameters for updateExpeditionLockout operation in ExpeditionLockoutApi.
+ * @export
+ * @interface ExpeditionLockoutApiUpdateExpeditionLockoutRequest
+ */
+export interface ExpeditionLockoutApiUpdateExpeditionLockoutRequest {
+    /**
+     * Id
+     * @type {number}
+     * @memberof ExpeditionLockoutApiUpdateExpeditionLockout
+     */
+    readonly id: number
+
+    /**
+     * ExpeditionLockout
+     * @type {ModelsExpeditionLockout}
+     * @memberof ExpeditionLockoutApiUpdateExpeditionLockout
+     */
+    readonly expeditionLockout: ModelsExpeditionLockout
+}
+
+/**
+ * ExpeditionLockoutApi - object-oriented interface
+ * @export
+ * @class ExpeditionLockoutApi
+ * @extends {BaseAPI}
+ */
+export class ExpeditionLockoutApi extends BaseAPI {
+    /**
+     * 
+     * @summary Creates ExpeditionLockout
+     * @param {ExpeditionLockoutApiCreateExpeditionLockoutRequest} requestParameters Request parameters.
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof ExpeditionLockoutApi
+     */
+    public createExpeditionLockout(requestParameters: ExpeditionLockoutApiCreateExpeditionLockoutRequest, options?: any) {
+        return ExpeditionLockoutApiFp(this.configuration).createExpeditionLockout(requestParameters.expeditionLockout, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @summary Deletes ExpeditionLockout
+     * @param {ExpeditionLockoutApiDeleteExpeditionLockoutRequest} requestParameters Request parameters.
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof ExpeditionLockoutApi
+     */
+    public deleteExpeditionLockout(requestParameters: ExpeditionLockoutApiDeleteExpeditionLockoutRequest, options?: any) {
+        return ExpeditionLockoutApiFp(this.configuration).deleteExpeditionLockout(requestParameters.id, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @summary Gets ExpeditionLockout
+     * @param {ExpeditionLockoutApiGetExpeditionLockoutRequest} requestParameters Request parameters.
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof ExpeditionLockoutApi
+     */
+    public getExpeditionLockout(requestParameters: ExpeditionLockoutApiGetExpeditionLockoutRequest, options?: any) {
+        return ExpeditionLockoutApiFp(this.configuration).getExpeditionLockout(requestParameters.id, requestParameters.includes, requestParameters.select, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @summary Lists ExpeditionLockouts
+     * @param {ExpeditionLockoutApiListExpeditionLockoutsRequest} requestParameters Request parameters.
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof ExpeditionLockoutApi
+     */
+    public listExpeditionLockouts(requestParameters: ExpeditionLockoutApiListExpeditionLockoutsRequest = {}, options?: any) {
+        return ExpeditionLockoutApiFp(this.configuration).listExpeditionLockouts(requestParameters.includes, requestParameters.where, requestParameters.limit, requestParameters.orderBy, requestParameters.orderDirection, requestParameters.select, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @summary Updates ExpeditionLockout
+     * @param {ExpeditionLockoutApiUpdateExpeditionLockoutRequest} requestParameters Request parameters.
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof ExpeditionLockoutApi
+     */
+    public updateExpeditionLockout(requestParameters: ExpeditionLockoutApiUpdateExpeditionLockoutRequest, options?: any) {
+        return ExpeditionLockoutApiFp(this.configuration).updateExpeditionLockout(requestParameters.id, requestParameters.expeditionLockout, options).then((request) => request(this.axios, this.basePath));
+    }
+}
+
+
+/**
+ * ExpeditionMemberApi - axios parameter creator
+ * @export
+ */
+export const ExpeditionMemberApiAxiosParamCreator = function (configuration?: Configuration) {
+    return {
+        /**
+         * 
+         * @summary Creates ExpeditionMember
+         * @param {ModelsExpeditionMember} expeditionMember ExpeditionMember
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        createExpeditionMember: async (expeditionMember: ModelsExpeditionMember, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'expeditionMember' is not null or undefined
+            if (expeditionMember === null || expeditionMember === undefined) {
+                throw new RequiredError('expeditionMember','Required parameter expeditionMember was null or undefined when calling createExpeditionMember.');
+            }
+            const localVarPath = `/expedition_member`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, 'https://example.com');
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'PUT', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            const queryParameters = new URLSearchParams(localVarUrlObj.search);
+            for (const key in localVarQueryParameter) {
+                queryParameters.set(key, localVarQueryParameter[key]);
+            }
+            for (const key in options.query) {
+                queryParameters.set(key, options.query[key]);
+            }
+            localVarUrlObj.search = (new URLSearchParams(queryParameters)).toString();
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            const nonString = typeof expeditionMember !== 'string';
+            const needsSerialization = nonString && configuration && configuration.isJsonMime
+                ? configuration.isJsonMime(localVarRequestOptions.headers['Content-Type'])
+                : nonString;
+            localVarRequestOptions.data =  needsSerialization
+                ? JSON.stringify(expeditionMember !== undefined ? expeditionMember : {})
+                : (expeditionMember || "");
+
+            return {
+                url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @summary Deletes ExpeditionMember
+         * @param {number} id Id
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        deleteExpeditionMember: async (id: number, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'id' is not null or undefined
+            if (id === null || id === undefined) {
+                throw new RequiredError('id','Required parameter id was null or undefined when calling deleteExpeditionMember.');
+            }
+            const localVarPath = `/expedition_member/{id}`
+                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, 'https://example.com');
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'DELETE', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            const queryParameters = new URLSearchParams(localVarUrlObj.search);
+            for (const key in localVarQueryParameter) {
+                queryParameters.set(key, localVarQueryParameter[key]);
+            }
+            for (const key in options.query) {
+                queryParameters.set(key, options.query[key]);
+            }
+            localVarUrlObj.search = (new URLSearchParams(queryParameters)).toString();
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @summary Gets ExpeditionMember
+         * @param {number} id Id
+         * @param {string} [includes] Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names 
+         * @param {string} [select] Column names [.] separated to fetch specific fields in response
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getExpeditionMember: async (id: number, includes?: string, select?: string, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'id' is not null or undefined
+            if (id === null || id === undefined) {
+                throw new RequiredError('id','Required parameter id was null or undefined when calling getExpeditionMember.');
+            }
+            const localVarPath = `/expedition_member/{id}`
+                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, 'https://example.com');
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            if (includes !== undefined) {
+                localVarQueryParameter['includes'] = includes;
+            }
+
+            if (select !== undefined) {
+                localVarQueryParameter['select'] = select;
+            }
+
+
+    
+            const queryParameters = new URLSearchParams(localVarUrlObj.search);
+            for (const key in localVarQueryParameter) {
+                queryParameters.set(key, localVarQueryParameter[key]);
+            }
+            for (const key in options.query) {
+                queryParameters.set(key, options.query[key]);
+            }
+            localVarUrlObj.search = (new URLSearchParams(queryParameters)).toString();
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @summary Lists ExpeditionMembers
+         * @param {string} [includes] Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names 
+         * @param {string} [where] Filter on specific fields. Multiple conditions [.] separated Example: col_like_value.col2__val2
+         * @param {string} [limit] Rows to limit in response (Default: 10,000)
+         * @param {string} [orderBy] Order by [field]
+         * @param {string} [orderDirection] Order by field direction
+         * @param {string} [select] Column names [.] separated to fetch specific fields in response
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        listExpeditionMembers: async (includes?: string, where?: string, limit?: string, orderBy?: string, orderDirection?: string, select?: string, options: any = {}): Promise<RequestArgs> => {
+            const localVarPath = `/expedition_members`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, 'https://example.com');
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            if (includes !== undefined) {
+                localVarQueryParameter['includes'] = includes;
+            }
+
+            if (where !== undefined) {
+                localVarQueryParameter['where'] = where;
+            }
+
+            if (limit !== undefined) {
+                localVarQueryParameter['limit'] = limit;
+            }
+
+            if (orderBy !== undefined) {
+                localVarQueryParameter['orderBy'] = orderBy;
+            }
+
+            if (orderDirection !== undefined) {
+                localVarQueryParameter['orderDirection'] = orderDirection;
+            }
+
+            if (select !== undefined) {
+                localVarQueryParameter['select'] = select;
+            }
+
+
+    
+            const queryParameters = new URLSearchParams(localVarUrlObj.search);
+            for (const key in localVarQueryParameter) {
+                queryParameters.set(key, localVarQueryParameter[key]);
+            }
+            for (const key in options.query) {
+                queryParameters.set(key, options.query[key]);
+            }
+            localVarUrlObj.search = (new URLSearchParams(queryParameters)).toString();
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @summary Updates ExpeditionMember
+         * @param {number} id Id
+         * @param {ModelsExpeditionMember} expeditionMember ExpeditionMember
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        updateExpeditionMember: async (id: number, expeditionMember: ModelsExpeditionMember, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'id' is not null or undefined
+            if (id === null || id === undefined) {
+                throw new RequiredError('id','Required parameter id was null or undefined when calling updateExpeditionMember.');
+            }
+            // verify required parameter 'expeditionMember' is not null or undefined
+            if (expeditionMember === null || expeditionMember === undefined) {
+                throw new RequiredError('expeditionMember','Required parameter expeditionMember was null or undefined when calling updateExpeditionMember.');
+            }
+            const localVarPath = `/expedition_member/{id}`
+                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, 'https://example.com');
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'PATCH', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            const queryParameters = new URLSearchParams(localVarUrlObj.search);
+            for (const key in localVarQueryParameter) {
+                queryParameters.set(key, localVarQueryParameter[key]);
+            }
+            for (const key in options.query) {
+                queryParameters.set(key, options.query[key]);
+            }
+            localVarUrlObj.search = (new URLSearchParams(queryParameters)).toString();
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            const nonString = typeof expeditionMember !== 'string';
+            const needsSerialization = nonString && configuration && configuration.isJsonMime
+                ? configuration.isJsonMime(localVarRequestOptions.headers['Content-Type'])
+                : nonString;
+            localVarRequestOptions.data =  needsSerialization
+                ? JSON.stringify(expeditionMember !== undefined ? expeditionMember : {})
+                : (expeditionMember || "");
+
+            return {
+                url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
+                options: localVarRequestOptions,
+            };
+        },
+    }
+};
+
+/**
+ * ExpeditionMemberApi - functional programming interface
+ * @export
+ */
+export const ExpeditionMemberApiFp = function(configuration?: Configuration) {
+    return {
+        /**
+         * 
+         * @summary Creates ExpeditionMember
+         * @param {ModelsExpeditionMember} expeditionMember ExpeditionMember
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async createExpeditionMember(expeditionMember: ModelsExpeditionMember, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<ModelsExpeditionMember>>> {
+            const localVarAxiosArgs = await ExpeditionMemberApiAxiosParamCreator(configuration).createExpeditionMember(expeditionMember, options);
+            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
+                const axiosRequestArgs = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
+                return axios.request(axiosRequestArgs);
+            };
+        },
+        /**
+         * 
+         * @summary Deletes ExpeditionMember
+         * @param {number} id Id
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async deleteExpeditionMember(id: number, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<string>> {
+            const localVarAxiosArgs = await ExpeditionMemberApiAxiosParamCreator(configuration).deleteExpeditionMember(id, options);
+            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
+                const axiosRequestArgs = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
+                return axios.request(axiosRequestArgs);
+            };
+        },
+        /**
+         * 
+         * @summary Gets ExpeditionMember
+         * @param {number} id Id
+         * @param {string} [includes] Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names 
+         * @param {string} [select] Column names [.] separated to fetch specific fields in response
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async getExpeditionMember(id: number, includes?: string, select?: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<ModelsExpeditionMember>>> {
+            const localVarAxiosArgs = await ExpeditionMemberApiAxiosParamCreator(configuration).getExpeditionMember(id, includes, select, options);
+            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
+                const axiosRequestArgs = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
+                return axios.request(axiosRequestArgs);
+            };
+        },
+        /**
+         * 
+         * @summary Lists ExpeditionMembers
+         * @param {string} [includes] Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names 
+         * @param {string} [where] Filter on specific fields. Multiple conditions [.] separated Example: col_like_value.col2__val2
+         * @param {string} [limit] Rows to limit in response (Default: 10,000)
+         * @param {string} [orderBy] Order by [field]
+         * @param {string} [orderDirection] Order by field direction
+         * @param {string} [select] Column names [.] separated to fetch specific fields in response
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async listExpeditionMembers(includes?: string, where?: string, limit?: string, orderBy?: string, orderDirection?: string, select?: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<ModelsExpeditionMember>>> {
+            const localVarAxiosArgs = await ExpeditionMemberApiAxiosParamCreator(configuration).listExpeditionMembers(includes, where, limit, orderBy, orderDirection, select, options);
+            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
+                const axiosRequestArgs = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
+                return axios.request(axiosRequestArgs);
+            };
+        },
+        /**
+         * 
+         * @summary Updates ExpeditionMember
+         * @param {number} id Id
+         * @param {ModelsExpeditionMember} expeditionMember ExpeditionMember
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async updateExpeditionMember(id: number, expeditionMember: ModelsExpeditionMember, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<ModelsExpeditionMember>>> {
+            const localVarAxiosArgs = await ExpeditionMemberApiAxiosParamCreator(configuration).updateExpeditionMember(id, expeditionMember, options);
+            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
+                const axiosRequestArgs = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
+                return axios.request(axiosRequestArgs);
+            };
+        },
+    }
+};
+
+/**
+ * ExpeditionMemberApi - factory interface
+ * @export
+ */
+export const ExpeditionMemberApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
+    return {
+        /**
+         * 
+         * @summary Creates ExpeditionMember
+         * @param {ModelsExpeditionMember} expeditionMember ExpeditionMember
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        createExpeditionMember(expeditionMember: ModelsExpeditionMember, options?: any): AxiosPromise<Array<ModelsExpeditionMember>> {
+            return ExpeditionMemberApiFp(configuration).createExpeditionMember(expeditionMember, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @summary Deletes ExpeditionMember
+         * @param {number} id Id
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        deleteExpeditionMember(id: number, options?: any): AxiosPromise<string> {
+            return ExpeditionMemberApiFp(configuration).deleteExpeditionMember(id, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @summary Gets ExpeditionMember
+         * @param {number} id Id
+         * @param {string} [includes] Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names 
+         * @param {string} [select] Column names [.] separated to fetch specific fields in response
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getExpeditionMember(id: number, includes?: string, select?: string, options?: any): AxiosPromise<Array<ModelsExpeditionMember>> {
+            return ExpeditionMemberApiFp(configuration).getExpeditionMember(id, includes, select, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @summary Lists ExpeditionMembers
+         * @param {string} [includes] Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names 
+         * @param {string} [where] Filter on specific fields. Multiple conditions [.] separated Example: col_like_value.col2__val2
+         * @param {string} [limit] Rows to limit in response (Default: 10,000)
+         * @param {string} [orderBy] Order by [field]
+         * @param {string} [orderDirection] Order by field direction
+         * @param {string} [select] Column names [.] separated to fetch specific fields in response
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        listExpeditionMembers(includes?: string, where?: string, limit?: string, orderBy?: string, orderDirection?: string, select?: string, options?: any): AxiosPromise<Array<ModelsExpeditionMember>> {
+            return ExpeditionMemberApiFp(configuration).listExpeditionMembers(includes, where, limit, orderBy, orderDirection, select, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @summary Updates ExpeditionMember
+         * @param {number} id Id
+         * @param {ModelsExpeditionMember} expeditionMember ExpeditionMember
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        updateExpeditionMember(id: number, expeditionMember: ModelsExpeditionMember, options?: any): AxiosPromise<Array<ModelsExpeditionMember>> {
+            return ExpeditionMemberApiFp(configuration).updateExpeditionMember(id, expeditionMember, options).then((request) => request(axios, basePath));
+        },
+    };
+};
+
+/**
+ * Request parameters for createExpeditionMember operation in ExpeditionMemberApi.
+ * @export
+ * @interface ExpeditionMemberApiCreateExpeditionMemberRequest
+ */
+export interface ExpeditionMemberApiCreateExpeditionMemberRequest {
+    /**
+     * ExpeditionMember
+     * @type {ModelsExpeditionMember}
+     * @memberof ExpeditionMemberApiCreateExpeditionMember
+     */
+    readonly expeditionMember: ModelsExpeditionMember
+}
+
+/**
+ * Request parameters for deleteExpeditionMember operation in ExpeditionMemberApi.
+ * @export
+ * @interface ExpeditionMemberApiDeleteExpeditionMemberRequest
+ */
+export interface ExpeditionMemberApiDeleteExpeditionMemberRequest {
+    /**
+     * Id
+     * @type {number}
+     * @memberof ExpeditionMemberApiDeleteExpeditionMember
+     */
+    readonly id: number
+}
+
+/**
+ * Request parameters for getExpeditionMember operation in ExpeditionMemberApi.
+ * @export
+ * @interface ExpeditionMemberApiGetExpeditionMemberRequest
+ */
+export interface ExpeditionMemberApiGetExpeditionMemberRequest {
+    /**
+     * Id
+     * @type {number}
+     * @memberof ExpeditionMemberApiGetExpeditionMember
+     */
+    readonly id: number
+
+    /**
+     * Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names 
+     * @type {string}
+     * @memberof ExpeditionMemberApiGetExpeditionMember
+     */
+    readonly includes?: string
+
+    /**
+     * Column names [.] separated to fetch specific fields in response
+     * @type {string}
+     * @memberof ExpeditionMemberApiGetExpeditionMember
+     */
+    readonly select?: string
+}
+
+/**
+ * Request parameters for listExpeditionMembers operation in ExpeditionMemberApi.
+ * @export
+ * @interface ExpeditionMemberApiListExpeditionMembersRequest
+ */
+export interface ExpeditionMemberApiListExpeditionMembersRequest {
+    /**
+     * Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names 
+     * @type {string}
+     * @memberof ExpeditionMemberApiListExpeditionMembers
+     */
+    readonly includes?: string
+
+    /**
+     * Filter on specific fields. Multiple conditions [.] separated Example: col_like_value.col2__val2
+     * @type {string}
+     * @memberof ExpeditionMemberApiListExpeditionMembers
+     */
+    readonly where?: string
+
+    /**
+     * Rows to limit in response (Default: 10,000)
+     * @type {string}
+     * @memberof ExpeditionMemberApiListExpeditionMembers
+     */
+    readonly limit?: string
+
+    /**
+     * Order by [field]
+     * @type {string}
+     * @memberof ExpeditionMemberApiListExpeditionMembers
+     */
+    readonly orderBy?: string
+
+    /**
+     * Order by field direction
+     * @type {string}
+     * @memberof ExpeditionMemberApiListExpeditionMembers
+     */
+    readonly orderDirection?: string
+
+    /**
+     * Column names [.] separated to fetch specific fields in response
+     * @type {string}
+     * @memberof ExpeditionMemberApiListExpeditionMembers
+     */
+    readonly select?: string
+}
+
+/**
+ * Request parameters for updateExpeditionMember operation in ExpeditionMemberApi.
+ * @export
+ * @interface ExpeditionMemberApiUpdateExpeditionMemberRequest
+ */
+export interface ExpeditionMemberApiUpdateExpeditionMemberRequest {
+    /**
+     * Id
+     * @type {number}
+     * @memberof ExpeditionMemberApiUpdateExpeditionMember
+     */
+    readonly id: number
+
+    /**
+     * ExpeditionMember
+     * @type {ModelsExpeditionMember}
+     * @memberof ExpeditionMemberApiUpdateExpeditionMember
+     */
+    readonly expeditionMember: ModelsExpeditionMember
+}
+
+/**
+ * ExpeditionMemberApi - object-oriented interface
+ * @export
+ * @class ExpeditionMemberApi
+ * @extends {BaseAPI}
+ */
+export class ExpeditionMemberApi extends BaseAPI {
+    /**
+     * 
+     * @summary Creates ExpeditionMember
+     * @param {ExpeditionMemberApiCreateExpeditionMemberRequest} requestParameters Request parameters.
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof ExpeditionMemberApi
+     */
+    public createExpeditionMember(requestParameters: ExpeditionMemberApiCreateExpeditionMemberRequest, options?: any) {
+        return ExpeditionMemberApiFp(this.configuration).createExpeditionMember(requestParameters.expeditionMember, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @summary Deletes ExpeditionMember
+     * @param {ExpeditionMemberApiDeleteExpeditionMemberRequest} requestParameters Request parameters.
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof ExpeditionMemberApi
+     */
+    public deleteExpeditionMember(requestParameters: ExpeditionMemberApiDeleteExpeditionMemberRequest, options?: any) {
+        return ExpeditionMemberApiFp(this.configuration).deleteExpeditionMember(requestParameters.id, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @summary Gets ExpeditionMember
+     * @param {ExpeditionMemberApiGetExpeditionMemberRequest} requestParameters Request parameters.
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof ExpeditionMemberApi
+     */
+    public getExpeditionMember(requestParameters: ExpeditionMemberApiGetExpeditionMemberRequest, options?: any) {
+        return ExpeditionMemberApiFp(this.configuration).getExpeditionMember(requestParameters.id, requestParameters.includes, requestParameters.select, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @summary Lists ExpeditionMembers
+     * @param {ExpeditionMemberApiListExpeditionMembersRequest} requestParameters Request parameters.
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof ExpeditionMemberApi
+     */
+    public listExpeditionMembers(requestParameters: ExpeditionMemberApiListExpeditionMembersRequest = {}, options?: any) {
+        return ExpeditionMemberApiFp(this.configuration).listExpeditionMembers(requestParameters.includes, requestParameters.where, requestParameters.limit, requestParameters.orderBy, requestParameters.orderDirection, requestParameters.select, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @summary Updates ExpeditionMember
+     * @param {ExpeditionMemberApiUpdateExpeditionMemberRequest} requestParameters Request parameters.
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof ExpeditionMemberApi
+     */
+    public updateExpeditionMember(requestParameters: ExpeditionMemberApiUpdateExpeditionMemberRequest, options?: any) {
+        return ExpeditionMemberApiFp(this.configuration).updateExpeditionMember(requestParameters.id, requestParameters.expeditionMember, options).then((request) => request(this.axios, this.basePath));
     }
 }
 
@@ -42642,635 +38505,6 @@ export class FactionListModApi extends BaseAPI {
      */
     public updateFactionListMod(requestParameters: FactionListModApiUpdateFactionListModRequest, options?: any) {
         return FactionListModApiFp(this.configuration).updateFactionListMod(requestParameters.id, requestParameters.factionListMod, options).then((request) => request(this.axios, this.basePath));
-    }
-}
-
-
-/**
- * FactionValueApi - axios parameter creator
- * @export
- */
-export const FactionValueApiAxiosParamCreator = function (configuration?: Configuration) {
-    return {
-        /**
-         * 
-         * @summary Creates FactionValue
-         * @param {ModelsFactionValue} factionValue FactionValue
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        createFactionValue: async (factionValue: ModelsFactionValue, options: any = {}): Promise<RequestArgs> => {
-            // verify required parameter 'factionValue' is not null or undefined
-            if (factionValue === null || factionValue === undefined) {
-                throw new RequiredError('factionValue','Required parameter factionValue was null or undefined when calling createFactionValue.');
-            }
-            const localVarPath = `/faction_value`;
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, 'https://example.com');
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'PUT', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-
-    
-            localVarHeaderParameter['Content-Type'] = 'application/json';
-
-            const queryParameters = new URLSearchParams(localVarUrlObj.search);
-            for (const key in localVarQueryParameter) {
-                queryParameters.set(key, localVarQueryParameter[key]);
-            }
-            for (const key in options.query) {
-                queryParameters.set(key, options.query[key]);
-            }
-            localVarUrlObj.search = (new URLSearchParams(queryParameters)).toString();
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            const nonString = typeof factionValue !== 'string';
-            const needsSerialization = nonString && configuration && configuration.isJsonMime
-                ? configuration.isJsonMime(localVarRequestOptions.headers['Content-Type'])
-                : nonString;
-            localVarRequestOptions.data =  needsSerialization
-                ? JSON.stringify(factionValue !== undefined ? factionValue : {})
-                : (factionValue || "");
-
-            return {
-                url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * 
-         * @summary Deletes FactionValue
-         * @param {number} id Id
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        deleteFactionValue: async (id: number, options: any = {}): Promise<RequestArgs> => {
-            // verify required parameter 'id' is not null or undefined
-            if (id === null || id === undefined) {
-                throw new RequiredError('id','Required parameter id was null or undefined when calling deleteFactionValue.');
-            }
-            const localVarPath = `/faction_value/{id}`
-                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, 'https://example.com');
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'DELETE', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-
-    
-            const queryParameters = new URLSearchParams(localVarUrlObj.search);
-            for (const key in localVarQueryParameter) {
-                queryParameters.set(key, localVarQueryParameter[key]);
-            }
-            for (const key in options.query) {
-                queryParameters.set(key, options.query[key]);
-            }
-            localVarUrlObj.search = (new URLSearchParams(queryParameters)).toString();
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-
-            return {
-                url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * 
-         * @summary Gets FactionValue
-         * @param {number} id Id
-         * @param {string} [includes] Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names 
-         * @param {string} [select] Column names [.] separated to fetch specific fields in response
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getFactionValue: async (id: number, includes?: string, select?: string, options: any = {}): Promise<RequestArgs> => {
-            // verify required parameter 'id' is not null or undefined
-            if (id === null || id === undefined) {
-                throw new RequiredError('id','Required parameter id was null or undefined when calling getFactionValue.');
-            }
-            const localVarPath = `/faction_value/{id}`
-                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, 'https://example.com');
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-            if (includes !== undefined) {
-                localVarQueryParameter['includes'] = includes;
-            }
-
-            if (select !== undefined) {
-                localVarQueryParameter['select'] = select;
-            }
-
-
-    
-            const queryParameters = new URLSearchParams(localVarUrlObj.search);
-            for (const key in localVarQueryParameter) {
-                queryParameters.set(key, localVarQueryParameter[key]);
-            }
-            for (const key in options.query) {
-                queryParameters.set(key, options.query[key]);
-            }
-            localVarUrlObj.search = (new URLSearchParams(queryParameters)).toString();
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-
-            return {
-                url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * 
-         * @summary Lists FactionValues
-         * @param {string} [includes] Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names 
-         * @param {string} [where] Filter on specific fields. Multiple conditions [.] separated Example: col_like_value.col2__val2
-         * @param {string} [limit] Rows to limit in response (Default: 10,000)
-         * @param {string} [orderBy] Order by [field]
-         * @param {string} [orderDirection] Order by field direction
-         * @param {string} [select] Column names [.] separated to fetch specific fields in response
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        listFactionValues: async (includes?: string, where?: string, limit?: string, orderBy?: string, orderDirection?: string, select?: string, options: any = {}): Promise<RequestArgs> => {
-            const localVarPath = `/faction_values`;
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, 'https://example.com');
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-            if (includes !== undefined) {
-                localVarQueryParameter['includes'] = includes;
-            }
-
-            if (where !== undefined) {
-                localVarQueryParameter['where'] = where;
-            }
-
-            if (limit !== undefined) {
-                localVarQueryParameter['limit'] = limit;
-            }
-
-            if (orderBy !== undefined) {
-                localVarQueryParameter['orderBy'] = orderBy;
-            }
-
-            if (orderDirection !== undefined) {
-                localVarQueryParameter['orderDirection'] = orderDirection;
-            }
-
-            if (select !== undefined) {
-                localVarQueryParameter['select'] = select;
-            }
-
-
-    
-            const queryParameters = new URLSearchParams(localVarUrlObj.search);
-            for (const key in localVarQueryParameter) {
-                queryParameters.set(key, localVarQueryParameter[key]);
-            }
-            for (const key in options.query) {
-                queryParameters.set(key, options.query[key]);
-            }
-            localVarUrlObj.search = (new URLSearchParams(queryParameters)).toString();
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-
-            return {
-                url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * 
-         * @summary Updates FactionValue
-         * @param {number} id Id
-         * @param {ModelsFactionValue} factionValue FactionValue
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        updateFactionValue: async (id: number, factionValue: ModelsFactionValue, options: any = {}): Promise<RequestArgs> => {
-            // verify required parameter 'id' is not null or undefined
-            if (id === null || id === undefined) {
-                throw new RequiredError('id','Required parameter id was null or undefined when calling updateFactionValue.');
-            }
-            // verify required parameter 'factionValue' is not null or undefined
-            if (factionValue === null || factionValue === undefined) {
-                throw new RequiredError('factionValue','Required parameter factionValue was null or undefined when calling updateFactionValue.');
-            }
-            const localVarPath = `/faction_value/{id}`
-                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, 'https://example.com');
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'PATCH', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-
-    
-            localVarHeaderParameter['Content-Type'] = 'application/json';
-
-            const queryParameters = new URLSearchParams(localVarUrlObj.search);
-            for (const key in localVarQueryParameter) {
-                queryParameters.set(key, localVarQueryParameter[key]);
-            }
-            for (const key in options.query) {
-                queryParameters.set(key, options.query[key]);
-            }
-            localVarUrlObj.search = (new URLSearchParams(queryParameters)).toString();
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            const nonString = typeof factionValue !== 'string';
-            const needsSerialization = nonString && configuration && configuration.isJsonMime
-                ? configuration.isJsonMime(localVarRequestOptions.headers['Content-Type'])
-                : nonString;
-            localVarRequestOptions.data =  needsSerialization
-                ? JSON.stringify(factionValue !== undefined ? factionValue : {})
-                : (factionValue || "");
-
-            return {
-                url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
-                options: localVarRequestOptions,
-            };
-        },
-    }
-};
-
-/**
- * FactionValueApi - functional programming interface
- * @export
- */
-export const FactionValueApiFp = function(configuration?: Configuration) {
-    return {
-        /**
-         * 
-         * @summary Creates FactionValue
-         * @param {ModelsFactionValue} factionValue FactionValue
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async createFactionValue(factionValue: ModelsFactionValue, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<ModelsFactionValue>>> {
-            const localVarAxiosArgs = await FactionValueApiAxiosParamCreator(configuration).createFactionValue(factionValue, options);
-            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
-                const axiosRequestArgs = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
-                return axios.request(axiosRequestArgs);
-            };
-        },
-        /**
-         * 
-         * @summary Deletes FactionValue
-         * @param {number} id Id
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async deleteFactionValue(id: number, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<string>> {
-            const localVarAxiosArgs = await FactionValueApiAxiosParamCreator(configuration).deleteFactionValue(id, options);
-            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
-                const axiosRequestArgs = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
-                return axios.request(axiosRequestArgs);
-            };
-        },
-        /**
-         * 
-         * @summary Gets FactionValue
-         * @param {number} id Id
-         * @param {string} [includes] Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names 
-         * @param {string} [select] Column names [.] separated to fetch specific fields in response
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async getFactionValue(id: number, includes?: string, select?: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<ModelsFactionValue>>> {
-            const localVarAxiosArgs = await FactionValueApiAxiosParamCreator(configuration).getFactionValue(id, includes, select, options);
-            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
-                const axiosRequestArgs = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
-                return axios.request(axiosRequestArgs);
-            };
-        },
-        /**
-         * 
-         * @summary Lists FactionValues
-         * @param {string} [includes] Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names 
-         * @param {string} [where] Filter on specific fields. Multiple conditions [.] separated Example: col_like_value.col2__val2
-         * @param {string} [limit] Rows to limit in response (Default: 10,000)
-         * @param {string} [orderBy] Order by [field]
-         * @param {string} [orderDirection] Order by field direction
-         * @param {string} [select] Column names [.] separated to fetch specific fields in response
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async listFactionValues(includes?: string, where?: string, limit?: string, orderBy?: string, orderDirection?: string, select?: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<ModelsFactionValue>>> {
-            const localVarAxiosArgs = await FactionValueApiAxiosParamCreator(configuration).listFactionValues(includes, where, limit, orderBy, orderDirection, select, options);
-            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
-                const axiosRequestArgs = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
-                return axios.request(axiosRequestArgs);
-            };
-        },
-        /**
-         * 
-         * @summary Updates FactionValue
-         * @param {number} id Id
-         * @param {ModelsFactionValue} factionValue FactionValue
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async updateFactionValue(id: number, factionValue: ModelsFactionValue, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<ModelsFactionValue>>> {
-            const localVarAxiosArgs = await FactionValueApiAxiosParamCreator(configuration).updateFactionValue(id, factionValue, options);
-            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
-                const axiosRequestArgs = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
-                return axios.request(axiosRequestArgs);
-            };
-        },
-    }
-};
-
-/**
- * FactionValueApi - factory interface
- * @export
- */
-export const FactionValueApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
-    return {
-        /**
-         * 
-         * @summary Creates FactionValue
-         * @param {ModelsFactionValue} factionValue FactionValue
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        createFactionValue(factionValue: ModelsFactionValue, options?: any): AxiosPromise<Array<ModelsFactionValue>> {
-            return FactionValueApiFp(configuration).createFactionValue(factionValue, options).then((request) => request(axios, basePath));
-        },
-        /**
-         * 
-         * @summary Deletes FactionValue
-         * @param {number} id Id
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        deleteFactionValue(id: number, options?: any): AxiosPromise<string> {
-            return FactionValueApiFp(configuration).deleteFactionValue(id, options).then((request) => request(axios, basePath));
-        },
-        /**
-         * 
-         * @summary Gets FactionValue
-         * @param {number} id Id
-         * @param {string} [includes] Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names 
-         * @param {string} [select] Column names [.] separated to fetch specific fields in response
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getFactionValue(id: number, includes?: string, select?: string, options?: any): AxiosPromise<Array<ModelsFactionValue>> {
-            return FactionValueApiFp(configuration).getFactionValue(id, includes, select, options).then((request) => request(axios, basePath));
-        },
-        /**
-         * 
-         * @summary Lists FactionValues
-         * @param {string} [includes] Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names 
-         * @param {string} [where] Filter on specific fields. Multiple conditions [.] separated Example: col_like_value.col2__val2
-         * @param {string} [limit] Rows to limit in response (Default: 10,000)
-         * @param {string} [orderBy] Order by [field]
-         * @param {string} [orderDirection] Order by field direction
-         * @param {string} [select] Column names [.] separated to fetch specific fields in response
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        listFactionValues(includes?: string, where?: string, limit?: string, orderBy?: string, orderDirection?: string, select?: string, options?: any): AxiosPromise<Array<ModelsFactionValue>> {
-            return FactionValueApiFp(configuration).listFactionValues(includes, where, limit, orderBy, orderDirection, select, options).then((request) => request(axios, basePath));
-        },
-        /**
-         * 
-         * @summary Updates FactionValue
-         * @param {number} id Id
-         * @param {ModelsFactionValue} factionValue FactionValue
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        updateFactionValue(id: number, factionValue: ModelsFactionValue, options?: any): AxiosPromise<Array<ModelsFactionValue>> {
-            return FactionValueApiFp(configuration).updateFactionValue(id, factionValue, options).then((request) => request(axios, basePath));
-        },
-    };
-};
-
-/**
- * Request parameters for createFactionValue operation in FactionValueApi.
- * @export
- * @interface FactionValueApiCreateFactionValueRequest
- */
-export interface FactionValueApiCreateFactionValueRequest {
-    /**
-     * FactionValue
-     * @type {ModelsFactionValue}
-     * @memberof FactionValueApiCreateFactionValue
-     */
-    readonly factionValue: ModelsFactionValue
-}
-
-/**
- * Request parameters for deleteFactionValue operation in FactionValueApi.
- * @export
- * @interface FactionValueApiDeleteFactionValueRequest
- */
-export interface FactionValueApiDeleteFactionValueRequest {
-    /**
-     * Id
-     * @type {number}
-     * @memberof FactionValueApiDeleteFactionValue
-     */
-    readonly id: number
-}
-
-/**
- * Request parameters for getFactionValue operation in FactionValueApi.
- * @export
- * @interface FactionValueApiGetFactionValueRequest
- */
-export interface FactionValueApiGetFactionValueRequest {
-    /**
-     * Id
-     * @type {number}
-     * @memberof FactionValueApiGetFactionValue
-     */
-    readonly id: number
-
-    /**
-     * Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names 
-     * @type {string}
-     * @memberof FactionValueApiGetFactionValue
-     */
-    readonly includes?: string
-
-    /**
-     * Column names [.] separated to fetch specific fields in response
-     * @type {string}
-     * @memberof FactionValueApiGetFactionValue
-     */
-    readonly select?: string
-}
-
-/**
- * Request parameters for listFactionValues operation in FactionValueApi.
- * @export
- * @interface FactionValueApiListFactionValuesRequest
- */
-export interface FactionValueApiListFactionValuesRequest {
-    /**
-     * Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names 
-     * @type {string}
-     * @memberof FactionValueApiListFactionValues
-     */
-    readonly includes?: string
-
-    /**
-     * Filter on specific fields. Multiple conditions [.] separated Example: col_like_value.col2__val2
-     * @type {string}
-     * @memberof FactionValueApiListFactionValues
-     */
-    readonly where?: string
-
-    /**
-     * Rows to limit in response (Default: 10,000)
-     * @type {string}
-     * @memberof FactionValueApiListFactionValues
-     */
-    readonly limit?: string
-
-    /**
-     * Order by [field]
-     * @type {string}
-     * @memberof FactionValueApiListFactionValues
-     */
-    readonly orderBy?: string
-
-    /**
-     * Order by field direction
-     * @type {string}
-     * @memberof FactionValueApiListFactionValues
-     */
-    readonly orderDirection?: string
-
-    /**
-     * Column names [.] separated to fetch specific fields in response
-     * @type {string}
-     * @memberof FactionValueApiListFactionValues
-     */
-    readonly select?: string
-}
-
-/**
- * Request parameters for updateFactionValue operation in FactionValueApi.
- * @export
- * @interface FactionValueApiUpdateFactionValueRequest
- */
-export interface FactionValueApiUpdateFactionValueRequest {
-    /**
-     * Id
-     * @type {number}
-     * @memberof FactionValueApiUpdateFactionValue
-     */
-    readonly id: number
-
-    /**
-     * FactionValue
-     * @type {ModelsFactionValue}
-     * @memberof FactionValueApiUpdateFactionValue
-     */
-    readonly factionValue: ModelsFactionValue
-}
-
-/**
- * FactionValueApi - object-oriented interface
- * @export
- * @class FactionValueApi
- * @extends {BaseAPI}
- */
-export class FactionValueApi extends BaseAPI {
-    /**
-     * 
-     * @summary Creates FactionValue
-     * @param {FactionValueApiCreateFactionValueRequest} requestParameters Request parameters.
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof FactionValueApi
-     */
-    public createFactionValue(requestParameters: FactionValueApiCreateFactionValueRequest, options?: any) {
-        return FactionValueApiFp(this.configuration).createFactionValue(requestParameters.factionValue, options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
-     * 
-     * @summary Deletes FactionValue
-     * @param {FactionValueApiDeleteFactionValueRequest} requestParameters Request parameters.
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof FactionValueApi
-     */
-    public deleteFactionValue(requestParameters: FactionValueApiDeleteFactionValueRequest, options?: any) {
-        return FactionValueApiFp(this.configuration).deleteFactionValue(requestParameters.id, options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
-     * 
-     * @summary Gets FactionValue
-     * @param {FactionValueApiGetFactionValueRequest} requestParameters Request parameters.
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof FactionValueApi
-     */
-    public getFactionValue(requestParameters: FactionValueApiGetFactionValueRequest, options?: any) {
-        return FactionValueApiFp(this.configuration).getFactionValue(requestParameters.id, requestParameters.includes, requestParameters.select, options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
-     * 
-     * @summary Lists FactionValues
-     * @param {FactionValueApiListFactionValuesRequest} requestParameters Request parameters.
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof FactionValueApi
-     */
-    public listFactionValues(requestParameters: FactionValueApiListFactionValuesRequest = {}, options?: any) {
-        return FactionValueApiFp(this.configuration).listFactionValues(requestParameters.includes, requestParameters.where, requestParameters.limit, requestParameters.orderBy, requestParameters.orderDirection, requestParameters.select, options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
-     * 
-     * @summary Updates FactionValue
-     * @param {FactionValueApiUpdateFactionValueRequest} requestParameters Request parameters.
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof FactionValueApi
-     */
-    public updateFactionValue(requestParameters: FactionValueApiUpdateFactionValueRequest, options?: any) {
-        return FactionValueApiFp(this.configuration).updateFactionValue(requestParameters.id, requestParameters.factionValue, options).then((request) => request(this.axios, this.basePath));
     }
 }
 
@@ -46421,635 +41655,6 @@ export class GridApi extends BaseAPI {
 
 
 /**
- * GridEntryApi - axios parameter creator
- * @export
- */
-export const GridEntryApiAxiosParamCreator = function (configuration?: Configuration) {
-    return {
-        /**
-         * 
-         * @summary Creates GridEntry
-         * @param {ModelsGridEntry} gridEntry GridEntry
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        createGridEntry: async (gridEntry: ModelsGridEntry, options: any = {}): Promise<RequestArgs> => {
-            // verify required parameter 'gridEntry' is not null or undefined
-            if (gridEntry === null || gridEntry === undefined) {
-                throw new RequiredError('gridEntry','Required parameter gridEntry was null or undefined when calling createGridEntry.');
-            }
-            const localVarPath = `/grid_entry`;
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, 'https://example.com');
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'PUT', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-
-    
-            localVarHeaderParameter['Content-Type'] = 'application/json';
-
-            const queryParameters = new URLSearchParams(localVarUrlObj.search);
-            for (const key in localVarQueryParameter) {
-                queryParameters.set(key, localVarQueryParameter[key]);
-            }
-            for (const key in options.query) {
-                queryParameters.set(key, options.query[key]);
-            }
-            localVarUrlObj.search = (new URLSearchParams(queryParameters)).toString();
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            const nonString = typeof gridEntry !== 'string';
-            const needsSerialization = nonString && configuration && configuration.isJsonMime
-                ? configuration.isJsonMime(localVarRequestOptions.headers['Content-Type'])
-                : nonString;
-            localVarRequestOptions.data =  needsSerialization
-                ? JSON.stringify(gridEntry !== undefined ? gridEntry : {})
-                : (gridEntry || "");
-
-            return {
-                url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * 
-         * @summary Deletes GridEntry
-         * @param {number} id Id
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        deleteGridEntry: async (id: number, options: any = {}): Promise<RequestArgs> => {
-            // verify required parameter 'id' is not null or undefined
-            if (id === null || id === undefined) {
-                throw new RequiredError('id','Required parameter id was null or undefined when calling deleteGridEntry.');
-            }
-            const localVarPath = `/grid_entry/{id}`
-                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, 'https://example.com');
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'DELETE', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-
-    
-            const queryParameters = new URLSearchParams(localVarUrlObj.search);
-            for (const key in localVarQueryParameter) {
-                queryParameters.set(key, localVarQueryParameter[key]);
-            }
-            for (const key in options.query) {
-                queryParameters.set(key, options.query[key]);
-            }
-            localVarUrlObj.search = (new URLSearchParams(queryParameters)).toString();
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-
-            return {
-                url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * 
-         * @summary Gets GridEntry
-         * @param {number} id Id
-         * @param {string} [includes] Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names 
-         * @param {string} [select] Column names [.] separated to fetch specific fields in response
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getGridEntry: async (id: number, includes?: string, select?: string, options: any = {}): Promise<RequestArgs> => {
-            // verify required parameter 'id' is not null or undefined
-            if (id === null || id === undefined) {
-                throw new RequiredError('id','Required parameter id was null or undefined when calling getGridEntry.');
-            }
-            const localVarPath = `/grid_entry/{id}`
-                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, 'https://example.com');
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-            if (includes !== undefined) {
-                localVarQueryParameter['includes'] = includes;
-            }
-
-            if (select !== undefined) {
-                localVarQueryParameter['select'] = select;
-            }
-
-
-    
-            const queryParameters = new URLSearchParams(localVarUrlObj.search);
-            for (const key in localVarQueryParameter) {
-                queryParameters.set(key, localVarQueryParameter[key]);
-            }
-            for (const key in options.query) {
-                queryParameters.set(key, options.query[key]);
-            }
-            localVarUrlObj.search = (new URLSearchParams(queryParameters)).toString();
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-
-            return {
-                url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * 
-         * @summary Lists GridEntries
-         * @param {string} [includes] Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names 
-         * @param {string} [where] Filter on specific fields. Multiple conditions [.] separated Example: col_like_value.col2__val2
-         * @param {string} [limit] Rows to limit in response (Default: 10,000)
-         * @param {string} [orderBy] Order by [field]
-         * @param {string} [orderDirection] Order by field direction
-         * @param {string} [select] Column names [.] separated to fetch specific fields in response
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        listGridEntries: async (includes?: string, where?: string, limit?: string, orderBy?: string, orderDirection?: string, select?: string, options: any = {}): Promise<RequestArgs> => {
-            const localVarPath = `/grid_entries`;
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, 'https://example.com');
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-            if (includes !== undefined) {
-                localVarQueryParameter['includes'] = includes;
-            }
-
-            if (where !== undefined) {
-                localVarQueryParameter['where'] = where;
-            }
-
-            if (limit !== undefined) {
-                localVarQueryParameter['limit'] = limit;
-            }
-
-            if (orderBy !== undefined) {
-                localVarQueryParameter['orderBy'] = orderBy;
-            }
-
-            if (orderDirection !== undefined) {
-                localVarQueryParameter['orderDirection'] = orderDirection;
-            }
-
-            if (select !== undefined) {
-                localVarQueryParameter['select'] = select;
-            }
-
-
-    
-            const queryParameters = new URLSearchParams(localVarUrlObj.search);
-            for (const key in localVarQueryParameter) {
-                queryParameters.set(key, localVarQueryParameter[key]);
-            }
-            for (const key in options.query) {
-                queryParameters.set(key, options.query[key]);
-            }
-            localVarUrlObj.search = (new URLSearchParams(queryParameters)).toString();
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-
-            return {
-                url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * 
-         * @summary Updates GridEntry
-         * @param {number} id Id
-         * @param {ModelsGridEntry} gridEntry GridEntry
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        updateGridEntry: async (id: number, gridEntry: ModelsGridEntry, options: any = {}): Promise<RequestArgs> => {
-            // verify required parameter 'id' is not null or undefined
-            if (id === null || id === undefined) {
-                throw new RequiredError('id','Required parameter id was null or undefined when calling updateGridEntry.');
-            }
-            // verify required parameter 'gridEntry' is not null or undefined
-            if (gridEntry === null || gridEntry === undefined) {
-                throw new RequiredError('gridEntry','Required parameter gridEntry was null or undefined when calling updateGridEntry.');
-            }
-            const localVarPath = `/grid_entry/{id}`
-                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, 'https://example.com');
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'PATCH', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-
-    
-            localVarHeaderParameter['Content-Type'] = 'application/json';
-
-            const queryParameters = new URLSearchParams(localVarUrlObj.search);
-            for (const key in localVarQueryParameter) {
-                queryParameters.set(key, localVarQueryParameter[key]);
-            }
-            for (const key in options.query) {
-                queryParameters.set(key, options.query[key]);
-            }
-            localVarUrlObj.search = (new URLSearchParams(queryParameters)).toString();
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            const nonString = typeof gridEntry !== 'string';
-            const needsSerialization = nonString && configuration && configuration.isJsonMime
-                ? configuration.isJsonMime(localVarRequestOptions.headers['Content-Type'])
-                : nonString;
-            localVarRequestOptions.data =  needsSerialization
-                ? JSON.stringify(gridEntry !== undefined ? gridEntry : {})
-                : (gridEntry || "");
-
-            return {
-                url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
-                options: localVarRequestOptions,
-            };
-        },
-    }
-};
-
-/**
- * GridEntryApi - functional programming interface
- * @export
- */
-export const GridEntryApiFp = function(configuration?: Configuration) {
-    return {
-        /**
-         * 
-         * @summary Creates GridEntry
-         * @param {ModelsGridEntry} gridEntry GridEntry
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async createGridEntry(gridEntry: ModelsGridEntry, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<ModelsGridEntry>>> {
-            const localVarAxiosArgs = await GridEntryApiAxiosParamCreator(configuration).createGridEntry(gridEntry, options);
-            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
-                const axiosRequestArgs = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
-                return axios.request(axiosRequestArgs);
-            };
-        },
-        /**
-         * 
-         * @summary Deletes GridEntry
-         * @param {number} id Id
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async deleteGridEntry(id: number, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<string>> {
-            const localVarAxiosArgs = await GridEntryApiAxiosParamCreator(configuration).deleteGridEntry(id, options);
-            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
-                const axiosRequestArgs = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
-                return axios.request(axiosRequestArgs);
-            };
-        },
-        /**
-         * 
-         * @summary Gets GridEntry
-         * @param {number} id Id
-         * @param {string} [includes] Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names 
-         * @param {string} [select] Column names [.] separated to fetch specific fields in response
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async getGridEntry(id: number, includes?: string, select?: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<ModelsGridEntry>>> {
-            const localVarAxiosArgs = await GridEntryApiAxiosParamCreator(configuration).getGridEntry(id, includes, select, options);
-            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
-                const axiosRequestArgs = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
-                return axios.request(axiosRequestArgs);
-            };
-        },
-        /**
-         * 
-         * @summary Lists GridEntries
-         * @param {string} [includes] Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names 
-         * @param {string} [where] Filter on specific fields. Multiple conditions [.] separated Example: col_like_value.col2__val2
-         * @param {string} [limit] Rows to limit in response (Default: 10,000)
-         * @param {string} [orderBy] Order by [field]
-         * @param {string} [orderDirection] Order by field direction
-         * @param {string} [select] Column names [.] separated to fetch specific fields in response
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async listGridEntries(includes?: string, where?: string, limit?: string, orderBy?: string, orderDirection?: string, select?: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<ModelsGridEntry>>> {
-            const localVarAxiosArgs = await GridEntryApiAxiosParamCreator(configuration).listGridEntries(includes, where, limit, orderBy, orderDirection, select, options);
-            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
-                const axiosRequestArgs = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
-                return axios.request(axiosRequestArgs);
-            };
-        },
-        /**
-         * 
-         * @summary Updates GridEntry
-         * @param {number} id Id
-         * @param {ModelsGridEntry} gridEntry GridEntry
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async updateGridEntry(id: number, gridEntry: ModelsGridEntry, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<ModelsGridEntry>>> {
-            const localVarAxiosArgs = await GridEntryApiAxiosParamCreator(configuration).updateGridEntry(id, gridEntry, options);
-            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
-                const axiosRequestArgs = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
-                return axios.request(axiosRequestArgs);
-            };
-        },
-    }
-};
-
-/**
- * GridEntryApi - factory interface
- * @export
- */
-export const GridEntryApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
-    return {
-        /**
-         * 
-         * @summary Creates GridEntry
-         * @param {ModelsGridEntry} gridEntry GridEntry
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        createGridEntry(gridEntry: ModelsGridEntry, options?: any): AxiosPromise<Array<ModelsGridEntry>> {
-            return GridEntryApiFp(configuration).createGridEntry(gridEntry, options).then((request) => request(axios, basePath));
-        },
-        /**
-         * 
-         * @summary Deletes GridEntry
-         * @param {number} id Id
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        deleteGridEntry(id: number, options?: any): AxiosPromise<string> {
-            return GridEntryApiFp(configuration).deleteGridEntry(id, options).then((request) => request(axios, basePath));
-        },
-        /**
-         * 
-         * @summary Gets GridEntry
-         * @param {number} id Id
-         * @param {string} [includes] Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names 
-         * @param {string} [select] Column names [.] separated to fetch specific fields in response
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getGridEntry(id: number, includes?: string, select?: string, options?: any): AxiosPromise<Array<ModelsGridEntry>> {
-            return GridEntryApiFp(configuration).getGridEntry(id, includes, select, options).then((request) => request(axios, basePath));
-        },
-        /**
-         * 
-         * @summary Lists GridEntries
-         * @param {string} [includes] Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names 
-         * @param {string} [where] Filter on specific fields. Multiple conditions [.] separated Example: col_like_value.col2__val2
-         * @param {string} [limit] Rows to limit in response (Default: 10,000)
-         * @param {string} [orderBy] Order by [field]
-         * @param {string} [orderDirection] Order by field direction
-         * @param {string} [select] Column names [.] separated to fetch specific fields in response
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        listGridEntries(includes?: string, where?: string, limit?: string, orderBy?: string, orderDirection?: string, select?: string, options?: any): AxiosPromise<Array<ModelsGridEntry>> {
-            return GridEntryApiFp(configuration).listGridEntries(includes, where, limit, orderBy, orderDirection, select, options).then((request) => request(axios, basePath));
-        },
-        /**
-         * 
-         * @summary Updates GridEntry
-         * @param {number} id Id
-         * @param {ModelsGridEntry} gridEntry GridEntry
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        updateGridEntry(id: number, gridEntry: ModelsGridEntry, options?: any): AxiosPromise<Array<ModelsGridEntry>> {
-            return GridEntryApiFp(configuration).updateGridEntry(id, gridEntry, options).then((request) => request(axios, basePath));
-        },
-    };
-};
-
-/**
- * Request parameters for createGridEntry operation in GridEntryApi.
- * @export
- * @interface GridEntryApiCreateGridEntryRequest
- */
-export interface GridEntryApiCreateGridEntryRequest {
-    /**
-     * GridEntry
-     * @type {ModelsGridEntry}
-     * @memberof GridEntryApiCreateGridEntry
-     */
-    readonly gridEntry: ModelsGridEntry
-}
-
-/**
- * Request parameters for deleteGridEntry operation in GridEntryApi.
- * @export
- * @interface GridEntryApiDeleteGridEntryRequest
- */
-export interface GridEntryApiDeleteGridEntryRequest {
-    /**
-     * Id
-     * @type {number}
-     * @memberof GridEntryApiDeleteGridEntry
-     */
-    readonly id: number
-}
-
-/**
- * Request parameters for getGridEntry operation in GridEntryApi.
- * @export
- * @interface GridEntryApiGetGridEntryRequest
- */
-export interface GridEntryApiGetGridEntryRequest {
-    /**
-     * Id
-     * @type {number}
-     * @memberof GridEntryApiGetGridEntry
-     */
-    readonly id: number
-
-    /**
-     * Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names 
-     * @type {string}
-     * @memberof GridEntryApiGetGridEntry
-     */
-    readonly includes?: string
-
-    /**
-     * Column names [.] separated to fetch specific fields in response
-     * @type {string}
-     * @memberof GridEntryApiGetGridEntry
-     */
-    readonly select?: string
-}
-
-/**
- * Request parameters for listGridEntries operation in GridEntryApi.
- * @export
- * @interface GridEntryApiListGridEntriesRequest
- */
-export interface GridEntryApiListGridEntriesRequest {
-    /**
-     * Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names 
-     * @type {string}
-     * @memberof GridEntryApiListGridEntries
-     */
-    readonly includes?: string
-
-    /**
-     * Filter on specific fields. Multiple conditions [.] separated Example: col_like_value.col2__val2
-     * @type {string}
-     * @memberof GridEntryApiListGridEntries
-     */
-    readonly where?: string
-
-    /**
-     * Rows to limit in response (Default: 10,000)
-     * @type {string}
-     * @memberof GridEntryApiListGridEntries
-     */
-    readonly limit?: string
-
-    /**
-     * Order by [field]
-     * @type {string}
-     * @memberof GridEntryApiListGridEntries
-     */
-    readonly orderBy?: string
-
-    /**
-     * Order by field direction
-     * @type {string}
-     * @memberof GridEntryApiListGridEntries
-     */
-    readonly orderDirection?: string
-
-    /**
-     * Column names [.] separated to fetch specific fields in response
-     * @type {string}
-     * @memberof GridEntryApiListGridEntries
-     */
-    readonly select?: string
-}
-
-/**
- * Request parameters for updateGridEntry operation in GridEntryApi.
- * @export
- * @interface GridEntryApiUpdateGridEntryRequest
- */
-export interface GridEntryApiUpdateGridEntryRequest {
-    /**
-     * Id
-     * @type {number}
-     * @memberof GridEntryApiUpdateGridEntry
-     */
-    readonly id: number
-
-    /**
-     * GridEntry
-     * @type {ModelsGridEntry}
-     * @memberof GridEntryApiUpdateGridEntry
-     */
-    readonly gridEntry: ModelsGridEntry
-}
-
-/**
- * GridEntryApi - object-oriented interface
- * @export
- * @class GridEntryApi
- * @extends {BaseAPI}
- */
-export class GridEntryApi extends BaseAPI {
-    /**
-     * 
-     * @summary Creates GridEntry
-     * @param {GridEntryApiCreateGridEntryRequest} requestParameters Request parameters.
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof GridEntryApi
-     */
-    public createGridEntry(requestParameters: GridEntryApiCreateGridEntryRequest, options?: any) {
-        return GridEntryApiFp(this.configuration).createGridEntry(requestParameters.gridEntry, options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
-     * 
-     * @summary Deletes GridEntry
-     * @param {GridEntryApiDeleteGridEntryRequest} requestParameters Request parameters.
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof GridEntryApi
-     */
-    public deleteGridEntry(requestParameters: GridEntryApiDeleteGridEntryRequest, options?: any) {
-        return GridEntryApiFp(this.configuration).deleteGridEntry(requestParameters.id, options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
-     * 
-     * @summary Gets GridEntry
-     * @param {GridEntryApiGetGridEntryRequest} requestParameters Request parameters.
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof GridEntryApi
-     */
-    public getGridEntry(requestParameters: GridEntryApiGetGridEntryRequest, options?: any) {
-        return GridEntryApiFp(this.configuration).getGridEntry(requestParameters.id, requestParameters.includes, requestParameters.select, options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
-     * 
-     * @summary Lists GridEntries
-     * @param {GridEntryApiListGridEntriesRequest} requestParameters Request parameters.
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof GridEntryApi
-     */
-    public listGridEntries(requestParameters: GridEntryApiListGridEntriesRequest = {}, options?: any) {
-        return GridEntryApiFp(this.configuration).listGridEntries(requestParameters.includes, requestParameters.where, requestParameters.limit, requestParameters.orderBy, requestParameters.orderDirection, requestParameters.select, options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
-     * 
-     * @summary Updates GridEntry
-     * @param {GridEntryApiUpdateGridEntryRequest} requestParameters Request parameters.
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof GridEntryApi
-     */
-    public updateGridEntry(requestParameters: GridEntryApiUpdateGridEntryRequest, options?: any) {
-        return GridEntryApiFp(this.configuration).updateGridEntry(requestParameters.id, requestParameters.gridEntry, options).then((request) => request(this.axios, this.basePath));
-    }
-}
-
-
-/**
  * GroundSpawnApi - axios parameter creator
  * @export
  */
@@ -47679,635 +42284,6 @@ export class GroundSpawnApi extends BaseAPI {
 
 
 /**
- * GroupIdApi - axios parameter creator
- * @export
- */
-export const GroupIdApiAxiosParamCreator = function (configuration?: Configuration) {
-    return {
-        /**
-         * 
-         * @summary Creates GroupId
-         * @param {ModelsGroupId} groupId GroupId
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        createGroupId: async (groupId: ModelsGroupId, options: any = {}): Promise<RequestArgs> => {
-            // verify required parameter 'groupId' is not null or undefined
-            if (groupId === null || groupId === undefined) {
-                throw new RequiredError('groupId','Required parameter groupId was null or undefined when calling createGroupId.');
-            }
-            const localVarPath = `/group_id`;
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, 'https://example.com');
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'PUT', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-
-    
-            localVarHeaderParameter['Content-Type'] = 'application/json';
-
-            const queryParameters = new URLSearchParams(localVarUrlObj.search);
-            for (const key in localVarQueryParameter) {
-                queryParameters.set(key, localVarQueryParameter[key]);
-            }
-            for (const key in options.query) {
-                queryParameters.set(key, options.query[key]);
-            }
-            localVarUrlObj.search = (new URLSearchParams(queryParameters)).toString();
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            const nonString = typeof groupId !== 'string';
-            const needsSerialization = nonString && configuration && configuration.isJsonMime
-                ? configuration.isJsonMime(localVarRequestOptions.headers['Content-Type'])
-                : nonString;
-            localVarRequestOptions.data =  needsSerialization
-                ? JSON.stringify(groupId !== undefined ? groupId : {})
-                : (groupId || "");
-
-            return {
-                url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * 
-         * @summary Deletes GroupId
-         * @param {number} id Id
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        deleteGroupId: async (id: number, options: any = {}): Promise<RequestArgs> => {
-            // verify required parameter 'id' is not null or undefined
-            if (id === null || id === undefined) {
-                throw new RequiredError('id','Required parameter id was null or undefined when calling deleteGroupId.');
-            }
-            const localVarPath = `/group_id/{id}`
-                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, 'https://example.com');
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'DELETE', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-
-    
-            const queryParameters = new URLSearchParams(localVarUrlObj.search);
-            for (const key in localVarQueryParameter) {
-                queryParameters.set(key, localVarQueryParameter[key]);
-            }
-            for (const key in options.query) {
-                queryParameters.set(key, options.query[key]);
-            }
-            localVarUrlObj.search = (new URLSearchParams(queryParameters)).toString();
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-
-            return {
-                url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * 
-         * @summary Gets GroupId
-         * @param {number} id Id
-         * @param {string} [includes] Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names 
-         * @param {string} [select] Column names [.] separated to fetch specific fields in response
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getGroupId: async (id: number, includes?: string, select?: string, options: any = {}): Promise<RequestArgs> => {
-            // verify required parameter 'id' is not null or undefined
-            if (id === null || id === undefined) {
-                throw new RequiredError('id','Required parameter id was null or undefined when calling getGroupId.');
-            }
-            const localVarPath = `/group_id/{id}`
-                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, 'https://example.com');
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-            if (includes !== undefined) {
-                localVarQueryParameter['includes'] = includes;
-            }
-
-            if (select !== undefined) {
-                localVarQueryParameter['select'] = select;
-            }
-
-
-    
-            const queryParameters = new URLSearchParams(localVarUrlObj.search);
-            for (const key in localVarQueryParameter) {
-                queryParameters.set(key, localVarQueryParameter[key]);
-            }
-            for (const key in options.query) {
-                queryParameters.set(key, options.query[key]);
-            }
-            localVarUrlObj.search = (new URLSearchParams(queryParameters)).toString();
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-
-            return {
-                url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * 
-         * @summary Lists GroupIds
-         * @param {string} [includes] Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names 
-         * @param {string} [where] Filter on specific fields. Multiple conditions [.] separated Example: col_like_value.col2__val2
-         * @param {string} [limit] Rows to limit in response (Default: 10,000)
-         * @param {string} [orderBy] Order by [field]
-         * @param {string} [orderDirection] Order by field direction
-         * @param {string} [select] Column names [.] separated to fetch specific fields in response
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        listGroupIds: async (includes?: string, where?: string, limit?: string, orderBy?: string, orderDirection?: string, select?: string, options: any = {}): Promise<RequestArgs> => {
-            const localVarPath = `/group_ids`;
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, 'https://example.com');
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-            if (includes !== undefined) {
-                localVarQueryParameter['includes'] = includes;
-            }
-
-            if (where !== undefined) {
-                localVarQueryParameter['where'] = where;
-            }
-
-            if (limit !== undefined) {
-                localVarQueryParameter['limit'] = limit;
-            }
-
-            if (orderBy !== undefined) {
-                localVarQueryParameter['orderBy'] = orderBy;
-            }
-
-            if (orderDirection !== undefined) {
-                localVarQueryParameter['orderDirection'] = orderDirection;
-            }
-
-            if (select !== undefined) {
-                localVarQueryParameter['select'] = select;
-            }
-
-
-    
-            const queryParameters = new URLSearchParams(localVarUrlObj.search);
-            for (const key in localVarQueryParameter) {
-                queryParameters.set(key, localVarQueryParameter[key]);
-            }
-            for (const key in options.query) {
-                queryParameters.set(key, options.query[key]);
-            }
-            localVarUrlObj.search = (new URLSearchParams(queryParameters)).toString();
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-
-            return {
-                url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * 
-         * @summary Updates GroupId
-         * @param {number} id Id
-         * @param {ModelsGroupId} groupId GroupId
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        updateGroupId: async (id: number, groupId: ModelsGroupId, options: any = {}): Promise<RequestArgs> => {
-            // verify required parameter 'id' is not null or undefined
-            if (id === null || id === undefined) {
-                throw new RequiredError('id','Required parameter id was null or undefined when calling updateGroupId.');
-            }
-            // verify required parameter 'groupId' is not null or undefined
-            if (groupId === null || groupId === undefined) {
-                throw new RequiredError('groupId','Required parameter groupId was null or undefined when calling updateGroupId.');
-            }
-            const localVarPath = `/group_id/{id}`
-                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, 'https://example.com');
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'PATCH', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-
-    
-            localVarHeaderParameter['Content-Type'] = 'application/json';
-
-            const queryParameters = new URLSearchParams(localVarUrlObj.search);
-            for (const key in localVarQueryParameter) {
-                queryParameters.set(key, localVarQueryParameter[key]);
-            }
-            for (const key in options.query) {
-                queryParameters.set(key, options.query[key]);
-            }
-            localVarUrlObj.search = (new URLSearchParams(queryParameters)).toString();
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            const nonString = typeof groupId !== 'string';
-            const needsSerialization = nonString && configuration && configuration.isJsonMime
-                ? configuration.isJsonMime(localVarRequestOptions.headers['Content-Type'])
-                : nonString;
-            localVarRequestOptions.data =  needsSerialization
-                ? JSON.stringify(groupId !== undefined ? groupId : {})
-                : (groupId || "");
-
-            return {
-                url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
-                options: localVarRequestOptions,
-            };
-        },
-    }
-};
-
-/**
- * GroupIdApi - functional programming interface
- * @export
- */
-export const GroupIdApiFp = function(configuration?: Configuration) {
-    return {
-        /**
-         * 
-         * @summary Creates GroupId
-         * @param {ModelsGroupId} groupId GroupId
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async createGroupId(groupId: ModelsGroupId, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<ModelsGroupId>>> {
-            const localVarAxiosArgs = await GroupIdApiAxiosParamCreator(configuration).createGroupId(groupId, options);
-            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
-                const axiosRequestArgs = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
-                return axios.request(axiosRequestArgs);
-            };
-        },
-        /**
-         * 
-         * @summary Deletes GroupId
-         * @param {number} id Id
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async deleteGroupId(id: number, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<string>> {
-            const localVarAxiosArgs = await GroupIdApiAxiosParamCreator(configuration).deleteGroupId(id, options);
-            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
-                const axiosRequestArgs = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
-                return axios.request(axiosRequestArgs);
-            };
-        },
-        /**
-         * 
-         * @summary Gets GroupId
-         * @param {number} id Id
-         * @param {string} [includes] Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names 
-         * @param {string} [select] Column names [.] separated to fetch specific fields in response
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async getGroupId(id: number, includes?: string, select?: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<ModelsGroupId>>> {
-            const localVarAxiosArgs = await GroupIdApiAxiosParamCreator(configuration).getGroupId(id, includes, select, options);
-            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
-                const axiosRequestArgs = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
-                return axios.request(axiosRequestArgs);
-            };
-        },
-        /**
-         * 
-         * @summary Lists GroupIds
-         * @param {string} [includes] Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names 
-         * @param {string} [where] Filter on specific fields. Multiple conditions [.] separated Example: col_like_value.col2__val2
-         * @param {string} [limit] Rows to limit in response (Default: 10,000)
-         * @param {string} [orderBy] Order by [field]
-         * @param {string} [orderDirection] Order by field direction
-         * @param {string} [select] Column names [.] separated to fetch specific fields in response
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async listGroupIds(includes?: string, where?: string, limit?: string, orderBy?: string, orderDirection?: string, select?: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<ModelsGroupId>>> {
-            const localVarAxiosArgs = await GroupIdApiAxiosParamCreator(configuration).listGroupIds(includes, where, limit, orderBy, orderDirection, select, options);
-            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
-                const axiosRequestArgs = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
-                return axios.request(axiosRequestArgs);
-            };
-        },
-        /**
-         * 
-         * @summary Updates GroupId
-         * @param {number} id Id
-         * @param {ModelsGroupId} groupId GroupId
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async updateGroupId(id: number, groupId: ModelsGroupId, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<ModelsGroupId>>> {
-            const localVarAxiosArgs = await GroupIdApiAxiosParamCreator(configuration).updateGroupId(id, groupId, options);
-            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
-                const axiosRequestArgs = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
-                return axios.request(axiosRequestArgs);
-            };
-        },
-    }
-};
-
-/**
- * GroupIdApi - factory interface
- * @export
- */
-export const GroupIdApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
-    return {
-        /**
-         * 
-         * @summary Creates GroupId
-         * @param {ModelsGroupId} groupId GroupId
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        createGroupId(groupId: ModelsGroupId, options?: any): AxiosPromise<Array<ModelsGroupId>> {
-            return GroupIdApiFp(configuration).createGroupId(groupId, options).then((request) => request(axios, basePath));
-        },
-        /**
-         * 
-         * @summary Deletes GroupId
-         * @param {number} id Id
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        deleteGroupId(id: number, options?: any): AxiosPromise<string> {
-            return GroupIdApiFp(configuration).deleteGroupId(id, options).then((request) => request(axios, basePath));
-        },
-        /**
-         * 
-         * @summary Gets GroupId
-         * @param {number} id Id
-         * @param {string} [includes] Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names 
-         * @param {string} [select] Column names [.] separated to fetch specific fields in response
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getGroupId(id: number, includes?: string, select?: string, options?: any): AxiosPromise<Array<ModelsGroupId>> {
-            return GroupIdApiFp(configuration).getGroupId(id, includes, select, options).then((request) => request(axios, basePath));
-        },
-        /**
-         * 
-         * @summary Lists GroupIds
-         * @param {string} [includes] Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names 
-         * @param {string} [where] Filter on specific fields. Multiple conditions [.] separated Example: col_like_value.col2__val2
-         * @param {string} [limit] Rows to limit in response (Default: 10,000)
-         * @param {string} [orderBy] Order by [field]
-         * @param {string} [orderDirection] Order by field direction
-         * @param {string} [select] Column names [.] separated to fetch specific fields in response
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        listGroupIds(includes?: string, where?: string, limit?: string, orderBy?: string, orderDirection?: string, select?: string, options?: any): AxiosPromise<Array<ModelsGroupId>> {
-            return GroupIdApiFp(configuration).listGroupIds(includes, where, limit, orderBy, orderDirection, select, options).then((request) => request(axios, basePath));
-        },
-        /**
-         * 
-         * @summary Updates GroupId
-         * @param {number} id Id
-         * @param {ModelsGroupId} groupId GroupId
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        updateGroupId(id: number, groupId: ModelsGroupId, options?: any): AxiosPromise<Array<ModelsGroupId>> {
-            return GroupIdApiFp(configuration).updateGroupId(id, groupId, options).then((request) => request(axios, basePath));
-        },
-    };
-};
-
-/**
- * Request parameters for createGroupId operation in GroupIdApi.
- * @export
- * @interface GroupIdApiCreateGroupIdRequest
- */
-export interface GroupIdApiCreateGroupIdRequest {
-    /**
-     * GroupId
-     * @type {ModelsGroupId}
-     * @memberof GroupIdApiCreateGroupId
-     */
-    readonly groupId: ModelsGroupId
-}
-
-/**
- * Request parameters for deleteGroupId operation in GroupIdApi.
- * @export
- * @interface GroupIdApiDeleteGroupIdRequest
- */
-export interface GroupIdApiDeleteGroupIdRequest {
-    /**
-     * Id
-     * @type {number}
-     * @memberof GroupIdApiDeleteGroupId
-     */
-    readonly id: number
-}
-
-/**
- * Request parameters for getGroupId operation in GroupIdApi.
- * @export
- * @interface GroupIdApiGetGroupIdRequest
- */
-export interface GroupIdApiGetGroupIdRequest {
-    /**
-     * Id
-     * @type {number}
-     * @memberof GroupIdApiGetGroupId
-     */
-    readonly id: number
-
-    /**
-     * Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names 
-     * @type {string}
-     * @memberof GroupIdApiGetGroupId
-     */
-    readonly includes?: string
-
-    /**
-     * Column names [.] separated to fetch specific fields in response
-     * @type {string}
-     * @memberof GroupIdApiGetGroupId
-     */
-    readonly select?: string
-}
-
-/**
- * Request parameters for listGroupIds operation in GroupIdApi.
- * @export
- * @interface GroupIdApiListGroupIdsRequest
- */
-export interface GroupIdApiListGroupIdsRequest {
-    /**
-     * Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names 
-     * @type {string}
-     * @memberof GroupIdApiListGroupIds
-     */
-    readonly includes?: string
-
-    /**
-     * Filter on specific fields. Multiple conditions [.] separated Example: col_like_value.col2__val2
-     * @type {string}
-     * @memberof GroupIdApiListGroupIds
-     */
-    readonly where?: string
-
-    /**
-     * Rows to limit in response (Default: 10,000)
-     * @type {string}
-     * @memberof GroupIdApiListGroupIds
-     */
-    readonly limit?: string
-
-    /**
-     * Order by [field]
-     * @type {string}
-     * @memberof GroupIdApiListGroupIds
-     */
-    readonly orderBy?: string
-
-    /**
-     * Order by field direction
-     * @type {string}
-     * @memberof GroupIdApiListGroupIds
-     */
-    readonly orderDirection?: string
-
-    /**
-     * Column names [.] separated to fetch specific fields in response
-     * @type {string}
-     * @memberof GroupIdApiListGroupIds
-     */
-    readonly select?: string
-}
-
-/**
- * Request parameters for updateGroupId operation in GroupIdApi.
- * @export
- * @interface GroupIdApiUpdateGroupIdRequest
- */
-export interface GroupIdApiUpdateGroupIdRequest {
-    /**
-     * Id
-     * @type {number}
-     * @memberof GroupIdApiUpdateGroupId
-     */
-    readonly id: number
-
-    /**
-     * GroupId
-     * @type {ModelsGroupId}
-     * @memberof GroupIdApiUpdateGroupId
-     */
-    readonly groupId: ModelsGroupId
-}
-
-/**
- * GroupIdApi - object-oriented interface
- * @export
- * @class GroupIdApi
- * @extends {BaseAPI}
- */
-export class GroupIdApi extends BaseAPI {
-    /**
-     * 
-     * @summary Creates GroupId
-     * @param {GroupIdApiCreateGroupIdRequest} requestParameters Request parameters.
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof GroupIdApi
-     */
-    public createGroupId(requestParameters: GroupIdApiCreateGroupIdRequest, options?: any) {
-        return GroupIdApiFp(this.configuration).createGroupId(requestParameters.groupId, options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
-     * 
-     * @summary Deletes GroupId
-     * @param {GroupIdApiDeleteGroupIdRequest} requestParameters Request parameters.
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof GroupIdApi
-     */
-    public deleteGroupId(requestParameters: GroupIdApiDeleteGroupIdRequest, options?: any) {
-        return GroupIdApiFp(this.configuration).deleteGroupId(requestParameters.id, options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
-     * 
-     * @summary Gets GroupId
-     * @param {GroupIdApiGetGroupIdRequest} requestParameters Request parameters.
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof GroupIdApi
-     */
-    public getGroupId(requestParameters: GroupIdApiGetGroupIdRequest, options?: any) {
-        return GroupIdApiFp(this.configuration).getGroupId(requestParameters.id, requestParameters.includes, requestParameters.select, options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
-     * 
-     * @summary Lists GroupIds
-     * @param {GroupIdApiListGroupIdsRequest} requestParameters Request parameters.
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof GroupIdApi
-     */
-    public listGroupIds(requestParameters: GroupIdApiListGroupIdsRequest = {}, options?: any) {
-        return GroupIdApiFp(this.configuration).listGroupIds(requestParameters.includes, requestParameters.where, requestParameters.limit, requestParameters.orderBy, requestParameters.orderDirection, requestParameters.select, options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
-     * 
-     * @summary Updates GroupId
-     * @param {GroupIdApiUpdateGroupIdRequest} requestParameters Request parameters.
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof GroupIdApi
-     */
-    public updateGroupId(requestParameters: GroupIdApiUpdateGroupIdRequest, options?: any) {
-        return GroupIdApiFp(this.configuration).updateGroupId(requestParameters.id, requestParameters.groupId, options).then((request) => request(this.axios, this.basePath));
-    }
-}
-
-
-/**
  * GuildApi - axios parameter creator
  * @export
  */
@@ -48932,635 +42908,6 @@ export class GuildApi extends BaseAPI {
      */
     public updateGuild(requestParameters: GuildApiUpdateGuildRequest, options?: any) {
         return GuildApiFp(this.configuration).updateGuild(requestParameters.id, requestParameters.guild, options).then((request) => request(this.axios, this.basePath));
-    }
-}
-
-
-/**
- * GuildMemberApi - axios parameter creator
- * @export
- */
-export const GuildMemberApiAxiosParamCreator = function (configuration?: Configuration) {
-    return {
-        /**
-         * 
-         * @summary Creates GuildMember
-         * @param {ModelsGuildMember} guildMember GuildMember
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        createGuildMember: async (guildMember: ModelsGuildMember, options: any = {}): Promise<RequestArgs> => {
-            // verify required parameter 'guildMember' is not null or undefined
-            if (guildMember === null || guildMember === undefined) {
-                throw new RequiredError('guildMember','Required parameter guildMember was null or undefined when calling createGuildMember.');
-            }
-            const localVarPath = `/guild_member`;
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, 'https://example.com');
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'PUT', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-
-    
-            localVarHeaderParameter['Content-Type'] = 'application/json';
-
-            const queryParameters = new URLSearchParams(localVarUrlObj.search);
-            for (const key in localVarQueryParameter) {
-                queryParameters.set(key, localVarQueryParameter[key]);
-            }
-            for (const key in options.query) {
-                queryParameters.set(key, options.query[key]);
-            }
-            localVarUrlObj.search = (new URLSearchParams(queryParameters)).toString();
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            const nonString = typeof guildMember !== 'string';
-            const needsSerialization = nonString && configuration && configuration.isJsonMime
-                ? configuration.isJsonMime(localVarRequestOptions.headers['Content-Type'])
-                : nonString;
-            localVarRequestOptions.data =  needsSerialization
-                ? JSON.stringify(guildMember !== undefined ? guildMember : {})
-                : (guildMember || "");
-
-            return {
-                url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * 
-         * @summary Deletes GuildMember
-         * @param {number} id Id
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        deleteGuildMember: async (id: number, options: any = {}): Promise<RequestArgs> => {
-            // verify required parameter 'id' is not null or undefined
-            if (id === null || id === undefined) {
-                throw new RequiredError('id','Required parameter id was null or undefined when calling deleteGuildMember.');
-            }
-            const localVarPath = `/guild_member/{id}`
-                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, 'https://example.com');
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'DELETE', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-
-    
-            const queryParameters = new URLSearchParams(localVarUrlObj.search);
-            for (const key in localVarQueryParameter) {
-                queryParameters.set(key, localVarQueryParameter[key]);
-            }
-            for (const key in options.query) {
-                queryParameters.set(key, options.query[key]);
-            }
-            localVarUrlObj.search = (new URLSearchParams(queryParameters)).toString();
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-
-            return {
-                url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * 
-         * @summary Gets GuildMember
-         * @param {number} id Id
-         * @param {string} [includes] Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names 
-         * @param {string} [select] Column names [.] separated to fetch specific fields in response
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getGuildMember: async (id: number, includes?: string, select?: string, options: any = {}): Promise<RequestArgs> => {
-            // verify required parameter 'id' is not null or undefined
-            if (id === null || id === undefined) {
-                throw new RequiredError('id','Required parameter id was null or undefined when calling getGuildMember.');
-            }
-            const localVarPath = `/guild_member/{id}`
-                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, 'https://example.com');
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-            if (includes !== undefined) {
-                localVarQueryParameter['includes'] = includes;
-            }
-
-            if (select !== undefined) {
-                localVarQueryParameter['select'] = select;
-            }
-
-
-    
-            const queryParameters = new URLSearchParams(localVarUrlObj.search);
-            for (const key in localVarQueryParameter) {
-                queryParameters.set(key, localVarQueryParameter[key]);
-            }
-            for (const key in options.query) {
-                queryParameters.set(key, options.query[key]);
-            }
-            localVarUrlObj.search = (new URLSearchParams(queryParameters)).toString();
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-
-            return {
-                url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * 
-         * @summary Lists GuildMembers
-         * @param {string} [includes] Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names 
-         * @param {string} [where] Filter on specific fields. Multiple conditions [.] separated Example: col_like_value.col2__val2
-         * @param {string} [limit] Rows to limit in response (Default: 10,000)
-         * @param {string} [orderBy] Order by [field]
-         * @param {string} [orderDirection] Order by field direction
-         * @param {string} [select] Column names [.] separated to fetch specific fields in response
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        listGuildMembers: async (includes?: string, where?: string, limit?: string, orderBy?: string, orderDirection?: string, select?: string, options: any = {}): Promise<RequestArgs> => {
-            const localVarPath = `/guild_members`;
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, 'https://example.com');
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-            if (includes !== undefined) {
-                localVarQueryParameter['includes'] = includes;
-            }
-
-            if (where !== undefined) {
-                localVarQueryParameter['where'] = where;
-            }
-
-            if (limit !== undefined) {
-                localVarQueryParameter['limit'] = limit;
-            }
-
-            if (orderBy !== undefined) {
-                localVarQueryParameter['orderBy'] = orderBy;
-            }
-
-            if (orderDirection !== undefined) {
-                localVarQueryParameter['orderDirection'] = orderDirection;
-            }
-
-            if (select !== undefined) {
-                localVarQueryParameter['select'] = select;
-            }
-
-
-    
-            const queryParameters = new URLSearchParams(localVarUrlObj.search);
-            for (const key in localVarQueryParameter) {
-                queryParameters.set(key, localVarQueryParameter[key]);
-            }
-            for (const key in options.query) {
-                queryParameters.set(key, options.query[key]);
-            }
-            localVarUrlObj.search = (new URLSearchParams(queryParameters)).toString();
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-
-            return {
-                url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * 
-         * @summary Updates GuildMember
-         * @param {number} id Id
-         * @param {ModelsGuildMember} guildMember GuildMember
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        updateGuildMember: async (id: number, guildMember: ModelsGuildMember, options: any = {}): Promise<RequestArgs> => {
-            // verify required parameter 'id' is not null or undefined
-            if (id === null || id === undefined) {
-                throw new RequiredError('id','Required parameter id was null or undefined when calling updateGuildMember.');
-            }
-            // verify required parameter 'guildMember' is not null or undefined
-            if (guildMember === null || guildMember === undefined) {
-                throw new RequiredError('guildMember','Required parameter guildMember was null or undefined when calling updateGuildMember.');
-            }
-            const localVarPath = `/guild_member/{id}`
-                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, 'https://example.com');
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'PATCH', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-
-    
-            localVarHeaderParameter['Content-Type'] = 'application/json';
-
-            const queryParameters = new URLSearchParams(localVarUrlObj.search);
-            for (const key in localVarQueryParameter) {
-                queryParameters.set(key, localVarQueryParameter[key]);
-            }
-            for (const key in options.query) {
-                queryParameters.set(key, options.query[key]);
-            }
-            localVarUrlObj.search = (new URLSearchParams(queryParameters)).toString();
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            const nonString = typeof guildMember !== 'string';
-            const needsSerialization = nonString && configuration && configuration.isJsonMime
-                ? configuration.isJsonMime(localVarRequestOptions.headers['Content-Type'])
-                : nonString;
-            localVarRequestOptions.data =  needsSerialization
-                ? JSON.stringify(guildMember !== undefined ? guildMember : {})
-                : (guildMember || "");
-
-            return {
-                url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
-                options: localVarRequestOptions,
-            };
-        },
-    }
-};
-
-/**
- * GuildMemberApi - functional programming interface
- * @export
- */
-export const GuildMemberApiFp = function(configuration?: Configuration) {
-    return {
-        /**
-         * 
-         * @summary Creates GuildMember
-         * @param {ModelsGuildMember} guildMember GuildMember
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async createGuildMember(guildMember: ModelsGuildMember, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<ModelsGuildMember>>> {
-            const localVarAxiosArgs = await GuildMemberApiAxiosParamCreator(configuration).createGuildMember(guildMember, options);
-            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
-                const axiosRequestArgs = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
-                return axios.request(axiosRequestArgs);
-            };
-        },
-        /**
-         * 
-         * @summary Deletes GuildMember
-         * @param {number} id Id
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async deleteGuildMember(id: number, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<string>> {
-            const localVarAxiosArgs = await GuildMemberApiAxiosParamCreator(configuration).deleteGuildMember(id, options);
-            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
-                const axiosRequestArgs = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
-                return axios.request(axiosRequestArgs);
-            };
-        },
-        /**
-         * 
-         * @summary Gets GuildMember
-         * @param {number} id Id
-         * @param {string} [includes] Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names 
-         * @param {string} [select] Column names [.] separated to fetch specific fields in response
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async getGuildMember(id: number, includes?: string, select?: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<ModelsGuildMember>>> {
-            const localVarAxiosArgs = await GuildMemberApiAxiosParamCreator(configuration).getGuildMember(id, includes, select, options);
-            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
-                const axiosRequestArgs = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
-                return axios.request(axiosRequestArgs);
-            };
-        },
-        /**
-         * 
-         * @summary Lists GuildMembers
-         * @param {string} [includes] Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names 
-         * @param {string} [where] Filter on specific fields. Multiple conditions [.] separated Example: col_like_value.col2__val2
-         * @param {string} [limit] Rows to limit in response (Default: 10,000)
-         * @param {string} [orderBy] Order by [field]
-         * @param {string} [orderDirection] Order by field direction
-         * @param {string} [select] Column names [.] separated to fetch specific fields in response
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async listGuildMembers(includes?: string, where?: string, limit?: string, orderBy?: string, orderDirection?: string, select?: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<ModelsGuildMember>>> {
-            const localVarAxiosArgs = await GuildMemberApiAxiosParamCreator(configuration).listGuildMembers(includes, where, limit, orderBy, orderDirection, select, options);
-            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
-                const axiosRequestArgs = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
-                return axios.request(axiosRequestArgs);
-            };
-        },
-        /**
-         * 
-         * @summary Updates GuildMember
-         * @param {number} id Id
-         * @param {ModelsGuildMember} guildMember GuildMember
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async updateGuildMember(id: number, guildMember: ModelsGuildMember, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<ModelsGuildMember>>> {
-            const localVarAxiosArgs = await GuildMemberApiAxiosParamCreator(configuration).updateGuildMember(id, guildMember, options);
-            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
-                const axiosRequestArgs = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
-                return axios.request(axiosRequestArgs);
-            };
-        },
-    }
-};
-
-/**
- * GuildMemberApi - factory interface
- * @export
- */
-export const GuildMemberApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
-    return {
-        /**
-         * 
-         * @summary Creates GuildMember
-         * @param {ModelsGuildMember} guildMember GuildMember
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        createGuildMember(guildMember: ModelsGuildMember, options?: any): AxiosPromise<Array<ModelsGuildMember>> {
-            return GuildMemberApiFp(configuration).createGuildMember(guildMember, options).then((request) => request(axios, basePath));
-        },
-        /**
-         * 
-         * @summary Deletes GuildMember
-         * @param {number} id Id
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        deleteGuildMember(id: number, options?: any): AxiosPromise<string> {
-            return GuildMemberApiFp(configuration).deleteGuildMember(id, options).then((request) => request(axios, basePath));
-        },
-        /**
-         * 
-         * @summary Gets GuildMember
-         * @param {number} id Id
-         * @param {string} [includes] Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names 
-         * @param {string} [select] Column names [.] separated to fetch specific fields in response
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getGuildMember(id: number, includes?: string, select?: string, options?: any): AxiosPromise<Array<ModelsGuildMember>> {
-            return GuildMemberApiFp(configuration).getGuildMember(id, includes, select, options).then((request) => request(axios, basePath));
-        },
-        /**
-         * 
-         * @summary Lists GuildMembers
-         * @param {string} [includes] Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names 
-         * @param {string} [where] Filter on specific fields. Multiple conditions [.] separated Example: col_like_value.col2__val2
-         * @param {string} [limit] Rows to limit in response (Default: 10,000)
-         * @param {string} [orderBy] Order by [field]
-         * @param {string} [orderDirection] Order by field direction
-         * @param {string} [select] Column names [.] separated to fetch specific fields in response
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        listGuildMembers(includes?: string, where?: string, limit?: string, orderBy?: string, orderDirection?: string, select?: string, options?: any): AxiosPromise<Array<ModelsGuildMember>> {
-            return GuildMemberApiFp(configuration).listGuildMembers(includes, where, limit, orderBy, orderDirection, select, options).then((request) => request(axios, basePath));
-        },
-        /**
-         * 
-         * @summary Updates GuildMember
-         * @param {number} id Id
-         * @param {ModelsGuildMember} guildMember GuildMember
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        updateGuildMember(id: number, guildMember: ModelsGuildMember, options?: any): AxiosPromise<Array<ModelsGuildMember>> {
-            return GuildMemberApiFp(configuration).updateGuildMember(id, guildMember, options).then((request) => request(axios, basePath));
-        },
-    };
-};
-
-/**
- * Request parameters for createGuildMember operation in GuildMemberApi.
- * @export
- * @interface GuildMemberApiCreateGuildMemberRequest
- */
-export interface GuildMemberApiCreateGuildMemberRequest {
-    /**
-     * GuildMember
-     * @type {ModelsGuildMember}
-     * @memberof GuildMemberApiCreateGuildMember
-     */
-    readonly guildMember: ModelsGuildMember
-}
-
-/**
- * Request parameters for deleteGuildMember operation in GuildMemberApi.
- * @export
- * @interface GuildMemberApiDeleteGuildMemberRequest
- */
-export interface GuildMemberApiDeleteGuildMemberRequest {
-    /**
-     * Id
-     * @type {number}
-     * @memberof GuildMemberApiDeleteGuildMember
-     */
-    readonly id: number
-}
-
-/**
- * Request parameters for getGuildMember operation in GuildMemberApi.
- * @export
- * @interface GuildMemberApiGetGuildMemberRequest
- */
-export interface GuildMemberApiGetGuildMemberRequest {
-    /**
-     * Id
-     * @type {number}
-     * @memberof GuildMemberApiGetGuildMember
-     */
-    readonly id: number
-
-    /**
-     * Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names 
-     * @type {string}
-     * @memberof GuildMemberApiGetGuildMember
-     */
-    readonly includes?: string
-
-    /**
-     * Column names [.] separated to fetch specific fields in response
-     * @type {string}
-     * @memberof GuildMemberApiGetGuildMember
-     */
-    readonly select?: string
-}
-
-/**
- * Request parameters for listGuildMembers operation in GuildMemberApi.
- * @export
- * @interface GuildMemberApiListGuildMembersRequest
- */
-export interface GuildMemberApiListGuildMembersRequest {
-    /**
-     * Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names 
-     * @type {string}
-     * @memberof GuildMemberApiListGuildMembers
-     */
-    readonly includes?: string
-
-    /**
-     * Filter on specific fields. Multiple conditions [.] separated Example: col_like_value.col2__val2
-     * @type {string}
-     * @memberof GuildMemberApiListGuildMembers
-     */
-    readonly where?: string
-
-    /**
-     * Rows to limit in response (Default: 10,000)
-     * @type {string}
-     * @memberof GuildMemberApiListGuildMembers
-     */
-    readonly limit?: string
-
-    /**
-     * Order by [field]
-     * @type {string}
-     * @memberof GuildMemberApiListGuildMembers
-     */
-    readonly orderBy?: string
-
-    /**
-     * Order by field direction
-     * @type {string}
-     * @memberof GuildMemberApiListGuildMembers
-     */
-    readonly orderDirection?: string
-
-    /**
-     * Column names [.] separated to fetch specific fields in response
-     * @type {string}
-     * @memberof GuildMemberApiListGuildMembers
-     */
-    readonly select?: string
-}
-
-/**
- * Request parameters for updateGuildMember operation in GuildMemberApi.
- * @export
- * @interface GuildMemberApiUpdateGuildMemberRequest
- */
-export interface GuildMemberApiUpdateGuildMemberRequest {
-    /**
-     * Id
-     * @type {number}
-     * @memberof GuildMemberApiUpdateGuildMember
-     */
-    readonly id: number
-
-    /**
-     * GuildMember
-     * @type {ModelsGuildMember}
-     * @memberof GuildMemberApiUpdateGuildMember
-     */
-    readonly guildMember: ModelsGuildMember
-}
-
-/**
- * GuildMemberApi - object-oriented interface
- * @export
- * @class GuildMemberApi
- * @extends {BaseAPI}
- */
-export class GuildMemberApi extends BaseAPI {
-    /**
-     * 
-     * @summary Creates GuildMember
-     * @param {GuildMemberApiCreateGuildMemberRequest} requestParameters Request parameters.
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof GuildMemberApi
-     */
-    public createGuildMember(requestParameters: GuildMemberApiCreateGuildMemberRequest, options?: any) {
-        return GuildMemberApiFp(this.configuration).createGuildMember(requestParameters.guildMember, options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
-     * 
-     * @summary Deletes GuildMember
-     * @param {GuildMemberApiDeleteGuildMemberRequest} requestParameters Request parameters.
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof GuildMemberApi
-     */
-    public deleteGuildMember(requestParameters: GuildMemberApiDeleteGuildMemberRequest, options?: any) {
-        return GuildMemberApiFp(this.configuration).deleteGuildMember(requestParameters.id, options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
-     * 
-     * @summary Gets GuildMember
-     * @param {GuildMemberApiGetGuildMemberRequest} requestParameters Request parameters.
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof GuildMemberApi
-     */
-    public getGuildMember(requestParameters: GuildMemberApiGetGuildMemberRequest, options?: any) {
-        return GuildMemberApiFp(this.configuration).getGuildMember(requestParameters.id, requestParameters.includes, requestParameters.select, options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
-     * 
-     * @summary Lists GuildMembers
-     * @param {GuildMemberApiListGuildMembersRequest} requestParameters Request parameters.
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof GuildMemberApi
-     */
-    public listGuildMembers(requestParameters: GuildMemberApiListGuildMembersRequest = {}, options?: any) {
-        return GuildMemberApiFp(this.configuration).listGuildMembers(requestParameters.includes, requestParameters.where, requestParameters.limit, requestParameters.orderBy, requestParameters.orderDirection, requestParameters.select, options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
-     * 
-     * @summary Updates GuildMember
-     * @param {GuildMemberApiUpdateGuildMemberRequest} requestParameters Request parameters.
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof GuildMemberApi
-     */
-    public updateGuildMember(requestParameters: GuildMemberApiUpdateGuildMemberRequest, options?: any) {
-        return GuildMemberApiFp(this.configuration).updateGuildMember(requestParameters.id, requestParameters.guildMember, options).then((request) => request(this.axios, this.basePath));
     }
 }
 
@@ -51453,635 +44800,6 @@ export class InstanceListPlayerApi extends BaseAPI {
 
 
 /**
- * IpExemptionApi - axios parameter creator
- * @export
- */
-export const IpExemptionApiAxiosParamCreator = function (configuration?: Configuration) {
-    return {
-        /**
-         * 
-         * @summary Creates IpExemption
-         * @param {ModelsIpExemption} ipExemption IpExemption
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        createIpExemption: async (ipExemption: ModelsIpExemption, options: any = {}): Promise<RequestArgs> => {
-            // verify required parameter 'ipExemption' is not null or undefined
-            if (ipExemption === null || ipExemption === undefined) {
-                throw new RequiredError('ipExemption','Required parameter ipExemption was null or undefined when calling createIpExemption.');
-            }
-            const localVarPath = `/ip_exemption`;
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, 'https://example.com');
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'PUT', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-
-    
-            localVarHeaderParameter['Content-Type'] = 'application/json';
-
-            const queryParameters = new URLSearchParams(localVarUrlObj.search);
-            for (const key in localVarQueryParameter) {
-                queryParameters.set(key, localVarQueryParameter[key]);
-            }
-            for (const key in options.query) {
-                queryParameters.set(key, options.query[key]);
-            }
-            localVarUrlObj.search = (new URLSearchParams(queryParameters)).toString();
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            const nonString = typeof ipExemption !== 'string';
-            const needsSerialization = nonString && configuration && configuration.isJsonMime
-                ? configuration.isJsonMime(localVarRequestOptions.headers['Content-Type'])
-                : nonString;
-            localVarRequestOptions.data =  needsSerialization
-                ? JSON.stringify(ipExemption !== undefined ? ipExemption : {})
-                : (ipExemption || "");
-
-            return {
-                url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * 
-         * @summary Deletes IpExemption
-         * @param {number} id Id
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        deleteIpExemption: async (id: number, options: any = {}): Promise<RequestArgs> => {
-            // verify required parameter 'id' is not null or undefined
-            if (id === null || id === undefined) {
-                throw new RequiredError('id','Required parameter id was null or undefined when calling deleteIpExemption.');
-            }
-            const localVarPath = `/ip_exemption/{id}`
-                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, 'https://example.com');
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'DELETE', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-
-    
-            const queryParameters = new URLSearchParams(localVarUrlObj.search);
-            for (const key in localVarQueryParameter) {
-                queryParameters.set(key, localVarQueryParameter[key]);
-            }
-            for (const key in options.query) {
-                queryParameters.set(key, options.query[key]);
-            }
-            localVarUrlObj.search = (new URLSearchParams(queryParameters)).toString();
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-
-            return {
-                url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * 
-         * @summary Gets IpExemption
-         * @param {number} id Id
-         * @param {string} [includes] Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names 
-         * @param {string} [select] Column names [.] separated to fetch specific fields in response
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getIpExemption: async (id: number, includes?: string, select?: string, options: any = {}): Promise<RequestArgs> => {
-            // verify required parameter 'id' is not null or undefined
-            if (id === null || id === undefined) {
-                throw new RequiredError('id','Required parameter id was null or undefined when calling getIpExemption.');
-            }
-            const localVarPath = `/ip_exemption/{id}`
-                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, 'https://example.com');
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-            if (includes !== undefined) {
-                localVarQueryParameter['includes'] = includes;
-            }
-
-            if (select !== undefined) {
-                localVarQueryParameter['select'] = select;
-            }
-
-
-    
-            const queryParameters = new URLSearchParams(localVarUrlObj.search);
-            for (const key in localVarQueryParameter) {
-                queryParameters.set(key, localVarQueryParameter[key]);
-            }
-            for (const key in options.query) {
-                queryParameters.set(key, options.query[key]);
-            }
-            localVarUrlObj.search = (new URLSearchParams(queryParameters)).toString();
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-
-            return {
-                url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * 
-         * @summary Lists IpExemptions
-         * @param {string} [includes] Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names 
-         * @param {string} [where] Filter on specific fields. Multiple conditions [.] separated Example: col_like_value.col2__val2
-         * @param {string} [limit] Rows to limit in response (Default: 10,000)
-         * @param {string} [orderBy] Order by [field]
-         * @param {string} [orderDirection] Order by field direction
-         * @param {string} [select] Column names [.] separated to fetch specific fields in response
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        listIpExemptions: async (includes?: string, where?: string, limit?: string, orderBy?: string, orderDirection?: string, select?: string, options: any = {}): Promise<RequestArgs> => {
-            const localVarPath = `/ip_exemptions`;
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, 'https://example.com');
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-            if (includes !== undefined) {
-                localVarQueryParameter['includes'] = includes;
-            }
-
-            if (where !== undefined) {
-                localVarQueryParameter['where'] = where;
-            }
-
-            if (limit !== undefined) {
-                localVarQueryParameter['limit'] = limit;
-            }
-
-            if (orderBy !== undefined) {
-                localVarQueryParameter['orderBy'] = orderBy;
-            }
-
-            if (orderDirection !== undefined) {
-                localVarQueryParameter['orderDirection'] = orderDirection;
-            }
-
-            if (select !== undefined) {
-                localVarQueryParameter['select'] = select;
-            }
-
-
-    
-            const queryParameters = new URLSearchParams(localVarUrlObj.search);
-            for (const key in localVarQueryParameter) {
-                queryParameters.set(key, localVarQueryParameter[key]);
-            }
-            for (const key in options.query) {
-                queryParameters.set(key, options.query[key]);
-            }
-            localVarUrlObj.search = (new URLSearchParams(queryParameters)).toString();
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-
-            return {
-                url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * 
-         * @summary Updates IpExemption
-         * @param {number} id Id
-         * @param {ModelsIpExemption} ipExemption IpExemption
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        updateIpExemption: async (id: number, ipExemption: ModelsIpExemption, options: any = {}): Promise<RequestArgs> => {
-            // verify required parameter 'id' is not null or undefined
-            if (id === null || id === undefined) {
-                throw new RequiredError('id','Required parameter id was null or undefined when calling updateIpExemption.');
-            }
-            // verify required parameter 'ipExemption' is not null or undefined
-            if (ipExemption === null || ipExemption === undefined) {
-                throw new RequiredError('ipExemption','Required parameter ipExemption was null or undefined when calling updateIpExemption.');
-            }
-            const localVarPath = `/ip_exemption/{id}`
-                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, 'https://example.com');
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'PATCH', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-
-    
-            localVarHeaderParameter['Content-Type'] = 'application/json';
-
-            const queryParameters = new URLSearchParams(localVarUrlObj.search);
-            for (const key in localVarQueryParameter) {
-                queryParameters.set(key, localVarQueryParameter[key]);
-            }
-            for (const key in options.query) {
-                queryParameters.set(key, options.query[key]);
-            }
-            localVarUrlObj.search = (new URLSearchParams(queryParameters)).toString();
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            const nonString = typeof ipExemption !== 'string';
-            const needsSerialization = nonString && configuration && configuration.isJsonMime
-                ? configuration.isJsonMime(localVarRequestOptions.headers['Content-Type'])
-                : nonString;
-            localVarRequestOptions.data =  needsSerialization
-                ? JSON.stringify(ipExemption !== undefined ? ipExemption : {})
-                : (ipExemption || "");
-
-            return {
-                url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
-                options: localVarRequestOptions,
-            };
-        },
-    }
-};
-
-/**
- * IpExemptionApi - functional programming interface
- * @export
- */
-export const IpExemptionApiFp = function(configuration?: Configuration) {
-    return {
-        /**
-         * 
-         * @summary Creates IpExemption
-         * @param {ModelsIpExemption} ipExemption IpExemption
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async createIpExemption(ipExemption: ModelsIpExemption, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<ModelsIpExemption>>> {
-            const localVarAxiosArgs = await IpExemptionApiAxiosParamCreator(configuration).createIpExemption(ipExemption, options);
-            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
-                const axiosRequestArgs = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
-                return axios.request(axiosRequestArgs);
-            };
-        },
-        /**
-         * 
-         * @summary Deletes IpExemption
-         * @param {number} id Id
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async deleteIpExemption(id: number, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<string>> {
-            const localVarAxiosArgs = await IpExemptionApiAxiosParamCreator(configuration).deleteIpExemption(id, options);
-            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
-                const axiosRequestArgs = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
-                return axios.request(axiosRequestArgs);
-            };
-        },
-        /**
-         * 
-         * @summary Gets IpExemption
-         * @param {number} id Id
-         * @param {string} [includes] Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names 
-         * @param {string} [select] Column names [.] separated to fetch specific fields in response
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async getIpExemption(id: number, includes?: string, select?: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<ModelsIpExemption>>> {
-            const localVarAxiosArgs = await IpExemptionApiAxiosParamCreator(configuration).getIpExemption(id, includes, select, options);
-            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
-                const axiosRequestArgs = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
-                return axios.request(axiosRequestArgs);
-            };
-        },
-        /**
-         * 
-         * @summary Lists IpExemptions
-         * @param {string} [includes] Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names 
-         * @param {string} [where] Filter on specific fields. Multiple conditions [.] separated Example: col_like_value.col2__val2
-         * @param {string} [limit] Rows to limit in response (Default: 10,000)
-         * @param {string} [orderBy] Order by [field]
-         * @param {string} [orderDirection] Order by field direction
-         * @param {string} [select] Column names [.] separated to fetch specific fields in response
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async listIpExemptions(includes?: string, where?: string, limit?: string, orderBy?: string, orderDirection?: string, select?: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<ModelsIpExemption>>> {
-            const localVarAxiosArgs = await IpExemptionApiAxiosParamCreator(configuration).listIpExemptions(includes, where, limit, orderBy, orderDirection, select, options);
-            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
-                const axiosRequestArgs = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
-                return axios.request(axiosRequestArgs);
-            };
-        },
-        /**
-         * 
-         * @summary Updates IpExemption
-         * @param {number} id Id
-         * @param {ModelsIpExemption} ipExemption IpExemption
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async updateIpExemption(id: number, ipExemption: ModelsIpExemption, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<ModelsIpExemption>>> {
-            const localVarAxiosArgs = await IpExemptionApiAxiosParamCreator(configuration).updateIpExemption(id, ipExemption, options);
-            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
-                const axiosRequestArgs = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
-                return axios.request(axiosRequestArgs);
-            };
-        },
-    }
-};
-
-/**
- * IpExemptionApi - factory interface
- * @export
- */
-export const IpExemptionApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
-    return {
-        /**
-         * 
-         * @summary Creates IpExemption
-         * @param {ModelsIpExemption} ipExemption IpExemption
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        createIpExemption(ipExemption: ModelsIpExemption, options?: any): AxiosPromise<Array<ModelsIpExemption>> {
-            return IpExemptionApiFp(configuration).createIpExemption(ipExemption, options).then((request) => request(axios, basePath));
-        },
-        /**
-         * 
-         * @summary Deletes IpExemption
-         * @param {number} id Id
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        deleteIpExemption(id: number, options?: any): AxiosPromise<string> {
-            return IpExemptionApiFp(configuration).deleteIpExemption(id, options).then((request) => request(axios, basePath));
-        },
-        /**
-         * 
-         * @summary Gets IpExemption
-         * @param {number} id Id
-         * @param {string} [includes] Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names 
-         * @param {string} [select] Column names [.] separated to fetch specific fields in response
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getIpExemption(id: number, includes?: string, select?: string, options?: any): AxiosPromise<Array<ModelsIpExemption>> {
-            return IpExemptionApiFp(configuration).getIpExemption(id, includes, select, options).then((request) => request(axios, basePath));
-        },
-        /**
-         * 
-         * @summary Lists IpExemptions
-         * @param {string} [includes] Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names 
-         * @param {string} [where] Filter on specific fields. Multiple conditions [.] separated Example: col_like_value.col2__val2
-         * @param {string} [limit] Rows to limit in response (Default: 10,000)
-         * @param {string} [orderBy] Order by [field]
-         * @param {string} [orderDirection] Order by field direction
-         * @param {string} [select] Column names [.] separated to fetch specific fields in response
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        listIpExemptions(includes?: string, where?: string, limit?: string, orderBy?: string, orderDirection?: string, select?: string, options?: any): AxiosPromise<Array<ModelsIpExemption>> {
-            return IpExemptionApiFp(configuration).listIpExemptions(includes, where, limit, orderBy, orderDirection, select, options).then((request) => request(axios, basePath));
-        },
-        /**
-         * 
-         * @summary Updates IpExemption
-         * @param {number} id Id
-         * @param {ModelsIpExemption} ipExemption IpExemption
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        updateIpExemption(id: number, ipExemption: ModelsIpExemption, options?: any): AxiosPromise<Array<ModelsIpExemption>> {
-            return IpExemptionApiFp(configuration).updateIpExemption(id, ipExemption, options).then((request) => request(axios, basePath));
-        },
-    };
-};
-
-/**
- * Request parameters for createIpExemption operation in IpExemptionApi.
- * @export
- * @interface IpExemptionApiCreateIpExemptionRequest
- */
-export interface IpExemptionApiCreateIpExemptionRequest {
-    /**
-     * IpExemption
-     * @type {ModelsIpExemption}
-     * @memberof IpExemptionApiCreateIpExemption
-     */
-    readonly ipExemption: ModelsIpExemption
-}
-
-/**
- * Request parameters for deleteIpExemption operation in IpExemptionApi.
- * @export
- * @interface IpExemptionApiDeleteIpExemptionRequest
- */
-export interface IpExemptionApiDeleteIpExemptionRequest {
-    /**
-     * Id
-     * @type {number}
-     * @memberof IpExemptionApiDeleteIpExemption
-     */
-    readonly id: number
-}
-
-/**
- * Request parameters for getIpExemption operation in IpExemptionApi.
- * @export
- * @interface IpExemptionApiGetIpExemptionRequest
- */
-export interface IpExemptionApiGetIpExemptionRequest {
-    /**
-     * Id
-     * @type {number}
-     * @memberof IpExemptionApiGetIpExemption
-     */
-    readonly id: number
-
-    /**
-     * Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names 
-     * @type {string}
-     * @memberof IpExemptionApiGetIpExemption
-     */
-    readonly includes?: string
-
-    /**
-     * Column names [.] separated to fetch specific fields in response
-     * @type {string}
-     * @memberof IpExemptionApiGetIpExemption
-     */
-    readonly select?: string
-}
-
-/**
- * Request parameters for listIpExemptions operation in IpExemptionApi.
- * @export
- * @interface IpExemptionApiListIpExemptionsRequest
- */
-export interface IpExemptionApiListIpExemptionsRequest {
-    /**
-     * Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names 
-     * @type {string}
-     * @memberof IpExemptionApiListIpExemptions
-     */
-    readonly includes?: string
-
-    /**
-     * Filter on specific fields. Multiple conditions [.] separated Example: col_like_value.col2__val2
-     * @type {string}
-     * @memberof IpExemptionApiListIpExemptions
-     */
-    readonly where?: string
-
-    /**
-     * Rows to limit in response (Default: 10,000)
-     * @type {string}
-     * @memberof IpExemptionApiListIpExemptions
-     */
-    readonly limit?: string
-
-    /**
-     * Order by [field]
-     * @type {string}
-     * @memberof IpExemptionApiListIpExemptions
-     */
-    readonly orderBy?: string
-
-    /**
-     * Order by field direction
-     * @type {string}
-     * @memberof IpExemptionApiListIpExemptions
-     */
-    readonly orderDirection?: string
-
-    /**
-     * Column names [.] separated to fetch specific fields in response
-     * @type {string}
-     * @memberof IpExemptionApiListIpExemptions
-     */
-    readonly select?: string
-}
-
-/**
- * Request parameters for updateIpExemption operation in IpExemptionApi.
- * @export
- * @interface IpExemptionApiUpdateIpExemptionRequest
- */
-export interface IpExemptionApiUpdateIpExemptionRequest {
-    /**
-     * Id
-     * @type {number}
-     * @memberof IpExemptionApiUpdateIpExemption
-     */
-    readonly id: number
-
-    /**
-     * IpExemption
-     * @type {ModelsIpExemption}
-     * @memberof IpExemptionApiUpdateIpExemption
-     */
-    readonly ipExemption: ModelsIpExemption
-}
-
-/**
- * IpExemptionApi - object-oriented interface
- * @export
- * @class IpExemptionApi
- * @extends {BaseAPI}
- */
-export class IpExemptionApi extends BaseAPI {
-    /**
-     * 
-     * @summary Creates IpExemption
-     * @param {IpExemptionApiCreateIpExemptionRequest} requestParameters Request parameters.
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof IpExemptionApi
-     */
-    public createIpExemption(requestParameters: IpExemptionApiCreateIpExemptionRequest, options?: any) {
-        return IpExemptionApiFp(this.configuration).createIpExemption(requestParameters.ipExemption, options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
-     * 
-     * @summary Deletes IpExemption
-     * @param {IpExemptionApiDeleteIpExemptionRequest} requestParameters Request parameters.
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof IpExemptionApi
-     */
-    public deleteIpExemption(requestParameters: IpExemptionApiDeleteIpExemptionRequest, options?: any) {
-        return IpExemptionApiFp(this.configuration).deleteIpExemption(requestParameters.id, options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
-     * 
-     * @summary Gets IpExemption
-     * @param {IpExemptionApiGetIpExemptionRequest} requestParameters Request parameters.
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof IpExemptionApi
-     */
-    public getIpExemption(requestParameters: IpExemptionApiGetIpExemptionRequest, options?: any) {
-        return IpExemptionApiFp(this.configuration).getIpExemption(requestParameters.id, requestParameters.includes, requestParameters.select, options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
-     * 
-     * @summary Lists IpExemptions
-     * @param {IpExemptionApiListIpExemptionsRequest} requestParameters Request parameters.
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof IpExemptionApi
-     */
-    public listIpExemptions(requestParameters: IpExemptionApiListIpExemptionsRequest = {}, options?: any) {
-        return IpExemptionApiFp(this.configuration).listIpExemptions(requestParameters.includes, requestParameters.where, requestParameters.limit, requestParameters.orderBy, requestParameters.orderDirection, requestParameters.select, options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
-     * 
-     * @summary Updates IpExemption
-     * @param {IpExemptionApiUpdateIpExemptionRequest} requestParameters Request parameters.
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof IpExemptionApi
-     */
-    public updateIpExemption(requestParameters: IpExemptionApiUpdateIpExemptionRequest, options?: any) {
-        return IpExemptionApiFp(this.configuration).updateIpExemption(requestParameters.id, requestParameters.ipExemption, options).then((request) => request(this.axios, this.basePath));
-    }
-}
-
-
-/**
  * ItemApi - axios parameter creator
  * @export
  */
@@ -53964,635 +46682,6 @@ export class LdonTrapTemplateApi extends BaseAPI {
      */
     public updateLdonTrapTemplate(requestParameters: LdonTrapTemplateApiUpdateLdonTrapTemplateRequest, options?: any) {
         return LdonTrapTemplateApiFp(this.configuration).updateLdonTrapTemplate(requestParameters.id, requestParameters.ldonTrapTemplate, options).then((request) => request(this.axios, this.basePath));
-    }
-}
-
-
-/**
- * LevelExpModApi - axios parameter creator
- * @export
- */
-export const LevelExpModApiAxiosParamCreator = function (configuration?: Configuration) {
-    return {
-        /**
-         * 
-         * @summary Creates LevelExpMod
-         * @param {ModelsLevelExpMod} levelExpMod LevelExpMod
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        createLevelExpMod: async (levelExpMod: ModelsLevelExpMod, options: any = {}): Promise<RequestArgs> => {
-            // verify required parameter 'levelExpMod' is not null or undefined
-            if (levelExpMod === null || levelExpMod === undefined) {
-                throw new RequiredError('levelExpMod','Required parameter levelExpMod was null or undefined when calling createLevelExpMod.');
-            }
-            const localVarPath = `/level_exp_mod`;
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, 'https://example.com');
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'PUT', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-
-    
-            localVarHeaderParameter['Content-Type'] = 'application/json';
-
-            const queryParameters = new URLSearchParams(localVarUrlObj.search);
-            for (const key in localVarQueryParameter) {
-                queryParameters.set(key, localVarQueryParameter[key]);
-            }
-            for (const key in options.query) {
-                queryParameters.set(key, options.query[key]);
-            }
-            localVarUrlObj.search = (new URLSearchParams(queryParameters)).toString();
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            const nonString = typeof levelExpMod !== 'string';
-            const needsSerialization = nonString && configuration && configuration.isJsonMime
-                ? configuration.isJsonMime(localVarRequestOptions.headers['Content-Type'])
-                : nonString;
-            localVarRequestOptions.data =  needsSerialization
-                ? JSON.stringify(levelExpMod !== undefined ? levelExpMod : {})
-                : (levelExpMod || "");
-
-            return {
-                url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * 
-         * @summary Deletes LevelExpMod
-         * @param {number} id Id
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        deleteLevelExpMod: async (id: number, options: any = {}): Promise<RequestArgs> => {
-            // verify required parameter 'id' is not null or undefined
-            if (id === null || id === undefined) {
-                throw new RequiredError('id','Required parameter id was null or undefined when calling deleteLevelExpMod.');
-            }
-            const localVarPath = `/level_exp_mod/{id}`
-                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, 'https://example.com');
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'DELETE', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-
-    
-            const queryParameters = new URLSearchParams(localVarUrlObj.search);
-            for (const key in localVarQueryParameter) {
-                queryParameters.set(key, localVarQueryParameter[key]);
-            }
-            for (const key in options.query) {
-                queryParameters.set(key, options.query[key]);
-            }
-            localVarUrlObj.search = (new URLSearchParams(queryParameters)).toString();
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-
-            return {
-                url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * 
-         * @summary Gets LevelExpMod
-         * @param {number} id Id
-         * @param {string} [includes] Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names 
-         * @param {string} [select] Column names [.] separated to fetch specific fields in response
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getLevelExpMod: async (id: number, includes?: string, select?: string, options: any = {}): Promise<RequestArgs> => {
-            // verify required parameter 'id' is not null or undefined
-            if (id === null || id === undefined) {
-                throw new RequiredError('id','Required parameter id was null or undefined when calling getLevelExpMod.');
-            }
-            const localVarPath = `/level_exp_mod/{id}`
-                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, 'https://example.com');
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-            if (includes !== undefined) {
-                localVarQueryParameter['includes'] = includes;
-            }
-
-            if (select !== undefined) {
-                localVarQueryParameter['select'] = select;
-            }
-
-
-    
-            const queryParameters = new URLSearchParams(localVarUrlObj.search);
-            for (const key in localVarQueryParameter) {
-                queryParameters.set(key, localVarQueryParameter[key]);
-            }
-            for (const key in options.query) {
-                queryParameters.set(key, options.query[key]);
-            }
-            localVarUrlObj.search = (new URLSearchParams(queryParameters)).toString();
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-
-            return {
-                url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * 
-         * @summary Lists LevelExpMods
-         * @param {string} [includes] Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names 
-         * @param {string} [where] Filter on specific fields. Multiple conditions [.] separated Example: col_like_value.col2__val2
-         * @param {string} [limit] Rows to limit in response (Default: 10,000)
-         * @param {string} [orderBy] Order by [field]
-         * @param {string} [orderDirection] Order by field direction
-         * @param {string} [select] Column names [.] separated to fetch specific fields in response
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        listLevelExpMods: async (includes?: string, where?: string, limit?: string, orderBy?: string, orderDirection?: string, select?: string, options: any = {}): Promise<RequestArgs> => {
-            const localVarPath = `/level_exp_mods`;
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, 'https://example.com');
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-            if (includes !== undefined) {
-                localVarQueryParameter['includes'] = includes;
-            }
-
-            if (where !== undefined) {
-                localVarQueryParameter['where'] = where;
-            }
-
-            if (limit !== undefined) {
-                localVarQueryParameter['limit'] = limit;
-            }
-
-            if (orderBy !== undefined) {
-                localVarQueryParameter['orderBy'] = orderBy;
-            }
-
-            if (orderDirection !== undefined) {
-                localVarQueryParameter['orderDirection'] = orderDirection;
-            }
-
-            if (select !== undefined) {
-                localVarQueryParameter['select'] = select;
-            }
-
-
-    
-            const queryParameters = new URLSearchParams(localVarUrlObj.search);
-            for (const key in localVarQueryParameter) {
-                queryParameters.set(key, localVarQueryParameter[key]);
-            }
-            for (const key in options.query) {
-                queryParameters.set(key, options.query[key]);
-            }
-            localVarUrlObj.search = (new URLSearchParams(queryParameters)).toString();
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-
-            return {
-                url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * 
-         * @summary Updates LevelExpMod
-         * @param {number} id Id
-         * @param {ModelsLevelExpMod} levelExpMod LevelExpMod
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        updateLevelExpMod: async (id: number, levelExpMod: ModelsLevelExpMod, options: any = {}): Promise<RequestArgs> => {
-            // verify required parameter 'id' is not null or undefined
-            if (id === null || id === undefined) {
-                throw new RequiredError('id','Required parameter id was null or undefined when calling updateLevelExpMod.');
-            }
-            // verify required parameter 'levelExpMod' is not null or undefined
-            if (levelExpMod === null || levelExpMod === undefined) {
-                throw new RequiredError('levelExpMod','Required parameter levelExpMod was null or undefined when calling updateLevelExpMod.');
-            }
-            const localVarPath = `/level_exp_mod/{id}`
-                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, 'https://example.com');
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'PATCH', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-
-    
-            localVarHeaderParameter['Content-Type'] = 'application/json';
-
-            const queryParameters = new URLSearchParams(localVarUrlObj.search);
-            for (const key in localVarQueryParameter) {
-                queryParameters.set(key, localVarQueryParameter[key]);
-            }
-            for (const key in options.query) {
-                queryParameters.set(key, options.query[key]);
-            }
-            localVarUrlObj.search = (new URLSearchParams(queryParameters)).toString();
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            const nonString = typeof levelExpMod !== 'string';
-            const needsSerialization = nonString && configuration && configuration.isJsonMime
-                ? configuration.isJsonMime(localVarRequestOptions.headers['Content-Type'])
-                : nonString;
-            localVarRequestOptions.data =  needsSerialization
-                ? JSON.stringify(levelExpMod !== undefined ? levelExpMod : {})
-                : (levelExpMod || "");
-
-            return {
-                url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
-                options: localVarRequestOptions,
-            };
-        },
-    }
-};
-
-/**
- * LevelExpModApi - functional programming interface
- * @export
- */
-export const LevelExpModApiFp = function(configuration?: Configuration) {
-    return {
-        /**
-         * 
-         * @summary Creates LevelExpMod
-         * @param {ModelsLevelExpMod} levelExpMod LevelExpMod
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async createLevelExpMod(levelExpMod: ModelsLevelExpMod, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<ModelsLevelExpMod>>> {
-            const localVarAxiosArgs = await LevelExpModApiAxiosParamCreator(configuration).createLevelExpMod(levelExpMod, options);
-            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
-                const axiosRequestArgs = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
-                return axios.request(axiosRequestArgs);
-            };
-        },
-        /**
-         * 
-         * @summary Deletes LevelExpMod
-         * @param {number} id Id
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async deleteLevelExpMod(id: number, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<string>> {
-            const localVarAxiosArgs = await LevelExpModApiAxiosParamCreator(configuration).deleteLevelExpMod(id, options);
-            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
-                const axiosRequestArgs = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
-                return axios.request(axiosRequestArgs);
-            };
-        },
-        /**
-         * 
-         * @summary Gets LevelExpMod
-         * @param {number} id Id
-         * @param {string} [includes] Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names 
-         * @param {string} [select] Column names [.] separated to fetch specific fields in response
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async getLevelExpMod(id: number, includes?: string, select?: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<ModelsLevelExpMod>>> {
-            const localVarAxiosArgs = await LevelExpModApiAxiosParamCreator(configuration).getLevelExpMod(id, includes, select, options);
-            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
-                const axiosRequestArgs = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
-                return axios.request(axiosRequestArgs);
-            };
-        },
-        /**
-         * 
-         * @summary Lists LevelExpMods
-         * @param {string} [includes] Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names 
-         * @param {string} [where] Filter on specific fields. Multiple conditions [.] separated Example: col_like_value.col2__val2
-         * @param {string} [limit] Rows to limit in response (Default: 10,000)
-         * @param {string} [orderBy] Order by [field]
-         * @param {string} [orderDirection] Order by field direction
-         * @param {string} [select] Column names [.] separated to fetch specific fields in response
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async listLevelExpMods(includes?: string, where?: string, limit?: string, orderBy?: string, orderDirection?: string, select?: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<ModelsLevelExpMod>>> {
-            const localVarAxiosArgs = await LevelExpModApiAxiosParamCreator(configuration).listLevelExpMods(includes, where, limit, orderBy, orderDirection, select, options);
-            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
-                const axiosRequestArgs = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
-                return axios.request(axiosRequestArgs);
-            };
-        },
-        /**
-         * 
-         * @summary Updates LevelExpMod
-         * @param {number} id Id
-         * @param {ModelsLevelExpMod} levelExpMod LevelExpMod
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async updateLevelExpMod(id: number, levelExpMod: ModelsLevelExpMod, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<ModelsLevelExpMod>>> {
-            const localVarAxiosArgs = await LevelExpModApiAxiosParamCreator(configuration).updateLevelExpMod(id, levelExpMod, options);
-            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
-                const axiosRequestArgs = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
-                return axios.request(axiosRequestArgs);
-            };
-        },
-    }
-};
-
-/**
- * LevelExpModApi - factory interface
- * @export
- */
-export const LevelExpModApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
-    return {
-        /**
-         * 
-         * @summary Creates LevelExpMod
-         * @param {ModelsLevelExpMod} levelExpMod LevelExpMod
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        createLevelExpMod(levelExpMod: ModelsLevelExpMod, options?: any): AxiosPromise<Array<ModelsLevelExpMod>> {
-            return LevelExpModApiFp(configuration).createLevelExpMod(levelExpMod, options).then((request) => request(axios, basePath));
-        },
-        /**
-         * 
-         * @summary Deletes LevelExpMod
-         * @param {number} id Id
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        deleteLevelExpMod(id: number, options?: any): AxiosPromise<string> {
-            return LevelExpModApiFp(configuration).deleteLevelExpMod(id, options).then((request) => request(axios, basePath));
-        },
-        /**
-         * 
-         * @summary Gets LevelExpMod
-         * @param {number} id Id
-         * @param {string} [includes] Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names 
-         * @param {string} [select] Column names [.] separated to fetch specific fields in response
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getLevelExpMod(id: number, includes?: string, select?: string, options?: any): AxiosPromise<Array<ModelsLevelExpMod>> {
-            return LevelExpModApiFp(configuration).getLevelExpMod(id, includes, select, options).then((request) => request(axios, basePath));
-        },
-        /**
-         * 
-         * @summary Lists LevelExpMods
-         * @param {string} [includes] Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names 
-         * @param {string} [where] Filter on specific fields. Multiple conditions [.] separated Example: col_like_value.col2__val2
-         * @param {string} [limit] Rows to limit in response (Default: 10,000)
-         * @param {string} [orderBy] Order by [field]
-         * @param {string} [orderDirection] Order by field direction
-         * @param {string} [select] Column names [.] separated to fetch specific fields in response
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        listLevelExpMods(includes?: string, where?: string, limit?: string, orderBy?: string, orderDirection?: string, select?: string, options?: any): AxiosPromise<Array<ModelsLevelExpMod>> {
-            return LevelExpModApiFp(configuration).listLevelExpMods(includes, where, limit, orderBy, orderDirection, select, options).then((request) => request(axios, basePath));
-        },
-        /**
-         * 
-         * @summary Updates LevelExpMod
-         * @param {number} id Id
-         * @param {ModelsLevelExpMod} levelExpMod LevelExpMod
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        updateLevelExpMod(id: number, levelExpMod: ModelsLevelExpMod, options?: any): AxiosPromise<Array<ModelsLevelExpMod>> {
-            return LevelExpModApiFp(configuration).updateLevelExpMod(id, levelExpMod, options).then((request) => request(axios, basePath));
-        },
-    };
-};
-
-/**
- * Request parameters for createLevelExpMod operation in LevelExpModApi.
- * @export
- * @interface LevelExpModApiCreateLevelExpModRequest
- */
-export interface LevelExpModApiCreateLevelExpModRequest {
-    /**
-     * LevelExpMod
-     * @type {ModelsLevelExpMod}
-     * @memberof LevelExpModApiCreateLevelExpMod
-     */
-    readonly levelExpMod: ModelsLevelExpMod
-}
-
-/**
- * Request parameters for deleteLevelExpMod operation in LevelExpModApi.
- * @export
- * @interface LevelExpModApiDeleteLevelExpModRequest
- */
-export interface LevelExpModApiDeleteLevelExpModRequest {
-    /**
-     * Id
-     * @type {number}
-     * @memberof LevelExpModApiDeleteLevelExpMod
-     */
-    readonly id: number
-}
-
-/**
- * Request parameters for getLevelExpMod operation in LevelExpModApi.
- * @export
- * @interface LevelExpModApiGetLevelExpModRequest
- */
-export interface LevelExpModApiGetLevelExpModRequest {
-    /**
-     * Id
-     * @type {number}
-     * @memberof LevelExpModApiGetLevelExpMod
-     */
-    readonly id: number
-
-    /**
-     * Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names 
-     * @type {string}
-     * @memberof LevelExpModApiGetLevelExpMod
-     */
-    readonly includes?: string
-
-    /**
-     * Column names [.] separated to fetch specific fields in response
-     * @type {string}
-     * @memberof LevelExpModApiGetLevelExpMod
-     */
-    readonly select?: string
-}
-
-/**
- * Request parameters for listLevelExpMods operation in LevelExpModApi.
- * @export
- * @interface LevelExpModApiListLevelExpModsRequest
- */
-export interface LevelExpModApiListLevelExpModsRequest {
-    /**
-     * Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names 
-     * @type {string}
-     * @memberof LevelExpModApiListLevelExpMods
-     */
-    readonly includes?: string
-
-    /**
-     * Filter on specific fields. Multiple conditions [.] separated Example: col_like_value.col2__val2
-     * @type {string}
-     * @memberof LevelExpModApiListLevelExpMods
-     */
-    readonly where?: string
-
-    /**
-     * Rows to limit in response (Default: 10,000)
-     * @type {string}
-     * @memberof LevelExpModApiListLevelExpMods
-     */
-    readonly limit?: string
-
-    /**
-     * Order by [field]
-     * @type {string}
-     * @memberof LevelExpModApiListLevelExpMods
-     */
-    readonly orderBy?: string
-
-    /**
-     * Order by field direction
-     * @type {string}
-     * @memberof LevelExpModApiListLevelExpMods
-     */
-    readonly orderDirection?: string
-
-    /**
-     * Column names [.] separated to fetch specific fields in response
-     * @type {string}
-     * @memberof LevelExpModApiListLevelExpMods
-     */
-    readonly select?: string
-}
-
-/**
- * Request parameters for updateLevelExpMod operation in LevelExpModApi.
- * @export
- * @interface LevelExpModApiUpdateLevelExpModRequest
- */
-export interface LevelExpModApiUpdateLevelExpModRequest {
-    /**
-     * Id
-     * @type {number}
-     * @memberof LevelExpModApiUpdateLevelExpMod
-     */
-    readonly id: number
-
-    /**
-     * LevelExpMod
-     * @type {ModelsLevelExpMod}
-     * @memberof LevelExpModApiUpdateLevelExpMod
-     */
-    readonly levelExpMod: ModelsLevelExpMod
-}
-
-/**
- * LevelExpModApi - object-oriented interface
- * @export
- * @class LevelExpModApi
- * @extends {BaseAPI}
- */
-export class LevelExpModApi extends BaseAPI {
-    /**
-     * 
-     * @summary Creates LevelExpMod
-     * @param {LevelExpModApiCreateLevelExpModRequest} requestParameters Request parameters.
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof LevelExpModApi
-     */
-    public createLevelExpMod(requestParameters: LevelExpModApiCreateLevelExpModRequest, options?: any) {
-        return LevelExpModApiFp(this.configuration).createLevelExpMod(requestParameters.levelExpMod, options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
-     * 
-     * @summary Deletes LevelExpMod
-     * @param {LevelExpModApiDeleteLevelExpModRequest} requestParameters Request parameters.
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof LevelExpModApi
-     */
-    public deleteLevelExpMod(requestParameters: LevelExpModApiDeleteLevelExpModRequest, options?: any) {
-        return LevelExpModApiFp(this.configuration).deleteLevelExpMod(requestParameters.id, options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
-     * 
-     * @summary Gets LevelExpMod
-     * @param {LevelExpModApiGetLevelExpModRequest} requestParameters Request parameters.
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof LevelExpModApi
-     */
-    public getLevelExpMod(requestParameters: LevelExpModApiGetLevelExpModRequest, options?: any) {
-        return LevelExpModApiFp(this.configuration).getLevelExpMod(requestParameters.id, requestParameters.includes, requestParameters.select, options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
-     * 
-     * @summary Lists LevelExpMods
-     * @param {LevelExpModApiListLevelExpModsRequest} requestParameters Request parameters.
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof LevelExpModApi
-     */
-    public listLevelExpMods(requestParameters: LevelExpModApiListLevelExpModsRequest = {}, options?: any) {
-        return LevelExpModApiFp(this.configuration).listLevelExpMods(requestParameters.includes, requestParameters.where, requestParameters.limit, requestParameters.orderBy, requestParameters.orderDirection, requestParameters.select, options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
-     * 
-     * @summary Updates LevelExpMod
-     * @param {LevelExpModApiUpdateLevelExpModRequest} requestParameters Request parameters.
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof LevelExpModApi
-     */
-    public updateLevelExpMod(requestParameters: LevelExpModApiUpdateLevelExpModRequest, options?: any) {
-        return LevelExpModApiFp(this.configuration).updateLevelExpMod(requestParameters.id, requestParameters.levelExpMod, options).then((request) => request(this.axios, this.basePath));
     }
 }
 
@@ -57743,635 +49832,6 @@ export class LoginWorldServerApi extends BaseAPI {
 
 
 /**
- * LogsysCategoryApi - axios parameter creator
- * @export
- */
-export const LogsysCategoryApiAxiosParamCreator = function (configuration?: Configuration) {
-    return {
-        /**
-         * 
-         * @summary Creates LogsysCategory
-         * @param {ModelsLogsysCategory} logsysCategory LogsysCategory
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        createLogsysCategory: async (logsysCategory: ModelsLogsysCategory, options: any = {}): Promise<RequestArgs> => {
-            // verify required parameter 'logsysCategory' is not null or undefined
-            if (logsysCategory === null || logsysCategory === undefined) {
-                throw new RequiredError('logsysCategory','Required parameter logsysCategory was null or undefined when calling createLogsysCategory.');
-            }
-            const localVarPath = `/logsys_category`;
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, 'https://example.com');
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'PUT', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-
-    
-            localVarHeaderParameter['Content-Type'] = 'application/json';
-
-            const queryParameters = new URLSearchParams(localVarUrlObj.search);
-            for (const key in localVarQueryParameter) {
-                queryParameters.set(key, localVarQueryParameter[key]);
-            }
-            for (const key in options.query) {
-                queryParameters.set(key, options.query[key]);
-            }
-            localVarUrlObj.search = (new URLSearchParams(queryParameters)).toString();
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            const nonString = typeof logsysCategory !== 'string';
-            const needsSerialization = nonString && configuration && configuration.isJsonMime
-                ? configuration.isJsonMime(localVarRequestOptions.headers['Content-Type'])
-                : nonString;
-            localVarRequestOptions.data =  needsSerialization
-                ? JSON.stringify(logsysCategory !== undefined ? logsysCategory : {})
-                : (logsysCategory || "");
-
-            return {
-                url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * 
-         * @summary Deletes LogsysCategory
-         * @param {number} id Id
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        deleteLogsysCategory: async (id: number, options: any = {}): Promise<RequestArgs> => {
-            // verify required parameter 'id' is not null or undefined
-            if (id === null || id === undefined) {
-                throw new RequiredError('id','Required parameter id was null or undefined when calling deleteLogsysCategory.');
-            }
-            const localVarPath = `/logsys_category/{id}`
-                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, 'https://example.com');
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'DELETE', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-
-    
-            const queryParameters = new URLSearchParams(localVarUrlObj.search);
-            for (const key in localVarQueryParameter) {
-                queryParameters.set(key, localVarQueryParameter[key]);
-            }
-            for (const key in options.query) {
-                queryParameters.set(key, options.query[key]);
-            }
-            localVarUrlObj.search = (new URLSearchParams(queryParameters)).toString();
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-
-            return {
-                url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * 
-         * @summary Gets LogsysCategory
-         * @param {number} id Id
-         * @param {string} [includes] Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names 
-         * @param {string} [select] Column names [.] separated to fetch specific fields in response
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getLogsysCategory: async (id: number, includes?: string, select?: string, options: any = {}): Promise<RequestArgs> => {
-            // verify required parameter 'id' is not null or undefined
-            if (id === null || id === undefined) {
-                throw new RequiredError('id','Required parameter id was null or undefined when calling getLogsysCategory.');
-            }
-            const localVarPath = `/logsys_category/{id}`
-                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, 'https://example.com');
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-            if (includes !== undefined) {
-                localVarQueryParameter['includes'] = includes;
-            }
-
-            if (select !== undefined) {
-                localVarQueryParameter['select'] = select;
-            }
-
-
-    
-            const queryParameters = new URLSearchParams(localVarUrlObj.search);
-            for (const key in localVarQueryParameter) {
-                queryParameters.set(key, localVarQueryParameter[key]);
-            }
-            for (const key in options.query) {
-                queryParameters.set(key, options.query[key]);
-            }
-            localVarUrlObj.search = (new URLSearchParams(queryParameters)).toString();
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-
-            return {
-                url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * 
-         * @summary Lists LogsysCategories
-         * @param {string} [includes] Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names 
-         * @param {string} [where] Filter on specific fields. Multiple conditions [.] separated Example: col_like_value.col2__val2
-         * @param {string} [limit] Rows to limit in response (Default: 10,000)
-         * @param {string} [orderBy] Order by [field]
-         * @param {string} [orderDirection] Order by field direction
-         * @param {string} [select] Column names [.] separated to fetch specific fields in response
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        listLogsysCategories: async (includes?: string, where?: string, limit?: string, orderBy?: string, orderDirection?: string, select?: string, options: any = {}): Promise<RequestArgs> => {
-            const localVarPath = `/logsys_categories`;
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, 'https://example.com');
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-            if (includes !== undefined) {
-                localVarQueryParameter['includes'] = includes;
-            }
-
-            if (where !== undefined) {
-                localVarQueryParameter['where'] = where;
-            }
-
-            if (limit !== undefined) {
-                localVarQueryParameter['limit'] = limit;
-            }
-
-            if (orderBy !== undefined) {
-                localVarQueryParameter['orderBy'] = orderBy;
-            }
-
-            if (orderDirection !== undefined) {
-                localVarQueryParameter['orderDirection'] = orderDirection;
-            }
-
-            if (select !== undefined) {
-                localVarQueryParameter['select'] = select;
-            }
-
-
-    
-            const queryParameters = new URLSearchParams(localVarUrlObj.search);
-            for (const key in localVarQueryParameter) {
-                queryParameters.set(key, localVarQueryParameter[key]);
-            }
-            for (const key in options.query) {
-                queryParameters.set(key, options.query[key]);
-            }
-            localVarUrlObj.search = (new URLSearchParams(queryParameters)).toString();
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-
-            return {
-                url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * 
-         * @summary Updates LogsysCategory
-         * @param {number} id Id
-         * @param {ModelsLogsysCategory} logsysCategory LogsysCategory
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        updateLogsysCategory: async (id: number, logsysCategory: ModelsLogsysCategory, options: any = {}): Promise<RequestArgs> => {
-            // verify required parameter 'id' is not null or undefined
-            if (id === null || id === undefined) {
-                throw new RequiredError('id','Required parameter id was null or undefined when calling updateLogsysCategory.');
-            }
-            // verify required parameter 'logsysCategory' is not null or undefined
-            if (logsysCategory === null || logsysCategory === undefined) {
-                throw new RequiredError('logsysCategory','Required parameter logsysCategory was null or undefined when calling updateLogsysCategory.');
-            }
-            const localVarPath = `/logsys_category/{id}`
-                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, 'https://example.com');
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'PATCH', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-
-    
-            localVarHeaderParameter['Content-Type'] = 'application/json';
-
-            const queryParameters = new URLSearchParams(localVarUrlObj.search);
-            for (const key in localVarQueryParameter) {
-                queryParameters.set(key, localVarQueryParameter[key]);
-            }
-            for (const key in options.query) {
-                queryParameters.set(key, options.query[key]);
-            }
-            localVarUrlObj.search = (new URLSearchParams(queryParameters)).toString();
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            const nonString = typeof logsysCategory !== 'string';
-            const needsSerialization = nonString && configuration && configuration.isJsonMime
-                ? configuration.isJsonMime(localVarRequestOptions.headers['Content-Type'])
-                : nonString;
-            localVarRequestOptions.data =  needsSerialization
-                ? JSON.stringify(logsysCategory !== undefined ? logsysCategory : {})
-                : (logsysCategory || "");
-
-            return {
-                url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
-                options: localVarRequestOptions,
-            };
-        },
-    }
-};
-
-/**
- * LogsysCategoryApi - functional programming interface
- * @export
- */
-export const LogsysCategoryApiFp = function(configuration?: Configuration) {
-    return {
-        /**
-         * 
-         * @summary Creates LogsysCategory
-         * @param {ModelsLogsysCategory} logsysCategory LogsysCategory
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async createLogsysCategory(logsysCategory: ModelsLogsysCategory, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<ModelsLogsysCategory>>> {
-            const localVarAxiosArgs = await LogsysCategoryApiAxiosParamCreator(configuration).createLogsysCategory(logsysCategory, options);
-            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
-                const axiosRequestArgs = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
-                return axios.request(axiosRequestArgs);
-            };
-        },
-        /**
-         * 
-         * @summary Deletes LogsysCategory
-         * @param {number} id Id
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async deleteLogsysCategory(id: number, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<string>> {
-            const localVarAxiosArgs = await LogsysCategoryApiAxiosParamCreator(configuration).deleteLogsysCategory(id, options);
-            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
-                const axiosRequestArgs = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
-                return axios.request(axiosRequestArgs);
-            };
-        },
-        /**
-         * 
-         * @summary Gets LogsysCategory
-         * @param {number} id Id
-         * @param {string} [includes] Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names 
-         * @param {string} [select] Column names [.] separated to fetch specific fields in response
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async getLogsysCategory(id: number, includes?: string, select?: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<ModelsLogsysCategory>>> {
-            const localVarAxiosArgs = await LogsysCategoryApiAxiosParamCreator(configuration).getLogsysCategory(id, includes, select, options);
-            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
-                const axiosRequestArgs = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
-                return axios.request(axiosRequestArgs);
-            };
-        },
-        /**
-         * 
-         * @summary Lists LogsysCategories
-         * @param {string} [includes] Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names 
-         * @param {string} [where] Filter on specific fields. Multiple conditions [.] separated Example: col_like_value.col2__val2
-         * @param {string} [limit] Rows to limit in response (Default: 10,000)
-         * @param {string} [orderBy] Order by [field]
-         * @param {string} [orderDirection] Order by field direction
-         * @param {string} [select] Column names [.] separated to fetch specific fields in response
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async listLogsysCategories(includes?: string, where?: string, limit?: string, orderBy?: string, orderDirection?: string, select?: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<ModelsLogsysCategory>>> {
-            const localVarAxiosArgs = await LogsysCategoryApiAxiosParamCreator(configuration).listLogsysCategories(includes, where, limit, orderBy, orderDirection, select, options);
-            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
-                const axiosRequestArgs = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
-                return axios.request(axiosRequestArgs);
-            };
-        },
-        /**
-         * 
-         * @summary Updates LogsysCategory
-         * @param {number} id Id
-         * @param {ModelsLogsysCategory} logsysCategory LogsysCategory
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async updateLogsysCategory(id: number, logsysCategory: ModelsLogsysCategory, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<ModelsLogsysCategory>>> {
-            const localVarAxiosArgs = await LogsysCategoryApiAxiosParamCreator(configuration).updateLogsysCategory(id, logsysCategory, options);
-            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
-                const axiosRequestArgs = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
-                return axios.request(axiosRequestArgs);
-            };
-        },
-    }
-};
-
-/**
- * LogsysCategoryApi - factory interface
- * @export
- */
-export const LogsysCategoryApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
-    return {
-        /**
-         * 
-         * @summary Creates LogsysCategory
-         * @param {ModelsLogsysCategory} logsysCategory LogsysCategory
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        createLogsysCategory(logsysCategory: ModelsLogsysCategory, options?: any): AxiosPromise<Array<ModelsLogsysCategory>> {
-            return LogsysCategoryApiFp(configuration).createLogsysCategory(logsysCategory, options).then((request) => request(axios, basePath));
-        },
-        /**
-         * 
-         * @summary Deletes LogsysCategory
-         * @param {number} id Id
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        deleteLogsysCategory(id: number, options?: any): AxiosPromise<string> {
-            return LogsysCategoryApiFp(configuration).deleteLogsysCategory(id, options).then((request) => request(axios, basePath));
-        },
-        /**
-         * 
-         * @summary Gets LogsysCategory
-         * @param {number} id Id
-         * @param {string} [includes] Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names 
-         * @param {string} [select] Column names [.] separated to fetch specific fields in response
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getLogsysCategory(id: number, includes?: string, select?: string, options?: any): AxiosPromise<Array<ModelsLogsysCategory>> {
-            return LogsysCategoryApiFp(configuration).getLogsysCategory(id, includes, select, options).then((request) => request(axios, basePath));
-        },
-        /**
-         * 
-         * @summary Lists LogsysCategories
-         * @param {string} [includes] Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names 
-         * @param {string} [where] Filter on specific fields. Multiple conditions [.] separated Example: col_like_value.col2__val2
-         * @param {string} [limit] Rows to limit in response (Default: 10,000)
-         * @param {string} [orderBy] Order by [field]
-         * @param {string} [orderDirection] Order by field direction
-         * @param {string} [select] Column names [.] separated to fetch specific fields in response
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        listLogsysCategories(includes?: string, where?: string, limit?: string, orderBy?: string, orderDirection?: string, select?: string, options?: any): AxiosPromise<Array<ModelsLogsysCategory>> {
-            return LogsysCategoryApiFp(configuration).listLogsysCategories(includes, where, limit, orderBy, orderDirection, select, options).then((request) => request(axios, basePath));
-        },
-        /**
-         * 
-         * @summary Updates LogsysCategory
-         * @param {number} id Id
-         * @param {ModelsLogsysCategory} logsysCategory LogsysCategory
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        updateLogsysCategory(id: number, logsysCategory: ModelsLogsysCategory, options?: any): AxiosPromise<Array<ModelsLogsysCategory>> {
-            return LogsysCategoryApiFp(configuration).updateLogsysCategory(id, logsysCategory, options).then((request) => request(axios, basePath));
-        },
-    };
-};
-
-/**
- * Request parameters for createLogsysCategory operation in LogsysCategoryApi.
- * @export
- * @interface LogsysCategoryApiCreateLogsysCategoryRequest
- */
-export interface LogsysCategoryApiCreateLogsysCategoryRequest {
-    /**
-     * LogsysCategory
-     * @type {ModelsLogsysCategory}
-     * @memberof LogsysCategoryApiCreateLogsysCategory
-     */
-    readonly logsysCategory: ModelsLogsysCategory
-}
-
-/**
- * Request parameters for deleteLogsysCategory operation in LogsysCategoryApi.
- * @export
- * @interface LogsysCategoryApiDeleteLogsysCategoryRequest
- */
-export interface LogsysCategoryApiDeleteLogsysCategoryRequest {
-    /**
-     * Id
-     * @type {number}
-     * @memberof LogsysCategoryApiDeleteLogsysCategory
-     */
-    readonly id: number
-}
-
-/**
- * Request parameters for getLogsysCategory operation in LogsysCategoryApi.
- * @export
- * @interface LogsysCategoryApiGetLogsysCategoryRequest
- */
-export interface LogsysCategoryApiGetLogsysCategoryRequest {
-    /**
-     * Id
-     * @type {number}
-     * @memberof LogsysCategoryApiGetLogsysCategory
-     */
-    readonly id: number
-
-    /**
-     * Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names 
-     * @type {string}
-     * @memberof LogsysCategoryApiGetLogsysCategory
-     */
-    readonly includes?: string
-
-    /**
-     * Column names [.] separated to fetch specific fields in response
-     * @type {string}
-     * @memberof LogsysCategoryApiGetLogsysCategory
-     */
-    readonly select?: string
-}
-
-/**
- * Request parameters for listLogsysCategories operation in LogsysCategoryApi.
- * @export
- * @interface LogsysCategoryApiListLogsysCategoriesRequest
- */
-export interface LogsysCategoryApiListLogsysCategoriesRequest {
-    /**
-     * Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names 
-     * @type {string}
-     * @memberof LogsysCategoryApiListLogsysCategories
-     */
-    readonly includes?: string
-
-    /**
-     * Filter on specific fields. Multiple conditions [.] separated Example: col_like_value.col2__val2
-     * @type {string}
-     * @memberof LogsysCategoryApiListLogsysCategories
-     */
-    readonly where?: string
-
-    /**
-     * Rows to limit in response (Default: 10,000)
-     * @type {string}
-     * @memberof LogsysCategoryApiListLogsysCategories
-     */
-    readonly limit?: string
-
-    /**
-     * Order by [field]
-     * @type {string}
-     * @memberof LogsysCategoryApiListLogsysCategories
-     */
-    readonly orderBy?: string
-
-    /**
-     * Order by field direction
-     * @type {string}
-     * @memberof LogsysCategoryApiListLogsysCategories
-     */
-    readonly orderDirection?: string
-
-    /**
-     * Column names [.] separated to fetch specific fields in response
-     * @type {string}
-     * @memberof LogsysCategoryApiListLogsysCategories
-     */
-    readonly select?: string
-}
-
-/**
- * Request parameters for updateLogsysCategory operation in LogsysCategoryApi.
- * @export
- * @interface LogsysCategoryApiUpdateLogsysCategoryRequest
- */
-export interface LogsysCategoryApiUpdateLogsysCategoryRequest {
-    /**
-     * Id
-     * @type {number}
-     * @memberof LogsysCategoryApiUpdateLogsysCategory
-     */
-    readonly id: number
-
-    /**
-     * LogsysCategory
-     * @type {ModelsLogsysCategory}
-     * @memberof LogsysCategoryApiUpdateLogsysCategory
-     */
-    readonly logsysCategory: ModelsLogsysCategory
-}
-
-/**
- * LogsysCategoryApi - object-oriented interface
- * @export
- * @class LogsysCategoryApi
- * @extends {BaseAPI}
- */
-export class LogsysCategoryApi extends BaseAPI {
-    /**
-     * 
-     * @summary Creates LogsysCategory
-     * @param {LogsysCategoryApiCreateLogsysCategoryRequest} requestParameters Request parameters.
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof LogsysCategoryApi
-     */
-    public createLogsysCategory(requestParameters: LogsysCategoryApiCreateLogsysCategoryRequest, options?: any) {
-        return LogsysCategoryApiFp(this.configuration).createLogsysCategory(requestParameters.logsysCategory, options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
-     * 
-     * @summary Deletes LogsysCategory
-     * @param {LogsysCategoryApiDeleteLogsysCategoryRequest} requestParameters Request parameters.
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof LogsysCategoryApi
-     */
-    public deleteLogsysCategory(requestParameters: LogsysCategoryApiDeleteLogsysCategoryRequest, options?: any) {
-        return LogsysCategoryApiFp(this.configuration).deleteLogsysCategory(requestParameters.id, options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
-     * 
-     * @summary Gets LogsysCategory
-     * @param {LogsysCategoryApiGetLogsysCategoryRequest} requestParameters Request parameters.
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof LogsysCategoryApi
-     */
-    public getLogsysCategory(requestParameters: LogsysCategoryApiGetLogsysCategoryRequest, options?: any) {
-        return LogsysCategoryApiFp(this.configuration).getLogsysCategory(requestParameters.id, requestParameters.includes, requestParameters.select, options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
-     * 
-     * @summary Lists LogsysCategories
-     * @param {LogsysCategoryApiListLogsysCategoriesRequest} requestParameters Request parameters.
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof LogsysCategoryApi
-     */
-    public listLogsysCategories(requestParameters: LogsysCategoryApiListLogsysCategoriesRequest = {}, options?: any) {
-        return LogsysCategoryApiFp(this.configuration).listLogsysCategories(requestParameters.includes, requestParameters.where, requestParameters.limit, requestParameters.orderBy, requestParameters.orderDirection, requestParameters.select, options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
-     * 
-     * @summary Updates LogsysCategory
-     * @param {LogsysCategoryApiUpdateLogsysCategoryRequest} requestParameters Request parameters.
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof LogsysCategoryApi
-     */
-    public updateLogsysCategory(requestParameters: LogsysCategoryApiUpdateLogsysCategoryRequest, options?: any) {
-        return LogsysCategoryApiFp(this.configuration).updateLogsysCategory(requestParameters.id, requestParameters.logsysCategory, options).then((request) => request(this.axios, this.basePath));
-    }
-}
-
-
-/**
  * LootdropApi - axios parameter creator
  * @export
  */
@@ -59731,635 +51191,6 @@ export class MeApi extends BaseAPI {
      */
     public me(options?: any) {
         return MeApiFp(this.configuration).me(options).then((request) => request(this.axios, this.basePath));
-    }
-}
-
-
-/**
- * MerchantlistApi - axios parameter creator
- * @export
- */
-export const MerchantlistApiAxiosParamCreator = function (configuration?: Configuration) {
-    return {
-        /**
-         * 
-         * @summary Creates Merchantlist
-         * @param {ModelsMerchantlist} merchantlist Merchantlist
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        createMerchantlist: async (merchantlist: ModelsMerchantlist, options: any = {}): Promise<RequestArgs> => {
-            // verify required parameter 'merchantlist' is not null or undefined
-            if (merchantlist === null || merchantlist === undefined) {
-                throw new RequiredError('merchantlist','Required parameter merchantlist was null or undefined when calling createMerchantlist.');
-            }
-            const localVarPath = `/merchantlist`;
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, 'https://example.com');
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'PUT', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-
-    
-            localVarHeaderParameter['Content-Type'] = 'application/json';
-
-            const queryParameters = new URLSearchParams(localVarUrlObj.search);
-            for (const key in localVarQueryParameter) {
-                queryParameters.set(key, localVarQueryParameter[key]);
-            }
-            for (const key in options.query) {
-                queryParameters.set(key, options.query[key]);
-            }
-            localVarUrlObj.search = (new URLSearchParams(queryParameters)).toString();
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            const nonString = typeof merchantlist !== 'string';
-            const needsSerialization = nonString && configuration && configuration.isJsonMime
-                ? configuration.isJsonMime(localVarRequestOptions.headers['Content-Type'])
-                : nonString;
-            localVarRequestOptions.data =  needsSerialization
-                ? JSON.stringify(merchantlist !== undefined ? merchantlist : {})
-                : (merchantlist || "");
-
-            return {
-                url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * 
-         * @summary Deletes Merchantlist
-         * @param {number} id Id
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        deleteMerchantlist: async (id: number, options: any = {}): Promise<RequestArgs> => {
-            // verify required parameter 'id' is not null or undefined
-            if (id === null || id === undefined) {
-                throw new RequiredError('id','Required parameter id was null or undefined when calling deleteMerchantlist.');
-            }
-            const localVarPath = `/merchantlist/{id}`
-                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, 'https://example.com');
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'DELETE', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-
-    
-            const queryParameters = new URLSearchParams(localVarUrlObj.search);
-            for (const key in localVarQueryParameter) {
-                queryParameters.set(key, localVarQueryParameter[key]);
-            }
-            for (const key in options.query) {
-                queryParameters.set(key, options.query[key]);
-            }
-            localVarUrlObj.search = (new URLSearchParams(queryParameters)).toString();
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-
-            return {
-                url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * 
-         * @summary Gets Merchantlist
-         * @param {number} id Id
-         * @param {string} [includes] Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names 
-         * @param {string} [select] Column names [.] separated to fetch specific fields in response
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getMerchantlist: async (id: number, includes?: string, select?: string, options: any = {}): Promise<RequestArgs> => {
-            // verify required parameter 'id' is not null or undefined
-            if (id === null || id === undefined) {
-                throw new RequiredError('id','Required parameter id was null or undefined when calling getMerchantlist.');
-            }
-            const localVarPath = `/merchantlist/{id}`
-                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, 'https://example.com');
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-            if (includes !== undefined) {
-                localVarQueryParameter['includes'] = includes;
-            }
-
-            if (select !== undefined) {
-                localVarQueryParameter['select'] = select;
-            }
-
-
-    
-            const queryParameters = new URLSearchParams(localVarUrlObj.search);
-            for (const key in localVarQueryParameter) {
-                queryParameters.set(key, localVarQueryParameter[key]);
-            }
-            for (const key in options.query) {
-                queryParameters.set(key, options.query[key]);
-            }
-            localVarUrlObj.search = (new URLSearchParams(queryParameters)).toString();
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-
-            return {
-                url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * 
-         * @summary Lists Merchantlists
-         * @param {string} [includes] Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names 
-         * @param {string} [where] Filter on specific fields. Multiple conditions [.] separated Example: col_like_value.col2__val2
-         * @param {string} [limit] Rows to limit in response (Default: 10,000)
-         * @param {string} [orderBy] Order by [field]
-         * @param {string} [orderDirection] Order by field direction
-         * @param {string} [select] Column names [.] separated to fetch specific fields in response
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        listMerchantlists: async (includes?: string, where?: string, limit?: string, orderBy?: string, orderDirection?: string, select?: string, options: any = {}): Promise<RequestArgs> => {
-            const localVarPath = `/merchantlists`;
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, 'https://example.com');
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-            if (includes !== undefined) {
-                localVarQueryParameter['includes'] = includes;
-            }
-
-            if (where !== undefined) {
-                localVarQueryParameter['where'] = where;
-            }
-
-            if (limit !== undefined) {
-                localVarQueryParameter['limit'] = limit;
-            }
-
-            if (orderBy !== undefined) {
-                localVarQueryParameter['orderBy'] = orderBy;
-            }
-
-            if (orderDirection !== undefined) {
-                localVarQueryParameter['orderDirection'] = orderDirection;
-            }
-
-            if (select !== undefined) {
-                localVarQueryParameter['select'] = select;
-            }
-
-
-    
-            const queryParameters = new URLSearchParams(localVarUrlObj.search);
-            for (const key in localVarQueryParameter) {
-                queryParameters.set(key, localVarQueryParameter[key]);
-            }
-            for (const key in options.query) {
-                queryParameters.set(key, options.query[key]);
-            }
-            localVarUrlObj.search = (new URLSearchParams(queryParameters)).toString();
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-
-            return {
-                url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * 
-         * @summary Updates Merchantlist
-         * @param {number} id Id
-         * @param {ModelsMerchantlist} merchantlist Merchantlist
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        updateMerchantlist: async (id: number, merchantlist: ModelsMerchantlist, options: any = {}): Promise<RequestArgs> => {
-            // verify required parameter 'id' is not null or undefined
-            if (id === null || id === undefined) {
-                throw new RequiredError('id','Required parameter id was null or undefined when calling updateMerchantlist.');
-            }
-            // verify required parameter 'merchantlist' is not null or undefined
-            if (merchantlist === null || merchantlist === undefined) {
-                throw new RequiredError('merchantlist','Required parameter merchantlist was null or undefined when calling updateMerchantlist.');
-            }
-            const localVarPath = `/merchantlist/{id}`
-                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, 'https://example.com');
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'PATCH', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-
-    
-            localVarHeaderParameter['Content-Type'] = 'application/json';
-
-            const queryParameters = new URLSearchParams(localVarUrlObj.search);
-            for (const key in localVarQueryParameter) {
-                queryParameters.set(key, localVarQueryParameter[key]);
-            }
-            for (const key in options.query) {
-                queryParameters.set(key, options.query[key]);
-            }
-            localVarUrlObj.search = (new URLSearchParams(queryParameters)).toString();
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            const nonString = typeof merchantlist !== 'string';
-            const needsSerialization = nonString && configuration && configuration.isJsonMime
-                ? configuration.isJsonMime(localVarRequestOptions.headers['Content-Type'])
-                : nonString;
-            localVarRequestOptions.data =  needsSerialization
-                ? JSON.stringify(merchantlist !== undefined ? merchantlist : {})
-                : (merchantlist || "");
-
-            return {
-                url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
-                options: localVarRequestOptions,
-            };
-        },
-    }
-};
-
-/**
- * MerchantlistApi - functional programming interface
- * @export
- */
-export const MerchantlistApiFp = function(configuration?: Configuration) {
-    return {
-        /**
-         * 
-         * @summary Creates Merchantlist
-         * @param {ModelsMerchantlist} merchantlist Merchantlist
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async createMerchantlist(merchantlist: ModelsMerchantlist, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<ModelsMerchantlist>>> {
-            const localVarAxiosArgs = await MerchantlistApiAxiosParamCreator(configuration).createMerchantlist(merchantlist, options);
-            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
-                const axiosRequestArgs = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
-                return axios.request(axiosRequestArgs);
-            };
-        },
-        /**
-         * 
-         * @summary Deletes Merchantlist
-         * @param {number} id Id
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async deleteMerchantlist(id: number, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<string>> {
-            const localVarAxiosArgs = await MerchantlistApiAxiosParamCreator(configuration).deleteMerchantlist(id, options);
-            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
-                const axiosRequestArgs = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
-                return axios.request(axiosRequestArgs);
-            };
-        },
-        /**
-         * 
-         * @summary Gets Merchantlist
-         * @param {number} id Id
-         * @param {string} [includes] Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names 
-         * @param {string} [select] Column names [.] separated to fetch specific fields in response
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async getMerchantlist(id: number, includes?: string, select?: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<ModelsMerchantlist>>> {
-            const localVarAxiosArgs = await MerchantlistApiAxiosParamCreator(configuration).getMerchantlist(id, includes, select, options);
-            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
-                const axiosRequestArgs = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
-                return axios.request(axiosRequestArgs);
-            };
-        },
-        /**
-         * 
-         * @summary Lists Merchantlists
-         * @param {string} [includes] Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names 
-         * @param {string} [where] Filter on specific fields. Multiple conditions [.] separated Example: col_like_value.col2__val2
-         * @param {string} [limit] Rows to limit in response (Default: 10,000)
-         * @param {string} [orderBy] Order by [field]
-         * @param {string} [orderDirection] Order by field direction
-         * @param {string} [select] Column names [.] separated to fetch specific fields in response
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async listMerchantlists(includes?: string, where?: string, limit?: string, orderBy?: string, orderDirection?: string, select?: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<ModelsMerchantlist>>> {
-            const localVarAxiosArgs = await MerchantlistApiAxiosParamCreator(configuration).listMerchantlists(includes, where, limit, orderBy, orderDirection, select, options);
-            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
-                const axiosRequestArgs = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
-                return axios.request(axiosRequestArgs);
-            };
-        },
-        /**
-         * 
-         * @summary Updates Merchantlist
-         * @param {number} id Id
-         * @param {ModelsMerchantlist} merchantlist Merchantlist
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async updateMerchantlist(id: number, merchantlist: ModelsMerchantlist, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<ModelsMerchantlist>>> {
-            const localVarAxiosArgs = await MerchantlistApiAxiosParamCreator(configuration).updateMerchantlist(id, merchantlist, options);
-            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
-                const axiosRequestArgs = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
-                return axios.request(axiosRequestArgs);
-            };
-        },
-    }
-};
-
-/**
- * MerchantlistApi - factory interface
- * @export
- */
-export const MerchantlistApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
-    return {
-        /**
-         * 
-         * @summary Creates Merchantlist
-         * @param {ModelsMerchantlist} merchantlist Merchantlist
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        createMerchantlist(merchantlist: ModelsMerchantlist, options?: any): AxiosPromise<Array<ModelsMerchantlist>> {
-            return MerchantlistApiFp(configuration).createMerchantlist(merchantlist, options).then((request) => request(axios, basePath));
-        },
-        /**
-         * 
-         * @summary Deletes Merchantlist
-         * @param {number} id Id
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        deleteMerchantlist(id: number, options?: any): AxiosPromise<string> {
-            return MerchantlistApiFp(configuration).deleteMerchantlist(id, options).then((request) => request(axios, basePath));
-        },
-        /**
-         * 
-         * @summary Gets Merchantlist
-         * @param {number} id Id
-         * @param {string} [includes] Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names 
-         * @param {string} [select] Column names [.] separated to fetch specific fields in response
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getMerchantlist(id: number, includes?: string, select?: string, options?: any): AxiosPromise<Array<ModelsMerchantlist>> {
-            return MerchantlistApiFp(configuration).getMerchantlist(id, includes, select, options).then((request) => request(axios, basePath));
-        },
-        /**
-         * 
-         * @summary Lists Merchantlists
-         * @param {string} [includes] Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names 
-         * @param {string} [where] Filter on specific fields. Multiple conditions [.] separated Example: col_like_value.col2__val2
-         * @param {string} [limit] Rows to limit in response (Default: 10,000)
-         * @param {string} [orderBy] Order by [field]
-         * @param {string} [orderDirection] Order by field direction
-         * @param {string} [select] Column names [.] separated to fetch specific fields in response
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        listMerchantlists(includes?: string, where?: string, limit?: string, orderBy?: string, orderDirection?: string, select?: string, options?: any): AxiosPromise<Array<ModelsMerchantlist>> {
-            return MerchantlistApiFp(configuration).listMerchantlists(includes, where, limit, orderBy, orderDirection, select, options).then((request) => request(axios, basePath));
-        },
-        /**
-         * 
-         * @summary Updates Merchantlist
-         * @param {number} id Id
-         * @param {ModelsMerchantlist} merchantlist Merchantlist
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        updateMerchantlist(id: number, merchantlist: ModelsMerchantlist, options?: any): AxiosPromise<Array<ModelsMerchantlist>> {
-            return MerchantlistApiFp(configuration).updateMerchantlist(id, merchantlist, options).then((request) => request(axios, basePath));
-        },
-    };
-};
-
-/**
- * Request parameters for createMerchantlist operation in MerchantlistApi.
- * @export
- * @interface MerchantlistApiCreateMerchantlistRequest
- */
-export interface MerchantlistApiCreateMerchantlistRequest {
-    /**
-     * Merchantlist
-     * @type {ModelsMerchantlist}
-     * @memberof MerchantlistApiCreateMerchantlist
-     */
-    readonly merchantlist: ModelsMerchantlist
-}
-
-/**
- * Request parameters for deleteMerchantlist operation in MerchantlistApi.
- * @export
- * @interface MerchantlistApiDeleteMerchantlistRequest
- */
-export interface MerchantlistApiDeleteMerchantlistRequest {
-    /**
-     * Id
-     * @type {number}
-     * @memberof MerchantlistApiDeleteMerchantlist
-     */
-    readonly id: number
-}
-
-/**
- * Request parameters for getMerchantlist operation in MerchantlistApi.
- * @export
- * @interface MerchantlistApiGetMerchantlistRequest
- */
-export interface MerchantlistApiGetMerchantlistRequest {
-    /**
-     * Id
-     * @type {number}
-     * @memberof MerchantlistApiGetMerchantlist
-     */
-    readonly id: number
-
-    /**
-     * Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names 
-     * @type {string}
-     * @memberof MerchantlistApiGetMerchantlist
-     */
-    readonly includes?: string
-
-    /**
-     * Column names [.] separated to fetch specific fields in response
-     * @type {string}
-     * @memberof MerchantlistApiGetMerchantlist
-     */
-    readonly select?: string
-}
-
-/**
- * Request parameters for listMerchantlists operation in MerchantlistApi.
- * @export
- * @interface MerchantlistApiListMerchantlistsRequest
- */
-export interface MerchantlistApiListMerchantlistsRequest {
-    /**
-     * Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names 
-     * @type {string}
-     * @memberof MerchantlistApiListMerchantlists
-     */
-    readonly includes?: string
-
-    /**
-     * Filter on specific fields. Multiple conditions [.] separated Example: col_like_value.col2__val2
-     * @type {string}
-     * @memberof MerchantlistApiListMerchantlists
-     */
-    readonly where?: string
-
-    /**
-     * Rows to limit in response (Default: 10,000)
-     * @type {string}
-     * @memberof MerchantlistApiListMerchantlists
-     */
-    readonly limit?: string
-
-    /**
-     * Order by [field]
-     * @type {string}
-     * @memberof MerchantlistApiListMerchantlists
-     */
-    readonly orderBy?: string
-
-    /**
-     * Order by field direction
-     * @type {string}
-     * @memberof MerchantlistApiListMerchantlists
-     */
-    readonly orderDirection?: string
-
-    /**
-     * Column names [.] separated to fetch specific fields in response
-     * @type {string}
-     * @memberof MerchantlistApiListMerchantlists
-     */
-    readonly select?: string
-}
-
-/**
- * Request parameters for updateMerchantlist operation in MerchantlistApi.
- * @export
- * @interface MerchantlistApiUpdateMerchantlistRequest
- */
-export interface MerchantlistApiUpdateMerchantlistRequest {
-    /**
-     * Id
-     * @type {number}
-     * @memberof MerchantlistApiUpdateMerchantlist
-     */
-    readonly id: number
-
-    /**
-     * Merchantlist
-     * @type {ModelsMerchantlist}
-     * @memberof MerchantlistApiUpdateMerchantlist
-     */
-    readonly merchantlist: ModelsMerchantlist
-}
-
-/**
- * MerchantlistApi - object-oriented interface
- * @export
- * @class MerchantlistApi
- * @extends {BaseAPI}
- */
-export class MerchantlistApi extends BaseAPI {
-    /**
-     * 
-     * @summary Creates Merchantlist
-     * @param {MerchantlistApiCreateMerchantlistRequest} requestParameters Request parameters.
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof MerchantlistApi
-     */
-    public createMerchantlist(requestParameters: MerchantlistApiCreateMerchantlistRequest, options?: any) {
-        return MerchantlistApiFp(this.configuration).createMerchantlist(requestParameters.merchantlist, options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
-     * 
-     * @summary Deletes Merchantlist
-     * @param {MerchantlistApiDeleteMerchantlistRequest} requestParameters Request parameters.
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof MerchantlistApi
-     */
-    public deleteMerchantlist(requestParameters: MerchantlistApiDeleteMerchantlistRequest, options?: any) {
-        return MerchantlistApiFp(this.configuration).deleteMerchantlist(requestParameters.id, options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
-     * 
-     * @summary Gets Merchantlist
-     * @param {MerchantlistApiGetMerchantlistRequest} requestParameters Request parameters.
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof MerchantlistApi
-     */
-    public getMerchantlist(requestParameters: MerchantlistApiGetMerchantlistRequest, options?: any) {
-        return MerchantlistApiFp(this.configuration).getMerchantlist(requestParameters.id, requestParameters.includes, requestParameters.select, options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
-     * 
-     * @summary Lists Merchantlists
-     * @param {MerchantlistApiListMerchantlistsRequest} requestParameters Request parameters.
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof MerchantlistApi
-     */
-    public listMerchantlists(requestParameters: MerchantlistApiListMerchantlistsRequest = {}, options?: any) {
-        return MerchantlistApiFp(this.configuration).listMerchantlists(requestParameters.includes, requestParameters.where, requestParameters.limit, requestParameters.orderBy, requestParameters.orderDirection, requestParameters.select, options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
-     * 
-     * @summary Updates Merchantlist
-     * @param {MerchantlistApiUpdateMerchantlistRequest} requestParameters Request parameters.
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof MerchantlistApi
-     */
-    public updateMerchantlist(requestParameters: MerchantlistApiUpdateMerchantlistRequest, options?: any) {
-        return MerchantlistApiFp(this.configuration).updateMerchantlist(requestParameters.id, requestParameters.merchantlist, options).then((request) => request(this.axios, this.basePath));
     }
 }
 
@@ -62247,635 +53078,6 @@ export class NpcFactionApi extends BaseAPI {
      */
     public updateNpcFaction(requestParameters: NpcFactionApiUpdateNpcFactionRequest, options?: any) {
         return NpcFactionApiFp(this.configuration).updateNpcFaction(requestParameters.id, requestParameters.npcFaction, options).then((request) => request(this.axios, this.basePath));
-    }
-}
-
-
-/**
- * NpcScaleGlobalBaseApi - axios parameter creator
- * @export
- */
-export const NpcScaleGlobalBaseApiAxiosParamCreator = function (configuration?: Configuration) {
-    return {
-        /**
-         * 
-         * @summary Creates NpcScaleGlobalBase
-         * @param {ModelsNpcScaleGlobalBase} npcScaleGlobalBase NpcScaleGlobalBase
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        createNpcScaleGlobalBase: async (npcScaleGlobalBase: ModelsNpcScaleGlobalBase, options: any = {}): Promise<RequestArgs> => {
-            // verify required parameter 'npcScaleGlobalBase' is not null or undefined
-            if (npcScaleGlobalBase === null || npcScaleGlobalBase === undefined) {
-                throw new RequiredError('npcScaleGlobalBase','Required parameter npcScaleGlobalBase was null or undefined when calling createNpcScaleGlobalBase.');
-            }
-            const localVarPath = `/npc_scale_global_base`;
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, 'https://example.com');
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'PUT', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-
-    
-            localVarHeaderParameter['Content-Type'] = 'application/json';
-
-            const queryParameters = new URLSearchParams(localVarUrlObj.search);
-            for (const key in localVarQueryParameter) {
-                queryParameters.set(key, localVarQueryParameter[key]);
-            }
-            for (const key in options.query) {
-                queryParameters.set(key, options.query[key]);
-            }
-            localVarUrlObj.search = (new URLSearchParams(queryParameters)).toString();
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            const nonString = typeof npcScaleGlobalBase !== 'string';
-            const needsSerialization = nonString && configuration && configuration.isJsonMime
-                ? configuration.isJsonMime(localVarRequestOptions.headers['Content-Type'])
-                : nonString;
-            localVarRequestOptions.data =  needsSerialization
-                ? JSON.stringify(npcScaleGlobalBase !== undefined ? npcScaleGlobalBase : {})
-                : (npcScaleGlobalBase || "");
-
-            return {
-                url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * 
-         * @summary Deletes NpcScaleGlobalBase
-         * @param {number} id Id
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        deleteNpcScaleGlobalBase: async (id: number, options: any = {}): Promise<RequestArgs> => {
-            // verify required parameter 'id' is not null or undefined
-            if (id === null || id === undefined) {
-                throw new RequiredError('id','Required parameter id was null or undefined when calling deleteNpcScaleGlobalBase.');
-            }
-            const localVarPath = `/npc_scale_global_base/{id}`
-                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, 'https://example.com');
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'DELETE', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-
-    
-            const queryParameters = new URLSearchParams(localVarUrlObj.search);
-            for (const key in localVarQueryParameter) {
-                queryParameters.set(key, localVarQueryParameter[key]);
-            }
-            for (const key in options.query) {
-                queryParameters.set(key, options.query[key]);
-            }
-            localVarUrlObj.search = (new URLSearchParams(queryParameters)).toString();
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-
-            return {
-                url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * 
-         * @summary Gets NpcScaleGlobalBase
-         * @param {number} id Id
-         * @param {string} [includes] Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names 
-         * @param {string} [select] Column names [.] separated to fetch specific fields in response
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getNpcScaleGlobalBase: async (id: number, includes?: string, select?: string, options: any = {}): Promise<RequestArgs> => {
-            // verify required parameter 'id' is not null or undefined
-            if (id === null || id === undefined) {
-                throw new RequiredError('id','Required parameter id was null or undefined when calling getNpcScaleGlobalBase.');
-            }
-            const localVarPath = `/npc_scale_global_base/{id}`
-                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, 'https://example.com');
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-            if (includes !== undefined) {
-                localVarQueryParameter['includes'] = includes;
-            }
-
-            if (select !== undefined) {
-                localVarQueryParameter['select'] = select;
-            }
-
-
-    
-            const queryParameters = new URLSearchParams(localVarUrlObj.search);
-            for (const key in localVarQueryParameter) {
-                queryParameters.set(key, localVarQueryParameter[key]);
-            }
-            for (const key in options.query) {
-                queryParameters.set(key, options.query[key]);
-            }
-            localVarUrlObj.search = (new URLSearchParams(queryParameters)).toString();
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-
-            return {
-                url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * 
-         * @summary Lists NpcScaleGlobalBases
-         * @param {string} [includes] Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names 
-         * @param {string} [where] Filter on specific fields. Multiple conditions [.] separated Example: col_like_value.col2__val2
-         * @param {string} [limit] Rows to limit in response (Default: 10,000)
-         * @param {string} [orderBy] Order by [field]
-         * @param {string} [orderDirection] Order by field direction
-         * @param {string} [select] Column names [.] separated to fetch specific fields in response
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        listNpcScaleGlobalBases: async (includes?: string, where?: string, limit?: string, orderBy?: string, orderDirection?: string, select?: string, options: any = {}): Promise<RequestArgs> => {
-            const localVarPath = `/npc_scale_global_bases`;
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, 'https://example.com');
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-            if (includes !== undefined) {
-                localVarQueryParameter['includes'] = includes;
-            }
-
-            if (where !== undefined) {
-                localVarQueryParameter['where'] = where;
-            }
-
-            if (limit !== undefined) {
-                localVarQueryParameter['limit'] = limit;
-            }
-
-            if (orderBy !== undefined) {
-                localVarQueryParameter['orderBy'] = orderBy;
-            }
-
-            if (orderDirection !== undefined) {
-                localVarQueryParameter['orderDirection'] = orderDirection;
-            }
-
-            if (select !== undefined) {
-                localVarQueryParameter['select'] = select;
-            }
-
-
-    
-            const queryParameters = new URLSearchParams(localVarUrlObj.search);
-            for (const key in localVarQueryParameter) {
-                queryParameters.set(key, localVarQueryParameter[key]);
-            }
-            for (const key in options.query) {
-                queryParameters.set(key, options.query[key]);
-            }
-            localVarUrlObj.search = (new URLSearchParams(queryParameters)).toString();
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-
-            return {
-                url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * 
-         * @summary Updates NpcScaleGlobalBase
-         * @param {number} id Id
-         * @param {ModelsNpcScaleGlobalBase} npcScaleGlobalBase NpcScaleGlobalBase
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        updateNpcScaleGlobalBase: async (id: number, npcScaleGlobalBase: ModelsNpcScaleGlobalBase, options: any = {}): Promise<RequestArgs> => {
-            // verify required parameter 'id' is not null or undefined
-            if (id === null || id === undefined) {
-                throw new RequiredError('id','Required parameter id was null or undefined when calling updateNpcScaleGlobalBase.');
-            }
-            // verify required parameter 'npcScaleGlobalBase' is not null or undefined
-            if (npcScaleGlobalBase === null || npcScaleGlobalBase === undefined) {
-                throw new RequiredError('npcScaleGlobalBase','Required parameter npcScaleGlobalBase was null or undefined when calling updateNpcScaleGlobalBase.');
-            }
-            const localVarPath = `/npc_scale_global_base/{id}`
-                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, 'https://example.com');
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'PATCH', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-
-    
-            localVarHeaderParameter['Content-Type'] = 'application/json';
-
-            const queryParameters = new URLSearchParams(localVarUrlObj.search);
-            for (const key in localVarQueryParameter) {
-                queryParameters.set(key, localVarQueryParameter[key]);
-            }
-            for (const key in options.query) {
-                queryParameters.set(key, options.query[key]);
-            }
-            localVarUrlObj.search = (new URLSearchParams(queryParameters)).toString();
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            const nonString = typeof npcScaleGlobalBase !== 'string';
-            const needsSerialization = nonString && configuration && configuration.isJsonMime
-                ? configuration.isJsonMime(localVarRequestOptions.headers['Content-Type'])
-                : nonString;
-            localVarRequestOptions.data =  needsSerialization
-                ? JSON.stringify(npcScaleGlobalBase !== undefined ? npcScaleGlobalBase : {})
-                : (npcScaleGlobalBase || "");
-
-            return {
-                url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
-                options: localVarRequestOptions,
-            };
-        },
-    }
-};
-
-/**
- * NpcScaleGlobalBaseApi - functional programming interface
- * @export
- */
-export const NpcScaleGlobalBaseApiFp = function(configuration?: Configuration) {
-    return {
-        /**
-         * 
-         * @summary Creates NpcScaleGlobalBase
-         * @param {ModelsNpcScaleGlobalBase} npcScaleGlobalBase NpcScaleGlobalBase
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async createNpcScaleGlobalBase(npcScaleGlobalBase: ModelsNpcScaleGlobalBase, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<ModelsNpcScaleGlobalBase>>> {
-            const localVarAxiosArgs = await NpcScaleGlobalBaseApiAxiosParamCreator(configuration).createNpcScaleGlobalBase(npcScaleGlobalBase, options);
-            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
-                const axiosRequestArgs = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
-                return axios.request(axiosRequestArgs);
-            };
-        },
-        /**
-         * 
-         * @summary Deletes NpcScaleGlobalBase
-         * @param {number} id Id
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async deleteNpcScaleGlobalBase(id: number, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<string>> {
-            const localVarAxiosArgs = await NpcScaleGlobalBaseApiAxiosParamCreator(configuration).deleteNpcScaleGlobalBase(id, options);
-            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
-                const axiosRequestArgs = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
-                return axios.request(axiosRequestArgs);
-            };
-        },
-        /**
-         * 
-         * @summary Gets NpcScaleGlobalBase
-         * @param {number} id Id
-         * @param {string} [includes] Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names 
-         * @param {string} [select] Column names [.] separated to fetch specific fields in response
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async getNpcScaleGlobalBase(id: number, includes?: string, select?: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<ModelsNpcScaleGlobalBase>>> {
-            const localVarAxiosArgs = await NpcScaleGlobalBaseApiAxiosParamCreator(configuration).getNpcScaleGlobalBase(id, includes, select, options);
-            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
-                const axiosRequestArgs = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
-                return axios.request(axiosRequestArgs);
-            };
-        },
-        /**
-         * 
-         * @summary Lists NpcScaleGlobalBases
-         * @param {string} [includes] Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names 
-         * @param {string} [where] Filter on specific fields. Multiple conditions [.] separated Example: col_like_value.col2__val2
-         * @param {string} [limit] Rows to limit in response (Default: 10,000)
-         * @param {string} [orderBy] Order by [field]
-         * @param {string} [orderDirection] Order by field direction
-         * @param {string} [select] Column names [.] separated to fetch specific fields in response
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async listNpcScaleGlobalBases(includes?: string, where?: string, limit?: string, orderBy?: string, orderDirection?: string, select?: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<ModelsNpcScaleGlobalBase>>> {
-            const localVarAxiosArgs = await NpcScaleGlobalBaseApiAxiosParamCreator(configuration).listNpcScaleGlobalBases(includes, where, limit, orderBy, orderDirection, select, options);
-            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
-                const axiosRequestArgs = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
-                return axios.request(axiosRequestArgs);
-            };
-        },
-        /**
-         * 
-         * @summary Updates NpcScaleGlobalBase
-         * @param {number} id Id
-         * @param {ModelsNpcScaleGlobalBase} npcScaleGlobalBase NpcScaleGlobalBase
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async updateNpcScaleGlobalBase(id: number, npcScaleGlobalBase: ModelsNpcScaleGlobalBase, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<ModelsNpcScaleGlobalBase>>> {
-            const localVarAxiosArgs = await NpcScaleGlobalBaseApiAxiosParamCreator(configuration).updateNpcScaleGlobalBase(id, npcScaleGlobalBase, options);
-            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
-                const axiosRequestArgs = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
-                return axios.request(axiosRequestArgs);
-            };
-        },
-    }
-};
-
-/**
- * NpcScaleGlobalBaseApi - factory interface
- * @export
- */
-export const NpcScaleGlobalBaseApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
-    return {
-        /**
-         * 
-         * @summary Creates NpcScaleGlobalBase
-         * @param {ModelsNpcScaleGlobalBase} npcScaleGlobalBase NpcScaleGlobalBase
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        createNpcScaleGlobalBase(npcScaleGlobalBase: ModelsNpcScaleGlobalBase, options?: any): AxiosPromise<Array<ModelsNpcScaleGlobalBase>> {
-            return NpcScaleGlobalBaseApiFp(configuration).createNpcScaleGlobalBase(npcScaleGlobalBase, options).then((request) => request(axios, basePath));
-        },
-        /**
-         * 
-         * @summary Deletes NpcScaleGlobalBase
-         * @param {number} id Id
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        deleteNpcScaleGlobalBase(id: number, options?: any): AxiosPromise<string> {
-            return NpcScaleGlobalBaseApiFp(configuration).deleteNpcScaleGlobalBase(id, options).then((request) => request(axios, basePath));
-        },
-        /**
-         * 
-         * @summary Gets NpcScaleGlobalBase
-         * @param {number} id Id
-         * @param {string} [includes] Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names 
-         * @param {string} [select] Column names [.] separated to fetch specific fields in response
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getNpcScaleGlobalBase(id: number, includes?: string, select?: string, options?: any): AxiosPromise<Array<ModelsNpcScaleGlobalBase>> {
-            return NpcScaleGlobalBaseApiFp(configuration).getNpcScaleGlobalBase(id, includes, select, options).then((request) => request(axios, basePath));
-        },
-        /**
-         * 
-         * @summary Lists NpcScaleGlobalBases
-         * @param {string} [includes] Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names 
-         * @param {string} [where] Filter on specific fields. Multiple conditions [.] separated Example: col_like_value.col2__val2
-         * @param {string} [limit] Rows to limit in response (Default: 10,000)
-         * @param {string} [orderBy] Order by [field]
-         * @param {string} [orderDirection] Order by field direction
-         * @param {string} [select] Column names [.] separated to fetch specific fields in response
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        listNpcScaleGlobalBases(includes?: string, where?: string, limit?: string, orderBy?: string, orderDirection?: string, select?: string, options?: any): AxiosPromise<Array<ModelsNpcScaleGlobalBase>> {
-            return NpcScaleGlobalBaseApiFp(configuration).listNpcScaleGlobalBases(includes, where, limit, orderBy, orderDirection, select, options).then((request) => request(axios, basePath));
-        },
-        /**
-         * 
-         * @summary Updates NpcScaleGlobalBase
-         * @param {number} id Id
-         * @param {ModelsNpcScaleGlobalBase} npcScaleGlobalBase NpcScaleGlobalBase
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        updateNpcScaleGlobalBase(id: number, npcScaleGlobalBase: ModelsNpcScaleGlobalBase, options?: any): AxiosPromise<Array<ModelsNpcScaleGlobalBase>> {
-            return NpcScaleGlobalBaseApiFp(configuration).updateNpcScaleGlobalBase(id, npcScaleGlobalBase, options).then((request) => request(axios, basePath));
-        },
-    };
-};
-
-/**
- * Request parameters for createNpcScaleGlobalBase operation in NpcScaleGlobalBaseApi.
- * @export
- * @interface NpcScaleGlobalBaseApiCreateNpcScaleGlobalBaseRequest
- */
-export interface NpcScaleGlobalBaseApiCreateNpcScaleGlobalBaseRequest {
-    /**
-     * NpcScaleGlobalBase
-     * @type {ModelsNpcScaleGlobalBase}
-     * @memberof NpcScaleGlobalBaseApiCreateNpcScaleGlobalBase
-     */
-    readonly npcScaleGlobalBase: ModelsNpcScaleGlobalBase
-}
-
-/**
- * Request parameters for deleteNpcScaleGlobalBase operation in NpcScaleGlobalBaseApi.
- * @export
- * @interface NpcScaleGlobalBaseApiDeleteNpcScaleGlobalBaseRequest
- */
-export interface NpcScaleGlobalBaseApiDeleteNpcScaleGlobalBaseRequest {
-    /**
-     * Id
-     * @type {number}
-     * @memberof NpcScaleGlobalBaseApiDeleteNpcScaleGlobalBase
-     */
-    readonly id: number
-}
-
-/**
- * Request parameters for getNpcScaleGlobalBase operation in NpcScaleGlobalBaseApi.
- * @export
- * @interface NpcScaleGlobalBaseApiGetNpcScaleGlobalBaseRequest
- */
-export interface NpcScaleGlobalBaseApiGetNpcScaleGlobalBaseRequest {
-    /**
-     * Id
-     * @type {number}
-     * @memberof NpcScaleGlobalBaseApiGetNpcScaleGlobalBase
-     */
-    readonly id: number
-
-    /**
-     * Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names 
-     * @type {string}
-     * @memberof NpcScaleGlobalBaseApiGetNpcScaleGlobalBase
-     */
-    readonly includes?: string
-
-    /**
-     * Column names [.] separated to fetch specific fields in response
-     * @type {string}
-     * @memberof NpcScaleGlobalBaseApiGetNpcScaleGlobalBase
-     */
-    readonly select?: string
-}
-
-/**
- * Request parameters for listNpcScaleGlobalBases operation in NpcScaleGlobalBaseApi.
- * @export
- * @interface NpcScaleGlobalBaseApiListNpcScaleGlobalBasesRequest
- */
-export interface NpcScaleGlobalBaseApiListNpcScaleGlobalBasesRequest {
-    /**
-     * Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names 
-     * @type {string}
-     * @memberof NpcScaleGlobalBaseApiListNpcScaleGlobalBases
-     */
-    readonly includes?: string
-
-    /**
-     * Filter on specific fields. Multiple conditions [.] separated Example: col_like_value.col2__val2
-     * @type {string}
-     * @memberof NpcScaleGlobalBaseApiListNpcScaleGlobalBases
-     */
-    readonly where?: string
-
-    /**
-     * Rows to limit in response (Default: 10,000)
-     * @type {string}
-     * @memberof NpcScaleGlobalBaseApiListNpcScaleGlobalBases
-     */
-    readonly limit?: string
-
-    /**
-     * Order by [field]
-     * @type {string}
-     * @memberof NpcScaleGlobalBaseApiListNpcScaleGlobalBases
-     */
-    readonly orderBy?: string
-
-    /**
-     * Order by field direction
-     * @type {string}
-     * @memberof NpcScaleGlobalBaseApiListNpcScaleGlobalBases
-     */
-    readonly orderDirection?: string
-
-    /**
-     * Column names [.] separated to fetch specific fields in response
-     * @type {string}
-     * @memberof NpcScaleGlobalBaseApiListNpcScaleGlobalBases
-     */
-    readonly select?: string
-}
-
-/**
- * Request parameters for updateNpcScaleGlobalBase operation in NpcScaleGlobalBaseApi.
- * @export
- * @interface NpcScaleGlobalBaseApiUpdateNpcScaleGlobalBaseRequest
- */
-export interface NpcScaleGlobalBaseApiUpdateNpcScaleGlobalBaseRequest {
-    /**
-     * Id
-     * @type {number}
-     * @memberof NpcScaleGlobalBaseApiUpdateNpcScaleGlobalBase
-     */
-    readonly id: number
-
-    /**
-     * NpcScaleGlobalBase
-     * @type {ModelsNpcScaleGlobalBase}
-     * @memberof NpcScaleGlobalBaseApiUpdateNpcScaleGlobalBase
-     */
-    readonly npcScaleGlobalBase: ModelsNpcScaleGlobalBase
-}
-
-/**
- * NpcScaleGlobalBaseApi - object-oriented interface
- * @export
- * @class NpcScaleGlobalBaseApi
- * @extends {BaseAPI}
- */
-export class NpcScaleGlobalBaseApi extends BaseAPI {
-    /**
-     * 
-     * @summary Creates NpcScaleGlobalBase
-     * @param {NpcScaleGlobalBaseApiCreateNpcScaleGlobalBaseRequest} requestParameters Request parameters.
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof NpcScaleGlobalBaseApi
-     */
-    public createNpcScaleGlobalBase(requestParameters: NpcScaleGlobalBaseApiCreateNpcScaleGlobalBaseRequest, options?: any) {
-        return NpcScaleGlobalBaseApiFp(this.configuration).createNpcScaleGlobalBase(requestParameters.npcScaleGlobalBase, options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
-     * 
-     * @summary Deletes NpcScaleGlobalBase
-     * @param {NpcScaleGlobalBaseApiDeleteNpcScaleGlobalBaseRequest} requestParameters Request parameters.
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof NpcScaleGlobalBaseApi
-     */
-    public deleteNpcScaleGlobalBase(requestParameters: NpcScaleGlobalBaseApiDeleteNpcScaleGlobalBaseRequest, options?: any) {
-        return NpcScaleGlobalBaseApiFp(this.configuration).deleteNpcScaleGlobalBase(requestParameters.id, options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
-     * 
-     * @summary Gets NpcScaleGlobalBase
-     * @param {NpcScaleGlobalBaseApiGetNpcScaleGlobalBaseRequest} requestParameters Request parameters.
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof NpcScaleGlobalBaseApi
-     */
-    public getNpcScaleGlobalBase(requestParameters: NpcScaleGlobalBaseApiGetNpcScaleGlobalBaseRequest, options?: any) {
-        return NpcScaleGlobalBaseApiFp(this.configuration).getNpcScaleGlobalBase(requestParameters.id, requestParameters.includes, requestParameters.select, options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
-     * 
-     * @summary Lists NpcScaleGlobalBases
-     * @param {NpcScaleGlobalBaseApiListNpcScaleGlobalBasesRequest} requestParameters Request parameters.
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof NpcScaleGlobalBaseApi
-     */
-    public listNpcScaleGlobalBases(requestParameters: NpcScaleGlobalBaseApiListNpcScaleGlobalBasesRequest = {}, options?: any) {
-        return NpcScaleGlobalBaseApiFp(this.configuration).listNpcScaleGlobalBases(requestParameters.includes, requestParameters.where, requestParameters.limit, requestParameters.orderBy, requestParameters.orderDirection, requestParameters.select, options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
-     * 
-     * @summary Updates NpcScaleGlobalBase
-     * @param {NpcScaleGlobalBaseApiUpdateNpcScaleGlobalBaseRequest} requestParameters Request parameters.
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof NpcScaleGlobalBaseApi
-     */
-    public updateNpcScaleGlobalBase(requestParameters: NpcScaleGlobalBaseApiUpdateNpcScaleGlobalBaseRequest, options?: any) {
-        return NpcScaleGlobalBaseApiFp(this.configuration).updateNpcScaleGlobalBase(requestParameters.id, requestParameters.npcScaleGlobalBase, options).then((request) => request(this.axios, this.basePath));
     }
 }
 
@@ -67284,1893 +57486,6 @@ export class ObjectApi extends BaseAPI {
 
 
 /**
- * PerlEventExportSettingApi - axios parameter creator
- * @export
- */
-export const PerlEventExportSettingApiAxiosParamCreator = function (configuration?: Configuration) {
-    return {
-        /**
-         * 
-         * @summary Creates PerlEventExportSetting
-         * @param {ModelsPerlEventExportSetting} perlEventExportSetting PerlEventExportSetting
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        createPerlEventExportSetting: async (perlEventExportSetting: ModelsPerlEventExportSetting, options: any = {}): Promise<RequestArgs> => {
-            // verify required parameter 'perlEventExportSetting' is not null or undefined
-            if (perlEventExportSetting === null || perlEventExportSetting === undefined) {
-                throw new RequiredError('perlEventExportSetting','Required parameter perlEventExportSetting was null or undefined when calling createPerlEventExportSetting.');
-            }
-            const localVarPath = `/perl_event_export_setting`;
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, 'https://example.com');
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'PUT', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-
-    
-            localVarHeaderParameter['Content-Type'] = 'application/json';
-
-            const queryParameters = new URLSearchParams(localVarUrlObj.search);
-            for (const key in localVarQueryParameter) {
-                queryParameters.set(key, localVarQueryParameter[key]);
-            }
-            for (const key in options.query) {
-                queryParameters.set(key, options.query[key]);
-            }
-            localVarUrlObj.search = (new URLSearchParams(queryParameters)).toString();
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            const nonString = typeof perlEventExportSetting !== 'string';
-            const needsSerialization = nonString && configuration && configuration.isJsonMime
-                ? configuration.isJsonMime(localVarRequestOptions.headers['Content-Type'])
-                : nonString;
-            localVarRequestOptions.data =  needsSerialization
-                ? JSON.stringify(perlEventExportSetting !== undefined ? perlEventExportSetting : {})
-                : (perlEventExportSetting || "");
-
-            return {
-                url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * 
-         * @summary Deletes PerlEventExportSetting
-         * @param {number} id Id
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        deletePerlEventExportSetting: async (id: number, options: any = {}): Promise<RequestArgs> => {
-            // verify required parameter 'id' is not null or undefined
-            if (id === null || id === undefined) {
-                throw new RequiredError('id','Required parameter id was null or undefined when calling deletePerlEventExportSetting.');
-            }
-            const localVarPath = `/perl_event_export_setting/{id}`
-                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, 'https://example.com');
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'DELETE', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-
-    
-            const queryParameters = new URLSearchParams(localVarUrlObj.search);
-            for (const key in localVarQueryParameter) {
-                queryParameters.set(key, localVarQueryParameter[key]);
-            }
-            for (const key in options.query) {
-                queryParameters.set(key, options.query[key]);
-            }
-            localVarUrlObj.search = (new URLSearchParams(queryParameters)).toString();
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-
-            return {
-                url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * 
-         * @summary Gets PerlEventExportSetting
-         * @param {number} id Id
-         * @param {string} [includes] Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names 
-         * @param {string} [select] Column names [.] separated to fetch specific fields in response
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getPerlEventExportSetting: async (id: number, includes?: string, select?: string, options: any = {}): Promise<RequestArgs> => {
-            // verify required parameter 'id' is not null or undefined
-            if (id === null || id === undefined) {
-                throw new RequiredError('id','Required parameter id was null or undefined when calling getPerlEventExportSetting.');
-            }
-            const localVarPath = `/perl_event_export_setting/{id}`
-                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, 'https://example.com');
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-            if (includes !== undefined) {
-                localVarQueryParameter['includes'] = includes;
-            }
-
-            if (select !== undefined) {
-                localVarQueryParameter['select'] = select;
-            }
-
-
-    
-            const queryParameters = new URLSearchParams(localVarUrlObj.search);
-            for (const key in localVarQueryParameter) {
-                queryParameters.set(key, localVarQueryParameter[key]);
-            }
-            for (const key in options.query) {
-                queryParameters.set(key, options.query[key]);
-            }
-            localVarUrlObj.search = (new URLSearchParams(queryParameters)).toString();
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-
-            return {
-                url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * 
-         * @summary Lists PerlEventExportSettings
-         * @param {string} [includes] Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names 
-         * @param {string} [where] Filter on specific fields. Multiple conditions [.] separated Example: col_like_value.col2__val2
-         * @param {string} [limit] Rows to limit in response (Default: 10,000)
-         * @param {string} [orderBy] Order by [field]
-         * @param {string} [orderDirection] Order by field direction
-         * @param {string} [select] Column names [.] separated to fetch specific fields in response
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        listPerlEventExportSettings: async (includes?: string, where?: string, limit?: string, orderBy?: string, orderDirection?: string, select?: string, options: any = {}): Promise<RequestArgs> => {
-            const localVarPath = `/perl_event_export_settings`;
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, 'https://example.com');
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-            if (includes !== undefined) {
-                localVarQueryParameter['includes'] = includes;
-            }
-
-            if (where !== undefined) {
-                localVarQueryParameter['where'] = where;
-            }
-
-            if (limit !== undefined) {
-                localVarQueryParameter['limit'] = limit;
-            }
-
-            if (orderBy !== undefined) {
-                localVarQueryParameter['orderBy'] = orderBy;
-            }
-
-            if (orderDirection !== undefined) {
-                localVarQueryParameter['orderDirection'] = orderDirection;
-            }
-
-            if (select !== undefined) {
-                localVarQueryParameter['select'] = select;
-            }
-
-
-    
-            const queryParameters = new URLSearchParams(localVarUrlObj.search);
-            for (const key in localVarQueryParameter) {
-                queryParameters.set(key, localVarQueryParameter[key]);
-            }
-            for (const key in options.query) {
-                queryParameters.set(key, options.query[key]);
-            }
-            localVarUrlObj.search = (new URLSearchParams(queryParameters)).toString();
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-
-            return {
-                url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * 
-         * @summary Updates PerlEventExportSetting
-         * @param {number} id Id
-         * @param {ModelsPerlEventExportSetting} perlEventExportSetting PerlEventExportSetting
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        updatePerlEventExportSetting: async (id: number, perlEventExportSetting: ModelsPerlEventExportSetting, options: any = {}): Promise<RequestArgs> => {
-            // verify required parameter 'id' is not null or undefined
-            if (id === null || id === undefined) {
-                throw new RequiredError('id','Required parameter id was null or undefined when calling updatePerlEventExportSetting.');
-            }
-            // verify required parameter 'perlEventExportSetting' is not null or undefined
-            if (perlEventExportSetting === null || perlEventExportSetting === undefined) {
-                throw new RequiredError('perlEventExportSetting','Required parameter perlEventExportSetting was null or undefined when calling updatePerlEventExportSetting.');
-            }
-            const localVarPath = `/perl_event_export_setting/{id}`
-                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, 'https://example.com');
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'PATCH', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-
-    
-            localVarHeaderParameter['Content-Type'] = 'application/json';
-
-            const queryParameters = new URLSearchParams(localVarUrlObj.search);
-            for (const key in localVarQueryParameter) {
-                queryParameters.set(key, localVarQueryParameter[key]);
-            }
-            for (const key in options.query) {
-                queryParameters.set(key, options.query[key]);
-            }
-            localVarUrlObj.search = (new URLSearchParams(queryParameters)).toString();
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            const nonString = typeof perlEventExportSetting !== 'string';
-            const needsSerialization = nonString && configuration && configuration.isJsonMime
-                ? configuration.isJsonMime(localVarRequestOptions.headers['Content-Type'])
-                : nonString;
-            localVarRequestOptions.data =  needsSerialization
-                ? JSON.stringify(perlEventExportSetting !== undefined ? perlEventExportSetting : {})
-                : (perlEventExportSetting || "");
-
-            return {
-                url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
-                options: localVarRequestOptions,
-            };
-        },
-    }
-};
-
-/**
- * PerlEventExportSettingApi - functional programming interface
- * @export
- */
-export const PerlEventExportSettingApiFp = function(configuration?: Configuration) {
-    return {
-        /**
-         * 
-         * @summary Creates PerlEventExportSetting
-         * @param {ModelsPerlEventExportSetting} perlEventExportSetting PerlEventExportSetting
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async createPerlEventExportSetting(perlEventExportSetting: ModelsPerlEventExportSetting, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<ModelsPerlEventExportSetting>>> {
-            const localVarAxiosArgs = await PerlEventExportSettingApiAxiosParamCreator(configuration).createPerlEventExportSetting(perlEventExportSetting, options);
-            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
-                const axiosRequestArgs = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
-                return axios.request(axiosRequestArgs);
-            };
-        },
-        /**
-         * 
-         * @summary Deletes PerlEventExportSetting
-         * @param {number} id Id
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async deletePerlEventExportSetting(id: number, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<string>> {
-            const localVarAxiosArgs = await PerlEventExportSettingApiAxiosParamCreator(configuration).deletePerlEventExportSetting(id, options);
-            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
-                const axiosRequestArgs = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
-                return axios.request(axiosRequestArgs);
-            };
-        },
-        /**
-         * 
-         * @summary Gets PerlEventExportSetting
-         * @param {number} id Id
-         * @param {string} [includes] Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names 
-         * @param {string} [select] Column names [.] separated to fetch specific fields in response
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async getPerlEventExportSetting(id: number, includes?: string, select?: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<ModelsPerlEventExportSetting>>> {
-            const localVarAxiosArgs = await PerlEventExportSettingApiAxiosParamCreator(configuration).getPerlEventExportSetting(id, includes, select, options);
-            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
-                const axiosRequestArgs = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
-                return axios.request(axiosRequestArgs);
-            };
-        },
-        /**
-         * 
-         * @summary Lists PerlEventExportSettings
-         * @param {string} [includes] Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names 
-         * @param {string} [where] Filter on specific fields. Multiple conditions [.] separated Example: col_like_value.col2__val2
-         * @param {string} [limit] Rows to limit in response (Default: 10,000)
-         * @param {string} [orderBy] Order by [field]
-         * @param {string} [orderDirection] Order by field direction
-         * @param {string} [select] Column names [.] separated to fetch specific fields in response
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async listPerlEventExportSettings(includes?: string, where?: string, limit?: string, orderBy?: string, orderDirection?: string, select?: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<ModelsPerlEventExportSetting>>> {
-            const localVarAxiosArgs = await PerlEventExportSettingApiAxiosParamCreator(configuration).listPerlEventExportSettings(includes, where, limit, orderBy, orderDirection, select, options);
-            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
-                const axiosRequestArgs = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
-                return axios.request(axiosRequestArgs);
-            };
-        },
-        /**
-         * 
-         * @summary Updates PerlEventExportSetting
-         * @param {number} id Id
-         * @param {ModelsPerlEventExportSetting} perlEventExportSetting PerlEventExportSetting
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async updatePerlEventExportSetting(id: number, perlEventExportSetting: ModelsPerlEventExportSetting, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<ModelsPerlEventExportSetting>>> {
-            const localVarAxiosArgs = await PerlEventExportSettingApiAxiosParamCreator(configuration).updatePerlEventExportSetting(id, perlEventExportSetting, options);
-            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
-                const axiosRequestArgs = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
-                return axios.request(axiosRequestArgs);
-            };
-        },
-    }
-};
-
-/**
- * PerlEventExportSettingApi - factory interface
- * @export
- */
-export const PerlEventExportSettingApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
-    return {
-        /**
-         * 
-         * @summary Creates PerlEventExportSetting
-         * @param {ModelsPerlEventExportSetting} perlEventExportSetting PerlEventExportSetting
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        createPerlEventExportSetting(perlEventExportSetting: ModelsPerlEventExportSetting, options?: any): AxiosPromise<Array<ModelsPerlEventExportSetting>> {
-            return PerlEventExportSettingApiFp(configuration).createPerlEventExportSetting(perlEventExportSetting, options).then((request) => request(axios, basePath));
-        },
-        /**
-         * 
-         * @summary Deletes PerlEventExportSetting
-         * @param {number} id Id
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        deletePerlEventExportSetting(id: number, options?: any): AxiosPromise<string> {
-            return PerlEventExportSettingApiFp(configuration).deletePerlEventExportSetting(id, options).then((request) => request(axios, basePath));
-        },
-        /**
-         * 
-         * @summary Gets PerlEventExportSetting
-         * @param {number} id Id
-         * @param {string} [includes] Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names 
-         * @param {string} [select] Column names [.] separated to fetch specific fields in response
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getPerlEventExportSetting(id: number, includes?: string, select?: string, options?: any): AxiosPromise<Array<ModelsPerlEventExportSetting>> {
-            return PerlEventExportSettingApiFp(configuration).getPerlEventExportSetting(id, includes, select, options).then((request) => request(axios, basePath));
-        },
-        /**
-         * 
-         * @summary Lists PerlEventExportSettings
-         * @param {string} [includes] Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names 
-         * @param {string} [where] Filter on specific fields. Multiple conditions [.] separated Example: col_like_value.col2__val2
-         * @param {string} [limit] Rows to limit in response (Default: 10,000)
-         * @param {string} [orderBy] Order by [field]
-         * @param {string} [orderDirection] Order by field direction
-         * @param {string} [select] Column names [.] separated to fetch specific fields in response
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        listPerlEventExportSettings(includes?: string, where?: string, limit?: string, orderBy?: string, orderDirection?: string, select?: string, options?: any): AxiosPromise<Array<ModelsPerlEventExportSetting>> {
-            return PerlEventExportSettingApiFp(configuration).listPerlEventExportSettings(includes, where, limit, orderBy, orderDirection, select, options).then((request) => request(axios, basePath));
-        },
-        /**
-         * 
-         * @summary Updates PerlEventExportSetting
-         * @param {number} id Id
-         * @param {ModelsPerlEventExportSetting} perlEventExportSetting PerlEventExportSetting
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        updatePerlEventExportSetting(id: number, perlEventExportSetting: ModelsPerlEventExportSetting, options?: any): AxiosPromise<Array<ModelsPerlEventExportSetting>> {
-            return PerlEventExportSettingApiFp(configuration).updatePerlEventExportSetting(id, perlEventExportSetting, options).then((request) => request(axios, basePath));
-        },
-    };
-};
-
-/**
- * Request parameters for createPerlEventExportSetting operation in PerlEventExportSettingApi.
- * @export
- * @interface PerlEventExportSettingApiCreatePerlEventExportSettingRequest
- */
-export interface PerlEventExportSettingApiCreatePerlEventExportSettingRequest {
-    /**
-     * PerlEventExportSetting
-     * @type {ModelsPerlEventExportSetting}
-     * @memberof PerlEventExportSettingApiCreatePerlEventExportSetting
-     */
-    readonly perlEventExportSetting: ModelsPerlEventExportSetting
-}
-
-/**
- * Request parameters for deletePerlEventExportSetting operation in PerlEventExportSettingApi.
- * @export
- * @interface PerlEventExportSettingApiDeletePerlEventExportSettingRequest
- */
-export interface PerlEventExportSettingApiDeletePerlEventExportSettingRequest {
-    /**
-     * Id
-     * @type {number}
-     * @memberof PerlEventExportSettingApiDeletePerlEventExportSetting
-     */
-    readonly id: number
-}
-
-/**
- * Request parameters for getPerlEventExportSetting operation in PerlEventExportSettingApi.
- * @export
- * @interface PerlEventExportSettingApiGetPerlEventExportSettingRequest
- */
-export interface PerlEventExportSettingApiGetPerlEventExportSettingRequest {
-    /**
-     * Id
-     * @type {number}
-     * @memberof PerlEventExportSettingApiGetPerlEventExportSetting
-     */
-    readonly id: number
-
-    /**
-     * Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names 
-     * @type {string}
-     * @memberof PerlEventExportSettingApiGetPerlEventExportSetting
-     */
-    readonly includes?: string
-
-    /**
-     * Column names [.] separated to fetch specific fields in response
-     * @type {string}
-     * @memberof PerlEventExportSettingApiGetPerlEventExportSetting
-     */
-    readonly select?: string
-}
-
-/**
- * Request parameters for listPerlEventExportSettings operation in PerlEventExportSettingApi.
- * @export
- * @interface PerlEventExportSettingApiListPerlEventExportSettingsRequest
- */
-export interface PerlEventExportSettingApiListPerlEventExportSettingsRequest {
-    /**
-     * Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names 
-     * @type {string}
-     * @memberof PerlEventExportSettingApiListPerlEventExportSettings
-     */
-    readonly includes?: string
-
-    /**
-     * Filter on specific fields. Multiple conditions [.] separated Example: col_like_value.col2__val2
-     * @type {string}
-     * @memberof PerlEventExportSettingApiListPerlEventExportSettings
-     */
-    readonly where?: string
-
-    /**
-     * Rows to limit in response (Default: 10,000)
-     * @type {string}
-     * @memberof PerlEventExportSettingApiListPerlEventExportSettings
-     */
-    readonly limit?: string
-
-    /**
-     * Order by [field]
-     * @type {string}
-     * @memberof PerlEventExportSettingApiListPerlEventExportSettings
-     */
-    readonly orderBy?: string
-
-    /**
-     * Order by field direction
-     * @type {string}
-     * @memberof PerlEventExportSettingApiListPerlEventExportSettings
-     */
-    readonly orderDirection?: string
-
-    /**
-     * Column names [.] separated to fetch specific fields in response
-     * @type {string}
-     * @memberof PerlEventExportSettingApiListPerlEventExportSettings
-     */
-    readonly select?: string
-}
-
-/**
- * Request parameters for updatePerlEventExportSetting operation in PerlEventExportSettingApi.
- * @export
- * @interface PerlEventExportSettingApiUpdatePerlEventExportSettingRequest
- */
-export interface PerlEventExportSettingApiUpdatePerlEventExportSettingRequest {
-    /**
-     * Id
-     * @type {number}
-     * @memberof PerlEventExportSettingApiUpdatePerlEventExportSetting
-     */
-    readonly id: number
-
-    /**
-     * PerlEventExportSetting
-     * @type {ModelsPerlEventExportSetting}
-     * @memberof PerlEventExportSettingApiUpdatePerlEventExportSetting
-     */
-    readonly perlEventExportSetting: ModelsPerlEventExportSetting
-}
-
-/**
- * PerlEventExportSettingApi - object-oriented interface
- * @export
- * @class PerlEventExportSettingApi
- * @extends {BaseAPI}
- */
-export class PerlEventExportSettingApi extends BaseAPI {
-    /**
-     * 
-     * @summary Creates PerlEventExportSetting
-     * @param {PerlEventExportSettingApiCreatePerlEventExportSettingRequest} requestParameters Request parameters.
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof PerlEventExportSettingApi
-     */
-    public createPerlEventExportSetting(requestParameters: PerlEventExportSettingApiCreatePerlEventExportSettingRequest, options?: any) {
-        return PerlEventExportSettingApiFp(this.configuration).createPerlEventExportSetting(requestParameters.perlEventExportSetting, options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
-     * 
-     * @summary Deletes PerlEventExportSetting
-     * @param {PerlEventExportSettingApiDeletePerlEventExportSettingRequest} requestParameters Request parameters.
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof PerlEventExportSettingApi
-     */
-    public deletePerlEventExportSetting(requestParameters: PerlEventExportSettingApiDeletePerlEventExportSettingRequest, options?: any) {
-        return PerlEventExportSettingApiFp(this.configuration).deletePerlEventExportSetting(requestParameters.id, options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
-     * 
-     * @summary Gets PerlEventExportSetting
-     * @param {PerlEventExportSettingApiGetPerlEventExportSettingRequest} requestParameters Request parameters.
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof PerlEventExportSettingApi
-     */
-    public getPerlEventExportSetting(requestParameters: PerlEventExportSettingApiGetPerlEventExportSettingRequest, options?: any) {
-        return PerlEventExportSettingApiFp(this.configuration).getPerlEventExportSetting(requestParameters.id, requestParameters.includes, requestParameters.select, options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
-     * 
-     * @summary Lists PerlEventExportSettings
-     * @param {PerlEventExportSettingApiListPerlEventExportSettingsRequest} requestParameters Request parameters.
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof PerlEventExportSettingApi
-     */
-    public listPerlEventExportSettings(requestParameters: PerlEventExportSettingApiListPerlEventExportSettingsRequest = {}, options?: any) {
-        return PerlEventExportSettingApiFp(this.configuration).listPerlEventExportSettings(requestParameters.includes, requestParameters.where, requestParameters.limit, requestParameters.orderBy, requestParameters.orderDirection, requestParameters.select, options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
-     * 
-     * @summary Updates PerlEventExportSetting
-     * @param {PerlEventExportSettingApiUpdatePerlEventExportSettingRequest} requestParameters Request parameters.
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof PerlEventExportSettingApi
-     */
-    public updatePerlEventExportSetting(requestParameters: PerlEventExportSettingApiUpdatePerlEventExportSettingRequest, options?: any) {
-        return PerlEventExportSettingApiFp(this.configuration).updatePerlEventExportSetting(requestParameters.id, requestParameters.perlEventExportSetting, options).then((request) => request(this.axios, this.basePath));
-    }
-}
-
-
-/**
- * PetsEquipmentsetApi - axios parameter creator
- * @export
- */
-export const PetsEquipmentsetApiAxiosParamCreator = function (configuration?: Configuration) {
-    return {
-        /**
-         * 
-         * @summary Creates PetsEquipmentset
-         * @param {ModelsPetsEquipmentset} petsEquipmentset PetsEquipmentset
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        createPetsEquipmentset: async (petsEquipmentset: ModelsPetsEquipmentset, options: any = {}): Promise<RequestArgs> => {
-            // verify required parameter 'petsEquipmentset' is not null or undefined
-            if (petsEquipmentset === null || petsEquipmentset === undefined) {
-                throw new RequiredError('petsEquipmentset','Required parameter petsEquipmentset was null or undefined when calling createPetsEquipmentset.');
-            }
-            const localVarPath = `/pets_equipmentset`;
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, 'https://example.com');
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'PUT', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-
-    
-            localVarHeaderParameter['Content-Type'] = 'application/json';
-
-            const queryParameters = new URLSearchParams(localVarUrlObj.search);
-            for (const key in localVarQueryParameter) {
-                queryParameters.set(key, localVarQueryParameter[key]);
-            }
-            for (const key in options.query) {
-                queryParameters.set(key, options.query[key]);
-            }
-            localVarUrlObj.search = (new URLSearchParams(queryParameters)).toString();
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            const nonString = typeof petsEquipmentset !== 'string';
-            const needsSerialization = nonString && configuration && configuration.isJsonMime
-                ? configuration.isJsonMime(localVarRequestOptions.headers['Content-Type'])
-                : nonString;
-            localVarRequestOptions.data =  needsSerialization
-                ? JSON.stringify(petsEquipmentset !== undefined ? petsEquipmentset : {})
-                : (petsEquipmentset || "");
-
-            return {
-                url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * 
-         * @summary Deletes PetsEquipmentset
-         * @param {number} id Id
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        deletePetsEquipmentset: async (id: number, options: any = {}): Promise<RequestArgs> => {
-            // verify required parameter 'id' is not null or undefined
-            if (id === null || id === undefined) {
-                throw new RequiredError('id','Required parameter id was null or undefined when calling deletePetsEquipmentset.');
-            }
-            const localVarPath = `/pets_equipmentset/{id}`
-                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, 'https://example.com');
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'DELETE', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-
-    
-            const queryParameters = new URLSearchParams(localVarUrlObj.search);
-            for (const key in localVarQueryParameter) {
-                queryParameters.set(key, localVarQueryParameter[key]);
-            }
-            for (const key in options.query) {
-                queryParameters.set(key, options.query[key]);
-            }
-            localVarUrlObj.search = (new URLSearchParams(queryParameters)).toString();
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-
-            return {
-                url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * 
-         * @summary Gets PetsEquipmentset
-         * @param {number} id Id
-         * @param {string} [includes] Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names &lt;h4&gt;Relationships&lt;/h4&gt;PetsEquipmentsetEntries
-         * @param {string} [select] Column names [.] separated to fetch specific fields in response
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getPetsEquipmentset: async (id: number, includes?: string, select?: string, options: any = {}): Promise<RequestArgs> => {
-            // verify required parameter 'id' is not null or undefined
-            if (id === null || id === undefined) {
-                throw new RequiredError('id','Required parameter id was null or undefined when calling getPetsEquipmentset.');
-            }
-            const localVarPath = `/pets_equipmentset/{id}`
-                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, 'https://example.com');
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-            if (includes !== undefined) {
-                localVarQueryParameter['includes'] = includes;
-            }
-
-            if (select !== undefined) {
-                localVarQueryParameter['select'] = select;
-            }
-
-
-    
-            const queryParameters = new URLSearchParams(localVarUrlObj.search);
-            for (const key in localVarQueryParameter) {
-                queryParameters.set(key, localVarQueryParameter[key]);
-            }
-            for (const key in options.query) {
-                queryParameters.set(key, options.query[key]);
-            }
-            localVarUrlObj.search = (new URLSearchParams(queryParameters)).toString();
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-
-            return {
-                url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * 
-         * @summary Lists PetsEquipmentsets
-         * @param {string} [includes] Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names &lt;h4&gt;Relationships&lt;/h4&gt;PetsEquipmentsetEntries
-         * @param {string} [where] Filter on specific fields. Multiple conditions [.] separated Example: col_like_value.col2__val2
-         * @param {string} [limit] Rows to limit in response (Default: 10,000)
-         * @param {string} [orderBy] Order by [field]
-         * @param {string} [orderDirection] Order by field direction
-         * @param {string} [select] Column names [.] separated to fetch specific fields in response
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        listPetsEquipmentsets: async (includes?: string, where?: string, limit?: string, orderBy?: string, orderDirection?: string, select?: string, options: any = {}): Promise<RequestArgs> => {
-            const localVarPath = `/pets_equipmentsets`;
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, 'https://example.com');
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-            if (includes !== undefined) {
-                localVarQueryParameter['includes'] = includes;
-            }
-
-            if (where !== undefined) {
-                localVarQueryParameter['where'] = where;
-            }
-
-            if (limit !== undefined) {
-                localVarQueryParameter['limit'] = limit;
-            }
-
-            if (orderBy !== undefined) {
-                localVarQueryParameter['orderBy'] = orderBy;
-            }
-
-            if (orderDirection !== undefined) {
-                localVarQueryParameter['orderDirection'] = orderDirection;
-            }
-
-            if (select !== undefined) {
-                localVarQueryParameter['select'] = select;
-            }
-
-
-    
-            const queryParameters = new URLSearchParams(localVarUrlObj.search);
-            for (const key in localVarQueryParameter) {
-                queryParameters.set(key, localVarQueryParameter[key]);
-            }
-            for (const key in options.query) {
-                queryParameters.set(key, options.query[key]);
-            }
-            localVarUrlObj.search = (new URLSearchParams(queryParameters)).toString();
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-
-            return {
-                url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * 
-         * @summary Updates PetsEquipmentset
-         * @param {number} id Id
-         * @param {ModelsPetsEquipmentset} petsEquipmentset PetsEquipmentset
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        updatePetsEquipmentset: async (id: number, petsEquipmentset: ModelsPetsEquipmentset, options: any = {}): Promise<RequestArgs> => {
-            // verify required parameter 'id' is not null or undefined
-            if (id === null || id === undefined) {
-                throw new RequiredError('id','Required parameter id was null or undefined when calling updatePetsEquipmentset.');
-            }
-            // verify required parameter 'petsEquipmentset' is not null or undefined
-            if (petsEquipmentset === null || petsEquipmentset === undefined) {
-                throw new RequiredError('petsEquipmentset','Required parameter petsEquipmentset was null or undefined when calling updatePetsEquipmentset.');
-            }
-            const localVarPath = `/pets_equipmentset/{id}`
-                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, 'https://example.com');
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'PATCH', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-
-    
-            localVarHeaderParameter['Content-Type'] = 'application/json';
-
-            const queryParameters = new URLSearchParams(localVarUrlObj.search);
-            for (const key in localVarQueryParameter) {
-                queryParameters.set(key, localVarQueryParameter[key]);
-            }
-            for (const key in options.query) {
-                queryParameters.set(key, options.query[key]);
-            }
-            localVarUrlObj.search = (new URLSearchParams(queryParameters)).toString();
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            const nonString = typeof petsEquipmentset !== 'string';
-            const needsSerialization = nonString && configuration && configuration.isJsonMime
-                ? configuration.isJsonMime(localVarRequestOptions.headers['Content-Type'])
-                : nonString;
-            localVarRequestOptions.data =  needsSerialization
-                ? JSON.stringify(petsEquipmentset !== undefined ? petsEquipmentset : {})
-                : (petsEquipmentset || "");
-
-            return {
-                url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
-                options: localVarRequestOptions,
-            };
-        },
-    }
-};
-
-/**
- * PetsEquipmentsetApi - functional programming interface
- * @export
- */
-export const PetsEquipmentsetApiFp = function(configuration?: Configuration) {
-    return {
-        /**
-         * 
-         * @summary Creates PetsEquipmentset
-         * @param {ModelsPetsEquipmentset} petsEquipmentset PetsEquipmentset
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async createPetsEquipmentset(petsEquipmentset: ModelsPetsEquipmentset, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<ModelsPetsEquipmentset>>> {
-            const localVarAxiosArgs = await PetsEquipmentsetApiAxiosParamCreator(configuration).createPetsEquipmentset(petsEquipmentset, options);
-            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
-                const axiosRequestArgs = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
-                return axios.request(axiosRequestArgs);
-            };
-        },
-        /**
-         * 
-         * @summary Deletes PetsEquipmentset
-         * @param {number} id Id
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async deletePetsEquipmentset(id: number, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<string>> {
-            const localVarAxiosArgs = await PetsEquipmentsetApiAxiosParamCreator(configuration).deletePetsEquipmentset(id, options);
-            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
-                const axiosRequestArgs = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
-                return axios.request(axiosRequestArgs);
-            };
-        },
-        /**
-         * 
-         * @summary Gets PetsEquipmentset
-         * @param {number} id Id
-         * @param {string} [includes] Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names &lt;h4&gt;Relationships&lt;/h4&gt;PetsEquipmentsetEntries
-         * @param {string} [select] Column names [.] separated to fetch specific fields in response
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async getPetsEquipmentset(id: number, includes?: string, select?: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<ModelsPetsEquipmentset>>> {
-            const localVarAxiosArgs = await PetsEquipmentsetApiAxiosParamCreator(configuration).getPetsEquipmentset(id, includes, select, options);
-            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
-                const axiosRequestArgs = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
-                return axios.request(axiosRequestArgs);
-            };
-        },
-        /**
-         * 
-         * @summary Lists PetsEquipmentsets
-         * @param {string} [includes] Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names &lt;h4&gt;Relationships&lt;/h4&gt;PetsEquipmentsetEntries
-         * @param {string} [where] Filter on specific fields. Multiple conditions [.] separated Example: col_like_value.col2__val2
-         * @param {string} [limit] Rows to limit in response (Default: 10,000)
-         * @param {string} [orderBy] Order by [field]
-         * @param {string} [orderDirection] Order by field direction
-         * @param {string} [select] Column names [.] separated to fetch specific fields in response
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async listPetsEquipmentsets(includes?: string, where?: string, limit?: string, orderBy?: string, orderDirection?: string, select?: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<ModelsPetsEquipmentset>>> {
-            const localVarAxiosArgs = await PetsEquipmentsetApiAxiosParamCreator(configuration).listPetsEquipmentsets(includes, where, limit, orderBy, orderDirection, select, options);
-            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
-                const axiosRequestArgs = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
-                return axios.request(axiosRequestArgs);
-            };
-        },
-        /**
-         * 
-         * @summary Updates PetsEquipmentset
-         * @param {number} id Id
-         * @param {ModelsPetsEquipmentset} petsEquipmentset PetsEquipmentset
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async updatePetsEquipmentset(id: number, petsEquipmentset: ModelsPetsEquipmentset, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<ModelsPetsEquipmentset>>> {
-            const localVarAxiosArgs = await PetsEquipmentsetApiAxiosParamCreator(configuration).updatePetsEquipmentset(id, petsEquipmentset, options);
-            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
-                const axiosRequestArgs = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
-                return axios.request(axiosRequestArgs);
-            };
-        },
-    }
-};
-
-/**
- * PetsEquipmentsetApi - factory interface
- * @export
- */
-export const PetsEquipmentsetApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
-    return {
-        /**
-         * 
-         * @summary Creates PetsEquipmentset
-         * @param {ModelsPetsEquipmentset} petsEquipmentset PetsEquipmentset
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        createPetsEquipmentset(petsEquipmentset: ModelsPetsEquipmentset, options?: any): AxiosPromise<Array<ModelsPetsEquipmentset>> {
-            return PetsEquipmentsetApiFp(configuration).createPetsEquipmentset(petsEquipmentset, options).then((request) => request(axios, basePath));
-        },
-        /**
-         * 
-         * @summary Deletes PetsEquipmentset
-         * @param {number} id Id
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        deletePetsEquipmentset(id: number, options?: any): AxiosPromise<string> {
-            return PetsEquipmentsetApiFp(configuration).deletePetsEquipmentset(id, options).then((request) => request(axios, basePath));
-        },
-        /**
-         * 
-         * @summary Gets PetsEquipmentset
-         * @param {number} id Id
-         * @param {string} [includes] Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names &lt;h4&gt;Relationships&lt;/h4&gt;PetsEquipmentsetEntries
-         * @param {string} [select] Column names [.] separated to fetch specific fields in response
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getPetsEquipmentset(id: number, includes?: string, select?: string, options?: any): AxiosPromise<Array<ModelsPetsEquipmentset>> {
-            return PetsEquipmentsetApiFp(configuration).getPetsEquipmentset(id, includes, select, options).then((request) => request(axios, basePath));
-        },
-        /**
-         * 
-         * @summary Lists PetsEquipmentsets
-         * @param {string} [includes] Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names &lt;h4&gt;Relationships&lt;/h4&gt;PetsEquipmentsetEntries
-         * @param {string} [where] Filter on specific fields. Multiple conditions [.] separated Example: col_like_value.col2__val2
-         * @param {string} [limit] Rows to limit in response (Default: 10,000)
-         * @param {string} [orderBy] Order by [field]
-         * @param {string} [orderDirection] Order by field direction
-         * @param {string} [select] Column names [.] separated to fetch specific fields in response
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        listPetsEquipmentsets(includes?: string, where?: string, limit?: string, orderBy?: string, orderDirection?: string, select?: string, options?: any): AxiosPromise<Array<ModelsPetsEquipmentset>> {
-            return PetsEquipmentsetApiFp(configuration).listPetsEquipmentsets(includes, where, limit, orderBy, orderDirection, select, options).then((request) => request(axios, basePath));
-        },
-        /**
-         * 
-         * @summary Updates PetsEquipmentset
-         * @param {number} id Id
-         * @param {ModelsPetsEquipmentset} petsEquipmentset PetsEquipmentset
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        updatePetsEquipmentset(id: number, petsEquipmentset: ModelsPetsEquipmentset, options?: any): AxiosPromise<Array<ModelsPetsEquipmentset>> {
-            return PetsEquipmentsetApiFp(configuration).updatePetsEquipmentset(id, petsEquipmentset, options).then((request) => request(axios, basePath));
-        },
-    };
-};
-
-/**
- * Request parameters for createPetsEquipmentset operation in PetsEquipmentsetApi.
- * @export
- * @interface PetsEquipmentsetApiCreatePetsEquipmentsetRequest
- */
-export interface PetsEquipmentsetApiCreatePetsEquipmentsetRequest {
-    /**
-     * PetsEquipmentset
-     * @type {ModelsPetsEquipmentset}
-     * @memberof PetsEquipmentsetApiCreatePetsEquipmentset
-     */
-    readonly petsEquipmentset: ModelsPetsEquipmentset
-}
-
-/**
- * Request parameters for deletePetsEquipmentset operation in PetsEquipmentsetApi.
- * @export
- * @interface PetsEquipmentsetApiDeletePetsEquipmentsetRequest
- */
-export interface PetsEquipmentsetApiDeletePetsEquipmentsetRequest {
-    /**
-     * Id
-     * @type {number}
-     * @memberof PetsEquipmentsetApiDeletePetsEquipmentset
-     */
-    readonly id: number
-}
-
-/**
- * Request parameters for getPetsEquipmentset operation in PetsEquipmentsetApi.
- * @export
- * @interface PetsEquipmentsetApiGetPetsEquipmentsetRequest
- */
-export interface PetsEquipmentsetApiGetPetsEquipmentsetRequest {
-    /**
-     * Id
-     * @type {number}
-     * @memberof PetsEquipmentsetApiGetPetsEquipmentset
-     */
-    readonly id: number
-
-    /**
-     * Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names &lt;h4&gt;Relationships&lt;/h4&gt;PetsEquipmentsetEntries
-     * @type {string}
-     * @memberof PetsEquipmentsetApiGetPetsEquipmentset
-     */
-    readonly includes?: string
-
-    /**
-     * Column names [.] separated to fetch specific fields in response
-     * @type {string}
-     * @memberof PetsEquipmentsetApiGetPetsEquipmentset
-     */
-    readonly select?: string
-}
-
-/**
- * Request parameters for listPetsEquipmentsets operation in PetsEquipmentsetApi.
- * @export
- * @interface PetsEquipmentsetApiListPetsEquipmentsetsRequest
- */
-export interface PetsEquipmentsetApiListPetsEquipmentsetsRequest {
-    /**
-     * Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names &lt;h4&gt;Relationships&lt;/h4&gt;PetsEquipmentsetEntries
-     * @type {string}
-     * @memberof PetsEquipmentsetApiListPetsEquipmentsets
-     */
-    readonly includes?: string
-
-    /**
-     * Filter on specific fields. Multiple conditions [.] separated Example: col_like_value.col2__val2
-     * @type {string}
-     * @memberof PetsEquipmentsetApiListPetsEquipmentsets
-     */
-    readonly where?: string
-
-    /**
-     * Rows to limit in response (Default: 10,000)
-     * @type {string}
-     * @memberof PetsEquipmentsetApiListPetsEquipmentsets
-     */
-    readonly limit?: string
-
-    /**
-     * Order by [field]
-     * @type {string}
-     * @memberof PetsEquipmentsetApiListPetsEquipmentsets
-     */
-    readonly orderBy?: string
-
-    /**
-     * Order by field direction
-     * @type {string}
-     * @memberof PetsEquipmentsetApiListPetsEquipmentsets
-     */
-    readonly orderDirection?: string
-
-    /**
-     * Column names [.] separated to fetch specific fields in response
-     * @type {string}
-     * @memberof PetsEquipmentsetApiListPetsEquipmentsets
-     */
-    readonly select?: string
-}
-
-/**
- * Request parameters for updatePetsEquipmentset operation in PetsEquipmentsetApi.
- * @export
- * @interface PetsEquipmentsetApiUpdatePetsEquipmentsetRequest
- */
-export interface PetsEquipmentsetApiUpdatePetsEquipmentsetRequest {
-    /**
-     * Id
-     * @type {number}
-     * @memberof PetsEquipmentsetApiUpdatePetsEquipmentset
-     */
-    readonly id: number
-
-    /**
-     * PetsEquipmentset
-     * @type {ModelsPetsEquipmentset}
-     * @memberof PetsEquipmentsetApiUpdatePetsEquipmentset
-     */
-    readonly petsEquipmentset: ModelsPetsEquipmentset
-}
-
-/**
- * PetsEquipmentsetApi - object-oriented interface
- * @export
- * @class PetsEquipmentsetApi
- * @extends {BaseAPI}
- */
-export class PetsEquipmentsetApi extends BaseAPI {
-    /**
-     * 
-     * @summary Creates PetsEquipmentset
-     * @param {PetsEquipmentsetApiCreatePetsEquipmentsetRequest} requestParameters Request parameters.
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof PetsEquipmentsetApi
-     */
-    public createPetsEquipmentset(requestParameters: PetsEquipmentsetApiCreatePetsEquipmentsetRequest, options?: any) {
-        return PetsEquipmentsetApiFp(this.configuration).createPetsEquipmentset(requestParameters.petsEquipmentset, options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
-     * 
-     * @summary Deletes PetsEquipmentset
-     * @param {PetsEquipmentsetApiDeletePetsEquipmentsetRequest} requestParameters Request parameters.
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof PetsEquipmentsetApi
-     */
-    public deletePetsEquipmentset(requestParameters: PetsEquipmentsetApiDeletePetsEquipmentsetRequest, options?: any) {
-        return PetsEquipmentsetApiFp(this.configuration).deletePetsEquipmentset(requestParameters.id, options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
-     * 
-     * @summary Gets PetsEquipmentset
-     * @param {PetsEquipmentsetApiGetPetsEquipmentsetRequest} requestParameters Request parameters.
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof PetsEquipmentsetApi
-     */
-    public getPetsEquipmentset(requestParameters: PetsEquipmentsetApiGetPetsEquipmentsetRequest, options?: any) {
-        return PetsEquipmentsetApiFp(this.configuration).getPetsEquipmentset(requestParameters.id, requestParameters.includes, requestParameters.select, options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
-     * 
-     * @summary Lists PetsEquipmentsets
-     * @param {PetsEquipmentsetApiListPetsEquipmentsetsRequest} requestParameters Request parameters.
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof PetsEquipmentsetApi
-     */
-    public listPetsEquipmentsets(requestParameters: PetsEquipmentsetApiListPetsEquipmentsetsRequest = {}, options?: any) {
-        return PetsEquipmentsetApiFp(this.configuration).listPetsEquipmentsets(requestParameters.includes, requestParameters.where, requestParameters.limit, requestParameters.orderBy, requestParameters.orderDirection, requestParameters.select, options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
-     * 
-     * @summary Updates PetsEquipmentset
-     * @param {PetsEquipmentsetApiUpdatePetsEquipmentsetRequest} requestParameters Request parameters.
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof PetsEquipmentsetApi
-     */
-    public updatePetsEquipmentset(requestParameters: PetsEquipmentsetApiUpdatePetsEquipmentsetRequest, options?: any) {
-        return PetsEquipmentsetApiFp(this.configuration).updatePetsEquipmentset(requestParameters.id, requestParameters.petsEquipmentset, options).then((request) => request(this.axios, this.basePath));
-    }
-}
-
-
-/**
- * PetsEquipmentsetEntryApi - axios parameter creator
- * @export
- */
-export const PetsEquipmentsetEntryApiAxiosParamCreator = function (configuration?: Configuration) {
-    return {
-        /**
-         * 
-         * @summary Creates PetsEquipmentsetEntry
-         * @param {ModelsPetsEquipmentsetEntry} petsEquipmentsetEntry PetsEquipmentsetEntry
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        createPetsEquipmentsetEntry: async (petsEquipmentsetEntry: ModelsPetsEquipmentsetEntry, options: any = {}): Promise<RequestArgs> => {
-            // verify required parameter 'petsEquipmentsetEntry' is not null or undefined
-            if (petsEquipmentsetEntry === null || petsEquipmentsetEntry === undefined) {
-                throw new RequiredError('petsEquipmentsetEntry','Required parameter petsEquipmentsetEntry was null or undefined when calling createPetsEquipmentsetEntry.');
-            }
-            const localVarPath = `/pets_equipmentset_entry`;
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, 'https://example.com');
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'PUT', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-
-    
-            localVarHeaderParameter['Content-Type'] = 'application/json';
-
-            const queryParameters = new URLSearchParams(localVarUrlObj.search);
-            for (const key in localVarQueryParameter) {
-                queryParameters.set(key, localVarQueryParameter[key]);
-            }
-            for (const key in options.query) {
-                queryParameters.set(key, options.query[key]);
-            }
-            localVarUrlObj.search = (new URLSearchParams(queryParameters)).toString();
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            const nonString = typeof petsEquipmentsetEntry !== 'string';
-            const needsSerialization = nonString && configuration && configuration.isJsonMime
-                ? configuration.isJsonMime(localVarRequestOptions.headers['Content-Type'])
-                : nonString;
-            localVarRequestOptions.data =  needsSerialization
-                ? JSON.stringify(petsEquipmentsetEntry !== undefined ? petsEquipmentsetEntry : {})
-                : (petsEquipmentsetEntry || "");
-
-            return {
-                url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * 
-         * @summary Deletes PetsEquipmentsetEntry
-         * @param {number} id Id
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        deletePetsEquipmentsetEntry: async (id: number, options: any = {}): Promise<RequestArgs> => {
-            // verify required parameter 'id' is not null or undefined
-            if (id === null || id === undefined) {
-                throw new RequiredError('id','Required parameter id was null or undefined when calling deletePetsEquipmentsetEntry.');
-            }
-            const localVarPath = `/pets_equipmentset_entry/{id}`
-                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, 'https://example.com');
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'DELETE', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-
-    
-            const queryParameters = new URLSearchParams(localVarUrlObj.search);
-            for (const key in localVarQueryParameter) {
-                queryParameters.set(key, localVarQueryParameter[key]);
-            }
-            for (const key in options.query) {
-                queryParameters.set(key, options.query[key]);
-            }
-            localVarUrlObj.search = (new URLSearchParams(queryParameters)).toString();
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-
-            return {
-                url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * 
-         * @summary Gets PetsEquipmentsetEntry
-         * @param {number} id Id
-         * @param {string} [includes] Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names 
-         * @param {string} [select] Column names [.] separated to fetch specific fields in response
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getPetsEquipmentsetEntry: async (id: number, includes?: string, select?: string, options: any = {}): Promise<RequestArgs> => {
-            // verify required parameter 'id' is not null or undefined
-            if (id === null || id === undefined) {
-                throw new RequiredError('id','Required parameter id was null or undefined when calling getPetsEquipmentsetEntry.');
-            }
-            const localVarPath = `/pets_equipmentset_entry/{id}`
-                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, 'https://example.com');
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-            if (includes !== undefined) {
-                localVarQueryParameter['includes'] = includes;
-            }
-
-            if (select !== undefined) {
-                localVarQueryParameter['select'] = select;
-            }
-
-
-    
-            const queryParameters = new URLSearchParams(localVarUrlObj.search);
-            for (const key in localVarQueryParameter) {
-                queryParameters.set(key, localVarQueryParameter[key]);
-            }
-            for (const key in options.query) {
-                queryParameters.set(key, options.query[key]);
-            }
-            localVarUrlObj.search = (new URLSearchParams(queryParameters)).toString();
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-
-            return {
-                url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * 
-         * @summary Lists PetsEquipmentsetEntries
-         * @param {string} [includes] Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names 
-         * @param {string} [where] Filter on specific fields. Multiple conditions [.] separated Example: col_like_value.col2__val2
-         * @param {string} [limit] Rows to limit in response (Default: 10,000)
-         * @param {string} [orderBy] Order by [field]
-         * @param {string} [orderDirection] Order by field direction
-         * @param {string} [select] Column names [.] separated to fetch specific fields in response
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        listPetsEquipmentsetEntries: async (includes?: string, where?: string, limit?: string, orderBy?: string, orderDirection?: string, select?: string, options: any = {}): Promise<RequestArgs> => {
-            const localVarPath = `/pets_equipmentset_entries`;
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, 'https://example.com');
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-            if (includes !== undefined) {
-                localVarQueryParameter['includes'] = includes;
-            }
-
-            if (where !== undefined) {
-                localVarQueryParameter['where'] = where;
-            }
-
-            if (limit !== undefined) {
-                localVarQueryParameter['limit'] = limit;
-            }
-
-            if (orderBy !== undefined) {
-                localVarQueryParameter['orderBy'] = orderBy;
-            }
-
-            if (orderDirection !== undefined) {
-                localVarQueryParameter['orderDirection'] = orderDirection;
-            }
-
-            if (select !== undefined) {
-                localVarQueryParameter['select'] = select;
-            }
-
-
-    
-            const queryParameters = new URLSearchParams(localVarUrlObj.search);
-            for (const key in localVarQueryParameter) {
-                queryParameters.set(key, localVarQueryParameter[key]);
-            }
-            for (const key in options.query) {
-                queryParameters.set(key, options.query[key]);
-            }
-            localVarUrlObj.search = (new URLSearchParams(queryParameters)).toString();
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-
-            return {
-                url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * 
-         * @summary Updates PetsEquipmentsetEntry
-         * @param {number} id Id
-         * @param {ModelsPetsEquipmentsetEntry} petsEquipmentsetEntry PetsEquipmentsetEntry
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        updatePetsEquipmentsetEntry: async (id: number, petsEquipmentsetEntry: ModelsPetsEquipmentsetEntry, options: any = {}): Promise<RequestArgs> => {
-            // verify required parameter 'id' is not null or undefined
-            if (id === null || id === undefined) {
-                throw new RequiredError('id','Required parameter id was null or undefined when calling updatePetsEquipmentsetEntry.');
-            }
-            // verify required parameter 'petsEquipmentsetEntry' is not null or undefined
-            if (petsEquipmentsetEntry === null || petsEquipmentsetEntry === undefined) {
-                throw new RequiredError('petsEquipmentsetEntry','Required parameter petsEquipmentsetEntry was null or undefined when calling updatePetsEquipmentsetEntry.');
-            }
-            const localVarPath = `/pets_equipmentset_entry/{id}`
-                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, 'https://example.com');
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'PATCH', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-
-    
-            localVarHeaderParameter['Content-Type'] = 'application/json';
-
-            const queryParameters = new URLSearchParams(localVarUrlObj.search);
-            for (const key in localVarQueryParameter) {
-                queryParameters.set(key, localVarQueryParameter[key]);
-            }
-            for (const key in options.query) {
-                queryParameters.set(key, options.query[key]);
-            }
-            localVarUrlObj.search = (new URLSearchParams(queryParameters)).toString();
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            const nonString = typeof petsEquipmentsetEntry !== 'string';
-            const needsSerialization = nonString && configuration && configuration.isJsonMime
-                ? configuration.isJsonMime(localVarRequestOptions.headers['Content-Type'])
-                : nonString;
-            localVarRequestOptions.data =  needsSerialization
-                ? JSON.stringify(petsEquipmentsetEntry !== undefined ? petsEquipmentsetEntry : {})
-                : (petsEquipmentsetEntry || "");
-
-            return {
-                url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
-                options: localVarRequestOptions,
-            };
-        },
-    }
-};
-
-/**
- * PetsEquipmentsetEntryApi - functional programming interface
- * @export
- */
-export const PetsEquipmentsetEntryApiFp = function(configuration?: Configuration) {
-    return {
-        /**
-         * 
-         * @summary Creates PetsEquipmentsetEntry
-         * @param {ModelsPetsEquipmentsetEntry} petsEquipmentsetEntry PetsEquipmentsetEntry
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async createPetsEquipmentsetEntry(petsEquipmentsetEntry: ModelsPetsEquipmentsetEntry, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<ModelsPetsEquipmentsetEntry>>> {
-            const localVarAxiosArgs = await PetsEquipmentsetEntryApiAxiosParamCreator(configuration).createPetsEquipmentsetEntry(petsEquipmentsetEntry, options);
-            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
-                const axiosRequestArgs = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
-                return axios.request(axiosRequestArgs);
-            };
-        },
-        /**
-         * 
-         * @summary Deletes PetsEquipmentsetEntry
-         * @param {number} id Id
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async deletePetsEquipmentsetEntry(id: number, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<string>> {
-            const localVarAxiosArgs = await PetsEquipmentsetEntryApiAxiosParamCreator(configuration).deletePetsEquipmentsetEntry(id, options);
-            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
-                const axiosRequestArgs = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
-                return axios.request(axiosRequestArgs);
-            };
-        },
-        /**
-         * 
-         * @summary Gets PetsEquipmentsetEntry
-         * @param {number} id Id
-         * @param {string} [includes] Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names 
-         * @param {string} [select] Column names [.] separated to fetch specific fields in response
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async getPetsEquipmentsetEntry(id: number, includes?: string, select?: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<ModelsPetsEquipmentsetEntry>>> {
-            const localVarAxiosArgs = await PetsEquipmentsetEntryApiAxiosParamCreator(configuration).getPetsEquipmentsetEntry(id, includes, select, options);
-            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
-                const axiosRequestArgs = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
-                return axios.request(axiosRequestArgs);
-            };
-        },
-        /**
-         * 
-         * @summary Lists PetsEquipmentsetEntries
-         * @param {string} [includes] Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names 
-         * @param {string} [where] Filter on specific fields. Multiple conditions [.] separated Example: col_like_value.col2__val2
-         * @param {string} [limit] Rows to limit in response (Default: 10,000)
-         * @param {string} [orderBy] Order by [field]
-         * @param {string} [orderDirection] Order by field direction
-         * @param {string} [select] Column names [.] separated to fetch specific fields in response
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async listPetsEquipmentsetEntries(includes?: string, where?: string, limit?: string, orderBy?: string, orderDirection?: string, select?: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<ModelsPetsEquipmentsetEntry>>> {
-            const localVarAxiosArgs = await PetsEquipmentsetEntryApiAxiosParamCreator(configuration).listPetsEquipmentsetEntries(includes, where, limit, orderBy, orderDirection, select, options);
-            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
-                const axiosRequestArgs = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
-                return axios.request(axiosRequestArgs);
-            };
-        },
-        /**
-         * 
-         * @summary Updates PetsEquipmentsetEntry
-         * @param {number} id Id
-         * @param {ModelsPetsEquipmentsetEntry} petsEquipmentsetEntry PetsEquipmentsetEntry
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async updatePetsEquipmentsetEntry(id: number, petsEquipmentsetEntry: ModelsPetsEquipmentsetEntry, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<ModelsPetsEquipmentsetEntry>>> {
-            const localVarAxiosArgs = await PetsEquipmentsetEntryApiAxiosParamCreator(configuration).updatePetsEquipmentsetEntry(id, petsEquipmentsetEntry, options);
-            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
-                const axiosRequestArgs = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
-                return axios.request(axiosRequestArgs);
-            };
-        },
-    }
-};
-
-/**
- * PetsEquipmentsetEntryApi - factory interface
- * @export
- */
-export const PetsEquipmentsetEntryApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
-    return {
-        /**
-         * 
-         * @summary Creates PetsEquipmentsetEntry
-         * @param {ModelsPetsEquipmentsetEntry} petsEquipmentsetEntry PetsEquipmentsetEntry
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        createPetsEquipmentsetEntry(petsEquipmentsetEntry: ModelsPetsEquipmentsetEntry, options?: any): AxiosPromise<Array<ModelsPetsEquipmentsetEntry>> {
-            return PetsEquipmentsetEntryApiFp(configuration).createPetsEquipmentsetEntry(petsEquipmentsetEntry, options).then((request) => request(axios, basePath));
-        },
-        /**
-         * 
-         * @summary Deletes PetsEquipmentsetEntry
-         * @param {number} id Id
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        deletePetsEquipmentsetEntry(id: number, options?: any): AxiosPromise<string> {
-            return PetsEquipmentsetEntryApiFp(configuration).deletePetsEquipmentsetEntry(id, options).then((request) => request(axios, basePath));
-        },
-        /**
-         * 
-         * @summary Gets PetsEquipmentsetEntry
-         * @param {number} id Id
-         * @param {string} [includes] Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names 
-         * @param {string} [select] Column names [.] separated to fetch specific fields in response
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getPetsEquipmentsetEntry(id: number, includes?: string, select?: string, options?: any): AxiosPromise<Array<ModelsPetsEquipmentsetEntry>> {
-            return PetsEquipmentsetEntryApiFp(configuration).getPetsEquipmentsetEntry(id, includes, select, options).then((request) => request(axios, basePath));
-        },
-        /**
-         * 
-         * @summary Lists PetsEquipmentsetEntries
-         * @param {string} [includes] Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names 
-         * @param {string} [where] Filter on specific fields. Multiple conditions [.] separated Example: col_like_value.col2__val2
-         * @param {string} [limit] Rows to limit in response (Default: 10,000)
-         * @param {string} [orderBy] Order by [field]
-         * @param {string} [orderDirection] Order by field direction
-         * @param {string} [select] Column names [.] separated to fetch specific fields in response
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        listPetsEquipmentsetEntries(includes?: string, where?: string, limit?: string, orderBy?: string, orderDirection?: string, select?: string, options?: any): AxiosPromise<Array<ModelsPetsEquipmentsetEntry>> {
-            return PetsEquipmentsetEntryApiFp(configuration).listPetsEquipmentsetEntries(includes, where, limit, orderBy, orderDirection, select, options).then((request) => request(axios, basePath));
-        },
-        /**
-         * 
-         * @summary Updates PetsEquipmentsetEntry
-         * @param {number} id Id
-         * @param {ModelsPetsEquipmentsetEntry} petsEquipmentsetEntry PetsEquipmentsetEntry
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        updatePetsEquipmentsetEntry(id: number, petsEquipmentsetEntry: ModelsPetsEquipmentsetEntry, options?: any): AxiosPromise<Array<ModelsPetsEquipmentsetEntry>> {
-            return PetsEquipmentsetEntryApiFp(configuration).updatePetsEquipmentsetEntry(id, petsEquipmentsetEntry, options).then((request) => request(axios, basePath));
-        },
-    };
-};
-
-/**
- * Request parameters for createPetsEquipmentsetEntry operation in PetsEquipmentsetEntryApi.
- * @export
- * @interface PetsEquipmentsetEntryApiCreatePetsEquipmentsetEntryRequest
- */
-export interface PetsEquipmentsetEntryApiCreatePetsEquipmentsetEntryRequest {
-    /**
-     * PetsEquipmentsetEntry
-     * @type {ModelsPetsEquipmentsetEntry}
-     * @memberof PetsEquipmentsetEntryApiCreatePetsEquipmentsetEntry
-     */
-    readonly petsEquipmentsetEntry: ModelsPetsEquipmentsetEntry
-}
-
-/**
- * Request parameters for deletePetsEquipmentsetEntry operation in PetsEquipmentsetEntryApi.
- * @export
- * @interface PetsEquipmentsetEntryApiDeletePetsEquipmentsetEntryRequest
- */
-export interface PetsEquipmentsetEntryApiDeletePetsEquipmentsetEntryRequest {
-    /**
-     * Id
-     * @type {number}
-     * @memberof PetsEquipmentsetEntryApiDeletePetsEquipmentsetEntry
-     */
-    readonly id: number
-}
-
-/**
- * Request parameters for getPetsEquipmentsetEntry operation in PetsEquipmentsetEntryApi.
- * @export
- * @interface PetsEquipmentsetEntryApiGetPetsEquipmentsetEntryRequest
- */
-export interface PetsEquipmentsetEntryApiGetPetsEquipmentsetEntryRequest {
-    /**
-     * Id
-     * @type {number}
-     * @memberof PetsEquipmentsetEntryApiGetPetsEquipmentsetEntry
-     */
-    readonly id: number
-
-    /**
-     * Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names 
-     * @type {string}
-     * @memberof PetsEquipmentsetEntryApiGetPetsEquipmentsetEntry
-     */
-    readonly includes?: string
-
-    /**
-     * Column names [.] separated to fetch specific fields in response
-     * @type {string}
-     * @memberof PetsEquipmentsetEntryApiGetPetsEquipmentsetEntry
-     */
-    readonly select?: string
-}
-
-/**
- * Request parameters for listPetsEquipmentsetEntries operation in PetsEquipmentsetEntryApi.
- * @export
- * @interface PetsEquipmentsetEntryApiListPetsEquipmentsetEntriesRequest
- */
-export interface PetsEquipmentsetEntryApiListPetsEquipmentsetEntriesRequest {
-    /**
-     * Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names 
-     * @type {string}
-     * @memberof PetsEquipmentsetEntryApiListPetsEquipmentsetEntries
-     */
-    readonly includes?: string
-
-    /**
-     * Filter on specific fields. Multiple conditions [.] separated Example: col_like_value.col2__val2
-     * @type {string}
-     * @memberof PetsEquipmentsetEntryApiListPetsEquipmentsetEntries
-     */
-    readonly where?: string
-
-    /**
-     * Rows to limit in response (Default: 10,000)
-     * @type {string}
-     * @memberof PetsEquipmentsetEntryApiListPetsEquipmentsetEntries
-     */
-    readonly limit?: string
-
-    /**
-     * Order by [field]
-     * @type {string}
-     * @memberof PetsEquipmentsetEntryApiListPetsEquipmentsetEntries
-     */
-    readonly orderBy?: string
-
-    /**
-     * Order by field direction
-     * @type {string}
-     * @memberof PetsEquipmentsetEntryApiListPetsEquipmentsetEntries
-     */
-    readonly orderDirection?: string
-
-    /**
-     * Column names [.] separated to fetch specific fields in response
-     * @type {string}
-     * @memberof PetsEquipmentsetEntryApiListPetsEquipmentsetEntries
-     */
-    readonly select?: string
-}
-
-/**
- * Request parameters for updatePetsEquipmentsetEntry operation in PetsEquipmentsetEntryApi.
- * @export
- * @interface PetsEquipmentsetEntryApiUpdatePetsEquipmentsetEntryRequest
- */
-export interface PetsEquipmentsetEntryApiUpdatePetsEquipmentsetEntryRequest {
-    /**
-     * Id
-     * @type {number}
-     * @memberof PetsEquipmentsetEntryApiUpdatePetsEquipmentsetEntry
-     */
-    readonly id: number
-
-    /**
-     * PetsEquipmentsetEntry
-     * @type {ModelsPetsEquipmentsetEntry}
-     * @memberof PetsEquipmentsetEntryApiUpdatePetsEquipmentsetEntry
-     */
-    readonly petsEquipmentsetEntry: ModelsPetsEquipmentsetEntry
-}
-
-/**
- * PetsEquipmentsetEntryApi - object-oriented interface
- * @export
- * @class PetsEquipmentsetEntryApi
- * @extends {BaseAPI}
- */
-export class PetsEquipmentsetEntryApi extends BaseAPI {
-    /**
-     * 
-     * @summary Creates PetsEquipmentsetEntry
-     * @param {PetsEquipmentsetEntryApiCreatePetsEquipmentsetEntryRequest} requestParameters Request parameters.
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof PetsEquipmentsetEntryApi
-     */
-    public createPetsEquipmentsetEntry(requestParameters: PetsEquipmentsetEntryApiCreatePetsEquipmentsetEntryRequest, options?: any) {
-        return PetsEquipmentsetEntryApiFp(this.configuration).createPetsEquipmentsetEntry(requestParameters.petsEquipmentsetEntry, options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
-     * 
-     * @summary Deletes PetsEquipmentsetEntry
-     * @param {PetsEquipmentsetEntryApiDeletePetsEquipmentsetEntryRequest} requestParameters Request parameters.
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof PetsEquipmentsetEntryApi
-     */
-    public deletePetsEquipmentsetEntry(requestParameters: PetsEquipmentsetEntryApiDeletePetsEquipmentsetEntryRequest, options?: any) {
-        return PetsEquipmentsetEntryApiFp(this.configuration).deletePetsEquipmentsetEntry(requestParameters.id, options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
-     * 
-     * @summary Gets PetsEquipmentsetEntry
-     * @param {PetsEquipmentsetEntryApiGetPetsEquipmentsetEntryRequest} requestParameters Request parameters.
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof PetsEquipmentsetEntryApi
-     */
-    public getPetsEquipmentsetEntry(requestParameters: PetsEquipmentsetEntryApiGetPetsEquipmentsetEntryRequest, options?: any) {
-        return PetsEquipmentsetEntryApiFp(this.configuration).getPetsEquipmentsetEntry(requestParameters.id, requestParameters.includes, requestParameters.select, options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
-     * 
-     * @summary Lists PetsEquipmentsetEntries
-     * @param {PetsEquipmentsetEntryApiListPetsEquipmentsetEntriesRequest} requestParameters Request parameters.
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof PetsEquipmentsetEntryApi
-     */
-    public listPetsEquipmentsetEntries(requestParameters: PetsEquipmentsetEntryApiListPetsEquipmentsetEntriesRequest = {}, options?: any) {
-        return PetsEquipmentsetEntryApiFp(this.configuration).listPetsEquipmentsetEntries(requestParameters.includes, requestParameters.where, requestParameters.limit, requestParameters.orderBy, requestParameters.orderDirection, requestParameters.select, options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
-     * 
-     * @summary Updates PetsEquipmentsetEntry
-     * @param {PetsEquipmentsetEntryApiUpdatePetsEquipmentsetEntryRequest} requestParameters Request parameters.
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof PetsEquipmentsetEntryApi
-     */
-    public updatePetsEquipmentsetEntry(requestParameters: PetsEquipmentsetEntryApiUpdatePetsEquipmentsetEntryRequest, options?: any) {
-        return PetsEquipmentsetEntryApiFp(this.configuration).updatePetsEquipmentsetEntry(requestParameters.id, requestParameters.petsEquipmentsetEntry, options).then((request) => request(this.axios, this.basePath));
-    }
-}
-
-
-/**
  * PlayerTitlesetApi - axios parameter creator
  * @export
  */
@@ -69795,1264 +58110,6 @@ export class PlayerTitlesetApi extends BaseAPI {
      */
     public updatePlayerTitleset(requestParameters: PlayerTitlesetApiUpdatePlayerTitlesetRequest, options?: any) {
         return PlayerTitlesetApiFp(this.configuration).updatePlayerTitleset(requestParameters.id, requestParameters.playerTitleset, options).then((request) => request(this.axios, this.basePath));
-    }
-}
-
-
-/**
- * QuestGlobalApi - axios parameter creator
- * @export
- */
-export const QuestGlobalApiAxiosParamCreator = function (configuration?: Configuration) {
-    return {
-        /**
-         * 
-         * @summary Creates QuestGlobal
-         * @param {ModelsQuestGlobal} questGlobal QuestGlobal
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        createQuestGlobal: async (questGlobal: ModelsQuestGlobal, options: any = {}): Promise<RequestArgs> => {
-            // verify required parameter 'questGlobal' is not null or undefined
-            if (questGlobal === null || questGlobal === undefined) {
-                throw new RequiredError('questGlobal','Required parameter questGlobal was null or undefined when calling createQuestGlobal.');
-            }
-            const localVarPath = `/quest_global`;
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, 'https://example.com');
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'PUT', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-
-    
-            localVarHeaderParameter['Content-Type'] = 'application/json';
-
-            const queryParameters = new URLSearchParams(localVarUrlObj.search);
-            for (const key in localVarQueryParameter) {
-                queryParameters.set(key, localVarQueryParameter[key]);
-            }
-            for (const key in options.query) {
-                queryParameters.set(key, options.query[key]);
-            }
-            localVarUrlObj.search = (new URLSearchParams(queryParameters)).toString();
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            const nonString = typeof questGlobal !== 'string';
-            const needsSerialization = nonString && configuration && configuration.isJsonMime
-                ? configuration.isJsonMime(localVarRequestOptions.headers['Content-Type'])
-                : nonString;
-            localVarRequestOptions.data =  needsSerialization
-                ? JSON.stringify(questGlobal !== undefined ? questGlobal : {})
-                : (questGlobal || "");
-
-            return {
-                url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * 
-         * @summary Deletes QuestGlobal
-         * @param {number} id Id
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        deleteQuestGlobal: async (id: number, options: any = {}): Promise<RequestArgs> => {
-            // verify required parameter 'id' is not null or undefined
-            if (id === null || id === undefined) {
-                throw new RequiredError('id','Required parameter id was null or undefined when calling deleteQuestGlobal.');
-            }
-            const localVarPath = `/quest_global/{id}`
-                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, 'https://example.com');
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'DELETE', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-
-    
-            const queryParameters = new URLSearchParams(localVarUrlObj.search);
-            for (const key in localVarQueryParameter) {
-                queryParameters.set(key, localVarQueryParameter[key]);
-            }
-            for (const key in options.query) {
-                queryParameters.set(key, options.query[key]);
-            }
-            localVarUrlObj.search = (new URLSearchParams(queryParameters)).toString();
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-
-            return {
-                url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * 
-         * @summary Gets QuestGlobal
-         * @param {number} id Id
-         * @param {string} [includes] Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names 
-         * @param {string} [select] Column names [.] separated to fetch specific fields in response
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getQuestGlobal: async (id: number, includes?: string, select?: string, options: any = {}): Promise<RequestArgs> => {
-            // verify required parameter 'id' is not null or undefined
-            if (id === null || id === undefined) {
-                throw new RequiredError('id','Required parameter id was null or undefined when calling getQuestGlobal.');
-            }
-            const localVarPath = `/quest_global/{id}`
-                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, 'https://example.com');
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-            if (includes !== undefined) {
-                localVarQueryParameter['includes'] = includes;
-            }
-
-            if (select !== undefined) {
-                localVarQueryParameter['select'] = select;
-            }
-
-
-    
-            const queryParameters = new URLSearchParams(localVarUrlObj.search);
-            for (const key in localVarQueryParameter) {
-                queryParameters.set(key, localVarQueryParameter[key]);
-            }
-            for (const key in options.query) {
-                queryParameters.set(key, options.query[key]);
-            }
-            localVarUrlObj.search = (new URLSearchParams(queryParameters)).toString();
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-
-            return {
-                url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * 
-         * @summary Lists QuestGlobals
-         * @param {string} [includes] Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names 
-         * @param {string} [where] Filter on specific fields. Multiple conditions [.] separated Example: col_like_value.col2__val2
-         * @param {string} [limit] Rows to limit in response (Default: 10,000)
-         * @param {string} [orderBy] Order by [field]
-         * @param {string} [orderDirection] Order by field direction
-         * @param {string} [select] Column names [.] separated to fetch specific fields in response
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        listQuestGlobals: async (includes?: string, where?: string, limit?: string, orderBy?: string, orderDirection?: string, select?: string, options: any = {}): Promise<RequestArgs> => {
-            const localVarPath = `/quest_globals`;
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, 'https://example.com');
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-            if (includes !== undefined) {
-                localVarQueryParameter['includes'] = includes;
-            }
-
-            if (where !== undefined) {
-                localVarQueryParameter['where'] = where;
-            }
-
-            if (limit !== undefined) {
-                localVarQueryParameter['limit'] = limit;
-            }
-
-            if (orderBy !== undefined) {
-                localVarQueryParameter['orderBy'] = orderBy;
-            }
-
-            if (orderDirection !== undefined) {
-                localVarQueryParameter['orderDirection'] = orderDirection;
-            }
-
-            if (select !== undefined) {
-                localVarQueryParameter['select'] = select;
-            }
-
-
-    
-            const queryParameters = new URLSearchParams(localVarUrlObj.search);
-            for (const key in localVarQueryParameter) {
-                queryParameters.set(key, localVarQueryParameter[key]);
-            }
-            for (const key in options.query) {
-                queryParameters.set(key, options.query[key]);
-            }
-            localVarUrlObj.search = (new URLSearchParams(queryParameters)).toString();
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-
-            return {
-                url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * 
-         * @summary Updates QuestGlobal
-         * @param {number} id Id
-         * @param {ModelsQuestGlobal} questGlobal QuestGlobal
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        updateQuestGlobal: async (id: number, questGlobal: ModelsQuestGlobal, options: any = {}): Promise<RequestArgs> => {
-            // verify required parameter 'id' is not null or undefined
-            if (id === null || id === undefined) {
-                throw new RequiredError('id','Required parameter id was null or undefined when calling updateQuestGlobal.');
-            }
-            // verify required parameter 'questGlobal' is not null or undefined
-            if (questGlobal === null || questGlobal === undefined) {
-                throw new RequiredError('questGlobal','Required parameter questGlobal was null or undefined when calling updateQuestGlobal.');
-            }
-            const localVarPath = `/quest_global/{id}`
-                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, 'https://example.com');
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'PATCH', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-
-    
-            localVarHeaderParameter['Content-Type'] = 'application/json';
-
-            const queryParameters = new URLSearchParams(localVarUrlObj.search);
-            for (const key in localVarQueryParameter) {
-                queryParameters.set(key, localVarQueryParameter[key]);
-            }
-            for (const key in options.query) {
-                queryParameters.set(key, options.query[key]);
-            }
-            localVarUrlObj.search = (new URLSearchParams(queryParameters)).toString();
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            const nonString = typeof questGlobal !== 'string';
-            const needsSerialization = nonString && configuration && configuration.isJsonMime
-                ? configuration.isJsonMime(localVarRequestOptions.headers['Content-Type'])
-                : nonString;
-            localVarRequestOptions.data =  needsSerialization
-                ? JSON.stringify(questGlobal !== undefined ? questGlobal : {})
-                : (questGlobal || "");
-
-            return {
-                url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
-                options: localVarRequestOptions,
-            };
-        },
-    }
-};
-
-/**
- * QuestGlobalApi - functional programming interface
- * @export
- */
-export const QuestGlobalApiFp = function(configuration?: Configuration) {
-    return {
-        /**
-         * 
-         * @summary Creates QuestGlobal
-         * @param {ModelsQuestGlobal} questGlobal QuestGlobal
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async createQuestGlobal(questGlobal: ModelsQuestGlobal, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<ModelsQuestGlobal>>> {
-            const localVarAxiosArgs = await QuestGlobalApiAxiosParamCreator(configuration).createQuestGlobal(questGlobal, options);
-            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
-                const axiosRequestArgs = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
-                return axios.request(axiosRequestArgs);
-            };
-        },
-        /**
-         * 
-         * @summary Deletes QuestGlobal
-         * @param {number} id Id
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async deleteQuestGlobal(id: number, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<string>> {
-            const localVarAxiosArgs = await QuestGlobalApiAxiosParamCreator(configuration).deleteQuestGlobal(id, options);
-            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
-                const axiosRequestArgs = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
-                return axios.request(axiosRequestArgs);
-            };
-        },
-        /**
-         * 
-         * @summary Gets QuestGlobal
-         * @param {number} id Id
-         * @param {string} [includes] Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names 
-         * @param {string} [select] Column names [.] separated to fetch specific fields in response
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async getQuestGlobal(id: number, includes?: string, select?: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<ModelsQuestGlobal>>> {
-            const localVarAxiosArgs = await QuestGlobalApiAxiosParamCreator(configuration).getQuestGlobal(id, includes, select, options);
-            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
-                const axiosRequestArgs = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
-                return axios.request(axiosRequestArgs);
-            };
-        },
-        /**
-         * 
-         * @summary Lists QuestGlobals
-         * @param {string} [includes] Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names 
-         * @param {string} [where] Filter on specific fields. Multiple conditions [.] separated Example: col_like_value.col2__val2
-         * @param {string} [limit] Rows to limit in response (Default: 10,000)
-         * @param {string} [orderBy] Order by [field]
-         * @param {string} [orderDirection] Order by field direction
-         * @param {string} [select] Column names [.] separated to fetch specific fields in response
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async listQuestGlobals(includes?: string, where?: string, limit?: string, orderBy?: string, orderDirection?: string, select?: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<ModelsQuestGlobal>>> {
-            const localVarAxiosArgs = await QuestGlobalApiAxiosParamCreator(configuration).listQuestGlobals(includes, where, limit, orderBy, orderDirection, select, options);
-            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
-                const axiosRequestArgs = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
-                return axios.request(axiosRequestArgs);
-            };
-        },
-        /**
-         * 
-         * @summary Updates QuestGlobal
-         * @param {number} id Id
-         * @param {ModelsQuestGlobal} questGlobal QuestGlobal
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async updateQuestGlobal(id: number, questGlobal: ModelsQuestGlobal, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<ModelsQuestGlobal>>> {
-            const localVarAxiosArgs = await QuestGlobalApiAxiosParamCreator(configuration).updateQuestGlobal(id, questGlobal, options);
-            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
-                const axiosRequestArgs = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
-                return axios.request(axiosRequestArgs);
-            };
-        },
-    }
-};
-
-/**
- * QuestGlobalApi - factory interface
- * @export
- */
-export const QuestGlobalApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
-    return {
-        /**
-         * 
-         * @summary Creates QuestGlobal
-         * @param {ModelsQuestGlobal} questGlobal QuestGlobal
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        createQuestGlobal(questGlobal: ModelsQuestGlobal, options?: any): AxiosPromise<Array<ModelsQuestGlobal>> {
-            return QuestGlobalApiFp(configuration).createQuestGlobal(questGlobal, options).then((request) => request(axios, basePath));
-        },
-        /**
-         * 
-         * @summary Deletes QuestGlobal
-         * @param {number} id Id
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        deleteQuestGlobal(id: number, options?: any): AxiosPromise<string> {
-            return QuestGlobalApiFp(configuration).deleteQuestGlobal(id, options).then((request) => request(axios, basePath));
-        },
-        /**
-         * 
-         * @summary Gets QuestGlobal
-         * @param {number} id Id
-         * @param {string} [includes] Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names 
-         * @param {string} [select] Column names [.] separated to fetch specific fields in response
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getQuestGlobal(id: number, includes?: string, select?: string, options?: any): AxiosPromise<Array<ModelsQuestGlobal>> {
-            return QuestGlobalApiFp(configuration).getQuestGlobal(id, includes, select, options).then((request) => request(axios, basePath));
-        },
-        /**
-         * 
-         * @summary Lists QuestGlobals
-         * @param {string} [includes] Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names 
-         * @param {string} [where] Filter on specific fields. Multiple conditions [.] separated Example: col_like_value.col2__val2
-         * @param {string} [limit] Rows to limit in response (Default: 10,000)
-         * @param {string} [orderBy] Order by [field]
-         * @param {string} [orderDirection] Order by field direction
-         * @param {string} [select] Column names [.] separated to fetch specific fields in response
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        listQuestGlobals(includes?: string, where?: string, limit?: string, orderBy?: string, orderDirection?: string, select?: string, options?: any): AxiosPromise<Array<ModelsQuestGlobal>> {
-            return QuestGlobalApiFp(configuration).listQuestGlobals(includes, where, limit, orderBy, orderDirection, select, options).then((request) => request(axios, basePath));
-        },
-        /**
-         * 
-         * @summary Updates QuestGlobal
-         * @param {number} id Id
-         * @param {ModelsQuestGlobal} questGlobal QuestGlobal
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        updateQuestGlobal(id: number, questGlobal: ModelsQuestGlobal, options?: any): AxiosPromise<Array<ModelsQuestGlobal>> {
-            return QuestGlobalApiFp(configuration).updateQuestGlobal(id, questGlobal, options).then((request) => request(axios, basePath));
-        },
-    };
-};
-
-/**
- * Request parameters for createQuestGlobal operation in QuestGlobalApi.
- * @export
- * @interface QuestGlobalApiCreateQuestGlobalRequest
- */
-export interface QuestGlobalApiCreateQuestGlobalRequest {
-    /**
-     * QuestGlobal
-     * @type {ModelsQuestGlobal}
-     * @memberof QuestGlobalApiCreateQuestGlobal
-     */
-    readonly questGlobal: ModelsQuestGlobal
-}
-
-/**
- * Request parameters for deleteQuestGlobal operation in QuestGlobalApi.
- * @export
- * @interface QuestGlobalApiDeleteQuestGlobalRequest
- */
-export interface QuestGlobalApiDeleteQuestGlobalRequest {
-    /**
-     * Id
-     * @type {number}
-     * @memberof QuestGlobalApiDeleteQuestGlobal
-     */
-    readonly id: number
-}
-
-/**
- * Request parameters for getQuestGlobal operation in QuestGlobalApi.
- * @export
- * @interface QuestGlobalApiGetQuestGlobalRequest
- */
-export interface QuestGlobalApiGetQuestGlobalRequest {
-    /**
-     * Id
-     * @type {number}
-     * @memberof QuestGlobalApiGetQuestGlobal
-     */
-    readonly id: number
-
-    /**
-     * Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names 
-     * @type {string}
-     * @memberof QuestGlobalApiGetQuestGlobal
-     */
-    readonly includes?: string
-
-    /**
-     * Column names [.] separated to fetch specific fields in response
-     * @type {string}
-     * @memberof QuestGlobalApiGetQuestGlobal
-     */
-    readonly select?: string
-}
-
-/**
- * Request parameters for listQuestGlobals operation in QuestGlobalApi.
- * @export
- * @interface QuestGlobalApiListQuestGlobalsRequest
- */
-export interface QuestGlobalApiListQuestGlobalsRequest {
-    /**
-     * Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names 
-     * @type {string}
-     * @memberof QuestGlobalApiListQuestGlobals
-     */
-    readonly includes?: string
-
-    /**
-     * Filter on specific fields. Multiple conditions [.] separated Example: col_like_value.col2__val2
-     * @type {string}
-     * @memberof QuestGlobalApiListQuestGlobals
-     */
-    readonly where?: string
-
-    /**
-     * Rows to limit in response (Default: 10,000)
-     * @type {string}
-     * @memberof QuestGlobalApiListQuestGlobals
-     */
-    readonly limit?: string
-
-    /**
-     * Order by [field]
-     * @type {string}
-     * @memberof QuestGlobalApiListQuestGlobals
-     */
-    readonly orderBy?: string
-
-    /**
-     * Order by field direction
-     * @type {string}
-     * @memberof QuestGlobalApiListQuestGlobals
-     */
-    readonly orderDirection?: string
-
-    /**
-     * Column names [.] separated to fetch specific fields in response
-     * @type {string}
-     * @memberof QuestGlobalApiListQuestGlobals
-     */
-    readonly select?: string
-}
-
-/**
- * Request parameters for updateQuestGlobal operation in QuestGlobalApi.
- * @export
- * @interface QuestGlobalApiUpdateQuestGlobalRequest
- */
-export interface QuestGlobalApiUpdateQuestGlobalRequest {
-    /**
-     * Id
-     * @type {number}
-     * @memberof QuestGlobalApiUpdateQuestGlobal
-     */
-    readonly id: number
-
-    /**
-     * QuestGlobal
-     * @type {ModelsQuestGlobal}
-     * @memberof QuestGlobalApiUpdateQuestGlobal
-     */
-    readonly questGlobal: ModelsQuestGlobal
-}
-
-/**
- * QuestGlobalApi - object-oriented interface
- * @export
- * @class QuestGlobalApi
- * @extends {BaseAPI}
- */
-export class QuestGlobalApi extends BaseAPI {
-    /**
-     * 
-     * @summary Creates QuestGlobal
-     * @param {QuestGlobalApiCreateQuestGlobalRequest} requestParameters Request parameters.
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof QuestGlobalApi
-     */
-    public createQuestGlobal(requestParameters: QuestGlobalApiCreateQuestGlobalRequest, options?: any) {
-        return QuestGlobalApiFp(this.configuration).createQuestGlobal(requestParameters.questGlobal, options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
-     * 
-     * @summary Deletes QuestGlobal
-     * @param {QuestGlobalApiDeleteQuestGlobalRequest} requestParameters Request parameters.
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof QuestGlobalApi
-     */
-    public deleteQuestGlobal(requestParameters: QuestGlobalApiDeleteQuestGlobalRequest, options?: any) {
-        return QuestGlobalApiFp(this.configuration).deleteQuestGlobal(requestParameters.id, options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
-     * 
-     * @summary Gets QuestGlobal
-     * @param {QuestGlobalApiGetQuestGlobalRequest} requestParameters Request parameters.
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof QuestGlobalApi
-     */
-    public getQuestGlobal(requestParameters: QuestGlobalApiGetQuestGlobalRequest, options?: any) {
-        return QuestGlobalApiFp(this.configuration).getQuestGlobal(requestParameters.id, requestParameters.includes, requestParameters.select, options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
-     * 
-     * @summary Lists QuestGlobals
-     * @param {QuestGlobalApiListQuestGlobalsRequest} requestParameters Request parameters.
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof QuestGlobalApi
-     */
-    public listQuestGlobals(requestParameters: QuestGlobalApiListQuestGlobalsRequest = {}, options?: any) {
-        return QuestGlobalApiFp(this.configuration).listQuestGlobals(requestParameters.includes, requestParameters.where, requestParameters.limit, requestParameters.orderBy, requestParameters.orderDirection, requestParameters.select, options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
-     * 
-     * @summary Updates QuestGlobal
-     * @param {QuestGlobalApiUpdateQuestGlobalRequest} requestParameters Request parameters.
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof QuestGlobalApi
-     */
-    public updateQuestGlobal(requestParameters: QuestGlobalApiUpdateQuestGlobalRequest, options?: any) {
-        return QuestGlobalApiFp(this.configuration).updateQuestGlobal(requestParameters.id, requestParameters.questGlobal, options).then((request) => request(this.axios, this.basePath));
-    }
-}
-
-
-/**
- * RaidDetailApi - axios parameter creator
- * @export
- */
-export const RaidDetailApiAxiosParamCreator = function (configuration?: Configuration) {
-    return {
-        /**
-         * 
-         * @summary Creates RaidDetail
-         * @param {ModelsRaidDetail} raidDetail RaidDetail
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        createRaidDetail: async (raidDetail: ModelsRaidDetail, options: any = {}): Promise<RequestArgs> => {
-            // verify required parameter 'raidDetail' is not null or undefined
-            if (raidDetail === null || raidDetail === undefined) {
-                throw new RequiredError('raidDetail','Required parameter raidDetail was null or undefined when calling createRaidDetail.');
-            }
-            const localVarPath = `/raid_detail`;
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, 'https://example.com');
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'PUT', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-
-    
-            localVarHeaderParameter['Content-Type'] = 'application/json';
-
-            const queryParameters = new URLSearchParams(localVarUrlObj.search);
-            for (const key in localVarQueryParameter) {
-                queryParameters.set(key, localVarQueryParameter[key]);
-            }
-            for (const key in options.query) {
-                queryParameters.set(key, options.query[key]);
-            }
-            localVarUrlObj.search = (new URLSearchParams(queryParameters)).toString();
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            const nonString = typeof raidDetail !== 'string';
-            const needsSerialization = nonString && configuration && configuration.isJsonMime
-                ? configuration.isJsonMime(localVarRequestOptions.headers['Content-Type'])
-                : nonString;
-            localVarRequestOptions.data =  needsSerialization
-                ? JSON.stringify(raidDetail !== undefined ? raidDetail : {})
-                : (raidDetail || "");
-
-            return {
-                url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * 
-         * @summary Deletes RaidDetail
-         * @param {number} id Id
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        deleteRaidDetail: async (id: number, options: any = {}): Promise<RequestArgs> => {
-            // verify required parameter 'id' is not null or undefined
-            if (id === null || id === undefined) {
-                throw new RequiredError('id','Required parameter id was null or undefined when calling deleteRaidDetail.');
-            }
-            const localVarPath = `/raid_detail/{id}`
-                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, 'https://example.com');
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'DELETE', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-
-    
-            const queryParameters = new URLSearchParams(localVarUrlObj.search);
-            for (const key in localVarQueryParameter) {
-                queryParameters.set(key, localVarQueryParameter[key]);
-            }
-            for (const key in options.query) {
-                queryParameters.set(key, options.query[key]);
-            }
-            localVarUrlObj.search = (new URLSearchParams(queryParameters)).toString();
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-
-            return {
-                url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * 
-         * @summary Gets RaidDetail
-         * @param {number} id Id
-         * @param {string} [includes] Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names &lt;h4&gt;Relationships&lt;/h4&gt;RaidLeaders&lt;br&gt;RaidMembers
-         * @param {string} [select] Column names [.] separated to fetch specific fields in response
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getRaidDetail: async (id: number, includes?: string, select?: string, options: any = {}): Promise<RequestArgs> => {
-            // verify required parameter 'id' is not null or undefined
-            if (id === null || id === undefined) {
-                throw new RequiredError('id','Required parameter id was null or undefined when calling getRaidDetail.');
-            }
-            const localVarPath = `/raid_detail/{id}`
-                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, 'https://example.com');
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-            if (includes !== undefined) {
-                localVarQueryParameter['includes'] = includes;
-            }
-
-            if (select !== undefined) {
-                localVarQueryParameter['select'] = select;
-            }
-
-
-    
-            const queryParameters = new URLSearchParams(localVarUrlObj.search);
-            for (const key in localVarQueryParameter) {
-                queryParameters.set(key, localVarQueryParameter[key]);
-            }
-            for (const key in options.query) {
-                queryParameters.set(key, options.query[key]);
-            }
-            localVarUrlObj.search = (new URLSearchParams(queryParameters)).toString();
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-
-            return {
-                url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * 
-         * @summary Lists RaidDetails
-         * @param {string} [includes] Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names &lt;h4&gt;Relationships&lt;/h4&gt;RaidLeaders&lt;br&gt;RaidMembers
-         * @param {string} [where] Filter on specific fields. Multiple conditions [.] separated Example: col_like_value.col2__val2
-         * @param {string} [limit] Rows to limit in response (Default: 10,000)
-         * @param {string} [orderBy] Order by [field]
-         * @param {string} [orderDirection] Order by field direction
-         * @param {string} [select] Column names [.] separated to fetch specific fields in response
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        listRaidDetails: async (includes?: string, where?: string, limit?: string, orderBy?: string, orderDirection?: string, select?: string, options: any = {}): Promise<RequestArgs> => {
-            const localVarPath = `/raid_details`;
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, 'https://example.com');
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-            if (includes !== undefined) {
-                localVarQueryParameter['includes'] = includes;
-            }
-
-            if (where !== undefined) {
-                localVarQueryParameter['where'] = where;
-            }
-
-            if (limit !== undefined) {
-                localVarQueryParameter['limit'] = limit;
-            }
-
-            if (orderBy !== undefined) {
-                localVarQueryParameter['orderBy'] = orderBy;
-            }
-
-            if (orderDirection !== undefined) {
-                localVarQueryParameter['orderDirection'] = orderDirection;
-            }
-
-            if (select !== undefined) {
-                localVarQueryParameter['select'] = select;
-            }
-
-
-    
-            const queryParameters = new URLSearchParams(localVarUrlObj.search);
-            for (const key in localVarQueryParameter) {
-                queryParameters.set(key, localVarQueryParameter[key]);
-            }
-            for (const key in options.query) {
-                queryParameters.set(key, options.query[key]);
-            }
-            localVarUrlObj.search = (new URLSearchParams(queryParameters)).toString();
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-
-            return {
-                url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * 
-         * @summary Updates RaidDetail
-         * @param {number} id Id
-         * @param {ModelsRaidDetail} raidDetail RaidDetail
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        updateRaidDetail: async (id: number, raidDetail: ModelsRaidDetail, options: any = {}): Promise<RequestArgs> => {
-            // verify required parameter 'id' is not null or undefined
-            if (id === null || id === undefined) {
-                throw new RequiredError('id','Required parameter id was null or undefined when calling updateRaidDetail.');
-            }
-            // verify required parameter 'raidDetail' is not null or undefined
-            if (raidDetail === null || raidDetail === undefined) {
-                throw new RequiredError('raidDetail','Required parameter raidDetail was null or undefined when calling updateRaidDetail.');
-            }
-            const localVarPath = `/raid_detail/{id}`
-                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, 'https://example.com');
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'PATCH', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-
-    
-            localVarHeaderParameter['Content-Type'] = 'application/json';
-
-            const queryParameters = new URLSearchParams(localVarUrlObj.search);
-            for (const key in localVarQueryParameter) {
-                queryParameters.set(key, localVarQueryParameter[key]);
-            }
-            for (const key in options.query) {
-                queryParameters.set(key, options.query[key]);
-            }
-            localVarUrlObj.search = (new URLSearchParams(queryParameters)).toString();
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            const nonString = typeof raidDetail !== 'string';
-            const needsSerialization = nonString && configuration && configuration.isJsonMime
-                ? configuration.isJsonMime(localVarRequestOptions.headers['Content-Type'])
-                : nonString;
-            localVarRequestOptions.data =  needsSerialization
-                ? JSON.stringify(raidDetail !== undefined ? raidDetail : {})
-                : (raidDetail || "");
-
-            return {
-                url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
-                options: localVarRequestOptions,
-            };
-        },
-    }
-};
-
-/**
- * RaidDetailApi - functional programming interface
- * @export
- */
-export const RaidDetailApiFp = function(configuration?: Configuration) {
-    return {
-        /**
-         * 
-         * @summary Creates RaidDetail
-         * @param {ModelsRaidDetail} raidDetail RaidDetail
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async createRaidDetail(raidDetail: ModelsRaidDetail, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<ModelsRaidDetail>>> {
-            const localVarAxiosArgs = await RaidDetailApiAxiosParamCreator(configuration).createRaidDetail(raidDetail, options);
-            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
-                const axiosRequestArgs = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
-                return axios.request(axiosRequestArgs);
-            };
-        },
-        /**
-         * 
-         * @summary Deletes RaidDetail
-         * @param {number} id Id
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async deleteRaidDetail(id: number, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<string>> {
-            const localVarAxiosArgs = await RaidDetailApiAxiosParamCreator(configuration).deleteRaidDetail(id, options);
-            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
-                const axiosRequestArgs = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
-                return axios.request(axiosRequestArgs);
-            };
-        },
-        /**
-         * 
-         * @summary Gets RaidDetail
-         * @param {number} id Id
-         * @param {string} [includes] Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names &lt;h4&gt;Relationships&lt;/h4&gt;RaidLeaders&lt;br&gt;RaidMembers
-         * @param {string} [select] Column names [.] separated to fetch specific fields in response
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async getRaidDetail(id: number, includes?: string, select?: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<ModelsRaidDetail>>> {
-            const localVarAxiosArgs = await RaidDetailApiAxiosParamCreator(configuration).getRaidDetail(id, includes, select, options);
-            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
-                const axiosRequestArgs = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
-                return axios.request(axiosRequestArgs);
-            };
-        },
-        /**
-         * 
-         * @summary Lists RaidDetails
-         * @param {string} [includes] Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names &lt;h4&gt;Relationships&lt;/h4&gt;RaidLeaders&lt;br&gt;RaidMembers
-         * @param {string} [where] Filter on specific fields. Multiple conditions [.] separated Example: col_like_value.col2__val2
-         * @param {string} [limit] Rows to limit in response (Default: 10,000)
-         * @param {string} [orderBy] Order by [field]
-         * @param {string} [orderDirection] Order by field direction
-         * @param {string} [select] Column names [.] separated to fetch specific fields in response
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async listRaidDetails(includes?: string, where?: string, limit?: string, orderBy?: string, orderDirection?: string, select?: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<ModelsRaidDetail>>> {
-            const localVarAxiosArgs = await RaidDetailApiAxiosParamCreator(configuration).listRaidDetails(includes, where, limit, orderBy, orderDirection, select, options);
-            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
-                const axiosRequestArgs = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
-                return axios.request(axiosRequestArgs);
-            };
-        },
-        /**
-         * 
-         * @summary Updates RaidDetail
-         * @param {number} id Id
-         * @param {ModelsRaidDetail} raidDetail RaidDetail
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async updateRaidDetail(id: number, raidDetail: ModelsRaidDetail, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<ModelsRaidDetail>>> {
-            const localVarAxiosArgs = await RaidDetailApiAxiosParamCreator(configuration).updateRaidDetail(id, raidDetail, options);
-            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
-                const axiosRequestArgs = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
-                return axios.request(axiosRequestArgs);
-            };
-        },
-    }
-};
-
-/**
- * RaidDetailApi - factory interface
- * @export
- */
-export const RaidDetailApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
-    return {
-        /**
-         * 
-         * @summary Creates RaidDetail
-         * @param {ModelsRaidDetail} raidDetail RaidDetail
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        createRaidDetail(raidDetail: ModelsRaidDetail, options?: any): AxiosPromise<Array<ModelsRaidDetail>> {
-            return RaidDetailApiFp(configuration).createRaidDetail(raidDetail, options).then((request) => request(axios, basePath));
-        },
-        /**
-         * 
-         * @summary Deletes RaidDetail
-         * @param {number} id Id
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        deleteRaidDetail(id: number, options?: any): AxiosPromise<string> {
-            return RaidDetailApiFp(configuration).deleteRaidDetail(id, options).then((request) => request(axios, basePath));
-        },
-        /**
-         * 
-         * @summary Gets RaidDetail
-         * @param {number} id Id
-         * @param {string} [includes] Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names &lt;h4&gt;Relationships&lt;/h4&gt;RaidLeaders&lt;br&gt;RaidMembers
-         * @param {string} [select] Column names [.] separated to fetch specific fields in response
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getRaidDetail(id: number, includes?: string, select?: string, options?: any): AxiosPromise<Array<ModelsRaidDetail>> {
-            return RaidDetailApiFp(configuration).getRaidDetail(id, includes, select, options).then((request) => request(axios, basePath));
-        },
-        /**
-         * 
-         * @summary Lists RaidDetails
-         * @param {string} [includes] Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names &lt;h4&gt;Relationships&lt;/h4&gt;RaidLeaders&lt;br&gt;RaidMembers
-         * @param {string} [where] Filter on specific fields. Multiple conditions [.] separated Example: col_like_value.col2__val2
-         * @param {string} [limit] Rows to limit in response (Default: 10,000)
-         * @param {string} [orderBy] Order by [field]
-         * @param {string} [orderDirection] Order by field direction
-         * @param {string} [select] Column names [.] separated to fetch specific fields in response
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        listRaidDetails(includes?: string, where?: string, limit?: string, orderBy?: string, orderDirection?: string, select?: string, options?: any): AxiosPromise<Array<ModelsRaidDetail>> {
-            return RaidDetailApiFp(configuration).listRaidDetails(includes, where, limit, orderBy, orderDirection, select, options).then((request) => request(axios, basePath));
-        },
-        /**
-         * 
-         * @summary Updates RaidDetail
-         * @param {number} id Id
-         * @param {ModelsRaidDetail} raidDetail RaidDetail
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        updateRaidDetail(id: number, raidDetail: ModelsRaidDetail, options?: any): AxiosPromise<Array<ModelsRaidDetail>> {
-            return RaidDetailApiFp(configuration).updateRaidDetail(id, raidDetail, options).then((request) => request(axios, basePath));
-        },
-    };
-};
-
-/**
- * Request parameters for createRaidDetail operation in RaidDetailApi.
- * @export
- * @interface RaidDetailApiCreateRaidDetailRequest
- */
-export interface RaidDetailApiCreateRaidDetailRequest {
-    /**
-     * RaidDetail
-     * @type {ModelsRaidDetail}
-     * @memberof RaidDetailApiCreateRaidDetail
-     */
-    readonly raidDetail: ModelsRaidDetail
-}
-
-/**
- * Request parameters for deleteRaidDetail operation in RaidDetailApi.
- * @export
- * @interface RaidDetailApiDeleteRaidDetailRequest
- */
-export interface RaidDetailApiDeleteRaidDetailRequest {
-    /**
-     * Id
-     * @type {number}
-     * @memberof RaidDetailApiDeleteRaidDetail
-     */
-    readonly id: number
-}
-
-/**
- * Request parameters for getRaidDetail operation in RaidDetailApi.
- * @export
- * @interface RaidDetailApiGetRaidDetailRequest
- */
-export interface RaidDetailApiGetRaidDetailRequest {
-    /**
-     * Id
-     * @type {number}
-     * @memberof RaidDetailApiGetRaidDetail
-     */
-    readonly id: number
-
-    /**
-     * Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names &lt;h4&gt;Relationships&lt;/h4&gt;RaidLeaders&lt;br&gt;RaidMembers
-     * @type {string}
-     * @memberof RaidDetailApiGetRaidDetail
-     */
-    readonly includes?: string
-
-    /**
-     * Column names [.] separated to fetch specific fields in response
-     * @type {string}
-     * @memberof RaidDetailApiGetRaidDetail
-     */
-    readonly select?: string
-}
-
-/**
- * Request parameters for listRaidDetails operation in RaidDetailApi.
- * @export
- * @interface RaidDetailApiListRaidDetailsRequest
- */
-export interface RaidDetailApiListRaidDetailsRequest {
-    /**
-     * Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names &lt;h4&gt;Relationships&lt;/h4&gt;RaidLeaders&lt;br&gt;RaidMembers
-     * @type {string}
-     * @memberof RaidDetailApiListRaidDetails
-     */
-    readonly includes?: string
-
-    /**
-     * Filter on specific fields. Multiple conditions [.] separated Example: col_like_value.col2__val2
-     * @type {string}
-     * @memberof RaidDetailApiListRaidDetails
-     */
-    readonly where?: string
-
-    /**
-     * Rows to limit in response (Default: 10,000)
-     * @type {string}
-     * @memberof RaidDetailApiListRaidDetails
-     */
-    readonly limit?: string
-
-    /**
-     * Order by [field]
-     * @type {string}
-     * @memberof RaidDetailApiListRaidDetails
-     */
-    readonly orderBy?: string
-
-    /**
-     * Order by field direction
-     * @type {string}
-     * @memberof RaidDetailApiListRaidDetails
-     */
-    readonly orderDirection?: string
-
-    /**
-     * Column names [.] separated to fetch specific fields in response
-     * @type {string}
-     * @memberof RaidDetailApiListRaidDetails
-     */
-    readonly select?: string
-}
-
-/**
- * Request parameters for updateRaidDetail operation in RaidDetailApi.
- * @export
- * @interface RaidDetailApiUpdateRaidDetailRequest
- */
-export interface RaidDetailApiUpdateRaidDetailRequest {
-    /**
-     * Id
-     * @type {number}
-     * @memberof RaidDetailApiUpdateRaidDetail
-     */
-    readonly id: number
-
-    /**
-     * RaidDetail
-     * @type {ModelsRaidDetail}
-     * @memberof RaidDetailApiUpdateRaidDetail
-     */
-    readonly raidDetail: ModelsRaidDetail
-}
-
-/**
- * RaidDetailApi - object-oriented interface
- * @export
- * @class RaidDetailApi
- * @extends {BaseAPI}
- */
-export class RaidDetailApi extends BaseAPI {
-    /**
-     * 
-     * @summary Creates RaidDetail
-     * @param {RaidDetailApiCreateRaidDetailRequest} requestParameters Request parameters.
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof RaidDetailApi
-     */
-    public createRaidDetail(requestParameters: RaidDetailApiCreateRaidDetailRequest, options?: any) {
-        return RaidDetailApiFp(this.configuration).createRaidDetail(requestParameters.raidDetail, options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
-     * 
-     * @summary Deletes RaidDetail
-     * @param {RaidDetailApiDeleteRaidDetailRequest} requestParameters Request parameters.
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof RaidDetailApi
-     */
-    public deleteRaidDetail(requestParameters: RaidDetailApiDeleteRaidDetailRequest, options?: any) {
-        return RaidDetailApiFp(this.configuration).deleteRaidDetail(requestParameters.id, options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
-     * 
-     * @summary Gets RaidDetail
-     * @param {RaidDetailApiGetRaidDetailRequest} requestParameters Request parameters.
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof RaidDetailApi
-     */
-    public getRaidDetail(requestParameters: RaidDetailApiGetRaidDetailRequest, options?: any) {
-        return RaidDetailApiFp(this.configuration).getRaidDetail(requestParameters.id, requestParameters.includes, requestParameters.select, options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
-     * 
-     * @summary Lists RaidDetails
-     * @param {RaidDetailApiListRaidDetailsRequest} requestParameters Request parameters.
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof RaidDetailApi
-     */
-    public listRaidDetails(requestParameters: RaidDetailApiListRaidDetailsRequest = {}, options?: any) {
-        return RaidDetailApiFp(this.configuration).listRaidDetails(requestParameters.includes, requestParameters.where, requestParameters.limit, requestParameters.orderBy, requestParameters.orderDirection, requestParameters.select, options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
-     * 
-     * @summary Updates RaidDetail
-     * @param {RaidDetailApiUpdateRaidDetailRequest} requestParameters Request parameters.
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof RaidDetailApi
-     */
-    public updateRaidDetail(requestParameters: RaidDetailApiUpdateRaidDetailRequest, options?: any) {
-        return RaidDetailApiFp(this.configuration).updateRaidDetail(requestParameters.id, requestParameters.raidDetail, options).then((request) => request(this.axios, this.basePath));
     }
 }
 
@@ -75461,635 +62518,6 @@ export class SpawnEventApi extends BaseAPI {
 
 
 /**
- * SpawnentryApi - axios parameter creator
- * @export
- */
-export const SpawnentryApiAxiosParamCreator = function (configuration?: Configuration) {
-    return {
-        /**
-         * 
-         * @summary Creates Spawnentry
-         * @param {ModelsSpawnentry} spawnentry Spawnentry
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        createSpawnentry: async (spawnentry: ModelsSpawnentry, options: any = {}): Promise<RequestArgs> => {
-            // verify required parameter 'spawnentry' is not null or undefined
-            if (spawnentry === null || spawnentry === undefined) {
-                throw new RequiredError('spawnentry','Required parameter spawnentry was null or undefined when calling createSpawnentry.');
-            }
-            const localVarPath = `/spawnentry`;
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, 'https://example.com');
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'PUT', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-
-    
-            localVarHeaderParameter['Content-Type'] = 'application/json';
-
-            const queryParameters = new URLSearchParams(localVarUrlObj.search);
-            for (const key in localVarQueryParameter) {
-                queryParameters.set(key, localVarQueryParameter[key]);
-            }
-            for (const key in options.query) {
-                queryParameters.set(key, options.query[key]);
-            }
-            localVarUrlObj.search = (new URLSearchParams(queryParameters)).toString();
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            const nonString = typeof spawnentry !== 'string';
-            const needsSerialization = nonString && configuration && configuration.isJsonMime
-                ? configuration.isJsonMime(localVarRequestOptions.headers['Content-Type'])
-                : nonString;
-            localVarRequestOptions.data =  needsSerialization
-                ? JSON.stringify(spawnentry !== undefined ? spawnentry : {})
-                : (spawnentry || "");
-
-            return {
-                url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * 
-         * @summary Deletes Spawnentry
-         * @param {number} id Id
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        deleteSpawnentry: async (id: number, options: any = {}): Promise<RequestArgs> => {
-            // verify required parameter 'id' is not null or undefined
-            if (id === null || id === undefined) {
-                throw new RequiredError('id','Required parameter id was null or undefined when calling deleteSpawnentry.');
-            }
-            const localVarPath = `/spawnentry/{id}`
-                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, 'https://example.com');
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'DELETE', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-
-    
-            const queryParameters = new URLSearchParams(localVarUrlObj.search);
-            for (const key in localVarQueryParameter) {
-                queryParameters.set(key, localVarQueryParameter[key]);
-            }
-            for (const key in options.query) {
-                queryParameters.set(key, options.query[key]);
-            }
-            localVarUrlObj.search = (new URLSearchParams(queryParameters)).toString();
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-
-            return {
-                url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * 
-         * @summary Gets Spawnentry
-         * @param {number} id Id
-         * @param {string} [includes] Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names &lt;h4&gt;Relationships&lt;/h4&gt;Spawngroup&lt;br&gt;Spawngroup.Spawn2
-         * @param {string} [select] Column names [.] separated to fetch specific fields in response
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getSpawnentry: async (id: number, includes?: string, select?: string, options: any = {}): Promise<RequestArgs> => {
-            // verify required parameter 'id' is not null or undefined
-            if (id === null || id === undefined) {
-                throw new RequiredError('id','Required parameter id was null or undefined when calling getSpawnentry.');
-            }
-            const localVarPath = `/spawnentry/{id}`
-                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, 'https://example.com');
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-            if (includes !== undefined) {
-                localVarQueryParameter['includes'] = includes;
-            }
-
-            if (select !== undefined) {
-                localVarQueryParameter['select'] = select;
-            }
-
-
-    
-            const queryParameters = new URLSearchParams(localVarUrlObj.search);
-            for (const key in localVarQueryParameter) {
-                queryParameters.set(key, localVarQueryParameter[key]);
-            }
-            for (const key in options.query) {
-                queryParameters.set(key, options.query[key]);
-            }
-            localVarUrlObj.search = (new URLSearchParams(queryParameters)).toString();
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-
-            return {
-                url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * 
-         * @summary Lists Spawnentries
-         * @param {string} [includes] Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names &lt;h4&gt;Relationships&lt;/h4&gt;Spawngroup&lt;br&gt;Spawngroup.Spawn2
-         * @param {string} [where] Filter on specific fields. Multiple conditions [.] separated Example: col_like_value.col2__val2
-         * @param {string} [limit] Rows to limit in response (Default: 10,000)
-         * @param {string} [orderBy] Order by [field]
-         * @param {string} [orderDirection] Order by field direction
-         * @param {string} [select] Column names [.] separated to fetch specific fields in response
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        listSpawnentries: async (includes?: string, where?: string, limit?: string, orderBy?: string, orderDirection?: string, select?: string, options: any = {}): Promise<RequestArgs> => {
-            const localVarPath = `/spawnentries`;
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, 'https://example.com');
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-            if (includes !== undefined) {
-                localVarQueryParameter['includes'] = includes;
-            }
-
-            if (where !== undefined) {
-                localVarQueryParameter['where'] = where;
-            }
-
-            if (limit !== undefined) {
-                localVarQueryParameter['limit'] = limit;
-            }
-
-            if (orderBy !== undefined) {
-                localVarQueryParameter['orderBy'] = orderBy;
-            }
-
-            if (orderDirection !== undefined) {
-                localVarQueryParameter['orderDirection'] = orderDirection;
-            }
-
-            if (select !== undefined) {
-                localVarQueryParameter['select'] = select;
-            }
-
-
-    
-            const queryParameters = new URLSearchParams(localVarUrlObj.search);
-            for (const key in localVarQueryParameter) {
-                queryParameters.set(key, localVarQueryParameter[key]);
-            }
-            for (const key in options.query) {
-                queryParameters.set(key, options.query[key]);
-            }
-            localVarUrlObj.search = (new URLSearchParams(queryParameters)).toString();
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-
-            return {
-                url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * 
-         * @summary Updates Spawnentry
-         * @param {number} id Id
-         * @param {ModelsSpawnentry} spawnentry Spawnentry
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        updateSpawnentry: async (id: number, spawnentry: ModelsSpawnentry, options: any = {}): Promise<RequestArgs> => {
-            // verify required parameter 'id' is not null or undefined
-            if (id === null || id === undefined) {
-                throw new RequiredError('id','Required parameter id was null or undefined when calling updateSpawnentry.');
-            }
-            // verify required parameter 'spawnentry' is not null or undefined
-            if (spawnentry === null || spawnentry === undefined) {
-                throw new RequiredError('spawnentry','Required parameter spawnentry was null or undefined when calling updateSpawnentry.');
-            }
-            const localVarPath = `/spawnentry/{id}`
-                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, 'https://example.com');
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'PATCH', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-
-    
-            localVarHeaderParameter['Content-Type'] = 'application/json';
-
-            const queryParameters = new URLSearchParams(localVarUrlObj.search);
-            for (const key in localVarQueryParameter) {
-                queryParameters.set(key, localVarQueryParameter[key]);
-            }
-            for (const key in options.query) {
-                queryParameters.set(key, options.query[key]);
-            }
-            localVarUrlObj.search = (new URLSearchParams(queryParameters)).toString();
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            const nonString = typeof spawnentry !== 'string';
-            const needsSerialization = nonString && configuration && configuration.isJsonMime
-                ? configuration.isJsonMime(localVarRequestOptions.headers['Content-Type'])
-                : nonString;
-            localVarRequestOptions.data =  needsSerialization
-                ? JSON.stringify(spawnentry !== undefined ? spawnentry : {})
-                : (spawnentry || "");
-
-            return {
-                url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
-                options: localVarRequestOptions,
-            };
-        },
-    }
-};
-
-/**
- * SpawnentryApi - functional programming interface
- * @export
- */
-export const SpawnentryApiFp = function(configuration?: Configuration) {
-    return {
-        /**
-         * 
-         * @summary Creates Spawnentry
-         * @param {ModelsSpawnentry} spawnentry Spawnentry
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async createSpawnentry(spawnentry: ModelsSpawnentry, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<ModelsSpawnentry>>> {
-            const localVarAxiosArgs = await SpawnentryApiAxiosParamCreator(configuration).createSpawnentry(spawnentry, options);
-            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
-                const axiosRequestArgs = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
-                return axios.request(axiosRequestArgs);
-            };
-        },
-        /**
-         * 
-         * @summary Deletes Spawnentry
-         * @param {number} id Id
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async deleteSpawnentry(id: number, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<string>> {
-            const localVarAxiosArgs = await SpawnentryApiAxiosParamCreator(configuration).deleteSpawnentry(id, options);
-            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
-                const axiosRequestArgs = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
-                return axios.request(axiosRequestArgs);
-            };
-        },
-        /**
-         * 
-         * @summary Gets Spawnentry
-         * @param {number} id Id
-         * @param {string} [includes] Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names &lt;h4&gt;Relationships&lt;/h4&gt;Spawngroup&lt;br&gt;Spawngroup.Spawn2
-         * @param {string} [select] Column names [.] separated to fetch specific fields in response
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async getSpawnentry(id: number, includes?: string, select?: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<ModelsSpawnentry>>> {
-            const localVarAxiosArgs = await SpawnentryApiAxiosParamCreator(configuration).getSpawnentry(id, includes, select, options);
-            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
-                const axiosRequestArgs = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
-                return axios.request(axiosRequestArgs);
-            };
-        },
-        /**
-         * 
-         * @summary Lists Spawnentries
-         * @param {string} [includes] Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names &lt;h4&gt;Relationships&lt;/h4&gt;Spawngroup&lt;br&gt;Spawngroup.Spawn2
-         * @param {string} [where] Filter on specific fields. Multiple conditions [.] separated Example: col_like_value.col2__val2
-         * @param {string} [limit] Rows to limit in response (Default: 10,000)
-         * @param {string} [orderBy] Order by [field]
-         * @param {string} [orderDirection] Order by field direction
-         * @param {string} [select] Column names [.] separated to fetch specific fields in response
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async listSpawnentries(includes?: string, where?: string, limit?: string, orderBy?: string, orderDirection?: string, select?: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<ModelsSpawnentry>>> {
-            const localVarAxiosArgs = await SpawnentryApiAxiosParamCreator(configuration).listSpawnentries(includes, where, limit, orderBy, orderDirection, select, options);
-            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
-                const axiosRequestArgs = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
-                return axios.request(axiosRequestArgs);
-            };
-        },
-        /**
-         * 
-         * @summary Updates Spawnentry
-         * @param {number} id Id
-         * @param {ModelsSpawnentry} spawnentry Spawnentry
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async updateSpawnentry(id: number, spawnentry: ModelsSpawnentry, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<ModelsSpawnentry>>> {
-            const localVarAxiosArgs = await SpawnentryApiAxiosParamCreator(configuration).updateSpawnentry(id, spawnentry, options);
-            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
-                const axiosRequestArgs = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
-                return axios.request(axiosRequestArgs);
-            };
-        },
-    }
-};
-
-/**
- * SpawnentryApi - factory interface
- * @export
- */
-export const SpawnentryApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
-    return {
-        /**
-         * 
-         * @summary Creates Spawnentry
-         * @param {ModelsSpawnentry} spawnentry Spawnentry
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        createSpawnentry(spawnentry: ModelsSpawnentry, options?: any): AxiosPromise<Array<ModelsSpawnentry>> {
-            return SpawnentryApiFp(configuration).createSpawnentry(spawnentry, options).then((request) => request(axios, basePath));
-        },
-        /**
-         * 
-         * @summary Deletes Spawnentry
-         * @param {number} id Id
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        deleteSpawnentry(id: number, options?: any): AxiosPromise<string> {
-            return SpawnentryApiFp(configuration).deleteSpawnentry(id, options).then((request) => request(axios, basePath));
-        },
-        /**
-         * 
-         * @summary Gets Spawnentry
-         * @param {number} id Id
-         * @param {string} [includes] Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names &lt;h4&gt;Relationships&lt;/h4&gt;Spawngroup&lt;br&gt;Spawngroup.Spawn2
-         * @param {string} [select] Column names [.] separated to fetch specific fields in response
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getSpawnentry(id: number, includes?: string, select?: string, options?: any): AxiosPromise<Array<ModelsSpawnentry>> {
-            return SpawnentryApiFp(configuration).getSpawnentry(id, includes, select, options).then((request) => request(axios, basePath));
-        },
-        /**
-         * 
-         * @summary Lists Spawnentries
-         * @param {string} [includes] Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names &lt;h4&gt;Relationships&lt;/h4&gt;Spawngroup&lt;br&gt;Spawngroup.Spawn2
-         * @param {string} [where] Filter on specific fields. Multiple conditions [.] separated Example: col_like_value.col2__val2
-         * @param {string} [limit] Rows to limit in response (Default: 10,000)
-         * @param {string} [orderBy] Order by [field]
-         * @param {string} [orderDirection] Order by field direction
-         * @param {string} [select] Column names [.] separated to fetch specific fields in response
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        listSpawnentries(includes?: string, where?: string, limit?: string, orderBy?: string, orderDirection?: string, select?: string, options?: any): AxiosPromise<Array<ModelsSpawnentry>> {
-            return SpawnentryApiFp(configuration).listSpawnentries(includes, where, limit, orderBy, orderDirection, select, options).then((request) => request(axios, basePath));
-        },
-        /**
-         * 
-         * @summary Updates Spawnentry
-         * @param {number} id Id
-         * @param {ModelsSpawnentry} spawnentry Spawnentry
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        updateSpawnentry(id: number, spawnentry: ModelsSpawnentry, options?: any): AxiosPromise<Array<ModelsSpawnentry>> {
-            return SpawnentryApiFp(configuration).updateSpawnentry(id, spawnentry, options).then((request) => request(axios, basePath));
-        },
-    };
-};
-
-/**
- * Request parameters for createSpawnentry operation in SpawnentryApi.
- * @export
- * @interface SpawnentryApiCreateSpawnentryRequest
- */
-export interface SpawnentryApiCreateSpawnentryRequest {
-    /**
-     * Spawnentry
-     * @type {ModelsSpawnentry}
-     * @memberof SpawnentryApiCreateSpawnentry
-     */
-    readonly spawnentry: ModelsSpawnentry
-}
-
-/**
- * Request parameters for deleteSpawnentry operation in SpawnentryApi.
- * @export
- * @interface SpawnentryApiDeleteSpawnentryRequest
- */
-export interface SpawnentryApiDeleteSpawnentryRequest {
-    /**
-     * Id
-     * @type {number}
-     * @memberof SpawnentryApiDeleteSpawnentry
-     */
-    readonly id: number
-}
-
-/**
- * Request parameters for getSpawnentry operation in SpawnentryApi.
- * @export
- * @interface SpawnentryApiGetSpawnentryRequest
- */
-export interface SpawnentryApiGetSpawnentryRequest {
-    /**
-     * Id
-     * @type {number}
-     * @memberof SpawnentryApiGetSpawnentry
-     */
-    readonly id: number
-
-    /**
-     * Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names &lt;h4&gt;Relationships&lt;/h4&gt;Spawngroup&lt;br&gt;Spawngroup.Spawn2
-     * @type {string}
-     * @memberof SpawnentryApiGetSpawnentry
-     */
-    readonly includes?: string
-
-    /**
-     * Column names [.] separated to fetch specific fields in response
-     * @type {string}
-     * @memberof SpawnentryApiGetSpawnentry
-     */
-    readonly select?: string
-}
-
-/**
- * Request parameters for listSpawnentries operation in SpawnentryApi.
- * @export
- * @interface SpawnentryApiListSpawnentriesRequest
- */
-export interface SpawnentryApiListSpawnentriesRequest {
-    /**
-     * Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names &lt;h4&gt;Relationships&lt;/h4&gt;Spawngroup&lt;br&gt;Spawngroup.Spawn2
-     * @type {string}
-     * @memberof SpawnentryApiListSpawnentries
-     */
-    readonly includes?: string
-
-    /**
-     * Filter on specific fields. Multiple conditions [.] separated Example: col_like_value.col2__val2
-     * @type {string}
-     * @memberof SpawnentryApiListSpawnentries
-     */
-    readonly where?: string
-
-    /**
-     * Rows to limit in response (Default: 10,000)
-     * @type {string}
-     * @memberof SpawnentryApiListSpawnentries
-     */
-    readonly limit?: string
-
-    /**
-     * Order by [field]
-     * @type {string}
-     * @memberof SpawnentryApiListSpawnentries
-     */
-    readonly orderBy?: string
-
-    /**
-     * Order by field direction
-     * @type {string}
-     * @memberof SpawnentryApiListSpawnentries
-     */
-    readonly orderDirection?: string
-
-    /**
-     * Column names [.] separated to fetch specific fields in response
-     * @type {string}
-     * @memberof SpawnentryApiListSpawnentries
-     */
-    readonly select?: string
-}
-
-/**
- * Request parameters for updateSpawnentry operation in SpawnentryApi.
- * @export
- * @interface SpawnentryApiUpdateSpawnentryRequest
- */
-export interface SpawnentryApiUpdateSpawnentryRequest {
-    /**
-     * Id
-     * @type {number}
-     * @memberof SpawnentryApiUpdateSpawnentry
-     */
-    readonly id: number
-
-    /**
-     * Spawnentry
-     * @type {ModelsSpawnentry}
-     * @memberof SpawnentryApiUpdateSpawnentry
-     */
-    readonly spawnentry: ModelsSpawnentry
-}
-
-/**
- * SpawnentryApi - object-oriented interface
- * @export
- * @class SpawnentryApi
- * @extends {BaseAPI}
- */
-export class SpawnentryApi extends BaseAPI {
-    /**
-     * 
-     * @summary Creates Spawnentry
-     * @param {SpawnentryApiCreateSpawnentryRequest} requestParameters Request parameters.
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof SpawnentryApi
-     */
-    public createSpawnentry(requestParameters: SpawnentryApiCreateSpawnentryRequest, options?: any) {
-        return SpawnentryApiFp(this.configuration).createSpawnentry(requestParameters.spawnentry, options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
-     * 
-     * @summary Deletes Spawnentry
-     * @param {SpawnentryApiDeleteSpawnentryRequest} requestParameters Request parameters.
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof SpawnentryApi
-     */
-    public deleteSpawnentry(requestParameters: SpawnentryApiDeleteSpawnentryRequest, options?: any) {
-        return SpawnentryApiFp(this.configuration).deleteSpawnentry(requestParameters.id, options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
-     * 
-     * @summary Gets Spawnentry
-     * @param {SpawnentryApiGetSpawnentryRequest} requestParameters Request parameters.
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof SpawnentryApi
-     */
-    public getSpawnentry(requestParameters: SpawnentryApiGetSpawnentryRequest, options?: any) {
-        return SpawnentryApiFp(this.configuration).getSpawnentry(requestParameters.id, requestParameters.includes, requestParameters.select, options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
-     * 
-     * @summary Lists Spawnentries
-     * @param {SpawnentryApiListSpawnentriesRequest} requestParameters Request parameters.
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof SpawnentryApi
-     */
-    public listSpawnentries(requestParameters: SpawnentryApiListSpawnentriesRequest = {}, options?: any) {
-        return SpawnentryApiFp(this.configuration).listSpawnentries(requestParameters.includes, requestParameters.where, requestParameters.limit, requestParameters.orderBy, requestParameters.orderDirection, requestParameters.select, options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
-     * 
-     * @summary Updates Spawnentry
-     * @param {SpawnentryApiUpdateSpawnentryRequest} requestParameters Request parameters.
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof SpawnentryApi
-     */
-    public updateSpawnentry(requestParameters: SpawnentryApiUpdateSpawnentryRequest, options?: any) {
-        return SpawnentryApiFp(this.configuration).updateSpawnentry(requestParameters.id, requestParameters.spawnentry, options).then((request) => request(this.axios, this.basePath));
-    }
-}
-
-
-/**
  * SpawngroupApi - axios parameter creator
  * @export
  */
@@ -76714,635 +63142,6 @@ export class SpawngroupApi extends BaseAPI {
      */
     public updateSpawngroup(requestParameters: SpawngroupApiUpdateSpawngroupRequest, options?: any) {
         return SpawngroupApiFp(this.configuration).updateSpawngroup(requestParameters.id, requestParameters.spawngroup, options).then((request) => request(this.axios, this.basePath));
-    }
-}
-
-
-/**
- * SpellGlobalApi - axios parameter creator
- * @export
- */
-export const SpellGlobalApiAxiosParamCreator = function (configuration?: Configuration) {
-    return {
-        /**
-         * 
-         * @summary Creates SpellGlobal
-         * @param {ModelsSpellGlobal} spellGlobal SpellGlobal
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        createSpellGlobal: async (spellGlobal: ModelsSpellGlobal, options: any = {}): Promise<RequestArgs> => {
-            // verify required parameter 'spellGlobal' is not null or undefined
-            if (spellGlobal === null || spellGlobal === undefined) {
-                throw new RequiredError('spellGlobal','Required parameter spellGlobal was null or undefined when calling createSpellGlobal.');
-            }
-            const localVarPath = `/spell_global`;
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, 'https://example.com');
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'PUT', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-
-    
-            localVarHeaderParameter['Content-Type'] = 'application/json';
-
-            const queryParameters = new URLSearchParams(localVarUrlObj.search);
-            for (const key in localVarQueryParameter) {
-                queryParameters.set(key, localVarQueryParameter[key]);
-            }
-            for (const key in options.query) {
-                queryParameters.set(key, options.query[key]);
-            }
-            localVarUrlObj.search = (new URLSearchParams(queryParameters)).toString();
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            const nonString = typeof spellGlobal !== 'string';
-            const needsSerialization = nonString && configuration && configuration.isJsonMime
-                ? configuration.isJsonMime(localVarRequestOptions.headers['Content-Type'])
-                : nonString;
-            localVarRequestOptions.data =  needsSerialization
-                ? JSON.stringify(spellGlobal !== undefined ? spellGlobal : {})
-                : (spellGlobal || "");
-
-            return {
-                url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * 
-         * @summary Deletes SpellGlobal
-         * @param {number} id Id
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        deleteSpellGlobal: async (id: number, options: any = {}): Promise<RequestArgs> => {
-            // verify required parameter 'id' is not null or undefined
-            if (id === null || id === undefined) {
-                throw new RequiredError('id','Required parameter id was null or undefined when calling deleteSpellGlobal.');
-            }
-            const localVarPath = `/spell_global/{id}`
-                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, 'https://example.com');
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'DELETE', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-
-    
-            const queryParameters = new URLSearchParams(localVarUrlObj.search);
-            for (const key in localVarQueryParameter) {
-                queryParameters.set(key, localVarQueryParameter[key]);
-            }
-            for (const key in options.query) {
-                queryParameters.set(key, options.query[key]);
-            }
-            localVarUrlObj.search = (new URLSearchParams(queryParameters)).toString();
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-
-            return {
-                url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * 
-         * @summary Gets SpellGlobal
-         * @param {number} id Id
-         * @param {string} [includes] Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names 
-         * @param {string} [select] Column names [.] separated to fetch specific fields in response
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getSpellGlobal: async (id: number, includes?: string, select?: string, options: any = {}): Promise<RequestArgs> => {
-            // verify required parameter 'id' is not null or undefined
-            if (id === null || id === undefined) {
-                throw new RequiredError('id','Required parameter id was null or undefined when calling getSpellGlobal.');
-            }
-            const localVarPath = `/spell_global/{id}`
-                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, 'https://example.com');
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-            if (includes !== undefined) {
-                localVarQueryParameter['includes'] = includes;
-            }
-
-            if (select !== undefined) {
-                localVarQueryParameter['select'] = select;
-            }
-
-
-    
-            const queryParameters = new URLSearchParams(localVarUrlObj.search);
-            for (const key in localVarQueryParameter) {
-                queryParameters.set(key, localVarQueryParameter[key]);
-            }
-            for (const key in options.query) {
-                queryParameters.set(key, options.query[key]);
-            }
-            localVarUrlObj.search = (new URLSearchParams(queryParameters)).toString();
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-
-            return {
-                url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * 
-         * @summary Lists SpellGlobals
-         * @param {string} [includes] Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names 
-         * @param {string} [where] Filter on specific fields. Multiple conditions [.] separated Example: col_like_value.col2__val2
-         * @param {string} [limit] Rows to limit in response (Default: 10,000)
-         * @param {string} [orderBy] Order by [field]
-         * @param {string} [orderDirection] Order by field direction
-         * @param {string} [select] Column names [.] separated to fetch specific fields in response
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        listSpellGlobals: async (includes?: string, where?: string, limit?: string, orderBy?: string, orderDirection?: string, select?: string, options: any = {}): Promise<RequestArgs> => {
-            const localVarPath = `/spell_globals`;
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, 'https://example.com');
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-            if (includes !== undefined) {
-                localVarQueryParameter['includes'] = includes;
-            }
-
-            if (where !== undefined) {
-                localVarQueryParameter['where'] = where;
-            }
-
-            if (limit !== undefined) {
-                localVarQueryParameter['limit'] = limit;
-            }
-
-            if (orderBy !== undefined) {
-                localVarQueryParameter['orderBy'] = orderBy;
-            }
-
-            if (orderDirection !== undefined) {
-                localVarQueryParameter['orderDirection'] = orderDirection;
-            }
-
-            if (select !== undefined) {
-                localVarQueryParameter['select'] = select;
-            }
-
-
-    
-            const queryParameters = new URLSearchParams(localVarUrlObj.search);
-            for (const key in localVarQueryParameter) {
-                queryParameters.set(key, localVarQueryParameter[key]);
-            }
-            for (const key in options.query) {
-                queryParameters.set(key, options.query[key]);
-            }
-            localVarUrlObj.search = (new URLSearchParams(queryParameters)).toString();
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-
-            return {
-                url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * 
-         * @summary Updates SpellGlobal
-         * @param {number} id Id
-         * @param {ModelsSpellGlobal} spellGlobal SpellGlobal
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        updateSpellGlobal: async (id: number, spellGlobal: ModelsSpellGlobal, options: any = {}): Promise<RequestArgs> => {
-            // verify required parameter 'id' is not null or undefined
-            if (id === null || id === undefined) {
-                throw new RequiredError('id','Required parameter id was null or undefined when calling updateSpellGlobal.');
-            }
-            // verify required parameter 'spellGlobal' is not null or undefined
-            if (spellGlobal === null || spellGlobal === undefined) {
-                throw new RequiredError('spellGlobal','Required parameter spellGlobal was null or undefined when calling updateSpellGlobal.');
-            }
-            const localVarPath = `/spell_global/{id}`
-                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, 'https://example.com');
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'PATCH', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-
-    
-            localVarHeaderParameter['Content-Type'] = 'application/json';
-
-            const queryParameters = new URLSearchParams(localVarUrlObj.search);
-            for (const key in localVarQueryParameter) {
-                queryParameters.set(key, localVarQueryParameter[key]);
-            }
-            for (const key in options.query) {
-                queryParameters.set(key, options.query[key]);
-            }
-            localVarUrlObj.search = (new URLSearchParams(queryParameters)).toString();
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            const nonString = typeof spellGlobal !== 'string';
-            const needsSerialization = nonString && configuration && configuration.isJsonMime
-                ? configuration.isJsonMime(localVarRequestOptions.headers['Content-Type'])
-                : nonString;
-            localVarRequestOptions.data =  needsSerialization
-                ? JSON.stringify(spellGlobal !== undefined ? spellGlobal : {})
-                : (spellGlobal || "");
-
-            return {
-                url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
-                options: localVarRequestOptions,
-            };
-        },
-    }
-};
-
-/**
- * SpellGlobalApi - functional programming interface
- * @export
- */
-export const SpellGlobalApiFp = function(configuration?: Configuration) {
-    return {
-        /**
-         * 
-         * @summary Creates SpellGlobal
-         * @param {ModelsSpellGlobal} spellGlobal SpellGlobal
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async createSpellGlobal(spellGlobal: ModelsSpellGlobal, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<ModelsSpellGlobal>>> {
-            const localVarAxiosArgs = await SpellGlobalApiAxiosParamCreator(configuration).createSpellGlobal(spellGlobal, options);
-            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
-                const axiosRequestArgs = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
-                return axios.request(axiosRequestArgs);
-            };
-        },
-        /**
-         * 
-         * @summary Deletes SpellGlobal
-         * @param {number} id Id
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async deleteSpellGlobal(id: number, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<string>> {
-            const localVarAxiosArgs = await SpellGlobalApiAxiosParamCreator(configuration).deleteSpellGlobal(id, options);
-            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
-                const axiosRequestArgs = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
-                return axios.request(axiosRequestArgs);
-            };
-        },
-        /**
-         * 
-         * @summary Gets SpellGlobal
-         * @param {number} id Id
-         * @param {string} [includes] Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names 
-         * @param {string} [select] Column names [.] separated to fetch specific fields in response
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async getSpellGlobal(id: number, includes?: string, select?: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<ModelsSpellGlobal>>> {
-            const localVarAxiosArgs = await SpellGlobalApiAxiosParamCreator(configuration).getSpellGlobal(id, includes, select, options);
-            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
-                const axiosRequestArgs = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
-                return axios.request(axiosRequestArgs);
-            };
-        },
-        /**
-         * 
-         * @summary Lists SpellGlobals
-         * @param {string} [includes] Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names 
-         * @param {string} [where] Filter on specific fields. Multiple conditions [.] separated Example: col_like_value.col2__val2
-         * @param {string} [limit] Rows to limit in response (Default: 10,000)
-         * @param {string} [orderBy] Order by [field]
-         * @param {string} [orderDirection] Order by field direction
-         * @param {string} [select] Column names [.] separated to fetch specific fields in response
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async listSpellGlobals(includes?: string, where?: string, limit?: string, orderBy?: string, orderDirection?: string, select?: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<ModelsSpellGlobal>>> {
-            const localVarAxiosArgs = await SpellGlobalApiAxiosParamCreator(configuration).listSpellGlobals(includes, where, limit, orderBy, orderDirection, select, options);
-            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
-                const axiosRequestArgs = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
-                return axios.request(axiosRequestArgs);
-            };
-        },
-        /**
-         * 
-         * @summary Updates SpellGlobal
-         * @param {number} id Id
-         * @param {ModelsSpellGlobal} spellGlobal SpellGlobal
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async updateSpellGlobal(id: number, spellGlobal: ModelsSpellGlobal, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<ModelsSpellGlobal>>> {
-            const localVarAxiosArgs = await SpellGlobalApiAxiosParamCreator(configuration).updateSpellGlobal(id, spellGlobal, options);
-            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
-                const axiosRequestArgs = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
-                return axios.request(axiosRequestArgs);
-            };
-        },
-    }
-};
-
-/**
- * SpellGlobalApi - factory interface
- * @export
- */
-export const SpellGlobalApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
-    return {
-        /**
-         * 
-         * @summary Creates SpellGlobal
-         * @param {ModelsSpellGlobal} spellGlobal SpellGlobal
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        createSpellGlobal(spellGlobal: ModelsSpellGlobal, options?: any): AxiosPromise<Array<ModelsSpellGlobal>> {
-            return SpellGlobalApiFp(configuration).createSpellGlobal(spellGlobal, options).then((request) => request(axios, basePath));
-        },
-        /**
-         * 
-         * @summary Deletes SpellGlobal
-         * @param {number} id Id
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        deleteSpellGlobal(id: number, options?: any): AxiosPromise<string> {
-            return SpellGlobalApiFp(configuration).deleteSpellGlobal(id, options).then((request) => request(axios, basePath));
-        },
-        /**
-         * 
-         * @summary Gets SpellGlobal
-         * @param {number} id Id
-         * @param {string} [includes] Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names 
-         * @param {string} [select] Column names [.] separated to fetch specific fields in response
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getSpellGlobal(id: number, includes?: string, select?: string, options?: any): AxiosPromise<Array<ModelsSpellGlobal>> {
-            return SpellGlobalApiFp(configuration).getSpellGlobal(id, includes, select, options).then((request) => request(axios, basePath));
-        },
-        /**
-         * 
-         * @summary Lists SpellGlobals
-         * @param {string} [includes] Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names 
-         * @param {string} [where] Filter on specific fields. Multiple conditions [.] separated Example: col_like_value.col2__val2
-         * @param {string} [limit] Rows to limit in response (Default: 10,000)
-         * @param {string} [orderBy] Order by [field]
-         * @param {string} [orderDirection] Order by field direction
-         * @param {string} [select] Column names [.] separated to fetch specific fields in response
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        listSpellGlobals(includes?: string, where?: string, limit?: string, orderBy?: string, orderDirection?: string, select?: string, options?: any): AxiosPromise<Array<ModelsSpellGlobal>> {
-            return SpellGlobalApiFp(configuration).listSpellGlobals(includes, where, limit, orderBy, orderDirection, select, options).then((request) => request(axios, basePath));
-        },
-        /**
-         * 
-         * @summary Updates SpellGlobal
-         * @param {number} id Id
-         * @param {ModelsSpellGlobal} spellGlobal SpellGlobal
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        updateSpellGlobal(id: number, spellGlobal: ModelsSpellGlobal, options?: any): AxiosPromise<Array<ModelsSpellGlobal>> {
-            return SpellGlobalApiFp(configuration).updateSpellGlobal(id, spellGlobal, options).then((request) => request(axios, basePath));
-        },
-    };
-};
-
-/**
- * Request parameters for createSpellGlobal operation in SpellGlobalApi.
- * @export
- * @interface SpellGlobalApiCreateSpellGlobalRequest
- */
-export interface SpellGlobalApiCreateSpellGlobalRequest {
-    /**
-     * SpellGlobal
-     * @type {ModelsSpellGlobal}
-     * @memberof SpellGlobalApiCreateSpellGlobal
-     */
-    readonly spellGlobal: ModelsSpellGlobal
-}
-
-/**
- * Request parameters for deleteSpellGlobal operation in SpellGlobalApi.
- * @export
- * @interface SpellGlobalApiDeleteSpellGlobalRequest
- */
-export interface SpellGlobalApiDeleteSpellGlobalRequest {
-    /**
-     * Id
-     * @type {number}
-     * @memberof SpellGlobalApiDeleteSpellGlobal
-     */
-    readonly id: number
-}
-
-/**
- * Request parameters for getSpellGlobal operation in SpellGlobalApi.
- * @export
- * @interface SpellGlobalApiGetSpellGlobalRequest
- */
-export interface SpellGlobalApiGetSpellGlobalRequest {
-    /**
-     * Id
-     * @type {number}
-     * @memberof SpellGlobalApiGetSpellGlobal
-     */
-    readonly id: number
-
-    /**
-     * Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names 
-     * @type {string}
-     * @memberof SpellGlobalApiGetSpellGlobal
-     */
-    readonly includes?: string
-
-    /**
-     * Column names [.] separated to fetch specific fields in response
-     * @type {string}
-     * @memberof SpellGlobalApiGetSpellGlobal
-     */
-    readonly select?: string
-}
-
-/**
- * Request parameters for listSpellGlobals operation in SpellGlobalApi.
- * @export
- * @interface SpellGlobalApiListSpellGlobalsRequest
- */
-export interface SpellGlobalApiListSpellGlobalsRequest {
-    /**
-     * Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names 
-     * @type {string}
-     * @memberof SpellGlobalApiListSpellGlobals
-     */
-    readonly includes?: string
-
-    /**
-     * Filter on specific fields. Multiple conditions [.] separated Example: col_like_value.col2__val2
-     * @type {string}
-     * @memberof SpellGlobalApiListSpellGlobals
-     */
-    readonly where?: string
-
-    /**
-     * Rows to limit in response (Default: 10,000)
-     * @type {string}
-     * @memberof SpellGlobalApiListSpellGlobals
-     */
-    readonly limit?: string
-
-    /**
-     * Order by [field]
-     * @type {string}
-     * @memberof SpellGlobalApiListSpellGlobals
-     */
-    readonly orderBy?: string
-
-    /**
-     * Order by field direction
-     * @type {string}
-     * @memberof SpellGlobalApiListSpellGlobals
-     */
-    readonly orderDirection?: string
-
-    /**
-     * Column names [.] separated to fetch specific fields in response
-     * @type {string}
-     * @memberof SpellGlobalApiListSpellGlobals
-     */
-    readonly select?: string
-}
-
-/**
- * Request parameters for updateSpellGlobal operation in SpellGlobalApi.
- * @export
- * @interface SpellGlobalApiUpdateSpellGlobalRequest
- */
-export interface SpellGlobalApiUpdateSpellGlobalRequest {
-    /**
-     * Id
-     * @type {number}
-     * @memberof SpellGlobalApiUpdateSpellGlobal
-     */
-    readonly id: number
-
-    /**
-     * SpellGlobal
-     * @type {ModelsSpellGlobal}
-     * @memberof SpellGlobalApiUpdateSpellGlobal
-     */
-    readonly spellGlobal: ModelsSpellGlobal
-}
-
-/**
- * SpellGlobalApi - object-oriented interface
- * @export
- * @class SpellGlobalApi
- * @extends {BaseAPI}
- */
-export class SpellGlobalApi extends BaseAPI {
-    /**
-     * 
-     * @summary Creates SpellGlobal
-     * @param {SpellGlobalApiCreateSpellGlobalRequest} requestParameters Request parameters.
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof SpellGlobalApi
-     */
-    public createSpellGlobal(requestParameters: SpellGlobalApiCreateSpellGlobalRequest, options?: any) {
-        return SpellGlobalApiFp(this.configuration).createSpellGlobal(requestParameters.spellGlobal, options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
-     * 
-     * @summary Deletes SpellGlobal
-     * @param {SpellGlobalApiDeleteSpellGlobalRequest} requestParameters Request parameters.
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof SpellGlobalApi
-     */
-    public deleteSpellGlobal(requestParameters: SpellGlobalApiDeleteSpellGlobalRequest, options?: any) {
-        return SpellGlobalApiFp(this.configuration).deleteSpellGlobal(requestParameters.id, options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
-     * 
-     * @summary Gets SpellGlobal
-     * @param {SpellGlobalApiGetSpellGlobalRequest} requestParameters Request parameters.
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof SpellGlobalApi
-     */
-    public getSpellGlobal(requestParameters: SpellGlobalApiGetSpellGlobalRequest, options?: any) {
-        return SpellGlobalApiFp(this.configuration).getSpellGlobal(requestParameters.id, requestParameters.includes, requestParameters.select, options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
-     * 
-     * @summary Lists SpellGlobals
-     * @param {SpellGlobalApiListSpellGlobalsRequest} requestParameters Request parameters.
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof SpellGlobalApi
-     */
-    public listSpellGlobals(requestParameters: SpellGlobalApiListSpellGlobalsRequest = {}, options?: any) {
-        return SpellGlobalApiFp(this.configuration).listSpellGlobals(requestParameters.includes, requestParameters.where, requestParameters.limit, requestParameters.orderBy, requestParameters.orderDirection, requestParameters.select, options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
-     * 
-     * @summary Updates SpellGlobal
-     * @param {SpellGlobalApiUpdateSpellGlobalRequest} requestParameters Request parameters.
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof SpellGlobalApi
-     */
-    public updateSpellGlobal(requestParameters: SpellGlobalApiUpdateSpellGlobalRequest, options?: any) {
-        return SpellGlobalApiFp(this.configuration).updateSpellGlobal(requestParameters.id, requestParameters.spellGlobal, options).then((request) => request(this.axios, this.basePath));
     }
 }
 
@@ -79859,635 +65658,6 @@ export class TasksetApi extends BaseAPI {
      */
     public updateTaskset(requestParameters: TasksetApiUpdateTasksetRequest, options?: any) {
         return TasksetApiFp(this.configuration).updateTaskset(requestParameters.id, requestParameters.taskset, options).then((request) => request(this.axios, this.basePath));
-    }
-}
-
-
-/**
- * TimerApi - axios parameter creator
- * @export
- */
-export const TimerApiAxiosParamCreator = function (configuration?: Configuration) {
-    return {
-        /**
-         * 
-         * @summary Creates Timer
-         * @param {ModelsTimer} timer Timer
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        createTimer: async (timer: ModelsTimer, options: any = {}): Promise<RequestArgs> => {
-            // verify required parameter 'timer' is not null or undefined
-            if (timer === null || timer === undefined) {
-                throw new RequiredError('timer','Required parameter timer was null or undefined when calling createTimer.');
-            }
-            const localVarPath = `/timer`;
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, 'https://example.com');
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'PUT', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-
-    
-            localVarHeaderParameter['Content-Type'] = 'application/json';
-
-            const queryParameters = new URLSearchParams(localVarUrlObj.search);
-            for (const key in localVarQueryParameter) {
-                queryParameters.set(key, localVarQueryParameter[key]);
-            }
-            for (const key in options.query) {
-                queryParameters.set(key, options.query[key]);
-            }
-            localVarUrlObj.search = (new URLSearchParams(queryParameters)).toString();
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            const nonString = typeof timer !== 'string';
-            const needsSerialization = nonString && configuration && configuration.isJsonMime
-                ? configuration.isJsonMime(localVarRequestOptions.headers['Content-Type'])
-                : nonString;
-            localVarRequestOptions.data =  needsSerialization
-                ? JSON.stringify(timer !== undefined ? timer : {})
-                : (timer || "");
-
-            return {
-                url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * 
-         * @summary Deletes Timer
-         * @param {number} id Id
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        deleteTimer: async (id: number, options: any = {}): Promise<RequestArgs> => {
-            // verify required parameter 'id' is not null or undefined
-            if (id === null || id === undefined) {
-                throw new RequiredError('id','Required parameter id was null or undefined when calling deleteTimer.');
-            }
-            const localVarPath = `/timer/{id}`
-                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, 'https://example.com');
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'DELETE', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-
-    
-            const queryParameters = new URLSearchParams(localVarUrlObj.search);
-            for (const key in localVarQueryParameter) {
-                queryParameters.set(key, localVarQueryParameter[key]);
-            }
-            for (const key in options.query) {
-                queryParameters.set(key, options.query[key]);
-            }
-            localVarUrlObj.search = (new URLSearchParams(queryParameters)).toString();
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-
-            return {
-                url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * 
-         * @summary Gets Timer
-         * @param {number} id Id
-         * @param {string} [includes] Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names 
-         * @param {string} [select] Column names [.] separated to fetch specific fields in response
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getTimer: async (id: number, includes?: string, select?: string, options: any = {}): Promise<RequestArgs> => {
-            // verify required parameter 'id' is not null or undefined
-            if (id === null || id === undefined) {
-                throw new RequiredError('id','Required parameter id was null or undefined when calling getTimer.');
-            }
-            const localVarPath = `/timer/{id}`
-                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, 'https://example.com');
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-            if (includes !== undefined) {
-                localVarQueryParameter['includes'] = includes;
-            }
-
-            if (select !== undefined) {
-                localVarQueryParameter['select'] = select;
-            }
-
-
-    
-            const queryParameters = new URLSearchParams(localVarUrlObj.search);
-            for (const key in localVarQueryParameter) {
-                queryParameters.set(key, localVarQueryParameter[key]);
-            }
-            for (const key in options.query) {
-                queryParameters.set(key, options.query[key]);
-            }
-            localVarUrlObj.search = (new URLSearchParams(queryParameters)).toString();
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-
-            return {
-                url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * 
-         * @summary Lists Timers
-         * @param {string} [includes] Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names 
-         * @param {string} [where] Filter on specific fields. Multiple conditions [.] separated Example: col_like_value.col2__val2
-         * @param {string} [limit] Rows to limit in response (Default: 10,000)
-         * @param {string} [orderBy] Order by [field]
-         * @param {string} [orderDirection] Order by field direction
-         * @param {string} [select] Column names [.] separated to fetch specific fields in response
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        listTimers: async (includes?: string, where?: string, limit?: string, orderBy?: string, orderDirection?: string, select?: string, options: any = {}): Promise<RequestArgs> => {
-            const localVarPath = `/timers`;
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, 'https://example.com');
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-            if (includes !== undefined) {
-                localVarQueryParameter['includes'] = includes;
-            }
-
-            if (where !== undefined) {
-                localVarQueryParameter['where'] = where;
-            }
-
-            if (limit !== undefined) {
-                localVarQueryParameter['limit'] = limit;
-            }
-
-            if (orderBy !== undefined) {
-                localVarQueryParameter['orderBy'] = orderBy;
-            }
-
-            if (orderDirection !== undefined) {
-                localVarQueryParameter['orderDirection'] = orderDirection;
-            }
-
-            if (select !== undefined) {
-                localVarQueryParameter['select'] = select;
-            }
-
-
-    
-            const queryParameters = new URLSearchParams(localVarUrlObj.search);
-            for (const key in localVarQueryParameter) {
-                queryParameters.set(key, localVarQueryParameter[key]);
-            }
-            for (const key in options.query) {
-                queryParameters.set(key, options.query[key]);
-            }
-            localVarUrlObj.search = (new URLSearchParams(queryParameters)).toString();
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-
-            return {
-                url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * 
-         * @summary Updates Timer
-         * @param {number} id Id
-         * @param {ModelsTimer} timer Timer
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        updateTimer: async (id: number, timer: ModelsTimer, options: any = {}): Promise<RequestArgs> => {
-            // verify required parameter 'id' is not null or undefined
-            if (id === null || id === undefined) {
-                throw new RequiredError('id','Required parameter id was null or undefined when calling updateTimer.');
-            }
-            // verify required parameter 'timer' is not null or undefined
-            if (timer === null || timer === undefined) {
-                throw new RequiredError('timer','Required parameter timer was null or undefined when calling updateTimer.');
-            }
-            const localVarPath = `/timer/{id}`
-                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, 'https://example.com');
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'PATCH', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-
-    
-            localVarHeaderParameter['Content-Type'] = 'application/json';
-
-            const queryParameters = new URLSearchParams(localVarUrlObj.search);
-            for (const key in localVarQueryParameter) {
-                queryParameters.set(key, localVarQueryParameter[key]);
-            }
-            for (const key in options.query) {
-                queryParameters.set(key, options.query[key]);
-            }
-            localVarUrlObj.search = (new URLSearchParams(queryParameters)).toString();
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            const nonString = typeof timer !== 'string';
-            const needsSerialization = nonString && configuration && configuration.isJsonMime
-                ? configuration.isJsonMime(localVarRequestOptions.headers['Content-Type'])
-                : nonString;
-            localVarRequestOptions.data =  needsSerialization
-                ? JSON.stringify(timer !== undefined ? timer : {})
-                : (timer || "");
-
-            return {
-                url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
-                options: localVarRequestOptions,
-            };
-        },
-    }
-};
-
-/**
- * TimerApi - functional programming interface
- * @export
- */
-export const TimerApiFp = function(configuration?: Configuration) {
-    return {
-        /**
-         * 
-         * @summary Creates Timer
-         * @param {ModelsTimer} timer Timer
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async createTimer(timer: ModelsTimer, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<ModelsTimer>>> {
-            const localVarAxiosArgs = await TimerApiAxiosParamCreator(configuration).createTimer(timer, options);
-            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
-                const axiosRequestArgs = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
-                return axios.request(axiosRequestArgs);
-            };
-        },
-        /**
-         * 
-         * @summary Deletes Timer
-         * @param {number} id Id
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async deleteTimer(id: number, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<string>> {
-            const localVarAxiosArgs = await TimerApiAxiosParamCreator(configuration).deleteTimer(id, options);
-            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
-                const axiosRequestArgs = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
-                return axios.request(axiosRequestArgs);
-            };
-        },
-        /**
-         * 
-         * @summary Gets Timer
-         * @param {number} id Id
-         * @param {string} [includes] Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names 
-         * @param {string} [select] Column names [.] separated to fetch specific fields in response
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async getTimer(id: number, includes?: string, select?: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<ModelsTimer>>> {
-            const localVarAxiosArgs = await TimerApiAxiosParamCreator(configuration).getTimer(id, includes, select, options);
-            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
-                const axiosRequestArgs = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
-                return axios.request(axiosRequestArgs);
-            };
-        },
-        /**
-         * 
-         * @summary Lists Timers
-         * @param {string} [includes] Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names 
-         * @param {string} [where] Filter on specific fields. Multiple conditions [.] separated Example: col_like_value.col2__val2
-         * @param {string} [limit] Rows to limit in response (Default: 10,000)
-         * @param {string} [orderBy] Order by [field]
-         * @param {string} [orderDirection] Order by field direction
-         * @param {string} [select] Column names [.] separated to fetch specific fields in response
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async listTimers(includes?: string, where?: string, limit?: string, orderBy?: string, orderDirection?: string, select?: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<ModelsTimer>>> {
-            const localVarAxiosArgs = await TimerApiAxiosParamCreator(configuration).listTimers(includes, where, limit, orderBy, orderDirection, select, options);
-            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
-                const axiosRequestArgs = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
-                return axios.request(axiosRequestArgs);
-            };
-        },
-        /**
-         * 
-         * @summary Updates Timer
-         * @param {number} id Id
-         * @param {ModelsTimer} timer Timer
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async updateTimer(id: number, timer: ModelsTimer, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<ModelsTimer>>> {
-            const localVarAxiosArgs = await TimerApiAxiosParamCreator(configuration).updateTimer(id, timer, options);
-            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
-                const axiosRequestArgs = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
-                return axios.request(axiosRequestArgs);
-            };
-        },
-    }
-};
-
-/**
- * TimerApi - factory interface
- * @export
- */
-export const TimerApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
-    return {
-        /**
-         * 
-         * @summary Creates Timer
-         * @param {ModelsTimer} timer Timer
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        createTimer(timer: ModelsTimer, options?: any): AxiosPromise<Array<ModelsTimer>> {
-            return TimerApiFp(configuration).createTimer(timer, options).then((request) => request(axios, basePath));
-        },
-        /**
-         * 
-         * @summary Deletes Timer
-         * @param {number} id Id
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        deleteTimer(id: number, options?: any): AxiosPromise<string> {
-            return TimerApiFp(configuration).deleteTimer(id, options).then((request) => request(axios, basePath));
-        },
-        /**
-         * 
-         * @summary Gets Timer
-         * @param {number} id Id
-         * @param {string} [includes] Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names 
-         * @param {string} [select] Column names [.] separated to fetch specific fields in response
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getTimer(id: number, includes?: string, select?: string, options?: any): AxiosPromise<Array<ModelsTimer>> {
-            return TimerApiFp(configuration).getTimer(id, includes, select, options).then((request) => request(axios, basePath));
-        },
-        /**
-         * 
-         * @summary Lists Timers
-         * @param {string} [includes] Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names 
-         * @param {string} [where] Filter on specific fields. Multiple conditions [.] separated Example: col_like_value.col2__val2
-         * @param {string} [limit] Rows to limit in response (Default: 10,000)
-         * @param {string} [orderBy] Order by [field]
-         * @param {string} [orderDirection] Order by field direction
-         * @param {string} [select] Column names [.] separated to fetch specific fields in response
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        listTimers(includes?: string, where?: string, limit?: string, orderBy?: string, orderDirection?: string, select?: string, options?: any): AxiosPromise<Array<ModelsTimer>> {
-            return TimerApiFp(configuration).listTimers(includes, where, limit, orderBy, orderDirection, select, options).then((request) => request(axios, basePath));
-        },
-        /**
-         * 
-         * @summary Updates Timer
-         * @param {number} id Id
-         * @param {ModelsTimer} timer Timer
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        updateTimer(id: number, timer: ModelsTimer, options?: any): AxiosPromise<Array<ModelsTimer>> {
-            return TimerApiFp(configuration).updateTimer(id, timer, options).then((request) => request(axios, basePath));
-        },
-    };
-};
-
-/**
- * Request parameters for createTimer operation in TimerApi.
- * @export
- * @interface TimerApiCreateTimerRequest
- */
-export interface TimerApiCreateTimerRequest {
-    /**
-     * Timer
-     * @type {ModelsTimer}
-     * @memberof TimerApiCreateTimer
-     */
-    readonly timer: ModelsTimer
-}
-
-/**
- * Request parameters for deleteTimer operation in TimerApi.
- * @export
- * @interface TimerApiDeleteTimerRequest
- */
-export interface TimerApiDeleteTimerRequest {
-    /**
-     * Id
-     * @type {number}
-     * @memberof TimerApiDeleteTimer
-     */
-    readonly id: number
-}
-
-/**
- * Request parameters for getTimer operation in TimerApi.
- * @export
- * @interface TimerApiGetTimerRequest
- */
-export interface TimerApiGetTimerRequest {
-    /**
-     * Id
-     * @type {number}
-     * @memberof TimerApiGetTimer
-     */
-    readonly id: number
-
-    /**
-     * Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names 
-     * @type {string}
-     * @memberof TimerApiGetTimer
-     */
-    readonly includes?: string
-
-    /**
-     * Column names [.] separated to fetch specific fields in response
-     * @type {string}
-     * @memberof TimerApiGetTimer
-     */
-    readonly select?: string
-}
-
-/**
- * Request parameters for listTimers operation in TimerApi.
- * @export
- * @interface TimerApiListTimersRequest
- */
-export interface TimerApiListTimersRequest {
-    /**
-     * Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names 
-     * @type {string}
-     * @memberof TimerApiListTimers
-     */
-    readonly includes?: string
-
-    /**
-     * Filter on specific fields. Multiple conditions [.] separated Example: col_like_value.col2__val2
-     * @type {string}
-     * @memberof TimerApiListTimers
-     */
-    readonly where?: string
-
-    /**
-     * Rows to limit in response (Default: 10,000)
-     * @type {string}
-     * @memberof TimerApiListTimers
-     */
-    readonly limit?: string
-
-    /**
-     * Order by [field]
-     * @type {string}
-     * @memberof TimerApiListTimers
-     */
-    readonly orderBy?: string
-
-    /**
-     * Order by field direction
-     * @type {string}
-     * @memberof TimerApiListTimers
-     */
-    readonly orderDirection?: string
-
-    /**
-     * Column names [.] separated to fetch specific fields in response
-     * @type {string}
-     * @memberof TimerApiListTimers
-     */
-    readonly select?: string
-}
-
-/**
- * Request parameters for updateTimer operation in TimerApi.
- * @export
- * @interface TimerApiUpdateTimerRequest
- */
-export interface TimerApiUpdateTimerRequest {
-    /**
-     * Id
-     * @type {number}
-     * @memberof TimerApiUpdateTimer
-     */
-    readonly id: number
-
-    /**
-     * Timer
-     * @type {ModelsTimer}
-     * @memberof TimerApiUpdateTimer
-     */
-    readonly timer: ModelsTimer
-}
-
-/**
- * TimerApi - object-oriented interface
- * @export
- * @class TimerApi
- * @extends {BaseAPI}
- */
-export class TimerApi extends BaseAPI {
-    /**
-     * 
-     * @summary Creates Timer
-     * @param {TimerApiCreateTimerRequest} requestParameters Request parameters.
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof TimerApi
-     */
-    public createTimer(requestParameters: TimerApiCreateTimerRequest, options?: any) {
-        return TimerApiFp(this.configuration).createTimer(requestParameters.timer, options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
-     * 
-     * @summary Deletes Timer
-     * @param {TimerApiDeleteTimerRequest} requestParameters Request parameters.
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof TimerApi
-     */
-    public deleteTimer(requestParameters: TimerApiDeleteTimerRequest, options?: any) {
-        return TimerApiFp(this.configuration).deleteTimer(requestParameters.id, options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
-     * 
-     * @summary Gets Timer
-     * @param {TimerApiGetTimerRequest} requestParameters Request parameters.
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof TimerApi
-     */
-    public getTimer(requestParameters: TimerApiGetTimerRequest, options?: any) {
-        return TimerApiFp(this.configuration).getTimer(requestParameters.id, requestParameters.includes, requestParameters.select, options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
-     * 
-     * @summary Lists Timers
-     * @param {TimerApiListTimersRequest} requestParameters Request parameters.
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof TimerApi
-     */
-    public listTimers(requestParameters: TimerApiListTimersRequest = {}, options?: any) {
-        return TimerApiFp(this.configuration).listTimers(requestParameters.includes, requestParameters.where, requestParameters.limit, requestParameters.orderBy, requestParameters.orderDirection, requestParameters.select, options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
-     * 
-     * @summary Updates Timer
-     * @param {TimerApiUpdateTimerRequest} requestParameters Request parameters.
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof TimerApi
-     */
-    public updateTimer(requestParameters: TimerApiUpdateTimerRequest, options?: any) {
-        return TimerApiFp(this.configuration).updateTimer(requestParameters.id, requestParameters.timer, options).then((request) => request(this.axios, this.basePath));
     }
 }
 
@@ -84262,635 +69432,6 @@ export class ZoneApi extends BaseAPI {
      */
     public updateZone(requestParameters: ZoneApiUpdateZoneRequest, options?: any) {
         return ZoneApiFp(this.configuration).updateZone(requestParameters.id, requestParameters.zone, options).then((request) => request(this.axios, this.basePath));
-    }
-}
-
-
-/**
- * ZoneFlagApi - axios parameter creator
- * @export
- */
-export const ZoneFlagApiAxiosParamCreator = function (configuration?: Configuration) {
-    return {
-        /**
-         * 
-         * @summary Creates ZoneFlag
-         * @param {ModelsZoneFlag} zoneFlag ZoneFlag
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        createZoneFlag: async (zoneFlag: ModelsZoneFlag, options: any = {}): Promise<RequestArgs> => {
-            // verify required parameter 'zoneFlag' is not null or undefined
-            if (zoneFlag === null || zoneFlag === undefined) {
-                throw new RequiredError('zoneFlag','Required parameter zoneFlag was null or undefined when calling createZoneFlag.');
-            }
-            const localVarPath = `/zone_flag`;
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, 'https://example.com');
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'PUT', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-
-    
-            localVarHeaderParameter['Content-Type'] = 'application/json';
-
-            const queryParameters = new URLSearchParams(localVarUrlObj.search);
-            for (const key in localVarQueryParameter) {
-                queryParameters.set(key, localVarQueryParameter[key]);
-            }
-            for (const key in options.query) {
-                queryParameters.set(key, options.query[key]);
-            }
-            localVarUrlObj.search = (new URLSearchParams(queryParameters)).toString();
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            const nonString = typeof zoneFlag !== 'string';
-            const needsSerialization = nonString && configuration && configuration.isJsonMime
-                ? configuration.isJsonMime(localVarRequestOptions.headers['Content-Type'])
-                : nonString;
-            localVarRequestOptions.data =  needsSerialization
-                ? JSON.stringify(zoneFlag !== undefined ? zoneFlag : {})
-                : (zoneFlag || "");
-
-            return {
-                url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * 
-         * @summary Deletes ZoneFlag
-         * @param {number} id Id
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        deleteZoneFlag: async (id: number, options: any = {}): Promise<RequestArgs> => {
-            // verify required parameter 'id' is not null or undefined
-            if (id === null || id === undefined) {
-                throw new RequiredError('id','Required parameter id was null or undefined when calling deleteZoneFlag.');
-            }
-            const localVarPath = `/zone_flag/{id}`
-                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, 'https://example.com');
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'DELETE', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-
-    
-            const queryParameters = new URLSearchParams(localVarUrlObj.search);
-            for (const key in localVarQueryParameter) {
-                queryParameters.set(key, localVarQueryParameter[key]);
-            }
-            for (const key in options.query) {
-                queryParameters.set(key, options.query[key]);
-            }
-            localVarUrlObj.search = (new URLSearchParams(queryParameters)).toString();
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-
-            return {
-                url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * 
-         * @summary Gets ZoneFlag
-         * @param {number} id Id
-         * @param {string} [includes] Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names 
-         * @param {string} [select] Column names [.] separated to fetch specific fields in response
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getZoneFlag: async (id: number, includes?: string, select?: string, options: any = {}): Promise<RequestArgs> => {
-            // verify required parameter 'id' is not null or undefined
-            if (id === null || id === undefined) {
-                throw new RequiredError('id','Required parameter id was null or undefined when calling getZoneFlag.');
-            }
-            const localVarPath = `/zone_flag/{id}`
-                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, 'https://example.com');
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-            if (includes !== undefined) {
-                localVarQueryParameter['includes'] = includes;
-            }
-
-            if (select !== undefined) {
-                localVarQueryParameter['select'] = select;
-            }
-
-
-    
-            const queryParameters = new URLSearchParams(localVarUrlObj.search);
-            for (const key in localVarQueryParameter) {
-                queryParameters.set(key, localVarQueryParameter[key]);
-            }
-            for (const key in options.query) {
-                queryParameters.set(key, options.query[key]);
-            }
-            localVarUrlObj.search = (new URLSearchParams(queryParameters)).toString();
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-
-            return {
-                url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * 
-         * @summary Lists ZoneFlags
-         * @param {string} [includes] Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names 
-         * @param {string} [where] Filter on specific fields. Multiple conditions [.] separated Example: col_like_value.col2__val2
-         * @param {string} [limit] Rows to limit in response (Default: 10,000)
-         * @param {string} [orderBy] Order by [field]
-         * @param {string} [orderDirection] Order by field direction
-         * @param {string} [select] Column names [.] separated to fetch specific fields in response
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        listZoneFlags: async (includes?: string, where?: string, limit?: string, orderBy?: string, orderDirection?: string, select?: string, options: any = {}): Promise<RequestArgs> => {
-            const localVarPath = `/zone_flags`;
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, 'https://example.com');
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-            if (includes !== undefined) {
-                localVarQueryParameter['includes'] = includes;
-            }
-
-            if (where !== undefined) {
-                localVarQueryParameter['where'] = where;
-            }
-
-            if (limit !== undefined) {
-                localVarQueryParameter['limit'] = limit;
-            }
-
-            if (orderBy !== undefined) {
-                localVarQueryParameter['orderBy'] = orderBy;
-            }
-
-            if (orderDirection !== undefined) {
-                localVarQueryParameter['orderDirection'] = orderDirection;
-            }
-
-            if (select !== undefined) {
-                localVarQueryParameter['select'] = select;
-            }
-
-
-    
-            const queryParameters = new URLSearchParams(localVarUrlObj.search);
-            for (const key in localVarQueryParameter) {
-                queryParameters.set(key, localVarQueryParameter[key]);
-            }
-            for (const key in options.query) {
-                queryParameters.set(key, options.query[key]);
-            }
-            localVarUrlObj.search = (new URLSearchParams(queryParameters)).toString();
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-
-            return {
-                url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * 
-         * @summary Updates ZoneFlag
-         * @param {number} id Id
-         * @param {ModelsZoneFlag} zoneFlag ZoneFlag
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        updateZoneFlag: async (id: number, zoneFlag: ModelsZoneFlag, options: any = {}): Promise<RequestArgs> => {
-            // verify required parameter 'id' is not null or undefined
-            if (id === null || id === undefined) {
-                throw new RequiredError('id','Required parameter id was null or undefined when calling updateZoneFlag.');
-            }
-            // verify required parameter 'zoneFlag' is not null or undefined
-            if (zoneFlag === null || zoneFlag === undefined) {
-                throw new RequiredError('zoneFlag','Required parameter zoneFlag was null or undefined when calling updateZoneFlag.');
-            }
-            const localVarPath = `/zone_flag/{id}`
-                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, 'https://example.com');
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'PATCH', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-
-    
-            localVarHeaderParameter['Content-Type'] = 'application/json';
-
-            const queryParameters = new URLSearchParams(localVarUrlObj.search);
-            for (const key in localVarQueryParameter) {
-                queryParameters.set(key, localVarQueryParameter[key]);
-            }
-            for (const key in options.query) {
-                queryParameters.set(key, options.query[key]);
-            }
-            localVarUrlObj.search = (new URLSearchParams(queryParameters)).toString();
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            const nonString = typeof zoneFlag !== 'string';
-            const needsSerialization = nonString && configuration && configuration.isJsonMime
-                ? configuration.isJsonMime(localVarRequestOptions.headers['Content-Type'])
-                : nonString;
-            localVarRequestOptions.data =  needsSerialization
-                ? JSON.stringify(zoneFlag !== undefined ? zoneFlag : {})
-                : (zoneFlag || "");
-
-            return {
-                url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
-                options: localVarRequestOptions,
-            };
-        },
-    }
-};
-
-/**
- * ZoneFlagApi - functional programming interface
- * @export
- */
-export const ZoneFlagApiFp = function(configuration?: Configuration) {
-    return {
-        /**
-         * 
-         * @summary Creates ZoneFlag
-         * @param {ModelsZoneFlag} zoneFlag ZoneFlag
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async createZoneFlag(zoneFlag: ModelsZoneFlag, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<ModelsZoneFlag>>> {
-            const localVarAxiosArgs = await ZoneFlagApiAxiosParamCreator(configuration).createZoneFlag(zoneFlag, options);
-            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
-                const axiosRequestArgs = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
-                return axios.request(axiosRequestArgs);
-            };
-        },
-        /**
-         * 
-         * @summary Deletes ZoneFlag
-         * @param {number} id Id
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async deleteZoneFlag(id: number, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<string>> {
-            const localVarAxiosArgs = await ZoneFlagApiAxiosParamCreator(configuration).deleteZoneFlag(id, options);
-            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
-                const axiosRequestArgs = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
-                return axios.request(axiosRequestArgs);
-            };
-        },
-        /**
-         * 
-         * @summary Gets ZoneFlag
-         * @param {number} id Id
-         * @param {string} [includes] Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names 
-         * @param {string} [select] Column names [.] separated to fetch specific fields in response
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async getZoneFlag(id: number, includes?: string, select?: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<ModelsZoneFlag>>> {
-            const localVarAxiosArgs = await ZoneFlagApiAxiosParamCreator(configuration).getZoneFlag(id, includes, select, options);
-            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
-                const axiosRequestArgs = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
-                return axios.request(axiosRequestArgs);
-            };
-        },
-        /**
-         * 
-         * @summary Lists ZoneFlags
-         * @param {string} [includes] Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names 
-         * @param {string} [where] Filter on specific fields. Multiple conditions [.] separated Example: col_like_value.col2__val2
-         * @param {string} [limit] Rows to limit in response (Default: 10,000)
-         * @param {string} [orderBy] Order by [field]
-         * @param {string} [orderDirection] Order by field direction
-         * @param {string} [select] Column names [.] separated to fetch specific fields in response
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async listZoneFlags(includes?: string, where?: string, limit?: string, orderBy?: string, orderDirection?: string, select?: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<ModelsZoneFlag>>> {
-            const localVarAxiosArgs = await ZoneFlagApiAxiosParamCreator(configuration).listZoneFlags(includes, where, limit, orderBy, orderDirection, select, options);
-            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
-                const axiosRequestArgs = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
-                return axios.request(axiosRequestArgs);
-            };
-        },
-        /**
-         * 
-         * @summary Updates ZoneFlag
-         * @param {number} id Id
-         * @param {ModelsZoneFlag} zoneFlag ZoneFlag
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async updateZoneFlag(id: number, zoneFlag: ModelsZoneFlag, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<ModelsZoneFlag>>> {
-            const localVarAxiosArgs = await ZoneFlagApiAxiosParamCreator(configuration).updateZoneFlag(id, zoneFlag, options);
-            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
-                const axiosRequestArgs = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
-                return axios.request(axiosRequestArgs);
-            };
-        },
-    }
-};
-
-/**
- * ZoneFlagApi - factory interface
- * @export
- */
-export const ZoneFlagApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
-    return {
-        /**
-         * 
-         * @summary Creates ZoneFlag
-         * @param {ModelsZoneFlag} zoneFlag ZoneFlag
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        createZoneFlag(zoneFlag: ModelsZoneFlag, options?: any): AxiosPromise<Array<ModelsZoneFlag>> {
-            return ZoneFlagApiFp(configuration).createZoneFlag(zoneFlag, options).then((request) => request(axios, basePath));
-        },
-        /**
-         * 
-         * @summary Deletes ZoneFlag
-         * @param {number} id Id
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        deleteZoneFlag(id: number, options?: any): AxiosPromise<string> {
-            return ZoneFlagApiFp(configuration).deleteZoneFlag(id, options).then((request) => request(axios, basePath));
-        },
-        /**
-         * 
-         * @summary Gets ZoneFlag
-         * @param {number} id Id
-         * @param {string} [includes] Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names 
-         * @param {string} [select] Column names [.] separated to fetch specific fields in response
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getZoneFlag(id: number, includes?: string, select?: string, options?: any): AxiosPromise<Array<ModelsZoneFlag>> {
-            return ZoneFlagApiFp(configuration).getZoneFlag(id, includes, select, options).then((request) => request(axios, basePath));
-        },
-        /**
-         * 
-         * @summary Lists ZoneFlags
-         * @param {string} [includes] Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names 
-         * @param {string} [where] Filter on specific fields. Multiple conditions [.] separated Example: col_like_value.col2__val2
-         * @param {string} [limit] Rows to limit in response (Default: 10,000)
-         * @param {string} [orderBy] Order by [field]
-         * @param {string} [orderDirection] Order by field direction
-         * @param {string} [select] Column names [.] separated to fetch specific fields in response
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        listZoneFlags(includes?: string, where?: string, limit?: string, orderBy?: string, orderDirection?: string, select?: string, options?: any): AxiosPromise<Array<ModelsZoneFlag>> {
-            return ZoneFlagApiFp(configuration).listZoneFlags(includes, where, limit, orderBy, orderDirection, select, options).then((request) => request(axios, basePath));
-        },
-        /**
-         * 
-         * @summary Updates ZoneFlag
-         * @param {number} id Id
-         * @param {ModelsZoneFlag} zoneFlag ZoneFlag
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        updateZoneFlag(id: number, zoneFlag: ModelsZoneFlag, options?: any): AxiosPromise<Array<ModelsZoneFlag>> {
-            return ZoneFlagApiFp(configuration).updateZoneFlag(id, zoneFlag, options).then((request) => request(axios, basePath));
-        },
-    };
-};
-
-/**
- * Request parameters for createZoneFlag operation in ZoneFlagApi.
- * @export
- * @interface ZoneFlagApiCreateZoneFlagRequest
- */
-export interface ZoneFlagApiCreateZoneFlagRequest {
-    /**
-     * ZoneFlag
-     * @type {ModelsZoneFlag}
-     * @memberof ZoneFlagApiCreateZoneFlag
-     */
-    readonly zoneFlag: ModelsZoneFlag
-}
-
-/**
- * Request parameters for deleteZoneFlag operation in ZoneFlagApi.
- * @export
- * @interface ZoneFlagApiDeleteZoneFlagRequest
- */
-export interface ZoneFlagApiDeleteZoneFlagRequest {
-    /**
-     * Id
-     * @type {number}
-     * @memberof ZoneFlagApiDeleteZoneFlag
-     */
-    readonly id: number
-}
-
-/**
- * Request parameters for getZoneFlag operation in ZoneFlagApi.
- * @export
- * @interface ZoneFlagApiGetZoneFlagRequest
- */
-export interface ZoneFlagApiGetZoneFlagRequest {
-    /**
-     * Id
-     * @type {number}
-     * @memberof ZoneFlagApiGetZoneFlag
-     */
-    readonly id: number
-
-    /**
-     * Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names 
-     * @type {string}
-     * @memberof ZoneFlagApiGetZoneFlag
-     */
-    readonly includes?: string
-
-    /**
-     * Column names [.] separated to fetch specific fields in response
-     * @type {string}
-     * @memberof ZoneFlagApiGetZoneFlag
-     */
-    readonly select?: string
-}
-
-/**
- * Request parameters for listZoneFlags operation in ZoneFlagApi.
- * @export
- * @interface ZoneFlagApiListZoneFlagsRequest
- */
-export interface ZoneFlagApiListZoneFlagsRequest {
-    /**
-     * Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names 
-     * @type {string}
-     * @memberof ZoneFlagApiListZoneFlags
-     */
-    readonly includes?: string
-
-    /**
-     * Filter on specific fields. Multiple conditions [.] separated Example: col_like_value.col2__val2
-     * @type {string}
-     * @memberof ZoneFlagApiListZoneFlags
-     */
-    readonly where?: string
-
-    /**
-     * Rows to limit in response (Default: 10,000)
-     * @type {string}
-     * @memberof ZoneFlagApiListZoneFlags
-     */
-    readonly limit?: string
-
-    /**
-     * Order by [field]
-     * @type {string}
-     * @memberof ZoneFlagApiListZoneFlags
-     */
-    readonly orderBy?: string
-
-    /**
-     * Order by field direction
-     * @type {string}
-     * @memberof ZoneFlagApiListZoneFlags
-     */
-    readonly orderDirection?: string
-
-    /**
-     * Column names [.] separated to fetch specific fields in response
-     * @type {string}
-     * @memberof ZoneFlagApiListZoneFlags
-     */
-    readonly select?: string
-}
-
-/**
- * Request parameters for updateZoneFlag operation in ZoneFlagApi.
- * @export
- * @interface ZoneFlagApiUpdateZoneFlagRequest
- */
-export interface ZoneFlagApiUpdateZoneFlagRequest {
-    /**
-     * Id
-     * @type {number}
-     * @memberof ZoneFlagApiUpdateZoneFlag
-     */
-    readonly id: number
-
-    /**
-     * ZoneFlag
-     * @type {ModelsZoneFlag}
-     * @memberof ZoneFlagApiUpdateZoneFlag
-     */
-    readonly zoneFlag: ModelsZoneFlag
-}
-
-/**
- * ZoneFlagApi - object-oriented interface
- * @export
- * @class ZoneFlagApi
- * @extends {BaseAPI}
- */
-export class ZoneFlagApi extends BaseAPI {
-    /**
-     * 
-     * @summary Creates ZoneFlag
-     * @param {ZoneFlagApiCreateZoneFlagRequest} requestParameters Request parameters.
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof ZoneFlagApi
-     */
-    public createZoneFlag(requestParameters: ZoneFlagApiCreateZoneFlagRequest, options?: any) {
-        return ZoneFlagApiFp(this.configuration).createZoneFlag(requestParameters.zoneFlag, options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
-     * 
-     * @summary Deletes ZoneFlag
-     * @param {ZoneFlagApiDeleteZoneFlagRequest} requestParameters Request parameters.
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof ZoneFlagApi
-     */
-    public deleteZoneFlag(requestParameters: ZoneFlagApiDeleteZoneFlagRequest, options?: any) {
-        return ZoneFlagApiFp(this.configuration).deleteZoneFlag(requestParameters.id, options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
-     * 
-     * @summary Gets ZoneFlag
-     * @param {ZoneFlagApiGetZoneFlagRequest} requestParameters Request parameters.
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof ZoneFlagApi
-     */
-    public getZoneFlag(requestParameters: ZoneFlagApiGetZoneFlagRequest, options?: any) {
-        return ZoneFlagApiFp(this.configuration).getZoneFlag(requestParameters.id, requestParameters.includes, requestParameters.select, options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
-     * 
-     * @summary Lists ZoneFlags
-     * @param {ZoneFlagApiListZoneFlagsRequest} requestParameters Request parameters.
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof ZoneFlagApi
-     */
-    public listZoneFlags(requestParameters: ZoneFlagApiListZoneFlagsRequest = {}, options?: any) {
-        return ZoneFlagApiFp(this.configuration).listZoneFlags(requestParameters.includes, requestParameters.where, requestParameters.limit, requestParameters.orderBy, requestParameters.orderDirection, requestParameters.select, options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
-     * 
-     * @summary Updates ZoneFlag
-     * @param {ZoneFlagApiUpdateZoneFlagRequest} requestParameters Request parameters.
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof ZoneFlagApi
-     */
-    public updateZoneFlag(requestParameters: ZoneFlagApiUpdateZoneFlagRequest, options?: any) {
-        return ZoneFlagApiFp(this.configuration).updateZoneFlag(requestParameters.id, requestParameters.zoneFlag, options).then((request) => request(this.axios, this.basePath));
     }
 }
 

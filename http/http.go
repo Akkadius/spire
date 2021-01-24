@@ -5,7 +5,9 @@ import (
 	"fmt"
 	"github.com/Akkadius/spire/docs"
 	"github.com/Akkadius/spire/http/routes"
+	"github.com/gobuffalo/packr"
 	"github.com/labstack/echo/v4"
+	"github.com/labstack/echo/v4/middleware"
 	"github.com/sirupsen/logrus"
 	"net/http"
 	"unicode"
@@ -24,7 +26,7 @@ import (
 // @license.name Apache 2.0
 // @license.url http://www.apache.org/licenses/LICENSE-2.0.html
 
-// @host localhost:3000
+// @comment-host localhost:3000 // this is commented to exclude host for now
 // @BasePath /api/v1
 
 // Serve runs a http server
@@ -38,6 +40,23 @@ func Serve(port uint, logger *logrus.Logger, router *routes.Router) error {
 
 	e.GET("/swagger/*", docs.WrapHandler)
 	e.GET("/api/v1/routes", listRoutes)
+
+	// embed static assets
+	box := packr.NewBox("../public")
+	_, err := box.FindString("./spa-index.html")
+	if err != nil {
+		logger.Fatal(err)
+	}
+
+	e.Use(
+		middleware.StaticWithConfig(
+			middleware.StaticConfig{
+				Root:  "public",
+				Index: "spa-index.html",
+				HTML5: true,
+			},
+		),
+	)
 
 	e.HTTPErrorHandler = errorHandler
 

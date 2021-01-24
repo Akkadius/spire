@@ -105,7 +105,7 @@ export default {
         return
       }
 
-      (new TaskApi({baseOptions: SpireApiClient.getAxiosConfig()})).getTask({id: this.$route.params.id, includes: "3"}).then((result) => {
+      (new TaskApi(SpireApiClient.getOpenApiConfig())).getTask({id: this.$route.params.id, includes: "3"}).then((result) => {
         if (result.status === 200) {
           this.model = result.data
         }
@@ -187,7 +187,7 @@ export default {
       }
     },
     async init() {
-      const result = await (new TaskApi({baseOptions: SpireApiClient.getAxiosConfig()})).listTasks()
+      const result = await (new TaskApi(SpireApiClient.getOpenApiConfig())).listTasks()
       if (result.status === 200) {
         this.tasks = result.data
       }

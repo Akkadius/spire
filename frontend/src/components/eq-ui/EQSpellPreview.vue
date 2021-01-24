@@ -244,7 +244,7 @@ export default {
       return result;
     },
     getSpell: async function (spellId) {
-      const api    = (new SpellsNewApi({ baseOptions: SpireApiClient.getAxiosConfig() }))
+      const api    = (new SpellsNewApi(SpireApiClient.getOpenApiConfig()))
       const result = await api.getSpellsNew({ id: spellId })
       if (result.status === 200) {
         return result.data
@@ -257,7 +257,7 @@ export default {
       return spell.name ? spell.name : "Unknown Spell Name"
     },
     getItem: async function (itemId) {
-      const api    = (new ItemApi({ baseOptions: SpireApiClient.getAxiosConfig() }))
+      const api    = (new ItemApi(SpireApiClient.getOpenApiConfig()))
       const result = await api.getItem({ id: itemId })
       if (result.status === 200) {
         return result.data
