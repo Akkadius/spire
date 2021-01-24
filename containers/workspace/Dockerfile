@@ -26,6 +26,8 @@ RUN apt-get update && apt-get install -y \
     jq \
     inetutils-ping \
     redis-tools \
+    nodejs \
+    npm \
     wget \
     cron \
     procps \

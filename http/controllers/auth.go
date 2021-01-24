@@ -1,10 +1,11 @@
 package controllers
 
 import (
+	"fmt"
 	"github.com/Akkadius/spire/database"
+	"github.com/Akkadius/spire/env"
 	"github.com/Akkadius/spire/http/routes"
 	"github.com/Akkadius/spire/models"
-	"fmt"
 	"github.com/danilopolani/gocialite"
 	"github.com/davecgh/go-spew/spew"
 	"github.com/dgrijalva/jwt-go"
@@ -41,7 +42,10 @@ func createJwtToken(userId string) (string, error) {
 	atClaims := jwt.MapClaims{}
 	atClaims["authorized"] = true
 	atClaims["userId"] = userId
-	atClaims["exp"] = time.Now().Add(time.Hour * 24 * 7).Unix()
+
+	expirationHours, _ := time.ParseDuration(env.Get("JWT_EXPIRATION_HOURS", "87600"))
+
+	atClaims["exp"] = time.Now().Add(time.Hour * expirationHours).Unix()
 	at := jwt.NewWithClaims(jwt.SigningMethodHS256, atClaims)
 	token, err := at.SignedString([]byte(os.Getenv("JWT_SECRET_KEY")))
 	if err != nil {

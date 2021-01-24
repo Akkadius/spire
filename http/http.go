@@ -5,9 +5,8 @@ import (
 	"fmt"
 	"github.com/Akkadius/spire/docs"
 	"github.com/Akkadius/spire/http/routes"
-	"github.com/gobuffalo/packr"
+	"github.com/Akkadius/spire/http/spa"
 	"github.com/labstack/echo/v4"
-	"github.com/labstack/echo/v4/middleware"
 	"github.com/sirupsen/logrus"
 	"net/http"
 	"unicode"
@@ -41,22 +40,10 @@ func Serve(port uint, logger *logrus.Logger, router *routes.Router) error {
 	e.GET("/swagger/*", docs.WrapHandler)
 	e.GET("/api/v1/routes", listRoutes)
 
-	// embed static assets
-	box := packr.NewBox("../public")
-	_, err := box.FindString("./index.html")
-	if err != nil {
-		logger.Fatal(err)
-	}
-
-	e.Use(
-		middleware.StaticWithConfig(
-			middleware.StaticConfig{
-				Root:  "public",
-				Index: "index.html",
-				HTML5: true,
-			},
-		),
-	)
+	// serve spa as embedded static assets
+	s := spa.NewSpirePackagedSpaService(logger)
+	e.GET("/*", s.Spa().Handler())
+	e.Use(s.Spa().MiddlewareHandler())
 
 	e.HTTPErrorHandler = errorHandler
 
