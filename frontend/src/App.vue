@@ -43,12 +43,13 @@ export default {
 /*akkadius:experimental*/
 body {
   /* background-repeat: no-repeat; */
-  background-size:       cover;
-
+  background:            -webkit-radial-gradient(circle, transparent 40%, var(--color-v) 75%), linear-gradient(to right, var(--color), var(--color)), var(--image2) !important;
   background:            radial-gradient(circle, transparent 40%, var(--color-v) 75%), linear-gradient(to right, var(--color), var(--color)), var(--image2);
+
+
   background-position:   center center;
   background-size:       cover;
-  background-blend-mode: var(--blend-top, normal), var(--blend-bottom, saturation), normal;
+  background-blend-mode: normal, saturation, normal;
   --image:               url(~@/assets/img/champions-of-norrath-wallpaper.jpg);
   --image2:              url(~@/assets/img/champions-of-norrath-wallpaper.jpg);
   --color-v:             black;

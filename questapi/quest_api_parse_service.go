@@ -32,15 +32,15 @@ type QuestApiResponse struct {
 }
 
 type PerlApi struct {
-	PerlMethods   map[string][]PerlMethod `json:"methods"`
-	PerlEvents    []PerlEvent             `json:"events"`
-	PerlConstants []PerlConstants         `json:"constants"`
+	PerlMethods   map[string][]PerlMethod    `json:"methods"`
+	PerlEvents    []PerlEvent                `json:"events"`
+	PerlConstants map[string][]PerlConstants `json:"constants"`
 }
 
 type LuaApi struct {
-	LuaMethods   map[string][]LuaMethod `json:"methods"`
-	LuaEvents    []LuaEvent             `json:"events"`
-	LuaConstants []LuaConstants         `json:"constants"`
+	LuaMethods   map[string][]LuaMethod    `json:"methods"`
+	LuaEvents    []LuaEvent                `json:"events"`
+	LuaConstants map[string][]LuaConstants `json:"constants"`
 }
 
 type PerlMethod struct {
@@ -66,8 +66,8 @@ var luaMethods = map[string][]LuaMethod{}
 var lastRefreshed time.Time
 var perlEvents []PerlEvent
 var luaEvents []LuaEvent
-var perlConstants []PerlConstants
-var luaConstants []LuaConstants
+var perlConstants map[string][]PerlConstants
+var luaConstants map[string][]LuaConstants
 
 const lockKey = "quest-api-lock"
 
@@ -170,15 +170,13 @@ func (c *ParseService) Parse(forceRefresh bool) QuestApiResponse {
 		},
 	)
 	// sort perl constants
-	sort.Slice(
-		perlConstants, func(i, j int) bool {
-			if perlConstants[i].ConstantType != perlConstants[j].ConstantType {
-				return perlConstants[i].ConstantType < perlConstants[j].ConstantType
-			}
-
-			return perlConstants[i].Constant < perlConstants[j].Constant
-		},
-	)
+	for _, constants := range perlConstants {
+		sort.Slice(
+			constants[:], func(i, j int) bool {
+				return constants[i].Constant < constants[j].Constant
+			},
+		)
+	}
 
 	// sort lua methods
 	for _, methods := range luaMethods {
@@ -201,15 +199,13 @@ func (c *ParseService) Parse(forceRefresh bool) QuestApiResponse {
 	)
 
 	// sort lua constants
-	sort.Slice(
-		luaConstants, func(i, j int) bool {
-			if luaConstants[i].ConstantType != luaConstants[j].ConstantType {
-				return luaConstants[i].ConstantType < luaConstants[j].ConstantType
-			}
-
-			return luaConstants[i].Constant < luaConstants[j].Constant
-		},
-	)
+	for _, constants := range luaConstants {
+		sort.Slice(
+			constants[:], func(i, j int) bool {
+				return constants[i].Constant < constants[j].Constant
+			},
+		)
+	}
 
 	lastRefreshed = time.Now()
 

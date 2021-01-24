@@ -4,7 +4,7 @@
       <!-- CONTENT -->
       <div class="container-fluid">
 
-        <div class="row justify-content-between align-items-center mt-6">
+        <div class="row justify-content-between align-items-center mt-5">
           <div class="col-12 col-md-9 col-xl-7">
             <h2 class="mb-2">
               Database Connection Properties

@@ -5,7 +5,7 @@
       <div class="panel panel-default">
         <div class="row">
           <div class="col-12">
-            <eq-window style="margin-top: 30px">
+            <eq-window style="margin-top: 30px" title="Quest API Explorer">
 
               <h1 class="eq-header text-center mt-5" v-if="!loaded">LOADING... PLEASE WAIT...</h1>
 
@@ -13,6 +13,7 @@
 
               <div v-if="loaded">
 
+                <!-- Form -->
                 <div class="row">
                   <div class="col-2 text-center">
                     Language
@@ -35,16 +36,25 @@
                       @change="eventSelect();"
                       :options="eventOptions"/>
                   </div>
+                  <div class="col-2 text-center">
+                    Constants
+                    <b-form-select
+                      v-model="constantSelection"
+                      @change="constantSelect();"
+                      :options="constantOptions"/>
+                  </div>
 
                   <div class="col text-center align-middle ">
                     <div class="float-right">
-                      Last Updated: {{ fromNow(methods.last_refreshed) }}
+                      Last Updated: {{ fromNow(api.last_refreshed) }}
                     </div>
                   </div>
                 </div>
 
                 <!-- Display Quest API Methods -->
                 <div class="row mt-2" v-if="apiMethods.length > 0">
+
+                  <!-- Methods -->
                   <div class="col-12">
 
                     <!-- Everthing below will look a bit messy because things need -->
@@ -72,6 +82,75 @@
                         }} Example(s)</span></div></pre>
                   </div>
 
+                </div>
+
+                <!-- Events -->
+                <div
+                  class="row mt-2 pl-2"
+                  v-if="eventSelection"
+                  style="display:inline-block"
+                >
+                  <div class="col-12">
+
+                    <!-- Lua -->
+                    <pre
+                      v-if="languageSelection === 'lua'"
+                      class="highlight html bg-dark ml-0 mb-4 code-display"
+                      style="width: 50vw; display: inline-block; padding-left: 20px !important; padding-top: 10px !important; padding-bottom: 10px !important"
+                    ><span style="color: #57A64A">-- {{ eventSelectionFormatName() }}</span>
+function {{ getSelectedEvent().event_identifier }}(e)
+	<span style="color: #57A64A">-- Exported event variables</span>
+<span v-for="(e, index) in eventVars()" :key="index">	eq.debug("{{ e }} " .. e.{{ e }});
+</span>end</pre>
+                    <!-- Perl -->
+                    <pre
+                      v-if="languageSelection === 'perl'"
+                      class="highlight html bg-dark ml-0 mb-4 code-display"
+                      style="width: 50vw; display: inline-block; padding-left: 20px !important; padding-top: 10px !important; padding-bottom: 10px !important"
+                    ><span style="color: #57A64A"># {{ eventSelectionFormatName() }}</span>
+sub {{ getSelectedEvent().event_identifier }} {
+	<span style="color: #57A64A"># Exported event variables</span>
+<span v-for="(e, index) in eventVars()" :key="index">	quest::debug("{{ e }} " . ${{ e }});
+</span>}</pre>
+                  </div>
+
+                </div>
+
+                <!-- Constants -->
+                <div
+                  class="row mt-2 pl-2"
+                  v-if="languageSelection && constantSelection && api && Object.keys(api).length > 0"
+                  style="display:inline-block"
+                >
+                  <div class="col-12">
+
+                    <!-- Perl -->
+                    <pre
+                      v-if="languageSelection === 'perl'"
+                      class="highlight html bg-dark ml-0 mb-4 code-display"
+                      style="width: 50vw; display: inline-block; padding-left: 20px !important; padding-top: 10px !important; padding-bottom: 10px !important"
+                    ><div
+                      v-for="(constant, index) in api[getLanguageKey()].constants[constantSelection]"
+                      :key="index">{{ constant.constant }}</div></pre>
+
+                    <!-- Lua -->
+                    <pre
+                      v-if="languageSelection === 'lua'"
+                      class="highlight html bg-dark ml-0 mb-4 code-display"
+                      style="min-width: 30vw; display: inline-block; padding-left: 20px !important; padding-top: 10px !important; padding-bottom: 10px !important"
+                    ><div
+                      v-for="(constant, index) in api[getLanguageKey()].constants[constantSelection]"
+                      :key="index"><a
+                      @click="loadConstantExamples(formatConstant(constant))" href="javascript:void(0);"
+                      v-if="linkedExamples[languageSelection][formatConstant(constant)]">{{ formatConstant(constant) }}</a><span
+                      v-if="!linkedExamples[languageSelection][formatConstant(constant)]">{{
+                        formatConstant(constant)
+                      }}</span></div></pre>
+                  </div>
+                </div>
+
+                <!-- Example Previews -->
+                <div class="row mt-2 pl-2">
                   <div class="col-6 example-preview" v-if="displayExamples.length > 0">
 
                     <eq-window title="Examples">
@@ -126,40 +205,8 @@
                     </eq-window>
 
                   </div>
-
                 </div>
 
-                <!-- Events -->
-                <div
-                  class="row mt-2 pl-2"
-                  v-if="eventSelection"
-                  style="display:inline-block"
-                >
-                  <div class="col-12">
-
-                    <!-- Lua -->
-                    <pre
-                      v-if="languageSelection === 'lua'"
-                      class="highlight html bg-dark ml-0 mb-4 code-display"
-                      style="width: 50vw; display: inline-block; padding-left: 20px !important; padding-top: 10px !important; padding-bottom: 10px !important"
-                    ><span style="color: #57A64A">-- {{ eventSelectionFormatName() }}</span>
-function {{ getSelectedEvent().event_identifier }}(e)
-	<span style="color: #57A64A">-- Exported event variables</span>
-<span v-for="(e, index) in eventVars()" :key="index">	eq.debug("{{ e }} " .. e.{{ e }});
-</span>end</pre>
-                    <!-- Perl -->
-                    <pre
-                      v-if="languageSelection === 'perl'"
-                      class="highlight html bg-dark ml-0 mb-4 code-display"
-                      style="width: 50vw; display: inline-block; padding-left: 20px !important; padding-top: 10px !important; padding-bottom: 10px !important"
-                    ><span style="color: #57A64A"># {{ eventSelectionFormatName() }}</span>
-sub {{ getSelectedEvent().event_identifier }} {
-	<span style="color: #57A64A"># Exported event variables</span>
-<span v-for="(e, index) in eventVars()" :key="index">	quest::debug("{{ e }} " . ${{ e }});
-</span>}</pre>
-                  </div>
-
-                </div>
               </div>
 
 
@@ -201,7 +248,7 @@ export default {
     return {
       codeClass: "",
 
-      // select
+      // languages:select
       languageSelection: null,
       languageOptions: [
         {value: null, text: 'Select a Language'},
@@ -209,15 +256,24 @@ export default {
         {value: 'lua', text: 'Lua'},
       ],
 
-      // select
+      // methods:select
       methodTypeSelection: null,
       methodTypeOptions: [],
 
-      // select
+      // events:select
       eventSelection: null,
       eventOptions: [],
 
-      apiMethods: [],
+      // constants:select
+      constantSelection: null,
+      constantOptions: [],
+
+      // response data
+      api: {},
+
+      // intermediary data for display
+      apiMethods: {},
+      apiConstants: {},
 
       // route watcher
       routeWatcher: null,
@@ -245,16 +301,25 @@ export default {
       return moment(time).fromNow()
     },
     init() {
+
+      // reset
+      this.languageSelection   = null
+      this.methodTypeSelection = null
+      this.eventSelection      = null
+      this.constantSelection   = null
+      this.displayExamples     = []
+
+      // route watcher
       this.routeWatcher = this.$watch('$route.query', () => {
         this.loadQueryParams()
       });
 
       this.loaded = false
 
+      // load data from api
       SpireApiClient.v1().get('/quest-api/methods', this.database).then((response) => {
         if (response.data && response.data.data) {
-          this.methods = response.data.data
-
+          this.api    = response.data.data
           this.loaded = true
           this.loadQueryParams()
         }
@@ -274,6 +339,7 @@ export default {
       this.languageSelection   = null
       this.methodTypeSelection = null
       this.eventSelection      = null
+      this.constantSelection   = null
 
       if (this.$route.query.lang) {
         this.languageSelection = this.$route.query.lang
@@ -285,6 +351,10 @@ export default {
       }
       if (this.$route.query.event) {
         this.eventSelection = this.$route.query.event
+      }
+      if (this.$route.query.constant) {
+        this.constantSelection = this.$route.query.constant
+        this.constantSelect()
       }
 
       if (!this.$route.query.lang && !this.$route.query.type) {
@@ -302,6 +372,9 @@ export default {
       if (this.eventSelection) {
         query.event = this.eventSelection
       }
+      if (this.constantSelection) {
+        query.constant = this.constantSelection
+      }
 
       this.$router.push(
         {
@@ -313,6 +386,9 @@ export default {
     },
     navigateTo(url, name) {
       window.open(url, name);
+    },
+    formatConstant(constant) {
+      return this.languageSelection == "lua" ? this.constantSelection + '.' + constant.constant : constant.constant;
     },
     getLanguageKey() {
       if (this.languageSelection == "perl") {
@@ -334,7 +410,7 @@ export default {
     getSelectedEvent() {
       const entity = this.eventSelection.split("-")[0]
       const event  = this.eventSelection.split("-")[1]
-      let events   = this.methods[this.getLanguageKey()].events
+      let events   = this.api[this.getLanguageKey()].events
       let e        = []
       events.forEach(row => {
         if (row.event_identifier === "event_") {
@@ -356,16 +432,18 @@ export default {
     // when language is selected
     languageSelect: function () {
 
+      this.constantSelection = null
+
       // methods
-      if (this.methods[this.getLanguageKey()].methods) {
+      if (this.api[this.getLanguageKey()].methods) {
         let options  = []
-        let types    = Object.keys(this.methods[this.getLanguageKey()].methods).sort().filter((item) => {
+        let types    = Object.keys(this.api[this.getLanguageKey()].methods).sort().filter((item) => {
           return !item.includes("Deprecated") && !item.includes("EQDB")
         })
         let typeSize = types.length
         options.push({value: null, text: "--- Select a Type (" + typeSize + ") ---"})
         types.forEach((option) => {
-          let methodCount = this.methods[this.getLanguageKey()].methods[option].length
+          let methodCount = this.api[this.getLanguageKey()].methods[option].length
           options.push({value: option, text: option + ' (' + methodCount + ')'})
         })
 
@@ -376,8 +454,8 @@ export default {
       }
 
       // events
-      if (this.methods[this.getLanguageKey()].events) {
-        let events       = this.methods[this.getLanguageKey()].events
+      if (this.api[this.getLanguageKey()].events) {
+        let events       = this.api[this.getLanguageKey()].events
         let eventSize    = events.length
         let selectOption = '--- Select Event (' + eventSize + ') ---'
         let options      = [{value: null, text: selectOption}]
@@ -393,6 +471,26 @@ export default {
         this.eventSelection = null
       }
 
+      // constants
+      if (this.api[this.getLanguageKey()].constants) {
+        let apiConstants = this.api[this.getLanguageKey()].constants
+        let options      = []
+        let constants    = Object.keys(apiConstants).sort().filter((constant) => {
+          return !constant.includes("Deprecated") && !constant.includes("EQDB")
+        })
+        let typeSize     = constants.length
+        options.push({value: null, text: "--- Select a constant group (" + typeSize + ") ---"})
+        constants.forEach((category) => {
+          let methodCount = apiConstants[category].length
+          options.push({value: category, text: category + ' (' + methodCount + ')'})
+        })
+
+        this.constantOptions = options
+        if (!this.constantSelection) {
+          this.constantSelection = null
+        }
+      }
+
       // update browser / route state
       setTimeout(() => {
         this.formChange(), 100
@@ -404,6 +502,10 @@ export default {
     // when method is clicked; loads editor examples
     loadExamples: function (method) {
       this.displayExamples = this.linkedExamples[this.languageSelection][method + '(']
+    },
+    // when method is clicked; loads editor examples
+    loadConstantExamples: function (search) {
+      this.displayExamples = this.linkedExamples[this.languageSelection][search]
     },
     editorInit: async function (slug, lineNumber) {
 
@@ -445,9 +547,10 @@ export default {
     methodTypeSelect: function () {
 
       // reset other displays
-      this.apiMethods     = []
-      let apiMethods      = []
-      this.eventSelection = null
+      this.apiMethods        = []
+      let apiMethods         = []
+      this.constantSelection = null
+      this.eventSelection    = null
 
       // used to search sources for examples
       let methodSearchTerms  = []
@@ -455,9 +558,9 @@ export default {
       let declaredSearchTerm = {}
 
       // methods
-      if (this.methods[this.getLanguageKey()].methods) {
+      if (this.api[this.getLanguageKey()].methods) {
         this.codeClass  = this.getLanguageKey()
-        const methods   = this.methods[this.getLanguageKey()].methods[this.methodTypeSelection]
+        const methods   = this.api[this.getLanguageKey()].methods[this.methodTypeSelection]
         const snakeCase = string => {
           return string.replace(/\W+/g, " ")
                        .split(/ |\B(?=[A-Z])/)
@@ -512,45 +615,7 @@ export default {
 
         this.apiMethods = apiMethods
 
-        // quest-api/source-examples/org/:org/repo/:repo/:branch
-
-        // fixed for now, but designed to be able to source from multiple locations
-        const org    = "ProjectEQ"
-        const repo   = "projecteqquests"
-        const branch = "master"
-
-        // reset
-        let linkedExamples = {
-          perl: {},
-          lua: {}
-        }
-
-        SpireApiClient.v1().post(util.format('/quest-api/source-examples/org/%s/repo/%s/branch/%s', org, repo, branch), {
-          "search_terms": methodSearchTerms,
-          "language": this.languageSelection
-        }).then((response) => {
-          if (response.data && response.data.data) {
-            // console.log(response.data.data)
-
-            response.data.data.forEach((result) => {
-              if (typeof linkedExamples[this.languageSelection][result.search_term] === "undefined") {
-                linkedExamples[this.languageSelection][result.search_term] = []
-              }
-
-              result.org    = org
-              result.repo   = repo
-              result.branch = branch
-
-              linkedExamples[this.languageSelection][result.search_term].push(result)
-            })
-          }
-          this.linkedExamples = linkedExamples
-          this.$forceUpdate()
-        });
-
-
-        this.displayExamples = []
-
+        this.loadSearchExamples(methodSearchTerms)
       }
 
       // update browser / route state
@@ -564,11 +629,76 @@ export default {
       // reset other displays
       this.apiMethods          = []
       this.methodTypeSelection = null
+      this.constantSelection   = null
 
       // update browser / route state
       setTimeout(() => {
         this.formChange(), 100
       });
+    },
+    // when an constant is selected
+    constantSelect: function () {
+
+      // reset other displays
+      this.apiMethods          = []
+      this.eventSelection      = null
+      this.methodTypeSelection = null
+
+      // update browser / route state
+      setTimeout(() => {
+        this.formChange(), 100
+      });
+
+      if (this.constantSelection) {
+        let apiConstants = this.api[this.getLanguageKey()].constants[this.constantSelection]
+        let searchTerms  = []
+
+        apiConstants.forEach((constant) => {
+          const constantVal = this.languageSelection == "lua" ? this.constantSelection + '.' + constant.constant : constant.constant;
+          searchTerms.push(constantVal)
+        })
+
+        this.loadSearchExamples(searchTerms)
+      }
+    },
+    loadSearchExamples: function (searchTerms) {
+
+      // examples
+      // reset
+      let linkedExamples = {
+        perl: {},
+        lua: {}
+      }
+
+      // fixed for now, but designed to be able to source from multiple locations
+      const org         = "ProjectEQ"
+      const repo        = "projecteqquests"
+      const branch      = "master"
+      const exampleRepo = util.format('/quest-api/source-examples/org/%s/repo/%s/branch/%s', org, repo, branch)
+      SpireApiClient.v1().post(exampleRepo, {
+        "search_terms": searchTerms,
+        "language": this.languageSelection
+      }).then((response) => {
+        if (response.data && response.data.data) {
+          // console.log(response.data.data)
+
+          response.data.data.forEach((result) => {
+            if (typeof linkedExamples[this.languageSelection][result.search_term] === "undefined") {
+              linkedExamples[this.languageSelection][result.search_term] = []
+            }
+
+            result.org    = org
+            result.repo   = repo
+            result.branch = branch
+
+            linkedExamples[this.languageSelection][result.search_term].push(result)
+          })
+        }
+        this.linkedExamples = linkedExamples
+        this.$forceUpdate()
+      });
+
+      this.displayExamples = []
     }
   }
 }

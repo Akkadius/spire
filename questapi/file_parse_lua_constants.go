@@ -5,15 +5,14 @@ import (
 )
 
 type LuaConstants struct {
-	ConstantType string `json:"constant_type"` // @eg Player,Mob etc.
-	Constant     string `json:"constant"`      // @eg var
+	Constant string `json:"constant"` // @eg var
 }
 
-func (c *ParseService) parseLuaConstants(files map[string]string) []LuaConstants {
+func (c *ParseService) parseLuaConstants(files map[string]string) map[string][]LuaConstants {
 
 	typeLabel := "" // Mob, Client, Item etc.
 	isInConstants := false
-	var luaConstants []LuaConstants
+	luaConstants := map[string][]LuaConstants{}
 	for fileName, contents := range files {
 
 		// regular constants
@@ -52,7 +51,10 @@ func (c *ParseService) parseLuaConstants(files map[string]string) []LuaConstants
 
 					// Events and their exports are covered in another parse function
 					// @eg luabind::value("summon", static_cast<int>(SPECATK_SUMMON)),
-					if strings.Contains(l, "luabind::value") && strings.Contains(l, "\"") && typeLabel != "" && isInConstants {
+					if strings.Contains(l, "luabind::value") && strings.Contains(
+						l,
+						"\"",
+					) && typeLabel != "" && isInConstants {
 						//fmt.Println(l)
 						//fmt.Println(typeLabel)
 
@@ -64,10 +66,9 @@ func (c *ParseService) parseLuaConstants(files map[string]string) []LuaConstants
 
 						//fmt.Printf("[%v.%v]\n", typeLabel, variable)
 
-						luaConstants = append(
-							luaConstants, LuaConstants{
-								ConstantType: typeLabel,
-								Constant:     variable,
+						luaConstants[typeLabel] = append(
+							luaConstants[typeLabel], LuaConstants{
+								Constant: variable,
 							},
 						)
 					}
@@ -93,10 +94,9 @@ func (c *ParseService) parseLuaConstants(files map[string]string) []LuaConstants
 
 					//fmt.Printf("[%v.%v]\n", "Rule", variable)
 
-					luaConstants = append(
-						luaConstants, LuaConstants{
-							ConstantType: "Rule",
-							Constant:     variable,
+					luaConstants["Rule"] = append(
+						luaConstants["Rule"], LuaConstants{
+							Constant: variable,
 						},
 					)
 				}

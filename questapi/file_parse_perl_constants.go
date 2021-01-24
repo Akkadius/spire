@@ -5,14 +5,13 @@ import (
 )
 
 type PerlConstants struct {
-	ConstantType string `json:"constant_type"` // @eg Player,Mob etc.
-	Constant     string `json:"constant"`      // @eg $variable
+	Constant string `json:"constant"` // @eg $variable
 }
 
-func (c *ParseService) parsePerlConstants(files map[string]string) []PerlConstants {
+func (c *ParseService) parsePerlConstants(files map[string]string) map[string][]PerlConstants {
 
 	typeLabel := "" // Mob, Client, Item etc.
-	var perlConstants []PerlConstants
+	perlConstants := map[string][]PerlConstants{}
 	for fileName, contents := range files {
 		if strings.Contains(fileName, ".cpp") {
 			if strings.Contains(contents, "ExportVar") {
@@ -51,10 +50,9 @@ func (c *ParseService) parsePerlConstants(files map[string]string) []PerlConstan
 							variable = "$" + strings.TrimSpace(varSplit[1])
 						}
 
-						perlConstants = append(
-							perlConstants, PerlConstants{
-								ConstantType: typeLabel,
-								Constant:     variable,
+						perlConstants[typeLabel] = append(
+							perlConstants[typeLabel], PerlConstants{
+								Constant: variable,
 							},
 						)
 					}
