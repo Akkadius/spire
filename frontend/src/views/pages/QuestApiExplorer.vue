@@ -456,7 +456,7 @@ export default {
       if (this.api[this.getLanguageKey()].events) {
         let events       = this.api[this.getLanguageKey()].events
         let eventSize    = events.length
-        let selectOption = '--- Events (' + eventSize + ') ---'
+        let selectOption = '--- Events   (' + eventSize + ') ---'
         let options      = [{value: null, text: selectOption}]
         events.forEach((option, index) => {
           if (option.event_identifier === "event_") {
