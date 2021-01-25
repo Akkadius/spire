@@ -24,7 +24,7 @@ func NewQuestApiController(
 
 func (d *QuestApiController) Routes() []*routes.Route {
 	return []*routes.Route{
-		routes.RegisterRoute(http.MethodGet, "quest-api/methods", d.methods, nil),
+		routes.RegisterRoute(http.MethodGet, "quest-api/definitions", d.getQuestDefinitions, nil),
 		routes.RegisterRoute(
 			http.MethodPost,
 			"quest-api/source-examples/org/:org/repo/:repo/branch/:branch",
@@ -34,7 +34,7 @@ func (d *QuestApiController) Routes() []*routes.Route {
 	}
 }
 
-func (d *QuestApiController) methods(c echo.Context) error {
+func (d *QuestApiController) getQuestDefinitions(c echo.Context) error {
 	return c.JSON(http.StatusOK, echo.Map{"data": d.parser.Parse(false)})
 }
 

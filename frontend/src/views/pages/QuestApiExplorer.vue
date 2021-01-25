@@ -317,7 +317,7 @@ export default {
       this.loaded = false
 
       // load data from api
-      SpireApiClient.v1().get('/quest-api/methods', this.database).then((response) => {
+      SpireApiClient.v1().get('/quest-api/definitions', this.database).then((response) => {
         if (response.data && response.data.data) {
           this.api    = response.data.data
           this.loaded = true
