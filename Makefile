@@ -70,7 +70,7 @@ rc: ##@dev Create Redis shell
 	docker-compose exec redis sh -c "redis-cli"
 
 up: ##@dev Brings up environment
-	docker-compose up -d
+	docker-compose up -d mysql workspace
 
 down: ##@dev Shuts down environment
 	docker-compose down -t 1

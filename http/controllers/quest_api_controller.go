@@ -9,8 +9,8 @@ import (
 )
 
 type QuestApiController struct {
-	logger *logrus.Logger
-	parser *questapi.ParseService
+	logger  *logrus.Logger
+	parser  *questapi.ParseService
 	sourcer *questapi.QuestExamplesGithubSourcer
 }
 
@@ -25,6 +25,7 @@ func NewQuestApiController(
 func (d *QuestApiController) Routes() []*routes.Route {
 	return []*routes.Route{
 		routes.RegisterRoute(http.MethodGet, "quest-api/definitions", d.getQuestDefinitions, nil),
+		routes.RegisterRoute(http.MethodPost, "quest-api/webhook-update-api", d.webhookUpdateApi, nil),
 		routes.RegisterRoute(
 			http.MethodPost,
 			"quest-api/source-examples/org/:org/repo/:repo/branch/:branch",
@@ -63,4 +64,15 @@ func (d *QuestApiController) searchGithubExamples(c echo.Context) error {
 			"data": d.sourcer.Search(org, repo, branch, p.SearchTerms, p.Language, false),
 		},
 	)
+}
+
+// ingests a webhook from Github and updates the repo data locally
+func (d *QuestApiController) webhookUpdateApi(c echo.Context) error {
+	// todo: verify signature later
+	if c.Request().Header.Get("X-Github-Event") != "" &&
+		c.Request().Header.Get("X-Github-Delivery") != "" {
+		d.parser.Parse(true)
+	}
+
+	return c.JSON(http.StatusOK, echo.Map{"data": "Ok"})
 }
