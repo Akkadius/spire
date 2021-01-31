@@ -1,8 +1,8 @@
 package database
 
 import (
-	"github.com/Akkadius/spire/models"
 	"fmt"
+	"github.com/Akkadius/spire/models"
 	"github.com/jinzhu/gorm"
 	"github.com/labstack/echo/v4"
 	"strconv"
@@ -11,11 +11,12 @@ import (
 )
 
 const (
-	equalDelimiter  = "__"
-	likeDelimiter   = "_like_"
-	selectDelimiter = "."
-	whereDelimiter  = "."
-	linksDelimiter  = ","
+	equalDelimiter   = "__"
+	likeDelimiter    = "_like_"
+	selectDelimiter  = "."
+	whereDelimiter   = "."
+	linksDelimiter   = ","
+	orderByDelimiter = "."
 )
 
 const (
@@ -106,7 +107,11 @@ func (d *DatabaseResolver) QueryContext(model models.Modelable, c echo.Context) 
 			orderDirection = orderDirectionParam
 		}
 
-		query = query.Order(fmt.Sprintf("%v %v", orderByParam, orderDirection))
+		// parse where [value = x]
+		orders := strings.Split(orderByParam, orderByDelimiter)
+		for _, order := range orders {
+			query = query.Order(fmt.Sprintf("%v %v", order, orderDirection))
+		}
 	}
 
 	// QueryContext limit
