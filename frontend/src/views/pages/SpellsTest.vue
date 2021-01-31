@@ -81,10 +81,10 @@ export default {
   },
 
   mounted() {
-    this.listSpells()
+    this.listZones()
   },
   methods: {
-    listSpells: function () {
+    listZones: function () {
       const api = (new SpellsNewApi(SpireApiClient.getOpenApiConfig()))
 
       let filters = [

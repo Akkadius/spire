@@ -68,6 +68,11 @@ export default new Router({
           meta: {title: "Spells Test"},
         },
         {
+          path: '/zones',
+          component: () => import('./views/pages/Zones.vue'),
+          meta: {title: "Zones"},
+        },
+        {
           path: '/connections',
           component: () => import('./views/pages/Connections.vue'),
           meta: {title: "Manage Database Connections"},
