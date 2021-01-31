@@ -73,6 +73,11 @@ export default new Router({
           meta: {title: "Zones"},
         },
         {
+          path: '/zone/:zoneId',
+          component: () => import('./views/pages/Zone.vue'),
+          meta: {title: "Zone"},
+        },
+        {
           path: '/connections',
           component: () => import('./views/pages/Connections.vue'),
           meta: {title: "Manage Database Connections"},

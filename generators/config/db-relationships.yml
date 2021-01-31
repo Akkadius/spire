@@ -81,7 +81,7 @@ npc_types:
   - 1-* merchant_id->merchantlist:merchantid
   - 1-* npc_faction_id->npc_faction:id
   - 1-* npc_spells_id->npc_spells:id
-  - 1-* id->spawnentry:npcID
+#  - 1-* id->spawnentry:npcID
   - 1-* emoteid->npc_emotes:emoteid
   - 1-1 armortint_id->npc_types_tint:id
 pets:
@@ -94,9 +94,13 @@ raid_details:
 rule_sets:
   - 1-* ruleset_id->rule_values:ruleset_id
 spawnentry:
+#  - 1-1 spawngroupID->spawngroup:id
+  - 1-1 npcID->npc_types:id
+#spawngroup:
+#  - 1-1 id->spawn2:spawngroupID
+spawn2:
   - 1-1 spawngroupID->spawngroup:id
-spawngroup:
-  - 1-1 id->spawn2:spawngroupID
+  - 1-* spawngroupID->spawnentry:spawngroupID
 spells_new:
   - 1-1 id->auras:spell_id
   - 1-* id->damageshieldtypes:spellid

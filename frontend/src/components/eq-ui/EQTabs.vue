@@ -2,8 +2,9 @@
     <div>
         <nav class='eq-tab-box-fancy'>
             <ul>
-                <li v-for="tab in tabs" :class="{ 'eq-tab-open': tab.isActive }"  @click="selectTab(tab)">
-                    <a :href="tab.href" @click="selectTab(tab)" style="color:white">{{ tab.name }}</a>
+                <li v-for="tab in tabs" :class="{ 'eq-tab-open': tab.isActive }" @click="selectTab(tab)">
+<!--                    <a :href="tab.href" @click="selectTab(tab)" style="color:white">{{ tab.name }}</a>-->
+                    <a @click="selectTab(tab)" style="color:white">{{ tab.name }}</a>
                 </li>
             </ul>
         </nav>

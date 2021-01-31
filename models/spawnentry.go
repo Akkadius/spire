@@ -1,11 +1,11 @@
 package models
 
 type Spawnentry struct {
-	SpawngroupID           int         `json:"spawngroup_id" gorm:"Column:spawngroupID"`
-	NpcID                  int         `json:"npc_id" gorm:"Column:npcID"`
-	Chance                 int16       `json:"chance" gorm:"Column:chance"`
-	ConditionValueFilter   int32       `json:"condition_value_filter" gorm:"Column:condition_value_filter"`
-	Spawngroup             *Spawngroup `json:"spawngroup,omitempty" gorm:"foreignKey:spawngroupID;references:id"`
+	SpawngroupID           int      `json:"spawngroup_id" gorm:"Column:spawngroupID"`
+	NpcID                  int      `json:"npc_id" gorm:"Column:npcID"`
+	Chance                 int16    `json:"chance" gorm:"Column:chance"`
+	ConditionValueFilter   int32    `json:"condition_value_filter" gorm:"Column:condition_value_filter"`
+	NpcType                *NpcType `json:"npc_type,omitempty" gorm:"foreignKey:npcID;references:id"`
 }
 
 func (Spawnentry) TableName() string {
@@ -14,8 +14,15 @@ func (Spawnentry) TableName() string {
 
 func (Spawnentry) Relationships() []string {
     return []string{
-		"Spawngroup",
-		"Spawngroup.Spawn2",
+		"NpcType",
+		"NpcType.AlternateCurrency",
+		"NpcType.Merchantlists",
+		"NpcType.NpcEmotes",
+		"NpcType.NpcFactions",
+		"NpcType.NpcFactions.NpcFactionEntries",
+		"NpcType.NpcSpells",
+		"NpcType.NpcSpells.NpcSpellsEntries",
+		"NpcType.NpcTypesTint",
 	}
 }
 

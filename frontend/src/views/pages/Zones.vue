@@ -8,11 +8,13 @@
 
 
           <div class="row">
-            <div :class="(selectedZone ? 'col-6' : 'col-12')">
+            <div class="col-12">
               <eq-window class="mt-5" title="Zones">
-                <div class="row" style="justify-content: center" v-if="zones">
 
-                  <div class='eq-window-nested-blue' style="width: 100%">
+                <app-loader :is-loading="!loaded" padding="8"/>
+
+                <div class="row" style="justify-content: center" v-if="zones">
+                  <div class='eq-window-nested-blue' style="width: 100%" v-if="loaded">
                     <div class="ml-2 mt-1 pb-1">Showing ({{ resultCount }}) results</div>
 
                     <input type="text"
@@ -33,14 +35,14 @@
 
                         <th style="width: 50px">Zone ID</th>
                         <th style="width: 50px">Version</th>
-                        <th style="text-align: center" v-if="!selectedZone">Bind</th>
-                        <th style="text-align: center" v-if="!selectedZone">Combat</th>
-                        <th style="text-align: center" v-if="!selectedZone">Levitate</th>
-                        <th style="text-align: center" v-if="!selectedZone">Outdoor</th>
+                        <th style="text-align: center">Bind</th>
+                        <th style="text-align: center">Combat</th>
+                        <th style="text-align: center">Levitate</th>
+                        <th style="text-align: center">Outdoor</th>
                       </tr>
                       </thead>
                       <tbody>
-                      <tr v-for="(zone, index) in filteredZones" :key="index" @click="clickZoneRow(zone)">
+                      <tr v-for="(zone, index) in filteredZones" :key="zone.id" @click="clickZoneRow(zone)">
 
                         <td style="text-align: center"><img :src="getExpansionIcon(zone.expansion)"></td>
                         <td style="text-align: left">{{ getExpansionName(zone.expansion) }}</td>
@@ -50,16 +52,16 @@
 
                         <td style="text-align: center">{{ zone.zoneidnumber }}</td>
                         <td style="text-align: center">{{ zone.version }}</td>
-                        <td style="text-align: center" v-if="!selectedZone">
+                        <td style="text-align: center">
                           <eq-checkbox :is-checked="(zone.canbind > 0)"/>
                         </td>
-                        <td style="text-align: center" v-if="!selectedZone">
+                        <td style="text-align: center">
                           <eq-checkbox :is-checked="(zone.cancombat > 0)"/>
                         </td>
-                        <td style="text-align: center" v-if="!selectedZone">
+                        <td style="text-align: center">
                           <eq-checkbox :is-checked="(zone.canlevitate > 0)"/>
                         </td>
-                        <td style="text-align: center" v-if="!selectedZone">
+                        <td style="text-align: center">
                           <eq-checkbox :is-checked="(zone.castoutdoor > 0)"/>
                         </td>
                       </tr>
@@ -68,16 +70,6 @@
                   </div>
                 </div>
 
-              </eq-window>
-            </div>
-            <div class="col-6" v-if="selectedZone">
-              <eq-window class="mt-5" :title="selectedZone.long_name ">
-
-                <h3 class="eq-header">{{ selectedZone.long_name }}</h3>
-
-                <zone-form :model="selectedZone"></zone-form>
-
-                <pre style="width: 100%">{{ selectedZone }}</pre>
               </eq-window>
             </div>
           </div>
@@ -100,9 +92,13 @@ import Expansions       from "@/app/utility/expansions";
 import EqCheckbox       from "@/components/eq-ui/EQCheckbox.vue";
 import ZoneForm         from "@/components/forms/ZoneForm.vue";
 import {debounce}       from "@/app/utility/debounce.js";
+import EqTabs           from "@/components/eq-ui/EQTabs.vue";
+import EqTab            from "@/components/eq-ui/EQTab.vue";
 
 export default {
   components: {
+    EqTab,
+    EqTabs,
     ZoneForm,
     EqCheckbox,
     EqWindow,
@@ -117,10 +113,11 @@ export default {
       beginRange: 10000,
       endRange: 100000,
 
-      selectedZone: null,
-
       // route watcher
       routeWatcher: null,
+
+      // loaded state
+      loaded: false,
     }
   },
   async activated() {
@@ -138,6 +135,8 @@ export default {
   },
   methods: {
     async init() {
+      this.loaded = false
+
       await this.listZones()
       this.loadState()
     },
@@ -203,9 +202,12 @@ export default {
       return Expansions.getExpansionName(expansion - 1) // zone table is offset by 1
     },
     clickZoneRow(zone) {
-      console.log("Click zone row")
-      console.log(zone.short_name)
-      this.selectedZone = zone
+      this.$router.push(
+        {
+          path: '/zone/' + zone.id
+        }
+      ).catch(() => {
+      })
     },
     listZones: async function () {
       const api = (new ZoneApi(SpireApiClient.getOpenApiConfig()))
@@ -226,6 +228,8 @@ export default {
         this.zones         = result.data
         this.filteredZones = result.data
       }
+
+      this.loaded = true
     }
   }
 }
