@@ -7,66 +7,80 @@
         <div class="panel panel-default">
 
 
-          <eq-window class="mt-5" title="Zones">
-            <div class="row" style="justify-content: center" v-if="zones">
+          <div class="row">
+            <div :class="(selectedZone ? 'col-6' : 'col-12')">
+              <eq-window class="mt-5" title="Zones">
+                <div class="row" style="justify-content: center" v-if="zones">
 
-              <div class='eq-window-nested-blue' style="width: 100%">
-                <div class="ml-2 mt-1 pb-1">Showing ({{ resultCount }}) results</div>
+                  <div class='eq-window-nested-blue' style="width: 100%">
+                    <div class="ml-2 mt-1 pb-1">Showing ({{ resultCount }}) results</div>
 
-                <input type="text"
-                       class="form-control"
-                       placeholder="Zone filter"
-                       v-model="zoneSearchText"
-                       v-on:keyup="setState">
+                    <input type="text"
+                           class="form-control"
+                           placeholder="Zone filter"
+                           v-model="zoneSearchText"
+                           v-on:keyup="setStateDebounce">
 
-                <table id="zonetable" class="eq-table eq-highlight-rows" style="display: table; font-size: 14px; ">
-                  <thead>
-                  <tr>
+                    <table id="zonetable" class="eq-table eq-highlight-rows" style="display: table; font-size: 14px; ">
+                      <thead>
+                      <tr>
 
-                    <th style="width: 60px; white-space: nowrap;"></th>
-                    <th style="width: 200px; white-space: nowrap;">Expansion</th>
-                    <th style="width: 100px; white-space: nowrap;">Short Name</th>
+                        <th style="width: 60px; white-space: nowrap;"></th>
+                        <th style="width: 200px; white-space: nowrap;">Expansion</th>
+                        <th style="width: 100px; white-space: nowrap;">Short Name</th>
 
-                    <th style="width: 350px">Long Name</th>
+                        <th style="width: 350px">Long Name</th>
 
-                    <th style="width: 50px">Zone ID</th>
-                    <th style="width: 50px">Version</th>
-                    <th style="text-align: center">Bind</th>
-                    <th style="text-align: center">Combat</th>
-                    <th style="text-align: center">Levitate</th>
-                    <th style="text-align: center">Outdoor</th>
-                  </tr>
-                  </thead>
-                  <tbody>
-                  <tr v-for="(zone, index) in filteredZones" :key="index" @click="clickZoneRow(zone)">
+                        <th style="width: 50px">Zone ID</th>
+                        <th style="width: 50px">Version</th>
+                        <th style="text-align: center" v-if="!selectedZone">Bind</th>
+                        <th style="text-align: center" v-if="!selectedZone">Combat</th>
+                        <th style="text-align: center" v-if="!selectedZone">Levitate</th>
+                        <th style="text-align: center" v-if="!selectedZone">Outdoor</th>
+                      </tr>
+                      </thead>
+                      <tbody>
+                      <tr v-for="(zone, index) in filteredZones" :key="index" @click="clickZoneRow(zone)">
 
-                    <td style="text-align: center"><img :src="getExpansionIcon(zone.expansion)"></td>
-                    <td style="text-align: left">{{ getExpansionName(zone.expansion) }}</td>
-                    <td style="text-align: right">{{ zone.short_name }}</td>
+                        <td style="text-align: center"><img :src="getExpansionIcon(zone.expansion)"></td>
+                        <td style="text-align: left">{{ getExpansionName(zone.expansion) }}</td>
+                        <td style="text-align: right">{{ zone.short_name }}</td>
 
-                    <td>{{ zone.long_name }}</td>
+                        <td>{{ zone.long_name }}</td>
 
-                    <td style="text-align: center">{{ zone.zoneidnumber }}</td>
-                    <td style="text-align: center">{{ zone.version }}</td>
-                    <td style="text-align: center">
-                      <eq-checkbox :is-checked="(zone.canbind > 0)"/>
-                    </td>
-                    <td style="text-align: center">
-                      <eq-checkbox :is-checked="(zone.cancombat > 0)"/>
-                    </td>
-                    <td style="text-align: center">
-                      <eq-checkbox :is-checked="(zone.canlevitate > 0)"/>
-                    </td>
-                    <td style="text-align: center">
-                      <eq-checkbox :is-checked="(zone.castoutdoor > 0)"/>
-                    </td>
-                  </tr>
-                  </tbody>
-                </table>
-              </div>
+                        <td style="text-align: center">{{ zone.zoneidnumber }}</td>
+                        <td style="text-align: center">{{ zone.version }}</td>
+                        <td style="text-align: center" v-if="!selectedZone">
+                          <eq-checkbox :is-checked="(zone.canbind > 0)"/>
+                        </td>
+                        <td style="text-align: center" v-if="!selectedZone">
+                          <eq-checkbox :is-checked="(zone.cancombat > 0)"/>
+                        </td>
+                        <td style="text-align: center" v-if="!selectedZone">
+                          <eq-checkbox :is-checked="(zone.canlevitate > 0)"/>
+                        </td>
+                        <td style="text-align: center" v-if="!selectedZone">
+                          <eq-checkbox :is-checked="(zone.castoutdoor > 0)"/>
+                        </td>
+                      </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+
+              </eq-window>
             </div>
+            <div class="col-6" v-if="selectedZone">
+              <eq-window class="mt-5" :title="selectedZone.long_name ">
 
-          </eq-window>
+                <h3 class="eq-header">{{ selectedZone.long_name }}</h3>
+
+                <zone-form :model="selectedZone"></zone-form>
+
+                <pre style="width: 100%">{{ selectedZone }}</pre>
+              </eq-window>
+            </div>
+          </div>
 
 
         </div>
@@ -84,9 +98,12 @@ import {SpireApiClient} from "@/app/api/spire-api-client";
 import * as util        from "util";
 import Expansions       from "@/app/utility/expansions";
 import EqCheckbox       from "@/components/eq-ui/EQCheckbox.vue";
+import ZoneForm         from "@/components/forms/ZoneForm.vue";
+import {debounce}       from "@/app/utility/debounce.js";
 
 export default {
   components: {
+    ZoneForm,
     EqCheckbox,
     EqWindow,
   },
@@ -99,6 +116,8 @@ export default {
       limit: 10000,
       beginRange: 10000,
       endRange: 100000,
+
+      selectedZone: null,
 
       // route watcher
       routeWatcher: null,
@@ -123,8 +142,14 @@ export default {
       this.loadState()
     },
 
+    setStateDebounce: debounce(function () {
+      this.setState()
+    }, 300),
+
     // let querystring updates drive state change
     setState() {
+      console.log("triggering setState()")
+
       let query = {}
       if (this.zoneSearchText) {
         query.q = this.zoneSearchText
@@ -180,6 +205,7 @@ export default {
     clickZoneRow(zone) {
       console.log("Click zone row")
       console.log(zone.short_name)
+      this.selectedZone = zone
     },
     listZones: async function () {
       const api = (new ZoneApi(SpireApiClient.getOpenApiConfig()))
