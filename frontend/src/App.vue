@@ -49,6 +49,8 @@ body {
 
   background-position:   center center;
   background-size:       cover;
+  background-repeat:     no-repeat;
+  background-attachment: fixed;
   background-blend-mode: normal, saturation, normal;
   --image:               url(~@/assets/img/champions-of-norrath-wallpaper.jpg);
   --image2:              url(~@/assets/img/champions-of-norrath-wallpaper.jpg);
