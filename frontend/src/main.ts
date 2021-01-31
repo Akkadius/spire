@@ -30,6 +30,10 @@ import "@/assets/css/highlight-js-vs2015.css";
 import VueFormGenerator from 'vue-form-generator'
 import 'vue-form-generator/dist/vfg.css'
 
+
+// Ag grid enterprise
+import 'ag-grid-enterprise';
+
 Vue.use(BootstrapVue)
 
 Vue.use(VueIziToast)

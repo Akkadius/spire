@@ -1,7 +1,7 @@
 <template>
   <div class='eq-window-nested-blue' style="width: 100%; overflow-y: scroll">
 
-    <div v-if="data.length === 0" class="p-3">
+    <div v-if="data && data.length === 0" class="p-3">
       There were no entries to be shown
     </div>
 
