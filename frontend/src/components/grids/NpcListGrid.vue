@@ -1,5 +1,5 @@
 <template>
-  <div v-if="npcs">
+  <div v-if="npcRowData">
     <pre v-if="npcStatusMessage" style="width: 100%; margin: 0px"
          class="mb-2">{{ npcStatusMessage }}</pre>
     <ag-grid-vue
@@ -42,6 +42,8 @@ export default {
           filter: "agTextColumnFilter",
           floatingFilter: true
         },
+
+        enableCellChangeFlash: true,
 
         // pagination: true,
         rowSelection: "single",

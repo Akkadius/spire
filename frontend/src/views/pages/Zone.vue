@@ -22,7 +22,7 @@
 
                   <!-- NPCS -->
                   <eq-tab :name="'NPC(s) ' + (npcCount ? '(' + npcCount + ')' : '')" :selected="true">
-                    <npc-list-grid :npcs="npcs"/>
+                    <npc-list-grid :npcs="npcs" v-if="npcs"/>
                   </eq-tab>
 
                   <!-- Doors -->
@@ -145,6 +145,8 @@ export default {
       this.loadZone()
     },
     loadZone: async function () {
+
+      this.npcs = null
 
       // load zone
       const zoneApi = (new ZoneApi(SpireApiClient.getOpenApiConfig()))
