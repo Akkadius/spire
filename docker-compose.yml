@@ -104,7 +104,7 @@ services:
     build:
       context: ./containers/grafana
     ports:
-      - '3030:3000'
+      - ${IP_ADDRESS:-0.0.0.0}:3030:3000
     volumes:
       - ./data/grafana/:/var/lib/grafana
     depends_on:
