@@ -626,7 +626,6 @@ export default {
         this.sendAllAnalytics("quest_navigate_methods_" + this.languageSelection, this.methodTypeSelection)
       }
 
-
     },
     // when an event type is selected
     eventSelect: function () {

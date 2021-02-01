@@ -91,8 +91,6 @@ services:
 
   influxdb:
     image: influxdb:latest
-    ports:
-      - '8086:8086'
     volumes:
       - ./data/influxdb/:/var/lib/influxdb
     environment:
