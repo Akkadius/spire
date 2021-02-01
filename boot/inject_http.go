@@ -4,10 +4,12 @@ import (
 	"github.com/Akkadius/spire/http/controllers"
 	appmiddleware "github.com/Akkadius/spire/http/middleware"
 	"github.com/Akkadius/spire/http/routes"
+	"github.com/Akkadius/spire/models"
 	"github.com/google/wire"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 	"net/http"
+	"time"
 )
 
 var httpSet = wire.NewSet(
@@ -64,9 +66,9 @@ func NewRouter(
 		// controller groups
 		[]*routes.ControllerGroup{
 			routes.NewControllerGroup("/auth/", cg.authControllers, []echo.MiddlewareFunc{}...),
-			routes.NewControllerGroup("/api/v1/", cg.v1controllers, userContextMiddleware.Handle()),
-			routes.NewControllerGroup("/api/v1/", cg.v1controllersNoAuth, middleware.GzipWithConfig(middleware.GzipConfig{Level: 1})),
-			routes.NewControllerGroup("/api/v1/", crudc.routes, userContextMiddleware.Handle()),
+			routes.NewControllerGroup("/api/v1/", cg.v1controllers, userContextMiddleware.Handle(), v1RateLimit()),
+			routes.NewControllerGroup("/api/v1/", cg.v1controllersNoAuth, middleware.GzipWithConfig(middleware.GzipConfig{Level: 1}), v1RateLimit()),
+			routes.NewControllerGroup("/api/v1/", crudc.routes, userContextMiddleware.Handle(), v1RateLimit()),
 		},
 	)
 }
@@ -94,4 +96,31 @@ func provideControllers(
 			questApiController,
 		},
 	}
+}
+
+func v1RateLimit() echo.MiddlewareFunc {
+	return appmiddleware.RateLimiterWithConfig(appmiddleware.RateLimiterConfig{
+		Skipper: func(c echo.Context) bool {
+
+			// if there is a validate user - skip the middleware
+			user, ok := c.Get("user").(models.User)
+			if ok {
+				if user.ID > 0 {
+					return true
+				}
+			}
+
+			return false
+		},
+		LimitConfig: appmiddleware.LimiterConfig{
+			Max:      40,
+			Duration: time.Second * 1,
+			Strategy: "ip",
+			Key:      "",
+		},
+		Prefix:                       "LIMIT",
+		Client:                       nil,
+		SkipRateLimiterInternalError: false,
+		OnRateLimit:                  nil,
+	})
 }
