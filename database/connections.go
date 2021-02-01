@@ -1,6 +1,7 @@
 package database
 
 import (
+	"fmt"
 	"github.com/Akkadius/spire/models"
 	"github.com/jinzhu/gorm"
 )
@@ -32,13 +33,27 @@ var spireTables = []models.Modelable{
 	&models.User{},
 	&models.UserServerDatabaseConnection{},
 	&models.ServerDatabaseConnection{},
+	&models.AnalyticEvent{},
+	&models.AnalyticEventCount{},
 }
 
 func (c Connections) SpireMigrate(drop bool) {
 	for _, table := range spireTables {
 		if drop {
+			fmt.Printf("Dropping table [%v]\n", table.TableName())
 			c.SpireDb().DropTable(table)
 		}
+		fmt.Printf("Migrating table [%v]\n", table.TableName())
 		c.SpireDb().AutoMigrate(table)
+
+		indexes, ok := table.(models.Indexable)
+		if ok {
+			fmt.Printf("Running indexes for [%v]\n", table.TableName())
+
+			for indexName, indexKeys := range indexes.Indexes() {
+				c.SpireDb().Model(table).AddIndex(indexName, indexKeys...)
+				fmt.Printf("Adding index for [%v] index [%v] keys %v\n", table.TableName(), indexName, indexKeys)
+			}
+		}
 	}
 }

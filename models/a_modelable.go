@@ -5,3 +5,7 @@ type Modelable interface {
 	TableName() string
 	Connection() string
 }
+
+type Indexable interface {
+	Indexes() map[string][]string
+}
