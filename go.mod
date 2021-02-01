@@ -5,6 +5,7 @@ go 1.12
 require (
 	github.com/Jeffail/gabs v1.4.0
 	github.com/alecthomas/template v0.0.0-20190718012654-fb15b899a751
+	github.com/aws/aws-sdk-go v1.19.0
 	github.com/danilopolani/gocialite v1.0.2
 	github.com/davecgh/go-spew v1.1.1
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible
@@ -22,6 +23,7 @@ require (
 	github.com/gorilla/mux v1.8.0
 	github.com/gregjones/httpcache v0.0.0-20190611155906-901d90724c79
 	github.com/iancoleman/strcase v0.1.0
+	github.com/influxdata/influxdb-client-go/v2 v2.2.2
 	github.com/jinzhu/gorm v1.9.16
 	github.com/jinzhu/now v1.1.1 // indirect
 	github.com/joho/godotenv v1.3.0
@@ -47,7 +49,6 @@ require (
 	golang.org/x/tools v0.0.0-20191205060818-73c7173a9f7d // indirect
 	golang.org/x/xerrors v0.0.0-20200804184101-5ec99f83aff1 // indirect
 	gopkg.in/oleiade/reflections.v1 v1.0.0 // indirect
-	gopkg.in/yaml.v2 v2.2.7 // indirect
 	gopkg.in/yaml.v3 v3.0.0-20200615113413-eeeca48fe776
 	willnorris.com/go/imageproxy v0.10.0
 )

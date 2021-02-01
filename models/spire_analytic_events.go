@@ -5,7 +5,7 @@ import (
 )
 
 type AnalyticEvent struct {
-	ID         uint      `json:"id" gorm:"type:bigint(11);primary_key;AUTO_INCREMENT"`
+	ID         uint      `json:"id" gorm:"primary_key,AUTO_INCREMENT,type:bigint(11)"`
 	EventName  string    `json:"event_name" gorm:"type:varchar(50);"`
 	EventValue string    `json:"event_value" gorm:"type:varchar(200);"`
 	RequestUri string    `json:"request_uri" gorm:"type:varchar(250);"`

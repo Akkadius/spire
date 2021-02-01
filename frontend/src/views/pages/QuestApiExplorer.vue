@@ -26,7 +26,7 @@
                     Types
                     <b-form-select
                       v-model="methodTypeSelection"
-                      @change="methodTypeSelect();"
+                      @change="formChange();"
                       :options="methodTypeOptions"/>
                   </div>
                   <div class="col-3 text-center">
@@ -40,7 +40,7 @@
                     Constants
                     <b-form-select
                       v-model="constantSelection"
-                      @change="constantSelect();"
+                      @change="formChange();"
                       :options="constantOptions"/>
                   </div>
 
@@ -142,7 +142,9 @@ sub {{ getSelectedEvent().event_identifier }} {
                       v-for="(constant, index) in api[getLanguageKey()].constants[constantSelection]"
                       :key="index"><a
                       @click="loadConstantExamples(formatConstant(constant))" href="javascript:void(0);"
-                      v-if="linkedExamples[languageSelection][formatConstant(constant)]">{{ formatConstant(constant) }}</a><span
+                      v-if="linkedExamples[languageSelection][formatConstant(constant)]">{{
+                        formatConstant(constant)
+                      }}</a><span
                       v-if="!linkedExamples[languageSelection][formatConstant(constant)]">{{
                         formatConstant(constant)
                       }}</span></div></pre>
@@ -431,7 +433,6 @@ export default {
 
     // when language is selected
     languageSelect: function () {
-
       this.constantSelection = null
 
       // methods
@@ -502,10 +503,14 @@ export default {
     // when method is clicked; loads editor examples
     loadExamples: function (method) {
       this.displayExamples = this.linkedExamples[this.languageSelection][method + '(']
+
+      this.sendAllAnalytics("load_quest_example_" + this.languageSelection, method)
     },
     // when method is clicked; loads editor examples
     loadConstantExamples: function (search) {
       this.displayExamples = this.linkedExamples[this.languageSelection][search]
+
+      this.sendAllAnalytics("load_quest_constant_example_" + this.languageSelection, search)
     },
     editorInit: async function (slug, lineNumber) {
 
@@ -551,6 +556,7 @@ export default {
       let apiMethods         = []
       this.constantSelection = null
       this.eventSelection    = null
+      this.formChange()
 
       // used to search sources for examples
       let methodSearchTerms  = []
@@ -616,12 +622,11 @@ export default {
         this.apiMethods = apiMethods
 
         this.loadSearchExamples(methodSearchTerms)
+
+        this.sendAllAnalytics("quest_navigate_methods_" + this.languageSelection, this.methodTypeSelection)
       }
 
-      // update browser / route state
-      setTimeout(() => {
-        this.formChange(), 100
-      });
+
     },
     // when an event type is selected
     eventSelect: function () {
@@ -635,6 +640,8 @@ export default {
       setTimeout(() => {
         this.formChange(), 100
       });
+
+      this.sendAllAnalytics("quest_navigate_events_" + this.languageSelection, this.eventSelection)
     },
     // when an constant is selected
     constantSelect: function () {
@@ -644,10 +651,10 @@ export default {
       this.eventSelection      = null
       this.methodTypeSelection = null
 
-      // update browser / route state
-      setTimeout(() => {
-        this.formChange(), 100
-      });
+      // // update browser / route state
+      // setTimeout(() => {
+      //   this.formChange(), 100
+      // });
 
       if (this.constantSelection) {
         let apiConstants = this.api[this.getLanguageKey()].constants[this.constantSelection]
@@ -659,6 +666,8 @@ export default {
         })
 
         this.loadSearchExamples(searchTerms)
+
+        this.sendAllAnalytics("quest_navigate_constants_" + this.languageSelection, this.constantSelection)
       }
     },
     loadSearchExamples: function (searchTerms) {
@@ -699,6 +708,22 @@ export default {
       });
 
       this.displayExamples = []
+    },
+    sendAllAnalytics(name, value) {
+      this.sendAnalyticsEvent(name, value)
+      this.sendAnalyticsCountEvent(name, value)
+    },
+    sendAnalyticsEvent(name, value) {
+      SpireApiClient
+        .v1().post('/analytics/event', {event_name: name, event_value: value})
+        .then((response) => {
+        });
+    },
+    sendAnalyticsCountEvent(name, key) {
+      SpireApiClient
+        .v1().post('/analytics/count', {event_name: name, event_key: key})
+        .then((response) => {
+        });
     }
   }
 }

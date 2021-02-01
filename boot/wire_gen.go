@@ -14,6 +14,7 @@ import (
 	"github.com/Akkadius/spire/internal/connection"
 	"github.com/Akkadius/spire/internal/encryption"
 	"github.com/Akkadius/spire/internal/github"
+	"github.com/Akkadius/spire/internal/influx"
 	"github.com/Akkadius/spire/questapi"
 )
 
@@ -43,6 +44,8 @@ func InitializeApplication() (App, error) {
 	databaseResolver := database.NewDatabaseResolver(connections, logger, encrypter, cache)
 	authController := controllers.NewAuthController(databaseResolver, logger)
 	meController := controllers.NewMeController()
+	client := influx.NewClient()
+	analyticsController := controllers.NewAnalyticsController(logger, client, databaseResolver)
 	dbConnectionCreateService := connection.NewDbConnectionCreateService(databaseResolver, logger, encrypter)
 	dbConnectionCheckService := connection.NewDbConnectionCheckService(databaseResolver, logger, encrypter)
 	connectionsController := controllers.NewConnectionsController(databaseResolver, logger, cache, dbConnectionCreateService, dbConnectionCheckService)
@@ -51,7 +54,7 @@ func InitializeApplication() (App, error) {
 	parseService := questapi.NewParseService(logger, cache, githubSourceDownloader)
 	questExamplesGithubSourcer := questapi.NewQuestExamplesGithubSourcer(logger, cache, githubSourceDownloader)
 	questApiController := controllers.NewQuestApiController(logger, parseService, questExamplesGithubSourcer)
-	bootAppControllerGroups := provideControllers(helloWorldController, authController, meController, connectionsController, docsController, questApiController)
+	bootAppControllerGroups := provideControllers(helloWorldController, authController, meController, analyticsController, connectionsController, docsController, questApiController)
 	aaAbilityController := crudcontrollers.NewAaAbilityController(databaseResolver, logger)
 	aaRankController := crudcontrollers.NewAaRankController(databaseResolver, logger)
 	accountController := crudcontrollers.NewAccountController(databaseResolver, logger)
@@ -140,7 +143,8 @@ func InitializeApplication() (App, error) {
 	zonePointController := crudcontrollers.NewZonePointController(databaseResolver, logger)
 	bootCrudControllers := provideCrudControllers(aaAbilityController, aaRankController, accountController, adventureDetailController, adventureTemplateController, adventureTemplateEntryController, adventureTemplateEntryFlavorController, alternateCurrencyController, blockedSpellController, bugController, bugReportController, charCreatePointAllocationController, characterAlternateAbilityController, characterAuraController, characterBandolierController, characterBindController, characterCorpseController, characterCurrencyController, characterDatumController, characterDisciplineController, characterInspectMessageController, characterItemRecastController, characterLanguageController, characterLeadershipAbilityController, characterMaterialController, characterMemmedSpellController, characterPotionbeltController, characterSkillController, characterSpellController, contentFlagController, dataBucketController, dbStrController, doorController, eventlogController, factionListController, factionListModController, fishingController, forageController, globalLootController, graveyardController, gridController, groundSpawnController, guildController, hackerController, instanceListController, instanceListPlayerController, itemController, ldonTrapEntryController, ldonTrapTemplateController, loginAccountController, loginApiTokenController, loginServerAdminController, loginServerListTypeController, loginWorldServerController, lootdropController, loottableController, nameFilterController, npcEmoteController, npcFactionController, npcSpellController, npcSpellsEffectController, npcSpellsEffectsEntryController, npcSpellsEntryController, npcTypeController, npcTypesTintController, objectController, playerTitlesetController, reportController, respawnTimeController, saylinkController, spawn2Controller, spawnConditionController, spawnConditionValueController, spawnEventController, spawngroupController, spellsNewController, startingItemController, taskController, tasksetController, titleController, tradeskillRecipeController, tradeskillRecipeEntryController, trapController, tributeController, zoneController, zonePointController)
 	userContextMiddleware := middleware.NewUserContextMiddleware(databaseResolver, cache, logger)
-	router := NewRouter(bootAppControllerGroups, bootCrudControllers, userContextMiddleware)
+	requestLogMiddleware := middleware.NewRequestLogMiddleware(client)
+	router := NewRouter(bootAppControllerGroups, bootCrudControllers, userContextMiddleware, requestLogMiddleware)
 	httpServeCommand := cmd.NewHttpServeCommand(logger, router)
 	routesListCommand := cmd.NewRoutesListCommand(router, logger)
 	generateConfigurationCommand := cmd.NewGenerateConfigurationCommand(databaseResolver, logger)

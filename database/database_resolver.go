@@ -93,7 +93,7 @@ func (d *DatabaseResolver) ResolveUserEqemuConnection(model models.Modelable, us
 
 		// If existing connection exists, return it
 		if _, ok := d.remoteDatabases[connectionType][connectionId]; ok {
-			fmt.Println("Returning cached lookup")
+			//fmt.Println("Returning cached lookup")
 			err := d.remoteDatabases[connectionType][connectionId].DB().Ping()
 			if err != nil {
 				d.logger.Printf("Debug: MySQL ping err [%v]", err)
