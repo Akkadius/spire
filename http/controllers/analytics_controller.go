@@ -80,19 +80,18 @@ func (a *AnalyticsController) count(c echo.Context) error {
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}
 
-	eventFind := models.AnalyticEventCount{
-		EventName:  r.EventName,
-		EventKey:   r.EventKey,
+	event := models.AnalyticEventCount{
+		EventName: r.EventName,
+		EventKey:  r.EventKey,
 	}
 
-	// first event
-	event := eventFind
-	event.Count = 1
-
-	a.db.GetSpireDb().Where(event).FirstOrCreate(&event)
-
+	a.db.GetSpireDb().Where(event).First(&event)
 	if event.ID > 0 {
-		a.db.GetSpireDb().Model(&event).Where(event).Update("count", event.Count + 1)
+		a.db.GetSpireDb().Model(&event).Where(event).Update("count", event.Count+1)
+	}
+
+	if event.ID == 0 {
+		a.db.GetSpireDb().Model(&event).Create(&event)
 	}
 
 	// result
