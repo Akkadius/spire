@@ -90,6 +90,7 @@ services:
   #############################################
 
   influxdb:
+    restart: unless-stopped
     image: influxdb:latest
     volumes:
       - ./data/influxdb/:/var/lib/influxdb
@@ -101,6 +102,7 @@ services:
     networks:
       - backend
   grafana:
+    restart: unless-stopped
     build:
       context: ./containers/grafana
     ports:
