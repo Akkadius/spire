@@ -27,8 +27,48 @@ func (c *ParseService) parsePerlMethods(contents string, perlMethods map[string]
 			methodFull := strings.TrimSpace(split[1])
 			returnType := ""
 
+			// has the entire line for the method parse at first
+			methodLine := methodFull
+
+			// comments
+			commentSplit := strings.Split(methodFull, "//")
+			comments := ""
+			categories := []string{}
+			if len(commentSplit) > 1 {
+				comments = strings.TrimSpace(commentSplit[1])
+
+				// entire line without the comments
+				methodLine = strings.TrimSpace(commentSplit[0])
+
+				// parse annotations individually
+				// supports other annotations easily if more are added
+				annotationSplit := strings.Split(comments, "@")
+				if len(annotationSplit) > 1 {
+					for _, s := range annotationSplit {
+
+						// @categories [cat1, cat2, cat3]
+						categoriesAnnotation := strings.Split(s, "categories")
+						if len(categoriesAnnotation) > 1 {
+
+							// multiple categories
+							categorySplit := strings.Split(categoriesAnnotation[1], ",")
+							if len(categorySplit) > 0 {
+
+								// trim spaces
+								for i := range categorySplit {
+									categorySplit[i] = strings.TrimSpace(categorySplit[i])
+								}
+
+								categories = categorySplit
+							}
+						}
+					}
+				}
+
+			}
+
 			// params
-			paramSplit := strings.Split(methodFull, "(")
+			paramSplit := strings.Split(methodLine, "(")
 			params := strings.ReplaceAll(paramSplit[1], ")", "")
 			p := strings.Split(strings.TrimSpace(params), ",")
 			for i := range p {
@@ -47,7 +87,7 @@ func (c *ParseService) parsePerlMethods(contents string, perlMethods map[string]
 					Params:     p,
 					MethodType: methodType,
 					ReturnType: returnType,
-					Categories: nil,
+					Categories: categories,
 				},
 			)
 		}
