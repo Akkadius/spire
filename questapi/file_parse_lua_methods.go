@@ -59,6 +59,10 @@ func (c *ParseService) parseLuaMethods(contents string, fileName string, luaMeth
 	}
 
 	for _, l := range strings.Split(contents, "\n") {
+		if strings.Contains(l, "const char *Lua") {
+			l = strings.ReplaceAll(l, "const char *Lua", "char Lua");
+		}
+
 		lineSplit := strings.Split(strings.TrimSpace(l), " ")
 
 		// int Lua_Inventory::CalcSlotFromMaterial(int material)
