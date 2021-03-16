@@ -99,7 +99,7 @@ watch-fe: ##@dev-watch Runs frontend watcher
 	cd frontend && npm run dev
 
 watch-be: ##@dev-watch Runs backend watcher
-	docker-compose exec workspace bash -c "air"
+	docker-compose exec workspace bash -c "air -c .air.toml"
 
 #----------------------
 # seed
