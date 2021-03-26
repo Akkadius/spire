@@ -515,6 +515,7 @@ export default {
     },
     // when method is clicked; loads editor examples
     loadExamples: function (method) {
+      this.closeExample()
       if (this.linkedExamples[this.languageSelection][method + '(']) {
         this.displayExamples = this.linkedExamples[this.languageSelection][method + '(']
 
