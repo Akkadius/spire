@@ -92,16 +92,27 @@ export default {
       let m = document.getElementsByClassName("method-scroll-" + this.$route.query.m);
       if (m && m[0]) {
         // m[0].scrollIntoView();
-        window.scrollTo({ top: m[0].offsetTop+70, behavior: 'smooth'});
+        window.scrollTo({ top: m[0].offsetTop + 70, behavior: "smooth" });
       }
     },
-    async copyToClip(s) {
-      await navigator.clipboard.writeText(s);
+    copyToClip(s) {
+      let myTemporaryInputElement   = document.createElement("input");
+      myTemporaryInputElement.type  = "text";
+      myTemporaryInputElement.value = s;
+
+      document.body.appendChild(myTemporaryInputElement);
+
+      myTemporaryInputElement.select();
+      document.execCommand("Copy");
+
+      document.body.removeChild(myTemporaryInputElement);
+
       this.$bvToast.toast(s, {
         title: "Copied to Clipboard!",
         autoHideDelay: 2000,
         solid: true
       })
+
     },
     buildFullMethod(method) {
       return util.format(
