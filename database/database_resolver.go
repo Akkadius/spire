@@ -34,7 +34,7 @@ func NewDatabaseResolver(
 	crypt *encryption.Encrypter,
 	cache *gocache.Cache,
 ) *DatabaseResolver {
-	return &DatabaseResolver{
+	i := &DatabaseResolver{
 		connections:           connections,
 		remoteDatabases:       map[string]map[uint]*gorm.DB{},
 		logger:                logger,
@@ -42,6 +42,12 @@ func NewDatabaseResolver(
 		cache:                 cache,
 		contentConnectionName: os.Getenv("MYSQL_EQEMU_CONTENT_DB_CONNECTION_NAME"),
 	}
+
+	// initialize ahead of time
+	i.remoteDatabases["default"] = map[uint]*gorm.DB{}
+	i.remoteDatabases["eqemu_content"] = map[uint]*gorm.DB{}
+
+	return i
 }
 
 func (d *DatabaseResolver) Get(model models.Modelable, c echo.Context) *gorm.DB {
