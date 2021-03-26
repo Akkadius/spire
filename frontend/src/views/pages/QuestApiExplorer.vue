@@ -155,7 +155,7 @@ sub {{ getSelectedEvent().event_identifier }} {
                 <div class="row mt-2 pl-2">
                   <div class="col-6 example-preview" v-if="displayExamples.length > 0">
 
-                    <eq-window title="Examples">
+                    <eq-window :title="'Examples (' + displayExamples.slice(0,50).length + ')'">
 
                       <button class="btn btn-white btn-sm" @click="closeExample"
                               style="right: 30px; top: 10px; position: absolute">X
@@ -165,9 +165,10 @@ sub {{ getSelectedEvent().event_identifier }} {
 
                         <div v-for="(example, index) in displayExamples.slice(0,50)"
                              :key="example.file_name + index + example.line_number">
-                          <div class="row">
+                          <div class="row ">
                             <div class="col">
                               <a href="javascript:;"
+                                 class="ml-5"
                                  @click="navigateTo('https://github.com/' + example.org + '/' + example.repo + '/blob/' + example.branch + '/' + encodeURIComponent(example.file_name) + '#L' + example.line_number, example.file_name)"
                                  style="color: #b9b194"
                               >
@@ -181,7 +182,7 @@ sub {{ getSelectedEvent().event_identifier }} {
                                 <button
                                   @click="navigateTo('https://github.com/' + example.org + '/' + example.repo)"
                                   style="line-height: 1.40;"
-                                  class="btn btn-primary btn-sm mr-2">
+                                  class="btn btn-primary btn-sm mr-2 ">
                                   <i class="fe fe-github"></i>
                                   {{ example.org + " / " + example.repo }}
                                 </button>
@@ -197,8 +198,8 @@ sub {{ getSelectedEvent().event_identifier }} {
                             theme="terminal"
                             width="100%"
                             :ref="slug(example.file_name)"
-                            height="250px"
-                            class="mt-3 mb-3"
+                            height="275px"
+                            class="mt-3 mb-3 ml-5 pr-6"
                           ></editor>
 
                         </div>
@@ -514,7 +515,7 @@ export default {
     },
     editorInit: async function (slug, lineNumber) {
 
-      this.$refs[slug][0].editor.setFontSize(14)
+      this.$refs[slug][0].editor.setFontSize(13)
 
       setTimeout(() => {
         // console.log(slug)
