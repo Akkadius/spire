@@ -515,9 +515,11 @@ export default {
     },
     // when method is clicked; loads editor examples
     loadExamples: function (method) {
-      this.displayExamples = this.linkedExamples[this.languageSelection][method + '(']
+      if (this.linkedExamples[this.languageSelection][method + '(']) {
+        this.displayExamples = this.linkedExamples[this.languageSelection][method + '(']
 
-      this.sendAllAnalytics("load_quest_example_" + this.languageSelection, method)
+        this.sendAllAnalytics("load_quest_example_" + this.languageSelection, method)
+      }
     },
     // when method is clicked; loads editor examples
     loadConstantExamples: function (search) {
@@ -527,16 +529,17 @@ export default {
     },
     editorInit: async function (slug, lineNumber) {
 
-      this.$refs[slug][0].editor.setFontSize(13)
 
       setTimeout(() => {
         // console.log(slug)
         // console.log(this.$refs[slug][0].editor)
         // console.log(lineNumber)
 
+        // console.log(this.$refs)
+
+        this.$refs[slug][0].editor.setFontSize(13)
         this.$refs[slug][0].editor.setReadOnly(true);
-        this.$refs[slug][0].editor.scrollToLine(lineNumber, true, true, function () {
-        });
+        this.$refs[slug][0].editor.scrollToLine(lineNumber, true, true, function () {});
         this.$refs[slug][0].editor.gotoLine(lineNumber, 0, true);
 
         const Range = ace.acequire('ace/range').Range;
@@ -719,7 +722,6 @@ export default {
         this.$forceUpdate()
       });
 
-      this.displayExamples = []
     },
     sendAllAnalytics(name, value) {
       this.sendAnalyticsEvent(name, value)

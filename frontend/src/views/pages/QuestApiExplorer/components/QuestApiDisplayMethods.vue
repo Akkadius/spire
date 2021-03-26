@@ -5,7 +5,7 @@
       :key="index"
       :style="(highlightedMethod === method.method ? 'background-color: rgba(106, 76, 50, 0.5);' : '')"
       :class="'method-scroll-' + method.method"
-      @click="highlightMethod(method)">
+      @click="highlightMethod(method); loadExamples(method.method)">
 
       <div class="d-inline-block">
         <button
@@ -125,12 +125,9 @@ export default {
     highlightMethod(method) {
       this.highlightedMethod = method.method;
 
-
       let queryState = {};
       Object.assign(queryState, this.$route.query)
       queryState.m = method.method
-
-      console.log(queryState)
 
       this.$router.push(
         {
