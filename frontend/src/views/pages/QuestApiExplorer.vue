@@ -59,27 +59,29 @@
 
                     <!-- Everthing below will look a bit messy because things need -->
                     <!-- to be on the same line for proper pre formatting -->
-                    <pre
+                    <div
                       class="highlight html bg-dark hljs mb-4 code-display"
                       style="padding-left: 20px !important; padding-top: 10px !important; padding-bottom: 10px !important"
-                      v-if="apiMethods.length > 0"><div
-                      v-for="(method, index) in apiMethods"
-                      :key="index"><span v-if="method.methodPrefix" style="color:#9CDCFE">{{
-                        method.methodPrefix
-                      }}</span><span v-if="!linkedExamples[languageSelection][method.method + '(']">{{
-                        method.method
-                      }}</span><a
-                      @click="loadExamples(method.method)" href="javascript:void(0);"
-                      v-if="linkedExamples[languageSelection][method.method + '(']">{{ method.method }}</a>({{
-                        method.params.join(", ")
-                      }}); <span
-                        v-if="method.comments" style="color: #57A64A">{{ method.comments }}</span> <span
-                        style="color: #57A64A"
-                        v-if="linkedExamples[languageSelection][method.method + '('] && linkedExamples[languageSelection][method.method + '('].length > 0">{{
-                          (languageSelection === "perl" ? "#" : "--")
-                        }} {{
-                          linkedExamples[languageSelection][method.method + "("].length
-                        }} Example(s)</span></div></pre>
+                      v-if="apiMethods.length > 0">
+                      <div
+                        v-for="(method, index) in apiMethods"
+                        :key="index"><span v-if="method.methodPrefix" style="color:#9CDCFE">{{
+                          method.methodPrefix
+                        }}</span> <span v-if="!linkedExamples[languageSelection][method.method + '(']">{{
+                          method.method
+                        }}</span><a
+                        @click="loadExamples(method.method)" href="javascript:void(0);"
+                        v-if="linkedExamples[languageSelection][method.method + '(']">{{ method.method }}</a>({{
+                          method.params.join(", ")
+                        }}); <span
+                          v-if="method.comments" style="color: #57A64A">{{ method.comments }}</span> <span
+                          style="color: #57A64A"
+                          v-if="linkedExamples[languageSelection][method.method + '('] && linkedExamples[languageSelection][method.method + '('].length > 0">{{
+                            (languageSelection === "perl" ? "#" : "--")
+                          }} {{
+                            linkedExamples[languageSelection][method.method + "("].length
+                          }} Example(s)</span></div>
+                    </div>
                   </div>
 
                 </div>
@@ -237,6 +239,7 @@ import slugify               from "slugify";
 import moment                from "moment";
 import * as util             from "util";
 
+
 export default {
   components: {
     EqTab,
@@ -295,6 +298,8 @@ export default {
   deactivated() {
     // remove route watcher
     this.routeWatcher()
+
+    document.body.removeEventListener('keyup', this.close)
   },
   activated() {
     this.init()
@@ -303,19 +308,29 @@ export default {
     fromNow(time) {
       return moment(time).fromNow()
     },
+    close(e) {
+      if (e.keyCode === 27) {
+        this.closeExample()
+      }
+    },
     init() {
 
       // reset
       this.languageSelection   = null
       this.methodTypeSelection = null
+      this.methodTypeOptions   = []
       this.eventSelection      = null
+      this.eventOptions        = []
       this.constantSelection   = null
+      this.constantOptions     = []
       this.displayExamples     = []
 
       // route watcher
       this.routeWatcher = this.$watch('$route.query', () => {
         this.loadQueryParams()
       });
+
+      document.body.addEventListener('keyup', this.close)
 
       this.loaded = false
 

@@ -39,6 +39,19 @@ input[type=checkbox].eq-checkbox:checked + label {
     font-size:        13px;
 }
 
+/*div usage*/
+[class*="eq-window"] .code-display {
+    border:           2px #555555 solid !important;
+    background-color: #0b0b10 !important;
+    color:            #FFFFFF !important;
+    padding:          5px !important;
+    padding-left:     15px !important;
+    margin:           5px;
+    display:          inline-block;
+    vertical-align:   middle;
+    font-family:      SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+}
+
 [class*="eq-window"] input:hover,
 [class*="eq-window"] textarea:hover,
 [class*="eq-window"] pre:hover,
