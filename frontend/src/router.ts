@@ -84,7 +84,7 @@ export default new Router({
         },
         {
           path: '/quest-api-explorer',
-          component: () => import('./views/pages/QuestApiExplorer.vue'),
+          component: () => import('./views/pages/QuestApiExplorer/QuestApiExplorer.vue'),
           meta: {title: "Quest API Explorer"},
         },
       ]

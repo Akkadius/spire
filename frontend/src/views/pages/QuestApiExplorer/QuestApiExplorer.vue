@@ -57,53 +57,18 @@
                   <!-- Methods -->
                   <div class="col-12">
 
-                    <!-- Everthing below will look a bit messy because things need -->
-                    <!-- to be on the same line for proper pre formatting -->
                     <div
-                      class="highlight html bg-dark hljs mb-4 code-display"
-                      style="padding-left: 20px !important; padding-top: 10px !important; padding-bottom: 10px !important; white-space:nowrap"
+                      class="mb-4 code-display"
+                      style="padding-left: 10px !important; padding-top: 10px !important; padding-bottom: 10px !important; white-space:nowrap"
                       v-if="apiMethods.length > 0">
 
-                      <div v-for="(method, index) in apiMethods" :key="index">
+                      <quest-api-display-methods
+                        :language-selection="languageSelection"
+                        :linked-examples="linkedExamples"
+                        :api-methods="apiMethods"
+                        @load-quest-example="loadQuestExample"
+                      />
 
-                        <!-- Method Prefix: eg $client quest:: eq. etc. -->
-                        <div v-if="method.methodPrefix" style="color:#9CDCFE;" class="d-inline-block">
-                          {{ method.methodPrefix }}
-                        </div>
-
-                        <!-- Method signature: Display if no linked example -->
-                        <div v-if="!linkedExamples[languageSelection][method.method + '(']" class="d-inline-block">
-                          {{ method.method }}
-                        </div>
-
-                        <!-- Method signature: With linked examples -->
-                        <div class="d-inline-block">
-                          <a
-                            @click="loadExamples(method.method)" href="javascript:void(0);"
-                            class="d-inline-block"
-                            v-if="linkedExamples[languageSelection][method.method + '(']">
-                            {{ method.method }}
-                          </a>
-
-                          <!-- Show method signature eg: (uint8 exp_percentage, uint8 max_level = 0, bool ignore_mods = false) -->
-                          <div class="d-inline-block">({{ method.params.join(", ") }});</div>
-
-                          <!-- Code Comments -->
-                          <div v-if="method.comments" style="color: #57A64A" class="d-inline-block ml-3">
-                            {{ method.comments }}
-                          </div>
-
-                          <!-- Display how many examples in comments -->
-                          <div
-                            style="color: #57A64A"
-                            class="d-inline-block ml-3"
-                            v-if="linkedExamples[languageSelection][method.method + '('] && linkedExamples[languageSelection][method.method + '('].length > 0">
-                            {{ (languageSelection === "perl" ? "#" : "--") }}
-                            {{ linkedExamples[languageSelection][method.method + "("].length }} Example(s)
-                          </div>
-
-                        </div>
-                      </div>
                     </div>
                   </div>
 
@@ -251,27 +216,29 @@ sub {{ getSelectedEvent().event_identifier }} {
 </template>
 
 <script type="ts">
-import EqWindow              from "@/components/eq-ui/EQWindow.vue";
-import DebugDisplayComponent from "@/components/DebugDisplayComponent.vue";
-import {SpireApiClient}      from "@/app/api/spire-api-client";
-import axios                 from "axios";
-import EqWindowSimple        from "@/components/eq-ui/EQWindowSimple.vue";
-import EqTabs                from "@/components/eq-ui/EQTabs.vue";
-import EqTab                 from "@/components/eq-ui/EQTab.vue";
-import slugify               from "slugify";
-import moment                from "moment";
-import * as util             from "util";
+import EqWindow               from "@/components/eq-ui/EQWindow.vue";
+import DebugDisplayComponent  from "@/components/DebugDisplayComponent.vue";
+import {SpireApiClient}       from "@/app/api/spire-api-client";
+import axios                  from "axios";
+import EqWindowSimple         from "@/components/eq-ui/EQWindowSimple.vue";
+import EqTabs                 from "@/components/eq-ui/EQTabs.vue";
+import EqTab                  from "@/components/eq-ui/EQTab.vue";
+import slugify                from "slugify";
+import moment                 from "moment";
+import * as util              from "util";
+import QuestApiDisplayMethods from "@/views/pages/QuestApiExplorer/components/QuestApiDisplayMethods.vue";
 
 
 export default {
   components: {
+    QuestApiDisplayMethods,
     EqTab,
     EqTabs,
     EqWindowSimple,
     DebugDisplayComponent,
     EqWindow,
     editor: require('vue2-ace-editor'),
-    "page-header": () => import("@/views/layout/PageHeader")
+    "page-header": () => import("@/views/layout/PageHeader.vue")
   },
   data() {
     return {
@@ -322,7 +289,7 @@ export default {
     // remove route watcher
     this.routeWatcher()
 
-    document.body.removeEventListener('keyup', this.close)
+    document.body.removeEventListener('keyup', this.closeExampleKeyHandler)
   },
   activated() {
     this.init()
@@ -331,7 +298,7 @@ export default {
     fromNow(time) {
       return moment(time).fromNow()
     },
-    close(e) {
+    closeExampleKeyHandler(e) {
       if (e.keyCode === 27) {
         this.closeExample()
       }
@@ -353,7 +320,7 @@ export default {
         this.loadQueryParams()
       });
 
-      document.body.addEventListener('keyup', this.close)
+      document.body.addEventListener('keyup', this.closeExampleKeyHandler)
 
       this.loaded = false
 
@@ -415,6 +382,9 @@ export default {
       }
       if (this.constantSelection) {
         query.constant = this.constantSelection
+      }
+      if (this.$route.query.m) {
+        query.m = this.$route.query.m
       }
 
       this.$router.push(
@@ -538,6 +508,10 @@ export default {
     },
     slug: function (toSlug) {
       return slugify(toSlug.replace(/[&\/\\#, +()$~%.'":*?<>{}]/g, "-"))
+    },
+    // received from component event
+    loadQuestExample(event) {
+      this.loadExamples(event.search)
     },
     // when method is clicked; loads editor examples
     loadExamples: function (method) {
