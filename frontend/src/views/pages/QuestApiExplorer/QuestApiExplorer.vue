@@ -227,6 +227,7 @@ import slugify                from "slugify";
 import moment                 from "moment";
 import * as util              from "util";
 import QuestApiDisplayMethods from "@/views/pages/QuestApiExplorer/components/QuestApiDisplayMethods.vue";
+import Analytics              from "@/app/analytics/analytics";
 
 
 export default {
@@ -282,7 +283,8 @@ export default {
         lua: {}
       },
       // examples being displayed for current method
-      displayExamples: []
+      displayExamples: [],
+
     }
   },
   deactivated() {
@@ -314,18 +316,18 @@ export default {
       this.constantSelection   = null
       this.constantOptions     = []
       this.displayExamples     = []
+      this.loaded              = false
 
       // route watcher
       this.routeWatcher = this.$watch('$route.query', () => {
         this.loadQueryParams()
       });
 
+      // escape handler
       document.body.addEventListener('keyup', this.closeExampleKeyHandler)
 
-      this.loaded = false
-
       // load data from api
-      SpireApiClient.v1().get('/quest-api/definitions', this.database).then((response) => {
+      SpireApiClient.v1().get('/quest-api/definitions').then((response) => {
         if (response.data && response.data.data) {
           this.api    = response.data.data
           this.loaded = true
@@ -368,6 +370,8 @@ export default {
       if (!this.$route.query.lang && !this.$route.query.type) {
         this.apiMethods = []
       }
+
+      this.lastQueryParamState = this.$route.query
     },
     formChange() {
       let query = {}
@@ -540,7 +544,8 @@ export default {
 
         this.$refs[slug][0].editor.setFontSize(13)
         this.$refs[slug][0].editor.setReadOnly(true);
-        this.$refs[slug][0].editor.scrollToLine(lineNumber, true, true, function () {});
+        this.$refs[slug][0].editor.scrollToLine(lineNumber, true, true, function () {
+        });
         this.$refs[slug][0].editor.gotoLine(lineNumber, 0, true);
 
         const Range = ace.acequire('ace/range').Range;
@@ -632,7 +637,6 @@ export default {
               methodSearchTerms.push(method.method + "(")
               declaredSearchTerm[method.method] = true
             }
-
           })
         }
 
@@ -729,16 +733,10 @@ export default {
       this.sendAnalyticsCountEvent(name, value)
     },
     sendAnalyticsEvent(name, value) {
-      SpireApiClient
-        .v1().post('/analytics/event', {event_name: name, event_value: value})
-        .then((response) => {
-        });
+      Analytics.trackEvent(name, value)
     },
     sendAnalyticsCountEvent(name, key) {
-      SpireApiClient
-        .v1().post('/analytics/count', {event_name: name, event_key: key})
-        .then((response) => {
-        });
+      Analytics.trackCountsEvent(name, key)
     }
   }
 }
