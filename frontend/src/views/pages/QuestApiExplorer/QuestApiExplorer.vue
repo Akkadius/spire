@@ -285,6 +285,10 @@ export default {
       // examples being displayed for current method
       displayExamples: [],
 
+      // keep last query params so when our watcher detects state
+      // we don't trigger load methods that don't need to load when
+      // certain query param values haven't changed
+      lastQueryParamState: {},
     }
   },
   deactivated() {
@@ -357,7 +361,9 @@ export default {
       }
       if (this.$route.query.type) {
         this.methodTypeSelection = this.$route.query.type
-        this.methodTypeSelect()
+        if (this.lastQueryParamState.type !== this.$route.query.type) {
+          this.methodTypeSelect()
+        }
       }
       if (this.$route.query.event) {
         this.eventSelection = this.$route.query.event
