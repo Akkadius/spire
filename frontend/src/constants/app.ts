@@ -19,5 +19,5 @@ export const App = {
   ASSET_SPELL_ANIMATIONS: ASSET_CDN_BASE_URL_INT + 'assets/spell_animations/',
   ASSET_EXPANSION_ICON_SMALL_URL: ASSET_CDN_BASE_URL_INT + 'assets/expansion-icons-small/',
   BACKEND_BASE_URL: (process.env.VUE_APP_BACKEND_BASE_URL ? process.env.VUE_APP_BACKEND_BASE_URL : window.location.origin),
-  DEBUG: false,
+  DEBUG: window.location.host.includes("localhost"),
 }

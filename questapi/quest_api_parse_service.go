@@ -26,9 +26,8 @@ func NewParseService(
 
 type QuestApiResponse struct {
 	LastRefreshed time.Time `json:"last_refreshed"`
-
-	PerlApi `json:"perl"`
-	LuaApi  `json:"lua"`
+	PerlApi       `json:"perl"`
+	LuaApi        `json:"lua"`
 }
 
 type PerlApi struct {

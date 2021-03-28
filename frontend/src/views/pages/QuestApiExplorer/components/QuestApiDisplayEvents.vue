@@ -8,7 +8,7 @@
     ><span style="color: #57A64A">-- {{ eventSelectionFormatName() }}</span>
 function {{ getSelectedEvent().event_identifier }}(e)
 	<span style="color: #57A64A">-- Exported event variables</span>
-<span v-for="(e, index) in eventVars()" :key="index">	eq.debug("{{ e }} " .. e.{{ e }});
+<span v-for="(e, index) in getSelectedEvent().event_vars" :key="index">	eq.debug("{{ e }} " .. e.{{ e }});
 </span>end</pre>
     <!-- Perl -->
     <pre
@@ -18,7 +18,7 @@ function {{ getSelectedEvent().event_identifier }}(e)
     ><span style="color: #57A64A"># {{ eventSelectionFormatName() }}</span>
 sub {{ getSelectedEvent().event_identifier }} {
 	<span style="color: #57A64A"># Exported event variables</span>
-<span v-for="(e, index) in eventVars()" :key="index">	quest::debug("{{ e }} " . ${{ e }});
+<span v-for="(e, index) in getSelectedEvent().event_vars" :key="index">	quest::debug("{{ e }} " . ${{ e }});
 </span>}</pre>
   </div>
 </template>
@@ -52,9 +52,6 @@ export default {
       })
 
       return e
-    },
-    eventVars() {
-      return this.getSelectedEvent().event_vars
     },
     eventSelectionFormatName() {
       const entity = this.eventSelection.split("-")[0]
