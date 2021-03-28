@@ -1,7 +1,6 @@
 <template>
-  <eq-window class="mt-4" title="Debug">
+  <eq-window class="mt-4" title="Debug" v-if="debug">
   <pre
-    v-if="debug"
     style="padding-top: 10px !important; width: 100%">{{ data }}</pre>
   </eq-window>
 </template>

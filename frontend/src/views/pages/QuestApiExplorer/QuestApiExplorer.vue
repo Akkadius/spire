@@ -33,7 +33,7 @@
                     Events
                     <b-form-select
                       v-model="eventSelection"
-                      @change="eventSelect();"
+                      @change="formChange();"
                       :options="eventOptions"/>
                   </div>
                   <div class="col-2 text-center">
@@ -112,12 +112,18 @@
                 <div class="row mt-2 pl-2">
                   <div class="col-6 example-preview" v-if="displayExamples.length > 0">
 
-                    <eq-window :title="'Examples (' + displayExamples.slice(0,50).length + ')'">
+                    <eq-window
+                      :title="'Examples (' + displayExamples.slice(0,50).length + ')'"
+                      class="mt-3"
+                    >
 
-                      <button
-                        class="btn btn-white btn-sm"
-                        @click="closeExample"
-                        style="right: 30px; top: 10px; position: absolute">X</button>
+                      <div style="right: 30px; top: 10px; position: absolute"><span style="color: gray" class="mr-3">(Esc)</span>
+                        <button
+                          class="btn btn-white btn-sm"
+                          @click="closeExample"
+                        >X
+                        </button>
+                      </div>
 
                       <div class="example-preview-inner">
                         <div v-for="(example, index) in displayExamples.slice(0,50)"
@@ -339,6 +345,9 @@ export default {
       }
       if (this.$route.query.event) {
         this.eventSelection = this.$route.query.event
+        if (this.lastQueryParamState.event !== this.$route.query.event) {
+          this.eventSelect()
+        }
       }
       if (this.$route.query.constant) {
         this.constantSelection = this.$route.query.constant
@@ -383,7 +392,6 @@ export default {
     closeExample: function () {
       this.displayExamples = []
     },
-
 
     // when language is selected
     languageSelect: function () {
@@ -482,7 +490,7 @@ export default {
 
         this.$refs[slug][0].editor.setFontSize(13)
         this.$refs[slug][0].editor.setReadOnly(true);
-        this.$refs[slug][0].editor.scrollToLine(lineNumber, true, true, function () {
+        this.$refs[slug][0].editor.scrollToLine(lineNumber, true, true, () => {
         });
         this.$refs[slug][0].editor.gotoLine(lineNumber, 0, true);
 
@@ -587,7 +595,7 @@ export default {
 
     },
     // when an event type is selected
-    eventSelect: function () {
+    eventSelect: async function () {
 
       // reset other displays
       this.apiMethods          = []
@@ -598,6 +606,15 @@ export default {
       setTimeout(() => {
         this.formChange(), 100
       });
+
+      const event = this.eventSelection.split("-")[1]
+      await this.loadSearchExamples([event])
+
+      let searchEvent = {
+        search: event
+      }
+
+      this.loadQuestExample(searchEvent)
 
       this.sendAllAnalytics("quest_navigate_events_" + this.languageSelection, this.eventSelection)
     },
@@ -628,7 +645,7 @@ export default {
         this.sendAllAnalytics("quest_navigate_constants_" + this.languageSelection, this.constantSelection)
       }
     },
-    loadSearchExamples: function (searchTerms) {
+    loadSearchExamples: async function (searchTerms) {
 
       // examples
       // reset
@@ -642,29 +659,29 @@ export default {
       const repo        = "projecteqquests"
       const branch      = "master"
       const exampleRepo = util.format('/quest-api/source-examples/org/%s/repo/%s/branch/%s', org, repo, branch)
-      SpireApiClient.v1().post(exampleRepo, {
+      const response    = await SpireApiClient.v1().post(exampleRepo, {
         "search_terms": searchTerms,
         "language": this.languageSelection
-      }).then((response) => {
-        if (response.data && response.data.data) {
-          // console.log(response.data.data)
+      })
 
-          response.data.data.forEach((result) => {
-            if (typeof linkedExamples[this.languageSelection][result.search_term] === "undefined") {
-              linkedExamples[this.languageSelection][result.search_term] = []
-            }
+      if (response.data && response.data.data) {
+        // console.log(response.data.data)
 
-            result.org    = org
-            result.repo   = repo
-            result.branch = branch
+        response.data.data.forEach((result) => {
+          if (typeof linkedExamples[this.languageSelection][result.search_term] === "undefined") {
+            linkedExamples[this.languageSelection][result.search_term] = []
+          }
 
-            linkedExamples[this.languageSelection][result.search_term].push(result)
-          })
-        }
-        this.linkedExamples = linkedExamples
-        this.$forceUpdate()
-      });
+          result.org    = org
+          result.repo   = repo
+          result.branch = branch
 
+          linkedExamples[this.languageSelection][result.search_term].push(result)
+        })
+      }
+
+      this.linkedExamples = linkedExamples
+      this.$forceUpdate()
     },
     sendAllAnalytics(name, value) {
       this.sendAnalyticsEvent(name, value)
