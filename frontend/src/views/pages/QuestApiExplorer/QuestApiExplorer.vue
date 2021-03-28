@@ -81,29 +81,14 @@
                   style="display:inline-block"
                 >
                   <div class="col-12">
-
-                    <!-- Lua -->
-                    <pre
-                      v-if="languageSelection === 'lua'"
-                      class="highlight html bg-dark ml-0 mb-4 code-display"
-                      style="width: 50vw; display: inline-block; padding-left: 20px !important; padding-top: 10px !important; padding-bottom: 10px !important"
-                    ><span style="color: #57A64A">-- {{ eventSelectionFormatName() }}</span>
-function {{ getSelectedEvent().event_identifier }}(e)
-	<span style="color: #57A64A">-- Exported event variables</span>
-<span v-for="(e, index) in eventVars()" :key="index">	eq.debug("{{ e }} " .. e.{{ e }});
-</span>end</pre>
-                    <!-- Perl -->
-                    <pre
-                      v-if="languageSelection === 'perl'"
-                      class="highlight html bg-dark ml-0 mb-4 code-display"
-                      style="width: 50vw; display: inline-block; padding-left: 20px !important; padding-top: 10px !important; padding-bottom: 10px !important"
-                    ><span style="color: #57A64A"># {{ eventSelectionFormatName() }}</span>
-sub {{ getSelectedEvent().event_identifier }} {
-	<span style="color: #57A64A"># Exported event variables</span>
-<span v-for="(e, index) in eventVars()" :key="index">	quest::debug("{{ e }} " . ${{ e }});
-</span>}</pre>
+                    <quest-api-display-events
+                      :language-selection="languageSelection"
+                      :event-selection="eventSelection"
+                      :linked-examples="linkedExamples"
+                      :api="api"
+                      @load-quest-example="loadQuestExample"
+                    />
                   </div>
-
                 </div>
 
                 <!-- Constants -->
@@ -129,12 +114,12 @@ sub {{ getSelectedEvent().event_identifier }} {
 
                     <eq-window :title="'Examples (' + displayExamples.slice(0,50).length + ')'">
 
-                      <button class="btn btn-white btn-sm" @click="closeExample"
-                              style="right: 30px; top: 10px; position: absolute">X
-                      </button>
+                      <button
+                        class="btn btn-white btn-sm"
+                        @click="closeExample"
+                        style="right: 30px; top: 10px; position: absolute">X</button>
 
                       <div class="example-preview-inner">
-
                         <div v-for="(example, index) in displayExamples.slice(0,50)"
                              :key="example.file_name + index + example.line_number">
                           <div class="row ">
@@ -184,14 +169,13 @@ sub {{ getSelectedEvent().event_identifier }} {
 
               </div>
 
-
             </eq-window>
           </div>
         </div>
       </div>
     </div>
 
-    <!--        <debug-display-component :data="database"/>-->
+    <eq-debug :data="api"/>
 
   </div>
 
@@ -211,10 +195,14 @@ import * as util                from "util";
 import QuestApiDisplayMethods   from "@/views/pages/QuestApiExplorer/components/QuestApiDisplayMethods.vue";
 import Analytics                from "@/app/analytics/analytics";
 import QuestApiDisplayConstants from "@/views/pages/QuestApiExplorer/components/QuestApiDisplayConstants.vue";
+import QuestApiDisplayEvents    from "@/views/pages/QuestApiExplorer/components/QuestApiDisplayEvents.vue";
+import EqDebug                  from "@/components/eq-ui/EQDebug.vue";
 
 
 export default {
   components: {
+    EqDebug,
+    QuestApiDisplayEvents,
     QuestApiDisplayConstants,
     QuestApiDisplayMethods,
     EqTab,
@@ -392,60 +380,25 @@ export default {
     navigateTo(url, name) {
       window.open(url, name);
     },
-
-    getLanguageKey() {
-      if (this.languageSelection == "perl") {
-        return "perl_api"
-      }
-      if (this.languageSelection == "lua") {
-        return "lua_api"
-      }
-      return ""
-    },
     closeExample: function () {
       this.displayExamples = []
     },
-    eventSelectionFormatName() {
-      const entity = this.eventSelection.split("-")[0]
-      const event  = this.eventSelection.split("-")[1]
-      return util.format("[%s] %s", entity, event)
-    },
-    getSelectedEvent() {
-      const entity = this.eventSelection.split("-")[0]
-      const event  = this.eventSelection.split("-")[1]
-      let events   = this.api[this.getLanguageKey()].events
-      let e        = []
-      events.forEach(row => {
-        if (row.event_identifier === "event_") {
-          return
-        }
 
-        if (row.event_identifier == event && row.entity_type == entity) {
-          e = row
-        }
-
-      })
-
-      return e
-    },
-    eventVars() {
-      return this.getSelectedEvent().event_vars
-    },
 
     // when language is selected
     languageSelect: function () {
       this.constantSelection = null
 
       // methods
-      if (this.api[this.getLanguageKey()].methods) {
+      if (this.api[this.languageSelection].methods) {
         let options  = []
-        let types    = Object.keys(this.api[this.getLanguageKey()].methods).sort().filter((item) => {
+        let types    = Object.keys(this.api[this.languageSelection].methods).sort().filter((item) => {
           return !item.includes("Deprecated") && !item.includes("EQDB")
         })
         let typeSize = types.length
         options.push({value: null, text: "--- Types (" + typeSize + ") ---"})
         types.forEach((option) => {
-          let methodCount = this.api[this.getLanguageKey()].methods[option].length
+          let methodCount = this.api[this.languageSelection].methods[option].length
           options.push({value: option, text: option + ' (' + methodCount + ')'})
         })
 
@@ -456,8 +409,8 @@ export default {
       }
 
       // events
-      if (this.api[this.getLanguageKey()].events) {
-        let events       = this.api[this.getLanguageKey()].events
+      if (this.api[this.languageSelection].events) {
+        let events       = this.api[this.languageSelection].events
         let eventSize    = events.length
         let selectOption = '--- Events   (' + eventSize + ') ---'
         let options      = [{value: null, text: selectOption}]
@@ -474,8 +427,8 @@ export default {
       }
 
       // constants
-      if (this.api[this.getLanguageKey()].constants) {
-        let apiConstants = this.api[this.getLanguageKey()].constants
+      if (this.api[this.languageSelection].constants) {
+        let apiConstants = this.api[this.languageSelection].constants
         let options      = []
         let constants    = Object.keys(apiConstants).sort().filter((constant) => {
           return !constant.includes("Deprecated") && !constant.includes("EQDB")
@@ -571,9 +524,9 @@ export default {
       let declaredSearchTerm = {}
 
       // methods
-      if (this.api[this.getLanguageKey()].methods) {
-        this.codeClass  = this.getLanguageKey()
-        const methods   = this.api[this.getLanguageKey()].methods[this.methodTypeSelection]
+      if (this.api[this.languageSelection].methods) {
+        this.codeClass  = this.languageSelection
+        const methods   = this.api[this.languageSelection].methods[this.methodTypeSelection]
         const snakeCase = string => {
           return string.replace(/\W+/g, " ")
                        .split(/ |\B(?=[A-Z])/)
@@ -662,7 +615,7 @@ export default {
       // });
 
       if (this.constantSelection) {
-        let apiConstants = this.api[this.getLanguageKey()].constants[this.constantSelection]
+        let apiConstants = this.api[this.languageSelection].constants[this.constantSelection]
         let searchTerms  = []
 
         apiConstants.forEach((constant) => {

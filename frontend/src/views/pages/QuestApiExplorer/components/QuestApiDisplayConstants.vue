@@ -5,7 +5,7 @@
     v-if="api"
   >
     <div
-      v-for="(constant, index) in api[getLanguageKey()].constants[constantSelection]"
+      v-for="(constant, index) in api[this.languageSelection].constants[constantSelection]"
       :key="index">
 
       <div class="d-inline-block">
@@ -72,15 +72,6 @@ export default {
         autoHideDelay: 2000,
         solid: true
       })
-    },
-    getLanguageKey() {
-      if (this.languageSelection === "perl") {
-        return "perl_api"
-      }
-      if (this.languageSelection === "lua") {
-        return "lua_api"
-      }
-      return ""
     },
     formatConstant(constant) {
       return this.languageSelection === "lua" ? this.constantSelection + "." + constant.constant : constant.constant;
