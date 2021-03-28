@@ -14,7 +14,7 @@
       <pre
         id="event-content"
         class="ml-0 mb-4 code-display"
-        style="width: 50vw; display: inline-block; padding-left: 20px !important; padding-top: 10px !important; padding-bottom: 10px !important"
+        style="width: 100%; display: inline-block; padding-left: 20px !important; padding-top: 10px !important; padding-bottom: 10px !important"
       >
 <span style="color:#ff7b72;">{{ getLangEventPrefix() }}</span> <span
         style="color: #d2a8ff">{{ getSelectedEvent(event).event_identifier }}</span>{{ getLangSubPostfix() }}

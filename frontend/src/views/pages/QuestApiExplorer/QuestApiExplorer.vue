@@ -109,7 +109,7 @@
                   <div class="col-12">
                     <quest-api-display-constants
                       :language-selection="languageSelection"
-                      :constants="[constantSelection]"
+                      :constants="constantSelection"
                       :linked-examples="linkedExamples"
                       :api="api"
                       @load-quest-example="loadQuestExample"
