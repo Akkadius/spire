@@ -49,7 +49,6 @@ export default {
   },
   methods: {
     loadConstantExamples: function (search) {
-      console.log(search)
       this.$emit("load-quest-example",
         {
           language: this.languageSelection,
@@ -66,7 +65,6 @@ export default {
 
       tempNode.select();
       document.execCommand("Copy");
-
       document.body.removeChild(tempNode);
 
       this.$bvToast.toast(s, {
@@ -74,7 +72,6 @@ export default {
         autoHideDelay: 2000,
         solid: true
       })
-
     },
     getLanguageKey() {
       if (this.languageSelection === "perl") {
