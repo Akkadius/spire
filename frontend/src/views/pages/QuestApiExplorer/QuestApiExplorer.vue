@@ -20,7 +20,7 @@
                     <b-form-select
                       v-model="languageSelection"
                       :options="languageOptions"
-                      @change="languageSelect();"/>
+                      @change="languageSelect(); displayExamples = []"/>
                   </div>
                   <div class="col-2 text-center">
                     Types
@@ -113,31 +113,13 @@ sub {{ getSelectedEvent().event_identifier }} {
                   style="display:inline-block"
                 >
                   <div class="col-12">
-
-                    <!-- Perl -->
-                    <pre
-                      v-if="languageSelection === 'perl'"
-                      class="highlight html bg-dark ml-0 mb-4 code-display"
-                      style="width: 50vw; display: inline-block; padding-left: 20px !important; padding-top: 10px !important; padding-bottom: 10px !important"
-                    ><div
-                      v-for="(constant, index) in api[getLanguageKey()].constants[constantSelection]"
-                      :key="index">{{ constant.constant }}</div></pre>
-
-                    <!-- Lua -->
-                    <pre
-                      v-if="languageSelection === 'lua'"
-                      class="highlight html bg-dark ml-0 mb-4 code-display"
-                      style="min-width: 30vw; display: inline-block; padding-left: 20px !important; padding-top: 10px !important; padding-bottom: 10px !important"
-                    ><div
-                      v-for="(constant, index) in api[getLanguageKey()].constants[constantSelection]"
-                      :key="index"><a
-                      @click="loadConstantExamples(formatConstant(constant))" href="javascript:void(0);"
-                      v-if="linkedExamples[languageSelection][formatConstant(constant)]">{{
-                        formatConstant(constant)
-                      }}</a><span
-                      v-if="!linkedExamples[languageSelection][formatConstant(constant)]">{{
-                        formatConstant(constant)
-                      }}</span></div></pre>
+                    <quest-api-display-constants
+                      :language-selection="languageSelection"
+                      :constant-selection="constantSelection"
+                      :linked-examples="linkedExamples"
+                      :api="api"
+                      @load-quest-example="loadQuestExample"
+                    />
                   </div>
                 </div>
 
@@ -216,22 +198,24 @@ sub {{ getSelectedEvent().event_identifier }} {
 </template>
 
 <script type="ts">
-import EqWindow               from "@/components/eq-ui/EQWindow.vue";
-import DebugDisplayComponent  from "@/components/DebugDisplayComponent.vue";
-import {SpireApiClient}       from "@/app/api/spire-api-client";
-import axios                  from "axios";
-import EqWindowSimple         from "@/components/eq-ui/EQWindowSimple.vue";
-import EqTabs                 from "@/components/eq-ui/EQTabs.vue";
-import EqTab                  from "@/components/eq-ui/EQTab.vue";
-import slugify                from "slugify";
-import moment                 from "moment";
-import * as util              from "util";
-import QuestApiDisplayMethods from "@/views/pages/QuestApiExplorer/components/QuestApiDisplayMethods.vue";
-import Analytics              from "@/app/analytics/analytics";
+import EqWindow                 from "@/components/eq-ui/EQWindow.vue";
+import DebugDisplayComponent    from "@/components/DebugDisplayComponent.vue";
+import {SpireApiClient}         from "@/app/api/spire-api-client";
+import axios                    from "axios";
+import EqWindowSimple           from "@/components/eq-ui/EQWindowSimple.vue";
+import EqTabs                   from "@/components/eq-ui/EQTabs.vue";
+import EqTab                    from "@/components/eq-ui/EQTab.vue";
+import slugify                  from "slugify";
+import moment                   from "moment";
+import * as util                from "util";
+import QuestApiDisplayMethods   from "@/views/pages/QuestApiExplorer/components/QuestApiDisplayMethods.vue";
+import Analytics                from "@/app/analytics/analytics";
+import QuestApiDisplayConstants from "@/views/pages/QuestApiExplorer/components/QuestApiDisplayConstants.vue";
 
 
 export default {
   components: {
+    QuestApiDisplayConstants,
     QuestApiDisplayMethods,
     EqTab,
     EqTabs,
@@ -408,9 +392,7 @@ export default {
     navigateTo(url, name) {
       window.open(url, name);
     },
-    formatConstant(constant) {
-      return this.languageSelection == "lua" ? this.constantSelection + '.' + constant.constant : constant.constant;
-    },
+
     getLanguageKey() {
       if (this.languageSelection == "perl") {
         return "perl_api"
@@ -521,16 +503,13 @@ export default {
     },
     // received from component event
     loadQuestExample(event) {
-      this.loadExamples(event.search)
-    },
-    // when method is clicked; loads editor examples
-    loadExamples: function (method) {
       this.closeExample()
-      if (this.linkedExamples[this.languageSelection][method + '(']) {
-        this.displayExamples = this.linkedExamples[this.languageSelection][method + '(']
+      if (this.linkedExamples[this.languageSelection][event.search]) {
+        this.displayExamples = this.linkedExamples[this.languageSelection][event.search]
 
-        this.sendAllAnalytics("load_quest_example_" + this.languageSelection, method)
+        this.sendAllAnalytics("load_quest_example_" + this.languageSelection, event.search.replace("(", ""))
       }
+
     },
     // when method is clicked; loads editor examples
     loadConstantExamples: function (search) {
