@@ -15,28 +15,28 @@
 
                 <!-- Form -->
                 <div class="row" @click="resetAllState()">
-                  <div class="col-1 text-center">
+                  <div class="col-lg-1 col-sm-12 text-center">
                     Language
                     <b-form-select
                       v-model="languageSelection"
                       :options="languageOptions"
                       @change="languageSelect();"/>
                   </div>
-                  <div class="col-2 text-center">
+                  <div class="col-lg-2 col-sm-12 text-center">
                     Types
                     <b-form-select
                       v-model="methodTypeSelection"
                       @change="methodTypeSelectReset(); formChange(); "
                       :options="methodTypeOptions"/>
                   </div>
-                  <div class="col-3 text-center">
+                  <div class="col-lg-3 col-sm-12 text-center">
                     Events
                     <b-form-select
                       v-model="eventSelection"
                       @change="eventSelectReset(); formChange();"
                       :options="eventOptions"/>
                   </div>
-                  <div class="col-2 text-center">
+                  <div class="col-lg-2 col-sm-12 text-center">
                     Constants
                     <b-form-select
                       v-model="constantSelection"
@@ -384,9 +384,10 @@ export default {
 
       if (this.$route.query.lang) {
         this.languageSelection = this.$route.query.lang
-        // if (this.lastQueryParamState.lang !== this.$route.query.lang) {
+        if (this.lastQueryParamState.lang !== this.$route.query.lang) {
+          setTimeout(this.methodTypeSelect, 50)
+        }
         this.languageSelect()
-        // }
       }
       if (this.$route.query.type) {
         this.methodTypeSelection = this.$route.query.type
