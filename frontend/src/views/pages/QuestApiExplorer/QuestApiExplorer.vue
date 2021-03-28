@@ -395,15 +395,11 @@ export default {
       this.api[this.languageSelection].events.forEach((event) => {
         if (event.event_identifier.toLowerCase().includes(this.search.toLowerCase())) {
           const eventIdentifier = event.entity_type + "-" + event.event_identifier
-          console.log(eventIdentifier)
           searchEventsResult.push(eventIdentifier)
         }
       })
 
-      console.log(searchEventsResult)
-
-      this.searchEventsResult = searchEventsResult
-
+      this.searchEventsResult     = searchEventsResult
       this.searchApiResultMethods = apiMethods
 
       if (this.search.length >= 3) {
