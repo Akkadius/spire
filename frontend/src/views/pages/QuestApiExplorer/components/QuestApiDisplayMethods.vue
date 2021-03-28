@@ -52,6 +52,15 @@
           {{ linkedExamples[languageSelection][method.method + "("].length }} Example(s)
         </div>
 
+        <!-- Display categories -->
+        <div
+          style="color: #57A64A"
+          class="d-inline-block ml-3"
+          v-if="method.categories && method.categories.length > 0">
+          {{ (languageSelection === "perl" ? "#" : "--") }}
+          ({{ method.categories.join(", ") }})
+        </div>
+
       </div>
     </div>
   </div>

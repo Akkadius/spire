@@ -653,6 +653,7 @@ export default {
               methodPrefix: prefix,
               params: method.params,
               comments: comment,
+              categories: method.categories,
             })
 
             // we use the bracket after the method to grep in searches because
