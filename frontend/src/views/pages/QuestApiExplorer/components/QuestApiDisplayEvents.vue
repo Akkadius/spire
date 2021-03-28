@@ -1,26 +1,30 @@
 <template>
   <div>
-    <div class="d-inline-block mt-2" style="vertical-align: top">
-      <button
-        class='btn btn-sm btn-outline-warning mb-1 mr-2'
-        @click="copyToClip()"
-        style="font-size: 8px; padding: 0.125rem 0.4rem; opacity: .6">
-        <i class="fa fa-clipboard"></i>
-      </button>
-    </div>
+    <div v-for="event in events" :key="event">
+      <div class="d-inline-block mt-2" style="vertical-align: top"
+      >
+        <button
+          class='btn btn-sm btn-outline-warning mb-1 mr-2'
+          @click="copyToClip(event)"
+          style="font-size: 8px; padding: 0.125rem 0.4rem; opacity: .6">
+          <i class="fa fa-clipboard"></i>
+        </button>
+      </div>
 
-    <pre
-      id="event-content"
-      class="ml-0 mb-4 code-display"
-      style="width: 50vw; display: inline-block; padding-left: 20px !important; padding-top: 10px !important; padding-bottom: 10px !important"
-    >
-<span style="color:#ff7b72;">{{ getEventPrefix() }}</span> <span
-      style="color: #d2a8ff">{{ getSelectedEvent().event_identifier }}</span>{{ getLangSubPostfix() }}
+      <pre
+        id="event-content"
+        class="ml-0 mb-4 code-display"
+        style="width: 50vw; display: inline-block; padding-left: 20px !important; padding-top: 10px !important; padding-bottom: 10px !important"
+      >
+<span style="color:#ff7b72;">{{ getLangEventPrefix() }}</span> <span
+        style="color: #d2a8ff">{{ getSelectedEvent(event).event_identifier }}</span>{{ getLangSubPostfix() }}
+	<span style="color: #57A64A">{{ getLangCommentCharacters() }} {{event}}</span>
 	<span style="color: #57A64A">{{ getLangCommentCharacters() }} Exported event variables</span>
-<span v-for="(e, index) in getSelectedEvent().event_vars" :key="index"><span
+<span v-for="(e, index) in getSelectedEvent(event).event_vars" :key="index"><span
   style="color:#9CDCFE;">	{{ getLangQuestPrefix() }}</span>debug("{{ e }} " {{ getLangConcatenate() }} <span
   style="color: rgb(252 199 33);">{{ getLangVariablePrefix() }}{{ e }}</span>);
 </span>}</pre>
+    </div>
   </div>
 </template>
 
@@ -38,7 +42,7 @@ export default {
     api: { type: Object },
     linkedExamples: { type: Object },
     languageSelection: { type: String },
-    eventSelection: { type: String }
+    events: { type: Array }
   },
   methods: {
     loadExamples: function (search) {
@@ -49,10 +53,10 @@ export default {
         }
       );
     },
-    copyToClip() {
+    copyToClip(e) {
       ClipBoard.copyFromElement("event-content")
 
-      const event = this.eventSelection.split("-")[1]
+      const event = e.split("-")[1]
       Analytics.trackCountsEvent("clipboard_copy_content", event)
 
       this.$bvToast.toast(event, {
@@ -61,9 +65,9 @@ export default {
         solid: true
       })
     },
-    getSelectedEvent() {
-      const entity = this.eventSelection.split("-")[0]
-      const event  = this.eventSelection.split("-")[1]
+    getSelectedEvent(ev) {
+      const entity = ev.split("-")[0]
+      const event  = ev.split("-")[1]
       let events   = this.api[this.languageSelection].events
       let e        = []
       events.forEach(row => {
@@ -79,12 +83,12 @@ export default {
 
       return e
     },
-    eventSelectionFormatName() {
-      const entity = this.eventSelection.split("-")[0]
-      const event  = this.eventSelection.split("-")[1]
+    eventSelectionFormatName(ev) {
+      const entity = ev.split("-")[0]
+      const event  = ev.split("-")[1]
       return util.format("[%s] %s", entity, event)
     },
-    getEventPrefix() {
+    getLangEventPrefix() {
       return this.languageSelection === "perl" ? "sub" : "function"
     },
     getLangQuestPrefix() {

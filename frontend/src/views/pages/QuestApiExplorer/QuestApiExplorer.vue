@@ -49,7 +49,7 @@
                       id="quest-explorer-search"
                       v-model="search"
                       v-on:keyup="onSearch(); onSearchMethodExampleLoad()"
-                      placeholder="Search for methods (soon events, constants)..."
+                      placeholder="Search for methods, events (soon constants)..."
                     />
                   </div>
 
@@ -92,7 +92,7 @@
                   <div class="col-12">
                     <quest-api-display-events
                       :language-selection="languageSelection"
-                      :event-selection="eventSelection"
+                      :events="[eventSelection]"
                       :linked-examples="linkedExamples"
                       :api="api"
                       @load-quest-example="loadQuestExample"
@@ -109,7 +109,7 @@
                   <div class="col-12">
                     <quest-api-display-constants
                       :language-selection="languageSelection"
-                      :constant-selection="constantSelection"
+                      :constants="[constantSelection]"
                       :linked-examples="linkedExamples"
                       :api="api"
                       @load-quest-example="loadQuestExample"
@@ -121,40 +121,59 @@
                 <!-- Search Results -->
 
                 <div v-if="search.length > 0">
-                <h3
-                  class="eq-header pb-3"
-                  style="border-bottom: 1px solid gray"
-                >Search Results</h3>
+                  <h3
+                    class="eq-header pb-3"
+                    style="border-bottom: 1px solid gray"
+                  >Search Results</h3>
 
-                <div
-                  class="mt-3"
-                  v-if="search.length > 0 && searchApiResultMethods.length === 0">
-                  No results found...
-                </div>
+                  <div
+                    class="mt-3"
+                    v-if="search.length > 0 && searchApiResultMethods.length === 0 && searchEventsResult.length === 0">
+                    No results found...
+                  </div>
 
-                <!-- Display Quest API Methods -->
-                <div class="row mt-2" v-if="searchApiResultMethods.length > 0">
+                  <!-- Search: Methods -->
+                  <div class="row mt-2" v-if="searchApiResultMethods.length > 0">
 
-                  <!-- Methods -->
-                  <div class="col-12">
+                    <!-- Methods -->
+                    <div class="col-12">
 
-                    <h5 class="eq-header">Methods ({{ (searchApiResultMethods.length) }})</h5>
+                      <h5 class="eq-header">Methods ({{ (searchApiResultMethods.length) }})</h5>
 
-                    <div
-                      class="mb-4 code-display"
-                      style="padding-left: 10px !important; padding-top: 10px !important; padding-bottom: 10px !important; white-space:nowrap">
+                      <div
+                        class="mb-4 code-display"
+                        style="padding-left: 10px !important; padding-top: 10px !important; padding-bottom: 10px !important; white-space:nowrap">
 
-                      <quest-api-display-methods
+                        <quest-api-display-methods
+                          :language-selection="languageSelection"
+                          :linked-examples="linkedExamples"
+                          :api-methods="searchApiResultMethods"
+                          @load-quest-example="loadQuestExample"
+                        />
+
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Search: Events -->
+                  <div class="row mt-2" v-if="searchEventsResult.length > 0">
+
+                    <!-- Events -->
+                    <div class="col-12">
+
+                      <h5 class="eq-header">Events ({{ (searchEventsResult.length) }})</h5>
+
+                      <quest-api-display-events
                         :language-selection="languageSelection"
+                        :events="searchEventsResult"
                         :linked-examples="linkedExamples"
-                        :api-methods="searchApiResultMethods"
+                        :api="api"
                         @load-quest-example="loadQuestExample"
                       />
 
                     </div>
-                  </div>
 
-                </div>
+                  </div>
 
                 </div>
 
@@ -325,7 +344,9 @@ export default {
 
       // search
       search: "",
-      searchApiResultMethods: {}
+      searchApiResultMethods: {},
+      searchEventsResult: [],
+      searchConstantsResult: []
     }
   },
   deactivated() {
@@ -369,6 +390,19 @@ export default {
           }
         })
       }
+
+      let searchEventsResult = []
+      this.api[this.languageSelection].events.forEach((event) => {
+        if (event.event_identifier.toLowerCase().includes(this.search.toLowerCase())) {
+          const eventIdentifier = event.entity_type + "-" + event.event_identifier
+          console.log(eventIdentifier)
+          searchEventsResult.push(eventIdentifier)
+        }
+      })
+
+      console.log(searchEventsResult)
+
+      this.searchEventsResult = searchEventsResult
 
       this.searchApiResultMethods = apiMethods
 
@@ -724,16 +758,19 @@ export default {
       Debug.log("[methodTypeSelectReset] trigger")
       this.constantSelection = null
       this.eventSelection    = null
+      this.search            = ""
     },
     eventSelectReset: function () {
       Debug.log("[eventSelectReset] trigger")
       this.methodTypeSelection = null
       this.constantSelection   = null
+      this.search              = ""
     },
     constantSelectReset: function () {
       Debug.log("[constantSelectReset] trigger")
       this.methodTypeSelection = null
       this.eventSelection      = null
+      this.search              = ""
     },
 
     // formats expected api rendered format from the API response
