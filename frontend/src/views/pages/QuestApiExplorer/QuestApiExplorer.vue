@@ -43,8 +43,17 @@
                       @change="constantSelectReset(); formChange();"
                       :options="constantOptions"/>
                   </div>
+                  <div class="col-lg-4 col-sm-12 text-center">
+                    Search
+                    <b-input
+                      id="quest-explorer-search"
+                      v-model="search"
+                      v-on:keyup="onSearch(); onSearchMethodExampleLoad()"
+                      placeholder="Search for methods (soon events, constants)..."
+                    />
+                  </div>
 
-                  <div class="col text-center align-middle ">
+                  <div class="col text-center align-middle mt-2">
                     <div class="float-right">
                       Last Updated: {{ fromNow(api.last_refreshed) }}
                     </div>
@@ -108,69 +117,45 @@
                   </div>
                 </div>
 
-                <!-- Example Previews -->
-                <div class="row mt-2 pl-2">
-                  <div class="col-6 example-preview" v-if="displayExamples.length > 0">
 
-                    <eq-window
-                      :title="'Examples (' + displayExamples.slice(0,50).length + ')'"
-                      class="mt-3"
-                    >
+                <!-- Search Results -->
 
-                      <div style="right: 30px; top: 10px; position: absolute"><span style="color: gray" class="mr-3">(Esc)</span>
-                        <button
-                          class="btn btn-white btn-sm"
-                          @click="closeExample"
-                        >X
-                        </button>
-                      </div>
+                <div v-if="search.length > 0">
+                <h3
+                  class="eq-header pb-3"
+                  style="border-bottom: 1px solid gray"
+                >Search Results</h3>
 
-                      <div class="example-preview-inner">
-                        <div v-for="(example, index) in displayExamples.slice(0,50)"
-                             :key="example.file_name + index + example.line_number">
-                          <div class="row ">
-                            <div class="col">
-                              <a href="javascript:;"
-                                 class="ml-5"
-                                 @click="navigateTo('https://github.com/' + example.org + '/' + example.repo + '/blob/' + example.branch + '/' + encodeURIComponent(example.file_name) + '#L' + example.line_number, example.file_name)"
-                                 style="color: #b9b194"
-                              >
-                                <i class="fe fe-github"></i>
-                                {{ example.file_name + ":" + example.line_number }}
-                              </a>
-                            </div>
+                <div
+                  class="mt-3"
+                  v-if="search.length > 0 && searchApiResultMethods.length === 0">
+                  No results found...
+                </div>
 
-                            <div class="col">
-                              <div class="float-right">
-                                <button
-                                  @click="navigateTo('https://github.com/' + example.org + '/' + example.repo)"
-                                  style="line-height: 1.40;"
-                                  class="btn btn-primary btn-sm mr-2 ">
-                                  <i class="fe fe-github"></i>
-                                  {{ example.org + " / " + example.repo }}
-                                </button>
-                              </div>
-                            </div>
-                          </div>
+                <!-- Display Quest API Methods -->
+                <div class="row mt-2" v-if="searchApiResultMethods.length > 0">
 
-                          <editor
-                            v-model="example.full_contents"
-                            @init="editorInit(slug(example.file_name), example.line_number)"
-                            :id="slug(example.file_name)"
-                            :lang="languageSelection"
-                            theme="terminal"
-                            width="100%"
-                            :ref="slug(example.file_name)"
-                            height="275px"
-                            class="mt-3 mb-3 ml-5 pr-6"
-                          ></editor>
+                  <!-- Methods -->
+                  <div class="col-12">
 
-                        </div>
-                      </div>
+                    <h5 class="eq-header">Methods ({{ (searchApiResultMethods.length) }})</h5>
 
-                    </eq-window>
+                    <div
+                      class="mb-4 code-display"
+                      style="padding-left: 10px !important; padding-top: 10px !important; padding-bottom: 10px !important; white-space:nowrap">
 
+                      <quest-api-display-methods
+                        :language-selection="languageSelection"
+                        :linked-examples="linkedExamples"
+                        :api-methods="searchApiResultMethods"
+                        @load-quest-example="loadQuestExample"
+                      />
+
+                    </div>
                   </div>
+
+                </div>
+
                 </div>
 
               </div>
@@ -178,6 +163,73 @@
               <eq-debug :data="api" v-if="Object.keys(api).length"/>
 
             </eq-window>
+
+            <!-- Example Previews -->
+            <div class="row mt-2 pl-2">
+              <div class="col-6 example-preview" v-if="displayExamples.length > 0">
+
+                <eq-window
+                  :title="'Examples (' + displayExamples.slice(0,50).length + ')'"
+                  class="mt-3"
+                >
+
+                  <div style="right: 30px; top: 10px; position: absolute"><span style="color: gray"
+                                                                                class="mr-3">(Esc)</span>
+                    <button
+                      class="btn btn-white btn-sm"
+                      @click="closeExample"
+                    >X
+                    </button>
+                  </div>
+
+                  <div class="example-preview-inner">
+                    <div v-for="(example, index) in displayExamples.slice(0,50)"
+                         :key="example.file_name + index + example.line_number">
+                      <div class="row ">
+                        <div class="col">
+                          <a href="javascript:;"
+                             class="ml-5"
+                             @click="navigateTo('https://github.com/' + example.org + '/' + example.repo + '/blob/' + example.branch + '/' + encodeURIComponent(example.file_name) + '#L' + example.line_number, example.file_name)"
+                             style="color: #b9b194"
+                          >
+                            <i class="fe fe-github"></i>
+                            {{ example.file_name + ":" + example.line_number }}
+                          </a>
+                        </div>
+
+                        <div class="col">
+                          <div class="float-right">
+                            <button
+                              @click="navigateTo('https://github.com/' + example.org + '/' + example.repo)"
+                              style="line-height: 1.40;"
+                              class="btn btn-primary btn-sm mr-2 ">
+                              <i class="fe fe-github"></i>
+                              {{ example.org + " / " + example.repo }}
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+
+                      <editor
+                        v-model="example.full_contents"
+                        @init="editorInit(slug(example.file_name), example.line_number)"
+                        :id="slug(example.file_name)"
+                        :lang="languageSelection"
+                        theme="terminal"
+                        width="100%"
+                        :ref="slug(example.file_name)"
+                        height="275px"
+                        class="mt-3 mb-3 ml-5 pr-6"
+                      ></editor>
+
+                    </div>
+                  </div>
+
+                </eq-window>
+
+              </div>
+            </div>
+
           </div>
         </div>
       </div>
@@ -206,6 +258,7 @@ import QuestApiDisplayConstants from "@/views/pages/QuestApiExplorer/components/
 import QuestApiDisplayEvents    from "@/views/pages/QuestApiExplorer/components/QuestApiDisplayEvents.vue";
 import EqDebug                  from "@/components/eq-ui/EQDebug.vue";
 import Debug                    from "@/app/debug/debug";
+import {debounce}               from "@/app/utility/debounce";
 
 export default {
   components: {
@@ -269,6 +322,10 @@ export default {
       // we don't trigger load methods that don't need to load when
       // certain query param values haven't changed
       lastQueryParamState: {},
+
+      // search
+      search: "",
+      searchApiResultMethods: {}
     }
   },
   deactivated() {
@@ -285,6 +342,60 @@ export default {
     this.init()
   },
   methods: {
+    onSearch: debounce(function () {
+      Debug.log("[onSearch] [%s]", this.search)
+
+      this.doSearch()
+    }, 200),
+
+    doSearch: function () {
+      Debug.log("[search] [%s]", this.search)
+
+      // reset
+      this.apiMethods          = []
+      this.methodTypeSelection = null
+      this.eventSelection      = null
+      this.constantSelection   = null
+      this.displayExamples     = []
+
+      this.formChange()
+
+      let apiMethods = []
+      for (const [key, value] of Object.entries(this.api[this.languageSelection].methods)) {
+        this.api[this.languageSelection].methods[key].forEach((method) => {
+          if (method.method.toLowerCase().includes(this.search.toLowerCase())) {
+            // console.log()
+            apiMethods.push(this.getFormattedApiMethod(method))
+          }
+        })
+      }
+
+      this.searchApiResultMethods = apiMethods
+    },
+
+    onSearchMethodExampleLoad: debounce(function () {
+      Debug.log("[onSearchMethodExampleLoad] [%s]", this.search)
+
+      // used to search sources for examples
+      let methodSearchTerms  = []
+      // keeps track of duplicate search terms
+      let declaredSearchTerm = {}
+
+      // methods
+      this.searchApiResultMethods.forEach((method) => {
+
+        // we use the bracket after the method to grep in searches because
+        // we can pick up false positives in comments and other unrelated things
+        if (!declaredSearchTerm[method.method]) {
+          methodSearchTerms.push(method.method + "(")
+          declaredSearchTerm[method.method] = true
+        }
+      })
+
+      this.loadSearchExamples(methodSearchTerms)
+
+    }, 500),
+
     resetAllState() {
       // return
 
@@ -310,7 +421,6 @@ export default {
           query: query
         }
       ).catch((e) => {
-        console.log(e)
       })
 
       Debug.log("[resetAllState] done")
@@ -330,15 +440,17 @@ export default {
       // this.lastQueryParamState = this.$route.query
 
       // reset
-      this.languageSelection   = null
-      this.methodTypeSelection = null
-      this.methodTypeOptions   = []
-      this.eventSelection      = null
-      this.eventOptions        = []
-      this.constantSelection   = null
-      this.constantOptions     = []
-      this.displayExamples     = []
-      this.loaded              = false
+      this.languageSelection      = null
+      this.methodTypeSelection    = null
+      this.methodTypeOptions      = []
+      this.eventSelection         = null
+      this.eventOptions           = []
+      this.constantSelection      = null
+      this.constantOptions        = []
+      this.displayExamples        = []
+      this.search                 = ""
+      this.searchApiResultMethods = {}
+      this.loaded                 = false
 
       // route watcher
       this.routeWatcher = this.$watch('$route.query', () => {
@@ -374,6 +486,7 @@ export default {
       this.methodTypeSelection = null
       this.eventSelection      = null
       this.constantSelection   = null
+      this.search              = ""
 
       if (!this.$route.query.lang) {
         this.methodTypeOptions = []
@@ -386,9 +499,16 @@ export default {
         this.languageSelection = this.$route.query.lang
         if (this.lastQueryParamState.lang !== this.$route.query.lang) {
           setTimeout(this.methodTypeSelect, 50)
+          setTimeout(() => {
+            let search = document.getElementById("quest-explorer-search")
+            if (search) {
+              search.focus()
+            }
+          }, 100)
         }
         this.languageSelect()
       }
+
       if (this.$route.query.type) {
         this.methodTypeSelection = this.$route.query.type
         if (this.lastQueryParamState.type !== this.$route.query.type) {
@@ -408,6 +528,16 @@ export default {
         if (this.lastQueryParamState.constant !== this.$route.query.constant) {
           Debug.log("[loadQueryParams] constantSelect")
           this.constantSelect()
+        }
+      }
+
+      if (this.$route.query.q) {
+        this.search = this.$route.query.q
+
+        if (this.lastQueryParamState.q !== this.$route.query.q) {
+          Debug.log("[loadQueryParams] search")
+          this.doSearch()
+          this.onSearchMethodExampleLoad()
         }
       }
 
@@ -433,6 +563,12 @@ export default {
       if (this.constantSelection) {
         query.constant = this.constantSelection
       }
+      if (this.search) {
+        query.q = this.search
+      }
+      if (this.search.length === 0) {
+        delete query.q
+      }
       if (this.$route.query.h) {
         query.h = this.$route.query.h
       }
@@ -455,6 +591,7 @@ export default {
     // when language is selected
     languageSelect: function () {
       this.constantSelection = null
+      this.search            = ""
 
       // methods
       if (this.api[this.languageSelection].methods) {
@@ -515,8 +652,8 @@ export default {
 
       // update browser / route state
       setTimeout(() => {
-        this.formChange(), 100
-      });
+        this.formChange();
+      }, 50);
     },
     slug: function (toSlug) {
       return slugify(toSlug.replace(/[&\/\\#, +()$~%.'":*?<>{}]/g, "-"))
@@ -595,6 +732,50 @@ export default {
       this.eventSelection      = null
     },
 
+    // formats expected api rendered format from the API response
+    getFormattedApiMethod(method) {
+      const snakeCase = string => {
+        return string.replace(/\W+/g, " ")
+                     .split(/ |\B(?=[A-Z])/)
+                     .map(word => word.toLowerCase())
+                     .join('_');
+      };
+
+      let prefix = method.method_type
+      prefix     = prefix.replace("NPC", "Npc")
+      let comment;
+
+      // perl
+      if (this.languageSelection === "perl") {
+        if (prefix == "quest") {
+          prefix = prefix.replace(prefix, "quest::")
+        } else {
+          prefix = prefix.replace(prefix, "$" + snakeCase(prefix).toLowerCase() + "->")
+        }
+      }
+
+      // lua
+      if (this.languageSelection === "lua") {
+        if (prefix == "eq") {
+          prefix = prefix.replace(prefix, "eq.")
+        } else {
+          prefix = prefix.replace(prefix, snakeCase(prefix).toLowerCase() + ":")
+        }
+
+        if (method.return_type !== "") {
+          comment = "-- @return " + method.return_type
+        }
+      }
+
+      return {
+        method: method.method,
+        methodPrefix: prefix,
+        params: method.params,
+        comments: comment,
+        categories: method.categories,
+      }
+    },
+
     // when a method type is selected
     methodTypeSelect: function () {
       Debug.log("[methodTypeSelect] trigger")
@@ -612,50 +793,11 @@ export default {
 
       // methods
       if (this.api[this.languageSelection].methods) {
-        this.codeClass  = this.languageSelection
-        const methods   = this.api[this.languageSelection].methods[this.methodTypeSelection]
-        const snakeCase = string => {
-          return string.replace(/\W+/g, " ")
-                       .split(/ |\B(?=[A-Z])/)
-                       .map(word => word.toLowerCase())
-                       .join('_');
-        };
-
+        this.codeClass = this.languageSelection
+        const methods  = this.api[this.languageSelection].methods[this.methodTypeSelection]
         if (methods && methods.length > 0) {
           methods.forEach((method) => {
-            let prefix = method.method_type
-            prefix     = prefix.replace("NPC", "Npc")
-            let comment;
-
-            // perl
-            if (this.languageSelection === "perl") {
-              if (prefix == "quest") {
-                prefix = prefix.replace(prefix, "quest::")
-              } else {
-                prefix = prefix.replace(prefix, "$" + snakeCase(prefix).toLowerCase() + "->")
-              }
-            }
-
-            // lua
-            if (this.languageSelection === "lua") {
-              if (prefix == "eq") {
-                prefix = prefix.replace(prefix, "eq.")
-              } else {
-                prefix = prefix.replace(prefix, snakeCase(prefix).toLowerCase() + ":")
-              }
-
-              if (method.return_type !== "") {
-                comment = "-- @return " + method.return_type
-              }
-            }
-
-            apiMethods.push({
-              method: method.method,
-              methodPrefix: prefix,
-              params: method.params,
-              comments: comment,
-              categories: method.categories,
-            })
+            apiMethods.push(this.getFormattedApiMethod(method))
 
             // we use the bracket after the method to grep in searches because
             // we can pick up false positives in comments and other unrelated things
@@ -667,9 +809,7 @@ export default {
         }
 
         this.apiMethods = apiMethods
-
         this.loadSearchExamples(methodSearchTerms)
-
         this.trackAnalytics("quest_navigate_methods_" + this.languageSelection, this.methodTypeSelection)
       }
 
