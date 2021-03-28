@@ -1,8 +1,9 @@
 <template>
-  <eq-window class="mt-4" title="Debug" v-if="debug">
-  <pre
-    style="padding-top: 10px !important; width: 100%">{{ data }}</pre>
-  </eq-window>
+  <div v-if="debug" class="mt-4">
+    <h3 class="eq-header">Debug</h3>
+    <pre
+      style="padding-top: 10px !important; width: 100%">{{ data }}</pre>
+  </div>
 </template>
 
 <script>

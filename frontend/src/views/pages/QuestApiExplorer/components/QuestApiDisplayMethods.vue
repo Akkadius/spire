@@ -59,6 +59,8 @@
 
 <script>
 import util from "util";
+import ClipBoard from "@/app/clipboard/clipboard";
+import Analytics from "@/app/analytics/analytics";
 
 export default {
   name: "QuestApiDisplayMethods",
@@ -73,8 +75,8 @@ export default {
     languageSelection: { type: String }
   },
   created() {
-    if (this.$route.query.m) {
-      this.highlightedMethod = this.$route.query.m
+    if (this.$route.query.h) {
+      this.highlightedMethod = this.$route.query.h
 
       setTimeout(this.scrollHighlightedIntoView, 100)
     }
@@ -89,30 +91,21 @@ export default {
       );
     },
     scrollHighlightedIntoView() {
-      let m = document.getElementsByClassName("method-scroll-" + this.$route.query.m);
-      if (m && m[0]) {
-        // m[0].scrollIntoView();
-        window.scrollTo({ top: m[0].offsetTop + 70, behavior: "smooth" });
+      let highlighted = document.getElementsByClassName("method-scroll-" + this.$route.query.h);
+      if (highlighted && highlighted[0]) {
+        window.scrollTo({ top: highlighted[0].offsetTop + 70, behavior: "smooth" });
       }
     },
     copyToClip(s) {
-      let myTemporaryInputElement   = document.createElement("input");
-      myTemporaryInputElement.type  = "text";
-      myTemporaryInputElement.value = s;
+      ClipBoard.copyFromText(s)
 
-      document.body.appendChild(myTemporaryInputElement);
-
-      myTemporaryInputElement.select();
-      document.execCommand("Copy");
-
-      document.body.removeChild(myTemporaryInputElement);
+      Analytics.trackCountsEvent("clipboard_copy_method", s)
 
       this.$bvToast.toast(s, {
         title: "Copied to Clipboard!",
         autoHideDelay: 2000,
         solid: true
       })
-
     },
     buildFullMethod(method) {
       return util.format(
@@ -127,7 +120,7 @@ export default {
 
       let queryState = {};
       Object.assign(queryState, this.$route.query)
-      queryState.m = method.method
+      queryState.h = method.method
 
       this.$router.push(
         {

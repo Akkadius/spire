@@ -8,4 +8,9 @@ export default class Analytics {
   static trackCountsEvent(name, key) {
     SpireApiClient.v1().post('/analytics/count', {event_name: name, event_key: key})
   }
+
+  static trackAllEvents(name, value) {
+    Analytics.trackEvent(name, value)
+    Analytics.trackCountsEvent(name, value)
+  }
 }

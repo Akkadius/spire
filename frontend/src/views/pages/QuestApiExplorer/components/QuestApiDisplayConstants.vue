@@ -6,6 +6,9 @@
   >
     <div
       v-for="(constant, index) in api[this.languageSelection].constants[constantSelection]"
+      :style="(highlightedConstant === formatConstant(constant) ? 'background-color: rgba(106, 76, 50, 0.5);' : '')"
+      :class="'method-scroll-' + formatConstant(constant)"
+      @click="highlightConstant(formatConstant(constant)); loadConstantExamples(formatConstant(constant))"
       :key="index">
 
       <div class="d-inline-block">
@@ -36,6 +39,9 @@
 </template>
 
 <script>
+import ClipBoard from "@/app/clipboard/clipboard";
+import Analytics from "@/app/analytics/analytics";
+
 export default {
   name: "QuestApiDisplayConstants",
   props: {
@@ -45,9 +51,29 @@ export default {
     constantSelection: { type: String }
   },
   data() {
-    return {}
+    return {
+      highlightedConstant: ""
+    }
+  },
+  created() {
+    if (this.$route.query.h) {
+      this.highlightedConstant = this.$route.query.h
+
+      setTimeout(this.scrollHighlightedIntoView, 100)
+      setTimeout(() => {
+        this.loadConstantExamples(this.highlightedConstant)
+      }, 500)
+
+    }
   },
   methods: {
+    scrollHighlightedIntoView() {
+      let highlighted = document.getElementsByClassName("method-scroll-" + this.$route.query.h);
+      if (highlighted && highlighted[0]) {
+        window.scrollTo({ top: highlighted[0].offsetTop + 70, behavior: "smooth" });
+      }
+    },
+
     loadConstantExamples: function (search) {
       this.$emit("load-quest-example",
         {
@@ -56,16 +82,11 @@ export default {
         }
       );
     },
+
     copyToClip(s) {
-      let tempNode   = document.createElement("input");
-      tempNode.type  = "text";
-      tempNode.value = s;
+      ClipBoard.copyFromText(s)
 
-      document.body.appendChild(tempNode);
-
-      tempNode.select();
-      document.execCommand("Copy");
-      document.body.removeChild(tempNode);
+      Analytics.trackCountsEvent("clipboard_copy_constant", s)
 
       this.$bvToast.toast(s, {
         title: "Copied to Clipboard!",
@@ -75,6 +96,24 @@ export default {
     },
     formatConstant(constant) {
       return this.languageSelection === "lua" ? this.constantSelection + "." + constant.constant : constant.constant;
+    },
+
+    highlightConstant(constant) {
+      this.highlightedConstant = constant;
+
+      let queryState = {};
+      Object.assign(queryState, this.$route.query)
+      queryState.h = constant
+
+      this.$router.push(
+        {
+          path: "/quest-api-explorer",
+          query: queryState
+        }
+      ).catch(() => {
+      })
+
+      // console.log(this.$route.query)
     }
   }
 }

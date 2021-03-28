@@ -14,33 +14,33 @@
               <div v-if="loaded">
 
                 <!-- Form -->
-                <div class="row">
+                <div class="row" @click="resetAllState()">
                   <div class="col-1 text-center">
                     Language
                     <b-form-select
                       v-model="languageSelection"
                       :options="languageOptions"
-                      @change="languageSelect(); displayExamples = []"/>
+                      @change="languageSelect();"/>
                   </div>
                   <div class="col-2 text-center">
                     Types
                     <b-form-select
                       v-model="methodTypeSelection"
-                      @change="formChange();"
+                      @change="methodTypeSelectReset(); formChange(); "
                       :options="methodTypeOptions"/>
                   </div>
                   <div class="col-3 text-center">
                     Events
                     <b-form-select
                       v-model="eventSelection"
-                      @change="formChange();"
+                      @change="eventSelectReset(); formChange();"
                       :options="eventOptions"/>
                   </div>
                   <div class="col-2 text-center">
                     Constants
                     <b-form-select
                       v-model="constantSelection"
-                      @change="formChange();"
+                      @change="constantSelectReset(); formChange();"
                       :options="constantOptions"/>
                   </div>
 
@@ -175,13 +175,15 @@
 
               </div>
 
+              <eq-debug :data="api" v-if="Object.keys(api).length"/>
+
             </eq-window>
           </div>
         </div>
       </div>
+
     </div>
 
-    <eq-debug :data="api"/>
 
   </div>
 
@@ -203,7 +205,7 @@ import Analytics                from "@/app/analytics/analytics";
 import QuestApiDisplayConstants from "@/views/pages/QuestApiExplorer/components/QuestApiDisplayConstants.vue";
 import QuestApiDisplayEvents    from "@/views/pages/QuestApiExplorer/components/QuestApiDisplayEvents.vue";
 import EqDebug                  from "@/components/eq-ui/EQDebug.vue";
-
+import Debug                    from "@/app/debug/debug";
 
 export default {
   components: {
@@ -270,15 +272,49 @@ export default {
     }
   },
   deactivated() {
+    Debug.log("[deactivated]")
+
     // remove route watcher
     this.routeWatcher()
 
     document.body.removeEventListener('keyup', this.closeExampleKeyHandler)
   },
   activated() {
+    Debug.log("[activated]")
+
     this.init()
   },
   methods: {
+    resetAllState() {
+      // return
+
+      Debug.log("[resetAllState]")
+
+      this.displayExamples = []
+
+      let query = this.$route.query
+      delete query.h
+
+      // for some reason this needs to be wiped first
+      this.$router.replace(
+        {
+          path: '/quest-api-explorer',
+          query: {}
+        }
+      ).catch(() => {
+      })
+
+      this.$router.replace(
+        {
+          path: '/quest-api-explorer',
+          query: query
+        }
+      ).catch((e) => {
+        console.log(e)
+      })
+
+      Debug.log("[resetAllState] done")
+    },
     fromNow(time) {
       return moment(time).fromNow()
     },
@@ -288,6 +324,10 @@ export default {
       }
     },
     init() {
+      Debug.blankLine()
+      Debug.log("[init]")
+
+      // this.lastQueryParamState = this.$route.query
 
       // reset
       this.languageSelection   = null
@@ -328,14 +368,25 @@ export default {
       });
     },
     loadQueryParams() {
+      Debug.log("[loadQueryParams] trigger")
+
       this.languageSelection   = null
       this.methodTypeSelection = null
       this.eventSelection      = null
       this.constantSelection   = null
 
+      if (!this.$route.query.lang) {
+        this.methodTypeOptions = []
+        this.eventOptions      = []
+        this.constantOptions   = []
+        this.displayExamples   = []
+      }
+
       if (this.$route.query.lang) {
         this.languageSelection = this.$route.query.lang
+        // if (this.lastQueryParamState.lang !== this.$route.query.lang) {
         this.languageSelect()
+        // }
       }
       if (this.$route.query.type) {
         this.methodTypeSelection = this.$route.query.type
@@ -346,12 +397,17 @@ export default {
       if (this.$route.query.event) {
         this.eventSelection = this.$route.query.event
         if (this.lastQueryParamState.event !== this.$route.query.event) {
+          Debug.log("[loadQueryParams] eventSelect")
           this.eventSelect()
         }
       }
       if (this.$route.query.constant) {
         this.constantSelection = this.$route.query.constant
-        this.constantSelect()
+
+        if (this.lastQueryParamState.constant !== this.$route.query.constant) {
+          Debug.log("[loadQueryParams] constantSelect")
+          this.constantSelect()
+        }
       }
 
       if (!this.$route.query.lang && !this.$route.query.type) {
@@ -361,6 +417,8 @@ export default {
       this.lastQueryParamState = this.$route.query
     },
     formChange() {
+      Debug.blankLine()
+      Debug.log("[formChange] trigger")
       let query = {}
       if (this.languageSelection) {
         query.lang = this.languageSelection
@@ -374,8 +432,8 @@ export default {
       if (this.constantSelection) {
         query.constant = this.constantSelection
       }
-      if (this.$route.query.m) {
-        query.m = this.$route.query.m
+      if (this.$route.query.h) {
+        query.h = this.$route.query.h
       }
 
       this.$router.push(
@@ -468,7 +526,7 @@ export default {
       if (this.linkedExamples[this.languageSelection][event.search]) {
         this.displayExamples = this.linkedExamples[this.languageSelection][event.search]
 
-        this.sendAllAnalytics("load_quest_example_" + this.languageSelection, event.search.replace("(", ""))
+        this.trackAnalytics("load_quest_example_" + this.languageSelection, event.search.replace("(", ""))
       }
 
     },
@@ -476,10 +534,16 @@ export default {
     loadConstantExamples: function (search) {
       this.displayExamples = this.linkedExamples[this.languageSelection][search]
 
-      this.sendAllAnalytics("load_quest_constant_example_" + this.languageSelection, search)
+      this.trackAnalytics("load_quest_constant_example_" + this.languageSelection, search)
     },
     editorInit: async function (slug, lineNumber) {
+      Debug.log("[editorInit] trigger")
 
+      // ace
+      require('brace/ext/language_tools')
+      require('brace/theme/terminal')
+      require('brace/mode/lua')
+      require('brace/mode/perl')
 
       setTimeout(() => {
         // console.log(slug)
@@ -508,23 +572,37 @@ export default {
 
 
       // this.loaded = false;
-      require('brace/ext/language_tools')
-      require('brace/theme/terminal')
-      require('brace/mode/lua')
-      require('brace/mode/perl')
+
       // this.$refs.myEditor.editor.setFontSize(16)
       // this.$refs.editorslug.editor.setReadOnly(true);
       // this.$refs.editorslug.editor.gotoLine(1, lineNumber, true);
     },
-    // when a method type is selected
-    methodTypeSelect: function () {
 
-      // reset other displays
-      this.apiMethods        = []
-      let apiMethods         = []
+    methodTypeSelectReset: function () {
+      Debug.log("[methodTypeSelectReset] trigger")
       this.constantSelection = null
       this.eventSelection    = null
-      this.formChange()
+    },
+    eventSelectReset: function () {
+      Debug.log("[eventSelectReset] trigger")
+      this.methodTypeSelection = null
+      this.constantSelection   = null
+    },
+    constantSelectReset: function () {
+      Debug.log("[constantSelectReset] trigger")
+      this.methodTypeSelection = null
+      this.eventSelection      = null
+    },
+
+    // when a method type is selected
+    methodTypeSelect: function () {
+      Debug.log("[methodTypeSelect] trigger")
+
+      // reset other displays
+      let apiMethods  = []
+      this.apiMethods = []
+
+      // this.formChange()
 
       // used to search sources for examples
       let methodSearchTerms  = []
@@ -590,12 +668,13 @@ export default {
 
         this.loadSearchExamples(methodSearchTerms)
 
-        this.sendAllAnalytics("quest_navigate_methods_" + this.languageSelection, this.methodTypeSelection)
+        this.trackAnalytics("quest_navigate_methods_" + this.languageSelection, this.methodTypeSelection)
       }
 
     },
     // when an event type is selected
     eventSelect: async function () {
+      Debug.log("[eventSelect] trigger")
 
       // reset other displays
       this.apiMethods          = []
@@ -603,9 +682,9 @@ export default {
       this.constantSelection   = null
 
       // update browser / route state
-      setTimeout(() => {
-        this.formChange(), 100
-      });
+      // setTimeout(() => {
+      //   this.formChange(), 100
+      // });
 
       const event = this.eventSelection.split("-")[1]
       await this.loadSearchExamples([event])
@@ -616,10 +695,11 @@ export default {
 
       this.loadQuestExample(searchEvent)
 
-      this.sendAllAnalytics("quest_navigate_events_" + this.languageSelection, this.eventSelection)
+      this.trackAnalytics("quest_navigate_events_" + this.languageSelection, this.eventSelection)
     },
     // when an constant is selected
     constantSelect: function () {
+      Debug.log("[constantSelect] trigger")
 
       // reset other displays
       this.apiMethods          = []
@@ -642,10 +722,11 @@ export default {
 
         this.loadSearchExamples(searchTerms)
 
-        this.sendAllAnalytics("quest_navigate_constants_" + this.languageSelection, this.constantSelection)
+        this.trackAnalytics("quest_navigate_constants_" + this.languageSelection, this.constantSelection)
       }
     },
     loadSearchExamples: async function (searchTerms) {
+      Debug.log("[loadSearchExamples] trigger")
 
       // examples
       // reset
@@ -683,16 +764,10 @@ export default {
       this.linkedExamples = linkedExamples
       this.$forceUpdate()
     },
-    sendAllAnalytics(name, value) {
-      this.sendAnalyticsEvent(name, value)
-      this.sendAnalyticsCountEvent(name, value)
+    trackAnalytics(name, value) {
+      Debug.log("[trackAnalytics] trigger")
+      Analytics.trackAllEvents(name, value)
     },
-    sendAnalyticsEvent(name, value) {
-      Analytics.trackEvent(name, value)
-    },
-    sendAnalyticsCountEvent(name, key) {
-      Analytics.trackCountsEvent(name, key)
-    }
   }
 }
 
