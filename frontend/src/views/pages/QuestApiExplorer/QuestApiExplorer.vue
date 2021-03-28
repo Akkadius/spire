@@ -371,6 +371,10 @@ export default {
       }
 
       this.searchApiResultMethods = apiMethods
+
+      if (this.search.length >= 3) {
+        Analytics.trackCountsEvent("quest_api_search", this.search)
+      }
     },
 
     onSearchMethodExampleLoad: debounce(function () {
