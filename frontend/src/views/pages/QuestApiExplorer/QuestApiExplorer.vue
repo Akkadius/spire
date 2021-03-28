@@ -185,7 +185,7 @@
 
             <!-- Example Previews -->
             <div class="row mt-2 pl-2">
-              <div class="col-6 example-preview" v-if="displayExamples.length > 0">
+              <div class="col-lg-6 col-sm-12 example-preview" v-if="displayExamples.length > 0">
 
                 <eq-window
                   :title="'Examples (' + displayExamples.slice(0,50).length + ')'"
@@ -965,8 +965,9 @@ export default {
 
 .example-preview {
   position: fixed;
-  right:    30px;
+  right:    0px;
   top:      2%;
+  z-index:  9999999
 }
 
 .example-preview-inner {
