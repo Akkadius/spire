@@ -59,24 +59,40 @@ func (c *ParseService) parseLuaMethods(contents string, fileName string, luaMeth
 	}
 
 	for _, l := range strings.Split(contents, "\n") {
-		if strings.Contains(l, "const char *Lua") {
-			l = strings.ReplaceAll(l, "const char *Lua", "char Lua");
+		if strings.Contains(l, "const char *") {
+			l = strings.ReplaceAll(l, "const char *", "string ")
 		}
+		if strings.Contains(l, "const char") {
+			l = strings.ReplaceAll(l, "const char", "string")
+		}
+
+		// transform 1 off statements like the following
+		// luabind::adl::object lua_get_zone_time(lua_State *L) {
+		if strings.Contains(l, "{") {
+			l = strings.ReplaceAll(l, "luabind::adl::object", "object")
+			l = strings.ReplaceAll(l, "State *L, ", "")
+			l = strings.ReplaceAll(l, "State *L", "")
+		}
+		//fmt.Println(l)
 
 		lineSplit := strings.Split(strings.TrimSpace(l), " ")
 
 		// int Lua_Inventory::CalcSlotFromMaterial(int material)
 		// here we first grep for lua_
 		if len(lineSplit) > 1 && len(lineSplit[1]) > 5 {
-			methodIdentifier := strings.ToLower(lineSplit[1][:4])
 
+			methodIdentifier := strings.ToLower(lineSplit[1][:4])
 			if methodIdentifier == "lua_" &&
 				!strings.Contains(l, "luabind") &&
 				!strings.Contains(l, "return ") &&
 				!strings.Contains(l, "#ifdef") &&
 				!strings.Contains(l, "struct ") {
 
+				//fmt.Println("")
 				//fmt.Println(strings.TrimSpace(l))
+				//fmt.Println(methodIdentifier)
+
+				// luabind::adl::object lua_get_zone_time(lua_State *L) {
 
 				// pull off the return type
 				// <Lua_Client> Lua_EntityList::GetClientByCharID(uint32 char_id) {
