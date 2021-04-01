@@ -47,7 +47,6 @@ type PerlMethod struct {
 	Params     []string `json:"params"`
 	MethodType string   `json:"method_type"`
 	ReturnType string   `json:"return_type"`
-	MethodFull string   `json:"method_full"`
 	Categories []string `json:"categories"`
 }
 
@@ -56,7 +55,6 @@ type LuaMethod struct {
 	Params     []string `json:"params"`
 	MethodType string   `json:"method_type"`
 	ReturnType string   `json:"return_type"`
-	MethodFull string   `json:"method_full"`
 	Categories []string `json:"categories"`
 }
 

@@ -1,7 +1,6 @@
 package questapi
 
 import (
-	"fmt"
 	"strings"
 )
 
@@ -83,7 +82,6 @@ func (c *ParseService) parsePerlMethods(contents string, perlMethods map[string]
 			perlMethods[methodType] = append(
 				perlMethods[methodType], PerlMethod{
 					Method:     method,
-					MethodFull: fmt.Sprintf("%v(%v)", method, params),
 					Params:     p,
 					MethodType: methodType,
 					ReturnType: returnType,

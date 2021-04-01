@@ -152,7 +152,6 @@ func (c *ParseService) parseLuaMethods(contents string, fileName string, luaMeth
 					luaMethods[methodType] = append(
 						luaMethods[methodType], LuaMethod{
 							Method:     method,
-							MethodFull: methodFull,
 							Params:     p,
 							MethodType: methodType,
 							ReturnType: returnType,
@@ -205,7 +204,6 @@ func (c *ParseService) parseLuaMethods(contents string, fileName string, luaMeth
 					// add to functions
 					luaMethods[methodType] = append(
 						luaMethods[methodType], LuaMethod{
-							MethodFull: methodFull,
 							Method:     method,
 							Params:     p,
 							MethodType: methodType,
