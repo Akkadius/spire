@@ -49,7 +49,7 @@ export default {
       this.$emit("load-quest-example",
         {
           language: this.languageSelection,
-          search: search
+          search: search + "("
         }
       );
     },

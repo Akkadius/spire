@@ -694,6 +694,7 @@ export default {
     },
     // received from component event
     loadQuestExample(event) {
+      console.log(event)
       this.closeExample()
       if (this.linkedExamples[this.languageSelection][event.search]) {
         this.displayExamples = this.linkedExamples[this.languageSelection][event.search]
@@ -865,11 +866,12 @@ export default {
       //   this.formChange(), 100
       // });
 
-      const event = this.eventSelection.split("-")[1]
-      await this.loadSearchExamples([event])
+      const event        = this.eventSelection.split("-")[1]
+      const searchString = (event.trim() + "(")
+      await this.loadSearchExamples([searchString])
 
       let searchEvent = {
-        search: event
+        search: searchString
       }
 
       this.loadQuestExample(searchEvent)
