@@ -24,8 +24,8 @@ func (c *ParseService) parsePerlEvents(files map[string]string) []PerlEvent {
 	// constants used in the code != what is used in the quest api in some circumstances
 	// this is to map the two together
 	// @example source: EVENT_TRADE perl usage: EVENT_ITEM
-	eventCodes := []string{}
-	perlEventCodes := []string{}
+	var eventCodes []string
+	var perlEventCodes []string
 	for fileName, contents := range files {
 
 		// source event names
@@ -73,7 +73,7 @@ func (c *ParseService) parsePerlEvents(files map[string]string) []PerlEvent {
 	//fmt.Printf("%+v\n", len(eventCodes))
 
 	// first pass; fetch all events and what entity they relate to (Player, NPC, Item etc.)
-	eventEntityMappings := []PerlEventEntityMapping{}
+	var eventEntityMappings []PerlEventEntityMapping
 	for fileName, contents := range files {
 		if strings.Contains(fileName, ".cpp") {
 			if strings.Contains(contents, "parse->Event") {
@@ -119,8 +119,8 @@ func (c *ParseService) parsePerlEvents(files map[string]string) []PerlEvent {
 	}
 
 	// second pass; parse event vars and tie to entities
-	perlEvents := []PerlEvent{}
-	hasMapped := []string{}
+	var perlEvents = []PerlEvent{}
+	var hasMapped = []string{}
 	for fileName, _ := range files {
 		contents := files[fileName]
 		if strings.Contains(fileName, "embparser.cpp") {
@@ -201,6 +201,77 @@ func (c *ParseService) parsePerlEvents(files map[string]string) []PerlEvent {
 			}
 		}
 
+	}
+
+	// For every event not already mapped (Doesn't have a specific handler) add it to the list
+	for fileName := range files {
+		content := files[fileName]
+		// grep: parse->EventPlayer(EVENT_LEVEL_UP, this, "", 0);
+		if strings.Contains(content, "parse->Event") {
+			for _, l := range strings.Split(files[fileName], "\n") {
+				if strings.Contains(l, "parse->Event") {
+					parseSplit := strings.Split(l, "parse->Event")
+					if len(parseSplit) > 0 {
+						eventLine := parseSplit[1]
+						eventTypeSplit := strings.Split(eventLine, "(")
+						// grab event type and then grab the sub event
+						// grep: Player(EVENT_LEVEL_UP, this, "", 0);
+						if len(eventTypeSplit) > 0 {
+							eventType := eventTypeSplit[0]
+
+							if eventType == "Encounter" {
+								continue
+							}
+
+							eventArgs := eventTypeSplit[1]
+							eventArgsSplit := strings.Split(eventArgs, ",")
+							// grep: EVENT_LEVEL_UP, this, "", 0);
+							// grab EVENT_LEVEL_UP
+							if len(eventArgsSplit) > 0 {
+								event := strings.TrimSpace(eventArgsSplit[0])
+
+								// make sure the event doesn't already exist
+								eventExists := false
+								for _, perlEvent := range perlEvents {
+									if perlEvent.EventName == event && perlEvent.EntityType == eventType {
+										eventExists = true
+										break
+									}
+								}
+
+								// if event doesn't exist we need to map the EVENT_NAME to a script event_name(e)
+								// since they are not usually 1:1
+								if !eventExists {
+
+									// get the perl script-used event name if exists
+									// @example source: EVENT_TRADE perl usage: EVENT_ITEM
+									finalEvent := event
+									eventIndex := indexOf(event, eventCodes)
+									if eventIndex >= 0 {
+										if len(perlEventCodes) > eventIndex {
+											finalEvent = perlEventCodes[eventIndex]
+										}
+									}
+
+									if finalEvent == "evt.event_id" {
+										continue
+									}
+
+									perlEvents = append(
+										perlEvents, PerlEvent{
+											EntityType:      eventType,
+											EventName:       event,
+											EventIdentifier: finalEvent,
+											EventVars:       []string{},
+										},
+									)
+								}
+							}
+						}
+					}
+				}
+			}
+		}
 	}
 
 	return perlEvents
