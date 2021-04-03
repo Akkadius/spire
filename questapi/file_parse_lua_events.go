@@ -26,6 +26,7 @@ func (c *ParseService) parseLuaEvents(files map[string]string) []LuaEvent {
 	// #1 Handler needs to be mapped from lua_parser_events.cpp eg: void handle_npc_popup
 	// #2 Parse lua_general.cpp#L2984 to map event identifiers (event_say(e)) to sub events EVENT_SAY
 	// #3 Parse lua_parser.cpp#L153 to map sub events to handles
+	// #4 For every event not already mapped (Doesn't have a specific handler) add it to the list
 
 	// #1 Handler needs to be mapped from lua_parser_events.cpp eg: void handle_npc_popup
 	// build list of handlers
@@ -209,6 +210,66 @@ func (c *ParseService) parseLuaEvents(files map[string]string) []LuaEvent {
 					}
 
 					luaEvents = append(luaEvents, e)
+				}
+			}
+		}
+	}
+
+	// #4 For every event not already mapped (Doesn't have a specific handler) add it to the list
+	for fileName := range files {
+		content := files[fileName]
+		// grep: parse->EventPlayer(EVENT_LEVEL_UP, this, "", 0);
+		if strings.Contains(content, "parse->Event") {
+			for _, l := range strings.Split(files[fileName], "\n") {
+				if strings.Contains(l, "parse->Event") {
+					parseSplit := strings.Split(l, "parse->Event")
+					if len(parseSplit) > 0 {
+						eventLine := parseSplit[1]
+						eventTypeSplit := strings.Split(eventLine, "(")
+						// grab event type and then grab the sub event
+						// grep: Player(EVENT_LEVEL_UP, this, "", 0);
+						if len(eventTypeSplit) > 0 {
+							eventType := eventTypeSplit[0]
+							eventArgs := eventTypeSplit[1]
+							eventArgsSplit := strings.Split(eventArgs, ",")
+							// grep: EVENT_LEVEL_UP, this, "", 0);
+							// grab EVENT_LEVEL_UP
+							if len(eventArgsSplit) > 0 {
+								event := strings.TrimSpace(eventArgsSplit[0])
+
+								// make sure the event doesn't already exist
+								eventExists := false
+								for _, luaEvent := range luaEvents {
+									if luaEvent.EventName == event && luaEvent.EntityType == eventType {
+										eventExists = true
+										break
+									}
+								}
+
+								// if event doesn't exist we need to map the EVENT_NAME to a script event_name(e)
+								// since they are not usually 1:1
+								if !eventExists {
+									identifier := ""
+									for _, mapping := range luaEventMappings {
+										if mapping.Event == event {
+											identifier = mapping.ScriptEventIdentifier
+										}
+									}
+
+									if len(identifier) > 0 {
+										e := LuaEvent{
+											EntityType:      eventType,
+											EventName:       event,
+											EventIdentifier: "event_" + identifier,
+											EventVars:       []string{},
+										}
+
+										luaEvents = append(luaEvents, e)
+									}
+								}
+							}
+						}
+					}
 				}
 			}
 		}
