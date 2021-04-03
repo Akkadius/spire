@@ -1,6 +1,7 @@
 package spa
 
 import (
+	"fmt"
 	"github.com/Akkadius/spire/http/routes"
 	"github.com/gobuffalo/packr"
 	"github.com/labstack/echo/v4"
@@ -51,7 +52,9 @@ func NewPackedSpaService(logger *logrus.Logger, config PackedSpaServeConfig) *Pa
 }
 
 func WrapCachedHandler(h http.Handler) echo.HandlerFunc {
+	fmt.Println("wrapped cache handler")
 	return func(c echo.Context) error {
+		fmt.Println(c.Request().RequestURI)
 		if contains([]string{".js", ".css", ".png"}, c.Request().RequestURI) {
 			c.Response().Header().Set("Vary", "Accept-Encoding")
 			c.Response().Header().Set("Cache-Control", "public, max-age=7776000")
