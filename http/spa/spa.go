@@ -55,6 +55,7 @@ func WrapCachedHandler(h http.Handler) echo.HandlerFunc {
 	fmt.Println("wrapped cache handler")
 	return func(c echo.Context) error {
 		fmt.Println(c.Request().RequestURI)
+		fmt.Printf("Request URI [%v]", c.Request().RequestURI)
 		if contains([]string{".js", ".css", ".png"}, c.Request().RequestURI) {
 			fmt.Println("sending cached headers")
 			c.Response().Header().Set("Vary", "Accept-Encoding")
