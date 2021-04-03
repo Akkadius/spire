@@ -55,7 +55,7 @@ func WrapCachedHandler(h http.Handler) echo.HandlerFunc {
 	fmt.Println("wrapped cache handler")
 	return func(c echo.Context) error {
 		fmt.Println(c.Request().RequestURI)
-		fmt.Printf("Request URI [%v]", c.Request().RequestURI)
+		fmt.Printf("Request URI [%v]\n", c.Request().RequestURI)
 		if contains([]string{".js", ".css", ".png"}, c.Request().RequestURI) {
 			fmt.Println("sending cached headers")
 			c.Response().Header().Set("Vary", "Accept-Encoding")
@@ -66,14 +66,15 @@ func WrapCachedHandler(h http.Handler) echo.HandlerFunc {
 	}
 }
 
-func contains(slice []string, item string) bool {
-	set := make(map[string]struct{}, len(slice))
-	for _, s := range slice {
-		set[s] = struct{}{}
+// Find takes a slice and looks for an element in it. If found it will
+// return it's key, otherwise it will return -1 and a bool of false.
+func contains(slice []string, val string) (bool) {
+	for _, item := range slice {
+		if strings.Contains(val, item) {
+			return true
+		}
 	}
-
-	_, ok := set[item]
-	return ok
+	return false
 }
 
 // This middleware handler is for the most part a static middleware handler for handling static assets
