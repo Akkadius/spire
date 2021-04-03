@@ -44,9 +44,31 @@ func NewPackedSpaService(logger *logrus.Logger, config PackedSpaServeConfig) *Pa
 	s.logger = logger
 	s.box = packr.NewBox(s.config.LocalBasePath)
 	s.fs = http.FileServer(s.box)
-	s.handler = echo.WrapHandler(http.StripPrefix(s.config.BasePath, s.fs))
+	//s.handler = echo.WrapHandler(http.StripPrefix(s.config.BasePath, s.fs))
+	s.handler = WrapCachedHandler(http.StripPrefix(s.config.BasePath, s.fs))
 
 	return s
+}
+
+func WrapCachedHandler(h http.Handler) echo.HandlerFunc {
+	return func(c echo.Context) error {
+		if contains([]string{".js", ".css", ".png"}, c.Request().RequestURI) {
+			c.Response().Header().Set("Vary", "Accept-Encoding")
+			c.Response().Header().Set("Cache-Control", "public, max-age=7776000")
+		}
+		h.ServeHTTP(c.Response(), c.Request())
+		return nil
+	}
+}
+
+func contains(slice []string, item string) bool {
+	set := make(map[string]struct{}, len(slice))
+	for _, s := range slice {
+		set[s] = struct{}{}
+	}
+
+	_, ok := set[item]
+	return ok
 }
 
 // This middleware handler is for the most part a static middleware handler for handling static assets
