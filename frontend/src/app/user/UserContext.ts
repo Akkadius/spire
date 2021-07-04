@@ -18,25 +18,32 @@ export default class UserContext {
       return this.user;
     }
 
-    const result = await ((new MeApi({
-        accessToken: undefined,
-        apiKey: undefined,
-        basePath: SpireApiClient.getBaseV1Path(),
-        formDataCtor: undefined,
-        password: "",
-        username: "",
-        isJsonMime(mime: string): boolean {
-          return false;
-        },
-        baseOptions: SpireApiClient.getAxiosConfig()
-      })
-    ).me())
+    try {
+      const result = await ((new MeApi({
+          accessToken: undefined,
+          apiKey: undefined,
+          basePath: SpireApiClient.getBaseV1Path(),
+          formDataCtor: undefined,
+          password: "",
+          username: "",
+          isJsonMime(mime: string): boolean {
+            return false;
+          },
+          baseOptions: SpireApiClient.getAxiosConfig()
+        })
+      ).me())
 
-    if (result.status === 200) {
-      this.user   = result.data
-      this.loaded = true
+      // @ts-ignore
+      if (result.status === 200 && !result.data.error) {
+        // @ts-ignore
+        this.user   = result.data
+        this.loaded = true
 
-      return this.user
+        return this.user
+      }
+    }
+    catch (e) {
+      // squash
     }
 
     return null
