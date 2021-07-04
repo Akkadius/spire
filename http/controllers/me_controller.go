@@ -35,5 +35,5 @@ func (a *MeController) me(c echo.Context) error {
 		return c.JSON(http.StatusOK, c.Get("user").(models.User))
 	}
 
-	return c.JSON(http.StatusNotFound, echo.Map{"error": "User context not found"})
+	return c.JSON(http.StatusOK, echo.Map{"error": "User context not found"})
 }
