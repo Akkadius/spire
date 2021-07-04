@@ -146,21 +146,19 @@
 
         </ul>
 
-        <!-- Heading -->
-        <h6 class="navbar-heading">
-          Editors
-        </h6>
+<!--        &lt;!&ndash; Heading &ndash;&gt;-->
+<!--        <h6 class="navbar-heading">-->
+<!--          Editors-->
+<!--        </h6>-->
 
-        <!-- Navigation -->
-        <ul class="navbar-nav mb-md-4">
-
-          <li class="nav-item">
-            <router-link class="nav-link " to="/test2/">
-              <i class="fe fe-list"></i> Task Editor
-            </router-link>
-          </li>
-
-        </ul>
+<!--        &lt;!&ndash; Navigation &ndash;&gt;-->
+<!--        <ul class="navbar-nav mb-md-4">-->
+<!--          <li class="nav-item">-->
+<!--            <router-link class="nav-link " to="/tasks/">-->
+<!--              <i class="fe fe-list"></i> Task Editor-->
+<!--            </router-link>-->
+<!--          </li>-->
+<!--        </ul>-->
 
         <!-- Push content down -->
         <div class="mt-auto"></div>
@@ -234,6 +232,7 @@ export default {
       testPageNavs: [
         { title: "Items Test", to: "/items-test" },
         { title: "Spells Test", to: "/spells-test" },
+        { title: "Task Editor (Non Functional)", to: "/tasks" },
       ]
     }
   },

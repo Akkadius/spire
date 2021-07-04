@@ -48,13 +48,13 @@ export default new Router({
           meta: {title: "Component Documentation"},
         },
         {
-          path: '/test2/',
-          component: () => import('./views/pages/Test2.vue'),
+          path: '/tasks/',
+          component: () => import('./views/pages/Tasks.vue'),
           meta: {title: "Task Editor"},
         },
         {
-          path: '/test2/:id',
-          component: () => import('./views/pages/Test2.vue'),
+          path: '/tasks/:id',
+          component: () => import('./views/pages/Tasks.vue'),
           meta: {title: "Task Editor"},
         },
         {

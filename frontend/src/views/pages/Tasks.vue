@@ -28,7 +28,7 @@
                       :style="(parseInt(taskSelected) === parseInt(task.id) ? 'background-color: rgba(106, 76, 50, 0.5);' : '')"
                       v-for="task in filteredTasks">
                       <router-link
-                        :to="'/test2/' + task.id"
+                        :to="'/tasks/' + task.id"
                         :style="'color: #FFFFFF !important; '">({{ task.id }}) {{ task.title }}
 
                       </router-link>
@@ -115,7 +115,7 @@ export default {
     async selectTask(task) {
       this.taskSelected = task.id
 
-      this.$router.push({path: '/test2/' + this.taskSelected}).catch(() => {})
+      this.$router.push({path: '/tasks/' + this.taskSelected}).catch(() => {})
     },
 
     async filterResultsByName() {
@@ -155,7 +155,7 @@ export default {
         return
       }
 
-      this.$router.push({path: '/test2/' + this.taskSelected})
+      this.$router.push({path: '/tasks/' + this.taskSelected})
     },
     getActivityDescription(activity) {
       if (activity.description_override !== "") {

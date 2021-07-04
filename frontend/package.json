@@ -12,7 +12,7 @@
     "@types/jquery": "^3.3.29",
     "ag-grid-community": "^25.0.1",
     "ag-grid-enterprise": "^25.0.1",
-    "ag-grid-vue": "^25.0.0",
+    "ag-grid-vue": "^25.3.0",
     "axios": "^0.18.0",
     "bootstrap": "^4.3.1",
     "bootstrap-vue": "^2.0.0-rc.19",
