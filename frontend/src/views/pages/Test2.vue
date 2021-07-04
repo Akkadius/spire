@@ -7,7 +7,7 @@
         <div class="panel panel-default">
           <eq-window title="Task Editor" v-if="tasks" style="margin-top: 30px">
             <div class="row">
-              <div :class="model ? 'col-4' : 'col-12'">
+              <div :class="model ? 'col-4' : 'col-12' + ''">
                 <h3 class="eq-header" style="text-align: center">Task Selection</h3>
 
                 <!-- Task List -->
@@ -34,20 +34,6 @@
                       </router-link>
                     </li>
                   </ul>
-
-                  <!--                  <select-->
-                  <!--                    size="2"-->
-                  <!--                    v-model="taskSelected"-->
-                  <!--                    v-bind="tasks"-->
-                  <!--                    @change="onChange"-->
-                  <!--                    class="form-control eq-input"-->
-                  <!--                    style="height: 100%; overflow-x: scroll">-->
-                  <!--                    <option-->
-                  <!--                      v-for="task in tasks"-->
-                  <!--                      :value="task.id">-->
-                  <!--                      [{{ task.id }}] {{ task.title }} {{ task.reward !== "" ? "[Reward: " + task.reward + "]" : "" }}-->
-                  <!--                    </option>-->
-                  <!--                  </select>-->
                 </div>
               </div>
 
