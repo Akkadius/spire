@@ -7,24 +7,47 @@
         <div class="panel panel-default">
           <eq-window title="Task Editor" v-if="tasks" style="margin-top: 30px">
             <div class="row">
-              <div :class="model ? 'col-3' : 'col-12'">
+              <div :class="model ? 'col-4' : 'col-12'">
                 <h3 class="eq-header" style="text-align: center">Task Selection</h3>
 
                 <!-- Task List -->
-                <div style="height: 80vh; overflow-y: hidden; overflow-x: hidden" class="p-2">
-                  <select
-                    size="2"
-                    v-model="taskSelected"
-                    v-bind="tasks"
-                    @change="onChange"
-                    class="form-control eq-input"
-                    style="height: 100%; overflow-x: scroll">
-                    <option
-                      v-for="task in tasks"
-                      :value="task.id">
-                      [{{ task.id }}] {{ task.title }} {{ task.reward !== "" ? "[Reward: " + task.reward + "]" : "" }}
-                    </option>
-                  </select>
+                <div style="" class="">
+
+                  <input type="text"
+                         placeholder="Filter results by name..."
+                         v-model="taskSearchFilter"
+                         @keyup="filterResultsByName"
+                         class="form-control ml-3" style="width: 95%">
+
+                  <ul
+                    style="overflow-y: scroll; height: 70vh; overflow-y: scroll; overflow-x: hidden; white-space:nowrap"
+                    class="eq p-1 m-3 eq-dark-background">
+
+                    <li
+                      @click="selectTask(task)"
+                      :style="(parseInt(taskSelected) === parseInt(task.id) ? 'background-color: rgba(106, 76, 50, 0.5);' : '')"
+                      v-for="task in filteredTasks">
+                      <router-link
+                        :to="'/test2/' + task.id"
+                        :style="'color: #FFFFFF !important; '">({{ task.id }}) {{ task.title }}
+
+                      </router-link>
+                    </li>
+                  </ul>
+
+                  <!--                  <select-->
+                  <!--                    size="2"-->
+                  <!--                    v-model="taskSelected"-->
+                  <!--                    v-bind="tasks"-->
+                  <!--                    @change="onChange"-->
+                  <!--                    class="form-control eq-input"-->
+                  <!--                    style="height: 100%; overflow-x: scroll">-->
+                  <!--                    <option-->
+                  <!--                      v-for="task in tasks"-->
+                  <!--                      :value="task.id">-->
+                  <!--                      [{{ task.id }}] {{ task.title }} {{ task.reward !== "" ? "[Reward: " + task.reward + "]" : "" }}-->
+                  <!--                    </option>-->
+                  <!--                  </select>-->
                 </div>
               </div>
 
@@ -35,7 +58,7 @@
               </div>
 
               <!-- Task Activities -->
-              <div class="col-4" v-if="model">
+              <div class="col-3" v-if="model">
                 <h3 class="eq-header" style="text-align: center">Task Activities</h3>
 
                 <select
@@ -71,8 +94,8 @@
 </template>
 
 <script type="ts">
-import {TaskApi}            from "@/app/api/api";
-import EqWindow                             from "@/components/eq-ui/EQWindow.vue";
+import {TaskApi} from "@/app/api/api";
+import EqWindow from "@/components/eq-ui/EQWindow.vue";
 import {SpireApiClient} from "@/app/api/spire-api-client";
 
 export default {
@@ -87,9 +110,11 @@ export default {
   data() {
     return {
       model: null,
-      tasks: {},
+      tasks: [],
+      filteredTasks: [],
       taskSelected: null,
       activitySelected: null,
+      taskSearchFilter: "",
     }
   },
 
@@ -99,19 +124,44 @@ export default {
     }
   },
   methods: {
+
+
+    async selectTask(task) {
+      this.taskSelected = task.id
+
+      this.$router.push({path: '/test2/' + this.taskSelected}).catch(() => {})
+    },
+
+    async filterResultsByName() {
+      // console.log(this.taskSearchFilter)
+      // console.log(this.tasks)
+
+      let filteredTasks = [];
+      this.tasks.forEach((task, index) => {
+        if (task.title.toLowerCase().includes(this.taskSearchFilter.toLowerCase())) {
+          filteredTasks.push(task);
+        }
+      });
+
+      this.filteredTasks = filteredTasks;
+    },
+
     async loadEntity() {
       if (typeof this.$route.params.id === "undefined") {
         this.model = null
         return
       }
 
-      (new TaskApi(SpireApiClient.getOpenApiConfig())).getTask({id: this.$route.params.id, includes: "3"}).then((result) => {
+      (new TaskApi(SpireApiClient.getOpenApiConfig())).getTask({
+        id: this.$route.params.id,
+        includes: "3"
+      }).then((result) => {
         if (result.status === 200) {
           this.model = result.data
         }
       })
 
-      this.taskSelected     = this.$route.params.id
+      this.taskSelected = this.$route.params.id
       this.activitySelected = null
     },
     async onChange() {
@@ -190,6 +240,7 @@ export default {
       const result = await (new TaskApi(SpireApiClient.getOpenApiConfig())).listTasks()
       if (result.status === 200) {
         this.tasks = result.data
+        this.filteredTasks = this.tasks;
       }
 
       this.loadEntity()
