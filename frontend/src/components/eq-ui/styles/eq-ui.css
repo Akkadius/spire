@@ -70,6 +70,11 @@ input[type=checkbox].eq-checkbox:checked + label {
     padding:          10px;
 }
 
+.eq-dark-background {
+    background-color: #0b0b10 !important;
+    color:            #FFFFFF !important;
+    border:           2px #555555 solid !important;
+}
 
 [class*="eq-window"] .inner-window {
     border:           2px #555555 solid !important;
