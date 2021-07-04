@@ -14,6 +14,7 @@ type Zone struct {
 	SafeX                     float32       `json:"safe_x" gorm:"Column:safe_x"`
 	SafeY                     float32       `json:"safe_y" gorm:"Column:safe_y"`
 	SafeZ                     float32       `json:"safe_z" gorm:"Column:safe_z"`
+	SafeHeading               float32       `json:"safe_heading" gorm:"Column:safe_heading"`
 	GraveyardId               float32       `json:"graveyard_id" gorm:"Column:graveyard_id"`
 	MinLevel                  uint8         `json:"min_level" gorm:"Column:min_level"`
 	MinStatus                 uint8         `json:"min_status" gorm:"Column:min_status"`

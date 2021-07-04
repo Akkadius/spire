@@ -93,14 +93,14 @@ raid_details:
   - 1-* raidid->raid_members:raidid
 rule_sets:
   - 1-* ruleset_id->rule_values:ruleset_id
-spawnentry:
+#spawnentry:
 #  - 1-1 spawngroupID->spawngroup:id
-  - 1-1 npcID->npc_types:id
+#  - 1-1 npcID->npc_types:id
 #spawngroup:
 #  - 1-1 id->spawn2:spawngroupID
 spawn2:
   - 1-1 spawngroupID->spawngroup:id
-  - 1-* spawngroupID->spawnentry:spawngroupID
+#  - 1-* spawngroupID->spawnentry:spawngroupID
 spells_new:
   - 1-1 id->auras:spell_id
   - 1-* id->damageshieldtypes:spellid

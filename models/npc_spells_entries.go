@@ -7,7 +7,7 @@ import (
 type NpcSpellsEntry struct {
 	ID            uint       `json:"id" gorm:"Column:id"`
 	NpcSpellsId   int        `json:"npc_spells_id" gorm:"Column:npc_spells_id"`
-	Spellid       int16      `json:"spellid" gorm:"Column:spellid"`
+	Spellid       uint16     `json:"spellid" gorm:"Column:spellid"`
 	Type          uint       `json:"type" gorm:"Column:type"`
 	Minlevel      uint8      `json:"minlevel" gorm:"Column:minlevel"`
 	Maxlevel      uint8      `json:"maxlevel" gorm:"Column:maxlevel"`
