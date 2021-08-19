@@ -23,6 +23,7 @@ type GenerateModel struct {
 	logger    *logrus.Logger
 	gorm      *gorm.DB
 	pluralize *pluralize.Client
+	debug     bool
 }
 
 func NewGenerateModel(options GenerateModelContext, logger *logrus.Logger, gorm *gorm.DB) *GenerateModel {
@@ -60,17 +61,10 @@ func ({{model_name}}) Connection() string {
 	BaseDependencyImportTemplate = `import ({{imports}})`
 )
 
-// relationships
 const (
-
-	// 1 to 1 relationship
-	RelationshipType1to1 = "1-1"
-
-	// 1 to many relationship
-	RelationshipType1toMany = "1-*"
-
-	// many to 1 relationship
-	RelationshipTypeManyTo1 = "*-1"
+	RelationshipType1to1    = "1-1" // RelationshipType1to1 1 to 1
+	RelationshipType1toMany = "1-*" // RelationshipType1toMany 1 to many
+	RelationshipTypeManyTo1 = "*-1" // RelationshipTypeManyTo1 many to 1
 )
 
 type ForeignKeyMappings struct {
