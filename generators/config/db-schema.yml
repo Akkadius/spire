@@ -3299,6 +3299,35 @@ character_enabledtasks:
     is_nullable: "NO"
     column_type: int(11) unsigned
     column_default: "0"
+character_exp_modifiers:
+  - column: character_id
+    data_type: int
+    column_key: PRI
+    ordinal_position: "1"
+    is_nullable: "NO"
+    column_type: int(11)
+    column_default: ""
+  - column: zone_id
+    data_type: int
+    column_key: PRI
+    ordinal_position: "2"
+    is_nullable: "NO"
+    column_type: int(11)
+    column_default: ""
+  - column: aa_modifier
+    data_type: float
+    column_key: ""
+    ordinal_position: "3"
+    is_nullable: "NO"
+    column_type: float
+    column_default: ""
+  - column: exp_modifier
+    data_type: float
+    column_key: ""
+    ordinal_position: "4"
+    is_nullable: "NO"
+    column_type: float
+    column_default: ""
 character_expedition_lockouts:
   - column: id
     data_type: int
@@ -9561,7 +9590,7 @@ npc_spells_entries:
     column_key: ""
     ordinal_position: "3"
     is_nullable: "NO"
-    column_type: smallint(5)
+    column_type: smallint(5) unsigned
     column_default: "0"
   - column: type
     data_type: int
@@ -10481,6 +10510,13 @@ npc_types:
     is_nullable: "NO"
     column_type: tinyint(1)
     column_default: "0"
+  - column: exp_mod
+    data_type: int
+    column_key: ""
+    ordinal_position: "123"
+    is_nullable: "NO"
+    column_type: int(11)
+    column_default: "100"
 npc_types_tint:
   - column: id
     data_type: int
@@ -10980,6 +11016,56 @@ object_contents:
     ordinal_position: "12"
     is_nullable: "NO"
     column_type: mediumint(7)
+    column_default: "0"
+perl_event_export_settings:
+  - column: event_id
+    data_type: int
+    column_key: PRI
+    ordinal_position: "1"
+    is_nullable: "NO"
+    column_type: int(11)
+    column_default: ""
+  - column: event_description
+    data_type: varchar
+    column_key: ""
+    ordinal_position: "2"
+    is_nullable: "YES"
+    column_type: varchar(150)
+    column_default: "NULL"
+  - column: export_qglobals
+    data_type: smallint
+    column_key: ""
+    ordinal_position: "3"
+    is_nullable: "YES"
+    column_type: smallint(11)
+    column_default: "0"
+  - column: export_mob
+    data_type: smallint
+    column_key: ""
+    ordinal_position: "4"
+    is_nullable: "YES"
+    column_type: smallint(11)
+    column_default: "0"
+  - column: export_zone
+    data_type: smallint
+    column_key: ""
+    ordinal_position: "5"
+    is_nullable: "YES"
+    column_type: smallint(11)
+    column_default: "0"
+  - column: export_item
+    data_type: smallint
+    column_key: ""
+    ordinal_position: "6"
+    is_nullable: "YES"
+    column_type: smallint(11)
+    column_default: "0"
+  - column: export_event
+    data_type: smallint
+    column_key: ""
+    ordinal_position: "7"
+    is_nullable: "YES"
+    column_type: smallint(11)
     column_default: "0"
 petitions:
   - column: dib
@@ -11599,6 +11685,126 @@ saylink:
     is_nullable: "NO"
     column_type: varchar(64)
     column_default: ''''''
+server_scheduled_events:
+  - column: id
+    data_type: int
+    column_key: PRI
+    ordinal_position: "1"
+    is_nullable: "NO"
+    column_type: int(11)
+    column_default: ""
+  - column: description
+    data_type: varchar
+    column_key: ""
+    ordinal_position: "2"
+    is_nullable: "YES"
+    column_type: varchar(255)
+    column_default: "NULL"
+  - column: event_type
+    data_type: varchar
+    column_key: ""
+    ordinal_position: "3"
+    is_nullable: "YES"
+    column_type: varchar(100)
+    column_default: "NULL"
+  - column: event_data
+    data_type: text
+    column_key: ""
+    ordinal_position: "4"
+    is_nullable: "YES"
+    column_type: text
+    column_default: "NULL"
+  - column: minute_start
+    data_type: int
+    column_key: ""
+    ordinal_position: "5"
+    is_nullable: "YES"
+    column_type: int(11)
+    column_default: "0"
+  - column: hour_start
+    data_type: int
+    column_key: ""
+    ordinal_position: "6"
+    is_nullable: "YES"
+    column_type: int(11)
+    column_default: "0"
+  - column: day_start
+    data_type: int
+    column_key: ""
+    ordinal_position: "7"
+    is_nullable: "YES"
+    column_type: int(11)
+    column_default: "0"
+  - column: month_start
+    data_type: int
+    column_key: ""
+    ordinal_position: "8"
+    is_nullable: "YES"
+    column_type: int(11)
+    column_default: "0"
+  - column: year_start
+    data_type: int
+    column_key: ""
+    ordinal_position: "9"
+    is_nullable: "YES"
+    column_type: int(11)
+    column_default: "0"
+  - column: minute_end
+    data_type: int
+    column_key: ""
+    ordinal_position: "10"
+    is_nullable: "YES"
+    column_type: int(11)
+    column_default: "0"
+  - column: hour_end
+    data_type: int
+    column_key: ""
+    ordinal_position: "11"
+    is_nullable: "YES"
+    column_type: int(11)
+    column_default: "0"
+  - column: day_end
+    data_type: int
+    column_key: ""
+    ordinal_position: "12"
+    is_nullable: "YES"
+    column_type: int(11)
+    column_default: "0"
+  - column: month_end
+    data_type: int
+    column_key: ""
+    ordinal_position: "13"
+    is_nullable: "YES"
+    column_type: int(11)
+    column_default: "0"
+  - column: year_end
+    data_type: int
+    column_key: ""
+    ordinal_position: "14"
+    is_nullable: "YES"
+    column_type: int(11)
+    column_default: "0"
+  - column: cron_expression
+    data_type: varchar
+    column_key: ""
+    ordinal_position: "15"
+    is_nullable: "YES"
+    column_type: varchar(100)
+    column_default: "NULL"
+  - column: created_at
+    data_type: datetime
+    column_key: ""
+    ordinal_position: "16"
+    is_nullable: "YES"
+    column_type: datetime
+    column_default: "NULL"
+  - column: deleted_at
+    data_type: datetime
+    column_key: ""
+    ordinal_position: "17"
+    is_nullable: "YES"
+    column_type: datetime
+    column_default: "NULL"
 sharedbank:
   - column: acctid
     data_type: int
@@ -11955,59 +12161,66 @@ spawn2:
     is_nullable: "NO"
     column_type: int(10)
     column_default: "0"
+  - column: path_when_zone_idle
+    data_type: tinyint
+    column_key: ""
+    ordinal_position: "12"
+    is_nullable: "NO"
+    column_type: tinyint(1)
+    column_default: "0"
   - column: _condition
     data_type: mediumint
     column_key: ""
-    ordinal_position: "12"
+    ordinal_position: "13"
     is_nullable: "NO"
     column_type: mediumint(8) unsigned
     column_default: "0"
   - column: cond_value
     data_type: mediumint
     column_key: ""
-    ordinal_position: "13"
+    ordinal_position: "14"
     is_nullable: "NO"
     column_type: mediumint(9)
     column_default: "1"
   - column: enabled
     data_type: tinyint
     column_key: ""
-    ordinal_position: "14"
+    ordinal_position: "15"
     is_nullable: "NO"
     column_type: tinyint(3) unsigned
     column_default: "1"
   - column: animation
     data_type: tinyint
     column_key: ""
-    ordinal_position: "15"
+    ordinal_position: "16"
     is_nullable: "NO"
     column_type: tinyint(3) unsigned
     column_default: "0"
   - column: min_expansion
     data_type: tinyint
     column_key: ""
-    ordinal_position: "16"
+    ordinal_position: "17"
     is_nullable: "NO"
     column_type: tinyint(4) unsigned
     column_default: "0"
   - column: max_expansion
     data_type: tinyint
     column_key: ""
-    ordinal_position: "17"
+    ordinal_position: "18"
     is_nullable: "NO"
     column_type: tinyint(4) unsigned
     column_default: "0"
   - column: content_flags
     data_type: varchar
     column_key: ""
-    ordinal_position: "18"
+    ordinal_position: "19"
     is_nullable: "YES"
     column_type: varchar(100)
     column_default: "NULL"
   - column: content_flags_disabled
     data_type: varchar
     column_key: ""
-    ordinal_position: "19"
+    ordinal_position: "20"
     is_nullable: "YES"
     column_type: varchar(100)
     column_default: "NULL"
@@ -15057,584 +15270,591 @@ zone:
     is_nullable: "NO"
     column_type: float
     column_default: "0"
-  - column: graveyard_id
+  - column: safe_heading
     data_type: float
     column_key: ""
     ordinal_position: "9"
     is_nullable: "NO"
     column_type: float
     column_default: "0"
-  - column: min_level
-    data_type: tinyint
+  - column: graveyard_id
+    data_type: float
     column_key: ""
     ordinal_position: "10"
     is_nullable: "NO"
-    column_type: tinyint(3) unsigned
+    column_type: float
     column_default: "0"
-  - column: min_status
+  - column: min_level
     data_type: tinyint
     column_key: ""
     ordinal_position: "11"
     is_nullable: "NO"
     column_type: tinyint(3) unsigned
     column_default: "0"
+  - column: min_status
+    data_type: tinyint
+    column_key: ""
+    ordinal_position: "12"
+    is_nullable: "NO"
+    column_type: tinyint(3) unsigned
+    column_default: "0"
   - column: zoneidnumber
     data_type: int
     column_key: MUL
-    ordinal_position: "12"
+    ordinal_position: "13"
     is_nullable: "NO"
     column_type: int(4)
     column_default: "0"
   - column: version
     data_type: tinyint
     column_key: ""
-    ordinal_position: "13"
+    ordinal_position: "14"
     is_nullable: "NO"
     column_type: tinyint(3) unsigned
     column_default: "0"
   - column: timezone
     data_type: int
     column_key: ""
-    ordinal_position: "14"
+    ordinal_position: "15"
     is_nullable: "NO"
     column_type: int(5)
     column_default: "0"
   - column: maxclients
     data_type: int
     column_key: ""
-    ordinal_position: "15"
+    ordinal_position: "16"
     is_nullable: "NO"
     column_type: int(5)
     column_default: "0"
   - column: ruleset
     data_type: int
     column_key: ""
-    ordinal_position: "16"
+    ordinal_position: "17"
     is_nullable: "NO"
     column_type: int(10) unsigned
     column_default: "0"
   - column: note
     data_type: varchar
     column_key: ""
-    ordinal_position: "17"
+    ordinal_position: "18"
     is_nullable: "YES"
     column_type: varchar(80)
     column_default: "NULL"
   - column: underworld
     data_type: float
     column_key: ""
-    ordinal_position: "18"
+    ordinal_position: "19"
     is_nullable: "NO"
     column_type: float
     column_default: "0"
   - column: minclip
     data_type: float
     column_key: ""
-    ordinal_position: "19"
+    ordinal_position: "20"
     is_nullable: "NO"
     column_type: float
     column_default: "450"
   - column: maxclip
     data_type: float
     column_key: ""
-    ordinal_position: "20"
+    ordinal_position: "21"
     is_nullable: "NO"
     column_type: float
     column_default: "450"
   - column: fog_minclip
     data_type: float
     column_key: ""
-    ordinal_position: "21"
+    ordinal_position: "22"
     is_nullable: "NO"
     column_type: float
     column_default: "450"
   - column: fog_maxclip
     data_type: float
     column_key: ""
-    ordinal_position: "22"
+    ordinal_position: "23"
     is_nullable: "NO"
     column_type: float
     column_default: "450"
   - column: fog_blue
     data_type: tinyint
     column_key: ""
-    ordinal_position: "23"
+    ordinal_position: "24"
     is_nullable: "NO"
     column_type: tinyint(3) unsigned
     column_default: "0"
   - column: fog_red
     data_type: tinyint
     column_key: ""
-    ordinal_position: "24"
+    ordinal_position: "25"
     is_nullable: "NO"
     column_type: tinyint(3) unsigned
     column_default: "0"
   - column: fog_green
     data_type: tinyint
     column_key: ""
-    ordinal_position: "25"
+    ordinal_position: "26"
     is_nullable: "NO"
     column_type: tinyint(3) unsigned
     column_default: "0"
   - column: sky
     data_type: tinyint
     column_key: ""
-    ordinal_position: "26"
+    ordinal_position: "27"
     is_nullable: "NO"
     column_type: tinyint(3) unsigned
     column_default: "1"
   - column: ztype
     data_type: tinyint
     column_key: ""
-    ordinal_position: "27"
+    ordinal_position: "28"
     is_nullable: "NO"
     column_type: tinyint(3) unsigned
     column_default: "1"
   - column: zone_exp_multiplier
     data_type: decimal
     column_key: ""
-    ordinal_position: "28"
+    ordinal_position: "29"
     is_nullable: "NO"
     column_type: decimal(6,2)
     column_default: "0.00"
   - column: walkspeed
     data_type: float
     column_key: ""
-    ordinal_position: "29"
+    ordinal_position: "30"
     is_nullable: "NO"
     column_type: float
     column_default: "0.4"
   - column: time_type
     data_type: tinyint
     column_key: ""
-    ordinal_position: "30"
+    ordinal_position: "31"
     is_nullable: "NO"
     column_type: tinyint(3) unsigned
     column_default: "2"
   - column: fog_red1
     data_type: tinyint
     column_key: ""
-    ordinal_position: "31"
+    ordinal_position: "32"
     is_nullable: "NO"
     column_type: tinyint(3) unsigned
     column_default: "0"
   - column: fog_green1
     data_type: tinyint
     column_key: ""
-    ordinal_position: "32"
+    ordinal_position: "33"
     is_nullable: "NO"
     column_type: tinyint(3) unsigned
     column_default: "0"
   - column: fog_blue1
     data_type: tinyint
     column_key: ""
-    ordinal_position: "33"
+    ordinal_position: "34"
     is_nullable: "NO"
     column_type: tinyint(3) unsigned
     column_default: "0"
   - column: fog_minclip1
     data_type: float
     column_key: ""
-    ordinal_position: "34"
+    ordinal_position: "35"
     is_nullable: "NO"
     column_type: float
     column_default: "450"
   - column: fog_maxclip1
     data_type: float
     column_key: ""
-    ordinal_position: "35"
+    ordinal_position: "36"
     is_nullable: "NO"
     column_type: float
     column_default: "450"
   - column: fog_red2
     data_type: tinyint
     column_key: ""
-    ordinal_position: "36"
+    ordinal_position: "37"
     is_nullable: "NO"
     column_type: tinyint(3) unsigned
     column_default: "0"
   - column: fog_green2
     data_type: tinyint
     column_key: ""
-    ordinal_position: "37"
+    ordinal_position: "38"
     is_nullable: "NO"
     column_type: tinyint(3) unsigned
     column_default: "0"
   - column: fog_blue2
     data_type: tinyint
     column_key: ""
-    ordinal_position: "38"
+    ordinal_position: "39"
     is_nullable: "NO"
     column_type: tinyint(3) unsigned
     column_default: "0"
   - column: fog_minclip2
     data_type: float
     column_key: ""
-    ordinal_position: "39"
+    ordinal_position: "40"
     is_nullable: "NO"
     column_type: float
     column_default: "450"
   - column: fog_maxclip2
     data_type: float
     column_key: ""
-    ordinal_position: "40"
+    ordinal_position: "41"
     is_nullable: "NO"
     column_type: float
     column_default: "450"
   - column: fog_red3
     data_type: tinyint
     column_key: ""
-    ordinal_position: "41"
+    ordinal_position: "42"
     is_nullable: "NO"
     column_type: tinyint(3) unsigned
     column_default: "0"
   - column: fog_green3
     data_type: tinyint
     column_key: ""
-    ordinal_position: "42"
+    ordinal_position: "43"
     is_nullable: "NO"
     column_type: tinyint(3) unsigned
     column_default: "0"
   - column: fog_blue3
     data_type: tinyint
     column_key: ""
-    ordinal_position: "43"
+    ordinal_position: "44"
     is_nullable: "NO"
     column_type: tinyint(3) unsigned
     column_default: "0"
   - column: fog_minclip3
     data_type: float
     column_key: ""
-    ordinal_position: "44"
+    ordinal_position: "45"
     is_nullable: "NO"
     column_type: float
     column_default: "450"
   - column: fog_maxclip3
     data_type: float
     column_key: ""
-    ordinal_position: "45"
+    ordinal_position: "46"
     is_nullable: "NO"
     column_type: float
     column_default: "450"
   - column: fog_red4
     data_type: tinyint
     column_key: ""
-    ordinal_position: "46"
+    ordinal_position: "47"
     is_nullable: "NO"
     column_type: tinyint(3) unsigned
     column_default: "0"
   - column: fog_green4
     data_type: tinyint
     column_key: ""
-    ordinal_position: "47"
+    ordinal_position: "48"
     is_nullable: "NO"
     column_type: tinyint(3) unsigned
     column_default: "0"
   - column: fog_blue4
     data_type: tinyint
     column_key: ""
-    ordinal_position: "48"
+    ordinal_position: "49"
     is_nullable: "NO"
     column_type: tinyint(3) unsigned
     column_default: "0"
   - column: fog_minclip4
     data_type: float
     column_key: ""
-    ordinal_position: "49"
+    ordinal_position: "50"
     is_nullable: "NO"
     column_type: float
     column_default: "450"
   - column: fog_maxclip4
     data_type: float
     column_key: ""
-    ordinal_position: "50"
+    ordinal_position: "51"
     is_nullable: "NO"
     column_type: float
     column_default: "450"
   - column: fog_density
     data_type: float
     column_key: ""
-    ordinal_position: "51"
+    ordinal_position: "52"
     is_nullable: "NO"
     column_type: float
     column_default: "0"
   - column: flag_needed
     data_type: varchar
     column_key: ""
-    ordinal_position: "52"
+    ordinal_position: "53"
     is_nullable: "NO"
     column_type: varchar(128)
     column_default: ''''''
   - column: canbind
     data_type: tinyint
     column_key: ""
-    ordinal_position: "53"
+    ordinal_position: "54"
     is_nullable: "NO"
     column_type: tinyint(4)
     column_default: "1"
   - column: cancombat
     data_type: tinyint
     column_key: ""
-    ordinal_position: "54"
+    ordinal_position: "55"
     is_nullable: "NO"
     column_type: tinyint(4)
     column_default: "1"
   - column: canlevitate
     data_type: tinyint
     column_key: ""
-    ordinal_position: "55"
+    ordinal_position: "56"
     is_nullable: "NO"
     column_type: tinyint(4)
     column_default: "1"
   - column: castoutdoor
     data_type: tinyint
     column_key: ""
-    ordinal_position: "56"
+    ordinal_position: "57"
     is_nullable: "NO"
     column_type: tinyint(4)
     column_default: "1"
   - column: hotzone
     data_type: tinyint
     column_key: ""
-    ordinal_position: "57"
+    ordinal_position: "58"
     is_nullable: "NO"
     column_type: tinyint(3) unsigned
     column_default: "0"
   - column: insttype
     data_type: tinyint
     column_key: ""
-    ordinal_position: "58"
+    ordinal_position: "59"
     is_nullable: "NO"
     column_type: tinyint(1) unsigned zerofill
     column_default: "0"
   - column: shutdowndelay
     data_type: bigint
     column_key: ""
-    ordinal_position: "59"
+    ordinal_position: "60"
     is_nullable: "NO"
     column_type: bigint(16) unsigned
     column_default: "5000"
   - column: peqzone
     data_type: tinyint
     column_key: ""
-    ordinal_position: "60"
+    ordinal_position: "61"
     is_nullable: "NO"
     column_type: tinyint(4)
     column_default: "1"
   - column: expansion
     data_type: tinyint
     column_key: ""
-    ordinal_position: "61"
+    ordinal_position: "62"
     is_nullable: "NO"
     column_type: tinyint(3)
     column_default: "0"
   - column: suspendbuffs
     data_type: tinyint
     column_key: ""
-    ordinal_position: "62"
+    ordinal_position: "63"
     is_nullable: "NO"
     column_type: tinyint(1) unsigned
     column_default: "0"
   - column: rain_chance1
     data_type: int
     column_key: ""
-    ordinal_position: "63"
+    ordinal_position: "64"
     is_nullable: "NO"
     column_type: int(4)
     column_default: "0"
   - column: rain_chance2
     data_type: int
     column_key: ""
-    ordinal_position: "64"
+    ordinal_position: "65"
     is_nullable: "NO"
     column_type: int(4)
     column_default: "0"
   - column: rain_chance3
     data_type: int
     column_key: ""
-    ordinal_position: "65"
+    ordinal_position: "66"
     is_nullable: "NO"
     column_type: int(4)
     column_default: "0"
   - column: rain_chance4
     data_type: int
     column_key: ""
-    ordinal_position: "66"
+    ordinal_position: "67"
     is_nullable: "NO"
     column_type: int(4)
     column_default: "0"
   - column: rain_duration1
     data_type: int
     column_key: ""
-    ordinal_position: "67"
+    ordinal_position: "68"
     is_nullable: "NO"
     column_type: int(4)
     column_default: "0"
   - column: rain_duration2
     data_type: int
     column_key: ""
-    ordinal_position: "68"
+    ordinal_position: "69"
     is_nullable: "NO"
     column_type: int(4)
     column_default: "0"
   - column: rain_duration3
     data_type: int
     column_key: ""
-    ordinal_position: "69"
+    ordinal_position: "70"
     is_nullable: "NO"
     column_type: int(4)
     column_default: "0"
   - column: rain_duration4
     data_type: int
     column_key: ""
-    ordinal_position: "70"
+    ordinal_position: "71"
     is_nullable: "NO"
     column_type: int(4)
     column_default: "0"
   - column: snow_chance1
     data_type: int
     column_key: ""
-    ordinal_position: "71"
+    ordinal_position: "72"
     is_nullable: "NO"
     column_type: int(4)
     column_default: "0"
   - column: snow_chance2
     data_type: int
     column_key: ""
-    ordinal_position: "72"
+    ordinal_position: "73"
     is_nullable: "NO"
     column_type: int(4)
     column_default: "0"
   - column: snow_chance3
     data_type: int
     column_key: ""
-    ordinal_position: "73"
+    ordinal_position: "74"
     is_nullable: "NO"
     column_type: int(4)
     column_default: "0"
   - column: snow_chance4
     data_type: int
     column_key: ""
-    ordinal_position: "74"
+    ordinal_position: "75"
     is_nullable: "NO"
     column_type: int(4)
     column_default: "0"
   - column: snow_duration1
     data_type: int
     column_key: ""
-    ordinal_position: "75"
+    ordinal_position: "76"
     is_nullable: "NO"
     column_type: int(4)
     column_default: "0"
   - column: snow_duration2
     data_type: int
     column_key: ""
-    ordinal_position: "76"
+    ordinal_position: "77"
     is_nullable: "NO"
     column_type: int(4)
     column_default: "0"
   - column: snow_duration3
     data_type: int
     column_key: ""
-    ordinal_position: "77"
+    ordinal_position: "78"
     is_nullable: "NO"
     column_type: int(4)
     column_default: "0"
   - column: snow_duration4
     data_type: int
     column_key: ""
-    ordinal_position: "78"
+    ordinal_position: "79"
     is_nullable: "NO"
     column_type: int(4)
     column_default: "0"
   - column: gravity
     data_type: float
     column_key: ""
-    ordinal_position: "79"
+    ordinal_position: "80"
     is_nullable: "NO"
     column_type: float
     column_default: "0.4"
   - column: type
     data_type: int
     column_key: ""
-    ordinal_position: "80"
+    ordinal_position: "81"
     is_nullable: "NO"
     column_type: int(3)
     column_default: "0"
   - column: skylock
     data_type: tinyint
     column_key: ""
-    ordinal_position: "81"
+    ordinal_position: "82"
     is_nullable: "NO"
     column_type: tinyint(4)
     column_default: "0"
   - column: fast_regen_hp
     data_type: int
     column_key: ""
-    ordinal_position: "82"
+    ordinal_position: "83"
     is_nullable: "NO"
     column_type: int(11)
     column_default: "180"
   - column: fast_regen_mana
     data_type: int
     column_key: ""
-    ordinal_position: "83"
+    ordinal_position: "84"
     is_nullable: "NO"
     column_type: int(11)
     column_default: "180"
   - column: fast_regen_endurance
     data_type: int
     column_key: ""
-    ordinal_position: "84"
+    ordinal_position: "85"
     is_nullable: "NO"
     column_type: int(11)
     column_default: "180"
   - column: npc_max_aggro_dist
     data_type: int
     column_key: ""
-    ordinal_position: "85"
+    ordinal_position: "86"
     is_nullable: "NO"
     column_type: int(11)
     column_default: "600"
   - column: max_movement_update_range
     data_type: int
     column_key: ""
-    ordinal_position: "86"
+    ordinal_position: "87"
     is_nullable: "NO"
     column_type: int(11) unsigned
     column_default: "600"
   - column: min_expansion
     data_type: tinyint
     column_key: ""
-    ordinal_position: "87"
+    ordinal_position: "88"
     is_nullable: "NO"
     column_type: tinyint(4) unsigned
     column_default: "0"
   - column: max_expansion
     data_type: tinyint
     column_key: ""
-    ordinal_position: "88"
+    ordinal_position: "89"
     is_nullable: "NO"
     column_type: tinyint(4) unsigned
     column_default: "0"
   - column: content_flags
     data_type: varchar
     column_key: ""
-    ordinal_position: "89"
+    ordinal_position: "90"
     is_nullable: "YES"
     column_type: varchar(100)
     column_default: "NULL"
   - column: content_flags_disabled
     data_type: varchar
     column_key: ""
-    ordinal_position: "90"
+    ordinal_position: "91"
     is_nullable: "YES"
     column_type: varchar(100)
     column_default: "NULL"
   - column: underworld_teleport_index
     data_type: int
     column_key: ""
-    ordinal_position: "91"
+    ordinal_position: "92"
     is_nullable: "NO"
     column_type: int(4)
     column_default: "0"

@@ -2,6 +2,8 @@ package generators
 
 import (
 	"fmt"
+	console "github.com/Akkadius/spire/console"
+	"github.com/Akkadius/spire/env"
 	"github.com/gertd/go-pluralize"
 	"github.com/iancoleman/strcase"
 	"github.com/jinzhu/gorm"
@@ -19,11 +21,11 @@ type GenerateModelContext struct {
 }
 
 type GenerateModel struct {
-	options   GenerateModelContext
-	logger    *logrus.Logger
-	gorm      *gorm.DB
-	pluralize *pluralize.Client
-	debug     bool
+	options      GenerateModelContext
+	logger       *logrus.Logger
+	gorm         *gorm.DB
+	pluralize    *pluralize.Client
+	debugEnabled bool
 }
 
 func NewGenerateModel(options GenerateModelContext, logger *logrus.Logger, gorm *gorm.DB) *GenerateModel {
@@ -80,38 +82,45 @@ type ModelGenerateResponse struct {
 	GormRelationships []string
 }
 
-func (gm *GenerateModel) Generate() []ModelGenerateResponse {
-	gm.options.Relationships = gm.loadRelationships()
-	relationships := gm.options.Relationships
-	tableNames := gm.getTableNames()
+func (g *GenerateModel) Generate() []ModelGenerateResponse {
+	g.options.Relationships = g.loadRelationships()
+	relationships := g.options.Relationships
+	tableNames := g.getTableNames()
 
 	// if no argument pull from relationships
-	if len(gm.options.TablesToGenerate) == 0 {
-		gm.options.TablesToGenerate = GetDatabaseTables()
+	if len(g.options.TablesToGenerate) == 0 {
+		g.options.TablesToGenerate = GetDatabaseTables()
 	}
 
 	// metadata to respond with
-	modelGenerateResponse := make([]ModelGenerateResponse, len(gm.options.TablesToGenerate))
+	modelGenerateResponse := make([]ModelGenerateResponse, len(g.options.TablesToGenerate))
 
-	for _, genModel := range gm.options.TablesToGenerate {
+	// TablesToGenerate is just a list of tables table1,table2
+	for _, genModel := range g.options.TablesToGenerate {
+		g.debug(fmt.Sprintf("Generating model for table [%v]", genModel))
+
 		for _, table := range tableNames {
 			if genModel != "all" && table != genModel {
 				continue
 			}
 
+			g.debug(fmt.Sprintf("-- Checking [%v]", table))
+
+			// base gorm template file that we will use to generate
 			t := BaseGormModelTemplate
+			// separate template for handling and injecting imports for models
 			importTemplate := BaseDependencyImportTemplate
-			t = strings.ReplaceAll(t, "{{model_name}}", gm.pluralize.Singular(strcase.ToCamel(table)))
+			t = strings.ReplaceAll(t, "{{model_name}}", g.pluralize.Singular(strcase.ToCamel(table)))
 
 			// calculate field and type length for formatting
 			maxColumnLengthInTable := 0
 			maxDataTypeLengthInTable := 0
-			for _, def := range gm.getColumnDefinitions(table) {
+			for _, def := range g.getColumnDefinitions(table) {
 				if len(def.Field) >= maxColumnLengthInTable {
 					maxColumnLengthInTable = len(def.Field)
 				}
 
-				translatedType := gm.translateDataType(def)
+				translatedType := g.translateDataType(def)
 				if len(translatedType) >= maxDataTypeLengthInTable {
 					maxDataTypeLengthInTable = len(translatedType)
 				}
@@ -123,8 +132,8 @@ func (gm *GenerateModel) Generate() []ModelGenerateResponse {
 					continue
 				}
 
-				col := strcase.ToCamel(gm.pluralize.Plural(relation.RemoteTable))
-				colType := gm.getRelationshipTypeModelAttributePrefix(relation) + strcase.ToCamel(gm.pluralize.Singular(relation.RemoteTable))
+				col := strcase.ToCamel(g.pluralize.Plural(relation.RemoteTable))
+				colType := g.getRelationshipTypeModelAttributePrefix(relation) + strcase.ToCamel(g.pluralize.Singular(relation.RemoteTable))
 
 				if len(col) >= maxColumnLengthInTable {
 					maxColumnLengthInTable = len(col)
@@ -133,11 +142,18 @@ func (gm *GenerateModel) Generate() []ModelGenerateResponse {
 				if len(colType) >= maxDataTypeLengthInTable {
 					maxDataTypeLengthInTable = len(colType)
 				}
+
+				g.debug(fmt.Sprintf("-- col [%v] colType [%v]", col, colType))
 			}
+
+			g.debug(fmt.Sprintf("-- maxDataTypeLengthInTable [%v]", maxDataTypeLengthInTable))
+			g.debug(fmt.Sprintf("-- maxColumnLengthInTable [%v]", maxColumnLengthInTable))
 
 			// gen model fields
 			modelFields := ""
-			for _, def := range gm.getColumnDefinitions(table) {
+			for _, def := range g.getColumnDefinitions(table) {
+
+				g.debug(fmt.Sprintf("-- def [%v] table [%v]", def, table))
 
 				structFieldName := ""
 				jsonFieldName := strcase.ToSnake(def.Field)
@@ -152,15 +168,19 @@ func (gm *GenerateModel) Generate() []ModelGenerateResponse {
 					structFieldName += "2"
 				}
 
-				modelFields += fmt.Sprintf(
+				modelField := fmt.Sprintf(
 					"\t%-*s%-*s `json:\"%v\" gorm:\"Column:%v\"`\n",
 					maxColumnLengthInTable+1,
 					structFieldName,
 					maxDataTypeLengthInTable,
-					gm.translateDataType(def),
+					g.translateDataType(def),
 					jsonFieldName,
 					def.Field,
 				)
+
+				g.debug(fmt.Sprintf("-- modelField [%v]", strings.TrimSpace(modelField)))
+
+				modelFields += modelField
 			}
 
 			// write relationships to model attributes
@@ -169,17 +189,19 @@ func (gm *GenerateModel) Generate() []ModelGenerateResponse {
 					continue
 				}
 
+				g.debug(fmt.Sprintf("-- relationships [%v]", relation))
+
 				maxColInTable := maxColumnLengthInTable + 1
 				relationshipAttributeTypeName := fmt.Sprintf(
 					"%v%v",
-					gm.getRelationshipTypeModelAttributePrefix(relation),
-					strcase.ToCamel(gm.pluralize.Singular(relation.RemoteTable)),
+					g.getRelationshipTypeModelAttributePrefix(relation),
+					strcase.ToCamel(g.pluralize.Singular(relation.RemoteTable)),
 				)
-				relationshipFieldNameSnakeCase := strcase.ToSnake(gm.pluralize.Singular(relation.RemoteTable))
+				relationshipFieldNameSnakeCase := strcase.ToSnake(g.pluralize.Singular(relation.RemoteTable))
 
 				switch relation.RelationType {
 				case RelationshipType1to1:
-					relationshipAttributeName := strcase.ToCamel(gm.pluralize.Singular(relation.RemoteTable))
+					relationshipAttributeName := strcase.ToCamel(g.pluralize.Singular(relation.RemoteTable))
 					modelFields += fmt.Sprintf(
 						"\t%-*s%-*s `json:\"%v,omitempty\" gorm:\"foreignKey:%v;references:%v\"`\n",
 						maxColInTable,
@@ -191,14 +213,14 @@ func (gm *GenerateModel) Generate() []ModelGenerateResponse {
 						relation.RemoteKey,
 					)
 				case RelationshipType1toMany:
-					relationshipAttributeName := strcase.ToCamel(gm.pluralize.Plural(relation.RemoteTable))
+					relationshipAttributeName := strcase.ToCamel(g.pluralize.Plural(relation.RemoteTable))
 					modelFields += fmt.Sprintf(
 						"\t%-*s%-*s `json:\"%v,omitempty\" gorm:\"foreignKey:%v;association_foreignkey:%v\"`\n",
 						maxColInTable,
 						relationshipAttributeName,
 						maxDataTypeLengthInTable,
 						relationshipAttributeTypeName,
-						gm.pluralize.Plural(relationshipFieldNameSnakeCase),
+						g.pluralize.Plural(relationshipFieldNameSnakeCase),
 						relation.RemoteKey,
 						relation.Key,
 					)
@@ -207,13 +229,15 @@ func (gm *GenerateModel) Generate() []ModelGenerateResponse {
 				}
 			}
 
+			g.debug(fmt.Sprintf("-- writing model fields"))
+
 			// write model fields
 			t = strings.ReplaceAll(t, "{{model_fields}}", modelFields)
 
 			// nested relationships
 			rt := BaseGormModelRelationshipTemplate
 			relationshipEntries := ""
-			nestedRelationships := gm.getNestedRelationshipsFromTable(table, "")
+			nestedRelationships := g.getNestedRelationshipsFromTable(table, "")
 			if len(nestedRelationships) > 0 {
 				relationshipEntries = "\n"
 				for _, nested := range nestedRelationships {
@@ -221,7 +245,7 @@ func (gm *GenerateModel) Generate() []ModelGenerateResponse {
 				}
 				relationshipEntries += "\t"
 			}
-			rt = strings.ReplaceAll(rt, "{{model_name}}", gm.pluralize.Singular(strcase.ToCamel(table)))
+			rt = strings.ReplaceAll(rt, "{{model_name}}", g.pluralize.Singular(strcase.ToCamel(table)))
 			rt = strings.ReplaceAll(rt, "{{relationships}}", relationshipEntries)
 
 			// handle imports
@@ -246,7 +270,7 @@ func (gm *GenerateModel) Generate() []ModelGenerateResponse {
 
 			// connection
 			ct := BaseGormModelConnectionTemplate
-			ct = strings.ReplaceAll(ct, "{{model_name}}", gm.pluralize.Singular(strcase.ToCamel(table)))
+			ct = strings.ReplaceAll(ct, "{{model_name}}", g.pluralize.Singular(strcase.ToCamel(table)))
 			ct = strings.ReplaceAll(ct, "{{connection_name}}", GetConnectionByTableName(table))
 
 			// final template
@@ -260,14 +284,14 @@ func (gm *GenerateModel) Generate() []ModelGenerateResponse {
 			// Create new cmd
 			file, err := os.Create(fileName)
 			if err != nil {
-				gm.logger.Fatal(err)
+				g.logger.Fatal(err)
 			}
 
 			defer file.Close()
 
 			_, err = file.WriteString(t)
 			if err != nil {
-				gm.logger.Fatal(err)
+				g.logger.Fatal(err)
 			}
 
 			fmt.Println(fmt.Sprintf("Generated [%v]", fileName))
@@ -286,7 +310,7 @@ func (gm *GenerateModel) Generate() []ModelGenerateResponse {
 }
 
 // return relationship type model prefix
-func (gm *GenerateModel) getRelationshipTypeModelAttributePrefix(r ForeignKeyMappings) string {
+func (g *GenerateModel) getRelationshipTypeModelAttributePrefix(r ForeignKeyMappings) string {
 	if r.RelationType == RelationshipType1to1 {
 		return "*"
 	}
@@ -297,25 +321,34 @@ func (gm *GenerateModel) getRelationshipTypeModelAttributePrefix(r ForeignKeyMap
 	return ""
 }
 
-func (gm *GenerateModel) getNestedRelationshipsFromTable(table string, prefix string) []string {
+func (g *GenerateModel) getNestedRelationshipsFromTable(table string, prefix string, rootTable ...string) []string {
 	relationshipNames := make([]string, 0)
 
 	if prefix != "" {
 		prefix = fmt.Sprintf("%v.", prefix)
 	}
 
-	for _, relation := range gm.options.Relationships {
+	for _, relation := range g.options.Relationships {
 		if table != relation.Table {
 			continue
 		}
+
+		if len(rootTable) > 0 {
+			if relation.RemoteTable == rootTable[0] {
+				g.debug(fmt.Sprintf("-- [getNestedRelationshipsFromTable] remote table is same as root table, skipping"))
+				continue
+			}
+		}
+
+		g.debug(fmt.Sprintf("-- [getNestedRelationshipsFromTable] table [%v] relation [%v]", table, relation))
 
 		relationshipAttributeName := ""
 
 		switch relation.RelationType {
 		case RelationshipType1to1:
-			relationshipAttributeName = strcase.ToCamel(gm.pluralize.Singular(relation.RemoteTable))
+			relationshipAttributeName = strcase.ToCamel(g.pluralize.Singular(relation.RemoteTable))
 		case RelationshipType1toMany:
-			relationshipAttributeName = strcase.ToCamel(gm.pluralize.Plural(relation.RemoteTable))
+			relationshipAttributeName = strcase.ToCamel(g.pluralize.Plural(relation.RemoteTable))
 		case RelationshipTypeManyTo1:
 			// todo: inverse
 		}
@@ -324,20 +357,22 @@ func (gm *GenerateModel) getNestedRelationshipsFromTable(table string, prefix st
 		passedDownPrefix := fmt.Sprintf("%v%v", prefix, relationshipAttributeName)
 		relationshipNames = append(
 			relationshipNames,
-			gm.getNestedRelationshipsFromTable(relation.RemoteTable, passedDownPrefix)...,
+			g.getNestedRelationshipsFromTable(relation.RemoteTable, passedDownPrefix, table)...,
 		)
 	}
 
 	sort.Strings(relationshipNames)
 
+	g.debug(fmt.Sprintf("-- [getNestedRelationshipsFromTable] relationshipNames [%v]", relationshipNames))
+
 	return relationshipNames
 }
 
 // return Table names from database
-func (gm *GenerateModel) getTableNames() []string {
-	rows, err := gm.gorm.DB().Query("SHOW TABLES")
+func (g *GenerateModel) getTableNames() []string {
+	rows, err := g.gorm.DB().Query("SHOW TABLES")
 	if err != nil {
-		gm.logger.Warn(err)
+		g.logger.Warn(err)
 	}
 
 	tableNames := make([]string, 0)
@@ -347,7 +382,7 @@ func (gm *GenerateModel) getTableNames() []string {
 		var column string
 		err = rows.Scan(&column)
 		if err != nil {
-			gm.logger.Warn(err)
+			g.logger.Warn(err)
 		}
 
 		tableNames = append(tableNames, column)
@@ -365,10 +400,10 @@ type ShowColumns struct {
 	Extra   string
 }
 
-func (gm *GenerateModel) getColumnDefinitions(tableName string) []ShowColumns {
-	rows, err := gm.gorm.DB().Query(fmt.Sprintf("SHOW COLUMNS FROM %v", tableName))
+func (g *GenerateModel) getColumnDefinitions(tableName string) []ShowColumns {
+	rows, err := g.gorm.DB().Query(fmt.Sprintf("SHOW COLUMNS FROM %v", tableName))
 	if err != nil {
-		gm.logger.Warn(err)
+		g.logger.Warn(err)
 	}
 
 	columnDefs := make([]ShowColumns, 0)
@@ -391,7 +426,7 @@ func (gm *GenerateModel) getColumnDefinitions(tableName string) []ShowColumns {
 	return columnDefs
 }
 
-func (gm *GenerateModel) translateDataType(column ShowColumns) string {
+func (g *GenerateModel) translateDataType(column ShowColumns) string {
 	unsigned := strings.Contains(column.Type, "unsigned")
 	nullable := strings.Contains(column.Null, "YES")
 	columnType := strings.Split(column.Type, "(")[0]
@@ -503,18 +538,18 @@ func (gm *GenerateModel) translateDataType(column ShowColumns) string {
 
 const dbRelationshipConfig = "./generators/config/db-relationships.yml"
 
-func (gm *GenerateModel) loadRelationships() []ForeignKeyMappings {
+func (g *GenerateModel) loadRelationships() []ForeignKeyMappings {
 	// load yaml
 	databaseSchemaYaml, err := ioutil.ReadFile(dbRelationshipConfig)
 	if err != nil {
-		gm.logger.Fatal(err)
+		g.logger.Fatal(err)
 	}
 
 	// unmarshal yaml
 	dbRelationships := make(map[string][]string, 0)
 	err = yaml.Unmarshal(databaseSchemaYaml, &dbRelationships)
 	if err != nil {
-		gm.logger.Fatalf("error: %v", err)
+		g.logger.Fatalf("error: %v", err)
 	}
 
 	relationships := []ForeignKeyMappings{}
@@ -528,8 +563,8 @@ func (gm *GenerateModel) loadRelationships() []ForeignKeyMappings {
 			relationType := strings.TrimSpace(split[0])
 			relationSignature := strings.TrimSpace(split[1])
 
-			if !gm.isValidRelationshipType(relationType) {
-				gm.logger.Fatalf(
+			if !g.isValidRelationshipType(relationType) {
+				g.logger.Fatalf(
 					"Invalid relationship type [%v] [%v] in [%v]!\n",
 					relationType,
 					relationSignature,
@@ -561,7 +596,7 @@ func (gm *GenerateModel) loadRelationships() []ForeignKeyMappings {
 	return relationships
 }
 
-func (gm *GenerateModel) isValidRelationshipType(relationshipType string) bool {
+func (g *GenerateModel) isValidRelationshipType(relationshipType string) bool {
 	switch relationshipType {
 	case RelationshipType1to1:
 		return true
@@ -570,4 +605,10 @@ func (gm *GenerateModel) isValidRelationshipType(relationshipType string) bool {
 	}
 
 	return false
+}
+
+func (g *GenerateModel) debug(msg string) {
+	if g.debugEnabled || env.GetBool("DEBUG", "false") {
+		console.Info("[Debug] [model_generator.go] " + msg)
+	}
 }

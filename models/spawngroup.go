@@ -14,6 +14,7 @@ type Spawngroup struct {
 	Despawn       int8    `json:"despawn" gorm:"Column:despawn"`
 	DespawnTimer  int     `json:"despawn_timer" gorm:"Column:despawn_timer"`
 	WpSpawns      uint8   `json:"wp_spawns" gorm:"Column:wp_spawns"`
+	Spawn2        *Spawn2 `json:"spawn_2,omitempty" gorm:"foreignKey:id;references:spawngroupID"`
 }
 
 func (Spawngroup) TableName() string {
@@ -21,7 +22,9 @@ func (Spawngroup) TableName() string {
 }
 
 func (Spawngroup) Relationships() []string {
-    return []string{}
+    return []string{
+		"Spawn2",
+	}
 }
 
 func (Spawngroup) Connection() string {

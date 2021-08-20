@@ -478,6 +478,21 @@ character_enabledtasks:
     is_nullable: "NO"
     column_type: int(11) unsigned
     column_default: "0"
+character_exp_modifiers:
+  - column: character_id
+    data_type: int
+    column_key: PRI
+    ordinal_position: "1"
+    is_nullable: "NO"
+    column_type: int(11)
+    column_default: ""
+  - column: zone_id
+    data_type: int
+    column_key: PRI
+    ordinal_position: "2"
+    is_nullable: "NO"
+    column_type: int(11)
+    column_default: ""
 character_expedition_lockouts:
   - column: id
     data_type: int
@@ -1490,6 +1505,14 @@ object_contents:
     is_nullable: "NO"
     column_type: int(11) unsigned
     column_default: "0"
+perl_event_export_settings:
+  - column: event_id
+    data_type: int
+    column_key: PRI
+    ordinal_position: "1"
+    is_nullable: "NO"
+    column_type: int(11)
+    column_default: ""
 petitions:
   - column: dib
     data_type: int
@@ -1657,6 +1680,14 @@ saylink:
     ordinal_position: "1"
     is_nullable: "NO"
     column_type: int(10)
+    column_default: ""
+server_scheduled_events:
+  - column: id
+    data_type: int
+    column_key: PRI
+    ordinal_position: "1"
+    is_nullable: "NO"
+    column_type: int(11)
     column_default: ""
 skill_caps:
   - column: skillID

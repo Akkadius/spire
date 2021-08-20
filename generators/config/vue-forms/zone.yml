@@ -81,6 +81,16 @@
 - disabled: false
   featured: false
   inputtype: text
+  label: Safe Heading
+  model: safe_heading
+  readonly: false
+  rows: ""
+  styleclasses: col-12
+  type: input
+  help: ""
+- disabled: false
+  featured: false
+  inputtype: text
   label: Graveyard Id
   model: graveyard_id
   readonly: false
