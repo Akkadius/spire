@@ -28760,6 +28760,9 @@ var doc = `{
                 "exclude": {
                     "type": "integer"
                 },
+                "exp_mod": {
+                    "type": "integer"
+                },
                 "face": {
                     "type": "integer"
                 },
@@ -29431,11 +29434,23 @@ var doc = `{
                 "min_expansion": {
                     "type": "integer"
                 },
+                "path_when_zone_idle": {
+                    "type": "integer"
+                },
                 "pathgrid": {
                     "type": "integer"
                 },
                 "respawntime": {
                     "type": "integer"
+                },
+                "spawnentries": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/models.Spawnentry"
+                    }
+                },
+                "spawngroup": {
+                    "$ref": "#/definitions/models.Spawngroup"
                 },
                 "spawngroup_id": {
                     "type": "integer"
@@ -29555,6 +29570,9 @@ var doc = `{
                 },
                 "npc_id": {
                     "type": "integer"
+                },
+                "npc_type": {
+                    "$ref": "#/definitions/models.NpcType"
                 },
                 "spawngroup": {
                     "$ref": "#/definitions/models.Spawngroup"
@@ -31109,6 +31127,9 @@ var doc = `{
                 },
                 "ruleset": {
                     "type": "integer"
+                },
+                "safe_heading": {
+                    "type": "number"
                 },
                 "safe_x": {
                     "type": "number"

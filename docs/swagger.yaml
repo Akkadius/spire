@@ -3016,6 +3016,8 @@ definitions:
         type: integer
       exclude:
         type: integer
+      exp_mod:
+        type: integer
       face:
         type: integer
       feettexture:
@@ -3460,10 +3462,18 @@ definitions:
         type: integer
       min_expansion:
         type: integer
+      path_when_zone_idle:
+        type: integer
       pathgrid:
         type: integer
       respawntime:
         type: integer
+      spawnentries:
+        items:
+          $ref: '#/definitions/models.Spawnentry'
+        type: array
+      spawngroup:
+        $ref: '#/definitions/models.Spawngroup'
       spawngroup_id:
         type: integer
       variance:
@@ -3542,6 +3552,8 @@ definitions:
         type: integer
       npc_id:
         type: integer
+      npc_type:
+        $ref: '#/definitions/models.NpcType'
       spawngroup:
         $ref: '#/definitions/models.Spawngroup'
       spawngroup_id:
@@ -4572,6 +4584,8 @@ definitions:
         type: integer
       ruleset:
         type: integer
+      safe_heading:
+        type: number
       safe_x:
         type: number
       safe_y:
