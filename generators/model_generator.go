@@ -336,7 +336,7 @@ func (g *GenerateModel) getNestedRelationshipsFromTable(table string, prefix str
 		if len(rootTable) > 0 {
 			if relation.RemoteTable == rootTable[0] {
 				g.debug(fmt.Sprintf("-- [getNestedRelationshipsFromTable] remote table is same as root table, skipping"))
-				continue
+				break
 			}
 		}
 

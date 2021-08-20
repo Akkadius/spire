@@ -132,6 +132,7 @@ type NpcType struct {
 	Merchantlists          []Merchantlist     `json:"merchantlists,omitempty" gorm:"foreignKey:merchantid;association_foreignkey:merchant_id"`
 	NpcFactions            []NpcFaction       `json:"npc_factions,omitempty" gorm:"foreignKey:id;association_foreignkey:npc_faction_id"`
 	NpcSpells              []NpcSpell         `json:"npc_spells,omitempty" gorm:"foreignKey:id;association_foreignkey:npc_spells_id"`
+	Spawnentries           []Spawnentry       `json:"spawnentries,omitempty" gorm:"foreignKey:npcID;association_foreignkey:id"`
 	NpcEmotes              []NpcEmote         `json:"npc_emotes,omitempty" gorm:"foreignKey:emoteid;association_foreignkey:emoteid"`
 	NpcTypesTint           *NpcTypesTint      `json:"npc_types_tint,omitempty" gorm:"foreignKey:armortint_id;references:id"`
 }
@@ -150,6 +151,9 @@ func (NpcType) Relationships() []string {
 		"NpcSpells",
 		"NpcSpells.NpcSpellsEntries",
 		"NpcTypesTint",
+		"Spawnentries",
+		"Spawnentries.Spawngroup",
+		"Spawnentries.Spawngroup.Spawn2",
 	}
 }
 
