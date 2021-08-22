@@ -20,6 +20,11 @@ export
 else
 endif
 
+DRUNPREFIX=
+ifeq ($(OS),Windows_NT)
+    DRUNPREFIX = winpty
+endif
+
 #----------------------
 # Terminal
 #----------------------
@@ -61,13 +66,13 @@ help: ##@other Show this help.
 
 bash: ##@dev Bash into workspace container
 	docker-compose up -d workspace
-	docker-compose exec workspace bash
+	$(DRUNPREFIX) docker-compose exec workspace bash
 
 mc: ##@dev Create MySQL shell
-	docker-compose exec mysql sh -c "mysql -uroot -p${MYSQL_ROOT_PASSWORD} -h localhost"
+	$(DRUNPREFIX) docker-compose exec mysql sh -c "mysql -uroot -p${MYSQL_ROOT_PASSWORD} -h localhost"
 
 rc: ##@dev Create Redis shell
-	docker-compose exec redis sh -c "redis-cli"
+	$(DRUNPREFIX) docker-compose exec redis sh -c "redis-cli"
 
 up: ##@dev Brings up environment
 	docker-compose up -d mysql workspace
@@ -79,7 +84,7 @@ logs: ##@dev Follow container logs
 	docker-compose logs --follow
 
 test: ##@dev Runs local tests
-	docker-compose exec workspace bash -c "go test -count=1 -cover ./... | grep -v 'no test files'"
+	$(DRUNPREFIX) docker-compose exec workspace bash -c "go test -count=1 -cover ./... | grep -v 'no test files'"
 
 #----------------------
 # build
@@ -106,11 +111,11 @@ watch-be: ##@dev-watch Runs backend watcher
 #----------------------
 
 seed-peq-database: ##@seed
-	docker-compose exec workspace bash -c "curl http://db.projecteq.net/api/v1/dump/latest -o /tmp/db.zip"
-	docker-compose exec workspace bash -c "unzip -o /tmp/db.zip -d /tmp/db/"
-	docker-compose exec workspace bash -c "mysql -h mysql -u${MYSQL_USERNAME} -p${MYSQL_PASSWORD} ${MYSQL_EQEMU_DATABASE} -e 'DROP DATABASE ${MYSQL_EQEMU_DATABASE}; CREATE DATABASE ${MYSQL_EQEMU_DATABASE};'"
-	docker-compose exec workspace bash -c "cd /tmp/db/peq-dump/ && mysql -h mysql -u${MYSQL_USERNAME} -p${MYSQL_PASSWORD} ${MYSQL_EQEMU_DATABASE} < ./create_all_tables.sql"
-	docker-compose exec workspace bash -c "rm -rf /tmp/db/"
+	$(DRUNPREFIX) docker-compose exec workspace bash -c "curl http://db.projecteq.net/api/v1/dump/latest -o /tmp/db.zip"
+	$(DRUNPREFIX) docker-compose exec workspace bash -c "unzip -o /tmp/db.zip -d /tmp/db/"
+	$(DRUNPREFIX) docker-compose exec workspace bash -c "mysql -h mysql -u${MYSQL_USERNAME} -p${MYSQL_PASSWORD} ${MYSQL_EQEMU_DATABASE} -e 'DROP DATABASE ${MYSQL_EQEMU_DATABASE}; CREATE DATABASE ${MYSQL_EQEMU_DATABASE};'"
+	$(DRUNPREFIX) docker-compose exec workspace bash -c "cd /tmp/db/peq-dump/ && mysql -h mysql -u${MYSQL_USERNAME} -p${MYSQL_PASSWORD} ${MYSQL_EQEMU_DATABASE} < ./create_all_tables.sql"
+	$(DRUNPREFIX) docker-compose exec workspace bash -c "rm -rf /tmp/db/"
 
 seed-peq-database-prod: ##@seed
 	docker-compose exec prod bash -c "curl http://db.projecteq.net/api/v1/dump/latest -o /tmp/db.zip"
@@ -124,7 +129,7 @@ seed-peq-database-prod: ##@seed
 #----------------------
 
 generate-axios-client: ##@generate Generate Axios client (Run outside workspace container)
-	docker run --rm -v "$${PWD}:/local" openapitools/openapi-generator-cli generate \
+	$(DRUNPREFIX) docker run --rm -v "$${PWD}:/local" openapitools/openapi-generator-cli generate \
         -i /local/docs/swagger.yaml \
         -g typescript-axios \
         -o /local/frontend/src/app/api/ --additional-properties=useSingleRequestParameter=true
@@ -137,7 +142,7 @@ generate-swagger: ##@generate Generate swagger docs (Run in workspace container)
 #----------------------
 
 install: ##@install Runs installer
-	docker-compose build
+	$(DRUNPREFIX) docker-compose build
 	make mysql-init
 	@./scripts/banner.sh "Environment Initialized!"
 	@cat ./scripts/install-message.txt
@@ -151,13 +156,13 @@ mysql-init: ##@mysql Initialize database
 	docker-compose kill mysql
 	docker-compose build mysql
 	docker-compose up -d mysql
-	docker-compose run --user=root mysql bash -c "chown -R mysql:mysql /var/lib/mysql && exit"
+	$(DRUNPREFIX) docker-compose run --user=root mysql bash -c "chown -R mysql:mysql /var/lib/mysql && exit"
 	docker-compose up -d mysql
-	docker-compose exec -T mysql sh -c 'while ! mysqladmin ping -h "mysql" --silent; do sleep .5; done'
-	docker-compose exec mysql sh -c "mysql -h localhost -uroot -p${MYSQL_ROOT_PASSWORD} -e 'CREATE DATABASE IF NOT EXISTS ${MYSQL_EQEMU_DATABASE}'"
-	docker-compose exec mysql sh -c "mysql -h localhost -uroot -p${MYSQL_ROOT_PASSWORD} -e 'GRANT ALL PRIVILEGES ON ${MYSQL_EQEMU_DATABASE}.* TO \"${MYSQL_USERNAME}\"@\"%\"'"
-	docker-compose exec mysql sh -c "mysql -h localhost -uroot -p${MYSQL_ROOT_PASSWORD} -e 'CREATE DATABASE IF NOT EXISTS ${MYSQL_SPIRE_DATABASE}';"
-	docker-compose exec mysql sh -c "mysql -h localhost -uroot -p${MYSQL_ROOT_PASSWORD} -e 'GRANT ALL PRIVILEGES ON ${MYSQL_SPIRE_DATABASE}.* TO \"${MYSQL_USERNAME}\"@\"%\"'"
+	$(DRUNPREFIX) docker-compose exec -T mysql sh -c 'while ! mysqladmin ping -h "mysql" --silent; do sleep .5; done'
+	$(DRUNPREFIX) docker-compose exec mysql sh -c "mysql -h localhost -uroot -p${MYSQL_ROOT_PASSWORD} -e 'CREATE DATABASE IF NOT EXISTS ${MYSQL_EQEMU_DATABASE}'"
+	$(DRUNPREFIX) docker-compose exec mysql sh -c "mysql -h localhost -uroot -p${MYSQL_ROOT_PASSWORD} -e 'GRANT ALL PRIVILEGES ON ${MYSQL_EQEMU_DATABASE}.* TO \"${MYSQL_USERNAME}\"@\"%\"'"
+	$(DRUNPREFIX) docker-compose exec mysql sh -c "mysql -h localhost -uroot -p${MYSQL_ROOT_PASSWORD} -e 'CREATE DATABASE IF NOT EXISTS ${MYSQL_SPIRE_DATABASE}';"
+	$(DRUNPREFIX) docker-compose exec mysql sh -c "mysql -h localhost -uroot -p${MYSQL_ROOT_PASSWORD} -e 'GRANT ALL PRIVILEGES ON ${MYSQL_SPIRE_DATABASE}.* TO \"${MYSQL_USERNAME}\"@\"%\"'"
 
 init-strip-mysql-remote-root: ##@mysql Strips MySQL remote root user
-	docker-compose exec mysql bash -c "mysql -uroot -p${MYSQL_ROOT_PASSWORD} -h localhost -e \"delete from mysql.user where User = 'root' and Host = '%'; FLUSH PRIVILEGES\""
+	$(DRUNPREFIX) docker-compose exec mysql bash -c "mysql -uroot -p${MYSQL_ROOT_PASSWORD} -h localhost -e \"delete from mysql.user where User = 'root' and Host = '%'; FLUSH PRIVILEGES\""
