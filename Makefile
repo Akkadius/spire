@@ -124,6 +124,9 @@ seed-peq-database-prod: ##@seed
 	docker-compose exec prod bash -c "cd /tmp/db/peq-dump/ && mysql -h mysql -u${MYSQL_USERNAME} -p${MYSQL_PASSWORD} ${MYSQL_EQEMU_DATABASE} < ./create_all_tables.sql"
 	docker-compose exec prod bash -c "rm -rf /tmp/db/"
 
+seed-spire-tables: ##@seed
+	$(DRUNPREFIX) docker-compose exec workspace bash -c "go run main.go spire:migrate"
+
 #----------------------
 # generate
 #----------------------
@@ -144,6 +147,8 @@ generate-swagger: ##@generate Generate swagger docs (Run in workspace container)
 install: ##@install Runs installer
 	$(DRUNPREFIX) docker-compose build
 	make mysql-init
+	make seed-peq-database
+	make seed-spire-tables
 	@./scripts/banner.sh "Environment Initialized!"
 	@cat ./scripts/install-message.txt
 

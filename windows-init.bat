@@ -17,16 +17,24 @@ goto check_Permissions
         exit
     )
 
+:: Install Choco
 @"%SystemRoot%\System32\WindowsPowerShell\v1.0\powershell.exe" -NoProfile -InputFormat None -ExecutionPolicy Bypass -Command "[System.Net.ServicePointManager]::SecurityProtocol = 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))" && SET "PATH=%PATH%;%ALLUSERSPROFILE%\chocolatey\bin"
 
+:: Install Make
 choco install -y make
 
+:: Install NodeJS
 choco install -y nodejs-lts
 
-echo %~dp0
+:: Install Go (If want to use outside of docker)
+choco install golang
 
+:: Copy windows bashrc profiles and WSL2 settings
 xcopy "%~dp0scripts\windows\profile\*.*" "%UserProfile%\" /K /D /H /Y
+
+:: Copy .env vars
 echo f | xcopy "%~dp0frontend\.env.example" "%~dp0frontend\.env"  /F /Y
+echo f | xcopy "%~dp0.env.dev" "%~dp0.env"  /F /Y
 
+:: Launch Git Bash (MinGW)
 "C:\Program Files\Git\git-bash.exe" --cd-to-home
-
