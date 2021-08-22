@@ -19,9 +19,14 @@ goto check_Permissions
 
 @"%SystemRoot%\System32\WindowsPowerShell\v1.0\powershell.exe" -NoProfile -InputFormat None -ExecutionPolicy Bypass -Command "[System.Net.ServicePointManager]::SecurityProtocol = 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))" && SET "PATH=%PATH%;%ALLUSERSPROFILE%\chocolatey\bin"
 
-choco install make
+choco install -y make
 
-xcopy "scripts\windows\profile\*.*" "%UserProfile%\" /K /D /H /Y
+choco install -y nodejs-lts
+
+echo %~dp0
+
+xcopy "%~dp0scripts\windows\profile\*.*" "%UserProfile%\" /K /D /H /Y
+echo f | xcopy "%~dp0frontend\.env.example" "%~dp0frontend\.env"  /F /Y
 
 "C:\Program Files\Git\git-bash.exe" --cd-to-home
 
