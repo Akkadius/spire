@@ -5,8 +5,6 @@
     <div class="container-fluid">
       <div class="panel-body">
         <div class="panel panel-default">
-
-
           <eq-window class="mt-5">
             Begin Range
             <input
@@ -81,10 +79,10 @@ export default {
   },
 
   mounted() {
-    this.listZones()
+    this.listSpells()
   },
   methods: {
-    listZones: function () {
+    listSpells: function () {
       const api = (new SpellsNewApi(SpireApiClient.getOpenApiConfig()))
 
       let filters = [

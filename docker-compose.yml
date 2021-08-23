@@ -20,7 +20,7 @@ services:
     hostname: go-workspace
     tty: true
     volumes:
-      - ./:/home/go/src:delegated
+      - ./:/home/go/src
       - build-cache:/home/go/.cache/
       - shared-pkg:/home/go/pkg
     environment:
@@ -30,7 +30,6 @@ services:
       TERM: xterm-256color
     ports:
       - ${IP_ADDRESS:-0.0.0.0}:3000:3000
-      - ${IP_ADDRESS:-0.0.0.0}:3001:3001
       - ${IP_ADDRESS:-0.0.0.0}:8080:8080
     networks:
       - backend
@@ -57,7 +56,6 @@ services:
       TERM: xterm-256color
     ports:
       - ${IP_ADDRESS:-0.0.0.0}:80:3000
-      - ${IP_ADDRESS:-0.0.0.0}:3001:3001
     networks:
       - backend
     command: "air -c .air.prod.toml"
@@ -73,7 +71,7 @@ services:
       args:
         - INNODB_BUFFER_POOL_SIZE=${INNODB_BUFFER_POOL_SIZE:-512MB}
     ports:
-      - ${IP_ADDRESS:-0.0.0.0}:3306:3306
+      - ${IP_ADDRESS:-0.0.0.0}:33066:3306
     volumes:
       - ./data/mariadb:/var/lib/mysql:delegated
     environment:

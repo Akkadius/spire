@@ -10,12 +10,13 @@ import (
 )
 
 type Unzip struct {
-	Src  string
-	Dest string
+	Src   string
+	Dest  string
+	debug bool
 }
 
 func New(src string, dest string) Unzip {
-	return Unzip{src, dest}
+	return Unzip{Src: src, Dest: dest, debug: false}
 }
 
 func (uz Unzip) Extract() error {
@@ -78,7 +79,9 @@ func (uz Unzip) Extract() error {
 		if err != nil {
 			return err
 		}
-		fmt.Println("Extracting file: " + f.Name)
+		if uz.debug {
+			fmt.Println("Extracting file: " + f.Name)
+		}
 	}
 
 	fmt.Println("Extraction of " + uz.Src + " finished!")
