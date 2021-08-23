@@ -1,0 +1,1 @@
+"C:\Program Files\Git\git-bash.exe" -c 'echo "Make sure docker is up!"; echo ""; docker-compose up -d workspace mysql'
