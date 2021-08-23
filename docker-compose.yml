@@ -20,7 +20,7 @@ services:
     hostname: go-workspace
     tty: true
     volumes:
-      - ./:/home/go/src:delegated
+      - ./:/home/go/src
       - build-cache:/home/go/.cache/
       - shared-pkg:/home/go/pkg
     environment:

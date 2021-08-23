@@ -111,6 +111,7 @@ watch-be: ##@dev-watch Runs backend watcher
 #----------------------
 
 seed-peq-database: ##@seed
+	docker-compose up -d workspace
 	$(DRUNPREFIX) docker-compose exec workspace bash -c "curl http://db.projecteq.net/api/v1/dump/latest -o /tmp/db.zip"
 	$(DRUNPREFIX) docker-compose exec workspace bash -c "unzip -o /tmp/db.zip -d /tmp/db/"
 	$(DRUNPREFIX) docker-compose exec workspace bash -c "mysql -h mysql -u${MYSQL_USERNAME} -p${MYSQL_PASSWORD} ${MYSQL_EQEMU_DATABASE} -e 'DROP DATABASE ${MYSQL_EQEMU_DATABASE}; CREATE DATABASE ${MYSQL_EQEMU_DATABASE};'"

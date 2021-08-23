@@ -1,2 +1,4 @@
 taskkill /im node.exe /f
-cd frontend && npm run dev
+
+cd frontend && npm install && npm run dev
+

@@ -1,1 +1,1 @@
-"C:\Program Files\Git\git-bash.exe" -c 'docker-compose exec workspace bash -c "pkill -9 air && air"'
+"C:\Program Files\Git\git-bash.exe" -c 'docker-compose exec workspace bash -c "pkill -9 air; air"'
