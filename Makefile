@@ -118,6 +118,7 @@ seed-peq-database: ##@seed
 	$(DRUNPREFIX) docker-compose exec workspace bash -c "cd /tmp/db/peq-dump/ && mysql -h mysql -u${MYSQL_USERNAME} -p${MYSQL_PASSWORD} ${MYSQL_EQEMU_DATABASE} < ./create_all_tables.sql"
 	$(DRUNPREFIX) docker-compose exec workspace bash -c "rm -rf /tmp/db/"
 
+# This needs to get cleaned up later
 seed-peq-database-prod: ##@seed
 	docker-compose exec prod bash -c "curl http://db.projecteq.net/api/v1/dump/latest -o /tmp/db.zip"
 	docker-compose exec prod bash -c "unzip -o /tmp/db.zip -d /tmp/db/"
