@@ -1,1 +1,5 @@
-"C:\Program Files\Git\git-bash.exe" -c 'docker-compose exec workspace bash -c "pkill -9 air; air"'
+TASKKILL /IM spire.exe /F
+go install github.com/cosmtrek/air
+
+"C:\Program Files\Git\git-bash.exe" -c 'air -c .air.windows.toml'
+

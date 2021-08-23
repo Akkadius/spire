@@ -33,7 +33,7 @@ choco install -y golang
 xcopy "%~dp0scripts\windows\profile\*.*" "%UserProfile%\" /K /D /H /Y
 
 :: Copy .env vars
-echo f | xcopy "%~dp0frontend\.env.example" "%~dp0frontend\.env"  /F /Y
+echo f | xcopy "%~dp0frontend\.env.example.windows" "%~dp0frontend\.env"  /F /Y
 echo f | xcopy "%~dp0.env.dev" "%~dp0.env"  /F /Y
 
 :: Launch Git Bash (MinGW)

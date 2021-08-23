@@ -47,10 +47,6 @@ func Serve(port uint, logger *logrus.Logger, router *routes.Router) error {
 
 	e.HTTPErrorHandler = errorHandler
 
-	go func() {
-		imageProxyHandler()
-	}()
-
 	return e.Start(fmt.Sprintf(":%v", port))
 }
 

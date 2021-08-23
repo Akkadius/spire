@@ -19,7 +19,7 @@ var envLoaded = false
 // loads .env.testing if invoked from the context of a test file
 // loads .env.debug.host if invoked from the context of MacOS which references variables to communicate back to the docker network
 func LoadEnvFileIfExists() error {
-	if runtime.GOOS == "darwin" {
+	if runtime.GOOS == "darwin" || runtime.GOOS == "windows" {
 		_ = os.Setenv("APP_ENV", "local")
 	}
 
@@ -46,7 +46,7 @@ func LoadEnvFileIfExists() error {
 		// search for global .env.debug.host
 		// if OS is darwin; we're likely talking from host -> container network
 		// used from IDEs
-		if runtime.GOOS == "darwin" {
+		if runtime.GOOS == "darwin" || runtime.GOOS == "windows" {
 			env := ".env.debug.host"
 			if loadEnvFile(env) {
 				fmt.Println(fmt.Sprintf("[LoadEnv] (Host) APP_ENV [%v] ENV_FILE [%v]", os.Getenv("APP_ENV"), env))
