@@ -27,7 +27,7 @@ choco install -y make
 choco install -y nodejs-lts
 
 :: Install Go (If want to use outside of docker)
-choco install golang
+choco install -y golang
 
 :: Copy windows bashrc profiles and WSL2 settings
 xcopy "%~dp0scripts\windows\profile\*.*" "%UserProfile%\" /K /D /H /Y
