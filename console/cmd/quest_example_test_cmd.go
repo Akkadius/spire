@@ -15,11 +15,10 @@ type QuestExampleTestCommand struct {
 	sourcer *questapi.QuestExamplesGithubSourcer
 }
 
-func (g *QuestExampleTestCommand) Command() *cobra.Command {
-	return g.command
+func (c *QuestExampleTestCommand) Command() *cobra.Command {
+	return c.command
 }
 
-// new instance of command
 func NewQuestExampleTestCommand(
 	logger *logrus.Logger,
 	sourcer *questapi.QuestExamplesGithubSourcer,
@@ -58,8 +57,7 @@ func (c *QuestExampleTestCommand) Handle(_ *cobra.Command, args []string) {
 	fmt.Println(result)
 }
 
-// Validate
-func (g *QuestExampleTestCommand) Validate(_ *cobra.Command, args []string) error {
+func (c *QuestExampleTestCommand) Validate(_ *cobra.Command, args []string) error {
 	if len(args) < 2 {
 		return errors.New("args required [methods] [language]")
 	}

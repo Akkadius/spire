@@ -12,13 +12,12 @@ type SpireMigrateCommand struct {
 	command     *cobra.Command
 }
 
-func (g *SpireMigrateCommand) Command() *cobra.Command {
-	return g.command
+func (c *SpireMigrateCommand) Command() *cobra.Command {
+	return c.command
 }
 
 var dropTables bool
 
-// new instance of command
 func NewSpireMigrateCommand(
 	connections *database.Connections,
 	logger *logrus.Logger,
@@ -45,8 +44,7 @@ func (c *SpireMigrateCommand) Handle(_ *cobra.Command, args []string) {
 	c.connections.SpireMigrate(dropTables)
 }
 
-// Validate
-func (g *SpireMigrateCommand) Validate(_ *cobra.Command, args []string) error {
+func (c *SpireMigrateCommand) Validate(_ *cobra.Command, args []string) error {
 	// Validate
 
 	return nil

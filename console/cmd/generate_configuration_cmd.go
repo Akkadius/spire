@@ -18,7 +18,6 @@ func (c *GenerateConfigurationCommand) Command() *cobra.Command {
 	return c.command
 }
 
-// new instance of command
 func NewGenerateConfigurationCommand(
 	db *database.DatabaseResolver,
 	logger *logrus.Logger,
@@ -37,7 +36,6 @@ func NewGenerateConfigurationCommand(
 	return i
 }
 
-// Handle
 func (c *GenerateConfigurationCommand) Handle(_ *cobra.Command, _ []string) {
 	if err := generators.NewGenerateDbSchemaConfig(
 		c.db.GetEqemuDb().DB(),
@@ -61,7 +59,6 @@ func (c *GenerateConfigurationCommand) Handle(_ *cobra.Command, _ []string) {
 	}
 }
 
-// Validate
 func (c *GenerateConfigurationCommand) Validate(_ *cobra.Command, _ []string) error {
 	return nil
 }

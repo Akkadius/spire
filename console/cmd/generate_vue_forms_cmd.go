@@ -14,11 +14,10 @@ type GenerateVueFormsCommand struct {
 	command *cobra.Command
 }
 
-func (g *GenerateVueFormsCommand) Command() *cobra.Command {
-	return g.command
+func (c *GenerateVueFormsCommand) Command() *cobra.Command {
+	return c.command
 }
 
-// new instance of command
 func NewGenerateVueFormsCommand(
 	db *gorm.DB,
 	logger *logrus.Logger,
@@ -40,7 +39,7 @@ func NewGenerateVueFormsCommand(
 }
 
 // Handle implementation of the Command interface
-func (g *GenerateVueFormsCommand) Handle(_ *cobra.Command, args []string) {
+func (c *GenerateVueFormsCommand) Handle(_ *cobra.Command, args []string) {
 	tablesToGenerate := make([]string, 0)
 
 	// pass in table as argument
@@ -52,16 +51,15 @@ func (g *GenerateVueFormsCommand) Handle(_ *cobra.Command, args []string) {
 		generators.GenerateVueFormContext{
 			TablesToGenerate: tablesToGenerate,
 		},
-		g.logger,
+		c.logger,
 	).Generate()
 
 	if err != nil {
-		g.logger.Fatal(err)
+		c.logger.Fatal(err)
 	}
 }
 
-// Validate
-func (g *GenerateVueFormsCommand) Validate(_ *cobra.Command, args []string) error {
+func (c *GenerateVueFormsCommand) Validate(_ *cobra.Command, args []string) error {
 	// Validate
 
 	if len(args) == 0 {

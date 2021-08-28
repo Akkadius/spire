@@ -19,7 +19,6 @@ func (c *HelloWorldCommand) Command() *cobra.Command {
 	return c.command
 }
 
-// new instance of command
 func NewHelloWorldCommand(db *gorm.DB, logger *logrus.Logger) *HelloWorldCommand {
 	i := &HelloWorldCommand{
 		db:     db,
@@ -50,6 +49,6 @@ func (c *HelloWorldCommand) Handle(cmd *cobra.Command, _ []string) {
 }
 
 // Validate implementation of the Command interface
-func (rm *HelloWorldCommand) Validate(_ *cobra.Command, _ []string) error {
+func (c *HelloWorldCommand) Validate(_ *cobra.Command, _ []string) error {
 	return nil
 }

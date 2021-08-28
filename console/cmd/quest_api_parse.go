@@ -14,11 +14,10 @@ type QuestApiParseCommand struct {
 	parser  *questapi.ParseService
 }
 
-func (g *QuestApiParseCommand) Command() *cobra.Command {
-	return g.command
+func (c *QuestApiParseCommand) Command() *cobra.Command {
+	return c.command
 }
 
-// new instance of command
 func NewQuestApiParseCommand(
 	logger *logrus.Logger,
 	parser *questapi.ParseService,
@@ -77,7 +76,7 @@ func (c *QuestApiParseCommand) Handle(_ *cobra.Command, args []string) {
 }
 
 // Validate
-func (g *QuestApiParseCommand) Validate(_ *cobra.Command, args []string) error {
+func (c *QuestApiParseCommand) Validate(_ *cobra.Command, args []string) error {
 	// Validate
 
 	return nil

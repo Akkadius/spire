@@ -18,11 +18,10 @@ type HttpServeCommand struct {
 	router  *routes.Router
 }
 
-func (hs *HttpServeCommand) Command() *cobra.Command {
-	return hs.command
+func (c *HttpServeCommand) Command() *cobra.Command {
+	return c.command
 }
 
-// new instance of command
 func NewHttpServeCommand(logger *logrus.Logger, router *routes.Router) *HttpServeCommand {
 	i := &HttpServeCommand{
 		logger: logger,
@@ -41,20 +40,20 @@ func NewHttpServeCommand(logger *logrus.Logger, router *routes.Router) *HttpServ
 }
 
 // Handle implementation of the Command interface
-func (hs *HttpServeCommand) Handle(_ *cobra.Command, _ []string) {
-	if err := http.Serve(hs.port, hs.logger, hs.router); err != nil {
-		hs.logger.WithError(err).Fatal(err.Error())
+func (c *HttpServeCommand) Handle(_ *cobra.Command, _ []string) {
+	if err := http.Serve(c.port, c.logger, c.router); err != nil {
+		c.logger.WithError(err).Fatal(err.Error())
 	}
 }
 
 // Validate implementation of the Command interface
-func (hs *HttpServeCommand) Validate(cmd *cobra.Command, _ []string) error {
+func (c *HttpServeCommand) Validate(cmd *cobra.Command, _ []string) error {
 	port := console.UintFromFlags(cmd.Flags(), "port")
 	if port < 0 || port > 99999 {
 		return errors.New("port is out of range")
 	}
 
-	hs.port = port
+	c.port = port
 
 	return nil
 }

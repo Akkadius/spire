@@ -18,11 +18,10 @@ type RoutesListCommand struct {
 	logger  *logrus.Logger
 }
 
-func (rlc *RoutesListCommand) Command() *cobra.Command {
-	return rlc.command
+func (c *RoutesListCommand) Command() *cobra.Command {
+	return c.command
 }
 
-// new instance of command
 func NewRoutesListCommand(router *routes.Router, logger *logrus.Logger) *RoutesListCommand {
 	i := &RoutesListCommand{
 		logger: logger,
@@ -40,13 +39,13 @@ func NewRoutesListCommand(router *routes.Router, logger *logrus.Logger) *RoutesL
 }
 
 // Handle implementation of the Command interface
-func (rlc *RoutesListCommand) Handle(_ *cobra.Command, _ []string) {
+func (c *RoutesListCommand) Handle(_ *cobra.Command, _ []string) {
 
 	// bring up echo instance
 	e := echo.New()
-	http.BootstrapMiddleware(e, rlc.router)
-	if err := http.BootstrapControllers(e, rlc.router.ControllerGroups()...); err != nil {
-		rlc.logger.Fatal(err)
+	http.BootstrapMiddleware(e, c.router)
+	if err := http.BootstrapControllers(e, c.router.ControllerGroups()...); err != nil {
+		c.logger.Fatal(err)
 	}
 
 	type Route struct {
@@ -114,6 +113,6 @@ func (rlc *RoutesListCommand) Handle(_ *cobra.Command, _ []string) {
 }
 
 // Validate implementation of the Command interface
-func (rlc *RoutesListCommand) Validate(_ *cobra.Command, _ []string) error {
+func (c *RoutesListCommand) Validate(_ *cobra.Command, _ []string) error {
 	return nil
 }

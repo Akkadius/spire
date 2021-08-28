@@ -17,7 +17,6 @@ func (c *GenerateModelsCommand) Command() *cobra.Command {
 	return c.command
 }
 
-// new instance of command
 func NewGenerateModelsCommand(db *gorm.DB, logger *logrus.Logger) *GenerateModelsCommand {
 	i := &GenerateModelsCommand{
 		db:     db,
@@ -33,7 +32,6 @@ func NewGenerateModelsCommand(db *gorm.DB, logger *logrus.Logger) *GenerateModel
 	return i
 }
 
-// Handle
 func (c *GenerateModelsCommand) Handle(cmd *cobra.Command, args []string) {
 	tablesToGenerate := make([]string, 0)
 
@@ -51,7 +49,6 @@ func (c *GenerateModelsCommand) Handle(cmd *cobra.Command, args []string) {
 	).Generate()
 }
 
-// Validate
 func (c *GenerateModelsCommand) Validate(cmd *cobra.Command, _ []string) error {
 	//if len(args) < 1 {
 	//	return errors.New("Requires [all|table_name]")

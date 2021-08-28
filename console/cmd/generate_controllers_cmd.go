@@ -19,7 +19,6 @@ func (g *GenerateControllersCommand) Command() *cobra.Command {
 	return g.command
 }
 
-// new instance of command
 func NewGenerateControllersCommand(db *gorm.DB, logger *logrus.Logger) *GenerateControllersCommand {
 	i := &GenerateControllersCommand{
 		db:     db,
@@ -83,7 +82,6 @@ func (g *GenerateControllersCommand) Handle(_ *cobra.Command, args []string) {
 	generators.NewSyncControllersToInjector(g.logger).Sync()
 }
 
-// Validate
 func (g *GenerateControllersCommand) Validate(_ *cobra.Command, _ []string) error {
 	return nil
 }
