@@ -28,7 +28,7 @@
       DashboardHeader,
       DashboardNavbar,
       BackToTop
-    }
+    },
   }
 </script>
 

@@ -10,6 +10,8 @@
 
 import {App} from "@/constants/app";
 import EqWindow from "@/components/eq-ui/EQWindow";
+import {EventBus} from "@/app/event-bus/event-bus";
+import LocalSettings from "@/app/local-settings/localsettings";
 
 export default {
   name: "EqDebug",
@@ -17,11 +19,22 @@ export default {
   props: {
     data: Object
   },
+  methods: {
+    debugUpdatedListener(){
+      this.debug = LocalSettings.get("debug-mode") === "true"
+    }
+  },
+  created() {
+    EventBus.$on("DEBUG_UPDATED", this.debugUpdatedListener);
+  },
+  destroyed() {
+    EventBus.$off("DEBUG_UPDATED", this.debugUpdatedListener);
+  },
   data() {
     return {
       debug: App.DEBUG
     }
-  }
+  },
 }
 </script>
 

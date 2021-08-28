@@ -136,9 +136,7 @@
     </div>
 
 
-    <div>
-      <pre v-if="debug" style="max-width: 400px">{{ spellData }}</pre>
-    </div>
+    <eq-debug :data="spellData"/>
   </div>
 </template>
 
@@ -153,6 +151,7 @@ import {DB_RACE_NAMES} from "@/app/constants/eq-races-constants";
 import {ItemApi, SpellsNewApi} from "@/app/api";
 import {SpireApiClient} from "@/app/api/spire-api-client";
 import EqWindow from "@/components/eq-ui/EQWindow";
+import EqDebug from "@/components/eq-ui/EQDebug";
 
 let unknowns = {}
 
@@ -160,6 +159,7 @@ export default {
   name: "EqSpellPreview",
   components: {
     EqWindow,
+    EqDebug,
     "eq-item-preview": () => import("@/components/eq-ui/EQItemPreview.vue"),
     "v-runtime-template": () => import("v-runtime-template")
   },

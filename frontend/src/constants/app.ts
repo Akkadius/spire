@@ -1,5 +1,7 @@
 // export const ASSET_CDN_BASE_URL = "https://rawcdn.githack.com/Akkadius/eq-asset-preview/36903141f431d94766eb83782e9445a856f23514/"
 
+import LocalSettings from "@/app/local-settings/localsettings";
+
 const CDN_VERSION_HASH = 'be32443283a960c9dfb6a6425fce26cddf36adb8'
 
 // List of different git CDN's
@@ -19,6 +21,6 @@ export const App = {
   ASSET_SPELL_ANIMATIONS: ASSET_CDN_BASE_URL_INT + 'assets/spell_animations/',
   ASSET_EXPANSION_ICON_SMALL_URL: ASSET_CDN_BASE_URL_INT + 'assets/expansion-icons-small/',
   BACKEND_BASE_URL: (process.env.VUE_APP_BACKEND_BASE_URL ? process.env.VUE_APP_BACKEND_BASE_URL : window.location.origin),
-  DEBUG: window.location.host.includes("localhost"),
+  DEBUG: LocalSettings.get("debug-mode") === "true",
   // DEBUG: true,
 }

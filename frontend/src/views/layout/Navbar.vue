@@ -146,19 +146,19 @@
 
         </ul>
 
-<!--        &lt;!&ndash; Heading &ndash;&gt;-->
-<!--        <h6 class="navbar-heading">-->
-<!--          Editors-->
-<!--        </h6>-->
+        <!--        &lt;!&ndash; Heading &ndash;&gt;-->
+        <!--        <h6 class="navbar-heading">-->
+        <!--          Editors-->
+        <!--        </h6>-->
 
-<!--        &lt;!&ndash; Navigation &ndash;&gt;-->
-<!--        <ul class="navbar-nav mb-md-4">-->
-<!--          <li class="nav-item">-->
-<!--            <router-link class="nav-link " to="/tasks/">-->
-<!--              <i class="fe fe-list"></i> Task Editor-->
-<!--            </router-link>-->
-<!--          </li>-->
-<!--        </ul>-->
+        <!--        &lt;!&ndash; Navigation &ndash;&gt;-->
+        <!--        <ul class="navbar-nav mb-md-4">-->
+        <!--          <li class="nav-item">-->
+        <!--            <router-link class="nav-link " to="/tasks/">-->
+        <!--              <i class="fe fe-list"></i> Task Editor-->
+        <!--            </router-link>-->
+        <!--          </li>-->
+        <!--        </ul>-->
 
         <!-- Push content down -->
         <div class="mt-auto"></div>
@@ -166,12 +166,11 @@
         <!-- User (md) -->
         <div class="navbar-user d-none d-md-flex" id="sidebarUser">
 
+          <navbar-user-settings-cog/>
+
           <!-- Icon -->
-          <a href="#sidebarModalActivity" class="navbar-user-link" data-toggle="modal">
-              <span class="icon">
-                <i class="fe fe-bell"></i>
-              </span>
-          </a>
+
+
 
           <!-- Dropup -->
           <div class="dropup">
@@ -210,36 +209,37 @@
 
 import {App} from "@/constants/app";
 import NavbarDropdownMenu from "@/views/layout/NavbarDropdownMenu";
+import NavbarUserSettingsCog from "@/views/layout/NavbarUserSettingsCog";
 import UserContext from "@/app/user/UserContext";
 
 export default {
-  components: { NavbarDropdownMenu },
+  components: {NavbarDropdownMenu, NavbarUserSettingsCog},
   data() {
     return {
       backendBaseUrl: "",
       user: null,
       componentNavs: [
-        { title: "Progress Bars", to: "/components#progress-bars" },
-        { title: "Page Headers", to: "/components#page-headers" },
-        { title: "Item Preview", to: "/components#item-preview" },
-        { title: "Spell Preview", to: "/components#spell-preview" },
-        { title: "NPC Special Abilities", to: "/components#npc-special-abilities" },
-        { title: "Table", to: "/components#table" },
-        { title: "Tabs", to: "/components#tabs" },
-        { title: "Form Elements", to: "/components#form-elements" },
-        { title: "Windows", to: "/components#windows" },
+        {title: "Progress Bars", to: "/components#progress-bars"},
+        {title: "Page Headers", to: "/components#page-headers"},
+        {title: "Item Preview", to: "/components#item-preview"},
+        {title: "Spell Preview", to: "/components#spell-preview"},
+        {title: "NPC Special Abilities", to: "/components#npc-special-abilities"},
+        {title: "Table", to: "/components#table"},
+        {title: "Tabs", to: "/components#tabs"},
+        {title: "Form Elements", to: "/components#form-elements"},
+        {title: "Windows", to: "/components#windows"},
       ],
       testPageNavs: [
-        { title: "Items Test", to: "/items-test" },
-        { title: "Spells Test", to: "/spells-test" },
-        { title: "Task Editor (Non Functional)", to: "/tasks" },
+        {title: "Items Test", to: "/items-test"},
+        {title: "Spells Test", to: "/spells-test"},
+        {title: "Task Editor (Non Functional)", to: "/tasks"},
       ]
     }
   },
 
   async mounted() {
     this.backendBaseUrl = App.BACKEND_BASE_URL
-    this.user           = await UserContext.getUser()
+    this.user = await UserContext.getUser()
   },
 
   methods: {
