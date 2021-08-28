@@ -41,8 +41,8 @@
             <div v-for="(item, index) in items"
                  :key="index"
                  style="display: inline-block; vertical-align: top"
-                 class="col-4">
-              <eq-window style="width: auto; height: 90%">
+                 class="col-4 mb-6">
+              <eq-window style="width: auto; height: 100%">
                 <eq-item-preview :item-data="item"/>
               </eq-window>
             </div>
