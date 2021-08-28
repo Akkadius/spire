@@ -38,7 +38,6 @@ func provideAppDbConnections() *database.Connections {
 	)
 }
 
-// mysql config
 type MySQLConfig struct {
 	Password           string
 	Username           string

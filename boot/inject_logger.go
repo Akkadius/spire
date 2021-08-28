@@ -45,7 +45,6 @@ func provideLogger() (*logrus.Logger, error) {
 	return baseLogger, nil
 }
 
-// logger config
 type LoggerConfig struct {
 	Application string
 	Environment string
