@@ -37,9 +37,12 @@
             >
           </eq-window>
 
-          <div class="row" style="justify-content: center">
-            <div v-for="(item, index) in items" :key="index" style="display: inline-block; vertical-align: top">
-              <eq-window style="margin-right: 10px; width: auto; height: 90%">
+          <div class="row pt-4">
+            <div v-for="(item, index) in items"
+                 :key="index"
+                 style="display: inline-block; vertical-align: top"
+                 class="col-4">
+              <eq-window style="width: auto; height: 90%">
                 <eq-item-preview :item-data="item"/>
               </eq-window>
             </div>
@@ -82,7 +85,7 @@ export default {
     this.listItems()
   },
   methods: {
-    listItems: function() {
+    listItems: function () {
       const api = (new ItemApi(SpireApiClient.getOpenApiConfig()))
 
       let filters = [
