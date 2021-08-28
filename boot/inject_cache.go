@@ -2,8 +2,8 @@ package boot
 
 import (
 	"github.com/google/wire"
-	"time"
 	gocache "github.com/patrickmn/go-cache"
+	"time"
 )
 
 // wire set for cache

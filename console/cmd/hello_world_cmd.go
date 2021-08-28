@@ -2,8 +2,8 @@ package cmd
 
 import (
 	"encoding/json"
-	"github.com/Akkadius/spire/models"
 	"fmt"
+	"github.com/Akkadius/spire/models"
 	"github.com/jinzhu/gorm"
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"

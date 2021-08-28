@@ -6,7 +6,7 @@ import (
 	"github.com/jinzhu/gorm"
 )
 
-// application database connections
+// Connections application database connections
 type Connections struct {
 	spireDb *gorm.DB
 	eqemuDb *gorm.DB

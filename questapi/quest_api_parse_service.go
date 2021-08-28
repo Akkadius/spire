@@ -68,12 +68,12 @@ var luaConstants map[string][]LuaConstants
 
 const lockKey = "quest-api-lock"
 
-// return files from memory
+// Files return files from memory
 func (c *ParseService) Files() map[string]string {
 	return c.files
 }
 
-// source files
+// Source source files
 func (c *ParseService) Source(
 	org string,
 	repo string,
@@ -93,7 +93,7 @@ func (c *ParseService) Source(
 	return c.files
 }
 
-// parses methods from our source
+// Parse parses methods from our source
 func (c *ParseService) Parse(forceRefresh bool) QuestApiResponse {
 
 	// pull files in

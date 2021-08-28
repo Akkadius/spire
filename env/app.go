@@ -15,7 +15,7 @@ const EnvMaxDirectorySeekLevels int = 10
 
 var envLoaded = false
 
-// loads environment file .env locally
+// LoadEnvFileIfExists loads environment file .env locally
 // loads .env.testing if invoked from the context of a test file
 // loads .env.debug.host if invoked from the context of MacOS which references variables to communicate back to the docker network
 func LoadEnvFileIfExists() error {

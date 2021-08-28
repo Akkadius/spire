@@ -1,10 +1,10 @@
 package cmd
 
 import (
+	"fmt"
 	"github.com/Akkadius/spire/console"
 	"github.com/Akkadius/spire/http"
 	"github.com/Akkadius/spire/http/routes"
-	"fmt"
 	"github.com/labstack/echo/v4"
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"

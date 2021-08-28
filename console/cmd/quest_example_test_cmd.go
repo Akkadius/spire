@@ -2,7 +2,7 @@ package cmd
 
 import (
 	"errors"
-	fmt "fmt"
+	"fmt"
 	"github.com/Akkadius/spire/questapi"
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
