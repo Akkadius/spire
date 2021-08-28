@@ -1,6 +1,6 @@
 <template>
-  <div v-if="debug" class="mt-4">
-    <h3 class="eq-header">Debug</h3>
+  <div v-if="debug">
+    <h6 class="eq-header">Debug</h6>
     <pre
       style="padding-top: 10px !important; width: 100%">{{ data }}</pre>
   </div>

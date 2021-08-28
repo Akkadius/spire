@@ -131,10 +131,8 @@
             <eq-item-preview :item-data="reagent.item"/>
           </eq-window>
         </b-popover>
-
       </div>
     </div>
-
 
     <eq-debug :data="spellData"/>
   </div>
