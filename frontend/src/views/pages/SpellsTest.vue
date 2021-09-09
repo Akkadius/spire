@@ -34,13 +34,10 @@
               placeholder="Limit"
             >
           </eq-window>
-
-          <div class="row pt-4">
-            <div v-for="(spell, index) in spells"
-                 :key="index"
-                 style="display: inline-block; vertical-align: top;"
-                 class="col-4 mb-6">
-              <eq-window style="width: auto; height: 100%">
+          
+          <div class="row" style="justify-content: center">
+            <div v-for="(spell, index) in spells" :key="spell.id" style="display: inline-block; vertical-align: top">
+              <eq-window style="margin-right: 10px; width: auto; height: 90%">
                 <eq-spell-preview :spell-data="spell"/>
               </eq-window>
             </div>
