@@ -457,6 +457,43 @@ export default {
       return printBuffer;
     },
 
+    getFocusPercentRange(effect_name, min, max, negate) {
+
+      let printBuffer = ""
+      let modifier = ""
+
+      if (min < 0)  {
+
+        if (min < max) {
+          let temp = min;
+          min = max;
+          max = temp;
+        }
+      }
+      else {
+        if (min > max)
+          max = min;
+      }
+
+      if (negate) {
+        min = -min;
+        max = -max;
+      }
+
+      if (max < 0){
+        modifier = "Decrease "
+      }
+      else{
+        modifier = "Increase "
+      }
+
+     if (min == max || max == 0) {
+       return printBuffer += "Focus: " + modifier + effect_name + " by " + Math.abs(min) + "%";
+     }
+     return printBuffer += "Focus: " + modifier + effect_name + " by " + Math.abs(min) + "% to " + Math.abs(max) + "%";
+},
+
+
     getSpellEffectInfo: async function () {
 
       let effectsInfo = []
@@ -1141,19 +1178,63 @@ export default {
               printBuffer += this.getFormatStandard("Attack Speed (v3 over cap)", "%", value_min, value_max, minlvl, maxlvl);
               break;
 
-            case 87: // Increase Magnification
-            case 98: // Increase Haste v2
-            case 114: // Increase Agro Multiplier
-            case 119: // Increase Haste v3
-            case 123: // Increase Spell Damage
-            case 124: // Increase Spell Damage
-            case 125: // Increase Spell Healing
-            case 127: // Increase Spell Haste
-            case 128: // Increase Spell Duration
-            case 129: // Increase Spell Range
-            case 130: // Decrease Spell/Bash Hate
-            case 131: // Decrease Chance of Using Reagent
-            case 132: // Decrease Spell Mana Cost
+            case 120:
+              printBuffer += this.getFormatStandard("Healing Taken", "%", value_min, value_max, minlvl, maxlvl);
+              break;
+
+            case 121:
+              printBuffer += this.getFormatStandard("Reverse Damage Shield", "", value_min, value_max, minlvl, maxlvl);
+              break;
+
+            case 122: //TODO implement this
+              printBuffer += "Error: (" + spell["effectid_" + effectIndex] + ") not implemented"
+                break;
+
+            case 123:
+              printBuffer += "Buff Blocker: Screech (" + base + ")"
+              break;
+
+            case 124:
+              printBuffer += this.getFocusPercentRange("Spell Damage", base, limit, false);
+              break;
+
+            case 125:
+              printBuffer += this.getFocusPercentRange("Healing", base, limit, false);
+              break;
+
+            case 126:
+              printBuffer += this.getFocusPercentRange("Spell Resist Rate", base, limit, true);
+              break;
+
+            case 127:
+              printBuffer += this.getFocusPercentRange("Spell Haste", base, limit, false);
+              break;
+
+            case 128:
+              printBuffer += this.getFocusPercentRange("Spell Duration", base, limit, false);
+              break;
+;
+            case 129:
+              printBuffer += this.getFocusPercentRange("Spell Range", base, limit, false);
+              break;
+
+            case 130:
+              printBuffer += this.getFocusPercentRange("Spell and Bash Hate", base, limit, false);
+              break;
+
+            case 131:
+              printBuffer += this.getFocusPercentRange("Chance of Using Reagent", base, limit, true);
+              break;
+
+            case 132:
+              printBuffer += this.getFocusPercentRange("Spell Mana Cost", base, limit, true);
+              break;
+
+            case 133: //Not on live
+              printBuffer += this.getFocusPercentRange("Stun Time", base, limit, false);
+              break;
+
+
             case 158: // Increase Chance to Reflect Spell
             case 168: // Increase Melee Mitigation
             case 169: // Increase Chance to Critical Hit
@@ -1198,13 +1279,12 @@ export default {
                 printBuffer += " by " + value_max + " per tick (total " + Math.abs(value_max * duration) + ")";
               }
               break;
-            case 113: // Summon Horse:
+
             case 152: // Summon Pets:
               printBuffer += this.getSpellEffectName(spell["effectid_" + effectIndex]);
               printBuffer += " <a href=?a=pet&name=" + spell["teleport_zone"] + ">" + spell["teleport_zone"] + "</a>";
               break;
-            case 115: // Food/Water
-            case 117: // Make Weapons Magical
+
             case 135: // Limit: Resist(Magic allowed)
             case 137: // Limit: Effect(Hitpoints allowed)
             case 138: // Limit: Spell Type(Detrimental only)
@@ -1325,10 +1405,7 @@ export default {
               printBuffer += " (" + value_max + "% penalty)";
               break;
             case 0: // In/Decrease hitpoints
-            case 111: // Increase All Resists
-            case 112: // Increase Effective Casting
-            case 116: // Decrease Curse Counter
-            case 118: // Increase Singing Skill
+
             case 159: // Decrease Stats
             case 167: // Pet Power Increase
             case 192: // Increase hate
