@@ -563,13 +563,13 @@ export default {
               if (base < 100){
                 value_max = (100 - value_max) * -1;
                 value_min = (100 - value_min) * -1;
-                printBuffer += this.getFormatStandard("Attack Speed", "%", value_min, value_max, minlvl, maxlvl);
               }
               else {
                 value_max = value_max - 100;
                 value_min = value_min - 100;
-                printBuffer += this.getFormatStandard("Attack Speed", "%", value_min, value_max, minlvl, maxlvl);
+
               }
+              printBuffer += this.getFormatStandard("Attack Speed", "%", value_min, value_max, minlvl, maxlvl);
               break;
 
             case 12: //note: eqemu does not support base1 "enhanced invisibility" value
@@ -940,14 +940,206 @@ export default {
 
             case 88: //TODO clean up, enum for zones
               if (spell["teleport_zone"] != "same"){
-                printBuffer += "TESTSTS"
+                tmp += " (" + spell["effect_base_value_" + (effectIndex + 1)]
+                + ", " + spell["effect_base_value_" + effectIndex] + ", "
+                + spell["effect_base_value_" + (effectIndex + 2)] + ", "
+                + spell["effect_base_value_" + (effectIndex + 3)] + ")"
               }
-              printBuffer += "Evacuate to " + spell["teleport_zone"] + " ( Y: " + spell["effect_base_value_" + effectIndex] + " X: " + spell["effect_base_value_" + (effectIndex + 1)] + ")"
+              printBuffer += "Evacuate to " + spell["teleport_zone"] + tmp
               break;
 
-
             case 89:
-              return Spell.FormatPercent("Player Size", base1 - 100);
+              if (base < 100){
+                value_max = (100 - value_max) * -1;
+                value_min = (100 - value_min) * -1;
+              }
+              else {
+                value_max = value_max - 100;
+                value_min = value_min - 100;
+
+              }
+              printBuffer += this.getFormatStandard("Player Size", "%", value_min, value_max, minlvl, maxlvl);
+              break;
+
+            case 90: // pet invisible - This is not implemented on eqemu
+              printBuffer += "Ignore Pet (not implemented)"
+              break;
+
+            case 91:
+              printBuffer += "Summon Corpse up to level " + base
+              break;
+
+            case 92:
+              printBuffer += this.getFormatStandard("Hate", "", value_min, value_max, minlvl, maxlvl);
+              break;
+
+            case 93:
+              printBuffer += "Stop Rain"
+              break;
+
+             case 94:
+              printBuffer += "Cancel if Combat Initiated"
+              break;
+
+            case 95:
+              printBuffer += "Sacrifice"
+              break;
+
+            case 96:
+              printBuffer += "Inhibit Spell Casting (Silence)"
+              break;
+
+            case 97:
+              printBuffer += this.getFormatStandard("Max Mana", "", value_min, value_max, minlvl, maxlvl);
+              break;
+
+            case 98:
+              if (base < 100){
+                value_max = (100 - value_max) * -1;
+                value_min = (100 - value_min) * -1;
+              }
+              else {
+                value_max = value_max - 100;
+                value_min = value_min - 100;
+
+              }
+              printBuffer += this.getFormatStandard("Attack Speed (v2 capped)", "%", value_min, value_max, minlvl, maxlvl);
+              break;
+
+            case 99:
+              printBuffer += "Root"
+              break;
+
+            case 100: //TODO add heal over time
+              // heal over time
+             // Spell.FormatCount("Current HP", value) + repeating + range + (base2 > 0 ? " (If " + Spell.FormatEnum((SpellTargetRestrict)base2) + ")" : "");
+              break;
+
+            case 101:
+              printBuffer += "Increase Current HP by " + (base * 7500) + " with recast blocking buff"
+              break;
+
+            case 102:
+              printBuffer += "Fear Immunity"
+              break;
+
+            case 103:
+              printBuffer += "Summon Pet to Player"
+              break;
+
+            case 104: //TODO clean up, enum for zones
+              if (spell["teleport_zone"] != ""){
+                tmp += spell["teleport_zone"] +
+                  " (" + spell["effect_base_value_" + (effectIndex + 1)]
+                  + ", " + spell["effect_base_value_" + effectIndex] + ", "
+                  + spell["effect_base_value_" + (effectIndex + 2)] + ", "
+                  + spell["effect_base_value_" + (effectIndex + 3)] + ")"
+              }
+              else{
+                tmp += "bind"
+              }
+              printBuffer += "Translocate to " + tmp
+              break;
+
+            case 105:
+              printBuffer += "Inhibit Gate";
+              return;
+
+            case 106:
+              printBuffer += "Summon Warder: " + spell["teleport_zone"]
+              break;
+
+            case 107: //not on live
+              printBuffer += this.getFormatStandard("NPC Level", "", value_min, value_max, minlvl, maxlvl);
+              break;
+
+            case 108: //limit "Ignore Auto Leave" not supported, not in current spell file
+              printBuffer += "Summon Familiar:"  + spell["teleport_zone"]
+              break;
+
+            case 109: //later expansions allow stacks to put into bags using limit value.
+              printBuffer += "Summon into Bag: "
+
+              const item2             = (await this.getItem(spell["effect_base_value_" + effectIndex]));
+              this.itemData[item2.id] = item2
+
+              if (item2.name) {
+                printBuffer += `
+                <div :id="${effectIndex} + '-' + ${item2.id} + '-' + componentId" style="display:inline-block" class="ml-2">
+
+                  <div style="display: inline-block">
+                    <img
+                      :src="itemCdnUrl + 'item_' + ${item2.icon} + '.png'"
+                      style="height:15px; border-radius: 25px; width:auto;"
+                      class="mr-1">
+                    <span class="mr-1">${item2.name}</span>
+                  </div>
+
+                </div>
+
+                <b-popover
+                  :target="${effectIndex} + '-' + ${item2.id} + '-' + componentId"
+                  placement="auto"
+                  custom-class="no-bg"
+                  delay="1"
+                  triggers="hover focus"
+                  style="width: 500px !important"
+                >
+                  <eq-window style="margin-right: 10px; width: auto; height: 90%">
+                    <eq-item-preview :item-data="itemData[${item2.id}]"/>
+                  </eq-window>
+                </b-popover>`
+              }
+              break;
+
+            case 110:
+              printBuffer += "Error: (" + spell["effectid_" + effectIndex] + ") not used"
+              break;
+
+            case 111:
+              printBuffer += this.getFormatStandard("All Resists", "", value_min, value_max, minlvl, maxlvl);
+              break;
+
+            case 112:
+              printBuffer += this.getFormatStandard("Effective Casting Level", "", value_min, value_max, minlvl, maxlvl);
+              break;
+
+            case 113:
+              printBuffer += "Summon Mount: " + spell["teleport_zone"]
+              break;
+
+            case 114:
+              printBuffer += this.getFormatStandard("Hate Generated", "%", value_min, value_max, minlvl, maxlvl);
+              break;
+
+            case 115:
+              printBuffer += "Reset Hunger Counter"
+              break;
+
+            case 116:
+                 printBuffer += this.getFormatStandard("Curse Counter", "", value_min, value_max, minlvl, maxlvl);
+                 break;
+
+            case 117:
+              return "Make Weapon Magical";
+              break;
+
+            case 118:
+              printBuffer += this.getFormatStandard("Singing Amplification", "%", (value_min * 10), (value_max * 10), minlvl, maxlvl);
+              break;
+
+            case 119:
+              if (base < 100){
+                value_max = (100 - value_max) * -1;
+                value_min = (100 - value_min) * -1;
+              }
+              else {
+                value_max = value_max - 100;
+                value_min = value_min - 100;
+
+              }
+              printBuffer += this.getFormatStandard("Attack Speed (v3 over cap)", "%", value_min, value_max, minlvl, maxlvl);
+              break;
 
             case 87: // Increase Magnification
             case 98: // Increase Haste v2
@@ -1006,60 +1198,11 @@ export default {
                 printBuffer += " by " + value_max + " per tick (total " + Math.abs(value_max * duration) + ")";
               }
               break;
-            case 30: // Frenzy Radius
-            case 86: // Reaction Radius
-              printBuffer += this.getSpellEffectName(spell["effectid_" + effectIndex]);
-              printBuffer += " (" + spell["effect_base_value_" + effectIndex] + "/" + spell["effect_limit_value_" + effectIndex] + ")";
-              break;
-            case 22: // Charm
-            case 23: // Fear
-            case 31: // Mesmerize
-              printBuffer += this.getSpellEffectName(spell["effectid_" + effectIndex]);
-              printBuffer += " up to level " + spell["effect_limit_value_" + effectIndex];
-              break;
-            case 33: // Summon Pet:
-            case 68: // Summon Skeleton Pet:
-            case 106: // Summon Warder:
-            case 108: // Summon Familiar:
             case 113: // Summon Horse:
             case 152: // Summon Pets:
               printBuffer += this.getSpellEffectName(spell["effectid_" + effectIndex]);
               printBuffer += " <a href=?a=pet&name=" + spell["teleport_zone"] + ">" + spell["teleport_zone"] + "</a>";
               break;
-            case 25: // Bind Affinity
-            case 26: // Gate
-            case 28: // Invisibility versus Undead
-            case 29: // Invisibility versus Animals
-            case 40: // Invunerability
-            case 41: // Destroy Target
-            case 42: // Shadowstep
-            case 44: // Lycanthropy
-            case 52: // Sense Undead
-            case 53: // Sense Summoned
-            case 54: // Sense Animals
-            case 56: // True North
-            case 57: // Levitate
-            case 61: // Identify
-            case 64: // SpinStun
-            case 65: // Infravision
-            case 66: // UltraVision
-            case 67: // Eye of Zomm
-            case 73: // Bind Sight
-            case 74: // Feign Death
-            case 75: // Voice Graft
-            case 76: // Sentinel
-            case 77: // Locate Corpse
-            case 82: // Summon PC
-            case 90: // Cloak
-            case 93: // Stop Rain
-            case 94: // Make Fragile (Delete if combat)
-            case 95: // Sacrifice
-            case 96: // Silence
-            case 99: // Root
-            case 101: // Complete Heal (with duration)
-            case 103: // Call Pet
-            case 104: // Translocate target to their bind point
-            case 105: // Anti-Gate
             case 115: // Food/Water
             case 117: // Make Weapons Magical
             case 135: // Limit: Resist(Magic allowed)
@@ -1092,12 +1235,6 @@ export default {
               printBuffer += this.getSpellEffectName(spell["effectid_" + effectIndex]);
               printBuffer += " (" + value_max + "%)";
               break;
-            case 81: // Resurrect
-              printBuffer += this.getSpellEffectName(spell["effectid_" + effectIndex]);
-              printBuffer += " and restore " + spell["effect_base_value_" + effectIndex] + "% experience";
-              break;
-            case 83: // Teleport
-            case 88: // Evacuate
             case 145: // Teleport v2
               //print_buffer += " (Need to add zone to spells table)";
               printBuffer += this.getSpellEffectName(spell["effectid_" + effectIndex]);
@@ -1110,22 +1247,7 @@ export default {
 
               printBuffer += "<a href=?a=spell&id=" + spell["effect_base_value_" + effectIndex] + "> " + (await this.getSpellName(spell["effect_base_value_" + effectIndex])) + "</a>";
               break;
-            case 89: // Increase Player Size
-              name = this.getSpellEffectName(spell["effectid_" + effectIndex]);
-              value_min -= 100;
-              value_max -= 100;
-              if (value_max < 0) {
-                name = name.replace("Increase", "Decrease");
-              }
-              printBuffer += name;
-              if (value_min !== value_max) {
-                printBuffer += " by " + value_min + "% (L" + minlvl + ") to " + " + value_max + " + "% (L" + maxlvl + ")";
-              } else {
-                printBuffer += " by " + value_max + "%";
-              }
-              break;
-            case 27: // Cancel Magic
-            case 134: // Limit: Max Level
+              case 134: // Limit: Max Level
             case 157: // Spell-Damage Shield
               printBuffer += this.getSpellEffectName(spell["effectid_" + effectIndex]);
               printBuffer += " (" + value_max + ")";
@@ -1203,20 +1325,6 @@ export default {
               printBuffer += " (" + value_max + "% penalty)";
               break;
             case 0: // In/Decrease hitpoints
-            case 35: // Increase Disease Counter
-            case 36: // Increase Poison Counter
-            case 46: // Increase Magic Fire
-            case 47: // Increase Magic Cold
-            case 48: // Increase Magic Poison
-            case 49: // Increase Magic Disease
-            case 50: // Increase Magic Resist
-            case 55: // Increase Absorb Damage
-            case 59: // Increase Damage Shield
-            case 69: // Increase Max Hitpoints
-            case 78: // Increase Absorb Magic Damage
-            case 79: // Increase HP when cast
-            case 92: // Increase hate
-            case 97: // Increase Mana Pool
             case 111: // Increase All Resists
             case 112: // Increase Effective Casting
             case 116: // Decrease Curse Counter
@@ -1246,7 +1354,7 @@ export default {
           if (printBuffer !== "") {
 
             //let test = this.getFormatStandard(" Movement Speed", "%", value_min, value_max, minlvl, maxlvl)
-            effectsInfo.push("Slot " + effectIndex + ": &nbsp &nbsp &nbsp " + printBuffer)
+            effectsInfo.push("Slot " + effectIndex + ": &nbsp " + printBuffer)
             /*
             " &nbsp &nbsp &nbsp [ * DEBUG * " + "(ID: " + spell["effectid_" + effectIndex] + ") "
             +   "(Base:" +base + ") "+ "(Limit: " + limit + ") "+ "(max: " + max + ")]"
