@@ -425,6 +425,38 @@ export default {
 
       return result;
     },
+
+    getFormatStandard(effect_name, type, value_min, value_max, minlvl, maxlvl){
+
+      let modifier = ""
+
+      if (value_max < 0){
+        modifier = "Decrease "
+      }
+      else{
+        modifier = "Increase "
+      }
+
+      let printBuffer = modifier + effect_name
+
+      if (value_min !== value_max) {
+        printBuffer += " by " + Math.trunc(Math.abs(value_min))+ type + " (L" + minlvl + ") to " + Math.trunc(Math.abs(value_max) )+ type + " (L" + maxlvl + ")";
+      } else {
+        printBuffer += " by " + Math.trunc(Math.abs(value_max)) + type
+      }
+
+      return printBuffer;
+    },
+
+    getUpToMaxLvl(max){
+      let printBuffer = ""
+      if (max > 0){
+        printBuffer = " up to level " + max
+      }
+
+      return printBuffer;
+    },
+
     getSpellEffectInfo: async function () {
 
       let effectsInfo = []
@@ -436,86 +468,210 @@ export default {
       let serverMaxLevel = 100;
 
       for (let effectIndex = 1; effectIndex <= 12; effectIndex++) {
+
         const spell     = this.spellData
         let printBuffer = "";
         let name        = ""
         let v           = ""
+        let tmp         = ""
 
-        if ((spell["effectid_" + effectIndex] !== 254) && (spell["effectid_" + effectIndex] !== 10)) {
-          let maxlvl = spell["effect_base_value_" + effectIndex];
-          let minlvl = serverMaxLevel;
+        let base = spell["effect_base_value_" + effectIndex]
+        let limit = spell["effect_limit_value_" + effectIndex]
+        let max = spell["max_" + effectIndex]
+
+        if (spell["effectid_" + effectIndex] !== 254) {
+
+          //let maxlvl = spell["effect_base_value_" + effectIndex];
+          let maxlvl = serverMaxLevel;
+          let minlvl = 1; // make this 255; FIX THIS
+
           for (let classId = 1; classId <= 16; classId++) {
             if (spell["classes" + classId] < minlvl) {
               minlvl = spell["classes" + classId];
             }
           }
 
-          let min = this.calcSpellEffectValue(
+          let value_min = this.calcSpellEffectValue(
             spell["formula_" + effectIndex],
             spell["effect_base_value_" + effectIndex],
             spell["max_" + effectIndex],
             minlvl
           );
 
-          let max = this.calcSpellEffectValue(
+          let value_max = this.calcSpellEffectValue(
             spell["formula_" + effectIndex],
             spell["effect_base_value_" + effectIndex],
             spell["max_" + effectIndex],
             serverMaxLevel
           );
 
-          let base_limit = spell["effect_limit_value_" + effectIndex];
-          if ((min < max) && (max < 0)
+          if ((value_min < value_max) && (value_max < 0)
           ) {
-            tn  = min;
-            min = max;
-            max = tn;
+            tn  = value_min;
+            value_min = value_max;
+            value_max = tn;
           }
 
           switch (spell["effectid_" + effectIndex]) {
-            case 3: // Increase Movement (% / 0)
-              if (max < 0) { // Decrease
-                printBuffer += "Decrease Movement";
-                if (min !== max) {
-                  printBuffer += " by " + Math.abs(min) + "% (L" + minlvl + ") to " + Math.abs(max) + "% (L" + maxlvl + ")";
-                } else {
-                  printBuffer += " by " + Math.abs(100) + "%";
-                }
-              } else {
-                printBuffer += "Increase Movement";
-                if (min !== max) {
-                  printBuffer += " by " + min + "% (L" + minlvl + ") to " + (max) + "% (L" + maxlvl + ")";
-                } else {
-                  printBuffer += " by " + (max) + "%";
-                }
+
+            case 1:
+              printBuffer += this.getFormatStandard("AC", "", value_min, value_max, minlvl, maxlvl);
+              break;
+
+            case 2:
+              printBuffer += this.getFormatStandard("ATK", "", value_min, value_max, minlvl, maxlvl);
+              break;
+
+            case 3:
+              printBuffer += this.getFormatStandard("Movement Speed", "%", value_min, value_max, minlvl, maxlvl);
+              break;
+
+            case 4:
+              printBuffer += this.getFormatStandard("STR", "", value_min, value_max, minlvl, maxlvl);
+              break;
+
+            case 5:
+              printBuffer += this.getFormatStandard("DEX", "", value_min, value_max, minlvl, maxlvl);
+              break;
+
+            case 6:
+              printBuffer += this.getFormatStandard("AGI", "", value_min, value_max, minlvl, maxlvl);
+              break;
+
+            case 7:
+              printBuffer += this.getFormatStandard("STA", "", value_min, value_max, minlvl, maxlvl);
+              break;
+
+            case 8:
+              printBuffer += this.getFormatStandard("INT", "", value_min, value_max, minlvl, maxlvl);
+              break;
+
+            case 9:
+              printBuffer += this.getFormatStandard("WIS", "", value_min, value_max, minlvl, maxlvl);
+              break;
+
+            case 10:
+              if (base == 0 && (spell["formula_" + effectIndex] == 100)){ //This is used as a placeholder do not calculate
+                printBuffer = ""
+              }
+              else {
+                printBuffer += this.getFormatStandard("CHA", "", value_min, value_max, minlvl, maxlvl);
               }
               break;
-            case 11: // Decrease OR Inscrease AttackSpeed (max/min = percentage of speed / normal speed, IE, 70=>-30% 130=>+30%
-              if (max < 100) { // Decrease
-                printBuffer += "Decrease Attack Speed";
-                if (min !== max) {
-                  printBuffer += " by " + (100 - min) + "% (L" + minlvl + ") to " + (100 - max) + "% (L" + maxlvl + ")";
-                } else {
-                  printBuffer += " by " + (100 - max) + "%";
-                }
-              } else {
-                printBuffer += "Increase Attack Speed";
-                if (min !== max) {
-                  printBuffer += " by " + (min - 100) + "% (L" + minlvl + ") to " + (max - 100) + "% (L" + maxlvl + ")";
-                } else {
-                  printBuffer += " by " + (max - 100) + "%";
-                }
+
+            case 11: // Slow 70=>-30%, Haste 130=>+30%
+              if (base < 100){
+                value_max = (100 - value_max) * -1;
+                value_min = (100 - value_min) * -1;
+                printBuffer += this.getFormatStandard("Attack Speed", "%", value_min, value_max, minlvl, maxlvl);
+              }
+              else {
+                value_max = value_max - 100;
+                value_min = value_min - 100;
+                printBuffer += this.getFormatStandard("Attack Speed", "%", value_min, value_max, minlvl, maxlvl);
               }
               break;
-            case 21: // stun
-              printBuffer += this.getSpellEffectName(spell["effectid_" + effectIndex]);
-              if (min !== max) {
-                printBuffer += " (" + (min / 1000) + " sec (L" + minlvl + ") to " + (max / 1000) + " sec (L" + maxlvl + "))";
-              } else {
-                printBuffer += " (" + (max / 1000) + " sec)";
-              }
+
+            case 12: //note: eqemu does not support base1 "enhanced invisibility" value
+              printBuffer += "Invisibility (Unstable)"
               break;
-            case 32: // summonitem
+
+            case 13: //note: eqemu does not support base1 "enhanced see invisibility" value
+              printBuffer += "See Invisible"
+              break;
+
+            case 14:
+              printBuffer += "Enduring Breath"
+              break;
+
+            case 15: //TODO Duration effect mana
+              break;
+
+            case 16:
+              printBuffer += "Error: (" + spell["effectid_" + effectIndex] + ") not used"
+              break;
+
+            case 17:
+              printBuffer += "Error: (" + spell["effectid_" + effectIndex] + ") not used"
+              break;
+
+            case 18:
+              printBuffer += "Pacify"
+              break;
+
+            case 19:
+              printBuffer += this.getFormatStandard("Faction", "", value_min, value_max, minlvl, maxlvl);
+              break;
+
+            case 20:
+              printBuffer += "Blind"
+              break;
+
+            case 21:
+              let pvpstun = ""
+              if (base !== limit && limit !== 0){
+                pvpstun += " ( " + (limit/1000) + " in PvP)"
+              }
+
+              printBuffer += "Stun for " + (base / 1000) + " sec" + pvpstun + this.getUpToMaxLvl(max)
+              break;
+
+            case 22:
+              printBuffer += "Charm" + this.getUpToMaxLvl(max)
+              break;
+
+            case 23:
+              printBuffer += "Fear" + this.getUpToMaxLvl(max)
+              break;
+
+            case 24:
+              printBuffer += this.getFormatStandard("Stamina Loss", "", value_min, value_max, minlvl, maxlvl);
+              break;
+
+            case 25:
+              let bindtype = ""
+              if (base == 2){
+                bindtype += " (Secondary Bind Point)"
+              }
+              else if (base == 3){
+                bindtype += " (Tertiary Bind Point)"
+              }
+              printBuffer += "Bind" + bindtype
+              break;
+
+            case 26:
+              let gatetype = ""
+               if (limit == 2){
+                gatetype += " to Secondary Bind Point "
+              }
+              else if (limit == 3){
+                gatetype += " to Tertiary Bind Point "
+              }
+
+              printBuffer += "Gate" + gatetype + " (" + (100 - base) + "% chance to fail)"
+              break;
+
+            case 27:
+              printBuffer += "Dispel" + " with level modifier of " + " (" + base + ")"
+              break;
+
+            case 28:
+              printBuffer += "Invisibility to Undead (Unstable)"
+              break;
+
+            case 29:
+              printBuffer += "Invisibility to Animals (Unstable)"
+              break;
+
+            case 30:
+              printBuffer += "Decrease Aggro Radius to " + base + this.getUpToMaxLvl(max)
+              break;
+
+            case 31:
+              printBuffer += "Mesmerize" + this.getUpToMaxLvl(max)
+              break;
+
+            case 32: //Review this
               printBuffer += this.getSpellEffectName(spell["effectid_" + effectIndex]);
 
               const item             = (await this.getItem(spell["effect_base_value_" + effectIndex]));
@@ -549,6 +705,250 @@ export default {
                 </b-popover>`
               }
               break;
+
+            case 33:
+              printBuffer += "Summon Pet: " +spell["teleport_zone"]
+              break;
+
+            case 34:
+              printBuffer += "Error: (" + spell["effectid_" + effectIndex] + ") not used"
+              break;
+
+            case 35:
+              printBuffer += this.getFormatStandard("Disease Counter", "", value_min, value_max, minlvl, maxlvl);
+              break;
+
+            case 36:
+              printBuffer += this.getFormatStandard("Poison Counter", "", value_min, value_max, minlvl, maxlvl);
+              break;
+
+            case 37:
+              printBuffer += "Error: (" + spell["effectid_" + effectIndex] + ") not used"
+              break;
+
+            case 38:
+              printBuffer += "Error: (" + spell["effectid_" + effectIndex] + ") not used"
+              break;
+
+            case 39:
+              printBuffer += "Can not be Twincast"
+              break;
+
+            case 40:
+              printBuffer += "Invulnerability"
+              break;
+
+            case 41:
+              printBuffer += "Destroy"
+              break;
+
+            case 42: //handled by client, unknown what base value represents
+              printBuffer += "Shadowstep"
+              break;
+
+            case 43: //custom on eqemu, not used on live. Any client with this effect now has chance to crippling blow
+              printBuffer += "Berserk: Allows chance to crippling blow"
+              break;
+
+            case 44: //TODO This is a type of buff stacker that I need to figure out
+              printBuffer += "Lycanthropy: Need to implement on Eqemu"
+              break;
+
+            case 45: //custom on eqemu, not used on live. Stackable melee lifesteal effect.
+              printBuffer += "Lifetap from Weapon Damage: " + base + "%"
+              break;
+
+            case 46:
+              printBuffer += this.getFormatStandard("Fire Resist", "", value_min, value_max, minlvl, maxlvl);
+              break;
+
+            case 47:
+              printBuffer += this.getFormatStandard("Cold Resist", "", value_min, value_max, minlvl, maxlvl);
+              break;
+
+            case 48:
+              printBuffer += this.getFormatStandard("Poison Resist", "", value_min, value_max, minlvl, maxlvl);
+              break;
+
+            case 49:
+              printBuffer += this.getFormatStandard("Disease Resist", "", value_min, value_max, minlvl, maxlvl);
+              break;
+
+            case 50:
+              printBuffer += this.getFormatStandard("Magic Resist", "", value_min, value_max, minlvl, maxlvl);
+              break;
+
+            case 51:
+              printBuffer += "Sense Undead"
+              break;
+
+            case 52:
+              printBuffer += "Sense Summoned"
+              break;
+
+            case 53:
+              printBuffer += "Sense Animal"
+              break;
+
+            case 54:
+              printBuffer += "Error: (" + spell["effectid_" + effectIndex] + ") not used"
+              break;
+
+            case 55: //rune
+              printBuffer += "Absorb Damage: 100%, Total: " + base
+              break;
+
+            case 56:
+              printBuffer += "True North"
+              break;
+
+            case 57:
+              printBuffer += "Levitate"
+              break;
+
+            case 58: //TODO NEED FINISH THIS
+              printBuffer += "Illusion: "
+              break;
+
+            case 59:
+              printBuffer += this.getFormatStandard("Damage Shield", "", value_min, value_max, minlvl, maxlvl);
+              break;
+
+            case 60:
+              printBuffer += "Error: (" + spell["effectid_" + effectIndex] + ") not used"
+              break;
+
+            case 61:
+              printBuffer += "Identify Item"
+              break;
+
+            case 62:
+              printBuffer += "Error: (" + spell["effectid_" + effectIndex] + ") not used"
+              break;
+
+            case 63:
+              printBuffer += "Memory Blur" + " (" + base + "% chance)"
+              break;
+
+            case 63:
+              printBuffer += "Memory Blur" + " (" + base + "% chance)"
+              break;
+
+            case 64:
+              if (base !== limit && limit !== 0){
+                printBuffer += "Stun and Spin NPC for " + (base / 1000) + " sec (PC for "  + (limit/ 1000) + " sec " + this.getUpToMaxLvl(max)
+              }
+              else {
+                printBuffer += "Stun and Spin for " + (base / 1000) + " sec "+ this.getUpToMaxLvl(max)
+              }
+              break;
+
+            case 65:
+              printBuffer += "Infravision"
+              break;
+
+            case 66:
+              printBuffer += "Ultravision"
+              break;
+
+            case 67:
+              printBuffer += "Eye of Zomm"
+              break;
+
+            case 68:
+              printBuffer += "Reclaim Pet Mana"
+              break;
+
+            case 69: //TODO Max HP
+              printBuffer += "TO DO"
+              break;
+
+            case 70:
+              printBuffer += "Error: (" + spell["effectid_" + effectIndex] + ") not used"
+              break;
+
+            case 71:
+              printBuffer += "Summon Pet: " + spell["teleport_zone"]
+              break;
+
+            case 72:
+              printBuffer += "Error: (" + spell["effectid_" + effectIndex] + ") not used"
+              break;
+
+            case 73:
+              printBuffer += "Bind Sight"
+              break;
+
+            case 74:
+              printBuffer += "Feign Death (" + base + "% chance)"
+              break;
+
+            case 75:
+              printBuffer += "Project Voice"
+              break;
+
+            case 76:
+              printBuffer += "Sentinel"
+              break;
+
+            case 77:
+              printBuffer += "Locate Corpse"
+              break;
+
+            case 78: //spell rune
+              printBuffer += "Absorb Spell Damage: 100%, Total: " + base
+              break;
+
+            case 79: //instant heal
+              //return Spell.FormatCount("Current HP", value) + range + (base2 > 0 ? " (If " + Spell.FormatEnum((SpellTargetRestrict)base2) + ")" : "");
+              break;
+
+            case 80:
+              printBuffer += "Error: (" + spell["effectid_" + effectIndex] + ") not used"
+              break;
+
+            case 81:
+              printBuffer += "Resurrect with " + base + "% XP"
+              break;
+
+            case 82:
+              printBuffer += "Summon Player"
+              break;
+
+            case 83: //TODO teleport
+              //return String.Format("Teleport to {0}", Extra);
+              break;
+
+            case 84: // base on emu does damage. Correct?
+              printBuffer += "Gravity Flux"
+              break;
+
+            case 85: //TODO Spell proc LINK
+              if (limit != 0){
+                tmp += " with " + limit + " % Rate Mod"
+              }
+              printBuffer += "Add Melee Proc: " + (await this.getSpellName(spell["effect_base_value_" + effectIndex])) + tmp
+              break;
+
+            case 86:
+              printBuffer += "Decrease Social Radius to " + base +  + this.getUpToMaxLvl(max)
+              break;
+
+            case 87:
+              printBuffer += this.getFormatStandard("Magnification", "%", value_min, value_max, minlvl, maxlvl);
+              break;
+
+            case 88: //TODO clean up, enum for zones
+              if (spell["teleport_zone"] != "same"){
+                printBuffer += "TESTSTS"
+              }
+              printBuffer += "Evacuate to " + spell["teleport_zone"] + " ( Y: " + spell["effect_base_value_" + effectIndex] + " X: " + spell["effect_base_value_" + (effectIndex + 1)] + ")"
+              break;
+
+
+            case 89:
+              return Spell.FormatPercent("Player Size", base1 - 100);
+
             case 87: // Increase Magnification
             case 98: // Increase Haste v2
             case 114: // Increase Agro Multiplier
@@ -586,24 +986,24 @@ export default {
             case 273: // Increase Critical Dot Chance
             case 294: // Increase Critical Spell Chance
               printBuffer += this.getSpellEffectName(spell["effectid_" + effectIndex]);
-              if (min !== max) {
-                printBuffer += " by " + min + "% (L" + minlvl + ") to " + max + "% (L" + maxlvl + ")";
+              if (value_min !== value_max) {
+                printBuffer += " by " + value_min + "% (L" + minlvl + ") to " + value_max + "% (L" + maxlvl + ")";
               } else {
-                printBuffer += " by " + max + "%";
+                printBuffer += " by " + value_max + "%";
               }
               break;
             case 15: // Increase Mana per tick
             case 100: // Increase Hitpoints v2 per tick
               printBuffer += this.getSpellEffectName(spell["effectid_" + effectIndex]);
               let duration = spell["buffduration"]
-              if (min !== max) {
-                printBuffer += " by " + Math.abs(min) + " (L" + minlvl + ") to " + Math.abs(
-                  max
-                ) + " (L" + maxlvl + ") per tick (total " + Math.abs(min * duration) + " to " + Math.abs(
-                  max * duration
+              if (value_min !== value_max) {
+                printBuffer += " by " + Math.abs(value_min) + " (L" + minlvl + ") to " + Math.abs(
+                  value_max
+                ) + " (L" + maxlvl + ") per tick (total " + Math.abs(value_min * duration) + " to " + Math.abs(
+                  value_max * duration
                 ) + ")";
               } else {
-                printBuffer += " by " + max + " per tick (total " + Math.abs(max * duration) + ")";
+                printBuffer += " by " + value_max + " per tick (total " + Math.abs(value_max * duration) + ")";
               }
               break;
             case 30: // Frenzy Radius
@@ -626,9 +1026,6 @@ export default {
               printBuffer += this.getSpellEffectName(spell["effectid_" + effectIndex]);
               printBuffer += " <a href=?a=pet&name=" + spell["teleport_zone"] + ">" + spell["teleport_zone"] + "</a>";
               break;
-            case 13: // See Invisible
-            case 18: // Pacify
-            case 20: // Blindness
             case 25: // Bind Affinity
             case 26: // Gate
             case 28: // Invisibility versus Undead
@@ -693,7 +1090,7 @@ export default {
             case 120: // Set Healing Effectiveness
             case 330: // Critical Damage Mob
               printBuffer += this.getSpellEffectName(spell["effectid_" + effectIndex]);
-              printBuffer += " (" + max + "%)";
+              printBuffer += " (" + value_max + "%)";
               break;
             case 81: // Resurrect
               printBuffer += this.getSpellEffectName(spell["effectid_" + effectIndex]);
@@ -715,51 +1112,51 @@ export default {
               break;
             case 89: // Increase Player Size
               name = this.getSpellEffectName(spell["effectid_" + effectIndex]);
-              min -= 100;
-              max -= 100;
-              if (max < 0) {
+              value_min -= 100;
+              value_max -= 100;
+              if (value_max < 0) {
                 name = name.replace("Increase", "Decrease");
               }
               printBuffer += name;
-              if (min !== max) {
-                printBuffer += " by " + min + "% (L" + minlvl + ") to " + " + max + " + "% (L" + maxlvl + ")";
+              if (value_min !== value_max) {
+                printBuffer += " by " + value_min + "% (L" + minlvl + ") to " + " + value_max + " + "% (L" + maxlvl + ")";
               } else {
-                printBuffer += " by " + max + "%";
+                printBuffer += " by " + value_max + "%";
               }
               break;
             case 27: // Cancel Magic
             case 134: // Limit: Max Level
             case 157: // Spell-Damage Shield
               printBuffer += this.getSpellEffectName(spell["effectid_" + effectIndex]);
-              printBuffer += " (" + max + ")";
+              printBuffer += " (" + value_max + ")";
               break;
             case 121: // Reverse Damage Shield
               printBuffer += this.getSpellEffectName(spell["effectid_" + effectIndex]);
-              printBuffer += " (-" + max + ")";
+              printBuffer += " (-" + value_max + ")";
               break;
             case 91: // Summon Corpse
               printBuffer += this.getSpellEffectName(spell["effectid_" + effectIndex]);
-              printBuffer += " (max level " + max + ")";
+              printBuffer += " (value_max level " + value_max + ")";
               break;
             case 136: // Limit: Target
               printBuffer += this.getSpellEffectName(spell["effectid_" + effectIndex]);
-              if (max < 0) {
-                max = -max;
+              if (value_max < 0) {
+                value_max = -value_max;
                 v   = " excluded";
               } else {
                 v = "";
               }
-              printBuffer += " (" + DB_SPELL_TARGETS[max] + " " + v + ")";
+              printBuffer += " (" + DB_SPELL_TARGETS[value_max] + " " + v + ")";
               break;
             case 139: // Limit: Spell
               printBuffer += this.getSpellEffectName(spell["effectid_" + effectIndex]);
-              max = spell["effect_base_value_" + effectIndex];
-              if (max < 0) {
-                max = -max;
+              value_max = spell["effect_base_value_" + effectIndex];
+              if (value_max < 0) {
+                value_max = -value_max;
                 v   = " excluded";
               }
 
-              name = (await this.getSpellName(max))
+              name = (await this.getSpellName(value_max))
               if (csv === false) {
                 printBuffer += "(" + name + ")";
               } else {
@@ -768,22 +1165,22 @@ export default {
               break;
             case 140: // Limit: Min Duration
               printBuffer += this.getSpellEffectName(spell["effectid_" + effectIndex]);
-              min *= 6;
-              max *= 6;
-              if (min !== max) {
-                printBuffer += " (" + min + " sec (L" + minlvl + ") to " + max + " sec (L" + maxlvl + "))";
+              value_min *= 6;
+              value_max *= 6;
+              if (value_min !== value_max) {
+                printBuffer += " (" + value_min + " sec (L" + minlvl + ") to " + value_max + " sec (L" + maxlvl + "))";
               } else {
-                printBuffer += " (max sec)";
+                printBuffer += " (value_max sec)";
               }
               break;
             case 143: // Limit: Min Casting Time
               printBuffer += this.getSpellEffectName(spell["effectid_" + effectIndex]);
-              min *= 6;
-              max *= 6;
-              if (min !== max) {
-                printBuffer += " (" + (min / 6000) + " sec (L" + minlvl + ") to " + (max / 6000) + " sec (L" + maxlvl + "))";
+              value_min *= 6;
+              value_max *= 6;
+              if (value_min !== value_max) {
+                printBuffer += " (" + (value_min / 6000) + " sec (L" + minlvl + ") to " + (value_max / 6000) + " sec (L" + maxlvl + "))";
               } else {
-                printBuffer += " (" + (max / 6000) + " sec)";
+                printBuffer += " (" + (value_max / 6000) + " sec)";
               }
               break;
             case 148: // Stacking: Overwrite existing spell
@@ -796,25 +1193,16 @@ export default {
               break;
             case 147: // Increase Hitpoints (%)
               name = this.getSpellEffectName(spell["effectid_" + effectIndex]);
-              if (max < 0) {
+              if (value_max < 0) {
                 name = name.replace("Increase", "Decrease");
               }
-              printBuffer += name + " by " + spell["effect_limit_value_" + effectIndex] + " (" + max + "% " + max + ")";
+              printBuffer += name + " by " + spell["effect_limit_value_" + effectIndex] + " (" + value_max + "% " + value_max + ")";
               break;
             case 153: // Balance Party Health
               printBuffer += this.getSpellEffectName(spell["effectid_" + effectIndex]);
-              printBuffer += " (" + max + "% penalty)";
+              printBuffer += " (" + value_max + "% penalty)";
               break;
             case 0: // In/Decrease hitpoints
-            case 1: // Increase AC
-            case 2: // Increase ATK
-            case 4: // Increase STR
-            case 5: // Increase DEX
-            case 6: // Increase AGI
-            case 7: // Increase STA
-            case 8: // Increase INT
-            case 9: // Increase WIS
-            case 19: // Increase Faction
             case 35: // Increase Disease Counter
             case 36: // Increase Poison Counter
             case 46: // Increase Magic Fire
@@ -838,17 +1226,17 @@ export default {
             case 192: // Increase hate
             default:
               name = this.getSpellEffectName(spell["effectid_" + effectIndex]);
-              if (max < 0) {
+              if (value_max < 0) {
                 name = name.replace("Increase", "Decrease");
               }
               printBuffer += name;
-              if (min !== max) {
-                printBuffer += " by " + min + " (L" + minlvl + ") to " + max + " (L" + maxlvl + ")";
+              if (value_min !== value_max) {
+                printBuffer += " by " + value_min + " (L" + minlvl + ") to " + value_max + " (L" + maxlvl + ")";
               } else {
-                if (max < 0) {
-                  max = -max;
+                if (value_max < 0) {
+                  value_max = -value_max;
                 }
-                printBuffer += " by " + max + "";
+                printBuffer += " by " + value_max + "";
               }
 
               break;
@@ -856,7 +1244,17 @@ export default {
 
 
           if (printBuffer !== "") {
-            effectsInfo.push(effectIndex + ") " + printBuffer)
+
+            //let test = this.getFormatStandard(" Movement Speed", "%", value_min, value_max, minlvl, maxlvl)
+            effectsInfo.push("Slot " + effectIndex + ": &nbsp &nbsp &nbsp " + printBuffer)
+            /*
+            " &nbsp &nbsp &nbsp [ * DEBUG * " + "(ID: " + spell["effectid_" + effectIndex] + ") "
+            +   "(Base:" +base + ") "+ "(Limit: " + limit + ") "+ "(max: " + max + ")]"
+            +   " Min: " + value_min + " Max: " + value_max + " MinLv: " + minlvl + " MaxLv: " + maxlvl
+            + "  [TEST]  " + 0 + " :End"
+            )
+
+             */
           }
 
           if (this.debugSpellEffects && printBuffer !== "") {

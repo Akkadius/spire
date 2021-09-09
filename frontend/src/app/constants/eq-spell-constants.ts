@@ -176,6 +176,7 @@ export const DB_SPELL_EFFECTS = {
   "323": "Add Defensive Proc:",
   "330": "Critical Damage Mob",
   "369": "Decrease Corruption Counter",
+
 }
 
 export const DB_SPELL_TARGETS = {
