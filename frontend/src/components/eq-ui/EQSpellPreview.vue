@@ -785,7 +785,6 @@ export default {
             value_max = tn;
           }
 
-          let value_new = 0 //todo delete this
           let special_range = this.CalcValueRange(spell["formula_" + effectIndex], base, max, spell["effectid_" + effectIndex],spell["buffduration"],serverMaxLevel)
 
           switch (spell["effectid_" + effectIndex]) {
@@ -1141,8 +1140,8 @@ export default {
               printBuffer += "Reclaim Pet Mana"
               break;
 
-            case 69: //TODO Max HP
-              printBuffer += "TO DO"
+            case 69:
+              printBuffer += this.getFormatStandard("Max HP", "", value_min, value_max, minlvl, maxlvl) + special_range
               break;
 
             case 70:
@@ -1511,14 +1510,11 @@ export default {
               printBuffer += "Limit Type: " + tmp
               break;
 
-            case 139://TODO why isnt gespellname working, ulitmately we need spell links
+            case 139://TODO need spell links
               if (base < 0){
                 tmp += "Exclude "
               }
-              const spell2 = await this.getSpell(Math.abs(base))
-              let testname = spell2.name ? spell2.name : "Unknown Spell Name"
-
-              printBuffer += "Limit Spell: " + Math.abs(base)  + tmp + this.getSpellName[Math.abs(base)] + testname;
+              printBuffer += "Limit Spell: " + tmp + (await this.getSpellName(Math.abs(base)))
               break;
 
             case 140:
@@ -1538,7 +1534,7 @@ export default {
               printBuffer += "Limit Min Casting Time: " + (base/1000) + "s"
               break;
 
-            case 143:
+            case 144:
               printBuffer += "Limit Max Casting Time: " + (base/1000) + "s"
               break;
 
