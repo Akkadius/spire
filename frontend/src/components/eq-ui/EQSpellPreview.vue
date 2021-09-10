@@ -19,6 +19,10 @@
       <tbody>
       <tr style="vertical-align:middle !important">
       </tr>
+      <tr v-if="spellData['id'] !== ''">
+        <td class="spell-field-label">Spell ID: </td>
+        <td> {{ spellData["id"] }}</td>
+      </tr>
       <tr v-if="getClasses() !== ''">
         <td class="spell-field-label">Classes</td>
         <td>{{ getClasses() }}</td>
@@ -422,8 +426,7 @@ export default {
           change = -12 * tick;
           break;
         case 123:
-          // random in range
-          change = (Math.Abs(max) - Math.Abs(base1)) / 2;
+          change = (Math.abs(max) - Math.abs(base1)) / 2;
           break;
         case 124:
           if (level > 50) change = (level - 50);
@@ -518,7 +521,7 @@ export default {
         if (base1 < 0){
           max = max * -1;
         }
-        printBuffer = " (Random: " + base1 + " to " + max
+        printBuffer = " (Random: " + Math.abs(base1) + " to " + Math.abs(max) +  ")"
       }
 
       if (calc == 107) {
@@ -528,7 +531,6 @@ export default {
       if (calc == 108) {
         printBuffer = " (" + type + " to " + finish + " @ 2/tick)"
       }
-
 
       if (calc == 120) {
         printBuffer = " (" + type + " to " + finish + " @ 5/tick)"
@@ -558,7 +560,7 @@ export default {
         printBuffer = " (" + type + " to " + finish + " @ " + (calc - 4000) + "/tick)"
       }
 
-      return null;
+      return printBuffer;
     },
 
     calcSpellEffectValue(form, base, max, lvl) {
@@ -737,7 +739,7 @@ export default {
         let name        = ""
         let v           = ""
         let tmp         = ""
-        let pertick     = " per tick"
+        let pertick = spell["buffduration"] ? " per tick " : ""
 
         let base = spell["effect_base_value_" + effectIndex]
         let limit = spell["effect_limit_value_" + effectIndex]
@@ -756,6 +758,7 @@ export default {
             }
           }
 
+          /* OLD
           let value_min = this.calcSpellEffectValue(
             spell["formula_" + effectIndex],
             spell["effect_base_value_" + effectIndex],
@@ -769,24 +772,27 @@ export default {
             spell["max_" + effectIndex],
             serverMaxLevel
           );
+          */
+
+          let value_min = this.calcSpellEffectValue2( spell["formula_" + effectIndex], base, max, 1,minlvl);
+          let value_max = this.calcSpellEffectValue2( spell["formula_" + effectIndex], base, max, 1,serverMaxLevel);
+
 
           if ((value_min < value_max) && (value_max < 0)
           ) {
-            tn  = value_min;
+            let tn  = value_min;
             value_min = value_max;
             value_max = tn;
           }
 
-          let value_new = this.calcSpellEffectValue2( spell["formula_" + effectIndex], base, max, 1,serverMaxLevel);
+          let value_new = 0 //todo delete this
+          let special_range = this.CalcValueRange(spell["formula_" + effectIndex], base, max, spell["effectid_" + effectIndex],spell["buffduration"],serverMaxLevel)
 
           switch (spell["effectid_" + effectIndex]) {
 
             case 0:
-              pertick = spell["buffduration"] ? pertick : ""
-              tmp += limit ? DB_SPELL_TARGET_RESTRICTION[Math.abs(base)] : ""
-              printBuffer += this.getFormatStandard("Current HP", "", value_min, value_max, minlvl, maxlvl) + pertick
-
-              //return Spell.FormatCount("Current HP", value) + repeating + range + (base2 > 0 ? " (If " + Spell.FormatEnum((SpellTargetRestrict)base2) + ")" : "");
+              tmp += limit ? " (" + DB_SPELL_TARGET_RESTRICTION[Math.abs(limit)] + ")" : ""
+              printBuffer += this.getFormatStandard("Current HP", "", value_min, value_max, minlvl, maxlvl)  + pertick + special_range + tmp
               break;
 
             case 1:
@@ -859,7 +865,8 @@ export default {
               printBuffer += "Enduring Breath"
               break;
 
-            case 15: //TODO Duration effect mana
+            case 15:
+              printBuffer += this.getFormatStandard("Current Mana", "", value_min, value_max, minlvl, maxlvl) + pertick + special_range
               break;
 
             case 16:
@@ -1174,8 +1181,9 @@ export default {
               printBuffer += "Absorb Spell Damage: 100%, Total: " + base
               break;
 
-            case 79: //instant heal
-              //return Spell.FormatCount("Current HP", value) + range + (base2 > 0 ? " (If " + Spell.FormatEnum((SpellTargetRestrict)base2) + ")" : "");
+            case 79:
+              tmp += limit ? " (" + DB_SPELL_TARGET_RESTRICTION[Math.abs(limit)] + ")" : ""
+              printBuffer += this.getFormatStandard("Current HP", "", value_min, value_max, minlvl, maxlvl)  + special_range + tmp
               break;
 
             case 80:
@@ -1726,15 +1734,15 @@ export default {
           if (printBuffer !== "") {
 
             //let test = this.getFormatStandard(" Movement Speed", "%", value_min, value_max, minlvl, maxlvl)
-            effectsInfo.push("Slot " + effectIndex + ": &nbsp " + printBuffer + " [DEBUG] Value new: " + Math.abs(value_new))
-            /*
+            effectsInfo.push("Slot " + effectIndex + ": &nbsp " + printBuffer)
+/*
             " &nbsp &nbsp &nbsp [ * DEBUG * " + "(ID: " + spell["effectid_" + effectIndex] + ") "
             +   "(Base:" +base + ") "+ "(Limit: " + limit + ") "+ "(max: " + max + ")]"
             +   " Min: " + value_min + " Max: " + value_max + " MinLv: " + minlvl + " MaxLv: " + maxlvl
             + "  [TEST]  " + 0 + " :End"
             )
+*/
 
-             */
           }
 
           if (this.debugSpellEffects && printBuffer !== "") {
