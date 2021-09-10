@@ -1234,6 +1234,47 @@ export default {
               printBuffer += this.getFocusPercentRange("Stun Time", base, limit, false);
               break;
 
+            case 134:
+              if (limit == 0){
+                limit = 100
+              }
+              printBuffer += "Limit Max Level: " + base + " (lose " + limit + "% per level)"
+              break;
+
+            case 135:
+              if (base < 0){
+                tmp = "Exclude "
+              }
+              printBuffer += "Limit Resist: " + tmp + DB_SPELL_RESISTS[Math.abs(base)]
+              break;
+
+            case 136:
+              if (base < 0){
+                tmp = "Exclude "
+              }
+              printBuffer += "Limit Target: " + tmp + DB_SPELL_TARGETS[Math.abs(base)]
+              break;
+/*
+            case 136:
+              printBuffer += ("Limit Target: {1}{0}", Spell.FormatEnum((SpellTarget)Math.Abs(base1)), base1 >= 0 ? "" : "Exclude ");
+            case 137:
+              printBuffer += ("Limit Effect: {1}{0}", Spell.FormatEnum((SpellEffect)Math.Abs(base1)), base1 >= 0 ? "" : "Exclude ");
+            case 138:
+              printBuffer += ("Limit Type: {0}", base1 == 0 ? "Detrimental" : "Beneficial");
+            case 139:
+              printBuffer += ("Limit Spell: {1}[Spell {0}]", Math.Abs(base1), base1 >= 0 ? "" : "Exclude ");
+            case 140:
+              printBuffer += ("Limit Min Duration: {0}s", base1 * 6);
+            case 141:
+              printBuffer += ("Limit Max Duration: {0}s", 0);
+            case 142:
+              printBuffer += ("Limit Min Level: {0}", base1);
+            case 143:
+              printBuffer += ("Limit Min Casting Time: {0}s", base1 / 1000f);
+            case 144:
+              printBuffer += ("Limit Max Casting Time: {0}s", base1 / 1000f);
+              */
+
 
             case 158: // Increase Chance to Reflect Spell
             case 168: // Increase Melee Mitigation
