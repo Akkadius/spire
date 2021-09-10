@@ -1254,9 +1254,14 @@ export default {
               }
               printBuffer += "Limit Target: " + tmp + DB_SPELL_TARGETS[Math.abs(base)]
               break;
+
+            case 137:
+              if (base < 0){
+                tmp = "Exclude "
+              }
+              //printBuffer += "Limit Effect: " + tmp + DB_SPELL_TARGETS[Math.abs(base)]
+              break;
 /*
-            case 136:
-              printBuffer += ("Limit Target: {1}{0}", Spell.FormatEnum((SpellTarget)Math.Abs(base1)), base1 >= 0 ? "" : "Exclude ");
             case 137:
               printBuffer += ("Limit Effect: {1}{0}", Spell.FormatEnum((SpellEffect)Math.Abs(base1)), base1 >= 0 ? "" : "Exclude ");
             case 138:
