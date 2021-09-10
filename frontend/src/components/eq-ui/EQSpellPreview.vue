@@ -335,6 +335,232 @@ export default {
       }
       return DB_SPELL_EFFECTS[effectId] ? DB_SPELL_EFFECTS[effectId] : "??? (" + effectId + ")"
     },
+
+ // (int calc, int base1, int max, int tick, int level = MAX_LEVEL)
+    calcSpellEffectValue2(calc, base1, max, tick, level) {
+
+      if (calc == 0) {
+        return base1;
+      }
+
+      if (calc == 100)
+      {
+        if (max > 0 && base1 > max) {
+          return max;
+        }
+        return base1;
+      }
+
+      let change = 0;
+
+      switch (calc)
+      {
+        case 100:
+          break;
+
+        case 101:
+          change = level / 2;
+          break;
+        case 102:
+          change = level;
+          break;
+        case 103:
+          change = level * 2;
+          break;
+        case 104:
+          change = level * 3;
+          break;
+        case 105:
+          change = level * 4;
+          break;
+        case 107:
+          change = -1 * tick;
+          break;
+        case 108:
+          change = -2 * tick;
+          break;
+        case 109:
+          change = level / 4;
+          break;
+        case 110:
+          change = level / 6;
+          break;
+        case 111:
+          if (level > 16) change = (level - 16) * 6;
+          break;
+        case 112:
+          if (level > 24) change = (level - 24) * 8;
+          break;
+        case 113:
+          if (level > 34) change = (level - 34) * 10;
+          break;
+        case 114:
+          if (level > 44) change = (level - 44) * 15;
+          break;
+        case 115:
+          if (level > 15) change = (level - 15) * 7;
+          break;
+        case 116:
+          if (level > 24) change = (level - 24) * 10;
+          break;
+        case 117:
+          if (level > 34) change = (level - 34) * 13;
+          break;
+        case 118:
+          if (level > 44) change = (level - 44) * 20;
+          break;
+        case 119:
+          change = level / 8;
+          break;
+        case 120:
+          change = -5 * tick;
+          break;
+        case 121:
+          change = level / 3;
+          break;
+        case 122:
+          change = -12 * tick;
+          break;
+        case 123:
+          // random in range
+          change = (Math.Abs(max) - Math.Abs(base1)) / 2;
+          break;
+        case 124:
+          if (level > 50) change = (level - 50);
+          break;
+        case 125:
+          if (level > 50) change = (level - 50) * 2;
+          break;
+        case 126:
+          if (level > 50) change = (level - 50) * 3;
+          break;
+        case 127:
+          if (level > 50) change = (level - 50) * 4;
+          break;
+        case 128:
+          if (level > 50) change = (level - 50) * 5;
+          break;
+        case 129:
+          if (level > 50) change = (level - 50) * 10;
+          break;
+        case 130:
+          if (level > 50) change = (level - 50) * 15;
+          break;
+        case 131:
+          if (level > 50) change = (level - 50) * 20;
+          break;
+        case 132:
+          if (level > 50) change = (level - 50) * 25;
+          break;
+        case 139:
+          if (level > 30) change = (level - 30) / 2;
+          break;
+        case 140:
+          if (level > 30) change = (level - 30);
+          break;
+        case 141:
+          if (level > 30) change = 3 * (level - 30) / 2;
+          break;
+        case 142:
+          if (level > 30) change = 2 * (level - 60);
+          break;
+        case 143:
+          change = 3 * level / 4;
+          break;
+
+        case 3000:
+          // todo: this appears to be scaled by the targets level
+          // base1 value how it affects a level 100 target
+          return base1;
+
+        default:
+          if (calc > 0 && calc < 1000) {
+            change = level * calc;
+          }
+
+          if (calc >= 1000 && calc < 2000) {
+            change = tick * (calc - 1000) * -1;
+          }
+
+          if (calc >= 2000 && calc < 3000) {
+            change = level * (calc - 2000);
+          }
+
+          if (calc >= 4000 && calc < 5000) {
+            change = -tick * (calc - 4000);
+          }
+
+          break;
+      }
+
+      let value = Math.abs(base1) + change;
+
+      if (max != 0 && value > Math.abs(max)) {
+        value = Math.abs(max);
+      }
+
+      if (base1 < 0) {
+        value = -value;
+      }
+
+      return value;
+    },
+
+    CalcValueRange(calc, base1, max, spa, duration, level)
+    {
+      let printBuffer = ""
+      let start = this.calcSpellEffectValue2(calc, base1, max, 1, level);
+      let finish = Math.abs(this.calcSpellEffectValue2(calc, base1, max, duration, level));
+
+      let type = Math.abs(start) < Math.abs(finish) ? "Growing" : "Decaying";
+
+      if (calc == 123){
+        if (base1 < 0){
+          max = max * -1;
+        }
+        printBuffer = " (Random: " + base1 + " to " + max
+      }
+
+      if (calc == 107) {
+        printBuffer = " (" + type + " to " + finish + " @ 1/tick)"
+      }
+
+      if (calc == 108) {
+        printBuffer = " (" + type + " to " + finish + " @ 2/tick)"
+      }
+
+
+      if (calc == 120) {
+        printBuffer = " (" + type + " to " + finish + " @ 5/tick)"
+      }
+
+      if (calc == 122) {
+        printBuffer = " (" + type + " to " + finish + " @ 12/tick)"
+      }
+
+      if (calc > 1000 && calc < 2000) {
+        printBuffer = " (" + type + " to " + finish + " @ " + (calc - 1000) + "/tick)"
+      }
+
+      if (calc >= 3000 && calc < 4000)
+      {
+        if (calc - 3000 == spa)
+        {
+          printBuffer = " (Scales, Base Level: 100)";
+        }
+        if (calc - 3500 == spa)
+        {
+          printBuffer = " (Scales, Base Level: 105)";
+        }
+      }
+
+      if (calc > 4000 && calc < 5000) {
+        printBuffer = " (" + type + " to " + finish + " @ " + (calc - 4000) + "/tick)"
+      }
+
+      return null;
+    },
+
     calcSpellEffectValue(form, base, max, lvl) {
       let sign   = 1;
       let ubase  = Math.abs(base);
@@ -449,11 +675,11 @@ export default {
     },
 
     getUpToMaxLvl(max){
+
       let printBuffer = ""
       if (max > 0){
         printBuffer = " up to level " + max
       }
-
       return printBuffer;
     },
 
@@ -511,10 +737,12 @@ export default {
         let name        = ""
         let v           = ""
         let tmp         = ""
+        let pertick     = " per tick"
 
         let base = spell["effect_base_value_" + effectIndex]
         let limit = spell["effect_limit_value_" + effectIndex]
         let max = spell["max_" + effectIndex]
+
 
         if (spell["effectid_" + effectIndex] !== 254) {
 
@@ -549,7 +777,17 @@ export default {
             value_max = tn;
           }
 
+          let value_new = this.calcSpellEffectValue2( spell["formula_" + effectIndex], base, max, 1,serverMaxLevel);
+
           switch (spell["effectid_" + effectIndex]) {
+
+            case 0:
+              pertick = spell["buffduration"] ? pertick : ""
+              tmp += limit ? DB_SPELL_TARGET_RESTRICTION[Math.abs(base)] : ""
+              printBuffer += this.getFormatStandard("Current HP", "", value_min, value_max, minlvl, maxlvl) + pertick
+
+              //return Spell.FormatCount("Current HP", value) + repeating + range + (base2 > 0 ? " (If " + Spell.FormatEnum((SpellTargetRestrict)base2) + ")" : "");
+              break;
 
             case 1:
               printBuffer += this.getFormatStandard("AC", "", value_min, value_max, minlvl, maxlvl);
@@ -709,7 +947,7 @@ export default {
               break;
 
             case 32: //Review this
-              printBuffer += this.getSpellEffectName(spell["effectid_" + effectIndex]);
+              printBuffer += "Summon Item: "
 
               const item             = (await this.getItem(spell["effect_base_value_" + effectIndex]));
               this.itemData[item.id] = item
@@ -1488,7 +1726,7 @@ export default {
           if (printBuffer !== "") {
 
             //let test = this.getFormatStandard(" Movement Speed", "%", value_min, value_max, minlvl, maxlvl)
-            effectsInfo.push("Slot " + effectIndex + ": &nbsp " + printBuffer)
+            effectsInfo.push("Slot " + effectIndex + ": &nbsp " + printBuffer + " [DEBUG] Value new: " + Math.abs(value_new))
             /*
             " &nbsp &nbsp &nbsp [ * DEBUG * " + "(ID: " + spell["effectid_" + effectIndex] + ") "
             +   "(Base:" +base + ") "+ "(Limit: " + limit + ") "+ "(max: " + max + ")]"
