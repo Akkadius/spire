@@ -143,7 +143,7 @@
 import {App} from "@/constants/app";
 import {DB_CLASSES} from "@/app/constants/eq-classes-constants";
 import {DB_SKILLS} from "@/app/constants/eq-skill-constants";
-import {DB_SPELL_EFFECTS, DB_SPELL_RESISTS, DB_SPELL_TARGETS} from "@/app/constants/eq-spell-constants";
+import {DB_SPELL_EFFECTS, DB_SPA, DB_SPELL_RESISTS, DB_SPELL_TARGETS, DB_SPELL_TARGET_RESTRICTION} from "@/app/constants/eq-spell-constants";
 import * as util from "util";
 import {DB_RACE_NAMES} from "@/app/constants/eq-races-constants";
 import {ItemApi, SpellsNewApi} from "@/app/api";
@@ -1235,51 +1235,66 @@ export default {
               break;
 
             case 134:
-              if (limit == 0){
-                limit = 100
-              }
+              limit = limit ? limit : 100
               printBuffer += "Limit Max Level: " + base + " (lose " + limit + "% per level)"
               break;
 
             case 135:
               if (base < 0){
-                tmp = "Exclude "
+                tmp += "Exclude "
               }
               printBuffer += "Limit Resist: " + tmp + DB_SPELL_RESISTS[Math.abs(base)]
               break;
 
             case 136:
               if (base < 0){
-                tmp = "Exclude "
+                tmp += "Exclude "
               }
               printBuffer += "Limit Target: " + tmp + DB_SPELL_TARGETS[Math.abs(base)]
               break;
 
             case 137:
               if (base < 0){
-                tmp = "Exclude "
+                tmp += "Exclude "
               }
-              //printBuffer += "Limit Effect: " + tmp + DB_SPELL_TARGETS[Math.abs(base)]
+              printBuffer += "Limit Effect: " + tmp + DB_SPA[Math.abs(base)]
               break;
-/*
-            case 137:
-              printBuffer += ("Limit Effect: {1}{0}", Spell.FormatEnum((SpellEffect)Math.Abs(base1)), base1 >= 0 ? "" : "Exclude ");
-            case 138:
-              printBuffer += ("Limit Type: {0}", base1 == 0 ? "Detrimental" : "Beneficial");
-            case 139:
-              printBuffer += ("Limit Spell: {1}[Spell {0}]", Math.Abs(base1), base1 >= 0 ? "" : "Exclude ");
-            case 140:
-              printBuffer += ("Limit Min Duration: {0}s", base1 * 6);
-            case 141:
-              printBuffer += ("Limit Max Duration: {0}s", 0);
-            case 142:
-              printBuffer += ("Limit Min Level: {0}", base1);
-            case 143:
-              printBuffer += ("Limit Min Casting Time: {0}s", base1 / 1000f);
-            case 144:
-              printBuffer += ("Limit Max Casting Time: {0}s", base1 / 1000f);
-              */
 
+            case 138:
+              tmp += base ? "Beneficial" : "Detrimental"
+              printBuffer += "Limit Type: " + tmp
+              break;
+
+            case 139://TODO why isnt gespellname working, ulitmately we need spell links
+              if (base < 0){
+                tmp += "Exclude "
+              }
+              const spell2 = await this.getSpell(Math.abs(base))
+              let testname = spell2.name ? spell2.name : "Unknown Spell Name"
+
+              printBuffer += "Limit Spell: " + Math.abs(base)  + tmp + this.getSpellName[Math.abs(base)] + testname;
+              break;
+
+            case 140:
+              printBuffer += "Limit Min Duration: " + (base * 6) + "s"
+              break;
+
+            case 141:
+              tmp += base ? "Non-Duration Spells" : "Duration Spells"
+              printBuffer += "Limit Duration Type: " + tmp
+              break;
+
+            case 142:
+              printBuffer += "Limit Min Level: " + base
+              break;
+
+            case 143:
+              printBuffer += "Limit Min Casting Time: " + (base/1000) + "s"
+              break;
+
+            case 143:
+              printBuffer += "Limit Max Casting Time: " + (base/1000) + "s"
+              break;
 
             case 158: // Increase Chance to Reflect Spell
             case 168: // Increase Melee Mitigation
@@ -1331,10 +1346,6 @@ export default {
               printBuffer += " <a href=?a=pet&name=" + spell["teleport_zone"] + ">" + spell["teleport_zone"] + "</a>";
               break;
 
-            case 135: // Limit: Resist(Magic allowed)
-            case 137: // Limit: Effect(Hitpoints allowed)
-            case 138: // Limit: Spell Type(Detrimental only)
-            case 141: // Limit: Instant spells only
             case 150: // Death Save - Restore Full Health
             case 151: // Suspend Pet - Lose Buffs and Equipment
             case 154: // Remove Detrimental
