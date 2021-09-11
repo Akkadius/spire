@@ -147,7 +147,7 @@
 import {App} from "@/constants/app";
 import {DB_CLASSES} from "@/app/constants/eq-classes-constants";
 import {DB_SKILLS} from "@/app/constants/eq-skill-constants";
-import {DB_SPELL_EFFECTS, DB_SPA, DB_SPELL_RESISTS, DB_SPELL_TARGETS, DB_SPELL_TARGET_RESTRICTION} from "@/app/constants/eq-spell-constants";
+import {DB_SPELL_EFFECTS, DB_SPA, DB_SPELL_RESISTS, DB_SPELL_TARGETS, DB_SPELL_TARGET_RESTRICTION,DB_SPELL_INSTRUMENT, DB_SPELL_WORN_ATTRIBUTE_CAP} from "@/app/constants/eq-spell-constants";
 import * as util from "util";
 import {DB_RACE_NAMES} from "@/app/constants/eq-races-constants";
 import {ItemApi, SpellsNewApi} from "@/app/api";
@@ -1900,7 +1900,7 @@ export default {
               break;
 
             case 227:
-              printBuffer += "Decrease " + DB_SKILLS[limit] + " Timer by " + base + "s (Before Haste)"
+              printBuffer += "Decrease " + DB_SKILLS[limit] + " Timer by " + this.humanTime(base) + " (Before Haste)"
               break;
 
             case 228:
@@ -1988,11 +1988,76 @@ export default {
               printBuffer += "Train Second Magic Specialization Ability (Secondary Forte)"
               break;
 
+            case 249:
+              printBuffer += this.getFormatStandard( "Offhand Weapon Damage Bonus", "%", value_min, value_max, minlvl, maxlvl)
+              break;
+
+            case 250:
+              printBuffer += this.getFormatStandard( "Melee Proc Rate (from buffs, abilities and skills", "%", value_min, value_max, minlvl, maxlvl)
+              break;
+
+            case 251:
+              printBuffer += this.getFormatStandard( "Chance of Using Ammo", "%", -value_min, -value_max, minlvl, maxlvl)
+              break;
+
+            case 252:
+              printBuffer += this.getFormatStandard( "Chance to Backstab From Front", "%", value_min, value_max, minlvl, maxlvl)
+              break;
+
+            case 253:
+              printBuffer +=  "Allow Frontal Backstab for Minimum Damage"
+              break;
+
+            case 255:
+              printBuffer += "Increase Shield Ability Duration by " + base + "s"
+              break;
+
+            case 256:
+              printBuffer += "Shroud of Stealth (" + base + ")"
+              break;
+
+            case 257:
+              printBuffer += "Enable Pet Ability: Hold"
+              break;
+
+            case 258:
+              printBuffer += this.getFormatStandard( "Chance to Triple Backstab", "%", value_min, value_max, minlvl, maxlvl)
+              break;
+
+            case 259:
+              printBuffer += this.getFormatStandard( "AC Soft Cap", "%", value_min, value_max, minlvl, maxlvl)
+              break;
+
+            case 260:
+              printBuffer += this.getFormatStandard( DB_SPELL_INSTRUMENT[limit] + " Bonus", "%", (value_min * 10), (value_max * 10), minlvl, maxlvl)
+              break;
+
+            case 261:
+              printBuffer += this.getFormatStandard( "Song Cap", "", (value_min * 10), (value_max * 10), minlvl, maxlvl)
+              break;
+
+            case 262:
+              printBuffer += this.getFormatStandard( DB_SPELL_WORN_ATTRIBUTE_CAP[limit] + " Cap", "", value_min, value_max, minlvl, maxlvl)
+              break;
+
+            case 263:
+              printBuffer += this.getFormatStandard( "Ability to Specialize Tradeskills", "", value_min, value_max, minlvl, maxlvl)
+              break;
+
+            case 264:
+              printBuffer += "Reduce [AA " + limit + "] Timer by " + this.humanTime(base)
+              break;
+
+            case 265:
+              printBuffer += "No Fizzle up to level " + base
+              break;
+
+            case 266:
+              printBuffer += this.getFormatStandard( "Chance of " + limit + " Additional 2H Attacks", "%", value_min, value_max, minlvl, maxlvl)
+             break;
 
 
 
-
-            case 266: // Add Attack Chance
             case 273: // Increase Critical Dot Chance
             case 294: // Increase Critical Spell Chance
               printBuffer += this.getSpellEffectName(spell["effectid_" + effectIndex]);
