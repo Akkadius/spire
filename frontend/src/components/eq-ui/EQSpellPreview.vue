@@ -1652,8 +1652,8 @@ export default {
               break;
 
             case 169:
-              printBuffer += this.getFormatStandard("Chance to Critical Hit", "%", value_min, value_max, minlvl, maxlvl)
-              //printBuffer += Spell.FormatPercent("Chance to Critical Hit" + ((SpellSkill)base2 != SpellSkill.Hit ? " with " + Spell.FormatEnum((SpellSkill)base2) : ""), value);
+              tmp += limit >= 0 ? " with " + DB_SKILLS[limit] : ""
+              printBuffer += this.getFormatStandard("Chance to Critical Hit", "%", value_min, value_max, minlvl, maxlvl) + tmp
               break;
 
             case 170:
@@ -1688,13 +1688,73 @@ export default {
               printBuffer += this.getFormatStandard("Chance to Double Attack", "%", value_min, value_max, minlvl, maxlvl)
               break;
 
-            case 180: // Increase Chance to Resist Spell
-            case 181: // Increase Chance to Resist Fear Spell
-            case 183: // Increase All Skills Skill Check
-            case 184: // Increase Chance to Hit With all Skills
-            case 185: // Increase All Skills Damage Modifier
-            case 186: // Increase All Skills Minimum Damage Modifier
-            case 188: // Increase Chance to Block
+            case 178:
+              printBuffer += "Lifetap from Weapon Damage: " + base + "%"
+              break;
+
+            case 179:
+              printBuffer += "Instrument Modifier: " + DB_SKILLS[spell["skill"]] + " " + value_max
+              break;
+
+            case 180:
+              printBuffer += this.getFormatStandard("Chance to Resist Spell", "%", value_min, value_max, minlvl, maxlvl)
+              break;
+
+            case 181:
+              printBuffer += this.getFormatStandard("Chance to Resist Fear Spell", "%", value_min, value_max, minlvl, maxlvl)
+              break;
+
+            case 182:
+              printBuffer += this.getFormatStandard("Weapon Delay", "%", value_min/10, value_max/10, minlvl, maxlvl)
+              break;
+
+            case 183:
+              printBuffer += "Error: (" + spell["effectid_" + effectIndex] + ") not used"
+              break;
+
+            case 184:
+              tmp += (limit >= 0) ? " with " + DB_SKILLS[limit] : ""
+              printBuffer += this.getFormatStandard("Chance to Hit", "%", value_min, value_max, minlvl, maxlvl) + tmp
+              break;
+
+            case 185:
+              tmp += (limit >= 0) ? " with " + DB_SKILLS[limit] : " with ALL SKILLS"
+              printBuffer += this.getFormatStandard("Damage", "%", value_min, value_max, minlvl, maxlvl) + tmp
+              break;
+
+            case 186:
+              tmp += (limit >= 0) ? " with " + DB_SKILLS[limit] : " with ALL SKILLS"
+              printBuffer += this.getFormatStandard("Min Damage", "%", value_min, value_max, minlvl, maxlvl) + tmp
+              break;
+
+            case 187:
+              printBuffer += "Balance Group Mana with " + base + "% Penalty (Max HP taken: " + limit + ")"
+              break;
+
+            case 188:
+              printBuffer += this.getFormatStandard("Chance to Block", "%", value_min, value_max, minlvl, maxlvl)
+              break;
+
+            case 189:
+              printBuffer += this.getFormatStandard("Current Endurance", "", value_min, value_max, minlvl, maxlvl) + pertick + special_range
+              break;
+
+            case 190:
+              printBuffer += this.getFormatStandard("Max Endurance", "", value_min, value_max, minlvl, maxlvl)
+              break;
+
+            case 191:
+              printBuffer += "Inhibit Combat"
+              break;
+
+            case 193:
+              printBuffer += this.getFormatStandard("Hate", "", value_min, value_max, minlvl, maxlvl) + pertick + special_range
+              break;
+
+
+
+
+
             case 200: // Increase Proc Modifier
             case 201: // Increase Range Proc Modifier
             case 216: // Increase Accuracy
@@ -1760,7 +1820,6 @@ export default {
 
           if (printBuffer !== "") {
 
-            //let test = this.getFormatStandard(" Movement Speed", "%", value_min, value_max, minlvl, maxlvl)
             effectsInfo.push("Slot " + effectIndex + ": &nbsp " + printBuffer)
 /*
             " &nbsp &nbsp &nbsp [ * DEBUG * " + "(ID: " + spell["effectid_" + effectIndex] + ") "
