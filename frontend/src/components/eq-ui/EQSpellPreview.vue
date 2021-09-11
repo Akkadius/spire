@@ -1718,12 +1718,12 @@ export default {
               break;
 
             case 185:
-              tmp += (limit >= 0) ? " with " + DB_SKILLS[limit] : " with ALL SKILLS"
+              tmp += (limit >= 0) ? " with " + DB_SKILLS[limit] : " with all skills"
               printBuffer += this.getFormatStandard("Hit Damage", "%", value_min, value_max, minlvl, maxlvl) + tmp
               break;
 
             case 186:
-              tmp += (limit >= 0) ? " with " + DB_SKILLS[limit] : " with ALL SKILLS"
+              tmp += (limit >= 0) ? " with " + DB_SKILLS[limit] : " with all skills"
               printBuffer += this.getFormatStandard("Min Hit Damage", "%", value_min, value_max, minlvl, maxlvl) + tmp
               break;
 
@@ -1867,15 +1867,131 @@ export default {
               break;
 
             case 220:
-              printBuffer += this.getFormatStandard(DB_SKILLS[limit], "", value_min, value_max, minlvl, maxlvl) + " Damage Bonus"
+              printBuffer += this.getFormatStandard(DB_SKILLS[limit] + " Damage Bonus", "", value_min, value_max, minlvl, maxlvl)
+              break;
+
+            case 221:
+              printBuffer += this.getFormatStandard("Weight", "%", -value_min, -value_max, minlvl, maxlvl)
+              break;
+
+            case 222:
+              printBuffer += this.getFormatStandard("Chance to Block from Back", "%", value_min, value_max, minlvl, maxlvl)
+              break;
+
+            case 223:
+              printBuffer += this.getFormatStandard("Chance to Double Riposte", "%", value_min, value_max, minlvl, maxlvl)
+              break;
+
+            case 224:
+              if (limit > 0) {
+                printBuffer += this.getFormatStandard("Chance of Additional Riposte", "%", value_min, value_max, minlvl, maxlvl) + " with " + DB_SKILLS[limit]
+              }
+              else {
+                printBuffer += this.getFormatStandard("Chance of Additional Riposte", "%", value_min, value_max, minlvl, maxlvl)
+              }
+              break;
+
+            case 225:
+              printBuffer += this.getFormatStandard("Chance to Double Attack ", "%", value_min, value_max, minlvl, maxlvl) + " (Additive)";
+              break;
+
+            case 226:
+              printBuffer += "Add Two-Handed Bash Ability";
+              break;
+
+            case 227:
+              printBuffer += "Decrease " + DB_SKILLS[limit] + " Timer by " + base + "s (Before Haste)"
+              break;
+
+            case 228:
+              printBuffer += this.getFormatStandard("Falling Damage", "%", -value_min, -value_max, minlvl, maxlvl)
+              break;
+
+            case 229:
+              printBuffer += this.getFormatStandard("Chance to Cast Through Stun", "%", value_min, value_max, minlvl, maxlvl)
+              break;
+
+            case 230:
+              printBuffer += this.getFormatStandard("Shield Ability Range", "", value_min, value_max, minlvl, maxlvl)
+              break;
+
+            case 231:
+              printBuffer += this.getFormatStandard("Chance to Stun Bash", "%", value_min, value_max, minlvl, maxlvl)
+              break;
+
+            case 232:
+              tmp += limit ? (await this.getSpellName(limit)) : (await this.getSpellName(4789))
+              printBuffer += "Cast: " + tmp + " on Death (" + base + "% Chance)"
+              break;
+
+            case 233:
+              printBuffer += this.getFormatStandard("Food Consumption", "%", value_min, value_max, minlvl, maxlvl)
+              break;
+
+            case 234:
+              printBuffer += "Decrease Poison Application Time by " + (10 - base / 1000) + + "s"
+              break;
+
+            case 235:
+              printBuffer += this.getFormatStandard("Chance to Channel Spells", "%", value_min, value_max, minlvl, maxlvl)
+              break;
+
+            case 236:
+              printBuffer += "Error: (" + spell["effectid_" + effectIndex] + ") not used"
+              break;
+
+            case 237:
+              printBuffer += "Enable Pet Ability: Receive Group Buffs"
+              break;
+
+            case 238:
+              printBuffer += (base == 3) ? "Permanent Illusion (Persist After Death)" : " Permanent Illusion"
+              break;
+
+            case 239:
+              printBuffer += this.getFormatStandard("Chance to Feign Death Through Spell Hit", "%", value_min, value_max, minlvl, maxlvl)
+              break;
+
+            case 240:
+              printBuffer += "Error: (" + spell["effectid_" + effectIndex] + ") not used"
+              break;
+
+            case 241:
+              printBuffer += "Reclaim Pet Mana (Return " + base + "%)"
+              break;
+
+            case 242:
+              printBuffer += this.getFormatStandard("Chance to Memory Blur", "%", value_min, value_max, minlvl, maxlvl)
+              break;
+
+            case 243:
+              printBuffer += this.getFormatStandard("Chance of Charm Breaking", "%", -value_min, -value_max, minlvl, maxlvl)
+              break;
+
+            case 244:
+              printBuffer += this.getFormatStandard("Chance of Root Breaking", "%",  -value_min, -value_max, minlvl, maxlvl)
+              break;
+
+            case 245:
+              printBuffer += this.getFormatStandard("Chance of Trap Circumvention", "%", value_min, value_max, minlvl, maxlvl)
+              break;
+
+            case 246:
+              printBuffer += this.getFormatStandard("Lung Capacity", "", value_min, value_max, minlvl, maxlvl)
+              break;
+
+            case 247:
+              printBuffer += this.getFormatStandard( DB_SKILLS[limit] + " Skill Cap", "", value_min, value_max, minlvl, maxlvl)
+              break;
+
+            case 248:
+              printBuffer += "Train Second Magic Specialization Ability (Secondary Forte)"
               break;
 
 
 
-            case 200: // Increase Proc Modifier
-            case 201: // Increase Range Proc Modifier
-            case 216: // Increase Accuracy
-            case 227: // Reduce Skill Timer
+
+
             case 266: // Add Attack Chance
             case 273: // Increase Critical Dot Chance
             case 294: // Increase Critical Spell Chance
@@ -1887,13 +2003,7 @@ export default {
               }
               break;
 
-            case 178: // Lifetap from Weapon Damage
-            case 179: // Instrument Modifier
-            case 182: // Hundred Hands Effect
-            case 194: // Fade
-            case 195: // Stun Resist
-            case 205: // Rampage
-            case 206: // Area of Effect Taunt
+
             case 311: // Limit: Combat Skills Not Allowed
             case 314: // Fixed Duration Invisbility
             case 299: // Wake the Dead
@@ -1913,24 +2023,6 @@ export default {
               printBuffer += this.getSpellEffectName(spell["effectid_" + effectIndex]);
 
               printBuffer += "<a href=?a=spell&id=" + spell["effect_base_value_" + effectIndex] + "> " + (await this.getSpellName(spell["effect_base_value_" + effectIndex])) + "</a>";
-              break;
-
-            case 192: // Increase hate
-            default:
-              name = this.getSpellEffectName(spell["effectid_" + effectIndex]);
-              if (value_max < 0) {
-                name = name.replace("Increase", "Decrease");
-              }
-              printBuffer += name;
-              if (value_min !== value_max) {
-                printBuffer += " by " + value_min + " (L" + minlvl + ") to " + value_max + " (L" + maxlvl + ")";
-              } else {
-                if (value_max < 0) {
-                  value_max = -value_max;
-                }
-                printBuffer += " by " + value_max + "";
-              }
-
               break;
           }
 
