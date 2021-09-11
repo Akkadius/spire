@@ -1719,12 +1719,12 @@ export default {
 
             case 185:
               tmp += (limit >= 0) ? " with " + DB_SKILLS[limit] : " with ALL SKILLS"
-              printBuffer += this.getFormatStandard("Damage", "%", value_min, value_max, minlvl, maxlvl) + tmp
+              printBuffer += this.getFormatStandard("Hit Damage", "%", value_min, value_max, minlvl, maxlvl) + tmp
               break;
 
             case 186:
               tmp += (limit >= 0) ? " with " + DB_SKILLS[limit] : " with ALL SKILLS"
-              printBuffer += this.getFormatStandard("Min Damage", "%", value_min, value_max, minlvl, maxlvl) + tmp
+              printBuffer += this.getFormatStandard("Min Hit Damage", "%", value_min, value_max, minlvl, maxlvl) + tmp
               break;
 
             case 187:
@@ -1747,11 +1747,128 @@ export default {
               printBuffer += "Inhibit Combat"
               break;
 
-            case 193:
+            case 192:
               printBuffer += this.getFormatStandard("Hate", "", value_min, value_max, minlvl, maxlvl) + pertick + special_range
               break;
 
+            case 193:
+              printBuffer += DB_SKILLS[spell["skill"]] + " Attack for " + base + " with " + limit + " % Accuracy Mod"
+              break;
 
+            case 194:
+              printBuffer += "Cancel Aggro (" + base + " % Chance)"
+              break;
+
+            case 195:
+              printBuffer += this.getFormatStandard("Chance to Resist Any Stun", "%", value_min, value_max, minlvl, maxlvl)
+              break;
+
+            case 196:
+              printBuffer += this.getFormatStandard("Srikethrough", "%", value_min, value_max, minlvl, maxlvl)
+              break;
+
+            case 197:
+              tmp += (limit >= 0) ? DB_SKILLS[limit] : " Hit "
+              printBuffer += this.getFormatStandard(tmp + "Damage Taken", "%", value_min, value_max, minlvl, maxlvl)
+              break;
+
+            case 198:
+              printBuffer += this.getFormatStandard("Current Endurance", "", value_min, value_max, minlvl, maxlvl)
+              break;
+
+            case 199:
+              printBuffer += "Taunt with " + limit + " added Hate (Chance " + base + "%)"
+              break;
+
+            case 200:
+              printBuffer += this.getFormatStandard("Worn Proc Rate", "%", value_min, value_max, minlvl, maxlvl)
+              break;
+
+            case 201:
+              printBuffer += "Add Range Proc: "  + (await this.getSpellName(base)) + " with " + limit + "% Rate Mod"
+              break;
+
+            case 202:
+              printBuffer += "Project Illusion on Next Spell"
+              break;
+
+            case 203:
+              printBuffer += "Mass Group Buff on Next Spell"
+              break;
+
+            case 204:
+              printBuffer += "Group Fear Immunity for " + (base * 10) + "s"
+              break;
+
+            case 205:
+              printBuffer += "Rampage"
+              break;
+
+            case 206:
+              printBuffer += "AE Taunt with " + base + " added Hate"
+              break;
+
+            case 207:
+              printBuffer += "Flesh to Bone Chips"
+              break;
+
+            case 208:
+              printBuffer += "Error: (" + spell["effectid_" + effectIndex] + ") not used"
+              break;
+
+            case 209: //TODO need to update emulator code to use percent based (+0.5% per level difference) and confirm duration change mechanic
+              if (limit != 0) {
+                printBuffer += "Decrease Beneficial Duration by 50% " + (base/10) + "% Chance)" + this.getUpToMaxLvl(max)
+              }
+              else{
+                printBuffer += "Dispel Beneficial " + (base/10) + "% Chance" + this.getUpToMaxLvl(max)
+              }
+              break;
+
+            case 210:
+              printBuffer += "Pet Shielding for " + base * 12 + "s"
+              break;
+
+            case 211: //eqemu uses this, Live uses different formula now, base=chance, limit=damage mod
+              printBuffer += "AE Melee for " + base * 12 + "s"
+              break;
+
+            case 212: //eqemu uses this, Live uses different formula now, base=chance, limit, mana cost mod
+              printBuffer += this.getFormatStandard("Frenzied Devastation: Chance to Critical Nuke", "%", value_min, value_max, minlvl, maxlvl) + " and Increase Spell Mana Cost 100%"
+              break;
+
+            case 213:
+              printBuffer += this.getFormatStandard("Pet Max HP", "%", value_min, value_max, minlvl, maxlvl)
+              break;
+
+            case 214:
+              printBuffer += this.getFormatStandard("Max HP", "%", value_min/100, value_max/100, minlvl, maxlvl)
+              break;
+
+            case 215:
+              printBuffer += this.getFormatStandard("Pet Chance to Avoid Melee", "%", value_min, value_max, minlvl, maxlvl)
+              break;
+
+            case 216:
+              tmp += (limit >= 0) ? " with " + DB_SKILLS[limit] : ""
+              printBuffer += this.getFormatStandard("Accuracy", "", value_min, value_max, minlvl, maxlvl) + tmp
+              break;
+
+            case 217:
+              printBuffer += "Add Headshot Proc with up to " + limit + " Damage"
+              break;
+
+            case 218:
+              printBuffer += this.getFormatStandard("Pet Chance to Critical Hit", "%", value_min, value_max, minlvl, maxlvl)
+              break;
+
+            case 219:
+              printBuffer += this.getFormatStandard("Chance to Slay Undead", "%", value_min/100, value_max/100, minlvl, maxlvl) + " with " + limit + "Damage Mod"
+              break;
+
+            case 220:
+              printBuffer += this.getFormatStandard(DB_SKILLS[limit], "", value_min, value_max, minlvl, maxlvl) + " Damage Bonus"
+              break;
 
 
 
