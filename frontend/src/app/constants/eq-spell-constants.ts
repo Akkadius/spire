@@ -1067,3 +1067,30 @@ export const DB_SPELL_TARGET_RESTRICTION = {
   "50009": "Has No Harmonious Expanse Buff",
   "99999": "Unknown 99999"
 }
+
+export const DB_SPELL_INSTRUMENT = {
+
+  "23": "Woodwind",
+  "24": "Strings",
+  "25": "Brass",
+  "26": "Percussion",
+  "50": "Singing",
+  "51": "All"
+}
+
+export const DB_SPELL_WORN_ATTRIBUTE_CAP = {
+  "-1": "Base_Stats",
+  "0": "STR",
+  "1": "STA",
+  "2": "AGI",
+  "3": "DEX",
+  "4": "WIS",
+  "5": "INT",
+  "6": "CHA" ,
+  "7": "Magic Resist",
+  "8": "Cold Resist",
+  "9": "Fire Resist",
+  "10": "Poison Resist",
+  "11": "Disease Resist",
+  "13": "Corruption Resist"
+}
