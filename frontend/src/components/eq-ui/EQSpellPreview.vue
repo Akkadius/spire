@@ -147,7 +147,7 @@
 import {App} from "@/constants/app";
 import {DB_CLASSES} from "@/app/constants/eq-classes-constants";
 import {DB_SKILLS} from "@/app/constants/eq-skill-constants";
-import {DB_SPELL_EFFECTS, DB_SPA, DB_SPELL_RESISTS, DB_SPELL_TARGETS, DB_SPELL_TARGET_RESTRICTION,DB_SPELL_INSTRUMENT, DB_SPELL_WORN_ATTRIBUTE_CAP} from "@/app/constants/eq-spell-constants";
+import {DB_SPELL_EFFECTS, DB_SPA, DB_SPELL_RESISTS, DB_SPELL_TARGETS, DB_SPELL_TARGET_RESTRICTION,DB_SPELL_INSTRUMENT, DB_SPELL_WORN_ATTRIBUTE_CAP, DB_SPELL_PETCMDS} from "@/app/constants/eq-spell-constants";
 import * as util from "util";
 import {DB_RACE_NAMES} from "@/app/constants/eq-races-constants";
 import {ItemApi, SpellsNewApi} from "@/app/api";
@@ -2056,7 +2056,9 @@ export default {
               printBuffer += this.getFormatStandard( "Chance of " + limit + " Additional 2H Attacks", "%", value_min, value_max, minlvl, maxlvl)
              break;
 
-
+            case 267:
+              printBuffer += "Enable Pet Ability: (" + DB_SPELL_PETCMDS[limit] + ")"
+              break;
 
             case 273: // Increase Critical Dot Chance
             case 294: // Increase Critical Spell Chance
