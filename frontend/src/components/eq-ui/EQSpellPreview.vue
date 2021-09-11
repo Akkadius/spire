@@ -1093,7 +1093,7 @@ export default {
               break;
 
             case 59:
-              printBuffer += this.getFormatStandard("Damage Shield", "", value_min, value_max, minlvl, maxlvl);
+              printBuffer += this.getFormatStandard("Damage Shield", "", -value_min, -value_max, minlvl, maxlvl);
               break;
 
             case 60:
@@ -1592,7 +1592,7 @@ export default {
               break;
 
             case 157:
-              printBuffer += this.getFormatStandard("Spell Damage Shield", "", value_min, value_max, minlvl, maxlvl)
+              printBuffer += this.getFormatStandard("Spell Damage Shield", "", -value_min, -value_max, minlvl, maxlvl)
               break;
 
             case 158:
@@ -1607,7 +1607,7 @@ export default {
               break;
 
             case 159:
-              this.getFormatStandard("Base Stats", "%", value_min, value_max, minlvl, maxlvl)
+              printBuffer += this.getFormatStandard("Base Stats", "%", value_min, value_max, minlvl, maxlvl)
               break;
 
             case 160:
@@ -1646,45 +1646,48 @@ export default {
             case 167:
               printBuffer += "Increase Pet Power " + value_max
               break;
- /*
-
-
 
             case 168:
-              // defensive disc. how is this different than an endless rune?
-              // maybe it only mitigates the DI portion of the hit?
-              return Spell.FormatPercent("Melee Mitigation", -value);
-            case 169:
-              return Spell.FormatPercent("Chance to Critical Hit" + ((SpellSkill)base2 != SpellSkill.Hit ? " with " + Spell.FormatEnum((SpellSkill)base2) : ""), value);
-            case 170:
-              // stacks with itself in other slots
-              return Spell.FormatPercent("Critical Nuke Damage", base1) + " of Base Damage";
-            case 171:
-              return Spell.FormatPercent("Chance to Crippling Blow", value);
-            case 172:
-              // combat agility AA
-              return Spell.FormatPercent("Chance to Avoid Melee", base1);
-            case 173:
-              return Spell.FormatPercent("Chance to Riposte", value);
-            case 174:
-              return Spell.FormatPercent("Chance to Dodge", value);
-            case 175:
-              return Spell.FormatPercent("Chance to Parry", value);
-            case 176:
-              return Spell.FormatPercent("Chance to Dual Wield", value);
-            case 177:
-              // this is multiplicative
-              return Spell.FormatPercent("Chance to Double Attack", base1);
-*/
+              printBuffer += this.getFormatStandard("Melee Mitigation", "%", -value_min, -value_max, minlvl, maxlvl)
+              break;
 
-            case 168: // Increase Melee Mitigation
-            case 169: // Increase Chance to Critical Hit
-            case 172: // Increase Chance to Avoid Melee
-            case 173: // Increase Chance to Riposte
-            case 174: // Increase Chance to Dodge
-            case 175: // Increase Chance to Parry
-            case 176: // Increase Chance to Dual Wield
-            case 177: // Increase Chance to Double Attack
+            case 169:
+              printBuffer += this.getFormatStandard("Chance to Critical Hit", "%", value_min, value_max, minlvl, maxlvl)
+              //printBuffer += Spell.FormatPercent("Chance to Critical Hit" + ((SpellSkill)base2 != SpellSkill.Hit ? " with " + Spell.FormatEnum((SpellSkill)base2) : ""), value);
+              break;
+
+            case 170:
+              printBuffer += this.getFormatStandard("Critical Nuke Damage", "%", value_min, value_max, minlvl, maxlvl) + " of Base Damage"
+              break;
+
+            case 171:
+              printBuffer += this.getFormatStandard("Chance to Crippling Blow", "%", value_min, value_max, minlvl, maxlvl)
+              break;
+
+            case 172:
+              printBuffer += this.getFormatStandard("Chance to Avoid Melee", "%", value_min, value_max, minlvl, maxlvl)
+              break;
+
+            case 173:
+              printBuffer += this.getFormatStandard("Chance to Riposte", "%", value_min, value_max, minlvl, maxlvl)
+              break;
+
+            case 174:
+              printBuffer += this.getFormatStandard("Chance to Dodge", "%", value_min, value_max, minlvl, maxlvl)
+              break;
+
+            case 175:
+              printBuffer += this.getFormatStandard("Chance to Parry", "%", value_min, value_max, minlvl, maxlvl)
+              break;
+
+            case 176:
+              printBuffer += this.getFormatStandard("Chance to Dual Wield", "%", value_min, value_max, minlvl, maxlvl)
+              break;
+
+            case 177:
+              printBuffer += this.getFormatStandard("Chance to Double Attack", "%", value_min, value_max, minlvl, maxlvl)
+              break;
+
             case 180: // Increase Chance to Resist Spell
             case 181: // Increase Chance to Resist Fear Spell
             case 183: // Increase All Skills Skill Check
