@@ -2054,14 +2054,69 @@ export default {
 
             case 266:
               printBuffer += this.getFormatStandard( "Chance of " + limit + " Additional 2H Attacks", "%", value_min, value_max, minlvl, maxlvl)
-             break;
+              break;
 
             case 267:
               printBuffer += "Enable Pet Ability: (" + DB_SPELL_PETCMDS[limit] + ")"
               break;
 
-            case 273: // Increase Critical Dot Chance
-            case 294: // Increase Critical Spell Chance
+            case 268:
+              printBuffer += this.getFormatStandard( "Chance to Fail " + DB_SKILLS[limit] + " Combine", "%", -value_min, -value_max, minlvl, maxlvl)
+              break;
+
+            case 269:
+              printBuffer += this.getFormatStandard( "Bandage HP Cap", "%", value_min, value_max, minlvl, maxlvl)
+              break;
+
+            case 270:
+              printBuffer += this.getFormatStandard( "Beneficial Song Range", "", value_min, value_max, minlvl, maxlvl)
+              break;
+
+            case 271:
+              printBuffer += this.getFormatStandard( "Innate Movement Speed", "%", value_min, value_max, minlvl, maxlvl)
+              break;
+
+            case 272:
+              printBuffer += this.getFormatStandard( "Song effective casting level", "", value_min, value_max, minlvl, maxlvl)
+              break;
+
+            case 273: //Does live effect now have decay component?
+              printBuffer += this.getFormatStandard( "Chance to Critical DoT", "%", value_min, value_max, minlvl, maxlvl)
+              break;
+
+            case 274: //Does live effect now have decay component?
+              printBuffer += this.getFormatStandard( "Chance to Critical Heal", "%", value_min, value_max, minlvl, maxlvl)
+              break;
+
+            case 275:
+              printBuffer += this.getFormatStandard( "Chance to Critical Mend", "%", value_min, value_max, minlvl, maxlvl)
+              break;
+
+            case 276:
+              printBuffer += this.getFormatStandard( "Dual Wield Skill Amount", "", value_min, value_max, minlvl, maxlvl)
+              break;
+
+            case 277:
+              printBuffer += "Second Chance to Trigger Divine Intervention with a Heal for " + base + "% of baseline"
+              break;
+
+            case 278:
+              printBuffer += " Add Finishing Blow Proc with up to " + (base / 10) + " Damage (" + limit + "% Chance)"
+              break;
+
+            case 279:
+              printBuffer += this.getFormatStandard( "Chance to Flurry", "%", value_min, value_max, minlvl, maxlvl)
+              break;
+
+            case 280:
+              printBuffer += this.getFormatStandard( "Pet Chance to Flurry", "%", value_min, value_max, minlvl, maxlvl)
+              break;
+
+            case 281:
+              printBuffer += "Pet Chance to Feign Death (" + base + "%)"
+              break;
+
+             case 294: // Increase Critical Spell Chance
               printBuffer += this.getSpellEffectName(spell["effectid_" + effectIndex]);
               if (value_min !== value_max) {
                 printBuffer += " by " + value_min + "% (L" + minlvl + ") to " + value_max + "% (L" + maxlvl + ")";
