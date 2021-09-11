@@ -1769,7 +1769,7 @@ export default {
 
             case 197:
               tmp += (limit >= 0) ? DB_SKILLS[limit] : " Hit "
-              printBuffer += this.getFormatStandard(tmp + "Damage Taken", "%", value_min, value_max, minlvl, maxlvl)
+              printBuffer += this.getFormatStandard(tmp + " Damage Taken", "%", value_min, value_max, minlvl, maxlvl)
               break;
 
             case 198:
@@ -1863,7 +1863,7 @@ export default {
               break;
 
             case 219:
-              printBuffer += this.getFormatStandard("Chance to Slay Undead", "%", value_min/100, value_max/100, minlvl, maxlvl) + " with " + limit + "Damage Mod"
+              printBuffer += this.getFormatStandard("Chance to Slay Undead", "%", value_min/100, value_max/100, minlvl, maxlvl) + " with " + limit + " Damage Mod"
               break;
 
             case 220:
