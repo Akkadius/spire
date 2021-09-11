@@ -739,6 +739,7 @@ export default {
         let name        = ""
         let v           = ""
         let tmp         = ""
+        let tmp2        = ""
         let pertick = spell["buffduration"] ? " per tick " : ""
 
         let base = spell["effect_base_value_" + effectIndex]
@@ -791,7 +792,7 @@ export default {
 
             case 0:
               tmp += limit ? " (" + DB_SPELL_TARGET_RESTRICTION[Math.abs(limit)] + ")" : ""
-              printBuffer += this.getFormatStandard("Current HP", "", value_min, value_max, minlvl, maxlvl)  + pertick + special_range + tmp
+              printBuffer += this.getFormatStandard("Current HP", "", value_min, value_max, minlvl, maxlvl) + pertick + special_range + tmp
               break;
 
             case 1:
@@ -1182,7 +1183,7 @@ export default {
 
             case 79:
               tmp += limit ? " (" + DB_SPELL_TARGET_RESTRICTION[Math.abs(limit)] + ")" : ""
-              printBuffer += this.getFormatStandard("Current HP", "", value_min, value_max, minlvl, maxlvl)  + special_range + tmp
+              printBuffer += this.getFormatStandard("Current HP", "", value_min, value_max, minlvl, maxlvl) + special_range + tmp
               break;
 
             case 80:
@@ -1292,9 +1293,9 @@ export default {
               printBuffer += "Root"
               break;
 
-            case 100: //TODO add heal over time
-              // heal over time
-             // Spell.FormatCount("Current HP", value) + repeating + range + (base2 > 0 ? " (If " + Spell.FormatEnum((SpellTargetRestrict)base2) + ")" : "");
+            case 100:
+              tmp += limit ? " (" + DB_SPELL_TARGET_RESTRICTION[Math.abs(limit)] + ")" : ""
+              printBuffer += this.getFormatStandard("Current HP", "", value_min, value_max, minlvl, maxlvl)  + pertick + special_range + tmp
               break;
 
             case 101:
@@ -1538,7 +1539,144 @@ export default {
               printBuffer += "Limit Max Casting Time: " + (base/1000) + "s"
               break;
 
-            case 158: // Increase Chance to Reflect Spell
+            case 145:
+              printBuffer += "Teleport to " + spell["teleport_zone"]
+              break;
+
+            case 146: //todo data location for port xyz for 45 , Set position to
+              break;
+
+            case 147:
+              printBuffer += this.getFormatStandard("Current HP", "%", value_min, value_max, minlvl, maxlvl) + " up to " + max
+              break;
+
+            case 148:
+              tmp += limit ? limit : spell["formula_" + effectIndex] % 100
+              printBuffer += "Stacking: Block new spell if slot " + tmp + " is " + DB_SPA[Math.abs(base)] + " and Less Than " + max
+              break;
+
+            case 149:
+              tmp += limit ? limit : spell["formula_" + effectIndex] % 100
+              printBuffer += "Stacking: Overwrite existing spell if slot " + tmp + " is " + DB_SPA[Math.abs(base)] + " and Less Than " + max
+              break;
+
+            case 150:
+              tmp += max ? " (Increase heal by " + max + " if affected is above lv " + limit + ")" : ""
+              printBuffer += (base == 1) ? "Divine Intervention with 300 Heal" + tmp : "Divine Intervention with 8000 Heal" + tmp
+              break;
+
+            case 151:
+              tmp += base ? " with Buffs" : ""
+              printBuffer += "Suspend Pet" + tmp
+              break;
+
+            case 152:
+              printBuffer += "Summon Temp Pet: " + spell["teleport_zone"] + " x " + base + " for " + max + "s"
+              break;
+
+            case 153:
+              printBuffer += "Balance Group HP with " + base + "% Penalty (Max HP taken: " + limit + ")"
+              break;
+
+            case 154: //TODO need to update emulator code to use percent based (+0.5% per level difference) and confirm duration change mechanic
+              if (limit != 0) {
+                printBuffer += "Decrease Detrimental Duration by 50% " + (base/10) + "% Chance)" + this.getUpToMaxLvl(max)
+              }
+              else{
+                printBuffer += "Dispel Detrimental " + (base/10) + "% Chance" + this.getUpToMaxLvl(max)
+              }
+              break;
+
+            case 156:
+              printBuffer += "Illusion: Target"
+              break;
+
+            case 157:
+              printBuffer += this.getFormatStandard("Spell Damage Shield", "", value_min, value_max, minlvl, maxlvl)
+              break;
+
+            case 158:
+              tmp  += max ? " with up to " +max + "% Base Damage" : ""
+              if (limit > 0) {
+                tmp += " and " + limit + " Improved Resist Mod"
+              }
+              else if (limit < 0){
+                tmp += " and " + limit + " Reduced Resist Mod"
+              }
+              printBuffer += this.getFormatStandard("Chance to Reflect Spell", "%", value_min, value_max, minlvl, maxlvl) + tmp
+              break;
+
+            case 159:
+              this.getFormatStandard("Base Stats", "%", value_min, value_max, minlvl, maxlvl)
+              break;
+
+            case 160:
+              printBuffer += "Intoxicate if Tolerance under " + base
+              break;
+
+            case 161:
+              tmp += limit ? "Max Per Hit: " + limit : ""
+              tmp += max ? ", Total: " + max : ""
+              printBuffer +=  "Absorb Spell Damage: " + base + "%," + tmp
+              break;
+
+            case 162:
+              tmp += limit ? "Max Per Hit: " + limit : ""
+              tmp += max ? ", Total: " + max : ""
+              printBuffer +=  "Absorb Melee Damage: " + base + "%," + tmp
+              break;
+
+            case 163:
+              tmp += max ? ", Max Per Hit: " + max : ""
+              printBuffer +=  "Absorb " + base + " Hits or Spells " + base + "%," + tmp
+              break;
+
+            case 164:
+              printBuffer += "Appraise Chest " + value_max
+              break;
+
+            case 165:
+              printBuffer += "Disarm Chest "  + value_max
+              break;
+
+            case 166:
+              printBuffer += "Unlock Chest " + value_max
+              break;
+
+            case 167:
+              printBuffer += "Increase Pet Power " + value_max
+              break;
+ /*
+
+
+
+            case 168:
+              // defensive disc. how is this different than an endless rune?
+              // maybe it only mitigates the DI portion of the hit?
+              return Spell.FormatPercent("Melee Mitigation", -value);
+            case 169:
+              return Spell.FormatPercent("Chance to Critical Hit" + ((SpellSkill)base2 != SpellSkill.Hit ? " with " + Spell.FormatEnum((SpellSkill)base2) : ""), value);
+            case 170:
+              // stacks with itself in other slots
+              return Spell.FormatPercent("Critical Nuke Damage", base1) + " of Base Damage";
+            case 171:
+              return Spell.FormatPercent("Chance to Crippling Blow", value);
+            case 172:
+              // combat agility AA
+              return Spell.FormatPercent("Chance to Avoid Melee", base1);
+            case 173:
+              return Spell.FormatPercent("Chance to Riposte", value);
+            case 174:
+              return Spell.FormatPercent("Chance to Dodge", value);
+            case 175:
+              return Spell.FormatPercent("Chance to Parry", value);
+            case 176:
+              return Spell.FormatPercent("Chance to Dual Wield", value);
+            case 177:
+              // this is multiplicative
+              return Spell.FormatPercent("Chance to Double Attack", base1);
+*/
+
             case 168: // Increase Melee Mitigation
             case 169: // Increase Chance to Critical Hit
             case 172: // Increase Chance to Avoid Melee
@@ -1568,30 +1706,7 @@ export default {
                 printBuffer += " by " + value_max + "%";
               }
               break;
-            case 15: // Increase Mana per tick
-            case 100: // Increase Hitpoints v2 per tick
-              printBuffer += this.getSpellEffectName(spell["effectid_" + effectIndex]);
-              let duration = spell["buffduration"]
-              if (value_min !== value_max) {
-                printBuffer += " by " + Math.abs(value_min) + " (L" + minlvl + ") to " + Math.abs(
-                  value_max
-                ) + " (L" + maxlvl + ") per tick (total " + Math.abs(value_min * duration) + " to " + Math.abs(
-                  value_max * duration
-                ) + ")";
-              } else {
-                printBuffer += " by " + value_max + " per tick (total " + Math.abs(value_max * duration) + ")";
-              }
-              break;
 
-            case 152: // Summon Pets:
-              printBuffer += this.getSpellEffectName(spell["effectid_" + effectIndex]);
-              printBuffer += " <a href=?a=pet&name=" + spell["teleport_zone"] + ">" + spell["teleport_zone"] + "</a>";
-              break;
-
-            case 150: // Death Save - Restore Full Health
-            case 151: // Suspend Pet - Lose Buffs and Equipment
-            case 154: // Remove Detrimental
-            case 156: // Illusion: Target
             case 178: // Lifetap from Weapon Damage
             case 179: // Instrument Modifier
             case 182: // Hundred Hands Effect
@@ -1608,105 +1723,18 @@ export default {
               printBuffer += this.getSpellEffectName(spell["effectid_" + effectIndex]);
               printBuffer += DB_RACE_NAMES[spell["effect_base_value_" + effectIndex]];
               break;
-            case 63: // Memblur
-            case 120: // Set Healing Effectiveness
             case 330: // Critical Damage Mob
               printBuffer += this.getSpellEffectName(spell["effectid_" + effectIndex]);
               printBuffer += " (" + value_max + "%)";
               break;
-            case 145: // Teleport v2
-              //print_buffer += " (Need to add zone to spells table)";
-              printBuffer += this.getSpellEffectName(spell["effectid_" + effectIndex]);
-              printBuffer += " <a href=?a=zone&name=" + spell["teleport_zone"] + ">" + spell["teleport_zone"] + "</a>";
-              break;
-            case 85: // Add Proc:
+
             case 289: // Improved Spell Effect:
             case 323: // Add Defensive Proc:
               printBuffer += this.getSpellEffectName(spell["effectid_" + effectIndex]);
 
               printBuffer += "<a href=?a=spell&id=" + spell["effect_base_value_" + effectIndex] + "> " + (await this.getSpellName(spell["effect_base_value_" + effectIndex])) + "</a>";
               break;
-              case 134: // Limit: Max Level
-            case 157: // Spell-Damage Shield
-              printBuffer += this.getSpellEffectName(spell["effectid_" + effectIndex]);
-              printBuffer += " (" + value_max + ")";
-              break;
-            case 121: // Reverse Damage Shield
-              printBuffer += this.getSpellEffectName(spell["effectid_" + effectIndex]);
-              printBuffer += " (-" + value_max + ")";
-              break;
-            case 91: // Summon Corpse
-              printBuffer += this.getSpellEffectName(spell["effectid_" + effectIndex]);
-              printBuffer += " (value_max level " + value_max + ")";
-              break;
-            case 136: // Limit: Target
-              printBuffer += this.getSpellEffectName(spell["effectid_" + effectIndex]);
-              if (value_max < 0) {
-                value_max = -value_max;
-                v   = " excluded";
-              } else {
-                v = "";
-              }
-              printBuffer += " (" + DB_SPELL_TARGETS[value_max] + " " + v + ")";
-              break;
-            case 139: // Limit: Spell
-              printBuffer += this.getSpellEffectName(spell["effectid_" + effectIndex]);
-              value_max = spell["effect_base_value_" + effectIndex];
-              if (value_max < 0) {
-                value_max = -value_max;
-                v   = " excluded";
-              }
 
-              name = (await this.getSpellName(value_max))
-              if (csv === false) {
-                printBuffer += "(" + name + ")";
-              } else {
-                printBuffer += " (<a href=?a=spell&id=" + spell["effect_base_value_" + effectIndex] + ">" + name + "</a>v)";
-              }
-              break;
-            case 140: // Limit: Min Duration
-              printBuffer += this.getSpellEffectName(spell["effectid_" + effectIndex]);
-              value_min *= 6;
-              value_max *= 6;
-              if (value_min !== value_max) {
-                printBuffer += " (" + value_min + " sec (L" + minlvl + ") to " + value_max + " sec (L" + maxlvl + "))";
-              } else {
-                printBuffer += " (value_max sec)";
-              }
-              break;
-            case 143: // Limit: Min Casting Time
-              printBuffer += this.getSpellEffectName(spell["effectid_" + effectIndex]);
-              value_min *= 6;
-              value_max *= 6;
-              if (value_min !== value_max) {
-                printBuffer += " (" + (value_min / 6000) + " sec (L" + minlvl + ") to " + (value_max / 6000) + " sec (L" + maxlvl + "))";
-              } else {
-                printBuffer += " (" + (value_max / 6000) + " sec)";
-              }
-              break;
-            case 148: // Stacking: Overwrite existing spell
-              printBuffer += this.getSpellEffectName(spell["effectid_" + effectIndex]);
-              printBuffer += " if slot " + (spell["formula_" + effectIndex] - 200) + " is effect '" + this.getSpellEffectName(spell["effect_base_value_" + effectIndex]) + "' and < " + spell["max_" + effectIndex];
-              break;
-            case 149: // Stacking: Overwrite existing spell
-              printBuffer += this.getSpellEffectName(spell["effectid_" + effectIndex]);
-              printBuffer += " if slot " + (spell["formula_" + effectIndex] - 200) + " is effect '" + this.getSpellEffectName(spell["effect_base_value_" + effectIndex]) + "' and < " + spell["max_" + effectIndex];
-              break;
-            case 147: // Increase Hitpoints (%)
-              name = this.getSpellEffectName(spell["effectid_" + effectIndex]);
-              if (value_max < 0) {
-                name = name.replace("Increase", "Decrease");
-              }
-              printBuffer += name + " by " + spell["effect_limit_value_" + effectIndex] + " (" + value_max + "% " + value_max + ")";
-              break;
-            case 153: // Balance Party Health
-              printBuffer += this.getSpellEffectName(spell["effectid_" + effectIndex]);
-              printBuffer += " (" + value_max + "% penalty)";
-              break;
-            case 0: // In/Decrease hitpoints
-
-            case 159: // Decrease Stats
-            case 167: // Pet Power Increase
             case 192: // Increase hate
             default:
               name = this.getSpellEffectName(spell["effectid_" + effectIndex]);
