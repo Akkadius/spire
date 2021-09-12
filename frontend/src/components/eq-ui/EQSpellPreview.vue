@@ -716,9 +716,9 @@ export default {
       }
 
      if (min == max || max == 0) {
-       return printBuffer += "Focus: " + modifier + effect_name + " by " + Math.abs(min) + "%";
+       return printBuffer += modifier + effect_name + " by " + Math.abs(min) + "%";
      }
-     return printBuffer += "Focus: " + modifier + effect_name + " by " + Math.abs(min) + "% to " + Math.abs(max) + "%";
+     return printBuffer += modifier + effect_name + " by " + Math.abs(min) + "% to " + Math.abs(max) + "%";
 },
 
 
@@ -2116,14 +2116,85 @@ export default {
               printBuffer += "Pet Chance to Feign Death (" + base + "%)"
               break;
 
-             case 294: // Increase Critical Spell Chance
-              printBuffer += this.getSpellEffectName(spell["effectid_" + effectIndex]);
-              if (value_min !== value_max) {
-                printBuffer += " by " + value_min + "% (L" + minlvl + ") to " + value_max + "% (L" + maxlvl + ")";
-              } else {
-                printBuffer += " by " + value_max + "%";
-              }
+            case 282:
+              printBuffer += this.getFormatStandard( "Bandage Amount", "%", value_min, value_max, minlvl, maxlvl)
               break;
+
+            case 283:
+              printBuffer += this.getFormatStandard( "Chance to perform a Double Special Attack", "%", value_min, value_max, minlvl, maxlvl)
+              break;
+
+            case 284:
+              printBuffer += "Error: (" + spell["effectid_" + effectIndex] + ") not used"
+              break;
+
+            case 285:
+              printBuffer += "Chance Hide skill will succeed while moving (" + base + "%)"
+              break;
+
+            case 286:
+              printBuffer += this.getFormatStandard( "Spell Damage", "", value_min, value_max, minlvl, maxlvl) + " (before crit)"
+              break;
+
+            case 287:
+              printBuffer += this.getFormatStandard( "Spell Duration", "seconds", (value_min * 6), (value_max * 6), minlvl, maxlvl)
+              break;
+
+            case 288: //TODO finish this when AA tables are added, this procs the spell associated with the AA, rank.spell is what the spell id that procs is
+              printBuffer += "Add [Insert AA spell] Proc to" + DB_SPA[limit] + "(" + (base/10) + "% Chance)"
+              break;
+
+            case 289:
+              printBuffer += "Cast:" + (await this.getSpellName(base)) + "on Duration Fade"
+              break;
+
+            case 290:
+              printBuffer += this.getFormatStandard( "Movement Speed Cap", "", value_min, value_max, minlvl, maxlvl)
+              break;
+
+            case 291: //TODO Fix this in source code, not coded correct
+              printBuffer += "Remove up to (" + base + ") detrimental effects"
+              break;
+
+            case 292:
+              printBuffer += this.getFormatStandard( "Chance of Strikethrough", "%", value_min, value_max, minlvl, maxlvl)
+              break;
+
+            case 293:
+              printBuffer += this.getFormatStandard( "Chance to Resist Melee Stun", "%", value_min, value_max, minlvl, maxlvl)
+              break;
+
+            case 294:
+              printBuffer += (base) ? this.getFormatStandard( "Chance to Critical Nuke", "%", value_min, value_max, minlvl, maxlvl) : ""
+              printBuffer += (base) ? " and " : ""
+              printBuffer += (limit) ?  this.getFormatStandard( "Critical Nuke Damage", "%", limit, limit, minlvl, maxlvl) + " of Base Damage" : ""
+              break;
+
+            case 295:
+              printBuffer += "Error: (" + spell["effectid_" + effectIndex] + ") not used"
+              break;
+
+            case 296:
+              printBuffer += this.getFocusPercentRange("Spell Damage Taken", base, limit, false);
+              break;
+
+            case 297:
+              printBuffer += this.getFormatStandard( "Spell Damage Taken", "", value_min, value_max, minlvl, maxlvl)
+              break;
+
+            case 298:
+              printBuffer += this.getFormatStandard( "Pet Size", "%", -value_min, -value_max, minlvl, maxlvl)
+              break;
+
+            case 299:
+              printBuffer += "Wake the Dead (" + max + ")"
+              break;
+
+            case 300:
+              printBuffer += "Summon Doppelganger: " + spell["teleport_zone"]
+              break;
+
+
 
 
             case 311: // Limit: Combat Skills Not Allowed
