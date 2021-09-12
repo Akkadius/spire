@@ -105,9 +105,10 @@ export const ITEM_WEAPONS = {
 }
 
 export const DB_BARD_SKILLS = {
-  "23": "Wind",
+  "23": "Woodwind",
   "24": "Strings",
   "25": "Brass",
   "26": "Percussions",
+  "50": "Singing",
   "51": "All instruments"
 }
