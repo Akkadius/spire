@@ -146,8 +146,8 @@
 
 import {App} from "@/constants/app";
 import {DB_CLASSES} from "@/app/constants/eq-classes-constants";
-import {DB_SKILLS} from "@/app/constants/eq-skill-constants";
-import {DB_SPELL_EFFECTS, DB_SPA, DB_SPELL_RESISTS, DB_SPELL_TARGETS, DB_SPELL_TARGET_RESTRICTION,DB_SPELL_INSTRUMENT, DB_SPELL_WORN_ATTRIBUTE_CAP, DB_SPELL_PETCMDS} from "@/app/constants/eq-spell-constants";
+import {DB_SKILLS, DB_BARD_SKILLS} from "@/app/constants/eq-skill-constants";
+import {DB_SPELL_EFFECTS, DB_SPA, DB_SPELL_RESISTS, DB_SPELL_TARGETS, DB_SPELL_TARGET_RESTRICTION, DB_SPELL_WORN_ATTRIBUTE_CAP, DB_SPELL_PETCMDS} from "@/app/constants/eq-spell-constants";
 import * as util from "util";
 import {DB_RACE_NAMES} from "@/app/constants/eq-races-constants";
 import {ItemApi, SpellsNewApi} from "@/app/api";
@@ -2029,7 +2029,7 @@ export default {
               break;
 
             case 260:
-              printBuffer += this.getFormatStandard( DB_SPELL_INSTRUMENT[limit] + " Bonus", "%", (value_min * 10), (value_max * 10), minlvl, maxlvl)
+              printBuffer += this.getFormatStandard( DB_BARD_SKILLS[limit] + " Bonus", "%", (value_min * 10), (value_max * 10), minlvl, maxlvl)
               break;
 
             case 261:
@@ -2199,7 +2199,6 @@ export default {
 
             case 311: // Limit: Combat Skills Not Allowed
             case 314: // Fixed Duration Invisbility
-            case 299: // Wake the Dead
               printBuffer += this.getSpellEffectName(spell["effectid_" + effectIndex]);
               break;
             case 58: // Illusion:
@@ -2211,7 +2210,6 @@ export default {
               printBuffer += " (" + value_max + "%)";
               break;
 
-            case 289: // Improved Spell Effect:
             case 323: // Add Defensive Proc:
               printBuffer += this.getSpellEffectName(spell["effectid_" + effectIndex]);
 
