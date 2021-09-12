@@ -1,4 +1,5 @@
 export const DB_SKILLS = {
+  "-1": "Hit",
   "0": "1H Blunt",
   "1": "1H Slashing",
   "2": "2H Blunt",
