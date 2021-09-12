@@ -67,7 +67,6 @@ export default {
   components: {
     EqItemPreview,
     EqWindow,
-    "header-image": () => import("@/components/HeaderImageComponent"),
     "test-form": () => import("@/components/forms/TasksForm"),
     "task-activity": () => import("@/components/forms/TaskActivitiesForm"),
     "page-header": () => import("@/views/layout/PageHeader")

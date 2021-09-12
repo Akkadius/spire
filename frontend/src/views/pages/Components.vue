@@ -426,8 +426,7 @@ export default {
     EqWindow,
     EqWindowComplex,
     EqWindowFancy,
-    EqWindowSimple,
-    "header-image": () => import("@/components/HeaderImageComponent")
+    EqWindowSimple
   },
   data() {
     return {

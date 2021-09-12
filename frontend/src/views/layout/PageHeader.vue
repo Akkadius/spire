@@ -28,11 +28,10 @@
 </template>
 
 <script>
-import HeaderImageComponent from "@/components/HeaderImageComponent";
+
 
 export default {
   name: "PageHeader",
-  components: { HeaderImageComponent },
   props: {
     preTitle: String,
     title: String,

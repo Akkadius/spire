@@ -41,7 +41,6 @@
 </template>
 
 <script>
-import HeaderImageComponent from "../../components/HeaderImageComponent";
 import PageHeader from "@/views/layout/PageHeader";
 import {App} from "@/constants/app";
 import EqWindow from "@/components/eq-ui/EQWindow";
@@ -136,7 +135,7 @@ let renderEventListener    = null
 let animationPreviewExists = {}
 
 export default {
-  components: { EqWindow, HeaderImageComponent, PageHeader },
+  components: { EqWindow, PageHeader },
   data() {
     return {
       loaded: false,

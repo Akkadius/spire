@@ -93,7 +93,6 @@
 </template>
 
 <script>
-import HeaderImageComponent from "../../components/HeaderImageComponent";
 import ItemModels from "@/app/asset-maps/objects-map.json";
 import util from "util";
 import itemSlots from "@/constants/item-slots.json"
@@ -113,7 +112,7 @@ let itemModelExists = {};
 let modelFiles      = {};
 
 export default {
-  components: { EqWindow, HeaderImageComponent, PageHeader },
+  components: { EqWindow, PageHeader },
   data() {
     return {
       itemSlotSearch: 0,

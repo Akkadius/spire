@@ -34,7 +34,6 @@ import {SpireApiClient} from "@/app/api/spire-api-client";
 
 export default {
   components: {
-    "header-image": () => import("@/components/HeaderImageComponent"),
     "page-header": () => import("@/views/layout/PageHeader"),
     "v-runtime-template": () => import("v-runtime-template")
   },

@@ -6,12 +6,11 @@
 
 <script>
 
-  import HeaderImageComponent from '../../components/HeaderImageComponent';
   import EqWindow from "@/components/eq-ui/EQWindow";
   import UserContext from "@/app/user/UserContext";
 
   export default {
-    components: { EqWindow, HeaderImageComponent },
+    components: { EqWindow },
     data() {
       return {
         userContext: null,

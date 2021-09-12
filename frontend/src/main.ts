@@ -19,6 +19,9 @@ import './assets/css/global.css'
 // EQ Assets - These should be moved into the assets themselves
 import '@/components/eq-ui/styles/eq-ui.css'
 
+// font awesome
+import '@/assets/font-awesome-4.7.0/css/font-awesome.min.css'
+
 // Lazyload
 import VueLazyload      from 'vue-lazyload'
 // rpg awesome icons
@@ -31,7 +34,7 @@ import VueFormGenerator from 'vue-form-generator'
 import 'vue-form-generator/dist/vfg.css'
 
 
-// Ag grid enterprise
+// Ag grid enterprisec
 import 'ag-grid-enterprise';
 
 Vue.use(BootstrapVue)

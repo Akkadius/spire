@@ -136,7 +136,6 @@
 </template>
 
 <script>
-import HeaderImageComponent from "../../components/HeaderImageComponent";
 import NpcModels from "@/app/asset-maps/npc-models-map";
 import util from "util";
 import slugify from "slugify"
@@ -154,7 +153,7 @@ let modelFiles    = {};
 let raceExists    = {};
 
 export default {
-  components: { EqWindowSimple, EqWindow, HeaderImageComponent, PageHeader },
+  components: { EqWindowSimple, EqWindow, PageHeader },
   data() {
     return {
       races: null,

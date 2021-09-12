@@ -5,6 +5,8 @@ go 1.12
 require (
 	github.com/Jeffail/gabs v1.4.0
 	github.com/alecthomas/template v0.0.0-20190718012654-fb15b899a751
+	github.com/asticode/go-astikit v0.21.1 // indirect
+	github.com/asticode/go-astilectron v0.24.0 // indirect
 	github.com/aws/aws-sdk-go v1.19.0
 	github.com/cosmtrek/air v1.27.3 // indirect
 	github.com/danilopolani/gocialite v1.0.2
@@ -43,6 +45,7 @@ require (
 	github.com/valyala/fasttemplate v1.2.0 // indirect
 	github.com/volatiletech/null/v8 v8.1.0
 	github.com/volatiletech/sqlboiler/v4 v4.2.0
+	github.com/webview/webview v0.0.0-20210330151455-f540d88dde4e
 	golang.org/x/crypto v0.0.0-20200728195943-123391ffb6de // indirect
 	golang.org/x/sys v0.0.0-20200909081042-eff7692f9009 // indirect
 	golang.org/x/text v0.3.3 // indirect
