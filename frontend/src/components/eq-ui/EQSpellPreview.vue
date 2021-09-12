@@ -1088,8 +1088,8 @@ export default {
               printBuffer += "Levitate"
               break;
 
-            case 58: //TODO NEED FINISH THIS
-              printBuffer += "Illusion: "
+            case 58: // Illusion:
+              printBuffer += "Illusion: " + DB_RACE_NAMES[spell["effect_base_value_" + effectIndex]]
               break;
 
             case 59:
@@ -2314,26 +2314,93 @@ export default {
               printBuffer += this.getFormatStandard("Max Negative HP", "", value_min, value_max, minlvl, maxlvl)
               break;
 
-
-     
-            case 311: // Limit: Combat Skills Not Allowed
-            case 314: // Fixed Duration Invisbility
-              printBuffer += this.getSpellEffectName(spell["effectid_" + effectIndex]);
-              break;
-            case 58: // Illusion:
-              printBuffer += this.getSpellEffectName(spell["effectid_" + effectIndex]);
-              printBuffer += DB_RACE_NAMES[spell["effect_base_value_" + effectIndex]];
-              break;
-            case 330: // Critical Damage Mob
-              printBuffer += this.getSpellEffectName(spell["effectid_" + effectIndex]);
-              printBuffer += " (" + value_max + "%)";
+            case 329:
+              printBuffer += "Absorb Damage using Mana: " + base + "%"
               break;
 
-            case 323: // Add Defensive Proc:
-              printBuffer += this.getSpellEffectName(spell["effectid_" + effectIndex]);
-
-              printBuffer += "<a href=?a=spell&id=" + spell["effect_base_value_" + effectIndex] + "> " + (await this.getSpellName(spell["effect_base_value_" + effectIndex])) + "</a>";
+            case 330:
+              printBuffer += this.getFormatStandard("Critical " + DB_SKILLS[limit] + " Damage", "%", value_min, value_max, minlvl, maxlvl) + " of Base Damage"
               break;
+
+            case 331:
+              printBuffer += this.getFormatStandard("Chance to Salvage Components", "%", value_min, value_max, minlvl, maxlvl)
+              break;
+
+            case 332:
+              printBuffer += "Summon to Corpse"
+              break;
+
+            case 333:
+              printBuffer += "Cast: " + (await this.getSpellName(limit)) + "on Rune Fade"
+              break;
+
+            case 334:
+              printBuffer += this.getFormatStandard("Current HP", "%", value_min, value_max, minlvl, maxlvl) + pertick + special_range + " (If Target Not Moving)";
+
+            case 335:
+              printBuffer +=  "Block Next Spell" + (base < 100 ? " (" + base + "% Chance)" : "")
+              break;
+
+            case 336:
+              printBuffer += "Error: (" + spell["effectid_" + effectIndex] + ") not used"
+              break;
+
+            case 337:
+              printBuffer += this.getFormatStandard("Experience Gain", "%", value_min, value_max, minlvl, maxlvl)
+              break;
+
+            case 338:
+              printBuffer += "Summon and Resurrect All Corpses"
+              break;
+
+            case 339:
+              printBuffer += "Cast: " + (await this.getSpellName(limit)) + "on Spell Use (" + base + "% Chance)"
+              break;
+
+            case 340:
+              printBuffer += "Cast: " + (await this.getSpellName(limit)) +  (base < 100 ? " (" + base + "% Chance) (Only one effect casts)" : "")
+              break;
+
+            case 341:
+              printBuffer += this.getFormatStandard("ATK Cap", "", value_min, value_max, minlvl, maxlvl)
+              break;
+
+            case 342:
+              printBuffer +=  "Inhibit Low Health Fleeing"
+              break;
+
+            case 343:
+              printBuffer += "Interrupt Casting" + (base < 100 ? "(" + base + "% Chance)" : "")
+              break;
+
+            case 344:
+              printBuffer += this.getFormatStandard("Chance to Channel Item Click Effects", "%", value_min, value_max, minlvl, maxlvl)
+              break;
+
+            case 345:
+              printBuffer += "Limit Assassinate Level: " + base + (limit ? "(" + limit + "% Chance Bonus)" : "")
+              break;
+
+            case 346:
+              printBuffer += "Limit Headshot Level: " + base + (limit ? "(" + limit + "% Chance Bonus)" : "")
+              break;
+
+            case 347:
+              printBuffer += this.getFormatStandard("Chance of Double Archery Attack", "%", value_min, value_max, minlvl, maxlvl)
+              break;
+
+            case 348:
+              printBuffer += "Limit: Min Mana Cost: " + base
+              break;
+
+            case 349:
+              printBuffer += this.getFormatStandard("Damage When Shield Equipped", "%", value_min, value_max, minlvl, maxlvl)
+              break;
+
+            case 350:
+              printBuffer += "Manaburn: Consumes up to " + base + " mana to deal " + -limit + "% of that mana as direct damage"
+              break;
+
           }
 
 
