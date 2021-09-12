@@ -19,6 +19,7 @@
     "bootstrap-vue": "^2.0.0-rc.19",
     "cheerio": "^1.0.0-rc.5",
     "core-js": "^2.6.5",
+    "fontawesome-4.7": "^4.7.0",
     "jquery": "^3.2.1",
     "markdown-it": "^12.0.4",
     "moment": "^2.27.0",
