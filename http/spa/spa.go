@@ -78,7 +78,6 @@ func contains(slice []string, val string) (bool) {
 func (s PackedSpaService) MiddlewareHandler() echo.MiddlewareFunc {
 	return func(next echo.HandlerFunc) echo.HandlerFunc {
 		return func(c echo.Context) (err error) {
-
 			// if we explicitly ignore paths, process routing as normal
 			for _, skipPath := range s.config.SkipPaths {
 				if strings.Contains(c.Request().URL.Path, skipPath) {
@@ -96,7 +95,8 @@ func (s PackedSpaService) MiddlewareHandler() echo.MiddlewareFunc {
 			}
 
 			name := filepath.Join(s.config.BasePath, path.Clean("/"+p)) // "/"+ for security
-			if name == "/" {
+
+			if name == "/" || name == "\\" {
 				index, err := s.box.Find(s.config.SpaIndex)
 				if err != nil {
 					s.logger.Error(err)
