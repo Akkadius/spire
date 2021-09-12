@@ -20,7 +20,7 @@ import './assets/css/global.css'
 import '@/components/eq-ui/styles/eq-ui.css'
 
 // font awesome
-import '@/assets/font-awesome-4.7.0/css/font-awesome.min.css'
+import '@/assets/font-awesome-4.7.0/css/font-awesome.css'
 
 // Lazyload
 import VueLazyload      from 'vue-lazyload'
