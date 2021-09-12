@@ -85,8 +85,6 @@ func (g *GithubSourceDownloader) Source(org string, repo string, branch string, 
 					fileName = strings.ReplaceAll(fileName, "\\", "/")
 				}
 
-				fmt.Printf("fileName [%v]\n", fileName)
-
 				unzippedFiles[fileName] = string(data)
 			}
 
