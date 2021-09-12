@@ -739,8 +739,7 @@ export default {
         let name        = ""
         let v           = ""
         let tmp         = ""
-        let tmp2        = ""
-        let pertick = spell["buffduration"] ? " per tick " : ""
+        let pertick     = spell["buffduration"] ? " per tick " : ""
 
         let base = spell["effect_base_value_" + effectIndex]
         let limit = spell["effect_limit_value_" + effectIndex]
@@ -911,26 +910,24 @@ export default {
               break;
 
             case 25:
-              let bindtype = ""
-              if (base == 2){
-                bindtype += " (Secondary Bind Point)"
+              if (tmp  == 2){
+                tmp += " (Secondary Bind Point)"
               }
               else if (base == 3){
-                bindtype += " (Tertiary Bind Point)"
+                tmp += " (Tertiary Bind Point)"
               }
-              printBuffer += "Bind" + bindtype
+              printBuffer += "Bind" + tmp
               break;
 
             case 26:
-              let gatetype = ""
-               if (limit == 2){
-                gatetype += " to Secondary Bind Point "
+              if (limit == 2){
+                tmp += " to Secondary Bind Point "
               }
               else if (limit == 3){
-                gatetype += " to Tertiary Bind Point "
+                tmp += " to Tertiary Bind Point "
               }
 
-              printBuffer += "Gate" + gatetype + " (" + (100 - base) + "% chance to fail)"
+              printBuffer += "Gate" + tmp + " (" + (100 - base) + "% chance to fail)"
               break;
 
             case 27:
@@ -953,7 +950,7 @@ export default {
               printBuffer += "Mesmerize" + this.getUpToMaxLvl(max)
               break;
 
-            case 32: //Review this
+            case 32:
               printBuffer += "Summon Item: "
 
               const item             = (await this.getItem(spell["effect_base_value_" + effectIndex]));
@@ -1404,7 +1401,7 @@ export default {
                  break;
 
             case 117:
-              return "Make Weapon Magical";
+              printBuffer += "Make Weapon Magical"
               break;
 
             case 118:
@@ -1434,7 +1431,7 @@ export default {
 
             case 122: //TODO implement this
               printBuffer += "Error: (" + spell["effectid_" + effectIndex] + ") not implemented"
-                break;
+              break;
 
             case 123:
               printBuffer += "Buff Blocker: Screech (" + base + ")"
@@ -1481,41 +1478,27 @@ export default {
               break;
 
             case 134:
-              limit = limit ? limit : 100
-              printBuffer += "Limit Max Level: " + base + " (lose " + limit + "% per level)"
+              printBuffer += "Limit Max Level: " + base + " (lose " + (limit ? limit : 100) + "% per level)"
               break;
 
             case 135:
-              if (base < 0){
-                tmp += "Exclude "
-              }
-              printBuffer += "Limit Resist: " + tmp + DB_SPELL_RESISTS[Math.abs(base)]
+              printBuffer += "Limit Resist: " + (base < 0 ? "Exclude " : "") + DB_SPELL_RESISTS[Math.abs(base)]
               break;
 
             case 136:
-              if (base < 0){
-                tmp += "Exclude "
-              }
-              printBuffer += "Limit Target: " + tmp + DB_SPELL_TARGETS[Math.abs(base)]
+              printBuffer += "Limit Target: " + (base < 0 ? "Exclude " : "") + DB_SPELL_TARGETS[Math.abs(base)]
               break;
 
-            case 137:
-              if (base < 0){
-                tmp += "Exclude "
-              }
-              printBuffer += "Limit Effect: " + tmp + DB_SPA[Math.abs(base)]
+            case 137: //Maybe include number id  + " (SPA: " + Math.abs(base) + ")"
+              printBuffer += "Limit Effect: " + (base < 0 ? "Exclude " : "") + DB_SPA[Math.abs(base)]
               break;
 
             case 138:
-              tmp += base ? "Beneficial" : "Detrimental"
-              printBuffer += "Limit Type: " + tmp
+              printBuffer += "Limit Type: " + (base ? "Beneficial" : "Detrimental")
               break;
 
             case 139://TODO need spell links
-              if (base < 0){
-                tmp += "Exclude "
-              }
-              printBuffer += "Limit Spell: " + tmp + (await this.getSpellName(Math.abs(base)))
+              printBuffer += "Limit Spell: " + (base < 0 ? "Exclude " : "") + (await this.getSpellName(Math.abs(base)))
               break;
 
             case 140:
@@ -1523,8 +1506,7 @@ export default {
               break;
 
             case 141:
-              tmp += base ? "Non-Duration Spells" : "Duration Spells"
-              printBuffer += "Limit Duration Type: " + tmp
+              printBuffer += "Limit Duration Type: " + (base ? "Non-Duration Spells" : "Duration Spells")
               break;
 
             case 142:
@@ -1552,12 +1534,12 @@ export default {
 
             case 148:
               tmp += limit ? limit : spell["formula_" + effectIndex] % 100
-              printBuffer += "Stacking: Block new spell if slot " + tmp + " is " + DB_SPA[Math.abs(base)] + " and Less Than " + max
+              printBuffer += "Stacking: Block new spell if slot " + tmp + " is " + DB_SPA[Math.abs(base)] + " and less than " + max
               break;
 
             case 149:
               tmp += limit ? limit : spell["formula_" + effectIndex] % 100
-              printBuffer += "Stacking: Overwrite existing spell if slot " + tmp + " is " + DB_SPA[Math.abs(base)] + " and Less Than " + max
+              printBuffer += "Stacking: Overwrite existing spell if slot " + tmp + " is " + DB_SPA[Math.abs(base)] + " and less than " + max
               break;
 
             case 150:
@@ -1566,8 +1548,7 @@ export default {
               break;
 
             case 151:
-              tmp += base ? " with Buffs" : ""
-              printBuffer += "Suspend Pet" + tmp
+              printBuffer += "Suspend Pet" + (base ? " with Buffs" : "")
               break;
 
             case 152:
