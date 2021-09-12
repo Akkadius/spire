@@ -989,7 +989,7 @@ export default {
               break;
 
             case 33:
-              printBuffer += "Summon Pet: " +spell["teleport_zone"]
+              printBuffer += "Summon Pet: " + spell["teleport_zone"]
               break;
 
             case 34:
@@ -2194,9 +2194,128 @@ export default {
               printBuffer += "Summon Doppelganger: " + spell["teleport_zone"]
               break;
 
+            case 301:
+              printBuffer += this.getFormatStandard( "Archery Damage", "%", -value_min, -value_max, minlvl, maxlvl)
+              break;
+
+            case 302: //crit
+              printBuffer += this.getFocusPercentRange("Spell Damage", base, limit, false);
+              break;
+
+            case 303: //crit
+              printBuffer += this.getFormatStandard( "Spell Damage", "", value_min, value_max, minlvl, maxlvl)
+              break;
+
+            case 304:
+              printBuffer += this.getFormatStandard( "Chance to Avoid Offhand Riposte", "%", -value_min, -value_max, minlvl, maxlvl)
+              break;
+
+            case 305:
+              if (max) {
+                printBuffer += this.getFormatStandard("Offhand Damage Shield Taken", "", value_min, value_max, minlvl, maxlvl)
+              }
+              else {
+                printBuffer += this.getFormatStandard("Offhand Damage Shield Taken", "%", -value_min, -value_max, minlvl, maxlvl)
+              }
+              break;
+
+            case 306:
+              printBuffer += "Wake the Dead: + " + spell["teleport_zone"] + " x " + base + " for " + max + "s"
+              break;
+
+            case 307:
+              printBuffer += "Appraisal"
+              break;
+
+            case 308:
+              printBuffer += "Suspend Minion to remain after Zoning";
+              break;
+
+            case 309:
+              printBuffer += "Teleport to Caster's Bind";
+              break;
+
+            case 310:
+              printBuffer += "Reduce Timer by " + this.humanTime(base / 1000)
+              break;
+
+            case 311:
+              printBuffer +=  "Limit Type: " + (base == 1 ? "Include" : "Exclude") + " Combat Skills"
+              break;
+
+            case 312:
+              printBuffer +=  "Sanctuary: Place caster bottom hate list, fades if cast on other than self."
+              break;
+
+            case 313:
+              printBuffer += this.getFormatStandard("Chance to Double Forage", "%", value_min, value_max, minlvl, maxlvl)
+              break;
+
+            case 314:
+              printBuffer += "Invisibility" + (base > 1 ? " (Enhanced " + base + ")" : "")
+              break;
+
+            case 315:
+              printBuffer += "Invisibility to Undead" + (base > 1 ? " (Enhanced " + base + ")" : "")
+              break;
+
+            case 316:
+              printBuffer += "Invisibility to Animals" + (base > 1 ? " (Enhanced " + base + ")" : "")
+              break;
+
+            case 317:
+              printBuffer += this.getFormatStandard("HP Regen Cap", "", value_min, value_max, minlvl, maxlvl)
+              break;
+
+            case 318:
+              printBuffer += this.getFormatStandard("Mana Regen Cap", "", value_min, value_max, minlvl, maxlvl)
+              break;
+
+            case 319:
+              printBuffer += this.getFormatStandard("Chance to Critical HoT", "%", value_min, value_max, minlvl, maxlvl)
+              break;
+
+            case 320:
+              printBuffer += this.getFormatStandard("Shield Block Chance", "%", value_min, value_max, minlvl, maxlvl)
+              break;
+
+            case 321:
+              printBuffer += this.getFormatStandard("Target's Target Hate", "", value_min, value_max, minlvl, maxlvl)
+              break;
+
+            case 322:
+              printBuffer +=  "Gate to Home City"
+              break;
+
+            case 323:
+              if (limit != 0){
+                tmp += " with " + limit + " % Rate Mod"
+              }
+              printBuffer += "Add Defensive Proc: " + (await this.getSpellName(spell["effect_base_value_" + effectIndex])) + tmp
+              break;
+
+            case 324:
+              printBuffer += "Cast from HP with " + base + "% Penalty"
+              break;
+
+            case 325:
+              printBuffer += this.getFormatStandard("Chance to Remain Hidden When Hit By AE", "%", value_min, value_max, minlvl, maxlvl)
+              break;
+
+            case 326:
+              printBuffer += this.getFormatStandard("Spell Memorization Gems", "", value_min, value_max, minlvl, maxlvl)
+              break;
+
+            case 327:
+              printBuffer += this.getFormatStandard("Buff Slots", "", value_min, value_max, minlvl, maxlvl)
+              break;
+
+            case 328:
+              printBuffer += this.getFormatStandard("Max Negative HP", "", value_min, value_max, minlvl, maxlvl)
+              break;
 
 
-
+     
             case 311: // Limit: Combat Skills Not Allowed
             case 314: // Fixed Duration Invisbility
               printBuffer += this.getSpellEffectName(spell["effectid_" + effectIndex]);
