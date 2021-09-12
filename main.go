@@ -5,6 +5,8 @@ import (
 	"github.com/Akkadius/spire/console"
 	"github.com/Akkadius/spire/env"
 	"log"
+	"os"
+	"runtime"
 )
 
 func main() {
@@ -17,6 +19,11 @@ func main() {
 	app, err := boot.InitializeApplication()
 	if err != nil {
 		log.Fatal(err)
+	}
+
+	// ran via executable on desktop
+	if len(os.Args) == 1 && runtime.GOOS == "windows" {
+		app.Desktop().Boot()
 	}
 
 	// run cmd

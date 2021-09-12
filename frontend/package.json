@@ -5,8 +5,8 @@
   "scripts": {
     "dev": "node --max_old_space_size=4096 node_modules/@vue/cli-service/bin/vue-cli-service.js serve --open",
     "serve": "vue-cli-service serve",
-    "build": "NODE_ENV=production vue-cli-service build",
-    "build-win": "vue-cli-service build",
+    "build": "NODE_ENV=production vue-cli-service build --nomaps",
+    "build-assets": "NODE_ENV=production VUE_APP_ASSETS=local vue-cli-service build --nomaps",
     "lint": "vue-cli-service lint"
   },
   "dependencies": {

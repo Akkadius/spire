@@ -8,8 +8,13 @@ const CDN_VERSION_HASH = 'be32443283a960c9dfb6a6425fce26cddf36adb8'
 // const ASSET_CDN_BASE_URL_INT = `https://gitcdn.xyz/repo/Akkadius/eq-asset-preview/${CDN_VERSION_HASH}/`
 
 // fast
-const ASSET_CDN_BASE_URL_INT = `https://rawcdn.githack.com/Akkadius/eq-asset-preview/${CDN_VERSION_HASH}/`
-// const ASSET_CDN_BASE_URL_INT = `https://ghcdn.rawgit.org/Akkadius/eq-asset-preview/${CDN_VERSION_HASH}/`
+// `https://ghcdn.rawgit.org/Akkadius/eq-asset-preview/${CDN_VERSION_HASH}/`
+let ASSET_CDN_BASE_URL_INT = `https://rawcdn.githack.com/Akkadius/eq-asset-preview/${CDN_VERSION_HASH}/`
+
+// use local assets if desktop build
+if (process.env.VUE_APP_ASSETS && process.env.VUE_APP_ASSETS.trim() === "local") {
+  ASSET_CDN_BASE_URL_INT = "/";
+}
 
 export const App = {
   ASSET_CDN_BASE_URL: ASSET_CDN_BASE_URL_INT,

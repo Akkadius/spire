@@ -6,6 +6,7 @@ import (
 	"github.com/Akkadius/spire/env"
 	"log"
 	"os"
+	"strconv"
 
 	"fmt"
 
@@ -62,6 +63,21 @@ func getEQEmuLocalMySQLConfig() (*MySQLConfig, error) {
 		MaxOpenConnections: env.GetInt("MYSQL_MAX_OPEN_CONNECTIONS", "150"),
 		EnableLogging:      env.GetBool("MYSQL_QUERY_LOGGING", "false"),
 		ConnMaxLifetime:    env.GetInt("MYSQL_CONNECTION_MAX_LIFE_TIME", "5"),
+	}
+
+	// load eqemu config if exists
+	config := getEQEmuConfig()
+	if config.Server.Database.Db != "" {
+		port, err := strconv.Atoi(config.Server.Database.Port)
+		if err != nil {
+			log.Fatalf("unable to convert string to integer error [%v]", err)
+		}
+
+		m.Username = config.Server.Database.Username
+		m.Password = config.Server.Database.Password
+		m.Host = config.Server.Database.Host
+		m.Port = port
+		m.Database = config.Server.Database.Db
 	}
 
 	const errorPrefix string = "eqemu Server Local"

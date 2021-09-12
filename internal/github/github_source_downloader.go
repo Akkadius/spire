@@ -9,6 +9,7 @@ import (
 	"net/http"
 	"os"
 	"path/filepath"
+	"runtime"
 	"strings"
 )
 
@@ -25,6 +26,10 @@ func (g *GithubSourceDownloader) Source(org string, repo string, branch string, 
 
 	// repo params
 	repoDir := fmt.Sprintf("%v/%v-%v/", os.TempDir(), repo, branch)
+	if runtime.GOOS == "windows" {
+		repoDir = fmt.Sprintf("%v\\%v-%v\\", os.TempDir(), repo, branch)
+	}
+
 	repoZipUrl := fmt.Sprintf("https://github.com/%v/%v/archive/%v.zip", org, repo, branch)
 
 	//unzipLoc := fmt.Sprintf("%v/quests/", os.TempDir())
@@ -74,9 +79,11 @@ func (g *GithubSourceDownloader) Source(org string, repo string, branch string, 
 					g.logger.Fatal(err)
 				}
 
-				//fmt.Println(repoDir)
-
 				fileName := strings.ReplaceAll(path, fmt.Sprintf("%v%v-%v/", repoDir, repo, branch), "")
+				if runtime.GOOS == "windows" {
+					fileName = strings.ReplaceAll(path, fmt.Sprintf("%v%v-%v\\", repoDir, repo, branch), "")
+					fileName = strings.ReplaceAll(fileName, "\\", "/")
+				}
 
 				unzippedFiles[fileName] = string(data)
 			}

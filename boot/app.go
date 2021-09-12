@@ -4,6 +4,7 @@ import (
 	"context"
 	"github.com/Akkadius/spire/database"
 	"github.com/Akkadius/spire/http/routes"
+	"github.com/Akkadius/spire/internal/desktop"
 	"github.com/jinzhu/gorm"
 	gocache "github.com/patrickmn/go-cache"
 	"github.com/sirupsen/logrus"
@@ -20,6 +21,11 @@ type App struct {
 	commands      []*cobra.Command
 	db            *database.DatabaseResolver
 	router        *routes.Router
+	desktop       *desktop.WebBoot
+}
+
+func (a App) Desktop() *desktop.WebBoot {
+	return a.desktop
 }
 
 func (a App) DbConnections() *database.Connections {
@@ -39,6 +45,7 @@ func NewApplication(
 	db *database.DatabaseResolver,
 	dbConnections *database.Connections,
 	router *routes.Router,
+	desktop *desktop.WebBoot,
 ) App {
 	return App{
 		context:       context.Background(),
@@ -49,5 +56,6 @@ func NewApplication(
 		db:            db,
 		dbConnections: dbConnections,
 		router:        router,
+		desktop:       desktop,
 	}
 }

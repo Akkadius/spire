@@ -12,6 +12,7 @@ import (
 	"github.com/Akkadius/spire/http/crudcontrollers"
 	"github.com/Akkadius/spire/http/middleware"
 	"github.com/Akkadius/spire/internal/connection"
+	"github.com/Akkadius/spire/internal/desktop"
 	"github.com/Akkadius/spire/internal/encryption"
 	"github.com/Akkadius/spire/internal/github"
 	"github.com/Akkadius/spire/internal/influx"
@@ -152,6 +153,7 @@ func InitializeApplication() (App, error) {
 	questApiParseCommand := cmd.NewQuestApiParseCommand(logger, parseService)
 	questExampleTestCommand := cmd.NewQuestExampleTestCommand(logger, questExamplesGithubSourcer)
 	v := ProvideCommands(helloWorldCommand, generateModelsCommand, generateControllersCommand, generateVueFormsCommand, httpServeCommand, routesListCommand, generateConfigurationCommand, spireMigrateCommand, questApiParseCommand, questExampleTestCommand)
-	app := NewApplication(db, logger, cache, v, databaseResolver, connections, router)
+	webBoot := desktop.NewWebBoot(logger, router)
+	app := NewApplication(db, logger, cache, v, databaseResolver, connections, router, webBoot)
 	return app, nil
 }

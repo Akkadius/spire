@@ -1,10 +1,10 @@
-import axios       from "axios";
+import axios from "axios";
 import UserContext from "@/app/user/UserContext";
-import Debug       from "@/app/debug/debug";
+import Debug from "@/app/debug/debug";
 
 export class SpireApiClient {
   static getBasePath() {
-    return process.env.VUE_APP_BACKEND_BASE_URL ?
+    return process.env.VUE_APP_BACKEND_BASE_URL && process.env.NODE_ENV !== 'production' ?
       process.env.VUE_APP_BACKEND_BASE_URL :
       window.location.origin
   }
