@@ -2518,7 +2518,7 @@ export default {
               break;
 
             case 381:
-              printBuffer +=  "Fling to Self (Velocity" + base + ")" + (max ? "Target must be " + max + " or fewer lv higher than you" : "")
+              printBuffer +=  "Fling to Self (Velocity: " + base + ")" + (max ? "Target must be " + max + " or fewer lv higher than you" : "")
               break;
 
             case 382:
@@ -2530,16 +2530,9 @@ export default {
               break;
 
             case 384:
-              printBuffer +=  "Fling to Target (Velocity" + base + ")"
+              printBuffer +=  "Fling to Target (Velocity: " + base + ")"
               break;
-/*
-
-
-
-
-
-
- */
+/
           }
           if (printBuffer !== "") {
 
