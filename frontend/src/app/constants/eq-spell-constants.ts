@@ -1121,3 +1121,12 @@ export const DB_SPELL_PETCMDS = {
   "32": "/petregroupon",
   "33": "/petregroupoff"
 }
+export const DB_SPELL_NEGATETYPE = {
+  "0": "Spell, Item and AA",
+  "1": "Spell",
+  "2": "Item",
+  "3": "Spell and Item",
+  "4": "AA",
+  "5": "Spell and AA",
+  "6": "Item and AA",
+}

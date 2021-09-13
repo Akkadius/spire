@@ -147,13 +147,14 @@
 import {App} from "@/constants/app";
 import {DB_CLASSES} from "@/app/constants/eq-classes-constants";
 import {DB_SKILLS, DB_BARD_SKILLS} from "@/app/constants/eq-skill-constants";
-import {DB_SPELL_EFFECTS, DB_SPA, DB_SPELL_RESISTS, DB_SPELL_TARGETS, DB_SPELL_TARGET_RESTRICTION, DB_SPELL_WORN_ATTRIBUTE_CAP, DB_SPELL_PETCMDS} from "@/app/constants/eq-spell-constants";
+import {DB_SPELL_EFFECTS, DB_SPA, DB_SPELL_RESISTS, DB_SPELL_TARGETS, DB_SPELL_TARGET_RESTRICTION, DB_SPELL_WORN_ATTRIBUTE_CAP, DB_SPELL_PETCMDS,DB_SPELL_NEGATETYPE} from "@/app/constants/eq-spell-constants";
 import * as util from "util";
 import {DB_RACE_NAMES} from "@/app/constants/eq-races-constants";
 import {ItemApi, SpellsNewApi} from "@/app/api";
 import {SpireApiClient} from "@/app/api/spire-api-client";
 import EqWindow from "@/components/eq-ui/EQWindow";
 import EqDebug from "@/components/eq-ui/EQDebug";
+import {BODYTYPES} from "@/app/constants/eq-bodytype-constants";
 
 let unknowns = {}
 
@@ -2382,9 +2383,164 @@ export default {
               printBuffer += "Manaburn: Consumes up to " + base + " mana to deal " + -limit + "% of that mana as direct damage"
               break;
 
+            case 351: //TODO
+              printBuffer += "Aura Effect: Need to link to aura table"
+              break;
+
+            case 352:
+              printBuffer += "Error: (" + spell["effectid_" + effectIndex] + ") not used"
+              break;
+
+            case 353:
+              printBuffer += this.getFormatStandard("Aura Count", "", value_min, value_max, minlvl, maxlvl)
+              break;
+
+            case 354:
+              printBuffer += "Error: (" + spell["effectid_" + effectIndex] + ") not used"
+              break;
+
+            case 355:
+              printBuffer += "Error: (" + spell["effectid_" + effectIndex] + ") not used"
+              break;
+
+            case 356:
+              printBuffer += "Error: (" + spell["effectid_" + effectIndex] + ") not used"
+              break;
+
+            case 357:
+              printBuffer += "Inhibit Spell Casting (Focus Silence) (" + base + "% Chance)";
+              break;
+
+            case 358:
+              printBuffer += this.getFormatStandard("Current Mana", "", value_min, value_max, minlvl, maxlvl) + special_range
+              break;
+
+            case 359:
+              printBuffer += this.getFormatStandard("Chance to Sense Trap", "%", value_min, value_max, minlvl, maxlvl)
+              break;
+
+            case 360:
+              printBuffer += "Add Killshot Proc: " + await this.getSpellName(limit) + " (" + base + "% Chance)" + (max ? " Target Max Lv: " + max : "")
+              break;
+
+            case 361:
+              printBuffer += "Cast: " + (await this.getSpellName(limit)) + " on Death (" + base + "% Chance)"
+              break;
+
+            case 362:
+              printBuffer += this.getFormatStandard("Potion Belt Slots", "", value_min, value_max, minlvl, maxlvl)
+              break;
+
+            case 363:
+              printBuffer += this.getFormatStandard("Bandolier Slots", "", value_min, value_max, minlvl, maxlvl)
+              break;
+
+            case 364:
+              printBuffer += this.getFormatStandard("Chance to Triple Attack", "", value_min, value_max, minlvl, maxlvl)
+              break;
+
+            case 365:
+              printBuffer += "Cast: " + (await this.getSpellName(limit)) + " if spell Kills Target (" + base + "% Chance)"
+              break;
+
+            case 366:
+              printBuffer += "Error: (" + spell["effectid_" + effectIndex] + ") not used"
+              break;
+
+            case 367:
+              printBuffer += "Transform Body Type to " + BODYTYPES[base]
+              break;
+
+            case 368: //TODO: get faction name from dbase
+              printBuffer += this.getFormatStandard("Faction with [Faction " + base + "]", "", limit, limit, minlvl, maxlvl)
+              break;
+
+            case 369:
+              printBuffer += this.getFormatStandard("Corruption Counter", "", value_min, value_max, minlvl, maxlvl)
+              break;
+
+            case 370:
+              printBuffer += this.getFormatStandard("Corruption Resist", "", value_min, value_max, minlvl, maxlvl)
+              break;
+
+            case 371:
+              printBuffer += this.getFormatStandard("Attack Speed", "", -value_min, -value_max, minlvl, maxlvl) + "(Stackable)"
+              break;
+
+            case 372:
+              printBuffer += this.getFormatStandard("Forage Skill Cap", "", value_min, value_max, minlvl, maxlvl)
+              break;
+
+            case 373:
+              printBuffer += "Cast: " + (await this.getSpellName(base)) + " on Fade"
+              break;
+
+            case 374:
+              printBuffer += "Cast: " + (await this.getSpellName(limit)) + (base < 100 ? " (" + base + "% Chance)" : "")
+              break;
+
+            case 375:
+              printBuffer += this.getFormatStandard("Critical DoT Damage", "%", value_min, value_max, minlvl, maxlvl) + " of Base Damage"
+              break;
+
+            case 376:
+              printBuffer += "Fling"
+              break;
+
+            case 377:
+              printBuffer += "Cast: " + (await this.getSpellName(base)) + "on Duration Finished"
+              break;
+
+            case 378:
+              printBuffer += this.getFormatStandard("Chance to Resist " + DB_SPA[limit] + " Effects", "%", value_min, value_max, minlvl, maxlvl)
+              break;
+
+            case 379://client handles this function
+              if (limit == 0){
+                printBuffer += "Shadowstep Forward " + base
+              }
+              if (limit == 90) {
+                printBuffer += "Shadowstep Right " + base
+              }
+              if (limit == 180) {
+                printBuffer += "Shadowstep Back " + base
+              }
+              if (limit == 270) {
+                printBuffer += "Shadowstep Left " + base
+              }
+              else {
+                printBuffer += "Shadowstep " + base + " to " + limit + " Degrees"
+              }
+              break;
+
+            case 380:
+              printBuffer += "Push Back " + limit + " and Up " + base
+              break;
+
+            case 381:
+              printBuffer +=  "Fling to Self (Velocity" + base + ")" + (max ? "Target must be " + max + " or fewer lv higher than you" : "")
+              break;
+
+            case 382:
+              printBuffer += "Inhibit Effect: " + DB_SPA[limit] + (base ? " (From: " + DB_SPELL_NEGATETYPE[base] + " Effects)" : "")
+              break;
+
+            case 383: // spell proc + " (Sympathetic Proc)"
+              printBuffer += "Cast: " + (await this.getSpellName(limit)) + " on Spell Use" + (base != 100 ? " (Proc rate mod: " + (base - 100) + "%)" : "")
+              break;
+
+            case 384:
+              printBuffer +=  "Fling to Target (Velocity" + base + ")"
+              break;
+/*
+
+
+
+
+
+
+ */
           }
-
-
           if (printBuffer !== "") {
 
             effectsInfo.push("Slot " + effectIndex + ": &nbsp " + printBuffer)
