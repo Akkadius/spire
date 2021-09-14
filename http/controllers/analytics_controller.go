@@ -42,6 +42,15 @@ type AnalyticsEventRequest struct {
 
 // searches quest examples
 func (a *AnalyticsController) event(c echo.Context) error {
+	if a.db.GetSpireDb() == nil {
+		return c.JSON(
+			http.StatusInternalServerError,
+			echo.Map{
+				"message": "Spire database unavailable",
+			},
+		)
+	}
+
 	// body - bind
 	p := new(AnalyticsEventRequest)
 	if err := c.Bind(p); err != nil {
@@ -75,6 +84,15 @@ type AnalyticsEventCountRequest struct {
 
 // searches quest examples
 func (a *AnalyticsController) count(c echo.Context) error {
+	if a.db.GetSpireDb() == nil {
+		return c.JSON(
+			http.StatusInternalServerError,
+			echo.Map{
+				"message": "Spire database unavailable",
+			},
+		)
+	}
+
 	r := new(AnalyticsEventCountRequest)
 	if err := c.Bind(r); err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())

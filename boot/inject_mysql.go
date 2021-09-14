@@ -177,6 +177,11 @@ func provideSpireDatabase() (*gorm.DB, error) {
 		return nil, err
 	}
 
+	// if booting from local server folder
+	if getEQEmuConfig().Server.Database.Db != "" {
+		return nil, nil
+	}
+
 	mysql, err := gorm.Open(
 		"mysql",
 		fmt.Sprintf(

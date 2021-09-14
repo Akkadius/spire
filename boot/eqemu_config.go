@@ -2,7 +2,6 @@ package boot
 
 import (
 	"encoding/json"
-	"fmt"
 	"io/ioutil"
 	"log"
 	"os"
@@ -81,7 +80,7 @@ const eqemuConfigJson = "eqemu_config.json"
 
 func getEQEmuConfig() EQEmuConfigJson {
 	if _, err := os.Stat(eqemuConfigJson); err == nil {
-		fmt.Printf("Reading from config [%v]\n", eqemuConfigJson)
+		// fmt.Printf("Reading from config [%v]\n", eqemuConfigJson)
 		body, err := ioutil.ReadFile(eqemuConfigJson)
 		if err != nil {
 			log.Fatalf("unable to read file: %v", err)
