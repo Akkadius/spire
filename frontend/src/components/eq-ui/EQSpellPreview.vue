@@ -145,7 +145,7 @@
 <script>
 
 import {App} from "@/constants/app";
-import {DB_CLASSES} from "@/app/constants/eq-classes-constants";
+import {DB_CLASSES, DB_CLASSES_SHORT} from "@/app/constants/eq-classes-constants";
 import {DB_SKILLS, DB_BARD_SKILLS} from "@/app/constants/eq-skill-constants";
 import {DB_SPELL_EFFECTS, DB_SPA, DB_SPELL_RESISTS, DB_SPELL_TARGETS, DB_SPELL_TARGET_RESTRICTION, DB_SPELL_WORN_ATTRIBUTE_CAP, DB_SPELL_PETCMDS,DB_SPELL_NEGATETYPE, DB_SPELL_NUMHITSTYPE} from "@/app/constants/eq-spell-constants";
 import * as util from "util";
@@ -2617,8 +2617,8 @@ export default {
               printBuffer += "Cap Endurance at " + (limit > 0 ? "lowest of " + base + "% or " + limit : +base + "%")
               break;
 
-            case 411: //TODO best way to do bit mask?
-              printBuffer += "Limit Class: " + base
+            case 411:
+              printBuffer += "Limit Class: " + DB_CLASSES_SHORT[base >> 1]
               break;
 
             case 412:
@@ -2830,7 +2830,7 @@ export default {
               if (limit == 0) { tmp += "HP" }
               if (limit == 1) { tmp += "Mana" }
               if (limit == 2) { tmp += "Endurance" }
-              printBuffer += "Return " + (base1 / 10) + "% of Spell Damage as" + tmp + (max > 0 ? ", Max Per Hit: " + max + ")" : "")
+              printBuffer += "Return " + (base / 10) + "% of Spell Damage as" + tmp + (max > 0 ? ", Max Per Hit: " + max + ")" : "")
               break;
 
             case 458:
@@ -2877,7 +2877,7 @@ export default {
               printBuffer += this.getFormatStandard("Damage Shield Taken", "%", value_min, value_max, minlvl, maxlvl)
               break;
 
-            case 469: //TODO need spell group defines
+            case 469: //TODO need spell group defines need query
               printBuffer += "Cast: Highest Rank of [Group " + limit + "]" + (base < 100 ? " (" + base + "% Chance) (Only one effect casts)" : "")
               break;
 
@@ -2886,7 +2886,7 @@ export default {
               break;
 
             case 471:
-              printBuffer += this.getFormatStandard("Chance to Repeat Primary Hand Round", "%", value_min, value_max, minlvl, maxlvl) + (limit ? " with " + limit " % Damage Bonus" : "")
+              printBuffer += this.getFormatStandard("Chance to Repeat Primary Hand Round", "%", value_min, value_max, minlvl, maxlvl) + (limit ? " with " + limit + " % Damage Bonus" : "")
 
             case 472:
               printBuffer += "Buy AA Rank (" + base + ")"
@@ -2901,10 +2901,98 @@ export default {
               break;
 
             case 475:
-              printBuffer += "Cast: " + (await this.getSpellName(limit)) + " if Not Cast By Item Click" + (base ? "(Chance " + base + "%)"
+              printBuffer += "Cast: " + (await this.getSpellName(limit)) + " if Not Cast By Item Click" + (base ? " (Chance " + base + "%)" : "")
               break;
 
-          }
+            case 476:
+              if (base == 0) { tmp += "2H Weapons" }
+              if (base == 1) { tmp += "Shields" }
+              if (base == 2) { tmp += "Dual Wield" }
+              printBuffer +=  "Weapon Stance: Apply spell" + (await this.getSpellName(limit)) + " when using " + tmp
+              break;
+
+            case 477:
+              printBuffer += "Move to Top of Rampage List (" + base + "% Chance)"
+              break;
+
+            case 478:
+              printBuffer += "Move to Bottom of Rampage List (" + base + "% Chance)"
+              break;
+
+            case 479:
+              printBuffer += "Limit Effect: " + DB_SPA[limit] + " greater than " + base
+              break;
+
+            case 480:
+              printBuffer += "Limit Effect: " + DB_SPA[limit] + " less than " + base
+              break;
+
+            case 481:
+              printBuffer += "Cast: " + (await this.getSpellName(limit)) + " if Hit By Spell" + (base < 100 ? "(" + base + "% Chance)" : "")
+              break;
+
+            case 482:
+              printBuffer += this.getFormatStandard("Base " + DB_SKILLS[limit] + " Damage", "%", value_min, value_max, minlvl, maxlvl)
+              break;
+
+            case 483:
+              printBuffer += this.getFocusPercentRange("Spell Damage Taken", base, limit, false); + "(v2)"
+              break;
+
+            case 484:
+              printBuffer += this.getFormatStandard("Spell Damage Taken Amount", "", value_min, value_max, minlvl, maxlvl) + "(After Crit)"
+              break;
+
+            case 485:
+              printBuffer += "Limit Caster Class: " + DB_CLASSES_SHORT[base >> 1] + "(Outgoing Focus Limit)"
+              break;
+
+            case 486:
+              printBuffer += "Limit Caster: " + (base == 0 ? "Exclude " : "") + "Self"
+              break;
+
+            case 487:
+              printBuffer += this.getFormatStandard(DB_SKILLS[limit] + " Skill Cap with Recipes", "", value_min, value_max, minlvl, maxlvl) + "(After Crit)"
+              break;
+
+            case 488:
+              printBuffer += this.getFormatStandard("Push Taken", "%", -value_min, -value_max, minlvl, maxlvl)
+              break;
+
+            case 489:
+              printBuffer += this.getFormatStandard("Endurance Regen Cap", "", value_min, value_max, minlvl, maxlvl)
+              break;
+
+            case 490:
+              printBuffer += "Limit Min Recast: " + (base/1000) + "s"
+              break;
+
+            case 491:
+              printBuffer += "Limit Max Recast: " + (base/1000) + "s"
+              break;
+
+            case 492:
+              printBuffer +=  "Limit Min Endurance Cost: " + base
+              break;
+
+            case 493:
+              printBuffer +=  "Limit Max Endurance Cost: " + base
+              break;
+
+            case 494:
+              printBuffer += this.getFormatStandard("Pet ATK", "", value_min, value_max, minlvl, maxlvl)
+              break;
+
+            case 495:
+              printBuffer +=  "Limit Max Duration: " + (base * 6)
+              break;
+
+            case 496:
+              printBuffer += this.getFormatStandard("Critical " + DB_SKILLS[limit] + " Damage", "%", value_min, value_max, minlvl, maxlvl) + " of Base Damage (Non Stacking)"
+              break;
+
+
+           }
           if (printBuffer !== "") {
 
             effectsInfo.push("Slot " + effectIndex + ": &nbsp " + printBuffer)
