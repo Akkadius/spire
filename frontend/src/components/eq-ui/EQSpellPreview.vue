@@ -1682,18 +1682,15 @@ export default {
               break;
 
             case 184:
-              tmp += (limit >= 0) ? " with " + DB_SKILLS[limit] : ""
-              printBuffer += this.getFormatStandard("Chance to Hit", "%", value_min, value_max, minlvl, maxlvl) + tmp
+              printBuffer += this.getFormatStandard("Chance to Hit", "%", value_min, value_max, minlvl, maxlvl) + (limit >= 0 ? " with " + DB_SKILLS[limit] : "")
               break;
 
             case 185:
-              tmp += (limit >= 0) ? " with " + DB_SKILLS[limit] : " with all skills"
-              printBuffer += this.getFormatStandard("Hit Damage", "%", value_min, value_max, minlvl, maxlvl) + tmp
+              printBuffer += this.getFormatStandard(DB_SKILLS[limit] + " Damage", "%", value_min, value_max, minlvl, maxlvl)
               break;
 
             case 186:
-              tmp += (limit >= 0) ? " with " + DB_SKILLS[limit] : " with all skills"
-              printBuffer += this.getFormatStandard("Min Hit Damage", "%", value_min, value_max, minlvl, maxlvl) + tmp
+              printBuffer += this.getFormatStandard("Min " + DB_SKILLS[limit] + " Damage", "%", value_min, value_max, minlvl, maxlvl)
               break;
 
             case 187:
@@ -2100,7 +2097,7 @@ export default {
               break;
 
             case 286:
-              printBuffer += this.getFormatStandard("Spell Damage", "", value_min, value_max, minlvl, maxlvl) + " (before crit)"
+              printBuffer += this.getFormatStandard("Spell Damage Amount", "", value_min, value_max, minlvl, maxlvl) + " (before crit)"
               break;
 
             case 287:
@@ -2783,6 +2780,128 @@ export default {
 
             case 445:
               printBuffer += "Grant " + base + "Mercenary Slots"
+              break;
+
+            case 446:
+              printBuffer += "Buff Blocker A (" + base + ")"
+              break;
+
+            case 447:
+              printBuffer += "Buff Blocker B (" + base + ")"
+              break;
+
+            case 448:
+              printBuffer += "Buff Blocker C (" + base + ")"
+              break;
+
+            case 449:
+              printBuffer += "Buff Blocker D (" + base + ")"
+              break;
+
+            case 450:
+              printBuffer += "Absorb DoT Damage: " + base + "%" + (limit > 0 ? "Max Per Hit: " + limit : "") + (max > 0 ? " Total: " + max : "")
+              break;
+
+            case 451:
+              printBuffer += "Absorb Melee Damage: " + base + "% over " + limit + + (max > 0 ? " Total: " + max : "")
+              break;
+
+            case 452:
+              printBuffer += "Absorb Spell Damage: " + base + "% over " + limit + + (max > 0 ? " Total: " + max : "")
+              break;
+
+            case 453:
+              printBuffer += "Cast: " + (await this.getSpellName(base)) + " if " + limit + " Melee Damage Taken in Single Hit"
+              break;
+
+            case 454:
+              printBuffer += "Cast: " + (await this.getSpellName(base)) + " if " + limit + " Spell Damage Taken in Single Hit"
+              break;
+
+            case 455:
+              printBuffer += this.getFormatStandard("Current Hate", "%", value_min, value_max, minlvl, maxlvl)
+              break;
+
+            case 456:
+              printBuffer += this.getFormatStandard("Current Hate", "%", value_min, value_max, minlvl, maxlvl) + pertick
+              break;
+
+            case 457:
+              if (limit == 0) { tmp += "HP" }
+              if (limit == 1) { tmp += "Mana" }
+              if (limit == 2) { tmp += "Endurance" }
+              printBuffer += "Return " + (base1 / 10) + "% of Spell Damage as" + tmp + (max > 0 ? ", Max Per Hit: " + max + ")" : "")
+              break;
+
+            case 458:
+              printBuffer += this.getFormatStandard("Faction Hit", "%", value_min, value_max, minlvl, maxlvl)
+              break;
+
+            case 459:
+              printBuffer += this.getFormatStandard(DB_SKILLS[limit] + " Damage", "%", value_min, value_max, minlvl, maxlvl) + " (v2)"
+              break;
+
+            case 460:
+              printBuffer += "Limit Type: Include Non-Focusable"
+              break;
+
+            case 461:
+              printBuffer += this.getFocusPercentRange("Spell Damage", base, limit, false) + " (Before Crit)"
+              break;
+
+            case 462:
+              printBuffer += this.getFormatStandard("Spell Damage Amount", "", value_min, value_max, minlvl, maxlvl) + " (After Crit)"
+              break;
+
+            case 463:
+              printBuffer += "Melee Shielding: " + base + "%"
+              break;
+
+            case 464:
+              printBuffer += this.getFormatStandard("Pet Chance to Rampage", "%", value_min, value_max, minlvl, maxlvl) + (limit ? " with " + limit + "% of Damage" : "")
+              break;
+
+            case 465:
+              printBuffer += this.getFormatStandard("Pet Chance to AE Rampage", "%", value_min, value_max, minlvl, maxlvl) + (limit ? " with " + limit + "% of Damage" : "")
+              break;
+
+            case 466:
+              printBuffer += this.getFormatStandard("Pet Chance to Flurry on Double Attack", "%", value_min, value_max, minlvl, maxlvl)
+              break;
+
+            case 467:
+              printBuffer += this.getFormatStandard("Damage Shield Taken", "", value_min, value_max, minlvl, maxlvl)
+              break;
+
+            case 468:
+              printBuffer += this.getFormatStandard("Damage Shield Taken", "%", value_min, value_max, minlvl, maxlvl)
+              break;
+
+            case 469: //TODO need spell group defines
+              printBuffer += "Cast: Highest Rank of [Group " + limit + "]" + (base < 100 ? " (" + base + "% Chance) (Only one effect casts)" : "")
+              break;
+
+            case 470:
+              printBuffer += "Cast: Highest Rank of [Group " + limit + "]" + (base < 100 ? " (" + base + "% Chance)" : "")
+              break;
+
+            case 471:
+              printBuffer += this.getFormatStandard("Chance to Repeat Primary Hand Round", "%", value_min, value_max, minlvl, maxlvl) + (limit ? " with " + limit " % Damage Bonus" : "")
+
+            case 472:
+              printBuffer += "Buy AA Rank (" + base + ")"
+              break;
+
+            case 473:
+              printBuffer += this.getFormatStandard("Chance to Double Backstab From Front", "%", value_min, value_max, minlvl, maxlvl)
+              break;
+
+            case 474:
+              printBuffer += this.getFormatStandard("Pet Critical Hit Damage", "%", value_min, value_max, minlvl, maxlvl) + " of Base Damage"
+              break;
+
+            case 475:
+              printBuffer += "Cast: " + (await this.getSpellName(limit)) + " if Not Cast By Item Click" + (base ? "(Chance " + base + "%)"
               break;
 
           }
