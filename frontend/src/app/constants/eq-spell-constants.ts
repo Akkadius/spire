@@ -1130,3 +1130,22 @@ export const DB_SPELL_NEGATETYPE = {
   "5": "Spell and AA",
   "6": "Item and AA",
 }
+
+export const DB_SPELL_NUMHITSTYPE = {
+
+  "0": "None",
+  "1": "Incoming Hit Attempts",
+  "2": "Outgoing Hit Attempts",
+  "3": "Incoming Spells",
+  "4": "Outgoing Spells",
+  "5": "Outgoing Hit Successes",
+  "6": "Incoming Hit Successes",
+  "7": "Matching Spells",
+  "8": "Incoming Hits Or Spells",
+  "9": "Reflected Spells",
+  "10": "Defensive Proc Casts",
+  "11": "Offensive Proc Casts",
+  "13": "Incoming Hits Or Spells Or DS",
+  "14": "Outgoing Hits Affected By Buff",
+  "15": "Tradeskill Combines",
+}
