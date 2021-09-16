@@ -670,9 +670,9 @@ export default {
       let printBuffer = modifier + effect_name
 
       if (value_min !== value_max) {
-        printBuffer += " by " + Math.trunc(Math.abs(value_min))+ type + " (L" + minlvl + ") to " + Math.trunc(Math.abs(value_max) )+ type + " (L" + maxlvl + ")";
+        printBuffer += " by " + (Math.abs(value_min))+ type + " (L" + minlvl + ") to " + (Math.abs(value_max) )+ type + " (L" + maxlvl + ")";
       } else {
-        printBuffer += " by " + Math.trunc(Math.abs(value_max)) + type
+        printBuffer += " by " + (Math.abs(value_max)) + type
       }
 
       return printBuffer;
@@ -889,12 +889,11 @@ export default {
               break;
 
             case 21:
-              let pvpstun = ""
               if (base !== limit && limit !== 0) {
-                pvpstun += " ( " + (limit / 1000) + " in PvP)"
+                tmp += " ( " + (limit / 1000) + " in PvP)"
               }
 
-              printBuffer += "Stun for " + (base / 1000) + " sec" + pvpstun + this.getUpToMaxLvl(max)
+              printBuffer += "Stun for " + (base / 1000) + " sec" + tmp + this.getUpToMaxLvl(max)
               break;
 
             case 22:
@@ -2991,8 +2990,125 @@ export default {
               printBuffer += this.getFormatStandard("Critical " + DB_SKILLS[limit] + " Damage", "%", value_min, value_max, minlvl, maxlvl) + " of Base Damage (Non Stacking)"
               break;
 
+            case 497:
+              printBuffer += "Limit: No Procs or Twincast"
+              break;
 
-           }
+            case 498:
+              printBuffer += this.getFormatStandard("Chance of " + limit + " Additional 1H Attacks", "%", value_min, value_max, minlvl, maxlvl)
+              break;
+
+            case 499:
+              printBuffer += this.getFormatStandard("Chance of " + limit + " Secondary 1H Attack", "%", value_min, value_max, minlvl, maxlvl)
+              break;
+
+            case 500:
+              printBuffer += this.getFocusPercentRange("Spell Haste", base, limit, false) + "(No max reduction limit)"
+              break;
+
+            case 501:
+              printBuffer += (base < 0 ? "Increase" : "Decrease") + " Casting Times by " +  Math.abs(base / 1000) + "s"
+              break;
+
+            case 502:
+              if (base !== limit && limit !== 0) {
+                tmp += " ( " + (limit / 1000) + " in PvP)"
+              }
+              printBuffer += "Stun and Fear " + (base / 1000) + " sec" + tmp + this.getUpToMaxLvl(max)
+              break;
+
+            case 503:
+              printBuffer += this.getFormatStandard( (limit == 0 ? "Rear" : "Frontal") + " Arc Melee Damage", "%", value_min/10, value_max/10, minlvl, maxlvl)
+              break;
+
+            case 503:
+              printBuffer += this.getFormatStandard( (limit == 0 ? "Rear" : "Frontal") + " Arc Melee Damage Amount", "", value_min/10, value_max/10, minlvl, maxlvl)
+              break;
+
+            case 505:
+              printBuffer += this.getFormatStandard( (limit == 0 ? "Rear" : "Frontal") + " Arc Melee Damage Taken", "%", value_min/10, value_max/10, minlvl, maxlvl)
+              break;
+
+            case 506:
+              printBuffer += this.getFormatStandard( (limit == 0 ? "Rear" : "Frontal") + " Arc Melee Damage Taken Amount", "", value_min/10, value_max/10, minlvl, maxlvl)
+              break;
+
+            case 507:
+              printBuffer += this.getFocusPercentRange("Spell Power", base, limit, false) + " (Focus Spell DOT, DD and Healing)"
+              break;
+
+            case 509:
+              printBuffer += (limit < 0 ? "Decrease" : "Increase") + " Current HP by " + (Math.abs(limit) / 10) + "% of Caster Current HP ( " + (Math.abs(base) / 10) + "% Life Burn)"
+              break;
+
+            case 510:
+              printBuffer += this.getFormatStandard("Incoming Resist Modifier", "%", value_min, value_max, minlvl, maxlvl)
+              break;
+
+             case 511:
+               printBuffer += "Limit Min Delay Between Trigger: " + (limit/1000) + "s" + " (Max Triggers: " + base  +")"
+               break;
+
+            case 512:
+              printBuffer += "Proc Timer: " + (limit/1000) + "s" + " (Max Triggers: " + base  +")"
+              break;
+
+            case 513:
+              printBuffer += this.getFormatStandard("Max Mana", "%", value_min/100, value_max/100, minlvl, maxlvl)
+              break;
+
+            case 514:
+              printBuffer += this.getFormatStandard("Max Endurance", "%", value_min/100, value_max/100, minlvl, maxlvl)
+              break;
+
+            case 515:
+              printBuffer += this.getFormatStandard("Avoidance AC", "%", value_min/1000, value_max/1000, minlvl, maxlvl)
+              break;
+
+            case 516:
+              printBuffer += this.getFormatStandard("Mitigation AC", "%", value_min/1000, value_max/1000, minlvl, maxlvl)
+              break;
+
+            case 517:
+              printBuffer += this.getFormatStandard("ATK Offense", "%", value_min/1000, value_max/1000, minlvl, maxlvl)
+              break;
+
+            case 518:
+              printBuffer += this.getFormatStandard("ATK Accuracy", "%", value_min/1000, value_max/1000, minlvl, maxlvl)
+              break;
+
+            case 519:
+              printBuffer += this.getFormatStandard("Luck", "", value_min, value_max, minlvl, maxlvl)
+              break;
+
+            case 520:
+              printBuffer += this.getFormatStandard("Luck", "%", value_min, value_max, minlvl, maxlvl)
+              break;
+
+            case 521:
+              printBuffer += "Absorb Damage using Endurance: "  + (base / 100) + (limit != 10000 ? (limit / 10000) + " End per 1 HP)" : "") + (max > 0 ? ", Max Per Hit: " + max : "")
+              break;
+
+            case 522:
+              printBuffer += this.getFormatStandard("Current Mana", "%", value_min/100, value_max/100, minlvl, maxlvl) + " up to " + max
+              break;
+
+            case 523:
+              printBuffer += this.getFormatStandard("Current Endurance", "%", value_min/100, value_max/100, minlvl, maxlvl) + " up to " + max
+              break;
+
+            case 524:
+              printBuffer += this.getFormatStandard("Current HP", "%", value_min, value_max, minlvl, maxlvl) + " up to " + max + pertick
+              break;
+
+            case 525:
+              printBuffer += this.getFormatStandard("Current Mana", "%", value_min, value_max, minlvl, maxlvl) + " up to " + max + pertick
+              break;
+
+            case 526:
+              printBuffer += this.getFormatStandard("Current Endurance", "%", value_min, value_max, minlvl, maxlvl) + " up to " + max + pertick
+              break;
+          }
           if (printBuffer !== "") {
 
             effectsInfo.push("Slot " + effectIndex + ": &nbsp " + printBuffer)
