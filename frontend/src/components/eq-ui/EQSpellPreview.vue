@@ -342,19 +342,18 @@ export default {
       return DB_SPELL_EFFECTS[effectId] ? DB_SPELL_EFFECTS[effectId] : "??? (" + effectId + ")"
     },
 
- // (int calc, int base1, int max, int tick, int level = MAX_LEVEL)
-    calcSpellEffectValue2(calc, base1, max, tick, level) {
+    calcSpellEffectValue(calc, base, max, tick, level) {
 
       if (calc == 0) {
-        return base1;
+        return base;
       }
 
       if (calc == 100)
       {
-        if (max > 0 && base1 > max) {
+        if (max > 0 && base > max) {
           return max;
         }
-        return base1;
+        return base;
       }
 
       let change = 0;
@@ -428,7 +427,7 @@ export default {
           change = -12 * tick;
           break;
         case 123:
-          change = (Math.abs(max) - Math.abs(base1)) / 2;
+          change = (Math.abs(max) - Math.abs(base)) / 2;
           break;
         case 124:
           if (level > 50) change = (level - 50);
@@ -474,9 +473,7 @@ export default {
           break;
 
         case 3000:
-          // todo: this appears to be scaled by the targets level
-          // base1 value how it affects a level 100 target
-          return base1;
+          return base;
 
         default:
           if (calc > 0 && calc < 1000) {
@@ -498,32 +495,32 @@ export default {
           break;
       }
 
-      let value = Math.abs(base1) + change;
+      let value = Math.abs(base) + change;
 
       if (max != 0 && value > Math.abs(max)) {
         value = Math.abs(max);
       }
 
-      if (base1 < 0) {
+      if (base < 0) {
         value = -value;
       }
 
       return value;
     },
 
-    CalcValueRange(calc, base1, max, spa, duration, level)
+    CalcValueRange(calc, base, max, spa, duration, level)
     {
       let printBuffer = ""
-      let start = this.calcSpellEffectValue2(calc, base1, max, 1, level);
-      let finish = Math.abs(this.calcSpellEffectValue2(calc, base1, max, duration, level));
+      let start = this.calcSpellEffectValue(calc, base, max, 1, level);
+      let finish = Math.abs(this.calcSpellEffectValue(calc, base, max, duration, level));
 
       let type = Math.abs(start) < Math.abs(finish) ? "Growing" : "Decaying";
 
       if (calc == 123){
-        if (base1 < 0){
+        if (base < 0){
           max = max * -1;
         }
-        printBuffer = " (Random: " + Math.abs(base1) + " to " + Math.abs(max) +  ")"
+        printBuffer = " (Random: " + Math.abs(base) + " to " + Math.abs(max) +  ")"
       }
 
       if (calc == 107) {
@@ -563,97 +560,6 @@ export default {
       }
 
       return printBuffer;
-    },
-
-    calcSpellEffectValue(form, base, max, lvl) {
-      let sign   = 1;
-      let ubase  = Math.abs(base);
-      let result = 0;
-      if ((max < base) && (max !== 0)) {
-        sign = -1;
-      }
-      switch (form) {
-        case 0:
-        case 100:
-          result = ubase;
-          break;
-        case 101:
-          result = ubase + sign * (lvl / 2);
-          break;
-        case 102:
-          result = ubase + sign * lvl;
-          break;
-        case 103:
-          result = ubase + sign * lvl * 2;
-          break;
-        case 104:
-          result = ubase + sign * lvl * 3;
-          break;
-        case 105:
-        case 107:
-          result = ubase + sign * lvl * 4;
-          break;
-        case 108:
-          result = Math.floor(ubase + sign * lvl / 3);
-          break;
-        case 109:
-          result = Math.floor(ubase + sign * lvl / 4);
-          break;
-        case 110:
-          result = Math.floor(ubase + lvl / 5);
-          break;
-        case 111:
-          result = ubase + 5 * (lvl - 16);
-          break;
-        case 112:
-          result = ubase + 8 * (lvl - 24);
-          break;
-        case 113:
-          result = ubase + 12 * (lvl - 34);
-          break;
-        case 114:
-          result = ubase + 15 * (lvl - 44);
-          break;
-        case 115:
-          result = ubase + 15 * (lvl - 54);
-          break;
-        case 116:
-          result = Math.floor(ubase + 8 * (lvl - 24));
-          break;
-        case 117:
-          result = ubase + 11 * (lvl - 34);
-          break;
-        case 118:
-          result = ubase + 17 * (lvl - 44);
-          break;
-        case 119:
-          result = Math.floor(ubase + lvl / 8);
-          break;
-        case 121:
-          result = Math.floor(ubase + lvl / 3);
-          break;
-
-        default:
-          if (form < 100) {
-            result = ubase + (lvl * form);
-          }
-      } // end switch
-      if (max !== 0) {
-        if (sign === 1) {
-          if (result > max) {
-            result = max;
-          }
-        } else {
-          if (result < max) {
-            result = max;
-          }
-        }
-      }
-      if ((base < 0) && (result > 0)) {
-        result *= -1;
-      }
-
-      return result;
     },
 
     getFormatStandard(effect_name, type, value_min, value_max, minlvl, maxlvl){
@@ -728,9 +634,6 @@ export default {
 
       let effectsInfo = []
 
-      // TODO: Remove
-      let csv = false
-
       // TODO: Handle elsewhere
       let serverMaxLevel = 100;
 
@@ -738,8 +641,6 @@ export default {
 
         const spell     = this.spellData
         let printBuffer = "";
-        let name        = ""
-        let v           = ""
         let tmp         = ""
         let pertick     = spell["buffduration"] ? " per tick " : ""
 
@@ -750,6 +651,7 @@ export default {
 
         if (spell["effectid_" + effectIndex] !== 254) {
 
+          //TODO For some reason not getting level currently from spell
           //let maxlvl = spell["effect_base_value_" + effectIndex];
           let maxlvl = serverMaxLevel;
           let minlvl = 1; // make this 255; FIX THIS
@@ -760,24 +662,8 @@ export default {
             }
           }
 
-          /* OLD
-          let value_min = this.calcSpellEffectValue(
-            spell["formula_" + effectIndex],
-            spell["effect_base_value_" + effectIndex],
-            spell["max_" + effectIndex],
-            minlvl
-          );
-
-          let value_max = this.calcSpellEffectValue(
-            spell["formula_" + effectIndex],
-            spell["effect_base_value_" + effectIndex],
-            spell["max_" + effectIndex],
-            serverMaxLevel
-          );
-          */
-
-          let value_min = this.calcSpellEffectValue2( spell["formula_" + effectIndex], base, max, 1,minlvl);
-          let value_max = this.calcSpellEffectValue2( spell["formula_" + effectIndex], base, max, 1,serverMaxLevel);
+          let value_min = this.calcSpellEffectValue( spell["formula_" + effectIndex], base, max, 1,minlvl);
+          let value_max = this.calcSpellEffectValue( spell["formula_" + effectIndex], base, max, 1,serverMaxLevel);
 
 
           if ((value_min < value_max) && (value_max < 0)
@@ -3109,17 +2995,9 @@ export default {
               printBuffer += this.getFormatStandard("Current Endurance", "%", value_min, value_max, minlvl, maxlvl) + " up to " + max + pertick
               break;
           }
+
           if (printBuffer !== "") {
-
             effectsInfo.push("Slot " + effectIndex + ": &nbsp " + printBuffer)
-/*
-            " &nbsp &nbsp &nbsp [ * DEBUG * " + "(ID: " + spell["effectid_" + effectIndex] + ") "
-            +   "(Base:" +base + ") "+ "(Limit: " + limit + ") "+ "(max: " + max + ")]"
-            +   " Min: " + value_min + " Max: " + value_max + " MinLv: " + minlvl + " MaxLv: " + maxlvl
-            + "  [TEST]  " + 0 + " :End"
-            )
-*/
-
           }
 
           if (this.debugSpellEffects && printBuffer !== "") {
