@@ -51,7 +51,7 @@
         <td class="spell-field-label">Mana</td>
         <td> {{ spellData["mana"] }}</td>
       </tr>
-      <tr v-if="spellData['skill'] < 52 && getDatabaseSkillName(spellData['skill']) !== ''">
+      <tr v-if="spellData['skill'] < 77 && getDatabaseSkillName(spellData['skill']) !== ''">
         <td class="spell-field-label">Skill</td>
         <td> {{ getDatabaseSkillName(spellData["skill"]) }}</td>
       </tr>
@@ -505,7 +505,7 @@ export default {
         value = -value;
       }
 
-      return value;
+      return Math.trunc(value);
     },
 
     CalcValueRange(calc, base, max, spa, duration, level)
@@ -576,7 +576,7 @@ export default {
       let printBuffer = modifier + effect_name
 
       if (value_min !== value_max) {
-        printBuffer += " by " + (Math.abs(value_min))+ type + " (L" + minlvl + ") to " + (Math.abs(value_max) )+ type + " (L" + maxlvl + ")";
+        printBuffer += " by " + (Math.abs(value_min))+ type + " (L" + minlvl + ") to " + (Math.abs(value_max) )+ type + " (L" + maxlvl + ")"
       } else {
         printBuffer += " by " + (Math.abs(value_max)) + type
       }
@@ -1700,8 +1700,7 @@ export default {
               break;
 
             case 216:
-              tmp += (limit >= 0) ? " with " + DB_SKILLS[limit] : ""
-              printBuffer += this.getFormatStandard("Accuracy", "", value_min, value_max, minlvl, maxlvl) + tmp
+              printBuffer += this.getFormatStandard("Accuracy", "", value_min, value_max, minlvl, maxlvl) + (limit >= 0 ? " with " + DB_SKILLS[limit] : "")
               break;
 
             case 217:
@@ -1770,7 +1769,7 @@ export default {
 
             case 232:
               tmp += limit ? (await this.getSpellName(limit)) : (await this.getSpellName(4789))
-              printBuffer += "Cast: " + tmp + " on Death (" + base + "% Chance)"
+              printBuffer += "Cast: " + tmp + " on Death (" + base + "% Chance Divine Intervention)"
               break;
 
             case 233:
@@ -1994,7 +1993,7 @@ export default {
               break;
 
             case 289:
-              printBuffer += "Cast:" + (await this.getSpellName(base)) + "on Duration Fade"
+              printBuffer += "Cast: " + (await this.getSpellName(base)) + " on Duration Fade"
               break;
 
             case 290:
@@ -2136,10 +2135,7 @@ export default {
               break;
 
             case 323:
-              if (limit != 0) {
-                tmp += " with " + limit + " % Rate Mod"
-              }
-              printBuffer += "Add Defensive Proc: " + (await this.getSpellName(spell["effect_base_value_" + effectIndex])) + tmp
+              printBuffer += "Add Defensive Proc: " + (await this.getSpellName(spell["effect_base_value_" + effectIndex])) + (limit ? " with " + limit + " % Rate Mod" : "")
               break;
 
             case 324:
@@ -2205,8 +2201,8 @@ export default {
               printBuffer += "Cast: " + (await this.getSpellName(limit)) + "on Spell Use (" + base + "% Chance)"
               break;
 
-            case 340:
-              printBuffer += "Cast: " + (await this.getSpellName(limit)) + (base < 100 ? " (" + base + "% Chance) (Only one effect casts)" : "")
+            case 340: //Only one effect casts if multiple 340s in spell
+              printBuffer += "Cast: " + (await this.getSpellName(limit)) + (base < 100 ? " (" + base + "% Chance)" : "")
               break;
 
             case 341:
@@ -2354,7 +2350,7 @@ export default {
               break;
 
             case 377:
-              printBuffer += "Cast: " + (await this.getSpellName(base)) + "on Duration Finished"
+              printBuffer += "Cast: " + (await this.getSpellName(base)) + " on Duration Finished"
               break;
 
             case 378:
@@ -2762,8 +2758,8 @@ export default {
               printBuffer += this.getFormatStandard("Damage Shield Taken", "%", value_min, value_max, minlvl, maxlvl)
               break;
 
-            case 469: //TODO need spell group defines need query
-              printBuffer += "Cast: Highest Rank of [Group " + limit + "]" + (base < 100 ? " (" + base + "% Chance) (Only one effect casts)" : "")
+            case 469: //TODO need spell group defines need query /Only one effect casts if multiple 340s in spell
+              printBuffer += "Cast: Highest Rank of [Group " + limit + "]" + (base < 100 ? " (" + base + "% Chance) " : "")
               break;
 
             case 470:
