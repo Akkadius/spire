@@ -361,11 +361,11 @@ export default {
 
     calcSpellEffectValue(calc, base, max, tick, level) {
 
-      if (calc == 0) {
+      if (calc === 0) {
         return base;
       }
 
-      if (calc == 100) {
+      if (calc === 100) {
         if (max > 0 && base > max) {
           return max;
         }
@@ -512,7 +512,7 @@ export default {
 
       let value = Math.abs(base) + change;
 
-      if (max != 0 && value > Math.abs(max)) {
+      if (max !== 0 && value > Math.abs(max)) {
         value = Math.abs(max);
       }
 
@@ -2111,7 +2111,7 @@ export default {
               break;
 
             case 311:
-              printBuffer += "Limit Type: " + (base == 1 ? "Include" : "Exclude") + " Combat Skills"
+              printBuffer += "Limit Type: " + (base === 1 ? "Include" : "Exclude") + " Combat Skills"
               break;
 
             case 312:
