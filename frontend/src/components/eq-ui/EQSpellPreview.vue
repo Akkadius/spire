@@ -1442,7 +1442,7 @@ export default {
 
             case 149:
               tmp += limit ? limit : spell["formula_" + effectIndex] % 100
-              printBuffer += "Stacking: Overwrite existing spell if slot " + tmp + " is " + DB_SPA[Math.abs(base)] + " and less than " + max
+              printBuffer += "Stacking: Overwrite spell if slot " + tmp + " is " + DB_SPA[Math.abs(base)] + " and less than " + max
               break;
 
             case 150:
@@ -3051,7 +3051,7 @@ export default {
           }
 
           if (printBuffer !== "") {
-            effectsInfo.push("Slot " + effectIndex + ": &nbsp " + printBuffer)
+            effectsInfo.push(util.format("%s) %s", effectIndex, printBuffer))
           }
 
           if (this.debugSpellEffects && printBuffer !== "") {
