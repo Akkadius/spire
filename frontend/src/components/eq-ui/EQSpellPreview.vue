@@ -46,24 +46,31 @@
       <tr v-if="spellData['spell_fades'] !== ''">
         <td class="spell-field-label">When fading</td>
         <td> {{ spellData["spell_fades"] }}</td>
+
       </tr>
       <tr v-if="spellData['mana'] > 0">
         <td class="spell-field-label">Mana</td>
         <td> {{ spellData["mana"] }}</td>
       </tr>
+
+      <tr v-if="spellData['endur_cost'] !== 0 || spellData['endur_upkeep'] !== 0 ">
+        <td class="spell-field-label">Endurance</td>
+        <td> {{ spellData["endur_cost"] }}, Upkeep: {{ spellData["endur_upkeep"] }} per second  </td>
+      </tr>
+
       <tr v-if="spellData['skill'] < 77 && getDatabaseSkillName(spellData['skill']) !== ''">
         <td class="spell-field-label">Skill</td>
         <td> {{ getDatabaseSkillName(spellData["skill"]) }}</td>
       </tr>
-      <tr>
+      <tr v-if="spellData['cast_time'] > 0 || spellData['recovery_time'] > 0 || spellData['recast_time'] > 0">
         <td class="spell-field-label">Casting Time</td>
         <td> {{ (spellData["cast_time"] / 1000) }} sec</td>
       </tr>
-      <tr>
+      <tr v-if="spellData['cast_time'] > 0 || spellData['recovery_time'] > 0 || spellData['recast_time'] > 0">
         <td class="spell-field-label">Recovery Time</td>
         <td> {{ (spellData["recovery_time"] / 1000) }} sec</td>
       </tr>
-      <tr>
+      <tr v-if="spellData['cast_time'] > 0 || spellData['recovery_time'] > 0 || spellData['recast_time'] > 0">
         <td class="spell-field-label">Recast Time</td>
         <td> {{ (spellData["recast_time"] / 1000) }} sec</td>
       </tr>
@@ -629,6 +636,29 @@ export default {
      return printBuffer += modifier + effect_name + " by " + Math.abs(min) + "% to " + Math.abs(max) + "%";
 },
 
+    async getSpellGroupNameById(spellGroupId) {
+
+      const api = (new SpellsNewApi(SpireApiClient.getOpenApiConfig()))
+
+      let filters = [
+        ["spellgroup", "__", spellGroupId],
+      ]
+
+      let wheres = [];
+      filters.forEach((filter) => {
+        wheres.push(util.format("%s%s%s", filter[0], filter[1], filter[2]))
+      })
+
+      const result = await (api.listSpellsNews({limit: 1, where: wheres.join("."), orderBy: "id"}));
+
+      if (result.status == 200) {
+        if (result.data.length > 0) {
+          return result.data[0].name;
+        }
+      }
+
+      return "Unknown Spell Group";
+    },
 
     getSpellEffectInfo: async function () {
 
@@ -654,11 +684,11 @@ export default {
           //TODO For some reason not getting level currently from spell
           //let maxlvl = spell["effect_base_value_" + effectIndex];
           let maxlvl = serverMaxLevel;
-          let minlvl = 1; // make this 255; FIX THIS
+          let minlvl = 255; // make this 255; FIX THIS
 
           for (let classId = 1; classId <= 16; classId++) {
-            if (spell["classes" + classId] < minlvl) {
-              minlvl = spell["classes" + classId];
+            if (spell["classes_" + classId] < minlvl) {
+              minlvl = spell["classes_" + classId];
             }
           }
 
@@ -1077,8 +1107,8 @@ export default {
               printBuffer += "Summon Player"
               break;
 
-            case 83: //TODO teleport
-              //return String.Format("Teleport to {0}", Extra);
+            case 83: //TODO teleport zone enum
+              printBuffer += "Teleport to " + spell["teleport_zone"]
               break;
 
             case 84: // base on emu does damage. Correct?
@@ -1185,7 +1215,7 @@ export default {
               break;
 
             case 104: //TODO clean up, enum for zones
-              if (spell["teleport_zone"] != "") {
+              if (spell["teleport_zone"] !== "") {
                 tmp += spell["teleport_zone"] +
                   " (" + spell["effect_base_value_" + (effectIndex + 1)]
                   + ", " + spell["effect_base_value_" + effectIndex] + ", "
@@ -1331,7 +1361,7 @@ export default {
             case 128:
               printBuffer += this.getFocusPercentRange("Spell Duration", base, limit, false);
               break;
-              ;
+
             case 129:
               printBuffer += this.getFocusPercentRange("Spell Range", base, limit, false);
               break;
@@ -1769,7 +1799,7 @@ export default {
 
             case 232:
               tmp += limit ? (await this.getSpellName(limit)) : (await this.getSpellName(4789))
-              printBuffer += "Cast: " + tmp + " on Death (" + base + "% Chance Divine Intervention)"
+              printBuffer += "Cast: " + tmp + " on Death (" + base + "% Chance Divine Save)"
               break;
 
             case 233:
@@ -2058,13 +2088,9 @@ export default {
               printBuffer += this.getFormatStandard("Chance to Avoid Offhand Riposte", "%", -value_min, -value_max, minlvl, maxlvl)
               break;
 
-            case 305:
-              if (max) {
-                printBuffer += this.getFormatStandard("Offhand Damage Shield Taken", "", value_min, value_max, minlvl, maxlvl)
-              } else {
-                printBuffer += this.getFormatStandard("Offhand Damage Shield Taken", "%", -value_min, -value_max, minlvl, maxlvl)
-              }
-              break;
+            case 305: //Note: Percent decrease damage taken is negative number from AA, but positive number on Spells, there are spells with negative values that increase damage taken.
+               printBuffer += this.getFormatStandard("Offhand Damage Shield Taken", "%", -value_min, -value_max, minlvl, maxlvl)
+               break;
 
             case 306:
               printBuffer += "Wake the Dead: + " + spell["teleport_zone"] + " x " + base + " for " + max + "s"
@@ -2395,7 +2421,15 @@ export default {
               break;
 
             case 385: //TODO get spell group name from id, need to search for first spell in the spellgroup
-              printBuffer += "Limit Spell Group:" + (base >= 0 ? "" : "Exclude ") + Math.abs(base)
+              const spellGroupId = Math.abs(base);
+              const spellGroupName = await this.getSpellGroupNameById(spellGroupId);
+
+              printBuffer += util.format(
+                "Limit Spell Group: %s %s",
+                (base >= 0 ? "" : "Exclude "),
+                spellGroupName
+              )
+
               break;
 
             case 386:
@@ -2636,7 +2670,7 @@ export default {
               break;
 
             case 439:
-              printBuffer += "Add Assasinate Proc with up to " + limit + "Damage" + (base ? " Chance Mod:" + base : "")
+              printBuffer += "Add Assassinate Proc with up to " + limit + "Damage" + (base ? " Chance Mod:" + base : "")
               break;
 
             case 440:
@@ -2817,7 +2851,7 @@ export default {
               break;
 
             case 483:
-              printBuffer += this.getFocusPercentRange("Spell Damage Taken", base, limit, false); + "(v2)"
+              printBuffer += this.getFocusPercentRange("Spell Damage Taken", base, limit, false) + "(v2)"
               break;
 
             case 484:
@@ -3011,7 +3045,7 @@ export default {
       }
 
       return effectsInfo;
-    }
+    },
   },
   props: {
     spellData: Object
