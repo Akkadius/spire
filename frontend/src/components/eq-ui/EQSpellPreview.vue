@@ -2616,6 +2616,7 @@ export default {
               } else {
                 printBuffer += "Alter Vision: Base1=" + base + " Base2=" + limit + " Max=" + max
               }
+              break;
 
             case 432:
               printBuffer += this.getFormatStandard("Trophy Slots", "", value_min, value_max, minlvl, maxlvl)
