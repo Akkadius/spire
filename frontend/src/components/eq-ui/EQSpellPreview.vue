@@ -2817,6 +2817,7 @@ export default {
 
             case 471:
               printBuffer += this.getFormatStandard("Chance to Repeat Primary Hand Round", "%", value_min, value_max, minlvl, maxlvl) + (limit ? " with " + limit + " % Damage Bonus" : "")
+              break;
 
             case 472:
               printBuffer += "Buy AA Rank (" + base + ")"
