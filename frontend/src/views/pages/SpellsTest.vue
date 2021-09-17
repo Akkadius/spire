@@ -34,7 +34,7 @@
               placeholder="Limit"
             >
           </eq-window>
-          
+
           <div class="row" style="justify-content: center">
             <div v-for="(spell, index) in spells" :key="spell.id" style="display: inline-block; vertical-align: top">
               <eq-window style="margin-right: 10px; width: auto; height: 90%">
