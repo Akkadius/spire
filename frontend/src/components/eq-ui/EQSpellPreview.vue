@@ -2204,6 +2204,7 @@ export default {
 
             case 334:
               printBuffer += this.getFormatStandard("Current HP", "%", value_min, value_max, minlvl, maxlvl) + pertick + special_range + " (If Target Not Moving)";
+              break;
 
             case 335:
               printBuffer += "Block Next Spell" + (base < 100 ? " (" + base + "% Chance)" : "")
