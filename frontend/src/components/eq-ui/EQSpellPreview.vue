@@ -20,7 +20,7 @@
       <tr style="vertical-align:middle !important">
       </tr>
       <tr v-if="spellData['id'] !== ''">
-        <td class="spell-field-label">Spell ID: </td>
+        <td class="spell-field-label">Spell ID:</td>
         <td> {{ spellData["id"] }}</td>
       </tr>
       <tr v-if="getClasses() !== ''">
@@ -55,7 +55,7 @@
 
       <tr v-if="spellData['endur_cost'] !== 0 || spellData['endur_upkeep'] !== 0 ">
         <td class="spell-field-label">Endurance</td>
-        <td> {{ spellData["endur_cost"] }}, Upkeep: {{ spellData["endur_upkeep"] }} per second  </td>
+        <td> {{ spellData["endur_cost"] }}, Upkeep: {{ spellData["endur_upkeep"] }} per second</td>
       </tr>
 
       <tr v-if="spellData['skill'] < 77 && getDatabaseSkillName(spellData['skill']) !== ''">
@@ -151,17 +151,27 @@
 
 <script>
 
-import {App} from "@/constants/app";
+import {App}                          from "@/constants/app";
 import {DB_CLASSES, DB_CLASSES_SHORT} from "@/app/constants/eq-classes-constants";
-import {DB_SKILLS, DB_BARD_SKILLS} from "@/app/constants/eq-skill-constants";
-import {DB_SPELL_EFFECTS, DB_SPA, DB_SPELL_RESISTS, DB_SPELL_TARGETS, DB_SPELL_TARGET_RESTRICTION, DB_SPELL_WORN_ATTRIBUTE_CAP, DB_SPELL_PETCMDS,DB_SPELL_NEGATETYPE, DB_SPELL_NUMHITSTYPE} from "@/app/constants/eq-spell-constants";
-import * as util from "util";
-import {DB_RACE_NAMES} from "@/app/constants/eq-races-constants";
-import {ItemApi, SpellsNewApi} from "@/app/api";
-import {SpireApiClient} from "@/app/api/spire-api-client";
-import EqWindow from "@/components/eq-ui/EQWindow";
-import EqDebug from "@/components/eq-ui/EQDebug";
-import {BODYTYPES} from "@/app/constants/eq-bodytype-constants";
+import {DB_BARD_SKILLS, DB_SKILLS}    from "@/app/constants/eq-skill-constants";
+import {
+  DB_SPA,
+  DB_SPELL_EFFECTS,
+  DB_SPELL_NEGATETYPE,
+  DB_SPELL_NUMHITSTYPE,
+  DB_SPELL_PETCMDS,
+  DB_SPELL_RESISTS,
+  DB_SPELL_TARGET_RESTRICTION,
+  DB_SPELL_TARGETS,
+  DB_SPELL_WORN_ATTRIBUTE_CAP
+}                                     from "@/app/constants/eq-spell-constants";
+import * as util                      from "util";
+import {DB_RACE_NAMES}                from "@/app/constants/eq-races-constants";
+import {ItemApi, SpellsNewApi}        from "@/app/api";
+import {SpireApiClient}               from "@/app/api/spire-api-client";
+import EqWindow                       from "@/components/eq-ui/EQWindow";
+import EqDebug                        from "@/components/eq-ui/EQDebug";
+import {BODYTYPES}                    from "@/app/constants/eq-bodytype-constants";
 
 let unknowns = {}
 
@@ -255,7 +265,7 @@ export default {
     },
     getSpell: async function (spellId) {
       const api    = (new SpellsNewApi(SpireApiClient.getOpenApiConfig()))
-      const result = await api.getSpellsNew({ id: spellId })
+      const result = await api.getSpellsNew({id: spellId})
       if (result.status === 200) {
         return result.data
       }
@@ -269,7 +279,7 @@ export default {
 
     getItem: async function (itemId) {
       const api    = (new ItemApi(SpireApiClient.getOpenApiConfig()))
-      const result = await api.getItem({ id: itemId })
+      const result = await api.getItem({id: itemId})
       if (result.status === 200) {
         return result.data
       }
@@ -355,8 +365,7 @@ export default {
         return base;
       }
 
-      if (calc == 100)
-      {
+      if (calc == 100) {
         if (max > 0 && base > max) {
           return max;
         }
@@ -365,8 +374,7 @@ export default {
 
       let change = 0;
 
-      switch (calc)
-      {
+      switch (calc) {
         case 100:
           break;
 
@@ -515,34 +523,33 @@ export default {
       return Math.trunc(value);
     },
 
-    CalcValueRange(calc, base, max, spa, duration, level)
-    {
+    CalcValueRange(calc, base, max, spa, duration, level) {
       let printBuffer = ""
-      let start = this.calcSpellEffectValue(calc, base, max, 1, level);
-      let finish = Math.abs(this.calcSpellEffectValue(calc, base, max, duration, level));
+      let start       = this.calcSpellEffectValue(calc, base, max, 1, level);
+      let finish      = Math.abs(this.calcSpellEffectValue(calc, base, max, duration, level));
 
       let type = Math.abs(start) < Math.abs(finish) ? "Growing" : "Decaying";
 
-      if (calc == 123){
-        if (base < 0){
+      if (calc === 123) {
+        if (base < 0) {
           max = max * -1;
         }
-        printBuffer = " (Random: " + Math.abs(base) + " to " + Math.abs(max) +  ")"
+        printBuffer = " (Random: " + Math.abs(base) + " to " + Math.abs(max) + ")"
       }
 
-      if (calc == 107) {
+      if (calc === 107) {
         printBuffer = " (" + type + " to " + finish + " @ 1/tick)"
       }
 
-      if (calc == 108) {
+      if (calc === 108) {
         printBuffer = " (" + type + " to " + finish + " @ 2/tick)"
       }
 
-      if (calc == 120) {
+      if (calc === 120) {
         printBuffer = " (" + type + " to " + finish + " @ 5/tick)"
       }
 
-      if (calc == 122) {
+      if (calc === 122) {
         printBuffer = " (" + type + " to " + finish + " @ 12/tick)"
       }
 
@@ -550,14 +557,11 @@ export default {
         printBuffer = " (" + type + " to " + finish + " @ " + (calc - 1000) + "/tick)"
       }
 
-      if (calc >= 3000 && calc < 4000)
-      {
-        if (calc - 3000 == spa)
-        {
+      if (calc >= 3000 && calc < 4000) {
+        if (calc - 3000 === spa) {
           printBuffer = " (Scales, Base Level: 100)";
         }
-        if (calc - 3500 == spa)
-        {
+        if (calc - 3500 === spa) {
           printBuffer = " (Scales, Base Level: 105)";
         }
       }
@@ -569,21 +573,20 @@ export default {
       return printBuffer;
     },
 
-    getFormatStandard(effect_name, type, value_min, value_max, minlvl, maxlvl){
+    getFormatStandard(effect_name, type, value_min, value_max, minlvl, maxlvl) {
 
       let modifier = ""
 
-      if (value_max < 0){
+      if (value_max < 0) {
         modifier = "Decrease "
-      }
-      else{
+      } else {
         modifier = "Increase "
       }
 
       let printBuffer = modifier + effect_name
 
       if (value_min !== value_max) {
-        printBuffer += " by " + (Math.abs(value_min))+ type + " (L" + minlvl + ") to " + (Math.abs(value_max) )+ type + " (L" + maxlvl + ")"
+        printBuffer += " by " + (Math.abs(value_min)) + type + " (L" + minlvl + ") to " + (Math.abs(value_max)) + type + " (L" + maxlvl + ")"
       } else {
         printBuffer += " by " + (Math.abs(value_max)) + type
       }
@@ -591,10 +594,10 @@ export default {
       return printBuffer;
     },
 
-    getUpToMaxLvl(max){
+    getUpToMaxLvl(max) {
 
       let printBuffer = ""
-      if (max > 0){
+      if (max > 0) {
         printBuffer = " up to level " + max
       }
       return printBuffer;
@@ -603,17 +606,16 @@ export default {
     getFocusPercentRange(effect_name, min, max, negate) {
 
       let printBuffer = ""
-      let modifier = ""
+      let modifier    = ""
 
-      if (min < 0)  {
+      if (min < 0) {
 
         if (min < max) {
           let temp = min;
-          min = max;
-          max = temp;
+          min      = max;
+          max      = temp;
         }
-      }
-      else {
+      } else {
         if (min > max)
           max = min;
       }
@@ -623,18 +625,17 @@ export default {
         max = -max;
       }
 
-      if (max < 0){
+      if (max < 0) {
         modifier = "Decrease "
-      }
-      else{
+      } else {
         modifier = "Increase "
       }
 
-     if (min == max || max == 0) {
-       return printBuffer += modifier + effect_name + " by " + Math.abs(min) + "%";
-     }
-     return printBuffer += modifier + effect_name + " by " + Math.abs(min) + "% to " + Math.abs(max) + "%";
-},
+      if (min === max || max === 0) {
+        return printBuffer += modifier + effect_name + " by " + Math.abs(min) + "%";
+      }
+      return printBuffer += modifier + effect_name + " by " + Math.abs(min) + "% to " + Math.abs(max) + "%";
+    },
 
     async getSpellGroupNameById(spellGroupId) {
 
@@ -651,7 +652,7 @@ export default {
 
       const result = await (api.listSpellsNews({limit: 1, where: wheres.join("."), orderBy: "id"}));
 
-      if (result.status == 200) {
+      if (result.status === 200) {
         if (result.data.length > 0) {
           return result.data[0].name;
         }
@@ -674,9 +675,9 @@ export default {
         let tmp         = ""
         let pertick     = spell["buffduration"] ? " per tick " : ""
 
-        let base = spell["effect_base_value_" + effectIndex]
+        let base  = spell["effect_base_value_" + effectIndex]
         let limit = spell["effect_limit_value_" + effectIndex]
-        let max = spell["max_" + effectIndex]
+        let max   = spell["max_" + effectIndex]
 
 
         if (spell["effectid_" + effectIndex] !== 254) {
@@ -692,18 +693,16 @@ export default {
             }
           }
 
-          let value_min = this.calcSpellEffectValue( spell["formula_" + effectIndex], base, max, 1,minlvl);
-          let value_max = this.calcSpellEffectValue( spell["formula_" + effectIndex], base, max, 1,serverMaxLevel);
+          let value_min = this.calcSpellEffectValue(spell["formula_" + effectIndex], base, max, 1, minlvl);
+          let value_max = this.calcSpellEffectValue(spell["formula_" + effectIndex], base, max, 1, serverMaxLevel);
 
-
-          if ((value_min < value_max) && (value_max < 0)
-          ) {
-            let tn  = value_min;
+          if ((value_min < value_max) && (value_max < 0)) {
+            let tn    = value_min;
             value_min = value_max;
             value_max = tn;
           }
 
-          let special_range = this.CalcValueRange(spell["formula_" + effectIndex], base, max, spell["effectid_" + effectIndex],spell["buffduration"],serverMaxLevel)
+          let special_range = this.CalcValueRange(spell["formula_" + effectIndex], base, max, spell["effectid_" + effectIndex], spell["buffduration"], serverMaxLevel)
 
           switch (spell["effectid_" + effectIndex]) {
 
@@ -749,7 +748,7 @@ export default {
               break;
 
             case 10:
-              if (base == 0 && (spell["formula_" + effectIndex] == 100)) { //This is used as a placeholder do not calculate
+              if (base === 0 && (spell["formula_" + effectIndex] === 100)) { //This is used as a placeholder do not calculate
                 printBuffer = ""
               } else {
                 printBuffer += this.getFormatStandard("CHA", "", value_min, value_max, minlvl, maxlvl);
@@ -825,18 +824,18 @@ export default {
               break;
 
             case 25:
-              if (tmp == 2) {
+              if (tmp === 2) {
                 tmp += " (Secondary Bind Point)"
-              } else if (base == 3) {
+              } else if (base === 3) {
                 tmp += " (Tertiary Bind Point)"
               }
               printBuffer += "Bind" + tmp
               break;
 
             case 26:
-              if (limit == 2) {
+              if (limit === 2) {
                 tmp += " to Secondary Bind Point "
-              } else if (limit == 3) {
+              } else if (limit === 3) {
                 tmp += " to Tertiary Bind Point "
               }
 
@@ -866,7 +865,7 @@ export default {
             case 32:
               printBuffer += "Summon Item: "
 
-              const item = (await this.getItem(spell["effect_base_value_" + effectIndex]));
+              const item             = (await this.getItem(spell["effect_base_value_" + effectIndex]));
               this.itemData[item.id] = item
 
               if (item.name) {
@@ -1128,7 +1127,7 @@ export default {
               break;
 
             case 88: //TODO clean up, enum for zones
-              if (spell["teleport_zone"] != "same") {
+              if (spell["teleport_zone"] !== "same") {
                 tmp += " (" + spell["effect_base_value_" + (effectIndex + 1)]
                   + ", " + spell["effect_base_value_" + effectIndex] + ", "
                   + spell["effect_base_value_" + (effectIndex + 2)] + ", "
@@ -1144,7 +1143,6 @@ export default {
               } else {
                 value_max = value_max - 100;
                 value_min = value_min - 100;
-
               }
               printBuffer += this.getFormatStandard("Player Size", "%", value_min, value_max, minlvl, maxlvl);
               break;
@@ -1246,7 +1244,7 @@ export default {
             case 109: //later expansions allow stacks to put into bags using limit value.
               printBuffer += "Summon into Bag: "
 
-              const item2 = (await this.getItem(spell["effect_base_value_" + effectIndex]));
+              const item2             = (await this.getItem(spell["effect_base_value_" + effectIndex]));
               this.itemData[item2.id] = item2
 
               if (item2.name) {
@@ -1321,8 +1319,8 @@ export default {
               } else {
                 value_max = value_max - 100;
                 value_min = value_min - 100;
-
               }
+
               printBuffer += this.getFormatStandard("Attack Speed (v3 over cap)", "%", value_min, value_max, minlvl, maxlvl);
               break;
 
@@ -1449,7 +1447,7 @@ export default {
 
             case 150:
               tmp += max ? " (Increase heal by " + max + " if affected is above lv " + limit + ")" : ""
-              printBuffer += (base == 1) ? "Divine Intervention with 300 Heal" + tmp : "Divine Intervention with 8000 Heal" + tmp
+              printBuffer += (base === 1) ? "Divine Intervention with 300 Heal" + tmp : "Divine Intervention with 8000 Heal" + tmp
               break;
 
             case 151:
@@ -1465,7 +1463,7 @@ export default {
               break;
 
             case 154: //TODO need to update emulator code to use percent based (+0.5% per level difference) and confirm duration change mechanic
-              if (limit != 0) {
+              if (limit !== 0) {
                 printBuffer += "Decrease Detrimental Duration by 50% " + (base / 10) + "% Chance)" + this.getUpToMaxLvl(max)
               } else {
                 printBuffer += "Dispel Detrimental " + (base / 10) + "% Chance" + this.getUpToMaxLvl(max)
@@ -1698,7 +1696,7 @@ export default {
               break;
 
             case 209: //TODO need to update emulator code to use percent based (+0.5% per level difference) and confirm duration change mechanic
-              if (limit != 0) {
+              if (limit !== 0) {
                 printBuffer += "Decrease Beneficial Duration by 50% " + (base / 10) + "% Chance)" + this.getUpToMaxLvl(max)
               } else {
                 printBuffer += "Dispel Beneficial " + (base / 10) + "% Chance" + this.getUpToMaxLvl(max)
@@ -1823,7 +1821,7 @@ export default {
               break;
 
             case 238:
-              printBuffer += (base == 3) ? "Permanent Illusion (Persist After Death)" : " Permanent Illusion"
+              printBuffer += (base === 3) ? "Permanent Illusion (Persist After Death)" : " Permanent Illusion"
               break;
 
             case 239:
@@ -2089,8 +2087,8 @@ export default {
               break;
 
             case 305: //Note: Percent decrease damage taken is negative number from AA, but positive number on Spells, there are spells with negative values that increase damage taken.
-               printBuffer += this.getFormatStandard("Offhand Damage Shield Taken", "%", -value_min, -value_max, minlvl, maxlvl)
-               break;
+              printBuffer += this.getFormatStandard("Offhand Damage Shield Taken", "%", -value_min, -value_max, minlvl, maxlvl)
+              break;
 
             case 306:
               printBuffer += "Wake the Dead: + " + spell["teleport_zone"] + " x " + base + " for " + max + "s"
@@ -2384,16 +2382,16 @@ export default {
               break;
 
             case 379://client handles this function
-              if (limit == 0) {
+              if (limit === 0) {
                 printBuffer += "Shadowstep Forward " + base
               }
-              if (limit == 90) {
+              if (limit === 90) {
                 printBuffer += "Shadowstep Right " + base
               }
-              if (limit == 180) {
+              if (limit === 180) {
                 printBuffer += "Shadowstep Back " + base
               }
-              if (limit == 270) {
+              if (limit === 270) {
                 printBuffer += "Shadowstep Left " + base
               } else {
                 printBuffer += "Shadowstep " + base + " to " + limit + " Degrees"
@@ -2413,7 +2411,7 @@ export default {
               break;
 
             case 383: // spell proc + " (Sympathetic Proc)"
-              printBuffer += "Cast: " + (await this.getSpellName(limit)) + " on Spell Use" + (base != 100 ? " (Proc rate mod: " + (base - 100) + "%)" : "")
+              printBuffer += "Cast: " + (await this.getSpellName(limit)) + " on Spell Use" + (base !== 100 ? " (Proc rate mod: " + (base - 100) + "%)" : "")
               break;
 
             case 384:
@@ -2421,7 +2419,7 @@ export default {
               break;
 
             case 385: //TODO get spell group name from id, need to search for first spell in the spellgroup
-              const spellGroupId = Math.abs(base);
+              const spellGroupId   = Math.abs(base);
               const spellGroupName = await this.getSpellGroupNameById(spellGroupId);
 
               printBuffer += util.format(
@@ -2613,16 +2611,15 @@ export default {
               break;
 
             case 431: // not implemented on eqemu
-              if (base < 0){
+              if (base < 0) {
                 printBuffer += "Tint Vision: Red= " + (base >> 16 & 0xff) + " Green=" + (base >> 8 & 0xff) + " Blue=" + (base & 0xff)
-              }
-              else {
+              } else {
                 printBuffer += "Alter Vision: Base1=" + base + " Base2=" + limit + " Max=" + max
               }
 
             case 432:
               printBuffer += this.getFormatStandard("Trophy Slots", "", value_min, value_max, minlvl, maxlvl)
-              break
+              break;
 
             /* EQEMU DOESN"T USE THESE YET, were changed on live after ROF2
             case 433:
@@ -2640,8 +2637,8 @@ export default {
               */
 
             case 433:
-               printBuffer += this.getFormatStandard("Crtical DoT Chance", "%", value_min, value_max, minlvl, maxlvl) + "Decay Rate of " + limit + " over level " + max
-               break
+              printBuffer += this.getFormatStandard("Crtical DoT Chance", "%", value_min, value_max, minlvl, maxlvl) + "Decay Rate of " + limit + " over level " + max
+              break
 
             case 434:
               printBuffer += this.getFormatStandard("Crtical Heal Chance", "%", value_min, value_max, minlvl, maxlvl) + "Decay Rate of " + limit + " over level " + max
@@ -2656,16 +2653,28 @@ export default {
               break;
 
             case 437:
-              if (base == 52584) { tmp += "Primary Anchor" }
-              if (base == 52585) { tmp += "Secondary Anchor" }
-              if (base == 50874) { tmp += "Guild Anchor" }
+              if (base === 52584) {
+                tmp += "Primary Anchor"
+              }
+              if (base === 52585) {
+                tmp += "Secondary Anchor"
+              }
+              if (base === 50874) {
+                tmp += "Guild Anchor"
+              }
               printBuffer += "Teleport to your " + tmp
               break;
 
             case 438:
-              if (base == 52584) { tmp += "Primary Anchor" }
-              if (base == 52585) { tmp += "Secondary Anchor" }
-              if (base == 50874) { tmp += "Guild Anchor" }
+              if (base === 52584) {
+                tmp += "Primary Anchor"
+              }
+              if (base === 52585) {
+                tmp += "Secondary Anchor"
+              }
+              if (base === 50874) {
+                tmp += "Guild Anchor"
+              }
               printBuffer += "Teleport to their " + tmp
               break;
 
@@ -2674,7 +2683,7 @@ export default {
               break;
 
             case 440:
-              printBuffer +=  "Limit Finishing Blow Level to " + base + " and lower NPC targets with" + (limit /10) + "% or less health."
+              printBuffer += "Limit Finishing Blow Level to " + base + " and lower NPC targets with" + (limit / 10) + "% or less health."
               break;
 
             case 441:
@@ -2718,11 +2727,11 @@ export default {
               break;
 
             case 451:
-              printBuffer += "Absorb Melee Damage: " + base + "% over " + limit + + (max > 0 ? " Total: " + max : "")
+              printBuffer += "Absorb Melee Damage: " + base + "% over " + limit + +(max > 0 ? " Total: " + max : "")
               break;
 
             case 452:
-              printBuffer += "Absorb Spell Damage: " + base + "% over " + limit + + (max > 0 ? " Total: " + max : "")
+              printBuffer += "Absorb Spell Damage: " + base + "% over " + limit + +(max > 0 ? " Total: " + max : "")
               break;
 
             case 453:
@@ -2742,9 +2751,15 @@ export default {
               break;
 
             case 457:
-              if (limit == 0) { tmp += "HP" }
-              if (limit == 1) { tmp += "Mana" }
-              if (limit == 2) { tmp += "Endurance" }
+              if (limit === 0) {
+                tmp += "HP"
+              }
+              if (limit === 1) {
+                tmp += "Mana"
+              }
+              if (limit === 2) {
+                tmp += "Endurance"
+              }
               printBuffer += "Return " + (base / 10) + "% of Spell Damage as" + tmp + (max > 0 ? ", Max Per Hit: " + max + ")" : "")
               break;
 
@@ -2820,10 +2835,16 @@ export default {
               break;
 
             case 476:
-              if (base == 0) { tmp += "2H Weapons" }
-              if (base == 1) { tmp += "Shields" }
-              if (base == 2) { tmp += "Dual Wield" }
-              printBuffer +=  "Weapon Stance: Apply spell" + (await this.getSpellName(limit)) + " when using " + tmp
+              if (base === 0) {
+                tmp += "2H Weapons"
+              }
+              if (base === 1) {
+                tmp += "Shields"
+              }
+              if (base === 2) {
+                tmp += "Dual Wield"
+              }
+              printBuffer += "Weapon Stance: Apply spell" + (await this.getSpellName(limit)) + " when using " + tmp
               break;
 
             case 477:
@@ -2863,7 +2884,7 @@ export default {
               break;
 
             case 486:
-              printBuffer += "Limit Caster: " + (base == 0 ? "Exclude " : "") + "Self"
+              printBuffer += "Limit Caster: " + (base === 0 ? "Exclude " : "") + "Self"
               break;
 
             case 487:
@@ -2879,19 +2900,19 @@ export default {
               break;
 
             case 490:
-              printBuffer += "Limit Min Recast: " + (base/1000) + "s"
+              printBuffer += "Limit Min Recast: " + (base / 1000) + "s"
               break;
 
             case 491:
-              printBuffer += "Limit Max Recast: " + (base/1000) + "s"
+              printBuffer += "Limit Max Recast: " + (base / 1000) + "s"
               break;
 
             case 492:
-              printBuffer +=  "Limit Min Endurance Cost: " + base
+              printBuffer += "Limit Min Endurance Cost: " + base
               break;
 
             case 493:
-              printBuffer +=  "Limit Max Endurance Cost: " + base
+              printBuffer += "Limit Max Endurance Cost: " + base
               break;
 
             case 494:
@@ -2899,7 +2920,7 @@ export default {
               break;
 
             case 495:
-              printBuffer +=  "Limit Max Duration: " + (base * 6)
+              printBuffer += "Limit Max Duration: " + (base * 6)
               break;
 
             case 496:
@@ -2923,7 +2944,7 @@ export default {
               break;
 
             case 501:
-              printBuffer += (base < 0 ? "Increase" : "Decrease") + " Casting Times by " +  Math.abs(base / 1000) + "s"
+              printBuffer += (base < 0 ? "Increase" : "Decrease") + " Casting Times by " + Math.abs(base / 1000) + "s"
               break;
 
             case 502:
@@ -2934,19 +2955,19 @@ export default {
               break;
 
             case 503:
-              printBuffer += this.getFormatStandard( (limit == 0 ? "Rear" : "Frontal") + " Arc Melee Damage", "%", value_min/10, value_max/10, minlvl, maxlvl)
+              printBuffer += this.getFormatStandard((limit === 0 ? "Rear" : "Frontal") + " Arc Melee Damage", "%", value_min / 10, value_max / 10, minlvl, maxlvl)
               break;
 
             case 503:
-              printBuffer += this.getFormatStandard( (limit == 0 ? "Rear" : "Frontal") + " Arc Melee Damage Amount", "", value_min/10, value_max/10, minlvl, maxlvl)
+              printBuffer += this.getFormatStandard((limit === 0 ? "Rear" : "Frontal") + " Arc Melee Damage Amount", "", value_min / 10, value_max / 10, minlvl, maxlvl)
               break;
 
             case 505:
-              printBuffer += this.getFormatStandard( (limit == 0 ? "Rear" : "Frontal") + " Arc Melee Damage Taken", "%", value_min/10, value_max/10, minlvl, maxlvl)
+              printBuffer += this.getFormatStandard((limit === 0 ? "Rear" : "Frontal") + " Arc Melee Damage Taken", "%", value_min / 10, value_max / 10, minlvl, maxlvl)
               break;
 
             case 506:
-              printBuffer += this.getFormatStandard( (limit == 0 ? "Rear" : "Frontal") + " Arc Melee Damage Taken Amount", "", value_min/10, value_max/10, minlvl, maxlvl)
+              printBuffer += this.getFormatStandard((limit === 0 ? "Rear" : "Frontal") + " Arc Melee Damage Taken Amount", "", value_min / 10, value_max / 10, minlvl, maxlvl)
               break;
 
             case 507:
@@ -2961,36 +2982,36 @@ export default {
               printBuffer += this.getFormatStandard("Incoming Resist Modifier", "%", value_min, value_max, minlvl, maxlvl)
               break;
 
-             case 511:
-               printBuffer += "Limit Min Delay Between Trigger: " + (limit/1000) + "s" + " (Max Triggers: " + base  +")"
-               break;
+            case 511:
+              printBuffer += "Limit Min Delay Between Trigger: " + (limit / 1000) + "s" + " (Max Triggers: " + base + ")"
+              break;
 
             case 512:
-              printBuffer += "Proc Timer: " + (limit/1000) + "s" + " (Max Triggers: " + base  +")"
+              printBuffer += "Proc Timer: " + (limit / 1000) + "s" + " (Max Triggers: " + base + ")"
               break;
 
             case 513:
-              printBuffer += this.getFormatStandard("Max Mana", "%", value_min/100, value_max/100, minlvl, maxlvl)
+              printBuffer += this.getFormatStandard("Max Mana", "%", value_min / 100, value_max / 100, minlvl, maxlvl)
               break;
 
             case 514:
-              printBuffer += this.getFormatStandard("Max Endurance", "%", value_min/100, value_max/100, minlvl, maxlvl)
+              printBuffer += this.getFormatStandard("Max Endurance", "%", value_min / 100, value_max / 100, minlvl, maxlvl)
               break;
 
             case 515:
-              printBuffer += this.getFormatStandard("Avoidance AC", "%", value_min/1000, value_max/1000, minlvl, maxlvl)
+              printBuffer += this.getFormatStandard("Avoidance AC", "%", value_min / 1000, value_max / 1000, minlvl, maxlvl)
               break;
 
             case 516:
-              printBuffer += this.getFormatStandard("Mitigation AC", "%", value_min/1000, value_max/1000, minlvl, maxlvl)
+              printBuffer += this.getFormatStandard("Mitigation AC", "%", value_min / 1000, value_max / 1000, minlvl, maxlvl)
               break;
 
             case 517:
-              printBuffer += this.getFormatStandard("ATK Offense", "%", value_min/1000, value_max/1000, minlvl, maxlvl)
+              printBuffer += this.getFormatStandard("ATK Offense", "%", value_min / 1000, value_max / 1000, minlvl, maxlvl)
               break;
 
             case 518:
-              printBuffer += this.getFormatStandard("ATK Accuracy", "%", value_min/1000, value_max/1000, minlvl, maxlvl)
+              printBuffer += this.getFormatStandard("ATK Accuracy", "%", value_min / 1000, value_max / 1000, minlvl, maxlvl)
               break;
 
             case 519:
@@ -3002,15 +3023,15 @@ export default {
               break;
 
             case 521:
-              printBuffer += "Absorb Damage using Endurance: "  + (base / 100) + (limit != 10000 ? (limit / 10000) + " End per 1 HP)" : "") + (max > 0 ? ", Max Per Hit: " + max : "")
+              printBuffer += "Absorb Damage using Endurance: " + (base / 100) + (limit !== 10000 ? (limit / 10000) + " End per 1 HP)" : "") + (max > 0 ? ", Max Per Hit: " + max : "")
               break;
 
             case 522:
-              printBuffer += this.getFormatStandard("Current Mana", "%", value_min/100, value_max/100, minlvl, maxlvl) + " up to " + max
+              printBuffer += this.getFormatStandard("Current Mana", "%", value_min / 100, value_max / 100, minlvl, maxlvl) + " up to " + max
               break;
 
             case 523:
-              printBuffer += this.getFormatStandard("Current Endurance", "%", value_min/100, value_max/100, minlvl, maxlvl) + " up to " + max
+              printBuffer += this.getFormatStandard("Current Endurance", "%", value_min / 100, value_max / 100, minlvl, maxlvl) + " up to " + max
               break;
 
             case 524:
@@ -3055,9 +3076,9 @@ export default {
 
 <style>
 .spell-field-label {
-  text-align:    right;
-  font-weight:   bold;
-  width:         40%;
+  text-align: right;
+  font-weight: bold;
+  width: 40%;
   padding-right: 10px;
 }
 </style>
