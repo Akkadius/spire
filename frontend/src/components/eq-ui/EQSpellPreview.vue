@@ -20,7 +20,7 @@
       <tr style="vertical-align:middle !important">
       </tr>
       <tr v-if="spellData['id'] !== ''">
-        <td class="spell-field-label">Spell ID:</td>
+        <td class="spell-field-label">Spell ID</td>
         <td> {{ spellData["id"] }}</td>
       </tr>
       <tr v-if="getClasses() !== ''">
