@@ -6,20 +6,21 @@
       <div class="panel-body">
         <div class="panel panel-default">
 
-          <eq-window class="mt-5">
+          <eq-window class="mt-5 text-center">
 
-            <div style="display: inline-block" v-for="(icon, index) in dbClassIcons" class="mb-3">
-              <div class="text-center p-1">
-                {{ dbClassesShort[index] }}
-                <div class="text-center">
-                  <img
-                    @click="selectClass(index)"
-                    :src="itemCdnUrl + 'item_' + icon + '.png'"
-                    :style="'width:auto;' + (isClassSelected(index) ? 'border: 2px solid #dadada; border-radius: 7px;' : '')"
-                    class="mt-1 p-1">
+            <div class="row">
+              <div v-for="(icon, index) in dbClassIcons" class="mb-3 text-center">
+                <div class="text-center p-1 col-lg-12 col-sm-12">
+                  {{ dbClassesShort[index] }}
+                  <div class="text-center">
+                    <img
+                      @click="selectClass(index)"
+                      :src="itemCdnUrl + 'item_' + icon + '.png'"
+                      :style="'width:auto;' + (isClassSelected(index) ? 'border: 2px solid #dadada; border-radius: 7px;' : '')"
+                      class="mt-1 p-1">
+                  </div>
                 </div>
               </div>
-
             </div>
 
             <div class="row mt-4">
@@ -94,7 +95,15 @@
                 </b-form-group>
               </div>
 
+
             </div>
+
+            <div class="row">
+              <div class="form-group">
+                <button class='eq-button' @click="resetForm()">Reset Form</button>
+              </div>
+            </div>
+
             <app-loader :is-loading="!loaded" padding="4"/>
           </eq-window>
 
@@ -189,6 +198,16 @@ export default {
         }
       ).catch(() => {
       })
+    },
+
+    resetForm: function() {
+      this.selectedClass = 0;
+      this.spellName = "";
+      this.spellEffect = "";
+      this.selectedSpa = -1;
+      this.selectedLevel = 0;
+      this.selectedLevelType = 0;
+      this.spells = null;
     },
 
     loadQueryState: function () {
