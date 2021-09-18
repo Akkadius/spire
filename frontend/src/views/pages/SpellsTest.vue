@@ -40,29 +40,31 @@
 
               <div class="col-lg-3 col-sm-12 text-center">
                 Spell Effect SPA
-<!--                <input-->
-<!--                  name="spell_effect"-->
-<!--                  class="form-control"-->
-<!--                  placeholder="Spell Effect SPA #"-->
-<!--                  v-model="spellEffect"-->
-<!--                  type="text"-->
-<!--                  title="SPA # or description e.g. Root, Stun, Mesmerize, Cure, Heal, HoT, DD, DoT, Proc, Snare, Pacify, Timer 3"-->
-<!--                  value=""-->
-<!--                >-->
+                <!--                <input-->
+                <!--                  name="spell_effect"-->
+                <!--                  class="form-control"-->
+                <!--                  placeholder="Spell Effect SPA #"-->
+                <!--                  v-model="spellEffect"-->
+                <!--                  type="text"-->
+                <!--                  title="SPA # or description e.g. Root, Stun, Mesmerize, Cure, Heal, HoT, DD, DoT, Proc, Snare, Pacify, Timer 3"-->
+                <!--                  value=""-->
+                <!--                >-->
 
-                <select name="class" id="spell_effect" class="form-control" v-model="selectedSpa" @change="triggerState()">
+                <select name="class" id="spell_effect" class="form-control" v-model="selectedSpa"
+                        @change="triggerState()">
                   <option value="-1">-- Select --</option>
 
                   <option v-for="(spellEffect, id) in dbSpellEffects" v-bind:value="id">
-                    {{id}}) {{ spellEffect }}
+                    {{ id }}) {{ spellEffect }}
                   </option>
                 </select>
 
               </div>
 
-              <div class="col-lg-3 col-sm-12 text-center">
+              <div class="col-lg-2 col-sm-12 text-center">
                 Class
-                <select name="class" id="Class" class="form-control" v-model="selectedClass" @change="selectClass(selectedClass)">
+                <select name="class" id="Class" class="form-control" v-model="selectedClass"
+                        @change="selectClass(selectedClass)">
                   <option value="0">All</option>
 
                   <option v-for="(eqClass, eqClassId) in dbClasses" v-bind:value="eqClassId">
@@ -71,11 +73,30 @@
                 </select>
               </div>
 
+              <div class="col-lg-2 col-sm-12 text-center">
+                Level
+                <select name="class" id="Class" class="form-control" v-model="selectedLevel"
+                        @change="selectClass(selectedClass)">
+                  <option value="0">-- Select --</option>
+                  <option v-for="l in 105" v-bind:value="l">
+                    {{ l }}
+                  </option>
+                </select>
+              </div>
+              <div class="col-lg-2 col-sm-12" v-if="selectedLevel">
+                <b-form-group>
+                  <b-form-radio v-model="selectedLevelType" @change="triggerStateDelayed()" value="0">Only
+                  </b-form-radio>
+                  <b-form-radio v-model="selectedLevelType" @change="triggerStateDelayed()" value="1">And Higher
+                  </b-form-radio>
+                  <b-form-radio v-model="selectedLevelType" @change="triggerStateDelayed()" value="2">And Lower
+                  </b-form-radio>
+                </b-form-group>
+              </div>
 
             </div>
             <app-loader :is-loading="!loaded" padding="4"/>
           </eq-window>
-
 
 
           <div class="row" style="justify-content: center" v-if="loaded">
@@ -104,7 +125,7 @@ import EqSpellPreview from "@/components/eq-ui/EQSpellPreview.vue";
 import {DB_CLASSES_ICONS} from "@/app/constants/eq-class-icon-constants";
 import {App} from "@/constants/app";
 import {DB_CLASSES_SHORT, DB_PLAYER_CLASSES} from "@/app/constants/eq-classes-constants";
-import {DB_SPA, DB_SPELL_EFFECTS} from "@/app/constants/eq-spell-constants";
+import {DB_SPA} from "@/app/constants/eq-spell-constants";
 
 const SPELLS_LIST_ROUTE = "/spells-test";
 
@@ -135,6 +156,8 @@ export default {
       spellName: "",
       spellEffect: "",
       selectedSpa: -1,
+      selectedLevel: 0,
+      selectedLevelType: 0,
     }
   },
 
@@ -156,6 +179,8 @@ export default {
       queryState.class = this.selectedClass
       queryState.name = this.spellName
       queryState.spa = this.selectedSpa
+      queryState.level = this.selectedLevel
+      queryState.levelType = this.selectedLevelType
 
       this.$router.push(
         {
@@ -167,13 +192,20 @@ export default {
     },
 
     loadQueryState: function () {
-      console.log("Loading query state");
-
       if (this.$route.query.class) {
         this.selectedClass = this.$route.query.class;
       }
       if (this.$route.query.spa) {
         this.selectedSpa = this.$route.query.spa;
+      }
+      if (this.$route.query.name) {
+        this.spellName = this.$route.query.name;
+      }
+      if (this.$route.query.level) {
+        this.selectedLevel = this.$route.query.level;
+      }
+      if (this.$route.query.levelType) {
+        this.selectedLevelType = this.$route.query.levelType;
       }
     },
 
@@ -183,6 +215,12 @@ export default {
       this.selectedSpa = -1
       this.updateQueryState();
       this.listSpells()
+    },
+
+    triggerStateDelayed() {
+      setTimeout(() => {
+        this.triggerState()
+      }, 100)
     },
 
     triggerState() {
@@ -201,11 +239,23 @@ export default {
       let filters = [];
       let whereOr = [];
 
-      console.log("class")
-      console.log(this.selectedClass)
-
-      if (this.selectedClass > 0) {
+      // filter by class and no level set
+      if (this.selectedClass > 0 && this.selectedLevel === 0) {
         filters.push(["classes" + this.selectedClass, "_gte_", "1"]);
+        filters.push(["classes" + this.selectedClass, "_lte_", "250"]);
+      }
+
+      // filter by level if class set
+      if (this.selectedLevel > 0 && this.selectedClass > 0) {
+        let filterType = "__"; // equal
+        if (parseInt(this.selectedLevelType) === 1) {
+          filterType = "_gte_";
+        }
+        if (parseInt(this.selectedLevelType) === 2) {
+          filterType = "_lte_";
+        }
+
+        filters.push(["classes" + this.selectedClass, filterType, this.selectedLevel]);
         filters.push(["classes" + this.selectedClass, "_lte_", "250"]);
       }
 
@@ -231,10 +281,10 @@ export default {
         wheresOrs.push(where)
       })
 
-      console.log(wheresOrs)
-
       let request = {};
       request.limit = this.limit;
+
+      // filter by class
       if (this.selectedClass > 0) {
         request.orderBy = util.format("classes%s", this.selectedClass)
       }
@@ -246,8 +296,6 @@ export default {
       if (Object.keys(wheresOrs).length > 0) {
         request.whereOr = wheresOrs.join(".")
       }
-
-      console.log(request);
 
       api.listSpellsNews(request).then((result) => {
         if (result.status === 200) {
