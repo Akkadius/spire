@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "target": "esnext",
+    "target": "ES6",
     "module": "esnext",
     "strict": true,
     "jsx": "preserve",
@@ -28,7 +28,12 @@
       "esnext",
       "dom",
       "dom.iterable",
-      "scripthost"
+      "scripthost",
+      "DOM",
+      "ES6",
+      "DOM.Iterable",
+      "ScriptHost",
+      "ES2016.Array.Include"
     ]
   },
   "include": [

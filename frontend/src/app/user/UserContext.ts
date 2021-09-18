@@ -19,10 +19,12 @@ export default class UserContext {
     }
 
     try {
+      // @ts-ignore
       const result = await ((new MeApi({
           accessToken: undefined,
           apiKey: undefined,
           basePath: SpireApiClient.getBaseV1Path(),
+          // @ts-ignore
           formDataCtor: undefined,
           password: "",
           username: "",

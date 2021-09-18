@@ -11,6 +11,7 @@ import (
 	gocache "github.com/patrickmn/go-cache"
 	"github.com/sirupsen/logrus"
 	"os"
+	"strings"
 	"time"
 )
 
@@ -196,4 +197,96 @@ func (d *DatabaseResolver) ResolveUserEqemuConnection(model models.Modelable, us
 	d.remoteDatabases[connectionType][conn.ServerDatabaseConnection.ID] = mysql
 
 	return mysql
+}
+
+func (d *DatabaseResolver) handleWheres(query *gorm.DB, filter string) *gorm.DB {
+	// parse where field = value
+	wheres := strings.Split(filter, equalDelimiter)
+	if len(wheres) > 1 {
+		query = query.Where(fmt.Sprintf("%v = ?", wheres[0]), wheres[1])
+	}
+
+	// parse where field like '%value%'
+	wheres = strings.Split(filter, likeDelimiter)
+	if len(wheres) > 1 {
+		query = query.Where(fmt.Sprintf("%v like ?", wheres[0]), fmt.Sprintf("%%%v%%", wheres[1]))
+	}
+
+	// parse where [value > x]
+	wheres = strings.Split(filter, greaterThan)
+	if len(wheres) > 1 {
+		query = query.Where(fmt.Sprintf("%v > ?", wheres[0]), wheres[1])
+	}
+
+	// parse where [value < x]
+	wheres = strings.Split(filter, lesserThan)
+	if len(wheres) > 1 {
+		query = query.Where(fmt.Sprintf("%v < ?", wheres[0]), wheres[1])
+	}
+
+	// parse where [value >= x]
+	wheres = strings.Split(filter, greaterThanEqual)
+	if len(wheres) > 1 {
+		query = query.Where(fmt.Sprintf("%v >= ?", wheres[0]), wheres[1])
+	}
+
+	// parse where [value <= x]
+	wheres = strings.Split(filter, lesserThanEqual)
+	if len(wheres) > 1 {
+		query = query.Where(fmt.Sprintf("%v <= ?", wheres[0]), wheres[1])
+	}
+
+	// parse where [value = x]
+	wheres = strings.Split(filter, equal)
+	if len(wheres) > 1 {
+		query = query.Where(fmt.Sprintf("%v = ?", wheres[0]), wheres[1])
+	}
+
+	return query;
+}
+
+func (d *DatabaseResolver) handleOrWheres(query *gorm.DB, filter string) *gorm.DB {
+	// parse where field = value
+	wheres := strings.Split(filter, equalDelimiter)
+	if len(wheres) > 1 {
+		query = query.Or(fmt.Sprintf("%v = ?", wheres[0]), wheres[1])
+	}
+
+	// parse where field like '%value%'
+	wheres = strings.Split(filter, likeDelimiter)
+	if len(wheres) > 1 {
+		query = query.Or(fmt.Sprintf("%v like ?", wheres[0]), fmt.Sprintf("%%%v%%", wheres[1]))
+	}
+
+	// parse where [value > x]
+	wheres = strings.Split(filter, greaterThan)
+	if len(wheres) > 1 {
+		query = query.Or(fmt.Sprintf("%v > ?", wheres[0]), wheres[1])
+	}
+
+	// parse where [value < x]
+	wheres = strings.Split(filter, lesserThan)
+	if len(wheres) > 1 {
+		query = query.Or(fmt.Sprintf("%v < ?", wheres[0]), wheres[1])
+	}
+
+	// parse where [value >= x]
+	wheres = strings.Split(filter, greaterThanEqual)
+	if len(wheres) > 1 {
+		query = query.Or(fmt.Sprintf("%v >= ?", wheres[0]), wheres[1])
+	}
+
+	// parse where [value <= x]
+	wheres = strings.Split(filter, lesserThanEqual)
+	if len(wheres) > 1 {
+		query = query.Or(fmt.Sprintf("%v <= ?", wheres[0]), wheres[1])
+	}
+
+	// parse where [value = x]
+	wheres = strings.Split(filter, equal)
+	if len(wheres) > 1 {
+		query = query.Or(fmt.Sprintf("%v = ?", wheres[0]), wheres[1])
+	}
+
+	return query;
 }

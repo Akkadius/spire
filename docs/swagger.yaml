@@ -1135,6 +1135,23 @@ definitions:
       taskid:
         type: integer
     type: object
+  models.CharacterExpeditionLockout:
+    properties:
+      character_id:
+        type: integer
+      duration:
+        type: integer
+      event_name:
+        type: string
+      expedition_name:
+        type: string
+      expire_time:
+        type: string
+      from_expedition_uuid:
+        type: string
+      id:
+        type: integer
+    type: object
   models.CharacterInspectMessage:
     properties:
       id:
@@ -3415,6 +3432,43 @@ definitions:
       updated_at:
         type: string
     type: object
+  models.ServerScheduledEvent:
+    properties:
+      created_at:
+        type: string
+      cron_expression:
+        type: string
+      day_end:
+        type: integer
+      day_start:
+        type: integer
+      deleted_at:
+        type: string
+      description:
+        type: string
+      event_data:
+        type: string
+      event_type:
+        type: string
+      hour_end:
+        type: integer
+      hour_start:
+        type: integer
+      id:
+        type: integer
+      minute_end:
+        type: integer
+      minute_start:
+        type: integer
+      month_end:
+        type: integer
+      month_start:
+        type: integer
+      year_end:
+        type: integer
+      year_start:
+        type: integer
+    type: object
   models.Sharedbank:
     properties:
       acctid:
@@ -4725,6 +4779,11 @@ paths:
         in: query
         name: where
         type: string
+      - description: 'Filter on specific fields (Chained ors). Multiple conditions
+          [.] separated Example: col_like_value.col2__val2'
+        in: query
+        name: whereOr
+        type: string
       - description: 'Rows to limit in response (Default: 10,000)'
         in: query
         name: limit
@@ -5037,6 +5096,11 @@ paths:
         in: query
         name: where
         type: string
+      - description: 'Filter on specific fields (Chained ors). Multiple conditions
+          [.] separated Example: col_like_value.col2__val2'
+        in: query
+        name: whereOr
+        type: string
       - description: 'Rows to limit in response (Default: 10,000)'
         in: query
         name: limit
@@ -5216,6 +5280,11 @@ paths:
           Example: col_like_value.col2__val2'
         in: query
         name: where
+        type: string
+      - description: 'Filter on specific fields (Chained ors). Multiple conditions
+          [.] separated Example: col_like_value.col2__val2'
+        in: query
+        name: whereOr
         type: string
       - description: 'Rows to limit in response (Default: 10,000)'
         in: query
@@ -5397,6 +5466,11 @@ paths:
         in: query
         name: where
         type: string
+      - description: 'Filter on specific fields (Chained ors). Multiple conditions
+          [.] separated Example: col_like_value.col2__val2'
+        in: query
+        name: whereOr
+        type: string
       - description: 'Rows to limit in response (Default: 10,000)'
         in: query
         name: limit
@@ -5576,6 +5650,11 @@ paths:
           Example: col_like_value.col2__val2'
         in: query
         name: where
+        type: string
+      - description: 'Filter on specific fields (Chained ors). Multiple conditions
+          [.] separated Example: col_like_value.col2__val2'
+        in: query
+        name: whereOr
         type: string
       - description: 'Rows to limit in response (Default: 10,000)'
         in: query
@@ -5889,6 +5968,11 @@ paths:
         in: query
         name: where
         type: string
+      - description: 'Filter on specific fields (Chained ors). Multiple conditions
+          [.] separated Example: col_like_value.col2__val2'
+        in: query
+        name: whereOr
+        type: string
       - description: 'Rows to limit in response (Default: 10,000)'
         in: query
         name: limit
@@ -5937,6 +6021,11 @@ paths:
         in: query
         name: where
         type: string
+      - description: 'Filter on specific fields (Chained ors). Multiple conditions
+          [.] separated Example: col_like_value.col2__val2'
+        in: query
+        name: whereOr
+        type: string
       - description: 'Rows to limit in response (Default: 10,000)'
         in: query
         name: limit
@@ -5984,6 +6073,11 @@ paths:
           Example: col_like_value.col2__val2'
         in: query
         name: where
+        type: string
+      - description: 'Filter on specific fields (Chained ors). Multiple conditions
+          [.] separated Example: col_like_value.col2__val2'
+        in: query
+        name: whereOr
         type: string
       - description: 'Rows to limit in response (Default: 10,000)'
         in: query
@@ -6297,6 +6391,11 @@ paths:
         in: query
         name: where
         type: string
+      - description: 'Filter on specific fields (Chained ors). Multiple conditions
+          [.] separated Example: col_like_value.col2__val2'
+        in: query
+        name: whereOr
+        type: string
       - description: 'Rows to limit in response (Default: 10,000)'
         in: query
         name: limit
@@ -6609,6 +6708,11 @@ paths:
         in: query
         name: where
         type: string
+      - description: 'Filter on specific fields (Chained ors). Multiple conditions
+          [.] separated Example: col_like_value.col2__val2'
+        in: query
+        name: whereOr
+        type: string
       - description: 'Rows to limit in response (Default: 10,000)'
         in: query
         name: limit
@@ -6656,6 +6760,11 @@ paths:
           Example: col_like_value.col2__val2'
         in: query
         name: where
+        type: string
+      - description: 'Filter on specific fields (Chained ors). Multiple conditions
+          [.] separated Example: col_like_value.col2__val2'
+        in: query
+        name: whereOr
         type: string
       - description: 'Rows to limit in response (Default: 10,000)'
         in: query
@@ -6837,6 +6946,11 @@ paths:
         in: query
         name: where
         type: string
+      - description: 'Filter on specific fields (Chained ors). Multiple conditions
+          [.] separated Example: col_like_value.col2__val2'
+        in: query
+        name: whereOr
+        type: string
       - description: 'Rows to limit in response (Default: 10,000)'
         in: query
         name: limit
@@ -6884,6 +6998,11 @@ paths:
           Example: col_like_value.col2__val2'
         in: query
         name: where
+        type: string
+      - description: 'Filter on specific fields (Chained ors). Multiple conditions
+          [.] separated Example: col_like_value.col2__val2'
+        in: query
+        name: whereOr
         type: string
       - description: 'Rows to limit in response (Default: 10,000)'
         in: query
@@ -7197,6 +7316,11 @@ paths:
         in: query
         name: where
         type: string
+      - description: 'Filter on specific fields (Chained ors). Multiple conditions
+          [.] separated Example: col_like_value.col2__val2'
+        in: query
+        name: whereOr
+        type: string
       - description: 'Rows to limit in response (Default: 10,000)'
         in: query
         name: limit
@@ -7376,6 +7500,11 @@ paths:
           Example: col_like_value.col2__val2'
         in: query
         name: where
+        type: string
+      - description: 'Filter on specific fields (Chained ors). Multiple conditions
+          [.] separated Example: col_like_value.col2__val2'
+        in: query
+        name: whereOr
         type: string
       - description: 'Rows to limit in response (Default: 10,000)'
         in: query
@@ -7557,6 +7686,11 @@ paths:
         in: query
         name: where
         type: string
+      - description: 'Filter on specific fields (Chained ors). Multiple conditions
+          [.] separated Example: col_like_value.col2__val2'
+        in: query
+        name: whereOr
+        type: string
       - description: 'Rows to limit in response (Default: 10,000)'
         in: query
         name: limit
@@ -7737,6 +7871,11 @@ paths:
         in: query
         name: where
         type: string
+      - description: 'Filter on specific fields (Chained ors). Multiple conditions
+          [.] separated Example: col_like_value.col2__val2'
+        in: query
+        name: whereOr
+        type: string
       - description: 'Rows to limit in response (Default: 10,000)'
         in: query
         name: limit
@@ -7784,6 +7923,11 @@ paths:
           Example: col_like_value.col2__val2'
         in: query
         name: where
+        type: string
+      - description: 'Filter on specific fields (Chained ors). Multiple conditions
+          [.] separated Example: col_like_value.col2__val2'
+        in: query
+        name: whereOr
         type: string
       - description: 'Rows to limit in response (Default: 10,000)'
         in: query
@@ -7964,6 +8108,11 @@ paths:
           Example: col_like_value.col2__val2'
         in: query
         name: where
+        type: string
+      - description: 'Filter on specific fields (Chained ors). Multiple conditions
+          [.] separated Example: col_like_value.col2__val2'
+        in: query
+        name: whereOr
         type: string
       - description: 'Rows to limit in response (Default: 10,000)'
         in: query
@@ -8277,6 +8426,11 @@ paths:
         in: query
         name: where
         type: string
+      - description: 'Filter on specific fields (Chained ors). Multiple conditions
+          [.] separated Example: col_like_value.col2__val2'
+        in: query
+        name: whereOr
+        type: string
       - description: 'Rows to limit in response (Default: 10,000)'
         in: query
         name: limit
@@ -8309,6 +8463,191 @@ paths:
       summary: Lists CharacterDisciplines
       tags:
       - CharacterDiscipline
+  /character_expedition_lockout:
+    put:
+      consumes:
+      - application/json
+      operationId: createCharacterExpeditionLockout
+      parameters:
+      - description: CharacterExpeditionLockout
+        in: body
+        name: character_expedition_lockout
+        required: true
+        schema:
+          $ref: '#/definitions/models.CharacterExpeditionLockout'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.CharacterExpeditionLockout'
+            type: array
+        "500":
+          description: Error inserting entity
+          schema:
+            type: string
+      summary: Creates CharacterExpeditionLockout
+      tags:
+      - CharacterExpeditionLockout
+  /character_expedition_lockout/{id}:
+    delete:
+      consumes:
+      - application/json
+      operationId: deleteCharacterExpeditionLockout
+      parameters:
+      - description: Id
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Entity deleted successfully
+          schema:
+            type: string
+        "404":
+          description: Cannot find entity
+          schema:
+            type: string
+        "500":
+          description: Error deleting entity
+          schema:
+            type: string
+      summary: Deletes CharacterExpeditionLockout
+      tags:
+      - CharacterExpeditionLockout
+    get:
+      consumes:
+      - application/json
+      operationId: getCharacterExpeditionLockout
+      parameters:
+      - description: Id
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: 'Relationships [all] for all [number] for depth of relationships
+          to load or [.] separated relationship names '
+        in: query
+        name: includes
+        type: string
+      - description: Column names [.] separated to fetch specific fields in response
+        in: query
+        name: select
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.CharacterExpeditionLockout'
+            type: array
+        "404":
+          description: Entity not found
+          schema:
+            type: string
+        "500":
+          description: Bad query request
+          schema:
+            type: string
+      summary: Gets CharacterExpeditionLockout
+      tags:
+      - CharacterExpeditionLockout
+    patch:
+      consumes:
+      - application/json
+      operationId: updateCharacterExpeditionLockout
+      parameters:
+      - description: Id
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: CharacterExpeditionLockout
+        in: body
+        name: character_expedition_lockout
+        required: true
+        schema:
+          $ref: '#/definitions/models.CharacterExpeditionLockout'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.CharacterExpeditionLockout'
+            type: array
+        "404":
+          description: Cannot find entity
+          schema:
+            type: string
+        "500":
+          description: Error updating entity
+          schema:
+            type: string
+      summary: Updates CharacterExpeditionLockout
+      tags:
+      - CharacterExpeditionLockout
+  /character_expedition_lockouts:
+    get:
+      consumes:
+      - application/json
+      operationId: listCharacterExpeditionLockouts
+      parameters:
+      - description: 'Relationships [all] for all [number] for depth of relationships
+          to load or [.] separated relationship names '
+        in: query
+        name: includes
+        type: string
+      - description: 'Filter on specific fields. Multiple conditions [.] separated
+          Example: col_like_value.col2__val2'
+        in: query
+        name: where
+        type: string
+      - description: 'Filter on specific fields (Chained ors). Multiple conditions
+          [.] separated Example: col_like_value.col2__val2'
+        in: query
+        name: whereOr
+        type: string
+      - description: 'Rows to limit in response (Default: 10,000)'
+        in: query
+        name: limit
+        type: string
+      - description: Order by [field]
+        in: query
+        name: orderBy
+        type: string
+      - description: Order by field direction
+        in: query
+        name: orderDirection
+        type: string
+      - description: Column names [.] separated to fetch specific fields in response
+        in: query
+        name: select
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.CharacterExpeditionLockout'
+            type: array
+        "500":
+          description: Bad query request
+          schema:
+            type: string
+      summary: Lists CharacterExpeditionLockouts
+      tags:
+      - CharacterExpeditionLockout
   /character_inspect_message:
     put:
       consumes:
@@ -8456,6 +8795,11 @@ paths:
           Example: col_like_value.col2__val2'
         in: query
         name: where
+        type: string
+      - description: 'Filter on specific fields (Chained ors). Multiple conditions
+          [.] separated Example: col_like_value.col2__val2'
+        in: query
+        name: whereOr
         type: string
       - description: 'Rows to limit in response (Default: 10,000)'
         in: query
@@ -8637,6 +8981,11 @@ paths:
         in: query
         name: where
         type: string
+      - description: 'Filter on specific fields (Chained ors). Multiple conditions
+          [.] separated Example: col_like_value.col2__val2'
+        in: query
+        name: whereOr
+        type: string
       - description: 'Rows to limit in response (Default: 10,000)'
         in: query
         name: limit
@@ -8817,6 +9166,11 @@ paths:
         in: query
         name: where
         type: string
+      - description: 'Filter on specific fields (Chained ors). Multiple conditions
+          [.] separated Example: col_like_value.col2__val2'
+        in: query
+        name: whereOr
+        type: string
       - description: 'Rows to limit in response (Default: 10,000)'
         in: query
         name: limit
@@ -8864,6 +9218,11 @@ paths:
           Example: col_like_value.col2__val2'
         in: query
         name: where
+        type: string
+      - description: 'Filter on specific fields (Chained ors). Multiple conditions
+          [.] separated Example: col_like_value.col2__val2'
+        in: query
+        name: whereOr
         type: string
       - description: 'Rows to limit in response (Default: 10,000)'
         in: query
@@ -9177,6 +9536,11 @@ paths:
         in: query
         name: where
         type: string
+      - description: 'Filter on specific fields (Chained ors). Multiple conditions
+          [.] separated Example: col_like_value.col2__val2'
+        in: query
+        name: whereOr
+        type: string
       - description: 'Rows to limit in response (Default: 10,000)'
         in: query
         name: limit
@@ -9356,6 +9720,11 @@ paths:
           Example: col_like_value.col2__val2'
         in: query
         name: where
+        type: string
+      - description: 'Filter on specific fields (Chained ors). Multiple conditions
+          [.] separated Example: col_like_value.col2__val2'
+        in: query
+        name: whereOr
         type: string
       - description: 'Rows to limit in response (Default: 10,000)'
         in: query
@@ -9537,6 +9906,11 @@ paths:
         in: query
         name: where
         type: string
+      - description: 'Filter on specific fields (Chained ors). Multiple conditions
+          [.] separated Example: col_like_value.col2__val2'
+        in: query
+        name: whereOr
+        type: string
       - description: 'Rows to limit in response (Default: 10,000)'
         in: query
         name: limit
@@ -9716,6 +10090,11 @@ paths:
           Example: col_like_value.col2__val2'
         in: query
         name: where
+        type: string
+      - description: 'Filter on specific fields (Chained ors). Multiple conditions
+          [.] separated Example: col_like_value.col2__val2'
+        in: query
+        name: whereOr
         type: string
       - description: 'Rows to limit in response (Default: 10,000)'
         in: query
@@ -9897,6 +10276,11 @@ paths:
         in: query
         name: where
         type: string
+      - description: 'Filter on specific fields (Chained ors). Multiple conditions
+          [.] separated Example: col_like_value.col2__val2'
+        in: query
+        name: whereOr
+        type: string
       - description: 'Rows to limit in response (Default: 10,000)'
         in: query
         name: limit
@@ -10076,6 +10460,11 @@ paths:
           Example: col_like_value.col2__val2'
         in: query
         name: where
+        type: string
+      - description: 'Filter on specific fields (Chained ors). Multiple conditions
+          [.] separated Example: col_like_value.col2__val2'
+        in: query
+        name: whereOr
         type: string
       - description: 'Rows to limit in response (Default: 10,000)'
         in: query
@@ -10257,6 +10646,11 @@ paths:
         in: query
         name: where
         type: string
+      - description: 'Filter on specific fields (Chained ors). Multiple conditions
+          [.] separated Example: col_like_value.col2__val2'
+        in: query
+        name: whereOr
+        type: string
       - description: 'Rows to limit in response (Default: 10,000)'
         in: query
         name: limit
@@ -10436,6 +10830,11 @@ paths:
           Example: col_like_value.col2__val2'
         in: query
         name: where
+        type: string
+      - description: 'Filter on specific fields (Chained ors). Multiple conditions
+          [.] separated Example: col_like_value.col2__val2'
+        in: query
+        name: whereOr
         type: string
       - description: 'Rows to limit in response (Default: 10,000)'
         in: query
@@ -10617,6 +11016,11 @@ paths:
         in: query
         name: where
         type: string
+      - description: 'Filter on specific fields (Chained ors). Multiple conditions
+          [.] separated Example: col_like_value.col2__val2'
+        in: query
+        name: whereOr
+        type: string
       - description: 'Rows to limit in response (Default: 10,000)'
         in: query
         name: limit
@@ -10797,6 +11201,11 @@ paths:
         in: query
         name: where
         type: string
+      - description: 'Filter on specific fields (Chained ors). Multiple conditions
+          [.] separated Example: col_like_value.col2__val2'
+        in: query
+        name: whereOr
+        type: string
       - description: 'Rows to limit in response (Default: 10,000)'
         in: query
         name: limit
@@ -10976,6 +11385,11 @@ paths:
           Example: col_like_value.col2__val2'
         in: query
         name: where
+        type: string
+      - description: 'Filter on specific fields (Chained ors). Multiple conditions
+          [.] separated Example: col_like_value.col2__val2'
+        in: query
+        name: whereOr
         type: string
       - description: 'Rows to limit in response (Default: 10,000)'
         in: query
@@ -11289,6 +11703,11 @@ paths:
         in: query
         name: where
         type: string
+      - description: 'Filter on specific fields (Chained ors). Multiple conditions
+          [.] separated Example: col_like_value.col2__val2'
+        in: query
+        name: whereOr
+        type: string
       - description: 'Rows to limit in response (Default: 10,000)'
         in: query
         name: limit
@@ -11469,6 +11888,11 @@ paths:
         in: query
         name: where
         type: string
+      - description: 'Filter on specific fields (Chained ors). Multiple conditions
+          [.] separated Example: col_like_value.col2__val2'
+        in: query
+        name: whereOr
+        type: string
       - description: 'Rows to limit in response (Default: 10,000)'
         in: query
         name: limit
@@ -11516,6 +11940,11 @@ paths:
           Example: col_like_value.col2__val2'
         in: query
         name: where
+        type: string
+      - description: 'Filter on specific fields (Chained ors). Multiple conditions
+          [.] separated Example: col_like_value.col2__val2'
+        in: query
+        name: whereOr
         type: string
       - description: 'Rows to limit in response (Default: 10,000)'
         in: query
@@ -11829,6 +12258,11 @@ paths:
         in: query
         name: where
         type: string
+      - description: 'Filter on specific fields (Chained ors). Multiple conditions
+          [.] separated Example: col_like_value.col2__val2'
+        in: query
+        name: whereOr
+        type: string
       - description: 'Rows to limit in response (Default: 10,000)'
         in: query
         name: limit
@@ -11876,6 +12310,11 @@ paths:
           Example: col_like_value.col2__val2'
         in: query
         name: where
+        type: string
+      - description: 'Filter on specific fields (Chained ors). Multiple conditions
+          [.] separated Example: col_like_value.col2__val2'
+        in: query
+        name: whereOr
         type: string
       - description: 'Rows to limit in response (Default: 10,000)'
         in: query
@@ -12057,6 +12496,11 @@ paths:
         in: query
         name: where
         type: string
+      - description: 'Filter on specific fields (Chained ors). Multiple conditions
+          [.] separated Example: col_like_value.col2__val2'
+        in: query
+        name: whereOr
+        type: string
       - description: 'Rows to limit in response (Default: 10,000)'
         in: query
         name: limit
@@ -12236,6 +12680,11 @@ paths:
           Example: col_like_value.col2__val2'
         in: query
         name: where
+        type: string
+      - description: 'Filter on specific fields (Chained ors). Multiple conditions
+          [.] separated Example: col_like_value.col2__val2'
+        in: query
+        name: whereOr
         type: string
       - description: 'Rows to limit in response (Default: 10,000)'
         in: query
@@ -12417,6 +12866,11 @@ paths:
         in: query
         name: where
         type: string
+      - description: 'Filter on specific fields (Chained ors). Multiple conditions
+          [.] separated Example: col_like_value.col2__val2'
+        in: query
+        name: whereOr
+        type: string
       - description: 'Rows to limit in response (Default: 10,000)'
         in: query
         name: limit
@@ -12596,6 +13050,11 @@ paths:
           Example: col_like_value.col2__val2'
         in: query
         name: where
+        type: string
+      - description: 'Filter on specific fields (Chained ors). Multiple conditions
+          [.] separated Example: col_like_value.col2__val2'
+        in: query
+        name: whereOr
         type: string
       - description: 'Rows to limit in response (Default: 10,000)'
         in: query
@@ -12777,6 +13236,11 @@ paths:
         in: query
         name: where
         type: string
+      - description: 'Filter on specific fields (Chained ors). Multiple conditions
+          [.] separated Example: col_like_value.col2__val2'
+        in: query
+        name: whereOr
+        type: string
       - description: 'Rows to limit in response (Default: 10,000)'
         in: query
         name: limit
@@ -12956,6 +13420,11 @@ paths:
           Example: col_like_value.col2__val2'
         in: query
         name: where
+        type: string
+      - description: 'Filter on specific fields (Chained ors). Multiple conditions
+          [.] separated Example: col_like_value.col2__val2'
+        in: query
+        name: whereOr
         type: string
       - description: 'Rows to limit in response (Default: 10,000)'
         in: query
@@ -13137,6 +13606,11 @@ paths:
         in: query
         name: where
         type: string
+      - description: 'Filter on specific fields (Chained ors). Multiple conditions
+          [.] separated Example: col_like_value.col2__val2'
+        in: query
+        name: whereOr
+        type: string
       - description: 'Rows to limit in response (Default: 10,000)'
         in: query
         name: limit
@@ -13316,6 +13790,11 @@ paths:
           Example: col_like_value.col2__val2'
         in: query
         name: where
+        type: string
+      - description: 'Filter on specific fields (Chained ors). Multiple conditions
+          [.] separated Example: col_like_value.col2__val2'
+        in: query
+        name: whereOr
         type: string
       - description: 'Rows to limit in response (Default: 10,000)'
         in: query
@@ -13629,6 +14108,11 @@ paths:
         in: query
         name: where
         type: string
+      - description: 'Filter on specific fields (Chained ors). Multiple conditions
+          [.] separated Example: col_like_value.col2__val2'
+        in: query
+        name: whereOr
+        type: string
       - description: 'Rows to limit in response (Default: 10,000)'
         in: query
         name: limit
@@ -13676,6 +14160,11 @@ paths:
           Example: col_like_value.col2__val2'
         in: query
         name: where
+        type: string
+      - description: 'Filter on specific fields (Chained ors). Multiple conditions
+          [.] separated Example: col_like_value.col2__val2'
+        in: query
+        name: whereOr
         type: string
       - description: 'Rows to limit in response (Default: 10,000)'
         in: query
@@ -13857,6 +14346,11 @@ paths:
         in: query
         name: where
         type: string
+      - description: 'Filter on specific fields (Chained ors). Multiple conditions
+          [.] separated Example: col_like_value.col2__val2'
+        in: query
+        name: whereOr
+        type: string
       - description: 'Rows to limit in response (Default: 10,000)'
         in: query
         name: limit
@@ -13904,6 +14398,11 @@ paths:
           Example: col_like_value.col2__val2'
         in: query
         name: where
+        type: string
+      - description: 'Filter on specific fields (Chained ors). Multiple conditions
+          [.] separated Example: col_like_value.col2__val2'
+        in: query
+        name: whereOr
         type: string
       - description: 'Rows to limit in response (Default: 10,000)'
         in: query
@@ -14217,6 +14716,11 @@ paths:
         in: query
         name: where
         type: string
+      - description: 'Filter on specific fields (Chained ors). Multiple conditions
+          [.] separated Example: col_like_value.col2__val2'
+        in: query
+        name: whereOr
+        type: string
       - description: 'Rows to limit in response (Default: 10,000)'
         in: query
         name: limit
@@ -14396,6 +14900,11 @@ paths:
           Example: col_like_value.col2__val2'
         in: query
         name: where
+        type: string
+      - description: 'Filter on specific fields (Chained ors). Multiple conditions
+          [.] separated Example: col_like_value.col2__val2'
+        in: query
+        name: whereOr
         type: string
       - description: 'Rows to limit in response (Default: 10,000)'
         in: query
@@ -14577,6 +15086,11 @@ paths:
         in: query
         name: where
         type: string
+      - description: 'Filter on specific fields (Chained ors). Multiple conditions
+          [.] separated Example: col_like_value.col2__val2'
+        in: query
+        name: whereOr
+        type: string
       - description: 'Rows to limit in response (Default: 10,000)'
         in: query
         name: limit
@@ -14756,6 +15270,11 @@ paths:
           Example: col_like_value.col2__val2'
         in: query
         name: where
+        type: string
+      - description: 'Filter on specific fields (Chained ors). Multiple conditions
+          [.] separated Example: col_like_value.col2__val2'
+        in: query
+        name: whereOr
         type: string
       - description: 'Rows to limit in response (Default: 10,000)'
         in: query
@@ -14937,6 +15456,11 @@ paths:
         in: query
         name: where
         type: string
+      - description: 'Filter on specific fields (Chained ors). Multiple conditions
+          [.] separated Example: col_like_value.col2__val2'
+        in: query
+        name: whereOr
+        type: string
       - description: 'Rows to limit in response (Default: 10,000)'
         in: query
         name: limit
@@ -15116,6 +15640,11 @@ paths:
           Example: col_like_value.col2__val2'
         in: query
         name: where
+        type: string
+      - description: 'Filter on specific fields (Chained ors). Multiple conditions
+          [.] separated Example: col_like_value.col2__val2'
+        in: query
+        name: whereOr
         type: string
       - description: 'Rows to limit in response (Default: 10,000)'
         in: query
@@ -15297,6 +15826,11 @@ paths:
         in: query
         name: where
         type: string
+      - description: 'Filter on specific fields (Chained ors). Multiple conditions
+          [.] separated Example: col_like_value.col2__val2'
+        in: query
+        name: whereOr
+        type: string
       - description: 'Rows to limit in response (Default: 10,000)'
         in: query
         name: limit
@@ -15476,6 +16010,11 @@ paths:
           Example: col_like_value.col2__val2'
         in: query
         name: where
+        type: string
+      - description: 'Filter on specific fields (Chained ors). Multiple conditions
+          [.] separated Example: col_like_value.col2__val2'
+        in: query
+        name: whereOr
         type: string
       - description: 'Rows to limit in response (Default: 10,000)'
         in: query
@@ -15678,6 +16217,11 @@ paths:
         in: query
         name: where
         type: string
+      - description: 'Filter on specific fields (Chained ors). Multiple conditions
+          [.] separated Example: col_like_value.col2__val2'
+        in: query
+        name: whereOr
+        type: string
       - description: 'Rows to limit in response (Default: 10,000)'
         in: query
         name: limit
@@ -15857,6 +16401,11 @@ paths:
           Example: col_like_value.col2__val2'
         in: query
         name: where
+        type: string
+      - description: 'Filter on specific fields (Chained ors). Multiple conditions
+          [.] separated Example: col_like_value.col2__val2'
+        in: query
+        name: whereOr
         type: string
       - description: 'Rows to limit in response (Default: 10,000)'
         in: query
@@ -16038,6 +16587,11 @@ paths:
         in: query
         name: where
         type: string
+      - description: 'Filter on specific fields (Chained ors). Multiple conditions
+          [.] separated Example: col_like_value.col2__val2'
+        in: query
+        name: whereOr
+        type: string
       - description: 'Rows to limit in response (Default: 10,000)'
         in: query
         name: limit
@@ -16217,6 +16771,11 @@ paths:
           Example: col_like_value.col2__val2'
         in: query
         name: where
+        type: string
+      - description: 'Filter on specific fields (Chained ors). Multiple conditions
+          [.] separated Example: col_like_value.col2__val2'
+        in: query
+        name: whereOr
         type: string
       - description: 'Rows to limit in response (Default: 10,000)'
         in: query
@@ -16398,6 +16957,11 @@ paths:
         in: query
         name: where
         type: string
+      - description: 'Filter on specific fields (Chained ors). Multiple conditions
+          [.] separated Example: col_like_value.col2__val2'
+        in: query
+        name: whereOr
+        type: string
       - description: 'Rows to limit in response (Default: 10,000)'
         in: query
         name: limit
@@ -16445,6 +17009,11 @@ paths:
           Example: col_like_value.col2__val2'
         in: query
         name: where
+        type: string
+      - description: 'Filter on specific fields (Chained ors). Multiple conditions
+          [.] separated Example: col_like_value.col2__val2'
+        in: query
+        name: whereOr
         type: string
       - description: 'Rows to limit in response (Default: 10,000)'
         in: query
@@ -16625,6 +17194,11 @@ paths:
           Example: col_like_value.col2__val2'
         in: query
         name: where
+        type: string
+      - description: 'Filter on specific fields (Chained ors). Multiple conditions
+          [.] separated Example: col_like_value.col2__val2'
+        in: query
+        name: whereOr
         type: string
       - description: 'Rows to limit in response (Default: 10,000)'
         in: query
@@ -16938,6 +17512,11 @@ paths:
         in: query
         name: where
         type: string
+      - description: 'Filter on specific fields (Chained ors). Multiple conditions
+          [.] separated Example: col_like_value.col2__val2'
+        in: query
+        name: whereOr
+        type: string
       - description: 'Rows to limit in response (Default: 10,000)'
         in: query
         name: limit
@@ -17117,6 +17696,11 @@ paths:
           Example: col_like_value.col2__val2'
         in: query
         name: where
+        type: string
+      - description: 'Filter on specific fields (Chained ors). Multiple conditions
+          [.] separated Example: col_like_value.col2__val2'
+        in: query
+        name: whereOr
         type: string
       - description: 'Rows to limit in response (Default: 10,000)'
         in: query
@@ -17298,6 +17882,11 @@ paths:
         in: query
         name: where
         type: string
+      - description: 'Filter on specific fields (Chained ors). Multiple conditions
+          [.] separated Example: col_like_value.col2__val2'
+        in: query
+        name: whereOr
+        type: string
       - description: 'Rows to limit in response (Default: 10,000)'
         in: query
         name: limit
@@ -17477,6 +18066,11 @@ paths:
           Example: col_like_value.col2__val2'
         in: query
         name: where
+        type: string
+      - description: 'Filter on specific fields (Chained ors). Multiple conditions
+          [.] separated Example: col_like_value.col2__val2'
+        in: query
+        name: whereOr
         type: string
       - description: 'Rows to limit in response (Default: 10,000)'
         in: query
@@ -17658,6 +18252,11 @@ paths:
         in: query
         name: where
         type: string
+      - description: 'Filter on specific fields (Chained ors). Multiple conditions
+          [.] separated Example: col_like_value.col2__val2'
+        in: query
+        name: whereOr
+        type: string
       - description: 'Rows to limit in response (Default: 10,000)'
         in: query
         name: limit
@@ -17837,6 +18436,11 @@ paths:
           Example: col_like_value.col2__val2'
         in: query
         name: where
+        type: string
+      - description: 'Filter on specific fields (Chained ors). Multiple conditions
+          [.] separated Example: col_like_value.col2__val2'
+        in: query
+        name: whereOr
         type: string
       - description: 'Rows to limit in response (Default: 10,000)'
         in: query
@@ -18018,6 +18622,11 @@ paths:
         in: query
         name: where
         type: string
+      - description: 'Filter on specific fields (Chained ors). Multiple conditions
+          [.] separated Example: col_like_value.col2__val2'
+        in: query
+        name: whereOr
+        type: string
       - description: 'Rows to limit in response (Default: 10,000)'
         in: query
         name: limit
@@ -18050,6 +18659,191 @@ paths:
       summary: Lists Saylinks
       tags:
       - Saylink
+  /server_scheduled_event:
+    put:
+      consumes:
+      - application/json
+      operationId: createServerScheduledEvent
+      parameters:
+      - description: ServerScheduledEvent
+        in: body
+        name: server_scheduled_event
+        required: true
+        schema:
+          $ref: '#/definitions/models.ServerScheduledEvent'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.ServerScheduledEvent'
+            type: array
+        "500":
+          description: Error inserting entity
+          schema:
+            type: string
+      summary: Creates ServerScheduledEvent
+      tags:
+      - ServerScheduledEvent
+  /server_scheduled_event/{id}:
+    delete:
+      consumes:
+      - application/json
+      operationId: deleteServerScheduledEvent
+      parameters:
+      - description: Id
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Entity deleted successfully
+          schema:
+            type: string
+        "404":
+          description: Cannot find entity
+          schema:
+            type: string
+        "500":
+          description: Error deleting entity
+          schema:
+            type: string
+      summary: Deletes ServerScheduledEvent
+      tags:
+      - ServerScheduledEvent
+    get:
+      consumes:
+      - application/json
+      operationId: getServerScheduledEvent
+      parameters:
+      - description: Id
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: 'Relationships [all] for all [number] for depth of relationships
+          to load or [.] separated relationship names '
+        in: query
+        name: includes
+        type: string
+      - description: Column names [.] separated to fetch specific fields in response
+        in: query
+        name: select
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.ServerScheduledEvent'
+            type: array
+        "404":
+          description: Entity not found
+          schema:
+            type: string
+        "500":
+          description: Bad query request
+          schema:
+            type: string
+      summary: Gets ServerScheduledEvent
+      tags:
+      - ServerScheduledEvent
+    patch:
+      consumes:
+      - application/json
+      operationId: updateServerScheduledEvent
+      parameters:
+      - description: Id
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: ServerScheduledEvent
+        in: body
+        name: server_scheduled_event
+        required: true
+        schema:
+          $ref: '#/definitions/models.ServerScheduledEvent'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.ServerScheduledEvent'
+            type: array
+        "404":
+          description: Cannot find entity
+          schema:
+            type: string
+        "500":
+          description: Error updating entity
+          schema:
+            type: string
+      summary: Updates ServerScheduledEvent
+      tags:
+      - ServerScheduledEvent
+  /server_scheduled_events:
+    get:
+      consumes:
+      - application/json
+      operationId: listServerScheduledEvents
+      parameters:
+      - description: 'Relationships [all] for all [number] for depth of relationships
+          to load or [.] separated relationship names '
+        in: query
+        name: includes
+        type: string
+      - description: 'Filter on specific fields. Multiple conditions [.] separated
+          Example: col_like_value.col2__val2'
+        in: query
+        name: where
+        type: string
+      - description: 'Filter on specific fields (Chained ors). Multiple conditions
+          [.] separated Example: col_like_value.col2__val2'
+        in: query
+        name: whereOr
+        type: string
+      - description: 'Rows to limit in response (Default: 10,000)'
+        in: query
+        name: limit
+        type: string
+      - description: Order by [field]
+        in: query
+        name: orderBy
+        type: string
+      - description: Order by field direction
+        in: query
+        name: orderDirection
+        type: string
+      - description: Column names [.] separated to fetch specific fields in response
+        in: query
+        name: select
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.ServerScheduledEvent'
+            type: array
+        "500":
+          description: Bad query request
+          schema:
+            type: string
+      summary: Lists ServerScheduledEvents
+      tags:
+      - ServerScheduledEvent
   /spawn_2:
     put:
       consumes:
@@ -18117,8 +18911,8 @@ paths:
         name: id
         required: true
         type: integer
-      - description: 'Relationships [all] for all [number] for depth of relationships
-          to load or [.] separated relationship names '
+      - description: Relationships [all] for all [number] for depth of relationships
+          to load or [.] separated relationship names <h4>Relationships</h4>Spawnentries<br>Spawnentries.NpcType<br>Spawnentries.NpcType.AlternateCurrency<br>Spawnentries.NpcType.Merchantlists<br>Spawnentries.NpcType.NpcFactions<br>Spawnentries.NpcType.NpcFactions.NpcFactionEntries<br>Spawnentries.NpcType.NpcSpells<br>Spawnentries.NpcType.NpcSpells.NpcSpellsEntries<br>Spawnentries.Spawngroup<br>Spawnentries.Spawngroup.Spawn2<br>Spawngroup
         in: query
         name: includes
         type: string
@@ -18188,8 +18982,8 @@ paths:
       - application/json
       operationId: listSpawn2s
       parameters:
-      - description: 'Relationships [all] for all [number] for depth of relationships
-          to load or [.] separated relationship names '
+      - description: Relationships [all] for all [number] for depth of relationships
+          to load or [.] separated relationship names <h4>Relationships</h4>Spawnentries<br>Spawnentries.NpcType<br>Spawnentries.NpcType.AlternateCurrency<br>Spawnentries.NpcType.Merchantlists<br>Spawnentries.NpcType.NpcFactions<br>Spawnentries.NpcType.NpcFactions.NpcFactionEntries<br>Spawnentries.NpcType.NpcSpells<br>Spawnentries.NpcType.NpcSpells.NpcSpellsEntries<br>Spawnentries.Spawngroup<br>Spawnentries.Spawngroup.Spawn2<br>Spawngroup
         in: query
         name: includes
         type: string
@@ -18197,6 +18991,11 @@ paths:
           Example: col_like_value.col2__val2'
         in: query
         name: where
+        type: string
+      - description: 'Filter on specific fields (Chained ors). Multiple conditions
+          [.] separated Example: col_like_value.col2__val2'
+        in: query
+        name: whereOr
         type: string
       - description: 'Rows to limit in response (Default: 10,000)'
         in: query
@@ -18510,6 +19309,11 @@ paths:
         in: query
         name: where
         type: string
+      - description: 'Filter on specific fields (Chained ors). Multiple conditions
+          [.] separated Example: col_like_value.col2__val2'
+        in: query
+        name: whereOr
+        type: string
       - description: 'Rows to limit in response (Default: 10,000)'
         in: query
         name: limit
@@ -18738,6 +19542,11 @@ paths:
         in: query
         name: where
         type: string
+      - description: 'Filter on specific fields (Chained ors). Multiple conditions
+          [.] separated Example: col_like_value.col2__val2'
+        in: query
+        name: whereOr
+        type: string
       - description: 'Rows to limit in response (Default: 10,000)'
         in: query
         name: limit
@@ -18917,6 +19726,11 @@ paths:
           Example: col_like_value.col2__val2'
         in: query
         name: where
+        type: string
+      - description: 'Filter on specific fields (Chained ors). Multiple conditions
+          [.] separated Example: col_like_value.col2__val2'
+        in: query
+        name: whereOr
         type: string
       - description: 'Rows to limit in response (Default: 10,000)'
         in: query
@@ -19098,6 +19912,11 @@ paths:
         in: query
         name: where
         type: string
+      - description: 'Filter on specific fields (Chained ors). Multiple conditions
+          [.] separated Example: col_like_value.col2__val2'
+        in: query
+        name: whereOr
+        type: string
       - description: 'Rows to limit in response (Default: 10,000)'
         in: query
         name: limit
@@ -19277,6 +20096,11 @@ paths:
           Example: col_like_value.col2__val2'
         in: query
         name: where
+        type: string
+      - description: 'Filter on specific fields (Chained ors). Multiple conditions
+          [.] separated Example: col_like_value.col2__val2'
+        in: query
+        name: whereOr
         type: string
       - description: 'Rows to limit in response (Default: 10,000)'
         in: query
@@ -19458,6 +20282,11 @@ paths:
         in: query
         name: where
         type: string
+      - description: 'Filter on specific fields (Chained ors). Multiple conditions
+          [.] separated Example: col_like_value.col2__val2'
+        in: query
+        name: whereOr
+        type: string
       - description: 'Rows to limit in response (Default: 10,000)'
         in: query
         name: limit
@@ -19637,6 +20466,11 @@ paths:
           Example: col_like_value.col2__val2'
         in: query
         name: where
+        type: string
+      - description: 'Filter on specific fields (Chained ors). Multiple conditions
+          [.] separated Example: col_like_value.col2__val2'
+        in: query
+        name: whereOr
         type: string
       - description: 'Rows to limit in response (Default: 10,000)'
         in: query
@@ -19818,6 +20652,11 @@ paths:
         in: query
         name: where
         type: string
+      - description: 'Filter on specific fields (Chained ors). Multiple conditions
+          [.] separated Example: col_like_value.col2__val2'
+        in: query
+        name: whereOr
+        type: string
       - description: 'Rows to limit in response (Default: 10,000)'
         in: query
         name: limit
@@ -19997,6 +20836,11 @@ paths:
           Example: col_like_value.col2__val2'
         in: query
         name: where
+        type: string
+      - description: 'Filter on specific fields (Chained ors). Multiple conditions
+          [.] separated Example: col_like_value.col2__val2'
+        in: query
+        name: whereOr
         type: string
       - description: 'Rows to limit in response (Default: 10,000)'
         in: query
@@ -20178,6 +21022,11 @@ paths:
         in: query
         name: where
         type: string
+      - description: 'Filter on specific fields (Chained ors). Multiple conditions
+          [.] separated Example: col_like_value.col2__val2'
+        in: query
+        name: whereOr
+        type: string
       - description: 'Rows to limit in response (Default: 10,000)'
         in: query
         name: limit
@@ -20357,6 +21206,11 @@ paths:
           Example: col_like_value.col2__val2'
         in: query
         name: where
+        type: string
+      - description: 'Filter on specific fields (Chained ors). Multiple conditions
+          [.] separated Example: col_like_value.col2__val2'
+        in: query
+        name: whereOr
         type: string
       - description: 'Rows to limit in response (Default: 10,000)'
         in: query
@@ -20538,6 +21392,11 @@ paths:
         in: query
         name: where
         type: string
+      - description: 'Filter on specific fields (Chained ors). Multiple conditions
+          [.] separated Example: col_like_value.col2__val2'
+        in: query
+        name: whereOr
+        type: string
       - description: 'Rows to limit in response (Default: 10,000)'
         in: query
         name: limit
@@ -20624,7 +21483,7 @@ paths:
           description: Error deleting entity
           schema:
             type: string
-      summary: Deletes Zone
+      summary: Delegenerate-axios-clienttes Zone
       tags:
       - Zone
     get:
@@ -20850,6 +21709,11 @@ paths:
         in: query
         name: where
         type: string
+      - description: 'Filter on specific fields (Chained ors). Multiple conditions
+          [.] separated Example: col_like_value.col2__val2'
+        in: query
+        name: whereOr
+        type: string
       - description: 'Rows to limit in response (Default: 10,000)'
         in: query
         name: limit
@@ -20897,6 +21761,11 @@ paths:
           Example: col_like_value.col2__val2'
         in: query
         name: where
+        type: string
+      - description: 'Filter on specific fields (Chained ors). Multiple conditions
+          [.] separated Example: col_like_value.col2__val2'
+        in: query
+        name: whereOr
         type: string
       - description: 'Rows to limit in response (Default: 10,000)'
         in: query

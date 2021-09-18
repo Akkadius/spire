@@ -44,6 +44,7 @@ func (e *RespawnTimeController) Routes() []*routes.Route {
 // @Tags RespawnTime
 // @Param includes query string false "Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names "
 // @Param where query string false "Filter on specific fields. Multiple conditions [.] separated Example: col_like_value.col2__val2"
+// @Param whereOr query string false "Filter on specific fields (Chained ors). Multiple conditions [.] separated Example: col_like_value.col2__val2"
 // @Param limit query string false "Rows to limit in response (Default: 10,000)"
 // @Param orderBy query string false "Order by [field]"
 // @Param orderDirection query string false "Order by field direction"

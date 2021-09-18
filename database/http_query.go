@@ -54,48 +54,17 @@ func (d *DatabaseResolver) QueryContext(model models.Modelable, c echo.Context) 
 			continue
 		}
 
-		// parse where field = value
-		wheres := strings.Split(filter, equalDelimiter)
-		if len(wheres) > 1 {
-			query = query.Where(fmt.Sprintf("%v = ?", wheres[0]), wheres[1])
+		query = d.handleWheres(query, filter)
+	}
+
+	// where or filters
+	whereOrParam := c.QueryParam("whereOr")
+	for _, filter := range strings.Split(whereOrParam, whereDelimiter) {
+		if len(filter) == 0 {
+			continue
 		}
 
-		// parse where field like '%value%'
-		wheres = strings.Split(filter, likeDelimiter)
-		if len(wheres) > 1 {
-			query = query.Where(fmt.Sprintf("%v like ?", wheres[0]), fmt.Sprintf("%%%v%%", wheres[1]))
-		}
-
-		// parse where [value > x]
-		wheres = strings.Split(filter, greaterThan)
-		if len(wheres) > 1 {
-			query = query.Where(fmt.Sprintf("%v > ?", wheres[0]), wheres[1])
-		}
-
-		// parse where [value < x]
-		wheres = strings.Split(filter, lesserThan)
-		if len(wheres) > 1 {
-			query = query.Where(fmt.Sprintf("%v < ?", wheres[0]), wheres[1])
-		}
-
-		// parse where [value >= x]
-		wheres = strings.Split(filter, greaterThanEqual)
-		if len(wheres) > 1 {
-			query = query.Where(fmt.Sprintf("%v >= ?", wheres[0]), wheres[1])
-		}
-
-		// parse where [value <= x]
-		wheres = strings.Split(filter, lesserThanEqual)
-		if len(wheres) > 1 {
-			query = query.Where(fmt.Sprintf("%v <= ?", wheres[0]), wheres[1])
-		}
-
-		// parse where [value = x]
-		wheres = strings.Split(filter, equal)
-		if len(wheres) > 1 {
-			query = query.Where(fmt.Sprintf("%v = ?", wheres[0]), wheres[1])
-		}
-
+		query = d.handleOrWheres(query, filter)
 	}
 
 	// order

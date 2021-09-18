@@ -134,10 +134,20 @@ seed-spire-tables: ##@seed
 #----------------------
 
 generate-axios-client: ##@generate Generate Axios client (Run outside workspace container)
-	$(DRUNPREFIX) docker run --rm -v "$${PWD}:/local" openapitools/openapi-generator-cli generate \
+	$(DRUNPREFIX) docker run --rm -v "$${PWD}:/local" openapitools/openapi-generator-cli:v4.0.0 generate \
         -i /local/docs/swagger.yaml \
         -g typescript-axios \
-        -o /local/frontend/src/app/api/ --additional-properties=useSingleRequestParameter=true
+        -o /local/frontend/src/app/api/ \
+        -c /local/openapi-generator-config.yaml
+
+generate-axios-client-local: ##@generate Generate Axios client (Run outside workspace container)
+	# sudo npm install @openapitools/openapi-generator-cli -g
+	openapi-generator-cli version-manager set 5.0.0
+	openapi-generator-cli generate --enable-post-process-file \
+        -i ./docs/swagger.yaml \
+        -g typescript-axios \
+        -o ./frontend/src/app/api/ \
+        -c ./openapi-generator-config.yaml
 
 generate-swagger: ##@generate Generate swagger docs (Run in workspace container)
 	./scripts/generate-swagger.sh

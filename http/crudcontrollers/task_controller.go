@@ -44,6 +44,7 @@ func (e *TaskController) Routes() []*routes.Route {
 // @Tags Task
 // @Param includes query string false "Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names <h4>Relationships</h4>TaskActivities<br>TaskActivities.Goallists<br>TaskActivities.NpcType<br>TaskActivities.NpcType.AlternateCurrency<br>TaskActivities.NpcType.Merchantlists<br>TaskActivities.NpcType.NpcEmotes<br>TaskActivities.NpcType.NpcFactions<br>TaskActivities.NpcType.NpcFactions.NpcFactionEntries<br>TaskActivities.NpcType.NpcSpells<br>TaskActivities.NpcType.NpcSpells.NpcSpellsEntries<br>TaskActivities.NpcType.NpcTypesTint<br>TaskActivities.NpcType.Spawnentries<br>TaskActivities.NpcType.Spawnentries.Spawngroup<br>TaskActivities.NpcType.Spawnentries.Spawngroup.Spawn2<br>Tasksets"
 // @Param where query string false "Filter on specific fields. Multiple conditions [.] separated Example: col_like_value.col2__val2"
+// @Param whereOr query string false "Filter on specific fields (Chained ors). Multiple conditions [.] separated Example: col_like_value.col2__val2"
 // @Param limit query string false "Rows to limit in response (Default: 10,000)"
 // @Param orderBy query string false "Order by [field]"
 // @Param orderDirection query string false "Order by field direction"

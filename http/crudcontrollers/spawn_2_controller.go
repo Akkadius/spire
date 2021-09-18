@@ -42,8 +42,9 @@ func (e *Spawn2Controller) Routes() []*routes.Route {
 // @Accept json
 // @Produce json
 // @Tags Spawn2
-// @Param includes query string false "Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names "
+// @Param includes query string false "Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names <h4>Relationships</h4>Spawnentries<br>Spawnentries.NpcType<br>Spawnentries.NpcType.AlternateCurrency<br>Spawnentries.NpcType.Merchantlists<br>Spawnentries.NpcType.NpcFactions<br>Spawnentries.NpcType.NpcFactions.NpcFactionEntries<br>Spawnentries.NpcType.NpcSpells<br>Spawnentries.NpcType.NpcSpells.NpcSpellsEntries<br>Spawnentries.Spawngroup<br>Spawnentries.Spawngroup.Spawn2<br>Spawngroup"
 // @Param where query string false "Filter on specific fields. Multiple conditions [.] separated Example: col_like_value.col2__val2"
+// @Param whereOr query string false "Filter on specific fields (Chained ors). Multiple conditions [.] separated Example: col_like_value.col2__val2"
 // @Param limit query string false "Rows to limit in response (Default: 10,000)"
 // @Param orderBy query string false "Order by [field]"
 // @Param orderDirection query string false "Order by field direction"
@@ -68,7 +69,7 @@ func (e *Spawn2Controller) listSpawn2s(c echo.Context) error {
 // @Produce json
 // @Tags Spawn2
 // @Param id path int true "Id"
-// @Param includes query string false "Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names "
+// @Param includes query string false "Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names <h4>Relationships</h4>Spawnentries<br>Spawnentries.NpcType<br>Spawnentries.NpcType.AlternateCurrency<br>Spawnentries.NpcType.Merchantlists<br>Spawnentries.NpcType.NpcFactions<br>Spawnentries.NpcType.NpcFactions.NpcFactionEntries<br>Spawnentries.NpcType.NpcSpells<br>Spawnentries.NpcType.NpcSpells.NpcSpellsEntries<br>Spawnentries.Spawngroup<br>Spawnentries.Spawngroup.Spawn2<br>Spawngroup"
 // @Param select query string false "Column names [.] separated to fetch specific fields in response"
 // @Success 200 {array} models.Spawn2
 // @Failure 404 {string} string "Entity not found"
