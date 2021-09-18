@@ -111,6 +111,26 @@
 - disabled: false
   featured: false
   inputtype: text
+  label: Reward Radiant Crystals
+  model: reward_radiant_crystals
+  readonly: false
+  rows: ""
+  styleclasses: col-12
+  type: input
+  help: ""
+- disabled: false
+  featured: false
+  inputtype: text
+  label: Reward Ebon Crystals
+  model: reward_ebon_crystals
+  readonly: false
+  rows: ""
+  styleclasses: col-12
+  type: input
+  help: ""
+- disabled: false
+  featured: false
+  inputtype: text
   label: Minlevel
   model: minlevel
   readonly: false
@@ -128,6 +148,36 @@
   styleclasses: col-12
   type: input
   help: <p>Maximum Level</p>
+- disabled: false
+  featured: false
+  inputtype: text
+  label: Level Spread
+  model: level_spread
+  readonly: false
+  rows: ""
+  styleclasses: col-12
+  type: input
+  help: ""
+- disabled: false
+  featured: false
+  inputtype: text
+  label: Min Players
+  model: min_players
+  readonly: false
+  rows: ""
+  styleclasses: col-12
+  type: input
+  help: ""
+- disabled: false
+  featured: false
+  inputtype: text
+  label: Max Players
+  model: max_players
+  readonly: false
+  rows: ""
+  styleclasses: col-12
+  type: input
+  help: ""
 - disabled: false
   featured: false
   inputtype: text
@@ -158,3 +208,23 @@
   styleclasses: col-12
   type: input
   help: <p>Completion Emote</p>
+- disabled: false
+  featured: false
+  inputtype: text
+  label: Replay Timer Seconds
+  model: replay_timer_seconds
+  readonly: false
+  rows: ""
+  styleclasses: col-12
+  type: input
+  help: ""
+- disabled: false
+  featured: false
+  inputtype: text
+  label: Request Timer Seconds
+  model: request_timer_seconds
+  readonly: false
+  rows: ""
+  styleclasses: col-12
+  type: input
+  help: ""

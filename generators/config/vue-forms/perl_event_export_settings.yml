@@ -1,0 +1,70 @@
+- disabled: false
+  featured: false
+  inputtype: text
+  label: Event Id
+  model: event_id
+  readonly: false
+  rows: ""
+  styleclasses: col-12
+  type: input
+  help: <p><a href="https://eqemu.gitbook.io/quest-api/events" target="_blank">Unique Perl Event Identifier</a></p>
+- disabled: false
+  featured: false
+  inputtype: text
+  label: Event Description
+  model: event_description
+  readonly: false
+  rows: ""
+  styleclasses: col-12
+  type: input
+  help: <p>Event Description</p>
+- disabled: false
+  featured: false
+  inputtype: text
+  label: Export Qglobals
+  model: export_qglobals
+  readonly: false
+  rows: ""
+  styleclasses: col-12
+  type: input
+  help: '<p>Export QGlobals: 0 = False, 1 = True</p>'
+- disabled: false
+  featured: false
+  inputtype: text
+  label: Export Mob
+  model: export_mob
+  readonly: false
+  rows: ""
+  styleclasses: col-12
+  type: input
+  help: '<p>Export Mob: 0 = False, 1 = True</p>'
+- disabled: false
+  featured: false
+  inputtype: text
+  label: Export Zone
+  model: export_zone
+  readonly: false
+  rows: ""
+  styleclasses: col-12
+  type: input
+  help: '<p>Export Zone: 0 = False, 1 = True</p>'
+- disabled: false
+  featured: false
+  inputtype: text
+  label: Export Item
+  model: export_item
+  readonly: false
+  rows: ""
+  styleclasses: col-12
+  type: input
+  help: '<p>Export Item: 0 = False, 1 = True</p>'
+- disabled: false
+  featured: false
+  inputtype: text
+  label: Export Event
+  model: export_event
+  readonly: false
+  rows: ""
+  styleclasses: col-12
+  type: input
+  help: '<p>Export Event: 0 = False, 1 = True</p>'
