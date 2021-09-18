@@ -37,14 +37,19 @@ func NewGenerateConfigurationCommand(
 }
 
 func (c *GenerateConfigurationCommand) Handle(_ *cobra.Command, _ []string) {
+	db, err := c.db.GetEqemuDb().DB()
+	if err != nil {
+		c.logger.Fatal(err)
+	}
+
 	if err := generators.NewGenerateDbSchemaConfig(
-		c.db.GetEqemuDb().DB(),
+		db,
 		c.logger,
 	).Generate(os.Getenv("MYSQL_EQEMU_DATABASE")); err != nil {
 		c.logger.Fatal(err)
 	}
 
-	if err := generators.NewGenerateDbSchemaConfig(c.db.GetEqemuDb().DB(), c.logger).GenerateKeys(); err != nil {
+	if err := generators.NewGenerateDbSchemaConfig(db, c.logger).GenerateKeys(); err != nil {
 		c.logger.Fatal(err)
 	}
 

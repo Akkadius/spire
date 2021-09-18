@@ -4,15 +4,16 @@ import (
 	"errors"
 	"github.com/Akkadius/spire/database"
 	"github.com/Akkadius/spire/env"
+	"gorm.io/driver/mysql"
+	"gorm.io/gorm/logger"
 	"log"
 	"os"
 	"strconv"
 
 	"fmt"
 
-	_ "github.com/go-sql-driver/mysql"
 	"github.com/google/wire"
-	"github.com/jinzhu/gorm"
+	"gorm.io/gorm"
 )
 
 // wire set for loading the stores.
@@ -108,34 +109,47 @@ func provideEQEmuLocalDatabase() (*gorm.DB, error) {
 		return nil, err
 	}
 
-	mysql, err := gorm.Open(
-		"mysql",
-		fmt.Sprintf(
-			"%v:%v@tcp(%v:%v)/%v?charset=utf8&parseTime=True&loc=Local",
-			config.Username,
-			config.Password,
-			config.Host,
-			config.Port,
-			config.Database,
-		),
+	logMode := logger.Silent
+	if config.EnableLogging {
+		logMode = logger.Info
+	}
+
+	db, err := gorm.Open(mysql.Open(fmt.Sprintf(
+		"%v:%v@tcp(%v:%v)/%v?charset=utf8&parseTime=True&loc=Local",
+		config.Username,
+		config.Password,
+		config.Host,
+		config.Port,
+		config.Database,
+	)),
+		&gorm.Config{
+			SkipDefaultTransaction:                   true,
+			DisableForeignKeyConstraintWhenMigrating: true,
+			DisableAutomaticPing:                     false,
+			Logger: logger.Default.LogMode(logMode),
+		},
 	)
+
 	if err != nil {
 		return nil, err
 	}
-	if config.ConnMaxLifetime > 0 {
-		mysql.DB().SetMaxOpenConns(config.ConnMaxLifetime)
-	}
-	if config.MaxIdleConnections > 0 {
-		mysql.DB().SetMaxIdleConns(config.MaxIdleConnections)
-	}
-	if config.MaxOpenConnections > 0 {
-		mysql.DB().SetMaxOpenConns(config.MaxOpenConnections)
-	}
-	if config.EnableLogging {
-		mysql.LogMode(config.EnableLogging)
+
+	sqlDB, err := db.DB()
+	if err != nil {
+		return nil, err
 	}
 
-	return mysql, nil
+	if config.ConnMaxLifetime > 0 {
+		sqlDB.SetMaxOpenConns(config.ConnMaxLifetime)
+	}
+	if config.MaxIdleConnections > 0 {
+		sqlDB.SetMaxIdleConns(config.MaxIdleConnections)
+	}
+	if config.MaxOpenConnections > 0 {
+		sqlDB.SetMaxOpenConns(config.MaxOpenConnections)
+	}
+
+	return db, nil
 }
 
 // return mysql config
@@ -182,32 +196,46 @@ func provideSpireDatabase() (*gorm.DB, error) {
 		return nil, nil
 	}
 
-	mysql, err := gorm.Open(
-		"mysql",
-		fmt.Sprintf(
-			"%v:%v@tcp(%v:%v)/%v?charset=utf8&parseTime=True&loc=Local",
-			config.Username,
-			config.Password,
-			config.Host,
-			config.Port,
-			config.Database,
-		),
+	logMode := logger.Silent
+	if config.EnableLogging {
+		logMode = logger.Info
+	}
+
+	db, err := gorm.Open(mysql.Open(fmt.Sprintf(
+		"%v:%v@tcp(%v:%v)/%v?charset=utf8&parseTime=True&loc=Local",
+		config.Username,
+		config.Password,
+		config.Host,
+		config.Port,
+		config.Database,
+	)),
+		&gorm.Config{
+			SkipDefaultTransaction:                   true,
+			DisableForeignKeyConstraintWhenMigrating: true,
+			DisableAutomaticPing:                     false,
+			Logger: logger.Default.LogMode(logMode),
+		},
 	)
+
 	if err != nil {
 		return nil, err
 	}
-	if config.ConnMaxLifetime > 0 {
-		mysql.DB().SetMaxOpenConns(config.ConnMaxLifetime)
-	}
-	if config.MaxIdleConnections > 0 {
-		mysql.DB().SetMaxIdleConns(config.MaxIdleConnections)
-	}
-	if config.MaxOpenConnections > 0 {
-		mysql.DB().SetMaxOpenConns(config.MaxOpenConnections)
-	}
-	if config.EnableLogging {
-		mysql.LogMode(config.EnableLogging)
+
+	sqlDB, err := db.DB()
+	if err != nil {
+		return nil, err
 	}
 
-	return mysql, nil
+	if config.ConnMaxLifetime > 0 {
+		sqlDB.SetMaxOpenConns(config.ConnMaxLifetime)
+	}
+	if config.MaxIdleConnections > 0 {
+		sqlDB.SetMaxIdleConns(config.MaxIdleConnections)
+	}
+	if config.MaxOpenConnections > 0 {
+		sqlDB.SetMaxOpenConns(config.MaxOpenConnections)
+	}
+
+
+	return db, nil
 }

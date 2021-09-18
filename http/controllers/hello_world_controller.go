@@ -3,7 +3,7 @@ package controllers
 import (
 	"github.com/Akkadius/spire/http/routes"
 	"fmt"
-	"github.com/jinzhu/gorm"
+	"gorm.io/gorm"
 	"github.com/labstack/echo/v4"
 	"github.com/sirupsen/logrus"
 	"net/http"

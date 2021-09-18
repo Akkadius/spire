@@ -119,7 +119,7 @@ func (e *CharacterCorpseController) updateCharacterCorpse(c echo.Context) error 
 		return c.JSON(http.StatusNotFound, echo.Map{"error": "Cannot find entity"})
 	}
 
-	err = e.db.Get(models.CharacterCorpse{}, c).Model(&models.CharacterCorpse{}).Update(&characterCorpse).Error
+	err = e.db.Get(models.CharacterCorpse{}, c).Model(&models.CharacterCorpse{}).Updates(&characterCorpse).Error
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error updating entity: [%v]", err)})
 	}

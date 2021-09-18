@@ -5,7 +5,7 @@ import (
 	"github.com/Akkadius/spire/database"
 	"github.com/Akkadius/spire/http/routes"
 	"github.com/Akkadius/spire/internal/desktop"
-	"github.com/jinzhu/gorm"
+	"gorm.io/gorm"
 	gocache "github.com/patrickmn/go-cache"
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"

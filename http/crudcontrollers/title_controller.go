@@ -119,7 +119,7 @@ func (e *TitleController) updateTitle(c echo.Context) error {
 		return c.JSON(http.StatusNotFound, echo.Map{"error": "Cannot find entity"})
 	}
 
-	err = e.db.Get(models.Title{}, c).Model(&models.Title{}).Update(&title).Error
+	err = e.db.Get(models.Title{}, c).Model(&models.Title{}).Updates(&title).Error
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error updating entity: [%v]", err)})
 	}

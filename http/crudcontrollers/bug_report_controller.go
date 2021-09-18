@@ -119,7 +119,7 @@ func (e *BugReportController) updateBugReport(c echo.Context) error {
 		return c.JSON(http.StatusNotFound, echo.Map{"error": "Cannot find entity"})
 	}
 
-	err = e.db.Get(models.BugReport{}, c).Model(&models.BugReport{}).Update(&bugReport).Error
+	err = e.db.Get(models.BugReport{}, c).Model(&models.BugReport{}).Updates(&bugReport).Error
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error updating entity: [%v]", err)})
 	}

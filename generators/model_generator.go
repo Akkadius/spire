@@ -6,9 +6,9 @@ import (
 	"github.com/Akkadius/spire/env"
 	"github.com/gertd/go-pluralize"
 	"github.com/iancoleman/strcase"
-	"github.com/jinzhu/gorm"
 	"github.com/sirupsen/logrus"
 	"gopkg.in/yaml.v3"
+	"gorm.io/gorm"
 	"io/ioutil"
 	"os"
 	"sort"
@@ -370,23 +370,8 @@ func (g *GenerateModel) getNestedRelationshipsFromTable(table string, prefix str
 
 // return Table names from database
 func (g *GenerateModel) getTableNames() []string {
-	rows, err := g.gorm.DB().Query("SHOW TABLES")
-	if err != nil {
-		g.logger.Warn(err)
-	}
-
 	tableNames := make([]string, 0)
-
-	defer rows.Close()
-	for rows.Next() {
-		var column string
-		err = rows.Scan(&column)
-		if err != nil {
-			g.logger.Warn(err)
-		}
-
-		tableNames = append(tableNames, column)
-	}
+	g.gorm.Raw("SHOW TABLES").Scan(&tableNames)
 
 	return tableNames
 }
@@ -401,27 +386,8 @@ type ShowColumns struct {
 }
 
 func (g *GenerateModel) getColumnDefinitions(tableName string) []ShowColumns {
-	rows, err := g.gorm.DB().Query(fmt.Sprintf("SHOW COLUMNS FROM %v", tableName))
-	if err != nil {
-		g.logger.Warn(err)
-	}
-
 	columnDefs := make([]ShowColumns, 0)
-
-	defer rows.Close()
-	for rows.Next() {
-		var showColumns ShowColumns
-		_ = rows.Scan(
-			&showColumns.Field,
-			&showColumns.Type,
-			&showColumns.Null,
-			&showColumns.Key,
-			&showColumns.Default,
-			&showColumns.Extra,
-		)
-
-		columnDefs = append(columnDefs, showColumns)
-	}
+	g.gorm.Raw(fmt.Sprintf("SHOW COLUMNS FROM %v", tableName)).Scan(&columnDefs)
 
 	return columnDefs
 }

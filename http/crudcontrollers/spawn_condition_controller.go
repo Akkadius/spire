@@ -1,10 +1,10 @@
 package crudcontrollers
 
 import (
+	"fmt"
 	"github.com/Akkadius/spire/database"
 	"github.com/Akkadius/spire/http/routes"
 	"github.com/Akkadius/spire/models"
-	"fmt"
 	"github.com/labstack/echo/v4"
 	"github.com/sirupsen/logrus"
 	"net/http"
@@ -118,7 +118,7 @@ func (e *SpawnConditionController) updateSpawnCondition(c echo.Context) error {
 		return c.JSON(http.StatusNotFound, echo.Map{"error": "Cannot find entity"})
 	}
 
-	err = e.db.Get(models.SpawnCondition{}, c).Model(&models.SpawnCondition{}).Update(&spawnCondition).Error
+	err = e.db.Get(models.SpawnCondition{}, c).Model(&models.SpawnCondition{}).Updates(&spawnCondition).Error
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error updating entity: [%v]", err)})
 	}

@@ -119,7 +119,7 @@ func (e *DataBucketController) updateDataBucket(c echo.Context) error {
 		return c.JSON(http.StatusNotFound, echo.Map{"error": "Cannot find entity"})
 	}
 
-	err = e.db.Get(models.DataBucket{}, c).Model(&models.DataBucket{}).Update(&dataBucket).Error
+	err = e.db.Get(models.DataBucket{}, c).Model(&models.DataBucket{}).Updates(&dataBucket).Error
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error updating entity: [%v]", err)})
 	}
