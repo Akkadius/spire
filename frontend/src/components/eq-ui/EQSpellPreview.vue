@@ -164,14 +164,14 @@ import {
   DB_SPELL_TARGET_RESTRICTION,
   DB_SPELL_TARGETS,
   DB_SPELL_WORN_ATTRIBUTE_CAP
-}                                     from "@/app/constants/eq-spell-constants";
-import * as util                      from "util";
-import {DB_RACE_NAMES}                from "@/app/constants/eq-races-constants";
-import {ItemApi, SpellsNewApi}        from "@/app/api";
-import {SpireApiClient}               from "@/app/api/spire-api-client";
-import EqWindow                       from "@/components/eq-ui/EQWindow";
-import EqDebug                        from "@/components/eq-ui/EQDebug";
-import {BODYTYPES}                    from "@/app/constants/eq-bodytype-constants";
+}                                          from "@/app/constants/eq-spell-constants";
+import * as util                           from "util";
+import {DB_RACE_NAMES}                     from "@/app/constants/eq-races-constants";
+import {ItemApi, SpellsNewApi}             from "@/app/api";
+import {SpireApiClient}                    from "@/app/api/spire-api-client";
+import EqWindow                            from "@/components/eq-ui/EQWindow";
+import EqDebug                             from "@/components/eq-ui/EQDebug";
+import {BODYTYPES}                         from "@/app/constants/eq-bodytype-constants";
 
 let unknowns = {}
 
@@ -273,6 +273,10 @@ export default {
       return {}
     },
     getSpellName: async function (spellId) {
+      if (spellId <= 0) {
+        return "Unknown Spell Name"
+      }
+
       const spell = await this.getSpell(spellId)
       return spell.name ? spell.name : "Unknown Spell Name"
     },
