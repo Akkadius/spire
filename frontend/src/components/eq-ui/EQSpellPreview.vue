@@ -151,9 +151,9 @@
 
 <script>
 
-import {App}                          from "@/constants/app";
-import {DB_CLASSES, DB_CLASSES_SHORT} from "@/app/constants/eq-classes-constants";
-import {DB_BARD_SKILLS, DB_SKILLS}    from "@/app/constants/eq-skill-constants";
+import {App}                               from "@/constants/app";
+import {DB_CLASSES, DB_CLASSES_WEAR_SHORT} from "@/app/constants/eq-classes-constants";
+import {DB_BARD_SKILLS, DB_SKILLS}         from "@/app/constants/eq-skill-constants";
 import {
   DB_SPA,
   DB_SPELL_EFFECTS,
@@ -2532,7 +2532,7 @@ export default {
               break;
 
             case 411:
-              printBuffer += "Limit Class: " + DB_CLASSES_SHORT[base >> 1]
+              printBuffer += "Limit Class: " + DB_CLASSES_WEAR_SHORT[base >> 1]
               break;
 
             case 412:
@@ -2883,7 +2883,7 @@ export default {
               break;
 
             case 485:
-              printBuffer += "Limit Caster Class: " + DB_CLASSES_SHORT[base >> 1] + "(Outgoing Focus Limit)"
+              printBuffer += "Limit Caster Class: " + DB_CLASSES_WEAR_SHORT[base >> 1] + "(Outgoing Focus Limit)"
               break;
 
             case 486:

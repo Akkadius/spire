@@ -289,8 +289,8 @@ import {
   ITEM_ELEMENTS,
   ITEM_SIZE
 } from "@/app/constants/eq-item-constants";
-import {BODYTYPES} from "@/app/constants/eq-bodytype-constants";
-import {DB_CLASSES_SHORT} from "@/app/constants/eq-classes-constants";
+import {BODYTYPES}                     from "@/app/constants/eq-bodytype-constants";
+import {DB_CLASSES_WEAR_SHORT}         from "@/app/constants/eq-classes-constants";
 import {DB_RACE_NAMES, DB_RACES_SHORT} from "@/app/constants/eq-races-constants";
 import {DB_DIETIES} from "@/app/constants/eq-deities-constants";
 import EqDebug from "@/components/eq-ui/EQDebug";
@@ -407,7 +407,7 @@ export default {
     getClasses: function () {
       let classes      = []
       let classesValue = this.itemData.classes
-      for (const [key, value] of Object.entries(DB_CLASSES_SHORT).reverse()) {
+      for (const [key, value] of Object.entries(DB_CLASSES_WEAR_SHORT).reverse()) {
 
         if (key <= classesValue) {
           classesValue -= key;

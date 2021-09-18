@@ -1,4 +1,4 @@
-export default {
+export const DB_CLASSES_ICONS = {
   1: '4487', // Warrior
   2: '4477', // Cleric
   3: '4476', // Paladin
