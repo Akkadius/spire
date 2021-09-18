@@ -235,6 +235,10 @@ export default {
 
       let request = {};
       request.limit = this.limit;
+      if (this.selectedClass > 0) {
+        request.orderBy = util.format("classes%s", this.selectedClass)
+      }
+
       if (Object.keys(wheres).length > 0) {
         request.where = wheres.join(".")
       }
