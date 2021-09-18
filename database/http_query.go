@@ -3,8 +3,8 @@ package database
 import (
 	"fmt"
 	"github.com/Akkadius/spire/models"
-	"github.com/jinzhu/gorm"
 	"github.com/labstack/echo/v4"
+	"gorm.io/gorm"
 	"strconv"
 	"strings"
 	"unicode"
@@ -30,7 +30,7 @@ const (
 const defaultLimit = 10000
 
 func (d *DatabaseResolver) QueryContext(model models.Modelable, c echo.Context) *gorm.DB {
-	query := d.Get(model, c).Model(&model)
+	query := d.Get(model, c).Table(model.TableName())
 
 	// selects
 	selectParam := c.QueryParam("select")
@@ -59,12 +59,17 @@ func (d *DatabaseResolver) QueryContext(model models.Modelable, c echo.Context) 
 
 	// where or filters
 	whereOrParam := c.QueryParam("whereOr")
+	orWheres := d.Get(model, c).Model(&model)
 	for _, filter := range strings.Split(whereOrParam, whereDelimiter) {
 		if len(filter) == 0 {
 			continue
 		}
 
-		query = d.handleOrWheres(query, filter)
+		orWheres = d.handleOrWheres(orWheres, filter)
+	}
+
+	if len(strings.Split(whereOrParam, whereDelimiter)) > 0 {
+		query = query.Where(orWheres)
 	}
 
 	// order

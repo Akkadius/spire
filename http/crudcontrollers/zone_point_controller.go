@@ -119,7 +119,7 @@ func (e *ZonePointController) updateZonePoint(c echo.Context) error {
 		return c.JSON(http.StatusNotFound, echo.Map{"error": "Cannot find entity"})
 	}
 
-	err = e.db.Get(models.ZonePoint{}, c).Model(&models.ZonePoint{}).Update(&zonePoint).Error
+	err = e.db.Get(models.ZonePoint{}, c).Model(&models.ZonePoint{}).Updates(&zonePoint).Error
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error updating entity: [%v]", err)})
 	}

@@ -119,7 +119,7 @@ func (e *LoginServerAdminController) updateLoginServerAdmin(c echo.Context) erro
 		return c.JSON(http.StatusNotFound, echo.Map{"error": "Cannot find entity"})
 	}
 
-	err = e.db.Get(models.LoginServerAdmin{}, c).Model(&models.LoginServerAdmin{}).Update(&loginServerAdmin).Error
+	err = e.db.Get(models.LoginServerAdmin{}, c).Model(&models.LoginServerAdmin{}).Updates(&loginServerAdmin).Error
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error updating entity: [%v]", err)})
 	}

@@ -119,7 +119,7 @@ func (e *AccountController) updateAccount(c echo.Context) error {
 		return c.JSON(http.StatusNotFound, echo.Map{"error": "Cannot find entity"})
 	}
 
-	err = e.db.Get(models.Account{}, c).Model(&models.Account{}).Update(&account).Error
+	err = e.db.Get(models.Account{}, c).Model(&models.Account{}).Updates(&account).Error
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error updating entity: [%v]", err)})
 	}

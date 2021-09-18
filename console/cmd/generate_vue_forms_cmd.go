@@ -3,7 +3,7 @@ package cmd
 import (
 	"errors"
 	"github.com/Akkadius/spire/generators"
-	"github.com/jinzhu/gorm"
+	"gorm.io/gorm"
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
 )

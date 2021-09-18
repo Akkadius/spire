@@ -119,7 +119,7 @@ func (e *LdonTrapEntryController) updateLdonTrapEntry(c echo.Context) error {
 		return c.JSON(http.StatusNotFound, echo.Map{"error": "Cannot find entity"})
 	}
 
-	err = e.db.Get(models.LdonTrapEntry{}, c).Model(&models.LdonTrapEntry{}).Update(&ldonTrapEntry).Error
+	err = e.db.Get(models.LdonTrapEntry{}, c).Model(&models.LdonTrapEntry{}).Updates(&ldonTrapEntry).Error
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error updating entity: [%v]", err)})
 	}

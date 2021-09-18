@@ -119,7 +119,7 @@ func (e *LoottableController) updateLoottable(c echo.Context) error {
 		return c.JSON(http.StatusNotFound, echo.Map{"error": "Cannot find entity"})
 	}
 
-	err = e.db.Get(models.Loottable{}, c).Model(&models.Loottable{}).Update(&loottable).Error
+	err = e.db.Get(models.Loottable{}, c).Model(&models.Loottable{}).Updates(&loottable).Error
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error updating entity: [%v]", err)})
 	}

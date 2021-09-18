@@ -6,10 +6,11 @@ import (
 	"github.com/Akkadius/spire/http/request"
 	"github.com/Akkadius/spire/internal/encryption"
 	"github.com/Akkadius/spire/models"
-	"github.com/jinzhu/gorm"
 	"github.com/labstack/echo/v4"
 	gocache "github.com/patrickmn/go-cache"
 	"github.com/sirupsen/logrus"
+	"gorm.io/driver/mysql"
+	"gorm.io/gorm"
 	"os"
 	"strings"
 	"time"
@@ -101,10 +102,16 @@ func (d *DatabaseResolver) ResolveUserEqemuConnection(model models.Modelable, us
 		// If existing connection exists, return it
 		if _, ok := d.remoteDatabases[connectionType][connectionId]; ok {
 			//fmt.Println("Returning cached lookup")
-			err := d.remoteDatabases[connectionType][connectionId].DB().Ping()
+			db, err := d.remoteDatabases[connectionType][connectionId].DB()
 			if err != nil {
 				d.logger.Printf("Debug: MySQL ping err [%v]", err)
 			}
+
+			err = db.Ping()
+			if err != nil {
+				d.logger.Printf("Debug: MySQL ping err [%v]", err)
+			}
+
 			return d.remoteDatabases[connectionType][connectionId]
 		}
 	}
@@ -140,7 +147,12 @@ func (d *DatabaseResolver) ResolveUserEqemuConnection(model models.Modelable, us
 
 		// If existing connection exists, return it
 		if _, ok := d.remoteDatabases[connectionType][conn.ServerDatabaseConnection.ID]; ok {
-			err := d.remoteDatabases[connectionType][conn.ServerDatabaseConnection.ID].DB().Ping()
+			db, err := d.remoteDatabases[connectionType][conn.ServerDatabaseConnection.ID].DB()
+			if err != nil {
+				d.logger.Printf("Debug: MySQL ping err [%v]", err)
+			}
+
+			err = db.Ping()
 			if err != nil {
 				d.logger.Printf("Debug: MySQL ping err [%v]", err)
 			}
@@ -181,22 +193,31 @@ func (d *DatabaseResolver) ResolveUserEqemuConnection(model models.Modelable, us
 		dbName,
 	)
 
-	// open connection
-	mysql, err := gorm.Open("mysql", dsn)
+	db, err := gorm.Open(mysql.Open(dsn),
+		&gorm.Config{
+			SkipDefaultTransaction:                   true,
+			DisableForeignKeyConstraintWhenMigrating: true,
+			DisableAutomaticPing:                     false,
+		},
+	)
+
 	if err != nil {
-		d.logger.Printf("Debug: MySQL err [%v]", err)
+		d.logger.Printf("[database_resolver] MySQL conn err [%v]", err)
 	}
 
-	// set params
-	mysql.DB().SetConnMaxLifetime(time.Minute * 3)
-	mysql.DB().SetMaxIdleConns(env.GetInt("MYSQL_MAX_IDLE_CONNECTIONS", "10"))
-	mysql.DB().SetMaxOpenConns(env.GetInt("MYSQL_MAX_OPEN_CONNECTIONS", "150"))
-	mysql.LogMode(env.GetBool("MYSQL_QUERY_LOGGING", "false"))
+	sqlDB, err := db.DB()
+	if err != nil {
+		d.logger.Printf("[database_resolver] MySQL fetch err [%v]", err)
+	}
+
+	sqlDB.SetConnMaxLifetime(time.Minute * 3)
+	sqlDB.SetMaxIdleConns(env.GetInt("MYSQL_MAX_IDLE_CONNECTIONS", "10"))
+	sqlDB.SetMaxOpenConns(env.GetInt("MYSQL_MAX_OPEN_CONNECTIONS", "150"))
 
 	// cache instance pointer to memory
-	d.remoteDatabases[connectionType][conn.ServerDatabaseConnection.ID] = mysql
+	d.remoteDatabases[connectionType][conn.ServerDatabaseConnection.ID] = db
 
-	return mysql
+	return db
 }
 
 func (d *DatabaseResolver) handleWheres(query *gorm.DB, filter string) *gorm.DB {
@@ -242,7 +263,7 @@ func (d *DatabaseResolver) handleWheres(query *gorm.DB, filter string) *gorm.DB 
 		query = query.Where(fmt.Sprintf("%v = ?", wheres[0]), wheres[1])
 	}
 
-	return query;
+	return query
 }
 
 func (d *DatabaseResolver) handleOrWheres(query *gorm.DB, filter string) *gorm.DB {
@@ -288,5 +309,5 @@ func (d *DatabaseResolver) handleOrWheres(query *gorm.DB, filter string) *gorm.D
 		query = query.Or(fmt.Sprintf("%v = ?", wheres[0]), wheres[1])
 	}
 
-	return query;
+	return query
 }

@@ -119,7 +119,7 @@ func (e *SaylinkController) updateSaylink(c echo.Context) error {
 		return c.JSON(http.StatusNotFound, echo.Map{"error": "Cannot find entity"})
 	}
 
-	err = e.db.Get(models.Saylink{}, c).Model(&models.Saylink{}).Update(&saylink).Error
+	err = e.db.Get(models.Saylink{}, c).Model(&models.Saylink{}).Updates(&saylink).Error
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error updating entity: [%v]", err)})
 	}

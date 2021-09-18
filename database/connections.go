@@ -3,7 +3,7 @@ package database
 import (
 	"fmt"
 	"github.com/Akkadius/spire/models"
-	"github.com/jinzhu/gorm"
+	"gorm.io/gorm"
 )
 
 // Connections application database connections
@@ -41,19 +41,19 @@ func (c Connections) SpireMigrate(drop bool) {
 	for _, table := range spireTables {
 		if drop {
 			fmt.Printf("Dropping table [%v]\n", table.TableName())
-			c.SpireDb().DropTable(table)
+			_ = c.SpireDb().Migrator().DropTable(table)
 		}
 		fmt.Printf("Migrating table [%v]\n", table.TableName())
-		c.SpireDb().AutoMigrate(table)
+		_ = c.SpireDb().Migrator().AutoMigrate(table)
 
-		indexes, ok := table.(models.Indexable)
-		if ok {
-			fmt.Printf("Running indexes for [%v]\n", table.TableName())
-
-			for indexName, indexKeys := range indexes.Indexes() {
-				c.SpireDb().Model(table).AddIndex(indexName, indexKeys...)
-				fmt.Printf("Adding index for [%v] index [%v] keys %v\n", table.TableName(), indexName, indexKeys)
-			}
-		}
+		//indexes, ok := table.(models.Indexable)
+		//if ok {
+		//	fmt.Printf("Running indexes for [%v]\n", table.TableName())
+		//
+		//	for indexName, indexKeys := range indexes.Indexes() {
+		//		c.SpireDb().Model(table).Migrator().AddIndex(indexName, indexKeys...)
+		//		fmt.Printf("Adding index for [%v] index [%v] keys %v\n", table.TableName(), indexName, indexKeys)
+		//	}
+		//}
 	}
 }

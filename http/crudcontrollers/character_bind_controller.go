@@ -119,7 +119,7 @@ func (e *CharacterBindController) updateCharacterBind(c echo.Context) error {
 		return c.JSON(http.StatusNotFound, echo.Map{"error": "Cannot find entity"})
 	}
 
-	err = e.db.Get(models.CharacterBind{}, c).Model(&models.CharacterBind{}).Update(&characterBind).Error
+	err = e.db.Get(models.CharacterBind{}, c).Model(&models.CharacterBind{}).Updates(&characterBind).Error
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error updating entity: [%v]", err)})
 	}
