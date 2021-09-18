@@ -104,7 +104,7 @@ import EqSpellPreview from "@/components/eq-ui/EQSpellPreview.vue";
 import {DB_CLASSES_ICONS} from "@/app/constants/eq-class-icon-constants";
 import {App} from "@/constants/app";
 import {DB_CLASSES_SHORT, DB_PLAYER_CLASSES} from "@/app/constants/eq-classes-constants";
-import {DB_SPELL_EFFECTS} from "@/app/constants/eq-spell-constants";
+import {DB_SPA, DB_SPELL_EFFECTS} from "@/app/constants/eq-spell-constants";
 
 const SPELLS_LIST_ROUTE = "/spells-test";
 
@@ -127,7 +127,7 @@ export default {
       dbClassIcons: DB_CLASSES_ICONS,
       dbClassesShort: DB_CLASSES_SHORT,
       dbClasses: DB_PLAYER_CLASSES,
-      dbSpellEffects: DB_SPELL_EFFECTS,
+      dbSpellEffects: DB_SPA,
       itemCdnUrl: App.ASSET_ITEM_ICON_BASE_URL,
 
       // form values

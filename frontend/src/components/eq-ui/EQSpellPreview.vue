@@ -191,6 +191,7 @@ export default {
       itemCdnUrl: App.ASSET_ITEM_ICON_BASE_URL,
       spellEffectInfo: [],
       itemData: {},
+      sideLoadedSpellData: {},
       componentId: "",
       reagents: [],
     }
@@ -663,6 +664,38 @@ export default {
       }
 
       return "Unknown Spell Group";
+    },
+
+    renderSpellMini: async function (parentSpellId, renderSpellId) {
+      const spell = (await this.getSpell(renderSpellId));
+
+      this.sideLoadedSpellData[renderSpellId] = spell
+
+      return `
+          <div :id="${parentSpellId} + '-' + ${renderSpellId} + '-' + componentId" style="display:inline-block" class="ml-2">
+
+            <div style="display: inline-block">
+              <img
+                :src="spellCdnUrl + '' + ${spell.new_icon} + '.gif'"
+                style="height:15px; border-radius: 25px; width:auto;"
+                class="mr-1">
+              <span class="mr-1">${spell.name}</span>
+            </div>
+
+          </div>
+
+          <b-popover
+            :target="${parentSpellId} + '-' + ${renderSpellId} + '-' + componentId"
+            placement="auto"
+            custom-class="no-bg"
+            delay="1"
+            triggers="hover focus"
+            style="width: 500px !important"
+          >
+            <eq-window style="margin-right: 10px; width: auto; height: 90%">
+                <eq-spell-preview :spell-data="sideLoadedSpellData[${renderSpellId}]"/>
+            </eq-window>
+          </b-popover>`;
     },
 
     getSpellEffectInfo: async function () {
@@ -2025,7 +2058,7 @@ export default {
               break;
 
             case 289:
-              printBuffer += "Cast: " + (await this.getSpellName(base)) + " on Duration Fade"
+              printBuffer += "Cast: " + (await this.renderSpellMini(this.spellData.id, base)) + " on Duration Fade"
               break;
 
             case 290:
@@ -2163,7 +2196,7 @@ export default {
               break;
 
             case 323:
-              printBuffer += "Add Defensive Proc: " + (await this.getSpellName(spell["effect_base_value_" + effectIndex])) + (limit ? " with " + limit + " % Rate Mod" : "")
+              printBuffer += "Add Defensive Proc: " + (await this.renderSpellMini(this.spellData.id, spell["effect_base_value_" + effectIndex])) + (limit ? " with " + limit + " % Rate Mod" : "")
               break;
 
             case 324:
@@ -2203,7 +2236,7 @@ export default {
               break;
 
             case 333:
-              printBuffer += "Cast: " + (await this.getSpellName(limit)) + "on Rune Fade"
+              printBuffer += "Cast: " + (await this.renderSpellMini(this.spellData.id, limit)) + "on Rune Fade"
               break;
 
             case 334:
@@ -2227,11 +2260,11 @@ export default {
               break;
 
             case 339:
-              printBuffer += "Cast: " + (await this.getSpellName(limit)) + "on Spell Use (" + base + "% Chance)"
+              printBuffer += "Cast: " + (await this.renderSpellMini(this.spellData.id, limit)) + "on Spell Use (" + base + "% Chance)"
               break;
 
             case 340: //Only one effect casts if multiple 340s in spell
-              printBuffer += "Cast: " + (await this.getSpellName(limit)) + (base < 100 ? " (" + base + "% Chance)" : "")
+              printBuffer += "Cast: " + (await this.renderSpellMini(this.spellData.id, limit)) + (base < 100 ? " (" + base + "% Chance)" : "")
               break;
 
             case 341:
@@ -2311,11 +2344,11 @@ export default {
               break;
 
             case 360:
-              printBuffer += "Add Killshot Proc: " + await this.getSpellName(limit) + " (" + base + "% Chance)" + (max ? " Target Max Lv: " + max : "")
+              printBuffer += "Add Killshot Proc: " + await this.renderSpellMini(this.spellData.id, limit) + " (" + base + "% Chance)" + (max ? " Target Max Lv: " + max : "")
               break;
 
             case 361:
-              printBuffer += "Cast: " + (await this.getSpellName(limit)) + " on Death (" + base + "% Chance)"
+              printBuffer += "Cast: " + (await this.renderSpellMini(this.spellData.id, limit)) + " on Death (" + base + "% Chance)"
               break;
 
             case 362:
@@ -2331,7 +2364,7 @@ export default {
               break;
 
             case 365:
-              printBuffer += "Cast: " + (await this.getSpellName(limit)) + " if spell Kills Target (" + base + "% Chance)"
+              printBuffer += "Cast: " + (await this.renderSpellMini(this.spellData.id, limit)) + " if spell Kills Target (" + base + "% Chance)"
               break;
 
             case 366:
@@ -2363,11 +2396,11 @@ export default {
               break;
 
             case 373:
-              printBuffer += "Cast: " + (await this.getSpellName(base)) + " on Fade"
+              printBuffer += "Cast: " + (await this.renderSpellMini(this.spellData.id, base)) + " on Fade"
               break;
 
             case 374:
-              printBuffer += "Cast: " + (await this.getSpellName(limit)) + (base < 100 ? " (" + base + "% Chance)" : "")
+              printBuffer += "Cast: " + (await this.renderSpellMini(this.spellData.id, limit)) + (base < 100 ? " (" + base + "% Chance)" : "")
               break;
 
             case 375:
@@ -2379,7 +2412,7 @@ export default {
               break;
 
             case 377:
-              printBuffer += "Cast: " + (await this.getSpellName(base)) + " on Duration Finished"
+              printBuffer += "Cast: " + (await this.renderSpellMini(this.spellData.id, base)) + " on Duration Finished"
               break;
 
             case 378:
@@ -2416,7 +2449,7 @@ export default {
               break;
 
             case 383: // spell proc + " (Sympathetic Proc)"
-              printBuffer += "Cast: " + (await this.getSpellName(limit)) + " on Spell Use" + (base !== 100 ? " (Proc rate mod: " + (base - 100) + "%)" : "")
+              printBuffer += "Cast: " + (await this.renderSpellMini(this.spellData.id, limit)) + " on Spell Use" + (base !== 100 ? " (Proc rate mod: " + (base - 100) + "%)" : "")
               break;
 
             case 384:
@@ -2436,11 +2469,11 @@ export default {
               break;
 
             case 386:
-              printBuffer += "Cast: " + (await this.getSpellName(base)) + " on Curer"
+              printBuffer += "Cast: " + (await this.renderSpellMini(this.spellData.id, base)) + " on Curer"
               break;
 
             case 387:
-              printBuffer += "Cast: " + (await this.getSpellName(base)) + " on Cured"
+              printBuffer += "Cast: " + (await this.renderSpellMini(this.spellData.id, base)) + " on Cured"
               break;
 
             case 388:
@@ -2516,11 +2549,11 @@ export default {
               break;
 
             case 406:
-              printBuffer += "Cast: " + (await this.getSpellName(base)) + " if Max Hits Used"
+              printBuffer += "Cast: " + (await this.renderSpellMini(this.spellData.id, base)) + " if Max Hits Used"
               break;
 
             case 407:
-              printBuffer += "Cast: " + (await this.getSpellName(base)) + " on Focus Limit Match"
+              printBuffer += "Cast: " + (await this.renderSpellMini(this.spellData.id, base)) + " on Focus Limit Match"
               break;
 
             case 408:
@@ -2568,7 +2601,7 @@ export default {
               break
 
             case 419:
-              printBuffer += "Add Melee Proc (v2): " + (await this.getSpellName(base)) + (limit ? " with " + limit + " % Rate Mod" : "")
+              printBuffer += "Add Melee Proc (v2): " + (await this.renderSpellMini(this.spellData.id, base)) + (limit ? " with " + limit + " % Rate Mod" : "")
               break;
 
             case 420:
@@ -2600,7 +2633,7 @@ export default {
               break
 
             case 427:
-              printBuffer += "Add Skill Proc: " + (await this.getSpellName(base)) + (limit ? " with " + limit + " % Rate Mod" : "")
+              printBuffer += "Add Skill Proc: " + (await this.renderSpellMini(this.spellData.id, base)) + (limit ? " with " + limit + " % Rate Mod" : "")
               break;
 
             case 428:
@@ -2608,7 +2641,7 @@ export default {
               break;
 
             case 429:
-              printBuffer += "Add Skill Proc on Successful Hit: " + (await this.getSpellName(base)) + (limit ? " with " + limit + " % Rate Mod" : "")
+              printBuffer += "Add Skill Proc on Successful Hit: " + (await this.renderSpellMini(this.spellData.id, base)) + (limit ? " with " + limit + " % Rate Mod" : "")
               break;
 
             case 430: // not implemented on eqemu
@@ -2697,11 +2730,11 @@ export default {
               break;
 
             case 442:
-              printBuffer += "Cast: " + (await this.getSpellName(base)) + " once if " + DB_SPELL_TARGET_RESTRICTION[limit]
+              printBuffer += "Cast: " + (await this.renderSpellMini(this.spellData.id, base)) + " once if " + DB_SPELL_TARGET_RESTRICTION[limit]
               break;
 
             case 443:
-              printBuffer += "Cast: " + (await this.getSpellName(base)) + " once if Caster " + DB_SPELL_TARGET_RESTRICTION[limit]
+              printBuffer += "Cast: " + (await this.renderSpellMini(this.spellData.id, base)) + " once if Caster " + DB_SPELL_TARGET_RESTRICTION[limit]
               break;
 
             case 444:
@@ -2741,11 +2774,11 @@ export default {
               break;
 
             case 453:
-              printBuffer += "Cast: " + (await this.getSpellName(base)) + " if " + limit + " Melee Damage Taken in Single Hit"
+              printBuffer += "Cast: " + (await this.renderSpellMini(this.spellData.id, base)) + " if " + limit + " Melee Damage Taken in Single Hit"
               break;
 
             case 454:
-              printBuffer += "Cast: " + (await this.getSpellName(base)) + " if " + limit + " Spell Damage Taken in Single Hit"
+              printBuffer += "Cast: " + (await this.renderSpellMini(this.spellData.id, base)) + " if " + limit + " Spell Damage Taken in Single Hit"
               break;
 
             case 455:
@@ -2838,7 +2871,7 @@ export default {
               break;
 
             case 475:
-              printBuffer += "Cast: " + (await this.getSpellName(limit)) + " if Not Cast By Item Click" + (base ? " (Chance " + base + "%)" : "")
+              printBuffer += "Cast: " + (await this.renderSpellMini(this.spellData.id, limit)) + " if Not Cast By Item Click" + (base ? " (Chance " + base + "%)" : "")
               break;
 
             case 476:
@@ -2851,7 +2884,7 @@ export default {
               if (base === 2) {
                 tmp += "Dual Wield"
               }
-              printBuffer += "Weapon Stance: Apply spell" + (await this.getSpellName(limit)) + " when using " + tmp
+              printBuffer += "Weapon Stance: Apply spell" + (await this.renderSpellMini(this.spellData.id, limit)) + " when using " + tmp
               break;
 
             case 477:
@@ -2871,7 +2904,7 @@ export default {
               break;
 
             case 481:
-              printBuffer += "Cast: " + (await this.getSpellName(limit)) + " if Hit By Spell" + (base < 100 ? "(" + base + "% Chance)" : "")
+              printBuffer += "Cast: " + (await this.renderSpellMini(this.spellData.id, limit)) + " if Hit By Spell" + (base < 100 ? "(" + base + "% Chance)" : "")
               break;
 
             case 482:
