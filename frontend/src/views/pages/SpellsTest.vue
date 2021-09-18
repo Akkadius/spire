@@ -184,12 +184,22 @@ export default {
 
     updateQueryState: function () {
       let queryState = {};
-      Object.assign(queryState, this.$route.query)
-      queryState.class = this.selectedClass
-      queryState.name = this.spellName
-      queryState.spa = this.selectedSpa
-      queryState.level = this.selectedLevel
-      queryState.levelType = this.selectedLevelType
+
+      if (this.selectedClass !== 0) {
+        queryState.class = this.selectedClass
+      }
+      if (this.spellName !== "") {
+        queryState.name = this.spellName
+      }
+      if (this.selectedSpa !== -1) {
+        queryState.spa = this.selectedSpa
+      }
+      if (this.selectedLevel !== 0) {
+        queryState.level = this.selectedLevel
+      }
+      if (this.selectedLevelType !== 0) {
+        queryState.levelType = this.selectedLevelType
+      }
 
       this.$router.push(
         {
@@ -208,6 +218,7 @@ export default {
       this.selectedLevel = 0;
       this.selectedLevelType = 0;
       this.spells = null;
+      this.updateQueryState()
     },
 
     loadQueryState: function () {
