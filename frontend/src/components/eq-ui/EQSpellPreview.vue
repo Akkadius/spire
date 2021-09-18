@@ -1174,7 +1174,7 @@ export default {
               break;
 
             case 85: //TODO Spell proc LINK
-              printBuffer += "Add Melee Proc: " + (await this.getSpellName(spell["effect_base_value_" + effectIndex])) + (limit ? " with " + limit + " % Rate Mod" : "")
+              printBuffer += "Add Melee Proc: " + (await this.renderSpellMini(this.spellData.id, base)) + (limit ? " with " + limit + " % Rate Mod" : "")
               break;
 
             case 86:
@@ -1460,7 +1460,7 @@ export default {
               break;
 
             case 139://TODO need spell links
-              printBuffer += "Limit Spell: " + (base < 0 ? "Exclude " : "") + (await this.getSpellName(Math.abs(base)))
+              printBuffer += "Limit Spell: " + (base < 0 ? "Exclude " : "") + (await this.renderSpellMini(this.spellData.id, Math.abs(base)))
               break;
 
             case 140:
@@ -1558,18 +1558,18 @@ export default {
             case 161:
               tmp += limit ? "Max Per Hit: " + limit : ""
               tmp += max ? ", Total: " + max : ""
-              printBuffer += "Absorb Spell Damage: " + base + "%," + tmp
+              printBuffer += "Absorb Spell Damage: " + base + "%" + tmp
               break;
 
             case 162:
               tmp += limit ? "Max Per Hit: " + limit : ""
               tmp += max ? ", Total: " + max : ""
-              printBuffer += "Absorb Melee Damage: " + base + "%," + tmp
+              printBuffer += "Absorb Melee Damage: " + base + "%" + tmp
               break;
 
             case 163:
               tmp += max ? ", Max Per Hit: " + max : ""
-              printBuffer += "Absorb " + base + " Hits or Spells " + base + "%," + tmp
+              printBuffer += "Absorb " + base + " Hits or Spells " + base + "%" + tmp
               break;
 
             case 164:
@@ -1723,7 +1723,7 @@ export default {
               break;
 
             case 201:
-              printBuffer += "Add Range Proc: " + (await this.getSpellName(base)) + " with " + limit + "% Rate Mod"
+              printBuffer += "Add Range Proc: " + (await this.renderSpellMini(this.spellData.id, base)) + " with " + limit + "% Rate Mod"
               break;
 
             case 202:
@@ -1855,8 +1855,8 @@ export default {
               break;
 
             case 232:
-              tmp += limit ? (await this.getSpellName(limit)) : (await this.getSpellName(4789))
-              printBuffer += "Cast: " + tmp + " on Death (" + base + "% Chance Divine Save)"
+              tmp += limit ? " and " + (await this.renderSpellMini(this.spellData.id, limit)) : ""
+              printBuffer += "Cast: " + (await this.renderSpellMini(this.spellData.id, 4789)) + tmp + " on Death (" + base + "% Chance Divine Save)"
               break;
 
             case 233:
