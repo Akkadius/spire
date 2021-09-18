@@ -1,10 +1,48 @@
+export const DB_CLASSES_SHORT = {
+  "16": "BER",
+  "15": "BST",
+  "14": "ENC",
+  "13": "MAG",
+  "12": "WIZ",
+  "11": "NEC",
+  "10": "SHM",
+  "9": "ROG",
+  "8": "BRD",
+  "7": "MNK",
+  "6": "DRU",
+  "5": "SHD",
+  "4": "RNG",
+  "3": "PAL",
+  "2": "CLR",
+  "1": "WAR"
+}
+
+export const DB_PLAYER_CLASSES = {
+  "1": "Warrior",
+  "2": "Cleric",
+  "3": "Paladin",
+  "4": "Ranger",
+  "5": "Shadow Knight",
+  "6": "Druid",
+  "7": "Monk",
+  "8": "Bard",
+  "9": "Rogue",
+  "10": "Shaman",
+  "11": "Necromancer",
+  "12": "Wizard",
+  "13": "Magician",
+  "14": "Enchanter",
+  "15": "Beastlord",
+  "16": "Berserker",
+};
+
 export const DB_CLASSES = {
   "0": "Warrior",
   "1": "Warrior",
   "2": "Cleric",
   "3": "Paladin",
   "4": "Ranger",
-  "5": "Shadown Knight",
+  "5": "Shadow Knight",
   "6": "Druid",
   "7": "Monk",
   "8": "Bard",
@@ -67,7 +105,7 @@ export const CLASSES = {
   "15": "Berserker"
 }
 
-export const DB_CLASSES_SHORT = {
+export const DB_CLASSES_WEAR_SHORT = {
   "65535": "ALL",
   "32768": "BER",
   "16384": "BST",
