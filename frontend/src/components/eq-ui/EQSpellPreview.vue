@@ -82,6 +82,10 @@
         <td class="spell-field-label">Recast Time</td>
         <td> {{ (spellData["recast_time"] / 1000) }} sec</td>
       </tr>
+      <tr v-if="spellData['endur_timer_index'] > 0 ">
+        <td class="spell-field-label">Recast Timer ID</td>
+        <td> {{ spellData["endur_timer_index"] }}</td>
+      </tr>
 
       <tr v-if="getBuffDuration()">
         <td class="spell-field-label">Duration</td>
@@ -100,7 +104,6 @@
           {{ spellData["range"] }}
         </td>
       </tr>
-
       <tr v-if="spellData['aoerange'] > 0">
         <td class="spell-field-label">AOE Range</td>
         <td>
@@ -108,28 +111,45 @@
           {{ spellData["aoerange"] }}
         </td>
       </tr>
-
-      <tr v-if="(spellData['max_dist'] != 0 || spellData['min_dist'] != 0) && (spellData['max_dist_mod'] != 0 || spellData['min_dist_mod'] != 0) ">
+      <tr v-if="(spellData['max_dist'] !== 0 || spellData['min_dist'] !== 0) && (spellData['max_dist_mod'] !== 0 || spellData['min_dist_mod'] !== 0) ">
         <td class="spell-field-label">Range Based Mod</td>
         <td> ({{ spellData["min_dist_mod"] * 100 }}% at {{ spellData["min_dist"] }}) to ({{ spellData["max_dist_mod"] * 100 }}% at {{ spellData["max_dist"] }})  </td>
       </tr>
 
+      <tr v-if="spellData['viral_range'] > 0">
+        <td class="spell-field-label">Viral Range</td>
+        <td> {{ spellData["viral_range"] }}, Recast: {{ spellData["viral_targets"] }}s to {{ spellData["viral_timer"]}}s  </td>
+      </tr>
+
       <tr v-if="spellData['targettype'] > 0 && getTargetTypeName(spellData['targettype']) !== ''">
         <td class="spell-field-label">Target</td>
-        <td> {{ getTargetTypeName(spellData["targettype"]) }}</td>
+        <td> {{ getTargetTypeName(spellData["targettype"]) }}
+        </td>
+      </tr>
+      <tr v-if="spellData['aemaxtargets'] > 0 ">
+        <td class="spell-field-label">Max Targets</td>
+        <td> {{ spellData["aemaxtargets"] }} </td>
+      </tr>
+      <tr v-if="spellData['cone_start_angle'] != 0 || spellData['cone_stop_angle']">
+        <td class="spell-field-label">Cone Angle</td>
+        <td> {{ spellData["cone_start_angle"] }} degrees to {{ spellData["cone_stop_angle"] }} degrees </td>
       </tr>
 
       <tr v-if="spellData['resisttype'] > 0 && getSpellResistTypeName(spellData['resisttype']) !== ''">
         <td class="spell-field-label">Resist Type</td>
         <td> {{ getSpellResistTypeName(spellData["resisttype"]) }}
-          <span v-if="spellData['resist_diff'] != 0">(adjust: {{ spellData["resist_diff"] }})</span>
+          <span v-if="spellData['resist_diff'] !== 0 && spellData['no_resist'] == 0">(adjust: {{ spellData["resist_diff"] }})</span>
+          <span v-if="spellData['no_resist'] !== 0">(Unresistable)</span>
+        </td>
+      </tr>
+      <tr v-if="spellData['max_resist'] > 0 || spellData['min_resist'] > 0">
+        <td class="spell-field-label">Resist Chance Limits</td>
+        <td>
+          <span v-if="spellData['max_resist'] != 0">Max: {{ spellData["max_resist"] /2 }}% </span>
+          <span v-if="spellData['min_resist'] != 0">Min: {{ spellData["min_resist"] /2 }}% </span>
         </td>
       </tr>
 
-      <tr v-if="spellData['time_of_day'] === 2">
-        <td class="spell-field-label">Casting Restrictions</td>
-        <td> Night Time</td>
-      </tr>
 
 
       <!-- TODO: Display Reagents - the data should be passed in? -->
