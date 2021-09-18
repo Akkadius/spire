@@ -60,6 +60,12 @@ var doc = `{
                     },
                     {
                         "type": "string",
+                        "description": "Filter on specific fields (Chained ors). Multiple conditions [.] separated Example: col_like_value.col2__val2",
+                        "name": "whereOr",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
                         "description": "Rows to limit in response (Default: 10,000)",
                         "name": "limit",
                         "in": "query"
@@ -526,6 +532,12 @@ var doc = `{
                     },
                     {
                         "type": "string",
+                        "description": "Filter on specific fields (Chained ors). Multiple conditions [.] separated Example: col_like_value.col2__val2",
+                        "name": "whereOr",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
                         "description": "Rows to limit in response (Default: 10,000)",
                         "name": "limit",
                         "in": "query"
@@ -790,6 +802,12 @@ var doc = `{
                         "type": "string",
                         "description": "Filter on specific fields. Multiple conditions [.] separated Example: col_like_value.col2__val2",
                         "name": "where",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Filter on specific fields (Chained ors). Multiple conditions [.] separated Example: col_like_value.col2__val2",
+                        "name": "whereOr",
                         "in": "query"
                     },
                     {
@@ -1062,6 +1080,12 @@ var doc = `{
                     },
                     {
                         "type": "string",
+                        "description": "Filter on specific fields (Chained ors). Multiple conditions [.] separated Example: col_like_value.col2__val2",
+                        "name": "whereOr",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
                         "description": "Rows to limit in response (Default: 10,000)",
                         "name": "limit",
                         "in": "query"
@@ -1326,6 +1350,12 @@ var doc = `{
                         "type": "string",
                         "description": "Filter on specific fields. Multiple conditions [.] separated Example: col_like_value.col2__val2",
                         "name": "where",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Filter on specific fields (Chained ors). Multiple conditions [.] separated Example: col_like_value.col2__val2",
+                        "name": "whereOr",
                         "in": "query"
                     },
                     {
@@ -1796,6 +1826,12 @@ var doc = `{
                     },
                     {
                         "type": "string",
+                        "description": "Filter on specific fields (Chained ors). Multiple conditions [.] separated Example: col_like_value.col2__val2",
+                        "name": "whereOr",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
                         "description": "Rows to limit in response (Default: 10,000)",
                         "name": "limit",
                         "in": "query"
@@ -1866,6 +1902,12 @@ var doc = `{
                     },
                     {
                         "type": "string",
+                        "description": "Filter on specific fields (Chained ors). Multiple conditions [.] separated Example: col_like_value.col2__val2",
+                        "name": "whereOr",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
                         "description": "Rows to limit in response (Default: 10,000)",
                         "name": "limit",
                         "in": "query"
@@ -1932,6 +1974,12 @@ var doc = `{
                         "type": "string",
                         "description": "Filter on specific fields. Multiple conditions [.] separated Example: col_like_value.col2__val2",
                         "name": "where",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Filter on specific fields (Chained ors). Multiple conditions [.] separated Example: col_like_value.col2__val2",
+                        "name": "whereOr",
                         "in": "query"
                     },
                     {
@@ -2402,6 +2450,12 @@ var doc = `{
                     },
                     {
                         "type": "string",
+                        "description": "Filter on specific fields (Chained ors). Multiple conditions [.] separated Example: col_like_value.col2__val2",
+                        "name": "whereOr",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
                         "description": "Rows to limit in response (Default: 10,000)",
                         "name": "limit",
                         "in": "query"
@@ -2868,6 +2922,12 @@ var doc = `{
                     },
                     {
                         "type": "string",
+                        "description": "Filter on specific fields (Chained ors). Multiple conditions [.] separated Example: col_like_value.col2__val2",
+                        "name": "whereOr",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
                         "description": "Rows to limit in response (Default: 10,000)",
                         "name": "limit",
                         "in": "query"
@@ -2934,6 +2994,12 @@ var doc = `{
                         "type": "string",
                         "description": "Filter on specific fields. Multiple conditions [.] separated Example: col_like_value.col2__val2",
                         "name": "where",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Filter on specific fields (Chained ors). Multiple conditions [.] separated Example: col_like_value.col2__val2",
+                        "name": "whereOr",
                         "in": "query"
                     },
                     {
@@ -3206,6 +3272,12 @@ var doc = `{
                     },
                     {
                         "type": "string",
+                        "description": "Filter on specific fields (Chained ors). Multiple conditions [.] separated Example: col_like_value.col2__val2",
+                        "name": "whereOr",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
                         "description": "Rows to limit in response (Default: 10,000)",
                         "name": "limit",
                         "in": "query"
@@ -3272,6 +3344,12 @@ var doc = `{
                         "type": "string",
                         "description": "Filter on specific fields. Multiple conditions [.] separated Example: col_like_value.col2__val2",
                         "name": "where",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Filter on specific fields (Chained ors). Multiple conditions [.] separated Example: col_like_value.col2__val2",
+                        "name": "whereOr",
                         "in": "query"
                     },
                     {
@@ -3742,6 +3820,12 @@ var doc = `{
                     },
                     {
                         "type": "string",
+                        "description": "Filter on specific fields (Chained ors). Multiple conditions [.] separated Example: col_like_value.col2__val2",
+                        "name": "whereOr",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
                         "description": "Rows to limit in response (Default: 10,000)",
                         "name": "limit",
                         "in": "query"
@@ -4006,6 +4090,12 @@ var doc = `{
                         "type": "string",
                         "description": "Filter on specific fields. Multiple conditions [.] separated Example: col_like_value.col2__val2",
                         "name": "where",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Filter on specific fields (Chained ors). Multiple conditions [.] separated Example: col_like_value.col2__val2",
+                        "name": "whereOr",
                         "in": "query"
                     },
                     {
@@ -4278,6 +4368,12 @@ var doc = `{
                     },
                     {
                         "type": "string",
+                        "description": "Filter on specific fields (Chained ors). Multiple conditions [.] separated Example: col_like_value.col2__val2",
+                        "name": "whereOr",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
                         "description": "Rows to limit in response (Default: 10,000)",
                         "name": "limit",
                         "in": "query"
@@ -4546,6 +4642,12 @@ var doc = `{
                     },
                     {
                         "type": "string",
+                        "description": "Filter on specific fields (Chained ors). Multiple conditions [.] separated Example: col_like_value.col2__val2",
+                        "name": "whereOr",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
                         "description": "Rows to limit in response (Default: 10,000)",
                         "name": "limit",
                         "in": "query"
@@ -4612,6 +4714,12 @@ var doc = `{
                         "type": "string",
                         "description": "Filter on specific fields. Multiple conditions [.] separated Example: col_like_value.col2__val2",
                         "name": "where",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Filter on specific fields (Chained ors). Multiple conditions [.] separated Example: col_like_value.col2__val2",
+                        "name": "whereOr",
                         "in": "query"
                     },
                     {
@@ -4880,6 +4988,12 @@ var doc = `{
                         "type": "string",
                         "description": "Filter on specific fields. Multiple conditions [.] separated Example: col_like_value.col2__val2",
                         "name": "where",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Filter on specific fields (Chained ors). Multiple conditions [.] separated Example: col_like_value.col2__val2",
+                        "name": "whereOr",
                         "in": "query"
                     },
                     {
@@ -5350,6 +5464,12 @@ var doc = `{
                     },
                     {
                         "type": "string",
+                        "description": "Filter on specific fields (Chained ors). Multiple conditions [.] separated Example: col_like_value.col2__val2",
+                        "name": "whereOr",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
                         "description": "Rows to limit in response (Default: 10,000)",
                         "name": "limit",
                         "in": "query"
@@ -5380,6 +5500,280 @@ var doc = `{
                             "type": "array",
                             "items": {
                                 "$ref": "#/definitions/models.CharacterDiscipline"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Bad query request",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/character_expedition_lockout": {
+            "put": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "CharacterExpeditionLockout"
+                ],
+                "summary": "Creates CharacterExpeditionLockout",
+                "operationId": "createCharacterExpeditionLockout",
+                "parameters": [
+                    {
+                        "description": "CharacterExpeditionLockout",
+                        "name": "character_expedition_lockout",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.CharacterExpeditionLockout"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.CharacterExpeditionLockout"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Error inserting entity",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/character_expedition_lockout/{id}": {
+            "get": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "CharacterExpeditionLockout"
+                ],
+                "summary": "Gets CharacterExpeditionLockout",
+                "operationId": "getCharacterExpeditionLockout",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names ",
+                        "name": "includes",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Column names [.] separated to fetch specific fields in response",
+                        "name": "select",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.CharacterExpeditionLockout"
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Entity not found",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Bad query request",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "CharacterExpeditionLockout"
+                ],
+                "summary": "Deletes CharacterExpeditionLockout",
+                "operationId": "deleteCharacterExpeditionLockout",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Entity deleted successfully",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "404": {
+                        "description": "Cannot find entity",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Error deleting entity",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            },
+            "patch": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "CharacterExpeditionLockout"
+                ],
+                "summary": "Updates CharacterExpeditionLockout",
+                "operationId": "updateCharacterExpeditionLockout",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "CharacterExpeditionLockout",
+                        "name": "character_expedition_lockout",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.CharacterExpeditionLockout"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.CharacterExpeditionLockout"
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Cannot find entity",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Error updating entity",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/character_expedition_lockouts": {
+            "get": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "CharacterExpeditionLockout"
+                ],
+                "summary": "Lists CharacterExpeditionLockouts",
+                "operationId": "listCharacterExpeditionLockouts",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names ",
+                        "name": "includes",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Filter on specific fields. Multiple conditions [.] separated Example: col_like_value.col2__val2",
+                        "name": "where",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Filter on specific fields (Chained ors). Multiple conditions [.] separated Example: col_like_value.col2__val2",
+                        "name": "whereOr",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Rows to limit in response (Default: 10,000)",
+                        "name": "limit",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Order by [field]",
+                        "name": "orderBy",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Order by field direction",
+                        "name": "orderDirection",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Column names [.] separated to fetch specific fields in response",
+                        "name": "select",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.CharacterExpeditionLockout"
                             }
                         }
                     },
@@ -5614,6 +6008,12 @@ var doc = `{
                         "type": "string",
                         "description": "Filter on specific fields. Multiple conditions [.] separated Example: col_like_value.col2__val2",
                         "name": "where",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Filter on specific fields (Chained ors). Multiple conditions [.] separated Example: col_like_value.col2__val2",
+                        "name": "whereOr",
                         "in": "query"
                     },
                     {
@@ -5886,6 +6286,12 @@ var doc = `{
                     },
                     {
                         "type": "string",
+                        "description": "Filter on specific fields (Chained ors). Multiple conditions [.] separated Example: col_like_value.col2__val2",
+                        "name": "whereOr",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
                         "description": "Rows to limit in response (Default: 10,000)",
                         "name": "limit",
                         "in": "query"
@@ -6154,6 +6560,12 @@ var doc = `{
                     },
                     {
                         "type": "string",
+                        "description": "Filter on specific fields (Chained ors). Multiple conditions [.] separated Example: col_like_value.col2__val2",
+                        "name": "whereOr",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
                         "description": "Rows to limit in response (Default: 10,000)",
                         "name": "limit",
                         "in": "query"
@@ -6220,6 +6632,12 @@ var doc = `{
                         "type": "string",
                         "description": "Filter on specific fields. Multiple conditions [.] separated Example: col_like_value.col2__val2",
                         "name": "where",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Filter on specific fields (Chained ors). Multiple conditions [.] separated Example: col_like_value.col2__val2",
+                        "name": "whereOr",
                         "in": "query"
                     },
                     {
@@ -6690,6 +7108,12 @@ var doc = `{
                     },
                     {
                         "type": "string",
+                        "description": "Filter on specific fields (Chained ors). Multiple conditions [.] separated Example: col_like_value.col2__val2",
+                        "name": "whereOr",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
                         "description": "Rows to limit in response (Default: 10,000)",
                         "name": "limit",
                         "in": "query"
@@ -6954,6 +7378,12 @@ var doc = `{
                         "type": "string",
                         "description": "Filter on specific fields. Multiple conditions [.] separated Example: col_like_value.col2__val2",
                         "name": "where",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Filter on specific fields (Chained ors). Multiple conditions [.] separated Example: col_like_value.col2__val2",
+                        "name": "whereOr",
                         "in": "query"
                     },
                     {
@@ -7226,6 +7656,12 @@ var doc = `{
                     },
                     {
                         "type": "string",
+                        "description": "Filter on specific fields (Chained ors). Multiple conditions [.] separated Example: col_like_value.col2__val2",
+                        "name": "whereOr",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
                         "description": "Rows to limit in response (Default: 10,000)",
                         "name": "limit",
                         "in": "query"
@@ -7490,6 +7926,12 @@ var doc = `{
                         "type": "string",
                         "description": "Filter on specific fields. Multiple conditions [.] separated Example: col_like_value.col2__val2",
                         "name": "where",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Filter on specific fields (Chained ors). Multiple conditions [.] separated Example: col_like_value.col2__val2",
+                        "name": "whereOr",
                         "in": "query"
                     },
                     {
@@ -7762,6 +8204,12 @@ var doc = `{
                     },
                     {
                         "type": "string",
+                        "description": "Filter on specific fields (Chained ors). Multiple conditions [.] separated Example: col_like_value.col2__val2",
+                        "name": "whereOr",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
                         "description": "Rows to limit in response (Default: 10,000)",
                         "name": "limit",
                         "in": "query"
@@ -8026,6 +8474,12 @@ var doc = `{
                         "type": "string",
                         "description": "Filter on specific fields. Multiple conditions [.] separated Example: col_like_value.col2__val2",
                         "name": "where",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Filter on specific fields (Chained ors). Multiple conditions [.] separated Example: col_like_value.col2__val2",
+                        "name": "whereOr",
                         "in": "query"
                     },
                     {
@@ -8298,6 +8752,12 @@ var doc = `{
                     },
                     {
                         "type": "string",
+                        "description": "Filter on specific fields (Chained ors). Multiple conditions [.] separated Example: col_like_value.col2__val2",
+                        "name": "whereOr",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
                         "description": "Rows to limit in response (Default: 10,000)",
                         "name": "limit",
                         "in": "query"
@@ -8562,6 +9022,12 @@ var doc = `{
                         "type": "string",
                         "description": "Filter on specific fields. Multiple conditions [.] separated Example: col_like_value.col2__val2",
                         "name": "where",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Filter on specific fields (Chained ors). Multiple conditions [.] separated Example: col_like_value.col2__val2",
+                        "name": "whereOr",
                         "in": "query"
                     },
                     {
@@ -8834,6 +9300,12 @@ var doc = `{
                     },
                     {
                         "type": "string",
+                        "description": "Filter on specific fields (Chained ors). Multiple conditions [.] separated Example: col_like_value.col2__val2",
+                        "name": "whereOr",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
                         "description": "Rows to limit in response (Default: 10,000)",
                         "name": "limit",
                         "in": "query"
@@ -9102,6 +9574,12 @@ var doc = `{
                     },
                     {
                         "type": "string",
+                        "description": "Filter on specific fields (Chained ors). Multiple conditions [.] separated Example: col_like_value.col2__val2",
+                        "name": "whereOr",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
                         "description": "Rows to limit in response (Default: 10,000)",
                         "name": "limit",
                         "in": "query"
@@ -9366,6 +9844,12 @@ var doc = `{
                         "type": "string",
                         "description": "Filter on specific fields. Multiple conditions [.] separated Example: col_like_value.col2__val2",
                         "name": "where",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Filter on specific fields (Chained ors). Multiple conditions [.] separated Example: col_like_value.col2__val2",
+                        "name": "whereOr",
                         "in": "query"
                     },
                     {
@@ -9836,6 +10320,12 @@ var doc = `{
                     },
                     {
                         "type": "string",
+                        "description": "Filter on specific fields (Chained ors). Multiple conditions [.] separated Example: col_like_value.col2__val2",
+                        "name": "whereOr",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
                         "description": "Rows to limit in response (Default: 10,000)",
                         "name": "limit",
                         "in": "query"
@@ -10104,6 +10594,12 @@ var doc = `{
                     },
                     {
                         "type": "string",
+                        "description": "Filter on specific fields (Chained ors). Multiple conditions [.] separated Example: col_like_value.col2__val2",
+                        "name": "whereOr",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
                         "description": "Rows to limit in response (Default: 10,000)",
                         "name": "limit",
                         "in": "query"
@@ -10170,6 +10666,12 @@ var doc = `{
                         "type": "string",
                         "description": "Filter on specific fields. Multiple conditions [.] separated Example: col_like_value.col2__val2",
                         "name": "where",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Filter on specific fields (Chained ors). Multiple conditions [.] separated Example: col_like_value.col2__val2",
+                        "name": "whereOr",
                         "in": "query"
                     },
                     {
@@ -10640,6 +11142,12 @@ var doc = `{
                     },
                     {
                         "type": "string",
+                        "description": "Filter on specific fields (Chained ors). Multiple conditions [.] separated Example: col_like_value.col2__val2",
+                        "name": "whereOr",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
                         "description": "Rows to limit in response (Default: 10,000)",
                         "name": "limit",
                         "in": "query"
@@ -10706,6 +11214,12 @@ var doc = `{
                         "type": "string",
                         "description": "Filter on specific fields. Multiple conditions [.] separated Example: col_like_value.col2__val2",
                         "name": "where",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Filter on specific fields (Chained ors). Multiple conditions [.] separated Example: col_like_value.col2__val2",
+                        "name": "whereOr",
                         "in": "query"
                     },
                     {
@@ -10978,6 +11492,12 @@ var doc = `{
                     },
                     {
                         "type": "string",
+                        "description": "Filter on specific fields (Chained ors). Multiple conditions [.] separated Example: col_like_value.col2__val2",
+                        "name": "whereOr",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
                         "description": "Rows to limit in response (Default: 10,000)",
                         "name": "limit",
                         "in": "query"
@@ -11242,6 +11762,12 @@ var doc = `{
                         "type": "string",
                         "description": "Filter on specific fields. Multiple conditions [.] separated Example: col_like_value.col2__val2",
                         "name": "where",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Filter on specific fields (Chained ors). Multiple conditions [.] separated Example: col_like_value.col2__val2",
+                        "name": "whereOr",
                         "in": "query"
                     },
                     {
@@ -11514,6 +12040,12 @@ var doc = `{
                     },
                     {
                         "type": "string",
+                        "description": "Filter on specific fields (Chained ors). Multiple conditions [.] separated Example: col_like_value.col2__val2",
+                        "name": "whereOr",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
                         "description": "Rows to limit in response (Default: 10,000)",
                         "name": "limit",
                         "in": "query"
@@ -11778,6 +12310,12 @@ var doc = `{
                         "type": "string",
                         "description": "Filter on specific fields. Multiple conditions [.] separated Example: col_like_value.col2__val2",
                         "name": "where",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Filter on specific fields (Chained ors). Multiple conditions [.] separated Example: col_like_value.col2__val2",
+                        "name": "whereOr",
                         "in": "query"
                     },
                     {
@@ -12050,6 +12588,12 @@ var doc = `{
                     },
                     {
                         "type": "string",
+                        "description": "Filter on specific fields (Chained ors). Multiple conditions [.] separated Example: col_like_value.col2__val2",
+                        "name": "whereOr",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
                         "description": "Rows to limit in response (Default: 10,000)",
                         "name": "limit",
                         "in": "query"
@@ -12314,6 +12858,12 @@ var doc = `{
                         "type": "string",
                         "description": "Filter on specific fields. Multiple conditions [.] separated Example: col_like_value.col2__val2",
                         "name": "where",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Filter on specific fields (Chained ors). Multiple conditions [.] separated Example: col_like_value.col2__val2",
+                        "name": "whereOr",
                         "in": "query"
                     },
                     {
@@ -12586,6 +13136,12 @@ var doc = `{
                     },
                     {
                         "type": "string",
+                        "description": "Filter on specific fields (Chained ors). Multiple conditions [.] separated Example: col_like_value.col2__val2",
+                        "name": "whereOr",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
                         "description": "Rows to limit in response (Default: 10,000)",
                         "name": "limit",
                         "in": "query"
@@ -12850,6 +13406,12 @@ var doc = `{
                         "type": "string",
                         "description": "Filter on specific fields. Multiple conditions [.] separated Example: col_like_value.col2__val2",
                         "name": "where",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Filter on specific fields (Chained ors). Multiple conditions [.] separated Example: col_like_value.col2__val2",
+                        "name": "whereOr",
                         "in": "query"
                     },
                     {
@@ -13320,6 +13882,12 @@ var doc = `{
                     },
                     {
                         "type": "string",
+                        "description": "Filter on specific fields (Chained ors). Multiple conditions [.] separated Example: col_like_value.col2__val2",
+                        "name": "whereOr",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
                         "description": "Rows to limit in response (Default: 10,000)",
                         "name": "limit",
                         "in": "query"
@@ -13386,6 +13954,12 @@ var doc = `{
                         "type": "string",
                         "description": "Filter on specific fields. Multiple conditions [.] separated Example: col_like_value.col2__val2",
                         "name": "where",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Filter on specific fields (Chained ors). Multiple conditions [.] separated Example: col_like_value.col2__val2",
+                        "name": "whereOr",
                         "in": "query"
                     },
                     {
@@ -13658,6 +14232,12 @@ var doc = `{
                     },
                     {
                         "type": "string",
+                        "description": "Filter on specific fields (Chained ors). Multiple conditions [.] separated Example: col_like_value.col2__val2",
+                        "name": "whereOr",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
                         "description": "Rows to limit in response (Default: 10,000)",
                         "name": "limit",
                         "in": "query"
@@ -13724,6 +14304,12 @@ var doc = `{
                         "type": "string",
                         "description": "Filter on specific fields. Multiple conditions [.] separated Example: col_like_value.col2__val2",
                         "name": "where",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Filter on specific fields (Chained ors). Multiple conditions [.] separated Example: col_like_value.col2__val2",
+                        "name": "whereOr",
                         "in": "query"
                     },
                     {
@@ -14194,6 +14780,12 @@ var doc = `{
                     },
                     {
                         "type": "string",
+                        "description": "Filter on specific fields (Chained ors). Multiple conditions [.] separated Example: col_like_value.col2__val2",
+                        "name": "whereOr",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
                         "description": "Rows to limit in response (Default: 10,000)",
                         "name": "limit",
                         "in": "query"
@@ -14458,6 +15050,12 @@ var doc = `{
                         "type": "string",
                         "description": "Filter on specific fields. Multiple conditions [.] separated Example: col_like_value.col2__val2",
                         "name": "where",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Filter on specific fields (Chained ors). Multiple conditions [.] separated Example: col_like_value.col2__val2",
+                        "name": "whereOr",
                         "in": "query"
                     },
                     {
@@ -14730,6 +15328,12 @@ var doc = `{
                     },
                     {
                         "type": "string",
+                        "description": "Filter on specific fields (Chained ors). Multiple conditions [.] separated Example: col_like_value.col2__val2",
+                        "name": "whereOr",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
                         "description": "Rows to limit in response (Default: 10,000)",
                         "name": "limit",
                         "in": "query"
@@ -14994,6 +15598,12 @@ var doc = `{
                         "type": "string",
                         "description": "Filter on specific fields. Multiple conditions [.] separated Example: col_like_value.col2__val2",
                         "name": "where",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Filter on specific fields (Chained ors). Multiple conditions [.] separated Example: col_like_value.col2__val2",
+                        "name": "whereOr",
                         "in": "query"
                     },
                     {
@@ -15266,6 +15876,12 @@ var doc = `{
                     },
                     {
                         "type": "string",
+                        "description": "Filter on specific fields (Chained ors). Multiple conditions [.] separated Example: col_like_value.col2__val2",
+                        "name": "whereOr",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
                         "description": "Rows to limit in response (Default: 10,000)",
                         "name": "limit",
                         "in": "query"
@@ -15530,6 +16146,12 @@ var doc = `{
                         "type": "string",
                         "description": "Filter on specific fields. Multiple conditions [.] separated Example: col_like_value.col2__val2",
                         "name": "where",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Filter on specific fields (Chained ors). Multiple conditions [.] separated Example: col_like_value.col2__val2",
+                        "name": "whereOr",
                         "in": "query"
                     },
                     {
@@ -15802,6 +16424,12 @@ var doc = `{
                     },
                     {
                         "type": "string",
+                        "description": "Filter on specific fields (Chained ors). Multiple conditions [.] separated Example: col_like_value.col2__val2",
+                        "name": "whereOr",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
                         "description": "Rows to limit in response (Default: 10,000)",
                         "name": "limit",
                         "in": "query"
@@ -16066,6 +16694,12 @@ var doc = `{
                         "type": "string",
                         "description": "Filter on specific fields. Multiple conditions [.] separated Example: col_like_value.col2__val2",
                         "name": "where",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Filter on specific fields (Chained ors). Multiple conditions [.] separated Example: col_like_value.col2__val2",
+                        "name": "whereOr",
                         "in": "query"
                     },
                     {
@@ -16370,6 +17004,12 @@ var doc = `{
                     },
                     {
                         "type": "string",
+                        "description": "Filter on specific fields (Chained ors). Multiple conditions [.] separated Example: col_like_value.col2__val2",
+                        "name": "whereOr",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
                         "description": "Rows to limit in response (Default: 10,000)",
                         "name": "limit",
                         "in": "query"
@@ -16634,6 +17274,12 @@ var doc = `{
                         "type": "string",
                         "description": "Filter on specific fields. Multiple conditions [.] separated Example: col_like_value.col2__val2",
                         "name": "where",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Filter on specific fields (Chained ors). Multiple conditions [.] separated Example: col_like_value.col2__val2",
+                        "name": "whereOr",
                         "in": "query"
                     },
                     {
@@ -16906,6 +17552,12 @@ var doc = `{
                     },
                     {
                         "type": "string",
+                        "description": "Filter on specific fields (Chained ors). Multiple conditions [.] separated Example: col_like_value.col2__val2",
+                        "name": "whereOr",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
                         "description": "Rows to limit in response (Default: 10,000)",
                         "name": "limit",
                         "in": "query"
@@ -17170,6 +17822,12 @@ var doc = `{
                         "type": "string",
                         "description": "Filter on specific fields. Multiple conditions [.] separated Example: col_like_value.col2__val2",
                         "name": "where",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Filter on specific fields (Chained ors). Multiple conditions [.] separated Example: col_like_value.col2__val2",
+                        "name": "whereOr",
                         "in": "query"
                     },
                     {
@@ -17442,6 +18100,12 @@ var doc = `{
                     },
                     {
                         "type": "string",
+                        "description": "Filter on specific fields (Chained ors). Multiple conditions [.] separated Example: col_like_value.col2__val2",
+                        "name": "whereOr",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
                         "description": "Rows to limit in response (Default: 10,000)",
                         "name": "limit",
                         "in": "query"
@@ -17508,6 +18172,12 @@ var doc = `{
                         "type": "string",
                         "description": "Filter on specific fields. Multiple conditions [.] separated Example: col_like_value.col2__val2",
                         "name": "where",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Filter on specific fields (Chained ors). Multiple conditions [.] separated Example: col_like_value.col2__val2",
+                        "name": "whereOr",
                         "in": "query"
                     },
                     {
@@ -17776,6 +18446,12 @@ var doc = `{
                         "type": "string",
                         "description": "Filter on specific fields. Multiple conditions [.] separated Example: col_like_value.col2__val2",
                         "name": "where",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Filter on specific fields (Chained ors). Multiple conditions [.] separated Example: col_like_value.col2__val2",
+                        "name": "whereOr",
                         "in": "query"
                     },
                     {
@@ -18246,6 +18922,12 @@ var doc = `{
                     },
                     {
                         "type": "string",
+                        "description": "Filter on specific fields (Chained ors). Multiple conditions [.] separated Example: col_like_value.col2__val2",
+                        "name": "whereOr",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
                         "description": "Rows to limit in response (Default: 10,000)",
                         "name": "limit",
                         "in": "query"
@@ -18510,6 +19192,12 @@ var doc = `{
                         "type": "string",
                         "description": "Filter on specific fields. Multiple conditions [.] separated Example: col_like_value.col2__val2",
                         "name": "where",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Filter on specific fields (Chained ors). Multiple conditions [.] separated Example: col_like_value.col2__val2",
+                        "name": "whereOr",
                         "in": "query"
                     },
                     {
@@ -18782,6 +19470,12 @@ var doc = `{
                     },
                     {
                         "type": "string",
+                        "description": "Filter on specific fields (Chained ors). Multiple conditions [.] separated Example: col_like_value.col2__val2",
+                        "name": "whereOr",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
                         "description": "Rows to limit in response (Default: 10,000)",
                         "name": "limit",
                         "in": "query"
@@ -19046,6 +19740,12 @@ var doc = `{
                         "type": "string",
                         "description": "Filter on specific fields. Multiple conditions [.] separated Example: col_like_value.col2__val2",
                         "name": "where",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Filter on specific fields (Chained ors). Multiple conditions [.] separated Example: col_like_value.col2__val2",
+                        "name": "whereOr",
                         "in": "query"
                     },
                     {
@@ -19318,6 +20018,12 @@ var doc = `{
                     },
                     {
                         "type": "string",
+                        "description": "Filter on specific fields (Chained ors). Multiple conditions [.] separated Example: col_like_value.col2__val2",
+                        "name": "whereOr",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
                         "description": "Rows to limit in response (Default: 10,000)",
                         "name": "limit",
                         "in": "query"
@@ -19582,6 +20288,12 @@ var doc = `{
                         "type": "string",
                         "description": "Filter on specific fields. Multiple conditions [.] separated Example: col_like_value.col2__val2",
                         "name": "where",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Filter on specific fields (Chained ors). Multiple conditions [.] separated Example: col_like_value.col2__val2",
+                        "name": "whereOr",
                         "in": "query"
                     },
                     {
@@ -19854,6 +20566,12 @@ var doc = `{
                     },
                     {
                         "type": "string",
+                        "description": "Filter on specific fields (Chained ors). Multiple conditions [.] separated Example: col_like_value.col2__val2",
+                        "name": "whereOr",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
                         "description": "Rows to limit in response (Default: 10,000)",
                         "name": "limit",
                         "in": "query"
@@ -19884,6 +20602,280 @@ var doc = `{
                             "type": "array",
                             "items": {
                                 "$ref": "#/definitions/models.Saylink"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Bad query request",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/server_scheduled_event": {
+            "put": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "ServerScheduledEvent"
+                ],
+                "summary": "Creates ServerScheduledEvent",
+                "operationId": "createServerScheduledEvent",
+                "parameters": [
+                    {
+                        "description": "ServerScheduledEvent",
+                        "name": "server_scheduled_event",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.ServerScheduledEvent"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.ServerScheduledEvent"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Error inserting entity",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/server_scheduled_event/{id}": {
+            "get": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "ServerScheduledEvent"
+                ],
+                "summary": "Gets ServerScheduledEvent",
+                "operationId": "getServerScheduledEvent",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names ",
+                        "name": "includes",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Column names [.] separated to fetch specific fields in response",
+                        "name": "select",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.ServerScheduledEvent"
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Entity not found",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Bad query request",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "ServerScheduledEvent"
+                ],
+                "summary": "Deletes ServerScheduledEvent",
+                "operationId": "deleteServerScheduledEvent",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Entity deleted successfully",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "404": {
+                        "description": "Cannot find entity",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Error deleting entity",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            },
+            "patch": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "ServerScheduledEvent"
+                ],
+                "summary": "Updates ServerScheduledEvent",
+                "operationId": "updateServerScheduledEvent",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "ServerScheduledEvent",
+                        "name": "server_scheduled_event",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.ServerScheduledEvent"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.ServerScheduledEvent"
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Cannot find entity",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Error updating entity",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/server_scheduled_events": {
+            "get": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "ServerScheduledEvent"
+                ],
+                "summary": "Lists ServerScheduledEvents",
+                "operationId": "listServerScheduledEvents",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names ",
+                        "name": "includes",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Filter on specific fields. Multiple conditions [.] separated Example: col_like_value.col2__val2",
+                        "name": "where",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Filter on specific fields (Chained ors). Multiple conditions [.] separated Example: col_like_value.col2__val2",
+                        "name": "whereOr",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Rows to limit in response (Default: 10,000)",
+                        "name": "limit",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Order by [field]",
+                        "name": "orderBy",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Order by field direction",
+                        "name": "orderDirection",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Column names [.] separated to fetch specific fields in response",
+                        "name": "select",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.ServerScheduledEvent"
                             }
                         }
                     },
@@ -19962,7 +20954,7 @@ var doc = `{
                     },
                     {
                         "type": "string",
-                        "description": "Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names ",
+                        "description": "Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names \u003ch4\u003eRelationships\u003c/h4\u003eSpawnentries\u003cbr\u003eSpawnentries.NpcType\u003cbr\u003eSpawnentries.NpcType.AlternateCurrency\u003cbr\u003eSpawnentries.NpcType.Merchantlists\u003cbr\u003eSpawnentries.NpcType.NpcFactions\u003cbr\u003eSpawnentries.NpcType.NpcFactions.NpcFactionEntries\u003cbr\u003eSpawnentries.NpcType.NpcSpells\u003cbr\u003eSpawnentries.NpcType.NpcSpells.NpcSpellsEntries\u003cbr\u003eSpawnentries.Spawngroup\u003cbr\u003eSpawnentries.Spawngroup.Spawn2\u003cbr\u003eSpawngroup",
                         "name": "includes",
                         "in": "query"
                     },
@@ -20110,7 +21102,7 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "string",
-                        "description": "Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names ",
+                        "description": "Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names \u003ch4\u003eRelationships\u003c/h4\u003eSpawnentries\u003cbr\u003eSpawnentries.NpcType\u003cbr\u003eSpawnentries.NpcType.AlternateCurrency\u003cbr\u003eSpawnentries.NpcType.Merchantlists\u003cbr\u003eSpawnentries.NpcType.NpcFactions\u003cbr\u003eSpawnentries.NpcType.NpcFactions.NpcFactionEntries\u003cbr\u003eSpawnentries.NpcType.NpcSpells\u003cbr\u003eSpawnentries.NpcType.NpcSpells.NpcSpellsEntries\u003cbr\u003eSpawnentries.Spawngroup\u003cbr\u003eSpawnentries.Spawngroup.Spawn2\u003cbr\u003eSpawngroup",
                         "name": "includes",
                         "in": "query"
                     },
@@ -20118,6 +21110,12 @@ var doc = `{
                         "type": "string",
                         "description": "Filter on specific fields. Multiple conditions [.] separated Example: col_like_value.col2__val2",
                         "name": "where",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Filter on specific fields (Chained ors). Multiple conditions [.] separated Example: col_like_value.col2__val2",
+                        "name": "whereOr",
                         "in": "query"
                     },
                     {
@@ -20588,6 +21586,12 @@ var doc = `{
                     },
                     {
                         "type": "string",
+                        "description": "Filter on specific fields (Chained ors). Multiple conditions [.] separated Example: col_like_value.col2__val2",
+                        "name": "whereOr",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
                         "description": "Rows to limit in response (Default: 10,000)",
                         "name": "limit",
                         "in": "query"
@@ -20926,6 +21930,12 @@ var doc = `{
                     },
                     {
                         "type": "string",
+                        "description": "Filter on specific fields (Chained ors). Multiple conditions [.] separated Example: col_like_value.col2__val2",
+                        "name": "whereOr",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
                         "description": "Rows to limit in response (Default: 10,000)",
                         "name": "limit",
                         "in": "query"
@@ -21190,6 +22200,12 @@ var doc = `{
                         "type": "string",
                         "description": "Filter on specific fields. Multiple conditions [.] separated Example: col_like_value.col2__val2",
                         "name": "where",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Filter on specific fields (Chained ors). Multiple conditions [.] separated Example: col_like_value.col2__val2",
+                        "name": "whereOr",
                         "in": "query"
                     },
                     {
@@ -21462,6 +22478,12 @@ var doc = `{
                     },
                     {
                         "type": "string",
+                        "description": "Filter on specific fields (Chained ors). Multiple conditions [.] separated Example: col_like_value.col2__val2",
+                        "name": "whereOr",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
                         "description": "Rows to limit in response (Default: 10,000)",
                         "name": "limit",
                         "in": "query"
@@ -21726,6 +22748,12 @@ var doc = `{
                         "type": "string",
                         "description": "Filter on specific fields. Multiple conditions [.] separated Example: col_like_value.col2__val2",
                         "name": "where",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Filter on specific fields (Chained ors). Multiple conditions [.] separated Example: col_like_value.col2__val2",
+                        "name": "whereOr",
                         "in": "query"
                     },
                     {
@@ -21998,6 +23026,12 @@ var doc = `{
                     },
                     {
                         "type": "string",
+                        "description": "Filter on specific fields (Chained ors). Multiple conditions [.] separated Example: col_like_value.col2__val2",
+                        "name": "whereOr",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
                         "description": "Rows to limit in response (Default: 10,000)",
                         "name": "limit",
                         "in": "query"
@@ -22262,6 +23296,12 @@ var doc = `{
                         "type": "string",
                         "description": "Filter on specific fields. Multiple conditions [.] separated Example: col_like_value.col2__val2",
                         "name": "where",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Filter on specific fields (Chained ors). Multiple conditions [.] separated Example: col_like_value.col2__val2",
+                        "name": "whereOr",
                         "in": "query"
                     },
                     {
@@ -22534,6 +23574,12 @@ var doc = `{
                     },
                     {
                         "type": "string",
+                        "description": "Filter on specific fields (Chained ors). Multiple conditions [.] separated Example: col_like_value.col2__val2",
+                        "name": "whereOr",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
                         "description": "Rows to limit in response (Default: 10,000)",
                         "name": "limit",
                         "in": "query"
@@ -22798,6 +23844,12 @@ var doc = `{
                         "type": "string",
                         "description": "Filter on specific fields. Multiple conditions [.] separated Example: col_like_value.col2__val2",
                         "name": "where",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Filter on specific fields (Chained ors). Multiple conditions [.] separated Example: col_like_value.col2__val2",
+                        "name": "whereOr",
                         "in": "query"
                     },
                     {
@@ -23070,6 +24122,12 @@ var doc = `{
                     },
                     {
                         "type": "string",
+                        "description": "Filter on specific fields (Chained ors). Multiple conditions [.] separated Example: col_like_value.col2__val2",
+                        "name": "whereOr",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
                         "description": "Rows to limit in response (Default: 10,000)",
                         "name": "limit",
                         "in": "query"
@@ -23334,6 +24392,12 @@ var doc = `{
                         "type": "string",
                         "description": "Filter on specific fields. Multiple conditions [.] separated Example: col_like_value.col2__val2",
                         "name": "where",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Filter on specific fields (Chained ors). Multiple conditions [.] separated Example: col_like_value.col2__val2",
+                        "name": "whereOr",
                         "in": "query"
                     },
                     {
@@ -23606,6 +24670,12 @@ var doc = `{
                     },
                     {
                         "type": "string",
+                        "description": "Filter on specific fields (Chained ors). Multiple conditions [.] separated Example: col_like_value.col2__val2",
+                        "name": "whereOr",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
                         "description": "Rows to limit in response (Default: 10,000)",
                         "name": "limit",
                         "in": "query"
@@ -23759,7 +24829,7 @@ var doc = `{
                 "tags": [
                     "Zone"
                 ],
-                "summary": "Deletes Zone",
+                "summary": "Delegenerate-axios-clienttes Zone",
                 "operationId": "deleteZone",
                 "parameters": [
                     {
@@ -24072,6 +25142,12 @@ var doc = `{
                     },
                     {
                         "type": "string",
+                        "description": "Filter on specific fields (Chained ors). Multiple conditions [.] separated Example: col_like_value.col2__val2",
+                        "name": "whereOr",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
                         "description": "Rows to limit in response (Default: 10,000)",
                         "name": "limit",
                         "in": "query"
@@ -24138,6 +25214,12 @@ var doc = `{
                         "type": "string",
                         "description": "Filter on specific fields. Multiple conditions [.] separated Example: col_like_value.col2__val2",
                         "name": "where",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Filter on specific fields (Chained ors). Multiple conditions [.] separated Example: col_like_value.col2__val2",
+                        "name": "whereOr",
                         "in": "query"
                     },
                     {
@@ -25900,6 +26982,32 @@ var doc = `{
                     "type": "integer"
                 },
                 "taskid": {
+                    "type": "integer"
+                }
+            }
+        },
+        "models.CharacterExpeditionLockout": {
+            "type": "object",
+            "properties": {
+                "character_id": {
+                    "type": "integer"
+                },
+                "duration": {
+                    "type": "integer"
+                },
+                "event_name": {
+                    "type": "string"
+                },
+                "expedition_name": {
+                    "type": "string"
+                },
+                "expire_time": {
+                    "type": "string"
+                },
+                "from_expedition_uuid": {
+                    "type": "string"
+                },
+                "id": {
                     "type": "integer"
                 }
             }
@@ -29360,6 +30468,62 @@ var doc = `{
                 },
                 "updated_at": {
                     "type": "string"
+                }
+            }
+        },
+        "models.ServerScheduledEvent": {
+            "type": "object",
+            "properties": {
+                "created_at": {
+                    "type": "string"
+                },
+                "cron_expression": {
+                    "type": "string"
+                },
+                "day_end": {
+                    "type": "integer"
+                },
+                "day_start": {
+                    "type": "integer"
+                },
+                "deleted_at": {
+                    "type": "string"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "event_data": {
+                    "type": "string"
+                },
+                "event_type": {
+                    "type": "string"
+                },
+                "hour_end": {
+                    "type": "integer"
+                },
+                "hour_start": {
+                    "type": "integer"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "minute_end": {
+                    "type": "integer"
+                },
+                "minute_start": {
+                    "type": "integer"
+                },
+                "month_end": {
+                    "type": "integer"
+                },
+                "month_start": {
+                    "type": "integer"
+                },
+                "year_end": {
+                    "type": "integer"
+                },
+                "year_start": {
+                    "type": "integer"
                 }
             }
         },

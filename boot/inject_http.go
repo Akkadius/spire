@@ -8,6 +8,7 @@ import (
 	"github.com/google/wire"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
+	gocache "github.com/patrickmn/go-cache"
 	"net/http"
 	"time"
 )
@@ -38,6 +39,7 @@ func NewRouter(
 	crudc *crudControllers,
 	userContextMiddleware *appmiddleware.UserContextMiddleware,
 	logMiddleware *appmiddleware.RequestLogMiddleware,
+	cache *gocache.Cache,
 ) *routes.Router {
 	return routes.NewHttpRouter(
 
@@ -80,7 +82,12 @@ func NewRouter(
 				middleware.GzipWithConfig(middleware.GzipConfig{Level: 1}),
 				v1RateLimit(),
 			),
-			routes.NewControllerGroup("/api/v1/", crudc.routes, userContextMiddleware.Handle(), v1RateLimit()),
+			routes.NewControllerGroup(
+				"/api/v1/",
+				crudc.routes,
+				userContextMiddleware.Handle(),
+				v1RateLimit(),
+			),
 		},
 	)
 }

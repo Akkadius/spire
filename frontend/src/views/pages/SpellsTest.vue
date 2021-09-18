@@ -40,15 +40,24 @@
 
               <div class="col-lg-3 col-sm-12 text-center">
                 Spell Effect SPA
-                <input
-                  name="spell_effect"
-                  class="form-control"
-                  placeholder="Spell Effect SPA #"
-                  v-model="spellEffect"
-                  type="text"
-                  title="SPA # or description e.g. Root, Stun, Mesmerize, Cure, Heal, HoT, DD, DoT, Proc, Snare, Pacify, Timer 3"
-                  value=""
-                >
+<!--                <input-->
+<!--                  name="spell_effect"-->
+<!--                  class="form-control"-->
+<!--                  placeholder="Spell Effect SPA #"-->
+<!--                  v-model="spellEffect"-->
+<!--                  type="text"-->
+<!--                  title="SPA # or description e.g. Root, Stun, Mesmerize, Cure, Heal, HoT, DD, DoT, Proc, Snare, Pacify, Timer 3"-->
+<!--                  value=""-->
+<!--                >-->
+
+                <select name="class" id="spell_effect" class="form-control" v-model="selectedSpa" @change="triggerState()">
+                  <option value="-1">-- Select --</option>
+
+                  <option v-for="(spellEffect, id) in dbSpellEffects" v-bind:value="id">
+                    {{id}}) {{ spellEffect }}
+                  </option>
+                </select>
+
               </div>
 
               <div class="col-lg-3 col-sm-12 text-center">
@@ -95,6 +104,7 @@ import EqSpellPreview from "@/components/eq-ui/EQSpellPreview.vue";
 import {DB_CLASSES_ICONS} from "@/app/constants/eq-class-icon-constants";
 import {App} from "@/constants/app";
 import {DB_CLASSES_SHORT, DB_PLAYER_CLASSES} from "@/app/constants/eq-classes-constants";
+import {DB_SPELL_EFFECTS} from "@/app/constants/eq-spell-constants";
 
 const SPELLS_LIST_ROUTE = "/spells-test";
 
@@ -117,12 +127,14 @@ export default {
       dbClassIcons: DB_CLASSES_ICONS,
       dbClassesShort: DB_CLASSES_SHORT,
       dbClasses: DB_PLAYER_CLASSES,
+      dbSpellEffects: DB_SPELL_EFFECTS,
       itemCdnUrl: App.ASSET_ITEM_ICON_BASE_URL,
 
       // form values
       selectedClass: 0,
       spellName: "",
       spellEffect: "",
+      selectedSpa: -1,
     }
   },
 
@@ -143,7 +155,7 @@ export default {
       Object.assign(queryState, this.$route.query)
       queryState.class = this.selectedClass
       queryState.name = this.spellName
-      queryState.effect = this.spellEffect
+      queryState.spa = this.selectedSpa
 
       this.$router.push(
         {
@@ -160,12 +172,15 @@ export default {
       if (this.$route.query.class) {
         this.selectedClass = this.$route.query.class;
       }
+      if (this.$route.query.spa) {
+        this.selectedSpa = this.$route.query.spa;
+      }
     },
 
     selectClass: function (eqClass) {
       this.selectedClass = eqClass;
       this.spellName = ""
-      this.spellEffect = ""
+      this.selectedSpa = -1
       this.updateQueryState();
       this.listSpells()
     },
@@ -184,6 +199,10 @@ export default {
 
       const api = (new SpellsNewApi(SpireApiClient.getOpenApiConfig()))
       let filters = [];
+      let whereOr = [];
+
+      console.log("class")
+      console.log(this.selectedClass)
 
       if (this.selectedClass > 0) {
         filters.push(["classes" + this.selectedClass, "_gte_", "1"]);
@@ -194,13 +213,39 @@ export default {
         filters.push(["name", "_like_", this.spellName]);
       }
 
+      if (this.selectedSpa > 0) {
+        for (let effectIndex = 1; effectIndex <= 12; effectIndex++) {
+          whereOr.push(["effectid" + effectIndex, "__", this.selectedSpa]);
+        }
+      }
+
       let wheres = [];
       filters.forEach((filter) => {
         const where = util.format("%s%s%s", filter[0], filter[1], filter[2])
         wheres.push(where)
       })
 
-      api.listSpellsNews({limit: this.limit, where: wheres.join(".")}).then((result) => {
+      let wheresOrs = [];
+      whereOr.forEach((filter) => {
+        const where = util.format("%s%s%s", filter[0], filter[1], filter[2])
+        wheresOrs.push(where)
+      })
+
+      console.log(wheresOrs)
+
+      let request = {};
+      request.limit = this.limit;
+      if (Object.keys(wheres).length > 0) {
+        request.where = wheres.join(".")
+      }
+
+      if (Object.keys(wheresOrs).length > 0) {
+        request.whereOr = wheresOrs.join(".")
+      }
+
+      console.log(request);
+
+      api.listSpellsNews(request).then((result) => {
         if (result.status === 200) {
           this.spells = result.data
           this.loaded = true;

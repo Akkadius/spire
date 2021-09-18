@@ -1,0 +1,8 @@
+additionalProperties:
+  modelPropertyNaming: snake_case
+  useSingleRequestParameter: true
+  supportsES6: false
+  snapshot: true
+  withSeparateModelsAndApi: true
+  apiPackage: api
+  modelPackage: models
