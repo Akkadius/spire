@@ -27,6 +27,7 @@
         <td class="spell-field-label">Classes</td>
         <td>{{ getClasses() }}</td>
       </tr>
+
       <tr v-if="spellData['you_cast'] !== ''">
         <td class="spell-field-label">When you cast</td>
         <td> {{ spellData["you_cast"] }}</td>
@@ -46,22 +47,29 @@
       <tr v-if="spellData['spell_fades'] !== ''">
         <td class="spell-field-label">When fading</td>
         <td> {{ spellData["spell_fades"] }}</td>
-
       </tr>
+
+      <tr v-if="spellData['skill'] < 116 && getDatabaseSkillName(spellData['skill']) !== ''">
+        <td class="spell-field-label">Skill</td>
+        <td> {{ getDatabaseSkillName(spellData["skill"]) }}
+            <span v-if="spellData['is_discipline'] != 0">(Combat Skill)</span>
+        </td>
+      </tr>
+
       <tr v-if="spellData['mana'] > 0">
         <td class="spell-field-label">Mana</td>
         <td> {{ spellData["mana"] }}</td>
       </tr>
 
-      <tr v-if="spellData['endur_cost'] !== 0 || spellData['endur_upkeep'] !== 0 ">
+      <tr v-if="spellData['endur_cost'] !== 0 ">
         <td class="spell-field-label">Endurance</td>
-        <td> {{ spellData["endur_cost"] }}, Upkeep: {{ spellData["endur_upkeep"] }} per second</td>
+        <td> {{ spellData["endur_cost"] }}</td>
+      </tr>
+      <tr v-if="spellData['endur_upkeep'] !== 0 ">
+        <td class="spell-field-label">Endurance Upkeep</td>
+        <td> {{ spellData["endur_upkeep"] }} per second</td>
       </tr>
 
-      <tr v-if="spellData['skill'] < 77 && getDatabaseSkillName(spellData['skill']) !== ''">
-        <td class="spell-field-label">Skill</td>
-        <td> {{ getDatabaseSkillName(spellData["skill"]) }}</td>
-      </tr>
       <tr v-if="spellData['cast_time'] > 0 || spellData['recovery_time'] > 0 || spellData['recast_time'] > 0">
         <td class="spell-field-label">Casting Time</td>
         <td> {{ (spellData["cast_time"] / 1000) }} sec</td>
@@ -74,28 +82,42 @@
         <td class="spell-field-label">Recast Time</td>
         <td> {{ (spellData["recast_time"] / 1000) }} sec</td>
       </tr>
-      <tr>
-        <td class="spell-field-label">Range</td>
-        <td> {{ spellData["range"] }}</td>
-      </tr>
-      <tr v-if="spellData['targettype'] > 0 && getTargetTypeName(spellData['targettype']) !== ''">
-        <td class="spell-field-label">Target</td>
-        <td> {{ getTargetTypeName(spellData["targettype"]) }}</td>
-      </tr>
-      <tr v-if="spellData['resisttype'] > 0 && getSpellResistTypeName(spellData['resisttype']) !== ''">
-        <td class="spell-field-label">Resist Type</td>
-        <td> {{ getSpellResistTypeName(spellData["resisttype"]) }}
-          <span v-if="spellData['resist_diff'] > 0">(adjust: {{ spellData["resist_diff"] }} )</span>
-        </td>
-      </tr>
-      <tr v-if="spellData['time_of_day'] === 2">
-        <td class="spell-field-label">Casting Restrictions</td>
-        <td> Night Time</td>
-      </tr>
+
       <tr v-if="getBuffDuration()">
         <td class="spell-field-label">Duration</td>
         <td> {{ humanTime(getBuffDuration() * 6) }} - {{ getBuffDuration() }} tic(s)</td>
       </tr>
+      <tr v-if="spellData['ae_duration'] > 0">
+        <td class="spell-field-label">Rain Duration</td>
+        <td> {{ spellData["ae_duration"] / 2500 }} waves </td>
+      </tr>
+
+      <tr v-if="spellData['range'] > 0">
+        <td class="spell-field-label">Range</td>
+        <td> {{ spellData["range"] }}</td>
+      </tr>
+      <tr v-if="spellData['aoerange'] > 0">
+        <td class="spell-field-label">AOE Range</td>
+        <td> {{ spellData["aoerange"] }}</td>
+      </tr>
+
+      <tr v-if="spellData['targettype'] > 0 && getTargetTypeName(spellData['targettype']) !== ''">
+        <td class="spell-field-label">Target</td>
+        <td> {{ getTargetTypeName(spellData["targettype"]) }}</td>
+      </tr>
+
+      <tr v-if="spellData['resisttype'] > 0 && getSpellResistTypeName(spellData['resisttype']) !== ''">
+        <td class="spell-field-label">Resist Type</td>
+        <td> {{ getSpellResistTypeName(spellData["resisttype"]) }}
+          <span v-if="spellData['resist_diff'] != 0">(adjust: {{ spellData["resist_diff"] }})</span>
+        </td>
+      </tr>
+
+      <tr v-if="spellData['time_of_day'] === 2">
+        <td class="spell-field-label">Casting Restrictions</td>
+        <td> Night Time</td>
+      </tr>
+
 
       <!-- TODO: Display Reagents - the data should be passed in? -->
 
