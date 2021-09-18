@@ -1218,3 +1218,13 @@
   styleclasses: col-12
   type: input
   help: '<p>Aggro regardless of _int or level : 0 = False, 1 = True</p>'
+- disabled: false
+  featured: false
+  inputtype: text
+  label: Exp Mod
+  model: exp_mod
+  readonly: false
+  rows: ""
+  styleclasses: col-12
+  type: input
+  help: ""

@@ -14466,41 +14466,90 @@ tasks:
     is_nullable: "NO"
     column_type: tinyint(3) unsigned
     column_default: "2"
+  - column: reward_radiant_crystals
+    data_type: int
+    column_key: ""
+    ordinal_position: "12"
+    is_nullable: "NO"
+    column_type: int(10) unsigned
+    column_default: "0"
+  - column: reward_ebon_crystals
+    data_type: int
+    column_key: ""
+    ordinal_position: "13"
+    is_nullable: "NO"
+    column_type: int(10) unsigned
+    column_default: "0"
   - column: minlevel
     data_type: tinyint
     column_key: ""
-    ordinal_position: "12"
+    ordinal_position: "14"
     is_nullable: "NO"
     column_type: tinyint(3) unsigned
     column_default: "0"
   - column: maxlevel
     data_type: tinyint
     column_key: ""
-    ordinal_position: "13"
+    ordinal_position: "15"
     is_nullable: "NO"
     column_type: tinyint(3) unsigned
+    column_default: "0"
+  - column: level_spread
+    data_type: int
+    column_key: ""
+    ordinal_position: "16"
+    is_nullable: "NO"
+    column_type: int(10) unsigned
+    column_default: "0"
+  - column: min_players
+    data_type: int
+    column_key: ""
+    ordinal_position: "17"
+    is_nullable: "NO"
+    column_type: int(10) unsigned
+    column_default: "0"
+  - column: max_players
+    data_type: int
+    column_key: ""
+    ordinal_position: "18"
+    is_nullable: "NO"
+    column_type: int(10) unsigned
     column_default: "0"
   - column: repeatable
     data_type: tinyint
     column_key: ""
-    ordinal_position: "14"
+    ordinal_position: "19"
     is_nullable: "NO"
     column_type: tinyint(1) unsigned
     column_default: "1"
   - column: faction_reward
     data_type: int
     column_key: ""
-    ordinal_position: "15"
+    ordinal_position: "20"
     is_nullable: "NO"
     column_type: int(10)
     column_default: "0"
   - column: completion_emote
     data_type: varchar
     column_key: ""
-    ordinal_position: "16"
+    ordinal_position: "21"
     is_nullable: "NO"
-    column_type: varchar(128)
+    column_type: varchar(512)
     column_default: ''''''
+  - column: replay_timer_seconds
+    data_type: int
+    column_key: ""
+    ordinal_position: "22"
+    is_nullable: "NO"
+    column_type: int(10) unsigned
+    column_default: "0"
+  - column: request_timer_seconds
+    data_type: int
+    column_key: ""
+    ordinal_position: "23"
+    is_nullable: "NO"
+    column_type: int(10) unsigned
+    column_default: "0"
 tasksets:
   - column: id
     data_type: int
