@@ -92,13 +92,26 @@
         <td> {{ spellData["ae_duration"] / 2500 }} waves </td>
       </tr>
 
+
       <tr v-if="spellData['range'] > 0">
         <td class="spell-field-label">Range</td>
-        <td> {{ spellData["range"] }}</td>
+        <td>
+          <span v-if="spellData['min_range'] > 0 && spellData['aoerange'] == 0 ">  {{ spellData["min_range"] }} to </span>
+          {{ spellData["range"] }}
+        </td>
       </tr>
+
       <tr v-if="spellData['aoerange'] > 0">
         <td class="spell-field-label">AOE Range</td>
-        <td> {{ spellData["aoerange"] }}</td>
+        <td>
+          <span v-if="spellData['min_range'] > 0">  {{ spellData["min_range"] }} to </span>
+          {{ spellData["aoerange"] }}
+        </td>
+      </tr>
+
+      <tr v-if="(spellData['max_dist'] != 0 || spellData['min_dist'] != 0) && (spellData['max_dist_mod'] != 0 || spellData['min_dist_mod'] != 0) ">
+        <td class="spell-field-label">Range Based Mod</td>
+        <td> ({{ spellData["min_dist_mod"] * 100 }}% at {{ spellData["min_dist"] }}) to ({{ spellData["max_dist_mod"] * 100 }}% at {{ spellData["max_dist"] }})  </td>
       </tr>
 
       <tr v-if="spellData['targettype'] > 0 && getTargetTypeName(spellData['targettype']) !== ''">
