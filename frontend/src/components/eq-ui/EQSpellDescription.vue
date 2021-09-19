@@ -1,6 +1,9 @@
 <template>
-  <div v-if="spell['descnum'] > 0 && effectDescription !== ''">
-    {{ effectDescription }}
+  <div>
+    <div v-if="spell['descnum'] > 0 && effectDescription !== '' && loaded">
+      {{ effectDescription }}
+    </div>
+    <app-loader :is-loading="!loaded" size="15"/>
   </div>
 </template>
 
@@ -23,11 +26,13 @@ export default {
       if (result && result.trim() !== "") {
         this.effectDescription = result;
       }
+      this.loaded = true;
     })
   },
   data() {
     return {
-      effectDescription: ""
+      effectDescription: "",
+      loaded: false
     }
   },
   props: {
