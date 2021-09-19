@@ -218,32 +218,13 @@
 
       <tr v-if="spellData['cone_start_angle'] !== 0 || spellData['cone_stop_angle'] !== 0">
         <td class="spell-field-label">Cone Angle</td>
-        <!-- <td> {{ spellData["cone_start_angle"] }} degrees to {{ spellData["cone_stop_angle"] }} degrees -->
-        <td>
-           <span v-if="(spellData['cone_start_angle'] >= 270 && spellData['cone_stop_angle'] <= 90) &&
-           ((360 - spellData['cone_start_angle']) == spellData['cone_stop_angle'])">
-             Frontal {{ ((360 - spellData["cone_start_angle"]) + spellData["cone_stop_angle"])}} degree Arc </span>
-          <span v-if="(spellData['cone_start_angle'] >= 90 && spellData['cone_start_angle'] <= 180) &&
-          (spellData['cone_stop_angle'] >= 180 && spellData['cone_stop_angle'] <= 270) &&
-          ((360 - spellData['cone_start_angle']) == spellData['cone_stop_angle'])">
-            Rear {{ Math.abs((spellData["cone_start_angle"]) - spellData["cone_stop_angle"])}} degree Arc </span>
-          <span v-if="(spellData['cone_start_angle'] >= 180 && spellData['cone_start_angle'] <= 270) &&
-          (spellData['cone_stop_angle'] >= 270 && spellData['cone_stop_angle'] <= 360) &&
-          Math.abs(270 - spellData['cone_start_angle']) == Math.abs(270 - spellData['cone_stop_angle'])">
-            Left {{ Math.abs((spellData["cone_start_angle"]) - spellData["cone_stop_angle"])}} degree Arc </span>
-          <span v-if="(spellData['cone_start_angle'] >= 0 && spellData['cone_start_angle'] <= 90) &&
-          (spellData['cone_stop_angle'] >= 90 && spellData['cone_stop_angle'] <= 180) &&
-          Math.abs(90 - spellData['cone_start_angle']) == Math.abs(90 - spellData['cone_stop_angle'])">
-            Right {{ Math.abs((spellData["cone_start_angle"]) - spellData["cone_stop_angle"])}} degree Arc </span>
-        </td>
+        <td> {{getConeAngleDescription(spellData['cone_start_angle'], spellData['cone_stop_angle'])}} </td>
       </tr>
 
       <tr v-if="spellData['resisttype'] > 0 && getSpellResistTypeName(spellData['resisttype']) !== ''">
         <td class="spell-field-label">Resist Type</td>
         <td> {{ getSpellResistTypeName(spellData["resisttype"]) }}
-          <span v-if="spellData['resist_diff'] !== 0 && spellData['no_resist'] == 0">(adjust: {{
-              spellData["resist_diff"]
-            }})</span>
+          <span v-if="spellData['resist_diff'] !== 0 && spellData['no_resist'] == 0">(adjust: {{spellData["resist_diff"]}})</span>
           <span v-if="spellData['no_resist'] !== 0">(Unresistable)</span>
         </td>
       </tr>
@@ -286,7 +267,7 @@
         <td> {{ spellData["field_217"] }}%</td>
       </tr>
 
-      <!-- Num hits -->
+      <!-- other -->
 
       <tr v-if="spellData['numhitstype'] > 0 ">
         <td class="spell-field-label">Max Hits</td>
@@ -476,6 +457,28 @@ export default {
     },
     getSpellNumHitsTypeName: function (id) {
       return DB_SPELL_NUMHITSTYPE[id] ? DB_SPELL_NUMHITSTYPE[id] : ""
+    },
+
+    getConeAngleDescription: function (start, stop) {
+
+      if (start >= 1 && start <= 180) {
+        return "Right 180 degree Arc"
+      }
+
+      if ((start >= 270 && stop <= 90) &&  ((360 - start) == stop)){
+        return "Frontal " + ((360 - start) + stop) + " degree Arc"
+      }
+      if ((start >= 90 && start <= 180) && (stop >= 180 && stop <= 270) && ((360 - start) == stop)){
+        return "Rear " + Math.abs((start) - stop) + " degree Arc"
+      }
+      if ((start >= 180 && start <= 270) && (stop >= 270 && stop <= 360) && (Math.abs(270 - start) == Math.abs(270 - stop))){
+        return "Left " + Math.abs(start - stop) + " degree Arc"
+      }
+      if ((start >= 0 && start <= 90) && (stop >= 90 && stop <= 180) && (Math.abs(90 - start) == Math.abs(90 - stop))){
+        return "Right " + Math.abs(start - stop) + " degree Arc"
+      }
+
+      return start + " degrees to " + stop + " degrees"
     },
 
     humanTime: function (sec) {
