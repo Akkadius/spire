@@ -285,6 +285,12 @@
 
       <!-- other -->
 
+
+      <tr v-if="spellData['nimbuseffect'] > 0 ">
+        <td class="spell-field-label">Nimbus Type</td>
+        <td> {{ spellData["nimbuseffect"] }}</td>
+      </tr>
+
       <tr v-if="spellData['numhitstype'] > 0 ">
         <td class="spell-field-label">Max Hits</td>
         <td> {{ spellData["numhits"] }} {{ getSpellNumHitsTypeName(spellData["numhitstype"]) }}</td>
@@ -294,6 +300,7 @@
         <td class="spell-field-label">Recourse</td>
         <v-runtime-template :template="'<td>' + recourseLink + '</td>'"/>
       </tr>
+
 
       <!-- TODO: Display Reagents - the data should be passed in? -->
 
