@@ -3,7 +3,8 @@
 
     <div class="row">
       <div class="col-1" v-if="spellData.new_icon > 0">
-        <img :src="spellCdnUrl + spellData.new_icon + '.gif'" style="width:40px;height:auto;border-radius: 10px">
+        <img :src="spellCdnUrl + spellData.new_icon + '.gif'"
+             :style="'width:40px;height:auto;border-radius: 10px; ' + 'border: 2px solid ' + getTargetTypeColor(this.spellData['targettype']) + '; border-radius: 7px;'">
       </div>
       <div class="col-11 pl-5">
         <h6 class="eq-header" style="margin: 0px; margin-bottom: 10px">
@@ -160,7 +161,9 @@
       <tr v-if="spellData['range'] > 0">
         <td class="spell-field-label">Range</td>
         <td>
-          <span v-if="spellData['min_range'] > 0 && spellData['aoerange'] == 0 ">  {{ spellData["min_range"] }}' to </span>
+          <span v-if="spellData['min_range'] > 0 && spellData['aoerange'] == 0 ">  {{
+              spellData["min_range"]
+            }}' to </span>
           {{ spellData["range"] }}'
         </td>
       </tr>
@@ -174,7 +177,9 @@
       <tr
         v-if="(spellData['max_dist'] !== 0 || spellData['min_dist'] !== 0) && (spellData['max_dist_mod'] !== 0 || spellData['min_dist_mod'] !== 0) ">
         <td class="spell-field-label">Range Based Mod</td>
-        <td> ({{ spellData["min_dist_mod"] * 100 }}% at {{ spellData["min_dist"] }}') to ({{ spellData["max_dist_mod"] * 100 }}% at {{ spellData["max_dist"] }}')  </td>
+        <td> ({{ spellData["min_dist_mod"] * 100 }}% at {{ spellData["min_dist"] }}') to
+          ({{ spellData["max_dist_mod"] * 100 }}% at {{ spellData["max_dist"] }}')
+        </td>
       </tr>
 
       <tr v-if="spellData['viral_range'] > 0">
@@ -220,30 +225,30 @@
       <tr v-if="spellData['pushback'] != 0 || spellData['pushup'] != 0">
         <td class="spell-field-label">Knockback</td>
         <td>
-          <span v-if="spellData['pushback'] != 0">Push Back: {{ spellData["pushback"]}}' </span>
-          <span v-if="spellData['pushup'] != 0">Push Up: {{ spellData["pushup"]}}' </span>
+          <span v-if="spellData['pushback'] != 0">Push Back: {{ spellData["pushback"] }}' </span>
+          <span v-if="spellData['pushup'] != 0">Push Up: {{ spellData["pushup"] }}' </span>
         </td>
       </tr>
 
       <tr v-if="spellData['bonushate'] !== 0">
         <td class="spell-field-label">Hate Mod:</td>
         <td>
-          <span v-if="spellData['bonushate'] > 0">+{{ spellData["bonushate"]}} </span>
-          <span v-if="spellData['bonushate'] < 0"> {{ spellData["bonushate"]}} </span>
+          <span v-if="spellData['bonushate'] > 0">+{{ spellData["bonushate"] }} </span>
+          <span v-if="spellData['bonushate'] < 0"> {{ spellData["bonushate"] }} </span>
         </td>
       </tr>
 
       <tr v-if="spellData['hate_added'] !== 0">
         <td class="spell-field-label">Hate:</td>
         <td>
-          <span v-if="spellData['hate_added'] > 0">+{{ spellData["hate_added"]}} </span>
-          <span v-if="spellData['hate_added'] < 0"> {{ spellData["hate_added"]}} </span>
+          <span v-if="spellData['hate_added'] > 0">+{{ spellData["hate_added"] }} </span>
+          <span v-if="spellData['hate_added'] < 0"> {{ spellData["hate_added"] }} </span>
         </td>
       </tr>
 
       <tr v-if="spellData['field_217'] > 0 ">
         <td class="spell-field-label">Max Critical Chance</td>
-        <td> {{ spellData["field_217"] }}% </td>
+        <td> {{ spellData["field_217"] }}%</td>
       </tr>
 
       <!-- Num hits -->
@@ -325,9 +330,9 @@ import {
   DB_SPELL_RESISTS,
   DB_SPELL_TARGET_RESTRICTION,
   DB_SPELL_TARGETS,
-  DB_SPELL_WORN_ATTRIBUTE_CAP
-}                                          from "@/app/constants/eq-spell-constants";
-import * as util                           from "util";
+  DB_SPELL_WORN_ATTRIBUTE_CAP, SPELL_TARGET_TYPE_COLORS
+}                from "@/app/constants/eq-spell-constants";
+import * as util from "util";
 import {DB_RACE_NAMES}                     from "@/app/constants/eq-races-constants";
 import {DbStrApi, ItemApi, SpellsNewApi}   from "@/app/api";
 import {SpireApiClient}                    from "@/app/api/spire-api-client";
@@ -433,6 +438,10 @@ export default {
         });
       }
     },
+    getTargetTypeColor(targetType) {
+      return SPELL_TARGET_TYPE_COLORS[targetType];
+    },
+
     getClasses() {
       let classData = []
       for (let i = 1; i <= 16; i++) {
@@ -460,7 +469,7 @@ export default {
       return DB_SPELL_NUMHITSTYPE[id] ? DB_SPELL_NUMHITSTYPE[id] : ""
     },
 
-     getMinLevel: function () {
+    getMinLevel: function () {
       let minLevel = 0
       for (let i = 1; i <= 16; i++) {
         const classIndex = "classes_" + i
@@ -892,14 +901,16 @@ export default {
 
       this.sideLoadedSpellData[renderSpellId] = spell
 
+      const targetTypeColor = this.getTargetTypeColor(spell['targettype']);
+
       return `
           <div :id="${parentSpellId} + '-' + ${renderSpellId} + '-' + componentId" style="display:inline-block" class="ml-1">
 
             <div style="display: inline-block">
               <img
                 :src="spellCdnUrl + '' + ${spell.new_icon} + '.gif'"
-                style="height:15px; border-radius: 25px; width:auto;"
-                class="mr-1">
+                style="height:15px; width:auto; border: .5px solid ${targetTypeColor}; border-radius: 2px;"
+                >
               <span style="color: #f7ff00">${spell.name}</span>
             </div>
 

@@ -1076,7 +1076,7 @@ export const DB_SPELL_WORN_ATTRIBUTE_CAP = {
   "3": "DEX",
   "4": "WIS",
   "5": "INT",
-  "6": "CHA" ,
+  "6": "CHA",
   "7": "Magic Resist",
   "8": "Cold Resist",
   "9": "Fire Resist",
@@ -1148,4 +1148,42 @@ export const DB_SPELL_NUMHITSTYPE = {
   "13": "Incoming Hits Or Spells Or DS",
   "14": "Outgoing Hits Affected By Buff",
   "15": "Tradeskill Combines",
+}
+
+export const SPELL_TARGET_TYPE_COLORS = {
+  0: "red",
+  1: "red",
+  2: "#CCCCFF", // blue purple
+  3: "purple",
+  4: "#CCCCFF", // blue purple
+  5: "red",
+  6: "yellow",
+  8: "#90EE90", // light green
+  9: "red",
+  11: "red",
+  13: "red",
+  14: "red",
+  15: "red",
+  16: "red",
+  17: "red",
+  18: "red",
+  20: "red",
+  24: "#CCCCFF", // blue purple
+  25: "#CCCCFF", // blue purple
+  32: "black",
+  33: "black",
+  34: "red",
+  35: "red",
+  36: "black",
+  37: "black",
+  38: "red",
+  39: "red",
+  40: "purple",
+  41: "purple",
+  42: "teal",
+  43: "red",
+  44: "teal",
+  45: "green",
+  46: "#CBC3E3", // light purple
+  47: "red",
 }
