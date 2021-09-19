@@ -92,6 +92,19 @@
           </li>
         </ul>
 
+        <h6 class="navbar-heading">
+          Browsers
+        </h6>
+
+        <!-- Navigation -->
+        <ul class="navbar-nav mb-md-4">
+          <li class="nav-item">
+            <router-link class="nav-link " to="/spells">
+              <i class="ra ra-book mr-1"></i> Spell Browser
+            </router-link>
+          </li>
+        </ul>
+
         <!-- Heading -->
         <h6 class="navbar-heading">
           Documentation
@@ -231,7 +244,6 @@ export default {
       ],
       testPageNavs: [
         {title: "Items Test", to: "/items-test"},
-        {title: "Spells Test", to: "/spells-test"},
         {title: "Task Editor (Non Functional)", to: "/tasks"},
       ]
     }

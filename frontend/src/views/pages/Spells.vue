@@ -153,7 +153,7 @@ import {DB_CLASSES_SHORT, DB_PLAYER_CLASSES} from "@/app/constants/eq-classes-co
 import {DB_SPA}                              from "@/app/constants/eq-spell-constants";
 import EqSpellPreviewTable                   from "@/components/eq-ui/EQSpellPreviewTable.vue";
 
-const SPELLS_LIST_ROUTE = "/spells-test";
+const SPELLS_LIST_ROUTE = "/spells";
 
 export default {
   components: {
