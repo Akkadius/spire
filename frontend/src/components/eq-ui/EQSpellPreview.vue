@@ -104,7 +104,7 @@
         <td> Cancel on Sit </td>
       </tr>
 
-      <tr v-if="spellData['sneak'] !== 0">
+      <tr v-if="spellData['sneaking'] !== 0">
         <td class="spell-field-label">Restriction</td>
         <td> Must Be Sneaking </td>
       </tr>
@@ -158,20 +158,20 @@
       <tr v-if="spellData['range'] > 0">
         <td class="spell-field-label">Range</td>
         <td>
-          <span v-if="spellData['min_range'] > 0 && spellData['aoerange'] == 0 ">  {{ spellData["min_range"] }} to </span>
-          {{ spellData["range"] }}
+          <span v-if="spellData['min_range'] > 0 && spellData['aoerange'] == 0 ">  {{ spellData["min_range"] }}' to </span>
+          {{ spellData["range"] }}'
         </td>
       </tr>
       <tr v-if="spellData['aoerange'] > 0">
         <td class="spell-field-label">AOE Range</td>
         <td>
-          <span v-if="spellData['min_range'] > 0">  {{ spellData["min_range"] }} to </span>
-          {{ spellData["aoerange"] }}
+          <span v-if="spellData['min_range'] > 0">  {{ spellData["min_range"] }}' to </span>
+          {{ spellData["aoerange"] }}'
         </td>
       </tr>
       <tr v-if="(spellData['max_dist'] !== 0 || spellData['min_dist'] !== 0) && (spellData['max_dist_mod'] !== 0 || spellData['min_dist_mod'] !== 0) ">
         <td class="spell-field-label">Range Based Mod</td>
-        <td> ({{ spellData["min_dist_mod"] * 100 }}% at {{ spellData["min_dist"] }}) to ({{ spellData["max_dist_mod"] * 100 }}% at {{ spellData["max_dist"] }})  </td>
+        <td> ({{ spellData["min_dist_mod"] * 100 }}% at {{ spellData["min_dist"] }}') to ({{ spellData["max_dist_mod"] * 100 }}% at {{ spellData["max_dist"] }}')  </td>
       </tr>
 
       <tr v-if="spellData['viral_range'] > 0">
@@ -208,7 +208,43 @@
         </td>
       </tr>
 
+      <!-- Added effects -->
 
+      <tr v-if="spellData['pushback'] != 0 || spellData['pushup'] != 0">
+        <td class="spell-field-label">Knockback</td>
+        <td>
+          <span v-if="spellData['pushback'] != 0">Push Back: {{ spellData["pushback"]}}' </span>
+          <span v-if="spellData['pushup'] != 0">Push Up: {{ spellData["pushup"]}}' </span>
+        </td>
+      </tr>
+
+      <tr v-if="spellData['bonushate'] !== 0">
+        <td class="spell-field-label">Hate Mod:</td>
+        <td>
+          <span v-if="spellData['bonushate'] > 0">+{{ spellData["bonushate"]}} </span>
+          <span v-if="spellData['bonushate'] < 0"> {{ spellData["bonushate"]}} </span>
+        </td>
+      </tr>
+
+      <tr v-if="spellData['hate_added'] !== 0">
+        <td class="spell-field-label">Hate:</td>
+        <td>
+          <span v-if="spellData['hate_added'] > 0">+{{ spellData["hate_added"]}} </span>
+          <span v-if="spellData['hate_added'] < 0"> {{ spellData["hate_added"]}} </span>
+        </td>
+      </tr>
+
+      <tr v-if="spellData['field_217'] > 0 ">
+        <td class="spell-field-label">Max Critical Chance</td>
+        <td> {{ spellData["field_217"] }}% </td>
+      </tr>
+
+      <!-- Num hits -->
+
+      <tr v-if="spellData['numhitstype'] > 0 ">
+        <td class="spell-field-label">Max Hits</td>
+        <td> {{ spellData["numhits"] }} {{ getSpellNumHitsTypeName(spellData["numhitstype"]) }}</td>
+      </tr>
 
       <!-- TODO: Display Reagents - the data should be passed in? -->
 
@@ -355,7 +391,11 @@ export default {
     getSpellTargetRestrictionTypeName: function (id) {
       return DB_SPELL_TARGET_RESTRICTION[id] ? DB_SPELL_TARGET_RESTRICTION[id] : ""
     },
-    getMinLevel: function () {
+    getSpellNumHitsTypeName: function (id) {
+      return DB_SPELL_NUMHITSTYPE[id] ? DB_SPELL_NUMHITSTYPE[id] : ""
+    },
+
+     getMinLevel: function () {
       let minLevel = 0
       for (let i = 1; i <= 16; i++) {
         const classIndex = "classes_" + i
