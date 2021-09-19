@@ -278,6 +278,11 @@
         </td>
       </tr>
 
+      <tr v-if="spellData['field_198'] !== 0 ">
+        <td class="spell-field-label">Spell Hate</td>
+        <td>No Detrimental Spell Aggro</td>
+      </tr>
+
       <tr v-if="spellData['field_217'] > 0 ">
         <td class="spell-field-label">Max Critical Chance</td>
         <td> {{ spellData["field_217"] }}%</td>
