@@ -135,8 +135,8 @@ func v1RateLimit() echo.MiddlewareFunc {
 				return false
 			},
 			LimitConfig: appmiddleware.LimiterConfig{
-				Max:      401,
-				Duration: time.Second * 1,
+				Max:      5000,
+				Duration: time.Minute * 1,
 				Strategy: "ip",
 				Key:      "",
 			},
