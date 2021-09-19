@@ -22,7 +22,10 @@
       </tr>
       <tr v-if="spellData['id'] !== ''">
         <td class="spell-field-label">Spell ID</td>
-        <td> {{ spellData["id"] }}</td>
+        <td> {{ spellData["id"] }}
+          <span v-if="spellData['spellgroup'] !== 0">(Group: {{spellData['spellgroup']}}</span>
+          <!-- <span v-if="spellData['rank'] !== 0">, Rank: {{spellData['rank']}})</span> -->
+        </td>
       </tr>
       <tr v-if="getClasses(spellData) !== ''">
         <td class="spell-field-label">Classes</td>
@@ -146,6 +149,20 @@
         <td> {{ humanTime(getBuffDuration(spellData) * 6) }} - {{ getBuffDuration(spellData) }} tic(s)</td>
       </tr>
 
+      <tr v-if="getBuffDuration(spellData)">
+        <td class="spell-field-label">Dispelable</td>
+        <td>
+        <span v-if="spellData['dispel_flag'] !== 0">No</span>
+        <span v-if="spellData['dispel_flag'] == 0">Yes</span>
+        <span v-if="spellData['field_232'] !== 0">, Can Not Remove</span>
+        </td>
+      </tr>
+
+      <tr v-if="spellData['persistdeath'] !== 0">
+        <td class="spell-field-label">Persist After Death</td>
+        <td> Yes </td>
+      </tr>
+
       <!-- ToDO
       <span v-if="spellData['dispel_flag'] !== 0">,  Dispelable: Yes </span>
       <span v-if="spellData['short_buff_box'] !== 0">, Song </span>
@@ -258,6 +275,12 @@
         <td> {{ spellData["numhits"] }} {{ getSpellNumHitsTypeName(spellData["numhitstype"]) }}</td>
       </tr>
 
+      <!--
+      <tr v-if="spellData['recourse_link'] > 0 ">
+        <td class="spell-field-label">Recourse</td>
+        <td> {{ (await this.renderSpellMini(spell.id, spellData["recourse_link"])) }} </td>
+      </tr>
+      -->
 
       <!-- TODO: Display Reagents - the data should be passed in? -->
 
@@ -429,6 +452,7 @@ export default {
     getSpellNumHitsTypeName: function (id) {
       return DB_SPELL_NUMHITSTYPE[id] ? DB_SPELL_NUMHITSTYPE[id] : ""
     },
+
     humanTime: function (sec) {
       let result = ""
       if (sec === 0) {
