@@ -248,7 +248,7 @@
       </tr>
 
       <tr v-if="spellData['bonushate'] !== 0">
-        <td class="spell-field-label">Hate Mod:</td>
+        <td class="spell-field-label">Hate Mod</td>
         <td>
           <span v-if="spellData['bonushate'] > 0">+{{ spellData["bonushate"] }} </span>
           <span v-if="spellData['bonushate'] < 0"> {{ spellData["bonushate"] }} </span>
@@ -256,7 +256,7 @@
       </tr>
 
       <tr v-if="spellData['hate_added'] !== 0">
-        <td class="spell-field-label">Hate:</td>
+        <td class="spell-field-label">Hate</td>
         <td>
           <span v-if="spellData['hate_added'] > 0">+{{ spellData["hate_added"] }} </span>
           <span v-if="spellData['hate_added'] < 0"> {{ spellData["hate_added"] }} </span>
@@ -275,12 +275,10 @@
         <td> {{ spellData["numhits"] }} {{ getSpellNumHitsTypeName(spellData["numhitstype"]) }}</td>
       </tr>
 
-      <!--
       <tr v-if="spellData['recourse_link'] > 0 ">
         <td class="spell-field-label">Recourse</td>
-        <td> {{ (await this.renderSpellMini(spell.id, spellData["recourse_link"])) }} </td>
+        <v-runtime-template :template="'<td>' + recourseLink + '</td>'"/>
       </tr>
-      -->
 
       <!-- TODO: Display Reagents - the data should be passed in? -->
 
@@ -379,7 +377,8 @@ export default {
       sideLoadedSpellData: {},
       componentId: "",
       reagents: [],
-      effectDescription: ""
+      effectDescription: "",
+      recourseLink: ""
     }
   },
   created() {
@@ -414,6 +413,14 @@ export default {
           reagent.item = await this.getItem(this.spellData["components_" + i])
           reagents.push(reagent)
         }
+      }
+
+      // recourse
+      if (this.spellData['recourse_link'] > 0) {
+        // async
+        Spells.renderSpellMini(this.spellData.id, this.spellData["recourse_link"]).then((result) => {
+          this.recourseLink = result;
+        })
       }
 
       this.reagents = reagents
