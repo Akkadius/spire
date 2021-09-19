@@ -5,7 +5,7 @@
         <v-runtime-template :template="'<span>' + effect + '</span>'" class="pb-6 mt-3 doc"/>
       </div>
     </div>
-    <app-loader :is-loading="!loaded"/>
+    <app-loader :is-loading="!loaded" size="15"/>
   </div>
 </template>
 
