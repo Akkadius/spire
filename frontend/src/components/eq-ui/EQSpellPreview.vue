@@ -52,9 +52,11 @@
       <tr v-if="spellData['skill'] < 116 && getDatabaseSkillName(spellData['skill']) !== ''">
         <td class="spell-field-label">Skill</td>
         <td> {{ getDatabaseSkillName(spellData["skill"]) }}
-            <span v-if="spellData['is_discipline'] != 0">(Combat Skill)</span>
+            <span v-if="spellData['is_discipline'] !== 0">(Combat Skill)</span>
         </td>
       </tr>
+
+      <!-- Resources -->
 
       <tr v-if="spellData['mana'] > 0">
         <td class="spell-field-label">Mana</td>
@@ -70,11 +72,58 @@
         <td> {{ spellData["endur_upkeep"] }} per second</td>
       </tr>
 
-      <tr v-if="spellData['cast_time'] > 0 || spellData['recovery_time'] > 0 || spellData['recast_time'] > 0">
+      <!-- Restrictions -->
+
+      <tr v-if="spellData['cast_restriction'] > 2">
+        <td class="spell-field-label">Target Restriction</td>
+        <td> {{ getSpellTargetRestrictionTypeName(spellData["cast_restriction"]) }}</td>
+      </tr>
+
+      <tr v-if="spellData['field_220'] > 2">
+        <td class="spell-field-label">Caster Restriction</td>
+        <td> {{ getSpellTargetRestrictionTypeName(spellData["field_220"]) }}</td>
+      </tr>
+
+      <tr v-if="spellData['in_combat'] == 0 && spellData['outof_combat'] !== 0">
+        <td class="spell-field-label">Restriction</td>
+        <td> Out of Combat Only </td>
+      </tr>
+
+      <tr v-if="spellData['in_combat'] !== 0 && spellData['outof_combat'] == 0">
+        <td class="spell-field-label">Restriction</td>
+        <td> In Combat Only </td>
+      </tr>
+
+      <tr v-if="spellData['field_234'] !== 0">
+        <td class="spell-field-label">Restriction</td>
+        <td> Only During Fast Regen </td>
+      </tr>
+
+      <tr v-if="spellData['disallow_sit'] !== 0">
+        <td class="spell-field-label">Restriction</td>
+        <td> Cancel on Sit </td>
+      </tr>
+
+      <tr v-if="spellData['sneak'] !== 0">
+        <td class="spell-field-label">Restriction</td>
+        <td> Must Be Sneaking </td>
+      </tr>
+
+      <tr v-if="spellData['zonetype'] > 0">
+        <td class="spell-field-label">Restriction</td>
+        <td>
+          <span v-if="spellData['zonetype'] == 1"> Outdoor Only </span>
+          <span v-if="spellData['zonetype'] == 2"> Indoor Only </span>
+        </td>
+      </tr>
+
+      <!-- Casting -->
+
+      <tr v-if="(spellData['cast_time'] > 0 || spellData['recovery_time'] > 0 || spellData['recast_time'] > 0) && spellData['is_discipline'] == 0">
         <td class="spell-field-label">Casting Time</td>
         <td> {{ (spellData["cast_time"] / 1000) }} sec</td>
       </tr>
-      <tr v-if="spellData['cast_time'] > 0 || spellData['recovery_time'] > 0 || spellData['recast_time'] > 0">
+      <tr v-if="(spellData['cast_time'] > 0 || spellData['recovery_time'] > 0 || spellData['recast_time'] > 0) && spellData['is_discipline'] == 0">
         <td class="spell-field-label">Recovery Time</td>
         <td> {{ (spellData["recovery_time"] / 1000) }} sec</td>
       </tr>
@@ -83,16 +132,25 @@
         <td> {{ (spellData["recast_time"] / 1000) }} sec</td>
       </tr>
       <tr v-if="spellData['endur_timer_index'] > 0 ">
-        <td class="spell-field-label">Recast Timer ID</td>
+        <td class="spell-field-label">Timer</td>
         <td> {{ spellData["endur_timer_index"] }}</td>
       </tr>
+
+      <!-- Duration / Buffs -->
 
       <tr v-if="getBuffDuration()">
         <td class="spell-field-label">Duration</td>
         <td> {{ humanTime(getBuffDuration() * 6) }} - {{ getBuffDuration() }} tic(s)</td>
       </tr>
+
+      <!-- ToDO
+      <span v-if="spellData['dispel_flag'] !== 0">,  Dispelable: Yes </span>
+      <span v-if="spellData['short_buff_box'] !== 0">, Song </span>
+      <span v-if="spellData['no_remove'] !== 0">, Can Not Remove </span>
+      -->
+
       <tr v-if="spellData['ae_duration'] > 0">
-        <td class="spell-field-label">Rain Duration</td>
+        <td class="spell-field-label">AE Waves</td>
         <td> {{ spellData["ae_duration"] / 2500 }} waves </td>
       </tr>
 
@@ -293,6 +351,9 @@ export default {
     },
     getSpellResistTypeName: function (resist) {
       return DB_SPELL_RESISTS[resist] ? DB_SPELL_RESISTS[resist] : ""
+    },
+    getSpellTargetRestrictionTypeName: function (id) {
+      return DB_SPELL_TARGET_RESTRICTION[id] ? DB_SPELL_TARGET_RESTRICTION[id] : ""
     },
     getMinLevel: function () {
       let minLevel = 0
