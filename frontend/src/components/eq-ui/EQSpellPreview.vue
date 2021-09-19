@@ -302,7 +302,7 @@
       </div>
     </div>
 
-    <div class="mt-5 mb-3" v-if="spellData['effectdescnum'] > 0 && effectDescription !== ''">
+    <div class="mt-3 mb-3" v-if="spellData['effectdescnum'] > 0 && effectDescription !== ''">
       {{ effectDescription }}
     </div>
 
