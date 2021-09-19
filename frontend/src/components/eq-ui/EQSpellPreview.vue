@@ -59,6 +59,15 @@
           <span v-if="spellData['is_discipline'] !== 0">(Combat Skill)</span>
         </td>
       </tr>
+      <tr v-if="spellData['good_effect'] >= 0">
+        <td class="spell-field-label">Type</td>
+        <td>
+          <span v-if="spellData['good_effect'] == 0">Detrimental</span>
+          <span v-if="spellData['good_effect'] == 1">Beneficial</span>
+          <span v-if="spellData['good_effect'] == 2">Beneficial Group</span>
+          <span v-if="spellData['good_effect'] == 3">Unknown</span>
+        </td>
+      </tr>
 
       <!-- Resources -->
 
@@ -126,7 +135,9 @@
       <tr
         v-if="(spellData['cast_time'] > 0 || spellData['recovery_time'] > 0 || spellData['recast_time'] > 0) && spellData['is_discipline'] == 0">
         <td class="spell-field-label">Casting Time</td>
-        <td> {{ (spellData["cast_time"] / 1000) }} sec</td>
+        <td> {{ (spellData["cast_time"] / 1000) }} sec
+          <span v-if="spellData['uninterruptable'] !== 0">(Uninterruptable)</span>
+        </td>
       </tr>
       <tr
         v-if="(spellData['cast_time'] > 0 || spellData['recovery_time'] > 0 || spellData['recast_time'] > 0) && spellData['is_discipline'] == 0">
@@ -225,7 +236,7 @@
         <td class="spell-field-label">Resist Type</td>
         <td> {{ getSpellResistTypeName(spellData["resisttype"]) }}
           <span v-if="spellData['resist_diff'] !== 0 && spellData['no_resist'] == 0">(adjust: {{spellData["resist_diff"]}})</span>
-          <span v-if="spellData['no_resist'] !== 0">(Unresistable)</span>
+          <span v-if="spellData['field_209'] !== 0">(Unresistable)</span>
         </td>
       </tr>
       <tr v-if="spellData['max_resist'] > 0 || spellData['min_resist'] > 0">
@@ -234,6 +245,11 @@
           <span v-if="spellData['max_resist'] != 0">Max: {{ spellData["max_resist"] / 2 }}% </span>
           <span v-if="spellData['min_resist'] != 0">Min: {{ spellData["min_resist"] / 2 }}% </span>
         </td>
+      </tr>
+
+      <tr v-if="spellData['not_extendable'] != 0 ">
+        <td class="spell-field-label">Focusable</td>
+        <td>No</td>
       </tr>
 
       <!-- Added effects -->
