@@ -412,15 +412,7 @@ export default {
     },
 
     getClasses(spell) {
-      let classData = []
-      for (let i = 1; i <= 16; i++) {
-        const classIndex = "classes_" + i
-        if ((spell[classIndex] > 0) && (spell[classIndex] < 255)) {
-          classData.push(DB_CLASSES[i] + " (" + spell[classIndex] + ")")
-        }
-      }
-
-      return classData.join(", ")
+     return Spells.getClasses(spell)
     },
     getDatabaseSkillName: function (skillId) {
       return DB_SKILLS[skillId] ? DB_SKILLS[skillId] : ""

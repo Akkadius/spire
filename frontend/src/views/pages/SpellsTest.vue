@@ -25,7 +25,7 @@
 
             <div class="row mt-4">
 
-              <div class="col-lg-3 col-sm-12 text-center">
+              <div class="col-lg-2 col-sm-12 text-center">
                 Spell Name or ID
                 <input
                   name="spell_name"
@@ -39,18 +39,8 @@
                   value="">
               </div>
 
-              <div class="col-lg-3 col-sm-12 text-center">
+              <div class="col-lg-2 col-sm-12 text-center">
                 Spell Effect SPA
-                <!--                <input-->
-                <!--                  name="spell_effect"-->
-                <!--                  class="form-control"-->
-                <!--                  placeholder="Spell Effect SPA #"-->
-                <!--                  v-model="spellEffect"-->
-                <!--                  type="text"-->
-                <!--                  title="SPA # or description e.g. Root, Stun, Mesmerize, Cure, Heal, HoT, DD, DoT, Proc, Snare, Pacify, Timer 3"-->
-                <!--                  value=""-->
-                <!--                >-->
-
                 <select
                   name="class"
                   id="spell_effect"
@@ -107,6 +97,19 @@
                   </b-form-radio>
                 </b-form-group>
               </div>
+
+              <div class="col-lg-2 col-sm-12 text-center">
+                List Type
+                <select
+                  id="Class"
+                  class="form-control"
+                  v-model="listType"
+                  @change="triggerState()">
+                  <option value="table">Table</option>
+                  <option value="card">Cards</option>
+                </select>
+              </div>
+
             </div>
 
             <div class="row">
@@ -118,13 +121,17 @@
             <app-loader :is-loading="!loaded" padding="4"/>
           </eq-window>
 
-          <div class="row" style="justify-content: center" v-if="loaded">
+          <!-- card rendering -->
+          <div class="row" style="justify-content: center" v-if="loaded && listType === 'card'">
             <div v-for="(spell, index) in spells" :key="spell.id" style="display: inline-block; vertical-align: top">
               <eq-window style="margin-right: 10px; width: auto; height: 90%">
                 <eq-spell-preview :spell-data="spell"/>
               </eq-window>
             </div>
           </div>
+
+          <eq-spell-preview-table :spells="spells" v-if="loaded && listType === 'table' && spells"/>
+
         </div>
 
       </div>
@@ -144,11 +151,13 @@ import {DB_CLASSES_ICONS}                    from "@/app/constants/eq-class-icon
 import {App}                                 from "@/constants/app";
 import {DB_CLASSES_SHORT, DB_PLAYER_CLASSES} from "@/app/constants/eq-classes-constants";
 import {DB_SPA}                              from "@/app/constants/eq-spell-constants";
+import EqSpellPreviewTable                   from "@/components/eq-ui/EQSpellPreviewTable.vue";
 
 const SPELLS_LIST_ROUTE = "/spells-test";
 
 export default {
   components: {
+    EqSpellPreviewTable,
     EqSpellPreview,
     EqItemPreview,
     EqWindow,
@@ -176,6 +185,8 @@ export default {
       selectedSpa: -1,
       selectedLevel: 0,
       selectedLevelType: 0,
+
+      listType: "table"
     }
   },
 
@@ -196,6 +207,9 @@ export default {
 
       if (this.selectedClass !== 0) {
         queryState.class = this.selectedClass
+      }
+      if (this.listType !== 0) {
+        queryState.listType = this.listType
       }
       if (this.spellName !== "") {
         queryState.name = this.spellName
@@ -245,6 +259,9 @@ export default {
       }
       if (this.$route.query.levelType) {
         this.selectedLevelType = this.$route.query.levelType;
+      }
+      if (this.$route.query.listType) {
+        this.listType = this.$route.query.listType;
       }
     },
 

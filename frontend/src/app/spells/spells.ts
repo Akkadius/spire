@@ -13,9 +13,9 @@ import {
 import {DB_RACE_NAMES}             from "@/app/constants/eq-races-constants";
 import {DB_BARD_SKILLS, DB_SKILLS} from "@/app/constants/eq-skill-constants";
 import {BODYTYPES}                 from "@/app/constants/eq-bodytype-constants";
-import util                        from "util";
-import {DB_CLASSES_WEAR_SHORT}           from "@/app/constants/eq-classes-constants";
-import {DbStrApi, ItemApi, SpellsNewApi} from "@/app/api";
+import util                                from "util";
+import {DB_CLASSES, DB_CLASSES_WEAR_SHORT} from "@/app/constants/eq-classes-constants";
+import {DbStrApi, ItemApi, SpellsNewApi}   from "@/app/api";
 import {SpireApiClient}                  from "@/app/api/spire-api-client";
 import {App}                       from "@/constants/app";
 import {ItemStore}                 from "@/app/store/itemStore";
@@ -31,6 +31,19 @@ export class Spells {
     }
 
     return {}
+  };
+
+  public static getClasses(spell) {
+    let classData = []
+    for (let i = 1; i <= 16; i++) {
+      const classIndex = "classes_" + i
+      if ((spell[classIndex] > 0) && (spell[classIndex] < 255)) {
+        // @ts-ignore
+        classData.push(DB_CLASSES[i] + " (" + spell[classIndex] + ")")
+      }
+    }
+
+    return classData.join(", ")
   };
 
   public static async getSpellEffectInfo(spell, effectIndex) {
