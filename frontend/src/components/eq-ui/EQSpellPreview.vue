@@ -408,15 +408,15 @@ export default {
 
                 const baseEffect = util.format("#%s", i)
                 if (description.includes(baseEffect)) {
-                  description = description.replaceAll(baseEffect, this.spellData['effect_base_value_' + i])
+                  description = description.replaceAll(baseEffect, Math.abs(this.spellData['effect_base_value_' + i]))
                 }
                 const limitEffect = util.format("$%s", i)
                 if (description.includes(limitEffect)) {
-                  description = description.replaceAll(limitEffect, this.spellData['effect_limit_value' + i])
+                  description = description.replaceAll(limitEffect, Math.abs(this.spellData['effect_limit_value' + i]))
                 }
                 const maxEffect = util.format("@%s", i)
                 if (description.includes(maxEffect)) {
-                  description = description.replaceAll(maxEffect, this.spellData['max_' + i])
+                  description = description.replaceAll(maxEffect, Math.abs(this.spellData['max_' + i]))
                 }
 
                 if (description.includes("%z")) {
