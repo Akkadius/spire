@@ -302,6 +302,7 @@
       </div>
     </div>
 
+    <h6 class="eq-header mt-3 mb-3" v-if="spellData['effectdescnum'] > 0">Description</h6>
     <div class="mt-3 mb-3" v-if="spellData['effectdescnum'] > 0 && effectDescription !== ''">
       {{ effectDescription }}
     </div>
