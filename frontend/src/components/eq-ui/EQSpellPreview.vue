@@ -52,7 +52,7 @@
       <tr v-if="spellData['skill'] < 116 && getDatabaseSkillName(spellData['skill']) !== ''">
         <td class="spell-field-label">Skill</td>
         <td> {{ getDatabaseSkillName(spellData["skill"]) }}
-            <span v-if="spellData['is_discipline'] !== 0">(Combat Skill)</span>
+          <span v-if="spellData['is_discipline'] !== 0">(Combat Skill)</span>
         </td>
       </tr>
 
@@ -86,27 +86,27 @@
 
       <tr v-if="spellData['in_combat'] == 0 && spellData['outof_combat'] !== 0">
         <td class="spell-field-label">Restriction</td>
-        <td> Out of Combat Only </td>
+        <td> Out of Combat Only</td>
       </tr>
 
       <tr v-if="spellData['in_combat'] !== 0 && spellData['outof_combat'] == 0">
         <td class="spell-field-label">Restriction</td>
-        <td> In Combat Only </td>
+        <td> In Combat Only</td>
       </tr>
 
       <tr v-if="spellData['field_234'] !== 0">
         <td class="spell-field-label">Restriction</td>
-        <td> Only During Fast Regen </td>
+        <td> Only During Fast Regen</td>
       </tr>
 
       <tr v-if="spellData['disallow_sit'] !== 0">
         <td class="spell-field-label">Restriction</td>
-        <td> Cancel on Sit </td>
+        <td> Cancel on Sit</td>
       </tr>
 
       <tr v-if="spellData['sneaking'] !== 0">
         <td class="spell-field-label">Restriction</td>
-        <td> Must Be Sneaking </td>
+        <td> Must Be Sneaking</td>
       </tr>
 
       <tr v-if="spellData['zonetype'] > 0">
@@ -119,11 +119,13 @@
 
       <!-- Casting -->
 
-      <tr v-if="(spellData['cast_time'] > 0 || spellData['recovery_time'] > 0 || spellData['recast_time'] > 0) && spellData['is_discipline'] == 0">
+      <tr
+        v-if="(spellData['cast_time'] > 0 || spellData['recovery_time'] > 0 || spellData['recast_time'] > 0) && spellData['is_discipline'] == 0">
         <td class="spell-field-label">Casting Time</td>
         <td> {{ (spellData["cast_time"] / 1000) }} sec</td>
       </tr>
-      <tr v-if="(spellData['cast_time'] > 0 || spellData['recovery_time'] > 0 || spellData['recast_time'] > 0) && spellData['is_discipline'] == 0">
+      <tr
+        v-if="(spellData['cast_time'] > 0 || spellData['recovery_time'] > 0 || spellData['recast_time'] > 0) && spellData['is_discipline'] == 0">
         <td class="spell-field-label">Recovery Time</td>
         <td> {{ (spellData["recovery_time"] / 1000) }} sec</td>
       </tr>
@@ -151,7 +153,7 @@
 
       <tr v-if="spellData['ae_duration'] > 0">
         <td class="spell-field-label">AE Waves</td>
-        <td> {{ spellData["ae_duration"] / 2500 }} waves </td>
+        <td> {{ spellData["ae_duration"] / 2500 }} waves</td>
       </tr>
 
 
@@ -169,14 +171,17 @@
           {{ spellData["aoerange"] }}'
         </td>
       </tr>
-      <tr v-if="(spellData['max_dist'] !== 0 || spellData['min_dist'] !== 0) && (spellData['max_dist_mod'] !== 0 || spellData['min_dist_mod'] !== 0) ">
+      <tr
+        v-if="(spellData['max_dist'] !== 0 || spellData['min_dist'] !== 0) && (spellData['max_dist_mod'] !== 0 || spellData['min_dist_mod'] !== 0) ">
         <td class="spell-field-label">Range Based Mod</td>
         <td> ({{ spellData["min_dist_mod"] * 100 }}% at {{ spellData["min_dist"] }}') to ({{ spellData["max_dist_mod"] * 100 }}% at {{ spellData["max_dist"] }}')  </td>
       </tr>
 
       <tr v-if="spellData['viral_range'] > 0">
         <td class="spell-field-label">Viral Range</td>
-        <td> {{ spellData["viral_range"] }}, Recast: {{ spellData["viral_targets"] }}s to {{ spellData["viral_timer"]}}s  </td>
+        <td> {{ spellData["viral_range"] }}, Recast: {{ spellData["viral_targets"] }}s to
+          {{ spellData["viral_timer"] }}s
+        </td>
       </tr>
 
       <tr v-if="spellData['targettype'] > 0 && getTargetTypeName(spellData['targettype']) !== ''">
@@ -186,25 +191,27 @@
       </tr>
       <tr v-if="spellData['aemaxtargets'] > 0 ">
         <td class="spell-field-label">Max Targets</td>
-        <td> {{ spellData["aemaxtargets"] }} </td>
+        <td> {{ spellData["aemaxtargets"] }}</td>
       </tr>
       <tr v-if="spellData['cone_start_angle'] != 0 || spellData['cone_stop_angle']">
         <td class="spell-field-label">Cone Angle</td>
-        <td> {{ spellData["cone_start_angle"] }} degrees to {{ spellData["cone_stop_angle"] }} degrees </td>
+        <td> {{ spellData["cone_start_angle"] }} degrees to {{ spellData["cone_stop_angle"] }} degrees</td>
       </tr>
 
       <tr v-if="spellData['resisttype'] > 0 && getSpellResistTypeName(spellData['resisttype']) !== ''">
         <td class="spell-field-label">Resist Type</td>
         <td> {{ getSpellResistTypeName(spellData["resisttype"]) }}
-          <span v-if="spellData['resist_diff'] !== 0 && spellData['no_resist'] == 0">(adjust: {{ spellData["resist_diff"] }})</span>
+          <span v-if="spellData['resist_diff'] !== 0 && spellData['no_resist'] == 0">(adjust: {{
+              spellData["resist_diff"]
+            }})</span>
           <span v-if="spellData['no_resist'] !== 0">(Unresistable)</span>
         </td>
       </tr>
       <tr v-if="spellData['max_resist'] > 0 || spellData['min_resist'] > 0">
         <td class="spell-field-label">Resist Chance Limits</td>
         <td>
-          <span v-if="spellData['max_resist'] != 0">Max: {{ spellData["max_resist"] /2 }}% </span>
-          <span v-if="spellData['min_resist'] != 0">Min: {{ spellData["min_resist"] /2 }}% </span>
+          <span v-if="spellData['max_resist'] != 0">Max: {{ spellData["max_resist"] / 2 }}% </span>
+          <span v-if="spellData['min_resist'] != 0">Min: {{ spellData["min_resist"] / 2 }}% </span>
         </td>
       </tr>
 
@@ -245,6 +252,7 @@
         <td class="spell-field-label">Max Hits</td>
         <td> {{ spellData["numhits"] }} {{ getSpellNumHitsTypeName(spellData["numhitstype"]) }}</td>
       </tr>
+
 
       <!-- TODO: Display Reagents - the data should be passed in? -->
 
@@ -294,6 +302,10 @@
       </div>
     </div>
 
+    <div class="mt-5 mb-3" v-if="spellData['effectdescnum'] > 0 && effectDescription !== ''">
+      {{ effectDescription }}
+    </div>
+
     <eq-debug :data="spellData"/>
   </div>
 </template>
@@ -316,7 +328,7 @@ import {
 }                                          from "@/app/constants/eq-spell-constants";
 import * as util                           from "util";
 import {DB_RACE_NAMES}                     from "@/app/constants/eq-races-constants";
-import {ItemApi, SpellsNewApi}             from "@/app/api";
+import {DbStrApi, ItemApi, SpellsNewApi}   from "@/app/api";
 import {SpireApiClient}                    from "@/app/api/spire-api-client";
 import EqWindow                            from "@/components/eq-ui/EQWindow";
 import EqDebug                             from "@/components/eq-ui/EQDebug";
@@ -343,6 +355,7 @@ export default {
       sideLoadedSpellData: {},
       componentId: "",
       reagents: [],
+      effectDescription: "",
     }
   },
   created() {
@@ -367,6 +380,57 @@ export default {
       }
 
       this.reagents = reagents
+
+
+      if (this.spellData['effectdescnum'] > 0) {
+        const api   = (new DbStrApi(SpireApiClient.getOpenApiConfig()))
+        let filters = [
+          ["type", "__", 6],
+          ["id", "__", this.spellData['effectdescnum']],
+        ]
+
+        let wheres = [];
+        filters.forEach((filter) => {
+          wheres.push(util.format("%s%s%s", filter[0], filter[1], filter[2]))
+        })
+
+
+        api.listDbStrs({where: wheres.join(".")}).then((result) => {
+          if (result.status === 200) {
+            if (result.data && result.data.length > 0) {
+              let description = result.data[0].value;
+
+              // #1 Base for effect id 1
+              // $1 Limit for effect id 1
+              // @1 Max for effect id 1
+              // %z (# ticks)
+              for (let i = 1; i <= 12; i++) {
+
+                const baseEffect = util.format("#%s", i)
+                if (description.includes(baseEffect)) {
+                  description = description.replaceAll(baseEffect, this.spellData['effect_base_value_' + i])
+                }
+                const limitEffect = util.format("$%s", i)
+                if (description.includes(limitEffect)) {
+                  description = description.replaceAll(limitEffect, this.spellData['effect_limit_value' + i])
+                }
+                const maxEffect = util.format("@%s", i)
+                if (description.includes(maxEffect)) {
+                  description = description.replaceAll(maxEffect, this.spellData['max_' + i])
+                }
+
+                if (description.includes("%z")) {
+                  description = description.replaceAll("%z",
+                    util.format("(%s ticks)", this.spellData['buffduration'])
+                  )
+                }
+              }
+
+              this.effectDescription = description;
+            }
+          }
+        });
+      }
     },
     getClasses() {
       let classData = []
@@ -828,14 +892,14 @@ export default {
       this.sideLoadedSpellData[renderSpellId] = spell
 
       return `
-          <div :id="${parentSpellId} + '-' + ${renderSpellId} + '-' + componentId" style="display:inline-block" class="ml-2">
+          <div :id="${parentSpellId} + '-' + ${renderSpellId} + '-' + componentId" style="display:inline-block" class="ml-1">
 
             <div style="display: inline-block">
               <img
                 :src="spellCdnUrl + '' + ${spell.new_icon} + '.gif'"
                 style="height:15px; border-radius: 25px; width:auto;"
                 class="mr-1">
-              <span class="mr-1">${spell.name}</span>
+              <span style="color: #f7ff00">${spell.name}</span>
             </div>
 
           </div>
@@ -1990,7 +2054,7 @@ export default {
 
             case 232:
               tmp += limit ? " and " + (await this.renderSpellMini(this.spellData.id, limit)) : ""
-              printBuffer += "Cast: " + (await this.renderSpellMini(this.spellData.id, 4789)) + tmp + " on Death (" + base + "% Chance Divine Save)"
+              printBuffer += "Cast " + (await this.renderSpellMini(this.spellData.id, 4789)) + tmp + " on Death (" + base + "% Chance Divine Save)"
               break;
 
             case 233:
@@ -2214,7 +2278,7 @@ export default {
               break;
 
             case 289:
-              printBuffer += "Cast: " + (await this.renderSpellMini(this.spellData.id, base)) + " on Duration Fade"
+              printBuffer += "Cast " + (await this.renderSpellMini(this.spellData.id, base)) + " on Duration Fade"
               break;
 
             case 290:
@@ -2392,7 +2456,7 @@ export default {
               break;
 
             case 333:
-              printBuffer += "Cast: " + (await this.renderSpellMini(this.spellData.id, limit)) + "on Rune Fade"
+              printBuffer += "Cast " + (await this.renderSpellMini(this.spellData.id, limit)) + "on Rune Fade"
               break;
 
             case 334:
@@ -2416,11 +2480,11 @@ export default {
               break;
 
             case 339:
-              printBuffer += "Cast: " + (await this.renderSpellMini(this.spellData.id, limit)) + "on Spell Use (" + base + "% Chance)"
+              printBuffer += "Cast " + (await this.renderSpellMini(this.spellData.id, limit)) + "on Spell Use (" + base + "% Chance)"
               break;
 
             case 340: //Only one effect casts if multiple 340s in spell
-              printBuffer += "Cast: " + (await this.renderSpellMini(this.spellData.id, limit)) + (base < 100 ? " (" + base + "% Chance)" : "")
+              printBuffer += "Cast " + (await this.renderSpellMini(this.spellData.id, limit)) + (base < 100 ? " (" + base + "% Chance)" : "")
               break;
 
             case 341:
@@ -2504,7 +2568,7 @@ export default {
               break;
 
             case 361:
-              printBuffer += "Cast: " + (await this.renderSpellMini(this.spellData.id, limit)) + " on Death (" + base + "% Chance)"
+              printBuffer += "Cast " + (await this.renderSpellMini(this.spellData.id, limit)) + " on Death (" + base + "% Chance)"
               break;
 
             case 362:
@@ -2520,7 +2584,7 @@ export default {
               break;
 
             case 365:
-              printBuffer += "Cast: " + (await this.renderSpellMini(this.spellData.id, limit)) + " if spell Kills Target (" + base + "% Chance)"
+              printBuffer += "Cast " + (await this.renderSpellMini(this.spellData.id, limit)) + " if spell Kills Target (" + base + "% Chance)"
               break;
 
             case 366:
@@ -2552,11 +2616,11 @@ export default {
               break;
 
             case 373:
-              printBuffer += "Cast: " + (await this.renderSpellMini(this.spellData.id, base)) + " on Fade"
+              printBuffer += "Cast " + (await this.renderSpellMini(this.spellData.id, base)) + " on Fade"
               break;
 
             case 374:
-              printBuffer += "Cast: " + (await this.renderSpellMini(this.spellData.id, limit)) + (base < 100 ? " (" + base + "% Chance)" : "")
+              printBuffer += "Cast " + (await this.renderSpellMini(this.spellData.id, limit)) + (base < 100 ? " (" + base + "% Chance)" : "")
               break;
 
             case 375:
@@ -2568,7 +2632,7 @@ export default {
               break;
 
             case 377:
-              printBuffer += "Cast: " + (await this.renderSpellMini(this.spellData.id, base)) + " on Duration Finished"
+              printBuffer += "Cast " + (await this.renderSpellMini(this.spellData.id, base)) + " on Duration Finished"
               break;
 
             case 378:
@@ -2605,7 +2669,7 @@ export default {
               break;
 
             case 383: // spell proc + " (Sympathetic Proc)"
-              printBuffer += "Cast: " + (await this.renderSpellMini(this.spellData.id, limit)) + " on Spell Use" + (base !== 100 ? " (Proc rate mod: " + (base - 100) + "%)" : "")
+              printBuffer += "Cast " + (await this.renderSpellMini(this.spellData.id, limit)) + " on Spell Use" + (base !== 100 ? " (Proc rate mod: " + (base - 100) + "%)" : "")
               break;
 
             case 384:
@@ -2625,11 +2689,11 @@ export default {
               break;
 
             case 386:
-              printBuffer += "Cast: " + (await this.renderSpellMini(this.spellData.id, base)) + " on Curer"
+              printBuffer += "Cast " + (await this.renderSpellMini(this.spellData.id, base)) + " on Curer"
               break;
 
             case 387:
-              printBuffer += "Cast: " + (await this.renderSpellMini(this.spellData.id, base)) + " on Cured"
+              printBuffer += "Cast " + (await this.renderSpellMini(this.spellData.id, base)) + " on Cured"
               break;
 
             case 388:
@@ -2705,11 +2769,11 @@ export default {
               break;
 
             case 406:
-              printBuffer += "Cast: " + (await this.renderSpellMini(this.spellData.id, base)) + " if Max Hits Used"
+              printBuffer += "Cast " + (await this.renderSpellMini(this.spellData.id, base)) + " if Max Hits Used"
               break;
 
             case 407:
-              printBuffer += "Cast: " + (await this.renderSpellMini(this.spellData.id, base)) + " on Focus Limit Match"
+              printBuffer += "Cast " + (await this.renderSpellMini(this.spellData.id, base)) + " on Focus Limit Match"
               break;
 
             case 408:
@@ -2886,11 +2950,11 @@ export default {
               break;
 
             case 442:
-              printBuffer += "Cast: " + (await this.renderSpellMini(this.spellData.id, base)) + " once if " + DB_SPELL_TARGET_RESTRICTION[limit]
+              printBuffer += "Cast " + (await this.renderSpellMini(this.spellData.id, base)) + " once if " + DB_SPELL_TARGET_RESTRICTION[limit]
               break;
 
             case 443:
-              printBuffer += "Cast: " + (await this.renderSpellMini(this.spellData.id, base)) + " once if Caster " + DB_SPELL_TARGET_RESTRICTION[limit]
+              printBuffer += "Cast " + (await this.renderSpellMini(this.spellData.id, base)) + " once if Caster " + DB_SPELL_TARGET_RESTRICTION[limit]
               break;
 
             case 444:
@@ -2930,11 +2994,11 @@ export default {
               break;
 
             case 453:
-              printBuffer += "Cast: " + (await this.renderSpellMini(this.spellData.id, base)) + " if " + limit + " Melee Damage Taken in Single Hit"
+              printBuffer += "Cast " + (await this.renderSpellMini(this.spellData.id, base)) + " if " + limit + " Melee Damage Taken in Single Hit"
               break;
 
             case 454:
-              printBuffer += "Cast: " + (await this.renderSpellMini(this.spellData.id, base)) + " if " + limit + " Spell Damage Taken in Single Hit"
+              printBuffer += "Cast " + (await this.renderSpellMini(this.spellData.id, base)) + " if " + limit + " Spell Damage Taken in Single Hit"
               break;
 
             case 455:
@@ -3003,11 +3067,11 @@ export default {
               break;
 
             case 469: //TODO need spell group defines need query /Only one effect casts if multiple 340s in spell
-              printBuffer += "Cast: Highest Rank of [Group " + limit + "]" + (base < 100 ? " (" + base + "% Chance) " : "")
+              printBuffer += "Cast Highest Rank of [Group " + limit + "]" + (base < 100 ? " (" + base + "% Chance) " : "")
               break;
 
             case 470:
-              printBuffer += "Cast: Highest Rank of [Group " + limit + "]" + (base < 100 ? " (" + base + "% Chance)" : "")
+              printBuffer += "Cast Highest Rank of [Group " + limit + "]" + (base < 100 ? " (" + base + "% Chance)" : "")
               break;
 
             case 471:
@@ -3027,7 +3091,7 @@ export default {
               break;
 
             case 475:
-              printBuffer += "Cast: " + (await this.renderSpellMini(this.spellData.id, limit)) + " if Not Cast By Item Click" + (base ? " (Chance " + base + "%)" : "")
+              printBuffer += "Cast " + (await this.renderSpellMini(this.spellData.id, limit)) + " if Not Cast By Item Click" + (base ? " (Chance " + base + "%)" : "")
               break;
 
             case 476:
@@ -3060,7 +3124,7 @@ export default {
               break;
 
             case 481:
-              printBuffer += "Cast: " + (await this.renderSpellMini(this.spellData.id, limit)) + " if Hit By Spell" + (base < 100 ? "(" + base + "% Chance)" : "")
+              printBuffer += "Cast " + (await this.renderSpellMini(this.spellData.id, limit)) + " if Hit By Spell" + (base < 100 ? "(" + base + "% Chance)" : "")
               break;
 
             case 482:
