@@ -319,7 +319,7 @@ export default {
 
       // if number, filter by id
       // else name
-      if (!isNaN(this.spellName)) {
+      if (!isNaN(this.spellName) && this.spellName) {
         filters.push(["id", "__", this.spellName]);
       }
       else if (this.spellName) {
