@@ -2908,9 +2908,11 @@ export class Spells {
   };
 
   public static async renderSpellMini(parentSpellId, renderSpellId) {
-    const spell = <any>(await this.getSpell(renderSpellId));
-
-    this.setSpellData(renderSpellId, spell);
+    let spell = <any> this.getSpellData(renderSpellId)
+    if (!this.getSpellData(renderSpellId)) {
+      spell = <any>(await this.getSpell(renderSpellId));
+      this.setSpellData(renderSpellId, spell);
+    }
 
     const targetTypeColor = this.getTargetTypeColor(spell["targettype"]);
 
