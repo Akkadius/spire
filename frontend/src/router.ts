@@ -63,9 +63,9 @@ export default new Router({
           meta: {title: "Items Test"},
         },
         {
-          path: '/spells-test',
-          component: () => import('./views/pages/SpellsTest.vue'),
-          meta: {title: "Spells Test"},
+          path: '/spells',
+          component: () => import('./views/pages/Spells.vue'),
+          meta: {title: "Spells Browser"},
         },
         {
           path: '/zones',
