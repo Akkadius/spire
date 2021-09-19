@@ -1376,7 +1376,7 @@ export default {
               break;
 
             case 86:
-              printBuffer += "Decrease Social Radius to " + base + +this.getUpToMaxLvl(max)
+              printBuffer += "Decrease Social Radius to " + base +this.getUpToMaxLvl(max)
               break;
 
             case 87:
