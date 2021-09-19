@@ -315,7 +315,14 @@ export default {
         filters.push(["classes" + this.selectedClass, "_lte_", "250"]);
       }
 
-      if (this.spellName) {
+
+
+      // if number, filter by id
+      // else name
+      if (!isNaN(this.spellName)) {
+        filters.push(["id", "__", this.spellName]);
+      }
+      else if (this.spellName) {
         filters.push(["name", "_like_", this.spellName]);
       }
 
