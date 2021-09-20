@@ -84,6 +84,10 @@ export class Spells {
 
       let special_range = this.CalcValueRange(spell["formula_" + effectIndex], base, max, spell["effectid_" + effectIndex], spell["buffduration"], serverMaxLevel)
 
+      if ((spell["formula_" + effectIndex] != 100) && (minlvl < 255)) {
+        maxlvl = this.getSpellMaxOutLevel(spell["formula_" + effectIndex], base, max, minlvl)
+      }
+
       switch (spell["effectid_" + effectIndex]) {
 
         case 0:
@@ -2663,6 +2667,21 @@ export class Spells {
     }
 
     return printBuffer;
+  };
+
+  public static getSpellMaxOutLevel(calc, base, max, minLevel) {
+    let MaxServerLevel = 100 //Better way to define this.
+    let value = 0;
+
+    for (let i = minLevel; i <= 100; i++) {
+
+      value = this.calcSpellEffectValue(calc, base, max, 1, i)
+
+      if (Math.abs(value) >= max) {
+        return i;
+      }
+    }
+    return MaxServerLevel
   };
 
   public static getFormatStandard(effect_name, type, value_min, value_max, minlvl, maxlvl) {
