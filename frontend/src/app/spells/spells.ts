@@ -1805,7 +1805,7 @@ export class Spells {
           printBuffer += "Fling to Target (Velocity: " + base + ")"
           break;
 
-        case 385: //TODO get spell group name from id, need to search for first spell in the spellgroup
+        case 385:
           const spellGroupId   = Math.abs(base);
           const spellGroupName = await this.getSpellGroupNameById(spellGroupId);
 
@@ -2196,7 +2196,7 @@ export class Spells {
           break;
 
         case 469: //TODO need spell group defines need query /Only one effect casts if multiple 340s in spell
-          printBuffer += "Cast Highest Rank of [Group " + limit + "]" + (base < 100 ? " (" + base + "% Chance) " : "")
+          printBuffer += "Cast Highest Rank of [Group " +  (await this.getSpellGroupNameById(Math.abs(base))) + "]" + (base < 100 ? " (" + base + "% Chance) " : "")
           break;
 
         case 470:
@@ -2906,7 +2906,7 @@ export class Spells {
             }
             const limitEffect = util.format("$%s", i)
             if (description.includes(limitEffect)) {
-              description = description.replaceAll(limitEffect, String(Math.abs(spell["effect_limit_value" + i])))
+              description = description.replaceAll(limitEffect, String(Math.abs(spell["effect_limit_value_" + i])))
             }
             const maxEffect = util.format("@%s", i)
             if (description.includes(maxEffect)) {
