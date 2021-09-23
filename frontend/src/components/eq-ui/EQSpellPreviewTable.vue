@@ -25,7 +25,6 @@
             <img :src="spellCdnUrl + spell.new_icon + '.gif'"
                  :style="'width:20px;height:auto;border-radius: 10px; ' + 'border: 2px solid ' + getTargetTypeColor(spell['targettype']) + '; border-radius: 7px;'">
             {{ spell.name }}
-
 <!--            <v-runtime-template :template="'<span>lol' + spellMini[spell.id] + '</span>'" />-->
           </td>
           <td>{{ getClasses(spell) }}</td>

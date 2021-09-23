@@ -152,6 +152,7 @@ import {App}                                 from "@/constants/app";
 import {DB_CLASSES_SHORT, DB_PLAYER_CLASSES} from "@/app/constants/eq-classes-constants";
 import {DB_SPA}                              from "@/app/constants/eq-spell-constants";
 import EqSpellPreviewTable                   from "@/components/eq-ui/EQSpellPreviewTable.vue";
+import {Spells}                              from "@/app/spells/spells";
 
 const SPELLS_LIST_ROUTE = "/spells";
 
@@ -193,10 +194,13 @@ export default {
   mounted() {
     if (Object.keys(this.$route.query).length !== 0) {
       this.loadQueryState()
-      this.listSpells()
+      Spells.preloadDbstr().then((res) => {
+        this.listSpells()
+      })
     }
 
     if (Object.keys(this.$route.query).length === 0) {
+      Spells.preloadDbstr()
       this.loaded = true;
     }
   },
@@ -314,8 +318,6 @@ export default {
         filters.push(["classes" + this.selectedClass, filterType, this.selectedLevel]);
         filters.push(["classes" + this.selectedClass, "_lte_", "250"]);
       }
-
-
 
       // if number, filter by id
       // else name
