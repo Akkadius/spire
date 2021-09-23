@@ -9,23 +9,25 @@ import {
   DB_SPELL_TARGETS,
   DB_SPELL_WORN_ATTRIBUTE_CAP,
   SPELL_TARGET_TYPE_COLORS
-}                                  from "@/app/constants/eq-spell-constants";
-import {DB_RACE_NAMES}             from "@/app/constants/eq-races-constants";
-import {DB_BARD_SKILLS, DB_SKILLS} from "@/app/constants/eq-skill-constants";
-import {BODYTYPES}                 from "@/app/constants/eq-bodytype-constants";
+}                                          from "@/app/constants/eq-spell-constants";
+import {DB_RACE_NAMES}                     from "@/app/constants/eq-races-constants";
+import {DB_BARD_SKILLS, DB_SKILLS}         from "@/app/constants/eq-skill-constants";
+import {BODYTYPES}                         from "@/app/constants/eq-bodytype-constants";
 import util                                from "util";
 import {DB_CLASSES, DB_CLASSES_WEAR_SHORT} from "@/app/constants/eq-classes-constants";
 import {DbStrApi, ItemApi, SpellsNewApi}   from "@/app/api";
-import {SpireApiClient}                  from "@/app/api/spire-api-client";
-import {App}                       from "@/constants/app";
-import {ItemStore}                 from "@/app/store/itemStore";
+import {SpireApiClient}                    from "@/app/api/spire-api-client";
+import {App}                               from "@/constants/app";
+import {ItemStore}                         from "@/app/store/itemStore";
 
 export class Spells {
-  public static data = {}
+  public static data           = {}
+  public static dbstrData      = {}
+  public static dbstrPreloaded = false
 
-  public static async getItem (itemId) {
+  public static async getItem(itemId) {
     const api    = (new ItemApi(SpireApiClient.getOpenApiConfig()))
-    const result = await api.getItem({ id: itemId })
+    const result = await api.getItem({id: itemId})
     if (result.status === 200) {
       return result.data
     }
@@ -83,6 +85,10 @@ export class Spells {
       }
 
       let special_range = this.CalcValueRange(spell["formula_" + effectIndex], base, max, spell["effectid_" + effectIndex], spell["buffduration"], serverMaxLevel)
+
+      if ((spell["formula_" + effectIndex] != 100) && (minlvl < 255)) {
+        maxlvl = this.getSpellMaxOutLevel(spell["formula_" + effectIndex], base, max, minlvl)
+      }
 
       switch (spell["effectid_" + effectIndex]) {
 
@@ -245,7 +251,7 @@ export class Spells {
         case 32:
           printBuffer += "Summon Item: "
 
-          const item = <any> (await this.getItem(spell["effect_base_value_" + effectIndex]));
+          const item = <any>(await this.getItem(spell["effect_base_value_" + effectIndex]));
 
           ItemStore.setItem(item.id, item)
 
@@ -625,7 +631,7 @@ export class Spells {
         case 109: //later expansions allow stacks to put into bags using limit value.
           printBuffer += "Summon into Bag: "
 
-          const item2             = <any> (await this.getItem(spell["effect_base_value_" + effectIndex]));
+          const item2 = <any>(await this.getItem(spell["effect_base_value_" + effectIndex]));
 
           ItemStore.setItem(item2.id, item2);
 
@@ -1801,7 +1807,7 @@ export class Spells {
           printBuffer += "Fling to Target (Velocity: " + base + ")"
           break;
 
-        case 385: //TODO get spell group name from id, need to search for first spell in the spellgroup
+        case 385:
           const spellGroupId   = Math.abs(base);
           const spellGroupName = await this.getSpellGroupNameById(spellGroupId);
 
@@ -2192,7 +2198,7 @@ export class Spells {
           break;
 
         case 469: //TODO need spell group defines need query /Only one effect casts if multiple 340s in spell
-          printBuffer += "Cast Highest Rank of [Group " + limit + "]" + (base < 100 ? " (" + base + "% Chance) " : "")
+          printBuffer += "Cast Highest Rank of [Group " + (await this.getSpellGroupNameById(Math.abs(base))) + "]" + (base < 100 ? " (" + base + "% Chance) " : "")
           break;
 
         case 470:
@@ -2665,6 +2671,21 @@ export class Spells {
     return printBuffer;
   };
 
+  public static getSpellMaxOutLevel(calc, base, max, minLevel) {
+    let MaxServerLevel = 100 //Better way to define this.
+    let value          = 0;
+
+    for (let i = minLevel; i <= 100; i++) {
+
+      value = this.calcSpellEffectValue(calc, base, max, 1, i)
+
+      if (Math.abs(value) >= max) {
+        return i;
+      }
+    }
+    return MaxServerLevel
+  };
+
   public static getFormatStandard(effect_name, type, value_min, value_max, minlvl, maxlvl) {
     let modifier = ""
 
@@ -2763,6 +2784,10 @@ export class Spells {
   };
 
   public static async getSpell(spellId) {
+    if (spellId === 0) {
+      return {}
+    }
+
     const api    = (new SpellsNewApi(SpireApiClient.getOpenApiConfig()))
     const result = await api.getSpellsNew({id: spellId})
     if (result.status === 200) {
@@ -2859,56 +2884,41 @@ export class Spells {
 
   public static async getSpellDescription(spell) {
     if (spell["descnum"] > 0) {
-      const api   = (new DbStrApi(SpireApiClient.getOpenApiConfig()))
-      let filters = [
-        ["type", "__", 6],
-        ["id", "__", spell["descnum"]]
-      ]
+      let description = await this.getDbstrData(spell["descnum"])
+      if (description) {
 
-      let wheres = [];
-      filters.forEach((filter) => {
-        // @ts-ignore
-        wheres.push(util.format("%s%s%s", filter[0], filter[1], filter[2]))
-      })
-
-      const result = await api.listDbStrs({where: wheres.join(".")});
-      if (result.status === 200) {
-        if (result.data && result.data.length > 0) {
-          let description = <string>result.data[0].value;
-
-          // #1 Base for effect id 1
-          // $1 Limit for effect id 1
-          // @1 Max for effect id 1
-          // %z (# ticks)
-          for (let i = 1; i <= 12; i++) {
-            const baseEffect = util.format("#%s", i)
-            if (description.includes(baseEffect)) {
-              description = description.replaceAll(baseEffect, String(Math.abs(spell["effect_base_value_" + i])))
-            }
-            const limitEffect = util.format("$%s", i)
-            if (description.includes(limitEffect)) {
-              description = description.replaceAll(limitEffect, String(Math.abs(spell["effect_limit_value" + i])))
-            }
-            const maxEffect = util.format("@%s", i)
-            if (description.includes(maxEffect)) {
-              description = description.replaceAll(maxEffect, String(Math.abs(spell["max_" + i])))
-            }
-
-            if (description.includes("%z")) {
-              description = description.replaceAll("%z",
-                util.format("(%s ticks)", spell["buffduration"])
-              )
-            }
+        // #1 Base for effect id 1
+        // $1 Limit for effect id 1
+        // @1 Max for effect id 1
+        // %z (# ticks)
+        for (let i = 1; i <= 12; i++) {
+          const baseEffect = util.format("#%s", i)
+          if (description.includes(baseEffect)) {
+            description = description.replaceAll(baseEffect, String(Math.abs(spell["effect_base_value_" + i])))
+          }
+          const limitEffect = util.format("$%s", i)
+          if (description.includes(limitEffect)) {
+            description = description.replaceAll(limitEffect, String(Math.abs(spell["effect_limit_value_" + i])))
+          }
+          const maxEffect = util.format("@%s", i)
+          if (description.includes(maxEffect)) {
+            description = description.replaceAll(maxEffect, String(Math.abs(spell["max_" + i])))
           }
 
-          return description;
+          if (description.includes("%z")) {
+            description = description.replaceAll("%z",
+              util.format("(%s ticks)", spell["buffduration"])
+            )
+          }
         }
+
+        return description;
       }
     }
   };
 
   public static async renderSpellMini(parentSpellId, renderSpellId) {
-    let spell = <any> this.getSpellData(renderSpellId)
+    let spell = <any>this.getSpellData(renderSpellId)
     if (!this.getSpellData(renderSpellId)) {
       spell = <any>(await this.getSpell(renderSpellId));
       this.setSpellData(renderSpellId, spell);
@@ -2950,4 +2960,70 @@ export class Spells {
   public static getSpellData(spellId) {
     return this.data[spellId]
   }
+
+  public static async preloadDbstr() {
+    const api   = (new DbStrApi(SpireApiClient.getOpenApiConfig()))
+    let filters = [
+      ["type", "__", 6]
+    ]
+
+    if (this.dbstrPreloaded) {
+      return;
+    }
+
+
+    let wheres = [];
+    filters.forEach((filter) => {
+      // @ts-ignore
+      wheres.push(util.format("%s%s%s", filter[0], filter[1], filter[2]))
+    })
+
+    const result = await api.listDbStrs({where: wheres.join(".")});
+    if (result.status === 200) {
+      if (result.data && result.data.length > 0) {
+        for (let index in result.data) {
+          const row = result.data[index]
+          this.setDbstrData(row.id, row.value)
+        }
+
+        this.dbstrPreloaded = true
+      }
+    }
+  }
+
+  public static setDbstrData(id, message: any) {
+    this.dbstrData[id] = message;
+  }
+
+  public static async getDbstrData(id) {
+    // return nothing if we're preloaded
+    if (this.dbstrPreloaded && !this.dbstrData[id]) {
+      return ""
+    }
+
+    if (this.dbstrData[id]) {
+      return this.dbstrData[id]
+    }
+
+    const api   = (new DbStrApi(SpireApiClient.getOpenApiConfig()))
+    let filters = [
+      ["type", "__", 6],
+      ["id", "__", id]
+    ]
+
+    let wheres = [];
+    filters.forEach((filter) => {
+      // @ts-ignore
+      wheres.push(util.format("%s%s%s", filter[0], filter[1], filter[2]))
+    })
+
+    const result = await api.listDbStrs({where: wheres.join(".")});
+    if (result.status === 200) {
+      if (result.data && result.data.length > 0) {
+        this.dbstrData[id] = <string>result.data[0].value;
+      }
+    }
+  }
+
+
 }

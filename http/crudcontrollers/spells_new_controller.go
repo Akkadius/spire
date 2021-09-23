@@ -9,6 +9,7 @@ import (
 	"github.com/sirupsen/logrus"
 	"net/http"
 	"strconv"
+	"strings"
 )
 
 type SpellsNewController struct {
@@ -31,6 +32,7 @@ func (e *SpellsNewController) Routes() []*routes.Route {
 		routes.RegisterRoute(http.MethodDelete, "spells_new/:spells_new", e.deleteSpellsNew, nil),
 		routes.RegisterRoute(http.MethodGet, "spells_new/:spells_new", e.getSpellsNew, nil),
 		routes.RegisterRoute(http.MethodGet, "spells_news", e.listSpellsNews, nil),
+		routes.RegisterRoute(http.MethodGet, "spells_news/bulk", e.getSpellsNewBulk, nil),
 		routes.RegisterRoute(http.MethodPatch, "spells_new/:spells_new", e.updateSpellsNew, nil),
 		routes.RegisterRoute(http.MethodPut, "spells_new", e.createSpellsNew, nil),
 	}
@@ -182,4 +184,33 @@ func (e *SpellsNewController) deleteSpellsNew(c echo.Context) error {
 	}
 
 	return c.JSON(http.StatusOK, echo.Map{"success": "Entity deleted successfully"})
+}
+
+type BulkSpellsNewGetRequest struct {
+	IDs string `json:"ids"`
+}
+
+// getSpellsNewBulk godoc
+// @Id getSpellsNewBulk
+// @Summary Gets SpellsNews in bulk
+// @Accept json
+// @Produce json
+// @Tags SpellsNew
+// @Success 200 {array} models.SpellsNew
+// @Failure 500 {string} string "Bad query request"
+// @Router /spells_news/bulk [get]
+func (e *SpellsNewController) getSpellsNewBulk(c echo.Context) error {
+	var results []models.SpellsNew
+
+	r := new(BulkSpellsNewGetRequest)
+	if err := c.Bind(r); err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error binding to bulk request: [%v]", err)})
+	}
+
+	err := e.db.QueryContext(models.SpellsNew{}, c).Find(&results, strings.Split(r.IDs, ",")).Error
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err})
+	}
+
+	return c.JSON(http.StatusOK, results)
 }
