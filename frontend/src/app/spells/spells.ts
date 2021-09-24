@@ -245,7 +245,7 @@ export class Spells {
           break;
 
         case 31:
-          printBuffer += "Mesmerize" + this.getUpToMaxLvl(max)
+          printBuffer += "Mesmerize" + this.getUpToMaxLvl(max) + " (Stack Type: " + base +")"
           break;
 
         case 32:
