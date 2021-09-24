@@ -153,12 +153,12 @@ export class Spells {
           printBuffer += this.getFormatStandard("Attack Speed", "%", value_min, value_max, minlvl, maxlvl);
           break;
 
-        case 12: //note: eqemu does not support base1 "enhanced invisibility" value
-          printBuffer += "Invisibility (Unstable)"
+        case 12:
+          printBuffer += "Invisibility (Unstable) (" + base + ")"
           break;
 
-        case 13: //note: eqemu does not support base1 "enhanced see invisibility" value
-          printBuffer += "See Invisible"
+        case 13:
+          printBuffer += "See Invisible (" + base + ")"
           break;
 
         case 14:
