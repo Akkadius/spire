@@ -328,8 +328,8 @@ export class Spells {
           printBuffer += "Berserk: Allows chance to crippling blow"
           break;
 
-        case 44: //TODO This is a type of buff stacker that I need to figure out
-          printBuffer += "Lycanthropy: Need to implement on Eqemu"
+        case 44:
+          printBuffer += "Stacking: Delayed Heal Marker " + base
           break;
 
         case 45: //custom on eqemu, not used on live. Stackable melee lifesteal effect.
@@ -402,10 +402,6 @@ export class Spells {
 
         case 62:
           printBuffer += "Error: (" + spell["effectid_" + effectIndex] + ") not used"
-          break;
-
-        case 63:
-          printBuffer += "Memory Blur" + " (" + base + "% chance)"
           break;
 
         case 63:
