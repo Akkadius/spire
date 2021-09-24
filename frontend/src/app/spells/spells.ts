@@ -154,11 +154,11 @@ export class Spells {
           break;
 
         case 12:
-          printBuffer += "Invisibility (Unstable) (" + base + ")"
+          printBuffer += "Invisibility (Unstable)" + (base > 1 ? " (Enhanced " + base + ")" : "")
           break;
 
         case 13:
-          printBuffer += "See Invisible (" + base + ")"
+          printBuffer += "See Invisible" + (base > 1 ? " (Enhanced " + base + ")" : "")
           break;
 
         case 14:
@@ -233,11 +233,11 @@ export class Spells {
           break;
 
         case 28:
-          printBuffer += "Invisibility to Undead (Unstable)"
+          printBuffer += "Invisibility to Undead (Unstable)" + (base > 1 ? " (Enhanced " + base + ")" : "")
           break;
 
         case 29:
-          printBuffer += "Invisibility to Animals (Unstable)"
+          printBuffer += "Invisibility to Animals (Unstable)" + (base > 1 ? " (Enhanced " + base + ")" : "")
           break;
 
         case 30:
