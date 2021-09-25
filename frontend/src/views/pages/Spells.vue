@@ -123,7 +123,10 @@
 
           <!-- card rendering -->
           <div class="row" style="justify-content: center" v-if="loaded && listType === 'card'">
-            <div v-for="(spell, index) in spells" :key="spell.id" style="display: inline-block; vertical-align: top">
+            <div v-for="(spell, index) in spells"
+                 class="col-lg-4 col-sm-12"
+                 :key="spell.id"
+                 style="display: inline-block; vertical-align: top">
               <eq-window style="margin-right: 10px; width: auto; height: 90%">
                 <eq-spell-preview :spell-data="spell"/>
               </eq-window>
@@ -417,7 +420,7 @@ export default {
               ids: spellsToPreload
             }
           }).then((response) => {
-            if (response.status == 200 && response.data) {
+            if (response.status == 200 && response.data && parseInt(response.data.length) > 0) {
               response.data.forEach((spell) => {
                 Spells.setSpell(spell.id, spell);
               })

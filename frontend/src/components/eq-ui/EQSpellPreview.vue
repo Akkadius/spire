@@ -17,7 +17,7 @@
 
     <!-- Info -->
 
-    <table style="width: 100%" class="mt-3">
+    <table style="width: 100%" class="mt-3 spell-preview-table">
       <tbody>
       <tr style="vertical-align:middle !important">
       </tr>
@@ -30,17 +30,18 @@
       </tr>
       <tr v-if="getClasses(spellData) !== ''">
         <td class="spell-field-label">Classes</td>
-        <td>
-          <span v-for="(icon, index) in dbClassIcons">
-            <span v-if="spellData['classes_' + index] > 0 && spellData['classes_' + index] < 255">
+        <td style="width: 250px">
+          <div v-for="(icon, index) in dbClassIcons" style="display: inline-block">
+            <div v-if="spellData['classes_' + index] > 0 && spellData['classes_' + index] < 255"
+                 class="mr-2">
                 <img
                   :src="itemCdnUrl + 'item_' + icon + '.png'"
                   class="mb-1"
                   style="height: 17px; width:auto; border-radius: 5px">
               {{ dbClassesShort[index] }}
               ({{ spellData["classes_" + index] }})
-              </span>
-          </span>
+              </div>
+          </div>
         </td>
 
       </tr>
@@ -373,7 +374,7 @@
     </div>
 
     <h6 class="eq-header mt-3 mb-3" v-if="spellData['descnum'] > 0 && effectDescription !== ''">Description</h6>
-    <div class="mt-3 mb-3" v-if="spellData['descnum'] > 0 && effectDescription !== ''">
+    <div class="mt-3 mb-3" v-if="spellData['descnum'] > 0 && effectDescription !== ''" style="width: 70%">
       {{ effectDescription }}
     </div>
 
@@ -592,5 +593,8 @@ export default {
   font-weight:   bold;
   width:         40%;
   padding-right: 10px;
+}
+.spell-preview-table {
+  word-wrap:break-word;
 }
 </style>

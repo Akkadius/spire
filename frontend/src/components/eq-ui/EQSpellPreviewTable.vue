@@ -8,7 +8,7 @@
           No spells were found
         </div>
 
-        <div class='eq-window-nested-blue' v-if="spells.length > 0">
+        <div class='eq-window-nested-blue' v-if="spells.length > 0" style="overflow-y: scroll;">
           <table id="tabbox1" class="eq-table eq-highlight-rows" style="display: table;">
             <thead>
             <tr>
