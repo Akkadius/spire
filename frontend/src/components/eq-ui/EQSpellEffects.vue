@@ -36,6 +36,7 @@ export default {
       if (this.spell["effectid_" + effectIndex] !== 254) {
         Spells.getSpellEffectInfo(this.spell, effectIndex).then((result) => {
           this.spellEffectInfo[result.index] = result.info;
+          this.$forceUpdate();
         })
       }
     }
@@ -54,6 +55,7 @@ export default {
     this.sideLoadedSpellData = Spells.data;
     this.itemData = Items.items;
     this.loaded = true;
+
   },
   data() {
     return {
