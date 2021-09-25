@@ -35,8 +35,8 @@
             <span v-if="spellData['classes_' + index] > 0 && spellData['classes_' + index] < 255">
                 <img
                   :src="itemCdnUrl + 'item_' + icon + '.png'"
-                  style="height: 20px; width:auto; border-radius: 7px"
-                  class="mt-1 p-1">
+                  class="mb-1"
+                  style="height: 17px; width:auto; border-radius: 5px">
               {{ dbClassesShort[index] }}
               ({{ spellData["classes_" + index] }})
               </span>
