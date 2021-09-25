@@ -26,7 +26,7 @@ type Spawn2 struct {
 	ContentFlags           null.String  `json:"content_flags" gorm:"Column:content_flags"`
 	ContentFlagsDisabled   null.String  `json:"content_flags_disabled" gorm:"Column:content_flags_disabled"`
 	Spawngroup             *Spawngroup  `json:"spawngroup,omitempty" gorm:"foreignKey:spawngroupID;references:id"`
-	Spawnentries           []Spawnentry `json:"spawnentries,omitempty" gorm:"foreignKey:spawngroupID;association_foreignkey:spawngroupID"`
+	Spawnentries           []Spawnentry `json:"spawnentries,omitempty" gorm:"foreignKey:spawngroupID;references:spawngroupID"`
 }
 
 func (Spawn2) TableName() string {

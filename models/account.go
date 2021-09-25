@@ -25,11 +25,11 @@ type Account struct {
 	Expansion      int8            `json:"expansion" gorm:"Column:expansion"`
 	BanReason      null.String     `json:"ban_reason" gorm:"Column:ban_reason"`
 	SuspendReason  null.String     `json:"suspend_reason" gorm:"Column:suspend_reason"`
-	AccountFlags   []AccountFlag   `json:"account_flags,omitempty" gorm:"foreignKey:p_accid;association_foreignkey:id"`
-	AccountRewards []AccountReward `json:"account_rewards,omitempty" gorm:"foreignKey:account_id;association_foreignkey:id"`
-	Sharedbanks    []Sharedbank    `json:"sharedbanks,omitempty" gorm:"foreignKey:acctid;association_foreignkey:id"`
-	BugReports     []BugReport     `json:"bug_reports,omitempty" gorm:"foreignKey:account_id;association_foreignkey:id"`
-	AccountIps     []AccountIp     `json:"account_ips,omitempty" gorm:"foreignKey:accid;association_foreignkey:id"`
+	AccountFlags   []AccountFlag   `json:"account_flags,omitempty" gorm:"foreignKey:p_accid;references:id"`
+	AccountRewards []AccountReward `json:"account_rewards,omitempty" gorm:"foreignKey:account_id;references:id"`
+	Sharedbanks    []Sharedbank    `json:"sharedbanks,omitempty" gorm:"foreignKey:acctid;references:id"`
+	BugReports     []BugReport     `json:"bug_reports,omitempty" gorm:"foreignKey:account_id;references:id"`
+	AccountIps     []AccountIp     `json:"account_ips,omitempty" gorm:"foreignKey:accid;references:id"`
 }
 
 func (Account) TableName() string {

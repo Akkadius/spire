@@ -7,7 +7,7 @@ type LoottableEntry struct {
 	Droplimit       uint8           `json:"droplimit" gorm:"Column:droplimit"`
 	Mindrop         uint8           `json:"mindrop" gorm:"Column:mindrop"`
 	Probability     float32         `json:"probability" gorm:"Column:probability"`
-	LootdropEntries []LootdropEntry `json:"lootdrop_entries,omitempty" gorm:"foreignKey:lootdrop_id;association_foreignkey:lootdrop_id"`
+	LootdropEntries []LootdropEntry `json:"lootdrop_entries,omitempty" gorm:"foreignKey:lootdrop_id;references:lootdrop_id"`
 }
 
 func (LoottableEntry) TableName() string {

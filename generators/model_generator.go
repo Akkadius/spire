@@ -215,7 +215,7 @@ func (g *GenerateModel) Generate() []ModelGenerateResponse {
 				case RelationshipType1toMany:
 					relationshipAttributeName := strcase.ToCamel(g.pluralize.Plural(relation.RemoteTable))
 					modelFields += fmt.Sprintf(
-						"\t%-*s%-*s `json:\"%v,omitempty\" gorm:\"foreignKey:%v;association_foreignkey:%v\"`\n",
+						"\t%-*s%-*s `json:\"%v,omitempty\" gorm:\"foreignKey:%v;references:%v\"`\n",
 						maxColInTable,
 						relationshipAttributeName,
 						maxDataTypeLengthInTable,

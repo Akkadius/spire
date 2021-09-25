@@ -5,7 +5,7 @@ type Grid struct {
 	Zoneid      int         `json:"zoneid" gorm:"Column:zoneid"`
 	Type        int         `json:"type" gorm:"Column:type"`
 	Type2       int         `json:"type_2" gorm:"Column:type2"`
-	GridEntries []GridEntry `json:"grid_entries,omitempty" gorm:"foreignKey:gridid;association_foreignkey:id"`
+	GridEntries []GridEntry `json:"grid_entries,omitempty" gorm:"foreignKey:gridid;references:id"`
 }
 
 func (Grid) TableName() string {

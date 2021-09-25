@@ -9,8 +9,8 @@ type RaidDetail struct {
 	Loottype    int          `json:"loottype" gorm:"Column:loottype"`
 	Locked      int8         `json:"locked" gorm:"Column:locked"`
 	Motd        null.String  `json:"motd" gorm:"Column:motd"`
-	RaidLeaders []RaidLeader `json:"raid_leaders,omitempty" gorm:"foreignKey:rid;association_foreignkey:raidid"`
-	RaidMembers []RaidMember `json:"raid_members,omitempty" gorm:"foreignKey:raidid;association_foreignkey:raidid"`
+	RaidLeaders []RaidLeader `json:"raid_leaders,omitempty" gorm:"foreignKey:rid;references:raidid"`
+	RaidMembers []RaidMember `json:"raid_members,omitempty" gorm:"foreignKey:raidid;references:raidid"`
 }
 
 func (RaidDetail) TableName() string {

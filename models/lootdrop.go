@@ -11,7 +11,7 @@ type Lootdrop struct {
 	MaxExpansion           uint8           `json:"max_expansion" gorm:"Column:max_expansion"`
 	ContentFlags           null.String     `json:"content_flags" gorm:"Column:content_flags"`
 	ContentFlagsDisabled   null.String     `json:"content_flags_disabled" gorm:"Column:content_flags_disabled"`
-	LootdropEntries        []LootdropEntry `json:"lootdrop_entries,omitempty" gorm:"foreignKey:lootdrop_id;association_foreignkey:id"`
+	LootdropEntries        []LootdropEntry `json:"lootdrop_entries,omitempty" gorm:"foreignKey:lootdrop_id;references:id"`
 }
 
 func (Lootdrop) TableName() string {
