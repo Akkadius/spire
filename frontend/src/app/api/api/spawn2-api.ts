@@ -19,6 +19,8 @@ import { Configuration } from '../configuration';
 // @ts-ignore
 import { BASE_PATH, COLLECTION_FORMATS, RequestArgs, BaseAPI, RequiredError } from '../base';
 // @ts-ignore
+import { CrudcontrollersBulkFetchByIdsGetRequest } from '../models';
+// @ts-ignore
 import { ModelsSpawn2 } from '../models';
 /**
  * Spawn2Api - axios parameter creator
@@ -167,6 +169,57 @@ export const Spawn2ApiAxiosParamCreator = function (configuration?: Configuratio
             localVarUrlObj.search = (new URLSearchParams(queryParameters)).toString();
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @summary Gets Spawn2s in bulk
+         * @param {CrudcontrollersBulkFetchByIdsGetRequest} body body
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getSpawn2sBulk: async (body: CrudcontrollersBulkFetchByIdsGetRequest, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'body' is not null or undefined
+            if (body === null || body === undefined) {
+                throw new RequiredError('body','Required parameter body was null or undefined when calling getSpawn2sBulk.');
+            }
+            const localVarPath = `/spawn_2s/bulk`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, 'https://example.com');
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            const queryParameters = new URLSearchParams(localVarUrlObj.search);
+            for (const key in localVarQueryParameter) {
+                queryParameters.set(key, localVarQueryParameter[key]);
+            }
+            for (const key in options.query) {
+                queryParameters.set(key, options.query[key]);
+            }
+            localVarUrlObj.search = (new URLSearchParams(queryParameters)).toString();
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            const nonString = typeof body !== 'string';
+            const needsSerialization = nonString && configuration && configuration.isJsonMime
+                ? configuration.isJsonMime(localVarRequestOptions.headers['Content-Type'])
+                : nonString;
+            localVarRequestOptions.data =  needsSerialization
+                ? JSON.stringify(body !== undefined ? body : {})
+                : (body || "");
 
             return {
                 url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
@@ -357,6 +410,20 @@ export const Spawn2ApiFp = function(configuration?: Configuration) {
         },
         /**
          * 
+         * @summary Gets Spawn2s in bulk
+         * @param {CrudcontrollersBulkFetchByIdsGetRequest} body body
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async getSpawn2sBulk(body: CrudcontrollersBulkFetchByIdsGetRequest, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<ModelsSpawn2>>> {
+            const localVarAxiosArgs = await Spawn2ApiAxiosParamCreator(configuration).getSpawn2sBulk(body, options);
+            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
+                const axiosRequestArgs = {...localVarAxiosArgs.options, url: (configuration?.basePath || basePath) + localVarAxiosArgs.url};
+                return axios.request(axiosRequestArgs);
+            };
+        },
+        /**
+         * 
          * @summary Lists Spawn2s
          * @param {string} [includes] Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names &lt;h4&gt;Relationships&lt;/h4&gt;Spawnentries&lt;br&gt;Spawnentries.NpcType&lt;br&gt;Spawnentries.NpcType.AlternateCurrency&lt;br&gt;Spawnentries.NpcType.Merchantlists&lt;br&gt;Spawnentries.NpcType.NpcFactions&lt;br&gt;Spawnentries.NpcType.NpcFactions.NpcFactionEntries&lt;br&gt;Spawnentries.NpcType.NpcSpells&lt;br&gt;Spawnentries.NpcType.NpcSpells.NpcSpellsEntries&lt;br&gt;Spawnentries.Spawngroup&lt;br&gt;Spawnentries.Spawngroup.Spawn2&lt;br&gt;Spawngroup
          * @param {string} [where] Filter on specific fields. Multiple conditions [.] separated Example: col_like_value.col2__val2
@@ -430,6 +497,16 @@ export const Spawn2ApiFactory = function (configuration?: Configuration, basePat
          */
         getSpawn2(id: number, includes?: string, select?: string, options?: any): AxiosPromise<Array<ModelsSpawn2>> {
             return Spawn2ApiFp(configuration).getSpawn2(id, includes, select, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @summary Gets Spawn2s in bulk
+         * @param {CrudcontrollersBulkFetchByIdsGetRequest} body body
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getSpawn2sBulk(body: CrudcontrollersBulkFetchByIdsGetRequest, options?: any): AxiosPromise<Array<ModelsSpawn2>> {
+            return Spawn2ApiFp(configuration).getSpawn2sBulk(body, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -515,6 +592,20 @@ export interface Spawn2ApiGetSpawn2Request {
      * @memberof Spawn2ApiGetSpawn2
      */
     readonly select?: string
+}
+
+/**
+ * Request parameters for getSpawn2sBulk operation in Spawn2Api.
+ * @export
+ * @interface Spawn2ApiGetSpawn2sBulkRequest
+ */
+export interface Spawn2ApiGetSpawn2sBulkRequest {
+    /**
+     * body
+     * @type {CrudcontrollersBulkFetchByIdsGetRequest}
+     * @memberof Spawn2ApiGetSpawn2sBulk
+     */
+    readonly body: CrudcontrollersBulkFetchByIdsGetRequest
 }
 
 /**
@@ -635,6 +726,18 @@ export class Spawn2Api extends BaseAPI {
      */
     public getSpawn2(requestParameters: Spawn2ApiGetSpawn2Request, options?: any) {
         return Spawn2ApiFp(this.configuration).getSpawn2(requestParameters.id, requestParameters.includes, requestParameters.select, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @summary Gets Spawn2s in bulk
+     * @param {Spawn2ApiGetSpawn2sBulkRequest} requestParameters Request parameters.
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof Spawn2Api
+     */
+    public getSpawn2sBulk(requestParameters: Spawn2ApiGetSpawn2sBulkRequest, options?: any) {
+        return Spawn2ApiFp(this.configuration).getSpawn2sBulk(requestParameters.body, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**

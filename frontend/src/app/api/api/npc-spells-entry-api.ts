@@ -19,6 +19,8 @@ import { Configuration } from '../configuration';
 // @ts-ignore
 import { BASE_PATH, COLLECTION_FORMATS, RequestArgs, BaseAPI, RequiredError } from '../base';
 // @ts-ignore
+import { CrudcontrollersBulkFetchByIdsGetRequest } from '../models';
+// @ts-ignore
 import { ModelsNpcSpellsEntry } from '../models';
 /**
  * NpcSpellsEntryApi - axios parameter creator
@@ -114,6 +116,57 @@ export const NpcSpellsEntryApiAxiosParamCreator = function (configuration?: Conf
             localVarUrlObj.search = (new URLSearchParams(queryParameters)).toString();
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @summary Gets NpcSpellsEntries in bulk
+         * @param {CrudcontrollersBulkFetchByIdsGetRequest} body body
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getNpcSpellsEntriesBulk: async (body: CrudcontrollersBulkFetchByIdsGetRequest, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'body' is not null or undefined
+            if (body === null || body === undefined) {
+                throw new RequiredError('body','Required parameter body was null or undefined when calling getNpcSpellsEntriesBulk.');
+            }
+            const localVarPath = `/npc_spells_entries/bulk`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, 'https://example.com');
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            const queryParameters = new URLSearchParams(localVarUrlObj.search);
+            for (const key in localVarQueryParameter) {
+                queryParameters.set(key, localVarQueryParameter[key]);
+            }
+            for (const key in options.query) {
+                queryParameters.set(key, options.query[key]);
+            }
+            localVarUrlObj.search = (new URLSearchParams(queryParameters)).toString();
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            const nonString = typeof body !== 'string';
+            const needsSerialization = nonString && configuration && configuration.isJsonMime
+                ? configuration.isJsonMime(localVarRequestOptions.headers['Content-Type'])
+                : nonString;
+            localVarRequestOptions.data =  needsSerialization
+                ? JSON.stringify(body !== undefined ? body : {})
+                : (body || "");
 
             return {
                 url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
@@ -341,6 +394,20 @@ export const NpcSpellsEntryApiFp = function(configuration?: Configuration) {
         },
         /**
          * 
+         * @summary Gets NpcSpellsEntries in bulk
+         * @param {CrudcontrollersBulkFetchByIdsGetRequest} body body
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async getNpcSpellsEntriesBulk(body: CrudcontrollersBulkFetchByIdsGetRequest, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<ModelsNpcSpellsEntry>>> {
+            const localVarAxiosArgs = await NpcSpellsEntryApiAxiosParamCreator(configuration).getNpcSpellsEntriesBulk(body, options);
+            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
+                const axiosRequestArgs = {...localVarAxiosArgs.options, url: (configuration?.basePath || basePath) + localVarAxiosArgs.url};
+                return axios.request(axiosRequestArgs);
+            };
+        },
+        /**
+         * 
          * @summary Gets NpcSpellsEntry
          * @param {number} id Id
          * @param {string} [includes] Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names 
@@ -421,6 +488,16 @@ export const NpcSpellsEntryApiFactory = function (configuration?: Configuration,
         },
         /**
          * 
+         * @summary Gets NpcSpellsEntries in bulk
+         * @param {CrudcontrollersBulkFetchByIdsGetRequest} body body
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getNpcSpellsEntriesBulk(body: CrudcontrollersBulkFetchByIdsGetRequest, options?: any): AxiosPromise<Array<ModelsNpcSpellsEntry>> {
+            return NpcSpellsEntryApiFp(configuration).getNpcSpellsEntriesBulk(body, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
          * @summary Gets NpcSpellsEntry
          * @param {number} id Id
          * @param {string} [includes] Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names 
@@ -487,6 +564,20 @@ export interface NpcSpellsEntryApiDeleteNpcSpellsEntryRequest {
      * @memberof NpcSpellsEntryApiDeleteNpcSpellsEntry
      */
     readonly id: number
+}
+
+/**
+ * Request parameters for getNpcSpellsEntriesBulk operation in NpcSpellsEntryApi.
+ * @export
+ * @interface NpcSpellsEntryApiGetNpcSpellsEntriesBulkRequest
+ */
+export interface NpcSpellsEntryApiGetNpcSpellsEntriesBulkRequest {
+    /**
+     * body
+     * @type {CrudcontrollersBulkFetchByIdsGetRequest}
+     * @memberof NpcSpellsEntryApiGetNpcSpellsEntriesBulk
+     */
+    readonly body: CrudcontrollersBulkFetchByIdsGetRequest
 }
 
 /**
@@ -623,6 +714,18 @@ export class NpcSpellsEntryApi extends BaseAPI {
      */
     public deleteNpcSpellsEntry(requestParameters: NpcSpellsEntryApiDeleteNpcSpellsEntryRequest, options?: any) {
         return NpcSpellsEntryApiFp(this.configuration).deleteNpcSpellsEntry(requestParameters.id, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @summary Gets NpcSpellsEntries in bulk
+     * @param {NpcSpellsEntryApiGetNpcSpellsEntriesBulkRequest} requestParameters Request parameters.
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof NpcSpellsEntryApi
+     */
+    public getNpcSpellsEntriesBulk(requestParameters: NpcSpellsEntryApiGetNpcSpellsEntriesBulkRequest, options?: any) {
+        return NpcSpellsEntryApiFp(this.configuration).getNpcSpellsEntriesBulk(requestParameters.body, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**

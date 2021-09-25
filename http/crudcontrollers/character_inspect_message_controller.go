@@ -20,7 +20,7 @@ func NewCharacterInspectMessageController(
 	db *database.DatabaseResolver,
 	logger *logrus.Logger,
 ) *CharacterInspectMessageController {
-	return &CharacterInspectMessageController {
+	return &CharacterInspectMessageController{
 		db:     db,
 		logger: logger,
 	}
@@ -31,6 +31,7 @@ func (e *CharacterInspectMessageController) Routes() []*routes.Route {
 		routes.RegisterRoute(http.MethodDelete, "character_inspect_message/:character_inspect_message", e.deleteCharacterInspectMessage, nil),
 		routes.RegisterRoute(http.MethodGet, "character_inspect_message/:character_inspect_message", e.getCharacterInspectMessage, nil),
 		routes.RegisterRoute(http.MethodGet, "character_inspect_messages", e.listCharacterInspectMessages, nil),
+		routes.RegisterRoute(http.MethodPost, "spells_news/bulk", e.getCharacterInspectMessagesBulk, nil),
 		routes.RegisterRoute(http.MethodPatch, "character_inspect_message/:character_inspect_message", e.updateCharacterInspectMessage, nil),
 		routes.RegisterRoute(http.MethodPut, "character_inspect_message", e.createCharacterInspectMessage, nil),
 	}
@@ -111,7 +112,10 @@ func (e *CharacterInspectMessageController) getCharacterInspectMessage(c echo.Co
 func (e *CharacterInspectMessageController) updateCharacterInspectMessage(c echo.Context) error {
 	characterInspectMessage := new(models.CharacterInspectMessage)
 	if err := c.Bind(characterInspectMessage); err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error binding to entity: [%v]", err)})
+		return c.JSON(
+			http.StatusInternalServerError,
+			echo.Map{"error": fmt.Sprintf("Error binding to entity: [%v]", err)},
+		)
 	}
 
 	err := e.db.Get(models.CharacterInspectMessage{}, c).Model(&models.CharacterInspectMessage{}).First(&models.CharacterInspectMessage{}, characterInspectMessage.ID).Error
@@ -141,12 +145,18 @@ func (e *CharacterInspectMessageController) updateCharacterInspectMessage(c echo
 func (e *CharacterInspectMessageController) createCharacterInspectMessage(c echo.Context) error {
 	characterInspectMessage := new(models.CharacterInspectMessage)
 	if err := c.Bind(characterInspectMessage); err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error binding to entity: [%v]", err)})
+		return c.JSON(
+			http.StatusInternalServerError,
+			echo.Map{"error": fmt.Sprintf("Error binding to entity: [%v]", err)},
+		)
 	}
 
 	err := e.db.Get(models.CharacterInspectMessage{}, c).Model(&models.CharacterInspectMessage{}).Create(&characterInspectMessage).Error
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error inserting entity: [%v]", err)})
+		return c.JSON(
+			http.StatusInternalServerError,
+			echo.Map{"error": fmt.Sprintf("Error inserting entity: [%v]", err)},
+		)
 	}
 
 	return c.JSON(http.StatusOK, characterInspectMessage)
@@ -182,4 +192,40 @@ func (e *CharacterInspectMessageController) deleteCharacterInspectMessage(c echo
 	}
 
 	return c.JSON(http.StatusOK, echo.Map{"success": "Entity deleted successfully"})
+}
+
+// getCharacterInspectMessagesBulk godoc
+// @Id getCharacterInspectMessagesBulk
+// @Summary Gets CharacterInspectMessages in bulk
+// @Accept json
+// @Produce json
+// @Param Body body BulkFetchByIdsGetRequest true "body"
+// @Tags CharacterInspectMessage
+// @Success 200 {array} models.CharacterInspectMessage
+// @Failure 500 {string} string "Bad query request"
+// @Router /character_inspect_messages/bulk [post]
+func (e *CharacterInspectMessageController) getCharacterInspectMessagesBulk(c echo.Context) error {
+	var results []models.CharacterInspectMessage
+
+	r := new(BulkFetchByIdsGetRequest)
+	if err := c.Bind(r); err != nil {
+		return c.JSON(
+			http.StatusInternalServerError,
+			echo.Map{"error": fmt.Sprintf("Error binding to bulk request: [%v]", err)},
+		)
+	}
+
+	if len(r.IDs) == 0 {
+		return c.JSON(
+			http.StatusInternalServerError,
+			echo.Map{"error": fmt.Sprintf("Missing request field data 'ids'")},
+		)
+	}
+
+	err := e.db.QueryContext(models.CharacterInspectMessage{}, c).Find(&results, r.IDs).Error
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err})
+	}
+
+	return c.JSON(http.StatusOK, results)
 }

@@ -20,7 +20,7 @@ func NewFishingController(
 	db *database.DatabaseResolver,
 	logger *logrus.Logger,
 ) *FishingController {
-	return &FishingController {
+	return &FishingController{
 		db:     db,
 		logger: logger,
 	}
@@ -31,6 +31,7 @@ func (e *FishingController) Routes() []*routes.Route {
 		routes.RegisterRoute(http.MethodDelete, "fishing/:fishing", e.deleteFishing, nil),
 		routes.RegisterRoute(http.MethodGet, "fishing/:fishing", e.getFishing, nil),
 		routes.RegisterRoute(http.MethodGet, "fishings", e.listFishings, nil),
+		routes.RegisterRoute(http.MethodPost, "spells_news/bulk", e.getFishingsBulk, nil),
 		routes.RegisterRoute(http.MethodPatch, "fishing/:fishing", e.updateFishing, nil),
 		routes.RegisterRoute(http.MethodPut, "fishing", e.createFishing, nil),
 	}
@@ -111,7 +112,10 @@ func (e *FishingController) getFishing(c echo.Context) error {
 func (e *FishingController) updateFishing(c echo.Context) error {
 	fishing := new(models.Fishing)
 	if err := c.Bind(fishing); err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error binding to entity: [%v]", err)})
+		return c.JSON(
+			http.StatusInternalServerError,
+			echo.Map{"error": fmt.Sprintf("Error binding to entity: [%v]", err)},
+		)
 	}
 
 	err := e.db.Get(models.Fishing{}, c).Model(&models.Fishing{}).First(&models.Fishing{}, fishing.ID).Error
@@ -141,12 +145,18 @@ func (e *FishingController) updateFishing(c echo.Context) error {
 func (e *FishingController) createFishing(c echo.Context) error {
 	fishing := new(models.Fishing)
 	if err := c.Bind(fishing); err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error binding to entity: [%v]", err)})
+		return c.JSON(
+			http.StatusInternalServerError,
+			echo.Map{"error": fmt.Sprintf("Error binding to entity: [%v]", err)},
+		)
 	}
 
 	err := e.db.Get(models.Fishing{}, c).Model(&models.Fishing{}).Create(&fishing).Error
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error inserting entity: [%v]", err)})
+		return c.JSON(
+			http.StatusInternalServerError,
+			echo.Map{"error": fmt.Sprintf("Error inserting entity: [%v]", err)},
+		)
 	}
 
 	return c.JSON(http.StatusOK, fishing)
@@ -182,4 +192,40 @@ func (e *FishingController) deleteFishing(c echo.Context) error {
 	}
 
 	return c.JSON(http.StatusOK, echo.Map{"success": "Entity deleted successfully"})
+}
+
+// getFishingsBulk godoc
+// @Id getFishingsBulk
+// @Summary Gets Fishings in bulk
+// @Accept json
+// @Produce json
+// @Param Body body BulkFetchByIdsGetRequest true "body"
+// @Tags Fishing
+// @Success 200 {array} models.Fishing
+// @Failure 500 {string} string "Bad query request"
+// @Router /fishings/bulk [post]
+func (e *FishingController) getFishingsBulk(c echo.Context) error {
+	var results []models.Fishing
+
+	r := new(BulkFetchByIdsGetRequest)
+	if err := c.Bind(r); err != nil {
+		return c.JSON(
+			http.StatusInternalServerError,
+			echo.Map{"error": fmt.Sprintf("Error binding to bulk request: [%v]", err)},
+		)
+	}
+
+	if len(r.IDs) == 0 {
+		return c.JSON(
+			http.StatusInternalServerError,
+			echo.Map{"error": fmt.Sprintf("Missing request field data 'ids'")},
+		)
+	}
+
+	err := e.db.QueryContext(models.Fishing{}, c).Find(&results, r.IDs).Error
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err})
+	}
+
+	return c.JSON(http.StatusOK, results)
 }

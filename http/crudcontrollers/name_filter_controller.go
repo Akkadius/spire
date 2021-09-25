@@ -20,7 +20,7 @@ func NewNameFilterController(
 	db *database.DatabaseResolver,
 	logger *logrus.Logger,
 ) *NameFilterController {
-	return &NameFilterController {
+	return &NameFilterController{
 		db:     db,
 		logger: logger,
 	}
@@ -31,6 +31,7 @@ func (e *NameFilterController) Routes() []*routes.Route {
 		routes.RegisterRoute(http.MethodDelete, "name_filter/:name_filter", e.deleteNameFilter, nil),
 		routes.RegisterRoute(http.MethodGet, "name_filter/:name_filter", e.getNameFilter, nil),
 		routes.RegisterRoute(http.MethodGet, "name_filters", e.listNameFilters, nil),
+		routes.RegisterRoute(http.MethodPost, "spells_news/bulk", e.getNameFiltersBulk, nil),
 		routes.RegisterRoute(http.MethodPatch, "name_filter/:name_filter", e.updateNameFilter, nil),
 		routes.RegisterRoute(http.MethodPut, "name_filter", e.createNameFilter, nil),
 	}
@@ -111,7 +112,10 @@ func (e *NameFilterController) getNameFilter(c echo.Context) error {
 func (e *NameFilterController) updateNameFilter(c echo.Context) error {
 	nameFilter := new(models.NameFilter)
 	if err := c.Bind(nameFilter); err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error binding to entity: [%v]", err)})
+		return c.JSON(
+			http.StatusInternalServerError,
+			echo.Map{"error": fmt.Sprintf("Error binding to entity: [%v]", err)},
+		)
 	}
 
 	err := e.db.Get(models.NameFilter{}, c).Model(&models.NameFilter{}).First(&models.NameFilter{}, nameFilter.ID).Error
@@ -141,12 +145,18 @@ func (e *NameFilterController) updateNameFilter(c echo.Context) error {
 func (e *NameFilterController) createNameFilter(c echo.Context) error {
 	nameFilter := new(models.NameFilter)
 	if err := c.Bind(nameFilter); err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error binding to entity: [%v]", err)})
+		return c.JSON(
+			http.StatusInternalServerError,
+			echo.Map{"error": fmt.Sprintf("Error binding to entity: [%v]", err)},
+		)
 	}
 
 	err := e.db.Get(models.NameFilter{}, c).Model(&models.NameFilter{}).Create(&nameFilter).Error
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error inserting entity: [%v]", err)})
+		return c.JSON(
+			http.StatusInternalServerError,
+			echo.Map{"error": fmt.Sprintf("Error inserting entity: [%v]", err)},
+		)
 	}
 
 	return c.JSON(http.StatusOK, nameFilter)
@@ -182,4 +192,40 @@ func (e *NameFilterController) deleteNameFilter(c echo.Context) error {
 	}
 
 	return c.JSON(http.StatusOK, echo.Map{"success": "Entity deleted successfully"})
+}
+
+// getNameFiltersBulk godoc
+// @Id getNameFiltersBulk
+// @Summary Gets NameFilters in bulk
+// @Accept json
+// @Produce json
+// @Param Body body BulkFetchByIdsGetRequest true "body"
+// @Tags NameFilter
+// @Success 200 {array} models.NameFilter
+// @Failure 500 {string} string "Bad query request"
+// @Router /name_filters/bulk [post]
+func (e *NameFilterController) getNameFiltersBulk(c echo.Context) error {
+	var results []models.NameFilter
+
+	r := new(BulkFetchByIdsGetRequest)
+	if err := c.Bind(r); err != nil {
+		return c.JSON(
+			http.StatusInternalServerError,
+			echo.Map{"error": fmt.Sprintf("Error binding to bulk request: [%v]", err)},
+		)
+	}
+
+	if len(r.IDs) == 0 {
+		return c.JSON(
+			http.StatusInternalServerError,
+			echo.Map{"error": fmt.Sprintf("Missing request field data 'ids'")},
+		)
+	}
+
+	err := e.db.QueryContext(models.NameFilter{}, c).Find(&results, r.IDs).Error
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err})
+	}
+
+	return c.JSON(http.StatusOK, results)
 }

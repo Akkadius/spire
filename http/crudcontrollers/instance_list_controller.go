@@ -20,7 +20,7 @@ func NewInstanceListController(
 	db *database.DatabaseResolver,
 	logger *logrus.Logger,
 ) *InstanceListController {
-	return &InstanceListController {
+	return &InstanceListController{
 		db:     db,
 		logger: logger,
 	}
@@ -31,6 +31,7 @@ func (e *InstanceListController) Routes() []*routes.Route {
 		routes.RegisterRoute(http.MethodDelete, "instance_list/:instance_list", e.deleteInstanceList, nil),
 		routes.RegisterRoute(http.MethodGet, "instance_list/:instance_list", e.getInstanceList, nil),
 		routes.RegisterRoute(http.MethodGet, "instance_lists", e.listInstanceLists, nil),
+		routes.RegisterRoute(http.MethodPost, "spells_news/bulk", e.getInstanceListsBulk, nil),
 		routes.RegisterRoute(http.MethodPatch, "instance_list/:instance_list", e.updateInstanceList, nil),
 		routes.RegisterRoute(http.MethodPut, "instance_list", e.createInstanceList, nil),
 	}
@@ -111,7 +112,10 @@ func (e *InstanceListController) getInstanceList(c echo.Context) error {
 func (e *InstanceListController) updateInstanceList(c echo.Context) error {
 	instanceList := new(models.InstanceList)
 	if err := c.Bind(instanceList); err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error binding to entity: [%v]", err)})
+		return c.JSON(
+			http.StatusInternalServerError,
+			echo.Map{"error": fmt.Sprintf("Error binding to entity: [%v]", err)},
+		)
 	}
 
 	err := e.db.Get(models.InstanceList{}, c).Model(&models.InstanceList{}).First(&models.InstanceList{}, instanceList.ID).Error
@@ -141,12 +145,18 @@ func (e *InstanceListController) updateInstanceList(c echo.Context) error {
 func (e *InstanceListController) createInstanceList(c echo.Context) error {
 	instanceList := new(models.InstanceList)
 	if err := c.Bind(instanceList); err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error binding to entity: [%v]", err)})
+		return c.JSON(
+			http.StatusInternalServerError,
+			echo.Map{"error": fmt.Sprintf("Error binding to entity: [%v]", err)},
+		)
 	}
 
 	err := e.db.Get(models.InstanceList{}, c).Model(&models.InstanceList{}).Create(&instanceList).Error
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error inserting entity: [%v]", err)})
+		return c.JSON(
+			http.StatusInternalServerError,
+			echo.Map{"error": fmt.Sprintf("Error inserting entity: [%v]", err)},
+		)
 	}
 
 	return c.JSON(http.StatusOK, instanceList)
@@ -182,4 +192,40 @@ func (e *InstanceListController) deleteInstanceList(c echo.Context) error {
 	}
 
 	return c.JSON(http.StatusOK, echo.Map{"success": "Entity deleted successfully"})
+}
+
+// getInstanceListsBulk godoc
+// @Id getInstanceListsBulk
+// @Summary Gets InstanceLists in bulk
+// @Accept json
+// @Produce json
+// @Param Body body BulkFetchByIdsGetRequest true "body"
+// @Tags InstanceList
+// @Success 200 {array} models.InstanceList
+// @Failure 500 {string} string "Bad query request"
+// @Router /instance_lists/bulk [post]
+func (e *InstanceListController) getInstanceListsBulk(c echo.Context) error {
+	var results []models.InstanceList
+
+	r := new(BulkFetchByIdsGetRequest)
+	if err := c.Bind(r); err != nil {
+		return c.JSON(
+			http.StatusInternalServerError,
+			echo.Map{"error": fmt.Sprintf("Error binding to bulk request: [%v]", err)},
+		)
+	}
+
+	if len(r.IDs) == 0 {
+		return c.JSON(
+			http.StatusInternalServerError,
+			echo.Map{"error": fmt.Sprintf("Missing request field data 'ids'")},
+		)
+	}
+
+	err := e.db.QueryContext(models.InstanceList{}, c).Find(&results, r.IDs).Error
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err})
+	}
+
+	return c.JSON(http.StatusOK, results)
 }

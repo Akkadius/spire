@@ -20,7 +20,7 @@ func NewSpawnConditionValueController(
 	db *database.DatabaseResolver,
 	logger *logrus.Logger,
 ) *SpawnConditionValueController {
-	return &SpawnConditionValueController {
+	return &SpawnConditionValueController{
 		db:     db,
 		logger: logger,
 	}
@@ -31,6 +31,7 @@ func (e *SpawnConditionValueController) Routes() []*routes.Route {
 		routes.RegisterRoute(http.MethodDelete, "spawn_condition_value/:spawn_condition_value", e.deleteSpawnConditionValue, nil),
 		routes.RegisterRoute(http.MethodGet, "spawn_condition_value/:spawn_condition_value", e.getSpawnConditionValue, nil),
 		routes.RegisterRoute(http.MethodGet, "spawn_condition_values", e.listSpawnConditionValues, nil),
+		routes.RegisterRoute(http.MethodPost, "spells_news/bulk", e.getSpawnConditionValuesBulk, nil),
 		routes.RegisterRoute(http.MethodPatch, "spawn_condition_value/:spawn_condition_value", e.updateSpawnConditionValue, nil),
 		routes.RegisterRoute(http.MethodPut, "spawn_condition_value", e.createSpawnConditionValue, nil),
 	}
@@ -111,7 +112,10 @@ func (e *SpawnConditionValueController) getSpawnConditionValue(c echo.Context) e
 func (e *SpawnConditionValueController) updateSpawnConditionValue(c echo.Context) error {
 	spawnConditionValue := new(models.SpawnConditionValue)
 	if err := c.Bind(spawnConditionValue); err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error binding to entity: [%v]", err)})
+		return c.JSON(
+			http.StatusInternalServerError,
+			echo.Map{"error": fmt.Sprintf("Error binding to entity: [%v]", err)},
+		)
 	}
 
 	err := e.db.Get(models.SpawnConditionValue{}, c).Model(&models.SpawnConditionValue{}).First(&models.SpawnConditionValue{}, spawnConditionValue.ID).Error
@@ -141,12 +145,18 @@ func (e *SpawnConditionValueController) updateSpawnConditionValue(c echo.Context
 func (e *SpawnConditionValueController) createSpawnConditionValue(c echo.Context) error {
 	spawnConditionValue := new(models.SpawnConditionValue)
 	if err := c.Bind(spawnConditionValue); err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error binding to entity: [%v]", err)})
+		return c.JSON(
+			http.StatusInternalServerError,
+			echo.Map{"error": fmt.Sprintf("Error binding to entity: [%v]", err)},
+		)
 	}
 
 	err := e.db.Get(models.SpawnConditionValue{}, c).Model(&models.SpawnConditionValue{}).Create(&spawnConditionValue).Error
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error inserting entity: [%v]", err)})
+		return c.JSON(
+			http.StatusInternalServerError,
+			echo.Map{"error": fmt.Sprintf("Error inserting entity: [%v]", err)},
+		)
 	}
 
 	return c.JSON(http.StatusOK, spawnConditionValue)
@@ -182,4 +192,40 @@ func (e *SpawnConditionValueController) deleteSpawnConditionValue(c echo.Context
 	}
 
 	return c.JSON(http.StatusOK, echo.Map{"success": "Entity deleted successfully"})
+}
+
+// getSpawnConditionValuesBulk godoc
+// @Id getSpawnConditionValuesBulk
+// @Summary Gets SpawnConditionValues in bulk
+// @Accept json
+// @Produce json
+// @Param Body body BulkFetchByIdsGetRequest true "body"
+// @Tags SpawnConditionValue
+// @Success 200 {array} models.SpawnConditionValue
+// @Failure 500 {string} string "Bad query request"
+// @Router /spawn_condition_values/bulk [post]
+func (e *SpawnConditionValueController) getSpawnConditionValuesBulk(c echo.Context) error {
+	var results []models.SpawnConditionValue
+
+	r := new(BulkFetchByIdsGetRequest)
+	if err := c.Bind(r); err != nil {
+		return c.JSON(
+			http.StatusInternalServerError,
+			echo.Map{"error": fmt.Sprintf("Error binding to bulk request: [%v]", err)},
+		)
+	}
+
+	if len(r.IDs) == 0 {
+		return c.JSON(
+			http.StatusInternalServerError,
+			echo.Map{"error": fmt.Sprintf("Missing request field data 'ids'")},
+		)
+	}
+
+	err := e.db.QueryContext(models.SpawnConditionValue{}, c).Find(&results, r.IDs).Error
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err})
+	}
+
+	return c.JSON(http.StatusOK, results)
 }

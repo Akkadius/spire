@@ -20,7 +20,7 @@ func NewNpcSpellsEffectsEntryController(
 	db *database.DatabaseResolver,
 	logger *logrus.Logger,
 ) *NpcSpellsEffectsEntryController {
-	return &NpcSpellsEffectsEntryController {
+	return &NpcSpellsEffectsEntryController{
 		db:     db,
 		logger: logger,
 	}
@@ -31,6 +31,7 @@ func (e *NpcSpellsEffectsEntryController) Routes() []*routes.Route {
 		routes.RegisterRoute(http.MethodDelete, "npc_spells_effects_entry/:npc_spells_effects_entry", e.deleteNpcSpellsEffectsEntry, nil),
 		routes.RegisterRoute(http.MethodGet, "npc_spells_effects_entry/:npc_spells_effects_entry", e.getNpcSpellsEffectsEntry, nil),
 		routes.RegisterRoute(http.MethodGet, "npc_spells_effects_entries", e.listNpcSpellsEffectsEntries, nil),
+		routes.RegisterRoute(http.MethodPost, "spells_news/bulk", e.getNpcSpellsEffectsEntriesBulk, nil),
 		routes.RegisterRoute(http.MethodPatch, "npc_spells_effects_entry/:npc_spells_effects_entry", e.updateNpcSpellsEffectsEntry, nil),
 		routes.RegisterRoute(http.MethodPut, "npc_spells_effects_entry", e.createNpcSpellsEffectsEntry, nil),
 	}
@@ -111,7 +112,10 @@ func (e *NpcSpellsEffectsEntryController) getNpcSpellsEffectsEntry(c echo.Contex
 func (e *NpcSpellsEffectsEntryController) updateNpcSpellsEffectsEntry(c echo.Context) error {
 	npcSpellsEffectsEntry := new(models.NpcSpellsEffectsEntry)
 	if err := c.Bind(npcSpellsEffectsEntry); err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error binding to entity: [%v]", err)})
+		return c.JSON(
+			http.StatusInternalServerError,
+			echo.Map{"error": fmt.Sprintf("Error binding to entity: [%v]", err)},
+		)
 	}
 
 	err := e.db.Get(models.NpcSpellsEffectsEntry{}, c).Model(&models.NpcSpellsEffectsEntry{}).First(&models.NpcSpellsEffectsEntry{}, npcSpellsEffectsEntry.ID).Error
@@ -141,12 +145,18 @@ func (e *NpcSpellsEffectsEntryController) updateNpcSpellsEffectsEntry(c echo.Con
 func (e *NpcSpellsEffectsEntryController) createNpcSpellsEffectsEntry(c echo.Context) error {
 	npcSpellsEffectsEntry := new(models.NpcSpellsEffectsEntry)
 	if err := c.Bind(npcSpellsEffectsEntry); err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error binding to entity: [%v]", err)})
+		return c.JSON(
+			http.StatusInternalServerError,
+			echo.Map{"error": fmt.Sprintf("Error binding to entity: [%v]", err)},
+		)
 	}
 
 	err := e.db.Get(models.NpcSpellsEffectsEntry{}, c).Model(&models.NpcSpellsEffectsEntry{}).Create(&npcSpellsEffectsEntry).Error
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error inserting entity: [%v]", err)})
+		return c.JSON(
+			http.StatusInternalServerError,
+			echo.Map{"error": fmt.Sprintf("Error inserting entity: [%v]", err)},
+		)
 	}
 
 	return c.JSON(http.StatusOK, npcSpellsEffectsEntry)
@@ -182,4 +192,40 @@ func (e *NpcSpellsEffectsEntryController) deleteNpcSpellsEffectsEntry(c echo.Con
 	}
 
 	return c.JSON(http.StatusOK, echo.Map{"success": "Entity deleted successfully"})
+}
+
+// getNpcSpellsEffectsEntriesBulk godoc
+// @Id getNpcSpellsEffectsEntriesBulk
+// @Summary Gets NpcSpellsEffectsEntries in bulk
+// @Accept json
+// @Produce json
+// @Param Body body BulkFetchByIdsGetRequest true "body"
+// @Tags NpcSpellsEffectsEntry
+// @Success 200 {array} models.NpcSpellsEffectsEntry
+// @Failure 500 {string} string "Bad query request"
+// @Router /npc_spells_effects_entries/bulk [post]
+func (e *NpcSpellsEffectsEntryController) getNpcSpellsEffectsEntriesBulk(c echo.Context) error {
+	var results []models.NpcSpellsEffectsEntry
+
+	r := new(BulkFetchByIdsGetRequest)
+	if err := c.Bind(r); err != nil {
+		return c.JSON(
+			http.StatusInternalServerError,
+			echo.Map{"error": fmt.Sprintf("Error binding to bulk request: [%v]", err)},
+		)
+	}
+
+	if len(r.IDs) == 0 {
+		return c.JSON(
+			http.StatusInternalServerError,
+			echo.Map{"error": fmt.Sprintf("Missing request field data 'ids'")},
+		)
+	}
+
+	err := e.db.QueryContext(models.NpcSpellsEffectsEntry{}, c).Find(&results, r.IDs).Error
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err})
+	}
+
+	return c.JSON(http.StatusOK, results)
 }

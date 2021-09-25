@@ -20,7 +20,7 @@ func NewAaAbilityController(
 	db *database.DatabaseResolver,
 	logger *logrus.Logger,
 ) *AaAbilityController {
-	return &AaAbilityController {
+	return &AaAbilityController{
 		db:     db,
 		logger: logger,
 	}
@@ -31,6 +31,7 @@ func (e *AaAbilityController) Routes() []*routes.Route {
 		routes.RegisterRoute(http.MethodDelete, "aa_ability/:aa_ability", e.deleteAaAbility, nil),
 		routes.RegisterRoute(http.MethodGet, "aa_ability/:aa_ability", e.getAaAbility, nil),
 		routes.RegisterRoute(http.MethodGet, "aa_abilities", e.listAaAbilities, nil),
+		routes.RegisterRoute(http.MethodPost, "spells_news/bulk", e.getAaAbilitiesBulk, nil),
 		routes.RegisterRoute(http.MethodPatch, "aa_ability/:aa_ability", e.updateAaAbility, nil),
 		routes.RegisterRoute(http.MethodPut, "aa_ability", e.createAaAbility, nil),
 	}
@@ -111,7 +112,10 @@ func (e *AaAbilityController) getAaAbility(c echo.Context) error {
 func (e *AaAbilityController) updateAaAbility(c echo.Context) error {
 	aaAbility := new(models.AaAbility)
 	if err := c.Bind(aaAbility); err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error binding to entity: [%v]", err)})
+		return c.JSON(
+			http.StatusInternalServerError,
+			echo.Map{"error": fmt.Sprintf("Error binding to entity: [%v]", err)},
+		)
 	}
 
 	err := e.db.Get(models.AaAbility{}, c).Model(&models.AaAbility{}).First(&models.AaAbility{}, aaAbility.ID).Error
@@ -141,12 +145,18 @@ func (e *AaAbilityController) updateAaAbility(c echo.Context) error {
 func (e *AaAbilityController) createAaAbility(c echo.Context) error {
 	aaAbility := new(models.AaAbility)
 	if err := c.Bind(aaAbility); err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error binding to entity: [%v]", err)})
+		return c.JSON(
+			http.StatusInternalServerError,
+			echo.Map{"error": fmt.Sprintf("Error binding to entity: [%v]", err)},
+		)
 	}
 
 	err := e.db.Get(models.AaAbility{}, c).Model(&models.AaAbility{}).Create(&aaAbility).Error
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error inserting entity: [%v]", err)})
+		return c.JSON(
+			http.StatusInternalServerError,
+			echo.Map{"error": fmt.Sprintf("Error inserting entity: [%v]", err)},
+		)
 	}
 
 	return c.JSON(http.StatusOK, aaAbility)
@@ -182,4 +192,40 @@ func (e *AaAbilityController) deleteAaAbility(c echo.Context) error {
 	}
 
 	return c.JSON(http.StatusOK, echo.Map{"success": "Entity deleted successfully"})
+}
+
+// getAaAbilitiesBulk godoc
+// @Id getAaAbilitiesBulk
+// @Summary Gets AaAbilities in bulk
+// @Accept json
+// @Produce json
+// @Param Body body BulkFetchByIdsGetRequest true "body"
+// @Tags AaAbility
+// @Success 200 {array} models.AaAbility
+// @Failure 500 {string} string "Bad query request"
+// @Router /aa_abilities/bulk [post]
+func (e *AaAbilityController) getAaAbilitiesBulk(c echo.Context) error {
+	var results []models.AaAbility
+
+	r := new(BulkFetchByIdsGetRequest)
+	if err := c.Bind(r); err != nil {
+		return c.JSON(
+			http.StatusInternalServerError,
+			echo.Map{"error": fmt.Sprintf("Error binding to bulk request: [%v]", err)},
+		)
+	}
+
+	if len(r.IDs) == 0 {
+		return c.JSON(
+			http.StatusInternalServerError,
+			echo.Map{"error": fmt.Sprintf("Missing request field data 'ids'")},
+		)
+	}
+
+	err := e.db.QueryContext(models.AaAbility{}, c).Find(&results, r.IDs).Error
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err})
+	}
+
+	return c.JSON(http.StatusOK, results)
 }

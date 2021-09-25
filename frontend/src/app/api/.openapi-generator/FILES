@@ -98,6 +98,7 @@ base.ts
 configuration.ts
 git_push.sh
 index.ts
+models/crudcontrollers-bulk-fetch-by-ids-get-request.ts
 models/index.ts
 models/models-aa-ability.ts
 models/models-aa-rank.ts

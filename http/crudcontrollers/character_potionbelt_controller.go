@@ -20,7 +20,7 @@ func NewCharacterPotionbeltController(
 	db *database.DatabaseResolver,
 	logger *logrus.Logger,
 ) *CharacterPotionbeltController {
-	return &CharacterPotionbeltController {
+	return &CharacterPotionbeltController{
 		db:     db,
 		logger: logger,
 	}
@@ -31,6 +31,7 @@ func (e *CharacterPotionbeltController) Routes() []*routes.Route {
 		routes.RegisterRoute(http.MethodDelete, "character_potionbelt/:character_potionbelt", e.deleteCharacterPotionbelt, nil),
 		routes.RegisterRoute(http.MethodGet, "character_potionbelt/:character_potionbelt", e.getCharacterPotionbelt, nil),
 		routes.RegisterRoute(http.MethodGet, "character_potionbelts", e.listCharacterPotionbelts, nil),
+		routes.RegisterRoute(http.MethodPost, "spells_news/bulk", e.getCharacterPotionbeltsBulk, nil),
 		routes.RegisterRoute(http.MethodPatch, "character_potionbelt/:character_potionbelt", e.updateCharacterPotionbelt, nil),
 		routes.RegisterRoute(http.MethodPut, "character_potionbelt", e.createCharacterPotionbelt, nil),
 	}
@@ -111,7 +112,10 @@ func (e *CharacterPotionbeltController) getCharacterPotionbelt(c echo.Context) e
 func (e *CharacterPotionbeltController) updateCharacterPotionbelt(c echo.Context) error {
 	characterPotionbelt := new(models.CharacterPotionbelt)
 	if err := c.Bind(characterPotionbelt); err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error binding to entity: [%v]", err)})
+		return c.JSON(
+			http.StatusInternalServerError,
+			echo.Map{"error": fmt.Sprintf("Error binding to entity: [%v]", err)},
+		)
 	}
 
 	err := e.db.Get(models.CharacterPotionbelt{}, c).Model(&models.CharacterPotionbelt{}).First(&models.CharacterPotionbelt{}, characterPotionbelt.ID).Error
@@ -141,12 +145,18 @@ func (e *CharacterPotionbeltController) updateCharacterPotionbelt(c echo.Context
 func (e *CharacterPotionbeltController) createCharacterPotionbelt(c echo.Context) error {
 	characterPotionbelt := new(models.CharacterPotionbelt)
 	if err := c.Bind(characterPotionbelt); err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error binding to entity: [%v]", err)})
+		return c.JSON(
+			http.StatusInternalServerError,
+			echo.Map{"error": fmt.Sprintf("Error binding to entity: [%v]", err)},
+		)
 	}
 
 	err := e.db.Get(models.CharacterPotionbelt{}, c).Model(&models.CharacterPotionbelt{}).Create(&characterPotionbelt).Error
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error inserting entity: [%v]", err)})
+		return c.JSON(
+			http.StatusInternalServerError,
+			echo.Map{"error": fmt.Sprintf("Error inserting entity: [%v]", err)},
+		)
 	}
 
 	return c.JSON(http.StatusOK, characterPotionbelt)
@@ -182,4 +192,40 @@ func (e *CharacterPotionbeltController) deleteCharacterPotionbelt(c echo.Context
 	}
 
 	return c.JSON(http.StatusOK, echo.Map{"success": "Entity deleted successfully"})
+}
+
+// getCharacterPotionbeltsBulk godoc
+// @Id getCharacterPotionbeltsBulk
+// @Summary Gets CharacterPotionbelts in bulk
+// @Accept json
+// @Produce json
+// @Param Body body BulkFetchByIdsGetRequest true "body"
+// @Tags CharacterPotionbelt
+// @Success 200 {array} models.CharacterPotionbelt
+// @Failure 500 {string} string "Bad query request"
+// @Router /character_potionbelts/bulk [post]
+func (e *CharacterPotionbeltController) getCharacterPotionbeltsBulk(c echo.Context) error {
+	var results []models.CharacterPotionbelt
+
+	r := new(BulkFetchByIdsGetRequest)
+	if err := c.Bind(r); err != nil {
+		return c.JSON(
+			http.StatusInternalServerError,
+			echo.Map{"error": fmt.Sprintf("Error binding to bulk request: [%v]", err)},
+		)
+	}
+
+	if len(r.IDs) == 0 {
+		return c.JSON(
+			http.StatusInternalServerError,
+			echo.Map{"error": fmt.Sprintf("Missing request field data 'ids'")},
+		)
+	}
+
+	err := e.db.QueryContext(models.CharacterPotionbelt{}, c).Find(&results, r.IDs).Error
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err})
+	}
+
+	return c.JSON(http.StatusOK, results)
 }

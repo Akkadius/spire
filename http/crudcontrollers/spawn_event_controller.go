@@ -20,7 +20,7 @@ func NewSpawnEventController(
 	db *database.DatabaseResolver,
 	logger *logrus.Logger,
 ) *SpawnEventController {
-	return &SpawnEventController {
+	return &SpawnEventController{
 		db:     db,
 		logger: logger,
 	}
@@ -31,6 +31,7 @@ func (e *SpawnEventController) Routes() []*routes.Route {
 		routes.RegisterRoute(http.MethodDelete, "spawn_event/:spawn_event", e.deleteSpawnEvent, nil),
 		routes.RegisterRoute(http.MethodGet, "spawn_event/:spawn_event", e.getSpawnEvent, nil),
 		routes.RegisterRoute(http.MethodGet, "spawn_events", e.listSpawnEvents, nil),
+		routes.RegisterRoute(http.MethodPost, "spells_news/bulk", e.getSpawnEventsBulk, nil),
 		routes.RegisterRoute(http.MethodPatch, "spawn_event/:spawn_event", e.updateSpawnEvent, nil),
 		routes.RegisterRoute(http.MethodPut, "spawn_event", e.createSpawnEvent, nil),
 	}
@@ -111,7 +112,10 @@ func (e *SpawnEventController) getSpawnEvent(c echo.Context) error {
 func (e *SpawnEventController) updateSpawnEvent(c echo.Context) error {
 	spawnEvent := new(models.SpawnEvent)
 	if err := c.Bind(spawnEvent); err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error binding to entity: [%v]", err)})
+		return c.JSON(
+			http.StatusInternalServerError,
+			echo.Map{"error": fmt.Sprintf("Error binding to entity: [%v]", err)},
+		)
 	}
 
 	err := e.db.Get(models.SpawnEvent{}, c).Model(&models.SpawnEvent{}).First(&models.SpawnEvent{}, spawnEvent.ID).Error
@@ -141,12 +145,18 @@ func (e *SpawnEventController) updateSpawnEvent(c echo.Context) error {
 func (e *SpawnEventController) createSpawnEvent(c echo.Context) error {
 	spawnEvent := new(models.SpawnEvent)
 	if err := c.Bind(spawnEvent); err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error binding to entity: [%v]", err)})
+		return c.JSON(
+			http.StatusInternalServerError,
+			echo.Map{"error": fmt.Sprintf("Error binding to entity: [%v]", err)},
+		)
 	}
 
 	err := e.db.Get(models.SpawnEvent{}, c).Model(&models.SpawnEvent{}).Create(&spawnEvent).Error
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error inserting entity: [%v]", err)})
+		return c.JSON(
+			http.StatusInternalServerError,
+			echo.Map{"error": fmt.Sprintf("Error inserting entity: [%v]", err)},
+		)
 	}
 
 	return c.JSON(http.StatusOK, spawnEvent)
@@ -182,4 +192,40 @@ func (e *SpawnEventController) deleteSpawnEvent(c echo.Context) error {
 	}
 
 	return c.JSON(http.StatusOK, echo.Map{"success": "Entity deleted successfully"})
+}
+
+// getSpawnEventsBulk godoc
+// @Id getSpawnEventsBulk
+// @Summary Gets SpawnEvents in bulk
+// @Accept json
+// @Produce json
+// @Param Body body BulkFetchByIdsGetRequest true "body"
+// @Tags SpawnEvent
+// @Success 200 {array} models.SpawnEvent
+// @Failure 500 {string} string "Bad query request"
+// @Router /spawn_events/bulk [post]
+func (e *SpawnEventController) getSpawnEventsBulk(c echo.Context) error {
+	var results []models.SpawnEvent
+
+	r := new(BulkFetchByIdsGetRequest)
+	if err := c.Bind(r); err != nil {
+		return c.JSON(
+			http.StatusInternalServerError,
+			echo.Map{"error": fmt.Sprintf("Error binding to bulk request: [%v]", err)},
+		)
+	}
+
+	if len(r.IDs) == 0 {
+		return c.JSON(
+			http.StatusInternalServerError,
+			echo.Map{"error": fmt.Sprintf("Missing request field data 'ids'")},
+		)
+	}
+
+	err := e.db.QueryContext(models.SpawnEvent{}, c).Find(&results, r.IDs).Error
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err})
+	}
+
+	return c.JSON(http.StatusOK, results)
 }

@@ -19,6 +19,8 @@ import { Configuration } from '../configuration';
 // @ts-ignore
 import { BASE_PATH, COLLECTION_FORMATS, RequestArgs, BaseAPI, RequiredError } from '../base';
 // @ts-ignore
+import { CrudcontrollersBulkFetchByIdsGetRequest } from '../models';
+// @ts-ignore
 import { ModelsZone } from '../models';
 /**
  * ZoneApi - axios parameter creator
@@ -79,7 +81,7 @@ export const ZoneApiAxiosParamCreator = function (configuration?: Configuration)
         },
         /**
          * 
-         * @summary Delegenerate-axios-clienttes Zone
+         * @summary Deletes Zone
          * @param {number} id Id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -167,6 +169,57 @@ export const ZoneApiAxiosParamCreator = function (configuration?: Configuration)
             localVarUrlObj.search = (new URLSearchParams(queryParameters)).toString();
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @summary Gets Zones in bulk
+         * @param {CrudcontrollersBulkFetchByIdsGetRequest} body body
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getZonesBulk: async (body: CrudcontrollersBulkFetchByIdsGetRequest, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'body' is not null or undefined
+            if (body === null || body === undefined) {
+                throw new RequiredError('body','Required parameter body was null or undefined when calling getZonesBulk.');
+            }
+            const localVarPath = `/zones/bulk`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, 'https://example.com');
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            const queryParameters = new URLSearchParams(localVarUrlObj.search);
+            for (const key in localVarQueryParameter) {
+                queryParameters.set(key, localVarQueryParameter[key]);
+            }
+            for (const key in options.query) {
+                queryParameters.set(key, options.query[key]);
+            }
+            localVarUrlObj.search = (new URLSearchParams(queryParameters)).toString();
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            const nonString = typeof body !== 'string';
+            const needsSerialization = nonString && configuration && configuration.isJsonMime
+                ? configuration.isJsonMime(localVarRequestOptions.headers['Content-Type'])
+                : nonString;
+            localVarRequestOptions.data =  needsSerialization
+                ? JSON.stringify(body !== undefined ? body : {})
+                : (body || "");
 
             return {
                 url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
@@ -327,7 +380,7 @@ export const ZoneApiFp = function(configuration?: Configuration) {
         },
         /**
          * 
-         * @summary Delegenerate-axios-clienttes Zone
+         * @summary Deletes Zone
          * @param {number} id Id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -350,6 +403,20 @@ export const ZoneApiFp = function(configuration?: Configuration) {
          */
         async getZone(id: number, includes?: string, select?: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<ModelsZone>>> {
             const localVarAxiosArgs = await ZoneApiAxiosParamCreator(configuration).getZone(id, includes, select, options);
+            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
+                const axiosRequestArgs = {...localVarAxiosArgs.options, url: (configuration?.basePath || basePath) + localVarAxiosArgs.url};
+                return axios.request(axiosRequestArgs);
+            };
+        },
+        /**
+         * 
+         * @summary Gets Zones in bulk
+         * @param {CrudcontrollersBulkFetchByIdsGetRequest} body body
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async getZonesBulk(body: CrudcontrollersBulkFetchByIdsGetRequest, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<ModelsZone>>> {
+            const localVarAxiosArgs = await ZoneApiAxiosParamCreator(configuration).getZonesBulk(body, options);
             return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
                 const axiosRequestArgs = {...localVarAxiosArgs.options, url: (configuration?.basePath || basePath) + localVarAxiosArgs.url};
                 return axios.request(axiosRequestArgs);
@@ -411,7 +478,7 @@ export const ZoneApiFactory = function (configuration?: Configuration, basePath?
         },
         /**
          * 
-         * @summary Delegenerate-axios-clienttes Zone
+         * @summary Deletes Zone
          * @param {number} id Id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -430,6 +497,16 @@ export const ZoneApiFactory = function (configuration?: Configuration, basePath?
          */
         getZone(id: number, includes?: string, select?: string, options?: any): AxiosPromise<Array<ModelsZone>> {
             return ZoneApiFp(configuration).getZone(id, includes, select, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @summary Gets Zones in bulk
+         * @param {CrudcontrollersBulkFetchByIdsGetRequest} body body
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getZonesBulk(body: CrudcontrollersBulkFetchByIdsGetRequest, options?: any): AxiosPromise<Array<ModelsZone>> {
+            return ZoneApiFp(configuration).getZonesBulk(body, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -515,6 +592,20 @@ export interface ZoneApiGetZoneRequest {
      * @memberof ZoneApiGetZone
      */
     readonly select?: string
+}
+
+/**
+ * Request parameters for getZonesBulk operation in ZoneApi.
+ * @export
+ * @interface ZoneApiGetZonesBulkRequest
+ */
+export interface ZoneApiGetZonesBulkRequest {
+    /**
+     * body
+     * @type {CrudcontrollersBulkFetchByIdsGetRequest}
+     * @memberof ZoneApiGetZonesBulk
+     */
+    readonly body: CrudcontrollersBulkFetchByIdsGetRequest
 }
 
 /**
@@ -615,7 +706,7 @@ export class ZoneApi extends BaseAPI {
 
     /**
      * 
-     * @summary Delegenerate-axios-clienttes Zone
+     * @summary Deletes Zone
      * @param {ZoneApiDeleteZoneRequest} requestParameters Request parameters.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
@@ -635,6 +726,18 @@ export class ZoneApi extends BaseAPI {
      */
     public getZone(requestParameters: ZoneApiGetZoneRequest, options?: any) {
         return ZoneApiFp(this.configuration).getZone(requestParameters.id, requestParameters.includes, requestParameters.select, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @summary Gets Zones in bulk
+     * @param {ZoneApiGetZonesBulkRequest} requestParameters Request parameters.
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof ZoneApi
+     */
+    public getZonesBulk(requestParameters: ZoneApiGetZonesBulkRequest, options?: any) {
+        return ZoneApiFp(this.configuration).getZonesBulk(requestParameters.body, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**

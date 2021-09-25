@@ -20,7 +20,7 @@ func NewNpcTypeController(
 	db *database.DatabaseResolver,
 	logger *logrus.Logger,
 ) *NpcTypeController {
-	return &NpcTypeController {
+	return &NpcTypeController{
 		db:     db,
 		logger: logger,
 	}
@@ -31,6 +31,7 @@ func (e *NpcTypeController) Routes() []*routes.Route {
 		routes.RegisterRoute(http.MethodDelete, "npc_type/:npc_type", e.deleteNpcType, nil),
 		routes.RegisterRoute(http.MethodGet, "npc_type/:npc_type", e.getNpcType, nil),
 		routes.RegisterRoute(http.MethodGet, "npc_types", e.listNpcTypes, nil),
+		routes.RegisterRoute(http.MethodPost, "spells_news/bulk", e.getNpcTypesBulk, nil),
 		routes.RegisterRoute(http.MethodPatch, "npc_type/:npc_type", e.updateNpcType, nil),
 		routes.RegisterRoute(http.MethodPut, "npc_type", e.createNpcType, nil),
 	}
@@ -111,7 +112,10 @@ func (e *NpcTypeController) getNpcType(c echo.Context) error {
 func (e *NpcTypeController) updateNpcType(c echo.Context) error {
 	npcType := new(models.NpcType)
 	if err := c.Bind(npcType); err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error binding to entity: [%v]", err)})
+		return c.JSON(
+			http.StatusInternalServerError,
+			echo.Map{"error": fmt.Sprintf("Error binding to entity: [%v]", err)},
+		)
 	}
 
 	err := e.db.Get(models.NpcType{}, c).Model(&models.NpcType{}).First(&models.NpcType{}, npcType.ID).Error
@@ -141,12 +145,18 @@ func (e *NpcTypeController) updateNpcType(c echo.Context) error {
 func (e *NpcTypeController) createNpcType(c echo.Context) error {
 	npcType := new(models.NpcType)
 	if err := c.Bind(npcType); err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error binding to entity: [%v]", err)})
+		return c.JSON(
+			http.StatusInternalServerError,
+			echo.Map{"error": fmt.Sprintf("Error binding to entity: [%v]", err)},
+		)
 	}
 
 	err := e.db.Get(models.NpcType{}, c).Model(&models.NpcType{}).Create(&npcType).Error
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error inserting entity: [%v]", err)})
+		return c.JSON(
+			http.StatusInternalServerError,
+			echo.Map{"error": fmt.Sprintf("Error inserting entity: [%v]", err)},
+		)
 	}
 
 	return c.JSON(http.StatusOK, npcType)
@@ -182,4 +192,40 @@ func (e *NpcTypeController) deleteNpcType(c echo.Context) error {
 	}
 
 	return c.JSON(http.StatusOK, echo.Map{"success": "Entity deleted successfully"})
+}
+
+// getNpcTypesBulk godoc
+// @Id getNpcTypesBulk
+// @Summary Gets NpcTypes in bulk
+// @Accept json
+// @Produce json
+// @Param Body body BulkFetchByIdsGetRequest true "body"
+// @Tags NpcType
+// @Success 200 {array} models.NpcType
+// @Failure 500 {string} string "Bad query request"
+// @Router /npc_types/bulk [post]
+func (e *NpcTypeController) getNpcTypesBulk(c echo.Context) error {
+	var results []models.NpcType
+
+	r := new(BulkFetchByIdsGetRequest)
+	if err := c.Bind(r); err != nil {
+		return c.JSON(
+			http.StatusInternalServerError,
+			echo.Map{"error": fmt.Sprintf("Error binding to bulk request: [%v]", err)},
+		)
+	}
+
+	if len(r.IDs) == 0 {
+		return c.JSON(
+			http.StatusInternalServerError,
+			echo.Map{"error": fmt.Sprintf("Missing request field data 'ids'")},
+		)
+	}
+
+	err := e.db.QueryContext(models.NpcType{}, c).Find(&results, r.IDs).Error
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err})
+	}
+
+	return c.JSON(http.StatusOK, results)
 }

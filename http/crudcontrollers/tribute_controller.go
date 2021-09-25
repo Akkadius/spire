@@ -20,7 +20,7 @@ func NewTributeController(
 	db *database.DatabaseResolver,
 	logger *logrus.Logger,
 ) *TributeController {
-	return &TributeController {
+	return &TributeController{
 		db:     db,
 		logger: logger,
 	}
@@ -31,6 +31,7 @@ func (e *TributeController) Routes() []*routes.Route {
 		routes.RegisterRoute(http.MethodDelete, "tribute/:tribute", e.deleteTribute, nil),
 		routes.RegisterRoute(http.MethodGet, "tribute/:tribute", e.getTribute, nil),
 		routes.RegisterRoute(http.MethodGet, "tributes", e.listTributes, nil),
+		routes.RegisterRoute(http.MethodPost, "spells_news/bulk", e.getTributesBulk, nil),
 		routes.RegisterRoute(http.MethodPatch, "tribute/:tribute", e.updateTribute, nil),
 		routes.RegisterRoute(http.MethodPut, "tribute", e.createTribute, nil),
 	}
@@ -111,7 +112,10 @@ func (e *TributeController) getTribute(c echo.Context) error {
 func (e *TributeController) updateTribute(c echo.Context) error {
 	tribute := new(models.Tribute)
 	if err := c.Bind(tribute); err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error binding to entity: [%v]", err)})
+		return c.JSON(
+			http.StatusInternalServerError,
+			echo.Map{"error": fmt.Sprintf("Error binding to entity: [%v]", err)},
+		)
 	}
 
 	err := e.db.Get(models.Tribute{}, c).Model(&models.Tribute{}).First(&models.Tribute{}, tribute.ID).Error
@@ -141,12 +145,18 @@ func (e *TributeController) updateTribute(c echo.Context) error {
 func (e *TributeController) createTribute(c echo.Context) error {
 	tribute := new(models.Tribute)
 	if err := c.Bind(tribute); err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error binding to entity: [%v]", err)})
+		return c.JSON(
+			http.StatusInternalServerError,
+			echo.Map{"error": fmt.Sprintf("Error binding to entity: [%v]", err)},
+		)
 	}
 
 	err := e.db.Get(models.Tribute{}, c).Model(&models.Tribute{}).Create(&tribute).Error
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error inserting entity: [%v]", err)})
+		return c.JSON(
+			http.StatusInternalServerError,
+			echo.Map{"error": fmt.Sprintf("Error inserting entity: [%v]", err)},
+		)
 	}
 
 	return c.JSON(http.StatusOK, tribute)
@@ -182,4 +192,40 @@ func (e *TributeController) deleteTribute(c echo.Context) error {
 	}
 
 	return c.JSON(http.StatusOK, echo.Map{"success": "Entity deleted successfully"})
+}
+
+// getTributesBulk godoc
+// @Id getTributesBulk
+// @Summary Gets Tributes in bulk
+// @Accept json
+// @Produce json
+// @Param Body body BulkFetchByIdsGetRequest true "body"
+// @Tags Tribute
+// @Success 200 {array} models.Tribute
+// @Failure 500 {string} string "Bad query request"
+// @Router /tributes/bulk [post]
+func (e *TributeController) getTributesBulk(c echo.Context) error {
+	var results []models.Tribute
+
+	r := new(BulkFetchByIdsGetRequest)
+	if err := c.Bind(r); err != nil {
+		return c.JSON(
+			http.StatusInternalServerError,
+			echo.Map{"error": fmt.Sprintf("Error binding to bulk request: [%v]", err)},
+		)
+	}
+
+	if len(r.IDs) == 0 {
+		return c.JSON(
+			http.StatusInternalServerError,
+			echo.Map{"error": fmt.Sprintf("Missing request field data 'ids'")},
+		)
+	}
+
+	err := e.db.QueryContext(models.Tribute{}, c).Find(&results, r.IDs).Error
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err})
+	}
+
+	return c.JSON(http.StatusOK, results)
 }

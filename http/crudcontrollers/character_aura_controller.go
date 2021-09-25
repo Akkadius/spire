@@ -20,7 +20,7 @@ func NewCharacterAuraController(
 	db *database.DatabaseResolver,
 	logger *logrus.Logger,
 ) *CharacterAuraController {
-	return &CharacterAuraController {
+	return &CharacterAuraController{
 		db:     db,
 		logger: logger,
 	}
@@ -31,6 +31,7 @@ func (e *CharacterAuraController) Routes() []*routes.Route {
 		routes.RegisterRoute(http.MethodDelete, "character_aura/:character_aura", e.deleteCharacterAura, nil),
 		routes.RegisterRoute(http.MethodGet, "character_aura/:character_aura", e.getCharacterAura, nil),
 		routes.RegisterRoute(http.MethodGet, "character_auras", e.listCharacterAuras, nil),
+		routes.RegisterRoute(http.MethodPost, "spells_news/bulk", e.getCharacterAurasBulk, nil),
 		routes.RegisterRoute(http.MethodPatch, "character_aura/:character_aura", e.updateCharacterAura, nil),
 		routes.RegisterRoute(http.MethodPut, "character_aura", e.createCharacterAura, nil),
 	}
@@ -111,7 +112,10 @@ func (e *CharacterAuraController) getCharacterAura(c echo.Context) error {
 func (e *CharacterAuraController) updateCharacterAura(c echo.Context) error {
 	characterAura := new(models.CharacterAura)
 	if err := c.Bind(characterAura); err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error binding to entity: [%v]", err)})
+		return c.JSON(
+			http.StatusInternalServerError,
+			echo.Map{"error": fmt.Sprintf("Error binding to entity: [%v]", err)},
+		)
 	}
 
 	err := e.db.Get(models.CharacterAura{}, c).Model(&models.CharacterAura{}).First(&models.CharacterAura{}, characterAura.ID).Error
@@ -141,12 +145,18 @@ func (e *CharacterAuraController) updateCharacterAura(c echo.Context) error {
 func (e *CharacterAuraController) createCharacterAura(c echo.Context) error {
 	characterAura := new(models.CharacterAura)
 	if err := c.Bind(characterAura); err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error binding to entity: [%v]", err)})
+		return c.JSON(
+			http.StatusInternalServerError,
+			echo.Map{"error": fmt.Sprintf("Error binding to entity: [%v]", err)},
+		)
 	}
 
 	err := e.db.Get(models.CharacterAura{}, c).Model(&models.CharacterAura{}).Create(&characterAura).Error
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error inserting entity: [%v]", err)})
+		return c.JSON(
+			http.StatusInternalServerError,
+			echo.Map{"error": fmt.Sprintf("Error inserting entity: [%v]", err)},
+		)
 	}
 
 	return c.JSON(http.StatusOK, characterAura)
@@ -182,4 +192,40 @@ func (e *CharacterAuraController) deleteCharacterAura(c echo.Context) error {
 	}
 
 	return c.JSON(http.StatusOK, echo.Map{"success": "Entity deleted successfully"})
+}
+
+// getCharacterAurasBulk godoc
+// @Id getCharacterAurasBulk
+// @Summary Gets CharacterAuras in bulk
+// @Accept json
+// @Produce json
+// @Param Body body BulkFetchByIdsGetRequest true "body"
+// @Tags CharacterAura
+// @Success 200 {array} models.CharacterAura
+// @Failure 500 {string} string "Bad query request"
+// @Router /character_auras/bulk [post]
+func (e *CharacterAuraController) getCharacterAurasBulk(c echo.Context) error {
+	var results []models.CharacterAura
+
+	r := new(BulkFetchByIdsGetRequest)
+	if err := c.Bind(r); err != nil {
+		return c.JSON(
+			http.StatusInternalServerError,
+			echo.Map{"error": fmt.Sprintf("Error binding to bulk request: [%v]", err)},
+		)
+	}
+
+	if len(r.IDs) == 0 {
+		return c.JSON(
+			http.StatusInternalServerError,
+			echo.Map{"error": fmt.Sprintf("Missing request field data 'ids'")},
+		)
+	}
+
+	err := e.db.QueryContext(models.CharacterAura{}, c).Find(&results, r.IDs).Error
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err})
+	}
+
+	return c.JSON(http.StatusOK, results)
 }

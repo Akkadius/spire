@@ -20,7 +20,7 @@ func NewGlobalLootController(
 	db *database.DatabaseResolver,
 	logger *logrus.Logger,
 ) *GlobalLootController {
-	return &GlobalLootController {
+	return &GlobalLootController{
 		db:     db,
 		logger: logger,
 	}
@@ -31,6 +31,7 @@ func (e *GlobalLootController) Routes() []*routes.Route {
 		routes.RegisterRoute(http.MethodDelete, "global_loot/:global_loot", e.deleteGlobalLoot, nil),
 		routes.RegisterRoute(http.MethodGet, "global_loot/:global_loot", e.getGlobalLoot, nil),
 		routes.RegisterRoute(http.MethodGet, "global_loots", e.listGlobalLoots, nil),
+		routes.RegisterRoute(http.MethodPost, "spells_news/bulk", e.getGlobalLootsBulk, nil),
 		routes.RegisterRoute(http.MethodPatch, "global_loot/:global_loot", e.updateGlobalLoot, nil),
 		routes.RegisterRoute(http.MethodPut, "global_loot", e.createGlobalLoot, nil),
 	}
@@ -111,7 +112,10 @@ func (e *GlobalLootController) getGlobalLoot(c echo.Context) error {
 func (e *GlobalLootController) updateGlobalLoot(c echo.Context) error {
 	globalLoot := new(models.GlobalLoot)
 	if err := c.Bind(globalLoot); err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error binding to entity: [%v]", err)})
+		return c.JSON(
+			http.StatusInternalServerError,
+			echo.Map{"error": fmt.Sprintf("Error binding to entity: [%v]", err)},
+		)
 	}
 
 	err := e.db.Get(models.GlobalLoot{}, c).Model(&models.GlobalLoot{}).First(&models.GlobalLoot{}, globalLoot.ID).Error
@@ -141,12 +145,18 @@ func (e *GlobalLootController) updateGlobalLoot(c echo.Context) error {
 func (e *GlobalLootController) createGlobalLoot(c echo.Context) error {
 	globalLoot := new(models.GlobalLoot)
 	if err := c.Bind(globalLoot); err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error binding to entity: [%v]", err)})
+		return c.JSON(
+			http.StatusInternalServerError,
+			echo.Map{"error": fmt.Sprintf("Error binding to entity: [%v]", err)},
+		)
 	}
 
 	err := e.db.Get(models.GlobalLoot{}, c).Model(&models.GlobalLoot{}).Create(&globalLoot).Error
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error inserting entity: [%v]", err)})
+		return c.JSON(
+			http.StatusInternalServerError,
+			echo.Map{"error": fmt.Sprintf("Error inserting entity: [%v]", err)},
+		)
 	}
 
 	return c.JSON(http.StatusOK, globalLoot)
@@ -182,4 +192,40 @@ func (e *GlobalLootController) deleteGlobalLoot(c echo.Context) error {
 	}
 
 	return c.JSON(http.StatusOK, echo.Map{"success": "Entity deleted successfully"})
+}
+
+// getGlobalLootsBulk godoc
+// @Id getGlobalLootsBulk
+// @Summary Gets GlobalLoots in bulk
+// @Accept json
+// @Produce json
+// @Param Body body BulkFetchByIdsGetRequest true "body"
+// @Tags GlobalLoot
+// @Success 200 {array} models.GlobalLoot
+// @Failure 500 {string} string "Bad query request"
+// @Router /global_loots/bulk [post]
+func (e *GlobalLootController) getGlobalLootsBulk(c echo.Context) error {
+	var results []models.GlobalLoot
+
+	r := new(BulkFetchByIdsGetRequest)
+	if err := c.Bind(r); err != nil {
+		return c.JSON(
+			http.StatusInternalServerError,
+			echo.Map{"error": fmt.Sprintf("Error binding to bulk request: [%v]", err)},
+		)
+	}
+
+	if len(r.IDs) == 0 {
+		return c.JSON(
+			http.StatusInternalServerError,
+			echo.Map{"error": fmt.Sprintf("Missing request field data 'ids'")},
+		)
+	}
+
+	err := e.db.QueryContext(models.GlobalLoot{}, c).Find(&results, r.IDs).Error
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err})
+	}
+
+	return c.JSON(http.StatusOK, results)
 }

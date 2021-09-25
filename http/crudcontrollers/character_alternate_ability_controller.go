@@ -20,7 +20,7 @@ func NewCharacterAlternateAbilityController(
 	db *database.DatabaseResolver,
 	logger *logrus.Logger,
 ) *CharacterAlternateAbilityController {
-	return &CharacterAlternateAbilityController {
+	return &CharacterAlternateAbilityController{
 		db:     db,
 		logger: logger,
 	}
@@ -31,6 +31,7 @@ func (e *CharacterAlternateAbilityController) Routes() []*routes.Route {
 		routes.RegisterRoute(http.MethodDelete, "character_alternate_ability/:character_alternate_ability", e.deleteCharacterAlternateAbility, nil),
 		routes.RegisterRoute(http.MethodGet, "character_alternate_ability/:character_alternate_ability", e.getCharacterAlternateAbility, nil),
 		routes.RegisterRoute(http.MethodGet, "character_alternate_abilities", e.listCharacterAlternateAbilities, nil),
+		routes.RegisterRoute(http.MethodPost, "spells_news/bulk", e.getCharacterAlternateAbilitiesBulk, nil),
 		routes.RegisterRoute(http.MethodPatch, "character_alternate_ability/:character_alternate_ability", e.updateCharacterAlternateAbility, nil),
 		routes.RegisterRoute(http.MethodPut, "character_alternate_ability", e.createCharacterAlternateAbility, nil),
 	}
@@ -111,7 +112,10 @@ func (e *CharacterAlternateAbilityController) getCharacterAlternateAbility(c ech
 func (e *CharacterAlternateAbilityController) updateCharacterAlternateAbility(c echo.Context) error {
 	characterAlternateAbility := new(models.CharacterAlternateAbility)
 	if err := c.Bind(characterAlternateAbility); err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error binding to entity: [%v]", err)})
+		return c.JSON(
+			http.StatusInternalServerError,
+			echo.Map{"error": fmt.Sprintf("Error binding to entity: [%v]", err)},
+		)
 	}
 
 	err := e.db.Get(models.CharacterAlternateAbility{}, c).Model(&models.CharacterAlternateAbility{}).First(&models.CharacterAlternateAbility{}, characterAlternateAbility.ID).Error
@@ -141,12 +145,18 @@ func (e *CharacterAlternateAbilityController) updateCharacterAlternateAbility(c 
 func (e *CharacterAlternateAbilityController) createCharacterAlternateAbility(c echo.Context) error {
 	characterAlternateAbility := new(models.CharacterAlternateAbility)
 	if err := c.Bind(characterAlternateAbility); err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error binding to entity: [%v]", err)})
+		return c.JSON(
+			http.StatusInternalServerError,
+			echo.Map{"error": fmt.Sprintf("Error binding to entity: [%v]", err)},
+		)
 	}
 
 	err := e.db.Get(models.CharacterAlternateAbility{}, c).Model(&models.CharacterAlternateAbility{}).Create(&characterAlternateAbility).Error
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error inserting entity: [%v]", err)})
+		return c.JSON(
+			http.StatusInternalServerError,
+			echo.Map{"error": fmt.Sprintf("Error inserting entity: [%v]", err)},
+		)
 	}
 
 	return c.JSON(http.StatusOK, characterAlternateAbility)
@@ -182,4 +192,40 @@ func (e *CharacterAlternateAbilityController) deleteCharacterAlternateAbility(c 
 	}
 
 	return c.JSON(http.StatusOK, echo.Map{"success": "Entity deleted successfully"})
+}
+
+// getCharacterAlternateAbilitiesBulk godoc
+// @Id getCharacterAlternateAbilitiesBulk
+// @Summary Gets CharacterAlternateAbilities in bulk
+// @Accept json
+// @Produce json
+// @Param Body body BulkFetchByIdsGetRequest true "body"
+// @Tags CharacterAlternateAbility
+// @Success 200 {array} models.CharacterAlternateAbility
+// @Failure 500 {string} string "Bad query request"
+// @Router /character_alternate_abilities/bulk [post]
+func (e *CharacterAlternateAbilityController) getCharacterAlternateAbilitiesBulk(c echo.Context) error {
+	var results []models.CharacterAlternateAbility
+
+	r := new(BulkFetchByIdsGetRequest)
+	if err := c.Bind(r); err != nil {
+		return c.JSON(
+			http.StatusInternalServerError,
+			echo.Map{"error": fmt.Sprintf("Error binding to bulk request: [%v]", err)},
+		)
+	}
+
+	if len(r.IDs) == 0 {
+		return c.JSON(
+			http.StatusInternalServerError,
+			echo.Map{"error": fmt.Sprintf("Missing request field data 'ids'")},
+		)
+	}
+
+	err := e.db.QueryContext(models.CharacterAlternateAbility{}, c).Find(&results, r.IDs).Error
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err})
+	}
+
+	return c.JSON(http.StatusOK, results)
 }

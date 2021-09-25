@@ -20,7 +20,7 @@ func NewCharacterExpeditionLockoutController(
 	db *database.DatabaseResolver,
 	logger *logrus.Logger,
 ) *CharacterExpeditionLockoutController {
-	return &CharacterExpeditionLockoutController {
+	return &CharacterExpeditionLockoutController{
 		db:     db,
 		logger: logger,
 	}
@@ -31,6 +31,7 @@ func (e *CharacterExpeditionLockoutController) Routes() []*routes.Route {
 		routes.RegisterRoute(http.MethodDelete, "character_expedition_lockout/:character_expedition_lockout", e.deleteCharacterExpeditionLockout, nil),
 		routes.RegisterRoute(http.MethodGet, "character_expedition_lockout/:character_expedition_lockout", e.getCharacterExpeditionLockout, nil),
 		routes.RegisterRoute(http.MethodGet, "character_expedition_lockouts", e.listCharacterExpeditionLockouts, nil),
+		routes.RegisterRoute(http.MethodPost, "spells_news/bulk", e.getCharacterExpeditionLockoutsBulk, nil),
 		routes.RegisterRoute(http.MethodPatch, "character_expedition_lockout/:character_expedition_lockout", e.updateCharacterExpeditionLockout, nil),
 		routes.RegisterRoute(http.MethodPut, "character_expedition_lockout", e.createCharacterExpeditionLockout, nil),
 	}
@@ -111,7 +112,10 @@ func (e *CharacterExpeditionLockoutController) getCharacterExpeditionLockout(c e
 func (e *CharacterExpeditionLockoutController) updateCharacterExpeditionLockout(c echo.Context) error {
 	characterExpeditionLockout := new(models.CharacterExpeditionLockout)
 	if err := c.Bind(characterExpeditionLockout); err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error binding to entity: [%v]", err)})
+		return c.JSON(
+			http.StatusInternalServerError,
+			echo.Map{"error": fmt.Sprintf("Error binding to entity: [%v]", err)},
+		)
 	}
 
 	err := e.db.Get(models.CharacterExpeditionLockout{}, c).Model(&models.CharacterExpeditionLockout{}).First(&models.CharacterExpeditionLockout{}, characterExpeditionLockout.ID).Error
@@ -141,12 +145,18 @@ func (e *CharacterExpeditionLockoutController) updateCharacterExpeditionLockout(
 func (e *CharacterExpeditionLockoutController) createCharacterExpeditionLockout(c echo.Context) error {
 	characterExpeditionLockout := new(models.CharacterExpeditionLockout)
 	if err := c.Bind(characterExpeditionLockout); err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error binding to entity: [%v]", err)})
+		return c.JSON(
+			http.StatusInternalServerError,
+			echo.Map{"error": fmt.Sprintf("Error binding to entity: [%v]", err)},
+		)
 	}
 
 	err := e.db.Get(models.CharacterExpeditionLockout{}, c).Model(&models.CharacterExpeditionLockout{}).Create(&characterExpeditionLockout).Error
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error inserting entity: [%v]", err)})
+		return c.JSON(
+			http.StatusInternalServerError,
+			echo.Map{"error": fmt.Sprintf("Error inserting entity: [%v]", err)},
+		)
 	}
 
 	return c.JSON(http.StatusOK, characterExpeditionLockout)
@@ -182,4 +192,40 @@ func (e *CharacterExpeditionLockoutController) deleteCharacterExpeditionLockout(
 	}
 
 	return c.JSON(http.StatusOK, echo.Map{"success": "Entity deleted successfully"})
+}
+
+// getCharacterExpeditionLockoutsBulk godoc
+// @Id getCharacterExpeditionLockoutsBulk
+// @Summary Gets CharacterExpeditionLockouts in bulk
+// @Accept json
+// @Produce json
+// @Param Body body BulkFetchByIdsGetRequest true "body"
+// @Tags CharacterExpeditionLockout
+// @Success 200 {array} models.CharacterExpeditionLockout
+// @Failure 500 {string} string "Bad query request"
+// @Router /character_expedition_lockouts/bulk [post]
+func (e *CharacterExpeditionLockoutController) getCharacterExpeditionLockoutsBulk(c echo.Context) error {
+	var results []models.CharacterExpeditionLockout
+
+	r := new(BulkFetchByIdsGetRequest)
+	if err := c.Bind(r); err != nil {
+		return c.JSON(
+			http.StatusInternalServerError,
+			echo.Map{"error": fmt.Sprintf("Error binding to bulk request: [%v]", err)},
+		)
+	}
+
+	if len(r.IDs) == 0 {
+		return c.JSON(
+			http.StatusInternalServerError,
+			echo.Map{"error": fmt.Sprintf("Missing request field data 'ids'")},
+		)
+	}
+
+	err := e.db.QueryContext(models.CharacterExpeditionLockout{}, c).Find(&results, r.IDs).Error
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err})
+	}
+
+	return c.JSON(http.StatusOK, results)
 }

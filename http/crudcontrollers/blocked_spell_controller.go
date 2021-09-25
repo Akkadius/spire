@@ -20,7 +20,7 @@ func NewBlockedSpellController(
 	db *database.DatabaseResolver,
 	logger *logrus.Logger,
 ) *BlockedSpellController {
-	return &BlockedSpellController {
+	return &BlockedSpellController{
 		db:     db,
 		logger: logger,
 	}
@@ -31,6 +31,7 @@ func (e *BlockedSpellController) Routes() []*routes.Route {
 		routes.RegisterRoute(http.MethodDelete, "blocked_spell/:blocked_spell", e.deleteBlockedSpell, nil),
 		routes.RegisterRoute(http.MethodGet, "blocked_spell/:blocked_spell", e.getBlockedSpell, nil),
 		routes.RegisterRoute(http.MethodGet, "blocked_spells", e.listBlockedSpells, nil),
+		routes.RegisterRoute(http.MethodPost, "spells_news/bulk", e.getBlockedSpellsBulk, nil),
 		routes.RegisterRoute(http.MethodPatch, "blocked_spell/:blocked_spell", e.updateBlockedSpell, nil),
 		routes.RegisterRoute(http.MethodPut, "blocked_spell", e.createBlockedSpell, nil),
 	}
@@ -111,7 +112,10 @@ func (e *BlockedSpellController) getBlockedSpell(c echo.Context) error {
 func (e *BlockedSpellController) updateBlockedSpell(c echo.Context) error {
 	blockedSpell := new(models.BlockedSpell)
 	if err := c.Bind(blockedSpell); err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error binding to entity: [%v]", err)})
+		return c.JSON(
+			http.StatusInternalServerError,
+			echo.Map{"error": fmt.Sprintf("Error binding to entity: [%v]", err)},
+		)
 	}
 
 	err := e.db.Get(models.BlockedSpell{}, c).Model(&models.BlockedSpell{}).First(&models.BlockedSpell{}, blockedSpell.ID).Error
@@ -141,12 +145,18 @@ func (e *BlockedSpellController) updateBlockedSpell(c echo.Context) error {
 func (e *BlockedSpellController) createBlockedSpell(c echo.Context) error {
 	blockedSpell := new(models.BlockedSpell)
 	if err := c.Bind(blockedSpell); err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error binding to entity: [%v]", err)})
+		return c.JSON(
+			http.StatusInternalServerError,
+			echo.Map{"error": fmt.Sprintf("Error binding to entity: [%v]", err)},
+		)
 	}
 
 	err := e.db.Get(models.BlockedSpell{}, c).Model(&models.BlockedSpell{}).Create(&blockedSpell).Error
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error inserting entity: [%v]", err)})
+		return c.JSON(
+			http.StatusInternalServerError,
+			echo.Map{"error": fmt.Sprintf("Error inserting entity: [%v]", err)},
+		)
 	}
 
 	return c.JSON(http.StatusOK, blockedSpell)
@@ -182,4 +192,40 @@ func (e *BlockedSpellController) deleteBlockedSpell(c echo.Context) error {
 	}
 
 	return c.JSON(http.StatusOK, echo.Map{"success": "Entity deleted successfully"})
+}
+
+// getBlockedSpellsBulk godoc
+// @Id getBlockedSpellsBulk
+// @Summary Gets BlockedSpells in bulk
+// @Accept json
+// @Produce json
+// @Param Body body BulkFetchByIdsGetRequest true "body"
+// @Tags BlockedSpell
+// @Success 200 {array} models.BlockedSpell
+// @Failure 500 {string} string "Bad query request"
+// @Router /blocked_spells/bulk [post]
+func (e *BlockedSpellController) getBlockedSpellsBulk(c echo.Context) error {
+	var results []models.BlockedSpell
+
+	r := new(BulkFetchByIdsGetRequest)
+	if err := c.Bind(r); err != nil {
+		return c.JSON(
+			http.StatusInternalServerError,
+			echo.Map{"error": fmt.Sprintf("Error binding to bulk request: [%v]", err)},
+		)
+	}
+
+	if len(r.IDs) == 0 {
+		return c.JSON(
+			http.StatusInternalServerError,
+			echo.Map{"error": fmt.Sprintf("Missing request field data 'ids'")},
+		)
+	}
+
+	err := e.db.QueryContext(models.BlockedSpell{}, c).Find(&results, r.IDs).Error
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err})
+	}
+
+	return c.JSON(http.StatusOK, results)
 }

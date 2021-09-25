@@ -20,7 +20,7 @@ func NewGroundSpawnController(
 	db *database.DatabaseResolver,
 	logger *logrus.Logger,
 ) *GroundSpawnController {
-	return &GroundSpawnController {
+	return &GroundSpawnController{
 		db:     db,
 		logger: logger,
 	}
@@ -31,6 +31,7 @@ func (e *GroundSpawnController) Routes() []*routes.Route {
 		routes.RegisterRoute(http.MethodDelete, "ground_spawn/:ground_spawn", e.deleteGroundSpawn, nil),
 		routes.RegisterRoute(http.MethodGet, "ground_spawn/:ground_spawn", e.getGroundSpawn, nil),
 		routes.RegisterRoute(http.MethodGet, "ground_spawns", e.listGroundSpawns, nil),
+		routes.RegisterRoute(http.MethodPost, "spells_news/bulk", e.getGroundSpawnsBulk, nil),
 		routes.RegisterRoute(http.MethodPatch, "ground_spawn/:ground_spawn", e.updateGroundSpawn, nil),
 		routes.RegisterRoute(http.MethodPut, "ground_spawn", e.createGroundSpawn, nil),
 	}
@@ -111,7 +112,10 @@ func (e *GroundSpawnController) getGroundSpawn(c echo.Context) error {
 func (e *GroundSpawnController) updateGroundSpawn(c echo.Context) error {
 	groundSpawn := new(models.GroundSpawn)
 	if err := c.Bind(groundSpawn); err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error binding to entity: [%v]", err)})
+		return c.JSON(
+			http.StatusInternalServerError,
+			echo.Map{"error": fmt.Sprintf("Error binding to entity: [%v]", err)},
+		)
 	}
 
 	err := e.db.Get(models.GroundSpawn{}, c).Model(&models.GroundSpawn{}).First(&models.GroundSpawn{}, groundSpawn.ID).Error
@@ -141,12 +145,18 @@ func (e *GroundSpawnController) updateGroundSpawn(c echo.Context) error {
 func (e *GroundSpawnController) createGroundSpawn(c echo.Context) error {
 	groundSpawn := new(models.GroundSpawn)
 	if err := c.Bind(groundSpawn); err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error binding to entity: [%v]", err)})
+		return c.JSON(
+			http.StatusInternalServerError,
+			echo.Map{"error": fmt.Sprintf("Error binding to entity: [%v]", err)},
+		)
 	}
 
 	err := e.db.Get(models.GroundSpawn{}, c).Model(&models.GroundSpawn{}).Create(&groundSpawn).Error
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error inserting entity: [%v]", err)})
+		return c.JSON(
+			http.StatusInternalServerError,
+			echo.Map{"error": fmt.Sprintf("Error inserting entity: [%v]", err)},
+		)
 	}
 
 	return c.JSON(http.StatusOK, groundSpawn)
@@ -182,4 +192,40 @@ func (e *GroundSpawnController) deleteGroundSpawn(c echo.Context) error {
 	}
 
 	return c.JSON(http.StatusOK, echo.Map{"success": "Entity deleted successfully"})
+}
+
+// getGroundSpawnsBulk godoc
+// @Id getGroundSpawnsBulk
+// @Summary Gets GroundSpawns in bulk
+// @Accept json
+// @Produce json
+// @Param Body body BulkFetchByIdsGetRequest true "body"
+// @Tags GroundSpawn
+// @Success 200 {array} models.GroundSpawn
+// @Failure 500 {string} string "Bad query request"
+// @Router /ground_spawns/bulk [post]
+func (e *GroundSpawnController) getGroundSpawnsBulk(c echo.Context) error {
+	var results []models.GroundSpawn
+
+	r := new(BulkFetchByIdsGetRequest)
+	if err := c.Bind(r); err != nil {
+		return c.JSON(
+			http.StatusInternalServerError,
+			echo.Map{"error": fmt.Sprintf("Error binding to bulk request: [%v]", err)},
+		)
+	}
+
+	if len(r.IDs) == 0 {
+		return c.JSON(
+			http.StatusInternalServerError,
+			echo.Map{"error": fmt.Sprintf("Missing request field data 'ids'")},
+		)
+	}
+
+	err := e.db.QueryContext(models.GroundSpawn{}, c).Find(&results, r.IDs).Error
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err})
+	}
+
+	return c.JSON(http.StatusOK, results)
 }

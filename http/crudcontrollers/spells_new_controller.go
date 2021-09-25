@@ -1,10 +1,10 @@
 package crudcontrollers
 
 import (
-	"fmt"
 	"github.com/Akkadius/spire/database"
 	"github.com/Akkadius/spire/http/routes"
 	"github.com/Akkadius/spire/models"
+	"fmt"
 	"github.com/labstack/echo/v4"
 	"github.com/sirupsen/logrus"
 	"net/http"
@@ -31,7 +31,7 @@ func (e *SpellsNewController) Routes() []*routes.Route {
 		routes.RegisterRoute(http.MethodDelete, "spells_new/:spells_new", e.deleteSpellsNew, nil),
 		routes.RegisterRoute(http.MethodGet, "spells_new/:spells_new", e.getSpellsNew, nil),
 		routes.RegisterRoute(http.MethodGet, "spells_news", e.listSpellsNews, nil),
-		routes.RegisterRoute(http.MethodPost, "spells_news/bulk", e.getSpellsNewBulk, nil),
+		routes.RegisterRoute(http.MethodPost, "spells_news/bulk", e.getSpellsNewsBulk, nil),
 		routes.RegisterRoute(http.MethodPatch, "spells_new/:spells_new", e.updateSpellsNew, nil),
 		routes.RegisterRoute(http.MethodPut, "spells_new", e.createSpellsNew, nil),
 	}
@@ -125,10 +125,7 @@ func (e *SpellsNewController) updateSpellsNew(c echo.Context) error {
 
 	err = e.db.Get(models.SpellsNew{}, c).Model(&models.SpellsNew{}).Updates(&spellsNew).Error
 	if err != nil {
-		return c.JSON(
-			http.StatusInternalServerError,
-			echo.Map{"error": fmt.Sprintf("Error updating entity: [%v]", err)},
-		)
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error updating entity: [%v]", err)})
 	}
 
 	return c.JSON(http.StatusOK, spellsNew)
@@ -197,24 +194,20 @@ func (e *SpellsNewController) deleteSpellsNew(c echo.Context) error {
 	return c.JSON(http.StatusOK, echo.Map{"success": "Entity deleted successfully"})
 }
 
-type BulkSpellsNewGetRequest struct {
-	IDs []int `json:"ids"`
-}
-
-// getSpellsNewBulk godoc
-// @Id getSpellsNewBulk
+// getSpellsNewsBulk godoc
+// @Id getSpellsNewsBulk
 // @Summary Gets SpellsNews in bulk
 // @Accept json
 // @Produce json
-// @Param ids body BulkSpellsNewGetRequest true "ids"
+// @Param Body body BulkFetchByIdsGetRequest true "body"
 // @Tags SpellsNew
 // @Success 200 {array} models.SpellsNew
 // @Failure 500 {string} string "Bad query request"
 // @Router /spells_news/bulk [post]
-func (e *SpellsNewController) getSpellsNewBulk(c echo.Context) error {
+func (e *SpellsNewController) getSpellsNewsBulk(c echo.Context) error {
 	var results []models.SpellsNew
 
-	r := new(BulkSpellsNewGetRequest)
+	r := new(BulkFetchByIdsGetRequest)
 	if err := c.Bind(r); err != nil {
 		return c.JSON(
 			http.StatusInternalServerError,

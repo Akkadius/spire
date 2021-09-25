@@ -378,11 +378,11 @@ export default {
           })
 
           // bulk fetch preload
-          SpireApiClient.v1().post('/spells_news/bulk',
-            {
+          api.getSpellsNewsBulk({
+            body: {
               ids: spellsToPreload
             }
-          ).then((response) => {
+          }).then((response) => {
             if (response.status == 200 && response.data) {
               response.data.forEach((spell) => {
                 Spells.setSpell(spell.id, spell);

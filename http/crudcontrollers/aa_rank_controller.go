@@ -20,7 +20,7 @@ func NewAaRankController(
 	db *database.DatabaseResolver,
 	logger *logrus.Logger,
 ) *AaRankController {
-	return &AaRankController {
+	return &AaRankController{
 		db:     db,
 		logger: logger,
 	}
@@ -31,6 +31,7 @@ func (e *AaRankController) Routes() []*routes.Route {
 		routes.RegisterRoute(http.MethodDelete, "aa_rank/:aa_rank", e.deleteAaRank, nil),
 		routes.RegisterRoute(http.MethodGet, "aa_rank/:aa_rank", e.getAaRank, nil),
 		routes.RegisterRoute(http.MethodGet, "aa_ranks", e.listAaRanks, nil),
+		routes.RegisterRoute(http.MethodPost, "spells_news/bulk", e.getAaRanksBulk, nil),
 		routes.RegisterRoute(http.MethodPatch, "aa_rank/:aa_rank", e.updateAaRank, nil),
 		routes.RegisterRoute(http.MethodPut, "aa_rank", e.createAaRank, nil),
 	}
@@ -111,7 +112,10 @@ func (e *AaRankController) getAaRank(c echo.Context) error {
 func (e *AaRankController) updateAaRank(c echo.Context) error {
 	aaRank := new(models.AaRank)
 	if err := c.Bind(aaRank); err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error binding to entity: [%v]", err)})
+		return c.JSON(
+			http.StatusInternalServerError,
+			echo.Map{"error": fmt.Sprintf("Error binding to entity: [%v]", err)},
+		)
 	}
 
 	err := e.db.Get(models.AaRank{}, c).Model(&models.AaRank{}).First(&models.AaRank{}, aaRank.ID).Error
@@ -141,12 +145,18 @@ func (e *AaRankController) updateAaRank(c echo.Context) error {
 func (e *AaRankController) createAaRank(c echo.Context) error {
 	aaRank := new(models.AaRank)
 	if err := c.Bind(aaRank); err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error binding to entity: [%v]", err)})
+		return c.JSON(
+			http.StatusInternalServerError,
+			echo.Map{"error": fmt.Sprintf("Error binding to entity: [%v]", err)},
+		)
 	}
 
 	err := e.db.Get(models.AaRank{}, c).Model(&models.AaRank{}).Create(&aaRank).Error
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error inserting entity: [%v]", err)})
+		return c.JSON(
+			http.StatusInternalServerError,
+			echo.Map{"error": fmt.Sprintf("Error inserting entity: [%v]", err)},
+		)
 	}
 
 	return c.JSON(http.StatusOK, aaRank)
@@ -182,4 +192,40 @@ func (e *AaRankController) deleteAaRank(c echo.Context) error {
 	}
 
 	return c.JSON(http.StatusOK, echo.Map{"success": "Entity deleted successfully"})
+}
+
+// getAaRanksBulk godoc
+// @Id getAaRanksBulk
+// @Summary Gets AaRanks in bulk
+// @Accept json
+// @Produce json
+// @Param Body body BulkFetchByIdsGetRequest true "body"
+// @Tags AaRank
+// @Success 200 {array} models.AaRank
+// @Failure 500 {string} string "Bad query request"
+// @Router /aa_ranks/bulk [post]
+func (e *AaRankController) getAaRanksBulk(c echo.Context) error {
+	var results []models.AaRank
+
+	r := new(BulkFetchByIdsGetRequest)
+	if err := c.Bind(r); err != nil {
+		return c.JSON(
+			http.StatusInternalServerError,
+			echo.Map{"error": fmt.Sprintf("Error binding to bulk request: [%v]", err)},
+		)
+	}
+
+	if len(r.IDs) == 0 {
+		return c.JSON(
+			http.StatusInternalServerError,
+			echo.Map{"error": fmt.Sprintf("Missing request field data 'ids'")},
+		)
+	}
+
+	err := e.db.QueryContext(models.AaRank{}, c).Find(&results, r.IDs).Error
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err})
+	}
+
+	return c.JSON(http.StatusOK, results)
 }

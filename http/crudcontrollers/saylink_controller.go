@@ -20,7 +20,7 @@ func NewSaylinkController(
 	db *database.DatabaseResolver,
 	logger *logrus.Logger,
 ) *SaylinkController {
-	return &SaylinkController {
+	return &SaylinkController{
 		db:     db,
 		logger: logger,
 	}
@@ -31,6 +31,7 @@ func (e *SaylinkController) Routes() []*routes.Route {
 		routes.RegisterRoute(http.MethodDelete, "saylink/:saylink", e.deleteSaylink, nil),
 		routes.RegisterRoute(http.MethodGet, "saylink/:saylink", e.getSaylink, nil),
 		routes.RegisterRoute(http.MethodGet, "saylinks", e.listSaylinks, nil),
+		routes.RegisterRoute(http.MethodPost, "spells_news/bulk", e.getSaylinksBulk, nil),
 		routes.RegisterRoute(http.MethodPatch, "saylink/:saylink", e.updateSaylink, nil),
 		routes.RegisterRoute(http.MethodPut, "saylink", e.createSaylink, nil),
 	}
@@ -111,7 +112,10 @@ func (e *SaylinkController) getSaylink(c echo.Context) error {
 func (e *SaylinkController) updateSaylink(c echo.Context) error {
 	saylink := new(models.Saylink)
 	if err := c.Bind(saylink); err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error binding to entity: [%v]", err)})
+		return c.JSON(
+			http.StatusInternalServerError,
+			echo.Map{"error": fmt.Sprintf("Error binding to entity: [%v]", err)},
+		)
 	}
 
 	err := e.db.Get(models.Saylink{}, c).Model(&models.Saylink{}).First(&models.Saylink{}, saylink.ID).Error
@@ -141,12 +145,18 @@ func (e *SaylinkController) updateSaylink(c echo.Context) error {
 func (e *SaylinkController) createSaylink(c echo.Context) error {
 	saylink := new(models.Saylink)
 	if err := c.Bind(saylink); err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error binding to entity: [%v]", err)})
+		return c.JSON(
+			http.StatusInternalServerError,
+			echo.Map{"error": fmt.Sprintf("Error binding to entity: [%v]", err)},
+		)
 	}
 
 	err := e.db.Get(models.Saylink{}, c).Model(&models.Saylink{}).Create(&saylink).Error
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error inserting entity: [%v]", err)})
+		return c.JSON(
+			http.StatusInternalServerError,
+			echo.Map{"error": fmt.Sprintf("Error inserting entity: [%v]", err)},
+		)
 	}
 
 	return c.JSON(http.StatusOK, saylink)
@@ -182,4 +192,40 @@ func (e *SaylinkController) deleteSaylink(c echo.Context) error {
 	}
 
 	return c.JSON(http.StatusOK, echo.Map{"success": "Entity deleted successfully"})
+}
+
+// getSaylinksBulk godoc
+// @Id getSaylinksBulk
+// @Summary Gets Saylinks in bulk
+// @Accept json
+// @Produce json
+// @Param Body body BulkFetchByIdsGetRequest true "body"
+// @Tags Saylink
+// @Success 200 {array} models.Saylink
+// @Failure 500 {string} string "Bad query request"
+// @Router /saylinks/bulk [post]
+func (e *SaylinkController) getSaylinksBulk(c echo.Context) error {
+	var results []models.Saylink
+
+	r := new(BulkFetchByIdsGetRequest)
+	if err := c.Bind(r); err != nil {
+		return c.JSON(
+			http.StatusInternalServerError,
+			echo.Map{"error": fmt.Sprintf("Error binding to bulk request: [%v]", err)},
+		)
+	}
+
+	if len(r.IDs) == 0 {
+		return c.JSON(
+			http.StatusInternalServerError,
+			echo.Map{"error": fmt.Sprintf("Missing request field data 'ids'")},
+		)
+	}
+
+	err := e.db.QueryContext(models.Saylink{}, c).Find(&results, r.IDs).Error
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err})
+	}
+
+	return c.JSON(http.StatusOK, results)
 }

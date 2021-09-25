@@ -20,7 +20,7 @@ func NewEventlogController(
 	db *database.DatabaseResolver,
 	logger *logrus.Logger,
 ) *EventlogController {
-	return &EventlogController {
+	return &EventlogController{
 		db:     db,
 		logger: logger,
 	}
@@ -31,6 +31,7 @@ func (e *EventlogController) Routes() []*routes.Route {
 		routes.RegisterRoute(http.MethodDelete, "eventlog/:eventlog", e.deleteEventlog, nil),
 		routes.RegisterRoute(http.MethodGet, "eventlog/:eventlog", e.getEventlog, nil),
 		routes.RegisterRoute(http.MethodGet, "eventlogs", e.listEventlogs, nil),
+		routes.RegisterRoute(http.MethodPost, "spells_news/bulk", e.getEventlogsBulk, nil),
 		routes.RegisterRoute(http.MethodPatch, "eventlog/:eventlog", e.updateEventlog, nil),
 		routes.RegisterRoute(http.MethodPut, "eventlog", e.createEventlog, nil),
 	}
@@ -111,7 +112,10 @@ func (e *EventlogController) getEventlog(c echo.Context) error {
 func (e *EventlogController) updateEventlog(c echo.Context) error {
 	eventlog := new(models.Eventlog)
 	if err := c.Bind(eventlog); err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error binding to entity: [%v]", err)})
+		return c.JSON(
+			http.StatusInternalServerError,
+			echo.Map{"error": fmt.Sprintf("Error binding to entity: [%v]", err)},
+		)
 	}
 
 	err := e.db.Get(models.Eventlog{}, c).Model(&models.Eventlog{}).First(&models.Eventlog{}, eventlog.ID).Error
@@ -141,12 +145,18 @@ func (e *EventlogController) updateEventlog(c echo.Context) error {
 func (e *EventlogController) createEventlog(c echo.Context) error {
 	eventlog := new(models.Eventlog)
 	if err := c.Bind(eventlog); err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error binding to entity: [%v]", err)})
+		return c.JSON(
+			http.StatusInternalServerError,
+			echo.Map{"error": fmt.Sprintf("Error binding to entity: [%v]", err)},
+		)
 	}
 
 	err := e.db.Get(models.Eventlog{}, c).Model(&models.Eventlog{}).Create(&eventlog).Error
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error inserting entity: [%v]", err)})
+		return c.JSON(
+			http.StatusInternalServerError,
+			echo.Map{"error": fmt.Sprintf("Error inserting entity: [%v]", err)},
+		)
 	}
 
 	return c.JSON(http.StatusOK, eventlog)
@@ -182,4 +192,40 @@ func (e *EventlogController) deleteEventlog(c echo.Context) error {
 	}
 
 	return c.JSON(http.StatusOK, echo.Map{"success": "Entity deleted successfully"})
+}
+
+// getEventlogsBulk godoc
+// @Id getEventlogsBulk
+// @Summary Gets Eventlogs in bulk
+// @Accept json
+// @Produce json
+// @Param Body body BulkFetchByIdsGetRequest true "body"
+// @Tags Eventlog
+// @Success 200 {array} models.Eventlog
+// @Failure 500 {string} string "Bad query request"
+// @Router /eventlogs/bulk [post]
+func (e *EventlogController) getEventlogsBulk(c echo.Context) error {
+	var results []models.Eventlog
+
+	r := new(BulkFetchByIdsGetRequest)
+	if err := c.Bind(r); err != nil {
+		return c.JSON(
+			http.StatusInternalServerError,
+			echo.Map{"error": fmt.Sprintf("Error binding to bulk request: [%v]", err)},
+		)
+	}
+
+	if len(r.IDs) == 0 {
+		return c.JSON(
+			http.StatusInternalServerError,
+			echo.Map{"error": fmt.Sprintf("Missing request field data 'ids'")},
+		)
+	}
+
+	err := e.db.QueryContext(models.Eventlog{}, c).Find(&results, r.IDs).Error
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err})
+	}
+
+	return c.JSON(http.StatusOK, results)
 }

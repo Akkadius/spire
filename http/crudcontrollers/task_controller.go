@@ -20,7 +20,7 @@ func NewTaskController(
 	db *database.DatabaseResolver,
 	logger *logrus.Logger,
 ) *TaskController {
-	return &TaskController {
+	return &TaskController{
 		db:     db,
 		logger: logger,
 	}
@@ -31,6 +31,7 @@ func (e *TaskController) Routes() []*routes.Route {
 		routes.RegisterRoute(http.MethodDelete, "task/:task", e.deleteTask, nil),
 		routes.RegisterRoute(http.MethodGet, "task/:task", e.getTask, nil),
 		routes.RegisterRoute(http.MethodGet, "tasks", e.listTasks, nil),
+		routes.RegisterRoute(http.MethodPost, "spells_news/bulk", e.getTasksBulk, nil),
 		routes.RegisterRoute(http.MethodPatch, "task/:task", e.updateTask, nil),
 		routes.RegisterRoute(http.MethodPut, "task", e.createTask, nil),
 	}
@@ -111,7 +112,10 @@ func (e *TaskController) getTask(c echo.Context) error {
 func (e *TaskController) updateTask(c echo.Context) error {
 	task := new(models.Task)
 	if err := c.Bind(task); err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error binding to entity: [%v]", err)})
+		return c.JSON(
+			http.StatusInternalServerError,
+			echo.Map{"error": fmt.Sprintf("Error binding to entity: [%v]", err)},
+		)
 	}
 
 	err := e.db.Get(models.Task{}, c).Model(&models.Task{}).First(&models.Task{}, task.ID).Error
@@ -141,12 +145,18 @@ func (e *TaskController) updateTask(c echo.Context) error {
 func (e *TaskController) createTask(c echo.Context) error {
 	task := new(models.Task)
 	if err := c.Bind(task); err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error binding to entity: [%v]", err)})
+		return c.JSON(
+			http.StatusInternalServerError,
+			echo.Map{"error": fmt.Sprintf("Error binding to entity: [%v]", err)},
+		)
 	}
 
 	err := e.db.Get(models.Task{}, c).Model(&models.Task{}).Create(&task).Error
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error inserting entity: [%v]", err)})
+		return c.JSON(
+			http.StatusInternalServerError,
+			echo.Map{"error": fmt.Sprintf("Error inserting entity: [%v]", err)},
+		)
 	}
 
 	return c.JSON(http.StatusOK, task)
@@ -182,4 +192,40 @@ func (e *TaskController) deleteTask(c echo.Context) error {
 	}
 
 	return c.JSON(http.StatusOK, echo.Map{"success": "Entity deleted successfully"})
+}
+
+// getTasksBulk godoc
+// @Id getTasksBulk
+// @Summary Gets Tasks in bulk
+// @Accept json
+// @Produce json
+// @Param Body body BulkFetchByIdsGetRequest true "body"
+// @Tags Task
+// @Success 200 {array} models.Task
+// @Failure 500 {string} string "Bad query request"
+// @Router /tasks/bulk [post]
+func (e *TaskController) getTasksBulk(c echo.Context) error {
+	var results []models.Task
+
+	r := new(BulkFetchByIdsGetRequest)
+	if err := c.Bind(r); err != nil {
+		return c.JSON(
+			http.StatusInternalServerError,
+			echo.Map{"error": fmt.Sprintf("Error binding to bulk request: [%v]", err)},
+		)
+	}
+
+	if len(r.IDs) == 0 {
+		return c.JSON(
+			http.StatusInternalServerError,
+			echo.Map{"error": fmt.Sprintf("Missing request field data 'ids'")},
+		)
+	}
+
+	err := e.db.QueryContext(models.Task{}, c).Find(&results, r.IDs).Error
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err})
+	}
+
+	return c.JSON(http.StatusOK, results)
 }

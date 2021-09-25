@@ -20,7 +20,7 @@ func NewCharacterItemRecastController(
 	db *database.DatabaseResolver,
 	logger *logrus.Logger,
 ) *CharacterItemRecastController {
-	return &CharacterItemRecastController {
+	return &CharacterItemRecastController{
 		db:     db,
 		logger: logger,
 	}
@@ -31,6 +31,7 @@ func (e *CharacterItemRecastController) Routes() []*routes.Route {
 		routes.RegisterRoute(http.MethodDelete, "character_item_recast/:character_item_recast", e.deleteCharacterItemRecast, nil),
 		routes.RegisterRoute(http.MethodGet, "character_item_recast/:character_item_recast", e.getCharacterItemRecast, nil),
 		routes.RegisterRoute(http.MethodGet, "character_item_recasts", e.listCharacterItemRecasts, nil),
+		routes.RegisterRoute(http.MethodPost, "spells_news/bulk", e.getCharacterItemRecastsBulk, nil),
 		routes.RegisterRoute(http.MethodPatch, "character_item_recast/:character_item_recast", e.updateCharacterItemRecast, nil),
 		routes.RegisterRoute(http.MethodPut, "character_item_recast", e.createCharacterItemRecast, nil),
 	}
@@ -111,7 +112,10 @@ func (e *CharacterItemRecastController) getCharacterItemRecast(c echo.Context) e
 func (e *CharacterItemRecastController) updateCharacterItemRecast(c echo.Context) error {
 	characterItemRecast := new(models.CharacterItemRecast)
 	if err := c.Bind(characterItemRecast); err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error binding to entity: [%v]", err)})
+		return c.JSON(
+			http.StatusInternalServerError,
+			echo.Map{"error": fmt.Sprintf("Error binding to entity: [%v]", err)},
+		)
 	}
 
 	err := e.db.Get(models.CharacterItemRecast{}, c).Model(&models.CharacterItemRecast{}).First(&models.CharacterItemRecast{}, characterItemRecast.ID).Error
@@ -141,12 +145,18 @@ func (e *CharacterItemRecastController) updateCharacterItemRecast(c echo.Context
 func (e *CharacterItemRecastController) createCharacterItemRecast(c echo.Context) error {
 	characterItemRecast := new(models.CharacterItemRecast)
 	if err := c.Bind(characterItemRecast); err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error binding to entity: [%v]", err)})
+		return c.JSON(
+			http.StatusInternalServerError,
+			echo.Map{"error": fmt.Sprintf("Error binding to entity: [%v]", err)},
+		)
 	}
 
 	err := e.db.Get(models.CharacterItemRecast{}, c).Model(&models.CharacterItemRecast{}).Create(&characterItemRecast).Error
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error inserting entity: [%v]", err)})
+		return c.JSON(
+			http.StatusInternalServerError,
+			echo.Map{"error": fmt.Sprintf("Error inserting entity: [%v]", err)},
+		)
 	}
 
 	return c.JSON(http.StatusOK, characterItemRecast)
@@ -182,4 +192,40 @@ func (e *CharacterItemRecastController) deleteCharacterItemRecast(c echo.Context
 	}
 
 	return c.JSON(http.StatusOK, echo.Map{"success": "Entity deleted successfully"})
+}
+
+// getCharacterItemRecastsBulk godoc
+// @Id getCharacterItemRecastsBulk
+// @Summary Gets CharacterItemRecasts in bulk
+// @Accept json
+// @Produce json
+// @Param Body body BulkFetchByIdsGetRequest true "body"
+// @Tags CharacterItemRecast
+// @Success 200 {array} models.CharacterItemRecast
+// @Failure 500 {string} string "Bad query request"
+// @Router /character_item_recasts/bulk [post]
+func (e *CharacterItemRecastController) getCharacterItemRecastsBulk(c echo.Context) error {
+	var results []models.CharacterItemRecast
+
+	r := new(BulkFetchByIdsGetRequest)
+	if err := c.Bind(r); err != nil {
+		return c.JSON(
+			http.StatusInternalServerError,
+			echo.Map{"error": fmt.Sprintf("Error binding to bulk request: [%v]", err)},
+		)
+	}
+
+	if len(r.IDs) == 0 {
+		return c.JSON(
+			http.StatusInternalServerError,
+			echo.Map{"error": fmt.Sprintf("Missing request field data 'ids'")},
+		)
+	}
+
+	err := e.db.QueryContext(models.CharacterItemRecast{}, c).Find(&results, r.IDs).Error
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err})
+	}
+
+	return c.JSON(http.StatusOK, results)
 }
