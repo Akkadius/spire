@@ -47,9 +47,28 @@ const (
 func (gc *GenerateController) Generate() {
 	keyName := ""
 	keys := GetDbSchemaKeysConfigTable(gc.options.EntityName)
+
+	// first pass grab id if it exists
 	for _, key := range keys {
-		if key.OrdinalPosition == "1" {
+		if key.Column == "id" {
 			keyName = strcase.ToCamel(key.Column)
+			break
+		}
+	}
+
+	// second pass if not found
+	if len(keyName) == 0 {
+		for _, key := range keys {
+			fmt.Println(key)
+			if key.ColumnKey.String == "PRI" {
+				keyName = strcase.ToCamel(key.Column)
+				break
+			}
+
+			if key.OrdinalPosition == "1" {
+				keyName = strcase.ToCamel(key.Column)
+				break
+			}
 		}
 	}
 

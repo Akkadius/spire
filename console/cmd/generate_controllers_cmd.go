@@ -3,9 +3,11 @@ package cmd
 import (
 	"fmt"
 	"github.com/Akkadius/spire/generators"
-	"gorm.io/gorm"
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
+	"gorm.io/gorm"
+	"io/ioutil"
+	"os"
 	"strings"
 )
 
@@ -38,6 +40,8 @@ func NewGenerateControllersCommand(db *gorm.DB, logger *logrus.Logger) *Generate
 // Handle implementation of the Command interface
 func (g *GenerateControllersCommand) Handle(_ *cobra.Command, args []string) {
 	//plural := pluralize.NewClient()
+
+	g.writeTypesFile()
 
 	for table, keys := range generators.GetDbSchemaKeysConfig() {
 		if len(args) > 0 && table != args[0] {
@@ -84,4 +88,25 @@ func (g *GenerateControllersCommand) Handle(_ *cobra.Command, args []string) {
 
 func (g *GenerateControllersCommand) Validate(_ *cobra.Command, _ []string) error {
 	return nil
+}
+
+func (g *GenerateControllersCommand) writeTypesFile() {
+	b, err := ioutil.ReadFile("./generators/templates/crud_controller_types.go")
+	if err != nil {
+		g.logger.Fatal(err)
+	}
+
+	// create file
+	file, err := os.Create("./http/crudcontrollers/a_types.go")
+	if err != nil {
+		g.logger.Fatal(err)
+	}
+
+	defer file.Close()
+
+	// write contents
+	_, err = file.WriteString(string(b))
+	if err != nil {
+		g.logger.Fatal(err)
+	}
 }

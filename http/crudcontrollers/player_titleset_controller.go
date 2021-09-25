@@ -20,7 +20,7 @@ func NewPlayerTitlesetController(
 	db *database.DatabaseResolver,
 	logger *logrus.Logger,
 ) *PlayerTitlesetController {
-	return &PlayerTitlesetController {
+	return &PlayerTitlesetController{
 		db:     db,
 		logger: logger,
 	}
@@ -31,6 +31,7 @@ func (e *PlayerTitlesetController) Routes() []*routes.Route {
 		routes.RegisterRoute(http.MethodDelete, "player_titleset/:player_titleset", e.deletePlayerTitleset, nil),
 		routes.RegisterRoute(http.MethodGet, "player_titleset/:player_titleset", e.getPlayerTitleset, nil),
 		routes.RegisterRoute(http.MethodGet, "player_titlesets", e.listPlayerTitlesets, nil),
+		routes.RegisterRoute(http.MethodPost, "spells_news/bulk", e.getPlayerTitlesetsBulk, nil),
 		routes.RegisterRoute(http.MethodPatch, "player_titleset/:player_titleset", e.updatePlayerTitleset, nil),
 		routes.RegisterRoute(http.MethodPut, "player_titleset", e.createPlayerTitleset, nil),
 	}
@@ -111,7 +112,10 @@ func (e *PlayerTitlesetController) getPlayerTitleset(c echo.Context) error {
 func (e *PlayerTitlesetController) updatePlayerTitleset(c echo.Context) error {
 	playerTitleset := new(models.PlayerTitleset)
 	if err := c.Bind(playerTitleset); err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error binding to entity: [%v]", err)})
+		return c.JSON(
+			http.StatusInternalServerError,
+			echo.Map{"error": fmt.Sprintf("Error binding to entity: [%v]", err)},
+		)
 	}
 
 	err := e.db.Get(models.PlayerTitleset{}, c).Model(&models.PlayerTitleset{}).First(&models.PlayerTitleset{}, playerTitleset.ID).Error
@@ -141,12 +145,18 @@ func (e *PlayerTitlesetController) updatePlayerTitleset(c echo.Context) error {
 func (e *PlayerTitlesetController) createPlayerTitleset(c echo.Context) error {
 	playerTitleset := new(models.PlayerTitleset)
 	if err := c.Bind(playerTitleset); err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error binding to entity: [%v]", err)})
+		return c.JSON(
+			http.StatusInternalServerError,
+			echo.Map{"error": fmt.Sprintf("Error binding to entity: [%v]", err)},
+		)
 	}
 
 	err := e.db.Get(models.PlayerTitleset{}, c).Model(&models.PlayerTitleset{}).Create(&playerTitleset).Error
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error inserting entity: [%v]", err)})
+		return c.JSON(
+			http.StatusInternalServerError,
+			echo.Map{"error": fmt.Sprintf("Error inserting entity: [%v]", err)},
+		)
 	}
 
 	return c.JSON(http.StatusOK, playerTitleset)
@@ -182,4 +192,40 @@ func (e *PlayerTitlesetController) deletePlayerTitleset(c echo.Context) error {
 	}
 
 	return c.JSON(http.StatusOK, echo.Map{"success": "Entity deleted successfully"})
+}
+
+// getPlayerTitlesetsBulk godoc
+// @Id getPlayerTitlesetsBulk
+// @Summary Gets PlayerTitlesets in bulk
+// @Accept json
+// @Produce json
+// @Param Body body BulkFetchByIdsGetRequest true "body"
+// @Tags PlayerTitleset
+// @Success 200 {array} models.PlayerTitleset
+// @Failure 500 {string} string "Bad query request"
+// @Router /player_titlesets/bulk [post]
+func (e *PlayerTitlesetController) getPlayerTitlesetsBulk(c echo.Context) error {
+	var results []models.PlayerTitleset
+
+	r := new(BulkFetchByIdsGetRequest)
+	if err := c.Bind(r); err != nil {
+		return c.JSON(
+			http.StatusInternalServerError,
+			echo.Map{"error": fmt.Sprintf("Error binding to bulk request: [%v]", err)},
+		)
+	}
+
+	if len(r.IDs) == 0 {
+		return c.JSON(
+			http.StatusInternalServerError,
+			echo.Map{"error": fmt.Sprintf("Missing request field data 'ids'")},
+		)
+	}
+
+	err := e.db.QueryContext(models.PlayerTitleset{}, c).Find(&results, r.IDs).Error
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err})
+	}
+
+	return c.JSON(http.StatusOK, results)
 }

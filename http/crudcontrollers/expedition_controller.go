@@ -20,7 +20,7 @@ func NewExpeditionController(
 	db *database.DatabaseResolver,
 	logger *logrus.Logger,
 ) *ExpeditionController {
-	return &ExpeditionController {
+	return &ExpeditionController{
 		db:     db,
 		logger: logger,
 	}
@@ -31,6 +31,7 @@ func (e *ExpeditionController) Routes() []*routes.Route {
 		routes.RegisterRoute(http.MethodDelete, "expedition/:expedition", e.deleteExpedition, nil),
 		routes.RegisterRoute(http.MethodGet, "expedition/:expedition", e.getExpedition, nil),
 		routes.RegisterRoute(http.MethodGet, "expeditions", e.listExpeditions, nil),
+		routes.RegisterRoute(http.MethodPost, "spells_news/bulk", e.getExpeditionsBulk, nil),
 		routes.RegisterRoute(http.MethodPatch, "expedition/:expedition", e.updateExpedition, nil),
 		routes.RegisterRoute(http.MethodPut, "expedition", e.createExpedition, nil),
 	}
@@ -111,7 +112,10 @@ func (e *ExpeditionController) getExpedition(c echo.Context) error {
 func (e *ExpeditionController) updateExpedition(c echo.Context) error {
 	expedition := new(models.Expedition)
 	if err := c.Bind(expedition); err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error binding to entity: [%v]", err)})
+		return c.JSON(
+			http.StatusInternalServerError,
+			echo.Map{"error": fmt.Sprintf("Error binding to entity: [%v]", err)},
+		)
 	}
 
 	err := e.db.Get(models.Expedition{}, c).Model(&models.Expedition{}).First(&models.Expedition{}, expedition.ID).Error
@@ -141,12 +145,18 @@ func (e *ExpeditionController) updateExpedition(c echo.Context) error {
 func (e *ExpeditionController) createExpedition(c echo.Context) error {
 	expedition := new(models.Expedition)
 	if err := c.Bind(expedition); err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error binding to entity: [%v]", err)})
+		return c.JSON(
+			http.StatusInternalServerError,
+			echo.Map{"error": fmt.Sprintf("Error binding to entity: [%v]", err)},
+		)
 	}
 
 	err := e.db.Get(models.Expedition{}, c).Model(&models.Expedition{}).Create(&expedition).Error
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error inserting entity: [%v]", err)})
+		return c.JSON(
+			http.StatusInternalServerError,
+			echo.Map{"error": fmt.Sprintf("Error inserting entity: [%v]", err)},
+		)
 	}
 
 	return c.JSON(http.StatusOK, expedition)
@@ -182,4 +192,40 @@ func (e *ExpeditionController) deleteExpedition(c echo.Context) error {
 	}
 
 	return c.JSON(http.StatusOK, echo.Map{"success": "Entity deleted successfully"})
+}
+
+// getExpeditionsBulk godoc
+// @Id getExpeditionsBulk
+// @Summary Gets Expeditions in bulk
+// @Accept json
+// @Produce json
+// @Param Body body BulkFetchByIdsGetRequest true "body"
+// @Tags Expedition
+// @Success 200 {array} models.Expedition
+// @Failure 500 {string} string "Bad query request"
+// @Router /expeditions/bulk [post]
+func (e *ExpeditionController) getExpeditionsBulk(c echo.Context) error {
+	var results []models.Expedition
+
+	r := new(BulkFetchByIdsGetRequest)
+	if err := c.Bind(r); err != nil {
+		return c.JSON(
+			http.StatusInternalServerError,
+			echo.Map{"error": fmt.Sprintf("Error binding to bulk request: [%v]", err)},
+		)
+	}
+
+	if len(r.IDs) == 0 {
+		return c.JSON(
+			http.StatusInternalServerError,
+			echo.Map{"error": fmt.Sprintf("Missing request field data 'ids'")},
+		)
+	}
+
+	err := e.db.QueryContext(models.Expedition{}, c).Find(&results, r.IDs).Error
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err})
+	}
+
+	return c.JSON(http.StatusOK, results)
 }

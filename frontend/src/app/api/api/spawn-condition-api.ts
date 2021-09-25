@@ -19,6 +19,8 @@ import { Configuration } from '../configuration';
 // @ts-ignore
 import { BASE_PATH, COLLECTION_FORMATS, RequestArgs, BaseAPI, RequiredError } from '../base';
 // @ts-ignore
+import { CrudcontrollersBulkFetchByIdsGetRequest } from '../models';
+// @ts-ignore
 import { ModelsSpawnCondition } from '../models';
 /**
  * SpawnConditionApi - axios parameter creator
@@ -175,9 +177,61 @@ export const SpawnConditionApiAxiosParamCreator = function (configuration?: Conf
         },
         /**
          * 
+         * @summary Gets SpawnConditions in bulk
+         * @param {CrudcontrollersBulkFetchByIdsGetRequest} body body
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getSpawnConditionsBulk: async (body: CrudcontrollersBulkFetchByIdsGetRequest, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'body' is not null or undefined
+            if (body === null || body === undefined) {
+                throw new RequiredError('body','Required parameter body was null or undefined when calling getSpawnConditionsBulk.');
+            }
+            const localVarPath = `/spawn_conditions/bulk`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, 'https://example.com');
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            const queryParameters = new URLSearchParams(localVarUrlObj.search);
+            for (const key in localVarQueryParameter) {
+                queryParameters.set(key, localVarQueryParameter[key]);
+            }
+            for (const key in options.query) {
+                queryParameters.set(key, options.query[key]);
+            }
+            localVarUrlObj.search = (new URLSearchParams(queryParameters)).toString();
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            const nonString = typeof body !== 'string';
+            const needsSerialization = nonString && configuration && configuration.isJsonMime
+                ? configuration.isJsonMime(localVarRequestOptions.headers['Content-Type'])
+                : nonString;
+            localVarRequestOptions.data =  needsSerialization
+                ? JSON.stringify(body !== undefined ? body : {})
+                : (body || "");
+
+            return {
+                url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
          * @summary Lists SpawnConditions
          * @param {string} [includes] Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names 
          * @param {string} [where] Filter on specific fields. Multiple conditions [.] separated Example: col_like_value.col2__val2
+         * @param {string} [whereOr] Filter on specific fields (Chained ors). Multiple conditions [.] separated Example: col_like_value.col2__val2
          * @param {string} [limit] Rows to limit in response (Default: 10,000)
          * @param {string} [orderBy] Order by [field]
          * @param {string} [orderDirection] Order by field direction
@@ -185,7 +239,7 @@ export const SpawnConditionApiAxiosParamCreator = function (configuration?: Conf
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        listSpawnConditions: async (includes?: string, where?: string, limit?: string, orderBy?: string, orderDirection?: string, select?: string, options: any = {}): Promise<RequestArgs> => {
+        listSpawnConditions: async (includes?: string, where?: string, whereOr?: string, limit?: string, orderBy?: string, orderDirection?: string, select?: string, options: any = {}): Promise<RequestArgs> => {
             const localVarPath = `/spawn_conditions`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, 'https://example.com');
@@ -204,6 +258,10 @@ export const SpawnConditionApiAxiosParamCreator = function (configuration?: Conf
 
             if (where !== undefined) {
                 localVarQueryParameter['where'] = where;
+            }
+
+            if (whereOr !== undefined) {
+                localVarQueryParameter['whereOr'] = whereOr;
             }
 
             if (limit !== undefined) {
@@ -352,9 +410,24 @@ export const SpawnConditionApiFp = function(configuration?: Configuration) {
         },
         /**
          * 
+         * @summary Gets SpawnConditions in bulk
+         * @param {CrudcontrollersBulkFetchByIdsGetRequest} body body
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async getSpawnConditionsBulk(body: CrudcontrollersBulkFetchByIdsGetRequest, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<ModelsSpawnCondition>>> {
+            const localVarAxiosArgs = await SpawnConditionApiAxiosParamCreator(configuration).getSpawnConditionsBulk(body, options);
+            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
+                const axiosRequestArgs = {...localVarAxiosArgs.options, url: (configuration?.basePath || basePath) + localVarAxiosArgs.url};
+                return axios.request(axiosRequestArgs);
+            };
+        },
+        /**
+         * 
          * @summary Lists SpawnConditions
          * @param {string} [includes] Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names 
          * @param {string} [where] Filter on specific fields. Multiple conditions [.] separated Example: col_like_value.col2__val2
+         * @param {string} [whereOr] Filter on specific fields (Chained ors). Multiple conditions [.] separated Example: col_like_value.col2__val2
          * @param {string} [limit] Rows to limit in response (Default: 10,000)
          * @param {string} [orderBy] Order by [field]
          * @param {string} [orderDirection] Order by field direction
@@ -362,8 +435,8 @@ export const SpawnConditionApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async listSpawnConditions(includes?: string, where?: string, limit?: string, orderBy?: string, orderDirection?: string, select?: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<ModelsSpawnCondition>>> {
-            const localVarAxiosArgs = await SpawnConditionApiAxiosParamCreator(configuration).listSpawnConditions(includes, where, limit, orderBy, orderDirection, select, options);
+        async listSpawnConditions(includes?: string, where?: string, whereOr?: string, limit?: string, orderBy?: string, orderDirection?: string, select?: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<ModelsSpawnCondition>>> {
+            const localVarAxiosArgs = await SpawnConditionApiAxiosParamCreator(configuration).listSpawnConditions(includes, where, whereOr, limit, orderBy, orderDirection, select, options);
             return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
                 const axiosRequestArgs = {...localVarAxiosArgs.options, url: (configuration?.basePath || basePath) + localVarAxiosArgs.url};
                 return axios.request(axiosRequestArgs);
@@ -427,9 +500,20 @@ export const SpawnConditionApiFactory = function (configuration?: Configuration,
         },
         /**
          * 
+         * @summary Gets SpawnConditions in bulk
+         * @param {CrudcontrollersBulkFetchByIdsGetRequest} body body
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getSpawnConditionsBulk(body: CrudcontrollersBulkFetchByIdsGetRequest, options?: any): AxiosPromise<Array<ModelsSpawnCondition>> {
+            return SpawnConditionApiFp(configuration).getSpawnConditionsBulk(body, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
          * @summary Lists SpawnConditions
          * @param {string} [includes] Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names 
          * @param {string} [where] Filter on specific fields. Multiple conditions [.] separated Example: col_like_value.col2__val2
+         * @param {string} [whereOr] Filter on specific fields (Chained ors). Multiple conditions [.] separated Example: col_like_value.col2__val2
          * @param {string} [limit] Rows to limit in response (Default: 10,000)
          * @param {string} [orderBy] Order by [field]
          * @param {string} [orderDirection] Order by field direction
@@ -437,8 +521,8 @@ export const SpawnConditionApiFactory = function (configuration?: Configuration,
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        listSpawnConditions(includes?: string, where?: string, limit?: string, orderBy?: string, orderDirection?: string, select?: string, options?: any): AxiosPromise<Array<ModelsSpawnCondition>> {
-            return SpawnConditionApiFp(configuration).listSpawnConditions(includes, where, limit, orderBy, orderDirection, select, options).then((request) => request(axios, basePath));
+        listSpawnConditions(includes?: string, where?: string, whereOr?: string, limit?: string, orderBy?: string, orderDirection?: string, select?: string, options?: any): AxiosPromise<Array<ModelsSpawnCondition>> {
+            return SpawnConditionApiFp(configuration).listSpawnConditions(includes, where, whereOr, limit, orderBy, orderDirection, select, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -511,6 +595,20 @@ export interface SpawnConditionApiGetSpawnConditionRequest {
 }
 
 /**
+ * Request parameters for getSpawnConditionsBulk operation in SpawnConditionApi.
+ * @export
+ * @interface SpawnConditionApiGetSpawnConditionsBulkRequest
+ */
+export interface SpawnConditionApiGetSpawnConditionsBulkRequest {
+    /**
+     * body
+     * @type {CrudcontrollersBulkFetchByIdsGetRequest}
+     * @memberof SpawnConditionApiGetSpawnConditionsBulk
+     */
+    readonly body: CrudcontrollersBulkFetchByIdsGetRequest
+}
+
+/**
  * Request parameters for listSpawnConditions operation in SpawnConditionApi.
  * @export
  * @interface SpawnConditionApiListSpawnConditionsRequest
@@ -529,6 +627,13 @@ export interface SpawnConditionApiListSpawnConditionsRequest {
      * @memberof SpawnConditionApiListSpawnConditions
      */
     readonly where?: string
+
+    /**
+     * Filter on specific fields (Chained ors). Multiple conditions [.] separated Example: col_like_value.col2__val2
+     * @type {string}
+     * @memberof SpawnConditionApiListSpawnConditions
+     */
+    readonly whereOr?: string
 
     /**
      * Rows to limit in response (Default: 10,000)
@@ -625,6 +730,18 @@ export class SpawnConditionApi extends BaseAPI {
 
     /**
      * 
+     * @summary Gets SpawnConditions in bulk
+     * @param {SpawnConditionApiGetSpawnConditionsBulkRequest} requestParameters Request parameters.
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof SpawnConditionApi
+     */
+    public getSpawnConditionsBulk(requestParameters: SpawnConditionApiGetSpawnConditionsBulkRequest, options?: any) {
+        return SpawnConditionApiFp(this.configuration).getSpawnConditionsBulk(requestParameters.body, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
      * @summary Lists SpawnConditions
      * @param {SpawnConditionApiListSpawnConditionsRequest} requestParameters Request parameters.
      * @param {*} [options] Override http request option.
@@ -632,7 +749,7 @@ export class SpawnConditionApi extends BaseAPI {
      * @memberof SpawnConditionApi
      */
     public listSpawnConditions(requestParameters: SpawnConditionApiListSpawnConditionsRequest = {}, options?: any) {
-        return SpawnConditionApiFp(this.configuration).listSpawnConditions(requestParameters.includes, requestParameters.where, requestParameters.limit, requestParameters.orderBy, requestParameters.orderDirection, requestParameters.select, options).then((request) => request(this.axios, this.basePath));
+        return SpawnConditionApiFp(this.configuration).listSpawnConditions(requestParameters.includes, requestParameters.where, requestParameters.whereOr, requestParameters.limit, requestParameters.orderBy, requestParameters.orderDirection, requestParameters.select, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**

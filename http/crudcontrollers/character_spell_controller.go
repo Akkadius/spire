@@ -20,7 +20,7 @@ func NewCharacterSpellController(
 	db *database.DatabaseResolver,
 	logger *logrus.Logger,
 ) *CharacterSpellController {
-	return &CharacterSpellController {
+	return &CharacterSpellController{
 		db:     db,
 		logger: logger,
 	}
@@ -31,6 +31,7 @@ func (e *CharacterSpellController) Routes() []*routes.Route {
 		routes.RegisterRoute(http.MethodDelete, "character_spell/:character_spell", e.deleteCharacterSpell, nil),
 		routes.RegisterRoute(http.MethodGet, "character_spell/:character_spell", e.getCharacterSpell, nil),
 		routes.RegisterRoute(http.MethodGet, "character_spells", e.listCharacterSpells, nil),
+		routes.RegisterRoute(http.MethodPost, "spells_news/bulk", e.getCharacterSpellsBulk, nil),
 		routes.RegisterRoute(http.MethodPatch, "character_spell/:character_spell", e.updateCharacterSpell, nil),
 		routes.RegisterRoute(http.MethodPut, "character_spell", e.createCharacterSpell, nil),
 	}
@@ -111,7 +112,10 @@ func (e *CharacterSpellController) getCharacterSpell(c echo.Context) error {
 func (e *CharacterSpellController) updateCharacterSpell(c echo.Context) error {
 	characterSpell := new(models.CharacterSpell)
 	if err := c.Bind(characterSpell); err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error binding to entity: [%v]", err)})
+		return c.JSON(
+			http.StatusInternalServerError,
+			echo.Map{"error": fmt.Sprintf("Error binding to entity: [%v]", err)},
+		)
 	}
 
 	err := e.db.Get(models.CharacterSpell{}, c).Model(&models.CharacterSpell{}).First(&models.CharacterSpell{}, characterSpell.ID).Error
@@ -141,12 +145,18 @@ func (e *CharacterSpellController) updateCharacterSpell(c echo.Context) error {
 func (e *CharacterSpellController) createCharacterSpell(c echo.Context) error {
 	characterSpell := new(models.CharacterSpell)
 	if err := c.Bind(characterSpell); err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error binding to entity: [%v]", err)})
+		return c.JSON(
+			http.StatusInternalServerError,
+			echo.Map{"error": fmt.Sprintf("Error binding to entity: [%v]", err)},
+		)
 	}
 
 	err := e.db.Get(models.CharacterSpell{}, c).Model(&models.CharacterSpell{}).Create(&characterSpell).Error
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error inserting entity: [%v]", err)})
+		return c.JSON(
+			http.StatusInternalServerError,
+			echo.Map{"error": fmt.Sprintf("Error inserting entity: [%v]", err)},
+		)
 	}
 
 	return c.JSON(http.StatusOK, characterSpell)
@@ -182,4 +192,40 @@ func (e *CharacterSpellController) deleteCharacterSpell(c echo.Context) error {
 	}
 
 	return c.JSON(http.StatusOK, echo.Map{"success": "Entity deleted successfully"})
+}
+
+// getCharacterSpellsBulk godoc
+// @Id getCharacterSpellsBulk
+// @Summary Gets CharacterSpells in bulk
+// @Accept json
+// @Produce json
+// @Param Body body BulkFetchByIdsGetRequest true "body"
+// @Tags CharacterSpell
+// @Success 200 {array} models.CharacterSpell
+// @Failure 500 {string} string "Bad query request"
+// @Router /character_spells/bulk [post]
+func (e *CharacterSpellController) getCharacterSpellsBulk(c echo.Context) error {
+	var results []models.CharacterSpell
+
+	r := new(BulkFetchByIdsGetRequest)
+	if err := c.Bind(r); err != nil {
+		return c.JSON(
+			http.StatusInternalServerError,
+			echo.Map{"error": fmt.Sprintf("Error binding to bulk request: [%v]", err)},
+		)
+	}
+
+	if len(r.IDs) == 0 {
+		return c.JSON(
+			http.StatusInternalServerError,
+			echo.Map{"error": fmt.Sprintf("Missing request field data 'ids'")},
+		)
+	}
+
+	err := e.db.QueryContext(models.CharacterSpell{}, c).Find(&results, r.IDs).Error
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err})
+	}
+
+	return c.JSON(http.StatusOK, results)
 }

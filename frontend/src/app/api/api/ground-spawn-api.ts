@@ -19,6 +19,8 @@ import { Configuration } from '../configuration';
 // @ts-ignore
 import { BASE_PATH, COLLECTION_FORMATS, RequestArgs, BaseAPI, RequiredError } from '../base';
 // @ts-ignore
+import { CrudcontrollersBulkFetchByIdsGetRequest } from '../models';
+// @ts-ignore
 import { ModelsGroundSpawn } from '../models';
 /**
  * GroundSpawnApi - axios parameter creator
@@ -167,6 +169,57 @@ export const GroundSpawnApiAxiosParamCreator = function (configuration?: Configu
             localVarUrlObj.search = (new URLSearchParams(queryParameters)).toString();
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @summary Gets GroundSpawns in bulk
+         * @param {CrudcontrollersBulkFetchByIdsGetRequest} body body
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getGroundSpawnsBulk: async (body: CrudcontrollersBulkFetchByIdsGetRequest, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'body' is not null or undefined
+            if (body === null || body === undefined) {
+                throw new RequiredError('body','Required parameter body was null or undefined when calling getGroundSpawnsBulk.');
+            }
+            const localVarPath = `/ground_spawns/bulk`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, 'https://example.com');
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            const queryParameters = new URLSearchParams(localVarUrlObj.search);
+            for (const key in localVarQueryParameter) {
+                queryParameters.set(key, localVarQueryParameter[key]);
+            }
+            for (const key in options.query) {
+                queryParameters.set(key, options.query[key]);
+            }
+            localVarUrlObj.search = (new URLSearchParams(queryParameters)).toString();
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            const nonString = typeof body !== 'string';
+            const needsSerialization = nonString && configuration && configuration.isJsonMime
+                ? configuration.isJsonMime(localVarRequestOptions.headers['Content-Type'])
+                : nonString;
+            localVarRequestOptions.data =  needsSerialization
+                ? JSON.stringify(body !== undefined ? body : {})
+                : (body || "");
 
             return {
                 url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
@@ -357,6 +410,20 @@ export const GroundSpawnApiFp = function(configuration?: Configuration) {
         },
         /**
          * 
+         * @summary Gets GroundSpawns in bulk
+         * @param {CrudcontrollersBulkFetchByIdsGetRequest} body body
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async getGroundSpawnsBulk(body: CrudcontrollersBulkFetchByIdsGetRequest, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<ModelsGroundSpawn>>> {
+            const localVarAxiosArgs = await GroundSpawnApiAxiosParamCreator(configuration).getGroundSpawnsBulk(body, options);
+            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
+                const axiosRequestArgs = {...localVarAxiosArgs.options, url: (configuration?.basePath || basePath) + localVarAxiosArgs.url};
+                return axios.request(axiosRequestArgs);
+            };
+        },
+        /**
+         * 
          * @summary Lists GroundSpawns
          * @param {string} [includes] Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names 
          * @param {string} [where] Filter on specific fields. Multiple conditions [.] separated Example: col_like_value.col2__val2
@@ -430,6 +497,16 @@ export const GroundSpawnApiFactory = function (configuration?: Configuration, ba
          */
         getGroundSpawn(id: number, includes?: string, select?: string, options?: any): AxiosPromise<Array<ModelsGroundSpawn>> {
             return GroundSpawnApiFp(configuration).getGroundSpawn(id, includes, select, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @summary Gets GroundSpawns in bulk
+         * @param {CrudcontrollersBulkFetchByIdsGetRequest} body body
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getGroundSpawnsBulk(body: CrudcontrollersBulkFetchByIdsGetRequest, options?: any): AxiosPromise<Array<ModelsGroundSpawn>> {
+            return GroundSpawnApiFp(configuration).getGroundSpawnsBulk(body, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -515,6 +592,20 @@ export interface GroundSpawnApiGetGroundSpawnRequest {
      * @memberof GroundSpawnApiGetGroundSpawn
      */
     readonly select?: string
+}
+
+/**
+ * Request parameters for getGroundSpawnsBulk operation in GroundSpawnApi.
+ * @export
+ * @interface GroundSpawnApiGetGroundSpawnsBulkRequest
+ */
+export interface GroundSpawnApiGetGroundSpawnsBulkRequest {
+    /**
+     * body
+     * @type {CrudcontrollersBulkFetchByIdsGetRequest}
+     * @memberof GroundSpawnApiGetGroundSpawnsBulk
+     */
+    readonly body: CrudcontrollersBulkFetchByIdsGetRequest
 }
 
 /**
@@ -635,6 +726,18 @@ export class GroundSpawnApi extends BaseAPI {
      */
     public getGroundSpawn(requestParameters: GroundSpawnApiGetGroundSpawnRequest, options?: any) {
         return GroundSpawnApiFp(this.configuration).getGroundSpawn(requestParameters.id, requestParameters.includes, requestParameters.select, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @summary Gets GroundSpawns in bulk
+     * @param {GroundSpawnApiGetGroundSpawnsBulkRequest} requestParameters Request parameters.
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof GroundSpawnApi
+     */
+    public getGroundSpawnsBulk(requestParameters: GroundSpawnApiGetGroundSpawnsBulkRequest, options?: any) {
+        return GroundSpawnApiFp(this.configuration).getGroundSpawnsBulk(requestParameters.body, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**

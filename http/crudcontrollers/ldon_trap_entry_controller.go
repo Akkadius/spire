@@ -20,7 +20,7 @@ func NewLdonTrapEntryController(
 	db *database.DatabaseResolver,
 	logger *logrus.Logger,
 ) *LdonTrapEntryController {
-	return &LdonTrapEntryController {
+	return &LdonTrapEntryController{
 		db:     db,
 		logger: logger,
 	}
@@ -31,6 +31,7 @@ func (e *LdonTrapEntryController) Routes() []*routes.Route {
 		routes.RegisterRoute(http.MethodDelete, "ldon_trap_entry/:ldon_trap_entry", e.deleteLdonTrapEntry, nil),
 		routes.RegisterRoute(http.MethodGet, "ldon_trap_entry/:ldon_trap_entry", e.getLdonTrapEntry, nil),
 		routes.RegisterRoute(http.MethodGet, "ldon_trap_entries", e.listLdonTrapEntries, nil),
+		routes.RegisterRoute(http.MethodPost, "spells_news/bulk", e.getLdonTrapEntriesBulk, nil),
 		routes.RegisterRoute(http.MethodPatch, "ldon_trap_entry/:ldon_trap_entry", e.updateLdonTrapEntry, nil),
 		routes.RegisterRoute(http.MethodPut, "ldon_trap_entry", e.createLdonTrapEntry, nil),
 	}
@@ -111,7 +112,10 @@ func (e *LdonTrapEntryController) getLdonTrapEntry(c echo.Context) error {
 func (e *LdonTrapEntryController) updateLdonTrapEntry(c echo.Context) error {
 	ldonTrapEntry := new(models.LdonTrapEntry)
 	if err := c.Bind(ldonTrapEntry); err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error binding to entity: [%v]", err)})
+		return c.JSON(
+			http.StatusInternalServerError,
+			echo.Map{"error": fmt.Sprintf("Error binding to entity: [%v]", err)},
+		)
 	}
 
 	err := e.db.Get(models.LdonTrapEntry{}, c).Model(&models.LdonTrapEntry{}).First(&models.LdonTrapEntry{}, ldonTrapEntry.ID).Error
@@ -141,12 +145,18 @@ func (e *LdonTrapEntryController) updateLdonTrapEntry(c echo.Context) error {
 func (e *LdonTrapEntryController) createLdonTrapEntry(c echo.Context) error {
 	ldonTrapEntry := new(models.LdonTrapEntry)
 	if err := c.Bind(ldonTrapEntry); err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error binding to entity: [%v]", err)})
+		return c.JSON(
+			http.StatusInternalServerError,
+			echo.Map{"error": fmt.Sprintf("Error binding to entity: [%v]", err)},
+		)
 	}
 
 	err := e.db.Get(models.LdonTrapEntry{}, c).Model(&models.LdonTrapEntry{}).Create(&ldonTrapEntry).Error
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error inserting entity: [%v]", err)})
+		return c.JSON(
+			http.StatusInternalServerError,
+			echo.Map{"error": fmt.Sprintf("Error inserting entity: [%v]", err)},
+		)
 	}
 
 	return c.JSON(http.StatusOK, ldonTrapEntry)
@@ -182,4 +192,40 @@ func (e *LdonTrapEntryController) deleteLdonTrapEntry(c echo.Context) error {
 	}
 
 	return c.JSON(http.StatusOK, echo.Map{"success": "Entity deleted successfully"})
+}
+
+// getLdonTrapEntriesBulk godoc
+// @Id getLdonTrapEntriesBulk
+// @Summary Gets LdonTrapEntries in bulk
+// @Accept json
+// @Produce json
+// @Param Body body BulkFetchByIdsGetRequest true "body"
+// @Tags LdonTrapEntry
+// @Success 200 {array} models.LdonTrapEntry
+// @Failure 500 {string} string "Bad query request"
+// @Router /ldon_trap_entries/bulk [post]
+func (e *LdonTrapEntryController) getLdonTrapEntriesBulk(c echo.Context) error {
+	var results []models.LdonTrapEntry
+
+	r := new(BulkFetchByIdsGetRequest)
+	if err := c.Bind(r); err != nil {
+		return c.JSON(
+			http.StatusInternalServerError,
+			echo.Map{"error": fmt.Sprintf("Error binding to bulk request: [%v]", err)},
+		)
+	}
+
+	if len(r.IDs) == 0 {
+		return c.JSON(
+			http.StatusInternalServerError,
+			echo.Map{"error": fmt.Sprintf("Missing request field data 'ids'")},
+		)
+	}
+
+	err := e.db.QueryContext(models.LdonTrapEntry{}, c).Find(&results, r.IDs).Error
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err})
+	}
+
+	return c.JSON(http.StatusOK, results)
 }

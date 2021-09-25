@@ -19,6 +19,8 @@ import { Configuration } from '../configuration';
 // @ts-ignore
 import { BASE_PATH, COLLECTION_FORMATS, RequestArgs, BaseAPI, RequiredError } from '../base';
 // @ts-ignore
+import { CrudcontrollersBulkFetchByIdsGetRequest } from '../models';
+// @ts-ignore
 import { ModelsTradeskillRecipeEntry } from '../models';
 /**
  * TradeskillRecipeEntryApi - axios parameter creator
@@ -114,6 +116,57 @@ export const TradeskillRecipeEntryApiAxiosParamCreator = function (configuration
             localVarUrlObj.search = (new URLSearchParams(queryParameters)).toString();
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @summary Gets TradeskillRecipeEntries in bulk
+         * @param {CrudcontrollersBulkFetchByIdsGetRequest} body body
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getTradeskillRecipeEntriesBulk: async (body: CrudcontrollersBulkFetchByIdsGetRequest, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'body' is not null or undefined
+            if (body === null || body === undefined) {
+                throw new RequiredError('body','Required parameter body was null or undefined when calling getTradeskillRecipeEntriesBulk.');
+            }
+            const localVarPath = `/tradeskill_recipe_entries/bulk`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, 'https://example.com');
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            const queryParameters = new URLSearchParams(localVarUrlObj.search);
+            for (const key in localVarQueryParameter) {
+                queryParameters.set(key, localVarQueryParameter[key]);
+            }
+            for (const key in options.query) {
+                queryParameters.set(key, options.query[key]);
+            }
+            localVarUrlObj.search = (new URLSearchParams(queryParameters)).toString();
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            const nonString = typeof body !== 'string';
+            const needsSerialization = nonString && configuration && configuration.isJsonMime
+                ? configuration.isJsonMime(localVarRequestOptions.headers['Content-Type'])
+                : nonString;
+            localVarRequestOptions.data =  needsSerialization
+                ? JSON.stringify(body !== undefined ? body : {})
+                : (body || "");
 
             return {
                 url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
@@ -341,6 +394,20 @@ export const TradeskillRecipeEntryApiFp = function(configuration?: Configuration
         },
         /**
          * 
+         * @summary Gets TradeskillRecipeEntries in bulk
+         * @param {CrudcontrollersBulkFetchByIdsGetRequest} body body
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async getTradeskillRecipeEntriesBulk(body: CrudcontrollersBulkFetchByIdsGetRequest, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<ModelsTradeskillRecipeEntry>>> {
+            const localVarAxiosArgs = await TradeskillRecipeEntryApiAxiosParamCreator(configuration).getTradeskillRecipeEntriesBulk(body, options);
+            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
+                const axiosRequestArgs = {...localVarAxiosArgs.options, url: (configuration?.basePath || basePath) + localVarAxiosArgs.url};
+                return axios.request(axiosRequestArgs);
+            };
+        },
+        /**
+         * 
          * @summary Gets TradeskillRecipeEntry
          * @param {number} id Id
          * @param {string} [includes] Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names 
@@ -421,6 +488,16 @@ export const TradeskillRecipeEntryApiFactory = function (configuration?: Configu
         },
         /**
          * 
+         * @summary Gets TradeskillRecipeEntries in bulk
+         * @param {CrudcontrollersBulkFetchByIdsGetRequest} body body
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getTradeskillRecipeEntriesBulk(body: CrudcontrollersBulkFetchByIdsGetRequest, options?: any): AxiosPromise<Array<ModelsTradeskillRecipeEntry>> {
+            return TradeskillRecipeEntryApiFp(configuration).getTradeskillRecipeEntriesBulk(body, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
          * @summary Gets TradeskillRecipeEntry
          * @param {number} id Id
          * @param {string} [includes] Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names 
@@ -487,6 +564,20 @@ export interface TradeskillRecipeEntryApiDeleteTradeskillRecipeEntryRequest {
      * @memberof TradeskillRecipeEntryApiDeleteTradeskillRecipeEntry
      */
     readonly id: number
+}
+
+/**
+ * Request parameters for getTradeskillRecipeEntriesBulk operation in TradeskillRecipeEntryApi.
+ * @export
+ * @interface TradeskillRecipeEntryApiGetTradeskillRecipeEntriesBulkRequest
+ */
+export interface TradeskillRecipeEntryApiGetTradeskillRecipeEntriesBulkRequest {
+    /**
+     * body
+     * @type {CrudcontrollersBulkFetchByIdsGetRequest}
+     * @memberof TradeskillRecipeEntryApiGetTradeskillRecipeEntriesBulk
+     */
+    readonly body: CrudcontrollersBulkFetchByIdsGetRequest
 }
 
 /**
@@ -623,6 +714,18 @@ export class TradeskillRecipeEntryApi extends BaseAPI {
      */
     public deleteTradeskillRecipeEntry(requestParameters: TradeskillRecipeEntryApiDeleteTradeskillRecipeEntryRequest, options?: any) {
         return TradeskillRecipeEntryApiFp(this.configuration).deleteTradeskillRecipeEntry(requestParameters.id, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @summary Gets TradeskillRecipeEntries in bulk
+     * @param {TradeskillRecipeEntryApiGetTradeskillRecipeEntriesBulkRequest} requestParameters Request parameters.
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof TradeskillRecipeEntryApi
+     */
+    public getTradeskillRecipeEntriesBulk(requestParameters: TradeskillRecipeEntryApiGetTradeskillRecipeEntriesBulkRequest, options?: any) {
+        return TradeskillRecipeEntryApiFp(this.configuration).getTradeskillRecipeEntriesBulk(requestParameters.body, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**

@@ -20,7 +20,7 @@ func NewCharacterCorpseController(
 	db *database.DatabaseResolver,
 	logger *logrus.Logger,
 ) *CharacterCorpseController {
-	return &CharacterCorpseController {
+	return &CharacterCorpseController{
 		db:     db,
 		logger: logger,
 	}
@@ -31,6 +31,7 @@ func (e *CharacterCorpseController) Routes() []*routes.Route {
 		routes.RegisterRoute(http.MethodDelete, "character_corpse/:character_corpse", e.deleteCharacterCorpse, nil),
 		routes.RegisterRoute(http.MethodGet, "character_corpse/:character_corpse", e.getCharacterCorpse, nil),
 		routes.RegisterRoute(http.MethodGet, "character_corpses", e.listCharacterCorpses, nil),
+		routes.RegisterRoute(http.MethodPost, "spells_news/bulk", e.getCharacterCorpsesBulk, nil),
 		routes.RegisterRoute(http.MethodPatch, "character_corpse/:character_corpse", e.updateCharacterCorpse, nil),
 		routes.RegisterRoute(http.MethodPut, "character_corpse", e.createCharacterCorpse, nil),
 	}
@@ -111,7 +112,10 @@ func (e *CharacterCorpseController) getCharacterCorpse(c echo.Context) error {
 func (e *CharacterCorpseController) updateCharacterCorpse(c echo.Context) error {
 	characterCorpse := new(models.CharacterCorpse)
 	if err := c.Bind(characterCorpse); err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error binding to entity: [%v]", err)})
+		return c.JSON(
+			http.StatusInternalServerError,
+			echo.Map{"error": fmt.Sprintf("Error binding to entity: [%v]", err)},
+		)
 	}
 
 	err := e.db.Get(models.CharacterCorpse{}, c).Model(&models.CharacterCorpse{}).First(&models.CharacterCorpse{}, characterCorpse.ID).Error
@@ -141,12 +145,18 @@ func (e *CharacterCorpseController) updateCharacterCorpse(c echo.Context) error 
 func (e *CharacterCorpseController) createCharacterCorpse(c echo.Context) error {
 	characterCorpse := new(models.CharacterCorpse)
 	if err := c.Bind(characterCorpse); err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error binding to entity: [%v]", err)})
+		return c.JSON(
+			http.StatusInternalServerError,
+			echo.Map{"error": fmt.Sprintf("Error binding to entity: [%v]", err)},
+		)
 	}
 
 	err := e.db.Get(models.CharacterCorpse{}, c).Model(&models.CharacterCorpse{}).Create(&characterCorpse).Error
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error inserting entity: [%v]", err)})
+		return c.JSON(
+			http.StatusInternalServerError,
+			echo.Map{"error": fmt.Sprintf("Error inserting entity: [%v]", err)},
+		)
 	}
 
 	return c.JSON(http.StatusOK, characterCorpse)
@@ -182,4 +192,40 @@ func (e *CharacterCorpseController) deleteCharacterCorpse(c echo.Context) error 
 	}
 
 	return c.JSON(http.StatusOK, echo.Map{"success": "Entity deleted successfully"})
+}
+
+// getCharacterCorpsesBulk godoc
+// @Id getCharacterCorpsesBulk
+// @Summary Gets CharacterCorpses in bulk
+// @Accept json
+// @Produce json
+// @Param Body body BulkFetchByIdsGetRequest true "body"
+// @Tags CharacterCorpse
+// @Success 200 {array} models.CharacterCorpse
+// @Failure 500 {string} string "Bad query request"
+// @Router /character_corpses/bulk [post]
+func (e *CharacterCorpseController) getCharacterCorpsesBulk(c echo.Context) error {
+	var results []models.CharacterCorpse
+
+	r := new(BulkFetchByIdsGetRequest)
+	if err := c.Bind(r); err != nil {
+		return c.JSON(
+			http.StatusInternalServerError,
+			echo.Map{"error": fmt.Sprintf("Error binding to bulk request: [%v]", err)},
+		)
+	}
+
+	if len(r.IDs) == 0 {
+		return c.JSON(
+			http.StatusInternalServerError,
+			echo.Map{"error": fmt.Sprintf("Missing request field data 'ids'")},
+		)
+	}
+
+	err := e.db.QueryContext(models.CharacterCorpse{}, c).Find(&results, r.IDs).Error
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err})
+	}
+
+	return c.JSON(http.StatusOK, results)
 }

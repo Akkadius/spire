@@ -193,7 +193,8 @@ func (d *DatabaseResolver) ResolveUserEqemuConnection(model models.Modelable, us
 		dbName,
 	)
 
-	db, err := gorm.Open(mysql.Open(dsn),
+	db, err := gorm.Open(
+		mysql.Open(dsn),
 		&gorm.Config{
 			SkipDefaultTransaction:                   true,
 			DisableForeignKeyConstraintWhenMigrating: true,
@@ -225,6 +226,12 @@ func (d *DatabaseResolver) handleWheres(query *gorm.DB, filter string) *gorm.DB 
 	wheres := strings.Split(filter, equalDelimiter)
 	if len(wheres) > 1 {
 		query = query.Where(fmt.Sprintf("%v = ?", wheres[0]), wheres[1])
+	}
+
+	// parse where field like '%value%'
+	wheres = strings.Split(filter, notLikeDelimiter)
+	if len(wheres) > 1 {
+		query = query.Where(fmt.Sprintf("%v not like ?", wheres[0]), fmt.Sprintf("%%%v%%", wheres[1]))
 	}
 
 	// parse where field like '%value%'
@@ -271,6 +278,12 @@ func (d *DatabaseResolver) handleOrWheres(query *gorm.DB, filter string) *gorm.D
 	wheres := strings.Split(filter, equalDelimiter)
 	if len(wheres) > 1 {
 		query = query.Or(fmt.Sprintf("%v = ?", wheres[0]), wheres[1])
+	}
+
+	// parse where field like '%value%'
+	wheres = strings.Split(filter, notLikeDelimiter)
+	if len(wheres) > 1 {
+		query = query.Where(fmt.Sprintf("%v not like ?", wheres[0]), fmt.Sprintf("%%%v%%", wheres[1]))
 	}
 
 	// parse where field like '%value%'

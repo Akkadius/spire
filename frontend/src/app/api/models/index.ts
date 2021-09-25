@@ -1,3 +1,4 @@
+export * from './crudcontrollers-bulk-fetch-by-ids-get-request';
 export * from './models-aa-ability';
 export * from './models-aa-rank';
 export * from './models-account';

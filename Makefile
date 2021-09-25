@@ -134,7 +134,7 @@ seed-spire-tables: ##@seed
 #----------------------
 
 generate-axios-client: ##@generate Generate Axios client (Run outside workspace container)
-	$(DRUNPREFIX) docker run --rm -v "$${PWD}:/local" openapitools/openapi-generator-cli:v4.0.0 generate \
+	$(DRUNPREFIX) docker run --rm -v "$${PWD}:/local" openapitools/openapi-generator-cli:v5.0.0 generate \
         -i /local/docs/swagger.yaml \
         -g typescript-axios \
         -o /local/frontend/src/app/api/ \

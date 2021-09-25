@@ -20,7 +20,7 @@ func NewLootdropController(
 	db *database.DatabaseResolver,
 	logger *logrus.Logger,
 ) *LootdropController {
-	return &LootdropController {
+	return &LootdropController{
 		db:     db,
 		logger: logger,
 	}
@@ -31,6 +31,7 @@ func (e *LootdropController) Routes() []*routes.Route {
 		routes.RegisterRoute(http.MethodDelete, "lootdrop/:lootdrop", e.deleteLootdrop, nil),
 		routes.RegisterRoute(http.MethodGet, "lootdrop/:lootdrop", e.getLootdrop, nil),
 		routes.RegisterRoute(http.MethodGet, "lootdrops", e.listLootdrops, nil),
+		routes.RegisterRoute(http.MethodPost, "spells_news/bulk", e.getLootdropsBulk, nil),
 		routes.RegisterRoute(http.MethodPatch, "lootdrop/:lootdrop", e.updateLootdrop, nil),
 		routes.RegisterRoute(http.MethodPut, "lootdrop", e.createLootdrop, nil),
 	}
@@ -111,7 +112,10 @@ func (e *LootdropController) getLootdrop(c echo.Context) error {
 func (e *LootdropController) updateLootdrop(c echo.Context) error {
 	lootdrop := new(models.Lootdrop)
 	if err := c.Bind(lootdrop); err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error binding to entity: [%v]", err)})
+		return c.JSON(
+			http.StatusInternalServerError,
+			echo.Map{"error": fmt.Sprintf("Error binding to entity: [%v]", err)},
+		)
 	}
 
 	err := e.db.Get(models.Lootdrop{}, c).Model(&models.Lootdrop{}).First(&models.Lootdrop{}, lootdrop.ID).Error
@@ -141,12 +145,18 @@ func (e *LootdropController) updateLootdrop(c echo.Context) error {
 func (e *LootdropController) createLootdrop(c echo.Context) error {
 	lootdrop := new(models.Lootdrop)
 	if err := c.Bind(lootdrop); err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error binding to entity: [%v]", err)})
+		return c.JSON(
+			http.StatusInternalServerError,
+			echo.Map{"error": fmt.Sprintf("Error binding to entity: [%v]", err)},
+		)
 	}
 
 	err := e.db.Get(models.Lootdrop{}, c).Model(&models.Lootdrop{}).Create(&lootdrop).Error
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error inserting entity: [%v]", err)})
+		return c.JSON(
+			http.StatusInternalServerError,
+			echo.Map{"error": fmt.Sprintf("Error inserting entity: [%v]", err)},
+		)
 	}
 
 	return c.JSON(http.StatusOK, lootdrop)
@@ -182,4 +192,40 @@ func (e *LootdropController) deleteLootdrop(c echo.Context) error {
 	}
 
 	return c.JSON(http.StatusOK, echo.Map{"success": "Entity deleted successfully"})
+}
+
+// getLootdropsBulk godoc
+// @Id getLootdropsBulk
+// @Summary Gets Lootdrops in bulk
+// @Accept json
+// @Produce json
+// @Param Body body BulkFetchByIdsGetRequest true "body"
+// @Tags Lootdrop
+// @Success 200 {array} models.Lootdrop
+// @Failure 500 {string} string "Bad query request"
+// @Router /lootdrops/bulk [post]
+func (e *LootdropController) getLootdropsBulk(c echo.Context) error {
+	var results []models.Lootdrop
+
+	r := new(BulkFetchByIdsGetRequest)
+	if err := c.Bind(r); err != nil {
+		return c.JSON(
+			http.StatusInternalServerError,
+			echo.Map{"error": fmt.Sprintf("Error binding to bulk request: [%v]", err)},
+		)
+	}
+
+	if len(r.IDs) == 0 {
+		return c.JSON(
+			http.StatusInternalServerError,
+			echo.Map{"error": fmt.Sprintf("Missing request field data 'ids'")},
+		)
+	}
+
+	err := e.db.QueryContext(models.Lootdrop{}, c).Find(&results, r.IDs).Error
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err})
+	}
+
+	return c.JSON(http.StatusOK, results)
 }

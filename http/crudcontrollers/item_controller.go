@@ -20,7 +20,7 @@ func NewItemController(
 	db *database.DatabaseResolver,
 	logger *logrus.Logger,
 ) *ItemController {
-	return &ItemController {
+	return &ItemController{
 		db:     db,
 		logger: logger,
 	}
@@ -31,6 +31,7 @@ func (e *ItemController) Routes() []*routes.Route {
 		routes.RegisterRoute(http.MethodDelete, "item/:item", e.deleteItem, nil),
 		routes.RegisterRoute(http.MethodGet, "item/:item", e.getItem, nil),
 		routes.RegisterRoute(http.MethodGet, "items", e.listItems, nil),
+		routes.RegisterRoute(http.MethodPost, "spells_news/bulk", e.getItemsBulk, nil),
 		routes.RegisterRoute(http.MethodPatch, "item/:item", e.updateItem, nil),
 		routes.RegisterRoute(http.MethodPut, "item", e.createItem, nil),
 	}
@@ -111,7 +112,10 @@ func (e *ItemController) getItem(c echo.Context) error {
 func (e *ItemController) updateItem(c echo.Context) error {
 	item := new(models.Item)
 	if err := c.Bind(item); err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error binding to entity: [%v]", err)})
+		return c.JSON(
+			http.StatusInternalServerError,
+			echo.Map{"error": fmt.Sprintf("Error binding to entity: [%v]", err)},
+		)
 	}
 
 	err := e.db.Get(models.Item{}, c).Model(&models.Item{}).First(&models.Item{}, item.ID).Error
@@ -141,12 +145,18 @@ func (e *ItemController) updateItem(c echo.Context) error {
 func (e *ItemController) createItem(c echo.Context) error {
 	item := new(models.Item)
 	if err := c.Bind(item); err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error binding to entity: [%v]", err)})
+		return c.JSON(
+			http.StatusInternalServerError,
+			echo.Map{"error": fmt.Sprintf("Error binding to entity: [%v]", err)},
+		)
 	}
 
 	err := e.db.Get(models.Item{}, c).Model(&models.Item{}).Create(&item).Error
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error inserting entity: [%v]", err)})
+		return c.JSON(
+			http.StatusInternalServerError,
+			echo.Map{"error": fmt.Sprintf("Error inserting entity: [%v]", err)},
+		)
 	}
 
 	return c.JSON(http.StatusOK, item)
@@ -182,4 +192,40 @@ func (e *ItemController) deleteItem(c echo.Context) error {
 	}
 
 	return c.JSON(http.StatusOK, echo.Map{"success": "Entity deleted successfully"})
+}
+
+// getItemsBulk godoc
+// @Id getItemsBulk
+// @Summary Gets Items in bulk
+// @Accept json
+// @Produce json
+// @Param Body body BulkFetchByIdsGetRequest true "body"
+// @Tags Item
+// @Success 200 {array} models.Item
+// @Failure 500 {string} string "Bad query request"
+// @Router /items/bulk [post]
+func (e *ItemController) getItemsBulk(c echo.Context) error {
+	var results []models.Item
+
+	r := new(BulkFetchByIdsGetRequest)
+	if err := c.Bind(r); err != nil {
+		return c.JSON(
+			http.StatusInternalServerError,
+			echo.Map{"error": fmt.Sprintf("Error binding to bulk request: [%v]", err)},
+		)
+	}
+
+	if len(r.IDs) == 0 {
+		return c.JSON(
+			http.StatusInternalServerError,
+			echo.Map{"error": fmt.Sprintf("Missing request field data 'ids'")},
+		)
+	}
+
+	err := e.db.QueryContext(models.Item{}, c).Find(&results, r.IDs).Error
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err})
+	}
+
+	return c.JSON(http.StatusOK, results)
 }

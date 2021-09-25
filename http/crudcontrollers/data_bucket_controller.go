@@ -20,7 +20,7 @@ func NewDataBucketController(
 	db *database.DatabaseResolver,
 	logger *logrus.Logger,
 ) *DataBucketController {
-	return &DataBucketController {
+	return &DataBucketController{
 		db:     db,
 		logger: logger,
 	}
@@ -31,6 +31,7 @@ func (e *DataBucketController) Routes() []*routes.Route {
 		routes.RegisterRoute(http.MethodDelete, "data_bucket/:data_bucket", e.deleteDataBucket, nil),
 		routes.RegisterRoute(http.MethodGet, "data_bucket/:data_bucket", e.getDataBucket, nil),
 		routes.RegisterRoute(http.MethodGet, "data_buckets", e.listDataBuckets, nil),
+		routes.RegisterRoute(http.MethodPost, "spells_news/bulk", e.getDataBucketsBulk, nil),
 		routes.RegisterRoute(http.MethodPatch, "data_bucket/:data_bucket", e.updateDataBucket, nil),
 		routes.RegisterRoute(http.MethodPut, "data_bucket", e.createDataBucket, nil),
 	}
@@ -111,7 +112,10 @@ func (e *DataBucketController) getDataBucket(c echo.Context) error {
 func (e *DataBucketController) updateDataBucket(c echo.Context) error {
 	dataBucket := new(models.DataBucket)
 	if err := c.Bind(dataBucket); err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error binding to entity: [%v]", err)})
+		return c.JSON(
+			http.StatusInternalServerError,
+			echo.Map{"error": fmt.Sprintf("Error binding to entity: [%v]", err)},
+		)
 	}
 
 	err := e.db.Get(models.DataBucket{}, c).Model(&models.DataBucket{}).First(&models.DataBucket{}, dataBucket.ID).Error
@@ -141,12 +145,18 @@ func (e *DataBucketController) updateDataBucket(c echo.Context) error {
 func (e *DataBucketController) createDataBucket(c echo.Context) error {
 	dataBucket := new(models.DataBucket)
 	if err := c.Bind(dataBucket); err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error binding to entity: [%v]", err)})
+		return c.JSON(
+			http.StatusInternalServerError,
+			echo.Map{"error": fmt.Sprintf("Error binding to entity: [%v]", err)},
+		)
 	}
 
 	err := e.db.Get(models.DataBucket{}, c).Model(&models.DataBucket{}).Create(&dataBucket).Error
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error inserting entity: [%v]", err)})
+		return c.JSON(
+			http.StatusInternalServerError,
+			echo.Map{"error": fmt.Sprintf("Error inserting entity: [%v]", err)},
+		)
 	}
 
 	return c.JSON(http.StatusOK, dataBucket)
@@ -182,4 +192,40 @@ func (e *DataBucketController) deleteDataBucket(c echo.Context) error {
 	}
 
 	return c.JSON(http.StatusOK, echo.Map{"success": "Entity deleted successfully"})
+}
+
+// getDataBucketsBulk godoc
+// @Id getDataBucketsBulk
+// @Summary Gets DataBuckets in bulk
+// @Accept json
+// @Produce json
+// @Param Body body BulkFetchByIdsGetRequest true "body"
+// @Tags DataBucket
+// @Success 200 {array} models.DataBucket
+// @Failure 500 {string} string "Bad query request"
+// @Router /data_buckets/bulk [post]
+func (e *DataBucketController) getDataBucketsBulk(c echo.Context) error {
+	var results []models.DataBucket
+
+	r := new(BulkFetchByIdsGetRequest)
+	if err := c.Bind(r); err != nil {
+		return c.JSON(
+			http.StatusInternalServerError,
+			echo.Map{"error": fmt.Sprintf("Error binding to bulk request: [%v]", err)},
+		)
+	}
+
+	if len(r.IDs) == 0 {
+		return c.JSON(
+			http.StatusInternalServerError,
+			echo.Map{"error": fmt.Sprintf("Missing request field data 'ids'")},
+		)
+	}
+
+	err := e.db.QueryContext(models.DataBucket{}, c).Find(&results, r.IDs).Error
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err})
+	}
+
+	return c.JSON(http.StatusOK, results)
 }

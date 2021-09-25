@@ -19,6 +19,8 @@ import { Configuration } from '../configuration';
 // @ts-ignore
 import { BASE_PATH, COLLECTION_FORMATS, RequestArgs, BaseAPI, RequiredError } from '../base';
 // @ts-ignore
+import { CrudcontrollersBulkFetchByIdsGetRequest } from '../models';
+// @ts-ignore
 import { ModelsCharacterDatum } from '../models';
 /**
  * CharacterDatumApi - axios parameter creator
@@ -114,6 +116,57 @@ export const CharacterDatumApiAxiosParamCreator = function (configuration?: Conf
             localVarUrlObj.search = (new URLSearchParams(queryParameters)).toString();
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @summary Gets CharacterData in bulk
+         * @param {CrudcontrollersBulkFetchByIdsGetRequest} body body
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getCharacterDataBulk: async (body: CrudcontrollersBulkFetchByIdsGetRequest, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'body' is not null or undefined
+            if (body === null || body === undefined) {
+                throw new RequiredError('body','Required parameter body was null or undefined when calling getCharacterDataBulk.');
+            }
+            const localVarPath = `/character_data/bulk`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, 'https://example.com');
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            const queryParameters = new URLSearchParams(localVarUrlObj.search);
+            for (const key in localVarQueryParameter) {
+                queryParameters.set(key, localVarQueryParameter[key]);
+            }
+            for (const key in options.query) {
+                queryParameters.set(key, options.query[key]);
+            }
+            localVarUrlObj.search = (new URLSearchParams(queryParameters)).toString();
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            const nonString = typeof body !== 'string';
+            const needsSerialization = nonString && configuration && configuration.isJsonMime
+                ? configuration.isJsonMime(localVarRequestOptions.headers['Content-Type'])
+                : nonString;
+            localVarRequestOptions.data =  needsSerialization
+                ? JSON.stringify(body !== undefined ? body : {})
+                : (body || "");
 
             return {
                 url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
@@ -341,6 +394,20 @@ export const CharacterDatumApiFp = function(configuration?: Configuration) {
         },
         /**
          * 
+         * @summary Gets CharacterData in bulk
+         * @param {CrudcontrollersBulkFetchByIdsGetRequest} body body
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async getCharacterDataBulk(body: CrudcontrollersBulkFetchByIdsGetRequest, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<ModelsCharacterDatum>>> {
+            const localVarAxiosArgs = await CharacterDatumApiAxiosParamCreator(configuration).getCharacterDataBulk(body, options);
+            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
+                const axiosRequestArgs = {...localVarAxiosArgs.options, url: (configuration?.basePath || basePath) + localVarAxiosArgs.url};
+                return axios.request(axiosRequestArgs);
+            };
+        },
+        /**
+         * 
          * @summary Gets CharacterDatum
          * @param {number} id Id
          * @param {string} [includes] Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names &lt;h4&gt;Relationships&lt;/h4&gt;AdventureStats&lt;br&gt;Buyers&lt;br&gt;CharRecipeLists&lt;br&gt;CharacterActivities&lt;br&gt;CharacterAltCurrencies&lt;br&gt;CharacterAlternateAbilities&lt;br&gt;CharacterAuras&lt;br&gt;CharacterBandoliers&lt;br&gt;CharacterBinds&lt;br&gt;CharacterBuffs&lt;br&gt;CharacterCorpses&lt;br&gt;CharacterCurrencies&lt;br&gt;CharacterDisciplines&lt;br&gt;CharacterEnabledtasks&lt;br&gt;CharacterInspectMessages&lt;br&gt;CharacterItemRecasts&lt;br&gt;CharacterLanguages&lt;br&gt;CharacterLeadershipAbilities&lt;br&gt;CharacterMaterials&lt;br&gt;CharacterMemmedSpells&lt;br&gt;CharacterPetBuffs&lt;br&gt;CharacterPetInfos&lt;br&gt;CharacterPetInventories&lt;br&gt;CharacterPotionbelts&lt;br&gt;CharacterSkills&lt;br&gt;CharacterSpells&lt;br&gt;CharacterTasks&lt;br&gt;CharacterTributes&lt;br&gt;CompletedTasks&lt;br&gt;DataBuckets&lt;br&gt;FactionValues&lt;br&gt;Friends&lt;br&gt;Guild&lt;br&gt;Guild.GuildBanks&lt;br&gt;Guild.GuildMembers&lt;br&gt;Guild.GuildRanks&lt;br&gt;GuildMembers&lt;br&gt;InstanceListPlayers&lt;br&gt;Inventories&lt;br&gt;Inventories.Item&lt;br&gt;Inventories.Item.DiscoveredItems&lt;br&gt;Keyrings&lt;br&gt;Mail&lt;br&gt;PlayerTitlesets&lt;br&gt;QuestGlobals&lt;br&gt;Timers&lt;br&gt;Titles&lt;br&gt;Traders&lt;br&gt;ZoneFlags
@@ -421,6 +488,16 @@ export const CharacterDatumApiFactory = function (configuration?: Configuration,
         },
         /**
          * 
+         * @summary Gets CharacterData in bulk
+         * @param {CrudcontrollersBulkFetchByIdsGetRequest} body body
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getCharacterDataBulk(body: CrudcontrollersBulkFetchByIdsGetRequest, options?: any): AxiosPromise<Array<ModelsCharacterDatum>> {
+            return CharacterDatumApiFp(configuration).getCharacterDataBulk(body, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
          * @summary Gets CharacterDatum
          * @param {number} id Id
          * @param {string} [includes] Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names &lt;h4&gt;Relationships&lt;/h4&gt;AdventureStats&lt;br&gt;Buyers&lt;br&gt;CharRecipeLists&lt;br&gt;CharacterActivities&lt;br&gt;CharacterAltCurrencies&lt;br&gt;CharacterAlternateAbilities&lt;br&gt;CharacterAuras&lt;br&gt;CharacterBandoliers&lt;br&gt;CharacterBinds&lt;br&gt;CharacterBuffs&lt;br&gt;CharacterCorpses&lt;br&gt;CharacterCurrencies&lt;br&gt;CharacterDisciplines&lt;br&gt;CharacterEnabledtasks&lt;br&gt;CharacterInspectMessages&lt;br&gt;CharacterItemRecasts&lt;br&gt;CharacterLanguages&lt;br&gt;CharacterLeadershipAbilities&lt;br&gt;CharacterMaterials&lt;br&gt;CharacterMemmedSpells&lt;br&gt;CharacterPetBuffs&lt;br&gt;CharacterPetInfos&lt;br&gt;CharacterPetInventories&lt;br&gt;CharacterPotionbelts&lt;br&gt;CharacterSkills&lt;br&gt;CharacterSpells&lt;br&gt;CharacterTasks&lt;br&gt;CharacterTributes&lt;br&gt;CompletedTasks&lt;br&gt;DataBuckets&lt;br&gt;FactionValues&lt;br&gt;Friends&lt;br&gt;Guild&lt;br&gt;Guild.GuildBanks&lt;br&gt;Guild.GuildMembers&lt;br&gt;Guild.GuildRanks&lt;br&gt;GuildMembers&lt;br&gt;InstanceListPlayers&lt;br&gt;Inventories&lt;br&gt;Inventories.Item&lt;br&gt;Inventories.Item.DiscoveredItems&lt;br&gt;Keyrings&lt;br&gt;Mail&lt;br&gt;PlayerTitlesets&lt;br&gt;QuestGlobals&lt;br&gt;Timers&lt;br&gt;Titles&lt;br&gt;Traders&lt;br&gt;ZoneFlags
@@ -487,6 +564,20 @@ export interface CharacterDatumApiDeleteCharacterDatumRequest {
      * @memberof CharacterDatumApiDeleteCharacterDatum
      */
     readonly id: number
+}
+
+/**
+ * Request parameters for getCharacterDataBulk operation in CharacterDatumApi.
+ * @export
+ * @interface CharacterDatumApiGetCharacterDataBulkRequest
+ */
+export interface CharacterDatumApiGetCharacterDataBulkRequest {
+    /**
+     * body
+     * @type {CrudcontrollersBulkFetchByIdsGetRequest}
+     * @memberof CharacterDatumApiGetCharacterDataBulk
+     */
+    readonly body: CrudcontrollersBulkFetchByIdsGetRequest
 }
 
 /**
@@ -623,6 +714,18 @@ export class CharacterDatumApi extends BaseAPI {
      */
     public deleteCharacterDatum(requestParameters: CharacterDatumApiDeleteCharacterDatumRequest, options?: any) {
         return CharacterDatumApiFp(this.configuration).deleteCharacterDatum(requestParameters.id, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @summary Gets CharacterData in bulk
+     * @param {CharacterDatumApiGetCharacterDataBulkRequest} requestParameters Request parameters.
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof CharacterDatumApi
+     */
+    public getCharacterDataBulk(requestParameters: CharacterDatumApiGetCharacterDataBulkRequest, options?: any) {
+        return CharacterDatumApiFp(this.configuration).getCharacterDataBulk(requestParameters.body, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**

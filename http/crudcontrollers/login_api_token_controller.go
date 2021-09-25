@@ -20,7 +20,7 @@ func NewLoginApiTokenController(
 	db *database.DatabaseResolver,
 	logger *logrus.Logger,
 ) *LoginApiTokenController {
-	return &LoginApiTokenController {
+	return &LoginApiTokenController{
 		db:     db,
 		logger: logger,
 	}
@@ -31,6 +31,7 @@ func (e *LoginApiTokenController) Routes() []*routes.Route {
 		routes.RegisterRoute(http.MethodDelete, "login_api_token/:login_api_token", e.deleteLoginApiToken, nil),
 		routes.RegisterRoute(http.MethodGet, "login_api_token/:login_api_token", e.getLoginApiToken, nil),
 		routes.RegisterRoute(http.MethodGet, "login_api_tokens", e.listLoginApiTokens, nil),
+		routes.RegisterRoute(http.MethodPost, "spells_news/bulk", e.getLoginApiTokensBulk, nil),
 		routes.RegisterRoute(http.MethodPatch, "login_api_token/:login_api_token", e.updateLoginApiToken, nil),
 		routes.RegisterRoute(http.MethodPut, "login_api_token", e.createLoginApiToken, nil),
 	}
@@ -111,7 +112,10 @@ func (e *LoginApiTokenController) getLoginApiToken(c echo.Context) error {
 func (e *LoginApiTokenController) updateLoginApiToken(c echo.Context) error {
 	loginApiToken := new(models.LoginApiToken)
 	if err := c.Bind(loginApiToken); err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error binding to entity: [%v]", err)})
+		return c.JSON(
+			http.StatusInternalServerError,
+			echo.Map{"error": fmt.Sprintf("Error binding to entity: [%v]", err)},
+		)
 	}
 
 	err := e.db.Get(models.LoginApiToken{}, c).Model(&models.LoginApiToken{}).First(&models.LoginApiToken{}, loginApiToken.ID).Error
@@ -141,12 +145,18 @@ func (e *LoginApiTokenController) updateLoginApiToken(c echo.Context) error {
 func (e *LoginApiTokenController) createLoginApiToken(c echo.Context) error {
 	loginApiToken := new(models.LoginApiToken)
 	if err := c.Bind(loginApiToken); err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error binding to entity: [%v]", err)})
+		return c.JSON(
+			http.StatusInternalServerError,
+			echo.Map{"error": fmt.Sprintf("Error binding to entity: [%v]", err)},
+		)
 	}
 
 	err := e.db.Get(models.LoginApiToken{}, c).Model(&models.LoginApiToken{}).Create(&loginApiToken).Error
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error inserting entity: [%v]", err)})
+		return c.JSON(
+			http.StatusInternalServerError,
+			echo.Map{"error": fmt.Sprintf("Error inserting entity: [%v]", err)},
+		)
 	}
 
 	return c.JSON(http.StatusOK, loginApiToken)
@@ -182,4 +192,40 @@ func (e *LoginApiTokenController) deleteLoginApiToken(c echo.Context) error {
 	}
 
 	return c.JSON(http.StatusOK, echo.Map{"success": "Entity deleted successfully"})
+}
+
+// getLoginApiTokensBulk godoc
+// @Id getLoginApiTokensBulk
+// @Summary Gets LoginApiTokens in bulk
+// @Accept json
+// @Produce json
+// @Param Body body BulkFetchByIdsGetRequest true "body"
+// @Tags LoginApiToken
+// @Success 200 {array} models.LoginApiToken
+// @Failure 500 {string} string "Bad query request"
+// @Router /login_api_tokens/bulk [post]
+func (e *LoginApiTokenController) getLoginApiTokensBulk(c echo.Context) error {
+	var results []models.LoginApiToken
+
+	r := new(BulkFetchByIdsGetRequest)
+	if err := c.Bind(r); err != nil {
+		return c.JSON(
+			http.StatusInternalServerError,
+			echo.Map{"error": fmt.Sprintf("Error binding to bulk request: [%v]", err)},
+		)
+	}
+
+	if len(r.IDs) == 0 {
+		return c.JSON(
+			http.StatusInternalServerError,
+			echo.Map{"error": fmt.Sprintf("Missing request field data 'ids'")},
+		)
+	}
+
+	err := e.db.QueryContext(models.LoginApiToken{}, c).Find(&results, r.IDs).Error
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err})
+	}
+
+	return c.JSON(http.StatusOK, results)
 }

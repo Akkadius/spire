@@ -1,6 +1,6 @@
 basePath: /api/v1
 definitions:
-  crudcontrollers.BulkSpellsNewGetRequest:
+  crudcontrollers.BulkFetchByIdsGetRequest:
     properties:
       ids:
         items:
@@ -4211,28 +4211,14 @@ definitions:
         type: integer
       id:
         type: integer
-      level_spread:
-        type: integer
-      max_players:
-        type: integer
       maxlevel:
-        type: integer
-      min_players:
         type: integer
       minlevel:
         type: integer
       repeatable:
         type: integer
-      replay_timer_seconds:
-        type: integer
-      request_timer_seconds:
-        type: integer
       reward:
         type: string
-      reward_ebon_crystals:
-        type: integer
-      reward_radiant_crystals:
-        type: integer
       rewardid:
         type: integer
       rewardmethod:
@@ -4837,6 +4823,34 @@ paths:
       summary: Lists AaAbilities
       tags:
       - AaAbility
+  /aa_abilities/bulk:
+    post:
+      consumes:
+      - application/json
+      operationId: getAaAbilitiesBulk
+      parameters:
+      - description: body
+        in: body
+        name: Body
+        required: true
+        schema:
+          $ref: '#/definitions/crudcontrollers.BulkFetchByIdsGetRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.AaAbility'
+            type: array
+        "500":
+          description: Bad query request
+          schema:
+            type: string
+      summary: Gets AaAbilities in bulk
+      tags:
+      - AaAbility
   /aa_ability:
     put:
       consumes:
@@ -5154,6 +5168,34 @@ paths:
       summary: Lists AaRanks
       tags:
       - AaRank
+  /aa_ranks/bulk:
+    post:
+      consumes:
+      - application/json
+      operationId: getAaRanksBulk
+      parameters:
+      - description: body
+        in: body
+        name: Body
+        required: true
+        schema:
+          $ref: '#/definitions/crudcontrollers.BulkFetchByIdsGetRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.AaRank'
+            type: array
+        "500":
+          description: Bad query request
+          schema:
+            type: string
+      summary: Gets AaRanks in bulk
+      tags:
+      - AaRank
   /account:
     put:
       consumes:
@@ -5337,6 +5379,34 @@ paths:
           schema:
             type: string
       summary: Lists Accounts
+      tags:
+      - Account
+  /accounts/bulk:
+    post:
+      consumes:
+      - application/json
+      operationId: getAccountsBulk
+      parameters:
+      - description: body
+        in: body
+        name: Body
+        required: true
+        schema:
+          $ref: '#/definitions/crudcontrollers.BulkFetchByIdsGetRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Account'
+            type: array
+        "500":
+          description: Bad query request
+          schema:
+            type: string
+      summary: Gets Accounts in bulk
       tags:
       - Account
   /adventure_detail:
@@ -5524,6 +5594,34 @@ paths:
       summary: Lists AdventureDetails
       tags:
       - AdventureDetail
+  /adventure_details/bulk:
+    post:
+      consumes:
+      - application/json
+      operationId: getAdventureDetailsBulk
+      parameters:
+      - description: body
+        in: body
+        name: Body
+        required: true
+        schema:
+          $ref: '#/definitions/crudcontrollers.BulkFetchByIdsGetRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.AdventureDetail'
+            type: array
+        "500":
+          description: Bad query request
+          schema:
+            type: string
+      summary: Gets AdventureDetails in bulk
+      tags:
+      - AdventureDetail
   /adventure_template:
     put:
       consumes:
@@ -5707,6 +5805,34 @@ paths:
           schema:
             type: string
       summary: Lists AdventureTemplateEntries
+      tags:
+      - AdventureTemplateEntry
+  /adventure_template_entries/bulk:
+    post:
+      consumes:
+      - application/json
+      operationId: getAdventureTemplateEntriesBulk
+      parameters:
+      - description: body
+        in: body
+        name: Body
+        required: true
+        schema:
+          $ref: '#/definitions/crudcontrollers.BulkFetchByIdsGetRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.AdventureTemplateEntry'
+            type: array
+        "500":
+          description: Bad query request
+          schema:
+            type: string
+      summary: Gets AdventureTemplateEntries in bulk
       tags:
       - AdventureTemplateEntry
   /adventure_template_entry:
@@ -6026,6 +6152,34 @@ paths:
       summary: Lists AdventureTemplateEntryFlavors
       tags:
       - AdventureTemplateEntryFlavor
+  /adventure_template_entry_flavors/bulk:
+    post:
+      consumes:
+      - application/json
+      operationId: getAdventureTemplateEntryFlavorsBulk
+      parameters:
+      - description: body
+        in: body
+        name: Body
+        required: true
+        schema:
+          $ref: '#/definitions/crudcontrollers.BulkFetchByIdsGetRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.AdventureTemplateEntryFlavor'
+            type: array
+        "500":
+          description: Bad query request
+          schema:
+            type: string
+      summary: Gets AdventureTemplateEntryFlavors in bulk
+      tags:
+      - AdventureTemplateEntryFlavor
   /adventure_templates:
     get:
       consumes:
@@ -6079,6 +6233,34 @@ paths:
       summary: Lists AdventureTemplates
       tags:
       - AdventureTemplate
+  /adventure_templates/bulk:
+    post:
+      consumes:
+      - application/json
+      operationId: getAdventureTemplatesBulk
+      parameters:
+      - description: body
+        in: body
+        name: Body
+        required: true
+        schema:
+          $ref: '#/definitions/crudcontrollers.BulkFetchByIdsGetRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.AdventureTemplate'
+            type: array
+        "500":
+          description: Bad query request
+          schema:
+            type: string
+      summary: Gets AdventureTemplates in bulk
+      tags:
+      - AdventureTemplate
   /alternate_currencies:
     get:
       consumes:
@@ -6130,6 +6312,34 @@ paths:
           schema:
             type: string
       summary: Lists AlternateCurrencies
+      tags:
+      - AlternateCurrency
+  /alternate_currencies/bulk:
+    post:
+      consumes:
+      - application/json
+      operationId: getAlternateCurrenciesBulk
+      parameters:
+      - description: body
+        in: body
+        name: Body
+        required: true
+        schema:
+          $ref: '#/definitions/crudcontrollers.BulkFetchByIdsGetRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.AlternateCurrency'
+            type: array
+        "500":
+          description: Bad query request
+          schema:
+            type: string
+      summary: Gets AlternateCurrencies in bulk
       tags:
       - AlternateCurrency
   /alternate_currency:
@@ -6449,6 +6659,34 @@ paths:
       summary: Lists BlockedSpells
       tags:
       - BlockedSpell
+  /blocked_spells/bulk:
+    post:
+      consumes:
+      - application/json
+      operationId: getBlockedSpellsBulk
+      parameters:
+      - description: body
+        in: body
+        name: Body
+        required: true
+        schema:
+          $ref: '#/definitions/crudcontrollers.BulkFetchByIdsGetRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.BlockedSpell'
+            type: array
+        "500":
+          description: Bad query request
+          schema:
+            type: string
+      summary: Gets BlockedSpells in bulk
+      tags:
+      - BlockedSpell
   /bug:
     put:
       consumes:
@@ -6766,6 +7004,34 @@ paths:
       summary: Lists BugReports
       tags:
       - BugReport
+  /bug_reports/bulk:
+    post:
+      consumes:
+      - application/json
+      operationId: getBugReportsBulk
+      parameters:
+      - description: body
+        in: body
+        name: Body
+        required: true
+        schema:
+          $ref: '#/definitions/crudcontrollers.BulkFetchByIdsGetRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.BugReport'
+            type: array
+        "500":
+          description: Bad query request
+          schema:
+            type: string
+      summary: Gets BugReports in bulk
+      tags:
+      - BugReport
   /bugs:
     get:
       consumes:
@@ -6817,6 +7083,34 @@ paths:
           schema:
             type: string
       summary: Lists Bugs
+      tags:
+      - Bug
+  /bugs/bulk:
+    post:
+      consumes:
+      - application/json
+      operationId: getBugsBulk
+      parameters:
+      - description: body
+        in: body
+        name: Body
+        required: true
+        schema:
+          $ref: '#/definitions/crudcontrollers.BulkFetchByIdsGetRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Bug'
+            type: array
+        "500":
+          description: Bad query request
+          schema:
+            type: string
+      summary: Gets Bugs in bulk
       tags:
       - Bug
   /char_create_point_allocation:
@@ -7004,6 +7298,34 @@ paths:
       summary: Lists CharCreatePointAllocations
       tags:
       - CharCreatePointAllocation
+  /char_create_point_allocations/bulk:
+    post:
+      consumes:
+      - application/json
+      operationId: getCharCreatePointAllocationsBulk
+      parameters:
+      - description: body
+        in: body
+        name: Body
+        required: true
+        schema:
+          $ref: '#/definitions/crudcontrollers.BulkFetchByIdsGetRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.CharCreatePointAllocation'
+            type: array
+        "500":
+          description: Bad query request
+          schema:
+            type: string
+      summary: Gets CharCreatePointAllocations in bulk
+      tags:
+      - CharCreatePointAllocation
   /character_alternate_abilities:
     get:
       consumes:
@@ -7055,6 +7377,34 @@ paths:
           schema:
             type: string
       summary: Lists CharacterAlternateAbilities
+      tags:
+      - CharacterAlternateAbility
+  /character_alternate_abilities/bulk:
+    post:
+      consumes:
+      - application/json
+      operationId: getCharacterAlternateAbilitiesBulk
+      parameters:
+      - description: body
+        in: body
+        name: Body
+        required: true
+        schema:
+          $ref: '#/definitions/crudcontrollers.BulkFetchByIdsGetRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.CharacterAlternateAbility'
+            type: array
+        "500":
+          description: Bad query request
+          schema:
+            type: string
+      summary: Gets CharacterAlternateAbilities in bulk
       tags:
       - CharacterAlternateAbility
   /character_alternate_ability:
@@ -7374,6 +7724,34 @@ paths:
       summary: Lists CharacterAuras
       tags:
       - CharacterAura
+  /character_auras/bulk:
+    post:
+      consumes:
+      - application/json
+      operationId: getCharacterAurasBulk
+      parameters:
+      - description: body
+        in: body
+        name: Body
+        required: true
+        schema:
+          $ref: '#/definitions/crudcontrollers.BulkFetchByIdsGetRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.CharacterAura'
+            type: array
+        "500":
+          description: Bad query request
+          schema:
+            type: string
+      summary: Gets CharacterAuras in bulk
+      tags:
+      - CharacterAura
   /character_bandolier:
     put:
       consumes:
@@ -7557,6 +7935,34 @@ paths:
           schema:
             type: string
       summary: Lists CharacterBandoliers
+      tags:
+      - CharacterBandolier
+  /character_bandoliers/bulk:
+    post:
+      consumes:
+      - application/json
+      operationId: getCharacterBandoliersBulk
+      parameters:
+      - description: body
+        in: body
+        name: Body
+        required: true
+        schema:
+          $ref: '#/definitions/crudcontrollers.BulkFetchByIdsGetRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.CharacterBandolier'
+            type: array
+        "500":
+          description: Bad query request
+          schema:
+            type: string
+      summary: Gets CharacterBandoliers in bulk
       tags:
       - CharacterBandolier
   /character_bind:
@@ -7744,6 +8150,34 @@ paths:
       summary: Lists CharacterBinds
       tags:
       - CharacterBind
+  /character_binds/bulk:
+    post:
+      consumes:
+      - application/json
+      operationId: getCharacterBindsBulk
+      parameters:
+      - description: body
+        in: body
+        name: Body
+        required: true
+        schema:
+          $ref: '#/definitions/crudcontrollers.BulkFetchByIdsGetRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.CharacterBind'
+            type: array
+        "500":
+          description: Bad query request
+          schema:
+            type: string
+      summary: Gets CharacterBinds in bulk
+      tags:
+      - CharacterBind
   /character_corpse:
     put:
       consumes:
@@ -7929,6 +8363,34 @@ paths:
       summary: Lists CharacterCorpses
       tags:
       - CharacterCorpse
+  /character_corpses/bulk:
+    post:
+      consumes:
+      - application/json
+      operationId: getCharacterCorpsesBulk
+      parameters:
+      - description: body
+        in: body
+        name: Body
+        required: true
+        schema:
+          $ref: '#/definitions/crudcontrollers.BulkFetchByIdsGetRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.CharacterCorpse'
+            type: array
+        "500":
+          description: Bad query request
+          schema:
+            type: string
+      summary: Gets CharacterCorpses in bulk
+      tags:
+      - CharacterCorpse
   /character_currencies:
     get:
       consumes:
@@ -7980,6 +8442,34 @@ paths:
           schema:
             type: string
       summary: Lists CharacterCurrencies
+      tags:
+      - CharacterCurrency
+  /character_currencies/bulk:
+    post:
+      consumes:
+      - application/json
+      operationId: getCharacterCurrenciesBulk
+      parameters:
+      - description: body
+        in: body
+        name: Body
+        required: true
+        schema:
+          $ref: '#/definitions/crudcontrollers.BulkFetchByIdsGetRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.CharacterCurrency'
+            type: array
+        "500":
+          description: Bad query request
+          schema:
+            type: string
+      summary: Gets CharacterCurrencies in bulk
       tags:
       - CharacterCurrency
   /character_currency:
@@ -8165,6 +8655,34 @@ paths:
           schema:
             type: string
       summary: Lists CharacterData
+      tags:
+      - CharacterDatum
+  /character_data/bulk:
+    post:
+      consumes:
+      - application/json
+      operationId: getCharacterDataBulk
+      parameters:
+      - description: body
+        in: body
+        name: Body
+        required: true
+        schema:
+          $ref: '#/definitions/crudcontrollers.BulkFetchByIdsGetRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.CharacterDatum'
+            type: array
+        "500":
+          description: Bad query request
+          schema:
+            type: string
+      summary: Gets CharacterData in bulk
       tags:
       - CharacterDatum
   /character_datum:
@@ -8484,6 +9002,34 @@ paths:
       summary: Lists CharacterDisciplines
       tags:
       - CharacterDiscipline
+  /character_disciplines/bulk:
+    post:
+      consumes:
+      - application/json
+      operationId: getCharacterDisciplinesBulk
+      parameters:
+      - description: body
+        in: body
+        name: Body
+        required: true
+        schema:
+          $ref: '#/definitions/crudcontrollers.BulkFetchByIdsGetRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.CharacterDiscipline'
+            type: array
+        "500":
+          description: Bad query request
+          schema:
+            type: string
+      summary: Gets CharacterDisciplines in bulk
+      tags:
+      - CharacterDiscipline
   /character_expedition_lockout:
     put:
       consumes:
@@ -8667,6 +9213,34 @@ paths:
           schema:
             type: string
       summary: Lists CharacterExpeditionLockouts
+      tags:
+      - CharacterExpeditionLockout
+  /character_expedition_lockouts/bulk:
+    post:
+      consumes:
+      - application/json
+      operationId: getCharacterExpeditionLockoutsBulk
+      parameters:
+      - description: body
+        in: body
+        name: Body
+        required: true
+        schema:
+          $ref: '#/definitions/crudcontrollers.BulkFetchByIdsGetRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.CharacterExpeditionLockout'
+            type: array
+        "500":
+          description: Bad query request
+          schema:
+            type: string
+      summary: Gets CharacterExpeditionLockouts in bulk
       tags:
       - CharacterExpeditionLockout
   /character_inspect_message:
@@ -8854,6 +9428,34 @@ paths:
       summary: Lists CharacterInspectMessages
       tags:
       - CharacterInspectMessage
+  /character_inspect_messages/bulk:
+    post:
+      consumes:
+      - application/json
+      operationId: getCharacterInspectMessagesBulk
+      parameters:
+      - description: body
+        in: body
+        name: Body
+        required: true
+        schema:
+          $ref: '#/definitions/crudcontrollers.BulkFetchByIdsGetRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.CharacterInspectMessage'
+            type: array
+        "500":
+          description: Bad query request
+          schema:
+            type: string
+      summary: Gets CharacterInspectMessages in bulk
+      tags:
+      - CharacterInspectMessage
   /character_item_recast:
     put:
       consumes:
@@ -9037,6 +9639,34 @@ paths:
           schema:
             type: string
       summary: Lists CharacterItemRecasts
+      tags:
+      - CharacterItemRecast
+  /character_item_recasts/bulk:
+    post:
+      consumes:
+      - application/json
+      operationId: getCharacterItemRecastsBulk
+      parameters:
+      - description: body
+        in: body
+        name: Body
+        required: true
+        schema:
+          $ref: '#/definitions/crudcontrollers.BulkFetchByIdsGetRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.CharacterItemRecast'
+            type: array
+        "500":
+          description: Bad query request
+          schema:
+            type: string
+      summary: Gets CharacterItemRecasts in bulk
       tags:
       - CharacterItemRecast
   /character_language:
@@ -9224,6 +9854,34 @@ paths:
       summary: Lists CharacterLanguages
       tags:
       - CharacterLanguage
+  /character_languages/bulk:
+    post:
+      consumes:
+      - application/json
+      operationId: getCharacterLanguagesBulk
+      parameters:
+      - description: body
+        in: body
+        name: Body
+        required: true
+        schema:
+          $ref: '#/definitions/crudcontrollers.BulkFetchByIdsGetRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.CharacterLanguage'
+            type: array
+        "500":
+          description: Bad query request
+          schema:
+            type: string
+      summary: Gets CharacterLanguages in bulk
+      tags:
+      - CharacterLanguage
   /character_leadership_abilities:
     get:
       consumes:
@@ -9275,6 +9933,34 @@ paths:
           schema:
             type: string
       summary: Lists CharacterLeadershipAbilities
+      tags:
+      - CharacterLeadershipAbility
+  /character_leadership_abilities/bulk:
+    post:
+      consumes:
+      - application/json
+      operationId: getCharacterLeadershipAbilitiesBulk
+      parameters:
+      - description: body
+        in: body
+        name: Body
+        required: true
+        schema:
+          $ref: '#/definitions/crudcontrollers.BulkFetchByIdsGetRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.CharacterLeadershipAbility'
+            type: array
+        "500":
+          description: Bad query request
+          schema:
+            type: string
+      summary: Gets CharacterLeadershipAbilities in bulk
       tags:
       - CharacterLeadershipAbility
   /character_leadership_ability:
@@ -9594,6 +10280,34 @@ paths:
       summary: Lists CharacterMaterials
       tags:
       - CharacterMaterial
+  /character_materials/bulk:
+    post:
+      consumes:
+      - application/json
+      operationId: getCharacterMaterialsBulk
+      parameters:
+      - description: body
+        in: body
+        name: Body
+        required: true
+        schema:
+          $ref: '#/definitions/crudcontrollers.BulkFetchByIdsGetRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.CharacterMaterial'
+            type: array
+        "500":
+          description: Bad query request
+          schema:
+            type: string
+      summary: Gets CharacterMaterials in bulk
+      tags:
+      - CharacterMaterial
   /character_memmed_spell:
     put:
       consumes:
@@ -9777,6 +10491,34 @@ paths:
           schema:
             type: string
       summary: Lists CharacterMemmedSpells
+      tags:
+      - CharacterMemmedSpell
+  /character_memmed_spells/bulk:
+    post:
+      consumes:
+      - application/json
+      operationId: getCharacterMemmedSpellsBulk
+      parameters:
+      - description: body
+        in: body
+        name: Body
+        required: true
+        schema:
+          $ref: '#/definitions/crudcontrollers.BulkFetchByIdsGetRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.CharacterMemmedSpell'
+            type: array
+        "500":
+          description: Bad query request
+          schema:
+            type: string
+      summary: Gets CharacterMemmedSpells in bulk
       tags:
       - CharacterMemmedSpell
   /character_potionbelt:
@@ -9964,6 +10706,34 @@ paths:
       summary: Lists CharacterPotionbelts
       tags:
       - CharacterPotionbelt
+  /character_potionbelts/bulk:
+    post:
+      consumes:
+      - application/json
+      operationId: getCharacterPotionbeltsBulk
+      parameters:
+      - description: body
+        in: body
+        name: Body
+        required: true
+        schema:
+          $ref: '#/definitions/crudcontrollers.BulkFetchByIdsGetRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.CharacterPotionbelt'
+            type: array
+        "500":
+          description: Bad query request
+          schema:
+            type: string
+      summary: Gets CharacterPotionbelts in bulk
+      tags:
+      - CharacterPotionbelt
   /character_skill:
     put:
       consumes:
@@ -10147,6 +10917,34 @@ paths:
           schema:
             type: string
       summary: Lists CharacterSkills
+      tags:
+      - CharacterSkill
+  /character_skills/bulk:
+    post:
+      consumes:
+      - application/json
+      operationId: getCharacterSkillsBulk
+      parameters:
+      - description: body
+        in: body
+        name: Body
+        required: true
+        schema:
+          $ref: '#/definitions/crudcontrollers.BulkFetchByIdsGetRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.CharacterSkill'
+            type: array
+        "500":
+          description: Bad query request
+          schema:
+            type: string
+      summary: Gets CharacterSkills in bulk
       tags:
       - CharacterSkill
   /character_spell:
@@ -10334,6 +11132,34 @@ paths:
       summary: Lists CharacterSpells
       tags:
       - CharacterSpell
+  /character_spells/bulk:
+    post:
+      consumes:
+      - application/json
+      operationId: getCharacterSpellsBulk
+      parameters:
+      - description: body
+        in: body
+        name: Body
+        required: true
+        schema:
+          $ref: '#/definitions/crudcontrollers.BulkFetchByIdsGetRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.CharacterSpell'
+            type: array
+        "500":
+          description: Bad query request
+          schema:
+            type: string
+      summary: Gets CharacterSpells in bulk
+      tags:
+      - CharacterSpell
   /content_flag:
     put:
       consumes:
@@ -10517,6 +11343,34 @@ paths:
           schema:
             type: string
       summary: Lists ContentFlags
+      tags:
+      - ContentFlag
+  /content_flags/bulk:
+    post:
+      consumes:
+      - application/json
+      operationId: getContentFlagsBulk
+      parameters:
+      - description: body
+        in: body
+        name: Body
+        required: true
+        schema:
+          $ref: '#/definitions/crudcontrollers.BulkFetchByIdsGetRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.ContentFlag'
+            type: array
+        "500":
+          description: Bad query request
+          schema:
+            type: string
+      summary: Gets ContentFlags in bulk
       tags:
       - ContentFlag
   /data_bucket:
@@ -10704,6 +11558,34 @@ paths:
       summary: Lists DataBuckets
       tags:
       - DataBucket
+  /data_buckets/bulk:
+    post:
+      consumes:
+      - application/json
+      operationId: getDataBucketsBulk
+      parameters:
+      - description: body
+        in: body
+        name: Body
+        required: true
+        schema:
+          $ref: '#/definitions/crudcontrollers.BulkFetchByIdsGetRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.DataBucket'
+            type: array
+        "500":
+          description: Bad query request
+          schema:
+            type: string
+      summary: Gets DataBuckets in bulk
+      tags:
+      - DataBucket
   /db_str:
     put:
       consumes:
@@ -10887,6 +11769,34 @@ paths:
           schema:
             type: string
       summary: Lists DbStrs
+      tags:
+      - DbStr
+  /db_strs/bulk:
+    post:
+      consumes:
+      - application/json
+      operationId: getDbStrsBulk
+      parameters:
+      - description: body
+        in: body
+        name: Body
+        required: true
+        schema:
+          $ref: '#/definitions/crudcontrollers.BulkFetchByIdsGetRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.DbStr'
+            type: array
+        "500":
+          description: Bad query request
+          schema:
+            type: string
+      summary: Gets DbStrs in bulk
       tags:
       - DbStr
   /door:
@@ -11074,6 +11984,34 @@ paths:
       summary: Lists Doors
       tags:
       - Door
+  /doors/bulk:
+    post:
+      consumes:
+      - application/json
+      operationId: getDoorsBulk
+      parameters:
+      - description: body
+        in: body
+        name: Body
+        required: true
+        schema:
+          $ref: '#/definitions/crudcontrollers.BulkFetchByIdsGetRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Door'
+            type: array
+        "500":
+          description: Bad query request
+          schema:
+            type: string
+      summary: Gets Doors in bulk
+      tags:
+      - Door
   /dynamic_zone:
     put:
       consumes:
@@ -11259,6 +12197,34 @@ paths:
       summary: Lists DynamicZones
       tags:
       - DynamicZone
+  /dynamic_zones/bulk:
+    post:
+      consumes:
+      - application/json
+      operationId: getDynamicZonesBulk
+      parameters:
+      - description: body
+        in: body
+        name: Body
+        required: true
+        schema:
+          $ref: '#/definitions/crudcontrollers.BulkFetchByIdsGetRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.DynamicZone'
+            type: array
+        "500":
+          description: Bad query request
+          schema:
+            type: string
+      summary: Gets DynamicZones in bulk
+      tags:
+      - DynamicZone
   /eventlog:
     put:
       consumes:
@@ -11442,6 +12408,34 @@ paths:
           schema:
             type: string
       summary: Lists Eventlogs
+      tags:
+      - Eventlog
+  /eventlogs/bulk:
+    post:
+      consumes:
+      - application/json
+      operationId: getEventlogsBulk
+      parameters:
+      - description: body
+        in: body
+        name: Body
+        required: true
+        schema:
+          $ref: '#/definitions/crudcontrollers.BulkFetchByIdsGetRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Eventlog'
+            type: array
+        "500":
+          description: Bad query request
+          schema:
+            type: string
+      summary: Gets Eventlogs in bulk
       tags:
       - Eventlog
   /expedition:
@@ -11761,6 +12755,34 @@ paths:
       summary: Lists ExpeditionLockouts
       tags:
       - ExpeditionLockout
+  /expedition_lockouts/bulk:
+    post:
+      consumes:
+      - application/json
+      operationId: getExpeditionLockoutsBulk
+      parameters:
+      - description: body
+        in: body
+        name: Body
+        required: true
+        schema:
+          $ref: '#/definitions/crudcontrollers.BulkFetchByIdsGetRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.ExpeditionLockout'
+            type: array
+        "500":
+          description: Bad query request
+          schema:
+            type: string
+      summary: Gets ExpeditionLockouts in bulk
+      tags:
+      - ExpeditionLockout
   /expedition_member:
     put:
       consumes:
@@ -11946,6 +12968,34 @@ paths:
       summary: Lists ExpeditionMembers
       tags:
       - ExpeditionMember
+  /expedition_members/bulk:
+    post:
+      consumes:
+      - application/json
+      operationId: getExpeditionMembersBulk
+      parameters:
+      - description: body
+        in: body
+        name: Body
+        required: true
+        schema:
+          $ref: '#/definitions/crudcontrollers.BulkFetchByIdsGetRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.ExpeditionMember'
+            type: array
+        "500":
+          description: Bad query request
+          schema:
+            type: string
+      summary: Gets ExpeditionMembers in bulk
+      tags:
+      - ExpeditionMember
   /expeditions:
     get:
       consumes:
@@ -11997,6 +13047,34 @@ paths:
           schema:
             type: string
       summary: Lists Expeditions
+      tags:
+      - Expedition
+  /expeditions/bulk:
+    post:
+      consumes:
+      - application/json
+      operationId: getExpeditionsBulk
+      parameters:
+      - description: body
+        in: body
+        name: Body
+        required: true
+        schema:
+          $ref: '#/definitions/crudcontrollers.BulkFetchByIdsGetRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Expedition'
+            type: array
+        "500":
+          description: Bad query request
+          schema:
+            type: string
+      summary: Gets Expeditions in bulk
       tags:
       - Expedition
   /faction_list:
@@ -12316,6 +13394,34 @@ paths:
       summary: Lists FactionListMods
       tags:
       - FactionListMod
+  /faction_list_mods/bulk:
+    post:
+      consumes:
+      - application/json
+      operationId: getFactionListModsBulk
+      parameters:
+      - description: body
+        in: body
+        name: Body
+        required: true
+        schema:
+          $ref: '#/definitions/crudcontrollers.BulkFetchByIdsGetRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.FactionListMod'
+            type: array
+        "500":
+          description: Bad query request
+          schema:
+            type: string
+      summary: Gets FactionListMods in bulk
+      tags:
+      - FactionListMod
   /faction_lists:
     get:
       consumes:
@@ -12367,6 +13473,34 @@ paths:
           schema:
             type: string
       summary: Lists FactionLists
+      tags:
+      - FactionList
+  /faction_lists/bulk:
+    post:
+      consumes:
+      - application/json
+      operationId: getFactionListsBulk
+      parameters:
+      - description: body
+        in: body
+        name: Body
+        required: true
+        schema:
+          $ref: '#/definitions/crudcontrollers.BulkFetchByIdsGetRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.FactionList'
+            type: array
+        "500":
+          description: Bad query request
+          schema:
+            type: string
+      summary: Gets FactionLists in bulk
       tags:
       - FactionList
   /fishing:
@@ -12554,6 +13688,34 @@ paths:
       summary: Lists Fishings
       tags:
       - Fishing
+  /fishings/bulk:
+    post:
+      consumes:
+      - application/json
+      operationId: getFishingsBulk
+      parameters:
+      - description: body
+        in: body
+        name: Body
+        required: true
+        schema:
+          $ref: '#/definitions/crudcontrollers.BulkFetchByIdsGetRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Fishing'
+            type: array
+        "500":
+          description: Bad query request
+          schema:
+            type: string
+      summary: Gets Fishings in bulk
+      tags:
+      - Fishing
   /forage:
     put:
       consumes:
@@ -12737,6 +13899,34 @@ paths:
           schema:
             type: string
       summary: Lists Forages
+      tags:
+      - Forage
+  /forages/bulk:
+    post:
+      consumes:
+      - application/json
+      operationId: getForagesBulk
+      parameters:
+      - description: body
+        in: body
+        name: Body
+        required: true
+        schema:
+          $ref: '#/definitions/crudcontrollers.BulkFetchByIdsGetRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Forage'
+            type: array
+        "500":
+          description: Bad query request
+          schema:
+            type: string
+      summary: Gets Forages in bulk
       tags:
       - Forage
   /global_loot:
@@ -12924,6 +14114,34 @@ paths:
       summary: Lists GlobalLoots
       tags:
       - GlobalLoot
+  /global_loots/bulk:
+    post:
+      consumes:
+      - application/json
+      operationId: getGlobalLootsBulk
+      parameters:
+      - description: body
+        in: body
+        name: Body
+        required: true
+        schema:
+          $ref: '#/definitions/crudcontrollers.BulkFetchByIdsGetRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.GlobalLoot'
+            type: array
+        "500":
+          description: Bad query request
+          schema:
+            type: string
+      summary: Gets GlobalLoots in bulk
+      tags:
+      - GlobalLoot
   /graveyard:
     put:
       consumes:
@@ -13107,6 +14325,34 @@ paths:
           schema:
             type: string
       summary: Lists Graveyards
+      tags:
+      - Graveyard
+  /graveyards/bulk:
+    post:
+      consumes:
+      - application/json
+      operationId: getGraveyardsBulk
+      parameters:
+      - description: body
+        in: body
+        name: Body
+        required: true
+        schema:
+          $ref: '#/definitions/crudcontrollers.BulkFetchByIdsGetRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Graveyard'
+            type: array
+        "500":
+          description: Bad query request
+          schema:
+            type: string
+      summary: Gets Graveyards in bulk
       tags:
       - Graveyard
   /grid:
@@ -13294,6 +14540,34 @@ paths:
       summary: Lists Grids
       tags:
       - Grid
+  /grids/bulk:
+    post:
+      consumes:
+      - application/json
+      operationId: getGridsBulk
+      parameters:
+      - description: body
+        in: body
+        name: Body
+        required: true
+        schema:
+          $ref: '#/definitions/crudcontrollers.BulkFetchByIdsGetRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Grid'
+            type: array
+        "500":
+          description: Bad query request
+          schema:
+            type: string
+      summary: Gets Grids in bulk
+      tags:
+      - Grid
   /ground_spawn:
     put:
       consumes:
@@ -13477,6 +14751,34 @@ paths:
           schema:
             type: string
       summary: Lists GroundSpawns
+      tags:
+      - GroundSpawn
+  /ground_spawns/bulk:
+    post:
+      consumes:
+      - application/json
+      operationId: getGroundSpawnsBulk
+      parameters:
+      - description: body
+        in: body
+        name: Body
+        required: true
+        schema:
+          $ref: '#/definitions/crudcontrollers.BulkFetchByIdsGetRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.GroundSpawn'
+            type: array
+        "500":
+          description: Bad query request
+          schema:
+            type: string
+      summary: Gets GroundSpawns in bulk
       tags:
       - GroundSpawn
   /guild:
@@ -13664,6 +14966,34 @@ paths:
       summary: Lists Guilds
       tags:
       - Guild
+  /guilds/bulk:
+    post:
+      consumes:
+      - application/json
+      operationId: getGuildsBulk
+      parameters:
+      - description: body
+        in: body
+        name: Body
+        required: true
+        schema:
+          $ref: '#/definitions/crudcontrollers.BulkFetchByIdsGetRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Guild'
+            type: array
+        "500":
+          description: Bad query request
+          schema:
+            type: string
+      summary: Gets Guilds in bulk
+      tags:
+      - Guild
   /hacker:
     put:
       consumes:
@@ -13847,6 +15177,34 @@ paths:
           schema:
             type: string
       summary: Lists Hackers
+      tags:
+      - Hacker
+  /hackers/bulk:
+    post:
+      consumes:
+      - application/json
+      operationId: getHackersBulk
+      parameters:
+      - description: body
+        in: body
+        name: Body
+        required: true
+        schema:
+          $ref: '#/definitions/crudcontrollers.BulkFetchByIdsGetRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Hacker'
+            type: array
+        "500":
+          description: Bad query request
+          schema:
+            type: string
+      summary: Gets Hackers in bulk
       tags:
       - Hacker
   /instance_list:
@@ -14166,6 +15524,34 @@ paths:
       summary: Lists InstanceListPlayers
       tags:
       - InstanceListPlayer
+  /instance_list_players/bulk:
+    post:
+      consumes:
+      - application/json
+      operationId: getInstanceListPlayersBulk
+      parameters:
+      - description: body
+        in: body
+        name: Body
+        required: true
+        schema:
+          $ref: '#/definitions/crudcontrollers.BulkFetchByIdsGetRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.InstanceListPlayer'
+            type: array
+        "500":
+          description: Bad query request
+          schema:
+            type: string
+      summary: Gets InstanceListPlayers in bulk
+      tags:
+      - InstanceListPlayer
   /instance_lists:
     get:
       consumes:
@@ -14217,6 +15603,34 @@ paths:
           schema:
             type: string
       summary: Lists InstanceLists
+      tags:
+      - InstanceList
+  /instance_lists/bulk:
+    post:
+      consumes:
+      - application/json
+      operationId: getInstanceListsBulk
+      parameters:
+      - description: body
+        in: body
+        name: Body
+        required: true
+        schema:
+          $ref: '#/definitions/crudcontrollers.BulkFetchByIdsGetRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.InstanceList'
+            type: array
+        "500":
+          description: Bad query request
+          schema:
+            type: string
+      summary: Gets InstanceLists in bulk
       tags:
       - InstanceList
   /item:
@@ -14404,6 +15818,34 @@ paths:
       summary: Lists Items
       tags:
       - Item
+  /items/bulk:
+    post:
+      consumes:
+      - application/json
+      operationId: getItemsBulk
+      parameters:
+      - description: body
+        in: body
+        name: Body
+        required: true
+        schema:
+          $ref: '#/definitions/crudcontrollers.BulkFetchByIdsGetRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Item'
+            type: array
+        "500":
+          description: Bad query request
+          schema:
+            type: string
+      summary: Gets Items in bulk
+      tags:
+      - Item
   /ldon_trap_entries:
     get:
       consumes:
@@ -14455,6 +15897,34 @@ paths:
           schema:
             type: string
       summary: Lists LdonTrapEntries
+      tags:
+      - LdonTrapEntry
+  /ldon_trap_entries/bulk:
+    post:
+      consumes:
+      - application/json
+      operationId: getLdonTrapEntriesBulk
+      parameters:
+      - description: body
+        in: body
+        name: Body
+        required: true
+        schema:
+          $ref: '#/definitions/crudcontrollers.BulkFetchByIdsGetRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.LdonTrapEntry'
+            type: array
+        "500":
+          description: Bad query request
+          schema:
+            type: string
+      summary: Gets LdonTrapEntries in bulk
       tags:
       - LdonTrapEntry
   /ldon_trap_entry:
@@ -14774,6 +16244,34 @@ paths:
       summary: Lists LdonTrapTemplates
       tags:
       - LdonTrapTemplate
+  /ldon_trap_templates/bulk:
+    post:
+      consumes:
+      - application/json
+      operationId: getLdonTrapTemplatesBulk
+      parameters:
+      - description: body
+        in: body
+        name: Body
+        required: true
+        schema:
+          $ref: '#/definitions/crudcontrollers.BulkFetchByIdsGetRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.LdonTrapTemplate'
+            type: array
+        "500":
+          description: Bad query request
+          schema:
+            type: string
+      summary: Gets LdonTrapTemplates in bulk
+      tags:
+      - LdonTrapTemplate
   /login_account:
     put:
       consumes:
@@ -14957,6 +16455,34 @@ paths:
           schema:
             type: string
       summary: Lists LoginAccounts
+      tags:
+      - LoginAccount
+  /login_accounts/bulk:
+    post:
+      consumes:
+      - application/json
+      operationId: getLoginAccountsBulk
+      parameters:
+      - description: body
+        in: body
+        name: Body
+        required: true
+        schema:
+          $ref: '#/definitions/crudcontrollers.BulkFetchByIdsGetRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.LoginAccount'
+            type: array
+        "500":
+          description: Bad query request
+          schema:
+            type: string
+      summary: Gets LoginAccounts in bulk
       tags:
       - LoginAccount
   /login_api_token:
@@ -15144,6 +16670,34 @@ paths:
       summary: Lists LoginApiTokens
       tags:
       - LoginApiToken
+  /login_api_tokens/bulk:
+    post:
+      consumes:
+      - application/json
+      operationId: getLoginApiTokensBulk
+      parameters:
+      - description: body
+        in: body
+        name: Body
+        required: true
+        schema:
+          $ref: '#/definitions/crudcontrollers.BulkFetchByIdsGetRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.LoginApiToken'
+            type: array
+        "500":
+          description: Bad query request
+          schema:
+            type: string
+      summary: Gets LoginApiTokens in bulk
+      tags:
+      - LoginApiToken
   /login_server_admin:
     put:
       consumes:
@@ -15327,6 +16881,34 @@ paths:
           schema:
             type: string
       summary: Lists LoginServerAdmins
+      tags:
+      - LoginServerAdmin
+  /login_server_admins/bulk:
+    post:
+      consumes:
+      - application/json
+      operationId: getLoginServerAdminsBulk
+      parameters:
+      - description: body
+        in: body
+        name: Body
+        required: true
+        schema:
+          $ref: '#/definitions/crudcontrollers.BulkFetchByIdsGetRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.LoginServerAdmin'
+            type: array
+        "500":
+          description: Bad query request
+          schema:
+            type: string
+      summary: Gets LoginServerAdmins in bulk
       tags:
       - LoginServerAdmin
   /login_server_list_type:
@@ -15514,6 +17096,34 @@ paths:
       summary: Lists LoginServerListTypes
       tags:
       - LoginServerListType
+  /login_server_list_types/bulk:
+    post:
+      consumes:
+      - application/json
+      operationId: getLoginServerListTypesBulk
+      parameters:
+      - description: body
+        in: body
+        name: Body
+        required: true
+        schema:
+          $ref: '#/definitions/crudcontrollers.BulkFetchByIdsGetRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.LoginServerListType'
+            type: array
+        "500":
+          description: Bad query request
+          schema:
+            type: string
+      summary: Gets LoginServerListTypes in bulk
+      tags:
+      - LoginServerListType
   /login_world_server:
     put:
       consumes:
@@ -15697,6 +17307,34 @@ paths:
           schema:
             type: string
       summary: Lists LoginWorldServers
+      tags:
+      - LoginWorldServer
+  /login_world_servers/bulk:
+    post:
+      consumes:
+      - application/json
+      operationId: getLoginWorldServersBulk
+      parameters:
+      - description: body
+        in: body
+        name: Body
+        required: true
+        schema:
+          $ref: '#/definitions/crudcontrollers.BulkFetchByIdsGetRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.LoginWorldServer'
+            type: array
+        "500":
+          description: Bad query request
+          schema:
+            type: string
+      summary: Gets LoginWorldServers in bulk
       tags:
       - LoginWorldServer
   /lootdrop:
@@ -15884,6 +17522,34 @@ paths:
       summary: Lists Lootdrops
       tags:
       - Lootdrop
+  /lootdrops/bulk:
+    post:
+      consumes:
+      - application/json
+      operationId: getLootdropsBulk
+      parameters:
+      - description: body
+        in: body
+        name: Body
+        required: true
+        schema:
+          $ref: '#/definitions/crudcontrollers.BulkFetchByIdsGetRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Lootdrop'
+            type: array
+        "500":
+          description: Bad query request
+          schema:
+            type: string
+      summary: Gets Lootdrops in bulk
+      tags:
+      - Lootdrop
   /loottable:
     put:
       consumes:
@@ -16067,6 +17733,34 @@ paths:
           schema:
             type: string
       summary: Lists Loottables
+      tags:
+      - Loottable
+  /loottables/bulk:
+    post:
+      consumes:
+      - application/json
+      operationId: getLoottablesBulk
+      parameters:
+      - description: body
+        in: body
+        name: Body
+        required: true
+        schema:
+          $ref: '#/definitions/crudcontrollers.BulkFetchByIdsGetRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Loottable'
+            type: array
+        "500":
+          description: Bad query request
+          schema:
+            type: string
+      summary: Gets Loottables in bulk
       tags:
       - Loottable
   /me:
@@ -16275,6 +17969,34 @@ paths:
       summary: Lists NameFilters
       tags:
       - NameFilter
+  /name_filters/bulk:
+    post:
+      consumes:
+      - application/json
+      operationId: getNameFiltersBulk
+      parameters:
+      - description: body
+        in: body
+        name: Body
+        required: true
+        schema:
+          $ref: '#/definitions/crudcontrollers.BulkFetchByIdsGetRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.NameFilter'
+            type: array
+        "500":
+          description: Bad query request
+          schema:
+            type: string
+      summary: Gets NameFilters in bulk
+      tags:
+      - NameFilter
   /npc_emote:
     put:
       consumes:
@@ -16458,6 +18180,34 @@ paths:
           schema:
             type: string
       summary: Lists NpcEmotes
+      tags:
+      - NpcEmote
+  /npc_emotes/bulk:
+    post:
+      consumes:
+      - application/json
+      operationId: getNpcEmotesBulk
+      parameters:
+      - description: body
+        in: body
+        name: Body
+        required: true
+        schema:
+          $ref: '#/definitions/crudcontrollers.BulkFetchByIdsGetRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.NpcEmote'
+            type: array
+        "500":
+          description: Bad query request
+          schema:
+            type: string
+      summary: Gets NpcEmotes in bulk
       tags:
       - NpcEmote
   /npc_faction:
@@ -16645,6 +18395,34 @@ paths:
       summary: Lists NpcFactions
       tags:
       - NpcFaction
+  /npc_factions/bulk:
+    post:
+      consumes:
+      - application/json
+      operationId: getNpcFactionsBulk
+      parameters:
+      - description: body
+        in: body
+        name: Body
+        required: true
+        schema:
+          $ref: '#/definitions/crudcontrollers.BulkFetchByIdsGetRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.NpcFaction'
+            type: array
+        "500":
+          description: Bad query request
+          schema:
+            type: string
+      summary: Gets NpcFactions in bulk
+      tags:
+      - NpcFaction
   /npc_spell:
     put:
       consumes:
@@ -16828,6 +18606,34 @@ paths:
           schema:
             type: string
       summary: Lists NpcSpells
+      tags:
+      - NpcSpell
+  /npc_spells/bulk:
+    post:
+      consumes:
+      - application/json
+      operationId: getNpcSpellsBulk
+      parameters:
+      - description: body
+        in: body
+        name: Body
+        required: true
+        schema:
+          $ref: '#/definitions/crudcontrollers.BulkFetchByIdsGetRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.NpcSpell'
+            type: array
+        "500":
+          description: Bad query request
+          schema:
+            type: string
+      summary: Gets NpcSpells in bulk
       tags:
       - NpcSpell
   /npc_spells_effect:
@@ -17015,6 +18821,34 @@ paths:
       summary: Lists NpcSpellsEffects
       tags:
       - NpcSpellsEffect
+  /npc_spells_effects/bulk:
+    post:
+      consumes:
+      - application/json
+      operationId: getNpcSpellsEffectsBulk
+      parameters:
+      - description: body
+        in: body
+        name: Body
+        required: true
+        schema:
+          $ref: '#/definitions/crudcontrollers.BulkFetchByIdsGetRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.NpcSpellsEffect'
+            type: array
+        "500":
+          description: Bad query request
+          schema:
+            type: string
+      summary: Gets NpcSpellsEffects in bulk
+      tags:
+      - NpcSpellsEffect
   /npc_spells_effects_entries:
     get:
       consumes:
@@ -17066,6 +18900,34 @@ paths:
           schema:
             type: string
       summary: Lists NpcSpellsEffectsEntries
+      tags:
+      - NpcSpellsEffectsEntry
+  /npc_spells_effects_entries/bulk:
+    post:
+      consumes:
+      - application/json
+      operationId: getNpcSpellsEffectsEntriesBulk
+      parameters:
+      - description: body
+        in: body
+        name: Body
+        required: true
+        schema:
+          $ref: '#/definitions/crudcontrollers.BulkFetchByIdsGetRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.NpcSpellsEffectsEntry'
+            type: array
+        "500":
+          description: Bad query request
+          schema:
+            type: string
+      summary: Gets NpcSpellsEffectsEntries in bulk
       tags:
       - NpcSpellsEffectsEntry
   /npc_spells_effects_entry:
@@ -17251,6 +19113,34 @@ paths:
           schema:
             type: string
       summary: Lists NpcSpellsEntries
+      tags:
+      - NpcSpellsEntry
+  /npc_spells_entries/bulk:
+    post:
+      consumes:
+      - application/json
+      operationId: getNpcSpellsEntriesBulk
+      parameters:
+      - description: body
+        in: body
+        name: Body
+        required: true
+        schema:
+          $ref: '#/definitions/crudcontrollers.BulkFetchByIdsGetRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.NpcSpellsEntry'
+            type: array
+        "500":
+          description: Bad query request
+          schema:
+            type: string
+      summary: Gets NpcSpellsEntries in bulk
       tags:
       - NpcSpellsEntry
   /npc_spells_entry:
@@ -17570,6 +19460,34 @@ paths:
       summary: Lists NpcTypes
       tags:
       - NpcType
+  /npc_types/bulk:
+    post:
+      consumes:
+      - application/json
+      operationId: getNpcTypesBulk
+      parameters:
+      - description: body
+        in: body
+        name: Body
+        required: true
+        schema:
+          $ref: '#/definitions/crudcontrollers.BulkFetchByIdsGetRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.NpcType'
+            type: array
+        "500":
+          description: Bad query request
+          schema:
+            type: string
+      summary: Gets NpcTypes in bulk
+      tags:
+      - NpcType
   /npc_types_tint:
     put:
       consumes:
@@ -17753,6 +19671,34 @@ paths:
           schema:
             type: string
       summary: Lists NpcTypesTints
+      tags:
+      - NpcTypesTint
+  /npc_types_tints/bulk:
+    post:
+      consumes:
+      - application/json
+      operationId: getNpcTypesTintsBulk
+      parameters:
+      - description: body
+        in: body
+        name: Body
+        required: true
+        schema:
+          $ref: '#/definitions/crudcontrollers.BulkFetchByIdsGetRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.NpcTypesTint'
+            type: array
+        "500":
+          description: Bad query request
+          schema:
+            type: string
+      summary: Gets NpcTypesTints in bulk
       tags:
       - NpcTypesTint
   /object:
@@ -17940,6 +19886,34 @@ paths:
       summary: Lists Objects
       tags:
       - Object
+  /objects/bulk:
+    post:
+      consumes:
+      - application/json
+      operationId: getObjectsBulk
+      parameters:
+      - description: body
+        in: body
+        name: Body
+        required: true
+        schema:
+          $ref: '#/definitions/crudcontrollers.BulkFetchByIdsGetRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Object'
+            type: array
+        "500":
+          description: Bad query request
+          schema:
+            type: string
+      summary: Gets Objects in bulk
+      tags:
+      - Object
   /player_titleset:
     put:
       consumes:
@@ -18123,6 +20097,34 @@ paths:
           schema:
             type: string
       summary: Lists PlayerTitlesets
+      tags:
+      - PlayerTitleset
+  /player_titlesets/bulk:
+    post:
+      consumes:
+      - application/json
+      operationId: getPlayerTitlesetsBulk
+      parameters:
+      - description: body
+        in: body
+        name: Body
+        required: true
+        schema:
+          $ref: '#/definitions/crudcontrollers.BulkFetchByIdsGetRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.PlayerTitleset'
+            type: array
+        "500":
+          description: Bad query request
+          schema:
+            type: string
+      summary: Gets PlayerTitlesets in bulk
       tags:
       - PlayerTitleset
   /report:
@@ -18310,6 +20312,34 @@ paths:
       summary: Lists Reports
       tags:
       - Report
+  /reports/bulk:
+    post:
+      consumes:
+      - application/json
+      operationId: getReportsBulk
+      parameters:
+      - description: body
+        in: body
+        name: Body
+        required: true
+        schema:
+          $ref: '#/definitions/crudcontrollers.BulkFetchByIdsGetRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Report'
+            type: array
+        "500":
+          description: Bad query request
+          schema:
+            type: string
+      summary: Gets Reports in bulk
+      tags:
+      - Report
   /respawn_time:
     put:
       consumes:
@@ -18493,6 +20523,34 @@ paths:
           schema:
             type: string
       summary: Lists RespawnTimes
+      tags:
+      - RespawnTime
+  /respawn_times/bulk:
+    post:
+      consumes:
+      - application/json
+      operationId: getRespawnTimesBulk
+      parameters:
+      - description: body
+        in: body
+        name: Body
+        required: true
+        schema:
+          $ref: '#/definitions/crudcontrollers.BulkFetchByIdsGetRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.RespawnTime'
+            type: array
+        "500":
+          description: Bad query request
+          schema:
+            type: string
+      summary: Gets RespawnTimes in bulk
       tags:
       - RespawnTime
   /saylink:
@@ -18680,6 +20738,34 @@ paths:
       summary: Lists Saylinks
       tags:
       - Saylink
+  /saylinks/bulk:
+    post:
+      consumes:
+      - application/json
+      operationId: getSaylinksBulk
+      parameters:
+      - description: body
+        in: body
+        name: Body
+        required: true
+        schema:
+          $ref: '#/definitions/crudcontrollers.BulkFetchByIdsGetRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Saylink'
+            type: array
+        "500":
+          description: Bad query request
+          schema:
+            type: string
+      summary: Gets Saylinks in bulk
+      tags:
+      - Saylink
   /server_scheduled_event:
     put:
       consumes:
@@ -18865,6 +20951,34 @@ paths:
       summary: Lists ServerScheduledEvents
       tags:
       - ServerScheduledEvent
+  /server_scheduled_events/bulk:
+    post:
+      consumes:
+      - application/json
+      operationId: getServerScheduledEventsBulk
+      parameters:
+      - description: body
+        in: body
+        name: Body
+        required: true
+        schema:
+          $ref: '#/definitions/crudcontrollers.BulkFetchByIdsGetRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.ServerScheduledEvent'
+            type: array
+        "500":
+          description: Bad query request
+          schema:
+            type: string
+      summary: Gets ServerScheduledEvents in bulk
+      tags:
+      - ServerScheduledEvent
   /spawn_2:
     put:
       consumes:
@@ -19048,6 +21162,34 @@ paths:
           schema:
             type: string
       summary: Lists Spawn2s
+      tags:
+      - Spawn2
+  /spawn_2s/bulk:
+    post:
+      consumes:
+      - application/json
+      operationId: getSpawn2sBulk
+      parameters:
+      - description: body
+        in: body
+        name: Body
+        required: true
+        schema:
+          $ref: '#/definitions/crudcontrollers.BulkFetchByIdsGetRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Spawn2'
+            type: array
+        "500":
+          description: Bad query request
+          schema:
+            type: string
+      summary: Gets Spawn2s in bulk
       tags:
       - Spawn2
   /spawn_condition:
@@ -19367,6 +21509,34 @@ paths:
       summary: Lists SpawnConditionValues
       tags:
       - SpawnConditionValue
+  /spawn_condition_values/bulk:
+    post:
+      consumes:
+      - application/json
+      operationId: getSpawnConditionValuesBulk
+      parameters:
+      - description: body
+        in: body
+        name: Body
+        required: true
+        schema:
+          $ref: '#/definitions/crudcontrollers.BulkFetchByIdsGetRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.SpawnConditionValue'
+            type: array
+        "500":
+          description: Bad query request
+          schema:
+            type: string
+      summary: Gets SpawnConditionValues in bulk
+      tags:
+      - SpawnConditionValue
   /spawn_conditions:
     get:
       consumes:
@@ -19382,6 +21552,11 @@ paths:
           Example: col_like_value.col2__val2'
         in: query
         name: where
+        type: string
+      - description: 'Filter on specific fields (Chained ors). Multiple conditions
+          [.] separated Example: col_like_value.col2__val2'
+        in: query
+        name: whereOr
         type: string
       - description: 'Rows to limit in response (Default: 10,000)'
         in: query
@@ -19413,6 +21588,34 @@ paths:
           schema:
             type: string
       summary: Lists SpawnConditions
+      tags:
+      - SpawnCondition
+  /spawn_conditions/bulk:
+    post:
+      consumes:
+      - application/json
+      operationId: getSpawnConditionsBulk
+      parameters:
+      - description: body
+        in: body
+        name: Body
+        required: true
+        schema:
+          $ref: '#/definitions/crudcontrollers.BulkFetchByIdsGetRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.SpawnCondition'
+            type: array
+        "500":
+          description: Bad query request
+          schema:
+            type: string
+      summary: Gets SpawnConditions in bulk
       tags:
       - SpawnCondition
   /spawn_event:
@@ -19600,6 +21803,34 @@ paths:
       summary: Lists SpawnEvents
       tags:
       - SpawnEvent
+  /spawn_events/bulk:
+    post:
+      consumes:
+      - application/json
+      operationId: getSpawnEventsBulk
+      parameters:
+      - description: body
+        in: body
+        name: Body
+        required: true
+        schema:
+          $ref: '#/definitions/crudcontrollers.BulkFetchByIdsGetRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.SpawnEvent'
+            type: array
+        "500":
+          description: Bad query request
+          schema:
+            type: string
+      summary: Gets SpawnEvents in bulk
+      tags:
+      - SpawnEvent
   /spawngroup:
     put:
       consumes:
@@ -19783,6 +22014,34 @@ paths:
           schema:
             type: string
       summary: Lists Spawngroups
+      tags:
+      - Spawngroup
+  /spawngroups/bulk:
+    post:
+      consumes:
+      - application/json
+      operationId: getSpawngroupsBulk
+      parameters:
+      - description: body
+        in: body
+        name: Body
+        required: true
+        schema:
+          $ref: '#/definitions/crudcontrollers.BulkFetchByIdsGetRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Spawngroup'
+            type: array
+        "500":
+          description: Bad query request
+          schema:
+            type: string
+      summary: Gets Spawngroups in bulk
       tags:
       - Spawngroup
   /spells_new:
@@ -19974,14 +22233,14 @@ paths:
     post:
       consumes:
       - application/json
-      operationId: getSpellsNewBulk
+      operationId: getSpellsNewsBulk
       parameters:
-      - description: ids
+      - description: body
         in: body
-        name: ids
+        name: Body
         required: true
         schema:
-          $ref: '#/definitions/crudcontrollers.BulkSpellsNewGetRequest'
+          $ref: '#/definitions/crudcontrollers.BulkFetchByIdsGetRequest'
       produces:
       - application/json
       responses:
@@ -20183,6 +22442,34 @@ paths:
       summary: Lists StartingItems
       tags:
       - StartingItem
+  /starting_items/bulk:
+    post:
+      consumes:
+      - application/json
+      operationId: getStartingItemsBulk
+      parameters:
+      - description: body
+        in: body
+        name: Body
+        required: true
+        schema:
+          $ref: '#/definitions/crudcontrollers.BulkFetchByIdsGetRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.StartingItem'
+            type: array
+        "500":
+          description: Bad query request
+          schema:
+            type: string
+      summary: Gets StartingItems in bulk
+      tags:
+      - StartingItem
   /task:
     put:
       consumes:
@@ -20366,6 +22653,34 @@ paths:
           schema:
             type: string
       summary: Lists Tasks
+      tags:
+      - Task
+  /tasks/bulk:
+    post:
+      consumes:
+      - application/json
+      operationId: getTasksBulk
+      parameters:
+      - description: body
+        in: body
+        name: Body
+        required: true
+        schema:
+          $ref: '#/definitions/crudcontrollers.BulkFetchByIdsGetRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Task'
+            type: array
+        "500":
+          description: Bad query request
+          schema:
+            type: string
+      summary: Gets Tasks in bulk
       tags:
       - Task
   /taskset:
@@ -20553,6 +22868,34 @@ paths:
       summary: Lists Tasksets
       tags:
       - Taskset
+  /tasksets/bulk:
+    post:
+      consumes:
+      - application/json
+      operationId: getTasksetsBulk
+      parameters:
+      - description: body
+        in: body
+        name: Body
+        required: true
+        schema:
+          $ref: '#/definitions/crudcontrollers.BulkFetchByIdsGetRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Taskset'
+            type: array
+        "500":
+          description: Bad query request
+          schema:
+            type: string
+      summary: Gets Tasksets in bulk
+      tags:
+      - Taskset
   /title:
     put:
       consumes:
@@ -20736,6 +23079,34 @@ paths:
           schema:
             type: string
       summary: Lists Titles
+      tags:
+      - Title
+  /titles/bulk:
+    post:
+      consumes:
+      - application/json
+      operationId: getTitlesBulk
+      parameters:
+      - description: body
+        in: body
+        name: Body
+        required: true
+        schema:
+          $ref: '#/definitions/crudcontrollers.BulkFetchByIdsGetRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Title'
+            type: array
+        "500":
+          description: Bad query request
+          schema:
+            type: string
+      summary: Gets Titles in bulk
       tags:
       - Title
   /tradeskill_recipe:
@@ -20923,6 +23294,34 @@ paths:
       summary: Lists TradeskillRecipeEntries
       tags:
       - TradeskillRecipeEntry
+  /tradeskill_recipe_entries/bulk:
+    post:
+      consumes:
+      - application/json
+      operationId: getTradeskillRecipeEntriesBulk
+      parameters:
+      - description: body
+        in: body
+        name: Body
+        required: true
+        schema:
+          $ref: '#/definitions/crudcontrollers.BulkFetchByIdsGetRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.TradeskillRecipeEntry'
+            type: array
+        "500":
+          description: Bad query request
+          schema:
+            type: string
+      summary: Gets TradeskillRecipeEntries in bulk
+      tags:
+      - TradeskillRecipeEntry
   /tradeskill_recipe_entry:
     put:
       consumes:
@@ -21106,6 +23505,34 @@ paths:
           schema:
             type: string
       summary: Lists TradeskillRecipes
+      tags:
+      - TradeskillRecipe
+  /tradeskill_recipes/bulk:
+    post:
+      consumes:
+      - application/json
+      operationId: getTradeskillRecipesBulk
+      parameters:
+      - description: body
+        in: body
+        name: Body
+        required: true
+        schema:
+          $ref: '#/definitions/crudcontrollers.BulkFetchByIdsGetRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.TradeskillRecipe'
+            type: array
+        "500":
+          description: Bad query request
+          schema:
+            type: string
+      summary: Gets TradeskillRecipes in bulk
       tags:
       - TradeskillRecipe
   /trap:
@@ -21293,6 +23720,34 @@ paths:
       summary: Lists Traps
       tags:
       - Trap
+  /traps/bulk:
+    post:
+      consumes:
+      - application/json
+      operationId: getTrapsBulk
+      parameters:
+      - description: body
+        in: body
+        name: Body
+        required: true
+        schema:
+          $ref: '#/definitions/crudcontrollers.BulkFetchByIdsGetRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Trap'
+            type: array
+        "500":
+          description: Bad query request
+          schema:
+            type: string
+      summary: Gets Traps in bulk
+      tags:
+      - Trap
   /tribute:
     put:
       consumes:
@@ -21476,6 +23931,34 @@ paths:
           schema:
             type: string
       summary: Lists Tributes
+      tags:
+      - Tribute
+  /tributes/bulk:
+    post:
+      consumes:
+      - application/json
+      operationId: getTributesBulk
+      parameters:
+      - description: body
+        in: body
+        name: Body
+        required: true
+        schema:
+          $ref: '#/definitions/crudcontrollers.BulkFetchByIdsGetRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Tribute'
+            type: array
+        "500":
+          description: Bad query request
+          schema:
+            type: string
+      summary: Gets Tributes in bulk
       tags:
       - Tribute
   /zone:
@@ -21795,6 +24278,34 @@ paths:
       summary: Lists ZonePoints
       tags:
       - ZonePoint
+  /zone_points/bulk:
+    post:
+      consumes:
+      - application/json
+      operationId: getZonePointsBulk
+      parameters:
+      - description: body
+        in: body
+        name: Body
+        required: true
+        schema:
+          $ref: '#/definitions/crudcontrollers.BulkFetchByIdsGetRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.ZonePoint'
+            type: array
+        "500":
+          description: Bad query request
+          schema:
+            type: string
+      summary: Gets ZonePoints in bulk
+      tags:
+      - ZonePoint
   /zones:
     get:
       consumes:
@@ -21846,6 +24357,34 @@ paths:
           schema:
             type: string
       summary: Lists Zones
+      tags:
+      - Zone
+  /zones/bulk:
+    post:
+      consumes:
+      - application/json
+      operationId: getZonesBulk
+      parameters:
+      - description: body
+        in: body
+        name: Body
+        required: true
+        schema:
+          $ref: '#/definitions/crudcontrollers.BulkFetchByIdsGetRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Zone'
+            type: array
+        "500":
+          description: Bad query request
+          schema:
+            type: string
+      summary: Gets Zones in bulk
       tags:
       - Zone
 swagger: "2.0"

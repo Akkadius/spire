@@ -19,6 +19,8 @@ import { Configuration } from '../configuration';
 // @ts-ignore
 import { BASE_PATH, COLLECTION_FORMATS, RequestArgs, BaseAPI, RequiredError } from '../base';
 // @ts-ignore
+import { CrudcontrollersBulkFetchByIdsGetRequest } from '../models';
+// @ts-ignore
 import { ModelsNpcTypesTint } from '../models';
 /**
  * NpcTypesTintApi - axios parameter creator
@@ -167,6 +169,57 @@ export const NpcTypesTintApiAxiosParamCreator = function (configuration?: Config
             localVarUrlObj.search = (new URLSearchParams(queryParameters)).toString();
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @summary Gets NpcTypesTints in bulk
+         * @param {CrudcontrollersBulkFetchByIdsGetRequest} body body
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getNpcTypesTintsBulk: async (body: CrudcontrollersBulkFetchByIdsGetRequest, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'body' is not null or undefined
+            if (body === null || body === undefined) {
+                throw new RequiredError('body','Required parameter body was null or undefined when calling getNpcTypesTintsBulk.');
+            }
+            const localVarPath = `/npc_types_tints/bulk`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, 'https://example.com');
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            const queryParameters = new URLSearchParams(localVarUrlObj.search);
+            for (const key in localVarQueryParameter) {
+                queryParameters.set(key, localVarQueryParameter[key]);
+            }
+            for (const key in options.query) {
+                queryParameters.set(key, options.query[key]);
+            }
+            localVarUrlObj.search = (new URLSearchParams(queryParameters)).toString();
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            const nonString = typeof body !== 'string';
+            const needsSerialization = nonString && configuration && configuration.isJsonMime
+                ? configuration.isJsonMime(localVarRequestOptions.headers['Content-Type'])
+                : nonString;
+            localVarRequestOptions.data =  needsSerialization
+                ? JSON.stringify(body !== undefined ? body : {})
+                : (body || "");
 
             return {
                 url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
@@ -357,6 +410,20 @@ export const NpcTypesTintApiFp = function(configuration?: Configuration) {
         },
         /**
          * 
+         * @summary Gets NpcTypesTints in bulk
+         * @param {CrudcontrollersBulkFetchByIdsGetRequest} body body
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async getNpcTypesTintsBulk(body: CrudcontrollersBulkFetchByIdsGetRequest, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<ModelsNpcTypesTint>>> {
+            const localVarAxiosArgs = await NpcTypesTintApiAxiosParamCreator(configuration).getNpcTypesTintsBulk(body, options);
+            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
+                const axiosRequestArgs = {...localVarAxiosArgs.options, url: (configuration?.basePath || basePath) + localVarAxiosArgs.url};
+                return axios.request(axiosRequestArgs);
+            };
+        },
+        /**
+         * 
          * @summary Lists NpcTypesTints
          * @param {string} [includes] Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names 
          * @param {string} [where] Filter on specific fields. Multiple conditions [.] separated Example: col_like_value.col2__val2
@@ -430,6 +497,16 @@ export const NpcTypesTintApiFactory = function (configuration?: Configuration, b
          */
         getNpcTypesTint(id: number, includes?: string, select?: string, options?: any): AxiosPromise<Array<ModelsNpcTypesTint>> {
             return NpcTypesTintApiFp(configuration).getNpcTypesTint(id, includes, select, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @summary Gets NpcTypesTints in bulk
+         * @param {CrudcontrollersBulkFetchByIdsGetRequest} body body
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getNpcTypesTintsBulk(body: CrudcontrollersBulkFetchByIdsGetRequest, options?: any): AxiosPromise<Array<ModelsNpcTypesTint>> {
+            return NpcTypesTintApiFp(configuration).getNpcTypesTintsBulk(body, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -515,6 +592,20 @@ export interface NpcTypesTintApiGetNpcTypesTintRequest {
      * @memberof NpcTypesTintApiGetNpcTypesTint
      */
     readonly select?: string
+}
+
+/**
+ * Request parameters for getNpcTypesTintsBulk operation in NpcTypesTintApi.
+ * @export
+ * @interface NpcTypesTintApiGetNpcTypesTintsBulkRequest
+ */
+export interface NpcTypesTintApiGetNpcTypesTintsBulkRequest {
+    /**
+     * body
+     * @type {CrudcontrollersBulkFetchByIdsGetRequest}
+     * @memberof NpcTypesTintApiGetNpcTypesTintsBulk
+     */
+    readonly body: CrudcontrollersBulkFetchByIdsGetRequest
 }
 
 /**
@@ -635,6 +726,18 @@ export class NpcTypesTintApi extends BaseAPI {
      */
     public getNpcTypesTint(requestParameters: NpcTypesTintApiGetNpcTypesTintRequest, options?: any) {
         return NpcTypesTintApiFp(this.configuration).getNpcTypesTint(requestParameters.id, requestParameters.includes, requestParameters.select, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @summary Gets NpcTypesTints in bulk
+     * @param {NpcTypesTintApiGetNpcTypesTintsBulkRequest} requestParameters Request parameters.
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof NpcTypesTintApi
+     */
+    public getNpcTypesTintsBulk(requestParameters: NpcTypesTintApiGetNpcTypesTintsBulkRequest, options?: any) {
+        return NpcTypesTintApiFp(this.configuration).getNpcTypesTintsBulk(requestParameters.body, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**

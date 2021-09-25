@@ -20,7 +20,7 @@ func NewContentFlagController(
 	db *database.DatabaseResolver,
 	logger *logrus.Logger,
 ) *ContentFlagController {
-	return &ContentFlagController {
+	return &ContentFlagController{
 		db:     db,
 		logger: logger,
 	}
@@ -31,6 +31,7 @@ func (e *ContentFlagController) Routes() []*routes.Route {
 		routes.RegisterRoute(http.MethodDelete, "content_flag/:content_flag", e.deleteContentFlag, nil),
 		routes.RegisterRoute(http.MethodGet, "content_flag/:content_flag", e.getContentFlag, nil),
 		routes.RegisterRoute(http.MethodGet, "content_flags", e.listContentFlags, nil),
+		routes.RegisterRoute(http.MethodPost, "spells_news/bulk", e.getContentFlagsBulk, nil),
 		routes.RegisterRoute(http.MethodPatch, "content_flag/:content_flag", e.updateContentFlag, nil),
 		routes.RegisterRoute(http.MethodPut, "content_flag", e.createContentFlag, nil),
 	}
@@ -111,7 +112,10 @@ func (e *ContentFlagController) getContentFlag(c echo.Context) error {
 func (e *ContentFlagController) updateContentFlag(c echo.Context) error {
 	contentFlag := new(models.ContentFlag)
 	if err := c.Bind(contentFlag); err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error binding to entity: [%v]", err)})
+		return c.JSON(
+			http.StatusInternalServerError,
+			echo.Map{"error": fmt.Sprintf("Error binding to entity: [%v]", err)},
+		)
 	}
 
 	err := e.db.Get(models.ContentFlag{}, c).Model(&models.ContentFlag{}).First(&models.ContentFlag{}, contentFlag.ID).Error
@@ -141,12 +145,18 @@ func (e *ContentFlagController) updateContentFlag(c echo.Context) error {
 func (e *ContentFlagController) createContentFlag(c echo.Context) error {
 	contentFlag := new(models.ContentFlag)
 	if err := c.Bind(contentFlag); err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error binding to entity: [%v]", err)})
+		return c.JSON(
+			http.StatusInternalServerError,
+			echo.Map{"error": fmt.Sprintf("Error binding to entity: [%v]", err)},
+		)
 	}
 
 	err := e.db.Get(models.ContentFlag{}, c).Model(&models.ContentFlag{}).Create(&contentFlag).Error
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error inserting entity: [%v]", err)})
+		return c.JSON(
+			http.StatusInternalServerError,
+			echo.Map{"error": fmt.Sprintf("Error inserting entity: [%v]", err)},
+		)
 	}
 
 	return c.JSON(http.StatusOK, contentFlag)
@@ -182,4 +192,40 @@ func (e *ContentFlagController) deleteContentFlag(c echo.Context) error {
 	}
 
 	return c.JSON(http.StatusOK, echo.Map{"success": "Entity deleted successfully"})
+}
+
+// getContentFlagsBulk godoc
+// @Id getContentFlagsBulk
+// @Summary Gets ContentFlags in bulk
+// @Accept json
+// @Produce json
+// @Param Body body BulkFetchByIdsGetRequest true "body"
+// @Tags ContentFlag
+// @Success 200 {array} models.ContentFlag
+// @Failure 500 {string} string "Bad query request"
+// @Router /content_flags/bulk [post]
+func (e *ContentFlagController) getContentFlagsBulk(c echo.Context) error {
+	var results []models.ContentFlag
+
+	r := new(BulkFetchByIdsGetRequest)
+	if err := c.Bind(r); err != nil {
+		return c.JSON(
+			http.StatusInternalServerError,
+			echo.Map{"error": fmt.Sprintf("Error binding to bulk request: [%v]", err)},
+		)
+	}
+
+	if len(r.IDs) == 0 {
+		return c.JSON(
+			http.StatusInternalServerError,
+			echo.Map{"error": fmt.Sprintf("Missing request field data 'ids'")},
+		)
+	}
+
+	err := e.db.QueryContext(models.ContentFlag{}, c).Find(&results, r.IDs).Error
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err})
+	}
+
+	return c.JSON(http.StatusOK, results)
 }

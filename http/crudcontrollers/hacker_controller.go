@@ -20,7 +20,7 @@ func NewHackerController(
 	db *database.DatabaseResolver,
 	logger *logrus.Logger,
 ) *HackerController {
-	return &HackerController {
+	return &HackerController{
 		db:     db,
 		logger: logger,
 	}
@@ -31,6 +31,7 @@ func (e *HackerController) Routes() []*routes.Route {
 		routes.RegisterRoute(http.MethodDelete, "hacker/:hacker", e.deleteHacker, nil),
 		routes.RegisterRoute(http.MethodGet, "hacker/:hacker", e.getHacker, nil),
 		routes.RegisterRoute(http.MethodGet, "hackers", e.listHackers, nil),
+		routes.RegisterRoute(http.MethodPost, "spells_news/bulk", e.getHackersBulk, nil),
 		routes.RegisterRoute(http.MethodPatch, "hacker/:hacker", e.updateHacker, nil),
 		routes.RegisterRoute(http.MethodPut, "hacker", e.createHacker, nil),
 	}
@@ -111,7 +112,10 @@ func (e *HackerController) getHacker(c echo.Context) error {
 func (e *HackerController) updateHacker(c echo.Context) error {
 	hacker := new(models.Hacker)
 	if err := c.Bind(hacker); err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error binding to entity: [%v]", err)})
+		return c.JSON(
+			http.StatusInternalServerError,
+			echo.Map{"error": fmt.Sprintf("Error binding to entity: [%v]", err)},
+		)
 	}
 
 	err := e.db.Get(models.Hacker{}, c).Model(&models.Hacker{}).First(&models.Hacker{}, hacker.ID).Error
@@ -141,12 +145,18 @@ func (e *HackerController) updateHacker(c echo.Context) error {
 func (e *HackerController) createHacker(c echo.Context) error {
 	hacker := new(models.Hacker)
 	if err := c.Bind(hacker); err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error binding to entity: [%v]", err)})
+		return c.JSON(
+			http.StatusInternalServerError,
+			echo.Map{"error": fmt.Sprintf("Error binding to entity: [%v]", err)},
+		)
 	}
 
 	err := e.db.Get(models.Hacker{}, c).Model(&models.Hacker{}).Create(&hacker).Error
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error inserting entity: [%v]", err)})
+		return c.JSON(
+			http.StatusInternalServerError,
+			echo.Map{"error": fmt.Sprintf("Error inserting entity: [%v]", err)},
+		)
 	}
 
 	return c.JSON(http.StatusOK, hacker)
@@ -182,4 +192,40 @@ func (e *HackerController) deleteHacker(c echo.Context) error {
 	}
 
 	return c.JSON(http.StatusOK, echo.Map{"success": "Entity deleted successfully"})
+}
+
+// getHackersBulk godoc
+// @Id getHackersBulk
+// @Summary Gets Hackers in bulk
+// @Accept json
+// @Produce json
+// @Param Body body BulkFetchByIdsGetRequest true "body"
+// @Tags Hacker
+// @Success 200 {array} models.Hacker
+// @Failure 500 {string} string "Bad query request"
+// @Router /hackers/bulk [post]
+func (e *HackerController) getHackersBulk(c echo.Context) error {
+	var results []models.Hacker
+
+	r := new(BulkFetchByIdsGetRequest)
+	if err := c.Bind(r); err != nil {
+		return c.JSON(
+			http.StatusInternalServerError,
+			echo.Map{"error": fmt.Sprintf("Error binding to bulk request: [%v]", err)},
+		)
+	}
+
+	if len(r.IDs) == 0 {
+		return c.JSON(
+			http.StatusInternalServerError,
+			echo.Map{"error": fmt.Sprintf("Missing request field data 'ids'")},
+		)
+	}
+
+	err := e.db.QueryContext(models.Hacker{}, c).Find(&results, r.IDs).Error
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err})
+	}
+
+	return c.JSON(http.StatusOK, results)
 }

@@ -20,7 +20,7 @@ func New{{.EntityName}}Controller(
 	db *database.DatabaseResolver,
 	logger *logrus.Logger,
 ) *{{.EntityName}}Controller {
-	return &{{.EntityName}}Controller {
+	return &{{.EntityName}}Controller{
 		db:     db,
 		logger: logger,
 	}
@@ -31,6 +31,7 @@ func (e *{{.EntityName}}Controller) Routes() []*routes.Route {
 		routes.RegisterRoute(http.MethodDelete, "{{.EntityNameSnake}}/:{{.EntityNameSnake}}", e.delete{{.EntityName}}, nil),
 		routes.RegisterRoute(http.MethodGet, "{{.EntityNameSnake}}/:{{.EntityNameSnake}}", e.get{{.EntityName}}, nil),
 		routes.RegisterRoute(http.MethodGet, "{{.EntityNameSnakePlural}}", e.list{{.EntityNamePlural}}, nil),
+		routes.RegisterRoute(http.MethodPost, "spells_news/bulk", e.get{{.EntityNamePlural}}Bulk, nil),
 		routes.RegisterRoute(http.MethodPatch, "{{.EntityNameSnake}}/:{{.EntityNameSnake}}", e.update{{.EntityName}}, nil),
 		routes.RegisterRoute(http.MethodPut, "{{.EntityNameSnake}}", e.create{{.EntityName}}, nil),
 	}
@@ -111,7 +112,10 @@ func (e *{{.EntityName}}Controller) get{{.EntityName}}(c echo.Context) error {
 func (e *{{.EntityName}}Controller) update{{.EntityName}}(c echo.Context) error {
 	{{.EntityNameCamel}} := new(models.{{.EntityName}})
 	if err := c.Bind({{.EntityNameCamel}}); err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error binding to entity: [%v]", err)})
+		return c.JSON(
+			http.StatusInternalServerError,
+			echo.Map{"error": fmt.Sprintf("Error binding to entity: [%v]", err)},
+		)
 	}
 
 	err := e.db.Get(models.{{.EntityName}}{}, c).Model(&models.{{.EntityName}}{}).First(&models.{{.EntityName}}{}, {{.EntityNameCamel}}.{{.KeyName}}).Error
@@ -141,12 +145,18 @@ func (e *{{.EntityName}}Controller) update{{.EntityName}}(c echo.Context) error 
 func (e *{{.EntityName}}Controller) create{{.EntityName}}(c echo.Context) error {
 	{{.EntityNameCamel}} := new(models.{{.EntityName}})
 	if err := c.Bind({{.EntityNameCamel}}); err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error binding to entity: [%v]", err)})
+		return c.JSON(
+			http.StatusInternalServerError,
+			echo.Map{"error": fmt.Sprintf("Error binding to entity: [%v]", err)},
+		)
 	}
 
 	err := e.db.Get(models.{{.EntityName}}{}, c).Model(&models.{{.EntityName}}{}).Create(&{{.EntityNameCamel}}).Error
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error inserting entity: [%v]", err)})
+		return c.JSON(
+			http.StatusInternalServerError,
+			echo.Map{"error": fmt.Sprintf("Error inserting entity: [%v]", err)},
+		)
 	}
 
 	return c.JSON(http.StatusOK, {{.EntityNameCamel}})
@@ -182,4 +192,40 @@ func (e *{{.EntityName}}Controller) delete{{.EntityName}}(c echo.Context) error 
 	}
 
 	return c.JSON(http.StatusOK, echo.Map{"success": "Entity deleted successfully"})
+}
+
+// get{{.EntityNamePlural}}Bulk godoc
+// @Id get{{.EntityNamePlural}}Bulk
+// @Summary Gets {{.EntityNamePlural}} in bulk
+// @Accept json
+// @Produce json
+// @Param Body body BulkFetchByIdsGetRequest true "body"
+// @Tags {{.EntityName}}
+// @Success 200 {array} models.{{.EntityName}}
+// @Failure 500 {string} string "Bad query request"
+// @Router /{{.EntityNameSnakePlural}}/bulk [post]
+func (e *{{.EntityName}}Controller) get{{.EntityNamePlural}}Bulk(c echo.Context) error {
+	var results []models.{{.EntityName}}
+
+	r := new(BulkFetchByIdsGetRequest)
+	if err := c.Bind(r); err != nil {
+		return c.JSON(
+			http.StatusInternalServerError,
+			echo.Map{"error": fmt.Sprintf("Error binding to bulk request: [%v]", err)},
+		)
+	}
+
+	if len(r.IDs) == 0 {
+		return c.JSON(
+			http.StatusInternalServerError,
+			echo.Map{"error": fmt.Sprintf("Missing request field data 'ids'")},
+		)
+	}
+
+	err := e.db.QueryContext(models.{{.EntityName}}{}, c).Find(&results, r.IDs).Error
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err})
+	}
+
+	return c.JSON(http.StatusOK, results)
 }

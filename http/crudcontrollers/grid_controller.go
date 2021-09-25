@@ -20,7 +20,7 @@ func NewGridController(
 	db *database.DatabaseResolver,
 	logger *logrus.Logger,
 ) *GridController {
-	return &GridController {
+	return &GridController{
 		db:     db,
 		logger: logger,
 	}
@@ -31,6 +31,7 @@ func (e *GridController) Routes() []*routes.Route {
 		routes.RegisterRoute(http.MethodDelete, "grid/:grid", e.deleteGrid, nil),
 		routes.RegisterRoute(http.MethodGet, "grid/:grid", e.getGrid, nil),
 		routes.RegisterRoute(http.MethodGet, "grids", e.listGrids, nil),
+		routes.RegisterRoute(http.MethodPost, "spells_news/bulk", e.getGridsBulk, nil),
 		routes.RegisterRoute(http.MethodPatch, "grid/:grid", e.updateGrid, nil),
 		routes.RegisterRoute(http.MethodPut, "grid", e.createGrid, nil),
 	}
@@ -111,7 +112,10 @@ func (e *GridController) getGrid(c echo.Context) error {
 func (e *GridController) updateGrid(c echo.Context) error {
 	grid := new(models.Grid)
 	if err := c.Bind(grid); err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error binding to entity: [%v]", err)})
+		return c.JSON(
+			http.StatusInternalServerError,
+			echo.Map{"error": fmt.Sprintf("Error binding to entity: [%v]", err)},
+		)
 	}
 
 	err := e.db.Get(models.Grid{}, c).Model(&models.Grid{}).First(&models.Grid{}, grid.ID).Error
@@ -141,12 +145,18 @@ func (e *GridController) updateGrid(c echo.Context) error {
 func (e *GridController) createGrid(c echo.Context) error {
 	grid := new(models.Grid)
 	if err := c.Bind(grid); err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error binding to entity: [%v]", err)})
+		return c.JSON(
+			http.StatusInternalServerError,
+			echo.Map{"error": fmt.Sprintf("Error binding to entity: [%v]", err)},
+		)
 	}
 
 	err := e.db.Get(models.Grid{}, c).Model(&models.Grid{}).Create(&grid).Error
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error inserting entity: [%v]", err)})
+		return c.JSON(
+			http.StatusInternalServerError,
+			echo.Map{"error": fmt.Sprintf("Error inserting entity: [%v]", err)},
+		)
 	}
 
 	return c.JSON(http.StatusOK, grid)
@@ -182,4 +192,40 @@ func (e *GridController) deleteGrid(c echo.Context) error {
 	}
 
 	return c.JSON(http.StatusOK, echo.Map{"success": "Entity deleted successfully"})
+}
+
+// getGridsBulk godoc
+// @Id getGridsBulk
+// @Summary Gets Grids in bulk
+// @Accept json
+// @Produce json
+// @Param Body body BulkFetchByIdsGetRequest true "body"
+// @Tags Grid
+// @Success 200 {array} models.Grid
+// @Failure 500 {string} string "Bad query request"
+// @Router /grids/bulk [post]
+func (e *GridController) getGridsBulk(c echo.Context) error {
+	var results []models.Grid
+
+	r := new(BulkFetchByIdsGetRequest)
+	if err := c.Bind(r); err != nil {
+		return c.JSON(
+			http.StatusInternalServerError,
+			echo.Map{"error": fmt.Sprintf("Error binding to bulk request: [%v]", err)},
+		)
+	}
+
+	if len(r.IDs) == 0 {
+		return c.JSON(
+			http.StatusInternalServerError,
+			echo.Map{"error": fmt.Sprintf("Missing request field data 'ids'")},
+		)
+	}
+
+	err := e.db.QueryContext(models.Grid{}, c).Find(&results, r.IDs).Error
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err})
+	}
+
+	return c.JSON(http.StatusOK, results)
 }

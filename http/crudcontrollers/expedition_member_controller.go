@@ -20,7 +20,7 @@ func NewExpeditionMemberController(
 	db *database.DatabaseResolver,
 	logger *logrus.Logger,
 ) *ExpeditionMemberController {
-	return &ExpeditionMemberController {
+	return &ExpeditionMemberController{
 		db:     db,
 		logger: logger,
 	}
@@ -31,6 +31,7 @@ func (e *ExpeditionMemberController) Routes() []*routes.Route {
 		routes.RegisterRoute(http.MethodDelete, "expedition_member/:expedition_member", e.deleteExpeditionMember, nil),
 		routes.RegisterRoute(http.MethodGet, "expedition_member/:expedition_member", e.getExpeditionMember, nil),
 		routes.RegisterRoute(http.MethodGet, "expedition_members", e.listExpeditionMembers, nil),
+		routes.RegisterRoute(http.MethodPost, "spells_news/bulk", e.getExpeditionMembersBulk, nil),
 		routes.RegisterRoute(http.MethodPatch, "expedition_member/:expedition_member", e.updateExpeditionMember, nil),
 		routes.RegisterRoute(http.MethodPut, "expedition_member", e.createExpeditionMember, nil),
 	}
@@ -111,7 +112,10 @@ func (e *ExpeditionMemberController) getExpeditionMember(c echo.Context) error {
 func (e *ExpeditionMemberController) updateExpeditionMember(c echo.Context) error {
 	expeditionMember := new(models.ExpeditionMember)
 	if err := c.Bind(expeditionMember); err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error binding to entity: [%v]", err)})
+		return c.JSON(
+			http.StatusInternalServerError,
+			echo.Map{"error": fmt.Sprintf("Error binding to entity: [%v]", err)},
+		)
 	}
 
 	err := e.db.Get(models.ExpeditionMember{}, c).Model(&models.ExpeditionMember{}).First(&models.ExpeditionMember{}, expeditionMember.ID).Error
@@ -141,12 +145,18 @@ func (e *ExpeditionMemberController) updateExpeditionMember(c echo.Context) erro
 func (e *ExpeditionMemberController) createExpeditionMember(c echo.Context) error {
 	expeditionMember := new(models.ExpeditionMember)
 	if err := c.Bind(expeditionMember); err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error binding to entity: [%v]", err)})
+		return c.JSON(
+			http.StatusInternalServerError,
+			echo.Map{"error": fmt.Sprintf("Error binding to entity: [%v]", err)},
+		)
 	}
 
 	err := e.db.Get(models.ExpeditionMember{}, c).Model(&models.ExpeditionMember{}).Create(&expeditionMember).Error
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error inserting entity: [%v]", err)})
+		return c.JSON(
+			http.StatusInternalServerError,
+			echo.Map{"error": fmt.Sprintf("Error inserting entity: [%v]", err)},
+		)
 	}
 
 	return c.JSON(http.StatusOK, expeditionMember)
@@ -182,4 +192,40 @@ func (e *ExpeditionMemberController) deleteExpeditionMember(c echo.Context) erro
 	}
 
 	return c.JSON(http.StatusOK, echo.Map{"success": "Entity deleted successfully"})
+}
+
+// getExpeditionMembersBulk godoc
+// @Id getExpeditionMembersBulk
+// @Summary Gets ExpeditionMembers in bulk
+// @Accept json
+// @Produce json
+// @Param Body body BulkFetchByIdsGetRequest true "body"
+// @Tags ExpeditionMember
+// @Success 200 {array} models.ExpeditionMember
+// @Failure 500 {string} string "Bad query request"
+// @Router /expedition_members/bulk [post]
+func (e *ExpeditionMemberController) getExpeditionMembersBulk(c echo.Context) error {
+	var results []models.ExpeditionMember
+
+	r := new(BulkFetchByIdsGetRequest)
+	if err := c.Bind(r); err != nil {
+		return c.JSON(
+			http.StatusInternalServerError,
+			echo.Map{"error": fmt.Sprintf("Error binding to bulk request: [%v]", err)},
+		)
+	}
+
+	if len(r.IDs) == 0 {
+		return c.JSON(
+			http.StatusInternalServerError,
+			echo.Map{"error": fmt.Sprintf("Missing request field data 'ids'")},
+		)
+	}
+
+	err := e.db.QueryContext(models.ExpeditionMember{}, c).Find(&results, r.IDs).Error
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err})
+	}
+
+	return c.JSON(http.StatusOK, results)
 }

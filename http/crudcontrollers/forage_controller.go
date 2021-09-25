@@ -20,7 +20,7 @@ func NewForageController(
 	db *database.DatabaseResolver,
 	logger *logrus.Logger,
 ) *ForageController {
-	return &ForageController {
+	return &ForageController{
 		db:     db,
 		logger: logger,
 	}
@@ -31,6 +31,7 @@ func (e *ForageController) Routes() []*routes.Route {
 		routes.RegisterRoute(http.MethodDelete, "forage/:forage", e.deleteForage, nil),
 		routes.RegisterRoute(http.MethodGet, "forage/:forage", e.getForage, nil),
 		routes.RegisterRoute(http.MethodGet, "forages", e.listForages, nil),
+		routes.RegisterRoute(http.MethodPost, "spells_news/bulk", e.getForagesBulk, nil),
 		routes.RegisterRoute(http.MethodPatch, "forage/:forage", e.updateForage, nil),
 		routes.RegisterRoute(http.MethodPut, "forage", e.createForage, nil),
 	}
@@ -111,7 +112,10 @@ func (e *ForageController) getForage(c echo.Context) error {
 func (e *ForageController) updateForage(c echo.Context) error {
 	forage := new(models.Forage)
 	if err := c.Bind(forage); err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error binding to entity: [%v]", err)})
+		return c.JSON(
+			http.StatusInternalServerError,
+			echo.Map{"error": fmt.Sprintf("Error binding to entity: [%v]", err)},
+		)
 	}
 
 	err := e.db.Get(models.Forage{}, c).Model(&models.Forage{}).First(&models.Forage{}, forage.ID).Error
@@ -141,12 +145,18 @@ func (e *ForageController) updateForage(c echo.Context) error {
 func (e *ForageController) createForage(c echo.Context) error {
 	forage := new(models.Forage)
 	if err := c.Bind(forage); err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error binding to entity: [%v]", err)})
+		return c.JSON(
+			http.StatusInternalServerError,
+			echo.Map{"error": fmt.Sprintf("Error binding to entity: [%v]", err)},
+		)
 	}
 
 	err := e.db.Get(models.Forage{}, c).Model(&models.Forage{}).Create(&forage).Error
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error inserting entity: [%v]", err)})
+		return c.JSON(
+			http.StatusInternalServerError,
+			echo.Map{"error": fmt.Sprintf("Error inserting entity: [%v]", err)},
+		)
 	}
 
 	return c.JSON(http.StatusOK, forage)
@@ -182,4 +192,40 @@ func (e *ForageController) deleteForage(c echo.Context) error {
 	}
 
 	return c.JSON(http.StatusOK, echo.Map{"success": "Entity deleted successfully"})
+}
+
+// getForagesBulk godoc
+// @Id getForagesBulk
+// @Summary Gets Forages in bulk
+// @Accept json
+// @Produce json
+// @Param Body body BulkFetchByIdsGetRequest true "body"
+// @Tags Forage
+// @Success 200 {array} models.Forage
+// @Failure 500 {string} string "Bad query request"
+// @Router /forages/bulk [post]
+func (e *ForageController) getForagesBulk(c echo.Context) error {
+	var results []models.Forage
+
+	r := new(BulkFetchByIdsGetRequest)
+	if err := c.Bind(r); err != nil {
+		return c.JSON(
+			http.StatusInternalServerError,
+			echo.Map{"error": fmt.Sprintf("Error binding to bulk request: [%v]", err)},
+		)
+	}
+
+	if len(r.IDs) == 0 {
+		return c.JSON(
+			http.StatusInternalServerError,
+			echo.Map{"error": fmt.Sprintf("Missing request field data 'ids'")},
+		)
+	}
+
+	err := e.db.QueryContext(models.Forage{}, c).Find(&results, r.IDs).Error
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err})
+	}
+
+	return c.JSON(http.StatusOK, results)
 }

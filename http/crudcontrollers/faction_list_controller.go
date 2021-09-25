@@ -20,7 +20,7 @@ func NewFactionListController(
 	db *database.DatabaseResolver,
 	logger *logrus.Logger,
 ) *FactionListController {
-	return &FactionListController {
+	return &FactionListController{
 		db:     db,
 		logger: logger,
 	}
@@ -31,6 +31,7 @@ func (e *FactionListController) Routes() []*routes.Route {
 		routes.RegisterRoute(http.MethodDelete, "faction_list/:faction_list", e.deleteFactionList, nil),
 		routes.RegisterRoute(http.MethodGet, "faction_list/:faction_list", e.getFactionList, nil),
 		routes.RegisterRoute(http.MethodGet, "faction_lists", e.listFactionLists, nil),
+		routes.RegisterRoute(http.MethodPost, "spells_news/bulk", e.getFactionListsBulk, nil),
 		routes.RegisterRoute(http.MethodPatch, "faction_list/:faction_list", e.updateFactionList, nil),
 		routes.RegisterRoute(http.MethodPut, "faction_list", e.createFactionList, nil),
 	}
@@ -111,7 +112,10 @@ func (e *FactionListController) getFactionList(c echo.Context) error {
 func (e *FactionListController) updateFactionList(c echo.Context) error {
 	factionList := new(models.FactionList)
 	if err := c.Bind(factionList); err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error binding to entity: [%v]", err)})
+		return c.JSON(
+			http.StatusInternalServerError,
+			echo.Map{"error": fmt.Sprintf("Error binding to entity: [%v]", err)},
+		)
 	}
 
 	err := e.db.Get(models.FactionList{}, c).Model(&models.FactionList{}).First(&models.FactionList{}, factionList.ID).Error
@@ -141,12 +145,18 @@ func (e *FactionListController) updateFactionList(c echo.Context) error {
 func (e *FactionListController) createFactionList(c echo.Context) error {
 	factionList := new(models.FactionList)
 	if err := c.Bind(factionList); err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error binding to entity: [%v]", err)})
+		return c.JSON(
+			http.StatusInternalServerError,
+			echo.Map{"error": fmt.Sprintf("Error binding to entity: [%v]", err)},
+		)
 	}
 
 	err := e.db.Get(models.FactionList{}, c).Model(&models.FactionList{}).Create(&factionList).Error
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error inserting entity: [%v]", err)})
+		return c.JSON(
+			http.StatusInternalServerError,
+			echo.Map{"error": fmt.Sprintf("Error inserting entity: [%v]", err)},
+		)
 	}
 
 	return c.JSON(http.StatusOK, factionList)
@@ -182,4 +192,40 @@ func (e *FactionListController) deleteFactionList(c echo.Context) error {
 	}
 
 	return c.JSON(http.StatusOK, echo.Map{"success": "Entity deleted successfully"})
+}
+
+// getFactionListsBulk godoc
+// @Id getFactionListsBulk
+// @Summary Gets FactionLists in bulk
+// @Accept json
+// @Produce json
+// @Param Body body BulkFetchByIdsGetRequest true "body"
+// @Tags FactionList
+// @Success 200 {array} models.FactionList
+// @Failure 500 {string} string "Bad query request"
+// @Router /faction_lists/bulk [post]
+func (e *FactionListController) getFactionListsBulk(c echo.Context) error {
+	var results []models.FactionList
+
+	r := new(BulkFetchByIdsGetRequest)
+	if err := c.Bind(r); err != nil {
+		return c.JSON(
+			http.StatusInternalServerError,
+			echo.Map{"error": fmt.Sprintf("Error binding to bulk request: [%v]", err)},
+		)
+	}
+
+	if len(r.IDs) == 0 {
+		return c.JSON(
+			http.StatusInternalServerError,
+			echo.Map{"error": fmt.Sprintf("Missing request field data 'ids'")},
+		)
+	}
+
+	err := e.db.QueryContext(models.FactionList{}, c).Find(&results, r.IDs).Error
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err})
+	}
+
+	return c.JSON(http.StatusOK, results)
 }

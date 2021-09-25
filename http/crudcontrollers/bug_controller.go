@@ -20,7 +20,7 @@ func NewBugController(
 	db *database.DatabaseResolver,
 	logger *logrus.Logger,
 ) *BugController {
-	return &BugController {
+	return &BugController{
 		db:     db,
 		logger: logger,
 	}
@@ -31,6 +31,7 @@ func (e *BugController) Routes() []*routes.Route {
 		routes.RegisterRoute(http.MethodDelete, "bug/:bug", e.deleteBug, nil),
 		routes.RegisterRoute(http.MethodGet, "bug/:bug", e.getBug, nil),
 		routes.RegisterRoute(http.MethodGet, "bugs", e.listBugs, nil),
+		routes.RegisterRoute(http.MethodPost, "spells_news/bulk", e.getBugsBulk, nil),
 		routes.RegisterRoute(http.MethodPatch, "bug/:bug", e.updateBug, nil),
 		routes.RegisterRoute(http.MethodPut, "bug", e.createBug, nil),
 	}
@@ -111,7 +112,10 @@ func (e *BugController) getBug(c echo.Context) error {
 func (e *BugController) updateBug(c echo.Context) error {
 	bug := new(models.Bug)
 	if err := c.Bind(bug); err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error binding to entity: [%v]", err)})
+		return c.JSON(
+			http.StatusInternalServerError,
+			echo.Map{"error": fmt.Sprintf("Error binding to entity: [%v]", err)},
+		)
 	}
 
 	err := e.db.Get(models.Bug{}, c).Model(&models.Bug{}).First(&models.Bug{}, bug.ID).Error
@@ -141,12 +145,18 @@ func (e *BugController) updateBug(c echo.Context) error {
 func (e *BugController) createBug(c echo.Context) error {
 	bug := new(models.Bug)
 	if err := c.Bind(bug); err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error binding to entity: [%v]", err)})
+		return c.JSON(
+			http.StatusInternalServerError,
+			echo.Map{"error": fmt.Sprintf("Error binding to entity: [%v]", err)},
+		)
 	}
 
 	err := e.db.Get(models.Bug{}, c).Model(&models.Bug{}).Create(&bug).Error
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error inserting entity: [%v]", err)})
+		return c.JSON(
+			http.StatusInternalServerError,
+			echo.Map{"error": fmt.Sprintf("Error inserting entity: [%v]", err)},
+		)
 	}
 
 	return c.JSON(http.StatusOK, bug)
@@ -182,4 +192,40 @@ func (e *BugController) deleteBug(c echo.Context) error {
 	}
 
 	return c.JSON(http.StatusOK, echo.Map{"success": "Entity deleted successfully"})
+}
+
+// getBugsBulk godoc
+// @Id getBugsBulk
+// @Summary Gets Bugs in bulk
+// @Accept json
+// @Produce json
+// @Param Body body BulkFetchByIdsGetRequest true "body"
+// @Tags Bug
+// @Success 200 {array} models.Bug
+// @Failure 500 {string} string "Bad query request"
+// @Router /bugs/bulk [post]
+func (e *BugController) getBugsBulk(c echo.Context) error {
+	var results []models.Bug
+
+	r := new(BulkFetchByIdsGetRequest)
+	if err := c.Bind(r); err != nil {
+		return c.JSON(
+			http.StatusInternalServerError,
+			echo.Map{"error": fmt.Sprintf("Error binding to bulk request: [%v]", err)},
+		)
+	}
+
+	if len(r.IDs) == 0 {
+		return c.JSON(
+			http.StatusInternalServerError,
+			echo.Map{"error": fmt.Sprintf("Missing request field data 'ids'")},
+		)
+	}
+
+	err := e.db.QueryContext(models.Bug{}, c).Find(&results, r.IDs).Error
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err})
+	}
+
+	return c.JSON(http.StatusOK, results)
 }

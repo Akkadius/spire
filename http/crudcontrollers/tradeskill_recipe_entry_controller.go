@@ -20,7 +20,7 @@ func NewTradeskillRecipeEntryController(
 	db *database.DatabaseResolver,
 	logger *logrus.Logger,
 ) *TradeskillRecipeEntryController {
-	return &TradeskillRecipeEntryController {
+	return &TradeskillRecipeEntryController{
 		db:     db,
 		logger: logger,
 	}
@@ -31,6 +31,7 @@ func (e *TradeskillRecipeEntryController) Routes() []*routes.Route {
 		routes.RegisterRoute(http.MethodDelete, "tradeskill_recipe_entry/:tradeskill_recipe_entry", e.deleteTradeskillRecipeEntry, nil),
 		routes.RegisterRoute(http.MethodGet, "tradeskill_recipe_entry/:tradeskill_recipe_entry", e.getTradeskillRecipeEntry, nil),
 		routes.RegisterRoute(http.MethodGet, "tradeskill_recipe_entries", e.listTradeskillRecipeEntries, nil),
+		routes.RegisterRoute(http.MethodPost, "spells_news/bulk", e.getTradeskillRecipeEntriesBulk, nil),
 		routes.RegisterRoute(http.MethodPatch, "tradeskill_recipe_entry/:tradeskill_recipe_entry", e.updateTradeskillRecipeEntry, nil),
 		routes.RegisterRoute(http.MethodPut, "tradeskill_recipe_entry", e.createTradeskillRecipeEntry, nil),
 	}
@@ -111,7 +112,10 @@ func (e *TradeskillRecipeEntryController) getTradeskillRecipeEntry(c echo.Contex
 func (e *TradeskillRecipeEntryController) updateTradeskillRecipeEntry(c echo.Context) error {
 	tradeskillRecipeEntry := new(models.TradeskillRecipeEntry)
 	if err := c.Bind(tradeskillRecipeEntry); err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error binding to entity: [%v]", err)})
+		return c.JSON(
+			http.StatusInternalServerError,
+			echo.Map{"error": fmt.Sprintf("Error binding to entity: [%v]", err)},
+		)
 	}
 
 	err := e.db.Get(models.TradeskillRecipeEntry{}, c).Model(&models.TradeskillRecipeEntry{}).First(&models.TradeskillRecipeEntry{}, tradeskillRecipeEntry.ID).Error
@@ -141,12 +145,18 @@ func (e *TradeskillRecipeEntryController) updateTradeskillRecipeEntry(c echo.Con
 func (e *TradeskillRecipeEntryController) createTradeskillRecipeEntry(c echo.Context) error {
 	tradeskillRecipeEntry := new(models.TradeskillRecipeEntry)
 	if err := c.Bind(tradeskillRecipeEntry); err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error binding to entity: [%v]", err)})
+		return c.JSON(
+			http.StatusInternalServerError,
+			echo.Map{"error": fmt.Sprintf("Error binding to entity: [%v]", err)},
+		)
 	}
 
 	err := e.db.Get(models.TradeskillRecipeEntry{}, c).Model(&models.TradeskillRecipeEntry{}).Create(&tradeskillRecipeEntry).Error
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error inserting entity: [%v]", err)})
+		return c.JSON(
+			http.StatusInternalServerError,
+			echo.Map{"error": fmt.Sprintf("Error inserting entity: [%v]", err)},
+		)
 	}
 
 	return c.JSON(http.StatusOK, tradeskillRecipeEntry)
@@ -182,4 +192,40 @@ func (e *TradeskillRecipeEntryController) deleteTradeskillRecipeEntry(c echo.Con
 	}
 
 	return c.JSON(http.StatusOK, echo.Map{"success": "Entity deleted successfully"})
+}
+
+// getTradeskillRecipeEntriesBulk godoc
+// @Id getTradeskillRecipeEntriesBulk
+// @Summary Gets TradeskillRecipeEntries in bulk
+// @Accept json
+// @Produce json
+// @Param Body body BulkFetchByIdsGetRequest true "body"
+// @Tags TradeskillRecipeEntry
+// @Success 200 {array} models.TradeskillRecipeEntry
+// @Failure 500 {string} string "Bad query request"
+// @Router /tradeskill_recipe_entries/bulk [post]
+func (e *TradeskillRecipeEntryController) getTradeskillRecipeEntriesBulk(c echo.Context) error {
+	var results []models.TradeskillRecipeEntry
+
+	r := new(BulkFetchByIdsGetRequest)
+	if err := c.Bind(r); err != nil {
+		return c.JSON(
+			http.StatusInternalServerError,
+			echo.Map{"error": fmt.Sprintf("Error binding to bulk request: [%v]", err)},
+		)
+	}
+
+	if len(r.IDs) == 0 {
+		return c.JSON(
+			http.StatusInternalServerError,
+			echo.Map{"error": fmt.Sprintf("Missing request field data 'ids'")},
+		)
+	}
+
+	err := e.db.QueryContext(models.TradeskillRecipeEntry{}, c).Find(&results, r.IDs).Error
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err})
+	}
+
+	return c.JSON(http.StatusOK, results)
 }

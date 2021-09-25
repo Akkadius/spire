@@ -493,7 +493,7 @@ func (g *GenerateModel) translateDataType(column ShowColumns) string {
 		case "binary", "varbinary", "tinyblob", "blob", "mediumblob", "longblob":
 			return "[]byte"
 		case "numeric", "decimal", "dec", "fixed":
-			return "types.Decimal"
+			return "float32"
 		case "json":
 			return "types.JSON"
 		default:

@@ -1,10 +1,10 @@
 package crudcontrollers
 
 import (
-	"fmt"
 	"github.com/Akkadius/spire/database"
 	"github.com/Akkadius/spire/http/routes"
 	"github.com/Akkadius/spire/models"
+	"fmt"
 	"github.com/labstack/echo/v4"
 	"github.com/sirupsen/logrus"
 	"net/http"
@@ -20,7 +20,7 @@ func NewZoneController(
 	db *database.DatabaseResolver,
 	logger *logrus.Logger,
 ) *ZoneController {
-	return &ZoneController {
+	return &ZoneController{
 		db:     db,
 		logger: logger,
 	}
@@ -31,6 +31,7 @@ func (e *ZoneController) Routes() []*routes.Route {
 		routes.RegisterRoute(http.MethodDelete, "zone/:zone", e.deleteZone, nil),
 		routes.RegisterRoute(http.MethodGet, "zone/:zone", e.getZone, nil),
 		routes.RegisterRoute(http.MethodGet, "zones", e.listZones, nil),
+		routes.RegisterRoute(http.MethodPost, "spells_news/bulk", e.getZonesBulk, nil),
 		routes.RegisterRoute(http.MethodPatch, "zone/:zone", e.updateZone, nil),
 		routes.RegisterRoute(http.MethodPut, "zone", e.createZone, nil),
 	}
@@ -111,7 +112,10 @@ func (e *ZoneController) getZone(c echo.Context) error {
 func (e *ZoneController) updateZone(c echo.Context) error {
 	zone := new(models.Zone)
 	if err := c.Bind(zone); err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error binding to entity: [%v]", err)})
+		return c.JSON(
+			http.StatusInternalServerError,
+			echo.Map{"error": fmt.Sprintf("Error binding to entity: [%v]", err)},
+		)
 	}
 
 	err := e.db.Get(models.Zone{}, c).Model(&models.Zone{}).First(&models.Zone{}, zone.ID).Error
@@ -141,12 +145,18 @@ func (e *ZoneController) updateZone(c echo.Context) error {
 func (e *ZoneController) createZone(c echo.Context) error {
 	zone := new(models.Zone)
 	if err := c.Bind(zone); err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error binding to entity: [%v]", err)})
+		return c.JSON(
+			http.StatusInternalServerError,
+			echo.Map{"error": fmt.Sprintf("Error binding to entity: [%v]", err)},
+		)
 	}
 
 	err := e.db.Get(models.Zone{}, c).Model(&models.Zone{}).Create(&zone).Error
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error inserting entity: [%v]", err)})
+		return c.JSON(
+			http.StatusInternalServerError,
+			echo.Map{"error": fmt.Sprintf("Error inserting entity: [%v]", err)},
+		)
 	}
 
 	return c.JSON(http.StatusOK, zone)
@@ -182,4 +192,40 @@ func (e *ZoneController) deleteZone(c echo.Context) error {
 	}
 
 	return c.JSON(http.StatusOK, echo.Map{"success": "Entity deleted successfully"})
+}
+
+// getZonesBulk godoc
+// @Id getZonesBulk
+// @Summary Gets Zones in bulk
+// @Accept json
+// @Produce json
+// @Param Body body BulkFetchByIdsGetRequest true "body"
+// @Tags Zone
+// @Success 200 {array} models.Zone
+// @Failure 500 {string} string "Bad query request"
+// @Router /zones/bulk [post]
+func (e *ZoneController) getZonesBulk(c echo.Context) error {
+	var results []models.Zone
+
+	r := new(BulkFetchByIdsGetRequest)
+	if err := c.Bind(r); err != nil {
+		return c.JSON(
+			http.StatusInternalServerError,
+			echo.Map{"error": fmt.Sprintf("Error binding to bulk request: [%v]", err)},
+		)
+	}
+
+	if len(r.IDs) == 0 {
+		return c.JSON(
+			http.StatusInternalServerError,
+			echo.Map{"error": fmt.Sprintf("Missing request field data 'ids'")},
+		)
+	}
+
+	err := e.db.QueryContext(models.Zone{}, c).Find(&results, r.IDs).Error
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err})
+	}
+
+	return c.JSON(http.StatusOK, results)
 }

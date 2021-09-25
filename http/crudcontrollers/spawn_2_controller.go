@@ -20,7 +20,7 @@ func NewSpawn2Controller(
 	db *database.DatabaseResolver,
 	logger *logrus.Logger,
 ) *Spawn2Controller {
-	return &Spawn2Controller {
+	return &Spawn2Controller{
 		db:     db,
 		logger: logger,
 	}
@@ -31,6 +31,7 @@ func (e *Spawn2Controller) Routes() []*routes.Route {
 		routes.RegisterRoute(http.MethodDelete, "spawn_2/:spawn_2", e.deleteSpawn2, nil),
 		routes.RegisterRoute(http.MethodGet, "spawn_2/:spawn_2", e.getSpawn2, nil),
 		routes.RegisterRoute(http.MethodGet, "spawn_2s", e.listSpawn2s, nil),
+		routes.RegisterRoute(http.MethodPost, "spells_news/bulk", e.getSpawn2sBulk, nil),
 		routes.RegisterRoute(http.MethodPatch, "spawn_2/:spawn_2", e.updateSpawn2, nil),
 		routes.RegisterRoute(http.MethodPut, "spawn_2", e.createSpawn2, nil),
 	}
@@ -111,7 +112,10 @@ func (e *Spawn2Controller) getSpawn2(c echo.Context) error {
 func (e *Spawn2Controller) updateSpawn2(c echo.Context) error {
 	spawn2 := new(models.Spawn2)
 	if err := c.Bind(spawn2); err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error binding to entity: [%v]", err)})
+		return c.JSON(
+			http.StatusInternalServerError,
+			echo.Map{"error": fmt.Sprintf("Error binding to entity: [%v]", err)},
+		)
 	}
 
 	err := e.db.Get(models.Spawn2{}, c).Model(&models.Spawn2{}).First(&models.Spawn2{}, spawn2.ID).Error
@@ -141,12 +145,18 @@ func (e *Spawn2Controller) updateSpawn2(c echo.Context) error {
 func (e *Spawn2Controller) createSpawn2(c echo.Context) error {
 	spawn2 := new(models.Spawn2)
 	if err := c.Bind(spawn2); err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error binding to entity: [%v]", err)})
+		return c.JSON(
+			http.StatusInternalServerError,
+			echo.Map{"error": fmt.Sprintf("Error binding to entity: [%v]", err)},
+		)
 	}
 
 	err := e.db.Get(models.Spawn2{}, c).Model(&models.Spawn2{}).Create(&spawn2).Error
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error inserting entity: [%v]", err)})
+		return c.JSON(
+			http.StatusInternalServerError,
+			echo.Map{"error": fmt.Sprintf("Error inserting entity: [%v]", err)},
+		)
 	}
 
 	return c.JSON(http.StatusOK, spawn2)
@@ -182,4 +192,40 @@ func (e *Spawn2Controller) deleteSpawn2(c echo.Context) error {
 	}
 
 	return c.JSON(http.StatusOK, echo.Map{"success": "Entity deleted successfully"})
+}
+
+// getSpawn2sBulk godoc
+// @Id getSpawn2sBulk
+// @Summary Gets Spawn2s in bulk
+// @Accept json
+// @Produce json
+// @Param Body body BulkFetchByIdsGetRequest true "body"
+// @Tags Spawn2
+// @Success 200 {array} models.Spawn2
+// @Failure 500 {string} string "Bad query request"
+// @Router /spawn_2s/bulk [post]
+func (e *Spawn2Controller) getSpawn2sBulk(c echo.Context) error {
+	var results []models.Spawn2
+
+	r := new(BulkFetchByIdsGetRequest)
+	if err := c.Bind(r); err != nil {
+		return c.JSON(
+			http.StatusInternalServerError,
+			echo.Map{"error": fmt.Sprintf("Error binding to bulk request: [%v]", err)},
+		)
+	}
+
+	if len(r.IDs) == 0 {
+		return c.JSON(
+			http.StatusInternalServerError,
+			echo.Map{"error": fmt.Sprintf("Missing request field data 'ids'")},
+		)
+	}
+
+	err := e.db.QueryContext(models.Spawn2{}, c).Find(&results, r.IDs).Error
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err})
+	}
+
+	return c.JSON(http.StatusOK, results)
 }

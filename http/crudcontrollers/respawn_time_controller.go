@@ -20,7 +20,7 @@ func NewRespawnTimeController(
 	db *database.DatabaseResolver,
 	logger *logrus.Logger,
 ) *RespawnTimeController {
-	return &RespawnTimeController {
+	return &RespawnTimeController{
 		db:     db,
 		logger: logger,
 	}
@@ -31,6 +31,7 @@ func (e *RespawnTimeController) Routes() []*routes.Route {
 		routes.RegisterRoute(http.MethodDelete, "respawn_time/:respawn_time", e.deleteRespawnTime, nil),
 		routes.RegisterRoute(http.MethodGet, "respawn_time/:respawn_time", e.getRespawnTime, nil),
 		routes.RegisterRoute(http.MethodGet, "respawn_times", e.listRespawnTimes, nil),
+		routes.RegisterRoute(http.MethodPost, "spells_news/bulk", e.getRespawnTimesBulk, nil),
 		routes.RegisterRoute(http.MethodPatch, "respawn_time/:respawn_time", e.updateRespawnTime, nil),
 		routes.RegisterRoute(http.MethodPut, "respawn_time", e.createRespawnTime, nil),
 	}
@@ -111,7 +112,10 @@ func (e *RespawnTimeController) getRespawnTime(c echo.Context) error {
 func (e *RespawnTimeController) updateRespawnTime(c echo.Context) error {
 	respawnTime := new(models.RespawnTime)
 	if err := c.Bind(respawnTime); err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error binding to entity: [%v]", err)})
+		return c.JSON(
+			http.StatusInternalServerError,
+			echo.Map{"error": fmt.Sprintf("Error binding to entity: [%v]", err)},
+		)
 	}
 
 	err := e.db.Get(models.RespawnTime{}, c).Model(&models.RespawnTime{}).First(&models.RespawnTime{}, respawnTime.ID).Error
@@ -141,12 +145,18 @@ func (e *RespawnTimeController) updateRespawnTime(c echo.Context) error {
 func (e *RespawnTimeController) createRespawnTime(c echo.Context) error {
 	respawnTime := new(models.RespawnTime)
 	if err := c.Bind(respawnTime); err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error binding to entity: [%v]", err)})
+		return c.JSON(
+			http.StatusInternalServerError,
+			echo.Map{"error": fmt.Sprintf("Error binding to entity: [%v]", err)},
+		)
 	}
 
 	err := e.db.Get(models.RespawnTime{}, c).Model(&models.RespawnTime{}).Create(&respawnTime).Error
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error inserting entity: [%v]", err)})
+		return c.JSON(
+			http.StatusInternalServerError,
+			echo.Map{"error": fmt.Sprintf("Error inserting entity: [%v]", err)},
+		)
 	}
 
 	return c.JSON(http.StatusOK, respawnTime)
@@ -182,4 +192,40 @@ func (e *RespawnTimeController) deleteRespawnTime(c echo.Context) error {
 	}
 
 	return c.JSON(http.StatusOK, echo.Map{"success": "Entity deleted successfully"})
+}
+
+// getRespawnTimesBulk godoc
+// @Id getRespawnTimesBulk
+// @Summary Gets RespawnTimes in bulk
+// @Accept json
+// @Produce json
+// @Param Body body BulkFetchByIdsGetRequest true "body"
+// @Tags RespawnTime
+// @Success 200 {array} models.RespawnTime
+// @Failure 500 {string} string "Bad query request"
+// @Router /respawn_times/bulk [post]
+func (e *RespawnTimeController) getRespawnTimesBulk(c echo.Context) error {
+	var results []models.RespawnTime
+
+	r := new(BulkFetchByIdsGetRequest)
+	if err := c.Bind(r); err != nil {
+		return c.JSON(
+			http.StatusInternalServerError,
+			echo.Map{"error": fmt.Sprintf("Error binding to bulk request: [%v]", err)},
+		)
+	}
+
+	if len(r.IDs) == 0 {
+		return c.JSON(
+			http.StatusInternalServerError,
+			echo.Map{"error": fmt.Sprintf("Missing request field data 'ids'")},
+		)
+	}
+
+	err := e.db.QueryContext(models.RespawnTime{}, c).Find(&results, r.IDs).Error
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err})
+	}
+
+	return c.JSON(http.StatusOK, results)
 }

@@ -20,7 +20,7 @@ func NewCharacterLanguageController(
 	db *database.DatabaseResolver,
 	logger *logrus.Logger,
 ) *CharacterLanguageController {
-	return &CharacterLanguageController {
+	return &CharacterLanguageController{
 		db:     db,
 		logger: logger,
 	}
@@ -31,6 +31,7 @@ func (e *CharacterLanguageController) Routes() []*routes.Route {
 		routes.RegisterRoute(http.MethodDelete, "character_language/:character_language", e.deleteCharacterLanguage, nil),
 		routes.RegisterRoute(http.MethodGet, "character_language/:character_language", e.getCharacterLanguage, nil),
 		routes.RegisterRoute(http.MethodGet, "character_languages", e.listCharacterLanguages, nil),
+		routes.RegisterRoute(http.MethodPost, "spells_news/bulk", e.getCharacterLanguagesBulk, nil),
 		routes.RegisterRoute(http.MethodPatch, "character_language/:character_language", e.updateCharacterLanguage, nil),
 		routes.RegisterRoute(http.MethodPut, "character_language", e.createCharacterLanguage, nil),
 	}
@@ -111,7 +112,10 @@ func (e *CharacterLanguageController) getCharacterLanguage(c echo.Context) error
 func (e *CharacterLanguageController) updateCharacterLanguage(c echo.Context) error {
 	characterLanguage := new(models.CharacterLanguage)
 	if err := c.Bind(characterLanguage); err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error binding to entity: [%v]", err)})
+		return c.JSON(
+			http.StatusInternalServerError,
+			echo.Map{"error": fmt.Sprintf("Error binding to entity: [%v]", err)},
+		)
 	}
 
 	err := e.db.Get(models.CharacterLanguage{}, c).Model(&models.CharacterLanguage{}).First(&models.CharacterLanguage{}, characterLanguage.ID).Error
@@ -141,12 +145,18 @@ func (e *CharacterLanguageController) updateCharacterLanguage(c echo.Context) er
 func (e *CharacterLanguageController) createCharacterLanguage(c echo.Context) error {
 	characterLanguage := new(models.CharacterLanguage)
 	if err := c.Bind(characterLanguage); err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error binding to entity: [%v]", err)})
+		return c.JSON(
+			http.StatusInternalServerError,
+			echo.Map{"error": fmt.Sprintf("Error binding to entity: [%v]", err)},
+		)
 	}
 
 	err := e.db.Get(models.CharacterLanguage{}, c).Model(&models.CharacterLanguage{}).Create(&characterLanguage).Error
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error inserting entity: [%v]", err)})
+		return c.JSON(
+			http.StatusInternalServerError,
+			echo.Map{"error": fmt.Sprintf("Error inserting entity: [%v]", err)},
+		)
 	}
 
 	return c.JSON(http.StatusOK, characterLanguage)
@@ -182,4 +192,40 @@ func (e *CharacterLanguageController) deleteCharacterLanguage(c echo.Context) er
 	}
 
 	return c.JSON(http.StatusOK, echo.Map{"success": "Entity deleted successfully"})
+}
+
+// getCharacterLanguagesBulk godoc
+// @Id getCharacterLanguagesBulk
+// @Summary Gets CharacterLanguages in bulk
+// @Accept json
+// @Produce json
+// @Param Body body BulkFetchByIdsGetRequest true "body"
+// @Tags CharacterLanguage
+// @Success 200 {array} models.CharacterLanguage
+// @Failure 500 {string} string "Bad query request"
+// @Router /character_languages/bulk [post]
+func (e *CharacterLanguageController) getCharacterLanguagesBulk(c echo.Context) error {
+	var results []models.CharacterLanguage
+
+	r := new(BulkFetchByIdsGetRequest)
+	if err := c.Bind(r); err != nil {
+		return c.JSON(
+			http.StatusInternalServerError,
+			echo.Map{"error": fmt.Sprintf("Error binding to bulk request: [%v]", err)},
+		)
+	}
+
+	if len(r.IDs) == 0 {
+		return c.JSON(
+			http.StatusInternalServerError,
+			echo.Map{"error": fmt.Sprintf("Missing request field data 'ids'")},
+		)
+	}
+
+	err := e.db.QueryContext(models.CharacterLanguage{}, c).Find(&results, r.IDs).Error
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err})
+	}
+
+	return c.JSON(http.StatusOK, results)
 }
