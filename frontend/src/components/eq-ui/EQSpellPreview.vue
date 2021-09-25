@@ -1,5 +1,6 @@
 <template>
-  <div class="pb-4" style="min-width: 400px; max-width: 400px; padding: 5px" v-if="spellData && spellData['targettype']">
+  <div class="pb-4" style="min-width: 400px; max-width: 400px; padding: 5px"
+       v-if="spellData && spellData['targettype']">
 
     <div class="row">
       <div class="col-1" v-if="spellData.new_icon > 0">
@@ -23,7 +24,7 @@
       <tr v-if="spellData['id'] !== ''">
         <td class="spell-field-label">Spell ID</td>
         <td> {{ spellData["id"] }}
-          <span v-if="spellData['spellgroup'] !== 0">(Group: {{spellData['spellgroup']}})</span>
+          <span v-if="spellData['spellgroup'] !== 0">(Group: {{ spellData["spellgroup"] }})</span>
           <!-- <span v-if="spellData['rank'] !== 0">, Rank: {{spellData['rank']}})</span> -->
         </td>
       </tr>
@@ -163,15 +164,15 @@
       <tr v-if="getBuffDuration(spellData)">
         <td class="spell-field-label">Dispelable</td>
         <td>
-        <span v-if="spellData['dispel_flag'] !== 0">No</span>
-        <span v-if="spellData['dispel_flag'] == 0">Yes</span>
-        <span v-if="spellData['field_232'] !== 0">, Can Not Remove</span>
+          <span v-if="spellData['dispel_flag'] !== 0">No</span>
+          <span v-if="spellData['dispel_flag'] === 0">Yes</span>
+          <span v-if="spellData['field_232'] !== 0">, Can Not Remove</span>
         </td>
       </tr>
 
       <tr v-if="spellData['persistdeath'] !== 0">
         <td class="spell-field-label">Persist After Death</td>
-        <td> Yes </td>
+        <td> Yes</td>
       </tr>
 
       <!-- ToDO
@@ -229,13 +230,14 @@
 
       <tr v-if="spellData['cone_start_angle'] !== 0 || spellData['cone_stop_angle'] !== 0">
         <td class="spell-field-label">Cone Angle</td>
-        <td> {{getConeAngleDescription(spellData['cone_start_angle'], spellData['cone_stop_angle'])}} </td>
+        <td> {{ getConeAngleDescription(spellData["cone_start_angle"], spellData["cone_stop_angle"]) }}</td>
       </tr>
 
       <tr v-if="spellData['resisttype'] > 0 && getSpellResistTypeName(spellData['resisttype']) !== ''">
         <td class="spell-field-label">Resist Type</td>
         <td> {{ getSpellResistTypeName(spellData["resisttype"]) }}
-          <span v-if="spellData['resist_diff'] !== 0 && spellData['no_resist'] == 0">(adjust: {{spellData["resist_diff"]}})</span>
+          <span
+            v-if="spellData['resist_diff'] !== 0 && spellData['no_resist'] == 0">(adjust: {{ spellData["resist_diff"] }})</span>
           <span v-if="spellData['field_209'] !== 0">(Unresistable)</span>
         </td>
       </tr>
@@ -320,7 +322,10 @@
     <h6 class="eq-header mt-3 mb-3" v-if="spellEffectInfo.length > 0">Effects</h6>
     <div v-if="spellEffectInfo.length > 0">
       <div v-for="effect in spellEffectInfo">
-        <v-runtime-template :template="'<span>' + effect + '</span>'" class="pb-6 mt-3 doc"/>
+        <v-runtime-template
+          :template="'<span>' + effect + '</span>'"
+          v-if="typeof effect !== 'undefined'"
+          class="pb-6 mt-3 doc"/>
       </div>
     </div>
 
@@ -367,7 +372,6 @@
 <script>
 
 import {App} from "@/constants/app";
-import {DB_CLASSES} from "@/app/constants/eq-classes-constants";
 import {DB_SKILLS} from "@/app/constants/eq-skill-constants";
 import {
   DB_SPELL_EFFECTS,
@@ -376,12 +380,12 @@ import {
   DB_SPELL_TARGET_RESTRICTION,
   DB_SPELL_TARGETS
 } from "@/app/constants/eq-spell-constants";
-import {ItemApi, SpellsNewApi} from "@/app/api";
+import {SpellsNewApi} from "@/app/api";
 import {SpireApiClient} from "@/app/api/spire-api-client";
 import EqWindow from "@/components/eq-ui/EQWindow";
 import EqDebug from "@/components/eq-ui/EQDebug";
-import {Spells} from "@/app/spells/spells";
-import {ItemStore} from "@/app/store/itemStore";
+import {Spells} from "@/app/spells";
+import {Items} from "@/app/items";
 
 let unknowns = {}
 
@@ -414,7 +418,7 @@ export default {
   methods: {
     async init() {
 
-      if (!this.spellData['targettype']) {
+      if (!this.spellData["targettype"]) {
         return
       }
 
@@ -424,10 +428,7 @@ export default {
       for (let effectIndex = 1; effectIndex <= 12; effectIndex++) {
         if (this.spellData["effectid_" + effectIndex] !== 254) {
           this.getSpellEffectInfo(this.spellData, effectIndex).then((result) => {
-            let effectInfo = this.spellEffectInfo;
-            effectInfo.push(result)
-            effectInfo           = effectInfo.sort((a, b) => a - b)
-            this.spellEffectInfo = effectInfo;
+            this.spellEffectInfo[result.index] = result.info;
           })
         }
       }
@@ -441,13 +442,13 @@ export default {
         if (this.spellData["components_" + i] > 0) {
           let reagent  = {}
           reagent.id   = this.spellData["components_" + i]
-          reagent.item = await this.getItem(this.spellData["components_" + i])
+          reagent.item = await Items.getItem(this.spellData["components_" + i])
           reagents.push(reagent)
         }
       }
 
       // recourse
-      if (this.spellData['recourse_link'] > 0) {
+      if (this.spellData["recourse_link"] > 0) {
         // async
         Spells.renderSpellMini(this.spellData.id, this.spellData["recourse_link"]).then((result) => {
           this.recourseLink = result;
@@ -459,7 +460,7 @@ export default {
 
       this.sideLoadedSpellData = Spells.data;
 
-      this.itemData = ItemStore.data;
+      this.itemData = Items.items;
     },
     getTargetTypeColor(targetType) {
       return Spells.getTargetTypeColor(targetType)
@@ -474,7 +475,7 @@ export default {
     },
 
     getClasses(spell) {
-     return Spells.getClasses(spell)
+      return Spells.getClasses(spell)
     },
     getDatabaseSkillName: function (skillId) {
       return DB_SKILLS[skillId] ? DB_SKILLS[skillId] : ""
@@ -498,16 +499,16 @@ export default {
         return "Right 180 degree Arc"
       }
 
-      if ((start >= 270 && stop <= 90) &&  ((360 - start) == stop)){
+      if ((start >= 270 && stop <= 90) && ((360 - start) == stop)) {
         return "Frontal " + ((360 - start) + stop) + " degree Arc"
       }
-      if ((start >= 90 && start <= 180) && (stop >= 180 && stop <= 270) && ((360 - start) == stop)){
+      if ((start >= 90 && start <= 180) && (stop >= 180 && stop <= 270) && ((360 - start) == stop)) {
         return "Rear " + Math.abs((start) - stop) + " degree Arc"
       }
-      if ((start >= 180 && start <= 270) && (stop >= 270 && stop <= 360) && (Math.abs(270 - start) == Math.abs(270 - stop))){
+      if ((start >= 180 && start <= 270) && (stop >= 270 && stop <= 360) && (Math.abs(270 - start) == Math.abs(270 - stop))) {
         return "Left " + Math.abs(start - stop) + " degree Arc"
       }
-      if ((start >= 0 && start <= 90) && (stop >= 90 && stop <= 180) && (Math.abs(90 - start) == Math.abs(90 - stop))){
+      if ((start >= 0 && start <= 90) && (stop >= 90 && stop <= 180) && (Math.abs(90 - start) == Math.abs(90 - stop))) {
         return "Right " + Math.abs(start - stop) + " degree Arc"
       }
 
@@ -538,13 +539,7 @@ export default {
     },
 
     getItem: async function (itemId) {
-      const api    = (new ItemApi(SpireApiClient.getOpenApiConfig()))
-      const result = await api.getItem({ id: itemId })
-      if (result.status === 200) {
-        return result.data
-      }
-
-      return {}
+      return await Items.getItem(itemId)
     },
     getItemName: async function (itemId) {
       const item = await this.getItem(itemId)

@@ -31,7 +31,7 @@ func (e *ExpeditionMemberController) Routes() []*routes.Route {
 		routes.RegisterRoute(http.MethodDelete, "expedition_member/:expedition_member", e.deleteExpeditionMember, nil),
 		routes.RegisterRoute(http.MethodGet, "expedition_member/:expedition_member", e.getExpeditionMember, nil),
 		routes.RegisterRoute(http.MethodGet, "expedition_members", e.listExpeditionMembers, nil),
-		routes.RegisterRoute(http.MethodPost, "spells_news/bulk", e.getExpeditionMembersBulk, nil),
+		routes.RegisterRoute(http.MethodPost, "expedition_members/bulk", e.getExpeditionMembersBulk, nil),
 		routes.RegisterRoute(http.MethodPatch, "expedition_member/:expedition_member", e.updateExpeditionMember, nil),
 		routes.RegisterRoute(http.MethodPut, "expedition_member", e.createExpeditionMember, nil),
 	}
@@ -217,7 +217,7 @@ func (e *ExpeditionMemberController) getExpeditionMembersBulk(c echo.Context) er
 
 	if len(r.IDs) == 0 {
 		return c.JSON(
-			http.StatusInternalServerError,
+			http.StatusOK,
 			echo.Map{"error": fmt.Sprintf("Missing request field data 'ids'")},
 		)
 	}

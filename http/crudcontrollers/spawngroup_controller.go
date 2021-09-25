@@ -31,7 +31,7 @@ func (e *SpawngroupController) Routes() []*routes.Route {
 		routes.RegisterRoute(http.MethodDelete, "spawngroup/:spawngroup", e.deleteSpawngroup, nil),
 		routes.RegisterRoute(http.MethodGet, "spawngroup/:spawngroup", e.getSpawngroup, nil),
 		routes.RegisterRoute(http.MethodGet, "spawngroups", e.listSpawngroups, nil),
-		routes.RegisterRoute(http.MethodPost, "spells_news/bulk", e.getSpawngroupsBulk, nil),
+		routes.RegisterRoute(http.MethodPost, "spawngroups/bulk", e.getSpawngroupsBulk, nil),
 		routes.RegisterRoute(http.MethodPatch, "spawngroup/:spawngroup", e.updateSpawngroup, nil),
 		routes.RegisterRoute(http.MethodPut, "spawngroup", e.createSpawngroup, nil),
 	}
@@ -217,7 +217,7 @@ func (e *SpawngroupController) getSpawngroupsBulk(c echo.Context) error {
 
 	if len(r.IDs) == 0 {
 		return c.JSON(
-			http.StatusInternalServerError,
+			http.StatusOK,
 			echo.Map{"error": fmt.Sprintf("Missing request field data 'ids'")},
 		)
 	}

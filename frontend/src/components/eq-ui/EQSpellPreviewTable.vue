@@ -49,7 +49,7 @@
 </template>
 
 <script>
-import {Spells} from "@/app/spells/spells";
+import {Spells} from "@/app/spells";
 import EqWindow from "@/components/eq-ui/EQWindow.vue";
 import EqSpellEffects from "@/components/eq-ui/EQSpellEffects";
 import {App} from "@/constants/app";

@@ -31,7 +31,7 @@ func (e *{{.EntityName}}Controller) Routes() []*routes.Route {
 		routes.RegisterRoute(http.MethodDelete, "{{.EntityNameSnake}}/:{{.EntityNameSnake}}", e.delete{{.EntityName}}, nil),
 		routes.RegisterRoute(http.MethodGet, "{{.EntityNameSnake}}/:{{.EntityNameSnake}}", e.get{{.EntityName}}, nil),
 		routes.RegisterRoute(http.MethodGet, "{{.EntityNameSnakePlural}}", e.list{{.EntityNamePlural}}, nil),
-		routes.RegisterRoute(http.MethodPost, "spells_news/bulk", e.get{{.EntityNamePlural}}Bulk, nil),
+		routes.RegisterRoute(http.MethodPost, "{{.EntityNameSnakePlural}}/bulk", e.get{{.EntityNamePlural}}Bulk, nil),
 		routes.RegisterRoute(http.MethodPatch, "{{.EntityNameSnake}}/:{{.EntityNameSnake}}", e.update{{.EntityName}}, nil),
 		routes.RegisterRoute(http.MethodPut, "{{.EntityNameSnake}}", e.create{{.EntityName}}, nil),
 	}
@@ -217,7 +217,7 @@ func (e *{{.EntityName}}Controller) get{{.EntityNamePlural}}Bulk(c echo.Context)
 
 	if len(r.IDs) == 0 {
 		return c.JSON(
-			http.StatusInternalServerError,
+			http.StatusOK,
 			echo.Map{"error": fmt.Sprintf("Missing request field data 'ids'")},
 		)
 	}

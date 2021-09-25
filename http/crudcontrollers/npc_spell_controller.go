@@ -31,7 +31,7 @@ func (e *NpcSpellController) Routes() []*routes.Route {
 		routes.RegisterRoute(http.MethodDelete, "npc_spell/:npc_spell", e.deleteNpcSpell, nil),
 		routes.RegisterRoute(http.MethodGet, "npc_spell/:npc_spell", e.getNpcSpell, nil),
 		routes.RegisterRoute(http.MethodGet, "npc_spells", e.listNpcSpells, nil),
-		routes.RegisterRoute(http.MethodPost, "spells_news/bulk", e.getNpcSpellsBulk, nil),
+		routes.RegisterRoute(http.MethodPost, "npc_spells/bulk", e.getNpcSpellsBulk, nil),
 		routes.RegisterRoute(http.MethodPatch, "npc_spell/:npc_spell", e.updateNpcSpell, nil),
 		routes.RegisterRoute(http.MethodPut, "npc_spell", e.createNpcSpell, nil),
 	}
@@ -217,7 +217,7 @@ func (e *NpcSpellController) getNpcSpellsBulk(c echo.Context) error {
 
 	if len(r.IDs) == 0 {
 		return c.JSON(
-			http.StatusInternalServerError,
+			http.StatusOK,
 			echo.Map{"error": fmt.Sprintf("Missing request field data 'ids'")},
 		)
 	}

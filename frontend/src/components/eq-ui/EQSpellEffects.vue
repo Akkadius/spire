@@ -2,7 +2,10 @@
   <div>
     <div v-if="spellEffectInfo.length > 0 && loaded">
       <div v-for="effect in spellEffectInfo">
-        <v-runtime-template :template="'<span>' + effect + '</span>'" class="pb-6 mt-3 doc"/>
+        <v-runtime-template
+          :template="'<span>' + effect + '</span>'"
+          v-if="typeof effect !== 'undefined'"
+          class="pb-6 mt-3 doc"/>
       </div>
     </div>
     <app-loader :is-loading="!loaded" size="15"/>
@@ -10,11 +13,12 @@
 </template>
 
 <script>
-import {Spells} from "@/app/spells/spells";
+import {Spells} from "@/app/spells";
 import {App} from "@/constants/app";
-import EqItemPreview                         from "@/components/eq-ui/EQItemPreview.vue";
-import EqSpellPreview                        from "@/components/eq-ui/EQSpellPreview.vue";
-import EqWindow                              from "@/components/eq-ui/EQWindow.vue";
+import EqItemPreview from "@/components/eq-ui/EQItemPreview.vue";
+import EqSpellPreview from "@/components/eq-ui/EQSpellPreview.vue";
+import EqWindow from "@/components/eq-ui/EQWindow.vue";
+import {Items} from "@/app/items";
 
 export default {
   name: "EqSpellEffects",
@@ -24,23 +28,32 @@ export default {
     EqSpellPreview,
     EqWindow,
   },
-  created() {
+  async created() {
     // async each effect index if it exists
     // this is so loading spell effects and any subsequent ajax requests
     // do not block the card from loading
     for (let effectIndex = 1; effectIndex <= 12; effectIndex++) {
       if (this.spell["effectid_" + effectIndex] !== 254) {
         Spells.getSpellEffectInfo(this.spell, effectIndex).then((result) => {
-          let effectInfo = this.spellEffectInfo;
-          effectInfo.push(result)
-          effectInfo           = effectInfo.sort((a, b) => a - b)
-          this.spellEffectInfo = effectInfo;
-          this.loaded = true;
+          this.spellEffectInfo[result.index] = result.info;
         })
       }
     }
 
+    // reagents
+    let reagents = []
+    for (let i = 0; i < 4; i++) {
+      if (this.spell["components_" + i] > 0) {
+        let reagent  = {}
+        reagent.id   = this.spell["components_" + i]
+        reagent.item = await Items.getItem(this.spell["components_" + i])
+        reagents.push(reagent)
+      }
+    }
+
     this.sideLoadedSpellData = Spells.data;
+    this.itemData = Items.items;
+    this.loaded = true;
   },
   data() {
     return {

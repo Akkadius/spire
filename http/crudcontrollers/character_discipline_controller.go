@@ -31,7 +31,7 @@ func (e *CharacterDisciplineController) Routes() []*routes.Route {
 		routes.RegisterRoute(http.MethodDelete, "character_discipline/:character_discipline", e.deleteCharacterDiscipline, nil),
 		routes.RegisterRoute(http.MethodGet, "character_discipline/:character_discipline", e.getCharacterDiscipline, nil),
 		routes.RegisterRoute(http.MethodGet, "character_disciplines", e.listCharacterDisciplines, nil),
-		routes.RegisterRoute(http.MethodPost, "spells_news/bulk", e.getCharacterDisciplinesBulk, nil),
+		routes.RegisterRoute(http.MethodPost, "character_disciplines/bulk", e.getCharacterDisciplinesBulk, nil),
 		routes.RegisterRoute(http.MethodPatch, "character_discipline/:character_discipline", e.updateCharacterDiscipline, nil),
 		routes.RegisterRoute(http.MethodPut, "character_discipline", e.createCharacterDiscipline, nil),
 	}
@@ -217,7 +217,7 @@ func (e *CharacterDisciplineController) getCharacterDisciplinesBulk(c echo.Conte
 
 	if len(r.IDs) == 0 {
 		return c.JSON(
-			http.StatusInternalServerError,
+			http.StatusOK,
 			echo.Map{"error": fmt.Sprintf("Missing request field data 'ids'")},
 		)
 	}

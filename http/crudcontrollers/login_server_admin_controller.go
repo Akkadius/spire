@@ -31,7 +31,7 @@ func (e *LoginServerAdminController) Routes() []*routes.Route {
 		routes.RegisterRoute(http.MethodDelete, "login_server_admin/:login_server_admin", e.deleteLoginServerAdmin, nil),
 		routes.RegisterRoute(http.MethodGet, "login_server_admin/:login_server_admin", e.getLoginServerAdmin, nil),
 		routes.RegisterRoute(http.MethodGet, "login_server_admins", e.listLoginServerAdmins, nil),
-		routes.RegisterRoute(http.MethodPost, "spells_news/bulk", e.getLoginServerAdminsBulk, nil),
+		routes.RegisterRoute(http.MethodPost, "login_server_admins/bulk", e.getLoginServerAdminsBulk, nil),
 		routes.RegisterRoute(http.MethodPatch, "login_server_admin/:login_server_admin", e.updateLoginServerAdmin, nil),
 		routes.RegisterRoute(http.MethodPut, "login_server_admin", e.createLoginServerAdmin, nil),
 	}
@@ -217,7 +217,7 @@ func (e *LoginServerAdminController) getLoginServerAdminsBulk(c echo.Context) er
 
 	if len(r.IDs) == 0 {
 		return c.JSON(
-			http.StatusInternalServerError,
+			http.StatusOK,
 			echo.Map{"error": fmt.Sprintf("Missing request field data 'ids'")},
 		)
 	}

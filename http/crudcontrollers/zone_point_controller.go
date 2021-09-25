@@ -31,7 +31,7 @@ func (e *ZonePointController) Routes() []*routes.Route {
 		routes.RegisterRoute(http.MethodDelete, "zone_point/:zone_point", e.deleteZonePoint, nil),
 		routes.RegisterRoute(http.MethodGet, "zone_point/:zone_point", e.getZonePoint, nil),
 		routes.RegisterRoute(http.MethodGet, "zone_points", e.listZonePoints, nil),
-		routes.RegisterRoute(http.MethodPost, "spells_news/bulk", e.getZonePointsBulk, nil),
+		routes.RegisterRoute(http.MethodPost, "zone_points/bulk", e.getZonePointsBulk, nil),
 		routes.RegisterRoute(http.MethodPatch, "zone_point/:zone_point", e.updateZonePoint, nil),
 		routes.RegisterRoute(http.MethodPut, "zone_point", e.createZonePoint, nil),
 	}
@@ -217,7 +217,7 @@ func (e *ZonePointController) getZonePointsBulk(c echo.Context) error {
 
 	if len(r.IDs) == 0 {
 		return c.JSON(
-			http.StatusInternalServerError,
+			http.StatusOK,
 			echo.Map{"error": fmt.Sprintf("Missing request field data 'ids'")},
 		)
 	}

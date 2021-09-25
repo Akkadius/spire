@@ -31,7 +31,7 @@ func (e *CharacterPotionbeltController) Routes() []*routes.Route {
 		routes.RegisterRoute(http.MethodDelete, "character_potionbelt/:character_potionbelt", e.deleteCharacterPotionbelt, nil),
 		routes.RegisterRoute(http.MethodGet, "character_potionbelt/:character_potionbelt", e.getCharacterPotionbelt, nil),
 		routes.RegisterRoute(http.MethodGet, "character_potionbelts", e.listCharacterPotionbelts, nil),
-		routes.RegisterRoute(http.MethodPost, "spells_news/bulk", e.getCharacterPotionbeltsBulk, nil),
+		routes.RegisterRoute(http.MethodPost, "character_potionbelts/bulk", e.getCharacterPotionbeltsBulk, nil),
 		routes.RegisterRoute(http.MethodPatch, "character_potionbelt/:character_potionbelt", e.updateCharacterPotionbelt, nil),
 		routes.RegisterRoute(http.MethodPut, "character_potionbelt", e.createCharacterPotionbelt, nil),
 	}
@@ -217,7 +217,7 @@ func (e *CharacterPotionbeltController) getCharacterPotionbeltsBulk(c echo.Conte
 
 	if len(r.IDs) == 0 {
 		return c.JSON(
-			http.StatusInternalServerError,
+			http.StatusOK,
 			echo.Map{"error": fmt.Sprintf("Missing request field data 'ids'")},
 		)
 	}

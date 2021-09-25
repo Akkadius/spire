@@ -31,7 +31,7 @@ func (e *DataBucketController) Routes() []*routes.Route {
 		routes.RegisterRoute(http.MethodDelete, "data_bucket/:data_bucket", e.deleteDataBucket, nil),
 		routes.RegisterRoute(http.MethodGet, "data_bucket/:data_bucket", e.getDataBucket, nil),
 		routes.RegisterRoute(http.MethodGet, "data_buckets", e.listDataBuckets, nil),
-		routes.RegisterRoute(http.MethodPost, "spells_news/bulk", e.getDataBucketsBulk, nil),
+		routes.RegisterRoute(http.MethodPost, "data_buckets/bulk", e.getDataBucketsBulk, nil),
 		routes.RegisterRoute(http.MethodPatch, "data_bucket/:data_bucket", e.updateDataBucket, nil),
 		routes.RegisterRoute(http.MethodPut, "data_bucket", e.createDataBucket, nil),
 	}
@@ -217,7 +217,7 @@ func (e *DataBucketController) getDataBucketsBulk(c echo.Context) error {
 
 	if len(r.IDs) == 0 {
 		return c.JSON(
-			http.StatusInternalServerError,
+			http.StatusOK,
 			echo.Map{"error": fmt.Sprintf("Missing request field data 'ids'")},
 		)
 	}

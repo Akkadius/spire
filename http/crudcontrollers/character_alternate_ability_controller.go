@@ -31,7 +31,7 @@ func (e *CharacterAlternateAbilityController) Routes() []*routes.Route {
 		routes.RegisterRoute(http.MethodDelete, "character_alternate_ability/:character_alternate_ability", e.deleteCharacterAlternateAbility, nil),
 		routes.RegisterRoute(http.MethodGet, "character_alternate_ability/:character_alternate_ability", e.getCharacterAlternateAbility, nil),
 		routes.RegisterRoute(http.MethodGet, "character_alternate_abilities", e.listCharacterAlternateAbilities, nil),
-		routes.RegisterRoute(http.MethodPost, "spells_news/bulk", e.getCharacterAlternateAbilitiesBulk, nil),
+		routes.RegisterRoute(http.MethodPost, "character_alternate_abilities/bulk", e.getCharacterAlternateAbilitiesBulk, nil),
 		routes.RegisterRoute(http.MethodPatch, "character_alternate_ability/:character_alternate_ability", e.updateCharacterAlternateAbility, nil),
 		routes.RegisterRoute(http.MethodPut, "character_alternate_ability", e.createCharacterAlternateAbility, nil),
 	}
@@ -217,7 +217,7 @@ func (e *CharacterAlternateAbilityController) getCharacterAlternateAbilitiesBulk
 
 	if len(r.IDs) == 0 {
 		return c.JSON(
-			http.StatusInternalServerError,
+			http.StatusOK,
 			echo.Map{"error": fmt.Sprintf("Missing request field data 'ids'")},
 		)
 	}

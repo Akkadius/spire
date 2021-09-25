@@ -31,7 +31,7 @@ func (e *GroundSpawnController) Routes() []*routes.Route {
 		routes.RegisterRoute(http.MethodDelete, "ground_spawn/:ground_spawn", e.deleteGroundSpawn, nil),
 		routes.RegisterRoute(http.MethodGet, "ground_spawn/:ground_spawn", e.getGroundSpawn, nil),
 		routes.RegisterRoute(http.MethodGet, "ground_spawns", e.listGroundSpawns, nil),
-		routes.RegisterRoute(http.MethodPost, "spells_news/bulk", e.getGroundSpawnsBulk, nil),
+		routes.RegisterRoute(http.MethodPost, "ground_spawns/bulk", e.getGroundSpawnsBulk, nil),
 		routes.RegisterRoute(http.MethodPatch, "ground_spawn/:ground_spawn", e.updateGroundSpawn, nil),
 		routes.RegisterRoute(http.MethodPut, "ground_spawn", e.createGroundSpawn, nil),
 	}
@@ -217,7 +217,7 @@ func (e *GroundSpawnController) getGroundSpawnsBulk(c echo.Context) error {
 
 	if len(r.IDs) == 0 {
 		return c.JSON(
-			http.StatusInternalServerError,
+			http.StatusOK,
 			echo.Map{"error": fmt.Sprintf("Missing request field data 'ids'")},
 		)
 	}

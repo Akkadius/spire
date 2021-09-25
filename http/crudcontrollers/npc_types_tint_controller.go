@@ -31,7 +31,7 @@ func (e *NpcTypesTintController) Routes() []*routes.Route {
 		routes.RegisterRoute(http.MethodDelete, "npc_types_tint/:npc_types_tint", e.deleteNpcTypesTint, nil),
 		routes.RegisterRoute(http.MethodGet, "npc_types_tint/:npc_types_tint", e.getNpcTypesTint, nil),
 		routes.RegisterRoute(http.MethodGet, "npc_types_tints", e.listNpcTypesTints, nil),
-		routes.RegisterRoute(http.MethodPost, "spells_news/bulk", e.getNpcTypesTintsBulk, nil),
+		routes.RegisterRoute(http.MethodPost, "npc_types_tints/bulk", e.getNpcTypesTintsBulk, nil),
 		routes.RegisterRoute(http.MethodPatch, "npc_types_tint/:npc_types_tint", e.updateNpcTypesTint, nil),
 		routes.RegisterRoute(http.MethodPut, "npc_types_tint", e.createNpcTypesTint, nil),
 	}
@@ -217,7 +217,7 @@ func (e *NpcTypesTintController) getNpcTypesTintsBulk(c echo.Context) error {
 
 	if len(r.IDs) == 0 {
 		return c.JSON(
-			http.StatusInternalServerError,
+			http.StatusOK,
 			echo.Map{"error": fmt.Sprintf("Missing request field data 'ids'")},
 		)
 	}

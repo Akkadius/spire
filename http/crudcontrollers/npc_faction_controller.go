@@ -31,7 +31,7 @@ func (e *NpcFactionController) Routes() []*routes.Route {
 		routes.RegisterRoute(http.MethodDelete, "npc_faction/:npc_faction", e.deleteNpcFaction, nil),
 		routes.RegisterRoute(http.MethodGet, "npc_faction/:npc_faction", e.getNpcFaction, nil),
 		routes.RegisterRoute(http.MethodGet, "npc_factions", e.listNpcFactions, nil),
-		routes.RegisterRoute(http.MethodPost, "spells_news/bulk", e.getNpcFactionsBulk, nil),
+		routes.RegisterRoute(http.MethodPost, "npc_factions/bulk", e.getNpcFactionsBulk, nil),
 		routes.RegisterRoute(http.MethodPatch, "npc_faction/:npc_faction", e.updateNpcFaction, nil),
 		routes.RegisterRoute(http.MethodPut, "npc_faction", e.createNpcFaction, nil),
 	}
@@ -217,7 +217,7 @@ func (e *NpcFactionController) getNpcFactionsBulk(c echo.Context) error {
 
 	if len(r.IDs) == 0 {
 		return c.JSON(
-			http.StatusInternalServerError,
+			http.StatusOK,
 			echo.Map{"error": fmt.Sprintf("Missing request field data 'ids'")},
 		)
 	}

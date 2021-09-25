@@ -31,7 +31,7 @@ func (e *SaylinkController) Routes() []*routes.Route {
 		routes.RegisterRoute(http.MethodDelete, "saylink/:saylink", e.deleteSaylink, nil),
 		routes.RegisterRoute(http.MethodGet, "saylink/:saylink", e.getSaylink, nil),
 		routes.RegisterRoute(http.MethodGet, "saylinks", e.listSaylinks, nil),
-		routes.RegisterRoute(http.MethodPost, "spells_news/bulk", e.getSaylinksBulk, nil),
+		routes.RegisterRoute(http.MethodPost, "saylinks/bulk", e.getSaylinksBulk, nil),
 		routes.RegisterRoute(http.MethodPatch, "saylink/:saylink", e.updateSaylink, nil),
 		routes.RegisterRoute(http.MethodPut, "saylink", e.createSaylink, nil),
 	}
@@ -217,7 +217,7 @@ func (e *SaylinkController) getSaylinksBulk(c echo.Context) error {
 
 	if len(r.IDs) == 0 {
 		return c.JSON(
-			http.StatusInternalServerError,
+			http.StatusOK,
 			echo.Map{"error": fmt.Sprintf("Missing request field data 'ids'")},
 		)
 	}

@@ -31,7 +31,7 @@ func (e *AaAbilityController) Routes() []*routes.Route {
 		routes.RegisterRoute(http.MethodDelete, "aa_ability/:aa_ability", e.deleteAaAbility, nil),
 		routes.RegisterRoute(http.MethodGet, "aa_ability/:aa_ability", e.getAaAbility, nil),
 		routes.RegisterRoute(http.MethodGet, "aa_abilities", e.listAaAbilities, nil),
-		routes.RegisterRoute(http.MethodPost, "spells_news/bulk", e.getAaAbilitiesBulk, nil),
+		routes.RegisterRoute(http.MethodPost, "aa_abilities/bulk", e.getAaAbilitiesBulk, nil),
 		routes.RegisterRoute(http.MethodPatch, "aa_ability/:aa_ability", e.updateAaAbility, nil),
 		routes.RegisterRoute(http.MethodPut, "aa_ability", e.createAaAbility, nil),
 	}
@@ -217,7 +217,7 @@ func (e *AaAbilityController) getAaAbilitiesBulk(c echo.Context) error {
 
 	if len(r.IDs) == 0 {
 		return c.JSON(
-			http.StatusInternalServerError,
+			http.StatusOK,
 			echo.Map{"error": fmt.Sprintf("Missing request field data 'ids'")},
 		)
 	}

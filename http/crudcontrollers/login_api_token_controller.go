@@ -31,7 +31,7 @@ func (e *LoginApiTokenController) Routes() []*routes.Route {
 		routes.RegisterRoute(http.MethodDelete, "login_api_token/:login_api_token", e.deleteLoginApiToken, nil),
 		routes.RegisterRoute(http.MethodGet, "login_api_token/:login_api_token", e.getLoginApiToken, nil),
 		routes.RegisterRoute(http.MethodGet, "login_api_tokens", e.listLoginApiTokens, nil),
-		routes.RegisterRoute(http.MethodPost, "spells_news/bulk", e.getLoginApiTokensBulk, nil),
+		routes.RegisterRoute(http.MethodPost, "login_api_tokens/bulk", e.getLoginApiTokensBulk, nil),
 		routes.RegisterRoute(http.MethodPatch, "login_api_token/:login_api_token", e.updateLoginApiToken, nil),
 		routes.RegisterRoute(http.MethodPut, "login_api_token", e.createLoginApiToken, nil),
 	}
@@ -217,7 +217,7 @@ func (e *LoginApiTokenController) getLoginApiTokensBulk(c echo.Context) error {
 
 	if len(r.IDs) == 0 {
 		return c.JSON(
-			http.StatusInternalServerError,
+			http.StatusOK,
 			echo.Map{"error": fmt.Sprintf("Missing request field data 'ids'")},
 		)
 	}

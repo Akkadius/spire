@@ -31,7 +31,7 @@ func (e *AaRankController) Routes() []*routes.Route {
 		routes.RegisterRoute(http.MethodDelete, "aa_rank/:aa_rank", e.deleteAaRank, nil),
 		routes.RegisterRoute(http.MethodGet, "aa_rank/:aa_rank", e.getAaRank, nil),
 		routes.RegisterRoute(http.MethodGet, "aa_ranks", e.listAaRanks, nil),
-		routes.RegisterRoute(http.MethodPost, "spells_news/bulk", e.getAaRanksBulk, nil),
+		routes.RegisterRoute(http.MethodPost, "aa_ranks/bulk", e.getAaRanksBulk, nil),
 		routes.RegisterRoute(http.MethodPatch, "aa_rank/:aa_rank", e.updateAaRank, nil),
 		routes.RegisterRoute(http.MethodPut, "aa_rank", e.createAaRank, nil),
 	}
@@ -217,7 +217,7 @@ func (e *AaRankController) getAaRanksBulk(c echo.Context) error {
 
 	if len(r.IDs) == 0 {
 		return c.JSON(
-			http.StatusInternalServerError,
+			http.StatusOK,
 			echo.Map{"error": fmt.Sprintf("Missing request field data 'ids'")},
 		)
 	}

@@ -31,7 +31,7 @@ func (e *DoorController) Routes() []*routes.Route {
 		routes.RegisterRoute(http.MethodDelete, "door/:door", e.deleteDoor, nil),
 		routes.RegisterRoute(http.MethodGet, "door/:door", e.getDoor, nil),
 		routes.RegisterRoute(http.MethodGet, "doors", e.listDoors, nil),
-		routes.RegisterRoute(http.MethodPost, "spells_news/bulk", e.getDoorsBulk, nil),
+		routes.RegisterRoute(http.MethodPost, "doors/bulk", e.getDoorsBulk, nil),
 		routes.RegisterRoute(http.MethodPatch, "door/:door", e.updateDoor, nil),
 		routes.RegisterRoute(http.MethodPut, "door", e.createDoor, nil),
 	}
@@ -217,7 +217,7 @@ func (e *DoorController) getDoorsBulk(c echo.Context) error {
 
 	if len(r.IDs) == 0 {
 		return c.JSON(
-			http.StatusInternalServerError,
+			http.StatusOK,
 			echo.Map{"error": fmt.Sprintf("Missing request field data 'ids'")},
 		)
 	}

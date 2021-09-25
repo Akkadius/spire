@@ -31,7 +31,7 @@ func (e *BlockedSpellController) Routes() []*routes.Route {
 		routes.RegisterRoute(http.MethodDelete, "blocked_spell/:blocked_spell", e.deleteBlockedSpell, nil),
 		routes.RegisterRoute(http.MethodGet, "blocked_spell/:blocked_spell", e.getBlockedSpell, nil),
 		routes.RegisterRoute(http.MethodGet, "blocked_spells", e.listBlockedSpells, nil),
-		routes.RegisterRoute(http.MethodPost, "spells_news/bulk", e.getBlockedSpellsBulk, nil),
+		routes.RegisterRoute(http.MethodPost, "blocked_spells/bulk", e.getBlockedSpellsBulk, nil),
 		routes.RegisterRoute(http.MethodPatch, "blocked_spell/:blocked_spell", e.updateBlockedSpell, nil),
 		routes.RegisterRoute(http.MethodPut, "blocked_spell", e.createBlockedSpell, nil),
 	}
@@ -217,7 +217,7 @@ func (e *BlockedSpellController) getBlockedSpellsBulk(c echo.Context) error {
 
 	if len(r.IDs) == 0 {
 		return c.JSON(
-			http.StatusInternalServerError,
+			http.StatusOK,
 			echo.Map{"error": fmt.Sprintf("Missing request field data 'ids'")},
 		)
 	}

@@ -31,7 +31,7 @@ func (e *TributeController) Routes() []*routes.Route {
 		routes.RegisterRoute(http.MethodDelete, "tribute/:tribute", e.deleteTribute, nil),
 		routes.RegisterRoute(http.MethodGet, "tribute/:tribute", e.getTribute, nil),
 		routes.RegisterRoute(http.MethodGet, "tributes", e.listTributes, nil),
-		routes.RegisterRoute(http.MethodPost, "spells_news/bulk", e.getTributesBulk, nil),
+		routes.RegisterRoute(http.MethodPost, "tributes/bulk", e.getTributesBulk, nil),
 		routes.RegisterRoute(http.MethodPatch, "tribute/:tribute", e.updateTribute, nil),
 		routes.RegisterRoute(http.MethodPut, "tribute", e.createTribute, nil),
 	}
@@ -217,7 +217,7 @@ func (e *TributeController) getTributesBulk(c echo.Context) error {
 
 	if len(r.IDs) == 0 {
 		return c.JSON(
-			http.StatusInternalServerError,
+			http.StatusOK,
 			echo.Map{"error": fmt.Sprintf("Missing request field data 'ids'")},
 		)
 	}

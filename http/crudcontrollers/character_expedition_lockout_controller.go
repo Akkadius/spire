@@ -31,7 +31,7 @@ func (e *CharacterExpeditionLockoutController) Routes() []*routes.Route {
 		routes.RegisterRoute(http.MethodDelete, "character_expedition_lockout/:character_expedition_lockout", e.deleteCharacterExpeditionLockout, nil),
 		routes.RegisterRoute(http.MethodGet, "character_expedition_lockout/:character_expedition_lockout", e.getCharacterExpeditionLockout, nil),
 		routes.RegisterRoute(http.MethodGet, "character_expedition_lockouts", e.listCharacterExpeditionLockouts, nil),
-		routes.RegisterRoute(http.MethodPost, "spells_news/bulk", e.getCharacterExpeditionLockoutsBulk, nil),
+		routes.RegisterRoute(http.MethodPost, "character_expedition_lockouts/bulk", e.getCharacterExpeditionLockoutsBulk, nil),
 		routes.RegisterRoute(http.MethodPatch, "character_expedition_lockout/:character_expedition_lockout", e.updateCharacterExpeditionLockout, nil),
 		routes.RegisterRoute(http.MethodPut, "character_expedition_lockout", e.createCharacterExpeditionLockout, nil),
 	}
@@ -217,7 +217,7 @@ func (e *CharacterExpeditionLockoutController) getCharacterExpeditionLockoutsBul
 
 	if len(r.IDs) == 0 {
 		return c.JSON(
-			http.StatusInternalServerError,
+			http.StatusOK,
 			echo.Map{"error": fmt.Sprintf("Missing request field data 'ids'")},
 		)
 	}

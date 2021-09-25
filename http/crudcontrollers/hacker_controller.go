@@ -31,7 +31,7 @@ func (e *HackerController) Routes() []*routes.Route {
 		routes.RegisterRoute(http.MethodDelete, "hacker/:hacker", e.deleteHacker, nil),
 		routes.RegisterRoute(http.MethodGet, "hacker/:hacker", e.getHacker, nil),
 		routes.RegisterRoute(http.MethodGet, "hackers", e.listHackers, nil),
-		routes.RegisterRoute(http.MethodPost, "spells_news/bulk", e.getHackersBulk, nil),
+		routes.RegisterRoute(http.MethodPost, "hackers/bulk", e.getHackersBulk, nil),
 		routes.RegisterRoute(http.MethodPatch, "hacker/:hacker", e.updateHacker, nil),
 		routes.RegisterRoute(http.MethodPut, "hacker", e.createHacker, nil),
 	}
@@ -217,7 +217,7 @@ func (e *HackerController) getHackersBulk(c echo.Context) error {
 
 	if len(r.IDs) == 0 {
 		return c.JSON(
-			http.StatusInternalServerError,
+			http.StatusOK,
 			echo.Map{"error": fmt.Sprintf("Missing request field data 'ids'")},
 		)
 	}

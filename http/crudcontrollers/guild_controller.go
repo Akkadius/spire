@@ -31,7 +31,7 @@ func (e *GuildController) Routes() []*routes.Route {
 		routes.RegisterRoute(http.MethodDelete, "guild/:guild", e.deleteGuild, nil),
 		routes.RegisterRoute(http.MethodGet, "guild/:guild", e.getGuild, nil),
 		routes.RegisterRoute(http.MethodGet, "guilds", e.listGuilds, nil),
-		routes.RegisterRoute(http.MethodPost, "spells_news/bulk", e.getGuildsBulk, nil),
+		routes.RegisterRoute(http.MethodPost, "guilds/bulk", e.getGuildsBulk, nil),
 		routes.RegisterRoute(http.MethodPatch, "guild/:guild", e.updateGuild, nil),
 		routes.RegisterRoute(http.MethodPut, "guild", e.createGuild, nil),
 	}
@@ -217,7 +217,7 @@ func (e *GuildController) getGuildsBulk(c echo.Context) error {
 
 	if len(r.IDs) == 0 {
 		return c.JSON(
-			http.StatusInternalServerError,
+			http.StatusOK,
 			echo.Map{"error": fmt.Sprintf("Missing request field data 'ids'")},
 		)
 	}

@@ -31,7 +31,7 @@ func (e *TradeskillRecipeEntryController) Routes() []*routes.Route {
 		routes.RegisterRoute(http.MethodDelete, "tradeskill_recipe_entry/:tradeskill_recipe_entry", e.deleteTradeskillRecipeEntry, nil),
 		routes.RegisterRoute(http.MethodGet, "tradeskill_recipe_entry/:tradeskill_recipe_entry", e.getTradeskillRecipeEntry, nil),
 		routes.RegisterRoute(http.MethodGet, "tradeskill_recipe_entries", e.listTradeskillRecipeEntries, nil),
-		routes.RegisterRoute(http.MethodPost, "spells_news/bulk", e.getTradeskillRecipeEntriesBulk, nil),
+		routes.RegisterRoute(http.MethodPost, "tradeskill_recipe_entries/bulk", e.getTradeskillRecipeEntriesBulk, nil),
 		routes.RegisterRoute(http.MethodPatch, "tradeskill_recipe_entry/:tradeskill_recipe_entry", e.updateTradeskillRecipeEntry, nil),
 		routes.RegisterRoute(http.MethodPut, "tradeskill_recipe_entry", e.createTradeskillRecipeEntry, nil),
 	}
@@ -217,7 +217,7 @@ func (e *TradeskillRecipeEntryController) getTradeskillRecipeEntriesBulk(c echo.
 
 	if len(r.IDs) == 0 {
 		return c.JSON(
-			http.StatusInternalServerError,
+			http.StatusOK,
 			echo.Map{"error": fmt.Sprintf("Missing request field data 'ids'")},
 		)
 	}

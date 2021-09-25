@@ -31,7 +31,7 @@ func (e *BugReportController) Routes() []*routes.Route {
 		routes.RegisterRoute(http.MethodDelete, "bug_report/:bug_report", e.deleteBugReport, nil),
 		routes.RegisterRoute(http.MethodGet, "bug_report/:bug_report", e.getBugReport, nil),
 		routes.RegisterRoute(http.MethodGet, "bug_reports", e.listBugReports, nil),
-		routes.RegisterRoute(http.MethodPost, "spells_news/bulk", e.getBugReportsBulk, nil),
+		routes.RegisterRoute(http.MethodPost, "bug_reports/bulk", e.getBugReportsBulk, nil),
 		routes.RegisterRoute(http.MethodPatch, "bug_report/:bug_report", e.updateBugReport, nil),
 		routes.RegisterRoute(http.MethodPut, "bug_report", e.createBugReport, nil),
 	}
@@ -217,7 +217,7 @@ func (e *BugReportController) getBugReportsBulk(c echo.Context) error {
 
 	if len(r.IDs) == 0 {
 		return c.JSON(
-			http.StatusInternalServerError,
+			http.StatusOK,
 			echo.Map{"error": fmt.Sprintf("Missing request field data 'ids'")},
 		)
 	}

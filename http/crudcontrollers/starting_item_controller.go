@@ -31,7 +31,7 @@ func (e *StartingItemController) Routes() []*routes.Route {
 		routes.RegisterRoute(http.MethodDelete, "starting_item/:starting_item", e.deleteStartingItem, nil),
 		routes.RegisterRoute(http.MethodGet, "starting_item/:starting_item", e.getStartingItem, nil),
 		routes.RegisterRoute(http.MethodGet, "starting_items", e.listStartingItems, nil),
-		routes.RegisterRoute(http.MethodPost, "spells_news/bulk", e.getStartingItemsBulk, nil),
+		routes.RegisterRoute(http.MethodPost, "starting_items/bulk", e.getStartingItemsBulk, nil),
 		routes.RegisterRoute(http.MethodPatch, "starting_item/:starting_item", e.updateStartingItem, nil),
 		routes.RegisterRoute(http.MethodPut, "starting_item", e.createStartingItem, nil),
 	}
@@ -217,7 +217,7 @@ func (e *StartingItemController) getStartingItemsBulk(c echo.Context) error {
 
 	if len(r.IDs) == 0 {
 		return c.JSON(
-			http.StatusInternalServerError,
+			http.StatusOK,
 			echo.Map{"error": fmt.Sprintf("Missing request field data 'ids'")},
 		)
 	}

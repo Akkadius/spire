@@ -31,7 +31,7 @@ func (e *Spawn2Controller) Routes() []*routes.Route {
 		routes.RegisterRoute(http.MethodDelete, "spawn_2/:spawn_2", e.deleteSpawn2, nil),
 		routes.RegisterRoute(http.MethodGet, "spawn_2/:spawn_2", e.getSpawn2, nil),
 		routes.RegisterRoute(http.MethodGet, "spawn_2s", e.listSpawn2s, nil),
-		routes.RegisterRoute(http.MethodPost, "spells_news/bulk", e.getSpawn2sBulk, nil),
+		routes.RegisterRoute(http.MethodPost, "spawn_2s/bulk", e.getSpawn2sBulk, nil),
 		routes.RegisterRoute(http.MethodPatch, "spawn_2/:spawn_2", e.updateSpawn2, nil),
 		routes.RegisterRoute(http.MethodPut, "spawn_2", e.createSpawn2, nil),
 	}
@@ -217,7 +217,7 @@ func (e *Spawn2Controller) getSpawn2sBulk(c echo.Context) error {
 
 	if len(r.IDs) == 0 {
 		return c.JSON(
-			http.StatusInternalServerError,
+			http.StatusOK,
 			echo.Map{"error": fmt.Sprintf("Missing request field data 'ids'")},
 		)
 	}

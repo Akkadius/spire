@@ -31,7 +31,7 @@ func (e *GlobalLootController) Routes() []*routes.Route {
 		routes.RegisterRoute(http.MethodDelete, "global_loot/:global_loot", e.deleteGlobalLoot, nil),
 		routes.RegisterRoute(http.MethodGet, "global_loot/:global_loot", e.getGlobalLoot, nil),
 		routes.RegisterRoute(http.MethodGet, "global_loots", e.listGlobalLoots, nil),
-		routes.RegisterRoute(http.MethodPost, "spells_news/bulk", e.getGlobalLootsBulk, nil),
+		routes.RegisterRoute(http.MethodPost, "global_loots/bulk", e.getGlobalLootsBulk, nil),
 		routes.RegisterRoute(http.MethodPatch, "global_loot/:global_loot", e.updateGlobalLoot, nil),
 		routes.RegisterRoute(http.MethodPut, "global_loot", e.createGlobalLoot, nil),
 	}
@@ -217,7 +217,7 @@ func (e *GlobalLootController) getGlobalLootsBulk(c echo.Context) error {
 
 	if len(r.IDs) == 0 {
 		return c.JSON(
-			http.StatusInternalServerError,
+			http.StatusOK,
 			echo.Map{"error": fmt.Sprintf("Missing request field data 'ids'")},
 		)
 	}

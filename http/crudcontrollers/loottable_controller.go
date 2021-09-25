@@ -31,7 +31,7 @@ func (e *LoottableController) Routes() []*routes.Route {
 		routes.RegisterRoute(http.MethodDelete, "loottable/:loottable", e.deleteLoottable, nil),
 		routes.RegisterRoute(http.MethodGet, "loottable/:loottable", e.getLoottable, nil),
 		routes.RegisterRoute(http.MethodGet, "loottables", e.listLoottables, nil),
-		routes.RegisterRoute(http.MethodPost, "spells_news/bulk", e.getLoottablesBulk, nil),
+		routes.RegisterRoute(http.MethodPost, "loottables/bulk", e.getLoottablesBulk, nil),
 		routes.RegisterRoute(http.MethodPatch, "loottable/:loottable", e.updateLoottable, nil),
 		routes.RegisterRoute(http.MethodPut, "loottable", e.createLoottable, nil),
 	}
@@ -217,7 +217,7 @@ func (e *LoottableController) getLoottablesBulk(c echo.Context) error {
 
 	if len(r.IDs) == 0 {
 		return c.JSON(
-			http.StatusInternalServerError,
+			http.StatusOK,
 			echo.Map{"error": fmt.Sprintf("Missing request field data 'ids'")},
 		)
 	}

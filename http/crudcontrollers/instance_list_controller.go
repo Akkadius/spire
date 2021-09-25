@@ -31,7 +31,7 @@ func (e *InstanceListController) Routes() []*routes.Route {
 		routes.RegisterRoute(http.MethodDelete, "instance_list/:instance_list", e.deleteInstanceList, nil),
 		routes.RegisterRoute(http.MethodGet, "instance_list/:instance_list", e.getInstanceList, nil),
 		routes.RegisterRoute(http.MethodGet, "instance_lists", e.listInstanceLists, nil),
-		routes.RegisterRoute(http.MethodPost, "spells_news/bulk", e.getInstanceListsBulk, nil),
+		routes.RegisterRoute(http.MethodPost, "instance_lists/bulk", e.getInstanceListsBulk, nil),
 		routes.RegisterRoute(http.MethodPatch, "instance_list/:instance_list", e.updateInstanceList, nil),
 		routes.RegisterRoute(http.MethodPut, "instance_list", e.createInstanceList, nil),
 	}
@@ -217,7 +217,7 @@ func (e *InstanceListController) getInstanceListsBulk(c echo.Context) error {
 
 	if len(r.IDs) == 0 {
 		return c.JSON(
-			http.StatusInternalServerError,
+			http.StatusOK,
 			echo.Map{"error": fmt.Sprintf("Missing request field data 'ids'")},
 		)
 	}

@@ -31,7 +31,7 @@ func (e *TasksetController) Routes() []*routes.Route {
 		routes.RegisterRoute(http.MethodDelete, "taskset/:taskset", e.deleteTaskset, nil),
 		routes.RegisterRoute(http.MethodGet, "taskset/:taskset", e.getTaskset, nil),
 		routes.RegisterRoute(http.MethodGet, "tasksets", e.listTasksets, nil),
-		routes.RegisterRoute(http.MethodPost, "spells_news/bulk", e.getTasksetsBulk, nil),
+		routes.RegisterRoute(http.MethodPost, "tasksets/bulk", e.getTasksetsBulk, nil),
 		routes.RegisterRoute(http.MethodPatch, "taskset/:taskset", e.updateTaskset, nil),
 		routes.RegisterRoute(http.MethodPut, "taskset", e.createTaskset, nil),
 	}
@@ -217,7 +217,7 @@ func (e *TasksetController) getTasksetsBulk(c echo.Context) error {
 
 	if len(r.IDs) == 0 {
 		return c.JSON(
-			http.StatusInternalServerError,
+			http.StatusOK,
 			echo.Map{"error": fmt.Sprintf("Missing request field data 'ids'")},
 		)
 	}
