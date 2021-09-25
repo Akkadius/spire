@@ -1,5 +1,5 @@
 <template>
-  <div class="pb-4" style="min-width: 400px; max-width: 400px; padding: 5px" v-if="spellData">
+  <div class="pb-4" style="min-width: 400px; max-width: 400px; padding: 5px" v-if="spellData && spellData['targettype']">
 
     <div class="row">
       <div class="col-1" v-if="spellData.new_icon > 0">
@@ -408,11 +408,15 @@ export default {
       recourseLink: ""
     }
   },
-  created() {
+  mounted() {
     this.init()
   },
   methods: {
     async init() {
+
+      if (!this.spellData['targettype']) {
+        return
+      }
 
       // async each effect index if it exists
       // this is so loading spell effects and any subsequent ajax requests
@@ -454,6 +458,8 @@ export default {
       this.loadSpellDescription();
 
       this.sideLoadedSpellData = Spells.data;
+
+      console.log(this.sideLoadedSpellData);
       this.itemData = ItemStore.data;
     },
     getTargetTypeColor(targetType) {

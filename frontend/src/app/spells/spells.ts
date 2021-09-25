@@ -245,7 +245,7 @@ export class Spells {
           break;
 
         case 31:
-          printBuffer += "Mesmerize" + this.getUpToMaxLvl(max) + " (Stack Type: " + base +")"
+          printBuffer += "Mesmerize" + this.getUpToMaxLvl(max) + " (Stack Type: " + base + ")"
           break;
 
         case 32:
@@ -2454,6 +2454,56 @@ export class Spells {
     return effectsInfo;
   };
 
+  // if there is a spell id referenced in the spell effect, we return it here
+  // used in bulk loading spell info
+  public static getSpellIdFromEffectIfExists(spell, effectIndex) {
+    if (spell["effectid_" + effectIndex] !== 254) {
+
+      let base  = spell["effect_base_value_" + effectIndex]
+      let limit = spell["effect_limit_value_" + effectIndex]
+
+      switch (spell["effectid_" + effectIndex]) {
+
+        case 139:
+          return Math.abs(base);
+        case 85:
+        case 201:
+        case 289:
+        case 373:
+        case 377:
+        case 386:
+        case 387:
+        case 406:
+        case 407:
+        case 419:
+        case 427:
+        case 429:
+        case 442:
+        case 443:
+        case 453:
+        case 454:
+          return base;
+        case 323:
+          return spell["effect_base_value_" + effectIndex];
+        case 232:
+        case 333:
+        case 339:
+        case 340:
+        case 360:
+        case 361:
+        case 365:
+        case 374:
+        case 383:
+        case 475:
+        case 476:
+        case 481:
+          return limit
+      }
+    }
+
+    return 0;
+  }
+
   public static calcSpellEffectValue(calc, base, max, tick, level) {
     if (calc === 0) {
       return base;
@@ -2779,20 +2829,6 @@ export class Spells {
     return SPELL_TARGET_TYPE_COLORS[targetType];
   };
 
-  public static async getSpell(spellId) {
-    if (spellId === 0) {
-      return {}
-    }
-
-    const api    = (new SpellsNewApi(SpireApiClient.getOpenApiConfig()))
-    const result = await api.getSpellsNew({id: spellId})
-    if (result.status === 200) {
-      return result.data
-    }
-
-    return {}
-  };
-
   public static humanTime(sec) {
     let result = ""
     if (sec === 0) {
@@ -2914,12 +2950,7 @@ export class Spells {
   };
 
   public static async renderSpellMini(parentSpellId, renderSpellId) {
-    let spell = <any>this.getSpellData(renderSpellId)
-    if (!this.getSpellData(renderSpellId)) {
-      spell = <any>(await this.getSpell(renderSpellId));
-      this.setSpellData(renderSpellId, spell);
-    }
-
+    let spell             = <any>await this.getSpell(renderSpellId)
     const targetTypeColor = this.getTargetTypeColor(spell["targettype"]);
 
     return `
@@ -2949,12 +2980,27 @@ export class Spells {
           </b-popover>`;
   };
 
-  public static setSpellData(spellId, spell: any) {
+  public static setSpell(spellId, spell: any) {
     this.data[spellId] = spell;
   }
 
-  public static getSpellData(spellId) {
-    return this.data[spellId]
+  public static async getSpell(spellId) {
+    if (spellId === 0) {
+      return {}
+    }
+
+    if (this.data[spellId]) {
+      return this.data[spellId]
+    }
+
+    const api    = (new SpellsNewApi(SpireApiClient.getOpenApiConfig()))
+    const result = await api.getSpellsNew({id: spellId})
+    if (result.status === 200 && result.data) {
+      this.setSpell(spellId, result.data);
+      return result.data
+    }
+
+    return {}
   }
 
   public static async preloadDbstr() {

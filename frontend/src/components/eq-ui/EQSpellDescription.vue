@@ -32,7 +32,7 @@ export default {
   data() {
     return {
       effectDescription: "",
-      loaded: false
+      loaded: false,
     }
   },
   props: {
