@@ -291,7 +291,7 @@ type Item struct {
 	UNK240              int              `json:"unk_240" gorm:"Column:UNK240"`
 	UNK241              int              `json:"unk_241" gorm:"Column:UNK241"`
 	Epicitem            int              `json:"epicitem" gorm:"Column:epicitem"`
-	DiscoveredItems     []DiscoveredItem `json:"discovered_items,omitempty" gorm:"foreignKey:item_id;association_foreignkey:id"`
+	DiscoveredItems     []DiscoveredItem `json:"discovered_items,omitempty" gorm:"foreignKey:item_id;references:id"`
 }
 
 func (Item) TableName() string {

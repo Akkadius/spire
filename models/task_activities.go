@@ -21,7 +21,7 @@ type TaskActivity struct {
 	Zones                string     `json:"zones" gorm:"Column:zones"`
 	Optional             int8       `json:"optional" gorm:"Column:optional"`
 	NpcType              *NpcType   `json:"npc_type,omitempty" gorm:"foreignKey:delivertonpc;references:id"`
-	Goallists            []Goallist `json:"goallists,omitempty" gorm:"foreignKey:listid;association_foreignkey:goalid"`
+	Goallists            []Goallist `json:"goallists,omitempty" gorm:"foreignKey:listid;references:goalid"`
 }
 
 func (TaskActivity) TableName() string {

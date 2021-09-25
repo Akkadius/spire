@@ -66,7 +66,7 @@ export default {
   },
   async created() {
     for (const spell of this.spells) {
-      Spells.setSpellData(spell['id'], spell)
+      Spells.setSpell(spell['id'], spell)
       // Spells.renderSpellMini("0", spell['id']).then((result) => {
       //   this.spellMini[spell['id']] = result
       // })

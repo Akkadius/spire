@@ -1,5 +1,12 @@
 basePath: /api/v1
 definitions:
+  crudcontrollers.BulkSpellsNewGetRequest:
+    properties:
+      ids:
+        items:
+          type: integer
+        type: array
+    type: object
   models.AaAbility:
     properties:
       category:
@@ -4204,14 +4211,28 @@ definitions:
         type: integer
       id:
         type: integer
+      level_spread:
+        type: integer
+      max_players:
+        type: integer
       maxlevel:
+        type: integer
+      min_players:
         type: integer
       minlevel:
         type: integer
       repeatable:
         type: integer
+      replay_timer_seconds:
+        type: integer
+      request_timer_seconds:
+        type: integer
       reward:
         type: string
+      reward_ebon_crystals:
+        type: integer
+      reward_radiant_crystals:
+        type: integer
       rewardid:
         type: integer
       rewardmethod:
@@ -19949,6 +19970,34 @@ paths:
       summary: Lists SpellsNews
       tags:
       - SpellsNew
+  /spells_news/bulk:
+    post:
+      consumes:
+      - application/json
+      operationId: getSpellsNewBulk
+      parameters:
+      - description: ids
+        in: body
+        name: ids
+        required: true
+        schema:
+          $ref: '#/definitions/crudcontrollers.BulkSpellsNewGetRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.SpellsNew'
+            type: array
+        "500":
+          description: Bad query request
+          schema:
+            type: string
+      summary: Gets SpellsNews in bulk
+      tags:
+      - SpellsNew
   /starting_item:
     put:
       consumes:
@@ -21483,7 +21532,7 @@ paths:
           description: Error deleting entity
           schema:
             type: string
-      summary: Delegenerate-axios-clienttes Zone
+      summary: Deletes Zone
       tags:
       - Zone
     get:

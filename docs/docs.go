@@ -22526,6 +22526,49 @@ var doc = `{
                 }
             }
         },
+        "/spells_news/bulk": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "SpellsNew"
+                ],
+                "summary": "Gets SpellsNews in bulk",
+                "operationId": "getSpellsNewBulk",
+                "parameters": [
+                    {
+                        "description": "ids",
+                        "name": "ids",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/crudcontrollers.BulkSpellsNewGetRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.SpellsNew"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Bad query request",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
         "/starting_item": {
             "put": {
                 "consumes": [
@@ -24829,7 +24872,7 @@ var doc = `{
                 "tags": [
                     "Zone"
                 ],
-                "summary": "Delegenerate-axios-clienttes Zone",
+                "summary": "Deletes Zone",
                 "operationId": "deleteZone",
                 "parameters": [
                     {
@@ -25268,6 +25311,17 @@ var doc = `{
         }
     },
     "definitions": {
+        "crudcontrollers.BulkSpellsNewGetRequest": {
+            "type": "object",
+            "properties": {
+                "ids": {
+                    "type": "array",
+                    "items": {
+                        "type": "integer"
+                    }
+                }
+            }
+        },
         "models.AaAbility": {
             "type": "object",
             "properties": {
@@ -31635,7 +31689,16 @@ var doc = `{
                 "id": {
                     "type": "integer"
                 },
+                "level_spread": {
+                    "type": "integer"
+                },
+                "max_players": {
+                    "type": "integer"
+                },
                 "maxlevel": {
+                    "type": "integer"
+                },
+                "min_players": {
                     "type": "integer"
                 },
                 "minlevel": {
@@ -31644,8 +31707,20 @@ var doc = `{
                 "repeatable": {
                     "type": "integer"
                 },
+                "replay_timer_seconds": {
+                    "type": "integer"
+                },
+                "request_timer_seconds": {
+                    "type": "integer"
+                },
                 "reward": {
                     "type": "string"
+                },
+                "reward_ebon_crystals": {
+                    "type": "integer"
+                },
+                "reward_radiant_crystals": {
+                    "type": "integer"
                 },
                 "rewardid": {
                     "type": "integer"

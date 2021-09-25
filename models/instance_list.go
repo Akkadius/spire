@@ -8,8 +8,8 @@ type InstanceList struct {
 	StartTime           uint                 `json:"start_time" gorm:"Column:start_time"`
 	Duration            uint                 `json:"duration" gorm:"Column:duration"`
 	NeverExpires        uint8                `json:"never_expires" gorm:"Column:never_expires"`
-	InstanceListPlayers []InstanceListPlayer `json:"instance_list_players,omitempty" gorm:"foreignKey:id;association_foreignkey:id"`
-	Zones               []Zone               `json:"zones,omitempty" gorm:"foreignKey:zoneidunumber;association_foreignkey:zone"`
+	InstanceListPlayers []InstanceListPlayer `json:"instance_list_players,omitempty" gorm:"foreignKey:id;references:id"`
+	Zones               []Zone               `json:"zones,omitempty" gorm:"foreignKey:zoneidunumber;references:zone"`
 }
 
 func (InstanceList) TableName() string {

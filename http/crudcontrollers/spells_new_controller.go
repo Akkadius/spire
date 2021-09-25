@@ -1,15 +1,14 @@
 package crudcontrollers
 
 import (
+	"fmt"
 	"github.com/Akkadius/spire/database"
 	"github.com/Akkadius/spire/http/routes"
 	"github.com/Akkadius/spire/models"
-	"fmt"
 	"github.com/labstack/echo/v4"
 	"github.com/sirupsen/logrus"
 	"net/http"
 	"strconv"
-	"strings"
 )
 
 type SpellsNewController struct {
@@ -21,7 +20,7 @@ func NewSpellsNewController(
 	db *database.DatabaseResolver,
 	logger *logrus.Logger,
 ) *SpellsNewController {
-	return &SpellsNewController {
+	return &SpellsNewController{
 		db:     db,
 		logger: logger,
 	}
@@ -32,7 +31,7 @@ func (e *SpellsNewController) Routes() []*routes.Route {
 		routes.RegisterRoute(http.MethodDelete, "spells_new/:spells_new", e.deleteSpellsNew, nil),
 		routes.RegisterRoute(http.MethodGet, "spells_new/:spells_new", e.getSpellsNew, nil),
 		routes.RegisterRoute(http.MethodGet, "spells_news", e.listSpellsNews, nil),
-		routes.RegisterRoute(http.MethodGet, "spells_news/bulk", e.getSpellsNewBulk, nil),
+		routes.RegisterRoute(http.MethodPost, "spells_news/bulk", e.getSpellsNewBulk, nil),
 		routes.RegisterRoute(http.MethodPatch, "spells_new/:spells_new", e.updateSpellsNew, nil),
 		routes.RegisterRoute(http.MethodPut, "spells_new", e.createSpellsNew, nil),
 	}
@@ -113,7 +112,10 @@ func (e *SpellsNewController) getSpellsNew(c echo.Context) error {
 func (e *SpellsNewController) updateSpellsNew(c echo.Context) error {
 	spellsNew := new(models.SpellsNew)
 	if err := c.Bind(spellsNew); err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error binding to entity: [%v]", err)})
+		return c.JSON(
+			http.StatusInternalServerError,
+			echo.Map{"error": fmt.Sprintf("Error binding to entity: [%v]", err)},
+		)
 	}
 
 	err := e.db.Get(models.SpellsNew{}, c).Model(&models.SpellsNew{}).First(&models.SpellsNew{}, spellsNew.ID).Error
@@ -123,7 +125,10 @@ func (e *SpellsNewController) updateSpellsNew(c echo.Context) error {
 
 	err = e.db.Get(models.SpellsNew{}, c).Model(&models.SpellsNew{}).Updates(&spellsNew).Error
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error updating entity: [%v]", err)})
+		return c.JSON(
+			http.StatusInternalServerError,
+			echo.Map{"error": fmt.Sprintf("Error updating entity: [%v]", err)},
+		)
 	}
 
 	return c.JSON(http.StatusOK, spellsNew)
@@ -143,12 +148,18 @@ func (e *SpellsNewController) updateSpellsNew(c echo.Context) error {
 func (e *SpellsNewController) createSpellsNew(c echo.Context) error {
 	spellsNew := new(models.SpellsNew)
 	if err := c.Bind(spellsNew); err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error binding to entity: [%v]", err)})
+		return c.JSON(
+			http.StatusInternalServerError,
+			echo.Map{"error": fmt.Sprintf("Error binding to entity: [%v]", err)},
+		)
 	}
 
 	err := e.db.Get(models.SpellsNew{}, c).Model(&models.SpellsNew{}).Create(&spellsNew).Error
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error inserting entity: [%v]", err)})
+		return c.JSON(
+			http.StatusInternalServerError,
+			echo.Map{"error": fmt.Sprintf("Error inserting entity: [%v]", err)},
+		)
 	}
 
 	return c.JSON(http.StatusOK, spellsNew)
@@ -187,7 +198,7 @@ func (e *SpellsNewController) deleteSpellsNew(c echo.Context) error {
 }
 
 type BulkSpellsNewGetRequest struct {
-	IDs string `json:"ids"`
+	IDs []int `json:"ids"`
 }
 
 // getSpellsNewBulk godoc
@@ -195,19 +206,30 @@ type BulkSpellsNewGetRequest struct {
 // @Summary Gets SpellsNews in bulk
 // @Accept json
 // @Produce json
+// @Param ids body BulkSpellsNewGetRequest true "ids"
 // @Tags SpellsNew
 // @Success 200 {array} models.SpellsNew
 // @Failure 500 {string} string "Bad query request"
-// @Router /spells_news/bulk [get]
+// @Router /spells_news/bulk [post]
 func (e *SpellsNewController) getSpellsNewBulk(c echo.Context) error {
 	var results []models.SpellsNew
 
 	r := new(BulkSpellsNewGetRequest)
 	if err := c.Bind(r); err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error binding to bulk request: [%v]", err)})
+		return c.JSON(
+			http.StatusInternalServerError,
+			echo.Map{"error": fmt.Sprintf("Error binding to bulk request: [%v]", err)},
+		)
 	}
 
-	err := e.db.QueryContext(models.SpellsNew{}, c).Find(&results, strings.Split(r.IDs, ",")).Error
+	if len(r.IDs) == 0 {
+		return c.JSON(
+			http.StatusInternalServerError,
+			echo.Map{"error": fmt.Sprintf("Missing request field data 'ids'")},
+		)
+	}
+
+	err := e.db.QueryContext(models.SpellsNew{}, c).Find(&results, r.IDs).Error
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err})
 	}

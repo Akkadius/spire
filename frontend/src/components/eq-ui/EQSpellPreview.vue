@@ -1,5 +1,5 @@
 <template>
-  <div class="pb-4" style="min-width: 400px; max-width: 400px; padding: 5px" v-if="spellData">
+  <div class="pb-4" style="min-width: 400px; max-width: 400px; padding: 5px" v-if="spellData && spellData['targettype']">
 
     <div class="row">
       <div class="col-1" v-if="spellData.new_icon > 0">
@@ -23,7 +23,7 @@
       <tr v-if="spellData['id'] !== ''">
         <td class="spell-field-label">Spell ID</td>
         <td> {{ spellData["id"] }}
-          <span v-if="spellData['spellgroup'] !== 0">(Group: {{spellData['spellgroup']}}</span>
+          <span v-if="spellData['spellgroup'] !== 0">(Group: {{spellData['spellgroup']}})</span>
           <!-- <span v-if="spellData['rank'] !== 0">, Rank: {{spellData['rank']}})</span> -->
         </td>
       </tr>
@@ -57,6 +57,15 @@
         <td class="spell-field-label">Skill</td>
         <td> {{ getDatabaseSkillName(spellData["skill"]) }}
           <span v-if="spellData['is_discipline'] !== 0">(Combat Skill)</span>
+        </td>
+      </tr>
+      <tr v-if="spellData['good_effect'] >= 0">
+        <td class="spell-field-label">Type</td>
+        <td>
+          <span v-if="spellData['good_effect'] == 0">Detrimental</span>
+          <span v-if="spellData['good_effect'] == 1">Beneficial</span>
+          <span v-if="spellData['good_effect'] == 2">Beneficial Group</span>
+          <span v-if="spellData['good_effect'] == 3">Unknown</span>
         </td>
       </tr>
 
@@ -126,7 +135,9 @@
       <tr
         v-if="(spellData['cast_time'] > 0 || spellData['recovery_time'] > 0 || spellData['recast_time'] > 0) && spellData['is_discipline'] == 0">
         <td class="spell-field-label">Casting Time</td>
-        <td> {{ (spellData["cast_time"] / 1000) }} sec</td>
+        <td> {{ (spellData["cast_time"] / 1000) }} sec
+          <span v-if="spellData['uninterruptable'] !== 0">(Uninterruptable)</span>
+        </td>
       </tr>
       <tr
         v-if="(spellData['cast_time'] > 0 || spellData['recovery_time'] > 0 || spellData['recast_time'] > 0) && spellData['is_discipline'] == 0">
@@ -215,18 +226,17 @@
         <td class="spell-field-label">Max Targets</td>
         <td> {{ spellData["aemaxtargets"] }}</td>
       </tr>
-      <tr v-if="spellData['cone_start_angle'] != 0 || spellData['cone_stop_angle']">
+
+      <tr v-if="spellData['cone_start_angle'] !== 0 || spellData['cone_stop_angle'] !== 0">
         <td class="spell-field-label">Cone Angle</td>
-        <td> {{ spellData["cone_start_angle"] }} degrees to {{ spellData["cone_stop_angle"] }} degrees</td>
+        <td> {{getConeAngleDescription(spellData['cone_start_angle'], spellData['cone_stop_angle'])}} </td>
       </tr>
 
       <tr v-if="spellData['resisttype'] > 0 && getSpellResistTypeName(spellData['resisttype']) !== ''">
         <td class="spell-field-label">Resist Type</td>
         <td> {{ getSpellResistTypeName(spellData["resisttype"]) }}
-          <span v-if="spellData['resist_diff'] !== 0 && spellData['no_resist'] == 0">(adjust: {{
-              spellData["resist_diff"]
-            }})</span>
-          <span v-if="spellData['no_resist'] !== 0">(Unresistable)</span>
+          <span v-if="spellData['resist_diff'] !== 0 && spellData['no_resist'] == 0">(adjust: {{spellData["resist_diff"]}})</span>
+          <span v-if="spellData['field_209'] !== 0">(Unresistable)</span>
         </td>
       </tr>
       <tr v-if="spellData['max_resist'] > 0 || spellData['min_resist'] > 0">
@@ -235,6 +245,11 @@
           <span v-if="spellData['max_resist'] != 0">Max: {{ spellData["max_resist"] / 2 }}% </span>
           <span v-if="spellData['min_resist'] != 0">Min: {{ spellData["min_resist"] / 2 }}% </span>
         </td>
+      </tr>
+
+      <tr v-if="spellData['not_extendable'] != 0 ">
+        <td class="spell-field-label">Focusable</td>
+        <td>No</td>
       </tr>
 
       <!-- Added effects -->
@@ -263,22 +278,34 @@
         </td>
       </tr>
 
+      <tr v-if="spellData['field_198'] !== 0 ">
+        <td class="spell-field-label">Spell Hate</td>
+        <td>No Detrimental Spell Aggro</td>
+      </tr>
+
       <tr v-if="spellData['field_217'] > 0 ">
         <td class="spell-field-label">Max Critical Chance</td>
         <td> {{ spellData["field_217"] }}%</td>
       </tr>
 
-      <!-- Num hits -->
+      <!-- other -->
+
+
+      <tr v-if="spellData['nimbuseffect'] > 0 ">
+        <td class="spell-field-label">Nimbus Type</td>
+        <td> {{ spellData["nimbuseffect"] }}</td>
+      </tr>
 
       <tr v-if="spellData['numhitstype'] > 0 ">
         <td class="spell-field-label">Max Hits</td>
         <td> {{ spellData["numhits"] }} {{ getSpellNumHitsTypeName(spellData["numhitstype"]) }}</td>
       </tr>
 
-      <tr v-if="spellData['recourse_link'] > 0 ">
+      <tr v-if="spellData['recourse_link'] > 0 && recourseLink !== ''">
         <td class="spell-field-label">Recourse</td>
         <v-runtime-template :template="'<td>' + recourseLink + '</td>'"/>
       </tr>
+
 
       <!-- TODO: Display Reagents - the data should be passed in? -->
 
@@ -381,11 +408,15 @@ export default {
       recourseLink: ""
     }
   },
-  created() {
+  mounted() {
     this.init()
   },
   methods: {
     async init() {
+
+      if (!this.spellData['targettype']) {
+        return
+      }
 
       // async each effect index if it exists
       // this is so loading spell effects and any subsequent ajax requests
@@ -427,6 +458,8 @@ export default {
       this.loadSpellDescription();
 
       this.sideLoadedSpellData = Spells.data;
+
+      console.log(this.sideLoadedSpellData);
       this.itemData = ItemStore.data;
     },
     getTargetTypeColor(targetType) {
@@ -458,6 +491,28 @@ export default {
     },
     getSpellNumHitsTypeName: function (id) {
       return DB_SPELL_NUMHITSTYPE[id] ? DB_SPELL_NUMHITSTYPE[id] : ""
+    },
+
+    getConeAngleDescription: function (start, stop) {
+
+      if (start >= 1 && start <= 180) {
+        return "Right 180 degree Arc"
+      }
+
+      if ((start >= 270 && stop <= 90) &&  ((360 - start) == stop)){
+        return "Frontal " + ((360 - start) + stop) + " degree Arc"
+      }
+      if ((start >= 90 && start <= 180) && (stop >= 180 && stop <= 270) && ((360 - start) == stop)){
+        return "Rear " + Math.abs((start) - stop) + " degree Arc"
+      }
+      if ((start >= 180 && start <= 270) && (stop >= 270 && stop <= 360) && (Math.abs(270 - start) == Math.abs(270 - stop))){
+        return "Left " + Math.abs(start - stop) + " degree Arc"
+      }
+      if ((start >= 0 && start <= 90) && (stop >= 90 && stop <= 180) && (Math.abs(90 - start) == Math.abs(90 - stop))){
+        return "Right " + Math.abs(start - stop) + " degree Arc"
+      }
+
+      return start + " degrees to " + stop + " degrees"
     },
 
     humanTime: function (sec) {

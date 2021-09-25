@@ -15,7 +15,7 @@ type Loottable struct {
 	MaxExpansion           uint8            `json:"max_expansion" gorm:"Column:max_expansion"`
 	ContentFlags           null.String      `json:"content_flags" gorm:"Column:content_flags"`
 	ContentFlagsDisabled   null.String      `json:"content_flags_disabled" gorm:"Column:content_flags_disabled"`
-	LoottableEntries       []LoottableEntry `json:"loottable_entries,omitempty" gorm:"foreignKey:loottable_id;association_foreignkey:id"`
+	LoottableEntries       []LoottableEntry `json:"loottable_entries,omitempty" gorm:"foreignKey:loottable_id;references:id"`
 }
 
 func (Loottable) TableName() string {

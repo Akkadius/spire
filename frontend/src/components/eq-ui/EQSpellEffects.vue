@@ -50,6 +50,7 @@ export default {
       componentId: "",
       sideLoadedSpellData: {},
       loaded: false,
+      itemData: {},
     }
   },
   props: {

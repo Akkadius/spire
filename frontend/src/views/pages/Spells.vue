@@ -323,8 +323,7 @@ export default {
       // else name
       if (!isNaN(this.spellName) && this.spellName) {
         filters.push(["id", "__", this.spellName]);
-      }
-      else if (this.spellName) {
+      } else if (this.spellName) {
         filters.push(["name", "_like_", this.spellName]);
       }
 
@@ -364,8 +363,34 @@ export default {
 
       api.listSpellsNews(request).then((result) => {
         if (result.status === 200) {
+          // set spells to be rendered
           this.spells = result.data
-          this.loaded = true;
+
+          // fetch spell ids that might be referenced by effects to bulk preload
+          let spellsToPreload = [];
+          result.data.forEach((spell) => {
+            for (let effectIndex = 1; effectIndex <= 12; effectIndex++) {
+              const spellId = Spells.getSpellIdFromEffectIfExists(spell, effectIndex);
+              if (spellId > 0) {
+                spellsToPreload.push(spellId);
+              }
+            }
+          })
+
+          // bulk fetch preload
+          SpireApiClient.v1().post('/spells_news/bulk',
+            {
+              ids: spellsToPreload
+            }
+          ).then((response) => {
+            if (response.status == 200 && response.data) {
+              response.data.forEach((spell) => {
+                Spells.setSpell(spell.id, spell);
+              })
+
+              this.loaded = true;
+            }
+          });
         }
       })
     }

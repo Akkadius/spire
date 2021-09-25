@@ -26,7 +26,7 @@ type NpcSpell struct {
 	IdleNoSpRecastMin        uint             `json:"idle_no_sp_recast_min" gorm:"Column:idle_no_sp_recast_min"`
 	IdleNoSpRecastMax        uint             `json:"idle_no_sp_recast_max" gorm:"Column:idle_no_sp_recast_max"`
 	IdleBChance              uint8            `json:"idle_b_chance" gorm:"Column:idle_b_chance"`
-	NpcSpellsEntries         []NpcSpellsEntry `json:"npc_spells_entries,omitempty" gorm:"foreignKey:npc_spells_id;association_foreignkey:id"`
+	NpcSpellsEntries         []NpcSpellsEntry `json:"npc_spells_entries,omitempty" gorm:"foreignKey:npc_spells_id;references:id"`
 }
 
 func (NpcSpell) TableName() string {

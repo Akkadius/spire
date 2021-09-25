@@ -243,10 +243,10 @@ type SpellsNew struct {
 	Field235             int                `json:"field_235" gorm:"Column:field235"`
 	Field236             int                `json:"field_236" gorm:"Column:field236"`
 	Aura                 *Aura              `json:"aura,omitempty" gorm:"foreignKey:id;references:spell_id"`
-	Damageshieldtypes    []Damageshieldtype `json:"damageshieldtypes,omitempty" gorm:"foreignKey:spellid;association_foreignkey:id"`
-	SpellBuckets         []SpellBucket      `json:"spell_buckets,omitempty" gorm:"foreignKey:spellid;association_foreignkey:id"`
-	SpellGlobals         []SpellGlobal      `json:"spell_globals,omitempty" gorm:"foreignKey:spellid;association_foreignkey:id"`
-	BlockedSpells        []BlockedSpell     `json:"blocked_spells,omitempty" gorm:"foreignKey:spellid;association_foreignkey:id"`
+	Damageshieldtypes    []Damageshieldtype `json:"damageshieldtypes,omitempty" gorm:"foreignKey:spellid;references:id"`
+	SpellBuckets         []SpellBucket      `json:"spell_buckets,omitempty" gorm:"foreignKey:spellid;references:id"`
+	SpellGlobals         []SpellGlobal      `json:"spell_globals,omitempty" gorm:"foreignKey:spellid;references:id"`
+	BlockedSpells        []BlockedSpell     `json:"blocked_spells,omitempty" gorm:"foreignKey:spellid;references:id"`
 }
 
 func (SpellsNew) TableName() string {

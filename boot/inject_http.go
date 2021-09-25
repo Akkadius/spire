@@ -70,6 +70,7 @@ func NewRouter(
 					},
 				},
 			),
+			middleware.GzipWithConfig(middleware.GzipConfig{Level: 1}),
 		},
 
 		// controller groups
@@ -79,7 +80,6 @@ func NewRouter(
 			routes.NewControllerGroup(
 				"/api/v1/",
 				cg.v1controllersNoAuth,
-				middleware.GzipWithConfig(middleware.GzipConfig{Level: 1}),
 				v1RateLimit(),
 			),
 			routes.NewControllerGroup(
