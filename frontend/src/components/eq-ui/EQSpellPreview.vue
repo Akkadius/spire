@@ -164,7 +164,7 @@
         <td class="spell-field-label">Dispelable</td>
         <td>
         <span v-if="spellData['dispel_flag'] !== 0">No</span>
-        <span v-if="spellData['dispel_flag'] == 0">Yes</span>
+        <span v-if="spellData['dispel_flag'] === 0">Yes</span>
         <span v-if="spellData['field_232'] !== 0">, Can Not Remove</span>
         </td>
       </tr>
