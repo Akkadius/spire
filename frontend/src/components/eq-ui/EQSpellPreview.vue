@@ -459,7 +459,6 @@ export default {
 
       this.sideLoadedSpellData = Spells.data;
 
-      console.log(this.sideLoadedSpellData);
       this.itemData = ItemStore.data;
     },
     getTargetTypeColor(targetType) {

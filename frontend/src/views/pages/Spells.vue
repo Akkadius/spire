@@ -303,6 +303,9 @@ export default {
       if (this.selectedClass > 0 && this.selectedLevel === 0) {
         filters.push(["classes" + this.selectedClass, "_gte_", "1"]);
         filters.push(["classes" + this.selectedClass, "_lte_", "250"]);
+
+        // exclude rk 2/3 for now
+        filters.push(["name", "_notlike_", "Rk. I"]);
       }
 
       // filter by level if class set
@@ -317,6 +320,9 @@ export default {
 
         filters.push(["classes" + this.selectedClass, filterType, this.selectedLevel]);
         filters.push(["classes" + this.selectedClass, "_lte_", "250"]);
+
+        // exclude rk 2/3 for now
+        filters.push(["name", "_notlike_", "Rk. I"]);
       }
 
       // if number, filter by id
