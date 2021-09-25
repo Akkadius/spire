@@ -30,7 +30,19 @@
       </tr>
       <tr v-if="getClasses(spellData) !== ''">
         <td class="spell-field-label">Classes</td>
-        <td>{{ getClasses(spellData) }}</td>
+        <td>
+          <span v-for="(icon, index) in dbClassIcons">
+            <span v-if="spellData['classes_' + index] > 0 && spellData['classes_' + index] < 255">
+                <img
+                  :src="itemCdnUrl + 'item_' + icon + '.png'"
+                  style="height: 20px; width:auto; border-radius: 7px"
+                  class="mt-1 p-1">
+              {{ dbClassesShort[index] }}
+              ({{ spellData["classes_" + index] }})
+              </span>
+          </span>
+        </td>
+
       </tr>
 
       <tr v-if="spellData['you_cast'] !== ''">
@@ -386,6 +398,8 @@ import EqWindow from "@/components/eq-ui/EQWindow";
 import EqDebug from "@/components/eq-ui/EQDebug";
 import {Spells} from "@/app/spells";
 import {Items} from "@/app/items";
+import {DB_CLASSES_ICONS} from "@/app/constants/eq-class-icon-constants";
+import {DB_CLASSES_SHORT} from "@/app/constants/eq-classes-constants";
 
 let unknowns = {}
 
@@ -409,7 +423,9 @@ export default {
       componentId: "",
       reagents: [],
       effectDescription: "",
-      recourseLink: ""
+      recourseLink: "",
+      dbClassIcons: DB_CLASSES_ICONS,
+      dbClassesShort: DB_CLASSES_SHORT,
     }
   },
   mounted() {

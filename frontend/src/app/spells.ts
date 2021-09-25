@@ -2967,7 +2967,7 @@ export class Spells {
             <div style="display: inline-block">
               <img
                 :src="spellCdnUrl + '' + ${spell.new_icon} + '.gif'"
-                style="height:15px; width:auto; border: .5px solid ${targetTypeColor}; border-radius: 2px;"
+                style="width:20px;height:auto; border: 2px solid ${targetTypeColor}; border-radius: 7px;"
                 >
               <span style="color: #f7ff00">${spell.name}</span>
             </div>
