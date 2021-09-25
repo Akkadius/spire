@@ -31,7 +31,7 @@ func (e *SpawnConditionController) Routes() []*routes.Route {
 		routes.RegisterRoute(http.MethodDelete, "spawn_condition/:spawn_condition", e.deleteSpawnCondition, nil),
 		routes.RegisterRoute(http.MethodGet, "spawn_condition/:spawn_condition", e.getSpawnCondition, nil),
 		routes.RegisterRoute(http.MethodGet, "spawn_conditions", e.listSpawnConditions, nil),
-		routes.RegisterRoute(http.MethodPost, "spells_news/bulk", e.getSpawnConditionsBulk, nil),
+		routes.RegisterRoute(http.MethodPost, "spawn_conditions/bulk", e.getSpawnConditionsBulk, nil),
 		routes.RegisterRoute(http.MethodPatch, "spawn_condition/:spawn_condition", e.updateSpawnCondition, nil),
 		routes.RegisterRoute(http.MethodPut, "spawn_condition", e.createSpawnCondition, nil),
 	}
@@ -217,7 +217,7 @@ func (e *SpawnConditionController) getSpawnConditionsBulk(c echo.Context) error 
 
 	if len(r.IDs) == 0 {
 		return c.JSON(
-			http.StatusInternalServerError,
+			http.StatusOK,
 			echo.Map{"error": fmt.Sprintf("Missing request field data 'ids'")},
 		)
 	}

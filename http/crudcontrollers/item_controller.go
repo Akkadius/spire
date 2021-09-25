@@ -31,7 +31,7 @@ func (e *ItemController) Routes() []*routes.Route {
 		routes.RegisterRoute(http.MethodDelete, "item/:item", e.deleteItem, nil),
 		routes.RegisterRoute(http.MethodGet, "item/:item", e.getItem, nil),
 		routes.RegisterRoute(http.MethodGet, "items", e.listItems, nil),
-		routes.RegisterRoute(http.MethodPost, "spells_news/bulk", e.getItemsBulk, nil),
+		routes.RegisterRoute(http.MethodPost, "items/bulk", e.getItemsBulk, nil),
 		routes.RegisterRoute(http.MethodPatch, "item/:item", e.updateItem, nil),
 		routes.RegisterRoute(http.MethodPut, "item", e.createItem, nil),
 	}
@@ -217,7 +217,7 @@ func (e *ItemController) getItemsBulk(c echo.Context) error {
 
 	if len(r.IDs) == 0 {
 		return c.JSON(
-			http.StatusInternalServerError,
+			http.StatusOK,
 			echo.Map{"error": fmt.Sprintf("Missing request field data 'ids'")},
 		)
 	}

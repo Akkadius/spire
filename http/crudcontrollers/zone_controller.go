@@ -31,7 +31,7 @@ func (e *ZoneController) Routes() []*routes.Route {
 		routes.RegisterRoute(http.MethodDelete, "zone/:zone", e.deleteZone, nil),
 		routes.RegisterRoute(http.MethodGet, "zone/:zone", e.getZone, nil),
 		routes.RegisterRoute(http.MethodGet, "zones", e.listZones, nil),
-		routes.RegisterRoute(http.MethodPost, "spells_news/bulk", e.getZonesBulk, nil),
+		routes.RegisterRoute(http.MethodPost, "zones/bulk", e.getZonesBulk, nil),
 		routes.RegisterRoute(http.MethodPatch, "zone/:zone", e.updateZone, nil),
 		routes.RegisterRoute(http.MethodPut, "zone", e.createZone, nil),
 	}
@@ -217,7 +217,7 @@ func (e *ZoneController) getZonesBulk(c echo.Context) error {
 
 	if len(r.IDs) == 0 {
 		return c.JSON(
-			http.StatusInternalServerError,
+			http.StatusOK,
 			echo.Map{"error": fmt.Sprintf("Missing request field data 'ids'")},
 		)
 	}

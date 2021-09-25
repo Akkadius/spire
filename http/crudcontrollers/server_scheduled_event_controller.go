@@ -31,7 +31,7 @@ func (e *ServerScheduledEventController) Routes() []*routes.Route {
 		routes.RegisterRoute(http.MethodDelete, "server_scheduled_event/:server_scheduled_event", e.deleteServerScheduledEvent, nil),
 		routes.RegisterRoute(http.MethodGet, "server_scheduled_event/:server_scheduled_event", e.getServerScheduledEvent, nil),
 		routes.RegisterRoute(http.MethodGet, "server_scheduled_events", e.listServerScheduledEvents, nil),
-		routes.RegisterRoute(http.MethodPost, "spells_news/bulk", e.getServerScheduledEventsBulk, nil),
+		routes.RegisterRoute(http.MethodPost, "server_scheduled_events/bulk", e.getServerScheduledEventsBulk, nil),
 		routes.RegisterRoute(http.MethodPatch, "server_scheduled_event/:server_scheduled_event", e.updateServerScheduledEvent, nil),
 		routes.RegisterRoute(http.MethodPut, "server_scheduled_event", e.createServerScheduledEvent, nil),
 	}
@@ -217,7 +217,7 @@ func (e *ServerScheduledEventController) getServerScheduledEventsBulk(c echo.Con
 
 	if len(r.IDs) == 0 {
 		return c.JSON(
-			http.StatusInternalServerError,
+			http.StatusOK,
 			echo.Map{"error": fmt.Sprintf("Missing request field data 'ids'")},
 		)
 	}

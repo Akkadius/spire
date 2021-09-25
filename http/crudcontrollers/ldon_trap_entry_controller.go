@@ -31,7 +31,7 @@ func (e *LdonTrapEntryController) Routes() []*routes.Route {
 		routes.RegisterRoute(http.MethodDelete, "ldon_trap_entry/:ldon_trap_entry", e.deleteLdonTrapEntry, nil),
 		routes.RegisterRoute(http.MethodGet, "ldon_trap_entry/:ldon_trap_entry", e.getLdonTrapEntry, nil),
 		routes.RegisterRoute(http.MethodGet, "ldon_trap_entries", e.listLdonTrapEntries, nil),
-		routes.RegisterRoute(http.MethodPost, "spells_news/bulk", e.getLdonTrapEntriesBulk, nil),
+		routes.RegisterRoute(http.MethodPost, "ldon_trap_entries/bulk", e.getLdonTrapEntriesBulk, nil),
 		routes.RegisterRoute(http.MethodPatch, "ldon_trap_entry/:ldon_trap_entry", e.updateLdonTrapEntry, nil),
 		routes.RegisterRoute(http.MethodPut, "ldon_trap_entry", e.createLdonTrapEntry, nil),
 	}
@@ -217,7 +217,7 @@ func (e *LdonTrapEntryController) getLdonTrapEntriesBulk(c echo.Context) error {
 
 	if len(r.IDs) == 0 {
 		return c.JSON(
-			http.StatusInternalServerError,
+			http.StatusOK,
 			echo.Map{"error": fmt.Sprintf("Missing request field data 'ids'")},
 		)
 	}

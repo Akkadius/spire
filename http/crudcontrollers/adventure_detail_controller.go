@@ -31,7 +31,7 @@ func (e *AdventureDetailController) Routes() []*routes.Route {
 		routes.RegisterRoute(http.MethodDelete, "adventure_detail/:adventure_detail", e.deleteAdventureDetail, nil),
 		routes.RegisterRoute(http.MethodGet, "adventure_detail/:adventure_detail", e.getAdventureDetail, nil),
 		routes.RegisterRoute(http.MethodGet, "adventure_details", e.listAdventureDetails, nil),
-		routes.RegisterRoute(http.MethodPost, "spells_news/bulk", e.getAdventureDetailsBulk, nil),
+		routes.RegisterRoute(http.MethodPost, "adventure_details/bulk", e.getAdventureDetailsBulk, nil),
 		routes.RegisterRoute(http.MethodPatch, "adventure_detail/:adventure_detail", e.updateAdventureDetail, nil),
 		routes.RegisterRoute(http.MethodPut, "adventure_detail", e.createAdventureDetail, nil),
 	}
@@ -217,7 +217,7 @@ func (e *AdventureDetailController) getAdventureDetailsBulk(c echo.Context) erro
 
 	if len(r.IDs) == 0 {
 		return c.JSON(
-			http.StatusInternalServerError,
+			http.StatusOK,
 			echo.Map{"error": fmt.Sprintf("Missing request field data 'ids'")},
 		)
 	}

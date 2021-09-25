@@ -31,7 +31,7 @@ func (e *CharacterSpellController) Routes() []*routes.Route {
 		routes.RegisterRoute(http.MethodDelete, "character_spell/:character_spell", e.deleteCharacterSpell, nil),
 		routes.RegisterRoute(http.MethodGet, "character_spell/:character_spell", e.getCharacterSpell, nil),
 		routes.RegisterRoute(http.MethodGet, "character_spells", e.listCharacterSpells, nil),
-		routes.RegisterRoute(http.MethodPost, "spells_news/bulk", e.getCharacterSpellsBulk, nil),
+		routes.RegisterRoute(http.MethodPost, "character_spells/bulk", e.getCharacterSpellsBulk, nil),
 		routes.RegisterRoute(http.MethodPatch, "character_spell/:character_spell", e.updateCharacterSpell, nil),
 		routes.RegisterRoute(http.MethodPut, "character_spell", e.createCharacterSpell, nil),
 	}
@@ -217,7 +217,7 @@ func (e *CharacterSpellController) getCharacterSpellsBulk(c echo.Context) error 
 
 	if len(r.IDs) == 0 {
 		return c.JSON(
-			http.StatusInternalServerError,
+			http.StatusOK,
 			echo.Map{"error": fmt.Sprintf("Missing request field data 'ids'")},
 		)
 	}

@@ -31,7 +31,7 @@ func (e *RespawnTimeController) Routes() []*routes.Route {
 		routes.RegisterRoute(http.MethodDelete, "respawn_time/:respawn_time", e.deleteRespawnTime, nil),
 		routes.RegisterRoute(http.MethodGet, "respawn_time/:respawn_time", e.getRespawnTime, nil),
 		routes.RegisterRoute(http.MethodGet, "respawn_times", e.listRespawnTimes, nil),
-		routes.RegisterRoute(http.MethodPost, "spells_news/bulk", e.getRespawnTimesBulk, nil),
+		routes.RegisterRoute(http.MethodPost, "respawn_times/bulk", e.getRespawnTimesBulk, nil),
 		routes.RegisterRoute(http.MethodPatch, "respawn_time/:respawn_time", e.updateRespawnTime, nil),
 		routes.RegisterRoute(http.MethodPut, "respawn_time", e.createRespawnTime, nil),
 	}
@@ -217,7 +217,7 @@ func (e *RespawnTimeController) getRespawnTimesBulk(c echo.Context) error {
 
 	if len(r.IDs) == 0 {
 		return c.JSON(
-			http.StatusInternalServerError,
+			http.StatusOK,
 			echo.Map{"error": fmt.Sprintf("Missing request field data 'ids'")},
 		)
 	}

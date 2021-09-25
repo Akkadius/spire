@@ -31,7 +31,7 @@ func (e *DynamicZoneController) Routes() []*routes.Route {
 		routes.RegisterRoute(http.MethodDelete, "dynamic_zone/:dynamic_zone", e.deleteDynamicZone, nil),
 		routes.RegisterRoute(http.MethodGet, "dynamic_zone/:dynamic_zone", e.getDynamicZone, nil),
 		routes.RegisterRoute(http.MethodGet, "dynamic_zones", e.listDynamicZones, nil),
-		routes.RegisterRoute(http.MethodPost, "spells_news/bulk", e.getDynamicZonesBulk, nil),
+		routes.RegisterRoute(http.MethodPost, "dynamic_zones/bulk", e.getDynamicZonesBulk, nil),
 		routes.RegisterRoute(http.MethodPatch, "dynamic_zone/:dynamic_zone", e.updateDynamicZone, nil),
 		routes.RegisterRoute(http.MethodPut, "dynamic_zone", e.createDynamicZone, nil),
 	}
@@ -217,7 +217,7 @@ func (e *DynamicZoneController) getDynamicZonesBulk(c echo.Context) error {
 
 	if len(r.IDs) == 0 {
 		return c.JSON(
-			http.StatusInternalServerError,
+			http.StatusOK,
 			echo.Map{"error": fmt.Sprintf("Missing request field data 'ids'")},
 		)
 	}

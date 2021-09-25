@@ -31,7 +31,7 @@ func (e *LoginServerListTypeController) Routes() []*routes.Route {
 		routes.RegisterRoute(http.MethodDelete, "login_server_list_type/:login_server_list_type", e.deleteLoginServerListType, nil),
 		routes.RegisterRoute(http.MethodGet, "login_server_list_type/:login_server_list_type", e.getLoginServerListType, nil),
 		routes.RegisterRoute(http.MethodGet, "login_server_list_types", e.listLoginServerListTypes, nil),
-		routes.RegisterRoute(http.MethodPost, "spells_news/bulk", e.getLoginServerListTypesBulk, nil),
+		routes.RegisterRoute(http.MethodPost, "login_server_list_types/bulk", e.getLoginServerListTypesBulk, nil),
 		routes.RegisterRoute(http.MethodPatch, "login_server_list_type/:login_server_list_type", e.updateLoginServerListType, nil),
 		routes.RegisterRoute(http.MethodPut, "login_server_list_type", e.createLoginServerListType, nil),
 	}
@@ -217,7 +217,7 @@ func (e *LoginServerListTypeController) getLoginServerListTypesBulk(c echo.Conte
 
 	if len(r.IDs) == 0 {
 		return c.JSON(
-			http.StatusInternalServerError,
+			http.StatusOK,
 			echo.Map{"error": fmt.Sprintf("Missing request field data 'ids'")},
 		)
 	}

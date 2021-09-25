@@ -31,7 +31,7 @@ func (e *TaskController) Routes() []*routes.Route {
 		routes.RegisterRoute(http.MethodDelete, "task/:task", e.deleteTask, nil),
 		routes.RegisterRoute(http.MethodGet, "task/:task", e.getTask, nil),
 		routes.RegisterRoute(http.MethodGet, "tasks", e.listTasks, nil),
-		routes.RegisterRoute(http.MethodPost, "spells_news/bulk", e.getTasksBulk, nil),
+		routes.RegisterRoute(http.MethodPost, "tasks/bulk", e.getTasksBulk, nil),
 		routes.RegisterRoute(http.MethodPatch, "task/:task", e.updateTask, nil),
 		routes.RegisterRoute(http.MethodPut, "task", e.createTask, nil),
 	}
@@ -217,7 +217,7 @@ func (e *TaskController) getTasksBulk(c echo.Context) error {
 
 	if len(r.IDs) == 0 {
 		return c.JSON(
-			http.StatusInternalServerError,
+			http.StatusOK,
 			echo.Map{"error": fmt.Sprintf("Missing request field data 'ids'")},
 		)
 	}

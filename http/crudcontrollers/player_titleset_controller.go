@@ -31,7 +31,7 @@ func (e *PlayerTitlesetController) Routes() []*routes.Route {
 		routes.RegisterRoute(http.MethodDelete, "player_titleset/:player_titleset", e.deletePlayerTitleset, nil),
 		routes.RegisterRoute(http.MethodGet, "player_titleset/:player_titleset", e.getPlayerTitleset, nil),
 		routes.RegisterRoute(http.MethodGet, "player_titlesets", e.listPlayerTitlesets, nil),
-		routes.RegisterRoute(http.MethodPost, "spells_news/bulk", e.getPlayerTitlesetsBulk, nil),
+		routes.RegisterRoute(http.MethodPost, "player_titlesets/bulk", e.getPlayerTitlesetsBulk, nil),
 		routes.RegisterRoute(http.MethodPatch, "player_titleset/:player_titleset", e.updatePlayerTitleset, nil),
 		routes.RegisterRoute(http.MethodPut, "player_titleset", e.createPlayerTitleset, nil),
 	}
@@ -217,7 +217,7 @@ func (e *PlayerTitlesetController) getPlayerTitlesetsBulk(c echo.Context) error 
 
 	if len(r.IDs) == 0 {
 		return c.JSON(
-			http.StatusInternalServerError,
+			http.StatusOK,
 			echo.Map{"error": fmt.Sprintf("Missing request field data 'ids'")},
 		)
 	}

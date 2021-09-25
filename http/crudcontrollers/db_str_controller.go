@@ -31,7 +31,7 @@ func (e *DbStrController) Routes() []*routes.Route {
 		routes.RegisterRoute(http.MethodDelete, "db_str/:db_str", e.deleteDbStr, nil),
 		routes.RegisterRoute(http.MethodGet, "db_str/:db_str", e.getDbStr, nil),
 		routes.RegisterRoute(http.MethodGet, "db_strs", e.listDbStrs, nil),
-		routes.RegisterRoute(http.MethodPost, "spells_news/bulk", e.getDbStrsBulk, nil),
+		routes.RegisterRoute(http.MethodPost, "db_strs/bulk", e.getDbStrsBulk, nil),
 		routes.RegisterRoute(http.MethodPatch, "db_str/:db_str", e.updateDbStr, nil),
 		routes.RegisterRoute(http.MethodPut, "db_str", e.createDbStr, nil),
 	}
@@ -217,7 +217,7 @@ func (e *DbStrController) getDbStrsBulk(c echo.Context) error {
 
 	if len(r.IDs) == 0 {
 		return c.JSON(
-			http.StatusInternalServerError,
+			http.StatusOK,
 			echo.Map{"error": fmt.Sprintf("Missing request field data 'ids'")},
 		)
 	}

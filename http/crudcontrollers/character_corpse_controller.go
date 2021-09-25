@@ -31,7 +31,7 @@ func (e *CharacterCorpseController) Routes() []*routes.Route {
 		routes.RegisterRoute(http.MethodDelete, "character_corpse/:character_corpse", e.deleteCharacterCorpse, nil),
 		routes.RegisterRoute(http.MethodGet, "character_corpse/:character_corpse", e.getCharacterCorpse, nil),
 		routes.RegisterRoute(http.MethodGet, "character_corpses", e.listCharacterCorpses, nil),
-		routes.RegisterRoute(http.MethodPost, "spells_news/bulk", e.getCharacterCorpsesBulk, nil),
+		routes.RegisterRoute(http.MethodPost, "character_corpses/bulk", e.getCharacterCorpsesBulk, nil),
 		routes.RegisterRoute(http.MethodPatch, "character_corpse/:character_corpse", e.updateCharacterCorpse, nil),
 		routes.RegisterRoute(http.MethodPut, "character_corpse", e.createCharacterCorpse, nil),
 	}
@@ -217,7 +217,7 @@ func (e *CharacterCorpseController) getCharacterCorpsesBulk(c echo.Context) erro
 
 	if len(r.IDs) == 0 {
 		return c.JSON(
-			http.StatusInternalServerError,
+			http.StatusOK,
 			echo.Map{"error": fmt.Sprintf("Missing request field data 'ids'")},
 		)
 	}

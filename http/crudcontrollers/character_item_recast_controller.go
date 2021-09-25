@@ -31,7 +31,7 @@ func (e *CharacterItemRecastController) Routes() []*routes.Route {
 		routes.RegisterRoute(http.MethodDelete, "character_item_recast/:character_item_recast", e.deleteCharacterItemRecast, nil),
 		routes.RegisterRoute(http.MethodGet, "character_item_recast/:character_item_recast", e.getCharacterItemRecast, nil),
 		routes.RegisterRoute(http.MethodGet, "character_item_recasts", e.listCharacterItemRecasts, nil),
-		routes.RegisterRoute(http.MethodPost, "spells_news/bulk", e.getCharacterItemRecastsBulk, nil),
+		routes.RegisterRoute(http.MethodPost, "character_item_recasts/bulk", e.getCharacterItemRecastsBulk, nil),
 		routes.RegisterRoute(http.MethodPatch, "character_item_recast/:character_item_recast", e.updateCharacterItemRecast, nil),
 		routes.RegisterRoute(http.MethodPut, "character_item_recast", e.createCharacterItemRecast, nil),
 	}
@@ -217,7 +217,7 @@ func (e *CharacterItemRecastController) getCharacterItemRecastsBulk(c echo.Conte
 
 	if len(r.IDs) == 0 {
 		return c.JSON(
-			http.StatusInternalServerError,
+			http.StatusOK,
 			echo.Map{"error": fmt.Sprintf("Missing request field data 'ids'")},
 		)
 	}

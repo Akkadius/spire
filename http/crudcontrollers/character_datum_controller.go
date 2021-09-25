@@ -31,7 +31,7 @@ func (e *CharacterDatumController) Routes() []*routes.Route {
 		routes.RegisterRoute(http.MethodDelete, "character_datum/:character_datum", e.deleteCharacterDatum, nil),
 		routes.RegisterRoute(http.MethodGet, "character_datum/:character_datum", e.getCharacterDatum, nil),
 		routes.RegisterRoute(http.MethodGet, "character_data", e.listCharacterData, nil),
-		routes.RegisterRoute(http.MethodPost, "spells_news/bulk", e.getCharacterDataBulk, nil),
+		routes.RegisterRoute(http.MethodPost, "character_data/bulk", e.getCharacterDataBulk, nil),
 		routes.RegisterRoute(http.MethodPatch, "character_datum/:character_datum", e.updateCharacterDatum, nil),
 		routes.RegisterRoute(http.MethodPut, "character_datum", e.createCharacterDatum, nil),
 	}
@@ -217,7 +217,7 @@ func (e *CharacterDatumController) getCharacterDataBulk(c echo.Context) error {
 
 	if len(r.IDs) == 0 {
 		return c.JSON(
-			http.StatusInternalServerError,
+			http.StatusOK,
 			echo.Map{"error": fmt.Sprintf("Missing request field data 'ids'")},
 		)
 	}

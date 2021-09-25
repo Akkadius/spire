@@ -31,7 +31,7 @@ func (e *CharacterAuraController) Routes() []*routes.Route {
 		routes.RegisterRoute(http.MethodDelete, "character_aura/:character_aura", e.deleteCharacterAura, nil),
 		routes.RegisterRoute(http.MethodGet, "character_aura/:character_aura", e.getCharacterAura, nil),
 		routes.RegisterRoute(http.MethodGet, "character_auras", e.listCharacterAuras, nil),
-		routes.RegisterRoute(http.MethodPost, "spells_news/bulk", e.getCharacterAurasBulk, nil),
+		routes.RegisterRoute(http.MethodPost, "character_auras/bulk", e.getCharacterAurasBulk, nil),
 		routes.RegisterRoute(http.MethodPatch, "character_aura/:character_aura", e.updateCharacterAura, nil),
 		routes.RegisterRoute(http.MethodPut, "character_aura", e.createCharacterAura, nil),
 	}
@@ -217,7 +217,7 @@ func (e *CharacterAuraController) getCharacterAurasBulk(c echo.Context) error {
 
 	if len(r.IDs) == 0 {
 		return c.JSON(
-			http.StatusInternalServerError,
+			http.StatusOK,
 			echo.Map{"error": fmt.Sprintf("Missing request field data 'ids'")},
 		)
 	}

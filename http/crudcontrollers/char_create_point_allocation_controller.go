@@ -31,7 +31,7 @@ func (e *CharCreatePointAllocationController) Routes() []*routes.Route {
 		routes.RegisterRoute(http.MethodDelete, "char_create_point_allocation/:char_create_point_allocation", e.deleteCharCreatePointAllocation, nil),
 		routes.RegisterRoute(http.MethodGet, "char_create_point_allocation/:char_create_point_allocation", e.getCharCreatePointAllocation, nil),
 		routes.RegisterRoute(http.MethodGet, "char_create_point_allocations", e.listCharCreatePointAllocations, nil),
-		routes.RegisterRoute(http.MethodPost, "spells_news/bulk", e.getCharCreatePointAllocationsBulk, nil),
+		routes.RegisterRoute(http.MethodPost, "char_create_point_allocations/bulk", e.getCharCreatePointAllocationsBulk, nil),
 		routes.RegisterRoute(http.MethodPatch, "char_create_point_allocation/:char_create_point_allocation", e.updateCharCreatePointAllocation, nil),
 		routes.RegisterRoute(http.MethodPut, "char_create_point_allocation", e.createCharCreatePointAllocation, nil),
 	}
@@ -217,7 +217,7 @@ func (e *CharCreatePointAllocationController) getCharCreatePointAllocationsBulk(
 
 	if len(r.IDs) == 0 {
 		return c.JSON(
-			http.StatusInternalServerError,
+			http.StatusOK,
 			echo.Map{"error": fmt.Sprintf("Missing request field data 'ids'")},
 		)
 	}

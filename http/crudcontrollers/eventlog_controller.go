@@ -31,7 +31,7 @@ func (e *EventlogController) Routes() []*routes.Route {
 		routes.RegisterRoute(http.MethodDelete, "eventlog/:eventlog", e.deleteEventlog, nil),
 		routes.RegisterRoute(http.MethodGet, "eventlog/:eventlog", e.getEventlog, nil),
 		routes.RegisterRoute(http.MethodGet, "eventlogs", e.listEventlogs, nil),
-		routes.RegisterRoute(http.MethodPost, "spells_news/bulk", e.getEventlogsBulk, nil),
+		routes.RegisterRoute(http.MethodPost, "eventlogs/bulk", e.getEventlogsBulk, nil),
 		routes.RegisterRoute(http.MethodPatch, "eventlog/:eventlog", e.updateEventlog, nil),
 		routes.RegisterRoute(http.MethodPut, "eventlog", e.createEventlog, nil),
 	}
@@ -217,7 +217,7 @@ func (e *EventlogController) getEventlogsBulk(c echo.Context) error {
 
 	if len(r.IDs) == 0 {
 		return c.JSON(
-			http.StatusInternalServerError,
+			http.StatusOK,
 			echo.Map{"error": fmt.Sprintf("Missing request field data 'ids'")},
 		)
 	}

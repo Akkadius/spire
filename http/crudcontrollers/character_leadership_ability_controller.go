@@ -31,7 +31,7 @@ func (e *CharacterLeadershipAbilityController) Routes() []*routes.Route {
 		routes.RegisterRoute(http.MethodDelete, "character_leadership_ability/:character_leadership_ability", e.deleteCharacterLeadershipAbility, nil),
 		routes.RegisterRoute(http.MethodGet, "character_leadership_ability/:character_leadership_ability", e.getCharacterLeadershipAbility, nil),
 		routes.RegisterRoute(http.MethodGet, "character_leadership_abilities", e.listCharacterLeadershipAbilities, nil),
-		routes.RegisterRoute(http.MethodPost, "spells_news/bulk", e.getCharacterLeadershipAbilitiesBulk, nil),
+		routes.RegisterRoute(http.MethodPost, "character_leadership_abilities/bulk", e.getCharacterLeadershipAbilitiesBulk, nil),
 		routes.RegisterRoute(http.MethodPatch, "character_leadership_ability/:character_leadership_ability", e.updateCharacterLeadershipAbility, nil),
 		routes.RegisterRoute(http.MethodPut, "character_leadership_ability", e.createCharacterLeadershipAbility, nil),
 	}
@@ -217,7 +217,7 @@ func (e *CharacterLeadershipAbilityController) getCharacterLeadershipAbilitiesBu
 
 	if len(r.IDs) == 0 {
 		return c.JSON(
-			http.StatusInternalServerError,
+			http.StatusOK,
 			echo.Map{"error": fmt.Sprintf("Missing request field data 'ids'")},
 		)
 	}

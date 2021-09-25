@@ -31,7 +31,7 @@ func (e *GraveyardController) Routes() []*routes.Route {
 		routes.RegisterRoute(http.MethodDelete, "graveyard/:graveyard", e.deleteGraveyard, nil),
 		routes.RegisterRoute(http.MethodGet, "graveyard/:graveyard", e.getGraveyard, nil),
 		routes.RegisterRoute(http.MethodGet, "graveyards", e.listGraveyards, nil),
-		routes.RegisterRoute(http.MethodPost, "spells_news/bulk", e.getGraveyardsBulk, nil),
+		routes.RegisterRoute(http.MethodPost, "graveyards/bulk", e.getGraveyardsBulk, nil),
 		routes.RegisterRoute(http.MethodPatch, "graveyard/:graveyard", e.updateGraveyard, nil),
 		routes.RegisterRoute(http.MethodPut, "graveyard", e.createGraveyard, nil),
 	}
@@ -217,7 +217,7 @@ func (e *GraveyardController) getGraveyardsBulk(c echo.Context) error {
 
 	if len(r.IDs) == 0 {
 		return c.JSON(
-			http.StatusInternalServerError,
+			http.StatusOK,
 			echo.Map{"error": fmt.Sprintf("Missing request field data 'ids'")},
 		)
 	}

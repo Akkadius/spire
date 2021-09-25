@@ -31,7 +31,7 @@ func (e *FishingController) Routes() []*routes.Route {
 		routes.RegisterRoute(http.MethodDelete, "fishing/:fishing", e.deleteFishing, nil),
 		routes.RegisterRoute(http.MethodGet, "fishing/:fishing", e.getFishing, nil),
 		routes.RegisterRoute(http.MethodGet, "fishings", e.listFishings, nil),
-		routes.RegisterRoute(http.MethodPost, "spells_news/bulk", e.getFishingsBulk, nil),
+		routes.RegisterRoute(http.MethodPost, "fishings/bulk", e.getFishingsBulk, nil),
 		routes.RegisterRoute(http.MethodPatch, "fishing/:fishing", e.updateFishing, nil),
 		routes.RegisterRoute(http.MethodPut, "fishing", e.createFishing, nil),
 	}
@@ -217,7 +217,7 @@ func (e *FishingController) getFishingsBulk(c echo.Context) error {
 
 	if len(r.IDs) == 0 {
 		return c.JSON(
-			http.StatusInternalServerError,
+			http.StatusOK,
 			echo.Map{"error": fmt.Sprintf("Missing request field data 'ids'")},
 		)
 	}

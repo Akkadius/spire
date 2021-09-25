@@ -31,7 +31,7 @@ func (e *CharacterLanguageController) Routes() []*routes.Route {
 		routes.RegisterRoute(http.MethodDelete, "character_language/:character_language", e.deleteCharacterLanguage, nil),
 		routes.RegisterRoute(http.MethodGet, "character_language/:character_language", e.getCharacterLanguage, nil),
 		routes.RegisterRoute(http.MethodGet, "character_languages", e.listCharacterLanguages, nil),
-		routes.RegisterRoute(http.MethodPost, "spells_news/bulk", e.getCharacterLanguagesBulk, nil),
+		routes.RegisterRoute(http.MethodPost, "character_languages/bulk", e.getCharacterLanguagesBulk, nil),
 		routes.RegisterRoute(http.MethodPatch, "character_language/:character_language", e.updateCharacterLanguage, nil),
 		routes.RegisterRoute(http.MethodPut, "character_language", e.createCharacterLanguage, nil),
 	}
@@ -217,7 +217,7 @@ func (e *CharacterLanguageController) getCharacterLanguagesBulk(c echo.Context) 
 
 	if len(r.IDs) == 0 {
 		return c.JSON(
-			http.StatusInternalServerError,
+			http.StatusOK,
 			echo.Map{"error": fmt.Sprintf("Missing request field data 'ids'")},
 		)
 	}

@@ -31,7 +31,7 @@ func (e *CharacterMaterialController) Routes() []*routes.Route {
 		routes.RegisterRoute(http.MethodDelete, "character_material/:character_material", e.deleteCharacterMaterial, nil),
 		routes.RegisterRoute(http.MethodGet, "character_material/:character_material", e.getCharacterMaterial, nil),
 		routes.RegisterRoute(http.MethodGet, "character_materials", e.listCharacterMaterials, nil),
-		routes.RegisterRoute(http.MethodPost, "spells_news/bulk", e.getCharacterMaterialsBulk, nil),
+		routes.RegisterRoute(http.MethodPost, "character_materials/bulk", e.getCharacterMaterialsBulk, nil),
 		routes.RegisterRoute(http.MethodPatch, "character_material/:character_material", e.updateCharacterMaterial, nil),
 		routes.RegisterRoute(http.MethodPut, "character_material", e.createCharacterMaterial, nil),
 	}
@@ -217,7 +217,7 @@ func (e *CharacterMaterialController) getCharacterMaterialsBulk(c echo.Context) 
 
 	if len(r.IDs) == 0 {
 		return c.JSON(
-			http.StatusInternalServerError,
+			http.StatusOK,
 			echo.Map{"error": fmt.Sprintf("Missing request field data 'ids'")},
 		)
 	}

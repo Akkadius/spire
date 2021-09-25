@@ -31,7 +31,7 @@ func (e *LoginWorldServerController) Routes() []*routes.Route {
 		routes.RegisterRoute(http.MethodDelete, "login_world_server/:login_world_server", e.deleteLoginWorldServer, nil),
 		routes.RegisterRoute(http.MethodGet, "login_world_server/:login_world_server", e.getLoginWorldServer, nil),
 		routes.RegisterRoute(http.MethodGet, "login_world_servers", e.listLoginWorldServers, nil),
-		routes.RegisterRoute(http.MethodPost, "spells_news/bulk", e.getLoginWorldServersBulk, nil),
+		routes.RegisterRoute(http.MethodPost, "login_world_servers/bulk", e.getLoginWorldServersBulk, nil),
 		routes.RegisterRoute(http.MethodPatch, "login_world_server/:login_world_server", e.updateLoginWorldServer, nil),
 		routes.RegisterRoute(http.MethodPut, "login_world_server", e.createLoginWorldServer, nil),
 	}
@@ -217,7 +217,7 @@ func (e *LoginWorldServerController) getLoginWorldServersBulk(c echo.Context) er
 
 	if len(r.IDs) == 0 {
 		return c.JSON(
-			http.StatusInternalServerError,
+			http.StatusOK,
 			echo.Map{"error": fmt.Sprintf("Missing request field data 'ids'")},
 		)
 	}

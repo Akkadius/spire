@@ -31,7 +31,7 @@ func (e *LootdropController) Routes() []*routes.Route {
 		routes.RegisterRoute(http.MethodDelete, "lootdrop/:lootdrop", e.deleteLootdrop, nil),
 		routes.RegisterRoute(http.MethodGet, "lootdrop/:lootdrop", e.getLootdrop, nil),
 		routes.RegisterRoute(http.MethodGet, "lootdrops", e.listLootdrops, nil),
-		routes.RegisterRoute(http.MethodPost, "spells_news/bulk", e.getLootdropsBulk, nil),
+		routes.RegisterRoute(http.MethodPost, "lootdrops/bulk", e.getLootdropsBulk, nil),
 		routes.RegisterRoute(http.MethodPatch, "lootdrop/:lootdrop", e.updateLootdrop, nil),
 		routes.RegisterRoute(http.MethodPut, "lootdrop", e.createLootdrop, nil),
 	}
@@ -217,7 +217,7 @@ func (e *LootdropController) getLootdropsBulk(c echo.Context) error {
 
 	if len(r.IDs) == 0 {
 		return c.JSON(
-			http.StatusInternalServerError,
+			http.StatusOK,
 			echo.Map{"error": fmt.Sprintf("Missing request field data 'ids'")},
 		)
 	}

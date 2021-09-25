@@ -31,7 +31,7 @@ func (e *CharacterInspectMessageController) Routes() []*routes.Route {
 		routes.RegisterRoute(http.MethodDelete, "character_inspect_message/:character_inspect_message", e.deleteCharacterInspectMessage, nil),
 		routes.RegisterRoute(http.MethodGet, "character_inspect_message/:character_inspect_message", e.getCharacterInspectMessage, nil),
 		routes.RegisterRoute(http.MethodGet, "character_inspect_messages", e.listCharacterInspectMessages, nil),
-		routes.RegisterRoute(http.MethodPost, "spells_news/bulk", e.getCharacterInspectMessagesBulk, nil),
+		routes.RegisterRoute(http.MethodPost, "character_inspect_messages/bulk", e.getCharacterInspectMessagesBulk, nil),
 		routes.RegisterRoute(http.MethodPatch, "character_inspect_message/:character_inspect_message", e.updateCharacterInspectMessage, nil),
 		routes.RegisterRoute(http.MethodPut, "character_inspect_message", e.createCharacterInspectMessage, nil),
 	}
@@ -217,7 +217,7 @@ func (e *CharacterInspectMessageController) getCharacterInspectMessagesBulk(c ec
 
 	if len(r.IDs) == 0 {
 		return c.JSON(
-			http.StatusInternalServerError,
+			http.StatusOK,
 			echo.Map{"error": fmt.Sprintf("Missing request field data 'ids'")},
 		)
 	}

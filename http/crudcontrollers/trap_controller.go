@@ -31,7 +31,7 @@ func (e *TrapController) Routes() []*routes.Route {
 		routes.RegisterRoute(http.MethodDelete, "trap/:trap", e.deleteTrap, nil),
 		routes.RegisterRoute(http.MethodGet, "trap/:trap", e.getTrap, nil),
 		routes.RegisterRoute(http.MethodGet, "traps", e.listTraps, nil),
-		routes.RegisterRoute(http.MethodPost, "spells_news/bulk", e.getTrapsBulk, nil),
+		routes.RegisterRoute(http.MethodPost, "traps/bulk", e.getTrapsBulk, nil),
 		routes.RegisterRoute(http.MethodPatch, "trap/:trap", e.updateTrap, nil),
 		routes.RegisterRoute(http.MethodPut, "trap", e.createTrap, nil),
 	}
@@ -217,7 +217,7 @@ func (e *TrapController) getTrapsBulk(c echo.Context) error {
 
 	if len(r.IDs) == 0 {
 		return c.JSON(
-			http.StatusInternalServerError,
+			http.StatusOK,
 			echo.Map{"error": fmt.Sprintf("Missing request field data 'ids'")},
 		)
 	}

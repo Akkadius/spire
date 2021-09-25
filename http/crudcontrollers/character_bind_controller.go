@@ -31,7 +31,7 @@ func (e *CharacterBindController) Routes() []*routes.Route {
 		routes.RegisterRoute(http.MethodDelete, "character_bind/:character_bind", e.deleteCharacterBind, nil),
 		routes.RegisterRoute(http.MethodGet, "character_bind/:character_bind", e.getCharacterBind, nil),
 		routes.RegisterRoute(http.MethodGet, "character_binds", e.listCharacterBinds, nil),
-		routes.RegisterRoute(http.MethodPost, "spells_news/bulk", e.getCharacterBindsBulk, nil),
+		routes.RegisterRoute(http.MethodPost, "character_binds/bulk", e.getCharacterBindsBulk, nil),
 		routes.RegisterRoute(http.MethodPatch, "character_bind/:character_bind", e.updateCharacterBind, nil),
 		routes.RegisterRoute(http.MethodPut, "character_bind", e.createCharacterBind, nil),
 	}
@@ -217,7 +217,7 @@ func (e *CharacterBindController) getCharacterBindsBulk(c echo.Context) error {
 
 	if len(r.IDs) == 0 {
 		return c.JSON(
-			http.StatusInternalServerError,
+			http.StatusOK,
 			echo.Map{"error": fmt.Sprintf("Missing request field data 'ids'")},
 		)
 	}

@@ -31,7 +31,7 @@ func (e *CharacterBandolierController) Routes() []*routes.Route {
 		routes.RegisterRoute(http.MethodDelete, "character_bandolier/:character_bandolier", e.deleteCharacterBandolier, nil),
 		routes.RegisterRoute(http.MethodGet, "character_bandolier/:character_bandolier", e.getCharacterBandolier, nil),
 		routes.RegisterRoute(http.MethodGet, "character_bandoliers", e.listCharacterBandoliers, nil),
-		routes.RegisterRoute(http.MethodPost, "spells_news/bulk", e.getCharacterBandoliersBulk, nil),
+		routes.RegisterRoute(http.MethodPost, "character_bandoliers/bulk", e.getCharacterBandoliersBulk, nil),
 		routes.RegisterRoute(http.MethodPatch, "character_bandolier/:character_bandolier", e.updateCharacterBandolier, nil),
 		routes.RegisterRoute(http.MethodPut, "character_bandolier", e.createCharacterBandolier, nil),
 	}
@@ -217,7 +217,7 @@ func (e *CharacterBandolierController) getCharacterBandoliersBulk(c echo.Context
 
 	if len(r.IDs) == 0 {
 		return c.JSON(
-			http.StatusInternalServerError,
+			http.StatusOK,
 			echo.Map{"error": fmt.Sprintf("Missing request field data 'ids'")},
 		)
 	}

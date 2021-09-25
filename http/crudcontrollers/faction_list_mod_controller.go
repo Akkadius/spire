@@ -31,7 +31,7 @@ func (e *FactionListModController) Routes() []*routes.Route {
 		routes.RegisterRoute(http.MethodDelete, "faction_list_mod/:faction_list_mod", e.deleteFactionListMod, nil),
 		routes.RegisterRoute(http.MethodGet, "faction_list_mod/:faction_list_mod", e.getFactionListMod, nil),
 		routes.RegisterRoute(http.MethodGet, "faction_list_mods", e.listFactionListMods, nil),
-		routes.RegisterRoute(http.MethodPost, "spells_news/bulk", e.getFactionListModsBulk, nil),
+		routes.RegisterRoute(http.MethodPost, "faction_list_mods/bulk", e.getFactionListModsBulk, nil),
 		routes.RegisterRoute(http.MethodPatch, "faction_list_mod/:faction_list_mod", e.updateFactionListMod, nil),
 		routes.RegisterRoute(http.MethodPut, "faction_list_mod", e.createFactionListMod, nil),
 	}
@@ -217,7 +217,7 @@ func (e *FactionListModController) getFactionListModsBulk(c echo.Context) error 
 
 	if len(r.IDs) == 0 {
 		return c.JSON(
-			http.StatusInternalServerError,
+			http.StatusOK,
 			echo.Map{"error": fmt.Sprintf("Missing request field data 'ids'")},
 		)
 	}

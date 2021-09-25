@@ -31,7 +31,7 @@ func (e *GridController) Routes() []*routes.Route {
 		routes.RegisterRoute(http.MethodDelete, "grid/:grid", e.deleteGrid, nil),
 		routes.RegisterRoute(http.MethodGet, "grid/:grid", e.getGrid, nil),
 		routes.RegisterRoute(http.MethodGet, "grids", e.listGrids, nil),
-		routes.RegisterRoute(http.MethodPost, "spells_news/bulk", e.getGridsBulk, nil),
+		routes.RegisterRoute(http.MethodPost, "grids/bulk", e.getGridsBulk, nil),
 		routes.RegisterRoute(http.MethodPatch, "grid/:grid", e.updateGrid, nil),
 		routes.RegisterRoute(http.MethodPut, "grid", e.createGrid, nil),
 	}
@@ -217,7 +217,7 @@ func (e *GridController) getGridsBulk(c echo.Context) error {
 
 	if len(r.IDs) == 0 {
 		return c.JSON(
-			http.StatusInternalServerError,
+			http.StatusOK,
 			echo.Map{"error": fmt.Sprintf("Missing request field data 'ids'")},
 		)
 	}

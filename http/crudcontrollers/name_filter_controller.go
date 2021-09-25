@@ -31,7 +31,7 @@ func (e *NameFilterController) Routes() []*routes.Route {
 		routes.RegisterRoute(http.MethodDelete, "name_filter/:name_filter", e.deleteNameFilter, nil),
 		routes.RegisterRoute(http.MethodGet, "name_filter/:name_filter", e.getNameFilter, nil),
 		routes.RegisterRoute(http.MethodGet, "name_filters", e.listNameFilters, nil),
-		routes.RegisterRoute(http.MethodPost, "spells_news/bulk", e.getNameFiltersBulk, nil),
+		routes.RegisterRoute(http.MethodPost, "name_filters/bulk", e.getNameFiltersBulk, nil),
 		routes.RegisterRoute(http.MethodPatch, "name_filter/:name_filter", e.updateNameFilter, nil),
 		routes.RegisterRoute(http.MethodPut, "name_filter", e.createNameFilter, nil),
 	}
@@ -217,7 +217,7 @@ func (e *NameFilterController) getNameFiltersBulk(c echo.Context) error {
 
 	if len(r.IDs) == 0 {
 		return c.JSON(
-			http.StatusInternalServerError,
+			http.StatusOK,
 			echo.Map{"error": fmt.Sprintf("Missing request field data 'ids'")},
 		)
 	}

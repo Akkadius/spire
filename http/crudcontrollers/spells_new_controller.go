@@ -1,10 +1,10 @@
 package crudcontrollers
 
 import (
-	"fmt"
 	"github.com/Akkadius/spire/database"
 	"github.com/Akkadius/spire/http/routes"
 	"github.com/Akkadius/spire/models"
+	"fmt"
 	"github.com/labstack/echo/v4"
 	"github.com/sirupsen/logrus"
 	"net/http"
@@ -125,10 +125,7 @@ func (e *SpellsNewController) updateSpellsNew(c echo.Context) error {
 
 	err = e.db.Get(models.SpellsNew{}, c).Model(&models.SpellsNew{}).Updates(&spellsNew).Error
 	if err != nil {
-		return c.JSON(
-			http.StatusInternalServerError,
-			echo.Map{"error": fmt.Sprintf("Error updating entity: [%v]", err)},
-		)
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error updating entity: [%v]", err)})
 	}
 
 	return c.JSON(http.StatusOK, spellsNew)
@@ -220,7 +217,7 @@ func (e *SpellsNewController) getSpellsNewsBulk(c echo.Context) error {
 
 	if len(r.IDs) == 0 {
 		return c.JSON(
-			http.StatusInternalServerError,
+			http.StatusOK,
 			echo.Map{"error": fmt.Sprintf("Missing request field data 'ids'")},
 		)
 	}

@@ -31,7 +31,7 @@ func (e *ForageController) Routes() []*routes.Route {
 		routes.RegisterRoute(http.MethodDelete, "forage/:forage", e.deleteForage, nil),
 		routes.RegisterRoute(http.MethodGet, "forage/:forage", e.getForage, nil),
 		routes.RegisterRoute(http.MethodGet, "forages", e.listForages, nil),
-		routes.RegisterRoute(http.MethodPost, "spells_news/bulk", e.getForagesBulk, nil),
+		routes.RegisterRoute(http.MethodPost, "forages/bulk", e.getForagesBulk, nil),
 		routes.RegisterRoute(http.MethodPatch, "forage/:forage", e.updateForage, nil),
 		routes.RegisterRoute(http.MethodPut, "forage", e.createForage, nil),
 	}
@@ -217,7 +217,7 @@ func (e *ForageController) getForagesBulk(c echo.Context) error {
 
 	if len(r.IDs) == 0 {
 		return c.JSON(
-			http.StatusInternalServerError,
+			http.StatusOK,
 			echo.Map{"error": fmt.Sprintf("Missing request field data 'ids'")},
 		)
 	}

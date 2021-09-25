@@ -31,7 +31,7 @@ func (e *ContentFlagController) Routes() []*routes.Route {
 		routes.RegisterRoute(http.MethodDelete, "content_flag/:content_flag", e.deleteContentFlag, nil),
 		routes.RegisterRoute(http.MethodGet, "content_flag/:content_flag", e.getContentFlag, nil),
 		routes.RegisterRoute(http.MethodGet, "content_flags", e.listContentFlags, nil),
-		routes.RegisterRoute(http.MethodPost, "spells_news/bulk", e.getContentFlagsBulk, nil),
+		routes.RegisterRoute(http.MethodPost, "content_flags/bulk", e.getContentFlagsBulk, nil),
 		routes.RegisterRoute(http.MethodPatch, "content_flag/:content_flag", e.updateContentFlag, nil),
 		routes.RegisterRoute(http.MethodPut, "content_flag", e.createContentFlag, nil),
 	}
@@ -217,7 +217,7 @@ func (e *ContentFlagController) getContentFlagsBulk(c echo.Context) error {
 
 	if len(r.IDs) == 0 {
 		return c.JSON(
-			http.StatusInternalServerError,
+			http.StatusOK,
 			echo.Map{"error": fmt.Sprintf("Missing request field data 'ids'")},
 		)
 	}

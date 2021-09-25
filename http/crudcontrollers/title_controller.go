@@ -31,7 +31,7 @@ func (e *TitleController) Routes() []*routes.Route {
 		routes.RegisterRoute(http.MethodDelete, "title/:title", e.deleteTitle, nil),
 		routes.RegisterRoute(http.MethodGet, "title/:title", e.getTitle, nil),
 		routes.RegisterRoute(http.MethodGet, "titles", e.listTitles, nil),
-		routes.RegisterRoute(http.MethodPost, "spells_news/bulk", e.getTitlesBulk, nil),
+		routes.RegisterRoute(http.MethodPost, "titles/bulk", e.getTitlesBulk, nil),
 		routes.RegisterRoute(http.MethodPatch, "title/:title", e.updateTitle, nil),
 		routes.RegisterRoute(http.MethodPut, "title", e.createTitle, nil),
 	}
@@ -217,7 +217,7 @@ func (e *TitleController) getTitlesBulk(c echo.Context) error {
 
 	if len(r.IDs) == 0 {
 		return c.JSON(
-			http.StatusInternalServerError,
+			http.StatusOK,
 			echo.Map{"error": fmt.Sprintf("Missing request field data 'ids'")},
 		)
 	}

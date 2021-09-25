@@ -31,7 +31,7 @@ func (e *NpcTypeController) Routes() []*routes.Route {
 		routes.RegisterRoute(http.MethodDelete, "npc_type/:npc_type", e.deleteNpcType, nil),
 		routes.RegisterRoute(http.MethodGet, "npc_type/:npc_type", e.getNpcType, nil),
 		routes.RegisterRoute(http.MethodGet, "npc_types", e.listNpcTypes, nil),
-		routes.RegisterRoute(http.MethodPost, "spells_news/bulk", e.getNpcTypesBulk, nil),
+		routes.RegisterRoute(http.MethodPost, "npc_types/bulk", e.getNpcTypesBulk, nil),
 		routes.RegisterRoute(http.MethodPatch, "npc_type/:npc_type", e.updateNpcType, nil),
 		routes.RegisterRoute(http.MethodPut, "npc_type", e.createNpcType, nil),
 	}
@@ -217,7 +217,7 @@ func (e *NpcTypeController) getNpcTypesBulk(c echo.Context) error {
 
 	if len(r.IDs) == 0 {
 		return c.JSON(
-			http.StatusInternalServerError,
+			http.StatusOK,
 			echo.Map{"error": fmt.Sprintf("Missing request field data 'ids'")},
 		)
 	}

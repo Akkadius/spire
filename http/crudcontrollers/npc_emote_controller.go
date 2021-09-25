@@ -31,7 +31,7 @@ func (e *NpcEmoteController) Routes() []*routes.Route {
 		routes.RegisterRoute(http.MethodDelete, "npc_emote/:npc_emote", e.deleteNpcEmote, nil),
 		routes.RegisterRoute(http.MethodGet, "npc_emote/:npc_emote", e.getNpcEmote, nil),
 		routes.RegisterRoute(http.MethodGet, "npc_emotes", e.listNpcEmotes, nil),
-		routes.RegisterRoute(http.MethodPost, "spells_news/bulk", e.getNpcEmotesBulk, nil),
+		routes.RegisterRoute(http.MethodPost, "npc_emotes/bulk", e.getNpcEmotesBulk, nil),
 		routes.RegisterRoute(http.MethodPatch, "npc_emote/:npc_emote", e.updateNpcEmote, nil),
 		routes.RegisterRoute(http.MethodPut, "npc_emote", e.createNpcEmote, nil),
 	}
@@ -217,7 +217,7 @@ func (e *NpcEmoteController) getNpcEmotesBulk(c echo.Context) error {
 
 	if len(r.IDs) == 0 {
 		return c.JSON(
-			http.StatusInternalServerError,
+			http.StatusOK,
 			echo.Map{"error": fmt.Sprintf("Missing request field data 'ids'")},
 		)
 	}

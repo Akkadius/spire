@@ -31,7 +31,7 @@ func (e *NpcSpellsEffectController) Routes() []*routes.Route {
 		routes.RegisterRoute(http.MethodDelete, "npc_spells_effect/:npc_spells_effect", e.deleteNpcSpellsEffect, nil),
 		routes.RegisterRoute(http.MethodGet, "npc_spells_effect/:npc_spells_effect", e.getNpcSpellsEffect, nil),
 		routes.RegisterRoute(http.MethodGet, "npc_spells_effects", e.listNpcSpellsEffects, nil),
-		routes.RegisterRoute(http.MethodPost, "spells_news/bulk", e.getNpcSpellsEffectsBulk, nil),
+		routes.RegisterRoute(http.MethodPost, "npc_spells_effects/bulk", e.getNpcSpellsEffectsBulk, nil),
 		routes.RegisterRoute(http.MethodPatch, "npc_spells_effect/:npc_spells_effect", e.updateNpcSpellsEffect, nil),
 		routes.RegisterRoute(http.MethodPut, "npc_spells_effect", e.createNpcSpellsEffect, nil),
 	}
@@ -217,7 +217,7 @@ func (e *NpcSpellsEffectController) getNpcSpellsEffectsBulk(c echo.Context) erro
 
 	if len(r.IDs) == 0 {
 		return c.JSON(
-			http.StatusInternalServerError,
+			http.StatusOK,
 			echo.Map{"error": fmt.Sprintf("Missing request field data 'ids'")},
 		)
 	}

@@ -31,7 +31,7 @@ func (e *CharacterCurrencyController) Routes() []*routes.Route {
 		routes.RegisterRoute(http.MethodDelete, "character_currency/:character_currency", e.deleteCharacterCurrency, nil),
 		routes.RegisterRoute(http.MethodGet, "character_currency/:character_currency", e.getCharacterCurrency, nil),
 		routes.RegisterRoute(http.MethodGet, "character_currencies", e.listCharacterCurrencies, nil),
-		routes.RegisterRoute(http.MethodPost, "spells_news/bulk", e.getCharacterCurrenciesBulk, nil),
+		routes.RegisterRoute(http.MethodPost, "character_currencies/bulk", e.getCharacterCurrenciesBulk, nil),
 		routes.RegisterRoute(http.MethodPatch, "character_currency/:character_currency", e.updateCharacterCurrency, nil),
 		routes.RegisterRoute(http.MethodPut, "character_currency", e.createCharacterCurrency, nil),
 	}
@@ -217,7 +217,7 @@ func (e *CharacterCurrencyController) getCharacterCurrenciesBulk(c echo.Context)
 
 	if len(r.IDs) == 0 {
 		return c.JSON(
-			http.StatusInternalServerError,
+			http.StatusOK,
 			echo.Map{"error": fmt.Sprintf("Missing request field data 'ids'")},
 		)
 	}

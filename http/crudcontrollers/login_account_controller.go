@@ -31,7 +31,7 @@ func (e *LoginAccountController) Routes() []*routes.Route {
 		routes.RegisterRoute(http.MethodDelete, "login_account/:login_account", e.deleteLoginAccount, nil),
 		routes.RegisterRoute(http.MethodGet, "login_account/:login_account", e.getLoginAccount, nil),
 		routes.RegisterRoute(http.MethodGet, "login_accounts", e.listLoginAccounts, nil),
-		routes.RegisterRoute(http.MethodPost, "spells_news/bulk", e.getLoginAccountsBulk, nil),
+		routes.RegisterRoute(http.MethodPost, "login_accounts/bulk", e.getLoginAccountsBulk, nil),
 		routes.RegisterRoute(http.MethodPatch, "login_account/:login_account", e.updateLoginAccount, nil),
 		routes.RegisterRoute(http.MethodPut, "login_account", e.createLoginAccount, nil),
 	}
@@ -217,7 +217,7 @@ func (e *LoginAccountController) getLoginAccountsBulk(c echo.Context) error {
 
 	if len(r.IDs) == 0 {
 		return c.JSON(
-			http.StatusInternalServerError,
+			http.StatusOK,
 			echo.Map{"error": fmt.Sprintf("Missing request field data 'ids'")},
 		)
 	}

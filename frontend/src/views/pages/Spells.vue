@@ -141,7 +141,7 @@
 </template>
 
 <script type="ts">
-import {SpellsNewApi}                        from "@/app/api/api";
+import {ItemApi, SpellsNewApi}               from "@/app/api/api";
 import EqWindow                              from "@/components/eq-ui/EQWindow.vue";
 import {SpireApiClient}                      from "@/app/api/spire-api-client";
 import EqItemPreview                         from "@/components/eq-ui/EQItemPreview.vue";
@@ -152,7 +152,8 @@ import {App}                                 from "@/constants/app";
 import {DB_CLASSES_SHORT, DB_PLAYER_CLASSES} from "@/app/constants/eq-classes-constants";
 import {DB_SPA}                              from "@/app/constants/eq-spell-constants";
 import EqSpellPreviewTable                   from "@/components/eq-ui/EQSpellPreviewTable.vue";
-import {Spells}                              from "@/app/spells/spells";
+import {Spells}                              from "@/app/spells";
+import {Items}                               from "@/app/items";
 
 const SPELLS_LIST_ROUTE = "/spells";
 
@@ -367,23 +368,50 @@ export default {
         request.whereOr = wheresOrs.join(".")
       }
 
-      api.listSpellsNews(request).then((result) => {
+      api.listSpellsNews(request).then(async (result) => {
         if (result.status === 200) {
           // set spells to be rendered
           this.spells = result.data
 
           // fetch spell ids that might be referenced by effects to bulk preload
           let spellsToPreload = [];
+          let itemsToPreload  = [];
           result.data.forEach((spell) => {
             for (let effectIndex = 1; effectIndex <= 12; effectIndex++) {
               const spellId = Spells.getSpellIdFromEffectIfExists(spell, effectIndex);
               if (spellId > 0) {
                 spellsToPreload.push(spellId);
               }
+              const itemId = Spells.getItemIdFromEffectIfExists(spell, effectIndex);
+              if (itemId > 0) {
+                itemsToPreload.push(itemId);
+              }
             }
           })
 
+          // fetch spell ids that might be referenced by effects to bulk preload
+          result.data.forEach((spell) => {
+            for (let i = 0; i < 4; i++) {
+              if (spell["components_" + i] > 0) {
+                itemsToPreload.push(spell["components_" + i])
+              }
+            }
+          });
+
           // bulk fetch preload
+          const response = await (new ItemApi(SpireApiClient.getOpenApiConfig())).getItemsBulk({
+            body: {
+              ids: itemsToPreload
+            }
+          })
+
+          if (response.status == 200 && response.data && parseInt(response.data.length) > 0) {
+            response.data.forEach((item) => {
+              Items.setItem(item.id, item);
+            })
+          }
+
+          // spells bulk fetch preload
           api.getSpellsNewsBulk({
             body: {
               ids: spellsToPreload
@@ -397,6 +425,7 @@ export default {
               this.loaded = true;
             }
           });
+
         }
       })
     }

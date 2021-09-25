@@ -18,7 +18,7 @@ import {DB_CLASSES, DB_CLASSES_WEAR_SHORT} from "@/app/constants/eq-classes-cons
 import {DbStrApi, ItemApi, SpellsNewApi}   from "@/app/api";
 import {SpireApiClient}                    from "@/app/api/spire-api-client";
 import {App}                               from "@/constants/app";
-import {ItemStore}                         from "@/app/store/itemStore";
+import {Items}                             from "@/app/items";
 
 export class Spells {
   public static data           = {}
@@ -26,13 +26,7 @@ export class Spells {
   public static dbstrPreloaded = false
 
   public static async getItem(itemId) {
-    const api    = (new ItemApi(SpireApiClient.getOpenApiConfig()))
-    const result = await api.getItem({id: itemId})
-    if (result.status === 200) {
-      return result.data
-    }
-
-    return {}
+    return await Items.getItem(itemId)
   };
 
   public static getClasses(spell) {
@@ -49,11 +43,10 @@ export class Spells {
   };
 
   public static async getSpellEffectInfo(spell, effectIndex) {
-    let effectsInfo = []
-
     // TODO: Handle elsewhere
     let serverMaxLevel = 100;
 
+    let effectsInfo = ""
     let printBuffer = "";
     let tmp         = ""
     let pertick     = spell["buffduration"] ? " per tick " : ""
@@ -251,13 +244,12 @@ export class Spells {
         case 32:
           printBuffer += "Summon Item: "
 
-          const item = <any>(await this.getItem(spell["effect_base_value_" + effectIndex]));
-
-          ItemStore.setItem(item.id, item)
+          const item = <any>(await Items.getItem(spell["effect_base_value_" + effectIndex]));
+          let parentSpellIdSi = spell['id'];
 
           if (item.name) {
             printBuffer += `
-                <div :id="${effectIndex} + '-' + ${item.id} + '-' + componentId" style="display:inline-block" class="ml-2">
+                <div :id="${parentSpellIdSi} + '-' + ${effectIndex} + '-' + ${item.id} + '-' + componentId" style="display:inline-block" class="ml-2">
 
                   <div style="display: inline-block">
                     <img
@@ -270,7 +262,7 @@ export class Spells {
                 </div>
 
                 <b-popover
-                  :target="${effectIndex} + '-' + ${item.id} + '-' + componentId"
+                  :target="${parentSpellIdSi} + '-' + ${effectIndex} + '-' + ${item.id} + '-' + componentId"
                   placement="auto"
                   custom-class="no-bg"
                   delay="1"
@@ -610,7 +602,7 @@ export class Spells {
 
         case 105:
           printBuffer += "Inhibit Gate";
-          return;
+          break;
 
         case 106:
           printBuffer += "Summon Warder: " + spell["teleport_zone"]
@@ -627,13 +619,12 @@ export class Spells {
         case 109: //later expansions allow stacks to put into bags using limit value.
           printBuffer += "Summon into Bag: "
 
-          const item2 = <any>(await this.getItem(spell["effect_base_value_" + effectIndex]));
-
-          ItemStore.setItem(item2.id, item2);
+          const item2 = <any>(await Items.getItem(spell["effect_base_value_" + effectIndex]));
+          let parentSpellId = spell['id'];
 
           if (item2.name) {
             printBuffer += `
-                <div :id="${effectIndex} + '-' + ${item2.id} + '-' + componentId" style="display:inline-block" class="ml-2">
+                <div :id="${parentSpellId} + '-' + ${effectIndex} + '-' + ${item2.id} + '-' + componentId" style="display:inline-block" class="ml-2">
 
                   <div style="display: inline-block">
                     <img
@@ -646,7 +637,7 @@ export class Spells {
                 </div>
 
                 <b-popover
-                  :target="${effectIndex} + '-' + ${item2.id} + '-' + componentId"
+                  :target="${parentSpellId} + '-' + ${effectIndex} + '-' + ${item2.id} + '-' + componentId"
                   placement="auto"
                   custom-class="no-bg"
                   delay="1"
@@ -2436,7 +2427,7 @@ export class Spells {
 
       if (printBuffer !== "") {
         // @ts-ignore
-        effectsInfo.push(util.format("%s) %s", effectIndex, printBuffer))
+        effectsInfo = util.format("%s) %s", effectIndex, printBuffer)
       }
 
       if (App.DEBUG && printBuffer !== "") {
@@ -2447,11 +2438,10 @@ export class Spells {
           effectIndex
         )
         // @ts-ignore
-        effectsInfo.push(debug)
       }
     }
 
-    return effectsInfo;
+    return {index: effectIndex, info: effectsInfo};
   };
 
   // if there is a spell id referenced in the spell effect, we return it here
@@ -2498,6 +2488,24 @@ export class Spells {
         case 476:
         case 481:
           return limit
+      }
+    }
+
+    return 0;
+  }
+
+  // if there is a spell id referenced in the spell effect, we return it here
+  // used in bulk loading spell info
+  public static getItemIdFromEffectIfExists(spell, effectIndex) {
+    if (spell["effectid_" + effectIndex] !== 254) {
+
+      let base  = spell["effect_base_value_" + effectIndex]
+      let limit = spell["effect_limit_value_" + effectIndex]
+
+      switch (spell["effectid_" + effectIndex]) {
+        case 32:
+        case 109:
+          return spell["effect_base_value_" + effectIndex]
       }
     }
 
