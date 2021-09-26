@@ -2,7 +2,7 @@
 
 import LocalSettings from "@/app/local-settings/localsettings";
 
-const CDN_VERSION_HASH = 'be32443283a960c9dfb6a6425fce26cddf36adb8'
+const CDN_VERSION_HASH = 'f6b8252f5d55fe15d2c264bb5e92819059db432a'
 
 // List of different git CDN's
 // const ASSET_CDN_BASE_URL_INT = `https://gitcdn.xyz/repo/Akkadius/eq-asset-preview/${CDN_VERSION_HASH}/`
@@ -25,6 +25,7 @@ export const App = {
   ASSET_SPELL_ICONS_BASE_URL: ASSET_CDN_BASE_URL_INT + 'assets/spell_icons/',
   ASSET_SPELL_ANIMATIONS: ASSET_CDN_BASE_URL_INT + 'assets/spell_animations/',
   ASSET_EXPANSION_ICON_SMALL_URL: ASSET_CDN_BASE_URL_INT + 'assets/expansion-icons-small/',
+  ASSET_WALLPAPER_URL: ASSET_CDN_BASE_URL_INT + 'assets/wallpaper/',
   BACKEND_BASE_URL: (process.env.VUE_APP_BACKEND_BASE_URL ? process.env.VUE_APP_BACKEND_BASE_URL : window.location.origin),
   DEBUG: LocalSettings.get("debug-mode") === "true",
   // DEBUG: true,

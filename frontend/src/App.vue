@@ -4,6 +4,9 @@
 
 <script>
 
+import * as util from "util";
+import {App} from "@/constants/app";
+
 export default {
   name: "App",
   mounted() {
@@ -25,21 +28,22 @@ export default {
     })
 
     const backgrounds = [
-      require("@/assets/img/wallpaper/champions-of-norrath-wallpaper.jpg"),
-      require("@/assets/img/wallpaper/everquest-wallpaper-1.jpeg"),
-      require("@/assets/img/wallpaper/faydark.png"),
-      require("@/assets/img/wallpaper/freeport.png"),
-      require("@/assets/img/wallpaper/lavastorm.png"),
-      require("@/assets/img/wallpaper/rivervale.png"),
-      require("@/assets/img/wallpaper/qeynos.png"),
-      require("@/assets/img/wallpaper/soldungb.png"),
-      require("@/assets/img/wallpaper/spire-wall.jpg"),
-      require("@/assets/img/wallpaper/void.jpeg"),
-    ];
+      "champions-of-norrath-wallpaper.jpg",
+      "everquest-wallpaper-1.jpeg",
+      "faydark.png",
+      "freeport.png",
+      "lavastorm.png",
+      "rivervale.png",
+      "qeynos.png",
+      "soldungb.png",
+      "spire-wall.jpg",
+      "void.jpeg",
+    ]
 
-    console.log(backgrounds);
-
-    const background = backgrounds[Math.floor(Math.random() * backgrounds.length)].trim();
+    const background = util.format("%s%s",
+      App.ASSET_WALLPAPER_URL,
+      backgrounds[Math.floor(Math.random() * backgrounds.length)].trim()
+    )
 
     document.body.style.setProperty("--image", "url(" + background + ")");
   },
