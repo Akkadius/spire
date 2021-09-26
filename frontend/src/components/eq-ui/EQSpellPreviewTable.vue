@@ -8,7 +8,8 @@
           No spells were found
         </div>
 
-        <div class='eq-window-nested-blue' v-if="spells.length > 0" style="overflow-y: scroll;">
+        <div class='spell-table' v-if="spells.length > 0">
+<!--        <div class='eq-window-nested-blue' v-if="spells.length > 0" style="overflow-y: scroll;">-->
           <table id="tabbox1" class="eq-table eq-highlight-rows" style="display: table;">
             <thead>
             <tr>
@@ -25,13 +26,13 @@
             </thead>
             <tbody>
             <tr v-for="(spell, index) in spells" :key="spell.id">
-              <td style="text-align: center">
+              <td>
 
                 <v-runtime-template
                   v-if="spellMinis"
                   :template="'<span>' + spellMinis[spell.id] + '</span>'"/>
               </td>
-              <td style="text-align: center">
+              <td>
                 <span v-for="(icon, index) in dbClassIcons">
                   <span v-if="spell['classes_' + index] > 0 && spell['classes_' + index] < 255">
                       <img
@@ -109,7 +110,7 @@ export default {
     for (const spell of this.spells) {
       Spells.setSpell(spell["id"], spell)
 
-      spellMinis[spell["id"]] = await Spells.renderSpellMini("0", spell["id"])
+      spellMinis[spell["id"]] = await Spells.renderSpellMini("0", spell["id"], 30)
     }
     this.spellMinis = spellMinis
 
@@ -162,5 +163,22 @@ export default {
   padding-top:    5px;
   padding-bottom: 5px;
   border-right: .1px solid #ffffff1c;
+  border-left: .1px solid #ffffff1c;
+}
+
+/* For Mobile */
+@media screen and (max-width: 540px) {
+  .spell-table {
+    overflow-x: visible;
+    overflow-y: scroll !important
+  }
+}
+
+/* For Tablets */
+@media screen and (min-width: 540px) and (max-width: 780px) {
+  .spell-table {
+    overflow-x: visible;
+    overflow-y: scroll !important
+  }
 }
 </style>

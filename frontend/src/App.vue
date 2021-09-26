@@ -5,10 +5,7 @@
 <script>
 
 export default {
-  name: "example",
-  data() {
-    return {}
-  },
+  name: "App",
   mounted() {
     var self = this
     window.addEventListener("keypress", function (e) {
@@ -26,6 +23,23 @@ export default {
         //   break
       }
     })
+
+    const backgrounds = [
+      "champions-of-norrath-wallpaper.jpg",
+      "everquest-wallpaper-1.jpeg",
+      "faydark.png",
+      "freeport.png",
+      "lavastorm.png",
+      "rivervale.png",
+      "qeynos.png",
+      "soldungb.png",
+      "spire-wall.jpg",
+      "void.jpeg",
+    ];
+
+    const background = backgrounds[Math.floor(Math.random() * backgrounds.length)].trim();
+
+    document.body.style.setProperty("--image", "url(" + require(`@/assets/img/wallpaper/${background}`) + ")");
   },
   watch: {
     "$route"(to, from) {
@@ -46,8 +60,8 @@ export default {
 /*akkadius:experimental*/
 body {
   /* background-repeat: no-repeat; */
-  background:            -webkit-radial-gradient(circle, transparent 40%, var(--color-v) 75%), linear-gradient(to right, var(--color), var(--color)), var(--image2) !important;
-  background:            radial-gradient(circle, transparent 40%, var(--color-v) 75%), linear-gradient(to right, var(--color), var(--color)), var(--image2);
+  background:            -webkit-radial-gradient(circle, transparent 40%, var(--color-v) 95%), linear-gradient(to right, var(--color), var(--color)), var(--image) !important;
+  background:            radial-gradient(circle, transparent 40%, var(--color-v) 95%), linear-gradient(to right, var(--color), var(--color)), var(--image);
 
 
   background-position:   center center;
@@ -55,12 +69,11 @@ body {
   background-repeat:     no-repeat;
   background-attachment: fixed;
   background-blend-mode: normal, saturation, normal;
-  --image:               url(~@/assets/img/champions-of-norrath-wallpaper.jpg);
-  --image2:              url(~@/assets/img/champions-of-norrath-wallpaper.jpg);
+  /*--image:               url(~@/assets/img/wallpaper/champions-of-norrath-wallpaper.jpg);*/
+  /*--image2:              url(https://preview.redd.it/z7oyx36pvc871.png?width=2560&format=png&auto=webp&s=96b8b9471ee1392e7817f8df93fc8119a27fc14a);*/
   --color-v:             black;
   --color:               grey;
 }
-
 
 
 </style>

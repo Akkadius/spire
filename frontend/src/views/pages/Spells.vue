@@ -124,7 +124,7 @@
           <!-- card rendering -->
           <div class="row" style="justify-content: center" v-if="loaded && listType === 'card'">
             <div v-for="(spell, index) in spells"
-                 class="col-lg-4 col-sm-12"
+                 class="col-lg-4 col-sm-9"
                  :key="spell.id"
                  style="display: inline-block; vertical-align: top">
               <eq-window style="margin-right: 10px; width: auto; height: 90%">

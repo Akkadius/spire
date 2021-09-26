@@ -2957,7 +2957,7 @@ export class Spells {
     }
   };
 
-  public static async renderSpellMini(parentSpellId, renderSpellId) {
+  public static async renderSpellMini(parentSpellId, renderSpellId, iconSize = 20) {
     let spell             = <any>await this.getSpell(renderSpellId)
     const targetTypeColor = this.getTargetTypeColor(spell["targettype"]);
 
@@ -2967,7 +2967,8 @@ export class Spells {
             <div style="display: inline-block">
               <img
                 :src="spellCdnUrl + '' + ${spell.new_icon} + '.gif'"
-                style="width:20px;height:auto; border: 2px solid ${targetTypeColor}; border-radius: 7px;"
+                style="width: ${iconSize}px;height:auto; border: 2px solid ${targetTypeColor}; border-radius: 7px;"
+                class="mr-1"
                 >
               <span style="color: #f7ff00">${spell.name}</span>
             </div>
