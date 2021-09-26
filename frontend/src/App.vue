@@ -37,6 +37,8 @@ export default {
       require("@/assets/img/wallpaper/void.jpeg"),
     ];
 
+    console.log(backgrounds);
+
     const background = backgrounds[Math.floor(Math.random() * backgrounds.length)].trim();
 
     document.body.style.setProperty("--image", "url(" + background + ")");
