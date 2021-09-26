@@ -45,7 +45,14 @@ export default {
       backgrounds[Math.floor(Math.random() * backgrounds.length)].trim()
     )
 
-    document.body.style.setProperty("--image", "url(" + background + ")");
+    var curImg = new Image();
+    curImg.src = background;
+    curImg.onload = function(){
+      // do whatever here, add it to the background, append the image ect.
+      document.body.style.setProperty("--image", "url(" + background + ")");
+    }
+
+
   },
   watch: {
     "$route"(to, from) {
@@ -75,8 +82,7 @@ body {
   background-repeat:     no-repeat;
   background-attachment: fixed;
   background-blend-mode: normal, saturation, normal;
-  /*--image:               url(~@/assets/img/wallpaper/champions-of-norrath-wallpaper.jpg);*/
-  /*--image2:              url(https://preview.redd.it/z7oyx36pvc871.png?width=2560&format=png&auto=webp&s=96b8b9471ee1392e7817f8df93fc8119a27fc14a);*/
+  /*--image:               url(~@/assets/img/eq-wallpaper-1.jpg);*/
   --color-v:             black;
   --color:               grey;
 }
