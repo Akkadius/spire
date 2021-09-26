@@ -25,21 +25,21 @@ export default {
     })
 
     const backgrounds = [
-      "champions-of-norrath-wallpaper.jpg",
-      "everquest-wallpaper-1.jpeg",
-      "faydark.png",
-      "freeport.png",
-      "lavastorm.png",
-      "rivervale.png",
-      "qeynos.png",
-      "soldungb.png",
-      "spire-wall.jpg",
-      "void.jpeg",
+      require("@/assets/img/wallpaper/champions-of-norrath-wallpaper.jpg"),
+      require("@/assets/img/wallpaper/everquest-wallpaper-1.jpeg"),
+      require("@/assets/img/wallpaper/faydark.png"),
+      require("@/assets/img/wallpaper/freeport.png"),
+      require("@/assets/img/wallpaper/lavastorm.png"),
+      require("@/assets/img/wallpaper/rivervale.png"),
+      require("@/assets/img/wallpaper/qeynos.png"),
+      require("@/assets/img/wallpaper/soldungb.png"),
+      require("@/assets/img/wallpaper/spire-wall.jpg"),
+      require("@/assets/img/wallpaper/void.jpeg"),
     ];
 
     const background = backgrounds[Math.floor(Math.random() * backgrounds.length)].trim();
 
-    document.body.style.setProperty("--image", "url(" + require(`@/assets/img/wallpaper/${background}`) + ")");
+    document.body.style.setProperty("--image", "url(" + background + ")");
   },
   watch: {
     "$route"(to, from) {
