@@ -238,7 +238,7 @@ export default {
           { title: "Race Viewer", to: "/race-viewer", icon: "ra ra-monster-skull mr-1" },
           { title: "Item Model Viewer", to: "/item-viewer", icon: "ra ra-crossed-swords mr-1" },
           { title: "Item Icon Viewer", to: "/item-icon-viewer", icon: "ra ra-burning-eye mr-1" },
-          { title: "Spell Animation Viewer", to: "/spell-animation-viewer", icon: "ra ra-frost-emblem mr-1" }
+          { title: "Spell Animation Viewer", to: "/spell-animation-viewer", icon: "ra ra-dragon mr-1" }
         ]
       },
       calculatorNav: {
@@ -248,6 +248,7 @@ export default {
         navs: [
           { title: "Race Calculator", to: "/calculators#race-bitmask-calculator", icon: "ra ra-eye-monster mr-1" },
           { title: "Class Calculator", to: "/calculators#class-bitmask-calculator", icon: "ra ra-lion mr-1" },
+          { title: "Special Abilities Calculator", to: "/calculators#npc-special-abilities", icon: "ra ra-lion mr-1" },
         ]
       },
       testPageNavs: [

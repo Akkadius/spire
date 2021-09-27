@@ -128,13 +128,13 @@
               </div>
 
               <div class="row">
-                <npc-special-abilities
-                  show-special-abilities-result="1"
-                  :inputData.sync="specialAbilityInput"
-                  :abilities="specialAbilityInput"/>
+                <eq-window style="width: 100%">
+                  <npc-special-abilities
+                    show-special-abilities-result="1"
+                    :inputData.sync="specialAbilityInput"
+                    :abilities="specialAbilityInput"/>
 
-                <eq-window class="eq-window" style="width: 100%">
-                  <h4 class="eq-header">Special Abilities Input</h4>
+                  <h4 class="eq-header mt-4">Special Abilities Input</h4>
                   <input
                     type="text"
                     class="form-control mb-5 mt-4"
