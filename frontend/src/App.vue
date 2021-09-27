@@ -29,7 +29,6 @@ export default {
 
     const backgrounds = [
       "champions-of-norrath-wallpaper.jpg",
-      "everquest-wallpaper-1.jpeg",
       "faydark.png",
       "freeport.png",
       "lavastorm.png",
@@ -75,7 +74,6 @@ body {
   /* background-repeat: no-repeat; */
   background:            -webkit-radial-gradient(circle, transparent 40%, var(--color-v) 95%), linear-gradient(to right, var(--color), var(--color)), var(--image) !important;
   background:            radial-gradient(circle, transparent 40%, var(--color-v) 95%), linear-gradient(to right, var(--color), var(--color)), var(--image);
-
 
   background-position:   center center;
   background-size:       cover;
