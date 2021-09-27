@@ -104,8 +104,6 @@ export default {
     }
   },
   async created() {
-    console.log("created")
-
     let spellMinis = []
     for (const spell of this.spells) {
       Spells.setSpell(spell["id"], spell)

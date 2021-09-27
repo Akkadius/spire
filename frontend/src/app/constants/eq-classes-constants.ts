@@ -1,3 +1,22 @@
+export const DB_PLAYER_CLASSES_ALL = {
+  1: { 'class': 'Warrior', short: 'WAR', mask: 1, icon: 4487},
+  2: { 'class': 'Cleric', short: 'CLR', mask: 2, icon: 4477},
+  3: { 'class': 'Paladin', short: 'PAL', mask: 4, icon: 4476},
+  4: { 'class': 'Ranger', short: 'RNG', mask: 8, icon: 4471},
+  5: { 'class': 'Shadow Knight', short: 'SHD', mask: 16, icon: 4483},
+  6: { 'class': 'Druid', short: 'DRU', mask: 32, icon: 4481},
+  7: { 'class': 'Monk', short: 'MNK', mask: 64, icon: 4475},
+  8: { 'class': 'Bard', short: 'BRD', mask: 128, icon: 4464},
+  9: { 'class': 'Rogue', short: 'ROG', mask: 256, icon: 4490},
+  10: { 'class': 'Shaman', short: 'SHM', mask: 512, icon: 4491},
+  11: { 'class': 'Necromancer', short: 'NEC', mask: 1024, icon: 4469},
+  12: { 'class': 'Wizard', short: 'WIZ', mask: 2048, icon: 4482},
+  13: { 'class': 'Magician', short: 'MAG', mask: 4096, icon: 4470},
+  14: { 'class': 'Enchanter', short: 'ENC', mask: 8192, icon: 4488},
+  15: { 'class': 'Beastlord', short: 'BST', mask: 16384, icon: 4489},
+  16: { 'class': 'Berserker', short: 'BER', mask: 32768, icon: 4465},
+};
+
 export const DB_CLASSES_SHORT = {
   "16": "BER",
   "15": "BST",

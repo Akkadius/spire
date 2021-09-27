@@ -87,6 +87,11 @@ export default new Router({
           component: () => import('./views/pages/QuestApiExplorer/QuestApiExplorer.vue'),
           meta: {title: "Quest API Explorer"},
         },
+        {
+          path: '/calculators',
+          component: () => import('./views/pages/Calculators.vue'),
+          meta: {title: "Calculators"},
+        },
       ]
     },
     {

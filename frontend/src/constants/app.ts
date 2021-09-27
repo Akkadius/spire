@@ -2,7 +2,7 @@
 
 import LocalSettings from "@/app/local-settings/localsettings";
 
-const CDN_VERSION_HASH = 'f6b8252f5d55fe15d2c264bb5e92819059db432a'
+const CDN_VERSION_HASH = '67151b2b34d404ab2c1b3b2302ae1bbae84b1c04'
 
 // List of different git CDN's
 // const ASSET_CDN_BASE_URL_INT = `https://gitcdn.xyz/repo/Akkadius/eq-asset-preview/${CDN_VERSION_HASH}/`

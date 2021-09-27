@@ -1,4 +1,4 @@
-export default {
+export const DB_RACES_ICONS = {
   1: '4472',
   2: '4466',
   3: '4478',
