@@ -12,6 +12,10 @@
         </div>
       </div>
     </div>
+    <div class="form-group text-center">
+      <button class='eq-button mr-3' @click="selectAll()" style="display: inline-block; width: 80px">All</button>
+      <button class='eq-button' @click="selectNone()" style="display: inline-block; width: 80px">None</button>
+    </div>
   </div>
 </template>
 
@@ -54,6 +58,20 @@ export default {
     this.calculateFromBitmask();
   },
   methods: {
+    selectAll() {
+      Object.keys(this.races).reverse().forEach((raceId) => {
+        this.selectedRaces[raceId] = true;
+      });
+      this.$forceUpdate();
+      this.calculateToBitmask();
+    },
+    selectNone() {
+      Object.keys(this.races).reverse().forEach((raceId) => {
+        this.selectedRaces[raceId] = false;
+      });
+      this.$forceUpdate();
+      this.calculateToBitmask();
+    },
     calculateFromBitmask() {
       Object.keys(this.races).reverse().forEach((raceId) => {
         const race = this.races[raceId];

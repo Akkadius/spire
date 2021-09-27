@@ -12,6 +12,10 @@
         </div>
       </div>
     </div>
+    <div class="form-group text-center">
+      <button class='eq-button mr-3' @click="selectAll()" style="display: inline-block; width: 80px">All</button>
+      <button class='eq-button' @click="selectNone()" style="display: inline-block; width: 80px">None</button>
+    </div>
   </div>
 </template>
 
@@ -35,11 +39,11 @@ export default {
     mask: {
       // the callback will be called immediately after the start of the observation
       immediate: true,
-      handler (val, oldVal) {
+      handler(val, oldVal) {
         this.currentMask = parseInt(this.mask)
         this.calculateFromBitmask();
       }
-    },
+    }
   },
   data() {
     return {
@@ -54,9 +58,23 @@ export default {
     this.calculateFromBitmask();
   },
   methods: {
+    selectAll() {
+      Object.keys(this.classes).reverse().forEach((classId) => {
+        this.selectedClasses[classId] = true;
+      });
+      this.$forceUpdate();
+      this.calculateToBitmask();
+    },
+    selectNone() {
+      Object.keys(this.classes).reverse().forEach((classId) => {
+        this.selectedClasses[classId] = false;
+      });
+      this.$forceUpdate();
+      this.calculateToBitmask();
+    },
     calculateFromBitmask() {
       Object.keys(this.classes).reverse().forEach((classId) => {
-        const gameClass = this.classes[classId];
+        const gameClass               = this.classes[classId];
         this.selectedClasses[classId] = false
         if (this.currentMask >= gameClass.mask) {
           this.currentMask -= gameClass.mask;
