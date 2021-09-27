@@ -491,6 +491,7 @@ export default {
       return BODYTYPES[this.itemData.banedmgbody] ? BODYTYPES[this.itemData.banedmgbody] : ""
     },
     getAugTypeDescription: function (type) {
+      type = parseInt(type)
       return AUG_TYPES[type] ? AUG_TYPES[type] : ""
     },
     title: function (str) {

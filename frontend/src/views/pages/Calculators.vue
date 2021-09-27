@@ -60,6 +60,33 @@
             </div>
           </div>
 
+          <!-- Augment Type Bitmask Calculator -->
+          <header-component
+            header="Augment Type Calculator"
+            sub-header="Computes the bitmask for selected augments..."
+          />
+
+          <div class="row">
+            <div class="col-12">
+              <eq-window style="width: 500px">
+                <aug-bitmask-calculator
+                  :inputData.sync="augBitmask"
+                  :mask="augBitmask"/>
+
+                <div class="row">
+                  <div class="col-12">
+                    <h4 class="eq-header mt-2">Aug Bitmask</h4>
+                    The input is two-way bound with the aug selector
+                    <input
+                      type="text"
+                      class="form-control mb-3 mt-3"
+                      v-model="augBitmask">
+                  </div>
+                </div>
+              </eq-window>
+            </div>
+          </div>
+
           <!-- Inventory Slot Calculator -->
           <header-component
             header="Inventory Slot Calculator"
@@ -144,10 +171,12 @@ import HeaderComponent from "../layout/HeaderComponent";
 import RaceBitmaskCalculator from "../../components/tools/RaceBitmaskCalculator";
 import ClassBitmaskCalculator from "../../components/tools/ClassBitmaskCalculator";
 import InventorySlotCalculator from "../../components/tools/InventorySlotCalculator";
+import AugBitmaskCalculator from "../../components/tools/AugmentTypeCalculator";
 
 export default {
   name: "Calculators",
   components: {
+    AugBitmaskCalculator,
     InventorySlotCalculator,
     ClassBitmaskCalculator,
     RaceBitmaskCalculator,
@@ -166,6 +195,7 @@ export default {
   },
   data() {
     return {
+      augBitmask: "477396",
       racesBitmask: "1859",
       classesBitmask: "37349",
       inventorySlotBitmask: "1536",
