@@ -75,49 +75,10 @@
         </h6>
 
         <!-- Navigation -->
-
-        <!-- Viewers -->
         <ul class="navbar-nav mb-md-4">
-          <li class="nav-item">
-            <a :class="'nav-link collapse ' + (hasRoute('viewer') ? 'active' : 'collapsed')"
-               href="#sidebarViewers" data-toggle="collapse" role="button"
-               aria-expanded="false" aria-controls="sidebarViewers">
-              <i class="ra ra-bleeding-eye mr-1"></i> Viewers
-            </a>
-            <div :class="'collapse ' + (hasRoute('viewer') ? 'show' : '')" id="sidebarViewers">
-              <ul class="nav nav-sm flex-column">
-                <li v-for="nav in viewerNavs">
-                  <router-link class="nav-link" :to="nav.to">
-                    <i :class="nav.icon" v-if="nav.icon"></i>{{ nav.title }}
-                  </router-link>
-                </li>
-              </ul>
-            </div>
-          </li>
+          <nav-section-component :config="viewerNav"/>
+          <nav-section-component :config="calculatorNav"/>
         </ul>
-
-        <!--        <ul class="navbar-nav mb-md-4">-->
-        <!--          <li class="nav-item">-->
-        <!--            <router-link class="nav-link " to="/race-viewer">-->
-        <!--              <i class="ra ra-monster-skull mr-1"></i> Race Viewer-->
-        <!--            </router-link>-->
-        <!--          </li>-->
-        <!--          <li class="nav-item">-->
-        <!--            <router-link class="nav-link " to="/item-viewer">-->
-        <!--              <i class="ra ra-crossed-swords mr-1"></i> Item Model Viewer-->
-        <!--            </router-link>-->
-        <!--          </li>-->
-        <!--          <li class="nav-item">-->
-        <!--            <router-link class="nav-link " to="/item-icon-viewer">-->
-        <!--              <i class="ra ra-burning-eye mr-1"></i> Item Icon Viewer-->
-        <!--            </router-link>-->
-        <!--          </li>-->
-        <!--          <li class="nav-item">-->
-        <!--            <router-link class="nav-link " to="/spell-animation-viewer">-->
-        <!--              <i class="ra ra-frost-emblem mr-1"></i> Spell Animation Viewer-->
-        <!--            </router-link>-->
-        <!--          </li>-->
-        <!--        </ul>-->
 
         <h6 class="navbar-heading">
           Browsers
@@ -250,9 +211,10 @@ import {App} from "@/constants/app";
 import NavbarDropdownMenu from "@/views/layout/NavbarDropdownMenu";
 import NavbarUserSettingsCog from "@/views/layout/NavbarUserSettingsCog";
 import UserContext from "@/app/user/UserContext";
+import NavSectionComponent from "@/views/layout/NavSectionComponent";
 
 export default {
-  components: { NavbarDropdownMenu, NavbarUserSettingsCog },
+  components: { NavSectionComponent, NavbarDropdownMenu, NavbarUserSettingsCog },
   data() {
     return {
       backendBaseUrl: "",
@@ -268,12 +230,26 @@ export default {
         { title: "Form Elements", to: "/components#form-elements" },
         { title: "Windows", to: "/components#windows" }
       ],
-      viewerNavs: [
-        { title: "Race Viewer", to: "/race-viewer", icon: "ra ra-monster-skull mr-1" },
-        { title: "Item Model Viewer", to: "/item-viewer", icon: "ra ra-crossed-swords mr-1" },
-        { title: "Item Icon Viewer", to: "/item-icon-viewer", icon: "ra ra-burning-eye mr-1" },
-        { title: "Spell Animation Viewer", to: "/spell-animation-viewer", icon: "ra ra-frost-emblem mr-1" }
-      ],
+      viewerNav: {
+        label: "Viewers",
+        labelIcon: "ra ra-bleeding-eye mr-1",
+        routePrefixMatch: "viewer",
+        navs: [
+          { title: "Race Viewer", to: "/race-viewer", icon: "ra ra-monster-skull mr-1" },
+          { title: "Item Model Viewer", to: "/item-viewer", icon: "ra ra-crossed-swords mr-1" },
+          { title: "Item Icon Viewer", to: "/item-icon-viewer", icon: "ra ra-burning-eye mr-1" },
+          { title: "Spell Animation Viewer", to: "/spell-animation-viewer", icon: "ra ra-frost-emblem mr-1" }
+        ]
+      },
+      calculatorNav: {
+        label: "Calculators",
+        labelIcon: "ra ra-cog mr-1",
+        routePrefixMatch: "calculator",
+        navs: [
+          { title: "Race Calculator", to: "/calculators#race-bitmask-calculator", icon: "ra ra-eye-monster mr-1" },
+          { title: "Class Calculator", to: "/calculators#class-bitmask-calculator", icon: "ra ra-lion mr-1" },
+        ]
+      },
       testPageNavs: [
         { title: "Items Test", to: "/items-test" },
         { title: "Task Editor (Non Functional)", to: "/tasks" }

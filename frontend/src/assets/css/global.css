@@ -115,3 +115,11 @@
     background-color: transparent !important;
     border: none;
 }
+
+
+/* navbar */
+@media (min-width: 768px) {
+    .navbar-vertical.navbar-expand-md .navbar-nav .nav .nav-link {
+        padding-left: 2.25rem;
+    }
+}
