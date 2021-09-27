@@ -248,7 +248,7 @@ export default {
         navs: [
           { title: "Race Calculator", to: "/calculators#race-bitmask-calculator", icon: "ra ra-eye-monster mr-1" },
           { title: "Class Calculator", to: "/calculators#class-bitmask-calculator", icon: "ra ra-lion mr-1" },
-          { title: "Augment Type Calculator", to: "/calculators#augment-type-calculator", icon: "ra ra-gem mr-1" },
+          { title: "Augment Type Calculator", to: "/calculators#augment-type-calculator", icon: "ra ra-sapphire mr-1" },
           { title: "Inventory Slot Calculator", to: "/calculators#inventory-slot-calculator", icon: "ra ra-eye-shield mr-1" },
           { title: "Special Abilities Calculator", to: "/calculators#npc-special-abilities", icon: "ra ra-lion mr-1" },
         ]

@@ -21,6 +21,7 @@
 <script>
 import {App} from "../../constants/app";
 import {AUG_TYPES} from "../../app/constants/eq-aug-constants";
+import itemTypesIconMapping from "@/constants/item-type-icon-mapping.json"
 
 export default {
   name: "AugBitmaskCalculator",
