@@ -23,7 +23,7 @@
 
       </router-link>
 
-<!--      <hr class="dropdown-divider">-->
+      <!--      <hr class="dropdown-divider">-->
 
 
       <!--      <hr class="dropdown-divider">-->
@@ -71,32 +71,53 @@
 
         <!-- Heading -->
         <h6 class="navbar-heading">
-          Asset Viewers
+          Tools
         </h6>
 
         <!-- Navigation -->
+
+        <!-- Viewers -->
         <ul class="navbar-nav mb-md-4">
           <li class="nav-item">
-            <router-link class="nav-link " to="/race-viewer">
-              <i class="ra ra-monster-skull mr-1"></i> Race Viewer
-            </router-link>
-          </li>
-          <li class="nav-item">
-            <router-link class="nav-link " to="/item-viewer">
-              <i class="ra ra-crossed-swords mr-1"></i> Item Model Viewer
-            </router-link>
-          </li>
-          <li class="nav-item">
-            <router-link class="nav-link " to="/item-icon-viewer">
-              <i class="ra ra-burning-eye mr-1"></i> Item Icon Viewer
-            </router-link>
-          </li>
-          <li class="nav-item">
-            <router-link class="nav-link " to="/spell-animation-viewer">
-              <i class="ra ra-frost-emblem mr-1"></i> Spell Animation Viewer
-            </router-link>
+            <a :class="'nav-link collapse ' + (hasRoute('viewer') ? 'active' : 'collapsed')"
+               href="#sidebarViewers" data-toggle="collapse" role="button"
+               aria-expanded="false" aria-controls="sidebarViewers">
+              <i class="ra ra-bleeding-eye mr-1"></i> Viewers
+            </a>
+            <div :class="'collapse ' + (hasRoute('viewer') ? 'show' : '')" id="sidebarViewers">
+              <ul class="nav nav-sm flex-column">
+                <li v-for="nav in viewerNavs">
+                  <router-link class="nav-link" :to="nav.to">
+                    <i :class="nav.icon" v-if="nav.icon"></i>{{ nav.title }}
+                  </router-link>
+                </li>
+              </ul>
+            </div>
           </li>
         </ul>
+
+        <!--        <ul class="navbar-nav mb-md-4">-->
+        <!--          <li class="nav-item">-->
+        <!--            <router-link class="nav-link " to="/race-viewer">-->
+        <!--              <i class="ra ra-monster-skull mr-1"></i> Race Viewer-->
+        <!--            </router-link>-->
+        <!--          </li>-->
+        <!--          <li class="nav-item">-->
+        <!--            <router-link class="nav-link " to="/item-viewer">-->
+        <!--              <i class="ra ra-crossed-swords mr-1"></i> Item Model Viewer-->
+        <!--            </router-link>-->
+        <!--          </li>-->
+        <!--          <li class="nav-item">-->
+        <!--            <router-link class="nav-link " to="/item-icon-viewer">-->
+        <!--              <i class="ra ra-burning-eye mr-1"></i> Item Icon Viewer-->
+        <!--            </router-link>-->
+        <!--          </li>-->
+        <!--          <li class="nav-item">-->
+        <!--            <router-link class="nav-link " to="/spell-animation-viewer">-->
+        <!--              <i class="ra ra-frost-emblem mr-1"></i> Spell Animation Viewer-->
+        <!--            </router-link>-->
+        <!--          </li>-->
+        <!--        </ul>-->
 
         <h6 class="navbar-heading">
           Browsers
@@ -246,6 +267,12 @@ export default {
         { title: "Tabs", to: "/components#tabs" },
         { title: "Form Elements", to: "/components#form-elements" },
         { title: "Windows", to: "/components#windows" }
+      ],
+      viewerNavs: [
+        { title: "Race Viewer", to: "/race-viewer", icon: "ra ra-monster-skull mr-1" },
+        { title: "Item Model Viewer", to: "/item-viewer", icon: "ra ra-crossed-swords mr-1" },
+        { title: "Item Icon Viewer", to: "/item-icon-viewer", icon: "ra ra-burning-eye mr-1" },
+        { title: "Spell Animation Viewer", to: "/spell-animation-viewer", icon: "ra ra-frost-emblem mr-1" }
       ],
       testPageNavs: [
         { title: "Items Test", to: "/items-test" },
