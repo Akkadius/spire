@@ -530,7 +530,7 @@ export default {
     showSpecialAbilitiesResult: {
       type: String,
       required: false,
-      default: false
+      default: "0"
     }
   },
   data() {

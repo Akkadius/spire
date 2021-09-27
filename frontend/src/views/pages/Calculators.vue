@@ -60,6 +60,35 @@
             </div>
           </div>
 
+          <!-- Inventory Slot Calculator -->
+          <header-component
+            header="Inventory Slot Calculator"
+            sub-header="Computes outputs based on inputs..."
+          />
+
+          <div class="row">
+            <div class="col-12">
+              <eq-window style="width: 500px">
+
+                <inventory-slot-calculator
+                  :inputData.sync="inventorySlotBitmask"
+                  :mask="inventorySlotBitmask"
+                />
+
+                <div class="row">
+                  <div class="col-12">
+                    <h4 class="eq-header mt-2">Inventory Slot Bitmask</h4>
+                    The input is two-way bound with above
+                    <input
+                      type="text"
+                      class="form-control mb-3 mt-3"
+                      v-model="inventorySlotBitmask">
+                  </div>
+                </div>
+              </eq-window>
+            </div>
+          </div>
+
           <!-- NPC Special Abilities -->
           <header-component
             header="NPC Special Abilities"
@@ -114,10 +143,12 @@ import NpcSpecialAbilities from "@/components/tools/NpcSpecialAbilities";
 import HeaderComponent from "../layout/HeaderComponent";
 import RaceBitmaskCalculator from "../../components/tools/RaceBitmaskCalculator";
 import ClassBitmaskCalculator from "../../components/tools/ClassBitmaskCalculator";
+import InventorySlotCalculator from "../../components/tools/InventorySlotCalculator";
 
 export default {
   name: "Calculators",
   components: {
+    InventorySlotCalculator,
     ClassBitmaskCalculator,
     RaceBitmaskCalculator,
     HeaderComponent,
@@ -137,6 +168,7 @@ export default {
     return {
       racesBitmask: "1859",
       classesBitmask: "37349",
+      inventorySlotBitmask: "1536",
       specialAbilityInput: "1,1,3000,50^2,1,1,1000,2340^3,1,20,0,0,0,0,100,0^4,1,0,100,0,0,0,100,0^11,1,4,150,0,0,5^29,1,50^40,1,10,10,100^7,1^10,1^14,1^19,1^22,1^25,1^26,1"
     }
   },

@@ -36,8 +36,6 @@ export default {
       // the callback will be called immediately after the start of the observation
       immediate: true,
       handler (val, oldVal) {
-        console.log("fired2")
-        console.log(this.mask)
         this.currentMask = parseInt(this.mask)
         this.calculateFromBitmask();
       }
