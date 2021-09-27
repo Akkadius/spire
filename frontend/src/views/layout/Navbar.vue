@@ -9,16 +9,22 @@
       </button>
 
       <!-- Brand -->
-      <router-link class="ml-3 mt-3" to="/">
-        <img src="~@/assets/img/eqemu-logo-1.png" class="navbar-brand-img mx-auto d-none d-sm-block mb-3" alt="..."
-             style="max-height: 7rem">
+      <router-link class="ml-3 mt-3 d-none d-lg-block" to="/">
+        <img src="~@/assets/img/eqemu-logo-1.png"
+             class="navbar-brand-img mx-auto d-none d-sm-block mb-3" alt="..."
+             style="max-height: 6rem">
       </router-link>
 
-      <hr class="dropdown-divider">
 
-      <h4 class=" text-center menuetto-header small-mobile">
-        Spire
-      </h4>
+      <router-link class="ml-3 mt-3" to="/">
+        <h1 class="text-center eq-header small-mobile">
+          Spire
+        </h1>
+
+      </router-link>
+
+<!--      <hr class="dropdown-divider">-->
+
 
       <!--      <hr class="dropdown-divider">-->
 
@@ -184,7 +190,6 @@
           <!-- Icon -->
 
 
-
           <!-- Dropup -->
           <div class="dropup">
 
@@ -226,32 +231,32 @@ import NavbarUserSettingsCog from "@/views/layout/NavbarUserSettingsCog";
 import UserContext from "@/app/user/UserContext";
 
 export default {
-  components: {NavbarDropdownMenu, NavbarUserSettingsCog},
+  components: { NavbarDropdownMenu, NavbarUserSettingsCog },
   data() {
     return {
       backendBaseUrl: "",
       user: null,
       componentNavs: [
-        {title: "Progress Bars", to: "/components#progress-bars"},
-        {title: "Page Headers", to: "/components#page-headers"},
-        {title: "Item Preview", to: "/components#item-preview"},
-        {title: "Spell Preview", to: "/components#spell-preview"},
-        {title: "NPC Special Abilities", to: "/components#npc-special-abilities"},
-        {title: "Table", to: "/components#table"},
-        {title: "Tabs", to: "/components#tabs"},
-        {title: "Form Elements", to: "/components#form-elements"},
-        {title: "Windows", to: "/components#windows"},
+        { title: "Progress Bars", to: "/components#progress-bars" },
+        { title: "Page Headers", to: "/components#page-headers" },
+        { title: "Item Preview", to: "/components#item-preview" },
+        { title: "Spell Preview", to: "/components#spell-preview" },
+        { title: "NPC Special Abilities", to: "/components#npc-special-abilities" },
+        { title: "Table", to: "/components#table" },
+        { title: "Tabs", to: "/components#tabs" },
+        { title: "Form Elements", to: "/components#form-elements" },
+        { title: "Windows", to: "/components#windows" }
       ],
       testPageNavs: [
-        {title: "Items Test", to: "/items-test"},
-        {title: "Task Editor (Non Functional)", to: "/tasks"},
+        { title: "Items Test", to: "/items-test" },
+        { title: "Task Editor (Non Functional)", to: "/tasks" }
       ]
     }
   },
 
   async mounted() {
     this.backendBaseUrl = App.BACKEND_BASE_URL
-    this.user = await UserContext.getUser()
+    this.user           = await UserContext.getUser()
   },
 
   methods: {
