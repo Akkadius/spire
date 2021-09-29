@@ -50,8 +50,6 @@ export default {
       // do whatever here, add it to the background, append the image ect.
       document.body.style.setProperty("--image", "url(" + background + ")");
     }
-
-
   },
   watch: {
     "$route"(to, from) {
@@ -62,8 +60,13 @@ export default {
 </script>
 
 <style lang="scss">
+
+/* ag-grid */
 @import "../node_modules/ag-grid-community/dist/styles/ag-grid.css";
 @import "../node_modules/ag-grid-community/dist/styles/ag-theme-balham-dark.css";
+
+/* spritesheet assets */
+@import "https://rawcdn.githack.com/Akkadius/eq-asset-preview/4dfd41553f0f30e4061ca63d7dba589b978c40b8/assets/sprites/item-icons.css";
 
 .card-slim {
   padding: 18px !important;

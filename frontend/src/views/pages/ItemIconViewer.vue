@@ -6,10 +6,7 @@
     <div>
       <div class="container-fluid">
 
-
-
-
-        <eq-window title="Icons" v-lazy-container="{ selector: 'img' }" class="mt-5 text-center">
+        <eq-window title="Icons" class="mt-5 text-center">
           <div class="row mb-4">
 
             <!-- Item Slot -->
@@ -59,29 +56,8 @@
             No icons found...
           </span>
 
-          <span v-for="icon in filteredIcons" :key="icon">
-
-            <img :src="initialLoad === false ? '' : icon" :data-src="icon" style="height: 40px" :id="slug(icon)"
-                 class="fade-in p-1">
-
-            <!-- Popover -->
-            <b-popover
-              :target="slug(icon)"
-              placement="bottom"
-              variant="light"
-              triggers="hover focus"
-            >
-<!--              <template v-slot:title>Icon</template>-->
-
-              <table>
-                <tr>
-                  <td class="mr-3"><b>Icon</b></td>
-                  <td>{{ getIconFromUrl(icon) }}</td>
-                </tr>
-              </table>
-
-            </b-popover>
-
+          <span v-for="icon in filteredIcons" :key="icon" :id="'item-' + icon">
+            <span :class="'fade-in item-' + icon" :title="icon"></span>
           </span>
         </eq-window>
       </div>
@@ -99,15 +75,11 @@ import itemSlots from "@/constants/item-slots.json"
 import itemTypes from "@/constants/item-types.json"
 import itemSlotIconMapping from "@/constants/item-slot-icon-mapping.json"
 import itemTypesIconMapping from "@/constants/item-type-icon-mapping.json"
-import {IconViewerStore} from "@/app/store/iconViewerStore";
-import slugify from "slugify";
 import PageHeader from "@/views/layout/PageHeader";
 import EqWindowSimple from "@/components/eq-ui/EQWindowSimple";
 import EqWindowComplex from "@/components/eq-ui/EQWindowComplex";
 import EqWindow from "@/components/eq-ui/EQWindow";
-import {App} from "@/constants/app";
 
-const baseUrl     = App.ASSET_ITEM_ICON_BASE_URL;
 const MAX_ICON_ID = 10000;
 // const MAX_ICON_ID = 1000;
 
@@ -125,24 +97,14 @@ export default {
       iconSlotOptions: null,
       iconItemTypeOptions: null,
       loaded: false,
-      initialLoad: false
     }
   },
   methods: {
     reset: function () {
+      this.loaded = false;
       this.iconSlotSearch     = 0;
       this.iconItemTypeSearch = 0;
       this.loadModels()
-    },
-
-    // slugify
-    slug: function (toSlug) {
-      return slugify(toSlug.replace(/[&\/\\#, +()$~%.'":*?<>{}]/g, "-"))
-    },
-
-    // get icon from url
-    getIconFromUrl: function (url) {
-      return url.split("item_icons/item_")[1].split(".png")[0]
     },
 
     // icon slot search
@@ -158,7 +120,7 @@ export default {
       let icons = []
       itemSlotIconMapping[this.iconSlotSearch].forEach((icon) => {
         if (iconExists[icon] && !itemAdded[icon]) {
-          icons.push(baseUrl + util.format("item_%s.png", icon))
+          icons.push(icon)
           itemAdded[icon] = 1
         }
       })
@@ -181,7 +143,7 @@ export default {
       let icons = []
       itemTypesIconMapping[this.iconItemTypeSearch].forEach((icon) => {
         if (iconExists[icon] && !itemAdded[icon]) {
-          icons.push(baseUrl + util.format("item_%s.png", icon))
+          icons.push(icon)
           itemAdded[icon] = 1
         }
       })
@@ -195,22 +157,11 @@ export default {
       this.loaded        = false
       this.filteredIcons = icons;
       this.loaded        = true
-      this.initialLoad   = true
     },
 
     // load meta data
     loadModelMeta: function () {
-
-      if (typeof IconViewerStore.raceImages !== "undefined" && Object.keys(IconViewerStore.icons).length > 0) {
-        icons                    = IconViewerStore.icons;
-        modelFiles               = IconViewerStore.modelFiles;
-        iconExists               = IconViewerStore.iconExists;
-        this.iconSlotOptions     = IconViewerStore.iconSlotOptions
-        this.iconItemTypeOptions = IconViewerStore.iconItemTypeOptions
-
-        this.loaded = true
-        return
-      }
+      console.time("files");
 
       // Preload model files
       modelFiles = {};
@@ -221,6 +172,9 @@ export default {
         modelFiles[fileName] = 1
       })
 
+      console.timeEnd("files");
+      console.time("icons");
+
       // Preload icons
       icons = [];
       for (let iconId = 0; iconId <= MAX_ICON_ID; iconId++) {
@@ -228,18 +182,21 @@ export default {
         const modelExists = modelFiles[modelKey]
 
         if (modelExists) {
-          icons.push(baseUrl + modelKey)
+          icons.push(iconId)
           iconExists[iconId] = 1
         }
       }
 
+      console.timeEnd("icons");
+
       // Item Slot
       this.iconSlotOptions = [];
+      let iconSlotOptions = [];
       for (let slot = 0; slot <= 19; slot++) {
         const slotDescription = itemSlots[slot][0];
         const slotNumbers     = itemSlots[slot][1];
 
-        this.iconSlotOptions.push(
+        iconSlotOptions.push(
           {
             text: slotDescription,
             value: slotNumbers
@@ -247,33 +204,31 @@ export default {
         )
       }
 
+      this.iconSlotOptions = iconSlotOptions
+
       // Item Type
       this.iconItemTypeOptions = [];
+      let iconItemTypeOptions = [];
       for (const [type, description] of Object.entries(itemTypes)) {
-        this.iconItemTypeOptions.push(
+        iconItemTypeOptions.push(
           {
             text: description,
             value: type
           }
         )
       }
-
-      // Store
-      IconViewerStore.modelFiles          = modelFiles
-      IconViewerStore.icons               = icons
-      IconViewerStore.iconExists          = iconExists
-      IconViewerStore.iconSlotOptions     = this.iconSlotOptions
-      IconViewerStore.iconItemTypeOptions = this.iconItemTypeOptions
-
+      this.iconItemTypeOptions = iconItemTypeOptions
     }
   },
   async mounted() {
+    this.loaded = false;
     this.loadModelMeta()
 
     setTimeout(() => {
       this.loadModels()
-    }, 100);
+    }, 50);
   }
 }
 </script>
+
 
