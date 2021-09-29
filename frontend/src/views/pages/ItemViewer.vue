@@ -54,10 +54,13 @@
             No models found...
           </span>
 
+          <div class="row">
           <div v-for="item in filteredItemModels" :key="item"
-               style="min-width: 120px; min-height: 40px; display:inline-block; text-align: center">
+               class="m-1"
+               style="height: auto; min-width: 120px; display:flex; align-items: center; text-align: center; border: 1px solid rgb(218 218 218 / 30%); border-radius: 7px;">
 
             <span :class="'fade-in object-ctn-' + item" :title="'IT' + item"></span>
+          </div>
           </div>
 
           <div class="mt-5">Images courtesy of Maudigan <3</div>

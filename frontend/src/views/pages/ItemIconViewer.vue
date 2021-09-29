@@ -56,8 +56,10 @@
             No icons found...
           </span>
 
-          <span v-for="icon in filteredIcons" :key="icon" :id="'item-' + icon">
-            <span :class="'fade-in item-' + icon" :title="icon"></span>
+          <span v-for="icon in filteredIcons" :key="icon" :id="'item-' + icon" class="p-1">
+            <span
+              :class="'fade-in item-' + icon" :title="icon"
+              style="border: 1px solid rgb(218 218 218 / 30%); border-radius: 7px;"/>
           </span>
         </eq-window>
       </div>
