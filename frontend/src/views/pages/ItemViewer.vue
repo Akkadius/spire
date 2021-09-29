@@ -1,15 +1,11 @@
 <template>
   <div>
-<!--    <page-header title="Item Model Viewer" pre-title="Search and view item models..."/>-->
+    <!--    <page-header title="Item Model Viewer" pre-title="Search and view item models..."/>-->
 
     <!-- CONTENT -->
     <div>
       <div class="container-fluid">
-
-
-
-        <eq-window title="Item Models" v-if="loaded" class="mt-5 text-center" v-lazy-container="{ selector: 'img' }">
-
+        <eq-window title="Item Models" class="mt-5 text-center">
           <div class="row mb-4">
 
             <!-- Item Slot -->
@@ -54,36 +50,17 @@
 
           <app-loader :is-loading="!loaded" padding="8"/>
 
-          <span v-if="filteredItemModels.length === 0">
+          <span v-if="filteredItemModels && filteredItemModels.length === 0">
             No models found...
           </span>
 
           <div v-for="item in filteredItemModels" :key="item"
                style="min-width: 120px; min-height: 40px; display:inline-block; text-align: center">
-            <img :src="initialLoad === false ? '' : item" :data-src="item" :id="slug(item)" class="fade-in">
 
-            <!-- Popover -->
-            <b-popover
-              :target="slug(item)"
-              placement="bottom"
-              variant="light"
-              triggers="hover focus"
-            >
-              <!--              <template v-slot:title>Icon</template>-->
-
-              <table>
-                <tr>
-                  <td class="mr-3"><b>Model</b></td>
-                  <td>IT{{ getWeaponGraphicModelFromUrl(item) }}</td>
-                </tr>
-              </table>
-
-            </b-popover>
-
+            <span :class="'fade-in object-ctn-' + item" :title="'IT' + item"></span>
           </div>
 
           <div class="mt-5">Images courtesy of Maudigan <3</div>
-
         </eq-window>
 
       </div>
@@ -120,8 +97,7 @@ export default {
       filteredItemModels: null,
       itemSlotOptions: [],
       itemTypeOptions: null,
-      loaded: false,
-      initialLoad: false,
+      loaded: false
     }
   },
   methods: {
@@ -157,7 +133,7 @@ export default {
         const file = idFile.replace("IT", "")
 
         if (itemModelExists[file]) {
-          idFiles.push(baseUrl + util.format("CTN_%s.png", file))
+          idFiles.push(file)
         }
       })
 
@@ -179,7 +155,7 @@ export default {
         const file = idFile.replace("IT", "")
 
         if (itemModelExists[file]) {
-          idFiles.push(baseUrl + util.format("CTN_%s.png", file))
+          idFiles.push(file)
         }
       })
 
@@ -195,6 +171,8 @@ export default {
     }
   },
   async mounted() {
+    this.loaded = false;
+
     modelFiles = {};
     ItemModels[0].contents.forEach((row) => {
       const pieces   = row.name.split(/\//);
@@ -206,11 +184,10 @@ export default {
     itemModels = [];
 
     for (let itemId = 0; itemId <= MAX_ITEM_IDFILE; itemId++) {
-      const modelKey    = util.format("CTN_%s.png", itemId);
-      const modelExists = modelFiles[modelKey]
+      const modelKey = util.format("CTN_%s.png", itemId);
 
-      if (modelExists) {
-        itemModels.push(baseUrl + modelKey)
+      if (modelFiles[modelKey]) {
+        itemModels.push(itemId)
         itemModelExists[itemId] = 1
       }
     }
@@ -241,7 +218,6 @@ export default {
 
     setTimeout(() => {
       this.loadModels()
-      this.initialLoad = true
     }, 100);
 
   }
