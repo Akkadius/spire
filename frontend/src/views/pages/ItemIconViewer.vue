@@ -198,9 +198,14 @@ export default {
         const slotDescription = itemSlots[slot][0];
         const slotNumbers     = itemSlots[slot][1];
 
+        let itemCountDescription = "";
+        if (itemSlotIconMapping[slotNumbers] && itemSlotIconMapping[slotNumbers].length > 0) {
+          itemCountDescription = util.format(" (%s icons)", itemSlotIconMapping[slotNumbers].length)
+        }
+
         iconSlotOptions.push(
           {
-            text: slotDescription,
+            text: slotDescription + itemCountDescription,
             value: slotNumbers
           }
         )
@@ -212,9 +217,15 @@ export default {
       this.iconItemTypeOptions = [];
       let iconItemTypeOptions = [];
       for (const [type, description] of Object.entries(itemTypes)) {
+
+        let itemCountDescription = "";
+        if (itemTypesIconMapping[type] && itemTypesIconMapping[type].length > 0) {
+          itemCountDescription = util.format(" (%s icons)", itemTypesIconMapping[type].length)
+        }
+
         iconItemTypeOptions.push(
           {
-            text: description,
+            text: description + itemCountDescription,
             value: type
           }
         )

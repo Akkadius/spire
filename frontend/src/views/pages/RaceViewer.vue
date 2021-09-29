@@ -9,7 +9,8 @@
             <input
               type="text"
               class="form-control form-control-prepended list-search"
-              v-model.lazy="raceSearch"
+              v-model="raceSearch"
+              @keyup="doRaceSearch()"
               @keyup.enter="doRaceSearch()"
               placeholder="Filter by Race name">
           </div>
@@ -89,6 +90,7 @@ import PageHeader from "@/views/layout/PageHeader";
 import {App} from "@/constants/app";
 import EqWindow from "@/components/eq-ui/EQWindow";
 import EqWindowSimple from "@/components/eq-ui/EQWindowSimple";
+import {debounce} from "@/app/utility/debounce.js";
 
 const baseUrl = App.ASSET_CDN_BASE_URL + "assets/npc_models/";
 
@@ -109,7 +111,7 @@ export default {
     }
   },
   methods: {
-    doRaceSearch: function () {
+    doRaceSearch: debounce(function () {
       this.loaded = false
 
       let filteredRaceIds = [];
@@ -133,7 +135,7 @@ export default {
 
       this.filteredRaces = filteredRaceIds
       this.loaded        = true
-    },
+    }, 300),
     getRaceImages: function (raceId) {
 
       let raceImages = [];
