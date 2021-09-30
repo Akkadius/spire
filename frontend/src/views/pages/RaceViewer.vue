@@ -10,8 +10,8 @@
               type="text"
               class="form-control form-control-prepended list-search"
               v-model="raceSearch"
-              @keyup="doRaceSearch()"
-              @keyup.enter="doRaceSearch()"
+              @keyup="triggerStateDebounce()"
+              @keyup.enter="triggerState()"
               placeholder="Filter by Race name">
           </div>
           <div class="col-auto">
@@ -97,6 +97,11 @@ const baseUrl = App.ASSET_CDN_BASE_URL + "assets/npc_models/";
 const MAX_RACE_ID = 700;
 let modelFiles    = {};
 let raceExists    = {};
+let races       = [];
+
+
+// todo: move this to central constants later
+const RACE_VIEWER_ROUTE = "/race-viewer";
 
 export default {
   components: { EqWindowSimple, EqWindow, PageHeader },
@@ -107,34 +112,73 @@ export default {
       loaded: false,
       raceConstants: null,
       raceSearch: "",
-      initialLoad: false
     }
   },
   methods: {
-    doRaceSearch: debounce(function () {
-      this.loaded = false
 
-      let filteredRaceIds = [];
-      for (let raceId = 0; raceId <= MAX_RACE_ID; raceId++) {
+    // when inputs are triggered and state is updated
+    updateQueryState: function () {
+      let queryState = {};
 
-        if (!raceConstants[raceId]) {
-          continue;
-        }
-
-        if (!raceExists[raceId]) {
-          continue;
-        }
-
-        const raceName = raceConstants[raceId];
-        if (!raceName.toLowerCase().includes(this.raceSearch)) {
-          continue;
-        }
-
-        filteredRaceIds.push(raceId);
+      if (this.raceSearch !== "") {
+        queryState.raceSearch = this.raceSearch
       }
 
-      this.filteredRaces = filteredRaceIds
-      this.loaded        = true
+      this.$router.push(
+        {
+          path: RACE_VIEWER_ROUTE,
+          query: queryState
+        }
+      ).catch(() => {
+      })
+    },
+
+    // usually from loading initial state
+    loadQueryState: function () {
+      if (this.$route.query.raceSearch) {
+        this.raceSearch = this.$route.query.raceSearch;
+      }
+    },
+
+    triggerState() {
+      this.updateQueryState();
+      this.loadModels()
+    },
+
+    loadModels() {
+      this.loaded = false;
+
+      if (this.raceSearch !== "") {
+        let filteredRaceIds = [];
+        for (let raceId = 0; raceId <= MAX_RACE_ID; raceId++) {
+
+          if (!raceConstants[raceId]) {
+            continue;
+          }
+
+          if (!raceExists[raceId]) {
+            continue;
+          }
+
+          const raceName = raceConstants[raceId];
+          if (!raceName.toLowerCase().includes(this.raceSearch)) {
+            continue;
+          }
+
+          filteredRaceIds.push(raceId);
+        }
+
+        this.filteredRaces = filteredRaceIds
+        this.loaded        = true
+        return;
+      }
+
+      this.filteredRaces = races
+      this.loaded = true;
+    },
+
+    triggerStateDebounce: debounce(function () {
+      this.triggerState()
     }, 300),
     getRaceImages: function (raceId) {
 
@@ -175,7 +219,7 @@ export default {
     slug: function (toSlug) {
       return slugify(toSlug.replace(/[&\/\\#, +()$~%.'":*?<>{}]/g, "-"))
     },
-    loadModels: function () {
+    initModels() {
       var start = new Date().getTime();
       NpcModels[0].contents.forEach((row) => {
         const pieces   = row.name.split(/\//);
@@ -185,8 +229,8 @@ export default {
       })
 
       this.raceImages = {};
-      let races       = [];
       let raceImages  = {};
+      races = [];
 
       for (let raceId = 0; raceId <= MAX_RACE_ID; raceId++) {
         let modelKey = "";
@@ -214,16 +258,16 @@ export default {
 
       this.raceImages    = raceImages
       this.filteredRaces = races;
-      this.loaded        = true
     }
   },
   async mounted() {
+    this.loadQueryState()
     this.raceConstants = raceConstants
+    this.initModels()
 
     setTimeout(() => {
       this.loadModels()
-      this.initialLoad = true
-    }, 100);
+    }, 50);
   }
 }
 </script>
