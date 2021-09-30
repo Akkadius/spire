@@ -5,11 +5,11 @@
     <!-- CONTENT -->
     <div>
       <div class="container-fluid">
-        <eq-window title="Item Models" class="mt-5 text-center">
+        <eq-window title="Item Models" class="mt-5 text-center" style="min-height: 500px">
           <div class="row mb-4">
 
             <!-- Item Slot -->
-            <div class="col-5">
+            <div class="col-lg-5 col-sm-12">
 
               <!-- Input -->
               <select
@@ -27,7 +27,7 @@
             </div>
 
             <!-- Item Type -->
-            <div class="col-6">
+            <div class="col-lg-6 col-sm-12">
 
               <!-- Input -->
               <select
@@ -43,8 +43,10 @@
 
               </select>
             </div>
-            <div class="col-auto">
-              <b-button variant="primary" @click="reset">Reset</b-button>
+            <div class="col-lg-1 col-sm-12">
+              <b-button variant="primary" class="form-control mr-1 ml-2 mt-1" @click="reset">
+                <i class="fa fa-eraser mr-1"></i>
+                Reset</b-button>
             </div>
           </div>
 
@@ -54,16 +56,12 @@
             No models found...
           </span>
 
-          <div class="row">
-          <div v-for="item in filteredItemModels" :key="item"
-               class="m-1"
-               style="height: auto; min-width: 120px; display:flex; align-items: center; text-align: center; border: 1px solid rgb(218 218 218 / 30%); border-radius: 7px;">
-
-            <span :class="'fade-in object-ctn-' + item" :title="'IT' + item"></span>
-          </div>
+          <div class="row justify-content-center">
+            <div v-for="item in filteredItemModels" :key="item" class="m-1 item-model">
+              <span :class="'fade-in object-ctn-' + item" :title="'IT' + item"></span>
+            </div>
           </div>
 
-          <div class="mt-5">Images courtesy of Maudigan <3</div>
         </eq-window>
 
       </div>
@@ -200,9 +198,14 @@ export default {
       const slotDescription = itemSlots[slot][0];
       const slotNumbers     = itemSlots[slot][1];
 
+      let modelCountDescription = "";
+      if (itemSlotIdFileMapping[slotNumbers] && itemSlotIdFileMapping[slotNumbers].length > 0) {
+        modelCountDescription = util.format(" (%s models)", itemSlotIdFileMapping[slotNumbers].length)
+      }
+
       this.itemSlotOptions.push(
         {
-          text: slotDescription,
+          text: slotDescription + modelCountDescription,
           value: slotNumbers
         }
       )
@@ -211,12 +214,20 @@ export default {
     // Item Type
     this.itemTypeOptions = [];
     for (const [type, description] of Object.entries(itemTypes)) {
-      this.itemTypeOptions.push(
-        {
-          text: description,
-          value: type
-        }
-      )
+
+      let modelCountDescription = "";
+      if (itemTypesModelMapping[type] && itemTypesModelMapping[type].length > 0) {
+        modelCountDescription = util.format(" (%s models)", itemTypesModelMapping[type].length)
+      }
+
+      if (itemTypesModelMapping[type].length > 0) {
+        this.itemTypeOptions.push(
+          {
+            text: type + ") " + description + modelCountDescription,
+            value: type
+          }
+        )
+      }
     }
 
     setTimeout(() => {
@@ -227,3 +238,14 @@ export default {
 }
 </script>
 
+<style scoped>
+.item-model {
+  height:          auto;
+  min-width:       120px;
+  display:         flex;
+  justify-content: center;
+  align-items:     center;
+  border:          1px solid rgb(218 218 218 / 30%);
+  border-radius:   7px;
+}
+</style>
