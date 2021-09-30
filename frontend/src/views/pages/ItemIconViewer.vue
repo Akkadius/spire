@@ -71,7 +71,7 @@ let iconExists = {}
 let icons      = [];
 let modelFiles = {};
 
-// move this somewhere else at some point
+// move this to central constants later
 const ITEM_ICON_VIEWER_ROUTE = "/item-icon-viewer"
 
 export default {
@@ -128,7 +128,6 @@ export default {
     triggerState() {
       this.updateQueryState();
       this.loadIcons()
-      console.log("test")
     },
 
     loadIcons() {
