@@ -70,7 +70,6 @@ func NewRouter(
 					},
 				},
 			),
-			middleware.GzipWithConfig(middleware.GzipConfig{Level: 1}),
 		},
 
 		// controller groups
@@ -81,12 +80,14 @@ func NewRouter(
 				"/api/v1/",
 				cg.v1controllersNoAuth,
 				v1RateLimit(),
+				middleware.GzipWithConfig(middleware.GzipConfig{Level: 1}),
 			),
 			routes.NewControllerGroup(
 				"/api/v1/",
 				crudc.routes,
 				userContextMiddleware.Handle(),
 				v1RateLimit(),
+				middleware.GzipWithConfig(middleware.GzipConfig{Level: 1}),
 			),
 		},
 	)
