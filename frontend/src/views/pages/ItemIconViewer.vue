@@ -1,73 +1,55 @@
 <template>
-  <div>
-<!--    <page-header title="Item Icon Viewer" pre-title="Search and view item icons..."/>-->
+  <div class="container-fluid">
+    <eq-window title="Icons" class="mt-5 text-center">
+      <div class="row mb-4">
 
-    <!-- CONTENT -->
-    <div>
-      <div class="container-fluid">
+        <!-- Item Slot -->
+        <div class="col-5">
+          <select
+            class="form-control list-search"
+            v-model.lazy="iconSlotSearch"
+            @change="iconItemTypeSearch = 0; triggerState()"
+          >
+            <option value="0">Select Slot Filter</option>
+            <option v-for="option in iconSlotOptions" v-bind:value="option.value">
+              {{ option.text }}
+            </option>
+          </select>
+        </div>
 
-        <eq-window title="Icons" class="mt-5 text-center">
-          <div class="row mb-4">
+        <!-- Item Type -->
+        <div class="col-6">
+          <select
+            class="form-control list-search"
+            v-model.lazy="iconItemTypeSearch"
+            @change="iconSlotSearch = 0; triggerState()"
+          >
+            <option value="0">Select Type Filter</option>
+            <option v-for="option in iconItemTypeOptions" v-bind:value="option.value">
+              {{ option.text }}
+            </option>
 
-            <!-- Item Slot -->
-            <div class="col-5">
+          </select>
+        </div>
 
-              <!-- Input -->
-              <select
-                class="form-control list-search"
-                v-model.lazy="iconSlotSearch"
-                @change="doIconSlotSearch()"
-              >
-                <option value="0">Select Slot Filter</option>
+        <div class="col-auto">
+          <b-button variant="primary" @click="reset">Reset</b-button>
+        </div>
+      </div>
 
-                <option v-for="option in iconSlotOptions" v-bind:value="option.value">
-                  {{ option.text }}
-                </option>
+      <app-loader :is-loading="!loaded" padding="8"/>
 
-              </select>
-
-            </div>
-
-            <!-- Item Type -->
-            <div class="col-6">
-              <!-- Input -->
-              <select
-                class="form-control list-search"
-                v-model.lazy="iconItemTypeSearch"
-                @change="doIconItemTypeSearch()"
-              >
-                <option value="0">Select Type Filter</option>
-
-                <option v-for="option in iconItemTypeOptions" v-bind:value="option.value">
-                  {{ option.text }}
-                </option>
-
-              </select>
-            </div>
-
-            <div class="col-auto">
-              <b-button variant="primary" @click="reset">Reset</b-button>
-            </div>
-          </div>
-
-          <app-loader :is-loading="!loaded" padding="8"/>
-
-          <span v-if="filteredIcons && filteredIcons.length === 0">
+      <span v-if="filteredIcons && filteredIcons.length === 0">
             No icons found...
           </span>
 
-          <span v-for="icon in filteredIcons" :key="icon" :id="'item-' + icon" class="p-1">
+      <span v-for="icon in filteredIcons" :key="icon" :id="'item-' + icon" class="p-1">
             <span
               :class="'fade-in item-' + icon" :title="icon"
               style="border: 1px solid rgb(218 218 218 / 30%); border-radius: 7px;"/>
           </span>
-        </eq-window>
-      </div>
-
-
-    </div>
+    </eq-window>
   </div>
-
 </template>
 
 <script>
@@ -89,6 +71,9 @@ let iconExists = {}
 let icons      = [];
 let modelFiles = {};
 
+// move this somewhere else at some point
+const ITEM_ICON_VIEWER_ROUTE = "/item-icon-viewer"
+
 export default {
   components: { EqWindow, EqWindowComplex, EqWindowSimple, PageHeader },
   data() {
@@ -98,67 +83,104 @@ export default {
       filteredIcons: null,
       iconSlotOptions: null,
       iconItemTypeOptions: null,
-      loaded: false,
+      loaded: false
     }
   },
   methods: {
     reset: function () {
-      this.loaded = false;
+      this.loaded             = false;
       this.iconSlotSearch     = 0;
       this.iconItemTypeSearch = 0;
-      this.loadModels()
+      this.updateQueryState()
+      this.loadIcons()
     },
 
-    // icon slot search
-    doIconSlotSearch: function () {
-      let itemAdded           = {};
-      this.iconItemTypeSearch = 0
-      this.loaded             = false
+    // when inputs are triggered and state is updated
+    updateQueryState: function () {
+      let queryState = {};
 
-      if (!itemSlotIconMapping[this.iconSlotSearch]) {
-        return
+      if (this.iconSlotSearch !== 0) {
+        queryState.slot = this.iconSlotSearch
+      }
+      if (this.iconItemTypeSearch !== 0) {
+        queryState.itemType = this.iconItemTypeSearch
       }
 
-      let icons = []
-      itemSlotIconMapping[this.iconSlotSearch].forEach((icon) => {
-        if (iconExists[icon] && !itemAdded[icon]) {
-          icons.push(icon)
-          itemAdded[icon] = 1
+      this.$router.push(
+        {
+          path: ITEM_ICON_VIEWER_ROUTE,
+          query: queryState
         }
+      ).catch(() => {
       })
-
-      this.filteredIcons = icons
-      this.loaded        = true
     },
 
-    // item type search
-    doIconItemTypeSearch: function () {
-      let itemAdded       = {};
-      this.iconSlotSearch = 0
+    // usually from loading initial state
+    loadQueryState: function () {
+      if (this.$route.query.slot) {
+        this.iconSlotSearch = this.$route.query.slot;
+      }
+      if (this.$route.query.itemType) {
+        this.iconItemTypeSearch = this.$route.query.itemType;
+      }
+    },
 
-      this.loaded = false
+    triggerState() {
+      this.updateQueryState();
+      this.loadIcons()
+      console.log("test")
+    },
 
-      if (!itemTypesIconMapping[this.iconItemTypeSearch]) {
-        return
+    loadIcons() {
+      this.loaded = false;
+
+      // icon slot based search
+      if (this.iconSlotSearch > 0) {
+        let itemAdded           = {};
+        this.iconItemTypeSearch = 0
+
+        if (!itemSlotIconMapping[this.iconSlotSearch]) {
+          return
+        }
+
+        let filteredIcons = []
+        itemSlotIconMapping[this.iconSlotSearch].forEach((icon) => {
+          if (iconExists[icon] && !itemAdded[icon]) {
+            filteredIcons.push(icon)
+            itemAdded[icon] = 1
+          }
+        })
+
+        this.filteredIcons = filteredIcons
+        this.loaded        = true;
+        return;
       }
 
-      let icons = []
-      itemTypesIconMapping[this.iconItemTypeSearch].forEach((icon) => {
-        if (iconExists[icon] && !itemAdded[icon]) {
-          icons.push(icon)
-          itemAdded[icon] = 1
+      // icon item type search
+      if (this.iconItemTypeSearch > 0) {
+        let itemAdded       = {};
+        this.iconSlotSearch = 0
+
+        if (!itemTypesIconMapping[this.iconItemTypeSearch]) {
+          return
         }
-      })
 
+        let filteredIcons = []
+        itemTypesIconMapping[this.iconItemTypeSearch].forEach((icon) => {
+          if (iconExists[icon] && !itemAdded[icon]) {
+            filteredIcons.push(icon)
+            itemAdded[icon] = 1
+          }
+        })
+
+        this.filteredIcons = filteredIcons
+        this.loaded        = true;
+        return;
+      }
+
+      // if no filters or searches were hit, we load them all
       this.filteredIcons = icons
-      this.loaded        = true
-    },
-
-    // zero state loader
-    loadModels: function () {
-      this.loaded        = false
-      this.filteredIcons = icons;
-      this.loaded        = true
+      this.loaded        = true;
     },
 
     // load meta data
@@ -193,7 +215,7 @@ export default {
 
       // Item Slot
       this.iconSlotOptions = [];
-      let iconSlotOptions = [];
+      let iconSlotOptions  = [];
       for (let slot = 0; slot <= 19; slot++) {
         const slotDescription = itemSlots[slot][0];
         const slotNumbers     = itemSlots[slot][1];
@@ -215,7 +237,7 @@ export default {
 
       // Item Type
       this.iconItemTypeOptions = [];
-      let iconItemTypeOptions = [];
+      let iconItemTypeOptions  = [];
       for (const [type, description] of Object.entries(itemTypes)) {
 
         let itemCountDescription = "";
@@ -236,11 +258,13 @@ export default {
     }
   },
   async mounted() {
+    this.loadQueryState()
+
     this.loaded = false;
     this.loadModelMeta()
 
     setTimeout(() => {
-      this.loadModels()
+      this.loadIcons()
     }, 50);
   }
 }
