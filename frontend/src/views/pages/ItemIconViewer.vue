@@ -100,10 +100,10 @@ export default {
       let queryState = {};
 
       if (this.iconSlotSearch !== 0) {
-        queryState.slot = this.iconSlotSearch
+        queryState.iconSlot = this.iconSlotSearch
       }
       if (this.iconItemTypeSearch !== 0) {
-        queryState.itemType = this.iconItemTypeSearch
+        queryState.iconItemType = this.iconItemTypeSearch
       }
 
       this.$router.push(
@@ -117,11 +117,11 @@ export default {
 
     // usually from loading initial state
     loadQueryState: function () {
-      if (this.$route.query.slot) {
-        this.iconSlotSearch = this.$route.query.slot;
+      if (this.$route.query.iconSlot) {
+        this.iconSlotSearch = this.$route.query.iconSlot;
       }
-      if (this.$route.query.itemType) {
-        this.iconItemTypeSearch = this.$route.query.itemType;
+      if (this.$route.query.iconItemType) {
+        this.iconItemTypeSearch = this.$route.query.iconItemType;
       }
     },
 
