@@ -118,12 +118,13 @@ func (e *SpawnConditionController) updateSpawnCondition(c echo.Context) error {
 		)
 	}
 
-	err := e.db.Get(models.SpawnCondition{}, c).Model(&models.SpawnCondition{}).First(&models.SpawnCondition{}, spawnCondition.ID).Error
+    entity := models.SpawnCondition{}
+	err := e.db.Get(models.SpawnCondition{}, c).Model(&models.SpawnCondition{}).First(&entity, spawnCondition.ID).Error
 	if err != nil || spawnCondition.ID == 0 {
 		return c.JSON(http.StatusNotFound, echo.Map{"error": "Cannot find entity"})
 	}
 
-	err = e.db.Get(models.SpawnCondition{}, c).Model(&models.SpawnCondition{}).Updates(&spawnCondition).Error
+	err = e.db.Get(models.SpawnCondition{}, c).Model(&entity).Updates(&spawnCondition).Error
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error updating entity: [%v]", err)})
 	}

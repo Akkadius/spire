@@ -118,12 +118,13 @@ func (e *GraveyardController) updateGraveyard(c echo.Context) error {
 		)
 	}
 
-	err := e.db.Get(models.Graveyard{}, c).Model(&models.Graveyard{}).First(&models.Graveyard{}, graveyard.ID).Error
+    entity := models.Graveyard{}
+	err := e.db.Get(models.Graveyard{}, c).Model(&models.Graveyard{}).First(&entity, graveyard.ID).Error
 	if err != nil || graveyard.ID == 0 {
 		return c.JSON(http.StatusNotFound, echo.Map{"error": "Cannot find entity"})
 	}
 
-	err = e.db.Get(models.Graveyard{}, c).Model(&models.Graveyard{}).Updates(&graveyard).Error
+	err = e.db.Get(models.Graveyard{}, c).Model(&entity).Updates(&graveyard).Error
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error updating entity: [%v]", err)})
 	}

@@ -118,12 +118,13 @@ func (e *CharacterItemRecastController) updateCharacterItemRecast(c echo.Context
 		)
 	}
 
-	err := e.db.Get(models.CharacterItemRecast{}, c).Model(&models.CharacterItemRecast{}).First(&models.CharacterItemRecast{}, characterItemRecast.ID).Error
+    entity := models.CharacterItemRecast{}
+	err := e.db.Get(models.CharacterItemRecast{}, c).Model(&models.CharacterItemRecast{}).First(&entity, characterItemRecast.ID).Error
 	if err != nil || characterItemRecast.ID == 0 {
 		return c.JSON(http.StatusNotFound, echo.Map{"error": "Cannot find entity"})
 	}
 
-	err = e.db.Get(models.CharacterItemRecast{}, c).Model(&models.CharacterItemRecast{}).Updates(&characterItemRecast).Error
+	err = e.db.Get(models.CharacterItemRecast{}, c).Model(&entity).Updates(&characterItemRecast).Error
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error updating entity: [%v]", err)})
 	}

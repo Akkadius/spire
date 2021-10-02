@@ -118,12 +118,13 @@ func (e *TasksetController) updateTaskset(c echo.Context) error {
 		)
 	}
 
-	err := e.db.Get(models.Taskset{}, c).Model(&models.Taskset{}).First(&models.Taskset{}, taskset.ID).Error
+    entity := models.Taskset{}
+	err := e.db.Get(models.Taskset{}, c).Model(&models.Taskset{}).First(&entity, taskset.ID).Error
 	if err != nil || taskset.ID == 0 {
 		return c.JSON(http.StatusNotFound, echo.Map{"error": "Cannot find entity"})
 	}
 
-	err = e.db.Get(models.Taskset{}, c).Model(&models.Taskset{}).Updates(&taskset).Error
+	err = e.db.Get(models.Taskset{}, c).Model(&entity).Updates(&taskset).Error
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error updating entity: [%v]", err)})
 	}

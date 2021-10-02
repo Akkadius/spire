@@ -118,12 +118,13 @@ func (e *CharacterExpeditionLockoutController) updateCharacterExpeditionLockout(
 		)
 	}
 
-	err := e.db.Get(models.CharacterExpeditionLockout{}, c).Model(&models.CharacterExpeditionLockout{}).First(&models.CharacterExpeditionLockout{}, characterExpeditionLockout.ID).Error
+    entity := models.CharacterExpeditionLockout{}
+	err := e.db.Get(models.CharacterExpeditionLockout{}, c).Model(&models.CharacterExpeditionLockout{}).First(&entity, characterExpeditionLockout.ID).Error
 	if err != nil || characterExpeditionLockout.ID == 0 {
 		return c.JSON(http.StatusNotFound, echo.Map{"error": "Cannot find entity"})
 	}
 
-	err = e.db.Get(models.CharacterExpeditionLockout{}, c).Model(&models.CharacterExpeditionLockout{}).Updates(&characterExpeditionLockout).Error
+	err = e.db.Get(models.CharacterExpeditionLockout{}, c).Model(&entity).Updates(&characterExpeditionLockout).Error
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error updating entity: [%v]", err)})
 	}

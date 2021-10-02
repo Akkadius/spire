@@ -118,12 +118,13 @@ func (e *CharacterPotionbeltController) updateCharacterPotionbelt(c echo.Context
 		)
 	}
 
-	err := e.db.Get(models.CharacterPotionbelt{}, c).Model(&models.CharacterPotionbelt{}).First(&models.CharacterPotionbelt{}, characterPotionbelt.ID).Error
+    entity := models.CharacterPotionbelt{}
+	err := e.db.Get(models.CharacterPotionbelt{}, c).Model(&models.CharacterPotionbelt{}).First(&entity, characterPotionbelt.ID).Error
 	if err != nil || characterPotionbelt.ID == 0 {
 		return c.JSON(http.StatusNotFound, echo.Map{"error": "Cannot find entity"})
 	}
 
-	err = e.db.Get(models.CharacterPotionbelt{}, c).Model(&models.CharacterPotionbelt{}).Updates(&characterPotionbelt).Error
+	err = e.db.Get(models.CharacterPotionbelt{}, c).Model(&entity).Updates(&characterPotionbelt).Error
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error updating entity: [%v]", err)})
 	}

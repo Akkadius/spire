@@ -118,12 +118,13 @@ func (e *GlobalLootController) updateGlobalLoot(c echo.Context) error {
 		)
 	}
 
-	err := e.db.Get(models.GlobalLoot{}, c).Model(&models.GlobalLoot{}).First(&models.GlobalLoot{}, globalLoot.ID).Error
+    entity := models.GlobalLoot{}
+	err := e.db.Get(models.GlobalLoot{}, c).Model(&models.GlobalLoot{}).First(&entity, globalLoot.ID).Error
 	if err != nil || globalLoot.ID == 0 {
 		return c.JSON(http.StatusNotFound, echo.Map{"error": "Cannot find entity"})
 	}
 
-	err = e.db.Get(models.GlobalLoot{}, c).Model(&models.GlobalLoot{}).Updates(&globalLoot).Error
+	err = e.db.Get(models.GlobalLoot{}, c).Model(&entity).Updates(&globalLoot).Error
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error updating entity: [%v]", err)})
 	}

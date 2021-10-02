@@ -118,12 +118,13 @@ func (e *CharacterSpellController) updateCharacterSpell(c echo.Context) error {
 		)
 	}
 
-	err := e.db.Get(models.CharacterSpell{}, c).Model(&models.CharacterSpell{}).First(&models.CharacterSpell{}, characterSpell.ID).Error
+    entity := models.CharacterSpell{}
+	err := e.db.Get(models.CharacterSpell{}, c).Model(&models.CharacterSpell{}).First(&entity, characterSpell.ID).Error
 	if err != nil || characterSpell.ID == 0 {
 		return c.JSON(http.StatusNotFound, echo.Map{"error": "Cannot find entity"})
 	}
 
-	err = e.db.Get(models.CharacterSpell{}, c).Model(&models.CharacterSpell{}).Updates(&characterSpell).Error
+	err = e.db.Get(models.CharacterSpell{}, c).Model(&entity).Updates(&characterSpell).Error
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error updating entity: [%v]", err)})
 	}

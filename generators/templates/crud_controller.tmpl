@@ -118,12 +118,13 @@ func (e *{{.EntityName}}Controller) update{{.EntityName}}(c echo.Context) error 
 		)
 	}
 
-	err := e.db.Get(models.{{.EntityName}}{}, c).Model(&models.{{.EntityName}}{}).First(&models.{{.EntityName}}{}, {{.EntityNameCamel}}.{{.KeyName}}).Error
+    entity := models.{{.EntityName}}{}
+	err := e.db.Get(models.{{.EntityName}}{}, c).Model(&models.{{.EntityName}}{}).First(&entity, {{.EntityNameCamel}}.{{.KeyName}}).Error
 	if err != nil || {{.EntityNameCamel}}.{{.KeyName}} == 0 {
 		return c.JSON(http.StatusNotFound, echo.Map{"error": "Cannot find entity"})
 	}
 
-	err = e.db.Get(models.{{.EntityName}}{}, c).Model(&models.{{.EntityName}}{}).Updates(&{{.EntityNameCamel}}).Error
+	err = e.db.Get(models.{{.EntityName}}{}, c).Model(&entity).Updates(&{{.EntityNameCamel}}).Error
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error updating entity: [%v]", err)})
 	}

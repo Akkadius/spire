@@ -118,12 +118,13 @@ func (e *SpawngroupController) updateSpawngroup(c echo.Context) error {
 		)
 	}
 
-	err := e.db.Get(models.Spawngroup{}, c).Model(&models.Spawngroup{}).First(&models.Spawngroup{}, spawngroup.ID).Error
+    entity := models.Spawngroup{}
+	err := e.db.Get(models.Spawngroup{}, c).Model(&models.Spawngroup{}).First(&entity, spawngroup.ID).Error
 	if err != nil || spawngroup.ID == 0 {
 		return c.JSON(http.StatusNotFound, echo.Map{"error": "Cannot find entity"})
 	}
 
-	err = e.db.Get(models.Spawngroup{}, c).Model(&models.Spawngroup{}).Updates(&spawngroup).Error
+	err = e.db.Get(models.Spawngroup{}, c).Model(&entity).Updates(&spawngroup).Error
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error updating entity: [%v]", err)})
 	}

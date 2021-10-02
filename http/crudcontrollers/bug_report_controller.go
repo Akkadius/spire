@@ -118,12 +118,13 @@ func (e *BugReportController) updateBugReport(c echo.Context) error {
 		)
 	}
 
-	err := e.db.Get(models.BugReport{}, c).Model(&models.BugReport{}).First(&models.BugReport{}, bugReport.ID).Error
+    entity := models.BugReport{}
+	err := e.db.Get(models.BugReport{}, c).Model(&models.BugReport{}).First(&entity, bugReport.ID).Error
 	if err != nil || bugReport.ID == 0 {
 		return c.JSON(http.StatusNotFound, echo.Map{"error": "Cannot find entity"})
 	}
 
-	err = e.db.Get(models.BugReport{}, c).Model(&models.BugReport{}).Updates(&bugReport).Error
+	err = e.db.Get(models.BugReport{}, c).Model(&entity).Updates(&bugReport).Error
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error updating entity: [%v]", err)})
 	}

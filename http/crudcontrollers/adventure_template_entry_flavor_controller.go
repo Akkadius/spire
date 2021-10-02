@@ -118,12 +118,13 @@ func (e *AdventureTemplateEntryFlavorController) updateAdventureTemplateEntryFla
 		)
 	}
 
-	err := e.db.Get(models.AdventureTemplateEntryFlavor{}, c).Model(&models.AdventureTemplateEntryFlavor{}).First(&models.AdventureTemplateEntryFlavor{}, adventureTemplateEntryFlavor.ID).Error
+    entity := models.AdventureTemplateEntryFlavor{}
+	err := e.db.Get(models.AdventureTemplateEntryFlavor{}, c).Model(&models.AdventureTemplateEntryFlavor{}).First(&entity, adventureTemplateEntryFlavor.ID).Error
 	if err != nil || adventureTemplateEntryFlavor.ID == 0 {
 		return c.JSON(http.StatusNotFound, echo.Map{"error": "Cannot find entity"})
 	}
 
-	err = e.db.Get(models.AdventureTemplateEntryFlavor{}, c).Model(&models.AdventureTemplateEntryFlavor{}).Updates(&adventureTemplateEntryFlavor).Error
+	err = e.db.Get(models.AdventureTemplateEntryFlavor{}, c).Model(&entity).Updates(&adventureTemplateEntryFlavor).Error
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error updating entity: [%v]", err)})
 	}

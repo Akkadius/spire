@@ -118,12 +118,13 @@ func (e *ForageController) updateForage(c echo.Context) error {
 		)
 	}
 
-	err := e.db.Get(models.Forage{}, c).Model(&models.Forage{}).First(&models.Forage{}, forage.ID).Error
+    entity := models.Forage{}
+	err := e.db.Get(models.Forage{}, c).Model(&models.Forage{}).First(&entity, forage.ID).Error
 	if err != nil || forage.ID == 0 {
 		return c.JSON(http.StatusNotFound, echo.Map{"error": "Cannot find entity"})
 	}
 
-	err = e.db.Get(models.Forage{}, c).Model(&models.Forage{}).Updates(&forage).Error
+	err = e.db.Get(models.Forage{}, c).Model(&entity).Updates(&forage).Error
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error updating entity: [%v]", err)})
 	}

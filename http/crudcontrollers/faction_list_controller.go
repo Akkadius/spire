@@ -118,12 +118,13 @@ func (e *FactionListController) updateFactionList(c echo.Context) error {
 		)
 	}
 
-	err := e.db.Get(models.FactionList{}, c).Model(&models.FactionList{}).First(&models.FactionList{}, factionList.ID).Error
+    entity := models.FactionList{}
+	err := e.db.Get(models.FactionList{}, c).Model(&models.FactionList{}).First(&entity, factionList.ID).Error
 	if err != nil || factionList.ID == 0 {
 		return c.JSON(http.StatusNotFound, echo.Map{"error": "Cannot find entity"})
 	}
 
-	err = e.db.Get(models.FactionList{}, c).Model(&models.FactionList{}).Updates(&factionList).Error
+	err = e.db.Get(models.FactionList{}, c).Model(&entity).Updates(&factionList).Error
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error updating entity: [%v]", err)})
 	}

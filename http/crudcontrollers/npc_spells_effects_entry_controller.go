@@ -118,12 +118,13 @@ func (e *NpcSpellsEffectsEntryController) updateNpcSpellsEffectsEntry(c echo.Con
 		)
 	}
 
-	err := e.db.Get(models.NpcSpellsEffectsEntry{}, c).Model(&models.NpcSpellsEffectsEntry{}).First(&models.NpcSpellsEffectsEntry{}, npcSpellsEffectsEntry.ID).Error
+    entity := models.NpcSpellsEffectsEntry{}
+	err := e.db.Get(models.NpcSpellsEffectsEntry{}, c).Model(&models.NpcSpellsEffectsEntry{}).First(&entity, npcSpellsEffectsEntry.ID).Error
 	if err != nil || npcSpellsEffectsEntry.ID == 0 {
 		return c.JSON(http.StatusNotFound, echo.Map{"error": "Cannot find entity"})
 	}
 
-	err = e.db.Get(models.NpcSpellsEffectsEntry{}, c).Model(&models.NpcSpellsEffectsEntry{}).Updates(&npcSpellsEffectsEntry).Error
+	err = e.db.Get(models.NpcSpellsEffectsEntry{}, c).Model(&entity).Updates(&npcSpellsEffectsEntry).Error
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error updating entity: [%v]", err)})
 	}

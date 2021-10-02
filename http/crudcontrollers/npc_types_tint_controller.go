@@ -118,12 +118,13 @@ func (e *NpcTypesTintController) updateNpcTypesTint(c echo.Context) error {
 		)
 	}
 
-	err := e.db.Get(models.NpcTypesTint{}, c).Model(&models.NpcTypesTint{}).First(&models.NpcTypesTint{}, npcTypesTint.ID).Error
+    entity := models.NpcTypesTint{}
+	err := e.db.Get(models.NpcTypesTint{}, c).Model(&models.NpcTypesTint{}).First(&entity, npcTypesTint.ID).Error
 	if err != nil || npcTypesTint.ID == 0 {
 		return c.JSON(http.StatusNotFound, echo.Map{"error": "Cannot find entity"})
 	}
 
-	err = e.db.Get(models.NpcTypesTint{}, c).Model(&models.NpcTypesTint{}).Updates(&npcTypesTint).Error
+	err = e.db.Get(models.NpcTypesTint{}, c).Model(&entity).Updates(&npcTypesTint).Error
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error updating entity: [%v]", err)})
 	}

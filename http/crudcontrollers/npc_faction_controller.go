@@ -118,12 +118,13 @@ func (e *NpcFactionController) updateNpcFaction(c echo.Context) error {
 		)
 	}
 
-	err := e.db.Get(models.NpcFaction{}, c).Model(&models.NpcFaction{}).First(&models.NpcFaction{}, npcFaction.ID).Error
+    entity := models.NpcFaction{}
+	err := e.db.Get(models.NpcFaction{}, c).Model(&models.NpcFaction{}).First(&entity, npcFaction.ID).Error
 	if err != nil || npcFaction.ID == 0 {
 		return c.JSON(http.StatusNotFound, echo.Map{"error": "Cannot find entity"})
 	}
 
-	err = e.db.Get(models.NpcFaction{}, c).Model(&models.NpcFaction{}).Updates(&npcFaction).Error
+	err = e.db.Get(models.NpcFaction{}, c).Model(&entity).Updates(&npcFaction).Error
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error updating entity: [%v]", err)})
 	}

@@ -118,12 +118,13 @@ func (e *HackerController) updateHacker(c echo.Context) error {
 		)
 	}
 
-	err := e.db.Get(models.Hacker{}, c).Model(&models.Hacker{}).First(&models.Hacker{}, hacker.ID).Error
+    entity := models.Hacker{}
+	err := e.db.Get(models.Hacker{}, c).Model(&models.Hacker{}).First(&entity, hacker.ID).Error
 	if err != nil || hacker.ID == 0 {
 		return c.JSON(http.StatusNotFound, echo.Map{"error": "Cannot find entity"})
 	}
 
-	err = e.db.Get(models.Hacker{}, c).Model(&models.Hacker{}).Updates(&hacker).Error
+	err = e.db.Get(models.Hacker{}, c).Model(&entity).Updates(&hacker).Error
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error updating entity: [%v]", err)})
 	}

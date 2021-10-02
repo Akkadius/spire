@@ -118,12 +118,13 @@ func (e *ZonePointController) updateZonePoint(c echo.Context) error {
 		)
 	}
 
-	err := e.db.Get(models.ZonePoint{}, c).Model(&models.ZonePoint{}).First(&models.ZonePoint{}, zonePoint.ID).Error
+    entity := models.ZonePoint{}
+	err := e.db.Get(models.ZonePoint{}, c).Model(&models.ZonePoint{}).First(&entity, zonePoint.ID).Error
 	if err != nil || zonePoint.ID == 0 {
 		return c.JSON(http.StatusNotFound, echo.Map{"error": "Cannot find entity"})
 	}
 
-	err = e.db.Get(models.ZonePoint{}, c).Model(&models.ZonePoint{}).Updates(&zonePoint).Error
+	err = e.db.Get(models.ZonePoint{}, c).Model(&entity).Updates(&zonePoint).Error
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error updating entity: [%v]", err)})
 	}

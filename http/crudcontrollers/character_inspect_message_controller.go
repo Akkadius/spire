@@ -118,12 +118,13 @@ func (e *CharacterInspectMessageController) updateCharacterInspectMessage(c echo
 		)
 	}
 
-	err := e.db.Get(models.CharacterInspectMessage{}, c).Model(&models.CharacterInspectMessage{}).First(&models.CharacterInspectMessage{}, characterInspectMessage.ID).Error
+    entity := models.CharacterInspectMessage{}
+	err := e.db.Get(models.CharacterInspectMessage{}, c).Model(&models.CharacterInspectMessage{}).First(&entity, characterInspectMessage.ID).Error
 	if err != nil || characterInspectMessage.ID == 0 {
 		return c.JSON(http.StatusNotFound, echo.Map{"error": "Cannot find entity"})
 	}
 
-	err = e.db.Get(models.CharacterInspectMessage{}, c).Model(&models.CharacterInspectMessage{}).Updates(&characterInspectMessage).Error
+	err = e.db.Get(models.CharacterInspectMessage{}, c).Model(&entity).Updates(&characterInspectMessage).Error
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error updating entity: [%v]", err)})
 	}

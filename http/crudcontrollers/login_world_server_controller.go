@@ -118,12 +118,13 @@ func (e *LoginWorldServerController) updateLoginWorldServer(c echo.Context) erro
 		)
 	}
 
-	err := e.db.Get(models.LoginWorldServer{}, c).Model(&models.LoginWorldServer{}).First(&models.LoginWorldServer{}, loginWorldServer.ID).Error
+    entity := models.LoginWorldServer{}
+	err := e.db.Get(models.LoginWorldServer{}, c).Model(&models.LoginWorldServer{}).First(&entity, loginWorldServer.ID).Error
 	if err != nil || loginWorldServer.ID == 0 {
 		return c.JSON(http.StatusNotFound, echo.Map{"error": "Cannot find entity"})
 	}
 
-	err = e.db.Get(models.LoginWorldServer{}, c).Model(&models.LoginWorldServer{}).Updates(&loginWorldServer).Error
+	err = e.db.Get(models.LoginWorldServer{}, c).Model(&entity).Updates(&loginWorldServer).Error
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error updating entity: [%v]", err)})
 	}

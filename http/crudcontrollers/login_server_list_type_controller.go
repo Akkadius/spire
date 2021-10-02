@@ -118,12 +118,13 @@ func (e *LoginServerListTypeController) updateLoginServerListType(c echo.Context
 		)
 	}
 
-	err := e.db.Get(models.LoginServerListType{}, c).Model(&models.LoginServerListType{}).First(&models.LoginServerListType{}, loginServerListType.ID).Error
+    entity := models.LoginServerListType{}
+	err := e.db.Get(models.LoginServerListType{}, c).Model(&models.LoginServerListType{}).First(&entity, loginServerListType.ID).Error
 	if err != nil || loginServerListType.ID == 0 {
 		return c.JSON(http.StatusNotFound, echo.Map{"error": "Cannot find entity"})
 	}
 
-	err = e.db.Get(models.LoginServerListType{}, c).Model(&models.LoginServerListType{}).Updates(&loginServerListType).Error
+	err = e.db.Get(models.LoginServerListType{}, c).Model(&entity).Updates(&loginServerListType).Error
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error updating entity: [%v]", err)})
 	}

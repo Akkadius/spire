@@ -118,12 +118,13 @@ func (e *AaAbilityController) updateAaAbility(c echo.Context) error {
 		)
 	}
 
-	err := e.db.Get(models.AaAbility{}, c).Model(&models.AaAbility{}).First(&models.AaAbility{}, aaAbility.ID).Error
+    entity := models.AaAbility{}
+	err := e.db.Get(models.AaAbility{}, c).Model(&models.AaAbility{}).First(&entity, aaAbility.ID).Error
 	if err != nil || aaAbility.ID == 0 {
 		return c.JSON(http.StatusNotFound, echo.Map{"error": "Cannot find entity"})
 	}
 
-	err = e.db.Get(models.AaAbility{}, c).Model(&models.AaAbility{}).Updates(&aaAbility).Error
+	err = e.db.Get(models.AaAbility{}, c).Model(&entity).Updates(&aaAbility).Error
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error updating entity: [%v]", err)})
 	}

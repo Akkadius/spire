@@ -118,12 +118,13 @@ func (e *DynamicZoneController) updateDynamicZone(c echo.Context) error {
 		)
 	}
 
-	err := e.db.Get(models.DynamicZone{}, c).Model(&models.DynamicZone{}).First(&models.DynamicZone{}, dynamicZone.ID).Error
+    entity := models.DynamicZone{}
+	err := e.db.Get(models.DynamicZone{}, c).Model(&models.DynamicZone{}).First(&entity, dynamicZone.ID).Error
 	if err != nil || dynamicZone.ID == 0 {
 		return c.JSON(http.StatusNotFound, echo.Map{"error": "Cannot find entity"})
 	}
 
-	err = e.db.Get(models.DynamicZone{}, c).Model(&models.DynamicZone{}).Updates(&dynamicZone).Error
+	err = e.db.Get(models.DynamicZone{}, c).Model(&entity).Updates(&dynamicZone).Error
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error updating entity: [%v]", err)})
 	}

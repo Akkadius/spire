@@ -118,12 +118,13 @@ func (e *AaRankController) updateAaRank(c echo.Context) error {
 		)
 	}
 
-	err := e.db.Get(models.AaRank{}, c).Model(&models.AaRank{}).First(&models.AaRank{}, aaRank.ID).Error
+    entity := models.AaRank{}
+	err := e.db.Get(models.AaRank{}, c).Model(&models.AaRank{}).First(&entity, aaRank.ID).Error
 	if err != nil || aaRank.ID == 0 {
 		return c.JSON(http.StatusNotFound, echo.Map{"error": "Cannot find entity"})
 	}
 
-	err = e.db.Get(models.AaRank{}, c).Model(&models.AaRank{}).Updates(&aaRank).Error
+	err = e.db.Get(models.AaRank{}, c).Model(&entity).Updates(&aaRank).Error
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error updating entity: [%v]", err)})
 	}

@@ -118,12 +118,13 @@ func (e *DoorController) updateDoor(c echo.Context) error {
 		)
 	}
 
-	err := e.db.Get(models.Door{}, c).Model(&models.Door{}).First(&models.Door{}, door.ID).Error
+    entity := models.Door{}
+	err := e.db.Get(models.Door{}, c).Model(&models.Door{}).First(&entity, door.ID).Error
 	if err != nil || door.ID == 0 {
 		return c.JSON(http.StatusNotFound, echo.Map{"error": "Cannot find entity"})
 	}
 
-	err = e.db.Get(models.Door{}, c).Model(&models.Door{}).Updates(&door).Error
+	err = e.db.Get(models.Door{}, c).Model(&entity).Updates(&door).Error
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error updating entity: [%v]", err)})
 	}

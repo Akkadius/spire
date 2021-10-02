@@ -118,12 +118,13 @@ func (e *CharacterAuraController) updateCharacterAura(c echo.Context) error {
 		)
 	}
 
-	err := e.db.Get(models.CharacterAura{}, c).Model(&models.CharacterAura{}).First(&models.CharacterAura{}, characterAura.ID).Error
+    entity := models.CharacterAura{}
+	err := e.db.Get(models.CharacterAura{}, c).Model(&models.CharacterAura{}).First(&entity, characterAura.ID).Error
 	if err != nil || characterAura.ID == 0 {
 		return c.JSON(http.StatusNotFound, echo.Map{"error": "Cannot find entity"})
 	}
 
-	err = e.db.Get(models.CharacterAura{}, c).Model(&models.CharacterAura{}).Updates(&characterAura).Error
+	err = e.db.Get(models.CharacterAura{}, c).Model(&entity).Updates(&characterAura).Error
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error updating entity: [%v]", err)})
 	}

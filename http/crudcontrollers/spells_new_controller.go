@@ -118,12 +118,13 @@ func (e *SpellsNewController) updateSpellsNew(c echo.Context) error {
 		)
 	}
 
-	err := e.db.Get(models.SpellsNew{}, c).Model(&models.SpellsNew{}).First(&models.SpellsNew{}, spellsNew.ID).Error
+    entity := models.SpellsNew{}
+	err := e.db.Get(models.SpellsNew{}, c).Model(&models.SpellsNew{}).First(&entity, spellsNew.ID).Error
 	if err != nil || spellsNew.ID == 0 {
 		return c.JSON(http.StatusNotFound, echo.Map{"error": "Cannot find entity"})
 	}
 
-	err = e.db.Get(models.SpellsNew{}, c).Model(&models.SpellsNew{}).Updates(&spellsNew).Error
+	err = e.db.Get(models.SpellsNew{}, c).Model(&entity).Updates(&spellsNew).Error
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error updating entity: [%v]", err)})
 	}

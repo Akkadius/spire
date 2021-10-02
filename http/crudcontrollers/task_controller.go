@@ -118,12 +118,13 @@ func (e *TaskController) updateTask(c echo.Context) error {
 		)
 	}
 
-	err := e.db.Get(models.Task{}, c).Model(&models.Task{}).First(&models.Task{}, task.ID).Error
+    entity := models.Task{}
+	err := e.db.Get(models.Task{}, c).Model(&models.Task{}).First(&entity, task.ID).Error
 	if err != nil || task.ID == 0 {
 		return c.JSON(http.StatusNotFound, echo.Map{"error": "Cannot find entity"})
 	}
 
-	err = e.db.Get(models.Task{}, c).Model(&models.Task{}).Updates(&task).Error
+	err = e.db.Get(models.Task{}, c).Model(&entity).Updates(&task).Error
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error updating entity: [%v]", err)})
 	}

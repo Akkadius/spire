@@ -118,12 +118,13 @@ func (e *EventlogController) updateEventlog(c echo.Context) error {
 		)
 	}
 
-	err := e.db.Get(models.Eventlog{}, c).Model(&models.Eventlog{}).First(&models.Eventlog{}, eventlog.ID).Error
+    entity := models.Eventlog{}
+	err := e.db.Get(models.Eventlog{}, c).Model(&models.Eventlog{}).First(&entity, eventlog.ID).Error
 	if err != nil || eventlog.ID == 0 {
 		return c.JSON(http.StatusNotFound, echo.Map{"error": "Cannot find entity"})
 	}
 
-	err = e.db.Get(models.Eventlog{}, c).Model(&models.Eventlog{}).Updates(&eventlog).Error
+	err = e.db.Get(models.Eventlog{}, c).Model(&entity).Updates(&eventlog).Error
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error updating entity: [%v]", err)})
 	}

@@ -118,12 +118,13 @@ func (e *TributeController) updateTribute(c echo.Context) error {
 		)
 	}
 
-	err := e.db.Get(models.Tribute{}, c).Model(&models.Tribute{}).First(&models.Tribute{}, tribute.ID).Error
+    entity := models.Tribute{}
+	err := e.db.Get(models.Tribute{}, c).Model(&models.Tribute{}).First(&entity, tribute.ID).Error
 	if err != nil || tribute.ID == 0 {
 		return c.JSON(http.StatusNotFound, echo.Map{"error": "Cannot find entity"})
 	}
 
-	err = e.db.Get(models.Tribute{}, c).Model(&models.Tribute{}).Updates(&tribute).Error
+	err = e.db.Get(models.Tribute{}, c).Model(&entity).Updates(&tribute).Error
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error updating entity: [%v]", err)})
 	}

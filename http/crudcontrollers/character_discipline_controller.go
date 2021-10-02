@@ -118,12 +118,13 @@ func (e *CharacterDisciplineController) updateCharacterDiscipline(c echo.Context
 		)
 	}
 
-	err := e.db.Get(models.CharacterDiscipline{}, c).Model(&models.CharacterDiscipline{}).First(&models.CharacterDiscipline{}, characterDiscipline.ID).Error
+    entity := models.CharacterDiscipline{}
+	err := e.db.Get(models.CharacterDiscipline{}, c).Model(&models.CharacterDiscipline{}).First(&entity, characterDiscipline.ID).Error
 	if err != nil || characterDiscipline.ID == 0 {
 		return c.JSON(http.StatusNotFound, echo.Map{"error": "Cannot find entity"})
 	}
 
-	err = e.db.Get(models.CharacterDiscipline{}, c).Model(&models.CharacterDiscipline{}).Updates(&characterDiscipline).Error
+	err = e.db.Get(models.CharacterDiscipline{}, c).Model(&entity).Updates(&characterDiscipline).Error
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error updating entity: [%v]", err)})
 	}

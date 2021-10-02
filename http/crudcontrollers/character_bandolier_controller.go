@@ -118,12 +118,13 @@ func (e *CharacterBandolierController) updateCharacterBandolier(c echo.Context) 
 		)
 	}
 
-	err := e.db.Get(models.CharacterBandolier{}, c).Model(&models.CharacterBandolier{}).First(&models.CharacterBandolier{}, characterBandolier.ID).Error
+    entity := models.CharacterBandolier{}
+	err := e.db.Get(models.CharacterBandolier{}, c).Model(&models.CharacterBandolier{}).First(&entity, characterBandolier.ID).Error
 	if err != nil || characterBandolier.ID == 0 {
 		return c.JSON(http.StatusNotFound, echo.Map{"error": "Cannot find entity"})
 	}
 
-	err = e.db.Get(models.CharacterBandolier{}, c).Model(&models.CharacterBandolier{}).Updates(&characterBandolier).Error
+	err = e.db.Get(models.CharacterBandolier{}, c).Model(&entity).Updates(&characterBandolier).Error
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error updating entity: [%v]", err)})
 	}

@@ -118,12 +118,13 @@ func (e *TrapController) updateTrap(c echo.Context) error {
 		)
 	}
 
-	err := e.db.Get(models.Trap{}, c).Model(&models.Trap{}).First(&models.Trap{}, trap.ID).Error
+    entity := models.Trap{}
+	err := e.db.Get(models.Trap{}, c).Model(&models.Trap{}).First(&entity, trap.ID).Error
 	if err != nil || trap.ID == 0 {
 		return c.JSON(http.StatusNotFound, echo.Map{"error": "Cannot find entity"})
 	}
 
-	err = e.db.Get(models.Trap{}, c).Model(&models.Trap{}).Updates(&trap).Error
+	err = e.db.Get(models.Trap{}, c).Model(&entity).Updates(&trap).Error
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error updating entity: [%v]", err)})
 	}

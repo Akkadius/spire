@@ -118,12 +118,13 @@ func (e *TradeskillRecipeEntryController) updateTradeskillRecipeEntry(c echo.Con
 		)
 	}
 
-	err := e.db.Get(models.TradeskillRecipeEntry{}, c).Model(&models.TradeskillRecipeEntry{}).First(&models.TradeskillRecipeEntry{}, tradeskillRecipeEntry.ID).Error
+    entity := models.TradeskillRecipeEntry{}
+	err := e.db.Get(models.TradeskillRecipeEntry{}, c).Model(&models.TradeskillRecipeEntry{}).First(&entity, tradeskillRecipeEntry.ID).Error
 	if err != nil || tradeskillRecipeEntry.ID == 0 {
 		return c.JSON(http.StatusNotFound, echo.Map{"error": "Cannot find entity"})
 	}
 
-	err = e.db.Get(models.TradeskillRecipeEntry{}, c).Model(&models.TradeskillRecipeEntry{}).Updates(&tradeskillRecipeEntry).Error
+	err = e.db.Get(models.TradeskillRecipeEntry{}, c).Model(&entity).Updates(&tradeskillRecipeEntry).Error
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error updating entity: [%v]", err)})
 	}

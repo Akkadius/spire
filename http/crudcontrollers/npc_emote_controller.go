@@ -118,12 +118,13 @@ func (e *NpcEmoteController) updateNpcEmote(c echo.Context) error {
 		)
 	}
 
-	err := e.db.Get(models.NpcEmote{}, c).Model(&models.NpcEmote{}).First(&models.NpcEmote{}, npcEmote.ID).Error
+    entity := models.NpcEmote{}
+	err := e.db.Get(models.NpcEmote{}, c).Model(&models.NpcEmote{}).First(&entity, npcEmote.ID).Error
 	if err != nil || npcEmote.ID == 0 {
 		return c.JSON(http.StatusNotFound, echo.Map{"error": "Cannot find entity"})
 	}
 
-	err = e.db.Get(models.NpcEmote{}, c).Model(&models.NpcEmote{}).Updates(&npcEmote).Error
+	err = e.db.Get(models.NpcEmote{}, c).Model(&entity).Updates(&npcEmote).Error
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error updating entity: [%v]", err)})
 	}

@@ -118,12 +118,13 @@ func (e *BlockedSpellController) updateBlockedSpell(c echo.Context) error {
 		)
 	}
 
-	err := e.db.Get(models.BlockedSpell{}, c).Model(&models.BlockedSpell{}).First(&models.BlockedSpell{}, blockedSpell.ID).Error
+    entity := models.BlockedSpell{}
+	err := e.db.Get(models.BlockedSpell{}, c).Model(&models.BlockedSpell{}).First(&entity, blockedSpell.ID).Error
 	if err != nil || blockedSpell.ID == 0 {
 		return c.JSON(http.StatusNotFound, echo.Map{"error": "Cannot find entity"})
 	}
 
-	err = e.db.Get(models.BlockedSpell{}, c).Model(&models.BlockedSpell{}).Updates(&blockedSpell).Error
+	err = e.db.Get(models.BlockedSpell{}, c).Model(&entity).Updates(&blockedSpell).Error
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error updating entity: [%v]", err)})
 	}

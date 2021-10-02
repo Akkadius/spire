@@ -118,12 +118,13 @@ func (e *GuildController) updateGuild(c echo.Context) error {
 		)
 	}
 
-	err := e.db.Get(models.Guild{}, c).Model(&models.Guild{}).First(&models.Guild{}, guild.ID).Error
+    entity := models.Guild{}
+	err := e.db.Get(models.Guild{}, c).Model(&models.Guild{}).First(&entity, guild.ID).Error
 	if err != nil || guild.ID == 0 {
 		return c.JSON(http.StatusNotFound, echo.Map{"error": "Cannot find entity"})
 	}
 
-	err = e.db.Get(models.Guild{}, c).Model(&models.Guild{}).Updates(&guild).Error
+	err = e.db.Get(models.Guild{}, c).Model(&entity).Updates(&guild).Error
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error updating entity: [%v]", err)})
 	}

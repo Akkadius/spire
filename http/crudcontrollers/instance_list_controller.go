@@ -118,12 +118,13 @@ func (e *InstanceListController) updateInstanceList(c echo.Context) error {
 		)
 	}
 
-	err := e.db.Get(models.InstanceList{}, c).Model(&models.InstanceList{}).First(&models.InstanceList{}, instanceList.ID).Error
+    entity := models.InstanceList{}
+	err := e.db.Get(models.InstanceList{}, c).Model(&models.InstanceList{}).First(&entity, instanceList.ID).Error
 	if err != nil || instanceList.ID == 0 {
 		return c.JSON(http.StatusNotFound, echo.Map{"error": "Cannot find entity"})
 	}
 
-	err = e.db.Get(models.InstanceList{}, c).Model(&models.InstanceList{}).Updates(&instanceList).Error
+	err = e.db.Get(models.InstanceList{}, c).Model(&entity).Updates(&instanceList).Error
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error updating entity: [%v]", err)})
 	}

@@ -118,12 +118,13 @@ func (e *CharCreatePointAllocationController) updateCharCreatePointAllocation(c 
 		)
 	}
 
-	err := e.db.Get(models.CharCreatePointAllocation{}, c).Model(&models.CharCreatePointAllocation{}).First(&models.CharCreatePointAllocation{}, charCreatePointAllocation.ID).Error
+    entity := models.CharCreatePointAllocation{}
+	err := e.db.Get(models.CharCreatePointAllocation{}, c).Model(&models.CharCreatePointAllocation{}).First(&entity, charCreatePointAllocation.ID).Error
 	if err != nil || charCreatePointAllocation.ID == 0 {
 		return c.JSON(http.StatusNotFound, echo.Map{"error": "Cannot find entity"})
 	}
 
-	err = e.db.Get(models.CharCreatePointAllocation{}, c).Model(&models.CharCreatePointAllocation{}).Updates(&charCreatePointAllocation).Error
+	err = e.db.Get(models.CharCreatePointAllocation{}, c).Model(&entity).Updates(&charCreatePointAllocation).Error
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error updating entity: [%v]", err)})
 	}

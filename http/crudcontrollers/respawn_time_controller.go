@@ -118,12 +118,13 @@ func (e *RespawnTimeController) updateRespawnTime(c echo.Context) error {
 		)
 	}
 
-	err := e.db.Get(models.RespawnTime{}, c).Model(&models.RespawnTime{}).First(&models.RespawnTime{}, respawnTime.ID).Error
+    entity := models.RespawnTime{}
+	err := e.db.Get(models.RespawnTime{}, c).Model(&models.RespawnTime{}).First(&entity, respawnTime.ID).Error
 	if err != nil || respawnTime.ID == 0 {
 		return c.JSON(http.StatusNotFound, echo.Map{"error": "Cannot find entity"})
 	}
 
-	err = e.db.Get(models.RespawnTime{}, c).Model(&models.RespawnTime{}).Updates(&respawnTime).Error
+	err = e.db.Get(models.RespawnTime{}, c).Model(&entity).Updates(&respawnTime).Error
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error updating entity: [%v]", err)})
 	}

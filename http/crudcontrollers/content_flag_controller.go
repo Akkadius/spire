@@ -118,12 +118,13 @@ func (e *ContentFlagController) updateContentFlag(c echo.Context) error {
 		)
 	}
 
-	err := e.db.Get(models.ContentFlag{}, c).Model(&models.ContentFlag{}).First(&models.ContentFlag{}, contentFlag.ID).Error
+    entity := models.ContentFlag{}
+	err := e.db.Get(models.ContentFlag{}, c).Model(&models.ContentFlag{}).First(&entity, contentFlag.ID).Error
 	if err != nil || contentFlag.ID == 0 {
 		return c.JSON(http.StatusNotFound, echo.Map{"error": "Cannot find entity"})
 	}
 
-	err = e.db.Get(models.ContentFlag{}, c).Model(&models.ContentFlag{}).Updates(&contentFlag).Error
+	err = e.db.Get(models.ContentFlag{}, c).Model(&entity).Updates(&contentFlag).Error
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error updating entity: [%v]", err)})
 	}

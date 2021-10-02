@@ -118,12 +118,13 @@ func (e *GroundSpawnController) updateGroundSpawn(c echo.Context) error {
 		)
 	}
 
-	err := e.db.Get(models.GroundSpawn{}, c).Model(&models.GroundSpawn{}).First(&models.GroundSpawn{}, groundSpawn.ID).Error
+    entity := models.GroundSpawn{}
+	err := e.db.Get(models.GroundSpawn{}, c).Model(&models.GroundSpawn{}).First(&entity, groundSpawn.ID).Error
 	if err != nil || groundSpawn.ID == 0 {
 		return c.JSON(http.StatusNotFound, echo.Map{"error": "Cannot find entity"})
 	}
 
-	err = e.db.Get(models.GroundSpawn{}, c).Model(&models.GroundSpawn{}).Updates(&groundSpawn).Error
+	err = e.db.Get(models.GroundSpawn{}, c).Model(&entity).Updates(&groundSpawn).Error
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error updating entity: [%v]", err)})
 	}

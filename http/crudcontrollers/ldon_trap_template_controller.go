@@ -118,12 +118,13 @@ func (e *LdonTrapTemplateController) updateLdonTrapTemplate(c echo.Context) erro
 		)
 	}
 
-	err := e.db.Get(models.LdonTrapTemplate{}, c).Model(&models.LdonTrapTemplate{}).First(&models.LdonTrapTemplate{}, ldonTrapTemplate.ID).Error
+    entity := models.LdonTrapTemplate{}
+	err := e.db.Get(models.LdonTrapTemplate{}, c).Model(&models.LdonTrapTemplate{}).First(&entity, ldonTrapTemplate.ID).Error
 	if err != nil || ldonTrapTemplate.ID == 0 {
 		return c.JSON(http.StatusNotFound, echo.Map{"error": "Cannot find entity"})
 	}
 
-	err = e.db.Get(models.LdonTrapTemplate{}, c).Model(&models.LdonTrapTemplate{}).Updates(&ldonTrapTemplate).Error
+	err = e.db.Get(models.LdonTrapTemplate{}, c).Model(&entity).Updates(&ldonTrapTemplate).Error
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error updating entity: [%v]", err)})
 	}

@@ -118,12 +118,13 @@ func (e *CharacterAlternateAbilityController) updateCharacterAlternateAbility(c 
 		)
 	}
 
-	err := e.db.Get(models.CharacterAlternateAbility{}, c).Model(&models.CharacterAlternateAbility{}).First(&models.CharacterAlternateAbility{}, characterAlternateAbility.ID).Error
+    entity := models.CharacterAlternateAbility{}
+	err := e.db.Get(models.CharacterAlternateAbility{}, c).Model(&models.CharacterAlternateAbility{}).First(&entity, characterAlternateAbility.ID).Error
 	if err != nil || characterAlternateAbility.ID == 0 {
 		return c.JSON(http.StatusNotFound, echo.Map{"error": "Cannot find entity"})
 	}
 
-	err = e.db.Get(models.CharacterAlternateAbility{}, c).Model(&models.CharacterAlternateAbility{}).Updates(&characterAlternateAbility).Error
+	err = e.db.Get(models.CharacterAlternateAbility{}, c).Model(&entity).Updates(&characterAlternateAbility).Error
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error updating entity: [%v]", err)})
 	}

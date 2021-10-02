@@ -118,12 +118,13 @@ func (e *LdonTrapEntryController) updateLdonTrapEntry(c echo.Context) error {
 		)
 	}
 
-	err := e.db.Get(models.LdonTrapEntry{}, c).Model(&models.LdonTrapEntry{}).First(&models.LdonTrapEntry{}, ldonTrapEntry.ID).Error
+    entity := models.LdonTrapEntry{}
+	err := e.db.Get(models.LdonTrapEntry{}, c).Model(&models.LdonTrapEntry{}).First(&entity, ldonTrapEntry.ID).Error
 	if err != nil || ldonTrapEntry.ID == 0 {
 		return c.JSON(http.StatusNotFound, echo.Map{"error": "Cannot find entity"})
 	}
 
-	err = e.db.Get(models.LdonTrapEntry{}, c).Model(&models.LdonTrapEntry{}).Updates(&ldonTrapEntry).Error
+	err = e.db.Get(models.LdonTrapEntry{}, c).Model(&entity).Updates(&ldonTrapEntry).Error
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error updating entity: [%v]", err)})
 	}
