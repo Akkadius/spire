@@ -12,6 +12,10 @@
         </div>
       </div>
     </div>
+    <div class="form-group text-center">
+      <button class='eq-button mr-3' @click="selectAll()" style="display: inline-block; width: 80px">All</button>
+      <button class='eq-button' @click="selectNone()" style="display: inline-block; width: 80px">None</button>
+    </div>
   </div>
 </template>
 
@@ -50,6 +54,20 @@ export default {
     },
   },
   methods: {
+    selectAll() {
+      Object.keys(this.slots).reverse().forEach((slotId) => {
+        this.selectedSlots[slotId] = true;
+      });
+      this.$forceUpdate();
+      this.calculateToBitmask();
+    },
+    selectNone() {
+      Object.keys(this.slots).reverse().forEach((slotId) => {
+        this.selectedSlots[slotId] = false;
+      });
+      this.$forceUpdate();
+      this.calculateToBitmask();
+    },
     selectSlot: function(slotId) {
       slotId = parseInt(slotId)
 
