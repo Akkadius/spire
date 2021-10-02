@@ -69,14 +69,14 @@ func (g *GithubSourceDownloader) Source(org string, repo string, branch string, 
 			// stat file
 			fi, err := os.Stat(path)
 			if err != nil {
-				g.logger.Fatal(err)
+				g.logger.Error(err)
 			}
 
 			// if regular file - not dir
 			if fi.Mode().IsRegular() {
 				data, err := ioutil.ReadFile(path)
 				if err != nil {
-					g.logger.Fatal(err)
+					g.logger.Error(err)
 				}
 
 				fileName := strings.ReplaceAll(path, fmt.Sprintf("%v%v-%v/", repoDir, repo, branch), "")
