@@ -7,7 +7,7 @@
           <img
             @click="selectDeity(deityId)"
             :src="itemCdnUrl + 'item_' + deity.icon + '.png'"
-            :style="'width:auto;' + (isDeitySelected(deityId) ? 'border: 2px solid #dadada; border-radius: 7px;' : 'border: 1px solid rgb(218 218 218 / 30%); border-radius: 7px;')"
+            :style="'width:auto;' + (isDeitySelected(deityId) ? 'border: 2px solid #dadada; border-radius: 7px;' : 'border: 2px solid rgb(218 218 218 / 30%); border-radius: 7px;')"
             class="mt-1 p-1">
         </div>
       </div>
