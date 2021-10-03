@@ -5,12 +5,11 @@
         <div class="text-center" style="width: 70px; display: inline-block;">
         <img
           :src="getExpansionIconUrlSmall(expansionId)"
-          :style="'width:auto;' + (isExpansionSelected(expansionId) ? 'border: 2px solid #dadada; border-radius: 7px;' : 'border: 2px solid rgb(218 218 218 / 30%); border-radius: 7px;')"
+          :style="'width: 56px;' + (isExpansionSelected(expansionId) ? 'border: 2px solid #dadada; border-radius: 7px;' : 'border: 2px solid rgb(218 218 218 / 30%); border-radius: 7px;')"
           class="mt-1 p-1">
         </div>
           ({{expansionId}})
-          {{ expansion.name }}
-
+          {{ expansion.name }}s
       </div>
     </div>
     <div class="form-group text-center">
