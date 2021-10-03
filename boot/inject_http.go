@@ -1,9 +1,9 @@
 package boot
 
 import (
-	"github.com/Akkadius/spire/http/controllers"
-	appmiddleware "github.com/Akkadius/spire/http/middleware"
-	"github.com/Akkadius/spire/http/routes"
+	controllers2 "github.com/Akkadius/spire/internal/http/controllers"
+	middleware2 "github.com/Akkadius/spire/internal/http/middleware"
+	routes2 "github.com/Akkadius/spire/internal/http/routes"
 	"github.com/Akkadius/spire/models"
 	"github.com/google/wire"
 	"github.com/labstack/echo/v4"
@@ -14,34 +14,34 @@ import (
 )
 
 var httpSet = wire.NewSet(
-	appmiddleware.NewUserContextMiddleware,
-	appmiddleware.NewRequestLogMiddleware,
-	controllers.NewAnalyticsController,
-	controllers.NewHelloWorldController,
-	controllers.NewConnectionsController,
-	controllers.NewMeController,
-	controllers.NewAuthController,
-	controllers.NewDocsController,
-	controllers.NewQuestApiController,
+	middleware2.NewUserContextMiddleware,
+	middleware2.NewRequestLogMiddleware,
+	controllers2.NewAnalyticsController,
+	controllers2.NewHelloWorldController,
+	controllers2.NewConnectionsController,
+	controllers2.NewMeController,
+	controllers2.NewAuthController,
+	controllers2.NewDocsController,
+	controllers2.NewQuestApiController,
 	provideControllers,
 	NewRouter,
 )
 
 type appControllerGroups struct {
-	authControllers       []routes.Controller
-	helloWorldControllers []routes.Controller
-	v1controllers         []routes.Controller
-	v1controllersNoAuth   []routes.Controller
+	authControllers       []routes2.Controller
+	helloWorldControllers []routes2.Controller
+	v1controllers         []routes2.Controller
+	v1controllersNoAuth   []routes2.Controller
 }
 
 func NewRouter(
 	cg *appControllerGroups,
 	crudc *crudControllers,
-	userContextMiddleware *appmiddleware.UserContextMiddleware,
-	logMiddleware *appmiddleware.RequestLogMiddleware,
+	userContextMiddleware *middleware2.UserContextMiddleware,
+	logMiddleware *middleware2.RequestLogMiddleware,
 	cache *gocache.Cache,
-) *routes.Router {
-	return routes.NewHttpRouter(
+) *routes2.Router {
+	return routes2.NewHttpRouter(
 
 		// pre middleware
 		[]echo.MiddlewareFunc{
@@ -73,16 +73,16 @@ func NewRouter(
 		},
 
 		// controller groups
-		[]*routes.ControllerGroup{
-			routes.NewControllerGroup("/auth/", cg.authControllers, []echo.MiddlewareFunc{}...),
-			routes.NewControllerGroup("/api/v1/", cg.v1controllers, userContextMiddleware.Handle(), v1RateLimit()),
-			routes.NewControllerGroup(
+		[]*routes2.ControllerGroup{
+			routes2.NewControllerGroup("/auth/", cg.authControllers, []echo.MiddlewareFunc{}...),
+			routes2.NewControllerGroup("/api/v1/", cg.v1controllers, userContextMiddleware.Handle(), v1RateLimit()),
+			routes2.NewControllerGroup(
 				"/api/v1/",
 				cg.v1controllersNoAuth,
 				v1RateLimit(),
 				middleware.GzipWithConfig(middleware.GzipConfig{Level: 1}),
 			),
-			routes.NewControllerGroup(
+			routes2.NewControllerGroup(
 				"/api/v1/",
 				crudc.routes,
 				userContextMiddleware.Handle(),
@@ -95,34 +95,34 @@ func NewRouter(
 
 // controllers provider
 func provideControllers(
-	hello *controllers.HelloWorldController,
-	auth *controllers.AuthController,
-	me *controllers.MeController,
-	analytics *controllers.AnalyticsController,
-	connections *controllers.ConnectionsController,
-	docs *controllers.DocsController,
-	quest *controllers.QuestApiController,
+	hello *controllers2.HelloWorldController,
+	auth *controllers2.AuthController,
+	me *controllers2.MeController,
+	analytics *controllers2.AnalyticsController,
+	connections *controllers2.ConnectionsController,
+	docs *controllers2.DocsController,
+	quest *controllers2.QuestApiController,
 ) *appControllerGroups {
 	return &appControllerGroups{
-		authControllers: []routes.Controller{
+		authControllers: []routes2.Controller{
 			auth,
 		},
-		v1controllers: []routes.Controller{
+		v1controllers: []routes2.Controller{
 			me,
 			analytics,
 			connections,
 			hello,
 			docs,
 		},
-		v1controllersNoAuth: []routes.Controller{
+		v1controllersNoAuth: []routes2.Controller{
 			quest,
 		},
 	}
 }
 
 func v1RateLimit() echo.MiddlewareFunc {
-	return appmiddleware.RateLimiterWithConfig(
-		appmiddleware.RateLimiterConfig{
+	return middleware2.RateLimiterWithConfig(
+		middleware2.RateLimiterConfig{
 			Skipper: func(c echo.Context) bool {
 
 				// if there is a validate user - skip the middleware
@@ -135,7 +135,7 @@ func v1RateLimit() echo.MiddlewareFunc {
 
 				return false
 			},
-			LimitConfig: appmiddleware.LimiterConfig{
+			LimitConfig: middleware2.LimiterConfig{
 				Max:      5000,
 				Duration: time.Minute * 1,
 				Strategy: "ip",

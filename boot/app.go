@@ -2,9 +2,9 @@ package boot
 
 import (
 	"context"
-	"github.com/Akkadius/spire/http/routes"
 	"github.com/Akkadius/spire/internal/database"
 	"github.com/Akkadius/spire/internal/desktop"
+	"github.com/Akkadius/spire/internal/http/routes"
 	gocache "github.com/patrickmn/go-cache"
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"

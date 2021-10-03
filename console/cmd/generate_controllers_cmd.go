@@ -97,7 +97,7 @@ func (g *GenerateControllersCommand) writeTypesFile() {
 	}
 
 	// create file
-	file, err := os.Create("./http/crudcontrollers/a_types.go")
+	file, err := os.Create("./internal/http/crudcontrollers/a_types.go")
 	if err != nil {
 		g.logger.Fatal(err)
 	}

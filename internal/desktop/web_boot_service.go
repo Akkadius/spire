@@ -2,8 +2,8 @@ package desktop
 
 import (
 	"fmt"
-	"github.com/Akkadius/spire/http"
-	"github.com/Akkadius/spire/http/routes"
+	"github.com/Akkadius/spire/internal/http"
+	"github.com/Akkadius/spire/internal/http/routes"
 	"github.com/sirupsen/logrus"
 	"log"
 	"net"

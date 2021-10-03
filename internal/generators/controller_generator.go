@@ -41,7 +41,7 @@ type templateData struct {
 }
 
 const (
-	crudControllerPath = "./http/crudcontrollers/"
+	crudControllerPath = "./internal/http/crudcontrollers/"
 )
 
 func (gc *GenerateController) Generate() {

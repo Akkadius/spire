@@ -1,8 +1,8 @@
 package boot
 
 import (
-	"github.com/Akkadius/spire/http/crudcontrollers"
-	"github.com/Akkadius/spire/http/routes"
+	"github.com/Akkadius/spire/internal/http/crudcontrollers"
+	"github.com/Akkadius/spire/internal/http/routes"
 	"github.com/google/wire"
 )
 

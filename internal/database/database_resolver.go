@@ -2,9 +2,9 @@ package database
 
 import (
 	"fmt"
-	"github.com/Akkadius/spire/http/request"
 	"github.com/Akkadius/spire/internal/encryption"
 	"github.com/Akkadius/spire/internal/env"
+	"github.com/Akkadius/spire/internal/http/request"
 	"github.com/Akkadius/spire/models"
 	"github.com/labstack/echo/v4"
 	gocache "github.com/patrickmn/go-cache"
