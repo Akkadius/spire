@@ -1,9 +1,9 @@
 package controllers
 
 import (
-	"github.com/Akkadius/spire/database"
 	"github.com/Akkadius/spire/http/request"
 	"github.com/Akkadius/spire/http/routes"
+	"github.com/Akkadius/spire/internal/database"
 	"github.com/Akkadius/spire/internal/influx"
 	"github.com/Akkadius/spire/models"
 	"github.com/labstack/echo/v4"

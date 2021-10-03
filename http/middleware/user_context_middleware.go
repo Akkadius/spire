@@ -1,9 +1,9 @@
 package middleware
 
 import (
-	"github.com/Akkadius/spire/database"
-	"github.com/Akkadius/spire/models"
 	"fmt"
+	"github.com/Akkadius/spire/internal/database"
+	"github.com/Akkadius/spire/models"
 	"github.com/dgrijalva/jwt-go"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"

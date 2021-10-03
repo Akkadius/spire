@@ -2,8 +2,8 @@ package controllers
 
 import (
 	"fmt"
-	"github.com/Akkadius/spire/database"
 	"github.com/Akkadius/spire/http/routes"
+	"github.com/Akkadius/spire/internal/database"
 	"github.com/Akkadius/spire/models"
 	"github.com/danilopolani/gocialite"
 	"github.com/davecgh/go-spew/spew"

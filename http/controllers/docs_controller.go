@@ -1,9 +1,9 @@
 package controllers
 
 import (
-	"github.com/Akkadius/spire/database"
-	"github.com/Akkadius/spire/http/routes"
 	"fmt"
+	"github.com/Akkadius/spire/http/routes"
+	"github.com/Akkadius/spire/internal/database"
 	"github.com/labstack/echo/v4"
 	"github.com/sirupsen/logrus"
 	"io/ioutil"

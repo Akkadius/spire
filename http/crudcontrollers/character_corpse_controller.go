@@ -1,7 +1,7 @@
 package crudcontrollers
 
 import (
-	"github.com/Akkadius/spire/database"
+	"github.com/Akkadius/spire/internal/database"
 	"github.com/Akkadius/spire/http/routes"
 	"github.com/Akkadius/spire/models"
 	"fmt"

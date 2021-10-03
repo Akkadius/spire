@@ -2,13 +2,13 @@ package boot
 
 import (
 	"context"
-	"github.com/Akkadius/spire/database"
 	"github.com/Akkadius/spire/http/routes"
+	"github.com/Akkadius/spire/internal/database"
 	"github.com/Akkadius/spire/internal/desktop"
-	"gorm.io/gorm"
 	gocache "github.com/patrickmn/go-cache"
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
+	"gorm.io/gorm"
 )
 
 // App is the root App resource

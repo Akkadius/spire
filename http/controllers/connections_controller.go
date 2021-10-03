@@ -1,14 +1,14 @@
 package controllers
 
 import (
-	"github.com/Akkadius/spire/database"
+	"errors"
+	"fmt"
 	"github.com/Akkadius/spire/http/request"
 	"github.com/Akkadius/spire/http/routes"
 	"github.com/Akkadius/spire/internal/connection"
 	"github.com/Akkadius/spire/internal/connection/contexts"
+	"github.com/Akkadius/spire/internal/database"
 	"github.com/Akkadius/spire/models"
-	"errors"
-	"fmt"
 	"github.com/labstack/echo/v4"
 	gocache "github.com/patrickmn/go-cache"
 	"github.com/sirupsen/logrus"
