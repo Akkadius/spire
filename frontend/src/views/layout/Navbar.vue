@@ -57,17 +57,17 @@
       <div class="collapse navbar-collapse" id="sidebarCollapse">
 
         <!-- Form -->
-        <form class="mt-4 mb-3 d-md-none">
-          <div class="input-group input-group-rounded input-group-merge">
-            <input type="search" class="form-control form-control-rounded form-control-prepended" placeholder="Search"
-                   aria-label="Search">
-            <div class="input-group-prepend">
-              <div class="input-group-text">
-                <span class="fe fe-search"></span>
-              </div>
-            </div>
-          </div>
-        </form>
+        <!--        <form class="mt-4 mb-3 d-md-none">-->
+        <!--          <div class="input-group input-group-rounded input-group-merge">-->
+        <!--            <input type="search" class="form-control form-control-rounded form-control-prepended" placeholder="Search"-->
+        <!--                   aria-label="Search">-->
+        <!--            <div class="input-group-prepend">-->
+        <!--              <div class="input-group-text">-->
+        <!--                <span class="fe fe-search"></span>-->
+        <!--              </div>-->
+        <!--            </div>-->
+        <!--          </div>-->
+        <!--        </form>-->
 
         <!-- Heading -->
         <h6 class="navbar-heading">
@@ -207,11 +207,11 @@
 
 <script>
 
-import {App} from "@/constants/app";
-import NavbarDropdownMenu from "@/views/layout/NavbarDropdownMenu";
+import {App}                 from "@/constants/app";
+import NavbarDropdownMenu    from "@/views/layout/NavbarDropdownMenu";
 import NavbarUserSettingsCog from "@/views/layout/NavbarUserSettingsCog";
-import UserContext from "@/app/user/UserContext";
-import NavSectionComponent from "@/views/layout/NavSectionComponent";
+import UserContext           from "@/app/user/UserContext";
+import NavSectionComponent   from "@/views/layout/NavSectionComponent";
 
 export default {
   components: { NavSectionComponent, NavbarDropdownMenu, NavbarUserSettingsCog },
@@ -249,9 +249,17 @@ export default {
           { title: "Race Calculator", to: "/calculators#race-bitmask-calculator", icon: "ra ra-eye-monster mr-1" },
           { title: "Class Calculator", to: "/calculators#class-bitmask-calculator", icon: "ra ra-lion mr-1" },
           { title: "Deity Calculator", to: "/calculators#deity-bitmask-calculator", icon: "ra ra-venomous-snake mr-1" },
-          { title: "Expansions Calculator", to: "/calculators#expansions-bitmask-calculator", icon: "ra ra-lever mr-1" },
+          {
+            title: "Expansions Calculator",
+            to: "/calculators#expansions-bitmask-calculator",
+            icon: "ra ra-lever mr-1"
+          },
           { title: "Augment Type Calculator", to: "/calculators#augment-type-calculator", icon: "ra ra-sapphire mr-1" },
-          { title: "Inventory Slot Calculator", to: "/calculators#inventory-slot-calculator", icon: "ra ra-eye-shield mr-1" },
+          {
+            title: "Inventory Slot Calculator",
+            to: "/calculators#inventory-slot-calculator",
+            icon: "ra ra-eye-shield mr-1"
+          },
           { title: "Special Abilities Calculator", to: "/calculators#npc-special-abilities", icon: "ra ra-lion mr-1" },
         ]
       },
@@ -270,6 +278,17 @@ export default {
   methods: {
     hasRoute: function (partial) {
       return (this.$route.path.indexOf(partial) > -1)
+    },
+    hideNavbarAfterClick() {
+      const sidebar = document.getElementById("sidebarCollapse")
+      if (sidebar) {
+        sidebar.classList.remove("show");
+      }
+    },
+  },
+  watch: {
+    $route(to, from) {
+      this.hideNavbarAfterClick()
     }
   }
 }

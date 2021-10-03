@@ -12,7 +12,7 @@ import '@/assets/css/custom.css'
 import 'izitoast/dist/css/iziToast.css'
 import VueIziToast  from 'vue-izitoast'
 // Dashkit
-import './assets/css/theme.min.css'
+import './assets/css/theme-nav-top.css'
 import './assets/fonts/feather/feather.min.css'
 import './assets/css/global.css'
 
