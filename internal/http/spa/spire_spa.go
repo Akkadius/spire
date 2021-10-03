@@ -19,7 +19,7 @@ func (s SpirePackagedSpaService) Spa() *PackedSpaService {
 // Spire SPA vars
 const (
 	SpireBasePath      = ""
-	SpireLocalBasePath = "../../frontend/dist/"
+	SpireLocalBasePath = "../../../frontend/dist/"
 	SpireSpaIndex      = "index.html"
 )
 
