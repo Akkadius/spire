@@ -262,17 +262,5 @@ export default {
       expansionBitmask: "3079"
     }
   },
-  methods: {
-    scrollFix: function (hashbang) {
-      location.hash = hashbang;
-      document.getElementById(hashbang.replace("#", "")).scrollIntoView();
-    }
-
-  },
-  watch: {
-    "$route.hash": function () {
-      setTimeout(() => this.scrollFix(this.$route.hash), 1);
-    }
-  }
 }
 </script>

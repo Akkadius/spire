@@ -446,20 +446,6 @@ export default {
       this.orangeProgress = Math.floor(Math.random() * 100 + 1)
       this.yellowProgress = Math.floor(Math.random() * 100 + 1)
     }, 1000);
-
-    setTimeout(() => this.scrollFix(this.$route.hash), 1);
   },
-  methods: {
-    scrollFix: function (hashbang) {
-      location.hash = hashbang;
-      document.getElementById(hashbang.replace("#", "")).scrollIntoView();
-    }
-
-  },
-  watch: {
-    "$route.hash": function () {
-      setTimeout(() => this.scrollFix(this.$route.hash), 1);
-    }
-  }
 }
 </script>
