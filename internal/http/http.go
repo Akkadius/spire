@@ -4,7 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"github.com/Akkadius/spire/docs"
-	routes2 "github.com/Akkadius/spire/internal/http/routes"
+	"github.com/Akkadius/spire/internal/http/routes"
 	"github.com/Akkadius/spire/internal/http/spa"
 	"github.com/labstack/echo/v4"
 	"github.com/sirupsen/logrus"
@@ -29,7 +29,7 @@ import (
 // @BasePath /api/v1
 
 // Serve runs a http server
-func Serve(port uint, logger *logrus.Logger, router *routes2.Router) error {
+func Serve(port uint, logger *logrus.Logger, router *routes.Router) error {
 	e := echo.New()
 
 	BootstrapMiddleware(e, router)
@@ -63,7 +63,7 @@ func errorHandler(err error, c echo.Context) {
 	_ = c.JSON(http.StatusUnprocessableEntity, echo.Map{"error": first(err.Error())})
 }
 
-func BootstrapMiddleware(e *echo.Echo, router *routes2.Router) {
+func BootstrapMiddleware(e *echo.Echo, router *routes.Router) {
 	for _, m := range router.GlobalPreMiddlewares() {
 		e.Pre(m)
 	}
@@ -72,7 +72,7 @@ func BootstrapMiddleware(e *echo.Echo, router *routes2.Router) {
 	}
 }
 
-func BootstrapControllers(e *echo.Echo, controllerGroups ...*routes2.ControllerGroup) error {
+func BootstrapControllers(e *echo.Echo, controllerGroups ...*routes.ControllerGroup) error {
 	for _, cg := range controllerGroups {
 		g := e.Group(cg.RoutePrefix(), cg.Middlewares()...)
 		for _, c := range cg.Controllers() {
@@ -85,7 +85,7 @@ func BootstrapControllers(e *echo.Echo, controllerGroups ...*routes2.ControllerG
 	return nil
 }
 
-func registerRoutes(controller routes2.Controller, g *echo.Group) error {
+func registerRoutes(controller routes.Controller, g *echo.Group) error {
 	for _, r := range controller.Routes() {
 		switch r.Method() {
 		case http.MethodGet:
