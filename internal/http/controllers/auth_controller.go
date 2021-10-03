@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"github.com/Akkadius/spire/internal/database"
 	"github.com/Akkadius/spire/internal/http/routes"
-	"github.com/Akkadius/spire/models"
+	"github.com/Akkadius/spire/internal/models"
 	"github.com/danilopolani/gocialite"
 	"github.com/davecgh/go-spew/spew"
 	"github.com/dgrijalva/jwt-go"

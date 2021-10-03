@@ -3,7 +3,7 @@ package controllers
 import (
 	"github.com/Akkadius/spire/internal/http/request"
 	"github.com/Akkadius/spire/internal/http/routes"
-	"github.com/Akkadius/spire/models"
+	"github.com/Akkadius/spire/internal/models"
 	"github.com/labstack/echo/v4"
 	"net/http"
 )

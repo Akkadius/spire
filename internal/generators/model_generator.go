@@ -279,7 +279,7 @@ func (g *GenerateModel) Generate() []ModelGenerateResponse {
 			t = strings.ReplaceAll(t, "{{connection}}", ct)
 
 			// write file
-			fileName := "./models/" + strcase.ToSnake(table) + ".go"
+			fileName := "./internal/models/" + strcase.ToSnake(table) + ".go"
 
 			// Create new cmd
 			file, err := os.Create(fileName)

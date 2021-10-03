@@ -3,7 +3,7 @@ package integration
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/Akkadius/spire/models"
+	"github.com/Akkadius/spire/internal/models"
 	"github.com/stretchr/testify/assert"
 	"log"
 	"testing"

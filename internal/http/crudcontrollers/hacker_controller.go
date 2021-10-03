@@ -3,7 +3,7 @@ package crudcontrollers
 import (
 	"github.com/Akkadius/spire/internal/database"
 	"github.com/Akkadius/spire/internal/http/routes"
-	"github.com/Akkadius/spire/models"
+	"github.com/Akkadius/spire/internal/models"
 	"fmt"
 	"github.com/labstack/echo/v4"
 	"github.com/sirupsen/logrus"
