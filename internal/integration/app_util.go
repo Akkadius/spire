@@ -2,7 +2,7 @@ package integration
 
 import (
 	"github.com/Akkadius/spire/boot"
-	"github.com/Akkadius/spire/env"
+	"github.com/Akkadius/spire/internal/env"
 	"github.com/Akkadius/spire/models"
 	"log"
 )

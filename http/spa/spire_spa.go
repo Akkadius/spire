@@ -1,7 +1,7 @@
 package spa
 
 import (
-	"github.com/Akkadius/spire/env"
+	"github.com/Akkadius/spire/internal/env"
 	"github.com/gobuffalo/packr"
 	"github.com/sirupsen/logrus"
 	"strings"

@@ -2,8 +2,8 @@ package boot
 
 import (
 	"errors"
-	"github.com/Akkadius/spire/env"
 	"github.com/Akkadius/spire/internal/database"
+	"github.com/Akkadius/spire/internal/env"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm/logger"
 	"log"

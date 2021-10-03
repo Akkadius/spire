@@ -4,9 +4,9 @@ import (
 	"database/sql"
 	"errors"
 	"fmt"
-	"github.com/Akkadius/spire/env"
 	"github.com/Akkadius/spire/internal/database"
 	"github.com/Akkadius/spire/internal/encryption"
+	"github.com/Akkadius/spire/internal/env"
 	"github.com/Akkadius/spire/models"
 	"github.com/sirupsen/logrus"
 )
