@@ -13,7 +13,7 @@ type GenerateConfig struct {
 	} `yaml:"database"`
 }
 
-const generateConfig = "./generators/config/generate-config.yml"
+const generateConfig = "./internal/generators/config/generate-config.yml"
 
 func GetGenerateConfig() GenerateConfig {
 	m := GenerateConfig{}

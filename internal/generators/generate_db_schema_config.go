@@ -23,8 +23,8 @@ func NewGenerateDbSchemaConfig(db *sql.DB, logger *logrus.Logger) *GenerateDbSch
 }
 
 const (
-	dbSchemaConfig     = "./generators/config/db-schema.yml"
-	dbSchemaKeysConfig = "./generators/config/db-schema-keys.yml"
+	dbSchemaConfig     = "./internal/generators/config/db-schema.yml"
+	dbSchemaKeysConfig = "./internal/generators/config/db-schema-keys.yml"
 )
 
 type DbSchemaRowResult struct {

@@ -16,8 +16,8 @@ type GenerateControllerContext struct {
 }
 
 type GenerateController struct {
-	options   GenerateControllerContext
-	logger    *logrus.Logger
+	options GenerateControllerContext
+	logger  *logrus.Logger
 	pluralize *pluralize.Client
 }
 
@@ -78,7 +78,7 @@ func (gc *GenerateController) Generate() {
 
 	entityName := gc.pluralize.Singular(gc.options.EntityName)
 
-	tpl, err := template.ParseFiles("./generators/templates/crud_controller.tmpl")
+	tpl, err := template.ParseFiles("./internal/generators/templates/crud_controller.tmpl")
 	templateData := templateData{
 		RelationshipsComment:  gc.options.RelationshipsComment,
 		EntityName:            strcase.ToCamel(entityName),

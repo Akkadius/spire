@@ -21,8 +21,8 @@ type GenerateModelContext struct {
 }
 
 type GenerateModel struct {
-	options      GenerateModelContext
-	logger       *logrus.Logger
+	options GenerateModelContext
+	logger  *logrus.Logger
 	gorm         *gorm.DB
 	pluralize    *pluralize.Client
 	debugEnabled bool
@@ -502,7 +502,7 @@ func (g *GenerateModel) translateDataType(column ShowColumns) string {
 	}
 }
 
-const dbRelationshipConfig = "./generators/config/db-relationships.yml"
+const dbRelationshipConfig = "./internal/generators/config/db-relationships.yml"
 
 func (g *GenerateModel) loadRelationships() []ForeignKeyMappings {
 	// load yaml

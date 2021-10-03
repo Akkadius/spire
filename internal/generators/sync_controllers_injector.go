@@ -74,7 +74,7 @@ func (s *SyncControllersToInjector) Sync() {
 		controllersRegisterString += fmt.Sprintf("\t\t\t%v,\n", strcase.ToLowerCamel(name))
 	}
 
-	tpl, err := template.ParseFiles("./generators/templates/inject_http_crud_controller.tmpl")
+	tpl, err := template.ParseFiles("./internal/generators/templates/inject_http_crud_controller.tmpl")
 	t := injectHttpCrudControllerTmpl{
 		NewControllers:      strings.TrimSuffix(newControllersString, "\n"),
 		ControllersParam:    strings.TrimSuffix(controllersParamString, "\n"),

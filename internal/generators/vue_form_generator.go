@@ -27,8 +27,8 @@ type GenerateVueFormContext struct {
 }
 
 type GenerateVueForm struct {
-	options   GenerateVueFormContext
-	logger    *logrus.Logger
+	options GenerateVueFormContext
+	logger  *logrus.Logger
 	pluralize *pluralize.Client
 }
 
@@ -61,7 +61,7 @@ func (g *GenerateVueForm) Generate() error {
 	for _, table := range g.options.TablesToGenerate {
 
 		// template
-		tpl, err := template.ParseFiles("./generators/templates/vue_form.tmpl")
+		tpl, err := template.ParseFiles("./internal/generators/templates/vue_form.tmpl")
 
 		type templateData struct {
 			FormFields            string
@@ -117,7 +117,7 @@ const (
 	// database schema doc .yaml reference http url
 	dbSchemaRawUrl = "https://raw.githubusercontent.com/eqemu/docs-db-schema/master/database-schema-reference.yml"
 	// database schema doc .yaml local reference
-	dbSchemaLocalCachePath = "./generators/config/database-schema-reference.yml"
+	dbSchemaLocalCachePath = "./internal/generators/config/database-schema-reference.yml"
 )
 
 var dbSchemaYaml map[interface{}]interface{}
@@ -260,7 +260,7 @@ func (g *GenerateVueForm) GenerateConfig() error {
 			return err
 		}
 
-		vueFieldsConfigFile := fmt.Sprintf("./generators/config/vue-forms/%v.yml", table)
+		vueFieldsConfigFile := fmt.Sprintf("./internal/generators/config/vue-forms/%v.yml", table)
 
 		dir, err := filepath.Abs(filepath.Dir(vueFieldsConfigFile))
 		if err != nil {
@@ -296,7 +296,7 @@ func (g *GenerateVueForm) GenerateConfig() error {
 func GetVueFormConfigTable(form string) []VueFormField {
 	var m []VueFormField
 
-	vueFieldsConfigFile := fmt.Sprintf("./generators/config/vue-forms/%v.yml", form)
+	vueFieldsConfigFile := fmt.Sprintf("./internal/generators/config/vue-forms/%v.yml", form)
 
 	config, err := ioutil.ReadFile(vueFieldsConfigFile)
 	if err != nil {

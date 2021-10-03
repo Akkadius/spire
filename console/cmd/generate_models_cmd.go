@@ -1,10 +1,10 @@
 package cmd
 
 import (
-	"github.com/Akkadius/spire/generators"
-	"gorm.io/gorm"
+	"github.com/Akkadius/spire/internal/generators"
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
+	"gorm.io/gorm"
 )
 
 type GenerateModelsCommand struct {

@@ -2,7 +2,7 @@ package cmd
 
 import (
 	"fmt"
-	"github.com/Akkadius/spire/generators"
+	"github.com/Akkadius/spire/internal/generators"
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
 	"gorm.io/gorm"
@@ -91,7 +91,7 @@ func (g *GenerateControllersCommand) Validate(_ *cobra.Command, _ []string) erro
 }
 
 func (g *GenerateControllersCommand) writeTypesFile() {
-	b, err := ioutil.ReadFile("./generators/templates/crud_controller_types.go")
+	b, err := ioutil.ReadFile("./internal/generators/templates/crud_controller_types.go")
 	if err != nil {
 		g.logger.Fatal(err)
 	}

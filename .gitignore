@@ -6,7 +6,7 @@ data/
 bin/
 tmp/
 .DS_Store
-generators/config/database-schema-reference.yml
+internal/generators/config/database-schema-reference.yml
 
 docs-quest-api
 public/
