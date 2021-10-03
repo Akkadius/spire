@@ -22,8 +22,6 @@ import '@/components/eq-ui/styles/eq-ui.css'
 // font awesome
 import 'fontawesome-4.7'
 
-// Lazyload
-import VueLazyload      from 'vue-lazyload'
 // rpg awesome icons
 import "rpg-awesome/css/rpg-awesome.min.css";
 
@@ -40,8 +38,6 @@ import 'ag-grid-enterprise';
 Vue.use(BootstrapVue)
 
 Vue.use(VueIziToast)
-
-Vue.use(VueLazyload)
 
 // Custom components
 Vue.component('field-eq-text-input', () => import('@/components/form-components/FieldEqTextInput.vue'));
