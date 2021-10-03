@@ -2,8 +2,8 @@ package integration
 
 import (
 	"encoding/json"
-	"github.com/Akkadius/spire/models"
 	"fmt"
+	"github.com/Akkadius/spire/models"
 	"github.com/stretchr/testify/assert"
 	"log"
 	"testing"

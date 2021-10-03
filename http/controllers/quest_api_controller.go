@@ -2,7 +2,7 @@ package controllers
 
 import (
 	"github.com/Akkadius/spire/http/routes"
-	"github.com/Akkadius/spire/questapi"
+	"github.com/Akkadius/spire/internal/questapi"
 	"github.com/labstack/echo/v4"
 	"github.com/sirupsen/logrus"
 	"net/http"

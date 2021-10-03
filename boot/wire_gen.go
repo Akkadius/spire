@@ -16,7 +16,7 @@ import (
 	"github.com/Akkadius/spire/internal/encryption"
 	"github.com/Akkadius/spire/internal/github"
 	"github.com/Akkadius/spire/internal/influx"
-	"github.com/Akkadius/spire/questapi"
+	"github.com/Akkadius/spire/internal/questapi"
 )
 
 import (
