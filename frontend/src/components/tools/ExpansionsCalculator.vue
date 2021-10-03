@@ -9,7 +9,7 @@
           class="mt-1 p-1">
         </div>
           ({{expansionId}})
-          {{ expansion.name }}s
+          {{ expansion.name }}
       </div>
     </div>
     <div class="form-group text-center">
