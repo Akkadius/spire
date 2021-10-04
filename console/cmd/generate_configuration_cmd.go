@@ -1,8 +1,8 @@
 package cmd
 
 import (
-	"github.com/Akkadius/spire/database"
-	"github.com/Akkadius/spire/generators"
+	"github.com/Akkadius/spire/internal/database"
+	"github.com/Akkadius/spire/internal/generators"
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
 	"os"

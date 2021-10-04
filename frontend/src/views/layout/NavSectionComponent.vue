@@ -4,7 +4,7 @@
          :href="'#sidebar-' + navId"
          data-toggle="collapse"
          role="button"
-         aria-expanded="false"
+         :aria-expanded="(hasRoute(config.routePrefixMatch) ? 'true' : 'false')"
          :aria-controls="'sidebar-' + navId">
         <i :class="config.labelIcon" v-if="config.labelIcon"></i>
         {{ config.label }}

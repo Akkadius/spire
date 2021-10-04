@@ -3,7 +3,7 @@ package cmd
 import (
 	"errors"
 	"fmt"
-	"github.com/Akkadius/spire/questapi"
+	"github.com/Akkadius/spire/internal/questapi"
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
 	"strings"

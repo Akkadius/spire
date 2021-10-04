@@ -69,31 +69,27 @@
                     </table>
                   </div>
                 </div>
+              </div>
 
-              </eq-window>
-            </div>
+            </eq-window>
           </div>
-
-
         </div>
-
       </div>
     </div>
-
   </div>
 </template>
 
 <script type="ts">
-import {ZoneApi}        from "@/app/api/api";
-import EqWindow         from "@/components/eq-ui/EQWindow.vue";
+import {ZoneApi} from "@/app/api/api";
+import EqWindow from "@/components/eq-ui/EQWindow.vue";
 import {SpireApiClient} from "@/app/api/spire-api-client";
-import * as util        from "util";
-import Expansions       from "@/app/utility/expansions";
-import EqCheckbox       from "@/components/eq-ui/EQCheckbox.vue";
-import ZoneForm         from "@/components/forms/ZoneForm.vue";
-import {debounce}       from "@/app/utility/debounce.js";
-import EqTabs           from "@/components/eq-ui/EQTabs.vue";
-import EqTab            from "@/components/eq-ui/EQTab.vue";
+import * as util from "util";
+import Expansions from "@/app/utility/expansions";
+import EqCheckbox from "@/components/eq-ui/EQCheckbox.vue";
+import ZoneForm from "@/components/forms/ZoneForm.vue";
+import {debounce} from "@/app/utility/debounce.js";
+import EqTabs from "@/components/eq-ui/EQTabs.vue";
+import EqTab from "@/components/eq-ui/EQTab.vue";
 
 export default {
   components: {
@@ -185,8 +181,8 @@ export default {
         const expansion = e.expansion - 1 // zone table is offset by 1
 
         return e.short_name.toLowerCase().includes(searchString)
-               || Expansions.getExpansionName(expansion).toLowerCase().includes(searchString)
-               || e.long_name.toLowerCase().includes(searchString)
+          || Expansions.getExpansionName(expansion).toLowerCase().includes(searchString)
+          || e.long_name.toLowerCase().includes(searchString)
       });
 
       if (this.filteredZones.length === 0) {
@@ -225,7 +221,7 @@ export default {
       const result = await api.listZones({limit: this.limit, where: wheres.join("."), orderBy: "expansion.short_name"})
 
       if (result.status === 200) {
-        this.zones         = result.data
+        this.zones = result.data
         this.filteredZones = result.data
       }
 
@@ -239,5 +235,15 @@ export default {
 <style>
 #zonetable TBODY TR TD {
   padding: 2px 4px;
+}
+.eq-table tr {
+  border-bottom: .4px solid #ffffff1c;
+}
+
+.eq-table td {
+  padding-top:    5px;
+  padding-bottom: 5px;
+  border-right: .1px solid #ffffff1c;
+  border-left: .1px solid #ffffff1c;
 }
 </style>

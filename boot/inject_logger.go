@@ -1,7 +1,7 @@
 package boot
 
 import (
-	"github.com/Akkadius/spire/env"
+	"github.com/Akkadius/spire/internal/env"
 	"github.com/go-errors/errors"
 	"github.com/google/wire"
 	"github.com/sirupsen/logrus"

@@ -492,7 +492,7 @@ export default {
     },
     getAugTypeDescription: function (type) {
       type = parseInt(type)
-      return AUG_TYPES[type] ? AUG_TYPES[type] : ""
+      return AUG_TYPES[type] ? AUG_TYPES[type].name : ""
     },
     title: function (str) {
       return str.replace(

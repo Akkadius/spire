@@ -3,8 +3,8 @@ package cmd
 import (
 	"fmt"
 	"github.com/Akkadius/spire/console"
-	"github.com/Akkadius/spire/http"
-	"github.com/Akkadius/spire/http/routes"
+	"github.com/Akkadius/spire/internal/http"
+	"github.com/Akkadius/spire/internal/http/routes"
 	"github.com/labstack/echo/v4"
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"

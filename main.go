@@ -3,7 +3,7 @@ package main
 import (
 	"github.com/Akkadius/spire/boot"
 	"github.com/Akkadius/spire/console"
-	"github.com/Akkadius/spire/env"
+	"github.com/Akkadius/spire/internal/env"
 	"log"
 	"os"
 	"runtime"

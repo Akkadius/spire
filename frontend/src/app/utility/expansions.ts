@@ -1,6 +1,6 @@
 import {EXPANSION_ICONS_SMALL} from "@/app/constants/eq-expansion-icons";
 import {App}                   from "@/constants/app";
-import {EXPANSION_NAMES}       from "@/app/constants/eq-expansion-names";
+import {EXPANSION_NAMES}       from "@/app/constants/eq-expansions";
 
 export default class Expansions {
   static getExpansionIconUrlSmall(expansionId) {

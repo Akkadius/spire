@@ -5,7 +5,7 @@ import (
 	"github.com/Akkadius/spire/internal/desktop"
 	"github.com/Akkadius/spire/internal/github"
 	"github.com/Akkadius/spire/internal/influx"
-	"github.com/Akkadius/spire/questapi"
+	"github.com/Akkadius/spire/internal/questapi"
 	"github.com/google/wire"
 )
 

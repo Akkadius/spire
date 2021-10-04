@@ -60,6 +60,60 @@
             </div>
           </div>
 
+          <!-- Deity Bitmask Calculator -->
+          <header-component
+            header="Deity Bitmask Calculator"
+            sub-header="Computes the bitmask for selected deities..."
+          />
+
+          <div class="row">
+            <div class="col-12">
+              <eq-window style="width: 500px">
+                <deity-bitmask-calculator
+                  :inputData.sync="deityBitmask"
+                  :mask="deityBitmask"/>
+
+                <div class="row">
+                  <div class="col-12">
+                    <h4 class="eq-header mt-2">Deity Bitmask</h4>
+                    The input is two-way bound with the deity selector
+                    <input
+                      type="text"
+                      class="form-control mb-3 mt-3"
+                      v-model="deityBitmask">
+                  </div>
+                </div>
+              </eq-window>
+            </div>
+          </div>
+
+          <!-- Expansions Bitmask Calculator -->
+          <header-component
+            header="Expansions Bitmask Calculator"
+            sub-header="Computes the bitmask for selected expansions..."
+          />
+
+          <div class="row">
+            <div class="col-12">
+              <eq-window style="width: 500px">
+                <expansion-bitmask-calculator
+                  :inputData.sync="expansionBitmask"
+                  :mask="expansionBitmask"/>
+
+                <div class="row">
+                  <div class="col-12">
+                    <h4 class="eq-header mt-2">Expansion Bitmask</h4>
+                    The input is two-way bound with the expansion selector
+                    <input
+                      type="text"
+                      class="form-control mb-3 mt-3"
+                      v-model="expansionBitmask">
+                  </div>
+                </div>
+              </eq-window>
+            </div>
+          </div>
+
           <!-- Augment Type Bitmask Calculator -->
           <header-component
             header="Augment Type Calculator"
@@ -172,10 +226,14 @@ import RaceBitmaskCalculator from "../../components/tools/RaceBitmaskCalculator"
 import ClassBitmaskCalculator from "../../components/tools/ClassBitmaskCalculator";
 import InventorySlotCalculator from "../../components/tools/InventorySlotCalculator";
 import AugBitmaskCalculator from "../../components/tools/AugmentTypeCalculator";
+import DeityBitmaskCalculator from "../../components/tools/DeityCalculator";
+import ExpansionBitmaskCalculator from "../../components/tools/ExpansionsCalculator";
 
 export default {
   name: "Calculators",
   components: {
+    ExpansionBitmaskCalculator,
+    DeityBitmaskCalculator,
     AugBitmaskCalculator,
     InventorySlotCalculator,
     ClassBitmaskCalculator,
@@ -199,20 +257,10 @@ export default {
       racesBitmask: "1859",
       classesBitmask: "37349",
       inventorySlotBitmask: "1536",
-      specialAbilityInput: "1,1,3000,50^2,1,1,1000,2340^3,1,20,0,0,0,0,100,0^4,1,0,100,0,0,0,100,0^11,1,4,150,0,0,5^29,1,50^40,1,10,10,100^7,1^10,1^14,1^19,1^22,1^25,1^26,1"
+      specialAbilityInput: "1,1,3000,50^2,1,1,1000,2340^3,1,20,0,0,0,0,100,0^4,1,0,100,0,0,0,100,0^11,1,4,150,0,0,5^29,1,50^40,1,10,10,100^7,1^10,1^14,1^19,1^22,1^25,1^26,1",
+      deityBitmask: "3079",
+      expansionBitmask: "3079"
     }
   },
-  methods: {
-    scrollFix: function (hashbang) {
-      location.hash = hashbang;
-      document.getElementById(hashbang.replace("#", "")).scrollIntoView();
-    }
-
-  },
-  watch: {
-    "$route.hash": function () {
-      setTimeout(() => this.scrollFix(this.$route.hash), 1);
-    }
-  }
 }
 </script>

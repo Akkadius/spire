@@ -1,7 +1,7 @@
 package boot
 
 import (
-	"github.com/Akkadius/spire/database"
+	"github.com/Akkadius/spire/internal/database"
 	"github.com/google/wire"
 )
 

@@ -1,10 +1,10 @@
 package boot
 
 import (
-	"github.com/Akkadius/spire/http/controllers"
-	appmiddleware "github.com/Akkadius/spire/http/middleware"
-	"github.com/Akkadius/spire/http/routes"
-	"github.com/Akkadius/spire/models"
+	"github.com/Akkadius/spire/internal/http/controllers"
+	appmiddleware "github.com/Akkadius/spire/internal/http/middleware"
+	"github.com/Akkadius/spire/internal/http/routes"
+	"github.com/Akkadius/spire/internal/models"
 	"github.com/google/wire"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
@@ -70,7 +70,6 @@ func NewRouter(
 					},
 				},
 			),
-			middleware.GzipWithConfig(middleware.GzipConfig{Level: 1}),
 		},
 
 		// controller groups
@@ -81,12 +80,14 @@ func NewRouter(
 				"/api/v1/",
 				cg.v1controllersNoAuth,
 				v1RateLimit(),
+				middleware.GzipWithConfig(middleware.GzipConfig{Level: 1}),
 			),
 			routes.NewControllerGroup(
 				"/api/v1/",
 				crudc.routes,
 				userContextMiddleware.Handle(),
 				v1RateLimit(),
+				middleware.GzipWithConfig(middleware.GzipConfig{Level: 1}),
 			),
 		},
 	)

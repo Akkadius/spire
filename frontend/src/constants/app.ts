@@ -2,14 +2,15 @@
 
 import LocalSettings from "@/app/local-settings/localsettings";
 
-const CDN_VERSION_HASH = '67151b2b34d404ab2c1b3b2302ae1bbae84b1c04'
+const CDN_VERSION_HASH = '4dfd41553f0f30e4061ca63d7dba589b978c40b8'
 
 // List of different git CDN's
 // const ASSET_CDN_BASE_URL_INT = `https://gitcdn.xyz/repo/Akkadius/eq-asset-preview/${CDN_VERSION_HASH}/`
 
 // fast
 // `https://ghcdn.rawgit.org/Akkadius/eq-asset-preview/${CDN_VERSION_HASH}/`
-let ASSET_CDN_BASE_URL_INT = `https://rawcdn.githack.com/Akkadius/eq-asset-preview/${CDN_VERSION_HASH}/`
+// let ASSET_CDN_BASE_URL_INT = `https://rawcdn.githack.com/Akkadius/eq-asset-preview/${CDN_VERSION_HASH}/`
+let ASSET_CDN_BASE_URL_INT = `https://ghcdn.rawgit.org/Akkadius/eq-asset-preview/${CDN_VERSION_HASH}/`
 
 // use local assets if desktop build
 if (process.env.VUE_APP_ASSETS && process.env.VUE_APP_ASSETS.trim() === "local") {
@@ -27,6 +28,7 @@ export const App = {
   ASSET_EXPANSION_ICON_SMALL_URL: ASSET_CDN_BASE_URL_INT + 'assets/expansion-icons-small/',
   ASSET_WALLPAPER_URL: ASSET_CDN_BASE_URL_INT + 'assets/wallpaper/',
   ASSET_INVENTORY_SLOT_URL: ASSET_CDN_BASE_URL_INT + 'assets/inventory/',
+  ASSET_SPRITE_ITEM_ICONS_URL: ASSET_CDN_BASE_URL_INT + 'assets/sprites/item-icons.css',
   BACKEND_BASE_URL: (process.env.VUE_APP_BACKEND_BASE_URL ? process.env.VUE_APP_BACKEND_BASE_URL : window.location.origin),
   DEBUG: LocalSettings.get("debug-mode") === "true",
   // DEBUG: true,
