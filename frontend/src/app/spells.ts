@@ -86,7 +86,7 @@ export class Spells {
       switch (spell["effectid_" + effectIndex]) {
 
         case 0:
-          tmp += limit ? " (" + DB_SPELL_TARGET_RESTRICTION[Math.abs(limit)] + ")" : ""
+          tmp += limit > 0 ? " (" + DB_SPELL_TARGET_RESTRICTION[Math.abs(limit)] + ")" : ""
           printBuffer += this.getFormatStandard("Current HP", "", value_min, value_max, minlvl, maxlvl) + pertick + special_range + tmp
           break;
 
@@ -349,19 +349,19 @@ export class Spells {
           break;
 
         case 51:
-          printBuffer += "Sense Undead"
+          printBuffer += "Error: (" + spell["effectid_" + effectIndex] + ") not used"
           break;
 
         case 52:
-          printBuffer += "Sense Summoned"
+          printBuffer += "Sense Undead"
           break;
 
         case 53:
-          printBuffer += "Sense Animal"
+          printBuffer += "Sense Summoned"
           break;
 
         case 54:
-          printBuffer += "Error: (" + spell["effectid_" + effectIndex] + ") not used"
+          printBuffer += "Sense Animal"
           break;
 
         case 55: //rune
@@ -1574,7 +1574,7 @@ export class Spells {
           break;
 
         case 333:
-          printBuffer += "Cast " + (await this.renderSpellMini(spell.id, limit)) + "on Rune Fade"
+          printBuffer += "Cast " + (await this.renderSpellMini(spell.id, base)) + "on Rune Fade"
           break;
 
         case 334:

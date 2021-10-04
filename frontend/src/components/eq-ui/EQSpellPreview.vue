@@ -234,6 +234,8 @@
       <tr v-if="spellData['targettype'] > 0 && getTargetTypeName(spellData['targettype']) !== ''">
         <td class="spell-field-label">Target</td>
         <td> {{ getTargetTypeName(spellData["targettype"]) }}
+          <span v-if="spellData['can_mgb'] == 0 && (spellData['buffduration'] > 0) && (spellData['targettype'] == 3  || spellData['targettype'] == 40 || spellData['targettype'] == 41)"> &nbsp; (No MGB)</span>
+          <span v-if="spellData['can_mgb'] == 1 && (spellData['buffduration'] == 0) && (spellData['targettype'] == 3  || spellData['targettype'] == 40 || spellData['targettype'] == 41)"> &nbsp; (Can MGB)</span>
         </td>
       </tr>
       <tr v-if="spellData['aemaxtargets'] > 0 ">
@@ -249,31 +251,31 @@
       <tr v-if="spellData['resisttype'] > 0 && getSpellResistTypeName(spellData['resisttype']) !== ''">
         <td class="spell-field-label">Resist Type</td>
         <td> {{ getSpellResistTypeName(spellData["resisttype"]) }}
-          <span
-            v-if="spellData['resist_diff'] !== 0 && spellData['no_resist'] == 0">(adjust: {{ spellData["resist_diff"] }})</span>
+          <span v-if="spellData['resist_diff'] !== 0 && spellData['field_209'] == 0  && spellData['no_partial_resist'] == 0"> &nbsp;({{ spellData["resist_diff"] }})</span>
+          <span v-if="spellData['resist_diff'] !== 0 && spellData['field_209'] == 0  && spellData['no_partial_resist'] !== 0"> &nbsp;({{ spellData["resist_diff"] }}) &nbsp; (No Partial Resist)</span>
           <span v-if="spellData['field_209'] !== 0">(Unresistable)</span>
         </td>
       </tr>
       <tr v-if="spellData['max_resist'] > 0 || spellData['min_resist'] > 0">
         <td class="spell-field-label">Resist Chance Limits</td>
         <td>
-          <span v-if="spellData['max_resist'] != 0">Max: {{ spellData["max_resist"] / 2 }}% </span>
-          <span v-if="spellData['min_resist'] != 0">Min: {{ spellData["min_resist"] / 2 }}% </span>
+          <span v-if="spellData['max_resist'] !== 0">Max: {{ spellData["max_resist"] / 2 }}% </span>
+          <span v-if="spellData['min_resist'] !== 0">Min: {{ spellData["min_resist"] / 2 }}% </span>
         </td>
       </tr>
 
-      <tr v-if="spellData['not_extendable'] != 0 ">
+      <tr v-if="spellData['not_extendable'] !== 0 ">
         <td class="spell-field-label">Focusable</td>
         <td>No</td>
       </tr>
 
       <!-- Added effects -->
 
-      <tr v-if="spellData['pushback'] != 0 || spellData['pushup'] != 0">
+      <tr v-if="spellData['pushback'] !== 0 || spellData['pushup'] !== 0">
         <td class="spell-field-label">Knockback</td>
         <td>
-          <span v-if="spellData['pushback'] != 0">Push Back: {{ spellData["pushback"] }}' </span>
-          <span v-if="spellData['pushup'] != 0">Push Up: {{ spellData["pushup"] }}' </span>
+          <span v-if="spellData['pushback'] !== 0">Push Back: {{ spellData["pushback"] }}' </span>
+          <span v-if="spellData['pushup'] !== 0">Push Up: {{ spellData["pushup"] }}' </span>
         </td>
       </tr>
 
