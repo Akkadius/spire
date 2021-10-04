@@ -249,8 +249,8 @@
       <tr v-if="spellData['resisttype'] > 0 && getSpellResistTypeName(spellData['resisttype']) !== ''">
         <td class="spell-field-label">Resist Type</td>
         <td> {{ getSpellResistTypeName(spellData["resisttype"]) }}
-          <span
-            v-if="spellData['resist_diff'] !== 0 && spellData['no_resist'] == 0">(adjust: {{ spellData["resist_diff"] }})</span>
+          <span v-if="spellData['resist_diff'] !== 0 && spellData['field_209'] == 0  && spellData['no_partial_resist'] == 0"> &nbsp;({{ spellData["resist_diff"] }})</span>
+          <span v-if="spellData['resist_diff'] !== 0 && spellData['field_209'] == 0  && spellData['no_partial_resist'] != 0"> &nbsp;({{ spellData["resist_diff"] }}) &nbsp; (No Partial Resist)</span>
           <span v-if="spellData['field_209'] !== 0">(Unresistable)</span>
         </td>
       </tr>
