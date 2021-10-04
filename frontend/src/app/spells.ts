@@ -349,19 +349,19 @@ export class Spells {
           break;
 
         case 51:
-          printBuffer += "Sense Undead"
+          printBuffer += "Error: (" + spell["effectid_" + effectIndex] + ") not used"
           break;
 
         case 52:
-          printBuffer += "Sense Summoned"
+          printBuffer += "Sense Undead"
           break;
 
         case 53:
-          printBuffer += "Sense Animal"
+          printBuffer += "Sense Summoned"
           break;
 
         case 54:
-          printBuffer += "Error: (" + spell["effectid_" + effectIndex] + ") not used"
+          printBuffer += "Sense Animal"
           break;
 
         case 55: //rune
