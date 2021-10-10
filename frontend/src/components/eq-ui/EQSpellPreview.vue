@@ -348,7 +348,7 @@
     <h6 class="eq-header mt-3 mb-3" v-if="reagents.length > 0">Reagents</h6>
     <div v-if="reagents.length > 0">
       <div v-for="reagent in reagents" style="width:100%">
-        <div :id="reagent.id + '-' + reagent.item.id + '-' + componentId" style="display:inline-block" class="ml-2">
+        <div :id="reagent.id + '-' + reagent.item.id + '-' + componentId" style="display:inline-block">
 
           <div style="display: inline-block">
             <img
