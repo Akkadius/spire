@@ -448,6 +448,7 @@ export default {
         if (this.spellData["effectid_" + effectIndex] !== 254) {
           this.getSpellEffectInfo(this.spellData, effectIndex).then((result) => {
             this.spellEffectInfo[result.index] = result.info;
+            this.$forceUpdate()
           })
         }
       }
