@@ -409,7 +409,7 @@ import EqProgressBar from "@/components/eq-ui/EQProgressBar";
 import PageHeader from "@/views/layout/PageHeader";
 import EqItemPreview from "@/components/eq-ui/EQItemPreview";
 import {EXAMPLE_ITEM_DATA} from "@/app/constants/eq-example-item-data";
-import EqSpellPreview from "@/components/eq-ui/EQSpellPreview";
+import EqSpellPreview from "@/components/eq-ui/EQSpellCardPreview";
 import {EXAMPLE_SPELL_DATA} from "@/app/constants/eq-example-spell-data";
 import NpcSpecialAbilities from "@/components/tools/NpcSpecialAbilities";
 

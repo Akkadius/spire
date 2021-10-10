@@ -294,8 +294,8 @@ import {DB_CLASSES_WEAR_SHORT}         from "@/app/constants/eq-classes-constant
 import {DB_RACE_NAMES, DB_RACES_SHORT} from "@/app/constants/eq-races-constants";
 import {DB_DIETIES} from "@/app/constants/eq-deities-constants";
 import EqDebug from "@/components/eq-ui/EQDebug";
-import {App} from "@/constants/app";
-import EqSpellPreview from "@/components/eq-ui/EQSpellPreview";
+import {App}                from "@/constants/app";
+import EqSpellPreview       from "@/components/eq-ui/EQSpellCardPreview";
 import {EXAMPLE_SPELL_DATA} from "@/app/constants/eq-example-spell-data";
 import EqWindow from "@/components/eq-ui/EQWindow";
 import {SpireApiClient} from "@/app/api/spire-api-client";

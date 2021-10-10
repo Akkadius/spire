@@ -9,9 +9,9 @@
 
 <script>
 import {Spells} from "@/app/spells";
-import EqItemPreview from "@/components/eq-ui/EQItemPreview.vue";
-import EqSpellPreview from "@/components/eq-ui/EQSpellPreview.vue";
-import EqWindow from "@/components/eq-ui/EQWindow.vue";
+import EqItemPreview  from "@/components/eq-ui/EQItemPreview.vue";
+import EqSpellPreview from "@/components/eq-ui/EQSpellCardPreview.vue";
+import EqWindow       from "@/components/eq-ui/EQWindow.vue";
 
 export default {
   name: "EqSpellDescription",

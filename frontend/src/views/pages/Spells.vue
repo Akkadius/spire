@@ -148,7 +148,7 @@ import EqWindow                              from "@/components/eq-ui/EQWindow.v
 import {SpireApiClient}                      from "@/app/api/spire-api-client";
 import EqItemPreview                         from "@/components/eq-ui/EQItemPreview.vue";
 import * as util                             from "util";
-import EqSpellPreview                        from "@/components/eq-ui/EQSpellPreview.vue";
+import EqSpellPreview                        from "@/components/eq-ui/EQSpellCardPreview.vue";
 import {DB_CLASSES_ICONS}                    from "@/app/constants/eq-class-icon-constants";
 import {App}                                 from "@/constants/app";
 import {DB_CLASSES_SHORT, DB_PLAYER_CLASSES} from "@/app/constants/eq-classes-constants";

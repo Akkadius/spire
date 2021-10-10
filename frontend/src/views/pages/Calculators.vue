@@ -219,7 +219,7 @@ import EqTab from "@/components/eq-ui/EQTab";
 import EqProgressBar from "@/components/eq-ui/EQProgressBar";
 import PageHeader from "@/views/layout/PageHeader";
 import EqItemPreview from "@/components/eq-ui/EQItemPreview";
-import EqSpellPreview from "@/components/eq-ui/EQSpellPreview";
+import EqSpellPreview from "@/components/eq-ui/EQSpellCardPreview";
 import NpcSpecialAbilities from "@/components/tools/NpcSpecialAbilities";
 import HeaderComponent from "../layout/HeaderComponent";
 import RaceBitmaskCalculator from "../../components/tools/RaceBitmaskCalculator";

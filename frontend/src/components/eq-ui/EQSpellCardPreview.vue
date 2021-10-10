@@ -1,5 +1,5 @@
 <template>
-  <div class="pb-4" style="min-width: 400px; max-width: 400px; padding: 5px"
+  <div class="pb-4" style=" padding: 5px"
        v-if="spellData && spellData['targettype']">
 
     <div class="row">
@@ -17,10 +17,8 @@
 
     <!-- Info -->
 
-    <table style="width: 100%" class="mt-3 spell-preview-table">
+    <table class="mt-3 spell-preview-table">
       <tbody>
-      <tr style="vertical-align:middle !important">
-      </tr>
       <tr v-if="spellData['id'] !== ''">
         <td class="spell-field-label">Spell ID</td>
         <td> {{ spellData["id"] }}
@@ -594,10 +592,20 @@ export default {
 .spell-field-label {
   text-align:    right;
   font-weight:   bold;
-  width:         40%;
   padding-right: 10px;
 }
 .spell-preview-table {
-  word-wrap:break-word;
+  word-wrap: break-word;
+  width: 100%;
 }
+.spell-preview-table th,td {
+  word-wrap: break-word;
+}
+
+@media only screen and (max-width: 600px) {
+  .spell-preview-table {
+    width: 90%;
+  }
+}
+
 </style>
