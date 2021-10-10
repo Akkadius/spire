@@ -593,6 +593,7 @@ export default {
   text-align:    right;
   font-weight:   bold;
   padding-right: 10px;
+  width: 35%;
 }
 .spell-preview-table {
   word-wrap: break-word;
