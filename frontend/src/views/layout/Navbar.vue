@@ -81,14 +81,14 @@
         </ul>
 
         <h6 class="navbar-heading">
-          Browsers
+          Tools
         </h6>
 
         <!-- Navigation -->
         <ul class="navbar-nav mb-md-4">
           <li class="nav-item">
             <router-link class="nav-link " to="/spells">
-              <i class="ra ra-book mr-1"></i> Spell Browser
+              <i class="ra ra-book mr-1"></i> Spells
             </router-link>
           </li>
         </ul>
@@ -212,6 +212,7 @@ import NavbarDropdownMenu    from "@/views/layout/NavbarDropdownMenu";
 import NavbarUserSettingsCog from "@/views/layout/NavbarUserSettingsCog";
 import UserContext           from "@/app/user/UserContext";
 import NavSectionComponent   from "@/views/layout/NavSectionComponent";
+import {ROUTE}               from "@/routes";
 
 export default {
   components: { NavSectionComponent, NavbarDropdownMenu, NavbarUserSettingsCog },
@@ -235,10 +236,10 @@ export default {
         labelIcon: "ra ra-bleeding-eye mr-1",
         routePrefixMatch: "viewer",
         navs: [
-          { title: "Race Viewer", to: "/race-viewer", icon: "ra ra-monster-skull mr-1" },
-          { title: "Item Model Viewer", to: "/item-viewer", icon: "ra ra-crossed-swords mr-1" },
-          { title: "Item Icon Viewer", to: "/item-icon-viewer", icon: "ra ra-burning-eye mr-1" },
-          { title: "Spell Animation Viewer", to: "/spell-animation-viewer", icon: "ra ra-dragon mr-1" }
+          { title: "Race Viewer", to: ROUTE.RACE_VIEWER, icon: "ra ra-monster-skull mr-1" },
+          { title: "Item Model Viewer", to: ROUTE.ITEM_VIEWER, icon: "ra ra-crossed-swords mr-1" },
+          { title: "Item Icon Viewer", to: ROUTE.ITEM_ICON_VIEWER, icon: "ra ra-burning-eye mr-1" },
+          { title: "Spell Animation Viewer", to: ROUTE.SPELL_ANIMATION_VIEWER, icon: "ra ra-dragon mr-1" }
         ]
       },
       calculatorNav: {
