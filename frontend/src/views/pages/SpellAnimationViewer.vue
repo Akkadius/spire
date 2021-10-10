@@ -41,12 +41,13 @@
 </template>
 
 <script>
-import PageHeader from "@/views/layout/PageHeader";
-import {App} from "@/constants/app";
-import EqWindow from "@/components/eq-ui/EQWindow";
-import SpellAnimations from "@/app/asset-maps/spell-animations-map.json";
+import PageHeader        from "@/views/layout/PageHeader";
+import {App}             from "@/constants/app";
+import EqWindow          from "@/components/eq-ui/EQWindow";
+import SpellAnimations   from "@/app/asset-maps/spell-animations-map.json";
 import spellAnimMappings from "@/app/data-maps/spell-icon-anim-name-map.json";
-import {Listeners} from "@/app/listeners/listeners";
+import {Listeners}       from "@/app/listeners/listeners";
+import {ROUTE}           from "../../routes";
 
 let itemModels = [];
 
@@ -175,7 +176,7 @@ export default {
       }, 500);
     },
     triggerSearch: debounce(function () {
-      this.$router.push({ path: "/spell-animation-viewer", query: { q: this.search } }).catch(err => err)
+      this.$router.push({ path: ROUTE.SPELL_ANIMATION_VIEWER, query: { q: this.search } }).catch(err => err)
     }, 1000),
     spellAnimSearch: function () {
       this.loaded = false

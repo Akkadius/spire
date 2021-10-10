@@ -82,26 +82,22 @@
 </template>
 
 <script>
-import NpcModels from "@/app/asset-maps/npc-models-map";
-import util from "util";
-import slugify from "slugify"
-import raceConstants from "@/app/constants/eq-race-constants"
-import PageHeader from "@/views/layout/PageHeader";
-import {App} from "@/constants/app";
-import EqWindow from "@/components/eq-ui/EQWindow";
+import NpcModels      from "@/app/asset-maps/npc-models-map";
+import util           from "util";
+import slugify        from "slugify"
+import raceConstants  from "@/app/constants/eq-race-constants"
+import PageHeader     from "@/views/layout/PageHeader";
+import {App}          from "@/constants/app";
+import EqWindow       from "@/components/eq-ui/EQWindow";
 import EqWindowSimple from "@/components/eq-ui/EQWindowSimple";
-import {debounce} from "@/app/utility/debounce.js";
+import {debounce}     from "@/app/utility/debounce.js";
+import {ROUTE}        from "../../routes";
 
-const baseUrl = App.ASSET_CDN_BASE_URL + "assets/npc_models/";
-
+const baseUrl     = App.ASSET_CDN_BASE_URL + "assets/npc_models/";
 const MAX_RACE_ID = 700;
 let modelFiles    = {};
 let raceExists    = {};
-let races       = [];
-
-
-// todo: move this to central constants later
-const RACE_VIEWER_ROUTE = "/race-viewer";
+let races         = [];
 
 export default {
   components: { EqWindowSimple, EqWindow, PageHeader },
@@ -126,7 +122,7 @@ export default {
 
       this.$router.push(
         {
-          path: RACE_VIEWER_ROUTE,
+          path: ROUTE.RACE_VIEWER,
           query: queryState
         }
       ).catch(() => {
@@ -174,7 +170,7 @@ export default {
       }
 
       this.filteredRaces = races
-      this.loaded = true;
+      this.loaded        = true;
     },
 
     triggerStateDebounce: debounce(function () {
@@ -230,7 +226,7 @@ export default {
 
       this.raceImages = {};
       let raceImages  = {};
-      races = [];
+      races           = [];
 
       for (let raceId = 0; raceId <= MAX_RACE_ID; raceId++) {
         let modelKey = "";

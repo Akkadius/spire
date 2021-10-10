@@ -53,16 +53,17 @@
 </template>
 
 <script>
-import ItemIcons from "@/app/asset-maps/item-icons-map.json";
-import util from "util";
-import itemSlots from "@/constants/item-slots.json"
-import itemTypes from "@/constants/item-types.json"
-import itemSlotIconMapping from "@/constants/item-slot-icon-mapping.json"
+import ItemIcons            from "@/app/asset-maps/item-icons-map.json";
+import util                 from "util";
+import itemSlots            from "@/constants/item-slots.json"
+import itemTypes            from "@/constants/item-types.json"
+import itemSlotIconMapping  from "@/constants/item-slot-icon-mapping.json"
 import itemTypesIconMapping from "@/constants/item-type-icon-mapping.json"
-import PageHeader from "@/views/layout/PageHeader";
-import EqWindowSimple from "@/components/eq-ui/EQWindowSimple";
-import EqWindowComplex from "@/components/eq-ui/EQWindowComplex";
-import EqWindow from "@/components/eq-ui/EQWindow";
+import PageHeader           from "@/views/layout/PageHeader";
+import EqWindowSimple       from "@/components/eq-ui/EQWindowSimple";
+import EqWindowComplex      from "@/components/eq-ui/EQWindowComplex";
+import EqWindow             from "@/components/eq-ui/EQWindow";
+import {ROUTE}              from "../../routes";
 
 const MAX_ICON_ID = 10000;
 // const MAX_ICON_ID = 1000;
@@ -70,9 +71,6 @@ const MAX_ICON_ID = 10000;
 let iconExists = {}
 let icons      = [];
 let modelFiles = {};
-
-// move this to central constants later
-const ITEM_ICON_VIEWER_ROUTE = "/item-icon-viewer"
 
 export default {
   components: { EqWindow, EqWindowComplex, EqWindowSimple, PageHeader },
@@ -108,7 +106,7 @@ export default {
 
       this.$router.push(
         {
-          path: ITEM_ICON_VIEWER_ROUTE,
+          path: ROUTE.ITEM_ICON_VIEWER,
           query: queryState
         }
       ).catch(() => {

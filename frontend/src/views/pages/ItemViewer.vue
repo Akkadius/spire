@@ -60,26 +60,23 @@
 </template>
 
 <script>
-import ItemModels from "@/app/asset-maps/objects-map.json";
-import util from "util";
-import itemSlots from "@/constants/item-slots.json"
+import ItemModels            from "@/app/asset-maps/objects-map.json";
+import util                  from "util";
+import itemSlots             from "@/constants/item-slots.json"
 import itemSlotIdFileMapping from "@/constants/item-slot-idfile-mapping.json"
-import itemTypes from "@/constants/item-types.json"
+import itemTypes             from "@/constants/item-types.json"
 import itemTypesModelMapping from "@/constants/item-type-model-mapping.json"
-import slugify from "slugify";
-import PageHeader from "@/views/layout/PageHeader";
-import {App} from "@/constants/app";
-import EqWindow from "@/components/eq-ui/EQWindow";
+import slugify               from "slugify";
+import PageHeader            from "@/views/layout/PageHeader";
+import {App}                 from "@/constants/app";
+import EqWindow              from "@/components/eq-ui/EQWindow";
+import {ROUTE}               from "../../routes";
 
 const baseUrl         = App.ASSET_CDN_BASE_URL + "assets/objects/";
 const MAX_ITEM_IDFILE = 100000;
-
-let itemModels      = [];
-let itemModelExists = {};
-let modelFiles      = {};
-
-// move this to central constants later
-const ITEM_VIEWER_ROUTE = "/item-viewer"
+let itemModels        = [];
+let itemModelExists   = {};
+let modelFiles        = {};
 
 export default {
   components: { EqWindow, PageHeader },
@@ -115,7 +112,7 @@ export default {
 
       this.$router.push(
         {
-          path: ITEM_VIEWER_ROUTE,
+          path: ROUTE.ITEM_VIEWER,
           query: queryState
         }
       ).catch(() => {
@@ -268,12 +265,12 @@ export default {
 
 <style scoped>
 .item-model {
-  height:          auto;
-  min-width:       120px;
-  display:         flex;
+  height: auto;
+  min-width: 120px;
+  display: flex;
   justify-content: center;
-  align-items:     center;
-  border:          1px solid rgb(218 218 218 / 30%);
-  border-radius:   7px;
+  align-items: center;
+  border: 1px solid rgb(218 218 218 / 30%);
+  border-radius: 7px;
 }
 </style>

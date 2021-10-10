@@ -156,8 +156,7 @@ import {DB_SPA}                              from "@/app/constants/eq-spell-cons
 import EqSpellPreviewTable                   from "@/components/eq-ui/EQSpellPreviewTable.vue";
 import {Spells}                              from "@/app/spells";
 import {Items}                               from "@/app/items";
-
-const SPELLS_LIST_ROUTE = "/spells";
+import {ROUTE} from "@/routes";
 
 export default {
   components: {
@@ -233,7 +232,7 @@ export default {
 
       this.$router.push(
         {
-          path: SPELLS_LIST_ROUTE,
+          path: ROUTE.SPELLS_LIST,
           query: queryState
         }
       ).catch(() => {

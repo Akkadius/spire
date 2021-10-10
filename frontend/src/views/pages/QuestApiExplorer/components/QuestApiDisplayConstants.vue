@@ -41,6 +41,7 @@
 <script>
 import ClipBoard from "@/app/clipboard/clipboard";
 import Analytics from "@/app/analytics/analytics";
+import {ROUTE}   from "@/routes";
 
 export default {
   name: "QuestApiDisplayConstants",
@@ -107,7 +108,7 @@ export default {
 
       this.$router.push(
         {
-          path: "/quest-api-explorer",
+          path: ROUTE.QUEST_API_EXPLORER,
           query: queryState
         }
       ).catch(() => {

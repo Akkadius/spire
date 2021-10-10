@@ -1,5 +1,6 @@
 import Vue    from 'vue'
 import Router from 'vue-router'
+import {ROUTE} from "@/routes";
 
 Vue.use(Router)
 
@@ -18,22 +19,22 @@ export default new Router({
           meta: {title: "Home"},
         },
         {
-          path: '/race-viewer',
+          path: ROUTE.RACE_VIEWER,
           component: () => import('./views/pages/RaceViewer.vue'),
           meta: {title: "Race Viewer"},
         },
         {
-          path: '/item-viewer',
+          path: ROUTE.ITEM_VIEWER,
           component: () => import('./views/pages/ItemViewer.vue'),
           meta: {title: "Item Viewer"},
         },
         {
-          path: '/item-icon-viewer',
+          path: ROUTE.ITEM_ICON_VIEWER,
           component: () => import('./views/pages/ItemIconViewer.vue'),
           meta: {title: "Item Icon Viewer"},
         },
         {
-          path: '/spell-animation-viewer',
+          path: ROUTE.SPELL_ANIMATION_VIEWER,
           component: () => import('./views/pages/SpellAnimationViewer.vue'),
           meta: {title: "Spell Animation Viewer"},
         },
@@ -63,7 +64,7 @@ export default new Router({
           meta: {title: "Items Test"},
         },
         {
-          path: '/spells',
+          path: ROUTE.SPELLS_LIST,
           component: () => import('./views/pages/Spells.vue'),
           meta: {title: "Spells Browser"},
         },
@@ -83,7 +84,7 @@ export default new Router({
           meta: {title: "Manage Database Connections"},
         },
         {
-          path: '/quest-api-explorer',
+          path: ROUTE.QUEST_API_EXPLORER,
           component: () => import('./views/pages/QuestApiExplorer/QuestApiExplorer.vue'),
           meta: {title: "Quest API Explorer"},
         },

@@ -278,6 +278,7 @@ import QuestApiDisplayEvents    from "@/views/pages/QuestApiExplorer/components/
 import EqDebug                  from "@/components/eq-ui/EQDebug.vue";
 import Debug                    from "@/app/debug/debug";
 import {debounce}               from "@/app/utility/debounce";
+import {ROUTE} from "@/routes";
 
 export default {
   components: {
@@ -443,7 +444,7 @@ export default {
       // for some reason this needs to be wiped first
       this.$router.replace(
         {
-          path: '/quest-api-explorer',
+          path: ROUTE.QUEST_API_EXPLORER,
           query: {}
         }
       ).catch(() => {
@@ -451,7 +452,7 @@ export default {
 
       this.$router.replace(
         {
-          path: '/quest-api-explorer',
+          path: ROUTE.QUEST_API_EXPLORER,
           query: query
         }
       ).catch((e) => {
@@ -609,7 +610,7 @@ export default {
 
       this.$router.push(
         {
-          path: '/quest-api-explorer',
+          path: ROUTE.QUEST_API_EXPLORER,
           query: query
         }
       ).catch(() => {
