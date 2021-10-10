@@ -1,73 +1,69 @@
 <template>
-  <div>
-
-    <!-- CONTENT -->
-    <div class="container-fluid">
-      <div class="panel-body">
-        <div class="panel panel-default">
+  <div class="container-fluid">
+    <div class="panel-body">
+      <div class="panel panel-default">
 
 
-          <div class="row">
-            <div class="col-12">
-              <eq-window class="mt-5" title="Zones">
+        <div class="row">
+          <div class="col-12">
+            <eq-window class="mt-5" title="Zones">
 
-                <app-loader :is-loading="!loaded" padding="8"/>
+              <app-loader :is-loading="!loaded" padding="8"/>
 
-                <div class="row" style="justify-content: center" v-if="zones">
-                  <div class='eq-window-nested-blue' style="width: 100%" v-if="loaded">
-                    <div class="ml-2 mt-1 pb-1">Showing ({{ resultCount }}) results</div>
+              <div class="row" style="justify-content: center" v-if="zones">
+                <div class='' style="width: 100%" v-if="loaded">
+                  <div class="ml-2 mt-1 pb-1">Showing ({{ resultCount }}) results</div>
 
-                    <input type="text"
-                           class="form-control"
-                           placeholder="Zone filter"
-                           v-model="zoneSearchText"
-                           v-on:keyup="setStateDebounce">
+                  <input type="text"
+                         class="form-control"
+                         placeholder="Zone filter"
+                         v-model="zoneSearchText"
+                         v-on:keyup="setStateDebounce">
 
-                    <table id="zonetable" class="eq-table eq-highlight-rows" style="display: table; font-size: 14px; ">
-                      <thead>
-                      <tr>
+                  <table id="zonetable" class="eq-table eq-highlight-rows" style="display: table; font-size: 14px; ">
+                    <thead>
+                    <tr>
 
-                        <th style="width: 60px; white-space: nowrap;"></th>
-                        <th style="width: 200px; white-space: nowrap;">Expansion</th>
-                        <th style="width: 100px; white-space: nowrap;">Short Name</th>
+                      <th style="width: 60px; white-space: nowrap;"></th>
+                      <th style="width: 200px; white-space: nowrap;">Expansion</th>
+                      <th style="width: 100px; white-space: nowrap;">Short Name</th>
 
-                        <th style="width: 350px">Long Name</th>
+                      <th style="width: 350px">Long Name</th>
 
-                        <th style="width: 50px">Zone ID</th>
-                        <th style="width: 50px">Version</th>
-                        <th style="text-align: center">Bind</th>
-                        <th style="text-align: center">Combat</th>
-                        <th style="text-align: center">Levitate</th>
-                        <th style="text-align: center">Outdoor</th>
-                      </tr>
-                      </thead>
-                      <tbody>
-                      <tr v-for="(zone, index) in filteredZones" :key="zone.id" @click="clickZoneRow(zone)">
+                      <th style="width: 50px">Zone ID</th>
+                      <th style="width: 50px">Version</th>
+                      <th style="text-align: center">Bind</th>
+                      <th style="text-align: center">Combat</th>
+                      <th style="text-align: center">Levitate</th>
+                      <th style="text-align: center">Outdoor</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr v-for="(zone, index) in filteredZones" :key="zone.id" @click="clickZoneRow(zone)">
 
-                        <td style="text-align: center"><img :src="getExpansionIcon(zone.expansion)"></td>
-                        <td style="text-align: left">{{ getExpansionName(zone.expansion) }}</td>
-                        <td style="text-align: right">{{ zone.short_name }}</td>
+                      <td style="text-align: center"><img :src="getExpansionIcon(zone.expansion)"></td>
+                      <td style="text-align: left">{{ getExpansionName(zone.expansion) }}</td>
+                      <td style="text-align: right">{{ zone.short_name }}</td>
 
-                        <td>{{ zone.long_name }}</td>
+                      <td>{{ zone.long_name }}</td>
 
-                        <td style="text-align: center">{{ zone.zoneidnumber }}</td>
-                        <td style="text-align: center">{{ zone.version }}</td>
-                        <td style="text-align: center">
-                          <eq-checkbox :is-checked="(zone.canbind > 0)"/>
-                        </td>
-                        <td style="text-align: center">
-                          <eq-checkbox :is-checked="(zone.cancombat > 0)"/>
-                        </td>
-                        <td style="text-align: center">
-                          <eq-checkbox :is-checked="(zone.canlevitate > 0)"/>
-                        </td>
-                        <td style="text-align: center">
-                          <eq-checkbox :is-checked="(zone.castoutdoor > 0)"/>
-                        </td>
-                      </tr>
-                      </tbody>
-                    </table>
-                  </div>
+                      <td style="text-align: center">{{ zone.zoneidnumber }}</td>
+                      <td style="text-align: center">{{ zone.version }}</td>
+                      <td style="text-align: center">
+                        <eq-checkbox :is-checked="(zone.canbind > 0)"/>
+                      </td>
+                      <td style="text-align: center">
+                        <eq-checkbox :is-checked="(zone.cancombat > 0)"/>
+                      </td>
+                      <td style="text-align: center">
+                        <eq-checkbox :is-checked="(zone.canlevitate > 0)"/>
+                      </td>
+                      <td style="text-align: center">
+                        <eq-checkbox :is-checked="(zone.castoutdoor > 0)"/>
+                      </td>
+                    </tr>
+                    </tbody>
+                  </table>
                 </div>
               </div>
 
