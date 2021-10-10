@@ -242,14 +242,14 @@ export class Spells {
           break;
 
         case 32:
-          printBuffer += "Summon Item: "
+          printBuffer += "Summon Item "
 
           const item = <any>(await Items.getItem(spell["effect_base_value_" + effectIndex]));
           let parentSpellIdSi = spell['id'];
 
           if (item.name) {
             printBuffer += `
-                <div :id="${parentSpellIdSi} + '-' + ${effectIndex} + '-' + ${item.id} + '-' + componentId" style="display:inline-block" class="ml-2">
+                <div :id="${parentSpellIdSi} + '-' + ${effectIndex} + '-' + ${item.id} + '-' + componentId" style="display:inline-block">
 
                   <div style="display: inline-block">
                     <img
@@ -490,7 +490,7 @@ export class Spells {
           break;
 
         case 85: //TODO Spell proc LINK
-          printBuffer += "Add Melee Proc: " + (await this.renderSpellMini(spell.id, base)) + (limit ? " with " + limit + " % Rate Mod" : "")
+          printBuffer += "Add Melee Proc " + (await this.renderSpellMini(spell.id, base)) + (limit ? " with " + limit + " % Rate Mod" : "")
           break;
 
         case 86:
@@ -624,7 +624,7 @@ export class Spells {
 
           if (item2.name) {
             printBuffer += `
-                <div :id="${parentSpellId} + '-' + ${effectIndex} + '-' + ${item2.id} + '-' + componentId" style="display:inline-block" class="ml-2">
+                <div :id="${parentSpellId} + '-' + ${effectIndex} + '-' + ${item2.id} + '-' + componentId" style="display:inline-block">
 
                   <div style="display: inline-block">
                     <img
@@ -1939,7 +1939,7 @@ export class Spells {
           break
 
         case 419:
-          printBuffer += "Add Melee Proc (v2): " + (await this.renderSpellMini(spell.id, base)) + (limit ? " with " + limit + " % Rate Mod" : "")
+          printBuffer += "Add Melee Proc (v2) " + (await this.renderSpellMini(spell.id, base)) + (limit ? " with " + limit + " % Rate Mod" : "")
           break;
 
         case 420:
@@ -2962,13 +2962,12 @@ export class Spells {
     const targetTypeColor = this.getTargetTypeColor(spell["targettype"]);
 
     return `
-          <div :id="${parentSpellId} + '-' + ${renderSpellId} + '-' + componentId" style="display:inline-block" class="ml-1">
+          <div :id="${parentSpellId} + '-' + ${renderSpellId} + '-' + componentId" style="display:inline-block">
 
             <div style="display: inline-block">
               <img
                 :src="spellCdnUrl + '' + ${spell.new_icon} + '.gif'"
                 style="width: ${iconSize}px;height:auto; border: 2px solid ${targetTypeColor}; border-radius: 7px;"
-                class="mr-1"
                 >
               <span style="color: #f7ff00">${spell.name}</span>
             </div>
