@@ -74,10 +74,10 @@
       <tr v-if="spellData['good_effect'] >= 0">
         <td class="spell-field-label">Type</td>
         <td>
-          <span v-if="spellData['good_effect'] == 0">Detrimental</span>
-          <span v-if="spellData['good_effect'] == 1">Beneficial</span>
-          <span v-if="spellData['good_effect'] == 2">Beneficial Group</span>
-          <span v-if="spellData['good_effect'] == 3">Unknown</span>
+          <span v-if="spellData['good_effect'] === 0">Detrimental</span>
+          <span v-if="spellData['good_effect'] === 1">Beneficial</span>
+          <span v-if="spellData['good_effect'] === 2">Beneficial Group</span>
+          <span v-if="spellData['good_effect'] === 3">Unknown</span>
         </td>
       </tr>
 
@@ -109,7 +109,7 @@
         <td> {{ getSpellTargetRestrictionTypeName(spellData["field_220"]) }}</td>
       </tr>
 
-      <tr v-if="spellData['in_combat'] == 0 && spellData['outof_combat'] !== 0">
+      <tr v-if="spellData['in_combat'] === 0 && spellData['outof_combat'] !== 0">
         <td class="spell-field-label">Restriction</td>
         <td> Out of Combat Only</td>
       </tr>
@@ -137,22 +137,22 @@
       <tr v-if="spellData['zonetype'] > 0">
         <td class="spell-field-label">Restriction</td>
         <td>
-          <span v-if="spellData['zonetype'] == 1"> Outdoor Only </span>
-          <span v-if="spellData['zonetype'] == 2"> Indoor Only </span>
+          <span v-if="spellData['zonetype'] === 1"> Outdoor Only </span>
+          <span v-if="spellData['zonetype'] === 2"> Indoor Only </span>
         </td>
       </tr>
 
       <!-- Casting -->
 
       <tr
-        v-if="(spellData['cast_time'] > 0 || spellData['recovery_time'] > 0 || spellData['recast_time'] > 0) && spellData['is_discipline'] == 0">
+        v-if="(spellData['cast_time'] > 0 || spellData['recovery_time'] > 0 || spellData['recast_time'] > 0) && spellData['is_discipline'] === 0">
         <td class="spell-field-label">Casting Time</td>
         <td> {{ (spellData["cast_time"] / 1000) }} sec
           <span v-if="spellData['uninterruptable'] !== 0">(Uninterruptable)</span>
         </td>
       </tr>
       <tr
-        v-if="(spellData['cast_time'] > 0 || spellData['recovery_time'] > 0 || spellData['recast_time'] > 0) && spellData['is_discipline'] == 0">
+        v-if="(spellData['cast_time'] > 0 || spellData['recovery_time'] > 0 || spellData['recast_time'] > 0) && spellData['is_discipline'] === 0">
         <td class="spell-field-label">Recovery Time</td>
         <td> {{ (spellData["recovery_time"] / 1000) }} sec</td>
       </tr>
@@ -201,7 +201,7 @@
       <tr v-if="spellData['range'] > 0">
         <td class="spell-field-label">Range</td>
         <td>
-          <span v-if="spellData['min_range'] > 0 && spellData['aoerange'] == 0 ">  {{
+          <span v-if="spellData['min_range'] > 0 && spellData['aoerange'] === 0 ">  {{
               spellData["min_range"]
             }}' to </span>
           {{ spellData["range"] }}'
@@ -232,8 +232,8 @@
       <tr v-if="spellData['targettype'] > 0 && getTargetTypeName(spellData['targettype']) !== ''">
         <td class="spell-field-label">Target</td>
         <td> {{ getTargetTypeName(spellData["targettype"]) }}
-          <span v-if="spellData['can_mgb'] == 0 && (spellData['buffduration'] > 0) && (spellData['targettype'] == 3  || spellData['targettype'] == 40 || spellData['targettype'] == 41)"> &nbsp; (No MGB)</span>
-          <span v-if="spellData['can_mgb'] == 1 && (spellData['buffduration'] == 0) && (spellData['targettype'] == 3  || spellData['targettype'] == 40 || spellData['targettype'] == 41)"> &nbsp; (Can MGB)</span>
+          <span v-if="spellData['can_mgb'] == 0 && (spellData['buffduration'] > 0) && (spellData['targettype'] === 3  || spellData['targettype'] === 40 || spellData['targettype'] === 41)"> &nbsp; (No MGB)</span>
+          <span v-if="spellData['can_mgb'] === 1 && (spellData['buffduration'] === 0) && (spellData['targettype'] === 3  || spellData['targettype'] === 40 || spellData['targettype'] === 41)"> &nbsp; (Can MGB)</span>
         </td>
       </tr>
       <tr v-if="spellData['aemaxtargets'] > 0 ">
@@ -249,8 +249,8 @@
       <tr v-if="spellData['resisttype'] > 0 && getSpellResistTypeName(spellData['resisttype']) !== ''">
         <td class="spell-field-label">Resist Type</td>
         <td> {{ getSpellResistTypeName(spellData["resisttype"]) }}
-          <span v-if="spellData['resist_diff'] !== 0 && spellData['field_209'] == 0  && spellData['no_partial_resist'] == 0"> &nbsp;({{ spellData["resist_diff"] }})</span>
-          <span v-if="spellData['resist_diff'] !== 0 && spellData['field_209'] == 0  && spellData['no_partial_resist'] !== 0"> &nbsp;({{ spellData["resist_diff"] }}) &nbsp; (No Partial Resist)</span>
+          <span v-if="spellData['resist_diff'] !== 0 && spellData['field_209'] === 0  && spellData['no_partial_resist'] === 0"> &nbsp;({{ spellData["resist_diff"] }})</span>
+          <span v-if="spellData['resist_diff'] !== 0 && spellData['field_209'] === 0  && spellData['no_partial_resist'] !== 0"> &nbsp;({{ spellData["resist_diff"] }}) &nbsp; (No Partial Resist)</span>
           <span v-if="spellData['field_209'] !== 0">(Unresistable)</span>
         </td>
       </tr>
@@ -517,16 +517,16 @@ export default {
         return "Right 180 degree Arc"
       }
 
-      if ((start >= 270 && stop <= 90) && ((360 - start) == stop)) {
+      if ((start >= 270 && stop <= 90) && ((360 - start) === stop)) {
         return "Frontal " + ((360 - start) + stop) + " degree Arc"
       }
-      if ((start >= 90 && start <= 180) && (stop >= 180 && stop <= 270) && ((360 - start) == stop)) {
+      if ((start >= 90 && start <= 180) && (stop >= 180 && stop <= 270) && ((360 - start) === stop)) {
         return "Rear " + Math.abs((start) - stop) + " degree Arc"
       }
-      if ((start >= 180 && start <= 270) && (stop >= 270 && stop <= 360) && (Math.abs(270 - start) == Math.abs(270 - stop))) {
+      if ((start >= 180 && start <= 270) && (stop >= 270 && stop <= 360) && (Math.abs(270 - start) === Math.abs(270 - stop))) {
         return "Left " + Math.abs(start - stop) + " degree Arc"
       }
-      if ((start >= 0 && start <= 90) && (stop >= 90 && stop <= 180) && (Math.abs(90 - start) == Math.abs(90 - stop))) {
+      if ((start >= 0 && start <= 90) && (stop >= 90 && stop <= 180) && (Math.abs(90 - start) === Math.abs(90 - stop))) {
         return "Right " + Math.abs(start - stop) + " degree Arc"
       }
 
