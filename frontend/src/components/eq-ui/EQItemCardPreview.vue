@@ -37,196 +37,201 @@
       </div>
     </div>
 
-    <div>
+    <div class="row">
+      <div class="col-12">
 
-      <!-- 2nd level -->
-      <div class="mb-3 row">
-        <!-- First Section -->
-        <div class="stat-section col-4" style="padding-left: 0px">
-          <table style="width: 125px;" class="item-preview-table">
-            <tbody>
+        <!-- 2nd level -->
+        <div class="mb-3 row">
+          <!-- First Section -->
+          <div class="stat-section col-4">
+            <table style="width: 125px;" class="item-preview-table">
+              <tbody>
 
-            <tr v-for="(value, stat) in secondlevel1">
-              <!-- Label -->
-              <td style="font-weight: bold" v-if="value !== '' && value !== 0">
-                {{ stat }}
-              </td>
+              <tr v-for="(value, stat) in secondlevel1">
+                <!-- Label -->
+                <td style="font-weight: bold" v-if="value !== '' && value !== 0">
+                  {{ stat }}
+                </td>
 
-              <!-- Regular stat -->
-              <td style="text-align: right" v-if="value !== '' && value !== 0">
-                {{ value }}
-              </td>
+                <!-- Regular stat -->
+                <td style="text-align: right" v-if="value !== '' && value !== 0">
+                  {{ value }}
+                </td>
 
-            </tr>
-            </tbody>
-          </table>
+              </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <!-- Second Section (AC / HP / Mana / End) -->
+          <div class="stat-section col-4">
+            <table style="width: 125px;">
+              <tbody>
+
+              <tr v-for="(value, stat) in secondlevel2">
+                <!-- Label -->
+                <td style="font-weight: bold" v-if="value !== '' && value !== 0">
+                  {{ stat }}
+                </td>
+
+                <!-- Regular stat -->
+                <td style="text-align: right" v-if="value !== '' && value !== 0">
+                  {{ value }}
+                </td>
+
+              </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <!-- Third Section (Weapon Damage) -->
+          <div class="stat-section col-4">
+            <table style="width: 125px;">
+              <tbody>
+
+              <tr v-for="(value, stat) in secondlevel3">
+                <!-- Label -->
+                <td style="font-weight: bold" v-if="value !== '' && value !== 0">
+                  {{ stat }}
+                </td>
+
+                <!-- Regular stat -->
+                <td style="text-align: right" v-if="value !== '' && value !== 0">
+                  {{ value }}
+                </td>
+
+              </tr>
+              </tbody>
+            </table>
+          </div>
         </div>
 
-        <!-- Second Section (AC / HP / Mana / End) -->
-        <div class="stat-section col-4">
-          <table style="width: 125px;">
-            <tbody>
+        <!-- 3rd level -->
+        <div class="mb-3 row">
 
-            <tr v-for="(value, stat) in secondlevel2">
-              <!-- Label -->
-              <td style="font-weight: bold" v-if="value !== '' && value !== 0">
-                {{ stat }}
-              </td>
+          <!-- Stats -->
+          <div class="stat-section col-4">
+            <table style="width:100%">
+              <tbody>
+              <tr v-for="(data, stat) in stats">
 
-              <!-- Regular stat -->
-              <td style="text-align: right" v-if="value !== '' && value !== 0">
-                {{ value }}
-              </td>
+                <!-- Label -->
+                <td style="font-weight: bold" v-if="itemData[data.stat] > 0 || itemData[data.heroic] > 0">
+                  {{ stat }}
+                </td>
 
-            </tr>
-            </tbody>
-          </table>
-        </div>
+                <!-- Regular stat -->
+                <td style="text-align: right" v-if="itemData[data.stat] > 0 || itemData[data.heroic] > 0">
+                  {{ itemData[data.stat] }}
+                </td>
 
-        <!-- Third Section (Weapon Damage) -->
-        <div class="stat-section col-4">
-          <table style="width: 125px;">
-            <tbody>
-
-            <tr v-for="(value, stat) in secondlevel3">
-              <!-- Label -->
-              <td style="font-weight: bold" v-if="value !== '' && value !== 0">
-                {{ stat }}
-              </td>
-
-              <!-- Regular stat -->
-              <td style="text-align: right" v-if="value !== '' && value !== 0">
-                {{ value }}
-              </td>
-
-            </tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-
-      <!-- 3rd level -->
-      <div class="mb-3 row">
-
-        <!-- Stats -->
-        <div class="stat-section col-4" style="padding-left: 0px">
-          <table style="width:100%">
-            <tbody>
-            <tr v-for="(data, stat) in stats">
-
-              <!-- Label -->
-              <td style="font-weight: bold" v-if="itemData[data.stat] > 0 || itemData[data.heroic] > 0">
-                {{ stat }}
-              </td>
-
-              <!-- Regular stat -->
-              <td style="text-align: right" v-if="itemData[data.stat] > 0 || itemData[data.heroic] > 0">
-                {{ itemData[data.stat] }}
-              </td>
-
-              <!-- Heroic -->
-              <td style="text-align: right" v-if="itemData[data.heroic] > 0">
+                <!-- Heroic -->
+                <td style="text-align: right" v-if="itemData[data.heroic] > 0">
                           <span style="color: #ffecca" v-if="itemData[data.heroic]">
                             {{ itemData[data.heroic] > 0 ? "+" + itemData[data.heroic] : itemData[data.heroic] }}
                           </span>
-              </td>
-            </tr>
-            </tbody>
-          </table>
-        </div>
+                </td>
+              </tr>
+              </tbody>
+            </table>
+          </div>
 
-        <div class="stat-section col-4">
-          <table style="width:100%">
-            <tbody>
-            <tr v-for="(data, stat) in resists">
+          <div class="stat-section col-4">
+            <table style="width:100%">
+              <tbody>
+              <tr v-for="(data, stat) in resists">
 
-              <!-- Label -->
-              <td style="font-weight: bold; min-width: 95px"
-                  v-if="itemData[data.stat] > 0 || itemData[data.heroic] > 0">
-                {{ stat }}
-              </td>
+                <!-- Label -->
+                <td style="font-weight: bold; min-width: 95px"
+                    v-if="itemData[data.stat] > 0 || itemData[data.heroic] > 0">
+                  {{ stat }}
+                </td>
 
-              <!-- Regular stat -->
-              <td style="text-align: right" v-if="itemData[data.stat] > 0 || itemData[data.heroic] > 0">
-                {{ itemData[data.stat] }}
-              </td>
+                <!-- Regular stat -->
+                <td style="text-align: right" v-if="itemData[data.stat] > 0 || itemData[data.heroic] > 0">
+                  {{ itemData[data.stat] }}
+                </td>
 
-              <!-- Heroic -->
-              <td style="text-align: right" v-if="itemData[data.heroic] > 0">
+                <!-- Heroic -->
+                <td style="text-align: right" v-if="itemData[data.heroic] > 0">
                 <span style="color: #ffecca" v-if="itemData[data.heroic]">
                   {{ itemData[data.heroic] > 0 ? "+" + itemData[data.heroic] : itemData[data.heroic] }}
                 </span>
-              </td>
-            </tr>
-            </tbody>
-          </table>
+                </td>
+              </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="stat-section col-4">
+            <table style="width:100%">
+              <tbody>
+              <tr v-for="(field, stat) in mod3">
+
+                <!-- Label -->
+                <td style="font-weight: bold" v-if="itemData[field] > 0">
+                  {{ stat }}
+                </td>
+
+                <!-- Regular stat -->
+                <td style="text-align: right" v-if="itemData[field] > 0">
+                  {{ itemData[field] }}
+                </td>
+
+              </tr>
+              </tbody>
+            </table>
+          </div>
         </div>
 
-        <div class="stat-section col-4">
-          <table style="width:100%">
-            <tbody>
-            <tr v-for="(field, stat) in mod3">
-
-              <!-- Label -->
-              <td style="font-weight: bold" v-if="itemData[field] > 0">
-                {{ stat }}
-              </td>
-
-              <!-- Regular stat -->
-              <td style="text-align: right" v-if="itemData[field] > 0">
-                {{ itemData[field] }}
-              </td>
-
-            </tr>
-            </tbody>
-          </table>
-        </div>
       </div>
     </div>
 
     <!-- TODO: Price -->
 
     <!-- Extra Damage Amount -->
-    <div v-if="itemData['extradmgamt'] > 0" class="mt-3 mb-3">
-      <div class="row">
+    <div v-if="itemData['extradmgamt'] > 0" class="mt-3 mb-3 row">
+      <div class="col-12">
         <span style="font-weight: bold" class="pr-2">{{ getExtraDmgSkill() }} Damage </span> +{{ itemData.extradmgamt }}
       </div>
     </div>
 
     <!-- Bard Skill -->
-    <div v-if="itemData['bardtype'] > 22 && itemData['bardtype'] < 65535" class="mt-3 mb-3">
-      <div class="row">
+    <div v-if="itemData['bardtype'] > 22 && itemData['bardtype'] < 65535" class="mt-3 mb-3 row">
+      <div class="col-12">
         <span style="font-weight: bold" class="pr-2">Bard Skill ({{ getBardSkill() }}) </span>
         {{ ((itemData.bardvalue * 10) - 100) }}%
       </div>
     </div>
 
     <!-- Skill Mod Type -->
-    <div v-if="itemData['skillmodtype'] > 0 && itemData['skillmodvalue'] !== 0" class="mt-3 mb-3">
-      <div class="row">
-        <span style="font-weight: bold" class="pr-2">Skill Mod ({{ getSkillModSkill() }}) </span>
-        +{{ itemData.skillmodvalue }}
+    <div class="row">
+      <div v-if="itemData['skillmodtype'] > 0 && itemData['skillmodvalue'] !== 0" class="mt-3 mb-3">
+        <div class="row">
+          <span style="font-weight: bold" class="pr-2">Skill Mod ({{ getSkillModSkill() }}) </span>
+          +{{ itemData.skillmodvalue }}
+        </div>
       </div>
     </div>
 
     <!-- Augmentation Type -->
-    <div v-if="itemData['itemtype'] === 54" class="mt-3 mb-3">
-      <div class="row mb-1">
-        <div style="font-weight: bold" class="pr-2">Augmentation Slot Type(s)</div>
-      </div>
-      <div>
-        <div v-for="(augType, index) in getAugSlotTypes()" :key="augType" class="row">
-          {{ augType }}
+    <div class="row">
+      <div class="col-12">
+        <div v-if="itemData['itemtype'] === 54" class="mt-3 mb-3">
+          <div style="font-weight: bold" class="pr-2">Augmentation Slot Type(s)</div>
+          <div v-for="(augType, index) in getAugSlotTypes()" :key="augType">
+            {{ augType }}
+          </div>
+          <div class="mt-2" v-if="itemData.augrestrict > 0">
+            <span style="font-weight: bold" class="pr-2">Augmentation Restriction </span> {{ getAugRestriction() }}
+          </div>
         </div>
-      </div>
-      <div class="row mt-2" v-if="itemData.augrestrict > 0">
-        <span style="font-weight: bold" class="pr-2">Augmentation Restriction </span> {{ getAugRestriction() }}
       </div>
     </div>
 
     <!-- Augment Slots -->
-    <div class="pl-0">
-      <div v-for="(n, i) in 5" class="row">
+    <div class="pl-0 row">
+      <div v-for="(n, i) in 5" class="col-12">
         <div v-if="itemData['augslot_' + n + '_type'] > 0">
           <img
             src='~@/assets/img/icons/inventory/blank_slot.gif'
@@ -240,7 +245,7 @@
 
     <!-- Effects -->
     <div class="row col-12 pl-0 pt-3 pb-3">
-      <div v-for="effect in effects" :key="effect.field">
+      <div v-for="effect in effects" :key="effect.field" class="col-12">
 
         <!-- Click Effect -->
         <div v-if="itemData[effect.field] > 0 && effectData[effect.field]">
@@ -248,18 +253,11 @@
           <!-- Target -->
           <div :id="itemData[effect.field] + '-' + componentId">
 
-            <div style="display: inline-block">
-              <img
-                :src="spellCdnUrl + effectData[effect.field].new_icon + '.gif'"
-                style="height:15px; border-radius: 25px; width:auto;"
-                class="mr-3">
-              <span style="font-weight: bold" class="mr-2">Effect</span>
-            </div>
-
-            <div style="display: inline-block">
-
-              {{ effectData[effect.field].name }} ({{ effect.name }})
-            </div>
+            <img
+              :src="spellCdnUrl + effectData[effect.field].new_icon + '.gif'"
+              :style="'width:20px;height:auto; ' + 'border: 1px solid ' + getTargetTypeColor(effectData[effect.field]['targettype']) + '; border-radius: 3px;'"
+              class="mr-1 mt-1">
+            {{ effectData[effect.field].name }} ({{ effect.name }})
 
           </div>
 
@@ -384,6 +382,9 @@ export default {
     }
   },
   methods: {
+    getTargetTypeColor(targetType) {
+      return Spells.getTargetTypeColor(targetType)
+    },
     getItemSize: function (size) {
       return ITEM_SIZE[size] ? ITEM_SIZE[size] : "N/A";
     },
