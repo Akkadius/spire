@@ -11,13 +11,15 @@ import (
 )
 
 const (
-	equalDelimiter   = "__"
-	likeDelimiter    = "_like_"
-	notLikeDelimiter = "_notlike_"
-	selectDelimiter  = "."
-	whereDelimiter   = "."
-	linksDelimiter   = ","
-	orderByDelimiter = "."
+	equalDelimiter    = "__"
+	notEqualDelimiter = "_ne_"
+	likeDelimiter     = "_like_"
+	bitwiseAnd        = "_bitwiseand_"
+	notLikeDelimiter  = "_notlike_"
+	selectDelimiter   = "."
+	whereDelimiter    = "."
+	linksDelimiter    = ","
+	orderByDelimiter  = "."
 )
 
 const (

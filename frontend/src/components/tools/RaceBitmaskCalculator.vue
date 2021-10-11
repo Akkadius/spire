@@ -1,18 +1,20 @@
 <template>
   <div class="row">
-    <div v-for="(race, index) in races" class="mb-3 text-center">
-      <div class="text-center p-1 col-lg-12 col-sm-12">
-        {{ race.race }}
-        <div class="text-center">
-          <img
-            @click="selectRace(index)"
-            :src="itemCdnUrl + 'item_' + race.icon + '.png'"
-            :style="'width:auto;' + (isRaceSelected(index) ? 'border: 2px solid #dadada; border-radius: 7px;' : 'border: 2px solid rgb(218 218 218 / 0%); border-radius: 7px;')"
-            class="mt-1 p-1">
+    <div class="mr-3 d-inline-block text-center">
+      <div v-for="(race, index) in races" class="mb-1 text-center d-inline-block">
+        <div class="text-center p-1 col-lg-12 col-sm-12">
+          {{ race.short }}
+          <div class="text-center">
+            <img
+              @click="selectRace(index)"
+              :src="itemCdnUrl + 'item_' + race.icon + '.png'"
+              :style="'width:auto;' + (isRaceSelected(index) ? 'border: 2px solid #dadada; border-radius: 7px;' : 'border: 2px solid rgb(218 218 218 / 0%); border-radius: 7px;')"
+              class="mt-1 p-1">
+          </div>
         </div>
       </div>
     </div>
-    <div class="form-group text-center">
+    <div :class="'mt-4 d-inline-block ' + (centeredButtons ? 'text-center w-100' : '')" v-if="displayAllNone">
       <button class='eq-button mr-3' @click="selectAll()" style="display: inline-block; width: 80px">All</button>
       <button class='eq-button' @click="selectNone()" style="display: inline-block; width: 80px">None</button>
     </div>
@@ -20,8 +22,8 @@
 </template>
 
 <script>
-import {DB_PLAYER_RACES} from "../../app/constants/eq-races-constants";
-import {App} from "../../constants/app";
+import {DB_PLAYER_RACES} from "@/app/constants/eq-races-constants";
+import {App} from "@/constants/app";
 
 export default {
   name: "RaceBitmaskCalculator",
@@ -33,17 +35,27 @@ export default {
     mask: {
       type: String,
       required: false
+    },
+    displayAllNone: {
+      type: Boolean,
+      required: false,
+      default: true
+    },
+    centeredButtons: {
+      type: Boolean,
+      required: false,
+      default: true
     }
   },
   watch: {
     mask: {
       // the callback will be called immediately after the start of the observation
       immediate: true,
-      handler (val, oldVal) {
+      handler(val, oldVal) {
         this.currentMask = parseInt(this.mask)
         this.calculateFromBitmask();
       }
-    },
+    }
   },
   data() {
     return {
@@ -74,7 +86,7 @@ export default {
     },
     calculateFromBitmask() {
       Object.keys(this.races).reverse().forEach((raceId) => {
-        const race = this.races[raceId];
+        const race                 = this.races[raceId];
         this.selectedRaces[raceId] = false
         if (this.currentMask >= race.mask) {
           this.currentMask -= race.mask;
@@ -94,6 +106,7 @@ export default {
       });
 
       this.$emit("update:inputData", bitmask.toString());
+      this.$emit("fired", "true");
     },
     selectRace: function (raceId) {
       this.selectedRaces[raceId] = !this.selectedRaces[raceId];

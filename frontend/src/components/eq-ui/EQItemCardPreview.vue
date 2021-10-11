@@ -3,7 +3,8 @@
 
     <div class="row">
       <div class="col-1">
-        <img :src="cdnUrl + 'assets/item_icons/item_' + itemData.icon + '.png'" style="width:40px;height:auto;">
+        <span :class="'fade-in item-' + itemData.icon" :title="itemData.icon"/>
+        <!--        <img :src="cdnUrl + 'assets/item_icons/item_' + itemData.icon + '.png'" style="width:40px;height:auto;">-->
       </div>
       <div class="col-11 pl-5">
         <h6 class="eq-header" style="margin: 0px; margin-bottom: 10px">
@@ -16,7 +17,7 @@
             <tbody>
 
             <tr>
-              <td colspan="2" nowrap="1"> {{ getItemTags() }}</td>
+              <td colspan="2"> {{ getItemTags() }}</td>
             </tr>
 
             <tr v-for="(value, stat) in toplevel">
@@ -26,7 +27,7 @@
             </tr>
 
             <tr>
-              <td colspan="2" nowrap="1"> {{ getSlots() }}</td>
+              <td colspan="2"> {{ getSlots() }}</td>
             </tr>
 
             </tbody>
@@ -42,7 +43,7 @@
       <div class="mb-3 row">
         <!-- First Section -->
         <div class="stat-section col-4" style="padding-left: 0px">
-          <table style="width: 125px;">
+          <table style="width: 125px;" class="item-preview-table">
             <tbody>
 
             <tr v-for="(value, stat) in secondlevel1">
@@ -140,7 +141,8 @@
             <tr v-for="(data, stat) in resists">
 
               <!-- Label -->
-              <td style="font-weight: bold; min-width: 95px" v-if="itemData[data.stat] > 0 || itemData[data.heroic] > 0">
+              <td style="font-weight: bold; min-width: 95px"
+                  v-if="itemData[data.stat] > 0 || itemData[data.heroic] > 0">
                 {{ stat }}
               </td>
 
@@ -209,10 +211,15 @@
 
     <!-- Augmentation Type -->
     <div v-if="itemData['itemtype'] === 54" class="mt-3 mb-3">
-      <div class="row">
-        <span style="font-weight: bold" class="pr-2">Augmentation Slot Type(s) </span> {{ getAugSlotTypes() }}
+      <div class="row mb-1">
+        <div style="font-weight: bold" class="pr-2">Augmentation Slot Type(s)</div>
       </div>
-      <div class="row" v-if="itemData.augrestrict > 0">
+      <div>
+        <div v-for="(augType, index) in getAugSlotTypes()" :key="augType" class="row">
+          {{ augType }}
+        </div>
+      </div>
+      <div class="row mt-2" v-if="itemData.augrestrict > 0">
         <span style="font-weight: bold" class="pr-2">Augmentation Restriction </span> {{ getAugRestriction() }}
       </div>
     </div>
@@ -289,22 +296,21 @@ import {
   ITEM_ELEMENTS,
   ITEM_SIZE
 } from "@/app/constants/eq-item-constants";
-import {BODYTYPES}                     from "@/app/constants/eq-bodytype-constants";
-import {DB_CLASSES_WEAR_SHORT}         from "@/app/constants/eq-classes-constants";
+import {BODYTYPES} from "@/app/constants/eq-bodytype-constants";
+import {DB_CLASSES_WEAR_SHORT} from "@/app/constants/eq-classes-constants";
 import {DB_RACE_NAMES, DB_RACES_SHORT} from "@/app/constants/eq-races-constants";
 import {DB_DIETIES} from "@/app/constants/eq-deities-constants";
 import EqDebug from "@/components/eq-ui/EQDebug";
-import {App}                from "@/constants/app";
-import EqSpellPreview       from "@/components/eq-ui/EQSpellCardPreview";
+import {App} from "@/constants/app";
+import EqSpellPreview from "@/components/eq-ui/EQSpellCardPreview";
 import {EXAMPLE_SPELL_DATA} from "@/app/constants/eq-example-spell-data";
 import EqWindow from "@/components/eq-ui/EQWindow";
-import {SpireApiClient} from "@/app/api/spire-api-client";
-import {SpellsNewApi} from "@/app/api";
 import {DB_BARD_SKILLS, DB_SKILLS} from "@/app/constants/eq-skill-constants";
 import {AUG_TYPES} from "@/app/constants/eq-aug-constants";
+import {Spells} from "@/app/spells";
 
 export default {
-  name: "EqItemPreview",
+  name: "EqItemCardPreview",
   components: { EqWindow, EqSpellPreview, EqDebug },
   data() {
     return {
@@ -467,7 +473,7 @@ export default {
         bit *= 2;
       }
 
-      return this.itemData.augtype > 0 ? augSlots.join(", ").trim() : "All Slots"
+      return this.itemData.augtype > 0 ? augSlots : ["All Slots"]
     },
     getExtraDmgSkill: function () {
       return DB_SKILLS[this.itemData.extradmgskill] ? this.title(DB_SKILLS[this.itemData.extradmgskill].replace("_", " ").toLowerCase()) : ""
@@ -533,11 +539,9 @@ export default {
     // spell loading
     this.effects.forEach((effect) => {
       if (this.itemData[effect.field] > 0) {
-        (new SpellsNewApi(SpireApiClient.getOpenApiConfig())).getSpellsNew({ id: this.itemData[effect.field] }).then((result) => {
-          if (result.status === 200) {
-            this.effectData[effect.field] = result.data
-            this.$forceUpdate()
-          }
+        Spells.getSpell(this.itemData[effect.field]).then((spell) => {
+          this.effectData[effect.field] = spell
+          this.$forceUpdate()
         })
       }
     })
@@ -555,6 +559,15 @@ export default {
   padding-left:   10px;
   display:        inline-block;
   vertical-align: top;
+}
+
+.item-preview-table {
+  word-wrap: break-word;
+  width:     100%;
+}
+
+.item-preview-table th, td {
+  word-wrap: break-word;
 }
 
 </style>

@@ -1,18 +1,20 @@
 <template>
   <div class="row">
-    <div v-for="(deity, deityId) in deities" class="mb-3 text-center">
-      <div class="text-center p-2 col-lg-12 col-sm-12">
-        <small :style="(deity.name.length > 8 ? 'font-size: 9px' : '')">{{ deity.name }}</small>
-        <div class="text-center">
-          <img
-            @click="selectDeity(deityId)"
-            :src="itemCdnUrl + 'item_' + deity.icon + '.png'"
-            :style="'width:auto;' + (isDeitySelected(deityId) ? 'border: 2px solid #dadada; border-radius: 7px;' : 'border: 2px solid rgb(218 218 218 / 30%); border-radius: 7px;')"
-            class="mt-1 p-1">
+    <div class="mr-3 d-inline-block text-center">
+      <div v-for="(deity, deityId) in deities" class="mb-1 text-center d-inline-block">
+        <div class="text-center p-2 col-lg-12 col-sm-12">
+          <small :style="(deity.name.length > 8 ? 'font-size: 9px' : '')">{{ deity.name }}</small>
+          <div class="text-center">
+            <img
+              @click="selectDeity(deityId)"
+              :src="itemCdnUrl + 'item_' + deity.icon + '.png'"
+              :style="'width:auto;' + (isDeitySelected(deityId) ? 'border: 2px solid #dadada; border-radius: 7px;' : 'border: 2px solid rgb(218 218 218 / 30%); border-radius: 7px;')"
+              class="mt-1 p-1">
+          </div>
         </div>
       </div>
     </div>
-    <div class="form-group text-center">
+    <div :class="'mt-4 d-inline-block ' + (centeredButtons ? 'text-center w-100' : '')" v-if="displayAllNone">
       <button class='eq-button mr-3' @click="selectAll()" style="display: inline-block; width: 80px">All</button>
       <button class='eq-button' @click="selectNone()" style="display: inline-block; width: 80px">None</button>
     </div>
@@ -20,8 +22,8 @@
 </template>
 
 <script>
-import {App} from "../../constants/app";
-import {DB_DIETIES_FULL} from "../../app/constants/eq-deities-constants";
+import {App} from "@/constants/app";
+import {DB_DIETIES_FULL} from "@/app/constants/eq-deities-constants";
 
 export default {
   name: "DeityBitmaskCalculator",
@@ -33,6 +35,16 @@ export default {
     mask: {
       type: String,
       required: false
+    },
+    displayAllNone: {
+      type: Boolean,
+      required: false,
+      default: true
+    },
+    centeredButtons: {
+      type: Boolean,
+      required: false,
+      default: true
     }
   },
   watch: {
@@ -94,6 +106,7 @@ export default {
       });
 
       this.$emit("update:inputData", bitmask.toString());
+      this.$emit("fired", "true");
     },
     selectDeity: function (deityId) {
       this.selectedDeityes[deityId] = !this.selectedDeityes[deityId];

@@ -3,6 +3,7 @@ export const ROUTE = {
   SPELL_ANIMATION_VIEWER: "/spell-animation-viewer",
   QUEST_API_EXPLORER: "/quest-api-explorer",
   SPELLS_LIST: "/spells",
+  ITEMS_LIST: "/items",
   ITEM_VIEWER: "/item-viewer",
   RACE_VIEWER: "/race-viewer"
 };

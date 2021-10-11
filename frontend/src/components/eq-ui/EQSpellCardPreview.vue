@@ -1,5 +1,5 @@
 <template>
-  <div class="pb-4" style="max-width: 500px; padding: 5px"
+  <div class="pb-4" style="min-width: 400px; max-width: 500px; padding: 5px"
        v-if="spellData && spellData['targettype']">
 
     <div class="row">
@@ -32,13 +32,13 @@
           <div v-for="(icon, index) in dbClassIcons" style="display: inline-block">
             <div v-if="spellData['classes_' + index] > 0 && spellData['classes_' + index] < 255"
                  class="mr-2">
-                <img
-                  :src="itemCdnUrl + 'item_' + icon + '.png'"
-                  class="mb-1"
-                  style="height: 17px; width:auto; border-radius: 5px">
+              <img
+                :src="itemCdnUrl + 'item_' + icon + '.png'"
+                class="mb-1"
+                style="height: 17px; width:auto; border-radius: 5px">
               {{ dbClassesShort[index] }}
               ({{ spellData["classes_" + index] }})
-              </div>
+            </div>
           </div>
         </td>
 
@@ -232,8 +232,10 @@
       <tr v-if="spellData['targettype'] > 0 && getTargetTypeName(spellData['targettype']) !== ''">
         <td class="spell-field-label">Target</td>
         <td> {{ getTargetTypeName(spellData["targettype"]) }}
-          <span v-if="spellData['can_mgb'] == 0 && (spellData['buffduration'] > 0) && (spellData['targettype'] === 3  || spellData['targettype'] === 40 || spellData['targettype'] === 41)"> &nbsp; (No MGB)</span>
-          <span v-if="spellData['can_mgb'] === 1 && (spellData['buffduration'] === 0) && (spellData['targettype'] === 3  || spellData['targettype'] === 40 || spellData['targettype'] === 41)"> &nbsp; (Can MGB)</span>
+          <span
+            v-if="spellData['can_mgb'] == 0 && (spellData['buffduration'] > 0) && (spellData['targettype'] === 3  || spellData['targettype'] === 40 || spellData['targettype'] === 41)"> &nbsp; (No MGB)</span>
+          <span
+            v-if="spellData['can_mgb'] === 1 && (spellData['buffduration'] === 0) && (spellData['targettype'] === 3  || spellData['targettype'] === 40 || spellData['targettype'] === 41)"> &nbsp; (Can MGB)</span>
         </td>
       </tr>
       <tr v-if="spellData['aemaxtargets'] > 0 ">
@@ -249,8 +251,14 @@
       <tr v-if="spellData['resisttype'] > 0 && getSpellResistTypeName(spellData['resisttype']) !== ''">
         <td class="spell-field-label">Resist Type</td>
         <td> {{ getSpellResistTypeName(spellData["resisttype"]) }}
-          <span v-if="spellData['resist_diff'] !== 0 && spellData['field_209'] === 0  && spellData['no_partial_resist'] === 0"> &nbsp;({{ spellData["resist_diff"] }})</span>
-          <span v-if="spellData['resist_diff'] !== 0 && spellData['field_209'] === 0  && spellData['no_partial_resist'] !== 0"> &nbsp;({{ spellData["resist_diff"] }}) &nbsp; (No Partial Resist)</span>
+          <span
+            v-if="spellData['resist_diff'] !== 0 && spellData['field_209'] === 0  && spellData['no_partial_resist'] === 0"> &nbsp;({{
+              spellData["resist_diff"]
+            }})</span>
+          <span
+            v-if="spellData['resist_diff'] !== 0 && spellData['field_209'] === 0  && spellData['no_partial_resist'] !== 0"> &nbsp;({{
+              spellData["resist_diff"]
+            }}) &nbsp; (No Partial Resist)</span>
           <span v-if="spellData['field_209'] !== 0">(Unresistable)</span>
         </td>
       </tr>
@@ -326,7 +334,7 @@
 
       <!-- TODO: Optionally Display Items that have this spell as a scroll / tome -->
 
-      <!--      <eq-item-preview/>-->
+      <!--      <eq-item-card-preview/>-->
 
       </tbody>
     </table>
@@ -367,7 +375,7 @@
           style="width: 500px !important"
         >
           <eq-window style="margin-right: 10px; width: auto; height: 90%">
-            <eq-item-preview :item-data="reagent.item"/>
+            <eq-item-card-preview :item-data="reagent.item"/>
           </eq-window>
         </b-popover>
       </div>
@@ -409,7 +417,7 @@ export default {
   components: {
     EqWindow,
     EqDebug,
-    "eq-item-preview": () => import("@/components/eq-ui/EQItemPreview.vue"),
+    "eq-item-card-preview": () => import("@/components/eq-ui/EQItemCardPreview.vue"),
     "v-runtime-template": () => import("v-runtime-template")
   },
   data() {
@@ -426,7 +434,7 @@ export default {
       effectDescription: "",
       recourseLink: "",
       dbClassIcons: DB_CLASSES_ICONS,
-      dbClassesShort: DB_CLASSES_SHORT,
+      dbClassesShort: DB_CLASSES_SHORT
     }
   },
   mounted() {
@@ -593,13 +601,15 @@ export default {
   text-align:    right;
   font-weight:   bold;
   padding-right: 10px;
-  width: 35%;
+  width:         35%;
 }
+
 .spell-preview-table {
   word-wrap: break-word;
-  width: 100%;
+  width:     100%;
 }
-.spell-preview-table th,td {
+
+.spell-preview-table th, td {
   word-wrap: break-word;
 }
 

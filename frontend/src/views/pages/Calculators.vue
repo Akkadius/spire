@@ -218,7 +218,7 @@ import EqTabs from "@/components/eq-ui/EQTabs";
 import EqTab from "@/components/eq-ui/EQTab";
 import EqProgressBar from "@/components/eq-ui/EQProgressBar";
 import PageHeader from "@/views/layout/PageHeader";
-import EqItemPreview from "@/components/eq-ui/EQItemPreview";
+import EqItemCardPreview from "@/components/eq-ui/EQItemCardPreview";
 import EqSpellPreview from "@/components/eq-ui/EQSpellCardPreview";
 import NpcSpecialAbilities from "@/components/tools/NpcSpecialAbilities";
 import HeaderComponent from "../layout/HeaderComponent";
@@ -241,7 +241,7 @@ export default {
     HeaderComponent,
     NpcSpecialAbilities,
     EqSpellPreview,
-    EqItemPreview,
+    EqItemCardPreview,
     PageHeader,
     EqProgressBar,
     EqTab,

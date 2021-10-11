@@ -270,7 +270,7 @@ export class Spells {
                   style="width: 500px !important"
                 >
                   <eq-window style="margin-right: 10px; width: auto; height: 90%">
-                    <eq-item-preview :item-data="itemData[${item.id}]"/>
+                    <eq-item-card-preview :item-data="itemData[${item.id}]"/>
                   </eq-window>
                 </b-popover>`
           }
@@ -645,7 +645,7 @@ export class Spells {
                   style="width: 500px !important"
                 >
                   <eq-window style="margin-right: 10px; width: auto; height: 90%">
-                    <eq-item-preview :item-data="itemData[${item2.id}]"/>
+                    <eq-item-card-preview :item-data="itemData[${item2.id}]"/>
                   </eq-window>
                 </b-popover>`
           }

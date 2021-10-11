@@ -228,6 +228,18 @@ func (d *DatabaseResolver) handleWheres(query *gorm.DB, filter string) *gorm.DB 
 		query = query.Where(fmt.Sprintf("%v = ?", wheres[0]), wheres[1])
 	}
 
+	// parse where field != value
+	wheres = strings.Split(filter, notEqualDelimiter)
+	if len(wheres) > 1 {
+		query = query.Where(fmt.Sprintf("%v != ?", wheres[0]), wheres[1])
+	}
+
+	// parse where bitwise field & value
+	wheres = strings.Split(filter, bitwiseAnd)
+	if len(wheres) > 1 {
+		query = query.Where(fmt.Sprintf("%v & ?", wheres[0]), wheres[1])
+	}
+
 	// parse where field like '%value%'
 	wheres = strings.Split(filter, notLikeDelimiter)
 	if len(wheres) > 1 {
@@ -280,10 +292,22 @@ func (d *DatabaseResolver) handleOrWheres(query *gorm.DB, filter string) *gorm.D
 		query = query.Or(fmt.Sprintf("%v = ?", wheres[0]), wheres[1])
 	}
 
+	// parse where field != value
+	wheres = strings.Split(filter, notEqualDelimiter)
+	if len(wheres) > 1 {
+		query = query.Or(fmt.Sprintf("%v != ?", wheres[0]), wheres[1])
+	}
+
+	// parse where bitwise field & value
+	wheres = strings.Split(filter, bitwiseAnd)
+	if len(wheres) > 1 {
+		query = query.Or(fmt.Sprintf("%v & ?", wheres[0]), wheres[1])
+	}
+
 	// parse where field like '%value%'
 	wheres = strings.Split(filter, notLikeDelimiter)
 	if len(wheres) > 1 {
-		query = query.Where(fmt.Sprintf("%v not like ?", wheres[0]), fmt.Sprintf("%%%v%%", wheres[1]))
+		query = query.Or(fmt.Sprintf("%v not like ?", wheres[0]), fmt.Sprintf("%%%v%%", wheres[1]))
 	}
 
 	// parse where field like '%value%'

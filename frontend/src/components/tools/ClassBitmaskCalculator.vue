@@ -1,18 +1,20 @@
 <template>
-  <div class="row">
-    <div v-for="(gClass, classId) in classes" class="mb-3 text-center">
-      <div class="text-center p-1 col-lg-12 col-sm-12">
-        {{ gClass.short }}
-        <div class="text-center">
-          <img
-            @click="selectClass(classId)"
-            :src="itemCdnUrl + 'item_' + gClass.icon + '.png'"
-            :style="'width:auto;' + (isClassSelected(classId) ? 'border: 2px solid #dadada; border-radius: 7px;' : 'border: 2px solid rgb(218 218 218 / 0%); border-radius: 7px;')"
-            class="mt-1 p-1">
+  <div class="row text-center">
+    <div class="mr-3 d-inline-block">
+      <div v-for="(gClass, classId) in classes" class="mb-1 d-inline-block">
+        <div class="text-center p-1 col-lg-12 col-sm-12">
+          {{ gClass.short }}
+          <div class="text-center">
+            <img
+              @click="selectClass(classId)"
+              :src="itemCdnUrl + 'item_' + gClass.icon + '.png'"
+              :style="'width:auto;' + (isClassSelected(classId) ? 'border: 2px solid #dadada; border-radius: 7px;' : 'border: 2px solid rgb(218 218 218 / 0%); border-radius: 7px;')"
+              class="mt-1 p-1">
+          </div>
         </div>
       </div>
     </div>
-    <div class="form-group text-center">
+    <div :class="'mt-4 d-inline-block ' + (centeredButtons ? 'text-center w-100' : '')" v-if="displayAllNone">
       <button class='eq-button mr-3' @click="selectAll()" style="display: inline-block; width: 80px">All</button>
       <button class='eq-button' @click="selectNone()" style="display: inline-block; width: 80px">None</button>
     </div>
@@ -20,8 +22,8 @@
 </template>
 
 <script>
-import {App} from "../../constants/app";
-import {DB_PLAYER_CLASSES_ALL} from "../../app/constants/eq-classes-constants";
+import {App} from "@/constants/app";
+import {DB_PLAYER_CLASSES_ALL} from "@/app/constants/eq-classes-constants";
 
 export default {
   name: "ClassBitmaskCalculator",
@@ -33,6 +35,16 @@ export default {
     mask: {
       type: String,
       required: false
+    },
+    displayAllNone: {
+      type: Boolean,
+      required: false,
+      default: true
+    },
+    centeredButtons: {
+      type: Boolean,
+      required: false,
+      default: true
     }
   },
   watch: {
@@ -94,6 +106,7 @@ export default {
       });
 
       this.$emit("update:inputData", bitmask.toString());
+      this.$emit("fired", "true");
     },
     selectClass: function (classId) {
       this.selectedClasses[classId] = !this.selectedClasses[classId];

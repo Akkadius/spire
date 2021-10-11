@@ -43,7 +43,7 @@
                  style="display: inline-block; vertical-align: top"
                  class="col-4 mb-6">
               <eq-window style="width: auto; height: 100%">
-                <eq-item-preview :item-data="item"/>
+                <eq-item-card-preview :item-data="item"/>
               </eq-window>
             </div>
           </div>
@@ -60,12 +60,12 @@
 import {ItemApi}        from "@/app/api/api";
 import EqWindow         from "@/components/eq-ui/EQWindow.vue";
 import {SpireApiClient} from "@/app/api/spire-api-client";
-import EqItemPreview    from "@/components/eq-ui/EQItemPreview.vue";
+import EqItemCardPreview    from "@/components/eq-ui/EQItemCardPreview.vue";
 import * as util        from "util";
 
 export default {
   components: {
-    EqItemPreview,
+    EqItemCardPreview,
     EqWindow,
     "test-form": () => import("@/components/forms/TasksForm"),
     "task-activity": () => import("@/components/forms/TaskActivitiesForm"),

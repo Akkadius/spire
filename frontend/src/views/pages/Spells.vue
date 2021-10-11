@@ -146,7 +146,7 @@
 import {ItemApi, SpellsNewApi}               from "@/app/api/api";
 import EqWindow                              from "@/components/eq-ui/EQWindow.vue";
 import {SpireApiClient}                      from "@/app/api/spire-api-client";
-import EqItemPreview                         from "@/components/eq-ui/EQItemPreview.vue";
+import EqItemCardPreview                         from "@/components/eq-ui/EQItemCardPreview.vue";
 import * as util                             from "util";
 import EqSpellPreview                        from "@/components/eq-ui/EQSpellCardPreview.vue";
 import {DB_CLASSES_ICONS}                    from "@/app/constants/eq-class-icon-constants";
@@ -162,7 +162,7 @@ export default {
   components: {
     EqSpellPreviewTable,
     EqSpellPreview,
-    EqItemPreview,
+    EqItemCardPreview,
     EqWindow,
     "test-form": () => import("@/components/forms/TasksForm"),
     "task-activity": () => import("@/components/forms/TaskActivitiesForm"),

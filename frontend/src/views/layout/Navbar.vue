@@ -91,6 +91,11 @@
               <i class="ra ra-book mr-1"></i> Spells
             </router-link>
           </li>
+          <li class="nav-item">
+            <router-link class="nav-link " to="/items">
+              <i class="ra ra-relic-blade mr-1"></i> Items
+            </router-link>
+          </li>
         </ul>
 
         <!-- Heading -->

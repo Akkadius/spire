@@ -69,6 +69,11 @@ export default new Router({
           meta: {title: "Spells Browser"},
         },
         {
+          path: ROUTE.ITEMS_LIST,
+          component: () => import('./views/pages/Items.vue'),
+          meta: {title: "Items Browser"},
+        },
+        {
           path: '/zones',
           component: () => import('./views/pages/Zones.vue'),
           meta: {title: "Zones"},

@@ -85,7 +85,7 @@
                 <!-- Item Preview -->
                 <div v-for="(item, index) in items" :key="index" style="display: inline-block; vertical-align: top">
                   <eq-window style="margin-right: 10px; width: auto; height: 90%">
-                    <eq-item-preview :item-data="item"/>
+                    <eq-item-card-preview :item-data="item"/>
                   </eq-window>
                 </div>
               </div>
@@ -106,7 +106,7 @@
 
               <div class="row">
                 <!-- Spell Preview -->
-                <div v-for="(spell, index) in spells" :key="index" style="display: inline-block; vertical-align: top">
+                <div v-for="(spell, index) in spells" :key="index" style="display: inline-block; vertical-align: top" class="col-5">
                   <eq-window style="margin-right: 10px; width: auto; height: 90%">
                     <eq-spell-preview :spell-data="spell"/>
                   </eq-window>
@@ -407,7 +407,7 @@ import EqTabs from "@/components/eq-ui/EQTabs";
 import EqTab from "@/components/eq-ui/EQTab";
 import EqProgressBar from "@/components/eq-ui/EQProgressBar";
 import PageHeader from "@/views/layout/PageHeader";
-import EqItemPreview from "@/components/eq-ui/EQItemPreview";
+import EqItemCardPreview from "@/components/eq-ui/EQItemCardPreview";
 import {EXAMPLE_ITEM_DATA} from "@/app/constants/eq-example-item-data";
 import EqSpellPreview from "@/components/eq-ui/EQSpellCardPreview";
 import {EXAMPLE_SPELL_DATA} from "@/app/constants/eq-example-spell-data";
@@ -418,7 +418,7 @@ export default {
   components: {
     NpcSpecialAbilities,
     EqSpellPreview,
-    EqItemPreview,
+    EqItemCardPreview,
     PageHeader,
     EqProgressBar,
     EqTab,

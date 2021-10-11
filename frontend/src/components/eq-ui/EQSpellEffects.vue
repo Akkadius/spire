@@ -15,7 +15,7 @@
 <script>
 import {Spells} from "@/app/spells";
 import {App} from "@/constants/app";
-import EqItemPreview  from "@/components/eq-ui/EQItemPreview.vue";
+import EqItemCardPreview  from "@/components/eq-ui/EQItemCardPreview.vue";
 import EqSpellPreview from "@/components/eq-ui/EQSpellCardPreview.vue";
 import EqWindow       from "@/components/eq-ui/EQWindow.vue";
 import {Items} from "@/app/items";
@@ -24,7 +24,7 @@ export default {
   name: "EqSpellEffects",
   components: {
     "v-runtime-template": () => import("v-runtime-template"),
-    EqItemPreview,
+    EqItemCardPreview,
     EqSpellPreview,
     EqWindow,
   },

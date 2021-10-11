@@ -1,18 +1,20 @@
 <template>
   <div class="row">
-    <div v-for="(slot, slotId) in slots" class="mb-3 text-center">
-      <div class="text-center p-1 col-lg-12 col-sm-12">
-        {{ slot.name }}
-        <div class="text-center">
-          <img
-            @click="selectSlot(slotId)"
-            :src="slotUrl + 'old_slot_' + slotId + '.gif'"
-            :style="'width:auto;' + (isSlotSelected(slotId) ? 'border: 2px solid #dadada; border-radius: 7px;' : 'border: 2px solid rgb(218 218 218 / 0%); border-radius: 7px;')"
-            class="mt-1 p-1">
+    <div class="mr-3 d-inline-block" style="display: inline-block">
+      <div v-for="(slot, slotId) in slots" class="mb-1 text-center d-inline-block">
+        <div class="text-center p-1 col-lg-12 col-sm-12" v-if="!isSlotSkipped(slotId)">
+          {{ slot.name }}
+          <div class="text-center">
+            <img
+              @click="selectSlot(slotId)"
+              :src="slotUrl + 'old_slot_' + slotId + '.gif'"
+              :style="'width:auto;' + (isSlotSelected(slotId) ? 'border: 2px solid #dadada; border-radius: 7px;' : 'border: 2px solid rgb(218 218 218 / 0%); border-radius: 7px;')"
+              class="mt-1 p-1">
+          </div>
         </div>
       </div>
     </div>
-    <div class="form-group text-center">
+    <div class="mt-4 d-inline-block" v-if="displayAllNone">
       <button class='eq-button mr-3' @click="selectAll()" style="display: inline-block; width: 80px">All</button>
       <button class='eq-button' @click="selectNone()" style="display: inline-block; width: 80px">None</button>
     </div>
@@ -20,8 +22,8 @@
 </template>
 
 <script>
-import {PLAYER_INVENTORY_SLOT, PLAYER_INVENTORY_SLOTS} from "../../app/constants/eq-inventory-constants";
-import {App} from "../../constants/app";
+import {PLAYER_INVENTORY_SLOT, PLAYER_INVENTORY_SLOTS} from "@/app/constants/eq-inventory-constants";
+import {App} from "@/constants/app";
 
 export default {
   name: "InventorySlotCalculator",
@@ -37,6 +39,16 @@ export default {
     mask: {
       type: String,
       required: false
+    },
+    displayAllNone: {
+      type: Boolean,
+      required: false,
+      default: true
+    },
+    skipDuplicateSlots: {
+      type: Boolean,
+      required: false,
+      default: false
     }
   },
   mounted() {
@@ -47,13 +59,33 @@ export default {
     mask: {
       // the callback will be called immediately after the start of the observation
       immediate: true,
-      handler (val, oldVal) {
+      handler(val, oldVal) {
         this.currentMask = parseInt(this.mask)
         this.calculateFromBitmask();
       }
-    },
+    }
   },
   methods: {
+    isSlotSkipped(slot) {
+      if (!this.skipDuplicateSlots){
+        return false;
+      }
+
+      if (this.skipDuplicateSlots) {
+        // this comes in as a string
+        slot = parseInt(slot)
+
+        if (slot === PLAYER_INVENTORY_SLOT.EAR_2) {
+          return true;
+        }
+        if (slot === PLAYER_INVENTORY_SLOT.BRACER_2) {
+          return true;
+        }
+        if (slot === PLAYER_INVENTORY_SLOT.RING_2) {
+          return true;
+        }
+      }
+    },
     selectAll() {
       Object.keys(this.slots).reverse().forEach((slotId) => {
         this.selectedSlots[slotId] = true;
@@ -68,19 +100,19 @@ export default {
       this.$forceUpdate();
       this.calculateToBitmask();
     },
-    selectSlot: function(slotId) {
+    selectSlot: function (slotId) {
       slotId = parseInt(slotId)
 
       this.selectedSlots[slotId] = !this.selectedSlots[slotId];
 
       // dual updates
-      const dualUpdates = {}
-      dualUpdates[PLAYER_INVENTORY_SLOT.EAR_1] = PLAYER_INVENTORY_SLOT.EAR_2
-      dualUpdates[PLAYER_INVENTORY_SLOT.EAR_2] = PLAYER_INVENTORY_SLOT.EAR_1
+      const dualUpdates                           = {}
+      dualUpdates[PLAYER_INVENTORY_SLOT.EAR_1]    = PLAYER_INVENTORY_SLOT.EAR_2
+      dualUpdates[PLAYER_INVENTORY_SLOT.EAR_2]    = PLAYER_INVENTORY_SLOT.EAR_1
       dualUpdates[PLAYER_INVENTORY_SLOT.BRACER_1] = PLAYER_INVENTORY_SLOT.BRACER_2
       dualUpdates[PLAYER_INVENTORY_SLOT.BRACER_2] = PLAYER_INVENTORY_SLOT.BRACER_1
-      dualUpdates[PLAYER_INVENTORY_SLOT.RING_1] = PLAYER_INVENTORY_SLOT.RING_2
-      dualUpdates[PLAYER_INVENTORY_SLOT.RING_2] = PLAYER_INVENTORY_SLOT.RING_1
+      dualUpdates[PLAYER_INVENTORY_SLOT.RING_1]   = PLAYER_INVENTORY_SLOT.RING_2
+      dualUpdates[PLAYER_INVENTORY_SLOT.RING_2]   = PLAYER_INVENTORY_SLOT.RING_1
 
       if (dualUpdates[slotId]) {
         this.selectedSlots[dualUpdates[slotId]] = this.selectedSlots[slotId];
@@ -89,12 +121,12 @@ export default {
       this.$forceUpdate()
       this.calculateToBitmask();
     },
-    isSlotSelected: function(slotId) {
+    isSlotSelected: function (slotId) {
       return this.selectedSlots[slotId]
     },
     calculateFromBitmask() {
       Object.keys(this.slots).reverse().forEach((slot) => {
-        const inventorySlot = this.slots[slot];
+        const inventorySlot      = this.slots[slot];
         this.selectedSlots[slot] = false
         if (this.currentMask >= inventorySlot.mask) {
           this.currentMask -= inventorySlot.mask;
@@ -114,7 +146,8 @@ export default {
       });
 
       this.$emit("update:inputData", bitmask.toString());
-    },
+      this.$emit("fired", "true");
+    }
   }
 }
 </script>

@@ -47,7 +47,7 @@ Vue.component('field-task-duration-code', () => import('@/components/form-compon
 Vue.component('field-task-duration', () => import('@/components/form-components/FieldTaskDuration.vue'));
 Vue.component('field-eq-yes-no', () => import('@/components/form-components/FieldEqYesNo.vue'));
 Vue.component('field-eq-cash', () => import('@/components/form-components/FieldEqCash.vue'));
-Vue.component('eq-item-preview', () => import('@/components/eq-ui/EQItemPreview.vue'));
+Vue.component('eq-item-card-preview', () => import('@/components/eq-ui/EQItemCardPreview.vue'));
 
 
 // vue form generator
