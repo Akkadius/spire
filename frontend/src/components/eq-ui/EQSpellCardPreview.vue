@@ -1,5 +1,5 @@
 <template>
-  <div class="pb-4" style=" padding: 5px"
+  <div class="pb-4" style="max-width: 500px; padding: 5px"
        v-if="spellData && spellData['targettype']">
 
     <div class="row">
