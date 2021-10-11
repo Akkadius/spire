@@ -207,10 +207,8 @@
     <!-- Skill Mod Type -->
     <div class="row">
       <div v-if="itemData['skillmodtype'] > 0 && itemData['skillmodvalue'] !== 0" class="mt-3 mb-3 col-12">
-        <div class="row">
-          <span style="font-weight: bold" class="pr-2">Skill Mod ({{ getSkillModSkill() }}) </span>
-          +{{ itemData.skillmodvalue }}
-        </div>
+        <span style="font-weight: bold" class="pr-2">Skill Mod ({{ getSkillModSkill() }}) </span>
+        +{{ itemData.skillmodvalue }}
       </div>
     </div>
 
