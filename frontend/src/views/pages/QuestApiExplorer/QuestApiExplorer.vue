@@ -373,16 +373,20 @@ export default {
     }, 200),
 
     doSearch: function () {
-      Debug.log("[search] [%s]", this.search)
-
-      this.optionLoaded = false
-
       // reset
       this.apiMethods          = []
       this.methodTypeSelection = null
       this.eventSelection      = null
       this.constantSelection   = null
       this.displayExamples     = []
+
+      if (this.search.trim() === "") {
+        return
+      }
+
+      Debug.log("[search] [%s]", this.search)
+
+      this.optionLoaded = false
 
       this.formChange()
 
@@ -410,6 +414,8 @@ export default {
       if (this.search.length >= 3) {
         Analytics.trackCountsEvent("quest_api_search", this.search)
       }
+
+      this.optionLoaded = true
     },
 
     onSearchMethodExampleLoad: debounce(function () {
@@ -432,8 +438,6 @@ export default {
       })
 
       this.loadSearchExamples(methodSearchTerms)
-      this.optionLoaded = true
-
     }, 500),
 
     resetAllState() {
