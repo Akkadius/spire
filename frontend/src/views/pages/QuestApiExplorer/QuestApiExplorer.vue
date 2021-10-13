@@ -369,6 +369,11 @@ export default {
     onSearch: debounce(function () {
       Debug.log("[onSearch] [%s]", this.search)
 
+      if (this.search.trim() === "") {
+        this.optionLoaded = true
+        return
+      }
+
       this.doSearch()
     }, 500),
 
