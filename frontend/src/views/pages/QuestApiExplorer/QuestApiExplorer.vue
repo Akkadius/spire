@@ -43,7 +43,7 @@
                     <b-input
                       id="quest-explorer-search"
                       v-model="search"
-                      v-on:keyup="onSearch(); onSearchMethodExampleLoad()"
+                      v-on:keyup="optionLoaded = false; onSearch(); onSearchMethodExampleLoad()"
                       placeholder="Search for methods, events (soon constants)..."
                     />
                   </div>
@@ -370,7 +370,7 @@ export default {
       Debug.log("[onSearch] [%s]", this.search)
 
       this.doSearch()
-    }, 200),
+    }, 500),
 
     doSearch: function () {
       // reset
