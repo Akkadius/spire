@@ -6,11 +6,6 @@
         <div class="row">
           <div class="col-12">
             <eq-window style="margin-top: 30px" title="Quest API Explorer">
-
-              <h1 class="eq-header text-center mt-5" v-if="!loaded">LOADING... PLEASE WAIT...</h1>
-
-              <app-loader :is-loading="!loaded" padding="4"/>
-
               <div v-if="loaded">
 
                 <!-- Form -->
@@ -59,6 +54,8 @@
                     </div>
                   </div>
                 </div>
+
+
 
                 <!-- Display Quest API Methods -->
                 <div class="row mt-2" v-if="apiMethods.length > 0">
@@ -120,7 +117,7 @@
 
                 <!-- Search Results -->
 
-                <div v-if="search.length > 0">
+                <div v-if="search.length > 0 && optionLoaded">
                   <h3
                     class="eq-header pb-3"
                     style="border-bottom: 1px solid gray"
@@ -177,7 +174,11 @@
 
                 </div>
 
+                <app-loader :is-loading="!optionLoaded" padding="4"/>
+
               </div>
+
+              <app-loader :is-loading="!loaded" padding="4"/>
 
               <eq-debug :data="api" v-if="Object.keys(api).length"/>
 
@@ -329,6 +330,7 @@ export default {
       routeWatcher: null,
 
       loaded: false,
+      optionLoaded: true,
 
       // linked method examples
       linkedExamples: {
@@ -372,6 +374,8 @@ export default {
 
     doSearch: function () {
       Debug.log("[search] [%s]", this.search)
+
+      this.optionLoaded = false
 
       // reset
       this.apiMethods          = []
@@ -428,6 +432,7 @@ export default {
       })
 
       this.loadSearchExamples(methodSearchTerms)
+      this.optionLoaded = true
 
     }, 500),
 

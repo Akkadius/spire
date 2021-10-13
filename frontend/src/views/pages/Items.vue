@@ -149,6 +149,7 @@
             </div>
 
             <app-loader :is-loading="!loaded" padding="4"/>
+
           </eq-window>
 
           <!-- card rendering -->
