@@ -109,12 +109,11 @@ export default {
     }
   },
   methods: {
-
-
     async selectTask(task) {
       this.taskSelected = task.id
 
-      this.$router.push({path: '/tasks/' + this.taskSelected}).catch(() => {})
+      this.$router.push({path: '/tasks/' + this.taskSelected}).catch(() => {
+      })
     },
 
     async filterResultsByName() {

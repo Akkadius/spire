@@ -143,19 +143,19 @@
 </template>
 
 <script type="ts">
-import {ItemApi, SpellsNewApi}               from "@/app/api/api";
-import EqWindow                              from "@/components/eq-ui/EQWindow.vue";
-import {SpireApiClient}                      from "@/app/api/spire-api-client";
-import EqItemCardPreview                         from "@/components/eq-ui/EQItemCardPreview.vue";
-import * as util                             from "util";
-import EqSpellPreview                        from "@/components/eq-ui/EQSpellCardPreview.vue";
-import {DB_CLASSES_ICONS}                    from "@/app/constants/eq-class-icon-constants";
-import {App}                                 from "@/constants/app";
+import {ItemApi, SpellsNewApi} from "@/app/api/api";
+import EqWindow from "@/components/eq-ui/EQWindow.vue";
+import {SpireApiClient} from "@/app/api/spire-api-client";
+import EqItemCardPreview from "@/components/eq-ui/EQItemCardPreview.vue";
+import * as util from "util";
+import EqSpellPreview from "@/components/eq-ui/EQSpellCardPreview.vue";
+import {DB_CLASSES_ICONS} from "@/app/constants/eq-class-icon-constants";
+import {App} from "@/constants/app";
 import {DB_CLASSES_SHORT, DB_PLAYER_CLASSES} from "@/app/constants/eq-classes-constants";
-import {DB_SPA}                              from "@/app/constants/eq-spell-constants";
-import EqSpellPreviewTable                   from "@/components/eq-ui/EQSpellPreviewTable.vue";
-import {Spells}                              from "@/app/spells";
-import {Items}                               from "@/app/items";
+import {DB_SPA} from "@/app/constants/eq-spell-constants";
+import EqSpellPreviewTable from "@/components/eq-ui/EQSpellPreviewTable.vue";
+import {Spells} from "@/app/spells";
+import {Items} from "@/app/items";
 import {ROUTE} from "@/routes";
 
 export default {
@@ -240,13 +240,13 @@ export default {
     },
 
     resetForm: function () {
-      this.selectedClass     = 0;
-      this.spellName         = "";
-      this.spellEffect       = "";
-      this.selectedSpa       = -1;
-      this.selectedLevel     = 0;
+      this.selectedClass = 0;
+      this.spellName = "";
+      this.spellEffect = "";
+      this.selectedSpa = -1;
+      this.selectedLevel = 0;
       this.selectedLevelType = 0;
-      this.spells            = null;
+      this.spells = null;
       this.updateQueryState()
     },
 
@@ -273,8 +273,8 @@ export default {
 
     selectClass: function (eqClass) {
       this.selectedClass = eqClass;
-      this.spellName     = ""
-      this.selectedSpa   = -1
+      this.spellName = ""
+      this.selectedSpa = -1
       this.updateQueryState();
       this.listSpells()
     },
@@ -297,7 +297,7 @@ export default {
     listSpells: function () {
       this.loaded = false;
 
-      const api   = (new SpellsNewApi(SpireApiClient.getOpenApiConfig()))
+      const api = (new SpellsNewApi(SpireApiClient.getOpenApiConfig()))
       let filters = [];
       let whereOr = [];
 
@@ -353,7 +353,7 @@ export default {
         wheresOrs.push(where)
       })
 
-      let request   = {};
+      let request = {};
       request.limit = this.limit;
 
       // filter by class
@@ -376,7 +376,7 @@ export default {
 
           // fetch spell ids that might be referenced by effects to bulk preload
           let spellsToPreload = [];
-          let itemsToPreload  = [];
+          let itemsToPreload = [];
           result.data.forEach((spell) => {
             for (let effectIndex = 1; effectIndex <= 12; effectIndex++) {
               const spellId = Spells.getSpellIdFromEffectIfExists(spell, effectIndex);
