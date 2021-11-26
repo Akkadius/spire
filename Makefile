@@ -161,8 +161,14 @@ install: ##@install Runs installer
 	make mysql-init
 	make seed-peq-database
 	make seed-spire-tables
+	make install-assets
 	@./scripts/banner.sh "Environment Initialized!"
 	@cat ./scripts/install-message.txt
+
+install-assets: ##@install Installs assets
+	$(DRUNPREFIX) docker-compose exec workspace bash -c 'curl --compressed -o /tmp/assets.zip -L https://github.com/Akkadius/eq-asset-preview/archive/refs/heads/master.zip'
+	$(DRUNPREFIX) docker-compose exec workspace bash -c 'unzip -o /tmp/assets.zip -d /tmp/assets'
+	$(DRUNPREFIX) docker-compose exec workspace bash -c 'cp -R /tmp/assets/eq-asset-preview-master/ ./frontend/public/'
 
 #----------------------
 # mysql

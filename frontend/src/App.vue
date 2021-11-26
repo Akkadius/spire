@@ -94,9 +94,9 @@ export default {
 @import "../node_modules/ag-grid-community/dist/styles/ag-theme-balham-dark.css";
 
 /* spritesheet assets */
-@import "https://rawcdn.githack.com/Akkadius/eq-asset-preview/4dfd41553f0f30e4061ca63d7dba589b978c40b8/assets/sprites/item-icons.css";
-@import "https://rawcdn.githack.com/Akkadius/eq-asset-preview/4dfd41553f0f30e4061ca63d7dba589b978c40b8/assets/sprites/objects.css";
-@import "https://rawcdn.githack.com/Akkadius/eq-asset-preview/4dfd41553f0f30e4061ca63d7dba589b978c40b8/assets/sprites/race-models.css";
+@import "../public/eq-asset-preview-master/assets/sprites/item-icons.css";
+@import "../public/eq-asset-preview-master/assets/sprites/objects.css";
+@import "../public/eq-asset-preview-master/assets/sprites/race-models.css";
 
 .card-slim {
   padding: 18px !important;
