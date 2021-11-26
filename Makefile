@@ -170,6 +170,11 @@ install-assets: ##@install Installs assets
 	$(DRUNPREFIX) docker-compose exec workspace bash -c 'unzip -o /tmp/assets.zip -d /tmp/assets'
 	$(DRUNPREFIX) docker-compose exec workspace bash -c 'cp -R /tmp/assets/eq-asset-preview-master/ ./frontend/public/'
 
+install-assets-prod: ##@install Installs assets
+	docker-compose exec prod bash -c 'curl --compressed -o /tmp/assets.zip -L https://github.com/Akkadius/eq-asset-preview/archive/refs/heads/master.zip'
+	docker-compose exec prod bash -c 'unzip -o /tmp/assets.zip -d /tmp/assets'
+	docker-compose exec prod bash -c 'cp -R /tmp/assets/eq-asset-preview-master/ ./frontend/public/'
+
 #----------------------
 # mysql
 #----------------------
