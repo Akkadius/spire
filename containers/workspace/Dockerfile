@@ -8,7 +8,7 @@ ENV PUID ${PUID}
 ARG PGID=1000
 ENV PGID ${PGID}
 
-ENV GO_VERSION 1.16.2
+ENV GO_VERSION 1.17.3
 
 RUN apt-get update -yqq && \
     groupadd -g ${PGID} go && \
