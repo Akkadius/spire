@@ -37,9 +37,6 @@ RUN apt-get update && apt-get install -y \
     unzip \
  && rm -rf /var/lib/apt/lists/* \
 
-RUN curl -sL https://deb.nodesource.com/setup_12.x | bash && \
-    apt-get update && apt-get install -y nodejs npm node-gyp && rm -rf /var/lib/apt/lists/*
-
 #############################################
 # install go
 #############################################
@@ -86,6 +83,12 @@ RUN go get -u github.com/gobuffalo/packr/packr
 RUN go get -u github.com/swaggo/swag/cmd/swag
 RUN go get -u github.com/swaggo/echo-swagger
 RUN go get -u github.com/google/wire/cmd/wire
+
+#############################################
+# node
+#############################################
+RUN curl -sL https://deb.nodesource.com/setup_12.x | sudo bash && \
+    sudo apt-get update && sudo apt-get install -y nodejs && sudo rm -rf /var/lib/apt/lists/*
 
 #############################################
 # bash

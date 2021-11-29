@@ -24,14 +24,12 @@ RUN apt-get update && apt-get install -y \
     git \
     inetutils-ping \
     wget \
+    sudo \
     make \
     mariadb-client \
     zip \
     unzip \
  && rm -rf /var/lib/apt/lists/*
-
-RUN curl -sL https://deb.nodesource.com/setup_12.x | bash && \
-    apt-get update && apt-get install -y nodejs npm node-gyp && rm -rf /var/lib/apt/lists/*
 
 #############################################
 # install go
@@ -48,6 +46,12 @@ ENV GOROOT=/usr/local/go/
 ENV PATH=$PATH:/usr/local/go/bin:$GOPATH/bin
 ENV CGO_ENABLED 0
 
+#############################################
+# sudo
+#############################################
+RUN echo "go ALL=(root) NOPASSWD:ALL" > /etc/sudoers.d/user && \
+     chmod 0440 /etc/sudoers.d/user
+
 #######################################################################
 # default shell
 #######################################################################
@@ -57,6 +61,17 @@ USER go
 
 RUN go get -u github.com/cosmtrek/air
 RUN go get -u github.com/gobuffalo/packr/packr
+
+#############################################
+# node
+#############################################
+RUN curl -sL https://deb.nodesource.com/setup_12.x | sudo bash && \
+    sudo apt-get update && sudo apt-get install -y nodejs && sudo rm -rf /var/lib/apt/lists/*
+
+# Remove sudo; we needed it during build steps to make per-user installs smoother
+USER root
+RUN rm /etc/sudoers.d/user
+USER go
 
 #############################################
 # bash
