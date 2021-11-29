@@ -20,9 +20,10 @@ require (
 	github.com/go-openapi/jsonreference v0.19.3 // indirect
 	github.com/go-openapi/spec v0.19.4 // indirect
 	github.com/go-sql-driver/mysql v1.6.0
-	github.com/gobuffalo/envy v1.10.1 // indirect
+	github.com/gobuffalo/envy v1.9.0 // indirect
+	github.com/gobuffalo/logger v1.0.4 // indirect
 	github.com/gobuffalo/packr v1.30.1
-	github.com/gobuffalo/packr/v2 v2.8.3 // indirect
+	github.com/gobuffalo/packr/v2 v2.8.1 // indirect
 	github.com/gomarkdown/markdown v0.0.0-20201030010234-8ba61b39d0e4
 	github.com/google/wire v0.4.0
 	github.com/gorilla/mux v1.8.0
@@ -30,7 +31,7 @@ require (
 	github.com/iancoleman/strcase v0.1.0
 	github.com/influxdata/influxdb-client-go/v2 v2.2.2
 	github.com/jinzhu/gorm v1.9.16
-	github.com/joho/godotenv v1.4.0
+	github.com/joho/godotenv v1.3.0
 	github.com/karrick/godirwalk v1.16.1 // indirect
 	github.com/konsorten/go-windows-terminal-sequences v1.0.3 // indirect
 	github.com/labstack/echo/v4 v4.1.16
@@ -51,7 +52,8 @@ require (
 	github.com/volatiletech/sqlboiler/v4 v4.2.0
 	github.com/webview/webview v0.0.0-20210330151455-f540d88dde4e
 	golang.org/x/crypto v0.0.0-20210817164053-32db794688a5 // indirect
-	golang.org/x/sys v0.0.0-20211124211545-fe61309f8881 // indirect
+	golang.org/x/sys v0.0.0-20210910150752-751e447fb3d0 // indirect
+	golang.org/x/term v0.0.0-20210615171337-6886f2dfbf5b // indirect
 	golang.org/x/xerrors v0.0.0-20200804184101-5ec99f83aff1 // indirect
 	gopkg.in/oleiade/reflections.v1 v1.0.0 // indirect
 	gopkg.in/yaml.v3 v3.0.0-20210107192922-496545a6307b
