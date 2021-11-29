@@ -18,4 +18,4 @@ cd "$cwd" && packr clean
 cd "$cwd" && packr
 cd "$cwd" && go build
 cd "$cwd" && GOOS=windows GOARCH=amd64 go build
-cd "$cwd" && gh-release --assets=./spire./spire.exe -y
+cd "$cwd" && gh-release --assets=./spire,/spire.exe -y
