@@ -166,11 +166,6 @@ install-assets: ##@install Installs assets
 	$(DRUNPREFIX) $(COMPOSE_COMMAND) exec workspace bash -c 'unzip -o /tmp/assets.zip -d /tmp/assets'
 	$(DRUNPREFIX) $(COMPOSE_COMMAND) exec workspace bash -c 'cp -R /tmp/assets/eq-asset-preview-master/ ./frontend/public/'
 
-install-assets-prod: ##@install Installs assets
-	$(COMPOSE_COMMAND) exec prod bash -c 'curl --compressed -o /tmp/assets.zip -L https://github.com/Akkadius/eq-asset-preview/archive/refs/heads/master.zip'
-	$(COMPOSE_COMMAND) exec prod bash -c 'unzip -o /tmp/assets.zip -d /tmp/assets'
-	$(COMPOSE_COMMAND) exec prod bash -c 'cp -R /tmp/assets/eq-asset-preview-master/ ./frontend/public/'
-
 #----------------------
 # mysql
 #----------------------
