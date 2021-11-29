@@ -8,7 +8,7 @@ steps:
       GH_RELEASE_GITHUB_API_TOKEN:
         from_secret: GH_RELEASE_GITHUB_API_TOKEN
     commands:
-      - pwd
+      - sudo chown -R go /drone/src
       - ./scripts/build-release.sh
     when:
       branch: ["master"]
