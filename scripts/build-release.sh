@@ -5,6 +5,8 @@ cwd=$(pwd)
 # packr for packing web assets into binary
 go install github.com/gobuffalo/packr/packr
 
+make install-assets
+
 #:: Build SPA (Frontend)
 cd "$cwd/frontend" && npm install && npm run build
 
@@ -18,4 +20,4 @@ cd "$cwd" && packr clean
 cd "$cwd" && packr
 cd "$cwd" && go build
 cd "$cwd" && GOOS=windows GOARCH=amd64 go build
-cd "$cwd" && gh-release --assets=./spire -y
+cd "$cwd" && gh-release --assets=./spire./spire.exe -y
