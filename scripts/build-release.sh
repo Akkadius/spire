@@ -11,9 +11,9 @@ make install-assets
 cd "$cwd/frontend" && npm install && npm run build
 
 # Copy local asset images (This step is part of install now)
-# curl -o /tmp/assets.zip -L https://github.com/Akkadius/eq-asset-preview/archive/refs/heads/master.zip
-# unzip -o /tmp/assets.zip -d /tmp/assets
-# cp -R /tmp/assets/eq-asset-preview-master/assets/ ./frontend/dist/
+curl --compressed -o /tmp/assets.zip -L https://github.com/Akkadius/eq-asset-preview/archive/refs/heads/master.zip
+unzip -o /tmp/assets.zip -d /tmp/assets
+cp -R /tmp/assets/eq-asset-preview-master/ ./frontend/public/
 
 #:: Pack frontend assets into binary
 cd "$cwd" && packr clean
