@@ -7,6 +7,7 @@ import (
 	"github.com/Akkadius/spire/internal/http/routes"
 	"github.com/Akkadius/spire/internal/http/spa"
 	"github.com/labstack/echo/v4"
+	"github.com/labstack/echo/v4/middleware"
 	"github.com/sirupsen/logrus"
 	"net/http"
 	"unicode"
@@ -42,7 +43,7 @@ func Serve(port uint, logger *logrus.Logger, router *routes.Router) error {
 
 	// serve spa as embedded static assets
 	s := spa.NewSpirePackagedSpaService(logger)
-	e.GET("/*", s.Spa().Handler())
+	e.GET("/*", s.Spa().Handler(), middleware.GzipWithConfig(middleware.GzipConfig{Level: 1}))
 	e.Use(s.Spa().MiddlewareHandler())
 
 	e.HTTPErrorHandler = errorHandler
