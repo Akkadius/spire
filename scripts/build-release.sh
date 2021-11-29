@@ -5,8 +5,6 @@ cwd=$(pwd)
 # packr for packing web assets into binary
 go install github.com/gobuffalo/packr/packr
 
-make install-assets
-
 #:: Build SPA (Frontend)
 cd "$cwd/frontend" && npm install && npm run build
 
