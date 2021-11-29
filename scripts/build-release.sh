@@ -2,7 +2,7 @@
 go install github.com/gobuffalo/packr/packr
 
 #:: Build SPA (Frontend)
-cd frontend && npm run build && cd ..
+cd frontend && npm install && npm run build && cd ..
 
 # Copy local asset images (This step is part of install now)
 # curl -o /tmp/assets.zip -L https://github.com/Akkadius/eq-asset-preview/archive/refs/heads/master.zip
