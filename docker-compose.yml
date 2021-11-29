@@ -36,31 +36,6 @@ services:
     command: "/bin/bash -c 'sudo chown go -R /home/go/pkg && go get || true && bash'"
 
   #############################################
-  # prod
-  #############################################
-  prod:
-    restart: unless-stopped
-    image: prod
-    build:
-      context: ./containers/prod
-    hostname: prod
-    tty: true
-    volumes:
-      - ./:/home/go/src
-      - build-cache:/home/go/.cache/
-      - shared-pkg:/home/go/pkg
-    environment:
-      TZ: America/Chicago
-      CGO_ENABLED: 0
-      APP_ENV: production
-      TERM: xterm-256color
-    ports:
-      - ${IP_ADDRESS:-0.0.0.0}:80:3000
-    networks:
-      - backend
-    command: "air -c .air.prod.toml"
-
-  #############################################
   # mysql
   #############################################
 

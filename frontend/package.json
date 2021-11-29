@@ -4,9 +4,8 @@
   "private": true,
   "scripts": {
     "dev": "node --max_old_space_size=4096 --stack-size=10000 node_modules/@vue/cli-service/bin/vue-cli-service.js serve --open",
-    "serve": "vue-cli-service serve",
-    "build": "NODE_ENV=production vue-cli-service build --nomaps",
-    "build-assets": "NODE_ENV=production VUE_APP_ASSETS=local node --max_old_space_size=4096 --stack-size=10000 node_modules/@vue/cli-service/bin/vue-cli-service.js build --nomaps",
+    "serve": "node --max_old_space_size=4096 --stack-size=10000 node_modules/@vue/cli-service/bin/vue-cli-service.js serve",
+    "build": "NODE_ENV=production node --max_old_space_size=4096 --stack-size=10000 node_modules/@vue/cli-service/bin/vue-cli-service.js build --nomaps",
     "lint": "vue-cli-service lint"
   },
   "dependencies": {

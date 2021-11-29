@@ -23,14 +23,15 @@ RUN apt-get update && apt-get install -y \
     curl \
     git \
     inetutils-ping \
-    nodejs \
-    npm \
     wget \
     make \
     mariadb-client \
     zip \
     unzip \
  && rm -rf /var/lib/apt/lists/*
+
+RUN curl -sL https://deb.nodesource.com/setup_12.x | bash && \
+    apt-get update && apt-get install -y nodejs && rm -rf /var/lib/apt/lists/*
 
 #############################################
 # install go

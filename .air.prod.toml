@@ -18,7 +18,7 @@ include_ext = ["go", "tpl", "tmpl", "html"]
 exclude_dir = [
 	"bin",
 	"build",
-	"http/spa",
+	"internal/http/spa",
 	"frontend/node_modules",
 	"frontend/dist",
 	"assets",

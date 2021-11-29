@@ -14,3 +14,4 @@ spire.exe
 spire.exe~
 
 frontend/public/eq-asset-preview-master/
+internal/http/spa/a_spa-packr.go
