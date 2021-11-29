@@ -81,6 +81,9 @@ rc: ##@dev Create Redis shell
 
 up: ##@dev Brings up environment
 	$(COMPOSE_COMMAND) up -d mysql workspace
+ifeq ($(APP_ENV),production)
+	$(COMPOSE_COMMAND) up -d mysql workspace
+endif
 
 down: ##@dev Shuts down environment
 	$(COMPOSE_COMMAND) down -t 1
