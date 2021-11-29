@@ -95,18 +95,17 @@ func (c *ParseService) Source(
 
 // Parse parses methods from our source
 func (c *ParseService) Parse(forceRefresh bool) QuestApiResponse {
+	// if lock set, return
+	_, found := c.cache.Get(lockKey)
+	if found {
+		return c.apiResponse()
+	}
 
 	// pull files in
 	c.Source("EQEmu", "Server", "master", forceRefresh)
 
 	// return cached copy
 	if len(perlMethods) > 0 && len(luaMethods) > 0 && !forceRefresh {
-		return c.apiResponse()
-	}
-
-	// if lock set, return
-	_, found := c.cache.Get(lockKey)
-	if found {
 		return c.apiResponse()
 	}
 

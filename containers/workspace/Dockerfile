@@ -38,7 +38,7 @@ RUN apt-get update && apt-get install -y \
  && rm -rf /var/lib/apt/lists/* \
 
 RUN curl -sL https://deb.nodesource.com/setup_12.x | bash && \
-    apt-get update && apt-get install -y nodejs && rm -rf /var/lib/apt/lists/*
+    apt-get update && apt-get install -y nodejs npm --no-install-recommends && rm -rf /var/lib/apt/lists/*
 
 #############################################
 # install go

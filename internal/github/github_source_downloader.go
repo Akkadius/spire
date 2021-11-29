@@ -3,6 +3,7 @@ package github
 import (
 	"fmt"
 	"github.com/Akkadius/spire/internal/unzip"
+	gocache "github.com/patrickmn/go-cache"
 	"github.com/sirupsen/logrus"
 	"io"
 	"io/ioutil"
@@ -15,14 +16,22 @@ import (
 
 type GithubSourceDownloader struct {
 	logger *logrus.Logger
+	cache      *gocache.Cache
 }
 
-func NewGithubSourceDownloader(logger *logrus.Logger) *GithubSourceDownloader {
-	return &GithubSourceDownloader{logger: logger}
+func NewGithubSourceDownloader(logger *logrus.Logger, cache *gocache.Cache) *GithubSourceDownloader {
+	return &GithubSourceDownloader{logger: logger, cache: cache}
 }
 
 // sources quest files and returns filename:contents
 func (g *GithubSourceDownloader) Source(org string, repo string, branch string, forceRefresh bool) map[string]string {
+
+	lockKey := fmt.Sprintf("%v-%v-%v", org, repo, branch)
+	// if lock set, return
+	_, found := g.cache.Get(lockKey)
+	if found {
+		return nil
+	}
 
 	// repo params
 	repoDir := fmt.Sprintf("%v/%v-%v/", os.TempDir(), repo, branch)
@@ -94,6 +103,9 @@ func (g *GithubSourceDownloader) Source(org string, repo string, branch string, 
 	if err != nil {
 		g.logger.Error(err)
 	}
+
+	// delete lock
+	g.cache.Delete(lockKey)
 
 	return unzippedFiles
 }
