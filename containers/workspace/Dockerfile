@@ -66,7 +66,7 @@ RUN chsh -s /bin/bash go
 #############################################
 # download migrate utility (migrations)
 #############################################
-RUN wget --quiet https://github.com/golang-migrate/migrate/releases/download/v4.12.2/migrate.linux-amd64.tar.gz \
+RUN mkdir -p /tmp/ && chmod 1777 /tmp && wget --quiet https://github.com/golang-migrate/migrate/releases/download/v4.12.2/migrate.linux-amd64.tar.gz \
     && tar -xvf migrate.linux-amd64.tar.gz -C /tmp/ \
     && mv /tmp/migrate.linux-amd64 /bin/migrate \
     && chmod +x /bin/migrate
@@ -89,6 +89,8 @@ RUN go get -u github.com/google/wire/cmd/wire
 #############################################
 RUN curl -sL https://deb.nodesource.com/setup_12.x | sudo bash && \
     sudo apt-get update && sudo apt-get install -y nodejs && sudo rm -rf /var/lib/apt/lists/*
+
+RUN sudo npm install -g gh-release
 
 #############################################
 # bash

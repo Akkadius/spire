@@ -7,12 +7,12 @@ go install github.com/gobuffalo/packr/packr
 call npm install -g win-node-env
 
 :: Build SPA (Frontend)
-cd frontend && call npm run build-assets & cd ..
+cd frontend && call npm run build & cd ..
 
 :: Copy local asset images
-curl -o %localappdata%\Temp\assets.zip -L https://github.com/Akkadius/eq-asset-preview/archive/refs/heads/master.zip
-unzip -o %localappdata%\Temp\assets.zip -d %localappdata%\Temp\assets
-xcopy "%localappdata%\Temp\assets\eq-asset-preview-master\assets\" "frontend\dist\assets\" /s /e /y
+:: curl -o %localappdata%\Temp\assets.zip -L https://github.com/Akkadius/eq-asset-preview/archive/refs/heads/master.zip
+:: unzip -o %localappdata%\Temp\assets.zip -d %localappdata%\Temp\assets
+:: xcopy "%localappdata%\Temp\assets\eq-asset-preview-master\assets\" "frontend\dist\assets\" /s /e /y
 
 @REM xcopy "frontend\dist\" "public\" /s /e /y
 

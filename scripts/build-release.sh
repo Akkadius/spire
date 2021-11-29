@@ -2,7 +2,7 @@
 go install github.com/gobuffalo/packr/packr
 
 #:: Build SPA (Frontend)
-cd frontend && npm run build-assets && cd ..
+cd frontend && npm run build && cd ..
 
 # Copy local asset images (This step is part of install now)
 # curl -o /tmp/assets.zip -L https://github.com/Akkadius/eq-asset-preview/archive/refs/heads/master.zip
@@ -16,3 +16,4 @@ packr
 go build
 GOOS=windows GOARCH=amd64 go build
 
+gh-release --assets=./spire -y

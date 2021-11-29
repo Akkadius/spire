@@ -157,6 +157,9 @@ generate-swagger: ##@generate Generate swagger docs (Run in workspace container)
 build: ##@install Build
 	$(DRUNPREFIX) $(COMPOSE_COMMAND) build
 
+publish: ##@images
+	docker push akkadius/spire:go-workspace
+
 install: ##@install Runs installer
 	$(DRUNPREFIX) $(COMPOSE_COMMAND) build
 	make mysql-init

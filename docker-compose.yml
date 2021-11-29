@@ -14,7 +14,7 @@ services:
   # workspace
   #############################################
   workspace:
-    image: go-workspace
+    image: akkadius/spire:go-workspace
     build:
       context: ./containers/workspace
     hostname: go-workspace

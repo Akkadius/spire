@@ -1,0 +1,8 @@
+{
+  "name": "spire",
+  "version": "1.0.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Akkadius/spire.git"
+  }
+}

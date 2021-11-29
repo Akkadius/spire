@@ -1,0 +1,14 @@
+kind: pipeline
+name: default
+
+steps:
+  - name: spire-build-release
+    image: akkadius/spire:go-workspace
+    environment:
+      GH_RELEASE_GITHUB_API_TOKEN:
+        from_secret: GH_RELEASE_GITHUB_API_TOKEN
+    commands:
+      - ./scripts/build-release.sh
+    when:
+      branch: ["master"]
+      event: [push]
