@@ -12,6 +12,7 @@ import (
 	"path/filepath"
 	"runtime"
 	"strings"
+	"time"
 )
 
 type GithubSourceDownloader struct {
@@ -32,6 +33,8 @@ func (g *GithubSourceDownloader) Source(org string, repo string, branch string, 
 	if found {
 		return nil
 	}
+
+	g.cache.Set(lockKey, 1, time.Minute*10)
 
 	// repo params
 	repoDir := fmt.Sprintf("%v/%v-%v/", os.TempDir(), repo, branch)
