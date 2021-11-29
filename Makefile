@@ -154,6 +154,9 @@ generate-swagger: ##@generate Generate swagger docs (Run in workspace container)
 # install
 #----------------------
 
+build: ##@install Build
+	$(DRUNPREFIX) $(COMPOSE_COMMAND) build
+
 install: ##@install Runs installer
 	$(DRUNPREFIX) $(COMPOSE_COMMAND) build
 	make mysql-init
