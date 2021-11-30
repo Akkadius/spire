@@ -24,6 +24,10 @@ type App struct {
 	desktop       *desktop.WebBoot
 }
 
+func (a App) Cache() *gocache.Cache {
+	return a.cache
+}
+
 func (a App) Desktop() *desktop.WebBoot {
 	return a.desktop
 }

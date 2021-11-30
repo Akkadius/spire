@@ -1,6 +1,6 @@
 module github.com/Akkadius/spire
 
-go 1.12
+go 1.16
 
 require (
 	github.com/Jeffail/gabs v1.4.0
