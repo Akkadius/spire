@@ -6,6 +6,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [1.0.1]
 * Remove application boot dependency on having `APP_NAME` set
-
+ 
 ## [1.0.0]
 * Initial release
