@@ -63,8 +63,6 @@ export default {
 
         result = md.render(result);
 
-        console.log(result)
-
         // doc
         this.changelog = "<div>" + result + "</div>"
 

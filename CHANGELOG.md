@@ -1,3 +1,6 @@
+## [1.0.3]
+* Add version to navbar
+
 ## [1.0.2]
 * Embed the changelog you're reading into the app
 

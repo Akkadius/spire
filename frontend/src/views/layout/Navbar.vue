@@ -152,6 +152,10 @@
 
         </ul>
 
+        <h6 class="navbar-heading" v-if="appVersion">
+          Version {{ appVersion }}
+        </h6>
+
         <!--        &lt;!&ndash; Heading &ndash;&gt;-->
         <!--        <h6 class="navbar-heading">-->
         <!--          Editors-->
@@ -218,6 +222,8 @@ import NavbarUserSettingsCog from "@/views/layout/NavbarUserSettingsCog";
 import UserContext           from "@/app/user/UserContext";
 import NavSectionComponent   from "@/views/layout/NavSectionComponent";
 import {ROUTE}               from "@/routes";
+import {SpireApiClient}      from "@/app/api/spire-api-client";
+import * as util             from "util";
 
 export default {
   components: { NavSectionComponent, NavbarDropdownMenu, NavbarUserSettingsCog },
@@ -225,6 +231,7 @@ export default {
     return {
       backendBaseUrl: "",
       user: null,
+      appVersion: "",
       componentNavs: [
         { title: "Progress Bars", to: "/components#progress-bars" },
         { title: "Page Headers", to: "/components#page-headers" },
@@ -277,6 +284,17 @@ export default {
   },
 
   async mounted() {
+
+    SpireApiClient.v1().get(`/app/env`).then((response) => {
+      if (response.data && response.data.data) {
+        // console.log(response.data.data)
+        const env     = response.data.data.env
+        const version = response.data.data.version
+
+        this.appVersion = util.format("%s (%s)", env, version)
+      }
+    })
+
     this.backendBaseUrl = App.BACKEND_BASE_URL
     this.user           = await UserContext.getUser()
   },

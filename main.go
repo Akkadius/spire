@@ -27,6 +27,7 @@ func main() {
 
 	// ran via executable on desktop
 	if len(os.Args) == 1 && runtime.GOOS == "windows" {
+		_ = os.Setenv("APP_ENV", "desktop")
 		app.Desktop().Boot()
 	}
 

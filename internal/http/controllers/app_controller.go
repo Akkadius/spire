@@ -50,7 +50,6 @@ type PackageJson struct {
 
 func (d *AppController) env(c echo.Context) error {
 	data, _ := d.cache.Get("packageJson")
-
 	pJson, ok := data.([]byte)
 	if ok {
 		var pkg PackageJson
