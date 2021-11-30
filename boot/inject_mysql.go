@@ -81,7 +81,7 @@ func getEQEmuLocalMySQLConfig() (*MySQLConfig, error) {
 		m.Database = config.Server.Database.Db
 	}
 
-	const errorPrefix string = "eqemu Server Local"
+	const errorPrefix string = "eqemu server local"
 
 	if len(m.Username) == 0 {
 		return &MySQLConfig{}, errors.New(fmt.Sprintf("[%v] mysql username cannot be empty", errorPrefix))
@@ -166,7 +166,7 @@ func getSpireMySQLConfig() (*MySQLConfig, error) {
 		ConnMaxLifetime:    env.GetInt("MYSQL_CONNECTION_MAX_LIFE_TIME", "5"),
 	}
 
-	const errorPrefix string = "eqemu Server Local"
+	const errorPrefix string = "eqemu server spire"
 
 	if len(m.Username) == 0 {
 		return &MySQLConfig{}, errors.New(fmt.Sprintf("[%v] mysql username cannot be empty", errorPrefix))
@@ -186,14 +186,14 @@ func getSpireMySQLConfig() (*MySQLConfig, error) {
 
 // Local spire database connection
 func provideSpireDatabase() (*gorm.DB, error) {
-	config, err := getSpireMySQLConfig()
-	if err != nil {
-		return nil, err
-	}
-
 	// if booting from local server folder
 	if getEQEmuConfig().Server.Database.Db != "" {
 		return nil, nil
+	}
+
+	config, err := getSpireMySQLConfig()
+	if err != nil {
+		return nil, err
 	}
 
 	logMode := logger.Silent
