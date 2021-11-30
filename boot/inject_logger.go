@@ -5,7 +5,6 @@ import (
 	"github.com/go-errors/errors"
 	"github.com/google/wire"
 	"github.com/sirupsen/logrus"
-	"os"
 )
 
 const (
@@ -54,7 +53,7 @@ type LoggerConfig struct {
 // return logger config
 func getLoggerConfig() (*LoggerConfig, error) {
 	c := &LoggerConfig{
-		Application: os.Getenv("APP_NAME"),
+		Application: env.Get("APP_NAME", "local"),
 		Environment: env.Get("APP_ENV", "local"),
 		Formatter:   env.Get("LOGGING_FORMAT", "text"),
 	}
