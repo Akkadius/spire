@@ -9,7 +9,7 @@
         </div>
 
         <div class='spell-table' v-if="spells.length > 0">
-<!--        <div class='eq-window-nested-blue' v-if="spells.length > 0" style="overflow-y: scroll;">-->
+          <!--        <div class='eq-window-nested-blue' v-if="spells.length > 0" style="overflow-y: scroll;">-->
           <table id="tabbox1" class="eq-table eq-highlight-rows" style="display: table;">
             <thead>
             <tr>
@@ -25,7 +25,7 @@
             </tr>
             </thead>
             <tbody>
-            <tr v-for="(spell, index) in spells" :key="spell.id">
+            <tr v-for="(spell, index) in spells" :key="spell.id" @click="editSpell(spell.id)">
               <td>
 
                 <v-runtime-template
@@ -65,15 +65,17 @@
 </template>
 
 <script>
-import {Spells} from "@/app/spells";
-import EqWindow from "@/components/eq-ui/EQWindow.vue";
-import EqSpellEffects from "@/components/eq-ui/EQSpellEffects";
-import EqSpellPreview from "@/components/eq-ui/EQSpellCardPreview.vue";
-import {App}          from "@/constants/app";
+import {Spells}           from "@/app/spells";
+import EqWindow           from "@/components/eq-ui/EQWindow.vue";
+import EqSpellEffects     from "@/components/eq-ui/EQSpellEffects";
+import EqSpellPreview     from "@/components/eq-ui/EQSpellCardPreview.vue";
+import {App}              from "@/constants/app";
 import EqSpellDescription from "@/components/eq-ui/EQSpellDescription";
 import {DB_SPELL_TARGETS} from "@/app/constants/eq-spell-constants";
 import {DB_CLASSES_ICONS} from "@/app/constants/eq-class-icon-constants";
 import {DB_CLASSES_SHORT} from "@/app/constants/eq-classes-constants";
+import {ROUTE}            from "@/routes";
+import * as util          from "util";
 
 export default {
   name: "EqSpellPreviewTable",
@@ -147,6 +149,19 @@ export default {
     },
     getBuffDuration: function (spell) {
       return Spells.getBuffDuration(spell)
+    },
+    editSpell(spellId) {
+
+      // for some reason this needs to be wiped first
+      this.$router.push(
+        {
+          path: util.format(ROUTE.SPELL_EDIT, spellId),
+          query: {}
+        }
+      ).catch(() => {
+      })
+
+      console.log(spellId)
     }
   }
 }
@@ -158,7 +173,7 @@ export default {
 }
 
 .eq-table td {
-  padding-top:    5px;
+  padding-top: 5px;
   padding-bottom: 5px;
   border-right: .1px solid #ffffff1c;
   border-left: .1px solid #ffffff1c;

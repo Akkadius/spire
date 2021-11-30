@@ -1,5 +1,5 @@
 <template>
-  <div class="pb-4" style="min-width: 400px; max-width: 500px; padding: 5px"
+  <div class="pb-4 fade-in" style="min-width: 400px; max-width: 500px; padding: 5px"
        v-if="spellData && spellData['targettype']">
 
     <div class="row">
@@ -420,6 +420,12 @@ export default {
     "eq-item-card-preview": () => import("@/components/eq-ui/EQItemCardPreview.vue"),
     "v-runtime-template": () => import("v-runtime-template")
   },
+  watch: {
+    'spellData' () {
+      console.log("spell data changed")
+      this.init()
+    }
+  },
   data() {
     return {
       debug: App.DEBUG,
@@ -443,7 +449,9 @@ export default {
   methods: {
     async init() {
 
-      if (!this.spellData["targettype"]) {
+      console.log("init")
+
+      if (!this.spellData || !this.spellData["targettype"]) {
         return
       }
 

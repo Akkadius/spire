@@ -1,6 +1,7 @@
 import Vue    from 'vue'
 import Router from 'vue-router'
 import {ROUTE} from "@/routes";
+import * as util from "util";
 
 Vue.use(Router)
 
@@ -67,6 +68,11 @@ export default new Router({
           path: ROUTE.SPELLS_LIST,
           component: () => import('./views/pages/Spells.vue'),
           meta: {title: "Spells Browser"},
+        },
+        {
+          path: util.format(ROUTE.SPELL_EDIT, ":id"),
+          component: () => import('./views/pages/SpellEdit.vue'),
+          meta: {title: "Spell Edit"},
         },
         {
           path: ROUTE.ITEMS_LIST,

@@ -87,13 +87,13 @@
         <!-- Navigation -->
         <ul class="navbar-nav mb-md-4">
           <li class="nav-item">
-            <router-link class="nav-link " to="/spells">
-              <i class="ra ra-book mr-1"></i> Spells
+            <router-link class="nav-link " to="/items">
+              <i class="ra ra-relic-blade mr-1"></i> Items
             </router-link>
           </li>
           <li class="nav-item">
-            <router-link class="nav-link " to="/items">
-              <i class="ra ra-relic-blade mr-1"></i> Items
+            <router-link class="nav-link " to="/spells">
+              <i class="ra ra-book mr-1"></i> Spells
             </router-link>
           </li>
         </ul>

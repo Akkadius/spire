@@ -33,10 +33,16 @@ input[type=checkbox].eq-checkbox:checked + label {
     color:            #FFFFFF !important;
     padding:          5px !important;
     padding-left:     15px !important;
-    margin:           5px;
+    /*margin:           5px;*/
     display:          inline-block;
     vertical-align:   middle;
     font-size:        13px;
+}
+
+[class*="input-group-text"] {
+    background-color: #0b0b10 !important;
+    border:           2px #555555 solid !important;
+    padding: 0.0rem 0.76rem;
 }
 
 /*div usage*/
