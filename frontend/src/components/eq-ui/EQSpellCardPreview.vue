@@ -459,6 +459,12 @@ export default {
       // this is so loading spell effects and any subsequent ajax requests
       // do not block the card from loading
       for (let effectIndex = 1; effectIndex <= 12; effectIndex++) {
+
+        if (this.spellEffectInfo[effectIndex]) {
+          this.spellEffectInfo[effectIndex] = "";
+          this.$forceUpdate()
+        }
+
         if (this.spellData["effectid_" + effectIndex] !== 254) {
           this.getSpellEffectInfo(this.spellData, effectIndex).then((result) => {
             this.spellEffectInfo[result.index] = result.info;
@@ -501,6 +507,7 @@ export default {
     },
 
     loadSpellDescription() {
+      this.effectDescription = ""
       Spells.getSpellDescription(this.spellData).then((result) => {
         if (result && result.trim() !== "") {
           this.effectDescription = result;
