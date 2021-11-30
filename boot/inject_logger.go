@@ -53,7 +53,7 @@ type LoggerConfig struct {
 // return logger config
 func getLoggerConfig() (*LoggerConfig, error) {
 	c := &LoggerConfig{
-		Application: env.Get("APP_NAME", "local"),
+		Application: env.Get("APP_NAME", "spire"),
 		Environment: env.Get("APP_ENV", "local"),
 		Formatter:   env.Get("LOGGING_FORMAT", "text"),
 	}
