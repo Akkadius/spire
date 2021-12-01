@@ -45,13 +45,13 @@
                       <b-form-input placeholder="Formula" disabled/>
                     </b-input-group>
 
-                    <b-input-group v-for="i in 12">
+                    <b-input-group v-for="i in 12" :key="i">
                       <template #prepend>
                         <b-input-group-text style="width: 40px;">{{ i }}</b-input-group-text>
                       </template>
 
                       <b-form-select v-model="spell['effectid_' + i]" @change="redrawCard" style="width: 150px">
-                        <b-form-select-option v-for="(effect, id) in DB_SPA" :value="parseInt(id)">{{ id }}) {{
+                        <b-form-select-option v-for="(effect, id) in DB_SPA" :key="id" :value="parseInt(id)">{{ id }}) {{
                             effect
                           }}
                         </b-form-select-option>
