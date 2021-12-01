@@ -30,6 +30,7 @@
                 </eq-tab>
                 <eq-tab name="Effects">
 
+                  <h4 class="eq-header">Effects</h4>
                   <div >
 
                     <b-input-group style="height: 30px; margin-bottom: 15px">
@@ -67,9 +68,187 @@
 
                   </div>
 
+                  <h4 class="eq-header mt-3">Added Effects</h4>
+
+                  Push Up
+                  <b-form-input v-model="spell.pushback"/>
+                  Push Back
+                  <b-form-input v-model="spell.pushup"/>
+                  Hate Modifier
+                  <b-form-input v-model="spell.bonushate"/>
+                  Spell Hate Given
+                  <b-form-input v-model="spell.hate_added"/>
+                  No Detrimental Spell Aggro
+                  <b-form-input v-model="spell.field_198"/>
+                  Max Critical Chance
+                  <b-form-input v-model="spell.field_217"/>
+                  Viral Range
+                  <b-form-input v-model="spell.viral_range"/>
+                  Viral Targets
+                  <b-form-input v-model="spell.viral_targets"/>
+                  Viral Timer
+                  <b-form-input v-model="spell.viral_timer"/>
+                  Nimbus Type
+                  <b-form-input v-model="spell.nimbuseffect"/>
+                  Max Hits Type
+                  <b-form-input v-model="spell.numhitstype"/>
+                  Max Hits Allowed
+                  <b-form-input v-model="spell.numhits"/>
+                  Recourse Spell ID
+                  <b-form-input v-model="spell.recourse_link"/>
+
+                  <h4 class="eq-header mt-3">Focus</h4>
+
+                  Not Focusable
+                  <b-form-input v-model="spell.not_extendable"/>
+                  Do not allow Heal or Dmg Item Mods (Maxtargets)
+                  <b-form-input v-model="spell.maxtargets"/>
+                  Song Base Effect Cap
+                  <b-form-input v-model="spell.songcap"/>
+
+                  <h4 class="eq-header mt-3">Spell Group</h4>
+
+                  Spell Group
+                  <b-form-input v-model="spell.spellgroup"/>
+                  Rank
+                  <b-form-input v-model="spell.rank"/>
+
+
+
+                </eq-tab>
+                <eq-tab name="General">
+                  Skill
+                  <b-form-input v-model="spell.skill"/>
+                  Good Effect
+                  <b-form-input v-model="spell.good_effect"/>
+                  Mana
+                  <b-form-input v-model="spell.mana"/>
+                  Endurance Cost
+                  <b-form-input v-model="spell.endur_cost"/>
+                  Endurance Upkeep
+                  <b-form-input v-model="spell.endur_upkeep"/>
+                  Use Discipline Window
+                  <b-form-input v-model="spell.is_discipline"/>
+                  pcnpc_only_flag
+                  <b-form-input v-model="spell.pcnpc_only_flag"/>
+                  Teleport Zone / Pet DbaseID / ItemGraphic for Bolt Spells
+                  <b-form-input v-model="spell.teleport_zone"/>
                 </eq-tab>
                 <eq-tab name="Restrictions">
-
+                  Target Restriction
+                  <b-form-input v-model="spell.cast_restriction"/>
+                  Caster Restriction
+                  <b-form-input v-model="spell.field_220"/>
+                  Must Be In Combat
+                  <b-form-input v-model="spell.in_combat"/>
+                  Must Be Out of Combat
+                  <b-form-input v-model="spell.outof_combat"/>
+                  Zone Type (select)
+                  <b-form-input v-model="spell.zonetype"/>
+                  Environment Type
+                  <b-form-input v-model="spell.environment_type"/>
+                  Time of Day
+                  <b-form-input v-model="spell.time_of_day"/>
+                  Only During Fast Regen
+                  <b-form-input v-model="spell.allowrest"/>
+                  Cancel On Sit
+                  <b-form-input v-model="spell.disallow_sit"/>
+                  Must be Sneaking
+                  <b-form-input v-model="spell.sneaking"/>
+                </eq-tab>
+                <eq-tab name="Casting">
+                  Cast Time
+                  <b-form-input v-model="spell.cast_time"/>
+                  Recovery Time
+                  <b-form-input v-model="spell.recovery_time"/>
+                  Recast Time
+                  <b-form-input v-model="spell.recast_time"/>
+                  Timer Index (Timer Max 19, also seen few discs with -1)
+                  <b-form-input v-model="spell.endur_timer_index"/>
+                  Uninterruptable
+                  <b-form-input v-model="spell.uninterruptable"/>
+                  Fizzle Adjustment
+                  <b-form-input v-model="spell.basediff"/>
+                  Cast Not Standing (Can Cast from Sitting position, Can cast on  invulnerable Targets, Can not be interrupted by SE_InterruptCasting)
+                  <b-form-input v-model="spell.cast_not_standing"/>
+                </eq-tab>
+                <eq-tab name="Buffing">
+                  Buff Duration
+                  <b-form-input v-model="spell.buffduration"/>
+                  Duration Formula
+                  <b-form-input v-model="spell.buffdurationformula"/>
+                  Can Not Dispell
+                  <b-form-input v-model="spell.nodispell"/>
+                  Can Not Click Off
+                  <b-form-input v-model="spell.field_232"/>
+                  Persist After Death
+                  <b-form-input v-model="spell.persistdeath"/>
+                  Suspendable
+                  <b-form-input v-model="spell.suspendable"/>
+                  Short Duration Buff Box
+                  <b-form-input v-model="spell.short_buff_box"/>
+                  Can MGB
+                  <b-form-input v-model="spell.can_mgb"/>
+                  No Buff Block
+                  <b-form-input v-model="spell.no_block"/>
+                  DOT not stackable
+                  <b-form-input v-model="spell.dot_stacking_exempt"/>
+                  PVP Duration
+                  <b-form-input v-model="spell.field_181"/>
+                  PVP Duration Cap
+                  <b-form-input v-model="spell.field_182"/>
+                </eq-tab>
+                <eq-tab name="Range">
+                  Target Type
+                  <b-form-input v-model="spell.targettype"/>
+                  Range
+                  <b-form-input v-model="spell.range"/>
+                  AOE Range
+                  <b-form-input v-model="spell.aoerange"/>
+                  AOE Rain Waves
+                  <b-form-input v-model="spell.ae_duration"/>
+                  AOE Max Targets
+                  <b-form-input v-model="spell.aemaxtargets"/>
+                  Min Range
+                  <b-form-input v-model="spell.min_range"/>
+                  Min Distance for Modifier
+                  <b-form-input v-model="spell.min_dist"/>
+                  Min Distance Modifier
+                  <b-form-input v-model="spell.min_dist_mod"/>
+                  Max Distance for Modifier
+                  <b-form-input v-model="spell.max_dist"/>
+                  Max Distance Modifier
+                  <b-form-input v-model="spell.max_dist_mod"/>
+                  Cone Angle Start
+                  <b-form-input v-model="spell.cone_start_angle"/>
+                  Cone Angle End
+                  <b-form-input v-model="spell.cone_stop_angle"/>
+                  NPC does not need Light of Sight to cast
+                  <b-form-input v-model="spell.npc_no_los"/>
+                </eq-tab>
+                <eq-tab name="Resist">
+                  Resist Type
+                  <b-form-input v-model="spell.resisttype"/>
+                  Unresistable
+                  <b-form-input v-model="spell.field_209"/>
+                  Resist Diff
+                  <b-form-input v-model="spell.resist_diff"/>
+                  No Partial Resists
+                  <b-form-input v-model="spell.no_partial_resist"/>
+                  Resist Chance Limits: Max Chance (Actual in game chance is divided by 2)
+                  <b-form-input v-model="spell.max_resist"/>
+                  Resist Chance Limits: Min Chance (Actual in game chance is divided by 2)
+                  <b-form-input v-model="spell.min_resist"/>
+                  PVP Resist Mod
+                  <b-form-input v-model="spell.pvpresistbase"/>
+                  PVP Resist Per Level
+                  <b-form-input v-model="spell.pvpresistcalc"/>
+                  PVP Resist Cap
+                  <b-form-input v-model="spell.pvpresistcap"/>
+                  Reflectable
+                  <b-form-input v-model="spell.reflectable"/>
+                  Feedbackable
+                  <b-form-input v-model="spell.field_160"/>
                 </eq-tab>
               </eq-tabs>
 
