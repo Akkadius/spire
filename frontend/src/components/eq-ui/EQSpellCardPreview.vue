@@ -392,21 +392,21 @@
 
 <script>
 
-import {App} from "@/constants/app";
-import {DB_SKILLS} from "@/app/constants/eq-skill-constants";
+import {App}              from "@/constants/app";
+import {DB_SKILLS}        from "@/app/constants/eq-skill-constants";
 import {
   DB_SPELL_EFFECTS,
   DB_SPELL_NUMHITSTYPE,
   DB_SPELL_RESISTS,
   DB_SPELL_TARGET_RESTRICTION,
   DB_SPELL_TARGETS
-} from "@/app/constants/eq-spell-constants";
-import {SpellsNewApi} from "@/app/api";
-import {SpireApiClient} from "@/app/api/spire-api-client";
-import EqWindow from "@/components/eq-ui/EQWindow";
-import EqDebug from "@/components/eq-ui/EQDebug";
-import {Spells} from "@/app/spells";
-import {Items} from "@/app/items";
+}                         from "@/app/constants/eq-spell-constants";
+import {SpellsNewApi}     from "@/app/api";
+import {SpireApiClient}   from "@/app/api/spire-api-client";
+import EqWindow           from "@/components/eq-ui/EQWindow";
+import EqDebug            from "@/components/eq-ui/EQDebug";
+import {Spells}           from "@/app/spells";
+import {Items}            from "@/app/items";
 import {DB_CLASSES_ICONS} from "@/app/constants/eq-class-icon-constants";
 import {DB_CLASSES_SHORT} from "@/app/constants/eq-classes-constants";
 
@@ -421,10 +421,12 @@ export default {
     "v-runtime-template": () => import("v-runtime-template")
   },
   watch: {
-    'spellData' () {
-      console.log("spell data changed")
-      this.init()
-    }
+    spellData: {
+      handler: function (val, oldVal) {
+        this.init()
+      },
+      deep: true
+    },
   },
   data() {
     return {
@@ -459,7 +461,6 @@ export default {
       // this is so loading spell effects and any subsequent ajax requests
       // do not block the card from loading
       for (let effectIndex = 1; effectIndex <= 12; effectIndex++) {
-
         if (this.spellEffectInfo[effectIndex]) {
           this.spellEffectInfo[effectIndex] = "";
           this.$forceUpdate()
@@ -613,15 +614,15 @@ export default {
 
 <style>
 .spell-field-label {
-  text-align:    right;
-  font-weight:   bold;
+  text-align: right;
+  font-weight: bold;
   padding-right: 10px;
-  width:         35%;
+  width: 35%;
 }
 
 .spell-preview-table {
   word-wrap: break-word;
-  width:     100%;
+  width: 100%;
 }
 
 .spell-preview-table th, td {

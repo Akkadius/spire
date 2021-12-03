@@ -50,21 +50,18 @@
                         <b-input-group-text style="width: 40px;">{{ i }}</b-input-group-text>
                       </template>
 
-                      <b-form-select v-model="spell['effectid_' + i]" @change="redrawCard" style="width: 150px">
+                      <b-form-select v-model="spell['effectid_' + i]" style="width: 150px">
                         <b-form-select-option v-for="(effect, id) in DB_SPA" :key="id" :value="parseInt(id)">{{ id }}) {{
                             effect
                           }}
                         </b-form-select-option>
                       </b-form-select>
 
-                      <b-form-input v-model="spell['effect_base_value_' + i]" @change="redrawCard"/>
-                      <b-form-input v-model="spell['max_' + i]" @change="redrawCard"/>
-                      <b-form-input v-model="spell['effect_limit_value_' + i]" @change="redrawCard"/>
-                      <b-form-input v-model="spell['formula_' + i]" @change="redrawCard"/>
+                      <b-form-input v-model="spell['effect_base_value_' + i]"/>
+                      <b-form-input v-model="spell['max_' + i]"/>
+                      <b-form-input v-model="spell['effect_limit_value_' + i]"/>
+                      <b-form-input v-model="spell['formula_' + i]"/>
                     </b-input-group>
-
-                    <!--                    {{i}})-->
-
 
                   </div>
 
@@ -113,12 +110,13 @@
                   Rank
                   <b-form-input v-model="spell.rank"/>
 
-
-
                 </eq-tab>
                 <eq-tab name="General">
                   Skill
-                  <b-form-input v-model="spell.skill"/>
+                  <b-form-select v-model="spell.skill" class="mb-3" v-if="DB_SKILLS">
+                    <b-form-select-option :value="parseInt(id)" v-for="(skill, id) in DB_SKILLS">{{id}}) {{skill}}</b-form-select-option>
+                  </b-form-select>
+
                   Good Effect
                   <b-form-input v-model="spell.good_effect"/>
                   Mana
@@ -256,8 +254,9 @@
           </div>
 
           <div class="col-5">
-            <eq-window style="margin-top: 30px; margin-right: 10px; width: auto;" v-if="loaded">
-              <eq-spell-preview :spell-data="spell"/>
+            <eq-window style="margin-top: 30px; margin-right: 10px; width: auto;">
+              <eq-spell-preview
+                :spell-data="spell"/>
             </eq-window>
           </div>
         </div>
@@ -274,6 +273,7 @@ import EqTab                      from "../../components/eq-ui/EQTab";
 import EqSpellPreview             from "../../components/eq-ui/EQSpellCardPreview";
 import {Spells}                   from "../../app/spells";
 import {DB_SPA, DB_SPELL_EFFECTS} from "../../app/constants/eq-spell-constants";
+import {DB_SKILLS}                from "../../app/constants/eq-skill-constants";
 
 export default {
   name: "SpellEdit",
@@ -283,6 +283,7 @@ export default {
       spell: null,
       DB_SPELL_EFFECTS: DB_SPELL_EFFECTS,
       DB_SPA: DB_SPA,
+      DB_SKILLS: DB_SKILLS,
       loaded: true,
     }
   },
