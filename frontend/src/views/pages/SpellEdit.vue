@@ -56,6 +56,9 @@
                       <spell-animation-preview
                         class="mt-4"
                         :id="spell.casting_anim"/>
+
+                      Casting Animation
+                      <b-form-input v-model.number="spell.casting_anim"/>
                     </div>
                   </div>
                 </eq-tab>

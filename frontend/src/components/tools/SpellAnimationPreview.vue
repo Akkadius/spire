@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div v-if="previewId === 0">
+    <div v-if="previewId === 0" class="mb-3">
       Spell casting animation preview not found...
     </div>
     <div v-if="previewId > 0">
@@ -9,8 +9,8 @@
         loop
         autoplay
         :style="'height: ' + this.height + 'px; border-radius:10px; border: 1px solid;'"
+        :src="videoSource"
         class="spell-preview">
-        <source :src="spellAnimationUrl + previewId + '.mp4'" type="video/mp4">
       </video>
     </div>
   </div>
@@ -26,23 +26,36 @@ export default {
     return {
       spellAnimationUrl: App.ASSET_SPELL_ANIMATIONS,
       previewId: 0,
+      videoSource: ""
+    }
+  },
+  watch: {
+    id: {
+      handler: function (val, oldVal) {
+        console.log("trigger")
+        this.render()
+      },
+    },
+  },
+  methods: {
+    render() {
+      this.previewId = 0;
+      SpellAnimations[0].contents.forEach((row) => {
+        const pieces      = row.name.split(/\//);
+        const fileName    = pieces[pieces.length - 1].replace(".mp4", "");
+        const animationId = parseInt(fileName)
+
+        if (this.id === animationId) {
+          this.previewId = this.id;
+
+          this.videoSource = this.spellAnimationUrl + this.previewId + '.mp4';
+          return false
+        }
+      })
     }
   },
   created() {
-    SpellAnimations[0].contents.forEach((row) => {
-      const pieces      = row.name.split(/\//);
-      const fileName    = pieces[pieces.length - 1].replace(".mp4", "");
-      const animationId = parseInt(fileName)
-
-      console.log(row)
-      console.log(animationId)
-      console.log(this.id)
-
-      if (this.id === animationId) {
-        this.previewId = this.id;
-        return false
-      }
-    })
+    this.render()
   },
   props: {
     id: {
