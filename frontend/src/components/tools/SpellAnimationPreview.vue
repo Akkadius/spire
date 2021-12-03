@@ -8,7 +8,7 @@
         muted
         loop
         autoplay
-        :style="'width: ' + this.width + 'px; border-radius:10px; border: 1px solid;'"
+        :style="'width: ' + this.width + 'px; height: ' + this.height + 'px; border-radius:10px; border: 1px solid;'"
         :src="videoSource"
         class="spell-preview">
       </video>
@@ -64,6 +64,11 @@ export default {
     },
     width: {
       default: 250,
+      required: false,
+      type: Number,
+    },
+    height: {
+      default: 332,
       required: false,
       type: Number,
     },

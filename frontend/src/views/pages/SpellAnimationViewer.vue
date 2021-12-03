@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="container-fluid">
+    <div :class="isComponent ? '' : 'container-fluid'">
       <app-loader :is-loading="!loaded" padding="8"/>
 
       <eq-window
@@ -147,8 +147,34 @@ export default {
       routeWatcher: null,
     }
   },
+  created() {
+    this.init()
+  },
   methods: {
-    init: function () {
+    init () {
+      if (!this.$route.query.q) {
+        this.search        = ""
+        this.filteredRaces = []
+      }
+
+      // create route watcher
+      this.routeWatcher = this.$watch('$route.query', () => {
+        this.search = this.$route.query.q
+        this.spellAnimSearch();
+      });
+
+      this.render()
+      this.spellAnimSearch()
+
+      // render scroll listener
+      if (Listeners.SpellAnimViewerRenderListener) {
+        window.removeEventListener("scroll", Listeners.SpellAnimViewerRenderListener)
+      }
+
+      Listeners.SpellAnimViewerRenderListener = debounce(handleRender, 100)
+      window.addEventListener("scroll", Listeners.SpellAnimViewerRenderListener);
+    },
+    render: function () {
       // Preload model files
       let modelFiles = [];
       SpellAnimations[0].contents.forEach((row) => {
@@ -161,7 +187,7 @@ export default {
         animationPreviewExists[animationId] = 1
       })
 
-      console.log(animationPreviewExists)
+      // console.log(animationPreviewExists)
 
       // Sort by spell animation number
       modelFiles.sort(function (a, b) {
@@ -211,27 +237,7 @@ export default {
     }
   },
   activated() {
-    if (!this.$route.query.q) {
-      this.search        = ""
-      this.filteredRaces = []
-    }
-
-    // create route watcher
-    this.routeWatcher = this.$watch('$route.query', () => {
-      this.search = this.$route.query.q
-      this.spellAnimSearch();
-    });
-
-    this.init()
-    this.spellAnimSearch()
-
-    // render scroll listener
-    if (Listeners.SpellAnimViewerRenderListener) {
-      window.removeEventListener("scroll", Listeners.SpellAnimViewerRenderListener)
-    }
-
-    Listeners.SpellAnimViewerRenderListener = debounce(handleRender, 100)
-    window.addEventListener("scroll", Listeners.SpellAnimViewerRenderListener);
+   this.init()
   },
   deactivated() {
     if (Listeners.SpellAnimViewerRenderListener) {
@@ -250,6 +256,13 @@ export default {
       window.removeEventListener("scroll", Listeners.SpellAnimViewerRenderListener, true)
       Listeners.SpellAnimViewerRenderListener = null
     }
+  },
+  props: {
+    isComponent: { // here for now because this viewer wasn't built as a component in mind
+      default: false,
+      required: false,
+      type: Boolean,
+    },
   }
 }
 </script>

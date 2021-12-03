@@ -52,7 +52,11 @@
                       ID File
                       <b-form-input v-model="spell.player_1"/>
                     </div>
-                    <div class="col-5" style="text-align: center">
+                    <div
+                      class="col-5"
+                      style="text-align: center"
+                      @mouseover="drawSpellAnimationSelector"
+                    >
                       <spell-animation-preview
                         class="mt-4"
                         :id="spell.spellanim"/>
@@ -320,6 +324,19 @@
               />
             </eq-window>
 
+            <!-- spell anim selector -->
+            <div
+              style="margin-top: 30px; margin-right: 10px; width: auto;"
+              class="fade-in"
+              v-if="spellAnimSelectorActive">
+
+              <spell-animation-viewer :is-component="true"/>
+
+              <!--              <spell-icon-selector-->
+              <!--                :inputData.sync="spell.new_icon"-->
+              <!--              />-->
+            </div>
+
 
           </div>
         </div>
@@ -341,12 +358,13 @@ import {App}                                                          from "../.
 import SpellIconSelector                                              from "../../components/tools/SpellIconSelector";
 import SpellAnimationPreview
                                                                       from "../../components/tools/SpellAnimationPreview";
+import SpellAnimationViewer                                           from "./SpellAnimationViewer";
 
 const MILLISECONDS_BEFORE_WINDOW_RESET = 3000;
 
 export default {
   name: "SpellEdit",
-  components: { SpellAnimationPreview, SpellIconSelector, EqSpellPreview, EqTab, EqTabs, EqWindow, EqWindowFancy },
+  components: { SpellAnimationViewer, SpellAnimationPreview, SpellIconSelector, EqSpellPreview, EqTab, EqTabs, EqWindow, EqWindowFancy },
   data() {
     return {
       spell: null, // spell record data
@@ -360,6 +378,7 @@ export default {
 
       previewSpellActive: true,
       iconSelectorActive: false,
+      spellAnimSelectorActive: false,
 
       tabSelected: { 'basic': true },
 
@@ -383,23 +402,34 @@ export default {
       }
     },
 
+    /**
+     * Selector / previewers
+     */
     resetPreviewComponents() {
-      this.iconSelectorActive = false;
+      this.previewSpellActive      = false;
+      this.iconSelectorActive      = false;
+      this.spellAnimSelectorActive = false;
     },
     previewSpell() {
       let shouldReset = Date.now() - this.lastResetTime > MILLISECONDS_BEFORE_WINDOW_RESET;
       // SECONDS_BEFORE_WINDOW_RESET
 
       if (!this.previewSpellActive && shouldReset) {
-        this.previewSpellActive = true;
         this.resetPreviewComponents()
-        this.lastResetTime = Date.now()
+        this.previewSpellActive = true;
+        this.lastResetTime      = Date.now()
       }
+    },
+    drawSpellAnimationSelector() {
+      this.resetPreviewComponents()
+      this.spellAnimSelectorActive = true
     },
     drawIconSelector() {
       this.previewSpellActive = false;
       this.iconSelectorActive = true;
     },
+
+
     getTargetTypeColor(targetType) {
       return Spells.getTargetTypeColor(targetType);
     },
