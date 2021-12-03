@@ -55,10 +55,10 @@
                     <div class="col-5" style="text-align: center">
                       <spell-animation-preview
                         class="mt-4"
-                        :id="spell.casting_anim"/>
+                        :id="spell.spellanim"/>
 
-                      Casting Animation
-                      <b-form-input v-model.number="spell.casting_anim"/>
+                      Spell Animation
+                      <b-form-input v-model.number="spell.spellanim"/>
                     </div>
                   </div>
                 </eq-tab>
