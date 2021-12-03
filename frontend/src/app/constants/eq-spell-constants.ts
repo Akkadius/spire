@@ -434,7 +434,7 @@ export const DB_SPA = {
   "251": "Endless Quiver",
   "252": "Backstab from Front",
   "253": "Chaotic Stab",
-  "254": "NoSpell",
+  "254": "No Spell",
   "255": "Shielding Duration",
   "256": "Shroud Of Stealth",
   "257": "Give Pet Hold",

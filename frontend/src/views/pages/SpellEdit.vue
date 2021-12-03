@@ -6,8 +6,23 @@
           <div class="col-7">
             <eq-window style="margin-top: 30px" title="Edit Spell">
 
-              <eq-tabs v-if="spell">
-                <eq-tab name="Basic" :selected="true">
+              <eq-tabs v-if="spell && tabSelected">
+                <eq-tab
+                  name="Basic"
+                  @mouseover.native="previewSpell"
+                  :selected="tabSelected['basic']"
+                >
+                  <div class="row" @mouseover="drawIconSelector">
+                    <div class="col-11">
+                      Icon
+                      <b-form-input v-model="spell.new_icon"/>
+                    </div>
+
+                    <div class="col-1" v-if="spell.new_icon > 0">
+                      <img :src="spellCdnUrl + spell.new_icon + '.gif'"
+                           :style="'width:40px;height:auto;border-radius: 10px; ' + 'border: 2px solid ' + getTargetTypeColor(this.spell['targettype']) + '; border-radius: 7px;'">
+                    </div>
+                  </div>
 
                   Id
                   <b-form-input v-model="spell.id"/>
@@ -267,9 +282,23 @@
           </div>
 
           <div class="col-5">
-            <eq-window style="margin-top: 30px; margin-right: 10px; width: auto;">
+
+            <!-- preview spell -->
+            <eq-window
+              style="margin-top: 30px; margin-right: 10px; width: auto;"
+              v-if="previewSpellActive">
               <eq-spell-preview
                 :spell-data="spell"/>
+            </eq-window>
+
+            <!-- icon selector -->
+            <eq-window
+              style="margin-top: 30px; margin-right: 10px; width: auto;"
+              class="fade-in"
+              v-if="iconSelectorActive">
+              <spell-icon-selector
+                :inputData.sync="spell.new_icon"
+              />
             </eq-window>
           </div>
         </div>
@@ -287,19 +316,31 @@ import EqSpellPreview                                                 from "../.
 import {Spells}                                                       from "../../app/spells";
 import {DB_SPA, DB_SPELL_EFFECTS, DB_SPELL_RESISTS, DB_SPELL_TARGETS} from "../../app/constants/eq-spell-constants";
 import {DB_SKILLS}                                                    from "../../app/constants/eq-skill-constants";
+import {App}                                                          from "../../constants/app";
+import SpellIconSelector                                              from "../../components/tools/SpellIconSelector";
+
+const MILLISECONDS_BEFORE_WINDOW_RESET = 3000;
 
 export default {
   name: "SpellEdit",
-  components: { EqSpellPreview, EqTab, EqTabs, EqWindow, EqWindowFancy },
+  components: { SpellIconSelector, EqSpellPreview, EqTab, EqTabs, EqWindow, EqWindowFancy },
   data() {
     return {
-      spell: null,
+      spell: null, // spell record data
+      spellCdnUrl: App.ASSET_SPELL_ICONS_BASE_URL,
       DB_SPELL_EFFECTS: DB_SPELL_EFFECTS,
       DB_SPA: DB_SPA,
       DB_SKILLS: DB_SKILLS,
       DB_SPELL_TARGETS: DB_SPELL_TARGETS,
       DB_SPELL_RESISTS: DB_SPELL_RESISTS,
       loaded: true,
+
+      previewSpellActive: true,
+      iconSelectorActive: false,
+
+      tabSelected: { 'basic': true },
+
+      lastResetTime: Date.now(),
     }
   },
   watch: {
@@ -309,16 +350,41 @@ export default {
   },
   async created() {
     this.load()
-    console.log("created")
   },
   methods: {
     load() {
       if (this.$route.params.id > 0) {
         Spells.getSpell(this.$route.params.id).then(result => {
-          console.log(result)
           this.spell = result
         })
       }
+    },
+
+    resetPreviewComponents() {
+      this.iconSelectorActive = false;
+    },
+    previewSpell() {
+      let shouldReset = Date.now() - this.lastResetTime > MILLISECONDS_BEFORE_WINDOW_RESET;
+      // SECONDS_BEFORE_WINDOW_RESET
+
+      if (!this.previewSpellActive && shouldReset) {
+        this.previewSpellActive = true;
+        this.resetPreviewComponents()
+        this.lastResetTime = Date.now()
+      }
+    },
+    drawIconSelector() {
+      this.previewSpellActive = false;
+      this.iconSelectorActive = true;
+    },
+    getTargetTypeColor(targetType) {
+      return Spells.getTargetTypeColor(targetType);
+    },
+    selectTab(tab) {
+      console.log("trigger")
+      console.log(tab)
+      this.tabSelected      = {}
+      this.tabSelected[tab] = true
     },
     redrawCard() {
       this.loaded = false
