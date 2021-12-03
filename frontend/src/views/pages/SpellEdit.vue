@@ -425,7 +425,7 @@ export default {
       this.spellAnimSelectorActive = true
     },
     drawIconSelector() {
-      this.previewSpellActive = false;
+      this.resetPreviewComponents()
       this.iconSelectorActive = true;
     },
 
