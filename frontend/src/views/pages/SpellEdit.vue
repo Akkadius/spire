@@ -12,36 +12,52 @@
                   @mouseover.native="previewSpell"
                   :selected="tabSelected['basic']"
                 >
-                  <div class="row" @mouseover="drawIconSelector">
-                    <div class="col-11">
+
+                  <div class="row">
+                    <div class="col-2">
+                      Id
+                      <b-form-input v-model="spell.id"/>
+                    </div>
+                    <div class="col-7">
+                      Name
+                      <b-form-input v-model="spell.name"/>
+                    </div>
+
+                    <div class="col-2" @mouseover="drawIconSelector">
                       Icon
                       <b-form-input v-model="spell.new_icon"/>
                     </div>
 
-                    <div class="col-1" v-if="spell.new_icon > 0">
-                      <img :src="spellCdnUrl + spell.new_icon + '.gif'"
-                           :style="'width:40px;height:auto;border-radius: 10px; ' + 'border: 2px solid ' + getTargetTypeColor(this.spell['targettype']) + '; border-radius: 7px;'">
+                    <div class="col-1" v-if="spell.new_icon > 0" @mouseover="drawIconSelector">
+                      <img
+                        :src="spellCdnUrl + spell.new_icon + '.gif'"
+                        class="mt-3"
+                        :style="'width:35px;height:auto;border-radius: 10px; ' + 'border: 2px solid ' + getTargetTypeColor(this.spell['targettype']) + '; border-radius: 7px;'">
                     </div>
+
                   </div>
 
-                  Id
-                  <b-form-input v-model="spell.id"/>
-                  Name
-                  <b-form-input v-model="spell.name"/>
-                  You Cast
-                  <b-form-input v-model="spell.you_cast"/>
-                  Other Casts
-                  <b-form-input v-model="spell.other_casts"/>
-                  Cast On You
-                  <b-form-input v-model="spell.cast_on_you"/>
-                  Cast On Other
-                  <b-form-input v-model="spell.cast_on_other"/>
-                  Spell Fades
-                  <b-form-input v-model="spell.spell_fades"/>
-                  ID File
-                  <b-form-input v-model="spell.player_1"/>
-
-
+                  <div class="row">
+                    <div class="col-7">
+                      You Cast
+                      <b-form-input v-model="spell.you_cast"/>
+                      Other Casts
+                      <b-form-input v-model="spell.other_casts"/>
+                      Cast On You
+                      <b-form-input v-model="spell.cast_on_you"/>
+                      Cast On Other
+                      <b-form-input v-model="spell.cast_on_other"/>
+                      Spell Fades
+                      <b-form-input v-model="spell.spell_fades"/>
+                      ID File
+                      <b-form-input v-model="spell.player_1"/>
+                    </div>
+                    <div class="col-5" style="text-align: center">
+                      <spell-animation-preview
+                        class="mt-4"
+                        :id="spell.casting_anim"/>
+                    </div>
+                  </div>
                 </eq-tab>
                 <eq-tab name="Effects">
 
@@ -300,6 +316,8 @@
                 :inputData.sync="spell.new_icon"
               />
             </eq-window>
+
+
           </div>
         </div>
       </div>
@@ -318,12 +336,14 @@ import {DB_SPA, DB_SPELL_EFFECTS, DB_SPELL_RESISTS, DB_SPELL_TARGETS} from "../.
 import {DB_SKILLS}                                                    from "../../app/constants/eq-skill-constants";
 import {App}                                                          from "../../constants/app";
 import SpellIconSelector                                              from "../../components/tools/SpellIconSelector";
+import SpellAnimationPreview
+                                                                      from "../../components/tools/SpellAnimationPreview";
 
 const MILLISECONDS_BEFORE_WINDOW_RESET = 3000;
 
 export default {
   name: "SpellEdit",
-  components: { SpellIconSelector, EqSpellPreview, EqTab, EqTabs, EqWindow, EqWindowFancy },
+  components: { SpellAnimationPreview, SpellIconSelector, EqSpellPreview, EqTab, EqTabs, EqWindow, EqWindowFancy },
   data() {
     return {
       spell: null, // spell record data
