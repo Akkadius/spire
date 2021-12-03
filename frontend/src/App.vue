@@ -89,15 +89,6 @@ export default {
 
 <style lang="scss">
 
-/* ag-grid */
-@import "../node_modules/ag-grid-community/dist/styles/ag-grid.css";
-@import "../node_modules/ag-grid-community/dist/styles/ag-theme-balham-dark.css";
-
-/* spritesheet assets */
-@import "../public/eq-asset-preview-master/assets/sprites/item-icons.css";
-@import "../public/eq-asset-preview-master/assets/sprites/objects.css";
-@import "../public/eq-asset-preview-master/assets/sprites/race-models.css";
-
 .card-slim {
   padding: 18px !important;
 }

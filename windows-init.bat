@@ -24,7 +24,8 @@ goto check_Permissions
 choco install -y make
 
 :: Install NodeJS
-choco install -y nodejs-lts
+:: choco install -y nodejs-lts
+choco install -y nodejs --version=12.13.0
 
 :: Install Go (If want to use outside of docker)
 choco install -y golang
