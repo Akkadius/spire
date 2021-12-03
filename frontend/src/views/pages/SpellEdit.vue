@@ -6,7 +6,7 @@
           <div class="col-7">
             <eq-window style="margin-top: 30px" title="Edit Spell">
 
-              <eq-tabs v-if="spell && tabSelected">
+              <eq-tabs v-if="spell && tabSelected" :hover-open="true">
                 <eq-tab
                   name="Basic"
                   @mouseover.native="previewSpell"

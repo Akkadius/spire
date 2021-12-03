@@ -5,8 +5,14 @@
         <li
           v-for="tab in tabs"
           :class="{ 'eq-tab-open': tab.isActive }"
-          @click="selectTab(tab)">
-          <a @click="selectTab(tab)" style="color:white">{{ tab.name }}</a>
+          @mouseover="selectTabHover(tab)"
+          @click="selectTab(tab)"
+        >
+          <a
+            @click="selectTab(tab)"
+            style="color:white">
+            {{ tab.name }}
+          </a>
         </li>
       </ul>
     </nav>
@@ -27,11 +33,23 @@ export default {
     this.tabs = this.$children;
   },
   methods: {
+    selectTabHover(selectedTab) {
+      if (this.hoverOpen) {
+        this.selectTab(selectedTab)
+      }
+    },
     selectTab(selectedTab) {
       this.tabs.forEach(tab => {
         tab.isActive = (tab.name === selectedTab.name);
       });
     }
+  },
+  props: {
+    hoverOpen: {
+      default: false,
+      required: false,
+      type: Boolean,
+    },
   }
 }
 </script>
