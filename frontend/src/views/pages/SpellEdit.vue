@@ -114,7 +114,7 @@
                 </eq-tab>
                 <eq-tab name="General">
                   Skill
-                  <b-form-select v-model="spell.skill" class="mb-3" v-if="DB_SKILLS">
+                  <b-form-select v-model="spell.skill" v-if="DB_SKILLS">
                     <b-form-select-option :value="parseInt(id)" v-for="(skill, id) in DB_SKILLS">{{ id }}) {{ skill }}
                     </b-form-select-option>
                   </b-form-select>
@@ -201,9 +201,9 @@
                 </eq-tab>
                 <eq-tab name="Range">
                   Target Type
-                  <b-form-select v-model="spell.targettype" class="mb-3" v-if="DB_SPELL_TARGETS">
-                    <b-form-select-option :value="parseInt(id)" v-for="(skill, id) in DB_SPELL_TARGETS">{{ id }})
-                      {{ skill }}
+                  <b-form-select v-model="spell.targettype" v-if="DB_SPELL_TARGETS">
+                    <b-form-select-option :value="parseInt(id)" v-for="(value, id) in DB_SPELL_TARGETS">{{ id }})
+                      {{ value }}
                     </b-form-select-option>
                   </b-form-select>
 
@@ -234,7 +234,12 @@
                 </eq-tab>
                 <eq-tab name="Resist">
                   Resist Type
-                  <b-form-input v-model="spell.resisttype"/>
+                  <b-form-select v-model="spell.resisttype" v-if="DB_SPELL_RESISTS">
+                    <b-form-select-option :value="parseInt(id)" v-for="(value, id) in DB_SPELL_RESISTS">{{ id }})
+                      {{ value }}
+                    </b-form-select-option>
+                  </b-form-select>
+
                   Unresistable
                   <b-form-input v-model="spell.field_209"/>
                   Resist Diff
@@ -274,14 +279,14 @@
 </template>
 
 <script>
-import EqWindowFancy                                from "../../components/eq-ui/EQWindowFancy";
-import EqWindow                                     from "../../components/eq-ui/EQWindow";
-import EqTabs                                       from "../../components/eq-ui/EQTabs";
-import EqTab                                        from "../../components/eq-ui/EQTab";
-import EqSpellPreview                               from "../../components/eq-ui/EQSpellCardPreview";
-import {Spells}                                     from "../../app/spells";
-import {DB_SPA, DB_SPELL_EFFECTS, DB_SPELL_TARGETS} from "../../app/constants/eq-spell-constants";
-import {DB_SKILLS}                                  from "../../app/constants/eq-skill-constants";
+import EqWindowFancy                                                  from "../../components/eq-ui/EQWindowFancy";
+import EqWindow                                                       from "../../components/eq-ui/EQWindow";
+import EqTabs                                                         from "../../components/eq-ui/EQTabs";
+import EqTab                                                          from "../../components/eq-ui/EQTab";
+import EqSpellPreview                                                 from "../../components/eq-ui/EQSpellCardPreview";
+import {Spells}                                                       from "../../app/spells";
+import {DB_SPA, DB_SPELL_EFFECTS, DB_SPELL_RESISTS, DB_SPELL_TARGETS} from "../../app/constants/eq-spell-constants";
+import {DB_SKILLS}                                                    from "../../app/constants/eq-skill-constants";
 
 export default {
   name: "SpellEdit",
@@ -293,6 +298,7 @@ export default {
       DB_SPA: DB_SPA,
       DB_SKILLS: DB_SKILLS,
       DB_SPELL_TARGETS: DB_SPELL_TARGETS,
+      DB_SPELL_RESISTS: DB_SPELL_RESISTS,
       loaded: true,
     }
   },
