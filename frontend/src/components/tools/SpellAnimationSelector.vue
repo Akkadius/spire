@@ -11,7 +11,7 @@
       placeholder="Search for spell names to find animations">
 
     <div
-      style="height: 90vh; overflow-y: scroll"
+      style="height: 85vh; overflow-y: scroll"
       v-on:scroll.passive="render"
       id="spell-video-view-port">
 
