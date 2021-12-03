@@ -325,17 +325,20 @@
             </eq-window>
 
             <!-- spell anim selector -->
-            <div
+            <eq-window
               style="margin-top: 30px; margin-right: 10px; width: auto;"
               class="fade-in"
               v-if="spellAnimSelectorActive">
 
-              <spell-animation-viewer :is-component="true"/>
+<!--              <spell-animation-viewer :is-component="true"/>-->
+              <spell-animation-selector
+                :inputData.sync="spell.spellanim"
+              />
 
               <!--              <spell-icon-selector-->
               <!--                :inputData.sync="spell.new_icon"-->
               <!--              />-->
-            </div>
+            </eq-window>
 
 
           </div>
@@ -359,12 +362,14 @@ import SpellIconSelector                                              from "../.
 import SpellAnimationPreview
                                                                       from "../../components/tools/SpellAnimationPreview";
 import SpellAnimationViewer                                           from "./SpellAnimationViewer";
+import SpellAnimationSelector
+                                                                      from "../../components/tools/SpellAnimationSelector";
 
 const MILLISECONDS_BEFORE_WINDOW_RESET = 3000;
 
 export default {
   name: "SpellEdit",
-  components: { SpellAnimationViewer, SpellAnimationPreview, SpellIconSelector, EqSpellPreview, EqTab, EqTabs, EqWindow, EqWindowFancy },
+  components: { SpellAnimationSelector, SpellAnimationViewer, SpellAnimationPreview, SpellIconSelector, EqSpellPreview, EqTab, EqTabs, EqWindow, EqWindowFancy },
   data() {
     return {
       spell: null, // spell record data
