@@ -132,6 +132,6 @@
 }
 
 .pulsate {
-    border: 4px solid cyan;
+    border: 1px solid cyan;
     animation: border-pulsate 1s infinite;
 }

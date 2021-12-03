@@ -4,9 +4,10 @@
       @click="selectIcon(icon)"
       v-for="icon in icons"
       :key="icon"
-      class="d-inline-block"
+      :class="'d-inline-block '"
       style="margin: 2px">
       <img :src="spellCdnUrl + icon + '.gif'"
+           :class="classIsPulsating(icon)"
            :style="'width:40px; height:auto; border-radius:10px; border: 1px solid;'">
     </div>
   </div>
@@ -21,6 +22,7 @@ export default {
   data() {
     return {
       spellCdnUrl: App.ASSET_SPELL_ICONS_BASE_URL,
+      selectedIcon: 0,
       icons: [],
     }
   },
@@ -36,7 +38,11 @@ export default {
   methods: {
     selectIcon(icon) {
       this.$emit("update:inputData", icon);
-    }
+      this.selectedIcon = icon
+    },
+    classIsPulsating(icon) {
+      return icon === this.selectedIcon ? 'pulsate' : ''
+    },
   }
 }
 </script>

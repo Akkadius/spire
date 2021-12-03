@@ -438,12 +438,6 @@ export default {
     getTargetTypeColor(targetType) {
       return Spells.getTargetTypeColor(targetType);
     },
-    selectTab(tab) {
-      console.log("trigger")
-      console.log(tab)
-      this.tabSelected      = {}
-      this.tabSelected[tab] = true
-    },
     redrawCard() {
       this.loaded = false
 
