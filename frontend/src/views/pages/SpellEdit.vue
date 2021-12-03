@@ -31,7 +31,7 @@
                 <eq-tab name="Effects">
 
                   <h4 class="eq-header">Effects</h4>
-                  <div >
+                  <div>
 
                     <b-input-group style="height: 30px; margin-bottom: 15px">
                       <template #prepend>
@@ -51,7 +51,8 @@
                       </template>
 
                       <b-form-select v-model="spell['effectid_' + i]" style="width: 150px">
-                        <b-form-select-option v-for="(effect, id) in DB_SPA" :key="id" :value="parseInt(id)">{{ id }}) {{
+                        <b-form-select-option v-for="(effect, id) in DB_SPA" :key="id" :value="parseInt(id)">{{ id }})
+                          {{
                             effect
                           }}
                         </b-form-select-option>
@@ -114,7 +115,8 @@
                 <eq-tab name="General">
                   Skill
                   <b-form-select v-model="spell.skill" class="mb-3" v-if="DB_SKILLS">
-                    <b-form-select-option :value="parseInt(id)" v-for="(skill, id) in DB_SKILLS">{{id}}) {{skill}}</b-form-select-option>
+                    <b-form-select-option :value="parseInt(id)" v-for="(skill, id) in DB_SKILLS">{{ id }}) {{ skill }}
+                    </b-form-select-option>
                   </b-form-select>
 
                   Good Effect
@@ -167,7 +169,8 @@
                   <b-form-input v-model="spell.uninterruptable"/>
                   Fizzle Adjustment
                   <b-form-input v-model="spell.basediff"/>
-                  Cast Not Standing (Can Cast from Sitting position, Can cast on  invulnerable Targets, Can not be interrupted by SE_InterruptCasting)
+                  Cast Not Standing (Can Cast from Sitting position, Can cast on invulnerable Targets, Can not be
+                  interrupted by SE_InterruptCasting)
                   <b-form-input v-model="spell.cast_not_standing"/>
                 </eq-tab>
                 <eq-tab name="Buffing">
@@ -198,7 +201,12 @@
                 </eq-tab>
                 <eq-tab name="Range">
                   Target Type
-                  <b-form-input v-model="spell.targettype"/>
+                  <b-form-select v-model="spell.targettype" class="mb-3" v-if="DB_SPELL_TARGETS">
+                    <b-form-select-option :value="parseInt(id)" v-for="(skill, id) in DB_SPELL_TARGETS">{{ id }})
+                      {{ skill }}
+                    </b-form-select-option>
+                  </b-form-select>
+
                   Range
                   <b-form-input v-model="spell.range"/>
                   AOE Range
@@ -266,14 +274,14 @@
 </template>
 
 <script>
-import EqWindowFancy              from "../../components/eq-ui/EQWindowFancy";
-import EqWindow                   from "../../components/eq-ui/EQWindow";
-import EqTabs                     from "../../components/eq-ui/EQTabs";
-import EqTab                      from "../../components/eq-ui/EQTab";
-import EqSpellPreview             from "../../components/eq-ui/EQSpellCardPreview";
-import {Spells}                   from "../../app/spells";
-import {DB_SPA, DB_SPELL_EFFECTS} from "../../app/constants/eq-spell-constants";
-import {DB_SKILLS}                from "../../app/constants/eq-skill-constants";
+import EqWindowFancy                                from "../../components/eq-ui/EQWindowFancy";
+import EqWindow                                     from "../../components/eq-ui/EQWindow";
+import EqTabs                                       from "../../components/eq-ui/EQTabs";
+import EqTab                                        from "../../components/eq-ui/EQTab";
+import EqSpellPreview                               from "../../components/eq-ui/EQSpellCardPreview";
+import {Spells}                                     from "../../app/spells";
+import {DB_SPA, DB_SPELL_EFFECTS, DB_SPELL_TARGETS} from "../../app/constants/eq-spell-constants";
+import {DB_SKILLS}                                  from "../../app/constants/eq-skill-constants";
 
 export default {
   name: "SpellEdit",
@@ -284,6 +292,7 @@ export default {
       DB_SPELL_EFFECTS: DB_SPELL_EFFECTS,
       DB_SPA: DB_SPA,
       DB_SKILLS: DB_SKILLS,
+      DB_SPELL_TARGETS: DB_SPELL_TARGETS,
       loaded: true,
     }
   },
