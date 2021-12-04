@@ -158,7 +158,10 @@
                 <eq-tab name="General">
                   Skill
                   <b-form-select v-model="spell.skill" v-if="DB_SKILLS">
-                    <b-form-select-option :value="parseInt(id)" v-for="(skill, id) in DB_SKILLS">{{ id }}) {{ skill }}
+                    <b-form-select-option
+                      :value="parseInt(id)" v-for="(skill, id) in DB_SKILLS"
+                      :key="id"
+                    >{{ id }}) {{ skill }}
                     </b-form-select-option>
                   </b-form-select>
 
@@ -248,7 +251,8 @@
                   <eq-checkbox class="mt-2 mb-2" v-model="spell.no_block" @input="spell.no_block = $event"/>
 
                   DOT not stackable
-                  <eq-checkbox class="mt-2 mb-2" v-model="spell.dot_stacking_exempt" @input="spell.dot_stacking_exempt = $event"/>
+                  <eq-checkbox class="mt-2 mb-2" v-model="spell.dot_stacking_exempt"
+                               @input="spell.dot_stacking_exempt = $event"/>
                   PVP Duration
                   <b-form-input v-model="spell.field_181"/>
                   PVP Duration Cap
@@ -257,7 +261,11 @@
                 <eq-tab name="Range">
                   Target Type
                   <b-form-select v-model="spell.targettype" v-if="DB_SPELL_TARGETS">
-                    <b-form-select-option :value="parseInt(id)" v-for="(value, id) in DB_SPELL_TARGETS">{{ id }})
+                    <b-form-select-option
+                      :value="parseInt(id)"
+                      v-for="(value, id) in DB_SPELL_TARGETS"
+                      :key="id"
+                    >{{ id }})
                       {{ value }}
                     </b-form-select-option>
                   </b-form-select>
@@ -290,8 +298,14 @@
                 </eq-tab>
                 <eq-tab name="Resist">
                   Resist Type
-                  <b-form-select v-model="spell.resisttype" v-if="DB_SPELL_RESISTS">
-                    <b-form-select-option :value="parseInt(id)" v-for="(value, id) in DB_SPELL_RESISTS">{{ id }})
+                  <b-form-select
+                    v-model="spell.resisttype"
+                    v-if="DB_SPELL_RESISTS"
+                  >
+                    <b-form-select-option
+                      :value="parseInt(id)" v-for="(value, id) in DB_SPELL_RESISTS"
+                      :key="id"
+                    >{{ id }})
                       {{ value }}
                     </b-form-select-option>
                   </b-form-select>
@@ -302,7 +316,8 @@
                   Resist Diff
                   <b-form-input v-model="spell.resist_diff"/>
                   No Partial Resists
-                  <eq-checkbox class="mt-2 mb-2" v-model="spell.no_partial_resist" @input="spell.no_partial_resist = $event"/>
+                  <eq-checkbox class="mt-2 mb-2" v-model="spell.no_partial_resist"
+                               @input="spell.no_partial_resist = $event"/>
 
                   Resist Chance Limits: Max Chance (Actual in game chance is divided by 2)
                   <b-form-input v-model="spell.max_resist"/>
@@ -350,7 +365,7 @@
               class="fade-in"
               v-if="spellAnimSelectorActive">
 
-<!--              <spell-animation-viewer :is-component="true"/>-->
+              <!--              <spell-animation-viewer :is-component="true"/>-->
               <spell-animation-selector
                 :inputData.sync="spell.spellanim"
               />
@@ -390,7 +405,18 @@ const MILLISECONDS_BEFORE_WINDOW_RESET = 3000;
 
 export default {
   name: "SpellEdit",
-  components: { EqCheckbox, SpellAnimationSelector, SpellAnimationViewer, SpellAnimationPreview, SpellIconSelector, EqSpellPreview, EqTab, EqTabs, EqWindow, EqWindowFancy },
+  components: {
+    EqCheckbox,
+    SpellAnimationSelector,
+    SpellAnimationViewer,
+    SpellAnimationPreview,
+    SpellIconSelector,
+    EqSpellPreview,
+    EqTab,
+    EqTabs,
+    EqWindow,
+    EqWindowFancy
+  },
   data() {
     return {
       spell: null, // spell record data
