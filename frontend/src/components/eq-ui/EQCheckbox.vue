@@ -7,7 +7,7 @@
       v-model="inputVal"
       v-bind:true-value="1"
       v-bind:false-value="0"
-      :checked="isChecked || inputVal"
+      :checked="(inputVal > 0)"
       :disabled="disabled === 1">
     <label :for="id"></label>
   </div>
@@ -39,6 +39,11 @@ export default {
     },
     disabled: {
       default: 0
+    },
+    value: {
+      type: Number,
+      required: false,
+      default: 0,
     }
   },
   mounted() {

@@ -185,7 +185,7 @@
 
                   Must Be Out of Combat
                   <eq-checkbox class="mt-2 mb-2" @input="spell.outof_combat = $event"/>
-                  
+
                   Zone Type (select)
                   <b-form-input v-model="spell.zonetype"/>
                   Environment Type
@@ -193,11 +193,13 @@
                   Time of Day
                   <b-form-input v-model="spell.time_of_day"/>
                   Only During Fast Regen
-                  <b-form-input v-model="spell.allowrest"/>
+                  <eq-checkbox class="mt-2 mb-2" @input="spell.allowrest = $event"/>
+
                   Cancel On Sit
-                  <b-form-input v-model="spell.disallow_sit"/>
+                  <eq-checkbox class="mt-2 mb-2" @input="spell.disallow_sit = $event"/>
+
                   Must be Sneaking
-                  <b-form-input v-model="spell.sneaking"/>
+                  <eq-checkbox class="mt-2 mb-2" @input="spell.sneaking = $event"/>
                 </eq-tab>
                 <eq-tab name="Casting">
                   Cast Time
@@ -223,19 +225,24 @@
                   Duration Formula
                   <b-form-input v-model="spell.buffdurationformula"/>
                   Can Not Dispell
-                  <b-form-input v-model="spell.nodispell"/>
+                  <eq-checkbox class="mt-2 mb-2" v-model="spell.nodispell" @input="spell.nodispell = $event"/>
+
                   Can Not Click Off
-                  <b-form-input v-model="spell.field_232"/>
+                  <eq-checkbox class="mt-2 mb-2" v-model="spell.field_232" @input="spell.field_232 = $event"/>
+
                   Persist After Death
-                  <b-form-input v-model="spell.persistdeath"/>
+                  <eq-checkbox class="mt-2 mb-2" v-model="spell.persistdeath" @input="spell.persistdeath = $event"/>
+
                   Suspendable
-                  <b-form-input v-model="spell.suspendable"/>
+                  <eq-checkbox class="mt-2 mb-2" v-model="spell.suspendable" @input="spell.suspendable = $event"/>
+
                   Short Duration Buff Box
                   <b-form-input v-model="spell.short_buff_box"/>
                   Can MGB
-                  <b-form-input v-model="spell.can_mgb"/>
+                  <eq-checkbox class="mt-2 mb-2" v-model="spell.can_mgb" @input="spell.can_mgb = $event"/>
+
                   No Buff Block
-                  <b-form-input v-model="spell.no_block"/>
+                  <eq-checkbox class="mt-2 mb-2" v-model="spell.no_block" @input="spell.no_block = $event"/>
                   DOT not stackable
                   <b-form-input v-model="spell.dot_stacking_exempt"/>
                   PVP Duration
