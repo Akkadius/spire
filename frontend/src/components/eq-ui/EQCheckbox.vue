@@ -35,7 +35,7 @@ export default {
     isChecked: {
       type: Boolean,
       required: false,
-      default: 0
+      default: false
     },
     disabled: {
       default: 0

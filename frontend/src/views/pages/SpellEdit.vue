@@ -8,6 +8,7 @@
 
               <eq-tabs
                 v-if="spell && tabSelected"
+                class="spell-edit-card"
                 :hover-open="true"
                 @mouseover.native="previewSpell"
               >
@@ -69,7 +70,7 @@
                     </div>
                   </div>
                 </eq-tab>
-                <eq-tab name="Effects">
+                <eq-tab name="Effects" class="effect-tab">
 
                   <h4 class="eq-header">Effects</h4>
                   <div>
@@ -182,15 +183,33 @@
                   <b-form-input v-model="spell.teleport_zone"/>
                 </eq-tab>
                 <eq-tab name="Restrictions">
+                  <div class="row">
+                    <div class="col-3" style="text-align:center">
+                      Must Be Out of Combat
+                      <eq-checkbox class="mt-2 mb-2" v-model="spell.outof_combat" @input="spell.outof_combat = $event"/>
+                    </div>
+                    <div class="col-3" style="text-align:center">
+                      Must Be In Combat
+                      <eq-checkbox class="mt-2 mb-2" v-model="spell.in_combat" @input="spell.in_combat = $event"/>
+                    </div>
+                    <div class="col-3" style="text-align:center">
+                      Only During Fast Regen
+                      <eq-checkbox class="mt-2 mb-2" v-model="spell.allowrest" @input="spell.allowrest = $event"/>
+                    </div>
+                    <div class="col-3" style="text-align:center">
+                      Cancel On Sit
+                      <eq-checkbox class="mt-2 mb-2" v-model="spell.disallow_sit" @input="spell.disallow_sit = $event"/>
+                    </div>
+                    <div class="col-3" style="text-align:center">
+                      Must be Sneaking
+                      <eq-checkbox class="mt-2 mb-2" v-model="spell.sneaking" @input="spell.sneaking = $event"/>
+                    </div>
+                  </div>
+
                   Target Restriction
                   <b-form-input v-model="spell.cast_restriction"/>
                   Caster Restriction
                   <b-form-input v-model="spell.field_220"/>
-                  Must Be In Combat
-                  <eq-checkbox class="mt-2 mb-2" v-model="spell.in_combat" @input="spell.in_combat = $event"/>
-
-                  Must Be Out of Combat
-                  <eq-checkbox class="mt-2 mb-2" v-model="spell.outof_combat" @input="spell.outof_combat = $event"/>
 
                   Zone Type (select)
                   <b-form-input v-model="spell.zonetype"/>
@@ -198,14 +217,6 @@
                   <b-form-input v-model="spell.environment_type"/>
                   Time of Day
                   <b-form-input v-model="spell.time_of_day"/>
-                  Only During Fast Regen
-                  <eq-checkbox class="mt-2 mb-2" v-model="spell.allowrest" @input="spell.allowrest = $event"/>
-
-                  Cancel On Sit
-                  <eq-checkbox class="mt-2 mb-2" v-model="spell.disallow_sit" @input="spell.disallow_sit = $event"/>
-
-                  Must be Sneaking
-                  <eq-checkbox class="mt-2 mb-2" v-model="spell.sneaking" @input="spell.sneaking = $event"/>
                 </eq-tab>
                 <eq-tab name="Casting">
                   Cast Time
@@ -227,75 +238,157 @@
                   <b-form-input v-model="spell.cast_not_standing"/>
                 </eq-tab>
                 <eq-tab name="Buffing">
-                  Buff Duration
-                  <b-form-input v-model="spell.buffduration"/>
-                  Duration Formula
-                  <b-form-input v-model="spell.buffdurationformula"/>
-                  Can Not Dispell
-                  <eq-checkbox class="mt-2 mb-2" v-model="spell.nodispell" @input="spell.nodispell = $event"/>
 
-                  Can Not Click Off
-                  <eq-checkbox class="mt-2 mb-2" v-model="spell.field_232" @input="spell.field_232 = $event"/>
+                  <div class="row">
+                    <div class="col-3" style="text-align:center">
+                      Can Not Dispell
+                      <eq-checkbox class="mt-2 mb-2" v-model="spell.nodispell" @input="spell.nodispell = $event"/>
+                    </div>
+                    <div class="col-3" style="text-align:center">
+                      Can Not Click Off
+                      <eq-checkbox class="mt-2 mb-2" v-model="spell.field_232" @input="spell.field_232 = $event"/>
+                    </div>
+                    <div class="col-3" style="text-align:center">
+                      Persist After Death
+                      <eq-checkbox class="mt-2 mb-2" v-model="spell.persistdeath" @input="spell.persistdeath = $event"/>
+                    </div>
+                    <div class="col-3" style="text-align:center">
+                      Suspendable
+                      <eq-checkbox class="mt-2 mb-2" v-model="spell.suspendable" @input="spell.suspendable = $event"/>
+                    </div>
+                  </div>
 
-                  Persist After Death
-                  <eq-checkbox class="mt-2 mb-2" v-model="spell.persistdeath" @input="spell.persistdeath = $event"/>
+                  <div class="row">
+                    <div class="col-3" style="text-align:center">
+                      Can MGB
+                      <eq-checkbox class="mt-2 mb-2" v-model="spell.can_mgb" @input="spell.can_mgb = $event"/>
+                    </div>
 
-                  Suspendable
-                  <eq-checkbox class="mt-2 mb-2" v-model="spell.suspendable" @input="spell.suspendable = $event"/>
+                    <div class="col-3" style="text-align:center">
+                      Short Duration Buff
+                      <eq-checkbox
+                        class="mt-2 mb-2"
+                        v-model="spell.short_buff_box"
+                        @input="spell.short_buff_box = $event"
+                      />
+                    </div>
+                    <div class="col-3" style="text-align:center">
+                      No Buff Block
+                      <eq-checkbox
+                        class="mt-2 mb-2"
+                        v-model="spell.no_block"
+                        @input="spell.no_block = $event"
+                      />
+                    </div>
+                    <div class="col-3" style="text-align:center">
+                      DOT Not Stackable
+                      <eq-checkbox
+                        class="mt-2 mb-2"
+                        v-model="spell.dot_stacking_exempt"
+                        @input="spell.dot_stacking_exempt = $event"
+                      />
+                    </div>
+                  </div>
 
-                  Short Duration Buff Box
-                  <eq-checkbox class="mt-2 mb-2" v-model="spell.short_buff_box" @input="spell.short_buff_box = $event"/>
+                  <div class="row">
+                    <div class="col-3">
+                      Buff Duration
+                      <b-form-input v-model="spell.buffduration"/>
+                    </div>
+                    <div class="col-3">
+                      Duration Formula
+                      <b-form-input v-model="spell.buffdurationformula"/>
+                    </div>
+                    <div class="col-3">
+                      PVP Duration
+                      <b-form-input v-model="spell.field_181"/>
 
-                  Can MGB
-                  <eq-checkbox class="mt-2 mb-2" v-model="spell.can_mgb" @input="spell.can_mgb = $event"/>
+                    </div>
+                    <div class="col-3">
+                      PVP Duration Cap
+                      <b-form-input v-model="spell.field_182"/>
+                    </div>
+                  </div>
 
-                  No Buff Block
-                  <eq-checkbox class="mt-2 mb-2" v-model="spell.no_block" @input="spell.no_block = $event"/>
 
-                  DOT not stackable
-                  <eq-checkbox class="mt-2 mb-2" v-model="spell.dot_stacking_exempt"
-                               @input="spell.dot_stacking_exempt = $event"/>
-                  PVP Duration
-                  <b-form-input v-model="spell.field_181"/>
-                  PVP Duration Cap
-                  <b-form-input v-model="spell.field_182"/>
                 </eq-tab>
                 <eq-tab name="Range">
-                  Target Type
-                  <b-form-select v-model="spell.targettype" v-if="DB_SPELL_TARGETS">
-                    <b-form-select-option
-                      :value="parseInt(id)"
-                      v-for="(value, id) in DB_SPELL_TARGETS"
-                      :key="id"
-                    >{{ id }})
-                      {{ value }}
-                    </b-form-select-option>
-                  </b-form-select>
 
-                  Range
-                  <b-form-input v-model="spell.range"/>
-                  AOE Range
-                  <b-form-input v-model="spell.aoerange"/>
-                  AOE Rain Waves
-                  <b-form-input v-model="spell.ae_duration"/>
-                  AOE Max Targets
-                  <b-form-input v-model="spell.aemaxtargets"/>
-                  Min Range
-                  <b-form-input v-model="spell.min_range"/>
-                  Min Distance for Modifier
-                  <b-form-input v-model="spell.min_dist"/>
-                  Min Distance Modifier
-                  <b-form-input v-model="spell.min_dist_mod"/>
-                  Max Distance for Modifier
-                  <b-form-input v-model="spell.max_dist"/>
-                  Max Distance Modifier
-                  <b-form-input v-model="spell.max_dist_mod"/>
-                  Cone Angle Start
-                  <b-form-input v-model="spell.cone_start_angle"/>
-                  Cone Angle End
-                  <b-form-input v-model="spell.cone_stop_angle"/>
-                  NPC does not need Light of Sight to cast
-                  <eq-checkbox class="mt-2 mb-2" v-model="spell.npc_no_los" @input="spell.npc_no_los = $event"/>
+                  <div class="row">
+                    <div class="col-3">
+                      Spell Range
+                      <b-form-input v-model="spell.range"/>
+                    </div>
+                    <div class="col-3">
+                      Target Type
+                      <b-form-select v-model="spell.targettype" v-if="DB_SPELL_TARGETS">
+                        <b-form-select-option
+                          :value="parseInt(id)"
+                          v-for="(value, id) in DB_SPELL_TARGETS"
+                          :key="id"
+                        >{{ id }})
+                          {{ value }}
+                        </b-form-select-option>
+                      </b-form-select>
+                    </div>
+                    <div class="col-6 text-center">
+                      NPC Line of Sight Not Required to Cast
+                      <eq-checkbox class="mt-2 mb-2" v-model="spell.npc_no_los" @input="spell.npc_no_los = $event"/>
+                    </div>
+                  </div>
+
+                  <h6 class="eq-header">Area of Effect (AOE)</h6>
+
+                  <div class="row">
+                    <div class="col-4">
+                      AOE Range
+                      <b-form-input v-model="spell.aoerange"/>
+                    </div>
+                    <div class="col-4">
+                      AOE Rain Waves
+                      <b-form-input v-model="spell.ae_duration"/>
+                    </div>
+                    <div class="col-4">
+                      AOE Max Targets
+                      <b-form-input v-model="spell.aemaxtargets"/>
+                    </div>
+                  </div>
+
+                  <div class="row">
+                    <div class="col-2">
+                      Min Range
+                      <b-form-input v-model="spell.min_range"/>
+                    </div>
+                    <div class="col-2">
+                      Min Distance for Mod
+                      <b-form-input v-model="spell.min_dist"/>
+                    </div>
+                    <div class="col-2">
+                      Min Distance Mod
+                      <b-form-input v-model="spell.min_dist_mod"/>
+                    </div>
+                    <div class="col-3">
+                      Max Distance for Mod
+                      <b-form-input v-model="spell.max_dist"/>
+                    </div>
+                    <div class="col-3">
+                      Max Distance Mod
+                      <b-form-input v-model="spell.max_dist_mod"/>
+                    </div>
+                  </div>
+
+                  <h6 class="eq-header">Cone</h6>
+
+                  <div class="row">
+                    <div class="col-6">
+                      Cone Angle Start
+                      <b-form-input v-model="spell.cone_start_angle"/>
+                    </div>
+                    <div class="col-6">
+                      Cone Angle End
+                      <b-form-input v-model="spell.cone_stop_angle"/>
+                    </div>
+                  </div>
 
                 </eq-tab>
                 <eq-tab name="Resist">
@@ -501,5 +594,11 @@ export default {
 </script>
 
 <style scoped>
+.spell-edit-card input, .spell-edit-card select {
+  margin-bottom: 10px;
+}
 
+.effect-tab input, .effect-tab select {
+  margin-bottom: 0;
+}
 </style>
