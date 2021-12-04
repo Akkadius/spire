@@ -174,7 +174,8 @@
                   Endurance Upkeep
                   <b-form-input v-model="spell.endur_upkeep"/>
                   Use Discipline Window
-                  <b-form-input v-model="spell.is_discipline"/>
+                  <eq-checkbox class="mt-2 mb-2" v-model="spell.is_discipline" @input="spell.is_discipline = $event"/>
+
                   pcnpc_only_flag
                   <b-form-input v-model="spell.pcnpc_only_flag"/>
                   Teleport Zone / Pet DbaseID / ItemGraphic for Bolt Spells
@@ -186,10 +187,10 @@
                   Caster Restriction
                   <b-form-input v-model="spell.field_220"/>
                   Must Be In Combat
-                  <eq-checkbox class="mt-2 mb-2" @input="spell.in_combat = $event"/>
+                  <eq-checkbox class="mt-2 mb-2" v-model="spell.in_combat" @input="spell.in_combat = $event"/>
 
                   Must Be Out of Combat
-                  <eq-checkbox class="mt-2 mb-2" @input="spell.outof_combat = $event"/>
+                  <eq-checkbox class="mt-2 mb-2" v-model="spell.outof_combat" @input="spell.outof_combat = $event"/>
 
                   Zone Type (select)
                   <b-form-input v-model="spell.zonetype"/>
@@ -198,13 +199,13 @@
                   Time of Day
                   <b-form-input v-model="spell.time_of_day"/>
                   Only During Fast Regen
-                  <eq-checkbox class="mt-2 mb-2" @input="spell.allowrest = $event"/>
+                  <eq-checkbox class="mt-2 mb-2" v-model="spell.allowrest" @input="spell.allowrest = $event"/>
 
                   Cancel On Sit
-                  <eq-checkbox class="mt-2 mb-2" @input="spell.disallow_sit = $event"/>
+                  <eq-checkbox class="mt-2 mb-2" v-model="spell.disallow_sit" @input="spell.disallow_sit = $event"/>
 
                   Must be Sneaking
-                  <eq-checkbox class="mt-2 mb-2" @input="spell.sneaking = $event"/>
+                  <eq-checkbox class="mt-2 mb-2" v-model="spell.sneaking" @input="spell.sneaking = $event"/>
                 </eq-tab>
                 <eq-tab name="Casting">
                   Cast Time
@@ -216,7 +217,8 @@
                   Timer Index (Timer Max 19, also seen few discs with -1)
                   <b-form-input v-model="spell.endur_timer_index"/>
                   Uninterruptable
-                  <eq-checkbox class="mt-2 mb-2" @input="spell.uninterruptable = $event"/>
+                  <eq-checkbox class="mt-2 mb-2" v-model="spell.uninterruptable"
+                               @input="spell.uninterruptable = $event"/>
 
                   Fizzle Adjustment
                   <b-form-input v-model="spell.basediff"/>
@@ -316,8 +318,10 @@
                   Resist Diff
                   <b-form-input v-model="spell.resist_diff"/>
                   No Partial Resists
-                  <eq-checkbox class="mt-2 mb-2" v-model="spell.no_partial_resist"
-                               @input="spell.no_partial_resist = $event"/>
+                  <eq-checkbox
+                    class="mt-2 mb-2"
+                    v-model="spell.no_partial_resist"
+                    @input="spell.no_partial_resist = $event"/>
 
                   Resist Chance Limits: Max Chance (Actual in game chance is divided by 2)
                   <b-form-input v-model="spell.max_resist"/>
