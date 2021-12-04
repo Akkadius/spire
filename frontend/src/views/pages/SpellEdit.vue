@@ -237,14 +237,16 @@
                   <eq-checkbox class="mt-2 mb-2" v-model="spell.suspendable" @input="spell.suspendable = $event"/>
 
                   Short Duration Buff Box
-                  <b-form-input v-model="spell.short_buff_box"/>
+                  <eq-checkbox class="mt-2 mb-2" v-model="spell.short_buff_box" @input="spell.short_buff_box = $event"/>
+
                   Can MGB
                   <eq-checkbox class="mt-2 mb-2" v-model="spell.can_mgb" @input="spell.can_mgb = $event"/>
 
                   No Buff Block
                   <eq-checkbox class="mt-2 mb-2" v-model="spell.no_block" @input="spell.no_block = $event"/>
+
                   DOT not stackable
-                  <b-form-input v-model="spell.dot_stacking_exempt"/>
+                  <eq-checkbox class="mt-2 mb-2" v-model="spell.dot_stacking_exempt" @input="spell.dot_stacking_exempt = $event"/>
                   PVP Duration
                   <b-form-input v-model="spell.field_181"/>
                   PVP Duration Cap
