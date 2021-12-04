@@ -6,6 +6,12 @@
           <div class="col-7">
             <eq-window style="margin-top: 30px" title="Edit Spell">
 
+              <div v-if="notification">
+                <b-button class="btn-dark btn-outline-warning form-control" @click="notification = ''">
+                  <i class="ra ra-book mr-1"></i> {{ notification }}
+                </b-button>
+              </div>
+
               <eq-tabs
                 v-if="spell && tabSelected"
                 class="spell-edit-card"
@@ -20,7 +26,7 @@
                   <div class="row">
                     <div class="col-2">
                       Id
-                      <b-form-input v-model="spell.id"/>
+                      <b-form-input v-model.number="spell.id"/>
                     </div>
                     <div class="col-7">
                       Name
@@ -201,7 +207,8 @@
                     </div>
                     <div class="col-3 text-center">
                       Not Focusable
-                      <eq-checkbox class="mt-2 mb-2" v-model="spell.not_extendable" @input="spell.not_extendable = $event"/>
+                      <eq-checkbox class="mt-2 mb-2" v-model="spell.not_extendable"
+                                   @input="spell.not_extendable = $event"/>
                     </div>
                   </div>
 
@@ -538,7 +545,12 @@
                 </eq-tab>
               </eq-tabs>
 
+              <div class="text-center mt-3">
+                <b-button class="btn-dark btn-sm btn-outline-warning" @click="saveSpell">Save</b-button>
+              </div>
+
             </eq-window>
+
           </div>
 
           <div class="col-5">
@@ -602,6 +614,9 @@ import SpellAnimationViewer                                           from "./Sp
 import SpellAnimationSelector
                                                                       from "../../components/tools/SpellAnimationSelector";
 import EqCheckbox                                                     from "../../components/eq-ui/EQCheckbox";
+import {SpellsNewApi}                                                 from "../../app/api";
+import {SpireApiClient}                                               from "../../app/api/spire-api-client";
+import * as util                                                      from "util";
 
 const MILLISECONDS_BEFORE_WINDOW_RESET = 3000;
 
@@ -637,6 +652,8 @@ export default {
       tabSelected: { 'basic': true },
 
       lastResetTime: Date.now(),
+
+      notification: "",
     }
   },
   watch: {
@@ -648,6 +665,32 @@ export default {
     this.load()
   },
   methods: {
+
+    async saveSpell() {
+      const api = (new SpellsNewApi(SpireApiClient.getOpenApiConfig()))
+      // let request = { new SpellsNewApiUpdateSpellsNewRequest() }
+      // request.id = this.spell.id
+      // request.spellsNew = this.spell
+
+      api.updateSpellsNew({
+        id: this.spell.id,
+        spellsNew: this.spell
+      }).then((result) => {
+        if (result.status === 200) {
+          this.notification = util.format("Spell updated successfully! (%s) %s", this.spell.id, this.spell.name)
+        }
+      }).catch(async () => {
+        const createRes = await api.createSpellsNew({
+          spellsNew: this.spell
+        })
+
+        if (createRes.status === 200) {
+          this.notification = util.format("Created new Spell! (%s) %s", this.spell.id, this.spell.name)
+        }
+      })
+    },
+
+
     load() {
       if (this.$route.params.id > 0) {
         Spells.getSpell(this.$route.params.id).then(result => {
