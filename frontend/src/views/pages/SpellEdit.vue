@@ -118,7 +118,8 @@
                   Spell Hate Given
                   <b-form-input v-model="spell.hate_added"/>
                   No Detrimental Spell Aggro
-                  <b-form-input v-model="spell.field_198"/>
+                  <eq-checkbox class="mt-2 mb-2" v-model="spell.field_198" @input="spell.field_198 = $event"/>
+
                   Max Critical Chance
                   <b-form-input v-model="spell.field_217"/>
                   Viral Range
@@ -139,7 +140,8 @@
                   <h4 class="eq-header mt-3">Focus</h4>
 
                   Not Focusable
-                  <b-form-input v-model="spell.not_extendable"/>
+                  <eq-checkbox class="mt-2 mb-2" v-model="spell.not_extendable" @input="spell.not_extendable = $event"/>
+
                   Do not allow Heal or Dmg Item Mods (Maxtargets)
                   <b-form-input v-model="spell.maxtargets"/>
                   Song Base Effect Cap
@@ -283,7 +285,8 @@
                   Cone Angle End
                   <b-form-input v-model="spell.cone_stop_angle"/>
                   NPC does not need Light of Sight to cast
-                  <b-form-input v-model="spell.npc_no_los"/>
+                  <eq-checkbox class="mt-2 mb-2" v-model="spell.npc_no_los" @input="spell.npc_no_los = $event"/>
+
                 </eq-tab>
                 <eq-tab name="Resist">
                   Resist Type
@@ -294,11 +297,13 @@
                   </b-form-select>
 
                   Unresistable
-                  <b-form-input v-model="spell.field_209"/>
+                  <eq-checkbox class="mt-2 mb-2" v-model="spell.field_209" @input="spell.field_209 = $event"/>
+
                   Resist Diff
                   <b-form-input v-model="spell.resist_diff"/>
                   No Partial Resists
-                  <b-form-input v-model="spell.no_partial_resist"/>
+                  <eq-checkbox class="mt-2 mb-2" v-model="spell.no_partial_resist" @input="spell.no_partial_resist = $event"/>
+
                   Resist Chance Limits: Max Chance (Actual in game chance is divided by 2)
                   <b-form-input v-model="spell.max_resist"/>
                   Resist Chance Limits: Min Chance (Actual in game chance is divided by 2)
