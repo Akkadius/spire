@@ -429,7 +429,6 @@
 
                 </eq-tab>
                 <eq-tab name="Range">
-
                   <div class="row">
                     <div class="col-3">
                       Spell Range
@@ -550,7 +549,13 @@
               </eq-tabs>
 
               <div class="text-center mt-3">
-                <b-button class="btn-dark btn-sm btn-outline-warning" @click="saveSpell">Save</b-button>
+                <b-button
+                  class="btn-dark btn-sm btn-outline-warning"
+                  @click="saveSpell"
+                >
+                  <i class="ra ra-book mr-1"></i>
+                  Save Spell
+                </b-button>
               </div>
 
             </eq-window>

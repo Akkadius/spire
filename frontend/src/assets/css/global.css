@@ -126,12 +126,12 @@
 
 /* pulseate */
 @keyframes border-pulsate {
-    0%   { border-color: rgba(0, 255, 255, 1); }
+    0%   { border-color: rgba(255, 140, 0, 1); }
     50% { border-color: rgba(0, 255, 255, 0); }
-    100%   { border-color: rgba(0, 255, 255, 1); }
+    100%   { border-color: rgba(255, 140, 0, 1); }
 }
 
 .pulsate {
-    border: 1px solid cyan;
+    border: 1px solid darkorange;
     animation: border-pulsate .5s infinite;
 }
