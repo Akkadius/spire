@@ -1,6 +1,14 @@
 <template>
   <div v-if="id">
-    <input type="checkbox" :id="id" class='eq-checkbox' :checked="isChecked" :disabled="disabled === 1">
+    <input
+      type="checkbox"
+      :id="id"
+      class='eq-checkbox'
+      v-model="inputVal"
+      v-bind:true-value="1"
+      v-bind:false-value="0"
+      :checked="isChecked || inputVal"
+      :disabled="disabled === 1">
     <label :for="id"></label>
   </div>
 </template>
@@ -11,6 +19,16 @@ export default {
   data() {
     return {
       id: ""
+    }
+  },
+  computed: {
+    inputVal: {
+      get() {
+        return this.value;
+      },
+      set(val) {
+        this.$emit('input', val);
+      }
     }
   },
   props: {
@@ -33,7 +51,7 @@ export default {
     randId() {
       return "_" + Math.random().toString(36).substr(2, 9);
     }
-  }
+  },
 
 }
 </script>

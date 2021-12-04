@@ -181,9 +181,11 @@
                   Caster Restriction
                   <b-form-input v-model="spell.field_220"/>
                   Must Be In Combat
-                  <b-form-input v-model="spell.in_combat"/>
+                  <eq-checkbox class="mt-2 mb-2" @input="spell.in_combat = $event"/>
+
                   Must Be Out of Combat
-                  <b-form-input v-model="spell.outof_combat"/>
+                  <eq-checkbox class="mt-2 mb-2" @input="spell.outof_combat = $event"/>
+                  
                   Zone Type (select)
                   <b-form-input v-model="spell.zonetype"/>
                   Environment Type
@@ -207,7 +209,8 @@
                   Timer Index (Timer Max 19, also seen few discs with -1)
                   <b-form-input v-model="spell.endur_timer_index"/>
                   Uninterruptable
-                  <b-form-input v-model="spell.uninterruptable"/>
+                  <eq-checkbox class="mt-2 mb-2" @input="spell.uninterruptable = $event"/>
+
                   Fizzle Adjustment
                   <b-form-input v-model="spell.basediff"/>
                   Cast Not Standing (Can Cast from Sitting position, Can cast on invulnerable Targets, Can not be
@@ -367,12 +370,13 @@ import SpellAnimationPreview
 import SpellAnimationViewer                                           from "./SpellAnimationViewer";
 import SpellAnimationSelector
                                                                       from "../../components/tools/SpellAnimationSelector";
+import EqCheckbox                                                     from "../../components/eq-ui/EQCheckbox";
 
 const MILLISECONDS_BEFORE_WINDOW_RESET = 3000;
 
 export default {
   name: "SpellEdit",
-  components: { SpellAnimationSelector, SpellAnimationViewer, SpellAnimationPreview, SpellIconSelector, EqSpellPreview, EqTab, EqTabs, EqWindow, EqWindowFancy },
+  components: { EqCheckbox, SpellAnimationSelector, SpellAnimationViewer, SpellAnimationPreview, SpellIconSelector, EqSpellPreview, EqTab, EqTabs, EqWindow, EqWindowFancy },
   data() {
     return {
       spell: null, // spell record data
