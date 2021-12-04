@@ -42,22 +42,43 @@
                   </div>
 
                   <div class="row">
-                    <div class="col-7">
-                      You Cast
-                      <b-form-input v-model="spell.you_cast"/>
-                      Other Casts
-                      <b-form-input v-model="spell.other_casts"/>
-                      Cast On You
-                      <b-form-input v-model="spell.cast_on_you"/>
-                      Cast On Other
-                      <b-form-input v-model="spell.cast_on_other"/>
-                      Spell Fades
-                      <b-form-input v-model="spell.spell_fades"/>
-                      ID File
-                      <b-form-input v-model="spell.player_1"/>
+                    <div class="col-8">
+                      <div class="row">
+                        <div class="col-6">
+                          You Cast
+                          <b-form-input v-model="spell.you_cast"/>
+                        </div>
+                        <div class="col-6">
+                          Other Casts
+                          <b-form-input v-model="spell.other_casts"/>
+                        </div>
+                      </div>
+
+                      <div class="row">
+                        <div class="col-6">
+                          Cast On You
+                          <b-form-input v-model="spell.cast_on_you"/>
+                        </div>
+                        <div class="col-6">
+                          Cast On Other
+                          <b-form-input v-model="spell.cast_on_other"/>
+                        </div>
+                      </div>
+
+                      <div class="row">
+                        <div class="col-6">
+                          Spell Fades
+                          <b-form-input v-model="spell.spell_fades"/>
+                        </div>
+                        <div class="col-6">
+                          ID File
+                          <b-form-input v-model="spell.player_1"/>
+                        </div>
+                      </div>
+
                     </div>
                     <div
-                      class="col-5"
+                      class="col-4"
                       style="text-align: center"
                       @mouseover="drawSpellAnimationSelector"
                     >
@@ -71,10 +92,7 @@
                   </div>
                 </eq-tab>
                 <eq-tab name="Effects" class="effect-tab">
-
-                  <h4 class="eq-header">Effects</h4>
                   <div>
-
                     <b-input-group style="height: 30px; margin-bottom: 15px">
                       <template #prepend>
                         <b-input-group-text style="width: 40px;">#</b-input-group-text>
@@ -107,28 +125,104 @@
                     </b-input-group>
 
                   </div>
+                </eq-tab>
 
-                  <h4 class="eq-header mt-3">Added Effects</h4>
+                <eq-tab name="Effects+">
 
-                  Push Up
-                  <b-form-input v-model="spell.pushback"/>
-                  Push Back
-                  <b-form-input v-model="spell.pushup"/>
-                  Hate Modifier
-                  <b-form-input v-model="spell.bonushate"/>
-                  Spell Hate Given
-                  <b-form-input v-model="spell.hate_added"/>
-                  No Detrimental Spell Aggro
-                  <eq-checkbox class="mt-2 mb-2" v-model="spell.field_198" @input="spell.field_198 = $event"/>
+                  <!-- Knockback -->
+                  <div class="row">
+                    <div class="col-2 text-right">
+                      <h6 class="eq-header mt-3">Knockback</h6>
+                    </div>
+                    <div class="col-4">
+                      Push Up
+                      <b-form-input v-model="spell.pushback"/>
+                    </div>
+                    <div class="col-4">
+                      Push Back
+                      <b-form-input v-model="spell.pushup"/>
+                    </div>
+                  </div>
+
+                  <!-- Hate -->
+                  <div class="row">
+                    <div class="col-2 text-right">
+                      <h6 class="eq-header mt-3">Hate</h6>
+                    </div>
+                    <div class="col-3">
+                      Hate Modifier
+                      <b-form-input v-model="spell.bonushate"/>
+                    </div>
+                    <div class="col-3">
+                      Spell Hate Given
+                      <b-form-input v-model="spell.hate_added"/>
+                    </div>
+                    <div class="col-3 text-center">
+                      No Detrimental Spell Aggro
+                      <eq-checkbox
+                        class="mt-2 mb-2"
+                        v-model="spell.field_198"
+                        @input="spell.field_198 = $event"
+                      />
+                    </div>
+                  </div>
+
+                  <!-- Viral Spells -->
+                  <div class="row">
+                    <div class="col-2 text-right">
+                      <h6 class="eq-header mt-3">Viral Spells</h6>
+                    </div>
+                    <div class="col-3">
+                      Viral Range
+                      <b-form-input v-model="spell.viral_range"/>
+                    </div>
+                    <div class="col-3">
+                      Viral Targets
+                      <b-form-input v-model="spell.viral_targets"/>
+                    </div>
+                    <div class="col-3">
+                      Viral Timer
+                      <b-form-input v-model="spell.viral_timer"/>
+                    </div>
+                  </div>
+
+                  <!-- Focus -->
+                  <div class="row">
+                    <div class="col-2 text-right">
+                      <h6 class="eq-header mt-3">Focus</h6>
+                    </div>
+                    <div class="col-3">
+                      Max Targets
+                      <b-form-input v-model="spell.maxtargets"/>
+                    </div>
+                    <div class="col-3">
+                      Song Base Effect Cap
+                      <b-form-input v-model="spell.songcap"/>
+                    </div>
+                    <div class="col-3 text-center">
+                      Not Focusable
+                      <eq-checkbox class="mt-2 mb-2" v-model="spell.not_extendable" @input="spell.not_extendable = $event"/>
+                    </div>
+                  </div>
+
+                  <!-- Spell Group -->
+                  <div class="row">
+                    <div class="col-2 text-right">
+                      <h6 class="eq-header mt-3">Spell Group</h6>
+                    </div>
+                    <div class="col-4">
+                      Spell Group
+                      <b-form-input v-model="spell.spellgroup"/>
+                    </div>
+                    <div class="col-4">
+                      Rank
+                      <b-form-input v-model="spell.rank"/>
+                    </div>
+                  </div>
 
                   Max Critical Chance
                   <b-form-input v-model="spell.field_217"/>
-                  Viral Range
-                  <b-form-input v-model="spell.viral_range"/>
-                  Viral Targets
-                  <b-form-input v-model="spell.viral_targets"/>
-                  Viral Timer
-                  <b-form-input v-model="spell.viral_timer"/>
+
                   Nimbus Type
                   <b-form-input v-model="spell.nimbuseffect"/>
                   Max Hits Type
@@ -138,50 +232,61 @@
                   Recourse Spell ID
                   <b-form-input v-model="spell.recourse_link"/>
 
-                  <h4 class="eq-header mt-3">Focus</h4>
-
-                  Not Focusable
-                  <eq-checkbox class="mt-2 mb-2" v-model="spell.not_extendable" @input="spell.not_extendable = $event"/>
-
-                  Do not allow Heal or Dmg Item Mods (Maxtargets)
-                  <b-form-input v-model="spell.maxtargets"/>
-                  Song Base Effect Cap
-                  <b-form-input v-model="spell.songcap"/>
-
-                  <h4 class="eq-header mt-3">Spell Group</h4>
-
-                  Spell Group
-                  <b-form-input v-model="spell.spellgroup"/>
-                  Rank
-                  <b-form-input v-model="spell.rank"/>
-
                 </eq-tab>
+
                 <eq-tab name="General">
-                  Skill
-                  <b-form-select v-model="spell.skill" v-if="DB_SKILLS">
-                    <b-form-select-option
-                      :value="parseInt(id)" v-for="(skill, id) in DB_SKILLS"
-                      :key="id"
-                    >{{ id }}) {{ skill }}
-                    </b-form-select-option>
-                  </b-form-select>
+                  <div class="row">
+                    <div class="col-6">
+                      Skill
+                      <b-form-select v-model="spell.skill" v-if="DB_SKILLS">
+                        <b-form-select-option
+                          :value="parseInt(id)" v-for="(skill, id) in DB_SKILLS"
+                          :key="id"
+                        >{{ id }}) {{ skill }}
+                        </b-form-select-option>
+                      </b-form-select>
+                    </div>
+                    <div class="col-6">
+                      Good Effect
+                      <b-form-input v-model="spell.good_effect"/>
+                    </div>
+                  </div>
 
-                  Good Effect
-                  <b-form-input v-model="spell.good_effect"/>
-                  Mana
-                  <b-form-input v-model="spell.mana"/>
-                  Endurance Cost
-                  <b-form-input v-model="spell.endur_cost"/>
-                  Endurance Upkeep
-                  <b-form-input v-model="spell.endur_upkeep"/>
-                  Use Discipline Window
-                  <eq-checkbox class="mt-2 mb-2" v-model="spell.is_discipline" @input="spell.is_discipline = $event"/>
+                  <div class="row">
+                    <div class="col-3">
+                      Mana Cost
+                      <b-form-input v-model="spell.mana"/>
+                    </div>
+                    <div class="col-3">
+                      Endurance Cost
+                      <b-form-input v-model="spell.endur_cost"/>
+                    </div>
+                    <div class="col-3">
+                      Endurance Upkeep
+                      <b-form-input v-model="spell.endur_upkeep"/>
+                    </div>
+                    <div class="col-3">
+                      Use Discipline Window
+                      <eq-checkbox
+                        class="mt-2 mb-2"
+                        v-model="spell.is_discipline"
+                        @input="spell.is_discipline = $event"
+                      />
+                    </div>
+                  </div>
 
-                  pcnpc_only_flag
-                  <b-form-input v-model="spell.pcnpc_only_flag"/>
-                  Teleport Zone / Pet DbaseID / ItemGraphic for Bolt Spells
-                  <b-form-input v-model="spell.teleport_zone"/>
+                  <div class="row">
+                    <div class="col-6">
+                      pcnpc_only_flag
+                      <b-form-input v-model="spell.pcnpc_only_flag"/>
+                    </div>
+                    <div class="col-6">
+                      Teleport Zone / Pet DbaseID / ItemGraphic for Bolt Spells
+                      <b-form-input v-model="spell.teleport_zone"/>
+                    </div>
+                  </div>
                 </eq-tab>
+
                 <eq-tab name="Restrictions">
                   <div class="row">
                     <div class="col-3" style="text-align:center">
