@@ -97,6 +97,8 @@ type Zone struct {
 	ContentFlags              null.String `json:"content_flags" gorm:"Column:content_flags"`
 	ContentFlagsDisabled      null.String `json:"content_flags_disabled" gorm:"Column:content_flags_disabled"`
 	UnderworldTeleportIndex   int         `json:"underworld_teleport_index" gorm:"Column:underworld_teleport_index"`
+	LavaDamage                null.Int    `json:"lava_damage" gorm:"Column:lava_damage"`
+	MinLavaDamage             int         `json:"min_lava_damage" gorm:"Column:min_lava_damage"`
 }
 
 func (Zone) TableName() string {
