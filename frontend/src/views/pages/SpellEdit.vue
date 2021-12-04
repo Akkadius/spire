@@ -48,6 +48,7 @@
                   </div>
 
                   <spell-class-selector :spell="spell" @input="spell = $event"/>
+<!--                  <spell-deity-selector :spell="spell" @input="spell = $event"/>-->
 
                   <div class="row">
                     <div class="col-8">
@@ -610,23 +611,25 @@ import {Spells}                                                       from "../.
 import {DB_SPA, DB_SPELL_EFFECTS, DB_SPELL_RESISTS, DB_SPELL_TARGETS} from "../../app/constants/eq-spell-constants";
 import {DB_SKILLS}                                                    from "../../app/constants/eq-skill-constants";
 import {App}                                                          from "../../constants/app";
-import SpellIconSelector                                              from "../../components/tools/SpellIconSelector";
+import SpellIconSelector    from "../../components/tools/SpellIconSelector";
 import SpellAnimationPreview
-                                                                      from "../../components/tools/SpellAnimationPreview";
-import SpellAnimationViewer                                           from "./SpellAnimationViewer";
+                            from "../../components/tools/SpellAnimationPreview";
+import SpellAnimationViewer from "./SpellAnimationViewer";
 import SpellAnimationSelector
-                                                                      from "../../components/tools/SpellAnimationSelector";
-import EqCheckbox                                                     from "../../components/eq-ui/EQCheckbox";
-import {SpellsNewApi}                                                 from "../../app/api";
-import {SpireApiClient}                                               from "../../app/api/spire-api-client";
-import * as util                                                      from "util";
-import SpellClassSelector                                             from "../../components/tools/SpellClassSelector";
+                            from "../../components/tools/SpellAnimationSelector";
+import EqCheckbox           from "../../components/eq-ui/EQCheckbox";
+import {SpellsNewApi}       from "../../app/api";
+import {SpireApiClient}     from "../../app/api/spire-api-client";
+import * as util            from "util";
+import SpellClassSelector   from "../../components/tools/SpellClassSelector";
+import SpellDeitySelector   from "../../components/tools/SpellDeitySelector";
 
 const MILLISECONDS_BEFORE_WINDOW_RESET = 3000;
 
 export default {
   name: "SpellEdit",
   components: {
+    SpellDeitySelector,
     SpellClassSelector,
     EqCheckbox,
     SpellAnimationSelector,
@@ -663,6 +666,9 @@ export default {
   },
   watch: {
     '$route'() {
+      // reset state vars when we navigate away
+      this.notification = ""
+      // reload
       this.load()
     }
   },
