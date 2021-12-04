@@ -586,6 +586,7 @@
 
               <!--              <spell-animation-viewer :is-component="true"/>-->
               <spell-animation-selector
+                :selected-animation="spell.spellanim"
                 :inputData.sync="spell.spellanim"
               />
 

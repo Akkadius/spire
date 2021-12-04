@@ -19,10 +19,14 @@
         No animations found...
       </div>
 
-      <div v-for="(animationId) in filteredAnimations" style="display:inline-block">
+      <div
+        v-for="(animationId) in filteredAnimations"
+        class="d-inline-block"
+      >
         <video
           muted
           loop
+          style="width: 160px; height: 230px; border-radius: 10px; border: 1px solid;"
           :id="'spell-' + animationId"
           :data-src="animBaseUrl + animationId + '.mp4'"
           @mousedown="selectSpellAnim(animationId)"
@@ -140,9 +144,14 @@ export default {
       filteredAnimations: [],
       search: "",
       animBaseUrl: App.ASSET_SPELL_ANIMATIONS,
-
-      selectedAnimation: 0,
     }
+  },
+  props: {
+    selectedAnimation: {
+      type: Number,
+      default: 0,
+      required: true
+    },
   },
   created() {
     this.init()

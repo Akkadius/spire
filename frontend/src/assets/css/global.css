@@ -133,5 +133,5 @@
 
 .pulsate {
     border: 1px solid cyan;
-    animation: border-pulsate 1s infinite;
+    animation: border-pulsate .5s infinite;
 }

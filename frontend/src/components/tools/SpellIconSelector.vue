@@ -6,9 +6,11 @@
       :key="icon"
       :class="'d-inline-block '"
       style="margin: 2px">
-      <img :src="spellCdnUrl + icon + '.gif'"
-           :class="classIsPulsating(icon)"
-           :style="'width:40px; height:auto; border-radius:10px; border: 1px solid;'">
+      <img
+        :src="spellCdnUrl + icon + '.gif'"
+        :class="classIsPulsating(icon)"
+        :style="'width:40px; height: 40px; border-radius:10px; border: 1px solid;'"
+      >
     </div>
   </div>
 </template>
