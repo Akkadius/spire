@@ -47,6 +47,8 @@
 
                   </div>
 
+                  <spell-class-selector :spell="spell" @input="spell = $event"/>
+
                   <div class="row">
                     <div class="col-8">
                       <div class="row">
@@ -81,7 +83,6 @@
                           <b-form-input v-model="spell.player_1"/>
                         </div>
                       </div>
-
                     </div>
                     <div
                       class="col-4"
@@ -96,6 +97,8 @@
                       <b-form-input v-model.number="spell.spellanim"/>
                     </div>
                   </div>
+
+
                 </eq-tab>
                 <eq-tab name="Effects" class="effect-tab">
                   <div>
@@ -617,12 +620,14 @@ import EqCheckbox                                                     from "../.
 import {SpellsNewApi}                                                 from "../../app/api";
 import {SpireApiClient}                                               from "../../app/api/spire-api-client";
 import * as util                                                      from "util";
+import SpellClassSelector                                             from "../../components/tools/SpellClassSelector";
 
 const MILLISECONDS_BEFORE_WINDOW_RESET = 3000;
 
 export default {
   name: "SpellEdit",
   components: {
+    SpellClassSelector,
     EqCheckbox,
     SpellAnimationSelector,
     SpellAnimationViewer,
@@ -668,10 +673,6 @@ export default {
 
     async saveSpell() {
       const api = (new SpellsNewApi(SpireApiClient.getOpenApiConfig()))
-      // let request = { new SpellsNewApiUpdateSpellsNewRequest() }
-      // request.id = this.spell.id
-      // request.spellsNew = this.spell
-
       api.updateSpellsNew({
         id: this.spell.id,
         spellsNew: this.spell
@@ -689,7 +690,6 @@ export default {
         }
       })
     },
-
 
     load() {
       if (this.$route.params.id > 0) {
