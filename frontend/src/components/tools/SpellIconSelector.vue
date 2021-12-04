@@ -33,8 +33,6 @@ export default {
     },
   },
   created() {
-    console.log(this.selectedIcon)
-
     SpellIcons[0].contents.forEach((row) => {
       const pieces   = row.name.split(/\//);
       const fileName = pieces[pieces.length - 1];
