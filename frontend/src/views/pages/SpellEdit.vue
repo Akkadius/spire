@@ -265,7 +265,7 @@
                       Endurance Upkeep
                       <b-form-input v-model="spell.endur_upkeep"/>
                     </div>
-                    <div class="col-3">
+                    <div class="col-3 text-center">
                       Use Discipline Window
                       <eq-checkbox
                         class="mt-2 mb-2"
