@@ -22,11 +22,19 @@ export default {
   data() {
     return {
       spellCdnUrl: App.ASSET_SPELL_ICONS_BASE_URL,
-      selectedIcon: 0,
       icons: [],
     }
   },
+  props: {
+    selectedIcon: {
+      type: Number,
+      default: 0,
+      required: true
+    },
+  },
   created() {
+    console.log(this.selectedIcon)
+
     SpellIcons[0].contents.forEach((row) => {
       const pieces   = row.name.split(/\//);
       const fileName = pieces[pieces.length - 1];
@@ -41,7 +49,7 @@ export default {
       this.selectedIcon = icon
     },
     classIsPulsating(icon) {
-      return icon === this.selectedIcon ? 'pulsate' : ''
+      return parseInt(icon) === parseInt(this.selectedIcon) ? 'pulsate' : ''
     },
   }
 }

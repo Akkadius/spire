@@ -573,6 +573,7 @@
               class="fade-in"
               v-if="iconSelectorActive">
               <spell-icon-selector
+                :selected-icon="spell.new_icon"
                 :inputData.sync="spell.new_icon"
               />
             </eq-window>
