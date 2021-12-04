@@ -30,6 +30,7 @@
         </video>
       </div>
     </div>
+
   </div>
 </template>
 
@@ -105,7 +106,7 @@ function elementInViewport(elem) {
   let pointContainer = document.elementFromPoint(elemCenter.x, elemCenter.y);
   do {
     if (pointContainer === elem) return true;
-  } while (pointContainer = pointContainer.parentNode);
+  } while (pointContainer === pointContainer.parentNode);
   return false;
 }
 
