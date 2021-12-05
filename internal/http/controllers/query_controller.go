@@ -138,18 +138,18 @@ func (q *QueryController) freeIdsReserved(c echo.Context) error {
 		q.logger.Warn(err)
 	}
 
-	IdColumn := c.Param("id")
+	idColumn := c.Param("id")
 	table := c.Param("table")
 	keyName := c.Param("name")
 
-	sql := fmt.Sprintf(`select %v, %v from %v where %v like '%%placeholder%%' or %v like '%%reserved%%' order by %v`,
-		IdColumn,
+	query := fmt.Sprintf(`select %v, %v from %v where %v like '%%placeholder%%' or %v like '%%reserved%%' order by %v`,
+		idColumn,
 		keyName,
 		table,
 		keyName,
 		keyName,
-		IdColumn,
+		idColumn,
 	)
 
-	return c.JSON(http.StatusOK, echo.Map{"data": database.GenericQuery(db, sql)})
+	return c.JSON(http.StatusOK, echo.Map{"data": database.GenericQuery(db, query)})
 }
