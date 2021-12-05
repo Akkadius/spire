@@ -93,7 +93,7 @@ export default {
   },
   methods: {
     selectId(id) {
-      this.$emit('input', id);
+      this.$emit('input', parseInt(id));
     }
   },
   mounted() {

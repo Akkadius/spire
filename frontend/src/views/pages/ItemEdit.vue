@@ -70,9 +70,12 @@
                       style="text-align: center"
                       @mouseover="drawItemModelSelector"
                     >
+
+                      <item-model-preview :id="item.idfile"/>
+
                       <!--                      <item-animation-preview-->
                       <!--                        class="mt-4"-->
-                      <!--                        :id="item.spellanim"/>-->
+                      <!--                        :id="item.itemanim"/>-->
                       <!---->
                       Item Model
                       <b-form-input v-model.number="item.idfile"/>
@@ -130,8 +133,6 @@
                 :with-reserved="true"
                 @input="item.id = $event"/>
             </eq-window>
-
-
           </div>
         </div>
       </div>
@@ -147,17 +148,19 @@ import EqTab            from "../../components/eq-ui/EQTab";
 import EqItemPreview    from "../../components/eq-ui/EQItemCardPreview";
 import {App}            from "../../constants/app";
 import EqCheckbox       from "../../components/eq-ui/EQCheckbox";
-import {ItemsNewApi}    from "../../app/api";
 import {SpireApiClient} from "../../app/api/spire-api-client";
 import * as util        from "util";
 import FreeIdSelector   from "../../components/tools/FreeIdSelector";
 import {Items}          from "../../app/items";
+import {ItemApi}        from "../../app/api";
+import ItemModelPreview from "../../components/tools/ItemModelPreview";
 
 const MILLISECONDS_BEFORE_WINDOW_RESET = 3000;
 
 export default {
   name: "ItemEdit",
   components: {
+    ItemModelPreview,
     FreeIdSelector,
     EqCheckbox,
     EqItemPreview,
@@ -219,10 +222,10 @@ export default {
       this.error        = ""
       this.notification = ""
 
-      const api = (new ItemsNewApi(SpireApiClient.getOpenApiConfig()))
-      api.updateItemsNew({
+      const api = (new ItemApi(SpireApiClient.getOpenApiConfig()))
+      api.updateItem({
         id: this.item.id,
-        spellsNew: this.spell
+        item: this.item
       }).then((result) => {
         if (result.status === 200) {
           this.notification = util.format("Item updated successfully! (%s) %s", this.item.id, this.item.name)
@@ -241,8 +244,8 @@ export default {
           return
         }
 
-        const createRes = await api.createItemsNew({
-          spellsNew: this.spell
+        const createRes = await api.createItem({
+          item: this.item
         })
 
         if (createRes.status === 200) {
@@ -264,10 +267,10 @@ export default {
      * Selector / previewers
      */
     resetPreviewComponents() {
-      this.previewItemActive       = false;
-      this.iconSelectorActive      = false;
-      this.spellAnimSelectorActive = false;
-      this.freeIdSelectorActive    = false;
+      this.previewItemActive      = false;
+      this.iconSelectorActive     = false;
+      this.itemAnimSelectorActive = false;
+      this.freeIdSelectorActive   = false;
     },
     previewItem() {
       let shouldReset = Date.now() - this.lastResetTime > MILLISECONDS_BEFORE_WINDOW_RESET;
@@ -281,7 +284,7 @@ export default {
     },
     drawItemModelSelector() {
       this.resetPreviewComponents()
-      this.spellAnimSelectorActive = true
+      this.itemAnimSelectorActive = true
     },
     drawIconSelector() {
       if (!this.freeIdSelectorActive) {
