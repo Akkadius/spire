@@ -174,7 +174,7 @@ func (q *QueryController) freeIdRanges(c echo.Context) error {
 			}
 		}
 
-		return c.JSON(http.StatusInternalServerError, echo.Map{"data": ranges})
+		return c.JSON(http.StatusOK, echo.Map{"data": ranges})
 	}
 
 	return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Ranges not found"})
