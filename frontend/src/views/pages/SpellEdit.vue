@@ -272,13 +272,6 @@
                       <b-form-input v-model.number="spell.recourse_link"/>
                     </div>
                   </div>
-
-
-
-
-
-
-
                 </eq-tab>
 
                 <eq-tab name="General">

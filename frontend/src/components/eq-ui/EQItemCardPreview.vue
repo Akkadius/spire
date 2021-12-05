@@ -420,7 +420,7 @@ export default {
         }
       }
 
-      return classes.join(", ").trim()
+      return this.itemData.classes >= 65535 ? 'ALL' : classes.join(", ").trim()
     },
     getRaces: function () {
       let races      = []
@@ -433,7 +433,7 @@ export default {
         }
       }
 
-      return races.join(", ").trim()
+      return this.itemData.races >= 65535 ? 'ALL' : races.join(", ").trim()
     },
     getDeity: function () {
       let deities      = []
