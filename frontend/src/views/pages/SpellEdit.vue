@@ -254,17 +254,30 @@
                     </div>
                   </div>
 
-                  Max Critical Chance
-                  <b-form-input v-model.number="spell.field_217"/>
+                  <!-- Misc -->
+                  <div class="row">
+                    <div class="col-2 text-right">
+                      <h6 class="eq-header mt-3">Misc</h6>
+                    </div>
+                    <div class="col-3">
+                      Max Critical Chance
+                      <b-form-input v-model.number="spell.field_217"/>
+                    </div>
+                    <div class="col-3">
+                      Nimbus Type
+                      <b-form-input v-model.number="spell.nimbuseffect"/>
+                    </div>
+                    <div class="col-3">
+                      Recourse Spell ID
+                      <b-form-input v-model.number="spell.recourse_link"/>
+                    </div>
+                  </div>
 
-                  Nimbus Type
-                  <b-form-input v-model.number="spell.nimbuseffect"/>
-                  Max Hits Type
-                  <b-form-input v-model.number="spell.numhitstype"/>
-                  Max Hits Allowed
-                  <b-form-input v-model.number="spell.numhits"/>
-                  Recourse Spell ID
-                  <b-form-input v-model.number="spell.recourse_link"/>
+
+
+
+
+
 
                 </eq-tab>
 
@@ -553,6 +566,18 @@
                       Max Distance Mod
                       <b-form-input v-model.number="spell.max_dist_mod"/>
                     </div>
+
+                  </div>
+
+                  <div class="row">
+                    <div class="col-6">
+                      Max Hits Type
+                      <b-form-input v-model.number="spell.numhitstype"/>
+                    </div>
+                    <div class="col-6">
+                      Max Hits Allowed
+                      <b-form-input v-model.number="spell.numhits"/>
+                    </div>
                   </div>
 
                   <h6 class="eq-header">Cone</h6>
@@ -645,6 +670,7 @@
                   Save Spell
                 </b-button>
               </div>
+
 
             </eq-window>
 
