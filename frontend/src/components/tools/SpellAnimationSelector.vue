@@ -44,6 +44,7 @@ import {App}             from "@/constants/app";
 import EqWindow          from "@/components/eq-ui/EQWindow";
 import SpellAnimations   from "@/app/asset-maps/spell-animations-map.json";
 import spellAnimMappings from "@/app/data-maps/spell-icon-anim-name-map.json";
+import * as util         from "util";
 
 function handleRender() {
   let playing  = []
@@ -165,6 +166,23 @@ export default {
 
       this.render()
       this.spellAnimSearch()
+
+      // bring focus to the selected video
+      if (this.selectedAnimation > 0) {
+        // we need 100ms delay because the videos haven't been rendered yet
+        setTimeout(() => {
+          const container = document.getElementById("spell-video-view-port");
+          const target = util.format("spell-%s", this.selectedAnimation)
+          // console.log(container)
+          // console.log(target)
+          // console.log(container.scrollTop)
+          // console.log(document.getElementById(target).offsetTop)
+
+          // 230 is height of video to offset
+          container.scrollTop = document.getElementById(target).offsetTop - 230;
+        }, 100)
+      }
+
     },
     render: function () {
       // Preload model files
@@ -228,7 +246,6 @@ export default {
     },
     selectSpellAnim(anim) {
       this.$emit("update:inputData", anim);
-      this.selectedAnimation = anim;
     }
   },
   activated() {
