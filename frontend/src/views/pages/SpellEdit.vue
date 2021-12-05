@@ -311,7 +311,7 @@
 
                   <div class="row">
                     <div class="col-6">
-                      pcnpc_only_flag
+                      pcnpc_only_flag (???)
                       <b-form-input v-model.number="spell.pcnpc_only_flag"/>
                     </div>
                     <div class="col-6">
@@ -570,40 +570,65 @@
 
                 </eq-tab>
                 <eq-tab name="Resist">
-                  Resist Type
-                  <b-form-select
-                    v-model.number="spell.resisttype"
-                    v-if="DB_SPELL_RESISTS"
-                  >
-                    <b-form-select-option
-                      :value="parseInt(id)" v-for="(value, id) in DB_SPELL_RESISTS"
-                      :key="id"
-                    >{{ id }})
-                      {{ value }}
-                    </b-form-select-option>
-                  </b-form-select>
 
-                  Unresistable
-                  <eq-checkbox class="mt-2 mb-2" v-model.number="spell.field_209" @input="spell.field_209 = $event"/>
+                  <div class="row">
+                    <div class="col-3">
+                      Resist Type
+                      <b-form-select
+                        v-model.number="spell.resisttype"
+                        v-if="DB_SPELL_RESISTS"
+                      >
+                        <b-form-select-option
+                          :value="parseInt(id)" v-for="(value, id) in DB_SPELL_RESISTS"
+                          :key="id"
+                        >{{ id }})
+                          {{ value }}
+                        </b-form-select-option>
+                      </b-form-select>
+                    </div>
+                    <div class="col-3">
+                      Resist Diff
+                      <b-form-input v-model.number="spell.resist_diff"/>
+                    </div>
+                    <div class="col-3 text-center">
+                      Unresistable
+                      <eq-checkbox class="mt-2 mb-2" v-model.number="spell.field_209" @input="spell.field_209 = $event"/>
+                    </div>
+                    <div class="col-3 text-center">
+                      No Partial Resists
+                      <eq-checkbox
+                        class="mt-2 mb-2"
+                        v-model.number="spell.no_partial_resist"
+                        @input="spell.no_partial_resist = $event"/>
+                    </div>
+                  </div>
 
-                  Resist Diff
-                  <b-form-input v-model.number="spell.resist_diff"/>
-                  No Partial Resists
-                  <eq-checkbox
-                    class="mt-2 mb-2"
-                    v-model.number="spell.no_partial_resist"
-                    @input="spell.no_partial_resist = $event"/>
+                  <div class="row">
+                    <div class="col-4">
+                      PVP Resist Mod
+                      <b-form-input v-model.number="spell.pvpresistbase"/>
+                    </div>
+                    <div class="col-4">
+                      PVP Resist Per Level
+                      <b-form-input v-model.number="spell.pvpresistcalc"/>
+                    </div>
+                    <div class="col-4">
+                      PVP Resist Cap
+                      <b-form-input v-model.number="spell.pvpresistcap"/>
+                    </div>
+                  </div>
+
 
                   Resist Chance Limits: Max Chance (Actual in game chance is divided by 2)
                   <b-form-input v-model.number="spell.max_resist"/>
                   Resist Chance Limits: Min Chance (Actual in game chance is divided by 2)
                   <b-form-input v-model.number="spell.min_resist"/>
-                  PVP Resist Mod
-                  <b-form-input v-model.number="spell.pvpresistbase"/>
-                  PVP Resist Per Level
-                  <b-form-input v-model.number="spell.pvpresistcalc"/>
-                  PVP Resist Cap
-                  <b-form-input v-model.number="spell.pvpresistcap"/>
+
+
+
+
+
+
                   Reflectable
                   <b-form-input v-model.number="spell.reflectable"/>
                   Feedbackable
