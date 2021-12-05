@@ -32,6 +32,7 @@ require (
 	github.com/influxdata/influxdb-client-go/v2 v2.2.2
 	github.com/jinzhu/gorm v1.9.16
 	github.com/joho/godotenv v1.3.0
+	github.com/k0kubun/pp v3.0.1+incompatible // indirect
 	github.com/karrick/godirwalk v1.16.1 // indirect
 	github.com/konsorten/go-windows-terminal-sequences v1.0.3 // indirect
 	github.com/labstack/echo/v4 v4.1.16
