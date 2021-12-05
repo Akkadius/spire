@@ -42,7 +42,7 @@
 
                     <div class="col-2" @mouseover="drawIconSelector">
                       Icon
-                      <b-form-input v-model="spell.new_icon"/>
+                      <b-form-input v-model.number="spell.new_icon"/>
                     </div>
 
                     <div
@@ -143,7 +143,7 @@
                         <b-input-group-text style="width: 40px;">{{ i }}</b-input-group-text>
                       </template>
 
-                      <b-form-select v-model="spell['effectid_' + i]" style="width: 150px">
+                      <b-form-select v-model.number="spell['effectid_' + i]" style="width: 150px">
                         <b-form-select-option v-for="(effect, id) in DB_SPA" :key="id" :value="parseInt(id)">{{ id }})
                           {{
                             effect
@@ -151,10 +151,10 @@
                         </b-form-select-option>
                       </b-form-select>
 
-                      <b-form-input v-model="spell['effect_base_value_' + i]"/>
-                      <b-form-input v-model="spell['max_' + i]"/>
-                      <b-form-input v-model="spell['effect_limit_value_' + i]"/>
-                      <b-form-input v-model="spell['formula_' + i]"/>
+                      <b-form-input v-model.number="spell['effect_base_value_' + i]"/>
+                      <b-form-input v-model.number="spell['max_' + i]"/>
+                      <b-form-input v-model.number="spell['effect_limit_value_' + i]"/>
+                      <b-form-input v-model.number="spell['formula_' + i]"/>
                     </b-input-group>
 
                   </div>
@@ -169,11 +169,11 @@
                     </div>
                     <div class="col-4">
                       Push Up
-                      <b-form-input v-model="spell.pushback"/>
+                      <b-form-input v-model.number="spell.pushback"/>
                     </div>
                     <div class="col-4">
                       Push Back
-                      <b-form-input v-model="spell.pushup"/>
+                      <b-form-input v-model.number="spell.pushup"/>
                     </div>
                   </div>
 
@@ -184,17 +184,17 @@
                     </div>
                     <div class="col-3">
                       Hate Modifier
-                      <b-form-input v-model="spell.bonushate"/>
+                      <b-form-input v-model.number="spell.bonushate"/>
                     </div>
                     <div class="col-3">
                       Spell Hate Given
-                      <b-form-input v-model="spell.hate_added"/>
+                      <b-form-input v-model.number="spell.hate_added"/>
                     </div>
                     <div class="col-3 text-center">
                       No Detrimental Spell Aggro
                       <eq-checkbox
                         class="mt-2 mb-2"
-                        v-model="spell.field_198"
+                        v-model.number="spell.field_198"
                         @input="spell.field_198 = $event"
                       />
                     </div>
@@ -207,15 +207,15 @@
                     </div>
                     <div class="col-3">
                       Viral Range
-                      <b-form-input v-model="spell.viral_range"/>
+                      <b-form-input v-model.number="spell.viral_range"/>
                     </div>
                     <div class="col-3">
                       Viral Targets
-                      <b-form-input v-model="spell.viral_targets"/>
+                      <b-form-input v-model.number="spell.viral_targets"/>
                     </div>
                     <div class="col-3">
                       Viral Timer
-                      <b-form-input v-model="spell.viral_timer"/>
+                      <b-form-input v-model.number="spell.viral_timer"/>
                     </div>
                   </div>
 
@@ -226,15 +226,15 @@
                     </div>
                     <div class="col-3">
                       Max Targets
-                      <b-form-input v-model="spell.maxtargets"/>
+                      <b-form-input v-model.number="spell.maxtargets"/>
                     </div>
                     <div class="col-3">
                       Song Base Effect Cap
-                      <b-form-input v-model="spell.songcap"/>
+                      <b-form-input v-model.number="spell.songcap"/>
                     </div>
                     <div class="col-3 text-center">
                       Not Focusable
-                      <eq-checkbox class="mt-2 mb-2" v-model="spell.not_extendable"
+                      <eq-checkbox class="mt-2 mb-2" v-model.number="spell.not_extendable"
                                    @input="spell.not_extendable = $event"/>
                     </div>
                   </div>
@@ -246,25 +246,25 @@
                     </div>
                     <div class="col-4">
                       Spell Group
-                      <b-form-input v-model="spell.spellgroup"/>
+                      <b-form-input v-model.number="spell.spellgroup"/>
                     </div>
                     <div class="col-4">
                       Rank
-                      <b-form-input v-model="spell.rank"/>
+                      <b-form-input v-model.number="spell.rank"/>
                     </div>
                   </div>
 
                   Max Critical Chance
-                  <b-form-input v-model="spell.field_217"/>
+                  <b-form-input v-model.number="spell.field_217"/>
 
                   Nimbus Type
-                  <b-form-input v-model="spell.nimbuseffect"/>
+                  <b-form-input v-model.number="spell.nimbuseffect"/>
                   Max Hits Type
-                  <b-form-input v-model="spell.numhitstype"/>
+                  <b-form-input v-model.number="spell.numhitstype"/>
                   Max Hits Allowed
-                  <b-form-input v-model="spell.numhits"/>
+                  <b-form-input v-model.number="spell.numhits"/>
                   Recourse Spell ID
-                  <b-form-input v-model="spell.recourse_link"/>
+                  <b-form-input v-model.number="spell.recourse_link"/>
 
                 </eq-tab>
 
@@ -272,7 +272,7 @@
                   <div class="row">
                     <div class="col-6">
                       Skill
-                      <b-form-select v-model="spell.skill" v-if="DB_SKILLS">
+                      <b-form-select v-model.number="spell.skill" v-if="DB_SKILLS">
                         <b-form-select-option
                           :value="parseInt(id)" v-for="(skill, id) in DB_SKILLS"
                           :key="id"
@@ -282,28 +282,28 @@
                     </div>
                     <div class="col-6">
                       Good Effect
-                      <b-form-input v-model="spell.good_effect"/>
+                      <b-form-input v-model.number="spell.good_effect"/>
                     </div>
                   </div>
 
                   <div class="row">
                     <div class="col-3">
                       Mana Cost
-                      <b-form-input v-model="spell.mana"/>
+                      <b-form-input v-model.number="spell.mana"/>
                     </div>
                     <div class="col-3">
                       Endurance Cost
-                      <b-form-input v-model="spell.endur_cost"/>
+                      <b-form-input v-model.number="spell.endur_cost"/>
                     </div>
                     <div class="col-3">
                       Endurance Upkeep
-                      <b-form-input v-model="spell.endur_upkeep"/>
+                      <b-form-input v-model.number="spell.endur_upkeep"/>
                     </div>
                     <div class="col-3 text-center">
                       Use Discipline Window
                       <eq-checkbox
                         class="mt-2 mb-2"
-                        v-model="spell.is_discipline"
+                        v-model.number="spell.is_discipline"
                         @input="spell.is_discipline = $event"
                       />
                     </div>
@@ -312,11 +312,11 @@
                   <div class="row">
                     <div class="col-6">
                       pcnpc_only_flag
-                      <b-form-input v-model="spell.pcnpc_only_flag"/>
+                      <b-form-input v-model.number="spell.pcnpc_only_flag"/>
                     </div>
                     <div class="col-6">
                       Teleport Zone / Pet DbaseID / ItemGraphic for Bolt Spells
-                      <b-form-input v-model="spell.teleport_zone"/>
+                      <b-form-input v-model.number="spell.teleport_zone"/>
                     </div>
                   </div>
                 </eq-tab>
@@ -325,89 +325,89 @@
                   <div class="row">
                     <div class="col-3" style="text-align:center">
                       Must Be Out of Combat
-                      <eq-checkbox class="mt-2 mb-2" v-model="spell.outof_combat" @input="spell.outof_combat = $event"/>
+                      <eq-checkbox class="mt-2 mb-2" v-model.number="spell.outof_combat" @input="spell.outof_combat = $event"/>
                     </div>
                     <div class="col-3" style="text-align:center">
                       Must Be In Combat
-                      <eq-checkbox class="mt-2 mb-2" v-model="spell.in_combat" @input="spell.in_combat = $event"/>
+                      <eq-checkbox class="mt-2 mb-2" v-model.number="spell.in_combat" @input="spell.in_combat = $event"/>
                     </div>
                     <div class="col-3" style="text-align:center">
                       Only During Fast Regen
-                      <eq-checkbox class="mt-2 mb-2" v-model="spell.allowrest" @input="spell.allowrest = $event"/>
+                      <eq-checkbox class="mt-2 mb-2" v-model.number="spell.allowrest" @input="spell.allowrest = $event"/>
                     </div>
                     <div class="col-3" style="text-align:center">
                       Cancel On Sit
-                      <eq-checkbox class="mt-2 mb-2" v-model="spell.disallow_sit" @input="spell.disallow_sit = $event"/>
+                      <eq-checkbox class="mt-2 mb-2" v-model.number="spell.disallow_sit" @input="spell.disallow_sit = $event"/>
                     </div>
                     <div class="col-3" style="text-align:center">
                       Must be Sneaking
-                      <eq-checkbox class="mt-2 mb-2" v-model="spell.sneaking" @input="spell.sneaking = $event"/>
+                      <eq-checkbox class="mt-2 mb-2" v-model.number="spell.sneaking" @input="spell.sneaking = $event"/>
                     </div>
                   </div>
 
                   Target Restriction
-                  <b-form-input v-model="spell.cast_restriction"/>
+                  <b-form-input v-model.number="spell.cast_restriction"/>
                   Caster Restriction
-                  <b-form-input v-model="spell.field_220"/>
+                  <b-form-input v-model.number="spell.field_220"/>
 
                   Zone Type (select)
-                  <b-form-input v-model="spell.zonetype"/>
+                  <b-form-input v-model.number="spell.zonetype"/>
                   Environment Type
-                  <b-form-input v-model="spell.environment_type"/>
+                  <b-form-input v-model.number="spell.environment_type"/>
                   Time of Day
-                  <b-form-input v-model="spell.time_of_day"/>
+                  <b-form-input v-model.number="spell.time_of_day"/>
                 </eq-tab>
                 <eq-tab name="Casting">
                   Cast Time
-                  <b-form-input v-model="spell.cast_time"/>
+                  <b-form-input v-model.number="spell.cast_time"/>
                   Recovery Time
-                  <b-form-input v-model="spell.recovery_time"/>
+                  <b-form-input v-model.number="spell.recovery_time"/>
                   Recast Time
-                  <b-form-input v-model="spell.recast_time"/>
+                  <b-form-input v-model.number="spell.recast_time"/>
                   Timer Index (Timer Max 19, also seen few discs with -1)
-                  <b-form-input v-model="spell.endur_timer_index"/>
+                  <b-form-input v-model.number="spell.endur_timer_index"/>
                   Uninterruptable
-                  <eq-checkbox class="mt-2 mb-2" v-model="spell.uninterruptable"
+                  <eq-checkbox class="mt-2 mb-2" v-model.number="spell.uninterruptable"
                                @input="spell.uninterruptable = $event"/>
 
                   Fizzle Adjustment
-                  <b-form-input v-model="spell.basediff"/>
+                  <b-form-input v-model.number="spell.basediff"/>
                   Cast Not Standing (Can Cast from Sitting position, Can cast on invulnerable Targets, Can not be
                   interrupted by SE_InterruptCasting)
-                  <b-form-input v-model="spell.cast_not_standing"/>
+                  <b-form-input v-model.number="spell.cast_not_standing"/>
                 </eq-tab>
                 <eq-tab name="Buffing">
 
                   <div class="row">
                     <div class="col-3" style="text-align:center">
                       Can Not Dispell
-                      <eq-checkbox class="mt-2 mb-2" v-model="spell.nodispell" @input="spell.nodispell = $event"/>
+                      <eq-checkbox class="mt-2 mb-2" v-model.number="spell.nodispell" @input="spell.nodispell = $event"/>
                     </div>
                     <div class="col-3" style="text-align:center">
                       Can Not Click Off
-                      <eq-checkbox class="mt-2 mb-2" v-model="spell.field_232" @input="spell.field_232 = $event"/>
+                      <eq-checkbox class="mt-2 mb-2" v-model.number="spell.field_232" @input="spell.field_232 = $event"/>
                     </div>
                     <div class="col-3" style="text-align:center">
                       Persist After Death
-                      <eq-checkbox class="mt-2 mb-2" v-model="spell.persistdeath" @input="spell.persistdeath = $event"/>
+                      <eq-checkbox class="mt-2 mb-2" v-model.number="spell.persistdeath" @input="spell.persistdeath = $event"/>
                     </div>
                     <div class="col-3" style="text-align:center">
                       Suspendable
-                      <eq-checkbox class="mt-2 mb-2" v-model="spell.suspendable" @input="spell.suspendable = $event"/>
+                      <eq-checkbox class="mt-2 mb-2" v-model.number="spell.suspendable" @input="spell.suspendable = $event"/>
                     </div>
                   </div>
 
                   <div class="row">
                     <div class="col-3" style="text-align:center">
                       Can MGB
-                      <eq-checkbox class="mt-2 mb-2" v-model="spell.can_mgb" @input="spell.can_mgb = $event"/>
+                      <eq-checkbox class="mt-2 mb-2" v-model.number="spell.can_mgb" @input="spell.can_mgb = $event"/>
                     </div>
 
                     <div class="col-3" style="text-align:center">
                       Short Duration Buff
                       <eq-checkbox
                         class="mt-2 mb-2"
-                        v-model="spell.short_buff_box"
+                        v-model.number="spell.short_buff_box"
                         @input="spell.short_buff_box = $event"
                       />
                     </div>
@@ -415,7 +415,7 @@
                       No Buff Block
                       <eq-checkbox
                         class="mt-2 mb-2"
-                        v-model="spell.no_block"
+                        v-model.number="spell.no_block"
                         @input="spell.no_block = $event"
                       />
                     </div>
@@ -423,7 +423,7 @@
                       DOT Not Stackable
                       <eq-checkbox
                         class="mt-2 mb-2"
-                        v-model="spell.dot_stacking_exempt"
+                        v-model.number="spell.dot_stacking_exempt"
                         @input="spell.dot_stacking_exempt = $event"
                       />
                     </div>
@@ -432,20 +432,20 @@
                   <div class="row">
                     <div class="col-3">
                       Buff Duration
-                      <b-form-input v-model="spell.buffduration"/>
+                      <b-form-input v-model.number="spell.buffduration"/>
                     </div>
                     <div class="col-3">
                       Duration Formula
-                      <b-form-input v-model="spell.buffdurationformula"/>
+                      <b-form-input v-model.number="spell.buffdurationformula"/>
                     </div>
                     <div class="col-3">
                       PVP Duration
-                      <b-form-input v-model="spell.field_181"/>
+                      <b-form-input v-model.number="spell.field_181"/>
 
                     </div>
                     <div class="col-3">
                       PVP Duration Cap
-                      <b-form-input v-model="spell.field_182"/>
+                      <b-form-input v-model.number="spell.field_182"/>
                     </div>
                   </div>
                 </eq-tab>
@@ -453,11 +453,11 @@
                   <div class="row">
                     <div class="col-3">
                       Spell Range
-                      <b-form-input v-model="spell.range"/>
+                      <b-form-input v-model.number="spell.range"/>
                     </div>
                     <div class="col-3">
                       Target Type
-                      <b-form-select v-model="spell.targettype" v-if="DB_SPELL_TARGETS">
+                      <b-form-select v-model.number="spell.targettype" v-if="DB_SPELL_TARGETS">
                         <b-form-select-option
                           :value="parseInt(id)"
                           v-for="(value, id) in DB_SPELL_TARGETS"
@@ -469,7 +469,7 @@
                     </div>
                     <div class="col-6 text-center">
                       NPC Line of Sight Not Required to Cast
-                      <eq-checkbox class="mt-2 mb-2" v-model="spell.npc_no_los" @input="spell.npc_no_los = $event"/>
+                      <eq-checkbox class="mt-2 mb-2" v-model.number="spell.npc_no_los" @input="spell.npc_no_los = $event"/>
                     </div>
                   </div>
 
@@ -478,38 +478,38 @@
                   <div class="row">
                     <div class="col-4">
                       AOE Range
-                      <b-form-input v-model="spell.aoerange"/>
+                      <b-form-input v-model.number="spell.aoerange"/>
                     </div>
                     <div class="col-4">
                       AOE Rain Waves
-                      <b-form-input v-model="spell.ae_duration"/>
+                      <b-form-input v-model.number="spell.ae_duration"/>
                     </div>
                     <div class="col-4">
                       AOE Max Targets
-                      <b-form-input v-model="spell.aemaxtargets"/>
+                      <b-form-input v-model.number="spell.aemaxtargets"/>
                     </div>
                   </div>
 
                   <div class="row">
                     <div class="col-2">
                       Min Range
-                      <b-form-input v-model="spell.min_range"/>
+                      <b-form-input v-model.number="spell.min_range"/>
                     </div>
                     <div class="col-2">
                       Min Distance for Mod
-                      <b-form-input v-model="spell.min_dist"/>
+                      <b-form-input v-model.number="spell.min_dist"/>
                     </div>
                     <div class="col-2">
                       Min Distance Mod
-                      <b-form-input v-model="spell.min_dist_mod"/>
+                      <b-form-input v-model.number="spell.min_dist_mod"/>
                     </div>
                     <div class="col-3">
                       Max Distance for Mod
-                      <b-form-input v-model="spell.max_dist"/>
+                      <b-form-input v-model.number="spell.max_dist"/>
                     </div>
                     <div class="col-3">
                       Max Distance Mod
-                      <b-form-input v-model="spell.max_dist_mod"/>
+                      <b-form-input v-model.number="spell.max_dist_mod"/>
                     </div>
                   </div>
 
@@ -518,11 +518,11 @@
                   <div class="row">
                     <div class="col-6">
                       Cone Angle Start
-                      <b-form-input v-model="spell.cone_start_angle"/>
+                      <b-form-input v-model.number="spell.cone_start_angle"/>
                     </div>
                     <div class="col-6">
                       Cone Angle End
-                      <b-form-input v-model="spell.cone_stop_angle"/>
+                      <b-form-input v-model.number="spell.cone_stop_angle"/>
                     </div>
                   </div>
 
@@ -530,7 +530,7 @@
                 <eq-tab name="Resist">
                   Resist Type
                   <b-form-select
-                    v-model="spell.resisttype"
+                    v-model.number="spell.resisttype"
                     v-if="DB_SPELL_RESISTS"
                   >
                     <b-form-select-option
@@ -542,30 +542,30 @@
                   </b-form-select>
 
                   Unresistable
-                  <eq-checkbox class="mt-2 mb-2" v-model="spell.field_209" @input="spell.field_209 = $event"/>
+                  <eq-checkbox class="mt-2 mb-2" v-model.number="spell.field_209" @input="spell.field_209 = $event"/>
 
                   Resist Diff
-                  <b-form-input v-model="spell.resist_diff"/>
+                  <b-form-input v-model.number="spell.resist_diff"/>
                   No Partial Resists
                   <eq-checkbox
                     class="mt-2 mb-2"
-                    v-model="spell.no_partial_resist"
+                    v-model.number="spell.no_partial_resist"
                     @input="spell.no_partial_resist = $event"/>
 
                   Resist Chance Limits: Max Chance (Actual in game chance is divided by 2)
-                  <b-form-input v-model="spell.max_resist"/>
+                  <b-form-input v-model.number="spell.max_resist"/>
                   Resist Chance Limits: Min Chance (Actual in game chance is divided by 2)
-                  <b-form-input v-model="spell.min_resist"/>
+                  <b-form-input v-model.number="spell.min_resist"/>
                   PVP Resist Mod
-                  <b-form-input v-model="spell.pvpresistbase"/>
+                  <b-form-input v-model.number="spell.pvpresistbase"/>
                   PVP Resist Per Level
-                  <b-form-input v-model="spell.pvpresistcalc"/>
+                  <b-form-input v-model.number="spell.pvpresistcalc"/>
                   PVP Resist Cap
-                  <b-form-input v-model="spell.pvpresistcap"/>
+                  <b-form-input v-model.number="spell.pvpresistcap"/>
                   Reflectable
-                  <b-form-input v-model="spell.reflectable"/>
+                  <b-form-input v-model.number="spell.reflectable"/>
                   Feedbackable
-                  <b-form-input v-model="spell.field_160"/>
+                  <b-form-input v-model.number="spell.field_160"/>
                 </eq-tab>
               </eq-tabs>
 
