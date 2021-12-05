@@ -8,9 +8,13 @@
 
               <div v-if="notification">
                 <b-button class="btn-dark btn-outline-warning form-control" @click="notification = ''">
-                  <i class="ra ra-book mr-1"></i> {{ notification }}
+                  <i class="ra ra-book mr-1"></i>{{ notification }}
                 </b-button>
               </div>
+
+              <b-alert show dismissable variant="danger" v-if="error">
+                <i class="fa fa-warning"></i> {{error}}
+              </b-alert>
 
               <eq-tabs
                 v-if="spell && tabSelected"
@@ -700,6 +704,7 @@ export default {
       lastResetTime: Date.now(),
 
       notification: "",
+      error: "",
     }
   },
   watch: {
@@ -735,6 +740,9 @@ export default {
     },
 
     async saveSpell() {
+      this.error = ""
+      this.notification = ""
+
       const api = (new SpellsNewApi(SpireApiClient.getOpenApiConfig()))
       api.updateSpellsNew({
         id: this.spell.id,
@@ -744,7 +752,19 @@ export default {
           this.notification = util.format("Spell updated successfully! (%s) %s", this.spell.id, this.spell.name)
           this.resetFieldEditedStatus()
         }
-      }).catch(async () => {
+
+        if (result.data.error) {
+          this.notification = result.data.error
+        }
+
+      }).catch(async (error) => {
+
+        // marshalling error
+        if (error.response.data && error.response.data.error.includes("marshal")) {
+          this.error = error.response.data.error
+          return
+        }
+
         const createRes = await api.createSpellsNew({
           spellsNew: this.spell
         })
@@ -753,6 +773,8 @@ export default {
           this.notification = util.format("Created new Spell! (%s) %s", this.spell.id, this.spell.name)
           this.resetFieldEditedStatus()
         }
+
+
       })
     },
 
