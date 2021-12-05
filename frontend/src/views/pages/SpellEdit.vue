@@ -48,7 +48,7 @@
                   </div>
 
                   <spell-class-selector :spell="spell" @input="spell = $event"/>
-<!--                  <spell-deity-selector :spell="spell" @input="spell = $event"/>-->
+                  <!--                  <spell-deity-selector :spell="spell" @input="spell = $event"/>-->
 
                   <div class="row">
                     <div class="col-8">
@@ -425,8 +425,6 @@
                       <b-form-input v-model="spell.field_182"/>
                     </div>
                   </div>
-
-
                 </eq-tab>
                 <eq-tab name="Range">
                   <div class="row">
@@ -589,15 +587,19 @@
               class="fade-in"
               v-if="spellAnimSelectorActive">
 
-              <!--              <spell-animation-viewer :is-component="true"/>-->
               <spell-animation-selector
                 :selected-animation="spell.spellanim"
                 :inputData.sync="spell.spellanim"
               />
+            </eq-window>
 
-              <!--              <spell-icon-selector-->
-              <!--                :inputData.sync="spell.new_icon"-->
-              <!--              />-->
+            <!-- free id selector -->
+            <eq-window
+              style="margin-top: 30px; margin-right: 10px; width: auto;"
+              class="fade-in"
+              v-if="spellAnimSelectorActive">
+
+
             </eq-window>
 
 
@@ -618,18 +620,18 @@ import {Spells}                                                       from "../.
 import {DB_SPA, DB_SPELL_EFFECTS, DB_SPELL_RESISTS, DB_SPELL_TARGETS} from "../../app/constants/eq-spell-constants";
 import {DB_SKILLS}                                                    from "../../app/constants/eq-skill-constants";
 import {App}                                                          from "../../constants/app";
-import SpellIconSelector    from "../../components/tools/SpellIconSelector";
+import SpellIconSelector                                              from "../../components/tools/SpellIconSelector";
 import SpellAnimationPreview
-                            from "../../components/tools/SpellAnimationPreview";
-import SpellAnimationViewer from "./SpellAnimationViewer";
+                                                                      from "../../components/tools/SpellAnimationPreview";
+import SpellAnimationViewer                                           from "./SpellAnimationViewer";
 import SpellAnimationSelector
-                            from "../../components/tools/SpellAnimationSelector";
-import EqCheckbox           from "../../components/eq-ui/EQCheckbox";
-import {SpellsNewApi}       from "../../app/api";
-import {SpireApiClient}     from "../../app/api/spire-api-client";
-import * as util            from "util";
-import SpellClassSelector   from "../../components/tools/SpellClassSelector";
-import SpellDeitySelector   from "../../components/tools/SpellDeitySelector";
+                                                                      from "../../components/tools/SpellAnimationSelector";
+import EqCheckbox                                                     from "../../components/eq-ui/EQCheckbox";
+import {SpellsNewApi}                                                 from "../../app/api";
+import {SpireApiClient}                                               from "../../app/api/spire-api-client";
+import * as util                                                      from "util";
+import SpellClassSelector                                             from "../../components/tools/SpellClassSelector";
+import SpellDeitySelector                                             from "../../components/tools/SpellDeitySelector";
 
 const MILLISECONDS_BEFORE_WINDOW_RESET = 3000;
 
@@ -663,6 +665,7 @@ export default {
       previewSpellActive: true,
       iconSelectorActive: false,
       spellAnimSelectorActive: false,
+      freeIdSelectorActive: false,
 
       tabSelected: { 'basic': true },
 
@@ -719,6 +722,7 @@ export default {
       this.previewSpellActive      = false;
       this.iconSelectorActive      = false;
       this.spellAnimSelectorActive = false;
+      this.freeIdSelectorActive    = false;
     },
     previewSpell() {
       let shouldReset = Date.now() - this.lastResetTime > MILLISECONDS_BEFORE_WINDOW_RESET;

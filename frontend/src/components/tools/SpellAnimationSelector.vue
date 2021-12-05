@@ -21,6 +21,7 @@
 
       <div
         v-for="(animationId) in filteredAnimations"
+        :key="animationId"
         class="d-inline-block"
       >
         <video
