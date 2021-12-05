@@ -14,6 +14,7 @@
 
               <eq-tabs
                 v-if="spell && tabSelected"
+                id="spell-edit-card"
                 class="spell-edit-card"
                 :hover-open="true"
                 @mouseover.native="previewSpell"
@@ -30,7 +31,9 @@
                     </div>
                     <div class="col-7">
                       Name
-                      <b-form-input v-model="spell.name"/>
+                      <b-form-input
+                        :value="spell.name" @change="v => spell.name = v"
+                      />
                     </div>
 
                     <div class="col-2" @mouseover="drawIconSelector">
@@ -59,33 +62,45 @@
                       <div class="row">
                         <div class="col-6">
                           You Cast
-                          <b-form-input v-model="spell.you_cast"/>
+                          <b-form-input
+                            :value="spell.you_cast" @change="v => spell.you_cast = v"
+                          />
                         </div>
                         <div class="col-6">
                           Other Casts
-                          <b-form-input v-model="spell.other_casts"/>
+                          <b-form-input
+                            :value="spell.other_casts" @change="v => spell.other_casts = v"
+                          />
                         </div>
                       </div>
 
                       <div class="row">
                         <div class="col-6">
                           Cast On You
-                          <b-form-input v-model="spell.cast_on_you"/>
+                          <b-form-input
+                            :value="spell.cast_on_you" @change="v => spell.cast_on_you = v"
+                          />
                         </div>
                         <div class="col-6">
                           Cast On Other
-                          <b-form-input v-model="spell.cast_on_other"/>
+                          <b-form-input
+                            :value="spell.cast_on_other" @change="v => spell.cast_on_other = v"
+                          />
                         </div>
                       </div>
 
                       <div class="row">
                         <div class="col-6">
                           Spell Fades
-                          <b-form-input v-model="spell.spell_fades"/>
+                          <b-form-input
+                            :value="spell.spell_fades" @change="v => spell.spell_fades = v"
+                          />
                         </div>
                         <div class="col-6">
                           ID File
-                          <b-form-input v-model="spell.player_1"/>
+                          <b-form-input
+                            :value="spell.player_1" @change="v => spell.player_1 = v"
+                          />
                         </div>
                       </div>
                     </div>
@@ -696,9 +711,28 @@ export default {
     }
   },
   async created() {
+
+    setTimeout(() => {
+      document.getElementById("spell-edit-card").removeEventListener('input', this.setFieldModified, true);
+      document.getElementById("spell-edit-card").addEventListener('input', this.setFieldModified)
+    }, 300)
+
     this.load()
   },
   methods: {
+
+    setFieldModified(evt) {
+      // border: 2px #555555 solid !important;
+      evt.target.style.setProperty('border-color', 'orange', 'important');
+    },
+
+    resetFieldEditedStatus() {
+      // reset elements
+      const elements = document.getElementById("spell-edit-card").querySelectorAll("input, select");
+      elements.forEach((element) => {
+        element.style.setProperty('border-color', '#555555', 'important');
+      });
+    },
 
     async saveSpell() {
       const api = (new SpellsNewApi(SpireApiClient.getOpenApiConfig()))
@@ -708,6 +742,7 @@ export default {
       }).then((result) => {
         if (result.status === 200) {
           this.notification = util.format("Spell updated successfully! (%s) %s", this.spell.id, this.spell.name)
+          this.resetFieldEditedStatus()
         }
       }).catch(async () => {
         const createRes = await api.createSpellsNew({
@@ -716,6 +751,7 @@ export default {
 
         if (createRes.status === 200) {
           this.notification = util.format("Created new Spell! (%s) %s", this.spell.id, this.spell.name)
+          this.resetFieldEditedStatus()
         }
       })
     },

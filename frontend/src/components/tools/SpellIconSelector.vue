@@ -45,8 +45,7 @@ export default {
   },
   methods: {
     selectIcon(icon) {
-      this.$emit("update:inputData", icon);
-      this.selectedIcon = icon
+      this.$emit("update:inputData", parseInt(icon));
     },
     classIsPulsating(icon) {
       return parseInt(icon) === parseInt(this.selectedIcon) ? 'pulsate' : ''
