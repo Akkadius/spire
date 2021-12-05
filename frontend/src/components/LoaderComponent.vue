@@ -57,9 +57,9 @@ export default {
   padding: 0;
   margin: 0;
   font-weight: bold;
-  font-size: 45px;
+  font-size: 43px;
   color: #222;
-  font-family:             menuetto, serif;
+  font-family: menuetto, serif;
 }
 
 .loader li {

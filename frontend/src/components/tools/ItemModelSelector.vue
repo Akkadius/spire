@@ -1,266 +1,282 @@
 <template>
-  <div class="text-center">
-    <app-loader :is-loading="!loaded" padding="8"/>
+  <div>
+    <div class="row mb-4">
 
-    <input
-      type="text"
-      class="form-control ml-2 mb-4"
-      v-model="search"
-      v-on:keyup="triggerSearch"
-      style="width: 95%"
-      placeholder="Search for spell names to find animations">
+      <!-- Item Slot -->
+      <div class="col-lg-5">
 
-    <div
-      style="height: 85vh; overflow-y: scroll"
-      v-on:scroll.passive="render"
-      id="spell-video-view-port">
+        <!-- Input -->
+        <select
+          class="form-control form-control-prepended list-search"
+          v-model.lazy="itemSlotSearch"
+          @change="itemTypeSearch = 0; loadModels()"
+        >
+          <option value="0">Select Slot Filter</option>
+          <option v-for="option in itemSlotOptions" v-bind:value="option.value">
+            {{ option.text }}
+          </option>
 
-      <div v-if="filteredAnimations && filteredAnimations.length === 0">
-        No animations found...
+        </select>
       </div>
 
-      <div
-        v-for="(animationId) in filteredAnimations"
-        :key="animationId"
-        class="d-inline-block"
-      >
-        <video
-          muted
-          loop
-          style="width: 160px; height: 230px; border-radius: 10px; border: 1px solid;"
-          :id="'spell-' + animationId"
-          :data-src="animBaseUrl + animationId + '.mp4'"
-          @mousedown="selectSpellAnim(animationId)"
-          :class="'spell-preview ' + classIsPulsating(animationId)">
-        </video>
+      <!-- Item Type -->
+      <div class="col-lg-5">
+
+        <!-- Input -->
+        <select
+          class="form-control form-control-prepended list-search"
+          v-model.lazy="itemTypeSearch"
+          @change="itemSlotSearch = 0; loadModels()"
+        >
+          <option value="0">Select Item Type Filter</option>
+          <option v-for="option in itemTypeOptions" v-bind:value="option.value">
+            {{ option.text }}
+          </option>
+        </select>
+      </div>
+      <div class="col-lg-2 col-sm-12">
+        <b-button variant="primary" class="btn-dark btn-sm btn-outline-warning" @click="reset">
+          <i class="fa fa-eraser mr-1"></i>
+          Reset
+        </b-button>
       </div>
     </div>
 
+    <app-loader :is-loading="!loaded" padding="8"/>
+
+    <div
+      style="height: 85vh; overflow-y: scroll"
+      id="item-model-view-port">
+
+      <span v-if="filteredItemModels && filteredItemModels.length === 0">
+        No models found...
+      </span>
+
+      <div class="row justify-content-center">
+        <div
+          v-for="modelId in filteredItemModels"
+          :key="modelId"
+          @mousedown="selectItemModel(modelId)"
+          :class="'m-1 item-model ' +  classIsPulsating(modelId)"
+        >
+          <span
+            :id="'item-model-' + modelId"
+            :class="'fade-in object-ctn-' + modelId"
+            :title="'IT' + modelId">
+          </span>
+        </div>
+      </div>
+
+    </div>
   </div>
 </template>
 
 <script>
-import PageHeader        from "@/views/layout/PageHeader";
-import {App}             from "@/constants/app";
-import EqWindow          from "@/components/eq-ui/EQWindow";
-import ItemModels   from "@/app/asset-maps/spell-animations-map.json";
-import spellAnimMappings from "@/app/data-maps/spell-icon-anim-name-map.json";
-import * as util         from "util";
+import ItemModels            from "@/app/asset-maps/objects-map.json";
+import util                  from "util";
+import itemSlots             from "@/constants/item-slots.json"
+import itemSlotIdFileMapping from "@/constants/item-slot-idfile-mapping.json"
+import itemTypes             from "@/constants/item-types.json"
+import itemTypesModelMapping from "@/constants/item-type-model-mapping.json"
+import slugify               from "slugify";
+import PageHeader            from "@/views/layout/PageHeader";
+import {App}                 from "@/constants/app";
+import EqWindow              from "@/components/eq-ui/EQWindow";
 
-function handleRender() {
-  let playing  = []
-  let stopping = []
-  let videos   = document.getElementsByClassName("spell-preview");
-
-  for (let i = 0; i < videos.length; i++) {
-
-    let video   = videos.item(i)
-    let source  = document.createElement("source");
-    let dataSrc = video.getAttribute("data-src")
-
-    // Toggle playing
-    if (elementInViewport(video)) {
-      if (dataSrc) {
-
-        // video.setAttribute("src", dataSrc);
-        video.removeAttribute("data-src");
-        video.pause()
-        video.innerHTML = "";
-        video.removeAttribute("src");
-
-        source.setAttribute("src", dataSrc);
-        source.setAttribute("type", "video/mp4");
-        video.appendChild(source);
-        video.load();
-        video.play();
-      }
-
-      if (!videoPlaying(video) && videoLoaded(video)) {
-        video.play()
-        playing.push(video.getAttribute("id"))
-      }
-    } else {
-      if (videoPlaying(video) && videoLoaded(video)) {
-        video.pause()
-        stopping.push(video.getAttribute("id"))
-      }
-    }
-  }
-
-  // console.log("Playing", playing)
-  // console.log("Stopping", stopping)
-}
-
-function elementInViewport(elem) {
-  if (!(elem instanceof Element)) throw Error('DomUtil: elem is not an element.');
-  const style = getComputedStyle(elem);
-  if (style.display === 'none') return false;
-  if (style.visibility !== 'visible') return false;
-  if (style.opacity < 0.1) return false;
-  if (elem.offsetWidth + elem.offsetHeight + elem.getBoundingClientRect().height +
-    elem.getBoundingClientRect().width === 0) {
-    return false;
-  }
-  const elemCenter   = {
-    x: elem.getBoundingClientRect().left + elem.offsetWidth / 2,
-    y: elem.getBoundingClientRect().top + elem.offsetHeight / 2
-  };
-  if (elemCenter.x < 0) return false;
-  if (elemCenter.x > (document.documentElement.clientWidth || window.innerWidth)) return false;
-  if (elemCenter.y < 0) return false;
-  if (elemCenter.y > (document.documentElement.clientHeight || window.innerHeight)) return false;
-  let pointContainer = document.elementFromPoint(elemCenter.x, elemCenter.y);
-  do {
-    if (pointContainer === elem) return true;
-  } while (pointContainer === pointContainer.parentNode);
-  return false;
-}
-
-function debounce(func, delay) {
-  let debounceTimer;
-  return function () {
-    const context = this;
-    const args    = arguments;
-    clearTimeout(debounceTimer);
-    debounceTimer = setTimeout(() => func.apply(context, args), delay);
-  };
-}
-
-function videoPlaying(el) {
-  return !!(el.currentTime > 0 && !el.paused && !el.ended && el.readyState > 2);
-}
-
-function videoLoaded(el) {
-  return el.readyState === 4
-}
-
-let animationPreviewExists = {}
+const baseUrl         = App.ASSET_CDN_BASE_URL + "assets/objects/";
+const MAX_ITEM_IDFILE = 100000;
+let itemModels        = [];
+let itemModelExists   = {};
+let modelFiles        = {};
 
 export default {
   name: "ItemModelSelector",
   components: { EqWindow, PageHeader },
   data() {
     return {
-      loaded: false,
-      spellAnimations: [],
-      filteredAnimations: [],
-      search: "",
-      animBaseUrl: App.ASSET_SPELL_ANIMATIONS,
+      itemSlotSearch: 0,
+      itemTypeSearch: 0,
+      filteredItemModels: null,
+      itemSlotOptions: [],
+      itemTypeOptions: null,
+      loaded: false
+    }
+  },
+  methods: {
+
+    selectItemModel(modelId) {
+      this.$emit("input", util.format("IT%s", modelId));
+    },
+
+    getSelectedModelNoIT() {
+      return parseInt(this.selectedModel.toString().replace("IT", "").trim())
+    },
+
+    classIsPulsating(modelId) {
+      return parseInt(modelId) === this.getSelectedModelNoIT() ? 'pulsate' : ''
+    },
+
+    // reset to zero state
+    reset: function () {
+      this.itemSlotSearch = 0;
+      this.itemTypeSearch = 0;
+      this.loadModels()
+    },
+
+    // slugify
+    slug: function (toSlug) {
+      return slugify(toSlug.replace(/[&\/\\#, +()$~%.'":*?<>{}]/g, "-"))
+    },
+
+    // get graphic from url
+    getWeaponGraphicModelFromUrl: function (url) {
+      return url.split("objects/CTN_")[1].split(".png")[0]
+    },
+
+    // zero state loader
+    loadModels: function () {
+
+      // filter by item type
+      if (this.itemTypeSearch > 0) {
+        this.itemSlotSearch = 0;
+        if (!itemTypesModelMapping[this.itemTypeSearch]) {
+          return
+        }
+
+        let idFiles = []
+        itemTypesModelMapping[this.itemTypeSearch].forEach((idFile) => {
+          const file = idFile.replace("IT", "")
+
+          if (itemModelExists[file]) {
+            idFiles.push(file)
+          }
+        })
+
+        this.filteredItemModels = idFiles
+        this.loaded             = true
+        return
+      }
+
+      // item slot search
+      if (this.itemSlotSearch) {
+        this.itemTypeSearch = 0;
+
+        if (!itemSlotIdFileMapping[this.itemSlotSearch]) {
+          return
+        }
+
+        let idFiles = []
+        itemSlotIdFileMapping[this.itemSlotSearch].forEach((idFile) => {
+          const file = idFile.replace("IT", "")
+
+          if (itemModelExists[file]) {
+            idFiles.push(file)
+          }
+        })
+
+        this.filteredItemModels = idFiles
+        this.loaded             = true
+        return;
+      }
+
+      // fallback - load everything
+      this.filteredItemModels = itemModels;
+      this.loaded             = true;
+    }
+  },
+  async mounted() {
+    this.loaded = false;
+
+    modelFiles = {};
+    ItemModels[0].contents.forEach((row) => {
+      const pieces   = row.name.split(/\//);
+      const fileName = pieces[pieces.length - 1];
+
+      modelFiles[fileName] = 1
+    })
+
+    itemModels = [];
+
+    for (let itemId = 0; itemId <= MAX_ITEM_IDFILE; itemId++) {
+      const modelKey = util.format("CTN_%s.png", itemId);
+
+      if (modelFiles[modelKey]) {
+        itemModels.push(itemId)
+        itemModelExists[itemId] = 1
+      }
+    }
+
+    // slot
+    for (let slot = 0; slot <= 19; slot++) {
+      const slotDescription = itemSlots[slot][0];
+      const slotNumbers     = itemSlots[slot][1];
+
+      let modelCountDescription = "";
+      if (itemSlotIdFileMapping[slotNumbers] && itemSlotIdFileMapping[slotNumbers].length > 0) {
+        modelCountDescription = util.format(" (%s models)", itemSlotIdFileMapping[slotNumbers].length)
+      }
+
+      this.itemSlotOptions.push(
+        {
+          text: slotDescription + modelCountDescription,
+          value: slotNumbers
+        }
+      )
+    }
+
+    // Item Type
+    this.itemTypeOptions = [];
+    for (const [type, description] of Object.entries(itemTypes)) {
+
+      let modelCountDescription = "";
+      if (itemTypesModelMapping[type] && itemTypesModelMapping[type].length > 0) {
+        modelCountDescription = util.format(" (%s models)", itemTypesModelMapping[type].length)
+      }
+
+      if (itemTypesModelMapping[type].length > 0) {
+        this.itemTypeOptions.push(
+          {
+            text: type + ") " + description + modelCountDescription,
+            value: type
+          }
+        )
+      }
+    }
+
+    setTimeout(() => {
+      this.loadModels()
+    }, 100);
+
+    // bring focus to the selected model
+    // we queue this on a timeout because elements haven't been rendered yet
+    if (this.selectedModel && this.selectedModel.length > 0) {
+      setTimeout(() => {
+        const container = document.getElementById("item-model-view-port");
+        const target    = document.getElementById(util.format("item-model-%s", this.getSelectedModelNoIT()))
+        if (container && target) {
+          container.scrollTop = target.offsetTop - 300;
+        }
+      }, 100)
     }
   },
   props: {
-    selectedAnimation: {
-      type: Number,
-      default: 0,
+    selectedModel: {
+      type: String,
+      default: "",
       required: true
     },
-  },
-  created() {
-    this.init()
-  },
-  methods: {
-    init() {
-      if (!this.$route.query.q) {
-        this.search        = ""
-        this.filteredRaces = []
-      }
-
-      this.render()
-      this.spellAnimSearch()
-
-      // bring focus to the selected video
-      if (this.selectedAnimation > 0) {
-        // we need 100ms delay because the videos haven't been rendered yet
-        setTimeout(() => {
-          const container = document.getElementById("spell-video-view-port");
-          const target = util.format("spell-%s", this.selectedAnimation)
-          // console.log(container)
-          // console.log(target)
-          // console.log(container.scrollTop)
-          // console.log(document.getElementById(target).offsetTop)
-
-          // 230 is height of video to offset
-          container.scrollTop = document.getElementById(target).offsetTop - 230;
-        }, 100)
-      }
-
-    },
-    render: function () {
-      // Preload model files
-      let modelFiles = [];
-      ItemModels[0].contents.forEach((row) => {
-        const pieces      = row.name.split(/\//);
-        const fileName    = pieces[pieces.length - 1].replace(".mp4", "");
-        const animationId = parseInt(fileName)
-
-        modelFiles.push(animationId)
-
-        animationPreviewExists[animationId] = 1
-      })
-
-      // Sort by spell animation number
-      modelFiles.sort(function (a, b) {
-        return a - b;
-      });
-
-      this.spellAnimations = modelFiles
-      this.loaded          = true
-
-      handleRender()
-    },
-    classIsPulsating(animation) {
-      return animation === this.selectedAnimation ? 'pulsate' : ''
-    },
-    triggerSearch() {
-      this.spellAnimSearch();
-    },
-    spellAnimSearch: function () {
-      this.loaded = false
-
-      let foundAnim          = {};
-      let filteredAnimations = []
-
-      for (let spellAnimMapping of spellAnimMappings) {
-        const spellName   = spellAnimMapping[0].toLowerCase().trim()
-        const spellAnimId = spellAnimMapping[2]
-
-        if (spellName.includes(this.search.toLowerCase())) {
-          if (!foundAnim[spellAnimId] && animationPreviewExists[spellAnimId]) {
-            filteredAnimations.push(spellAnimId)
-            foundAnim[spellAnimId] = 1
-          }
-        }
-      }
-
-      // Sort by spell animation number
-      filteredAnimations.sort(function (a, b) {
-        return a - b;
-      });
-
-      this.filteredAnimations = filteredAnimations
-      this.loaded             = true
-
-      setTimeout(() => {
-        handleRender()
-      }, 100);
-
-    },
-    selectSpellAnim(anim) {
-      this.$emit("update:inputData", anim);
-    }
-  },
-  activated() {
-    this.init()
   },
 }
 </script>
 
-<style>
-.spell-preview {
-  height: 250px;
-  min-width: 150px;
-  max-width: 200px;
-  border-radius: 10px;
-  margin: 3px;
+<style scoped>
+.item-model {
+  height: auto;
+  min-width: 120px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 1px solid rgb(218 218 218 / 30%);
+  border-radius: 7px;
 }
 </style>

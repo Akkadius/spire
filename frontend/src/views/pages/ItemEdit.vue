@@ -62,8 +62,6 @@
                   <div class="row">
                     <div class="col-8">
 
-                      Stuff goes here...
-
                     </div>
                     <div
                       class="col-4"
@@ -108,6 +106,18 @@
                 :item-data="item"/>
             </eq-window>
 
+            <!-- item model selector -->
+            <eq-window
+              style="margin-top: 30px; margin-right: 10px; width: auto;"
+              class="fade-in"
+              v-if="itemModelSelectorActive && item">
+
+              <item-model-selector
+                :selected-model="item.idfile"
+                @input="item.idfile = $event"
+              />
+            </eq-window>
+
             <!-- icon selector -->
             <eq-window
               style="margin-top: 30px; margin-right: 10px; width: auto;"
@@ -141,25 +151,27 @@
 </template>
 
 <script>
-import EqWindowFancy    from "../../components/eq-ui/EQWindowFancy";
-import EqWindow         from "../../components/eq-ui/EQWindow";
-import EqTabs           from "../../components/eq-ui/EQTabs";
-import EqTab            from "../../components/eq-ui/EQTab";
-import EqItemPreview    from "../../components/eq-ui/EQItemCardPreview";
-import {App}            from "../../constants/app";
-import EqCheckbox       from "../../components/eq-ui/EQCheckbox";
-import {SpireApiClient} from "../../app/api/spire-api-client";
-import * as util        from "util";
-import FreeIdSelector   from "../../components/tools/FreeIdSelector";
-import {Items}          from "../../app/items";
-import {ItemApi}        from "../../app/api";
-import ItemModelPreview from "../../components/tools/ItemModelPreview";
+import EqWindowFancy     from "../../components/eq-ui/EQWindowFancy";
+import EqWindow          from "../../components/eq-ui/EQWindow";
+import EqTabs            from "../../components/eq-ui/EQTabs";
+import EqTab             from "../../components/eq-ui/EQTab";
+import EqItemPreview     from "../../components/eq-ui/EQItemCardPreview";
+import {App}             from "../../constants/app";
+import EqCheckbox        from "../../components/eq-ui/EQCheckbox";
+import {SpireApiClient}  from "../../app/api/spire-api-client";
+import * as util         from "util";
+import FreeIdSelector    from "../../components/tools/FreeIdSelector";
+import {Items}           from "../../app/items";
+import {ItemApi}         from "../../app/api";
+import ItemModelPreview  from "../../components/tools/ItemModelPreview";
+import ItemModelSelector from "../../components/tools/ItemModelSelector";
 
 const MILLISECONDS_BEFORE_WINDOW_RESET = 3000;
 
 export default {
   name: "ItemEdit",
   components: {
+    ItemModelSelector,
     ItemModelPreview,
     FreeIdSelector,
     EqCheckbox,
@@ -177,7 +189,7 @@ export default {
 
       previewItemActive: true,
       iconSelectorActive: false,
-      spellAnimSelectorActive: false,
+      itemModelSelectorActive: false,
       freeIdSelectorActive: false,
 
       lastResetTime: Date.now(),
@@ -267,10 +279,10 @@ export default {
      * Selector / previewers
      */
     resetPreviewComponents() {
-      this.previewItemActive      = false;
-      this.iconSelectorActive     = false;
-      this.itemAnimSelectorActive = false;
-      this.freeIdSelectorActive   = false;
+      this.previewItemActive       = false;
+      this.iconSelectorActive      = false;
+      this.itemModelSelectorActive = false;
+      this.freeIdSelectorActive    = false;
     },
     previewItem() {
       let shouldReset = Date.now() - this.lastResetTime > MILLISECONDS_BEFORE_WINDOW_RESET;
@@ -284,7 +296,7 @@ export default {
     },
     drawItemModelSelector() {
       this.resetPreviewComponents()
-      this.itemAnimSelectorActive = true
+      this.itemModelSelectorActive = true
     },
     drawIconSelector() {
       if (!this.freeIdSelectorActive) {
