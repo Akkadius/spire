@@ -151,37 +151,5 @@ func (q *QueryController) freeIdsReserved(c echo.Context) error {
 		IdColumn,
 	)
 
-	rows, err := db.Query(sql)
-	if err != nil {
-		q.logger.Warn(err)
-	}
-	columns, _ := rows.Columns()
-	count := len(columns)
-	values := make([]interface{}, count)
-	valuePtrs := make([]interface{}, count)
-	resultRows := []map[string]string{}
-	for rows.Next() {
-		for i, _ := range columns {
-			valuePtrs[i] = &values[i]
-		}
-		rows.Scan(valuePtrs...)
-
-		tmpStruct := map[string]string{}
-
-		for i, col := range columns {
-			var v interface{}
-			val := values[i]
-			b, ok := val.([]byte)
-			if ok {
-				v = string(b)
-			} else {
-				v = val
-			}
-			tmpStruct[col] = fmt.Sprintf("%s", v)
-		}
-
-		resultRows = append(resultRows, tmpStruct)
-	}
-
-	return c.JSON(http.StatusOK, echo.Map{"data": resultRows})
+	return c.JSON(http.StatusOK, echo.Map{"data": database.GenericQuery(db, sql)})
 }
