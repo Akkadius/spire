@@ -159,7 +159,7 @@
                  :key="item.id"
                  style="display: inline-block; vertical-align: top">
               <eq-window style="margin-right: 10px; width: auto; height: 90%">
-                <eq-item-card-preview :item-data="item"/>
+                <eq-item-card-preview :item-data="item" :show-edit="true"/>
               </eq-window>
             </div>
           </div>

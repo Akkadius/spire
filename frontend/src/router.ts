@@ -80,6 +80,11 @@ export default new Router({
           meta: {title: "Items Browser"},
         },
         {
+          path: util.format(ROUTE.ITEM_EDIT, ":id"),
+          component: () => import('./views/pages/ItemEdit.vue'),
+          meta: {title: "Item Edit"},
+        },
+        {
           path: '/zones',
           component: () => import('./views/pages/Zones.vue'),
           meta: {title: "Zones"},

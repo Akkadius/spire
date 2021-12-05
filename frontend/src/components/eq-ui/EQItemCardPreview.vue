@@ -1,5 +1,5 @@
 <template>
-  <div class="item-bg" style="max-width: 400px; padding: 5px">
+  <div class="item-bg" style="max-width: 400px; padding: 5px" v-if="itemData">
 
     <div class="row">
       <div class="col-1">
@@ -35,9 +35,10 @@
         </div>
 
       </div>
-      <div class="col-1 text-right">
+      <div class="col-1 text-right" v-if="showEdit">
         <div
-          class="text-center pl-2 pr-2 eq-button-fancy"
+          class="text-center eq-button-fancy"
+          @click="editItem(itemData.id)"
         >
           Edit
         </div>
@@ -311,6 +312,8 @@ import EqWindow                        from "@/components/eq-ui/EQWindow";
 import {DB_BARD_SKILLS, DB_SKILLS}     from "@/app/constants/eq-skill-constants";
 import {AUG_TYPES}                     from "@/app/constants/eq-aug-constants";
 import {Spells}                        from "@/app/spells";
+import util                            from "util";
+import {ROUTE}                         from "@/routes";
 
 export default {
   name: "EqItemCardPreview",
@@ -387,6 +390,15 @@ export default {
     }
   },
   methods: {
+    editItem(itemId) {
+      this.$router.push(
+        {
+          path: util.format(ROUTE.ITEM_EDIT, itemId),
+          query: {}
+        }
+      ).catch(() => {
+      })
+    },
     getTargetTypeColor(targetType) {
       return Spells.getTargetTypeColor(targetType)
     },
@@ -555,7 +567,16 @@ export default {
     this.secondlevel3 = data
   },
   props: {
-    itemData: Object
+    itemData: {
+      type: Object,
+      default: {},
+      required: true
+    },
+    showEdit: {
+      type: Boolean,
+      default: false,
+      required: false,
+    }
   }
 }
 </script>

@@ -17,7 +17,7 @@
               </b-alert>
 
               <eq-tabs
-                v-if="spell && tabSelected"
+                v-if="spell"
                 id="spell-edit-card"
                 class="spell-edit-card"
                 :hover-open="true"
@@ -25,7 +25,7 @@
               >
                 <eq-tab
                   name="Basic"
-                  :selected="tabSelected['basic']"
+                  :selected="true"
                 >
 
                   <div class="row">
@@ -610,7 +610,8 @@
                     </div>
                     <div class="col-3 text-center">
                       Unresistable
-                      <eq-checkbox class="mt-2 mb-2" v-model.number="spell.field_209" @input="spell.field_209 = $event"/>
+                      <eq-checkbox class="mt-2 mb-2" v-model.number="spell.field_209"
+                                   @input="spell.field_209 = $event"/>
                     </div>
                     <div class="col-3 text-center">
                       No Partial Resists
@@ -636,16 +637,10 @@
                     </div>
                   </div>
 
-
                   Resist Chance Limits: Max Chance (Actual in game chance is divided by 2)
                   <b-form-input v-model.number="spell.max_resist"/>
                   Resist Chance Limits: Min Chance (Actual in game chance is divided by 2)
                   <b-form-input v-model.number="spell.min_resist"/>
-
-
-
-
-
 
                   Reflectable
                   <b-form-input v-model.number="spell.reflectable"/>
@@ -654,7 +649,8 @@
                 </eq-tab>
               </eq-tabs>
 
-              <div class="text-center mt-3">
+              <div class="text-center align-content-center mt-3">
+
                 <b-button
                   class="btn-dark btn-sm btn-outline-warning"
                   @click="saveSpell"
@@ -784,8 +780,6 @@ export default {
       iconSelectorActive: false,
       spellAnimSelectorActive: false,
       freeIdSelectorActive: false,
-
-      tabSelected: { 'basic': true },
 
       lastResetTime: Date.now(),
 

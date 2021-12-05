@@ -151,8 +151,6 @@ export default {
       return Spells.getBuffDuration(spell)
     },
     editSpell(spellId) {
-
-      // for some reason this needs to be wiped first
       this.$router.push(
         {
           path: util.format(ROUTE.SPELL_EDIT, spellId),
@@ -160,8 +158,6 @@ export default {
         }
       ).catch(() => {
       })
-
-      console.log(spellId)
     }
   }
 }
