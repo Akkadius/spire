@@ -13,7 +13,7 @@
               </div>
 
               <b-alert show dismissable variant="danger" v-if="error">
-                <i class="fa fa-warning"></i> {{error}}
+                <i class="fa fa-warning"></i> {{ error }}
               </b-alert>
 
               <eq-tabs
@@ -325,75 +325,116 @@
                   <div class="row">
                     <div class="col-3" style="text-align:center">
                       Must Be Out of Combat
-                      <eq-checkbox class="mt-2 mb-2" v-model.number="spell.outof_combat" @input="spell.outof_combat = $event"/>
+                      <eq-checkbox class="mt-2 mb-2" v-model.number="spell.outof_combat"
+                                   @input="spell.outof_combat = $event"/>
                     </div>
-                    <div class="col-3" style="text-align:center">
+                    <div class="col-2" style="text-align:center">
                       Must Be In Combat
-                      <eq-checkbox class="mt-2 mb-2" v-model.number="spell.in_combat" @input="spell.in_combat = $event"/>
+                      <eq-checkbox class="mt-2 mb-2" v-model.number="spell.in_combat"
+                                   @input="spell.in_combat = $event"/>
                     </div>
                     <div class="col-3" style="text-align:center">
                       Only During Fast Regen
-                      <eq-checkbox class="mt-2 mb-2" v-model.number="spell.allowrest" @input="spell.allowrest = $event"/>
+                      <eq-checkbox class="mt-2 mb-2" v-model.number="spell.allowrest"
+                                   @input="spell.allowrest = $event"/>
                     </div>
-                    <div class="col-3" style="text-align:center">
+                    <div class="col-2" style="text-align:center">
                       Cancel On Sit
-                      <eq-checkbox class="mt-2 mb-2" v-model.number="spell.disallow_sit" @input="spell.disallow_sit = $event"/>
+                      <eq-checkbox class="mt-2 mb-2" v-model.number="spell.disallow_sit"
+                                   @input="spell.disallow_sit = $event"/>
                     </div>
-                    <div class="col-3" style="text-align:center">
+                    <div class="col-2" style="text-align:center">
                       Must be Sneaking
                       <eq-checkbox class="mt-2 mb-2" v-model.number="spell.sneaking" @input="spell.sneaking = $event"/>
                     </div>
                   </div>
 
-                  Target Restriction
-                  <b-form-input v-model.number="spell.cast_restriction"/>
-                  Caster Restriction
-                  <b-form-input v-model.number="spell.field_220"/>
-
-                  Zone Type (select)
-                  <b-form-input v-model.number="spell.zonetype"/>
-                  Environment Type
-                  <b-form-input v-model.number="spell.environment_type"/>
-                  Time of Day
-                  <b-form-input v-model.number="spell.time_of_day"/>
+                  <div class="row mt-3 mb-3">
+                    <div class="col-2">
+                      Target Restriction
+                      <b-form-input v-model.number="spell.cast_restriction"/>
+                    </div>
+                    <div class="col-2">
+                      Caster Restriction
+                      <b-form-input v-model.number="spell.field_220"/>
+                    </div>
+                    <div class="col-2">
+                      Zone Type (select)
+                      <b-form-input v-model.number="spell.zonetype"/>
+                    </div>
+                    <div class="col-3">
+                      Environment Type (???)
+                      <b-form-input v-model.number="spell.environment_type"/>
+                    </div>
+                    <div class="col-3">
+                      Time of Day (???)
+                      <b-form-input v-model.number="spell.time_of_day"/>
+                    </div>
+                  </div>
                 </eq-tab>
                 <eq-tab name="Casting">
-                  Cast Time
-                  <b-form-input v-model.number="spell.cast_time"/>
-                  Recovery Time
-                  <b-form-input v-model.number="spell.recovery_time"/>
-                  Recast Time
-                  <b-form-input v-model.number="spell.recast_time"/>
-                  Timer Index (Timer Max 19, also seen few discs with -1)
-                  <b-form-input v-model.number="spell.endur_timer_index"/>
-                  Uninterruptable
-                  <eq-checkbox class="mt-2 mb-2" v-model.number="spell.uninterruptable"
-                               @input="spell.uninterruptable = $event"/>
 
-                  Fizzle Adjustment
-                  <b-form-input v-model.number="spell.basediff"/>
-                  Cast Not Standing (Can Cast from Sitting position, Can cast on invulnerable Targets, Can not be
-                  interrupted by SE_InterruptCasting)
-                  <b-form-input v-model.number="spell.cast_not_standing"/>
+                  <div class="row">
+                    <div class="col-3">
+                      Cast Time (Clarify)
+                      <b-form-input v-model.number="spell.cast_time"/>
+                    </div>
+                    <div class="col-3">
+                      Recovery Time (Clarify)
+                      <b-form-input v-model.number="spell.recovery_time"/>
+                    </div>
+                    <div class="col-3">
+                      Recast Time (Clarify)
+                      <b-form-input v-model.number="spell.recast_time"/>
+                    </div>
+                    <div class="col-3">
+                      Timer Index (???)
+                      <b-form-input v-model.number="spell.endur_timer_index"/>
+                    </div>
+                  </div>
+
+                  <div class="row">
+                    <div class="col-4">
+                      Fizzle Adjustment
+                      <b-form-input v-model.number="spell.basediff"/>
+                    </div>
+                    <div class="col-4">
+                      Cast Not Standing
+                      <b-form-input v-model.number="spell.cast_not_standing"/>
+                    </div>
+                    <div class="col-4 text-center">
+                      Uninterruptable
+                      <eq-checkbox
+                        class="mt-2 mb-2"
+                        v-model.number="spell.uninterruptable"
+                        @input="spell.uninterruptable = $event"
+                      />
+                    </div>
+                  </div>
+
                 </eq-tab>
                 <eq-tab name="Buffing">
 
                   <div class="row">
                     <div class="col-3" style="text-align:center">
                       Can Not Dispell
-                      <eq-checkbox class="mt-2 mb-2" v-model.number="spell.nodispell" @input="spell.nodispell = $event"/>
+                      <eq-checkbox class="mt-2 mb-2" v-model.number="spell.nodispell"
+                                   @input="spell.nodispell = $event"/>
                     </div>
                     <div class="col-3" style="text-align:center">
                       Can Not Click Off
-                      <eq-checkbox class="mt-2 mb-2" v-model.number="spell.field_232" @input="spell.field_232 = $event"/>
+                      <eq-checkbox class="mt-2 mb-2" v-model.number="spell.field_232"
+                                   @input="spell.field_232 = $event"/>
                     </div>
                     <div class="col-3" style="text-align:center">
                       Persist After Death
-                      <eq-checkbox class="mt-2 mb-2" v-model.number="spell.persistdeath" @input="spell.persistdeath = $event"/>
+                      <eq-checkbox class="mt-2 mb-2" v-model.number="spell.persistdeath"
+                                   @input="spell.persistdeath = $event"/>
                     </div>
                     <div class="col-3" style="text-align:center">
                       Suspendable
-                      <eq-checkbox class="mt-2 mb-2" v-model.number="spell.suspendable" @input="spell.suspendable = $event"/>
+                      <eq-checkbox class="mt-2 mb-2" v-model.number="spell.suspendable"
+                                   @input="spell.suspendable = $event"/>
                     </div>
                   </div>
 
@@ -440,12 +481,12 @@
                     </div>
                     <div class="col-3">
                       PVP Duration
-                      <b-form-input v-model.number="spell.field_181"/>
+                      <b-form-input v-model.number="spell.pvp_duration"/>
 
                     </div>
                     <div class="col-3">
                       PVP Duration Cap
-                      <b-form-input v-model.number="spell.field_182"/>
+                      <b-form-input v-model.number="spell.pvp_duration_cap"/>
                     </div>
                   </div>
                 </eq-tab>
@@ -469,7 +510,8 @@
                     </div>
                     <div class="col-6 text-center">
                       NPC Line of Sight Not Required to Cast
-                      <eq-checkbox class="mt-2 mb-2" v-model.number="spell.npc_no_los" @input="spell.npc_no_los = $event"/>
+                      <eq-checkbox class="mt-2 mb-2" v-model.number="spell.npc_no_los"
+                                   @input="spell.npc_no_los = $event"/>
                     </div>
                   </div>
 
@@ -652,17 +694,17 @@ import {DB_SKILLS}                                                    from "../.
 import {App}                                                          from "../../constants/app";
 import SpellIconSelector                                              from "../../components/tools/SpellIconSelector";
 import SpellAnimationPreview
-                            from "../../components/tools/SpellAnimationPreview";
-import SpellAnimationViewer from "./SpellAnimationViewer";
+                                                                      from "../../components/tools/SpellAnimationPreview";
+import SpellAnimationViewer                                           from "./SpellAnimationViewer";
 import SpellAnimationSelector
-                            from "../../components/tools/SpellAnimationSelector";
-import EqCheckbox           from "../../components/eq-ui/EQCheckbox";
-import {SpellsNewApi}       from "../../app/api";
-import {SpireApiClient}     from "../../app/api/spire-api-client";
-import * as util            from "util";
-import SpellClassSelector   from "../../components/tools/SpellClassSelector";
-import SpellDeitySelector   from "../../components/tools/SpellDeitySelector";
-import FreeIdSelector       from "../../components/tools/FreeIdSelector";
+                                                                      from "../../components/tools/SpellAnimationSelector";
+import EqCheckbox                                                     from "../../components/eq-ui/EQCheckbox";
+import {SpellsNewApi}                                                 from "../../app/api";
+import {SpireApiClient}                                               from "../../app/api/spire-api-client";
+import * as util                                                      from "util";
+import SpellClassSelector                                             from "../../components/tools/SpellClassSelector";
+import SpellDeitySelector                                             from "../../components/tools/SpellDeitySelector";
+import FreeIdSelector                                                 from "../../components/tools/FreeIdSelector";
 
 const MILLISECONDS_BEFORE_WINDOW_RESET = 3000;
 
@@ -740,7 +782,7 @@ export default {
     },
 
     async saveSpell() {
-      this.error = ""
+      this.error        = ""
       this.notification = ""
 
       const api = (new SpellsNewApi(SpireApiClient.getOpenApiConfig()))
@@ -817,7 +859,7 @@ export default {
     },
     drawFreeIdSelector() {
       this.resetPreviewComponents()
-      this.lastResetTime = Date.now()
+      this.lastResetTime        = Date.now()
       this.freeIdSelectorActive = true
     },
     getTargetTypeColor(targetType) {
