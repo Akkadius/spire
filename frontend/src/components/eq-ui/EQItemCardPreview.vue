@@ -6,7 +6,7 @@
         <span :class="'fade-in item-' + itemData.icon" :title="itemData.icon"/>
         <!--        <img :src="cdnUrl + 'assets/item_icons/item_' + itemData.icon + '.png'" style="width:40px;height:auto;">-->
       </div>
-      <div class="col-11 pl-5">
+      <div class="col-10 pl-5">
         <h6 class="eq-header" style="margin: 0px; margin-bottom: 10px">
           {{ itemData.name }}
         </h6>
@@ -34,6 +34,13 @@
           </table>
         </div>
 
+      </div>
+      <div class="col-1 text-right">
+        <div
+          class="text-center pl-2 pr-2 eq-button-fancy"
+        >
+          Edit
+        </div>
       </div>
     </div>
 
@@ -291,19 +298,19 @@ import {
   ITEM_DB_SLOTS,
   ITEM_ELEMENTS,
   ITEM_SIZE
-} from "@/app/constants/eq-item-constants";
-import {BODYTYPES} from "@/app/constants/eq-bodytype-constants";
-import {DB_CLASSES_WEAR_SHORT} from "@/app/constants/eq-classes-constants";
+}                                      from "@/app/constants/eq-item-constants";
+import {BODYTYPES}                     from "@/app/constants/eq-bodytype-constants";
+import {DB_CLASSES_WEAR_SHORT}         from "@/app/constants/eq-classes-constants";
 import {DB_RACE_NAMES, DB_RACES_SHORT} from "@/app/constants/eq-races-constants";
-import {DB_DIETIES} from "@/app/constants/eq-deities-constants";
-import EqDebug from "@/components/eq-ui/EQDebug";
-import {App} from "@/constants/app";
-import EqSpellPreview from "@/components/eq-ui/EQSpellCardPreview";
-import {EXAMPLE_SPELL_DATA} from "@/app/constants/eq-example-spell-data";
-import EqWindow from "@/components/eq-ui/EQWindow";
-import {DB_BARD_SKILLS, DB_SKILLS} from "@/app/constants/eq-skill-constants";
-import {AUG_TYPES} from "@/app/constants/eq-aug-constants";
-import {Spells} from "@/app/spells";
+import {DB_DIETIES}                    from "@/app/constants/eq-deities-constants";
+import EqDebug                         from "@/components/eq-ui/EQDebug";
+import {App}                           from "@/constants/app";
+import EqSpellPreview                  from "@/components/eq-ui/EQSpellCardPreview";
+import {EXAMPLE_SPELL_DATA}            from "@/app/constants/eq-example-spell-data";
+import EqWindow                        from "@/components/eq-ui/EQWindow";
+import {DB_BARD_SKILLS, DB_SKILLS}     from "@/app/constants/eq-skill-constants";
+import {AUG_TYPES}                     from "@/app/constants/eq-aug-constants";
+import {Spells}                        from "@/app/spells";
 
 export default {
   name: "EqItemCardPreview",
@@ -555,14 +562,14 @@ export default {
 
 <style>
 .stat-section {
-  padding-left:   10px;
-  display:        inline-block;
+  padding-left: 10px;
+  display: inline-block;
   vertical-align: top;
 }
 
 .item-preview-table {
   word-wrap: break-word;
-  width:     100%;
+  width: 100%;
 }
 
 .item-preview-table th, td {

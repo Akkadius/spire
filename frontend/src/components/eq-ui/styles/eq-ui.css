@@ -834,3 +834,34 @@ h5.eq-header {
 h6.eq-header {
     font-size: 200%;
 }
+
+.eq-button-fancy {
+    text-shadow:             0px 0px 3px #000, 0px 0px 0px #000, 1px 2px 5px #000, 4px 4px 5px #000;
+    font-family:             menuetto, serif;
+
+    color:                   #fcc721;
+    -webkit-background-clip: text;
+    -moz-background-clip:    text;
+
+    border: 2px solid rgba(218, 218, 218, 0.3);
+    border-radius: 7px;
+    float:left;
+    font-size: 22px;
+}
+
+.eq-button-fancy:hover {
+    border: 2px solid #fff300; /* some kind of blue border */
+
+    /* other CSS styles */
+
+    /* round the corners */
+    -webkit-border-radius: 7px;
+    -moz-border-radius: 7px;
+    border-radius: 7px;
+
+    /* make it glow! */
+    -webkit-box-shadow: 0px 0px 4px #fff300;
+    -moz-box-shadow: 0px 0px 4px #fff300;
+    box-shadow: 0px 0px 4px #fff300; /* some variation of blue for the shadow */
+
+}
