@@ -24,7 +24,7 @@
                 >
 
                   <div class="row">
-                    <div class="col-2">
+                    <div class="col-2" @mouseover="drawFreeIdSelector">
                       Id
                       <b-form-input v-model.number="spell.id"/>
                     </div>
@@ -38,7 +38,11 @@
                       <b-form-input v-model="spell.new_icon"/>
                     </div>
 
-                    <div class="col-1" v-if="spell.new_icon > 0" @mouseover="drawIconSelector">
+                    <div
+                      class="col-1" v-if="spell.new_icon > 0"
+                      style="margin-top: 7px"
+                      @mouseover="drawIconSelector"
+                    >
                       <img
                         :src="spellCdnUrl + spell.new_icon + '.gif'"
                         class="mt-3"
@@ -595,10 +599,17 @@
 
             <!-- free id selector -->
             <eq-window
+              title="Free Spell Ids"
               style="margin-top: 30px; margin-right: 10px; width: auto;"
               class="fade-in"
-              v-if="spellAnimSelectorActive">
+              v-if="freeIdSelectorActive">
 
+              <free-id-selector
+                table-name="spells_new"
+                id-name="id"
+                name-label="name"
+                :with-reserved="true"
+                @input="spell.id = $event"/>
 
             </eq-window>
 
@@ -622,22 +633,24 @@ import {DB_SKILLS}                                                    from "../.
 import {App}                                                          from "../../constants/app";
 import SpellIconSelector                                              from "../../components/tools/SpellIconSelector";
 import SpellAnimationPreview
-                                                                      from "../../components/tools/SpellAnimationPreview";
-import SpellAnimationViewer                                           from "./SpellAnimationViewer";
+                            from "../../components/tools/SpellAnimationPreview";
+import SpellAnimationViewer from "./SpellAnimationViewer";
 import SpellAnimationSelector
-                                                                      from "../../components/tools/SpellAnimationSelector";
-import EqCheckbox                                                     from "../../components/eq-ui/EQCheckbox";
-import {SpellsNewApi}                                                 from "../../app/api";
-import {SpireApiClient}                                               from "../../app/api/spire-api-client";
-import * as util                                                      from "util";
-import SpellClassSelector                                             from "../../components/tools/SpellClassSelector";
-import SpellDeitySelector                                             from "../../components/tools/SpellDeitySelector";
+                            from "../../components/tools/SpellAnimationSelector";
+import EqCheckbox           from "../../components/eq-ui/EQCheckbox";
+import {SpellsNewApi}       from "../../app/api";
+import {SpireApiClient}     from "../../app/api/spire-api-client";
+import * as util            from "util";
+import SpellClassSelector   from "../../components/tools/SpellClassSelector";
+import SpellDeitySelector   from "../../components/tools/SpellDeitySelector";
+import FreeIdSelector       from "../../components/tools/FreeIdSelector";
 
 const MILLISECONDS_BEFORE_WINDOW_RESET = 3000;
 
 export default {
   name: "SpellEdit",
   components: {
+    FreeIdSelector,
     SpellDeitySelector,
     SpellClassSelector,
     EqCheckbox,
@@ -739,21 +752,19 @@ export default {
       this.spellAnimSelectorActive = true
     },
     drawIconSelector() {
-      this.resetPreviewComponents()
-      this.iconSelectorActive = true;
+      if (!this.freeIdSelectorActive) {
+        this.resetPreviewComponents()
+        this.iconSelectorActive = true;
+      }
     },
-
-
+    drawFreeIdSelector() {
+      this.resetPreviewComponents()
+      this.lastResetTime = Date.now()
+      this.freeIdSelectorActive = true
+    },
     getTargetTypeColor(targetType) {
       return Spells.getTargetTypeColor(targetType);
     },
-    redrawCard() {
-      this.loaded = false
-
-      setTimeout(() => {
-        this.loaded = true
-      }, 5)
-    }
   }
 }
 </script>
