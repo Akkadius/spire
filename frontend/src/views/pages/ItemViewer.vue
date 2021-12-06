@@ -46,8 +46,8 @@
       <app-loader :is-loading="!loaded" padding="8"/>
 
       <span v-if="filteredItemModels && filteredItemModels.length === 0">
-            No models found...
-          </span>
+        No models found...
+      </span>
 
       <div class="row justify-content-center">
         <div v-for="item in filteredItemModels" :key="item" class="m-1 item-model">

@@ -123,10 +123,11 @@
               style="margin-top: 30px; margin-right: 10px; width: auto;"
               class="fade-in"
               v-if="iconSelectorActive">
-              <!--              <item-icon-selector-->
-              <!--                :selected-icon="item.new_icon"-->
-              <!--                :inputData.sync="item.new_icon"-->
-              <!--              />-->
+
+              <item-icon-selector
+                :selected-icon="item.icon"
+                @input="item.icon = $event"
+              />
             </eq-window>
 
             <!-- free id selector -->
@@ -165,12 +166,14 @@ import {Items}           from "../../app/items";
 import {ItemApi}         from "../../app/api";
 import ItemModelPreview  from "../../components/tools/ItemModelPreview";
 import ItemModelSelector from "../../components/tools/ItemModelSelector";
+import ItemIconSelector  from "../../components/tools/ItemIconSelector";
 
 const MILLISECONDS_BEFORE_WINDOW_RESET = 3000;
 
 export default {
   name: "ItemEdit",
   components: {
+    ItemIconSelector,
     ItemModelSelector,
     ItemModelPreview,
     FreeIdSelector,

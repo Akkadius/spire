@@ -33,8 +33,7 @@ export default {
   },
   methods: {
     render() {
-      this.previewId = 0;
-
+      this.previewId      = 0;
       const passedInModel = this.id.replace("IT", "")
 
       ItemModels[0].contents.forEach((row) => {

@@ -78,7 +78,6 @@ import itemSlots             from "@/constants/item-slots.json"
 import itemSlotIdFileMapping from "@/constants/item-slot-idfile-mapping.json"
 import itemTypes             from "@/constants/item-types.json"
 import itemTypesModelMapping from "@/constants/item-type-model-mapping.json"
-import slugify               from "slugify";
 import PageHeader            from "@/views/layout/PageHeader";
 import {App}                 from "@/constants/app";
 import EqWindow              from "@/components/eq-ui/EQWindow";
@@ -121,16 +120,6 @@ export default {
       this.itemSlotSearch = 0;
       this.itemTypeSearch = 0;
       this.loadModels()
-    },
-
-    // slugify
-    slug: function (toSlug) {
-      return slugify(toSlug.replace(/[&\/\\#, +()$~%.'":*?<>{}]/g, "-"))
-    },
-
-    // get graphic from url
-    getWeaponGraphicModelFromUrl: function (url) {
-      return url.split("objects/CTN_")[1].split(".png")[0]
     },
 
     // zero state loader
