@@ -165,7 +165,8 @@ export default {
         }
       });
 
-      this.$emit("update:inputData", bitmask.toString());
+      this.$emit("update:inputData", parseInt(bitmask));
+      this.$emit("input", parseInt(bitmask));
       this.$emit("fired", "true");
     }
   }

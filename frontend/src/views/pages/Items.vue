@@ -225,10 +225,10 @@ export default {
       itemCdnUrl: App.ASSET_ITEM_ICON_BASE_URL,
 
       // form values
-      selectedClasses: "0",
-      selectedRaces: "0",
-      selectedDeities: "0",
-      selectedSlots: "0",
+      selectedClasses: 0,
+      selectedRaces: 0,
+      selectedDeities: 0,
+      selectedSlots: 0,
       itemName: "",
       itemType: -1,
       spellEffect: "",
@@ -277,16 +277,16 @@ export default {
     updateQueryState: function () {
       let queryState = {};
 
-      if (this.selectedClasses !== "0") {
+      if (this.selectedClasses !== 0) {
         queryState.classes = this.selectedClasses
       }
-      if (this.selectedRaces !== "0") {
+      if (this.selectedRaces !== 0) {
         queryState.races = this.selectedRaces
       }
-      if (this.selectedDeities !== "0") {
+      if (this.selectedDeities !== 0) {
         queryState.deities = this.selectedDeities
       }
-      if (this.selectedSlots !== "0") {
+      if (this.selectedSlots !== 0) {
         queryState.slots = this.selectedSlots
       }
       if (this.itemType !== 0) {
@@ -315,10 +315,10 @@ export default {
     },
 
     resetForm: function () {
-      this.selectedClasses   = "0";
-      this.selectedRaces     = "0";
-      this.selectedSlots     = "0";
-      this.selectedDeities   = "0";
+      this.selectedClasses   = 0;
+      this.selectedRaces     = 0;
+      this.selectedSlots     = 0;
+      this.selectedDeities   = 0;
       this.itemType          = -1;
       this.itemName          = "";
       this.spellEffect       = "";
@@ -330,16 +330,16 @@ export default {
 
     loadQueryState: function () {
       if (this.$route.query.classes) {
-        this.selectedClasses = this.$route.query.classes;
+        this.selectedClasses = parseInt(this.$route.query.classes);
       }
       if (this.$route.query.races) {
-        this.selectedRaces = this.$route.query.races;
+        this.selectedRaces = parseInt(this.$route.query.races);
       }
       if (this.$route.query.deities) {
-        this.selectedDeities = this.$route.query.deities;
+        this.selectedDeities = parseInt(this.$route.query.deities);
       }
       if (this.$route.query.slots) {
-        this.selectedSlots = this.$route.query.slots;
+        this.selectedSlots = parseInt(this.$route.query.slots);
       }
       if (this.$route.query.itemType) {
         this.itemType = this.$route.query.itemType;

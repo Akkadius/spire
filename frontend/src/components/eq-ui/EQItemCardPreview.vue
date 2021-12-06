@@ -390,8 +390,6 @@ export default {
   },
   methods: {
     init() {
-      console.log("stuff")
-
       const uuidv4     = require("uuid/v4")
       this.componentId = uuidv4()
 
