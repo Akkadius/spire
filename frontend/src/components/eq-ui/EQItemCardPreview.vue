@@ -1,5 +1,5 @@
 <template>
-  <div class="item-bg" style="max-width: 400px; padding: 5px" v-if="itemData">
+  <div class="item-bg" style="max-width: 475px; padding: 5px" v-if="itemData">
 
     <div class="row">
       <div class="col-1">
@@ -36,8 +36,8 @@
       </div>
       <div class="col-1 text-right" v-if="showEdit">
         <div
-          class="text-center eq-button-fancy float-left"
-
+          class="eq-button-fancy"
+          style="margin-left: -40px;"
           @click="editItem(itemData.id)"
         >
           Edit
@@ -135,9 +135,9 @@
 
                 <!-- Heroic -->
                 <td style="text-align: right" v-if="itemData[data.heroic] > 0">
-                          <span style="color: #ffecca" v-if="itemData[data.heroic]">
-                            {{ itemData[data.heroic] > 0 ? "+" + itemData[data.heroic] : itemData[data.heroic] }}
-                          </span>
+                    <span style="color: #ffecca" v-if="itemData[data.heroic]">
+                      {{ itemData[data.heroic] > 0 ? "+" + itemData[data.heroic] : itemData[data.heroic] }}
+                    </span>
                 </td>
               </tr>
               </tbody>
@@ -161,10 +161,8 @@
                 </td>
 
                 <!-- Heroic -->
-                <td style="text-align: right" v-if="itemData[data.heroic] > 0">
-                <span style="color: #ffecca" v-if="itemData[data.heroic]">
+                <td style="text-align: right; color: #ffecca" v-if="itemData[data.heroic] > 0">
                   {{ itemData[data.heroic] > 0 ? "+" + itemData[data.heroic] : itemData[data.heroic] }}
-                </span>
                 </td>
               </tr>
               </tbody>

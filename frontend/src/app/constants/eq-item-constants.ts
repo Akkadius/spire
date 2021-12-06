@@ -86,17 +86,18 @@ export const DB_ITEM_TYPES = {
 }
 
 export const DB_ITEM_AUG_RESTRICT = {
+  "0": "None",
   "1": "Armor Only",
   "2": "Weapons Only",
-  "3": "1h Weapons Only",
-  "4": "2h Weapons Only",
-  "5": "1h Slash Only",
-  "6": "1h Blunt Only",
+  "3": "1H Weapons Only",
+  "4": "2H Weapons Only",
+  "5": "1H Slash Only",
+  "6": "1H Blunt Only",
   "7": "Piercing Only",
   "8": "Hand To Hand Only",
-  "9": "2h Slash Only",
-  "10": "2h Blunt Only",
-  "11": "2h Pierce Only",
+  "9": "2H Slash Only",
+  "10": "2H Blunt Only",
+  "11": "2H Pierce Only",
   "12": "Bows Only"
 }
 

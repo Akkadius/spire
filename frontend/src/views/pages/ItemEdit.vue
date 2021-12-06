@@ -56,33 +56,37 @@
 
                   </div>
 
-                  <class-bitmask-calculator
-                    class="text-center"
-                    :imageSize="40"
-                    :centered-buttons="false"
-                    @input="item.classes = parseInt($event)"
-                    :mask="item.classes"
-                  />
+                  <div class="mt-3 mb-3">
+                    <class-bitmask-calculator
+                      class="text-center"
+                      :imageSize="40"
+                      :centered-buttons="false"
+                      @input="item.classes = parseInt($event)"
+                      :mask="item.classes"
+                    />
 
-                  <race-bitmask-calculator
-                    :imageSize="40"
-                    :centered-buttons="false"
-                    @input="item.races = parseInt($event)"
-                    :mask="item.races"
-                  />
+                    <race-bitmask-calculator
+                      :imageSize="40"
+                      :centered-buttons="false"
+                      @input="item.races = parseInt($event)"
+                      :mask="item.races"
+                    />
 
-                  <deity-bitmask-calculator
-                    class="mt-1"
-                    :imageSize="37"
-                    :show-names="false"
-                    :centered-buttons="false"
-                    @input="item.deity = parseInt($event)"
-                    :mask="item.deity"
-                  />
+                    <deity-bitmask-calculator
+                      class="mt-1"
+                      :imageSize="37"
+                      :show-names="false"
+                      :centered-buttons="false"
+                      @input="item.deity = parseInt($event)"
+                      :mask="item.deity"
+                    />
+                  </div>
 
                   <div class="row">
                     <div class="col-8">
 
+                      <h1 class="eq-header">
+                      </h1>
 
                     </div>
 
@@ -99,9 +103,202 @@
                       <b-form-input v-model.number="item.idfile"/>
                     </div>
                   </div>
+                </eq-tab>
+
+                <eq-tab
+                  name="Augmentation">
+
+                  <h6 class="eq-header text-center mt-3 mb-3">Item Is Augment</h6>
+
+                  <!-- Aug Type -->
+                  <div class="row">
+                    <div class="col-1">
+
+                    </div>
+                    <div class="col-4 text-right">
+                      Augment Type
+                    </div>
+                    <div class="col-3">
+                      <select v-model.number="item['augtype']" class="form-control">
+                        <option
+                          v-for="(value, index) in AUG_TYPES"
+                          :key="index"
+                          :value="parseInt(index)">
+                          {{ index }}) {{ value.name }}
+                        </option>
+                      </select>
+
+                    </div>
+                  </div>
+
+                  <div class="row">
+                    <div class="col-1">
+
+                    </div>
+                    <div class="col-4 text-right">
+                      Augment Restriction
+                    </div>
+                    <div class="col-3">
+                      <select v-model.number="item['augrestrict']" class="form-control">
+                        <option
+                          v-for="(value, index) in DB_ITEM_AUG_RESTRICT"
+                          :key="index"
+                          :value="parseInt(index)">
+                          {{ index }}) {{ value }}
+                        </option>
+                      </select>
+                    </div>
+                  </div>
+
+                  <h6 class="eq-header text-center mt-3 mb-3">Item Has Augments</h6>
+
+                  <!-- Aug Distiller Type -->
+                  <div class="row">
+                    <div class="col-1">
+
+                    </div>
+                    <div class="col-4 text-right">
+                      Augment Distiller Type
+                    </div>
+                    <div class="col-3">
+                      <b-form-input v-model.number="item['augdistiller']"/>
+                    </div>
+                  </div>
+
+                  <!-- Aug Type -->
+                  <div class="row" v-for="i in 5" :key="i">
+                    <div class="col-1">
+
+                    </div>
+                    <div class="col-4 text-right">
+                      Augment Slot {{ i }} Type
+                    </div>
+                    <div class="col-3">
+                      <select v-model.number="item['augslot_' + i + '_type']" class="form-control">
+                        <option
+                          v-for="(value, index) in AUG_TYPES"
+                          :key="index"
+                          :value="parseInt(index)">
+                          {{ index }}) {{ value.name }}
+                        </option>
+                      </select>
+                    </div>
+                  </div>
+
+
+                  <!--                  "augrestrict",-->
+                  <!--                  "augtype",-->
+                  <!--                  "augdistiller",-->
+                  <!--                  "augslot1type",-->
+                  <!--                  "augslot1visible",-->
+                  <!--                  "augslot2type",-->
+                  <!--                  "augslot2visible",-->
+                  <!--                  "augslot3type",-->
+                  <!--                  "augslot3visible",-->
+                  <!--                  "augslot4type",-->
+                  <!--                  "augslot4visible",-->
+                  <!--                  "augslot5type",-->
+                  <!--                  "augslot5visible",-->
+                  <!--                  "augslot1unk2",-->
+                  <!--                  "augslot2unk2",-->
+                  <!--                  "augslot3unk2",-->
+                  <!--                  "augslot4unk2",-->
+                  <!--                  "augslot5unk2",-->
 
 
                 </eq-tab>
+
+                <eq-tab
+                  name="Resists & Stats"
+                >
+
+                  <div class="row">
+
+                    <!-- Resists -->
+                    <div class="col-6 text-center">
+                      <h6 class="eq-header">
+                        Resists
+                      </h6>
+                      <div
+                        v-for="(resist, description) in resists"
+                        :key="resist"
+                        class="row text-center"
+                      >
+                        <div class="col-2 text-right">
+                          {{ description }}
+                        </div>
+                        <div class="col-4">
+                          <b-form-input v-model.number="item[resist.stat]"/>
+                        </div>
+                        <div class="col-2 text-right">
+                          Heroic
+                        </div>
+                        <div class="col-4">
+                          <b-form-input v-model.number="item[resist.heroic]"/>
+                        </div>
+                      </div>
+                    </div>
+
+                    <!-- Stats -->
+                    <div class="col-6 text-center">
+
+                      <h6 class="eq-header">
+                        Stats
+                      </h6>
+                      <div
+                        v-for="(stat, description) in stats"
+                        :key="stat"
+                        class="row text-center"
+                      >
+                        <div class="col-2 text-right">
+                          {{ description }}
+                        </div>
+                        <div class="col-4">
+                          <b-form-input v-model.number="item[stat.stat]"/>
+                        </div>
+                        <div class="col-2 text-right">
+                          Heroic
+                        </div>
+                        <div class="col-4">
+                          <b-form-input v-model.number="item[stat.heroic]"/>
+                        </div>
+                      </div>
+                    </div>
+
+                  </div>
+                </eq-tab>
+
+                <eq-tab name="Mods">
+                  <div v-for="(field, description) in mod3" :key="field" class="row text-center">
+                    <div class="col-1">
+
+                    </div>
+                    <div class="col-4 text-right">
+                      {{ description }}
+                    </div>
+                    <div class="col-2">
+                      <b-form-input v-model.number="item[field]" v-if="field !== 'combateffects'"/>
+                      <!-- For some reason combateffects is a varchar field -->
+                      <b-form-input v-model="item[field]" v-if="field === 'combateffects'"/>
+                    </div>
+                  </div>
+                </eq-tab>
+
+                <eq-tab name="Pricing">
+                  <div v-for="(field, description) in pricingFields" :key="field" class="row text-center">
+                    <div class="col-1">
+
+                    </div>
+                    <div class="col-4 text-right">
+                      {{ description }}
+                    </div>
+                    <div class="col-2">
+                      <b-form-input v-model.number="item[field]"/>
+                      <!--                      <b-form-input v-model="item[field]"/>-->
+                    </div>
+                  </div>
+                </eq-tab>
+
               </eq-tabs>
 
               <div class="text-center mt-3">
@@ -191,6 +388,8 @@ import ItemIconSelector       from "../../components/tools/ItemIconSelector";
 import ClassBitmaskCalculator from "../../components/tools/ClassBitmaskCalculator";
 import RaceBitmaskCalculator  from "../../components/tools/RaceBitmaskCalculator";
 import DeityBitmaskCalculator from "../../components/tools/DeityCalculator";
+import {DB_ITEM_AUG_RESTRICT} from "../../app/constants/eq-item-constants";
+import {AUG_TYPES}            from "../../app/constants/eq-aug-constants";
 
 const MILLISECONDS_BEFORE_WINDOW_RESET = 3000;
 
@@ -226,6 +425,57 @@ export default {
 
       notification: "",
       error: "",
+
+      DB_ITEM_AUG_RESTRICT: DB_ITEM_AUG_RESTRICT,
+      AUG_TYPES: AUG_TYPES,
+
+      stats: {
+        "Strength": { stat: "astr", heroic: "heroic_str" },
+        "Stamina": { stat: "asta", heroic: "heroic_sta" },
+        "Intelligence": { stat: "aint", heroic: "heroic_int" },
+        "Wisdom": { stat: "awis", heroic: "heroic_wis" },
+        "Agility": { stat: "aagi", heroic: "heroic_agi" },
+        "Dexterity": { stat: "adex", heroic: "heroic_dex" },
+        "Charisma": { stat: "acha", heroic: "heroic_cha" }
+      },
+      resists: {
+        "Magic Resist": { stat: "mr", heroic: "heroic_mr" },
+        "Fire Resists": { stat: "fr", heroic: "heroic_fr" },
+        "Cold Resist": { stat: "cr", heroic: "heroic_cr" },
+        "Disease Resist": { stat: "dr", heroic: "heroic_dr" },
+        "Poison Resist": { stat: "pr", heroic: "heroic_pr" }
+      },
+
+      mod3: {
+        "Attack": "attack",
+        "HP Regen": "regen",
+        "Mana Regen": "manaregen",
+        "Endurance Regen": "enduranceregen",
+        "Spell Shielding": "spellshield",
+        "Combat Effects": "combateffects",
+        "Shielding": "shielding",
+        "DoT Shielding": "dotshielding",
+        "Avoidance": "avoidance",
+        "Accuracy": "accuracy",
+        "Stun Resist": "stunresist",
+        "Strikethrough": "strikethrough",
+        "Damage Shield": "damageshield"
+        // TODO: extradmgamt
+      },
+
+      pricingFields: {
+        "Price": "price",
+        "Sell Rate": "sellrate",
+
+        "Favor": "favor",
+        "Guild Favor": "guildfavor",
+        "Point Type": "pointtype",
+
+        "LDON Price": "ldonprice",
+        "LDON Theme": "ldontheme",
+        "LDON Sold": "ldonsold",
+        "LDON Sell Back Rate": "ldonsellbackrate",
+      },
     }
   },
   watch: {
@@ -237,7 +487,6 @@ export default {
     },
     item: {
       handler(val, oldVal) {
-        console.log("item data changed")
         if (this.item) {
           this.item.updatedAt = Date.now()
         }
@@ -310,7 +559,7 @@ export default {
     load() {
       if (this.$route.params.id > 0) {
         Items.getItem(this.$route.params.id).then(result => {
-          this.item = result
+          this.item      = result
           this.updatedAt = Date.now()
         })
       }
