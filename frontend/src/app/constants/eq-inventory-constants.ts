@@ -20,7 +20,7 @@ export const PLAYER_INVENTORY_SLOTS = {
   18: { 'name': 'Legs', mask: 262144},
   19: { 'name': 'Feet', mask: 524288},
   20: { 'name': 'Waist', mask: 1048576},
-  21: { 'name': 'Powersource', mask: 2097152},
+  21: { 'name': 'PS', mask: 2097152},
   22: { 'name': 'Ammo', mask: 4194304},
 };
 

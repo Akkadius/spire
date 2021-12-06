@@ -56,32 +56,6 @@
 
                   </div>
 
-                  <div class="mt-3 mb-3">
-                    <class-bitmask-calculator
-                      class="text-center"
-                      :imageSize="40"
-                      :centered-buttons="false"
-                      @input="item.classes = parseInt($event)"
-                      :mask="item.classes"
-                    />
-
-                    <race-bitmask-calculator
-                      :imageSize="40"
-                      :centered-buttons="false"
-                      @input="item.races = parseInt($event)"
-                      :mask="item.races"
-                    />
-
-                    <deity-bitmask-calculator
-                      class="mt-1"
-                      :imageSize="37"
-                      :show-names="false"
-                      :centered-buttons="false"
-                      @input="item.deity = parseInt($event)"
-                      :mask="item.deity"
-                    />
-                  </div>
-
                   <div class="row">
                     <div class="col-8">
 
@@ -103,6 +77,45 @@
                       <b-form-input v-model.number="item.idfile"/>
                     </div>
                   </div>
+
+                  <div class="mt-3 mb-3">
+                    <class-bitmask-calculator
+                      class="text-center mt-3"
+                      :imageSize="43"
+                      :centered-buttons="true"
+                      @input="item.classes = parseInt($event)"
+                      :mask="item.classes"
+                    />
+
+                    <race-bitmask-calculator
+                      :imageSize="40"
+                      class="mt-3"
+                      :centered-buttons="true"
+                      @input="item.races = parseInt($event)"
+                      :mask="item.races"
+                    />
+
+                    <deity-bitmask-calculator
+                      class="mt-3"
+                      :imageSize="37"
+                      :show-names="true"
+                      :centered-buttons="true"
+                      @input="item.deity = parseInt($event)"
+                      :mask="item.deity"
+                    />
+                  </div>
+
+                  <div class="mt-3 mb-3">
+                    <inventory-slot-calculator
+                      class="mt-1"
+                      :imageSize="45"
+                      :centered-buttons="false"
+                      @input="item.slots = parseInt($event)"
+                      :mask="item.slots"
+                    />
+                  </div>
+
+
                 </eq-tab>
 
                 <eq-tab
@@ -379,23 +392,25 @@ import {App}                  from "../../constants/app";
 import EqCheckbox             from "../../components/eq-ui/EQCheckbox";
 import {SpireApiClient}       from "../../app/api/spire-api-client";
 import * as util              from "util";
-import FreeIdSelector         from "../../components/tools/FreeIdSelector";
-import {Items}                from "../../app/items";
-import {ItemApi}              from "../../app/api";
-import ItemModelPreview       from "../../components/tools/ItemModelPreview";
-import ItemModelSelector      from "../../components/tools/ItemModelSelector";
-import ItemIconSelector       from "../../components/tools/ItemIconSelector";
-import ClassBitmaskCalculator from "../../components/tools/ClassBitmaskCalculator";
-import RaceBitmaskCalculator  from "../../components/tools/RaceBitmaskCalculator";
-import DeityBitmaskCalculator from "../../components/tools/DeityCalculator";
-import {DB_ITEM_AUG_RESTRICT} from "../../app/constants/eq-item-constants";
-import {AUG_TYPES}            from "../../app/constants/eq-aug-constants";
+import FreeIdSelector          from "../../components/tools/FreeIdSelector";
+import {Items}                 from "../../app/items";
+import {ItemApi}               from "../../app/api";
+import ItemModelPreview        from "../../components/tools/ItemModelPreview";
+import ItemModelSelector       from "../../components/tools/ItemModelSelector";
+import ItemIconSelector        from "../../components/tools/ItemIconSelector";
+import ClassBitmaskCalculator  from "../../components/tools/ClassBitmaskCalculator";
+import RaceBitmaskCalculator   from "../../components/tools/RaceBitmaskCalculator";
+import DeityBitmaskCalculator  from "../../components/tools/DeityCalculator";
+import {DB_ITEM_AUG_RESTRICT}  from "../../app/constants/eq-item-constants";
+import {AUG_TYPES}             from "../../app/constants/eq-aug-constants";
+import InventorySlotCalculator from "../../components/tools/InventorySlotCalculator";
 
 const MILLISECONDS_BEFORE_WINDOW_RESET = 3000;
 
 export default {
   name: "ItemEdit",
   components: {
+    InventorySlotCalculator,
     DeityBitmaskCalculator,
     RaceBitmaskCalculator,
     ClassBitmaskCalculator,

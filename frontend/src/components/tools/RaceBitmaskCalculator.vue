@@ -1,6 +1,9 @@
 <template>
   <div class="row" v-if="mask >= 0">
-    <div class="mr-3 d-inline-block text-center">
+    <div
+      class="mr-3 d-inline-block text-center"
+      :style="(centeredButtons ? 'width: 100%' : '')"
+    >
       <div v-for="(race, index) in races" class="mb-1 text-center d-inline-block">
         <div class="text-center p-0 col-lg-12 col-sm-12">
           {{ race.short }}
@@ -13,19 +16,21 @@
           </div>
         </div>
       </div>
-    </div>
-    <div :class="'mt-4 d-inline-block ' + (centeredButtons ? 'text-center w-100' : '')" v-if="displayAllNone">
-      <div
-        :class="'text-center btn-xs eq-button-fancy ' + (parseInt(mask) >= 65535 ? 'eq-button-fancy-highlighted' : '')"
-        @click="selectAll()"
-      >
-        All
-      </div>
-      <div
-        :class="'text-center btn-xs eq-button-fancy ' + (parseInt(mask) === 0 ? 'eq-button-fancy-highlighted' : '')"
-        @click="selectNone()"
-      >
-        None
+
+      <!-- Select All / None -->
+      <div class="d-inline-block" v-if="displayAllNone">
+        <div
+          :class="'text-center mt-2 btn-xs eq-button-fancy ' + (parseInt(mask) >= 65535 ? 'eq-button-fancy-highlighted' : '')"
+          @click="selectAll()"
+        >
+          All
+        </div>
+        <div
+          :class="'text-center mt-2 btn-xs eq-button-fancy ' + (parseInt(mask) === 0 ? 'eq-button-fancy-highlighted' : '')"
+          @click="selectNone()"
+        >
+          None
+        </div>
       </div>
     </div>
   </div>

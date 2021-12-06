@@ -1,6 +1,9 @@
 <template>
   <div class="row text-center" v-if="mask >= 0">
-    <div class="mr-3 d-inline-block">
+    <div
+      class="mr-3 d-inline-block"
+      :style="(centeredButtons ? 'width: 100%' : '')"
+    >
       <div v-for="(gClass, classId) in classes" class="mb-1 d-inline-block">
         <div class="text-center p-0 col-lg-12 col-sm-12">
           {{ gClass.short }}
@@ -13,20 +16,23 @@
           </div>
         </div>
       </div>
-    </div>
-    <div :class="'mt-4 d-inline-block ' + (centeredButtons ? 'text-center w-100' : '')" v-if="displayAllNone">
-      <div
-        :class="'text-center btn-xs eq-button-fancy ' + (parseInt(mask) >= 65535 ? 'eq-button-fancy-highlighted' : '')"
-        @click="selectAll()"
-      >
-        All
+
+      <!-- Select All / None -->
+      <div class="d-inline-block" v-if="displayAllNone">
+        <div
+          :class="'text-center mt-2 btn-xs eq-button-fancy ' + (parseInt(mask) >= 65535 ? 'eq-button-fancy-highlighted' : '')"
+          @click="selectAll()"
+        >
+          All
+        </div>
+        <div
+          :class="'text-center mt-2 btn-xs eq-button-fancy ' + (parseInt(mask) === 0 ? 'eq-button-fancy-highlighted' : '')"
+          @click="selectNone()"
+        >
+          None
+        </div>
       </div>
-      <div
-        :class="'text-center btn-xs eq-button-fancy ' + (parseInt(mask) === 0 ? 'eq-button-fancy-highlighted' : '')"
-        @click="selectNone()"
-      >
-        None
-      </div>
+
     </div>
   </div>
 </template>

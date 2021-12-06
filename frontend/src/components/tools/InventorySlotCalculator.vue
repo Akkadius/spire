@@ -1,6 +1,9 @@
 <template>
   <div class="row" v-if="mask >= 0">
-    <div class="mr-3 d-inline-block" style="display: inline-block">
+    <div
+      class="mr-3 d-inline-block text-center"
+      :style="'display: inline-block ' + (centeredButtons ? 'width: 100%' : '')"
+    >
       <div v-for="(slot, slotId) in slots" class="mb-1 text-center d-inline-block">
         <div class="text-center p-1 col-lg-12 col-sm-12" v-if="!isSlotSkipped(slotId)">
           {{ slot.name }}
@@ -13,21 +16,25 @@
           </div>
         </div>
       </div>
-    </div>
-    <div class="mt-4 d-inline-block" v-if="displayAllNone">
-      <div
-        :class="'text-center btn-xs eq-button-fancy ' + (parseInt(mask) >= 65535 ? 'eq-button-fancy-highlighted' : '')"
-        @click="selectAll()"
-      >
-        All
+
+      <!-- Select All / None -->
+      <div class="d-inline-block" v-if="displayAllNone">
+        <div
+          :class="'text-center mt-4 btn-xs eq-button-fancy ' + (parseInt(mask) >= 65535 ? 'eq-button-fancy-highlighted' : '')"
+          @click="selectAll()"
+        >
+          All
+        </div>
+        <div
+          :class="'text-center mt-4 btn-xs eq-button-fancy ' + (parseInt(mask) === 0 ? 'eq-button-fancy-highlighted' : '')"
+          @click="selectNone()"
+        >
+          None
+        </div>
       </div>
-      <div
-        :class="'text-center btn-xs eq-button-fancy ' + (parseInt(mask) === 0 ? 'eq-button-fancy-highlighted' : '')"
-        @click="selectNone()"
-      >
-        None
-      </div>
+
     </div>
+
   </div>
 </template>
 
