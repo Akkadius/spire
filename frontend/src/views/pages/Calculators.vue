@@ -197,9 +197,6 @@
               </eq-window>
             </div>
           </div>
-
-
-
         </div>
 
       </div>
@@ -210,23 +207,23 @@
 <script>
 // @ is an alias to /src
 
-import EqWindowSimple from "@/components/eq-ui/EQWindowSimple";
-import EqWindowFancy from "@/components/eq-ui/EQWindowFancy";
-import EqWindowComplex from "@/components/eq-ui/EQWindowComplex";
-import EqWindow from "@/components/eq-ui/EQWindow";
-import EqTabs from "@/components/eq-ui/EQTabs";
-import EqTab from "@/components/eq-ui/EQTab";
-import EqProgressBar from "@/components/eq-ui/EQProgressBar";
-import PageHeader from "@/views/layout/PageHeader";
-import EqItemCardPreview from "@/components/eq-ui/EQItemCardPreview";
-import EqSpellPreview from "@/components/eq-ui/EQSpellCardPreview";
-import NpcSpecialAbilities from "@/components/tools/NpcSpecialAbilities";
-import HeaderComponent from "../layout/HeaderComponent";
-import RaceBitmaskCalculator from "../../components/tools/RaceBitmaskCalculator";
-import ClassBitmaskCalculator from "../../components/tools/ClassBitmaskCalculator";
-import InventorySlotCalculator from "../../components/tools/InventorySlotCalculator";
-import AugBitmaskCalculator from "../../components/tools/AugmentTypeCalculator";
-import DeityBitmaskCalculator from "../../components/tools/DeityCalculator";
+import EqWindowSimple             from "@/components/eq-ui/EQWindowSimple";
+import EqWindowFancy              from "@/components/eq-ui/EQWindowFancy";
+import EqWindowComplex            from "@/components/eq-ui/EQWindowComplex";
+import EqWindow                   from "@/components/eq-ui/EQWindow";
+import EqTabs                     from "@/components/eq-ui/EQTabs";
+import EqTab                      from "@/components/eq-ui/EQTab";
+import EqProgressBar              from "@/components/eq-ui/EQProgressBar";
+import PageHeader                 from "@/views/layout/PageHeader";
+import EqItemCardPreview          from "@/components/eq-ui/EQItemCardPreview";
+import EqSpellPreview             from "@/components/eq-ui/EQSpellCardPreview";
+import NpcSpecialAbilities        from "@/components/tools/NpcSpecialAbilities";
+import HeaderComponent            from "../layout/HeaderComponent";
+import RaceBitmaskCalculator      from "../../components/tools/RaceBitmaskCalculator";
+import ClassBitmaskCalculator     from "../../components/tools/ClassBitmaskCalculator";
+import InventorySlotCalculator    from "../../components/tools/InventorySlotCalculator";
+import AugBitmaskCalculator       from "../../components/tools/AugmentTypeCalculator";
+import DeityBitmaskCalculator     from "../../components/tools/DeityCalculator";
 import ExpansionBitmaskCalculator from "../../components/tools/ExpansionsCalculator";
 
 export default {
@@ -254,11 +251,11 @@ export default {
   data() {
     return {
       augBitmask: "477396",
-      racesBitmask: "1859",
-      classesBitmask: "37349",
-      inventorySlotBitmask: "1536",
+      racesBitmask: 1859,
+      classesBitmask: 37349,
+      inventorySlotBitmask: 1536,
       specialAbilityInput: "1,1,3000,50^2,1,1,1000,2340^3,1,20,0,0,0,0,100,0^4,1,0,100,0,0,0,100,0^11,1,4,150,0,0,5^29,1,50^40,1,10,10,100^7,1^10,1^14,1^19,1^22,1^25,1^26,1",
-      deityBitmask: "3079",
+      deityBitmask: 3079,
       expansionBitmask: "3079"
     }
   },
