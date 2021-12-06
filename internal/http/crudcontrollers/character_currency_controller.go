@@ -124,7 +124,7 @@ func (e *CharacterCurrencyController) updateCharacterCurrency(c echo.Context) er
 		return c.JSON(http.StatusNotFound, echo.Map{"error": "Cannot find entity"})
 	}
 
-	err = e.db.Get(models.CharacterCurrency{}, c).Model(&entity).Updates(&characterCurrency).Error
+	err = e.db.Get(models.CharacterCurrency{}, c).Model(&entity).Select("*").Updates(&characterCurrency).Error
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error updating entity: [%v]", err)})
 	}

@@ -124,7 +124,7 @@ func (e *DbStrController) updateDbStr(c echo.Context) error {
 		return c.JSON(http.StatusNotFound, echo.Map{"error": "Cannot find entity"})
 	}
 
-	err = e.db.Get(models.DbStr{}, c).Model(&entity).Updates(&dbStr).Error
+	err = e.db.Get(models.DbStr{}, c).Model(&entity).Select("*").Updates(&dbStr).Error
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error updating entity: [%v]", err)})
 	}

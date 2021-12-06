@@ -124,7 +124,7 @@ func (e *ServerScheduledEventController) updateServerScheduledEvent(c echo.Conte
 		return c.JSON(http.StatusNotFound, echo.Map{"error": "Cannot find entity"})
 	}
 
-	err = e.db.Get(models.ServerScheduledEvent{}, c).Model(&entity).Updates(&serverScheduledEvent).Error
+	err = e.db.Get(models.ServerScheduledEvent{}, c).Model(&entity).Select("*").Updates(&serverScheduledEvent).Error
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error updating entity: [%v]", err)})
 	}

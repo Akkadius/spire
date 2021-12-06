@@ -124,7 +124,7 @@ func (e *NameFilterController) updateNameFilter(c echo.Context) error {
 		return c.JSON(http.StatusNotFound, echo.Map{"error": "Cannot find entity"})
 	}
 
-	err = e.db.Get(models.NameFilter{}, c).Model(&entity).Updates(&nameFilter).Error
+	err = e.db.Get(models.NameFilter{}, c).Model(&entity).Select("*").Updates(&nameFilter).Error
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error updating entity: [%v]", err)})
 	}

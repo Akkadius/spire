@@ -124,7 +124,7 @@ func (e *CharacterMaterialController) updateCharacterMaterial(c echo.Context) er
 		return c.JSON(http.StatusNotFound, echo.Map{"error": "Cannot find entity"})
 	}
 
-	err = e.db.Get(models.CharacterMaterial{}, c).Model(&entity).Updates(&characterMaterial).Error
+	err = e.db.Get(models.CharacterMaterial{}, c).Model(&entity).Select("*").Updates(&characterMaterial).Error
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error updating entity: [%v]", err)})
 	}

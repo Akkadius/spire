@@ -124,7 +124,7 @@ func (e *AlternateCurrencyController) updateAlternateCurrency(c echo.Context) er
 		return c.JSON(http.StatusNotFound, echo.Map{"error": "Cannot find entity"})
 	}
 
-	err = e.db.Get(models.AlternateCurrency{}, c).Model(&entity).Updates(&alternateCurrency).Error
+	err = e.db.Get(models.AlternateCurrency{}, c).Model(&entity).Select("*").Updates(&alternateCurrency).Error
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error updating entity: [%v]", err)})
 	}
