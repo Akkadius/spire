@@ -46,7 +46,7 @@
 
                     <div
                       class="col-1" v-if="item.icon > 0"
-                      style="margin-top: 7px"
+                      style="margin-top: 18px"
                       @mouseover="drawIconSelector"
                     >
                       <span
@@ -56,13 +56,37 @@
 
                   </div>
 
-                  <!--                  <item-class-selector :spell="spell" @input="spell = $event"/>-->
-                  <!--                  <item-deity-selector :spell="spell" @input="spell = $event"/>-->
+                  <class-bitmask-calculator
+                    class="text-center"
+                    :imageSize="40"
+                    :centered-buttons="false"
+                    @input="item.classes = parseInt($event)"
+                    :mask="item.classes"
+                  />
+
+                  <race-bitmask-calculator
+                    :imageSize="40"
+                    :centered-buttons="false"
+                    @input="item.races = parseInt($event)"
+                    :mask="item.races"
+                  />
+
+                  <deity-bitmask-calculator
+                    class="mt-1"
+                    :imageSize="37"
+                    :show-names="false"
+                    :centered-buttons="false"
+                    @input="item.deity = parseInt($event)"
+                    :mask="item.deity"
+                  />
 
                   <div class="row">
                     <div class="col-8">
 
+
                     </div>
+
+                    <!-- Model Preview -->
                     <div
                       class="col-4"
                       style="text-align: center"
@@ -71,10 +95,6 @@
 
                       <item-model-preview :id="item.idfile"/>
 
-                      <!--                      <item-animation-preview-->
-                      <!--                        class="mt-4"-->
-                      <!--                        :id="item.itemanim"/>-->
-                      <!---->
                       Item Model
                       <b-form-input v-model.number="item.idfile"/>
                     </div>
@@ -101,7 +121,8 @@
             <!-- preview item -->
             <eq-window
               style="margin-top: 30px; margin-right: 10px; width: auto;"
-              v-if="previewItemActive && item">
+              :key="item.updatedAt"
+              v-if="previewItemActive && item && item.id > 0">
               <eq-item-preview
                 :item-data="item"/>
             </eq-window>
@@ -152,27 +173,33 @@
 </template>
 
 <script>
-import EqWindowFancy     from "../../components/eq-ui/EQWindowFancy";
-import EqWindow          from "../../components/eq-ui/EQWindow";
-import EqTabs            from "../../components/eq-ui/EQTabs";
-import EqTab             from "../../components/eq-ui/EQTab";
-import EqItemPreview     from "../../components/eq-ui/EQItemCardPreview";
-import {App}             from "../../constants/app";
-import EqCheckbox        from "../../components/eq-ui/EQCheckbox";
-import {SpireApiClient}  from "../../app/api/spire-api-client";
-import * as util         from "util";
-import FreeIdSelector    from "../../components/tools/FreeIdSelector";
-import {Items}           from "../../app/items";
-import {ItemApi}         from "../../app/api";
-import ItemModelPreview  from "../../components/tools/ItemModelPreview";
-import ItemModelSelector from "../../components/tools/ItemModelSelector";
-import ItemIconSelector  from "../../components/tools/ItemIconSelector";
+import EqWindowFancy          from "../../components/eq-ui/EQWindowFancy";
+import EqWindow               from "../../components/eq-ui/EQWindow";
+import EqTabs                 from "../../components/eq-ui/EQTabs";
+import EqTab                  from "../../components/eq-ui/EQTab";
+import EqItemPreview          from "../../components/eq-ui/EQItemCardPreview";
+import {App}                  from "../../constants/app";
+import EqCheckbox             from "../../components/eq-ui/EQCheckbox";
+import {SpireApiClient}       from "../../app/api/spire-api-client";
+import * as util              from "util";
+import FreeIdSelector         from "../../components/tools/FreeIdSelector";
+import {Items}                from "../../app/items";
+import {ItemApi}              from "../../app/api";
+import ItemModelPreview       from "../../components/tools/ItemModelPreview";
+import ItemModelSelector      from "../../components/tools/ItemModelSelector";
+import ItemIconSelector       from "../../components/tools/ItemIconSelector";
+import ClassBitmaskCalculator from "../../components/tools/ClassBitmaskCalculator";
+import RaceBitmaskCalculator  from "../../components/tools/RaceBitmaskCalculator";
+import DeityBitmaskCalculator from "../../components/tools/DeityCalculator";
 
 const MILLISECONDS_BEFORE_WINDOW_RESET = 3000;
 
 export default {
   name: "ItemEdit",
   components: {
+    DeityBitmaskCalculator,
+    RaceBitmaskCalculator,
+    ClassBitmaskCalculator,
     ItemIconSelector,
     ItemModelSelector,
     ItemModelPreview,
@@ -207,7 +234,17 @@ export default {
       this.notification = ""
       // reload
       this.load()
-    }
+    },
+    item: {
+      handler(val, oldVal) {
+        console.log("item data changed")
+        if (this.item) {
+          this.item.updatedAt = Date.now()
+        }
+      },
+      deep: true,
+      immediate: true,
+    },
   },
   async created() {
 
@@ -274,6 +311,7 @@ export default {
       if (this.$route.params.id > 0) {
         Items.getItem(this.$route.params.id).then(result => {
           this.item = result
+          this.updatedAt = Date.now()
         })
       }
     },

@@ -4,7 +4,6 @@
     <div class="row">
       <div class="col-1">
         <span :class="'fade-in item-' + itemData.icon" :title="itemData.icon"/>
-        <!--        <img :src="cdnUrl + 'assets/item_icons/item_' + itemData.icon + '.png'" style="width:40px;height:auto;">-->
       </div>
       <div class="col-10 pl-5">
         <h6 class="eq-header" style="margin: 0px; margin-bottom: 10px">
@@ -37,7 +36,8 @@
       </div>
       <div class="col-1 text-right" v-if="showEdit">
         <div
-          class="text-center eq-button-fancy"
+          class="text-center eq-button-fancy float-left"
+
           @click="editItem(itemData.id)"
         >
           Edit
@@ -376,7 +376,6 @@ export default {
         "Haste": this.itemData.haste > 0 ? (this.itemData.haste + "%") : this.itemData.haste
       },
       secondlevel3: {},
-
       effectData: {}, // stores effect data when loaded from API
       effects: [
         { field: "proceffect", name: "Proc" },
@@ -390,6 +389,46 @@ export default {
     }
   },
   methods: {
+    init() {
+      console.log("stuff")
+
+      const uuidv4     = require("uuid/v4")
+      this.componentId = uuidv4()
+
+      // dynamic section builder
+      this.secondlevel3   = {}
+      let data            = {};
+      data["Base Damage"] = this.itemData.damage
+      if (this.itemData.elemdmgamt > 0) {
+        data[this.getElementDamageName() + " Damage"] = this.itemData.elemdmgamt
+      }
+      if (this.itemData.banedmgrace > 0 && this.itemData.banedmgamt !== 0) {
+        data["Bane Damage (" + this.getBaneDamageName() + ")"] = this.itemData.banedmgamt
+      }
+      if (this.itemData.banedmgbody > 0 && this.itemData.banedmgamt !== 0) {
+        data[this.getBaneDamageBodyName()] = this.itemData.banedmgamt
+      }
+
+      data["Backstab Damage"] = this.itemData.backstabdmg
+      data["Delay"]           = this.itemData.delay
+      if (this.itemData.damage > 0) {
+        data["Ratio"] = Math.round(this.itemData.damage / this.itemData.delay * 100) / 100
+      }
+      // TODO: Damage bonus
+      data["Range"] = this.itemData.range
+
+      // spell loading
+      this.effects.forEach((effect) => {
+        if (this.itemData[effect.field] > 0) {
+          Spells.getSpell(this.itemData[effect.field]).then((spell) => {
+            this.effectData[effect.field] = spell
+            this.$forceUpdate()
+          })
+        }
+      })
+
+      this.secondlevel3 = data
+    },
     editItem(itemId) {
       this.$router.push(
         {
@@ -445,7 +484,6 @@ export default {
       let races      = []
       let racesValue = this.itemData.races
       for (const [key, value] of Object.entries(DB_RACES_SHORT).reverse()) {
-
         if (key <= racesValue) {
           racesValue -= key;
           races.push(value)
@@ -528,43 +566,7 @@ export default {
     }
   },
   created: function () {
-    const uuidv4     = require("uuid/v4")
-    this.componentId = uuidv4()
-
-
-    // dynamic section builder
-    this.secondlevel3   = {}
-    let data            = {};
-    data["Base Damage"] = this.itemData.damage
-    if (this.itemData.elemdmgamt > 0) {
-      data[this.getElementDamageName() + " Damage"] = this.itemData.elemdmgamt
-    }
-    if (this.itemData.banedmgrace > 0 && this.itemData.banedmgamt !== 0) {
-      data["Bane Damage (" + this.getBaneDamageName() + ")"] = this.itemData.banedmgamt
-    }
-    if (this.itemData.banedmgbody > 0 && this.itemData.banedmgamt !== 0) {
-      data[this.getBaneDamageBodyName()] = this.itemData.banedmgamt
-    }
-
-    data["Backstab Damage"] = this.itemData.backstabdmg
-    data["Delay"]           = this.itemData.delay
-    if (this.itemData.damage > 0) {
-      data["Ratio"] = Math.round(this.itemData.damage / this.itemData.delay * 100) / 100
-    }
-    // TODO: Damage bonus
-    data["Range"] = this.itemData.range
-
-    // spell loading
-    this.effects.forEach((effect) => {
-      if (this.itemData[effect.field] > 0) {
-        Spells.getSpell(this.itemData[effect.field]).then((spell) => {
-          this.effectData[effect.field] = spell
-          this.$forceUpdate()
-        })
-      }
-    })
-
-    this.secondlevel3 = data
+    this.init()
   },
   props: {
     itemData: {

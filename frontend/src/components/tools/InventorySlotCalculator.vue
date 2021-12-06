@@ -8,22 +8,33 @@
             <img
               @click="selectSlot(slotId)"
               :src="slotUrl + 'old_slot_' + slotId + '.gif'"
-              :style="'width:auto;' + (isSlotSelected(slotId) ? 'border: 2px solid #dadada; border-radius: 7px;' : 'border: 2px solid rgb(218 218 218 / 0%); border-radius: 7px;')"
+              :style="getImageSize() + (isSlotSelected(slotId) ? 'border: 2px solid #dadada; border-radius: 7px;' : 'border: 2px solid rgb(218 218 218 / 0%); border-radius: 7px;')"
               class="mt-1 p-1">
           </div>
         </div>
       </div>
     </div>
     <div class="mt-4 d-inline-block" v-if="displayAllNone">
-      <button class='eq-button mr-3' @click="selectAll()" style="display: inline-block; width: 80px">All</button>
-      <button class='eq-button' @click="selectNone()" style="display: inline-block; width: 80px">None</button>
+      <div
+        :class="'text-center btn-xs eq-button-fancy ' + (parseInt(mask) >= 65535 ? 'eq-button-fancy-highlighted' : '')"
+        @click="selectAll()"
+      >
+        All
+      </div>
+      <div
+        :class="'text-center btn-xs eq-button-fancy ' + (parseInt(mask) === 0 ? 'eq-button-fancy-highlighted' : '')"
+        @click="selectNone()"
+      >
+        None
+      </div>
     </div>
   </div>
 </template>
 
 <script>
 import {PLAYER_INVENTORY_SLOT, PLAYER_INVENTORY_SLOTS} from "@/app/constants/eq-inventory-constants";
-import {App} from "@/constants/app";
+import {App}                                           from "@/constants/app";
+import util                                            from "util";
 
 export default {
   name: "InventorySlotCalculator",
@@ -37,7 +48,7 @@ export default {
   },
   props: {
     mask: {
-      type: String,
+      type: Number,
       required: false
     },
     displayAllNone: {
@@ -49,6 +60,11 @@ export default {
       type: Boolean,
       required: false,
       default: false
+    },
+    imageSize: {
+      type: Number,
+      required: false,
+      default: 50,
     }
   },
   mounted() {
@@ -66,8 +82,12 @@ export default {
     }
   },
   methods: {
+    getImageSize() {
+      return util.format("width: %spx; height %spx;", this.imageSize, this.imageSize)
+    },
+
     isSlotSkipped(slot) {
-      if (!this.skipDuplicateSlots){
+      if (!this.skipDuplicateSlots) {
         return false;
       }
 
