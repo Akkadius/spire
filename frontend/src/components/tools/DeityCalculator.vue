@@ -1,5 +1,5 @@
 <template>
-  <div class="pl-1 row">
+  <div class="pl-1 row" v-if="mask">
     <div class="mr-3 d-inline-block text-center">
       <div v-for="(deity, deityId) in deities" class="mb-1 text-center d-inline-block">
         <div class="text-center pl-0 pr-2 col-lg-12 col-sm-12">
