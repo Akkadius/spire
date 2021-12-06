@@ -1,5 +1,5 @@
 <template>
-  <div class="row" v-if="mask">
+  <div class="row" v-if="mask >= 0">
     <div class="mr-3 d-inline-block text-center">
       <div v-for="(race, index) in races" class="mb-1 text-center d-inline-block">
         <div class="text-center p-0 col-lg-12 col-sm-12">

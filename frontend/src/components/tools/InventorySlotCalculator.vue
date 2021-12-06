@@ -1,5 +1,5 @@
 <template>
-  <div class="row" v-if="mask">
+  <div class="row" v-if="mask >= 0">
     <div class="mr-3 d-inline-block" style="display: inline-block">
       <div v-for="(slot, slotId) in slots" class="mb-1 text-center d-inline-block">
         <div class="text-center p-1 col-lg-12 col-sm-12" v-if="!isSlotSkipped(slotId)">
