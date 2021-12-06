@@ -283,6 +283,12 @@
       </div>
     </div>
 
+    <div v-if="itemData.lore" class="mt-3 mb-3 row">
+      <div class="col-12">
+        <span style="font-weight: bold" class="mr-1">Lore</span> {{itemData.lore}}
+      </div>
+    </div>
+
     <div class="pb-4"></div>
 
     <eq-debug :data="itemData"/>

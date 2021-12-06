@@ -59,8 +59,112 @@
                   <div class="row">
                     <div class="col-8">
 
-                      <h1 class="eq-header">
-                      </h1>
+                      <div class="row">
+
+
+                        <!-- Lore -->
+                        <div class="col-10">
+                          Lore
+                          <b-form-input
+                            :value="item.lore" @change="v => item.lore = v"
+                          />
+                        </div>
+
+                        <!-- Lore Group-->
+                        <div class="col-2">
+                          Lore Group
+                          <b-form-input v-model.number="item.loregroup"/>
+                        </div>
+                      </div>
+
+                      <div class="row">
+
+                        <!-- Item Type -->
+                        <div class="col-3">
+                          Item Type
+                          <select v-model.number="item['itemtype']" class="form-control">
+                            <option
+                              v-for="(description, index) in DB_ITEM_TYPES"
+                              :key="index"
+                              :value="parseInt(index)">
+                              {{ index }}) {{ description }}
+                            </option>
+                          </select>
+                        </div>
+
+                        <!-- Item Class -->
+                        <div class="col-4">
+                          Item Class
+                          <select v-model.number="item['itemclass']" class="form-control">
+                            <option
+                              v-for="(description, index) in DB_ITEM_CLASS"
+                              :key="index"
+                              :value="parseInt(index)">
+                              {{ index }}) {{ description }}
+                            </option>
+                          </select>
+                        </div>
+
+                        <!-- Material -->
+                        <div class="col-3">
+                          Material
+                          <select v-model.number="item['material']" class="form-control">
+                            <option
+                              v-for="(description, index) in DB_ITEM_MATERIAL"
+                              :key="index"
+                              :value="parseInt(index)">
+                              {{ index }}) {{ description }}
+                            </option>
+                          </select>
+                        </div>
+                      </div>
+
+                      <div class="row">
+                        <!-- Is Magic -->
+                        <div class="col-2 text-center">
+                          Is Magic
+                          <eq-checkbox
+                            class="mt-3 mb-2"
+                            v-model.number="item.magic"
+                            @input="item.magic = $event"
+                          />
+                        </div>
+
+                        <!-- No Drop -->
+                        <div class="col-2 text-center">
+                          No Drop
+                          <eq-checkbox
+                            class="mt-3 mb-2"
+                            :true-value="0"
+                            :false-value="1"
+                            v-model.number="item.nodrop"
+                            @input="item.nodrop = $event"
+                          />
+                        </div>
+
+                        <!-- No Rent -->
+                        <div class="col-2 text-center">
+                          No Rent
+                          <eq-checkbox
+                            class="mt-3 mb-2"
+                            :true-value="0"
+                            :false-value="1"
+                            v-model.number="item.norent"
+                            @input="item.norent = $event"
+                          />
+                        </div>
+
+                        <!-- Tradeskills -->
+                        <div class="col-3 text-center">
+                          Tradeskill Item
+                          <eq-checkbox
+                            class="mt-3 mb-2"
+                            v-model.number="item.tradeskills"
+                            @input="item.tradeskills = $event"
+                          />
+                        </div>
+
+                      </div>
 
                     </div>
 
@@ -114,8 +218,6 @@
                       :mask="item.slots"
                     />
                   </div>
-
-
                 </eq-tab>
 
                 <eq-tab
@@ -383,15 +485,15 @@
 </template>
 
 <script>
-import EqWindowFancy          from "../../components/eq-ui/EQWindowFancy";
-import EqWindow               from "../../components/eq-ui/EQWindow";
-import EqTabs                 from "../../components/eq-ui/EQTabs";
-import EqTab                  from "../../components/eq-ui/EQTab";
-import EqItemPreview          from "../../components/eq-ui/EQItemCardPreview";
-import {App}                  from "../../constants/app";
-import EqCheckbox             from "../../components/eq-ui/EQCheckbox";
-import {SpireApiClient}       from "../../app/api/spire-api-client";
-import * as util              from "util";
+import EqWindowFancy           from "../../components/eq-ui/EQWindowFancy";
+import EqWindow                from "../../components/eq-ui/EQWindow";
+import EqTabs                  from "../../components/eq-ui/EQTabs";
+import EqTab                   from "../../components/eq-ui/EQTab";
+import EqItemPreview           from "../../components/eq-ui/EQItemCardPreview";
+import {App}                   from "../../constants/app";
+import EqCheckbox              from "../../components/eq-ui/EQCheckbox";
+import {SpireApiClient}        from "../../app/api/spire-api-client";
+import * as util               from "util";
 import FreeIdSelector          from "../../components/tools/FreeIdSelector";
 import {Items}                 from "../../app/items";
 import {ItemApi}               from "../../app/api";
@@ -400,9 +502,14 @@ import ItemModelSelector       from "../../components/tools/ItemModelSelector";
 import ItemIconSelector        from "../../components/tools/ItemIconSelector";
 import ClassBitmaskCalculator  from "../../components/tools/ClassBitmaskCalculator";
 import RaceBitmaskCalculator   from "../../components/tools/RaceBitmaskCalculator";
-import DeityBitmaskCalculator  from "../../components/tools/DeityCalculator";
-import {DB_ITEM_AUG_RESTRICT}  from "../../app/constants/eq-item-constants";
-import {AUG_TYPES}             from "../../app/constants/eq-aug-constants";
+import DeityBitmaskCalculator                               from "../../components/tools/DeityCalculator";
+import {
+  DB_ITEM_AUG_RESTRICT,
+  DB_ITEM_CLASS,
+  DB_ITEM_MATERIAL,
+  DB_ITEM_TYPES
+} from "../../app/constants/eq-item-constants";
+import {AUG_TYPES}                                          from "../../app/constants/eq-aug-constants";
 import InventorySlotCalculator from "../../components/tools/InventorySlotCalculator";
 
 const MILLISECONDS_BEFORE_WINDOW_RESET = 3000;
@@ -441,7 +548,10 @@ export default {
       notification: "",
       error: "",
 
+      DB_ITEM_MATERIAL: DB_ITEM_MATERIAL,
       DB_ITEM_AUG_RESTRICT: DB_ITEM_AUG_RESTRICT,
+      DB_ITEM_CLASS: DB_ITEM_CLASS,
+      DB_ITEM_TYPES: DB_ITEM_TYPES,
       AUG_TYPES: AUG_TYPES,
 
       stats: {

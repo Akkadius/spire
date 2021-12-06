@@ -5,8 +5,8 @@
       :id="id"
       class='eq-checkbox'
       v-model="inputVal"
-      v-bind:true-value="1"
-      v-bind:false-value="0"
+      v-bind:true-value="trueValue"
+      v-bind:false-value="falseValue"
       :checked="(inputVal > 0)"
       :disabled="disabled === 1">
     <label :for="id"></label>
@@ -41,6 +41,16 @@ export default {
       default: 0
     },
     value: {
+      type: Number,
+      required: false,
+      default: 0,
+    },
+    trueValue: {
+      type: Number,
+      required: false,
+      default: 1,
+    },
+    falseValue: {
       type: Number,
       required: false,
       default: 0,

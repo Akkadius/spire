@@ -85,6 +85,39 @@ export const DB_ITEM_TYPES = {
   "54": "Augmentation"
 }
 
+export const DB_ITEM_CLASS = {
+  0: "Common Item",
+  1: "Container",
+  2: "Book",
+}
+
+export const DB_ITEM_MATERIAL = {
+  0: "Cloth",
+  1: "Leather",
+  2: "Chain",
+  3: "Plate",
+  4: "Monk",
+  5: "Unknown",
+  6: "Unknown",
+  7: "Kunark",
+  8: "Unknown",
+  10: "Red Robe",
+  11: "Black Robe",
+  12: "Blue Robe",
+  13: "Yellow Robe",
+  14: "Green Robe",
+  15: "Purple Robe",
+  16: "White Robe",
+  17: "Velious",
+  18: "Velious",
+  19: "Velious",
+  20: "Velious",
+  21: "Velious",
+  22: "Velious",
+  23: "Cloth",
+  24: "Unknown",
+}
+
 export const DB_ITEM_AUG_RESTRICT = {
   "0": "None",
   "1": "Armor Only",
