@@ -61,7 +61,6 @@
 
                       <div class="row">
 
-
                         <!-- Lore -->
                         <div class="col-10">
                           Lore
@@ -185,14 +184,14 @@
                   <div class="mt-3 mb-3">
                     <class-bitmask-calculator
                       class="text-center mt-3"
-                      :imageSize="43"
+                      :imageSize="40"
                       :centered-buttons="true"
                       @input="item.classes = parseInt($event)"
                       :mask="item.classes"
                     />
 
                     <race-bitmask-calculator
-                      :imageSize="40"
+                      :imageSize="37"
                       class="mt-3"
                       :centered-buttons="true"
                       @input="item.races = parseInt($event)"
@@ -201,7 +200,7 @@
 
                     <deity-bitmask-calculator
                       class="mt-3"
-                      :imageSize="37"
+                      :imageSize="33"
                       :show-names="true"
                       :centered-buttons="true"
                       @input="item.deity = parseInt($event)"
@@ -224,7 +223,7 @@
 
                   <div class="row">
                     <div class="col-6">
-                      <h6 class="eq-header text-center mb-3 mt-3">Damage / Delay / Haste</h6>
+                      <h6 class="eq-header text-center mb-3">Damage / Delay / Haste</h6>
 
                       <div class="row"
                            :key="field.field"
@@ -302,7 +301,7 @@
                       </div>
                     </div>
                     <div class="col-6">
-                      <h6 class="eq-header text-center mb-3 mt-3">Bane</h6>
+                      <h6 class="eq-header text-center mb-3">Bane</h6>
 
                       <div class="row"
                            :key="field.field"
@@ -355,6 +354,81 @@
                           <b-form-input v-model.number="item[field.field]"/>
                         </div>
                       </div>
+                    </div>
+                  </div>
+                </eq-tab>
+
+                <eq-tab
+                  name="Stats"
+                >
+
+                  <div class="row">
+                    <!-- Stats -->
+                    <div class="col-6 text-center">
+
+                      <h6 class="eq-header">
+                        Stats
+                      </h6>
+                      <div
+                        v-for="(stat, description) in stats"
+                        :key="stat.stat"
+                        class="row text-center"
+                      >
+                        <div class="col-2 text-right">
+                          {{ description }}
+                        </div>
+                        <div class="col-4">
+                          <b-form-input v-model.number="item[stat.stat]"/>
+                        </div>
+                        <div class="col-2 text-right">
+                          Heroic
+                        </div>
+                        <div class="col-4">
+                          <b-form-input v-model.number="item[stat.heroic]"/>
+                        </div>
+                      </div>
+                    </div>
+
+                    <!-- Resists -->
+                    <div class="col-6 text-center">
+                      <h6 class="eq-header">
+                        Resists
+                      </h6>
+                      <div
+                        v-for="(resist, description) in resists"
+                        :key="resist.stat"
+                        class="row text-center"
+                      >
+                        <div class="col-2 text-right">
+                          {{ description }}
+                        </div>
+                        <div class="col-4">
+                          <b-form-input v-model.number="item[resist.stat]"/>
+                        </div>
+                        <div class="col-2 text-right">
+                          Heroic
+                        </div>
+                        <div class="col-4">
+                          <b-form-input v-model.number="item[resist.heroic]"/>
+                        </div>
+                      </div>
+                    </div>
+
+                  </div>
+                </eq-tab>
+
+                <eq-tab name="Mods">
+                  <div v-for="(field, description) in mod3" :key="field" class="row text-center">
+                    <div class="col-1">
+
+                    </div>
+                    <div class="col-4 text-right">
+                      {{ description }}
+                    </div>
+                    <div class="col-2">
+                      <b-form-input v-model.number="item[field]" v-if="field !== 'combateffects'"/>
+                      <!-- For some reason combateffects is a varchar field -->
+                      <b-form-input v-model="item[field]" v-if="field === 'combateffects'"/>
                     </div>
                   </div>
                 </eq-tab>
@@ -436,82 +510,6 @@
                           {{ index }}) {{ value.name }}
                         </option>
                       </select>
-                    </div>
-                  </div>
-                </eq-tab>
-
-                <eq-tab
-                  name="Resists & Stats"
-                >
-
-                  <div class="row">
-
-                    <!-- Resists -->
-                    <div class="col-6 text-center">
-                      <h6 class="eq-header">
-                        Resists
-                      </h6>
-                      <div
-                        v-for="(resist, description) in resists"
-                        :key="resist.stat"
-                        class="row text-center"
-                      >
-                        <div class="col-2 text-right">
-                          {{ description }}
-                        </div>
-                        <div class="col-4">
-                          <b-form-input v-model.number="item[resist.stat]"/>
-                        </div>
-                        <div class="col-2 text-right">
-                          Heroic
-                        </div>
-                        <div class="col-4">
-                          <b-form-input v-model.number="item[resist.heroic]"/>
-                        </div>
-                      </div>
-                    </div>
-
-                    <!-- Stats -->
-                    <div class="col-6 text-center">
-
-                      <h6 class="eq-header">
-                        Stats
-                      </h6>
-                      <div
-                        v-for="(stat, description) in stats"
-                        :key="stat.stat"
-                        class="row text-center"
-                      >
-                        <div class="col-2 text-right">
-                          {{ description }}
-                        </div>
-                        <div class="col-4">
-                          <b-form-input v-model.number="item[stat.stat]"/>
-                        </div>
-                        <div class="col-2 text-right">
-                          Heroic
-                        </div>
-                        <div class="col-4">
-                          <b-form-input v-model.number="item[stat.heroic]"/>
-                        </div>
-                      </div>
-                    </div>
-
-                  </div>
-                </eq-tab>
-
-                <eq-tab name="Mods">
-                  <div v-for="(field, description) in mod3" :key="field" class="row text-center">
-                    <div class="col-1">
-
-                    </div>
-                    <div class="col-4 text-right">
-                      {{ description }}
-                    </div>
-                    <div class="col-2">
-                      <b-form-input v-model.number="item[field]" v-if="field !== 'combateffects'"/>
-                      <!-- For some reason combateffects is a varchar field -->
-                      <b-form-input v-model="item[field]" v-if="field === 'combateffects'"/>
                     </div>
                   </div>
                 </eq-tab>
