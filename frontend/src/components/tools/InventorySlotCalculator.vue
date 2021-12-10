@@ -68,6 +68,11 @@ export default {
       required: false,
       default: false
     },
+    centeredButtons: {
+      type: Boolean,
+      required: false,
+      default: true
+    },
     imageSize: {
       type: Number,
       required: false,

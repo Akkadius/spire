@@ -6,7 +6,7 @@
     >
       <div v-for="(deity, deityId) in deities" class="mb-1 text-center d-inline-block">
         <div class="text-center pl-0 pr-1 col-lg-12 col-sm-12">
-          <small :style="(deity.short.length > 8 ? 'font-size: 9px' : 'font-size: 12px')" v-if="showNames">{{ deity.short }}</small>
+          <small :style="(deity.short.length > 8 ? 'font-size: 9px' : 'font-size: 10px')" v-if="showNames">{{ deity.short }}</small>
           <div class="text-center">
             <img
               @click="selectDeity(deityId)"
