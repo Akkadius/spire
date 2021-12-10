@@ -523,14 +523,19 @@ export class Spells {
           break;
 
         case 89:
-          if (base < 100) {
-            value_max = (100 - value_max) * -1;
-            value_min = (100 - value_min) * -1;
-          } else {
-            value_max = value_max - 100;
-            value_min = value_min - 100;
+          if (base !== 0 && base !== 100) {
+            if (base < 100) {
+              value_max = (100 - value_max) * -1;
+              value_min = (100 - value_min) * -1;
+            } else {
+              value_max = value_max - 100;
+              value_min = value_min - 100;
+            }
+            printBuffer += this.getFormatStandard("Player Size", "%", value_min, value_max, minlvl, maxlvl);
           }
-          printBuffer += this.getFormatStandard("Player Size", "%", value_min, value_max, minlvl, maxlvl);
+          else if (limit){
+            printBuffer += "Set Player Size: " + limit
+          }
           break;
 
         case 90: // pet invisible - This is not implemented on eqemu
