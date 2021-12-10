@@ -273,6 +273,8 @@ export class Spells {
                     <eq-item-card-preview :item-data="itemData[${item.id}]"/>
                   </eq-window>
                 </b-popover>`
+
+            printBuffer += (max > 1 ? " (Stacks: " + max + ")" : "")
           }
           break;
 
@@ -373,7 +375,7 @@ export class Spells {
           break;
 
         case 57:
-          printBuffer += "Levitate"
+          printBuffer += "Levitate" + (limit > 0 ? " While Moving" : "") +  (base > 1 ? " (Stack Type: " + base + ")" : "")
           break;
 
         case 58: // Illusion:
