@@ -483,16 +483,19 @@ export class Spells {
           printBuffer += "Summon Player"
           break;
 
-        case 83: //TODO teleport zone enum
+        case 83: //TODO teleport zone long enum ?
           printBuffer += "Teleport to " + spell["teleport_zone"]
-          printBuffer += " ( x: " + spell["effect_base_value_" + effectIndex] + ", y: " + spell["effect_base_value_" + (effectIndex + 1)] + ", z: " + spell["effect_base_value_" + (effectIndex + 2)] + ", h: " + spell["effect_base_value_" + (effectIndex + 3)] + " )"
+          printBuffer += " (" + spell["effect_base_value_" + (effectIndex + 1)]
+                       + ", " + spell["effect_base_value_" + effectIndex] + ", "
+                       + spell["effect_base_value_" + (effectIndex + 2)] + ", "
+                       + spell["effect_base_value_" + (effectIndex + 3)] + ")"
           break;
 
         case 84: // base on emu does damage. Correct?
           printBuffer += "Gravity Flux"
           break;
 
-        case 85: //TODO Spell proc LINK
+        case 85:
           printBuffer += "Add Melee Proc " + (await this.renderSpellMini(spell.id, base)) + (limit ? " with " + limit + " % Rate Mod" : "")
           break;
 
@@ -504,14 +507,19 @@ export class Spells {
           printBuffer += this.getFormatStandard("Magnification", "%", value_min, value_max, minlvl, maxlvl);
           break;
 
-        case 88: //TODO clean up, enum for zones
+        case 88: //TODO teleport zone long enum ?
           if (spell["teleport_zone"] !== "same") {
             tmp += " (" + spell["effect_base_value_" + (effectIndex + 1)]
                    + ", " + spell["effect_base_value_" + effectIndex] + ", "
                    + spell["effect_base_value_" + (effectIndex + 2)] + ", "
                    + spell["effect_base_value_" + (effectIndex + 3)] + ")"
+
+            printBuffer += "Evacuate to " + spell["teleport_zone"] + tmp
           }
-          printBuffer += "Evacuate to " + spell["teleport_zone"] + tmp
+          else{
+            printBuffer += "Evacuate to safe point in zone"
+          }
+
           break;
 
         case 89:
