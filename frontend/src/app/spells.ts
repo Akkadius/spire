@@ -419,7 +419,7 @@ export class Spells {
           break;
 
         case 67:
-          printBuffer += "Eye of Zomm"
+          printBuffer += "Eye of Zomm: "  + spell["teleport_zone"]
           break;
 
         case 68:
@@ -485,6 +485,7 @@ export class Spells {
 
         case 83: //TODO teleport zone enum
           printBuffer += "Teleport to " + spell["teleport_zone"]
+          printBuffer += " ( x: " + spell["effect_base_value_" + effectIndex] + ", y: " + spell["effect_base_value_" + (effectIndex + 1)] + ", z: " + spell["effect_base_value_" + (effectIndex + 2)] + ", h: " + spell["effect_base_value_" + (effectIndex + 3)] + " )"
           break;
 
         case 84: // base on emu does damage. Correct?
