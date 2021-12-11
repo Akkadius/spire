@@ -816,7 +816,17 @@ export class Spells {
           break;
 
         case 145:
-          printBuffer += "Teleport to " + spell["teleport_zone"]
+          if (spell["teleport_zone"] !== "same") {
+            tmp += " (" + spell["effect_base_value_" + (effectIndex + 1)]
+              + ", " + spell["effect_base_value_" + effectIndex] + ", "
+              + spell["effect_base_value_" + (effectIndex + 2)] + ", "
+              + spell["effect_base_value_" + (effectIndex + 3)] + ")"
+
+            printBuffer += "Teleport to " + spell["teleport_zone"] + tmp
+          }
+          else{
+            printBuffer += "Teleport to to safe point in zone"
+          }
           break;
 
         case 146: //todo data location for port xyz for 45 , Set position to
@@ -853,7 +863,7 @@ export class Spells {
           printBuffer += "Balance Group HP with " + base + "% Penalty (Max HP taken: " + limit + ")"
           break;
 
-        case 154: //TODO need to update emulator code to use percent based (+0.5% per level difference) and confirm duration change mechanic
+        case 154: //TODO need to confirm the duration mechanic.
           if (limit !== 0) {
             printBuffer += "Decrease Detrimental Duration by 50% " + (base / 10) + "% Chance)" + this.getUpToMaxLvl(max)
           } else {
@@ -880,7 +890,7 @@ export class Spells {
           break;
 
         case 159:
-          printBuffer += this.getFormatStandard("Base Stats", "%", value_min, value_max, minlvl, maxlvl)
+          printBuffer += this.getFormatStandard("All Base Stats", "%", value_min, value_max, minlvl, maxlvl)
           break;
 
         case 160:
@@ -966,7 +976,7 @@ export class Spells {
           break;
 
         case 179:
-          printBuffer += "Instrument Modifier: " + DB_SKILLS[spell["skill"]] + " " + value_max
+          printBuffer += "All Instrument Modifier: " + DB_SKILLS[spell["skill"]] + " " + value_max
           break;
 
         case 180:
