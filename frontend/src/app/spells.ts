@@ -1008,7 +1008,7 @@ export class Spells {
           break;
 
         case 187:
-          printBuffer += "Balance Group Mana with " + base + "% Penalty (Max HP taken: " + limit + ")"
+          printBuffer += "Balance Group Mana with " + base + "% Penalty (Max Mana taken: " + limit + ")"
           break;
 
         case 188:
