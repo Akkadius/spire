@@ -617,7 +617,7 @@ export class Spells {
           break;
 
         case 105:
-          printBuffer += "Inhibit Gate";
+          printBuffer += "Inhibit Gate (" + base + ")"
           break;
 
         case 106:
