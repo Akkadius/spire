@@ -1024,7 +1024,7 @@ export class Spells {
           break;
 
         case 191:
-          printBuffer += "Inhibit Combat"
+          printBuffer += "Inhibit Combat Abilities"
           break;
 
         case 192:
@@ -1044,7 +1044,7 @@ export class Spells {
           break;
 
         case 196:
-          printBuffer += this.getFormatStandard("Srikethrough", "%", value_min, value_max, minlvl, maxlvl)
+          printBuffer += this.getFormatStandard("Strikethrough", "%", value_min, value_max, minlvl, maxlvl)
           break;
 
         case 197:
