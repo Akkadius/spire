@@ -339,13 +339,19 @@
                             {{ description }}
                           </div>
                           <div class="col-3 p-0 m-0">
-                            <b-form-input v-model.number="item[stat.stat]" :style="(item[stat.stat] === 0 ? 'opacity: .5' : '')"/>
+                            <b-form-input
+                              v-model.number="item[stat.stat]"
+                              :style="(item[stat.stat] === 0 ? 'opacity: .5' : '')"
+                            />
                           </div>
                           <div class="col-1 p-0 m-0 mt-2">
                             +
                           </div>
                           <div class="col-3 p-0 m-0">
-                            <b-form-input v-model.number="item[stat.heroic]" :style="(item[stat.heroic] === 0 ? 'opacity: .5' : '')"/>
+                            <b-form-input
+                              v-model.number="item[stat.heroic]"
+                              :style="(item[stat.heroic] === 0 ? 'opacity: .5' : '')"
+                            />
                           </div>
                         </div>
 
@@ -444,6 +450,94 @@
                   </div>
 
 
+                </eq-tab>
+
+                <eq-tab name="Effects">
+                  <div>
+                    <b-input-group style="height: 30px; margin-bottom: 15px">
+                      <template #prepend>
+                        <b-input-group-text class="m-0" style="width: 100px; height: 38px">Effect Type
+                        </b-input-group-text>
+                      </template>
+
+                      <!--                      <b-input-group-text class="m-0" placeholder="Spell" disabled style="width: 200px">Spell</b-input-group-text>-->
+                      <b-form-input class="m-0" placeholder="Spell ID" disabled style="width: 100px"/>
+                      <b-form-input class="m-0" placeholder="As Level" disabled/>
+                      <b-form-input class="m-0" placeholder="Required Level" disabled/>
+                    </b-input-group>
+
+                    <b-input-group
+                      :key="field.field"
+                      v-for="field in
+                       [
+                         {
+                           effectType: 'Scroll',
+                           effectField: 'scrolleffect',
+                           asLevelField: 'scrolllevel',
+                           reqLevelField: 'scrolllevel_2',
+                         },
+                         {
+                           effectType: 'Click',
+                           effectField: 'clickeffect',
+                           asLevelField: 'clicklevel',
+                           reqLevelField: 'clicklevel_2',
+                         },
+                         {
+                           effectType: 'Proc',
+                           effectField: 'proceffect',
+                           asLevelField: 'proclevel',
+                           reqLevelField: 'proclevel_2',
+                         },
+                         {
+                           effectType: 'Focus',
+                           effectField: 'focuseffect',
+                           asLevelField: 'focuslevel',
+                           reqLevelField: 'focuslevel_2',
+                         },
+                         {
+                           effectType: 'Worn',
+                           effectField: 'worneffect',
+                           asLevelField: 'wornlevel',
+                           reqLevelField: 'wornlevel_2',
+                         },
+                         {
+                           effectType: 'Bard',
+                           effectField: 'bardeffect',
+                           asLevelField: 'bardlevel',
+                           reqLevelField: 'bardlevel_2',
+                         },
+                       ]"
+                    >
+
+                      <template #prepend>
+                        <b-input-group-text style="width: 100px; height: 38px">{{ field.effectType }}
+                        </b-input-group-text>
+                      </template>
+
+                      <!--                      <b-input-group-text style="width: 200px; height: 38px">Spell</b-input-group-text>-->
+                      <b-form-input
+                        class="m-0"
+                        placeholder="Spell ID"
+                        style="width: 100px"
+                        v-model.number="item[field.effectField]"
+                      />
+                      <b-form-input
+                        class="m-0"
+                        placeholder="As Level"
+                        @change="syncEffects(field.asLevelField, field.reqLevelField)"
+                        v-model.number="item[field.asLevelField]"
+                      />
+                      <b-form-input
+                        class="m-0"
+                        placeholder="Required Level"
+                        @change="syncEffects(field.reqLevelField, field.asLevelField)"
+                        v-model.number="item[field.reqLevelField]"
+                      />
+
+                    </b-input-group>
+
+
+                  </div>
                 </eq-tab>
 
                 <eq-tab
@@ -766,6 +860,13 @@ export default {
     this.load()
   },
   methods: {
+
+    // prefills required and as level if the other value is 0 to save extra effort
+    syncEffects(source, destination) {
+      if (this.item[destination] === 0) {
+        this.item[destination] = this.item[source]
+      }
+    },
 
     setFieldModified(evt) {
       // border: 2px #555555 solid !important;
