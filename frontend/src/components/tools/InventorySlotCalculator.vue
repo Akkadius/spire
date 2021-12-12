@@ -34,7 +34,7 @@
       <!-- Select All / None -->
       <div class="d-inline-block" v-if="displayAllNone">
         <div
-          :class="'text-center mt-4 btn-xs eq-button-fancy ' + (parseInt(mask) >= 65535 ? 'eq-button-fancy-highlighted' : '')"
+          :class="'text-center mt-4 btn-xs eq-button-fancy ' + (parseInt(mask) >= 8388607 ? 'eq-button-fancy-highlighted' : '')"
           @click="selectAll()"
         >
           All
