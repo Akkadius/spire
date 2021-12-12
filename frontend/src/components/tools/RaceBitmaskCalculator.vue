@@ -1,18 +1,18 @@
 <template>
   <div class="row" v-if="mask >= 0">
     <div
-      class="mr-3 d-inline-block text-center"
+      class="ml-1 mr-3 d-inline-block text-center"
       :style="(centeredButtons ? 'width: 100%' : '')"
     >
       <div v-for="(race, index) in races" class="mb-1 text-center d-inline-block">
         <div class="text-center p-0 mr-1 col-lg-12 col-sm-12">
-          {{ race.short }}
+          <span v-if="showTextTop">{{ race.short }}</span>
           <div class="text-center">
             <img
               :title="race.race"
               @click="selectRace(index)"
               :src="itemCdnUrl + 'item_' + race.icon + '.png'"
-              :style="getImageSize() + (isRaceSelected(index) ? 'border: 2px solid #dadada; border-radius: 7px;' : 'border-radius: 7px;')"
+              :style="getImageSize() + (isRaceSelected(index) ? 'border-radius: 7px; box-shadow: 0px 0px 1px 1px white;' : 'border-radius: 7px; opacity: .5')"
               class="mt-1 hover-highlight">
           </div>
         </div>
@@ -59,6 +59,11 @@ export default {
       default: true
     },
     centeredButtons: {
+      type: Boolean,
+      required: false,
+      default: true
+    },
+    showTextTop: {
       type: Boolean,
       required: false,
       default: true

@@ -13,6 +13,7 @@
           v-if="!isSlotSkipped(slotId)"
         >
           <span
+            v-if="showTextTop"
             class="d-inline-block"
             :style="'font-size: 12px; white-space: nowrap; overflow: hidden;text-overflow: ellipsis; max-width: ' + (imageSize) + 'px;'">
             {{ slot.name }}
@@ -24,7 +25,7 @@
               @click="selectSlot(slotId)"
               :src="slotUrl + 'old_slot_' + slotId + '.gif'"
               class="hover-highlight"
-              :style="getImageSize() + (isSlotSelected(slotId) ? 'border: 2px solid #dadada; border-radius: 7px;' : 'border-radius: 7px;')"
+              :style="getImageSize() + (isSlotSelected(slotId) ? 'border: 2px solid #dadada; border-radius: 7px;' : 'border-radius: 7px; ')"
             >
           </div>
         </div>
@@ -80,6 +81,11 @@ export default {
       type: Boolean,
       required: false,
       default: false
+    },
+    showTextTop: {
+      type: Boolean,
+      required: false,
+      default: true
     },
     centeredButtons: {
       type: Boolean,

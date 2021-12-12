@@ -51,13 +51,14 @@
                     >
                       <span
                         :class="'fade-in item-' + item.icon"
-                        style="border: 1px solid rgb(218 218 218 / 30%); border-radius: 7px;"/>
+                        style="border: 1px solid rgb(218 218 218 / 30%); border-radius: 7px;"
+                      />
                     </div>
 
                   </div>
 
                   <div class="row">
-                    <div class="col-8">
+                    <div class="col-12">
 
                       <div class="row">
 
@@ -85,7 +86,8 @@
                             <option
                               v-for="(description, index) in DB_ITEM_TYPES"
                               :key="index"
-                              :value="parseInt(index)">
+                              :value="parseInt(index)"
+                            >
                               {{ index }}) {{ description }}
                             </option>
                           </select>
@@ -98,7 +100,8 @@
                             <option
                               v-for="(description, index) in DB_ITEM_CLASS"
                               :key="index"
-                              :value="parseInt(index)">
+                              :value="parseInt(index)"
+                            >
                               {{ index }}) {{ description }}
                             </option>
                           </select>
@@ -111,111 +114,185 @@
                             <option
                               v-for="(description, index) in DB_ITEM_MATERIAL"
                               :key="index"
-                              :value="parseInt(index)">
+                              :value="parseInt(index)"
+                            >
                               {{ index }}) {{ description }}
                             </option>
                           </select>
                         </div>
+
+                        <!-- Stack Size -->
+                        <div class="col-2">
+                          Stack Size
+                          <b-form-input v-model.number="item.stacksize"/>
+                        </div>
                       </div>
 
-                      <div class="row">
-                        <!-- Is Magic -->
-                        <div class="col-2 text-center">
-                          Is Magic
-                          <eq-checkbox
-                            class="mt-3 mb-2"
-                            v-model.number="item.magic"
-                            @input="item.magic = $event"
-                          />
-                        </div>
-
-                        <!-- No Drop -->
-                        <div class="col-2 text-center">
-                          No Drop
-                          <eq-checkbox
-                            class="mt-3 mb-2"
-                            :true-value="0"
-                            :false-value="1"
-                            v-model.number="item.nodrop"
-                            @input="item.nodrop = $event"
-                          />
-                        </div>
-
-                        <!-- No Rent -->
-                        <div class="col-2 text-center">
-                          No Rent
-                          <eq-checkbox
-                            class="mt-3 mb-2"
-                            :true-value="0"
-                            :false-value="1"
-                            v-model.number="item.norent"
-                            @input="item.norent = $event"
-                          />
-                        </div>
-
-                        <!-- Tradeskills -->
-                        <div class="col-3 text-center">
-                          Tradeskill Item
-                          <eq-checkbox
-                            class="mt-3 mb-2"
-                            v-model.number="item.tradeskills"
-                            @input="item.tradeskills = $event"
-                          />
-                        </div>
-
-                      </div>
 
                     </div>
 
-                    <!-- Model Preview -->
-                    <div
-                      class="col-4"
-                      style="text-align: center"
-                      @mouseover="drawItemModelSelector"
-                    >
 
-                      <item-model-preview :id="item.idfile"/>
+                  </div>
 
-                      Item Model
-                      <b-form-input v-model.number="item.idfile"/>
+                  <div class="mt-3 mb-3">
+                    <div class="row">
+                      <div class="col-2 text-center">
+
+                        <div
+                          class="row" v-for="field in
+                       [
+                         {
+                           description: 'Is Magic',
+                           field: 'magic'
+                         },
+                         {
+                           description: 'No Drop',
+                           field: 'nodrop',
+                           true: 0,
+                           false: 1,
+                         },
+                         {
+                           description: 'No Rent',
+                           field: 'norent',
+                           true: 0,
+                           false: 1,
+                         },
+                         {
+                           description: 'Tradeskill Item',
+                           field: 'tradeskills'
+                         },
+                         {
+                           description: 'Book',
+                           field: 'book'
+                         },
+                         {
+                           description: 'No Transfer',
+                           field: 'notransfer'
+                         },
+                         {
+                           description: 'Summoned',
+                           field: 'summonedflag'
+                         },
+                         {
+                           description: 'Quest',
+                           field: 'questitemflag'
+                         },
+                         {
+                           description: 'Artifact',
+                           field: 'artifactflag'
+                         },
+                         {
+                           description: 'No Pet',
+                           field: 'nopet'
+                         },
+                         {
+                           description: 'Attuneable',
+                           field: 'attuneable'
+                         },
+                         {
+                           description: 'Stackable',
+                           field: 'stackable'
+                         },
+                         {
+                           description: 'Potion Belt',
+                           field: 'potionbelt'
+                         },
+                       ]"
+                        >
+                          <div class="col-9 text-right p-0 pr-2">
+                            {{ field.description }}
+                          </div>
+                          <div class="col-3 text-left p-0">
+                            <eq-checkbox
+                              class="mb-2 d-inline-block"
+                              :true-value="(typeof field.true !== 'undefined' ? field.true : 1)"
+                              :false-value="(typeof field.false !== 'undefined' ? field.false : 0)"
+                              v-model.number="item[field.field]"
+                              @input="item[field.field] = $event"
+                            />
+                          </div>
+                        </div>
+
+                      </div>
+
+                      <div class="col-2">
+                        <h4 class="eq-header text-center">
+                          Class
+                        </h4>
+                        <class-bitmask-calculator
+                          class="text-center mt-3"
+                          :show-text-top="false"
+                          :show-text-side="true"
+                          :imageSize="40"
+                          :centered-buttons="true"
+                          @input="item.classes = parseInt($event)"
+                          :mask="item.classes"
+                        />
+                      </div>
+                      <div class="col-2">
+                        <h4 class="eq-header text-center">
+                          Race
+                        </h4>
+                        <race-bitmask-calculator
+                          :imageSize="40"
+                          class="mt-3"
+                          :show-text-top="false"
+                          :centered-buttons="true"
+                          @input="item.races = parseInt($event)"
+                          :mask="item.races"
+                        />
+                      </div>
+                      <div class="col-2">
+                        <h4 class="eq-header text-center">
+                          Deity
+                        </h4>
+                        <deity-bitmask-calculator
+                          class="mt-3"
+                          :imageSize="40"
+                          :show-names="false"
+                          :centered-buttons="true"
+                          @input="item.deity = parseInt($event)"
+                          :mask="item.deity"
+                        />
+                      </div>
+
+                      <!-- Slots -->
+                      <div class="col-2">
+                        <h4 class="eq-header text-center">
+                          Slots
+                        </h4>
+                        <inventory-slot-calculator
+                          class="mt-1"
+                          :imageSize="40"
+                          :show-text-top="false"
+                          :centered-buttons="false"
+                          @input="item.slots = parseInt($event)"
+                          :mask="item.slots"
+                        />
+                      </div>
+
+                      <!-- Model Preview -->
+                      <div
+                        class="col-2"
+                        style="text-align: center"
+                      >
+                        <h4 class="eq-header text-center">
+                          Model
+                        </h4>
+
+                        <div @mouseover="drawItemModelSelector">
+                          <item-model-preview
+                            :id="item.idfile"
+                          />
+
+                          Item Model
+                          <b-form-input
+                            v-model.number="item.idfile"
+                          />
+                        </div>
+                      </div>
+
                     </div>
-                  </div>
-
-                  <div class="mt-3 mb-3">
-                    <class-bitmask-calculator
-                      class="text-center mt-3"
-                      :imageSize="40"
-                      :centered-buttons="true"
-                      @input="item.classes = parseInt($event)"
-                      :mask="item.classes"
-                    />
-
-                    <race-bitmask-calculator
-                      :imageSize="37"
-                      class="mt-3"
-                      :centered-buttons="true"
-                      @input="item.races = parseInt($event)"
-                      :mask="item.races"
-                    />
-
-                    <deity-bitmask-calculator
-                      class="mt-3"
-                      :imageSize="33"
-                      :show-names="true"
-                      :centered-buttons="true"
-                      @input="item.deity = parseInt($event)"
-                      :mask="item.deity"
-                    />
-                  </div>
-
-                  <div class="mt-3 mb-3">
-                    <inventory-slot-calculator
-                      class="mt-1"
-                      :imageSize="45"
-                      :centered-buttons="false"
-                      @input="item.slots = parseInt($event)"
-                      :mask="item.slots"
-                    />
                   </div>
                 </eq-tab>
 
@@ -225,9 +302,10 @@
                     <div class="col-6">
                       <h6 class="eq-header text-center mb-3">Damage / Delay / Haste</h6>
 
-                      <div class="row"
-                           :key="field.field"
-                           v-for="field in
+                      <div
+                        class="row"
+                        :key="field.field"
+                        v-for="field in
                        [
                          {
                            description: 'Damage',
@@ -241,7 +319,8 @@
                            description: 'Haste',
                            field: 'haste'
                          },
-                       ]">
+                       ]"
+                      >
                         <div class="col-5 text-right">
                           {{ field.description }}
                         </div>
@@ -252,9 +331,10 @@
 
                       <h6 class="eq-header text-center mb-3 mt-3">Extra Damage</h6>
 
-                      <div class="row"
-                           :key="field.field"
-                           v-for="field in
+                      <div
+                        class="row"
+                        :key="field.field"
+                        v-for="field in
                        [
                          {
                            description: 'Extra Damage Skill',
@@ -264,7 +344,8 @@
                            description: 'Extra Damage Amount',
                            field: 'extradmgamt'
                          },
-                       ]">
+                       ]"
+                      >
                         <div class="col-5 text-right">
                           {{ field.description }}
                         </div>
@@ -275,9 +356,10 @@
 
                       <h6 class="eq-header text-center mb-3 mt-3">Weapon</h6>
 
-                      <div class="row"
-                           :key="field.field"
-                           v-for="field in
+                      <div
+                        class="row"
+                        :key="field.field"
+                        v-for="field in
                        [
                          {
                            description: 'Backstab Damage',
@@ -291,7 +373,8 @@
                            description: 'Spell Damage',
                            field: 'spelldmg'
                          },
-                       ]">
+                       ]"
+                      >
                         <div class="col-5 text-right">
                           {{ field.description }}
                         </div>
@@ -303,9 +386,10 @@
                     <div class="col-6">
                       <h6 class="eq-header text-center mb-3">Bane</h6>
 
-                      <div class="row"
-                           :key="field.field"
-                           v-for="field in
+                      <div
+                        class="row"
+                        :key="field.field"
+                        v-for="field in
                        [
                          {
                            description: 'Bane Damage Amount',
@@ -323,7 +407,8 @@
                            description: 'Bane Damage Race Amount',
                            field: 'banedmgraceamt'
                          },
-                       ]">
+                       ]"
+                      >
                         <div class="col-5 text-right">
                           {{ field.description }}
                         </div>
@@ -334,9 +419,10 @@
 
                       <h6 class="eq-header text-center mb-3 mt-3">Elemental</h6>
 
-                      <div class="row"
-                           :key="field.field"
-                           v-for="field in
+                      <div
+                        class="row"
+                        :key="field.field"
+                        v-for="field in
                        [
                          {
                            description: 'Elemental Damage Amount',
@@ -346,7 +432,8 @@
                            description: 'Element Damage Type',
                            field: 'elemdmgtype'
                          },
-                       ]">
+                       ]"
+                      >
                         <div class="col-5 text-right">
                           {{ field.description }}
                         </div>
@@ -434,7 +521,8 @@
                 </eq-tab>
 
                 <eq-tab
-                  name="Augmentation">
+                  name="Augmentation"
+                >
 
                   <h6 class="eq-header text-center mt-3 mb-3">Item Is Augment</h6>
 
@@ -451,7 +539,8 @@
                         <option
                           v-for="(value, index) in AUG_TYPES"
                           :key="index"
-                          :value="parseInt(index)">
+                          :value="parseInt(index)"
+                        >
                           {{ index }}) {{ value.name }}
                         </option>
                       </select>
@@ -471,7 +560,8 @@
                         <option
                           v-for="(value, index) in DB_ITEM_AUG_RESTRICT"
                           :key="index"
-                          :value="parseInt(index)">
+                          :value="parseInt(index)"
+                        >
                           {{ index }}) {{ value }}
                         </option>
                       </select>
@@ -506,7 +596,8 @@
                         <option
                           v-for="(value, index) in AUG_TYPES"
                           :key="index"
-                          :value="parseInt(index)">
+                          :value="parseInt(index)"
+                        >
                           {{ index }}) {{ value.name }}
                         </option>
                       </select>
@@ -549,16 +640,19 @@
             <eq-window
               style="margin-top: 30px; margin-right: 10px; width: auto;"
               :key="item.updatedAt"
-              v-if="previewItemActive && item && item.id > 0">
+              v-if="previewItemActive && item && item.id > 0"
+            >
               <eq-item-preview
-                :item-data="item"/>
+                :item-data="item"
+              />
             </eq-window>
 
             <!-- item model selector -->
             <eq-window
               style="margin-top: 30px; margin-right: 10px; width: auto;"
               class="fade-in"
-              v-if="itemModelSelectorActive && item">
+              v-if="itemModelSelectorActive && item"
+            >
 
               <item-model-selector
                 :selected-model="item.idfile"
@@ -570,7 +664,8 @@
             <eq-window
               style="margin-top: 30px; margin-right: 10px; width: auto;"
               class="fade-in"
-              v-if="iconSelectorActive">
+              v-if="iconSelectorActive"
+            >
 
               <item-icon-selector
                 :selected-icon="item.icon"
@@ -583,14 +678,16 @@
               title="Free Item Ids"
               style="margin-top: 30px; margin-right: 10px; width: auto;"
               class="fade-in"
-              v-if="freeIdSelectorActive">
+              v-if="freeIdSelectorActive"
+            >
 
               <free-id-selector
                 table-name="items"
                 id-name="id"
                 name-label="name"
                 :with-reserved="true"
-                @input="item.id = $event"/>
+                @input="item.id = $event"
+              />
             </eq-window>
           </div>
         </div>

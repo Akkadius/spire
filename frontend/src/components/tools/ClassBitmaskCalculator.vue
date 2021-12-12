@@ -6,13 +6,13 @@
     >
       <div v-for="(gClass, classId) in classes" class="mb-1 d-inline-block">
         <div class="text-center p-0 mr-1 col-lg-12 col-sm-12">
-          {{ gClass.short }}
+          <span v-if="showTextTop">{{ gClass.short }}</span>
           <div class="text-center">
             <img
               :title="gClass.class"
               @click="selectClass(classId)"
               :src="itemCdnUrl + 'item_' + gClass.icon + '.png'"
-              :style="getImageSize() + (isClassSelected(classId) ? 'border: 2px solid #dadada; border-radius: 7px;' : 'border-radius: 7px;')"
+              :style="getImageSize() + (isClassSelected(classId) ? 'border: 2px solid #dadada; border-radius: 7px;' : 'border-radius: 7px; opacity: .6')"
               class="mt-1 hover-highlight">
           </div>
         </div>
@@ -63,6 +63,16 @@ export default {
       type: Boolean,
       required: false,
       default: true
+    },
+    showTextTop: {
+      type: Boolean,
+      required: false,
+      default: true
+    },
+    showTextSide: {
+      type: Boolean,
+      required: false,
+      default: false
     },
     imageSize: {
       type: Number,
