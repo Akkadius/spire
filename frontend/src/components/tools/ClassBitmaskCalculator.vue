@@ -5,14 +5,15 @@
       :style="(centeredButtons ? 'width: 100%' : '')"
     >
       <div v-for="(gClass, classId) in classes" class="mb-1 d-inline-block">
-        <div class="text-center p-0 col-lg-12 col-sm-12">
+        <div class="text-center p-0 mr-1 col-lg-12 col-sm-12">
           {{ gClass.short }}
           <div class="text-center">
             <img
+              :title="gClass.class"
               @click="selectClass(classId)"
               :src="itemCdnUrl + 'item_' + gClass.icon + '.png'"
-              :style="getImageSize() + (isClassSelected(classId) ? 'border: 2px solid #dadada; border-radius: 7px;' : 'border: 2px solid rgb(218 218 218 / 0%); border-radius: 7px;')"
-              class="mt-1 p-1">
+              :style="getImageSize() + (isClassSelected(classId) ? 'border: 2px solid #dadada; border-radius: 7px;' : 'border-radius: 7px;')"
+              class="mt-1 hover-highlight">
           </div>
         </div>
       </div>

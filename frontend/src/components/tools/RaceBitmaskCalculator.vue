@@ -9,10 +9,11 @@
           {{ race.short }}
           <div class="text-center">
             <img
+              :title="race.race"
               @click="selectRace(index)"
               :src="itemCdnUrl + 'item_' + race.icon + '.png'"
-              :style="getImageSize() + (isRaceSelected(index) ? 'border: 2px solid #dadada; border-radius: 7px;' : 'border: 2px solid rgb(218 218 218 / 0%); border-radius: 7px;')"
-              class="mt-1 p-1 mr-1">
+              :style="getImageSize() + (isRaceSelected(index) ? 'border: 2px solid #dadada; border-radius: 7px;' : 'border-radius: 7px;')"
+              class="mt-1 mr-1 hover-highlight">
           </div>
         </div>
       </div>

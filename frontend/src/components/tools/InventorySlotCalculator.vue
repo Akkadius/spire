@@ -4,15 +4,28 @@
       class="mr-3 d-inline-block text-center"
       :style="'display: inline-block ' + (centeredButtons ? 'width: 100%' : '')"
     >
-      <div v-for="(slot, slotId) in slots" class="mb-1 text-center d-inline-block">
-        <div class="text-center p-1 col-lg-12 col-sm-12" v-if="!isSlotSkipped(slotId)">
-          {{ slot.name }}
+      <div
+        v-for="(slot, slotId) in slots"
+        class="mb-1 text-center d-inline-block"
+      >
+        <div
+          class="text-center p-0 col-lg-12 col-sm-12"
+          v-if="!isSlotSkipped(slotId)"
+        >
+          <span
+            class="d-inline-block"
+            :style="'font-size: 12px; white-space: nowrap; overflow: hidden;text-overflow: ellipsis; max-width: ' + (imageSize) + 'px;'">
+            {{ slot.name }}
+          </span>
+
           <div class="text-center">
             <img
+              :title="slot.name"
               @click="selectSlot(slotId)"
               :src="slotUrl + 'old_slot_' + slotId + '.gif'"
-              :style="getImageSize() + (isSlotSelected(slotId) ? 'border: 2px solid #dadada; border-radius: 7px;' : 'border: 2px solid rgb(218 218 218 / 0%); border-radius: 7px;')"
-              class="mt-1 p-1">
+              class="hover-highlight"
+              :style="getImageSize() + (isSlotSelected(slotId) ? 'border: 2px solid #dadada; border-radius: 7px;' : 'border-radius: 7px;')"
+            >
           </div>
         </div>
       </div>
