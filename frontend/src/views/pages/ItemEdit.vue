@@ -316,13 +316,13 @@
                           <div class="col-4 text-right mr-3 p-0 mt-2">
                             {{ description }}
                           </div>
-                          <div class="col-3 p-0 m-0">
+                          <div class="col-3 p-0 m-0" :style="(item[stat.stat] === 0 ? 'opacity: .5' : '')">
                             <b-form-input v-model.number="item[stat.stat]"/>
                           </div>
                           <div class="col-1 p-0 m-0 mt-2">
                             +
                           </div>
-                          <div class="col-3 p-0 m-0">
+                          <div class="col-3 p-0 m-0" :style="(item[stat.heroic] === 0 ? 'opacity: .5' : '')">
                             <b-form-input v-model.number="item[stat.heroic]"/>
                           </div>
                         </div>
@@ -339,13 +339,13 @@
                             {{ description }}
                           </div>
                           <div class="col-3 p-0 m-0">
-                            <b-form-input v-model.number="item[stat.stat]"/>
+                            <b-form-input v-model.number="item[stat.stat]" :style="(item[stat.stat] === 0 ? 'opacity: .5' : '')"/>
                           </div>
                           <div class="col-1 p-0 m-0 mt-2">
                             +
                           </div>
                           <div class="col-3 p-0 m-0">
-                            <b-form-input v-model.number="item[stat.heroic]"/>
+                            <b-form-input v-model.number="item[stat.heroic]" :style="(item[stat.heroic] === 0 ? 'opacity: .5' : '')"/>
                           </div>
                         </div>
 
@@ -421,7 +421,7 @@
                           <div class="col-8 text-right mt-2 p-0 pr-3">
                             {{ field.description }}
                           </div>
-                          <div class="col-4 m-0 p-0">
+                          <div class="col-4 m-0 p-0" :style="(item[field.field] === 0 ? 'opacity: .5' : '')">
                             <b-form-input v-model.number="item[field.field]"/>
                           </div>
                         </div>
@@ -433,7 +433,7 @@
                         <div class="col-7 text-right mt-2 p-0 pr-3">
                           {{ description }}
                         </div>
-                        <div class="col-3 m-0 p-0">
+                        <div class="col-3 m-0 p-0" :style="(parseInt(item[field]) === 0 ? 'opacity: .5' : '')">
                           <b-form-input v-model.number="item[field]" v-if="field !== 'combateffects'"/>
                           <!-- For some reason combateffects is a varchar field -->
                           <b-form-input v-model="item[field]" v-if="field === 'combateffects'"/>
