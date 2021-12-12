@@ -9,7 +9,7 @@
         class="mb-1 text-center d-inline-block"
       >
         <div
-          class="text-center p-0 col-lg-12 col-sm-12"
+          class="text-center p-0 mr-1 col-lg-12 col-sm-12"
           v-if="!isSlotSkipped(slotId)"
         >
           <span

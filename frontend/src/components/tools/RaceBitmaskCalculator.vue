@@ -5,7 +5,7 @@
       :style="(centeredButtons ? 'width: 100%' : '')"
     >
       <div v-for="(race, index) in races" class="mb-1 text-center d-inline-block">
-        <div class="text-center p-0 col-lg-12 col-sm-12">
+        <div class="text-center p-0 mr-1 col-lg-12 col-sm-12">
           {{ race.short }}
           <div class="text-center">
             <img
@@ -13,7 +13,7 @@
               @click="selectRace(index)"
               :src="itemCdnUrl + 'item_' + race.icon + '.png'"
               :style="getImageSize() + (isRaceSelected(index) ? 'border: 2px solid #dadada; border-radius: 7px;' : 'border-radius: 7px;')"
-              class="mt-1 mr-1 hover-highlight">
+              class="mt-1 hover-highlight">
           </div>
         </div>
       </div>
