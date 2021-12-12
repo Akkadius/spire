@@ -152,6 +152,10 @@
                            false: 1,
                          },
                          {
+                           description: 'FV No Drop',
+                           field: 'fvnodrop',
+                         },
+                         {
                            description: 'No Rent',
                            field: 'norent',
                            true: 0,
@@ -296,16 +300,65 @@
                   </div>
                 </eq-tab>
 
-                <eq-tab name="Damage">
+                <eq-tab name="Stats">
 
                   <div class="row">
-                    <div class="col-6">
-                      <h6 class="eq-header text-center mb-3">Damage / Delay / Haste</h6>
 
-                      <div
-                        class="row"
-                        :key="field.field"
-                        v-for="field in
+                    <div class="col-4">
+
+                      <!-- Stats -->
+                      <div class="col-12 text-center">
+                        <div
+                          v-for="(stat, description) in stats"
+                          :key="stat.stat"
+                          class="row text-center"
+                        >
+                          <div class="col-4 text-right mr-3 p-0 mt-2">
+                            {{ description }}
+                          </div>
+                          <div class="col-3 p-0 m-0">
+                            <b-form-input v-model.number="item[stat.stat]"/>
+                          </div>
+                          <div class="col-1 p-0 m-0 mt-2">
+                            +
+                          </div>
+                          <div class="col-3 p-0 m-0">
+                            <b-form-input v-model.number="item[stat.heroic]"/>
+                          </div>
+                        </div>
+                      </div>
+
+                      <!-- Resists -->
+                      <div class="col-12 text-center">
+                        <div
+                          v-for="(stat, description) in resists"
+                          :key="stat.stat"
+                          class="row text-center"
+                        >
+                          <div class="col-4 text-right mr-3 p-0 mt-2">
+                            {{ description }}
+                          </div>
+                          <div class="col-3 p-0 m-0">
+                            <b-form-input v-model.number="item[stat.stat]"/>
+                          </div>
+                          <div class="col-1 p-0 m-0 mt-2">
+                            +
+                          </div>
+                          <div class="col-3 p-0 m-0">
+                            <b-form-input v-model.number="item[stat.heroic]"/>
+                          </div>
+                        </div>
+
+                      </div>
+
+                    </div>
+
+                    <div class="col-4">
+                      <div class="col-12">
+                        <div
+                          class="row"
+                          :key="field.field"
+                          v-for="field in
                        [
                          {
                            description: 'Damage',
@@ -319,23 +372,6 @@
                            description: 'Haste',
                            field: 'haste'
                          },
-                       ]"
-                      >
-                        <div class="col-5 text-right">
-                          {{ field.description }}
-                        </div>
-                        <div class="col-4">
-                          <b-form-input v-model.number="item[field.field]"/>
-                        </div>
-                      </div>
-
-                      <h6 class="eq-header text-center mb-3 mt-3">Extra Damage</h6>
-
-                      <div
-                        class="row"
-                        :key="field.field"
-                        v-for="field in
-                       [
                          {
                            description: 'Extra Damage Skill',
                            field: 'extradmgskill'
@@ -344,23 +380,6 @@
                            description: 'Extra Damage Amount',
                            field: 'extradmgamt'
                          },
-                       ]"
-                      >
-                        <div class="col-5 text-right">
-                          {{ field.description }}
-                        </div>
-                        <div class="col-4">
-                          <b-form-input v-model.number="item[field.field]"/>
-                        </div>
-                      </div>
-
-                      <h6 class="eq-header text-center mb-3 mt-3">Weapon</h6>
-
-                      <div
-                        class="row"
-                        :key="field.field"
-                        v-for="field in
-                       [
                          {
                            description: 'Backstab Damage',
                            field: 'backstabdmg'
@@ -373,24 +392,6 @@
                            description: 'Spell Damage',
                            field: 'spelldmg'
                          },
-                       ]"
-                      >
-                        <div class="col-5 text-right">
-                          {{ field.description }}
-                        </div>
-                        <div class="col-4">
-                          <b-form-input v-model.number="item[field.field]"/>
-                        </div>
-                      </div>
-                    </div>
-                    <div class="col-6">
-                      <h6 class="eq-header text-center mb-3">Bane</h6>
-
-                      <div
-                        class="row"
-                        :key="field.field"
-                        v-for="field in
-                       [
                          {
                            description: 'Bane Damage Amount',
                            field: 'banedmgamt'
@@ -407,23 +408,6 @@
                            description: 'Bane Damage Race Amount',
                            field: 'banedmgraceamt'
                          },
-                       ]"
-                      >
-                        <div class="col-5 text-right">
-                          {{ field.description }}
-                        </div>
-                        <div class="col-4">
-                          <b-form-input v-model.number="item[field.field]"/>
-                        </div>
-                      </div>
-
-                      <h6 class="eq-header text-center mb-3 mt-3">Elemental</h6>
-
-                      <div
-                        class="row"
-                        :key="field.field"
-                        v-for="field in
-                       [
                          {
                            description: 'Elemental Damage Amount',
                            field: 'elemdmgamt'
@@ -433,91 +417,33 @@
                            field: 'elemdmgtype'
                          },
                        ]"
-                      >
-                        <div class="col-5 text-right">
-                          {{ field.description }}
-                        </div>
-                        <div class="col-4">
-                          <b-form-input v-model.number="item[field.field]"/>
+                        >
+                          <div class="col-8 text-right mt-2 p-0 pr-3">
+                            {{ field.description }}
+                          </div>
+                          <div class="col-4 m-0 p-0">
+                            <b-form-input v-model.number="item[field.field]"/>
+                          </div>
                         </div>
                       </div>
                     </div>
-                  </div>
-                </eq-tab>
 
-                <eq-tab
-                  name="Stats"
-                >
-
-                  <div class="row">
-                    <!-- Stats -->
-                    <div class="col-6 text-center">
-
-                      <h6 class="eq-header">
-                        Stats
-                      </h6>
-                      <div
-                        v-for="(stat, description) in stats"
-                        :key="stat.stat"
-                        class="row text-center"
-                      >
-                        <div class="col-2 text-right">
+                    <div class="col-4">
+                      <div v-for="(field, description) in mod3" :key="field" class="row text-center">
+                        <div class="col-7 text-right mt-2 p-0 pr-3">
                           {{ description }}
                         </div>
-                        <div class="col-4">
-                          <b-form-input v-model.number="item[stat.stat]"/>
-                        </div>
-                        <div class="col-2 text-right">
-                          Heroic
-                        </div>
-                        <div class="col-4">
-                          <b-form-input v-model.number="item[stat.heroic]"/>
-                        </div>
-                      </div>
-                    </div>
-
-                    <!-- Resists -->
-                    <div class="col-6 text-center">
-                      <h6 class="eq-header">
-                        Resists
-                      </h6>
-                      <div
-                        v-for="(resist, description) in resists"
-                        :key="resist.stat"
-                        class="row text-center"
-                      >
-                        <div class="col-2 text-right">
-                          {{ description }}
-                        </div>
-                        <div class="col-4">
-                          <b-form-input v-model.number="item[resist.stat]"/>
-                        </div>
-                        <div class="col-2 text-right">
-                          Heroic
-                        </div>
-                        <div class="col-4">
-                          <b-form-input v-model.number="item[resist.heroic]"/>
+                        <div class="col-3 m-0 p-0">
+                          <b-form-input v-model.number="item[field]" v-if="field !== 'combateffects'"/>
+                          <!-- For some reason combateffects is a varchar field -->
+                          <b-form-input v-model="item[field]" v-if="field === 'combateffects'"/>
                         </div>
                       </div>
                     </div>
 
                   </div>
-                </eq-tab>
 
-                <eq-tab name="Mods">
-                  <div v-for="(field, description) in mod3" :key="field" class="row text-center">
-                    <div class="col-1">
 
-                    </div>
-                    <div class="col-4 text-right">
-                      {{ description }}
-                    </div>
-                    <div class="col-2">
-                      <b-form-input v-model.number="item[field]" v-if="field !== 'combateffects'"/>
-                      <!-- For some reason combateffects is a varchar field -->
-                      <b-form-input v-model="item[field]" v-if="field === 'combateffects'"/>
-                    </div>
-                  </div>
                 </eq-tab>
 
                 <eq-tab
