@@ -1307,7 +1307,7 @@ export class Spells {
           break;
 
         case 260:
-          printBuffer += "Set Instrument Modifier: " + DB_BARD_SKILLS[limit] + value_max
+          printBuffer += "Set Instrument Modifier: " + DB_BARD_SKILLS[limit] + " " + value_max
           break;
 
         case 261:
