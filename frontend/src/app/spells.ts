@@ -1355,7 +1355,7 @@ export class Spells {
           break;
 
         case 272:
-          printBuffer += this.getFormatStandard("Song effective casting level", "", value_min, value_max, minlvl, maxlvl)
+          printBuffer += this.getFormatStandard("Effective casting level", "", value_min, value_max, minlvl, maxlvl)
           break;
 
         case 273: //Does live effect now have decay component?
