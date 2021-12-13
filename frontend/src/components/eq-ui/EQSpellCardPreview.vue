@@ -3,8 +3,8 @@
        v-if="spellData && spellData['targettype']">
 
     <div class="row">
-      <div class="col-1" v-if="spellData.new_icon > 0">
-        <img :src="spellCdnUrl + spellData.new_icon + '.gif'"
+      <div class="col-1">
+        <img :src="spellCdnUrl + (spellData.new_icon > 0 ? spellData.new_icon : 1) + '.gif'"
              :style="'width:40px;height:auto;border-radius: 10px; ' + 'border: 2px solid ' + getTargetTypeColor(this.spellData['targettype']) + '; border-radius: 7px;'">
       </div>
       <div class="col-11 pl-5">

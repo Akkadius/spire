@@ -308,6 +308,41 @@
 
                       <!-- Stats -->
                       <div class="col-12 text-center">
+
+                        <div
+                          class="row"
+                          :key="field.field"
+                          v-for="field in
+                       [
+                         {
+                           description: 'AC',
+                           field: 'ac'
+                         },
+                         {
+                           description: 'HP',
+                           field: 'hp',
+                           regen: 'regen'
+                         },
+                         {
+                           description: 'Mana',
+                           field: 'mana',
+                           regen: 'manaregen',
+                         },
+                         {
+                           description: 'Endur',
+                           field: 'endur',
+                           regen: 'enduranceregen'
+                         },
+                       ]"
+                        >
+                          <div class="col-4 text-right mr-3 p-0 mt-2">
+                            {{ field.description }}
+                          </div>
+                          <div class="col-7 p-0 m-0" :style="(item[field.field] === 0 ? 'opacity: .5' : '')">
+                            <b-form-input v-model.number="item[field.field]"/>
+                          </div>
+                        </div>
+
                         <div
                           v-for="(stat, description) in stats"
                           :key="stat.stat"
@@ -326,35 +361,6 @@
                             <b-form-input v-model.number="item[stat.heroic]"/>
                           </div>
                         </div>
-                      </div>
-
-                      <!-- Resists -->
-                      <div class="col-12 text-center">
-                        <div
-                          v-for="(stat, description) in resists"
-                          :key="stat.stat"
-                          class="row text-center"
-                        >
-                          <div class="col-4 text-right mr-3 p-0 mt-2">
-                            {{ description }}
-                          </div>
-                          <div class="col-3 p-0 m-0">
-                            <b-form-input
-                              v-model.number="item[stat.stat]"
-                              :style="(item[stat.stat] === 0 ? 'opacity: .5' : '')"
-                            />
-                          </div>
-                          <div class="col-1 p-0 m-0 mt-2">
-                            +
-                          </div>
-                          <div class="col-3 p-0 m-0">
-                            <b-form-input
-                              v-model.number="item[stat.heroic]"
-                              :style="(item[stat.heroic] === 0 ? 'opacity: .5' : '')"
-                            />
-                          </div>
-                        </div>
-
                       </div>
 
                     </div>
@@ -510,7 +516,7 @@
                     >
 
                       <template #prepend>
-                        <b-input-group-text style="width: 100px; height: 38px">{{ field.effectType }}
+                        <b-input-group-text style="width: 100px; height: 38px; text-align: right;">{{ field.effectType }}
                         </b-input-group-text>
                       </template>
 
@@ -519,6 +525,8 @@
                         class="m-0"
                         placeholder="Spell ID"
                         style="width: 100px"
+                        @mouseover="drawEffectSelector"
+                        :id="field.effectField"
                         v-model.number="item[field.effectField]"
                       />
                       <b-form-input
@@ -709,6 +717,19 @@
                 @input="item.id = $event"
               />
             </eq-window>
+
+            <!-- spell effect selector -->
+            <div
+              class="fade-in"
+              v-if="spellEffectSelectorActive"
+            >
+
+              <spell-effect-selector
+                @input="item[$event.field] = $event.spell.id; setFieldModifiedById($event.field)"
+              />
+
+            </div>
+
           </div>
         </div>
       </div>
@@ -744,11 +765,15 @@ import {
 import {AUG_TYPES}             from "../../app/constants/eq-aug-constants";
 import InventorySlotCalculator from "../../components/tools/InventorySlotCalculator";
 
+import {Sketch}            from 'vue-color'
+import SpellEffectSelector from "../../components/tools/SpellEffectSelector";
+
 const MILLISECONDS_BEFORE_WINDOW_RESET = 3000;
 
 export default {
   name: "ItemEdit",
   components: {
+    SpellEffectSelector,
     InventorySlotCalculator,
     DeityBitmaskCalculator,
     RaceBitmaskCalculator,
@@ -762,7 +787,8 @@ export default {
     EqTab,
     EqTabs,
     EqWindow,
-    EqWindowFancy
+    EqWindowFancy,
+    Sketch
   },
   data() {
     return {
@@ -773,6 +799,7 @@ export default {
       previewItemActive: true,
       iconSelectorActive: false,
       itemModelSelectorActive: false,
+      spellEffectSelectorActive: false,
       freeIdSelectorActive: false,
 
       lastResetTime: Date.now(),
@@ -793,9 +820,7 @@ export default {
         "Wisdom": { stat: "awis", heroic: "heroic_wis" },
         "Agility": { stat: "aagi", heroic: "heroic_agi" },
         "Dexterity": { stat: "adex", heroic: "heroic_dex" },
-        "Charisma": { stat: "acha", heroic: "heroic_cha" }
-      },
-      resists: {
+        "Charisma": { stat: "acha", heroic: "heroic_cha" },
         "Magic Resist": { stat: "mr", heroic: "heroic_mr" },
         "Fire Resists": { stat: "fr", heroic: "heroic_fr" },
         "Cold Resist": { stat: "cr", heroic: "heroic_cr" },
@@ -808,15 +833,17 @@ export default {
         "HP Regen": "regen",
         "Mana Regen": "manaregen",
         "Endurance Regen": "enduranceregen",
-        "Spell Shielding": "spellshield",
-        "Combat Effects": "combateffects",
-        "Shielding": "shielding",
-        "DoT Shielding": "dotshielding",
-        "Avoidance": "avoidance",
         "Accuracy": "accuracy",
-        "Stun Resist": "stunresist",
+        "Avoidance": "avoidance",
+        "Clairvoyance": "clairvoyance",
+        "Combat Effects": "combateffects",
+        "Damage Shield": "damageshield",
+        "DoT Shielding": "dotshielding",
+        "Heal Amount": "healamt",
+        "Shielding": "shielding",
+        "Spell Shielding": "spellshield",
         "Strikethrough": "strikethrough",
-        "Damage Shield": "damageshield"
+        "Stun Resist": "stunresist",
         // TODO: extradmgamt
       },
 
@@ -871,6 +898,13 @@ export default {
     setFieldModified(evt) {
       // border: 2px #555555 solid !important;
       evt.target.style.setProperty('border-color', 'orange', 'important');
+    },
+
+    setFieldModifiedById(id) {
+      const target = document.getElementById(id)
+      if (target) {
+        target.style.setProperty('border-color', 'orange', 'important');
+      }
     },
 
     resetFieldEditedStatus() {
@@ -931,10 +965,11 @@ export default {
      * Selector / previewers
      */
     resetPreviewComponents() {
-      this.previewItemActive       = false;
-      this.iconSelectorActive      = false;
-      this.itemModelSelectorActive = false;
-      this.freeIdSelectorActive    = false;
+      this.previewItemActive         = false;
+      this.iconSelectorActive        = false;
+      this.itemModelSelectorActive   = false;
+      this.spellEffectSelectorActive = false;
+      this.freeIdSelectorActive      = false;
     },
     previewItem() {
       let shouldReset = Date.now() - this.lastResetTime > MILLISECONDS_BEFORE_WINDOW_RESET;
@@ -945,6 +980,10 @@ export default {
         this.previewItemActive = true;
         this.lastResetTime     = Date.now()
       }
+    },
+    drawEffectSelector() {
+      this.resetPreviewComponents()
+      this.spellEffectSelectorActive = true
     },
     drawItemModelSelector() {
       this.resetPreviewComponents()

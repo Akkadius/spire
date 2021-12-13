@@ -140,3 +140,7 @@
     border: 2px solid rgb(218 218 218 / 0%);
     border-radius: 7px;
 }
+
+.dropdown-menu {
+    background-color: #0b0b10;
+}
