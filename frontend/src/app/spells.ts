@@ -976,7 +976,7 @@ export class Spells {
           break;
 
         case 179:
-          printBuffer += "All Instrument Modifier: " + DB_SKILLS[spell["skill"]] + " " + value_max
+          printBuffer += "Set All Instrument Modifiers: " + value_max
           break;
 
         case 180:
@@ -1307,7 +1307,7 @@ export class Spells {
           break;
 
         case 260:
-          printBuffer += this.getFormatStandard(DB_BARD_SKILLS[limit] + " Bonus", "%", (value_min * 10), (value_max * 10), minlvl, maxlvl)
+          printBuffer += "Set Instrument Modifier: " + DB_BARD_SKILLS[limit] + value_max
           break;
 
         case 261:
