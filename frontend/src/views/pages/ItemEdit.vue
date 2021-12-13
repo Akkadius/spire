@@ -856,7 +856,7 @@ import InventorySlotCalculator from "../../components/tools/InventorySlotCalcula
 import {Sketch}            from 'vue-color'
 import SpellEffectSelector from "../../components/tools/SpellEffectSelector";
 
-const MILLISECONDS_BEFORE_WINDOW_RESET = 3000;
+const MILLISECONDS_BEFORE_WINDOW_RESET = 5000;
 
 export default {
   name: "ItemEdit",
@@ -881,26 +881,37 @@ export default {
   data() {
     return {
       item: null, // item record data
+      originalItem: null, // item record data; used to reference original values in tools
+      
       spellCdnUrl: App.ASSET_SPELL_ICONS_BASE_URL,
+
+      // state, loaded or not
       loaded: true,
 
+      // preview toggle bools
       previewItemActive: true,
       iconSelectorActive: false,
       itemModelSelectorActive: false,
       spellEffectSelectorActive: false,
       freeIdSelectorActive: false,
 
+      // used to track when the subselector tool window has last spawned a tool
+      // this keeps from a subsequent hover redrawing another tool within a grace period defined by
+      // MILLISECONDS_BEFORE_WINDOW_RESET
       lastResetTime: Date.now(),
 
+      // notifications and errors during save
       notification: "",
       error: "",
 
+      // constants
       DB_ITEM_MATERIAL: DB_ITEM_MATERIAL,
       DB_ITEM_AUG_RESTRICT: DB_ITEM_AUG_RESTRICT,
       DB_ITEM_CLASS: DB_ITEM_CLASS,
       DB_ITEM_TYPES: DB_ITEM_TYPES,
       AUG_TYPES: AUG_TYPES,
 
+      // fields used in forms
       stats: {
         "Strength": { stat: "astr", heroic: "heroic_str" },
         "Stamina": { stat: "asta", heroic: "heroic_sta" },
@@ -915,7 +926,6 @@ export default {
         "Disease Resist": { stat: "dr", heroic: "heroic_dr" },
         "Poison Resist": { stat: "pr", heroic: "heroic_pr" }
       },
-
       mod3: {
         "Attack": "attack",
         "HP Regen": "regen",
@@ -934,7 +944,6 @@ export default {
         "Stun Resist": "stunresist",
         // TODO: extradmgamt
       },
-
       pricingFields: {
         "Price": "price",
         "Sell Rate": "sellrate",
@@ -1084,11 +1093,11 @@ export default {
      * Selector / previewers
      */
     resetPreviewComponents() {
-      this.previewItemActive         = false;
+      this.freeIdSelectorActive      = false;
       this.iconSelectorActive        = false;
       this.itemModelSelectorActive   = false;
+      this.previewItemActive         = false;
       this.spellEffectSelectorActive = false;
-      this.freeIdSelectorActive      = false;
     },
     previewItem() {
       let shouldReset = Date.now() - this.lastResetTime > MILLISECONDS_BEFORE_WINDOW_RESET;
