@@ -1080,8 +1080,8 @@ export class Spells {
           printBuffer += "Group Fear Immunity for " + (base * 10) + "s"
           break;
 
-        case 205:
-          printBuffer += "Rampage"
+        case 205: //limit and max are custom to eqemu
+          printBuffer += "Rampage (" + base + ")" + (limit ? " (Max Hit Count: " + limit + ")" : "") + + (max ? " (AE Range: " + max + ")" : "")
           break;
 
         case 206:
@@ -1104,8 +1104,8 @@ export class Spells {
           }
           break;
 
-        case 210:
-          printBuffer += "Pet Shielding for " + base * 12 + "s"
+        case 210: //limit and max are custom to eqemu
+          printBuffer += "Pet Shielding for " + base * 12 + "s" +  (limit ? " (Owner Mitigation: " + limit + " %)" : "") +  (max ? " (Pet Mitigation: " + max + " %)" : "")
           break;
 
         case 211: //eqemu uses this, Live uses different formula now, base=chance, limit=damage mod
@@ -1141,7 +1141,7 @@ export class Spells {
           break;
 
         case 219:
-          printBuffer += this.getFormatStandard("Chance to Slay Undead", "%", value_min / 100, value_max / 100, minlvl, maxlvl) + " with " + limit + " Damage Mod"
+          printBuffer += this.getFormatStandard("Chance to Slay Undead", "%", value_min / 10, value_max / 10, minlvl, maxlvl) + " with " + limit + " Damage Mod"
           break;
 
         case 220:
@@ -1206,7 +1206,8 @@ export class Spells {
           break;
 
         case 234:
-          printBuffer += "Decrease Poison Application Time by " + (10 - base / 1000) + +"s"
+          //printBuffer += "Decrease Poison Application Time by " + (10 - base / 1000) + +"s" //Need to confirm if this is correct, below seems correct
+          printBuffer += "Decrease Poison Application Time by " + base / 1000 +"s"
           break;
 
         case 235:
@@ -1222,7 +1223,7 @@ export class Spells {
           break;
 
         case 238:
-          printBuffer += (base === 3) ? "Permanent Illusion (Persist After Death)" : " Permanent Illusion"
+          printBuffer += (base >= 2) ? "Permanent Illusion (Persist After Death)" : " Permanent Illusion"
           break;
 
         case 239:
