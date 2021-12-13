@@ -474,6 +474,7 @@
 
                     <b-input-group
                       :key="field.field"
+                      :style="(item[field.effectField] <= 0 ? 'opacity: .5' : '')"
                       v-for="field in
                        [
                          {
@@ -516,7 +517,9 @@
                     >
 
                       <template #prepend>
-                        <b-input-group-text style="width: 100px; height: 38px; text-align: right;">{{ field.effectType }}
+                        <b-input-group-text style="width: 100px; height: 38px; text-align: right;">{{
+                            field.effectType
+                          }}
                         </b-input-group-text>
                       </template>
 
@@ -541,10 +544,95 @@
                         @change="syncEffects(field.reqLevelField, field.asLevelField)"
                         v-model.number="item[field.reqLevelField]"
                       />
-
                     </b-input-group>
 
+                    <div class="row mt-3" v-if="item.clickeffect > 0">
+                      <div class="col-1">
+                        <h6 class="eq-header mt-4 text-center">Click</h6>
+                      </div>
 
+                      <div class="col-3 text-center">
+                        Item Click Charges
+                        <b-input-group class="mt-3">
+                          <b-input-group-append style="height: 38px">
+                            <b-form-input v-model.number="item.maxcharges" id="maxcharges" style="width: 70px"/>
+
+                            <b-form-select
+                              v-model.number="item.maxcharges"
+                              style="width: 140px"
+                              @change="setFieldModifiedById('maxcharges')"
+                            >
+                              <b-form-select-option
+                                variant="outline-warning"
+                                :value="parseInt(e.value)"
+                                v-for="(e, id) in [
+                                  {desc: 'Infinite', value: -1},
+                                  {desc: 'None', value: 0},
+                                ]"
+                                :key="e.value"
+                              >{{ e.value }}
+                                ({{ e.desc }})
+                              </b-form-select-option>
+                              <b-form-select-option
+                                :value="i"
+                                v-for="(i) in [1,2,3,4,5,6,7,8,9,10,12,13,14,15,17,18,20,30,40,50,60,100,250,500,750,1000]"
+                                :key="i"
+                              >{{ i }}
+                              </b-form-select-option>
+                            </b-form-select>
+                          </b-input-group-append>
+                        </b-input-group>
+                      </div>
+
+                      <div class="col-2 m-0 p-0 pl-3 text-center">
+                        Cast Time (ms)
+                        <b-form-input
+                          v-model.number="item.casttime"
+                          id="casttime"
+                          class="mt-3"
+                        />
+                        ({{ msToTime(item.casttime) }})
+                      </div>
+
+                      <div class="col-2 m-0 p-0 pl-3 text-center">
+                        Recast Time (ms)
+                        <b-form-input
+                          v-model.number="item.recastdelay"
+                          id="recastdelay"
+                          class="mt-3"
+                        />
+                        ({{ msToTime(item.recastdelay) }})
+                      </div>
+
+                      <div class="col-2 text-center">
+                        Recast Type
+                        <b-form-input
+                          v-model.number="item.recasttype"
+                          id="recasttype"
+                          class="mt-3"
+                        />
+                      </div>
+                      <div class="col-2 text-center">
+                        Click Type
+
+                        <select v-model.number="item.clicktype" class="form-control mt-3">
+                          <option
+                            v-for="(e, index) in [
+                              {desc: 'None', value: 0},
+                              {desc: 'Clickable from Inventory', value: 1},
+                              {desc: 'Clickable from Inventory', value: 3},
+                              {desc: 'Must Equip to Cast', value: 4},
+                              {desc: 'Clickable from Inventory', value: 5},
+                            ]"
+                            :key="e.value"
+                            :value="parseInt(e.value)"
+                          >
+                            {{ e.value }}) {{ e.desc }}
+                          </option>
+                        </select>
+
+                      </div>
+                    </div>
                   </div>
                 </eq-tab>
 
@@ -768,7 +856,7 @@ import InventorySlotCalculator from "../../components/tools/InventorySlotCalcula
 import {Sketch}            from 'vue-color'
 import SpellEffectSelector from "../../components/tools/SpellEffectSelector";
 
-const MILLISECONDS_BEFORE_WINDOW_RESET = 3000;
+const MILLISECONDS_BEFORE_WINDOW_RESET = 5000;
 
 export default {
   name: "ItemEdit",
@@ -793,26 +881,37 @@ export default {
   data() {
     return {
       item: null, // item record data
+      originalItem: null, // item record data; used to reference original values in tools
+
       spellCdnUrl: App.ASSET_SPELL_ICONS_BASE_URL,
+
+      // state, loaded or not
       loaded: true,
 
+      // preview toggle bools
       previewItemActive: true,
       iconSelectorActive: false,
       itemModelSelectorActive: false,
       spellEffectSelectorActive: false,
       freeIdSelectorActive: false,
 
+      // used to track when the subselector tool window has last spawned a tool
+      // this keeps from a subsequent hover redrawing another tool within a grace period defined by
+      // MILLISECONDS_BEFORE_WINDOW_RESET
       lastResetTime: Date.now(),
 
+      // notifications and errors during save
       notification: "",
       error: "",
 
+      // constants
       DB_ITEM_MATERIAL: DB_ITEM_MATERIAL,
       DB_ITEM_AUG_RESTRICT: DB_ITEM_AUG_RESTRICT,
       DB_ITEM_CLASS: DB_ITEM_CLASS,
       DB_ITEM_TYPES: DB_ITEM_TYPES,
       AUG_TYPES: AUG_TYPES,
 
+      // fields used in forms
       stats: {
         "Strength": { stat: "astr", heroic: "heroic_str" },
         "Stamina": { stat: "asta", heroic: "heroic_sta" },
@@ -827,7 +926,6 @@ export default {
         "Disease Resist": { stat: "dr", heroic: "heroic_dr" },
         "Poison Resist": { stat: "pr", heroic: "heroic_pr" }
       },
-
       mod3: {
         "Attack": "attack",
         "HP Regen": "regen",
@@ -846,7 +944,6 @@ export default {
         "Stun Resist": "stunresist",
         // TODO: extradmgamt
       },
-
       pricingFields: {
         "Price": "price",
         "Sell Rate": "sellrate",
@@ -861,12 +958,38 @@ export default {
     }
   },
   watch: {
+
+
+    // reset state vars when we navigate away
     '$route'() {
+      this.item         = null;
+      this.originalItem = null;
+
       // reset state vars when we navigate away
       this.notification = ""
+      this.resetFieldEditedStatus()
+      this.resetPreviewComponents()
+
       // reload
       this.load()
     },
+
+    // some item effect types have defaults when the effect is set
+    // they only appear to use that type when the effect is non-zero
+    'item.worneffect': function (newVal, oldVal) {
+      if (newVal !== oldVal && this.item) {
+        this.item.worntype = newVal > 0 ? 2 : 0
+        console.log("worn type is [%s]", this.item.worntype)
+      }
+    },
+    'item.focuseffect': function (newVal, oldVal) {
+      if (newVal !== oldVal && this.item) {
+        this.item.focustype = newVal > 0 ? 6 : 0
+        console.log("focus type is [%s]", this.item.focustype)
+      }
+    },
+
+    // setting updatedAt tricks the component into re-rendering
     item: {
       handler(val, oldVal) {
         if (this.item) {
@@ -878,7 +1001,6 @@ export default {
     },
   },
   async created() {
-
     setTimeout(() => {
       document.getElementById("item-edit-card").removeEventListener('input', this.setFieldModified, true);
       document.getElementById("item-edit-card").addEventListener('input', this.setFieldModified)
@@ -887,6 +1009,17 @@ export default {
     this.load()
   },
   methods: {
+
+    msToTime(ms) {
+      let seconds = (ms / 1000).toFixed(1);
+      let minutes = (ms / (1000 * 60)).toFixed(1);
+      let hours   = (ms / (1000 * 60 * 60)).toFixed(1);
+      let days    = (ms / (1000 * 60 * 60 * 24)).toFixed(1);
+      if (seconds < 60) return seconds + " Sec";
+      else if (minutes < 60) return minutes + " Min";
+      else if (hours < 24) return hours + " Hrs";
+      else return days + " Days"
+    },
 
     // prefills required and as level if the other value is 0 to save extra effort
     syncEffects(source, destination) {
@@ -909,10 +1042,16 @@ export default {
 
     resetFieldEditedStatus() {
       // reset elements
-      const elements = document.getElementById("item-edit-card").querySelectorAll("input, select");
-      elements.forEach((element) => {
-        element.style.setProperty('border-color', '#555555', 'important');
-      });
+      const itemEditCard = document.getElementById("item-edit-card")
+
+      if (itemEditCard) {
+        const elements = itemEditCard.querySelectorAll("input, select");
+        elements.forEach((element) => {
+          if (element) {
+            element.style.setProperty('border-color', '#555555', 'important');
+          }
+        });
+      }
     },
 
     async saveItem() {
@@ -955,8 +1094,9 @@ export default {
     load() {
       if (this.$route.params.id > 0) {
         Items.getItem(this.$route.params.id).then(result => {
-          this.item      = result
-          this.updatedAt = Date.now()
+          this.item              = result
+          this.updatedAt         = Date.now()
+          this.previewItemActive = true
         })
       }
     },
@@ -965,11 +1105,11 @@ export default {
      * Selector / previewers
      */
     resetPreviewComponents() {
-      this.previewItemActive         = false;
+      this.freeIdSelectorActive      = false;
       this.iconSelectorActive        = false;
       this.itemModelSelectorActive   = false;
+      this.previewItemActive         = false;
       this.spellEffectSelectorActive = false;
-      this.freeIdSelectorActive      = false;
     },
     previewItem() {
       let shouldReset = Date.now() - this.lastResetTime > MILLISECONDS_BEFORE_WINDOW_RESET;

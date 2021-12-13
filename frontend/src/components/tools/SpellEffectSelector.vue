@@ -49,7 +49,6 @@
             v-model="selectedSpa"
             @change="triggerState()"
           >
-
             <option value="-1">-- Select --</option>
             <option v-for="(spellEffect, id) in dbSpellEffects" v-bind:value="id">
               {{ id }}) {{ spellEffect }}
@@ -68,7 +67,7 @@
             v-model="selectedLevel"
             @change="selectClass(selectedClass)"
           >
-            <option value="0">-- Select --</option>
+            <option value="0">Select</option>
             <option v-for="l in 105" v-bind:value="l">
               {{ l }}
             </option>

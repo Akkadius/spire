@@ -258,7 +258,7 @@
           <div :id="itemData[effect.field] + '-' + componentId">
 
             <img
-              :src="spellCdnUrl + effectData[effect.field].new_icon + '.gif'"
+              :src="spellCdnUrl + (effectData[effect.field].new_icon > 0 ? effectData[effect.field].new_icon : 1) + '.gif'"
               :style="'width:20px;height:auto; ' + 'border: 1px solid ' + getTargetTypeColor(effectData[effect.field]['targettype']) + '; border-radius: 3px;'"
               class="mr-1 mt-1">
             {{ effectData[effect.field].name }} ({{ effect.name }})
