@@ -882,7 +882,7 @@ export default {
     return {
       item: null, // item record data
       originalItem: null, // item record data; used to reference original values in tools
-      
+
       spellCdnUrl: App.ASSET_SPELL_ICONS_BASE_URL,
 
       // state, loaded or not
@@ -962,9 +962,14 @@ export default {
 
     // reset state vars when we navigate away
     '$route'() {
+      this.item         = null;
+      this.originalItem = null;
+
       // reset state vars when we navigate away
       this.notification = ""
       this.resetFieldEditedStatus()
+      this.resetPreviewComponents()
+
       // reload
       this.load()
     },
@@ -972,13 +977,13 @@ export default {
     // some item effect types have defaults when the effect is set
     // they only appear to use that type when the effect is non-zero
     'item.worneffect': function (newVal, oldVal) {
-      if (newVal !== oldVal) {
+      if (newVal !== oldVal && this.item) {
         this.item.worntype = newVal > 0 ? 2 : 0
         console.log("worn type is [%s]", this.item.worntype)
       }
     },
     'item.focuseffect': function (newVal, oldVal) {
-      if (newVal !== oldVal) {
+      if (newVal !== oldVal && this.item) {
         this.item.focustype = newVal > 0 ? 6 : 0
         console.log("focus type is [%s]", this.item.focustype)
       }
@@ -1037,10 +1042,16 @@ export default {
 
     resetFieldEditedStatus() {
       // reset elements
-      const elements = document.getElementById("item-edit-card").querySelectorAll("input, select");
-      elements.forEach((element) => {
-        element.style.setProperty('border-color', '#555555', 'important');
-      });
+      const itemEditCard = document.getElementById("item-edit-card")
+
+      if (itemEditCard) {
+        const elements = itemEditCard.querySelectorAll("input, select");
+        elements.forEach((element) => {
+          if (element) {
+            element.style.setProperty('border-color', '#555555', 'important');
+          }
+        });
+      }
     },
 
     async saveItem() {
@@ -1083,8 +1094,9 @@ export default {
     load() {
       if (this.$route.params.id > 0) {
         Items.getItem(this.$route.params.id).then(result => {
-          this.item      = result
-          this.updatedAt = Date.now()
+          this.item              = result
+          this.updatedAt         = Date.now()
+          this.previewItemActive = true
         })
       }
     },
