@@ -1311,7 +1311,7 @@ export class Spells {
           break;
 
         case 261:
-          printBuffer += this.getFormatStandard("Song Cap", "", (value_min * 10), (value_max * 10), minlvl, maxlvl)
+          printBuffer += this.getFormatStandard("Song Cap", "", (value_min), (value_max), minlvl, maxlvl)
           break;
 
         case 262:
