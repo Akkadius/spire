@@ -2993,8 +2993,8 @@ export class Spells {
 
             <div style="display: inline-block">
               <img
-                :src="spellCdnUrl + '' + (${spell.new_icon} > 0 ? ${spell.new_icon} : 0) + '.gif'"
-                style="width: ${iconSize}px;height:auto; border: 1px solid ${targetTypeColor}; border-radius: 7px;"
+                :src="spellCdnUrl + '' + (${spell.new_icon} > 0 ? ${spell.new_icon} : 1) + '.gif'"
+                style="width: ${iconSize}px;height:auto; border: 2px solid ${targetTypeColor}; border-radius: 7px;"
                 >
               <span style="color: #f7ff00">${spell.name}</span>
             </div>

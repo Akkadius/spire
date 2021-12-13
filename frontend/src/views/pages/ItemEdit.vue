@@ -51,13 +51,14 @@
                     >
                       <span
                         :class="'fade-in item-' + item.icon"
-                        style="border: 1px solid rgb(218 218 218 / 30%); border-radius: 7px;"/>
+                        style="border: 1px solid rgb(218 218 218 / 30%); border-radius: 7px;"
+                      />
                     </div>
 
                   </div>
 
                   <div class="row">
-                    <div class="col-8">
+                    <div class="col-12">
 
                       <div class="row">
 
@@ -85,7 +86,8 @@
                             <option
                               v-for="(description, index) in DB_ITEM_TYPES"
                               :key="index"
-                              :value="parseInt(index)">
+                              :value="parseInt(index)"
+                            >
                               {{ index }}) {{ description }}
                             </option>
                           </select>
@@ -98,7 +100,8 @@
                             <option
                               v-for="(description, index) in DB_ITEM_CLASS"
                               :key="index"
-                              :value="parseInt(index)">
+                              :value="parseInt(index)"
+                            >
                               {{ index }}) {{ description }}
                             </option>
                           </select>
@@ -111,123 +114,263 @@
                             <option
                               v-for="(description, index) in DB_ITEM_MATERIAL"
                               :key="index"
-                              :value="parseInt(index)">
+                              :value="parseInt(index)"
+                            >
                               {{ index }}) {{ description }}
                             </option>
                           </select>
                         </div>
+
+                        <!-- Stack Size -->
+                        <div class="col-2">
+                          Stack Size
+                          <b-form-input v-model.number="item.stacksize"/>
+                        </div>
                       </div>
 
-                      <div class="row">
-                        <!-- Is Magic -->
-                        <div class="col-2 text-center">
-                          Is Magic
-                          <eq-checkbox
-                            class="mt-3 mb-2"
-                            v-model.number="item.magic"
-                            @input="item.magic = $event"
-                          />
-                        </div>
-
-                        <!-- No Drop -->
-                        <div class="col-2 text-center">
-                          No Drop
-                          <eq-checkbox
-                            class="mt-3 mb-2"
-                            :true-value="0"
-                            :false-value="1"
-                            v-model.number="item.nodrop"
-                            @input="item.nodrop = $event"
-                          />
-                        </div>
-
-                        <!-- No Rent -->
-                        <div class="col-2 text-center">
-                          No Rent
-                          <eq-checkbox
-                            class="mt-3 mb-2"
-                            :true-value="0"
-                            :false-value="1"
-                            v-model.number="item.norent"
-                            @input="item.norent = $event"
-                          />
-                        </div>
-
-                        <!-- Tradeskills -->
-                        <div class="col-3 text-center">
-                          Tradeskill Item
-                          <eq-checkbox
-                            class="mt-3 mb-2"
-                            v-model.number="item.tradeskills"
-                            @input="item.tradeskills = $event"
-                          />
-                        </div>
-
-                      </div>
 
                     </div>
 
-                    <!-- Model Preview -->
-                    <div
-                      class="col-4"
-                      style="text-align: center"
-                      @mouseover="drawItemModelSelector"
-                    >
 
-                      <item-model-preview :id="item.idfile"/>
+                  </div>
 
-                      Item Model
-                      <b-form-input v-model.number="item.idfile"/>
+                  <div class="mt-3 mb-3">
+                    <div class="row">
+                      <div class="col-2 text-center">
+
+                        <div
+                          class="row" v-for="field in
+                       [
+                         {
+                           description: 'Is Magic',
+                           field: 'magic'
+                         },
+                         {
+                           description: 'No Drop',
+                           field: 'nodrop',
+                           true: 0,
+                           false: 1,
+                         },
+                         {
+                           description: 'FV No Drop',
+                           field: 'fvnodrop',
+                         },
+                         {
+                           description: 'No Rent',
+                           field: 'norent',
+                           true: 0,
+                           false: 1,
+                         },
+                         {
+                           description: 'Tradeskill Item',
+                           field: 'tradeskills'
+                         },
+                         {
+                           description: 'Book',
+                           field: 'book'
+                         },
+                         {
+                           description: 'No Transfer',
+                           field: 'notransfer'
+                         },
+                         {
+                           description: 'Summoned',
+                           field: 'summonedflag'
+                         },
+                         {
+                           description: 'Quest',
+                           field: 'questitemflag'
+                         },
+                         {
+                           description: 'Artifact',
+                           field: 'artifactflag'
+                         },
+                         {
+                           description: 'No Pet',
+                           field: 'nopet'
+                         },
+                         {
+                           description: 'Attuneable',
+                           field: 'attuneable'
+                         },
+                         {
+                           description: 'Stackable',
+                           field: 'stackable'
+                         },
+                         {
+                           description: 'Potion Belt',
+                           field: 'potionbelt'
+                         },
+                       ]"
+                        >
+                          <div class="col-9 text-right p-0 pr-2">
+                            {{ field.description }}
+                          </div>
+                          <div class="col-3 text-left p-0">
+                            <eq-checkbox
+                              class="mb-2 d-inline-block"
+                              :true-value="(typeof field.true !== 'undefined' ? field.true : 1)"
+                              :false-value="(typeof field.false !== 'undefined' ? field.false : 0)"
+                              v-model.number="item[field.field]"
+                              @input="item[field.field] = $event"
+                            />
+                          </div>
+                        </div>
+
+                      </div>
+
+                      <div class="col-2">
+                        <h4 class="eq-header text-center">
+                          Class
+                        </h4>
+                        <class-bitmask-calculator
+                          class="text-center mt-3"
+                          :show-text-top="false"
+                          :show-text-side="true"
+                          :imageSize="40"
+                          :centered-buttons="true"
+                          @input="item.classes = parseInt($event)"
+                          :mask="item.classes"
+                        />
+                      </div>
+                      <div class="col-2">
+                        <h4 class="eq-header text-center">
+                          Race
+                        </h4>
+                        <race-bitmask-calculator
+                          :imageSize="40"
+                          class="mt-3"
+                          :show-text-top="false"
+                          :centered-buttons="true"
+                          @input="item.races = parseInt($event)"
+                          :mask="item.races"
+                        />
+                      </div>
+                      <div class="col-2">
+                        <h4 class="eq-header text-center">
+                          Deity
+                        </h4>
+                        <deity-bitmask-calculator
+                          class="mt-3"
+                          :imageSize="40"
+                          :show-names="false"
+                          :centered-buttons="true"
+                          @input="item.deity = parseInt($event)"
+                          :mask="item.deity"
+                        />
+                      </div>
+
+                      <!-- Slots -->
+                      <div class="col-2">
+                        <h4 class="eq-header text-center">
+                          Slots
+                        </h4>
+                        <inventory-slot-calculator
+                          class="mt-1"
+                          :imageSize="40"
+                          :show-text-top="false"
+                          :centered-buttons="false"
+                          @input="item.slots = parseInt($event)"
+                          :mask="item.slots"
+                        />
+                      </div>
+
+                      <!-- Model Preview -->
+                      <div
+                        class="col-2"
+                        style="text-align: center"
+                      >
+                        <h4 class="eq-header text-center">
+                          Model
+                        </h4>
+
+                        <div @mouseover="drawItemModelSelector">
+                          <item-model-preview
+                            :id="item.idfile"
+                          />
+
+                          Item Model
+                          <b-form-input
+                            v-model.number="item.idfile"
+                          />
+                        </div>
+                      </div>
+
                     </div>
-                  </div>
-
-                  <div class="mt-3 mb-3">
-                    <class-bitmask-calculator
-                      class="text-center mt-3"
-                      :imageSize="40"
-                      :centered-buttons="true"
-                      @input="item.classes = parseInt($event)"
-                      :mask="item.classes"
-                    />
-
-                    <race-bitmask-calculator
-                      :imageSize="37"
-                      class="mt-3"
-                      :centered-buttons="true"
-                      @input="item.races = parseInt($event)"
-                      :mask="item.races"
-                    />
-
-                    <deity-bitmask-calculator
-                      class="mt-3"
-                      :imageSize="33"
-                      :show-names="true"
-                      :centered-buttons="true"
-                      @input="item.deity = parseInt($event)"
-                      :mask="item.deity"
-                    />
-                  </div>
-
-                  <div class="mt-3 mb-3">
-                    <inventory-slot-calculator
-                      class="mt-1"
-                      :imageSize="45"
-                      :centered-buttons="false"
-                      @input="item.slots = parseInt($event)"
-                      :mask="item.slots"
-                    />
                   </div>
                 </eq-tab>
 
-                <eq-tab name="Damage">
+                <eq-tab name="Stats">
 
                   <div class="row">
-                    <div class="col-6">
-                      <h6 class="eq-header text-center mb-3">Damage / Delay / Haste</h6>
 
-                      <div class="row"
-                           :key="field.field"
-                           v-for="field in
+                    <div class="col-4">
+
+                      <!-- Stats -->
+                      <div class="col-12 text-center">
+
+                        <div
+                          class="row"
+                          :key="field.field"
+                          v-for="field in
+                       [
+                         {
+                           description: 'AC',
+                           field: 'ac'
+                         },
+                         {
+                           description: 'HP',
+                           field: 'hp',
+                           regen: 'regen'
+                         },
+                         {
+                           description: 'Mana',
+                           field: 'mana',
+                           regen: 'manaregen',
+                         },
+                         {
+                           description: 'Endur',
+                           field: 'endur',
+                           regen: 'enduranceregen'
+                         },
+                       ]"
+                        >
+                          <div class="col-4 text-right mr-3 p-0 mt-2">
+                            {{ field.description }}
+                          </div>
+                          <div class="col-7 p-0 m-0" :style="(item[field.field] === 0 ? 'opacity: .5' : '')">
+                            <b-form-input v-model.number="item[field.field]"/>
+                          </div>
+                        </div>
+
+                        <div
+                          v-for="(stat, description) in stats"
+                          :key="stat.stat"
+                          class="row text-center"
+                        >
+                          <div class="col-4 text-right mr-3 p-0 mt-2">
+                            {{ description }}
+                          </div>
+                          <div class="col-3 p-0 m-0" :style="(item[stat.stat] === 0 ? 'opacity: .5' : '')">
+                            <b-form-input v-model.number="item[stat.stat]"/>
+                          </div>
+                          <div class="col-1 p-0 m-0 mt-2">
+                            +
+                          </div>
+                          <div class="col-3 p-0 m-0" :style="(item[stat.heroic] === 0 ? 'opacity: .5' : '')">
+                            <b-form-input v-model.number="item[stat.heroic]"/>
+                          </div>
+                        </div>
+                      </div>
+
+                    </div>
+
+                    <div class="col-4">
+                      <div class="col-12">
+                        <div
+                          class="row"
+                          :key="field.field"
+                          v-for="field in
                        [
                          {
                            description: 'Damage',
@@ -241,21 +384,6 @@
                            description: 'Haste',
                            field: 'haste'
                          },
-                       ]">
-                        <div class="col-5 text-right">
-                          {{ field.description }}
-                        </div>
-                        <div class="col-4">
-                          <b-form-input v-model.number="item[field.field]"/>
-                        </div>
-                      </div>
-
-                      <h6 class="eq-header text-center mb-3 mt-3">Extra Damage</h6>
-
-                      <div class="row"
-                           :key="field.field"
-                           v-for="field in
-                       [
                          {
                            description: 'Extra Damage Skill',
                            field: 'extradmgskill'
@@ -264,21 +392,6 @@
                            description: 'Extra Damage Amount',
                            field: 'extradmgamt'
                          },
-                       ]">
-                        <div class="col-5 text-right">
-                          {{ field.description }}
-                        </div>
-                        <div class="col-4">
-                          <b-form-input v-model.number="item[field.field]"/>
-                        </div>
-                      </div>
-
-                      <h6 class="eq-header text-center mb-3 mt-3">Weapon</h6>
-
-                      <div class="row"
-                           :key="field.field"
-                           v-for="field in
-                       [
                          {
                            description: 'Backstab Damage',
                            field: 'backstabdmg'
@@ -291,22 +404,6 @@
                            description: 'Spell Damage',
                            field: 'spelldmg'
                          },
-                       ]">
-                        <div class="col-5 text-right">
-                          {{ field.description }}
-                        </div>
-                        <div class="col-4">
-                          <b-form-input v-model.number="item[field.field]"/>
-                        </div>
-                      </div>
-                    </div>
-                    <div class="col-6">
-                      <h6 class="eq-header text-center mb-3">Bane</h6>
-
-                      <div class="row"
-                           :key="field.field"
-                           v-for="field in
-                       [
                          {
                            description: 'Bane Damage Amount',
                            field: 'banedmgamt'
@@ -323,21 +420,6 @@
                            description: 'Bane Damage Race Amount',
                            field: 'banedmgraceamt'
                          },
-                       ]">
-                        <div class="col-5 text-right">
-                          {{ field.description }}
-                        </div>
-                        <div class="col-4">
-                          <b-form-input v-model.number="item[field.field]"/>
-                        </div>
-                      </div>
-
-                      <h6 class="eq-header text-center mb-3 mt-3">Elemental</h6>
-
-                      <div class="row"
-                           :key="field.field"
-                           v-for="field in
-                       [
                          {
                            description: 'Elemental Damage Amount',
                            field: 'elemdmgamt'
@@ -346,95 +428,129 @@
                            description: 'Element Damage Type',
                            field: 'elemdmgtype'
                          },
-                       ]">
-                        <div class="col-5 text-right">
-                          {{ field.description }}
-                        </div>
-                        <div class="col-4">
-                          <b-form-input v-model.number="item[field.field]"/>
+                       ]"
+                        >
+                          <div class="col-8 text-right mt-2 p-0 pr-3">
+                            {{ field.description }}
+                          </div>
+                          <div class="col-4 m-0 p-0" :style="(item[field.field] === 0 ? 'opacity: .5' : '')">
+                            <b-form-input v-model.number="item[field.field]"/>
+                          </div>
                         </div>
                       </div>
                     </div>
+
+                    <div class="col-4">
+                      <div v-for="(field, description) in mod3" :key="field" class="row text-center">
+                        <div class="col-7 text-right mt-2 p-0 pr-3">
+                          {{ description }}
+                        </div>
+                        <div class="col-3 m-0 p-0" :style="(parseInt(item[field]) === 0 ? 'opacity: .5' : '')">
+                          <b-form-input v-model.number="item[field]" v-if="field !== 'combateffects'"/>
+                          <!-- For some reason combateffects is a varchar field -->
+                          <b-form-input v-model="item[field]" v-if="field === 'combateffects'"/>
+                        </div>
+                      </div>
+                    </div>
+
+                  </div>
+
+
+                </eq-tab>
+
+                <eq-tab name="Effects">
+                  <div>
+                    <b-input-group style="height: 30px; margin-bottom: 15px">
+                      <template #prepend>
+                        <b-input-group-text class="m-0" style="width: 100px; height: 38px">Effect Type
+                        </b-input-group-text>
+                      </template>
+
+                      <!--                      <b-input-group-text class="m-0" placeholder="Spell" disabled style="width: 200px">Spell</b-input-group-text>-->
+                      <b-form-input class="m-0" placeholder="Spell ID" disabled style="width: 100px"/>
+                      <b-form-input class="m-0" placeholder="As Level" disabled/>
+                      <b-form-input class="m-0" placeholder="Required Level" disabled/>
+                    </b-input-group>
+
+                    <b-input-group
+                      :key="field.field"
+                      v-for="field in
+                       [
+                         {
+                           effectType: 'Scroll',
+                           effectField: 'scrolleffect',
+                           asLevelField: 'scrolllevel',
+                           reqLevelField: 'scrolllevel_2',
+                         },
+                         {
+                           effectType: 'Click',
+                           effectField: 'clickeffect',
+                           asLevelField: 'clicklevel',
+                           reqLevelField: 'clicklevel_2',
+                         },
+                         {
+                           effectType: 'Proc',
+                           effectField: 'proceffect',
+                           asLevelField: 'proclevel',
+                           reqLevelField: 'proclevel_2',
+                         },
+                         {
+                           effectType: 'Focus',
+                           effectField: 'focuseffect',
+                           asLevelField: 'focuslevel',
+                           reqLevelField: 'focuslevel_2',
+                         },
+                         {
+                           effectType: 'Worn',
+                           effectField: 'worneffect',
+                           asLevelField: 'wornlevel',
+                           reqLevelField: 'wornlevel_2',
+                         },
+                         {
+                           effectType: 'Bard',
+                           effectField: 'bardeffect',
+                           asLevelField: 'bardlevel',
+                           reqLevelField: 'bardlevel_2',
+                         },
+                       ]"
+                    >
+
+                      <template #prepend>
+                        <b-input-group-text style="width: 100px; height: 38px; text-align: right;">{{ field.effectType }}
+                        </b-input-group-text>
+                      </template>
+
+                      <!--                      <b-input-group-text style="width: 200px; height: 38px">Spell</b-input-group-text>-->
+                      <b-form-input
+                        class="m-0"
+                        placeholder="Spell ID"
+                        style="width: 100px"
+                        @mouseover="drawEffectSelector"
+                        :id="field.effectField"
+                        v-model.number="item[field.effectField]"
+                      />
+                      <b-form-input
+                        class="m-0"
+                        placeholder="As Level"
+                        @change="syncEffects(field.asLevelField, field.reqLevelField)"
+                        v-model.number="item[field.asLevelField]"
+                      />
+                      <b-form-input
+                        class="m-0"
+                        placeholder="Required Level"
+                        @change="syncEffects(field.reqLevelField, field.asLevelField)"
+                        v-model.number="item[field.reqLevelField]"
+                      />
+
+                    </b-input-group>
+
+
                   </div>
                 </eq-tab>
 
                 <eq-tab
-                  name="Stats"
+                  name="Augmentation"
                 >
-
-                  <div class="row">
-                    <!-- Stats -->
-                    <div class="col-6 text-center">
-
-                      <h6 class="eq-header">
-                        Stats
-                      </h6>
-                      <div
-                        v-for="(stat, description) in stats"
-                        :key="stat.stat"
-                        class="row text-center"
-                      >
-                        <div class="col-2 text-right">
-                          {{ description }}
-                        </div>
-                        <div class="col-4">
-                          <b-form-input v-model.number="item[stat.stat]"/>
-                        </div>
-                        <div class="col-2 text-right">
-                          Heroic
-                        </div>
-                        <div class="col-4">
-                          <b-form-input v-model.number="item[stat.heroic]"/>
-                        </div>
-                      </div>
-                    </div>
-
-                    <!-- Resists -->
-                    <div class="col-6 text-center">
-                      <h6 class="eq-header">
-                        Resists
-                      </h6>
-                      <div
-                        v-for="(resist, description) in resists"
-                        :key="resist.stat"
-                        class="row text-center"
-                      >
-                        <div class="col-2 text-right">
-                          {{ description }}
-                        </div>
-                        <div class="col-4">
-                          <b-form-input v-model.number="item[resist.stat]"/>
-                        </div>
-                        <div class="col-2 text-right">
-                          Heroic
-                        </div>
-                        <div class="col-4">
-                          <b-form-input v-model.number="item[resist.heroic]"/>
-                        </div>
-                      </div>
-                    </div>
-
-                  </div>
-                </eq-tab>
-
-                <eq-tab name="Mods">
-                  <div v-for="(field, description) in mod3" :key="field" class="row text-center">
-                    <div class="col-1">
-
-                    </div>
-                    <div class="col-4 text-right">
-                      {{ description }}
-                    </div>
-                    <div class="col-2">
-                      <b-form-input v-model.number="item[field]" v-if="field !== 'combateffects'"/>
-                      <!-- For some reason combateffects is a varchar field -->
-                      <b-form-input v-model="item[field]" v-if="field === 'combateffects'"/>
-                    </div>
-                  </div>
-                </eq-tab>
-
-                <eq-tab
-                  name="Augmentation">
 
                   <h6 class="eq-header text-center mt-3 mb-3">Item Is Augment</h6>
 
@@ -451,7 +567,8 @@
                         <option
                           v-for="(value, index) in AUG_TYPES"
                           :key="index"
-                          :value="parseInt(index)">
+                          :value="parseInt(index)"
+                        >
                           {{ index }}) {{ value.name }}
                         </option>
                       </select>
@@ -471,7 +588,8 @@
                         <option
                           v-for="(value, index) in DB_ITEM_AUG_RESTRICT"
                           :key="index"
-                          :value="parseInt(index)">
+                          :value="parseInt(index)"
+                        >
                           {{ index }}) {{ value }}
                         </option>
                       </select>
@@ -506,7 +624,8 @@
                         <option
                           v-for="(value, index) in AUG_TYPES"
                           :key="index"
-                          :value="parseInt(index)">
+                          :value="parseInt(index)"
+                        >
                           {{ index }}) {{ value.name }}
                         </option>
                       </select>
@@ -549,16 +668,19 @@
             <eq-window
               style="margin-top: 30px; margin-right: 10px; width: auto;"
               :key="item.updatedAt"
-              v-if="previewItemActive && item && item.id > 0">
+              v-if="previewItemActive && item && item.id > 0"
+            >
               <eq-item-preview
-                :item-data="item"/>
+                :item-data="item"
+              />
             </eq-window>
 
             <!-- item model selector -->
             <eq-window
               style="margin-top: 30px; margin-right: 10px; width: auto;"
               class="fade-in"
-              v-if="itemModelSelectorActive && item">
+              v-if="itemModelSelectorActive && item"
+            >
 
               <item-model-selector
                 :selected-model="item.idfile"
@@ -570,7 +692,8 @@
             <eq-window
               style="margin-top: 30px; margin-right: 10px; width: auto;"
               class="fade-in"
-              v-if="iconSelectorActive">
+              v-if="iconSelectorActive"
+            >
 
               <item-icon-selector
                 :selected-icon="item.icon"
@@ -583,15 +706,30 @@
               title="Free Item Ids"
               style="margin-top: 30px; margin-right: 10px; width: auto;"
               class="fade-in"
-              v-if="freeIdSelectorActive">
+              v-if="freeIdSelectorActive"
+            >
 
               <free-id-selector
                 table-name="items"
                 id-name="id"
                 name-label="name"
                 :with-reserved="true"
-                @input="item.id = $event"/>
+                @input="item.id = $event"
+              />
             </eq-window>
+
+            <!-- spell effect selector -->
+            <div
+              class="fade-in"
+              v-if="spellEffectSelectorActive"
+            >
+
+              <spell-effect-selector
+                @input="item[$event.field] = $event.spell.id; setFieldModifiedById($event.field)"
+              />
+
+            </div>
+
           </div>
         </div>
       </div>
@@ -627,11 +765,15 @@ import {
 import {AUG_TYPES}             from "../../app/constants/eq-aug-constants";
 import InventorySlotCalculator from "../../components/tools/InventorySlotCalculator";
 
+import {Sketch}            from 'vue-color'
+import SpellEffectSelector from "../../components/tools/SpellEffectSelector";
+
 const MILLISECONDS_BEFORE_WINDOW_RESET = 3000;
 
 export default {
   name: "ItemEdit",
   components: {
+    SpellEffectSelector,
     InventorySlotCalculator,
     DeityBitmaskCalculator,
     RaceBitmaskCalculator,
@@ -645,7 +787,8 @@ export default {
     EqTab,
     EqTabs,
     EqWindow,
-    EqWindowFancy
+    EqWindowFancy,
+    Sketch
   },
   data() {
     return {
@@ -656,6 +799,7 @@ export default {
       previewItemActive: true,
       iconSelectorActive: false,
       itemModelSelectorActive: false,
+      spellEffectSelectorActive: false,
       freeIdSelectorActive: false,
 
       lastResetTime: Date.now(),
@@ -676,9 +820,7 @@ export default {
         "Wisdom": { stat: "awis", heroic: "heroic_wis" },
         "Agility": { stat: "aagi", heroic: "heroic_agi" },
         "Dexterity": { stat: "adex", heroic: "heroic_dex" },
-        "Charisma": { stat: "acha", heroic: "heroic_cha" }
-      },
-      resists: {
+        "Charisma": { stat: "acha", heroic: "heroic_cha" },
         "Magic Resist": { stat: "mr", heroic: "heroic_mr" },
         "Fire Resists": { stat: "fr", heroic: "heroic_fr" },
         "Cold Resist": { stat: "cr", heroic: "heroic_cr" },
@@ -691,15 +833,17 @@ export default {
         "HP Regen": "regen",
         "Mana Regen": "manaregen",
         "Endurance Regen": "enduranceregen",
-        "Spell Shielding": "spellshield",
-        "Combat Effects": "combateffects",
-        "Shielding": "shielding",
-        "DoT Shielding": "dotshielding",
-        "Avoidance": "avoidance",
         "Accuracy": "accuracy",
-        "Stun Resist": "stunresist",
+        "Avoidance": "avoidance",
+        "Clairvoyance": "clairvoyance",
+        "Combat Effects": "combateffects",
+        "Damage Shield": "damageshield",
+        "DoT Shielding": "dotshielding",
+        "Heal Amount": "healamt",
+        "Shielding": "shielding",
+        "Spell Shielding": "spellshield",
         "Strikethrough": "strikethrough",
-        "Damage Shield": "damageshield"
+        "Stun Resist": "stunresist",
         // TODO: extradmgamt
       },
 
@@ -744,9 +888,23 @@ export default {
   },
   methods: {
 
+    // prefills required and as level if the other value is 0 to save extra effort
+    syncEffects(source, destination) {
+      if (this.item[destination] === 0) {
+        this.item[destination] = this.item[source]
+      }
+    },
+
     setFieldModified(evt) {
       // border: 2px #555555 solid !important;
       evt.target.style.setProperty('border-color', 'orange', 'important');
+    },
+
+    setFieldModifiedById(id) {
+      const target = document.getElementById(id)
+      if (target) {
+        target.style.setProperty('border-color', 'orange', 'important');
+      }
     },
 
     resetFieldEditedStatus() {
@@ -807,10 +965,11 @@ export default {
      * Selector / previewers
      */
     resetPreviewComponents() {
-      this.previewItemActive       = false;
-      this.iconSelectorActive      = false;
-      this.itemModelSelectorActive = false;
-      this.freeIdSelectorActive    = false;
+      this.previewItemActive         = false;
+      this.iconSelectorActive        = false;
+      this.itemModelSelectorActive   = false;
+      this.spellEffectSelectorActive = false;
+      this.freeIdSelectorActive      = false;
     },
     previewItem() {
       let shouldReset = Date.now() - this.lastResetTime > MILLISECONDS_BEFORE_WINDOW_RESET;
@@ -821,6 +980,10 @@ export default {
         this.previewItemActive = true;
         this.lastResetTime     = Date.now()
       }
+    },
+    drawEffectSelector() {
+      this.resetPreviewComponents()
+      this.spellEffectSelectorActive = true
     },
     drawItemModelSelector() {
       this.resetPreviewComponents()

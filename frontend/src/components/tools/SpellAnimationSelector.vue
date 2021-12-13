@@ -101,7 +101,7 @@ function elementInViewport(elem) {
     elem.getBoundingClientRect().width === 0) {
     return false;
   }
-  const elemCenter   = {
+  const elemCenter = {
     x: elem.getBoundingClientRect().left + elem.offsetWidth / 2,
     y: elem.getBoundingClientRect().top + elem.offsetHeight / 2
   };
@@ -173,14 +173,12 @@ export default {
         // we need 100ms delay because the videos haven't been rendered yet
         setTimeout(() => {
           const container = document.getElementById("spell-video-view-port");
-          const target = util.format("spell-%s", this.selectedAnimation)
-          // console.log(container)
-          // console.log(target)
-          // console.log(container.scrollTop)
-          // console.log(document.getElementById(target).offsetTop)
+          const target    = util.format("spell-%s", this.selectedAnimation)
 
           // 230 is height of video to offset
-          container.scrollTop = document.getElementById(target).offsetTop - 230;
+          if (container) {
+            container.scrollTop = document.getElementById(target).offsetTop - 230;
+          }
         }, 100)
       }
 

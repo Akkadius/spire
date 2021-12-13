@@ -164,6 +164,7 @@ import {Items} from "@/app/items";
 import {ROUTE} from "@/routes";
 
 export default {
+  name: "Spells",
   components: {
     EqSpellPreviewTable,
     EqSpellPreview,

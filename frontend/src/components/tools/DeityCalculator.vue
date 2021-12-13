@@ -5,14 +5,19 @@
       :style="(centeredButtons ? 'width: 100%' : '')"
     >
       <div v-for="(deity, deityId) in deities" class="mb-1 text-center d-inline-block">
-        <div class="text-center pl-0 pr-1 col-lg-12 col-sm-12">
-          <small :style="(deity.short.length > 8 ? 'font-size: 9px' : 'font-size: 10px')" v-if="showNames">{{ deity.short }}</small>
+        <div class="text-center pl-0 pr-0 mr-1 col-lg-12 col-sm-12">
+          <small
+            :style="(deity.short.length > 8 ? 'font-size: 9px' : 'font-size: 11px')"
+            v-if="showNames"
+          >{{ deity.short }}</small>
           <div class="text-center">
             <img
+              :title="deity.name"
               @click="selectDeity(deityId)"
               :src="itemCdnUrl + 'item_' + deity.icon + '.png'"
-              :style="getImageSize() + ' ' + (isDeitySelected(deityId) ? 'border: 2px solid #dadada; border-radius: 7px;' : 'border: 2px solid rgb(218 218 218 / 30%); border-radius: 7px;')"
-              class="mt-1 p-1">
+              :style="getImageSize() + ' ' + (isDeitySelected(deityId) ? 'border: 2px solid #dadada; border-radius: 7px;' : 'border-radius: 7px; opacity: .6')"
+              class="mt-1 hover-highlight" alt=""
+            >
           </div>
         </div>
       </div>

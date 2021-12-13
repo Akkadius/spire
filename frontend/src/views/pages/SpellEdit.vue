@@ -53,7 +53,8 @@
                       <img
                         :src="spellCdnUrl + spell.new_icon + '.gif'"
                         class="mt-3"
-                        :style="'width:35px;height:auto;border-radius: 10px; ' + 'border: 2px solid ' + getTargetTypeColor(this.spell['targettype']) + '; border-radius: 7px;'">
+                        :style="'width:35px;height:auto;border-radius: 10px; ' + 'border: 2px solid ' + getTargetTypeColor(this.spell['targettype']) + '; border-radius: 7px;'"
+                      >
                     </div>
 
                   </div>
@@ -115,7 +116,8 @@
                     >
                       <spell-animation-preview
                         class="mt-4"
-                        :id="spell.spellanim"/>
+                        :id="spell.spellanim"
+                      />
 
                       Spell Animation
                       <b-form-input v-model.number="spell.spellanim"/>
@@ -234,8 +236,10 @@
                     </div>
                     <div class="col-3 text-center">
                       Not Focusable
-                      <eq-checkbox class="mt-2 mb-2" v-model.number="spell.not_extendable"
-                                   @input="spell.not_extendable = $event"/>
+                      <eq-checkbox
+                        class="mt-2 mb-2" v-model.number="spell.not_extendable"
+                        @input="spell.not_extendable = $event"
+                      />
                     </div>
                   </div>
 
@@ -331,23 +335,31 @@
                   <div class="row">
                     <div class="col-3" style="text-align:center">
                       Must Be Out of Combat
-                      <eq-checkbox class="mt-2 mb-2" v-model.number="spell.outof_combat"
-                                   @input="spell.outof_combat = $event"/>
+                      <eq-checkbox
+                        class="mt-2 mb-2" v-model.number="spell.outof_combat"
+                        @input="spell.outof_combat = $event"
+                      />
                     </div>
                     <div class="col-2" style="text-align:center">
                       Must Be In Combat
-                      <eq-checkbox class="mt-2 mb-2" v-model.number="spell.in_combat"
-                                   @input="spell.in_combat = $event"/>
+                      <eq-checkbox
+                        class="mt-2 mb-2" v-model.number="spell.in_combat"
+                        @input="spell.in_combat = $event"
+                      />
                     </div>
                     <div class="col-3" style="text-align:center">
                       Only During Fast Regen
-                      <eq-checkbox class="mt-2 mb-2" v-model.number="spell.allowrest"
-                                   @input="spell.allowrest = $event"/>
+                      <eq-checkbox
+                        class="mt-2 mb-2" v-model.number="spell.allowrest"
+                        @input="spell.allowrest = $event"
+                      />
                     </div>
                     <div class="col-2" style="text-align:center">
                       Cancel On Sit
-                      <eq-checkbox class="mt-2 mb-2" v-model.number="spell.disallow_sit"
-                                   @input="spell.disallow_sit = $event"/>
+                      <eq-checkbox
+                        class="mt-2 mb-2" v-model.number="spell.disallow_sit"
+                        @input="spell.disallow_sit = $event"
+                      />
                     </div>
                     <div class="col-2" style="text-align:center">
                       Must be Sneaking
@@ -424,23 +436,31 @@
                   <div class="row">
                     <div class="col-3" style="text-align:center">
                       Can Not Dispell
-                      <eq-checkbox class="mt-2 mb-2" v-model.number="spell.nodispell"
-                                   @input="spell.nodispell = $event"/>
+                      <eq-checkbox
+                        class="mt-2 mb-2" v-model.number="spell.nodispell"
+                        @input="spell.nodispell = $event"
+                      />
                     </div>
                     <div class="col-3" style="text-align:center">
                       Can Not Click Off
-                      <eq-checkbox class="mt-2 mb-2" v-model.number="spell.field_232"
-                                   @input="spell.field_232 = $event"/>
+                      <eq-checkbox
+                        class="mt-2 mb-2" v-model.number="spell.field_232"
+                        @input="spell.field_232 = $event"
+                      />
                     </div>
                     <div class="col-3" style="text-align:center">
                       Persist After Death
-                      <eq-checkbox class="mt-2 mb-2" v-model.number="spell.persistdeath"
-                                   @input="spell.persistdeath = $event"/>
+                      <eq-checkbox
+                        class="mt-2 mb-2" v-model.number="spell.persistdeath"
+                        @input="spell.persistdeath = $event"
+                      />
                     </div>
                     <div class="col-3" style="text-align:center">
                       Suspendable
-                      <eq-checkbox class="mt-2 mb-2" v-model.number="spell.suspendable"
-                                   @input="spell.suspendable = $event"/>
+                      <eq-checkbox
+                        class="mt-2 mb-2" v-model.number="spell.suspendable"
+                        @input="spell.suspendable = $event"
+                      />
                     </div>
                   </div>
 
@@ -516,8 +536,10 @@
                     </div>
                     <div class="col-6 text-center">
                       NPC Line of Sight Not Required to Cast
-                      <eq-checkbox class="mt-2 mb-2" v-model.number="spell.npc_no_los"
-                                   @input="spell.npc_no_los = $event"/>
+                      <eq-checkbox
+                        class="mt-2 mb-2" v-model.number="spell.npc_no_los"
+                        @input="spell.npc_no_los = $event"
+                      />
                     </div>
                   </div>
 
@@ -610,15 +632,18 @@
                     </div>
                     <div class="col-3 text-center">
                       Unresistable
-                      <eq-checkbox class="mt-2 mb-2" v-model.number="spell.field_209"
-                                   @input="spell.field_209 = $event"/>
+                      <eq-checkbox
+                        class="mt-2 mb-2" v-model.number="spell.field_209"
+                        @input="spell.field_209 = $event"
+                      />
                     </div>
                     <div class="col-3 text-center">
                       No Partial Resists
                       <eq-checkbox
                         class="mt-2 mb-2"
                         v-model.number="spell.no_partial_resist"
-                        @input="spell.no_partial_resist = $event"/>
+                        @input="spell.no_partial_resist = $event"
+                      />
                     </div>
                   </div>
 
@@ -670,16 +695,19 @@
             <!-- preview spell -->
             <eq-window
               style="margin-top: 30px; margin-right: 10px; width: auto;"
-              v-if="previewSpellActive">
+              v-if="previewSpellActive"
+            >
               <eq-spell-preview
-                :spell-data="spell"/>
+                :spell-data="spell"
+              />
             </eq-window>
 
             <!-- icon selector -->
             <eq-window
               style="margin-top: 30px; margin-right: 10px; width: auto;"
               class="fade-in"
-              v-if="iconSelectorActive">
+              v-if="iconSelectorActive"
+            >
               <spell-icon-selector
                 :selected-icon="spell.new_icon"
                 :inputData.sync="spell.new_icon"
@@ -690,7 +718,8 @@
             <eq-window
               style="margin-top: 30px; margin-right: 10px; width: auto;"
               class="fade-in"
-              v-if="spellAnimSelectorActive">
+              v-if="spellAnimSelectorActive"
+            >
 
               <spell-animation-selector
                 :selected-animation="spell.spellanim"
@@ -703,14 +732,16 @@
               title="Free Spell Ids"
               style="margin-top: 30px; margin-right: 10px; width: auto;"
               class="fade-in"
-              v-if="freeIdSelectorActive">
+              v-if="freeIdSelectorActive"
+            >
 
               <free-id-selector
                 table-name="spells_new"
                 id-name="id"
                 name-label="name"
                 :with-reserved="true"
-                @input="spell.id = $event"/>
+                @input="spell.id = $event"
+              />
 
             </eq-window>
 
