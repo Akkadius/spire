@@ -1761,7 +1761,7 @@ export class Spells {
           break;
 
         case 373:
-          printBuffer += "Cast " + (await this.renderSpellMini(spell.id, base)) + " on Fade"
+          printBuffer += "Cast " + (await this.renderSpellMini(spell.id, base)) + " on Duration Fade (v373)"
           break;
 
         case 374:
@@ -1777,7 +1777,7 @@ export class Spells {
           break;
 
         case 377:
-          printBuffer += "Cast " + (await this.renderSpellMini(spell.id, base)) + " on Duration Finished"
+          printBuffer += "Cast " + (await this.renderSpellMini(spell.id, base)) + " on Duration Fade (v377)"
           break;
 
         case 378:

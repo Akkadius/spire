@@ -65,6 +65,13 @@
         <td> {{ spellData["spell_fades"] }}</td>
       </tr>
 
+      <tr v-if="spellData['typedescnum'] !== ''">
+        <td class="spell-field-label">Book Category</td>
+        <td> {{ getSpellTypeDescNumName(spellData["typedescnum"]) }}
+          <span v-if="spellData['effectdescnum'] !== ''"> / {{ getSpellTypeDescNumName(spellData["effectdescnum"]) }} </span>
+        </td>
+      </tr>
+
       <tr v-if="spellData['skill'] < 116 && getDatabaseSkillName(spellData['skill']) !== ''">
         <td class="spell-field-label">Skill</td>
         <td> {{ getDatabaseSkillName(spellData["skill"]) }}
@@ -399,7 +406,8 @@ import {
   DB_SPELL_NUMHITSTYPE,
   DB_SPELL_RESISTS,
   DB_SPELL_TARGET_RESTRICTION,
-  DB_SPELL_TARGETS
+  DB_SPELL_TARGETS,
+  DB_SPELL_TYPEDESCNUM
 }                         from "@/app/constants/eq-spell-constants";
 import {SpellsNewApi}     from "@/app/api";
 import {SpireApiClient}   from "@/app/api/spire-api-client";
@@ -533,6 +541,9 @@ export default {
     },
     getSpellNumHitsTypeName: function (id) {
       return DB_SPELL_NUMHITSTYPE[id] ? DB_SPELL_NUMHITSTYPE[id] : ""
+    },
+    getSpellTypeDescNumName: function (id) {
+      return DB_SPELL_TYPEDESCNUM[id] ? DB_SPELL_TYPEDESCNUM[id] : ""
     },
 
     getConeAngleDescription: function (start, stop) {
