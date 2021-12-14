@@ -4,5 +4,8 @@
   "repository": {
     "type": "git",
     "url": "https://github.com/Akkadius/spire.git"
+  },
+  "dependencies": {
+    "vue-color": "^2.8.1"
   }
 }
