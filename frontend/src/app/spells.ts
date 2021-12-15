@@ -2356,7 +2356,7 @@ export class Spells {
           if (base !== limit && limit !== 0) {
             tmp += " ( " + (limit / 1000) + " in PvP)"
           }
-          printBuffer += "Stun and Fear " + (base / 1000) + " sec" + tmp + this.getUpToMaxLvl(max)
+          printBuffer += "Stun and Fear " + (base / 1000) + " sec" + tmp + (max >= 1000 ? "up to level " + (max - 1000) : "up to level + " + max)
           break;
 
         case 503:
@@ -2388,11 +2388,11 @@ export class Spells {
           break;
 
         case 511:
-          printBuffer += "Limit Min Delay Between Trigger: " + (limit / 1000) + "s" + " (Max Triggers: " + base + ")"
+          printBuffer += "Limit: Focus Reuse Timer: " + (limit / 1000) + "s"
           break;
 
         case 512:
-          printBuffer += "Proc Timer: " + (limit / 1000) + "s" + " (Max Triggers: " + base + ")"
+          printBuffer += "Proc Reuse Timer: " + (limit / 1000) + "s"
           break;
 
         case 513:
