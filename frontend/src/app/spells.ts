@@ -1419,7 +1419,7 @@ export class Spells {
           break;
 
         case 288: //TODO finish this when AA tables are added, this procs the spell associated with the AA, rank.spell is what the spell id that procs is
-          printBuffer += "Add [Insert AA spell] Proc to" + DB_SPA[limit] + "(" + (base / 10) + "% Chance)"
+          printBuffer += "Cast " + (max) ? (await this.renderSpellMini(spell.id, max)) : "Get Spell from AA Table" + " on " + DB_SPA[limit] + " use" + "(" + (base / 10) + "% Chance)"
           break;
 
         case 289:
