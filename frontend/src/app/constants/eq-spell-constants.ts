@@ -699,7 +699,7 @@ export const DB_SPA = {
   "516": "AC Mitigation Max Percent",
   "517": "Attack Offense Max Percent",
   "518": "Attack Accuracy Max Percent",
-  "519": "Luck Amt",
+  "519": "Luck Amount",
   "520": "Luck Percent",
   "521": "Absorb Damage with Endurance",
   "522": "Instant Mana Percent",
