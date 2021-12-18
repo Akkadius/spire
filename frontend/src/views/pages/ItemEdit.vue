@@ -252,7 +252,7 @@
                         </h4>
                         <deity-bitmask-calculator
                           class="mt-3"
-                          :imageSize="40"
+                          :imageSize="38"
                           :show-names="false"
                           :centered-buttons="true"
                           @input="item.deity = parseInt($event)"
@@ -267,7 +267,7 @@
                         </h4>
                         <inventory-slot-calculator
                           class="mt-1"
-                          :imageSize="40"
+                          :imageSize="37"
                           :show-text-top="false"
                           :centered-buttons="false"
                           @input="item.slots = parseInt($event)"
@@ -988,12 +988,20 @@ export default {
         console.log("focus type is [%s]", this.item.focustype)
       }
     },
+    'item.casttime': function (newVal, oldVal) {
+      if (newVal !== oldVal && this.item) {
+        this.item.casttime_ = this.item.casttime
+        console.log("casttime_ is [%s]", this.item.casttime_)
+      }
+    },
 
     // setting updatedAt tricks the component into re-rendering
     item: {
       handler(val, oldVal) {
         if (this.item) {
           this.item.updatedAt = Date.now()
+
+          // console.log(JSON.stringify(this.item))
         }
       },
       deep: true,
