@@ -24,6 +24,11 @@ input[type=checkbox].eq-checkbox:checked + label {
     width: 16px;
 }
 
+.eq-checkbox-label:hover {
+    box-shadow: 0px 0px 1px 3px white;
+    border-radius: 7px;
+}
+
 [class*="eq-window"] input,
 [class*="eq-window"] textarea,
 [class*="eq-window"] pre,

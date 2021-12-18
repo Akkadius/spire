@@ -9,7 +9,7 @@
       v-bind:false-value="falseValue"
       :checked="(inputVal > 0)"
       :disabled="disabled === 1">
-    <label :for="id"></label>
+    <label :for="id" class="eq-checkbox-label"></label>
   </div>
 </template>
 
