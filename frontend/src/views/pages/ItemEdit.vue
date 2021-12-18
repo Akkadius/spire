@@ -227,7 +227,7 @@
                           class="text-center mt-3"
                           :show-text-top="false"
                           :show-text-side="true"
-                          :imageSize="40"
+                          :imageSize="38"
                           :centered-buttons="true"
                           @input="item.classes = parseInt($event)"
                           :mask="item.classes"
@@ -238,7 +238,7 @@
                           Race
                         </h4>
                         <race-bitmask-calculator
-                          :imageSize="40"
+                          :imageSize="37"
                           class="mt-3"
                           :show-text-top="false"
                           :centered-buttons="true"
@@ -252,7 +252,7 @@
                         </h4>
                         <deity-bitmask-calculator
                           class="mt-3"
-                          :imageSize="38"
+                          :imageSize="37"
                           :show-names="false"
                           :centered-buttons="true"
                           @input="item.deity = parseInt($event)"
