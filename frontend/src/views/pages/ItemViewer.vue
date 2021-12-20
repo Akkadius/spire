@@ -67,7 +67,7 @@ import itemSlotIdFileMapping from "@/constants/item-slot-idfile-mapping.json"
 import itemTypes             from "@/constants/item-types.json"
 import itemTypesModelMapping from "@/constants/item-type-model-mapping.json"
 import slugify               from "slugify";
-import PageHeader            from "@/views/layout/PageHeader";
+import PageHeader            from "@/components/layout/PageHeader";
 import {App}                 from "@/constants/app";
 import EqWindow              from "@/components/eq-ui/EQWindow";
 import {ROUTE}               from "../../routes";

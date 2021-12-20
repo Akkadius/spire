@@ -272,10 +272,10 @@ import EqTab                    from "@/components/eq-ui/EQTab.vue";
 import slugify                  from "slugify";
 import moment                   from "moment";
 import * as util                from "util";
-import QuestApiDisplayMethods   from "@/views/pages/QuestApiExplorer/components/QuestApiDisplayMethods.vue";
+import QuestApiDisplayMethods   from "@/views/quest-api-explorer/components/QuestApiDisplayMethods.vue";
 import Analytics                from "@/app/analytics/analytics";
-import QuestApiDisplayConstants from "@/views/pages/QuestApiExplorer/components/QuestApiDisplayConstants.vue";
-import QuestApiDisplayEvents    from "@/views/pages/QuestApiExplorer/components/QuestApiDisplayEvents.vue";
+import QuestApiDisplayConstants from "@/views/quest-api-explorer/components/QuestApiDisplayConstants.vue";
+import QuestApiDisplayEvents    from "@/views/quest-api-explorer/components/QuestApiDisplayEvents.vue";
 import EqDebug                  from "@/components/eq-ui/EQDebug.vue";
 import Debug                    from "@/app/debug/debug";
 import {debounce}               from "@/app/utility/debounce";
@@ -293,7 +293,7 @@ export default {
     DebugDisplayComponent,
     EqWindow,
     editor: require('vue2-ace-editor'),
-    "page-header": () => import("@/views/layout/PageHeader.vue")
+    "page-header": () => import("@/components/layout/PageHeader.vue")
   },
   data() {
     return {

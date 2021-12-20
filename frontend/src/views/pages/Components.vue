@@ -406,7 +406,7 @@ import EqWindow from "@/components/eq-ui/EQWindow";
 import EqTabs from "@/components/eq-ui/EQTabs";
 import EqTab from "@/components/eq-ui/EQTab";
 import EqProgressBar from "@/components/eq-ui/EQProgressBar";
-import PageHeader from "@/views/layout/PageHeader";
+import PageHeader from "@/components/layout/PageHeader";
 import EqItemCardPreview from "@/components/eq-ui/EQItemCardPreview";
 import {EXAMPLE_ITEM_DATA} from "@/app/constants/eq-example-item-data";
 import EqSpellPreview from "@/components/eq-ui/EQSpellCardPreview";

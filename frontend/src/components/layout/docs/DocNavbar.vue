@@ -116,10 +116,10 @@
 
 <script>
 
-import {App} from "@/constants/app";
-import NavbarDropdownMenu from "@/views/layout/NavbarDropdownMenu";
-import UserContext from "@/app/user/UserContext";
-import {SpireApiClient} from "@/app/api/spire-api-client";
+import {App}              from "@/constants/app";
+import NavbarDropdownMenu from "@/components/layout/NavbarDropdownMenu";
+import UserContext        from "@/app/user/UserContext";
+import {SpireApiClient}   from "@/app/api/spire-api-client";
 
 export default {
   components: {

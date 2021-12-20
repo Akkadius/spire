@@ -86,7 +86,7 @@ import NpcModels      from "@/app/asset-maps/npc-models-map";
 import util           from "util";
 import slugify        from "slugify"
 import raceConstants  from "@/app/constants/eq-race-constants"
-import PageHeader     from "@/views/layout/PageHeader";
+import PageHeader     from "@/components/layout/PageHeader";
 import {App}          from "@/constants/app";
 import EqWindow       from "@/components/eq-ui/EQWindow";
 import EqWindowSimple from "@/components/eq-ui/EQWindowSimple";

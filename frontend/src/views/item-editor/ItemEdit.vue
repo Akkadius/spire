@@ -768,7 +768,9 @@
                       Augment Distiller Type
                     </div>
                     <div class="col-3">
-                      <b-form-input v-model.number="item['augdistiller']"/>
+                      <b-form-input
+                        :style="(item['augdistiller'] === 0 ? 'opacity: .5' : '')"
+                        v-model.number="item['augdistiller']"/>
                     </div>
                   </div>
 
@@ -781,7 +783,11 @@
                       Augment Slot {{ i }} Type
                     </div>
                     <div class="col-3">
-                      <select v-model.number="item['augslot_' + i + '_type']" class="form-control">
+                      <select
+                        v-model.number="item['augslot_' + i + '_type']"
+                        :style="(item['augslot_' + i + '_type'] === 0 ? 'opacity: .5' : '')"
+                        class="form-control"
+                      >
                         <option
                           v-for="(value, index) in AUG_TYPES"
                           :key="index"
@@ -1083,11 +1089,11 @@ import {SpireApiClient}        from "../../app/api/spire-api-client";
 import * as util               from "util";
 import FreeIdSelector          from "../../components/tools/FreeIdSelector";
 import {Items}                 from "../../app/items";
-import {ItemApi}               from "../../app/api";
-import ItemModelPreview        from "../../components/tools/ItemModelPreview";
-import ItemModelSelector       from "../../components/tools/ItemModelSelector";
-import ItemIconSelector        from "../../components/tools/ItemIconSelector";
-import ClassBitmaskCalculator  from "../../components/tools/ClassBitmaskCalculator";
+import {ItemApi}              from "../../app/api";
+import ItemModelPreview       from "./components/ItemModelPreview";
+import ItemModelSelector      from "./components/ItemModelSelector";
+import ItemIconSelector       from "./components/ItemIconSelector";
+import ClassBitmaskCalculator from "../../components/tools/ClassBitmaskCalculator";
 import RaceBitmaskCalculator   from "../../components/tools/RaceBitmaskCalculator";
 import DeityBitmaskCalculator  from "../../components/tools/DeityCalculator";
 import {

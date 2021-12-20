@@ -363,7 +363,7 @@ export default {
   components: {
     DebugDisplayComponent,
     EqWindow,
-    "page-header": () => import("@/views/layout/PageHeader")
+    "page-header": () => import("@/components/layout/PageHeader")
   },
   data() {
     return {

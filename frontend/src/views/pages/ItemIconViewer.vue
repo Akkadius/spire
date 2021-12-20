@@ -59,7 +59,7 @@ import itemSlots            from "@/constants/item-slots.json"
 import itemTypes            from "@/constants/item-types.json"
 import itemSlotIconMapping  from "@/constants/item-slot-icon-mapping.json"
 import itemTypesIconMapping from "@/constants/item-type-icon-mapping.json"
-import PageHeader           from "@/views/layout/PageHeader";
+import PageHeader           from "@/components/layout/PageHeader";
 import EqWindowSimple       from "@/components/eq-ui/EQWindowSimple";
 import EqWindowComplex      from "@/components/eq-ui/EQWindowComplex";
 import EqWindow             from "@/components/eq-ui/EQWindow";

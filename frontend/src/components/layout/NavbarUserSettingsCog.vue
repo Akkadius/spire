@@ -25,8 +25,8 @@
 <script>
 
 import LocalSettings from "@/app/local-settings/localsettings";
-import {App} from "@/constants/app";
-import {EventBus} from "@/app/event-bus/event-bus";
+import {App}         from "@/constants/app";
+import {EventBus}    from "@/app/event-bus/event-bus";
 
 export default {
   name: "NavbarUserSettingsCog",

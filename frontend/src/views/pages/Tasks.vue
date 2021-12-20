@@ -89,7 +89,7 @@ export default {
     EqWindow,
     "test-form": () => import("@/components/forms/TasksForm"),
     "task-activity": () => import("@/components/forms/TaskActivitiesForm"),
-    "page-header": () => import("@/views/layout/PageHeader")
+    "page-header": () => import("@/components/layout/PageHeader")
   },
 
   data() {

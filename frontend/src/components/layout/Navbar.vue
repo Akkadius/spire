@@ -217,10 +217,10 @@
 <script>
 
 import {App}                 from "@/constants/app";
-import NavbarDropdownMenu    from "@/views/layout/NavbarDropdownMenu";
-import NavbarUserSettingsCog from "@/views/layout/NavbarUserSettingsCog";
+import NavbarDropdownMenu    from "@/components/layout/NavbarDropdownMenu";
+import NavbarUserSettingsCog from "@/components/layout/NavbarUserSettingsCog";
 import UserContext           from "@/app/user/UserContext";
-import NavSectionComponent   from "@/views/layout/NavSectionComponent";
+import NavSectionComponent   from "@/components/layout/NavSectionComponent";
 import {ROUTE}               from "@/routes";
 import {SpireApiClient}      from "@/app/api/spire-api-client";
 import * as util             from "util";

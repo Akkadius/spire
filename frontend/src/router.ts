@@ -12,7 +12,7 @@ export default new Router({
   routes: [
     {
       path: '/',
-      component: () => import('./views/layout/Layout.vue'),
+      component: () => import('./components/layout/Layout.vue'),
       children: [
         {
           path: '/',
@@ -81,7 +81,7 @@ export default new Router({
         },
         {
           path: util.format(ROUTE.ITEM_EDIT, ":id"),
-          component: () => import('./views/pages/ItemEdit.vue'),
+          component: () => import('./views/item-editor/ItemEdit.vue'),
           meta: {title: "Item Edit"},
         },
         {
@@ -101,7 +101,7 @@ export default new Router({
         },
         {
           path: ROUTE.QUEST_API_EXPLORER,
-          component: () => import('./views/pages/QuestApiExplorer/QuestApiExplorer.vue'),
+          component: () => import('./views/quest-api-explorer/QuestApiExplorer.vue'),
           meta: {title: "Quest API Explorer"},
         },
         {
@@ -113,7 +113,7 @@ export default new Router({
     },
     {
       path: '/docs',
-      component: () => import('./views/layout/docs/DocLayout.vue'),
+      component: () => import('./components/layout/docs/DocLayout.vue'),
       children: [
         {
           path: '/doc/:doc*',

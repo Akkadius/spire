@@ -14,7 +14,7 @@
 </template>
 
 <script>
-import UserContext from "@/app/user/UserContext";
+import UserContext      from "@/app/user/UserContext";
 import {SpireApiClient} from "@/app/api/spire-api-client";
 
 export default {
