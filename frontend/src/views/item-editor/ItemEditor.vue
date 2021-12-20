@@ -377,6 +377,7 @@
                         <div
                           class="row"
                           :key="field.field"
+                          @mouseover="drawStatScaleTool"
                           v-for="field in
                        [
                          {
@@ -404,7 +405,10 @@
                             {{ field.description }}
                           </div>
                           <div class="col-7 p-0 m-0" :style="(item[field.field] === 0 ? 'opacity: .5' : '')">
-                            <b-form-input v-model.number="item[field.field]"/>
+                            <b-form-input
+                              :id="field.field"
+                              v-model.number="item[field.field]"
+                            />
                           </div>
                         </div>
 
@@ -417,13 +421,19 @@
                             {{ description }}
                           </div>
                           <div class="col-3 p-0 m-0" :style="(item[stat.stat] === 0 ? 'opacity: .5' : '')">
-                            <b-form-input v-model.number="item[stat.stat]"/>
+                            <b-form-input
+                              :id="stat.stat"
+                              v-model.number="item[stat.stat]"
+                            />
                           </div>
                           <div class="col-1 p-0 m-0 mt-2">
                             +
                           </div>
                           <div class="col-3 p-0 m-0" :style="(item[stat.heroic] === 0 ? 'opacity: .5' : '')">
-                            <b-form-input v-model.number="item[stat.heroic]"/>
+                            <b-form-input
+                              :id="stat.heroic"
+                              v-model.number="item[stat.heroic]"
+                            />
                           </div>
                         </div>
                       </div>
@@ -435,85 +445,33 @@
                         <div
                           class="row"
                           :key="field.field"
-                          v-for="field in
-                       [
-                         {
-                           description: 'Damage',
-                           field: 'damage'
-                         },
-                         {
-                           description: 'Delay',
-                           field: 'delay'
-                         },
-                         {
-                           description: 'Haste',
-                           field: 'haste'
-                         },
-                         {
-                           description: 'Extra Damage Skill',
-                           field: 'extradmgskill'
-                         },
-                         {
-                           description: 'Extra Damage Amount',
-                           field: 'extradmgamt'
-                         },
-                         {
-                           description: 'Backstab Damage',
-                           field: 'backstabdmg'
-                         },
-                         {
-                           description: 'Range',
-                           field: 'range'
-                         },
-                         {
-                           description: 'Spell Damage',
-                           field: 'spelldmg'
-                         },
-                         {
-                           description: 'Bane Damage Amount',
-                           field: 'banedmgamt'
-                         },
-                         {
-                           description: 'Bane Damage Body',
-                           field: 'banedmgbody'
-                         },
-                         {
-                           description: 'Bane Damage Race',
-                           field: 'banedmgrace'
-                         },
-                         {
-                           description: 'Bane Damage Race Amount',
-                           field: 'banedmgraceamt'
-                         },
-                         {
-                           description: 'Elemental Damage Amount',
-                           field: 'elemdmgamt'
-                         },
-                         {
-                           description: 'Element Damage Type',
-                           field: 'elemdmgtype'
-                         },
-                       ]"
+                          @mouseover="drawStatScaleTool"
+                          v-for="field in damageStats"
                         >
                           <div class="col-8 text-right mt-2 p-0 pr-3">
                             {{ field.description }}
                           </div>
                           <div class="col-4 m-0 p-0" :style="(item[field.field] === 0 ? 'opacity: .5' : '')">
-                            <b-form-input v-model.number="item[field.field]"/>
+                            <b-form-input :id="field.field" v-model.number="item[field.field]"/>
                           </div>
                         </div>
                       </div>
                     </div>
 
                     <div class="col-4">
-                      <div v-for="(field, description) in mod3" :key="field" class="row text-center">
+                      <div
+                        v-for="(field, description) in mod3"
+                        :key="field"
+                        @mouseover="drawStatScaleTool"
+                        class="row text-center"
+                      >
                         <div class="col-7 text-right mt-2 p-0 pr-3">
                           {{ description }}
                         </div>
                         <div class="col-3 m-0 p-0" :style="(parseInt(item[field]) === 0 ? 'opacity: .5' : '')">
-                          <b-form-input v-model.number="item[field]" v-if="field !== 'combateffects'"/>
+                          <b-form-input :id="field" v-model.number="item[field]" v-if="field !== 'combateffects'"/>
                           <!-- For some reason combateffects is a varchar field -->
-                          <b-form-input v-model="item[field]" v-if="field === 'combateffects'"/>
+                          <b-form-input :id="field" v-model="item[field]" v-if="field === 'combateffects'"/>
                         </div>
                       </div>
                     </div>
@@ -771,7 +729,8 @@
                     <div class="col-3">
                       <b-form-input
                         :style="(item['augdistiller'] === 0 ? 'opacity: .5' : '')"
-                        v-model.number="item['augdistiller']"/>
+                        v-model.number="item['augdistiller']"
+                      />
                     </div>
                   </div>
 
@@ -829,7 +788,10 @@
                       {{ field.description }}
                     </div>
                     <div class="col-3 p-0 m-0" :style="(item[field.field] === 0 ? 'opacity: .5' : '')">
-                      <b-form-input v-model.number="item[field.field]"/>
+                      <b-form-input
+                        :id="field.field"
+                        v-model.number="item[field.field]"
+                      />
                     </div>
                   </div>
                 </eq-tab>
@@ -1005,6 +967,21 @@
 
           <div class="col-5">
 
+            <!-- Stat Scale Tool-->
+            <eq-window
+              title="Stat Scaling"
+              style="margin-top: 30px; margin-right: 10px; width: auto;"
+              class="fade-in"
+              v-if="drawStatScaleToolActive"
+            >
+              <item-stat-scale-tool
+                v-if="originalItem"
+                :original-item-data="originalItem"
+                @field="item[$event.field] = $event.value; setFieldModifiedById($event.field)"
+              />
+
+            </eq-window>
+
             <!-- preview item -->
             <eq-window
               style="margin-top: 30px; margin-right: 10px; width: auto;"
@@ -1090,11 +1067,11 @@ import {SpireApiClient}        from "../../app/api/spire-api-client";
 import * as util               from "util";
 import FreeIdSelector          from "../../components/tools/FreeIdSelector";
 import {Items}                 from "../../app/items";
-import {ItemApi}              from "../../app/api";
-import ItemModelPreview       from "./components/ItemModelPreview";
-import ItemModelSelector      from "./components/ItemModelSelector";
-import ItemIconSelector       from "./components/ItemIconSelector";
-import ClassBitmaskCalculator from "../../components/tools/ClassBitmaskCalculator";
+import {ItemApi}               from "../../app/api";
+import ItemModelPreview        from "./components/ItemModelPreview";
+import ItemModelSelector       from "./components/ItemModelSelector";
+import ItemIconSelector        from "./components/ItemIconSelector";
+import ClassBitmaskCalculator  from "../../components/tools/ClassBitmaskCalculator";
 import RaceBitmaskCalculator   from "../../components/tools/RaceBitmaskCalculator";
 import DeityBitmaskCalculator  from "../../components/tools/DeityCalculator";
 import {
@@ -1110,12 +1087,14 @@ import InventorySlotCalculator from "../../components/tools/InventorySlotCalcula
 import {Sketch}            from 'vue-color'
 import SpellEffectSelector from "../spell-editor/components/SpellEffectSelector";
 import {DB_SKILLS}         from "../../app/constants/eq-skill-constants";
+import ItemStatScaleTool   from "./components/ItemStatScaleTool";
 
 const MILLISECONDS_BEFORE_WINDOW_RESET = 5000;
 
 export default {
   name: "ItemEdit",
   components: {
+    ItemStatScaleTool,
     SpellEffectSelector,
     InventorySlotCalculator,
     DeityBitmaskCalculator,
@@ -1136,7 +1115,7 @@ export default {
   data() {
     return {
       item: null, // item record data
-      originalItem: null, // item record data; used to reference original values in tools
+      originalItem: {}, // item record data; used to reference original values in tools
 
       spellCdnUrl: App.ASSET_SPELL_ICONS_BASE_URL,
 
@@ -1149,6 +1128,7 @@ export default {
       itemModelSelectorActive: false,
       spellEffectSelectorActive: false,
       freeIdSelectorActive: false,
+      drawStatScaleToolActive: false,
 
       // show unknown fields
       showUnknown: 0,
@@ -1205,6 +1185,66 @@ export default {
         "Strikethrough": "strikethrough",
         "Stun Resist": "stunresist",
       },
+      damageStats: [
+        {
+          description: 'Damage',
+          field: 'damage'
+        },
+        {
+          description: 'Delay',
+          field: 'delay'
+        },
+        {
+          description: 'Haste',
+          field: 'haste'
+        },
+        {
+          description: 'Extra Damage Skill',
+          field: 'extradmgskill'
+        },
+        {
+          description: 'Extra Damage Amount',
+          field: 'extradmgamt'
+        },
+        {
+          description: 'Backstab Damage',
+          field: 'backstabdmg'
+        },
+        {
+          description: 'Range',
+          field: 'range'
+        },
+        {
+          description: 'Spell Damage',
+          field: 'spelldmg'
+        },
+        {
+          description: 'Bane Damage Amount',
+          field: 'banedmgamt'
+        },
+        {
+          description: 'Bane Damage Body',
+          field: 'banedmgbody'
+        },
+        {
+          description: 'Bane Damage Race',
+          field: 'banedmgrace'
+        },
+        {
+          description: 'Bane Damage Race Amount',
+          field: 'banedmgraceamt'
+        },
+        {
+          description: 'Elemental Damage Amount',
+          field: 'elemdmgamt'
+        },
+        {
+          description: 'Element Damage Type',
+          field: 'elemdmgtype'
+        },
+      ],
+
+
       pricingFields: {
         "Price": "price",
         "Sell Rate": "sellrate",
@@ -1413,6 +1453,8 @@ export default {
           this.item              = result
           this.updatedAt         = Date.now()
           this.previewItemActive = true
+
+          Object.assign(this.originalItem, result);
         })
       }
     },
@@ -1455,6 +1497,11 @@ export default {
       this.resetPreviewComponents()
       this.lastResetTime        = Date.now()
       this.freeIdSelectorActive = true
+    },
+    drawStatScaleTool() {
+      // this.resetPreviewComponents()
+      this.lastResetTime           = Date.now()
+      this.drawStatScaleToolActive = true
     },
     getTargetTypeColor(targetType) {
       return Items.getTargetTypeColor(targetType);
