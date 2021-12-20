@@ -245,9 +245,17 @@
                            description: 'Epic Item',
                            field: 'epicitem'
                          },
+                         {
+                           description: 'Arrow Expend',
+                           field: 'expendablearrow'
+                         },
+                         {
+                           description: 'Heirloom',
+                           field: 'heirloom'
+                         },
                        ]"
                         >
-                          <div class="col-9 text-right p-0 pr-2">
+                          <div class="col-9 text-right p-0 pr-2 m-0">
                             {{ field.description }}
                           </div>
                           <div class="col-3 text-left p-0">
@@ -708,7 +716,11 @@
                       Augment Type
                     </div>
                     <div class="col-3">
-                      <select v-model.number="item['augtype']" class="form-control">
+                      <select
+                        v-model.number="item['augtype']"
+                        class="form-control"
+                        :style="(item['augtype'] === 0 ? 'opacity: .5' : '')"
+                      >
                         <option
                           v-for="(value, index) in AUG_TYPES"
                           :key="index"
@@ -729,7 +741,11 @@
                       Augment Restriction
                     </div>
                     <div class="col-3">
-                      <select v-model.number="item['augrestrict']" class="form-control">
+                      <select
+                        v-model.number="item['augrestrict']"
+                        class="form-control"
+                        :style="(item['augrestrict'] === 0 ? 'opacity: .5' : '')"
+                      >
                         <option
                           v-for="(value, index) in DB_ITEM_AUG_RESTRICT"
                           :key="index"
@@ -811,6 +827,24 @@
                   </div>
                 </eq-tab>
 
+                <eq-tab name="Faction">
+                  <!-- Aug Type -->
+                  <div class="row" v-for="i in 4" :key="i">
+                    <div class="col-4 text-right mt-2 m-0 p-0">
+                      Faction Mod {{ i }}
+                    </div>
+                    <div class="col-2 mr-0 pr-0" :style="(item['factionmod_' + i] === 0 ? 'opacity: .5' : '')">
+                      <b-form-input v-model.number="item['factionmod_' + i]"/>
+                    </div>
+                    <div class="col-1 text-center mt-2 m-0 p-0">
+                      Amount
+                    </div>
+                    <div class="col-2" :style="(item['factionamt_' + i] === 0 ? 'opacity: .5' : '')">
+                      <b-form-input v-model.number="item['factionamt_' + i]"/>
+                    </div>
+                  </div>
+                </eq-tab>
+
                 <eq-tab name="Pricing">
                   <div v-for="(field, description) in pricingFields" :key="field" class="row text-center">
                     <div class="col-1">
@@ -819,7 +853,7 @@
                     <div class="col-4 text-right">
                       {{ description }}
                     </div>
-                    <div class="col-2">
+                    <div class="col-2" :style="(item[field] === 0 ? 'opacity: .5' : '')">
                       <b-form-input v-model.number="item[field]"/>
                       <!--                      <b-form-input v-model="item[field]"/>-->
                     </div>

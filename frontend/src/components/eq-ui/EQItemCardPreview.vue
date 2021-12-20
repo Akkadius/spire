@@ -508,6 +508,12 @@ export default {
       if (this.itemData.epicitem > 0) {
         tags.push("Epic");
       }
+      if (this.itemData.expendablearrow > 0) {
+        tags.push("Arrow Expendable");
+      }
+      if (this.itemData.heirloom > 0) {
+        tags.push("Heirloom");
+      }
 
       return tags.join(", ")
     },
