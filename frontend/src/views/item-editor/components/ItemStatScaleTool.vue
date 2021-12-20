@@ -1,10 +1,11 @@
 <template>
   <div>
-    Increase Stats by % from original stats
+    Increase All Stats by Multiplier from Original Stats (1 = 100%)
     <b-form-input
       v-model.number="increaseStatBy"
       @change="syncStats"
       type="number"
+      step=".1"
     />
   </div>
 </template>
@@ -14,7 +15,7 @@ export default {
   name: "ItemStatScaleTool",
   data() {
     return {
-      increaseStatBy: 100,
+      increaseStatBy: 1,
 
       topStats: [
         {
@@ -137,7 +138,7 @@ export default {
         const field = this.mod3[key]
         let update  = {
           field: field,
-          value: Math.round(this.originalItemData[field] * (this.increaseStatBy / 100))
+          value: Math.round(this.originalItemData[field] * this.increaseStatBy)
         }
 
         if (update.value > 0) {
@@ -150,7 +151,7 @@ export default {
         const field = entry.field
         let update  = {
           field: field,
-          value: Math.round(this.originalItemData[field] * (this.increaseStatBy / 100))
+          value: Math.round(this.originalItemData[field] * this.increaseStatBy)
         }
 
         if (update.value > 0) {
@@ -163,7 +164,7 @@ export default {
         const field = entry.field
         let update  = {
           field: field,
-          value: Math.round(this.originalItemData[field] * (this.increaseStatBy / 100))
+          value: Math.round(this.originalItemData[field] * this.increaseStatBy)
         }
 
         if (update.value > 0) {
@@ -177,7 +178,7 @@ export default {
         const heroic = entry.heroic
         let update   = {
           field: stat,
-          value: Math.round(this.originalItemData[stat] * (this.increaseStatBy / 100))
+          value: Math.round(this.originalItemData[stat] * this.increaseStatBy)
         }
 
         if (update.value > 0) {
@@ -186,7 +187,7 @@ export default {
 
         let heroicUpdate = {
           field: heroic,
-          value: Math.round(this.originalItemData[heroic] * (this.increaseStatBy / 100))
+          value: Math.round(this.originalItemData[heroic] * this.increaseStatBy)
         }
 
         if (heroicUpdate.value > 0) {

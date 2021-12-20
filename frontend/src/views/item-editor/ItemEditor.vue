@@ -1468,6 +1468,7 @@ export default {
       this.itemModelSelectorActive   = false;
       this.previewItemActive         = false;
       this.spellEffectSelectorActive = false;
+      this.drawStatScaleToolActive   = false;
     },
     previewItem() {
       let shouldReset = Date.now() - this.lastResetTime > MILLISECONDS_BEFORE_WINDOW_RESET;
