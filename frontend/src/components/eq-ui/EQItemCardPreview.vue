@@ -379,6 +379,7 @@ export default {
       secondlevel1: {
         "Size": this.getItemSize(this.itemData.size).toUpperCase(),
         "Weight": this.itemData.weight / 10,
+        "Light": this.itemData.light,
         "Item Type": this.getItemType(),
         "Rec Level": this.itemData.reclevel,
         "Req Level": this.itemData.reqlevel
