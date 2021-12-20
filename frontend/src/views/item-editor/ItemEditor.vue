@@ -136,7 +136,7 @@
                           v-for="(value, index) in ITEM_SIZE"
                           :key="index"
                         >{{ index }})
-                          {{ value.toString().toUpperCase() }}
+                          {{ value }}
                         </b-form-select-option>
                       </b-form-select>
                     </div>
@@ -365,7 +365,7 @@
                   </div>
                 </eq-tab>
 
-                <eq-tab name="Stats" class="stats-tab">
+                <eq-tab name="Stats" class="minified-inputs">
 
                   <div class="row">
 
@@ -703,6 +703,7 @@
 
                 <eq-tab
                   name="Augmentation"
+                  class="minified-inputs"
                 >
 
                   <h6 class="eq-header text-center mt-3 mb-3">Item Is Augment</h6>
@@ -800,7 +801,7 @@
                   </div>
                 </eq-tab>
 
-                <eq-tab name="Bag">
+                <eq-tab name="Bag" class="minified-inputs">
                   <div
                     class="row"
                     :key="field.field"
@@ -833,7 +834,7 @@
                   </div>
                 </eq-tab>
 
-                <eq-tab name="Faction">
+                <eq-tab name="Faction" class="minified-inputs">
                   <!-- Aug Type -->
                   <div class="row" v-for="i in 4" :key="i">
                     <div class="col-4 text-right mt-2 m-0 p-0">
@@ -851,12 +852,12 @@
                   </div>
                 </eq-tab>
 
-                <eq-tab name="Pricing">
+                <eq-tab name="Pricing" class="minified-inputs">
                   <div v-for="(field, description) in pricingFields" :key="field" class="row text-center">
                     <div class="col-1">
 
                     </div>
-                    <div class="col-4 text-right">
+                    <div class="col-4 text-right mt-1 mr-0 pr-0">
                       {{ description }}
                     </div>
                     <div class="col-2" :style="(item[field] === 0 ? 'opacity: .5' : '')">
@@ -1471,7 +1472,7 @@ export default {
   margin-bottom: 0;
 }
 
-.stats-tab input, .stats-tab select {
+.minified-inputs input, .minified-inputs select {
   margin-bottom: 7px;
   height: 30px;
 }
