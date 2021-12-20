@@ -201,6 +201,10 @@
                            description: 'Potion Belt',
                            field: 'potionbelt'
                          },
+                         {
+                           description: 'Placeable',
+                           field: 'placeable'
+                         },
                        ]"
                         >
                           <div class="col-9 text-right p-0 pr-2">
@@ -769,6 +773,23 @@
                   </div>
                 </eq-tab>
 
+                <eq-tab name="Unimplemented" v-if="showUnknown">
+                  <div class="row">
+                    <div
+                      class="col-2"
+                      :key="field.field"
+                      v-for="field in
+                       [
+                          'benefitflag',
+                          'pendingloreflag',
+                       ]"
+                    >
+                      {{ field }}
+                      <b-form-input v-model.number="item[field]"/>
+                    </div>
+                  </div>
+                </eq-tab>
+
                 <eq-tab name="?" v-if="showUnknown">
                   <div class="row">
                     <div
@@ -873,16 +894,16 @@
                 </b-button>
               </div>
 
-<!--              <div class="row">-->
-<!--                <div class="col-2">-->
-<!--                  Show Unknown-->
-<!--                  <eq-checkbox-->
-<!--                    class="mb-2 d-inline-block"-->
-<!--                    v-model="showUnknown"-->
-<!--                  />-->
-<!--                </div>-->
-<!--                <div class="col-10"></div>-->
-<!--              </div>-->
+              <div class="row">
+                <div class="col-10"></div>
+                <div class="col-2 text-right">
+                  Unknown
+                  <eq-checkbox
+                    class="mb-2 d-inline-block"
+                    v-model="showUnknown"
+                  />
+                </div>
+              </div>
 
             </eq-window>
           </div>
@@ -1084,7 +1105,6 @@ export default {
         "Spell Shielding": "spellshield",
         "Strikethrough": "strikethrough",
         "Stun Resist": "stunresist",
-        // TODO: extradmgamt
       },
       pricingFields: {
         "Price": "price",

@@ -342,7 +342,8 @@ export default {
         "Fire Resists": { stat: "fr", heroic: "heroic_fr" },
         "Cold Resist": { stat: "cr", heroic: "heroic_cr" },
         "Disease Resist": { stat: "dr", heroic: "heroic_dr" },
-        "Poison Resist": { stat: "pr", heroic: "heroic_pr" }
+        "Poison Resist": { stat: "pr", heroic: "heroic_pr" },
+        "Corruption": { stat: "svcorruption", heroic: "heroic_svcorrup" }
       },
       mod3: {
         "Attack": "attack",
@@ -361,7 +362,6 @@ export default {
         "Spell Shielding": "spellshield",
         "Strikethrough": "strikethrough",
         "Stun Resist": "stunresist",
-        // TODO: extradmgamt
       },
       toplevel: {
         "Class": this.getClasses(),
