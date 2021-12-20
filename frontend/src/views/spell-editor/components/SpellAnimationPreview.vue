@@ -18,7 +18,7 @@
 
 <script>
 import SpellAnimations from "@/app/asset-maps/spell-animations-map.json";
-import {App}           from "../../constants/app";
+import {App}           from "../../../constants/app";
 
 export default {
   name: "SpellAnimationPreview",

@@ -1107,7 +1107,7 @@ import {AUG_TYPES}             from "../../app/constants/eq-aug-constants";
 import InventorySlotCalculator from "../../components/tools/InventorySlotCalculator";
 
 import {Sketch}            from 'vue-color'
-import SpellEffectSelector from "../../components/tools/SpellEffectSelector";
+import SpellEffectSelector from "../spell-editor/components/SpellEffectSelector";
 import {DB_SKILLS}         from "../../app/constants/eq-skill-constants";
 
 const MILLISECONDS_BEFORE_WINDOW_RESET = 5000;

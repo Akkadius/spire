@@ -17,7 +17,7 @@
 
 <script>
 import SpellIcons from "@/app/asset-maps/spell-icons-map.json";
-import {App}      from "../../constants/app";
+import {App}      from "../../../constants/app";
 
 export default {
   name: "SpellIconSelector",

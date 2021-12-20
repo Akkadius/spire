@@ -754,28 +754,28 @@
 </template>
 
 <script>
-import EqWindowFancy                                                  from "../components/eq-ui/EQWindowFancy";
-import EqWindow                                                       from "../components/eq-ui/EQWindow";
-import EqTabs                                                         from "../components/eq-ui/EQTabs";
-import EqTab                                                          from "../components/eq-ui/EQTab";
-import EqSpellPreview                                                 from "../components/eq-ui/EQSpellCardPreview";
-import {Spells}                                                       from "../app/spells";
-import {DB_SPA, DB_SPELL_EFFECTS, DB_SPELL_RESISTS, DB_SPELL_TARGETS} from "../app/constants/eq-spell-constants";
-import {DB_SKILLS}                                                    from "../app/constants/eq-skill-constants";
-import {App}                                                          from "../constants/app";
-import SpellIconSelector                                              from "../components/tools/SpellIconSelector";
+import EqWindowFancy                                                  from "../../components/eq-ui/EQWindowFancy";
+import EqWindow                                                       from "../../components/eq-ui/EQWindow";
+import EqTabs                                                         from "../../components/eq-ui/EQTabs";
+import EqTab                                                          from "../../components/eq-ui/EQTab";
+import EqSpellPreview                                                 from "../../components/eq-ui/EQSpellCardPreview";
+import {Spells}                                                       from "../../app/spells";
+import {DB_SPA, DB_SPELL_EFFECTS, DB_SPELL_RESISTS, DB_SPELL_TARGETS} from "../../app/constants/eq-spell-constants";
+import {DB_SKILLS}                                                    from "../../app/constants/eq-skill-constants";
+import {App}                from "../../constants/app";
+import SpellIconSelector    from "./components/SpellIconSelector";
 import SpellAnimationPreview
-                                                                      from "../components/tools/SpellAnimationPreview";
-import SpellAnimationViewer                                           from "./SpellAnimationViewer";
+                            from "./components/SpellAnimationPreview";
+import SpellAnimationViewer from "../SpellAnimationViewer";
 import SpellAnimationSelector
-                                                                      from "../components/tools/SpellAnimationSelector";
-import EqCheckbox                                                     from "../components/eq-ui/EQCheckbox";
-import {SpellsNewApi}                                                 from "../app/api";
-import {SpireApiClient}                                               from "../app/api/spire-api-client";
-import * as util                                                      from "util";
-import SpellClassSelector                                             from "../components/tools/SpellClassSelector";
-import SpellDeitySelector                                             from "../components/tools/SpellDeitySelector";
-import FreeIdSelector                                                 from "../components/tools/FreeIdSelector";
+                            from "./components/SpellAnimationSelector";
+import EqCheckbox           from "../../components/eq-ui/EQCheckbox";
+import {SpellsNewApi}                                                 from "../../app/api";
+import {SpireApiClient}                                               from "../../app/api/spire-api-client";
+import * as util            from "util";
+import SpellClassSelector   from "./components/SpellClassSelector";
+import SpellDeitySelector   from "./components/SpellDeitySelector";
+import FreeIdSelector       from "../../components/tools/FreeIdSelector";
 
 const MILLISECONDS_BEFORE_WINDOW_RESET = 3000;
 

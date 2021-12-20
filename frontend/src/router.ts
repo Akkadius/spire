@@ -71,7 +71,7 @@ export default new Router({
         },
         {
           path: util.format(ROUTE.SPELL_EDIT, ":id"),
-          component: () => import('./views/SpellEdit.vue'),
+          component: () => import('./views/spell-editor/SpellEditor.vue'),
           meta: {title: "Spell Edit"},
         },
         {
@@ -81,7 +81,7 @@ export default new Router({
         },
         {
           path: util.format(ROUTE.ITEM_EDIT, ":id"),
-          component: () => import('./views/item-editor/ItemEdit.vue'),
+          component: () => import('./views/item-editor/ItemEditor.vue'),
           meta: {title: "Item Edit"},
         },
         {
