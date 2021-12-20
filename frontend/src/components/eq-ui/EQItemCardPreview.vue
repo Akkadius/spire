@@ -289,6 +289,13 @@
       </div>
     </div>
 
+    <div v-if="itemData.price > 0">
+      <span style="font-weight: bold" class="mr-2">Price</span>
+      <eq-cash-display
+        class="d-inline-block"
+        :price="itemData.price"/>
+    </div>
+
     <div class="pb-4"></div>
 
     <eq-debug :data="itemData"/>
@@ -307,21 +314,22 @@ import {
 import {BODYTYPES}                     from "@/app/constants/eq-bodytype-constants";
 import {DB_CLASSES_WEAR_SHORT}         from "@/app/constants/eq-classes-constants";
 import {DB_RACE_NAMES, DB_RACES_SHORT} from "@/app/constants/eq-races-constants";
-import {DB_DIETIES}                    from "@/app/constants/eq-deities-constants";
-import EqDebug                         from "@/components/eq-ui/EQDebug";
-import {App}                           from "@/constants/app";
-import EqSpellPreview                  from "@/components/eq-ui/EQSpellCardPreview";
-import {EXAMPLE_SPELL_DATA}            from "@/app/constants/eq-example-spell-data";
-import EqWindow                        from "@/components/eq-ui/EQWindow";
-import {DB_BARD_SKILLS, DB_SKILLS}     from "@/app/constants/eq-skill-constants";
-import {AUG_TYPES}                     from "@/app/constants/eq-aug-constants";
-import {Spells}                        from "@/app/spells";
-import util                            from "util";
-import {ROUTE}                         from "@/routes";
+import {DB_DIETIES}                from "@/app/constants/eq-deities-constants";
+import EqDebug                     from "@/components/eq-ui/EQDebug";
+import {App}                       from "@/constants/app";
+import EqSpellPreview              from "@/components/eq-ui/EQSpellCardPreview";
+import {EXAMPLE_SPELL_DATA}        from "@/app/constants/eq-example-spell-data";
+import EqWindow                    from "@/components/eq-ui/EQWindow";
+import {DB_BARD_SKILLS, DB_SKILLS} from "@/app/constants/eq-skill-constants";
+import {AUG_TYPES}                 from "@/app/constants/eq-aug-constants";
+import {Spells}                    from "@/app/spells";
+import util                        from "util";
+import {ROUTE}                     from "@/routes";
+import EqCashDisplay               from "@/components/eq-ui/EqCashDisplay";
 
 export default {
   name: "EqItemCardPreview",
-  components: { EqWindow, EqSpellPreview, EqDebug },
+  components: { EqCashDisplay, EqWindow, EqSpellPreview, EqDebug },
   data() {
     return {
       spells: EXAMPLE_SPELL_DATA,
