@@ -466,6 +466,45 @@ export default {
       if (this.itemData.norent === 0) {
         tags.push("No Rent");
       }
+      if (this.itemData.fvnodrop === 1) {
+        tags.push("FV No Drop");
+      }
+      if (this.itemData.book === 1) {
+        tags.push("Book");
+      }
+      if (this.itemData.tradeskills > 0) {
+        tags.push("Tradeskill Item");
+      }
+      if (this.itemData.notransfer === 1) {
+        tags.push("No Transfer");
+      }
+      if (this.itemData.summonedflag === 1) {
+        tags.push("Summoned");
+      }
+      if (this.itemData.questitemflag === 1) {
+        tags.push("Quest Item");
+      }
+      if (this.itemData.artifactflag === 1) {
+        tags.push("Artifact");
+      }
+      if (this.itemData.nopet === 1) {
+        tags.push("No Pet");
+      }
+      if (this.itemData.attuneable === 1) {
+        tags.push("Attuneable");
+      }
+      if (this.itemData.stackable === 1) {
+        tags.push("Stackable");
+      }
+      if (this.itemData.potionbelt === 1) {
+        tags.push("Potion Belt");
+      }
+      if (this.itemData.placeable === 1) {
+        tags.push("Placeable");
+      }
+      if (this.itemData.bardtype > 0) {
+        tags.push("Instrument");
+      }
 
       return tags.join(", ")
     },

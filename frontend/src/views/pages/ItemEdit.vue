@@ -32,51 +32,30 @@
                       Id
                       <b-form-input v-model.number="item.id"/>
                     </div>
-                    <div class="col-7">
+                    <div class="col-4">
                       Name
                       <b-form-input
                         :value="item.name" @change="v => item.name = v"
                       />
                     </div>
 
-                    <div class="col-2" @mouseover="drawIconSelector">
-                      Icon
-                      <b-form-input v-model.number="item.icon"/>
-                    </div>
-
-                    <div
-                      class="col-1" v-if="item.icon > 0"
-                      style="margin-top: 18px"
-                      @mouseover="drawIconSelector"
-                    >
-                      <span
-                        :class="'fade-in item-' + item.icon"
-                        style="border: 1px solid rgb(218 218 218 / 30%); border-radius: 7px;"
+                    <!-- Lore -->
+                    <div class="col-4">
+                      Lore
+                      <b-form-input
+                        :value="item.lore" @change="v => item.lore = v"
                       />
                     </div>
 
+                    <!-- Lore Group-->
+                    <div class="col-2">
+                      Lore Group
+                      <b-form-input v-model.number="item.loregroup"/>
+                    </div>
                   </div>
 
                   <div class="row">
                     <div class="col-12">
-
-                      <div class="row">
-
-                        <!-- Lore -->
-                        <div class="col-10">
-                          Lore
-                          <b-form-input
-                            :value="item.lore" @change="v => item.lore = v"
-                          />
-                        </div>
-
-                        <!-- Lore Group-->
-                        <div class="col-2">
-                          Lore Group
-                          <b-form-input v-model.number="item.loregroup"/>
-                        </div>
-                      </div>
-
                       <div class="row">
 
                         <!-- Item Type -->
@@ -298,6 +277,19 @@
                             v-model.number="item.idfile"
                           />
                         </div>
+
+                        <div @mouseover="drawIconSelector" class="mt-3">
+                          <div>
+                          <span
+                            :class="'fade-in item-' + item.icon"
+                            style="border: 1px solid rgb(218 218 218 / 30%); border-radius: 7px;"
+                          />
+                          </div>
+
+                          Icon
+                          <b-form-input v-model.number="item.icon"/>
+                        </div>
+
                       </div>
 
                     </div>
