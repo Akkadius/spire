@@ -296,7 +296,7 @@
         :price="itemData.price"/>
     </div>
 
-    <div class="pb-4"></div>
+    <div class="pb-4 mb-3"></div>
 
     <eq-debug :data="itemData"/>
   </div>
