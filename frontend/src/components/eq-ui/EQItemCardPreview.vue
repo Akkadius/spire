@@ -447,7 +447,7 @@ export default {
       return Spells.getTargetTypeColor(targetType)
     },
     getItemSize: function (size) {
-      return ITEM_SIZE[size] ? ITEM_SIZE[size] : "N/A";
+      return ITEM_SIZE[parseInt(size)] ? ITEM_SIZE[parseInt(size)] : "N/A";
     },
     getItemTags: function () {
       let tags = [];
@@ -504,6 +504,9 @@ export default {
       }
       if (this.itemData.bardtype > 0) {
         tags.push("Instrument");
+      }
+      if (this.itemData.epicitem > 0) {
+        tags.push("Epic");
       }
 
       return tags.join(", ")

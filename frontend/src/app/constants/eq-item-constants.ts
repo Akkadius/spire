@@ -172,11 +172,11 @@ export const DB_BAG_TYPES = {
 }
 
 export const ITEM_SIZE = {
-  "0": "Tiny",
-  "1": "Small",
-  "2": "Medium",
-  "3": "Large",
-  "4": "Giant",
+  0: "Tiny",
+  1: "Small",
+  2: "Medium",
+  3: "Large",
+  4: "Giant",
 }
 
 export const ITEM_ELEMENTS = {

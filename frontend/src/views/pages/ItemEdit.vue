@@ -16,6 +16,8 @@
                 <i class="fa fa-warning"></i> {{ error }}
               </b-alert>
 
+              <app-loader :is-loading="!item"/>
+
               <eq-tabs
                 v-if="item"
                 id="item-edit-card"
@@ -55,63 +57,118 @@
                   </div>
 
                   <div class="row">
-                    <div class="col-12">
-                      <div class="row">
 
-                        <!-- Item Type -->
-                        <div class="col-3">
-                          Item Type
-                          <select v-model.number="item['itemtype']" class="form-control">
-                            <option
-                              v-for="(description, index) in DB_ITEM_TYPES"
-                              :key="index"
-                              :value="parseInt(index)"
-                            >
-                              {{ index }}) {{ description }}
-                            </option>
-                          </select>
-                        </div>
+                    <!-- Item Type -->
+                    <div class="col-3">
+                      Item Type
+                      <select v-model.number="item['itemtype']" class="form-control">
+                        <option
+                          v-for="(description, index) in DB_ITEM_TYPES"
+                          :key="index"
+                          :value="parseInt(index)"
+                        >
+                          {{ index }}) {{ description }}
+                        </option>
+                      </select>
+                    </div>
 
-                        <!-- Item Class -->
-                        <div class="col-4">
-                          Item Class
-                          <select v-model.number="item['itemclass']" class="form-control">
-                            <option
-                              v-for="(description, index) in DB_ITEM_CLASS"
-                              :key="index"
-                              :value="parseInt(index)"
-                            >
-                              {{ index }}) {{ description }}
-                            </option>
-                          </select>
-                        </div>
+                    <!-- Item Class -->
+                    <div class="col-3">
+                      Item Class
+                      <select v-model.number="item['itemclass']" class="form-control">
+                        <option
+                          v-for="(description, index) in DB_ITEM_CLASS"
+                          :key="index"
+                          :value="parseInt(index)"
+                        >
+                          {{ index }}) {{ description }}
+                        </option>
+                      </select>
+                    </div>
 
-                        <!-- Material -->
-                        <div class="col-3">
-                          Material
-                          <select v-model.number="item['material']" class="form-control">
-                            <option
-                              v-for="(description, index) in DB_ITEM_MATERIAL"
-                              :key="index"
-                              :value="parseInt(index)"
-                            >
-                              {{ index }}) {{ description }}
-                            </option>
-                          </select>
-                        </div>
+                    <!-- Material -->
+                    <div class="col-3">
+                      Material
+                      <select v-model.number="item['material']" class="form-control">
+                        <option
+                          v-for="(description, index) in DB_ITEM_MATERIAL"
+                          :key="index"
+                          :value="parseInt(index)"
+                        >
+                          {{ index }}) {{ description }}
+                        </option>
+                      </select>
+                    </div>
 
-                        <!-- Stack Size -->
-                        <div class="col-2">
-                          Stack Size
-                          <b-form-input v-model.number="item.stacksize"/>
-                        </div>
-                      </div>
+                    <div class="col-2">
+                      Light Emission
+                      <b-form-select
+                        v-model.number="item.light"
+                      >
+                        <b-form-select-option
+                          :value="i"
+                          v-for="(i) in [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,255]"
+                          :key="i"
+                        >{{ i }}
+                        </b-form-select-option>
+                      </b-form-select>
+                    </div>
 
+                  </div>
 
+                  <div class="row">
+
+                    <!-- Stack Size -->
+                    <div class="col-2" :style="(item['stackable'] === 0 ? 'opacity: .5' : '')">
+                      Stack Size
+                      <b-form-input v-model.number="item.stacksize"/>
+                    </div>
+
+                    <!-- Item Size -->
+                    <div class="col-2">
+                      Item Size
+                      <b-form-select
+                        v-model.number="item.size"
+                      >
+                        <b-form-select-option
+                          variant="outline-warning"
+                          :value="parseInt(index)"
+                          v-for="(value, index) in ITEM_SIZE"
+                          :key="index"
+                        >{{ index }})
+                          {{ value.toString().toUpperCase() }}
+                        </b-form-select-option>
+                      </b-form-select>
+                    </div>
+
+                    <!-- Weight -->
+                    <div class="col-2">
+                      Weight
+                      <b-form-input v-model.number="item.weight"/>
+                    </div>
+
+                    <!-- Recommended Level -->
+                    <div class="col-2" :style="(item['reclevel'] === 0 ? 'opacity: .5' : '')">
+                      Recommended Level
+                      <b-form-input v-model.number="item.reclevel"/>
+                    </div>
+
+                    <!-- Required Level -->
+                    <div class="col-2" :style="(item['reqlevel'] === 0 ? 'opacity: .5' : '')">
+                      Required Level
+                      <b-form-input v-model.number="item.reqlevel"/>
+                    </div>
+
+                    <!-- Recommended Skill -->
+                    <div class="col-2" :style="(item['recskill'] === 0 ? 'opacity: .5' : '')">
+                      Rec Skill
+
+                      <b-form-input v-model.number="item.recskill"/>
                     </div>
 
 
                   </div>
+
 
                   <div class="mt-3 mb-3">
                     <div class="row">
@@ -183,6 +240,10 @@
                          {
                            description: 'Placeable',
                            field: 'placeable'
+                         },
+                         {
+                           description: 'Epic Item',
+                           field: 'epicitem'
                          },
                        ]"
                         >
@@ -279,7 +340,7 @@
                         </div>
 
                         <div @mouseover="drawIconSelector" class="mt-3">
-                          <div>
+                          <div class="mb-3">
                           <span
                             :class="'fade-in item-' + item.icon"
                             style="border: 1px solid rgb(218 218 218 / 30%); border-radius: 7px;"
@@ -774,6 +835,7 @@
                        [
                           'benefitflag',
                           'pendingloreflag',
+                          'lorefile',
                        ]"
                     >
                       {{ field }}
@@ -888,11 +950,11 @@
 
               <div class="row">
                 <div class="col-10"></div>
-                <div class="col-2 text-right">
+                <div class="col-2 text-right" title="Show unknown fields">
                   Unknown
                   <eq-checkbox
                     class="mb-2 d-inline-block"
-                    v-model="showUnknown"
+                    v-model.number="showUnknown"
                   />
                 </div>
               </div>
@@ -998,13 +1060,15 @@ import {
   DB_ITEM_AUG_RESTRICT,
   DB_ITEM_CLASS,
   DB_ITEM_MATERIAL,
-  DB_ITEM_TYPES
+  DB_ITEM_TYPES,
+  ITEM_SIZE
 }                              from "../../app/constants/eq-item-constants";
 import {AUG_TYPES}             from "../../app/constants/eq-aug-constants";
 import InventorySlotCalculator from "../../components/tools/InventorySlotCalculator";
 
 import {Sketch}            from 'vue-color'
 import SpellEffectSelector from "../../components/tools/SpellEffectSelector";
+import {DB_SKILLS}         from "../../app/constants/eq-skill-constants";
 
 const MILLISECONDS_BEFORE_WINDOW_RESET = 5000;
 
@@ -1046,7 +1110,7 @@ export default {
       freeIdSelectorActive: false,
 
       // show unknown fields
-      showUnknown: false,
+      showUnknown: 0,
 
       // used to track when the subselector tool window has last spawned a tool
       // this keeps from a subsequent hover redrawing another tool within a grace period defined by
@@ -1062,6 +1126,8 @@ export default {
       DB_ITEM_AUG_RESTRICT: DB_ITEM_AUG_RESTRICT,
       DB_ITEM_CLASS: DB_ITEM_CLASS,
       DB_ITEM_TYPES: DB_ITEM_TYPES,
+      DB_SKILLS: DB_SKILLS,
+      ITEM_SIZE: ITEM_SIZE,
       AUG_TYPES: AUG_TYPES,
 
       // fields used in forms
@@ -1208,8 +1274,11 @@ export default {
   },
   async created() {
     setTimeout(() => {
-      document.getElementById("item-edit-card").removeEventListener('input', this.setFieldModified, true);
-      document.getElementById("item-edit-card").addEventListener('input', this.setFieldModified)
+      const target = document.getElementById("item-edit-card")
+      if (target) {
+        target.removeEventListener('input', this.setFieldModified, true);
+        target.addEventListener('input', this.setFieldModified)
+      }
     }, 1000)
 
     this.load()
