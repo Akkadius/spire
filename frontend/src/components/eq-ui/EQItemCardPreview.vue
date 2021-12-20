@@ -3,7 +3,13 @@
 
     <div class="row">
       <div class="col-1">
-        <span :class="'fade-in item-' + itemData.icon" :title="itemData.icon"/>
+        <span :class="'fade-in item-' + itemData.icon" :title="itemData.icon">
+<!--          <span-->
+<!--            v-if="itemData.stacksize > 1"-->
+<!--            style="position:absolute; right: 0px; top:45px; font-size: 9px">-->
+<!--            x{{ itemData.stacksize }}-->
+<!--          </span>-->
+        </span>
       </div>
       <div class="col-10 pl-5">
         <h6 class="eq-header" style="margin: 0px; margin-bottom: 10px">
@@ -503,7 +509,7 @@ export default {
         tags.push("Attuneable");
       }
       if (this.itemData.stackable === 1) {
-        tags.push("Stackable");
+        tags.push("Stackable (" + this.itemData.stacksize  + ")");
       }
       if (this.itemData.potionbelt === 1) {
         tags.push("Potion Belt");
