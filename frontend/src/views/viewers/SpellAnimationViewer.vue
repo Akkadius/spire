@@ -47,7 +47,7 @@ import EqWindow          from "@/components/eq-ui/EQWindow";
 import SpellAnimations   from "@/app/asset-maps/spell-animations-map.json";
 import spellAnimMappings from "@/app/data-maps/spell-icon-anim-name-map.json";
 import {Listeners} from "@/app/listeners/listeners";
-import {ROUTE}     from "../routes";
+import {ROUTE}     from "../../routes";
 
 let itemModels = [];
 

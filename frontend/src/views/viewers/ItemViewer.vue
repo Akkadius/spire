@@ -70,7 +70,7 @@ import slugify               from "slugify";
 import PageHeader            from "@/components/layout/PageHeader";
 import {App}                 from "@/constants/app";
 import EqWindow from "@/components/eq-ui/EQWindow";
-import {ROUTE}  from "../routes";
+import {ROUTE}  from "../../routes";
 
 const baseUrl         = App.ASSET_CDN_BASE_URL + "assets/objects/";
 const MAX_ITEM_IDFILE = 100000;

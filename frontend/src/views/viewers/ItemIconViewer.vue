@@ -63,7 +63,7 @@ import PageHeader           from "@/components/layout/PageHeader";
 import EqWindowSimple       from "@/components/eq-ui/EQWindowSimple";
 import EqWindowComplex      from "@/components/eq-ui/EQWindowComplex";
 import EqWindow from "@/components/eq-ui/EQWindow";
-import {ROUTE}  from "../routes";
+import {ROUTE}  from "../../routes";
 
 const MAX_ICON_ID = 10000;
 // const MAX_ICON_ID = 1000;

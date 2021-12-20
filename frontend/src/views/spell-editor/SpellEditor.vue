@@ -766,7 +766,7 @@ import {App}                from "../../constants/app";
 import SpellIconSelector    from "./components/SpellIconSelector";
 import SpellAnimationPreview
                             from "./components/SpellAnimationPreview";
-import SpellAnimationViewer from "../SpellAnimationViewer";
+import SpellAnimationViewer from "../viewers/SpellAnimationViewer";
 import SpellAnimationSelector
                             from "./components/SpellAnimationSelector";
 import EqCheckbox           from "../../components/eq-ui/EQCheckbox";

@@ -21,22 +21,22 @@ export default new Router({
         },
         {
           path: ROUTE.RACE_VIEWER,
-          component: () => import('./views/RaceViewer.vue'),
+          component: () => import('./views/viewers/RaceViewer.vue'),
           meta: {title: "Race Viewer"},
         },
         {
           path: ROUTE.ITEM_VIEWER,
-          component: () => import('./views/ItemViewer.vue'),
+          component: () => import('./views/viewers/ItemViewer.vue'),
           meta: {title: "Item Viewer"},
         },
         {
           path: ROUTE.ITEM_ICON_VIEWER,
-          component: () => import('./views/ItemIconViewer.vue'),
+          component: () => import('./views/viewers/ItemIconViewer.vue'),
           meta: {title: "Item Icon Viewer"},
         },
         {
           path: ROUTE.SPELL_ANIMATION_VIEWER,
-          component: () => import('./views/SpellAnimationViewer.vue'),
+          component: () => import('./views/viewers/SpellAnimationViewer.vue'),
           meta: {title: "Spell Animation Viewer"},
         },
         {
