@@ -300,7 +300,7 @@
                   </div>
                 </eq-tab>
 
-                <eq-tab name="Stats">
+                <eq-tab name="Stats" class="stats-tab">
 
                   <div class="row">
 
@@ -721,6 +721,39 @@
                   </div>
                 </eq-tab>
 
+                <eq-tab name="Bag">
+                  <div
+                    class="row"
+                    :key="field.field"
+                    v-for="field in
+                       [
+                         {
+                           description: 'Bag Size',
+                           field: 'bagsize'
+                         },
+                         {
+                           description: 'Bag Slots',
+                           field: 'bagslots',
+                         },
+                         {
+                           description: 'Bag Type',
+                           field: 'bagtype',
+                         },
+                         {
+                           description: 'Bag Weight Restriction',
+                           field: 'bagwr',
+                         },
+                       ]"
+                  >
+                    <div class="col-5 text-right mr-3 p-0 mt-2">
+                      {{ field.description }}
+                    </div>
+                    <div class="col-3 p-0 m-0" :style="(item[field.field] === 0 ? 'opacity: .5' : '')">
+                      <b-form-input v-model.number="item[field.field]"/>
+                    </div>
+                  </div>
+                </eq-tab>
+
                 <eq-tab name="Pricing">
                   <div v-for="(field, description) in pricingFields" :key="field" class="row text-center">
                     <div class="col-1">
@@ -736,7 +769,99 @@
                   </div>
                 </eq-tab>
 
+                <eq-tab name="?" v-if="showUnknown">
+                  <div class="row">
+                    <div
+                      class="col-2"
+                      :key="field.field"
+                      v-for="field in
+                       [
+                          'unk_012',
+                          'unk_013',
+                          'unk_014',
+                          'unk_033',
+                          'unk_054',
+                          'unk_059',
+                          'unk_060',
+                          'unk_120',
+                          'unk_121',
+                          'unk_123',
+                          'unk_124',
+                          'unk_127',
+                          'unk_132',
+                          'unk_134',
+                          'unk_137',
+                          'unk_142',
+                          'unk_147',
+                          'unk_152',
+                          'unk_157',
+                          'unk_193',
+                          'unk_214',
+                          'unk_220',
+                          'unk_221',
+                          'unk_223',
+                          'unk_224',
+                          'unk_225',
+                          'unk_226',
+                          'unk_227',
+                          'unk_228',
+                          'unk_229',
+                          'unk_230',
+                          'unk_231',
+                          'unk_232',
+                          'unk_233',
+                          'unk_234',
+                          'unk_236',
+                          'unk_237',
+                          'unk_238',
+                          'unk_239',
+                          'unk_240',
+                          'unk_241',
+                          'wornunk_1',
+                          'wornunk_2',
+                          'wornunk_3',
+                          'wornunk_4',
+                          'wornunk_5',
+                          'wornunk_6',
+                          'wornunk_7',
+                          'procunk_1',
+                          'procunk_2',
+                          'procunk_3',
+                          'procunk_4',
+                          'procunk_6',
+                          'procunk_7',
+                          'scrollunk_1',
+                          'scrollunk_2',
+                          'scrollunk_3',
+                          'scrollunk_4',
+                          'scrollunk_5',
+                          'scrollunk_6',
+                          'focusunk_1',
+                          'focusunk_2',
+                          'focusunk_3',
+                          'focusunk_4',
+                          'focusunk_5',
+                          'focusunk_6',
+                          'focusunk_7',
+                          'clickunk_5',
+                          'clickunk_6',
+                          'clickunk_7',
+                          'bardunk_1',
+                          'bardunk_2',
+                          'bardunk_3',
+                          'bardunk_4',
+                          'bardunk_5',
+                          'bardunk_7',
+                       ]"
+                    >
+                      {{ field }}
+                      <b-form-input v-model.number="item[field]"/>
+                    </div>
+                  </div>
+                </eq-tab>
+
               </eq-tabs>
+
 
               <div class="text-center mt-3">
                 <b-button
@@ -747,6 +872,18 @@
                   Save Item
                 </b-button>
               </div>
+
+<!--              <div class="row">-->
+<!--                <div class="col-2">-->
+<!--                  Show Unknown-->
+<!--                  <eq-checkbox-->
+<!--                    class="mb-2 d-inline-block"-->
+<!--                    v-model="showUnknown"-->
+<!--                  />-->
+<!--                </div>-->
+<!--                <div class="col-10"></div>-->
+<!--              </div>-->
+
             </eq-window>
           </div>
 
@@ -895,6 +1032,9 @@ export default {
       spellEffectSelectorActive: false,
       freeIdSelectorActive: false,
 
+      // show unknown fields
+      showUnknown: false,
+
       // used to track when the subselector tool window has last spawned a tool
       // this keeps from a subsequent hover redrawing another tool within a grace period defined by
       // MILLISECONDS_BEFORE_WINDOW_RESET
@@ -924,7 +1064,8 @@ export default {
         "Fire Resists": { stat: "fr", heroic: "heroic_fr" },
         "Cold Resist": { stat: "cr", heroic: "heroic_cr" },
         "Disease Resist": { stat: "dr", heroic: "heroic_dr" },
-        "Poison Resist": { stat: "pr", heroic: "heroic_pr" }
+        "Poison Resist": { stat: "pr", heroic: "heroic_pr" },
+        "Corruption": { stat: "svcorruption", heroic: "heroic_svcorrup" }
       },
       mod3: {
         "Attack": "attack",
@@ -936,6 +1077,7 @@ export default {
         "Clairvoyance": "clairvoyance",
         "Combat Effects": "combateffects",
         "Damage Shield": "damageshield",
+        "Damage Shield Mitigation": "dsmitigation",
         "DoT Shielding": "dotshielding",
         "Heal Amount": "healamt",
         "Shielding": "shielding",
@@ -988,10 +1130,54 @@ export default {
         console.log("focus type is [%s]", this.item.focustype)
       }
     },
+    'item.scrolleffect': function (newVal, oldVal) {
+      if (newVal !== oldVal && this.item) {
+        this.item.scrolltype = newVal > 0 ? 7 : 0
+        console.log("this.item.scrolltype type is [%s]", this.item.scrolltype)
+      }
+    },
+    'item.bardeffect': function (newVal, oldVal) {
+      if (newVal !== oldVal && this.item) {
+        this.item.bardeffecttype = newVal > 0 ? 8 : 0
+        console.log("this.item.bardeffecttype type is [%s]", this.item.bardeffecttype)
+      }
+    },
     'item.casttime': function (newVal, oldVal) {
       if (newVal !== oldVal && this.item) {
         this.item.casttime_ = this.item.casttime
         console.log("casttime_ is [%s]", this.item.casttime_)
+      }
+    },
+
+    // when aug slot type is non-zero, set visible to 1
+    'item.augslot_1_type': function (newVal, oldVal) {
+      if (newVal !== oldVal && this.item) {
+        this.item.augslot_1_visible = newVal > 0 ? 1 : 0
+        console.log("this.item.augslot_1_visible is [%s]", this.item.augslot_1_visible)
+      }
+    },
+    'item.augslot_2_type': function (newVal, oldVal) {
+      if (newVal !== oldVal && this.item) {
+        this.item.augslot_2_visible = newVal > 0 ? 1 : 0
+        console.log("this.item.augslot_2_visible is [%s]", this.item.augslot_2_visible)
+      }
+    },
+    'item.augslot_3_type': function (newVal, oldVal) {
+      if (newVal !== oldVal && this.item) {
+        this.item.augslot_3_visible = newVal > 0 ? 1 : 0
+        console.log("this.item.augslot_3_visible is [%s]", this.item.augslot_3_visible)
+      }
+    },
+    'item.augslot_4_type': function (newVal, oldVal) {
+      if (newVal !== oldVal && this.item) {
+        this.item.augslot_4_visible = newVal > 0 ? 1 : 0
+        console.log("this.item.augslot_4_visible is [%s]", this.item.augslot_4_visible)
+      }
+    },
+    'item.augslot_5_type': function (newVal, oldVal) {
+      if (newVal !== oldVal && this.item) {
+        this.item.augslot_5_visible = newVal > 0 ? 1 : 0
+        console.log("this.item.augslot_5_visible is [%s]", this.item.augslot_5_visible)
       }
     },
 
@@ -1162,5 +1348,10 @@ export default {
 
 .effect-tab input, .effect-tab select {
   margin-bottom: 0;
+}
+
+.stats-tab input, .stats-tab select {
+  margin-bottom: 7px;
+  height: 30px;
 }
 </style>
