@@ -16,67 +16,67 @@ export default new Router({
       children: [
         {
           path: '/',
-          component: () => import('./views/pages/Home.vue'),
+          component: () => import('./views/Home.vue'),
           meta: {title: "Home"},
         },
         {
           path: ROUTE.RACE_VIEWER,
-          component: () => import('./views/pages/RaceViewer.vue'),
+          component: () => import('./views/RaceViewer.vue'),
           meta: {title: "Race Viewer"},
         },
         {
           path: ROUTE.ITEM_VIEWER,
-          component: () => import('./views/pages/ItemViewer.vue'),
+          component: () => import('./views/ItemViewer.vue'),
           meta: {title: "Item Viewer"},
         },
         {
           path: ROUTE.ITEM_ICON_VIEWER,
-          component: () => import('./views/pages/ItemIconViewer.vue'),
+          component: () => import('./views/ItemIconViewer.vue'),
           meta: {title: "Item Icon Viewer"},
         },
         {
           path: ROUTE.SPELL_ANIMATION_VIEWER,
-          component: () => import('./views/pages/SpellAnimationViewer.vue'),
+          component: () => import('./views/SpellAnimationViewer.vue'),
           meta: {title: "Spell Animation Viewer"},
         },
         {
           path: '/test/:zone',
-          component: () => import('./views/pages/Test.vue'),
+          component: () => import('./views/Test.vue'),
           meta: {title: "Test"},
         },
         {
           path: '/components',
-          component: () => import('./views/pages/Components.vue'),
+          component: () => import('./views/Components.vue'),
           meta: {title: "Component Documentation"},
         },
         {
           path: '/tasks/',
-          component: () => import('./views/pages/Tasks.vue'),
+          component: () => import('./views/Tasks.vue'),
           meta: {title: "Task Editor"},
         },
         {
           path: '/tasks/:id',
-          component: () => import('./views/pages/Tasks.vue'),
+          component: () => import('./views/Tasks.vue'),
           meta: {title: "Task Editor"},
         },
         {
           path: '/items-test',
-          component: () => import('./views/pages/ItemsTest.vue'),
+          component: () => import('./views/ItemsTest.vue'),
           meta: {title: "Items Test"},
         },
         {
           path: ROUTE.SPELLS_LIST,
-          component: () => import('./views/pages/Spells.vue'),
+          component: () => import('./views/Spells.vue'),
           meta: {title: "Spells Browser"},
         },
         {
           path: util.format(ROUTE.SPELL_EDIT, ":id"),
-          component: () => import('./views/pages/SpellEdit.vue'),
+          component: () => import('./views/SpellEdit.vue'),
           meta: {title: "Spell Edit"},
         },
         {
           path: ROUTE.ITEMS_LIST,
-          component: () => import('./views/pages/Items.vue'),
+          component: () => import('./views/Items.vue'),
           meta: {title: "Items Browser"},
         },
         {
@@ -86,17 +86,17 @@ export default new Router({
         },
         {
           path: '/zones',
-          component: () => import('./views/pages/Zones.vue'),
+          component: () => import('./views/Zones.vue'),
           meta: {title: "Zones"},
         },
         {
           path: '/zone/:zoneId',
-          component: () => import('./views/pages/Zone.vue'),
+          component: () => import('./views/Zone.vue'),
           meta: {title: "Zone"},
         },
         {
           path: '/connections',
-          component: () => import('./views/pages/Connections.vue'),
+          component: () => import('./views/Connections.vue'),
           meta: {title: "Manage Database Connections"},
         },
         {
@@ -106,7 +106,7 @@ export default new Router({
         },
         {
           path: '/calculators',
-          component: () => import('./views/pages/Calculators.vue'),
+          component: () => import('./views/Calculators.vue'),
           meta: {title: "Calculators"},
         },
       ]
@@ -117,23 +117,23 @@ export default new Router({
       children: [
         {
           path: '/doc/:doc*',
-          component: () => import('./views/pages/Doc.vue'),
+          component: () => import('./views/Doc.vue'),
           meta: {title: "Doc"},
         },
       ]
     },
     {
       path: '/logout',
-      component: () => import('./views/pages/Logout.vue')
+      component: () => import('./views/Logout.vue')
     },
     {
       path: '/login',
-      component: () => import('./views/pages/Login.vue'),
+      component: () => import('./views/Login.vue'),
       meta: {title: "Login"},
     },
     {
       path: '/fe-auth-callback',
-      component: () => import('./views/pages/AuthCallback.vue'),
+      component: () => import('./views/AuthCallback.vue'),
       meta: {title: "Authentication Callback"},
     },
   ]

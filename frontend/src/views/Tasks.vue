@@ -87,9 +87,9 @@ import {SpireApiClient} from "@/app/api/spire-api-client";
 export default {
   components: {
     EqWindow,
-    "test-form": () => import("@/components/forms/TasksForm"),
-    "task-activity": () => import("@/components/forms/TaskActivitiesForm"),
-    "page-header": () => import("@/components/layout/PageHeader")
+    "test-form": () => import("@/components/forms/TasksForm.vue"),
+    "task-activity": () => import("@/components/forms/TaskActivitiesForm.vue"),
+    "page-header": () => import("@/components/layout/PageHeader.vue")
   },
 
   data() {

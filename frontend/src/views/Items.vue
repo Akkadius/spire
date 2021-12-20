@@ -207,9 +207,9 @@ export default {
     EqItemCardPreview,
     EqItemCardPreview,
     EqWindow,
-    "test-form": () => import("@/components/forms/TasksForm"),
-    "task-activity": () => import("@/components/forms/TaskActivitiesForm"),
-    "page-header": () => import("@/components/layout/PageHeader")
+    "test-form": () => import("@/components/forms/TasksForm.vue"),
+    "task-activity": () => import("@/components/forms/TaskActivitiesForm.vue"),
+    "page-header": () => import("@/components/layout/PageHeader.vue")
   },
   data() {
     return {

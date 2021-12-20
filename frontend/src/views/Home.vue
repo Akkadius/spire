@@ -33,7 +33,7 @@
 
 import EqWindow         from "@/components/eq-ui/EQWindow";
 import UserContext      from "@/app/user/UserContext";
-import {SpireApiClient} from "../../app/api/spire-api-client";
+import {SpireApiClient} from "../app/api/spire-api-client";
 
 export default {
   components: {

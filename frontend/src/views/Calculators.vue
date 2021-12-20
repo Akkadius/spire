@@ -217,14 +217,14 @@ import EqProgressBar              from "@/components/eq-ui/EQProgressBar";
 import PageHeader                 from "@/components/layout/PageHeader";
 import EqItemCardPreview          from "@/components/eq-ui/EQItemCardPreview";
 import EqSpellPreview             from "@/components/eq-ui/EQSpellCardPreview";
-import NpcSpecialAbilities   from "@/components/tools/NpcSpecialAbilities";
-import HeaderComponent       from "../../components/layout/HeaderComponent";
-import RaceBitmaskCalculator from "../../components/tools/RaceBitmaskCalculator";
-import ClassBitmaskCalculator     from "../../components/tools/ClassBitmaskCalculator";
-import InventorySlotCalculator    from "../../components/tools/InventorySlotCalculator";
-import AugBitmaskCalculator       from "../../components/tools/AugmentTypeCalculator";
-import DeityBitmaskCalculator     from "../../components/tools/DeityCalculator";
-import ExpansionBitmaskCalculator from "../../components/tools/ExpansionsCalculator";
+import NpcSpecialAbilities        from "@/components/tools/NpcSpecialAbilities";
+import HeaderComponent            from "../components/layout/HeaderComponent";
+import RaceBitmaskCalculator      from "../components/tools/RaceBitmaskCalculator";
+import ClassBitmaskCalculator     from "../components/tools/ClassBitmaskCalculator";
+import InventorySlotCalculator    from "../components/tools/InventorySlotCalculator";
+import AugBitmaskCalculator       from "../components/tools/AugmentTypeCalculator";
+import DeityBitmaskCalculator     from "../components/tools/DeityCalculator";
+import ExpansionBitmaskCalculator from "../components/tools/ExpansionsCalculator";
 
 export default {
   name: "Calculators",

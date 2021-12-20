@@ -90,8 +90,8 @@ import PageHeader     from "@/components/layout/PageHeader";
 import {App}          from "@/constants/app";
 import EqWindow       from "@/components/eq-ui/EQWindow";
 import EqWindowSimple from "@/components/eq-ui/EQWindowSimple";
-import {debounce}     from "@/app/utility/debounce.js";
-import {ROUTE}        from "../../routes";
+import {debounce} from "@/app/utility/debounce.js";
+import {ROUTE}    from "../routes";
 
 const baseUrl     = App.ASSET_CDN_BASE_URL + "assets/npc_models/";
 const MAX_RACE_ID = 700;
