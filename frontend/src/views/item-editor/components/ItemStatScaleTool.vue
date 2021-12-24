@@ -1,26 +1,170 @@
 <template>
   <div>
-    Increase All (Non-Zero) Stats by Multiplier from Original Stats <br>(1 = 100%, 1.3 = 130%, 0.5 = 50%) Hit Enter Key or Move out of Input to see affect
-    <b-form-input
-      v-model.number="increaseAllStatsBy"
-      @change="increaseAllStats"
-      @mouseover="highlightAllFields"
-      @mouseleave="clearAllHighlights"
-      class="mt-3"
-      type="number"
-      step=".1"
-    />
+
+    <eq-window-complex title="Scale Stats by Percentage">
+      <div class="text-center mb-4">
+        Increase All (Non-Zero) Stats by Multiplier from Original Stats<br>
+        <b>Enter Key</b>, <b>Arrow Up/Down Keys</b> to see affect
+      </div>
+
+      <div class="row">
+        <div class="col-5 text-right m-0 p-0 mt-2">
+          All Stats
+        </div>
+        <div class="col-3">
+          <b-form-input
+            v-model.number="increaseAllStatsBy"
+            @change="increaseAllStats"
+            @focus="highlightAllFields"
+            @blur="clearAllHighlights"
+            @mouseover="highlightAllFields"
+            @mouseleave="clearAllHighlights"
+            type="number"
+            step=".1"
+          />
+        </div>
+        <div class="col-2 p-0 m-0 mt-2">
+          {{ Math.round(increaseAllStatsBy * 100) }}%
+        </div>
+      </div>
+
+      <div class="row mt-3">
+        <div class="col-5 text-right m-0 p-0 mt-2">
+          Top Stats
+        </div>
+        <div class="col-3">
+          <b-form-input
+            v-model.number="increaseAllTopStatsBy"
+            @change="increaseAllTopStats"
+            @focus="highlightTopStatFields"
+            @blur="clearAllHighlights"
+            @mouseover="highlightTopStatFields"
+            @mouseleave="clearAllHighlights"
+            type="number"
+            step=".1"
+          />
+        </div>
+        <div class="col-2 p-0 m-0 mt-2">
+          {{ Math.round(increaseAllTopStatsBy * 100) }}%
+        </div>
+      </div>
+
+      <div class="row mt-3">
+        <div class="col-5 text-right m-0 p-0 mt-2">
+          Damage
+        </div>
+        <div class="col-3">
+          <b-form-input
+            v-model.number="increaseAllDamageBy"
+            @change="increaseAllDamage"
+            @focus="highlightDamageFields"
+            @blur="clearAllHighlights"
+            @mouseover="highlightDamageFields"
+            @mouseleave="clearAllHighlights"
+            type="number"
+            step=".1"
+          />
+        </div>
+        <div class="col-2 p-0 m-0 mt-2">
+          {{ Math.round(increaseAllDamageBy * 100) }}%
+        </div>
+      </div>
+
+      <div class="row mt-3">
+        <div class="col-5 text-right m-0 p-0 mt-2">
+          Basic Stats
+        </div>
+        <div class="col-3">
+          <b-form-input
+            v-model.number="increaseAllBasicStatsBy"
+            @change="increaseAllBasicStats"
+            @focus="highlightBasicStatFields"
+            @blur="clearAllHighlights"
+            @mouseover="highlightBasicStatFields"
+            @mouseleave="clearAllHighlights"
+            type="number"
+            step=".1"
+          />
+        </div>
+        <div class="col-2 p-0 m-0 mt-2">
+          {{ Math.round(increaseAllBasicStatsBy * 100) }}%
+        </div>
+      </div>
+
+      <div class="row mt-3">
+        <div class="col-5 text-right m-0 p-0 mt-2">
+          Resists
+        </div>
+        <div class="col-3">
+          <b-form-input
+            v-model.number="increaseAllResistsBy"
+            @change="increaseAllResists"
+            @focus="highlightResistFields"
+            @blur="clearAllHighlights"
+            @mouseover="highlightResistFields"
+            @mouseleave="clearAllHighlights"
+            type="number"
+            step=".1"
+          />
+        </div>
+        <div class="col-2 p-0 m-0 mt-2">
+          {{ Math.round(increaseAllResistsBy * 100) }}%
+        </div>
+      </div>
+
+      <div class="row mt-3">
+        <div class="col-5 text-right m-0 p-0 mt-2">
+          Mods
+        </div>
+        <div class="col-3">
+          <b-form-input
+            v-model.number="increaseAllModsBy"
+            @change="increaseAllMods"
+            @focus="highlightModFields"
+            @blur="clearAllHighlights"
+            @mouseover="highlightModFields"
+            @mouseleave="clearAllHighlights"
+            type="number"
+            step=".1"
+          />
+        </div>
+        <div class="col-2 p-0 m-0 mt-2">
+          {{ Math.round(increaseAllModsBy * 100) }}%
+        </div>
+      </div>
+
+    </eq-window-complex>
+
   </div>
 </template>
 
 <script>
-import {Items} from "@/app/items";
+import {Items}         from "@/app/items";
+import EqWindowComplex from "../../../components/eq-ui/EQWindowComplex";
 
 export default {
   name: "ItemStatScaleTool",
+  components: { EqWindowComplex },
+  watch: {
+    'increaseAllStatsBy': function (newVal, oldVal) {
+      this.increaseAllResistsBy    = 1
+      this.increaseAllDamageBy     = 1
+      this.increaseAllTopStatsBy   = 1
+      this.increaseAllBasicStatsBy = 1
+      this.increaseAllModsBy       = 1
+    },
+    // 'increaseAllResistsBy': function (newVal, oldVal) {
+    //   this.increaseAllStatsBy = 1
+    // },
+  },
   data() {
     return {
       increaseAllStatsBy: 1,
+      increaseAllTopStatsBy: 1,
+      increaseAllDamageBy: 1,
+      increaseAllResistsBy: 1,
+      increaseAllBasicStatsBy: 1,
+      increaseAllModsBy: 1,
 
       topStats: [
         {
@@ -41,7 +185,7 @@ export default {
         },
       ],
 
-      stats: Items.getBasicStatAndResistFields(),
+      stats: Items.getBasicStatFields(),
       mod3: Items.getMod3Fields(),
 
       damageStats: [
@@ -112,6 +256,16 @@ export default {
       return fields;
     },
 
+    getResistFields() {
+      let fields = [];
+      for (let key in Items.getResistFields()) {
+        const entry = Items.getResistFields()[key]
+        const field = entry.stat
+        fields.push({ field: field, value: this.originalItemData[field] })
+      }
+      return fields;
+    },
+
     getTopStatFields() {
       let fields = [];
       for (let key in this.topStats) {
@@ -142,13 +296,15 @@ export default {
         this.getMod3Fields(),
         this.getDamageStatFields(),
         this.getTopStatFields(),
-        this.getBasicStatFields()
+        this.getBasicStatFields(),
+        this.getResistFields()
       )
 
       return fields;
     },
 
     // calculator functions
+    // percentage increase functions
     increaseAllStats() {
       this.getAllFields().forEach((entry) => {
         const field = entry.field
@@ -157,6 +313,81 @@ export default {
         let update = {
           field: field,
           value: Math.round(value * this.increaseAllStatsBy)
+        }
+
+        if (update.value > 0) {
+          this.$emit("field", update);
+        }
+      })
+    },
+    increaseAllTopStats() {
+      this.getTopStatFields().forEach((entry) => {
+        const field = entry.field
+        const value = entry.value
+
+        let update = {
+          field: field,
+          value: Math.round(value * this.increaseAllTopStatsBy)
+        }
+
+        if (update.value > 0) {
+          this.$emit("field", update);
+        }
+      })
+    },
+    increaseAllDamage() {
+      this.getDamageStatFields().forEach((entry) => {
+        const field = entry.field
+        const value = entry.value
+
+        let update = {
+          field: field,
+          value: Math.round(value * this.increaseAllDamageBy)
+        }
+
+        if (update.value > 0) {
+          this.$emit("field", update);
+        }
+      })
+    },
+    increaseAllBasicStats() {
+      this.getBasicStatFields().forEach((entry) => {
+        const field = entry.field
+        const value = entry.value
+
+        let update = {
+          field: field,
+          value: Math.round(value * this.increaseAllBasicStatsBy)
+        }
+
+        if (update.value > 0) {
+          this.$emit("field", update);
+        }
+      })
+    },
+    increaseAllResists() {
+      this.getResistFields().forEach((entry) => {
+        const field = entry.field
+        const value = entry.value
+
+        let update = {
+          field: field,
+          value: Math.round(value * this.increaseAllResistsBy)
+        }
+
+        if (update.value > 0) {
+          this.$emit("field", update);
+        }
+      })
+    },
+    increaseAllMods() {
+      this.getMod3Fields().forEach((entry) => {
+        const field = entry.field
+        const value = entry.value
+
+        let update = {
+          field: field,
+          value: Math.round(value * this.increaseAllModsBy)
         }
 
         if (update.value > 0) {
@@ -181,21 +412,51 @@ export default {
 
     highlightAllFields() {
       this.getAllFields().forEach((entry) => {
-        // this.$emit("highlight", entry.field);
         if (entry.value > 0) {
           this.highlightField(entry.field)
         }
       })
-
-      console.log("highlight all")
     },
+    highlightTopStatFields() {
+      this.getTopStatFields().forEach((entry) => {
+        if (entry.value > 0) {
+          this.highlightField(entry.field)
+        }
+      })
+    },
+    highlightDamageFields() {
+      this.getDamageStatFields().forEach((entry) => {
+        if (entry.value > 0) {
+          this.highlightField(entry.field)
+        }
+      })
+    },
+    highlightBasicStatFields() {
+      this.getBasicStatFields().forEach((entry) => {
+        if (entry.value > 0) {
+          this.highlightField(entry.field)
+        }
+      })
+    },
+    highlightResistFields() {
+      this.getResistFields().forEach((entry) => {
+        if (entry.value > 0) {
+          this.highlightField(entry.field)
+        }
+      })
+    },
+    highlightModFields() {
+      this.getMod3Fields().forEach((entry) => {
+        if (entry.value > 0) {
+          this.highlightField(entry.field)
+        }
+      })
+    },
+
     clearAllHighlights() {
       this.getAllFields().forEach((entry) => {
-        // this.$emit("highlight", entry.field);
         this.unhighlightField(entry.field)
       })
-
-      console.log("clear all")
     }
   }
 }

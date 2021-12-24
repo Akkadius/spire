@@ -66,7 +66,10 @@ input[type=checkbox].eq-checkbox:checked + label {
 [class*="eq-window"] input:hover,
 [class*="eq-window"] textarea:hover,
 [class*="eq-window"] pre:hover,
-[class*="eq-window"] select:hover {
+[class*="eq-window"] select:hover,
+[class*="eq-window"] input:focus,
+[class*="eq-window"] textarea:focus,
+[class*="eq-window"] select:focus {
     border-color: #8aa3ff !important;
 }
 
@@ -598,7 +601,7 @@ A:hover {
     pointer-events: none;
 }
 
-.eq-window .eq-window-title-bar {
+.eq-window > .eq-window-title-bar {
     position: absolute;
     overflow: hidden;
     top: -10px;

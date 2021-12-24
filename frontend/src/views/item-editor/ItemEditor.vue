@@ -1019,8 +1019,7 @@
           <div class="col-5">
 
             <!-- Stat Scale Tool-->
-            <eq-window
-              title="Stat Scaling"
+            <div
               style="margin-top: 30px; margin-right: 10px; width: auto;"
               class="fade-in"
               v-if="drawStatScaleToolActive"
@@ -1031,7 +1030,7 @@
                 @field="item[$event.field] = $event.value; setFieldModifiedById($event.field)"
               />
 
-            </eq-window>
+            </div>
 
             <!-- preview item -->
             <eq-window
@@ -1522,8 +1521,10 @@ export default {
     },
     drawStatScaleTool() {
       // this.resetPreviewComponents()
-      this.lastResetTime           = Date.now()
+      this.lastResetTime = Date.now()
+      this.resetPreviewComponents()
       this.drawStatScaleToolActive = true
+      this.previewItemActive       = true
     },
     getTargetTypeColor(targetType) {
       return Items.getTargetTypeColor(targetType);
