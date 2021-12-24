@@ -332,6 +332,7 @@ import {Spells}                    from "@/app/spells";
 import util                        from "util";
 import {ROUTE}                     from "@/routes";
 import EqCashDisplay               from "@/components/eq-ui/EqCashDisplay";
+import {Items}                     from "@/app/items";
 
 export default {
   name: "EqItemCardPreview",
@@ -359,24 +360,7 @@ export default {
         "Poison Resist": { stat: "pr", heroic: "heroic_pr" },
         "Corruption": { stat: "svcorruption", heroic: "heroic_svcorrup" }
       },
-      mod3: {
-        "Attack": "attack",
-        "HP Regen": "regen",
-        "Mana Regen": "manaregen",
-        "Endurance Regen": "enduranceregen",
-        "Accuracy": "accuracy",
-        "Avoidance": "avoidance",
-        "Clairvoyance": "clairvoyance",
-        "Combat Effects": "combateffects",
-        "Damage Shield": "damageshield",
-        "Damage Shield Mitigation": "dsmitigation",
-        "DoT Shielding": "dotshielding",
-        "Heal Amount": "healamt",
-        "Shielding": "shielding",
-        "Spell Shielding": "spellshield",
-        "Strikethrough": "strikethrough",
-        "Stun Resist": "stunresist",
-      },
+      mod3: Items.getMod3Fields(),
       toplevel: {
         "Class": this.getClasses(),
         "Race": this.getRaces(),

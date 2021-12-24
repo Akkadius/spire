@@ -2,8 +2,11 @@
   <div>
     Increase All Stats by Multiplier from Original Stats (1 = 100%, 1.3 = 130%, 0.5 = 50%)
     <b-form-input
-      v-model.number="increaseStatBy"
-      @change="syncStats"
+      v-model.number="increaseAllStatsBy"
+      @change="increaseAllStats"
+      @mouseover="highlightAllFields"
+      @mouseleave="clearAllHighlights"
+      class="mt-3"
       type="number"
       step=".1"
     />
@@ -11,11 +14,13 @@
 </template>
 
 <script>
+import {Items} from "@/app/items";
+
 export default {
   name: "ItemStatScaleTool",
   data() {
     return {
-      increaseStatBy: 1,
+      increaseAllStatsBy: 1,
 
       topStats: [
         {
@@ -36,39 +41,9 @@ export default {
         },
       ],
 
-      stats: {
-        "Strength": { stat: "astr", heroic: "heroic_str" },
-        "Stamina": { stat: "asta", heroic: "heroic_sta" },
-        "Intelligence": { stat: "aint", heroic: "heroic_int" },
-        "Wisdom": { stat: "awis", heroic: "heroic_wis" },
-        "Agility": { stat: "aagi", heroic: "heroic_agi" },
-        "Dexterity": { stat: "adex", heroic: "heroic_dex" },
-        "Charisma": { stat: "acha", heroic: "heroic_cha" },
-        "Magic Resist": { stat: "mr", heroic: "heroic_mr" },
-        "Fire Resists": { stat: "fr", heroic: "heroic_fr" },
-        "Cold Resist": { stat: "cr", heroic: "heroic_cr" },
-        "Disease Resist": { stat: "dr", heroic: "heroic_dr" },
-        "Poison Resist": { stat: "pr", heroic: "heroic_pr" },
-        "Corruption": { stat: "svcorruption", heroic: "heroic_svcorrup" }
-      },
-      mod3: {
-        "Attack": "attack",
-        "HP Regen": "regen",
-        "Mana Regen": "manaregen",
-        "Endurance Regen": "enduranceregen",
-        "Accuracy": "accuracy",
-        "Avoidance": "avoidance",
-        "Clairvoyance": "clairvoyance",
-        "Combat Effects": "combateffects",
-        "Damage Shield": "damageshield",
-        "Damage Shield Mitigation": "dsmitigation",
-        "DoT Shielding": "dotshielding",
-        "Heal Amount": "healamt",
-        "Shielding": "shielding",
-        "Spell Shielding": "spellshield",
-        "Strikethrough": "strikethrough",
-        "Stun Resist": "stunresist",
-      },
+      stats: Items.getBasicStatAndResistFields(),
+      mod3: Items.getMod3Fields(),
+
       damageStats: [
         {
           description: 'Damage',
@@ -77,10 +52,6 @@ export default {
         {
           description: 'Haste',
           field: 'haste'
-        },
-        {
-          description: 'Extra Damage Skill',
-          field: 'extradmgskill'
         },
         {
           description: 'Extra Damage Amount',
@@ -103,24 +74,12 @@ export default {
           field: 'banedmgamt'
         },
         {
-          description: 'Bane Damage Body',
-          field: 'banedmgbody'
-        },
-        {
-          description: 'Bane Damage Race',
-          field: 'banedmgrace'
-        },
-        {
           description: 'Bane Damage Race Amount',
           field: 'banedmgraceamt'
         },
         {
           description: 'Elemental Damage Amount',
           field: 'elemdmgamt'
-        },
-        {
-          description: 'Element Damage Type',
-          field: 'elemdmgtype'
         },
       ],
 
@@ -133,68 +92,110 @@ export default {
     },
   },
   methods: {
-    syncStats() {
+    // get field functions
+    getMod3Fields() {
+      let fields = [];
       for (let key in this.mod3) {
         const field = this.mod3[key]
-        let update  = {
-          field: field,
-          value: Math.round(this.originalItemData[field] * this.increaseStatBy)
-        }
-
-        if (update.value > 0) {
-          this.$emit("field", update);
-        }
+        fields.push({ field: field, value: this.originalItemData[field] })
       }
+      return fields;
+    },
 
+    getDamageStatFields() {
+      let fields = [];
       for (let key in this.damageStats) {
         const entry = this.damageStats[key]
         const field = entry.field
-        let update  = {
-          field: field,
-          value: Math.round(this.originalItemData[field] * this.increaseStatBy)
-        }
-
-        if (update.value > 0) {
-          this.$emit("field", update);
-        }
+        fields.push({ field: field, value: this.originalItemData[field] })
       }
+      return fields;
+    },
 
+    getTopStatFields() {
+      let fields = [];
       for (let key in this.topStats) {
         const entry = this.topStats[key]
         const field = entry.field
-        let update  = {
-          field: field,
-          value: Math.round(this.originalItemData[field] * this.increaseStatBy)
-        }
-
-        if (update.value > 0) {
-          this.$emit("field", update);
-        }
+        fields.push({ field: field, value: this.originalItemData[field] })
       }
+      return fields;
+    },
 
+    getBasicStatFields() {
+      let fields = [];
       for (let key in this.stats) {
         const entry  = this.stats[key]
         const stat   = entry.stat
         const heroic = entry.heroic
-        let update   = {
-          field: stat,
-          value: Math.round(this.originalItemData[stat] * this.increaseStatBy)
+        fields.push({ field: stat, value: this.originalItemData[stat] })
+        fields.push({ field: heroic, value: this.originalItemData[heroic] })
+      }
+
+      return fields;
+    },
+
+    getAllFields() {
+      let fields = [];
+
+      fields = fields.concat(
+        this.getMod3Fields(),
+        this.getDamageStatFields(),
+        this.getTopStatFields(),
+        this.getBasicStatFields()
+      )
+
+      return fields;
+    },
+
+    // calculator functions
+    increaseAllStats() {
+      this.getAllFields().forEach((entry) => {
+        const field = entry.field
+        const value = entry.value
+
+        let update = {
+          field: field,
+          value: Math.round(value * this.increaseAllStatsBy)
         }
 
         if (update.value > 0) {
           this.$emit("field", update);
         }
+      })
+    },
 
-        let heroicUpdate = {
-          field: heroic,
-          value: Math.round(this.originalItemData[heroic] * this.increaseStatBy)
-        }
-
-        if (heroicUpdate.value > 0) {
-          this.$emit("field", heroicUpdate);
-        }
+    // highlight functions
+    highlightField(name) {
+      const target = document.getElementById(name)
+      if (target) {
+        target.parentElement.parentElement.classList.add("pulsate-highlight");
       }
+    },
+    unhighlightField(name) {
+      const target = document.getElementById(name)
+      if (target) {
+        target.parentElement.parentElement.classList.remove("pulsate-highlight");
+      }
+    },
 
+    highlightAllFields() {
+      this.getAllFields().forEach((entry) => {
+        // this.$emit("highlight", entry.field);
+        if (entry.value > 0) {
+          this.highlightField(entry.field)
+        }
+      })
+
+      console.log("highlight all")
+    },
+    clearAllHighlights() {
+      this.getAllFields().forEach((entry) => {
+        // this.$emit("highlight", entry.field);
+        this.unhighlightField(entry.field)
+      })
+
+      console.log("clear all")
     }
   }
 }

@@ -377,6 +377,7 @@
                           class="row"
                           :key="field.field"
                           @mouseover="drawStatScaleTool"
+                          style="border: 1px solid rgb(0,0,0, 0%)"
                           v-for="field in
                        [
                          {
@@ -414,6 +415,7 @@
                         <div
                           v-for="(stat, description) in stats"
                           :key="stat.stat"
+                          style="border: 1px solid rgb(0,0,0, 0%)"
                           class="row text-center"
                         >
                           <div class="col-4 text-right mr-3 p-0 mt-2">
@@ -445,9 +447,10 @@
                           class="row"
                           :key="field.field"
                           @mouseover="drawStatScaleTool"
+                          style="border: 1px solid rgb(0,0,0, 0%)"
                           v-for="field in damageStats"
                         >
-                          <div class="col-8 text-right mt-2 p-0 pr-3">
+                          <div class="col-8 text-right mt-1 mb-1 p-0 pr-3">
                             {{ field.description }}
                           </div>
                           <div class="col-4 m-0 p-0" :style="(item[field.field] === 0 ? 'opacity: .5' : '')">
@@ -462,9 +465,10 @@
                         v-for="(field, description) in mod3"
                         :key="field"
                         @mouseover="drawStatScaleTool"
+                        style="border: 1px solid rgb(0,0,0, 0%)"
                         class="row text-center"
                       >
-                        <div class="col-7 text-right mt-2 p-0 pr-3">
+                        <div class="col-7 text-right mt-1 mb-1 p-0 pr-3">
                           {{ description }}
                         </div>
                         <div class="col-3 m-0 p-0" :style="(parseInt(item[field]) === 0 ? 'opacity: .5' : '')">
@@ -1199,39 +1203,9 @@ export default {
       AUG_TYPES: AUG_TYPES,
 
       // fields used in forms
-      stats: {
-        "Strength": { stat: "astr", heroic: "heroic_str" },
-        "Stamina": { stat: "asta", heroic: "heroic_sta" },
-        "Intelligence": { stat: "aint", heroic: "heroic_int" },
-        "Wisdom": { stat: "awis", heroic: "heroic_wis" },
-        "Agility": { stat: "aagi", heroic: "heroic_agi" },
-        "Dexterity": { stat: "adex", heroic: "heroic_dex" },
-        "Charisma": { stat: "acha", heroic: "heroic_cha" },
-        "Magic Resist": { stat: "mr", heroic: "heroic_mr" },
-        "Fire Resists": { stat: "fr", heroic: "heroic_fr" },
-        "Cold Resist": { stat: "cr", heroic: "heroic_cr" },
-        "Disease Resist": { stat: "dr", heroic: "heroic_dr" },
-        "Poison Resist": { stat: "pr", heroic: "heroic_pr" },
-        "Corruption": { stat: "svcorruption", heroic: "heroic_svcorrup" }
-      },
-      mod3: {
-        "Attack": "attack",
-        "HP Regen": "regen",
-        "Mana Regen": "manaregen",
-        "Endurance Regen": "enduranceregen",
-        "Accuracy": "accuracy",
-        "Avoidance": "avoidance",
-        "Clairvoyance": "clairvoyance",
-        "Combat Effects": "combateffects",
-        "Damage Shield": "damageshield",
-        "Damage Shield Mitigation": "dsmitigation",
-        "DoT Shielding": "dotshielding",
-        "Heal Amount": "healamt",
-        "Shielding": "shielding",
-        "Spell Shielding": "spellshield",
-        "Strikethrough": "strikethrough",
-        "Stun Resist": "stunresist",
-      },
+      stats: Items.getBasicStatAndResistFields(),
+      mod3: Items.getMod3Fields(),
+
       damageStats: [
         {
           description: 'Damage',
@@ -1568,7 +1542,8 @@ export default {
 }
 
 .minified-inputs input, .minified-inputs select {
-  margin-bottom: 7px;
+  margin-top: 3px;
+  margin-bottom: 3px;
   height: 30px;
 }
 </style>
