@@ -1,6 +1,6 @@
 <template>
   <div>
-    Increase All Stats by Multiplier from Original Stats (1 = 100%, 1.3 = 130%, 0.5 = 50%)
+    Increase All (Non-Zero) Stats by Multiplier from Original Stats <br>(1 = 100%, 1.3 = 130%, 0.5 = 50%) Hit Enter Key or Move out of Input to see affect
     <b-form-input
       v-model.number="increaseAllStatsBy"
       @change="increaseAllStats"
