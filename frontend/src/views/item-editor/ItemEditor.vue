@@ -1264,7 +1264,7 @@ export default {
     // reset state vars when we navigate away
     '$route'() {
       this.item         = null;
-      this.originalItem = null;
+      this.originalItem = {};
 
       // reset state vars when we navigate away
       this.notification = ""

@@ -1,6 +1,6 @@
 <template>
   <div>
-    Increase All Stats by Multiplier from Original Stats (1 = 100%)
+    Increase All Stats by Multiplier from Original Stats (1 = 100%, 1.3 = 130%, 0.5 = 50%)
     <b-form-input
       v-model.number="increaseStatBy"
       @change="syncStats"
