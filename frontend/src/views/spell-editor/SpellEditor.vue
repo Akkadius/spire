@@ -20,7 +20,6 @@
                 v-if="spell"
                 id="spell-edit-card"
                 class="spell-edit-card"
-                :hover-open="true"
                 @mouseover.native="previewSpell"
               >
                 <eq-tab

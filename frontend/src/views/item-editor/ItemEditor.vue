@@ -22,7 +22,6 @@
                 v-if="item"
                 id="item-edit-card"
                 class="item-edit-card"
-                :hover-open="true"
                 @mouseover.native="previewItem"
               >
                 <eq-tab

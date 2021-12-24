@@ -2,7 +2,6 @@
   <div>
     <eq-tabs
       v-if="freeIds"
-      :hover-open="true"
     >
       <eq-tab
         :name="'Free ID Ranges (' + freeIds.length + ')'"
