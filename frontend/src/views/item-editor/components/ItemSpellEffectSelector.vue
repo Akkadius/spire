@@ -85,12 +85,19 @@
           </b-form-group>
         </div>
 
-        <div class="col-1 mt-4">
+        <div class="col-1 text-center">
           <b-button
-            class="btn-dark btn-sm btn-outline-warning"
+            class="btn-dark btn-sm btn-outline-warning mb-3"
             @click="resetForm"
           >
             Reset
+          </b-button>
+
+          <b-button
+            class="btn-dark btn-sm btn-outline-warning"
+            @click="triggerState"
+          >
+            Search
           </b-button>
         </div>
 

@@ -1,17 +1,18 @@
 <template>
   <div>
-
-    <eq-window-complex title="Scale Stats by Percentage">
+    <eq-window-complex title="Scale Stats by Percentage" class="minified-inputs">
       <div class="text-center mb-4">
-        Increase All (Non-Zero) Stats by Multiplier from Original Stats<br>
-        <b>Enter Key</b>, <b>Arrow Up/Down Keys</b> to see affect
+        <span style="color: #7b714a">Increase by Multiplier from Original Stats</span>
+        <br>
+        <br>
+        Use <b>Enter Key</b>, <b>Arrow Up/Down Keys</b>
       </div>
 
       <div class="row">
-        <div class="col-5 text-right m-0 p-0 mt-2">
+        <div class="col-4 text-right m-0 p-0 mt-2">
           All Stats
         </div>
-        <div class="col-3">
+        <div class="col-5">
           <b-form-input
             v-model.number="increaseAllStatsBy"
             @change="increaseAllStats"
@@ -28,11 +29,11 @@
         </div>
       </div>
 
-      <div class="row mt-3">
-        <div class="col-5 text-right m-0 p-0 mt-2">
+      <div class="row mt-1">
+        <div class="col-4 text-right m-0 p-0 mt-2">
           Top Stats
         </div>
-        <div class="col-3">
+        <div class="col-5">
           <b-form-input
             v-model.number="increaseAllTopStatsBy"
             @change="increaseAllTopStats"
@@ -49,11 +50,11 @@
         </div>
       </div>
 
-      <div class="row mt-3">
-        <div class="col-5 text-right m-0 p-0 mt-2">
+      <div class="row mt-1">
+        <div class="col-4 text-right m-0 p-0 mt-2">
           Damage
         </div>
-        <div class="col-3">
+        <div class="col-5">
           <b-form-input
             v-model.number="increaseAllDamageBy"
             @change="increaseAllDamage"
@@ -70,11 +71,11 @@
         </div>
       </div>
 
-      <div class="row mt-3">
-        <div class="col-5 text-right m-0 p-0 mt-2">
+      <div class="row mt-1">
+        <div class="col-4 text-right m-0 p-0 mt-2">
           Basic Stats
         </div>
-        <div class="col-3">
+        <div class="col-5">
           <b-form-input
             v-model.number="increaseAllBasicStatsBy"
             @change="increaseAllBasicStats"
@@ -91,11 +92,11 @@
         </div>
       </div>
 
-      <div class="row mt-3">
-        <div class="col-5 text-right m-0 p-0 mt-2">
+      <div class="row mt-1">
+        <div class="col-4 text-right m-0 p-0 mt-2">
           Resists
         </div>
-        <div class="col-3">
+        <div class="col-5">
           <b-form-input
             v-model.number="increaseAllResistsBy"
             @change="increaseAllResists"
@@ -112,11 +113,11 @@
         </div>
       </div>
 
-      <div class="row mt-3">
-        <div class="col-5 text-right m-0 p-0 mt-2">
+      <div class="row mt-1">
+        <div class="col-4 text-right m-0 p-0 mt-2">
           Mods
         </div>
-        <div class="col-3">
+        <div class="col-5">
           <b-form-input
             v-model.number="increaseAllModsBy"
             @change="increaseAllMods"
