@@ -8,7 +8,7 @@
 
     <b-modal id="user-settings-modal" centered title="Settings" size="lg">
 
-      <div class="row mb-3">
+      <div class="row mb-4">
         <div class="col-4 text-right">
           Debug Mode
           <b-form-checkbox
@@ -26,7 +26,7 @@
         </div>
       </div>
 
-      <div class="row mb-3">
+      <div class="row mb-4">
         <div class="col-4 text-right">
           Enable Tab Hover
           <b-form-checkbox
