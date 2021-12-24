@@ -716,7 +716,7 @@
                     </div>
                   </div>
 
-                  <h6 class="eq-header text-center mt-3 mb-3">Item Has Augments</h6>
+                  <h6 class="eq-header text-center mt-3 mb-3">Item Can Have Augments</h6>
 
                   <!-- Aug Distiller Type -->
                   <div class="row">
@@ -825,6 +825,54 @@
                     <div class="col-2" :style="(item[field] === 0 ? 'opacity: .5' : '')">
                       <b-form-input v-model.number="item[field]"/>
                       <!--                      <b-form-input v-model="item[field]"/>-->
+                    </div>
+                  </div>
+                </eq-tab>
+
+                <eq-tab name="Meta">
+                  <div
+                    class="row"
+                    :key="field.field"
+                    v-for="field in
+                       [
+                         {
+                           description: 'Item Creation Time',
+                           field: 'created'
+                         },
+                         {
+                           description: 'Item Updated Time',
+                           field: 'updated',
+                         },
+                         {
+                           description: 'Item Verified Time',
+                           field: 'verified',
+                         },
+                         {
+                           description: 'Data Source',
+                           field: 'source',
+                         },
+                         {
+                           description: 'Comment',
+                           field: 'comment',
+                         },
+                         {
+                           description: 'serialization',
+                           field: 'serialization',
+                         },
+                         {
+                           description: 'serialized',
+                           field: 'serialized',
+                         },
+                       ]"
+                  >
+                    <div class="col-5 text-right mr-3 p-0 mt-2">
+                      {{ field.description }}
+                    </div>
+                    <div class="col-3 p-0 m-0" :style="(item[field.field] === 0 ? 'opacity: .5' : '')">
+                      <b-form-input
+                        :id="field.field"
+                        v-model.number="item[field.field]"
+                      />
                     </div>
                   </div>
                 </eq-tab>
