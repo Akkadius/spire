@@ -1,142 +1,142 @@
 <template>
-  <div>
-    <eq-window-complex title="Scale Stats by Percentage" class="minified-inputs">
-      <div class="text-center mb-4">
-        <span style="color: #7b714a">Increase by Multiplier from Original Stats</span>
-        <br>
-        <br>
-        Use <b>Enter Key</b>, <b>Arrow Up/Down Keys</b>
+  <eq-window-complex
+    title="Scale Stats by Percentage"
+    class="minified-inputs mb-0"
+  >
+    <div class="text-center mb-4">
+      <span style="color: #7b714a">Increase by Multiplier from Original Stats</span>
+      <br>
+      <br>
+      Use <b>Enter Key</b>, <b>Arrow Up/Down Keys</b>
+    </div>
+
+    <div class="row">
+      <div class="col-4 text-right m-0 p-0 mt-2">
+        All Stats
       </div>
-
-      <div class="row">
-        <div class="col-4 text-right m-0 p-0 mt-2">
-          All Stats
-        </div>
-        <div class="col-5">
-          <b-form-input
-            v-model.number="increaseAllStatsBy"
-            @change="increaseAllStats"
-            @focus="highlightAllFields"
-            @blur="clearAllHighlights"
-            @mouseover="highlightAllFields"
-            @mouseleave="clearAllHighlights"
-            type="number"
-            step=".1"
-          />
-        </div>
-        <div class="col-2 p-0 m-0 mt-2">
-          {{ Math.round(increaseAllStatsBy * 100) }}%
-        </div>
+      <div class="col-5">
+        <b-form-input
+          v-model.number="increaseAllStatsBy"
+          @change="increaseAllStats"
+          @focus="highlightAllFields"
+          @blur="clearAllHighlights"
+          @mouseover="highlightAllFields"
+          @mouseleave="clearAllHighlights"
+          type="number"
+          step=".1"
+        />
       </div>
-
-      <div class="row mt-1">
-        <div class="col-4 text-right m-0 p-0 mt-2">
-          Top Stats
-        </div>
-        <div class="col-5">
-          <b-form-input
-            v-model.number="increaseAllTopStatsBy"
-            @change="increaseAllTopStats"
-            @focus="highlightTopStatFields"
-            @blur="clearAllHighlights"
-            @mouseover="highlightTopStatFields"
-            @mouseleave="clearAllHighlights"
-            type="number"
-            step=".1"
-          />
-        </div>
-        <div class="col-2 p-0 m-0 mt-2">
-          {{ Math.round(increaseAllTopStatsBy * 100) }}%
-        </div>
+      <div class="col-2 p-0 m-0 mt-2">
+        {{ Math.round(increaseAllStatsBy * 100) }}%
       </div>
+    </div>
 
-      <div class="row mt-1">
-        <div class="col-4 text-right m-0 p-0 mt-2">
-          Damage
-        </div>
-        <div class="col-5">
-          <b-form-input
-            v-model.number="increaseAllDamageBy"
-            @change="increaseAllDamage"
-            @focus="highlightDamageFields"
-            @blur="clearAllHighlights"
-            @mouseover="highlightDamageFields"
-            @mouseleave="clearAllHighlights"
-            type="number"
-            step=".1"
-          />
-        </div>
-        <div class="col-2 p-0 m-0 mt-2">
-          {{ Math.round(increaseAllDamageBy * 100) }}%
-        </div>
+    <div class="row mt-1">
+      <div class="col-4 text-right m-0 p-0 mt-2">
+        Top Stats
       </div>
-
-      <div class="row mt-1">
-        <div class="col-4 text-right m-0 p-0 mt-2">
-          Basic Stats
-        </div>
-        <div class="col-5">
-          <b-form-input
-            v-model.number="increaseAllBasicStatsBy"
-            @change="increaseAllBasicStats"
-            @focus="highlightBasicStatFields"
-            @blur="clearAllHighlights"
-            @mouseover="highlightBasicStatFields"
-            @mouseleave="clearAllHighlights"
-            type="number"
-            step=".1"
-          />
-        </div>
-        <div class="col-2 p-0 m-0 mt-2">
-          {{ Math.round(increaseAllBasicStatsBy * 100) }}%
-        </div>
+      <div class="col-5">
+        <b-form-input
+          v-model.number="increaseAllTopStatsBy"
+          @change="increaseAllTopStats"
+          @focus="highlightTopStatFields"
+          @blur="clearAllHighlights"
+          @mouseover="highlightTopStatFields"
+          @mouseleave="clearAllHighlights"
+          type="number"
+          step=".1"
+        />
       </div>
-
-      <div class="row mt-1">
-        <div class="col-4 text-right m-0 p-0 mt-2">
-          Resists
-        </div>
-        <div class="col-5">
-          <b-form-input
-            v-model.number="increaseAllResistsBy"
-            @change="increaseAllResists"
-            @focus="highlightResistFields"
-            @blur="clearAllHighlights"
-            @mouseover="highlightResistFields"
-            @mouseleave="clearAllHighlights"
-            type="number"
-            step=".1"
-          />
-        </div>
-        <div class="col-2 p-0 m-0 mt-2">
-          {{ Math.round(increaseAllResistsBy * 100) }}%
-        </div>
+      <div class="col-2 p-0 m-0 mt-2">
+        {{ Math.round(increaseAllTopStatsBy * 100) }}%
       </div>
+    </div>
 
-      <div class="row mt-1">
-        <div class="col-4 text-right m-0 p-0 mt-2">
-          Mods
-        </div>
-        <div class="col-5">
-          <b-form-input
-            v-model.number="increaseAllModsBy"
-            @change="increaseAllMods"
-            @focus="highlightModFields"
-            @blur="clearAllHighlights"
-            @mouseover="highlightModFields"
-            @mouseleave="clearAllHighlights"
-            type="number"
-            step=".1"
-          />
-        </div>
-        <div class="col-2 p-0 m-0 mt-2">
-          {{ Math.round(increaseAllModsBy * 100) }}%
-        </div>
+    <div class="row mt-1">
+      <div class="col-4 text-right m-0 p-0 mt-2">
+        Damage
       </div>
+      <div class="col-5">
+        <b-form-input
+          v-model.number="increaseAllDamageBy"
+          @change="increaseAllDamage"
+          @focus="highlightDamageFields"
+          @blur="clearAllHighlights"
+          @mouseover="highlightDamageFields"
+          @mouseleave="clearAllHighlights"
+          type="number"
+          step=".1"
+        />
+      </div>
+      <div class="col-2 p-0 m-0 mt-2">
+        {{ Math.round(increaseAllDamageBy * 100) }}%
+      </div>
+    </div>
 
-    </eq-window-complex>
+    <div class="row mt-1">
+      <div class="col-4 text-right m-0 p-0 mt-2">
+        Basic Stats
+      </div>
+      <div class="col-5">
+        <b-form-input
+          v-model.number="increaseAllBasicStatsBy"
+          @change="increaseAllBasicStats"
+          @focus="highlightBasicStatFields"
+          @blur="clearAllHighlights"
+          @mouseover="highlightBasicStatFields"
+          @mouseleave="clearAllHighlights"
+          type="number"
+          step=".1"
+        />
+      </div>
+      <div class="col-2 p-0 m-0 mt-2">
+        {{ Math.round(increaseAllBasicStatsBy * 100) }}%
+      </div>
+    </div>
 
-  </div>
+    <div class="row mt-1">
+      <div class="col-4 text-right m-0 p-0 mt-2">
+        Resists
+      </div>
+      <div class="col-5">
+        <b-form-input
+          v-model.number="increaseAllResistsBy"
+          @change="increaseAllResists"
+          @focus="highlightResistFields"
+          @blur="clearAllHighlights"
+          @mouseover="highlightResistFields"
+          @mouseleave="clearAllHighlights"
+          type="number"
+          step=".1"
+        />
+      </div>
+      <div class="col-2 p-0 m-0 mt-2">
+        {{ Math.round(increaseAllResistsBy * 100) }}%
+      </div>
+    </div>
+
+    <div class="row mt-1">
+      <div class="col-4 text-right m-0 p-0 mt-2">
+        Mods
+      </div>
+      <div class="col-5">
+        <b-form-input
+          v-model.number="increaseAllModsBy"
+          @change="increaseAllMods"
+          @focus="highlightModFields"
+          @blur="clearAllHighlights"
+          @mouseover="highlightModFields"
+          @mouseleave="clearAllHighlights"
+          type="number"
+          step=".1"
+        />
+      </div>
+      <div class="col-2 p-0 m-0 mt-2">
+        {{ Math.round(increaseAllModsBy * 100) }}%
+      </div>
+    </div>
+
+  </eq-window-complex>
 </template>
 
 <script>
@@ -144,7 +144,7 @@ import {Items}         from "@/app/items";
 import EqWindowComplex from "../../../components/eq-ui/EQWindowComplex";
 
 export default {
-  name: "ItemStatScaleTool",
+  name: "ItemStatScalePercentage",
   components: { EqWindowComplex },
   watch: {
     'increaseAllStatsBy': function (newVal, oldVal) {
@@ -262,7 +262,9 @@ export default {
       for (let key in Items.getResistFields()) {
         const entry = Items.getResistFields()[key]
         const field = entry.stat
+        const heroic = entry.heroic
         fields.push({ field: field, value: this.originalItemData[field] })
+        fields.push({ field: heroic, value: this.originalItemData[field] })
       }
       return fields;
     },

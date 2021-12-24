@@ -1020,16 +1020,28 @@
 
             <!-- Stat Scale Tool-->
             <div
-              style="margin-top: 30px; margin-right: 10px; width: auto;"
               class="fade-in"
+              style="margin-bottom: 55px"
               v-if="drawStatScaleToolActive"
             >
-              <item-stat-scale-tool
-                v-if="originalItem"
-                :original-item-data="originalItem"
-                @field="item[$event.field] = $event.value; setFieldModifiedById($event.field)"
-              />
-
+              <div class="row">
+                <div class="col-6">
+                  <item-stat-scale-percentage
+                    v-if="originalItem"
+                    style="height: 100%"
+                    :original-item-data="originalItem"
+                    @field="item[$event.field] = $event.value; setFieldModifiedById($event.field)"
+                  />
+                </div>
+                <div class="col-6">
+                  <item-stat-scale-range
+                    v-if="originalItem"
+                    style="height: 100%"
+                    :original-item-data="originalItem"
+                    @field="item[$event.field] = $event.value; setFieldModifiedById($event.field)"
+                  />
+                </div>
+              </div>
             </div>
 
             <!-- preview item -->
@@ -1134,16 +1146,20 @@ import {
 import {AUG_TYPES}             from "../../app/constants/eq-aug-constants";
 import InventorySlotCalculator from "../../components/tools/InventorySlotCalculator";
 
-import {Sketch}            from 'vue-color'
-import SpellEffectSelector from "./components/ItemSpellEffectSelector";
-import {DB_SKILLS}         from "../../app/constants/eq-skill-constants";
-import ItemStatScaleTool from "./components/ItemStatScalePercentage";
+import {Sketch}                from 'vue-color'
+import SpellEffectSelector     from "./components/ItemSpellEffectSelector";
+import {DB_SKILLS}             from "../../app/constants/eq-skill-constants";
+import ItemStatScaleTool       from "./components/ItemStatScalePercentage";
+import ItemStatScalePercentage from "./components/ItemStatScalePercentage";
+import ItemStatScaleRange      from "./components/ItemStatScaleRange";
 
 const MILLISECONDS_BEFORE_WINDOW_RESET = 5000;
 
 export default {
   name: "ItemEdit",
   components: {
+    ItemStatScaleRange,
+    ItemStatScalePercentage,
     ItemStatScaleTool,
     SpellEffectSelector,
     InventorySlotCalculator,
