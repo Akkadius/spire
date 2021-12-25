@@ -891,7 +891,8 @@
                     v-for="(field, description) in pricingFields"
                     v-b-tooltip.hover.v-dark :title="getFieldDescription(field)"
                     :key="field"
-                    class="row text-center">
+                    class="row text-center"
+                  >
                     <div class="col-1">
 
                     </div>
@@ -1076,13 +1077,13 @@
                   Save Item
                 </div>
 
-<!--                <b-button-->
-<!--                  class="btn-dark btn-sm btn-outline-warning"-->
-<!--                  @click="saveItem"-->
-<!--                >-->
-<!--                  <i class="ra ra-book mr-1"></i>-->
-<!--                  Save Item-->
-<!--                </b-button>-->
+                <!--                <b-button-->
+                <!--                  class="btn-dark btn-sm btn-outline-warning"-->
+                <!--                  @click="saveItem"-->
+                <!--                >-->
+                <!--                  <i class="ra ra-book mr-1"></i>-->
+                <!--                  Save Item-->
+                <!--                </b-button>-->
               </div>
 
               <div class="row">
@@ -1209,7 +1210,6 @@ import EqItemPreview           from "../../components/eq-ui/EQItemCardPreview";
 import {App}                   from "../../constants/app";
 import EqCheckbox              from "../../components/eq-ui/EQCheckbox";
 import {SpireApiClient}        from "../../app/api/spire-api-client";
-import * as util               from "util";
 import FreeIdSelector          from "../../components/tools/FreeIdSelector";
 import {Items}                 from "../../app/items";
 import {ItemApi}               from "../../app/api";
@@ -1408,10 +1408,10 @@ export default {
         // setting item to be a clicky for the first time, lets set some sane defaults
         // console.log(oldVal)
         if (newVal > 0 && oldVal === -1) {
-          this.item.maxcharges = -1
-          this.item.casttime = 3000
+          this.item.maxcharges  = -1
+          this.item.casttime    = 3000
           this.item.recastdelay = 12000
-          this.item.clicktype = 5
+          this.item.clicktype   = 5
 
           setTimeout(() => {
             this.setFieldModifiedById('maxcharges')
