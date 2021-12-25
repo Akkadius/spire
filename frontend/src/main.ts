@@ -43,16 +43,16 @@ import "../node_modules/ag-grid-community/dist/styles/ag-theme-balham-dark.css";
 // Ag grid enterprisec
 import 'ag-grid-enterprise';
 
-import {BVConfigPlugin} from 'bootstrap-vue';
+// import {BVConfigPlugin} from 'bootstrap-vue';
 
-Vue.use(BVConfigPlugin, {
-  BTooltip: {
-    delay: {
-      show: 0,
-      hide: 0,
-    },
-  },
-});
+// Vue.use(BVConfigPlugin, {
+//   BTooltip: {
+//     delay: {
+//       show: 0,
+//       hide: 0,
+//     },
+//   },
+// });
 
 Vue.use(BootstrapVue)
 
