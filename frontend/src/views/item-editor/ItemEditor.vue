@@ -20,7 +20,7 @@
                 <i class="fa fa-warning"></i> {{ error }}
               </b-alert>
 
-              <app-loader :is-loading="!item"/>
+              <app-loader :is-loading="!item" class="mt-6 mb-5"/>
 
               <eq-tabs
                 v-if="item"
@@ -1067,7 +1067,7 @@
               </eq-tabs>
 
 
-              <div class="text-center mt-3">
+              <div class="text-center mt-3" v-if="item">
 
                 <div
                   :class="'text-center mt-2 btn-xs eq-button-fancy'"
@@ -1086,7 +1086,7 @@
                 <!--                </b-button>-->
               </div>
 
-              <div class="row">
+              <div class="row" v-if="item">
                 <div class="col-10"></div>
                 <div class="col-2 text-right" title="Show unknown fields">
                   Unknown
