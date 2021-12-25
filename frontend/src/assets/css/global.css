@@ -174,7 +174,7 @@
         border-color: rgba(255, 165, 0, 1);
     }
     50% {
-        border-color: rgba(255, 165, 0, .7);
+        border-color: rgba(255, 165, 0, .8);
     }
     100% {
         border-color: rgba(255, 165, 0, 1);
@@ -183,7 +183,7 @@
 
 .pulsate-highlight-modified {
     border: 2px solid rgba(255, 165, 0, 1);
-    animation: pulsate-highlight-modified 3s infinite;
+    animation: pulsate-highlight-modified 2s infinite;
 }
 
 .hover-highlight:hover {
