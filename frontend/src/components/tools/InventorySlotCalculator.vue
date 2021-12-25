@@ -21,7 +21,6 @@
 
           <div class="text-center">
             <img
-              v-b-tooltip.hover.v-dark.righttop
               :title="slot.name"
               @click="selectSlot(slotId)"
               :src="slotUrl + 'old_slot_' + slotId + '.gif'"

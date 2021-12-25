@@ -12,7 +12,6 @@
           >{{ deity.short }}</small>
           <div class="text-center">
             <img
-              v-b-tooltip.hover.v-dark.righttop
               :title="deity.name"
               @click="selectDeity(deityId)"
               :src="itemCdnUrl + 'item_' + deity.icon + '.png'"
