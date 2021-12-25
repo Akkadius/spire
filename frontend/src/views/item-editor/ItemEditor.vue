@@ -651,6 +651,7 @@
 
                             <b-form-select
                               v-model.number="item.maxcharges"
+                              id="maxcharges"
                               style="width: 140px"
                               @change="setFieldModifiedById('maxcharges')"
                             >
@@ -708,7 +709,7 @@
                       <div class="col-2 text-center">
                         Click Type
 
-                        <select v-model.number="item.clicktype" class="form-control mt-3">
+                        <select v-model.number="item.clicktype" id="clicktype" class="form-control mt-3">
                           <option
                             v-for="(e, index) in [
                               {desc: 'None', value: 0},
@@ -1401,6 +1402,28 @@ export default {
         console.log("worn type is [%s]", this.item.worntype)
       }
     },
+    'item.clickeffect': function (newVal, oldVal) {
+      if (newVal !== oldVal && this.item) {
+
+        // setting item to be a clicky for the first time, lets set some sane defaults
+        // console.log(oldVal)
+        if (newVal > 0 && oldVal === -1) {
+          this.item.maxcharges = -1
+          this.item.casttime = 3000
+          this.item.recastdelay = 12000
+          this.item.clicktype = 5
+
+          setTimeout(() => {
+            this.setFieldModifiedById('maxcharges')
+            this.setFieldModifiedById('casttime')
+            this.setFieldModifiedById('recastdelay')
+            this.setFieldModifiedById('clicktype')
+
+            this.sendNotification("Set clicky defaults...")
+          }, 50)
+        }
+      }
+    },
     'item.focuseffect': function (newVal, oldVal) {
       if (newVal !== oldVal && this.item) {
         this.item.focustype = newVal > 0 ? 6 : 0
@@ -1538,6 +1561,11 @@ export default {
       }, 5000)
     },
 
+    sendNotification(message) {
+      this.notification = message
+      this.dismissNotification()
+    },
+
     async saveItem() {
       this.error        = ""
       this.notification = ""
@@ -1548,8 +1576,7 @@ export default {
         item: this.item
       }).then((result) => {
         if (result.status === 200) {
-          this.notification = util.format("Item updated successfully!")
-          this.dismissNotification()
+          this.sendNotification("Item updated successfully!")
           this.resetFieldEditedStatus()
         }
 
@@ -1570,8 +1597,7 @@ export default {
         })
 
         if (createRes.status === 200) {
-          this.notification = util.format("Created new Item!")
-          this.dismissNotification()
+          this.sendNotification("Created new Item!")
           this.resetFieldEditedStatus()
         }
       })
