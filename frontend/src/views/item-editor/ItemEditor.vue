@@ -36,7 +36,7 @@
                     <div
                       class="col-2"
                       @mouseover="drawFreeIdSelector"
-                      v-b-tooltip.hover.v-dark :title="getFieldDescription('id')"
+                      v-b-tooltip.hover.v-dark.right :title="getFieldDescription('id')"
                     >
                       Id
                       <b-form-input v-model.number="item.id"/>
@@ -261,7 +261,7 @@
                            field: 'heirloom'
                          },
                        ]"
-                          v-b-tooltip.hover.v-dark :title="getFieldDescription(field.field)"
+                          v-b-tooltip.hover.v-dark.right :title="getFieldDescription(field.field)"
                         >
                           <div class="col-9 text-right p-0 pr-2 m-0">
                             {{ field.description }}
@@ -562,7 +562,7 @@
                       <b-form-input
                         class="m-0"
                         placeholder="Spell ID"
-                        v-b-tooltip.hover.v-dark :title="getFieldDescription(field.effectField)"
+                        v-b-tooltip.hover.v-dark.right :title="getFieldDescription(field.effectField)"
                         style="width: 100px"
                         @mouseover="drawEffectSelector"
                         :id="field.effectField"
@@ -572,14 +572,14 @@
                         class="m-0"
                         placeholder="As Level"
                         @change="syncEffects(field.asLevelField, field.reqLevelField)"
-                        v-b-tooltip.hover.v-dark :title="getFieldDescription(field.asLevelField)"
+                        v-b-tooltip.hover.v-dark.right :title="getFieldDescription(field.asLevelField)"
                         v-model.number="item[field.asLevelField]"
                       />
                       <b-form-input
                         class="m-0"
                         placeholder="Required Level"
                         @change="syncEffects(field.reqLevelField, field.asLevelField)"
-                        v-b-tooltip.hover.v-dark :title="getFieldDescription(field.reqLevelField)"
+                        v-b-tooltip.hover.v-dark.right :title="getFieldDescription(field.reqLevelField)"
                         v-model.number="item[field.reqLevelField]"
                       />
                     </b-input-group>
@@ -591,7 +591,7 @@
                       </div>
 
                       <div
-                        v-b-tooltip.hover.v-dark :title="getFieldDescription('procrate')"
+                        v-b-tooltip.hover.v-dark.right :title="getFieldDescription('procrate')"
                         class="col-4 m-0 p-0 pl-3 text-center"
                       >
                         Proc Rate
@@ -889,7 +889,7 @@
                 <eq-tab name="Pricing" class="minified-inputs">
                   <div
                     v-for="(field, description) in pricingFields"
-                    v-b-tooltip.hover.v-dark :title="getFieldDescription(field)"
+                    v-b-tooltip.hover.v-dark.right :title="getFieldDescription(field)"
                     :key="field"
                     class="row text-center"
                   >
@@ -941,7 +941,7 @@
                            field: 'serialized',
                          },
                        ]"
-                    v-b-tooltip.hover.v-dark :title="getFieldDescription(field.field)"
+                    v-b-tooltip.hover.v-dark.right :title="getFieldDescription(field.field)"
                   >
                     <div class="col-5 text-right mr-3 p-0 mt-2">
                       {{ field.description }}

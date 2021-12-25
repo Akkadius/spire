@@ -9,6 +9,7 @@
           <span v-if="showTextTop">{{ gClass.short }}</span>
           <div class="text-center">
             <img
+              v-b-tooltip.hover.v-dark.righttop
               :title="gClass.class"
               @click="selectClass(classId)"
               :src="itemCdnUrl + 'item_' + gClass.icon + '.png'"

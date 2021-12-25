@@ -9,6 +9,7 @@
           <span v-if="showTextTop">{{ race.short }}</span>
           <div class="text-center">
             <img
+              v-b-tooltip.hover.v-dark.righttop
               :title="race.race"
               @click="selectRace(index)"
               :src="itemCdnUrl + 'item_' + race.icon + '.png'"
