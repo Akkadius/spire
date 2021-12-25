@@ -4,7 +4,7 @@
       <div class="panel panel-default">
         <div class="row">
           <div class="col-7">
-            <eq-window style="margin-top: 30px" title="Edit Item">
+            <eq-window style="margin-top: 30px" >
 
               <div
                 v-if="notification"
