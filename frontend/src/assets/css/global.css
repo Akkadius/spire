@@ -136,6 +136,7 @@
     animation: border-pulsate .5s infinite;
 }
 
+/*showing when fields are highlighted in item editor*/
 @keyframes pulsate-highlight {
     0%   {
         border-color: rgb(138, 163, 255);
@@ -165,6 +166,24 @@
     -webkit-box-shadow: inset 0 0 15px #8aa3ff;
     -moz-box-shadow: inset 0 0 15px #8aa3ff;
     box-shadow: inset 0 0 15px #8aa3ff;
+}
+
+/*showing when fields are modified in item editor*/
+@keyframes pulsate-highlight-modified {
+    0% {
+        border-color: rgba(255, 165, 0, 1);
+    }
+    50% {
+        border-color: rgba(255, 165, 0, .7);
+    }
+    100% {
+        border-color: rgba(255, 165, 0, 1);
+    }
+}
+
+.pulsate-highlight-modified {
+    border: 2px solid rgba(255, 165, 0, 1);
+    animation: pulsate-highlight-modified 3s infinite;
 }
 
 .hover-highlight:hover {

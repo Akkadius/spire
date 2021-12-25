@@ -1402,6 +1402,12 @@ export default {
         console.log("worn type is [%s]", this.item.worntype)
       }
     },
+    'item.combateffects': function (newVal, oldVal) {
+      if (newVal !== oldVal && this.item) {
+        // have to cast this as string because we made this field varchar for wahtever reason
+        this.item.combateffects = newVal.toString()
+      }
+    },
     'item.clickeffect': function (newVal, oldVal) {
       if (newVal !== oldVal && this.item) {
 
@@ -1531,13 +1537,13 @@ export default {
 
     setFieldModified(evt) {
       // border: 2px #555555 solid !important;
-      evt.target.style.setProperty('border-color', 'orange', 'important');
+      evt.target.classList.add('pulsate-highlight-modified')
     },
 
     setFieldModifiedById(id) {
       const target = document.getElementById(id)
       if (target) {
-        target.style.setProperty('border-color', 'orange', 'important');
+        target.classList.add('pulsate-highlight-modified')
       }
     },
 
@@ -1549,7 +1555,7 @@ export default {
         const elements = itemEditCard.querySelectorAll("input, select");
         elements.forEach((element) => {
           if (element) {
-            element.style.setProperty('border-color', '#555555', 'important');
+            element.classList.remove('pulsate-highlight-modified')
           }
         });
       }

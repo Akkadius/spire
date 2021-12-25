@@ -33,7 +33,7 @@ input[type=checkbox].eq-checkbox:checked + label {
 [class*="eq-window"] textarea,
 [class*="eq-window"] pre,
 [class*="eq-window"] select {
-    border: 2px #555555 solid !important;
+    border: 2px #555555 solid;
     background-color: #0b0b10 !important;
     color: #FFFFFF !important;
     padding: 5px !important;
