@@ -182,3 +182,8 @@
     margin-bottom: 3px;
     height: 30px;
 }
+
+.tooltip-inner{
+    font-size: 15px;
+    max-width: 600px;
+}

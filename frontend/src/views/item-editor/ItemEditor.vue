@@ -6,10 +6,14 @@
           <div class="col-7">
             <eq-window style="margin-top: 30px" title="Edit Item">
 
-              <div v-if="notification">
-                <b-button class="btn-dark btn-outline-warning form-control" @click="notification = ''">
-                  <i class="ra ra-book mr-1"></i>{{ notification }}
-                </b-button>
+              <div
+                v-if="notification"
+                :class="'text-center mt-2 btn-xs eq-header fade-in'"
+                style="width: 100%; font-size: 30px"
+                @click="notification = ''"
+              >
+                <i class="ra ra-shield mr-1"></i>
+                {{ notification }}
               </div>
 
               <b-alert show dismissable variant="danger" v-if="error">
@@ -29,7 +33,11 @@
                   :selected="true"
                 >
                   <div class="row">
-                    <div class="col-2" @mouseover="drawFreeIdSelector">
+                    <div
+                      class="col-2"
+                      @mouseover="drawFreeIdSelector"
+                      v-b-tooltip.hover.v-dark :title="getFieldDescription('id')"
+                    >
                       Id
                       <b-form-input v-model.number="item.id"/>
                     </div>
@@ -253,6 +261,7 @@
                            field: 'heirloom'
                          },
                        ]"
+                          v-b-tooltip.hover.v-dark :title="getFieldDescription(field.field)"
                         >
                           <div class="col-9 text-right p-0 pr-2 m-0">
                             {{ field.description }}
@@ -553,6 +562,7 @@
                       <b-form-input
                         class="m-0"
                         placeholder="Spell ID"
+                        v-b-tooltip.hover.v-dark :title="getFieldDescription(field.effectField)"
                         style="width: 100px"
                         @mouseover="drawEffectSelector"
                         :id="field.effectField"
@@ -562,19 +572,75 @@
                         class="m-0"
                         placeholder="As Level"
                         @change="syncEffects(field.asLevelField, field.reqLevelField)"
+                        v-b-tooltip.hover.v-dark :title="getFieldDescription(field.asLevelField)"
                         v-model.number="item[field.asLevelField]"
                       />
                       <b-form-input
                         class="m-0"
                         placeholder="Required Level"
                         @change="syncEffects(field.reqLevelField, field.asLevelField)"
+                        v-b-tooltip.hover.v-dark :title="getFieldDescription(field.reqLevelField)"
                         v-model.number="item[field.reqLevelField]"
                       />
                     </b-input-group>
 
+                    <!-- Proc -->
+                    <div class="row mt-3" v-if="item.proceffect > 0">
+                      <div class="col-1">
+                        <h6 class="eq-header mt-5 text-right">Proc</h6>
+                      </div>
+
+                      <div
+                        v-b-tooltip.hover.v-dark :title="getFieldDescription('procrate')"
+                        class="col-4 m-0 p-0 pl-3 text-center"
+                      >
+                        Proc Rate
+                        <b-input-group>
+                          <b-input-group-append>
+                            <b-form-input
+                              v-model.number="item.procrate"
+                              id="procrate"
+                              class="mt-3"
+                            />
+                            <b-form-select v-model.number="item.procrate" class="form-control mt-3">
+                              <option
+                                v-for="(e, index) in [
+                                    {desc: '100%', value: 0},
+                                    {desc: '150%', value: 50},
+                                    {desc: '200%', value: 100},
+                                    {desc: '250%', value: 150},
+                                    {desc: '300%', value: 200},
+                                    {desc: '350%', value: 250},
+                                    {desc: '400%', value: 300},
+                                    {desc: '450%', value: 350},
+                                    {desc: '500%', value: 400},
+                                    {desc: '550%', value: 450},
+                                    {desc: '600%', value: 500},
+                                    {desc: '650%', value: 550},
+                                    {desc: '700%', value: 600},
+                                    {desc: '750%', value: 650},
+                                    {desc: '800%', value: 700},
+                                    {desc: '850%', value: 750},
+                                    {desc: '900%', value: 800},
+                                    {desc: '950%', value: 850},
+                                    {desc: '1000%', value: 900},
+                                  ]"
+                                :key="e.value"
+                                :value="parseInt(e.value)"
+                              >
+                                {{ e.value }}) {{ e.desc }}
+                              </option>
+                            </b-form-select>
+                          </b-input-group-append>
+                        </b-input-group>
+
+                      </div>
+                    </div>
+
+                    <!-- Click -->
                     <div class="row mt-3" v-if="item.clickeffect > 0">
                       <div class="col-1">
-                        <h6 class="eq-header mt-4 text-center">Click</h6>
+                        <h6 class="eq-header mt-5 text-right">Click</h6>
                       </div>
 
                       <div class="col-3 text-center">
@@ -638,6 +704,7 @@
                           class="mt-3"
                         />
                       </div>
+
                       <div class="col-2 text-center">
                         Click Type
 
@@ -659,6 +726,7 @@
 
                       </div>
                     </div>
+
                   </div>
                 </eq-tab>
 
@@ -818,7 +886,11 @@
                 </eq-tab>
 
                 <eq-tab name="Pricing" class="minified-inputs">
-                  <div v-for="(field, description) in pricingFields" :key="field" class="row text-center">
+                  <div
+                    v-for="(field, description) in pricingFields"
+                    v-b-tooltip.hover.v-dark :title="getFieldDescription(field)"
+                    :key="field"
+                    class="row text-center">
                     <div class="col-1">
 
                     </div>
@@ -867,6 +939,7 @@
                            field: 'serialized',
                          },
                        ]"
+                    v-b-tooltip.hover.v-dark :title="getFieldDescription(field.field)"
                   >
                     <div class="col-5 text-right mr-3 p-0 mt-2">
                       {{ field.description }}
@@ -993,13 +1066,22 @@
 
 
               <div class="text-center mt-3">
-                <b-button
-                  class="btn-dark btn-sm btn-outline-warning"
-                  @click="saveItem"
+
+                <div
+                  :class="'text-center mt-2 btn-xs eq-button-fancy'"
+                  @click="saveItem()"
                 >
-                  <i class="ra ra-book mr-1"></i>
+                  <i class="ra ra-shield mr-1"></i>
                   Save Item
-                </b-button>
+                </div>
+
+<!--                <b-button-->
+<!--                  class="btn-dark btn-sm btn-outline-warning"-->
+<!--                  @click="saveItem"-->
+<!--                >-->
+<!--                  <i class="ra ra-book mr-1"></i>-->
+<!--                  Save Item-->
+<!--                </b-button>-->
               </div>
 
               <div class="row">
@@ -1402,6 +1484,10 @@ export default {
   },
   methods: {
 
+    getFieldDescription(field) {
+      return Items.getFieldDescription(field);
+    },
+
     msToTime(ms) {
       let seconds = (ms / 1000).toFixed(1);
       let minutes = (ms / (1000 * 60)).toFixed(1);
@@ -1446,6 +1532,12 @@ export default {
       }
     },
 
+    dismissNotification() {
+      setTimeout(() => {
+        this.notification = ""
+      }, 5000)
+    },
+
     async saveItem() {
       this.error        = ""
       this.notification = ""
@@ -1456,7 +1548,8 @@ export default {
         item: this.item
       }).then((result) => {
         if (result.status === 200) {
-          this.notification = util.format("Item updated successfully! (%s) %s", this.item.id, this.item.name)
+          this.notification = util.format("Item updated successfully!")
+          this.dismissNotification()
           this.resetFieldEditedStatus()
         }
 
@@ -1477,7 +1570,8 @@ export default {
         })
 
         if (createRes.status === 200) {
-          this.notification = util.format("Created new Item! (%s) %s", this.item.id, this.item.name)
+          this.notification = util.format("Created new Item!")
+          this.dismissNotification()
           this.resetFieldEditedStatus()
         }
       })
