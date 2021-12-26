@@ -24,36 +24,7 @@
           class="d-inline-block"
           v-if="raceImages[race]"
         >
-          <span :class="'race-models-ctn-' + img" :id="slug(img)"></span>
-
-          <!-- Popover -->
-          <b-popover
-            :target="slug(img)"
-            placement="bottom"
-            variant="light"
-            triggers="hover focus"
-          >
-            <template v-slot:title>Info</template>
-
-            <table>
-              <tr>
-                <td><b>Race</b></td>
-                <td>{{ getRaceFromImage(img) }}</td>
-              </tr>
-              <tr>
-                <td><b>Gender</b></td>
-                <td>{{ getGenderFromImage(img) }}</td>
-              </tr>
-              <tr>
-                <td><b>Texture</b></td>
-                <td>{{ getTextureFromImage(img) }}</td>
-              </tr>
-              <tr>
-                <td><b>Helm Texture</b></td>
-                <td>{{ getHelmTextureFromImage(img) }}</td>
-              </tr>
-            </table>
-          </b-popover>
+          <span :class="'race-models-ctn-' + img"></span>
         </div>
 
         <h6 class="eq-header" style="font-size: 24px">
@@ -188,27 +159,6 @@ export default {
       }
 
       return raceImages
-    },
-    getMetaDataFromImage: function (img) {
-      const pieces   = img.split(/\//);
-      const fileName = pieces[pieces.length - 1];
-
-      return fileName.split("-");
-    },
-    getRaceFromImage: function (img) {
-      return this.getMetaDataFromImage(img)[0];
-    },
-    getGenderFromImage: function (img) {
-      return this.getMetaDataFromImage(img)[1];
-    },
-    getTextureFromImage: function (img) {
-      return this.getMetaDataFromImage(img)[2];
-    },
-    getHelmTextureFromImage: function (img) {
-      return this.getMetaDataFromImage(img)[3];
-    },
-    slug: function (toSlug) {
-      return slugify(toSlug.replace(/[&\/\\#, +()$~%.'":*?<>{}]/g, "-"))
     },
     initModels() {
       var start = new Date().getTime();
