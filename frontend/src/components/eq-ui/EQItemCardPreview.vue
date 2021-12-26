@@ -100,7 +100,7 @@
 
           <!-- Third Section (Weapon Damage) -->
           <div class="stat-section col-4">
-            <table style="width: 125px;">
+            <table style="width: 140px;">
               <tbody>
 
               <tr v-for="(value, stat) in secondlevel3">
@@ -406,8 +406,8 @@ export default {
       if (this.itemData.elemdmgamt > 0) {
         data[this.getElementDamageName() + " Damage"] = this.itemData.elemdmgamt
       }
-      if (this.itemData.banedmgrace > 0 && this.itemData.banedmgamt !== 0) {
-        data["Bane Damage (" + this.getBaneDamageName() + ")"] = this.itemData.banedmgamt
+      if (this.itemData.banedmgrace > 0 && this.itemData.banedmgraceamt !== 0) {
+        data["Bane (" + this.getBaneDamageName() + ")"] = this.itemData.banedmgraceamt
       }
       if (this.itemData.banedmgbody > 0 && this.itemData.banedmgamt !== 0) {
         data[this.getBaneDamageBodyName()] = this.itemData.banedmgamt
