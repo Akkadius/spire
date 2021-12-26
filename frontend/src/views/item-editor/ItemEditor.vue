@@ -395,10 +395,14 @@
                         </div>
 
                         <!-- Material -->
-                        <div class="row">
+                        <div class="row" @mouseover="drawRaceMaterialPreview">
                           <div class="col-12">
                             Material
-                            <select v-model.number="item['material']" class="form-control">
+                            <select
+                              v-model.number="item['material']"
+                              @change="materialChange"
+                              class="form-control"
+                            >
                               <option
                                 v-for="(description, index) in DB_ITEM_MATERIAL"
                                 :key="index"
@@ -1179,6 +1183,7 @@
             </eq-window>
           </div>
 
+          <!-- Preview / Selector Pane -->
           <div class="col-5">
 
             <!-- Stat Scale Tool-->
@@ -1228,6 +1233,20 @@
               <item-model-selector
                 :selected-model="item.idfile"
                 @input="item.idfile = $event; setFieldModifiedById('idfile')"
+              />
+            </eq-window>
+
+            <!-- race material preview -->
+            <eq-window
+              style="margin-top: 30px; margin-right: 10px; width: auto;"
+              class="fade-in text-center"
+              v-if="drawRaceMaterialPreviewActive && item"
+            >
+
+              <item-material-preview
+                v-if="item.material >= 0"
+                :selected-material="item.material"
+                @input="item.material = $event; setFieldModifiedById('material')"
               />
             </eq-window>
 
@@ -1331,12 +1350,14 @@ import ItemStatScaleRange      from "./components/ItemStatScaleRange";
 import ItemColorSelector       from "./components/ItemColorSelector";
 import * as util               from "util";
 import {RACES}                 from "../../app/constants/eq-race-constants";
+import ItemMaterialPreview     from "./components/ItemMaterialPreview";
 
 const MILLISECONDS_BEFORE_WINDOW_RESET = 5000;
 
 export default {
   name: "ItemEdit",
   components: {
+    ItemMaterialPreview,
     ItemColorSelector,
     ItemStatScaleRange,
     ItemStatScalePercentage,
@@ -1377,6 +1398,7 @@ export default {
       freeIdSelectorActive: false,
       drawStatScaleToolActive: false,
       drawColorSelectorActive: false,
+      drawRaceMaterialPreviewActive: false,
 
       // show unknown fields
       showUnknown: 0,
@@ -1778,19 +1800,21 @@ export default {
      * Selector / previewers
      */
     resetPreviewComponents() {
-      this.freeIdSelectorActive      = false;
-      this.iconSelectorActive        = false;
-      this.itemModelSelectorActive   = false;
-      this.previewItemActive         = false;
-      this.spellEffectSelectorActive = false;
-      this.drawStatScaleToolActive   = false;
-      this.drawColorSelectorActive   = false;
+      this.freeIdSelectorActive          = false;
+      this.iconSelectorActive            = false;
+      this.itemModelSelectorActive       = false;
+      this.previewItemActive             = false;
+      this.spellEffectSelectorActive     = false;
+      this.drawStatScaleToolActive       = false;
+      this.drawColorSelectorActive       = false;
+      this.drawRaceMaterialPreviewActive = false;
     },
-    previewItem() {
-      let shouldReset = Date.now() - this.lastResetTime > MILLISECONDS_BEFORE_WINDOW_RESET;
-      // SECONDS_BEFORE_WINDOW_RESET
+    shouldReset() {
+      return Date.now() - this.lastResetTime > MILLISECONDS_BEFORE_WINDOW_RESET;
+    },
 
-      if (!this.previewItemActive && shouldReset) {
+    previewItem() {
+      if (!this.previewItemActive && this.shouldReset()) {
         this.resetPreviewComponents()
         this.previewItemActive = true;
         this.lastResetTime     = Date.now()
@@ -1801,8 +1825,11 @@ export default {
       this.spellEffectSelectorActive = true
     },
     drawItemModelSelector() {
-      this.resetPreviewComponents()
-      this.itemModelSelectorActive = true
+      if (!this.itemModelSelectorActive && this.shouldReset()) {
+        this.resetPreviewComponents()
+        this.itemModelSelectorActive = true;
+        this.lastResetTime           = Date.now()
+      }
     },
     drawIconSelector() {
       if (!this.freeIdSelectorActive) {
@@ -1817,6 +1844,13 @@ export default {
         this.lastResetTime           = Date.now()
       }
     },
+    drawRaceMaterialPreview() {
+      if (!this.drawRaceMaterialPreviewActive) {
+        this.resetPreviewComponents()
+        this.drawRaceMaterialPreviewActive = true;
+        this.lastResetTime                 = Date.now()
+      }
+    },
     drawFreeIdSelector() {
       this.resetPreviewComponents()
       this.lastResetTime        = Date.now()
@@ -1829,6 +1863,14 @@ export default {
       this.drawStatScaleToolActive = true
       this.previewItemActive       = true
     },
+
+    materialChange() {
+      this.lastResetTime = Date.now()
+      // this.resetPreviewComponents()
+
+      this.drawRaceMaterialPreviewActive = true
+    },
+
     getTargetTypeColor(targetType) {
       return Items.getTargetTypeColor(targetType);
     },
