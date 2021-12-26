@@ -342,7 +342,10 @@
                         </h4>
 
                         <!-- item model -->
-                        <div @mouseover="drawItemModelSelector">
+                        <div
+                          @mouseover="drawItemModelSelector()"
+                          @click="drawItemModelSelector(true)"
+                        >
                           <item-model-preview
                             :id="item.idfile"
                             class="mb-2"
@@ -357,7 +360,7 @@
 
                         <!-- icon -->
                         Icon
-                        <div @mouseover="drawIconSelector" class="row">
+                        <div @mouseover="drawIconSelector()" @click="drawIconSelector(true)" class="row">
                           <div class="col-4">
                             <div class="mb-3 d-inline-block" style="width: 50px">
                             <span
@@ -377,7 +380,7 @@
 
                         <!-- color -->
                         Color
-                        <div @mouseover="drawColorSelector" class="row">
+                        <div @mouseover="drawColorSelector()" @click="drawColorSelector(true)" class="row">
                           <div class="col-2">
                             <div
                               class="mr-3"
@@ -1748,7 +1751,6 @@ export default {
 
           if (hex.length === 9) {
             hex = hex.replace("#ff", '#')
-            console.log("length is 9")
           }
 
           console.log(
@@ -1760,8 +1762,6 @@ export default {
           )
 
           this.hexColor = hex;
-
-          console.log(hex)
         })
       }
     },
@@ -1824,21 +1824,21 @@ export default {
       this.resetPreviewComponents()
       this.spellEffectSelectorActive = true
     },
-    drawItemModelSelector() {
-      if (!this.itemModelSelectorActive && this.shouldReset()) {
+    drawItemModelSelector(force = false) {
+      if ((!this.itemModelSelectorActive && this.shouldReset()) || force) {
         this.resetPreviewComponents()
         this.itemModelSelectorActive = true;
         this.lastResetTime           = Date.now()
       }
     },
-    drawIconSelector() {
-      if (!this.freeIdSelectorActive) {
+    drawIconSelector(force = false) {
+      if (!this.freeIdSelectorActive || force) {
         this.resetPreviewComponents()
         this.iconSelectorActive = true;
       }
     },
-    drawColorSelector() {
-      if (!this.drawColorSelectorActive) {
+    drawColorSelector(force = false) {
+      if (!this.drawColorSelectorActive || force) {
         this.resetPreviewComponents()
         this.drawColorSelectorActive = true;
         this.lastResetTime           = Date.now()

@@ -39,14 +39,13 @@
 <script>
 import NpcModels         from "@/app/asset-maps/npc-models-map";
 import util              from "util";
-import slugify           from "slugify"
 import {RACES}           from "@/app/constants/eq-race-constants"
 import PageHeader        from "@/components/layout/PageHeader";
 import {App}             from "@/constants/app";
 import EqWindow          from "@/components/eq-ui/EQWindow";
 import EqWindowSimple    from "@/components/eq-ui/EQWindowSimple";
 import {debounce}        from "@/app/utility/debounce.js";
-import {DB_PLAYER_RACES} from "../../../app/constants/eq-races-constants";
+import {DB_PLAYER_RACES} from "@/app/constants/eq-races-constants";
 
 const baseUrl     = App.ASSET_CDN_BASE_URL + "assets/npc_models/";
 const MAX_RACE_ID = 700;
