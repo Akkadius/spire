@@ -4,7 +4,7 @@
       <div class="panel panel-default">
         <div class="row">
           <div class="col-7">
-            <eq-window style="margin-top: 30px" >
+            <eq-window style="margin-top: 30px">
 
               <div
                 v-if="notification"
@@ -341,9 +341,10 @@
                         style="text-align: center"
                       >
                         <h4 class="eq-header text-center">
-                          Model
+                          Visuals
                         </h4>
 
+                        <!-- item model -->
                         <div @mouseover="drawItemModelSelector">
                           <item-model-preview
                             :id="item.idfile"
@@ -355,20 +356,45 @@
                           />
                         </div>
 
-                        <div @mouseover="drawIconSelector" class="mt-3">
-                          <div class="mb-3">
-                          <span
-                            :class="'fade-in item-' + item.icon"
-                            style="border: 1px solid rgb(218 218 218 / 30%); border-radius: 7px;"
-                          />
+                        <!-- icon -->
+                        Icon
+                        <div @mouseover="drawIconSelector" class="row">
+                          <div class="col-4">
+                            <div class="mb-3 d-inline-block" style="width: 50px">
+                            <span
+                              :class="'fade-in item-' + item.icon"
+                              style="border: 1px solid rgb(218 218 218 / 30%); border-radius: 7px;"
+                            />
+                            </div>
                           </div>
+                          <div class="col-8">
+                            <b-form-input
+                              style="height: 40px"
+                              v-model.number="item.icon"
+                            />
+                          </div>
+                        </div>
 
-                          Icon
-                          <b-form-input v-model.number="item.icon"/>
+                        <!-- color -->
+                        Color
+                        <div @mouseover="drawColorSelector" class="row">
+                          <div class="col-2">
+                            <div
+                              class="mr-3"
+                              :style="'width: 25px; height: 25px; margin-top: 3px; border-radius: 5px; background-color: ' + hexColor"
+                            />
+                          </div>
+                          <div class="col-10">
+                            <b-form-input
+                              disabled
+                              id="color"
+                              style="height: 30px; margin-top: 0px; margin-left: 5px"
+                              v-model.number="item.color"
+                            />
+                          </div>
                         </div>
 
                       </div>
-
                     </div>
                   </div>
                 </eq-tab>
@@ -1152,6 +1178,21 @@
               />
             </eq-window>
 
+            <!-- color selector -->
+            <div
+              style="margin-top: 600px; margin-right: 10px; width: auto;"
+              class="fade-in"
+              v-if="drawColorSelectorActive && item"
+            >
+
+              <item-color-selector
+                style="width: 100%; margin: auto; text-align: center"
+                :color="hexColor"
+                @input="item.color = $event.color; hexColor = $event.hexColor; setFieldModifiedById('color')"
+              />
+
+            </div>
+
             <!-- icon selector -->
             <eq-window
               style="margin-top: 30px; margin-right: 10px; width: auto;"
@@ -1229,18 +1270,20 @@ import {
 import {AUG_TYPES}             from "../../app/constants/eq-aug-constants";
 import InventorySlotCalculator from "../../components/tools/InventorySlotCalculator";
 
-import {Sketch}                from 'vue-color'
 import SpellEffectSelector     from "./components/ItemSpellEffectSelector";
 import {DB_SKILLS}             from "../../app/constants/eq-skill-constants";
 import ItemStatScaleTool       from "./components/ItemStatScalePercentage";
 import ItemStatScalePercentage from "./components/ItemStatScalePercentage";
 import ItemStatScaleRange      from "./components/ItemStatScaleRange";
+import ItemColorSelector       from "./components/ItemColorSelector";
+import * as util               from "util";
 
 const MILLISECONDS_BEFORE_WINDOW_RESET = 5000;
 
 export default {
   name: "ItemEdit",
   components: {
+    ItemColorSelector,
     ItemStatScaleRange,
     ItemStatScalePercentage,
     ItemStatScaleTool,
@@ -1258,8 +1301,7 @@ export default {
     EqTab,
     EqTabs,
     EqWindow,
-    EqWindowFancy,
-    Sketch
+    EqWindowFancy
   },
   data() {
     return {
@@ -1271,6 +1313,8 @@ export default {
       // state, loaded or not
       loaded: true,
 
+      hexColor: "#FFFFFF",
+
       // preview toggle bools
       previewItemActive: true,
       iconSelectorActive: false,
@@ -1278,6 +1322,7 @@ export default {
       spellEffectSelectorActive: false,
       freeIdSelectorActive: false,
       drawStatScaleToolActive: false,
+      drawColorSelectorActive: false,
 
       // show unknown fields
       showUnknown: 0,
@@ -1617,8 +1662,62 @@ export default {
           this.previewItemActive = true
 
           Object.assign(this.originalItem, result);
+
+          let hex = util.format("#%s", this.toHex(this.item.color))
+
+          // color has RR GG BB format however it appears that opacity is first
+          // opacity is pretty much always 1 or FF
+          // FF RR GG BB
+          // the selector is popping and pushing based on this
+
+          if (hex.length === 9) {
+            hex = hex.replace("#ff", '#')
+            console.log("length is 9")
+          }
+
+          console.log(
+            "[color] color is [%s] hex is [%s] length [%s] rgba [%s]",
+            this.item.color,
+            hex,
+            hex.length,
+            this.hexToRgbA(hex)
+          )
+
+          this.hexColor = hex;
+
+          console.log(hex)
         })
       }
+    },
+
+    toHex(d, padding) {
+      var hex = Number(d).toString(16);
+      padding = typeof (padding) === "undefined" || padding === null ? padding = 2 : padding;
+
+      while (hex.length < padding) {
+        hex = "0" + hex;
+      }
+
+      return hex;
+    },
+
+    hexToRgbA(hexCode, opacity = 1) {
+      let hex = hexCode.replace('#', '');
+
+      if (hex.length === 3) {
+        hex = `${hex[0]}${hex[0]}${hex[1]}${hex[1]}${hex[2]}${hex[2]}`;
+      }
+
+      const r = parseInt(hex.substring(0, 2), 16);
+      const g = parseInt(hex.substring(2, 4), 16);
+      const b = parseInt(hex.substring(4, 6), 16);
+
+      /* Backward compatibility for whole number based opacity values. */
+      if (opacity > 1 && opacity <= 100) {
+        opacity = opacity / 100;
+      }
+
+      return `rgba(${r},${g},${b},${opacity})`;
     },
 
     /**
@@ -1631,6 +1730,7 @@ export default {
       this.previewItemActive         = false;
       this.spellEffectSelectorActive = false;
       this.drawStatScaleToolActive   = false;
+      this.drawColorSelectorActive   = false;
     },
     previewItem() {
       let shouldReset = Date.now() - this.lastResetTime > MILLISECONDS_BEFORE_WINDOW_RESET;
@@ -1654,6 +1754,13 @@ export default {
       if (!this.freeIdSelectorActive) {
         this.resetPreviewComponents()
         this.iconSelectorActive = true;
+      }
+    },
+    drawColorSelector() {
+      if (!this.drawColorSelectorActive) {
+        this.resetPreviewComponents()
+        this.drawColorSelectorActive = true;
+        this.lastResetTime           = Date.now()
       }
     },
     drawFreeIdSelector() {
