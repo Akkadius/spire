@@ -13,7 +13,7 @@
               @click="selectRace(index)"
               :src="itemCdnUrl + 'item_' + race.icon + '.png'"
               :style="getImageSize() + (isRaceSelected(index) ? 'border-radius: 7px; box-shadow: 0px 0px 1px 1px white;' : 'border-radius: 7px; opacity: .5')"
-              class="mt-1 hover-highlight">
+              class="hover-highlight">
           </div>
         </div>
       </div>

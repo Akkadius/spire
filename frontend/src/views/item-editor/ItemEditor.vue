@@ -31,6 +31,7 @@
                 <eq-tab
                   name="General"
                   :selected="true"
+
                 >
                   <div class="row">
                     <div
@@ -39,7 +40,7 @@
                       v-b-tooltip.hover.v-dark.right :title="getFieldDescription('id')"
                     >
                       Id
-                      <b-form-input v-model.number="item.id"/>
+                      <b-form-input id="id" v-model.number="item.id"/>
                     </div>
                     <div class="col-4">
                       Name
@@ -47,23 +48,6 @@
                         :value="item.name" @change="v => item.name = v"
                       />
                     </div>
-
-                    <!-- Lore -->
-                    <div class="col-4">
-                      Lore
-                      <b-form-input
-                        :value="item.lore" @change="v => item.lore = v"
-                      />
-                    </div>
-
-                    <!-- Lore Group-->
-                    <div class="col-2">
-                      Lore Group
-                      <b-form-input v-model.number="item.loregroup"/>
-                    </div>
-                  </div>
-
-                  <div class="row">
 
                     <!-- Item Type -->
                     <div class="col-3">
@@ -93,32 +77,22 @@
                       </select>
                     </div>
 
-                    <!-- Material -->
-                    <div class="col-3">
-                      Material
-                      <select v-model.number="item['material']" class="form-control">
-                        <option
-                          v-for="(description, index) in DB_ITEM_MATERIAL"
-                          :key="index"
-                          :value="parseInt(index)"
-                        >
-                          {{ index }}) {{ description }}
-                        </option>
-                      </select>
+                  </div>
+
+                  <div class="row">
+
+                    <!-- Lore -->
+                    <div class="col-10">
+                      Lore
+                      <b-form-input
+                        :value="item.lore" @change="v => item.lore = v"
+                      />
                     </div>
 
+                    <!-- Lore Group-->
                     <div class="col-2">
-                      Light Emission
-                      <b-form-select
-                        v-model.number="item.light"
-                      >
-                        <b-form-select-option
-                          :value="i"
-                          v-for="(i) in [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,255]"
-                          :key="i"
-                        >{{ i }}
-                        </b-form-select-option>
-                      </b-form-select>
+                      Lore Group
+                      <b-form-input v-model.number="item.loregroup"/>
                     </div>
 
                   </div>
@@ -281,43 +255,60 @@
 
                       <div class="col-2">
                         <h4 class="eq-header text-center">
-                          Class
+                          Classes
                         </h4>
                         <class-bitmask-calculator
+                          style="border-radius: 15px; min-height: 400px;"
                           class="text-center mt-3"
                           :show-text-top="false"
                           :show-text-side="true"
                           :imageSize="38"
                           :centered-buttons="true"
-                          @input="item.classes = parseInt($event)"
+                          @input="item.classes = parseInt($event); setFieldModifiedById('classes')"
                           :mask="item.classes"
                         />
+                        <div class="text-center mt-3">
+                          Classes
+                          <b-input id="classes" v-model.number="item.classes"/>
+                        </div>
                       </div>
                       <div class="col-2">
                         <h4 class="eq-header text-center">
-                          Race
+                          Races
                         </h4>
                         <race-bitmask-calculator
+                          style="min-height: 400px;"
                           :imageSize="37"
                           class="mt-3"
                           :show-text-top="false"
                           :centered-buttons="true"
-                          @input="item.races = parseInt($event)"
+                          @input="item.races = parseInt($event); setFieldModifiedById('races')"
                           :mask="item.races"
                         />
+
+                        <div class="text-center mt-3">
+                          Races
+                          <b-input id="races" v-model.number="item.races"/>
+                        </div>
                       </div>
                       <div class="col-2">
                         <h4 class="eq-header text-center">
-                          Deity
+                          Deities
                         </h4>
                         <deity-bitmask-calculator
+                          style="min-height: 400px;"
                           class="mt-3"
                           :imageSize="37"
                           :show-names="false"
                           :centered-buttons="true"
-                          @input="item.deity = parseInt($event)"
+                          @input="item.deity = parseInt($event); setFieldModifiedById('deity')"
                           :mask="item.deity"
                         />
+
+                        <div class="text-center mt-3">
+                          Deities
+                          <b-input id="deity" v-model.number="item.deity"/>
+                        </div>
                       </div>
 
                       <!-- Slots -->
@@ -326,13 +317,19 @@
                           Slots
                         </h4>
                         <inventory-slot-calculator
+                          style="min-height: 400px;"
                           class="mt-1"
                           :imageSize="37"
                           :show-text-top="false"
                           :centered-buttons="false"
-                          @input="item.slots = parseInt($event)"
+                          @input="item.slots = parseInt($event); setFieldModifiedById('slots')"
                           :mask="item.slots"
                         />
+
+                        <div class="text-center mt-3">
+                          Slots
+                          <b-input id="slots" v-model.number="item.slots"/>
+                        </div>
                       </div>
 
                       <!-- Model Preview -->
@@ -348,10 +345,12 @@
                         <div @mouseover="drawItemModelSelector">
                           <item-model-preview
                             :id="item.idfile"
+                            class="mb-2"
                           />
 
                           Item Model
                           <b-form-input
+                            id="idfile"
                             v-model.number="item.idfile"
                           />
                         </div>
@@ -370,6 +369,7 @@
                           <div class="col-8">
                             <b-form-input
                               style="height: 40px"
+                              id="icon"
                               v-model.number="item.icon"
                             />
                           </div>
@@ -391,6 +391,39 @@
                               style="height: 30px; margin-top: 0px; margin-left: 5px"
                               v-model.number="item.color"
                             />
+                          </div>
+                        </div>
+
+                        <!-- Material -->
+                        <div class="row">
+                          <div class="col-12">
+                            Material
+                            <select v-model.number="item['material']" class="form-control">
+                              <option
+                                v-for="(description, index) in DB_ITEM_MATERIAL"
+                                :key="index"
+                                :value="parseInt(index)"
+                              >
+                                {{ index }}) {{ description }}
+                              </option>
+                            </select>
+                          </div>
+                        </div>
+
+                        <!-- Light Emission -->
+                        <div class="row">
+                          <div class="col-12">
+                            Light Emission
+                            <b-form-select
+                              v-model.number="item.light"
+                            >
+                              <b-form-select-option
+                                :value="i"
+                                v-for="(i) in [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,255]"
+                                :key="i"
+                              >{{ i }}
+                              </b-form-select-option>
+                            </b-form-select>
                           </div>
                         </div>
 
@@ -1194,7 +1227,7 @@
 
               <item-model-selector
                 :selected-model="item.idfile"
-                @input="item.idfile = $event"
+                @input="item.idfile = $event; setFieldModifiedById('idfile')"
               />
             </eq-window>
 
@@ -1222,7 +1255,7 @@
 
               <item-icon-selector
                 :selected-icon="item.icon"
-                @input="item.icon = $event"
+                @input="item.icon = $event; setFieldModifiedById('icon')"
               />
             </eq-window>
 
@@ -1239,7 +1272,7 @@
                 id-name="id"
                 name-label="name"
                 :with-reserved="true"
-                @input="item.id = $event"
+                @input="item.id = $event; setFieldModifiedById('id')"
               />
             </eq-window>
 

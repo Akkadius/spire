@@ -1,8 +1,8 @@
 <template>
-  <div class="row text-center" v-if="mask >= 0">
+  <div class="row" v-if="mask >= 0">
     <div
-      class="mr-3 d-inline-block"
-      :style="(centeredButtons ? 'width: 100%' : '')"
+      class="ml-1 mr-3 d-inline-block"
+      :style="(centeredButtons ? 'width: 100%; margin: 0;' : '')"
     >
       <div v-for="(gClass, classId) in classes" class="mb-1 d-inline-block">
         <div class="text-center p-0 mr-1 col-lg-12 col-sm-12">
@@ -13,7 +13,7 @@
               @click="selectClass(classId)"
               :src="itemCdnUrl + 'item_' + gClass.icon + '.png'"
               :style="getImageSize() + (isClassSelected(classId) ? 'border: 2px solid #dadada; border-radius: 7px;' : 'border-radius: 7px; opacity: .6')"
-              class="mt-1 hover-highlight">
+              class="hover-highlight">
           </div>
         </div>
       </div>
