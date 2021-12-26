@@ -44,6 +44,10 @@ input[type=checkbox].eq-checkbox:checked + label {
     font-size: 13px;
 }
 
+[class*="eq-window"] select {
+    padding-left: 10px !important;
+}
+
 [class*="input-group-text"] {
     background-color: #0b0b10 !important;
     border: 2px #555555 solid !important;
