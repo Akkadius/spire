@@ -1428,7 +1428,7 @@ export default {
       // used to track when the subselector tool window has last spawned a tool
       // this keeps from a subsequent hover redrawing another tool within a grace period defined by
       // MILLISECONDS_BEFORE_WINDOW_RESET
-      lastResetTime: Date.now(),
+      lastResetTime: Date.now() - MILLISECONDS_BEFORE_WINDOW_RESET,
 
       // notifications and errors during save
       notification: "",

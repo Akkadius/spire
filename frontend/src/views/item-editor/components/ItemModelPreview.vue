@@ -7,7 +7,7 @@
       v-if="previewId > 0"
       style="border: 1px solid rgb(218 218 218 / 30%); border-radius: 7px;"
     >
-      <span :class="'mt-5 mb-5 fade-in object-ctn-' + previewId"></span>
+      <span :class="'mt-2 mb-2 fade-in object-ctn-' + previewId"></span>
     </div>
   </div>
 </template>
