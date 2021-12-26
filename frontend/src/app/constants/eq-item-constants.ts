@@ -154,6 +154,7 @@ export const DB_ITEM_DEITIES = {
 }
 
 export const DB_BAG_TYPES = {
+  "0": "None",
   "9": "Alchemy",
   "10": "Tinkering",
   "12": "Poison Making",

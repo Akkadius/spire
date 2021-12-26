@@ -935,6 +935,8 @@
                          {
                            description: 'Bag Type',
                            field: 'bagtype',
+                           selectData: DB_BAG_TYPES,
+
                          },
                          {
                            description: 'Bag Weight Restriction',
@@ -947,9 +949,25 @@
                     </div>
                     <div class="col-3 p-0 m-0" :style="(item[field.field] === 0 ? 'opacity: .5' : '')">
                       <b-form-input
+                        v-if="!field.selectData"
                         :id="field.field"
                         v-model.number="item[field.field]"
                       />
+
+                      <select
+                        v-model.number="item[field.field]"
+                        class="form-control"
+                        v-if="field.selectData"
+                      >
+                        <option
+                          v-for="(description, index) in field.selectData"
+                          :key="index"
+                          :value="parseInt(index)"
+                        >
+                          {{ index }}) {{ description }}
+                        </option>
+                      </select>
+
                     </div>
                   </div>
                 </eq-tab>
@@ -1334,15 +1352,16 @@ import ItemModelSelector       from "./components/ItemModelSelector";
 import ItemIconSelector        from "./components/ItemIconSelector";
 import ClassBitmaskCalculator  from "../../components/tools/ClassBitmaskCalculator";
 import RaceBitmaskCalculator   from "../../components/tools/RaceBitmaskCalculator";
-import DeityBitmaskCalculator  from "../../components/tools/DeityCalculator";
+import DeityBitmaskCalculator from "../../components/tools/DeityCalculator";
 import {
+  DB_BAG_TYPES,
   DB_ITEM_AUG_RESTRICT,
   DB_ITEM_CLASS,
   DB_ITEM_MATERIAL,
   DB_ITEM_TYPES,
   ITEM_SIZE
-}                              from "../../app/constants/eq-item-constants";
-import {AUG_TYPES}             from "../../app/constants/eq-aug-constants";
+}                             from "../../app/constants/eq-item-constants";
+import {AUG_TYPES}            from "../../app/constants/eq-aug-constants";
 import InventorySlotCalculator from "../../components/tools/InventorySlotCalculator";
 
 import SpellEffectSelector     from "./components/ItemSpellEffectSelector";
@@ -1421,6 +1440,7 @@ export default {
       DB_ITEM_CLASS: DB_ITEM_CLASS,
       DB_ITEM_TYPES: DB_ITEM_TYPES,
       DB_SKILLS: DB_SKILLS,
+      DB_BAG_TYPES: DB_BAG_TYPES,
       ITEM_SIZE: ITEM_SIZE,
       AUG_TYPES: AUG_TYPES,
 
