@@ -85,7 +85,7 @@
 import NpcModels      from "@/app/asset-maps/npc-models-map";
 import util           from "util";
 import slugify        from "slugify"
-import raceConstants  from "@/app/constants/eq-race-constants"
+import {RACES}  from "@/app/constants/eq-race-constants"
 import PageHeader     from "@/components/layout/PageHeader";
 import {App}          from "@/constants/app";
 import EqWindow       from "@/components/eq-ui/EQWindow";
@@ -148,7 +148,7 @@ export default {
         let filteredRaceIds = [];
         for (let raceId = 0; raceId <= MAX_RACE_ID; raceId++) {
 
-          if (!raceConstants[raceId]) {
+          if (!RACES[raceId]) {
             continue;
           }
 
@@ -156,7 +156,7 @@ export default {
             continue;
           }
 
-          const raceName = raceConstants[raceId];
+          const raceName = RACES[raceId];
           if (!raceName.toLowerCase().includes(this.raceSearch)) {
             continue;
           }
@@ -258,7 +258,7 @@ export default {
   },
   async mounted() {
     this.loadQueryState()
-    this.raceConstants = raceConstants
+    this.raceConstants = RACES
     this.initModels()
 
     setTimeout(() => {

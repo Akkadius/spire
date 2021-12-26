@@ -489,7 +489,27 @@
                             {{ field.description }}
                           </div>
                           <div class="col-4 m-0 p-0" :style="(item[field.field] === 0 ? 'opacity: .5' : '')">
-                            <b-form-input :id="field.field" v-model.number="item[field.field]"/>
+
+                            <b-form-input
+                              :id="field.field"
+                              v-model.number="item[field.field]"
+                              v-if="!field.selectData"
+                            />
+
+                            <b-form-select
+                              v-if="field.selectData"
+                              v-model.number="item[field.field]"
+                              class="form-control"
+                            >
+                              <option
+                                v-for="(value, key) in field.selectData"
+                                :key="key"
+                                :value="parseInt(key)"
+                              >
+                                {{ key }}) {{ value }}
+                              </option>
+                            </b-form-select>
+
                           </div>
                         </div>
                       </div>
@@ -1277,6 +1297,7 @@ import ItemStatScalePercentage from "./components/ItemStatScalePercentage";
 import ItemStatScaleRange      from "./components/ItemStatScaleRange";
 import ItemColorSelector       from "./components/ItemColorSelector";
 import * as util               from "util";
+import {RACES}                 from "../../app/constants/eq-race-constants";
 
 const MILLISECONDS_BEFORE_WINDOW_RESET = 5000;
 
@@ -1392,7 +1413,8 @@ export default {
         },
         {
           description: 'Bane Damage Race',
-          field: 'banedmgrace'
+          field: 'banedmgrace',
+          selectData: RACES,
         },
         {
           description: 'Bane Damage Race Amount',
@@ -1407,7 +1429,6 @@ export default {
           field: 'elemdmgtype'
         },
       ],
-
 
       pricingFields: {
         "Price": "price",
