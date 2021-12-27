@@ -930,7 +930,7 @@
 
                          },
                          {
-                           description: 'Bag Weight Restriction',
+                           description: 'Bag Weight Reduction',
                            field: 'bagwr',
                          },
                        ]"
