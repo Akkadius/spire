@@ -41,7 +41,8 @@
                     >
                       Id
                       <b-form-input
-                        id="id" v-model.number="item.id"/>
+                        id="id" v-model.number="item.id"
+                      />
                     </div>
                     <div class="col-4">
                       Name
@@ -56,7 +57,8 @@
                       Item Type
                       <select
                         v-b-tooltip.hover.v-dark.right :title="getFieldDescription('itemtype')"
-                        v-model.number="item['itemtype']" class="form-control">
+                        v-model.number="item['itemtype']" class="form-control"
+                      >
                         <option
                           v-for="(description, index) in DB_ITEM_TYPES"
                           :key="index"
@@ -72,7 +74,8 @@
                       Item Class
                       <select
                         v-b-tooltip.hover.v-dark.right :title="getFieldDescription('itemclass')"
-                        v-model.number="item['itemclass']" class="form-control">
+                        v-model.number="item['itemclass']" class="form-control"
+                      >
                         <option
                           v-for="(description, index) in DB_ITEM_CLASS"
                           :key="index"
@@ -99,13 +102,21 @@
                     <!-- Lore Group -->
                     <div class="col-2">
                       Lore Group
-                      <b-form-input v-model.number="item.loregroup" v-b-tooltip.hover.v-dark.right :title="getFieldDescription('loregroup')"/>
+                      <b-form-input
+                        v-model.number="item.loregroup"
+                        v-b-tooltip.hover.v-dark.right
+                        :title="getFieldDescription('loregroup')"
+                      />
                     </div>
 
                     <!-- Min Status -->
                     <div class="col-2">
                       Min Status
-                      <b-form-input v-model.number="item.minstatus" v-b-tooltip.hover.v-dark.right :title="getFieldDescription('minstatus')"/>
+                      <b-form-input
+                        v-model.number="item.minstatus"
+                        v-b-tooltip.hover.v-dark.right
+                        :title="getFieldDescription('minstatus')"
+                      />
                     </div>
 
                     <!-- Script File ID -->
@@ -125,7 +136,11 @@
                     <!-- Stack Size -->
                     <div class="col-2" :style="(item['stackable'] === 0 ? 'opacity: .5' : '')">
                       Stack Size
-                      <b-form-input v-model.number="item.stacksize" v-b-tooltip.hover.v-dark.right :title="getFieldDescription('stacksize')"/>
+                      <b-form-input
+                        v-model.number="item.stacksize"
+                        v-b-tooltip.hover.v-dark.right
+                        :title="getFieldDescription('stacksize')"
+                      />
                     </div>
 
                     <!-- Item Size -->
@@ -149,26 +164,42 @@
                     <!-- Weight -->
                     <div class="col-2">
                       Weight
-                      <b-form-input v-model.number="item.weight" v-b-tooltip.hover.v-dark.right :title="getFieldDescription('weight')"/>
+                      <b-form-input
+                        v-model.number="item.weight"
+                        v-b-tooltip.hover.v-dark.right
+                        :title="getFieldDescription('weight')"
+                      />
                     </div>
 
                     <!-- Recommended Level -->
                     <div class="col-2" :style="(item['reclevel'] === 0 ? 'opacity: .5' : '')">
                       Recommended Level
-                      <b-form-input v-model.number="item.reclevel" v-b-tooltip.hover.v-dark.right :title="getFieldDescription('reclevel')"/>
+                      <b-form-input
+                        v-model.number="item.reclevel"
+                        v-b-tooltip.hover.v-dark.right
+                        :title="getFieldDescription('reclevel')"
+                      />
                     </div>
 
                     <!-- Required Level -->
                     <div class="col-2" :style="(item['reqlevel'] === 0 ? 'opacity: .5' : '')">
                       Required Level
-                      <b-form-input v-model.number="item.reqlevel" v-b-tooltip.hover.v-dark.right :title="getFieldDescription('reqlevel')"/>
+                      <b-form-input
+                        v-model.number="item.reqlevel"
+                        v-b-tooltip.hover.v-dark.right
+                        :title="getFieldDescription('reqlevel')"
+                      />
                     </div>
 
                     <!-- Recommended Skill -->
                     <div class="col-2" :style="(item['recskill'] === 0 ? 'opacity: .5' : '')">
                       Rec Skill
 
-                      <b-form-input v-model.number="item.recskill" v-b-tooltip.hover.v-dark.right :title="getFieldDescription('reqskill')"/>
+                      <b-form-input
+                        v-model.number="item.recskill"
+                        v-b-tooltip.hover.v-dark.right
+                        :title="getFieldDescription('reqskill')"
+                      />
                     </div>
 
 
@@ -2071,14 +2102,15 @@ export default {
      * Selector / previewers
      */
     resetPreviewComponents() {
-      this.freeIdSelectorActive          = false;
-      this.iconSelectorActive            = false;
-      this.itemModelSelectorActive       = false;
-      this.previewItemActive             = false;
-      this.spellEffectSelectorActive     = false;
-      this.drawStatScaleToolActive       = false;
-      this.drawColorSelectorActive       = false;
-      this.drawRaceMaterialPreviewActive = false;
+      this.freeIdSelectorActive            = false;
+      this.iconSelectorActive              = false;
+      this.itemModelSelectorActive         = false;
+      this.previewItemActive               = false;
+      this.spellEffectSelectorActive       = false;
+      this.drawStatScaleToolActive         = false;
+      this.drawColorSelectorActive         = false;
+      this.drawRaceMaterialPreviewActive   = false;
+      this.drawAugmentTypeCalculatorActive = false;
     },
     shouldReset() {
       return Date.now() - this.lastResetTime > MILLISECONDS_BEFORE_WINDOW_RESET;
