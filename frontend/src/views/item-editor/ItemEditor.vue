@@ -904,6 +904,7 @@
                     </div>
                     <div class="col-3">
                       <b-form-input
+                        v-b-tooltip.hover.v-dark.right :title="getFieldDescription('augtype')"
                         :style="(item['augtype'] === 0 ? 'opacity: .5' : '')"
                         v-model.number="item['augtype']"
                       />
@@ -921,6 +922,7 @@
                       <select
                         v-model.number="item['augrestrict']"
                         class="form-control"
+                        v-b-tooltip.hover.v-dark.right :title="getFieldDescription('augrestrict')"
                         :style="(item['augrestrict'] === 0 ? 'opacity: .5' : '')"
                       >
                         <option
@@ -948,6 +950,7 @@
                       <b-form-input
                         :style="(item['augdistiller'] === 0 ? 'opacity: .5' : '')"
                         v-model.number="item['augdistiller']"
+                        v-b-tooltip.hover.v-dark.right :title="getFieldDescription('augdistiller')"
                       />
                     </div>
                   </div>
@@ -965,6 +968,7 @@
                         v-model.number="item['augslot_' + i + '_type']"
                         :style="(item['augslot_' + i + '_type'] === 0 ? 'opacity: .5' : '')"
                         class="form-control"
+                        v-b-tooltip.hover.v-dark.right :title="getFieldDescription('augslot_' + i + '_type')"
                       >
                         <option
                           v-for="(value, index) in AUG_TYPES"
