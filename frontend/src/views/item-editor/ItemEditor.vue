@@ -829,7 +829,7 @@
                     <div class="col-1">
 
                     </div>
-                    <div class="col-4 text-right">
+                    <div class="col-4 text-right p-0 m-0 mt-2">
                       Augment Type
                     </div>
                     <div class="col-3">
@@ -854,7 +854,7 @@
                     <div class="col-1">
 
                     </div>
-                    <div class="col-4 text-right">
+                    <div class="col-4 text-right p-0 m-0 mt-2">
                       Augment Restriction
                     </div>
                     <div class="col-3">
@@ -881,8 +881,8 @@
                     <div class="col-1">
 
                     </div>
-                    <div class="col-4 text-right">
-                      Augment Distiller Type
+                    <div class="col-4 text-right p-0 m-0 mt-2">
+                      Augment Distiller Item ID
                     </div>
                     <div class="col-3">
                       <b-form-input
@@ -897,7 +897,7 @@
                     <div class="col-1">
 
                     </div>
-                    <div class="col-4 text-right">
+                    <div class="col-4 text-right p-0 m-0 mt-2">
                       Augment Slot {{ i }} Type
                     </div>
                     <div class="col-3">
