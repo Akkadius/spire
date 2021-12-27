@@ -1373,6 +1373,8 @@ import ItemColorSelector       from "./components/ItemColorSelector";
 import * as util               from "util";
 import {RACES}                 from "../../app/constants/eq-race-constants";
 import ItemMaterialPreview     from "./components/ItemMaterialPreview";
+import {BODYTYPES}             from "../../app/constants/eq-bodytype-constants";
+import {DB_SPELL_RESISTS}      from "../../app/constants/eq-spell-constants";
 
 const MILLISECONDS_BEFORE_WINDOW_RESET = 5000;
 
@@ -1462,8 +1464,13 @@ export default {
           field: 'haste'
         },
         {
+          description: 'Range',
+          field: 'range'
+        },
+        {
           description: 'Extra Damage Skill',
-          field: 'extradmgskill'
+          field: 'extradmgskill',
+          selectData: DB_SKILLS
         },
         {
           description: 'Extra Damage Amount',
@@ -1474,20 +1481,17 @@ export default {
           field: 'backstabdmg'
         },
         {
-          description: 'Range',
-          field: 'range'
-        },
-        {
           description: 'Spell Damage',
           field: 'spelldmg'
         },
         {
-          description: 'Bane Damage Amount',
-          field: 'banedmgamt'
+          description: 'Bane Damage Body',
+          field: 'banedmgbody',
+          selectData: BODYTYPES,
         },
         {
-          description: 'Bane Damage Body',
-          field: 'banedmgbody'
+          description: 'Bane Damage Amount',
+          field: 'banedmgamt'
         },
         {
           description: 'Bane Damage Race',
@@ -1499,12 +1503,13 @@ export default {
           field: 'banedmgraceamt'
         },
         {
-          description: 'Elemental Damage Amount',
-          field: 'elemdmgamt'
+          description: 'Element Damage Type',
+          field: 'elemdmgtype',
+          selectData: DB_SPELL_RESISTS,
         },
         {
-          description: 'Element Damage Type',
-          field: 'elemdmgtype'
+          description: 'Elemental Damage Amount',
+          field: 'elemdmgamt'
         },
       ],
 

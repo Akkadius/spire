@@ -410,7 +410,7 @@ export default {
         data["Bane (" + this.getBaneDamageName() + ")"] = this.itemData.banedmgraceamt
       }
       if (this.itemData.banedmgbody > 0 && this.itemData.banedmgamt !== 0) {
-        data[this.getBaneDamageBodyName()] = this.itemData.banedmgamt
+        data["Bane (" + this.getBaneDamageBodyName() + ")"] = this.itemData.banedmgamt
       }
 
       data["Backstab Damage"] = this.itemData.backstabdmg
@@ -584,7 +584,7 @@ export default {
       return this.itemData.augtype > 0 ? augSlots : ["All Slots"]
     },
     getExtraDmgSkill: function () {
-      return DB_SKILLS[this.itemData.extradmgskill] ? this.title(DB_SKILLS[this.itemData.extradmgskill].replace("_", " ").toLowerCase()) : ""
+      return DB_SKILLS[this.itemData.extradmgskill] ? (DB_SKILLS[this.itemData.extradmgskill].replace("_", " ")) : ""
     },
     getAugRestriction: function () {
       return DB_ITEM_AUG_RESTRICT[this.itemData.augrestrict] ? DB_ITEM_AUG_RESTRICT[this.itemData.augrestrict] : "Unknown Type (" + this.itemData.augrestrict + ")"
