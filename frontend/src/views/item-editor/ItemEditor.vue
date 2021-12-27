@@ -150,7 +150,6 @@
 
                   </div>
 
-
                   <div class="mt-3 mb-3">
                     <div class="row">
                       <div class="col-2 text-center">
@@ -417,6 +416,17 @@
                           </div>
                         </div>
 
+                        <!-- Elite Material -->
+                        <div class="row">
+                          <div class="col-12">
+                            Elite Material
+                            <b-form-input
+                              id="elitematerial"
+                              v-model.number="item.elitematerial"
+                            />
+                          </div>
+                        </div>
+
                         <!-- Light Emission -->
                         <div class="row">
                           <div class="col-12">
@@ -434,9 +444,22 @@
                           </div>
                         </div>
 
+                        <!-- Hero Forge Model -->
+                        <div class="row">
+                          <div class="col-12">
+                            Hero Forge Model
+                            <b-form-input
+                              id="herosforgemodel"
+                              v-model.number="item.herosforgemodel"
+                            />
+                          </div>
+                        </div>
+
                       </div>
                     </div>
                   </div>
+
+
                 </eq-tab>
 
                 <eq-tab name="Stats" class="minified-inputs">
