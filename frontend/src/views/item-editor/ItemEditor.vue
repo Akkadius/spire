@@ -826,7 +826,7 @@
                   <h6 class="eq-header text-center mt-3 mb-3">Item Is Augment</h6>
 
                   <!-- Aug Type -->
-                  <div class="row">
+                  <div class="row" @mouseover="drawAugmentTypeCalculator">
                     <div class="col-1">
 
                     </div>
@@ -834,20 +834,10 @@
                       Augment Type
                     </div>
                     <div class="col-3">
-                      <select
-                        v-model.number="item['augtype']"
-                        class="form-control"
+                      <b-form-input
                         :style="(item['augtype'] === 0 ? 'opacity: .5' : '')"
-                      >
-                        <option
-                          v-for="(value, index) in AUG_TYPES"
-                          :key="index"
-                          :value="parseInt(index)"
-                        >
-                          {{ index }}) {{ value.name }}
-                        </option>
-                      </select>
-
+                        v-model.number="item['augtype']"
+                      />
                     </div>
                   </div>
 
@@ -1258,6 +1248,19 @@
               />
             </eq-window>
 
+            <!-- augment type calculator -->
+            <eq-window
+              style="margin-top: 30px; margin-right: 10px; width: auto;"
+              class="fade-in"
+              title="Augment Type Selector"
+              v-if="drawAugmentTypeCalculatorActive && item"
+            >
+              <aug-bitmask-calculator
+                :inputData.sync="item.augtype"
+                :mask="item.augtype"
+              />
+            </eq-window>
+
             <!-- race material preview -->
             <eq-window
               style="margin-top: 30px; margin-right: 10px; width: auto;"
@@ -1377,12 +1380,14 @@ import ItemMaterialPreview     from "./components/ItemMaterialPreview";
 import {BODYTYPES}             from "../../app/constants/eq-bodytype-constants";
 import {DB_SPELL_RESISTS}      from "../../app/constants/eq-spell-constants";
 import {DB_ITEM_BARD_TYPE}     from "../../app/constants/eq-bard-types";
+import AugBitmaskCalculator    from "../../components/tools/AugmentTypeCalculator";
 
 const MILLISECONDS_BEFORE_WINDOW_RESET = 5000;
 
 export default {
   name: "ItemEdit",
   components: {
+    AugBitmaskCalculator,
     ItemMaterialPreview,
     ItemColorSelector,
     ItemStatScaleRange,
@@ -1425,6 +1430,7 @@ export default {
       drawStatScaleToolActive: false,
       drawColorSelectorActive: false,
       drawRaceMaterialPreviewActive: false,
+      drawAugmentTypeCalculatorActive: false,
 
       // show unknown fields
       showUnknown: 0,
@@ -1913,6 +1919,11 @@ export default {
       this.resetPreviewComponents()
       this.drawStatScaleToolActive = true
       this.previewItemActive       = true
+    },
+    drawAugmentTypeCalculator() {
+      this.lastResetTime = Date.now()
+      this.resetPreviewComponents()
+      this.drawAugmentTypeCalculatorActive = true
     },
 
     materialChange() {
