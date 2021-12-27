@@ -462,17 +462,18 @@
                          {
                            description: 'HP',
                            field: 'hp',
-                           regen: 'regen'
                          },
                          {
                            description: 'Mana',
                            field: 'mana',
-                           regen: 'manaregen',
                          },
                          {
                            description: 'Endur',
                            field: 'endur',
-                           regen: 'enduranceregen'
+                         },
+                         {
+                           description: 'Purity',
+                           field: 'purity',
                          },
                        ]"
                         >
@@ -1375,6 +1376,7 @@ import {RACES}                 from "../../app/constants/eq-race-constants";
 import ItemMaterialPreview     from "./components/ItemMaterialPreview";
 import {BODYTYPES}             from "../../app/constants/eq-bodytype-constants";
 import {DB_SPELL_RESISTS}      from "../../app/constants/eq-spell-constants";
+import {DB_ITEM_BARD_TYPE}     from "../../app/constants/eq-bard-types";
 
 const MILLISECONDS_BEFORE_WINDOW_RESET = 5000;
 
@@ -1441,6 +1443,7 @@ export default {
       DB_ITEM_AUG_RESTRICT: DB_ITEM_AUG_RESTRICT,
       DB_ITEM_CLASS: DB_ITEM_CLASS,
       DB_ITEM_TYPES: DB_ITEM_TYPES,
+      DB_ITEM_BARD_TYPE: DB_ITEM_BARD_TYPE,
       DB_SKILLS: DB_SKILLS,
       DB_BAG_TYPES: DB_BAG_TYPES,
       ITEM_SIZE: ITEM_SIZE,
@@ -1511,6 +1514,29 @@ export default {
           description: 'Elemental Damage Amount',
           field: 'elemdmgamt'
         },
+        {
+          description: 'Bard Skill Type',
+          field: 'bardtype',
+          selectData: DB_ITEM_BARD_TYPE,
+        },
+        {
+          description: 'Bard Value',
+          field: 'bardvalue'
+        },
+        {
+          description: 'Skill Mod Type',
+          field: 'skillmodtype',
+          selectData: DB_SKILLS,
+        },
+        {
+          description: 'Skill Mod Value',
+          field: 'skillmodvalue'
+        },
+        {
+          description: 'Skill Mod Max',
+          field: 'skillmodmax'
+        },
+
       ],
 
       pricingFields: {

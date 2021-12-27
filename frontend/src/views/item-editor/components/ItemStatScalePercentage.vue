@@ -184,6 +184,10 @@ export default {
           description: 'Endur',
           field: 'endur',
         },
+        {
+          description: 'Purity',
+          field: 'purity',
+        },
       ],
 
       stats: Items.getBasicStatFields(),

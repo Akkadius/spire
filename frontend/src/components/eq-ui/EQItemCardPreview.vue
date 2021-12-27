@@ -379,7 +379,8 @@ export default {
         "HP": this.itemData.hp,
         "Hana": this.itemData.mana,
         "End": this.itemData.endur,
-        "Haste": this.itemData.haste > 0 ? (this.itemData.haste + "%") : this.itemData.haste
+        "Haste": this.itemData.haste > 0 ? (this.itemData.haste + "%") : this.itemData.haste,
+        "Purity": this.itemData.purity
       },
       secondlevel3: {},
       effectData: {}, // stores effect data when loaded from API
