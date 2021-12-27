@@ -207,3 +207,32 @@ export const ITEM_ELEMENTS = {
   "5": "Disease",
   "6": "Corruption"
 }
+
+export const BOOK_TYPES = {
+  '-1': 'Old Parchment',
+  0: 'None',
+  1: 'Tattered Note',
+  2: 'Fell Blade Guild Note',
+  3: 'Bloodsoaked Note',
+  4: 'Water-Stained Ancient Tome',
+  5: 'Conium\'s Notebook Part One',
+  6: 'The Stone Frum Pazt Vol.I',
+  7: 'False Orders',
+  8: 'Stupendous Tome',
+  9: 'Leathers of the Vale',
+  10: 'Old Delivered Book',
+  11: 'Liber Brassica Felix v 6',
+  12: 'Bloodstained Journal Vol 1',
+  13: 'Guktan Warrior Recruit Letter',
+  14: 'Foreman Naug\'s Unsigned Report',
+  15: 'Elegant Pates',
+  16: 'Leatherbound Journal',
+  17: 'Dusty Kobold Scroll',
+  18: 'The Charasis Tome',
+  19: 'Liber Brassica Felix v 3',
+  20: 'Liber Brassica Felix v 2',
+  21: 'Tattered Note',
+  22: 'Singed Scroll',
+  23: 'Scroll of Flayed Goblin Skin',
+  25: 'Ancient Text',
+}

@@ -986,6 +986,68 @@
                   </div>
                 </eq-tab>
 
+                <eq-tab name="Book" class="minified-inputs">
+                  <div
+                    class="row"
+                    :key="field.field"
+                    v-for="field in
+                       [
+                         {
+                           description: 'Is Book',
+                           field: 'book',
+                           type: 'bool',
+                         },
+                         {
+                           description: 'Book Type',
+                           field: 'booktype',
+                           selectData: BOOK_TYPES
+                         },
+                         {
+                           description: 'Book (File) Name',
+                           field: 'filename',
+                         },
+                       ]"
+                  >
+                    <div class="col-5 text-right mr-3 p-0 mt-2">
+                      {{ field.description }}
+                    </div>
+                    <div class="col-3 p-0 m-0" :style="(item[field.field] === 0 ? 'opacity: .5' : '')">
+                      <b-form-input
+                        v-b-tooltip.hover.v-dark.right :title="getFieldDescription(field.field)"
+                        v-if="!field.selectData && !field.type"
+                        :id="field.field"
+                        v-model.number="item[field.field]"
+                      />
+
+                      <eq-checkbox
+                        v-b-tooltip.hover.v-dark.right :title="getFieldDescription(field.field)"
+                        class="d-inline-block mt-2 mb-2"
+                        :true-value="(typeof field.true !== 'undefined' ? field.true : 1)"
+                        :false-value="(typeof field.false !== 'undefined' ? field.false : 0)"
+                        v-model.number="item[field.field]"
+                        @input="item[field.field] = $event"
+                        v-if="field.type === 'bool'"
+                      />
+
+                      <select
+                        v-b-tooltip.hover.v-dark.right :title="getFieldDescription(field.field)"
+                        v-model.number="item[field.field]"
+                        class="form-control"
+                        v-if="field.selectData"
+                      >
+                        <option
+                          v-for="(description, index) in field.selectData"
+                          :key="index"
+                          :value="parseInt(index)"
+                        >
+                          {{ index }}) {{ description }}
+                        </option>
+                      </select>
+
+                    </div>
+                  </div>
+                </eq-tab>
+
                 <eq-tab name="Faction" class="minified-inputs">
                   <!-- Aug Type -->
                   <div class="row" v-for="i in 4" :key="i">
@@ -1381,6 +1443,7 @@ import ClassBitmaskCalculator  from "../../components/tools/ClassBitmaskCalculat
 import RaceBitmaskCalculator   from "../../components/tools/RaceBitmaskCalculator";
 import DeityBitmaskCalculator from "../../components/tools/DeityCalculator";
 import {
+  BOOK_TYPES,
   DB_BAG_TYPES,
   DB_ITEM_AUG_RESTRICT,
   DB_ITEM_CLASS,
@@ -1475,6 +1538,7 @@ export default {
       DB_ITEM_BARD_TYPE: DB_ITEM_BARD_TYPE,
       DB_SKILLS: DB_SKILLS,
       DB_BAG_TYPES: DB_BAG_TYPES,
+      BOOK_TYPES: BOOK_TYPES,
       ITEM_SIZE: ITEM_SIZE,
       AUG_TYPES: AUG_TYPES,
 
