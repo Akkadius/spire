@@ -117,7 +117,7 @@ export class Items {
       "awis": "The same effect as intelligence for the deity-based cc users:  Cleric, Shaman Druid, Paladin and Ranger.  The higher your wisdom, the more mana you get for each level.",
       "bagsize": "The max size an item can be and still fit into the container. 1 = Small, 2 = Medium, 3 = Large, 4 = Giant, 5 = Giant (Assembly Kit only?)",
       "bagslots": "The number of slots the bag has.",
-      "bagtype": "2 = Quiver, 9 = Alchemy Container, 10 = Toolbox, 11 = Books (for research), 12 = Mortar & Pestle, 13 = Quest Related?, 14 = Mixing Bowl, 15 = Spit, 16 = Sewing Kit, 17 = Forge, 18 = Fletching Kit, 19 = Brewing, 20 = Jewelers Kit, 22 = New Tanaan Kiln, 24 = Lexicon (wizard research?), 25 = Elemental Grimoire (mage research?), 26 = Books of Binding (necro research?), 27 = Enchanter research?, 28 = A coin pouch?, 29 = Concordance of Research, 30 = Quest Combine container (Offers Combine ability without relying on a specific tradeskill), 46 = Tackle Box (for fishing), 51 = Traders Satchel (for Bazaar trading), 53 = Augmentation Sealer (for applying/removing augments), 54 = Cooking, 55 = Ornamentation, 56 = Ornamentation Striping Tool (for removing ornamentations)",
+      "bagtype": "",
       "bagwr": "Bag Weight Reduction. Interestingly, you can also have bags that reduce coin weight. However, in order to set bags to reduce coin weight, you MUST set the Item ID somewhere between 17201 and 17230.",
       "banedmgamt": "Valid values: 0 -> 255 (-127 -> 127)",
       "banedmgraceamt": "Valid values: 0 -> 4294967295",

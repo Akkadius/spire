@@ -104,7 +104,11 @@
                     <!-- Script File ID -->
                     <div class="col-2">
                       Script File ID
-                      <b-form-input v-model.number="item.scriptfileid" v-b-tooltip.hover.v-dark.right :title="getFieldDescription('scriptfileid')"/>
+                      <b-form-input
+                        v-model.number="item.scriptfileid"
+                        v-b-tooltip.hover.v-dark.right
+                        :title="getFieldDescription('scriptfileid')"
+                      />
                     </div>
 
                   </div>
@@ -564,7 +568,9 @@
                           <div class="col-8 text-right mt-1 mb-1 p-0 pr-3">
                             {{ field.description }}
                           </div>
-                          <div class="col-4 m-0 p-0" :style="(item[field.field] <= 0 ? 'opacity: .5' : '')">
+                          <div
+                            v-b-tooltip.hover.v-dark.right :title="getFieldDescription(field.field)"
+                            class="col-4 m-0 p-0" :style="(item[field.field] <= 0 ? 'opacity: .5' : '')">
 
                             <b-form-input
                               :id="field.field"
@@ -602,7 +608,9 @@
                         <div class="col-7 text-right mt-1 mb-1 p-0 pr-3">
                           {{ description }}
                         </div>
-                        <div class="col-3 m-0 p-0" :style="(parseInt(item[field]) === 0 ? 'opacity: .5' : '')">
+                        <div class="col-3 m-0 p-0"
+                             v-b-tooltip.hover.v-dark.right :title="getFieldDescription(field)"
+                             :style="(parseInt(item[field]) === 0 ? 'opacity: .5' : '')">
                           <b-form-input :id="field" v-model.number="item[field]" v-if="field !== 'combateffects'"/>
                           <!-- For some reason combateffects is a varchar field -->
                           <b-form-input :id="field" v-model="item[field]" v-if="field === 'combateffects'"/>
@@ -973,7 +981,11 @@
                     <div class="col-5 text-right mr-3 p-0 mt-2">
                       {{ field.description }}
                     </div>
-                    <div class="col-3 p-0 m-0" :style="(item[field.field] === 0 ? 'opacity: .5' : '')">
+                    <div
+                      class="col-3 p-0 m-0"
+                      v-b-tooltip.hover.v-dark.right :title="getFieldDescription(field.field)"
+                      :style="(item[field.field] === 0 ? 'opacity: .5' : '')"
+                    >
                       <b-form-input
                         v-if="!field.selectData"
                         :id="field.field"
@@ -1123,13 +1135,19 @@
                       Faction Mod {{ i }}
                     </div>
                     <div class="col-2 mr-0 pr-0" :style="(item['factionmod_' + i] === 0 ? 'opacity: .5' : '')">
-                      <b-form-input v-model.number="item['factionmod_' + i]"/>
+                      <b-form-input
+                        v-b-tooltip.hover.v-dark.right :title="getFieldDescription('factionmod_' + i)"
+                        v-model.number="item['factionmod_' + i]"
+                      />
                     </div>
                     <div class="col-1 text-center mt-2 m-0 p-0">
                       Amount
                     </div>
                     <div class="col-2" :style="(item['factionamt_' + i] === 0 ? 'opacity: .5' : '')">
-                      <b-form-input v-model.number="item['factionamt_' + i]"/>
+                      <b-form-input
+                        v-b-tooltip.hover.v-dark.right :title="getFieldDescription('factionamt_' + i)"
+                        v-model.number="item['factionamt_' + i]"
+                      />
                     </div>
                   </div>
                 </eq-tab>
@@ -1137,7 +1155,6 @@
                 <eq-tab name="Pricing" class="minified-inputs">
                   <div
                     v-for="(field, description) in pricingFields"
-                    v-b-tooltip.hover.v-dark.right :title="getFieldDescription(field)"
                     :key="field"
                     class="row text-center"
                   >
@@ -1147,7 +1164,10 @@
                     <div class="col-4 text-right mt-1 mr-0 pr-0">
                       {{ description }}
                     </div>
-                    <div class="col-2" :style="(item[field] === 0 ? 'opacity: .5' : '')">
+                    <div
+                      v-b-tooltip.hover.v-dark.right :title="getFieldDescription(field)"
+                      class="col-2" :style="(item[field] === 0 ? 'opacity: .5' : '')"
+                    >
                       <b-form-input v-model.number="item[field]"/>
                       <!--                      <b-form-input v-model="item[field]"/>-->
                     </div>
@@ -1205,7 +1225,8 @@
 
                 <eq-tab name="Unsup." v-if="showUnknown">
                   <div class="text-center font-weight-bold mt-5 mb-5">
-                    These are fields that are identified but unsupported or unimplemented by the EverQuest Emulator Server Source (yet)
+                    These are fields that are identified but unsupported or unimplemented by the EverQuest Emulator
+                    Server Source (yet)
                   </div>
 
                   <div class="row">
@@ -1521,7 +1542,7 @@ import ItemModelSelector       from "./components/ItemModelSelector";
 import ItemIconSelector        from "./components/ItemIconSelector";
 import ClassBitmaskCalculator  from "../../components/tools/ClassBitmaskCalculator";
 import RaceBitmaskCalculator   from "../../components/tools/RaceBitmaskCalculator";
-import DeityBitmaskCalculator from "../../components/tools/DeityCalculator";
+import DeityBitmaskCalculator  from "../../components/tools/DeityCalculator";
 import {
   BOOK_TYPES,
   DB_BAG_TYPES,
@@ -1530,8 +1551,8 @@ import {
   DB_ITEM_MATERIAL,
   DB_ITEM_TYPES,
   ITEM_SIZE
-}                             from "../../app/constants/eq-item-constants";
-import {AUG_TYPES}            from "../../app/constants/eq-aug-constants";
+}                              from "../../app/constants/eq-item-constants";
+import {AUG_TYPES}             from "../../app/constants/eq-aug-constants";
 import InventorySlotCalculator from "../../components/tools/InventorySlotCalculator";
 
 import SpellEffectSelector     from "./components/ItemSpellEffectSelector";
