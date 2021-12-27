@@ -308,7 +308,7 @@ export class Items {
       "UNK193": "",
       "purity": "",
       "evolvinglevel": "",
-      "scriptfileid": "This ID (numeric value) of a Script that called from the quests/items/ folder when this item is right clicked. The number set in this field will be the script loaded for this item such as '123456' would use the file 'script_123456.pl'.",
+      "scriptfileid": "This is the ID (numeric value) of a script that is called from the 'quests/items/' folder when this item is right clicked. The number set in this field will be the script loaded for this item such as '123456' would use the file 'script_123456.pl' or 'script_123456.lua'",
       "clickname": "If a name is defined here, it will override the spell name of the set click effect (only works for SoF+ clients)",
       "procname": "If a name is defined here, it will override the spell name of the set proc effect (only works for SoF+ clients)",
       "wornname": "If a name is defined here, it will override the spell name of the set worn effect (only works for SoF+ clients)",

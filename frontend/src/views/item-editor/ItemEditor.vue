@@ -82,17 +82,29 @@
                   <div class="row">
 
                     <!-- Lore -->
-                    <div class="col-10">
+                    <div class="col-6">
                       Lore
                       <b-form-input
                         :value="item.lore" @change="v => item.lore = v"
                       />
                     </div>
 
-                    <!-- Lore Group-->
+                    <!-- Lore Group -->
                     <div class="col-2">
                       Lore Group
                       <b-form-input v-model.number="item.loregroup"/>
+                    </div>
+
+                    <!-- Min Status -->
+                    <div class="col-2">
+                      Min Status
+                      <b-form-input v-model.number="item.minstatus"/>
+                    </div>
+
+                    <!-- Script File ID -->
+                    <div class="col-2">
+                      Script File ID
+                      <b-form-input v-model.number="item.scriptfileid" v-b-tooltip.hover.v-dark.right :title="getFieldDescription('scriptfileid')"/>
                     </div>
 
                   </div>
@@ -842,11 +854,11 @@
                 </eq-tab>
 
                 <eq-tab
-                  name="Augmentation"
+                  name="Aug"
                   class="minified-inputs"
                 >
 
-                  <h6 class="eq-header text-center mt-3 mb-3">Item Is Augment</h6>
+                  <div class="text-center mt-3 mb-3 font-weight-bold">Item Is Augment</div>
 
                   <!-- Aug Type -->
                   <div class="row" @mouseover="drawAugmentTypeCalculator">
@@ -888,7 +900,7 @@
                     </div>
                   </div>
 
-                  <h6 class="eq-header text-center mt-3 mb-3">Item Can Have Augments</h6>
+                  <div class="text-center mt-3 mb-3 font-weight-bold">Item Can Have Augments</div>
 
                   <!-- Aug Distiller Type -->
                   <div class="row">
@@ -1191,13 +1203,21 @@
                   </div>
                 </eq-tab>
 
-                <eq-tab name="Unimplemented" v-if="showUnknown">
+                <eq-tab name="Unsup." v-if="showUnknown">
+                  <div class="text-center font-weight-bold mt-5 mb-5">
+                    These are fields that are identified but unsupported or unimplemented by the EverQuest Emulator Server Source (yet)
+                  </div>
+
                   <div class="row">
                     <div
                       class="col-2"
                       :key="field.field"
                       v-for="field in
                        [
+                          'evoid',
+                          'evoitem',
+                          'evolvinglevel',
+                          'evomax',
                           'benefitflag',
                           'pendingloreflag',
                           'lorefile',
@@ -1210,6 +1230,10 @@
                 </eq-tab>
 
                 <eq-tab name="?" v-if="showUnknown">
+                  <div class="text-center font-weight-bold mt-3 mb-3">
+                    These are fields that are unknown
+                  </div>
+
                   <div class="row">
                     <div
                       class="col-2"
