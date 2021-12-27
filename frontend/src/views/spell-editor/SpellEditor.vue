@@ -338,11 +338,11 @@
                         class="row" v-for="field in
                          [
                            {
-                             description: 'Must Be Out of Combat',
+                             description: 'Can Cast out of Combat',
                              field: 'outof_combat'
                            },
                            {
-                             description: 'Must Be In Combat',
+                             description: 'Can Cast in Combat',
                              field: 'in_combat',
                            },
                            {
@@ -364,6 +364,7 @@
                         </div>
                         <div class="col-3 text-left p-0">
                           <eq-checkbox
+                            v-b-tooltip.hover.v-dark.right :title="getFieldDescription(field.field)"
                             class="mb-2 d-inline-block"
                             :true-value="(typeof field.true !== 'undefined' ? field.true : 1)"
                             :false-value="(typeof field.false !== 'undefined' ? field.false : 0)"
@@ -489,6 +490,7 @@
                         </div>
                         <div class="col-3 text-left p-0">
                           <eq-checkbox
+                            v-b-tooltip.hover.v-dark.right :title="getFieldDescription(field.field)"
                             class="mb-2 d-inline-block"
                             :true-value="(typeof field.true !== 'undefined' ? field.true : 1)"
                             :false-value="(typeof field.false !== 'undefined' ? field.false : 0)"
@@ -777,12 +779,13 @@ import SpellAnimationViewer from "../viewers/SpellAnimationViewer";
 import SpellAnimationSelector
                             from "./components/SpellAnimationSelector";
 import EqCheckbox           from "../../components/eq-ui/EQCheckbox";
-import {SpellsNewApi}                                                 from "../../app/api";
-import {SpireApiClient}                                               from "../../app/api/spire-api-client";
+import {SpellsNewApi}       from "../../app/api";
+import {SpireApiClient}     from "../../app/api/spire-api-client";
 import * as util            from "util";
 import SpellClassSelector   from "./components/SpellClassSelector";
 import SpellDeitySelector   from "./components/SpellDeitySelector";
 import FreeIdSelector       from "../../components/tools/FreeIdSelector";
+import {Items}              from "../../app/items";
 
 const MILLISECONDS_BEFORE_WINDOW_RESET = 3000;
 
@@ -843,6 +846,10 @@ export default {
     this.load()
   },
   methods: {
+
+    getFieldDescription(field) {
+      return Spells.getFieldDescription(field);
+    },
 
     setFieldModified(evt) {
       // border: 2px #555555 solid !important;

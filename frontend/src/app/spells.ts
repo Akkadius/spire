@@ -9,16 +9,16 @@ import {
   DB_SPELL_TARGETS,
   DB_SPELL_WORN_ATTRIBUTE_CAP,
   SPELL_TARGET_TYPE_COLORS
-}                                          from "@/app/constants/eq-spell-constants";
-import {DB_RACE_NAMES}                     from "@/app/constants/eq-races-constants";
-import {DB_BARD_SKILLS, DB_SKILLS}         from "@/app/constants/eq-skill-constants";
-import {BODYTYPES}                         from "@/app/constants/eq-bodytype-constants";
-import util                                from "util";
+} from "@/app/constants/eq-spell-constants";
+import {DB_RACE_NAMES} from "@/app/constants/eq-races-constants";
+import {DB_BARD_SKILLS, DB_SKILLS} from "@/app/constants/eq-skill-constants";
+import {BODYTYPES} from "@/app/constants/eq-bodytype-constants";
+import util from "util";
 import {DB_CLASSES, DB_CLASSES_WEAR_SHORT} from "@/app/constants/eq-classes-constants";
-import {DbStrApi, ItemApi, SpellsNewApi}   from "@/app/api";
-import {SpireApiClient}                    from "@/app/api/spire-api-client";
-import {App}                               from "@/constants/app";
-import {Items}                             from "@/app/items";
+import {DbStrApi, SpellsNewApi} from "@/app/api";
+import {SpireApiClient} from "@/app/api/spire-api-client";
+import {App} from "@/constants/app";
+import {Items} from "@/app/items";
 
 export class Spells {
   public static data           = {}
@@ -244,7 +244,7 @@ export class Spells {
         case 32:
           printBuffer += "Summon Item "
 
-          const item = <any>(await Items.getItem(spell["effect_base_value_" + effectIndex]));
+          const item          = <any>(await Items.getItem(spell["effect_base_value_" + effectIndex]));
           let parentSpellIdSi = spell['id'];
 
           if (item.name) {
@@ -375,7 +375,7 @@ export class Spells {
           break;
 
         case 57:
-          printBuffer += "Levitate" + (limit > 0 ? " While Moving" : "") +  (base > 1 ? " (Stack Type: " + base + ")" : "")
+          printBuffer += "Levitate" + (limit > 0 ? " While Moving" : "") + (base > 1 ? " (Stack Type: " + base + ")" : "")
           break;
 
         case 58: // Illusion:
@@ -419,7 +419,7 @@ export class Spells {
           break;
 
         case 67:
-          printBuffer += "Eye of Zomm: "  + spell["teleport_zone"]
+          printBuffer += "Eye of Zomm: " + spell["teleport_zone"]
           break;
 
         case 68:
@@ -486,9 +486,9 @@ export class Spells {
         case 83: //TODO teleport zone long enum ?
           printBuffer += "Teleport to " + spell["teleport_zone"]
           printBuffer += " (" + spell["effect_base_value_" + (effectIndex + 1)]
-                       + ", " + spell["effect_base_value_" + effectIndex] + ", "
-                       + spell["effect_base_value_" + (effectIndex + 2)] + ", "
-                       + spell["effect_base_value_" + (effectIndex + 3)] + ")"
+            + ", " + spell["effect_base_value_" + effectIndex] + ", "
+            + spell["effect_base_value_" + (effectIndex + 2)] + ", "
+            + spell["effect_base_value_" + (effectIndex + 3)] + ")"
           break;
 
         case 84: // base on emu does damage. Correct?
@@ -510,13 +510,12 @@ export class Spells {
         case 88: //TODO teleport zone long enum ?
           if (spell["teleport_zone"] !== "same") {
             tmp += " (" + spell["effect_base_value_" + (effectIndex + 1)]
-                   + ", " + spell["effect_base_value_" + effectIndex] + ", "
-                   + spell["effect_base_value_" + (effectIndex + 2)] + ", "
-                   + spell["effect_base_value_" + (effectIndex + 3)] + ")"
+              + ", " + spell["effect_base_value_" + effectIndex] + ", "
+              + spell["effect_base_value_" + (effectIndex + 2)] + ", "
+              + spell["effect_base_value_" + (effectIndex + 3)] + ")"
 
             printBuffer += "Evacuate to " + spell["teleport_zone"] + tmp
-          }
-          else{
+          } else {
             printBuffer += "Evacuate to safe point in zone"
           }
 
@@ -532,8 +531,7 @@ export class Spells {
               value_min = value_min - 100;
             }
             printBuffer += this.getFormatStandard("Player Size", "%", value_min, value_max, minlvl, maxlvl);
-          }
-          else if (limit){
+          } else if (limit) {
             printBuffer += "Set Player Size: " + limit
           }
           break;
@@ -606,10 +604,10 @@ export class Spells {
         case 104: //TODO clean up, enum for zones
           if (spell["teleport_zone"] !== "") {
             tmp += spell["teleport_zone"] +
-                   " (" + spell["effect_base_value_" + (effectIndex + 1)]
-                   + ", " + spell["effect_base_value_" + effectIndex] + ", "
-                   + spell["effect_base_value_" + (effectIndex + 2)] + ", "
-                   + spell["effect_base_value_" + (effectIndex + 3)] + ")"
+              " (" + spell["effect_base_value_" + (effectIndex + 1)]
+              + ", " + spell["effect_base_value_" + effectIndex] + ", "
+              + spell["effect_base_value_" + (effectIndex + 2)] + ", "
+              + spell["effect_base_value_" + (effectIndex + 3)] + ")"
           } else {
             tmp += "bind"
           }
@@ -635,7 +633,7 @@ export class Spells {
         case 109: //later expansions allow stacks to put into bags using limit value.
           printBuffer += "Summon into Bag: "
 
-          const item2 = <any>(await Items.getItem(spell["effect_base_value_" + effectIndex]));
+          const item2       = <any>(await Items.getItem(spell["effect_base_value_" + effectIndex]));
           let parentSpellId = spell['id'];
 
           if (item2.name) {
@@ -823,8 +821,7 @@ export class Spells {
               + spell["effect_base_value_" + (effectIndex + 3)] + ")"
 
             printBuffer += "Teleport to " + spell["teleport_zone"] + tmp
-          }
-          else{
+          } else {
             printBuffer += "Teleport to to safe point in zone"
           }
           break;
@@ -1081,7 +1078,7 @@ export class Spells {
           break;
 
         case 205: //limit and max are custom to eqemu
-          printBuffer += "Rampage (" + base + ")" + (limit ? " (Max Hit Count: " + limit + ")" : "") + + (max ? " (AE Range: " + max + ")" : "")
+          printBuffer += "Rampage (" + base + ")" + (limit ? " (Max Hit Count: " + limit + ")" : "") + +(max ? " (AE Range: " + max + ")" : "")
           break;
 
         case 206:
@@ -1105,7 +1102,7 @@ export class Spells {
           break;
 
         case 210: //limit and max are custom to eqemu
-          printBuffer += "Pet Shielding for " + base * 12 + "s" +  (limit ? " (Owner Mitigation: " + limit + " %)" : "") +  (max ? " (Pet Mitigation: " + max + " %)" : "")
+          printBuffer += "Pet Shielding for " + base * 12 + "s" + (limit ? " (Owner Mitigation: " + limit + " %)" : "") + (max ? " (Pet Mitigation: " + max + " %)" : "")
           break;
 
         case 211: //eqemu uses this, Live uses different formula now, base=chance, limit=damage mod
@@ -1207,7 +1204,7 @@ export class Spells {
 
         case 234:
           //printBuffer += "Decrease Poison Application Time by " + (10 - base / 1000) + +"s" //Need to confirm if this is correct, below seems correct
-          printBuffer += "Decrease Poison Application Time by " + base / 1000 +"s"
+          printBuffer += "Decrease Poison Application Time by " + base / 1000 + "s"
           break;
 
         case 235:
@@ -3100,6 +3097,263 @@ export class Spells {
         this.dbstrData[id] = <string>result.data[0].value;
       }
     }
+  }
+
+
+  public static getFieldDescriptions() {
+    return {
+      'name': 'Name of the spell being cast.',
+      'player_1': 'Text used to describe player vs npc spells. Can put any text here.',
+      'teleport_zone': 'Used for pet type, temp pets, auras, zone short names for teleports, projectile graphic Idfile.',
+      'you_cast': 'Message when you cast the spell.',
+      'other_casts': 'Message other receive when you cast the spell.',
+      'cast_on_you': 'Message when you cast the spell on yoursef.',
+      'cast_on_other': 'Message when spell is cast on others.',
+      'spell_fades': 'Message when your spell buff fades.',
+      'range': 'Single targeted spell maximum range.',
+      'aoerange': 'Area of effect maximum range.',
+      'pushback': 'Knockback out force.',
+      'pushup': 'Knockback up force.',
+      'cast_time': 'Time it takes to cast the spell.',
+      'recovery_time': 'Sets the global recast delay on all spell gems.',
+      'recast_time': 'Sets recast delay on the spell gem used in casting.',
+      'buffdurationformula': 'Determines actual buff duration.',
+      'buffduration': 'Duration of the buff in tics, 1 tic = 6 seconds.',
+      'ae_duration': 'Number of rain wave is, 1 wave = 2500. Use target type 8.',
+      'mana': 'How much mana is required to cast this spell.',
+      'effect_base_value_1': '',
+      'effect_base_value_2': '',
+      'effect_base_value_3': '',
+      'effect_base_value_4': '',
+      'effect_base_value_5': '',
+      'effect_base_value_6': '',
+      'effect_base_value_7': '',
+      'effect_base_value_8': '',
+      'effect_base_value_9': '',
+      'effect_base_value_10': '',
+      'effect_base_value_11': '',
+      'effect_base_value_12': '',
+      'effect_limit_value_1': '',
+      'effect_limit_value_2': '',
+      'effect_limit_value_3': '',
+      'effect_limit_value_4': '',
+      'effect_limit_value_5': '',
+      'effect_limit_value_6': '',
+      'effect_limit_value_7': '',
+      'effect_limit_value_8': '',
+      'effect_limit_value_9': '',
+      'effect_limit_value_10': '',
+      'effect_limit_value_11': '',
+      'effect_limit_value_12': '',
+      'max_1': '',
+      'max_2': '',
+      'max_3': '',
+      'max_4': '',
+      'max_5': '',
+      'max_6': '',
+      'max_7': '',
+      'max_8': '',
+      'max_9': '',
+      'max_10': '',
+      'max_11': '',
+      'max_12': '',
+      'icon': '',
+      'memicon': '',
+      'components_1': '',
+      'components_2': '',
+      'components_3': '',
+      'components_4': '',
+      'component_counts_1': '',
+      'component_counts_2': '',
+      'component_counts_3': '',
+      'component_counts_4': '',
+      'noexpend_reagent_1': '',
+      'noexpend_reagent_2': '',
+      'noexpend_reagent_3': '',
+      'noexpend_reagent_4': '',
+      'formula_1': '',
+      'formula_2': '',
+      'formula_3': '',
+      'formula_4': '',
+      'formula_5': '',
+      'formula_6': '',
+      'formula_7': '',
+      'formula_8': '',
+      'formula_9': '',
+      'formula_10': '',
+      'formula_11': '',
+      'formula_12': '',
+      'light_type': '',
+      'good_effect': 'Determines if spell is beneficial or detrimental to the target.',
+      'activated': '',
+      'resisttype': 'Type of resistance stat on target the spell is checked against to determine if lands successfully.',
+      'effectid_1': '',
+      'effectid_2': '',
+      'effectid_3': '',
+      'effectid_4': '',
+      'effectid_5': '',
+      'effectid_6': '',
+      'effectid_7': '',
+      'effectid_8': '',
+      'effectid_9': '',
+      'effectid_10': '',
+      'effectid_11': '',
+      'effectid_12': '',
+      'targettype': 'Determines how the spell will be applied to targets.',
+      'basediff': 'Fizzle rate modifier,  positive values increase fizzle chance,  lower values decrease it.',
+      'skill': 'Spells skill type.',
+      'zonetype': 'Restrict spells to be casting only within indoor zones or outdoor zones.',
+      'environment_type': 'Unkown what this determines.',
+      'time_of_day': 'Restrict spells to only being cast during certain times of day.',
+      'classes_1': '',
+      'classes_2': '',
+      'classes_3': '',
+      'classes_4': '',
+      'classes_5': '',
+      'classes_6': '',
+      'classes_7': '',
+      'classes_8': '',
+      'classes_9': '',
+      'classes_10': '',
+      'classes_11': '',
+      'classes_12': '',
+      'classes_13': '',
+      'classes_14': '',
+      'classes_15': '',
+      'classes_16': '',
+      'casting_anim': 'Animation caster performs when casting.',
+      'target_anim': 'Animation target performs when being cast on.',
+      'travel_type': '',
+      'spell_affect_index': 'Alternative older spell casting graphics if \'spell animation\' is not used.',
+      'disallow_sit': 'Buff will fade if you sit.',
+      'deities_0': '',
+      'deities_1': '',
+      'deities_2': '',
+      'deities_3': '',
+      'deities_4': '',
+      'deities_5': '',
+      'deities_6': '',
+      'deities_7': '',
+      'deities_8': '',
+      'deities_9': '',
+      'deities_10': '',
+      'deities_11': '',
+      'deities_12': '',
+      'deities_13': '',
+      'deities_14': '',
+      'deities_15': '',
+      'deities_16': '',
+      'field_142': '',
+      'field_143': '',
+      'new_icon': 'Spellbook icon.',
+      'spellanim': 'Spell casting graphics.',
+      'uninterruptable': 'Spell can not be interrupted.',
+      'resist_diff': 'Decrease resist chance if negative, increases if positive.',
+      'dot_stacking_exempt': '',
+      'deleteable': '',
+      'recourse_link': 'When this spell is cast, automatically apply the recourse spell id on caster.',
+      'no_partial_resist': 'Spells can not do partial damage.',
+      'field_152': '',
+      'field_153': '',
+      'short_buff_box': 'Use short duration buff box.',
+      'descnum': 'Spell description:  From dbstr_us.text type 6',
+      'typedescnum': 'Primary spellbook short cut description: From dbstr_us.text type 5',
+      'effectdescnum': 'Secondary spellbook short cut description: From dbstr_us.text type 5',
+      'effectdescnum_2': 'Secondary spellbook short cut description: From dbstr_us.text type 5',
+      'npc_no_los': 'Does this spell require line of sight to target.',
+      'field_160': 'Allow this spell to be affected by spell damage shields.',
+      'reflectable': 'Allow this spell to be reflected back at caster.',
+      'bonushate': 'Add or remove an additional amount of hate to this spell.',
+      'field_163': '',
+      'field_164': '',
+      'ldon_trap': 'Flag found on all LDON trap or chest related spells.',
+      'endur_cost': 'Instant endurance cost.',
+      'endur_timer_index': 'Discipline timer id and timer id used for linked spells. Max is 19.',
+      'is_discipline': 'Determine if this spell goes into discipline window.',
+      'field_169': '',
+      'field_170': '',
+      'field_171': '',
+      'field_172': '',
+      'hate_added': 'Overrides spell hate and uses this value instead.',
+      'endur_upkeep': 'Endurance drain per second when a discipline is active.',
+      'numhitstype': 'Defines which type of behavior will increment down down the buff limited use counter.',
+      'numhits': 'The amount of limit use counts the buff will have.',
+      'pvpresistbase': 'not implemented',
+      'pvpresistcalc': 'not implemented',
+      'pvpresistcap': 'not implemented',
+      'spell_category': '',
+      'field_181': 'Buff duration formula used for detrimental spells cast on another player.',
+      'field_182': 'Maximum buff duration of a detrimental spell cast on another player.',
+      'pcnpc_only_flag': 'Restrict what tpe of entity the spell can be applied to.Set who spell can apply to',
+      'cast_not_standing': 'Can cast from sitting position, can cast while invisible, ignores invulnerability, can not be interrupted by SPA 343 SE_InterruptCasting.',
+      'can_mgb': 'This buff can be mass group buffed.',
+      'nodispell': 'This buff can not be dispelled.',
+      'npc_category': '',
+      'npc_usefulness': '',
+      'min_resist': 'Minimum chance for a spell to be resisted.',
+      'max_resist': 'Maximum chance for a spell to be resisted.',
+      'viral_targets': 'Maximum viral spread time. Actual time is a random between max and min.',
+      'viral_timer': 'Minimum viral spread time. Actual time is a random between max and min.',
+      'nimbuseffect': 'Persistent graphical effect.',
+      'cone_start_angle': 'Start cone angle. 360 degree total.',
+      'cone_stop_angle': 'End of cone angle. 360 degree total.',
+      'sneaking': 'This spell can only be applied from a sneak attack.',
+      'not_extendable': 'This spell can not be focused.',
+      'field_198': 'This spell will not cause you to be added to targets hate list.',
+      'field_199': '',
+      'suspendable': '',
+      'viral_range': 'Maximum range for a viral spell to spread to another target.',
+      'songcap': 'Maximum instrument/singing modifier that can be applied to a song.',
+      'field_203': '',
+      'field_204': '',
+      'no_block': 'Can not set this as a blocked buff.',
+      'field_206': '',
+      'spellgroup': 'Assign group id to ranked spells.',
+      'rank': 'Assign rank id, typically 1=Rank I, 5=Rank II, 10=Rank III. AA spell clicks also are assigned rank.',
+      'field_209': 'Spell is unable to be resisted.',
+      'field_210': '',
+      'cast_restriction': 'Special conditions on the caster that must be met in order to cast this spell.',
+      'allowrest': 'Prevent detrimental spell from canceling rest state.',
+      'in_combat': 'Spell can only be cast if in combat.',
+      'outof_combat': 'Spell can only be cast if out of combat.',
+      'field_215': '',
+      'field_216': '',
+      'field_217': 'Set maximum critical chance of this spell.',
+      'aemaxtargets': 'Maximum targets that any type of area of effect spell can hit.',
+      'maxtargets': 'Do not apply heal or damage item statistic to this spell.',
+      'field_220': 'Special conditions on the caster that must be met in order to cast this spell.',
+      'field_221': '',
+      'field_222': '',
+      'field_223': '',
+      'persistdeath': 'Buff will not fade if you die.',
+      'field_225': '',
+      'field_226': '',
+      'min_dist': 'Closet distance you can be from target for spell to receive a modifier.',
+      'min_dist_mod': 'Modifier applied at the closet distance.',
+      'max_dist': 'Furthest distance you can be from target for spell to receive a modifier.',
+      'max_dist_mod': 'Modifier applied at the furthest distance.',
+      'min_range': 'Can not be closer to target than this range to cast this spell..',
+      'field_232': 'Can not click off this buff.',
+      'field_233': '',
+      'field_234': '',
+      'field_235': '',
+      'field_236': '',
+    }
+  }
+
+  public static getFieldDescription(field: string) {
+    // we do this because the payload we get back from spire API is
+    // formatted slightly different
+    let fieldLookup = field.toLowerCase().replace("_", "")
+
+    for (let key in this.getFieldDescriptions()) {
+      let keyLookup = key.toLowerCase().replace("_", "")
+      if (keyLookup === fieldLookup) {
+        return this.getFieldDescriptions()[key]
+      }
+    }
+
+    return ''
   }
 
 
