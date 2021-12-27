@@ -211,84 +211,84 @@
 
                         <div
                           class="row" v-for="field in
-                       [
-                         {
-                           description: 'Is Magic',
-                           field: 'magic'
-                         },
-                         {
-                           description: 'No Drop',
-                           field: 'nodrop',
-                           true: 0,
-                           false: 1,
-                         },
-                         {
-                           description: 'FV No Drop',
-                           field: 'fvnodrop',
-                         },
-                         {
-                           description: 'No Rent',
-                           field: 'norent',
-                           true: 0,
-                           false: 1,
-                         },
-                         {
-                           description: 'Tradeskill Item',
-                           field: 'tradeskills'
-                         },
-                         {
-                           description: 'Book',
-                           field: 'book'
-                         },
-                         {
-                           description: 'No Transfer',
-                           field: 'notransfer'
-                         },
-                         {
-                           description: 'Summoned',
-                           field: 'summonedflag'
-                         },
-                         {
-                           description: 'Quest',
-                           field: 'questitemflag'
-                         },
-                         {
-                           description: 'Artifact',
-                           field: 'artifactflag'
-                         },
-                         {
-                           description: 'No Pet',
-                           field: 'nopet'
-                         },
-                         {
-                           description: 'Attuneable',
-                           field: 'attuneable'
-                         },
-                         {
-                           description: 'Stackable',
-                           field: 'stackable'
-                         },
-                         {
-                           description: 'Potion Belt',
-                           field: 'potionbelt'
-                         },
-                         {
-                           description: 'Placeable',
-                           field: 'placeable'
-                         },
-                         {
-                           description: 'Epic Item',
-                           field: 'epicitem'
-                         },
-                         {
-                           description: 'Arrow Expend',
-                           field: 'expendablearrow'
-                         },
-                         {
-                           description: 'Heirloom',
-                           field: 'heirloom'
-                         },
-                       ]"
+                           [
+                             {
+                               description: 'Is Magic',
+                               field: 'magic'
+                             },
+                             {
+                               description: 'No Drop',
+                               field: 'nodrop',
+                               true: 0,
+                               false: 1,
+                             },
+                             {
+                               description: 'FV No Drop',
+                               field: 'fvnodrop',
+                             },
+                             {
+                               description: 'No Rent',
+                               field: 'norent',
+                               true: 0,
+                               false: 1,
+                             },
+                             {
+                               description: 'Tradeskill Item',
+                               field: 'tradeskills'
+                             },
+                             {
+                               description: 'Book',
+                               field: 'book'
+                             },
+                             {
+                               description: 'No Transfer',
+                               field: 'notransfer'
+                             },
+                             {
+                               description: 'Summoned',
+                               field: 'summonedflag'
+                             },
+                             {
+                               description: 'Quest',
+                               field: 'questitemflag'
+                             },
+                             {
+                               description: 'Artifact',
+                               field: 'artifactflag'
+                             },
+                             {
+                               description: 'No Pet',
+                               field: 'nopet'
+                             },
+                             {
+                               description: 'Attuneable',
+                               field: 'attuneable'
+                             },
+                             {
+                               description: 'Stackable',
+                               field: 'stackable'
+                             },
+                             {
+                               description: 'Potion Belt',
+                               field: 'potionbelt'
+                             },
+                             {
+                               description: 'Placeable',
+                               field: 'placeable'
+                             },
+                             {
+                               description: 'Epic Item',
+                               field: 'epicitem'
+                             },
+                             {
+                               description: 'Arrow Expend',
+                               field: 'expendablearrow'
+                             },
+                             {
+                               description: 'Heirloom',
+                               field: 'heirloom'
+                             },
+                           ]"
                           v-b-tooltip.hover.v-dark.right :title="getFieldDescription(field.field)"
                         >
                           <div class="col-9 text-right p-0 pr-2 m-0">

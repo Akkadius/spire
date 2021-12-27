@@ -331,62 +331,75 @@
                 </eq-tab>
 
                 <eq-tab name="Restrictions">
-                  <div class="row">
-                    <div class="col-3" style="text-align:center">
-                      Must Be Out of Combat
-                      <eq-checkbox
-                        class="mt-2 mb-2" v-model.number="spell.outof_combat"
-                        @input="spell.outof_combat = $event"
-                      />
-                    </div>
-                    <div class="col-2" style="text-align:center">
-                      Must Be In Combat
-                      <eq-checkbox
-                        class="mt-2 mb-2" v-model.number="spell.in_combat"
-                        @input="spell.in_combat = $event"
-                      />
-                    </div>
-                    <div class="col-3" style="text-align:center">
-                      Only During Fast Regen
-                      <eq-checkbox
-                        class="mt-2 mb-2" v-model.number="spell.allowrest"
-                        @input="spell.allowrest = $event"
-                      />
-                    </div>
-                    <div class="col-2" style="text-align:center">
-                      Cancel On Sit
-                      <eq-checkbox
-                        class="mt-2 mb-2" v-model.number="spell.disallow_sit"
-                        @input="spell.disallow_sit = $event"
-                      />
-                    </div>
-                    <div class="col-2" style="text-align:center">
-                      Must be Sneaking
-                      <eq-checkbox class="mt-2 mb-2" v-model.number="spell.sneaking" @input="spell.sneaking = $event"/>
-                    </div>
-                  </div>
 
-                  <div class="row mt-3 mb-3">
-                    <div class="col-2">
-                      Target Restriction
-                      <b-form-input v-model.number="spell.cast_restriction"/>
-                    </div>
-                    <div class="col-2">
-                      Caster Restriction
-                      <b-form-input v-model.number="spell.field_220"/>
-                    </div>
-                    <div class="col-2">
-                      Zone Type (select)
-                      <b-form-input v-model.number="spell.zonetype"/>
-                    </div>
+                  <div class="row">
                     <div class="col-3">
-                      Environment Type (???)
-                      <b-form-input v-model.number="spell.environment_type"/>
+                      <div
+                        class="row" v-for="field in
+                         [
+                           {
+                             description: 'Must Be Out of Combat',
+                             field: 'outof_combat'
+                           },
+                           {
+                             description: 'Must Be In Combat',
+                             field: 'in_combat',
+                           },
+                           {
+                             description: 'Only During Fast Regen',
+                             field: 'allowrest',
+                           },
+                           {
+                             description: 'Cancel on Sit',
+                             field: 'disallow_sit',
+                           },
+                           {
+                             description: 'Must be Sneaking',
+                             field: 'sneaking',
+                           },
+                         ]"
+                      >
+                        <div class="col-9 text-right p-0 pr-2 m-0">
+                          {{ field.description }}
+                        </div>
+                        <div class="col-3 text-left p-0">
+                          <eq-checkbox
+                            class="mb-2 d-inline-block"
+                            :true-value="(typeof field.true !== 'undefined' ? field.true : 1)"
+                            :false-value="(typeof field.false !== 'undefined' ? field.false : 0)"
+                            v-model.number="spell[field.field]"
+                            @input="spell[field.field] = $event"
+                          />
+                        </div>
+                      </div>
                     </div>
-                    <div class="col-3">
-                      Time of Day (???)
-                      <b-form-input v-model.number="spell.time_of_day"/>
+
+                    <div class="col-9">
+                      <div class="row">
+                        <div class="col-4">
+                          Target Restriction
+                          <b-form-input v-model.number="spell.cast_restriction"/>
+                        </div>
+                        <div class="col-4">
+                          Caster Restriction
+                          <b-form-input v-model.number="spell.field_220"/>
+                        </div>
+                        <div class="col-4">
+                          Zone Type (select)
+                          <b-form-input v-model.number="spell.zonetype"/>
+                        </div>
+
+                        <div class="col-4">
+                          Environment Type (???)
+                          <b-form-input v-model.number="spell.environment_type"/>
+                        </div>
+                        <div class="col-4">
+                          Time of Day (???)
+                          <b-form-input v-model.number="spell.time_of_day"/>
+                        </div>
+                      </div>
                     </div>
+
                   </div>
                 </eq-tab>
                 <eq-tab name="Casting">
@@ -433,86 +446,81 @@
                 <eq-tab name="Buffing">
 
                   <div class="row">
-                    <div class="col-3" style="text-align:center">
-                      Can Not Dispell
-                      <eq-checkbox
-                        class="mt-2 mb-2" v-model.number="spell.nodispell"
-                        @input="spell.nodispell = $event"
-                      />
-                    </div>
-                    <div class="col-3" style="text-align:center">
-                      Can Not Click Off
-                      <eq-checkbox
-                        class="mt-2 mb-2" v-model.number="spell.field_232"
-                        @input="spell.field_232 = $event"
-                      />
-                    </div>
-                    <div class="col-3" style="text-align:center">
-                      Persist After Death
-                      <eq-checkbox
-                        class="mt-2 mb-2" v-model.number="spell.persistdeath"
-                        @input="spell.persistdeath = $event"
-                      />
-                    </div>
-                    <div class="col-3" style="text-align:center">
-                      Suspendable
-                      <eq-checkbox
-                        class="mt-2 mb-2" v-model.number="spell.suspendable"
-                        @input="spell.suspendable = $event"
-                      />
-                    </div>
-                  </div>
-
-                  <div class="row">
-                    <div class="col-3" style="text-align:center">
-                      Can MGB
-                      <eq-checkbox class="mt-2 mb-2" v-model.number="spell.can_mgb" @input="spell.can_mgb = $event"/>
-                    </div>
-
-                    <div class="col-3" style="text-align:center">
-                      Short Duration Buff
-                      <eq-checkbox
-                        class="mt-2 mb-2"
-                        v-model.number="spell.short_buff_box"
-                        @input="spell.short_buff_box = $event"
-                      />
-                    </div>
-                    <div class="col-3" style="text-align:center">
-                      No Buff Block
-                      <eq-checkbox
-                        class="mt-2 mb-2"
-                        v-model.number="spell.no_block"
-                        @input="spell.no_block = $event"
-                      />
-                    </div>
-                    <div class="col-3" style="text-align:center">
-                      DOT Not Stackable
-                      <eq-checkbox
-                        class="mt-2 mb-2"
-                        v-model.number="spell.dot_stacking_exempt"
-                        @input="spell.dot_stacking_exempt = $event"
-                      />
-                    </div>
-                  </div>
-
-                  <div class="row">
                     <div class="col-3">
-                      Buff Duration
-                      <b-form-input v-model.number="spell.buffduration"/>
+                      <div
+                        class="row" v-for="field in
+                         [
+                           {
+                             description: 'Can Not Dispell',
+                             field: 'nodispell'
+                           },
+                           {
+                             description: 'Can Not Click Off',
+                             field: 'field_232'
+                           },
+                           {
+                             description: 'Persist After Death',
+                             field: 'persistdeath'
+                           },
+                           {
+                             description: 'Suspendable',
+                             field: 'suspendable'
+                           },
+                           {
+                             description: 'Can MGB',
+                             field: 'can_mgb'
+                           },
+                           {
+                             description: 'Appear In Short Buff Box',
+                             field: 'short_buff_box'
+                           },
+                           {
+                             description: 'No Buff Block',
+                             field: 'no_block'
+                           },
+                           {
+                             description: 'DOT Not Stackable',
+                             field: 'dot_stacking_exempt'
+                           },
+                         ]"
+                      >
+                        <div class="col-9 text-right p-0 pr-2 m-0">
+                          {{ field.description }}
+                        </div>
+                        <div class="col-3 text-left p-0">
+                          <eq-checkbox
+                            class="mb-2 d-inline-block"
+                            :true-value="(typeof field.true !== 'undefined' ? field.true : 1)"
+                            :false-value="(typeof field.false !== 'undefined' ? field.false : 0)"
+                            v-model.number="spell[field.field]"
+                            @input="spell[field.field] = $event"
+                          />
+                        </div>
+                      </div>
                     </div>
-                    <div class="col-3">
-                      Duration Formula
-                      <b-form-input v-model.number="spell.buffdurationformula"/>
-                    </div>
-                    <div class="col-3">
-                      PVP Duration
-                      <b-form-input v-model.number="spell.pvp_duration"/>
 
+                    <div class="col-9">
+                      <div class="row">
+                      <div class="col-3">
+                        Buff Duration
+                        <b-form-input v-model.number="spell.buffduration"/>
+                      </div>
+                      <div class="col-3">
+                        Duration Formula
+                        <b-form-input v-model.number="spell.buffdurationformula"/>
+                      </div>
+                      <div class="col-3">
+                        PVP Duration
+                        <b-form-input v-model.number="spell.pvp_duration"/>
+
+                      </div>
+                      <div class="col-3">
+                        PVP Duration Cap
+                        <b-form-input v-model.number="spell.pvp_duration_cap"/>
+                      </div>
+                      </div>
                     </div>
-                    <div class="col-3">
-                      PVP Duration Cap
-                      <b-form-input v-model.number="spell.pvp_duration_cap"/>
-                    </div>
+
                   </div>
                 </eq-tab>
                 <eq-tab name="Range">
