@@ -40,11 +40,13 @@
                       v-b-tooltip.hover.v-dark.right :title="getFieldDescription('id')"
                     >
                       Id
-                      <b-form-input id="id" v-model.number="item.id"/>
+                      <b-form-input
+                        id="id" v-model.number="item.id"/>
                     </div>
                     <div class="col-4">
                       Name
                       <b-form-input
+                        v-b-tooltip.hover.v-dark.right :title="getFieldDescription('name')"
                         :value="item.name" @change="v => item.name = v"
                       />
                     </div>
@@ -52,7 +54,9 @@
                     <!-- Item Type -->
                     <div class="col-3">
                       Item Type
-                      <select v-model.number="item['itemtype']" class="form-control">
+                      <select
+                        v-b-tooltip.hover.v-dark.right :title="getFieldDescription('itemtype')"
+                        v-model.number="item['itemtype']" class="form-control">
                         <option
                           v-for="(description, index) in DB_ITEM_TYPES"
                           :key="index"
@@ -66,7 +70,9 @@
                     <!-- Item Class -->
                     <div class="col-3">
                       Item Class
-                      <select v-model.number="item['itemclass']" class="form-control">
+                      <select
+                        v-b-tooltip.hover.v-dark.right :title="getFieldDescription('itemclass')"
+                        v-model.number="item['itemclass']" class="form-control">
                         <option
                           v-for="(description, index) in DB_ITEM_CLASS"
                           :key="index"
@@ -86,19 +92,20 @@
                       Lore
                       <b-form-input
                         :value="item.lore" @change="v => item.lore = v"
+                        v-b-tooltip.hover.v-dark.right :title="getFieldDescription('lore')"
                       />
                     </div>
 
                     <!-- Lore Group -->
                     <div class="col-2">
                       Lore Group
-                      <b-form-input v-model.number="item.loregroup"/>
+                      <b-form-input v-model.number="item.loregroup" v-b-tooltip.hover.v-dark.right :title="getFieldDescription('loregroup')"/>
                     </div>
 
                     <!-- Min Status -->
                     <div class="col-2">
                       Min Status
-                      <b-form-input v-model.number="item.minstatus"/>
+                      <b-form-input v-model.number="item.minstatus" v-b-tooltip.hover.v-dark.right :title="getFieldDescription('minstatus')"/>
                     </div>
 
                     <!-- Script File ID -->
@@ -118,7 +125,7 @@
                     <!-- Stack Size -->
                     <div class="col-2" :style="(item['stackable'] === 0 ? 'opacity: .5' : '')">
                       Stack Size
-                      <b-form-input v-model.number="item.stacksize"/>
+                      <b-form-input v-model.number="item.stacksize" v-b-tooltip.hover.v-dark.right :title="getFieldDescription('stacksize')"/>
                     </div>
 
                     <!-- Item Size -->
@@ -126,6 +133,7 @@
                       Item Size
                       <b-form-select
                         v-model.number="item.size"
+                        v-b-tooltip.hover.v-dark.right :title="getFieldDescription('size')"
                       >
                         <b-form-select-option
                           variant="outline-warning"
@@ -141,26 +149,26 @@
                     <!-- Weight -->
                     <div class="col-2">
                       Weight
-                      <b-form-input v-model.number="item.weight"/>
+                      <b-form-input v-model.number="item.weight" v-b-tooltip.hover.v-dark.right :title="getFieldDescription('weight')"/>
                     </div>
 
                     <!-- Recommended Level -->
                     <div class="col-2" :style="(item['reclevel'] === 0 ? 'opacity: .5' : '')">
                       Recommended Level
-                      <b-form-input v-model.number="item.reclevel"/>
+                      <b-form-input v-model.number="item.reclevel" v-b-tooltip.hover.v-dark.right :title="getFieldDescription('reclevel')"/>
                     </div>
 
                     <!-- Required Level -->
                     <div class="col-2" :style="(item['reqlevel'] === 0 ? 'opacity: .5' : '')">
                       Required Level
-                      <b-form-input v-model.number="item.reqlevel"/>
+                      <b-form-input v-model.number="item.reqlevel" v-b-tooltip.hover.v-dark.right :title="getFieldDescription('reqlevel')"/>
                     </div>
 
                     <!-- Recommended Skill -->
                     <div class="col-2" :style="(item['recskill'] === 0 ? 'opacity: .5' : '')">
                       Rec Skill
 
-                      <b-form-input v-model.number="item.recskill"/>
+                      <b-form-input v-model.number="item.recskill" v-b-tooltip.hover.v-dark.right :title="getFieldDescription('reqskill')"/>
                     </div>
 
 
@@ -284,7 +292,12 @@
                         />
                         <div class="text-center mt-3">
                           Classes
-                          <b-input id="classes" v-model.number="item.classes"/>
+                          <b-input
+                            id="classes"
+                            v-model.number="item.classes"
+                            v-b-tooltip.hover.v-dark.right
+                            :title="getFieldDescription('classes')"
+                          />
                         </div>
                       </div>
                       <div class="col-2">
@@ -303,7 +316,10 @@
 
                         <div class="text-center mt-3">
                           Races
-                          <b-input id="races" v-model.number="item.races"/>
+                          <b-input
+                            id="races" v-model.number="item.races"
+                            v-b-tooltip.hover.v-dark.right :title="getFieldDescription('races')"
+                          />
                         </div>
                       </div>
                       <div class="col-2">
@@ -322,7 +338,10 @@
 
                         <div class="text-center mt-3">
                           Deities
-                          <b-input id="deity" v-model.number="item.deity"/>
+                          <b-input
+                            id="deity" v-model.number="item.deity"
+                            v-b-tooltip.hover.v-dark.right :title="getFieldDescription('deity')"
+                          />
                         </div>
                       </div>
 
@@ -343,7 +362,11 @@
 
                         <div class="text-center mt-3">
                           Slots
-                          <b-input id="slots" v-model.number="item.slots"/>
+                          <b-input
+                            id="slots"
+                            v-b-tooltip.hover.v-dark.right :title="getFieldDescription('slots')"
+                            v-model.number="item.slots"
+                          />
                         </div>
                       </div>
 
@@ -570,7 +593,8 @@
                           </div>
                           <div
                             v-b-tooltip.hover.v-dark.right :title="getFieldDescription(field.field)"
-                            class="col-4 m-0 p-0" :style="(item[field.field] <= 0 ? 'opacity: .5' : '')">
+                            class="col-4 m-0 p-0" :style="(item[field.field] <= 0 ? 'opacity: .5' : '')"
+                          >
 
                             <b-form-input
                               :id="field.field"
@@ -608,9 +632,11 @@
                         <div class="col-7 text-right mt-1 mb-1 p-0 pr-3">
                           {{ description }}
                         </div>
-                        <div class="col-3 m-0 p-0"
-                             v-b-tooltip.hover.v-dark.right :title="getFieldDescription(field)"
-                             :style="(parseInt(item[field]) === 0 ? 'opacity: .5' : '')">
+                        <div
+                          class="col-3 m-0 p-0"
+                          v-b-tooltip.hover.v-dark.right :title="getFieldDescription(field)"
+                          :style="(parseInt(item[field]) === 0 ? 'opacity: .5' : '')"
+                        >
                           <b-form-input :id="field" v-model.number="item[field]" v-if="field !== 'combateffects'"/>
                           <!-- For some reason combateffects is a varchar field -->
                           <b-form-input :id="field" v-model="item[field]" v-if="field === 'combateffects'"/>
