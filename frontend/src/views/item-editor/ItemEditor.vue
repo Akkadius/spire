@@ -361,7 +361,7 @@
                         Icon
                         <div @mouseover="drawIconSelector()" @click="drawIconSelector(true)" class="row">
                           <div class="col-4">
-                            <div class="mb-3 d-inline-block" style="width: 50px">
+                            <div class="d-inline-block" style="width: 50px">
                             <span
                               :class="'fade-in item-' + item.icon"
                               style="border: 1px solid rgb(218 218 218 / 30%); border-radius: 7px;"
