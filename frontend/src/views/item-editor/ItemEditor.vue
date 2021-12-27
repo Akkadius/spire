@@ -334,7 +334,7 @@
 
                       <!-- Model Preview -->
                       <div
-                        class="col-2"
+                        class="col-2 minified-inputs"
                         style="text-align: center"
                       >
                         <h4 class="eq-header text-center">
@@ -529,7 +529,7 @@
                           <div class="col-8 text-right mt-1 mb-1 p-0 pr-3">
                             {{ field.description }}
                           </div>
-                          <div class="col-4 m-0 p-0" :style="(item[field.field] === 0 ? 'opacity: .5' : '')">
+                          <div class="col-4 m-0 p-0" :style="(item[field.field] <= 0 ? 'opacity: .5' : '')">
 
                             <b-form-input
                               :id="field.field"
@@ -1488,10 +1488,6 @@ export default {
         {
           description: 'Backstab Damage',
           field: 'backstabdmg'
-        },
-        {
-          description: 'Spell Damage',
-          field: 'spelldmg'
         },
         {
           description: 'Bane Damage Body',
