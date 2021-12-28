@@ -1,5 +1,5 @@
 <template>
-  <div v-if="spa" class="ml-3">
+  <div v-if="spa >= 0" class="ml-3">
 
 <!--    <div class="mb-4 mt-3" style="font-size: 14px; color: rgb(123, 113, 74);">-->
 <!--      Depending on the spell effect, the base, limit, max, formula values can mean different things. Below shows what-->

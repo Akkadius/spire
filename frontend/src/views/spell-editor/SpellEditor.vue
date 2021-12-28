@@ -62,6 +62,18 @@
 
                   </div>
 
+                  <!-- Spell Group -->
+                  <div class="row">
+                    <div class="col-2">
+                      Spell Group
+                      <b-form-input v-model.number="spell.spellgroup"/>
+                    </div>
+                    <div class="col-2">
+                      Spell Group Rank
+                      <b-form-input v-model.number="spell.rank"/>
+                    </div>
+                  </div>
+
                   <spell-class-selector :spell="spell" @input="spell = $event"/>
                   <!--                  <spell-deity-selector :spell="spell" @input="spell = $event"/>-->
 
@@ -178,7 +190,7 @@
                   <!-- Knockback -->
                   <div class="row">
                     <div class="col-2 text-right">
-                      <h6 class="eq-header mt-3">Knockback</h6>
+                      <h4 class="eq-header mt-3">Knockback</h4>
                     </div>
                     <div class="col-4">
                       Push Up
@@ -190,10 +202,21 @@
                     </div>
                   </div>
 
+                  <!-- Recourse -->
+                  <div class="row">
+                    <div class="col-2 text-right">
+                      <h4 class="eq-header mt-3">Recourse</h4>
+                    </div>
+                    <div class="col-3">
+                      Recourse Spell ID
+                      <b-form-input v-model.number="spell.recourse_link"/>
+                    </div>
+                  </div>
+
                   <!-- Hate -->
                   <div class="row">
                     <div class="col-2 text-right">
-                      <h6 class="eq-header mt-3">Hate</h6>
+                      <h4 class="eq-header mt-3">Hate</h4>
                     </div>
                     <div class="col-3">
                       Hate Modifier
@@ -216,7 +239,7 @@
                   <!-- Viral Spells -->
                   <div class="row">
                     <div class="col-2 text-right">
-                      <h6 class="eq-header mt-3">Viral Spells</h6>
+                      <h4 class="eq-header mt-3">Viral Spells</h4>
                     </div>
                     <div class="col-3">
                       Viral Range
@@ -235,7 +258,7 @@
                   <!-- Focus -->
                   <div class="row">
                     <div class="col-2 text-right">
-                      <h6 class="eq-header mt-3">Focus</h6>
+                      <h4 class="eq-header mt-3">Focus</h4>
                     </div>
                     <div class="col-3">
                       Max Targets
@@ -254,25 +277,10 @@
                     </div>
                   </div>
 
-                  <!-- Spell Group -->
-                  <div class="row">
-                    <div class="col-2 text-right">
-                      <h6 class="eq-header mt-3">Spell Group</h6>
-                    </div>
-                    <div class="col-4">
-                      Spell Group
-                      <b-form-input v-model.number="spell.spellgroup"/>
-                    </div>
-                    <div class="col-4">
-                      Rank
-                      <b-form-input v-model.number="spell.rank"/>
-                    </div>
-                  </div>
-
                   <!-- Misc -->
                   <div class="row">
                     <div class="col-2 text-right">
-                      <h6 class="eq-header mt-3">Misc</h6>
+                      <h4 class="eq-header mt-3">Misc</h4>
                     </div>
                     <div class="col-3">
                       Max Critical Chance
@@ -282,11 +290,17 @@
                       Nimbus Type
                       <b-form-input v-model.number="spell.nimbuseffect"/>
                     </div>
-                    <div class="col-3">
-                      Recourse Spell ID
-                      <b-form-input v-model.number="spell.recourse_link"/>
+
+                    <div class="col-4"></div>
+                    <div class="col-2"></div>
+
+                    <div class="col-6">
+                      Teleport Zone / Pet DB ID / Item Graphic for Bolt Spells
+                      <b-form-input v-model.number="spell.teleport_zone"/>
                     </div>
                   </div>
+
+
                 </eq-tab>
 
                 <eq-tab name="General">
@@ -335,17 +349,14 @@
                       pcnpc_only_flag (???)
                       <b-form-input v-model.number="spell.pcnpc_only_flag"/>
                     </div>
-                    <div class="col-6">
-                      Teleport Zone / Pet DbaseID / ItemGraphic for Bolt Spells
-                      <b-form-input v-model.number="spell.teleport_zone"/>
-                    </div>
+
                   </div>
                 </eq-tab>
 
-                <eq-tab name="Restrictions">
+                <eq-tab name="Restrictions" class="minified-inputs">
 
                   <div class="row">
-                    <div class="col-3">
+                    <div class="col-12">
                       <div
                         class="row" v-for="field in
                          [
@@ -371,10 +382,10 @@
                            },
                          ]"
                       >
-                        <div class="col-9 text-right p-0 pr-2 m-0">
+                        <div class="col-6 text-right p-0 m-0 mr-3">
                           {{ field.description }}
                         </div>
-                        <div class="col-3 text-left p-0">
+                        <div class="col-3 text-left p-0 mt-1">
                           <eq-checkbox
                             v-b-tooltip.hover.v-dark.right :title="getFieldDescription(field.field)"
                             class="mb-2 d-inline-block"
@@ -385,36 +396,169 @@
                           />
                         </div>
                       </div>
-                    </div>
 
-                    <div class="col-9">
-                      <div class="row">
-                        <div class="col-4">
-                          Target Restriction
-                          <b-form-input v-model.number="spell.cast_restriction"/>
-                        </div>
-                        <div class="col-4">
-                          Caster Restriction
-                          <b-form-input v-model.number="spell.field_220"/>
-                        </div>
-                        <div class="col-4">
-                          Zone Type (select)
-                          <b-form-input v-model.number="spell.zonetype"/>
+                      <div
+                        class="row"
+                        :key="field.field"
+                        v-for="field in
+                       [
+                         {
+                           description: 'Target Restriction',
+                           field: 'cast_restriction',
+                           selectData: DB_SPELL_TARGET_RESTRICTION,
+                         },
+                         {
+                           description: 'Caster Restriction',
+                           field: 'field_220',
+                           selectData: DB_SPELL_TARGET_RESTRICTION,
+                         },
+                         {
+                           description: 'Zone Type',
+                           field: 'zonetype',
+                           selectData: DB_SPELL_ZONE_TYPE,
+                         },
+                         {
+                           description: 'Environment Type',
+                           field: 'environment_type',
+                         },
+                         {
+                           description: 'Time of Day',
+                           field: 'time_of_day',
+                         },
+                       ]"
+                      >
+                        <div class="col-6 text-right mr-3 p-0 mt-2">
+                          {{ field.description }}
                         </div>
 
-                        <div class="col-4">
-                          Environment Type (???)
-                          <b-form-input v-model.number="spell.environment_type"/>
-                        </div>
-                        <div class="col-4">
-                          Time of Day (???)
-                          <b-form-input v-model.number="spell.time_of_day"/>
+                        <div
+                          class="col-3 p-0 m-0"
+                          v-b-tooltip.hover.v-dark.right :title="getFieldDescription(field.field)"
+                          :style="(spell[field.field] <= 0 ? 'opacity: .5' : '')"
+                        >
+                          <!-- input -->
+                          <b-form-input
+                            v-if="!field.selectData"
+                            :id="field.field"
+                            v-model.number="spell[field.field]"
+                            class="m-0 mt-1"
+                          />
+
+                          <!-- select -->
+                          <select
+                            v-model.number="spell[field.field]"
+                            class="form-control m-0 mt-1"
+                            v-if="field.selectData"
+                          >
+                            <option
+                              v-for="(description, index) in field.selectData"
+                              :key="index"
+                              :value="parseInt(index)"
+                            >
+                              {{ index }}) {{ description }}
+                            </option>
+                          </select>
                         </div>
                       </div>
                     </div>
-
                   </div>
                 </eq-tab>
+
+                <eq-tab name="Range">
+                  <div class="row">
+                    <div class="col-3">
+                      Spell Range
+                      <b-form-input v-model.number="spell.range"/>
+                    </div>
+                    <div class="col-3">
+                      Target Type
+                      <b-form-select v-model.number="spell.targettype" v-if="DB_SPELL_TARGETS">
+                        <b-form-select-option
+                          :value="parseInt(id)"
+                          v-for="(value, id) in DB_SPELL_TARGETS"
+                          :key="id"
+                        >{{ id }})
+                          {{ value }}
+                        </b-form-select-option>
+                      </b-form-select>
+                    </div>
+                    <div class="col-6 text-center">
+                      NPC Line of Sight Not Required to Cast
+                      <eq-checkbox
+                        class="mt-2 mb-2" v-model.number="spell.npc_no_los"
+                        @input="spell.npc_no_los = $event"
+                      />
+                    </div>
+                  </div>
+
+                  <h4 class="eq-header">Area of Effect (AOE)</h4>
+
+                  <div class="row">
+                    <div class="col-4">
+                      AOE Range
+                      <b-form-input v-model.number="spell.aoerange"/>
+                    </div>
+                    <div class="col-4">
+                      AOE Rain Waves
+                      <b-form-input v-model.number="spell.ae_duration"/>
+                    </div>
+                    <div class="col-4">
+                      AOE Max Targets
+                      <b-form-input v-model.number="spell.aemaxtargets"/>
+                    </div>
+                  </div>
+
+                  <div class="row">
+                    <div class="col-2">
+                      Min Range
+                      <b-form-input v-model.number="spell.min_range"/>
+                    </div>
+                    <div class="col-2">
+                      Min Distance for Mod
+                      <b-form-input v-model.number="spell.min_dist"/>
+                    </div>
+                    <div class="col-2">
+                      Min Distance Mod
+                      <b-form-input v-model.number="spell.min_dist_mod"/>
+                    </div>
+                    <div class="col-3">
+                      Max Distance for Mod
+                      <b-form-input v-model.number="spell.max_dist"/>
+                    </div>
+                    <div class="col-3">
+                      Max Distance Mod
+                      <b-form-input v-model.number="spell.max_dist_mod"/>
+                    </div>
+
+                  </div>
+
+                  <div class="row">
+                    <div class="col-6">
+                      Max Hits Type
+                      <b-form-input v-model.number="spell.numhitstype"/>
+                    </div>
+                    <div class="col-6">
+                      Max Hits Allowed
+                      <b-form-input v-model.number="spell.numhits"/>
+                    </div>
+                  </div>
+
+                  <h4 class="eq-header">Cone</h4>
+
+                  <div class="row">
+                    <div class="col-6">
+                      Cone Angle Start
+                      <b-form-input v-model.number="spell.cone_start_angle"/>
+                    </div>
+                    <div class="col-6">
+                      Cone Angle End
+                      <b-form-input v-model.number="spell.cone_stop_angle"/>
+                    </div>
+                  </div>
+
+                </eq-tab>
+
+
                 <eq-tab name="Casting">
 
                   <div class="row">
@@ -536,99 +680,6 @@
                     </div>
 
                   </div>
-                </eq-tab>
-                <eq-tab name="Range">
-                  <div class="row">
-                    <div class="col-3">
-                      Spell Range
-                      <b-form-input v-model.number="spell.range"/>
-                    </div>
-                    <div class="col-3">
-                      Target Type
-                      <b-form-select v-model.number="spell.targettype" v-if="DB_SPELL_TARGETS">
-                        <b-form-select-option
-                          :value="parseInt(id)"
-                          v-for="(value, id) in DB_SPELL_TARGETS"
-                          :key="id"
-                        >{{ id }})
-                          {{ value }}
-                        </b-form-select-option>
-                      </b-form-select>
-                    </div>
-                    <div class="col-6 text-center">
-                      NPC Line of Sight Not Required to Cast
-                      <eq-checkbox
-                        class="mt-2 mb-2" v-model.number="spell.npc_no_los"
-                        @input="spell.npc_no_los = $event"
-                      />
-                    </div>
-                  </div>
-
-                  <h6 class="eq-header">Area of Effect (AOE)</h6>
-
-                  <div class="row">
-                    <div class="col-4">
-                      AOE Range
-                      <b-form-input v-model.number="spell.aoerange"/>
-                    </div>
-                    <div class="col-4">
-                      AOE Rain Waves
-                      <b-form-input v-model.number="spell.ae_duration"/>
-                    </div>
-                    <div class="col-4">
-                      AOE Max Targets
-                      <b-form-input v-model.number="spell.aemaxtargets"/>
-                    </div>
-                  </div>
-
-                  <div class="row">
-                    <div class="col-2">
-                      Min Range
-                      <b-form-input v-model.number="spell.min_range"/>
-                    </div>
-                    <div class="col-2">
-                      Min Distance for Mod
-                      <b-form-input v-model.number="spell.min_dist"/>
-                    </div>
-                    <div class="col-2">
-                      Min Distance Mod
-                      <b-form-input v-model.number="spell.min_dist_mod"/>
-                    </div>
-                    <div class="col-3">
-                      Max Distance for Mod
-                      <b-form-input v-model.number="spell.max_dist"/>
-                    </div>
-                    <div class="col-3">
-                      Max Distance Mod
-                      <b-form-input v-model.number="spell.max_dist_mod"/>
-                    </div>
-
-                  </div>
-
-                  <div class="row">
-                    <div class="col-6">
-                      Max Hits Type
-                      <b-form-input v-model.number="spell.numhitstype"/>
-                    </div>
-                    <div class="col-6">
-                      Max Hits Allowed
-                      <b-form-input v-model.number="spell.numhits"/>
-                    </div>
-                  </div>
-
-                  <h6 class="eq-header">Cone</h6>
-
-                  <div class="row">
-                    <div class="col-6">
-                      Cone Angle Start
-                      <b-form-input v-model.number="spell.cone_start_angle"/>
-                    </div>
-                    <div class="col-6">
-                      Cone Angle End
-                      <b-form-input v-model.number="spell.cone_stop_angle"/>
-                    </div>
-                  </div>
-
                 </eq-tab>
                 <eq-tab name="Resist">
 
@@ -776,7 +827,7 @@
                 :spa="spaPreviewNumber"
                 :spell="spell"
                 :effect-index="spaEffectIndex"
-                v-if="spaPreviewNumber"
+                v-if="spaPreviewNumber >= 0"
               />
 
             </eq-window>
@@ -789,27 +840,33 @@
 </template>
 
 <script>
-import EqWindowFancy                                                  from "../../components/eq-ui/EQWindowFancy";
-import EqWindow                                                       from "../../components/eq-ui/EQWindow";
-import EqTabs                                                         from "../../components/eq-ui/EQTabs";
-import EqTab                                                          from "../../components/eq-ui/EQTab";
-import EqSpellPreview                                                 from "../../components/eq-ui/EQSpellCardPreview";
-import {Spells}                                                       from "../../app/spells";
-import {DB_SPA, DB_SPELL_EFFECTS, DB_SPELL_RESISTS, DB_SPELL_TARGETS} from "../../app/constants/eq-spell-constants";
-import {DB_SKILLS}                                                    from "../../app/constants/eq-skill-constants";
-import {App}                                                          from "../../constants/app";
-import SpellIconSelector                                              from "./components/SpellIconSelector";
-import SpellAnimationPreview                                          from "./components/SpellAnimationPreview";
-import SpellAnimationViewer                                           from "../viewers/SpellAnimationViewer";
-import SpellAnimationSelector                                         from "./components/SpellAnimationSelector";
-import EqCheckbox                                                     from "../../components/eq-ui/EQCheckbox";
-import {SpellsNewApi}                                                 from "../../app/api";
-import {SpireApiClient}                                               from "../../app/api/spire-api-client";
-import * as util                                                      from "util";
-import SpellClassSelector                                             from "./components/SpellClassSelector";
-import SpellDeitySelector                                             from "./components/SpellDeitySelector";
-import FreeIdSelector                                                 from "../../components/tools/FreeIdSelector";
-import SpellSpaPreviewPane                                            from "./components/SpellSpaPreviewPane";
+import EqWindowFancy          from "../../components/eq-ui/EQWindowFancy";
+import EqWindow               from "../../components/eq-ui/EQWindow";
+import EqTabs                 from "../../components/eq-ui/EQTabs";
+import EqTab                  from "../../components/eq-ui/EQTab";
+import EqSpellPreview         from "../../components/eq-ui/EQSpellCardPreview";
+import {Spells}               from "../../app/spells";
+import {
+  DB_SPA,
+  DB_SPELL_EFFECTS,
+  DB_SPELL_RESISTS,
+  DB_SPELL_TARGET_RESTRICTION,
+  DB_SPELL_TARGETS,
+  DB_SPELL_ZONE_TYPE
+}                             from "../../app/constants/eq-spell-constants";
+import {DB_SKILLS}            from "../../app/constants/eq-skill-constants";
+import {App}                  from "../../constants/app";
+import SpellIconSelector      from "./components/SpellIconSelector";
+import SpellAnimationPreview  from "./components/SpellAnimationPreview";
+import SpellAnimationViewer   from "../viewers/SpellAnimationViewer";
+import SpellAnimationSelector from "./components/SpellAnimationSelector";
+import EqCheckbox             from "../../components/eq-ui/EQCheckbox";
+import {SpellsNewApi}         from "../../app/api";
+import {SpireApiClient}       from "../../app/api/spire-api-client";
+import SpellClassSelector     from "./components/SpellClassSelector";
+import SpellDeitySelector     from "./components/SpellDeitySelector";
+import FreeIdSelector         from "../../components/tools/FreeIdSelector";
+import SpellSpaPreviewPane    from "./components/SpellSpaPreviewPane";
 
 const MILLISECONDS_BEFORE_WINDOW_RESET = 3000;
 
@@ -843,6 +900,8 @@ export default {
       DB_SKILLS: DB_SKILLS,
       DB_SPELL_TARGETS: DB_SPELL_TARGETS,
       DB_SPELL_RESISTS: DB_SPELL_RESISTS,
+      DB_SPELL_TARGET_RESTRICTION: DB_SPELL_TARGET_RESTRICTION,
+      DB_SPELL_ZONE_TYPE: DB_SPELL_ZONE_TYPE,
       loaded: true,
 
       // preview / selectors
@@ -852,8 +911,8 @@ export default {
       freeIdSelectorActive: false,
       spaDetailPaneActive: false,
 
-      spaPreviewNumber: 0,
-      spaEffectIndex: 0,
+      spaPreviewNumber: -1,
+      spaEffectIndex: -1,
 
       lastResetTime: Date.now(),
 

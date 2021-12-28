@@ -3204,7 +3204,7 @@ export class Spells {
       'basediff': 'Fizzle rate modifier,  positive values increase fizzle chance,  lower values decrease it.',
       'skill': 'Spells skill type.',
       'zonetype': 'Restrict spells to be casting only within indoor zones or outdoor zones.',
-      'environment_type': 'Unkown what this determines.',
+      'environment_type': 'Unknown what this determines.',
       'time_of_day': 'Restrict spells to only being cast during certain times of day.',
       'classes_1': '',
       'classes_2': '',

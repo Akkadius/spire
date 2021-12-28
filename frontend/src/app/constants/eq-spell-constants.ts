@@ -776,6 +776,7 @@ export const DB_SPELL_RESISTS = {
 }
 
 export const DB_SPELL_TARGET_RESTRICTION = {
+  "0": "None",
   "3": "Unknown 3",
   "5": "Is Not On Horse",
   "100": "Is Animal Or Humanoid",
@@ -1352,4 +1353,11 @@ export const DB_SPELL_TYPEDESCNUM = {
   "161": "Timer 19",
   "162": "Timer 20",
   "163": "Alaris"
+}
+
+export const DB_SPELL_ZONE_TYPE = {
+  "-1": 'Any',
+  0: 'None',
+  1: 'Outdoors',
+  2: 'Dungeons',
 }
