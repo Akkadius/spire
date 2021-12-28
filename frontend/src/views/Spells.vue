@@ -57,21 +57,6 @@
               </div>
 
               <div class="col-lg-2 col-sm-12 text-center">
-                Class
-                <select
-                  name="class"
-                  id="Class"
-                  class="form-control"
-                  v-model="selectedClass"
-                  @change="selectClass(selectedClass)">
-                  <option value="0">All</option>
-                  <option v-for="(eqClass, eqClassId) in dbClasses" v-bind:value="eqClassId">
-                    {{ eqClass }}
-                  </option>
-                </select>
-              </div>
-
-              <div class="col-lg-2 col-sm-12 text-center">
                 Level
                 <select
                   name="class"
@@ -86,7 +71,7 @@
                 </select>
               </div>
 
-              <div class="col-lg-2 col-sm-12" v-if="selectedLevel">
+              <div class="col-lg-1 col-sm-12" v-if="selectedLevel">
                 <b-form-group>
                   <b-form-radio v-model="selectedLevelType" @change="triggerStateDelayed()" value="0">Only
                   </b-form-radio>
@@ -109,13 +94,18 @@
                 </select>
               </div>
 
+              <div class="col-lg-2 col-sm-12 p-0 pr-1 text-left">
+                <div
+                  :class="'text-center btn-xs eq-button-fancy'"
+                  style="margin-top: 19px"
+                  @click="resetForm()"
+                >
+                  Reset Form
+                </div>
+              </div>
+
             </div>
 
-            <div class="row">
-              <div class="form-group">
-                <button class='eq-button' @click="resetForm()">Reset Form</button>
-              </div>
-            </div>
 
             <app-loader :is-loading="!loaded" padding="4"/>
 

@@ -16,13 +16,14 @@
               <th style="width: 100px;"></th>
               <th style="width: auto;">Id</th>
               <th style="width: auto; min-width: 250px">Spell</th>
+              <th style="width: auto; min-width: 300px">Level</th>
+              <th style="width: 400px">Effects</th>
+
               <th>Mana</th>
               <th style="width: 80px">Cast</th>
               <th style="width: 80px">Recast</th>
               <th style="width: 120px">Duration</th>
               <th>Target</th>
-              <th style="width: 400px">Effects</th>
-              <th style="width: auto; min-width: 130px">Level</th>
 
               <!--              <th>Description</th>-->
             </tr>
@@ -47,16 +48,7 @@
                   v-if="spellMinis"
                   :template="'<span>' + spellMinis[spell.id] + '</span>'"/>
               </td>
-
-              <td>{{ spell["mana"] > 0 ? spell["mana"] : "" }}</td>
-              <td> {{ (spell["cast_time"] / 1000) }} sec</td>
-              <td> {{ (spell["recast_time"] / 1000) }} sec</td>
-              <td> {{ humanTime(getBuffDuration(spell) * 6) }} - {{ getBuffDuration(spell) }} tic(s)</td>
-              <td> {{ getTargetTypeName(spell["targettype"]) }}</td>
-              <td style="text-align: left">
-                <eq-spell-effects :spell="spell"/>
-              </td>
-              <td>
+              <td class="text-left">
                 <span v-for="(icon, index) in dbClassIcons">
                   <div v-if="spell['classes_' + index] > 0 && spell['classes_' + index] < 255" class="d-inline-block mr-2">
                       <img
@@ -68,6 +60,17 @@
                     </div>
                 </span>
               </td>
+              <td style="text-align: left">
+                <eq-spell-effects :spell="spell"/>
+              </td>
+
+              <td>{{ spell["mana"] > 0 ? spell["mana"] : "" }}</td>
+              <td> {{ (spell["cast_time"] / 1000) }} sec</td>
+              <td> {{ (spell["recast_time"] / 1000) }} sec</td>
+              <td> {{ humanTime(getBuffDuration(spell) * 6) }} - {{ getBuffDuration(spell) }} tic(s)</td>
+              <td> {{ getTargetTypeName(spell["targettype"]) }}</td>
+
+
 <!--              <td style="text-align: left">-->
 <!--                <eq-spell-description :spell="spell"/>-->
 <!--              </td>-->
@@ -135,7 +138,7 @@ export default {
     // do this once so we're not triggering vue re-renders in the loop
     this.sideLoadedSpellData = Spells.data
 
-    this.title = "Spells (" + this.spells.length + ")";
+    // this.title = "Spells (" + this.spells.length + ")";
   },
   props: {
     spells: Array
