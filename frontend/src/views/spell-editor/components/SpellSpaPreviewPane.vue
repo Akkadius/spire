@@ -12,7 +12,6 @@
       <div
         :class="'row ' + (field.description === 'Description' ? 'mb-3' : '') + (field.description === 'Notes' ? 'mt-3' : '')"
         v-for="field in fields" :key="field.description"
-        style="font-size: 15px"
       >
         <div
           :class="'col-2 text-right m-0 p-0 pr-2 font-weight-bold'"

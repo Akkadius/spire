@@ -627,11 +627,11 @@ export class Spells {
           break;
 
         case 108: //limit "Ignore Auto Leave" not supported, not in current spell file
-          printBuffer += "Summon Familiar:" + spell["teleport_zone"]
+          printBuffer += "Summon Familiar " + spell["teleport_zone"]
           break;
 
         case 109: //later expansions allow stacks to put into bags using limit value.
-          printBuffer += "Summon into Bag: "
+          printBuffer += "Summon into Bag "
 
           const item2       = <any>(await Items.getItem(spell["effect_base_value_" + effectIndex]));
           let parentSpellId = spell['id'];
@@ -678,7 +678,7 @@ export class Spells {
           break;
 
         case 113:
-          printBuffer += "Summon Mount: " + spell["teleport_zone"]
+          printBuffer += "Summon Mount " + spell["teleport_zone"]
           break;
 
         case 114:
@@ -2992,6 +2992,7 @@ export class Spells {
               <img
                 :src="spellCdnUrl + '' + (${spell.new_icon} > 0 ? ${spell.new_icon} : 1) + '.gif'"
                 style="width: ${iconSize}px;height:auto; border: 2px solid ${targetTypeColor}; border-radius: 7px;"
+                :class="(${iconSize} >= 20 ? 'mr-1' : '')"
                 >
               <span style="color: #f7ff00">${spell.name}</span>
             </div>

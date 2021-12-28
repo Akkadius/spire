@@ -27,21 +27,20 @@
             <tbody>
             <tr v-for="(spell, index) in spells" :key="spell.id" @click="editSpell(spell.id)">
               <td>
-
                 <v-runtime-template
                   v-if="spellMinis"
                   :template="'<span>' + spellMinis[spell.id] + '</span>'"/>
               </td>
               <td>
                 <span v-for="(icon, index) in dbClassIcons">
-                  <span v-if="spell['classes_' + index] > 0 && spell['classes_' + index] < 255">
+                  <div v-if="spell['classes_' + index] > 0 && spell['classes_' + index] < 255">
                       <img
                         :src="itemCdnUrl + 'item_' + icon + '.png'"
                         class="mb-1"
                         style="height: 17px; width:auto; border-radius: 5px">
                     {{ dbClassesShort[index] }}
                     ({{ spell["classes_" + index] }})
-                    </span>
+                    </div>
                 </span>
               </td>
               <td>{{ spell["mana"] > 0 ? spell["mana"] : "" }}</td>
@@ -173,6 +172,10 @@ export default {
   padding-bottom: 5px;
   border-right: .1px solid #ffffff1c;
   border-left: .1px solid #ffffff1c;
+}
+
+.spell-table td {
+  vertical-align: middle;
 }
 
 /* For Mobile */
