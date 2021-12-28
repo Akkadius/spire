@@ -76,7 +76,7 @@ export default new Router({
         },
         {
           path: ROUTE.ITEMS_LIST,
-          component: () => import('./views/Items.vue'),
+          component: () => import('./views/items/Items.vue'),
           meta: {title: "Items Browser"},
         },
         {

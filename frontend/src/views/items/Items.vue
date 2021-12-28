@@ -205,6 +205,12 @@
             </div>
           </div>
 
+          <!-- table -->
+          <item-preview-table
+            :items="items"
+            v-if="loaded && listType === 'table' && items"
+          />
+
           <!--          <eq-spell-preview-table :items="items" v-if="loaded && listType === 'table' && items"/>-->
 
         </div>
@@ -233,9 +239,11 @@ import InventorySlotCalculator from "@/components/tools/InventorySlotCalculator.
 import DeityBitmaskCalculator from "@/components/tools/DeityCalculator.vue";
 import itemTypes from "@/constants/item-types.json"
 import EqCheckbox from "@/components/eq-ui/EQCheckbox.vue";
+import ItemPreviewTable from "@/views/items/components/ItemPreviewTable.vue";
 
 export default {
   components: {
+    ItemPreviewTable,
     EqCheckbox,
     DeityBitmaskCalculator,
     InventorySlotCalculator,
@@ -276,7 +284,7 @@ export default {
       selectedLevel: 0,
       selectedLevelType: 0,
 
-      listType: "card",
+      listType: "table",
 
       itemFields: [],
       filterOptions: ["=", "<=", ">="],
@@ -406,8 +414,7 @@ export default {
         this.formFilters().forEach((filter) => {
           if (filter.field == key && typeof filter.true !== 'undefined' && filter.true == 0 && value === 0) {
             setValues++
-          }
-          else if (filter.field == key && typeof filter.true === 'undefined') {
+          } else if (filter.field == key && typeof filter.true === 'undefined') {
             setValues++
           }
         })
@@ -426,8 +433,7 @@ export default {
         this.formFilters().forEach((filter) => {
           if (filter.field == key && typeof filter.true !== 'undefined' && filter.true == 0 && value === 0) {
             values[filter.field] = value
-          }
-          else if (filter.field == key && typeof filter.true === 'undefined') {
+          } else if (filter.field == key && typeof filter.true === 'undefined') {
             values[filter.field] = value
           }
         })
@@ -563,7 +569,11 @@ export default {
         this.listType = this.$route.query.listType;
       }
       if (this.$route.query.filters) {
-        this.filters = JSON.parse(this.$route.query.filters);
+        this.resetFilters()
+        let filters = JSON.parse(this.$route.query.filters);
+        for (let key in filters) {
+          this.filters[key] = filters[key]
+        }
       }
     },
 
@@ -661,7 +671,7 @@ export default {
         filters.push(["slots", "__", 65535]);
       }
 
-      for (let key in this.filters) {
+      for (let key in this.getFiltersNonZeroValues()) {
         const value = this.filters[key]
         filters.push([key, "__", value])
       }
@@ -692,6 +702,12 @@ export default {
         filters.push(["name", "_like_", this.itemName]);
       }
 
+      if (filters.length === 0) {
+        this.items = null
+        this.loaded = true
+        return;
+      }
+
       let wheres = [];
       filters.forEach((filter) => {
         const where = util.format("%s%s%s", filter[0], filter[1], filter[2])
@@ -706,6 +722,10 @@ export default {
 
       let request   = {};
       request.limit = this.limit;
+
+      if (this.listType === 'table') {
+        request.limit = 1000;
+      }
 
       // filter by class
       if (this.selectedClasses > 0) {
