@@ -5,13 +5,13 @@
       :style="'margin-bottom: 40px; min-height: 275px; ' + (title ? 'padding-top: 30px' : 'padding-top: 0px !important')"
     >
       <div class='eq-window-title-bar' v-if="title">{{ title }}</div>
-      <div :style="'padding: 10px; ' + (title ? 'margin-top: 10px' : '') ">
+      <div :style="' ' + (title ? 'margin-top: 10px' : '') ">
         <div class='eq-window-nested-blue text-center' v-if="items.length === 0">
           No items were found
         </div>
 
         <div class='item-table' v-if="items.length > 0">
-          <div class="ml-5">Items shown ({{items.length}})</div>
+          <!--          <div class="ml-5">Items shown ({{items.length}})</div>-->
 
           <!--        <div class='eq-window-nested-blue' v-if="items.length > 0" style="overflow-y: scroll;">-->
           <table id="items-table" class="eq-table eq-highlight-rows" style="display: table;">
@@ -44,15 +44,18 @@
                 {{ item.id }}
               </td>
               <td class="text-left" style="vertical-align: middle">
-                <div :id="item.id + '-popover'" style="display:inline-block;">
-                    <span :class="'fade-in item-' + item.icon" :title="item.icon"/>
+                <div :id="item.id + '-popover'" style="display:inline-block; ">
+                    <span
+                      :class="'fade-in item-' + item.icon" :title="item.icon"
+                      style="height: 40px; width: 40px; display: inline-block"
+                    />
 
-<!--                    <img-->
-<!--                      :src="itemCdnUrl + 'item_' + item.icon + '.png'"-->
-<!--                      style="height:40px; border-radius: 25px; width:auto;"-->
-<!--                      class="mr-2"-->
-<!--                    >-->
-                    <span class="ml-2" style="position:relative; top: -15px">{{ item.name }}</span>
+                  <!--                    <img-->
+                  <!--                      :src="itemCdnUrl + 'item_' + item.icon + '.png'"-->
+                  <!--                      style="height:40px; border-radius: 25px; width:auto;"-->
+                  <!--                      class="mr-2"-->
+                  <!--                    >-->
+                  <span class="ml-2" style="position:relative; top: -15px">{{ item.name }}</span>
 
                 </div>
 
