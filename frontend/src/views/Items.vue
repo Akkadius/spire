@@ -158,9 +158,9 @@
                   </div>
                 </div>
 
-                <div class="row mt-4">
+                <div class="row mt-3">
 
-                  <div class="col-lg-2 col-sm-12 text-center">
+                  <div class="col-lg-2 col-sm-12 p-0 pr-1 text-center">
                     Item Name or ID
                     <input
                       name="item_name"
@@ -175,7 +175,7 @@
                     >
                   </div>
 
-                  <div class="col-lg-2 col-sm-12 text-center">
+                  <div class="col-lg-2 col-sm-12 p-0 pr-1 text-center">
                     Item Type
                     <select
                       id="item_type"
@@ -190,7 +190,7 @@
                     </select>
                   </div>
 
-                  <div class="col-lg-2 col-sm-12 text-center">
+                  <div class="col-lg-2 col-sm-12 p-0 pr-1 text-center">
                     Level
                     <select
                       class="form-control"
@@ -215,7 +215,7 @@
                     </b-form-group>
                   </div>
 
-                  <div class="col-lg-2 col-sm-12 text-center">
+                  <div class="col-lg-2 col-sm-12 p-0 pr-1 text-center">
                     List Type
                     <select
                       id="Class"
@@ -228,10 +228,10 @@
                     </select>
                   </div>
 
-                  <div class="col-lg-2 col-sm-12 text-left">
+                  <div class="col-lg-2 col-sm-12 p-0 pr-1 text-left">
                     <div
                       :class="'text-center btn-xs eq-button-fancy'"
-                      style="margin-top: 17px"
+                      style="margin-top: 19px"
                       @click="resetForm()"
                     >
                       Reset Form
@@ -431,10 +431,10 @@ export default {
       if (this.selectedSlots !== 0) {
         queryState.slots = this.selectedSlots
       }
-      if (this.itemType !== 0) {
+      if (this.itemType !== -1) {
         queryState.itemType = this.itemType
       }
-      if (this.listType !== 0) {
+      if (this.listType !== "card") {
         queryState.listType = this.listType
       }
       if (this.itemName !== "") {
@@ -468,6 +468,7 @@ export default {
       this.selectedLevelType = 0;
       this.items             = null;
       this.filters           = {}
+      this.listType          = "card"
       this.updateQueryState()
     },
 
