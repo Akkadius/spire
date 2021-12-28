@@ -185,121 +185,131 @@
                   </div>
                 </eq-tab>
 
-                <eq-tab name="Effects+">
+                <eq-tab name="Effects+" class="minified-inputs">
+                  <div class="row" v-for="field in
+                     [
+                       {
+                         description: '(Knockback) Push Back',
+                         field: 'pushback'
+                       },
+                       {
+                         description: '(Knockback) Push Up',
+                         field: 'pushup'
+                       },
+                       {
+                         description: '(Recourse) Recourse ID',
+                         field: 'recourse_link'
+                       },
+                       {
+                         description: '(Hate) Hate Modifier',
+                         field: 'bonushate'
+                       },
+                       {
+                         description: '(Hate) Spell Hate Given',
+                         field: 'hate_added'
+                       },
+                       {
+                         description: '(Hate) No Detrimental Spell Aggro',
+                         field: 'field_198',
+                         bool: true
+                       },
+                       {
+                         description: '(Viral) Viral Range',
+                         field: 'viral_range'
+                       },
+                       {
+                         description: '(Viral) Viral Targets',
+                         field: 'viral_targets'
+                       },
+                       {
+                         description: '(Viral) Viral Timer',
+                         field: 'viral_timer'
+                       },
+                       {
+                         description: '(Focus) Max Targets',
+                         field: 'maxtargets'
+                       },
+                       {
+                         description: '(Focus) Song Base Effect Cap',
+                         field: 'songcap'
+                       },
+                       {
+                         description: '(Focus) Not Focusable',
+                         field: 'not_extendable',
+                         bool: true,
+                       },
+                       {
+                         description: 'Max Critical Chance',
+                         field: 'field_217'
+                       },
+                       {
+                         description: 'Nimbus Type',
+                         field: 'nimbuseffect'
+                       },
+                       {
+                         description: 'Teleport Zone / Pet DB ID / Item Graphic for Bolt Spells',
+                         field: 'teleport_zone',
+                         text: true,
+                       },
+                     ]"
+                  >
+                    <div class="col-6 text-right p-0 m-0 mr-3 mt-3" v-if="field.bool">
+                      {{ field.description }}
+                    </div>
+                    <div class="col-6 text-right p-0 m-0 mr-3" v-if="!field.bool" style="margin-top: 10px !important">
+                      {{ field.description }}
+                    </div>
+                    <div class="col-3 text-left p-0 mt-1">
 
-                  <!-- Knockback -->
-                  <div class="row">
-                    <div class="col-2 text-right">
-                      <h4 class="eq-header mt-3">Knockback</h4>
-                    </div>
-                    <div class="col-4">
-                      Push Up
-                      <b-form-input v-model.number="spell.pushback"/>
-                    </div>
-                    <div class="col-4">
-                      Push Back
-                      <b-form-input v-model.number="spell.pushup"/>
-                    </div>
-                  </div>
-
-                  <!-- Recourse -->
-                  <div class="row">
-                    <div class="col-2 text-right">
-                      <h4 class="eq-header mt-3">Recourse</h4>
-                    </div>
-                    <div class="col-3">
-                      Recourse Spell ID
-                      <b-form-input v-model.number="spell.recourse_link"/>
-                    </div>
-                  </div>
-
-                  <!-- Hate -->
-                  <div class="row">
-                    <div class="col-2 text-right">
-                      <h4 class="eq-header mt-3">Hate</h4>
-                    </div>
-                    <div class="col-3">
-                      Hate Modifier
-                      <b-form-input v-model.number="spell.bonushate"/>
-                    </div>
-                    <div class="col-3">
-                      Spell Hate Given
-                      <b-form-input v-model.number="spell.hate_added"/>
-                    </div>
-                    <div class="col-3 text-center">
-                      No Detrimental Spell Aggro
+                      <!-- checkbox -->
                       <eq-checkbox
-                        class="mt-2 mb-2"
-                        v-model.number="spell.field_198"
-                        @input="spell.field_198 = $event"
+                        v-b-tooltip.hover.v-dark.right :title="getFieldDescription(field.field)"
+                        class="mb-1 mt-3 d-inline-block"
+                        :true-value="(typeof field.true !== 'undefined' ? field.true : 1)"
+                        :false-value="(typeof field.false !== 'undefined' ? field.false : 0)"
+                        v-model.number="spell[field.field]"
+                        @input="spell[field.field] = $event"
+                        v-if="field.bool"
                       />
-                    </div>
-                  </div>
 
-                  <!-- Viral Spells -->
-                  <div class="row">
-                    <div class="col-2 text-right">
-                      <h4 class="eq-header mt-3">Viral Spells</h4>
-                    </div>
-                    <div class="col-3">
-                      Viral Range
-                      <b-form-input v-model.number="spell.viral_range"/>
-                    </div>
-                    <div class="col-3">
-                      Viral Targets
-                      <b-form-input v-model.number="spell.viral_targets"/>
-                    </div>
-                    <div class="col-3">
-                      Viral Timer
-                      <b-form-input v-model.number="spell.viral_timer"/>
-                    </div>
-                  </div>
-
-                  <!-- Focus -->
-                  <div class="row">
-                    <div class="col-2 text-right">
-                      <h4 class="eq-header mt-3">Focus</h4>
-                    </div>
-                    <div class="col-3">
-                      Max Targets
-                      <b-form-input v-model.number="spell.maxtargets"/>
-                    </div>
-                    <div class="col-3">
-                      Song Base Effect Cap
-                      <b-form-input v-model.number="spell.songcap"/>
-                    </div>
-                    <div class="col-3 text-center">
-                      Not Focusable
-                      <eq-checkbox
-                        class="mt-2 mb-2" v-model.number="spell.not_extendable"
-                        @input="spell.not_extendable = $event"
+                      <!-- input number -->
+                      <b-form-input
+                        v-if="!field.selectData && !field.bool && !field.text"
+                        :id="field.field"
+                        v-model.number="spell[field.field]"
+                        class="m-0 mt-1"
+                        v-b-tooltip.hover.v-dark.right :title="getFieldDescription(field.field)"
+                        :style="(spell[field.field] === 0 ? 'opacity: .5' : '')"
                       />
+
+                      <!-- input text -->
+                      <b-form-input
+                        v-if="!field.selectData && !field.bool && field.text"
+                        :id="field.field"
+                        v-model.number="spell[field.field]"
+                        class="m-0 mt-1"
+                        v-b-tooltip.hover.v-dark.right :title="getFieldDescription(field.field)"
+                        :style="(spell[field.field] === 0 ? 'opacity: .5' : '')"
+                      />
+
+                      <!-- select -->
+                      <select
+                        v-model.number="spell[field.field]"
+                        class="form-control m-0 mt-1"
+                        v-if="field.selectData"
+                        v-b-tooltip.hover.v-dark.right :title="getFieldDescription(field.field)"
+                        :style="(spell[field.field] <= 0 ? 'opacity: .5' : '')"
+                      >
+                        <option
+                          v-for="(description, index) in field.selectData"
+                          :key="index"
+                          :value="parseInt(index)"
+                        >
+                          {{ index }}) {{ description }}
+                        </option>
+                      </select>
                     </div>
                   </div>
-
-                  <!-- Misc -->
-                  <div class="row">
-                    <div class="col-2 text-right">
-                      <h4 class="eq-header mt-3">Misc</h4>
-                    </div>
-                    <div class="col-3">
-                      Max Critical Chance
-                      <b-form-input v-model.number="spell.field_217"/>
-                    </div>
-                    <div class="col-3">
-                      Nimbus Type
-                      <b-form-input v-model.number="spell.nimbuseffect"/>
-                    </div>
-
-                    <div class="col-4"></div>
-                    <div class="col-2"></div>
-
-                    <div class="col-6">
-                      Teleport Zone / Pet DB ID / Item Graphic for Bolt Spells
-                      <b-form-input v-model.number="spell.teleport_zone"/>
-                    </div>
-                  </div>
-
 
                 </eq-tab>
 
@@ -900,7 +910,7 @@
                       </select>
                     </div>
                   </div>
-                  
+
                 </eq-tab>
               </eq-tabs>
 
