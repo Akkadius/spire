@@ -362,30 +362,67 @@
                          [
                            {
                              description: 'Can Cast out of Combat',
-                             field: 'outof_combat'
+                             field: 'outof_combat',
+                             bool: true
                            },
                            {
                              description: 'Can Cast in Combat',
                              field: 'in_combat',
+                             bool: true
                            },
                            {
                              description: 'Only During Fast Regen',
                              field: 'allowrest',
+                             bool: true
                            },
                            {
                              description: 'Cancel on Sit',
                              field: 'disallow_sit',
+                             bool: true
                            },
                            {
                              description: 'Must be Sneaking',
                              field: 'sneaking',
+                             bool: true
+                           },
+                           {
+                             description: 'Target Restriction',
+                             field: 'cast_restriction',
+                             selectData: DB_SPELL_TARGET_RESTRICTION,
+                           },
+                           {
+                             description: 'Caster Restriction',
+                             field: 'field_220',
+                             selectData: DB_SPELL_TARGET_RESTRICTION,
+                           },
+                           {
+                             description: 'Zone Type',
+                             field: 'zonetype',
+                             selectData: DB_SPELL_ZONE_TYPE,
+                           },
+                           {
+                             description: 'Environment Type',
+                             field: 'environment_type',
+                           },
+                           {
+                             description: 'Time of Day',
+                             field: 'time_of_day',
                            },
                          ]"
                       >
-                        <div class="col-6 text-right p-0 m-0 mr-3">
+                        <div class="col-6 text-right p-0 m-0 mr-3" v-if="field.bool">
+                          {{ field.description }}
+                        </div>
+                        <div
+                          class="col-6 text-right p-0 m-0 mr-3"
+                          v-if="!field.bool"
+                          style="margin-top: 10px !important"
+                        >
                           {{ field.description }}
                         </div>
                         <div class="col-3 text-left p-0 mt-1">
+
+                          <!-- checkbox -->
                           <eq-checkbox
                             v-b-tooltip.hover.v-dark.right :title="getFieldDescription(field.field)"
                             class="mb-2 d-inline-block"
@@ -393,55 +430,16 @@
                             :false-value="(typeof field.false !== 'undefined' ? field.false : 0)"
                             v-model.number="spell[field.field]"
                             @input="spell[field.field] = $event"
+                            v-if="field.bool"
                           />
-                        </div>
-                      </div>
 
-                      <div
-                        class="row"
-                        :key="field.field"
-                        v-for="field in
-                       [
-                         {
-                           description: 'Target Restriction',
-                           field: 'cast_restriction',
-                           selectData: DB_SPELL_TARGET_RESTRICTION,
-                         },
-                         {
-                           description: 'Caster Restriction',
-                           field: 'field_220',
-                           selectData: DB_SPELL_TARGET_RESTRICTION,
-                         },
-                         {
-                           description: 'Zone Type',
-                           field: 'zonetype',
-                           selectData: DB_SPELL_ZONE_TYPE,
-                         },
-                         {
-                           description: 'Environment Type',
-                           field: 'environment_type',
-                         },
-                         {
-                           description: 'Time of Day',
-                           field: 'time_of_day',
-                         },
-                       ]"
-                      >
-                        <div class="col-6 text-right mr-3 p-0 mt-2">
-                          {{ field.description }}
-                        </div>
-
-                        <div
-                          class="col-3 p-0 m-0"
-                          v-b-tooltip.hover.v-dark.right :title="getFieldDescription(field.field)"
-                          :style="(spell[field.field] <= 0 ? 'opacity: .5' : '')"
-                        >
                           <!-- input -->
                           <b-form-input
-                            v-if="!field.selectData"
+                            v-if="!field.selectData && !field.bool"
                             :id="field.field"
                             v-model.number="spell[field.field]"
                             class="m-0 mt-1"
+                            :style="(spell[field.field] <= 0 ? 'opacity: .5' : '')"
                           />
 
                           <!-- select -->
@@ -449,6 +447,7 @@
                             v-model.number="spell[field.field]"
                             class="form-control m-0 mt-1"
                             v-if="field.selectData"
+                            :style="(spell[field.field] <= 0 ? 'opacity: .5' : '')"
                           >
                             <option
                               v-for="(description, index) in field.selectData"
@@ -460,6 +459,7 @@
                           </select>
                         </div>
                       </div>
+
                     </div>
                   </div>
                 </eq-tab>
@@ -600,86 +600,114 @@
                   </div>
 
                 </eq-tab>
-                <eq-tab name="Buffing">
+                <eq-tab name="Buffing" class="minified-inputs">
+                  <div
+                    class="row" v-for="field in
+                     [
+                       {
+                         description: 'Can Not Dispell',
+                         field: 'nodispell',
+                         bool: true
+                       },
+                       {
+                         description: 'Can Not Click Off',
+                         field: 'field_232',
+                         bool: true
+                       },
+                       {
+                         description: 'Persist After Death',
+                         field: 'persistdeath',
+                         bool: true
+                       },
+                       {
+                         description: 'Suspendable',
+                         field: 'suspendable',
+                         bool: true
+                       },
+                       {
+                         description: 'Can MGB',
+                         field: 'can_mgb',
+                         bool: true
+                       },
+                       {
+                         description: 'Appear In Short Buff Box',
+                         field: 'short_buff_box',
+                         bool: true
+                       },
+                       {
+                         description: 'No Buff Block',
+                         field: 'no_block',
+                         bool: true
+                       },
+                       {
+                         description: 'DOT Not Stackable',
+                         field: 'dot_stacking_exempt',
+                         bool: true
+                       },
+                       {
+                         description: 'Buff Duration',
+                         field: 'buffduration'
+                       },
+                       {
+                         description: 'Buff Duration Formula',
+                         field: 'buffdurationformula'
+                       },
+                       {
+                         description: 'PVP Duration',
+                         field: 'pvp_duration'
+                       },
+                       {
+                         description: 'PVP Duration Cap',
+                         field: 'pvp_duration_cap'
+                       },
+                     ]"
+                  >
+                    <div class="col-6 text-right p-0 m-0 mr-3" v-if="field.bool">
+                      {{ field.description }}
+                    </div>
+                    <div class="col-6 text-right p-0 m-0 mr-3" v-if="!field.bool" style="margin-top: 10px !important">
+                      {{ field.description }}
+                    </div>
+                    <div class="col-3 text-left p-0 mt-1">
 
-                  <div class="row">
-                    <div class="col-3">
-                      <div
-                        class="row" v-for="field in
-                         [
-                           {
-                             description: 'Can Not Dispell',
-                             field: 'nodispell'
-                           },
-                           {
-                             description: 'Can Not Click Off',
-                             field: 'field_232'
-                           },
-                           {
-                             description: 'Persist After Death',
-                             field: 'persistdeath'
-                           },
-                           {
-                             description: 'Suspendable',
-                             field: 'suspendable'
-                           },
-                           {
-                             description: 'Can MGB',
-                             field: 'can_mgb'
-                           },
-                           {
-                             description: 'Appear In Short Buff Box',
-                             field: 'short_buff_box'
-                           },
-                           {
-                             description: 'No Buff Block',
-                             field: 'no_block'
-                           },
-                           {
-                             description: 'DOT Not Stackable',
-                             field: 'dot_stacking_exempt'
-                           },
-                         ]"
+                      <!-- checkbox -->
+                      <eq-checkbox
+                        v-b-tooltip.hover.v-dark.right :title="getFieldDescription(field.field)"
+                        class="mb-2 d-inline-block"
+                        :true-value="(typeof field.true !== 'undefined' ? field.true : 1)"
+                        :false-value="(typeof field.false !== 'undefined' ? field.false : 0)"
+                        v-model.number="spell[field.field]"
+                        @input="spell[field.field] = $event"
+                        v-if="field.bool"
+                      />
+
+                      <!-- input -->
+                      <b-form-input
+                        v-if="!field.selectData && !field.bool"
+                        :id="field.field"
+                        v-model.number="spell[field.field]"
+                        class="m-0 mt-1"
+                        :style="(spell[field.field] <= 0 ? 'opacity: .5' : '')"
+                      />
+
+                      <!-- select -->
+                      <select
+                        v-model.number="spell[field.field]"
+                        class="form-control m-0 mt-1"
+                        v-if="field.selectData"
+                        :style="(spell[field.field] <= 0 ? 'opacity: .5' : '')"
                       >
-                        <div class="col-9 text-right p-0 pr-2 m-0">
-                          {{ field.description }}
-                        </div>
-                        <div class="col-3 text-left p-0">
-                          <eq-checkbox
-                            v-b-tooltip.hover.v-dark.right :title="getFieldDescription(field.field)"
-                            class="mb-2 d-inline-block"
-                            :true-value="(typeof field.true !== 'undefined' ? field.true : 1)"
-                            :false-value="(typeof field.false !== 'undefined' ? field.false : 0)"
-                            v-model.number="spell[field.field]"
-                            @input="spell[field.field] = $event"
-                          />
-                        </div>
-                      </div>
+                        <option
+                          v-for="(description, index) in field.selectData"
+                          :key="index"
+                          :value="parseInt(index)"
+                        >
+                          {{ index }}) {{ description }}
+                        </option>
+                      </select>
                     </div>
-
-                    <div class="col-9">
-                      <div class="row">
-                        <div class="col-3">
-                          Buff Duration
-                          <b-form-input v-model.number="spell.buffduration"/>
-                        </div>
-                        <div class="col-3">
-                          Duration Formula
-                          <b-form-input v-model.number="spell.buffdurationformula"/>
-                        </div>
-                        <div class="col-3">
-                          PVP Duration
-                          <b-form-input v-model.number="spell.pvp_duration"/>
-
-                        </div>
-                        <div class="col-3">
-                          PVP Duration Cap
-                          <b-form-input v-model.number="spell.pvp_duration_cap"/>
-                        </div>
-                      </div>
-                    </div>
-
                   </div>
+
                 </eq-tab>
                 <eq-tab name="Resist">
 
