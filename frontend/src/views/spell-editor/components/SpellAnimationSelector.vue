@@ -8,12 +8,14 @@
       v-model="search"
       v-on:keyup="triggerSearch"
       style="width: 95%"
-      placeholder="Search for spell names to find animations">
+      placeholder="Search for spell names to find animations"
+    >
 
     <div
       style="height: 85vh; overflow-y: scroll"
       v-on:scroll.passive="render"
-      id="spell-video-view-port">
+      id="spell-video-view-port"
+    >
 
       <div v-if="filteredAnimations && filteredAnimations.length === 0">
         No animations found...
@@ -31,7 +33,8 @@
           :id="'spell-' + animationId"
           :data-src="animBaseUrl + animationId + '.mp4'"
           @mousedown="selectSpellAnim(animationId)"
-          :class="'spell-preview ' + classIsPulsating(animationId)">
+          :class="'spell-preview ' + classIsPulsating(animationId)"
+        >
         </video>
       </div>
     </div>
@@ -173,11 +176,11 @@ export default {
         // we need 100ms delay because the videos haven't been rendered yet
         setTimeout(() => {
           const container = document.getElementById("spell-video-view-port");
-          const target    = util.format("spell-%s", this.selectedAnimation)
+          const target    = document.getElementById(util.format("spell-%s", this.selectedAnimation))
 
           // 230 is height of video to offset
-          if (container) {
-            container.scrollTop = document.getElementById(target).offsetTop - 230;
+          if (container && target) {
+            container.scrollTop = target.offsetTop - 230;
           }
         }, 100)
       }

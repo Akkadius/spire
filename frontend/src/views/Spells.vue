@@ -363,7 +363,7 @@ export default {
       })
 
       let request = {};
-      this.message = "Refine search criteria to get more results...";
+      // this.message = "Refine search criteria to get more results...";
       request.limit = this.limit;
       if (this.selectedLevel && this.selectedLevel > 0) {
         request.limit = 1000

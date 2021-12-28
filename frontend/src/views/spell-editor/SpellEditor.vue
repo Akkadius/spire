@@ -6,10 +6,14 @@
           <div class="col-7">
             <eq-window style="margin-top: 30px" title="Edit Spell">
 
-              <div v-if="notification">
-                <b-button class="btn-dark btn-outline-warning form-control" @click="notification = ''">
-                  <i class="ra ra-book mr-1"></i>{{ notification }}
-                </b-button>
+              <div
+                v-if="notification"
+                :class="'text-center mt-2 btn-xs eq-header fade-in'"
+                style="width: 100%; font-size: 30px"
+                @click="notification = ''"
+              >
+                <i class="ra ra-book mr-1"></i>
+                {{ notification }}
               </div>
 
               <b-alert show dismissable variant="danger" v-if="error">
@@ -127,9 +131,12 @@
                 </eq-tab>
                 <eq-tab name="Effects" class="effect-tab">
                   <div>
-                    <b-input-group style="height: 30px; margin-bottom: 15px">
+                    <b-input-group style="height: 30px; margin-bottom: 8px">
                       <template #prepend>
-                        <b-input-group-text style="width: 40px;">#</b-input-group-text>
+                        <b-input-group-text
+                          style="width: 40px; "
+                        >#
+                        </b-input-group-text>
                       </template>
 
                       <b-form-input placeholder="Effect" disabled style="width: 150px"/>
@@ -139,22 +146,27 @@
                       <b-form-input placeholder="Formula" disabled/>
                     </b-input-group>
 
-                    <b-input-group v-for="i in 12" :key="i">
+                    <b-input-group v-for="i in 12" :key="i" style="margin-top: -1px">
                       <template #prepend>
-                        <b-input-group-text style="width: 40px;">{{ i }}</b-input-group-text>
+                        <b-input-group-text style="width: 40px; ">{{ i }}</b-input-group-text>
                       </template>
 
-                      <b-form-select v-model.number="spell['effectid_' + i]" style="width: 150px">
-                        <b-form-select-option v-for="(effect, id) in DB_SPA" :key="id" :value="parseInt(id)">{{ id }})
-                          {{
-                            effect
-                          }}
+                      <b-form-select
+                        @mouseover.native="drawSpaDetailPane(spell['effectid_' + i], i)"
+                        v-model.number="spell['effectid_' + i]"
+                        style="width: 150px"
+                      >
+                        <b-form-select-option
+                          v-for="(effect, id) in DB_SPA"
+                          :key="id"
+                          :value="parseInt(id)"
+                        >{{ id }}) {{ effect }}
                         </b-form-select-option>
                       </b-form-select>
 
                       <b-form-input v-model.number="spell['effect_base_value_' + i]"/>
-                      <b-form-input v-model.number="spell['max_' + i]"/>
                       <b-form-input v-model.number="spell['effect_limit_value_' + i]"/>
+                      <b-form-input v-model.number="spell['max_' + i]"/>
                       <b-form-input v-model.number="spell['formula_' + i]"/>
                     </b-input-group>
 
@@ -503,23 +515,23 @@
 
                     <div class="col-9">
                       <div class="row">
-                      <div class="col-3">
-                        Buff Duration
-                        <b-form-input v-model.number="spell.buffduration"/>
-                      </div>
-                      <div class="col-3">
-                        Duration Formula
-                        <b-form-input v-model.number="spell.buffdurationformula"/>
-                      </div>
-                      <div class="col-3">
-                        PVP Duration
-                        <b-form-input v-model.number="spell.pvp_duration"/>
+                        <div class="col-3">
+                          Buff Duration
+                          <b-form-input v-model.number="spell.buffduration"/>
+                        </div>
+                        <div class="col-3">
+                          Duration Formula
+                          <b-form-input v-model.number="spell.buffdurationformula"/>
+                        </div>
+                        <div class="col-3">
+                          PVP Duration
+                          <b-form-input v-model.number="spell.pvp_duration"/>
 
-                      </div>
-                      <div class="col-3">
-                        PVP Duration Cap
-                        <b-form-input v-model.number="spell.pvp_duration_cap"/>
-                      </div>
+                        </div>
+                        <div class="col-3">
+                          PVP Duration Cap
+                          <b-form-input v-model.number="spell.pvp_duration_cap"/>
+                        </div>
                       </div>
                     </div>
 
@@ -685,13 +697,13 @@
 
               <div class="text-center align-content-center mt-3">
 
-                <b-button
-                  class="btn-dark btn-sm btn-outline-warning"
-                  @click="saveSpell"
+                <div
+                  :class="'text-center mt-2 btn-xs eq-button-fancy'"
+                  @click="saveSpell()"
                 >
                   <i class="ra ra-book mr-1"></i>
                   Save Spell
-                </b-button>
+                </div>
               </div>
 
 
@@ -699,6 +711,7 @@
 
           </div>
 
+          <!-- Preview Pane -->
           <div class="col-5">
 
             <!-- preview spell -->
@@ -751,9 +764,22 @@
                 :with-reserved="true"
                 @input="spell.id = $event"
               />
-
             </eq-window>
 
+            <!-- SPA Detail Pane -->
+            <eq-window
+              style="margin-top: 30px; margin-right: 10px; width: auto;"
+              class="fade-in"
+              v-if="spaDetailPaneActive"
+            >
+              <spell-spa-preview-pane
+                :spa="spaPreviewNumber"
+                :spell="spell"
+                :effect-index="spaEffectIndex"
+                v-if="spaPreviewNumber"
+              />
+
+            </eq-window>
 
           </div>
         </div>
@@ -771,27 +797,26 @@ import EqSpellPreview                                                 from "../.
 import {Spells}                                                       from "../../app/spells";
 import {DB_SPA, DB_SPELL_EFFECTS, DB_SPELL_RESISTS, DB_SPELL_TARGETS} from "../../app/constants/eq-spell-constants";
 import {DB_SKILLS}                                                    from "../../app/constants/eq-skill-constants";
-import {App}                from "../../constants/app";
-import SpellIconSelector    from "./components/SpellIconSelector";
-import SpellAnimationPreview
-                            from "./components/SpellAnimationPreview";
-import SpellAnimationViewer from "../viewers/SpellAnimationViewer";
-import SpellAnimationSelector
-                            from "./components/SpellAnimationSelector";
-import EqCheckbox           from "../../components/eq-ui/EQCheckbox";
-import {SpellsNewApi}       from "../../app/api";
-import {SpireApiClient}     from "../../app/api/spire-api-client";
-import * as util            from "util";
-import SpellClassSelector   from "./components/SpellClassSelector";
-import SpellDeitySelector   from "./components/SpellDeitySelector";
-import FreeIdSelector       from "../../components/tools/FreeIdSelector";
-import {Items}              from "../../app/items";
+import {App}                                                          from "../../constants/app";
+import SpellIconSelector                                              from "./components/SpellIconSelector";
+import SpellAnimationPreview                                          from "./components/SpellAnimationPreview";
+import SpellAnimationViewer                                           from "../viewers/SpellAnimationViewer";
+import SpellAnimationSelector                                         from "./components/SpellAnimationSelector";
+import EqCheckbox                                                     from "../../components/eq-ui/EQCheckbox";
+import {SpellsNewApi}                                                 from "../../app/api";
+import {SpireApiClient}                                               from "../../app/api/spire-api-client";
+import * as util                                                      from "util";
+import SpellClassSelector                                             from "./components/SpellClassSelector";
+import SpellDeitySelector                                             from "./components/SpellDeitySelector";
+import FreeIdSelector                                                 from "../../components/tools/FreeIdSelector";
+import SpellSpaPreviewPane                                            from "./components/SpellSpaPreviewPane";
 
 const MILLISECONDS_BEFORE_WINDOW_RESET = 3000;
 
 export default {
   name: "SpellEdit",
   components: {
+    SpellSpaPreviewPane,
     FreeIdSelector,
     SpellDeitySelector,
     SpellClassSelector,
@@ -810,6 +835,9 @@ export default {
     return {
       spell: null, // spell record data
       spellCdnUrl: App.ASSET_SPELL_ICONS_BASE_URL,
+
+
+      // constants
       DB_SPELL_EFFECTS: DB_SPELL_EFFECTS,
       DB_SPA: DB_SPA,
       DB_SKILLS: DB_SKILLS,
@@ -817,10 +845,15 @@ export default {
       DB_SPELL_RESISTS: DB_SPELL_RESISTS,
       loaded: true,
 
+      // preview / selectors
       previewSpellActive: true,
       iconSelectorActive: false,
       spellAnimSelectorActive: false,
       freeIdSelectorActive: false,
+      spaDetailPaneActive: false,
+
+      spaPreviewNumber: 0,
+      spaEffectIndex: 0,
 
       lastResetTime: Date.now(),
 
@@ -864,6 +897,17 @@ export default {
       });
     },
 
+    dismissNotification() {
+      setTimeout(() => {
+        this.notification = ""
+      }, 5000)
+    },
+
+    sendNotification(message) {
+      this.notification = message
+      this.dismissNotification()
+    },
+
     async saveSpell() {
       this.error        = ""
       this.notification = ""
@@ -874,7 +918,7 @@ export default {
         spellsNew: this.spell
       }).then((result) => {
         if (result.status === 200) {
-          this.notification = util.format("Spell updated successfully! (%s) %s", this.spell.id, this.spell.name)
+          this.sendNotification("Spell updated successfully!")
           this.resetFieldEditedStatus()
         }
 
@@ -895,11 +939,9 @@ export default {
         })
 
         if (createRes.status === 200) {
-          this.notification = util.format("Created new Spell! (%s) %s", this.spell.id, this.spell.name)
+          this.sendNotification("Created new Spell!")
           this.resetFieldEditedStatus()
         }
-
-
       })
     },
 
@@ -919,6 +961,7 @@ export default {
       this.iconSelectorActive      = false;
       this.spellAnimSelectorActive = false;
       this.freeIdSelectorActive    = false;
+      this.spaDetailPaneActive     = false;
     },
     previewSpell() {
       let shouldReset = Date.now() - this.lastResetTime > MILLISECONDS_BEFORE_WINDOW_RESET;
@@ -944,6 +987,13 @@ export default {
       this.resetPreviewComponents()
       this.lastResetTime        = Date.now()
       this.freeIdSelectorActive = true
+    },
+    drawSpaDetailPane(spa, index) {
+      this.resetPreviewComponents()
+      this.lastResetTime       = Date.now()
+      this.spaDetailPaneActive = true
+      this.spaPreviewNumber    = spa
+      this.spaEffectIndex      = index
     },
     getTargetTypeColor(targetType) {
       return Spells.getTargetTypeColor(targetType);

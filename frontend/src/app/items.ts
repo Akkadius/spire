@@ -17,11 +17,15 @@ export class Items {
       return this.items[itemId]
     }
 
-    const api    = (new ItemApi(SpireApiClient.getOpenApiConfig()))
-    const result = await api.getItem({id: itemId})
-    if (result.status === 200 && result.data) {
-      this.setItem(itemId, result.data);
-      return result.data
+    const api = (new ItemApi(SpireApiClient.getOpenApiConfig()))
+    try {
+      const result = await api.getItem({id: itemId})
+      if (result.status === 200 && result.data) {
+        this.setItem(itemId, result.data);
+        return result.data
+      }
+    } catch (err) {
+      console.log("items.ts %s", err)
     }
 
     return {}
