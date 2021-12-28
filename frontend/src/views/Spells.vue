@@ -16,7 +16,7 @@
                       @click="selectClass(index)"
                       :src="itemCdnUrl + 'item_' + icon + '.png'"
                       :style="'width:auto;' + (isClassSelected(index) ? 'border: 2px solid #dadada; border-radius: 7px;' : 'border: 2px solid rgb(218 218 218 / 0%); border-radius: 7px;')"
-                      class="mt-1 p-1">
+                      class="mt-1">
                   </div>
                 </div>
               </div>

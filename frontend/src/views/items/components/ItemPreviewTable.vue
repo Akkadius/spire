@@ -11,7 +11,7 @@
         </div>
 
         <div class='item-table' v-if="items.length > 0">
-          <!--          <div class="ml-5">Items shown ({{items.length}})</div>-->
+<!--                    <div class="ml-3">Items shown ({{items.length}})</div>-->
 
           <!--        <div class='eq-window-nested-blue' v-if="items.length > 0" style="overflow-y: scroll;">-->
           <table id="items-table" class="eq-table eq-highlight-rows" style="display: table;">
