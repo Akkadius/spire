@@ -303,51 +303,96 @@
 
                 </eq-tab>
 
-                <eq-tab name="General">
+                <eq-tab name="General" class="minified-inputs">
                   <div class="row">
-                    <div class="col-6">
-                      Skill
-                      <b-form-select v-model.number="spell.skill" v-if="DB_SKILLS">
-                        <b-form-select-option
-                          :value="parseInt(id)" v-for="(skill, id) in DB_SKILLS"
-                          :key="id"
-                        >{{ id }}) {{ skill }}
-                        </b-form-select-option>
-                      </b-form-select>
-                    </div>
-                    <div class="col-6">
-                      Good Effect
-                      <b-form-input v-model.number="spell.good_effect"/>
-                    </div>
-                  </div>
+                    <div class="col-12">
+                      <div
+                        class="row" v-for="field in
+                         [
+                           {
+                             description: 'Is Discipline',
+                             field: 'is_discipline',
+                             bool: true
+                           },
+                           {
+                             description: 'Skills',
+                             field: 'skill',
+                             selectData: DB_SKILLS
+                           },
+                           {
+                             description: 'Good Effect',
+                             field: 'good_effect',
+                           },
+                           {
+                             description: 'Mana Cost',
+                             field: 'mana',
+                           },
+                           {
+                             description: 'Endurance Cost',
+                             field: 'endur_cost',
+                           },
+                           {
+                             description: 'Endurance Upkeep',
+                             field: 'endur_upkeep',
+                           },
+                         ]"
+                      >
+                        <div class="col-6 text-right p-0 m-0 mr-3" v-if="field.bool">
+                          {{ field.description }}
+                        </div>
+                        <div
+                          class="col-6 text-right p-0 m-0 mr-3"
+                          v-if="!field.bool"
+                          style="margin-top: 10px !important"
+                        >
+                          {{ field.description }}
+                        </div>
+                        <div class="col-3 text-left p-0 mt-1">
 
-                  <div class="row">
-                    <div class="col-3">
-                      Mana Cost
-                      <b-form-input v-model.number="spell.mana"/>
-                    </div>
-                    <div class="col-3">
-                      Endurance Cost
-                      <b-form-input v-model.number="spell.endur_cost"/>
-                    </div>
-                    <div class="col-3">
-                      Endurance Upkeep
-                      <b-form-input v-model.number="spell.endur_upkeep"/>
-                    </div>
-                    <div class="col-3 text-center">
-                      Use Discipline Window
-                      <eq-checkbox
-                        class="mt-2 mb-2"
-                        v-model.number="spell.is_discipline"
-                        @input="spell.is_discipline = $event"
-                      />
+                          <!-- checkbox -->
+                          <eq-checkbox
+                            v-b-tooltip.hover.v-dark.right :title="getFieldDescription(field.field)"
+                            class="mb-2 d-inline-block"
+                            :true-value="(typeof field.true !== 'undefined' ? field.true : 1)"
+                            :false-value="(typeof field.false !== 'undefined' ? field.false : 0)"
+                            v-model.number="spell[field.field]"
+                            @input="spell[field.field] = $event"
+                            v-if="field.bool"
+                          />
+
+                          <!-- input -->
+                          <b-form-input
+                            v-if="!field.selectData && !field.bool"
+                            :id="field.field"
+                            v-model.number="spell[field.field]"
+                            class="m-0 mt-1"
+                            :style="(spell[field.field] <= 0 ? 'opacity: .5' : '')"
+                          />
+
+                          <!-- select -->
+                          <select
+                            v-model.number="spell[field.field]"
+                            class="form-control m-0 mt-1"
+                            v-if="field.selectData"
+                            :style="(spell[field.field] <= 0 ? 'opacity: .5' : '')"
+                          >
+                            <option
+                              v-for="(description, index) in field.selectData"
+                              :key="index"
+                              :value="parseInt(index)"
+                            >
+                              {{ index }}) {{ description }}
+                            </option>
+                          </select>
+                        </div>
+                      </div>
+
                     </div>
                   </div>
 
                 </eq-tab>
 
                 <eq-tab name="Restrictions" class="minified-inputs">
-
                   <div class="row">
                     <div class="col-12">
                       <div
