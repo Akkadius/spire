@@ -344,13 +344,6 @@
                     </div>
                   </div>
 
-                  <div class="row">
-                    <div class="col-6">
-                      pcnpc_only_flag (???)
-                      <b-form-input v-model.number="spell.pcnpc_only_flag"/>
-                    </div>
-
-                  </div>
                 </eq-tab>
 
                 <eq-tab name="Restrictions" class="minified-inputs">
@@ -407,6 +400,11 @@
                            {
                              description: 'Time of Day',
                              field: 'time_of_day',
+                           },
+                           {
+                             description: 'PC or NPC Only',
+                             field: 'pcnpc_only_flag',
+                             selectData: DB_PC_NPC_ONLY_FLAG,
                            },
                          ]"
                       >
@@ -560,7 +558,8 @@
 
 
                 <eq-tab name="Casting" class="minified-inputs">
-                  <div class="row" v-for="field in
+                  <div
+                    class="row" v-for="field in
                      [
                        {
                          description: 'Uninterruptable',
@@ -915,6 +914,7 @@ import EqTab                  from "../../components/eq-ui/EQTab";
 import EqSpellPreview         from "../../components/eq-ui/EQSpellCardPreview";
 import {Spells}               from "../../app/spells";
 import {
+  DB_PC_NPC_ONLY_FLAG,
   DB_SPA,
   DB_SPELL_EFFECTS,
   DB_SPELL_RESISTS,
@@ -970,6 +970,7 @@ export default {
       DB_SPELL_RESISTS: DB_SPELL_RESISTS,
       DB_SPELL_TARGET_RESTRICTION: DB_SPELL_TARGET_RESTRICTION,
       DB_SPELL_ZONE_TYPE: DB_SPELL_ZONE_TYPE,
+      DB_PC_NPC_ONLY_FLAG: DB_PC_NPC_ONLY_FLAG,
       loaded: true,
 
       // preview / selectors

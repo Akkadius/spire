@@ -1361,3 +1361,10 @@ export const DB_SPELL_ZONE_TYPE = {
   1: 'Outdoors',
   2: 'Dungeons',
 }
+
+export const DB_PC_NPC_ONLY_FLAG = {
+  "-1": "-1",
+  0: "None",
+  1: "PCs (and mercs)",
+  2: "NPCs (and not mercs)"
+}
