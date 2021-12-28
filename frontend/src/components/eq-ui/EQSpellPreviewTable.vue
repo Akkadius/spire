@@ -13,41 +13,52 @@
           <table id="tabbox1" class="eq-table eq-highlight-rows" style="display: table;">
             <thead>
             <tr>
-              <th style="width: auto;"></th>
+              <th style="width: 100px;"></th>
               <th style="width: auto;">Id</th>
               <th style="width: auto; min-width: 250px">Spell</th>
-              <th style="width: auto; min-width: 130px">Level</th>
               <th>Mana</th>
               <th style="width: 80px">Cast</th>
               <th style="width: 80px">Recast</th>
               <th style="width: 120px">Duration</th>
               <th>Target</th>
               <th style="width: 400px">Effects</th>
-<!--              <th>Description</th>-->
+              <th style="width: auto; min-width: 130px">Level</th>
+
+              <!--              <th>Description</th>-->
             </tr>
             </thead>
             <tbody>
             <tr v-for="(spell, index) in spells" :key="spell.id">
               <td>
-                <div
-                  :class="'text-center mt-2 btn-xs eq-button-fancy'"
-                  style="font-size: 18px"
+                <b-button
                   @click="editSpell(spell.id)"
+                  size="sm"
+                  variant="outline-warning"
                 >
+                  <i class="ra ra-book"></i>
                   Edit
-                </div>
+                </b-button>
               </td>
               <td>
                 {{spell.id}}
               </td>
-              <td>
+              <td class="text-left">
                 <v-runtime-template
                   v-if="spellMinis"
                   :template="'<span>' + spellMinis[spell.id] + '</span>'"/>
               </td>
+
+              <td>{{ spell["mana"] > 0 ? spell["mana"] : "" }}</td>
+              <td> {{ (spell["cast_time"] / 1000) }} sec</td>
+              <td> {{ (spell["recast_time"] / 1000) }} sec</td>
+              <td> {{ humanTime(getBuffDuration(spell) * 6) }} - {{ getBuffDuration(spell) }} tic(s)</td>
+              <td> {{ getTargetTypeName(spell["targettype"]) }}</td>
+              <td style="text-align: left">
+                <eq-spell-effects :spell="spell"/>
+              </td>
               <td>
                 <span v-for="(icon, index) in dbClassIcons">
-                  <div v-if="spell['classes_' + index] > 0 && spell['classes_' + index] < 255">
+                  <div v-if="spell['classes_' + index] > 0 && spell['classes_' + index] < 255" class="d-inline-block mr-2">
                       <img
                         :src="itemCdnUrl + 'item_' + icon + '.png'"
                         class="mb-1"
@@ -56,14 +67,6 @@
                     ({{ spell["classes_" + index] }})
                     </div>
                 </span>
-              </td>
-              <td>{{ spell["mana"] > 0 ? spell["mana"] : "" }}</td>
-              <td> {{ (spell["cast_time"] / 1000) }} sec</td>
-              <td> {{ (spell["recast_time"] / 1000) }} sec</td>
-              <td> {{ humanTime(getBuffDuration(spell) * 6) }} - {{ getBuffDuration(spell) }} tic(s)</td>
-              <td> {{ getTargetTypeName(spell["targettype"]) }}</td>
-              <td style="text-align: left">
-                <eq-spell-effects :spell="spell"/>
               </td>
 <!--              <td style="text-align: left">-->
 <!--                <eq-spell-description :spell="spell"/>-->
