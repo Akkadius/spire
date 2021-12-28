@@ -10,85 +10,7 @@
             <div class="row">
               <div class="col-1">
                 <div
-                  class="row" v-for="field in
-                   [
-                     {
-                       description: 'Is Magic',
-                       field: 'magic'
-                     },
-                     {
-                       description: 'No Drop',
-                       field: 'nodrop',
-                       true: 0,
-                       false: 1,
-                     },
-                     {
-                       description: 'FV No Drop',
-                       field: 'fvnodrop',
-                     },
-                     {
-                       description: 'No Rent',
-                       field: 'norent',
-                       true: 0,
-                       false: 1,
-                     },
-                     {
-                       description: 'Tradeskill Item',
-                       field: 'tradeskills'
-                     },
-                     {
-                       description: 'Book',
-                       field: 'book'
-                     },
-                     {
-                       description: 'No Transfer',
-                       field: 'notransfer'
-                     },
-                     {
-                       description: 'Summoned',
-                       field: 'summonedflag'
-                     },
-                     {
-                       description: 'Quest',
-                       field: 'questitemflag'
-                     },
-                     {
-                       description: 'Artifact',
-                       field: 'artifactflag'
-                     },
-                     {
-                       description: 'No Pet',
-                       field: 'nopet'
-                     },
-                     {
-                       description: 'Attuneable',
-                       field: 'attuneable'
-                     },
-                     {
-                       description: 'Stackable',
-                       field: 'stackable'
-                     },
-                     {
-                       description: 'Potion Belt',
-                       field: 'potionbelt'
-                     },
-                     {
-                       description: 'Placeable',
-                       field: 'placeable'
-                     },
-                     {
-                       description: 'Epic Item',
-                       field: 'epicitem'
-                     },
-                     {
-                       description: 'Arrow Expend',
-                       field: 'expendablearrow'
-                     },
-                     {
-                       description: 'Heirloom',
-                       field: 'heirloom'
-                     },
-                   ]"
+                  class="row" v-for="field in formFilters()"
                 >
                   <div class="col-9 text-right p-0 pr-2 m-0">
                     {{ field.description }}
@@ -303,7 +225,6 @@ import {DB_CLASSES_ICONS} from "@/app/constants/eq-class-icon-constants";
 import {App} from "@/constants/app";
 import {DB_CLASSES_SHORT, DB_PLAYER_CLASSES} from "@/app/constants/eq-classes-constants";
 import {DB_SPA} from "@/app/constants/eq-spell-constants";
-// import EqItemCardPreviewTable                   from "@/components/eq-ui/EQItemCardPreviewTable.vue";
 import {Items} from "@/app/items";
 import {ROUTE} from "@/routes";
 import ClassBitmaskCalculator from "@/components/tools/ClassBitmaskCalculator.vue";
@@ -367,6 +288,9 @@ export default {
   },
 
   async mounted() {
+
+    this.resetFilters()
+
     if (Object.keys(this.$route.query).length !== 0) {
       this.loadQueryState()
       //Items.preloadDbstr().then((res) => {
@@ -393,6 +317,125 @@ export default {
   },
   methods: {
 
+    formFilters() {
+      return [
+        {
+          description: 'Is Magic',
+          field: 'magic'
+        },
+        {
+          description: 'No Drop',
+          field: 'nodrop',
+          true: 0,
+          false: 1,
+        },
+        {
+          description: 'FV No Drop',
+          field: 'fvnodrop',
+        },
+        {
+          description: 'No Rent',
+          field: 'norent',
+          true: 0,
+          false: 1,
+        },
+        {
+          description: 'Tradeskill Item',
+          field: 'tradeskills'
+        },
+        {
+          description: 'Book',
+          field: 'book'
+        },
+        {
+          description: 'No Transfer',
+          field: 'notransfer'
+        },
+        {
+          description: 'Summoned',
+          field: 'summonedflag'
+        },
+        {
+          description: 'Quest',
+          field: 'questitemflag'
+        },
+        {
+          description: 'Artifact',
+          field: 'artifactflag'
+        },
+        {
+          description: 'No Pet',
+          field: 'nopet'
+        },
+        {
+          description: 'Attuneable',
+          field: 'attuneable'
+        },
+        {
+          description: 'Stackable',
+          field: 'stackable'
+        },
+        {
+          description: 'Potion Belt',
+          field: 'potionbelt'
+        },
+        {
+          description: 'Placeable',
+          field: 'placeable'
+        },
+        {
+          description: 'Epic Item',
+          field: 'epicitem'
+        },
+        {
+          description: 'Arrow Expend',
+          field: 'expendablearrow'
+        },
+        {
+          description: 'Heirloom',
+          field: 'heirloom'
+        },
+      ]
+    },
+
+    getChangedFilterCount() {
+      let setValues = 0
+      for (let key in this.filters) {
+        const value = this.filters[key]
+
+        this.formFilters().forEach((filter) => {
+          if (filter.field == key && typeof filter.true !== 'undefined' && filter.true == 0 && value === 0) {
+            setValues++
+          }
+          else if (filter.field == key && typeof filter.true === 'undefined') {
+            setValues++
+          }
+        })
+      }
+
+      console.log("[getChangedFilterCount] set values [%s]", setValues)
+
+      return setValues
+    },
+
+    getFiltersNonZeroValues() {
+      let values = {}
+      for (let key in this.filters) {
+        const value = this.filters[key]
+
+        this.formFilters().forEach((filter) => {
+          if (filter.field == key && typeof filter.true !== 'undefined' && filter.true == 0 && value === 0) {
+            values[filter.field] = value
+          }
+          else if (filter.field == key && typeof filter.true === 'undefined') {
+            values[filter.field] = value
+          }
+        })
+      }
+
+      return values
+    },
+
     triggerCheckboxFilter(field, falseValue) {
       // console.log("hello")
       // console.log(this.filters)
@@ -405,14 +448,17 @@ export default {
         }
       }
 
-      if (Object.keys(this.filters).length > 0) {
-        this.listItems()
-      }
+      this.updateQueryState()
+      this.listItems()
+
+      // if (Object.keys(this.filters).length > 0) {
+      //   this.listItems()
+      // }
 
       // if no filters set, clear items result
-      if (Object.keys(this.filters).length === 0) {
-        this.items = null
-      }
+      // if (setValues === 0) {
+      //   this.items = null
+      // }
 
     },
 
@@ -446,6 +492,9 @@ export default {
       if (this.selectedLevelType !== 0) {
         queryState.levelType = this.selectedLevelType
       }
+      if (this.getChangedFilterCount() > 0) {
+        queryState.filters = JSON.stringify(this.getFiltersNonZeroValues())
+      }
 
       this.$router.push(
         {
@@ -456,7 +505,21 @@ export default {
       })
     },
 
+    resetFilters() {
+      this.filters = {}
+
+      // make sure that filters that are non-zero defaults are initialized as their
+      // zero-values first
+      this.formFilters().forEach((filter) => {
+        if (typeof filter.true !== 'undefined' && filter.true === 0) {
+          this.filters[filter.field] = 1
+        }
+      })
+    },
+
     resetForm: function () {
+      this.resetFilters()
+
       this.selectedClasses   = 0;
       this.selectedRaces     = 0;
       this.selectedSlots     = 0;
@@ -467,7 +530,6 @@ export default {
       this.selectedLevel     = 0;
       this.selectedLevelType = 0;
       this.items             = null;
-      this.filters           = {}
       this.listType          = "card"
       this.updateQueryState()
     },
@@ -499,6 +561,9 @@ export default {
       }
       if (this.$route.query.listType) {
         this.listType = this.$route.query.listType;
+      }
+      if (this.$route.query.filters) {
+        this.filters = JSON.parse(this.$route.query.filters);
       }
     },
 

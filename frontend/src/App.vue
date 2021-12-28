@@ -40,13 +40,15 @@ export default {
     },
 
     scrollFix: function (hashbang) {
-      console.log(location.hash);
+      if (hashbang) {
+        console.log(location.hash);
 
-      location.hash = hashbang;
-      const hashTarget = hashbang.replace("#", "");
-      if (document.getElementById(hashTarget)) {
-        console.log("scrolling to", hashTarget)
-        document.getElementById(hashTarget).scrollIntoView();
+        location.hash = hashbang;
+        const hashTarget = hashbang.replace("#", "");
+        if (document.getElementById(hashTarget)) {
+          console.log("scrolling to", hashTarget)
+          document.getElementById(hashTarget).scrollIntoView();
+        }
       }
     },
 
