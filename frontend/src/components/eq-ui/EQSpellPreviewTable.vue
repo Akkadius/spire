@@ -13,7 +13,9 @@
           <table id="tabbox1" class="eq-table eq-highlight-rows" style="display: table;">
             <thead>
             <tr>
-              <th style="width: auto; min-width: 200px">Spell</th>
+              <th style="width: auto;"></th>
+              <th style="width: auto;">Id</th>
+              <th style="width: auto; min-width: 250px">Spell</th>
               <th style="width: auto; min-width: 130px">Level</th>
               <th>Mana</th>
               <th style="width: 80px">Cast</th>
@@ -25,7 +27,19 @@
             </tr>
             </thead>
             <tbody>
-            <tr v-for="(spell, index) in spells" :key="spell.id" @click="editSpell(spell.id)">
+            <tr v-for="(spell, index) in spells" :key="spell.id">
+              <td>
+                <div
+                  :class="'text-center mt-2 btn-xs eq-button-fancy'"
+                  style="font-size: 18px"
+                  @click="editSpell(spell.id)"
+                >
+                  Edit
+                </div>
+              </td>
+              <td>
+                {{spell.id}}
+              </td>
               <td>
                 <v-runtime-template
                   v-if="spellMinis"
@@ -176,6 +190,10 @@ export default {
 
 .spell-table td {
   vertical-align: middle;
+}
+
+.spell-table tr:nth-child(even) {
+  background-color: rgba(255, 255, 255, .03);
 }
 
 /* For Mobile */

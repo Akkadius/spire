@@ -2992,7 +2992,7 @@ export class Spells {
               <img
                 :src="spellCdnUrl + '' + (${spell.new_icon} > 0 ? ${spell.new_icon} : 1) + '.gif'"
                 style="width: ${iconSize}px;height:auto; border: 2px solid ${targetTypeColor}; border-radius: 7px;"
-                :class="(${iconSize} >= 20 ? 'mr-1' : '')"
+                :class="(${iconSize} > 20 ? 'mr-1' : '')"
                 >
               <span style="color: #f7ff00">${spell.name}</span>
             </div>
