@@ -187,9 +187,9 @@
               </div>
             </div>
 
-            <app-loader :is-loading="!loaded" padding="4"/>
-
           </eq-window>
+
+          <app-loader :is-loading="!loaded" padding="4"/>
 
           <!-- card rendering -->
           <div class="row" style="justify-content: center" v-if="loaded && listType === 'card'">

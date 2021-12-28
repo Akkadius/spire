@@ -106,14 +106,13 @@
 
             </div>
 
-
-            <app-loader :is-loading="!loaded" padding="4"/>
-
             <div v-if="message">
               {{ message }}
             </div>
 
           </eq-window>
+
+          <app-loader :is-loading="!loaded" padding="4"/>
 
           <!-- card rendering -->
           <div class="row" style="justify-content: center" v-if="loaded && listType === 'card'">
