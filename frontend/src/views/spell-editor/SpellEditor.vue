@@ -289,7 +289,7 @@
                         v-model.number="spell[field.field]"
                         class="m-0 mt-1"
                         v-b-tooltip.hover.v-dark.right :title="getFieldDescription(field.field)"
-                        :style="(spell[field.field] === 0 ? 'opacity: .5' : '')"
+                        :style="(spell[field.field] === '' ? 'opacity: .5' : '')"
                       />
 
                       <!-- select -->
@@ -521,95 +521,129 @@
                   </div>
                 </eq-tab>
 
-                <eq-tab name="Range">
-                  <div class="row">
-                    <div class="col-3">
-                      Spell Range
-                      <b-form-input v-model.number="spell.range"/>
+                <eq-tab name="Range" class="minified-inputs">
+
+                  <div class="row" v-for="field in
+                     [
+                       {
+                         description: 'Spell Range',
+                         field: 'range'
+                       },
+                       {
+                         description: 'Target Type',
+                         field: 'targettype',
+                         selectData: DB_SPELL_TARGETS,
+                       },
+                       {
+                         description: 'NPC Line of Sight Not Required to Cast',
+                         field: 'npc_no_los',
+                         bool: true
+                       },
+                       {
+                         description: 'AOE Range',
+                         field: 'aoerange'
+                       },
+                       {
+                         description: 'AOE Rain Waves',
+                         field: 'ae_duration'
+                       },
+                       {
+                         description: 'AOE Max Targets',
+                         field: 'aemaxtargets'
+                       },
+                       {
+                         description: 'Min Range',
+                         field: 'min_range'
+                       },
+                       {
+                         description: 'Min Distance for Mod',
+                         field: 'min_dist'
+                       },
+                       {
+                         description: 'Min Distance Mod',
+                         field: 'min_dist_mod'
+                       },
+                       {
+                         description: 'Max Distance for Mod',
+                         field: 'max_dist'
+                       },
+                       {
+                         description: 'Max Distance Mod',
+                         field: 'max_dist_mod'
+                       },
+                       {
+                         description: 'Max Hits Type',
+                         field: 'numhitstype'
+                       },
+                       {
+                         description: 'Max Hits Allowed',
+                         field: 'numhits'
+                       },
+                       {
+                         description: 'Cone Angle Start',
+                         field: 'cone_start_angle'
+                       },
+                       {
+                         description: 'Cone Angle End',
+                         field: 'cone_stop_angle'
+                       },
+                     ]"
+                  >
+                    <div class="col-6 text-right p-0 m-0 mr-3 mt-3" v-if="field.bool">
+                      {{ field.description }}
                     </div>
-                    <div class="col-3">
-                      Target Type
-                      <b-form-select v-model.number="spell.targettype" v-if="DB_SPELL_TARGETS">
-                        <b-form-select-option
-                          :value="parseInt(id)"
-                          v-for="(value, id) in DB_SPELL_TARGETS"
-                          :key="id"
-                        >{{ id }})
-                          {{ value }}
-                        </b-form-select-option>
-                      </b-form-select>
+                    <div class="col-6 text-right p-0 m-0 mr-3" v-if="!field.bool" style="margin-top: 10px !important">
+                      {{ field.description }}
                     </div>
-                    <div class="col-6 text-center">
-                      NPC Line of Sight Not Required to Cast
+                    <div class="col-3 text-left p-0 mt-1">
+
+                      <!-- checkbox -->
                       <eq-checkbox
-                        class="mt-2 mb-2" v-model.number="spell.npc_no_los"
-                        @input="spell.npc_no_los = $event"
+                        v-b-tooltip.hover.v-dark.right :title="getFieldDescription(field.field)"
+                        class="mb-1 mt-3 d-inline-block"
+                        :true-value="(typeof field.true !== 'undefined' ? field.true : 1)"
+                        :false-value="(typeof field.false !== 'undefined' ? field.false : 0)"
+                        v-model.number="spell[field.field]"
+                        @input="spell[field.field] = $event"
+                        v-if="field.bool"
                       />
-                    </div>
-                  </div>
 
-                  <h4 class="eq-header">Area of Effect (AOE)</h4>
+                      <!-- input number -->
+                      <b-form-input
+                        v-if="!field.selectData && !field.bool && !field.text"
+                        :id="field.field"
+                        v-model.number="spell[field.field]"
+                        class="m-0 mt-1"
+                        v-b-tooltip.hover.v-dark.right :title="getFieldDescription(field.field)"
+                        :style="(spell[field.field] === 0 ? 'opacity: .5' : '')"
+                      />
 
-                  <div class="row">
-                    <div class="col-4">
-                      AOE Range
-                      <b-form-input v-model.number="spell.aoerange"/>
-                    </div>
-                    <div class="col-4">
-                      AOE Rain Waves
-                      <b-form-input v-model.number="spell.ae_duration"/>
-                    </div>
-                    <div class="col-4">
-                      AOE Max Targets
-                      <b-form-input v-model.number="spell.aemaxtargets"/>
-                    </div>
-                  </div>
+                      <!-- input text -->
+                      <b-form-input
+                        v-if="!field.selectData && !field.bool && field.text"
+                        :id="field.field"
+                        v-model.number="spell[field.field]"
+                        class="m-0 mt-1"
+                        v-b-tooltip.hover.v-dark.right :title="getFieldDescription(field.field)"
+                        :style="(spell[field.field] === '' ? 'opacity: .5' : '')"
+                      />
 
-                  <div class="row">
-                    <div class="col-2">
-                      Min Range
-                      <b-form-input v-model.number="spell.min_range"/>
-                    </div>
-                    <div class="col-2">
-                      Min Distance for Mod
-                      <b-form-input v-model.number="spell.min_dist"/>
-                    </div>
-                    <div class="col-2">
-                      Min Distance Mod
-                      <b-form-input v-model.number="spell.min_dist_mod"/>
-                    </div>
-                    <div class="col-3">
-                      Max Distance for Mod
-                      <b-form-input v-model.number="spell.max_dist"/>
-                    </div>
-                    <div class="col-3">
-                      Max Distance Mod
-                      <b-form-input v-model.number="spell.max_dist_mod"/>
-                    </div>
-
-                  </div>
-
-                  <div class="row">
-                    <div class="col-6">
-                      Max Hits Type
-                      <b-form-input v-model.number="spell.numhitstype"/>
-                    </div>
-                    <div class="col-6">
-                      Max Hits Allowed
-                      <b-form-input v-model.number="spell.numhits"/>
-                    </div>
-                  </div>
-
-                  <h4 class="eq-header">Cone</h4>
-
-                  <div class="row">
-                    <div class="col-6">
-                      Cone Angle Start
-                      <b-form-input v-model.number="spell.cone_start_angle"/>
-                    </div>
-                    <div class="col-6">
-                      Cone Angle End
-                      <b-form-input v-model.number="spell.cone_stop_angle"/>
+                      <!-- select -->
+                      <select
+                        v-model.number="spell[field.field]"
+                        class="form-control m-0 mt-1"
+                        v-if="field.selectData"
+                        v-b-tooltip.hover.v-dark.right :title="getFieldDescription(field.field)"
+                        :style="(spell[field.field] <= 0 ? 'opacity: .5' : '')"
+                      >
+                        <option
+                          v-for="(description, index) in field.selectData"
+                          :key="index"
+                          :value="parseInt(index)"
+                        >
+                          {{ index }}) {{ description }}
+                        </option>
+                      </select>
                     </div>
                   </div>
 

@@ -62,10 +62,10 @@
               <td> {{ (spell["recast_time"] / 1000) }} sec</td>
               <td> {{ humanTime(getBuffDuration(spell) * 6) }} - {{ getBuffDuration(spell) }} tic(s)</td>
               <td> {{ getTargetTypeName(spell["targettype"]) }}</td>
-              <td>
+              <td style="text-align: left">
                 <eq-spell-effects :spell="spell"/>
               </td>
-              <td>
+              <td style="text-align: left">
                 <eq-spell-description :spell="spell"/>
               </td>
             </tr>
@@ -190,10 +190,7 @@ export default {
 
 .spell-table td {
   vertical-align: middle;
-}
-
-.spell-table tr:nth-child(even) {
-  background-color: rgba(255, 255, 255, .03);
+  text-align: center;
 }
 
 /* For Mobile */
