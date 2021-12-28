@@ -559,43 +559,83 @@
                 </eq-tab>
 
 
-                <eq-tab name="Casting">
+                <eq-tab name="Casting" class="minified-inputs">
+                  <div class="row" v-for="field in
+                     [
+                       {
+                         description: 'Uninterruptable',
+                         field: 'uninterruptable',
+                         bool: true
+                       },
+                       {
+                         description: 'Cast Time',
+                         field: 'cast_time'
+                       },
+                       {
+                         description: 'Recovery Time',
+                         field: 'recovery_time'
+                       },
+                       {
+                         description: 'Recast Time',
+                         field: 'recast_time'
+                       },
+                       {
+                         description: 'Timer Index (???)',
+                         field: 'endur_timer_index'
+                       },
+                       {
+                         description: 'Fizzle Adjustment',
+                         field: 'basediff'
+                       },
+                       {
+                         description: 'Cast Not Standing',
+                         field: 'cast_not_standing'
+                       },
+                     ]"
+                  >
+                    <div class="col-6 text-right p-0 m-0 mr-3" v-if="field.bool">
+                      {{ field.description }}
+                    </div>
+                    <div class="col-6 text-right p-0 m-0 mr-3" v-if="!field.bool" style="margin-top: 10px !important">
+                      {{ field.description }}
+                    </div>
+                    <div class="col-3 text-left p-0 mt-1">
 
-                  <div class="row">
-                    <div class="col-3">
-                      Cast Time (Clarify)
-                      <b-form-input v-model.number="spell.cast_time"/>
-                    </div>
-                    <div class="col-3">
-                      Recovery Time (Clarify)
-                      <b-form-input v-model.number="spell.recovery_time"/>
-                    </div>
-                    <div class="col-3">
-                      Recast Time (Clarify)
-                      <b-form-input v-model.number="spell.recast_time"/>
-                    </div>
-                    <div class="col-3">
-                      Timer Index (???)
-                      <b-form-input v-model.number="spell.endur_timer_index"/>
-                    </div>
-                  </div>
-
-                  <div class="row">
-                    <div class="col-4">
-                      Fizzle Adjustment
-                      <b-form-input v-model.number="spell.basediff"/>
-                    </div>
-                    <div class="col-4">
-                      Cast Not Standing
-                      <b-form-input v-model.number="spell.cast_not_standing"/>
-                    </div>
-                    <div class="col-4 text-center">
-                      Uninterruptable
+                      <!-- checkbox -->
                       <eq-checkbox
-                        class="mt-2 mb-2"
-                        v-model.number="spell.uninterruptable"
-                        @input="spell.uninterruptable = $event"
+                        v-b-tooltip.hover.v-dark.right :title="getFieldDescription(field.field)"
+                        class="mb-2 d-inline-block"
+                        :true-value="(typeof field.true !== 'undefined' ? field.true : 1)"
+                        :false-value="(typeof field.false !== 'undefined' ? field.false : 0)"
+                        v-model.number="spell[field.field]"
+                        @input="spell[field.field] = $event"
+                        v-if="field.bool"
                       />
+
+                      <!-- input -->
+                      <b-form-input
+                        v-if="!field.selectData && !field.bool"
+                        :id="field.field"
+                        v-model.number="spell[field.field]"
+                        class="m-0 mt-1"
+                        :style="(spell[field.field] <= 0 ? 'opacity: .5' : '')"
+                      />
+
+                      <!-- select -->
+                      <select
+                        v-model.number="spell[field.field]"
+                        class="form-control m-0 mt-1"
+                        v-if="field.selectData"
+                        :style="(spell[field.field] <= 0 ? 'opacity: .5' : '')"
+                      >
+                        <option
+                          v-for="(description, index) in field.selectData"
+                          :key="index"
+                          :value="parseInt(index)"
+                        >
+                          {{ index }}) {{ description }}
+                        </option>
+                      </select>
                     </div>
                   </div>
 
