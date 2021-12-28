@@ -8,147 +8,260 @@
           <eq-window class="mt-5">
 
             <div class="row">
-              <div class="col-12">
-                <class-bitmask-calculator
-                  :imageSize="imageSizes"
-                  :centered-buttons="false"
-                  :display-all-none="true"
-                  @fired="selectClass()"
-                  :inputData.sync="selectedClasses"
-                  :mask="selectedClasses"/>
-              </div>
-            </div>
-
-            <div class="row">
-              <div class="col-12">
-                <race-bitmask-calculator
-                  :imageSize="imageSizes"
-                  :centered-buttons="false"
-                  :display-all-none="true"
-                  @fired="selectRaces()"
-                  :inputData.sync="selectedRaces"
-                  :mask="selectedRaces"/>
-              </div>
-            </div>
-
-            <div class="row">
-              <div class="col-12">
-                <deity-bitmask-calculator
-                  :imageSize="imageSizes"
-                  :centered-buttons="false"
-                  :display-all-none="true"
-                  @fired="selectDeities()"
-                  :inputData.sync="selectedDeities"
-                  :mask="selectedDeities"/>
-              </div>
-            </div>
-
-            <div class="row">
-              <div class="col-12">
-                <inventory-slot-calculator
-                  :imageSize="imageSizes"
-                  :skip-duplicate-slots="true"
-                  :display-all-none="true"
-                  @fired="selectSlots()"
-                  :inputData.sync="selectedSlots"
-                  :mask="selectedSlots"/>
-              </div>
-            </div>
-
-            <div class="row mt-4">
-
-              <div class="col-lg-2 col-sm-12 text-center">
-                Item Name or ID
-                <input
-                  name="item_name"
-                  type="text"
-                  class="form-control"
-                  v-on:keyup.enter="triggerState"
-                  v-model="itemName"
-                  placeholder="Name or ID"
-                  autofocus=""
-                  id="item_name"
-                  value="">
-              </div>
-
-              <div class="col-lg-2 col-sm-12 text-center">
-                Item Type
-                <select
-                  id="item_type"
-                  class="form-control"
-                  v-model="itemType"
-                  @change="triggerState()">
-                  <option value="-1">-- Select --</option>
-                  <option v-for="option in itemTypeOptions" v-bind:value="option.value">
-                    {{ option.text }}
-                  </option>
-                </select>
-              </div>
-
-              <div class="col-lg-2 col-sm-12 text-center">
-                Level
-                <select
-                  class="form-control"
-                  v-model="selectedLevel"
-                  @change="triggerState()">
-                  <option value="0">-- Select --</option>
-                  <option v-for="l in 105" v-bind:value="l">
-                    {{ l }}
-                  </option>
-                </select>
-              </div>
-
-              <div class="col-lg-2 col-sm-12" v-if="selectedLevel">
-                <b-form-group>
-                  <b-form-radio v-model="selectedLevelType" @change="triggerStateDelayed()" value="0">Only
-                  </b-form-radio>
-                  <b-form-radio v-model="selectedLevelType" @change="triggerStateDelayed()" value="1">And Higher
-                  </b-form-radio>
-                  <b-form-radio v-model="selectedLevelType" @change="triggerStateDelayed()" value="2">And Lower
-                  </b-form-radio>
-                </b-form-group>
-              </div>
-
-              <div class="col-lg-2 col-sm-12 text-center">
-                List Type
-                <select
-                  id="Class"
-                  class="form-control"
-                  v-model="listType"
-                  @change="triggerState()">
-                  <option value="table">Table</option>
-                  <option value="card">Cards</option>
-                </select>
-              </div>
-
-            </div>
-
-            <div class="row mt-2" v-if="1 < 0">
-              <div class="col-12">
-                <h6 class="eq-header">Filters</h6>
-              </div>
-            </div>
-            <div class="row" v-for="filter in 3" :key="filter" v-if="1 < 0">
-              <div class="col-12" v-if="itemFields">
-                <div class="input-group w-50">
-                  <div class="input-group-prepend">
-                    <select class="form-control">
-                      <option v-for="field in itemFields" :key="field">{{ field }}</option>
-                    </select>
+              <div class="col-1">
+                <div
+                  class="row" v-for="field in
+                   [
+                     {
+                       description: 'Is Magic',
+                       field: 'magic'
+                     },
+                     {
+                       description: 'No Drop',
+                       field: 'nodrop',
+                       true: 0,
+                       false: 1,
+                     },
+                     {
+                       description: 'FV No Drop',
+                       field: 'fvnodrop',
+                     },
+                     {
+                       description: 'No Rent',
+                       field: 'norent',
+                       true: 0,
+                       false: 1,
+                     },
+                     {
+                       description: 'Tradeskill Item',
+                       field: 'tradeskills'
+                     },
+                     {
+                       description: 'Book',
+                       field: 'book'
+                     },
+                     {
+                       description: 'No Transfer',
+                       field: 'notransfer'
+                     },
+                     {
+                       description: 'Summoned',
+                       field: 'summonedflag'
+                     },
+                     {
+                       description: 'Quest',
+                       field: 'questitemflag'
+                     },
+                     {
+                       description: 'Artifact',
+                       field: 'artifactflag'
+                     },
+                     {
+                       description: 'No Pet',
+                       field: 'nopet'
+                     },
+                     {
+                       description: 'Attuneable',
+                       field: 'attuneable'
+                     },
+                     {
+                       description: 'Stackable',
+                       field: 'stackable'
+                     },
+                     {
+                       description: 'Potion Belt',
+                       field: 'potionbelt'
+                     },
+                     {
+                       description: 'Placeable',
+                       field: 'placeable'
+                     },
+                     {
+                       description: 'Epic Item',
+                       field: 'epicitem'
+                     },
+                     {
+                       description: 'Arrow Expend',
+                       field: 'expendablearrow'
+                     },
+                     {
+                       description: 'Heirloom',
+                       field: 'heirloom'
+                     },
+                   ]"
+                >
+                  <div class="col-9 text-right p-0 pr-2 m-0">
+                    {{ field.description }}
                   </div>
-                  <select class="form-control w-15">
-                    <option v-for="field in filterOptions" :key="field">{{ field }}</option>
-                  </select>
-                  <div class="input-group-append">
-                    <input type="text" class="form-control">
+                  <div class="col-3 text-left p-0">
+                    <eq-checkbox
+                      class="mb-2 d-inline-block"
+                      :true-value="(typeof field.true !== 'undefined' ? field.true : 1)"
+                      :false-value="(typeof field.false !== 'undefined' ? field.false : 0)"
+                      v-model.number="filters[field.field]"
+                      @input="filters[field.field] = $event; triggerCheckboxFilter(field.field, (typeof field.false !== 'undefined' ? field.false : 0))"
+                    />
                   </div>
                 </div>
               </div>
-            </div>
 
-            <div class="row">
-              <div class="form-group">
-                <button class='eq-button' @click="resetForm()">Reset Form</button>
+              <div class="col-11 pl-4">
+                <div class="row">
+                  <div class="col-12">
+                    <class-bitmask-calculator
+                      :imageSize="imageSizes"
+                      :centered-buttons="false"
+                      :display-all-none="true"
+                      @fired="selectClass()"
+                      :inputData.sync="selectedClasses"
+                      :mask="selectedClasses"
+                    />
+                  </div>
+                </div>
+
+                <div class="row">
+                  <div class="col-12">
+                    <race-bitmask-calculator
+                      :imageSize="imageSizes"
+                      :centered-buttons="false"
+                      :display-all-none="true"
+                      @fired="selectRaces()"
+                      :inputData.sync="selectedRaces"
+                      :mask="selectedRaces"
+                    />
+                  </div>
+                </div>
+
+                <div class="row">
+                  <div class="col-12">
+                    <deity-bitmask-calculator
+                      :imageSize="imageSizes"
+                      :centered-buttons="false"
+                      :display-all-none="true"
+                      @fired="selectDeities()"
+                      :inputData.sync="selectedDeities"
+                      :mask="selectedDeities"
+                    />
+                  </div>
+                </div>
+
+                <div class="row">
+                  <div class="col-12">
+                    <inventory-slot-calculator
+                      :imageSize="imageSizes"
+                      :skip-duplicate-slots="true"
+                      :display-all-none="true"
+                      @fired="selectSlots()"
+                      :inputData.sync="selectedSlots"
+                      :mask="selectedSlots"
+                    />
+                  </div>
+                </div>
+
+                <div class="row mt-4">
+
+                  <div class="col-lg-2 col-sm-12 text-center">
+                    Item Name or ID
+                    <input
+                      name="item_name"
+                      type="text"
+                      class="form-control"
+                      v-on:keyup.enter="triggerState"
+                      v-model="itemName"
+                      placeholder="Name or ID"
+                      autofocus=""
+                      id="item_name"
+                      value=""
+                    >
+                  </div>
+
+                  <div class="col-lg-2 col-sm-12 text-center">
+                    Item Type
+                    <select
+                      id="item_type"
+                      class="form-control"
+                      v-model="itemType"
+                      @change="triggerState()"
+                    >
+                      <option value="-1">-- Select --</option>
+                      <option v-for="option in itemTypeOptions" v-bind:value="option.value">
+                        {{ option.text }}
+                      </option>
+                    </select>
+                  </div>
+
+                  <div class="col-lg-2 col-sm-12 text-center">
+                    Level
+                    <select
+                      class="form-control"
+                      v-model="selectedLevel"
+                      @change="triggerState()"
+                    >
+                      <option value="0">-- Select --</option>
+                      <option v-for="l in 105" v-bind:value="l">
+                        {{ l }}
+                      </option>
+                    </select>
+                  </div>
+
+                  <div class="col-lg-2 col-sm-12" v-if="selectedLevel">
+                    <b-form-group>
+                      <b-form-radio v-model="selectedLevelType" @change="triggerStateDelayed()" value="0">Only
+                      </b-form-radio>
+                      <b-form-radio v-model="selectedLevelType" @change="triggerStateDelayed()" value="1">And Higher
+                      </b-form-radio>
+                      <b-form-radio v-model="selectedLevelType" @change="triggerStateDelayed()" value="2">And Lower
+                      </b-form-radio>
+                    </b-form-group>
+                  </div>
+
+                  <div class="col-lg-2 col-sm-12 text-center">
+                    List Type
+                    <select
+                      id="Class"
+                      class="form-control"
+                      v-model="listType"
+                      @change="triggerState()"
+                    >
+                      <option value="table">Table</option>
+                      <option value="card">Cards</option>
+                    </select>
+                  </div>
+
+                  <div class="col-lg-2 col-sm-12 text-left">
+                    <div
+                      :class="'text-center btn-xs eq-button-fancy'"
+                      style="margin-top: 17px"
+                      @click="resetForm()"
+                    >
+                      Reset Form
+                    </div>
+                  </div>
+
+                </div>
+
+                <div class="row mt-2" v-if="1 < 0">
+                  <div class="col-12">
+                    <h6 class="eq-header">Filters</h6>
+                  </div>
+                </div>
+                <div class="row" v-for="filter in 3" :key="filter" v-if="1 < 0">
+                  <div class="col-12" v-if="itemFields">
+                    <div class="input-group w-50">
+                      <div class="input-group-prepend">
+                        <select class="form-control">
+                          <option v-for="field in itemFields" :key="field">{{ field }}</option>
+                        </select>
+                      </div>
+                      <select class="form-control w-15">
+                        <option v-for="field in filterOptions" :key="field">{{ field }}</option>
+                      </select>
+                      <div class="input-group-append">
+                        <input type="text" class="form-control">
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
 
@@ -158,10 +271,12 @@
 
           <!-- card rendering -->
           <div class="row" style="justify-content: center" v-if="loaded && listType === 'card'">
-            <div v-for="(item, index) in items"
-                 class="col-lg-4 col-sm-9"
-                 :key="item.id"
-                 style="display: inline-block; vertical-align: top">
+            <div
+              v-for="(item, index) in items"
+              class="col-lg-4 col-sm-9"
+              :key="item.id"
+              style="display: inline-block; vertical-align: top"
+            >
               <eq-window style="margin-right: 10px; width: auto; height: 90%">
                 <eq-item-card-preview :item-data="item" :show-edit="true"/>
               </eq-window>
@@ -179,26 +294,28 @@
 </template>
 
 <script type="ts">
-import {ItemApi}                             from "@/app/api/api";
-import EqWindow                              from "@/components/eq-ui/EQWindow.vue";
-import {SpireApiClient}                      from "@/app/api/spire-api-client";
-import * as util                             from "util";
-import EqItemCardPreview                     from "@/components/eq-ui/EQItemCardPreview.vue";
-import {DB_CLASSES_ICONS}                    from "@/app/constants/eq-class-icon-constants";
-import {App}                                 from "@/constants/app";
+import {ItemApi} from "@/app/api/api";
+import EqWindow from "@/components/eq-ui/EQWindow.vue";
+import {SpireApiClient} from "@/app/api/spire-api-client";
+import * as util from "util";
+import EqItemCardPreview from "@/components/eq-ui/EQItemCardPreview.vue";
+import {DB_CLASSES_ICONS} from "@/app/constants/eq-class-icon-constants";
+import {App} from "@/constants/app";
 import {DB_CLASSES_SHORT, DB_PLAYER_CLASSES} from "@/app/constants/eq-classes-constants";
-import {DB_SPA}                              from "@/app/constants/eq-spell-constants";
+import {DB_SPA} from "@/app/constants/eq-spell-constants";
 // import EqItemCardPreviewTable                   from "@/components/eq-ui/EQItemCardPreviewTable.vue";
-import {Items}                               from "@/app/items";
-import {ROUTE}                               from "@/routes";
-import ClassBitmaskCalculator                from "@/components/tools/ClassBitmaskCalculator.vue";
-import RaceBitmaskCalculator                 from "@/components/tools/RaceBitmaskCalculator.vue";
-import InventorySlotCalculator               from "@/components/tools/InventorySlotCalculator.vue";
-import DeityBitmaskCalculator                from "@/components/tools/DeityCalculator.vue";
-import itemTypes                             from "@/constants/item-types.json"
+import {Items} from "@/app/items";
+import {ROUTE} from "@/routes";
+import ClassBitmaskCalculator from "@/components/tools/ClassBitmaskCalculator.vue";
+import RaceBitmaskCalculator from "@/components/tools/RaceBitmaskCalculator.vue";
+import InventorySlotCalculator from "@/components/tools/InventorySlotCalculator.vue";
+import DeityBitmaskCalculator from "@/components/tools/DeityCalculator.vue";
+import itemTypes from "@/constants/item-types.json"
+import EqCheckbox from "@/components/eq-ui/EQCheckbox.vue";
 
 export default {
   components: {
+    EqCheckbox,
     DeityBitmaskCalculator,
     InventorySlotCalculator,
     RaceBitmaskCalculator,
@@ -232,6 +349,8 @@ export default {
       itemName: "",
       itemType: -1,
       spellEffect: "",
+
+      filters: {},
 
       selectedLevel: 0,
       selectedLevelType: 0,
@@ -273,6 +392,29 @@ export default {
     }
   },
   methods: {
+
+    triggerCheckboxFilter(field, falseValue) {
+      // console.log("hello")
+      // console.log(this.filters)
+
+      // delete filter from filters if false value set
+      for (let key in this.filters) {
+        const value = this.filters[key]
+        if (field == key && value === falseValue) {
+          delete this.filters[key]
+        }
+      }
+
+      if (Object.keys(this.filters).length > 0) {
+        this.listItems()
+      }
+
+      // if no filters set, clear items result
+      if (Object.keys(this.filters).length === 0) {
+        this.items = null
+      }
+
+    },
 
     updateQueryState: function () {
       let queryState = {};
@@ -325,6 +467,7 @@ export default {
       this.selectedLevel     = 0;
       this.selectedLevelType = 0;
       this.items             = null;
+      this.filters           = {}
       this.updateQueryState()
     },
 
@@ -450,6 +593,11 @@ export default {
         filters.push(["slots", "_ne_", 65535]);
       } else if (this.selectedSlots && parseInt(this.selectedSlots) > 0 && parseInt(this.selectedSlots) === 65535) {
         filters.push(["slots", "__", 65535]);
+      }
+
+      for (let key in this.filters) {
+        const value = this.filters[key]
+        filters.push([key, "__", value])
       }
 
       // item type
