@@ -364,6 +364,7 @@
                           <b-form-input
                             v-if="!field.selectData && !field.bool"
                             :id="field.field"
+                            v-b-tooltip.hover.v-dark.right :title="getFieldDescription(field.field)"
                             v-model.number="spell[field.field]"
                             class="m-0 mt-1"
                             :style="(spell[field.field] <= 0 ? 'opacity: .5' : '')"
@@ -374,6 +375,7 @@
                             v-model.number="spell[field.field]"
                             class="form-control m-0 mt-1"
                             v-if="field.selectData"
+                            v-b-tooltip.hover.v-dark.right :title="getFieldDescription(field.field)"
                             :style="(spell[field.field] <= 0 ? 'opacity: .5' : '')"
                           >
                             <option
@@ -482,6 +484,7 @@
                             :id="field.field"
                             v-model.number="spell[field.field]"
                             class="m-0 mt-1"
+                            v-b-tooltip.hover.v-dark.right :title="getFieldDescription(field.field)"
                             :style="(spell[field.field] <= 0 ? 'opacity: .5' : '')"
                           />
 
@@ -491,6 +494,7 @@
                             class="form-control m-0 mt-1"
                             v-if="field.selectData"
                             :style="(spell[field.field] <= 0 ? 'opacity: .5' : '')"
+                            v-b-tooltip.hover.v-dark.right :title="getFieldDescription(field.field)"
                           >
                             <option
                               v-for="(description, index) in field.selectData"
@@ -660,6 +664,7 @@
                       <b-form-input
                         v-if="!field.selectData && !field.bool"
                         :id="field.field"
+                        v-b-tooltip.hover.v-dark.right :title="getFieldDescription(field.field)"
                         v-model.number="spell[field.field]"
                         class="m-0 mt-1"
                         :style="(spell[field.field] <= 0 ? 'opacity: .5' : '')"
@@ -670,6 +675,7 @@
                         v-model.number="spell[field.field]"
                         class="form-control m-0 mt-1"
                         v-if="field.selectData"
+                        v-b-tooltip.hover.v-dark.right :title="getFieldDescription(field.field)"
                         :style="(spell[field.field] <= 0 ? 'opacity: .5' : '')"
                       >
                         <option
@@ -771,6 +777,7 @@
                         :id="field.field"
                         v-model.number="spell[field.field]"
                         class="m-0 mt-1"
+                        v-b-tooltip.hover.v-dark.right :title="getFieldDescription(field.field)"
                         :style="(spell[field.field] <= 0 ? 'opacity: .5' : '')"
                       />
 
@@ -779,6 +786,7 @@
                         v-model.number="spell[field.field]"
                         class="form-control m-0 mt-1"
                         v-if="field.selectData"
+                        v-b-tooltip.hover.v-dark.right :title="getFieldDescription(field.field)"
                         :style="(spell[field.field] <= 0 ? 'opacity: .5' : '')"
                       >
                         <option
@@ -791,70 +799,108 @@
                       </select>
                     </div>
                   </div>
-
                 </eq-tab>
-                <eq-tab name="Resist">
+                <eq-tab name="Resist" class="minified-inputs">
+                  <div
+                    class="row" v-for="field in
+                     [
+                       {
+                         description: 'Unresistable',
+                         field: 'field_209',
+                         bool: true
+                       },
+                       {
+                         description: 'No Partial Resists',
+                         field: 'no_partial_resist',
+                         bool: true
+                       },
+                       {
+                         description: 'Resist Type',
+                         field: 'resisttype',
+                         selectData: DB_SPELL_RESISTS,
+                       },
+                       {
+                         description: 'Resist Diff',
+                         field: 'resist_diff'
+                       },
+                       {
+                         description: 'PVP Resist Mod',
+                         field: 'pvpresistbase'
+                       },
+                       {
+                         description: 'PVP Resist Per Level',
+                         field: 'pvpresistcalc'
+                       },
+                       {
+                         description: 'PVP Resist Cap',
+                         field: 'pvpresistcap'
+                       },
+                       {
+                         description: 'Resist Chance Limits: Min Chance',
+                         field: 'min_resist'
+                       },
+                       {
+                         description: 'Resist Chance Limits: Max Chance',
+                         field: 'max_resist'
+                       },
+                       {
+                         description: 'Reflectable',
+                         field: 'reflectable'
+                       },
+                       {
+                         description: 'Feedbackable',
+                         field: 'field_160'
+                       },
+                     ]"
+                  >
+                    <div class="col-6 text-right p-0 m-0 mr-3" v-if="field.bool">
+                      {{ field.description }}
+                    </div>
+                    <div class="col-6 text-right p-0 m-0 mr-3" v-if="!field.bool" style="margin-top: 10px !important">
+                      {{ field.description }}
+                    </div>
+                    <div class="col-3 text-left p-0 mt-1">
 
-                  <div class="row">
-                    <div class="col-3">
-                      Resist Type
-                      <b-form-select
-                        v-model.number="spell.resisttype"
-                        v-if="DB_SPELL_RESISTS"
+                      <!-- checkbox -->
+                      <eq-checkbox
+                        v-b-tooltip.hover.v-dark.right :title="getFieldDescription(field.field)"
+                        class="mb-2 d-inline-block"
+                        :true-value="(typeof field.true !== 'undefined' ? field.true : 1)"
+                        :false-value="(typeof field.false !== 'undefined' ? field.false : 0)"
+                        v-model.number="spell[field.field]"
+                        @input="spell[field.field] = $event"
+                        v-if="field.bool"
+                      />
+
+                      <!-- input -->
+                      <b-form-input
+                        v-if="!field.selectData && !field.bool"
+                        :id="field.field"
+                        v-model.number="spell[field.field]"
+                        class="m-0 mt-1"
+                        v-b-tooltip.hover.v-dark.right :title="getFieldDescription(field.field)"
+                        :style="(spell[field.field] === 0 ? 'opacity: .5' : '')"
+                      />
+
+                      <!-- select -->
+                      <select
+                        v-model.number="spell[field.field]"
+                        class="form-control m-0 mt-1"
+                        v-if="field.selectData"
+                        v-b-tooltip.hover.v-dark.right :title="getFieldDescription(field.field)"
+                        :style="(spell[field.field] <= 0 ? 'opacity: .5' : '')"
                       >
-                        <b-form-select-option
-                          :value="parseInt(id)" v-for="(value, id) in DB_SPELL_RESISTS"
-                          :key="id"
-                        >{{ id }})
-                          {{ value }}
-                        </b-form-select-option>
-                      </b-form-select>
-                    </div>
-                    <div class="col-3">
-                      Resist Diff
-                      <b-form-input v-model.number="spell.resist_diff"/>
-                    </div>
-                    <div class="col-3 text-center">
-                      Unresistable
-                      <eq-checkbox
-                        class="mt-2 mb-2" v-model.number="spell.field_209"
-                        @input="spell.field_209 = $event"
-                      />
-                    </div>
-                    <div class="col-3 text-center">
-                      No Partial Resists
-                      <eq-checkbox
-                        class="mt-2 mb-2"
-                        v-model.number="spell.no_partial_resist"
-                        @input="spell.no_partial_resist = $event"
-                      />
+                        <option
+                          v-for="(description, index) in field.selectData"
+                          :key="index"
+                          :value="parseInt(index)"
+                        >
+                          {{ index }}) {{ description }}
+                        </option>
+                      </select>
                     </div>
                   </div>
-
-                  <div class="row">
-                    <div class="col-4">
-                      PVP Resist Mod
-                      <b-form-input v-model.number="spell.pvpresistbase"/>
-                    </div>
-                    <div class="col-4">
-                      PVP Resist Per Level
-                      <b-form-input v-model.number="spell.pvpresistcalc"/>
-                    </div>
-                    <div class="col-4">
-                      PVP Resist Cap
-                      <b-form-input v-model.number="spell.pvpresistcap"/>
-                    </div>
-                  </div>
-
-                  Resist Chance Limits: Max Chance (Actual in game chance is divided by 2)
-                  <b-form-input v-model.number="spell.max_resist"/>
-                  Resist Chance Limits: Min Chance (Actual in game chance is divided by 2)
-                  <b-form-input v-model.number="spell.min_resist"/>
-
-                  Reflectable
-                  <b-form-input v-model.number="spell.reflectable"/>
-                  Feedbackable
-                  <b-form-input v-model.number="spell.field_160"/>
+                  
                 </eq-tab>
               </eq-tabs>
 
