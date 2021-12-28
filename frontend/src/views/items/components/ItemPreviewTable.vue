@@ -11,6 +11,8 @@
         </div>
 
         <div class='item-table' v-if="items.length > 0">
+          <div class="ml-5">Items shown ({{items.length}})</div>
+
           <!--        <div class='eq-window-nested-blue' v-if="items.length > 0" style="overflow-y: scroll;">-->
           <table id="items-table" class="eq-table eq-highlight-rows" style="display: table;">
             <thead>
@@ -41,16 +43,16 @@
               <td>
                 {{ item.id }}
               </td>
-              <td class="text-left">
-                <div :id="item.id + '-popover'" style="display:inline-block">
-                  <div style="display: inline-block">
-                    <img
-                      :src="itemCdnUrl + 'item_' + item.icon + '.png'"
-                      style="height:40px; border-radius: 25px; width:auto;"
-                      class="mr-2"
-                    >
-                    <span class="mr-1">{{ item.name }}</span>
-                  </div>
+              <td class="text-left" style="vertical-align: middle">
+                <div :id="item.id + '-popover'" style="display:inline-block;">
+                    <span :class="'fade-in item-' + item.icon" :title="item.icon"/>
+
+<!--                    <img-->
+<!--                      :src="itemCdnUrl + 'item_' + item.icon + '.png'"-->
+<!--                      style="height:40px; border-radius: 25px; width:auto;"-->
+<!--                      class="mr-2"-->
+<!--                    >-->
+                    <span class="ml-2" style="position:relative; top: -15px">{{ item.name }}</span>
 
                 </div>
 
@@ -134,7 +136,7 @@ export default {
     // do this once so we're not triggering vue re-renders in the loop
     this.sideLoadedItemData = Items.data
 
-    this.title = "Items (" + this.items.length + ")";
+    // this.title = "Items (" + this.items.length + ")";
 
 
   },

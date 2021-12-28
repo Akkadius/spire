@@ -126,7 +126,7 @@
                     </select>
                   </div>
 
-                  <div class="col-lg-2 col-sm-12" v-if="selectedLevel">
+                  <div class="col-lg-1 col-sm-12 text-center" v-if="selectedLevel">
                     <b-form-group>
                       <b-form-radio v-model="selectedLevelType" @change="triggerStateDelayed()" value="0">Only
                       </b-form-radio>
@@ -387,22 +387,22 @@ export default {
           description: 'Potion Belt',
           field: 'potionbelt'
         },
-        {
-          description: 'Placeable',
-          field: 'placeable'
-        },
+        // {
+        //   description: 'Placeable',
+        //   field: 'placeable'
+        // },
         {
           description: 'Epic Item',
           field: 'epicitem'
         },
-        {
-          description: 'Arrow Expend',
-          field: 'expendablearrow'
-        },
-        {
-          description: 'Heirloom',
-          field: 'heirloom'
-        },
+        // {
+        //   description: 'Arrow Expend',
+        //   field: 'expendablearrow'
+        // },
+        // {
+        //   description: 'Heirloom',
+        //   field: 'heirloom'
+        // },
       ]
     },
 
@@ -536,7 +536,7 @@ export default {
       this.selectedLevel     = 0;
       this.selectedLevelType = 0;
       this.items             = null;
-      this.listType          = "card"
+      this.listType          = "table"
       this.updateQueryState()
     },
 
@@ -724,7 +724,7 @@ export default {
       request.limit = this.limit;
 
       if (this.listType === 'table') {
-        request.limit = 1000;
+        request.limit = 300;
       }
 
       // filter by class
