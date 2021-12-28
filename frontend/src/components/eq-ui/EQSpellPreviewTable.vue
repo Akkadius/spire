@@ -23,7 +23,7 @@
               <th style="width: 120px">Duration</th>
               <th>Target</th>
               <th style="width: 400px">Effects</th>
-              <th>Description</th>
+<!--              <th>Description</th>-->
             </tr>
             </thead>
             <tbody>
@@ -65,9 +65,9 @@
               <td style="text-align: left">
                 <eq-spell-effects :spell="spell"/>
               </td>
-              <td style="text-align: left">
-                <eq-spell-description :spell="spell"/>
-              </td>
+<!--              <td style="text-align: left">-->
+<!--                <eq-spell-description :spell="spell"/>-->
+<!--              </td>-->
             </tr>
             </tbody>
           </table>

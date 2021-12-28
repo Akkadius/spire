@@ -1096,7 +1096,6 @@ export default {
       spell: null, // spell record data
       spellCdnUrl: App.ASSET_SPELL_ICONS_BASE_URL,
 
-
       // constants
       DB_SPELL_EFFECTS: DB_SPELL_EFFECTS,
       DB_SPA: DB_SPA,
@@ -1128,6 +1127,7 @@ export default {
     '$route'() {
       // reset state vars when we navigate away
       this.notification = ""
+
       // reload
       this.load()
     }
