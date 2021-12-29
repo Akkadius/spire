@@ -109,6 +109,11 @@ export default new Router({
           component: () => import('./views/Calculators.vue'),
           meta: {title: "Calculators"},
         },
+        {
+          path: '/editor',
+          component: () => import('./views/Editor.vue'),
+          meta: {title: "Editor"},
+        },
       ]
     },
     {
