@@ -43,6 +43,11 @@ import "../node_modules/ag-grid-community/dist/styles/ag-theme-balham-dark.css";
 // Ag grid enterprisec
 import 'ag-grid-enterprise';
 
+// vue-tree
+
+import 'sl-vue-tree/src/sl-vue-tree-dark.css'
+import 'sl-vue-tree/src/sl-vue-tree.js'
+
 // import {BVConfigPlugin} from 'bootstrap-vue';
 
 // Vue.use(BVConfigPlugin, {

@@ -12,7 +12,7 @@ export default new Router({
   routes: [
     {
       path: '/',
-      component: () => import('./components/layout/Layout.vue'),
+      component: () => import('./components/layout/MainLayout.vue'),
       children: [
         {
           path: '/',
@@ -109,9 +109,16 @@ export default new Router({
           component: () => import('./views/Calculators.vue'),
           meta: {title: "Calculators"},
         },
+      ]
+    },
+    {
+      path: '/editor',
+      component: () => import('./components/layout/QuestEditorLayout.vue'),
+      meta: {title: "Editor"},
+      children: [
         {
-          path: '/editor',
-          component: () => import('./views/Editor.vue'),
+          path: '/',
+          component: () => import('./views/quest-editor/QuestEditor.vue'),
           meta: {title: "Editor"},
         },
       ]
