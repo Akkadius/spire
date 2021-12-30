@@ -104,6 +104,7 @@ export default {
   name: "ItemPreviewTable",
   components: {
     EqWindow,
+    "eq-item-card-preview": () => import("@/components/eq-ui/EQItemCardPreview.vue"),
     "v-runtime-template": () => import("v-runtime-template")
   },
   data() {
