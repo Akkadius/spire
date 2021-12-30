@@ -5,7 +5,7 @@
       class="editor"
       :options="options"
       v-model="code"
-      language="lua"
+      :language="language"
       @editorDidMount="editorDidMount"
     />
 
@@ -18,125 +18,147 @@ import {SpireApiClient}               from "../../app/api/spire-api-client";
 import axios                          from "axios";
 import * as util                      from "util";
 import {NpcTypeApi, TaskApi, ZoneApi} from "../../app/api";
+import {EventBus}                     from "../../app/event-bus/event-bus";
 
-let gSuggestions = []
+let gSuggestions     = {}
+gSuggestions["perl"] = []
+gSuggestions["lua"]  = []
 
 export default {
   components: {
     MonacoEditor
   },
 
+  created() {
+    EventBus.$on("EDITOR_OPEN_FILE", this.openFile);
+  },
+  destroyed() {
+    EventBus.$off("EDITOR_OPEN_FILE", this.openFile);
+  },
+
   async mounted() {
+    let languages = ['lua', 'perl']
+
     SpireApiClient.v1().get('/quest-api/definitions').then((response) => {
       if (response.data && response.data.data) {
-        let api         = response.data.data
-        let suggestions = [];
-        let language    = 'lua'
+        let api = response.data.data
+        languages.forEach((language) => {
+          let suggestions = [];
 
-        // constants
-        let constants = []
-        for (const key in api[language].constants) {
-          const entries = api[language].constants[key]
+          // constants
+          let constants = []
+          for (const key in api[language].constants) {
+            const entries = api[language].constants[key]
 
-          entries.forEach((e) => {
-            constants.push(
-              util.format(
-                "%s.%s",
-                key,
-                e.constant
+            entries.forEach((e) => {
+              constants.push(
+                util.format(
+                  "%s.%s",
+                  key,
+                  e.constant
+                )
               )
-            )
-          })
-        }
-
-        constants.forEach((c) => {
-          let completionSnippet = {
-            label: c,
-            kind: monaco.languages.CompletionItemKind.Constant,
-            insertText: c
+            })
           }
 
-          suggestions.push(completionSnippet)
-        })
+          constants.forEach((c) => {
+            let completionSnippet = {
+              label: c,
+              kind: monaco.languages.CompletionItemKind.Constant,
+              insertText: c
+            }
 
-        // methods
-        let apiMethods = []
-        for (const [key, value] of Object.entries(api[language].methods)) {
-          api[language].methods[key].forEach((method) => {
-            apiMethods.push(this.getFormattedApiMethod(method))
-          })
-        }
-
-        apiMethods.forEach((m) => {
-          let completionParams    = []
-          let autoCompletionIndex = 1;
-          m.params.forEach((p) => {
-            completionParams.push(
-              util.format("${%s:%s}", autoCompletionIndex, p)
-            )
-            autoCompletionIndex++;
+            suggestions.push(completionSnippet)
           })
 
-          // this is label friendly, doesn't include completion indexes
-          let methodLabel = util.format(
-            "%s.%s(%s)",
-            m.methodPrefix,
-            m.method,
-            m.params.join(", ")
-          )
-
-          // method snippet contains completion indexes for user to fill out param values
-          let methodSnippet = util.format(
-            "%s.%s(%s)",
-            m.methodPrefix,
-            m.method,
-            completionParams.join(", ")
-          )
-
-          let completionSnippet = {
-            label: methodLabel,
-            // filterText: methodLabel,
-            kind: monaco.languages.CompletionItemKind.Function,
-            // filterText: methodLabel,
-            insertText: methodSnippet,
-            insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet
+          // methods
+          let apiMethods = []
+          for (const [key, value] of Object.entries(api[language].methods)) {
+            api[language].methods[key].forEach((method) => {
+              apiMethods.push(this.getFormattedApiMethod(method))
+            })
           }
 
-          suggestions.push(completionSnippet)
+          apiMethods.forEach((m) => {
+            let completionParams    = []
+            let autoCompletionIndex = 1;
+            m.params.forEach((p) => {
+              completionParams.push(
+                util.format("${%s:%s}", autoCompletionIndex, p)
+              )
+              autoCompletionIndex++;
+            })
+
+            let languageQuestPrepend = "."
+            if (language === "perl") {
+              languageQuestPrepend = "::"
+            }
+
+            // this is label friendly, doesn't include completion indexes
+            let methodLabel = util.format(
+              "%s%s%s(%s)",
+              m.methodPrefix,
+              languageQuestPrepend,
+              m.method,
+              m.params.join(", ")
+            )
+
+            // method snippet contains completion indexes for user to fill out param values
+            let methodSnippet = util.format(
+              "%s%s%s(%s)",
+              m.methodPrefix,
+              languageQuestPrepend,
+              m.method,
+              completionParams.join(", ")
+            )
+
+            let completionSnippet = {
+              label: methodLabel,
+              // filterText: methodLabel,
+              kind: monaco.languages.CompletionItemKind.Function,
+              // filterText: methodLabel,
+              insertText: methodSnippet,
+              insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet
+            }
+
+            suggestions.push(completionSnippet)
+          })
+
+          // console.log(suggestions)
+
+          gSuggestions[language] = suggestions
+
+          monaco.languages.registerCompletionItemProvider(language, {
+            // triggerCharacters: ['.', ':', ' '],
+            provideCompletionItems: (model, position, context) => {
+              // find out if we are completing a property in the 'dependencies' object.
+              // var textUntilPosition = model.getValueInRange({
+              //   startLineNumber: 1,
+              //   startColumn: 1,
+              //   endLineNumber: position.lineNumber,
+              //   endColumn: position.column
+              // });
+              // var match = textUntilPosition.match(
+              //   /"dependencies"\s*:\s*\{\s*("[^"]*"\s*:\s*"[^"]*"\s*,\s*)*([^"]*)?$/
+              // );
+              // if (!match) {
+              //   return { suggestions: [] };
+              // }
+              var word  = model.getWordUntilPosition(position);
+              var range = {
+                startLineNumber: position.lineNumber,
+                endLineNumber: position.lineNumber,
+                startColumn: word.startColumn,
+                endColumn: word.endColumn
+              };
+              return {
+                suggestions: this.getSuggestions(range)
+              };
+            },
+          });
         })
 
-        // console.log(suggestions)
 
-        gSuggestions = suggestions
-
-        monaco.languages.registerCompletionItemProvider('lua', {
-          // triggerCharacters: ['.', ':', ' '],
-          provideCompletionItems: (model, position, context) => {
-            // find out if we are completing a property in the 'dependencies' object.
-            // var textUntilPosition = model.getValueInRange({
-            //   startLineNumber: 1,
-            //   startColumn: 1,
-            //   endLineNumber: position.lineNumber,
-            //   endColumn: position.column
-            // });
-            // var match = textUntilPosition.match(
-            //   /"dependencies"\s*:\s*\{\s*("[^"]*"\s*:\s*"[^"]*"\s*,\s*)*([^"]*)?$/
-            // );
-            // if (!match) {
-            //   return { suggestions: [] };
-            // }
-            var word  = model.getWordUntilPosition(position);
-            var range = {
-              startLineNumber: position.lineNumber,
-              endLineNumber: position.lineNumber,
-              startColumn: word.startColumn,
-              endColumn: word.endColumn
-            };
-            return {
-              suggestions: this.getSuggestions(range)
-            };
-          },
-        });
       }
     }, (error) => {
       // this.errorMessage = "Unknown error trying to contact the database"
@@ -201,7 +223,9 @@ export default {
         })
       }
 
-      gSuggestions = gSuggestions.concat(suggestions)
+      languages.forEach((language) => {
+        gSuggestions[language] = gSuggestions[language].concat(suggestions)
+      });
 
       // console.log(gSuggestions)
     }
@@ -209,10 +233,25 @@ export default {
   },
 
   methods: {
+    openFile(e) {
+      // console.log("received file open event")
+      // console.log(e)
+      this.code = e.contents
+
+      if (e.fullFileName.includes(".pl")) {
+        this.language = "perl"
+      }
+      if (e.fullFileName.includes(".lua")) {
+        this.language = "lua"
+      }
+    },
+
     getSuggestions(range) {
       // console.log(range)
+      // console.log("language is " + this.language)
+      // console.log(gSuggestions[this.language])
 
-      let suggestions = gSuggestions
+      let suggestions = gSuggestions[this.language]
       for (let key in suggestions) {
         suggestions[key].range = range
       }
@@ -318,6 +357,7 @@ export default {
 
   data() {
     return {
+      language: "lua",
       code: `-- same for vxed and tipt
 local compass     = { zone="barindu", x=-1249.24, y=575.142, z=-148.257 }
 local safereturn  = { zone="barindu", x=-1242.00, y=456.00, z=-121.76, h=0.0 }
@@ -401,7 +441,8 @@ function event_trade(e)
 end
       `,
       options: {
-        theme: 'vs-dark'
+        theme: 'vs-dark',
+        autoClosingBrackets: false,
       }
     }
   }
