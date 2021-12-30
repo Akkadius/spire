@@ -9,6 +9,7 @@
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
+    "@exuanbo/file-icons-js": "^3.3.0",
     "@types/jquery": "^3.5.9",
     "ag-grid-community": "^25.3.0",
     "ag-grid-enterprise": "^25.3.0",

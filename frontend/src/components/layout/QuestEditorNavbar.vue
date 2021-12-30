@@ -14,34 +14,39 @@
       </button>
 
       <router-link class="ml-3 mt-3" to="/">
-        <h1 class="text-center eq-header small-mobile">
+        <h1 class="text-center eq-header small-mobile mb-0">
           Spire
         </h1>
+        <span class="text-center eq-header" style="font-size: 25px;margin-left: 35px;">
+          Quest Editor
+        </span>
       </router-link>
 
       <div class="collapse navbar-collapse p-0" id="sidebarCollapse">
         <sl-vue-tree
           v-model="nodes"
           ref="slVueTree"
-          :show-branches="true"
+          :show-branches="false"
           class="mt-3"
           @select="nodeSelected"
-          style="width: 305px; height: 88vh; margin: 0; background-color: rgba(20, 20, 20, 0.6); border: 1px solid rgb(30 30 30); overflow-x: scroll"
+          style="width: 405px; height: 88vh; margin: 0; background-color: rgba(20, 20, 20, 0.6); border: 1px solid rgb(30 30 30); overflow-x: scroll"
         >
           <template slot="title" slot-scope="{ node }">
           <span class="item-icon">
-            <i class="fa fa-file" v-if="node.isLeaf"></i>
-            <i class="fa fa-folder" v-if="!node.isLeaf"></i>
+<!--            <i class="fa fa-file" v-if="node.isLeaf"></i>-->
+            <i class="icon perl-icon medium-blue" v-if="node.isLeaf && node.title.includes('.pl')"></i>
+            <i class="icon lua-icon medium-green" v-if="node.isLeaf && node.title.includes('.lua')"></i>
+            <i class="fa fa-folder medium-yellow" v-if="!node.isLeaf"></i>
           </span>
 
             {{ node.title }}
           </template>
 
           <template slot="toggle" slot-scope="{ node }">
-          <span v-if="!node.isLeaf">
-            <i v-if="node.isExpanded" class="fa fa-chevron-down"></i>
-            <i v-if="!node.isExpanded" class="fa fa-chevron-right"></i>
-          </span>
+<!--          <span v-if="!node.isLeaf">-->
+<!--            <i v-if="node.isExpanded" class="fa fa-chevron-down"></i>-->
+<!--            <i v-if="!node.isExpanded" class="fa fa-chevron-right"></i>-->
+<!--          </span>-->
           </template>
         </sl-vue-tree>
       </div>
@@ -68,6 +73,7 @@ export default {
   data() {
     return {
       files: null,
+      loadedFolders: [""],
       nodes: [
         { title: 'Loading...', isLeaf: true },
       ]
@@ -81,55 +87,9 @@ export default {
     SpireApiClient.v1().get('/quest-file-api/list').then((response) => {
       if (response.data) {
 
-        let questFiles = {}
-        response.data.files.forEach((file) => {
-          const filename = path.basename(file);
-          const folder   = path.basename(path.dirname(file));
+        this.files = response.data.files
 
-          if (folder === ".") {
-            return false;
-          }
-
-          if (typeof questFiles[folder] === "undefined") {
-            questFiles[folder] = [];
-          }
-
-          questFiles[folder].push(filename)
-        })
-
-        let nodes = []
-        let folders = 0
-        for (let folder in questFiles) {
-          const files = questFiles[folder]
-
-          let children = []
-
-          files.forEach((file) => {
-            let child      = {}
-            child.title    = file
-            child.isLeaf   = true
-            child.fullPath = util.format("%s/%s", folder, file)
-            children.push(child)
-          })
-
-          let node = {
-            title: folder,
-            isLeaf: false,
-            isExpanded: false,
-            children: children
-          }
-
-          nodes.push(node)
-          folders++
-
-          if (folders > 30) {
-            break
-          }
-        }
-
-        // console.log(nodes)
-
-        this.nodes = nodes
+        this.loadTree();
 
         // console.log(questFiles)
 
@@ -140,9 +100,60 @@ export default {
   },
 
   methods: {
+    loadTree() {
+
+      let questFiles = {}
+      this.files.forEach((file) => {
+        const filename = path.basename(file);
+        const folder   = path.basename(path.dirname(file));
+
+        if (folder === ".") {
+          return false;
+        }
+
+        if (typeof questFiles[folder] === "undefined") {
+          questFiles[folder] = [];
+        }
+
+        questFiles[folder].push(filename)
+      })
+
+      let nodes = []
+      let folders = 0
+      for (let folder in questFiles) {
+        const files = questFiles[folder]
+
+        // load children if the folder is loaded
+        let children = []
+
+        this.loadedFolders.forEach((f) => {
+          if (f === folder) {
+            files.forEach((file) => {
+              let child      = {}
+              child.title    = file
+              child.isLeaf   = true
+              child.fullPath = util.format("%s/%s", folder, file)
+              children.push(child)
+            })
+          }
+        })
+
+        let node = {
+          title: folder,
+          isLeaf: false,
+          isExpanded: false,
+          children: children
+        }
+
+        nodes.push(node)
+        folders++
+
+      }
+
+      this.nodes = nodes
+    },
+
     nodeSelected(nodes, event) {
-      this.selectedNodesTitle = nodes.map(node => node.title).join(', ');
-      this.lastEvent          = `Select nodes: ${this.selectedNodesTitle}`;
 
       // console.log(nodes[0])
       const slVueTree = this.$refs.slVueTree;
@@ -150,8 +161,57 @@ export default {
       let fullPath = []
       if (nodes[0]) {
         let fileName = nodes[0].title
-        if (nodes[0].path[0]) {
+        console.log(nodes[0])
+
+        if (!nodes[0].isLeaf) {
+          this.loadedFolders.indexOf(fileName) === -1 ? this.loadedFolders.push(fileName) : ""
+
+          let questFiles = {}
+          this.files.forEach((file) => {
+            const filename = path.basename(file);
+            const folder   = path.basename(path.dirname(file));
+
+            if (folder === ".") {
+              return false;
+            }
+
+            if (typeof questFiles[folder] === "undefined") {
+              questFiles[folder] = [];
+            }
+
+            questFiles[folder].push(filename)
+          })
+
+          let children = []
+
+          for (let folder in questFiles) {
+            const files = questFiles[folder]
+            if (folder === fileName) {
+              files.forEach((file) => {
+                let child      = {}
+                child.title    = file
+                child.isLeaf   = true
+                child.fullPath = util.format("%s/%s", folder, file)
+                children.push(child)
+              })
+            }
+          }
+
+          console.log(children)
+
+          slVueTree.updateNode(nodes[0].path, { children: children });
+          
+          // this.loadedFolders.push(fileName)
+          // this.loadTree()
+
+          console.log("loaded folders %s", fileName)
+        }
+
+        if (nodes[0].path[0] >= 0) {
           let parentName = slVueTree.getNode([nodes[0].path[0]]).title
+
+          console.log("p [%s] f [%s]", parentName, fileName)
+
           if (parentName !== fileName) {
             let fullFileName = util.format("%s/%s", parentName, fileName)
 
