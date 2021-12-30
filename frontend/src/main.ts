@@ -56,7 +56,6 @@ import 'sl-vue-tree/src/sl-vue-tree.js'
 
 Vue.use(BootstrapVue)
 
-
 /**
  * App loader
  */

@@ -138,7 +138,7 @@ export default {
     // expose instance to the global namespace for better debugging
     window.slVueTree = this.$refs.slVueTree;
 
-    window.addEventListener('keydown', (event) => this.onArrowDownHandler(event));
+    // window.addEventListener('keydown', (event) => this.onArrowDownHandler(event));
   },
 
   methods: {
