@@ -577,7 +577,7 @@ export class Spells {
             value_min = value_min - 100;
 
           }
-          printBuffer += this.getFormatStandard("Attack Speed (v2 capped)", "%", value_min, value_max, minlvl, maxlvl);
+          printBuffer += this.getFormatStandard("Attack Speed", "%", value_min, value_max, minlvl, maxlvl) + "(v98 capped)"
           break;
 
         case 99:
@@ -710,11 +710,11 @@ export class Spells {
             value_min = value_min - 100;
           }
 
-          printBuffer += this.getFormatStandard("Attack Speed (v3 over cap)", "%", value_min, value_max, minlvl, maxlvl);
+          printBuffer += this.getFormatStandard("Attack Speed", "%", value_min, value_max, minlvl, maxlvl) + "(v119 over cap)"
           break;
 
         case 120:
-          printBuffer += this.getFormatStandard("Healing Taken", "%", value_min, value_max, minlvl, maxlvl);
+          printBuffer += this.getFormatStandard("Healing Received", "%", value_min, value_max, minlvl, maxlvl);
           break;
 
         case 121:
@@ -1432,7 +1432,7 @@ export class Spells {
           break;
 
         case 292:
-          printBuffer += this.getFormatStandard("Chance of Strikethrough", "%", value_min, value_max, minlvl, maxlvl)
+          printBuffer += this.getFormatStandard("Chance of Strikethrough", "%", value_min, value_max, minlvl, maxlvl) + "(v292)"
           break;
 
         case 293:
@@ -1474,11 +1474,11 @@ export class Spells {
           break;
 
         case 302: //crit
-          printBuffer += this.getFocusPercentRange("Spell Damage", base, limit, false);
+          printBuffer += this.getFocusPercentRange("Spell Damage", base, limit, false) + "(v302 before crit)"
           break;
 
         case 303: //crit
-          printBuffer += this.getFormatStandard("Spell Damage", "", value_min, value_max, minlvl, maxlvl)
+          printBuffer += this.getFormatStandard("Spell Damage", "", value_min, value_max, minlvl, maxlvl) + "(v303 before crit)"
           break;
 
         case 304:
@@ -1855,23 +1855,23 @@ export class Spells {
           break;
 
         case 392:
-          printBuffer += this.getFormatStandard("Healing Amount", "", value_min, value_max, minlvl, maxlvl) + "(After Crit)"
+          printBuffer += this.getFormatStandard("Healing Amount", "", value_min, value_max, minlvl, maxlvl) + "(v392)"
           break;
 
         case 393: //Focus version
-          printBuffer += this.getFocusPercentRange("Heal Taken", base, limit, false);
+          printBuffer += this.getFocusPercentRange("Healing Received", base, limit, false)  + "(v393)"
           break;
 
         case 394:
-          printBuffer += this.getFormatStandard("Healing Taken Amount", "", value_min, value_max, minlvl, maxlvl) + "(Before Crit)"
+          printBuffer += this.getFormatStandard("Healing Amount Received", "", value_min, value_max, minlvl, maxlvl) + "(v394)"
           break;
 
         case 395:
-          printBuffer += this.getFocusPercentRange("Heal Taken", base, limit, false) + "(Before Crit)"
+          printBuffer += this.getFocusPercentRange("Healing Received", base, limit, false) + "(v395)"
           break;
 
         case 396:
-          printBuffer += this.getFormatStandard("Healing Amount", "", value_min, value_max, minlvl, maxlvl) + "(Before Crit)"
+          printBuffer += this.getFormatStandard("Healing Amount", "", value_min, value_max, minlvl, maxlvl) + "(v396 before crit)"
           break;
 
         case 397:
@@ -1951,15 +1951,15 @@ export class Spells {
           break;
 
         case 416:
-          printBuffer += this.getFormatStandard("AC", "", value_min, value_max, minlvl, maxlvl) + "(v2)"
+          printBuffer += this.getFormatStandard("AC", "", value_min, value_max, minlvl, maxlvl) + "(v416)"
           break
 
         case 417:
-          printBuffer += this.getFormatStandard("Current Mana", "", value_min, value_max, minlvl, maxlvl) + pertick + special_range + "(v2)"
+          printBuffer += this.getFormatStandard("Current Mana", "", value_min, value_max, minlvl, maxlvl) + pertick + special_range + "(v417)"
           break
 
         case 418:
-          printBuffer += this.getFormatStandard(DB_SKILLS[limit] + " Damage bonus", "", value_min, value_max, minlvl, maxlvl) + pertick + special_range + "(v2)"
+          printBuffer += this.getFormatStandard(DB_SKILLS[limit] + " Damage bonus", "", value_min, value_max, minlvl, maxlvl) + pertick + special_range + "(v418)"
           break
 
         case 419:
@@ -2169,7 +2169,7 @@ export class Spells {
           break;
 
         case 459:
-          printBuffer += this.getFormatStandard(DB_SKILLS[limit] + " Damage", "%", value_min, value_max, minlvl, maxlvl) + " (v2)"
+          printBuffer += this.getFormatStandard(DB_SKILLS[limit] + " Damage", "%", value_min, value_max, minlvl, maxlvl) + " (v459)"
           break;
 
         case 460:
@@ -2177,11 +2177,11 @@ export class Spells {
           break;
 
         case 461:
-          printBuffer += this.getFocusPercentRange("Spell Damage", base, limit, false) + " (Before Crit)"
+          printBuffer += this.getFocusPercentRange("Spell Damage", base, limit, false) + " (v461)"
           break;
 
         case 462:
-          printBuffer += this.getFormatStandard("Spell Damage Amount", "", value_min, value_max, minlvl, maxlvl) + " (After Crit)"
+          printBuffer += this.getFormatStandard("Spell Damage Amount", "", value_min, value_max, minlvl, maxlvl) + " (v462)"
           break;
 
         case 463:
@@ -2274,11 +2274,11 @@ export class Spells {
           break;
 
         case 483:
-          printBuffer += this.getFocusPercentRange("Spell Damage Taken", base, limit, false) + "(v2)"
+          printBuffer += this.getFocusPercentRange("Spell Damage Taken", base, limit, false) + "(v483)"
           break;
 
         case 484:
-          printBuffer += this.getFormatStandard("Spell Damage Taken Amount", "", value_min, value_max, minlvl, maxlvl) + "(After Crit)"
+          printBuffer += this.getFormatStandard("Spell Damage Taken Amount", "", value_min, value_max, minlvl, maxlvl) + "(v484)"
           break;
 
         case 485:
@@ -2290,7 +2290,7 @@ export class Spells {
           break;
 
         case 487:
-          printBuffer += this.getFormatStandard(DB_SKILLS[limit] + " Skill Cap with Recipes", "", value_min, value_max, minlvl, maxlvl) + "(After Crit)"
+          printBuffer += this.getFormatStandard(DB_SKILLS[limit] + " Skill Cap with Recipes", "", value_min, value_max, minlvl, maxlvl)
           break;
 
         case 488:
@@ -2342,7 +2342,7 @@ export class Spells {
           break;
 
         case 500:
-          printBuffer += this.getFocusPercentRange("Spell Haste", base, limit, false) + "(No max reduction limit)"
+          printBuffer += this.getFocusPercentRange("Spell Haste", base, limit, false) + "(v500 no max reduction limit)"
           break;
 
         case 501:

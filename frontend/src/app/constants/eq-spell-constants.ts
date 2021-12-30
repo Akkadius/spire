@@ -573,7 +573,7 @@ export const DB_SPA = {
   "390": "Focus: Spell Gem Lockout",
   "391": "Limit:  Max Mana",
   "392": "Focus: Healing Amount (v392)",
-  "393": "Focus: Incoming Healing Effectiveness (v392)",
+  "393": "Focus: Incoming Healing Effectiveness (v393)",
   "394": "Focus: Incoming Healing Amount",
   "395": "Focus: Incoming Healing Effectiveness (v395)",
   "396": "Focus: Healing Amount (v396 before crit)",
