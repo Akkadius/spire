@@ -8,9 +8,7 @@ import BootstrapVue from 'bootstrap-vue'
 // import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
 import '@/assets/css/custom.css'
-// iziToast
-import 'izitoast/dist/css/iziToast.css'
-import VueIziToast  from 'vue-izitoast'
+
 // Dashkit
 import './assets/css/theme.min.css'
 import './assets/fonts/feather/feather.min.css'
@@ -27,9 +25,6 @@ import "rpg-awesome/css/rpg-awesome.min.css";
 
 // highlight js css
 import "@/assets/css/highlight-js-vs2015.css";
-// Vue Form Generator
-import VueFormGenerator from 'vue-form-generator'
-import 'vue-form-generator/dist/vfg.css'
 
 /* ag-grid */
 import "../node_modules/ag-grid-community/dist/styles/ag-grid.css";
@@ -61,11 +56,6 @@ import 'sl-vue-tree/src/sl-vue-tree.js'
 
 Vue.use(BootstrapVue)
 
-Vue.use(VueIziToast)
-
-// vue form generator
-Vue.use(VueFormGenerator)
-Vue.component('vue-form-generator', VueFormGenerator.component);
 
 /**
  * App loader
