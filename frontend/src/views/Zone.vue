@@ -59,7 +59,6 @@ import {DoorApi, ObjectApi, Spawn2Api, ZoneApi} from "@/app/api/api";
 import EqWindow                                 from "@/components/eq-ui/EQWindow.vue";
 import {SpireApiClient}                         from "@/app/api/spire-api-client";
 import EqCheckbox                               from "@/components/eq-ui/EQCheckbox.vue";
-import ZoneForm                                 from "@/components/forms/ZoneForm.vue";
 import {debounce}                               from "@/app/utility/debounce.js";
 import EqTabs                                   from "@/components/eq-ui/EQTabs.vue";
 import EqTab                                    from "@/components/eq-ui/EQTab.vue";
@@ -73,7 +72,6 @@ export default {
     EqAutoTable,
     EqTab,
     EqTabs,
-    ZoneForm,
     EqCheckbox,
     EqWindow,
   },

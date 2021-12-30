@@ -82,7 +82,6 @@ import {SpireApiClient} from "@/app/api/spire-api-client";
 import * as util from "util";
 import Expansions from "@/app/utility/expansions";
 import EqCheckbox from "@/components/eq-ui/EQCheckbox.vue";
-import ZoneForm from "@/components/forms/ZoneForm.vue";
 import {debounce} from "@/app/utility/debounce.js";
 import EqTabs from "@/components/eq-ui/EQTabs.vue";
 import EqTab from "@/components/eq-ui/EQTab.vue";
@@ -91,7 +90,6 @@ export default {
   components: {
     EqTab,
     EqTabs,
-    ZoneForm,
     EqCheckbox,
     EqWindow,
   },

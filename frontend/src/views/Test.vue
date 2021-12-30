@@ -34,7 +34,6 @@ import {ZoneApi} from "@/app/api/api";
 
 export default {
   components: {
-    "test-form": () => import("@/components/forms/ZoneForm"),
     "page-header": () => import("@/components/layout/PageHeader")
   },
 

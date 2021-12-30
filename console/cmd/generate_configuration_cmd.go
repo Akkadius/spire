@@ -53,15 +53,6 @@ func (c *GenerateConfigurationCommand) Handle(_ *cobra.Command, _ []string) {
 		c.logger.Fatal(err)
 	}
 
-	if err := generators.NewGenerateVueForm(
-		generators.GenerateVueFormContext{
-			TablesToGenerate:      []string{},
-			UseDatabaseSchemaDocs: true,
-		},
-		c.logger,
-	).GenerateConfig(); err != nil {
-		c.logger.Fatal(err)
-	}
 }
 
 func (c *GenerateConfigurationCommand) Validate(_ *cobra.Command, _ []string) error {

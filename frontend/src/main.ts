@@ -63,17 +63,6 @@ Vue.use(BootstrapVue)
 
 Vue.use(VueIziToast)
 
-// Custom components
-Vue.component('field-eq-text-input', () => import('@/components/form-components/FieldEqTextInput.vue'));
-Vue.component('field-eq-text-area', () => import('@/components/form-components/FieldEqTextArea.vue'));
-Vue.component('field-task-type', () => import('@/components/form-components/FieldTaskType.vue'));
-Vue.component('field-task-duration-code', () => import('@/components/form-components/FieldTaskDurationCode.vue'));
-Vue.component('field-task-duration', () => import('@/components/form-components/FieldTaskDuration.vue'));
-Vue.component('field-eq-yes-no', () => import('@/components/form-components/FieldEqYesNo.vue'));
-Vue.component('field-eq-cash', () => import('@/components/form-components/FieldEqCash.vue'));
-Vue.component('eq-item-card-preview', () => import('@/components/eq-ui/EQItemCardPreview.vue'));
-
-
 // vue form generator
 Vue.use(VueFormGenerator)
 Vue.component('vue-form-generator', VueFormGenerator.component);

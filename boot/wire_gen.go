@@ -39,7 +39,6 @@ func InitializeApplication() (App, error) {
 	helloWorldCommand := cmd.NewHelloWorldCommand(db, logger)
 	generateModelsCommand := cmd.NewGenerateModelsCommand(db, logger)
 	generateControllersCommand := cmd.NewGenerateControllersCommand(db, logger)
-	generateVueFormsCommand := cmd.NewGenerateVueFormsCommand(db, logger)
 	helloWorldController := controllers.NewHelloWorldController(db, logger)
 	connections := provideAppDbConnections()
 	encrypter := encryption.NewEncrypter()
@@ -161,7 +160,7 @@ func InitializeApplication() (App, error) {
 	spireMigrateCommand := cmd.NewSpireMigrateCommand(connections, logger)
 	questApiParseCommand := cmd.NewQuestApiParseCommand(logger, parseService)
 	questExampleTestCommand := cmd.NewQuestExampleTestCommand(logger, questExamplesGithubSourcer)
-	v := ProvideCommands(helloWorldCommand, generateModelsCommand, generateControllersCommand, generateVueFormsCommand, httpServeCommand, routesListCommand, generateConfigurationCommand, spireMigrateCommand, questApiParseCommand, questExampleTestCommand)
+	v := ProvideCommands(helloWorldCommand, generateModelsCommand, generateControllersCommand, httpServeCommand, routesListCommand, generateConfigurationCommand, spireMigrateCommand, questApiParseCommand, questExampleTestCommand)
 	webBoot := desktop.NewWebBoot(logger, router)
 	app := NewApplication(db, logger, cache, v, databaseResolver, connections, router, webBoot)
 	return app, nil

@@ -40,7 +40,7 @@
               <!-- Task -->
               <div class="col-5" id="my-form" v-if="model">
                 <h3 class="eq-header" style="text-align: center">Task</h3>
-                <test-form :model="model" class="eq-input"/>
+<!--                <test-form :model="model" class="eq-input"/>-->
               </div>
 
               <!-- Task Activities -->
@@ -87,8 +87,7 @@ import {SpireApiClient} from "@/app/api/spire-api-client";
 export default {
   components: {
     EqWindow,
-    "test-form": () => import("@/components/forms/TasksForm.vue"),
-    "task-activity": () => import("@/components/forms/TaskActivitiesForm.vue"),
+    // "task-activity": () => import("@/components/forms/TaskActivitiesForm.vue"),
     "page-header": () => import("@/components/layout/PageHeader.vue")
   },
 
