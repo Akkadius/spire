@@ -1,7 +1,8 @@
 <template>
   <nav
     class="navbar navbar-vertical fixed-left navbar-expand-md navbar-dark navbar-vibrant pb-0"
-    id="sidebar">
+    id="sidebar"
+  >
     <div class="container-fluid">
 
       <!-- Toggler -->
@@ -25,7 +26,7 @@
           v-model="nodes"
           ref="slVueTree"
           class="mt-3"
-          style="width: 225px; height: 100%; margin: 0;"
+          style="width: 225px; height: 100%; margin: 0; background-color: rgba(20, 20, 20, 0.6); border: 1px solid rgb(30 30 30);"
         >
           <template slot="title" slot-scope="{ node }">
 
@@ -34,7 +35,7 @@
             <i class="fa fa-folder" v-if="!node.isLeaf"></i>
           </span>
 
-          {{ node.title }}
+            {{ node.title }}
 
           </template>
         </sl-vue-tree>
@@ -155,16 +156,13 @@ export default {
           nodeToSelect = slVueTree.getNextNode(selectedNode.path, node => node.isVisible);
         } else if (keyCode === 'ArrowUp') {
           nodeToSelect = slVueTree.getPrevNode(selectedNode.path, node => node.isVisible);
-        }
-        else if (keyCode === 'ArrowLeft') {
+        } else if (keyCode === 'ArrowLeft') {
           if (selectedNode.isLeaf) return;
           slVueTree.updateNode(selectedNode.path, { isExpanded: false });
-        }
-        else if (keyCode === 'ArrowRight') {
+        } else if (keyCode === 'ArrowRight') {
           if (selectedNode.isLeaf) return;
           slVueTree.updateNode(selectedNode.path, { isExpanded: true });
-        }
-        else if (keyCode === 'Enter' || keyCode === 'Space') {
+        } else if (keyCode === 'Enter' || keyCode === 'Space') {
           if (selectedNode.isLeaf) return;
           slVueTree.updateNode(selectedNode.path, { isExpanded: !selectedNode.isExpanded });
         }

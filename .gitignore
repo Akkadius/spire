@@ -5,6 +5,7 @@ spire
 data/
 bin/
 tmp/
+quests/
 .DS_Store
 internal/generators/config/database-schema-reference.yml
 
