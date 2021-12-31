@@ -1,6 +1,8 @@
 package controllers
 
 import (
+	"fmt"
+	"github.com/Akkadius/spire/internal/env"
 	"github.com/Akkadius/spire/internal/http/routes"
 	"github.com/Akkadius/spire/internal/questapi"
 	"github.com/labstack/echo/v4"
@@ -25,6 +27,7 @@ func NewQuestApiController(
 func (d *QuestApiController) Routes() []*routes.Route {
 	return []*routes.Route{
 		routes.RegisterRoute(http.MethodGet, "quest-api/definitions", d.getQuestDefinitions, nil),
+		routes.RegisterRoute(http.MethodPost, "quest-api/refresh-definitions", d.webhookSourceDefinitionsUpdateApi, nil),
 		routes.RegisterRoute(http.MethodPost, "quest-api/webhook-update-api", d.webhookSourceDefinitionsUpdateApi, nil),
 		routes.RegisterRoute(http.MethodPost, "quest-api/webhook-update-source-examples/org/:org/repo/:repo/branch/:branch", d.webhookSourceExamplesUpdateApi, nil),
 		routes.RegisterRoute(
@@ -70,8 +73,13 @@ func (d *QuestApiController) searchGithubExamples(c echo.Context) error {
 // ingests a webhook from Github and updates the repo data locally
 func (d *QuestApiController) webhookSourceDefinitionsUpdateApi(c echo.Context) error {
 	// todo: verify signature later
-	if c.Request().Header.Get("X-Github-Event") != "" &&
-		c.Request().Header.Get("X-Github-Delivery") != "" {
+
+	fmt.Println("Received definitions update request...")
+
+	isGithubRequest := c.Request().Header.Get("X-Github-Event") != "" &&
+			c.Request().Header.Get("X-Github-Delivery") != ""
+
+	if isGithubRequest || env.IsAppEnvLocal() {
 		d.parser.Parse(true)
 	}
 
@@ -88,7 +96,7 @@ func (d *QuestApiController) webhookSourceExamplesUpdateApi(c echo.Context) erro
 		repo := c.Param("repo")
 		branch := c.Param("branch")
 
-		d.sourcer.Source(org, repo, branch, true);
+		d.sourcer.Source(org, repo, branch, true)
 	}
 
 	return c.JSON(http.StatusOK, echo.Map{"data": "Ok"})

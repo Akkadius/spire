@@ -9,9 +9,6 @@ volumes:
   build-cache:
 
 services:
-  #############################################
-  # prod
-  #############################################
   workspace:
     restart: unless-stopped
     image: prod

@@ -24,7 +24,7 @@
                       @change="methodTypeSelectReset(); formChange(); "
                       :options="methodTypeOptions"/>
                   </div>
-                  <div class="col-lg-3 col-sm-12 text-center">
+                  <div class="col-lg-2 col-sm-12 text-center">
                     Events
                     <b-form-select
                       v-model="eventSelection"
@@ -38,7 +38,7 @@
                       @change="constantSelectReset(); formChange();"
                       :options="constantOptions"/>
                   </div>
-                  <div class="col-lg-4 col-sm-12 text-center">
+                  <div :class="'col-lg-' + (appEnvLocal ? '4' : '5') + ' col-sm-12 text-center'">
                     Search
                     <b-input
                       id="quest-explorer-search"
@@ -47,7 +47,19 @@
                       placeholder="Search for methods, events (soon constants)..."
                     />
                   </div>
+                  <div class="col-lg-1 col-sm-12 text-center" v-if="appEnvLocal">
+                    <b-button
+                      variant="outline-warning"
+                      @click="refreshDefinitions"
+                      size="sm"
+                      style="margin-top: 20px">
+                      <i class="fa fa-refresh"></i> Refresh
+                    </b-button>
+                  </div>
 
+                </div>
+
+                <div class="row">
                   <div class="col text-center align-middle mt-2">
                     <div class="float-right">
                       Last Updated: {{ fromNow(api.last_refreshed) }}
@@ -280,6 +292,7 @@ import EqDebug                  from "@/components/eq-ui/EQDebug.vue";
 import Debug                    from "@/app/debug/debug";
 import {debounce}               from "@/app/utility/debounce";
 import {ROUTE} from "@/routes";
+import {AppEnv} from "@/app/env/app-env";
 
 export default {
   components: {
@@ -298,6 +311,8 @@ export default {
   data() {
     return {
       codeClass: "",
+
+      appEnvLocal: false,
 
       // languages:select
       languageSelection: null,
@@ -366,6 +381,16 @@ export default {
     this.init()
   },
   methods: {
+    refreshDefinitions() {
+      this.loaded = false
+
+      SpireApiClient.v1().post('quest-api/refresh-definitions').then((response) => {
+        if (response.status === 200) {
+          this.init()
+        }
+      });
+    },
+
     onSearch: debounce(function () {
       Debug.log("[onSearch] [%s]", this.search)
 
@@ -505,6 +530,9 @@ export default {
       this.routeWatcher = this.$watch('$route.query', () => {
         this.loadQueryParams()
       });
+
+      // get app env
+      this.appEnvLocal = AppEnv.isAppLocal()
 
       // escape handler
       document.body.addEventListener('keyup', this.closeExampleKeyHandler)

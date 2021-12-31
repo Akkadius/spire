@@ -51,6 +51,17 @@ To run, simply put **spire.exe** in your server directory and double click (On W
 * When **augslot_4_type** is set to a non-zero value, **augslot_4_visible** is set to 1
 * When **augslot_5_type** is set to a non-zero value, **augslot_5_visible** is set to 1
 
+### Quest API Explorer
+
+* Added a **Refresh** button for local and desktop builds for anyone who wants to refresh their Quest definitions manually. Production and hosted version of Spire receives webhooks when new commits are made to EQEmu/Server and local installations won't receive this and require a manual update.
+
+### General Fixes 
+
+* (Kinglykrab reported) Dark Elf short name is now DEF, Wood Elf short name is now ELF, High Elf short name is now HIE, Halfling short name is now HFL
+* (Kinglykrab reported) Powersource icon was using Charm icon and is now the proper icon
+* Scrollbar should be twice the size in width now
+* (Trust reported) Expansion bitmask calculator now reports 0 (Classic) correctly
+
 ## [1.0.3]
 
 Add version to navbar

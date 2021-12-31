@@ -67,7 +67,7 @@
               <td>{{ spell["mana"] > 0 ? spell["mana"] : "" }}</td>
               <td> {{ (spell["cast_time"] / 1000) }} sec</td>
               <td> {{ (spell["recast_time"] / 1000) }} sec</td>
-              <td> {{ humanTime(getBuffDuration(spell) * 6) }} - {{ getBuffDuration(spell) }} tic(s)</td>
+              <td> {{ humanTime(getBuffDuration(spell) * 6) }} {{ getBuffDuration(spell) }} tic(s)</td>
               <td> {{ getTargetTypeName(spell["targettype"]) }}</td>
 
 
@@ -156,7 +156,7 @@ export default {
     humanTime: function (sec) {
       let result = ""
       if (sec === 0) {
-        result = "time";
+        result = "";
       } else {
         let h  = Math.floor(sec / 3600);
         let m  = Math.floor((sec - h * 3600) / 60);

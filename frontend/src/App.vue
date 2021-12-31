@@ -7,6 +7,7 @@
 import * as util  from "util";
 import {App}      from "@/constants/app";
 import {EventBus} from "@/app/event-bus/event-bus";
+import {AppEnv}   from "@/app/env/app-env";
 
 export default {
   name: "App",
@@ -29,6 +30,9 @@ export default {
     })
 
     this.loadWallpaper();
+
+    // init app env / version
+    AppEnv.init()
   },
 
   updated() {

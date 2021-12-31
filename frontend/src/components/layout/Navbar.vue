@@ -173,7 +173,7 @@
         </ul>
 
         <h6 class="navbar-heading" v-if="appVersion">
-          Version ({{appBuildType}}) {{ appVersion }}
+          Version ({{ appEnv }}) {{ appVersion }}
         </h6>
 
         <!-- Push content down -->
@@ -230,6 +230,7 @@ import NavSectionComponent   from "@/components/layout/NavSectionComponent";
 import {ROUTE}               from "@/routes";
 import {SpireApiClient}      from "@/app/api/spire-api-client";
 import {EventBus}            from "@/app/event-bus/event-bus";
+import {AppEnv}              from "@/app/env/app-env";
 
 export default {
   components: { NavSectionComponent, NavbarDropdownMenu, NavbarUserSettingsCog },
@@ -238,8 +239,8 @@ export default {
       backendBaseUrl: "",
       user: null,
       hideNavbar: false,
-      appBuildType: "",
-      appVersion: "",
+      appEnv: AppEnv.getEnv(),
+      appVersion: AppEnv.getVersion(),
       componentNavs: [
         { title: "Progress Bars", to: "/components#progress-bars" },
         { title: "Page Headers", to: "/components#page-headers" },
@@ -297,16 +298,13 @@ export default {
     EventBus.$off("HIDE_NAVBAR", this.hideNavBar);
   },
 
-
   async mounted() {
-
     SpireApiClient.v1().get(`/app/env`).then((response) => {
       if (response.data && response.data.data) {
-        // console.log(response.data.data)
-        const env         = response.data.data.env
-        const version     = response.data.data.version
-        this.appBuildType = env
-        this.appVersion   = version
+        const env       = response.data.data.env
+        const version   = response.data.data.version
+        this.appEnv     = env
+        this.appVersion = version
       }
     })
 

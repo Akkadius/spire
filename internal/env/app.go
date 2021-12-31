@@ -84,12 +84,16 @@ func loadEnvFile(envFile string) bool {
 const (
 	AppEnvTesting    = "testing"
 	AppEnvLocal      = "local"
+	AppEnvDev        = "dev" // effectively the same as (local)
+	AppEnvDesktop    = "desktop"
 	AppEnvStaging    = "staging"
 	AppEnvProduction = "production"
 )
 
 func IsAppEnvLocal() bool {
-	return os.Getenv("APP_ENV") == AppEnvLocal
+	return os.Getenv("APP_ENV") == AppEnvLocal ||
+		os.Getenv("APP_ENV") == AppEnvDev ||
+		os.Getenv("APP_ENV") == AppEnvDesktop
 }
 
 func IsAppEnvTesting() bool {
