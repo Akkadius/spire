@@ -34,7 +34,10 @@
                       :imageSize="imageSizes"
                       :centered-buttons="false"
                       :display-all-none="true"
+                      :add-only-button-enabled="true"
+                      :add-only-state-enabled="selectOnlyClassEnabled"
                       @fired="selectClass()"
+                      @selectOnly="selectOnlyClassEnabled = $event"
                       :inputData.sync="selectedClasses"
                       :mask="selectedClasses"
                     />
@@ -277,6 +280,9 @@ export default {
       itemType: -1,
       spellEffect: "",
 
+      // when "only" option is set
+      selectOnlyClassEnabled: false,
+
       filters: {},
 
       selectedLevel: 0,
@@ -496,6 +502,9 @@ export default {
       if (this.selectedLevelType !== 0) {
         queryState.levelType = this.selectedLevelType
       }
+      if (this.selectOnlyClassEnabled) {
+        queryState.classSelectOnly = 1
+      }
       if (this.getChangedFilterCount() > 0) {
         queryState.filters = JSON.stringify(this.getFiltersNonZeroValues())
       }
@@ -565,6 +574,9 @@ export default {
       }
       if (this.$route.query.listType) {
         this.listType = this.$route.query.listType;
+      }
+      if (parseInt(this.$route.query.classSelectOnly) === 1) {
+        this.selectOnlyClassEnabled = true;
       }
       if (this.$route.query.filters) {
         this.resetFilters()
@@ -639,7 +651,13 @@ export default {
 
       // filter by class
       if (this.selectedClasses && parseInt(this.selectedClasses) > 0 && parseInt(this.selectedClasses) !== 65535) {
-        filters.push(["classes", "_bitwiseand_", this.selectedClasses]);
+        if (this.selectOnlyClassEnabled) {
+          filters.push(["classes", "__", this.selectedClasses]);
+        }
+        else {
+          filters.push(["classes", "_bitwiseand_", this.selectedClasses]);
+        }
+
         filters.push(["classes", "_ne_", 65535]);
       } else if (this.selectedClasses && parseInt(this.selectedClasses) > 0 && parseInt(this.selectedClasses) === 65535) {
         filters.push(["classes", "__", 65535]);

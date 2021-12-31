@@ -61,6 +61,7 @@ To run, simply put **spire.exe** in your server directory and double click (On W
 * (Kinglykrab reported) Powersource icon was using Charm icon and is now the proper icon
 * Scrollbar should be twice the size in width now
 * (Trust reported) Expansion bitmask calculator now reports 0 (Classic) correctly
+* Added an **Only** button to classes in the items search view so that search results can filter on items that are only equipped by selected class.
 
 ## [1.0.3]
 

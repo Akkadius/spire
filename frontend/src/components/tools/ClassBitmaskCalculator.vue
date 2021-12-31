@@ -21,16 +21,24 @@
       <!-- Select All / None -->
       <div class="d-inline-block" v-if="displayAllNone">
         <div
-          :class="'text-center mt-2 btn-xs eq-button-fancy ' + (parseInt(mask) >= 65535 ? 'eq-button-fancy-highlighted' : '')"
+          :class="'text-center mt-2 btn-xs eq-button-fancy ' + (parseInt(mask) >= 65535 && !this.isOnlySelectedAndEnabled() ? 'eq-button-fancy-highlighted' : '')"
           @click="selectAll()"
         >
           All
         </div>
         <div
-          :class="'text-center mt-2 btn-xs eq-button-fancy ' + (parseInt(mask) === 0 ? 'eq-button-fancy-highlighted' : '')"
+          :class="'text-center mt-2 btn-xs eq-button-fancy ' + (parseInt(mask) === 0 && !this.isOnlySelectedAndEnabled() ? 'eq-button-fancy-highlighted' : '')"
           @click="selectNone()"
         >
           None
+        </div>
+        <div
+          :class="'text-center mt-2 btn-xs eq-button-fancy ' + (this.onlySelected ? 'eq-button-fancy-highlighted' : '')"
+          @click="selectOnly()"
+          v-if="addOnlyButtonEnabled"
+          title="When this is selected, only entries selected will appear in the results"
+        >
+          Only
         </div>
       </div>
 
@@ -78,6 +86,16 @@ export default {
       type: Number,
       required: false,
       default: 50,
+    },
+    addOnlyButtonEnabled: {
+      type: Boolean,
+      required: false,
+      default: false,
+    },
+    addOnlyStateEnabled: {
+      type: Boolean,
+      required: false,
+      default: false,
     }
   },
   watch: {
@@ -95,10 +113,20 @@ export default {
       classes: DB_PLAYER_CLASSES_ALL,
       itemCdnUrl: App.ASSET_ITEM_ICON_BASE_URL,
       selectedClasses: {},
-      currentMask: 0
+      currentMask: 0,
+      onlySelected: false,
     }
   },
   mounted() {
+    // queue this since we may not have this available right at mount point
+    setTimeout(() => {
+      // if we have the only button enabled and we are being passed in that its current state is enabled
+      if (this.addOnlyButtonEnabled && this.addOnlyStateEnabled) {
+        this.onlySelected = true
+      }
+    }, 100)
+
+    // bitmask
     this.currentMask = parseInt(this.mask)
     this.calculateFromBitmask();
   },
@@ -107,7 +135,17 @@ export default {
       return util.format("width: %spx; height %spx;", this.imageSize, this.imageSize)
     },
 
+    isOnlySelectedAndEnabled() {
+      return this.addOnlyButtonEnabled && this.onlySelected
+    },
+    selectOnly() {
+      this.selectNone()
+      console.log("selecting only")
+      this.onlySelected = true
+    },
+
     selectAll() {
+      this.onlySelected = false
       Object.keys(this.classes).reverse().forEach((classId) => {
         this.selectedClasses[classId] = true;
       });
@@ -115,6 +153,7 @@ export default {
       this.calculateToBitmask();
     },
     selectNone() {
+      this.onlySelected = false
       Object.keys(this.classes).reverse().forEach((classId) => {
         this.selectedClasses[classId] = false;
       });
@@ -143,10 +182,20 @@ export default {
       });
 
       this.$emit("update:inputData", parseInt(bitmask));
+      this.$emit("selectOnly", this.isOnlySelectedAndEnabled);
       this.$emit("input", parseInt(bitmask));
       this.$emit("fired", "true");
     },
     selectClass: function (classId) {
+
+      // if the only button is enabled, we need to unselect all other classes before
+      // selecting a class
+      if (this.isOnlySelectedAndEnabled()) {
+        Object.keys(this.classes).forEach((classId) => {
+          this.selectedClasses[classId] = false
+        });
+      }
+
       this.selectedClasses[classId] = !this.selectedClasses[classId];
 
       this.$forceUpdate()
