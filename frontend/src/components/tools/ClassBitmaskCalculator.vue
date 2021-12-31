@@ -182,7 +182,7 @@ export default {
       });
 
       this.$emit("update:inputData", parseInt(bitmask));
-      this.$emit("selectOnly", this.isOnlySelectedAndEnabled);
+      this.$emit("selectOnly", this.onlySelected);
       this.$emit("input", parseInt(bitmask));
       this.$emit("fired", "true");
     },
