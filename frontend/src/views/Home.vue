@@ -19,8 +19,10 @@
             </div>
           </div>
 
-          <div class="row" id="changelog" style="font-size: 16px">
-            <v-runtime-template :template="changelog"/>
+          <div class="row" id="changelog">
+            <div class="col-12">
+              <v-runtime-template class="changelog" :template="changelog"/>
+            </div>
           </div>
 
         </div>
@@ -66,7 +68,6 @@ export default {
         // doc
         this.changelog = "<div>" + result + "</div>"
 
-
         setTimeout(() => {
           const anchors = document.getElementById('changelog').getElementsByTagName('a');
           for (var i = 0; i < anchors.length; i++) {
@@ -105,3 +106,35 @@ export default {
 }
 </script>
 
+<style>
+.changelog {
+  font-size: 16px;
+  line-height: 1.5;
+  word-wrap: break-word;
+}
+
+.container {
+  position: relative;
+  width: 100%;
+  height: 0;
+  padding-bottom: 56.25%;
+}
+
+.anchor-link:hover {
+  display: initial;
+}
+
+.anchor-link {
+  display: none;
+}
+
+.video {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  padding-bottom: 30px;
+  padding-top: 15px;
+}
+</style>
