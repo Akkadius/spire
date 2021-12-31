@@ -5,6 +5,7 @@ import {SpireApiClient} from "@/app/api/spire-api-client";
 // these should be mirrored with env/app.go
 const AppEnvTesting    = "testing"
 const AppEnvLocal      = "local"
+const AppEnvDev        = "dev"
 const AppEnvDesktop    = "desktop"
 const AppEnvStaging    = "staging"
 const AppEnvProduction = "production"
@@ -27,7 +28,8 @@ export class AppEnv {
   }
 
   static isAppLocal() {
-    return this.getEnv() !== AppEnvProduction
+    return this.getEnv() !== AppEnvProduction &&
+      ([AppEnvLocal, AppEnvDesktop, AppEnvDev].includes(this.getEnv()))
   }
 
   private static _env;

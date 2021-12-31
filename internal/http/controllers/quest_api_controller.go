@@ -79,7 +79,11 @@ func (d *QuestApiController) webhookSourceDefinitionsUpdateApi(c echo.Context) e
 	isGithubRequest := c.Request().Header.Get("X-Github-Event") != "" &&
 			c.Request().Header.Get("X-Github-Delivery") != ""
 
-	if isGithubRequest || env.IsAppEnvLocal() {
+	if isGithubRequest && env.IsAppEnvProduction() {
+		d.parser.Parse(true)
+	}
+
+	if !isGithubRequest && env.IsAppEnvLocal() {
 		d.parser.Parse(true)
 	}
 
