@@ -19,7 +19,7 @@
             </div>
           </div>
 
-          <div class="row">
+          <div class="row" id="changelog" style="font-size: 16px">
             <v-runtime-template :template="changelog"/>
           </div>
 
@@ -65,6 +65,36 @@ export default {
 
         // doc
         this.changelog = "<div>" + result + "</div>"
+
+
+        setTimeout(() => {
+          const anchors = document.getElementById('changelog').getElementsByTagName('a');
+          for (var i = 0; i < anchors.length; i++) {
+            anchors[i].setAttribute('target', '_blank');
+          }
+
+          document.querySelectorAll('#changelog h1, #changelog h2, #changelog h3, #changelog h4').forEach($heading => {
+
+            //create id from heading text
+            const id = $heading.getAttribute("id") || $heading.innerText.toLowerCase().replace(/[`~!@#$%^&*()_|+\-=?;:'",.<>\{\}\[\]\\\/]/gi, '').replace(/ +/g, '-');
+
+            //add id to heading
+            $heading.setAttribute('id', id);
+
+            //append parent class to heading
+            $heading.classList.add('anchor-heading');
+
+            //create anchor
+            let $anchor         = document.createElement('a');
+            $anchor.className   = 'anchor-link';
+            $anchor.href        = '#' + id;
+            $anchor.innerText   = ' # ';
+            $anchor.style.color = '#666';
+
+            //append anchor after heading text
+            $heading.append($anchor);
+          });
+        }, 100)
 
       }
     })

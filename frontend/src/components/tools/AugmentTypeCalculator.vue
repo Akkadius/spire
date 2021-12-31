@@ -43,7 +43,7 @@ export default {
       required: false
     },
     mask: {
-      type: String,
+      type: Number,
       required: false
     }
   },
@@ -105,7 +105,7 @@ export default {
         }
       });
 
-      this.$emit("update:inputData", bitmask.toString());
+      this.$emit("update:inputData", parseInt(bitmask));
     },
     selectAug: function (augId) {
       this.selectedAugs[augId] = !this.selectedAugs[augId];

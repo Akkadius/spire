@@ -1,5 +1,5 @@
 <template>
-  <nav class="navbar navbar-vertical fixed-left navbar-expand-md navbar-dark navbar-vibrant" id="sidebar">
+  <nav class="navbar navbar-vertical fixed-left navbar-expand-md navbar-dark navbar-vibrant" id="sidebar" v-if="!hideNavbar">
     <div class="container-fluid">
 
       <!-- Toggler -->
@@ -224,6 +224,7 @@ import NavSectionComponent   from "@/components/layout/NavSectionComponent";
 import {ROUTE}               from "@/routes";
 import {SpireApiClient}      from "@/app/api/spire-api-client";
 import * as util             from "util";
+import {EventBus}            from "@/app/event-bus/event-bus";
 
 export default {
   components: { NavSectionComponent, NavbarDropdownMenu, NavbarUserSettingsCog },
@@ -231,6 +232,7 @@ export default {
     return {
       backendBaseUrl: "",
       user: null,
+      hideNavbar: false,
       appVersion: "",
       componentNavs: [
         { title: "Progress Bars", to: "/components#progress-bars" },
@@ -282,6 +284,13 @@ export default {
       ]
     }
   },
+  created() {
+    EventBus.$on("HIDE_NAVBAR", this.hideNavBar);
+  },
+  destroyed() {
+    EventBus.$off("HIDE_NAVBAR", this.hideNavBar);
+  },
+
 
   async mounted() {
 
@@ -300,6 +309,9 @@ export default {
   },
 
   methods: {
+    hideNavBar() {
+      this.hideNavbar = !this.hideNavbar
+    },
     hasRoute: function (partial) {
       return (this.$route.path.indexOf(partial) > -1)
     },

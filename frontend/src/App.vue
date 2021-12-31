@@ -4,8 +4,9 @@
 
 <script>
 
-import * as util from "util";
-import {App} from "@/constants/app";
+import * as util  from "util";
+import {App}      from "@/constants/app";
+import {EventBus} from "@/app/event-bus/event-bus";
 
 export default {
   name: "App",
@@ -21,14 +22,15 @@ export default {
       }
 
       switch (String.fromCharCode(e.keyCode)) {
-        // case 'h':
-        //   self.$router.push('/servers')
-        //   break
+        case 'h':
+          EventBus.$emit('HIDE_NAVBAR', true);
+          break
       }
     })
 
     this.loadWallpaper();
   },
+
   updated() {
     this.scrollToHashIfExists();
   },

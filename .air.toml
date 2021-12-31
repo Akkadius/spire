@@ -13,7 +13,7 @@ bin = "/bin/main"
 # Customize binary.
 full_bin = "APP_ENV=local /tmp/bin/app http:serve --port=3000"
 # Watch these filename extensions.
-include_ext = ["go", "tpl", "tmpl", "html"]
+include_ext = ["go", "tpl", "tmpl", "html", "md"]
 # Ignore these filename extensions or directories.
 exclude_dir = [
 	"bin",
@@ -21,6 +21,8 @@ exclude_dir = [
 	"frontend",
 	"assets",
 	"tmp",
+	"node_modules",
+	"quests",
 	"vendor",
 	"public",
 	"data",
