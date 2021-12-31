@@ -124,7 +124,7 @@ func (e *GridController) updateGrid(c echo.Context) error {
 		return c.JSON(http.StatusNotFound, echo.Map{"error": "Cannot find entity"})
 	}
 
-	err = e.db.Get(models.Grid{}, c).Model(&entity).Updates(&grid).Error
+	err = e.db.Get(models.Grid{}, c).Model(&entity).Select("*").Updates(&grid).Error
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error updating entity: [%v]", err)})
 	}

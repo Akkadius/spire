@@ -9,52 +9,71 @@
         </div>
 
         <div class='spell-table' v-if="spells.length > 0">
-<!--        <div class='eq-window-nested-blue' v-if="spells.length > 0" style="overflow-y: scroll;">-->
+          <!--        <div class='eq-window-nested-blue' v-if="spells.length > 0" style="overflow-y: scroll;">-->
           <table id="tabbox1" class="eq-table eq-highlight-rows" style="display: table;">
             <thead>
             <tr>
-              <th style="width: auto; min-width: 200px">Spell</th>
-              <th style="width: auto; min-width: 130px">Level</th>
+              <th style="width: 100px;"></th>
+              <th style="width: auto;">Id</th>
+              <th style="width: auto; min-width: 250px">Spell</th>
+              <th style="width: auto; min-width: 300px">Level</th>
+              <th style="width: 400px">Effects</th>
+
               <th>Mana</th>
               <th style="width: 80px">Cast</th>
               <th style="width: 80px">Recast</th>
               <th style="width: 120px">Duration</th>
               <th>Target</th>
-              <th style="width: 400px">Effects</th>
-              <th>Description</th>
+
+              <!--              <th>Description</th>-->
             </tr>
             </thead>
             <tbody>
             <tr v-for="(spell, index) in spells" :key="spell.id">
               <td>
-
+                <b-button
+                  @click="editSpell(spell.id)"
+                  size="sm"
+                  variant="outline-warning"
+                >
+                  <i class="ra ra-book"></i>
+                  Edit
+                </b-button>
+              </td>
+              <td>
+                {{spell.id}}
+              </td>
+              <td class="text-left">
                 <v-runtime-template
                   v-if="spellMinis"
                   :template="'<span>' + spellMinis[spell.id] + '</span>'"/>
               </td>
-              <td>
+              <td class="text-left">
                 <span v-for="(icon, index) in dbClassIcons">
-                  <span v-if="spell['classes_' + index] > 0 && spell['classes_' + index] < 255">
+                  <div v-if="spell['classes_' + index] > 0 && spell['classes_' + index] < 255" class="d-inline-block mr-2">
                       <img
                         :src="itemCdnUrl + 'item_' + icon + '.png'"
                         class="mb-1"
                         style="height: 17px; width:auto; border-radius: 5px">
                     {{ dbClassesShort[index] }}
                     ({{ spell["classes_" + index] }})
-                    </span>
+                    </div>
                 </span>
               </td>
+              <td style="text-align: left">
+                <eq-spell-effects :spell="spell"/>
+              </td>
+
               <td>{{ spell["mana"] > 0 ? spell["mana"] : "" }}</td>
               <td> {{ (spell["cast_time"] / 1000) }} sec</td>
               <td> {{ (spell["recast_time"] / 1000) }} sec</td>
               <td> {{ humanTime(getBuffDuration(spell) * 6) }} - {{ getBuffDuration(spell) }} tic(s)</td>
               <td> {{ getTargetTypeName(spell["targettype"]) }}</td>
-              <td>
-                <eq-spell-effects :spell="spell"/>
-              </td>
-              <td>
-                <eq-spell-description :spell="spell"/>
-              </td>
+
+
+<!--              <td style="text-align: left">-->
+<!--                <eq-spell-description :spell="spell"/>-->
+<!--              </td>-->
             </tr>
             </tbody>
           </table>
@@ -65,15 +84,17 @@
 </template>
 
 <script>
-import {Spells} from "@/app/spells";
-import EqWindow from "@/components/eq-ui/EQWindow.vue";
-import EqSpellEffects from "@/components/eq-ui/EQSpellEffects";
-import EqSpellPreview from "@/components/eq-ui/EQSpellCardPreview.vue";
-import {App}          from "@/constants/app";
+import {Spells}           from "@/app/spells";
+import EqWindow           from "@/components/eq-ui/EQWindow.vue";
+import EqSpellEffects     from "@/components/eq-ui/EQSpellEffects";
+import EqSpellPreview     from "@/components/eq-ui/EQSpellCardPreview.vue";
+import {App}              from "@/constants/app";
 import EqSpellDescription from "@/components/eq-ui/EQSpellDescription";
 import {DB_SPELL_TARGETS} from "@/app/constants/eq-spell-constants";
 import {DB_CLASSES_ICONS} from "@/app/constants/eq-class-icon-constants";
 import {DB_CLASSES_SHORT} from "@/app/constants/eq-classes-constants";
+import {ROUTE}            from "@/routes";
+import * as util          from "util";
 
 export default {
   name: "EqSpellPreviewTable",
@@ -117,7 +138,7 @@ export default {
     // do this once so we're not triggering vue re-renders in the loop
     this.sideLoadedSpellData = Spells.data
 
-    this.title = "Spells (" + this.spells.length + ")";
+    // this.title = "Spells (" + this.spells.length + ")";
   },
   props: {
     spells: Array
@@ -147,6 +168,15 @@ export default {
     },
     getBuffDuration: function (spell) {
       return Spells.getBuffDuration(spell)
+    },
+    editSpell(spellId) {
+      this.$router.push(
+        {
+          path: util.format(ROUTE.SPELL_EDIT, spellId),
+          query: {}
+        }
+      ).catch(() => {
+      })
     }
   }
 }
@@ -158,10 +188,15 @@ export default {
 }
 
 .eq-table td {
-  padding-top:    5px;
+  padding-top: 5px;
   padding-bottom: 5px;
   border-right: .1px solid #ffffff1c;
   border-left: .1px solid #ffffff1c;
+}
+
+.spell-table td {
+  vertical-align: middle;
+  text-align: center;
 }
 
 /* For Mobile */

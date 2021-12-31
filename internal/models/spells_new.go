@@ -186,8 +186,8 @@ type SpellsNew struct {
 	Pvpresistcalc        int                `json:"pvpresistcalc" gorm:"Column:pvpresistcalc"`
 	Pvpresistcap         int                `json:"pvpresistcap" gorm:"Column:pvpresistcap"`
 	SpellCategory        int                `json:"spell_category" gorm:"Column:spell_category"`
-	Field181             int                `json:"field_181" gorm:"Column:field181"`
-	Field182             int                `json:"field_182" gorm:"Column:field182"`
+	PvpDuration          int                `json:"pvp_duration" gorm:"Column:pvp_duration"`
+	PvpDurationCap       int                `json:"pvp_duration_cap" gorm:"Column:pvp_duration_cap"`
 	PcnpcOnlyFlag        null.Int           `json:"pcnpc_only_flag" gorm:"Column:pcnpc_only_flag"`
 	CastNotStanding      null.Int           `json:"cast_not_standing" gorm:"Column:cast_not_standing"`
 	CanMgb               int                `json:"can_mgb" gorm:"Column:can_mgb"`

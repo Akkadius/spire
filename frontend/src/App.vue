@@ -4,8 +4,9 @@
 
 <script>
 
-import * as util from "util";
-import {App} from "@/constants/app";
+import * as util  from "util";
+import {App}      from "@/constants/app";
+import {EventBus} from "@/app/event-bus/event-bus";
 
 export default {
   name: "App",
@@ -21,14 +22,15 @@ export default {
       }
 
       switch (String.fromCharCode(e.keyCode)) {
-        // case 'h':
-        //   self.$router.push('/servers')
-        //   break
+        case 'h':
+          EventBus.$emit('HIDE_NAVBAR', true);
+          break
       }
     })
 
     this.loadWallpaper();
   },
+
   updated() {
     this.scrollToHashIfExists();
   },
@@ -40,13 +42,15 @@ export default {
     },
 
     scrollFix: function (hashbang) {
-      console.log(location.hash);
+      if (hashbang) {
+        console.log(location.hash);
 
-      location.hash = hashbang;
-      const hashTarget = hashbang.replace("#", "");
-      if (document.getElementById(hashTarget)) {
-        console.log("scrolling to", hashTarget)
-        document.getElementById(hashTarget).scrollIntoView();
+        location.hash = hashbang;
+        const hashTarget = hashbang.replace("#", "");
+        if (document.getElementById(hashTarget)) {
+          console.log("scrolling to", hashTarget)
+          document.getElementById(hashTarget).scrollIntoView();
+        }
       }
     },
 
@@ -88,15 +92,6 @@ export default {
 </script>
 
 <style lang="scss">
-
-/* ag-grid */
-@import "../node_modules/ag-grid-community/dist/styles/ag-grid.css";
-@import "../node_modules/ag-grid-community/dist/styles/ag-theme-balham-dark.css";
-
-/* spritesheet assets */
-@import "../public/eq-asset-preview-master/assets/sprites/item-icons.css";
-@import "../public/eq-asset-preview-master/assets/sprites/objects.css";
-@import "../public/eq-asset-preview-master/assets/sprites/race-models.css";
 
 .card-slim {
   padding: 18px !important;

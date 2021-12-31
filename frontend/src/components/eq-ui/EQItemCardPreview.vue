@@ -1,12 +1,17 @@
 <template>
-  <div class="item-bg" style="max-width: 400px; padding: 5px">
+  <div class="item-bg" style="max-width: 475px; padding: 5px" v-if="itemData">
 
     <div class="row">
       <div class="col-1">
-        <span :class="'fade-in item-' + itemData.icon" :title="itemData.icon"/>
-        <!--        <img :src="cdnUrl + 'assets/item_icons/item_' + itemData.icon + '.png'" style="width:40px;height:auto;">-->
+        <span :class="'fade-in item-' + itemData.icon" :title="itemData.icon">
+<!--          <span-->
+<!--            v-if="itemData.stacksize > 1"-->
+<!--            style="position:absolute; right: 0px; top:45px; font-size: 9px">-->
+<!--            x{{ itemData.stacksize }}-->
+<!--          </span>-->
+        </span>
       </div>
-      <div class="col-11 pl-5">
+      <div class="col-10 pl-5">
         <h6 class="eq-header" style="margin: 0px; margin-bottom: 10px">
           {{ itemData.name }}
         </h6>
@@ -34,6 +39,15 @@
           </table>
         </div>
 
+      </div>
+      <div class="col-1 text-right" v-if="showEdit">
+        <div
+          class="eq-button-fancy"
+          style="margin-left: -40px;"
+          @click="editItem(itemData.id)"
+        >
+          Edit
+        </div>
       </div>
     </div>
 
@@ -86,7 +100,7 @@
 
           <!-- Third Section (Weapon Damage) -->
           <div class="stat-section col-4">
-            <table style="width: 125px;">
+            <table style="width: 140px;">
               <tbody>
 
               <tr v-for="(value, stat) in secondlevel3">
@@ -127,9 +141,9 @@
 
                 <!-- Heroic -->
                 <td style="text-align: right" v-if="itemData[data.heroic] > 0">
-                          <span style="color: #ffecca" v-if="itemData[data.heroic]">
-                            {{ itemData[data.heroic] > 0 ? "+" + itemData[data.heroic] : itemData[data.heroic] }}
-                          </span>
+                    <span style="color: #ffecca" v-if="itemData[data.heroic]">
+                      {{ itemData[data.heroic] > 0 ? "+" + itemData[data.heroic] : itemData[data.heroic] }}
+                    </span>
                 </td>
               </tr>
               </tbody>
@@ -153,10 +167,8 @@
                 </td>
 
                 <!-- Heroic -->
-                <td style="text-align: right" v-if="itemData[data.heroic] > 0">
-                <span style="color: #ffecca" v-if="itemData[data.heroic]">
+                <td style="text-align: right; color: #ffecca" v-if="itemData[data.heroic] > 0">
                   {{ itemData[data.heroic] > 0 ? "+" + itemData[data.heroic] : itemData[data.heroic] }}
-                </span>
                 </td>
               </tr>
               </tbody>
@@ -252,7 +264,7 @@
           <div :id="itemData[effect.field] + '-' + componentId">
 
             <img
-              :src="spellCdnUrl + effectData[effect.field].new_icon + '.gif'"
+              :src="spellCdnUrl + (effectData[effect.field].new_icon > 0 ? effectData[effect.field].new_icon : 1) + '.gif'"
               :style="'width:20px;height:auto; ' + 'border: 1px solid ' + getTargetTypeColor(effectData[effect.field]['targettype']) + '; border-radius: 3px;'"
               class="mr-1 mt-1">
             {{ effectData[effect.field].name }} ({{ effect.name }})
@@ -277,7 +289,29 @@
       </div>
     </div>
 
-    <div class="pb-4"></div>
+    <!-- Bag Weight Reduction -->
+    <div v-if="itemData.bagwr" class="mt-3 mb-3 row">
+      <div class="col-12">
+        <span style="font-weight: bold" class="mr-1">Bag Weight Reduction</span> {{itemData.bagwr}}%
+      </div>
+    </div>
+
+    <!-- Lore -->
+    <div v-if="itemData.lore" class="mt-3 mb-3 row">
+      <div class="col-12">
+        <span style="font-weight: bold" class="mr-1">Lore</span> {{itemData.lore}}
+      </div>
+    </div>
+
+    <!-- Price -->
+    <div v-if="itemData.price > 0">
+      <span style="font-weight: bold" class="mr-2">Price</span>
+      <eq-cash-display
+        class="d-inline-block"
+        :price="itemData.price"/>
+    </div>
+
+    <div class="pb-4 mb-3"></div>
 
     <eq-debug :data="itemData"/>
   </div>
@@ -291,23 +325,27 @@ import {
   ITEM_DB_SLOTS,
   ITEM_ELEMENTS,
   ITEM_SIZE
-} from "@/app/constants/eq-item-constants";
-import {BODYTYPES} from "@/app/constants/eq-bodytype-constants";
-import {DB_CLASSES_WEAR_SHORT} from "@/app/constants/eq-classes-constants";
+}                                      from "@/app/constants/eq-item-constants";
+import {BODYTYPES}                     from "@/app/constants/eq-bodytype-constants";
+import {DB_CLASSES_WEAR_SHORT}         from "@/app/constants/eq-classes-constants";
 import {DB_RACE_NAMES, DB_RACES_SHORT} from "@/app/constants/eq-races-constants";
-import {DB_DIETIES} from "@/app/constants/eq-deities-constants";
-import EqDebug from "@/components/eq-ui/EQDebug";
-import {App} from "@/constants/app";
-import EqSpellPreview from "@/components/eq-ui/EQSpellCardPreview";
-import {EXAMPLE_SPELL_DATA} from "@/app/constants/eq-example-spell-data";
-import EqWindow from "@/components/eq-ui/EQWindow";
+import {DB_DIETIES}                from "@/app/constants/eq-deities-constants";
+import EqDebug                     from "@/components/eq-ui/EQDebug";
+import {App}                       from "@/constants/app";
+import EqSpellPreview              from "@/components/eq-ui/EQSpellCardPreview";
+import {EXAMPLE_SPELL_DATA}        from "@/app/constants/eq-example-spell-data";
+import EqWindow                    from "@/components/eq-ui/EQWindow";
 import {DB_BARD_SKILLS, DB_SKILLS} from "@/app/constants/eq-skill-constants";
-import {AUG_TYPES} from "@/app/constants/eq-aug-constants";
-import {Spells} from "@/app/spells";
+import {AUG_TYPES}                 from "@/app/constants/eq-aug-constants";
+import {Spells}                    from "@/app/spells";
+import util                        from "util";
+import {ROUTE}                     from "@/routes";
+import EqCashDisplay               from "@/components/eq-ui/EqCashDisplay";
+import {Items}                     from "@/app/items";
 
 export default {
   name: "EqItemCardPreview",
-  components: { EqWindow, EqSpellPreview, EqDebug },
+  components: { EqCashDisplay, EqWindow, EqSpellPreview, EqDebug },
   data() {
     return {
       spells: EXAMPLE_SPELL_DATA,
@@ -328,24 +366,10 @@ export default {
         "Fire Resists": { stat: "fr", heroic: "heroic_fr" },
         "Cold Resist": { stat: "cr", heroic: "heroic_cr" },
         "Disease Resist": { stat: "dr", heroic: "heroic_dr" },
-        "Poison Resist": { stat: "pr", heroic: "heroic_pr" }
+        "Poison Resist": { stat: "pr", heroic: "heroic_pr" },
+        "Corruption": { stat: "svcorruption", heroic: "heroic_svcorrup" }
       },
-      mod3: {
-        "Attack": "attack",
-        "HP Regen": "regen",
-        "Mana Regen": "manaregen",
-        "Endurance Regen": "enduranceregen",
-        "Spell Shielding": "spellshield",
-        "Combat Effects": "combateffects",
-        "Shielding": "shielding",
-        "DoT Shielding": "dotshielding",
-        "Avoidance": "avoidance",
-        "Accuracy": "accuracy",
-        "Stun Resist": "stunresist",
-        "Strikethrough": "strikethrough",
-        "Damage Shield": "damageshield"
-        // TODO: extradmgamt
-      },
+      mod3: Items.getMod3Fields(),
       toplevel: {
         "Class": this.getClasses(),
         "Race": this.getRaces(),
@@ -354,6 +378,7 @@ export default {
       secondlevel1: {
         "Size": this.getItemSize(this.itemData.size).toUpperCase(),
         "Weight": this.itemData.weight / 10,
+        "Light": this.itemData.light,
         "Item Type": this.getItemType(),
         "Rec Level": this.itemData.reclevel,
         "Req Level": this.itemData.reqlevel
@@ -363,10 +388,10 @@ export default {
         "HP": this.itemData.hp,
         "Hana": this.itemData.mana,
         "End": this.itemData.endur,
-        "Haste": this.itemData.haste > 0 ? (this.itemData.haste + "%") : this.itemData.haste
+        "Haste": this.itemData.haste > 0 ? (this.itemData.haste + "%") : this.itemData.haste,
+        "Purity": this.itemData.purity
       },
       secondlevel3: {},
-
       effectData: {}, // stores effect data when loaded from API
       effects: [
         { field: "proceffect", name: "Proc" },
@@ -380,11 +405,58 @@ export default {
     }
   },
   methods: {
+    init() {
+      const uuidv4     = require("uuid/v4")
+      this.componentId = uuidv4()
+
+      // dynamic section builder
+      this.secondlevel3   = {}
+      let data            = {};
+      data["Base Damage"] = this.itemData.damage
+      if (this.itemData.elemdmgamt > 0) {
+        data[this.getElementDamageName() + " Damage"] = this.itemData.elemdmgamt
+      }
+      if (this.itemData.banedmgrace > 0 && this.itemData.banedmgraceamt !== 0) {
+        data["Bane (" + this.getBaneDamageName() + ")"] = this.itemData.banedmgraceamt
+      }
+      if (this.itemData.banedmgbody > 0 && this.itemData.banedmgamt !== 0) {
+        data["Bane (" + this.getBaneDamageBodyName() + ")"] = this.itemData.banedmgamt
+      }
+
+      data["Backstab Damage"] = this.itemData.backstabdmg
+      data["Delay"]           = this.itemData.delay
+      if (this.itemData.damage > 0) {
+        data["Ratio"] = Math.round(this.itemData.damage / this.itemData.delay * 100) / 100
+      }
+      // TODO: Damage bonus
+      data["Range"] = this.itemData.range
+
+      // spell loading
+      this.effects.forEach((effect) => {
+        if (this.itemData[effect.field] > 0) {
+          Spells.getSpell(this.itemData[effect.field]).then((spell) => {
+            this.effectData[effect.field] = spell
+            this.$forceUpdate()
+          })
+        }
+      })
+
+      this.secondlevel3 = data
+    },
+    editItem(itemId) {
+      this.$router.push(
+        {
+          path: util.format(ROUTE.ITEM_EDIT, itemId),
+          query: {}
+        }
+      ).catch(() => {
+      })
+    },
     getTargetTypeColor(targetType) {
       return Spells.getTargetTypeColor(targetType)
     },
     getItemSize: function (size) {
-      return ITEM_SIZE[size] ? ITEM_SIZE[size] : "N/A";
+      return ITEM_SIZE[parseInt(size)] ? ITEM_SIZE[parseInt(size)] : "N/A";
     },
     getItemTags: function () {
       let tags = [];
@@ -403,6 +475,54 @@ export default {
       if (this.itemData.norent === 0) {
         tags.push("No Rent");
       }
+      if (this.itemData.fvnodrop === 1) {
+        tags.push("FV No Drop");
+      }
+      if (this.itemData.book === 1) {
+        tags.push("Book");
+      }
+      if (this.itemData.tradeskills > 0) {
+        tags.push("Tradeskill Item");
+      }
+      if (this.itemData.notransfer === 1) {
+        tags.push("No Transfer");
+      }
+      if (this.itemData.summonedflag === 1) {
+        tags.push("Summoned");
+      }
+      if (this.itemData.questitemflag === 1) {
+        tags.push("Quest Item");
+      }
+      if (this.itemData.artifactflag === 1) {
+        tags.push("Artifact");
+      }
+      if (this.itemData.nopet === 1) {
+        tags.push("No Pet");
+      }
+      if (this.itemData.attuneable === 1) {
+        tags.push("Attuneable");
+      }
+      if (this.itemData.stackable === 1) {
+        tags.push("Stackable (" + this.itemData.stacksize  + ")");
+      }
+      if (this.itemData.potionbelt === 1) {
+        tags.push("Potion Belt");
+      }
+      if (this.itemData.placeable === 1) {
+        tags.push("Placeable");
+      }
+      if (this.itemData.bardtype > 0) {
+        tags.push("Instrument");
+      }
+      if (this.itemData.epicitem > 0) {
+        tags.push("Epic");
+      }
+      if (this.itemData.expendablearrow > 0) {
+        tags.push("Arrow Expendable");
+      }
+      if (this.itemData.heirloom > 0) {
+        tags.push("Heirloom");
+      }
 
       return tags.join(", ")
     },
@@ -420,20 +540,19 @@ export default {
         }
       }
 
-      return classes.join(", ").trim()
+      return this.itemData.classes >= 65535 ? 'ALL' : classes.join(", ").trim()
     },
     getRaces: function () {
       let races      = []
       let racesValue = this.itemData.races
       for (const [key, value] of Object.entries(DB_RACES_SHORT).reverse()) {
-
         if (key <= racesValue) {
           racesValue -= key;
           races.push(value)
         }
       }
 
-      return races.join(", ").trim()
+      return this.itemData.races >= 65535 ? 'ALL' : races.join(", ").trim()
     },
     getDeity: function () {
       let deities      = []
@@ -475,7 +594,7 @@ export default {
       return this.itemData.augtype > 0 ? augSlots : ["All Slots"]
     },
     getExtraDmgSkill: function () {
-      return DB_SKILLS[this.itemData.extradmgskill] ? this.title(DB_SKILLS[this.itemData.extradmgskill].replace("_", " ").toLowerCase()) : ""
+      return DB_SKILLS[this.itemData.extradmgskill] ? (DB_SKILLS[this.itemData.extradmgskill].replace("_", " ")) : ""
     },
     getAugRestriction: function () {
       return DB_ITEM_AUG_RESTRICT[this.itemData.augrestrict] ? DB_ITEM_AUG_RESTRICT[this.itemData.augrestrict] : "Unknown Type (" + this.itemData.augrestrict + ")"
@@ -509,60 +628,33 @@ export default {
     }
   },
   created: function () {
-    const uuidv4     = require("uuid/v4")
-    this.componentId = uuidv4()
-
-
-    // dynamic section builder
-    this.secondlevel3   = {}
-    let data            = {};
-    data["Base Damage"] = this.itemData.damage
-    if (this.itemData.elemdmgamt > 0) {
-      data[this.getElementDamageName() + " Damage"] = this.itemData.elemdmgamt
-    }
-    if (this.itemData.banedmgrace > 0 && this.itemData.banedmgamt !== 0) {
-      data["Bane Damage (" + this.getBaneDamageName() + ")"] = this.itemData.banedmgamt
-    }
-    if (this.itemData.banedmgbody > 0 && this.itemData.banedmgamt !== 0) {
-      data[this.getBaneDamageBodyName()] = this.itemData.banedmgamt
-    }
-
-    data["Backstab Damage"] = this.itemData.backstabdmg
-    data["Delay"]           = this.itemData.delay
-    if (this.itemData.damage > 0) {
-      data["Ratio"] = Math.round(this.itemData.damage / this.itemData.delay * 100) / 100
-    }
-    // TODO: Damage bonus
-    data["Range"] = this.itemData.range
-
-    // spell loading
-    this.effects.forEach((effect) => {
-      if (this.itemData[effect.field] > 0) {
-        Spells.getSpell(this.itemData[effect.field]).then((spell) => {
-          this.effectData[effect.field] = spell
-          this.$forceUpdate()
-        })
-      }
-    })
-
-    this.secondlevel3 = data
+    this.init()
   },
   props: {
-    itemData: Object
+    itemData: {
+      type: Object,
+      default: {},
+      required: true
+    },
+    showEdit: {
+      type: Boolean,
+      default: false,
+      required: false,
+    }
   }
 }
 </script>
 
 <style>
 .stat-section {
-  padding-left:   10px;
-  display:        inline-block;
+  padding-left: 10px;
+  display: inline-block;
   vertical-align: top;
 }
 
 .item-preview-table {
   word-wrap: break-word;
-  width:     100%;
+  width: 100%;
 }
 
 .item-preview-table th, td {

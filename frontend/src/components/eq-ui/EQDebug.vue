@@ -11,7 +11,7 @@
 import {App} from "@/constants/app";
 import EqWindow from "@/components/eq-ui/EQWindow";
 import {EventBus} from "@/app/event-bus/event-bus";
-import LocalSettings from "@/app/local-settings/localsettings";
+import {LocalSettings} from "@/app/local-settings/localsettings";
 
 export default {
   name: "EqDebug",

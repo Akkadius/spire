@@ -1,29 +1,51 @@
 <template>
-  <div class="row">
-    <div class="mr-3 d-inline-block text-center">
+  <div class="pl-1 row" v-if="mask >= 0">
+    <div
+      class="mr-3 d-inline-block text-center"
+      :style="(centeredButtons ? 'width: 100%' : '')"
+    >
       <div v-for="(deity, deityId) in deities" class="mb-1 text-center d-inline-block">
-        <div class="text-center p-2 col-lg-12 col-sm-12">
-          <small :style="(deity.name.length > 8 ? 'font-size: 9px' : '')">{{ deity.name }}</small>
+        <div class="text-center pl-0 pr-0 mr-1 col-lg-12 col-sm-12">
+          <small
+            :style="(deity.short.length > 8 ? 'font-size: 9px' : 'font-size: 11px')"
+            v-if="showNames"
+          >{{ deity.short }}</small>
           <div class="text-center">
             <img
+              :title="deity.name"
               @click="selectDeity(deityId)"
               :src="itemCdnUrl + 'item_' + deity.icon + '.png'"
-              :style="'width:auto;' + (isDeitySelected(deityId) ? 'border: 2px solid #dadada; border-radius: 7px;' : 'border: 2px solid rgb(218 218 218 / 30%); border-radius: 7px;')"
-              class="mt-1 p-1">
+              :style="getImageSize() + ' ' + (isDeitySelected(deityId) ? 'border: 2px solid #dadada; border-radius: 7px;' : 'border-radius: 7px; opacity: .6')"
+              class="mt-1 hover-highlight" alt=""
+            >
           </div>
         </div>
       </div>
-    </div>
-    <div :class="'mt-4 d-inline-block ' + (centeredButtons ? 'text-center w-100' : '')" v-if="displayAllNone">
-      <button class='eq-button mr-3' @click="selectAll()" style="display: inline-block; width: 80px">All</button>
-      <button class='eq-button' @click="selectNone()" style="display: inline-block; width: 80px">None</button>
+
+      <!-- Select All / None -->
+      <div class="d-inline-block" v-if="displayAllNone">
+        <div
+          :class="'text-center mt-2 btn-xs eq-button-fancy ' + (parseInt(mask) >= 65535 ? 'eq-button-fancy-highlighted' : '')"
+          @click="selectAll()"
+        >
+          All
+        </div>
+        <div
+          :class="'text-center mt-2 btn-xs eq-button-fancy ' + (parseInt(mask) === 0 ? 'eq-button-fancy-highlighted' : '')"
+          @click="selectNone()"
+        >
+          None
+        </div>
+      </div>
+
     </div>
   </div>
 </template>
 
 <script>
-import {App} from "@/constants/app";
+import {App}             from "@/constants/app";
 import {DB_DIETIES_FULL} from "@/app/constants/eq-deities-constants";
+import * as util         from "util";
 
 export default {
   name: "DeityBitmaskCalculator",
@@ -33,7 +55,7 @@ export default {
       required: false
     },
     mask: {
-      type: String,
+      type: Number,
       required: false
     },
     displayAllNone: {
@@ -45,6 +67,16 @@ export default {
       type: Boolean,
       required: false,
       default: true
+    },
+    showNames: {
+      type: Boolean,
+      required: false,
+      default: true
+    },
+    imageSize: {
+      type: Number,
+      required: false,
+      default: 50,
     }
   },
   watch: {
@@ -70,6 +102,9 @@ export default {
     this.calculateFromBitmask();
   },
   methods: {
+    getImageSize() {
+      return util.format("width: %spx; height %spx;", this.imageSize, this.imageSize)
+    },
     selectAll() {
       Object.keys(this.deities).reverse().forEach((deityId) => {
         this.selectedDeityes[deityId] = true;
@@ -105,7 +140,8 @@ export default {
         }
       });
 
-      this.$emit("update:inputData", bitmask.toString());
+      this.$emit("update:inputData", parseInt(bitmask));
+      this.$emit("input", parseInt(bitmask));
       this.$emit("fired", "true");
     },
     selectDeity: function (deityId) {

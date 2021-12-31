@@ -124,7 +124,7 @@ func (e *NpcSpellsEffectsEntryController) updateNpcSpellsEffectsEntry(c echo.Con
 		return c.JSON(http.StatusNotFound, echo.Map{"error": "Cannot find entity"})
 	}
 
-	err = e.db.Get(models.NpcSpellsEffectsEntry{}, c).Model(&entity).Updates(&npcSpellsEffectsEntry).Error
+	err = e.db.Get(models.NpcSpellsEffectsEntry{}, c).Model(&entity).Select("*").Updates(&npcSpellsEffectsEntry).Error
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error updating entity: [%v]", err)})
 	}

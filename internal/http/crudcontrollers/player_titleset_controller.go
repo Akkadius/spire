@@ -124,7 +124,7 @@ func (e *PlayerTitlesetController) updatePlayerTitleset(c echo.Context) error {
 		return c.JSON(http.StatusNotFound, echo.Map{"error": "Cannot find entity"})
 	}
 
-	err = e.db.Get(models.PlayerTitleset{}, c).Model(&entity).Updates(&playerTitleset).Error
+	err = e.db.Get(models.PlayerTitleset{}, c).Model(&entity).Select("*").Updates(&playerTitleset).Error
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error updating entity: [%v]", err)})
 	}

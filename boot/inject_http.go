@@ -24,6 +24,8 @@ var httpSet = wire.NewSet(
 	controllers.NewDocsController,
 	controllers.NewQuestApiController,
 	controllers.NewAppController,
+	controllers.NewQueryController,
+	controllers.NewQuestFileApiController,
 	provideControllers,
 	NewRouter,
 )
@@ -104,6 +106,8 @@ func provideControllers(
 	docs *controllers.DocsController,
 	quest *controllers.QuestApiController,
 	app *controllers.AppController,
+	query *controllers.QueryController,
+	questFileApi *controllers.QuestFileApiController,
 ) *appControllerGroups {
 	return &appControllerGroups{
 		authControllers: []routes.Controller{
@@ -119,6 +123,8 @@ func provideControllers(
 		v1controllersNoAuth: []routes.Controller{
 			quest,
 			app,
+			query,
+			questFileApi,
 		},
 	}
 }

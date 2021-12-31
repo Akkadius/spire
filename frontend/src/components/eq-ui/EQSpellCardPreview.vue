@@ -1,10 +1,10 @@
 <template>
-  <div class="pb-4" style="min-width: 400px; max-width: 500px; padding: 5px"
+  <div class="pb-4 fade-in" style="min-width: 400px; max-width: 500px; padding: 5px"
        v-if="spellData && spellData['targettype']">
 
     <div class="row">
-      <div class="col-1" v-if="spellData.new_icon > 0">
-        <img :src="spellCdnUrl + spellData.new_icon + '.gif'"
+      <div class="col-1">
+        <img :src="spellCdnUrl + (spellData.new_icon > 0 ? spellData.new_icon : 1) + '.gif'"
              :style="'width:40px;height:auto;border-radius: 10px; ' + 'border: 2px solid ' + getTargetTypeColor(this.spellData['targettype']) + '; border-radius: 7px;'">
       </div>
       <div class="col-11 pl-5">
@@ -63,6 +63,13 @@
       <tr v-if="spellData['spell_fades'] !== ''">
         <td class="spell-field-label">When fading</td>
         <td> {{ spellData["spell_fades"] }}</td>
+      </tr>
+
+      <tr v-if="spellData['typedescnum'] !== ''">
+        <td class="spell-field-label">Book Category</td>
+        <td> {{ getSpellTypeDescNumName(spellData["typedescnum"]) }}
+          <span v-if="spellData['effectdescnum'] !== ''"> / {{ getSpellTypeDescNumName(spellData["effectdescnum"]) }} </span>
+        </td>
       </tr>
 
       <tr v-if="spellData['skill'] < 116 && getDatabaseSkillName(spellData['skill']) !== ''">
@@ -392,21 +399,22 @@
 
 <script>
 
-import {App} from "@/constants/app";
-import {DB_SKILLS} from "@/app/constants/eq-skill-constants";
+import {App}              from "@/constants/app";
+import {DB_SKILLS}        from "@/app/constants/eq-skill-constants";
 import {
   DB_SPELL_EFFECTS,
   DB_SPELL_NUMHITSTYPE,
   DB_SPELL_RESISTS,
   DB_SPELL_TARGET_RESTRICTION,
-  DB_SPELL_TARGETS
-} from "@/app/constants/eq-spell-constants";
-import {SpellsNewApi} from "@/app/api";
-import {SpireApiClient} from "@/app/api/spire-api-client";
-import EqWindow from "@/components/eq-ui/EQWindow";
-import EqDebug from "@/components/eq-ui/EQDebug";
-import {Spells} from "@/app/spells";
-import {Items} from "@/app/items";
+  DB_SPELL_TARGETS,
+  DB_SPELL_TYPEDESCNUM
+}                         from "@/app/constants/eq-spell-constants";
+import {SpellsNewApi}     from "@/app/api";
+import {SpireApiClient}   from "@/app/api/spire-api-client";
+import EqWindow           from "@/components/eq-ui/EQWindow";
+import EqDebug            from "@/components/eq-ui/EQDebug";
+import {Spells}           from "@/app/spells";
+import {Items}            from "@/app/items";
 import {DB_CLASSES_ICONS} from "@/app/constants/eq-class-icon-constants";
 import {DB_CLASSES_SHORT} from "@/app/constants/eq-classes-constants";
 
@@ -419,6 +427,14 @@ export default {
     EqDebug,
     "eq-item-card-preview": () => import("@/components/eq-ui/EQItemCardPreview.vue"),
     "v-runtime-template": () => import("v-runtime-template")
+  },
+  watch: {
+    spellData: {
+      handler: function (val, oldVal) {
+        this.init()
+      },
+      deep: true
+    },
   },
   data() {
     return {
@@ -443,7 +459,9 @@ export default {
   methods: {
     async init() {
 
-      if (!this.spellData["targettype"]) {
+      console.log("init")
+
+      if (!this.spellData || !this.spellData["targettype"]) {
         return
       }
 
@@ -451,6 +469,11 @@ export default {
       // this is so loading spell effects and any subsequent ajax requests
       // do not block the card from loading
       for (let effectIndex = 1; effectIndex <= 12; effectIndex++) {
+        if (this.spellEffectInfo[effectIndex]) {
+          this.spellEffectInfo[effectIndex] = "";
+          this.$forceUpdate()
+        }
+
         if (this.spellData["effectid_" + effectIndex] !== 254) {
           this.getSpellEffectInfo(this.spellData, effectIndex).then((result) => {
             this.spellEffectInfo[result.index] = result.info;
@@ -493,6 +516,7 @@ export default {
     },
 
     loadSpellDescription() {
+      this.effectDescription = ""
       Spells.getSpellDescription(this.spellData).then((result) => {
         if (result && result.trim() !== "") {
           this.effectDescription = result;
@@ -517,6 +541,9 @@ export default {
     },
     getSpellNumHitsTypeName: function (id) {
       return DB_SPELL_NUMHITSTYPE[id] ? DB_SPELL_NUMHITSTYPE[id] : ""
+    },
+    getSpellTypeDescNumName: function (id) {
+      return DB_SPELL_TYPEDESCNUM[id] ? DB_SPELL_TYPEDESCNUM[id] : ""
     },
 
     getConeAngleDescription: function (start, stop) {
@@ -598,15 +625,15 @@ export default {
 
 <style>
 .spell-field-label {
-  text-align:    right;
-  font-weight:   bold;
+  text-align: right;
+  font-weight: bold;
   padding-right: 10px;
-  width:         35%;
+  width: 35%;
 }
 
 .spell-preview-table {
   word-wrap: break-word;
-  width:     100%;
+  width: 100%;
 }
 
 .spell-preview-table th, td {

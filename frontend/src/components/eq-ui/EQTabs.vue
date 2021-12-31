@@ -1,37 +1,59 @@
 <template>
-    <div>
-        <nav class='eq-tab-box-fancy'>
-            <ul>
-                <li v-for="tab in tabs" :class="{ 'eq-tab-open': tab.isActive }" @click="selectTab(tab)">
-<!--                    <a :href="tab.href" @click="selectTab(tab)" style="color:white">{{ tab.name }}</a>-->
-                    <a @click="selectTab(tab)" style="color:white">{{ tab.name }}</a>
-                </li>
-            </ul>
-        </nav>
+  <div>
+    <nav class='eq-tab-box-fancy'>
+      <ul>
+        <li
+          v-for="tab in tabs"
+          :class="{ 'eq-tab-open': tab.isActive }"
+          @mouseover="selectTabHover(tab)"
+          @click="selectTab(tab)"
+        >
+          <a
+            @click="selectTab(tab)"
+            style="color:white">
+            {{ tab.name }}
+          </a>
+        </li>
+      </ul>
+    </nav>
 
-        <div class="tabs-details">
-            <slot></slot>
-        </div>
+    <div class="tabs-details">
+      <slot></slot>
     </div>
+  </div>
 </template>
 
 <script>
-  export default {
-    name: 'EqTabs',
-    data() {
-      return { tabs: [] };
-    },
-    created() {
-      this.tabs = this.$children;
-    },
-    methods: {
-      selectTab(selectedTab) {
-        this.tabs.forEach(tab => {
-          tab.isActive = (tab.name === selectedTab.name);
-        });
+import {LocalSettings} from "@/app/local-settings/localsettings";
+
+export default {
+  name: 'EqTabs',
+  data() {
+    return { tabs: [] };
+  },
+  created() {
+    this.tabs = this.$children;
+  },
+  methods: {
+    selectTabHover(selectedTab) {
+      if (this.hoverOpen || LocalSettings.isTabHoverEnabled()) {
+        this.selectTab(selectedTab)
       }
+    },
+    selectTab(selectedTab) {
+      this.tabs.forEach(tab => {
+        tab.isActive = (tab.name === selectedTab.name);
+      });
     }
+  },
+  props: {
+    hoverOpen: {
+      default: false,
+      required: false,
+      type: Boolean,
+    },
   }
+}
 </script>
 
 <style scoped>

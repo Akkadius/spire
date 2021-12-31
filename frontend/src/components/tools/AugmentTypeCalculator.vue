@@ -11,9 +11,21 @@
       </div>
       <br>
     </div>
-    <div class="form-group text-center">
-      <button class='eq-button mr-3' @click="selectAll()" style="display: inline-block; width: 80px">All</button>
-      <button class='eq-button' @click="selectNone()" style="display: inline-block; width: 80px">None</button>
+
+    <!-- Select All / None -->
+    <div class="d-inline-block text-center">
+      <div
+        :class="'text-center mt-4 btn-xs eq-button-fancy ' + (parseInt(mask) >= 8388607 ? 'eq-button-fancy-highlighted' : '')"
+        @click="selectAll()"
+      >
+        All
+      </div>
+      <div
+        :class="'text-center mt-4 btn-xs eq-button-fancy ' + (parseInt(mask) === 0 ? 'eq-button-fancy-highlighted' : '')"
+        @click="selectNone()"
+      >
+        None
+      </div>
     </div>
   </div>
 </template>
@@ -31,7 +43,7 @@ export default {
       required: false
     },
     mask: {
-      type: String,
+      type: Number,
       required: false
     }
   },
@@ -93,7 +105,7 @@ export default {
         }
       });
 
-      this.$emit("update:inputData", bitmask.toString());
+      this.$emit("update:inputData", parseInt(bitmask));
     },
     selectAug: function (augId) {
       this.selectedAugs[augId] = !this.selectedAugs[augId];

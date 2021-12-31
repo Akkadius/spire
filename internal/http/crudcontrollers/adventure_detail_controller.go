@@ -124,7 +124,7 @@ func (e *AdventureDetailController) updateAdventureDetail(c echo.Context) error 
 		return c.JSON(http.StatusNotFound, echo.Map{"error": "Cannot find entity"})
 	}
 
-	err = e.db.Get(models.AdventureDetail{}, c).Model(&entity).Updates(&adventureDetail).Error
+	err = e.db.Get(models.AdventureDetail{}, c).Model(&entity).Select("*").Updates(&adventureDetail).Error
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error updating entity: [%v]", err)})
 	}

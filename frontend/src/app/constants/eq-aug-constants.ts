@@ -1,4 +1,5 @@
 export const AUG_TYPES = {
+  0: { name: "None", mask: 0 },
   1: { name: "(General: Single Stat)", mask: 1 },
   2: { name: "(General: Multiple Stat)", mask: 2 },
   3: { name: "(General: Spell Effect)", mask: 4 },

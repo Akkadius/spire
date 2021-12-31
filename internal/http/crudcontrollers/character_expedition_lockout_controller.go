@@ -124,7 +124,7 @@ func (e *CharacterExpeditionLockoutController) updateCharacterExpeditionLockout(
 		return c.JSON(http.StatusNotFound, echo.Map{"error": "Cannot find entity"})
 	}
 
-	err = e.db.Get(models.CharacterExpeditionLockout{}, c).Model(&entity).Updates(&characterExpeditionLockout).Error
+	err = e.db.Get(models.CharacterExpeditionLockout{}, c).Model(&entity).Select("*").Updates(&characterExpeditionLockout).Error
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error updating entity: [%v]", err)})
 	}

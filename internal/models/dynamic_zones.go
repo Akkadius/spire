@@ -4,6 +4,11 @@ type DynamicZone struct {
 	ID                  uint    `json:"id" gorm:"Column:id"`
 	InstanceId          int     `json:"instance_id" gorm:"Column:instance_id"`
 	Type                uint8   `json:"type" gorm:"Column:type"`
+	Uuid                string  `json:"uuid" gorm:"Column:uuid"`
+	Name                string  `json:"name" gorm:"Column:name"`
+	LeaderId            uint    `json:"leader_id" gorm:"Column:leader_id"`
+	MinPlayers          uint    `json:"min_players" gorm:"Column:min_players"`
+	MaxPlayers          uint    `json:"max_players" gorm:"Column:max_players"`
 	CompassZoneId       uint    `json:"compass_zone_id" gorm:"Column:compass_zone_id"`
 	CompassX            float32 `json:"compass_x" gorm:"Column:compass_x"`
 	CompassY            float32 `json:"compass_y" gorm:"Column:compass_y"`

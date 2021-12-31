@@ -5,57 +5,75 @@ input[type=checkbox].eq-checkbox {
 
 input[type=checkbox].eq-checkbox + label {
     vertical-align: middle;
-    margin:         0px 0px 5px 5px;
+    margin: 0px 0px 5px 5px;
 }
 
 input[type=checkbox].eq-checkbox + label {
-    display:    inline-block;
-    padding:    0;
+    display: inline-block;
+    padding: 0;
     background: url(../images/check_0.png) no-repeat;
-    height:     16px;
-    width:      16px;
+    height: 16px;
+    width: 16px;
 }
 
 input[type=checkbox].eq-checkbox:checked + label {
     background: url(../images/check_1.png) no-repeat;
-    display:    inline-block;
-    padding:    0;
-    height:     16px;
-    width:      16px;
+    display: inline-block;
+    padding: 0;
+    height: 16px;
+    width: 16px;
+}
+
+.eq-checkbox-label:hover {
+    box-shadow: 0px 0px 1px 3px white;
+    border-radius: 7px;
 }
 
 [class*="eq-window"] input,
 [class*="eq-window"] textarea,
 [class*="eq-window"] pre,
 [class*="eq-window"] select {
-    border:           2px #555555 solid !important;
+    border: 2px #555555 solid;
     background-color: #0b0b10 !important;
-    color:            #FFFFFF !important;
-    padding:          5px !important;
-    padding-left:     15px !important;
-    margin:           5px;
-    display:          inline-block;
-    vertical-align:   middle;
-    font-size:        13px;
+    color: #FFFFFF !important;
+    padding: 5px !important;
+    padding-left: 15px !important;
+    /*margin:           5px;*/
+    display: inline-block;
+    vertical-align: middle;
+    font-size: 13px;
+}
+
+[class*="eq-window"] select {
+    padding-left: 10px !important;
+}
+
+[class*="input-group-text"] {
+    background-color: #0b0b10 !important;
+    border: 2px #555555 solid !important;
+    padding: 0.0rem 0.76rem;
 }
 
 /*div usage*/
 [class*="eq-window"] .code-display {
-    border:           2px #555555 solid !important;
+    border: 2px #555555 solid !important;
     background-color: #0b0b10 !important;
-    color:            #FFFFFF !important;
-    padding:          5px !important;
-    padding-left:     15px !important;
-    margin:           5px;
-    display:          inline-block;
-    vertical-align:   middle;
-    font-family:      SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+    color: #FFFFFF !important;
+    padding: 5px !important;
+    padding-left: 15px !important;
+    margin: 5px;
+    display: inline-block;
+    vertical-align: middle;
+    font-family: SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
 }
 
 [class*="eq-window"] input:hover,
 [class*="eq-window"] textarea:hover,
 [class*="eq-window"] pre:hover,
-[class*="eq-window"] select:hover {
+[class*="eq-window"] select:hover,
+[class*="eq-window"] input:focus,
+[class*="eq-window"] textarea:focus,
+[class*="eq-window"] select:focus {
     border-color: #8aa3ff !important;
 }
 
@@ -64,63 +82,63 @@ input[type=checkbox].eq-checkbox:checked + label {
 }
 
 [class*="eq-window"] pre {
-    border:           2px #555555 solid !important;
+    border: 2px #555555 solid !important;
     background-color: #0b0b10 !important;
-    color:            #FFFFFF !important;
-    padding:          10px;
+    color: #FFFFFF !important;
+    padding: 10px;
 }
 
 .eq-dark-background {
     background-color: #0b0b10 !important;
-    color:            #FFFFFF !important;
-    border:           2px #555555 solid !important;
+    color: #FFFFFF !important;
+    border: 2px #555555 solid !important;
 }
 
 [class*="eq-window"] .inner-window {
-    border:           2px #555555 solid !important;
+    border: 2px #555555 solid !important;
     background-color: rgba(11, 11, 16, .2) !important;
-    color:            #FFFFFF !important;
-    padding:          10px;
+    color: #FFFFFF !important;
+    padding: 10px;
 }
 
 NAV.eq-tab-box-fancy UL {
     display: flex;
-    margin:  15px 0px 20px;
+    margin: 15px 0px 20px;
     padding: 0px;
 }
 
 NAV.eq-tab-box-fancy UL LI {
-    cursor:                  pointer;
-    list-style-type:         none;
-    flex-grow:               1;
-    text-align:              center;
-    border-top:              1px solid #858996;
-    border-bottom:           2px solid #575139;
-    border-left:             1px solid #40434e;
-    border-right:            1px solid #858996;
+    cursor: pointer;
+    list-style-type: none;
+    flex-grow: 1;
+    text-align: center;
+    border-top: 1px solid #858996;
+    border-bottom: 2px solid #575139;
+    border-left: 1px solid #40434e;
+    border-right: 1px solid #858996;
     border-top-right-radius: 15px;
-    border-top-left-radius:  15px;
-    color:                   #808080;
-    background-color:        rgba(255, 255, 255, 0.0);
+    border-top-left-radius: 15px;
+    color: #808080;
+    background-color: rgba(255, 255, 255, 0.0);
 }
 
 NAV.eq-tab-box-fancy UL LI:hover {
-    color:            #ffffff;
+    color: #ffffff;
     background-color: rgba(255, 255, 255, 0.2);
 }
 
 NAV.eq-tab-box-fancy UL LI.eq-tab-open {
-    cursor:           default;
-    border-top:       2px solid #949187;
-    border-bottom:    none;
-    border-left:      2px solid #8a7d4a;
-    border-right:     2px solid #949187;
+    cursor: default;
+    border-top: 2px solid #949187;
+    border-bottom: none;
+    border-left: 2px solid #8a7d4a;
+    border-right: 2px solid #949187;
     background-color: rgba(255, 255, 255, 0.0);
-    color:            #ffffff;
+    color: #ffffff;
 }
 
 NAV.eq-tab-box-fancy UL LI.eq-tab-open:hover {
-    cursor:           default;
+    cursor: default;
     background-color: rgba(255, 255, 255, 0.0);
 }
 
@@ -130,42 +148,42 @@ NAV.eq-tab-box-fancy UL LI.eq-tab-open:hover {
 ------------------------------------------------- */
 NAV.eq-tab-box-fancy UL {
     display: flex;
-    margin:  15px 0px 20px;
+    margin: 15px 0px 20px;
     padding: 0px;
 }
 
 NAV.eq-tab-box-fancy UL LI {
-    cursor:                  pointer;
-    list-style-type:         none;
-    flex-grow:               1;
-    text-align:              center;
-    border-top:              1px solid #858996;
-    border-bottom:           2px solid #575139;
-    border-left:             1px solid #40434e;
-    border-right:            1px solid #858996;
+    cursor: pointer;
+    list-style-type: none;
+    flex-grow: 1;
+    text-align: center;
+    border-top: 1px solid #858996;
+    border-bottom: 2px solid #575139;
+    border-left: 1px solid #40434e;
+    border-right: 1px solid #858996;
     border-top-right-radius: 15px;
-    border-top-left-radius:  15px;
-    color:                   #808080;
-    background-color:        rgba(255, 255, 255, 0.0);
+    border-top-left-radius: 15px;
+    color: #808080;
+    background-color: rgba(255, 255, 255, 0.0);
 }
 
 NAV.eq-tab-box-fancy UL LI:hover {
-    color:            #ffffff;
+    color: #ffffff;
     background-color: rgba(255, 255, 255, 0.2);
 }
 
 NAV.eq-tab-box-fancy UL LI.eq-tab-open {
-    cursor:           default;
-    border-top:       2px solid #949187;
-    border-bottom:    none;
-    border-left:      2px solid #8a7d4a;
-    border-right:     2px solid #949187;
+    cursor: default;
+    border-top: 2px solid #949187;
+    border-bottom: none;
+    border-left: 2px solid #8a7d4a;
+    border-right: 2px solid #949187;
     background-color: rgba(255, 255, 255, 0.0);
-    color:            #ffffff;
+    color: #ffffff;
 }
 
 NAV.eq-tab-box-fancy UL LI.eq-tab-open:hover {
-    cursor:           default;
+    cursor: default;
     background-color: rgba(255, 255, 255, 0.0);
 }
 
@@ -174,79 +192,79 @@ NAV.eq-tab-box-fancy UL LI.eq-tab-open:hover {
      tab box on various super fancy windows
 ------------------------------------------------- */
 .eq-window NAV.eq-tab-box-fancy UL {
-    display:               flex;
-    margin:                15px -18px 20px;
-    padding:               0 8px 7px;
-    height:                28px;
-    background-image:      url(../images/tab_l.png),
-                           url(../images/tab_r.png);
-    background-repeat:     no-repeat,
-                           no-repeat;
+    display: flex;
+    margin: 15px -18px 20px;
+    padding: 0 8px 7px;
+    height: 28px;
+    background-image: url(../images/tab_l.png),
+    url(../images/tab_r.png);
+    background-repeat: no-repeat,
+    no-repeat;
     background-position-x: left,
-                           right;
+    right;
     background-position-y: bottom,
-                           bottom;
-    background-clip:       padding-box,
-                           padding-box;
+    bottom;
+    background-clip: padding-box,
+    padding-box;
 }
 
 .eq-window NAV.eq-tab-box-fancy UL LI {
-    cursor:                pointer;
-    list-style-type:       none;
-    flex-grow:             1;
-    text-align:            center;
-    border-width:          0px;
-    color:                 #808080;
-    padding:               0px 20px;
-    height:                28px;
-    white-space:           nowrap;
-    line-height:           36px;
-    background-image:      url(../images/tab_down_l.png),
-                           url(../images/tab_down_r.png),
-                           url(../images/tab_down_t.png),
-                           url(../images/tab_down_b.png);
-    background-repeat:     no-repeat,
-                           no-repeat,
-                           repeat-x,
-                           repeat-x;
+    cursor: pointer;
+    list-style-type: none;
+    flex-grow: 1;
+    text-align: center;
+    border-width: 0px;
+    color: #808080;
+    padding: 0px 20px;
+    height: 28px;
+    white-space: nowrap;
+    line-height: 36px;
+    background-image: url(../images/tab_down_l.png),
+    url(../images/tab_down_r.png),
+    url(../images/tab_down_t.png),
+    url(../images/tab_down_b.png);
+    background-repeat: no-repeat,
+    no-repeat,
+    repeat-x,
+    repeat-x;
     background-position-x: left,
-                           right,
-                           left,
-                           left;
+    right,
+    left,
+    left;
     background-position-y: top,
-                           top,
-                           top,
-                           bottom;
-    background-clip:       padding-box,
-                           padding-box,
-                           content-box,
-                           content-box;
-    background-color:      transparent;
+    top,
+    top,
+    bottom;
+    background-clip: padding-box,
+    padding-box,
+    content-box,
+    content-box;
+    background-color: transparent;
 }
 
 .eq-window NAV.eq-tab-box-fancy UL LI:hover,
 .eq-window NAV.eq-tab-box-fancy UL LI.eq-tab-open {
-    cursor:                default;
-    border-width:          0;
-    color:                 #ffffff;
-    padding:               0 16px;
-    line-height:           25px;
-    background-image:      url(../images/tab_up_l.png),
-                           url(../images/tab_up_r.png),
-                           url(../images/tab_up_t.png);
-    background-repeat:     no-repeat,
-                           no-repeat,
-                           repeat-x;
+    cursor: default;
+    border-width: 0;
+    color: #ffffff;
+    padding: 0 16px;
+    line-height: 25px;
+    background-image: url(../images/tab_up_l.png),
+    url(../images/tab_up_r.png),
+    url(../images/tab_up_t.png);
+    background-repeat: no-repeat,
+    no-repeat,
+    repeat-x;
     background-position-x: left,
-                           right,
-                           left;
+    right,
+    left;
     background-position-y: top,
-                           top,
-                           top;
-    background-clip:       padding-box,
-                           padding-box,
-                           content-box;
-    background-color:      transparent;
+    top,
+    top;
+    background-clip: padding-box,
+    padding-box,
+    content-box;
+    background-color: transparent;
 }
 
 .eq-window NAV.eq-tab-box-fancy UL LI.eq-tab-open:hover {
@@ -256,83 +274,83 @@ NAV.eq-tab-box-fancy UL LI.eq-tab-open:hover {
 /*progress-bars*/
 DIV.eq-progress-bar {
     background-image: url(../images/progress_bar_bottom.png);
-    height:           6px;
-    width:            100px;
-    border:           0px;
-    text-align:       center;
-    padding:          0px;
-    margin:           10px;
-    display:          block;
-    line-height:      10px;
-    text-decoration:  none;
-    font-weight:      normal;
-    color:            #ffffff;
-    opacity:          1.0;
-    position:         relative;
+    height: 6px;
+    width: 100px;
+    border: 0px;
+    text-align: center;
+    padding: 0px;
+    margin: 10px;
+    display: block;
+    line-height: 10px;
+    text-decoration: none;
+    font-weight: normal;
+    color: #ffffff;
+    opacity: 1.0;
+    position: relative;
 }
 
 DIV.eq-progress-bar DIV {
-    height:           6px;
-    width:            100%;
-    border:           0;
-    text-align:       center;
-    padding:          0;
-    display:          block;
-    line-height:      6px;
-    margin:           0;
-    text-decoration:  none;
-    font-weight:      normal;
-    color:            #ffffff;
-    opacity:          1.0;
-    position:         relative;
+    height: 6px;
+    width: 100%;
+    border: 0;
+    text-align: center;
+    padding: 0;
+    display: block;
+    line-height: 6px;
+    margin: 0;
+    text-decoration: none;
+    font-weight: normal;
+    color: #ffffff;
+    opacity: 1.0;
+    position: relative;
     background-color: #ff0000;
-    z-index:          1;
-    transition:       width .5s;
+    z-index: 1;
+    transition: width .5s;
 
 }
 
 DIV.eq-progress-bar DIV:before {
-    content:          " ";
+    content: " ";
     background-image: url(../images/progress_bar_top.png);
-    height:           10px;
-    width:            108px;
-    border:           0;
-    text-align:       center;
-    padding:          0;
-    margin:           0;
-    display:          block;
-    line-height:      10px;
-    text-decoration:  none;
-    font-weight:      normal;
-    color:            #ffffff;
-    opacity:          1.0;
-    position:         absolute;
-    top:              -2px;
-    left:             -4px;
-    z-index:          -1;
+    height: 10px;
+    width: 108px;
+    border: 0;
+    text-align: center;
+    padding: 0;
+    margin: 0;
+    display: block;
+    line-height: 10px;
+    text-decoration: none;
+    font-weight: normal;
+    color: #ffffff;
+    opacity: 1.0;
+    position: absolute;
+    top: -2px;
+    left: -4px;
+    z-index: -1;
 }
 
 A.eq-progress-bar DIV:before {
-    content:               " ";
-    position:              absolute;
-    z-index:               -1;
-    padding:               19px;
-    left:                  -12px;
-    right:                 -12px;
-    top:                   -5px;
-    bottom:                -11px;
-    pointer-events:        none;
-    outline-offset:        -20px;
-    outline:               2px #40434e solid;
-    background-repeat:     no-repeat, no-repeat, no-repeat, no-repeat, repeat;
+    content: " ";
+    position: absolute;
+    z-index: -1;
+    padding: 19px;
+    left: -12px;
+    right: -12px;
+    top: -5px;
+    bottom: -11px;
+    pointer-events: none;
+    outline-offset: -20px;
+    outline: 2px #40434e solid;
+    background-repeat: no-repeat, no-repeat, no-repeat, no-repeat, repeat;
     background-position-x: left, right, left, right, left;
     background-position-y: top, top, bottom, bottom, top;
-    background-clip:       padding-box, padding-box, padding-box, padding-box, content-box;
-    background-repeat:     no-repeat, no-repeat, no-repeat, no-repeat;
+    background-clip: padding-box, padding-box, padding-box, padding-box, content-box;
+    background-repeat: no-repeat, no-repeat, no-repeat, no-repeat;
     background-position-x: left, right, left, right;
     background-position-y: top, top, bottom, bottom;
-    background-clip:       padding-box, padding-box, padding-box, padding-box;
-    background-image:      url(../images/simple_window_corner_tl.png), url(../images/simple_window_corner_tr.png), url(../images/simple_window_corner_bl.png), url(../images/simple_window_corner_br.png), url(../images/dark.gif);
+    background-clip: padding-box, padding-box, padding-box, padding-box;
+    background-image: url(../images/simple_window_corner_tl.png), url(../images/simple_window_corner_tr.png), url(../images/simple_window_corner_bl.png), url(../images/simple_window_corner_br.png), url(../images/dark.gif);
 }
 
 
@@ -342,32 +360,32 @@ A.eq-progress-bar DIV:before {
 
 A {
     text-decoration: none;
-    font-weight:     none;
-    color:           #7b714a;
+    font-weight: none;
+    color: #7b714a;
 }
 
 A:link {
     text-decoration: none;
-    font-weight:     none;
-    color:           #7b714a;
+    font-weight: none;
+    color: #7b714a;
 }
 
 A:active {
     text-decoration: none;
-    font-weight:     none;
-    color:           #7b714a;
+    font-weight: none;
+    color: #7b714a;
 }
 
 A:visited {
     text-decoration: none;
-    font-weight:     none;
-    color:           #6b614a;
+    font-weight: none;
+    color: #6b614a;
 }
 
 A:hover {
     text-decoration: none;
-    font-weight:     none;
-    color:           #7b714a;
+    font-weight: none;
+    color: #7b714a;
 }
 
 /* ----------------------------------------------
@@ -383,23 +401,23 @@ A:hover {
 .eq-button:visited,
 .eq-button:active,
 .eq-button:hover {
-    height:            36px;
-    border:            0px;
-    margin:            10px auto;
-    display:           block;
+    height: 36px;
+    border: 0px;
+    margin: 10px auto;
+    display: block;
     /*line-height:       21px;*/
-    text-decoration:   none;
-    font-weight:       none;
-    color:             #ffffff;
-    opacity:           1.0;
-    cursor:            pointer;
-    position:          relative;
+    text-decoration: none;
+    font-weight: none;
+    color: #ffffff;
+    opacity: 1.0;
+    cursor: pointer;
+    position: relative;
 
-    background-size:   100%;
+    background-size: 100%;
     background-repeat: no-repeat;
-    width:             auto;
-    padding:           10px;
-    font-size:         14px;
+    width: auto;
+    padding: 10px;
+    font-size: 14px;
 
 }
 
@@ -441,21 +459,21 @@ A:hover {
 .eq-button-wrap:visited,
 .eq-button-wrap:active,
 .eq-button-wrap:hover {
-    height:            50px;
-    width:             50px;
-    border:            0px;
-    padding:           0px;
-    margin:            1px;
-    display:           inline-block;
-    line-height:       40px;
-    text-decoration:   none;
-    font-weight:       none;
-    color:             #ffffff;
-    opacity:           1.0;
-    cursor:            pointer;
-    position:          relative;
+    height: 50px;
+    width: 50px;
+    border: 0px;
+    padding: 0px;
+    margin: 1px;
+    display: inline-block;
+    line-height: 40px;
+    text-decoration: none;
+    font-weight: none;
+    color: #ffffff;
+    opacity: 1.0;
+    cursor: pointer;
+    position: relative;
 
-    background-size:   100%;
+    background-size: 100%;
     background-repeat: no-repeat;
 }
 
@@ -492,49 +510,49 @@ A:hover {
 ------------------------------------------------- */
 
 .eq-window-title-bar {
-    position:              absolute;
-    overflow:              hidden;
-    top:                   -11px;
-    left:                  6px;
-    right:                 6px;
-    height:                21px;
-    font-family:           arial;
-    font-size:             9pt;
-    line-height:           21px;
-    text-align:            center;
-    color:                 #FFFFFF;
-    padding:               0px 13px;
-    background-image:      url(../images/rightt.gif), url(../images/leftt.gif), url(../images/midt.gif);
-    background-repeat:     no-repeat, no-repeat, repeat-x;
-    background-clip:       padding-box, padding-box, content-box;
+    position: absolute;
+    overflow: hidden;
+    top: -11px;
+    left: 6px;
+    right: 6px;
+    height: 21px;
+    font-family: arial;
+    font-size: 9pt;
+    line-height: 21px;
+    text-align: center;
+    color: #FFFFFF;
+    padding: 0px 13px;
+    background-image: url(../images/rightt.gif), url(../images/leftt.gif), url(../images/midt.gif);
+    background-repeat: no-repeat, no-repeat, repeat-x;
+    background-clip: padding-box, padding-box, content-box;
     background-position-x: right, left, left;
-    display:               block;
-    margin:                0px 0px;
+    display: block;
+    margin: 0px 0px;
 }
 
 .eq-window {
-    position:              relative;
-    background-image:      url(../images/super_fancy_r.png),
-                           url(../images/super_fancy_l.png),
-                           url(../images/super_fancy_bg.png);
-    background-repeat:     repeat-y,
-                           repeat-y,
-                           repeat;
+    position: relative;
+    background-image: url(../images/super_fancy_r.png),
+    url(../images/super_fancy_l.png),
+    url(../images/super_fancy_bg.png);
+    background-repeat: repeat-y,
+    repeat-y,
+    repeat;
     background-position-x: right,
-                           left,
-                           left;
+    left,
+    left;
     background-position-y: top,
-                           top,
-                           top;
-    padding-left:          20px;
-    padding-right:         20px;
-    padding-bottom:        0px;
-    z-index:               0;
-    font-family:           arial;
-    color:                 #FFFFFF;
-    box-shadow:            5px 20px 20px rgba(0, 0, 0, 0.6);
+    top,
+    top;
+    padding-left: 20px;
+    padding-right: 20px;
+    padding-bottom: 0px;
+    z-index: 0;
+    font-family: arial;
+    color: #FFFFFF;
+    box-shadow: 5px 20px 20px rgba(0, 0, 0, 0.6);
     /*opacity:               0.95;*/
-    transition:            opacity 200ms;
+    transition: opacity 200ms;
 
 }
 
@@ -543,68 +561,68 @@ A:hover {
 }
 
 .eq-window:before {
-    content:               " ";
-    position:              absolute;
-    z-index:               -1;
-    left:                  -4px;
-    right:                 0px;
-    top:                   -20px;
-    bottom:                -19px;
-    background-image:      url(../images/super_fancy_tl.png),
-                           url(../images/super_fancy_tr.png),
-                           url(../images/super_fancy_bl.png),
-                           url(../images/super_fancy_br.png),
-                           url(../images/super_fancy_t.png),
-                           url(../images/super_fancy_b.png);
-    background-repeat:     no-repeat,
-                           no-repeat,
-                           no-repeat,
-                           no-repeat,
-                           repeat-x,
-                           repeat-x;
+    content: " ";
+    position: absolute;
+    z-index: -1;
+    left: -4px;
+    right: 0px;
+    top: -20px;
+    bottom: -19px;
+    background-image: url(../images/super_fancy_tl.png),
+    url(../images/super_fancy_tr.png),
+    url(../images/super_fancy_bl.png),
+    url(../images/super_fancy_br.png),
+    url(../images/super_fancy_t.png),
+    url(../images/super_fancy_b.png);
+    background-repeat: no-repeat,
+    no-repeat,
+    no-repeat,
+    no-repeat,
+    repeat-x,
+    repeat-x;
     background-position-x: left,
-                           right,
-                           left,
-                           right,
-                           left,
-                           left;
+    right,
+    left,
+    right,
+    left,
+    left;
     background-position-y: top,
-                           top,
-                           bottom,
-                           bottom,
-                           top,
-                           bottom;
-    background-clip:       padding-box,
-                           padding-box,
-                           padding-box,
-                           padding-box,
-                           content-box,
-                           content-box;
-    padding-top:           0px;
-    padding-left:          20px;
-    padding-right:         20px;
-    padding-bottom:        0px;
-    pointer-events:        none;
+    top,
+    bottom,
+    bottom,
+    top,
+    bottom;
+    background-clip: padding-box,
+    padding-box,
+    padding-box,
+    padding-box,
+    content-box,
+    content-box;
+    padding-top: 0px;
+    padding-left: 20px;
+    padding-right: 20px;
+    padding-bottom: 0px;
+    pointer-events: none;
 }
 
-.eq-window .eq-window-title-bar {
-    position:         absolute;
-    overflow:         hidden;
-    top:              -10px;
-    font-size:        24px;
-    line-height:      25px;
-    text-align:       center;
-    padding:          0px 19px;
+.eq-window > .eq-window-title-bar {
+    position: absolute;
+    overflow: hidden;
+    top: -10px;
+    font-size: 24px;
+    line-height: 25px;
+    text-align: center;
+    padding: 0px 19px;
     background-image: url(../images/super_fancy_title.png);
-    display:          block;
-    background-size:  100%;
-    margin:           0 auto;
-    width:            275px;
-    height:           40px;
+    display: block;
+    background-size: 100%;
+    margin: 0 auto;
+    width: 275px;
+    height: 40px;
 
-    text-shadow:      0px 0px 3px #000, 0px 0px 0px #000, 1px 2px 5px #000, 4px 4px 5px #000;
-    color:            #fffdf7;
-    font-family:      menuetto, serif;
+    text-shadow: 0px 0px 3px #000, 0px 0px 0px #000, 1px 2px 5px #000, 4px 4px 5px #000;
+    color: #fffdf7;
+    font-family: menuetto, serif;
 }
 
 .eq-simple-window UL LI,
@@ -621,18 +639,18 @@ A:hover {
 .eq-window-complex,
 .eq-window-complex-fancy,
 .WindowComplexGM {
-    position:         relative;
-    margin:           25px auto;
+    position: relative;
+    margin: 25px auto;
     background-image: url(../images/light.gif);
-    padding:          19px 13px 17px;
-    z-index:          0;
-    border-width:     2px;
-    border-style:     solid;
-    border-color:     rgb(180, 173, 134) rgb(142, 134, 107) rgb(61, 58, 48) rgb(177, 170, 142);
-    font-family:      arial;
-    color:            #FFFFFF;
-    box-shadow:       5px 10px 20px rgba(0, 0, 0, 0.6);
-    transition:       opacity 200ms;
+    padding: 19px 13px 17px;
+    z-index: 0;
+    border-width: 2px;
+    border-style: solid;
+    border-color: rgb(180, 173, 134) rgb(142, 134, 107) rgb(61, 58, 48) rgb(177, 170, 142);
+    font-family: arial;
+    color: #FFFFFF;
+    box-shadow: 5px 10px 20px rgba(0, 0, 0, 0.6);
+    transition: opacity 200ms;
 }
 
 .eq-simple-window:hover,
@@ -648,34 +666,34 @@ A:hover {
 .eq-window-complex-fancy:before,
 .eq-window-fancy:before,
 .eq-simple-window:before {
-    content:        " ";
-    position:       absolute;
-    z-index:        -1;
-    padding:        19px;
-    left:           -12px;
-    right:          -12px;
-    top:            -5px;
-    bottom:         -11px;
+    content: " ";
+    position: absolute;
+    z-index: -1;
+    padding: 19px;
+    left: -12px;
+    right: -12px;
+    top: -5px;
+    bottom: -11px;
     pointer-events: none;
 }
 
 .eq-window-complex:before,
 .WindowComplexGM:before,
 .eq-window-complex-fancy:before {
-    outline-offset:        -20px;
-    outline:               2px #40434e solid;
-    background-repeat:     no-repeat, no-repeat, no-repeat, no-repeat, repeat;
+    outline-offset: -20px;
+    outline: 2px #40434e solid;
+    background-repeat: no-repeat, no-repeat, no-repeat, no-repeat, repeat;
     background-position-x: left, right, left, right, left;
     background-position-y: top, top, bottom, bottom, top;
-    background-clip:       padding-box, padding-box, padding-box, padding-box, content-box;
+    background-clip: padding-box, padding-box, padding-box, padding-box, content-box;
 }
 
 .eq-window-fancy:before,
 .eq-simple-window:before {
-    background-repeat:     no-repeat, no-repeat, no-repeat, no-repeat;
+    background-repeat: no-repeat, no-repeat, no-repeat, no-repeat;
     background-position-x: left, right, left, right;
     background-position-y: top, top, bottom, bottom;
-    background-clip:       padding-box, padding-box, padding-box, padding-box;
+    background-clip: padding-box, padding-box, padding-box, padding-box;
 }
 
 .eq-window-complex:before,
@@ -698,43 +716,47 @@ A:hover {
 
 .WindowNestedTanTitleBar {
     font-family: arial;
-    font-size:   16px;
-    text-align:  center;
-    color:       #FFFFFF;
-    padding:     0;
-    display:     block;
-    margin:      5px 0px;
+    font-size: 16px;
+    text-align: center;
+    color: #FFFFFF;
+    padding: 0;
+    display: block;
+    margin: 5px 0px;
 }
 
 .eq-window-nested-tan {
-    padding:        5px 8px;
-    margin:         10px 8px;
-    font-family:    arial;
-    font-size:      7pt;
-    color:          #FFFFFF;
-    text-align:     left;
+    padding: 5px 8px;
+    margin: 10px 8px;
+    font-family: arial;
+    font-size: 7pt;
+    color: #FFFFFF;
+    text-align: left;
     vertical-align: top;
-    border:         1px #7b714a dotted;
-    position:       relative;
+    border: 1px #7b714a dotted;
+    position: relative;
 }
 
 .eq-window-nested-blue {
     background-image: url(../images/dark.gif);
-    border:           1px #6b7194 solid;
-    color:            #FFFFFF;
-    margin:           0px;
-    padding:          5px;
+    border: 1px #6b7194 solid;
+    color: #FFFFFF;
+    margin: 0px;
+    padding: 5px;
 }
 
 /*Table*/
 
 table.eq-table {
-    color:           #FFFFFF;
-    width:           100%;
-    vertical-align:  top;
-    margin:          0px 0px 5px;
-    padding:         0px;
+    color: #FFFFFF;
+    width: 100%;
+    vertical-align: top;
+    margin: 0px 0px 5px;
+    padding: 0px;
     border-collapse: collapse;
+}
+
+table.eq-table tr:nth-child(even) {
+    background-color: rgba(255, 255, 255, .03);
 }
 
 table.eq-table A:link,
@@ -745,32 +767,32 @@ table.eq-table A:hover {
 }
 
 table.eq-table THEAD TR TH {
-    font-weight:     bold;
-    color:           #8aa3ff;
-    vertical-align:  top;
-    margin:          0px;
-    padding:         20px 15px 5px;
+    font-weight: bold;
+    color: #8aa3ff;
+    vertical-align: top;
+    margin: 0px;
+    padding: 20px 15px 5px;
     border-collapse: collapse;
-    text-align:      left;
-    white-space:     nowrap;
+    text-align: left;
+    white-space: nowrap;
 }
 
 table.eq-table TBODY TR TD {
-    color:           #ffffff;
-    vertical-align:  top;
-    margin:          0px;
-    padding:         2px 15px;
+    color: #ffffff;
+    vertical-align: top;
+    margin: 0px;
+    padding: 2px 15px;
     border-collapse: collapse;
-    text-align:      left;
+    text-align: left;
 }
 
 table.eq-table TFOOT TR TD {
-    color:           #ffffff;
-    vertical-align:  top;
-    margin:          0px;
-    padding:         5px 15px;
+    color: #ffffff;
+    vertical-align: top;
+    margin: 0px;
+    padding: 5px 15px;
     border-collapse: collapse;
-    text-align:      center;
+    text-align: center;
 }
 
 /* makes rows highlight in brown */
@@ -780,29 +802,29 @@ table.eq-highlight-rows TBODY TR:hover {
 
 @font-face {
     font-family: 'menuetto';
-    src:         url('~@/assets/fonts/Menuetto.ttf') format('truetype');
+    src: url('~@/assets/fonts/Menuetto.ttf') format('truetype');
 }
 
 /*Headers*/
 
 .eq-header {
-    text-shadow:             0px 0px 3px #000, 0px 0px 0px #000, 1px 2px 5px #000, 4px 4px 5px #000;
-    font-family:             menuetto, serif;
+    text-shadow: 0px 0px 3px #000, 0px 0px 0px #000, 1px 2px 5px #000, 4px 4px 5px #000;
+    font-family: menuetto, serif;
 
-    color:                   #fcc721;
+    color: #fcc721;
     -webkit-background-clip: text;
-    -moz-background-clip:    text;
+    -moz-background-clip: text;
 }
 
 [class*="eq-window"] legend {
-    text-shadow:             0px 0px 3px #000, 0px 0px 0px #000, 1px 2px 5px #000, 4px 4px 5px #000;
-    font-family:             menuetto, serif;
+    text-shadow: 0px 0px 3px #000, 0px 0px 0px #000, 1px 2px 5px #000, 4px 4px 5px #000;
+    font-family: menuetto, serif;
 
-    color:                   #fcc721;
+    color: #fcc721;
     -webkit-background-clip: text;
-    -moz-background-clip:    text;
+    -moz-background-clip: text;
 
-    padding-left:            10px;
+    padding-left: 10px;
 }
 
 h1.eq-header {
@@ -827,4 +849,43 @@ h5.eq-header {
 
 h6.eq-header {
     font-size: 200%;
+}
+
+.eq-button-fancy {
+    text-shadow: 0px 0px 3px #000, 0px 0px 0px #000, 1px 2px 5px #000, 4px 4px 5px #000;
+    font-family: menuetto, serif;
+
+    color: #fcc721;
+    -webkit-background-clip: text;
+    -moz-background-clip: text;
+
+    border: 2px solid rgba(218, 218, 218, 0.3);
+    border-radius: 7px;
+    font-size: 22px;
+
+    margin: 5px;
+
+    padding-left: 10px;
+    padding-right: 10px;
+
+    display: inline-block;
+}
+
+.eq-button-fancy:hover,
+.eq-button-fancy-highlighted
+{
+    border: 2px solid #fff300; /* some kind of blue border */
+
+    /* other CSS styles */
+
+    /* round the corners */
+    -webkit-border-radius: 7px;
+    -moz-border-radius: 7px;
+    border-radius: 7px;
+
+    /* make it glow! */
+    -webkit-box-shadow: 0px 0px 4px #fff300;
+    -moz-box-shadow: 0px 0px 4px #fff300;
+    box-shadow: 0px 0px 4px #fff300; /* some variation of blue for the shadow */
+
 }

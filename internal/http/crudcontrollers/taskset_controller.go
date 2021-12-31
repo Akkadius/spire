@@ -124,7 +124,7 @@ func (e *TasksetController) updateTaskset(c echo.Context) error {
 		return c.JSON(http.StatusNotFound, echo.Map{"error": "Cannot find entity"})
 	}
 
-	err = e.db.Get(models.Taskset{}, c).Model(&entity).Updates(&taskset).Error
+	err = e.db.Get(models.Taskset{}, c).Model(&entity).Select("*").Updates(&taskset).Error
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error updating entity: [%v]", err)})
 	}

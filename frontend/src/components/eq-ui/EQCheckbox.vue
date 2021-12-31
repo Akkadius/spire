@@ -1,7 +1,15 @@
 <template>
   <div v-if="id">
-    <input type="checkbox" :id="id" class='eq-checkbox' :checked="isChecked" :disabled="disabled === 1">
-    <label :for="id"></label>
+    <input
+      type="checkbox"
+      :id="id"
+      class='eq-checkbox'
+      v-model="inputVal"
+      v-bind:true-value="trueValue"
+      v-bind:false-value="falseValue"
+      :checked="(inputVal > 0)"
+      :disabled="disabled === 1">
+    <label :for="id" class="eq-checkbox-label"></label>
   </div>
 </template>
 
@@ -13,14 +21,39 @@ export default {
       id: ""
     }
   },
+  computed: {
+    inputVal: {
+      get() {
+        return this.value;
+      },
+      set(val) {
+        this.$emit('input', val);
+      }
+    }
+  },
   props: {
     isChecked: {
       type: Boolean,
       required: false,
-      default: 0
+      default: false
     },
     disabled: {
       default: 0
+    },
+    value: {
+      type: Number,
+      required: false,
+      default: 0,
+    },
+    trueValue: {
+      type: Number,
+      required: false,
+      default: 1,
+    },
+    falseValue: {
+      type: Number,
+      required: false,
+      default: 0,
     }
   },
   mounted() {
@@ -33,7 +66,7 @@ export default {
     randId() {
       return "_" + Math.random().toString(36).substr(2, 9);
     }
-  }
+  },
 
 }
 </script>

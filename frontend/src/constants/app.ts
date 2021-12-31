@@ -1,6 +1,6 @@
-// export const ASSET_CDN_BASE_URL = "https://rawcdn.githack.com/Akkadius/eq-asset-preview/36903141f431d94766eb83782e9445a856f23514/"
+// export convst ASSET_CDN_BASE_URL = "https://rawcdn.githack.com/Akkadius/eq-asset-preview/36903141f431d94766eb83782e9445a856f23514/"
 
-import LocalSettings from "@/app/local-settings/localsettings";
+import {LocalSettings} from "@/app/local-settings/localsettings";
 
 // const CDN_VERSION_HASH = '4dfd41553f0f30e4061ca63d7dba589b978c40b8'
 // List of different git CDN's

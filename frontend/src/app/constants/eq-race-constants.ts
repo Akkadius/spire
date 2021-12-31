@@ -1,4 +1,5 @@
-export default {
+export const RACES = {
+  '0': 'None',
   '1': 'Human',
   '2': 'Barbarian',
   '3': 'Erudite',
