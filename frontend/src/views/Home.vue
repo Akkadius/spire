@@ -121,8 +121,6 @@ export default {
     })
 
   }
-
-
 }
 </script>
 
@@ -131,6 +129,11 @@ export default {
   font-size: 16px;
   line-height: 1.5;
   word-wrap: break-word;
+  -webkit-text-size-adjust: 100%;
+}
+
+.changelog h1, .changelog h2, .changelog h3, .changelog h4, .changelog h5, .changelog h6 {
+  font-weight: 600;
 }
 
 .container {

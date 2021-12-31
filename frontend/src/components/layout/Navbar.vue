@@ -101,11 +101,15 @@
           <li class="nav-item">
             <router-link class="nav-link " to="/items">
               <i class="ra ra-relic-blade mr-1"></i> Items
+              <b-badge class="ml-3" variant="primary">NEW!</b-badge>
+              <b-badge class="ml-3" variant="warning">BETA (90%)</b-badge>
             </router-link>
           </li>
           <li class="nav-item">
             <router-link class="nav-link " to="/spells">
               <i class="ra ra-book mr-1"></i> Spells
+              <b-badge class="ml-3" variant="primary">NEW!</b-badge>
+              <b-badge class="ml-3" variant="warning">BETA (80%)</b-badge>
             </router-link>
           </li>
         </ul>

@@ -18,6 +18,39 @@ To run, simply put **spire.exe** in your server directory and double click (On W
 
 [![](https://img.youtube.com/vi/iQvm9pH8420/0.jpg)](https://www.youtube.com/watch?v=iQvm9pH8420)
 
+* Initial set of item search filters, more to be added later down the road
+* Search for items by either **table** or **card** formats, **table** is default
+* Item card preview on table item row hover
+* All item fields are supported out of the box with a detailed editor
+* Class bitmask selector
+* Race bitmask selector
+* Deity bitmask selector
+* Slot bitmask selector
+
+#### Hover Selector / Preview Tools
+
+* Item editor comes bundled with many hover selector and preview tools to make development feedback loop the tightest and best experience it can possibly be. Examples of these include:
+* Item free ID selector (hover over "id")
+* Item model selector (hover over "idfile")
+* Item icon selector (hover over "icon")
+* Item color selector (hover over "color")
+* Item material previewer (hover over "material", arrow selector) (cloth, chain, plate, robe etc.)
+* Item augment type selector (hover over "augtype")
+* Item effects selector (hover over any effect "spell id" field)
+
+#### Item Editor Sane Defaults
+
+* The item editor does a lot in the way of setting sane defaults for the user. There are a lot of fields that need to be set when other fields are set so there are triggers that are setup to make this more intuitive.
+* When **worneffect** is set to a non-zero value, **worntype** is set to 2
+* When **clickeffect** is set to a non-zero value, **clicktype** is set to 5, recast delay set to 12000, maxcharges -1 and casttime to 3000
+* When **scrolleffect** is set to a non-zero value, **scrolltype** is automatically set to 7
+* When **bardeffect** is set to a non-zero value, **bardeffecttype** is set to 8
+* When **augslot_1_type** is set to a non-zero value, **augslot_1_visible** is set to 1
+* When **augslot_2_type** is set to a non-zero value, **augslot_2_visible** is set to 1
+* When **augslot_3_type** is set to a non-zero value, **augslot_3_visible** is set to 1
+* When **augslot_4_type** is set to a non-zero value, **augslot_4_visible** is set to 1
+* When **augslot_5_type** is set to a non-zero value, **augslot_5_visible** is set to 1
+
 ## [1.0.3]
 
 Add version to navbar
