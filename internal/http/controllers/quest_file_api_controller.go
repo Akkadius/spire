@@ -6,7 +6,6 @@ import (
 	"github.com/labstack/echo/v4"
 	"github.com/sirupsen/logrus"
 	"io/ioutil"
-	"log"
 	"net/http"
 	"net/url"
 	"os"
@@ -34,10 +33,10 @@ func (h *QuestFileApiController) Routes() []*routes.Route {
 func visit(files *[]string) filepath.WalkFunc {
 	return func(path string, info os.FileInfo, err error) error {
 		if err != nil {
-			log.Fatal(err)
+			panic(err)
 		}
 
-		if strings.Contains(path, ".git") || strings.Contains(path, "./quests"){
+		if strings.Contains(path, ".git") || strings.Contains(path, "./quests") {
 			return nil
 		}
 
@@ -62,7 +61,6 @@ func (h *QuestFileApiController) listFiles(c echo.Context) error {
 
 	return c.JSON(http.StatusOK, echo.Map{"files": files})
 }
-
 
 func (h *QuestFileApiController) getFile(c echo.Context) error {
 	path, err := url.QueryUnescape(c.Param("file"))
