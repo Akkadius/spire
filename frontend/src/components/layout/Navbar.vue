@@ -1,18 +1,26 @@
 <template>
-  <nav class="navbar navbar-vertical fixed-left navbar-expand-md navbar-dark navbar-vibrant" id="sidebar" v-if="!hideNavbar">
+  <nav
+    class="navbar navbar-vertical fixed-left navbar-expand-md navbar-dark navbar-vibrant"
+    id="sidebar"
+    v-if="!hideNavbar"
+  >
     <div class="container-fluid">
 
       <!-- Toggler -->
-      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#sidebarCollapse"
-              aria-controls="sidebarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+      <button
+        class="navbar-toggler" type="button" data-toggle="collapse" data-target="#sidebarCollapse"
+        aria-controls="sidebarCollapse" aria-expanded="false" aria-label="Toggle navigation"
+      >
         <span class="navbar-toggler-icon"></span>
       </button>
 
       <!-- Brand -->
       <router-link class="ml-3 mt-3 d-none d-lg-block" to="/">
-        <img src="~@/assets/img/eqemu-logo-1.png"
-             class="navbar-brand-img mx-auto d-none d-sm-block mb-3" alt="..."
-             style="max-height: 6rem">
+        <img
+          src="~@/assets/img/eqemu-logo-1.png"
+          class="navbar-brand-img mx-auto d-none d-sm-block mb-3" alt="..."
+          style="max-height: 6rem"
+        >
       </router-link>
 
 
@@ -39,11 +47,15 @@
         <div class="dropdown">
 
           <!-- Toggle -->
-          <a href="#" id="sidebarIcon" class="dropdown-toggle" role="button" data-toggle="dropdown" aria-haspopup="true"
-             aria-expanded="false">
+          <a
+            href="#" id="sidebarIcon" class="dropdown-toggle" role="button" data-toggle="dropdown" aria-haspopup="true"
+            aria-expanded="false"
+          >
             <div class="avatar avatar-sm avatar-online">
-              <img :src="user ? user.avatar : require('@/assets/img/eqemu-avatar.png')"
-                   class="avatar-img rounded-circle" alt="...">
+              <img
+                :src="user ? user.avatar : require('@/assets/img/eqemu-avatar.png')"
+                class="avatar-img rounded-circle" alt="..."
+              >
             </div>
           </a>
 
@@ -120,9 +132,11 @@
 
           <!-- Components -->
           <li class="nav-item">
-            <a :class="'nav-link collapse ' + (hasRoute('components') ? 'active' : 'collapsed')"
-               href="#sidebarComponents" data-toggle="collapse" role="button"
-               aria-expanded="false" aria-controls="sidebarComponents">
+            <a
+              :class="'nav-link collapse ' + (hasRoute('components') ? 'active' : 'collapsed')"
+              href="#sidebarComponents" data-toggle="collapse" role="button"
+              aria-expanded="false" aria-controls="sidebarComponents"
+            >
               <i class="fe fe-book-open mr-1"></i> Components
             </a>
             <div :class="'collapse ' + (hasRoute('components') ? 'show' : '')" id="sidebarComponents">
@@ -136,9 +150,11 @@
 
           <!-- Test Pages -->
           <li class="nav-item">
-            <a :class="'nav-link collapse ' + (hasRoute('-test') ? 'active' : 'collapsed')"
-               href="#test-pages" data-toggle="collapse" role="button"
-               aria-expanded="false" aria-controls="test-pages">
+            <a
+              :class="'nav-link collapse ' + (hasRoute('-test') ? 'active' : 'collapsed')"
+              href="#test-pages" data-toggle="collapse" role="button"
+              aria-expanded="false" aria-controls="test-pages"
+            >
               <i class="fe fe-box mr-1"></i> Test Pages
             </a>
             <div :class="'collapse ' + (hasRoute('components') ? 'show' : '')" id="test-pages">
@@ -153,43 +169,29 @@
         </ul>
 
         <h6 class="navbar-heading" v-if="appVersion">
-          Version {{ appVersion }}
+          Version ({{appBuildType}}) {{ appVersion }}
         </h6>
-
-        <!--        &lt;!&ndash; Heading &ndash;&gt;-->
-        <!--        <h6 class="navbar-heading">-->
-        <!--          Editors-->
-        <!--        </h6>-->
-
-        <!--        &lt;!&ndash; Navigation &ndash;&gt;-->
-        <!--        <ul class="navbar-nav mb-md-4">-->
-        <!--          <li class="nav-item">-->
-        <!--            <router-link class="nav-link " to="/tasks/">-->
-        <!--              <i class="fe fe-list"></i> Task Editor-->
-        <!--            </router-link>-->
-        <!--          </li>-->
-        <!--        </ul>-->
 
         <!-- Push content down -->
         <div class="mt-auto"></div>
 
         <!-- User (md) -->
         <div class="navbar-user d-none d-md-flex" id="sidebarUser">
-
           <navbar-user-settings-cog/>
-
-          <!-- Icon -->
-
 
           <!-- Dropup -->
           <div class="dropup">
 
             <!-- Toggle -->
-            <a href="#" id="sidebarIconCopy" class="dropdown-toggle" role="button" data-toggle="dropdown"
-               aria-haspopup="true" aria-expanded="false">
+            <a
+              href="#" id="sidebarIconCopy" class="dropdown-toggle" role="button" data-toggle="dropdown"
+              aria-haspopup="true" aria-expanded="false"
+            >
               <div class="avatar avatar-sm avatar-online">
-                <img :src="user ? user.avatar : require('@/assets/img/eqemu-avatar.png')"
-                     class="avatar-img rounded-circle" alt="...">
+                <img
+                  :src="user ? user.avatar : require('@/assets/img/eqemu-avatar.png')"
+                  class="avatar-img rounded-circle" alt="..."
+                >
               </div>
             </a>
 
@@ -223,7 +225,6 @@ import UserContext           from "@/app/user/UserContext";
 import NavSectionComponent   from "@/components/layout/NavSectionComponent";
 import {ROUTE}               from "@/routes";
 import {SpireApiClient}      from "@/app/api/spire-api-client";
-import * as util             from "util";
 import {EventBus}            from "@/app/event-bus/event-bus";
 
 export default {
@@ -233,6 +234,7 @@ export default {
       backendBaseUrl: "",
       user: null,
       hideNavbar: false,
+      appBuildType: "",
       appVersion: "",
       componentNavs: [
         { title: "Progress Bars", to: "/components#progress-bars" },
@@ -297,10 +299,10 @@ export default {
     SpireApiClient.v1().get(`/app/env`).then((response) => {
       if (response.data && response.data.data) {
         // console.log(response.data.data)
-        const env     = response.data.data.env
-        const version = response.data.data.version
-
-        this.appVersion = util.format("%s (%s)", env, version)
+        const env         = response.data.data.env
+        const version     = response.data.data.version
+        this.appBuildType = env
+        this.appVersion   = version
       }
     })
 

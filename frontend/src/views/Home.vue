@@ -36,6 +36,7 @@
 import EqWindow         from "@/components/eq-ui/EQWindow";
 import UserContext      from "@/app/user/UserContext";
 import {SpireApiClient} from "../app/api/spire-api-client";
+import * as util        from "util";
 
 export default {
   components: {
@@ -54,6 +55,27 @@ export default {
     SpireApiClient.v1().get(`/app/changelog`).then((response) => {
       if (response.data && response.data.data) {
 
+        let markdownRaw = response.data.data
+
+        const youTubeSplit = markdownRaw.split("[![](https://img.youtube.com/vi/")
+
+        youTubeSplit.forEach((e) => {
+          if (e.includes("/0.jpg)](https://www.youtube.com")) {
+            const videoCodeSplit = e.split("/0.jpg")
+            if (videoCodeSplit.length > 0) {
+              const videoCode = videoCodeSplit[0].trim()
+
+              // replace markdown code for html
+              markdownRaw = markdownRaw.replace(
+                util.format("[![](https://img.youtube.com/vi/%s/0.jpg)](https://www.youtube.com/watch?v=%s)", videoCode, videoCode),
+                util.format('<div class="container"><iframe allow="autoplay" class="video" src="https://www.youtube.com/embed/%s?autoplay=1&mute=1&showinfo=0&controls=0&modestbranding=1&rel=0&loop=1&showsearch=0&iv_load_policy=3&playlist=%s" title="YouTube video player" frameborder="0" allowfullscreen></iframe></div>\n', videoCode, videoCode)
+              )
+
+              // console.log("Video code is [%s]", videoCode)
+            }
+          }
+        })
+
         const md = require("markdown-it")({
           html: true,
           xhtmlOut: false,
@@ -61,12 +83,10 @@ export default {
           typographer: false
         });
 
-        let result = response.data.data
-
-        result = md.render(result);
+        markdownRaw = md.render(markdownRaw);
 
         // doc
-        this.changelog = "<div>" + result + "</div>"
+        this.changelog = "<div>" + markdownRaw + "</div>"
 
         setTimeout(() => {
           const anchors = document.getElementById('changelog').getElementsByTagName('a');

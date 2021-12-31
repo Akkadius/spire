@@ -16,9 +16,7 @@ To run, simply put **spire.exe** in your server directory and double click (On W
 
 ### Item Editor v1 Launch!
 
-<div class="container">
-    <iframe allow='autoplay' class="video" src="https://www.youtube.com/embed/iQvm9pH8420?autoplay=1&mute=1&showinfo=0&controls=0&modestbranding=1&rel=0&loop=1&showsearch=0&iv_load_policy=3&playlist=iQvm9pH8420" title="YouTube video player" frameborder="0" allowfullscreen></iframe>
-</div>
+[![](https://img.youtube.com/vi/iQvm9pH8420/0.jpg)](https://www.youtube.com/watch?v=iQvm9pH8420)
 
 ## [1.0.3]
 
