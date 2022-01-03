@@ -326,7 +326,6 @@ export default {
               searchFilter = secondSplit[0].trim()
               console.log("search filter is [%s]", searchFilter)
             }
-
           }
         }
 

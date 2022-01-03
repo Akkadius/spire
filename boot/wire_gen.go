@@ -7,8 +7,8 @@
 package boot
 
 import (
-	"github.com/Akkadius/spire/console/cmd"
 	"github.com/Akkadius/spire/internal/connection"
+	"github.com/Akkadius/spire/internal/console/cmd"
 	"github.com/Akkadius/spire/internal/database"
 	"github.com/Akkadius/spire/internal/desktop"
 	"github.com/Akkadius/spire/internal/encryption"

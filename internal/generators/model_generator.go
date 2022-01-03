@@ -2,7 +2,7 @@ package generators
 
 import (
 	"fmt"
-	"github.com/Akkadius/spire/console"
+	"github.com/Akkadius/spire/internal/console"
 	"github.com/Akkadius/spire/internal/env"
 	"github.com/gertd/go-pluralize"
 	"github.com/iancoleman/strcase"

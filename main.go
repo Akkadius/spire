@@ -3,7 +3,7 @@ package main
 import (
 	_ "embed"
 	"github.com/Akkadius/spire/boot"
-	"github.com/Akkadius/spire/console"
+	"github.com/Akkadius/spire/internal/console"
 	"github.com/Akkadius/spire/internal/env"
 	"log"
 	"os"

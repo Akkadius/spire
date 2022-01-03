@@ -1,7 +1,7 @@
 package boot
 
 import (
-	"github.com/Akkadius/spire/console/cmd"
+	"github.com/Akkadius/spire/internal/console/cmd"
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/google/wire"
 	"github.com/spf13/cobra"
