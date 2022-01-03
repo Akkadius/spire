@@ -194,3 +194,26 @@ mysql-init: ##@mysql Initialize database
 
 init-strip-mysql-remote-root: ##@mysql Strips MySQL remote root user
 	$(DRUNPREFIX) $(COMPOSE_COMMAND) exec mysql bash -c "mysql -uroot -p${MYSQL_ROOT_PASSWORD} -h localhost -e \"delete from mysql.user where User = 'root' and Host = '%'; FLUSH PRIVILEGES\""
+
+#----------------------
+# build
+#----------------------
+
+build-assets: ##@build Builds static assets before packing into binary
+	curl --compressed -o /tmp/assets.zip -L https://github.com/Akkadius/eq-asset-preview/archive/refs/heads/master.zip
+	unzip -qq -o /tmp/assets.zip -d /tmp/assets
+	cp -R /tmp/assets/eq-asset-preview-master/ ./frontend/public/
+
+build-frontend: ##@build Builds frontend to be packed into binary
+	cd frontend && npm install && npm run build
+
+build-binary: ##@build Build and packs release binary
+	packr clean
+	packr
+	GOOS=linux GOARCH=amd64 go build -o spire-linux-amd64
+	GOOS=windows GOARCH=amd64 go build -o spire-windows-amd64.exe
+	zip spire-linux-amd64.zip spire-linux-amd64
+	zip spire-windows-amd64.exe.zip spire-windows-amd64.exe
+
+release-binary: ##@build Releases binary
+	gh-release --assets=spire-linux-amd64.zip,spire-windows-amd64.exe.zip -y
