@@ -16,6 +16,9 @@ cd "$cwd/frontend" && npm install && npm run build
 #:: Pack frontend assets into binary
 cd "$cwd" && packr clean
 cd "$cwd" && packr
-cd "$cwd" && go build
-cd "$cwd" && GOOS=windows GOARCH=amd64 go build
-cd "$cwd" && gh-release --assets=./spire,/spire.exe -y
+cd "$cwd" && GOOS=linux GOARCH=amd64 go build -o spire-linux-amd64
+cd "$cwd" && GOOS=windows GOARCH=amd64 go build -o spire-windows-amd64.exe
+cd "$cwd" && zip spire-linux-amd64.zip spire-linux-amd64
+cd "$cwd" && zip spire-windows-amd64.exe.zip spire-windows-amd64.exe
+
+cd "$cwd" && gh-release --assets=spire-linux-amd64.zip,spire-windows-amd64.exe.zip -y

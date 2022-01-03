@@ -23,10 +23,20 @@ func NewWebBoot(logger *logrus.Logger, router *routes.Router) *WebBoot {
 }
 
 func (c *WebBoot) Boot() {
+	port := 0
+
 	// get free network port from OS
-	port, err := getFreePort()
-	if err != nil {
-		c.logger.Fatal(err)
+	for i := 8090; i <= 8099; i++ {
+		found, _ := getFreePort(i)
+		if found > 0 {
+			port = found
+			break
+		}
+	}
+
+	if port == 0 {
+		fmt.Println("Failed to find free port, exiting...")
+		os.Exit(1)
 	}
 
 	// start web server
@@ -50,8 +60,8 @@ func (c *WebBoot) Boot() {
 
 }
 
-func getFreePort() (int, error) {
-	addr, err := net.ResolveTCPAddr("tcp", "localhost:0")
+func getFreePort(port int) (int, error) {
+	addr, err := net.ResolveTCPAddr("tcp", fmt.Sprintf("localhost:%v", port))
 	if err != nil {
 		return 0, err
 	}

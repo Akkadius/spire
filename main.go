@@ -2,15 +2,21 @@ package main
 
 import (
 	_ "embed"
+	"errors"
 	"github.com/Akkadius/spire/boot"
 	"github.com/Akkadius/spire/internal/console"
 	"github.com/Akkadius/spire/internal/env"
+	"github.com/Akkadius/spire/internal/updater"
 	"log"
 	"os"
-	"runtime"
 )
 
 func main() {
+	// self update service
+	if len(os.Args) == 1 {
+		updater.NewUpdaterService(packageJson).CheckForUpdates()
+	}
+
 	// load env
 	if err := env.LoadEnvFileIfExists(); err != nil {
 		log.Fatal(err)
@@ -25,8 +31,14 @@ func main() {
 	// load embedded resources
 	loadEmbedded(&app)
 
+	// check if running in docker
+	isInDocker := true
+	if _, err := os.Stat("/.dockerenv"); errors.Is(err, os.ErrNotExist) {
+		isInDocker = false
+	}
+
 	// ran via executable on desktop
-	if len(os.Args) == 1 && runtime.GOOS == "windows" {
+	if len(os.Args) == 1 && !isInDocker {
 		_ = os.Setenv("APP_ENV", "desktop")
 		app.Desktop().Boot()
 	}
@@ -39,7 +51,7 @@ func main() {
 
 var (
 	//go:embed CHANGELOG.md
-	changelog   string
+	changelog string
 	//go:embed package.json
 	packageJson []byte
 )

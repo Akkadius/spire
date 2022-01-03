@@ -25,6 +25,7 @@ require (
 	github.com/gobuffalo/packr v1.30.1
 	github.com/gobuffalo/packr/v2 v2.8.1 // indirect
 	github.com/gomarkdown/markdown v0.0.0-20201030010234-8ba61b39d0e4
+	github.com/google/go-github/v41 v41.0.0
 	github.com/google/wire v0.4.0
 	github.com/gorilla/mux v1.8.0
 	github.com/gregjones/httpcache v0.0.0-20190611155906-901d90724c79
