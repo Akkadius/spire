@@ -125,7 +125,4 @@ func (s UpdaterService) CheckForUpdates() {
 			bufio.NewReader(os.Stdin).ReadBytes('\n')
 		}
 	}
-
-	//if env.Env
-
 }
