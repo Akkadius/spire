@@ -11,6 +11,7 @@ import (
 	"os/exec"
 	"os/signal"
 	"runtime"
+	"strconv"
 )
 
 type WebBoot struct {
@@ -27,9 +28,9 @@ func (c *WebBoot) Boot() {
 
 	// get free network port from OS
 	for i := 8090; i <= 8099; i++ {
-		found, _ := getFreePort(i)
-		if found > 0 {
-			port = found
+		found, err := checkIfPortAvailable(i)
+		if found && err == nil {
+			port = i
 			break
 		}
 	}
@@ -60,18 +61,25 @@ func (c *WebBoot) Boot() {
 
 }
 
-func getFreePort(port int) (int, error) {
-	addr, err := net.ResolveTCPAddr("tcp", fmt.Sprintf("localhost:%v", port))
+func checkIfPortAvailable(port int) (status bool, err error) {
+	// Concatenate a colon and the port
+	host := ":" + strconv.Itoa(port)
+
+	// Try to create a server with the port
+	server, err := net.Listen("tcp", host)
+
+	// if it fails then the port is likely taken
 	if err != nil {
-		return 0, err
+		return false, err
 	}
 
-	l, err := net.ListenTCP("tcp", addr)
-	if err != nil {
-		return 0, err
-	}
-	defer l.Close()
-	return l.Addr().(*net.TCPAddr).Port, nil
+	// close the server
+	server.Close()
+
+	// we successfully used and closed the port
+	// so it's now available to be used again
+	return true, nil
+
 }
 
 func openBrowser(url string) {
