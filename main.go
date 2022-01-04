@@ -15,8 +15,6 @@ func main() {
 	// self update service
 	if len(os.Args) == 1 {
 		updater.NewUpdaterService(packageJson).CheckForUpdates()
-		// testing
-		os.Exit(0);
 	}
 
 	// load env
