@@ -157,6 +157,7 @@ func (s UpdaterService) CheckForUpdates() {
 				fmt.Print("Press 'Enter' to exit spire...")
 				fmt.Println("")
 				bufio.NewReader(os.Stdin).ReadBytes('\n')
+				os.Exit(0)
 			}
 
 			// windows
@@ -198,6 +199,7 @@ func (s UpdaterService) CheckForUpdates() {
 			fmt.Print("Press 'Enter' to exit spire...")
 			fmt.Println("")
 			bufio.NewReader(os.Stdin).ReadBytes('\n')
+			os.Exit(0)
 		}
 	}
 }
