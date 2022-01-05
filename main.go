@@ -2,7 +2,6 @@ package main
 
 import (
 	_ "embed"
-	"errors"
 	"github.com/Akkadius/spire/boot"
 	"github.com/Akkadius/spire/internal/console"
 	"github.com/Akkadius/spire/internal/env"
@@ -31,14 +30,8 @@ func main() {
 	// load embedded resources
 	loadEmbedded(&app)
 
-	// check if running in docker
-	isInDocker := true
-	if _, err := os.Stat("/.dockerenv"); errors.Is(err, os.ErrNotExist) {
-		isInDocker = false
-	}
-
 	// ran via executable on desktop
-	if len(os.Args) == 1 && !isInDocker {
+	if len(os.Args) == 1 {
 		_ = os.Setenv("APP_ENV", "desktop")
 		app.Desktop().Boot()
 	}

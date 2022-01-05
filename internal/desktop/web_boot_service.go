@@ -58,7 +58,6 @@ func (c *WebBoot) Boot() {
 		// sig is a ^C, handle it
 		os.Exit(0)
 	}
-
 }
 
 func checkIfPortAvailable(port int) (status bool, err error) {
@@ -87,7 +86,10 @@ func openBrowser(url string) {
 
 	switch runtime.GOOS {
 	case "linux":
-		err = exec.Command("xdg-open", url).Start()
+		// only try to open a browser window if there is a desktop environment present
+		if len(os.Getenv("XDG_CURRENT_DESKTOP")) > 0 {
+			err = exec.Command("xdg-open", url).Start()
+		}
 	case "windows":
 		err = exec.Command("rundll32", "url.dll,FileProtocolHandler", url).Start()
 	case "darwin":
