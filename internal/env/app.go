@@ -1,6 +1,7 @@
 package env
 
 import (
+	"errors"
 	"flag"
 	"fmt"
 	"github.com/joho/godotenv"
@@ -40,16 +41,27 @@ func LoadEnvFileIfExists() error {
 		}
 
 		// display env: [LoadEnv] APP_ENV [local] ENV_FILE [.env]
-		fmt.Println(envLoadMsg)
+		if len(os.Getenv("DEBUG")) > 0 {
+			fmt.Println(envLoadMsg)
+		}
+
 		envLoaded = true
 
+		// check if running in docker
+		isInDocker := true
+		if _, err := os.Stat("/.dockerenv"); errors.Is(err, os.ErrNotExist) {
+			isInDocker = false
+		}
+
 		// search for global .env.debug.host
-		// if OS is darwin; we're likely talking from host -> container network
+		// we're likely talking from host -> container network
 		// used from IDEs
-		if runtime.GOOS == "darwin" || runtime.GOOS == "windows" {
+		if !isInDocker {
 			env := ".env.debug.host"
 			if loadEnvFile(env) {
-				fmt.Println(fmt.Sprintf("[LoadEnv] (Host) APP_ENV [%v] ENV_FILE [%v]", os.Getenv("APP_ENV"), env))
+				if len(os.Getenv("DEBUG")) > 0 {
+					fmt.Println(fmt.Sprintf("[LoadEnv] (Host) APP_ENV [%v] ENV_FILE [%v]", os.Getenv("APP_ENV"), env))
+				}
 			}
 		}
 	}

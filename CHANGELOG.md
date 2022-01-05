@@ -1,3 +1,9 @@
+## [1.3.1]
+
+### Spire Self Updating
+
+* This release implements self updating and notifies users when a new version of Spire is available for download
+
 ## [1.3.0]
 
 ### Spire Launch!

@@ -2,7 +2,7 @@ package cmd
 
 import (
 	"fmt"
-	"github.com/Akkadius/spire/console"
+	"github.com/Akkadius/spire/internal/console"
 	"github.com/Akkadius/spire/internal/http"
 	"github.com/Akkadius/spire/internal/http/routes"
 	"github.com/labstack/echo/v4"

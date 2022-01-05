@@ -1,7 +1,7 @@
 package cmd
 
 import (
-	"github.com/Akkadius/spire/console"
+	"github.com/Akkadius/spire/internal/console"
 	"github.com/Akkadius/spire/internal/http"
 	"github.com/Akkadius/spire/internal/http/routes"
 	"github.com/sirupsen/logrus"

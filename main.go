@@ -3,14 +3,19 @@ package main
 import (
 	_ "embed"
 	"github.com/Akkadius/spire/boot"
-	"github.com/Akkadius/spire/console"
+	"github.com/Akkadius/spire/internal/console"
 	"github.com/Akkadius/spire/internal/env"
+	"github.com/Akkadius/spire/internal/updater"
 	"log"
 	"os"
-	"runtime"
 )
 
 func main() {
+	// self update service
+	if len(os.Args) == 1 {
+		updater.NewUpdaterService(packageJson).CheckForUpdates()
+	}
+
 	// load env
 	if err := env.LoadEnvFileIfExists(); err != nil {
 		log.Fatal(err)
@@ -26,7 +31,7 @@ func main() {
 	loadEmbedded(&app)
 
 	// ran via executable on desktop
-	if len(os.Args) == 1 && runtime.GOOS == "windows" {
+	if len(os.Args) == 1 {
 		_ = os.Setenv("APP_ENV", "desktop")
 		app.Desktop().Boot()
 	}
@@ -39,7 +44,7 @@ func main() {
 
 var (
 	//go:embed CHANGELOG.md
-	changelog   string
+	changelog string
 	//go:embed package.json
 	packageJson []byte
 )

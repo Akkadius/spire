@@ -90,14 +90,29 @@ export default {
             })
 
             let languageQuestPrepend = "."
+            let methodPrefix         = m.methodPrefix
+            if (language === "lua") {
+              if (m.methodPrefix !== "eq") {
+                methodPrefix         = "";
+                languageQuestPrepend = ":"
+              }
+            }
+
             if (language === "perl") {
               languageQuestPrepend = "::"
+
+              if (m.methodPrefix !== "quest") {
+                methodPrefix         = "";
+                // m.methodPrefix = `\$ ` + m.methodPrefix.toLowerCase()
+                languageQuestPrepend = ""
+              }
+
             }
 
             // this is label friendly, doesn't include completion indexes
             let methodLabel = util.format(
               "%s%s%s(%s)",
-              m.methodPrefix,
+              methodPrefix,
               languageQuestPrepend,
               m.method,
               m.params.join(", ")
@@ -106,18 +121,25 @@ export default {
             // method snippet contains completion indexes for user to fill out param values
             let methodSnippet = util.format(
               "%s%s%s(%s)",
-              m.methodPrefix,
+              methodPrefix,
               languageQuestPrepend,
               m.method,
               completionParams.join(", ")
             )
 
+            // console.log(methodLabel)
+
+            if (methodSnippet.includes("$")) {
+              // console.log(methodSnippet)
+            }
+
             let completionSnippet = {
               label: methodLabel,
               // filterText: methodLabel,
               kind: monaco.languages.CompletionItemKind.Function,
-              // filterText: methodLabel,
+              eqemuClass: m.methodPrefix.toLowerCase(),
               insertText: methodSnippet,
+
               insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet
             }
 
@@ -129,7 +151,7 @@ export default {
           gSuggestions[language] = suggestions
 
           monaco.languages.registerCompletionItemProvider(language, {
-            // triggerCharacters: ['.', ':', ' '],
+            triggerCharacters: ['>'],
             provideCompletionItems: (model, position, context) => {
               // find out if we are completing a property in the 'dependencies' object.
               // var textUntilPosition = model.getValueInRange({
@@ -156,6 +178,28 @@ export default {
               };
             },
           });
+
+          const config = {
+            surroundingPairs: [
+              { open: '{', close: '}' },
+              { open: '[', close: ']' },
+              { open: '(', close: ')' },
+              { open: '<', close: '>' },
+              // { open: "'", close: "'" },
+              // { open: '"', close: '"' },
+            ],
+            autoClosingPairs: [
+              { open: '{', close: '}' },
+              { open: '[', close: ']' },
+              { open: '(', close: ')' },
+              // { open: "'", close: "'", notIn: ['string', 'comment'] },
+              // { open: '"', close: '"', notIn: ['string', 'comment'] },
+            ],
+          };
+          monaco.languages.setLanguageConfiguration('lua', config);
+          monaco.languages.setLanguageConfiguration('perl', config);
+
+
         })
 
 
@@ -251,8 +295,72 @@ export default {
       // console.log("language is " + this.language)
       // console.log(gSuggestions[this.language])
 
+      let editor = this.editor;
+
+
+      const currentLine       = editor.getModel().getLineContent(editor.getPosition().lineNumber)
+      const line              = editor.getPosition().lineNumber;
+      const col               = editor.getPosition().column + 1;
+      const textUntilPosition = editor.getModel().getValueInRange({
+        startLineNumber: editor.getPosition().lineNumber,
+        startColumn: 0,
+        endLineNumber: line,
+        endColumn: col
+      });
+
+      const currentPos = textUntilPosition.length;
+      let searchFilter = ""
+
+      const wordSplit = textUntilPosition.split(" ")
+      if (wordSplit.length > 0) {
+        let lastWord = wordSplit[wordSplit.length - 1]
+
+        const lastWordContainsClosingParenthesis =
+                lastWord.includes("(") && lastWord.includes(")")
+
+        if (lastWord.includes("$") && !lastWordContainsClosingParenthesis) {
+          let wordSplit = lastWord.split("$")
+          if (wordSplit.length > 0) {
+            let secondSplit = wordSplit[1].trim().split("->")
+            if (secondSplit.length > 0) {
+              searchFilter = secondSplit[0].trim()
+              console.log("search filter is [%s]", searchFilter)
+            }
+          }
+        }
+
+        console.log("last word is [%s]", lastWord)
+      }
+
+      console.log("[currentLine] [%s]", currentLine)
+      console.log("[textUntilPosition] [%s]", textUntilPosition)
+
+      // sometimes a class inherits others... like mobs
+      let searchClasses = [searchFilter]
+      if (["client", "npc"].includes(searchFilter)) {
+        searchClasses = [searchFilter, "mob"]
+      } else if (searchFilter.toLowerCase().includes("entity_list")) {
+        searchClasses = ["entitylist"]
+      } else if (searchFilter.toLowerCase().includes("door")) {
+        searchClasses = ["doors"]
+      }
+
       let suggestions = gSuggestions[this.language]
       for (let key in suggestions) {
+        if (searchFilter !== "") {
+          // eqemuClass
+
+          // we're searching on class objects, if there doesn't exist any then lets skip
+          if (!suggestions[key].eqemuClass) {
+            continue;
+          }
+
+          // make sure our last word contains our class prefix
+          if (!searchClasses.includes(suggestions[key].eqemuClass)) {
+            continue;
+          }
+        }
+
         suggestions[key].range = range
       }
 
@@ -263,6 +371,8 @@ export default {
     editorDidMount(editor) {
       // console.log("editor mounted")
       // console.log(editor)
+
+      this.editor = editor
 
       // editor.trigger('source - use any string you like', 'editor.action.triggerSuggest', {});
 
@@ -366,9 +476,10 @@ export default {
       code: `Select a file...`,
       options: {
         theme: 'vs-dark',
-        autoClosingBrackets: false,
+        // autoClosingBrackets: false,
         autoIndent: true,
-      }
+      },
+      editor: null,
     }
   }
 }

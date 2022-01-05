@@ -11,5 +11,5 @@ steps:
       - sudo chown -R go /drone/src
       - ./scripts/build-release.sh
     when:
-      branch: ["master"]
-      event: [push]
+      branch: [ "master" ]
+      event: [ push ]
