@@ -16,6 +16,7 @@
           <li v-for="nav in config.navs">
             <router-link class="nav-link" :to="nav.to">
               <i :class="nav.icon" v-if="nav.icon"></i>{{ nav.title }}
+              <b-badge class="ml-3 d-inline-block" variant="primary" v-if="nav.isNew">NEW!</b-badge>
             </router-link>
           </li>
         </ul>

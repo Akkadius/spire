@@ -21,7 +21,7 @@
           No animations found...
         </div>
 
-        <div v-for="(spell) in filteredAnimations" style="display:inline-block">
+        <div v-for="(spell) in filteredAnimations" style="display:inline-block; position: relative;">
           <video
             muted
             loop
@@ -274,5 +274,10 @@ export default {
   max-width:     200px;
   border-radius: 10px;
   margin:        3px;
+}
+.overlay{
+  position: absolute;
+  bottom: 2px;
+  left: 9px;
 }
 </style>
