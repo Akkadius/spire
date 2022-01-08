@@ -1,3 +1,12 @@
+## [1.4.0]
+
+### Emitter Viewer
+
+* Spire now has an emitter viewer that now makes it easy for anyone looking to manipulate emitter text files in the client to find what kind of effects they want to play with or insert into their zones
+* Special thanks to DeadZergling for all of his effort putting together these high quality preview videos
+
+[![](https://img.youtube.com/vi/dpE_xWR2i6o/0.jpg)](https://www.youtube.com/watch?v=dpE_xWR2i6o)
+
 ## [1.3.1]
 
 ### Spire Self Updating

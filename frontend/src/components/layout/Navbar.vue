@@ -260,6 +260,7 @@ export default {
           { title: "Race Viewer", to: ROUTE.RACE_VIEWER, icon: "ra ra-monster-skull mr-1" },
           { title: "Item Model Viewer", to: ROUTE.ITEM_VIEWER, icon: "ra ra-crossed-swords mr-1" },
           { title: "Item Icon Viewer", to: ROUTE.ITEM_ICON_VIEWER, icon: "ra ra-burning-eye mr-1" },
+          { title: "Emitter Viewer", to: ROUTE.EMITTER_VIEWER, icon: "ra  ra-droplet-splash mr-1", isNew: true },
           { title: "Spell Animation Viewer", to: ROUTE.SPELL_ANIMATION_VIEWER, icon: "ra ra-dragon mr-1" }
         ]
       },
