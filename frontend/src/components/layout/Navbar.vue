@@ -15,13 +15,13 @@
       </button>
 
       <!-- Brand -->
-      <router-link class="ml-3 mt-3 d-none d-lg-block" to="/">
-        <img
-          src="~@/assets/img/eqemu-logo-1.png"
-          class="navbar-brand-img mx-auto d-none d-sm-block mb-3" alt="..."
-          style="max-height: 6rem"
-        >
-      </router-link>
+<!--      <router-link class="ml-3 mt-3 d-none d-lg-block" to="/">-->
+<!--        <img-->
+<!--          src="~@/assets/img/eqemu-logo-1.png"-->
+<!--          class="navbar-brand-img mx-auto d-none d-sm-block mb-3" alt="..."-->
+<!--          style="max-height: 6rem"-->
+<!--        >-->
+<!--      </router-link>-->
 
 
       <router-link class="ml-3 mt-3" to="/">
@@ -82,7 +82,7 @@
         <!--        </form>-->
 
         <!-- Heading -->
-        <h6 class="navbar-heading">
+        <h6 class="navbar-heading mt-3">
           Tools
         </h6>
 
@@ -260,6 +260,7 @@ export default {
           { title: "Race Viewer", to: ROUTE.RACE_VIEWER, icon: "ra ra-monster-skull mr-1" },
           { title: "Item Model Viewer", to: ROUTE.ITEM_VIEWER, icon: "ra ra-crossed-swords mr-1" },
           { title: "Item Icon Viewer", to: ROUTE.ITEM_ICON_VIEWER, icon: "ra ra-burning-eye mr-1" },
+          { title: "Player Animations", to: ROUTE.PLAYER_ANIMATION_VIEWER, icon: "ra ra-player-dodge mr-1", isNew: true },
           { title: "Emitter Viewer", to: ROUTE.EMITTER_VIEWER, icon: "ra  ra-droplet-splash mr-1", isNew: true },
           { title: "Spell Animation Viewer", to: ROUTE.SPELL_ANIMATION_VIEWER, icon: "ra ra-dragon mr-1" }
         ]

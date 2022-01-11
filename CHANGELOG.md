@@ -1,3 +1,12 @@
+## [1.5.0]
+
+### Player Animation Viewer
+
+* Spire now has an player animation viewer that can be used standalone and in things like a Spell editor where there are casting and target animations when spells are casted
+* Special thanks to DeadZergling for all of his effort putting together these high quality preview videos
+
+[![](https://img.youtube.com/vi/_WLjso1d9p8/0.jpg)](https://www.youtube.com/watch?v=_WLjso1d9p8)
+
 ## [1.4.0]
 
 ### Emitter Viewer
