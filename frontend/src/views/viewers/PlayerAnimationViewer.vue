@@ -3,7 +3,7 @@
     <app-loader :is-loading="!loaded" padding="8"/>
 
     <eq-window-simple
-      title="Environment Previews"
+      title="Player Animation Previews"
       v-if="loaded"
       class="mt-4 text-center"
     >
@@ -156,12 +156,12 @@ export default {
       this.previewAnimSearch()
 
       // render scroll listener
-      if (Listeners.EmitterViewerRenderListener) {
-        window.removeEventListener("scroll", Listeners.EmitterViewerRenderListener)
+      if (Listeners.ViewerRenderListener) {
+        window.removeEventListener("scroll", Listeners.ViewerRenderListener)
       }
 
-      Listeners.EmitterViewerRenderListener = debounce(handleRender, 100)
-      window.addEventListener("scroll", Listeners.EmitterViewerRenderListener);
+      Listeners.ViewerRenderListener = debounce(handleRender, 100)
+      window.addEventListener("scroll", Listeners.ViewerRenderListener);
     },
     render: function () {
       // Preload model files
@@ -191,7 +191,7 @@ export default {
     triggerSearch: debounce(function () {
       this.$router.push(
         {
-          path: ROUTE.EMITTER_VIEWER,
+          path: ROUTE.PLAYER_ANIMATION_VIEWER,
           query: {
             q: this.search
           }
@@ -224,21 +224,21 @@ export default {
     this.init()
   },
   deactivated() {
-    if (Listeners.EmitterViewerRenderListener) {
+    if (Listeners.ViewerRenderListener) {
       console.log("Removing listener")
-      window.removeEventListener("scroll", Listeners.EmitterViewerRenderListener, true)
-      Listeners.EmitterViewerRenderListener = null
+      window.removeEventListener("scroll", Listeners.ViewerRenderListener, true)
+      Listeners.ViewerRenderListener = null
     }
 
     // remove route watcher
     this.routeWatcher()
   },
   beforeDestroy() {
-    if (Listeners.EmitterViewerRenderListener) {
+    if (Listeners.ViewerRenderListener) {
       console.log("Removing listener2")
 
-      window.removeEventListener("scroll", Listeners.EmitterViewerRenderListener, true)
-      Listeners.EmitterViewerRenderListener = null
+      window.removeEventListener("scroll", Listeners.ViewerRenderListener, true)
+      Listeners.ViewerRenderListener = null
     }
   },
   props: {
