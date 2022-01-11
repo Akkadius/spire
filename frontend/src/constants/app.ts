@@ -28,6 +28,7 @@ export const App = {
   ASSET_SPELL_ICONS_BASE_URL: ASSET_CDN_BASE_URL_INT + 'assets/spell_icons/',
   ASSET_SPELL_ANIMATIONS: ASSET_CDN_BASE_URL_INT + 'assets/spell_animations/',
   ASSET_EMITTER_CLIPS: ASSET_CDN_BASE_URL_INT + 'assets/emitters/',
+  ASSET_PLAYER_ANIMATION_CLIPS: ASSET_CDN_BASE_URL_INT + 'assets/player-animations/',
   ASSET_EXPANSION_ICON_SMALL_URL: ASSET_CDN_BASE_URL_INT + 'assets/expansion-icons-small/',
   ASSET_WALLPAPER_URL: ASSET_CDN_BASE_URL_INT + 'assets/wallpaper/',
   ASSET_INVENTORY_SLOT_URL: ASSET_CDN_BASE_URL_INT + 'assets/inventory/',

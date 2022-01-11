@@ -40,6 +40,11 @@ export default new Router({
           meta: {title: "Spell Animation Viewer"},
         },
         {
+          path: ROUTE.PLAYER_ANIMATION_VIEWER,
+          component: () => import('./views/viewers/PlayerAnimationViewer.vue'),
+          meta: {title: "Player Animation Viewer"},
+        },
+        {
           path: ROUTE.EMITTER_VIEWER,
           component: () => import('./views/viewers/EmitterViewer.vue'),
           meta: {title: "Emitter Viewer"},

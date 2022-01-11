@@ -3,7 +3,7 @@
     <app-loader :is-loading="!loaded" padding="8"/>
 
     <eq-window-simple
-      title="Environment Emitters"
+      title="Environment Previews"
       v-if="loaded"
       class="mt-4 text-center"
     >
@@ -16,8 +16,8 @@
           muted
           loop
           :id="'preview-' + preview"
-          :data-src="animBaseUrl + preview + '.mp4'"
-          class="emitter-preview"
+          :data-src="previewBaseUrl + preview + '.mp4'"
+          class="player-anim-preview"
         >
         </video>
         <div class="overlay">
@@ -33,7 +33,7 @@
 import PageHeader      from "@/components/layout/PageHeader";
 import {App}           from "@/constants/app";
 import EqWindow        from "@/components/eq-ui/EQWindow";
-import Emitters from "@/app/asset-maps/emitters.json";
+import Previews from "@/app/asset-maps/player-animations.json";
 import {Listeners}     from "@/app/listeners/listeners";
 import {ROUTE}         from "../../routes";
 import EqWindowSimple  from "../../components/eq-ui/EQWindowSimple";
@@ -43,7 +43,7 @@ let itemModels = [];
 function handleRender() {
   let playing  = []
   let stopping = []
-  let videos   = document.getElementsByClassName("emitter-preview");
+  let videos   = document.getElementsByClassName("player-anim-preview");
   for (let i = 0; i < videos.length; i++) {
 
     let video   = videos.item(i)
@@ -132,7 +132,7 @@ export default {
       previews: [],
       filteredPreviews: [],
       search: "",
-      animBaseUrl: App.ASSET_EMITTER_CLIPS,
+      previewBaseUrl: App.ASSET_PLAYER_ANIMATION_CLIPS,
       routeWatcher: null,
     }
   },
@@ -166,7 +166,7 @@ export default {
     render: function () {
       // Preload model files
       let modelFiles = [];
-      Emitters[0].contents.forEach((row) => {
+      Previews[0].contents.forEach((row) => {
         const pieces      = row.name.split(/\//);
         const fileName    = pieces[pieces.length - 1].replace(".mp4", "");
         const animationId = parseInt(fileName)
@@ -252,7 +252,7 @@ export default {
 </script>
 
 <style>
-.emitter-preview {
+.player-anim-preview {
   height: 270px;
   width: 480px;
   border-radius: 10px;
