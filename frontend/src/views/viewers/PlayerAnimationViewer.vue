@@ -33,12 +33,9 @@
 import PageHeader     from "@/components/layout/PageHeader";
 import {App}          from "@/constants/app";
 import EqWindow       from "@/components/eq-ui/EQWindow";
-import Previews       from "@/app/asset-maps/player-animations.json";
 import EqWindowSimple from "../../components/eq-ui/EQWindowSimple";
 import VideoViewer    from "../../app/video-viewer/video-viewer";
-
-let itemModels = [];
-let previewExists = {}
+import EqAssets       from "../../app/eq-assets/eq-assets";
 
 export default {
   components: { EqWindowSimple, EqWindow, PageHeader },
@@ -76,24 +73,7 @@ export default {
     },
 
     render: function () {
-      // Preload model files
-      let modelFiles = [];
-      Previews[0].contents.forEach((row) => {
-        const pieces      = row.name.split(/\//);
-        const fileName    = pieces[pieces.length - 1].replace(".mp4", "");
-        const animationId = parseInt(fileName)
-
-        modelFiles.push(animationId)
-
-        previewExists[animationId] = 1
-      })
-
-      // Sort by preview animation number
-      modelFiles.sort(function (a, b) {
-        return a - b;
-      });
-
-      this.previews = modelFiles
+      this.previews = EqAssets.getPlayerAnimationFileIds()
       this.loaded   = true
 
       setTimeout(() => {
@@ -101,21 +81,9 @@ export default {
       }, 500);
     },
     previewAnimSearch: function () {
-      this.loaded          = false
-      let filteredPreviews = []
-
-      // Sort by preview animation number
-      filteredPreviews.sort(function (a, b) {
-        return a - b;
-      });
-
-      if (filteredPreviews.length > 0) {
-        this.filteredPreviews = filteredPreviews
-      } else {
-        this.filteredPreviews = this.previews
-      }
-
-      this.loaded = true
+      this.loaded           = false
+      this.filteredPreviews = this.previews
+      this.loaded           = true
 
       setTimeout(() => {
         VideoViewer.handleRender()

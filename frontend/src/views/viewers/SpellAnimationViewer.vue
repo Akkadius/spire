@@ -46,10 +46,10 @@
 import PageHeader        from "@/components/layout/PageHeader";
 import {App}             from "@/constants/app";
 import EqWindow          from "@/components/eq-ui/EQWindow";
-import SpellAnimations   from "@/app/asset-maps/spell-animations-map.json";
 import spellAnimMappings from "@/app/data-maps/spell-icon-anim-name-map.json";
 import {ROUTE}           from "../../routes";
 import VideoViewer       from "../../app/video-viewer/video-viewer";
+import EqAssets          from "../../app/eq-assets/eq-assets";
 
 let itemModels = [];
 
@@ -102,26 +102,11 @@ export default {
       VideoViewer.addScrollListener()
     },
     render: function () {
-      // Preload model files
-      let modelFiles = [];
-      SpellAnimations[0].contents.forEach((row) => {
-        const pieces      = row.name.split(/\//);
-        const fileName    = pieces[pieces.length - 1].replace(".mp4", "");
-        const animationId = parseInt(fileName)
-
-        modelFiles.push(animationId)
-
+      EqAssets.getSpellAnimationFileIds().forEach((animationId) => {
         animationPreviewExists[animationId] = 1
       })
 
-      // console.log(animationPreviewExists)
-
-      // Sort by spell animation number
-      modelFiles.sort(function (a, b) {
-        return a - b;
-      });
-
-      this.spellAnimations = modelFiles
+      this.spellAnimations = EqAssets.getSpellAnimationFileIds()
       this.loaded          = true
 
       setTimeout(() => {

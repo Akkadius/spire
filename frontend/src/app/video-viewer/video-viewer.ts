@@ -21,6 +21,7 @@ export default class VideoViewer {
   public static debounce(func, delay) {
     let debounceTimer;
     return function () {
+      // @ts-ignore
       const context = this;
       const args    = arguments;
       clearTimeout(debounceTimer);
@@ -79,7 +80,7 @@ export default class VideoViewer {
     if (stopping.length > 0) {
       VideoViewer.log("Stopping", stopping)
     }
-  }, 100);
+  }, 10);
 
   public static elementInViewport(elem) {
     // if (!(elem instanceof Element)) throw Error('DomUtil: elem is not an element.');

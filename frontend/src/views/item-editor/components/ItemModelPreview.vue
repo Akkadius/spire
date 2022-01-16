@@ -13,7 +13,7 @@
 </template>
 
 <script>
-import ItemModels from "@/app/asset-maps/objects-map.json";
+import ItemModels from "@/app/eq-assets/objects-map.json";
 import * as util  from "util";
 
 export default {

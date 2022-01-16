@@ -46,7 +46,7 @@
 import PageHeader        from "@/components/layout/PageHeader";
 import {App}             from "@/constants/app";
 import EqWindow          from "@/components/eq-ui/EQWindow";
-import SpellAnimations   from "@/app/asset-maps/spell-animations-map.json";
+import SpellAnimations   from "@/app/eq-assets/spell-animations-map.json";
 import spellAnimMappings from "@/app/data-maps/spell-icon-anim-name-map.json";
 import * as util         from "util";
 import VideoViewer       from "../../../app/video-viewer/video-viewer";
