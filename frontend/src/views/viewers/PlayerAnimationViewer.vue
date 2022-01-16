@@ -156,12 +156,12 @@ export default {
   /*width: 240px;*/
 
   border-radius: 10px;
-  margin: 1px;
+  margin-right: 5px;
 }
 
 .overlay {
   position: absolute;
-  bottom: 2px;
+  bottom: 6px;
   left: 9px;
 }
 </style>

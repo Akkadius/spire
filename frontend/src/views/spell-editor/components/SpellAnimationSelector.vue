@@ -33,7 +33,7 @@
           :id="'spell-' + animationId"
           :data-src="animBaseUrl + animationId + '.mp4'"
           @mousedown="selectSpellAnim(animationId)"
-          :class="'spell-preview ' + classIsPulsating(animationId)"
+          :class="'video-preview spell-preview ' + classIsPulsating(animationId)"
         >
         </video>
       </div>
@@ -49,75 +49,7 @@ import EqWindow          from "@/components/eq-ui/EQWindow";
 import SpellAnimations   from "@/app/asset-maps/spell-animations-map.json";
 import spellAnimMappings from "@/app/data-maps/spell-icon-anim-name-map.json";
 import * as util         from "util";
-
-function handleRender() {
-  let playing  = []
-  let stopping = []
-  let videos   = document.getElementsByClassName("spell-preview");
-
-  for (let i = 0; i < videos.length; i++) {
-
-    let video   = videos.item(i)
-    let source  = document.createElement("source");
-    let dataSrc = video.getAttribute("data-src")
-
-    // Toggle playing
-    if (elementInViewport(video)) {
-      if (dataSrc) {
-
-        // video.setAttribute("src", dataSrc);
-        video.removeAttribute("data-src");
-        video.pause()
-        video.innerHTML = "";
-        video.removeAttribute("src");
-
-        source.setAttribute("src", dataSrc);
-        source.setAttribute("type", "video/mp4");
-        video.appendChild(source);
-        video.load();
-        video.play();
-      }
-
-      if (!videoPlaying(video) && videoLoaded(video)) {
-        video.play()
-        playing.push(video.getAttribute("id"))
-      }
-    } else {
-      if (videoPlaying(video) && videoLoaded(video)) {
-        video.pause()
-        stopping.push(video.getAttribute("id"))
-      }
-    }
-  }
-
-  // console.log("Playing", playing)
-  // console.log("Stopping", stopping)
-}
-
-function elementInViewport(elem) {
-  if (!(elem instanceof Element)) throw Error('DomUtil: elem is not an element.');
-  const style = getComputedStyle(elem);
-  if (style.display === 'none') return false;
-  if (style.visibility !== 'visible') return false;
-  if (style.opacity < 0.1) return false;
-  if (elem.offsetWidth + elem.offsetHeight + elem.getBoundingClientRect().height +
-    elem.getBoundingClientRect().width === 0) {
-    return false;
-  }
-  const elemCenter = {
-    x: elem.getBoundingClientRect().left + elem.offsetWidth / 2,
-    y: elem.getBoundingClientRect().top + elem.offsetHeight / 2
-  };
-  if (elemCenter.x < 0) return false;
-  if (elemCenter.x > (document.documentElement.clientWidth || window.innerWidth)) return false;
-  if (elemCenter.y < 0) return false;
-  if (elemCenter.y > (document.documentElement.clientHeight || window.innerHeight)) return false;
-  let pointContainer = document.elementFromPoint(elemCenter.x, elemCenter.y);
-  do {
-    if (pointContainer === elem) return true;
-  } while (pointContainer === pointContainer.parentNode);
-  return false;
-}
+import VideoViewer       from "../../../app/video-viewer/video-viewer";
 
 function debounce(func, delay) {
   let debounceTimer;
@@ -127,14 +59,6 @@ function debounce(func, delay) {
     clearTimeout(debounceTimer);
     debounceTimer = setTimeout(() => func.apply(context, args), delay);
   };
-}
-
-function videoPlaying(el) {
-  return !!(el.currentTime > 0 && !el.paused && !el.ended && el.readyState > 2);
-}
-
-function videoLoaded(el) {
-  return el.readyState === 4
 }
 
 let animationPreviewExists = {}
@@ -207,7 +131,7 @@ export default {
       this.spellAnimations = modelFiles
       this.loaded          = true
 
-      handleRender()
+      VideoViewer.handleRender()
     },
     classIsPulsating(animation) {
       return animation === this.selectedAnimation ? 'pulsate' : ''
@@ -242,7 +166,7 @@ export default {
       this.loaded             = true
 
       setTimeout(() => {
-        handleRender()
+        VideoViewer.handleRender()
       }, 100);
 
     },

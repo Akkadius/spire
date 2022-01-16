@@ -50,9 +50,7 @@ function debounce(func, delay) {
   };
 }
 
-
-let renderEventListener = null
-let previewExists       = {}
+let previewExists = {}
 
 export default {
   components: { EqWindowSimple, EqWindow, PageHeader },
@@ -159,11 +157,11 @@ export default {
   /*height: 270px;*/
   /*width: 480px;*/
 
-  /*height: 180px;*/
-  /*width: 320px;*/
+  height: 180px;
+  width: 320px;
 
-  height: 135px;
-  width: 240px;
+  /*height: 135px;*/
+  /*width: 240px;*/
 
   border-radius: 10px;
   margin: 1px;
