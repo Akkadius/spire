@@ -104,7 +104,6 @@ export default class VideoViewer {
     )
 
     if (found) {
-      console.log("found")
       return true;
     }
 

@@ -37,6 +37,7 @@ import EqWindow         from "@/components/eq-ui/EQWindow";
 import UserContext      from "@/app/user/UserContext";
 import {SpireApiClient} from "../app/api/spire-api-client";
 import * as util        from "util";
+import VideoViewer      from "../app/video-viewer/video-viewer";
 
 export default {
   components: {
@@ -120,6 +121,25 @@ export default {
       }
     })
 
+    // auto play videos that are in the viewport
+    window.addEventListener("scroll", this.handleRender);
+    setTimeout(() => {
+      this.handleRender()
+    }, 500)
+  },
+  methods: {
+    handleRender() {
+      let videos = document.getElementsByClassName("video");
+      for (let i = 0; i < videos.length; i++) {
+        let video = videos.item(i)
+        if (VideoViewer.elementInViewport(video) && !video.src.includes("autoplay")) {
+          video.src = video.src + "&autoplay=1"
+        }
+      }
+    }
+  },
+  deactivated() {
+    window.removeEventListener("scroll", this.handleRender, false)
   }
 }
 </script>
