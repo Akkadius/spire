@@ -156,10 +156,17 @@ export default {
 
 <style>
 .emitter-preview {
-  height: 270px;
-  width: 480px;
+  /*height: 270px;*/
+  /*width: 480px;*/
+
+  /*height: 180px;*/
+  /*width: 320px;*/
+
+  height: 135px;
+  width: 240px;
+
   border-radius: 10px;
-  margin: 3px;
+  margin: 1px;
 }
 
 .overlay {
