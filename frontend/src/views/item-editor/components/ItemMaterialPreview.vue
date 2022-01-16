@@ -37,7 +37,7 @@
 </template>
 
 <script>
-import NpcModels         from "@/app/asset-maps/npc-models-map";
+import NpcModels         from "@/app/eq-assets/npc-models-map";
 import util              from "util";
 import {RACES}           from "@/app/constants/eq-race-constants"
 import PageHeader        from "@/components/layout/PageHeader";

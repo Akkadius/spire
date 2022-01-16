@@ -37,6 +37,7 @@ import EqWindow         from "@/components/eq-ui/EQWindow";
 import UserContext      from "@/app/user/UserContext";
 import {SpireApiClient} from "../app/api/spire-api-client";
 import * as util        from "util";
+import VideoViewer      from "../app/video-viewer/video-viewer";
 
 export default {
   components: {
@@ -68,7 +69,7 @@ export default {
               // replace markdown code for html
               markdownRaw = markdownRaw.replace(
                 util.format("[![](https://img.youtube.com/vi/%s/0.jpg)](https://www.youtube.com/watch?v=%s)", videoCode, videoCode),
-                util.format('<div class="container"><iframe allow="autoplay" class="video" src="https://www.youtube.com/embed/%s?autoplay=1&mute=1&showinfo=0&controls=0&modestbranding=1&rel=0&loop=1&showsearch=0&iv_load_policy=3&playlist=%s" title="YouTube video player" frameborder="0" allowfullscreen></iframe></div>\n', videoCode, videoCode)
+                util.format('<div class="container"><iframe allow="autoplay" class="video" src="https://www.youtube.com/embed/%s?mute=1&showinfo=0&controls=0&modestbranding=1&rel=0&loop=1&showsearch=0&iv_load_policy=3&playlist=%s" title="YouTube video player" frameborder="0" allowfullscreen></iframe></div>\n', videoCode, videoCode)
               )
 
               // console.log("Video code is [%s]", videoCode)
@@ -120,6 +121,25 @@ export default {
       }
     })
 
+    // auto play videos that are in the viewport
+    window.addEventListener("scroll", this.handleRender);
+    setTimeout(() => {
+      this.handleRender()
+    }, 500)
+  },
+  methods: {
+    handleRender() {
+      let videos = document.getElementsByClassName("video");
+      for (let i = 0; i < videos.length; i++) {
+        let video = videos.item(i)
+        if (VideoViewer.elementInViewport(video) && !video.src.includes("autoplay")) {
+          video.src = video.src + "&autoplay=1"
+        }
+      }
+    }
+  },
+  deactivated() {
+    window.removeEventListener("scroll", this.handleRender, false)
   }
 }
 </script>

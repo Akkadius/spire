@@ -1,10 +1,10 @@
 <template>
-  <div :class="isComponent ? '' : 'container-fluid'">
+  <div :class="isComponent ? '' : 'container-fluid'" v-if="loaded">
     <app-loader :is-loading="!loaded" padding="8"/>
 
-    <eq-window-simple
+    <eq-window
       title="Environment Emitters"
-      v-if="loaded"
+
       class="mt-4 text-center"
     >
       <div v-if="filteredPreviews && filteredPreviews.length === 0">
@@ -17,7 +17,7 @@
           loop
           :id="'preview-' + preview"
           :data-src="animBaseUrl + preview + '.mp4'"
-          class="emitter-preview"
+          class="video-preview emitter-preview"
         >
         </video>
         <div class="overlay">
@@ -25,104 +25,17 @@
         </div>
       </div>
       <div class="mt-3">Videos courtesy of DeadZergling <3</div>
-    </eq-window-simple>
+    </eq-window>
   </div>
 </template>
 
 <script>
-import PageHeader      from "@/components/layout/PageHeader";
-import {App}           from "@/constants/app";
-import EqWindow        from "@/components/eq-ui/EQWindow";
-import Emitters from "@/app/asset-maps/emitters.json";
-import {Listeners}     from "@/app/listeners/listeners";
-import {ROUTE}         from "../../routes";
-import EqWindowSimple  from "../../components/eq-ui/EQWindowSimple";
-
-let itemModels = [];
-
-function handleRender() {
-  let playing  = []
-  let stopping = []
-  let videos   = document.getElementsByClassName("emitter-preview");
-  for (let i = 0; i < videos.length; i++) {
-
-    let video   = videos.item(i)
-    let source  = document.createElement("source");
-    let dataSrc = video.getAttribute("data-src")
-
-    // Toggle playing
-    if (elementInViewport(video)) {
-      if (dataSrc) {
-
-        // video.setAttribute("src", dataSrc);
-        video.removeAttribute("data-src");
-        video.pause()
-        video.innerHTML = "";
-        video.removeAttribute("src");
-
-        source.setAttribute("src", dataSrc);
-        source.setAttribute("type", "video/mp4");
-        video.appendChild(source);
-        video.load();
-        video.play();
-      }
-
-      if (!videoPlaying(video) && videoLoaded(video)) {
-        video.play()
-        playing.push(video.getAttribute("id"))
-      }
-    } else {
-      if (videoPlaying(video) && videoLoaded(video)) {
-        video.pause()
-        stopping.push(video.getAttribute("id"))
-      }
-    }
-  }
-
-  console.log("Playing", playing)
-  console.log("Stopping", stopping)
-}
-
-function elementInViewport(el) {
-  let top    = el.offsetTop;
-  let left   = el.offsetLeft;
-  let width  = el.offsetWidth;
-  let height = el.offsetHeight;
-
-  while (el.offsetParent) {
-    el = el.offsetParent;
-    top += el.offsetTop;
-    left += el.offsetLeft;
-  }
-
-  return (
-    top < (window.pageYOffset + window.innerHeight) &&
-    left < (window.pageXOffset + window.innerWidth) &&
-    (top + height) > window.pageYOffset &&
-    (left + width) > window.pageXOffset
-  );
-}
-
-function debounce(func, delay) {
-  let debounceTimer;
-  return function () {
-    const context = this;
-    const args    = arguments;
-    clearTimeout(debounceTimer);
-    debounceTimer = setTimeout(() => func.apply(context, args), delay);
-  };
-}
-
-function videoPlaying(el) {
-  return !!(el.currentTime > 0 && !el.paused && !el.ended && el.readyState > 2);
-}
-
-function videoLoaded(el) {
-  return el.readyState === 4
-}
-
-let renderEventListener = null
-let previewExists       = {}
+import PageHeader     from "@/components/layout/PageHeader";
+import {App}          from "@/constants/app";
+import EqWindow       from "@/components/eq-ui/EQWindow";
+import EqWindowSimple from "../../components/eq-ui/EQWindowSimple";
+import VideoViewer    from "../../app/video-viewer/video-viewer";
+import EqAssets       from "../../app/eq-assets/eq-assets";
 
 export default {
   components: { EqWindowSimple, EqWindow, PageHeader },
@@ -155,68 +68,24 @@ export default {
       this.render()
       this.previewAnimSearch()
 
-      // render scroll listener
-      if (Listeners.EmitterViewerRenderListener) {
-        window.removeEventListener("scroll", Listeners.EmitterViewerRenderListener)
-      }
-
-      Listeners.EmitterViewerRenderListener = debounce(handleRender, 100)
-      window.addEventListener("scroll", Listeners.EmitterViewerRenderListener);
+      // hook video viewer scroll listener
+      VideoViewer.addScrollListener()
     },
     render: function () {
-      // Preload model files
-      let modelFiles = [];
-      Emitters[0].contents.forEach((row) => {
-        const pieces      = row.name.split(/\//);
-        const fileName    = pieces[pieces.length - 1].replace(".mp4", "");
-        const animationId = parseInt(fileName)
-
-        modelFiles.push(animationId)
-
-        previewExists[animationId] = 1
-      })
-
-      // Sort by preview animation number
-      modelFiles.sort(function (a, b) {
-        return a - b;
-      });
-
-      this.previews = modelFiles
+      this.previews = EqAssets.getEmitterPreviewFileIds()
       this.loaded   = true
 
       setTimeout(() => {
-        handleRender()
-      }, 500);
+        VideoViewer.handleRender()
+      }, 100);
     },
-    triggerSearch: debounce(function () {
-      this.$router.push(
-        {
-          path: ROUTE.EMITTER_VIEWER,
-          query: {
-            q: this.search
-          }
-        }
-      ).catch(err => err)
-    }, 1000),
     previewAnimSearch: function () {
-      this.loaded          = false
-      let filteredPreviews = []
-
-      // Sort by preview animation number
-      filteredPreviews.sort(function (a, b) {
-        return a - b;
-      });
-
-      if (filteredPreviews.length > 0) {
-        this.filteredPreviews = filteredPreviews
-      } else {
-        this.filteredPreviews = this.previews
-      }
-
-      this.loaded = true
+      this.loaded           = false
+      this.filteredPreviews = this.previews
+      this.loaded           = true
 
       setTimeout(() => {
-        handleRender()
+        VideoViewer.handleRender()
       }, 100);
     }
   },
@@ -224,22 +93,10 @@ export default {
     this.init()
   },
   deactivated() {
-    if (Listeners.EmitterViewerRenderListener) {
-      console.log("Removing listener")
-      window.removeEventListener("scroll", Listeners.EmitterViewerRenderListener, true)
-      Listeners.EmitterViewerRenderListener = null
-    }
+    VideoViewer.destroyScrollListener()
 
     // remove route watcher
     this.routeWatcher()
-  },
-  beforeDestroy() {
-    if (Listeners.EmitterViewerRenderListener) {
-      console.log("Removing listener2")
-
-      window.removeEventListener("scroll", Listeners.EmitterViewerRenderListener, true)
-      Listeners.EmitterViewerRenderListener = null
-    }
   },
   props: {
     isComponent: { // here for now because this viewer wasn't built as a component in mind
@@ -253,10 +110,20 @@ export default {
 
 <style>
 .emitter-preview {
-  height: 270px;
-  width: 480px;
+  /*height: 270px;*/
+  /*width: 480px;*/
+
+  /*height: 180px;*/
+  /*width: 320px;*/
+
+  height: 162px;
+  width: 288px;
+
+  /*height: 135px;*/
+  /*width: 240px;*/
+
   border-radius: 10px;
-  margin: 3px;
+  margin: 1px;
 }
 
 .overlay {

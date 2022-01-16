@@ -17,7 +17,7 @@
 </template>
 
 <script>
-import SpellAnimations from "@/app/asset-maps/spell-animations-map.json";
+import SpellAnimations from "@/app/eq-assets/spell-animations-map.json";
 import {App}           from "../../../constants/app";
 
 export default {

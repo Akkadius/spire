@@ -65,7 +65,7 @@
 </template>
 
 <script>
-import ItemIcons            from "@/app/asset-maps/item-icons-map.json";
+import ItemIcons            from "@/app/eq-assets/item-icons-map.json";
 import util                 from "util";
 import itemSlots            from "@/constants/item-slots.json"
 import itemTypes            from "@/constants/item-types.json"

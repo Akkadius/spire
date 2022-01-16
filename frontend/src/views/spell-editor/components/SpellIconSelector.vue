@@ -16,7 +16,7 @@
 </template>
 
 <script>
-import SpellIcons from "@/app/asset-maps/spell-icons-map.json";
+import SpellIcons from "@/app/eq-assets/spell-icons-map.json";
 import {App}      from "../../../constants/app";
 
 export default {

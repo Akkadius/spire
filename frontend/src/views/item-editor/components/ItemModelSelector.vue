@@ -72,7 +72,7 @@
 </template>
 
 <script>
-import ItemModels            from "@/app/asset-maps/objects-map.json";
+import ItemModels            from "@/app/eq-assets/objects-map.json";
 import util                  from "util";
 import itemSlots             from "@/constants/item-slots.json"
 import itemSlotIdFileMapping from "@/constants/item-slot-idfile-mapping.json"
