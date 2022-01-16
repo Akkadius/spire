@@ -17,7 +17,7 @@
           loop
           :id="'preview-' + preview"
           :data-src="animBaseUrl + preview + '.mp4'"
-          class="emitter-preview"
+          class="video-preview emitter-preview"
         >
         </video>
         <div class="overlay">
@@ -30,78 +30,15 @@
 </template>
 
 <script>
-import PageHeader      from "@/components/layout/PageHeader";
-import {App}           from "@/constants/app";
-import EqWindow        from "@/components/eq-ui/EQWindow";
-import Emitters from "@/app/asset-maps/emitters.json";
-import {Listeners}     from "@/app/listeners/listeners";
-import {ROUTE}         from "../../routes";
-import EqWindowSimple  from "../../components/eq-ui/EQWindowSimple";
+import PageHeader     from "@/components/layout/PageHeader";
+import {App}          from "@/constants/app";
+import EqWindow       from "@/components/eq-ui/EQWindow";
+import Emitters       from "@/app/asset-maps/emitters.json";
+import EqWindowSimple from "../../components/eq-ui/EQWindowSimple";
+import VideoViewer    from "../../app/video-viewer/video-viewer";
 
 let itemModels = [];
 
-function handleRender() {
-  let playing  = []
-  let stopping = []
-  let videos   = document.getElementsByClassName("emitter-preview");
-  for (let i = 0; i < videos.length; i++) {
-
-    let video   = videos.item(i)
-    let source  = document.createElement("source");
-    let dataSrc = video.getAttribute("data-src")
-
-    // Toggle playing
-    if (elementInViewport(video)) {
-      if (dataSrc) {
-
-        // video.setAttribute("src", dataSrc);
-        video.removeAttribute("data-src");
-        video.pause()
-        video.innerHTML = "";
-        video.removeAttribute("src");
-
-        source.setAttribute("src", dataSrc);
-        source.setAttribute("type", "video/mp4");
-        video.appendChild(source);
-        video.load();
-        video.play();
-      }
-
-      if (!videoPlaying(video) && videoLoaded(video)) {
-        video.play()
-        playing.push(video.getAttribute("id"))
-      }
-    } else {
-      if (videoPlaying(video) && videoLoaded(video)) {
-        video.pause()
-        stopping.push(video.getAttribute("id"))
-      }
-    }
-  }
-
-  console.log("Playing", playing)
-  console.log("Stopping", stopping)
-}
-
-function elementInViewport(el) {
-  let top    = el.offsetTop;
-  let left   = el.offsetLeft;
-  let width  = el.offsetWidth;
-  let height = el.offsetHeight;
-
-  while (el.offsetParent) {
-    el = el.offsetParent;
-    top += el.offsetTop;
-    left += el.offsetLeft;
-  }
-
-  return (
-    top < (window.pageYOffset + window.innerHeight) &&
-    left < (window.pageXOffset + window.innerWidth) &&
-    (top + height) > window.pageYOffset &&
-    (left + width) > window.pageXOffset
-  );
-}
 
 function debounce(func, delay) {
   let debounceTimer;
@@ -113,13 +50,6 @@ function debounce(func, delay) {
   };
 }
 
-function videoPlaying(el) {
-  return !!(el.currentTime > 0 && !el.paused && !el.ended && el.readyState > 2);
-}
-
-function videoLoaded(el) {
-  return el.readyState === 4
-}
 
 let renderEventListener = null
 let previewExists       = {}
@@ -155,13 +85,8 @@ export default {
       this.render()
       this.previewAnimSearch()
 
-      // render scroll listener
-      if (Listeners.EmitterViewerRenderListener) {
-        window.removeEventListener("scroll", Listeners.EmitterViewerRenderListener)
-      }
-
-      Listeners.EmitterViewerRenderListener = debounce(handleRender, 100)
-      window.addEventListener("scroll", Listeners.EmitterViewerRenderListener);
+      // hook video viewer scroll listener
+      VideoViewer.addScrollListener()
     },
     render: function () {
       // Preload model files
@@ -185,19 +110,9 @@ export default {
       this.loaded   = true
 
       setTimeout(() => {
-        handleRender()
-      }, 500);
+        VideoViewer.handleRender()
+      }, 100);
     },
-    triggerSearch: debounce(function () {
-      this.$router.push(
-        {
-          path: ROUTE.EMITTER_VIEWER,
-          query: {
-            q: this.search
-          }
-        }
-      ).catch(err => err)
-    }, 1000),
     previewAnimSearch: function () {
       this.loaded          = false
       let filteredPreviews = []
@@ -216,7 +131,7 @@ export default {
       this.loaded = true
 
       setTimeout(() => {
-        handleRender()
+        VideoViewer.handleRender()
       }, 100);
     }
   },
@@ -224,22 +139,10 @@ export default {
     this.init()
   },
   deactivated() {
-    if (Listeners.EmitterViewerRenderListener) {
-      console.log("Removing listener")
-      window.removeEventListener("scroll", Listeners.EmitterViewerRenderListener, true)
-      Listeners.EmitterViewerRenderListener = null
-    }
+    VideoViewer.destroyScrollListener()
 
     // remove route watcher
     this.routeWatcher()
-  },
-  beforeDestroy() {
-    if (Listeners.EmitterViewerRenderListener) {
-      console.log("Removing listener2")
-
-      window.removeEventListener("scroll", Listeners.EmitterViewerRenderListener, true)
-      Listeners.EmitterViewerRenderListener = null
-    }
   },
   props: {
     isComponent: { // here for now because this viewer wasn't built as a component in mind
