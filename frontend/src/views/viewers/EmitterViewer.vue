@@ -1,10 +1,10 @@
 <template>
-  <div :class="isComponent ? '' : 'container-fluid'">
+  <div :class="isComponent ? '' : 'container-fluid'" v-if="loaded">
     <app-loader :is-loading="!loaded" padding="8"/>
 
     <eq-window
       title="Environment Emitters"
-      v-if="loaded"
+
       class="mt-4 text-center"
     >
       <div v-if="filteredPreviews && filteredPreviews.length === 0">
@@ -113,8 +113,11 @@ export default {
   /*height: 270px;*/
   /*width: 480px;*/
 
-  height: 180px;
-  width: 320px;
+  /*height: 180px;*/
+  /*width: 320px;*/
+
+  height: 162px;
+  width: 288px;
 
   /*height: 135px;*/
   /*width: 240px;*/
