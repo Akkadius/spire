@@ -2,7 +2,7 @@
   <div :class="isComponent ? '' : 'container-fluid'">
     <app-loader :is-loading="!loaded" padding="8"/>
 
-    <eq-window-simple
+    <eq-window
       title="Environment Emitters"
       v-if="loaded"
       class="mt-4 text-center"
@@ -25,7 +25,7 @@
         </div>
       </div>
       <div class="mt-3">Videos courtesy of DeadZergling <3</div>
-    </eq-window-simple>
+    </eq-window>
   </div>
 </template>
 
@@ -38,18 +38,6 @@ import EqWindowSimple from "../../components/eq-ui/EQWindowSimple";
 import VideoViewer    from "../../app/video-viewer/video-viewer";
 
 let itemModels = [];
-
-
-function debounce(func, delay) {
-  let debounceTimer;
-  return function () {
-    const context = this;
-    const args    = arguments;
-    clearTimeout(debounceTimer);
-    debounceTimer = setTimeout(() => func.apply(context, args), delay);
-  };
-}
-
 let previewExists = {}
 
 export default {

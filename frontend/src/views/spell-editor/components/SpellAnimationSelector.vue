@@ -51,16 +51,6 @@ import spellAnimMappings from "@/app/data-maps/spell-icon-anim-name-map.json";
 import * as util         from "util";
 import VideoViewer       from "../../../app/video-viewer/video-viewer";
 
-function debounce(func, delay) {
-  let debounceTimer;
-  return function () {
-    const context = this;
-    const args    = arguments;
-    clearTimeout(debounceTimer);
-    debounceTimer = setTimeout(() => func.apply(context, args), delay);
-  };
-}
-
 let animationPreviewExists = {}
 
 export default {

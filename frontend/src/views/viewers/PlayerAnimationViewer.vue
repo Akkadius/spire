@@ -2,8 +2,8 @@
   <div :class="isComponent ? '' : 'container-fluid'">
     <app-loader :is-loading="!loaded" padding="8"/>
 
-    <eq-window-simple
-      title="Player Animation Previews"
+    <eq-window
+      title="Player Animations"
       v-if="loaded"
       class="mt-4 text-center"
     >
@@ -25,7 +25,7 @@
         </div>
       </div>
       <div class="mt-3">Videos courtesy of DeadZergling <3</div>
-    </eq-window-simple>
+    </eq-window>
   </div>
 </template>
 
