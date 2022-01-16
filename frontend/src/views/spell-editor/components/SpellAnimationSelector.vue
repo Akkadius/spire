@@ -104,7 +104,7 @@ export default {
 
           // 230 is height of video to offset
           if (container && target) {
-            container.scrollTop = target.offsetTop - 230;
+            container.scrollTop = target.offsetTop - 80;
           }
         }, 100)
       }
