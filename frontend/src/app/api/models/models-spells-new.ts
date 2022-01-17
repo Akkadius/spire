@@ -744,18 +744,6 @@ export interface ModelsSpellsNew {
      * @type {number}
      * @memberof ModelsSpellsNew
      */
-    field_181?: number;
-    /**
-     * 
-     * @type {number}
-     * @memberof ModelsSpellsNew
-     */
-    field_182?: number;
-    /**
-     * 
-     * @type {number}
-     * @memberof ModelsSpellsNew
-     */
     field_198?: number;
     /**
      * 
@@ -1267,6 +1255,18 @@ export interface ModelsSpellsNew {
      * @memberof ModelsSpellsNew
      */
     pushup?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof ModelsSpellsNew
+     */
+    pvp_duration?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof ModelsSpellsNew
+     */
+    pvp_duration_cap?: number;
     /**
      * 
      * @type {number}

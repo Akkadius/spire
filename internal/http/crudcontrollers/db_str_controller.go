@@ -46,6 +46,7 @@ func (e *DbStrController) Routes() []*routes.Route {
 // @Param includes query string false "Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names "
 // @Param where query string false "Filter on specific fields. Multiple conditions [.] separated Example: col_like_value.col2__val2"
 // @Param whereOr query string false "Filter on specific fields (Chained ors). Multiple conditions [.] separated Example: col_like_value.col2__val2"
+// @Param groupBy query string false "Group by field. Multiple conditions [.] separated Example: field1.field2"
 // @Param limit query string false "Rows to limit in response (Default: 10,000)"
 // @Param orderBy query string false "Order by [field]"
 // @Param orderDirection query string false "Order by field direction"

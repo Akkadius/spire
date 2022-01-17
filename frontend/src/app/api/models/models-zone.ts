@@ -280,6 +280,12 @@ export interface ModelsZone {
     insttype?: number;
     /**
      * 
+     * @type {number}
+     * @memberof ModelsZone
+     */
+    lava_damage?: number;
+    /**
+     * 
      * @type {string}
      * @memberof ModelsZone
      */
@@ -320,6 +326,12 @@ export interface ModelsZone {
      * @memberof ModelsZone
      */
     min_expansion?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof ModelsZone
+     */
+    min_lava_damage?: number;
     /**
      * 
      * @type {number}
