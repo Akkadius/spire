@@ -316,7 +316,7 @@ func (c *GenerateRaceModelMapsCommand) Handle(cmd *cobra.Command, _ []string) {
 
 	// get json
 	json, _ := json.MarshalIndent(rd, "", "  ")
-	
+
 	// zlib writer buffer
 	var b bytes.Buffer
 	w := zlib.NewWriter(&b)
