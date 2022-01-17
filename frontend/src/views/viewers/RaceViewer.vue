@@ -3,7 +3,7 @@
     <div class="container-fluid">
       <eq-window title="Race Viewer" class="mt-5 text-center">
         <div class="row mb-4">
-          <div class="col-8">
+          <div class="col-6">
 
             <!-- Input -->
             <input
@@ -17,7 +17,7 @@
 
           </div>
 
-          <div class="col-4">
+          <div class="col-5">
             <select
               @change="raceSearch = ''; triggerState()"
               v-model.number="zoneSearch" class="form-control"
@@ -33,6 +33,17 @@
             </select>
           </div>
 
+          <div class="col-1">
+
+            <button
+              class='btn btn-outline-warning btn-sm mb-1 mr-2'
+              @click="reset"
+            >
+              <i class="fa fa-refresh"></i> Reset
+            </button>
+
+          </div>
+
         </div>
 
         <app-loader :is-loading="!loaded" padding="6"/>
@@ -45,7 +56,7 @@
           <div
             v-for="race in filteredRaces"
             :key="race"
-            style="padding-bottom: 15px; display: inline-block; border: 3px solid rgba(218, 218, 218, .1); border-radius: 7px;"
+            style="padding-bottom: 15px; display: inline-block; border: 3px solid rgba(218, 218, 218, .1); border-radius: 7px; min-height: 200px"
             class="p-3 m-3 fade-in"
           >
 
@@ -294,6 +305,7 @@ export default {
       console.time('defineRaces');
       for (let raceId = 0; raceId <= MAX_RACE_ID; raceId++) {
         if (modelFiles[raceId] && modelFiles[raceId].length > 0) {
+          races.push(raceId)
           raceImages[raceId] = this.getRaceImages(raceId)
         }
       }
@@ -303,6 +315,12 @@ export default {
 
       this.raceImages    = raceImages
       this.filteredRaces = races;
+    },
+    reset() {
+      this.raceSearch = ""
+      this.zoneSearch = 0
+      this.updateQueryState()
+      this.loadModels()
     },
     loadRaceInventory() {
       SpireApiClient.v1().get('/static-map/race-inventory-map.json').then((result) => {
