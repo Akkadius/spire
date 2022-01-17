@@ -44,14 +44,16 @@
 
           <div class="col-4">
             <select
+              @change="raceSearch = ''; triggerState()"
               v-model.number="zoneSearch" class="form-control"
             >
+              <option value="0">--- Select Zone ---</option>
               <option
                 v-for="(z, index) in zoneList"
                 :key="z.zoneId"
                 :value="parseInt(z.zoneId)"
               >
-                {{ z.shortName }} {{ z.zoneId }}) {{ z.longName }})
+                {{ z.shortName }} {{ z.zoneId }}) Races ({{ z.modelCount }}) ({{ z.longName }})
               </option>
             </select>
           </div>
