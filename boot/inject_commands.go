@@ -18,6 +18,7 @@ var commandSet = wire.NewSet(
 	cmd.NewGenerateConfigurationCommand,
 	cmd.NewSpireMigrateCommand,
 	cmd.NewQuestExampleTestCommand,
+	cmd.NewGenerateRaceModelMapsCommand,
 	ProvideCommands,
 )
 
@@ -32,6 +33,7 @@ func ProvideCommands(
 	spireMigrateCommand *cmd.SpireMigrateCommand,
 	questApiParseCommand *cmd.QuestApiParseCommand,
 	questExampleTestCommand *cmd.QuestExampleTestCommand,
+	generateRaceModelMapsCommand *cmd.GenerateRaceModelMapsCommand,
 ) []*cobra.Command {
 	return []*cobra.Command{
 		helloWorldCommand.Command(),
@@ -43,5 +45,6 @@ func ProvideCommands(
 		spireMigrateCommand.Command(),
 		questApiParseCommand.Command(),
 		questExampleTestCommand.Command(),
+		generateRaceModelMapsCommand.Command(),
 	}
 }

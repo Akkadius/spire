@@ -156,7 +156,7 @@ const swaggerCss = `@charset "UTF-8";
 .swagger-ui .parаmeter__type {
   font-size: 12px;
   padding: 5px 0;
-  font-family: Source Code Pro, monospace;
+  font-family: SourceFile Code Pro, monospace;
   font-weight: 600;
   color: #3b4151
 }
@@ -238,7 +238,7 @@ const swaggerCss = `@charset "UTF-8";
   display: -ms-flexbox;
   display: flex;
   padding: 0 10px;
-  font-family: Source Code Pro, monospace;
+  font-family: SourceFile Code Pro, monospace;
   font-weight: 600;
   color: #3b4151;
   -webkit-box-align: center;
@@ -497,7 +497,7 @@ const swaggerCss = `@charset "UTF-8";
 
 .swagger-ui .response-col_status .response-undocumented {
   font-size: 11px;
-  font-family: Source Code Pro, monospace;
+  font-family: SourceFile Code Pro, monospace;
   font-weight: 600;
   color: #999
 }
@@ -510,7 +510,7 @@ const swaggerCss = `@charset "UTF-8";
   padding: 10px;
   border-radius: 4px;
   background: #41444e;
-  font-family: Source Code Pro, monospace;
+  font-family: SourceFile Code Pro, monospace;
   font-weight: 600;
   color: #fff
 }
@@ -526,7 +526,7 @@ const swaggerCss = `@charset "UTF-8";
   white-space: pre-wrap;
   border-radius: 4px;
   background: #41444e;
-  font-family: Source Code Pro, monospace;
+  font-family: SourceFile Code Pro, monospace;
   font-weight: 600;
   color: #fff
 }
@@ -883,7 +883,7 @@ const swaggerCss = `@charset "UTF-8";
   border-radius: 4px;
   outline: none;
   background: hsla(0, 0%, 100%, .8);
-  font-family: Source Code Pro, monospace;
+  font-family: SourceFile Code Pro, monospace;
   font-weight: 600;
   color: #3b4151
 }
@@ -900,7 +900,7 @@ const swaggerCss = `@charset "UTF-8";
   resize: none;
   border-radius: 4px;
   background: #41444e;
-  font-family: Source Code Pro, monospace;
+  font-family: SourceFile Code Pro, monospace;
   font-weight: 600;
   color: #fff
 }
@@ -922,7 +922,7 @@ const swaggerCss = `@charset "UTF-8";
   font-weight: 400!important;
   font-style: italic;
   margin: 0!important;
-  font-family: Source Code Pro, monospace;
+  font-family: SourceFile Code Pro, monospace;
   font-weight: 600;
   color: #3b4151
 }
@@ -1048,7 +1048,7 @@ const swaggerCss = `@charset "UTF-8";
 .swagger-ui .model {
   font-size: 12px;
   font-weight: 300;
-  font-family: Source Code Pro, monospace;
+  font-family: SourceFile Code Pro, monospace;
   font-weight: 600;
   color: #3b4151
 }
@@ -1255,7 +1255,7 @@ const swaggerCss = `@charset "UTF-8";
   font-size: 12px;
   font-weight: 300;
   vertical-align: middle;
-  font-family: Source Code Pro, monospace;
+  font-family: SourceFile Code Pro, monospace;
   font-weight: 600;
   color: #3b4151
 }
@@ -1315,7 +1315,7 @@ const swaggerCss = `@charset "UTF-8";
 .swagger-ui .parameter__in {
   font-size: 12px;
   font-style: italic;
-  font-family: Source Code Pro, monospace;
+  font-family: SourceFile Code Pro, monospace;
   font-weight: 600;
   color: #888
 }
@@ -1409,7 +1409,7 @@ const swaggerCss = `@charset "UTF-8";
   padding: 3px 5px;
   border-radius: 4px;
   background: rgba(0, 0, 0, .05);
-  font-family: Source Code Pro, monospace;
+  font-family: SourceFile Code Pro, monospace;
   font-weight: 600;
   color: #9012fe
 }
@@ -1434,7 +1434,7 @@ const swaggerCss = `@charset "UTF-8";
   font-size: 12px;
   font-weight: 300!important;
   margin: 0;
-  font-family: Source Code Pro, monospace;
+  font-family: SourceFile Code Pro, monospace;
   font-weight: 600;
   color: #3b4151
 }
@@ -1519,7 +1519,7 @@ const swaggerCss = `@charset "UTF-8";
   font-size: 12px;
   padding: 10px;
   border-radius: 4px;
-  font-family: Source Code Pro, monospace;
+  font-family: SourceFile Code Pro, monospace;
   font-weight: 600;
   color: #3b4151
 }
@@ -1551,7 +1551,7 @@ const swaggerCss = `@charset "UTF-8";
 .swagger-ui .errors-wrapper .errors h4 {
   font-size: 14px;
   margin: 0;
-  font-family: Source Code Pro, monospace;
+  font-family: SourceFile Code Pro, monospace;
   font-weight: 600;
   color: #3b4151
 }
@@ -1801,7 +1801,7 @@ const indexTempl = `<!-- HTML for static distribution bundle build -->
 <head>
   <meta charset="UTF-8">
   <title>Swagger UI</title>
-  <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,700|Source+Code+Pro:300,600|Titillium+Web:400,600,700" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,700|SourceFile+Code+Pro:300,600|Titillium+Web:400,600,700" rel="stylesheet">
   <link rel="stylesheet" type="text/css" href="./swagger-ui.css" >
   <link rel="icon" type="image/png" href="./favicon-32x32.png" sizes="32x32" />
   <link rel="icon" type="image/png" href="./favicon-16x16.png" sizes="16x16" />

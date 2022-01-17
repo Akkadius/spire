@@ -28,8 +28,8 @@
         <div v-if="loaded">
           <div v-for="race in filteredRaces"
                :key="race"
-               style="padding-bottom: 15px; display: inline-block; border: 1px solid rgb(218, 218, 218); border-radius: 7px;"
-               class="p-1 m-3"
+               style="padding-bottom: 15px; display: inline-block; border: 3px solid rgba(218, 218, 218, .1); border-radius: 7px;"
+               class="p-3 m-3"
           >
 
             <div class="mt-3" style="vertical-align: middle;">
@@ -68,7 +68,7 @@
 
             </span>
 
-              <h6 class="eq-header"> {{ (raceConstants[race] ? raceConstants[race] : "") }} ({{ race }}) </h6>
+              <h6 class="eq-header mt-5"> {{ (raceConstants[race] ? raceConstants[race] : "") }} ({{ race }}) </h6>
             </div>
 
           </div>
