@@ -42,6 +42,18 @@
               <i class="fa fa-refresh"></i> Reset
             </button>
 
+          <div class="col-4">
+            <select
+              v-model.number="zoneSearch" class="form-control"
+            >
+              <option
+                v-for="(z, index) in zoneList"
+                :key="z.zoneId"
+                :value="parseInt(z.zoneId)"
+              >
+                {{ z.shortName }} {{ z.zoneId }}) {{ z.longName }})
+              </option>
+            </select>
           </div>
 
         </div>
