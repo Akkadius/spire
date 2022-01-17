@@ -10,8 +10,8 @@
               type="text"
               class="form-control form-control-prepended list-search"
               v-model="raceSearch"
-              @keyup="triggerStateDebounce()"
-              @keyup.enter="triggerState()"
+              @keyup="zoneSearch = 0; triggerStateDebounce()"
+              @keyup.enter="zoneSearch = 0; triggerState()"
               placeholder="Filter by Race name"
             >
 
@@ -19,14 +19,16 @@
 
           <div class="col-4">
             <select
+              @change="raceSearch = ''; triggerState()"
               v-model.number="zoneSearch" class="form-control"
             >
+              <option value="0">--- Select Zone ---</option>
               <option
                 v-for="(z, index) in zoneList"
                 :key="z.zoneId"
                 :value="parseInt(z.zoneId)"
               >
-                {{ z.shortName }} {{ z.zoneId }}) {{ z.longName }})
+                {{ z.shortName }} {{ z.zoneId }}) Races ({{ z.modelCount }}) ({{ z.longName }})
               </option>
             </select>
           </div>
@@ -44,7 +46,7 @@
             v-for="race in filteredRaces"
             :key="race"
             style="padding-bottom: 15px; display: inline-block; border: 3px solid rgba(218, 218, 218, .1); border-radius: 7px;"
-            class="p-3 m-3"
+            class="p-3 m-3 fade-in"
           >
 
             <div class="mt-3" style="vertical-align: middle;">
@@ -110,11 +112,13 @@ import {ROUTE}          from "../../routes";
 import {SpireApiClient} from "../../app/api/spire-api-client";
 import {ZoneApi}        from "../../app/api";
 
-const baseUrl     = App.ASSET_CDN_BASE_URL + "assets/npc_models/";
-const MAX_RACE_ID = 700;
-let modelFiles    = {};
-let raceExists    = {};
-let races         = [];
+const baseUrl           = App.ASSET_CDN_BASE_URL + "assets/npc_models/";
+const MAX_RACE_ID       = 700;
+let modelFileExists     = {};
+let modelFiles          = {}
+let races               = [];
+let zoneToRaceIdMapping = {};
+
 
 export default {
   components: { EqWindowSimple, EqWindow, PageHeader },
@@ -140,6 +144,9 @@ export default {
       if (this.raceSearch !== "") {
         queryState.raceSearch = this.raceSearch
       }
+      if (this.zoneSearch !== 0) {
+        queryState.zoneSearch = this.zoneSearch
+      }
 
       this.$router.push(
         {
@@ -155,6 +162,9 @@ export default {
       if (this.$route.query.raceSearch) {
         this.raceSearch = this.$route.query.raceSearch;
       }
+      if (this.$route.query.zoneSearch) {
+        this.zoneSearch = this.$route.query.zoneSearch;
+      }
     },
 
     triggerState() {
@@ -165,20 +175,18 @@ export default {
     loadModels() {
       this.loaded = false;
 
+      // filtering
+      // race filter
       if (this.raceSearch !== "") {
         let filteredRaceIds = [];
         for (let raceId = 0; raceId <= MAX_RACE_ID; raceId++) {
 
-          if (!RACES[raceId]) {
-            continue;
-          }
-
-          if (!raceExists[raceId]) {
+          if (!RACES[raceId] || !modelFiles[raceId]) {
             continue;
           }
 
           const raceName = RACES[raceId];
-          if (!raceName.toLowerCase().includes(this.raceSearch)) {
+          if (!raceName.toLowerCase().includes(this.raceSearch.toLowerCase())) {
             continue;
           }
 
@@ -190,6 +198,29 @@ export default {
         return;
       }
 
+      // zone filter
+      if (this.zoneSearch !== 0) {
+        let filteredRaceIds = [];
+        for (let raceId = 0; raceId <= MAX_RACE_ID; raceId++) {
+          if (!RACES[raceId] || !modelFiles[raceId]) {
+            continue;
+          }
+
+          if (zoneToRaceIdMapping[this.zoneSearch]) {
+            if (!zoneToRaceIdMapping[this.zoneSearch].includes(raceId)) {
+              continue;
+            }
+          }
+
+          filteredRaceIds.push(raceId);
+        }
+
+        this.filteredRaces = filteredRaceIds
+        this.loaded        = true
+        return;
+      }
+
+      // set filtered races
       this.filteredRaces = races
       this.loaded        = true;
     },
@@ -198,20 +229,19 @@ export default {
       this.triggerState()
     }, 1000),
     getRaceImages: function (raceId) {
+      let raceImages = []
+      modelFiles[raceId].forEach((file) => {
+        if (file.includes(util.format("CTN_%s", raceId))) {
 
-      let raceImages = [];
-      for (let genderId = 0; genderId <= 2; genderId++) {
-        for (let textureId = 0; textureId <= 20; textureId++) {
-          for (let helmTextureId = 0; helmTextureId <= 10; helmTextureId++) {
-            const raceModel   = util.format("CTN_%s_%s_%s_%s.png", raceId, genderId, textureId, helmTextureId)
-            const modelExists = modelFiles[raceModel]
+          // replace for css formatting
+          file = file.replace(".png", "")
+            .replace("CTN_", "")
+            .replaceAll("_", "-")
 
-            if (modelExists) {
-              raceImages.push(util.format("%s-%s-%s-%s", raceId, genderId, textureId, helmTextureId));
-            }
-          }
+          // images
+          raceImages.push(file)
         }
-      }
+      })
 
       return raceImages
     },
@@ -237,41 +267,39 @@ export default {
       return slugify(toSlug.replace(/[&\/\\#, +()$~%.'":*?<>{}]/g, "-"))
     },
     initModels() {
-      var start = new Date().getTime();
-      NpcModels[0].contents.forEach((row) => {
-        const pieces   = row.name.split(/\//);
-        const fileName = pieces[pieces.length - 1];
+      console.time('initModels');
+      console.time('modelFiles');
 
-        modelFiles[fileName] = 1
+      modelFiles = {}
+      NpcModels[0].contents.forEach((row) => {
+        const pieces     = row.name.split(/\//);
+        const fileName   = pieces[pieces.length - 1];
+        const paramSplit = fileName.split("_")
+        const raceId     = paramSplit[1].trim();
+
+        modelFileExists[fileName] = 1
+
+        if (typeof modelFiles[raceId] === "undefined") {
+          modelFiles[raceId] = []
+        }
+        modelFiles[raceId].push(fileName)
       })
+
+      console.timeEnd('modelFiles');
 
       this.raceImages = {};
       let raceImages  = {};
       races           = [];
 
+      console.time('defineRaces');
       for (let raceId = 0; raceId <= MAX_RACE_ID; raceId++) {
-        let modelKey = "";
-
-        for (let genderId = 0; genderId <= 2; genderId++) {
-          for (let textureId = 0; textureId <= 20; textureId++) {
-            for (let helmTextureId = 0; helmTextureId <= 10; helmTextureId++) {
-              modelKey          = util.format("CTN_%s_%s_%s_%s.png", raceId, genderId, textureId, helmTextureId);
-              const modelExists = modelFiles[modelKey]
-
-              if (modelExists) {
-                if (!raceExists[raceId]) {
-                  raceExists[raceId] = 1
-                  races.push(raceId);
-                }
-              }
-            }
-          }
-        }
-
-        if (raceExists[raceId]) {
+        if (modelFiles[raceId] && modelFiles[raceId].length > 0) {
           raceImages[raceId] = this.getRaceImages(raceId)
         }
       }
+      console.timeEnd('defineRaces');
+
+      console.timeEnd('initModels');
 
       this.raceImages    = raceImages
       this.filteredRaces = races;
@@ -279,7 +307,7 @@ export default {
     loadRaceInventory() {
       SpireApiClient.v1().get('/static-map/race-inventory-map.json').then((result) => {
 
-        let zoneToRaceIdMapping = {};
+        zoneToRaceIdMapping = {};
 
         result.data.races.forEach((race) => {
           // console.log(race)
@@ -302,34 +330,33 @@ export default {
 
         })
 
-        // console.log(zoneToRaceIdMapping)
+        // after we load race inventory data
+        let zoneList = [];
+        (new ZoneApi(SpireApiClient.getOpenApiConfig())).listZones({
+          where: "version__0",
+          orderBy: "short_name",
+          groupBy: "zoneidnumber"
+        }).then((result) => {
+          if (result.status === 200) {
+            result.data.forEach((row) => {
 
+              zoneList.push(
+                {
+                  zoneId: row.zoneidnumber,
+                  shortName: row.short_name,
+                  longName: row.long_name,
+                  modelCount: zoneToRaceIdMapping[row.zoneidnumber] ? zoneToRaceIdMapping[row.zoneidnumber].length : 0,
+                }
+              )
+            })
+
+            this.zoneList = zoneList
+          }
+        })
+
+        // console.log(zoneToRaceIdMapping)
         // console.log(result)
       });
-
-      let zoneList = [];
-
-      (new ZoneApi(SpireApiClient.getOpenApiConfig())).listZones({
-        where: "version__0",
-        orderBy: "zoneidnumber",
-        groupBy: "zoneidnumber"
-      }).then((result) => {
-        if (result.status === 200) {
-          result.data.forEach((row) => {
-            // console.log(row)
-            zoneList.push(
-              {
-                zoneId: row.zoneidnumber,
-                shortName: row.short_name,
-                longName: row.long_name,
-              }
-            )
-          })
-
-          this.zoneList = zoneList
-        }
-      })
-
 
     }
   },
