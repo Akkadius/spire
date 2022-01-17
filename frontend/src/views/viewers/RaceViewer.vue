@@ -58,6 +58,17 @@
             </select>
           </div>
 
+          <div class="col-1">
+
+            <button
+              class='btn btn-outline-warning btn-sm mb-1 mr-2'
+              @click="reset"
+            >
+              <i class="fa fa-refresh"></i> Reset
+            </button>
+
+          </div>
+
         </div>
 
         <app-loader :is-loading="!loaded" padding="6"/>
