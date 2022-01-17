@@ -18,6 +18,7 @@ const (
 	notLikeDelimiter  = "_notlike_"
 	selectDelimiter   = "."
 	whereDelimiter    = "."
+	groupByDelimiter  = "."
 	linksDelimiter    = ","
 	orderByDelimiter  = "."
 )
@@ -58,6 +59,16 @@ func (d *DatabaseResolver) QueryContext(model models.Modelable, c echo.Context) 
 		}
 
 		query = d.handleWheres(query, filter)
+	}
+
+	// where filters
+	groupByParam := c.QueryParam("groupBy")
+	for _, filter := range strings.Split(groupByParam, groupByDelimiter) {
+		if len(filter) == 0 {
+			continue
+		}
+
+		query = query.Group(filter)
 	}
 
 	// where or filters

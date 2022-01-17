@@ -3,7 +3,7 @@
     <div class="container-fluid">
       <eq-window title="Race Viewer" class="mt-5 text-center">
         <div class="row mb-4">
-          <div class="col">
+          <div class="col-8">
 
             <!-- Input -->
             <input
@@ -12,11 +12,25 @@
               v-model="raceSearch"
               @keyup="triggerStateDebounce()"
               @keyup.enter="triggerState()"
-              placeholder="Filter by Race name">
-          </div>
-          <div class="col-auto">
+              placeholder="Filter by Race name"
+            >
 
           </div>
+
+          <div class="col-4">
+            <select
+              v-model.number="zoneSearch" class="form-control"
+            >
+              <option
+                v-for="(z, index) in zoneList"
+                :key="z.zoneId"
+                :value="parseInt(z.zoneId)"
+              >
+                {{ z.shortName }} {{ z.zoneId }}) {{ z.longName }})
+              </option>
+            </select>
+          </div>
+
         </div>
 
         <app-loader :is-loading="!loaded" padding="6"/>
@@ -25,11 +39,12 @@
             No races found...
           </span>
 
-        <div v-if="loaded">
-          <div v-for="race in filteredRaces"
-               :key="race"
-               style="padding-bottom: 15px; display: inline-block; border: 3px solid rgba(218, 218, 218, .1); border-radius: 7px;"
-               class="p-3 m-3"
+        <div v-if="loaded" class="row justify-content-center align-items-center">
+          <div
+            v-for="race in filteredRaces"
+            :key="race"
+            style="padding-bottom: 15px; display: inline-block; border: 3px solid rgba(218, 218, 218, .1); border-radius: 7px;"
+            class="p-3 m-3"
           >
 
             <div class="mt-3" style="vertical-align: middle;">
@@ -82,16 +97,18 @@
 </template>
 
 <script>
-import NpcModels      from "@/app/eq-assets/npc-models-map";
-import util           from "util";
-import slugify        from "slugify"
-import {RACES}  from "@/app/constants/eq-race-constants"
-import PageHeader     from "@/components/layout/PageHeader";
-import {App}          from "@/constants/app";
-import EqWindow       from "@/components/eq-ui/EQWindow";
-import EqWindowSimple from "@/components/eq-ui/EQWindowSimple";
-import {debounce} from "@/app/utility/debounce.js";
-import {ROUTE}    from "../../routes";
+import NpcModels        from "@/app/eq-assets/npc-models-map";
+import util             from "util";
+import slugify          from "slugify"
+import {RACES}          from "@/app/constants/eq-race-constants"
+import PageHeader       from "@/components/layout/PageHeader";
+import {App}            from "@/constants/app";
+import EqWindow         from "@/components/eq-ui/EQWindow";
+import EqWindowSimple   from "@/components/eq-ui/EQWindowSimple";
+import {debounce}       from "@/app/utility/debounce.js";
+import {ROUTE}          from "../../routes";
+import {SpireApiClient} from "../../app/api/spire-api-client";
+import {ZoneApi}        from "../../app/api";
 
 const baseUrl     = App.ASSET_CDN_BASE_URL + "assets/npc_models/";
 const MAX_RACE_ID = 700;
@@ -107,7 +124,11 @@ export default {
       raceImages: null,
       loaded: false,
       raceConstants: null,
+
       raceSearch: "",
+      zoneSearch: 0,
+
+      zoneList: [],
     }
   },
   methods: {
@@ -175,7 +196,7 @@ export default {
 
     triggerStateDebounce: debounce(function () {
       this.triggerState()
-    }, 300),
+    }, 1000),
     getRaceImages: function (raceId) {
 
       let raceImages = [];
@@ -254,12 +275,69 @@ export default {
 
       this.raceImages    = raceImages
       this.filteredRaces = races;
+    },
+    loadRaceInventory() {
+      SpireApiClient.v1().get('/static-map/race-inventory-map.json').then((result) => {
+
+        let zoneToRaceIdMapping = {};
+
+        result.data.races.forEach((race) => {
+          // console.log(race)
+
+          if (race.sources) {
+            race.sources.forEach((source) => {
+              if (source.zones) {
+                source.zones.forEach((zone) => {
+                  // console.log(zone)
+
+                  if (typeof zoneToRaceIdMapping[zone.id] === "undefined") {
+                    zoneToRaceIdMapping[zone.id] = []
+                  }
+
+                  zoneToRaceIdMapping[zone.id].push(race.race_id)
+                })
+              }
+            })
+          }
+
+        })
+
+        // console.log(zoneToRaceIdMapping)
+
+        // console.log(result)
+      });
+
+      let zoneList = [];
+
+      (new ZoneApi(SpireApiClient.getOpenApiConfig())).listZones({
+        where: "version__0",
+        orderBy: "zoneidnumber",
+        groupBy: "zoneidnumber"
+      }).then((result) => {
+        if (result.status === 200) {
+          result.data.forEach((row) => {
+            // console.log(row)
+            zoneList.push(
+              {
+                zoneId: row.zoneidnumber,
+                shortName: row.short_name,
+                longName: row.long_name,
+              }
+            )
+          })
+
+          this.zoneList = zoneList
+        }
+      })
+
+
     }
   },
   async mounted() {
     this.loadQueryState()
     this.raceConstants = RACES
     this.initModels()
+    this.loadRaceInventory()
 
     setTimeout(() => {
       this.loadModels()
