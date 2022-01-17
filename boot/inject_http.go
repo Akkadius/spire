@@ -4,6 +4,7 @@ import (
 	"github.com/Akkadius/spire/internal/http/controllers"
 	appmiddleware "github.com/Akkadius/spire/internal/http/middleware"
 	"github.com/Akkadius/spire/internal/http/routes"
+	"github.com/Akkadius/spire/internal/http/staticmaps"
 	"github.com/Akkadius/spire/internal/models"
 	"github.com/google/wire"
 	"github.com/labstack/echo/v4"
@@ -26,6 +27,7 @@ var httpSet = wire.NewSet(
 	controllers.NewAppController,
 	controllers.NewQueryController,
 	controllers.NewQuestFileApiController,
+	staticmaps.NewStaticMapController,
 	provideControllers,
 	NewRouter,
 )
@@ -108,6 +110,7 @@ func provideControllers(
 	app *controllers.AppController,
 	query *controllers.QueryController,
 	questFileApi *controllers.QuestFileApiController,
+	staticMaps *staticmaps.StaticMapController,
 ) *appControllerGroups {
 	return &appControllerGroups{
 		authControllers: []routes.Controller{
@@ -125,6 +128,7 @@ func provideControllers(
 			app,
 			query,
 			questFileApi,
+			staticMaps,
 		},
 	}
 }

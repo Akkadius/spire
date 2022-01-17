@@ -30,7 +30,8 @@
 </template>
 
 <script>
-import {ZoneApi} from "@/app/api/api";
+import {ZoneApi}        from "@/app/api/api";
+import {SpireApiClient} from "../app/api/spire-api-client";
 
 export default {
   components: {
@@ -66,6 +67,9 @@ export default {
         this.zones = result.data
       }
     })
+
+    const result = await SpireApiClient.v1().get('/static-map/race-inventory-map.json')
+    console.log(result)
 
     this.loadEntity()
   }

@@ -1,8 +1,6 @@
 package cmd
 
 import (
-	"bytes"
-	"compress/zlib"
 	"encoding/json"
 	"fmt"
 	"github.com/anaskhan96/soup"
@@ -200,7 +198,8 @@ func (c *GenerateRaceModelMapsCommand) Handle(cmd *cobra.Command, _ []string) {
 						if strings.Contains(line, "Model") || strings.Contains(line, "Texture") {
 
 							// sanitize line for more consistent parsing
-							newText := line
+							newText := line + " "
+							newText = strings.ReplaceAll(newText, "  ", " ")
 							newText = strings.ReplaceAll(newText, ",", " ")
 							newText = strings.ReplaceAll(newText, "\n\n", " ")
 
@@ -215,16 +214,18 @@ func (c *GenerateRaceModelMapsCommand) Handle(cmd *cobra.Command, _ []string) {
 
 							// get gender value from string value matches
 							gender := 2
-							if strings.Contains(modelString, femaleModel) {
+							if len(femaleModel) > 0 && strings.Contains(modelString, femaleModel) {
 								gender = 1
 							}
-							if strings.Contains(modelString, maleModel) {
+							if len(maleModel) > 0 && strings.Contains(modelString, maleModel) {
 								gender = 0
 							}
 
-							modelCode := strings.TrimSpace(c.GetStringInBetween(newText, "Model", "-"))
+							fmt.Println(newText)
+
+							modelCode := modelString
 							// neutral
-							if gender == 0 {
+							if gender == 2 {
 								modelCode = neutralModel
 							}
 
@@ -315,23 +316,12 @@ func (c *GenerateRaceModelMapsCommand) Handle(cmd *cobra.Command, _ []string) {
 	}
 
 	// get json
-	json, _ := json.MarshalIndent(rd, "", "  ")
-
-	// zlib writer buffer
-	var b bytes.Buffer
-	w := zlib.NewWriter(&b)
-	w.Write(json)
-	w.Close()
+	json, _ := json.Marshal(rd)
 
 	// write compressed file
-	file := "frontend/src/app/races/race-inventory-map.json"
-	_ = ioutil.WriteFile(file, b.Bytes(), 0644)
-	fmt.Printf("Wrote compressed to [%v]\n", file)
-
-	// write raw file
-	file = fmt.Sprintf("%v/race-inventory-map.json", os.TempDir())
-	_ = ioutil.WriteFile(file, json, 0644)
-	fmt.Printf("Wrote raw to [%v]\n", file)
+	file := "internal/http/staticmaps/race-inventory-map.json"
+	_ = ioutil.WriteFile(file,json, 0644)
+	fmt.Printf("Wrote to [%v]\n", file)
 }
 
 // Validate implementation of the Command interface
