@@ -47,31 +47,6 @@
               <i class="fa fa-refresh"></i> Reset
             </button>
 
-          <div class="col-4">
-            <select
-              @change="raceSearch = ''; triggerState()"
-              v-model.number="zoneSearch" class="form-control"
-            >
-              <option value="0">--- Select Zone ---</option>
-              <option
-                v-for="(z, index) in zoneList"
-                :key="z.zoneId"
-                :value="parseInt(z.zoneId)"
-              >
-                {{ z.shortName }} {{ z.zoneId }}) Races ({{ z.modelCount }}) ({{ z.longName }})
-              </option>
-            </select>
-          </div>
-
-          <div class="col-1">
-
-            <button
-              class='btn btn-outline-warning btn-sm mb-1 mr-2'
-              @click="reset"
-            >
-              <i class="fa fa-refresh"></i> Reset
-            </button>
-
           </div>
 
         </div>
@@ -132,7 +107,7 @@
           </div>
         </div>
 
-        <div class="mt-5">Images courtesy of Maudigan <3</div>
+        <div class="mt-3 text-center">Images courtesy of Maudigan <3</div>
       </eq-window>
     </div>
 

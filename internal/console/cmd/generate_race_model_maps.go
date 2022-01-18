@@ -221,8 +221,6 @@ func (c *GenerateRaceModelMapsCommand) Handle(cmd *cobra.Command, _ []string) {
 								gender = 0
 							}
 
-							fmt.Println(newText)
-
 							modelCode := modelString
 							// neutral
 							if gender == 2 {
