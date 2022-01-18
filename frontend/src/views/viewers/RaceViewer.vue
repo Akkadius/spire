@@ -1,14 +1,16 @@
 <template>
   <div>
     <div class="container-fluid">
-      <eq-window title="Race Viewer" class="mt-5 text-center">
+      <eq-window title="Race Viewer" class="mt-5">
         <div class="row mb-4">
           <div class="col-6">
+
+            Filter by Race Name
 
             <!-- Input -->
             <input
               type="text"
-              class="form-control form-control-prepended list-search"
+              class="form-control form-control-prepended list-search mt-1"
               v-model="raceSearch"
               @keyup="zoneSearch = 0; triggerStateDebounce()"
               @keyup.enter="zoneSearch = 0; triggerState()"
@@ -18,9 +20,12 @@
           </div>
 
           <div class="col-5">
+            Find Models Available by Zone
+
             <select
               @change="raceSearch = ''; triggerState()"
-              v-model.number="zoneSearch" class="form-control"
+              v-model.number="zoneSearch"
+              class="form-control mt-1"
             >
               <option value="0">--- Select Zone ---</option>
               <option
@@ -36,7 +41,7 @@
           <div class="col-1">
 
             <button
-              class='btn btn-outline-warning btn-sm mb-1 mr-2'
+              class='btn btn-outline-warning btn-sm mb-1 mr-2 mt-4'
               @click="reset"
             >
               <i class="fa fa-refresh"></i> Reset
@@ -52,7 +57,7 @@
             No races found...
           </span>
 
-        <div v-if="loaded" class="row justify-content-center align-items-center">
+        <div v-if="loaded" class="row justify-content-center align-items-center text-center">
           <div
             v-for="race in filteredRaces"
             :key="race"
@@ -102,7 +107,7 @@
           </div>
         </div>
 
-        <div class="mt-5">Images courtesy of Maudigan <3</div>
+        <div class="mt-3 text-center">Images courtesy of Maudigan <3</div>
       </eq-window>
     </div>
 

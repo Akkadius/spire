@@ -78,7 +78,7 @@
                   <!--                  <spell-deity-selector :spell="spell" @input="spell = $event"/>-->
 
                   <div class="row">
-                    <div class="col-8">
+                    <div class="col-6">
                       <div class="row">
                         <div class="col-6">
                           You Cast
@@ -125,12 +125,12 @@
                       </div>
                     </div>
                     <div
-                      class="col-4"
+                      class="col-6"
                       style="text-align: center"
                       @mouseover="drawSpellAnimationSelector"
                     >
                       <spell-animation-preview
-                        class="mt-4"
+                        class="mt-3 mb-3"
                         :id="spell.spellanim"
                       />
 

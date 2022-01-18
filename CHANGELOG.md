@@ -1,3 +1,14 @@
+## [1.6.0]
+
+### Updated Spell Animations!
+
+* Special thanks to DeadZergling for all of his effort putting together these high quality preview videos
+
+[![](https://img.youtube.com/vi/7xXoBAWs3n8/0.jpg)](https://www.youtube.com/watch?v=7xXoBAWs3n8)
+
+* Race viewer initial load should now be faster
+* Race viewer now includes a models available by zone filter
+
 ## [1.5.1]
 
 * Changelog page now only autoplays videos that are in the current viewport

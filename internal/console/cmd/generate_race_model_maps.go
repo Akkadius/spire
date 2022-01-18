@@ -221,8 +221,6 @@ func (c *GenerateRaceModelMapsCommand) Handle(cmd *cobra.Command, _ []string) {
 								gender = 0
 							}
 
-							fmt.Println(newText)
-
 							modelCode := modelString
 							// neutral
 							if gender == 2 {
@@ -320,7 +318,7 @@ func (c *GenerateRaceModelMapsCommand) Handle(cmd *cobra.Command, _ []string) {
 
 	// write compressed file
 	file := "internal/http/staticmaps/race-inventory-map.json"
-	_ = ioutil.WriteFile(file,json, 0644)
+	_ = ioutil.WriteFile(file, json, 0644)
 	fmt.Printf("Wrote to [%v]\n", file)
 }
 

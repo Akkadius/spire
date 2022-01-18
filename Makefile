@@ -209,7 +209,7 @@ build-frontend: ##@build Builds frontend to be packed into binary
 
 build-binary: ##@build Build and packs release binary
 	packr clean
-	packr
+	packr --compress
 	GOOS=linux GOARCH=amd64 go build -o spire-linux-amd64
 	GOOS=windows GOARCH=amd64 go build -o spire-windows-amd64.exe
 	zip spire-linux-amd64.zip spire-linux-amd64
