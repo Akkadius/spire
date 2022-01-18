@@ -232,6 +232,7 @@ export const ReportApiAxiosParamCreator = function (configuration?: Configuratio
          * @param {string} [includes] Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names 
          * @param {string} [where] Filter on specific fields. Multiple conditions [.] separated Example: col_like_value.col2__val2
          * @param {string} [whereOr] Filter on specific fields (Chained ors). Multiple conditions [.] separated Example: col_like_value.col2__val2
+         * @param {string} [groupBy] Group by field. Multiple conditions [.] separated Example: field1.field2
          * @param {string} [limit] Rows to limit in response (Default: 10,000)
          * @param {string} [orderBy] Order by [field]
          * @param {string} [orderDirection] Order by field direction
@@ -239,7 +240,7 @@ export const ReportApiAxiosParamCreator = function (configuration?: Configuratio
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        listReports: async (includes?: string, where?: string, whereOr?: string, limit?: string, orderBy?: string, orderDirection?: string, select?: string, options: any = {}): Promise<RequestArgs> => {
+        listReports: async (includes?: string, where?: string, whereOr?: string, groupBy?: string, limit?: string, orderBy?: string, orderDirection?: string, select?: string, options: any = {}): Promise<RequestArgs> => {
             const localVarPath = `/reports`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, 'https://example.com');
@@ -262,6 +263,10 @@ export const ReportApiAxiosParamCreator = function (configuration?: Configuratio
 
             if (whereOr !== undefined) {
                 localVarQueryParameter['whereOr'] = whereOr;
+            }
+
+            if (groupBy !== undefined) {
+                localVarQueryParameter['groupBy'] = groupBy;
             }
 
             if (limit !== undefined) {
@@ -428,6 +433,7 @@ export const ReportApiFp = function(configuration?: Configuration) {
          * @param {string} [includes] Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names 
          * @param {string} [where] Filter on specific fields. Multiple conditions [.] separated Example: col_like_value.col2__val2
          * @param {string} [whereOr] Filter on specific fields (Chained ors). Multiple conditions [.] separated Example: col_like_value.col2__val2
+         * @param {string} [groupBy] Group by field. Multiple conditions [.] separated Example: field1.field2
          * @param {string} [limit] Rows to limit in response (Default: 10,000)
          * @param {string} [orderBy] Order by [field]
          * @param {string} [orderDirection] Order by field direction
@@ -435,8 +441,8 @@ export const ReportApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async listReports(includes?: string, where?: string, whereOr?: string, limit?: string, orderBy?: string, orderDirection?: string, select?: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<ModelsReport>>> {
-            const localVarAxiosArgs = await ReportApiAxiosParamCreator(configuration).listReports(includes, where, whereOr, limit, orderBy, orderDirection, select, options);
+        async listReports(includes?: string, where?: string, whereOr?: string, groupBy?: string, limit?: string, orderBy?: string, orderDirection?: string, select?: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<ModelsReport>>> {
+            const localVarAxiosArgs = await ReportApiAxiosParamCreator(configuration).listReports(includes, where, whereOr, groupBy, limit, orderBy, orderDirection, select, options);
             return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
                 const axiosRequestArgs = {...localVarAxiosArgs.options, url: (configuration?.basePath || basePath) + localVarAxiosArgs.url};
                 return axios.request(axiosRequestArgs);
@@ -514,6 +520,7 @@ export const ReportApiFactory = function (configuration?: Configuration, basePat
          * @param {string} [includes] Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names 
          * @param {string} [where] Filter on specific fields. Multiple conditions [.] separated Example: col_like_value.col2__val2
          * @param {string} [whereOr] Filter on specific fields (Chained ors). Multiple conditions [.] separated Example: col_like_value.col2__val2
+         * @param {string} [groupBy] Group by field. Multiple conditions [.] separated Example: field1.field2
          * @param {string} [limit] Rows to limit in response (Default: 10,000)
          * @param {string} [orderBy] Order by [field]
          * @param {string} [orderDirection] Order by field direction
@@ -521,8 +528,8 @@ export const ReportApiFactory = function (configuration?: Configuration, basePat
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        listReports(includes?: string, where?: string, whereOr?: string, limit?: string, orderBy?: string, orderDirection?: string, select?: string, options?: any): AxiosPromise<Array<ModelsReport>> {
-            return ReportApiFp(configuration).listReports(includes, where, whereOr, limit, orderBy, orderDirection, select, options).then((request) => request(axios, basePath));
+        listReports(includes?: string, where?: string, whereOr?: string, groupBy?: string, limit?: string, orderBy?: string, orderDirection?: string, select?: string, options?: any): AxiosPromise<Array<ModelsReport>> {
+            return ReportApiFp(configuration).listReports(includes, where, whereOr, groupBy, limit, orderBy, orderDirection, select, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -634,6 +641,13 @@ export interface ReportApiListReportsRequest {
      * @memberof ReportApiListReports
      */
     readonly whereOr?: string
+
+    /**
+     * Group by field. Multiple conditions [.] separated Example: field1.field2
+     * @type {string}
+     * @memberof ReportApiListReports
+     */
+    readonly groupBy?: string
 
     /**
      * Rows to limit in response (Default: 10,000)
@@ -749,7 +763,7 @@ export class ReportApi extends BaseAPI {
      * @memberof ReportApi
      */
     public listReports(requestParameters: ReportApiListReportsRequest = {}, options?: any) {
-        return ReportApiFp(this.configuration).listReports(requestParameters.includes, requestParameters.where, requestParameters.whereOr, requestParameters.limit, requestParameters.orderBy, requestParameters.orderDirection, requestParameters.select, options).then((request) => request(this.axios, this.basePath));
+        return ReportApiFp(this.configuration).listReports(requestParameters.includes, requestParameters.where, requestParameters.whereOr, requestParameters.groupBy, requestParameters.limit, requestParameters.orderBy, requestParameters.orderDirection, requestParameters.select, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**

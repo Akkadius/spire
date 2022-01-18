@@ -15,10 +15,10 @@ sed -i \
   -e 's/null.Int/int/' \
   -e 's/null.Time/time.Time/' \
   -e 's/null.Float32/float32/' \
-  -e 's/null.Float64/float64/' ./models/*
+  -e 's/null.Float64/float64/' ./internal/models/*
 
 # generate
-swag init -g http/http.go
+swag init -g internal/http/http.go
 
 # revert temp changes
-git checkout models/
+git checkout internal/models/

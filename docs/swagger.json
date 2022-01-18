@@ -50,6 +50,12 @@
                     },
                     {
                         "type": "string",
+                        "description": "Group by field. Multiple conditions [.] separated Example: field1.field2",
+                        "name": "groupBy",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
                         "description": "Rows to limit in response (Default: 10,000)",
                         "name": "limit",
                         "in": "query"
@@ -565,6 +571,12 @@
                     },
                     {
                         "type": "string",
+                        "description": "Group by field. Multiple conditions [.] separated Example: field1.field2",
+                        "name": "groupBy",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
                         "description": "Rows to limit in response (Default: 10,000)",
                         "name": "limit",
                         "in": "query"
@@ -878,6 +890,12 @@
                         "type": "string",
                         "description": "Filter on specific fields (Chained ors). Multiple conditions [.] separated Example: col_like_value.col2__val2",
                         "name": "whereOr",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Group by field. Multiple conditions [.] separated Example: field1.field2",
+                        "name": "groupBy",
                         "in": "query"
                     },
                     {
@@ -1199,6 +1217,12 @@
                     },
                     {
                         "type": "string",
+                        "description": "Group by field. Multiple conditions [.] separated Example: field1.field2",
+                        "name": "groupBy",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
                         "description": "Rows to limit in response (Default: 10,000)",
                         "name": "limit",
                         "in": "query"
@@ -1512,6 +1536,12 @@
                         "type": "string",
                         "description": "Filter on specific fields (Chained ors). Multiple conditions [.] separated Example: col_like_value.col2__val2",
                         "name": "whereOr",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Group by field. Multiple conditions [.] separated Example: field1.field2",
+                        "name": "groupBy",
                         "in": "query"
                     },
                     {
@@ -2031,6 +2061,12 @@
                     },
                     {
                         "type": "string",
+                        "description": "Group by field. Multiple conditions [.] separated Example: field1.field2",
+                        "name": "groupBy",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
                         "description": "Rows to limit in response (Default: 10,000)",
                         "name": "limit",
                         "in": "query"
@@ -2150,6 +2186,12 @@
                     },
                     {
                         "type": "string",
+                        "description": "Group by field. Multiple conditions [.] separated Example: field1.field2",
+                        "name": "groupBy",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
                         "description": "Rows to limit in response (Default: 10,000)",
                         "name": "limit",
                         "in": "query"
@@ -2265,6 +2307,12 @@
                         "type": "string",
                         "description": "Filter on specific fields (Chained ors). Multiple conditions [.] separated Example: col_like_value.col2__val2",
                         "name": "whereOr",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Group by field. Multiple conditions [.] separated Example: field1.field2",
+                        "name": "groupBy",
                         "in": "query"
                     },
                     {
@@ -2784,6 +2832,12 @@
                     },
                     {
                         "type": "string",
+                        "description": "Group by field. Multiple conditions [.] separated Example: field1.field2",
+                        "name": "groupBy",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
                         "description": "Rows to limit in response (Default: 10,000)",
                         "name": "limit",
                         "in": "query"
@@ -3299,6 +3353,12 @@
                     },
                     {
                         "type": "string",
+                        "description": "Group by field. Multiple conditions [.] separated Example: field1.field2",
+                        "name": "groupBy",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
                         "description": "Rows to limit in response (Default: 10,000)",
                         "name": "limit",
                         "in": "query"
@@ -3414,6 +3474,12 @@
                         "type": "string",
                         "description": "Filter on specific fields (Chained ors). Multiple conditions [.] separated Example: col_like_value.col2__val2",
                         "name": "whereOr",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Group by field. Multiple conditions [.] separated Example: field1.field2",
+                        "name": "groupBy",
                         "in": "query"
                     },
                     {
@@ -3735,6 +3801,12 @@
                     },
                     {
                         "type": "string",
+                        "description": "Group by field. Multiple conditions [.] separated Example: field1.field2",
+                        "name": "groupBy",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
                         "description": "Rows to limit in response (Default: 10,000)",
                         "name": "limit",
                         "in": "query"
@@ -3850,6 +3922,12 @@
                         "type": "string",
                         "description": "Filter on specific fields (Chained ors). Multiple conditions [.] separated Example: col_like_value.col2__val2",
                         "name": "whereOr",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Group by field. Multiple conditions [.] separated Example: field1.field2",
+                        "name": "groupBy",
                         "in": "query"
                     },
                     {
@@ -4369,6 +4447,12 @@
                     },
                     {
                         "type": "string",
+                        "description": "Group by field. Multiple conditions [.] separated Example: field1.field2",
+                        "name": "groupBy",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
                         "description": "Rows to limit in response (Default: 10,000)",
                         "name": "limit",
                         "in": "query"
@@ -4682,6 +4766,12 @@
                         "type": "string",
                         "description": "Filter on specific fields (Chained ors). Multiple conditions [.] separated Example: col_like_value.col2__val2",
                         "name": "whereOr",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Group by field. Multiple conditions [.] separated Example: field1.field2",
+                        "name": "groupBy",
                         "in": "query"
                     },
                     {
@@ -5003,6 +5093,12 @@
                     },
                     {
                         "type": "string",
+                        "description": "Group by field. Multiple conditions [.] separated Example: field1.field2",
+                        "name": "groupBy",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
                         "description": "Rows to limit in response (Default: 10,000)",
                         "name": "limit",
                         "in": "query"
@@ -5320,6 +5416,12 @@
                     },
                     {
                         "type": "string",
+                        "description": "Group by field. Multiple conditions [.] separated Example: field1.field2",
+                        "name": "groupBy",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
                         "description": "Rows to limit in response (Default: 10,000)",
                         "name": "limit",
                         "in": "query"
@@ -5435,6 +5537,12 @@
                         "type": "string",
                         "description": "Filter on specific fields (Chained ors). Multiple conditions [.] separated Example: col_like_value.col2__val2",
                         "name": "whereOr",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Group by field. Multiple conditions [.] separated Example: field1.field2",
+                        "name": "groupBy",
                         "in": "query"
                     },
                     {
@@ -5752,6 +5860,12 @@
                         "type": "string",
                         "description": "Filter on specific fields (Chained ors). Multiple conditions [.] separated Example: col_like_value.col2__val2",
                         "name": "whereOr",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Group by field. Multiple conditions [.] separated Example: field1.field2",
+                        "name": "groupBy",
                         "in": "query"
                     },
                     {
@@ -6271,6 +6385,12 @@
                     },
                     {
                         "type": "string",
+                        "description": "Group by field. Multiple conditions [.] separated Example: field1.field2",
+                        "name": "groupBy",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
                         "description": "Rows to limit in response (Default: 10,000)",
                         "name": "limit",
                         "in": "query"
@@ -6584,6 +6704,12 @@
                         "type": "string",
                         "description": "Filter on specific fields (Chained ors). Multiple conditions [.] separated Example: col_like_value.col2__val2",
                         "name": "whereOr",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Group by field. Multiple conditions [.] separated Example: field1.field2",
+                        "name": "groupBy",
                         "in": "query"
                     },
                     {
@@ -6905,6 +7031,12 @@
                     },
                     {
                         "type": "string",
+                        "description": "Group by field. Multiple conditions [.] separated Example: field1.field2",
+                        "name": "groupBy",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
                         "description": "Rows to limit in response (Default: 10,000)",
                         "name": "limit",
                         "in": "query"
@@ -7218,6 +7350,12 @@
                         "type": "string",
                         "description": "Filter on specific fields (Chained ors). Multiple conditions [.] separated Example: col_like_value.col2__val2",
                         "name": "whereOr",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Group by field. Multiple conditions [.] separated Example: field1.field2",
+                        "name": "groupBy",
                         "in": "query"
                     },
                     {
@@ -7539,6 +7677,12 @@
                     },
                     {
                         "type": "string",
+                        "description": "Group by field. Multiple conditions [.] separated Example: field1.field2",
+                        "name": "groupBy",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
                         "description": "Rows to limit in response (Default: 10,000)",
                         "name": "limit",
                         "in": "query"
@@ -7654,6 +7798,12 @@
                         "type": "string",
                         "description": "Filter on specific fields (Chained ors). Multiple conditions [.] separated Example: col_like_value.col2__val2",
                         "name": "whereOr",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Group by field. Multiple conditions [.] separated Example: field1.field2",
+                        "name": "groupBy",
                         "in": "query"
                     },
                     {
@@ -8173,6 +8323,12 @@
                     },
                     {
                         "type": "string",
+                        "description": "Group by field. Multiple conditions [.] separated Example: field1.field2",
+                        "name": "groupBy",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
                         "description": "Rows to limit in response (Default: 10,000)",
                         "name": "limit",
                         "in": "query"
@@ -8486,6 +8642,12 @@
                         "type": "string",
                         "description": "Filter on specific fields (Chained ors). Multiple conditions [.] separated Example: col_like_value.col2__val2",
                         "name": "whereOr",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Group by field. Multiple conditions [.] separated Example: field1.field2",
+                        "name": "groupBy",
                         "in": "query"
                     },
                     {
@@ -8807,6 +8969,12 @@
                     },
                     {
                         "type": "string",
+                        "description": "Group by field. Multiple conditions [.] separated Example: field1.field2",
+                        "name": "groupBy",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
                         "description": "Rows to limit in response (Default: 10,000)",
                         "name": "limit",
                         "in": "query"
@@ -9120,6 +9288,12 @@
                         "type": "string",
                         "description": "Filter on specific fields (Chained ors). Multiple conditions [.] separated Example: col_like_value.col2__val2",
                         "name": "whereOr",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Group by field. Multiple conditions [.] separated Example: field1.field2",
+                        "name": "groupBy",
                         "in": "query"
                     },
                     {
@@ -9441,6 +9615,12 @@
                     },
                     {
                         "type": "string",
+                        "description": "Group by field. Multiple conditions [.] separated Example: field1.field2",
+                        "name": "groupBy",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
                         "description": "Rows to limit in response (Default: 10,000)",
                         "name": "limit",
                         "in": "query"
@@ -9754,6 +9934,12 @@
                         "type": "string",
                         "description": "Filter on specific fields (Chained ors). Multiple conditions [.] separated Example: col_like_value.col2__val2",
                         "name": "whereOr",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Group by field. Multiple conditions [.] separated Example: field1.field2",
+                        "name": "groupBy",
                         "in": "query"
                     },
                     {
@@ -10075,6 +10261,12 @@
                     },
                     {
                         "type": "string",
+                        "description": "Group by field. Multiple conditions [.] separated Example: field1.field2",
+                        "name": "groupBy",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
                         "description": "Rows to limit in response (Default: 10,000)",
                         "name": "limit",
                         "in": "query"
@@ -10388,6 +10580,12 @@
                         "type": "string",
                         "description": "Filter on specific fields (Chained ors). Multiple conditions [.] separated Example: col_like_value.col2__val2",
                         "name": "whereOr",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Group by field. Multiple conditions [.] separated Example: field1.field2",
+                        "name": "groupBy",
                         "in": "query"
                     },
                     {
@@ -10709,6 +10907,12 @@
                     },
                     {
                         "type": "string",
+                        "description": "Group by field. Multiple conditions [.] separated Example: field1.field2",
+                        "name": "groupBy",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
                         "description": "Rows to limit in response (Default: 10,000)",
                         "name": "limit",
                         "in": "query"
@@ -11026,6 +11230,12 @@
                     },
                     {
                         "type": "string",
+                        "description": "Group by field. Multiple conditions [.] separated Example: field1.field2",
+                        "name": "groupBy",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
                         "description": "Rows to limit in response (Default: 10,000)",
                         "name": "limit",
                         "in": "query"
@@ -11339,6 +11549,12 @@
                         "type": "string",
                         "description": "Filter on specific fields (Chained ors). Multiple conditions [.] separated Example: col_like_value.col2__val2",
                         "name": "whereOr",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Group by field. Multiple conditions [.] separated Example: field1.field2",
+                        "name": "groupBy",
                         "in": "query"
                     },
                     {
@@ -11858,6 +12074,12 @@
                     },
                     {
                         "type": "string",
+                        "description": "Group by field. Multiple conditions [.] separated Example: field1.field2",
+                        "name": "groupBy",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
                         "description": "Rows to limit in response (Default: 10,000)",
                         "name": "limit",
                         "in": "query"
@@ -12175,6 +12397,12 @@
                     },
                     {
                         "type": "string",
+                        "description": "Group by field. Multiple conditions [.] separated Example: field1.field2",
+                        "name": "groupBy",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
                         "description": "Rows to limit in response (Default: 10,000)",
                         "name": "limit",
                         "in": "query"
@@ -12290,6 +12518,12 @@
                         "type": "string",
                         "description": "Filter on specific fields (Chained ors). Multiple conditions [.] separated Example: col_like_value.col2__val2",
                         "name": "whereOr",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Group by field. Multiple conditions [.] separated Example: field1.field2",
+                        "name": "groupBy",
                         "in": "query"
                     },
                     {
@@ -12809,6 +13043,12 @@
                     },
                     {
                         "type": "string",
+                        "description": "Group by field. Multiple conditions [.] separated Example: field1.field2",
+                        "name": "groupBy",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
                         "description": "Rows to limit in response (Default: 10,000)",
                         "name": "limit",
                         "in": "query"
@@ -12924,6 +13164,12 @@
                         "type": "string",
                         "description": "Filter on specific fields (Chained ors). Multiple conditions [.] separated Example: col_like_value.col2__val2",
                         "name": "whereOr",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Group by field. Multiple conditions [.] separated Example: field1.field2",
+                        "name": "groupBy",
                         "in": "query"
                     },
                     {
@@ -13245,6 +13491,12 @@
                     },
                     {
                         "type": "string",
+                        "description": "Group by field. Multiple conditions [.] separated Example: field1.field2",
+                        "name": "groupBy",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
                         "description": "Rows to limit in response (Default: 10,000)",
                         "name": "limit",
                         "in": "query"
@@ -13558,6 +13810,12 @@
                         "type": "string",
                         "description": "Filter on specific fields (Chained ors). Multiple conditions [.] separated Example: col_like_value.col2__val2",
                         "name": "whereOr",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Group by field. Multiple conditions [.] separated Example: field1.field2",
+                        "name": "groupBy",
                         "in": "query"
                     },
                     {
@@ -13879,6 +14137,12 @@
                     },
                     {
                         "type": "string",
+                        "description": "Group by field. Multiple conditions [.] separated Example: field1.field2",
+                        "name": "groupBy",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
                         "description": "Rows to limit in response (Default: 10,000)",
                         "name": "limit",
                         "in": "query"
@@ -14192,6 +14456,12 @@
                         "type": "string",
                         "description": "Filter on specific fields (Chained ors). Multiple conditions [.] separated Example: col_like_value.col2__val2",
                         "name": "whereOr",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Group by field. Multiple conditions [.] separated Example: field1.field2",
+                        "name": "groupBy",
                         "in": "query"
                     },
                     {
@@ -14513,6 +14783,12 @@
                     },
                     {
                         "type": "string",
+                        "description": "Group by field. Multiple conditions [.] separated Example: field1.field2",
+                        "name": "groupBy",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
                         "description": "Rows to limit in response (Default: 10,000)",
                         "name": "limit",
                         "in": "query"
@@ -14826,6 +15102,12 @@
                         "type": "string",
                         "description": "Filter on specific fields (Chained ors). Multiple conditions [.] separated Example: col_like_value.col2__val2",
                         "name": "whereOr",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Group by field. Multiple conditions [.] separated Example: field1.field2",
+                        "name": "groupBy",
                         "in": "query"
                     },
                     {
@@ -15147,6 +15429,12 @@
                     },
                     {
                         "type": "string",
+                        "description": "Group by field. Multiple conditions [.] separated Example: field1.field2",
+                        "name": "groupBy",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
                         "description": "Rows to limit in response (Default: 10,000)",
                         "name": "limit",
                         "in": "query"
@@ -15460,6 +15748,12 @@
                         "type": "string",
                         "description": "Filter on specific fields (Chained ors). Multiple conditions [.] separated Example: col_like_value.col2__val2",
                         "name": "whereOr",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Group by field. Multiple conditions [.] separated Example: field1.field2",
+                        "name": "groupBy",
                         "in": "query"
                     },
                     {
@@ -15979,6 +16273,12 @@
                     },
                     {
                         "type": "string",
+                        "description": "Group by field. Multiple conditions [.] separated Example: field1.field2",
+                        "name": "groupBy",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
                         "description": "Rows to limit in response (Default: 10,000)",
                         "name": "limit",
                         "in": "query"
@@ -16094,6 +16394,12 @@
                         "type": "string",
                         "description": "Filter on specific fields (Chained ors). Multiple conditions [.] separated Example: col_like_value.col2__val2",
                         "name": "whereOr",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Group by field. Multiple conditions [.] separated Example: field1.field2",
+                        "name": "groupBy",
                         "in": "query"
                     },
                     {
@@ -16415,6 +16721,12 @@
                     },
                     {
                         "type": "string",
+                        "description": "Group by field. Multiple conditions [.] separated Example: field1.field2",
+                        "name": "groupBy",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
                         "description": "Rows to limit in response (Default: 10,000)",
                         "name": "limit",
                         "in": "query"
@@ -16530,6 +16842,12 @@
                         "type": "string",
                         "description": "Filter on specific fields (Chained ors). Multiple conditions [.] separated Example: col_like_value.col2__val2",
                         "name": "whereOr",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Group by field. Multiple conditions [.] separated Example: field1.field2",
+                        "name": "groupBy",
                         "in": "query"
                     },
                     {
@@ -17049,6 +17367,12 @@
                     },
                     {
                         "type": "string",
+                        "description": "Group by field. Multiple conditions [.] separated Example: field1.field2",
+                        "name": "groupBy",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
                         "description": "Rows to limit in response (Default: 10,000)",
                         "name": "limit",
                         "in": "query"
@@ -17362,6 +17686,12 @@
                         "type": "string",
                         "description": "Filter on specific fields (Chained ors). Multiple conditions [.] separated Example: col_like_value.col2__val2",
                         "name": "whereOr",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Group by field. Multiple conditions [.] separated Example: field1.field2",
+                        "name": "groupBy",
                         "in": "query"
                     },
                     {
@@ -17683,6 +18013,12 @@
                     },
                     {
                         "type": "string",
+                        "description": "Group by field. Multiple conditions [.] separated Example: field1.field2",
+                        "name": "groupBy",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
                         "description": "Rows to limit in response (Default: 10,000)",
                         "name": "limit",
                         "in": "query"
@@ -17996,6 +18332,12 @@
                         "type": "string",
                         "description": "Filter on specific fields (Chained ors). Multiple conditions [.] separated Example: col_like_value.col2__val2",
                         "name": "whereOr",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Group by field. Multiple conditions [.] separated Example: field1.field2",
+                        "name": "groupBy",
                         "in": "query"
                     },
                     {
@@ -18317,6 +18659,12 @@
                     },
                     {
                         "type": "string",
+                        "description": "Group by field. Multiple conditions [.] separated Example: field1.field2",
+                        "name": "groupBy",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
                         "description": "Rows to limit in response (Default: 10,000)",
                         "name": "limit",
                         "in": "query"
@@ -18630,6 +18978,12 @@
                         "type": "string",
                         "description": "Filter on specific fields (Chained ors). Multiple conditions [.] separated Example: col_like_value.col2__val2",
                         "name": "whereOr",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Group by field. Multiple conditions [.] separated Example: field1.field2",
+                        "name": "groupBy",
                         "in": "query"
                     },
                     {
@@ -18951,6 +19305,12 @@
                     },
                     {
                         "type": "string",
+                        "description": "Group by field. Multiple conditions [.] separated Example: field1.field2",
+                        "name": "groupBy",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
                         "description": "Rows to limit in response (Default: 10,000)",
                         "name": "limit",
                         "in": "query"
@@ -19264,6 +19624,12 @@
                         "type": "string",
                         "description": "Filter on specific fields (Chained ors). Multiple conditions [.] separated Example: col_like_value.col2__val2",
                         "name": "whereOr",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Group by field. Multiple conditions [.] separated Example: field1.field2",
+                        "name": "groupBy",
                         "in": "query"
                     },
                     {
@@ -19617,6 +19983,12 @@
                     },
                     {
                         "type": "string",
+                        "description": "Group by field. Multiple conditions [.] separated Example: field1.field2",
+                        "name": "groupBy",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
                         "description": "Rows to limit in response (Default: 10,000)",
                         "name": "limit",
                         "in": "query"
@@ -19930,6 +20302,12 @@
                         "type": "string",
                         "description": "Filter on specific fields (Chained ors). Multiple conditions [.] separated Example: col_like_value.col2__val2",
                         "name": "whereOr",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Group by field. Multiple conditions [.] separated Example: field1.field2",
+                        "name": "groupBy",
                         "in": "query"
                     },
                     {
@@ -20251,6 +20629,12 @@
                     },
                     {
                         "type": "string",
+                        "description": "Group by field. Multiple conditions [.] separated Example: field1.field2",
+                        "name": "groupBy",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
                         "description": "Rows to limit in response (Default: 10,000)",
                         "name": "limit",
                         "in": "query"
@@ -20564,6 +20948,12 @@
                         "type": "string",
                         "description": "Filter on specific fields (Chained ors). Multiple conditions [.] separated Example: col_like_value.col2__val2",
                         "name": "whereOr",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Group by field. Multiple conditions [.] separated Example: field1.field2",
+                        "name": "groupBy",
                         "in": "query"
                     },
                     {
@@ -20885,6 +21275,12 @@
                     },
                     {
                         "type": "string",
+                        "description": "Group by field. Multiple conditions [.] separated Example: field1.field2",
+                        "name": "groupBy",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
                         "description": "Rows to limit in response (Default: 10,000)",
                         "name": "limit",
                         "in": "query"
@@ -21000,6 +21396,12 @@
                         "type": "string",
                         "description": "Filter on specific fields (Chained ors). Multiple conditions [.] separated Example: col_like_value.col2__val2",
                         "name": "whereOr",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Group by field. Multiple conditions [.] separated Example: field1.field2",
+                        "name": "groupBy",
                         "in": "query"
                     },
                     {
@@ -21317,6 +21719,12 @@
                         "type": "string",
                         "description": "Filter on specific fields (Chained ors). Multiple conditions [.] separated Example: col_like_value.col2__val2",
                         "name": "whereOr",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Group by field. Multiple conditions [.] separated Example: field1.field2",
+                        "name": "groupBy",
                         "in": "query"
                     },
                     {
@@ -21836,6 +22244,12 @@
                     },
                     {
                         "type": "string",
+                        "description": "Group by field. Multiple conditions [.] separated Example: field1.field2",
+                        "name": "groupBy",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
                         "description": "Rows to limit in response (Default: 10,000)",
                         "name": "limit",
                         "in": "query"
@@ -22149,6 +22563,12 @@
                         "type": "string",
                         "description": "Filter on specific fields (Chained ors). Multiple conditions [.] separated Example: col_like_value.col2__val2",
                         "name": "whereOr",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Group by field. Multiple conditions [.] separated Example: field1.field2",
+                        "name": "groupBy",
                         "in": "query"
                     },
                     {
@@ -22470,6 +22890,12 @@
                     },
                     {
                         "type": "string",
+                        "description": "Group by field. Multiple conditions [.] separated Example: field1.field2",
+                        "name": "groupBy",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
                         "description": "Rows to limit in response (Default: 10,000)",
                         "name": "limit",
                         "in": "query"
@@ -22783,6 +23209,12 @@
                         "type": "string",
                         "description": "Filter on specific fields (Chained ors). Multiple conditions [.] separated Example: col_like_value.col2__val2",
                         "name": "whereOr",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Group by field. Multiple conditions [.] separated Example: field1.field2",
+                        "name": "groupBy",
                         "in": "query"
                     },
                     {
@@ -23104,6 +23536,12 @@
                     },
                     {
                         "type": "string",
+                        "description": "Group by field. Multiple conditions [.] separated Example: field1.field2",
+                        "name": "groupBy",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
                         "description": "Rows to limit in response (Default: 10,000)",
                         "name": "limit",
                         "in": "query"
@@ -23417,6 +23855,12 @@
                         "type": "string",
                         "description": "Filter on specific fields (Chained ors). Multiple conditions [.] separated Example: col_like_value.col2__val2",
                         "name": "whereOr",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Group by field. Multiple conditions [.] separated Example: field1.field2",
+                        "name": "groupBy",
                         "in": "query"
                     },
                     {
@@ -23738,6 +24182,12 @@
                     },
                     {
                         "type": "string",
+                        "description": "Group by field. Multiple conditions [.] separated Example: field1.field2",
+                        "name": "groupBy",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
                         "description": "Rows to limit in response (Default: 10,000)",
                         "name": "limit",
                         "in": "query"
@@ -24055,6 +24505,12 @@
                     },
                     {
                         "type": "string",
+                        "description": "Group by field. Multiple conditions [.] separated Example: field1.field2",
+                        "name": "groupBy",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
                         "description": "Rows to limit in response (Default: 10,000)",
                         "name": "limit",
                         "in": "query"
@@ -24368,6 +24824,12 @@
                         "type": "string",
                         "description": "Filter on specific fields (Chained ors). Multiple conditions [.] separated Example: col_like_value.col2__val2",
                         "name": "whereOr",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Group by field. Multiple conditions [.] separated Example: field1.field2",
+                        "name": "groupBy",
                         "in": "query"
                     },
                     {
@@ -24887,6 +25349,12 @@
                     },
                     {
                         "type": "string",
+                        "description": "Group by field. Multiple conditions [.] separated Example: field1.field2",
+                        "name": "groupBy",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
                         "description": "Rows to limit in response (Default: 10,000)",
                         "name": "limit",
                         "in": "query"
@@ -25002,6 +25470,12 @@
                         "type": "string",
                         "description": "Filter on specific fields (Chained ors). Multiple conditions [.] separated Example: col_like_value.col2__val2",
                         "name": "whereOr",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Group by field. Multiple conditions [.] separated Example: field1.field2",
+                        "name": "groupBy",
                         "in": "query"
                     },
                     {
@@ -25323,6 +25797,12 @@
                     },
                     {
                         "type": "string",
+                        "description": "Group by field. Multiple conditions [.] separated Example: field1.field2",
+                        "name": "groupBy",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
                         "description": "Rows to limit in response (Default: 10,000)",
                         "name": "limit",
                         "in": "query"
@@ -25636,6 +26116,12 @@
                         "type": "string",
                         "description": "Filter on specific fields (Chained ors). Multiple conditions [.] separated Example: col_like_value.col2__val2",
                         "name": "whereOr",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Group by field. Multiple conditions [.] separated Example: field1.field2",
+                        "name": "groupBy",
                         "in": "query"
                     },
                     {
@@ -25957,6 +26443,12 @@
                     },
                     {
                         "type": "string",
+                        "description": "Group by field. Multiple conditions [.] separated Example: field1.field2",
+                        "name": "groupBy",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
                         "description": "Rows to limit in response (Default: 10,000)",
                         "name": "limit",
                         "in": "query"
@@ -26270,6 +26762,12 @@
                         "type": "string",
                         "description": "Filter on specific fields (Chained ors). Multiple conditions [.] separated Example: col_like_value.col2__val2",
                         "name": "whereOr",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Group by field. Multiple conditions [.] separated Example: field1.field2",
+                        "name": "groupBy",
                         "in": "query"
                     },
                     {
@@ -26591,6 +27089,12 @@
                     },
                     {
                         "type": "string",
+                        "description": "Group by field. Multiple conditions [.] separated Example: field1.field2",
+                        "name": "groupBy",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
                         "description": "Rows to limit in response (Default: 10,000)",
                         "name": "limit",
                         "in": "query"
@@ -26904,6 +27408,12 @@
                         "type": "string",
                         "description": "Filter on specific fields (Chained ors). Multiple conditions [.] separated Example: col_like_value.col2__val2",
                         "name": "whereOr",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Group by field. Multiple conditions [.] separated Example: field1.field2",
+                        "name": "groupBy",
                         "in": "query"
                     },
                     {
@@ -27225,6 +27735,12 @@
                     },
                     {
                         "type": "string",
+                        "description": "Group by field. Multiple conditions [.] separated Example: field1.field2",
+                        "name": "groupBy",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
                         "description": "Rows to limit in response (Default: 10,000)",
                         "name": "limit",
                         "in": "query"
@@ -27538,6 +28054,12 @@
                         "type": "string",
                         "description": "Filter on specific fields (Chained ors). Multiple conditions [.] separated Example: col_like_value.col2__val2",
                         "name": "whereOr",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Group by field. Multiple conditions [.] separated Example: field1.field2",
+                        "name": "groupBy",
                         "in": "query"
                     },
                     {
@@ -27859,6 +28381,12 @@
                     },
                     {
                         "type": "string",
+                        "description": "Group by field. Multiple conditions [.] separated Example: field1.field2",
+                        "name": "groupBy",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
                         "description": "Rows to limit in response (Default: 10,000)",
                         "name": "limit",
                         "in": "query"
@@ -28176,6 +28704,12 @@
                     },
                     {
                         "type": "string",
+                        "description": "Group by field. Multiple conditions [.] separated Example: field1.field2",
+                        "name": "groupBy",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
                         "description": "Rows to limit in response (Default: 10,000)",
                         "name": "limit",
                         "in": "query"
@@ -28489,6 +29023,12 @@
                         "type": "string",
                         "description": "Filter on specific fields (Chained ors). Multiple conditions [.] separated Example: col_like_value.col2__val2",
                         "name": "whereOr",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Group by field. Multiple conditions [.] separated Example: field1.field2",
+                        "name": "groupBy",
                         "in": "query"
                     },
                     {
@@ -29008,6 +29548,12 @@
                     },
                     {
                         "type": "string",
+                        "description": "Group by field. Multiple conditions [.] separated Example: field1.field2",
+                        "name": "groupBy",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
                         "description": "Rows to limit in response (Default: 10,000)",
                         "name": "limit",
                         "in": "query"
@@ -29123,6 +29669,12 @@
                         "type": "string",
                         "description": "Filter on specific fields (Chained ors). Multiple conditions [.] separated Example: col_like_value.col2__val2",
                         "name": "whereOr",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Group by field. Multiple conditions [.] separated Example: field1.field2",
+                        "name": "groupBy",
                         "in": "query"
                     },
                     {
@@ -31455,6 +32007,18 @@
                 "instance_id": {
                     "type": "integer"
                 },
+                "leader_id": {
+                    "type": "integer"
+                },
+                "max_players": {
+                    "type": "integer"
+                },
+                "min_players": {
+                    "type": "integer"
+                },
+                "name": {
+                    "type": "string"
+                },
                 "safe_return_heading": {
                     "type": "number"
                 },
@@ -31472,6 +32036,9 @@
                 },
                 "type": {
                     "type": "integer"
+                },
+                "uuid": {
+                    "type": "string"
                 },
                 "zone_in_heading": {
                     "type": "number"
@@ -31531,26 +32098,11 @@
                 "dynamic_zone_id": {
                     "type": "integer"
                 },
-                "expedition_name": {
-                    "type": "string"
-                },
                 "id": {
                     "type": "integer"
                 },
                 "is_locked": {
                     "type": "integer"
-                },
-                "leader_id": {
-                    "type": "integer"
-                },
-                "max_players": {
-                    "type": "integer"
-                },
-                "min_players": {
-                    "type": "integer"
-                },
-                "uuid": {
-                    "type": "string"
                 }
             }
         },
@@ -35147,12 +35699,6 @@
                 "field_172": {
                     "type": "integer"
                 },
-                "field_181": {
-                    "type": "integer"
-                },
-                "field_182": {
-                    "type": "integer"
-                },
                 "field_198": {
                     "type": "integer"
                 },
@@ -35411,6 +35957,12 @@
                 "pushup": {
                     "type": "integer"
                 },
+                "pvp_duration": {
+                    "type": "integer"
+                },
+                "pvp_duration_cap": {
+                    "type": "integer"
+                },
                 "pvpresistbase": {
                     "type": "integer"
                 },
@@ -35592,7 +36144,16 @@
                 "id": {
                     "type": "integer"
                 },
+                "level_spread": {
+                    "type": "integer"
+                },
+                "max_players": {
+                    "type": "integer"
+                },
                 "maxlevel": {
+                    "type": "integer"
+                },
+                "min_players": {
                     "type": "integer"
                 },
                 "minlevel": {
@@ -35601,8 +36162,20 @@
                 "repeatable": {
                     "type": "integer"
                 },
+                "replay_timer_seconds": {
+                    "type": "integer"
+                },
+                "request_timer_seconds": {
+                    "type": "integer"
+                },
                 "reward": {
                     "type": "string"
+                },
+                "reward_ebon_crystals": {
+                    "type": "integer"
+                },
+                "reward_radiant_crystals": {
+                    "type": "integer"
                 },
                 "rewardid": {
                     "type": "integer"
@@ -36183,6 +36756,9 @@
                 "insttype": {
                     "type": "integer"
                 },
+                "lava_damage": {
+                    "type": "integer"
+                },
                 "long_name": {
                     "type": "string"
                 },
@@ -36202,6 +36778,9 @@
                     "type": "number"
                 },
                 "min_expansion": {
+                    "type": "integer"
+                },
+                "min_lava_damage": {
                     "type": "integer"
                 },
                 "min_level": {

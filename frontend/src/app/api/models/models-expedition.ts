@@ -34,12 +34,6 @@ export interface ModelsExpedition {
     dynamic_zone_id?: number;
     /**
      * 
-     * @type {string}
-     * @memberof ModelsExpedition
-     */
-    expedition_name?: string;
-    /**
-     * 
      * @type {number}
      * @memberof ModelsExpedition
      */
@@ -50,30 +44,6 @@ export interface ModelsExpedition {
      * @memberof ModelsExpedition
      */
     is_locked?: number;
-    /**
-     * 
-     * @type {number}
-     * @memberof ModelsExpedition
-     */
-    leader_id?: number;
-    /**
-     * 
-     * @type {number}
-     * @memberof ModelsExpedition
-     */
-    max_players?: number;
-    /**
-     * 
-     * @type {number}
-     * @memberof ModelsExpedition
-     */
-    min_players?: number;
-    /**
-     * 
-     * @type {string}
-     * @memberof ModelsExpedition
-     */
-    uuid?: string;
 }
 
 

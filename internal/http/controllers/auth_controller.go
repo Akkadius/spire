@@ -6,7 +6,6 @@ import (
 	"github.com/Akkadius/spire/internal/http/routes"
 	"github.com/Akkadius/spire/internal/models"
 	"github.com/danilopolani/gocialite"
-	"github.com/davecgh/go-spew/spew"
 	"github.com/dgrijalva/jwt-go"
 	"github.com/labstack/echo/v4"
 	"github.com/sirupsen/logrus"
@@ -81,13 +80,13 @@ func (a *AuthController) githubCallbackHandler(c echo.Context) error {
 	code := c.QueryParam("code")
 	state := c.QueryParam("state")
 
-	user, token, err := a.gocial.Handle(state, code)
+	user, _, err := a.gocial.Handle(state, code)
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, err.Error())
 	}
 
 	//spew.Dump(user)
-	spew.Dump(token)
+	//spew.Dump(token)
 
 	var newUser models.User
 	a.db.GetSpireDb().FirstOrCreate(

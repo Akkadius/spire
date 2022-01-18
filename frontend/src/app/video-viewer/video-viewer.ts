@@ -136,7 +136,7 @@ export default class VideoViewer {
   }
 
   public static videoPlaying(el) {
-    return !!(el.currentTime > 0 && !el.paused && !el.ended && el.readyState > 2);
+    return (el.currentTime > 0 && !el.paused && !el.ended && el.readyState > 2);
   }
 
   public static videoLoaded(el) {
@@ -147,10 +147,12 @@ export default class VideoViewer {
     this.destroyScrollListener()
 
     window.addEventListener("scroll", VideoViewer.handleRender);
+    window.addEventListener("resize", VideoViewer.handleRender);
   }
 
   public static destroyScrollListener() {
     window.removeEventListener("scroll", VideoViewer.handleRender, false)
+    window.removeEventListener("resize", VideoViewer.handleRender, false)
   }
 
 }

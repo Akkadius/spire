@@ -16,6 +16,7 @@ import (
 	"github.com/Akkadius/spire/internal/http/controllers"
 	"github.com/Akkadius/spire/internal/http/crudcontrollers"
 	"github.com/Akkadius/spire/internal/http/middleware"
+	"github.com/Akkadius/spire/internal/http/staticmaps"
 	"github.com/Akkadius/spire/internal/influx"
 	"github.com/Akkadius/spire/internal/questapi"
 )
@@ -58,7 +59,8 @@ func InitializeApplication() (App, error) {
 	appController := controllers.NewAppController(cache, logger)
 	queryController := controllers.NewQueryController(databaseResolver, logger)
 	questFileApiController := controllers.NewQuestFileApiController(logger)
-	bootAppControllerGroups := provideControllers(helloWorldController, authController, meController, analyticsController, connectionsController, docsController, questApiController, appController, queryController, questFileApiController)
+	staticMapController := staticmaps.NewStaticMapController(databaseResolver, logger)
+	bootAppControllerGroups := provideControllers(helloWorldController, authController, meController, analyticsController, connectionsController, docsController, questApiController, appController, queryController, questFileApiController, staticMapController)
 	aaAbilityController := crudcontrollers.NewAaAbilityController(databaseResolver, logger)
 	aaRankController := crudcontrollers.NewAaRankController(databaseResolver, logger)
 	accountController := crudcontrollers.NewAccountController(databaseResolver, logger)
@@ -161,7 +163,8 @@ func InitializeApplication() (App, error) {
 	spireMigrateCommand := cmd.NewSpireMigrateCommand(connections, logger)
 	questApiParseCommand := cmd.NewQuestApiParseCommand(logger, parseService)
 	questExampleTestCommand := cmd.NewQuestExampleTestCommand(logger, questExamplesGithubSourcer)
-	v := ProvideCommands(helloWorldCommand, generateModelsCommand, generateControllersCommand, httpServeCommand, routesListCommand, generateConfigurationCommand, spireMigrateCommand, questApiParseCommand, questExampleTestCommand)
+	generateRaceModelMapsCommand := cmd.NewGenerateRaceModelMapsCommand(logger)
+	v := ProvideCommands(helloWorldCommand, generateModelsCommand, generateControllersCommand, httpServeCommand, routesListCommand, generateConfigurationCommand, spireMigrateCommand, questApiParseCommand, questExampleTestCommand, generateRaceModelMapsCommand)
 	webBoot := desktop.NewWebBoot(logger, router)
 	app := NewApplication(db, logger, cache, v, databaseResolver, connections, router, webBoot)
 	return app, nil

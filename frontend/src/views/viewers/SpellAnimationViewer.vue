@@ -169,11 +169,15 @@ export default {
 
 <style>
 .spell-preview {
-  height: 250px;
-  min-width: 150px;
-  max-width: 200px;
+  /*height: 250px;*/
+  /*min-width: 150px;*/
+  /*max-width: 200px;*/
+
+  height: 162px;
+  width: 288px;
+
   border-radius: 10px;
-  margin: 3px;
+  margin-right: 5px;
 }
 
 .overlay {

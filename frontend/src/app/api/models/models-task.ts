@@ -69,7 +69,25 @@ export interface ModelsTask {
      * @type {number}
      * @memberof ModelsTask
      */
+    level_spread?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof ModelsTask
+     */
+    max_players?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof ModelsTask
+     */
     maxlevel?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof ModelsTask
+     */
+    min_players?: number;
     /**
      * 
      * @type {number}
@@ -84,10 +102,34 @@ export interface ModelsTask {
     repeatable?: number;
     /**
      * 
+     * @type {number}
+     * @memberof ModelsTask
+     */
+    replay_timer_seconds?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof ModelsTask
+     */
+    request_timer_seconds?: number;
+    /**
+     * 
      * @type {string}
      * @memberof ModelsTask
      */
     reward?: string;
+    /**
+     * 
+     * @type {number}
+     * @memberof ModelsTask
+     */
+    reward_ebon_crystals?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof ModelsTask
+     */
+    reward_radiant_crystals?: number;
     /**
      * 
      * @type {number}

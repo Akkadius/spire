@@ -67,6 +67,30 @@ export interface ModelsDynamicZone {
      * @type {number}
      * @memberof ModelsDynamicZone
      */
+    leader_id?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof ModelsDynamicZone
+     */
+    max_players?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof ModelsDynamicZone
+     */
+    min_players?: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof ModelsDynamicZone
+     */
+    name?: string;
+    /**
+     * 
+     * @type {number}
+     * @memberof ModelsDynamicZone
+     */
     safe_return_heading?: number;
     /**
      * 
@@ -98,6 +122,12 @@ export interface ModelsDynamicZone {
      * @memberof ModelsDynamicZone
      */
     type?: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof ModelsDynamicZone
+     */
+    uuid?: string;
     /**
      * 
      * @type {number}

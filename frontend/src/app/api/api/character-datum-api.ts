@@ -232,6 +232,7 @@ export const CharacterDatumApiAxiosParamCreator = function (configuration?: Conf
          * @param {string} [includes] Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names &lt;h4&gt;Relationships&lt;/h4&gt;AdventureStats&lt;br&gt;Buyers&lt;br&gt;CharRecipeLists&lt;br&gt;CharacterActivities&lt;br&gt;CharacterAltCurrencies&lt;br&gt;CharacterAlternateAbilities&lt;br&gt;CharacterAuras&lt;br&gt;CharacterBandoliers&lt;br&gt;CharacterBinds&lt;br&gt;CharacterBuffs&lt;br&gt;CharacterCorpses&lt;br&gt;CharacterCurrencies&lt;br&gt;CharacterDisciplines&lt;br&gt;CharacterEnabledtasks&lt;br&gt;CharacterInspectMessages&lt;br&gt;CharacterItemRecasts&lt;br&gt;CharacterLanguages&lt;br&gt;CharacterLeadershipAbilities&lt;br&gt;CharacterMaterials&lt;br&gt;CharacterMemmedSpells&lt;br&gt;CharacterPetBuffs&lt;br&gt;CharacterPetInfos&lt;br&gt;CharacterPetInventories&lt;br&gt;CharacterPotionbelts&lt;br&gt;CharacterSkills&lt;br&gt;CharacterSpells&lt;br&gt;CharacterTasks&lt;br&gt;CharacterTributes&lt;br&gt;CompletedTasks&lt;br&gt;DataBuckets&lt;br&gt;FactionValues&lt;br&gt;Friends&lt;br&gt;Guild&lt;br&gt;Guild.GuildBanks&lt;br&gt;Guild.GuildMembers&lt;br&gt;Guild.GuildRanks&lt;br&gt;GuildMembers&lt;br&gt;InstanceListPlayers&lt;br&gt;Inventories&lt;br&gt;Inventories.Item&lt;br&gt;Inventories.Item.DiscoveredItems&lt;br&gt;Keyrings&lt;br&gt;Mail&lt;br&gt;PlayerTitlesets&lt;br&gt;QuestGlobals&lt;br&gt;Timers&lt;br&gt;Titles&lt;br&gt;Traders&lt;br&gt;ZoneFlags
          * @param {string} [where] Filter on specific fields. Multiple conditions [.] separated Example: col_like_value.col2__val2
          * @param {string} [whereOr] Filter on specific fields (Chained ors). Multiple conditions [.] separated Example: col_like_value.col2__val2
+         * @param {string} [groupBy] Group by field. Multiple conditions [.] separated Example: field1.field2
          * @param {string} [limit] Rows to limit in response (Default: 10,000)
          * @param {string} [orderBy] Order by [field]
          * @param {string} [orderDirection] Order by field direction
@@ -239,7 +240,7 @@ export const CharacterDatumApiAxiosParamCreator = function (configuration?: Conf
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        listCharacterData: async (includes?: string, where?: string, whereOr?: string, limit?: string, orderBy?: string, orderDirection?: string, select?: string, options: any = {}): Promise<RequestArgs> => {
+        listCharacterData: async (includes?: string, where?: string, whereOr?: string, groupBy?: string, limit?: string, orderBy?: string, orderDirection?: string, select?: string, options: any = {}): Promise<RequestArgs> => {
             const localVarPath = `/character_data`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, 'https://example.com');
@@ -262,6 +263,10 @@ export const CharacterDatumApiAxiosParamCreator = function (configuration?: Conf
 
             if (whereOr !== undefined) {
                 localVarQueryParameter['whereOr'] = whereOr;
+            }
+
+            if (groupBy !== undefined) {
+                localVarQueryParameter['groupBy'] = groupBy;
             }
 
             if (limit !== undefined) {
@@ -428,6 +433,7 @@ export const CharacterDatumApiFp = function(configuration?: Configuration) {
          * @param {string} [includes] Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names &lt;h4&gt;Relationships&lt;/h4&gt;AdventureStats&lt;br&gt;Buyers&lt;br&gt;CharRecipeLists&lt;br&gt;CharacterActivities&lt;br&gt;CharacterAltCurrencies&lt;br&gt;CharacterAlternateAbilities&lt;br&gt;CharacterAuras&lt;br&gt;CharacterBandoliers&lt;br&gt;CharacterBinds&lt;br&gt;CharacterBuffs&lt;br&gt;CharacterCorpses&lt;br&gt;CharacterCurrencies&lt;br&gt;CharacterDisciplines&lt;br&gt;CharacterEnabledtasks&lt;br&gt;CharacterInspectMessages&lt;br&gt;CharacterItemRecasts&lt;br&gt;CharacterLanguages&lt;br&gt;CharacterLeadershipAbilities&lt;br&gt;CharacterMaterials&lt;br&gt;CharacterMemmedSpells&lt;br&gt;CharacterPetBuffs&lt;br&gt;CharacterPetInfos&lt;br&gt;CharacterPetInventories&lt;br&gt;CharacterPotionbelts&lt;br&gt;CharacterSkills&lt;br&gt;CharacterSpells&lt;br&gt;CharacterTasks&lt;br&gt;CharacterTributes&lt;br&gt;CompletedTasks&lt;br&gt;DataBuckets&lt;br&gt;FactionValues&lt;br&gt;Friends&lt;br&gt;Guild&lt;br&gt;Guild.GuildBanks&lt;br&gt;Guild.GuildMembers&lt;br&gt;Guild.GuildRanks&lt;br&gt;GuildMembers&lt;br&gt;InstanceListPlayers&lt;br&gt;Inventories&lt;br&gt;Inventories.Item&lt;br&gt;Inventories.Item.DiscoveredItems&lt;br&gt;Keyrings&lt;br&gt;Mail&lt;br&gt;PlayerTitlesets&lt;br&gt;QuestGlobals&lt;br&gt;Timers&lt;br&gt;Titles&lt;br&gt;Traders&lt;br&gt;ZoneFlags
          * @param {string} [where] Filter on specific fields. Multiple conditions [.] separated Example: col_like_value.col2__val2
          * @param {string} [whereOr] Filter on specific fields (Chained ors). Multiple conditions [.] separated Example: col_like_value.col2__val2
+         * @param {string} [groupBy] Group by field. Multiple conditions [.] separated Example: field1.field2
          * @param {string} [limit] Rows to limit in response (Default: 10,000)
          * @param {string} [orderBy] Order by [field]
          * @param {string} [orderDirection] Order by field direction
@@ -435,8 +441,8 @@ export const CharacterDatumApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async listCharacterData(includes?: string, where?: string, whereOr?: string, limit?: string, orderBy?: string, orderDirection?: string, select?: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<ModelsCharacterDatum>>> {
-            const localVarAxiosArgs = await CharacterDatumApiAxiosParamCreator(configuration).listCharacterData(includes, where, whereOr, limit, orderBy, orderDirection, select, options);
+        async listCharacterData(includes?: string, where?: string, whereOr?: string, groupBy?: string, limit?: string, orderBy?: string, orderDirection?: string, select?: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<ModelsCharacterDatum>>> {
+            const localVarAxiosArgs = await CharacterDatumApiAxiosParamCreator(configuration).listCharacterData(includes, where, whereOr, groupBy, limit, orderBy, orderDirection, select, options);
             return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
                 const axiosRequestArgs = {...localVarAxiosArgs.options, url: (configuration?.basePath || basePath) + localVarAxiosArgs.url};
                 return axios.request(axiosRequestArgs);
@@ -514,6 +520,7 @@ export const CharacterDatumApiFactory = function (configuration?: Configuration,
          * @param {string} [includes] Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names &lt;h4&gt;Relationships&lt;/h4&gt;AdventureStats&lt;br&gt;Buyers&lt;br&gt;CharRecipeLists&lt;br&gt;CharacterActivities&lt;br&gt;CharacterAltCurrencies&lt;br&gt;CharacterAlternateAbilities&lt;br&gt;CharacterAuras&lt;br&gt;CharacterBandoliers&lt;br&gt;CharacterBinds&lt;br&gt;CharacterBuffs&lt;br&gt;CharacterCorpses&lt;br&gt;CharacterCurrencies&lt;br&gt;CharacterDisciplines&lt;br&gt;CharacterEnabledtasks&lt;br&gt;CharacterInspectMessages&lt;br&gt;CharacterItemRecasts&lt;br&gt;CharacterLanguages&lt;br&gt;CharacterLeadershipAbilities&lt;br&gt;CharacterMaterials&lt;br&gt;CharacterMemmedSpells&lt;br&gt;CharacterPetBuffs&lt;br&gt;CharacterPetInfos&lt;br&gt;CharacterPetInventories&lt;br&gt;CharacterPotionbelts&lt;br&gt;CharacterSkills&lt;br&gt;CharacterSpells&lt;br&gt;CharacterTasks&lt;br&gt;CharacterTributes&lt;br&gt;CompletedTasks&lt;br&gt;DataBuckets&lt;br&gt;FactionValues&lt;br&gt;Friends&lt;br&gt;Guild&lt;br&gt;Guild.GuildBanks&lt;br&gt;Guild.GuildMembers&lt;br&gt;Guild.GuildRanks&lt;br&gt;GuildMembers&lt;br&gt;InstanceListPlayers&lt;br&gt;Inventories&lt;br&gt;Inventories.Item&lt;br&gt;Inventories.Item.DiscoveredItems&lt;br&gt;Keyrings&lt;br&gt;Mail&lt;br&gt;PlayerTitlesets&lt;br&gt;QuestGlobals&lt;br&gt;Timers&lt;br&gt;Titles&lt;br&gt;Traders&lt;br&gt;ZoneFlags
          * @param {string} [where] Filter on specific fields. Multiple conditions [.] separated Example: col_like_value.col2__val2
          * @param {string} [whereOr] Filter on specific fields (Chained ors). Multiple conditions [.] separated Example: col_like_value.col2__val2
+         * @param {string} [groupBy] Group by field. Multiple conditions [.] separated Example: field1.field2
          * @param {string} [limit] Rows to limit in response (Default: 10,000)
          * @param {string} [orderBy] Order by [field]
          * @param {string} [orderDirection] Order by field direction
@@ -521,8 +528,8 @@ export const CharacterDatumApiFactory = function (configuration?: Configuration,
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        listCharacterData(includes?: string, where?: string, whereOr?: string, limit?: string, orderBy?: string, orderDirection?: string, select?: string, options?: any): AxiosPromise<Array<ModelsCharacterDatum>> {
-            return CharacterDatumApiFp(configuration).listCharacterData(includes, where, whereOr, limit, orderBy, orderDirection, select, options).then((request) => request(axios, basePath));
+        listCharacterData(includes?: string, where?: string, whereOr?: string, groupBy?: string, limit?: string, orderBy?: string, orderDirection?: string, select?: string, options?: any): AxiosPromise<Array<ModelsCharacterDatum>> {
+            return CharacterDatumApiFp(configuration).listCharacterData(includes, where, whereOr, groupBy, limit, orderBy, orderDirection, select, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -634,6 +641,13 @@ export interface CharacterDatumApiListCharacterDataRequest {
      * @memberof CharacterDatumApiListCharacterData
      */
     readonly whereOr?: string
+
+    /**
+     * Group by field. Multiple conditions [.] separated Example: field1.field2
+     * @type {string}
+     * @memberof CharacterDatumApiListCharacterData
+     */
+    readonly groupBy?: string
 
     /**
      * Rows to limit in response (Default: 10,000)
@@ -749,7 +763,7 @@ export class CharacterDatumApi extends BaseAPI {
      * @memberof CharacterDatumApi
      */
     public listCharacterData(requestParameters: CharacterDatumApiListCharacterDataRequest = {}, options?: any) {
-        return CharacterDatumApiFp(this.configuration).listCharacterData(requestParameters.includes, requestParameters.where, requestParameters.whereOr, requestParameters.limit, requestParameters.orderBy, requestParameters.orderDirection, requestParameters.select, options).then((request) => request(this.axios, this.basePath));
+        return CharacterDatumApiFp(this.configuration).listCharacterData(requestParameters.includes, requestParameters.where, requestParameters.whereOr, requestParameters.groupBy, requestParameters.limit, requestParameters.orderBy, requestParameters.orderDirection, requestParameters.select, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
