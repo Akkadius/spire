@@ -1,3 +1,9 @@
+## [1.6.2]
+
+### Spell Animation Previewer
+
+* Fixed bug that prevented all previews from showing properly
+
 ## [1.6.1]
 
 ### Linux Auto Updates

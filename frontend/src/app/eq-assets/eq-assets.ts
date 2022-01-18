@@ -40,7 +40,15 @@ export default class EqAssets {
     return ids
   }
 
+  public static spellAnimationFileIds = []
+
   public static getSpellAnimationFileIds() {
+
+    // return cached set
+    if (this.spellAnimationFileIds.length > 0) {
+      return this.spellAnimationFileIds
+    }
+
     let ids = <any>[];
     if (SpellAnimations[0].contents) {
       SpellAnimations[0].contents.forEach((row) => {
@@ -54,6 +62,9 @@ export default class EqAssets {
     ids.sort(function (a, b) {
       return a - b;
     });
+
+    // cache for second retrieval
+    this.spellAnimationFileIds = ids
 
     return ids
   }

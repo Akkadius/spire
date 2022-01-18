@@ -16,6 +16,7 @@
               class="form-control ml-2 mb-4"
               v-model="search"
               v-on:keyup="triggerSearch"
+              @enter="triggerSearch"
               placeholder="Search for spell names to find animations"
             >
           </div>
@@ -126,19 +127,24 @@ export default {
       this.$router.push({ path: ROUTE.SPELL_ANIMATION_VIEWER, query: { q: this.search } }).catch(err => err)
     }, 1000),
     spellAnimSearch: function () {
+      console.log("trigger")
+
       this.loaded = false
 
       let foundAnim          = {};
-      let filteredAnimations = []
+      let filteredAnimations = EqAssets.getSpellAnimationFileIds()
 
-      for (let spellAnimMapping of spellAnimMappings) {
-        const spellName   = spellAnimMapping[0].toLowerCase().trim()
-        const spellAnimId = spellAnimMapping[2]
+      if (this.search !== "") {
+        filteredAnimations = []
+        for (let spellAnimMapping of spellAnimMappings) {
+          const spellName   = spellAnimMapping[0].toLowerCase().trim()
+          const spellAnimId = spellAnimMapping[2]
 
-        if (spellName.includes(this.search.toLowerCase())) {
-          if (!foundAnim[spellAnimId] && animationPreviewExists[spellAnimId]) {
-            filteredAnimations.push(spellAnimId)
-            foundAnim[spellAnimId] = 1
+          if (spellName.includes(this.search.toLowerCase())) {
+            if (!foundAnim[spellAnimId] && animationPreviewExists[spellAnimId]) {
+              filteredAnimations.push(spellAnimId)
+              foundAnim[spellAnimId] = 1
+            }
           }
         }
       }
