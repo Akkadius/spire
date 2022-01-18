@@ -2,41 +2,54 @@
   <div class="text-center">
     <app-loader :is-loading="!loaded" padding="8"/>
 
-    <input
-      type="text"
-      class="form-control ml-2 mb-4"
-      v-model="search"
-      v-on:keyup="triggerSearch"
-      style="width: 95%"
-      placeholder="Search for spell names to find animations"
-    >
+    <div class="row">
+      <div class="col-12">
+        <input
+          type="text"
+          class="form-control mb-4"
+          v-model="search"
+          v-on:keyup="triggerSearch"
+          placeholder="Search for spell names to find animations"
+        >
+      </div>
+    </div>
 
     <div
       style="height: 85vh; overflow-y: scroll"
       v-on:scroll.passive="render"
+      class="row justify-content-center"
       id="spell-video-view-port"
     >
 
-      <div v-if="filteredAnimations && filteredAnimations.length === 0">
-        No animations found...
+      <div class="col-12">
+        <div v-if="filteredAnimations && filteredAnimations.length === 0">
+          No animations found...
+        </div>
+
+        <div
+          v-for="(animationId) in filteredAnimations"
+          :key="animationId"
+          style="display:inline-block; position: relative;"
+          class="d-inline-block"
+        >
+          <video
+            muted
+            loop
+            style="height: 146px; width: 259px; border-radius: 5px; border: 1px solid rgba(255, 255, 255, .3);"
+            :id="'spell-' + animationId"
+            :data-src="animBaseUrl + animationId + '.mp4'"
+            @mousedown="selectSpellAnim(animationId)"
+            :class="'video-preview ' + classIsPulsating(animationId)"
+          >
+          </video>
+
+          <div class="overlay-spell-anim-selector">
+            <h6 class="eq-header" style="font-size: 21px; ">{{ animationId }}</h6>
+          </div>
+
+        </div>
       </div>
 
-      <div
-        v-for="(animationId) in filteredAnimations"
-        :key="animationId"
-        class="d-inline-block"
-      >
-        <video
-          muted
-          loop
-          style="width: 160px; height: 230px; border-radius: 10px; border: 1px solid;"
-          :id="'spell-' + animationId"
-          :data-src="animBaseUrl + animationId + '.mp4'"
-          @mousedown="selectSpellAnim(animationId)"
-          :class="'video-preview spell-preview ' + classIsPulsating(animationId)"
-        >
-        </video>
-      </div>
     </div>
 
   </div>
@@ -94,7 +107,7 @@ export default {
 
           // 230 is height of video to offset
           if (container && target) {
-            container.scrollTop = target.offsetTop - 80;
+            container.scrollTop = target.getBoundingClientRect().top - 150;
           }
         }, 100)
       }
@@ -171,11 +184,9 @@ export default {
 </script>
 
 <style>
-.spell-preview {
-  height: 250px;
-  min-width: 150px;
-  max-width: 200px;
-  border-radius: 10px;
-  margin: 3px;
+.overlay-spell-anim-selector {
+  position: absolute;
+  bottom: 1px;
+  left: 11px;
 }
 </style>

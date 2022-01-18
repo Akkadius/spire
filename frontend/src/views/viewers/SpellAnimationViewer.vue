@@ -9,34 +9,43 @@
         class="mt-5 text-center"
       >
 
-        <input
-          type="text"
-          class="form-control ml-2 mb-4"
-          v-model="search"
-          v-on:keyup="triggerSearch"
-          style="width: 95%"
-          placeholder="Search for spell names to find animations"
-        >
+        <div class="row">
+          <div class="col-12">
+            <input
+              type="text"
+              class="form-control ml-2 mb-4"
+              v-model="search"
+              v-on:keyup="triggerSearch"
+              placeholder="Search for spell names to find animations"
+            >
+          </div>
+        </div>
 
         <div v-if="filteredAnimations && filteredAnimations.length === 0">
           No animations found...
         </div>
 
-        <div v-for="(spell) in filteredAnimations" style="display:inline-block; position: relative;">
-          <video
-            muted
-            loop
-            :id="'spell-' + spell"
-            :data-src="animBaseUrl + spell + '.mp4'"
-            class="video-preview spell-preview"
-          >
-          </video>
-          <div class="overlay">
-            <h6 class="eq-header">{{ spell }}</h6>
+        <div class="row">
+          <div class="col-12">
+            <div v-for="(spell) in filteredAnimations" style="display:inline-block; position: relative;">
+              <video
+                muted
+                loop
+                :id="'spell-' + spell"
+                :data-src="animBaseUrl + spell + '.mp4'"
+                class="video-preview spell-preview-viewer"
+              >
+              </video>
+              <div class="overlay">
+                <h6 class="eq-header">{{ spell }}</h6>
+              </div>
+            </div>
+
           </div>
         </div>
 
-        <div class="mt-5">Videos courtesy of Georges <3</div>
+
+        <div class="mt-3">Videos courtesy of DeadZergling <3</div>
       </eq-window>
     </div>
   </div>
@@ -168,7 +177,7 @@ export default {
 </script>
 
 <style>
-.spell-preview {
+.spell-preview-viewer {
   /*height: 250px;*/
   /*min-width: 150px;*/
   /*max-width: 200px;*/
