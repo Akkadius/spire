@@ -63,7 +63,10 @@ func (s UpdaterService) CheckForUpdates() {
 	executablePath := filepath.Dir(ex)
 
 	// check if a .old version exists, delete it if does
-	oldExecutable :=  fmt.Sprintf("%s\\%s.old", executablePath, executableName)
+	oldExecutable := fmt.Sprintf("%s\\%s.old", executablePath, executableName)
+	if runtime.GOOS == "linux" {
+		oldExecutable = fmt.Sprintf("%s/%s.old", executablePath, executableName)
+	}
 	if _, err := os.Stat(oldExecutable); err == nil {
 		e := os.Remove(oldExecutable)
 		if e != nil {
@@ -72,7 +75,7 @@ func (s UpdaterService) CheckForUpdates() {
 	}
 
 	// if being ran from go run main.go
-	if executableName == "main.exe" {
+	if executableName == "main.exe" || executableName == "main" {
 		fmt.Println("[Update] Running as go run main.go, ignoring...")
 		return
 	}
@@ -131,6 +134,7 @@ func (s UpdaterService) CheckForUpdates() {
 
 			// linux
 			if runtime.GOOS == "linux" {
+
 				// unzip
 				tempFileZipped := fmt.Sprintf("%s/%s", os.TempDir(), targetFileNameZipped)
 				uz := unzip.New(tempFileZipped, os.TempDir())
@@ -139,14 +143,24 @@ func (s UpdaterService) CheckForUpdates() {
 					log.Println(err)
 				}
 
+				// rename running process to .old
+				err := os.Rename(
+					fmt.Sprintf("%s/%s", executablePath, executableName),
+					fmt.Sprintf("%s/%s.old", executablePath, executableName),
+				)
+				if err != nil {
+					log.Fatal(err)
+				}
+
 				// relink
 				tempFile := fmt.Sprintf("%s/%s", os.TempDir(), targetFileName)
-				err := moveFile(tempFile, "spire")
+				newExecutable := fmt.Sprintf("%s/%s", executablePath, executableName)
+				err = moveFile(tempFile, newExecutable)
 				if err != nil {
 					log.Println(err)
 				}
 
-				err = os.Chmod("spire", 0755)
+				err = os.Chmod(newExecutable, 0755)
 				if err != nil {
 					log.Println(err)
 				}
