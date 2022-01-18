@@ -1,3 +1,9 @@
+## [1.6.1]
+
+### Linux Auto Updates
+
+* Linux auto updates should properly work from this release (1.6.1) and on. 
+
 ## [1.6.0]
 
 ### Updated Spell Animations!
