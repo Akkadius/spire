@@ -2,7 +2,7 @@
   <div :class="isComponent ? '' : 'container-fluid'">
     <app-loader :is-loading="!loaded" padding="8"/>
 
-    <eq-window
+    <eq-window-simple
       title="Player Animations"
       v-if="loaded"
       class="mt-4 text-center"
@@ -11,6 +11,12 @@
         No previews found...
       </div>
 
+      <div
+        class="row "
+        v-on:scroll.passive="videoRender"
+        style="height: 90vh; overflow-y: scroll;"
+      >
+        <div class="col-12">
       <div v-for="(preview) in filteredPreviews" style="display:inline-block; position: relative;">
         <video
           muted
@@ -24,8 +30,9 @@
           <h6 class="eq-header">{{ preview }}</h6>
         </div>
       </div>
-      <div class="mt-3">Videos courtesy of DeadZergling <3</div>
-    </eq-window>
+      <div class="mt-3">Videos Credits @DeadZergling</div>
+        </div></div>
+    </eq-window-simple>
   </div>
 </template>
 
@@ -70,6 +77,10 @@ export default {
 
       // hook video viewer scroll listener
       VideoViewer.addScrollListener()
+    },
+
+    videoRender() {
+      VideoViewer.handleRender();
     },
 
     render: function () {

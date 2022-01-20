@@ -1,5 +1,5 @@
 <template>
-    <div class='eq-simple-window'>
+    <div class='eq-window-simple'>
         <div class='eq-window-title-bar' v-if="title">{{title}}</div>
         <div style="padding: 10px">
             <slot></slot>

@@ -625,7 +625,7 @@ A:hover {
     font-family: menuetto, serif;
 }
 
-.eq-simple-window UL LI,
+.eq-window-simple UL LI,
 .eq-window-fancy UL LI,
 .eq-window-complex UL LI,
 .eq-window-complex-fancy UL LI,
@@ -634,7 +634,7 @@ A:hover {
     list-style-type: none;
 }
 
-.eq-simple-window,
+.eq-window-simple,
 .eq-window-fancy,
 .eq-window-complex,
 .eq-window-complex-fancy,
@@ -653,7 +653,7 @@ A:hover {
     transition: opacity 200ms;
 }
 
-.eq-simple-window:hover,
+.eq-window-simple:hover,
 .eq-window-fancy:hover,
 .eq-window-complex:hover,
 .eq-window-complex-fancy:hover,
@@ -665,7 +665,7 @@ A:hover {
 .WindowComplexGM:before,
 .eq-window-complex-fancy:before,
 .eq-window-fancy:before,
-.eq-simple-window:before {
+.eq-window-simple:before {
     content: " ";
     position: absolute;
     z-index: -1;
@@ -689,7 +689,7 @@ A:hover {
 }
 
 .eq-window-fancy:before,
-.eq-simple-window:before {
+.eq-window-simple:before {
     background-repeat: no-repeat, no-repeat, no-repeat, no-repeat;
     background-position-x: left, right, left, right;
     background-position-y: top, top, bottom, bottom;
@@ -705,7 +705,7 @@ A:hover {
     background-image: url(../images/window_corner_tl.png), url(../images/window_corner_tr.png), url(../images/window_corner_bl.png), url(../images/window_corner_br.png), url(../images/dark.gif);
 }
 
-.eq-simple-window:before {
+.eq-window-simple:before {
     background-image: url(../images/simple_window_corner_tl.png), url(../images/simple_window_corner_tr.png), url(../images/simple_window_corner_bl.png), url(../images/simple_window_corner_br.png);
 }
 

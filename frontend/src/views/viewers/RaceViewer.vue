@@ -1,8 +1,8 @@
 <template>
   <div>
     <div class="container-fluid">
-      <eq-window title="Race Viewer" class="mt-5">
-        <div class="row mb-4">
+      <eq-window-simple title="Race Viewer">
+        <div class="row">
           <div class="col-6">
 
             Filter by Race Name
@@ -51,64 +51,47 @@
 
         </div>
 
+      </eq-window-simple>
+
+      <eq-window-simple class="mt-3">
         <app-loader :is-loading="!loaded" padding="6"/>
 
         <span v-if="filteredRaces && filteredRaces.length === 0">
-            No races found...
-          </span>
+          No races found...
+        </span>
 
-        <div v-if="loaded" class="row justify-content-center align-items-center text-center">
+        <div
+          v-if="loaded"
+          style="height: 75vh; overflow-y: scroll;"
+          id="race-viewer-viewport"
+          class="row justify-content-center align-items-center text-center"
+        >
           <div
             v-for="race in filteredRaces"
             :key="race"
-            style="padding-bottom: 15px; display: inline-block; border: 3px solid rgba(218, 218, 218, .1); border-radius: 7px; min-height: 200px"
+            style="padding-bottom: 15px; display: inline-block; border: 2px solid rgba(218, 218, 218, .1); border-radius: 5px; min-height: 200px"
             class="p-3 m-3 fade-in"
           >
 
             <div class="mt-3" style="vertical-align: middle;">
 
-            <span v-for="img in raceImages[race]" :key="img">
-              <span :class="'race-models-ctn-' + img" :id="slug(img)"></span>
-
-              <!-- Popover -->
-              <b-popover
-                :target="slug(img)"
-                placement="bottom"
-                variant="light"
-                triggers="hover focus"
-              >
-                <template v-slot:title>Info</template>
-
-                <table>
-                  <tr>
-                    <td><b>Race</b></td>
-                    <td>{{ getRaceFromImage(img) }}</td>
-                  </tr>
-                  <tr>
-                    <td><b>Gender</b></td>
-                    <td>{{ getGenderFromImage(img) }}</td>
-                  </tr>
-                  <tr>
-                    <td><b>Texture</b></td>
-                    <td>{{ getTextureFromImage(img) }}</td>
-                  </tr>
-                  <tr>
-                    <td><b>Helm Texture</b></td>
-                    <td>{{ getHelmTextureFromImage(img) }}</td>
-                  </tr>
-                </table>
-              </b-popover>
-
+            <span
+              v-for="img in raceImages[race]"
+              :title="getImageTitleDescription(img)"
+              :key="img"
+            >
+              <span :class="'race-models-ctn-' + img"></span>
             </span>
 
               <h6 class="eq-header mt-5"> {{ (raceConstants[race] ? raceConstants[race] : "") }} ({{ race }}) </h6>
             </div>
 
           </div>
+
+          <div class="col-12 mt-3 text-center">Image Credits @Maudigan</div>
         </div>
 
-        <div class="mt-3 text-center">Images courtesy of Maudigan <3</div>
-      </eq-window>
+      </eq-window-simple>
     </div>
 
   </div>
@@ -117,7 +100,6 @@
 <script>
 import NpcModels        from "@/app/eq-assets/npc-models-map";
 import util             from "util";
-import slugify          from "slugify"
 import {RACES}          from "@/app/constants/eq-race-constants"
 import PageHeader       from "@/components/layout/PageHeader";
 import {App}            from "@/constants/app";
@@ -127,6 +109,7 @@ import {debounce}       from "@/app/utility/debounce.js";
 import {ROUTE}          from "../../routes";
 import {SpireApiClient} from "../../app/api/spire-api-client";
 import {ZoneApi}        from "../../app/api";
+import VideoViewer      from "../../app/video-viewer/video-viewer";
 
 const baseUrl           = App.ASSET_CDN_BASE_URL + "assets/npc_models/";
 const MAX_RACE_ID       = 700;
@@ -134,7 +117,6 @@ let modelFileExists     = {};
 let modelFiles          = {}
 let races               = [];
 let zoneToRaceIdMapping = {};
-
 
 export default {
   components: { EqWindowSimple, EqWindow, PageHeader },
@@ -145,9 +127,11 @@ export default {
       loaded: false,
       raceConstants: null,
 
+      // search
       raceSearch: "",
       zoneSearch: 0,
 
+      // data
       zoneList: [],
     }
   },
@@ -186,6 +170,11 @@ export default {
     triggerState() {
       this.updateQueryState();
       this.loadModels()
+
+      const target = document.getElementById("race-viewer-viewport")
+      if (target) {
+        target.scrollTop = 0
+      }
     },
 
     loadModels() {
@@ -267,20 +256,16 @@ export default {
 
       return fileName.split("-");
     },
-    getRaceFromImage: function (img) {
-      return this.getMetaDataFromImage(img)[0];
-    },
-    getGenderFromImage: function (img) {
-      return this.getMetaDataFromImage(img)[1];
-    },
-    getTextureFromImage: function (img) {
-      return this.getMetaDataFromImage(img)[2];
-    },
-    getHelmTextureFromImage: function (img) {
-      return this.getMetaDataFromImage(img)[3];
-    },
-    slug: function (toSlug) {
-      return slugify(toSlug.replace(/[&\/\\#, +()$~%.'":*?<>{}]/g, "-"))
+    getImageTitleDescription(img) {
+      const meta = this.getMetaDataFromImage(img);
+
+      return util.format(
+        "Race: %s Gender: %s Texture: %s Helm: %s",
+        meta[0],
+        meta[1],
+        meta[2],
+        meta[3]
+      )
     },
     initModels() {
       console.time('initModels');
@@ -327,71 +312,58 @@ export default {
       this.updateQueryState()
       this.loadModels()
     },
-    loadRaceInventory() {
-      SpireApiClient.v1().get('/static-map/race-inventory-map.json').then((result) => {
+    async loadRaceInventory() {
+      const result = await SpireApiClient.v1().get('/static-map/race-inventory-map.json')
 
-        zoneToRaceIdMapping = {};
-
-        result.data.races.forEach((race) => {
-          // console.log(race)
-
-          if (race.sources) {
-            race.sources.forEach((source) => {
-              if (source.zones) {
-                source.zones.forEach((zone) => {
-                  // console.log(zone)
-
-                  if (typeof zoneToRaceIdMapping[zone.id] === "undefined") {
-                    zoneToRaceIdMapping[zone.id] = []
-                  }
-
-                  zoneToRaceIdMapping[zone.id].push(race.race_id)
-                })
-              }
-            })
-          }
-
-        })
-
-        // after we load race inventory data
-        let zoneList = [];
-        (new ZoneApi(SpireApiClient.getOpenApiConfig())).listZones({
-          where: "version__0",
-          orderBy: "short_name",
-          groupBy: "zoneidnumber"
-        }).then((result) => {
-          if (result.status === 200) {
-            result.data.forEach((row) => {
-
-              zoneList.push(
-                {
-                  zoneId: row.zoneidnumber,
-                  shortName: row.short_name,
-                  longName: row.long_name,
-                  modelCount: zoneToRaceIdMapping[row.zoneidnumber] ? zoneToRaceIdMapping[row.zoneidnumber].length : 0,
+      // zero out
+      zoneToRaceIdMapping = {};
+      result.data.races.forEach((race) => {
+        if (race.sources) {
+          race.sources.forEach((source) => {
+            if (source.zones) {
+              source.zones.forEach((zone) => {
+                if (typeof zoneToRaceIdMapping[zone.id] === "undefined") {
+                  zoneToRaceIdMapping[zone.id] = []
                 }
-              )
-            })
 
-            this.zoneList = zoneList
-          }
+                zoneToRaceIdMapping[zone.id].push(race.race_id)
+              })
+            }
+          })
+        }
+      })
+
+      // after we load race inventory data
+      let zoneList   = [];
+      let zoneResult = await (new ZoneApi(SpireApiClient.getOpenApiConfig())).listZones({
+        where: "version__0",
+        orderBy: "short_name",
+        groupBy: "zoneidnumber"
+      })
+
+      // zone data
+      if (zoneResult.status === 200) {
+        zoneResult.data.forEach((row) => {
+          zoneList.push(
+            {
+              zoneId: row.zoneidnumber,
+              shortName: row.short_name,
+              longName: row.long_name,
+              modelCount: zoneToRaceIdMapping[row.zoneidnumber] ? zoneToRaceIdMapping[row.zoneidnumber].length : 0,
+            }
+          )
         })
 
-        // console.log(zoneToRaceIdMapping)
-        // console.log(result)
-      });
-
+        this.zoneList = zoneList
+      }
     }
   },
   async mounted() {
     this.loadQueryState()
     this.raceConstants = RACES
     this.initModels()
-    this.loadRaceInventory()
-
-    setTimeout(() => {
-      this.loadModels()
-    }, 50);
+    await this.loadRaceInventory()
+    this.loadModels()
   }
 }
 </script>

@@ -1,3 +1,9 @@
+## [1.6.3]
+
+### Viewer UI Tweaks
+
+* Various UI tweaks to viewers for a much cleaner, simple user experience
+
 ## [1.6.2]
 
 ### Spell Animation Previewer

@@ -1,6 +1,4 @@
 export default class VideoViewer {
-  public static rendererEventListener: null;
-
   public static debug = true;
 
   public static log(...args: any[]) {
