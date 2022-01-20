@@ -3,17 +3,12 @@
     <div :class="isComponent ? '' : 'container-fluid'">
       <app-loader :is-loading="!loaded" padding="8"/>
 
-      <eq-window
-        title="Spell Animations"
-        v-if="loaded"
-        class="mt-5 text-center"
-      >
-
+      <eq-window-simple title="Spell Animations" style="margin-bottom: 1px">
         <div class="row">
           <div class="col-12">
             <input
               type="text"
-              class="form-control ml-2 mb-4"
+              class="form-control ml-2"
               v-model="search"
               v-on:keyup="triggerSearch"
               @enter="triggerSearch"
@@ -21,12 +16,21 @@
             >
           </div>
         </div>
+      </eq-window-simple>
 
+      <eq-window-simple
+        v-if="loaded"
+        class="text-center mt-3"
+      >
         <div v-if="filteredAnimations && filteredAnimations.length === 0">
           No animations found...
         </div>
 
-        <div class="row">
+        <div
+          class="row "
+          v-on:scroll.passive="videoRender"
+          style="height: 79vh; overflow-y: scroll;"
+        >
           <div class="col-12">
             <div v-for="(spell) in filteredAnimations" style="display:inline-block; position: relative;">
               <video
@@ -41,13 +45,11 @@
                 <h6 class="eq-header">{{ spell }}</h6>
               </div>
             </div>
-
           </div>
+
+          <div class="col-12 mt-3">Videos Credits @DeadZergling</div>
         </div>
-
-
-        <div class="mt-3">Videos courtesy of DeadZergling <3</div>
-      </eq-window>
+      </eq-window-simple>
     </div>
   </div>
 </template>
@@ -60,6 +62,7 @@ import spellAnimMappings from "@/app/data-maps/spell-icon-anim-name-map.json";
 import {ROUTE}           from "../../routes";
 import VideoViewer       from "../../app/video-viewer/video-viewer";
 import EqAssets          from "../../app/eq-assets/eq-assets";
+import EqWindowSimple    from "../../components/eq-ui/EQWindowSimple";
 
 let itemModels = [];
 
@@ -76,7 +79,7 @@ function debounce(func, delay) {
 let animationPreviewExists = {}
 
 export default {
-  components: { EqWindow, PageHeader },
+  components: { EqWindowSimple, EqWindow, PageHeader },
   data() {
     return {
       loaded: false,
@@ -110,6 +113,9 @@ export default {
 
       // hook video viewer scroll listener
       VideoViewer.addScrollListener()
+    },
+    videoRender() {
+      VideoViewer.handleRender();
     },
     render: function () {
       EqAssets.getSpellAnimationFileIds().forEach((animationId) => {
@@ -188,11 +194,11 @@ export default {
   /*min-width: 150px;*/
   /*max-width: 200px;*/
 
-  height: 162px;
-  width: 288px;
+  height: 262px;
+  width: 464px;
 
-  border-radius: 10px;
-  margin-right: 5px;
+  border-radius: 5px !important;
+  margin-right: 10px;
 }
 
 .overlay {
