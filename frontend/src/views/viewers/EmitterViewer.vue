@@ -3,6 +3,7 @@
     <app-loader :is-loading="!loaded" padding="8"/>
 
     <eq-window-simple
+      title="Emitter Viewer"
       class="mt-3 text-center"
     >
       <div v-if="filteredPreviews && filteredPreviews.length === 0">

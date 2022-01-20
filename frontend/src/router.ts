@@ -37,7 +37,7 @@ export default new Router({
         {
           path: ROUTE.SPELL_ANIMATION_VIEWER,
           component: () => import('./views/viewers/SpellAnimationViewer.vue'),
-          meta: {title: "Spell Animation Viewer"},
+          meta: {title: "Spell Animations"},
         },
         {
           path: ROUTE.PLAYER_ANIMATION_VIEWER,

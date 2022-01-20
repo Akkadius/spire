@@ -262,7 +262,7 @@ export default {
           { title: "Item Icon Viewer", to: ROUTE.ITEM_ICON_VIEWER, icon: "ra ra-burning-eye mr-1" },
           { title: "Player Animations", to: ROUTE.PLAYER_ANIMATION_VIEWER, icon: "ra ra-player-dodge mr-1", isNew: true },
           { title: "Emitter Viewer", to: ROUTE.EMITTER_VIEWER, icon: "ra  ra-droplet-splash mr-1", isNew: true },
-          { title: "Spell Animation Viewer", to: ROUTE.SPELL_ANIMATION_VIEWER, icon: "ra ra-dragon mr-1" }
+          { title: "Spell Animations", to: ROUTE.SPELL_ANIMATION_VIEWER, icon: "ra ra-dragon mr-1", isNew: true }
         ]
       },
       calculatorNav: {

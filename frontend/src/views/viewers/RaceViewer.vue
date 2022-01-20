@@ -53,7 +53,7 @@
 
       </eq-window-simple>
 
-      <eq-window-simple class="mt-3">
+      <eq-window class="mt-5">
         <app-loader :is-loading="!loaded" padding="6"/>
 
         <span v-if="filteredRaces && filteredRaces.length === 0">
@@ -91,7 +91,7 @@
           <div class="col-12 mt-3 text-center">Image Credits @Maudigan</div>
         </div>
 
-      </eq-window-simple>
+      </eq-window>
     </div>
 
   </div>
