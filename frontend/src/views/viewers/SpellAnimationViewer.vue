@@ -194,8 +194,11 @@ export default {
   /*min-width: 150px;*/
   /*max-width: 200px;*/
 
-  height: 262px;
-  width: 464px;
+  /*height: 262px;*/
+  /*width: 464px;*/
+
+  height: 25vh;
+  width: 44vh;
 
   border-radius: 5px !important;
   margin-right: 10px;

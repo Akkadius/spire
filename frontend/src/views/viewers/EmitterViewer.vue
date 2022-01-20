@@ -134,8 +134,11 @@ export default {
   /*height: 162px;*/
   /*width: 288px;*/
 
-  height: 262px;
-  width: 464px;
+  /*height: 262px;*/
+  /*width: 464px;*/
+
+  height: 25vh;
+  width: 44vh;
 
   /*height: 135px;*/
   /*width: 240px;*/
