@@ -29,7 +29,7 @@
         <div
           class="row "
           v-on:scroll.passive="videoRender"
-          style="height: 79vh; overflow-y: scroll;"
+          style="height: 79vh; overflow-y: scroll; box-sizing: border-box;"
         >
           <div class="col-12">
             <div v-for="(spell) in filteredAnimations" style="display:inline-block; position: relative;">

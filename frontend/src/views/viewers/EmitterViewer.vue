@@ -4,7 +4,7 @@
 
     <eq-window-simple
       title="Emitter Viewer"
-      class="mt-3 text-center"
+      class="mt-4 text-center"
     >
       <div v-if="filteredPreviews && filteredPreviews.length === 0">
         No previews found...

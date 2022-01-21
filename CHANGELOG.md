@@ -1,3 +1,15 @@
+## [1.6.4]
+
+### Viewer Improvements
+
+* Icon viewer inputs are now separated from the preview pane
+* Item model viewer inputs are now separated from the preview pane
+* Icon viewer now has a fixed scroll viewport
+* Item model viewer now has a fixed scroll viewport
+* Emitter viewer now has a fixed scroll viewport
+* Spell animations viewer now has a fixed scroll viewport
+* Video viewers are by default larger to improve browser rendering performance and make it easier to digest visual scanning
+
 ## [1.6.3]
 
 ### Viewer UI Tweaks
