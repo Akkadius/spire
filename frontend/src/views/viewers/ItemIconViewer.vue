@@ -1,7 +1,8 @@
 <template>
   <div class="container-fluid">
-    <eq-window title="Icons" class="mt-5 text-center">
-      <div class="row mb-4">
+
+    <eq-window-simple title="Icons" style="margin-bottom: 1px">
+      <div class="row">
 
         <!-- Item Slot -->
         <div class="col-5">
@@ -32,22 +33,42 @@
           </select>
         </div>
 
-        <div class="col-auto">
-          <b-button variant="primary" @click="reset">Reset</b-button>
+        <div class="col-lg-1 col-sm-12">
+
+          <button
+            class='btn btn-outline-warning btn-sm mb-1 mr-2 mt-1'
+            @click="reset"
+          >
+            <i class="fa fa-refresh"></i> Reset
+          </button>
         </div>
       </div>
+    </eq-window-simple>
 
+    <eq-window class="mt-5 text-center">
       <app-loader :is-loading="!loaded" padding="8"/>
 
       <span v-if="filteredIcons && filteredIcons.length === 0">
-            No icons found...
-          </span>
+        No icons found...
+      </span>
 
-      <span v-for="icon in filteredIcons" :key="icon" :id="'item-' + icon" class="p-1">
+      <div
+        v-if="loaded"
+        style="height: 75vh; overflow-y: scroll; "
+        id="icon-viewer-viewport"
+      >
+        <span
+          v-for="icon in filteredIcons"
+          :key="icon"
+          :id="'item-' + icon"
+          style="margin-right: 5px"
+        >
             <span
               :class="'fade-in item-' + icon" :title="icon"
-              style="border: 1px solid rgb(218 218 218 / 30%); border-radius: 7px;"/>
+              style="border: 1px solid rgb(218 218 218 / 30%); border-radius: 7px;"
+            />
           </span>
+      </div>
     </eq-window>
   </div>
 </template>
@@ -62,8 +83,8 @@ import itemTypesIconMapping from "@/constants/item-type-icon-mapping.json"
 import PageHeader           from "@/components/layout/PageHeader";
 import EqWindowSimple       from "@/components/eq-ui/EQWindowSimple";
 import EqWindowComplex      from "@/components/eq-ui/EQWindowComplex";
-import EqWindow from "@/components/eq-ui/EQWindow";
-import {ROUTE}  from "../../routes";
+import EqWindow             from "@/components/eq-ui/EQWindow";
+import {ROUTE}              from "../../routes";
 
 const MAX_ICON_ID = 10000;
 // const MAX_ICON_ID = 1000;

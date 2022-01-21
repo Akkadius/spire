@@ -62,7 +62,7 @@
 
         <div
           v-if="loaded"
-          style="height: 75vh; overflow-y: scroll;"
+          style="height: 75vh; overflow-y: scroll; "
           id="race-viewer-viewport"
           class="row justify-content-center align-items-center text-center"
         >

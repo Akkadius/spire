@@ -640,7 +640,9 @@ A:hover {
 .eq-window-complex-fancy,
 .WindowComplexGM {
     position: relative;
-    margin: 25px auto;
+    margin-top: 25px;
+    margin-bottom: 25px;
+    box-sizing: border-box;
     background-image: url(../images/light.gif);
     padding: 19px 13px 17px;
     z-index: 0;

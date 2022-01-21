@@ -1,7 +1,8 @@
 <template>
   <div class="container-fluid">
-    <eq-window title="Item Models" class="mt-5 text-center" style="min-height: 500px">
-      <div class="row mb-4">
+
+    <eq-window-simple title="Item Models" style="margin-bottom: 1px">
+      <div class="row">
 
         <!-- Item Slot -->
         <div class="col-lg-5 col-sm-12">
@@ -36,25 +37,45 @@
           </select>
         </div>
         <div class="col-lg-1 col-sm-12">
-          <b-button variant="primary" class="form-control mr-1 ml-2 mt-1" @click="reset">
-            <i class="fa fa-eraser mr-1"></i>
-            Reset
-          </b-button>
+
+          <button
+            class='btn btn-outline-warning btn-sm mb-1 mr-2 mt-1'
+            @click="reset"
+          >
+            <i class="fa fa-refresh"></i> Reset
+          </button>
         </div>
       </div>
+    </eq-window-simple>
 
+    <eq-window class="mt-5 text-center" style="min-height: 500px">
       <app-loader :is-loading="!loaded" padding="8"/>
 
       <span v-if="filteredItemModels && filteredItemModels.length === 0">
         No models found...
       </span>
 
-      <div class="row justify-content-center">
-        <div v-for="item in filteredItemModels" :key="item" class="m-1 item-model">
-          <span :class="'fade-in object-ctn-' + item" :title="'IT' + item"></span>
+      <div
+        v-if="loaded"
+        style="height: 80vh; overflow-y: scroll; "
+        id="item-viewer-viewport"
+        class="row justify-content-center"
+      >
+        <div
+          v-for="item in filteredItemModels"
+          :key="item"
+          style="min-height: 100px; max-height: 150px;"
+          class="m-1 item-model"
+        >
+          <span
+            :class="'fade-in object-ctn-' + item"
+            :title="'IT' + item"
+          ></span>
         </div>
-      </div>
 
+        <div class="col-12 mt-3 text-center">Image Credits @Maudigan</div>
+
+      </div>
     </eq-window>
   </div>
 </template>
@@ -69,8 +90,9 @@ import itemTypesModelMapping from "@/constants/item-type-model-mapping.json"
 import slugify               from "slugify";
 import PageHeader            from "@/components/layout/PageHeader";
 import {App}                 from "@/constants/app";
-import EqWindow from "@/components/eq-ui/EQWindow";
-import {ROUTE}  from "../../routes";
+import EqWindow              from "@/components/eq-ui/EQWindow";
+import {ROUTE}               from "../../routes";
+import EqWindowSimple        from "../../components/eq-ui/EQWindowSimple";
 
 const baseUrl         = App.ASSET_CDN_BASE_URL + "assets/objects/";
 const MAX_ITEM_IDFILE = 100000;
@@ -79,7 +101,7 @@ let itemModelExists   = {};
 let modelFiles        = {};
 
 export default {
-  components: { EqWindow, PageHeader },
+  components: { EqWindowSimple, EqWindow, PageHeader },
   data() {
     return {
       itemSlotSearch: 0,
@@ -265,8 +287,7 @@ export default {
 
 <style scoped>
 .item-model {
-  height: auto;
-  min-width: 120px;
+  width: 100px;
   display: flex;
   justify-content: center;
   align-items: center;

@@ -122,8 +122,8 @@ export default {
 
 <style>
 .player-anim-preview {
-  height: 270px;
-  width: 480px;
+  /*height: 270px;*/
+  /*width: 480px;*/
 
   /*height: 180px;*/
   /*width: 320px;*/
@@ -134,8 +134,11 @@ export default {
   /*height: 135px;*/
   /*width: 240px;*/
 
-  border-radius: 10px;
-  margin-right: 5px;
+  height: 25vh;
+  width: 44vh;
+
+  border-radius: 5px;
+  margin-right: 10px;
 }
 
 .overlay {
