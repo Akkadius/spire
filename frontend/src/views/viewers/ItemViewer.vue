@@ -49,7 +49,15 @@
     </eq-window-simple>
 
     <eq-window class="mt-5 text-center" style="min-height: 500px">
-      <app-loader :is-loading="!loaded" padding="8"/>
+
+      <!-- loader -->
+      <div v-if="!loaded" class="text-center justify-content-center mt-5 mb-5">
+        <div class="mb-3">
+          {{ renderingImages ? 'Rendering images...' : 'Loading images...'}}
+        </div>
+        <loader-fake-progess v-if="!loaded && !renderingImages"/>
+        <eq-progress-bar :percent="100" v-if="renderingImages"/>
+      </div>
 
       <span v-if="filteredItemModels && filteredItemModels.length === 0">
         No models found...
@@ -93,6 +101,8 @@ import {App}                 from "@/constants/app";
 import EqWindow              from "@/components/eq-ui/EQWindow";
 import {ROUTE}               from "../../routes";
 import EqWindowSimple        from "../../components/eq-ui/EQWindowSimple";
+import LoaderFakeProgess     from "../../components/LoaderFakeProgress";
+import EqProgressBar         from "../../components/eq-ui/EQProgressBar";
 
 const baseUrl         = App.ASSET_CDN_BASE_URL + "assets/objects/";
 const MAX_ITEM_IDFILE = 100000;
@@ -101,7 +111,7 @@ let itemModelExists   = {};
 let modelFiles        = {};
 
 export default {
-  components: { EqWindowSimple, EqWindow, PageHeader },
+  components: { EqProgressBar, LoaderFakeProgess, EqWindowSimple, EqWindow, PageHeader },
   data() {
     return {
       itemSlotSearch: 0,
@@ -109,7 +119,8 @@ export default {
       filteredItemModels: null,
       itemSlotOptions: [],
       itemTypeOptions: null,
-      loaded: false
+      loaded: false,
+      renderingImages: false,
     }
   },
   methods: {
@@ -169,52 +180,62 @@ export default {
     // zero state loader
     loadModels: function () {
 
-      // filter by item type
-      if (this.itemTypeSearch > 0) {
-        this.itemSlotSearch = 0;
-        if (!itemTypesModelMapping[this.itemTypeSearch]) {
-          return
-        }
+      let curImg = new Image();
+      curImg.src = '/eq-asset-preview-master/assets/sprites/objects.png';
+      curImg.onload = () => {
+        this.renderingImages = true
 
-        let idFiles = []
-        itemTypesModelMapping[this.itemTypeSearch].forEach((idFile) => {
-          const file = idFile.replace("IT", "")
+        setTimeout(() => {
+          this.renderingImages = false
 
-          if (itemModelExists[file]) {
-            idFiles.push(file)
+          // filter by item type
+          if (this.itemTypeSearch > 0) {
+            this.itemSlotSearch = 0;
+            if (!itemTypesModelMapping[this.itemTypeSearch]) {
+              return
+            }
+
+            let idFiles = []
+            itemTypesModelMapping[this.itemTypeSearch].forEach((idFile) => {
+              const file = idFile.replace("IT", "")
+
+              if (itemModelExists[file]) {
+                idFiles.push(file)
+              }
+            })
+
+            this.filteredItemModels = idFiles
+            this.loaded             = true
+            return
           }
-        })
 
-        this.filteredItemModels = idFiles
-        this.loaded             = true
-        return
-      }
+          // item slot search
+          if (this.itemSlotSearch) {
+            this.itemTypeSearch = 0;
 
-      // item slot search
-      if (this.itemSlotSearch) {
-        this.itemTypeSearch = 0;
+            if (!itemSlotIdFileMapping[this.itemSlotSearch]) {
+              return
+            }
 
-        if (!itemSlotIdFileMapping[this.itemSlotSearch]) {
-          return
-        }
+            let idFiles = []
+            itemSlotIdFileMapping[this.itemSlotSearch].forEach((idFile) => {
+              const file = idFile.replace("IT", "")
 
-        let idFiles = []
-        itemSlotIdFileMapping[this.itemSlotSearch].forEach((idFile) => {
-          const file = idFile.replace("IT", "")
+              if (itemModelExists[file]) {
+                idFiles.push(file)
+              }
+            })
 
-          if (itemModelExists[file]) {
-            idFiles.push(file)
+            this.filteredItemModels = idFiles
+            this.loaded             = true
+            return;
           }
-        })
 
-        this.filteredItemModels = idFiles
-        this.loaded             = true
-        return;
+          // fallback - load everything
+          this.filteredItemModels = itemModels;
+          this.loaded             = true;
+        }, 100)
       }
-
-      // fallback - load everything
-      this.filteredItemModels = itemModels;
-      this.loaded             = true;
     }
   },
   async mounted() {

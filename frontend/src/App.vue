@@ -76,7 +76,7 @@ export default {
         backgrounds[Math.floor(Math.random() * backgrounds.length)].trim()
       )
 
-      var curImg = new Image();
+      let curImg = new Image();
       curImg.src = background;
       curImg.onload = function(){
         // do whatever here, add it to the background, append the image ect.
