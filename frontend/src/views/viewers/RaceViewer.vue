@@ -63,9 +63,9 @@
           <eq-progress-bar :percent="100" v-if="renderingImages"/>
         </div>
 
-        <span v-if="filteredRaces && filteredRaces.length === 0">
+        <div v-if="filteredRaces && filteredRaces.length === 0" class="mt-3 text-center">
           No races found...
-        </span>
+        </div>
 
         <div
           v-if="loaded"
