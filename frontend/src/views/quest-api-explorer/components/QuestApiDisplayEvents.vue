@@ -23,7 +23,7 @@
 <span v-for="(e, index) in getSelectedEvent(event).event_vars" :key="index"><span
   style="color:#9CDCFE;">	{{ getLangQuestPrefix() }}</span>debug("{{ e }} " {{ getLangConcatenate() }} <span
   style="color: rgb(252 199 33);">{{ getLangVariablePrefix() }}{{ e }}</span>);
-</span>}</pre>
+</span><span style="color:#ff7b72">{{ getLangEventPostfix() }}</span></pre>
     </div>
   </div>
 </template>
@@ -99,6 +99,9 @@ export default {
     },
     getLangSubPostfix() {
       return this.languageSelection === "perl" ? " {" : "(e)"
+    },
+    getLangEventPostfix() {
+      return this.languageSelection === "perl" ? "}" : "end"
     },
     getLangConcatenate() {
       return this.languageSelection === "perl" ? "." : ".."
