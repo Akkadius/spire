@@ -7,6 +7,7 @@ go install github.com/gobuffalo/packr/packr
 
 # Copy local asset images (This step is part of install now)
 make build-assets
+make strip-extra-assets
 
 #:: Build SPA (Frontend)
 cd "$cwd/frontend" && npm install && npm run build
