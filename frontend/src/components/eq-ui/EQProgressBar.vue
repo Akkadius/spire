@@ -1,7 +1,7 @@
 <template>
     <div class='eq-progress-bar'>
         <div :style=' {width: percent + "%", "background-color": color }'>
-            <span v-if="percent > 0">{{percent}}%</span>
+            <span v-if="percent > 0" style="text-shadow: -2px 2px 3px #000;">{{percent}}%</span>
         </div>
     </div>
 </template>

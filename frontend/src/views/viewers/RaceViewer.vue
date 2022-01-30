@@ -13,7 +13,6 @@
               class="form-control form-control-prepended list-search mt-1"
               v-model="raceSearch"
               @keyup="zoneSearch = 0; triggerStateDebounce()"
-              @keyup.enter="zoneSearch = 0; triggerState()"
               placeholder="Filter by Race name"
             >
 
@@ -54,11 +53,19 @@
       </eq-window-simple>
 
       <eq-window class="mt-5">
-        <app-loader :is-loading="!loaded" padding="6"/>
 
-        <span v-if="filteredRaces && filteredRaces.length === 0">
+        <!-- loader -->
+        <div v-if="!loaded" class="text-center justify-content-center mt-5 mb-5">
+          <div class="mb-3">
+            {{ renderingImages ? 'Rendering images...' : 'Loading images...'}}
+          </div>
+          <loader-fake-progess v-if="!loaded && !renderingImages"/>
+          <eq-progress-bar :percent="100" v-if="renderingImages"/>
+        </div>
+
+        <div v-if="filteredRaces && filteredRaces.length === 0" class="mt-3 text-center">
           No races found...
-        </span>
+        </div>
 
         <div
           v-if="loaded"
@@ -99,17 +106,19 @@
 
 <script>
 import NpcModels        from "@/app/eq-assets/npc-models-map";
-import util             from "util";
-import {RACES}          from "@/app/constants/eq-race-constants"
-import PageHeader       from "@/components/layout/PageHeader";
-import {App}            from "@/constants/app";
-import EqWindow         from "@/components/eq-ui/EQWindow";
-import EqWindowSimple   from "@/components/eq-ui/EQWindowSimple";
-import {debounce}       from "@/app/utility/debounce.js";
-import {ROUTE}          from "../../routes";
-import {SpireApiClient} from "../../app/api/spire-api-client";
-import {ZoneApi}        from "../../app/api";
-import VideoViewer      from "../../app/video-viewer/video-viewer";
+import util              from "util";
+import {RACES}           from "@/app/constants/eq-race-constants"
+import PageHeader        from "@/components/layout/PageHeader";
+import {App}             from "@/constants/app";
+import EqWindow          from "@/components/eq-ui/EQWindow";
+import EqWindowSimple    from "@/components/eq-ui/EQWindowSimple";
+import {debounce}        from "@/app/utility/debounce.js";
+import {ROUTE}           from "../../routes";
+import {SpireApiClient}  from "../../app/api/spire-api-client";
+import {ZoneApi}         from "../../app/api";
+import VideoViewer       from "../../app/video-viewer/video-viewer";
+import LoaderFakeProgess from "../../components/LoaderFakeProgress";
+import EqProgressBar     from "../../components/eq-ui/EQProgressBar";
 
 const baseUrl           = App.ASSET_CDN_BASE_URL + "assets/npc_models/";
 const MAX_RACE_ID       = 700;
@@ -119,12 +128,13 @@ let races               = [];
 let zoneToRaceIdMapping = {};
 
 export default {
-  components: { EqWindowSimple, EqWindow, PageHeader },
+  components: { EqProgressBar, LoaderFakeProgess, EqWindowSimple, EqWindow, PageHeader },
   data() {
     return {
       filteredRaces: null,
       raceImages: null,
       loaded: false,
+      renderingImages: false,
       raceConstants: null,
 
       // search
@@ -180,59 +190,70 @@ export default {
     loadModels() {
       this.loaded = false;
 
-      // filtering
-      // race filter
-      if (this.raceSearch !== "") {
-        let filteredRaceIds = [];
-        for (let raceId = 0; raceId <= MAX_RACE_ID; raceId++) {
+      let curImg = new Image();
+      curImg.src = '/eq-asset-preview-master/assets/sprites/race-models.png';
+      curImg.onload = () => {
+        this.renderingImages = true
 
-          if (!RACES[raceId] || !modelFiles[raceId]) {
-            continue;
-          }
+        setTimeout(() => {
+          this.renderingImages = false
 
-          const raceName = RACES[raceId];
-          if (!raceName.toLowerCase().includes(this.raceSearch.toLowerCase())) {
-            continue;
-          }
+          // filtering
+          // race filter
+          if (this.raceSearch !== "") {
+            let filteredRaceIds = [];
+            for (let raceId = 0; raceId <= MAX_RACE_ID; raceId++) {
 
-          filteredRaceIds.push(raceId);
-        }
+              if (!RACES[raceId] || !modelFiles[raceId]) {
+                continue;
+              }
 
-        this.filteredRaces = filteredRaceIds
-        this.loaded        = true
-        return;
-      }
+              const raceName = RACES[raceId];
+              if (!raceName.toLowerCase().includes(this.raceSearch.toLowerCase())) {
+                continue;
+              }
 
-      // zone filter
-      if (this.zoneSearch !== 0) {
-        let filteredRaceIds = [];
-        for (let raceId = 0; raceId <= MAX_RACE_ID; raceId++) {
-          if (!RACES[raceId] || !modelFiles[raceId]) {
-            continue;
-          }
-
-          if (zoneToRaceIdMapping[this.zoneSearch]) {
-            if (!zoneToRaceIdMapping[this.zoneSearch].includes(raceId)) {
-              continue;
+              filteredRaceIds.push(raceId);
             }
+
+            this.filteredRaces = filteredRaceIds
+            this.loaded        = true
+            return;
           }
 
-          filteredRaceIds.push(raceId);
-        }
+          // zone filter
+          if (this.zoneSearch !== 0) {
+            let filteredRaceIds = [];
+            for (let raceId = 0; raceId <= MAX_RACE_ID; raceId++) {
+              if (!RACES[raceId] || !modelFiles[raceId]) {
+                continue;
+              }
 
-        this.filteredRaces = filteredRaceIds
-        this.loaded        = true
-        return;
+              if (zoneToRaceIdMapping[this.zoneSearch]) {
+                if (!zoneToRaceIdMapping[this.zoneSearch].includes(raceId)) {
+                  continue;
+                }
+              }
+
+              filteredRaceIds.push(raceId);
+            }
+
+            this.filteredRaces = filteredRaceIds
+            this.loaded        = true
+            return;
+          }
+
+          // set filtered races
+          this.filteredRaces = races
+          this.loaded        = true;
+
+        }, 1);
       }
-
-      // set filtered races
-      this.filteredRaces = races
-      this.loaded        = true;
     },
 
     triggerStateDebounce: debounce(function () {
       this.triggerState()
-    }, 1000),
+    }, 500),
     getRaceImages: function (raceId) {
       let raceImages = []
       modelFiles[raceId].forEach((file) => {

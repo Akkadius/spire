@@ -5,7 +5,7 @@ go 1.16
 require (
 	github.com/adotout/pack_2d v0.0.0-20140426184322-aed359845096
 	github.com/alecthomas/template v0.0.0-20190718012654-fb15b899a751
-	github.com/anaskhan96/soup v1.2.5 // indirect
+	github.com/anaskhan96/soup v1.2.5
 	github.com/danilopolani/gocialite v1.0.2
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible
 	github.com/gertd/go-pluralize v0.1.7

@@ -1,3 +1,24 @@
+## [1.6.5]
+
+### Quest API Explorer
+
+* Fixed a bug where sub event examples for Lua were not formatted properly [#21](https://github.com/Akkadius/spire/issues/21)
+
+### Viewer Improvements
+
+* Viewers now show separate loaders for when content is being downloaded versus when content is being rendered
+
+![image](https://user-images.githubusercontent.com/3319450/151697911-f25ab05c-1229-45c5-9a30-9069d32eb318.png)
+
+![image](https://user-images.githubusercontent.com/3319450/151697961-de014617-4cdf-4c0f-99dc-1c01f7b1690c.png)
+
+* Viewers now don't show content until images are fully downloaded and rendered
+* Item Icon Viewer now has icons up through live
+
+### Spire Binary Size
+
+* Spire should now be roughly 100MB less in executable size.
+
 ## [1.6.4]
 
 ### Viewer Improvements

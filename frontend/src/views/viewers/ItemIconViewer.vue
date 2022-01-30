@@ -5,7 +5,7 @@
       <div class="row">
 
         <!-- Item Slot -->
-        <div class="col-5">
+        <div class="col-6">
           <select
             class="form-control list-search"
             v-model.lazy="iconSlotSearch"
@@ -19,7 +19,7 @@
         </div>
 
         <!-- Item Type -->
-        <div class="col-6">
+        <div class="col-5">
           <select
             class="form-control list-search"
             v-model.lazy="iconItemTypeSearch"
@@ -46,7 +46,15 @@
     </eq-window-simple>
 
     <eq-window class="mt-5 text-center">
-      <app-loader :is-loading="!loaded" padding="8"/>
+
+      <!-- loader -->
+      <div v-if="!loaded" class="text-center justify-content-center mt-5 mb-5">
+        <div class="mb-3">
+          {{ renderingImages ? 'Rendering images...' : 'Loading images...'}}
+        </div>
+        <loader-fake-progess v-if="!loaded && !renderingImages"/>
+        <eq-progress-bar :percent="100" v-if="renderingImages"/>
+      </div>
 
       <span v-if="filteredIcons && filteredIcons.length === 0">
         No icons found...
@@ -85,6 +93,8 @@ import EqWindowSimple       from "@/components/eq-ui/EQWindowSimple";
 import EqWindowComplex      from "@/components/eq-ui/EQWindowComplex";
 import EqWindow             from "@/components/eq-ui/EQWindow";
 import {ROUTE}              from "../../routes";
+import LoaderFakeProgess    from "../../components/LoaderFakeProgress";
+import EqProgressBar        from "../../components/eq-ui/EQProgressBar";
 
 const MAX_ICON_ID = 10000;
 // const MAX_ICON_ID = 1000;
@@ -94,7 +104,7 @@ let icons      = [];
 let modelFiles = {};
 
 export default {
-  components: { EqWindow, EqWindowComplex, EqWindowSimple, PageHeader },
+  components: { EqProgressBar, LoaderFakeProgess, EqWindow, EqWindowComplex, EqWindowSimple, PageHeader },
   data() {
     return {
       iconSlotSearch: 0,
@@ -102,7 +112,8 @@ export default {
       filteredIcons: null,
       iconSlotOptions: null,
       iconItemTypeOptions: null,
-      loaded: false
+      loaded: false,
+      renderingImages: false,
     }
   },
   methods: {
@@ -152,53 +163,67 @@ export default {
     loadIcons() {
       this.loaded = false;
 
-      // icon slot based search
-      if (this.iconSlotSearch > 0) {
-        let itemAdded           = {};
-        this.iconItemTypeSearch = 0
+      // we let the browser download the image first before trying to render the content
+      let curImg = new Image();
+      curImg.src = '/eq-asset-preview-master/assets/sprites/item-icons.png';
+      curImg.onload = () => {
 
-        if (!itemSlotIconMapping[this.iconSlotSearch]) {
-          return
-        }
+        // inform the user we are rendering
+        this.renderingImages = true
+        setTimeout(() => {
+          this.renderingImages = false
 
-        let filteredIcons = []
-        itemSlotIconMapping[this.iconSlotSearch].forEach((icon) => {
-          if (iconExists[icon] && !itemAdded[icon]) {
-            filteredIcons.push(icon)
-            itemAdded[icon] = 1
+          // icon slot based search
+          if (this.iconSlotSearch > 0) {
+            let itemAdded           = {};
+            this.iconItemTypeSearch = 0
+
+            if (!itemSlotIconMapping[this.iconSlotSearch]) {
+              return
+            }
+
+            let filteredIcons = []
+            itemSlotIconMapping[this.iconSlotSearch].forEach((icon) => {
+              if (iconExists[icon] && !itemAdded[icon]) {
+                filteredIcons.push(icon)
+                itemAdded[icon] = 1
+              }
+            })
+
+            this.filteredIcons = filteredIcons
+            this.loaded        = true;
+            return;
           }
-        })
 
-        this.filteredIcons = filteredIcons
-        this.loaded        = true;
-        return;
+          // icon item type search
+          if (this.iconItemTypeSearch > 0) {
+            let itemAdded       = {};
+            this.iconSlotSearch = 0
+
+            if (!itemTypesIconMapping[this.iconItemTypeSearch]) {
+              return
+            }
+
+            let filteredIcons = []
+            itemTypesIconMapping[this.iconItemTypeSearch].forEach((icon) => {
+              if (iconExists[icon] && !itemAdded[icon]) {
+                filteredIcons.push(icon)
+                itemAdded[icon] = 1
+              }
+            })
+
+            this.filteredIcons = filteredIcons
+            this.loaded        = true;
+            return;
+          }
+
+          // if no filters or searches were hit, we load them all
+          this.filteredIcons = icons
+          this.loaded        = true;
+
+        }, 100);
       }
 
-      // icon item type search
-      if (this.iconItemTypeSearch > 0) {
-        let itemAdded       = {};
-        this.iconSlotSearch = 0
-
-        if (!itemTypesIconMapping[this.iconItemTypeSearch]) {
-          return
-        }
-
-        let filteredIcons = []
-        itemTypesIconMapping[this.iconItemTypeSearch].forEach((icon) => {
-          if (iconExists[icon] && !itemAdded[icon]) {
-            filteredIcons.push(icon)
-            itemAdded[icon] = 1
-          }
-        })
-
-        this.filteredIcons = filteredIcons
-        this.loaded        = true;
-        return;
-      }
-
-      // if no filters or searches were hit, we load them all
-      this.filteredIcons = icons
-      this.loaded        = true;
     },
 
     // load meta data
