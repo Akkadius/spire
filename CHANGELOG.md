@@ -1,3 +1,11 @@
+## [1.6.7]
+
+### Quest API Explorer
+
+Implemented searching by method param. [#23](https://github.com/Akkadius/spire/issues/23)
+
+![image](https://user-images.githubusercontent.com/3319450/151752471-85e4df08-4f0c-4936-a082-f62557d1cd12.png)
+
 ## [1.6.6]
 
 ### UI Tweaks
