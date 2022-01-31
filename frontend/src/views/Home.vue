@@ -180,4 +180,8 @@ export default {
   padding-bottom: 30px;
   padding-top: 15px;
 }
+
+#changelog img {
+  max-width: 100%;
+}
 </style>
