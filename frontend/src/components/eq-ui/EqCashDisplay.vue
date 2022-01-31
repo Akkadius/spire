@@ -1,22 +1,22 @@
 <template>
   <div>
     <div v-if="platinum > 0" class="d-inline-block mr-2">
-      <img :src="cdnUrl + 'assets/item_icons/item_644.png'" :style="'height: ' + size + 'px'" title="Platinum">
+      <div :class="'ml-1 item-644-sm'" title="Silver"/>
       {{ platinum }}
     </div>
 
     <div v-if="gold > 0" class="d-inline-block mr-2">
-      <img :src="cdnUrl + 'assets/item_icons/item_645.png'" :style="'height: ' + size + 'px'" title="Gold">
+      <div :class="'ml-1 item-645-sm'" title="Silver"/>
       {{ gold }}
     </div>
 
     <div v-if="silver > 0" class="d-inline-block mr-2">
-      <img :src="cdnUrl + 'assets/item_icons/item_646.png'" :style="'height: ' + size + 'px'" title="Silver">
+      <div :class="'ml-1 item-646-sm'" title="Silver"/>
       {{ silver }}
     </div>
 
     <div v-if="copper > 0" class="d-inline-block mr-2">
-      <img :src="cdnUrl + 'assets/item_icons/item_647.png'" :style="'height: ' + size + 'px'" title="Copper">
+      <div :class="'ml-1 item-647-sm'" title="Copper"/>
       {{ copper }}
     </div>
   </div>

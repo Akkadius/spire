@@ -4,26 +4,29 @@
       class="mr-3 d-inline-block text-center"
       :style="(centeredButtons ? 'width: 100%' : '')"
     >
-      <div v-for="(deity, deityId) in deities" class="mb-1 text-center d-inline-block">
+      <div v-for="(deity, deityId) in deities" class="text-center d-inline-block">
         <div class="text-center pl-0 pr-0 mr-1 col-lg-12 col-sm-12">
           <small
             :style="(deity.short.length > 8 ? 'font-size: 9px' : 'font-size: 11px')"
             v-if="showNames"
           >{{ deity.short }}</small>
           <div class="text-center">
-            <img
+            <span
               :title="deity.name"
               @click="selectDeity(deityId)"
-              :src="itemCdnUrl + 'item_' + deity.icon + '.png'"
-              :style="getImageSize() + ' ' + (isDeitySelected(deityId) ? 'border: 2px solid #dadada; border-radius: 7px;' : 'border-radius: 7px; opacity: .6')"
-              class="mt-1 hover-highlight" alt=""
-            >
+              :style="(isDeitySelected(deityId) ? 'border-radius: 3px;' : 'border-radius: 3px; opacity: .6')"
+              :class="'hover-highlight-inner item-' + deity.icon + ' ' + (isDeitySelected(deityId) ? 'highlight-selected-inner' : '')"
+            />
           </div>
         </div>
       </div>
 
       <!-- Select All / None -->
-      <div class="d-inline-block" v-if="displayAllNone">
+      <div
+        class="d-inline-block"
+        v-if="displayAllNone"
+        :style="'line-height: 25px; bottom: ' + (centeredButtons ? -10 : 15) + 'px; position: relative;'"
+      >
         <div
           :class="'text-center mt-2 btn-xs eq-button-fancy ' + (parseInt(mask) >= 65535 ? 'eq-button-fancy-highlighted' : '')"
           @click="selectAll()"
@@ -73,11 +76,6 @@ export default {
       required: false,
       default: true
     },
-    imageSize: {
-      type: Number,
-      required: false,
-      default: 50,
-    }
   },
   watch: {
     mask: {
@@ -92,7 +90,6 @@ export default {
   data() {
     return {
       deities: DB_DIETIES_FULL,
-      itemCdnUrl: App.ASSET_ITEM_ICON_BASE_URL,
       selectedDeityes: {},
       currentMask: 0
     }
@@ -102,9 +99,6 @@ export default {
     this.calculateFromBitmask();
   },
   methods: {
-    getImageSize() {
-      return util.format("width: %spx; height %spx;", this.imageSize, this.imageSize)
-    },
     selectAll() {
       Object.keys(this.deities).reverse().forEach((deityId) => {
         this.selectedDeityes[deityId] = true;

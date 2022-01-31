@@ -207,6 +207,7 @@ build-assets: ##@build Builds static assets before packing into binary
 strip-extra-assets: ##@build Strips extra assets not needed to packet into binary
 	rm -rf frontend/public/eq-asset-preview-master/assets/npc_models
 	rm -rf frontend/public/eq-asset-preview-master/assets/objects
+	rm -rf frontend/public/eq-asset-preview-master/assets/item_icons
 
 build-frontend: ##@build Builds frontend to be packed into binary
 	cd frontend && npm install && npm run build

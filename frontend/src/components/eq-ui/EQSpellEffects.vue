@@ -61,7 +61,6 @@ export default {
     return {
       spellEffectInfo: [],
       spellCdnUrl: App.ASSET_SPELL_ICONS_BASE_URL,
-      itemCdnUrl: App.ASSET_ITEM_ICON_BASE_URL,
       componentId: "",
       sideLoadedSpellData: {},
       loaded: false,

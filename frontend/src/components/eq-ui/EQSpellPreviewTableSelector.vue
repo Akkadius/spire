@@ -38,12 +38,12 @@
           >
                 <span v-for="(icon, index) in dbClassIcons">
                   <div v-if="spell['classes_' + index] > 0 && spell['classes_' + index] < 255">
-                      <img
-                        :src="itemCdnUrl + 'item_' + icon + '.png'"
-                        class="mb-1"
-                        style="height: 17px; width:auto; border-radius: 5px"
-                        alt=""
-                      >
+                    
+                     <span
+                       style="border-radius: 4px"
+                       :class="'item-' + icon + '-sm'"
+                       :title="dbClassesShort[index]"
+                     />
                     {{ dbClassesShort[index] }}
                     ({{ spell["classes_" + index] }})
                     </div>

@@ -1,10 +1,10 @@
 <template>
   <div v-if="spa >= 0" class="ml-3">
 
-<!--    <div class="mb-4 mt-3" style="font-size: 14px; color: rgb(123, 113, 74);">-->
-<!--      Depending on the spell effect, the base, limit, max, formula values can mean different things. Below shows what-->
-<!--      values correspond to what for the Spell effect you have highlighted.-->
-<!--    </div>-->
+    <!--    <div class="mb-4 mt-3" style="font-size: 14px; color: rgb(123, 113, 74);">-->
+    <!--      Depending on the spell effect, the base, limit, max, formula values can mean different things. Below shows what-->
+    <!--      values correspond to what for the Spell effect you have highlighted.-->
+    <!--    </div>-->
 
     <h6 class="eq-header mt-3 mb-3">Spell Effect Details</h6>
 
@@ -69,7 +69,6 @@ export default {
       sideLoadedSpellData: {},
 
       spellCdnUrl: App.ASSET_SPELL_ICONS_BASE_URL,
-      itemCdnUrl: App.ASSET_ITEM_ICON_BASE_URL,
 
       componentId: "",
       reagents: [],

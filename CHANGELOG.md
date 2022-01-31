@@ -1,3 +1,9 @@
+## [1.6.6]
+
+### UI Tweaks
+
+All item icons in application now load from a spritesheet, removing the dependency on an additional set of 40MB of images being loaded into the binary
+
 ## [1.6.5]
 
 ### Quest API Explorer
