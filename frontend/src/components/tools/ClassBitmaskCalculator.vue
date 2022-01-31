@@ -4,22 +4,26 @@
       class="ml-1 mr-3 d-inline-block"
       :style="(centeredButtons ? 'width: 100%; margin: 0;' : '')"
     >
-      <div v-for="(gClass, classId) in classes" class="mb-1 d-inline-block">
+      <div v-for="(gClass, classId) in classes" class="d-inline-block">
         <div class="text-center p-0 mr-1 col-lg-12 col-sm-12">
           <span v-if="showTextTop">{{ gClass.short }}</span>
           <div class="text-center">
-            <img
+            <span
               :title="gClass.class"
               @click="selectClass(classId)"
-              :src="itemCdnUrl + 'item_' + gClass.icon + '.png'"
-              :style="getImageSize() + (isClassSelected(classId) ? 'border: 2px solid #dadada; border-radius: 7px;' : 'border-radius: 7px; opacity: .6')"
-              class="hover-highlight">
+              :style="(isClassSelected(classId) ? 'border-radius: 3px;' : 'border-radius: 3px; opacity: .6')"
+              :class="'hover-highlight-inner item-' + gClass.icon + ' ' + (isClassSelected(classId) ? 'highlight-selected-inner' : '')"
+            />
           </div>
         </div>
       </div>
 
       <!-- Select All / None -->
-      <div class="d-inline-block" v-if="displayAllNone">
+      <div
+        class="d-inline-block"
+        v-if="displayAllNone"
+        :style="'line-height: 25px; bottom: ' + (centeredButtons ? -10 : 15) + 'px; position: relative;'"
+      >
         <div
           :class="'text-center mt-2 btn-xs eq-button-fancy ' + (parseInt(mask) >= 65535 && !this.isOnlySelectedAndEnabled() ? 'eq-button-fancy-highlighted' : '')"
           @click="selectAll()"
@@ -82,11 +86,6 @@ export default {
       required: false,
       default: false
     },
-    imageSize: {
-      type: Number,
-      required: false,
-      default: 50,
-    },
     addOnlyButtonEnabled: {
       type: Boolean,
       required: false,
@@ -111,7 +110,6 @@ export default {
   data() {
     return {
       classes: DB_PLAYER_CLASSES_ALL,
-      itemCdnUrl: App.ASSET_ITEM_ICON_BASE_URL,
       selectedClasses: {},
       currentMask: 0,
       onlySelected: false,
@@ -131,10 +129,6 @@ export default {
     this.calculateFromBitmask();
   },
   methods: {
-    getImageSize() {
-      return util.format("width: %spx; height %spx;", this.imageSize, this.imageSize)
-    },
-
     isOnlySelectedAndEnabled() {
       return this.addOnlyButtonEnabled && this.onlySelected
     },
@@ -203,7 +197,7 @@ export default {
     },
     isClassSelected: function (classId) {
       return this.selectedClasses[classId]
-    }
+    },
   }
 }
 </script>

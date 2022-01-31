@@ -5,15 +5,17 @@
         <div class="text-center">
           {{ gClass.short }}
           <div class="text-center">
-            <img
+            <span
               @click="selectClass(classId)"
-              :src="itemCdnUrl + 'item_' + gClass.icon + '.png'"
-              :style="'height: 45px; width:auto;' + selectedStyling(classId)"
-              class="mt-1 p-1 mb-2">
+              :style="(isClassSelected(classId) ? 'border-radius: 3px;' : 'border-radius: 3px; opacity: .6')"
+              :class="'item-' + gClass.icon + ' ' + (isClassSelected(classId) ? 'highlight-selected-inner' : '')"
+              class="mt-1 p-1 mb-2"
+            />
             <b-form-input
               v-model.number="spell['classes_' + classId]"
               @change="updateParent"
-              style="width: 45px; display: block; padding: 0; padding-left: 9px !important"/>
+              style="width: 45px; display: block; padding: 0; padding-left: 9px !important"
+            />
           </div>
         </div>
       </div>
@@ -22,7 +24,6 @@
 </template>
 
 <script>
-import {App}                   from "@/constants/app";
 import {DB_PLAYER_CLASSES_ALL} from "@/app/constants/eq-classes-constants";
 
 export default {
@@ -40,7 +41,6 @@ export default {
   data() {
     return {
       classes: DB_PLAYER_CLASSES_ALL,
-      itemCdnUrl: App.ASSET_ITEM_ICON_BASE_URL,
     }
   },
   methods: {

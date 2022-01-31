@@ -1,11 +1,15 @@
 <template>
-  <div class="pb-4 fade-in" style="min-width: 400px; max-width: 500px; padding: 5px"
-       v-if="spellData && spellData['targettype']">
+  <div
+    class="pb-4 fade-in" style="min-width: 400px; max-width: 500px; padding: 5px"
+    v-if="spellData && spellData['targettype']"
+  >
 
     <div class="row">
       <div class="col-1">
-        <img :src="spellCdnUrl + (spellData.new_icon > 0 ? spellData.new_icon : 1) + '.gif'"
-             :style="'width:40px;height:auto;border-radius: 10px; ' + 'border: 2px solid ' + getTargetTypeColor(this.spellData['targettype']) + '; border-radius: 7px;'">
+        <img
+          :src="spellCdnUrl + (spellData.new_icon > 0 ? spellData.new_icon : 1) + '.gif'"
+          :style="'width:40px;height:auto;border-radius: 10px; ' + 'border: 2px solid ' + getTargetTypeColor(this.spellData['targettype']) + '; border-radius: 7px;'"
+        >
       </div>
       <div class="col-11 pl-5">
         <h6 class="eq-header" style="margin: 0px; margin-bottom: 10px">
@@ -30,12 +34,15 @@
         <td class="spell-field-label">Classes</td>
         <td style="width: 250px">
           <div v-for="(icon, index) in dbClassIcons" style="display: inline-block">
-            <div v-if="spellData['classes_' + index] > 0 && spellData['classes_' + index] < 255"
-                 class="mr-2">
-              <img
-                :src="itemCdnUrl + 'item_' + icon + '.png'"
-                class="mb-1"
-                style="height: 17px; width:auto; border-radius: 5px">
+            <div
+              v-if="spellData['classes_' + index] > 0 && spellData['classes_' + index] < 255"
+              class="mr-2"
+            >
+               <span
+                 style="border-radius: 4px"
+                 :class="'item-' + icon + '-sm'"
+                 :title="dbClassesShort[index]"
+               />
               {{ dbClassesShort[index] }}
               ({{ spellData["classes_" + index] }})
             </div>
@@ -68,7 +75,9 @@
       <tr v-if="spellData['typedescnum'] !== ''">
         <td class="spell-field-label">Book Category</td>
         <td> {{ getSpellTypeDescNumName(spellData["typedescnum"]) }}
-          <span v-if="spellData['effectdescnum'] !== ''"> / {{ getSpellTypeDescNumName(spellData["effectdescnum"]) }} </span>
+          <span v-if="spellData['effectdescnum'] !== ''"> / {{
+              getSpellTypeDescNumName(spellData["effectdescnum"])
+            }} </span>
         </td>
       </tr>
 
@@ -152,14 +161,16 @@
       <!-- Casting -->
 
       <tr
-        v-if="(spellData['cast_time'] > 0 || spellData['recovery_time'] > 0 || spellData['recast_time'] > 0) && spellData['is_discipline'] === 0">
+        v-if="(spellData['cast_time'] > 0 || spellData['recovery_time'] > 0 || spellData['recast_time'] > 0) && spellData['is_discipline'] === 0"
+      >
         <td class="spell-field-label">Casting Time</td>
         <td> {{ (spellData["cast_time"] / 1000) }} sec
           <span v-if="spellData['uninterruptable'] !== 0">(Uninterruptable)</span>
         </td>
       </tr>
       <tr
-        v-if="(spellData['cast_time'] > 0 || spellData['recovery_time'] > 0 || spellData['recast_time'] > 0) && spellData['is_discipline'] === 0">
+        v-if="(spellData['cast_time'] > 0 || spellData['recovery_time'] > 0 || spellData['recast_time'] > 0) && spellData['is_discipline'] === 0"
+      >
         <td class="spell-field-label">Recovery Time</td>
         <td> {{ (spellData["recovery_time"] / 1000) }} sec</td>
       </tr>
@@ -222,7 +233,8 @@
         </td>
       </tr>
       <tr
-        v-if="(spellData['max_dist'] !== 0 || spellData['min_dist'] !== 0) && (spellData['max_dist_mod'] !== 0 || spellData['min_dist_mod'] !== 0) ">
+        v-if="(spellData['max_dist'] !== 0 || spellData['min_dist'] !== 0) && (spellData['max_dist_mod'] !== 0 || spellData['min_dist_mod'] !== 0) "
+      >
         <td class="spell-field-label">Range Based Mod</td>
         <td> ({{ spellData["min_dist_mod"] * 100 }}% at {{ spellData["min_dist"] }}') to
           ({{ spellData["max_dist_mod"] * 100 }}% at {{ spellData["max_dist"] }}')
@@ -240,9 +252,11 @@
         <td class="spell-field-label">Target</td>
         <td> {{ getTargetTypeName(spellData["targettype"]) }}
           <span
-            v-if="spellData['can_mgb'] == 0 && (spellData['buffduration'] > 0) && (spellData['targettype'] === 3  || spellData['targettype'] === 40 || spellData['targettype'] === 41)"> &nbsp; (No MGB)</span>
+            v-if="spellData['can_mgb'] == 0 && (spellData['buffduration'] > 0) && (spellData['targettype'] === 3  || spellData['targettype'] === 40 || spellData['targettype'] === 41)"
+          > &nbsp; (No MGB)</span>
           <span
-            v-if="spellData['can_mgb'] === 1 && (spellData['buffduration'] === 0) && (spellData['targettype'] === 3  || spellData['targettype'] === 40 || spellData['targettype'] === 41)"> &nbsp; (Can MGB)</span>
+            v-if="spellData['can_mgb'] === 1 && (spellData['buffduration'] === 0) && (spellData['targettype'] === 3  || spellData['targettype'] === 40 || spellData['targettype'] === 41)"
+          > &nbsp; (Can MGB)</span>
         </td>
       </tr>
       <tr v-if="spellData['aemaxtargets'] > 0 ">
@@ -259,11 +273,13 @@
         <td class="spell-field-label">Resist Type</td>
         <td> {{ getSpellResistTypeName(spellData["resisttype"]) }}
           <span
-            v-if="spellData['resist_diff'] !== 0 && spellData['field_209'] === 0  && spellData['no_partial_resist'] === 0"> &nbsp;({{
+            v-if="spellData['resist_diff'] !== 0 && spellData['field_209'] === 0  && spellData['no_partial_resist'] === 0"
+          > &nbsp;({{
               spellData["resist_diff"]
             }})</span>
           <span
-            v-if="spellData['resist_diff'] !== 0 && spellData['field_209'] === 0  && spellData['no_partial_resist'] !== 0"> &nbsp;({{
+            v-if="spellData['resist_diff'] !== 0 && spellData['field_209'] === 0  && spellData['no_partial_resist'] !== 0"
+          > &nbsp;({{
               spellData["resist_diff"]
             }}) &nbsp; (No Partial Resist)</span>
           <span v-if="spellData['field_209'] !== 0">(Unresistable)</span>
@@ -353,7 +369,8 @@
         <v-runtime-template
           :template="'<span>' + effect + '</span>'"
           v-if="typeof effect !== 'undefined'"
-          class="pb-6 mt-3 doc"/>
+          class="pb-6 mt-3 doc"
+        />
       </div>
     </div>
 
@@ -364,10 +381,9 @@
         <div :id="reagent.id + '-' + reagent.item.id + '-' + componentId" style="display:inline-block">
 
           <div style="display: inline-block">
-            <img
-              :src="itemCdnUrl + 'item_' + reagent.item.icon + '.png'"
-              style="height:15px; border-radius: 25px; width:auto;"
-              class="mr-2">
+
+            <div :class="'ml-1 item-' + reagent.item.icon + '-sm'"/>
+
             <span class="mr-1">{{ reagent.item.name }}</span>
           </div>
 
@@ -441,7 +457,6 @@ export default {
       debug: App.DEBUG,
       debugSpellEffects: false,
       spellCdnUrl: App.ASSET_SPELL_ICONS_BASE_URL,
-      itemCdnUrl: App.ASSET_ITEM_ICON_BASE_URL,
       spellEffectInfo: [],
       itemData: {},
       sideLoadedSpellData: {},

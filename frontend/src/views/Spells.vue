@@ -8,15 +8,15 @@
           <eq-window class="mt-5 text-center">
 
             <div class="row">
-              <div v-for="(icon, index) in dbClassIcons" class="mb-3 text-center">
+              <div v-for="(icon, index) in dbClassIcons" class="text-center">
                 <div class="text-center p-1 col-lg-12 col-sm-12">
                   {{ dbClassesShort[index] }}
                   <div class="text-center">
-                    <img
+                    <span
                       @click="selectClass(index)"
-                      :src="itemCdnUrl + 'item_' + icon + '.png'"
-                      :style="'width:auto;' + (isClassSelected(index) ? 'border: 2px solid #dadada; border-radius: 7px;' : 'border: 2px solid rgb(218 218 218 / 0%); border-radius: 7px;')"
-                      class="mt-1">
+                      :style="'width:40px;' + (isClassSelected(index) ? 'border-radius: 7px;' : 'border-radius: 7px;')"
+                      :class="'mt-1 hover-highlight-inner item-' + icon + ' ' + (isClassSelected(index) ? 'highlight-selected-inner' : '')"
+                    />
                   </div>
                 </div>
               </div>
@@ -35,7 +35,8 @@
                   placeholder="Name or ID"
                   autofocus=""
                   id="spell_name"
-                  value="">
+                  value=""
+                >
               </div>
 
               <div class="col-lg-2 col-sm-12 text-center">
@@ -45,7 +46,8 @@
                   id="spell_effect"
                   class="form-control"
                   v-model="selectedSpa"
-                  @change="triggerState()">
+                  @change="triggerState()"
+                >
 
                   <option value="-1">-- Select --</option>
                   <option v-for="(spellEffect, id) in dbSpellEffects" v-bind:value="id">
@@ -63,7 +65,8 @@
                   id="Class"
                   class="form-control"
                   v-model="selectedLevel"
-                  @change="selectClass(selectedClass)">
+                  @change="selectClass(selectedClass)"
+                >
                   <option value="0">-- Select --</option>
                   <option v-for="l in 105" v-bind:value="l">
                     {{ l }}
@@ -88,7 +91,8 @@
                   id="Class"
                   class="form-control"
                   v-model="listType"
-                  @change="triggerState()">
+                  @change="triggerState()"
+                >
                   <option value="table">Table</option>
                   <option value="card">Cards</option>
                 </select>
@@ -116,10 +120,12 @@
 
           <!-- card rendering -->
           <div class="row" style="justify-content: center" v-if="loaded && listType === 'card'">
-            <div v-for="(spell, index) in spells"
-                 class="col-lg-4 col-sm-9"
-                 :key="spell.id"
-                 style="display: inline-block; vertical-align: top">
+            <div
+              v-for="(spell, index) in spells"
+              class="col-lg-4 col-sm-9"
+              :key="spell.id"
+              style="display: inline-block; vertical-align: top"
+            >
               <eq-window style="margin-right: 10px; width: auto; height: 90%">
                 <eq-spell-preview :spell-data="spell"/>
               </eq-window>
@@ -144,7 +150,6 @@ import EqItemCardPreview from "@/components/eq-ui/EQItemCardPreview.vue";
 import * as util from "util";
 import EqSpellPreview from "@/components/eq-ui/EQSpellCardPreview.vue";
 import {DB_CLASSES_ICONS} from "@/app/constants/eq-class-icon-constants";
-import {App} from "@/constants/app";
 import {DB_CLASSES_SHORT, DB_PLAYER_CLASSES} from "@/app/constants/eq-classes-constants";
 import {DB_SPA} from "@/app/constants/eq-spell-constants";
 import EqSpellPreviewTable from "@/components/eq-ui/EQSpellPreviewTable.vue";
@@ -172,7 +177,6 @@ export default {
       dbClassesShort: DB_CLASSES_SHORT,
       dbClasses: DB_PLAYER_CLASSES,
       dbSpellEffects: DB_SPA,
-      itemCdnUrl: App.ASSET_ITEM_ICON_BASE_URL,
 
       // form values
       selectedClass: 0,
@@ -235,13 +239,13 @@ export default {
     },
 
     resetForm: function () {
-      this.selectedClass = 0;
-      this.spellName = "";
-      this.spellEffect = "";
-      this.selectedSpa = -1;
-      this.selectedLevel = 0;
+      this.selectedClass     = 0;
+      this.spellName         = "";
+      this.spellEffect       = "";
+      this.selectedSpa       = -1;
+      this.selectedLevel     = 0;
       this.selectedLevelType = 0;
-      this.spells = null;
+      this.spells            = null;
       this.updateQueryState()
     },
 
@@ -268,8 +272,8 @@ export default {
 
     selectClass: function (eqClass) {
       this.selectedClass = eqClass;
-      this.spellName = ""
-      this.selectedSpa = -1
+      this.spellName     = ""
+      this.selectedSpa   = -1
       this.updateQueryState();
       this.listSpells()
     },
@@ -290,10 +294,10 @@ export default {
     },
 
     listSpells: function () {
-      this.loaded = false;
+      this.loaded  = false;
       this.message = ""
 
-      const api = (new SpellsNewApi(SpireApiClient.getOpenApiConfig()))
+      const api   = (new SpellsNewApi(SpireApiClient.getOpenApiConfig()))
       let filters = [];
       let whereOr = [];
 
@@ -349,12 +353,12 @@ export default {
         wheresOrs.push(where)
       })
 
-      let request = {};
+      let request   = {};
       // this.message = "Refine search criteria to get more results...";
       request.limit = this.limit;
       if (this.selectedLevel && this.selectedLevel > 0) {
         request.limit = 1000
-        this.message = ""
+        this.message  = ""
       }
 
 
@@ -378,7 +382,7 @@ export default {
 
           // fetch spell ids that might be referenced by effects to bulk preload
           let spellsToPreload = [];
-          let itemsToPreload = [];
+          let itemsToPreload  = [];
           result.data.forEach((spell) => {
             for (let effectIndex = 1; effectIndex <= 12; effectIndex++) {
               const spellId = Spells.getSpellIdFromEffectIfExists(spell, effectIndex);

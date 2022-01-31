@@ -1,7 +1,9 @@
 <template>
   <div>
-    <div class='eq-window'
-         :style="'margin-bottom: 40px; min-height: 275px; ' + (title ? 'padding-top: 30px' : 'padding-top: 0px !important')">
+    <div
+      class='eq-window'
+      :style="'margin-bottom: 40px; min-height: 275px; ' + (title ? 'padding-top: 30px' : 'padding-top: 0px !important')"
+    >
       <div class='eq-window-title-bar' v-if="title">{{ title }}</div>
       <div :style="'padding: 10px; ' + (title ? 'margin-top: 10px' : '') ">
         <div class='eq-window-nested-blue text-center' v-if="spells.length === 0">
@@ -41,20 +43,25 @@
                 </b-button>
               </td>
               <td>
-                {{spell.id}}
+                {{ spell.id }}
               </td>
               <td class="text-left">
                 <v-runtime-template
                   v-if="spellMinis"
-                  :template="'<span>' + spellMinis[spell.id] + '</span>'"/>
+                  :template="'<span>' + spellMinis[spell.id] + '</span>'"
+                />
               </td>
               <td class="text-left">
                 <span v-for="(icon, index) in dbClassIcons">
-                  <div v-if="spell['classes_' + index] > 0 && spell['classes_' + index] < 255" class="d-inline-block mr-2">
-                      <img
-                        :src="itemCdnUrl + 'item_' + icon + '.png'"
-                        class="mb-1"
-                        style="height: 17px; width:auto; border-radius: 5px">
+                  <div
+                    v-if="spell['classes_' + index] > 0 && spell['classes_' + index] < 255"
+                    class="d-inline-block mr-2"
+                  >
+                      <span
+                        style="border-radius: 4px"
+                        :class="'item-' + icon + '-sm'"
+                        :title="dbClassesShort[index]"
+                      />
                     {{ dbClassesShort[index] }}
                     ({{ spell["classes_" + index] }})
                     </div>
@@ -71,9 +78,9 @@
               <td> {{ getTargetTypeName(spell["targettype"]) }}</td>
 
 
-<!--              <td style="text-align: left">-->
-<!--                <eq-spell-description :spell="spell"/>-->
-<!--              </td>-->
+              <!--              <td style="text-align: left">-->
+              <!--                <eq-spell-description :spell="spell"/>-->
+              <!--              </td>-->
             </tr>
             </tbody>
           </table>
@@ -110,7 +117,6 @@ export default {
       debug: App.DEBUG,
       debugSpellEffects: false,
       spellCdnUrl: App.ASSET_SPELL_ICONS_BASE_URL,
-      itemCdnUrl: App.ASSET_ITEM_ICON_BASE_URL,
       spellEffectInfo: [],
       itemData: {},
       sideLoadedSpellData: {},

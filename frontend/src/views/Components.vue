@@ -25,7 +25,7 @@
               <div class="row">
 
 
-                <div class="col-6 text-center">
+                <div class="col-4 text-center">
                   <!-- Window and Progress Bars -->
                   <eq-window title="Progress Bars" style="height: 90%">
                     Endurance

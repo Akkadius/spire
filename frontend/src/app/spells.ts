@@ -252,10 +252,7 @@ export class Spells {
                 <div :id="${parentSpellIdSi} + '-' + ${effectIndex} + '-' + ${item.id} + '-' + componentId" style="display:inline-block">
 
                   <div style="display: inline-block">
-                    <img
-                      :src="itemCdnUrl + 'item_' + ${item.icon} + '.png'"
-                      style="height:15px; border-radius: 25px; width:auto;"
-                      class="mr-1">
+                    <div class="ml-1 item-${item.icon}-sm"/>
                     <span class="mr-1">${item.name}</span>
                   </div>
 
@@ -641,10 +638,7 @@ export class Spells {
                 <div :id="${parentSpellId} + '-' + ${effectIndex} + '-' + ${item2.id} + '-' + componentId" style="display:inline-block">
 
                   <div style="display: inline-block">
-                    <img
-                      :src="itemCdnUrl + 'item_' + ${item2.icon} + '.png'"
-                      style="height:15px; border-radius: 25px; width:auto;"
-                      class="mr-1">
+                    <div class="ml-1 item-${item2.icon}-sm"/>
                     <span class="mr-1">${item2.name}</span>
                   </div>
 
@@ -2981,9 +2975,12 @@ export class Spells {
     }
   };
 
-  public static async renderSpellMini(parentSpellId, renderSpellId, iconSize = 20) {
+  public static async renderSpellMini(parentSpellId, renderSpellId, iconSize = 16) {
     let spell             = <any>await this.getSpell(renderSpellId)
     const targetTypeColor = this.getTargetTypeColor(spell["targettype"]);
+
+    let borderSize = iconSize > 16 ? 2 : 1;
+    let borderRadius = iconSize > 16 ? 7 : 3;
 
     return `
           <div :id="${parentSpellId} + '-' + ${renderSpellId} + '-' + componentId" style="display:inline-block">
@@ -2991,8 +2988,8 @@ export class Spells {
             <div style="display: inline-block">
               <img
                 :src="spellCdnUrl + '' + (${spell.new_icon} > 0 ? ${spell.new_icon} : 1) + '.gif'"
-                style="width: ${iconSize}px;height:auto; border: 2px solid ${targetTypeColor}; border-radius: 7px;"
-                :class="(${iconSize} > 20 ? 'mr-1' : '')"
+                style="width: ${iconSize}px;height:auto; border: ${borderSize}px solid ${targetTypeColor}; border-radius: ${borderRadius}px;"
+                :class="(${iconSize} > 16 ? 'mr-1' : '')"
                 >
               <span style="color: #f7ff00">${spell.name}</span>
             </div>

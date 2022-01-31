@@ -199,8 +199,6 @@
       </div>
     </div>
 
-    <!-- TODO: Price -->
-
     <!-- Extra Damage Amount -->
     <div v-if="itemData['extradmgamt'] > 0" class="mt-3 mb-3 row">
       <div class="col-12">

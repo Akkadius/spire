@@ -231,7 +231,6 @@ import {SpireApiClient} from "@/app/api/spire-api-client";
 import * as util from "util";
 import EqItemCardPreview from "@/components/eq-ui/EQItemCardPreview.vue";
 import {DB_CLASSES_ICONS} from "@/app/constants/eq-class-icon-constants";
-import {App} from "@/constants/app";
 import {DB_CLASSES_SHORT, DB_PLAYER_CLASSES} from "@/app/constants/eq-classes-constants";
 import {DB_SPA} from "@/app/constants/eq-spell-constants";
 import {Items} from "@/app/items";
@@ -269,7 +268,6 @@ export default {
       dbClassesShort: DB_CLASSES_SHORT,
       dbClasses: DB_PLAYER_CLASSES,
       dbItemEffects: DB_SPA,
-      itemCdnUrl: App.ASSET_ITEM_ICON_BASE_URL,
 
       // form values
       selectedClasses: 0,
@@ -653,8 +651,7 @@ export default {
       if (this.selectedClasses && parseInt(this.selectedClasses) > 0 && parseInt(this.selectedClasses) !== 65535) {
         if (this.selectOnlyClassEnabled) {
           filters.push(["classes", "__", this.selectedClasses]);
-        }
-        else {
+        } else {
           filters.push(["classes", "_bitwiseand_", this.selectedClasses]);
         }
 
@@ -719,7 +716,7 @@ export default {
       }
 
       if (filters.length === 0) {
-        this.items = null
+        this.items  = null
         this.loaded = true
         return;
       }

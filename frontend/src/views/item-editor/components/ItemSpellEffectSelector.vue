@@ -1,24 +1,23 @@
 <template>
   <div>
-    <eq-window style="margin-top: 30px;">
+    <eq-window-simple style="margin-top: 20px;">
       <div
-        class="row text-center"
+        class="row text-center justify-content-center mb-3"
         style="margin: 0 auto;"
       >
         <div
           v-for="(icon, index) in dbClassIcons"
-          class="mb-3 text-center"
+          class="mb-3 text-center mr-4"
         >
           <div class="text-center col-lg-12 p-0 col-sm-12">
             {{ dbClassesShort[index] }}
             <div class="text-center">
-              <img
+              <div
+                style="display: block"
                 @click="selectClass(index)"
-                :src="itemCdnUrl + 'item_' + icon + '.png'"
-                :style="'width:auto; height: 35px; ' + (isClassSelected(index) ? 'border: 2px solid #dadada; border-radius: 7px;' : 'border: 2px solid rgb(218 218 218 / 0%); border-radius: 7px;')"
-                class="mt-1 p-0"
-                alt=""
-              >
+                :class="'mt-1 hover-highlight-inner item-' + icon + ' ' + (isClassSelected(index) ? 'highlight-selected-inner' : '')"
+              />
+
             </div>
           </div>
         </div>
@@ -102,26 +101,26 @@
         </div>
 
       </div>
+    </eq-window-simple>
 
-      <app-loader :is-loading="!loaded" padding="4"/>
+    <app-loader :is-loading="!loaded" padding="4"/>
 
+    <eq-window-simple
+      style="overflow-y: scroll; overflow-x: hidden; height: 60vh"
+      id="spell-effect-selector-view-port"
+      v-if="loaded && spells"
+    >
       <div v-if="message">
         {{ message }}
       </div>
 
-      <div
-        style="height: 75vh; overflow-y: scroll"
-        id="spell-effect-selector-view-port"
+      <eq-spell-preview-table-selector
+        :spells="spells"
+        @input="bubbleToParent($event)"
         v-if="loaded && spells"
-      >
-        <eq-spell-preview-table-selector
-          :spells="spells"
-          @input="bubbleToParent($event)"
-          v-if="loaded && spells"
-        />
-      </div>
+      />
 
-    </eq-window>
+    </eq-window-simple>
   </div>
 </template>
 
@@ -140,10 +139,12 @@ import EqSpellPreviewTable from "@/components/eq-ui/EQSpellPreviewTable.vue";
 import {Spells} from "@/app/spells";
 import {Items} from "@/app/items";
 import EqSpellPreviewTableSelector from "@/components/eq-ui/EQSpellPreviewTableSelector.vue";
+import EqWindowSimple from "@/components/eq-ui/EQWindowSimple.vue";
 
 export default {
   name: "SpellEffectSelector",
   components: {
+    EqWindowSimple,
     EqSpellPreviewTableSelector,
     EqSpellPreviewTable,
     EqSpellPreview,
