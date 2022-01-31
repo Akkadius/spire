@@ -423,7 +423,22 @@ export default {
       let apiMethods = []
       for (const [key, value] of Object.entries(this.api[this.languageSelection].methods)) {
         this.api[this.languageSelection].methods[key].forEach((method) => {
-          if (method.method.toLowerCase().includes(this.search.toLowerCase())) {
+
+          let search = this.search.toLowerCase()
+
+          // search in params
+          let foundInParam = false
+          method.params.forEach((param) => {
+            if (foundInParam) {
+              return true
+            }
+
+            if (param.includes(search)) {
+              foundInParam = true
+            }
+          })
+
+          if (method.method.toLowerCase().includes(search) || foundInParam) {
             // console.log()
             apiMethods.push(this.getFormattedApiMethod(method))
           }
