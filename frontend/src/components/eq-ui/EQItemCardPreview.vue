@@ -240,16 +240,18 @@
     </div>
 
     <!-- Augment Slots -->
-    <div v-for="(n, i) in 5">
-      <div class="pl-0 row" v-if="itemData['augslot_' + n + '_type'] > 0">
-        <div class="col-12">
-          <img
-            src='~@/assets/img/icons/inventory/blank_slot.gif'
-            class="pr-3"
-            style='width:auto;height:15px'
-          >
-          <span style="font-weight: bold">Slot {{ n }}</span> Type {{ itemData["augslot_" + n + "_type"] }}
-          {{ getAugTypeDescription(itemData["augslot_" + n + "_type"]) }}
+    <div class="mb-3 mt-3">
+      <div v-for="(n, i) in 5">
+        <div class="pl-0 row mb-1 " v-if="itemData['augslot_' + n + '_type'] > 0">
+          <div class="col-12">
+            <img
+              src='~@/assets/img/icons/inventory/blank_slot.gif'
+              class="pr-3"
+              style='width:auto;height:15px'
+            >
+            <span style="font-weight: bold">Slot {{ n }}</span> Type {{ itemData["augslot_" + n + "_type"] }}
+            {{ getAugTypeDescription(itemData["augslot_" + n + "_type"]) }}
+          </div>
         </div>
       </div>
     </div>
