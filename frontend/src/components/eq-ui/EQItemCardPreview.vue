@@ -593,16 +593,17 @@ export default {
     },
     getDeity: function () {
       let deities      = []
-      let deitiesValue = this.itemData.deities
-      for (const [key, value] of Object.entries(DB_DIETIES).reverse()) {
+      let deitiesValue = this.itemData.deity
 
+      for (let [key, value] of Object.entries(DB_DIETIES).reverse()) {
+        key = parseInt(key)
         if (key <= deitiesValue) {
           deitiesValue -= key;
           deities.push(value)
         }
       }
 
-      return deities.join(", ").trim()
+      return this.itemData.deity >= 65535 ? 'ALL' : deities.join(", ").trim()
     },
     getSlots: function () {
       let slots      = []
