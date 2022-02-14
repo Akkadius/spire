@@ -1490,10 +1490,10 @@
             >
 
               <keep-alive>
-              <item-model-selector
-                :selected-model="item.idfile"
-                @input="item.idfile = $event; setFieldModifiedById('idfile')"
-              />
+                <item-model-selector
+                  :selected-model="item.idfile"
+                  @input="item.idfile = $event; setFieldModifiedById('idfile')"
+                />
               </keep-alive>
             </div>
 
@@ -1546,10 +1546,10 @@
             >
 
               <keep-alive>
-              <item-icon-selector
-                :selected-icon="item.icon"
-                @input="item.icon = $event; setFieldModifiedById('icon')"
-              />
+                <item-icon-selector
+                  :selected-icon="item.icon"
+                  @input="item.icon = $event; setFieldModifiedById('icon')"
+                />
               </keep-alive>
             </div>
 
@@ -1595,12 +1595,20 @@ import EqWindow                from "../../components/eq-ui/EQWindow";
 import EqTabs                  from "../../components/eq-ui/EQTabs";
 import EqTab                   from "../../components/eq-ui/EQTab";
 import EqItemPreview           from "../../components/eq-ui/EQItemCardPreview";
-import {App}                   from "../../constants/app";
+import {
+  App
+}                              from "../../constants/app";
 import EqCheckbox              from "../../components/eq-ui/EQCheckbox";
-import {SpireApiClient}        from "../../app/api/spire-api-client";
+import {
+  SpireApiClient
+}                              from "../../app/api/spire-api-client";
 import FreeIdSelector          from "../../components/tools/FreeIdSelector";
-import {Items}                 from "../../app/items";
-import {ItemApi}               from "../../app/api";
+import {
+  Items
+}                              from "../../app/items";
+import {
+  ItemApi
+}                              from "../../app/api";
 import ItemModelPreview        from "./components/ItemModelPreview";
 import ItemModelSelector       from "./components/ItemModelSelector";
 import ItemIconSelector        from "./components/ItemIconSelector";
@@ -1616,7 +1624,9 @@ import {
   DB_ITEM_TYPES,
   ITEM_SIZE
 }                              from "../../app/constants/eq-item-constants";
-import {AUG_TYPES}             from "../../app/constants/eq-aug-constants";
+import {
+  AUG_TYPES
+}                              from "../../app/constants/eq-aug-constants";
 import InventorySlotCalculator from "../../components/tools/InventorySlotCalculator";
 
 import SpellEffectSelector     from "./components/ItemSpellEffectSelector";
@@ -2062,6 +2072,7 @@ export default {
     },
 
     load() {
+
       if (this.$route.params.id > 0) {
         Items.getItem(this.$route.params.id).then(result => {
           this.item              = result
@@ -2090,6 +2101,31 @@ export default {
           )
 
           this.hexColor = hex;
+
+          // if we're cloning this item, automatically fetch an ID
+          if (this.$route.query.hasOwnProperty("clone")) {
+            SpireApiClient.v1().get("query/free-ids-reserved/items/id/name").then((response) => {
+              if (response.data) {
+
+                // grab first "reserved" entry available
+                if (response.data.data.length > 0) {
+                  this.item.id = response.data.data[0].id
+                  this.setFieldModifiedById('id')
+                }
+
+                // grab first free id in range entry available
+                if (response.data.data.length === 0) {
+                  SpireApiClient.v1().get("query/free-id-ranges/items/id").then((response) => {
+                    if (response.data && response.data.data) {
+                      this.item.id = response.data.data[0].start_id
+                      this.setFieldModifiedById('id')
+                    }
+                  });
+                }
+              }
+            });
+          }
+
         })
       }
     },

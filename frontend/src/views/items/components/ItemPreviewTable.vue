@@ -17,7 +17,7 @@
           <table id="items-table" class="eq-table eq-highlight-rows" style="display: table;">
             <thead>
             <tr>
-              <th style=" width: 100px"></th>
+              <th style=" width: 180px"></th>
               <th style="width: 100px" class="text-center">Id</th>
               <th style="width: auto;">Name</th>
               <th style="width: auto;">ReqLvl</th>
@@ -31,14 +31,29 @@
             <tbody>
             <tr v-for="(item, index) in items" :key="item.id">
               <td>
-                <b-button
-                  @click="editItem(item.id)"
-                  size="sm"
-                  variant="outline-warning"
-                >
-                  <i class="ra ra-sword"></i>
-                  Edit
-                </b-button>
+
+                <div class="btn-group" role="group" aria-label="Basic example">
+
+                  <b-button
+                    @click="editItem(item.id)"
+                    size="sm"
+                    variant="outline-warning"
+                  >
+                    <i class="ra ra-wrench"></i>
+                    Edit
+                  </b-button>
+
+                  <b-button
+                    @click="editItem(item.id, true)"
+                    size="sm"
+                    variant="outline-light"
+                  >
+                    <i class="ra ra-double-team"></i>
+                    Clone
+                  </b-button>
+
+                </div>
+
               </td>
               <td>
                 {{ item.id }}
@@ -157,10 +172,12 @@ export default {
     items: Array
   },
   methods: {
-    editItem(itemId) {
+    editItem(itemId, clone = false) {
+      console.log("clone [%s]", clone)
+
       this.$router.push(
         {
-          path: util.format(ROUTE.ITEM_EDIT, itemId),
+          path: util.format(ROUTE.ITEM_EDIT + (clone ? "?clone" : ""), itemId),
           query: {}
         }
       ).catch(() => {
