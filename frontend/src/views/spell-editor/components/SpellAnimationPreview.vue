@@ -21,9 +21,9 @@
 </template>
 
 <script>
-import SpellAnimations from "@/app/eq-assets/spell-animations-map.json";
-import {App}           from "../../../constants/app";
-import VideoViewer     from "../../../app/video-viewer/video-viewer";
+import {App}       from "../../../constants/app";
+import VideoViewer from "../../../app/video-viewer/video-viewer";
+import EqAssets    from "../../../app/eq-assets/eq-assets";
 
 export default {
   name: "SpellAnimationPreview",
@@ -45,11 +45,8 @@ export default {
   methods: {
     render() {
       this.previewId = 0;
-      SpellAnimations[0].contents.forEach((row) => {
-        const pieces      = row.name.split(/\//);
-        const fileName    = pieces[pieces.length - 1].replace(".mp4", "");
-        const animationId = parseInt(fileName)
 
+      EqAssets.getSpellAnimationFileIds().forEach((animationId) => {
         if (this.id === animationId) {
           this.previewId = this.id;
 

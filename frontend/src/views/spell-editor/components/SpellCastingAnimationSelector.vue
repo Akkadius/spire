@@ -2,28 +2,13 @@
   <div>
     <app-loader :is-loading="!loaded" padding="8"/>
 
-    <eq-window-simple style="width: 100%">
-      <div class="row">
-        <div class="col-12">
-          <input
-            type="text"
-            class="form-control"
-            v-model="search"
-            v-on:keyup="triggerSearch"
-            placeholder="Search for spell names to find animations"
-          >
-        </div>
-      </div>
-
-    </eq-window-simple>
-
     <eq-window-simple
       class="text-center p-0"
     >
       <div
-        style="height: 80vh; overflow-y: scroll"
+        style="height: 90vh; overflow-y: scroll"
         v-on:scroll="handleRender"
-        id="spell-video-view-port"
+        id="video-view-port"
       >
         <div class="col-12">
           <div v-if="filteredAnimations && filteredAnimations.length === 0">
@@ -62,28 +47,26 @@
 </template>
 
 <script>
-import PageHeader        from "@/components/layout/PageHeader";
-import {App}             from "@/constants/app";
-import EqWindow          from "@/components/eq-ui/EQWindow";
-import SpellAnimations   from "@/app/eq-assets/spell-animations-map.json";
-import spellAnimMappings from "@/app/data-maps/spell-icon-anim-name-map.json";
-import * as util         from "util";
-import VideoViewer       from "../../../app/video-viewer/video-viewer";
-import EqWindowSimple    from "../../../components/eq-ui/EQWindowSimple";
-import EqAssets          from "../../../app/eq-assets/eq-assets";
+import PageHeader     from "@/components/layout/PageHeader";
+import {App}          from "@/constants/app";
+import EqWindow       from "@/components/eq-ui/EQWindow";
+import * as util      from "util";
+import VideoViewer    from "../../../app/video-viewer/video-viewer";
+import EqWindowSimple from "../../../components/eq-ui/EQWindowSimple";
+import EqAssets       from "../../../app/eq-assets/eq-assets";
 
 let animationPreviewExists = {}
 
 export default {
-  name: "SpellAnimationSelector",
+  name: "SpellCastingAnimationSelector",
   components: { EqWindowSimple, EqWindow, PageHeader },
   data() {
     return {
       loaded: false,
-      spellAnimations: [],
+      animations: [],
       filteredAnimations: [],
       search: "",
-      animBaseUrl: App.ASSET_SPELL_ANIMATIONS,
+      animBaseUrl: App.ASSET_PLAYER_ANIMATION_CLIPS,
     }
   },
   props: {
@@ -98,19 +81,13 @@ export default {
   },
   methods: {
     init() {
-      if (!this.$route.query.q) {
-        this.search        = ""
-        this.filteredRaces = []
-      }
-
       this.render()
-      this.spellAnimSearch()
 
       // bring focus to the selected video
       if (this.selectedAnimation > 0) {
         // we need 100ms delay because the videos haven't been rendered yet
         setTimeout(() => {
-          const container = document.getElementById("spell-video-view-port");
+          const container = document.getElementById("video-view-port");
           const target    = document.getElementById(util.format("spell-%s", this.selectedAnimation))
 
           // 230 is height of video to offset
@@ -138,7 +115,7 @@ export default {
 
             // container.scrollTop = target.getBoundingClientRect().top - 150;
           }
-        }, 100)
+        }, 300)
       }
 
     },
@@ -148,7 +125,7 @@ export default {
     render: function () {
       // Preload model files
       let modelFiles = [];
-      EqAssets.getSpellAnimationFileIds().forEach((animationId) => {
+      EqAssets.getPlayerAnimationFileIds().forEach((animationId) => {
         modelFiles.push(animationId)
         animationPreviewExists[animationId] = 1
       })
@@ -158,8 +135,8 @@ export default {
         return a - b;
       });
 
-      this.spellAnimations = modelFiles
-      this.loaded          = true
+      this.filteredAnimations = modelFiles
+      this.loaded             = true
 
       VideoViewer.handleRender()
     },
@@ -168,37 +145,6 @@ export default {
     },
     triggerSearch() {
       this.spellAnimSearch();
-    },
-    spellAnimSearch: function () {
-      this.loaded = false
-
-      let foundAnim          = {};
-      let filteredAnimations = []
-
-      for (let spellAnimMapping of spellAnimMappings) {
-        const spellName   = spellAnimMapping[0].toLowerCase().trim()
-        const spellAnimId = spellAnimMapping[2]
-
-        if (spellName.includes(this.search.toLowerCase())) {
-          if (!foundAnim[spellAnimId] && animationPreviewExists[spellAnimId]) {
-            filteredAnimations.push(spellAnimId)
-            foundAnim[spellAnimId] = 1
-          }
-        }
-      }
-
-      // Sort by spell animation number
-      filteredAnimations.sort(function (a, b) {
-        return a - b;
-      });
-
-      this.filteredAnimations = filteredAnimations
-      this.loaded             = true
-
-      setTimeout(() => {
-        VideoViewer.handleRender()
-      }, 100);
-
     },
     selectSpellAnim(anim) {
       this.$emit("update:inputData", anim);

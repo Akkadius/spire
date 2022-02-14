@@ -22,14 +22,14 @@
           <table id="items-table" class="eq-table eq-highlight-rows" style="display: table;">
             <thead>
             <tr>
-              <th style=" width: 180px"></th>
-              <th style="width: 100px" class="text-center">Id</th>
-              <th style="width: auto;">Name</th>
-              <th style="width: auto;">ReqLvl</th>
-              <th style="width: auto;">AC</th>
-              <th style="width: auto;">HP</th>
-              <th style="width: auto;">Mana</th>
-              <th style="width: auto;">End</th>
+              <th style="text-align: center; width: 180px"></th>
+              <th style="text-align: center; width: 100px" class="text-center">Id</th>
+              <th style="text-align: center; width: auto;">Name</th>
+              <th style="text-align: center; width: auto;">ReqLvl</th>
+              <th style="text-align: center; width: auto;">AC</th>
+              <th style="text-align: center; width: auto;">HP</th>
+              <th style="text-align: center; width: auto;">Mana</th>
+              <th style="text-align: center; width: auto;">End</th>
               <th style="width: auto;">Classes</th>
             </tr>
             </thead>

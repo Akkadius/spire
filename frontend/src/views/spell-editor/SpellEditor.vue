@@ -34,7 +34,7 @@
                   <div class="row">
                     <div class="col-2" @mouseover="drawFreeIdSelector">
                       Id
-                      <b-form-input v-model.number="spell.id"/>
+                      <b-form-input id="id" v-model.number="spell.id"/>
                     </div>
                     <div class="col-7">
                       Name
@@ -45,7 +45,7 @@
 
                     <div class="col-2" @mouseover="drawIconSelector">
                       Icon
-                      <b-form-input v-model.number="spell.new_icon"/>
+                      <b-form-input id="icon" v-model.number="spell.new_icon"/>
                     </div>
 
                     <div
@@ -90,18 +90,24 @@
                       </div>
 
                       <div class="row">
-                        <div class="col-6 text-center">
+                        <div
+                          class="col-6 text-center"
+                          @mouseover="castingAnimField = 'casting_anim'; drawCastingAnimationSelector()"
+                        >
                           Casting Animation
 
                           <spell-casting-animation-preview :id="spell.casting_anim"/>
-                          <b-form-input v-model.number="spell.casting_anim" class="col-11"/>
+                          <b-form-input id="casting_anim" v-model.number="spell.casting_anim" class="col-11"/>
                         </div>
 
-                        <div class="col-6 text-center">
+                        <div
+                          class="col-6 text-center"
+                          @mouseover="castingAnimField = 'target_anim'; drawCastingAnimationSelector()"
+                        >
                           Target Animation
 
                           <spell-casting-animation-preview :id="spell.target_anim"/>
-                          <b-form-input v-model.number="spell.target_anim" class="col-11"/>
+                          <b-form-input id="target_anim" v-model.number="spell.target_anim" class="col-11"/>
                         </div>
                       </div>
                     </div>
@@ -166,7 +172,7 @@
                         class="mt-1"
                         :id="spell.spellanim"
                       />
-                      <b-form-input v-model.number="spell.spellanim" class="col-10"/>
+                      <b-form-input id="spellanim" v-model.number="spell.spellanim" class="col-10"/>
                     </div>
                   </div>
 
@@ -1034,6 +1040,19 @@
               />
             </div>
 
+            <!-- spell casting anim selector -->
+            <div
+              style="margin-top: 20px; width: auto;"
+              class="fade-in"
+              v-if="castingAnimSelectorActive && spell[castingAnimField]"
+            >
+
+              <spell-casting-animation-selector
+                :selected-animation="spell[castingAnimField]"
+                :inputData.sync="spell[castingAnimField]"
+              />
+            </div>
+
             <!-- free id selector -->
             <eq-window
               title="Free Spell Ids"
@@ -1092,23 +1111,25 @@ import {
 import {DB_SKILLS}                  from "../../app/constants/eq-skill-constants";
 import {App}                        from "../../constants/app";
 import SpellIconSelector            from "./components/SpellIconSelector";
-import SpellAnimationPreview        from "./components/SpellAnimationPreview";
-import SpellAnimationViewer         from "../viewers/SpellAnimationViewer";
-import SpellAnimationSelector       from "./components/SpellAnimationSelector";
-import EqCheckbox                   from "../../components/eq-ui/EQCheckbox";
-import {SpellsNewApi}               from "../../app/api";
-import {SpireApiClient}             from "../../app/api/spire-api-client";
-import SpellClassSelector           from "./components/SpellClassSelector";
-import SpellDeitySelector           from "./components/SpellDeitySelector";
-import FreeIdSelector               from "../../components/tools/FreeIdSelector";
-import SpellSpaPreviewPane          from "./components/SpellSpaPreviewPane";
-import SpellCastingAnimationPreview from "./components/SpellCastingAnimationPreview";
+import SpellAnimationPreview         from "./components/SpellAnimationPreview";
+import SpellAnimationViewer          from "../viewers/SpellAnimationViewer";
+import SpellAnimationSelector        from "./components/SpellAnimationSelector";
+import EqCheckbox                    from "../../components/eq-ui/EQCheckbox";
+import {SpellsNewApi}                from "../../app/api";
+import {SpireApiClient}              from "../../app/api/spire-api-client";
+import SpellClassSelector            from "./components/SpellClassSelector";
+import SpellDeitySelector            from "./components/SpellDeitySelector";
+import FreeIdSelector                from "../../components/tools/FreeIdSelector";
+import SpellSpaPreviewPane           from "./components/SpellSpaPreviewPane";
+import SpellCastingAnimationPreview  from "./components/SpellCastingAnimationPreview";
+import SpellCastingAnimationSelector from "./components/SpellCastingAnimationSelector";
 
 const MILLISECONDS_BEFORE_WINDOW_RESET = 3000;
 
 export default {
   name: "SpellEdit",
   components: {
+    SpellCastingAnimationSelector,
     SpellCastingAnimationPreview,
     SpellSpaPreviewPane,
     FreeIdSelector,
@@ -1147,9 +1168,12 @@ export default {
       spellAnimSelectorActive: false,
       freeIdSelectorActive: false,
       spaDetailPaneActive: false,
+      castingAnimSelectorActive: false,
 
       spaPreviewNumber: -1,
       spaEffectIndex: -1,
+
+      castingAnimField: "",
 
       lastResetTime: Date.now(),
 
@@ -1185,6 +1209,27 @@ export default {
       // border: 2px #555555 solid !important;
       evt.target.style.setProperty('border-color', 'orange', 'important');
     },
+
+    setFieldSubEditorHighlightedById(id) {
+      const target = document.getElementById(id)
+      if (target) {
+        target.classList.add('pulsate-highlight-white')
+      }
+    },
+
+    resetFieldSubEditorHighlightedStatus() {
+      // reset elements
+      const itemEditCard = document.getElementById("spell-edit-card")
+      if (itemEditCard) {
+        const elements = itemEditCard.querySelectorAll("input, select");
+        elements.forEach((element) => {
+          if (element) {
+            element.classList.remove('pulsate-highlight-white')
+          }
+        });
+      }
+    },
+
 
     resetFieldEditedStatus() {
       // reset elements
@@ -1254,11 +1299,14 @@ export default {
      * Selector / previewers
      */
     resetPreviewComponents() {
-      this.previewSpellActive      = false;
-      this.iconSelectorActive      = false;
-      this.spellAnimSelectorActive = false;
-      this.freeIdSelectorActive    = false;
-      this.spaDetailPaneActive     = false;
+      this.previewSpellActive        = false;
+      this.iconSelectorActive        = false;
+      this.spellAnimSelectorActive   = false;
+      this.freeIdSelectorActive      = false;
+      this.spaDetailPaneActive       = false;
+      this.castingAnimSelectorActive = false;
+
+      this.resetFieldSubEditorHighlightedStatus()
     },
     previewSpell() {
       let shouldReset = Date.now() - this.lastResetTime > MILLISECONDS_BEFORE_WINDOW_RESET;
@@ -1270,21 +1318,30 @@ export default {
         this.lastResetTime      = Date.now()
       }
     },
+    drawCastingAnimationSelector() {
+      this.resetPreviewComponents()
+      this.castingAnimSelectorActive = true;
+
+      this.setFieldSubEditorHighlightedById(this.castingAnimField)
+    },
     drawSpellAnimationSelector() {
       this.resetPreviewComponents()
       this.lastResetTime           = Date.now()
       this.spellAnimSelectorActive = true
+      this.setFieldSubEditorHighlightedById("spellanim")
     },
     drawIconSelector() {
       if (!this.freeIdSelectorActive) {
         this.resetPreviewComponents()
         this.iconSelectorActive = true;
+        this.setFieldSubEditorHighlightedById("icon")
       }
     },
     drawFreeIdSelector() {
       this.resetPreviewComponents()
       this.lastResetTime        = Date.now()
       this.freeIdSelectorActive = true
+      this.setFieldSubEditorHighlightedById("id")
     },
     drawSpaDetailPane(spa, index) {
       this.resetPreviewComponents()
