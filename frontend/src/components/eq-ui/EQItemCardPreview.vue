@@ -5,10 +5,10 @@
       <div class="col-1">
         <span :class="'fade-in item-' + itemData.icon" :title="itemData.icon">
 <!--          <span-->
-<!--            v-if="itemData.stacksize > 1"-->
-<!--            style="position:absolute; right: 0px; top:45px; font-size: 9px">-->
-<!--            x{{ itemData.stacksize }}-->
-<!--          </span>-->
+          <!--            v-if="itemData.stacksize > 1"-->
+          <!--            style="position:absolute; right: 0px; top:45px; font-size: 9px">-->
+          <!--            x{{ itemData.stacksize }}-->
+          <!--          </span>-->
         </span>
       </div>
       <div class="col-10 pl-5">
@@ -156,8 +156,10 @@
               <tr v-for="(data, stat) in resists">
 
                 <!-- Label -->
-                <td style="font-weight: bold; min-width: 95px"
-                    v-if="itemData[data.stat] > 0 || itemData[data.heroic] > 0">
+                <td
+                  style="font-weight: bold; min-width: 95px"
+                  v-if="itemData[data.stat] > 0 || itemData[data.heroic] > 0"
+                >
                   {{ stat }}
                 </td>
 
@@ -244,7 +246,8 @@
           <img
             src='~@/assets/img/icons/inventory/blank_slot.gif'
             class="pr-3"
-            style='width:auto;height:15px'>
+            style='width:auto;height:15px'
+          >
           <span style="font-weight: bold">Slot {{ n }}</span> Type {{ itemData["augslot_" + n + "_type"] }}
           {{ getAugTypeDescription(itemData["augslot_" + n + "_type"]) }}
         </div>
@@ -264,7 +267,8 @@
             <img
               :src="spellCdnUrl + (effectData[effect.field].new_icon > 0 ? effectData[effect.field].new_icon : 1) + '.gif'"
               :style="'width:20px;height:auto; ' + 'border: 1px solid ' + getTargetTypeColor(effectData[effect.field]['targettype']) + '; border-radius: 3px;'"
-              class="mr-1 mt-1">
+              class="mr-1 mt-1"
+            >
             {{ effectData[effect.field].name }} ({{ effect.name }})
 
           </div>
@@ -290,14 +294,24 @@
     <!-- Bag Weight Reduction -->
     <div v-if="itemData.bagwr" class="mt-3 mb-3 row">
       <div class="col-12">
-        <span style="font-weight: bold" class="mr-1">Bag Weight Reduction</span> {{itemData.bagwr}}%
+        <span style="font-weight: bold" class="mr-1">Bag Weight Reduction</span> {{ itemData.bagwr }}%
       </div>
     </div>
 
     <!-- Lore -->
     <div v-if="itemData.lore" class="mt-3 mb-3 row">
       <div class="col-12">
-        <span style="font-weight: bold" class="mr-1">Lore</span> {{itemData.lore}}
+        <span style="font-weight: bold" class="mr-1">Lore</span> {{ itemData.lore }}
+      </div>
+    </div>
+
+    <!-- Faction -->
+    <div v-for="i in 4" :key="i">
+      <div class="mb-1 row" v-if="itemData['factionmod_' + i] > 0 && factionNames[itemData['factionmod_' + i]]">
+        <div class="col-12">
+          <span style="font-weight: bold" class="mr-1">Faction</span> Increases your faction of
+          <span style="font-weight: bold">{{ factionNames[itemData['factionmod_' + i]] }}</span> by {{ itemData['factionamt_' + i] }} point(s)
+        </div>
       </div>
     </div>
 
@@ -306,7 +320,8 @@
       <span style="font-weight: bold" class="mr-2">Price</span>
       <eq-cash-display
         class="d-inline-block"
-        :price="itemData.price"/>
+        :price="itemData.price"
+      />
     </div>
 
     <div class="pb-4 mb-3"></div>
@@ -327,19 +342,21 @@ import {
 import {BODYTYPES}                     from "@/app/constants/eq-bodytype-constants";
 import {DB_CLASSES_WEAR_SHORT}         from "@/app/constants/eq-classes-constants";
 import {DB_RACE_NAMES, DB_RACES_SHORT} from "@/app/constants/eq-races-constants";
-import {DB_DIETIES}                from "@/app/constants/eq-deities-constants";
-import EqDebug                     from "@/components/eq-ui/EQDebug";
-import {App}                       from "@/constants/app";
-import EqSpellPreview              from "@/components/eq-ui/EQSpellCardPreview";
-import {EXAMPLE_SPELL_DATA}        from "@/app/constants/eq-example-spell-data";
-import EqWindow                    from "@/components/eq-ui/EQWindow";
-import {DB_BARD_SKILLS, DB_SKILLS} from "@/app/constants/eq-skill-constants";
-import {AUG_TYPES}                 from "@/app/constants/eq-aug-constants";
-import {Spells}                    from "@/app/spells";
-import util                        from "util";
-import {ROUTE}                     from "@/routes";
-import EqCashDisplay               from "@/components/eq-ui/EqCashDisplay";
-import {Items}                     from "@/app/items";
+import {DB_DIETIES}                    from "@/app/constants/eq-deities-constants";
+import EqDebug                         from "@/components/eq-ui/EQDebug";
+import {App}                           from "@/constants/app";
+import EqSpellPreview                  from "@/components/eq-ui/EQSpellCardPreview";
+import {EXAMPLE_SPELL_DATA}            from "@/app/constants/eq-example-spell-data";
+import EqWindow                        from "@/components/eq-ui/EQWindow";
+import {DB_BARD_SKILLS, DB_SKILLS}     from "@/app/constants/eq-skill-constants";
+import {AUG_TYPES}                     from "@/app/constants/eq-aug-constants";
+import {Spells}                        from "@/app/spells";
+import util                            from "util";
+import {ROUTE}                         from "@/routes";
+import EqCashDisplay                   from "@/components/eq-ui/EqCashDisplay";
+import {Items}                         from "@/app/items";
+import {FactionListApi}                from "@/app/api";
+import {SpireApiClient}                from "@/app/api/spire-api-client";
 
 export default {
   name: "EqItemCardPreview",
@@ -350,6 +367,7 @@ export default {
       cdnUrl: App.ASSET_CDN_BASE_URL,
       spellCdnUrl: App.ASSET_SPELL_ICONS_BASE_URL,
       componentId: "",
+      factionNames: [],
       stats: {
         "Strength": { stat: "astr", heroic: "heroic_str" },
         "Stamina": { stat: "asta", heroic: "heroic_sta" },
@@ -403,7 +421,7 @@ export default {
     }
   },
   methods: {
-    init() {
+    async init() {
       const uuidv4     = require("uuid/v4")
       this.componentId = uuidv4()
 
@@ -438,6 +456,25 @@ export default {
           })
         }
       })
+
+      let factions = []
+      for (let i = 1; i <= 4; i++) {
+        if (this.itemData['factionmod_' + i]) {
+          factions.push(this.itemData['factionmod_' + i])
+        }
+      }
+
+      const response = await (new FactionListApi(SpireApiClient.getOpenApiConfig())).getFactionListsBulk({
+        body: {
+          ids: factions
+        }
+      })
+
+      if (response.status === 200 && response.data && response.data.length > 0) {
+        response.data.forEach((faction) => {
+          this.factionNames[faction.id] = faction.name
+        })
+      }
 
       this.secondlevel3 = data
     },
@@ -501,7 +538,7 @@ export default {
         tags.push("Attuneable");
       }
       if (this.itemData.stackable === 1) {
-        tags.push("Stackable (" + this.itemData.stacksize  + ")");
+        tags.push("Stackable (" + this.itemData.stacksize + ")");
       }
       if (this.itemData.potionbelt === 1) {
         tags.push("Potion Belt");
