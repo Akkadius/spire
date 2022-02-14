@@ -202,14 +202,14 @@
     </div>
 
     <!-- Extra Damage Amount -->
-    <div v-if="itemData['extradmgamt'] > 0" class="mt-3 mb-3 row">
+    <div v-if="itemData['extradmgamt'] > 0" class="mb-1 row">
       <div class="col-12">
         <span style="font-weight: bold" class="pr-2">{{ getExtraDmgSkill() }} Damage </span> +{{ itemData.extradmgamt }}
       </div>
     </div>
 
     <!-- Bard Skill -->
-    <div v-if="itemData['bardtype'] > 22 && itemData['bardtype'] < 65535" class="mt-3 mb-3 row">
+    <div v-if="itemData['bardtype'] > 22 && itemData['bardtype'] < 65535" class="mb-1 row">
       <div class="col-12">
         <span style="font-weight: bold" class="pr-2">Bard Skill ({{ getBardSkill() }}) </span>
         {{ ((itemData.bardvalue * 10) - 100) }}%
@@ -217,17 +217,17 @@
     </div>
 
     <!-- Skill Mod Type -->
-    <div class="row">
-      <div v-if="itemData['skillmodtype'] > 0 && itemData['skillmodvalue'] !== 0" class="mt-3 mb-3 col-12">
+    <div class="row" v-if="itemData['skillmodtype'] > 0 && itemData['skillmodvalue'] !== 0">
+      <div class="mb-1 col-12">
         <span style="font-weight: bold" class="pr-2">Skill Mod ({{ getSkillModSkill() }}) </span>
         +{{ itemData.skillmodvalue }}
       </div>
     </div>
 
     <!-- Augmentation Type -->
-    <div class="row">
+    <div class="row" v-if="itemData['itemtype'] === 54">
       <div class="col-12">
-        <div v-if="itemData['itemtype'] === 54" class="mt-3 mb-3">
+        <div class="mt-3">
           <div style="font-weight: bold" class="pr-2">Augmentation Slot Type(s)</div>
           <div v-for="(augType, index) in getAugSlotTypes()" :key="augType">
             {{ augType }}
@@ -240,9 +240,9 @@
     </div>
 
     <!-- Augment Slots -->
-    <div class="pl-0 row">
-      <div v-for="(n, i) in 5" class="col-12">
-        <div v-if="itemData['augslot_' + n + '_type'] > 0">
+    <div v-for="(n, i) in 5">
+      <div class="pl-0 row" v-if="itemData['augslot_' + n + '_type'] > 0">
+        <div class="col-12">
           <img
             src='~@/assets/img/icons/inventory/blank_slot.gif'
             class="pr-3"
@@ -255,51 +255,47 @@
     </div>
 
     <!-- Effects -->
-    <div class="row col-12 pl-0 pt-3 pb-3">
-      <div v-for="effect in effects" :key="effect.field" class="col-12">
+    <div v-for="effect in effects" :key="effect.field" class="col-12">
+      <!-- Click Effect -->
+      <div v-if="itemData[effect.field] > 0 && effectData[effect.field]" class="row col-12 pl-0 pt-3 pb-3">
 
-        <!-- Click Effect -->
-        <div v-if="itemData[effect.field] > 0 && effectData[effect.field]">
+        <!-- Target -->
+        <div :id="itemData[effect.field] + '-' + componentId">
 
-          <!-- Target -->
-          <div :id="itemData[effect.field] + '-' + componentId">
-
-            <img
-              :src="spellCdnUrl + (effectData[effect.field].new_icon > 0 ? effectData[effect.field].new_icon : 1) + '.gif'"
-              :style="'width:20px;height:auto; ' + 'border: 1px solid ' + getTargetTypeColor(effectData[effect.field]['targettype']) + '; border-radius: 3px;'"
-              class="mr-1 mt-1"
-            >
-            {{ effectData[effect.field].name }} ({{ effect.name }})
-
-          </div>
-
-          <!-- Popover -->
-          <b-popover
-            :target="itemData[effect.field] + '-' + componentId"
-            placement="auto"
-            custom-class="no-bg"
-            delay="1"
-            triggers="hover focus"
-            style="width: 500px !important"
+          <img
+            :src="spellCdnUrl + (effectData[effect.field].new_icon > 0 ? effectData[effect.field].new_icon : 1) + '.gif'"
+            :style="'width:20px;height:auto; ' + 'border: 1px solid ' + getTargetTypeColor(effectData[effect.field]['targettype']) + '; border-radius: 3px;'"
+            class="mr-1 mt-1"
           >
-            <eq-window style="margin-right: 10px; width: auto; height: 90%">
-              <eq-spell-preview :spell-data="effectData[effect.field]"/>
-            </eq-window>
-          </b-popover>
+          {{ effectData[effect.field].name }} ({{ effect.name }})
+
         </div>
 
+        <!-- Popover -->
+        <b-popover
+          :target="itemData[effect.field] + '-' + componentId"
+          placement="auto"
+          custom-class="no-bg"
+          delay="1"
+          triggers="hover focus"
+          style="width: 500px !important"
+        >
+          <eq-window style="margin-right: 10px; width: auto; height: 90%">
+            <eq-spell-preview :spell-data="effectData[effect.field]"/>
+          </eq-window>
+        </b-popover>
       </div>
     </div>
 
     <!-- Bag Weight Reduction -->
-    <div v-if="itemData.bagwr" class="mt-3 mb-3 row">
+    <div v-if="itemData.bagwr" class="mb-1 row">
       <div class="col-12">
         <span style="font-weight: bold" class="mr-1">Bag Weight Reduction</span> {{ itemData.bagwr }}%
       </div>
     </div>
 
     <!-- Lore -->
-    <div v-if="itemData.lore" class="mt-3 mb-3 row">
+    <div v-if="itemData.lore" class="mb-1 row">
       <div class="col-12">
         <span style="font-weight: bold" class="mr-1">Lore</span> {{ itemData.lore }}
       </div>
@@ -309,8 +305,10 @@
     <div v-for="i in 4" :key="i">
       <div class="mb-1 row" v-if="itemData['factionmod_' + i] > 0 && factionNames[itemData['factionmod_' + i]]">
         <div class="col-12">
-          <span style="font-weight: bold" class="mr-1">Faction</span> Increases your faction of
-          <span style="font-weight: bold">{{ factionNames[itemData['factionmod_' + i]] }}</span> by {{ itemData['factionamt_' + i] }} point(s)
+          <span style="font-weight: bold" class="mr-1">Faction</span>
+          {{ (parseInt(itemData['factionamt_' + i]) > 0 ? "Increases" : "Decreases") }} your faction of
+          <span style="font-weight: bold">{{ factionNames[itemData['factionmod_' + i]] }}</span> by
+          {{ Math.abs(itemData['factionamt_' + i]) }} point(s)
         </div>
       </div>
     </div>
