@@ -159,12 +159,13 @@
                       style="text-align: center"
                       @mouseover="drawSpellAnimationSelector"
                     >
-                      <spell-animation-preview
-                        class="mt-3 mb-3"
-                        :id="spell.spellanim"
-                      />
 
                       Spell Animation
+
+                      <spell-animation-preview
+                        class="mt-1"
+                        :id="spell.spellanim"
+                      />
                       <b-form-input v-model.number="spell.spellanim" class="col-10"/>
                     </div>
                   </div>

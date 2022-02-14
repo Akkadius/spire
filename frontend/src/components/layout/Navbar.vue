@@ -240,17 +240,6 @@ export default {
       hideNavbar: false,
       appEnv: AppEnv.getEnv(),
       appVersion: AppEnv.getVersion(),
-      componentNavs: [
-        { title: "Progress Bars", to: "/components#progress-bars" },
-        { title: "Page Headers", to: "/components#page-headers" },
-        { title: "Item Preview", to: "/components#item-preview" },
-        { title: "Spell Preview", to: "/components#spell-preview" },
-        { title: "NPC Special Abilities", to: "/components#npc-special-abilities" },
-        { title: "Table", to: "/components#table" },
-        { title: "Tabs", to: "/components#tabs" },
-        { title: "Form Elements", to: "/components#form-elements" },
-        { title: "Windows", to: "/components#windows" }
-      ],
       viewerNav: {
         label: "Viewers",
         labelIcon: "ra ra-bleeding-eye mr-1",
@@ -264,6 +253,17 @@ export default {
           { title: "Spell Animations", to: ROUTE.SPELL_ANIMATION_VIEWER, icon: "ra ra-dragon mr-1", isNew: true }
         ]
       },
+      componentNavs: [
+        { title: "Progress Bars", to: "/components#progress-bars" },
+        { title: "Page Headers", to: "/components#page-headers" },
+        { title: "Item Preview", to: "/components#item-preview" },
+        { title: "Spell Preview", to: "/components#spell-preview" },
+        { title: "NPC Special Abilities", to: "/components#npc-special-abilities" },
+        { title: "Table", to: "/components#table" },
+        { title: "Tabs", to: "/components#tabs" },
+        { title: "Form Elements", to: "/components#form-elements" },
+        { title: "Windows", to: "/components#windows" }
+      ],
       calculatorNav: {
         label: "Calculators",
         labelIcon: "ra ra-cog mr-1",

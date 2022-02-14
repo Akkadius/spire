@@ -74,7 +74,7 @@
                 </select>
               </div>
 
-              <div class="col-lg-4 col-sm-12 mt-3 pl-0 pr-0">
+              <div class="col-lg-6 col-sm-12 mt-3 pl-0 pr-0">
                 <div class="btn-group ml-3" role="group" aria-label="Basic example" v-if="selectedLevel">
                   <b-button
                     @click="selectedLevelType = 0; triggerStateDelayed();"
@@ -109,6 +109,13 @@
                     size="sm"
                     :variant="(listType === 'card' ? 'warning' : 'outline-warning')"
                   ><i class="fa fa-th"></i></b-button>
+                </div>
+
+                <div class="btn-group ml-3" role="group" aria-label="Basic example">
+                  <b-button @click="limit = 10; triggerStateDelayed()" size="sm" :variant="(parseInt(limit) === 10 ? 'warning' : 'outline-warning')">10</b-button>
+                  <b-button @click="limit = 100; triggerStateDelayed()" size="sm" :variant="(parseInt(limit) === 100 ? 'warning' : 'outline-warning')">100</b-button>
+                  <b-button @click="limit = 250; triggerStateDelayed()" size="sm" :variant="(parseInt(limit) === 250 ? 'warning' : 'outline-warning')">250</b-button>
+                  <b-button @click="limit = 1000; triggerStateDelayed()" size="sm" :variant="(parseInt(limit) === 1000 ? 'warning' : 'outline-warning')">1000</b-button>
                 </div>
 
                 <div
@@ -183,7 +190,7 @@ export default {
     return {
       loaded: false,
       spells: null,
-      limit: 250,
+      limit: 100,
       beginRange: 10000,
       endRange: 100000,
       dbClassIcons: DB_CLASSES_ICONS,
@@ -381,11 +388,6 @@ export default {
       let request   = {};
       // this.message = "Refine search criteria to get more results...";
       request.limit = this.limit;
-      if (this.selectedLevel && this.selectedLevel > 0) {
-        request.limit = 1000
-        this.message  = ""
-      }
-
 
       // filter by class
       if (this.selectedClass > 0) {

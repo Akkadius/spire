@@ -142,6 +142,12 @@
                       <b-button alt="Display as grid" @click="listType = 'card'; " size="sm" :variant="(listType === 'card' ? 'warning' : 'outline-warning')"><i class="fa fa-th"></i></b-button>
                     </div>
 
+                    <div class="btn-group ml-3" role="group" aria-label="Basic example">
+                      <b-button @click="limit = 10; triggerStateDelayed()" size="sm" :variant="(parseInt(limit) === 10 ? 'warning' : 'outline-warning')">10</b-button>
+                      <b-button @click="limit = 100; triggerStateDelayed()" size="sm" :variant="(parseInt(limit) === 100 ? 'warning' : 'outline-warning')">100</b-button>
+                      <b-button @click="limit = 1000; triggerStateDelayed()" size="sm" :variant="(parseInt(limit) === 1000 ? 'warning' : 'outline-warning')">1000</b-button>
+                    </div>
+
                     <div
                       :class="'text-center btn-xs eq-button-fancy ml-3'"
                       style="line-height: 25px;"
@@ -251,8 +257,6 @@ export default {
       loaded: false,
       items: null,
       limit: 100,
-      beginRange: 10000,
-      endRange: 100000,
       dbClassIcons: DB_CLASSES_ICONS,
       dbClassesShort: DB_CLASSES_SHORT,
       dbClasses: DB_PLAYER_CLASSES,
@@ -724,10 +728,6 @@ export default {
 
       let request   = {};
       request.limit = this.limit;
-
-      if (this.listType === 'table') {
-        request.limit = 300;
-      }
 
       // filter by class
       if (this.selectedClasses > 0) {
