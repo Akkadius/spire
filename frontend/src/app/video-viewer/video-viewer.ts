@@ -44,6 +44,7 @@ export default class VideoViewer {
         if (VideoViewer.elementInViewport(video)) {
           if (dataSrc) {
 
+
             // video.setAttribute("src", dataSrc);
             video.removeAttribute("data-src");
             video.pause()
@@ -55,6 +56,9 @@ export default class VideoViewer {
             video.appendChild(source);
             video.load();
             video.play();
+
+            // @ts-ignore
+            playing.push(video.getAttribute("id"))
           }
 
           if (!VideoViewer.videoPlaying(video) && VideoViewer.videoLoaded(video)) {
@@ -83,28 +87,6 @@ export default class VideoViewer {
   public static elementInViewport(elem) {
     // if (!(elem instanceof Element)) throw Error('DomUtil: elem is not an element.');
 
-    let top    = elem.offsetTop;
-    let left   = elem.offsetLeft;
-    let width  = elem.offsetWidth;
-    let height = elem.offsetHeight;
-
-    let el = elem;
-    while (el.offsetParent) {
-      el = el.offsetParent;
-      top += el.offsetTop;
-      left += el.offsetLeft;
-    }
-
-    const found = (
-      top < (window.pageYOffset + window.innerHeight) &&
-      left < (window.pageXOffset + window.innerWidth) &&
-      (top + height) > window.pageYOffset &&
-      (left + width) > window.pageXOffset
-    )
-
-    if (found) {
-      return true;
-    }
 
     const style = getComputedStyle(elem);
     if (style.display === 'none') return false;

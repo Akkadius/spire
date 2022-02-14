@@ -1,20 +1,23 @@
 <template>
-  <div class="text-center">
+  <div>
     <app-loader :is-loading="!loaded" padding="8"/>
 
-    <div class="row">
-      <div class="col-12">
-        <input
-          type="text"
-          class="form-control mb-4"
-          v-model="search"
-          v-on:keyup="triggerSearch"
-          placeholder="Search for spell names to find animations"
-        >
+    <eq-window-simple style="width: 100%">
+      <div class="row">
+        <div class="col-12">
+          <input
+            type="text"
+            class="form-control"
+            v-model="search"
+            v-on:keyup="triggerSearch"
+            placeholder="Search for spell names to find animations"
+          >
+        </div>
       </div>
-    </div>
 
-    <div
+    </eq-window-simple>
+
+    <eq-window-simple
       style="height: 85vh; overflow-y: scroll"
       v-on:scroll.passive="render"
       class="row justify-content-center"
@@ -50,7 +53,7 @@
         </div>
       </div>
 
-    </div>
+    </eq-window-simple>
 
   </div>
 </template>
@@ -63,12 +66,13 @@ import SpellAnimations   from "@/app/eq-assets/spell-animations-map.json";
 import spellAnimMappings from "@/app/data-maps/spell-icon-anim-name-map.json";
 import * as util         from "util";
 import VideoViewer       from "../../../app/video-viewer/video-viewer";
+import EqWindowSimple    from "../../../components/eq-ui/EQWindowSimple";
 
 let animationPreviewExists = {}
 
 export default {
   name: "SpellAnimationSelector",
-  components: { EqWindow, PageHeader },
+  components: { EqWindowSimple, EqWindow, PageHeader },
   data() {
     return {
       loaded: false,
@@ -107,7 +111,28 @@ export default {
 
           // 230 is height of video to offset
           if (container && target) {
-            container.scrollTop = target.getBoundingClientRect().top - 150;
+            const top = target.getBoundingClientRect().top
+
+            // hack to get all of the videos to load without top and bottom clipping
+            setTimeout(() => {
+              container.scrollTop = top - 400;
+              VideoViewer.handleRender();
+            }, 1)
+
+            setTimeout(() => {
+              container.scrollTop = top;
+              VideoViewer.handleRender();
+            }, 100)
+
+            setTimeout(() => {
+              container.scroll({
+                top: top - 150,
+                behavior: 'auto'
+              });
+              VideoViewer.handleRender();
+            }, 300)
+
+            // container.scrollTop = target.getBoundingClientRect().top - 150;
           }
         }, 100)
       }

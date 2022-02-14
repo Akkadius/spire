@@ -474,8 +474,6 @@ export default {
   methods: {
     async init() {
 
-      console.log("init")
-
       if (!this.spellData || !this.spellData["targettype"]) {
         return
       }

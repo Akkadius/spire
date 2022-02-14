@@ -73,9 +73,39 @@
                       <b-form-input v-model.number="spell.rank"/>
                     </div>
                   </div>
-
-                  <spell-class-selector :spell="spell" @input="spell = $event"/>
                   <!--                  <spell-deity-selector :spell="spell" @input="spell = $event"/>-->
+
+                  <div class="row">
+                    <div class="col-6 pl-0 mr-0">
+                      <spell-class-selector :spell="spell" @input="spell = $event"/>
+                    </div>
+                    <div class="col-6">
+
+                      <div class="row">
+                        <div class="col-12 mb-3 mt-3">
+                          <h4 class="eq-header text-center">
+                            Visuals
+                          </h4>
+                        </div>
+                      </div>
+
+                      <div class="row">
+                        <div class="col-6 text-center">
+                          Casting Animation
+
+                          <spell-casting-animation-preview :id="spell.casting_anim"/>
+                          <b-form-input v-model.number="spell.casting_anim"/>
+                        </div>
+
+                        <div class="col-6 text-center">
+                          Target Animation
+
+                          <spell-casting-animation-preview :id="spell.target_anim"/>
+                          <b-form-input v-model.number="spell.target_anim"/>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
 
                   <div class="row">
                     <div class="col-6">
@@ -135,10 +165,9 @@
                       />
 
                       Spell Animation
-                      <b-form-input v-model.number="spell.spellanim"/>
+                      <b-form-input v-model.number="spell.spellanim" class="col-10"/>
                     </div>
                   </div>
-
 
                 </eq-tab>
                 <eq-tab name="Effects" class="effect-tab">
@@ -186,7 +215,8 @@
                 </eq-tab>
 
                 <eq-tab name="Effects+" class="minified-inputs">
-                  <div class="row" v-for="field in
+                  <div
+                    class="row" v-for="field in
                      [
                        {
                          description: '(Knockback) Push Back',
@@ -523,7 +553,8 @@
 
                 <eq-tab name="Range" class="minified-inputs">
 
-                  <div class="row" v-for="field in
+                  <div
+                    class="row" v-for="field in
                      [
                        {
                          description: 'Spell Range',
@@ -990,8 +1021,8 @@
             </eq-window>
 
             <!-- spell anim selector -->
-            <eq-window
-              style="margin-top: 30px; margin-right: 10px; width: auto;"
+            <div
+              style="margin-top: 20px; width: auto;"
               class="fade-in"
               v-if="spellAnimSelectorActive"
             >
@@ -1000,7 +1031,7 @@
                 :selected-animation="spell.spellanim"
                 :inputData.sync="spell.spellanim"
               />
-            </eq-window>
+            </div>
 
             <!-- free id selector -->
             <eq-window
@@ -1042,12 +1073,12 @@
 </template>
 
 <script>
-import EqWindowFancy          from "../../components/eq-ui/EQWindowFancy";
-import EqWindow               from "../../components/eq-ui/EQWindow";
-import EqTabs                 from "../../components/eq-ui/EQTabs";
-import EqTab                  from "../../components/eq-ui/EQTab";
-import EqSpellPreview         from "../../components/eq-ui/EQSpellCardPreview";
-import {Spells}               from "../../app/spells";
+import EqWindowFancy                from "../../components/eq-ui/EQWindowFancy";
+import EqWindow                     from "../../components/eq-ui/EQWindow";
+import EqTabs                       from "../../components/eq-ui/EQTabs";
+import EqTab                        from "../../components/eq-ui/EQTab";
+import EqSpellPreview               from "../../components/eq-ui/EQSpellCardPreview";
+import {Spells}                     from "../../app/spells";
 import {
   DB_PC_NPC_ONLY_FLAG,
   DB_SPA,
@@ -1056,26 +1087,28 @@ import {
   DB_SPELL_TARGET_RESTRICTION,
   DB_SPELL_TARGETS,
   DB_SPELL_ZONE_TYPE
-}                             from "../../app/constants/eq-spell-constants";
-import {DB_SKILLS}            from "../../app/constants/eq-skill-constants";
-import {App}                  from "../../constants/app";
-import SpellIconSelector      from "./components/SpellIconSelector";
-import SpellAnimationPreview  from "./components/SpellAnimationPreview";
-import SpellAnimationViewer   from "../viewers/SpellAnimationViewer";
-import SpellAnimationSelector from "./components/SpellAnimationSelector";
-import EqCheckbox             from "../../components/eq-ui/EQCheckbox";
-import {SpellsNewApi}         from "../../app/api";
-import {SpireApiClient}       from "../../app/api/spire-api-client";
-import SpellClassSelector     from "./components/SpellClassSelector";
-import SpellDeitySelector     from "./components/SpellDeitySelector";
-import FreeIdSelector         from "../../components/tools/FreeIdSelector";
-import SpellSpaPreviewPane    from "./components/SpellSpaPreviewPane";
+}                                   from "../../app/constants/eq-spell-constants";
+import {DB_SKILLS}                  from "../../app/constants/eq-skill-constants";
+import {App}                        from "../../constants/app";
+import SpellIconSelector            from "./components/SpellIconSelector";
+import SpellAnimationPreview        from "./components/SpellAnimationPreview";
+import SpellAnimationViewer         from "../viewers/SpellAnimationViewer";
+import SpellAnimationSelector       from "./components/SpellAnimationSelector";
+import EqCheckbox                   from "../../components/eq-ui/EQCheckbox";
+import {SpellsNewApi}               from "../../app/api";
+import {SpireApiClient}             from "../../app/api/spire-api-client";
+import SpellClassSelector           from "./components/SpellClassSelector";
+import SpellDeitySelector           from "./components/SpellDeitySelector";
+import FreeIdSelector               from "../../components/tools/FreeIdSelector";
+import SpellSpaPreviewPane          from "./components/SpellSpaPreviewPane";
+import SpellCastingAnimationPreview from "./components/SpellCastingAnimationPreview";
 
 const MILLISECONDS_BEFORE_WINDOW_RESET = 3000;
 
 export default {
   name: "SpellEdit",
   components: {
+    SpellCastingAnimationPreview,
     SpellSpaPreviewPane,
     FreeIdSelector,
     SpellDeitySelector,
@@ -1238,6 +1271,7 @@ export default {
     },
     drawSpellAnimationSelector() {
       this.resetPreviewComponents()
+      this.lastResetTime           = Date.now()
       this.spellAnimSelectorActive = true
     },
     drawIconSelector() {

@@ -2,34 +2,34 @@
   <div>
     <div
       v-if="previewId === 0"
-      :style="'width: ' + this.width + 'px; height: ' + this.height + 'px;'"
+      :style="'width: ' + this.width + 'px; height: ' + this.height + 'px; border-radius:5px; border: 1px solid rgba(255, 255, 255, .3)'"
+      class="text-center mb-2"
     >
-      Spell casting animation preview not found...
+      <div class="pt-5 pl-4 pr-4">Spell casting animation preview not found...</div>
     </div>
     <div v-if="previewId > 0">
       <video
+        class="video-preview"
         muted
         loop
         autoplay
-        class="video-preview"
         :style="'width: ' + this.width + 'px; height: ' + this.height + 'px; border-radius:5px; border: 1px solid rgba(255, 255, 255, .3)'"
         :src="videoSource"
-      >
-      </video>
+      />
     </div>
   </div>
 </template>
 
 <script>
-import SpellAnimations from "@/app/eq-assets/spell-animations-map.json";
-import {App}           from "../../../constants/app";
-import VideoViewer     from "../../../app/video-viewer/video-viewer";
+import {App}       from "../../../constants/app";
+import EqAssets    from "../../../app/eq-assets/eq-assets";
+import VideoViewer from "../../../app/video-viewer/video-viewer";
 
 export default {
-  name: "SpellAnimationPreview",
+  name: "SpellCastingAnimationPreview",
   data() {
     return {
-      spellAnimationUrl: App.ASSET_SPELL_ANIMATIONS,
+      playerAnimationClipUrl: App.ASSET_PLAYER_ANIMATION_CLIPS,
       previewId: 0,
       videoSource: ""
     }
@@ -45,15 +45,11 @@ export default {
   methods: {
     render() {
       this.previewId = 0;
-      SpellAnimations[0].contents.forEach((row) => {
-        const pieces      = row.name.split(/\//);
-        const fileName    = pieces[pieces.length - 1].replace(".mp4", "");
-        const animationId = parseInt(fileName)
 
+      EqAssets.getPlayerAnimationFileIds().forEach((animationId) => {
         if (this.id === animationId) {
-          this.previewId = this.id;
-
-          this.videoSource = this.spellAnimationUrl + this.previewId + '.mp4';
+          this.previewId   = this.id;
+          this.videoSource = this.playerAnimationClipUrl + this.previewId + '.mp4';
           return false
         }
       })
@@ -71,12 +67,12 @@ export default {
       type: Number,
     },
     width: {
-      default: 384,
+      default: 192,
       required: false,
       type: Number,
     },
     height: {
-      default: 216,
+      default: 108,
       required: false,
       type: Number,
     },

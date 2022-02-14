@@ -5,7 +5,8 @@
       v-for="icon in icons"
       :key="icon"
       :class="'d-inline-block '"
-      style="margin: 2px">
+      style="margin: 2px"
+    >
       <img
         :src="spellCdnUrl + icon + '.gif'"
         :class="classIsPulsating(icon)"
