@@ -1,17 +1,22 @@
 <template>
   <div>
     <div
+      class='eq-window-simple text-center'
+      v-if="items.length === 0"
+    >
+      No items were found
+    </div>
+
+    <div
       class='eq-window'
       :style="'margin-bottom: 40px; min-height: 275px; ' + (title ? 'padding-top: 30px' : 'padding-top: 0px !important')"
+      v-if="items.length > 0"
     >
       <div class='eq-window-title-bar' v-if="title">{{ title }}</div>
-      <div :style="' ' + (title ? 'margin-top: 10px' : '') ">
-        <div class='eq-window-nested-blue text-center' v-if="items.length === 0">
-          No items were found
-        </div>
+      <div :style="' ' + (title ? 'margin-top: 10px' : 'margin-top: 30px') ">
 
         <div class='item-table' v-if="items.length > 0">
-<!--                    <div class="ml-3">Items shown ({{items.length}})</div>-->
+          <!--                    <div class="ml-3">Items shown ({{items.length}})</div>-->
 
           <!--        <div class='eq-window-nested-blue' v-if="items.length > 0" style="overflow-y: scroll;">-->
           <table id="items-table" class="eq-table eq-highlight-rows" style="display: table;">
