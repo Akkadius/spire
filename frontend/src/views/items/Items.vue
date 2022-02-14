@@ -144,6 +144,7 @@
 
                     <div
                       :class="'text-center btn-xs eq-button-fancy ml-3'"
+                      style="line-height: 25px;"
                       @click="resetForm()"
                     >
                       Reset Form

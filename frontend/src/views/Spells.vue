@@ -5,7 +5,7 @@
       <div class="panel-body">
         <div class="panel panel-default">
 
-          <eq-window class="mt-5 text-center">
+          <eq-window class="mt-5">
 
             <div class="row">
               <div v-for="(icon, index) in dbClassIcons" class="text-center">
@@ -58,7 +58,7 @@
 
               </div>
 
-              <div class="col-lg-2 col-sm-12 text-center">
+              <div class="col-lg-1 col-sm-12 text-center">
                 Level
                 <select
                   name="class"
@@ -74,38 +74,51 @@
                 </select>
               </div>
 
-              <div class="col-lg-1 col-sm-12" v-if="selectedLevel">
-                <b-form-group>
-                  <b-form-radio v-model="selectedLevelType" @change="triggerStateDelayed()" value="0">Only
-                  </b-form-radio>
-                  <b-form-radio v-model="selectedLevelType" @change="triggerStateDelayed()" value="1">And Higher
-                  </b-form-radio>
-                  <b-form-radio v-model="selectedLevelType" @change="triggerStateDelayed()" value="2">And Lower
-                  </b-form-radio>
-                </b-form-group>
-              </div>
+              <div class="col-lg-4 col-sm-12 mt-3 pl-0 pr-0">
+                <div class="btn-group ml-3" role="group" aria-label="Basic example" v-if="selectedLevel">
+                  <b-button
+                    @click="selectedLevelType = 0; triggerStateDelayed();"
+                    size="sm"
+                    :variant="(parseInt(selectedLevelType) === 0 ? 'warning' : 'outline-warning')"
+                  >Only
+                  </b-button>
+                  <b-button
+                    @click="selectedLevelType = 1; triggerStateDelayed();"
+                    size="sm"
+                    :variant="(parseInt(selectedLevelType) === 1 ? 'warning' : 'outline-warning')"
+                  >Higher
+                  </b-button>
+                  <b-button
+                    @click="selectedLevelType = 2; triggerStateDelayed();"
+                    size="sm"
+                    :variant="(parseInt(selectedLevelType) === 2 ? 'warning' : 'outline-warning')"
+                  >Lower
+                  </b-button>
+                </div>
 
-              <div class="col-lg-2 col-sm-12 text-center">
-                List Type
-                <select
-                  id="Class"
-                  class="form-control"
-                  v-model="listType"
-                  @change="triggerState()"
-                >
-                  <option value="table">Table</option>
-                  <option value="card">Cards</option>
-                </select>
-              </div>
+                <div class="btn-group ml-3" role="group" aria-label="Basic example">
+                  <b-button
+                    alt="Display as table"
+                    @click="listType = 'table'; "
+                    size="sm"
+                    :variant="(listType === 'table' ? 'warning' : 'outline-warning')"
+                  ><i class="fa fa-table"></i></b-button>
+                  <b-button
+                    alt="Display as grid"
+                    @click="listType = 'card'; "
+                    size="sm"
+                    :variant="(listType === 'card' ? 'warning' : 'outline-warning')"
+                  ><i class="fa fa-th"></i></b-button>
+                </div>
 
-              <div class="col-lg-2 col-sm-12 p-0 pr-1 text-left">
                 <div
-                  :class="'text-center btn-xs eq-button-fancy'"
-                  style="margin-top: 19px"
+                  :class="'text-center btn-xs eq-button-fancy ml-3'"
+                  style="line-height: 25px;"
                   @click="resetForm()"
                 >
                   Reset Form
                 </div>
+
               </div>
 
             </div>
@@ -213,7 +226,7 @@ export default {
       if (this.selectedClass !== 0) {
         queryState.class = this.selectedClass
       }
-      if (this.listType !== 0) {
+      if (this.listType !== "") {
         queryState.listType = this.listType
       }
       if (this.spellName !== "") {
@@ -245,6 +258,7 @@ export default {
       this.selectedSpa       = -1;
       this.selectedLevel     = 0;
       this.selectedLevelType = 0;
+      this.listType          = "table"
       this.spells            = null;
       this.updateQueryState()
     },
@@ -310,18 +324,29 @@ export default {
         filters.push(["name", "_notlike_", "Rk. I"]);
       }
 
+      let filterType = "__"; // equal
+      if (parseInt(this.selectedLevelType) === 1) {
+        filterType = "_gte_";
+      }
+      if (parseInt(this.selectedLevelType) === 2) {
+        filterType = "_lte_";
+      }
+
       // filter by level if class set
       if (this.selectedLevel > 0 && this.selectedClass > 0) {
-        let filterType = "__"; // equal
-        if (parseInt(this.selectedLevelType) === 1) {
-          filterType = "_gte_";
-        }
-        if (parseInt(this.selectedLevelType) === 2) {
-          filterType = "_lte_";
-        }
-
         filters.push(["classes" + this.selectedClass, filterType, this.selectedLevel]);
         filters.push(["classes" + this.selectedClass, "_lte_", "250"]);
+
+        // exclude rk 2/3 for now
+        filters.push(["name", "_notlike_", "Rk. I"]);
+      }
+
+      // when no class is set but level is greater than 0
+      if (this.selectedClass === 0 && this.selectedLevel > 0) {
+        for (let i = 1; i < 16; i++) {
+          whereOr.push(["classes" + i, filterType, this.selectedLevel]);
+          // filters.push(["classes" + i, "_lte_", "250"]);
+        }
 
         // exclude rk 2/3 for now
         filters.push(["name", "_notlike_", "Rk. I"]);
