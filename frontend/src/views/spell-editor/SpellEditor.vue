@@ -94,14 +94,14 @@
                           Casting Animation
 
                           <spell-casting-animation-preview :id="spell.casting_anim"/>
-                          <b-form-input v-model.number="spell.casting_anim"/>
+                          <b-form-input v-model.number="spell.casting_anim" class="col-11"/>
                         </div>
 
                         <div class="col-6 text-center">
                           Target Animation
 
                           <spell-casting-animation-preview :id="spell.target_anim"/>
-                          <b-form-input v-model.number="spell.target_anim"/>
+                          <b-form-input v-model.number="spell.target_anim" class="col-11"/>
                         </div>
                       </div>
                     </div>

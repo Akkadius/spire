@@ -20,7 +20,7 @@
     <eq-window-simple
       style="height: 85vh; overflow-y: scroll"
       v-on:scroll.passive="render"
-      class="row justify-content-center"
+      class="row justify-content-center text-center"
       id="spell-video-view-port"
     >
 
