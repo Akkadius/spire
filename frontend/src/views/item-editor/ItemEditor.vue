@@ -935,7 +935,9 @@
                     </div>
                     <div class="col-3">
                       <b-form-input
-                        v-b-tooltip.hover.v-dark.right :title="getFieldDescription('augtype')"
+                        id="augtype"
+                        v-b-tooltip.hover.v-dark.right
+                        :title="getFieldDescription('augtype')"
                         :style="(item['augtype'] === 0 ? 'opacity: .5' : '')"
                         v-model.number="item['augtype']"
                       />
@@ -1483,17 +1485,18 @@
             </eq-window>
 
             <!-- item model selector -->
-            <eq-window
-              style="margin-top: 30px; margin-right: 10px; width: auto;"
+            <div
               class="fade-in"
               v-if="itemModelSelectorActive && item"
             >
 
+              <keep-alive>
               <item-model-selector
                 :selected-model="item.idfile"
                 @input="item.idfile = $event; setFieldModifiedById('idfile')"
               />
-            </eq-window>
+              </keep-alive>
+            </div>
 
             <!-- augment type calculator -->
             <eq-window
@@ -1509,8 +1512,8 @@
             </eq-window>
 
             <!-- race material preview -->
-            <eq-window
-              style="margin-top: 30px; margin-right: 10px; width: auto;"
+            <eq-window-simple
+              style="margin-top: 20px; margin-right: 10px; width: auto;"
               class="fade-in text-center"
               v-if="drawRaceMaterialPreviewActive && item"
             >
@@ -1520,7 +1523,7 @@
                 :selected-material="item.material"
                 @input="item.material = $event; setFieldModifiedById('material')"
               />
-            </eq-window>
+            </eq-window-simple>
 
             <!-- color selector -->
             <div
@@ -1538,20 +1541,21 @@
             </div>
 
             <!-- icon selector -->
-            <eq-window
-              style="margin-top: 30px; margin-right: 10px; width: auto;"
+            <div
               class="fade-in"
               v-if="iconSelectorActive"
             >
 
+              <keep-alive>
               <item-icon-selector
                 :selected-icon="item.icon"
                 @input="item.icon = $event; setFieldModifiedById('icon')"
               />
-            </eq-window>
+              </keep-alive>
+            </div>
 
             <!-- free id selector -->
-            <eq-window
+            <eq-window-simple
               title="Free Item Ids"
               style="margin-top: 30px; margin-right: 10px; width: auto;"
               class="fade-in"
@@ -1565,7 +1569,7 @@
                 :with-reserved="true"
                 @input="item.id = $event; setFieldModifiedById('id')"
               />
-            </eq-window>
+            </eq-window-simple>
 
             <!-- spell effect selector -->
             <div
@@ -1629,12 +1633,14 @@ import {BODYTYPES}             from "../../app/constants/eq-bodytype-constants";
 import {DB_SPELL_RESISTS}      from "../../app/constants/eq-spell-constants";
 import {DB_ITEM_BARD_TYPE}     from "../../app/constants/eq-bard-types";
 import AugBitmaskCalculator    from "../../components/tools/AugmentTypeCalculator";
+import EqWindowSimple          from "../../components/eq-ui/EQWindowSimple";
 
 const MILLISECONDS_BEFORE_WINDOW_RESET = 5000;
 
 export default {
   name: "ItemEdit",
   components: {
+    EqWindowSimple,
     AugBitmaskCalculator,
     ItemMaterialPreview,
     ItemColorSelector,
@@ -1961,6 +1967,7 @@ export default {
       }
     },
 
+    // field modified helpers
     setFieldModified(evt) {
       // border: 2px #555555 solid !important;
       evt.target.classList.add('pulsate-highlight-modified')
@@ -1982,6 +1989,26 @@ export default {
         elements.forEach((element) => {
           if (element) {
             element.classList.remove('pulsate-highlight-modified')
+          }
+        });
+      }
+    },
+
+    setFieldSubEditorHighlightedById(id) {
+      const target = document.getElementById(id)
+      if (target) {
+        target.classList.add('pulsate-highlight-white')
+      }
+    },
+
+    resetFieldSubEditorHighlightedStatus() {
+      // reset elements
+      const itemEditCard = document.getElementById("item-edit-card")
+      if (itemEditCard) {
+        const elements = itemEditCard.querySelectorAll("input, select");
+        elements.forEach((element) => {
+          if (element) {
+            element.classList.remove('pulsate-highlight-white')
           }
         });
       }
@@ -2102,6 +2129,8 @@ export default {
      * Selector / previewers
      */
     resetPreviewComponents() {
+      this.resetFieldSubEditorHighlightedStatus()
+
       this.freeIdSelectorActive            = false;
       this.iconSelectorActive              = false;
       this.itemModelSelectorActive         = false;
@@ -2132,12 +2161,16 @@ export default {
         this.resetPreviewComponents()
         this.itemModelSelectorActive = true;
         this.lastResetTime           = Date.now()
+
+        this.setFieldSubEditorHighlightedById("idfile")
       }
     },
     drawIconSelector(force = false) {
       if (!this.freeIdSelectorActive || force) {
         this.resetPreviewComponents()
         this.iconSelectorActive = true;
+
+        this.setFieldSubEditorHighlightedById("icon")
       }
     },
     drawColorSelector(force = false) {
@@ -2145,6 +2178,8 @@ export default {
         this.resetPreviewComponents()
         this.drawColorSelectorActive = true;
         this.lastResetTime           = Date.now()
+
+        this.setFieldSubEditorHighlightedById("color")
       }
     },
     drawRaceMaterialPreview() {
@@ -2152,12 +2187,16 @@ export default {
         this.resetPreviewComponents()
         this.drawRaceMaterialPreviewActive = true;
         this.lastResetTime                 = Date.now()
+
+        this.setFieldSubEditorHighlightedById("material")
       }
     },
     drawFreeIdSelector() {
       this.resetPreviewComponents()
       this.lastResetTime        = Date.now()
       this.freeIdSelectorActive = true
+
+      this.setFieldSubEditorHighlightedById("id")
     },
     drawStatScaleTool() {
       // this.resetPreviewComponents()
@@ -2170,6 +2209,8 @@ export default {
       this.lastResetTime = Date.now()
       this.resetPreviewComponents()
       this.drawAugmentTypeCalculatorActive = true
+
+      this.setFieldSubEditorHighlightedById("augtype")
     },
 
     materialChange() {

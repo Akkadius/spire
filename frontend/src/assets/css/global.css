@@ -169,11 +169,35 @@
     /*border: 1px solid #8aa3ff;*/
     animation: pulsate-highlight 1s infinite;
     border-radius: 7px;
-
-    -webkit-box-shadow: inset 0 0 15px #8aa3ff;
-    -moz-box-shadow: inset 0 0 15px #8aa3ff;
-    box-shadow: inset 0 0 15px #8aa3ff;
 }
+
+@keyframes pulsate-highlight-white {
+    0% {
+        border-color: rgb(255, 255, 255);
+        -webkit-box-shadow: 0 0 15px rgb(255, 255, 255);
+        -moz-box-shadow: 0 0 15px rgb(255, 255, 255);
+        box-shadow: 0 0 15px rgb(255, 255, 255);
+    }
+    50% {
+        border-color: rgba(0, 255, 255, 0);
+        -webkit-box-shadow: 0 0 15px rgba(255, 255, 255, .5);
+        -moz-box-shadow: 0 0 15px rgba(255, 255, 255, .5);
+        box-shadow: 0 0 15px rgba(255, 255, 255, .5);
+    }
+    100% {
+        border-color: rgb(255, 255, 255);
+        -webkit-box-shadow: 0 0 15px rgb(255, 255, 255);
+        -moz-box-shadow: 0 0 15px rgb(255, 255, 255);
+        box-shadow: 0 0 15px rgb(255, 255, 255);
+    }
+}
+
+.pulsate-highlight-white {
+    /*border: 1px solid #8aa3ff;*/
+    animation: pulsate-highlight-white 1s infinite;
+    border-radius: 7px;
+}
+
 
 /*showing when fields are modified in item editor*/
 @keyframes pulsate-highlight-modified {
@@ -192,7 +216,6 @@
     border: 2px solid rgba(216, 250, 8, 1);
     animation: pulsate-highlight-modified 2s infinite;
 }
-
 
 .hover-highlight:hover {
     border: 2px solid rgb(218 218 218 / 0%);
