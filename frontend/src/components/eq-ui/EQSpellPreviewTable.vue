@@ -12,7 +12,7 @@
 
         <div
           class='spell-table'
-          style="height: 75vh; overflow-y: scroll; overflow-x: hidden; box-shadow: rgb(0 0 0) 0px 27px 18px inset;"
+          style="height: 75vh; overflow-y: scroll; overflow-x: hidden; box-shadow: rgb(0 0 0) 0px 20px 15px inset;"
           v-if="spells.length > 0">
           <!--        <div class='eq-window-nested-blue' v-if="spells.length > 0" style="overflow-y: scroll;">-->
           <table id="tabbox1" class="eq-table eq-highlight-rows" style="display: table;">

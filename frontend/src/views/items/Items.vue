@@ -356,10 +356,8 @@ export default {
   watch: {
     // reset state vars when we navigate away
     '$route'() {
-      if (Object.keys(this.$route.query).length !== 0) {
-        this.loadQueryState()
-        this.listItems()
-      }
+      this.loadQueryState()
+      this.listItems()
     },
   },
 
