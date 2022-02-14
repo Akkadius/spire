@@ -31,7 +31,6 @@
                 <div class="row">
                   <div class="col-12">
                     <class-bitmask-calculator
-                      :imageSize="imageSizes"
                       :centered-buttons="false"
                       :display-all-none="true"
                       :add-only-button-enabled="true"
@@ -47,7 +46,6 @@
                 <div class="row">
                   <div class="col-12">
                     <race-bitmask-calculator
-                      :imageSize="imageSizes"
                       :centered-buttons="false"
                       :display-all-none="true"
                       @fired="selectRaces()"
@@ -60,7 +58,6 @@
                 <div class="row">
                   <div class="col-12">
                     <deity-bitmask-calculator
-                      :imageSize="imageSizes"
                       :centered-buttons="false"
                       :display-all-none="true"
                       @fired="selectDeities()"
@@ -73,7 +70,6 @@
                 <div class="row">
                   <div class="col-12">
                     <inventory-slot-calculator
-                      :imageSize="imageSizes"
                       :skip-duplicate-slots="true"
                       :display-all-none="true"
                       @fired="selectSlots()"
@@ -325,8 +321,6 @@ export default {
       filterOptions: ["=", "<=", ">="],
 
       itemTypeOptions: [],
-
-      imageSizes: 45,
     }
   },
 
