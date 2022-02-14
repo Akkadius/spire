@@ -5,24 +5,24 @@
       <div class="panel-body">
         <div class="panel panel-default">
 
-          <eq-window class="mt-5">
+          <eq-window-simple class="mt-3 p-2">
 
             <div class="row">
               <div v-for="(icon, index) in dbClassIcons" class="text-center">
-                <div class="text-center p-1 col-lg-12 col-sm-12">
+                <div class="text-center p-0 mr-3 col-lg-12 col-sm-12">
                   {{ dbClassesShort[index] }}
                   <div class="text-center">
                     <span
                       @click="selectClass(index)"
                       :style="'width:40px;' + (isClassSelected(index) ? 'border-radius: 7px;' : 'border-radius: 7px;')"
-                      :class="'mt-1 hover-highlight-inner item-' + icon + ' ' + (isClassSelected(index) ? 'highlight-selected-inner' : '')"
+                      :class="'hover-highlight-inner item-' + icon + ' ' + (isClassSelected(index) ? 'highlight-selected-inner' : '')"
                     />
                   </div>
                 </div>
               </div>
             </div>
 
-            <div class="row mt-4">
+            <div class="row mt-2">
 
               <div class="col-lg-2 col-sm-12 text-center">
                 Spell Name or ID
@@ -134,7 +134,7 @@
               {{ message }}
             </div>
 
-          </eq-window>
+          </eq-window-simple>
 
           <app-loader :is-loading="!loaded" padding="4"/>
 
@@ -146,7 +146,7 @@
               :key="spell.id"
               style="display: inline-block; vertical-align: top"
             >
-              <eq-window style="margin-right: 10px; width: auto; height: 90%">
+              <eq-window style="margin-right: 1px; width: auto; height: 93%">
                 <eq-spell-preview :spell-data="spell"/>
               </eq-window>
             </div>
@@ -176,10 +176,12 @@ import EqSpellPreviewTable from "@/components/eq-ui/EQSpellPreviewTable.vue";
 import {Spells} from "@/app/spells";
 import {Items} from "@/app/items";
 import {ROUTE} from "@/routes";
+import EqWindowSimple from "@/components/eq-ui/EQWindowSimple.vue";
 
 export default {
   name: "Spells",
   components: {
+    EqWindowSimple,
     EqSpellPreviewTable,
     EqSpellPreview,
     EqItemCardPreview,

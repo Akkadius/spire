@@ -1,16 +1,19 @@
 <template>
   <div>
     <div
-      class='eq-window'
-      :style="'margin-bottom: 40px; min-height: 275px; ' + (title ? 'padding-top: 30px' : 'padding-top: 0px !important')"
+      class='eq-window-simple p-0'
+      :style="'margin-bottom: 40px; ' + (title ? 'padding-top: 30px' : 'padding-top: 0px !important')"
     >
       <div class='eq-window-title-bar' v-if="title">{{ title }}</div>
-      <div :style="'padding: 10px; ' + (title ? 'margin-top: 10px' : '') ">
+      <div :style="'' + (title ? '' : '') ">
         <div class='eq-window-nested-blue text-center' v-if="spells.length === 0">
           No spells were found
         </div>
 
-        <div class='spell-table' v-if="spells.length > 0">
+        <div
+          class='spell-table'
+          style="height: 75vh; overflow-y: scroll; overflow-x: hidden; box-shadow: rgb(0 0 0) 0px 27px 18px inset;"
+          v-if="spells.length > 0">
           <!--        <div class='eq-window-nested-blue' v-if="spells.length > 0" style="overflow-y: scroll;">-->
           <table id="tabbox1" class="eq-table eq-highlight-rows" style="display: table;">
             <thead>
@@ -144,7 +147,7 @@ export default {
     // do this once so we're not triggering vue re-renders in the loop
     this.sideLoadedSpellData = Spells.data
 
-    // this.title = "Spells (" + this.spells.length + ")";
+    this.title = "Spells (" + this.spells.length + ")";
   },
   props: {
     spells: Array
