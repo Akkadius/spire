@@ -113,6 +113,7 @@
                     <div class="col-2">
                       Min Status
                       <b-form-input
+                        :style="(item['minstatus'] === 0 ? 'opacity: .5' : '')"
                         v-model.number="item.minstatus"
                         v-b-tooltip.hover.v-dark.right
                         :title="getFieldDescription('minstatus')"
@@ -123,6 +124,7 @@
                     <div class="col-2">
                       Script File ID
                       <b-form-input
+                        :style="(item['scriptfileid'] === 0 ? 'opacity: .5' : '')"
                         v-model.number="item.scriptfileid"
                         v-b-tooltip.hover.v-dark.right
                         :title="getFieldDescription('scriptfileid')"
