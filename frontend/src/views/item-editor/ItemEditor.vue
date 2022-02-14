@@ -875,13 +875,12 @@
                       </div>
 
                       <div class="col-2 m-0 p-0 pl-3 text-center">
-                        Recast Time (ms)
+                        Recast Time (seconds)
                         <b-form-input
                           v-model.number="item.recastdelay"
                           id="recastdelay"
                           class="mt-3"
                         />
-                        ({{ msToTime(item.recastdelay) }})
                       </div>
 
                       <div class="col-2 text-center">
@@ -1848,7 +1847,7 @@ export default {
         if (newVal > 0 && oldVal === -1) {
           this.item.maxcharges  = -1
           this.item.casttime    = 3000
-          this.item.recastdelay = 12000
+          this.item.recastdelay = 6
           this.item.clicktype   = 5
 
           setTimeout(() => {
