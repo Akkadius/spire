@@ -129,23 +129,63 @@
                     </select>
                   </div>
 
-                  <div class="col-lg-4 col-sm-12 mt-3 pl-0 pr-0" >
+                  <div class="col-lg-6 col-sm-12 mt-3 pl-0 pr-0">
 
                     <div class="btn-group ml-3" role="group" aria-label="Basic example" v-if="selectedLevel">
-                      <b-button @click="selectedLevelType = 0; triggerStateDelayed();" size="sm" :variant="(parseInt(selectedLevelType) === 0 ? 'warning' : 'outline-warning')">Only</b-button>
-                      <b-button @click="selectedLevelType = 1; triggerStateDelayed();" size="sm" :variant="(parseInt(selectedLevelType) === 1 ? 'warning' : 'outline-warning')">Higher</b-button>
-                      <b-button @click="selectedLevelType = 2; triggerStateDelayed();" size="sm" :variant="(parseInt(selectedLevelType) === 2 ? 'warning' : 'outline-warning')">Lower</b-button>
+                      <b-button
+                        @click="selectedLevelType = 0; triggerStateDelayed();"
+                        size="sm"
+                        :variant="(parseInt(selectedLevelType) === 0 ? 'warning' : 'outline-warning')"
+                      >Only
+                      </b-button>
+                      <b-button
+                        @click="selectedLevelType = 1; triggerStateDelayed();"
+                        size="sm"
+                        :variant="(parseInt(selectedLevelType) === 1 ? 'warning' : 'outline-warning')"
+                      >Higher
+                      </b-button>
+                      <b-button
+                        @click="selectedLevelType = 2; triggerStateDelayed();"
+                        size="sm"
+                        :variant="(parseInt(selectedLevelType) === 2 ? 'warning' : 'outline-warning')"
+                      >Lower
+                      </b-button>
                     </div>
 
                     <div class="btn-group ml-3" role="group" aria-label="Basic example">
-                      <b-button alt="Display as table" @click="listType = 'table'; " size="sm" :variant="(listType === 'table' ? 'warning' : 'outline-warning')"><i class="fa fa-table"></i></b-button>
-                      <b-button alt="Display as grid" @click="listType = 'card'; " size="sm" :variant="(listType === 'card' ? 'warning' : 'outline-warning')"><i class="fa fa-th"></i></b-button>
+                      <b-button
+                        alt="Display as table"
+                        @click="listType = 'table'; triggerState()"
+                        size="sm"
+                        :variant="(listType === 'table' ? 'warning' : 'outline-warning')"
+                      ><i class="fa fa-table"></i></b-button>
+                      <b-button
+                        alt="Display as grid"
+                        @click="listType = 'card'; triggerState()"
+                        size="sm"
+                        :variant="(listType === 'card' ? 'warning' : 'outline-warning')"
+                      ><i class="fa fa-th"></i></b-button>
                     </div>
 
                     <div class="btn-group ml-3" role="group" aria-label="Basic example">
-                      <b-button @click="limit = 10; triggerStateDelayed()" size="sm" :variant="(parseInt(limit) === 10 ? 'warning' : 'outline-warning')">10</b-button>
-                      <b-button @click="limit = 100; triggerStateDelayed()" size="sm" :variant="(parseInt(limit) === 100 ? 'warning' : 'outline-warning')">100</b-button>
-                      <b-button @click="limit = 1000; triggerStateDelayed()" size="sm" :variant="(parseInt(limit) === 1000 ? 'warning' : 'outline-warning')">1000</b-button>
+                      <b-button
+                        @click="limit = 10; triggerStateDelayed()"
+                        size="sm"
+                        :variant="(parseInt(limit) === 10 ? 'warning' : 'outline-warning')"
+                      >10
+                      </b-button>
+                      <b-button
+                        @click="limit = 100; triggerStateDelayed()"
+                        size="sm"
+                        :variant="(parseInt(limit) === 100 ? 'warning' : 'outline-warning')"
+                      >100
+                      </b-button>
+                      <b-button
+                        @click="limit = 1000; triggerStateDelayed()"
+                        size="sm"
+                        :variant="(parseInt(limit) === 1000 ? 'warning' : 'outline-warning')"
+                      >1000
+                      </b-button>
                     </div>
 
                     <div
@@ -318,6 +358,17 @@ export default {
       )
     }
   },
+
+  watch: {
+    // reset state vars when we navigate away
+    '$route'() {
+      if (Object.keys(this.$route.query).length !== 0) {
+        this.loadQueryState()
+        this.listItems()
+      }
+    },
+  },
+
   methods: {
 
     formFilters() {
@@ -481,7 +532,7 @@ export default {
       if (this.itemType !== -1) {
         queryState.itemType = this.itemType
       }
-      if (this.listType !== "card") {
+      if (this.listType !== "") {
         queryState.listType = this.listType
       }
       if (this.itemName !== "") {
@@ -490,7 +541,10 @@ export default {
       if (this.selectedLevel !== 0) {
         queryState.level = this.selectedLevel
       }
-      if (this.selectedLevelType !== 0) {
+      if (this.limit !== 0) {
+        queryState.limit = this.limit
+      }
+      if (this.selectedLevelType >= 0) {
         queryState.levelType = this.selectedLevelType
       }
       if (this.selectOnlyClassEnabled) {
@@ -532,6 +586,7 @@ export default {
       this.itemName          = "";
       this.spellEffect       = "";
       this.selectedLevel     = 0;
+      this.limit             = 100;
       this.selectedLevelType = 0;
       this.items             = null;
       this.listType          = "table"
@@ -559,6 +614,9 @@ export default {
       }
       if (this.$route.query.level) {
         this.selectedLevel = this.$route.query.level;
+      }
+      if (this.$route.query.limit) {
+        this.limit = this.$route.query.limit;
       }
       if (this.$route.query.levelType) {
         this.selectedLevelType = this.$route.query.levelType;
@@ -610,7 +668,6 @@ export default {
 
     triggerState() {
       this.updateQueryState();
-      this.listItems()
     },
 
     async getItemFields() {
