@@ -102,7 +102,6 @@
             <router-link class="nav-link " to="/items">
               <i class="ra ra-relic-blade mr-1"></i> Items
               <b-badge class="ml-3" variant="primary">NEW!</b-badge>
-              <b-badge class="ml-3" variant="warning">BETA (90%)</b-badge>
             </router-link>
           </li>
           <li class="nav-item">

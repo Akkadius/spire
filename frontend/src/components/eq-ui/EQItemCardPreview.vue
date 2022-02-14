@@ -257,35 +257,37 @@
     </div>
 
     <!-- Effects -->
-    <div v-for="effect in effects" :key="effect.field" class="col-12">
-      <!-- Click Effect -->
-      <div v-if="itemData[effect.field] > 0 && effectData[effect.field]" class="row col-12 pl-0 pt-3 pb-3">
+    <div class="mb-3">
+      <div v-for="effect in effects" :key="effect.field" class="col-12">
+        <div v-if="itemData[effect.field] > 0 && effectData[effect.field]" class="row col-12 pl-0 mb-1">
 
-        <!-- Target -->
-        <div :id="itemData[effect.field] + '-' + componentId">
+          <!-- Target -->
+          <div :id="itemData[effect.field] + '-' + componentId">
 
-          <img
-            :src="spellCdnUrl + (effectData[effect.field].new_icon > 0 ? effectData[effect.field].new_icon : 1) + '.gif'"
-            :style="'width:20px;height:auto; ' + 'border: 1px solid ' + getTargetTypeColor(effectData[effect.field]['targettype']) + '; border-radius: 3px;'"
-            class="mr-1 mt-1"
+            <img
+              :src="spellCdnUrl + (effectData[effect.field].new_icon > 0 ? effectData[effect.field].new_icon : 1) + '.gif'"
+              :style="'width:20px;height:auto; ' + 'border: 1px solid ' + getTargetTypeColor(effectData[effect.field]['targettype']) + '; border-radius: 3px;'"
+              class="mr-1 mt-1"
+              alt=""
+            >
+            {{ effectData[effect.field].name }} ({{ effect.name }})
+
+          </div>
+
+          <!-- Popover -->
+          <b-popover
+            :target="itemData[effect.field] + '-' + componentId"
+            placement="auto"
+            custom-class="no-bg"
+            delay="1"
+            triggers="hover focus"
+            style="width: 500px !important"
           >
-          {{ effectData[effect.field].name }} ({{ effect.name }})
-
+            <eq-window style="margin-right: 10px; width: auto; height: 90%">
+              <eq-spell-preview :spell-data="effectData[effect.field]"/>
+            </eq-window>
+          </b-popover>
         </div>
-
-        <!-- Popover -->
-        <b-popover
-          :target="itemData[effect.field] + '-' + componentId"
-          placement="auto"
-          custom-class="no-bg"
-          delay="1"
-          triggers="hover focus"
-          style="width: 500px !important"
-        >
-          <eq-window style="margin-right: 10px; width: auto; height: 90%">
-            <eq-spell-preview :spell-data="effectData[effect.field]"/>
-          </eq-window>
-        </b-popover>
       </div>
     </div>
 
@@ -324,7 +326,7 @@
       />
     </div>
 
-    <div class="pb-4 mb-3"></div>
+    <div class="pb-4 mb-5"></div>
 
     <eq-debug :data="itemData"/>
   </div>

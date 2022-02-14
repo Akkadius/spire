@@ -2104,6 +2104,11 @@ export default {
 
           // if we're cloning this item, automatically fetch an ID
           if (this.$route.query.hasOwnProperty("clone")) {
+
+            // setTimeout(() => {
+            //   this.sendNotification("Item is not fully cloned until it is saved!")
+            // }, 1000)
+
             SpireApiClient.v1().get("query/free-ids-reserved/items/id/name").then((response) => {
               if (response.data) {
 

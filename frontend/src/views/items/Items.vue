@@ -115,7 +115,7 @@
                     </select>
                   </div>
 
-                  <div class="col-lg-2 col-sm-12 p-0 pr-1 text-center">
+                  <div class="col-lg-1 col-sm-12 p-0 pr-1 text-center">
                     Level
                     <select
                       class="form-control"
@@ -129,38 +129,26 @@
                     </select>
                   </div>
 
-                  <div class="col-lg-1 col-sm-12 text-center" v-if="selectedLevel">
-                    <b-form-group>
-                      <b-form-radio v-model="selectedLevelType" @change="triggerStateDelayed()" value="0">Only
-                      </b-form-radio>
-                      <b-form-radio v-model="selectedLevelType" @change="triggerStateDelayed()" value="1">And Higher
-                      </b-form-radio>
-                      <b-form-radio v-model="selectedLevelType" @change="triggerStateDelayed()" value="2">And Lower
-                      </b-form-radio>
-                    </b-form-group>
-                  </div>
+                  <div class="col-lg-4 col-sm-12 mt-3 pl-0 pr-0" >
 
-                  <div class="col-lg-2 col-sm-12 p-0 pr-1 text-center">
-                    List Type
-                    <select
-                      id="Class"
-                      class="form-control"
-                      v-model="listType"
-                      @change="triggerState()"
-                    >
-                      <option value="table">Table</option>
-                      <option value="card">Cards</option>
-                    </select>
-                  </div>
+                    <div class="btn-group ml-3" role="group" aria-label="Basic example" v-if="selectedLevel">
+                      <b-button @click="selectedLevelType = 0; triggerStateDelayed();" size="sm" :variant="(parseInt(selectedLevelType) === 0 ? 'warning' : 'outline-warning')">Only</b-button>
+                      <b-button @click="selectedLevelType = 1; triggerStateDelayed();" size="sm" :variant="(parseInt(selectedLevelType) === 1 ? 'warning' : 'outline-warning')">Higher</b-button>
+                      <b-button @click="selectedLevelType = 2; triggerStateDelayed();" size="sm" :variant="(parseInt(selectedLevelType) === 2 ? 'warning' : 'outline-warning')">Lower</b-button>
+                    </div>
 
-                  <div class="col-lg-2 col-sm-12 p-0 pr-1 text-left">
+                    <div class="btn-group ml-3" role="group" aria-label="Basic example">
+                      <b-button alt="Display as table" @click="listType = 'table'; " size="sm" :variant="(listType === 'table' ? 'warning' : 'outline-warning')"><i class="fa fa-table"></i></b-button>
+                      <b-button alt="Display as grid" @click="listType = 'card'; " size="sm" :variant="(listType === 'card' ? 'warning' : 'outline-warning')"><i class="fa fa-th"></i></b-button>
+                    </div>
+
                     <div
-                      :class="'text-center btn-xs eq-button-fancy'"
-                      style="margin-top: 19px"
+                      :class="'text-center btn-xs eq-button-fancy ml-3'"
                       @click="resetForm()"
                     >
                       Reset Form
                     </div>
+
                   </div>
 
                 </div>
