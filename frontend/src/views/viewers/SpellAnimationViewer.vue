@@ -36,6 +36,7 @@
               <video
                 muted
                 loop
+                style="background-color: black;"
                 :id="'spell-' + spell"
                 :data-src="animBaseUrl + spell + '.mp4'"
                 class="video-preview spell-preview-viewer"
