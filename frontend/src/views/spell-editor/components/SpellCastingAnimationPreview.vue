@@ -5,7 +5,12 @@
       :style="'width: ' + this.width + 'px; height: ' + this.height + 'px; border-radius:5px; border: 1px solid rgba(255, 255, 255, .3)'"
       class="text-center mb-2"
     >
-      <div class="pt-5 pl-4 pr-4">Spell casting animation preview not found...</div>
+      <div
+        class="pt-5 pl-4 pr-4"
+        style="min-height: 111px; width: 100%"
+      >
+        Spell casting animation preview not found...
+      </div>
     </div>
     <div v-if="previewId > 0">
       <video

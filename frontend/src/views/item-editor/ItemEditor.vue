@@ -2076,7 +2076,7 @@ export default {
     load() {
 
       if (this.$route.params.id > 0) {
-        Items.getItem(this.$route.params.id).then(result => {
+        Items.getItem(this.$route.params.id).then((result) => {
           this.item              = result
           this.updatedAt         = Date.now()
           this.previewItemActive = true
@@ -2117,7 +2117,7 @@ export default {
                 // grab first "reserved" entry available
                 if (response.data.data.length > 0) {
                   this.item.id = response.data.data[0].id
-                  this.setFieldModifiedById('id')
+                  this.setFieldModifiedById('id');
                 }
 
                 // grab first free id in range entry available

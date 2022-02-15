@@ -13,12 +13,13 @@
         <div
           class='spell-table'
           style="height: 75vh; overflow-y: scroll; overflow-x: hidden; box-shadow: rgb(0 0 0) 0px 20px 15px inset;"
-          v-if="spells.length > 0">
+          v-if="spells.length > 0"
+        >
           <!--        <div class='eq-window-nested-blue' v-if="spells.length > 0" style="overflow-y: scroll;">-->
           <table id="tabbox1" class="eq-table eq-highlight-rows" style="display: table;">
             <thead>
             <tr>
-              <th style="width: 100px;"></th>
+              <th style="width: 180px;"></th>
               <th style="width: auto;">Id</th>
               <th style="width: auto; min-width: 250px">Spell</th>
               <th style="width: auto; min-width: 300px">Level</th>
@@ -36,14 +37,27 @@
             <tbody>
             <tr v-for="(spell, index) in spells" :key="spell.id">
               <td>
-                <b-button
-                  @click="editSpell(spell.id)"
-                  size="sm"
-                  variant="outline-warning"
-                >
-                  <i class="ra ra-book"></i>
-                  Edit
-                </b-button>
+
+                <div class="btn-group" role="group">
+                  <b-button
+                    @click="editSpell(spell.id)"
+                    size="sm"
+                    variant="outline-warning"
+                  >
+                    <i class="ra ra-wrench"></i>
+                    Edit
+                  </b-button>
+
+                  <b-button
+                    @click="editSpell(spell.id, true)"
+                    size="sm"
+                    variant="outline-light"
+                  >
+                    <i class="ra ra-double-team"></i>
+                    Clone
+                  </b-button>
+                </div>
+
               </td>
               <td>
                 {{ spell.id }}
@@ -178,10 +192,10 @@ export default {
     getBuffDuration: function (spell) {
       return Spells.getBuffDuration(spell)
     },
-    editSpell(spellId) {
+    editSpell(spellId, clone = false) {
       this.$router.push(
         {
-          path: util.format(ROUTE.SPELL_EDIT, spellId),
+          path: util.format(ROUTE.SPELL_EDIT + (clone ? "?clone" : ""), spellId),
           query: {}
         }
       ).catch(() => {

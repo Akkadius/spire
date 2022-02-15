@@ -37,7 +37,7 @@
             <tr v-for="(item, index) in items" :key="item.id">
               <td>
 
-                <div class="btn-group" role="group" aria-label="Basic example">
+                <div class="btn-group" role="group">
 
                   <b-button
                     @click="editItem(item.id)"
@@ -178,8 +178,6 @@ export default {
   },
   methods: {
     editItem(itemId, clone = false) {
-      console.log("clone [%s]", clone)
-
       this.$router.push(
         {
           path: util.format(ROUTE.ITEM_EDIT + (clone ? "?clone" : ""), itemId),

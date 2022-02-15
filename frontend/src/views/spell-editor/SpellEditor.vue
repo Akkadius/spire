@@ -1269,6 +1269,13 @@ export default {
       evt.target.style.setProperty('border-color', 'orange', 'important');
     },
 
+    setFieldModifiedById(id) {
+      const target = document.getElementById(id)
+      if (target) {
+        target.classList.add('pulsate-highlight-modified')
+      }
+    },
+
     setFieldSubEditorHighlightedById(id) {
       const target = document.getElementById(id)
       if (target) {
@@ -1348,8 +1355,34 @@ export default {
 
     load() {
       if (this.$route.params.id > 0) {
-        Spells.getSpell(this.$route.params.id).then(result => {
+        Spells.getSpell(this.$route.params.id).then((result) => {
           this.spell = result
+
+          // if we're cloning this spell, automatically fetch an ID
+          if (this.$route.query.hasOwnProperty("clone")) {
+
+            SpireApiClient.v1().get("query/free-ids-reserved/spells_new/id/name").then((response) => {
+              if (response.data) {
+
+                // grab first "reserved" entry available
+                if (response.data.data.length > 0) {
+                  this.spell.id = response.data.data[0].id
+                  this.setFieldModifiedById("id")
+                }
+
+                // grab first free id in range entry available
+                if (response.data.data.length === 0) {
+                  SpireApiClient.v1().get("query/free-id-ranges/spells_new/id").then((response) => {
+                    if (response.data && response.data.data) {
+                      this.spell.id = response.data.data[0].start_id
+                      this.setFieldModifiedById("id")
+                    }
+                  });
+                }
+              }
+            });
+          }
+
         })
       }
     },
