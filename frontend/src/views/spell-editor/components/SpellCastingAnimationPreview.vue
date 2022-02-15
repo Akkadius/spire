@@ -7,7 +7,7 @@
     >
       <div
         class="pt-5 pl-4 pr-4"
-        style="min-height: 111px; width: 100%"
+        style="min-height: 111px; width: 100%; background-color: black;"
       >
         Spell casting animation preview not found...
       </div>

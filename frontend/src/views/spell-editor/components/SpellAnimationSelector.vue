@@ -33,13 +33,13 @@
           <div
             v-for="(animationId) in filteredAnimations"
             :key="animationId"
-            style="display:inline-block; position: relative;"
+            style="display:inline-block; position: relative; "
             class="d-inline-block"
           >
             <video
               muted
               loop
-              style="height: 146px; width: 259px; border-radius: 5px; border: 1px solid rgba(255, 255, 255, .3);"
+              style="height: 146px; width: 259px; border-radius: 5px; border: 1px solid rgba(255, 255, 255, .3); background-color: black;"
               :id="'spell-' + animationId"
               :data-src="animBaseUrl + animationId + '.mp4#t=3'"
               @mousedown="selectSpellAnim(animationId)"
@@ -65,7 +65,6 @@
 import PageHeader        from "@/components/layout/PageHeader";
 import {App}             from "@/constants/app";
 import EqWindow          from "@/components/eq-ui/EQWindow";
-import SpellAnimations   from "@/app/eq-assets/spell-animations-map.json";
 import spellAnimMappings from "@/app/data-maps/spell-icon-anim-name-map.json";
 import * as util         from "util";
 import VideoViewer       from "../../../app/video-viewer/video-viewer";
@@ -98,6 +97,7 @@ export default {
   },
   methods: {
     init() {
+      console.time("[SpellAnimationSelector] init");
       if (!this.$route.query.q) {
         this.search        = ""
         this.filteredRaces = []
@@ -110,6 +110,7 @@ export default {
       if (this.selectedAnimation > 0) {
         // we need 100ms delay because the videos haven't been rendered yet
         setTimeout(() => {
+          console.time("[SpellAnimationSelector] scrollTo");
           const container = document.getElementById("spell-video-view-port");
           const target    = document.getElementById(util.format("spell-%s", this.selectedAnimation))
 
@@ -117,27 +118,15 @@ export default {
           if (container && target) {
             const top = target.getBoundingClientRect().top
 
-            // hack to get all of the videos to load without top and bottom clipping
-            setTimeout(() => {
-              container.scrollTop = top - 400;
-              VideoViewer.handleRender();
-            }, 1)
-
-            setTimeout(() => {
-              container.scrollTop = top;
-              VideoViewer.handleRender();
-            }, 100)
-
-            setTimeout(() => {
-              container.scrollTop = top - 250;
-              VideoViewer.handleRender();
-            }, 300)
-
-            // container.scrollTop = target.getBoundingClientRect().top - 150;
+            container.scrollTop = top - 250;
+            VideoViewer.handleRender();
           }
-        }, 100)
+
+          console.timeEnd("[SpellAnimationSelector] scrollTo");
+        }, 1)
       }
 
+      console.timeEnd("[SpellAnimationSelector] init");
     },
     handleRender() {
       VideoViewer.handleRender()

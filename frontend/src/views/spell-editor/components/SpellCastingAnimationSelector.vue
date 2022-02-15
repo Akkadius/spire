@@ -24,7 +24,7 @@
             <video
               muted
               loop
-              style="height: 146px; width: 259px; border-radius: 5px; border: 1px solid rgba(255, 255, 255, .3);"
+              style="height: 146px; width: 259px; border-radius: 5px; border: 1px solid rgba(255, 255, 255, .3); background-color: black;"
               :id="'spell-' + animationId"
               :data-src="animBaseUrl + animationId + '.mp4'"
               @mousedown="selectSpellAnim(animationId)"
@@ -89,27 +89,11 @@ export default {
 
           // 230 is height of video to offset
           if (container && target) {
-            const top = target.getBoundingClientRect().top
-
-            // hack to get all of the videos to load without top and bottom clipping
-            setTimeout(() => {
-              container.scrollTop = top - 400;
-              VideoViewer.handleRender();
-            }, 1)
-
-            setTimeout(() => {
-              container.scrollTop = top;
-              VideoViewer.handleRender();
-            }, 100)
-
-            setTimeout(() => {
-              container.scrollTop = top - 150;
-              VideoViewer.handleRender();
-            }, 300)
-
-            // container.scrollTop = target.getBoundingClientRect().top - 150;
+            const top           = target.getBoundingClientRect().top
+            container.scrollTop = top - 150;
+            VideoViewer.handleRender();
           }
-        }, 300)
+        }, 100)
       }
 
     },
@@ -117,6 +101,8 @@ export default {
       VideoViewer.handleRender()
     },
     render: function () {
+      console.log("render")
+
       // Preload model files
       let modelFiles = [];
       EqAssets.getPlayerAnimationFileIds().forEach((animationId) => {
@@ -128,8 +114,6 @@ export default {
       modelFiles.sort(function (a, b) {
         return a - b;
       });
-
-      console.log(this.filteredAnimations)
 
       this.filteredAnimations = modelFiles
       this.loaded             = true
@@ -147,6 +131,7 @@ export default {
     }
   },
   created() {
+    console.log("selector created")
     this.init()
   },
 }

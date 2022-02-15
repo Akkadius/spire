@@ -28,7 +28,7 @@
               >
                 <eq-tab
                   name="Basic"
-                  :selected="true"
+                  :selected="zeroStateSelected"
                 >
 
                   <div class="row">
@@ -1090,7 +1090,7 @@
             <div
               style="margin-top: 20px; width: auto;"
               class="fade-in"
-              v-if="castingAnimSelectorActive && spell[castingAnimField]"
+              v-if="castingAnimSelectorActive && spell[castingAnimField] >= 0"
             >
               <spell-casting-animation-selector
                 :selected-animation="spell[castingAnimField]"
@@ -1221,6 +1221,8 @@ export default {
       spaPreviewNumber: -1,
       spaEffectIndex: -1,
 
+      zeroStateSelected: true,
+
       castingAnimField: "",
 
       lastResetTime: Date.now(),
@@ -1233,6 +1235,7 @@ export default {
     '$route'() {
       // reset state vars when we navigate away
       this.notification = ""
+      this.zeroStateSelected = true
 
       // reload
       this.load()
