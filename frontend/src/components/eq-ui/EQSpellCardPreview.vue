@@ -594,16 +594,6 @@ export default {
 
       return result;
     },
-    getSpell: async function (spellId) {
-      const api    = (new SpellsNewApi(SpireApiClient.getOpenApiConfig()))
-      const result = await api.getSpellsNew({ id: spellId })
-      if (result.status === 200) {
-        return result.data
-      }
-
-      return {}
-    },
-
     getItem: async function (itemId) {
       return await Items.getItem(itemId)
     },

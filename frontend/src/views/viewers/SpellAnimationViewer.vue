@@ -133,8 +133,6 @@ export default {
       this.$router.push({ path: ROUTE.SPELL_ANIMATION_VIEWER, query: { q: this.search } }).catch(err => err)
     }, 1000),
     spellAnimSearch: function () {
-      console.log("trigger")
-
       this.loaded = false
 
       let foundAnim          = {};

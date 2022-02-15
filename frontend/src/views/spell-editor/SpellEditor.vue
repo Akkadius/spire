@@ -1356,7 +1356,7 @@ export default {
     load() {
       if (this.$route.params.id > 0) {
         Spells.getSpell(this.$route.params.id).then((result) => {
-          this.spell = result
+          this.spell = JSON.parse(JSON.stringify(result))
 
           // if we're cloning this spell, automatically fetch an ID
           if (this.$route.query.hasOwnProperty("clone")) {

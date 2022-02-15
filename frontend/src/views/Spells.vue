@@ -455,7 +455,9 @@ export default {
           }).then((response) => {
             if (response.status == 200 && response.data && parseInt(response.data.length) > 0) {
               response.data.forEach((spell) => {
-                Spells.setSpell(spell.id, spell);
+                if (!Spells.isSpellSet(spell.id)) {
+                  Spells.setSpell(spell.id, spell);
+                }
               })
             }
             this.loaded = true;

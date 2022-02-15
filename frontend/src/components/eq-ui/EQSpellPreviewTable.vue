@@ -12,7 +12,7 @@
 
         <div
           class='spell-table'
-          style="height: 75vh; overflow-y: scroll; overflow-x: hidden; box-shadow: rgb(0 0 0) 0px 20px 15px inset;"
+          style="height: 78vh; overflow-y: scroll; overflow-x: hidden; box-shadow: rgb(0 0 0) 0px 20px 15px inset;"
           v-if="spells.length > 0"
         >
           <!--        <div class='eq-window-nested-blue' v-if="spells.length > 0" style="overflow-y: scroll;">-->
@@ -151,7 +151,7 @@ export default {
     let spellMinis = []
 
     for (const spell of this.spells) {
-      if (Spells.getSpell(spell["id"])) {
+      if (!Spells.isSpellSet(spell["id"])) {
         Spells.setSpell(spell["id"], spell)
       }
 

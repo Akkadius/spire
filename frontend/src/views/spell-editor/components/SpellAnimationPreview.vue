@@ -44,7 +44,6 @@ export default {
   watch: {
     id: {
       handler: function (val, oldVal) {
-        console.log("trigger")
         this.render()
       },
     },

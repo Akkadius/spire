@@ -3014,6 +3014,10 @@ export class Spells {
     this.data[spellId] = spell;
   }
 
+  public static isSpellSet(spellId) {
+    return this.data[spellId] && this.data[spellId].length > 0
+  }
+
   public static async getSpell(spellId) {
     if (spellId === 0) {
       return {}
