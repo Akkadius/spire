@@ -1366,7 +1366,7 @@ export default {
 
                 // grab first "reserved" entry available
                 if (response.data.data.length > 0) {
-                  this.spell.id = response.data.data[0].id
+                  this.spell.id = parseInt(response.data.data[0].id)
                   this.setFieldModifiedById("id")
                 }
 
@@ -1374,7 +1374,7 @@ export default {
                 if (response.data.data.length === 0) {
                   SpireApiClient.v1().get("query/free-id-ranges/spells_new/id").then((response) => {
                     if (response.data && response.data.data) {
-                      this.spell.id = response.data.data[0].start_id
+                      this.spell.id = parseInt(response.data.data[0].start_id)
                       this.setFieldModifiedById("id")
                     }
                   });
