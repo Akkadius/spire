@@ -221,7 +221,7 @@
 
 .pulsate-highlight-green {
     /*border: 1px solid #8aa3ff;*/
-    animation: pulsate-highlight-green 1s infinite;
+    animation: pulsate-highlight-green 3s infinite;
     border-radius: 7px;
 }
 

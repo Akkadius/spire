@@ -129,6 +129,8 @@ export default {
         return a - b;
       });
 
+      console.log(this.filteredAnimations)
+
       this.filteredAnimations = modelFiles
       this.loaded             = true
 
@@ -144,7 +146,7 @@ export default {
       this.$emit("update:inputData", anim);
     }
   },
-  activated() {
+  created() {
     this.init()
   },
 }

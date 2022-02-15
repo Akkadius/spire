@@ -112,7 +112,7 @@
                             class="mt-1"
                             :id="spell.spellanim"
                           />
-                          <b-form-input id="spellanim" v-model.number="spell.spellanim" class="col-12 mt-1"/>
+                          <b-form-input id="spellanim" v-model.number="spell.spellanim" class="col-12 mt-3"/>
                         </div>
 
                       </div>
@@ -1092,12 +1092,10 @@
               class="fade-in"
               v-if="castingAnimSelectorActive && spell[castingAnimField]"
             >
-              <keep-alive>
-                <spell-casting-animation-selector
-                  :selected-animation="spell[castingAnimField]"
-                  :inputData.sync="spell[castingAnimField]"
-                />
-              </keep-alive>
+              <spell-casting-animation-selector
+                :selected-animation="spell[castingAnimField]"
+                :inputData.sync="spell[castingAnimField]"
+              />
             </div>
 
             <!-- free id selector -->

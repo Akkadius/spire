@@ -12,7 +12,7 @@
         loop
         autoplay
         class="video-preview"
-        :style="'width: 100%; height: auto; border-radius:5px; border: 1px solid rgba(255, 255, 255, .3)'"
+        :style="'width: 100%; min-height: 235px;height: auto; border-radius:5px; border: 1px solid rgba(255, 255, 255, .3)'"
         :src="videoSource"
       >
       </video>
