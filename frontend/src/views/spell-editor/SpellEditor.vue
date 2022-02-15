@@ -24,7 +24,7 @@
                 v-if="spell"
                 id="spell-edit-card"
                 class="spell-edit-card"
-                @mouseover.native="previewSpell"
+                @mouseover.native="previewSpell(false)"
               >
                 <eq-tab
                   name="Basic"
@@ -32,7 +32,11 @@
                 >
 
                   <div class="row">
-                    <div class="col-2" @mouseover="drawFreeIdSelector">
+                    <div
+                      class="col-2"
+                      @click="drawFreeIdSelector(true)"
+                      @mouseover="drawFreeIdSelector(false)"
+                    >
                       Id
                       <b-form-input id="id" v-model.number="spell.id"/>
                     </div>
@@ -43,7 +47,11 @@
                       />
                     </div>
 
-                    <div class="col-2" @mouseover="drawIconSelector">
+                    <div
+                      class="col-2"
+                      @mouseover="drawIconSelector(false)"
+                      @click="drawIconSelector(true)"
+                    >
                       Icon
                       <b-form-input id="icon" v-model.number="spell.new_icon"/>
                     </div>
@@ -51,7 +59,8 @@
                     <div
                       class="col-1" v-if="spell.new_icon > 0"
                       style="margin-top: 7px"
-                      @mouseover="drawIconSelector"
+                      @mouseover="drawIconSelector(false)"
+                      @click="drawIconSelector(true)"
                     >
                       <img
                         :src="spellCdnUrl + spell.new_icon + '.gif'"
@@ -63,16 +72,17 @@
                   </div>
 
                   <!-- Spell Group -->
-                  <div class="row">
-                    <div class="col-2">
-                      Spell Group
-                      <b-form-input v-model.number="spell.spellgroup"/>
-                    </div>
-                    <div class="col-2">
-                      Spell Group Rank
-                      <b-form-input v-model.number="spell.rank"/>
-                    </div>
-                  </div>
+                  <!--                  <div class="row">-->
+                  <!--                    <div class="col-2">-->
+                  <!--                      Spell Group-->
+                  <!--                      <b-form-input v-model.number="spell.spellgroup"/>-->
+                  <!--                    </div>-->
+                  <!--                    <div class="col-2">-->
+                  <!--                      Spell Group Rank-->
+                  <!--                      <b-form-input v-model.number="spell.rank"/>-->
+                  <!--                    </div>-->
+                  <!--                  </div>-->
+
                   <!--                  <spell-deity-selector :spell="spell" @input="spell = $event"/>-->
 
                   <div class="row">
@@ -89,7 +99,11 @@
                       <!--                        </div>-->
                       <!--                      </div>-->
 
-                      <div class="row" @mouseover="drawSpellAnimationSelector">
+                      <div
+                        class="row"
+                        @mouseover="drawSpellAnimationSelector(false)"
+                        @click="drawSpellAnimationSelector(true)"
+                      >
 
                         <div class="col-12 text-center">
                           Spell Animation
@@ -98,7 +112,7 @@
                             class="mt-1"
                             :id="spell.spellanim"
                           />
-                          <b-form-input id="spellanim" v-model.number="spell.spellanim" class="col-12"/>
+                          <b-form-input id="spellanim" v-model.number="spell.spellanim" class="col-12 mt-1"/>
                         </div>
 
                       </div>
@@ -162,7 +176,8 @@
 
                         <div
                           class="col-6 text-center"
-                          @mouseover="castingAnimField = 'casting_anim'; drawCastingAnimationSelector()"
+                          @mouseover="castingAnimField = 'casting_anim'; drawCastingAnimationSelector(false)"
+                          @click="castingAnimField = 'casting_anim'; drawCastingAnimationSelector(true)"
                         >
                           Casting Animation
 
@@ -172,7 +187,8 @@
 
                         <div
                           class="col-6 text-center"
-                          @mouseover="castingAnimField = 'target_anim'; drawCastingAnimationSelector()"
+                          @mouseover="castingAnimField = 'target_anim'; drawCastingAnimationSelector(false)"
+                          @click="castingAnimField = 'target_anim'; drawCastingAnimationSelector(true)"
                         >
                           Target Animation
 
@@ -1157,7 +1173,7 @@ import SpellCastingAnimationPreview  from "./components/SpellCastingAnimationPre
 import SpellCastingAnimationSelector from "./components/SpellCastingAnimationSelector";
 import {SPELL_SPA_DEFINITIONS}       from "../../app/constants/eq-spell-spa-definitions";
 
-const MILLISECONDS_BEFORE_WINDOW_RESET = 3000;
+const MILLISECONDS_BEFORE_WINDOW_RESET = 5000;
 
 export default {
   name: "SpellEdit",
@@ -1353,40 +1369,48 @@ export default {
 
       this.resetFieldSubEditorHighlightedStatus()
     },
-    previewSpell() {
-      let shouldReset = Date.now() - this.lastResetTime > MILLISECONDS_BEFORE_WINDOW_RESET;
-      // SECONDS_BEFORE_WINDOW_RESET
+    shouldReset() {
+      return (Date.now() - this.lastResetTime) > MILLISECONDS_BEFORE_WINDOW_RESET
+    },
 
-      if (!this.previewSpellActive && shouldReset) {
+    previewSpell(force = false) {
+      if (this.shouldReset() || force) {
         this.resetPreviewComponents()
         this.previewSpellActive = true;
-        this.lastResetTime      = Date.now()
+        // this.lastResetTime      = Date.now()
       }
     },
-    drawCastingAnimationSelector() {
-      this.resetPreviewComponents()
-      this.castingAnimSelectorActive = true;
-
-      this.setFieldSubEditorHighlightedById(this.castingAnimField)
-    },
-    drawSpellAnimationSelector() {
-      this.resetPreviewComponents()
-      this.lastResetTime           = Date.now()
-      this.spellAnimSelectorActive = true
-      this.setFieldSubEditorHighlightedById("spellanim")
-    },
-    drawIconSelector() {
-      if (!this.freeIdSelectorActive) {
+    drawCastingAnimationSelector(force = false) {
+      if (!this.castingAnimSelectorActive && this.shouldReset() || force) {
         this.resetPreviewComponents()
+        this.lastResetTime             = Date.now()
+        this.castingAnimSelectorActive = true;
+        this.setFieldSubEditorHighlightedById(this.castingAnimField)
+      }
+    },
+    drawSpellAnimationSelector(force = false) {
+      if (!this.spellAnimSelectorActive && this.shouldReset() || force) {
+        this.resetPreviewComponents()
+        this.lastResetTime           = Date.now()
+        this.spellAnimSelectorActive = true
+        this.setFieldSubEditorHighlightedById("spellanim")
+      }
+    },
+    drawIconSelector(force = false) {
+      if (!this.iconSelectorActive && this.shouldReset() || force) {
+        this.resetPreviewComponents()
+        this.lastResetTime      = Date.now()
         this.iconSelectorActive = true;
         this.setFieldSubEditorHighlightedById("icon")
       }
     },
-    drawFreeIdSelector() {
-      this.resetPreviewComponents()
-      this.lastResetTime        = Date.now()
-      this.freeIdSelectorActive = true
-      this.setFieldSubEditorHighlightedById("id")
+    drawFreeIdSelector(force = false) {
+      if (!this.freeIdSelectorActive && this.shouldReset() || force) {
+        this.resetPreviewComponents()
+        this.lastResetTime        = Date.now()
+        this.freeIdSelectorActive = true
+        this.setFieldSubEditorHighlightedById("id")
+      }
     },
     drawSpaDetailPane(spa, index) {
       this.resetPreviewComponents()

@@ -382,7 +382,7 @@
 
           <div style="display: inline-block">
 
-            <div :class="'ml-1 item-' + reagent.item.icon + '-sm'"/>
+            <div :class="'ml-1 mr-1 item-' + reagent.item.icon + '-sm'"/>
 
             <span class="mr-1">{{ reagent.item.name }}</span>
           </div>
