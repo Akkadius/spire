@@ -22,6 +22,7 @@
           muted
           loop
           :id="'preview-' + preview"
+          style="background-color: black;"
           :data-src="previewBaseUrl + preview + '.mp4'"
           class="video-preview player-anim-preview"
         >
