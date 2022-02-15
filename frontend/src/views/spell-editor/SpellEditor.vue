@@ -76,40 +76,33 @@
                   <!--                  <spell-deity-selector :spell="spell" @input="spell = $event"/>-->
 
                   <div class="row">
-                    <div class="col-6 pl-0 mr-0">
+                    <div class="col-6 pl-0 mr-0 mt-4">
                       <spell-class-selector :spell="spell" @input="spell = $event"/>
                     </div>
                     <div class="col-6">
 
-                      <div class="row">
-                        <div class="col-12 mb-3 mt-3">
-                          <h4 class="eq-header text-center">
-                            Visuals
-                          </h4>
+                      <!--                      <div class="row">-->
+                      <!--                        <div class="col-12 mb-3 mt-3">-->
+                      <!--                          <h4 class="eq-header text-center">-->
+                      <!--                            Visuals-->
+                      <!--                          </h4>-->
+                      <!--                        </div>-->
+                      <!--                      </div>-->
+
+                      <div class="row" @mouseover="drawSpellAnimationSelector">
+
+                        <div class="col-12 text-center">
+                          Spell Animation
+
+                          <spell-animation-preview
+                            class="mt-1"
+                            :id="spell.spellanim"
+                          />
+                          <b-form-input id="spellanim" v-model.number="spell.spellanim" class="col-12"/>
                         </div>
+
                       </div>
 
-                      <div class="row">
-                        <div
-                          class="col-6 text-center"
-                          @mouseover="castingAnimField = 'casting_anim'; drawCastingAnimationSelector()"
-                        >
-                          Casting Animation
-
-                          <spell-casting-animation-preview :id="spell.casting_anim"/>
-                          <b-form-input id="casting_anim" v-model.number="spell.casting_anim" class="col-11"/>
-                        </div>
-
-                        <div
-                          class="col-6 text-center"
-                          @mouseover="castingAnimField = 'target_anim'; drawCastingAnimationSelector()"
-                        >
-                          Target Animation
-
-                          <spell-casting-animation-preview :id="spell.target_anim"/>
-                          <b-form-input id="target_anim" v-model.number="spell.target_anim" class="col-11"/>
-                        </div>
-                      </div>
                     </div>
                   </div>
 
@@ -163,16 +156,32 @@
                     <div
                       class="col-6"
                       style="text-align: center"
-                      @mouseover="drawSpellAnimationSelector"
                     >
 
-                      Spell Animation
+                      <div class="row">
 
-                      <spell-animation-preview
-                        class="mt-1"
-                        :id="spell.spellanim"
-                      />
-                      <b-form-input id="spellanim" v-model.number="spell.spellanim" class="col-10"/>
+                        <div
+                          class="col-6 text-center"
+                          @mouseover="castingAnimField = 'casting_anim'; drawCastingAnimationSelector()"
+                        >
+                          Casting Animation
+
+                          <spell-casting-animation-preview :id="spell.casting_anim"/>
+                          <b-form-input id="casting_anim" v-model.number="spell.casting_anim" class="col-12"/>
+                        </div>
+
+                        <div
+                          class="col-6 text-center"
+                          @mouseover="castingAnimField = 'target_anim'; drawCastingAnimationSelector()"
+                        >
+                          Target Animation
+
+                          <spell-casting-animation-preview :id="spell.target_anim"/>
+                          <b-form-input id="target_anim" v-model.number="spell.target_anim" class="col-12"/>
+                        </div>
+
+                      </div>
+
                     </div>
                   </div>
 

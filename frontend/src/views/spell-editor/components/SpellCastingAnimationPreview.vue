@@ -13,7 +13,7 @@
         muted
         loop
         autoplay
-        :style="'width: ' + this.width + 'px; height: ' + this.height + 'px; border-radius:5px; border: 1px solid rgba(255, 255, 255, .3)'"
+        :style="'width: 100%; height: auto; border-radius:5px; border: 1px solid rgba(255, 255, 255, .3)'"
         :src="videoSource"
       />
     </div>
@@ -64,16 +64,6 @@ export default {
   props: {
     id: {
       required: true,
-      type: Number,
-    },
-    width: {
-      default: 192,
-      required: false,
-      type: Number,
-    },
-    height: {
-      default: 108,
-      required: false,
       type: Number,
     },
   }
