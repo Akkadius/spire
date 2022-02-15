@@ -198,6 +198,33 @@
     border-radius: 7px;
 }
 
+@keyframes pulsate-highlight-green {
+    0% {
+        border-color: rgb(50, 205, 50);
+        -webkit-box-shadow: inset 0 0 7px rgb(50, 205, 50);
+        -moz-box-shadow: inset 0 0 7px rgb(50, 205, 50);
+        box-shadow: inset 0 0 7px rgb(50, 205, 50);
+    }
+    50% {
+        border-color: rgba(50, 205, 50, 0);
+        -webkit-box-shadow: inset 0 0 7px rgba(50, 205, 50, .5);
+        -moz-box-shadow: inset 0 0 7px rgba(50, 205, 50, .5);
+        box-shadow: inset 0 0 7px rgba(50, 205, 50, .5);
+    }
+    100% {
+        border-color: rgb(50, 205, 50);
+        -webkit-box-shadow: inset 0 0 7px rgb(50, 205, 50);
+        -moz-box-shadow: inset 0 0 7px rgb(50, 205, 50);
+        box-shadow: inset 0 0 7px rgb(50, 205, 50);
+    }
+}
+
+.pulsate-highlight-green {
+    /*border: 1px solid #8aa3ff;*/
+    animation: pulsate-highlight-green 1s infinite;
+    border-radius: 7px;
+}
+
 
 /*showing when fields are modified in item editor*/
 @keyframes pulsate-highlight-modified {

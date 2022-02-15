@@ -212,10 +212,23 @@
                         </b-form-select-option>
                       </b-form-select>
 
-                      <b-form-input v-model.number="spell['effect_base_value_' + i]"/>
-                      <b-form-input v-model.number="spell['effect_limit_value_' + i]"/>
-                      <b-form-input v-model.number="spell['max_' + i]"/>
-                      <b-form-input v-model.number="spell['formula_' + i]"/>
+                      <b-form-input v-model.number="spell['effect_base_value_' + i]" :class="getSpaSpellHighlights(spell['effectid_' + i], 'base')"/>
+                      <b-form-input v-model.number="spell['effect_limit_value_' + i]" :class="getSpaSpellHighlights(spell['effectid_' + i], 'limit')"/>
+                      <b-form-input v-model.number="spell['max_' + i]" :class="getSpaSpellHighlights(spell['effectid_' + i], 'max')"/>
+
+                      <select
+                        v-model.number="spell['formula_' + i]"
+                        style="width: 140px"
+                      >
+                        <option
+                          v-for="(description, index) in BASE_VALUE_FORMULAS"
+                          :key="index"
+                          :value="parseInt(index)"
+                        >
+                          {{ index }}) {{ description }}
+                        </option>
+                      </select>
+
                     </b-input-group>
 
                   </div>
@@ -1098,8 +1111,9 @@ import EqWindow                     from "../../components/eq-ui/EQWindow";
 import EqTabs                       from "../../components/eq-ui/EQTabs";
 import EqTab                        from "../../components/eq-ui/EQTab";
 import EqSpellPreview               from "../../components/eq-ui/EQSpellCardPreview";
-import {Spells}                     from "../../app/spells";
+import {Spells}    from "../../app/spells";
 import {
+  BASE_VALUE_FORMULAS,
   DB_PC_NPC_ONLY_FLAG,
   DB_SPA,
   DB_SPELL_EFFECTS,
@@ -1107,8 +1121,8 @@ import {
   DB_SPELL_TARGET_RESTRICTION,
   DB_SPELL_TARGETS,
   DB_SPELL_ZONE_TYPE
-}                                   from "../../app/constants/eq-spell-constants";
-import {DB_SKILLS}                  from "../../app/constants/eq-skill-constants";
+}                  from "../../app/constants/eq-spell-constants";
+import {DB_SKILLS} from "../../app/constants/eq-skill-constants";
 import {App}                        from "../../constants/app";
 import SpellIconSelector            from "./components/SpellIconSelector";
 import SpellAnimationPreview         from "./components/SpellAnimationPreview";
@@ -1123,6 +1137,7 @@ import FreeIdSelector                from "../../components/tools/FreeIdSelector
 import SpellSpaPreviewPane           from "./components/SpellSpaPreviewPane";
 import SpellCastingAnimationPreview  from "./components/SpellCastingAnimationPreview";
 import SpellCastingAnimationSelector from "./components/SpellCastingAnimationSelector";
+import {SPELL_SPA_DEFINITIONS}       from "../../app/constants/eq-spell-spa-definitions";
 
 const MILLISECONDS_BEFORE_WINDOW_RESET = 3000;
 
@@ -1160,6 +1175,7 @@ export default {
       DB_SPELL_TARGET_RESTRICTION: DB_SPELL_TARGET_RESTRICTION,
       DB_SPELL_ZONE_TYPE: DB_SPELL_ZONE_TYPE,
       DB_PC_NPC_ONLY_FLAG: DB_PC_NPC_ONLY_FLAG,
+      BASE_VALUE_FORMULAS: BASE_VALUE_FORMULAS,
       loaded: true,
 
       // preview / selectors
@@ -1200,6 +1216,14 @@ export default {
     this.load()
   },
   methods: {
+
+    getSpaSpellHighlights(spaId, field) {
+      if (SPELL_SPA_DEFINITIONS[spaId][field]) {
+        if (SPELL_SPA_DEFINITIONS[spaId][field].includes("spellid")) {
+          return 'pulsate-highlight-green'
+        }
+      }
+    },
 
     getFieldDescription(field) {
       return Spells.getFieldDescription(field);

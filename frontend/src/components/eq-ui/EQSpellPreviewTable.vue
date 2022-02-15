@@ -6,7 +6,7 @@
     >
       <div class='eq-window-title-bar' v-if="title">{{ title }}</div>
       <div :style="'' + (title ? '' : '') ">
-        <div class='eq-window-nested-blue text-center' v-if="spells.length === 0">
+        <div class='eq-window-nested-blue text-center p-5' v-if="spells.length === 0">
           No spells were found
         </div>
 
