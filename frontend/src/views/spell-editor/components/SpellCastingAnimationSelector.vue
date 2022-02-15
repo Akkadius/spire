@@ -76,9 +76,6 @@ export default {
       required: true
     },
   },
-  created() {
-    this.init()
-  },
   methods: {
     init() {
       this.render()
@@ -106,10 +103,7 @@ export default {
             }, 100)
 
             setTimeout(() => {
-              container.scroll({
-                top: top - 150,
-                behavior: 'auto'
-              });
+              container.scrollTop = top - 150;
               VideoViewer.handleRender();
             }, 300)
 

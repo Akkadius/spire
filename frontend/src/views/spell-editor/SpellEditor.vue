@@ -212,13 +212,21 @@
                         </b-form-select-option>
                       </b-form-select>
 
-                      <b-form-input v-model.number="spell['effect_base_value_' + i]" :class="getSpaSpellHighlights(spell['effectid_' + i], 'base')"/>
-                      <b-form-input v-model.number="spell['effect_limit_value_' + i]" :class="getSpaSpellHighlights(spell['effectid_' + i], 'limit')"/>
-                      <b-form-input v-model.number="spell['max_' + i]" :class="getSpaSpellHighlights(spell['effectid_' + i], 'max')"/>
+                      <b-form-input
+                        v-model.number="spell['effect_base_value_' + i]"
+                        :class="getSpaSpellHighlights(spell['effectid_' + i], 'base')"
+                      />
+                      <b-form-input
+                        v-model.number="spell['effect_limit_value_' + i]"
+                        :class="getSpaSpellHighlights(spell['effectid_' + i], 'limit')"
+                      />
+                      <b-form-input
+                        v-model.number="spell['max_' + i]"
+                        :class="getSpaSpellHighlights(spell['effectid_' + i], 'max')"
+                      />
 
-                      <select
+                      <b-form-select
                         v-model.number="spell['formula_' + i]"
-                        style="width: 140px"
                       >
                         <option
                           v-for="(description, index) in BASE_VALUE_FORMULAS"
@@ -227,7 +235,7 @@
                         >
                           {{ index }}) {{ description }}
                         </option>
-                      </select>
+                      </b-form-select>
 
                     </b-input-group>
 
@@ -1059,11 +1067,12 @@
               class="fade-in"
               v-if="castingAnimSelectorActive && spell[castingAnimField]"
             >
-
-              <spell-casting-animation-selector
-                :selected-animation="spell[castingAnimField]"
-                :inputData.sync="spell[castingAnimField]"
-              />
+              <keep-alive>
+                <spell-casting-animation-selector
+                  :selected-animation="spell[castingAnimField]"
+                  :inputData.sync="spell[castingAnimField]"
+                />
+              </keep-alive>
             </div>
 
             <!-- free id selector -->
@@ -1106,12 +1115,12 @@
 </template>
 
 <script>
-import EqWindowFancy                from "../../components/eq-ui/EQWindowFancy";
-import EqWindow                     from "../../components/eq-ui/EQWindow";
-import EqTabs                       from "../../components/eq-ui/EQTabs";
-import EqTab                        from "../../components/eq-ui/EQTab";
-import EqSpellPreview               from "../../components/eq-ui/EQSpellCardPreview";
-import {Spells}    from "../../app/spells";
+import EqWindowFancy                 from "../../components/eq-ui/EQWindowFancy";
+import EqWindow                      from "../../components/eq-ui/EQWindow";
+import EqTabs                        from "../../components/eq-ui/EQTabs";
+import EqTab                         from "../../components/eq-ui/EQTab";
+import EqSpellPreview                from "../../components/eq-ui/EQSpellCardPreview";
+import {Spells}                      from "../../app/spells";
 import {
   BASE_VALUE_FORMULAS,
   DB_PC_NPC_ONLY_FLAG,
@@ -1121,10 +1130,10 @@ import {
   DB_SPELL_TARGET_RESTRICTION,
   DB_SPELL_TARGETS,
   DB_SPELL_ZONE_TYPE
-}                  from "../../app/constants/eq-spell-constants";
-import {DB_SKILLS} from "../../app/constants/eq-skill-constants";
-import {App}                        from "../../constants/app";
-import SpellIconSelector            from "./components/SpellIconSelector";
+}                                    from "../../app/constants/eq-spell-constants";
+import {DB_SKILLS}                   from "../../app/constants/eq-skill-constants";
+import {App}                         from "../../constants/app";
+import SpellIconSelector             from "./components/SpellIconSelector";
 import SpellAnimationPreview         from "./components/SpellAnimationPreview";
 import SpellAnimationViewer          from "../viewers/SpellAnimationViewer";
 import SpellAnimationSelector        from "./components/SpellAnimationSelector";
@@ -1219,7 +1228,10 @@ export default {
 
     getSpaSpellHighlights(spaId, field) {
       if (SPELL_SPA_DEFINITIONS[spaId][field]) {
-        if (SPELL_SPA_DEFINITIONS[spaId][field].includes("spellid")) {
+
+        // highlight when SPA field links to a sub-editor
+        const contents = SPELL_SPA_DEFINITIONS[spaId][field]
+        if (["spellid", "spell id", "item id", "itemid"].includes(contents)) {
           return 'pulsate-highlight-green'
         }
       }

@@ -50,7 +50,7 @@ export default {
         if (this.id === animationId) {
           this.previewId = this.id;
 
-          this.videoSource = this.spellAnimationUrl + this.previewId + '.mp4';
+          this.videoSource = this.spellAnimationUrl + this.previewId + '.mp4#t=3';
           return false
         }
       })
