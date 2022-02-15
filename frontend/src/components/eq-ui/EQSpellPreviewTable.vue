@@ -149,10 +149,13 @@ export default {
   },
   async created() {
     let spellMinis = []
-    for (const spell of this.spells) {
-      Spells.setSpell(spell["id"], spell)
 
-      spellMinis[spell["id"]] = await Spells.renderSpellMini("0", spell["id"], 30)
+    for (const spell of this.spells) {
+      if (Spells.getSpell(spell["id"])) {
+        Spells.setSpell(spell["id"], spell)
+      }
+
+      spellMinis[spell["id"]] = await Spells.renderSpellMini(0, spell["id"], 30)
     }
     this.spellMinis = spellMinis
 
