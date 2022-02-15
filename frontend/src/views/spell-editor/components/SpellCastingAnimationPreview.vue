@@ -2,7 +2,7 @@
   <div>
     <div
       v-if="previewId === 0"
-      :style="'width: ' + this.width + 'px; height: ' + this.height + 'px; border-radius:5px; border: 1px solid rgba(255, 255, 255, .3)'"
+      :style="'width: 100%; height: auto; min-height: 111px; border-radius:5px; border: 1px solid rgba(255, 255, 255, .3)'"
       class="text-center mb-2"
     >
       <div
