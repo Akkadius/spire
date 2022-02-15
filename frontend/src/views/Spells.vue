@@ -5,7 +5,7 @@
       <div class="panel-body">
         <div class="panel panel-default">
 
-          <eq-window-simple class="mt-3 p-2">
+          <eq-window-simple class="mt-3 p-0 pl-3">
 
             <div class="row">
               <div v-for="(icon, index) in dbClassIcons" class="text-center">
