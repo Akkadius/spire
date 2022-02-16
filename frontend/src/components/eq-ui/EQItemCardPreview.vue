@@ -272,6 +272,10 @@
             >
             {{ effectData[effect.field].name }} ({{ effect.name }})
 
+            <div v-if="['clickeffect'].includes(effect.field)" class="d-inline-block">
+              Cast Time ({{ itemData['casttime'] / 1000 }} sec) Recast Time ({{ itemData['recastdelay'] }} sec)
+            </div>
+
           </div>
 
           <!-- Popover -->
