@@ -2009,31 +2009,27 @@ export default {
       }
     },
 
+    setSubEditorFieldHighlights() {
+      let hasSubEditorFields = ["id", "icon", "idfile", "material", "color", "augtype"]
+      hasSubEditorFields.forEach((field) => {
+        this.setFieldHighlightHasSubEditor(field)
+      })
+    },
+
     resetFieldHighlightHasSubEditorStatus() {
-      // reset elements
-      const itemEditCard = document.getElementById("item-edit-card")
-      if (itemEditCard) {
-        const elements = itemEditCard.querySelectorAll("input, select");
-        elements.forEach((element) => {
-          if (element) {
-            element.classList.remove('pulsate-highlight-green')
-          }
-        });
-      }
+      document.querySelectorAll("input, select").forEach((element) => {
+        if (element && element.classList.contains('pulsate-highlight-green')) {
+          element.classList.remove('pulsate-highlight-green')
+        }
+      });
     },
 
     resetFieldEditedStatus() {
-      // reset elements
-      const itemEditCard = document.getElementById("item-edit-card")
-
-      if (itemEditCard) {
-        const elements = itemEditCard.querySelectorAll("input, select");
-        elements.forEach((element) => {
-          if (element) {
-            element.classList.remove('pulsate-highlight-modified')
-          }
-        });
-      }
+      document.querySelectorAll("input, select").forEach((element) => {
+        if (element && element.classList.contains('pulsate-highlight-modified')) {
+          element.classList.remove('pulsate-highlight-modified')
+        }
+      });
     },
 
     setFieldSubEditorHighlightedById(id) {
@@ -2137,11 +2133,6 @@ export default {
 
           // if we're cloning this item, automatically fetch an ID
           if (this.$route.query.hasOwnProperty("clone")) {
-
-            // setTimeout(() => {
-            //   this.sendNotification("Item is not fully cloned until it is saved!")
-            // }, 1000)
-
             SpireApiClient.v1().get("query/free-ids-reserved/items/id/name").then((response) => {
               if (response.data) {
 
@@ -2175,11 +2166,7 @@ export default {
           }
 
           this.resetFieldSubEditorHighlightedStatus()
-
-          let hasSubEditorFields = ["id", "icon", "idfile", "material", "color", "augtype"]
-          hasSubEditorFields.forEach((field) => {
-            this.setFieldHighlightHasSubEditor(field)
-          })
+          this.setSubEditorFieldHighlights()
 
         }, 100)
       }
@@ -2220,6 +2207,7 @@ export default {
      */
     resetPreviewComponents() {
       this.resetFieldSubEditorHighlightedStatus()
+      this.setSubEditorFieldHighlights()
 
       this.freeIdSelectorActive            = false;
       this.iconSelectorActive              = false;
