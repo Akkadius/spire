@@ -27,6 +27,16 @@ export default class VideoViewer {
     };
   }
 
+  public static stopAll() {
+    let videos   = document.getElementsByClassName("video-preview");
+    for (let i = 0; i < videos.length; i++) {
+      let video = <HTMLVideoElement>videos.item(i)
+      if (video) {
+        video.pause()
+      }
+    }
+  }
+
   public static handleRender = VideoViewer.debounce(() => {
     // @ts-ignore
     VideoViewer.log("Render")

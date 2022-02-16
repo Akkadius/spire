@@ -201,9 +201,9 @@
 @keyframes pulsate-highlight-green {
     0% {
         border-color: rgb(50, 205, 50);
-        -webkit-box-shadow: inset 0 0 15px rgb(50, 205, 50);
-        -moz-box-shadow: inset 0 0 15px rgb(50, 205, 50);
-        box-shadow: inset 0 0 15px rgb(50, 205, 50);
+        -webkit-box-shadow: inset 0 0 7px rgb(50, 205, 50);
+        -moz-box-shadow: inset 0 0 7px rgb(50, 205, 50);
+        box-shadow: inset 0 0 7px rgb(50, 205, 50);
     }
     50% {
         /*border-color: rgba(50, 205, 50, 0);*/
@@ -217,9 +217,9 @@
     }
     100% {
         border-color: rgb(50, 205, 50);
-        -webkit-box-shadow: inset 0 0 15px rgb(50, 205, 50);
-        -moz-box-shadow: inset 0 0 15px rgb(50, 205, 50);
-        box-shadow: inset 0 0 15px rgb(50, 205, 50);
+        -webkit-box-shadow: inset 0 0 7px rgb(50, 205, 50);
+        -moz-box-shadow: inset 0 0 7px rgb(50, 205, 50);
+        box-shadow: inset 0 0 7px rgb(50, 205, 50);
     }
 }
 

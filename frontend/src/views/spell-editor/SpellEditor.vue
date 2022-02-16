@@ -30,7 +30,6 @@
                   name="Basic"
                   :selected="zeroStateSelected"
                 >
-
                   <div class="row">
                     <div
                       class="col-2"
@@ -815,6 +814,14 @@
                         </option>
                       </select>
                     </div>
+                    <div class="col3 pl-3 mt-2">
+                      <loader-cast-bar-timer
+                        class="mt-3"
+                        color="#FF00FF"
+                        v-if="field.description.includes('Time') && !field.description.includes('Timer')"
+                        :time-ms="spell[field.field]"
+                      />
+                    </div>
                   </div>
 
                 </eq-tab>
@@ -1170,12 +1177,14 @@ import SpellSpaPreviewPane           from "./components/SpellSpaPreviewPane";
 import SpellCastingAnimationPreview  from "./components/SpellCastingAnimationPreview";
 import SpellCastingAnimationSelector from "./components/SpellCastingAnimationSelector";
 import {SPELL_SPA_DEFINITIONS}       from "../../app/constants/eq-spell-spa-definitions";
+import LoaderCastBarTimer            from "../../components/LoaderCastBarTimer";
 
 const MILLISECONDS_BEFORE_WINDOW_RESET = 5000;
 
 export default {
   name: "SpellEdit",
   components: {
+    LoaderCastBarTimer,
     SpellCastingAnimationSelector,
     SpellCastingAnimationPreview,
     SpellSpaPreviewPane,
@@ -1234,7 +1243,7 @@ export default {
   watch: {
     '$route'() {
       // reset state vars when we navigate away
-      this.notification = ""
+      this.notification      = ""
       this.zeroStateSelected = true
 
       // reload

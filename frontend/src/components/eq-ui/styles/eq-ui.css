@@ -305,8 +305,7 @@ DIV.eq-progress-bar DIV {
     position: relative;
     background-color: #ff0000;
     z-index: 1;
-    transition: width .5s;
-
+    transition: width .05s;
 }
 
 DIV.eq-progress-bar DIV:before {
