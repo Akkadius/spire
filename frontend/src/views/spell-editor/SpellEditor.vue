@@ -1245,6 +1245,8 @@ export default {
       // reset state vars when we navigate away
       this.notification      = ""
       this.zeroStateSelected = true
+      this.resetFieldEditedStatus()
+      this.resetPreviewComponents()
 
       // reload
       this.load()
