@@ -214,6 +214,13 @@ export default {
     }
   },
 
+  watch: {
+    '$route'() {
+      this.loadQueryState()
+      this.listSpells()
+    },
+  },
+
   mounted() {
     if (Object.keys(this.$route.query).length !== 0) {
       this.loadQueryState()
