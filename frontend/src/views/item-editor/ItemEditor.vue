@@ -1995,7 +1995,9 @@ export default {
     },
 
     setSubEditorFieldHighlights() {
-      let hasSubEditorFields = ["id", "icon", "idfile", "material", "color", "augtype"]
+      let hasSubEditorFields = ["id", "icon", "idfile", "material", "color", "augtype", "proceffect",
+        "worneffect", "focuseffect", "scrolleffect", "clickeffect", "bardeffect"
+      ]
       hasSubEditorFields.forEach((field) => {
         EditFormFieldUtil.setFieldHighlightHasSubEditor(field)
       })
