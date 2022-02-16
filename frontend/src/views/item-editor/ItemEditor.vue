@@ -476,6 +476,7 @@
                               v-model.number="item['material']"
                               @change="materialChange"
                               class="form-control"
+                              id="material"
                             >
                               <option
                                 v-for="(description, index) in DB_ITEM_MATERIAL"
@@ -1962,14 +1963,6 @@ export default {
     },
   },
   async created() {
-    setTimeout(() => {
-      const target = document.getElementById("item-edit-card")
-      if (target) {
-        target.removeEventListener('input', this.setFieldModified, true);
-        target.addEventListener('input', this.setFieldModified)
-      }
-    }, 1000)
-
     this.load()
   },
   methods: {
@@ -2006,6 +1999,26 @@ export default {
       const target = document.getElementById(id)
       if (target) {
         target.classList.add('pulsate-highlight-modified')
+      }
+    },
+
+    setFieldHighlightHasSubEditor(id) {
+      const target = document.getElementById(id)
+      if (target) {
+        target.classList.add('pulsate-highlight-green')
+      }
+    },
+
+    resetFieldHighlightHasSubEditorStatus() {
+      // reset elements
+      const itemEditCard = document.getElementById("item-edit-card")
+      if (itemEditCard) {
+        const elements = itemEditCard.querySelectorAll("input, select");
+        elements.forEach((element) => {
+          if (element) {
+            element.classList.remove('pulsate-highlight-green')
+          }
+        });
       }
     },
 
@@ -2152,6 +2165,23 @@ export default {
           }
 
         })
+
+        // hooks
+        setTimeout(() => {
+          const target = document.getElementById("item-edit-card")
+          if (target) {
+            target.removeEventListener('input', this.setFieldModified, true);
+            target.addEventListener('input', this.setFieldModified)
+          }
+
+          this.resetFieldSubEditorHighlightedStatus()
+
+          let hasSubEditorFields = ["id", "icon", "idfile", "material", "color", "augtype"]
+          hasSubEditorFields.forEach((field) => {
+            this.setFieldHighlightHasSubEditor(field)
+          })
+
+        }, 100)
       }
     },
 

@@ -1247,6 +1247,7 @@ export default {
       this.zeroStateSelected = true
       this.resetFieldEditedStatus()
       this.resetPreviewComponents()
+      this.resetFieldHighlightHasSubEditorStatus()
 
       // reload
       this.load()
@@ -1307,6 +1308,19 @@ export default {
       const target = document.getElementById(id)
       if (target) {
         target.classList.add('pulsate-highlight-green')
+      }
+    },
+
+    resetFieldHighlightHasSubEditorStatus() {
+      // reset elements
+      const itemEditCard = document.getElementById("spell-edit-card")
+      if (itemEditCard) {
+        const elements = itemEditCard.querySelectorAll("input, select");
+        elements.forEach((element) => {
+          if (element) {
+            element.classList.remove('pulsate-highlight-green')
+          }
+        });
       }
     },
 
