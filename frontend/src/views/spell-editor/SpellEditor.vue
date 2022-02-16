@@ -1207,6 +1207,7 @@ import LoaderCastBarTimer            from "../../components/LoaderCastBarTimer";
 import {EditFormFieldUtil}           from "../../app/forms/edit-form-field-util";
 import LoaderFakeProgess             from "../../components/LoaderFakeProgress";
 import SpellSpellEffectSelector      from "./components/SpellSpellEffectSelector";
+import {debounce}                    from "../../app/utility/debounce";
 
 const MILLISECONDS_BEFORE_WINDOW_RESET = 5000;
 
@@ -1443,12 +1444,14 @@ export default {
     shouldReset() {
       return (Date.now() - this.lastResetTime) > MILLISECONDS_BEFORE_WINDOW_RESET
     },
-    previewSpell(force = false) {
+
+    previewSpell: debounce( (force = false)  => {
       if (this.shouldReset() || force) {
         this.resetPreviewComponents()
         this.previewSpellActive = true;
       }
-    },
+    }, 300),
+
     drawCastingAnimationSelector(force = false) {
       if (!this.castingAnimSelectorActive && this.shouldReset() || force) {
         this.resetPreviewComponents()
