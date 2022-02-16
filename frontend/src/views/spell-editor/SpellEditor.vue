@@ -1178,6 +1178,7 @@ import SpellCastingAnimationPreview  from "./components/SpellCastingAnimationPre
 import SpellCastingAnimationSelector from "./components/SpellCastingAnimationSelector";
 import {SPELL_SPA_DEFINITIONS}       from "../../app/constants/eq-spell-spa-definitions";
 import LoaderCastBarTimer            from "../../components/LoaderCastBarTimer";
+import {EditFormFieldUtil}           from "../../app/forms/edit-form-field-util";
 
 const MILLISECONDS_BEFORE_WINDOW_RESET = 5000;
 
@@ -1261,7 +1262,7 @@ export default {
 
       let hasSubEditorFields = ["id", "casting_anim", "target_anim", "icon", "spellanim"]
       hasSubEditorFields.forEach((field) => {
-        this.setFieldHighlightHasSubEditor(field)
+        EditFormFieldUtil.setFieldHighlightHasSubEditor(field)
       })
 
     }, 300)
@@ -1283,55 +1284,6 @@ export default {
 
     getFieldDescription(field) {
       return Spells.getFieldDescription(field);
-    },
-
-    setFieldModified(evt) {
-      // border: 2px #555555 solid !important;
-      evt.target.style.setProperty('border-color', 'orange', 'important');
-    },
-
-    setFieldModifiedById(id) {
-      const target = document.getElementById(id)
-      if (target) {
-        target.classList.add('pulsate-highlight-modified')
-      }
-    },
-
-    setFieldSubEditorHighlightedById(id) {
-      const target = document.getElementById(id)
-      if (target) {
-        target.classList.add('pulsate-highlight-white')
-      }
-    },
-
-    setFieldHighlightHasSubEditor(id) {
-      const target = document.getElementById(id)
-      if (target) {
-        target.classList.add('pulsate-highlight-green')
-      }
-    },
-
-    resetFieldHighlightHasSubEditorStatus() {
-      document.querySelectorAll("input, select").forEach((element) => {
-        if (element && element.classList.contains('pulsate-highlight-green')) {
-          element.classList.remove('pulsate-highlight-green')
-        }
-      });
-    },
-
-    resetFieldSubEditorHighlightedStatus() {
-      document.querySelectorAll("input, select").forEach((element) => {
-        if (element && element.classList.contains('pulsate-highlight-white')) {
-          element.classList.remove('pulsate-highlight-white')
-        }
-      });
-    },
-
-    resetFieldEditedStatus() {
-      // reset elements
-      document.querySelectorAll("input, select").forEach((element) => {
-        element.style.setProperty('border-color', '#555555', 'important');
-      });
     },
 
     dismissNotification() {
@@ -1427,17 +1379,15 @@ export default {
       this.spaDetailPaneActive       = false;
       this.castingAnimSelectorActive = false;
 
-      this.resetFieldSubEditorHighlightedStatus()
+      EditFormFieldUtil.resetFieldSubEditorHighlightedStatus()
     },
     shouldReset() {
       return (Date.now() - this.lastResetTime) > MILLISECONDS_BEFORE_WINDOW_RESET
     },
-
     previewSpell(force = false) {
       if (this.shouldReset() || force) {
         this.resetPreviewComponents()
         this.previewSpellActive = true;
-        // this.lastResetTime      = Date.now()
       }
     },
     drawCastingAnimationSelector(force = false) {
@@ -1445,7 +1395,7 @@ export default {
         this.resetPreviewComponents()
         this.lastResetTime             = Date.now()
         this.castingAnimSelectorActive = true;
-        this.setFieldSubEditorHighlightedById(this.castingAnimField)
+        EditFormFieldUtil.setFieldSubEditorHighlightedById(this.castingAnimField)
       }
     },
     drawSpellAnimationSelector(force = false) {
@@ -1453,7 +1403,7 @@ export default {
         this.resetPreviewComponents()
         this.lastResetTime           = Date.now()
         this.spellAnimSelectorActive = true
-        this.setFieldSubEditorHighlightedById("spellanim")
+        EditFormFieldUtil.setFieldSubEditorHighlightedById("spellanim")
       }
     },
     drawIconSelector(force = false) {
@@ -1461,7 +1411,7 @@ export default {
         this.resetPreviewComponents()
         this.lastResetTime      = Date.now()
         this.iconSelectorActive = true;
-        this.setFieldSubEditorHighlightedById("icon")
+        EditFormFieldUtil.setFieldSubEditorHighlightedById("icon")
       }
     },
     drawFreeIdSelector(force = false) {
@@ -1469,7 +1419,7 @@ export default {
         this.resetPreviewComponents()
         this.lastResetTime        = Date.now()
         this.freeIdSelectorActive = true
-        this.setFieldSubEditorHighlightedById("id")
+        EditFormFieldUtil.setFieldSubEditorHighlightedById("id")
       }
     },
     drawSpaDetailPane(spa, index) {
