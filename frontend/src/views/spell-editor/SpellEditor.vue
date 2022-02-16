@@ -20,8 +20,14 @@
                 <i class="fa fa-warning"></i> {{ error }}
               </b-alert>
 
+              <!-- Loader -->
+              <app-loader :is-loading="!spell" padding="5"/>
+              <div v-if="!spell" class="mt-3 text-center">
+                <loader-fake-progess/>
+              </div>
+
               <eq-tabs
-                v-if="spell"
+                v-if="spell && spell.id >= 0"
                 id="spell-edit-card"
                 class="spell-edit-card"
                 @mouseover.native="previewSpell(false)"
@@ -1039,7 +1045,7 @@
                 </eq-tab>
               </eq-tabs>
 
-              <div class="text-center align-content-center mt-3">
+              <div class="text-center align-content-center mt-3" v-if="spell && spell.id >= 0">
 
                 <div
                   :class="'text-center mt-2 btn-xs eq-button-fancy'"
@@ -1179,12 +1185,14 @@ import SpellCastingAnimationSelector from "./components/SpellCastingAnimationSel
 import {SPELL_SPA_DEFINITIONS}       from "../../app/constants/eq-spell-spa-definitions";
 import LoaderCastBarTimer            from "../../components/LoaderCastBarTimer";
 import {EditFormFieldUtil}           from "../../app/forms/edit-form-field-util";
+import LoaderFakeProgess             from "../../components/LoaderFakeProgress";
 
 const MILLISECONDS_BEFORE_WINDOW_RESET = 5000;
 
 export default {
   name: "SpellEdit",
   components: {
+    LoaderFakeProgess,
     LoaderCastBarTimer,
     SpellCastingAnimationSelector,
     SpellCastingAnimationPreview,
@@ -1243,6 +1251,7 @@ export default {
   },
   watch: {
     '$route'() {
+
       // reset state vars when we navigate away
       this.notification      = ""
       this.zeroStateSelected = true
