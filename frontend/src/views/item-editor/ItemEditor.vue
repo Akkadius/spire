@@ -1663,6 +1663,7 @@ import {DB_ITEM_BARD_TYPE}     from "../../app/constants/eq-bard-types";
 import AugBitmaskCalculator    from "../../components/tools/AugmentTypeCalculator";
 import EqWindowSimple          from "../../components/eq-ui/EQWindowSimple";
 import LoaderCastBarTimer      from "../../components/LoaderCastBarTimer";
+import {EditFormFieldUtil}     from "../../app/forms/edit-form-field-util";
 
 const MILLISECONDS_BEFORE_WINDOW_RESET = 5000;
 
@@ -1849,8 +1850,8 @@ export default {
 
       // reset state vars when we navigate away
       this.notification = ""
-      this.resetFieldEditedStatus()
-      this.resetPreviewComponents()
+      EditFormFieldUtil.resetFieldEditedStatus()
+      EditFormFieldUtil.resetPreviewComponents()
 
       // reload
       this.load()
@@ -1882,10 +1883,10 @@ export default {
           this.item.clicktype   = 5
 
           setTimeout(() => {
-            this.setFieldModifiedById('maxcharges')
-            this.setFieldModifiedById('casttime')
-            this.setFieldModifiedById('recastdelay')
-            this.setFieldModifiedById('clicktype')
+            EditFormFieldUtil.setFieldModifiedById('maxcharges')
+            EditFormFieldUtil.setFieldModifiedById('casttime')
+            EditFormFieldUtil.setFieldModifiedById('recastdelay')
+            EditFormFieldUtil.setFieldModifiedById('clicktype')
 
             this.sendNotification("Set clicky defaults...")
           }, 50)
@@ -1989,67 +1990,15 @@ export default {
       }
     },
 
-    // field modified helpers
-    setFieldModified(evt) {
-      // border: 2px #555555 solid !important;
-      evt.target.classList.add('pulsate-highlight-modified')
-    },
-
     setFieldModifiedById(id) {
-      const target = document.getElementById(id)
-      if (target) {
-        target.classList.add('pulsate-highlight-modified')
-      }
-    },
-
-    setFieldHighlightHasSubEditor(id) {
-      const target = document.getElementById(id)
-      if (target) {
-        target.classList.add('pulsate-highlight-green')
-      }
+      EditFormFieldUtil.setFieldModifiedById(id)
     },
 
     setSubEditorFieldHighlights() {
       let hasSubEditorFields = ["id", "icon", "idfile", "material", "color", "augtype"]
       hasSubEditorFields.forEach((field) => {
-        this.setFieldHighlightHasSubEditor(field)
+        EditFormFieldUtil.setFieldHighlightHasSubEditor(field)
       })
-    },
-
-    resetFieldHighlightHasSubEditorStatus() {
-      document.querySelectorAll("input, select").forEach((element) => {
-        if (element && element.classList.contains('pulsate-highlight-green')) {
-          element.classList.remove('pulsate-highlight-green')
-        }
-      });
-    },
-
-    resetFieldEditedStatus() {
-      document.querySelectorAll("input, select").forEach((element) => {
-        if (element && element.classList.contains('pulsate-highlight-modified')) {
-          element.classList.remove('pulsate-highlight-modified')
-        }
-      });
-    },
-
-    setFieldSubEditorHighlightedById(id) {
-      const target = document.getElementById(id)
-      if (target) {
-        target.classList.add('pulsate-highlight-white')
-      }
-    },
-
-    resetFieldSubEditorHighlightedStatus() {
-      // reset elements
-      const itemEditCard = document.getElementById("item-edit-card")
-      if (itemEditCard) {
-        const elements = itemEditCard.querySelectorAll("input, select");
-        elements.forEach((element) => {
-          if (element) {
-            element.classList.remove('pulsate-highlight-white')
-          }
-        });
-      }
     },
 
     dismissNotification() {
@@ -2074,7 +2023,7 @@ export default {
       }).then((result) => {
         if (result.status === 200) {
           this.sendNotification("Item updated successfully!")
-          this.resetFieldEditedStatus()
+          EditFormFieldUtil.resetFieldEditedStatus()
         }
 
         if (result.data.error) {
@@ -2095,7 +2044,7 @@ export default {
 
         if (createRes.status === 200) {
           this.sendNotification("Created new Item!")
-          this.resetFieldEditedStatus()
+          EditFormFieldUtil.resetFieldEditedStatus()
         }
       })
     },
@@ -2139,7 +2088,7 @@ export default {
                 // grab first "reserved" entry available
                 if (response.data.data.length > 0) {
                   this.item.id = parseInt(response.data.data[0].id)
-                  this.setFieldModifiedById('id');
+                  EditFormFieldUtil.setFieldModifiedById('id');
                 }
 
                 // grab first free id in range entry available
@@ -2147,7 +2096,7 @@ export default {
                   SpireApiClient.v1().get("query/free-id-ranges/items/id").then((response) => {
                     if (response.data && response.data.data) {
                       this.item.id = parseInt(response.data.data[0].start_id)
-                      this.setFieldModifiedById('id')
+                      EditFormFieldUtil.setFieldModifiedById('id')
                     }
                   });
                 }
@@ -2161,11 +2110,11 @@ export default {
         setTimeout(() => {
           const target = document.getElementById("item-edit-card")
           if (target) {
-            target.removeEventListener('input', this.setFieldModified, true);
-            target.addEventListener('input', this.setFieldModified)
+            target.removeEventListener('input', EditFormFieldUtil.setFieldModified, true);
+            target.addEventListener('input', EditFormFieldUtil.setFieldModified)
           }
 
-          this.resetFieldSubEditorHighlightedStatus()
+          EditFormFieldUtil.resetFieldSubEditorHighlightedStatus()
           this.setSubEditorFieldHighlights()
 
         }, 100)
@@ -2206,7 +2155,7 @@ export default {
      * Selector / previewers
      */
     resetPreviewComponents() {
-      this.resetFieldSubEditorHighlightedStatus()
+      EditFormFieldUtil.resetFieldSubEditorHighlightedStatus()
       this.setSubEditorFieldHighlights()
 
       this.freeIdSelectorActive            = false;
@@ -2240,7 +2189,7 @@ export default {
         this.itemModelSelectorActive = true;
         this.lastResetTime           = Date.now()
 
-        this.setFieldSubEditorHighlightedById("idfile")
+        EditFormFieldUtil.setFieldSubEditorHighlightedById("idfile")
       }
     },
     drawIconSelector(force = false) {
@@ -2248,7 +2197,7 @@ export default {
         this.resetPreviewComponents()
         this.iconSelectorActive = true;
 
-        this.setFieldSubEditorHighlightedById("icon")
+        EditFormFieldUtil.setFieldSubEditorHighlightedById("icon")
       }
     },
     drawColorSelector(force = false) {
@@ -2257,7 +2206,7 @@ export default {
         this.drawColorSelectorActive = true;
         this.lastResetTime           = Date.now()
 
-        this.setFieldSubEditorHighlightedById("color")
+        EditFormFieldUtil.setFieldSubEditorHighlightedById("color")
       }
     },
     drawRaceMaterialPreview() {
@@ -2266,7 +2215,7 @@ export default {
         this.drawRaceMaterialPreviewActive = true;
         this.lastResetTime                 = Date.now()
 
-        this.setFieldSubEditorHighlightedById("material")
+        EditFormFieldUtil.setFieldSubEditorHighlightedById("material")
       }
     },
     drawFreeIdSelector() {
@@ -2274,7 +2223,7 @@ export default {
       this.lastResetTime        = Date.now()
       this.freeIdSelectorActive = true
 
-      this.setFieldSubEditorHighlightedById("id")
+      EditFormFieldUtil.setFieldSubEditorHighlightedById("id")
     },
     drawStatScaleTool() {
       // this.resetPreviewComponents()
@@ -2288,7 +2237,7 @@ export default {
       this.resetPreviewComponents()
       this.drawAugmentTypeCalculatorActive = true
 
-      this.setFieldSubEditorHighlightedById("augtype")
+      EditFormFieldUtil.setFieldSubEditorHighlightedById("augtype")
     },
 
     materialChange() {

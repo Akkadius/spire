@@ -1266,8 +1266,8 @@ export default {
   async created() {
 
     setTimeout(() => {
-      document.getElementById("spell-edit-card").removeEventListener('input', this.setFieldModified, true);
-      document.getElementById("spell-edit-card").addEventListener('input', this.setFieldModified)
+      document.getElementById("spell-edit-card").removeEventListener('input', EditFormFieldUtil.setFieldModified, true);
+      document.getElementById("spell-edit-card").addEventListener('input', EditFormFieldUtil.setFieldModified)
 
       let hasSubEditorFields = ["id", "casting_anim", "target_anim", "icon", "spellanim"]
       hasSubEditorFields.forEach((field) => {
@@ -1279,6 +1279,10 @@ export default {
     this.load()
   },
   methods: {
+
+    setFieldModifiedById(id) {
+      EditFormFieldUtil.setFieldModifiedById(id)
+    },
 
     getSpaSpellHighlights(spaId, field) {
       if (SPELL_SPA_DEFINITIONS[spaId][field]) {
@@ -1338,7 +1342,7 @@ export default {
 
         if (createRes.status === 200) {
           this.sendNotification("Created new Spell!")
-          this.resetFieldEditedStatus()
+          EditFormFieldUtil.resetFieldEditedStatus()
         }
       })
     },
@@ -1357,7 +1361,7 @@ export default {
                 // grab first "reserved" entry available
                 if (response.data.data.length > 0) {
                   this.spell.id = parseInt(response.data.data[0].id)
-                  this.setFieldModifiedById("id")
+                  EditFormFieldUtil.setFieldModifiedById("id")
                 }
 
                 // grab first free id in range entry available
@@ -1365,7 +1369,7 @@ export default {
                   SpireApiClient.v1().get("query/free-id-ranges/spells_new/id").then((response) => {
                     if (response.data && response.data.data) {
                       this.spell.id = parseInt(response.data.data[0].start_id)
-                      this.setFieldModifiedById("id")
+                      EditFormFieldUtil.setFieldModifiedById("id")
                     }
                   });
                 }
