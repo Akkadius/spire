@@ -1246,6 +1246,12 @@ export default {
     setTimeout(() => {
       document.getElementById("spell-edit-card").removeEventListener('input', this.setFieldModified, true);
       document.getElementById("spell-edit-card").addEventListener('input', this.setFieldModified)
+
+      let hasSubEditorFields = ["id", "casting_anim", "target_anim", "icon", "spellanim"]
+      hasSubEditorFields.forEach((field) => {
+        this.setFieldHighlightHasSubEditor(field)
+      })
+
     }, 300)
 
     this.load()
@@ -1286,6 +1292,13 @@ export default {
       }
     },
 
+    setFieldHighlightHasSubEditor(id) {
+      const target = document.getElementById(id)
+      if (target) {
+        target.classList.add('pulsate-highlight-green')
+      }
+    },
+
     resetFieldSubEditorHighlightedStatus() {
       // reset elements
       const itemEditCard = document.getElementById("spell-edit-card")
@@ -1298,7 +1311,6 @@ export default {
         });
       }
     },
-
 
     resetFieldEditedStatus() {
       // reset elements

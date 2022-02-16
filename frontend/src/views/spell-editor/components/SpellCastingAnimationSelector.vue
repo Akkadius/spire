@@ -76,9 +76,16 @@ export default {
       required: true
     },
   },
+  watch: {
+    'selectedAnimation'() {
+      this.init()
+    }
+  },
   methods: {
     init() {
       this.render()
+
+      console.log("[SpellCastingAnimationSelector] selected animation [%s]", this.selectedAnimation)
 
       // bring focus to the selected video
       if (this.selectedAnimation > 0) {
@@ -131,7 +138,6 @@ export default {
     }
   },
   created() {
-    console.log("selector created")
     this.init()
   },
 }
