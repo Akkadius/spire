@@ -134,7 +134,7 @@
     <app-loader :is-loading="!loaded" padding="4"/>
 
     <eq-window-simple
-      :title="'Spells (' + limit + ')'"
+      :title="'Spells (' + spells.length + ')'"
       class="p-0"
       v-if="loaded && spells"
     >
