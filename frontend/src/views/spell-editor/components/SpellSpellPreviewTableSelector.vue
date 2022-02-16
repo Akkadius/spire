@@ -4,7 +4,11 @@
       No spells were found
     </div>
 
-    <div class='spell-table' v-if="spells.length > 0">
+    <div
+      style="overflow-y: scroll; overflow-x: hidden; height: 58vh"
+      id="spell-effect-selector-view-port"
+      class='spell-table p-0'
+         v-if="spells.length > 0">
       <table class="eq-table eq-highlight-rows" style="display: table;">
         <thead>
         <tr>
@@ -20,25 +24,21 @@
           :key="spell.id"
         >
           <td style="vertical-align: middle">
-            <b-button-group variant="outline-warning">
-              <b-dropdown
-                block right text="Select" variant="outline-warning" size="sm"
-              >
-                <b-dropdown-item @click="selectAsEffect('scrolleffect', spell)">As Scroll Effect</b-dropdown-item>
-                <b-dropdown-item @click="selectAsEffect('clickeffect', spell)">As Click Effect</b-dropdown-item>
-                <b-dropdown-item @click="selectAsEffect('proceffect', spell)">As Proc Effect</b-dropdown-item>
-                <b-dropdown-item @click="selectAsEffect('focuseffect', spell)">As Focus Effect</b-dropdown-item>
-                <b-dropdown-item @click="selectAsEffect('worneffect', spell)">As Worn Effect</b-dropdown-item>
-                <b-dropdown-item @click="selectAsEffect('bardeffect', spell)">As Bard Effect</b-dropdown-item>
-              </b-dropdown>
-            </b-button-group>
+
+            <b-button
+              class="btn-dark btn-sm btn-outline-warning mb-3"
+              @click="selectSpell(spell.id)"
+            >
+              Select
+            </b-button>
+
           </td>
           <td
             style="text-align: center; padding: 5px; vertical-align: middle"
           >
                 <span v-for="(icon, index) in dbClassIcons">
                   <div v-if="spell['classes_' + index] > 0 && spell['classes_' + index] < 255">
-                    
+
                      <span
                        style="border-radius: 4px"
                        :class="'item-' + icon + '-sm'"
@@ -79,7 +79,7 @@ import {ROUTE}            from "@/routes";
 import * as util          from "util";
 
 export default {
-  name: "EqSpellPreviewTableSelector",
+  name: "SpellSpellPreviewTableSelector",
   components: {
     EqSpellDescription,
     EqSpellEffects,
@@ -126,6 +126,15 @@ export default {
     spells: Array
   },
   methods: {
+
+    selectSpell(spellId) {
+      const event = {
+        spellId: spellId,
+      }
+
+      this.$emit('input', event);
+    },
+
     selectAsEffect(field, spell) {
       const event = {
         field: field,

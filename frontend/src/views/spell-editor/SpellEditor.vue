@@ -244,16 +244,22 @@
                       </b-form-select>
 
                       <b-form-input
+                        :id="'effect_base_value_' + i"
                         v-model.number="spell['effect_base_value_' + i]"
                         :class="getSpaSpellHighlights(spell['effectid_' + i], 'base')"
+                        @click="processSpaFieldAction(i, spell['effectid_' + i], 'base')"
                       />
                       <b-form-input
+                        :id="'effect_limit_value_' + i"
                         v-model.number="spell['effect_limit_value_' + i]"
                         :class="getSpaSpellHighlights(spell['effectid_' + i], 'limit')"
+                        @click="processSpaFieldAction(i, spell['effectid_' + i], 'limit')"
                       />
                       <b-form-input
+                        :id="'max_' + i"
                         v-model.number="spell['max_' + i]"
                         :class="getSpaSpellHighlights(spell['effectid_' + i], 'max')"
+                        @click="processSpaFieldAction(i, spell['effectid_' + i], 'max')"
                       />
 
                       <b-form-select
@@ -1115,6 +1121,19 @@
               />
             </div>
 
+            <!-- spell effect selector -->
+            <div
+              style="margin-top: 20px; width: auto;"
+              class="fade-in"
+              v-if="spellSelectorActive"
+            >
+              <spell-spell-effect-selector
+                @input="spell[selectedEffectColumn + '_' + selectedEffectIndex] = $event.spellId; setFieldModifiedById(selectedEffectColumn + '_' + selectedEffectIndex)"
+                :selected-animation="spell.spellanim"
+                :inputData.sync="spell.spellanim"
+              />
+            </div>
+
             <!-- spell casting anim selector -->
             <div
               style="margin-top: 20px; width: auto;"
@@ -1187,12 +1206,14 @@ import {SPELL_SPA_DEFINITIONS}       from "../../app/constants/eq-spell-spa-defi
 import LoaderCastBarTimer            from "../../components/LoaderCastBarTimer";
 import {EditFormFieldUtil}           from "../../app/forms/edit-form-field-util";
 import LoaderFakeProgess             from "../../components/LoaderFakeProgress";
+import SpellSpellEffectSelector      from "./components/SpellSpellEffectSelector";
 
 const MILLISECONDS_BEFORE_WINDOW_RESET = 5000;
 
 export default {
   name: "SpellEdit",
   components: {
+    SpellSpellEffectSelector,
     LoaderFakeProgess,
     LoaderCastBarTimer,
     SpellCastingAnimationSelector,
@@ -1236,9 +1257,13 @@ export default {
       freeIdSelectorActive: false,
       spaDetailPaneActive: false,
       castingAnimSelectorActive: false,
+      spellSelectorActive: false,
 
       spaPreviewNumber: -1,
       spaEffectIndex: -1,
+
+      selectedEffectIndex: 0,
+      selectedEffectColumn: "",
 
       zeroStateSelected: true,
 
@@ -1287,6 +1312,19 @@ export default {
         const contents = SPELL_SPA_DEFINITIONS[spaId][field]
         if (["spellid", "spell id", "item id", "itemid"].includes(contents)) {
           return 'pulsate-highlight-green'
+        }
+      }
+    },
+
+    processSpaFieldAction(effectIndex, spaId, field) {
+      if (SPELL_SPA_DEFINITIONS[spaId][field]) {
+
+        // highlight when SPA field links to a sub-editor
+        const contents = SPELL_SPA_DEFINITIONS[spaId][field]
+
+        // activate spell selector
+        if (["spellid", "spell id"].includes(contents)) {
+          this.drawSpellSelector(effectIndex, field)
         }
       }
     },
@@ -1379,6 +1417,7 @@ export default {
             document.getElementById("spell-edit-card").addEventListener('input', EditFormFieldUtil.setFieldModified)
 
             this.resetPreviewComponents()
+            this.previewSpellActive = true
             this.setSubEditorFieldHighlights()
 
           }, 300)
@@ -1397,6 +1436,7 @@ export default {
       this.freeIdSelectorActive      = false;
       this.spaDetailPaneActive       = false;
       this.castingAnimSelectorActive = false;
+      this.spellSelectorActive       = false;
 
       EditFormFieldUtil.resetFieldSubEditorHighlightedStatus()
     },
@@ -1426,7 +1466,7 @@ export default {
     drawSpellAnimationSelector(force = false) {
       if (!this.spellAnimSelectorActive && this.shouldReset() || force) {
         this.resetPreviewComponents()
-        this.lastResetTime           = Date.now()
+        this.lastResetTime = Date.now()
         setTimeout(() => {
           this.spellAnimSelectorActive = true
         }, 100)
@@ -1448,6 +1488,27 @@ export default {
         this.freeIdSelectorActive = true
         EditFormFieldUtil.setFieldSubEditorHighlightedById("id")
       }
+    },
+    drawSpellSelector(effectIndex, field) {
+      this.resetPreviewComponents()
+      this.lastResetTime       = Date.now()
+      this.spellSelectorActive = true
+      this.selectedEffectIndex = effectIndex
+
+      let fieldId = ""
+      if (field.includes("max")) {
+        fieldId = "max"
+      }
+      if (field.includes("limit")) {
+        fieldId = "effect_limit_value"
+      }
+      if (field.includes("base")) {
+        fieldId = "effect_base_value"
+      }
+
+      this.selectedEffectColumn = fieldId
+
+      EditFormFieldUtil.setFieldSubEditorHighlightedById(fieldId + "_" + effectIndex)
     },
     drawSpaDetailPane(spa, index) {
       this.resetPreviewComponents()

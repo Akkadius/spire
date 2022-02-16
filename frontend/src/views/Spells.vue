@@ -75,7 +75,7 @@
               </div>
 
               <div class="col-lg-6 col-sm-12 mt-3 pl-0 pr-0">
-                <div class="btn-group ml-3" role="group" aria-label="Basic example" v-if="selectedLevel">
+                <div class="btn-group ml-3" role="group" v-if="selectedLevel">
                   <b-button
                     @click="selectedLevelType = 0; triggerStateDelayed();"
                     size="sm"

@@ -1851,7 +1851,7 @@ export default {
       // reset state vars when we navigate away
       this.notification = ""
       EditFormFieldUtil.resetFieldEditedStatus()
-      EditFormFieldUtil.resetPreviewComponents()
+      this.resetPreviewComponents()
 
       // reload
       this.load()

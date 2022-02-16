@@ -1,6 +1,6 @@
 <template>
   <div>
-    <eq-window-simple style="margin-top: 20px;">
+    <eq-window-simple style="margin-top: 20px;" class="p-1">
       <div
         class="row text-center justify-content-center mb-3"
         style="margin: 0 auto;"
@@ -74,47 +74,75 @@
         </div>
 
         <div class="col-2 m-0 p-0">
-          <b-form-group>
-            <b-form-radio v-model="selectedLevelType" @change="triggerState()" value="0">Only
-            </b-form-radio>
-            <b-form-radio v-model="selectedLevelType" @change="triggerState()" value="1">And Higher
-            </b-form-radio>
-            <b-form-radio v-model="selectedLevelType" @change="triggerState()" value="2">And Lower
-            </b-form-radio>
-          </b-form-group>
+          <div class="btn-group ml-3 mt-4" role="group">
+            <b-button
+              @click="selectedLevelType = 0; triggerState();"
+              size="sm"
+              :variant="(parseInt(selectedLevelType) === 0 ? 'warning' : 'outline-warning')"
+            >Only
+            </b-button>
+            <b-button
+              @click="selectedLevelType = 1; triggerState();"
+              size="sm"
+              :variant="(parseInt(selectedLevelType) === 1 ? 'warning' : 'outline-warning')"
+            >Higher
+            </b-button>
+            <b-button
+              @click="selectedLevelType = 2; triggerState();"
+              size="sm"
+              :variant="(parseInt(selectedLevelType) === 2 ? 'warning' : 'outline-warning')"
+            >Lower
+            </b-button>
+          </div>
         </div>
 
         <div class="col-1 text-center">
-          <b-button
-            class="btn-dark btn-sm btn-outline-warning mb-3"
-            @click="resetForm"
-          >
-            Reset
-          </b-button>
 
-          <b-button
-            class="btn-dark btn-sm btn-outline-warning"
-            @click="triggerState"
-          >
-            Search
-          </b-button>
         </div>
 
       </div>
+
+      <div class="row">
+        <div class="col-12 text-center mt-3">
+
+          <div class="btn-group ml-3" role="group" aria-label="Basic example">
+            <b-button @click="limit = 10; triggerState()" size="sm" :variant="(parseInt(limit) === 10 ? 'warning' : 'outline-warning')">10</b-button>
+            <b-button @click="limit = 100; triggerState()" size="sm" :variant="(parseInt(limit) === 100 ? 'warning' : 'outline-warning')">100</b-button>
+            <b-button @click="limit = 250; triggerState()" size="sm" :variant="(parseInt(limit) === 250 ? 'warning' : 'outline-warning')">250</b-button>
+            <b-button @click="limit = 1000; triggerState()" size="sm" :variant="(parseInt(limit) === 1000 ? 'warning' : 'outline-warning')">1000</b-button>
+          </div>
+
+          <b-button
+            class="btn-dark btn-sm btn-outline-warning mb-3 ml-3 mt-3"
+            @click="resetForm"
+          >
+            <i class="fa fa-refresh"/> Reset
+          </b-button>
+
+          <b-button
+            class="btn-dark btn-sm btn-outline-warning ml-3"
+            @click="triggerState"
+          >
+            <i class="fa fa-search"/> Search
+          </b-button>
+
+        </div>
+      </div>
+
     </eq-window-simple>
 
     <app-loader :is-loading="!loaded" padding="4"/>
 
     <eq-window-simple
-      style="overflow-y: scroll; overflow-x: hidden; height: 60vh"
-      id="spell-effect-selector-view-port"
+      :title="'Spells (' + limit + ')'"
+      class="p-0"
       v-if="loaded && spells"
     >
       <div v-if="message">
         {{ message }}
       </div>
 
-      <item-spell-preview-table-selector
+      <spell-spell-preview-table-selector
         :spells="spells"
         @input="bubbleToParent($event)"
         v-if="loaded && spells"
@@ -138,13 +166,13 @@ import {DB_SPA} from "@/app/constants/eq-spell-constants";
 import EqSpellPreviewTable from "@/components/eq-ui/EQSpellPreviewTable.vue";
 import {Spells} from "@/app/spells";
 import {Items} from "@/app/items";
-import ItemSpellPreviewTableSelector from "@/views/item-editor/components/ItemSpellPreviewTableSelector.vue";
 import EqWindowSimple from "@/components/eq-ui/EQWindowSimple.vue";
+import SpellSpellPreviewTableSelector from "@/views/spell-editor/components/SpellSpellPreviewTableSelector.vue";
 
 export default {
-  name: "SpellEffectSelector",
+  name: "SpellSpellEffectSelector",
   components: {
-    ItemSpellPreviewTableSelector,
+    SpellSpellPreviewTableSelector,
     EqWindowSimple,
     EqSpellPreviewTable,
     EqSpellPreview,
@@ -155,7 +183,7 @@ export default {
     return {
       loaded: false,
       spells: null,
-      limit: 250,
+      limit: 100,
       beginRange: 10000,
       endRange: 100000,
       dbClassIcons: DB_CLASSES_ICONS,
@@ -277,11 +305,6 @@ export default {
       let request   = {};
       this.message  = "";
       request.limit = this.limit;
-      if (this.selectedLevel && this.selectedLevel > 0) {
-        request.limit = 1000
-        this.message  = ""
-      }
-
 
       // filter by class
       if (this.selectedClass > 0) {
