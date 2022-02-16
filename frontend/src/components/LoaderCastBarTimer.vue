@@ -8,7 +8,8 @@
 </template>
 
 <script>
-import EqProgressBar from "./eq-ui/EQProgressBar";
+import EqProgressBar       from "./eq-ui/EQProgressBar";
+import {EditFormFieldUtil} from "../app/forms/edit-form-field-util";
 
 const TIME_INCREMENT_MS = 50
 
@@ -35,6 +36,13 @@ export default {
     }
   },
   components: { EqProgressBar },
+  watch: {
+    'timeMs'() {
+      this.progress = 0
+      this.internalProgress = 0
+      this.internalTimeRemaining = 0
+    }
+  },
   mounted() {
     this.interval              = setInterval(this.incrementLoader, TIME_INCREMENT_MS)
     this.internalTimeRemaining = parseInt(this.timeMs)
