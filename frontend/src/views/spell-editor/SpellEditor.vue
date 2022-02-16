@@ -1264,21 +1264,16 @@ export default {
     }
   },
   async created() {
+    this.load()
+  },
+  methods: {
 
-    setTimeout(() => {
-      document.getElementById("spell-edit-card").removeEventListener('input', EditFormFieldUtil.setFieldModified, true);
-      document.getElementById("spell-edit-card").addEventListener('input', EditFormFieldUtil.setFieldModified)
-
+    setSubEditorFieldHighlights() {
       let hasSubEditorFields = ["id", "casting_anim", "target_anim", "icon", "spellanim"]
       hasSubEditorFields.forEach((field) => {
         EditFormFieldUtil.setFieldHighlightHasSubEditor(field)
       })
-
-    }, 300)
-
-    this.load()
-  },
-  methods: {
+    },
 
     setFieldModifiedById(id) {
       EditFormFieldUtil.setFieldModifiedById(id)
@@ -1376,6 +1371,15 @@ export default {
               }
             });
           }
+
+          // hooks
+          setTimeout(() => {
+            document.getElementById("spell-edit-card").removeEventListener('input', EditFormFieldUtil.setFieldModified, true);
+            document.getElementById("spell-edit-card").addEventListener('input', EditFormFieldUtil.setFieldModified)
+
+            this.setSubEditorFieldHighlights()
+
+          }, 300)
 
         })
       }
