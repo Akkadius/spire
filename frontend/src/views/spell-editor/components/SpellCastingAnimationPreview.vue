@@ -18,7 +18,7 @@
         muted
         loop
         autoplay
-        :style="'width: 100%; height: auto; min-height: 111px; border-radius:5px; border: 1px solid rgba(255, 255, 255, .3)'"
+        :style="'width: 100%; height: auto; min-height: 111px; border-radius:5px; border: 1px solid rgba(255, 255, 255, .3); background-color: black;'"
         :src="videoSource"
       />
     </div>
