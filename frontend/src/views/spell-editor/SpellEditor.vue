@@ -1255,9 +1255,9 @@ export default {
       // reset state vars when we navigate away
       this.notification      = ""
       this.zeroStateSelected = true
-      this.resetFieldEditedStatus()
+      EditFormFieldUtil.resetFieldEditedStatus()
       this.resetPreviewComponents()
-      this.resetFieldHighlightHasSubEditorStatus()
+      EditFormFieldUtil.resetFieldHighlightHasSubEditorStatus()
 
       // reload
       this.load()
@@ -1321,7 +1321,7 @@ export default {
       }).then((result) => {
         if (result.status === 200) {
           this.sendNotification("Spell updated successfully!")
-          this.resetFieldEditedStatus()
+          EditFormFieldUtil.resetFieldEditedStatus()
         }
 
         if (result.data.error) {
