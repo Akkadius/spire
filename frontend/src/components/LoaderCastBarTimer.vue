@@ -71,7 +71,7 @@ export default {
           setTimeout(() => {
             this.interval = setInterval(this.incrementLoader, TIME_INCREMENT_MS)
           }, 500)
-        }, 3000)
+        }, 500)
       }
 
       this.calculateProgress()
