@@ -173,27 +173,27 @@
 
 @keyframes pulsate-highlight-white {
     0% {
-        border-color: rgb(255, 255, 255);
-        -webkit-box-shadow: 0 0 15px rgb(255, 255, 255);
-        -moz-box-shadow: 0 0 15px rgb(255, 255, 255);
-        box-shadow: 0 0 15px rgb(255, 255, 255);
+        border-color: rgb(255, 255, 255) !important;
+        -webkit-box-shadow: inset 0 0 15px rgb(255, 255, 255);
+        -moz-box-shadow: inset 0 0 15px rgb(255, 255, 255);
+        box-shadow: inset 0 0 15px rgb(255, 255, 255);
     }
     50% {
-        border-color: rgba(0, 255, 255, 0);
-        -webkit-box-shadow: 0 0 15px rgba(255, 255, 255, .5);
-        -moz-box-shadow: 0 0 15px rgba(255, 255, 255, .5);
-        box-shadow: 0 0 15px rgba(255, 255, 255, .5);
+        border-color: rgba(0, 255, 255, 0) !important;
+        -webkit-box-shadow: inset 0 0 15px rgba(255, 255, 255, .5);
+        -moz-box-shadow: inset 0 0 15px rgba(255, 255, 255, .5);
+        box-shadow: inset 0 0 15px rgba(255, 255, 255, .5);
     }
     100% {
-        border-color: rgb(255, 255, 255);
-        -webkit-box-shadow: 0 0 15px rgb(255, 255, 255);
-        -moz-box-shadow: 0 0 15px rgb(255, 255, 255);
-        box-shadow: 0 0 15px rgb(255, 255, 255);
+        border-color: rgb(255, 255, 255) !important;
+        -webkit-box-shadow: inset 0 0 15px rgb(255, 255, 255);
+        -moz-box-shadow: inset 0 0 15px rgb(255, 255, 255);
+        box-shadow: inset 0 0 15px rgb(255, 255, 255);
     }
 }
 
 .pulsate-highlight-white {
-    /*border: 1px solid #8aa3ff;*/
+    border: 3px solid white !important;
     animation: pulsate-highlight-white 1s infinite !important;
     border-radius: 7px;
 }
@@ -247,6 +247,14 @@
     border: 2px solid rgba(216, 250, 8, 1);
     animation: pulsate-highlight-modified 2s infinite;
 }
+
+/*.border-gray {*/
+/*    border-color: #555555;*/
+/*}*/
+t
+/*.border-field-edited {*/
+/*    border-color: orange;*/
+/*}*/
 
 .hover-highlight:hover {
     border: 2px solid rgb(218 218 218 / 0%);

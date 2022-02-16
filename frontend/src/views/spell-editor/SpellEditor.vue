@@ -231,6 +231,7 @@
 
                       <b-form-select
                         @mouseover.native="drawSpaDetailPane(spell['effectid_' + i], i)"
+                        :id="'effectid_' + i"
                         v-model.number="spell['effectid_' + i]"
                         style="width: 150px"
                       >
@@ -1065,6 +1066,21 @@
           <!-- Preview Pane -->
           <div class="col-5">
 
+            <!-- SPA Detail Pane -->
+            <eq-window
+              style="margin-top: 30px; margin-right: 10px; width: auto;"
+              class="fade-in"
+              v-if="spaDetailPaneActive"
+            >
+              <spell-spa-preview-pane
+                :spa="spaPreviewNumber"
+                :spell="spell"
+                :effect-index="spaEffectIndex"
+                v-if="spaPreviewNumber >= 0"
+              />
+
+            </eq-window>
+
             <!-- preview spell -->
             <eq-window
               style="margin-top: 30px; margin-right: 10px; width: auto;"
@@ -1093,7 +1109,6 @@
               class="fade-in"
               v-if="spellAnimSelectorActive"
             >
-
               <spell-animation-selector
                 :selected-animation="spell.spellanim"
                 :inputData.sync="spell.spellanim"
@@ -1127,21 +1142,6 @@
                 :with-reserved="true"
                 @input="spell.id = $event"
               />
-            </eq-window>
-
-            <!-- SPA Detail Pane -->
-            <eq-window
-              style="margin-top: 30px; margin-right: 10px; width: auto;"
-              class="fade-in"
-              v-if="spaDetailPaneActive"
-            >
-              <spell-spa-preview-pane
-                :spa="spaPreviewNumber"
-                :spell="spell"
-                :effect-index="spaEffectIndex"
-                v-if="spaPreviewNumber >= 0"
-              />
-
             </eq-window>
 
           </div>
@@ -1378,6 +1378,7 @@ export default {
             document.getElementById("spell-edit-card").removeEventListener('input', EditFormFieldUtil.setFieldModified, true);
             document.getElementById("spell-edit-card").addEventListener('input', EditFormFieldUtil.setFieldModified)
 
+            this.resetPreviewComponents()
             this.setSubEditorFieldHighlights()
 
           }, 300)
@@ -1412,7 +1413,13 @@ export default {
       if (!this.castingAnimSelectorActive && this.shouldReset() || force) {
         this.resetPreviewComponents()
         this.lastResetTime             = Date.now()
-        this.castingAnimSelectorActive = true;
+        this.castingAnimSelectorActive = false;
+
+        // queue this so that we can "redraw" the selector when toggling between casting and target
+        // this makes the scroll to selected animation more consistent
+        setTimeout(() => {
+          this.castingAnimSelectorActive = true;
+        }, 100)
         EditFormFieldUtil.setFieldSubEditorHighlightedById(this.castingAnimField)
       }
     },
@@ -1420,7 +1427,9 @@ export default {
       if (!this.spellAnimSelectorActive && this.shouldReset() || force) {
         this.resetPreviewComponents()
         this.lastResetTime           = Date.now()
-        this.spellAnimSelectorActive = true
+        setTimeout(() => {
+          this.spellAnimSelectorActive = true
+        }, 100)
         EditFormFieldUtil.setFieldSubEditorHighlightedById("spellanim")
       }
     },
@@ -1442,6 +1451,8 @@ export default {
     },
     drawSpaDetailPane(spa, index) {
       this.resetPreviewComponents()
+      EditFormFieldUtil.setFieldSubEditorHighlightedById("effectid_" + index)
+      this.previewSpellActive  = true
       this.lastResetTime       = Date.now()
       this.spaDetailPaneActive = true
       this.spaPreviewNumber    = spa

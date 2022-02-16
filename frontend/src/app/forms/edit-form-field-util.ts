@@ -25,13 +25,14 @@ export class EditFormFieldUtil {
 
   static resetFieldEditedStatus() {
     document.querySelectorAll("input, select").forEach((element) => {
-      // @ts-ignore
-      element.style.setProperty('border-color', '#555555', 'important');
+      if (element && element.classList.contains('pulsate-highlight-modified')) {
+        element.classList.remove('pulsate-highlight-modified')
+      }
     });
   }
 
   static setFieldModified(evt) {
-    evt.target.style.setProperty('border-color', 'orange', 'important');
+    evt.target.classList.add('pulsate-highlight-modified');
   }
 
   static setFieldModifiedById(id) {

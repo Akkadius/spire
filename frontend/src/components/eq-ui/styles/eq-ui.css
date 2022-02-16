@@ -74,7 +74,7 @@ input[type=checkbox].eq-checkbox:checked + label {
 [class*="eq-window"] input:focus,
 [class*="eq-window"] textarea:focus,
 [class*="eq-window"] select:focus {
-    border-color: #8aa3ff !important;
+    border-color: #8aa3ff;
 }
 
 [class*="eq-window"] {
