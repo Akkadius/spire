@@ -1209,6 +1209,7 @@ import LoaderFakeProgess             from "../../components/LoaderFakeProgress";
 import SpellSpellEffectSelector      from "./components/SpellSpellEffectSelector";
 import {debounce}                    from "../../app/utility/debounce";
 
+
 const MILLISECONDS_BEFORE_WINDOW_RESET = 5000;
 
 export default {
@@ -1445,7 +1446,7 @@ export default {
       return (Date.now() - this.lastResetTime) > MILLISECONDS_BEFORE_WINDOW_RESET
     },
 
-    previewSpell: debounce( (force = false)  => {
+    previewSpell: debounce( function(force = false) {
       if (this.shouldReset() || force) {
         this.resetPreviewComponents()
         this.previewSpellActive = true;
