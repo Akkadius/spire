@@ -873,6 +873,14 @@
                           id="casttime"
                           class="mt-3"
                         />
+
+                        <loader-cast-bar-timer
+                          class="mt-3 mb-3"
+                          style="margin-left: 20px"
+                          color="#FF00FF"
+                          :time-ms="item.casttime"
+                        />
+
                         ({{ msToTime(item.casttime) }})
                       </div>
 
@@ -883,6 +891,14 @@
                           id="recastdelay"
                           class="mt-3"
                         />
+
+                        <loader-cast-bar-timer
+                          class="mt-3 mb-3"
+                          style="margin-left: 20px"
+                          color="#FF00FF"
+                          :time-ms="(item.recastdelay * 1000)"
+                        />
+
                       </div>
 
                       <div class="col-2 text-center">
@@ -1645,12 +1661,14 @@ import {DB_SPELL_RESISTS}      from "../../app/constants/eq-spell-constants";
 import {DB_ITEM_BARD_TYPE}     from "../../app/constants/eq-bard-types";
 import AugBitmaskCalculator    from "../../components/tools/AugmentTypeCalculator";
 import EqWindowSimple          from "../../components/eq-ui/EQWindowSimple";
+import LoaderCastBarTimer      from "../../components/LoaderCastBarTimer";
 
 const MILLISECONDS_BEFORE_WINDOW_RESET = 5000;
 
 export default {
   name: "ItemEdit",
   components: {
+    LoaderCastBarTimer,
     EqWindowSimple,
     AugBitmaskCalculator,
     ItemMaterialPreview,
