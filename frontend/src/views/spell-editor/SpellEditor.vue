@@ -1312,35 +1312,24 @@ export default {
     },
 
     resetFieldHighlightHasSubEditorStatus() {
-      // reset elements
-      const itemEditCard = document.getElementById("spell-edit-card")
-      if (itemEditCard) {
-        const elements = itemEditCard.querySelectorAll("input, select");
-        elements.forEach((element) => {
-          if (element) {
-            element.classList.remove('pulsate-highlight-green')
-          }
-        });
-      }
+      document.querySelectorAll("input, select").forEach((element) => {
+        if (element && element.classList.contains('pulsate-highlight-green')) {
+          element.classList.remove('pulsate-highlight-green')
+        }
+      });
     },
 
     resetFieldSubEditorHighlightedStatus() {
-      // reset elements
-      const itemEditCard = document.getElementById("spell-edit-card")
-      if (itemEditCard) {
-        const elements = itemEditCard.querySelectorAll("input, select");
-        elements.forEach((element) => {
-          if (element) {
-            element.classList.remove('pulsate-highlight-white')
-          }
-        });
-      }
+      document.querySelectorAll("input, select").forEach((element) => {
+        if (element && element.classList.contains('pulsate-highlight-white')) {
+          element.classList.remove('pulsate-highlight-white')
+        }
+      });
     },
 
     resetFieldEditedStatus() {
       // reset elements
-      const elements = document.getElementById("spell-edit-card").querySelectorAll("input, select");
-      elements.forEach((element) => {
+      document.querySelectorAll("input, select").forEach((element) => {
         element.style.setProperty('border-color', '#555555', 'important');
       });
     },
