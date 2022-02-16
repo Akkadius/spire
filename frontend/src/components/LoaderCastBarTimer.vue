@@ -52,6 +52,8 @@ export default {
 
     incrementLoader() {
       if (this.timeMs === 0) {
+        this.internalProgress = 0
+        this.progress = 0
         return;
       }
 
