@@ -822,7 +822,8 @@
                     </div>
                     <div class="col3 pl-3 mt-2">
                       <loader-cast-bar-timer
-                        class="ml-3 mt-3"
+                        class="ml-3"
+                        style="margin-top: 11px"
                         color="#FF00FF"
                         v-if="field.description.includes('Time') && !field.description.includes('Timer')"
                         :time-ms="spell[field.field]"

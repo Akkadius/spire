@@ -3,6 +3,7 @@
     :percent="progress"
     :show-percent="false"
     :color="color"
+    :style="(timeMs === 0 ? 'opacity: .5' : '')"
   />
 </template>
 
@@ -50,6 +51,10 @@ export default {
     },
 
     incrementLoader() {
+      if (this.timeMs === 0) {
+        return;
+      }
+
       this.internalTimeRemaining = parseInt(this.internalTimeRemaining - TIME_INCREMENT_MS)
 
       if (this.internalTimeRemaining <= 0) {
