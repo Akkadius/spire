@@ -470,16 +470,18 @@ export default {
         }
       }
 
-      const response = await (new FactionListApi(SpireApiClient.getOpenApiConfig())).getFactionListsBulk({
-        body: {
-          ids: factions
-        }
-      })
-
-      if (response.status === 200 && response.data && response.data.length > 0) {
-        response.data.forEach((faction) => {
-          this.factionNames[faction.id] = faction.name
+      if (factions.length > 0) {
+        const response = await (new FactionListApi(SpireApiClient.getOpenApiConfig())).getFactionListsBulk({
+          body: {
+            ids: factions
+          }
         })
+
+        if (response.status === 200 && response.data && response.data.length > 0) {
+          response.data.forEach((faction) => {
+            this.factionNames[faction.id] = faction.name
+          })
+        }
       }
 
       this.secondlevel3 = data
