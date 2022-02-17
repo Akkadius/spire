@@ -28,11 +28,11 @@ func New{{.EntityName}}Controller(
 
 func (e *{{.EntityName}}Controller) Routes() []*routes.Route {
 	return []*routes.Route{
-		routes.RegisterRoute(http.MethodDelete, "{{.EntityNameSnake}}/:{{.EntityNameSnake}}", e.delete{{.EntityName}}, nil),
-		routes.RegisterRoute(http.MethodGet, "{{.EntityNameSnake}}/:{{.EntityNameSnake}}", e.get{{.EntityName}}, nil),
+		routes.RegisterRoute(http.MethodDelete, "{{.EntityNameSnake}}/:{{.KeyNameLowerCamel}}", e.delete{{.EntityName}}, nil),
+		routes.RegisterRoute(http.MethodGet, "{{.EntityNameSnake}}/:{{.KeyNameLowerCamel}}", e.get{{.EntityName}}, nil),
 		routes.RegisterRoute(http.MethodGet, "{{.EntityNameSnakePlural}}", e.list{{.EntityNamePlural}}, nil),
 		routes.RegisterRoute(http.MethodPost, "{{.EntityNameSnakePlural}}/bulk", e.get{{.EntityNamePlural}}Bulk, nil),
-		routes.RegisterRoute(http.MethodPatch, "{{.EntityNameSnake}}/:{{.EntityNameSnake}}", e.update{{.EntityName}}, nil),
+		routes.RegisterRoute(http.MethodPatch, "{{.EntityNameSnake}}/:{{.KeyNameLowerCamel}}", e.update{{.EntityName}}, nil),
 		routes.RegisterRoute(http.MethodPut, "{{.EntityNameSnake}}", e.create{{.EntityName}}, nil),
 	}
 }
@@ -70,7 +70,7 @@ func (e *{{.EntityName}}Controller) list{{.EntityNamePlural}}(c echo.Context) er
 // @Accept json
 // @Produce json
 // @Tags {{.EntityName}}
-// @Param id path int true "Id"
+// @Param {{.KeyNameLowerCamel}} path int true "{{.KeyNameLowerCamel}}"
 // @Param includes query string false "Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names {{if .RelationshipsComment}}<h4>Relationships</h4>{{.RelationshipsComment}}{{end}}"
 // @Param select query string false "Column names [.] separated to fetch specific fields in response"
 // @Success 200 {array} models.{{.EntityName}}
@@ -79,15 +79,15 @@ func (e *{{.EntityName}}Controller) list{{.EntityNamePlural}}(c echo.Context) er
 // @Failure 500 {string} string "Bad query request"
 // @Router /{{.EntityNameSnake}}/{{"{id}"}} [get]
 func (e *{{.EntityName}}Controller) get{{.EntityName}}(c echo.Context) error {
-	{{.EntityNameCamel}}Id, err := strconv.Atoi(c.Param("{{.EntityNameSnake}}"))
+	{{.KeyNameLowerCamel}}, err := strconv.Atoi(c.Param("{{.KeyNameLowerCamel}}"))
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Cannot find param"})
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Cannot find param [{{.KeyName}}]"})
 	}
 
 	var result models.{{.EntityName}}
-	err = e.db.QueryContext(models.{{.EntityName}}{}, c).First(&result, {{.EntityNameCamel}}Id).Error
+	err = e.db.QueryContext(models.{{.EntityName}}{}, c).First(&result, {{.KeyNameLowerCamel}}).Error
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err})
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
 	}
 
 	if result.{{.KeyName}} == 0 {
@@ -103,7 +103,7 @@ func (e *{{.EntityName}}Controller) get{{.EntityName}}(c echo.Context) error {
 // @Accept json
 // @Produce json
 // @Tags {{.EntityName}}
-// @Param id path int true "Id"
+// @Param {{.KeyName}} path int true "{{.KeyName}}"
 // @Param {{.EntityNameSnake}} body models.{{.EntityName}} true "{{.EntityName}}"
 // @Success 200 {array} models.{{.EntityName}}
 // @Failure 404 {string} string "Cannot find entity"
@@ -115,7 +115,7 @@ func (e *{{.EntityName}}Controller) update{{.EntityName}}(c echo.Context) error 
 	if err := c.Bind({{.EntityNameCamel}}); err != nil {
 		return c.JSON(
 			http.StatusInternalServerError,
-			echo.Map{"error": fmt.Sprintf("Error binding to entity: [%v]", err)},
+			echo.Map{"error": fmt.Sprintf("Error binding to entity [%v]", err.Error())},
 		)
 	}
 
@@ -127,7 +127,7 @@ func (e *{{.EntityName}}Controller) update{{.EntityName}}(c echo.Context) error 
 
 	err = e.db.Get(models.{{.EntityName}}{}, c).Model(&entity).Select("*").Updates(&{{.EntityNameCamel}}).Error
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error updating entity: [%v]", err)})
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error updating entity [%v]", err.Error())})
 	}
 
 	return c.JSON(http.StatusOK, {{.EntityNameCamel}})
@@ -149,7 +149,7 @@ func (e *{{.EntityName}}Controller) create{{.EntityName}}(c echo.Context) error 
 	if err := c.Bind({{.EntityNameCamel}}); err != nil {
 		return c.JSON(
 			http.StatusInternalServerError,
-			echo.Map{"error": fmt.Sprintf("Error binding to entity: [%v]", err)},
+			echo.Map{"error": fmt.Sprintf("Error binding to entity [%v]", err.Error())},
 		)
 	}
 
@@ -157,7 +157,7 @@ func (e *{{.EntityName}}Controller) create{{.EntityName}}(c echo.Context) error 
 	if err != nil {
 		return c.JSON(
 			http.StatusInternalServerError,
-			echo.Map{"error": fmt.Sprintf("Error inserting entity: [%v]", err)},
+			echo.Map{"error": fmt.Sprintf("Error inserting entity [%v]", err.Error())},
 		)
 	}
 
@@ -170,20 +170,20 @@ func (e *{{.EntityName}}Controller) create{{.EntityName}}(c echo.Context) error 
 // @Accept json
 // @Produce json
 // @Tags {{.EntityName}}
-// @Param id path int true "Id"
+// @Param {{.KeyNameLowerCamel}} path int true "{{.KeyNameLowerCamel}}"
 // @Success 200 {string} string "Entity deleted successfully"
 // @Failure 404 {string} string "Cannot find entity"
 // @Failure 500 {string} string "Error binding to entity"
 // @Failure 500 {string} string "Error deleting entity"
 // @Router /{{.EntityNameSnake}}/{{"{id}"}} [delete]
 func (e *{{.EntityName}}Controller) delete{{.EntityName}}(c echo.Context) error {
-	{{.EntityNameCamel}}Id, err := strconv.Atoi(c.Param("{{.EntityNameSnake}}"))
+	{{.KeyNameLowerCamel}}, err := strconv.Atoi(c.Param("{{.KeyName}}"))
 	if err != nil {
 		e.logger.Error(err)
 	}
 
 	{{.EntityNameCamel}} := new(models.{{.EntityName}})
-	err = e.db.Get(models.{{.EntityName}}{}, c).Model(&models.{{.EntityName}}{}).First(&{{.EntityNameCamel}}, {{.EntityNameCamel}}Id).Error
+	err = e.db.Get(models.{{.EntityName}}{}, c).Model(&models.{{.EntityName}}{}).First(&{{.EntityNameCamel}}, {{.KeyNameLowerCamel}}).Error
 	if err != nil || {{.EntityNameCamel}}.{{.KeyName}} == 0 {
 		return c.JSON(http.StatusNotFound, echo.Map{"error": "Cannot find entity"})
 	}
@@ -213,7 +213,7 @@ func (e *{{.EntityName}}Controller) get{{.EntityNamePlural}}Bulk(c echo.Context)
 	if err := c.Bind(r); err != nil {
 		return c.JSON(
 			http.StatusInternalServerError,
-			echo.Map{"error": fmt.Sprintf("Error binding to bulk request: [%v]", err)},
+			echo.Map{"error": fmt.Sprintf("Error binding to bulk request: [%v]", err.Error())},
 		)
 	}
 
@@ -226,7 +226,7 @@ func (e *{{.EntityName}}Controller) get{{.EntityNamePlural}}Bulk(c echo.Context)
 
 	err := e.db.QueryContext(models.{{.EntityName}}{}, c).Find(&results, r.IDs).Error
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err})
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
 	}
 
 	return c.JSON(http.StatusOK, results)

@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/gertd/go-pluralize"
 	"github.com/iancoleman/strcase"
+	"github.com/k0kubun/pp/v3"
 	"github.com/sirupsen/logrus"
 	"os"
 	"text/template"
@@ -16,8 +17,8 @@ type GenerateControllerContext struct {
 }
 
 type GenerateController struct {
-	options GenerateControllerContext
-	logger  *logrus.Logger
+	options   GenerateControllerContext
+	logger    *logrus.Logger
 	pluralize *pluralize.Client
 }
 
@@ -32,6 +33,7 @@ func NewGenerateController(options GenerateControllerContext, logger *logrus.Log
 type templateData struct {
 	RelationshipsComment  string
 	KeyName               string
+	KeyNameLowerCamel     string
 	EntityName            string
 	EntityNamePlural      string
 	EntityNameSnake       string
@@ -83,11 +85,16 @@ func (gc *GenerateController) Generate() {
 		RelationshipsComment:  gc.options.RelationshipsComment,
 		EntityName:            strcase.ToCamel(entityName),
 		KeyName:               keyName,
+		KeyNameLowerCamel:     strcase.ToLowerCamel(keyName),
 		EntityNamePlural:      gc.pluralize.Plural(strcase.ToCamel(entityName)),
 		EntityNameSnake:       strcase.ToSnake(entityName),
 		EntityNameSnakePlural: gc.pluralize.Plural(strcase.ToSnake(entityName)),
 		EntityNameCamel:       strcase.ToLowerCamel(entityName),
 		EntityNameCamelPlural: gc.pluralize.Plural(strcase.ToLowerCamel(entityName)),
+	}
+
+	if len(os.Getenv("DEBUG")) > 0 {
+		pp.Println(templateData)
 	}
 
 	var out bytes.Buffer

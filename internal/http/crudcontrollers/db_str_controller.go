@@ -28,11 +28,11 @@ func NewDbStrController(
 
 func (e *DbStrController) Routes() []*routes.Route {
 	return []*routes.Route{
-		routes.RegisterRoute(http.MethodDelete, "db_str/:db_str", e.deleteDbStr, nil),
-		routes.RegisterRoute(http.MethodGet, "db_str/:db_str", e.getDbStr, nil),
+		routes.RegisterRoute(http.MethodDelete, "db_str/:id", e.deleteDbStr, nil),
+		routes.RegisterRoute(http.MethodGet, "db_str/:id", e.getDbStr, nil),
 		routes.RegisterRoute(http.MethodGet, "db_strs", e.listDbStrs, nil),
 		routes.RegisterRoute(http.MethodPost, "db_strs/bulk", e.getDbStrsBulk, nil),
-		routes.RegisterRoute(http.MethodPatch, "db_str/:db_str", e.updateDbStr, nil),
+		routes.RegisterRoute(http.MethodPatch, "db_str/:id", e.updateDbStr, nil),
 		routes.RegisterRoute(http.MethodPut, "db_str", e.createDbStr, nil),
 	}
 }
@@ -70,7 +70,7 @@ func (e *DbStrController) listDbStrs(c echo.Context) error {
 // @Accept json
 // @Produce json
 // @Tags DbStr
-// @Param id path int true "Id"
+// @Param id path int true "id"
 // @Param includes query string false "Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names "
 // @Param select query string false "Column names [.] separated to fetch specific fields in response"
 // @Success 200 {array} models.DbStr
@@ -79,15 +79,15 @@ func (e *DbStrController) listDbStrs(c echo.Context) error {
 // @Failure 500 {string} string "Bad query request"
 // @Router /db_str/{id} [get]
 func (e *DbStrController) getDbStr(c echo.Context) error {
-	dbStrId, err := strconv.Atoi(c.Param("db_str"))
+	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Cannot find param"})
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Cannot find param [ID]"})
 	}
 
 	var result models.DbStr
-	err = e.db.QueryContext(models.DbStr{}, c).First(&result, dbStrId).Error
+	err = e.db.QueryContext(models.DbStr{}, c).First(&result, id).Error
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err})
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
 	}
 
 	if result.ID == 0 {
@@ -103,7 +103,7 @@ func (e *DbStrController) getDbStr(c echo.Context) error {
 // @Accept json
 // @Produce json
 // @Tags DbStr
-// @Param id path int true "Id"
+// @Param ID path int true "ID"
 // @Param db_str body models.DbStr true "DbStr"
 // @Success 200 {array} models.DbStr
 // @Failure 404 {string} string "Cannot find entity"
@@ -115,7 +115,7 @@ func (e *DbStrController) updateDbStr(c echo.Context) error {
 	if err := c.Bind(dbStr); err != nil {
 		return c.JSON(
 			http.StatusInternalServerError,
-			echo.Map{"error": fmt.Sprintf("Error binding to entity: [%v]", err)},
+			echo.Map{"error": fmt.Sprintf("Error binding to entity [%v]", err.Error())},
 		)
 	}
 
@@ -127,7 +127,7 @@ func (e *DbStrController) updateDbStr(c echo.Context) error {
 
 	err = e.db.Get(models.DbStr{}, c).Model(&entity).Select("*").Updates(&dbStr).Error
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error updating entity: [%v]", err)})
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error updating entity [%v]", err.Error())})
 	}
 
 	return c.JSON(http.StatusOK, dbStr)
@@ -149,7 +149,7 @@ func (e *DbStrController) createDbStr(c echo.Context) error {
 	if err := c.Bind(dbStr); err != nil {
 		return c.JSON(
 			http.StatusInternalServerError,
-			echo.Map{"error": fmt.Sprintf("Error binding to entity: [%v]", err)},
+			echo.Map{"error": fmt.Sprintf("Error binding to entity [%v]", err.Error())},
 		)
 	}
 
@@ -157,7 +157,7 @@ func (e *DbStrController) createDbStr(c echo.Context) error {
 	if err != nil {
 		return c.JSON(
 			http.StatusInternalServerError,
-			echo.Map{"error": fmt.Sprintf("Error inserting entity: [%v]", err)},
+			echo.Map{"error": fmt.Sprintf("Error inserting entity [%v]", err.Error())},
 		)
 	}
 
@@ -170,20 +170,20 @@ func (e *DbStrController) createDbStr(c echo.Context) error {
 // @Accept json
 // @Produce json
 // @Tags DbStr
-// @Param id path int true "Id"
+// @Param id path int true "id"
 // @Success 200 {string} string "Entity deleted successfully"
 // @Failure 404 {string} string "Cannot find entity"
 // @Failure 500 {string} string "Error binding to entity"
 // @Failure 500 {string} string "Error deleting entity"
 // @Router /db_str/{id} [delete]
 func (e *DbStrController) deleteDbStr(c echo.Context) error {
-	dbStrId, err := strconv.Atoi(c.Param("db_str"))
+	id, err := strconv.Atoi(c.Param("ID"))
 	if err != nil {
 		e.logger.Error(err)
 	}
 
 	dbStr := new(models.DbStr)
-	err = e.db.Get(models.DbStr{}, c).Model(&models.DbStr{}).First(&dbStr, dbStrId).Error
+	err = e.db.Get(models.DbStr{}, c).Model(&models.DbStr{}).First(&dbStr, id).Error
 	if err != nil || dbStr.ID == 0 {
 		return c.JSON(http.StatusNotFound, echo.Map{"error": "Cannot find entity"})
 	}
@@ -213,7 +213,7 @@ func (e *DbStrController) getDbStrsBulk(c echo.Context) error {
 	if err := c.Bind(r); err != nil {
 		return c.JSON(
 			http.StatusInternalServerError,
-			echo.Map{"error": fmt.Sprintf("Error binding to bulk request: [%v]", err)},
+			echo.Map{"error": fmt.Sprintf("Error binding to bulk request: [%v]", err.Error())},
 		)
 	}
 
@@ -226,7 +226,7 @@ func (e *DbStrController) getDbStrsBulk(c echo.Context) error {
 
 	err := e.db.QueryContext(models.DbStr{}, c).Find(&results, r.IDs).Error
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err})
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
 	}
 
 	return c.JSON(http.StatusOK, results)
