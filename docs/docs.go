@@ -215,7 +215,7 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Id",
+                        "description": "id",
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -272,7 +272,7 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Id",
+                        "description": "id",
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -314,8 +314,8 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Id",
-                        "name": "id",
+                        "description": "ID",
+                        "name": "ID",
                         "in": "path",
                         "required": true
                     },
@@ -413,7 +413,7 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Id",
+                        "description": "id",
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -470,7 +470,7 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Id",
+                        "description": "id",
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -512,8 +512,8 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Id",
-                        "name": "id",
+                        "description": "ID",
+                        "name": "ID",
                         "in": "path",
                         "required": true
                     },
@@ -736,7 +736,7 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Id",
+                        "description": "id",
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -793,7 +793,7 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Id",
+                        "description": "id",
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -835,8 +835,8 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Id",
-                        "name": "id",
+                        "description": "ID",
+                        "name": "ID",
                         "in": "path",
                         "required": true
                     },
@@ -1059,7 +1059,7 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Id",
+                        "description": "id",
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -1116,7 +1116,7 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Id",
+                        "description": "id",
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -1158,8 +1158,8 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Id",
-                        "name": "id",
+                        "description": "ID",
+                        "name": "ID",
                         "in": "path",
                         "required": true
                     },
@@ -1382,7 +1382,7 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Id",
+                        "description": "id",
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -1439,7 +1439,7 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Id",
+                        "description": "id",
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -1481,8 +1481,8 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Id",
-                        "name": "id",
+                        "description": "ID",
+                        "name": "ID",
                         "in": "path",
                         "required": true
                     },
@@ -1705,7 +1705,7 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Id",
+                        "description": "id",
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -1762,7 +1762,7 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Id",
+                        "description": "id",
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -1804,8 +1804,8 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Id",
-                        "name": "id",
+                        "description": "ID",
+                        "name": "ID",
                         "in": "path",
                         "required": true
                     },
@@ -1903,7 +1903,7 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Id",
+                        "description": "id",
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -1960,7 +1960,7 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Id",
+                        "description": "id",
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -2002,8 +2002,8 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Id",
-                        "name": "id",
+                        "description": "ID",
+                        "name": "ID",
                         "in": "path",
                         "required": true
                     },
@@ -2476,7 +2476,7 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Id",
+                        "description": "id",
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -2533,7 +2533,7 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Id",
+                        "description": "id",
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -2575,8 +2575,8 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Id",
-                        "name": "id",
+                        "description": "ID",
+                        "name": "ID",
                         "in": "path",
                         "required": true
                     },
@@ -2674,7 +2674,7 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Id",
+                        "description": "id",
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -2731,7 +2731,7 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Id",
+                        "description": "id",
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -2773,8 +2773,8 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Id",
-                        "name": "id",
+                        "description": "ID",
+                        "name": "ID",
                         "in": "path",
                         "required": true
                     },
@@ -2997,7 +2997,7 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Id",
+                        "description": "id",
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -3054,7 +3054,7 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Id",
+                        "description": "id",
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -3096,8 +3096,8 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Id",
-                        "name": "id",
+                        "description": "ID",
+                        "name": "ID",
                         "in": "path",
                         "required": true
                     },
@@ -3195,7 +3195,7 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Id",
+                        "description": "id",
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -3252,7 +3252,7 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Id",
+                        "description": "id",
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -3294,8 +3294,8 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Id",
-                        "name": "id",
+                        "description": "ID",
+                        "name": "ID",
                         "in": "path",
                         "required": true
                     },
@@ -3643,7 +3643,7 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Id",
+                        "description": "id",
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -3700,7 +3700,7 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Id",
+                        "description": "id",
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -3742,8 +3742,8 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Id",
-                        "name": "id",
+                        "description": "ID",
+                        "name": "ID",
                         "in": "path",
                         "required": true
                     },
@@ -4091,7 +4091,7 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Id",
+                        "description": "id",
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -4148,7 +4148,7 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Id",
+                        "description": "id",
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -4190,8 +4190,8 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Id",
-                        "name": "id",
+                        "description": "ID",
+                        "name": "ID",
                         "in": "path",
                         "required": true
                     },
@@ -4289,7 +4289,7 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Id",
+                        "description": "id",
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -4346,7 +4346,7 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Id",
+                        "description": "id",
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -4388,8 +4388,8 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Id",
-                        "name": "id",
+                        "description": "ID",
+                        "name": "ID",
                         "in": "path",
                         "required": true
                     },
@@ -4612,7 +4612,7 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Id",
+                        "description": "id",
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -4669,7 +4669,7 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Id",
+                        "description": "id",
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -4711,8 +4711,8 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Id",
-                        "name": "id",
+                        "description": "ID",
+                        "name": "ID",
                         "in": "path",
                         "required": true
                     },
@@ -4935,7 +4935,7 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Id",
+                        "description": "id",
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -4992,7 +4992,7 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Id",
+                        "description": "id",
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -5034,8 +5034,8 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Id",
-                        "name": "id",
+                        "description": "ID",
+                        "name": "ID",
                         "in": "path",
                         "required": true
                     },
@@ -5258,7 +5258,7 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Id",
+                        "description": "id",
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -5315,7 +5315,7 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Id",
+                        "description": "id",
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -5357,8 +5357,8 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Id",
-                        "name": "id",
+                        "description": "ID",
+                        "name": "ID",
                         "in": "path",
                         "required": true
                     },
@@ -5706,7 +5706,7 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Id",
+                        "description": "id",
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -5763,7 +5763,7 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Id",
+                        "description": "id",
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -5805,8 +5805,8 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Id",
-                        "name": "id",
+                        "description": "ID",
+                        "name": "ID",
                         "in": "path",
                         "required": true
                     },
@@ -6029,7 +6029,7 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Id",
+                        "description": "id",
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -6086,7 +6086,7 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Id",
+                        "description": "id",
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -6128,8 +6128,8 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Id",
-                        "name": "id",
+                        "description": "ID",
+                        "name": "ID",
                         "in": "path",
                         "required": true
                     },
@@ -6227,7 +6227,7 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Id",
+                        "description": "id",
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -6284,7 +6284,7 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Id",
+                        "description": "id",
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -6326,8 +6326,8 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Id",
-                        "name": "id",
+                        "description": "ID",
+                        "name": "ID",
                         "in": "path",
                         "required": true
                     },
@@ -6550,7 +6550,7 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Id",
+                        "description": "id",
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -6607,7 +6607,7 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Id",
+                        "description": "id",
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -6649,8 +6649,8 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Id",
-                        "name": "id",
+                        "description": "ID",
+                        "name": "ID",
                         "in": "path",
                         "required": true
                     },
@@ -6873,7 +6873,7 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Id",
+                        "description": "id",
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -6930,7 +6930,7 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Id",
+                        "description": "id",
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -6972,8 +6972,8 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Id",
-                        "name": "id",
+                        "description": "ID",
+                        "name": "ID",
                         "in": "path",
                         "required": true
                     },
@@ -7196,7 +7196,7 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Id",
+                        "description": "id",
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -7253,7 +7253,7 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Id",
+                        "description": "id",
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -7295,8 +7295,8 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Id",
-                        "name": "id",
+                        "description": "ID",
+                        "name": "ID",
                         "in": "path",
                         "required": true
                     },
@@ -7519,7 +7519,7 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Id",
+                        "description": "id",
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -7576,7 +7576,7 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Id",
+                        "description": "id",
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -7618,8 +7618,8 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Id",
-                        "name": "id",
+                        "description": "ID",
+                        "name": "ID",
                         "in": "path",
                         "required": true
                     },
@@ -7967,7 +7967,7 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Id",
+                        "description": "id",
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -8024,7 +8024,7 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Id",
+                        "description": "id",
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -8066,8 +8066,8 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Id",
-                        "name": "id",
+                        "description": "ID",
+                        "name": "ID",
                         "in": "path",
                         "required": true
                     },
@@ -8165,7 +8165,7 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Id",
+                        "description": "id",
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -8222,7 +8222,7 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Id",
+                        "description": "id",
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -8264,8 +8264,8 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Id",
-                        "name": "id",
+                        "description": "ID",
+                        "name": "ID",
                         "in": "path",
                         "required": true
                     },
@@ -8488,7 +8488,7 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Id",
+                        "description": "id",
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -8545,7 +8545,7 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Id",
+                        "description": "id",
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -8587,8 +8587,8 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Id",
-                        "name": "id",
+                        "description": "ID",
+                        "name": "ID",
                         "in": "path",
                         "required": true
                     },
@@ -8811,7 +8811,7 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Id",
+                        "description": "id",
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -8868,7 +8868,7 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Id",
+                        "description": "id",
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -8910,8 +8910,8 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Id",
-                        "name": "id",
+                        "description": "ID",
+                        "name": "ID",
                         "in": "path",
                         "required": true
                     },
@@ -9134,7 +9134,7 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Id",
+                        "description": "id",
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -9191,7 +9191,7 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Id",
+                        "description": "id",
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -9233,8 +9233,8 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Id",
-                        "name": "id",
+                        "description": "ID",
+                        "name": "ID",
                         "in": "path",
                         "required": true
                     },
@@ -9457,7 +9457,7 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Id",
+                        "description": "id",
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -9514,7 +9514,7 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Id",
+                        "description": "id",
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -9556,8 +9556,8 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Id",
-                        "name": "id",
+                        "description": "ID",
+                        "name": "ID",
                         "in": "path",
                         "required": true
                     },
@@ -9780,7 +9780,7 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Id",
+                        "description": "id",
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -9837,7 +9837,7 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Id",
+                        "description": "id",
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -9879,8 +9879,8 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Id",
-                        "name": "id",
+                        "description": "ID",
+                        "name": "ID",
                         "in": "path",
                         "required": true
                     },
@@ -10103,7 +10103,7 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Id",
+                        "description": "id",
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -10160,7 +10160,7 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Id",
+                        "description": "id",
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -10202,8 +10202,8 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Id",
-                        "name": "id",
+                        "description": "ID",
+                        "name": "ID",
                         "in": "path",
                         "required": true
                     },
@@ -10426,7 +10426,7 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Id",
+                        "description": "id",
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -10483,7 +10483,7 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Id",
+                        "description": "id",
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -10525,8 +10525,8 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Id",
-                        "name": "id",
+                        "description": "ID",
+                        "name": "ID",
                         "in": "path",
                         "required": true
                     },
@@ -10749,7 +10749,7 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Id",
+                        "description": "id",
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -10806,7 +10806,7 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Id",
+                        "description": "id",
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -10848,8 +10848,8 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Id",
-                        "name": "id",
+                        "description": "ID",
+                        "name": "ID",
                         "in": "path",
                         "required": true
                     },
@@ -11072,7 +11072,7 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Id",
+                        "description": "id",
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -11129,7 +11129,7 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Id",
+                        "description": "id",
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -11171,8 +11171,8 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Id",
-                        "name": "id",
+                        "description": "ID",
+                        "name": "ID",
                         "in": "path",
                         "required": true
                     },
@@ -11395,7 +11395,7 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Id",
+                        "description": "id",
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -11452,7 +11452,7 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Id",
+                        "description": "id",
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -11494,8 +11494,8 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Id",
-                        "name": "id",
+                        "description": "ID",
+                        "name": "ID",
                         "in": "path",
                         "required": true
                     },
@@ -11718,7 +11718,7 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Id",
+                        "description": "id",
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -11775,7 +11775,7 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Id",
+                        "description": "id",
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -11817,8 +11817,8 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Id",
-                        "name": "id",
+                        "description": "ID",
+                        "name": "ID",
                         "in": "path",
                         "required": true
                     },
@@ -11916,7 +11916,7 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Id",
+                        "description": "id",
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -11973,7 +11973,7 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Id",
+                        "description": "id",
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -12015,8 +12015,8 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Id",
-                        "name": "id",
+                        "description": "ID",
+                        "name": "ID",
                         "in": "path",
                         "required": true
                     },
@@ -12239,7 +12239,7 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Id",
+                        "description": "id",
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -12296,7 +12296,7 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Id",
+                        "description": "id",
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -12338,8 +12338,8 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Id",
-                        "name": "id",
+                        "description": "ID",
+                        "name": "ID",
                         "in": "path",
                         "required": true
                     },
@@ -12687,7 +12687,7 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Id",
+                        "description": "id",
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -12744,7 +12744,7 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Id",
+                        "description": "id",
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -12786,8 +12786,8 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Id",
-                        "name": "id",
+                        "description": "ID",
+                        "name": "ID",
                         "in": "path",
                         "required": true
                     },
@@ -12885,7 +12885,7 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Id",
+                        "description": "id",
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -12942,7 +12942,7 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Id",
+                        "description": "id",
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -12984,8 +12984,8 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Id",
-                        "name": "id",
+                        "description": "ID",
+                        "name": "ID",
                         "in": "path",
                         "required": true
                     },
@@ -13333,7 +13333,7 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Id",
+                        "description": "id",
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -13390,7 +13390,7 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Id",
+                        "description": "id",
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -13432,8 +13432,8 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Id",
-                        "name": "id",
+                        "description": "ID",
+                        "name": "ID",
                         "in": "path",
                         "required": true
                     },
@@ -13656,7 +13656,7 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Id",
+                        "description": "id",
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -13713,7 +13713,7 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Id",
+                        "description": "id",
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -13755,8 +13755,8 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Id",
-                        "name": "id",
+                        "description": "ID",
+                        "name": "ID",
                         "in": "path",
                         "required": true
                     },
@@ -13979,7 +13979,7 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Id",
+                        "description": "id",
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -14036,7 +14036,7 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Id",
+                        "description": "id",
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -14078,8 +14078,8 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Id",
-                        "name": "id",
+                        "description": "ID",
+                        "name": "ID",
                         "in": "path",
                         "required": true
                     },
@@ -14302,7 +14302,7 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Id",
+                        "description": "id",
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -14359,7 +14359,7 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Id",
+                        "description": "id",
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -14401,8 +14401,8 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Id",
-                        "name": "id",
+                        "description": "ID",
+                        "name": "ID",
                         "in": "path",
                         "required": true
                     },
@@ -14625,7 +14625,7 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Id",
+                        "description": "id",
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -14682,7 +14682,7 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Id",
+                        "description": "id",
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -14724,8 +14724,8 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Id",
-                        "name": "id",
+                        "description": "ID",
+                        "name": "ID",
                         "in": "path",
                         "required": true
                     },
@@ -14948,7 +14948,7 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Id",
+                        "description": "id",
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -15005,7 +15005,7 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Id",
+                        "description": "id",
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -15047,8 +15047,8 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Id",
-                        "name": "id",
+                        "description": "ID",
+                        "name": "ID",
                         "in": "path",
                         "required": true
                     },
@@ -15271,7 +15271,7 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Id",
+                        "description": "id",
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -15328,7 +15328,7 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Id",
+                        "description": "id",
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -15370,8 +15370,8 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Id",
-                        "name": "id",
+                        "description": "ID",
+                        "name": "ID",
                         "in": "path",
                         "required": true
                     },
@@ -15594,7 +15594,7 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Id",
+                        "description": "id",
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -15651,7 +15651,7 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Id",
+                        "description": "id",
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -15693,8 +15693,8 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Id",
-                        "name": "id",
+                        "description": "ID",
+                        "name": "ID",
                         "in": "path",
                         "required": true
                     },
@@ -15917,7 +15917,7 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Id",
+                        "description": "id",
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -15974,7 +15974,7 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Id",
+                        "description": "id",
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -16016,8 +16016,8 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Id",
-                        "name": "id",
+                        "description": "ID",
+                        "name": "ID",
                         "in": "path",
                         "required": true
                     },
@@ -16115,7 +16115,7 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Id",
+                        "description": "id",
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -16172,7 +16172,7 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Id",
+                        "description": "id",
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -16214,8 +16214,8 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Id",
-                        "name": "id",
+                        "description": "ID",
+                        "name": "ID",
                         "in": "path",
                         "required": true
                     },
@@ -16563,7 +16563,7 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Id",
+                        "description": "id",
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -16620,7 +16620,7 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Id",
+                        "description": "id",
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -16662,8 +16662,8 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Id",
-                        "name": "id",
+                        "description": "ID",
+                        "name": "ID",
                         "in": "path",
                         "required": true
                     },
@@ -17011,7 +17011,7 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Id",
+                        "description": "id",
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -17068,7 +17068,7 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Id",
+                        "description": "id",
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -17110,8 +17110,8 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Id",
-                        "name": "id",
+                        "description": "ID",
+                        "name": "ID",
                         "in": "path",
                         "required": true
                     },
@@ -17209,7 +17209,7 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Id",
+                        "description": "id",
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -17266,7 +17266,7 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Id",
+                        "description": "id",
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -17308,8 +17308,8 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Id",
-                        "name": "id",
+                        "description": "ID",
+                        "name": "ID",
                         "in": "path",
                         "required": true
                     },
@@ -17532,7 +17532,7 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Id",
+                        "description": "id",
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -17589,7 +17589,7 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Id",
+                        "description": "id",
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -17631,8 +17631,8 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Id",
-                        "name": "id",
+                        "description": "ID",
+                        "name": "ID",
                         "in": "path",
                         "required": true
                     },
@@ -17855,7 +17855,7 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Id",
+                        "description": "id",
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -17912,7 +17912,7 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Id",
+                        "description": "id",
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -17954,8 +17954,8 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Id",
-                        "name": "id",
+                        "description": "ID",
+                        "name": "ID",
                         "in": "path",
                         "required": true
                     },
@@ -18178,7 +18178,7 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Id",
+                        "description": "id",
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -18235,7 +18235,7 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Id",
+                        "description": "id",
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -18277,8 +18277,8 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Id",
-                        "name": "id",
+                        "description": "ID",
+                        "name": "ID",
                         "in": "path",
                         "required": true
                     },
@@ -18501,7 +18501,7 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Id",
+                        "description": "id",
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -18558,7 +18558,7 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Id",
+                        "description": "id",
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -18600,8 +18600,8 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Id",
-                        "name": "id",
+                        "description": "ID",
+                        "name": "ID",
                         "in": "path",
                         "required": true
                     },
@@ -18824,7 +18824,7 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Id",
+                        "description": "id",
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -18881,7 +18881,7 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Id",
+                        "description": "id",
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -18923,8 +18923,8 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Id",
-                        "name": "id",
+                        "description": "ID",
+                        "name": "ID",
                         "in": "path",
                         "required": true
                     },
@@ -19147,7 +19147,7 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Id",
+                        "description": "id",
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -19204,7 +19204,7 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Id",
+                        "description": "id",
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -19246,8 +19246,8 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Id",
-                        "name": "id",
+                        "description": "ID",
+                        "name": "ID",
                         "in": "path",
                         "required": true
                     },
@@ -19470,7 +19470,7 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Id",
+                        "description": "id",
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -19527,7 +19527,7 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Id",
+                        "description": "id",
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -19569,8 +19569,8 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Id",
-                        "name": "id",
+                        "description": "ID",
+                        "name": "ID",
                         "in": "path",
                         "required": true
                     },
@@ -19825,7 +19825,7 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Id",
+                        "description": "id",
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -19882,7 +19882,7 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Id",
+                        "description": "id",
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -19924,8 +19924,8 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Id",
-                        "name": "id",
+                        "description": "ID",
+                        "name": "ID",
                         "in": "path",
                         "required": true
                     },
@@ -20148,7 +20148,7 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Id",
+                        "description": "id",
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -20205,7 +20205,7 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Id",
+                        "description": "id",
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -20247,8 +20247,8 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Id",
-                        "name": "id",
+                        "description": "ID",
+                        "name": "ID",
                         "in": "path",
                         "required": true
                     },
@@ -20471,7 +20471,7 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Id",
+                        "description": "id",
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -20528,7 +20528,7 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Id",
+                        "description": "id",
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -20570,8 +20570,8 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Id",
-                        "name": "id",
+                        "description": "ID",
+                        "name": "ID",
                         "in": "path",
                         "required": true
                     },
@@ -20794,7 +20794,7 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Id",
+                        "description": "id",
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -20851,7 +20851,7 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Id",
+                        "description": "id",
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -20893,8 +20893,8 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Id",
-                        "name": "id",
+                        "description": "ID",
+                        "name": "ID",
                         "in": "path",
                         "required": true
                     },
@@ -21117,7 +21117,7 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Id",
+                        "description": "id",
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -21174,7 +21174,7 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Id",
+                        "description": "id",
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -21216,8 +21216,8 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Id",
-                        "name": "id",
+                        "description": "ID",
+                        "name": "ID",
                         "in": "path",
                         "required": true
                     },
@@ -21565,7 +21565,7 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Id",
+                        "description": "id",
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -21622,7 +21622,7 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Id",
+                        "description": "id",
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -21664,8 +21664,8 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Id",
-                        "name": "id",
+                        "description": "ID",
+                        "name": "ID",
                         "in": "path",
                         "required": true
                     },
@@ -21888,7 +21888,7 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Id",
+                        "description": "id",
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -21945,7 +21945,7 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Id",
+                        "description": "id",
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -21987,8 +21987,8 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Id",
-                        "name": "id",
+                        "description": "ID",
+                        "name": "ID",
                         "in": "path",
                         "required": true
                     },
@@ -22086,7 +22086,7 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Id",
+                        "description": "id",
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -22143,7 +22143,7 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Id",
+                        "description": "id",
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -22185,8 +22185,8 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Id",
-                        "name": "id",
+                        "description": "ID",
+                        "name": "ID",
                         "in": "path",
                         "required": true
                     },
@@ -22409,7 +22409,7 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Id",
+                        "description": "id",
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -22466,7 +22466,7 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Id",
+                        "description": "id",
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -22508,8 +22508,8 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Id",
-                        "name": "id",
+                        "description": "ID",
+                        "name": "ID",
                         "in": "path",
                         "required": true
                     },
@@ -22732,7 +22732,7 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Id",
+                        "description": "id",
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -22789,7 +22789,7 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Id",
+                        "description": "id",
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -22831,8 +22831,8 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Id",
-                        "name": "id",
+                        "description": "ID",
+                        "name": "ID",
                         "in": "path",
                         "required": true
                     },
@@ -23055,7 +23055,7 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Id",
+                        "description": "id",
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -23112,7 +23112,7 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Id",
+                        "description": "id",
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -23154,8 +23154,8 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Id",
-                        "name": "id",
+                        "description": "ID",
+                        "name": "ID",
                         "in": "path",
                         "required": true
                     },
@@ -23378,7 +23378,7 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Id",
+                        "description": "id",
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -23435,7 +23435,7 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Id",
+                        "description": "id",
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -23477,8 +23477,8 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Id",
-                        "name": "id",
+                        "description": "ID",
+                        "name": "ID",
                         "in": "path",
                         "required": true
                     },
@@ -23701,7 +23701,7 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Id",
+                        "description": "id",
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -23758,7 +23758,7 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Id",
+                        "description": "id",
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -23800,8 +23800,8 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Id",
-                        "name": "id",
+                        "description": "ID",
+                        "name": "ID",
                         "in": "path",
                         "required": true
                     },
@@ -24024,7 +24024,7 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Id",
+                        "description": "id",
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -24081,7 +24081,7 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Id",
+                        "description": "id",
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -24123,8 +24123,8 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Id",
-                        "name": "id",
+                        "description": "ID",
+                        "name": "ID",
                         "in": "path",
                         "required": true
                     },
@@ -24347,7 +24347,7 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Id",
+                        "description": "id",
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -24404,7 +24404,7 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Id",
+                        "description": "id",
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -24446,8 +24446,8 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Id",
-                        "name": "id",
+                        "description": "ID",
+                        "name": "ID",
                         "in": "path",
                         "required": true
                     },
@@ -24670,7 +24670,7 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Id",
+                        "description": "id",
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -24727,7 +24727,7 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Id",
+                        "description": "id",
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -24769,8 +24769,8 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Id",
-                        "name": "id",
+                        "description": "ID",
+                        "name": "ID",
                         "in": "path",
                         "required": true
                     },
@@ -24993,7 +24993,7 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Id",
+                        "description": "id",
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -25050,7 +25050,7 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Id",
+                        "description": "id",
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -25092,8 +25092,8 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Id",
-                        "name": "id",
+                        "description": "ID",
+                        "name": "ID",
                         "in": "path",
                         "required": true
                     },
@@ -25191,7 +25191,7 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Id",
+                        "description": "id",
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -25248,7 +25248,7 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Id",
+                        "description": "id",
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -25290,8 +25290,8 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Id",
-                        "name": "id",
+                        "description": "ID",
+                        "name": "ID",
                         "in": "path",
                         "required": true
                     },
@@ -25639,7 +25639,7 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Id",
+                        "description": "id",
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -25696,7 +25696,7 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Id",
+                        "description": "id",
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -25738,8 +25738,8 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Id",
-                        "name": "id",
+                        "description": "ID",
+                        "name": "ID",
                         "in": "path",
                         "required": true
                     },
@@ -25962,7 +25962,7 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Id",
+                        "description": "id",
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -26019,7 +26019,7 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Id",
+                        "description": "id",
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -26061,8 +26061,8 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Id",
-                        "name": "id",
+                        "description": "ID",
+                        "name": "ID",
                         "in": "path",
                         "required": true
                     },
@@ -26285,7 +26285,7 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Id",
+                        "description": "id",
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -26342,7 +26342,7 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Id",
+                        "description": "id",
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -26384,8 +26384,8 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Id",
-                        "name": "id",
+                        "description": "ID",
+                        "name": "ID",
                         "in": "path",
                         "required": true
                     },
@@ -26608,7 +26608,7 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Id",
+                        "description": "id",
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -26665,7 +26665,7 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Id",
+                        "description": "id",
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -26707,8 +26707,8 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Id",
-                        "name": "id",
+                        "description": "ID",
+                        "name": "ID",
                         "in": "path",
                         "required": true
                     },
@@ -26931,7 +26931,7 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Id",
+                        "description": "id",
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -26988,7 +26988,7 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Id",
+                        "description": "id",
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -27030,8 +27030,8 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Id",
-                        "name": "id",
+                        "description": "ID",
+                        "name": "ID",
                         "in": "path",
                         "required": true
                     },
@@ -27254,7 +27254,7 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Id",
+                        "description": "id",
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -27311,7 +27311,7 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Id",
+                        "description": "id",
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -27353,8 +27353,8 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Id",
-                        "name": "id",
+                        "description": "ID",
+                        "name": "ID",
                         "in": "path",
                         "required": true
                     },
@@ -27577,7 +27577,7 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Id",
+                        "description": "id",
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -27634,7 +27634,7 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Id",
+                        "description": "id",
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -27676,8 +27676,8 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Id",
-                        "name": "id",
+                        "description": "ID",
+                        "name": "ID",
                         "in": "path",
                         "required": true
                     },
@@ -27900,7 +27900,7 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Id",
+                        "description": "id",
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -27957,7 +27957,7 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Id",
+                        "description": "id",
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -27999,8 +27999,8 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Id",
-                        "name": "id",
+                        "description": "ID",
+                        "name": "ID",
                         "in": "path",
                         "required": true
                     },
@@ -28223,7 +28223,7 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Id",
+                        "description": "id",
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -28280,7 +28280,7 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Id",
+                        "description": "id",
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -28322,8 +28322,8 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Id",
-                        "name": "id",
+                        "description": "ID",
+                        "name": "ID",
                         "in": "path",
                         "required": true
                     },
@@ -28546,7 +28546,7 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Id",
+                        "description": "id",
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -28603,7 +28603,7 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Id",
+                        "description": "id",
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -28645,8 +28645,8 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Id",
-                        "name": "id",
+                        "description": "ID",
+                        "name": "ID",
                         "in": "path",
                         "required": true
                     },
@@ -28869,7 +28869,7 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Id",
+                        "description": "id",
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -28926,7 +28926,7 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Id",
+                        "description": "id",
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -28968,8 +28968,8 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Id",
-                        "name": "id",
+                        "description": "ID",
+                        "name": "ID",
                         "in": "path",
                         "required": true
                     },
@@ -29192,7 +29192,7 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Id",
+                        "description": "id",
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -29249,7 +29249,7 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Id",
+                        "description": "id",
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -29291,8 +29291,8 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Id",
-                        "name": "id",
+                        "description": "ID",
+                        "name": "ID",
                         "in": "path",
                         "required": true
                     },
@@ -29390,7 +29390,7 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Id",
+                        "description": "id",
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -29447,7 +29447,7 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Id",
+                        "description": "id",
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -29489,8 +29489,8 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Id",
-                        "name": "id",
+                        "description": "ID",
+                        "name": "ID",
                         "in": "path",
                         "required": true
                     },

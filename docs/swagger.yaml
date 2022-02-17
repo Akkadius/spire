@@ -4907,7 +4907,7 @@ paths:
       - application/json
       operationId: deleteAaAbility
       parameters:
-      - description: Id
+      - description: id
         in: path
         name: id
         required: true
@@ -4935,7 +4935,7 @@ paths:
       - application/json
       operationId: getAaAbility
       parameters:
-      - description: Id
+      - description: id
         in: path
         name: id
         required: true
@@ -4974,9 +4974,9 @@ paths:
       - application/json
       operationId: updateAaAbility
       parameters:
-      - description: Id
+      - description: ID
         in: path
-        name: id
+        name: ID
         required: true
         type: integer
       - description: AaAbility
@@ -5039,7 +5039,7 @@ paths:
       - application/json
       operationId: deleteAaRank
       parameters:
-      - description: Id
+      - description: id
         in: path
         name: id
         required: true
@@ -5067,7 +5067,7 @@ paths:
       - application/json
       operationId: getAaRank
       parameters:
-      - description: Id
+      - description: id
         in: path
         name: id
         required: true
@@ -5106,9 +5106,9 @@ paths:
       - application/json
       operationId: updateAaRank
       parameters:
-      - description: Id
+      - description: ID
         in: path
-        name: id
+        name: ID
         required: true
         type: integer
       - description: AaRank
@@ -5256,7 +5256,7 @@ paths:
       - application/json
       operationId: deleteAccount
       parameters:
-      - description: Id
+      - description: id
         in: path
         name: id
         required: true
@@ -5284,7 +5284,7 @@ paths:
       - application/json
       operationId: getAccount
       parameters:
-      - description: Id
+      - description: id
         in: path
         name: id
         required: true
@@ -5323,9 +5323,9 @@ paths:
       - application/json
       operationId: updateAccount
       parameters:
-      - description: Id
+      - description: ID
         in: path
-        name: id
+        name: ID
         required: true
         type: integer
       - description: Account
@@ -5473,7 +5473,7 @@ paths:
       - application/json
       operationId: deleteAdventureDetail
       parameters:
-      - description: Id
+      - description: id
         in: path
         name: id
         required: true
@@ -5501,7 +5501,7 @@ paths:
       - application/json
       operationId: getAdventureDetail
       parameters:
-      - description: Id
+      - description: id
         in: path
         name: id
         required: true
@@ -5540,9 +5540,9 @@ paths:
       - application/json
       operationId: updateAdventureDetail
       parameters:
-      - description: Id
+      - description: ID
         in: path
-        name: id
+        name: ID
         required: true
         type: integer
       - description: AdventureDetail
@@ -5690,7 +5690,7 @@ paths:
       - application/json
       operationId: deleteAdventureTemplate
       parameters:
-      - description: Id
+      - description: id
         in: path
         name: id
         required: true
@@ -5718,7 +5718,7 @@ paths:
       - application/json
       operationId: getAdventureTemplate
       parameters:
-      - description: Id
+      - description: id
         in: path
         name: id
         required: true
@@ -5757,9 +5757,9 @@ paths:
       - application/json
       operationId: updateAdventureTemplate
       parameters:
-      - description: Id
+      - description: ID
         in: path
-        name: id
+        name: ID
         required: true
         type: integer
       - description: AdventureTemplate
@@ -5907,7 +5907,7 @@ paths:
       - application/json
       operationId: deleteAdventureTemplateEntry
       parameters:
-      - description: Id
+      - description: id
         in: path
         name: id
         required: true
@@ -5935,7 +5935,7 @@ paths:
       - application/json
       operationId: getAdventureTemplateEntry
       parameters:
-      - description: Id
+      - description: id
         in: path
         name: id
         required: true
@@ -5974,9 +5974,9 @@ paths:
       - application/json
       operationId: updateAdventureTemplateEntry
       parameters:
-      - description: Id
+      - description: ID
         in: path
-        name: id
+        name: ID
         required: true
         type: integer
       - description: AdventureTemplateEntry
@@ -6039,7 +6039,7 @@ paths:
       - application/json
       operationId: deleteAdventureTemplateEntryFlavor
       parameters:
-      - description: Id
+      - description: id
         in: path
         name: id
         required: true
@@ -6067,7 +6067,7 @@ paths:
       - application/json
       operationId: getAdventureTemplateEntryFlavor
       parameters:
-      - description: Id
+      - description: id
         in: path
         name: id
         required: true
@@ -6106,9 +6106,9 @@ paths:
       - application/json
       operationId: updateAdventureTemplateEntryFlavor
       parameters:
-      - description: Id
+      - description: ID
         in: path
-        name: id
+        name: ID
         required: true
         type: integer
       - description: AdventureTemplateEntryFlavor
@@ -6426,7 +6426,7 @@ paths:
       - application/json
       operationId: deleteAlternateCurrency
       parameters:
-      - description: Id
+      - description: id
         in: path
         name: id
         required: true
@@ -6454,7 +6454,7 @@ paths:
       - application/json
       operationId: getAlternateCurrency
       parameters:
-      - description: Id
+      - description: id
         in: path
         name: id
         required: true
@@ -6493,9 +6493,9 @@ paths:
       - application/json
       operationId: updateAlternateCurrency
       parameters:
-      - description: Id
+      - description: ID
         in: path
-        name: id
+        name: ID
         required: true
         type: integer
       - description: AlternateCurrency
@@ -6558,7 +6558,7 @@ paths:
       - application/json
       operationId: deleteBlockedSpell
       parameters:
-      - description: Id
+      - description: id
         in: path
         name: id
         required: true
@@ -6586,7 +6586,7 @@ paths:
       - application/json
       operationId: getBlockedSpell
       parameters:
-      - description: Id
+      - description: id
         in: path
         name: id
         required: true
@@ -6625,9 +6625,9 @@ paths:
       - application/json
       operationId: updateBlockedSpell
       parameters:
-      - description: Id
+      - description: ID
         in: path
-        name: id
+        name: ID
         required: true
         type: integer
       - description: BlockedSpell
@@ -6775,7 +6775,7 @@ paths:
       - application/json
       operationId: deleteBug
       parameters:
-      - description: Id
+      - description: id
         in: path
         name: id
         required: true
@@ -6803,7 +6803,7 @@ paths:
       - application/json
       operationId: getBug
       parameters:
-      - description: Id
+      - description: id
         in: path
         name: id
         required: true
@@ -6842,9 +6842,9 @@ paths:
       - application/json
       operationId: updateBug
       parameters:
-      - description: Id
+      - description: ID
         in: path
-        name: id
+        name: ID
         required: true
         type: integer
       - description: Bug
@@ -6907,7 +6907,7 @@ paths:
       - application/json
       operationId: deleteBugReport
       parameters:
-      - description: Id
+      - description: id
         in: path
         name: id
         required: true
@@ -6935,7 +6935,7 @@ paths:
       - application/json
       operationId: getBugReport
       parameters:
-      - description: Id
+      - description: id
         in: path
         name: id
         required: true
@@ -6974,9 +6974,9 @@ paths:
       - application/json
       operationId: updateBugReport
       parameters:
-      - description: Id
+      - description: ID
         in: path
-        name: id
+        name: ID
         required: true
         type: integer
       - description: BugReport
@@ -7209,7 +7209,7 @@ paths:
       - application/json
       operationId: deleteCharCreatePointAllocation
       parameters:
-      - description: Id
+      - description: id
         in: path
         name: id
         required: true
@@ -7237,7 +7237,7 @@ paths:
       - application/json
       operationId: getCharCreatePointAllocation
       parameters:
-      - description: Id
+      - description: id
         in: path
         name: id
         required: true
@@ -7276,9 +7276,9 @@ paths:
       - application/json
       operationId: updateCharCreatePointAllocation
       parameters:
-      - description: Id
+      - description: ID
         in: path
-        name: id
+        name: ID
         required: true
         type: integer
       - description: CharCreatePointAllocation
@@ -7511,7 +7511,7 @@ paths:
       - application/json
       operationId: deleteCharacterAlternateAbility
       parameters:
-      - description: Id
+      - description: id
         in: path
         name: id
         required: true
@@ -7539,7 +7539,7 @@ paths:
       - application/json
       operationId: getCharacterAlternateAbility
       parameters:
-      - description: Id
+      - description: id
         in: path
         name: id
         required: true
@@ -7578,9 +7578,9 @@ paths:
       - application/json
       operationId: updateCharacterAlternateAbility
       parameters:
-      - description: Id
+      - description: ID
         in: path
-        name: id
+        name: ID
         required: true
         type: integer
       - description: CharacterAlternateAbility
@@ -7643,7 +7643,7 @@ paths:
       - application/json
       operationId: deleteCharacterAura
       parameters:
-      - description: Id
+      - description: id
         in: path
         name: id
         required: true
@@ -7671,7 +7671,7 @@ paths:
       - application/json
       operationId: getCharacterAura
       parameters:
-      - description: Id
+      - description: id
         in: path
         name: id
         required: true
@@ -7710,9 +7710,9 @@ paths:
       - application/json
       operationId: updateCharacterAura
       parameters:
-      - description: Id
+      - description: ID
         in: path
-        name: id
+        name: ID
         required: true
         type: integer
       - description: CharacterAura
@@ -7860,7 +7860,7 @@ paths:
       - application/json
       operationId: deleteCharacterBandolier
       parameters:
-      - description: Id
+      - description: id
         in: path
         name: id
         required: true
@@ -7888,7 +7888,7 @@ paths:
       - application/json
       operationId: getCharacterBandolier
       parameters:
-      - description: Id
+      - description: id
         in: path
         name: id
         required: true
@@ -7927,9 +7927,9 @@ paths:
       - application/json
       operationId: updateCharacterBandolier
       parameters:
-      - description: Id
+      - description: ID
         in: path
-        name: id
+        name: ID
         required: true
         type: integer
       - description: CharacterBandolier
@@ -8077,7 +8077,7 @@ paths:
       - application/json
       operationId: deleteCharacterBind
       parameters:
-      - description: Id
+      - description: id
         in: path
         name: id
         required: true
@@ -8105,7 +8105,7 @@ paths:
       - application/json
       operationId: getCharacterBind
       parameters:
-      - description: Id
+      - description: id
         in: path
         name: id
         required: true
@@ -8144,9 +8144,9 @@ paths:
       - application/json
       operationId: updateCharacterBind
       parameters:
-      - description: Id
+      - description: ID
         in: path
-        name: id
+        name: ID
         required: true
         type: integer
       - description: CharacterBind
@@ -8294,7 +8294,7 @@ paths:
       - application/json
       operationId: deleteCharacterCorpse
       parameters:
-      - description: Id
+      - description: id
         in: path
         name: id
         required: true
@@ -8322,7 +8322,7 @@ paths:
       - application/json
       operationId: getCharacterCorpse
       parameters:
-      - description: Id
+      - description: id
         in: path
         name: id
         required: true
@@ -8361,9 +8361,9 @@ paths:
       - application/json
       operationId: updateCharacterCorpse
       parameters:
-      - description: Id
+      - description: ID
         in: path
-        name: id
+        name: ID
         required: true
         type: integer
       - description: CharacterCorpse
@@ -8596,7 +8596,7 @@ paths:
       - application/json
       operationId: deleteCharacterCurrency
       parameters:
-      - description: Id
+      - description: id
         in: path
         name: id
         required: true
@@ -8624,7 +8624,7 @@ paths:
       - application/json
       operationId: getCharacterCurrency
       parameters:
-      - description: Id
+      - description: id
         in: path
         name: id
         required: true
@@ -8663,9 +8663,9 @@ paths:
       - application/json
       operationId: updateCharacterCurrency
       parameters:
-      - description: Id
+      - description: ID
         in: path
-        name: id
+        name: ID
         required: true
         type: integer
       - description: CharacterCurrency
@@ -8813,7 +8813,7 @@ paths:
       - application/json
       operationId: deleteCharacterDatum
       parameters:
-      - description: Id
+      - description: id
         in: path
         name: id
         required: true
@@ -8841,7 +8841,7 @@ paths:
       - application/json
       operationId: getCharacterDatum
       parameters:
-      - description: Id
+      - description: id
         in: path
         name: id
         required: true
@@ -8880,9 +8880,9 @@ paths:
       - application/json
       operationId: updateCharacterDatum
       parameters:
-      - description: Id
+      - description: ID
         in: path
-        name: id
+        name: ID
         required: true
         type: integer
       - description: CharacterDatum
@@ -8945,7 +8945,7 @@ paths:
       - application/json
       operationId: deleteCharacterDiscipline
       parameters:
-      - description: Id
+      - description: id
         in: path
         name: id
         required: true
@@ -8973,7 +8973,7 @@ paths:
       - application/json
       operationId: getCharacterDiscipline
       parameters:
-      - description: Id
+      - description: id
         in: path
         name: id
         required: true
@@ -9012,9 +9012,9 @@ paths:
       - application/json
       operationId: updateCharacterDiscipline
       parameters:
-      - description: Id
+      - description: ID
         in: path
-        name: id
+        name: ID
         required: true
         type: integer
       - description: CharacterDiscipline
@@ -9162,7 +9162,7 @@ paths:
       - application/json
       operationId: deleteCharacterExpeditionLockout
       parameters:
-      - description: Id
+      - description: id
         in: path
         name: id
         required: true
@@ -9190,7 +9190,7 @@ paths:
       - application/json
       operationId: getCharacterExpeditionLockout
       parameters:
-      - description: Id
+      - description: id
         in: path
         name: id
         required: true
@@ -9229,9 +9229,9 @@ paths:
       - application/json
       operationId: updateCharacterExpeditionLockout
       parameters:
-      - description: Id
+      - description: ID
         in: path
-        name: id
+        name: ID
         required: true
         type: integer
       - description: CharacterExpeditionLockout
@@ -9379,7 +9379,7 @@ paths:
       - application/json
       operationId: deleteCharacterInspectMessage
       parameters:
-      - description: Id
+      - description: id
         in: path
         name: id
         required: true
@@ -9407,7 +9407,7 @@ paths:
       - application/json
       operationId: getCharacterInspectMessage
       parameters:
-      - description: Id
+      - description: id
         in: path
         name: id
         required: true
@@ -9446,9 +9446,9 @@ paths:
       - application/json
       operationId: updateCharacterInspectMessage
       parameters:
-      - description: Id
+      - description: ID
         in: path
-        name: id
+        name: ID
         required: true
         type: integer
       - description: CharacterInspectMessage
@@ -9596,7 +9596,7 @@ paths:
       - application/json
       operationId: deleteCharacterItemRecast
       parameters:
-      - description: Id
+      - description: id
         in: path
         name: id
         required: true
@@ -9624,7 +9624,7 @@ paths:
       - application/json
       operationId: getCharacterItemRecast
       parameters:
-      - description: Id
+      - description: id
         in: path
         name: id
         required: true
@@ -9663,9 +9663,9 @@ paths:
       - application/json
       operationId: updateCharacterItemRecast
       parameters:
-      - description: Id
+      - description: ID
         in: path
-        name: id
+        name: ID
         required: true
         type: integer
       - description: CharacterItemRecast
@@ -9813,7 +9813,7 @@ paths:
       - application/json
       operationId: deleteCharacterLanguage
       parameters:
-      - description: Id
+      - description: id
         in: path
         name: id
         required: true
@@ -9841,7 +9841,7 @@ paths:
       - application/json
       operationId: getCharacterLanguage
       parameters:
-      - description: Id
+      - description: id
         in: path
         name: id
         required: true
@@ -9880,9 +9880,9 @@ paths:
       - application/json
       operationId: updateCharacterLanguage
       parameters:
-      - description: Id
+      - description: ID
         in: path
-        name: id
+        name: ID
         required: true
         type: integer
       - description: CharacterLanguage
@@ -10115,7 +10115,7 @@ paths:
       - application/json
       operationId: deleteCharacterLeadershipAbility
       parameters:
-      - description: Id
+      - description: id
         in: path
         name: id
         required: true
@@ -10143,7 +10143,7 @@ paths:
       - application/json
       operationId: getCharacterLeadershipAbility
       parameters:
-      - description: Id
+      - description: id
         in: path
         name: id
         required: true
@@ -10182,9 +10182,9 @@ paths:
       - application/json
       operationId: updateCharacterLeadershipAbility
       parameters:
-      - description: Id
+      - description: ID
         in: path
-        name: id
+        name: ID
         required: true
         type: integer
       - description: CharacterLeadershipAbility
@@ -10247,7 +10247,7 @@ paths:
       - application/json
       operationId: deleteCharacterMaterial
       parameters:
-      - description: Id
+      - description: id
         in: path
         name: id
         required: true
@@ -10275,7 +10275,7 @@ paths:
       - application/json
       operationId: getCharacterMaterial
       parameters:
-      - description: Id
+      - description: id
         in: path
         name: id
         required: true
@@ -10314,9 +10314,9 @@ paths:
       - application/json
       operationId: updateCharacterMaterial
       parameters:
-      - description: Id
+      - description: ID
         in: path
-        name: id
+        name: ID
         required: true
         type: integer
       - description: CharacterMaterial
@@ -10464,7 +10464,7 @@ paths:
       - application/json
       operationId: deleteCharacterMemmedSpell
       parameters:
-      - description: Id
+      - description: id
         in: path
         name: id
         required: true
@@ -10492,7 +10492,7 @@ paths:
       - application/json
       operationId: getCharacterMemmedSpell
       parameters:
-      - description: Id
+      - description: id
         in: path
         name: id
         required: true
@@ -10531,9 +10531,9 @@ paths:
       - application/json
       operationId: updateCharacterMemmedSpell
       parameters:
-      - description: Id
+      - description: ID
         in: path
-        name: id
+        name: ID
         required: true
         type: integer
       - description: CharacterMemmedSpell
@@ -10681,7 +10681,7 @@ paths:
       - application/json
       operationId: deleteCharacterPotionbelt
       parameters:
-      - description: Id
+      - description: id
         in: path
         name: id
         required: true
@@ -10709,7 +10709,7 @@ paths:
       - application/json
       operationId: getCharacterPotionbelt
       parameters:
-      - description: Id
+      - description: id
         in: path
         name: id
         required: true
@@ -10748,9 +10748,9 @@ paths:
       - application/json
       operationId: updateCharacterPotionbelt
       parameters:
-      - description: Id
+      - description: ID
         in: path
-        name: id
+        name: ID
         required: true
         type: integer
       - description: CharacterPotionbelt
@@ -10898,7 +10898,7 @@ paths:
       - application/json
       operationId: deleteCharacterSkill
       parameters:
-      - description: Id
+      - description: id
         in: path
         name: id
         required: true
@@ -10926,7 +10926,7 @@ paths:
       - application/json
       operationId: getCharacterSkill
       parameters:
-      - description: Id
+      - description: id
         in: path
         name: id
         required: true
@@ -10965,9 +10965,9 @@ paths:
       - application/json
       operationId: updateCharacterSkill
       parameters:
-      - description: Id
+      - description: ID
         in: path
-        name: id
+        name: ID
         required: true
         type: integer
       - description: CharacterSkill
@@ -11115,7 +11115,7 @@ paths:
       - application/json
       operationId: deleteCharacterSpell
       parameters:
-      - description: Id
+      - description: id
         in: path
         name: id
         required: true
@@ -11143,7 +11143,7 @@ paths:
       - application/json
       operationId: getCharacterSpell
       parameters:
-      - description: Id
+      - description: id
         in: path
         name: id
         required: true
@@ -11182,9 +11182,9 @@ paths:
       - application/json
       operationId: updateCharacterSpell
       parameters:
-      - description: Id
+      - description: ID
         in: path
-        name: id
+        name: ID
         required: true
         type: integer
       - description: CharacterSpell
@@ -11332,7 +11332,7 @@ paths:
       - application/json
       operationId: deleteContentFlag
       parameters:
-      - description: Id
+      - description: id
         in: path
         name: id
         required: true
@@ -11360,7 +11360,7 @@ paths:
       - application/json
       operationId: getContentFlag
       parameters:
-      - description: Id
+      - description: id
         in: path
         name: id
         required: true
@@ -11399,9 +11399,9 @@ paths:
       - application/json
       operationId: updateContentFlag
       parameters:
-      - description: Id
+      - description: ID
         in: path
-        name: id
+        name: ID
         required: true
         type: integer
       - description: ContentFlag
@@ -11549,7 +11549,7 @@ paths:
       - application/json
       operationId: deleteDataBucket
       parameters:
-      - description: Id
+      - description: id
         in: path
         name: id
         required: true
@@ -11577,7 +11577,7 @@ paths:
       - application/json
       operationId: getDataBucket
       parameters:
-      - description: Id
+      - description: id
         in: path
         name: id
         required: true
@@ -11616,9 +11616,9 @@ paths:
       - application/json
       operationId: updateDataBucket
       parameters:
-      - description: Id
+      - description: ID
         in: path
-        name: id
+        name: ID
         required: true
         type: integer
       - description: DataBucket
@@ -11766,7 +11766,7 @@ paths:
       - application/json
       operationId: deleteDbStr
       parameters:
-      - description: Id
+      - description: id
         in: path
         name: id
         required: true
@@ -11794,7 +11794,7 @@ paths:
       - application/json
       operationId: getDbStr
       parameters:
-      - description: Id
+      - description: id
         in: path
         name: id
         required: true
@@ -11833,9 +11833,9 @@ paths:
       - application/json
       operationId: updateDbStr
       parameters:
-      - description: Id
+      - description: ID
         in: path
-        name: id
+        name: ID
         required: true
         type: integer
       - description: DbStr
@@ -11983,7 +11983,7 @@ paths:
       - application/json
       operationId: deleteDoor
       parameters:
-      - description: Id
+      - description: id
         in: path
         name: id
         required: true
@@ -12011,7 +12011,7 @@ paths:
       - application/json
       operationId: getDoor
       parameters:
-      - description: Id
+      - description: id
         in: path
         name: id
         required: true
@@ -12050,9 +12050,9 @@ paths:
       - application/json
       operationId: updateDoor
       parameters:
-      - description: Id
+      - description: ID
         in: path
-        name: id
+        name: ID
         required: true
         type: integer
       - description: Door
@@ -12200,7 +12200,7 @@ paths:
       - application/json
       operationId: deleteDynamicZone
       parameters:
-      - description: Id
+      - description: id
         in: path
         name: id
         required: true
@@ -12228,7 +12228,7 @@ paths:
       - application/json
       operationId: getDynamicZone
       parameters:
-      - description: Id
+      - description: id
         in: path
         name: id
         required: true
@@ -12267,9 +12267,9 @@ paths:
       - application/json
       operationId: updateDynamicZone
       parameters:
-      - description: Id
+      - description: ID
         in: path
-        name: id
+        name: ID
         required: true
         type: integer
       - description: DynamicZone
@@ -12417,7 +12417,7 @@ paths:
       - application/json
       operationId: deleteEventlog
       parameters:
-      - description: Id
+      - description: id
         in: path
         name: id
         required: true
@@ -12445,7 +12445,7 @@ paths:
       - application/json
       operationId: getEventlog
       parameters:
-      - description: Id
+      - description: id
         in: path
         name: id
         required: true
@@ -12484,9 +12484,9 @@ paths:
       - application/json
       operationId: updateEventlog
       parameters:
-      - description: Id
+      - description: ID
         in: path
-        name: id
+        name: ID
         required: true
         type: integer
       - description: Eventlog
@@ -12634,7 +12634,7 @@ paths:
       - application/json
       operationId: deleteExpedition
       parameters:
-      - description: Id
+      - description: id
         in: path
         name: id
         required: true
@@ -12662,7 +12662,7 @@ paths:
       - application/json
       operationId: getExpedition
       parameters:
-      - description: Id
+      - description: id
         in: path
         name: id
         required: true
@@ -12701,9 +12701,9 @@ paths:
       - application/json
       operationId: updateExpedition
       parameters:
-      - description: Id
+      - description: ID
         in: path
-        name: id
+        name: ID
         required: true
         type: integer
       - description: Expedition
@@ -12766,7 +12766,7 @@ paths:
       - application/json
       operationId: deleteExpeditionLockout
       parameters:
-      - description: Id
+      - description: id
         in: path
         name: id
         required: true
@@ -12794,7 +12794,7 @@ paths:
       - application/json
       operationId: getExpeditionLockout
       parameters:
-      - description: Id
+      - description: id
         in: path
         name: id
         required: true
@@ -12833,9 +12833,9 @@ paths:
       - application/json
       operationId: updateExpeditionLockout
       parameters:
-      - description: Id
+      - description: ID
         in: path
-        name: id
+        name: ID
         required: true
         type: integer
       - description: ExpeditionLockout
@@ -12983,7 +12983,7 @@ paths:
       - application/json
       operationId: deleteExpeditionMember
       parameters:
-      - description: Id
+      - description: id
         in: path
         name: id
         required: true
@@ -13011,7 +13011,7 @@ paths:
       - application/json
       operationId: getExpeditionMember
       parameters:
-      - description: Id
+      - description: id
         in: path
         name: id
         required: true
@@ -13050,9 +13050,9 @@ paths:
       - application/json
       operationId: updateExpeditionMember
       parameters:
-      - description: Id
+      - description: ID
         in: path
-        name: id
+        name: ID
         required: true
         type: integer
       - description: ExpeditionMember
@@ -13285,7 +13285,7 @@ paths:
       - application/json
       operationId: deleteFactionList
       parameters:
-      - description: Id
+      - description: id
         in: path
         name: id
         required: true
@@ -13313,7 +13313,7 @@ paths:
       - application/json
       operationId: getFactionList
       parameters:
-      - description: Id
+      - description: id
         in: path
         name: id
         required: true
@@ -13352,9 +13352,9 @@ paths:
       - application/json
       operationId: updateFactionList
       parameters:
-      - description: Id
+      - description: ID
         in: path
-        name: id
+        name: ID
         required: true
         type: integer
       - description: FactionList
@@ -13417,7 +13417,7 @@ paths:
       - application/json
       operationId: deleteFactionListMod
       parameters:
-      - description: Id
+      - description: id
         in: path
         name: id
         required: true
@@ -13445,7 +13445,7 @@ paths:
       - application/json
       operationId: getFactionListMod
       parameters:
-      - description: Id
+      - description: id
         in: path
         name: id
         required: true
@@ -13484,9 +13484,9 @@ paths:
       - application/json
       operationId: updateFactionListMod
       parameters:
-      - description: Id
+      - description: ID
         in: path
-        name: id
+        name: ID
         required: true
         type: integer
       - description: FactionListMod
@@ -13719,7 +13719,7 @@ paths:
       - application/json
       operationId: deleteFishing
       parameters:
-      - description: Id
+      - description: id
         in: path
         name: id
         required: true
@@ -13747,7 +13747,7 @@ paths:
       - application/json
       operationId: getFishing
       parameters:
-      - description: Id
+      - description: id
         in: path
         name: id
         required: true
@@ -13786,9 +13786,9 @@ paths:
       - application/json
       operationId: updateFishing
       parameters:
-      - description: Id
+      - description: ID
         in: path
-        name: id
+        name: ID
         required: true
         type: integer
       - description: Fishing
@@ -13936,7 +13936,7 @@ paths:
       - application/json
       operationId: deleteForage
       parameters:
-      - description: Id
+      - description: id
         in: path
         name: id
         required: true
@@ -13964,7 +13964,7 @@ paths:
       - application/json
       operationId: getForage
       parameters:
-      - description: Id
+      - description: id
         in: path
         name: id
         required: true
@@ -14003,9 +14003,9 @@ paths:
       - application/json
       operationId: updateForage
       parameters:
-      - description: Id
+      - description: ID
         in: path
-        name: id
+        name: ID
         required: true
         type: integer
       - description: Forage
@@ -14153,7 +14153,7 @@ paths:
       - application/json
       operationId: deleteGlobalLoot
       parameters:
-      - description: Id
+      - description: id
         in: path
         name: id
         required: true
@@ -14181,7 +14181,7 @@ paths:
       - application/json
       operationId: getGlobalLoot
       parameters:
-      - description: Id
+      - description: id
         in: path
         name: id
         required: true
@@ -14220,9 +14220,9 @@ paths:
       - application/json
       operationId: updateGlobalLoot
       parameters:
-      - description: Id
+      - description: ID
         in: path
-        name: id
+        name: ID
         required: true
         type: integer
       - description: GlobalLoot
@@ -14370,7 +14370,7 @@ paths:
       - application/json
       operationId: deleteGraveyard
       parameters:
-      - description: Id
+      - description: id
         in: path
         name: id
         required: true
@@ -14398,7 +14398,7 @@ paths:
       - application/json
       operationId: getGraveyard
       parameters:
-      - description: Id
+      - description: id
         in: path
         name: id
         required: true
@@ -14437,9 +14437,9 @@ paths:
       - application/json
       operationId: updateGraveyard
       parameters:
-      - description: Id
+      - description: ID
         in: path
-        name: id
+        name: ID
         required: true
         type: integer
       - description: Graveyard
@@ -14587,7 +14587,7 @@ paths:
       - application/json
       operationId: deleteGrid
       parameters:
-      - description: Id
+      - description: id
         in: path
         name: id
         required: true
@@ -14615,7 +14615,7 @@ paths:
       - application/json
       operationId: getGrid
       parameters:
-      - description: Id
+      - description: id
         in: path
         name: id
         required: true
@@ -14654,9 +14654,9 @@ paths:
       - application/json
       operationId: updateGrid
       parameters:
-      - description: Id
+      - description: ID
         in: path
-        name: id
+        name: ID
         required: true
         type: integer
       - description: Grid
@@ -14804,7 +14804,7 @@ paths:
       - application/json
       operationId: deleteGroundSpawn
       parameters:
-      - description: Id
+      - description: id
         in: path
         name: id
         required: true
@@ -14832,7 +14832,7 @@ paths:
       - application/json
       operationId: getGroundSpawn
       parameters:
-      - description: Id
+      - description: id
         in: path
         name: id
         required: true
@@ -14871,9 +14871,9 @@ paths:
       - application/json
       operationId: updateGroundSpawn
       parameters:
-      - description: Id
+      - description: ID
         in: path
-        name: id
+        name: ID
         required: true
         type: integer
       - description: GroundSpawn
@@ -15021,7 +15021,7 @@ paths:
       - application/json
       operationId: deleteGuild
       parameters:
-      - description: Id
+      - description: id
         in: path
         name: id
         required: true
@@ -15049,7 +15049,7 @@ paths:
       - application/json
       operationId: getGuild
       parameters:
-      - description: Id
+      - description: id
         in: path
         name: id
         required: true
@@ -15088,9 +15088,9 @@ paths:
       - application/json
       operationId: updateGuild
       parameters:
-      - description: Id
+      - description: ID
         in: path
-        name: id
+        name: ID
         required: true
         type: integer
       - description: Guild
@@ -15238,7 +15238,7 @@ paths:
       - application/json
       operationId: deleteHacker
       parameters:
-      - description: Id
+      - description: id
         in: path
         name: id
         required: true
@@ -15266,7 +15266,7 @@ paths:
       - application/json
       operationId: getHacker
       parameters:
-      - description: Id
+      - description: id
         in: path
         name: id
         required: true
@@ -15305,9 +15305,9 @@ paths:
       - application/json
       operationId: updateHacker
       parameters:
-      - description: Id
+      - description: ID
         in: path
-        name: id
+        name: ID
         required: true
         type: integer
       - description: Hacker
@@ -15455,7 +15455,7 @@ paths:
       - application/json
       operationId: deleteInstanceList
       parameters:
-      - description: Id
+      - description: id
         in: path
         name: id
         required: true
@@ -15483,7 +15483,7 @@ paths:
       - application/json
       operationId: getInstanceList
       parameters:
-      - description: Id
+      - description: id
         in: path
         name: id
         required: true
@@ -15522,9 +15522,9 @@ paths:
       - application/json
       operationId: updateInstanceList
       parameters:
-      - description: Id
+      - description: ID
         in: path
-        name: id
+        name: ID
         required: true
         type: integer
       - description: InstanceList
@@ -15587,7 +15587,7 @@ paths:
       - application/json
       operationId: deleteInstanceListPlayer
       parameters:
-      - description: Id
+      - description: id
         in: path
         name: id
         required: true
@@ -15615,7 +15615,7 @@ paths:
       - application/json
       operationId: getInstanceListPlayer
       parameters:
-      - description: Id
+      - description: id
         in: path
         name: id
         required: true
@@ -15654,9 +15654,9 @@ paths:
       - application/json
       operationId: updateInstanceListPlayer
       parameters:
-      - description: Id
+      - description: ID
         in: path
-        name: id
+        name: ID
         required: true
         type: integer
       - description: InstanceListPlayer
@@ -15889,7 +15889,7 @@ paths:
       - application/json
       operationId: deleteItem
       parameters:
-      - description: Id
+      - description: id
         in: path
         name: id
         required: true
@@ -15917,7 +15917,7 @@ paths:
       - application/json
       operationId: getItem
       parameters:
-      - description: Id
+      - description: id
         in: path
         name: id
         required: true
@@ -15956,9 +15956,9 @@ paths:
       - application/json
       operationId: updateItem
       parameters:
-      - description: Id
+      - description: ID
         in: path
-        name: id
+        name: ID
         required: true
         type: integer
       - description: Item
@@ -16191,7 +16191,7 @@ paths:
       - application/json
       operationId: deleteLdonTrapEntry
       parameters:
-      - description: Id
+      - description: id
         in: path
         name: id
         required: true
@@ -16219,7 +16219,7 @@ paths:
       - application/json
       operationId: getLdonTrapEntry
       parameters:
-      - description: Id
+      - description: id
         in: path
         name: id
         required: true
@@ -16258,9 +16258,9 @@ paths:
       - application/json
       operationId: updateLdonTrapEntry
       parameters:
-      - description: Id
+      - description: ID
         in: path
-        name: id
+        name: ID
         required: true
         type: integer
       - description: LdonTrapEntry
@@ -16323,7 +16323,7 @@ paths:
       - application/json
       operationId: deleteLdonTrapTemplate
       parameters:
-      - description: Id
+      - description: id
         in: path
         name: id
         required: true
@@ -16351,7 +16351,7 @@ paths:
       - application/json
       operationId: getLdonTrapTemplate
       parameters:
-      - description: Id
+      - description: id
         in: path
         name: id
         required: true
@@ -16390,9 +16390,9 @@ paths:
       - application/json
       operationId: updateLdonTrapTemplate
       parameters:
-      - description: Id
+      - description: ID
         in: path
-        name: id
+        name: ID
         required: true
         type: integer
       - description: LdonTrapTemplate
@@ -16540,7 +16540,7 @@ paths:
       - application/json
       operationId: deleteLoginAccount
       parameters:
-      - description: Id
+      - description: id
         in: path
         name: id
         required: true
@@ -16568,7 +16568,7 @@ paths:
       - application/json
       operationId: getLoginAccount
       parameters:
-      - description: Id
+      - description: id
         in: path
         name: id
         required: true
@@ -16607,9 +16607,9 @@ paths:
       - application/json
       operationId: updateLoginAccount
       parameters:
-      - description: Id
+      - description: ID
         in: path
-        name: id
+        name: ID
         required: true
         type: integer
       - description: LoginAccount
@@ -16757,7 +16757,7 @@ paths:
       - application/json
       operationId: deleteLoginApiToken
       parameters:
-      - description: Id
+      - description: id
         in: path
         name: id
         required: true
@@ -16785,7 +16785,7 @@ paths:
       - application/json
       operationId: getLoginApiToken
       parameters:
-      - description: Id
+      - description: id
         in: path
         name: id
         required: true
@@ -16824,9 +16824,9 @@ paths:
       - application/json
       operationId: updateLoginApiToken
       parameters:
-      - description: Id
+      - description: ID
         in: path
-        name: id
+        name: ID
         required: true
         type: integer
       - description: LoginApiToken
@@ -16974,7 +16974,7 @@ paths:
       - application/json
       operationId: deleteLoginServerAdmin
       parameters:
-      - description: Id
+      - description: id
         in: path
         name: id
         required: true
@@ -17002,7 +17002,7 @@ paths:
       - application/json
       operationId: getLoginServerAdmin
       parameters:
-      - description: Id
+      - description: id
         in: path
         name: id
         required: true
@@ -17041,9 +17041,9 @@ paths:
       - application/json
       operationId: updateLoginServerAdmin
       parameters:
-      - description: Id
+      - description: ID
         in: path
-        name: id
+        name: ID
         required: true
         type: integer
       - description: LoginServerAdmin
@@ -17191,7 +17191,7 @@ paths:
       - application/json
       operationId: deleteLoginServerListType
       parameters:
-      - description: Id
+      - description: id
         in: path
         name: id
         required: true
@@ -17219,7 +17219,7 @@ paths:
       - application/json
       operationId: getLoginServerListType
       parameters:
-      - description: Id
+      - description: id
         in: path
         name: id
         required: true
@@ -17258,9 +17258,9 @@ paths:
       - application/json
       operationId: updateLoginServerListType
       parameters:
-      - description: Id
+      - description: ID
         in: path
-        name: id
+        name: ID
         required: true
         type: integer
       - description: LoginServerListType
@@ -17408,7 +17408,7 @@ paths:
       - application/json
       operationId: deleteLoginWorldServer
       parameters:
-      - description: Id
+      - description: id
         in: path
         name: id
         required: true
@@ -17436,7 +17436,7 @@ paths:
       - application/json
       operationId: getLoginWorldServer
       parameters:
-      - description: Id
+      - description: id
         in: path
         name: id
         required: true
@@ -17475,9 +17475,9 @@ paths:
       - application/json
       operationId: updateLoginWorldServer
       parameters:
-      - description: Id
+      - description: ID
         in: path
-        name: id
+        name: ID
         required: true
         type: integer
       - description: LoginWorldServer
@@ -17625,7 +17625,7 @@ paths:
       - application/json
       operationId: deleteLootdrop
       parameters:
-      - description: Id
+      - description: id
         in: path
         name: id
         required: true
@@ -17653,7 +17653,7 @@ paths:
       - application/json
       operationId: getLootdrop
       parameters:
-      - description: Id
+      - description: id
         in: path
         name: id
         required: true
@@ -17692,9 +17692,9 @@ paths:
       - application/json
       operationId: updateLootdrop
       parameters:
-      - description: Id
+      - description: ID
         in: path
-        name: id
+        name: ID
         required: true
         type: integer
       - description: Lootdrop
@@ -17842,7 +17842,7 @@ paths:
       - application/json
       operationId: deleteLoottable
       parameters:
-      - description: Id
+      - description: id
         in: path
         name: id
         required: true
@@ -17870,7 +17870,7 @@ paths:
       - application/json
       operationId: getLoottable
       parameters:
-      - description: Id
+      - description: id
         in: path
         name: id
         required: true
@@ -17909,9 +17909,9 @@ paths:
       - application/json
       operationId: updateLoottable
       parameters:
-      - description: Id
+      - description: ID
         in: path
-        name: id
+        name: ID
         required: true
         type: integer
       - description: Loottable
@@ -18080,7 +18080,7 @@ paths:
       - application/json
       operationId: deleteNameFilter
       parameters:
-      - description: Id
+      - description: id
         in: path
         name: id
         required: true
@@ -18108,7 +18108,7 @@ paths:
       - application/json
       operationId: getNameFilter
       parameters:
-      - description: Id
+      - description: id
         in: path
         name: id
         required: true
@@ -18147,9 +18147,9 @@ paths:
       - application/json
       operationId: updateNameFilter
       parameters:
-      - description: Id
+      - description: ID
         in: path
-        name: id
+        name: ID
         required: true
         type: integer
       - description: NameFilter
@@ -18297,7 +18297,7 @@ paths:
       - application/json
       operationId: deleteNpcEmote
       parameters:
-      - description: Id
+      - description: id
         in: path
         name: id
         required: true
@@ -18325,7 +18325,7 @@ paths:
       - application/json
       operationId: getNpcEmote
       parameters:
-      - description: Id
+      - description: id
         in: path
         name: id
         required: true
@@ -18364,9 +18364,9 @@ paths:
       - application/json
       operationId: updateNpcEmote
       parameters:
-      - description: Id
+      - description: ID
         in: path
-        name: id
+        name: ID
         required: true
         type: integer
       - description: NpcEmote
@@ -18514,7 +18514,7 @@ paths:
       - application/json
       operationId: deleteNpcFaction
       parameters:
-      - description: Id
+      - description: id
         in: path
         name: id
         required: true
@@ -18542,7 +18542,7 @@ paths:
       - application/json
       operationId: getNpcFaction
       parameters:
-      - description: Id
+      - description: id
         in: path
         name: id
         required: true
@@ -18581,9 +18581,9 @@ paths:
       - application/json
       operationId: updateNpcFaction
       parameters:
-      - description: Id
+      - description: ID
         in: path
-        name: id
+        name: ID
         required: true
         type: integer
       - description: NpcFaction
@@ -18731,7 +18731,7 @@ paths:
       - application/json
       operationId: deleteNpcSpell
       parameters:
-      - description: Id
+      - description: id
         in: path
         name: id
         required: true
@@ -18759,7 +18759,7 @@ paths:
       - application/json
       operationId: getNpcSpell
       parameters:
-      - description: Id
+      - description: id
         in: path
         name: id
         required: true
@@ -18798,9 +18798,9 @@ paths:
       - application/json
       operationId: updateNpcSpell
       parameters:
-      - description: Id
+      - description: ID
         in: path
-        name: id
+        name: ID
         required: true
         type: integer
       - description: NpcSpell
@@ -18948,7 +18948,7 @@ paths:
       - application/json
       operationId: deleteNpcSpellsEffect
       parameters:
-      - description: Id
+      - description: id
         in: path
         name: id
         required: true
@@ -18976,7 +18976,7 @@ paths:
       - application/json
       operationId: getNpcSpellsEffect
       parameters:
-      - description: Id
+      - description: id
         in: path
         name: id
         required: true
@@ -19015,9 +19015,9 @@ paths:
       - application/json
       operationId: updateNpcSpellsEffect
       parameters:
-      - description: Id
+      - description: ID
         in: path
-        name: id
+        name: ID
         required: true
         type: integer
       - description: NpcSpellsEffect
@@ -19250,7 +19250,7 @@ paths:
       - application/json
       operationId: deleteNpcSpellsEffectsEntry
       parameters:
-      - description: Id
+      - description: id
         in: path
         name: id
         required: true
@@ -19278,7 +19278,7 @@ paths:
       - application/json
       operationId: getNpcSpellsEffectsEntry
       parameters:
-      - description: Id
+      - description: id
         in: path
         name: id
         required: true
@@ -19317,9 +19317,9 @@ paths:
       - application/json
       operationId: updateNpcSpellsEffectsEntry
       parameters:
-      - description: Id
+      - description: ID
         in: path
-        name: id
+        name: ID
         required: true
         type: integer
       - description: NpcSpellsEffectsEntry
@@ -19467,7 +19467,7 @@ paths:
       - application/json
       operationId: deleteNpcSpellsEntry
       parameters:
-      - description: Id
+      - description: id
         in: path
         name: id
         required: true
@@ -19495,7 +19495,7 @@ paths:
       - application/json
       operationId: getNpcSpellsEntry
       parameters:
-      - description: Id
+      - description: id
         in: path
         name: id
         required: true
@@ -19534,9 +19534,9 @@ paths:
       - application/json
       operationId: updateNpcSpellsEntry
       parameters:
-      - description: Id
+      - description: ID
         in: path
-        name: id
+        name: ID
         required: true
         type: integer
       - description: NpcSpellsEntry
@@ -19599,7 +19599,7 @@ paths:
       - application/json
       operationId: deleteNpcType
       parameters:
-      - description: Id
+      - description: id
         in: path
         name: id
         required: true
@@ -19627,7 +19627,7 @@ paths:
       - application/json
       operationId: getNpcType
       parameters:
-      - description: Id
+      - description: id
         in: path
         name: id
         required: true
@@ -19666,9 +19666,9 @@ paths:
       - application/json
       operationId: updateNpcType
       parameters:
-      - description: Id
+      - description: ID
         in: path
-        name: id
+        name: ID
         required: true
         type: integer
       - description: NpcType
@@ -19816,7 +19816,7 @@ paths:
       - application/json
       operationId: deleteNpcTypesTint
       parameters:
-      - description: Id
+      - description: id
         in: path
         name: id
         required: true
@@ -19844,7 +19844,7 @@ paths:
       - application/json
       operationId: getNpcTypesTint
       parameters:
-      - description: Id
+      - description: id
         in: path
         name: id
         required: true
@@ -19883,9 +19883,9 @@ paths:
       - application/json
       operationId: updateNpcTypesTint
       parameters:
-      - description: Id
+      - description: ID
         in: path
-        name: id
+        name: ID
         required: true
         type: integer
       - description: NpcTypesTint
@@ -20033,7 +20033,7 @@ paths:
       - application/json
       operationId: deleteObject
       parameters:
-      - description: Id
+      - description: id
         in: path
         name: id
         required: true
@@ -20061,7 +20061,7 @@ paths:
       - application/json
       operationId: getObject
       parameters:
-      - description: Id
+      - description: id
         in: path
         name: id
         required: true
@@ -20100,9 +20100,9 @@ paths:
       - application/json
       operationId: updateObject
       parameters:
-      - description: Id
+      - description: ID
         in: path
-        name: id
+        name: ID
         required: true
         type: integer
       - description: Object
@@ -20250,7 +20250,7 @@ paths:
       - application/json
       operationId: deletePlayerTitleset
       parameters:
-      - description: Id
+      - description: id
         in: path
         name: id
         required: true
@@ -20278,7 +20278,7 @@ paths:
       - application/json
       operationId: getPlayerTitleset
       parameters:
-      - description: Id
+      - description: id
         in: path
         name: id
         required: true
@@ -20317,9 +20317,9 @@ paths:
       - application/json
       operationId: updatePlayerTitleset
       parameters:
-      - description: Id
+      - description: ID
         in: path
-        name: id
+        name: ID
         required: true
         type: integer
       - description: PlayerTitleset
@@ -20467,7 +20467,7 @@ paths:
       - application/json
       operationId: deleteReport
       parameters:
-      - description: Id
+      - description: id
         in: path
         name: id
         required: true
@@ -20495,7 +20495,7 @@ paths:
       - application/json
       operationId: getReport
       parameters:
-      - description: Id
+      - description: id
         in: path
         name: id
         required: true
@@ -20534,9 +20534,9 @@ paths:
       - application/json
       operationId: updateReport
       parameters:
-      - description: Id
+      - description: ID
         in: path
-        name: id
+        name: ID
         required: true
         type: integer
       - description: Report
@@ -20684,7 +20684,7 @@ paths:
       - application/json
       operationId: deleteRespawnTime
       parameters:
-      - description: Id
+      - description: id
         in: path
         name: id
         required: true
@@ -20712,7 +20712,7 @@ paths:
       - application/json
       operationId: getRespawnTime
       parameters:
-      - description: Id
+      - description: id
         in: path
         name: id
         required: true
@@ -20751,9 +20751,9 @@ paths:
       - application/json
       operationId: updateRespawnTime
       parameters:
-      - description: Id
+      - description: ID
         in: path
-        name: id
+        name: ID
         required: true
         type: integer
       - description: RespawnTime
@@ -20901,7 +20901,7 @@ paths:
       - application/json
       operationId: deleteSaylink
       parameters:
-      - description: Id
+      - description: id
         in: path
         name: id
         required: true
@@ -20929,7 +20929,7 @@ paths:
       - application/json
       operationId: getSaylink
       parameters:
-      - description: Id
+      - description: id
         in: path
         name: id
         required: true
@@ -20968,9 +20968,9 @@ paths:
       - application/json
       operationId: updateSaylink
       parameters:
-      - description: Id
+      - description: ID
         in: path
-        name: id
+        name: ID
         required: true
         type: integer
       - description: Saylink
@@ -21118,7 +21118,7 @@ paths:
       - application/json
       operationId: deleteServerScheduledEvent
       parameters:
-      - description: Id
+      - description: id
         in: path
         name: id
         required: true
@@ -21146,7 +21146,7 @@ paths:
       - application/json
       operationId: getServerScheduledEvent
       parameters:
-      - description: Id
+      - description: id
         in: path
         name: id
         required: true
@@ -21185,9 +21185,9 @@ paths:
       - application/json
       operationId: updateServerScheduledEvent
       parameters:
-      - description: Id
+      - description: ID
         in: path
-        name: id
+        name: ID
         required: true
         type: integer
       - description: ServerScheduledEvent
@@ -21335,7 +21335,7 @@ paths:
       - application/json
       operationId: deleteSpawn2
       parameters:
-      - description: Id
+      - description: id
         in: path
         name: id
         required: true
@@ -21363,7 +21363,7 @@ paths:
       - application/json
       operationId: getSpawn2
       parameters:
-      - description: Id
+      - description: id
         in: path
         name: id
         required: true
@@ -21402,9 +21402,9 @@ paths:
       - application/json
       operationId: updateSpawn2
       parameters:
-      - description: Id
+      - description: ID
         in: path
-        name: id
+        name: ID
         required: true
         type: integer
       - description: Spawn2
@@ -21552,7 +21552,7 @@ paths:
       - application/json
       operationId: deleteSpawnCondition
       parameters:
-      - description: Id
+      - description: id
         in: path
         name: id
         required: true
@@ -21580,7 +21580,7 @@ paths:
       - application/json
       operationId: getSpawnCondition
       parameters:
-      - description: Id
+      - description: id
         in: path
         name: id
         required: true
@@ -21619,9 +21619,9 @@ paths:
       - application/json
       operationId: updateSpawnCondition
       parameters:
-      - description: Id
+      - description: ID
         in: path
-        name: id
+        name: ID
         required: true
         type: integer
       - description: SpawnCondition
@@ -21684,7 +21684,7 @@ paths:
       - application/json
       operationId: deleteSpawnConditionValue
       parameters:
-      - description: Id
+      - description: id
         in: path
         name: id
         required: true
@@ -21712,7 +21712,7 @@ paths:
       - application/json
       operationId: getSpawnConditionValue
       parameters:
-      - description: Id
+      - description: id
         in: path
         name: id
         required: true
@@ -21751,9 +21751,9 @@ paths:
       - application/json
       operationId: updateSpawnConditionValue
       parameters:
-      - description: Id
+      - description: ID
         in: path
-        name: id
+        name: ID
         required: true
         type: integer
       - description: SpawnConditionValue
@@ -21986,7 +21986,7 @@ paths:
       - application/json
       operationId: deleteSpawnEvent
       parameters:
-      - description: Id
+      - description: id
         in: path
         name: id
         required: true
@@ -22014,7 +22014,7 @@ paths:
       - application/json
       operationId: getSpawnEvent
       parameters:
-      - description: Id
+      - description: id
         in: path
         name: id
         required: true
@@ -22053,9 +22053,9 @@ paths:
       - application/json
       operationId: updateSpawnEvent
       parameters:
-      - description: Id
+      - description: ID
         in: path
-        name: id
+        name: ID
         required: true
         type: integer
       - description: SpawnEvent
@@ -22203,7 +22203,7 @@ paths:
       - application/json
       operationId: deleteSpawngroup
       parameters:
-      - description: Id
+      - description: id
         in: path
         name: id
         required: true
@@ -22231,7 +22231,7 @@ paths:
       - application/json
       operationId: getSpawngroup
       parameters:
-      - description: Id
+      - description: id
         in: path
         name: id
         required: true
@@ -22270,9 +22270,9 @@ paths:
       - application/json
       operationId: updateSpawngroup
       parameters:
-      - description: Id
+      - description: ID
         in: path
-        name: id
+        name: ID
         required: true
         type: integer
       - description: Spawngroup
@@ -22420,7 +22420,7 @@ paths:
       - application/json
       operationId: deleteSpellsNew
       parameters:
-      - description: Id
+      - description: id
         in: path
         name: id
         required: true
@@ -22448,7 +22448,7 @@ paths:
       - application/json
       operationId: getSpellsNew
       parameters:
-      - description: Id
+      - description: id
         in: path
         name: id
         required: true
@@ -22487,9 +22487,9 @@ paths:
       - application/json
       operationId: updateSpellsNew
       parameters:
-      - description: Id
+      - description: ID
         in: path
-        name: id
+        name: ID
         required: true
         type: integer
       - description: SpellsNew
@@ -22637,7 +22637,7 @@ paths:
       - application/json
       operationId: deleteStartingItem
       parameters:
-      - description: Id
+      - description: id
         in: path
         name: id
         required: true
@@ -22665,7 +22665,7 @@ paths:
       - application/json
       operationId: getStartingItem
       parameters:
-      - description: Id
+      - description: id
         in: path
         name: id
         required: true
@@ -22704,9 +22704,9 @@ paths:
       - application/json
       operationId: updateStartingItem
       parameters:
-      - description: Id
+      - description: ID
         in: path
-        name: id
+        name: ID
         required: true
         type: integer
       - description: StartingItem
@@ -22854,7 +22854,7 @@ paths:
       - application/json
       operationId: deleteTask
       parameters:
-      - description: Id
+      - description: id
         in: path
         name: id
         required: true
@@ -22882,7 +22882,7 @@ paths:
       - application/json
       operationId: getTask
       parameters:
-      - description: Id
+      - description: id
         in: path
         name: id
         required: true
@@ -22921,9 +22921,9 @@ paths:
       - application/json
       operationId: updateTask
       parameters:
-      - description: Id
+      - description: ID
         in: path
-        name: id
+        name: ID
         required: true
         type: integer
       - description: Task
@@ -23071,7 +23071,7 @@ paths:
       - application/json
       operationId: deleteTaskset
       parameters:
-      - description: Id
+      - description: id
         in: path
         name: id
         required: true
@@ -23099,7 +23099,7 @@ paths:
       - application/json
       operationId: getTaskset
       parameters:
-      - description: Id
+      - description: id
         in: path
         name: id
         required: true
@@ -23138,9 +23138,9 @@ paths:
       - application/json
       operationId: updateTaskset
       parameters:
-      - description: Id
+      - description: ID
         in: path
-        name: id
+        name: ID
         required: true
         type: integer
       - description: Taskset
@@ -23288,7 +23288,7 @@ paths:
       - application/json
       operationId: deleteTitle
       parameters:
-      - description: Id
+      - description: id
         in: path
         name: id
         required: true
@@ -23316,7 +23316,7 @@ paths:
       - application/json
       operationId: getTitle
       parameters:
-      - description: Id
+      - description: id
         in: path
         name: id
         required: true
@@ -23355,9 +23355,9 @@ paths:
       - application/json
       operationId: updateTitle
       parameters:
-      - description: Id
+      - description: ID
         in: path
-        name: id
+        name: ID
         required: true
         type: integer
       - description: Title
@@ -23505,7 +23505,7 @@ paths:
       - application/json
       operationId: deleteTradeskillRecipe
       parameters:
-      - description: Id
+      - description: id
         in: path
         name: id
         required: true
@@ -23533,7 +23533,7 @@ paths:
       - application/json
       operationId: getTradeskillRecipe
       parameters:
-      - description: Id
+      - description: id
         in: path
         name: id
         required: true
@@ -23572,9 +23572,9 @@ paths:
       - application/json
       operationId: updateTradeskillRecipe
       parameters:
-      - description: Id
+      - description: ID
         in: path
-        name: id
+        name: ID
         required: true
         type: integer
       - description: TradeskillRecipe
@@ -23722,7 +23722,7 @@ paths:
       - application/json
       operationId: deleteTradeskillRecipeEntry
       parameters:
-      - description: Id
+      - description: id
         in: path
         name: id
         required: true
@@ -23750,7 +23750,7 @@ paths:
       - application/json
       operationId: getTradeskillRecipeEntry
       parameters:
-      - description: Id
+      - description: id
         in: path
         name: id
         required: true
@@ -23789,9 +23789,9 @@ paths:
       - application/json
       operationId: updateTradeskillRecipeEntry
       parameters:
-      - description: Id
+      - description: ID
         in: path
-        name: id
+        name: ID
         required: true
         type: integer
       - description: TradeskillRecipeEntry
@@ -23939,7 +23939,7 @@ paths:
       - application/json
       operationId: deleteTrap
       parameters:
-      - description: Id
+      - description: id
         in: path
         name: id
         required: true
@@ -23967,7 +23967,7 @@ paths:
       - application/json
       operationId: getTrap
       parameters:
-      - description: Id
+      - description: id
         in: path
         name: id
         required: true
@@ -24006,9 +24006,9 @@ paths:
       - application/json
       operationId: updateTrap
       parameters:
-      - description: Id
+      - description: ID
         in: path
-        name: id
+        name: ID
         required: true
         type: integer
       - description: Trap
@@ -24156,7 +24156,7 @@ paths:
       - application/json
       operationId: deleteTribute
       parameters:
-      - description: Id
+      - description: id
         in: path
         name: id
         required: true
@@ -24184,7 +24184,7 @@ paths:
       - application/json
       operationId: getTribute
       parameters:
-      - description: Id
+      - description: id
         in: path
         name: id
         required: true
@@ -24223,9 +24223,9 @@ paths:
       - application/json
       operationId: updateTribute
       parameters:
-      - description: Id
+      - description: ID
         in: path
-        name: id
+        name: ID
         required: true
         type: integer
       - description: Tribute
@@ -24373,7 +24373,7 @@ paths:
       - application/json
       operationId: deleteZone
       parameters:
-      - description: Id
+      - description: id
         in: path
         name: id
         required: true
@@ -24401,7 +24401,7 @@ paths:
       - application/json
       operationId: getZone
       parameters:
-      - description: Id
+      - description: id
         in: path
         name: id
         required: true
@@ -24440,9 +24440,9 @@ paths:
       - application/json
       operationId: updateZone
       parameters:
-      - description: Id
+      - description: ID
         in: path
-        name: id
+        name: ID
         required: true
         type: integer
       - description: Zone
@@ -24505,7 +24505,7 @@ paths:
       - application/json
       operationId: deleteZonePoint
       parameters:
-      - description: Id
+      - description: id
         in: path
         name: id
         required: true
@@ -24533,7 +24533,7 @@ paths:
       - application/json
       operationId: getZonePoint
       parameters:
-      - description: Id
+      - description: id
         in: path
         name: id
         required: true
@@ -24572,9 +24572,9 @@ paths:
       - application/json
       operationId: updateZonePoint
       parameters:
-      - description: Id
+      - description: ID
         in: path
-        name: id
+        name: ID
         required: true
         type: integer
       - description: ZonePoint
