@@ -1,10 +1,10 @@
 package crudcontrollers
 
 import (
+	"fmt"
 	"github.com/Akkadius/spire/internal/database"
 	"github.com/Akkadius/spire/internal/http/routes"
 	"github.com/Akkadius/spire/internal/models"
-	"fmt"
 	"github.com/labstack/echo/v4"
 	"github.com/sirupsen/logrus"
 	"net/http"
@@ -125,26 +125,44 @@ func (e *Spawn2Controller) getSpawn2(c echo.Context) error {
 // @Failure 500 {string} string "Error updating entity"
 // @Router /spawn_2/{id} [patch]
 func (e *Spawn2Controller) updateSpawn2(c echo.Context) error {
-	spawn2 := new(models.Spawn2)
-	if err := c.Bind(spawn2); err != nil {
+	request := new(models.Spawn2)
+	if err := c.Bind(request); err != nil {
 		return c.JSON(
 			http.StatusInternalServerError,
 			echo.Map{"error": fmt.Sprintf("Error binding to entity [%v]", err.Error())},
 		)
 	}
 
-	entity := models.Spawn2{}
-	err := e.db.Get(models.Spawn2{}, c).Model(&models.Spawn2{}).First(&entity, spawn2.ID).Error
-	if err != nil || spawn2.ID == 0 {
-		return c.JSON(http.StatusNotFound, echo.Map{"error": "Cannot find entity"})
+	var params []interface{}
+	var keys []string
+
+	// primary key param
+	id, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Cannot find param [ID]"})
+	}
+	params = append(params, id)
+	keys = append(keys, "id = ?")
+
+	// query builder
+	var result models.Spawn2
+	query := e.db.QueryContext(models.Spawn2{}, c)
+	for i, _ := range keys {
+		query = query.Where(keys[i], params[i])
 	}
 
-	err = e.db.Get(models.Spawn2{}, c).Model(&entity).Select("*").Updates(&spawn2).Error
+	// grab first entry
+	err = query.First(&result).Error
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Cannot find entity [%s]", err.Error())})
+	}
+
+	err = query.Select("*").Updates(&request).Error
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error updating entity [%v]", err.Error())})
 	}
 
-	return c.JSON(http.StatusOK, spawn2)
+	return c.JSON(http.StatusOK, request)
 }
 
 // createSpawn2 godoc

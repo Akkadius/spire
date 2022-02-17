@@ -1,10 +1,10 @@
 package crudcontrollers
 
 import (
+	"fmt"
 	"github.com/Akkadius/spire/internal/database"
 	"github.com/Akkadius/spire/internal/http/routes"
 	"github.com/Akkadius/spire/internal/models"
-	"fmt"
 	"github.com/labstack/echo/v4"
 	"github.com/sirupsen/logrus"
 	"net/http"
@@ -147,26 +147,66 @@ func (e *SpawnConditionValueController) getSpawnConditionValue(c echo.Context) e
 // @Failure 500 {string} string "Error updating entity"
 // @Router /spawn_condition_value/{id} [patch]
 func (e *SpawnConditionValueController) updateSpawnConditionValue(c echo.Context) error {
-	spawnConditionValue := new(models.SpawnConditionValue)
-	if err := c.Bind(spawnConditionValue); err != nil {
+	request := new(models.SpawnConditionValue)
+	if err := c.Bind(request); err != nil {
 		return c.JSON(
 			http.StatusInternalServerError,
 			echo.Map{"error": fmt.Sprintf("Error binding to entity [%v]", err.Error())},
 		)
 	}
 
-	entity := models.SpawnConditionValue{}
-	err := e.db.Get(models.SpawnConditionValue{}, c).Model(&models.SpawnConditionValue{}).First(&entity, spawnConditionValue.ID).Error
-	if err != nil || spawnConditionValue.ID == 0 {
-		return c.JSON(http.StatusNotFound, echo.Map{"error": "Cannot find entity"})
+	var params []interface{}
+	var keys []string
+
+	// primary key param
+	id, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Cannot find param [ID]"})
+	}
+	params = append(params, id)
+	keys = append(keys, "id = ?")
+
+	// key param [zone] position [3] type [varchar]
+	if len(c.QueryParam("zone")) > 0 {
+		zoneParam, err := strconv.Atoi(c.QueryParam("zone"))
+		if err != nil {
+			return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error parsing query param [zone] err [%s]", err.Error())})
+		}
+
+		params = append(params, zoneParam)
+		keys = append(keys, "zone = ?")
 	}
 
-	err = e.db.Get(models.SpawnConditionValue{}, c).Model(&entity).Select("*").Updates(&spawnConditionValue).Error
+	// key param [instance_id] position [4] type [int]
+	if len(c.QueryParam("instance_id")) > 0 {
+		instanceIdParam, err := strconv.Atoi(c.QueryParam("instance_id"))
+		if err != nil {
+			return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error parsing query param [instance_id] err [%s]", err.Error())})
+		}
+
+		params = append(params, instanceIdParam)
+		keys = append(keys, "instance_id = ?")
+	}
+
+	// query builder
+	var result models.SpawnConditionValue
+	query := e.db.QueryContext(models.SpawnConditionValue{}, c)
+	for i, _ := range keys {
+		query = query.Where(keys[i], params[i])
+	}
+
+	// grab first entry
+	err = query.First(&result).Error
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Cannot find entity [%s]", err.Error())})
+	}
+
+	err = query.Select("*").Updates(&request).Error
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error updating entity [%v]", err.Error())})
 	}
 
-	return c.JSON(http.StatusOK, spawnConditionValue)
+	return c.JSON(http.StatusOK, request)
 }
 
 // createSpawnConditionValue godoc

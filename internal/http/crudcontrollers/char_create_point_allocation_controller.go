@@ -1,10 +1,10 @@
 package crudcontrollers
 
 import (
+	"fmt"
 	"github.com/Akkadius/spire/internal/database"
 	"github.com/Akkadius/spire/internal/http/routes"
 	"github.com/Akkadius/spire/internal/models"
-	"fmt"
 	"github.com/labstack/echo/v4"
 	"github.com/sirupsen/logrus"
 	"net/http"
@@ -125,26 +125,44 @@ func (e *CharCreatePointAllocationController) getCharCreatePointAllocation(c ech
 // @Failure 500 {string} string "Error updating entity"
 // @Router /char_create_point_allocation/{id} [patch]
 func (e *CharCreatePointAllocationController) updateCharCreatePointAllocation(c echo.Context) error {
-	charCreatePointAllocation := new(models.CharCreatePointAllocation)
-	if err := c.Bind(charCreatePointAllocation); err != nil {
+	request := new(models.CharCreatePointAllocation)
+	if err := c.Bind(request); err != nil {
 		return c.JSON(
 			http.StatusInternalServerError,
 			echo.Map{"error": fmt.Sprintf("Error binding to entity [%v]", err.Error())},
 		)
 	}
 
-	entity := models.CharCreatePointAllocation{}
-	err := e.db.Get(models.CharCreatePointAllocation{}, c).Model(&models.CharCreatePointAllocation{}).First(&entity, charCreatePointAllocation.ID).Error
-	if err != nil || charCreatePointAllocation.ID == 0 {
-		return c.JSON(http.StatusNotFound, echo.Map{"error": "Cannot find entity"})
+	var params []interface{}
+	var keys []string
+
+	// primary key param
+	id, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Cannot find param [ID]"})
+	}
+	params = append(params, id)
+	keys = append(keys, "id = ?")
+
+	// query builder
+	var result models.CharCreatePointAllocation
+	query := e.db.QueryContext(models.CharCreatePointAllocation{}, c)
+	for i, _ := range keys {
+		query = query.Where(keys[i], params[i])
 	}
 
-	err = e.db.Get(models.CharCreatePointAllocation{}, c).Model(&entity).Select("*").Updates(&charCreatePointAllocation).Error
+	// grab first entry
+	err = query.First(&result).Error
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Cannot find entity [%s]", err.Error())})
+	}
+
+	err = query.Select("*").Updates(&request).Error
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error updating entity [%v]", err.Error())})
 	}
 
-	return c.JSON(http.StatusOK, charCreatePointAllocation)
+	return c.JSON(http.StatusOK, request)
 }
 
 // createCharCreatePointAllocation godoc

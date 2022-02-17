@@ -1,10 +1,10 @@
 package crudcontrollers
 
 import (
+	"fmt"
 	"github.com/Akkadius/spire/internal/database"
 	"github.com/Akkadius/spire/internal/http/routes"
 	"github.com/Akkadius/spire/internal/models"
-	"fmt"
 	"github.com/labstack/echo/v4"
 	"github.com/sirupsen/logrus"
 	"net/http"
@@ -147,26 +147,66 @@ func (e *CharacterBandolierController) getCharacterBandolier(c echo.Context) err
 // @Failure 500 {string} string "Error updating entity"
 // @Router /character_bandolier/{id} [patch]
 func (e *CharacterBandolierController) updateCharacterBandolier(c echo.Context) error {
-	characterBandolier := new(models.CharacterBandolier)
-	if err := c.Bind(characterBandolier); err != nil {
+	request := new(models.CharacterBandolier)
+	if err := c.Bind(request); err != nil {
 		return c.JSON(
 			http.StatusInternalServerError,
 			echo.Map{"error": fmt.Sprintf("Error binding to entity [%v]", err.Error())},
 		)
 	}
 
-	entity := models.CharacterBandolier{}
-	err := e.db.Get(models.CharacterBandolier{}, c).Model(&models.CharacterBandolier{}).First(&entity, characterBandolier.ID).Error
-	if err != nil || characterBandolier.ID == 0 {
-		return c.JSON(http.StatusNotFound, echo.Map{"error": "Cannot find entity"})
+	var params []interface{}
+	var keys []string
+
+	// primary key param
+	id, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Cannot find param [ID]"})
+	}
+	params = append(params, id)
+	keys = append(keys, "id = ?")
+
+	// key param [bandolier_id] position [2] type [tinyint]
+	if len(c.QueryParam("bandolier_id")) > 0 {
+		bandolierIdParam, err := strconv.Atoi(c.QueryParam("bandolier_id"))
+		if err != nil {
+			return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error parsing query param [bandolier_id] err [%s]", err.Error())})
+		}
+
+		params = append(params, bandolierIdParam)
+		keys = append(keys, "bandolier_id = ?")
 	}
 
-	err = e.db.Get(models.CharacterBandolier{}, c).Model(&entity).Select("*").Updates(&characterBandolier).Error
+	// key param [bandolier_slot] position [3] type [tinyint]
+	if len(c.QueryParam("bandolier_slot")) > 0 {
+		bandolierSlotParam, err := strconv.Atoi(c.QueryParam("bandolier_slot"))
+		if err != nil {
+			return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error parsing query param [bandolier_slot] err [%s]", err.Error())})
+		}
+
+		params = append(params, bandolierSlotParam)
+		keys = append(keys, "bandolier_slot = ?")
+	}
+
+	// query builder
+	var result models.CharacterBandolier
+	query := e.db.QueryContext(models.CharacterBandolier{}, c)
+	for i, _ := range keys {
+		query = query.Where(keys[i], params[i])
+	}
+
+	// grab first entry
+	err = query.First(&result).Error
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Cannot find entity [%s]", err.Error())})
+	}
+
+	err = query.Select("*").Updates(&request).Error
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error updating entity [%v]", err.Error())})
 	}
 
-	return c.JSON(http.StatusOK, characterBandolier)
+	return c.JSON(http.StatusOK, request)
 }
 
 // createCharacterBandolier godoc

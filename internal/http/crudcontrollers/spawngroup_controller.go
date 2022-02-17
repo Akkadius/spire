@@ -1,10 +1,10 @@
 package crudcontrollers
 
 import (
+	"fmt"
 	"github.com/Akkadius/spire/internal/database"
 	"github.com/Akkadius/spire/internal/http/routes"
 	"github.com/Akkadius/spire/internal/models"
-	"fmt"
 	"github.com/labstack/echo/v4"
 	"github.com/sirupsen/logrus"
 	"net/http"
@@ -125,26 +125,44 @@ func (e *SpawngroupController) getSpawngroup(c echo.Context) error {
 // @Failure 500 {string} string "Error updating entity"
 // @Router /spawngroup/{id} [patch]
 func (e *SpawngroupController) updateSpawngroup(c echo.Context) error {
-	spawngroup := new(models.Spawngroup)
-	if err := c.Bind(spawngroup); err != nil {
+	request := new(models.Spawngroup)
+	if err := c.Bind(request); err != nil {
 		return c.JSON(
 			http.StatusInternalServerError,
 			echo.Map{"error": fmt.Sprintf("Error binding to entity [%v]", err.Error())},
 		)
 	}
 
-	entity := models.Spawngroup{}
-	err := e.db.Get(models.Spawngroup{}, c).Model(&models.Spawngroup{}).First(&entity, spawngroup.ID).Error
-	if err != nil || spawngroup.ID == 0 {
-		return c.JSON(http.StatusNotFound, echo.Map{"error": "Cannot find entity"})
+	var params []interface{}
+	var keys []string
+
+	// primary key param
+	id, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Cannot find param [ID]"})
+	}
+	params = append(params, id)
+	keys = append(keys, "id = ?")
+
+	// query builder
+	var result models.Spawngroup
+	query := e.db.QueryContext(models.Spawngroup{}, c)
+	for i, _ := range keys {
+		query = query.Where(keys[i], params[i])
 	}
 
-	err = e.db.Get(models.Spawngroup{}, c).Model(&entity).Select("*").Updates(&spawngroup).Error
+	// grab first entry
+	err = query.First(&result).Error
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Cannot find entity [%s]", err.Error())})
+	}
+
+	err = query.Select("*").Updates(&request).Error
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error updating entity [%v]", err.Error())})
 	}
 
-	return c.JSON(http.StatusOK, spawngroup)
+	return c.JSON(http.StatusOK, request)
 }
 
 // createSpawngroup godoc

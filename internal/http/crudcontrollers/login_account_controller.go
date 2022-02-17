@@ -1,10 +1,10 @@
 package crudcontrollers
 
 import (
+	"fmt"
 	"github.com/Akkadius/spire/internal/database"
 	"github.com/Akkadius/spire/internal/http/routes"
 	"github.com/Akkadius/spire/internal/models"
-	"fmt"
 	"github.com/labstack/echo/v4"
 	"github.com/sirupsen/logrus"
 	"net/http"
@@ -125,26 +125,44 @@ func (e *LoginAccountController) getLoginAccount(c echo.Context) error {
 // @Failure 500 {string} string "Error updating entity"
 // @Router /login_account/{id} [patch]
 func (e *LoginAccountController) updateLoginAccount(c echo.Context) error {
-	loginAccount := new(models.LoginAccount)
-	if err := c.Bind(loginAccount); err != nil {
+	request := new(models.LoginAccount)
+	if err := c.Bind(request); err != nil {
 		return c.JSON(
 			http.StatusInternalServerError,
 			echo.Map{"error": fmt.Sprintf("Error binding to entity [%v]", err.Error())},
 		)
 	}
 
-	entity := models.LoginAccount{}
-	err := e.db.Get(models.LoginAccount{}, c).Model(&models.LoginAccount{}).First(&entity, loginAccount.ID).Error
-	if err != nil || loginAccount.ID == 0 {
-		return c.JSON(http.StatusNotFound, echo.Map{"error": "Cannot find entity"})
+	var params []interface{}
+	var keys []string
+
+	// primary key param
+	id, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Cannot find param [ID]"})
+	}
+	params = append(params, id)
+	keys = append(keys, "id = ?")
+
+	// query builder
+	var result models.LoginAccount
+	query := e.db.QueryContext(models.LoginAccount{}, c)
+	for i, _ := range keys {
+		query = query.Where(keys[i], params[i])
 	}
 
-	err = e.db.Get(models.LoginAccount{}, c).Model(&entity).Select("*").Updates(&loginAccount).Error
+	// grab first entry
+	err = query.First(&result).Error
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Cannot find entity [%s]", err.Error())})
+	}
+
+	err = query.Select("*").Updates(&request).Error
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error updating entity [%v]", err.Error())})
 	}
 
-	return c.JSON(http.StatusOK, loginAccount)
+	return c.JSON(http.StatusOK, request)
 }
 
 // createLoginAccount godoc

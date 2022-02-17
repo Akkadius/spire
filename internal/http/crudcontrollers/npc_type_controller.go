@@ -12,7 +12,7 @@ import (
 )
 
 type NpcTypeController struct {
-	db     *database.DatabaseResolver
+	db	 *database.DatabaseResolver
 	logger *logrus.Logger
 }
 
@@ -21,7 +21,7 @@ func NewNpcTypeController(
 	logger *logrus.Logger,
 ) *NpcTypeController {
 	return &NpcTypeController{
-		db:     db,
+		db:	 db,
 		logger: logger,
 	}
 }

@@ -1,10 +1,10 @@
 package crudcontrollers
 
 import (
+	"fmt"
 	"github.com/Akkadius/spire/internal/database"
 	"github.com/Akkadius/spire/internal/http/routes"
 	"github.com/Akkadius/spire/internal/models"
-	"fmt"
 	"github.com/labstack/echo/v4"
 	"github.com/sirupsen/logrus"
 	"net/http"
@@ -125,26 +125,44 @@ func (e *ZonePointController) getZonePoint(c echo.Context) error {
 // @Failure 500 {string} string "Error updating entity"
 // @Router /zone_point/{id} [patch]
 func (e *ZonePointController) updateZonePoint(c echo.Context) error {
-	zonePoint := new(models.ZonePoint)
-	if err := c.Bind(zonePoint); err != nil {
+	request := new(models.ZonePoint)
+	if err := c.Bind(request); err != nil {
 		return c.JSON(
 			http.StatusInternalServerError,
 			echo.Map{"error": fmt.Sprintf("Error binding to entity [%v]", err.Error())},
 		)
 	}
 
-	entity := models.ZonePoint{}
-	err := e.db.Get(models.ZonePoint{}, c).Model(&models.ZonePoint{}).First(&entity, zonePoint.ID).Error
-	if err != nil || zonePoint.ID == 0 {
-		return c.JSON(http.StatusNotFound, echo.Map{"error": "Cannot find entity"})
+	var params []interface{}
+	var keys []string
+
+	// primary key param
+	id, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Cannot find param [ID]"})
+	}
+	params = append(params, id)
+	keys = append(keys, "id = ?")
+
+	// query builder
+	var result models.ZonePoint
+	query := e.db.QueryContext(models.ZonePoint{}, c)
+	for i, _ := range keys {
+		query = query.Where(keys[i], params[i])
 	}
 
-	err = e.db.Get(models.ZonePoint{}, c).Model(&entity).Select("*").Updates(&zonePoint).Error
+	// grab first entry
+	err = query.First(&result).Error
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Cannot find entity [%s]", err.Error())})
+	}
+
+	err = query.Select("*").Updates(&request).Error
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error updating entity [%v]", err.Error())})
 	}
 
-	return c.JSON(http.StatusOK, zonePoint)
+	return c.JSON(http.StatusOK, request)
 }
 
 // createZonePoint godoc

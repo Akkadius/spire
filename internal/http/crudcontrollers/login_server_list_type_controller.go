@@ -1,10 +1,10 @@
 package crudcontrollers
 
 import (
+	"fmt"
 	"github.com/Akkadius/spire/internal/database"
 	"github.com/Akkadius/spire/internal/http/routes"
 	"github.com/Akkadius/spire/internal/models"
-	"fmt"
 	"github.com/labstack/echo/v4"
 	"github.com/sirupsen/logrus"
 	"net/http"
@@ -125,26 +125,44 @@ func (e *LoginServerListTypeController) getLoginServerListType(c echo.Context) e
 // @Failure 500 {string} string "Error updating entity"
 // @Router /login_server_list_type/{id} [patch]
 func (e *LoginServerListTypeController) updateLoginServerListType(c echo.Context) error {
-	loginServerListType := new(models.LoginServerListType)
-	if err := c.Bind(loginServerListType); err != nil {
+	request := new(models.LoginServerListType)
+	if err := c.Bind(request); err != nil {
 		return c.JSON(
 			http.StatusInternalServerError,
 			echo.Map{"error": fmt.Sprintf("Error binding to entity [%v]", err.Error())},
 		)
 	}
 
-	entity := models.LoginServerListType{}
-	err := e.db.Get(models.LoginServerListType{}, c).Model(&models.LoginServerListType{}).First(&entity, loginServerListType.ID).Error
-	if err != nil || loginServerListType.ID == 0 {
-		return c.JSON(http.StatusNotFound, echo.Map{"error": "Cannot find entity"})
+	var params []interface{}
+	var keys []string
+
+	// primary key param
+	id, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Cannot find param [ID]"})
+	}
+	params = append(params, id)
+	keys = append(keys, "id = ?")
+
+	// query builder
+	var result models.LoginServerListType
+	query := e.db.QueryContext(models.LoginServerListType{}, c)
+	for i, _ := range keys {
+		query = query.Where(keys[i], params[i])
 	}
 
-	err = e.db.Get(models.LoginServerListType{}, c).Model(&entity).Select("*").Updates(&loginServerListType).Error
+	// grab first entry
+	err = query.First(&result).Error
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Cannot find entity [%s]", err.Error())})
+	}
+
+	err = query.Select("*").Updates(&request).Error
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error updating entity [%v]", err.Error())})
 	}
 
-	return c.JSON(http.StatusOK, loginServerListType)
+	return c.JSON(http.StatusOK, request)
 }
 
 // createLoginServerListType godoc

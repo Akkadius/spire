@@ -1,10 +1,10 @@
 package crudcontrollers
 
 import (
+	"fmt"
 	"github.com/Akkadius/spire/internal/database"
 	"github.com/Akkadius/spire/internal/http/routes"
 	"github.com/Akkadius/spire/internal/models"
-	"fmt"
 	"github.com/labstack/echo/v4"
 	"github.com/sirupsen/logrus"
 	"net/http"
@@ -136,26 +136,55 @@ func (e *RespawnTimeController) getRespawnTime(c echo.Context) error {
 // @Failure 500 {string} string "Error updating entity"
 // @Router /respawn_time/{id} [patch]
 func (e *RespawnTimeController) updateRespawnTime(c echo.Context) error {
-	respawnTime := new(models.RespawnTime)
-	if err := c.Bind(respawnTime); err != nil {
+	request := new(models.RespawnTime)
+	if err := c.Bind(request); err != nil {
 		return c.JSON(
 			http.StatusInternalServerError,
 			echo.Map{"error": fmt.Sprintf("Error binding to entity [%v]", err.Error())},
 		)
 	}
 
-	entity := models.RespawnTime{}
-	err := e.db.Get(models.RespawnTime{}, c).Model(&models.RespawnTime{}).First(&entity, respawnTime.ID).Error
-	if err != nil || respawnTime.ID == 0 {
-		return c.JSON(http.StatusNotFound, echo.Map{"error": "Cannot find entity"})
+	var params []interface{}
+	var keys []string
+
+	// primary key param
+	id, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Cannot find param [ID]"})
+	}
+	params = append(params, id)
+	keys = append(keys, "id = ?")
+
+	// key param [instance_id] position [4] type [smallint]
+	if len(c.QueryParam("instance_id")) > 0 {
+		instanceIdParam, err := strconv.Atoi(c.QueryParam("instance_id"))
+		if err != nil {
+			return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error parsing query param [instance_id] err [%s]", err.Error())})
+		}
+
+		params = append(params, instanceIdParam)
+		keys = append(keys, "instance_id = ?")
 	}
 
-	err = e.db.Get(models.RespawnTime{}, c).Model(&entity).Select("*").Updates(&respawnTime).Error
+	// query builder
+	var result models.RespawnTime
+	query := e.db.QueryContext(models.RespawnTime{}, c)
+	for i, _ := range keys {
+		query = query.Where(keys[i], params[i])
+	}
+
+	// grab first entry
+	err = query.First(&result).Error
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Cannot find entity [%s]", err.Error())})
+	}
+
+	err = query.Select("*").Updates(&request).Error
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error updating entity [%v]", err.Error())})
 	}
 
-	return c.JSON(http.StatusOK, respawnTime)
+	return c.JSON(http.StatusOK, request)
 }
 
 // createRespawnTime godoc

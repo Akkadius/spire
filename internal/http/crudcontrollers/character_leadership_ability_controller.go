@@ -1,10 +1,10 @@
 package crudcontrollers
 
 import (
+	"fmt"
 	"github.com/Akkadius/spire/internal/database"
 	"github.com/Akkadius/spire/internal/http/routes"
 	"github.com/Akkadius/spire/internal/models"
-	"fmt"
 	"github.com/labstack/echo/v4"
 	"github.com/sirupsen/logrus"
 	"net/http"
@@ -136,26 +136,55 @@ func (e *CharacterLeadershipAbilityController) getCharacterLeadershipAbility(c e
 // @Failure 500 {string} string "Error updating entity"
 // @Router /character_leadership_ability/{id} [patch]
 func (e *CharacterLeadershipAbilityController) updateCharacterLeadershipAbility(c echo.Context) error {
-	characterLeadershipAbility := new(models.CharacterLeadershipAbility)
-	if err := c.Bind(characterLeadershipAbility); err != nil {
+	request := new(models.CharacterLeadershipAbility)
+	if err := c.Bind(request); err != nil {
 		return c.JSON(
 			http.StatusInternalServerError,
 			echo.Map{"error": fmt.Sprintf("Error binding to entity [%v]", err.Error())},
 		)
 	}
 
-	entity := models.CharacterLeadershipAbility{}
-	err := e.db.Get(models.CharacterLeadershipAbility{}, c).Model(&models.CharacterLeadershipAbility{}).First(&entity, characterLeadershipAbility.ID).Error
-	if err != nil || characterLeadershipAbility.ID == 0 {
-		return c.JSON(http.StatusNotFound, echo.Map{"error": "Cannot find entity"})
+	var params []interface{}
+	var keys []string
+
+	// primary key param
+	id, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Cannot find param [ID]"})
+	}
+	params = append(params, id)
+	keys = append(keys, "id = ?")
+
+	// key param [slot] position [2] type [smallint]
+	if len(c.QueryParam("slot")) > 0 {
+		slotParam, err := strconv.Atoi(c.QueryParam("slot"))
+		if err != nil {
+			return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error parsing query param [slot] err [%s]", err.Error())})
+		}
+
+		params = append(params, slotParam)
+		keys = append(keys, "slot = ?")
 	}
 
-	err = e.db.Get(models.CharacterLeadershipAbility{}, c).Model(&entity).Select("*").Updates(&characterLeadershipAbility).Error
+	// query builder
+	var result models.CharacterLeadershipAbility
+	query := e.db.QueryContext(models.CharacterLeadershipAbility{}, c)
+	for i, _ := range keys {
+		query = query.Where(keys[i], params[i])
+	}
+
+	// grab first entry
+	err = query.First(&result).Error
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Cannot find entity [%s]", err.Error())})
+	}
+
+	err = query.Select("*").Updates(&request).Error
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error updating entity [%v]", err.Error())})
 	}
 
-	return c.JSON(http.StatusOK, characterLeadershipAbility)
+	return c.JSON(http.StatusOK, request)
 }
 
 // createCharacterLeadershipAbility godoc

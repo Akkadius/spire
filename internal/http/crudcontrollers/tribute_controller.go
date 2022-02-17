@@ -1,10 +1,10 @@
 package crudcontrollers
 
 import (
+	"fmt"
 	"github.com/Akkadius/spire/internal/database"
 	"github.com/Akkadius/spire/internal/http/routes"
 	"github.com/Akkadius/spire/internal/models"
-	"fmt"
 	"github.com/labstack/echo/v4"
 	"github.com/sirupsen/logrus"
 	"net/http"
@@ -136,26 +136,55 @@ func (e *TributeController) getTribute(c echo.Context) error {
 // @Failure 500 {string} string "Error updating entity"
 // @Router /tribute/{id} [patch]
 func (e *TributeController) updateTribute(c echo.Context) error {
-	tribute := new(models.Tribute)
-	if err := c.Bind(tribute); err != nil {
+	request := new(models.Tribute)
+	if err := c.Bind(request); err != nil {
 		return c.JSON(
 			http.StatusInternalServerError,
 			echo.Map{"error": fmt.Sprintf("Error binding to entity [%v]", err.Error())},
 		)
 	}
 
-	entity := models.Tribute{}
-	err := e.db.Get(models.Tribute{}, c).Model(&models.Tribute{}).First(&entity, tribute.ID).Error
-	if err != nil || tribute.ID == 0 {
-		return c.JSON(http.StatusNotFound, echo.Map{"error": "Cannot find entity"})
+	var params []interface{}
+	var keys []string
+
+	// primary key param
+	id, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Cannot find param [ID]"})
+	}
+	params = append(params, id)
+	keys = append(keys, "id = ?")
+
+	// key param [isguild] position [5] type [tinyint]
+	if len(c.QueryParam("isguild")) > 0 {
+		isguildParam, err := strconv.Atoi(c.QueryParam("isguild"))
+		if err != nil {
+			return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error parsing query param [isguild] err [%s]", err.Error())})
+		}
+
+		params = append(params, isguildParam)
+		keys = append(keys, "isguild = ?")
 	}
 
-	err = e.db.Get(models.Tribute{}, c).Model(&entity).Select("*").Updates(&tribute).Error
+	// query builder
+	var result models.Tribute
+	query := e.db.QueryContext(models.Tribute{}, c)
+	for i, _ := range keys {
+		query = query.Where(keys[i], params[i])
+	}
+
+	// grab first entry
+	err = query.First(&result).Error
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Cannot find entity [%s]", err.Error())})
+	}
+
+	err = query.Select("*").Updates(&request).Error
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error updating entity [%v]", err.Error())})
 	}
 
-	return c.JSON(http.StatusOK, tribute)
+	return c.JSON(http.StatusOK, request)
 }
 
 // createTribute godoc

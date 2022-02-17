@@ -1,10 +1,10 @@
 package crudcontrollers
 
 import (
+	"fmt"
 	"github.com/Akkadius/spire/internal/database"
 	"github.com/Akkadius/spire/internal/http/routes"
 	"github.com/Akkadius/spire/internal/models"
-	"fmt"
 	"github.com/labstack/echo/v4"
 	"github.com/sirupsen/logrus"
 	"net/http"
@@ -136,26 +136,55 @@ func (e *CharacterDisciplineController) getCharacterDiscipline(c echo.Context) e
 // @Failure 500 {string} string "Error updating entity"
 // @Router /character_discipline/{id} [patch]
 func (e *CharacterDisciplineController) updateCharacterDiscipline(c echo.Context) error {
-	characterDiscipline := new(models.CharacterDiscipline)
-	if err := c.Bind(characterDiscipline); err != nil {
+	request := new(models.CharacterDiscipline)
+	if err := c.Bind(request); err != nil {
 		return c.JSON(
 			http.StatusInternalServerError,
 			echo.Map{"error": fmt.Sprintf("Error binding to entity [%v]", err.Error())},
 		)
 	}
 
-	entity := models.CharacterDiscipline{}
-	err := e.db.Get(models.CharacterDiscipline{}, c).Model(&models.CharacterDiscipline{}).First(&entity, characterDiscipline.ID).Error
-	if err != nil || characterDiscipline.ID == 0 {
-		return c.JSON(http.StatusNotFound, echo.Map{"error": "Cannot find entity"})
+	var params []interface{}
+	var keys []string
+
+	// primary key param
+	id, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Cannot find param [ID]"})
+	}
+	params = append(params, id)
+	keys = append(keys, "id = ?")
+
+	// key param [slot_id] position [2] type [smallint]
+	if len(c.QueryParam("slot_id")) > 0 {
+		slotIdParam, err := strconv.Atoi(c.QueryParam("slot_id"))
+		if err != nil {
+			return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error parsing query param [slot_id] err [%s]", err.Error())})
+		}
+
+		params = append(params, slotIdParam)
+		keys = append(keys, "slot_id = ?")
 	}
 
-	err = e.db.Get(models.CharacterDiscipline{}, c).Model(&entity).Select("*").Updates(&characterDiscipline).Error
+	// query builder
+	var result models.CharacterDiscipline
+	query := e.db.QueryContext(models.CharacterDiscipline{}, c)
+	for i, _ := range keys {
+		query = query.Where(keys[i], params[i])
+	}
+
+	// grab first entry
+	err = query.First(&result).Error
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Cannot find entity [%s]", err.Error())})
+	}
+
+	err = query.Select("*").Updates(&request).Error
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error updating entity [%v]", err.Error())})
 	}
 
-	return c.JSON(http.StatusOK, characterDiscipline)
+	return c.JSON(http.StatusOK, request)
 }
 
 // createCharacterDiscipline godoc
