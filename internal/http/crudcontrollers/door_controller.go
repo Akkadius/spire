@@ -12,7 +12,7 @@ import (
 )
 
 type DoorController struct {
-	db     *database.DatabaseResolver
+	db	 *database.DatabaseResolver
 	logger *logrus.Logger
 }
 
@@ -21,19 +21,19 @@ func NewDoorController(
 	logger *logrus.Logger,
 ) *DoorController {
 	return &DoorController{
-		db:     db,
+		db:	 db,
 		logger: logger,
 	}
 }
 
 func (e *DoorController) Routes() []*routes.Route {
 	return []*routes.Route{
-		routes.RegisterRoute(http.MethodDelete, "door/:door", e.deleteDoor, nil),
-		routes.RegisterRoute(http.MethodGet, "door/:door", e.getDoor, nil),
+		routes.RegisterRoute(http.MethodGet, "door/:id", e.getDoor, nil),
 		routes.RegisterRoute(http.MethodGet, "doors", e.listDoors, nil),
-		routes.RegisterRoute(http.MethodPost, "doors/bulk", e.getDoorsBulk, nil),
-		routes.RegisterRoute(http.MethodPatch, "door/:door", e.updateDoor, nil),
 		routes.RegisterRoute(http.MethodPut, "door", e.createDoor, nil),
+		routes.RegisterRoute(http.MethodDelete, "door/:id", e.deleteDoor, nil),
+		routes.RegisterRoute(http.MethodPatch, "door/:id", e.updateDoor, nil),
+		routes.RegisterRoute(http.MethodPost, "doors/bulk", e.getDoorsBulk, nil),
 	}
 }
 
@@ -70,7 +70,7 @@ func (e *DoorController) listDoors(c echo.Context) error {
 // @Accept json
 // @Produce json
 // @Tags Door
-// @Param id path int true "Id"
+// @Param id path int true "id"
 // @Param includes query string false "Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names "
 // @Param select query string false "Column names [.] separated to fetch specific fields in response"
 // @Success 200 {array} models.Door
@@ -79,17 +79,31 @@ func (e *DoorController) listDoors(c echo.Context) error {
 // @Failure 500 {string} string "Bad query request"
 // @Router /door/{id} [get]
 func (e *DoorController) getDoor(c echo.Context) error {
-	doorId, err := strconv.Atoi(c.Param("door"))
-	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Cannot find param"})
-	}
+	var params []interface{}
+	var keys []string
 
+	// primary key param
+	id, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Cannot find param [ID]"})
+	}
+	params = append(params, id)
+	keys = append(keys, "id = ?")
+
+	// query builder
 	var result models.Door
-	err = e.db.QueryContext(models.Door{}, c).First(&result, doorId).Error
-	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err})
+	query := e.db.QueryContext(models.Door{}, c)
+	for i, _ := range keys {
+		query = query.Where(keys[i], params[i])
 	}
 
+	// grab first entry
+	err = query.First(&result).Error
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
+	}
+
+	// couldn't find entity
 	if result.ID == 0 {
 		return c.JSON(http.StatusNotFound, echo.Map{"error": "Cannot find entity"})
 	}
@@ -103,7 +117,7 @@ func (e *DoorController) getDoor(c echo.Context) error {
 // @Accept json
 // @Produce json
 // @Tags Door
-// @Param id path int true "Id"
+// @Param ID path int true "ID"
 // @Param door body models.Door true "Door"
 // @Success 200 {array} models.Door
 // @Failure 404 {string} string "Cannot find entity"
@@ -115,11 +129,11 @@ func (e *DoorController) updateDoor(c echo.Context) error {
 	if err := c.Bind(door); err != nil {
 		return c.JSON(
 			http.StatusInternalServerError,
-			echo.Map{"error": fmt.Sprintf("Error binding to entity: [%v]", err)},
+			echo.Map{"error": fmt.Sprintf("Error binding to entity [%v]", err.Error())},
 		)
 	}
 
-    entity := models.Door{}
+	entity := models.Door{}
 	err := e.db.Get(models.Door{}, c).Model(&models.Door{}).First(&entity, door.ID).Error
 	if err != nil || door.ID == 0 {
 		return c.JSON(http.StatusNotFound, echo.Map{"error": "Cannot find entity"})
@@ -127,7 +141,7 @@ func (e *DoorController) updateDoor(c echo.Context) error {
 
 	err = e.db.Get(models.Door{}, c).Model(&entity).Select("*").Updates(&door).Error
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error updating entity: [%v]", err)})
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error updating entity [%v]", err.Error())})
 	}
 
 	return c.JSON(http.StatusOK, door)
@@ -149,7 +163,7 @@ func (e *DoorController) createDoor(c echo.Context) error {
 	if err := c.Bind(door); err != nil {
 		return c.JSON(
 			http.StatusInternalServerError,
-			echo.Map{"error": fmt.Sprintf("Error binding to entity: [%v]", err)},
+			echo.Map{"error": fmt.Sprintf("Error binding to entity [%v]", err.Error())},
 		)
 	}
 
@@ -157,7 +171,7 @@ func (e *DoorController) createDoor(c echo.Context) error {
 	if err != nil {
 		return c.JSON(
 			http.StatusInternalServerError,
-			echo.Map{"error": fmt.Sprintf("Error inserting entity: [%v]", err)},
+			echo.Map{"error": fmt.Sprintf("Error inserting entity [%v]", err.Error())},
 		)
 	}
 
@@ -170,25 +184,38 @@ func (e *DoorController) createDoor(c echo.Context) error {
 // @Accept json
 // @Produce json
 // @Tags Door
-// @Param id path int true "Id"
+// @Param id path int true "id"
 // @Success 200 {string} string "Entity deleted successfully"
 // @Failure 404 {string} string "Cannot find entity"
 // @Failure 500 {string} string "Error binding to entity"
 // @Failure 500 {string} string "Error deleting entity"
 // @Router /door/{id} [delete]
 func (e *DoorController) deleteDoor(c echo.Context) error {
-	doorId, err := strconv.Atoi(c.Param("door"))
+	var params []interface{}
+	var keys []string
+
+	// primary key param
+	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
 		e.logger.Error(err)
 	}
+	params = append(params, id)
+	keys = append(keys, "id = ?")
 
-	door := new(models.Door)
-	err = e.db.Get(models.Door{}, c).Model(&models.Door{}).First(&door, doorId).Error
-	if err != nil || door.ID == 0 {
-		return c.JSON(http.StatusNotFound, echo.Map{"error": "Cannot find entity"})
+	// query builder
+	var result models.Door
+	query := e.db.QueryContext(models.Door{}, c)
+	for i, _ := range keys {
+		query = query.Where(keys[i], params[i])
 	}
 
-	err = e.db.Get(models.Door{}, c).Model(&models.Door{}).Delete(&door).Error
+	// grab first entry
+	err = query.First(&result).Error
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
+	}
+
+	err = e.db.Get(models.Door{}, c).Model(&models.Door{}).Delete(&result).Error
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Error deleting entity"})
 	}
@@ -213,7 +240,7 @@ func (e *DoorController) getDoorsBulk(c echo.Context) error {
 	if err := c.Bind(r); err != nil {
 		return c.JSON(
 			http.StatusInternalServerError,
-			echo.Map{"error": fmt.Sprintf("Error binding to bulk request: [%v]", err)},
+			echo.Map{"error": fmt.Sprintf("Error binding to bulk request: [%v]", err.Error())},
 		)
 	}
 
@@ -226,7 +253,7 @@ func (e *DoorController) getDoorsBulk(c echo.Context) error {
 
 	err := e.db.QueryContext(models.Door{}, c).Find(&results, r.IDs).Error
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err})
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
 	}
 
 	return c.JSON(http.StatusOK, results)

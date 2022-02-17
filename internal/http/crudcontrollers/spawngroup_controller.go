@@ -12,7 +12,7 @@ import (
 )
 
 type SpawngroupController struct {
-	db     *database.DatabaseResolver
+	db	 *database.DatabaseResolver
 	logger *logrus.Logger
 }
 
@@ -21,19 +21,19 @@ func NewSpawngroupController(
 	logger *logrus.Logger,
 ) *SpawngroupController {
 	return &SpawngroupController{
-		db:     db,
+		db:	 db,
 		logger: logger,
 	}
 }
 
 func (e *SpawngroupController) Routes() []*routes.Route {
 	return []*routes.Route{
-		routes.RegisterRoute(http.MethodDelete, "spawngroup/:spawngroup", e.deleteSpawngroup, nil),
-		routes.RegisterRoute(http.MethodGet, "spawngroup/:spawngroup", e.getSpawngroup, nil),
+		routes.RegisterRoute(http.MethodGet, "spawngroup/:id", e.getSpawngroup, nil),
 		routes.RegisterRoute(http.MethodGet, "spawngroups", e.listSpawngroups, nil),
-		routes.RegisterRoute(http.MethodPost, "spawngroups/bulk", e.getSpawngroupsBulk, nil),
-		routes.RegisterRoute(http.MethodPatch, "spawngroup/:spawngroup", e.updateSpawngroup, nil),
 		routes.RegisterRoute(http.MethodPut, "spawngroup", e.createSpawngroup, nil),
+		routes.RegisterRoute(http.MethodDelete, "spawngroup/:id", e.deleteSpawngroup, nil),
+		routes.RegisterRoute(http.MethodPatch, "spawngroup/:id", e.updateSpawngroup, nil),
+		routes.RegisterRoute(http.MethodPost, "spawngroups/bulk", e.getSpawngroupsBulk, nil),
 	}
 }
 
@@ -70,7 +70,7 @@ func (e *SpawngroupController) listSpawngroups(c echo.Context) error {
 // @Accept json
 // @Produce json
 // @Tags Spawngroup
-// @Param id path int true "Id"
+// @Param id path int true "id"
 // @Param includes query string false "Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names <h4>Relationships</h4>Spawn2"
 // @Param select query string false "Column names [.] separated to fetch specific fields in response"
 // @Success 200 {array} models.Spawngroup
@@ -79,17 +79,31 @@ func (e *SpawngroupController) listSpawngroups(c echo.Context) error {
 // @Failure 500 {string} string "Bad query request"
 // @Router /spawngroup/{id} [get]
 func (e *SpawngroupController) getSpawngroup(c echo.Context) error {
-	spawngroupId, err := strconv.Atoi(c.Param("spawngroup"))
-	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Cannot find param"})
-	}
+	var params []interface{}
+	var keys []string
 
+	// primary key param
+	id, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Cannot find param [ID]"})
+	}
+	params = append(params, id)
+	keys = append(keys, "id = ?")
+
+	// query builder
 	var result models.Spawngroup
-	err = e.db.QueryContext(models.Spawngroup{}, c).First(&result, spawngroupId).Error
-	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err})
+	query := e.db.QueryContext(models.Spawngroup{}, c)
+	for i, _ := range keys {
+		query = query.Where(keys[i], params[i])
 	}
 
+	// grab first entry
+	err = query.First(&result).Error
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
+	}
+
+	// couldn't find entity
 	if result.ID == 0 {
 		return c.JSON(http.StatusNotFound, echo.Map{"error": "Cannot find entity"})
 	}
@@ -103,7 +117,7 @@ func (e *SpawngroupController) getSpawngroup(c echo.Context) error {
 // @Accept json
 // @Produce json
 // @Tags Spawngroup
-// @Param id path int true "Id"
+// @Param ID path int true "ID"
 // @Param spawngroup body models.Spawngroup true "Spawngroup"
 // @Success 200 {array} models.Spawngroup
 // @Failure 404 {string} string "Cannot find entity"
@@ -115,11 +129,11 @@ func (e *SpawngroupController) updateSpawngroup(c echo.Context) error {
 	if err := c.Bind(spawngroup); err != nil {
 		return c.JSON(
 			http.StatusInternalServerError,
-			echo.Map{"error": fmt.Sprintf("Error binding to entity: [%v]", err)},
+			echo.Map{"error": fmt.Sprintf("Error binding to entity [%v]", err.Error())},
 		)
 	}
 
-    entity := models.Spawngroup{}
+	entity := models.Spawngroup{}
 	err := e.db.Get(models.Spawngroup{}, c).Model(&models.Spawngroup{}).First(&entity, spawngroup.ID).Error
 	if err != nil || spawngroup.ID == 0 {
 		return c.JSON(http.StatusNotFound, echo.Map{"error": "Cannot find entity"})
@@ -127,7 +141,7 @@ func (e *SpawngroupController) updateSpawngroup(c echo.Context) error {
 
 	err = e.db.Get(models.Spawngroup{}, c).Model(&entity).Select("*").Updates(&spawngroup).Error
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error updating entity: [%v]", err)})
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error updating entity [%v]", err.Error())})
 	}
 
 	return c.JSON(http.StatusOK, spawngroup)
@@ -149,7 +163,7 @@ func (e *SpawngroupController) createSpawngroup(c echo.Context) error {
 	if err := c.Bind(spawngroup); err != nil {
 		return c.JSON(
 			http.StatusInternalServerError,
-			echo.Map{"error": fmt.Sprintf("Error binding to entity: [%v]", err)},
+			echo.Map{"error": fmt.Sprintf("Error binding to entity [%v]", err.Error())},
 		)
 	}
 
@@ -157,7 +171,7 @@ func (e *SpawngroupController) createSpawngroup(c echo.Context) error {
 	if err != nil {
 		return c.JSON(
 			http.StatusInternalServerError,
-			echo.Map{"error": fmt.Sprintf("Error inserting entity: [%v]", err)},
+			echo.Map{"error": fmt.Sprintf("Error inserting entity [%v]", err.Error())},
 		)
 	}
 
@@ -170,25 +184,38 @@ func (e *SpawngroupController) createSpawngroup(c echo.Context) error {
 // @Accept json
 // @Produce json
 // @Tags Spawngroup
-// @Param id path int true "Id"
+// @Param id path int true "id"
 // @Success 200 {string} string "Entity deleted successfully"
 // @Failure 404 {string} string "Cannot find entity"
 // @Failure 500 {string} string "Error binding to entity"
 // @Failure 500 {string} string "Error deleting entity"
 // @Router /spawngroup/{id} [delete]
 func (e *SpawngroupController) deleteSpawngroup(c echo.Context) error {
-	spawngroupId, err := strconv.Atoi(c.Param("spawngroup"))
+	var params []interface{}
+	var keys []string
+
+	// primary key param
+	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
 		e.logger.Error(err)
 	}
+	params = append(params, id)
+	keys = append(keys, "id = ?")
 
-	spawngroup := new(models.Spawngroup)
-	err = e.db.Get(models.Spawngroup{}, c).Model(&models.Spawngroup{}).First(&spawngroup, spawngroupId).Error
-	if err != nil || spawngroup.ID == 0 {
-		return c.JSON(http.StatusNotFound, echo.Map{"error": "Cannot find entity"})
+	// query builder
+	var result models.Spawngroup
+	query := e.db.QueryContext(models.Spawngroup{}, c)
+	for i, _ := range keys {
+		query = query.Where(keys[i], params[i])
 	}
 
-	err = e.db.Get(models.Spawngroup{}, c).Model(&models.Spawngroup{}).Delete(&spawngroup).Error
+	// grab first entry
+	err = query.First(&result).Error
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
+	}
+
+	err = e.db.Get(models.Spawngroup{}, c).Model(&models.Spawngroup{}).Delete(&result).Error
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Error deleting entity"})
 	}
@@ -213,7 +240,7 @@ func (e *SpawngroupController) getSpawngroupsBulk(c echo.Context) error {
 	if err := c.Bind(r); err != nil {
 		return c.JSON(
 			http.StatusInternalServerError,
-			echo.Map{"error": fmt.Sprintf("Error binding to bulk request: [%v]", err)},
+			echo.Map{"error": fmt.Sprintf("Error binding to bulk request: [%v]", err.Error())},
 		)
 	}
 
@@ -226,7 +253,7 @@ func (e *SpawngroupController) getSpawngroupsBulk(c echo.Context) error {
 
 	err := e.db.QueryContext(models.Spawngroup{}, c).Find(&results, r.IDs).Error
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err})
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
 	}
 
 	return c.JSON(http.StatusOK, results)

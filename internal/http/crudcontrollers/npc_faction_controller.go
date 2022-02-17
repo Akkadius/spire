@@ -12,7 +12,7 @@ import (
 )
 
 type NpcFactionController struct {
-	db     *database.DatabaseResolver
+	db	 *database.DatabaseResolver
 	logger *logrus.Logger
 }
 
@@ -21,19 +21,19 @@ func NewNpcFactionController(
 	logger *logrus.Logger,
 ) *NpcFactionController {
 	return &NpcFactionController{
-		db:     db,
+		db:	 db,
 		logger: logger,
 	}
 }
 
 func (e *NpcFactionController) Routes() []*routes.Route {
 	return []*routes.Route{
-		routes.RegisterRoute(http.MethodDelete, "npc_faction/:npc_faction", e.deleteNpcFaction, nil),
-		routes.RegisterRoute(http.MethodGet, "npc_faction/:npc_faction", e.getNpcFaction, nil),
+		routes.RegisterRoute(http.MethodGet, "npc_faction/:id", e.getNpcFaction, nil),
 		routes.RegisterRoute(http.MethodGet, "npc_factions", e.listNpcFactions, nil),
-		routes.RegisterRoute(http.MethodPost, "npc_factions/bulk", e.getNpcFactionsBulk, nil),
-		routes.RegisterRoute(http.MethodPatch, "npc_faction/:npc_faction", e.updateNpcFaction, nil),
 		routes.RegisterRoute(http.MethodPut, "npc_faction", e.createNpcFaction, nil),
+		routes.RegisterRoute(http.MethodDelete, "npc_faction/:id", e.deleteNpcFaction, nil),
+		routes.RegisterRoute(http.MethodPatch, "npc_faction/:id", e.updateNpcFaction, nil),
+		routes.RegisterRoute(http.MethodPost, "npc_factions/bulk", e.getNpcFactionsBulk, nil),
 	}
 }
 
@@ -70,7 +70,7 @@ func (e *NpcFactionController) listNpcFactions(c echo.Context) error {
 // @Accept json
 // @Produce json
 // @Tags NpcFaction
-// @Param id path int true "Id"
+// @Param id path int true "id"
 // @Param includes query string false "Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names <h4>Relationships</h4>NpcFactionEntries"
 // @Param select query string false "Column names [.] separated to fetch specific fields in response"
 // @Success 200 {array} models.NpcFaction
@@ -79,17 +79,31 @@ func (e *NpcFactionController) listNpcFactions(c echo.Context) error {
 // @Failure 500 {string} string "Bad query request"
 // @Router /npc_faction/{id} [get]
 func (e *NpcFactionController) getNpcFaction(c echo.Context) error {
-	npcFactionId, err := strconv.Atoi(c.Param("npc_faction"))
-	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Cannot find param"})
-	}
+	var params []interface{}
+	var keys []string
 
+	// primary key param
+	id, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Cannot find param [ID]"})
+	}
+	params = append(params, id)
+	keys = append(keys, "id = ?")
+
+	// query builder
 	var result models.NpcFaction
-	err = e.db.QueryContext(models.NpcFaction{}, c).First(&result, npcFactionId).Error
-	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err})
+	query := e.db.QueryContext(models.NpcFaction{}, c)
+	for i, _ := range keys {
+		query = query.Where(keys[i], params[i])
 	}
 
+	// grab first entry
+	err = query.First(&result).Error
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
+	}
+
+	// couldn't find entity
 	if result.ID == 0 {
 		return c.JSON(http.StatusNotFound, echo.Map{"error": "Cannot find entity"})
 	}
@@ -103,7 +117,7 @@ func (e *NpcFactionController) getNpcFaction(c echo.Context) error {
 // @Accept json
 // @Produce json
 // @Tags NpcFaction
-// @Param id path int true "Id"
+// @Param ID path int true "ID"
 // @Param npc_faction body models.NpcFaction true "NpcFaction"
 // @Success 200 {array} models.NpcFaction
 // @Failure 404 {string} string "Cannot find entity"
@@ -115,11 +129,11 @@ func (e *NpcFactionController) updateNpcFaction(c echo.Context) error {
 	if err := c.Bind(npcFaction); err != nil {
 		return c.JSON(
 			http.StatusInternalServerError,
-			echo.Map{"error": fmt.Sprintf("Error binding to entity: [%v]", err)},
+			echo.Map{"error": fmt.Sprintf("Error binding to entity [%v]", err.Error())},
 		)
 	}
 
-    entity := models.NpcFaction{}
+	entity := models.NpcFaction{}
 	err := e.db.Get(models.NpcFaction{}, c).Model(&models.NpcFaction{}).First(&entity, npcFaction.ID).Error
 	if err != nil || npcFaction.ID == 0 {
 		return c.JSON(http.StatusNotFound, echo.Map{"error": "Cannot find entity"})
@@ -127,7 +141,7 @@ func (e *NpcFactionController) updateNpcFaction(c echo.Context) error {
 
 	err = e.db.Get(models.NpcFaction{}, c).Model(&entity).Select("*").Updates(&npcFaction).Error
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error updating entity: [%v]", err)})
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error updating entity [%v]", err.Error())})
 	}
 
 	return c.JSON(http.StatusOK, npcFaction)
@@ -149,7 +163,7 @@ func (e *NpcFactionController) createNpcFaction(c echo.Context) error {
 	if err := c.Bind(npcFaction); err != nil {
 		return c.JSON(
 			http.StatusInternalServerError,
-			echo.Map{"error": fmt.Sprintf("Error binding to entity: [%v]", err)},
+			echo.Map{"error": fmt.Sprintf("Error binding to entity [%v]", err.Error())},
 		)
 	}
 
@@ -157,7 +171,7 @@ func (e *NpcFactionController) createNpcFaction(c echo.Context) error {
 	if err != nil {
 		return c.JSON(
 			http.StatusInternalServerError,
-			echo.Map{"error": fmt.Sprintf("Error inserting entity: [%v]", err)},
+			echo.Map{"error": fmt.Sprintf("Error inserting entity [%v]", err.Error())},
 		)
 	}
 
@@ -170,25 +184,38 @@ func (e *NpcFactionController) createNpcFaction(c echo.Context) error {
 // @Accept json
 // @Produce json
 // @Tags NpcFaction
-// @Param id path int true "Id"
+// @Param id path int true "id"
 // @Success 200 {string} string "Entity deleted successfully"
 // @Failure 404 {string} string "Cannot find entity"
 // @Failure 500 {string} string "Error binding to entity"
 // @Failure 500 {string} string "Error deleting entity"
 // @Router /npc_faction/{id} [delete]
 func (e *NpcFactionController) deleteNpcFaction(c echo.Context) error {
-	npcFactionId, err := strconv.Atoi(c.Param("npc_faction"))
+	var params []interface{}
+	var keys []string
+
+	// primary key param
+	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
 		e.logger.Error(err)
 	}
+	params = append(params, id)
+	keys = append(keys, "id = ?")
 
-	npcFaction := new(models.NpcFaction)
-	err = e.db.Get(models.NpcFaction{}, c).Model(&models.NpcFaction{}).First(&npcFaction, npcFactionId).Error
-	if err != nil || npcFaction.ID == 0 {
-		return c.JSON(http.StatusNotFound, echo.Map{"error": "Cannot find entity"})
+	// query builder
+	var result models.NpcFaction
+	query := e.db.QueryContext(models.NpcFaction{}, c)
+	for i, _ := range keys {
+		query = query.Where(keys[i], params[i])
 	}
 
-	err = e.db.Get(models.NpcFaction{}, c).Model(&models.NpcFaction{}).Delete(&npcFaction).Error
+	// grab first entry
+	err = query.First(&result).Error
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
+	}
+
+	err = e.db.Get(models.NpcFaction{}, c).Model(&models.NpcFaction{}).Delete(&result).Error
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Error deleting entity"})
 	}
@@ -213,7 +240,7 @@ func (e *NpcFactionController) getNpcFactionsBulk(c echo.Context) error {
 	if err := c.Bind(r); err != nil {
 		return c.JSON(
 			http.StatusInternalServerError,
-			echo.Map{"error": fmt.Sprintf("Error binding to bulk request: [%v]", err)},
+			echo.Map{"error": fmt.Sprintf("Error binding to bulk request: [%v]", err.Error())},
 		)
 	}
 
@@ -226,7 +253,7 @@ func (e *NpcFactionController) getNpcFactionsBulk(c echo.Context) error {
 
 	err := e.db.QueryContext(models.NpcFaction{}, c).Find(&results, r.IDs).Error
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err})
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
 	}
 
 	return c.JSON(http.StatusOK, results)

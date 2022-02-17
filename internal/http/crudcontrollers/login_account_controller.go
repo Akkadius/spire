@@ -12,7 +12,7 @@ import (
 )
 
 type LoginAccountController struct {
-	db     *database.DatabaseResolver
+	db	 *database.DatabaseResolver
 	logger *logrus.Logger
 }
 
@@ -21,19 +21,19 @@ func NewLoginAccountController(
 	logger *logrus.Logger,
 ) *LoginAccountController {
 	return &LoginAccountController{
-		db:     db,
+		db:	 db,
 		logger: logger,
 	}
 }
 
 func (e *LoginAccountController) Routes() []*routes.Route {
 	return []*routes.Route{
-		routes.RegisterRoute(http.MethodDelete, "login_account/:login_account", e.deleteLoginAccount, nil),
-		routes.RegisterRoute(http.MethodGet, "login_account/:login_account", e.getLoginAccount, nil),
+		routes.RegisterRoute(http.MethodGet, "login_account/:id", e.getLoginAccount, nil),
 		routes.RegisterRoute(http.MethodGet, "login_accounts", e.listLoginAccounts, nil),
-		routes.RegisterRoute(http.MethodPost, "login_accounts/bulk", e.getLoginAccountsBulk, nil),
-		routes.RegisterRoute(http.MethodPatch, "login_account/:login_account", e.updateLoginAccount, nil),
 		routes.RegisterRoute(http.MethodPut, "login_account", e.createLoginAccount, nil),
+		routes.RegisterRoute(http.MethodDelete, "login_account/:id", e.deleteLoginAccount, nil),
+		routes.RegisterRoute(http.MethodPatch, "login_account/:id", e.updateLoginAccount, nil),
+		routes.RegisterRoute(http.MethodPost, "login_accounts/bulk", e.getLoginAccountsBulk, nil),
 	}
 }
 
@@ -70,7 +70,7 @@ func (e *LoginAccountController) listLoginAccounts(c echo.Context) error {
 // @Accept json
 // @Produce json
 // @Tags LoginAccount
-// @Param id path int true "Id"
+// @Param id path int true "id"
 // @Param includes query string false "Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names "
 // @Param select query string false "Column names [.] separated to fetch specific fields in response"
 // @Success 200 {array} models.LoginAccount
@@ -79,17 +79,31 @@ func (e *LoginAccountController) listLoginAccounts(c echo.Context) error {
 // @Failure 500 {string} string "Bad query request"
 // @Router /login_account/{id} [get]
 func (e *LoginAccountController) getLoginAccount(c echo.Context) error {
-	loginAccountId, err := strconv.Atoi(c.Param("login_account"))
-	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Cannot find param"})
-	}
+	var params []interface{}
+	var keys []string
 
+	// primary key param
+	id, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Cannot find param [ID]"})
+	}
+	params = append(params, id)
+	keys = append(keys, "id = ?")
+
+	// query builder
 	var result models.LoginAccount
-	err = e.db.QueryContext(models.LoginAccount{}, c).First(&result, loginAccountId).Error
-	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err})
+	query := e.db.QueryContext(models.LoginAccount{}, c)
+	for i, _ := range keys {
+		query = query.Where(keys[i], params[i])
 	}
 
+	// grab first entry
+	err = query.First(&result).Error
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
+	}
+
+	// couldn't find entity
 	if result.ID == 0 {
 		return c.JSON(http.StatusNotFound, echo.Map{"error": "Cannot find entity"})
 	}
@@ -103,7 +117,7 @@ func (e *LoginAccountController) getLoginAccount(c echo.Context) error {
 // @Accept json
 // @Produce json
 // @Tags LoginAccount
-// @Param id path int true "Id"
+// @Param ID path int true "ID"
 // @Param login_account body models.LoginAccount true "LoginAccount"
 // @Success 200 {array} models.LoginAccount
 // @Failure 404 {string} string "Cannot find entity"
@@ -115,11 +129,11 @@ func (e *LoginAccountController) updateLoginAccount(c echo.Context) error {
 	if err := c.Bind(loginAccount); err != nil {
 		return c.JSON(
 			http.StatusInternalServerError,
-			echo.Map{"error": fmt.Sprintf("Error binding to entity: [%v]", err)},
+			echo.Map{"error": fmt.Sprintf("Error binding to entity [%v]", err.Error())},
 		)
 	}
 
-    entity := models.LoginAccount{}
+	entity := models.LoginAccount{}
 	err := e.db.Get(models.LoginAccount{}, c).Model(&models.LoginAccount{}).First(&entity, loginAccount.ID).Error
 	if err != nil || loginAccount.ID == 0 {
 		return c.JSON(http.StatusNotFound, echo.Map{"error": "Cannot find entity"})
@@ -127,7 +141,7 @@ func (e *LoginAccountController) updateLoginAccount(c echo.Context) error {
 
 	err = e.db.Get(models.LoginAccount{}, c).Model(&entity).Select("*").Updates(&loginAccount).Error
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error updating entity: [%v]", err)})
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error updating entity [%v]", err.Error())})
 	}
 
 	return c.JSON(http.StatusOK, loginAccount)
@@ -149,7 +163,7 @@ func (e *LoginAccountController) createLoginAccount(c echo.Context) error {
 	if err := c.Bind(loginAccount); err != nil {
 		return c.JSON(
 			http.StatusInternalServerError,
-			echo.Map{"error": fmt.Sprintf("Error binding to entity: [%v]", err)},
+			echo.Map{"error": fmt.Sprintf("Error binding to entity [%v]", err.Error())},
 		)
 	}
 
@@ -157,7 +171,7 @@ func (e *LoginAccountController) createLoginAccount(c echo.Context) error {
 	if err != nil {
 		return c.JSON(
 			http.StatusInternalServerError,
-			echo.Map{"error": fmt.Sprintf("Error inserting entity: [%v]", err)},
+			echo.Map{"error": fmt.Sprintf("Error inserting entity [%v]", err.Error())},
 		)
 	}
 
@@ -170,25 +184,38 @@ func (e *LoginAccountController) createLoginAccount(c echo.Context) error {
 // @Accept json
 // @Produce json
 // @Tags LoginAccount
-// @Param id path int true "Id"
+// @Param id path int true "id"
 // @Success 200 {string} string "Entity deleted successfully"
 // @Failure 404 {string} string "Cannot find entity"
 // @Failure 500 {string} string "Error binding to entity"
 // @Failure 500 {string} string "Error deleting entity"
 // @Router /login_account/{id} [delete]
 func (e *LoginAccountController) deleteLoginAccount(c echo.Context) error {
-	loginAccountId, err := strconv.Atoi(c.Param("login_account"))
+	var params []interface{}
+	var keys []string
+
+	// primary key param
+	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
 		e.logger.Error(err)
 	}
+	params = append(params, id)
+	keys = append(keys, "id = ?")
 
-	loginAccount := new(models.LoginAccount)
-	err = e.db.Get(models.LoginAccount{}, c).Model(&models.LoginAccount{}).First(&loginAccount, loginAccountId).Error
-	if err != nil || loginAccount.ID == 0 {
-		return c.JSON(http.StatusNotFound, echo.Map{"error": "Cannot find entity"})
+	// query builder
+	var result models.LoginAccount
+	query := e.db.QueryContext(models.LoginAccount{}, c)
+	for i, _ := range keys {
+		query = query.Where(keys[i], params[i])
 	}
 
-	err = e.db.Get(models.LoginAccount{}, c).Model(&models.LoginAccount{}).Delete(&loginAccount).Error
+	// grab first entry
+	err = query.First(&result).Error
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
+	}
+
+	err = e.db.Get(models.LoginAccount{}, c).Model(&models.LoginAccount{}).Delete(&result).Error
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Error deleting entity"})
 	}
@@ -213,7 +240,7 @@ func (e *LoginAccountController) getLoginAccountsBulk(c echo.Context) error {
 	if err := c.Bind(r); err != nil {
 		return c.JSON(
 			http.StatusInternalServerError,
-			echo.Map{"error": fmt.Sprintf("Error binding to bulk request: [%v]", err)},
+			echo.Map{"error": fmt.Sprintf("Error binding to bulk request: [%v]", err.Error())},
 		)
 	}
 
@@ -226,7 +253,7 @@ func (e *LoginAccountController) getLoginAccountsBulk(c echo.Context) error {
 
 	err := e.db.QueryContext(models.LoginAccount{}, c).Find(&results, r.IDs).Error
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err})
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
 	}
 
 	return c.JSON(http.StatusOK, results)

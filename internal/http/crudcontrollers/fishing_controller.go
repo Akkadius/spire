@@ -12,7 +12,7 @@ import (
 )
 
 type FishingController struct {
-	db     *database.DatabaseResolver
+	db	 *database.DatabaseResolver
 	logger *logrus.Logger
 }
 
@@ -21,19 +21,19 @@ func NewFishingController(
 	logger *logrus.Logger,
 ) *FishingController {
 	return &FishingController{
-		db:     db,
+		db:	 db,
 		logger: logger,
 	}
 }
 
 func (e *FishingController) Routes() []*routes.Route {
 	return []*routes.Route{
-		routes.RegisterRoute(http.MethodDelete, "fishing/:fishing", e.deleteFishing, nil),
-		routes.RegisterRoute(http.MethodGet, "fishing/:fishing", e.getFishing, nil),
+		routes.RegisterRoute(http.MethodGet, "fishing/:id", e.getFishing, nil),
 		routes.RegisterRoute(http.MethodGet, "fishings", e.listFishings, nil),
-		routes.RegisterRoute(http.MethodPost, "fishings/bulk", e.getFishingsBulk, nil),
-		routes.RegisterRoute(http.MethodPatch, "fishing/:fishing", e.updateFishing, nil),
 		routes.RegisterRoute(http.MethodPut, "fishing", e.createFishing, nil),
+		routes.RegisterRoute(http.MethodDelete, "fishing/:id", e.deleteFishing, nil),
+		routes.RegisterRoute(http.MethodPatch, "fishing/:id", e.updateFishing, nil),
+		routes.RegisterRoute(http.MethodPost, "fishings/bulk", e.getFishingsBulk, nil),
 	}
 }
 
@@ -70,7 +70,7 @@ func (e *FishingController) listFishings(c echo.Context) error {
 // @Accept json
 // @Produce json
 // @Tags Fishing
-// @Param id path int true "Id"
+// @Param id path int true "id"
 // @Param includes query string false "Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names "
 // @Param select query string false "Column names [.] separated to fetch specific fields in response"
 // @Success 200 {array} models.Fishing
@@ -79,17 +79,31 @@ func (e *FishingController) listFishings(c echo.Context) error {
 // @Failure 500 {string} string "Bad query request"
 // @Router /fishing/{id} [get]
 func (e *FishingController) getFishing(c echo.Context) error {
-	fishingId, err := strconv.Atoi(c.Param("fishing"))
-	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Cannot find param"})
-	}
+	var params []interface{}
+	var keys []string
 
+	// primary key param
+	id, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Cannot find param [ID]"})
+	}
+	params = append(params, id)
+	keys = append(keys, "id = ?")
+
+	// query builder
 	var result models.Fishing
-	err = e.db.QueryContext(models.Fishing{}, c).First(&result, fishingId).Error
-	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err})
+	query := e.db.QueryContext(models.Fishing{}, c)
+	for i, _ := range keys {
+		query = query.Where(keys[i], params[i])
 	}
 
+	// grab first entry
+	err = query.First(&result).Error
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
+	}
+
+	// couldn't find entity
 	if result.ID == 0 {
 		return c.JSON(http.StatusNotFound, echo.Map{"error": "Cannot find entity"})
 	}
@@ -103,7 +117,7 @@ func (e *FishingController) getFishing(c echo.Context) error {
 // @Accept json
 // @Produce json
 // @Tags Fishing
-// @Param id path int true "Id"
+// @Param ID path int true "ID"
 // @Param fishing body models.Fishing true "Fishing"
 // @Success 200 {array} models.Fishing
 // @Failure 404 {string} string "Cannot find entity"
@@ -115,11 +129,11 @@ func (e *FishingController) updateFishing(c echo.Context) error {
 	if err := c.Bind(fishing); err != nil {
 		return c.JSON(
 			http.StatusInternalServerError,
-			echo.Map{"error": fmt.Sprintf("Error binding to entity: [%v]", err)},
+			echo.Map{"error": fmt.Sprintf("Error binding to entity [%v]", err.Error())},
 		)
 	}
 
-    entity := models.Fishing{}
+	entity := models.Fishing{}
 	err := e.db.Get(models.Fishing{}, c).Model(&models.Fishing{}).First(&entity, fishing.ID).Error
 	if err != nil || fishing.ID == 0 {
 		return c.JSON(http.StatusNotFound, echo.Map{"error": "Cannot find entity"})
@@ -127,7 +141,7 @@ func (e *FishingController) updateFishing(c echo.Context) error {
 
 	err = e.db.Get(models.Fishing{}, c).Model(&entity).Select("*").Updates(&fishing).Error
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error updating entity: [%v]", err)})
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error updating entity [%v]", err.Error())})
 	}
 
 	return c.JSON(http.StatusOK, fishing)
@@ -149,7 +163,7 @@ func (e *FishingController) createFishing(c echo.Context) error {
 	if err := c.Bind(fishing); err != nil {
 		return c.JSON(
 			http.StatusInternalServerError,
-			echo.Map{"error": fmt.Sprintf("Error binding to entity: [%v]", err)},
+			echo.Map{"error": fmt.Sprintf("Error binding to entity [%v]", err.Error())},
 		)
 	}
 
@@ -157,7 +171,7 @@ func (e *FishingController) createFishing(c echo.Context) error {
 	if err != nil {
 		return c.JSON(
 			http.StatusInternalServerError,
-			echo.Map{"error": fmt.Sprintf("Error inserting entity: [%v]", err)},
+			echo.Map{"error": fmt.Sprintf("Error inserting entity [%v]", err.Error())},
 		)
 	}
 
@@ -170,25 +184,38 @@ func (e *FishingController) createFishing(c echo.Context) error {
 // @Accept json
 // @Produce json
 // @Tags Fishing
-// @Param id path int true "Id"
+// @Param id path int true "id"
 // @Success 200 {string} string "Entity deleted successfully"
 // @Failure 404 {string} string "Cannot find entity"
 // @Failure 500 {string} string "Error binding to entity"
 // @Failure 500 {string} string "Error deleting entity"
 // @Router /fishing/{id} [delete]
 func (e *FishingController) deleteFishing(c echo.Context) error {
-	fishingId, err := strconv.Atoi(c.Param("fishing"))
+	var params []interface{}
+	var keys []string
+
+	// primary key param
+	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
 		e.logger.Error(err)
 	}
+	params = append(params, id)
+	keys = append(keys, "id = ?")
 
-	fishing := new(models.Fishing)
-	err = e.db.Get(models.Fishing{}, c).Model(&models.Fishing{}).First(&fishing, fishingId).Error
-	if err != nil || fishing.ID == 0 {
-		return c.JSON(http.StatusNotFound, echo.Map{"error": "Cannot find entity"})
+	// query builder
+	var result models.Fishing
+	query := e.db.QueryContext(models.Fishing{}, c)
+	for i, _ := range keys {
+		query = query.Where(keys[i], params[i])
 	}
 
-	err = e.db.Get(models.Fishing{}, c).Model(&models.Fishing{}).Delete(&fishing).Error
+	// grab first entry
+	err = query.First(&result).Error
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
+	}
+
+	err = e.db.Get(models.Fishing{}, c).Model(&models.Fishing{}).Delete(&result).Error
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Error deleting entity"})
 	}
@@ -213,7 +240,7 @@ func (e *FishingController) getFishingsBulk(c echo.Context) error {
 	if err := c.Bind(r); err != nil {
 		return c.JSON(
 			http.StatusInternalServerError,
-			echo.Map{"error": fmt.Sprintf("Error binding to bulk request: [%v]", err)},
+			echo.Map{"error": fmt.Sprintf("Error binding to bulk request: [%v]", err.Error())},
 		)
 	}
 
@@ -226,7 +253,7 @@ func (e *FishingController) getFishingsBulk(c echo.Context) error {
 
 	err := e.db.QueryContext(models.Fishing{}, c).Find(&results, r.IDs).Error
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err})
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
 	}
 
 	return c.JSON(http.StatusOK, results)

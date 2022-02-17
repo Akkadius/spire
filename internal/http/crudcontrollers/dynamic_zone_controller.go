@@ -12,7 +12,7 @@ import (
 )
 
 type DynamicZoneController struct {
-	db     *database.DatabaseResolver
+	db	 *database.DatabaseResolver
 	logger *logrus.Logger
 }
 
@@ -21,19 +21,19 @@ func NewDynamicZoneController(
 	logger *logrus.Logger,
 ) *DynamicZoneController {
 	return &DynamicZoneController{
-		db:     db,
+		db:	 db,
 		logger: logger,
 	}
 }
 
 func (e *DynamicZoneController) Routes() []*routes.Route {
 	return []*routes.Route{
-		routes.RegisterRoute(http.MethodDelete, "dynamic_zone/:dynamic_zone", e.deleteDynamicZone, nil),
-		routes.RegisterRoute(http.MethodGet, "dynamic_zone/:dynamic_zone", e.getDynamicZone, nil),
+		routes.RegisterRoute(http.MethodGet, "dynamic_zone/:id", e.getDynamicZone, nil),
 		routes.RegisterRoute(http.MethodGet, "dynamic_zones", e.listDynamicZones, nil),
-		routes.RegisterRoute(http.MethodPost, "dynamic_zones/bulk", e.getDynamicZonesBulk, nil),
-		routes.RegisterRoute(http.MethodPatch, "dynamic_zone/:dynamic_zone", e.updateDynamicZone, nil),
 		routes.RegisterRoute(http.MethodPut, "dynamic_zone", e.createDynamicZone, nil),
+		routes.RegisterRoute(http.MethodDelete, "dynamic_zone/:id", e.deleteDynamicZone, nil),
+		routes.RegisterRoute(http.MethodPatch, "dynamic_zone/:id", e.updateDynamicZone, nil),
+		routes.RegisterRoute(http.MethodPost, "dynamic_zones/bulk", e.getDynamicZonesBulk, nil),
 	}
 }
 
@@ -70,7 +70,7 @@ func (e *DynamicZoneController) listDynamicZones(c echo.Context) error {
 // @Accept json
 // @Produce json
 // @Tags DynamicZone
-// @Param id path int true "Id"
+// @Param id path int true "id"
 // @Param includes query string false "Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names "
 // @Param select query string false "Column names [.] separated to fetch specific fields in response"
 // @Success 200 {array} models.DynamicZone
@@ -79,17 +79,31 @@ func (e *DynamicZoneController) listDynamicZones(c echo.Context) error {
 // @Failure 500 {string} string "Bad query request"
 // @Router /dynamic_zone/{id} [get]
 func (e *DynamicZoneController) getDynamicZone(c echo.Context) error {
-	dynamicZoneId, err := strconv.Atoi(c.Param("dynamic_zone"))
-	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Cannot find param"})
-	}
+	var params []interface{}
+	var keys []string
 
+	// primary key param
+	id, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Cannot find param [ID]"})
+	}
+	params = append(params, id)
+	keys = append(keys, "id = ?")
+
+	// query builder
 	var result models.DynamicZone
-	err = e.db.QueryContext(models.DynamicZone{}, c).First(&result, dynamicZoneId).Error
-	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err})
+	query := e.db.QueryContext(models.DynamicZone{}, c)
+	for i, _ := range keys {
+		query = query.Where(keys[i], params[i])
 	}
 
+	// grab first entry
+	err = query.First(&result).Error
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
+	}
+
+	// couldn't find entity
 	if result.ID == 0 {
 		return c.JSON(http.StatusNotFound, echo.Map{"error": "Cannot find entity"})
 	}
@@ -103,7 +117,7 @@ func (e *DynamicZoneController) getDynamicZone(c echo.Context) error {
 // @Accept json
 // @Produce json
 // @Tags DynamicZone
-// @Param id path int true "Id"
+// @Param ID path int true "ID"
 // @Param dynamic_zone body models.DynamicZone true "DynamicZone"
 // @Success 200 {array} models.DynamicZone
 // @Failure 404 {string} string "Cannot find entity"
@@ -115,11 +129,11 @@ func (e *DynamicZoneController) updateDynamicZone(c echo.Context) error {
 	if err := c.Bind(dynamicZone); err != nil {
 		return c.JSON(
 			http.StatusInternalServerError,
-			echo.Map{"error": fmt.Sprintf("Error binding to entity: [%v]", err)},
+			echo.Map{"error": fmt.Sprintf("Error binding to entity [%v]", err.Error())},
 		)
 	}
 
-    entity := models.DynamicZone{}
+	entity := models.DynamicZone{}
 	err := e.db.Get(models.DynamicZone{}, c).Model(&models.DynamicZone{}).First(&entity, dynamicZone.ID).Error
 	if err != nil || dynamicZone.ID == 0 {
 		return c.JSON(http.StatusNotFound, echo.Map{"error": "Cannot find entity"})
@@ -127,7 +141,7 @@ func (e *DynamicZoneController) updateDynamicZone(c echo.Context) error {
 
 	err = e.db.Get(models.DynamicZone{}, c).Model(&entity).Select("*").Updates(&dynamicZone).Error
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error updating entity: [%v]", err)})
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error updating entity [%v]", err.Error())})
 	}
 
 	return c.JSON(http.StatusOK, dynamicZone)
@@ -149,7 +163,7 @@ func (e *DynamicZoneController) createDynamicZone(c echo.Context) error {
 	if err := c.Bind(dynamicZone); err != nil {
 		return c.JSON(
 			http.StatusInternalServerError,
-			echo.Map{"error": fmt.Sprintf("Error binding to entity: [%v]", err)},
+			echo.Map{"error": fmt.Sprintf("Error binding to entity [%v]", err.Error())},
 		)
 	}
 
@@ -157,7 +171,7 @@ func (e *DynamicZoneController) createDynamicZone(c echo.Context) error {
 	if err != nil {
 		return c.JSON(
 			http.StatusInternalServerError,
-			echo.Map{"error": fmt.Sprintf("Error inserting entity: [%v]", err)},
+			echo.Map{"error": fmt.Sprintf("Error inserting entity [%v]", err.Error())},
 		)
 	}
 
@@ -170,25 +184,38 @@ func (e *DynamicZoneController) createDynamicZone(c echo.Context) error {
 // @Accept json
 // @Produce json
 // @Tags DynamicZone
-// @Param id path int true "Id"
+// @Param id path int true "id"
 // @Success 200 {string} string "Entity deleted successfully"
 // @Failure 404 {string} string "Cannot find entity"
 // @Failure 500 {string} string "Error binding to entity"
 // @Failure 500 {string} string "Error deleting entity"
 // @Router /dynamic_zone/{id} [delete]
 func (e *DynamicZoneController) deleteDynamicZone(c echo.Context) error {
-	dynamicZoneId, err := strconv.Atoi(c.Param("dynamic_zone"))
+	var params []interface{}
+	var keys []string
+
+	// primary key param
+	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
 		e.logger.Error(err)
 	}
+	params = append(params, id)
+	keys = append(keys, "id = ?")
 
-	dynamicZone := new(models.DynamicZone)
-	err = e.db.Get(models.DynamicZone{}, c).Model(&models.DynamicZone{}).First(&dynamicZone, dynamicZoneId).Error
-	if err != nil || dynamicZone.ID == 0 {
-		return c.JSON(http.StatusNotFound, echo.Map{"error": "Cannot find entity"})
+	// query builder
+	var result models.DynamicZone
+	query := e.db.QueryContext(models.DynamicZone{}, c)
+	for i, _ := range keys {
+		query = query.Where(keys[i], params[i])
 	}
 
-	err = e.db.Get(models.DynamicZone{}, c).Model(&models.DynamicZone{}).Delete(&dynamicZone).Error
+	// grab first entry
+	err = query.First(&result).Error
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
+	}
+
+	err = e.db.Get(models.DynamicZone{}, c).Model(&models.DynamicZone{}).Delete(&result).Error
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Error deleting entity"})
 	}
@@ -213,7 +240,7 @@ func (e *DynamicZoneController) getDynamicZonesBulk(c echo.Context) error {
 	if err := c.Bind(r); err != nil {
 		return c.JSON(
 			http.StatusInternalServerError,
-			echo.Map{"error": fmt.Sprintf("Error binding to bulk request: [%v]", err)},
+			echo.Map{"error": fmt.Sprintf("Error binding to bulk request: [%v]", err.Error())},
 		)
 	}
 
@@ -226,7 +253,7 @@ func (e *DynamicZoneController) getDynamicZonesBulk(c echo.Context) error {
 
 	err := e.db.QueryContext(models.DynamicZone{}, c).Find(&results, r.IDs).Error
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err})
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
 	}
 
 	return c.JSON(http.StatusOK, results)

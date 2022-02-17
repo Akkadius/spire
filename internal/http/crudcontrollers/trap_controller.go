@@ -12,7 +12,7 @@ import (
 )
 
 type TrapController struct {
-	db     *database.DatabaseResolver
+	db	 *database.DatabaseResolver
 	logger *logrus.Logger
 }
 
@@ -21,19 +21,19 @@ func NewTrapController(
 	logger *logrus.Logger,
 ) *TrapController {
 	return &TrapController{
-		db:     db,
+		db:	 db,
 		logger: logger,
 	}
 }
 
 func (e *TrapController) Routes() []*routes.Route {
 	return []*routes.Route{
-		routes.RegisterRoute(http.MethodDelete, "trap/:trap", e.deleteTrap, nil),
-		routes.RegisterRoute(http.MethodGet, "trap/:trap", e.getTrap, nil),
+		routes.RegisterRoute(http.MethodGet, "trap/:id", e.getTrap, nil),
 		routes.RegisterRoute(http.MethodGet, "traps", e.listTraps, nil),
-		routes.RegisterRoute(http.MethodPost, "traps/bulk", e.getTrapsBulk, nil),
-		routes.RegisterRoute(http.MethodPatch, "trap/:trap", e.updateTrap, nil),
 		routes.RegisterRoute(http.MethodPut, "trap", e.createTrap, nil),
+		routes.RegisterRoute(http.MethodDelete, "trap/:id", e.deleteTrap, nil),
+		routes.RegisterRoute(http.MethodPatch, "trap/:id", e.updateTrap, nil),
+		routes.RegisterRoute(http.MethodPost, "traps/bulk", e.getTrapsBulk, nil),
 	}
 }
 
@@ -70,7 +70,7 @@ func (e *TrapController) listTraps(c echo.Context) error {
 // @Accept json
 // @Produce json
 // @Tags Trap
-// @Param id path int true "Id"
+// @Param id path int true "id"
 // @Param includes query string false "Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names "
 // @Param select query string false "Column names [.] separated to fetch specific fields in response"
 // @Success 200 {array} models.Trap
@@ -79,17 +79,31 @@ func (e *TrapController) listTraps(c echo.Context) error {
 // @Failure 500 {string} string "Bad query request"
 // @Router /trap/{id} [get]
 func (e *TrapController) getTrap(c echo.Context) error {
-	trapId, err := strconv.Atoi(c.Param("trap"))
-	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Cannot find param"})
-	}
+	var params []interface{}
+	var keys []string
 
+	// primary key param
+	id, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Cannot find param [ID]"})
+	}
+	params = append(params, id)
+	keys = append(keys, "id = ?")
+
+	// query builder
 	var result models.Trap
-	err = e.db.QueryContext(models.Trap{}, c).First(&result, trapId).Error
-	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err})
+	query := e.db.QueryContext(models.Trap{}, c)
+	for i, _ := range keys {
+		query = query.Where(keys[i], params[i])
 	}
 
+	// grab first entry
+	err = query.First(&result).Error
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
+	}
+
+	// couldn't find entity
 	if result.ID == 0 {
 		return c.JSON(http.StatusNotFound, echo.Map{"error": "Cannot find entity"})
 	}
@@ -103,7 +117,7 @@ func (e *TrapController) getTrap(c echo.Context) error {
 // @Accept json
 // @Produce json
 // @Tags Trap
-// @Param id path int true "Id"
+// @Param ID path int true "ID"
 // @Param trap body models.Trap true "Trap"
 // @Success 200 {array} models.Trap
 // @Failure 404 {string} string "Cannot find entity"
@@ -115,11 +129,11 @@ func (e *TrapController) updateTrap(c echo.Context) error {
 	if err := c.Bind(trap); err != nil {
 		return c.JSON(
 			http.StatusInternalServerError,
-			echo.Map{"error": fmt.Sprintf("Error binding to entity: [%v]", err)},
+			echo.Map{"error": fmt.Sprintf("Error binding to entity [%v]", err.Error())},
 		)
 	}
 
-    entity := models.Trap{}
+	entity := models.Trap{}
 	err := e.db.Get(models.Trap{}, c).Model(&models.Trap{}).First(&entity, trap.ID).Error
 	if err != nil || trap.ID == 0 {
 		return c.JSON(http.StatusNotFound, echo.Map{"error": "Cannot find entity"})
@@ -127,7 +141,7 @@ func (e *TrapController) updateTrap(c echo.Context) error {
 
 	err = e.db.Get(models.Trap{}, c).Model(&entity).Select("*").Updates(&trap).Error
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error updating entity: [%v]", err)})
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error updating entity [%v]", err.Error())})
 	}
 
 	return c.JSON(http.StatusOK, trap)
@@ -149,7 +163,7 @@ func (e *TrapController) createTrap(c echo.Context) error {
 	if err := c.Bind(trap); err != nil {
 		return c.JSON(
 			http.StatusInternalServerError,
-			echo.Map{"error": fmt.Sprintf("Error binding to entity: [%v]", err)},
+			echo.Map{"error": fmt.Sprintf("Error binding to entity [%v]", err.Error())},
 		)
 	}
 
@@ -157,7 +171,7 @@ func (e *TrapController) createTrap(c echo.Context) error {
 	if err != nil {
 		return c.JSON(
 			http.StatusInternalServerError,
-			echo.Map{"error": fmt.Sprintf("Error inserting entity: [%v]", err)},
+			echo.Map{"error": fmt.Sprintf("Error inserting entity [%v]", err.Error())},
 		)
 	}
 
@@ -170,25 +184,38 @@ func (e *TrapController) createTrap(c echo.Context) error {
 // @Accept json
 // @Produce json
 // @Tags Trap
-// @Param id path int true "Id"
+// @Param id path int true "id"
 // @Success 200 {string} string "Entity deleted successfully"
 // @Failure 404 {string} string "Cannot find entity"
 // @Failure 500 {string} string "Error binding to entity"
 // @Failure 500 {string} string "Error deleting entity"
 // @Router /trap/{id} [delete]
 func (e *TrapController) deleteTrap(c echo.Context) error {
-	trapId, err := strconv.Atoi(c.Param("trap"))
+	var params []interface{}
+	var keys []string
+
+	// primary key param
+	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
 		e.logger.Error(err)
 	}
+	params = append(params, id)
+	keys = append(keys, "id = ?")
 
-	trap := new(models.Trap)
-	err = e.db.Get(models.Trap{}, c).Model(&models.Trap{}).First(&trap, trapId).Error
-	if err != nil || trap.ID == 0 {
-		return c.JSON(http.StatusNotFound, echo.Map{"error": "Cannot find entity"})
+	// query builder
+	var result models.Trap
+	query := e.db.QueryContext(models.Trap{}, c)
+	for i, _ := range keys {
+		query = query.Where(keys[i], params[i])
 	}
 
-	err = e.db.Get(models.Trap{}, c).Model(&models.Trap{}).Delete(&trap).Error
+	// grab first entry
+	err = query.First(&result).Error
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
+	}
+
+	err = e.db.Get(models.Trap{}, c).Model(&models.Trap{}).Delete(&result).Error
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Error deleting entity"})
 	}
@@ -213,7 +240,7 @@ func (e *TrapController) getTrapsBulk(c echo.Context) error {
 	if err := c.Bind(r); err != nil {
 		return c.JSON(
 			http.StatusInternalServerError,
-			echo.Map{"error": fmt.Sprintf("Error binding to bulk request: [%v]", err)},
+			echo.Map{"error": fmt.Sprintf("Error binding to bulk request: [%v]", err.Error())},
 		)
 	}
 
@@ -226,7 +253,7 @@ func (e *TrapController) getTrapsBulk(c echo.Context) error {
 
 	err := e.db.QueryContext(models.Trap{}, c).Find(&results, r.IDs).Error
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err})
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
 	}
 
 	return c.JSON(http.StatusOK, results)

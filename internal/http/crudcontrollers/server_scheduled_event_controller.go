@@ -12,7 +12,7 @@ import (
 )
 
 type ServerScheduledEventController struct {
-	db     *database.DatabaseResolver
+	db	 *database.DatabaseResolver
 	logger *logrus.Logger
 }
 
@@ -21,19 +21,19 @@ func NewServerScheduledEventController(
 	logger *logrus.Logger,
 ) *ServerScheduledEventController {
 	return &ServerScheduledEventController{
-		db:     db,
+		db:	 db,
 		logger: logger,
 	}
 }
 
 func (e *ServerScheduledEventController) Routes() []*routes.Route {
 	return []*routes.Route{
-		routes.RegisterRoute(http.MethodDelete, "server_scheduled_event/:server_scheduled_event", e.deleteServerScheduledEvent, nil),
-		routes.RegisterRoute(http.MethodGet, "server_scheduled_event/:server_scheduled_event", e.getServerScheduledEvent, nil),
+		routes.RegisterRoute(http.MethodGet, "server_scheduled_event/:id", e.getServerScheduledEvent, nil),
 		routes.RegisterRoute(http.MethodGet, "server_scheduled_events", e.listServerScheduledEvents, nil),
-		routes.RegisterRoute(http.MethodPost, "server_scheduled_events/bulk", e.getServerScheduledEventsBulk, nil),
-		routes.RegisterRoute(http.MethodPatch, "server_scheduled_event/:server_scheduled_event", e.updateServerScheduledEvent, nil),
 		routes.RegisterRoute(http.MethodPut, "server_scheduled_event", e.createServerScheduledEvent, nil),
+		routes.RegisterRoute(http.MethodDelete, "server_scheduled_event/:id", e.deleteServerScheduledEvent, nil),
+		routes.RegisterRoute(http.MethodPatch, "server_scheduled_event/:id", e.updateServerScheduledEvent, nil),
+		routes.RegisterRoute(http.MethodPost, "server_scheduled_events/bulk", e.getServerScheduledEventsBulk, nil),
 	}
 }
 
@@ -70,7 +70,7 @@ func (e *ServerScheduledEventController) listServerScheduledEvents(c echo.Contex
 // @Accept json
 // @Produce json
 // @Tags ServerScheduledEvent
-// @Param id path int true "Id"
+// @Param id path int true "id"
 // @Param includes query string false "Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names "
 // @Param select query string false "Column names [.] separated to fetch specific fields in response"
 // @Success 200 {array} models.ServerScheduledEvent
@@ -79,17 +79,31 @@ func (e *ServerScheduledEventController) listServerScheduledEvents(c echo.Contex
 // @Failure 500 {string} string "Bad query request"
 // @Router /server_scheduled_event/{id} [get]
 func (e *ServerScheduledEventController) getServerScheduledEvent(c echo.Context) error {
-	serverScheduledEventId, err := strconv.Atoi(c.Param("server_scheduled_event"))
-	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Cannot find param"})
-	}
+	var params []interface{}
+	var keys []string
 
+	// primary key param
+	id, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Cannot find param [ID]"})
+	}
+	params = append(params, id)
+	keys = append(keys, "id = ?")
+
+	// query builder
 	var result models.ServerScheduledEvent
-	err = e.db.QueryContext(models.ServerScheduledEvent{}, c).First(&result, serverScheduledEventId).Error
-	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err})
+	query := e.db.QueryContext(models.ServerScheduledEvent{}, c)
+	for i, _ := range keys {
+		query = query.Where(keys[i], params[i])
 	}
 
+	// grab first entry
+	err = query.First(&result).Error
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
+	}
+
+	// couldn't find entity
 	if result.ID == 0 {
 		return c.JSON(http.StatusNotFound, echo.Map{"error": "Cannot find entity"})
 	}
@@ -103,7 +117,7 @@ func (e *ServerScheduledEventController) getServerScheduledEvent(c echo.Context)
 // @Accept json
 // @Produce json
 // @Tags ServerScheduledEvent
-// @Param id path int true "Id"
+// @Param ID path int true "ID"
 // @Param server_scheduled_event body models.ServerScheduledEvent true "ServerScheduledEvent"
 // @Success 200 {array} models.ServerScheduledEvent
 // @Failure 404 {string} string "Cannot find entity"
@@ -115,11 +129,11 @@ func (e *ServerScheduledEventController) updateServerScheduledEvent(c echo.Conte
 	if err := c.Bind(serverScheduledEvent); err != nil {
 		return c.JSON(
 			http.StatusInternalServerError,
-			echo.Map{"error": fmt.Sprintf("Error binding to entity: [%v]", err)},
+			echo.Map{"error": fmt.Sprintf("Error binding to entity [%v]", err.Error())},
 		)
 	}
 
-    entity := models.ServerScheduledEvent{}
+	entity := models.ServerScheduledEvent{}
 	err := e.db.Get(models.ServerScheduledEvent{}, c).Model(&models.ServerScheduledEvent{}).First(&entity, serverScheduledEvent.ID).Error
 	if err != nil || serverScheduledEvent.ID == 0 {
 		return c.JSON(http.StatusNotFound, echo.Map{"error": "Cannot find entity"})
@@ -127,7 +141,7 @@ func (e *ServerScheduledEventController) updateServerScheduledEvent(c echo.Conte
 
 	err = e.db.Get(models.ServerScheduledEvent{}, c).Model(&entity).Select("*").Updates(&serverScheduledEvent).Error
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error updating entity: [%v]", err)})
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error updating entity [%v]", err.Error())})
 	}
 
 	return c.JSON(http.StatusOK, serverScheduledEvent)
@@ -149,7 +163,7 @@ func (e *ServerScheduledEventController) createServerScheduledEvent(c echo.Conte
 	if err := c.Bind(serverScheduledEvent); err != nil {
 		return c.JSON(
 			http.StatusInternalServerError,
-			echo.Map{"error": fmt.Sprintf("Error binding to entity: [%v]", err)},
+			echo.Map{"error": fmt.Sprintf("Error binding to entity [%v]", err.Error())},
 		)
 	}
 
@@ -157,7 +171,7 @@ func (e *ServerScheduledEventController) createServerScheduledEvent(c echo.Conte
 	if err != nil {
 		return c.JSON(
 			http.StatusInternalServerError,
-			echo.Map{"error": fmt.Sprintf("Error inserting entity: [%v]", err)},
+			echo.Map{"error": fmt.Sprintf("Error inserting entity [%v]", err.Error())},
 		)
 	}
 
@@ -170,25 +184,38 @@ func (e *ServerScheduledEventController) createServerScheduledEvent(c echo.Conte
 // @Accept json
 // @Produce json
 // @Tags ServerScheduledEvent
-// @Param id path int true "Id"
+// @Param id path int true "id"
 // @Success 200 {string} string "Entity deleted successfully"
 // @Failure 404 {string} string "Cannot find entity"
 // @Failure 500 {string} string "Error binding to entity"
 // @Failure 500 {string} string "Error deleting entity"
 // @Router /server_scheduled_event/{id} [delete]
 func (e *ServerScheduledEventController) deleteServerScheduledEvent(c echo.Context) error {
-	serverScheduledEventId, err := strconv.Atoi(c.Param("server_scheduled_event"))
+	var params []interface{}
+	var keys []string
+
+	// primary key param
+	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
 		e.logger.Error(err)
 	}
+	params = append(params, id)
+	keys = append(keys, "id = ?")
 
-	serverScheduledEvent := new(models.ServerScheduledEvent)
-	err = e.db.Get(models.ServerScheduledEvent{}, c).Model(&models.ServerScheduledEvent{}).First(&serverScheduledEvent, serverScheduledEventId).Error
-	if err != nil || serverScheduledEvent.ID == 0 {
-		return c.JSON(http.StatusNotFound, echo.Map{"error": "Cannot find entity"})
+	// query builder
+	var result models.ServerScheduledEvent
+	query := e.db.QueryContext(models.ServerScheduledEvent{}, c)
+	for i, _ := range keys {
+		query = query.Where(keys[i], params[i])
 	}
 
-	err = e.db.Get(models.ServerScheduledEvent{}, c).Model(&models.ServerScheduledEvent{}).Delete(&serverScheduledEvent).Error
+	// grab first entry
+	err = query.First(&result).Error
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
+	}
+
+	err = e.db.Get(models.ServerScheduledEvent{}, c).Model(&models.ServerScheduledEvent{}).Delete(&result).Error
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Error deleting entity"})
 	}
@@ -213,7 +240,7 @@ func (e *ServerScheduledEventController) getServerScheduledEventsBulk(c echo.Con
 	if err := c.Bind(r); err != nil {
 		return c.JSON(
 			http.StatusInternalServerError,
-			echo.Map{"error": fmt.Sprintf("Error binding to bulk request: [%v]", err)},
+			echo.Map{"error": fmt.Sprintf("Error binding to bulk request: [%v]", err.Error())},
 		)
 	}
 
@@ -226,7 +253,7 @@ func (e *ServerScheduledEventController) getServerScheduledEventsBulk(c echo.Con
 
 	err := e.db.QueryContext(models.ServerScheduledEvent{}, c).Find(&results, r.IDs).Error
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err})
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
 	}
 
 	return c.JSON(http.StatusOK, results)

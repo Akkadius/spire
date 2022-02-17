@@ -8,6 +8,7 @@ import (
 	"github.com/k0kubun/pp/v3"
 	"github.com/sirupsen/logrus"
 	"os"
+	"strings"
 	"text/template"
 )
 
@@ -90,7 +91,7 @@ func (gc *GenerateController) Generate() {
 
 	// build primary key param line
 	paramLine := ""
-	if priKey.DataType == "int" {
+	if strings.Contains(priKey.DataType, "int") {
 		paramLine = fmt.Sprintf(
 			"%s, err := strconv.Atoi(c.Param(\"%s\"))",
 			strcase.ToLowerCamel(keyName),
@@ -105,7 +106,8 @@ func (gc *GenerateController) Generate() {
 			pp.Println(key)
 
 			// add type lines (uint / int etc.)
-			param := fmt.Sprintf(`	// key param [%s] position [%s] type [%s]
+			param := fmt.Sprintf(`
+	// key param [%s] position [%s] type [%s]
 	if len(c.QueryParam("%s")) > 0 {
 		%sParam, err := strconv.Atoi(c.QueryParam("%s"))
 		if err != nil {
@@ -120,10 +122,10 @@ func (gc *GenerateController) Generate() {
 				key.OrdinalPosition,
 				key.DataType,
 				key.Column,
+				strcase.ToLowerCamel(key.Column),
 				key.Column,
 				key.Column,
-				key.Column,
-				key.Column,
+				strcase.ToLowerCamel(key.Column),
 				key.Column,
 			)
 

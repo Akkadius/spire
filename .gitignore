@@ -21,3 +21,5 @@ spire-linux-amd64
 spire-windows-amd64.exe
 spire-linux-amd64.zip
 spire-windows-amd64.exe.zip
+
+db_str.sql

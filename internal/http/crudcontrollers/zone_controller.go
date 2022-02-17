@@ -12,7 +12,7 @@ import (
 )
 
 type ZoneController struct {
-	db     *database.DatabaseResolver
+	db	 *database.DatabaseResolver
 	logger *logrus.Logger
 }
 
@@ -21,19 +21,19 @@ func NewZoneController(
 	logger *logrus.Logger,
 ) *ZoneController {
 	return &ZoneController{
-		db:     db,
+		db:	 db,
 		logger: logger,
 	}
 }
 
 func (e *ZoneController) Routes() []*routes.Route {
 	return []*routes.Route{
-		routes.RegisterRoute(http.MethodDelete, "zone/:zone", e.deleteZone, nil),
-		routes.RegisterRoute(http.MethodGet, "zone/:zone", e.getZone, nil),
+		routes.RegisterRoute(http.MethodGet, "zone/:id", e.getZone, nil),
 		routes.RegisterRoute(http.MethodGet, "zones", e.listZones, nil),
-		routes.RegisterRoute(http.MethodPost, "zones/bulk", e.getZonesBulk, nil),
-		routes.RegisterRoute(http.MethodPatch, "zone/:zone", e.updateZone, nil),
 		routes.RegisterRoute(http.MethodPut, "zone", e.createZone, nil),
+		routes.RegisterRoute(http.MethodDelete, "zone/:id", e.deleteZone, nil),
+		routes.RegisterRoute(http.MethodPatch, "zone/:id", e.updateZone, nil),
+		routes.RegisterRoute(http.MethodPost, "zones/bulk", e.getZonesBulk, nil),
 	}
 }
 
@@ -70,7 +70,7 @@ func (e *ZoneController) listZones(c echo.Context) error {
 // @Accept json
 // @Produce json
 // @Tags Zone
-// @Param id path int true "Id"
+// @Param id path int true "id"
 // @Param includes query string false "Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names "
 // @Param select query string false "Column names [.] separated to fetch specific fields in response"
 // @Success 200 {array} models.Zone
@@ -79,17 +79,31 @@ func (e *ZoneController) listZones(c echo.Context) error {
 // @Failure 500 {string} string "Bad query request"
 // @Router /zone/{id} [get]
 func (e *ZoneController) getZone(c echo.Context) error {
-	zoneId, err := strconv.Atoi(c.Param("zone"))
-	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Cannot find param"})
-	}
+	var params []interface{}
+	var keys []string
 
+	// primary key param
+	id, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Cannot find param [ID]"})
+	}
+	params = append(params, id)
+	keys = append(keys, "id = ?")
+
+	// query builder
 	var result models.Zone
-	err = e.db.QueryContext(models.Zone{}, c).First(&result, zoneId).Error
-	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err})
+	query := e.db.QueryContext(models.Zone{}, c)
+	for i, _ := range keys {
+		query = query.Where(keys[i], params[i])
 	}
 
+	// grab first entry
+	err = query.First(&result).Error
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
+	}
+
+	// couldn't find entity
 	if result.ID == 0 {
 		return c.JSON(http.StatusNotFound, echo.Map{"error": "Cannot find entity"})
 	}
@@ -103,7 +117,7 @@ func (e *ZoneController) getZone(c echo.Context) error {
 // @Accept json
 // @Produce json
 // @Tags Zone
-// @Param id path int true "Id"
+// @Param ID path int true "ID"
 // @Param zone body models.Zone true "Zone"
 // @Success 200 {array} models.Zone
 // @Failure 404 {string} string "Cannot find entity"
@@ -115,11 +129,11 @@ func (e *ZoneController) updateZone(c echo.Context) error {
 	if err := c.Bind(zone); err != nil {
 		return c.JSON(
 			http.StatusInternalServerError,
-			echo.Map{"error": fmt.Sprintf("Error binding to entity: [%v]", err)},
+			echo.Map{"error": fmt.Sprintf("Error binding to entity [%v]", err.Error())},
 		)
 	}
 
-    entity := models.Zone{}
+	entity := models.Zone{}
 	err := e.db.Get(models.Zone{}, c).Model(&models.Zone{}).First(&entity, zone.ID).Error
 	if err != nil || zone.ID == 0 {
 		return c.JSON(http.StatusNotFound, echo.Map{"error": "Cannot find entity"})
@@ -127,7 +141,7 @@ func (e *ZoneController) updateZone(c echo.Context) error {
 
 	err = e.db.Get(models.Zone{}, c).Model(&entity).Select("*").Updates(&zone).Error
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error updating entity: [%v]", err)})
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error updating entity [%v]", err.Error())})
 	}
 
 	return c.JSON(http.StatusOK, zone)
@@ -149,7 +163,7 @@ func (e *ZoneController) createZone(c echo.Context) error {
 	if err := c.Bind(zone); err != nil {
 		return c.JSON(
 			http.StatusInternalServerError,
-			echo.Map{"error": fmt.Sprintf("Error binding to entity: [%v]", err)},
+			echo.Map{"error": fmt.Sprintf("Error binding to entity [%v]", err.Error())},
 		)
 	}
 
@@ -157,7 +171,7 @@ func (e *ZoneController) createZone(c echo.Context) error {
 	if err != nil {
 		return c.JSON(
 			http.StatusInternalServerError,
-			echo.Map{"error": fmt.Sprintf("Error inserting entity: [%v]", err)},
+			echo.Map{"error": fmt.Sprintf("Error inserting entity [%v]", err.Error())},
 		)
 	}
 
@@ -170,25 +184,38 @@ func (e *ZoneController) createZone(c echo.Context) error {
 // @Accept json
 // @Produce json
 // @Tags Zone
-// @Param id path int true "Id"
+// @Param id path int true "id"
 // @Success 200 {string} string "Entity deleted successfully"
 // @Failure 404 {string} string "Cannot find entity"
 // @Failure 500 {string} string "Error binding to entity"
 // @Failure 500 {string} string "Error deleting entity"
 // @Router /zone/{id} [delete]
 func (e *ZoneController) deleteZone(c echo.Context) error {
-	zoneId, err := strconv.Atoi(c.Param("zone"))
+	var params []interface{}
+	var keys []string
+
+	// primary key param
+	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
 		e.logger.Error(err)
 	}
+	params = append(params, id)
+	keys = append(keys, "id = ?")
 
-	zone := new(models.Zone)
-	err = e.db.Get(models.Zone{}, c).Model(&models.Zone{}).First(&zone, zoneId).Error
-	if err != nil || zone.ID == 0 {
-		return c.JSON(http.StatusNotFound, echo.Map{"error": "Cannot find entity"})
+	// query builder
+	var result models.Zone
+	query := e.db.QueryContext(models.Zone{}, c)
+	for i, _ := range keys {
+		query = query.Where(keys[i], params[i])
 	}
 
-	err = e.db.Get(models.Zone{}, c).Model(&models.Zone{}).Delete(&zone).Error
+	// grab first entry
+	err = query.First(&result).Error
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
+	}
+
+	err = e.db.Get(models.Zone{}, c).Model(&models.Zone{}).Delete(&result).Error
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Error deleting entity"})
 	}
@@ -213,7 +240,7 @@ func (e *ZoneController) getZonesBulk(c echo.Context) error {
 	if err := c.Bind(r); err != nil {
 		return c.JSON(
 			http.StatusInternalServerError,
-			echo.Map{"error": fmt.Sprintf("Error binding to bulk request: [%v]", err)},
+			echo.Map{"error": fmt.Sprintf("Error binding to bulk request: [%v]", err.Error())},
 		)
 	}
 
@@ -226,7 +253,7 @@ func (e *ZoneController) getZonesBulk(c echo.Context) error {
 
 	err := e.db.QueryContext(models.Zone{}, c).Find(&results, r.IDs).Error
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err})
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
 	}
 
 	return c.JSON(http.StatusOK, results)

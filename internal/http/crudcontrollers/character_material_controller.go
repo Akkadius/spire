@@ -12,7 +12,7 @@ import (
 )
 
 type CharacterMaterialController struct {
-	db     *database.DatabaseResolver
+	db	 *database.DatabaseResolver
 	logger *logrus.Logger
 }
 
@@ -21,19 +21,19 @@ func NewCharacterMaterialController(
 	logger *logrus.Logger,
 ) *CharacterMaterialController {
 	return &CharacterMaterialController{
-		db:     db,
+		db:	 db,
 		logger: logger,
 	}
 }
 
 func (e *CharacterMaterialController) Routes() []*routes.Route {
 	return []*routes.Route{
-		routes.RegisterRoute(http.MethodDelete, "character_material/:character_material", e.deleteCharacterMaterial, nil),
-		routes.RegisterRoute(http.MethodGet, "character_material/:character_material", e.getCharacterMaterial, nil),
+		routes.RegisterRoute(http.MethodGet, "character_material/:id", e.getCharacterMaterial, nil),
 		routes.RegisterRoute(http.MethodGet, "character_materials", e.listCharacterMaterials, nil),
-		routes.RegisterRoute(http.MethodPost, "character_materials/bulk", e.getCharacterMaterialsBulk, nil),
-		routes.RegisterRoute(http.MethodPatch, "character_material/:character_material", e.updateCharacterMaterial, nil),
 		routes.RegisterRoute(http.MethodPut, "character_material", e.createCharacterMaterial, nil),
+		routes.RegisterRoute(http.MethodDelete, "character_material/:id", e.deleteCharacterMaterial, nil),
+		routes.RegisterRoute(http.MethodPatch, "character_material/:id", e.updateCharacterMaterial, nil),
+		routes.RegisterRoute(http.MethodPost, "character_materials/bulk", e.getCharacterMaterialsBulk, nil),
 	}
 }
 
@@ -70,7 +70,7 @@ func (e *CharacterMaterialController) listCharacterMaterials(c echo.Context) err
 // @Accept json
 // @Produce json
 // @Tags CharacterMaterial
-// @Param id path int true "Id"
+// @Param id path int true "id"
 // @Param includes query string false "Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names "
 // @Param select query string false "Column names [.] separated to fetch specific fields in response"
 // @Success 200 {array} models.CharacterMaterial
@@ -79,17 +79,42 @@ func (e *CharacterMaterialController) listCharacterMaterials(c echo.Context) err
 // @Failure 500 {string} string "Bad query request"
 // @Router /character_material/{id} [get]
 func (e *CharacterMaterialController) getCharacterMaterial(c echo.Context) error {
-	characterMaterialId, err := strconv.Atoi(c.Param("character_material"))
+	var params []interface{}
+	var keys []string
+
+	// primary key param
+	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Cannot find param"})
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Cannot find param [ID]"})
+	}
+	params = append(params, id)
+	keys = append(keys, "id = ?")
+
+	// key param [slot] position [2] type [tinyint]
+	if len(c.QueryParam("slot")) > 0 {
+		slotParam, err := strconv.Atoi(c.QueryParam("slot"))
+		if err != nil {
+			return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error parsing query param [slot] err [%s]", err.Error())})
+		}
+
+		params = append(params, slotParam)
+		keys = append(keys, "slot = ?")
 	}
 
+	// query builder
 	var result models.CharacterMaterial
-	err = e.db.QueryContext(models.CharacterMaterial{}, c).First(&result, characterMaterialId).Error
-	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err})
+	query := e.db.QueryContext(models.CharacterMaterial{}, c)
+	for i, _ := range keys {
+		query = query.Where(keys[i], params[i])
 	}
 
+	// grab first entry
+	err = query.First(&result).Error
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
+	}
+
+	// couldn't find entity
 	if result.ID == 0 {
 		return c.JSON(http.StatusNotFound, echo.Map{"error": "Cannot find entity"})
 	}
@@ -103,7 +128,7 @@ func (e *CharacterMaterialController) getCharacterMaterial(c echo.Context) error
 // @Accept json
 // @Produce json
 // @Tags CharacterMaterial
-// @Param id path int true "Id"
+// @Param ID path int true "ID"
 // @Param character_material body models.CharacterMaterial true "CharacterMaterial"
 // @Success 200 {array} models.CharacterMaterial
 // @Failure 404 {string} string "Cannot find entity"
@@ -115,11 +140,11 @@ func (e *CharacterMaterialController) updateCharacterMaterial(c echo.Context) er
 	if err := c.Bind(characterMaterial); err != nil {
 		return c.JSON(
 			http.StatusInternalServerError,
-			echo.Map{"error": fmt.Sprintf("Error binding to entity: [%v]", err)},
+			echo.Map{"error": fmt.Sprintf("Error binding to entity [%v]", err.Error())},
 		)
 	}
 
-    entity := models.CharacterMaterial{}
+	entity := models.CharacterMaterial{}
 	err := e.db.Get(models.CharacterMaterial{}, c).Model(&models.CharacterMaterial{}).First(&entity, characterMaterial.ID).Error
 	if err != nil || characterMaterial.ID == 0 {
 		return c.JSON(http.StatusNotFound, echo.Map{"error": "Cannot find entity"})
@@ -127,7 +152,7 @@ func (e *CharacterMaterialController) updateCharacterMaterial(c echo.Context) er
 
 	err = e.db.Get(models.CharacterMaterial{}, c).Model(&entity).Select("*").Updates(&characterMaterial).Error
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error updating entity: [%v]", err)})
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error updating entity [%v]", err.Error())})
 	}
 
 	return c.JSON(http.StatusOK, characterMaterial)
@@ -149,7 +174,7 @@ func (e *CharacterMaterialController) createCharacterMaterial(c echo.Context) er
 	if err := c.Bind(characterMaterial); err != nil {
 		return c.JSON(
 			http.StatusInternalServerError,
-			echo.Map{"error": fmt.Sprintf("Error binding to entity: [%v]", err)},
+			echo.Map{"error": fmt.Sprintf("Error binding to entity [%v]", err.Error())},
 		)
 	}
 
@@ -157,7 +182,7 @@ func (e *CharacterMaterialController) createCharacterMaterial(c echo.Context) er
 	if err != nil {
 		return c.JSON(
 			http.StatusInternalServerError,
-			echo.Map{"error": fmt.Sprintf("Error inserting entity: [%v]", err)},
+			echo.Map{"error": fmt.Sprintf("Error inserting entity [%v]", err.Error())},
 		)
 	}
 
@@ -170,25 +195,49 @@ func (e *CharacterMaterialController) createCharacterMaterial(c echo.Context) er
 // @Accept json
 // @Produce json
 // @Tags CharacterMaterial
-// @Param id path int true "Id"
+// @Param id path int true "id"
 // @Success 200 {string} string "Entity deleted successfully"
 // @Failure 404 {string} string "Cannot find entity"
 // @Failure 500 {string} string "Error binding to entity"
 // @Failure 500 {string} string "Error deleting entity"
 // @Router /character_material/{id} [delete]
 func (e *CharacterMaterialController) deleteCharacterMaterial(c echo.Context) error {
-	characterMaterialId, err := strconv.Atoi(c.Param("character_material"))
+	var params []interface{}
+	var keys []string
+
+	// primary key param
+	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
 		e.logger.Error(err)
 	}
+	params = append(params, id)
+	keys = append(keys, "id = ?")
 
-	characterMaterial := new(models.CharacterMaterial)
-	err = e.db.Get(models.CharacterMaterial{}, c).Model(&models.CharacterMaterial{}).First(&characterMaterial, characterMaterialId).Error
-	if err != nil || characterMaterial.ID == 0 {
-		return c.JSON(http.StatusNotFound, echo.Map{"error": "Cannot find entity"})
+	// key param [slot] position [2] type [tinyint]
+	if len(c.QueryParam("slot")) > 0 {
+		slotParam, err := strconv.Atoi(c.QueryParam("slot"))
+		if err != nil {
+			return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error parsing query param [slot] err [%s]", err.Error())})
+		}
+
+		params = append(params, slotParam)
+		keys = append(keys, "slot = ?")
 	}
 
-	err = e.db.Get(models.CharacterMaterial{}, c).Model(&models.CharacterMaterial{}).Delete(&characterMaterial).Error
+	// query builder
+	var result models.CharacterMaterial
+	query := e.db.QueryContext(models.CharacterMaterial{}, c)
+	for i, _ := range keys {
+		query = query.Where(keys[i], params[i])
+	}
+
+	// grab first entry
+	err = query.First(&result).Error
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
+	}
+
+	err = e.db.Get(models.CharacterMaterial{}, c).Model(&models.CharacterMaterial{}).Delete(&result).Error
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Error deleting entity"})
 	}
@@ -213,7 +262,7 @@ func (e *CharacterMaterialController) getCharacterMaterialsBulk(c echo.Context) 
 	if err := c.Bind(r); err != nil {
 		return c.JSON(
 			http.StatusInternalServerError,
-			echo.Map{"error": fmt.Sprintf("Error binding to bulk request: [%v]", err)},
+			echo.Map{"error": fmt.Sprintf("Error binding to bulk request: [%v]", err.Error())},
 		)
 	}
 
@@ -226,7 +275,7 @@ func (e *CharacterMaterialController) getCharacterMaterialsBulk(c echo.Context) 
 
 	err := e.db.QueryContext(models.CharacterMaterial{}, c).Find(&results, r.IDs).Error
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err})
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
 	}
 
 	return c.JSON(http.StatusOK, results)

@@ -12,7 +12,7 @@ import (
 )
 
 type SpellsNewController struct {
-	db     *database.DatabaseResolver
+	db	 *database.DatabaseResolver
 	logger *logrus.Logger
 }
 
@@ -21,19 +21,19 @@ func NewSpellsNewController(
 	logger *logrus.Logger,
 ) *SpellsNewController {
 	return &SpellsNewController{
-		db:     db,
+		db:	 db,
 		logger: logger,
 	}
 }
 
 func (e *SpellsNewController) Routes() []*routes.Route {
 	return []*routes.Route{
-		routes.RegisterRoute(http.MethodDelete, "spells_new/:spells_new", e.deleteSpellsNew, nil),
-		routes.RegisterRoute(http.MethodGet, "spells_new/:spells_new", e.getSpellsNew, nil),
+		routes.RegisterRoute(http.MethodGet, "spells_new/:id", e.getSpellsNew, nil),
 		routes.RegisterRoute(http.MethodGet, "spells_news", e.listSpellsNews, nil),
-		routes.RegisterRoute(http.MethodPost, "spells_news/bulk", e.getSpellsNewsBulk, nil),
-		routes.RegisterRoute(http.MethodPatch, "spells_new/:spells_new", e.updateSpellsNew, nil),
 		routes.RegisterRoute(http.MethodPut, "spells_new", e.createSpellsNew, nil),
+		routes.RegisterRoute(http.MethodDelete, "spells_new/:id", e.deleteSpellsNew, nil),
+		routes.RegisterRoute(http.MethodPatch, "spells_new/:id", e.updateSpellsNew, nil),
+		routes.RegisterRoute(http.MethodPost, "spells_news/bulk", e.getSpellsNewsBulk, nil),
 	}
 }
 
@@ -70,7 +70,7 @@ func (e *SpellsNewController) listSpellsNews(c echo.Context) error {
 // @Accept json
 // @Produce json
 // @Tags SpellsNew
-// @Param id path int true "Id"
+// @Param id path int true "id"
 // @Param includes query string false "Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names <h4>Relationships</h4>Aura<br>BlockedSpells<br>Damageshieldtypes<br>SpellBuckets<br>SpellGlobals"
 // @Param select query string false "Column names [.] separated to fetch specific fields in response"
 // @Success 200 {array} models.SpellsNew
@@ -79,17 +79,31 @@ func (e *SpellsNewController) listSpellsNews(c echo.Context) error {
 // @Failure 500 {string} string "Bad query request"
 // @Router /spells_new/{id} [get]
 func (e *SpellsNewController) getSpellsNew(c echo.Context) error {
-	spellsNewId, err := strconv.Atoi(c.Param("spells_new"))
-	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Cannot find param"})
-	}
+	var params []interface{}
+	var keys []string
 
+	// primary key param
+	id, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Cannot find param [ID]"})
+	}
+	params = append(params, id)
+	keys = append(keys, "id = ?")
+
+	// query builder
 	var result models.SpellsNew
-	err = e.db.QueryContext(models.SpellsNew{}, c).First(&result, spellsNewId).Error
-	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err})
+	query := e.db.QueryContext(models.SpellsNew{}, c)
+	for i, _ := range keys {
+		query = query.Where(keys[i], params[i])
 	}
 
+	// grab first entry
+	err = query.First(&result).Error
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
+	}
+
+	// couldn't find entity
 	if result.ID == 0 {
 		return c.JSON(http.StatusNotFound, echo.Map{"error": "Cannot find entity"})
 	}
@@ -103,7 +117,7 @@ func (e *SpellsNewController) getSpellsNew(c echo.Context) error {
 // @Accept json
 // @Produce json
 // @Tags SpellsNew
-// @Param id path int true "Id"
+// @Param ID path int true "ID"
 // @Param spells_new body models.SpellsNew true "SpellsNew"
 // @Success 200 {array} models.SpellsNew
 // @Failure 404 {string} string "Cannot find entity"
@@ -115,11 +129,11 @@ func (e *SpellsNewController) updateSpellsNew(c echo.Context) error {
 	if err := c.Bind(spellsNew); err != nil {
 		return c.JSON(
 			http.StatusInternalServerError,
-			echo.Map{"error": fmt.Sprintf("Error binding to entity: [%v]", err)},
+			echo.Map{"error": fmt.Sprintf("Error binding to entity [%v]", err.Error())},
 		)
 	}
 
-    entity := models.SpellsNew{}
+	entity := models.SpellsNew{}
 	err := e.db.Get(models.SpellsNew{}, c).Model(&models.SpellsNew{}).First(&entity, spellsNew.ID).Error
 	if err != nil || spellsNew.ID == 0 {
 		return c.JSON(http.StatusNotFound, echo.Map{"error": "Cannot find entity"})
@@ -127,7 +141,7 @@ func (e *SpellsNewController) updateSpellsNew(c echo.Context) error {
 
 	err = e.db.Get(models.SpellsNew{}, c).Model(&entity).Select("*").Updates(&spellsNew).Error
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error updating entity: [%v]", err)})
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error updating entity [%v]", err.Error())})
 	}
 
 	return c.JSON(http.StatusOK, spellsNew)
@@ -149,7 +163,7 @@ func (e *SpellsNewController) createSpellsNew(c echo.Context) error {
 	if err := c.Bind(spellsNew); err != nil {
 		return c.JSON(
 			http.StatusInternalServerError,
-			echo.Map{"error": fmt.Sprintf("Error binding to entity: [%v]", err)},
+			echo.Map{"error": fmt.Sprintf("Error binding to entity [%v]", err.Error())},
 		)
 	}
 
@@ -157,7 +171,7 @@ func (e *SpellsNewController) createSpellsNew(c echo.Context) error {
 	if err != nil {
 		return c.JSON(
 			http.StatusInternalServerError,
-			echo.Map{"error": fmt.Sprintf("Error inserting entity: [%v]", err)},
+			echo.Map{"error": fmt.Sprintf("Error inserting entity [%v]", err.Error())},
 		)
 	}
 
@@ -170,25 +184,38 @@ func (e *SpellsNewController) createSpellsNew(c echo.Context) error {
 // @Accept json
 // @Produce json
 // @Tags SpellsNew
-// @Param id path int true "Id"
+// @Param id path int true "id"
 // @Success 200 {string} string "Entity deleted successfully"
 // @Failure 404 {string} string "Cannot find entity"
 // @Failure 500 {string} string "Error binding to entity"
 // @Failure 500 {string} string "Error deleting entity"
 // @Router /spells_new/{id} [delete]
 func (e *SpellsNewController) deleteSpellsNew(c echo.Context) error {
-	spellsNewId, err := strconv.Atoi(c.Param("spells_new"))
+	var params []interface{}
+	var keys []string
+
+	// primary key param
+	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
 		e.logger.Error(err)
 	}
+	params = append(params, id)
+	keys = append(keys, "id = ?")
 
-	spellsNew := new(models.SpellsNew)
-	err = e.db.Get(models.SpellsNew{}, c).Model(&models.SpellsNew{}).First(&spellsNew, spellsNewId).Error
-	if err != nil || spellsNew.ID == 0 {
-		return c.JSON(http.StatusNotFound, echo.Map{"error": "Cannot find entity"})
+	// query builder
+	var result models.SpellsNew
+	query := e.db.QueryContext(models.SpellsNew{}, c)
+	for i, _ := range keys {
+		query = query.Where(keys[i], params[i])
 	}
 
-	err = e.db.Get(models.SpellsNew{}, c).Model(&models.SpellsNew{}).Delete(&spellsNew).Error
+	// grab first entry
+	err = query.First(&result).Error
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
+	}
+
+	err = e.db.Get(models.SpellsNew{}, c).Model(&models.SpellsNew{}).Delete(&result).Error
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Error deleting entity"})
 	}
@@ -213,7 +240,7 @@ func (e *SpellsNewController) getSpellsNewsBulk(c echo.Context) error {
 	if err := c.Bind(r); err != nil {
 		return c.JSON(
 			http.StatusInternalServerError,
-			echo.Map{"error": fmt.Sprintf("Error binding to bulk request: [%v]", err)},
+			echo.Map{"error": fmt.Sprintf("Error binding to bulk request: [%v]", err.Error())},
 		)
 	}
 
@@ -226,7 +253,7 @@ func (e *SpellsNewController) getSpellsNewsBulk(c echo.Context) error {
 
 	err := e.db.QueryContext(models.SpellsNew{}, c).Find(&results, r.IDs).Error
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err})
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
 	}
 
 	return c.JSON(http.StatusOK, results)

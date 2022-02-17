@@ -12,7 +12,7 @@ import (
 )
 
 type DataBucketController struct {
-	db     *database.DatabaseResolver
+	db	 *database.DatabaseResolver
 	logger *logrus.Logger
 }
 
@@ -21,19 +21,19 @@ func NewDataBucketController(
 	logger *logrus.Logger,
 ) *DataBucketController {
 	return &DataBucketController{
-		db:     db,
+		db:	 db,
 		logger: logger,
 	}
 }
 
 func (e *DataBucketController) Routes() []*routes.Route {
 	return []*routes.Route{
-		routes.RegisterRoute(http.MethodDelete, "data_bucket/:data_bucket", e.deleteDataBucket, nil),
-		routes.RegisterRoute(http.MethodGet, "data_bucket/:data_bucket", e.getDataBucket, nil),
+		routes.RegisterRoute(http.MethodGet, "data_bucket/:id", e.getDataBucket, nil),
 		routes.RegisterRoute(http.MethodGet, "data_buckets", e.listDataBuckets, nil),
-		routes.RegisterRoute(http.MethodPost, "data_buckets/bulk", e.getDataBucketsBulk, nil),
-		routes.RegisterRoute(http.MethodPatch, "data_bucket/:data_bucket", e.updateDataBucket, nil),
 		routes.RegisterRoute(http.MethodPut, "data_bucket", e.createDataBucket, nil),
+		routes.RegisterRoute(http.MethodDelete, "data_bucket/:id", e.deleteDataBucket, nil),
+		routes.RegisterRoute(http.MethodPatch, "data_bucket/:id", e.updateDataBucket, nil),
+		routes.RegisterRoute(http.MethodPost, "data_buckets/bulk", e.getDataBucketsBulk, nil),
 	}
 }
 
@@ -70,7 +70,7 @@ func (e *DataBucketController) listDataBuckets(c echo.Context) error {
 // @Accept json
 // @Produce json
 // @Tags DataBucket
-// @Param id path int true "Id"
+// @Param id path int true "id"
 // @Param includes query string false "Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names "
 // @Param select query string false "Column names [.] separated to fetch specific fields in response"
 // @Success 200 {array} models.DataBucket
@@ -79,17 +79,31 @@ func (e *DataBucketController) listDataBuckets(c echo.Context) error {
 // @Failure 500 {string} string "Bad query request"
 // @Router /data_bucket/{id} [get]
 func (e *DataBucketController) getDataBucket(c echo.Context) error {
-	dataBucketId, err := strconv.Atoi(c.Param("data_bucket"))
-	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Cannot find param"})
-	}
+	var params []interface{}
+	var keys []string
 
+	// primary key param
+	id, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Cannot find param [ID]"})
+	}
+	params = append(params, id)
+	keys = append(keys, "id = ?")
+
+	// query builder
 	var result models.DataBucket
-	err = e.db.QueryContext(models.DataBucket{}, c).First(&result, dataBucketId).Error
-	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err})
+	query := e.db.QueryContext(models.DataBucket{}, c)
+	for i, _ := range keys {
+		query = query.Where(keys[i], params[i])
 	}
 
+	// grab first entry
+	err = query.First(&result).Error
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
+	}
+
+	// couldn't find entity
 	if result.ID == 0 {
 		return c.JSON(http.StatusNotFound, echo.Map{"error": "Cannot find entity"})
 	}
@@ -103,7 +117,7 @@ func (e *DataBucketController) getDataBucket(c echo.Context) error {
 // @Accept json
 // @Produce json
 // @Tags DataBucket
-// @Param id path int true "Id"
+// @Param ID path int true "ID"
 // @Param data_bucket body models.DataBucket true "DataBucket"
 // @Success 200 {array} models.DataBucket
 // @Failure 404 {string} string "Cannot find entity"
@@ -115,11 +129,11 @@ func (e *DataBucketController) updateDataBucket(c echo.Context) error {
 	if err := c.Bind(dataBucket); err != nil {
 		return c.JSON(
 			http.StatusInternalServerError,
-			echo.Map{"error": fmt.Sprintf("Error binding to entity: [%v]", err)},
+			echo.Map{"error": fmt.Sprintf("Error binding to entity [%v]", err.Error())},
 		)
 	}
 
-    entity := models.DataBucket{}
+	entity := models.DataBucket{}
 	err := e.db.Get(models.DataBucket{}, c).Model(&models.DataBucket{}).First(&entity, dataBucket.ID).Error
 	if err != nil || dataBucket.ID == 0 {
 		return c.JSON(http.StatusNotFound, echo.Map{"error": "Cannot find entity"})
@@ -127,7 +141,7 @@ func (e *DataBucketController) updateDataBucket(c echo.Context) error {
 
 	err = e.db.Get(models.DataBucket{}, c).Model(&entity).Select("*").Updates(&dataBucket).Error
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error updating entity: [%v]", err)})
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error updating entity [%v]", err.Error())})
 	}
 
 	return c.JSON(http.StatusOK, dataBucket)
@@ -149,7 +163,7 @@ func (e *DataBucketController) createDataBucket(c echo.Context) error {
 	if err := c.Bind(dataBucket); err != nil {
 		return c.JSON(
 			http.StatusInternalServerError,
-			echo.Map{"error": fmt.Sprintf("Error binding to entity: [%v]", err)},
+			echo.Map{"error": fmt.Sprintf("Error binding to entity [%v]", err.Error())},
 		)
 	}
 
@@ -157,7 +171,7 @@ func (e *DataBucketController) createDataBucket(c echo.Context) error {
 	if err != nil {
 		return c.JSON(
 			http.StatusInternalServerError,
-			echo.Map{"error": fmt.Sprintf("Error inserting entity: [%v]", err)},
+			echo.Map{"error": fmt.Sprintf("Error inserting entity [%v]", err.Error())},
 		)
 	}
 
@@ -170,25 +184,38 @@ func (e *DataBucketController) createDataBucket(c echo.Context) error {
 // @Accept json
 // @Produce json
 // @Tags DataBucket
-// @Param id path int true "Id"
+// @Param id path int true "id"
 // @Success 200 {string} string "Entity deleted successfully"
 // @Failure 404 {string} string "Cannot find entity"
 // @Failure 500 {string} string "Error binding to entity"
 // @Failure 500 {string} string "Error deleting entity"
 // @Router /data_bucket/{id} [delete]
 func (e *DataBucketController) deleteDataBucket(c echo.Context) error {
-	dataBucketId, err := strconv.Atoi(c.Param("data_bucket"))
+	var params []interface{}
+	var keys []string
+
+	// primary key param
+	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
 		e.logger.Error(err)
 	}
+	params = append(params, id)
+	keys = append(keys, "id = ?")
 
-	dataBucket := new(models.DataBucket)
-	err = e.db.Get(models.DataBucket{}, c).Model(&models.DataBucket{}).First(&dataBucket, dataBucketId).Error
-	if err != nil || dataBucket.ID == 0 {
-		return c.JSON(http.StatusNotFound, echo.Map{"error": "Cannot find entity"})
+	// query builder
+	var result models.DataBucket
+	query := e.db.QueryContext(models.DataBucket{}, c)
+	for i, _ := range keys {
+		query = query.Where(keys[i], params[i])
 	}
 
-	err = e.db.Get(models.DataBucket{}, c).Model(&models.DataBucket{}).Delete(&dataBucket).Error
+	// grab first entry
+	err = query.First(&result).Error
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
+	}
+
+	err = e.db.Get(models.DataBucket{}, c).Model(&models.DataBucket{}).Delete(&result).Error
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Error deleting entity"})
 	}
@@ -213,7 +240,7 @@ func (e *DataBucketController) getDataBucketsBulk(c echo.Context) error {
 	if err := c.Bind(r); err != nil {
 		return c.JSON(
 			http.StatusInternalServerError,
-			echo.Map{"error": fmt.Sprintf("Error binding to bulk request: [%v]", err)},
+			echo.Map{"error": fmt.Sprintf("Error binding to bulk request: [%v]", err.Error())},
 		)
 	}
 
@@ -226,7 +253,7 @@ func (e *DataBucketController) getDataBucketsBulk(c echo.Context) error {
 
 	err := e.db.QueryContext(models.DataBucket{}, c).Find(&results, r.IDs).Error
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err})
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
 	}
 
 	return c.JSON(http.StatusOK, results)

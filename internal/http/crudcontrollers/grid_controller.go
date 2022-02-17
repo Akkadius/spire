@@ -12,7 +12,7 @@ import (
 )
 
 type GridController struct {
-	db     *database.DatabaseResolver
+	db	 *database.DatabaseResolver
 	logger *logrus.Logger
 }
 
@@ -21,19 +21,19 @@ func NewGridController(
 	logger *logrus.Logger,
 ) *GridController {
 	return &GridController{
-		db:     db,
+		db:	 db,
 		logger: logger,
 	}
 }
 
 func (e *GridController) Routes() []*routes.Route {
 	return []*routes.Route{
-		routes.RegisterRoute(http.MethodDelete, "grid/:grid", e.deleteGrid, nil),
-		routes.RegisterRoute(http.MethodGet, "grid/:grid", e.getGrid, nil),
+		routes.RegisterRoute(http.MethodGet, "grid/:id", e.getGrid, nil),
 		routes.RegisterRoute(http.MethodGet, "grids", e.listGrids, nil),
-		routes.RegisterRoute(http.MethodPost, "grids/bulk", e.getGridsBulk, nil),
-		routes.RegisterRoute(http.MethodPatch, "grid/:grid", e.updateGrid, nil),
 		routes.RegisterRoute(http.MethodPut, "grid", e.createGrid, nil),
+		routes.RegisterRoute(http.MethodDelete, "grid/:id", e.deleteGrid, nil),
+		routes.RegisterRoute(http.MethodPatch, "grid/:id", e.updateGrid, nil),
+		routes.RegisterRoute(http.MethodPost, "grids/bulk", e.getGridsBulk, nil),
 	}
 }
 
@@ -70,7 +70,7 @@ func (e *GridController) listGrids(c echo.Context) error {
 // @Accept json
 // @Produce json
 // @Tags Grid
-// @Param id path int true "Id"
+// @Param id path int true "id"
 // @Param includes query string false "Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names <h4>Relationships</h4>GridEntries"
 // @Param select query string false "Column names [.] separated to fetch specific fields in response"
 // @Success 200 {array} models.Grid
@@ -79,17 +79,42 @@ func (e *GridController) listGrids(c echo.Context) error {
 // @Failure 500 {string} string "Bad query request"
 // @Router /grid/{id} [get]
 func (e *GridController) getGrid(c echo.Context) error {
-	gridId, err := strconv.Atoi(c.Param("grid"))
+	var params []interface{}
+	var keys []string
+
+	// primary key param
+	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Cannot find param"})
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Cannot find param [ID]"})
+	}
+	params = append(params, id)
+	keys = append(keys, "id = ?")
+
+	// key param [zoneid] position [2] type [int]
+	if len(c.QueryParam("zoneid")) > 0 {
+		zoneidParam, err := strconv.Atoi(c.QueryParam("zoneid"))
+		if err != nil {
+			return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error parsing query param [zoneid] err [%s]", err.Error())})
+		}
+
+		params = append(params, zoneidParam)
+		keys = append(keys, "zoneid = ?")
 	}
 
+	// query builder
 	var result models.Grid
-	err = e.db.QueryContext(models.Grid{}, c).First(&result, gridId).Error
-	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err})
+	query := e.db.QueryContext(models.Grid{}, c)
+	for i, _ := range keys {
+		query = query.Where(keys[i], params[i])
 	}
 
+	// grab first entry
+	err = query.First(&result).Error
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
+	}
+
+	// couldn't find entity
 	if result.ID == 0 {
 		return c.JSON(http.StatusNotFound, echo.Map{"error": "Cannot find entity"})
 	}
@@ -103,7 +128,7 @@ func (e *GridController) getGrid(c echo.Context) error {
 // @Accept json
 // @Produce json
 // @Tags Grid
-// @Param id path int true "Id"
+// @Param ID path int true "ID"
 // @Param grid body models.Grid true "Grid"
 // @Success 200 {array} models.Grid
 // @Failure 404 {string} string "Cannot find entity"
@@ -115,11 +140,11 @@ func (e *GridController) updateGrid(c echo.Context) error {
 	if err := c.Bind(grid); err != nil {
 		return c.JSON(
 			http.StatusInternalServerError,
-			echo.Map{"error": fmt.Sprintf("Error binding to entity: [%v]", err)},
+			echo.Map{"error": fmt.Sprintf("Error binding to entity [%v]", err.Error())},
 		)
 	}
 
-    entity := models.Grid{}
+	entity := models.Grid{}
 	err := e.db.Get(models.Grid{}, c).Model(&models.Grid{}).First(&entity, grid.ID).Error
 	if err != nil || grid.ID == 0 {
 		return c.JSON(http.StatusNotFound, echo.Map{"error": "Cannot find entity"})
@@ -127,7 +152,7 @@ func (e *GridController) updateGrid(c echo.Context) error {
 
 	err = e.db.Get(models.Grid{}, c).Model(&entity).Select("*").Updates(&grid).Error
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error updating entity: [%v]", err)})
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error updating entity [%v]", err.Error())})
 	}
 
 	return c.JSON(http.StatusOK, grid)
@@ -149,7 +174,7 @@ func (e *GridController) createGrid(c echo.Context) error {
 	if err := c.Bind(grid); err != nil {
 		return c.JSON(
 			http.StatusInternalServerError,
-			echo.Map{"error": fmt.Sprintf("Error binding to entity: [%v]", err)},
+			echo.Map{"error": fmt.Sprintf("Error binding to entity [%v]", err.Error())},
 		)
 	}
 
@@ -157,7 +182,7 @@ func (e *GridController) createGrid(c echo.Context) error {
 	if err != nil {
 		return c.JSON(
 			http.StatusInternalServerError,
-			echo.Map{"error": fmt.Sprintf("Error inserting entity: [%v]", err)},
+			echo.Map{"error": fmt.Sprintf("Error inserting entity [%v]", err.Error())},
 		)
 	}
 
@@ -170,25 +195,49 @@ func (e *GridController) createGrid(c echo.Context) error {
 // @Accept json
 // @Produce json
 // @Tags Grid
-// @Param id path int true "Id"
+// @Param id path int true "id"
 // @Success 200 {string} string "Entity deleted successfully"
 // @Failure 404 {string} string "Cannot find entity"
 // @Failure 500 {string} string "Error binding to entity"
 // @Failure 500 {string} string "Error deleting entity"
 // @Router /grid/{id} [delete]
 func (e *GridController) deleteGrid(c echo.Context) error {
-	gridId, err := strconv.Atoi(c.Param("grid"))
+	var params []interface{}
+	var keys []string
+
+	// primary key param
+	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
 		e.logger.Error(err)
 	}
+	params = append(params, id)
+	keys = append(keys, "id = ?")
 
-	grid := new(models.Grid)
-	err = e.db.Get(models.Grid{}, c).Model(&models.Grid{}).First(&grid, gridId).Error
-	if err != nil || grid.ID == 0 {
-		return c.JSON(http.StatusNotFound, echo.Map{"error": "Cannot find entity"})
+	// key param [zoneid] position [2] type [int]
+	if len(c.QueryParam("zoneid")) > 0 {
+		zoneidParam, err := strconv.Atoi(c.QueryParam("zoneid"))
+		if err != nil {
+			return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error parsing query param [zoneid] err [%s]", err.Error())})
+		}
+
+		params = append(params, zoneidParam)
+		keys = append(keys, "zoneid = ?")
 	}
 
-	err = e.db.Get(models.Grid{}, c).Model(&models.Grid{}).Delete(&grid).Error
+	// query builder
+	var result models.Grid
+	query := e.db.QueryContext(models.Grid{}, c)
+	for i, _ := range keys {
+		query = query.Where(keys[i], params[i])
+	}
+
+	// grab first entry
+	err = query.First(&result).Error
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
+	}
+
+	err = e.db.Get(models.Grid{}, c).Model(&models.Grid{}).Delete(&result).Error
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Error deleting entity"})
 	}
@@ -213,7 +262,7 @@ func (e *GridController) getGridsBulk(c echo.Context) error {
 	if err := c.Bind(r); err != nil {
 		return c.JSON(
 			http.StatusInternalServerError,
-			echo.Map{"error": fmt.Sprintf("Error binding to bulk request: [%v]", err)},
+			echo.Map{"error": fmt.Sprintf("Error binding to bulk request: [%v]", err.Error())},
 		)
 	}
 
@@ -226,7 +275,7 @@ func (e *GridController) getGridsBulk(c echo.Context) error {
 
 	err := e.db.QueryContext(models.Grid{}, c).Find(&results, r.IDs).Error
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err})
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
 	}
 
 	return c.JSON(http.StatusOK, results)

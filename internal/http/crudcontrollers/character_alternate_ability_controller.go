@@ -12,7 +12,7 @@ import (
 )
 
 type CharacterAlternateAbilityController struct {
-	db     *database.DatabaseResolver
+	db	 *database.DatabaseResolver
 	logger *logrus.Logger
 }
 
@@ -21,19 +21,19 @@ func NewCharacterAlternateAbilityController(
 	logger *logrus.Logger,
 ) *CharacterAlternateAbilityController {
 	return &CharacterAlternateAbilityController{
-		db:     db,
+		db:	 db,
 		logger: logger,
 	}
 }
 
 func (e *CharacterAlternateAbilityController) Routes() []*routes.Route {
 	return []*routes.Route{
-		routes.RegisterRoute(http.MethodDelete, "character_alternate_ability/:character_alternate_ability", e.deleteCharacterAlternateAbility, nil),
-		routes.RegisterRoute(http.MethodGet, "character_alternate_ability/:character_alternate_ability", e.getCharacterAlternateAbility, nil),
+		routes.RegisterRoute(http.MethodGet, "character_alternate_ability/:id", e.getCharacterAlternateAbility, nil),
 		routes.RegisterRoute(http.MethodGet, "character_alternate_abilities", e.listCharacterAlternateAbilities, nil),
-		routes.RegisterRoute(http.MethodPost, "character_alternate_abilities/bulk", e.getCharacterAlternateAbilitiesBulk, nil),
-		routes.RegisterRoute(http.MethodPatch, "character_alternate_ability/:character_alternate_ability", e.updateCharacterAlternateAbility, nil),
 		routes.RegisterRoute(http.MethodPut, "character_alternate_ability", e.createCharacterAlternateAbility, nil),
+		routes.RegisterRoute(http.MethodDelete, "character_alternate_ability/:id", e.deleteCharacterAlternateAbility, nil),
+		routes.RegisterRoute(http.MethodPatch, "character_alternate_ability/:id", e.updateCharacterAlternateAbility, nil),
+		routes.RegisterRoute(http.MethodPost, "character_alternate_abilities/bulk", e.getCharacterAlternateAbilitiesBulk, nil),
 	}
 }
 
@@ -70,7 +70,7 @@ func (e *CharacterAlternateAbilityController) listCharacterAlternateAbilities(c 
 // @Accept json
 // @Produce json
 // @Tags CharacterAlternateAbility
-// @Param id path int true "Id"
+// @Param id path int true "id"
 // @Param includes query string false "Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names "
 // @Param select query string false "Column names [.] separated to fetch specific fields in response"
 // @Success 200 {array} models.CharacterAlternateAbility
@@ -79,17 +79,42 @@ func (e *CharacterAlternateAbilityController) listCharacterAlternateAbilities(c 
 // @Failure 500 {string} string "Bad query request"
 // @Router /character_alternate_ability/{id} [get]
 func (e *CharacterAlternateAbilityController) getCharacterAlternateAbility(c echo.Context) error {
-	characterAlternateAbilityId, err := strconv.Atoi(c.Param("character_alternate_ability"))
+	var params []interface{}
+	var keys []string
+
+	// primary key param
+	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Cannot find param"})
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Cannot find param [ID]"})
+	}
+	params = append(params, id)
+	keys = append(keys, "id = ?")
+
+	// key param [aa_id] position [2] type [smallint]
+	if len(c.QueryParam("aa_id")) > 0 {
+		aaIdParam, err := strconv.Atoi(c.QueryParam("aa_id"))
+		if err != nil {
+			return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error parsing query param [aa_id] err [%s]", err.Error())})
+		}
+
+		params = append(params, aaIdParam)
+		keys = append(keys, "aa_id = ?")
 	}
 
+	// query builder
 	var result models.CharacterAlternateAbility
-	err = e.db.QueryContext(models.CharacterAlternateAbility{}, c).First(&result, characterAlternateAbilityId).Error
-	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err})
+	query := e.db.QueryContext(models.CharacterAlternateAbility{}, c)
+	for i, _ := range keys {
+		query = query.Where(keys[i], params[i])
 	}
 
+	// grab first entry
+	err = query.First(&result).Error
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
+	}
+
+	// couldn't find entity
 	if result.ID == 0 {
 		return c.JSON(http.StatusNotFound, echo.Map{"error": "Cannot find entity"})
 	}
@@ -103,7 +128,7 @@ func (e *CharacterAlternateAbilityController) getCharacterAlternateAbility(c ech
 // @Accept json
 // @Produce json
 // @Tags CharacterAlternateAbility
-// @Param id path int true "Id"
+// @Param ID path int true "ID"
 // @Param character_alternate_ability body models.CharacterAlternateAbility true "CharacterAlternateAbility"
 // @Success 200 {array} models.CharacterAlternateAbility
 // @Failure 404 {string} string "Cannot find entity"
@@ -115,11 +140,11 @@ func (e *CharacterAlternateAbilityController) updateCharacterAlternateAbility(c 
 	if err := c.Bind(characterAlternateAbility); err != nil {
 		return c.JSON(
 			http.StatusInternalServerError,
-			echo.Map{"error": fmt.Sprintf("Error binding to entity: [%v]", err)},
+			echo.Map{"error": fmt.Sprintf("Error binding to entity [%v]", err.Error())},
 		)
 	}
 
-    entity := models.CharacterAlternateAbility{}
+	entity := models.CharacterAlternateAbility{}
 	err := e.db.Get(models.CharacterAlternateAbility{}, c).Model(&models.CharacterAlternateAbility{}).First(&entity, characterAlternateAbility.ID).Error
 	if err != nil || characterAlternateAbility.ID == 0 {
 		return c.JSON(http.StatusNotFound, echo.Map{"error": "Cannot find entity"})
@@ -127,7 +152,7 @@ func (e *CharacterAlternateAbilityController) updateCharacterAlternateAbility(c 
 
 	err = e.db.Get(models.CharacterAlternateAbility{}, c).Model(&entity).Select("*").Updates(&characterAlternateAbility).Error
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error updating entity: [%v]", err)})
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error updating entity [%v]", err.Error())})
 	}
 
 	return c.JSON(http.StatusOK, characterAlternateAbility)
@@ -149,7 +174,7 @@ func (e *CharacterAlternateAbilityController) createCharacterAlternateAbility(c 
 	if err := c.Bind(characterAlternateAbility); err != nil {
 		return c.JSON(
 			http.StatusInternalServerError,
-			echo.Map{"error": fmt.Sprintf("Error binding to entity: [%v]", err)},
+			echo.Map{"error": fmt.Sprintf("Error binding to entity [%v]", err.Error())},
 		)
 	}
 
@@ -157,7 +182,7 @@ func (e *CharacterAlternateAbilityController) createCharacterAlternateAbility(c 
 	if err != nil {
 		return c.JSON(
 			http.StatusInternalServerError,
-			echo.Map{"error": fmt.Sprintf("Error inserting entity: [%v]", err)},
+			echo.Map{"error": fmt.Sprintf("Error inserting entity [%v]", err.Error())},
 		)
 	}
 
@@ -170,25 +195,49 @@ func (e *CharacterAlternateAbilityController) createCharacterAlternateAbility(c 
 // @Accept json
 // @Produce json
 // @Tags CharacterAlternateAbility
-// @Param id path int true "Id"
+// @Param id path int true "id"
 // @Success 200 {string} string "Entity deleted successfully"
 // @Failure 404 {string} string "Cannot find entity"
 // @Failure 500 {string} string "Error binding to entity"
 // @Failure 500 {string} string "Error deleting entity"
 // @Router /character_alternate_ability/{id} [delete]
 func (e *CharacterAlternateAbilityController) deleteCharacterAlternateAbility(c echo.Context) error {
-	characterAlternateAbilityId, err := strconv.Atoi(c.Param("character_alternate_ability"))
+	var params []interface{}
+	var keys []string
+
+	// primary key param
+	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
 		e.logger.Error(err)
 	}
+	params = append(params, id)
+	keys = append(keys, "id = ?")
 
-	characterAlternateAbility := new(models.CharacterAlternateAbility)
-	err = e.db.Get(models.CharacterAlternateAbility{}, c).Model(&models.CharacterAlternateAbility{}).First(&characterAlternateAbility, characterAlternateAbilityId).Error
-	if err != nil || characterAlternateAbility.ID == 0 {
-		return c.JSON(http.StatusNotFound, echo.Map{"error": "Cannot find entity"})
+	// key param [aa_id] position [2] type [smallint]
+	if len(c.QueryParam("aa_id")) > 0 {
+		aaIdParam, err := strconv.Atoi(c.QueryParam("aa_id"))
+		if err != nil {
+			return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error parsing query param [aa_id] err [%s]", err.Error())})
+		}
+
+		params = append(params, aaIdParam)
+		keys = append(keys, "aa_id = ?")
 	}
 
-	err = e.db.Get(models.CharacterAlternateAbility{}, c).Model(&models.CharacterAlternateAbility{}).Delete(&characterAlternateAbility).Error
+	// query builder
+	var result models.CharacterAlternateAbility
+	query := e.db.QueryContext(models.CharacterAlternateAbility{}, c)
+	for i, _ := range keys {
+		query = query.Where(keys[i], params[i])
+	}
+
+	// grab first entry
+	err = query.First(&result).Error
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
+	}
+
+	err = e.db.Get(models.CharacterAlternateAbility{}, c).Model(&models.CharacterAlternateAbility{}).Delete(&result).Error
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Error deleting entity"})
 	}
@@ -213,7 +262,7 @@ func (e *CharacterAlternateAbilityController) getCharacterAlternateAbilitiesBulk
 	if err := c.Bind(r); err != nil {
 		return c.JSON(
 			http.StatusInternalServerError,
-			echo.Map{"error": fmt.Sprintf("Error binding to bulk request: [%v]", err)},
+			echo.Map{"error": fmt.Sprintf("Error binding to bulk request: [%v]", err.Error())},
 		)
 	}
 
@@ -226,7 +275,7 @@ func (e *CharacterAlternateAbilityController) getCharacterAlternateAbilitiesBulk
 
 	err := e.db.QueryContext(models.CharacterAlternateAbility{}, c).Find(&results, r.IDs).Error
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err})
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
 	}
 
 	return c.JSON(http.StatusOK, results)

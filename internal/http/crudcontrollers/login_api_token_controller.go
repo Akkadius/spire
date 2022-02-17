@@ -12,7 +12,7 @@ import (
 )
 
 type LoginApiTokenController struct {
-	db     *database.DatabaseResolver
+	db	 *database.DatabaseResolver
 	logger *logrus.Logger
 }
 
@@ -21,19 +21,19 @@ func NewLoginApiTokenController(
 	logger *logrus.Logger,
 ) *LoginApiTokenController {
 	return &LoginApiTokenController{
-		db:     db,
+		db:	 db,
 		logger: logger,
 	}
 }
 
 func (e *LoginApiTokenController) Routes() []*routes.Route {
 	return []*routes.Route{
-		routes.RegisterRoute(http.MethodDelete, "login_api_token/:login_api_token", e.deleteLoginApiToken, nil),
-		routes.RegisterRoute(http.MethodGet, "login_api_token/:login_api_token", e.getLoginApiToken, nil),
+		routes.RegisterRoute(http.MethodGet, "login_api_token/:id", e.getLoginApiToken, nil),
 		routes.RegisterRoute(http.MethodGet, "login_api_tokens", e.listLoginApiTokens, nil),
-		routes.RegisterRoute(http.MethodPost, "login_api_tokens/bulk", e.getLoginApiTokensBulk, nil),
-		routes.RegisterRoute(http.MethodPatch, "login_api_token/:login_api_token", e.updateLoginApiToken, nil),
 		routes.RegisterRoute(http.MethodPut, "login_api_token", e.createLoginApiToken, nil),
+		routes.RegisterRoute(http.MethodDelete, "login_api_token/:id", e.deleteLoginApiToken, nil),
+		routes.RegisterRoute(http.MethodPatch, "login_api_token/:id", e.updateLoginApiToken, nil),
+		routes.RegisterRoute(http.MethodPost, "login_api_tokens/bulk", e.getLoginApiTokensBulk, nil),
 	}
 }
 
@@ -70,7 +70,7 @@ func (e *LoginApiTokenController) listLoginApiTokens(c echo.Context) error {
 // @Accept json
 // @Produce json
 // @Tags LoginApiToken
-// @Param id path int true "Id"
+// @Param id path int true "id"
 // @Param includes query string false "Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names "
 // @Param select query string false "Column names [.] separated to fetch specific fields in response"
 // @Success 200 {array} models.LoginApiToken
@@ -79,17 +79,31 @@ func (e *LoginApiTokenController) listLoginApiTokens(c echo.Context) error {
 // @Failure 500 {string} string "Bad query request"
 // @Router /login_api_token/{id} [get]
 func (e *LoginApiTokenController) getLoginApiToken(c echo.Context) error {
-	loginApiTokenId, err := strconv.Atoi(c.Param("login_api_token"))
-	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Cannot find param"})
-	}
+	var params []interface{}
+	var keys []string
 
+	// primary key param
+	id, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Cannot find param [ID]"})
+	}
+	params = append(params, id)
+	keys = append(keys, "id = ?")
+
+	// query builder
 	var result models.LoginApiToken
-	err = e.db.QueryContext(models.LoginApiToken{}, c).First(&result, loginApiTokenId).Error
-	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err})
+	query := e.db.QueryContext(models.LoginApiToken{}, c)
+	for i, _ := range keys {
+		query = query.Where(keys[i], params[i])
 	}
 
+	// grab first entry
+	err = query.First(&result).Error
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
+	}
+
+	// couldn't find entity
 	if result.ID == 0 {
 		return c.JSON(http.StatusNotFound, echo.Map{"error": "Cannot find entity"})
 	}
@@ -103,7 +117,7 @@ func (e *LoginApiTokenController) getLoginApiToken(c echo.Context) error {
 // @Accept json
 // @Produce json
 // @Tags LoginApiToken
-// @Param id path int true "Id"
+// @Param ID path int true "ID"
 // @Param login_api_token body models.LoginApiToken true "LoginApiToken"
 // @Success 200 {array} models.LoginApiToken
 // @Failure 404 {string} string "Cannot find entity"
@@ -115,11 +129,11 @@ func (e *LoginApiTokenController) updateLoginApiToken(c echo.Context) error {
 	if err := c.Bind(loginApiToken); err != nil {
 		return c.JSON(
 			http.StatusInternalServerError,
-			echo.Map{"error": fmt.Sprintf("Error binding to entity: [%v]", err)},
+			echo.Map{"error": fmt.Sprintf("Error binding to entity [%v]", err.Error())},
 		)
 	}
 
-    entity := models.LoginApiToken{}
+	entity := models.LoginApiToken{}
 	err := e.db.Get(models.LoginApiToken{}, c).Model(&models.LoginApiToken{}).First(&entity, loginApiToken.ID).Error
 	if err != nil || loginApiToken.ID == 0 {
 		return c.JSON(http.StatusNotFound, echo.Map{"error": "Cannot find entity"})
@@ -127,7 +141,7 @@ func (e *LoginApiTokenController) updateLoginApiToken(c echo.Context) error {
 
 	err = e.db.Get(models.LoginApiToken{}, c).Model(&entity).Select("*").Updates(&loginApiToken).Error
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error updating entity: [%v]", err)})
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error updating entity [%v]", err.Error())})
 	}
 
 	return c.JSON(http.StatusOK, loginApiToken)
@@ -149,7 +163,7 @@ func (e *LoginApiTokenController) createLoginApiToken(c echo.Context) error {
 	if err := c.Bind(loginApiToken); err != nil {
 		return c.JSON(
 			http.StatusInternalServerError,
-			echo.Map{"error": fmt.Sprintf("Error binding to entity: [%v]", err)},
+			echo.Map{"error": fmt.Sprintf("Error binding to entity [%v]", err.Error())},
 		)
 	}
 
@@ -157,7 +171,7 @@ func (e *LoginApiTokenController) createLoginApiToken(c echo.Context) error {
 	if err != nil {
 		return c.JSON(
 			http.StatusInternalServerError,
-			echo.Map{"error": fmt.Sprintf("Error inserting entity: [%v]", err)},
+			echo.Map{"error": fmt.Sprintf("Error inserting entity [%v]", err.Error())},
 		)
 	}
 
@@ -170,25 +184,38 @@ func (e *LoginApiTokenController) createLoginApiToken(c echo.Context) error {
 // @Accept json
 // @Produce json
 // @Tags LoginApiToken
-// @Param id path int true "Id"
+// @Param id path int true "id"
 // @Success 200 {string} string "Entity deleted successfully"
 // @Failure 404 {string} string "Cannot find entity"
 // @Failure 500 {string} string "Error binding to entity"
 // @Failure 500 {string} string "Error deleting entity"
 // @Router /login_api_token/{id} [delete]
 func (e *LoginApiTokenController) deleteLoginApiToken(c echo.Context) error {
-	loginApiTokenId, err := strconv.Atoi(c.Param("login_api_token"))
+	var params []interface{}
+	var keys []string
+
+	// primary key param
+	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
 		e.logger.Error(err)
 	}
+	params = append(params, id)
+	keys = append(keys, "id = ?")
 
-	loginApiToken := new(models.LoginApiToken)
-	err = e.db.Get(models.LoginApiToken{}, c).Model(&models.LoginApiToken{}).First(&loginApiToken, loginApiTokenId).Error
-	if err != nil || loginApiToken.ID == 0 {
-		return c.JSON(http.StatusNotFound, echo.Map{"error": "Cannot find entity"})
+	// query builder
+	var result models.LoginApiToken
+	query := e.db.QueryContext(models.LoginApiToken{}, c)
+	for i, _ := range keys {
+		query = query.Where(keys[i], params[i])
 	}
 
-	err = e.db.Get(models.LoginApiToken{}, c).Model(&models.LoginApiToken{}).Delete(&loginApiToken).Error
+	// grab first entry
+	err = query.First(&result).Error
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
+	}
+
+	err = e.db.Get(models.LoginApiToken{}, c).Model(&models.LoginApiToken{}).Delete(&result).Error
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Error deleting entity"})
 	}
@@ -213,7 +240,7 @@ func (e *LoginApiTokenController) getLoginApiTokensBulk(c echo.Context) error {
 	if err := c.Bind(r); err != nil {
 		return c.JSON(
 			http.StatusInternalServerError,
-			echo.Map{"error": fmt.Sprintf("Error binding to bulk request: [%v]", err)},
+			echo.Map{"error": fmt.Sprintf("Error binding to bulk request: [%v]", err.Error())},
 		)
 	}
 
@@ -226,7 +253,7 @@ func (e *LoginApiTokenController) getLoginApiTokensBulk(c echo.Context) error {
 
 	err := e.db.QueryContext(models.LoginApiToken{}, c).Find(&results, r.IDs).Error
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err})
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
 	}
 
 	return c.JSON(http.StatusOK, results)

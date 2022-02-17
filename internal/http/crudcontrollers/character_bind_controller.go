@@ -12,7 +12,7 @@ import (
 )
 
 type CharacterBindController struct {
-	db     *database.DatabaseResolver
+	db	 *database.DatabaseResolver
 	logger *logrus.Logger
 }
 
@@ -21,19 +21,19 @@ func NewCharacterBindController(
 	logger *logrus.Logger,
 ) *CharacterBindController {
 	return &CharacterBindController{
-		db:     db,
+		db:	 db,
 		logger: logger,
 	}
 }
 
 func (e *CharacterBindController) Routes() []*routes.Route {
 	return []*routes.Route{
-		routes.RegisterRoute(http.MethodDelete, "character_bind/:character_bind", e.deleteCharacterBind, nil),
-		routes.RegisterRoute(http.MethodGet, "character_bind/:character_bind", e.getCharacterBind, nil),
+		routes.RegisterRoute(http.MethodGet, "character_bind/:id", e.getCharacterBind, nil),
 		routes.RegisterRoute(http.MethodGet, "character_binds", e.listCharacterBinds, nil),
-		routes.RegisterRoute(http.MethodPost, "character_binds/bulk", e.getCharacterBindsBulk, nil),
-		routes.RegisterRoute(http.MethodPatch, "character_bind/:character_bind", e.updateCharacterBind, nil),
 		routes.RegisterRoute(http.MethodPut, "character_bind", e.createCharacterBind, nil),
+		routes.RegisterRoute(http.MethodDelete, "character_bind/:id", e.deleteCharacterBind, nil),
+		routes.RegisterRoute(http.MethodPatch, "character_bind/:id", e.updateCharacterBind, nil),
+		routes.RegisterRoute(http.MethodPost, "character_binds/bulk", e.getCharacterBindsBulk, nil),
 	}
 }
 
@@ -70,7 +70,7 @@ func (e *CharacterBindController) listCharacterBinds(c echo.Context) error {
 // @Accept json
 // @Produce json
 // @Tags CharacterBind
-// @Param id path int true "Id"
+// @Param id path int true "id"
 // @Param includes query string false "Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names "
 // @Param select query string false "Column names [.] separated to fetch specific fields in response"
 // @Success 200 {array} models.CharacterBind
@@ -79,17 +79,42 @@ func (e *CharacterBindController) listCharacterBinds(c echo.Context) error {
 // @Failure 500 {string} string "Bad query request"
 // @Router /character_bind/{id} [get]
 func (e *CharacterBindController) getCharacterBind(c echo.Context) error {
-	characterBindId, err := strconv.Atoi(c.Param("character_bind"))
+	var params []interface{}
+	var keys []string
+
+	// primary key param
+	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Cannot find param"})
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Cannot find param [ID]"})
+	}
+	params = append(params, id)
+	keys = append(keys, "id = ?")
+
+	// key param [slot] position [2] type [int]
+	if len(c.QueryParam("slot")) > 0 {
+		slotParam, err := strconv.Atoi(c.QueryParam("slot"))
+		if err != nil {
+			return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error parsing query param [slot] err [%s]", err.Error())})
+		}
+
+		params = append(params, slotParam)
+		keys = append(keys, "slot = ?")
 	}
 
+	// query builder
 	var result models.CharacterBind
-	err = e.db.QueryContext(models.CharacterBind{}, c).First(&result, characterBindId).Error
-	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err})
+	query := e.db.QueryContext(models.CharacterBind{}, c)
+	for i, _ := range keys {
+		query = query.Where(keys[i], params[i])
 	}
 
+	// grab first entry
+	err = query.First(&result).Error
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
+	}
+
+	// couldn't find entity
 	if result.ID == 0 {
 		return c.JSON(http.StatusNotFound, echo.Map{"error": "Cannot find entity"})
 	}
@@ -103,7 +128,7 @@ func (e *CharacterBindController) getCharacterBind(c echo.Context) error {
 // @Accept json
 // @Produce json
 // @Tags CharacterBind
-// @Param id path int true "Id"
+// @Param ID path int true "ID"
 // @Param character_bind body models.CharacterBind true "CharacterBind"
 // @Success 200 {array} models.CharacterBind
 // @Failure 404 {string} string "Cannot find entity"
@@ -115,11 +140,11 @@ func (e *CharacterBindController) updateCharacterBind(c echo.Context) error {
 	if err := c.Bind(characterBind); err != nil {
 		return c.JSON(
 			http.StatusInternalServerError,
-			echo.Map{"error": fmt.Sprintf("Error binding to entity: [%v]", err)},
+			echo.Map{"error": fmt.Sprintf("Error binding to entity [%v]", err.Error())},
 		)
 	}
 
-    entity := models.CharacterBind{}
+	entity := models.CharacterBind{}
 	err := e.db.Get(models.CharacterBind{}, c).Model(&models.CharacterBind{}).First(&entity, characterBind.ID).Error
 	if err != nil || characterBind.ID == 0 {
 		return c.JSON(http.StatusNotFound, echo.Map{"error": "Cannot find entity"})
@@ -127,7 +152,7 @@ func (e *CharacterBindController) updateCharacterBind(c echo.Context) error {
 
 	err = e.db.Get(models.CharacterBind{}, c).Model(&entity).Select("*").Updates(&characterBind).Error
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error updating entity: [%v]", err)})
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error updating entity [%v]", err.Error())})
 	}
 
 	return c.JSON(http.StatusOK, characterBind)
@@ -149,7 +174,7 @@ func (e *CharacterBindController) createCharacterBind(c echo.Context) error {
 	if err := c.Bind(characterBind); err != nil {
 		return c.JSON(
 			http.StatusInternalServerError,
-			echo.Map{"error": fmt.Sprintf("Error binding to entity: [%v]", err)},
+			echo.Map{"error": fmt.Sprintf("Error binding to entity [%v]", err.Error())},
 		)
 	}
 
@@ -157,7 +182,7 @@ func (e *CharacterBindController) createCharacterBind(c echo.Context) error {
 	if err != nil {
 		return c.JSON(
 			http.StatusInternalServerError,
-			echo.Map{"error": fmt.Sprintf("Error inserting entity: [%v]", err)},
+			echo.Map{"error": fmt.Sprintf("Error inserting entity [%v]", err.Error())},
 		)
 	}
 
@@ -170,25 +195,49 @@ func (e *CharacterBindController) createCharacterBind(c echo.Context) error {
 // @Accept json
 // @Produce json
 // @Tags CharacterBind
-// @Param id path int true "Id"
+// @Param id path int true "id"
 // @Success 200 {string} string "Entity deleted successfully"
 // @Failure 404 {string} string "Cannot find entity"
 // @Failure 500 {string} string "Error binding to entity"
 // @Failure 500 {string} string "Error deleting entity"
 // @Router /character_bind/{id} [delete]
 func (e *CharacterBindController) deleteCharacterBind(c echo.Context) error {
-	characterBindId, err := strconv.Atoi(c.Param("character_bind"))
+	var params []interface{}
+	var keys []string
+
+	// primary key param
+	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
 		e.logger.Error(err)
 	}
+	params = append(params, id)
+	keys = append(keys, "id = ?")
 
-	characterBind := new(models.CharacterBind)
-	err = e.db.Get(models.CharacterBind{}, c).Model(&models.CharacterBind{}).First(&characterBind, characterBindId).Error
-	if err != nil || characterBind.ID == 0 {
-		return c.JSON(http.StatusNotFound, echo.Map{"error": "Cannot find entity"})
+	// key param [slot] position [2] type [int]
+	if len(c.QueryParam("slot")) > 0 {
+		slotParam, err := strconv.Atoi(c.QueryParam("slot"))
+		if err != nil {
+			return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error parsing query param [slot] err [%s]", err.Error())})
+		}
+
+		params = append(params, slotParam)
+		keys = append(keys, "slot = ?")
 	}
 
-	err = e.db.Get(models.CharacterBind{}, c).Model(&models.CharacterBind{}).Delete(&characterBind).Error
+	// query builder
+	var result models.CharacterBind
+	query := e.db.QueryContext(models.CharacterBind{}, c)
+	for i, _ := range keys {
+		query = query.Where(keys[i], params[i])
+	}
+
+	// grab first entry
+	err = query.First(&result).Error
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
+	}
+
+	err = e.db.Get(models.CharacterBind{}, c).Model(&models.CharacterBind{}).Delete(&result).Error
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Error deleting entity"})
 	}
@@ -213,7 +262,7 @@ func (e *CharacterBindController) getCharacterBindsBulk(c echo.Context) error {
 	if err := c.Bind(r); err != nil {
 		return c.JSON(
 			http.StatusInternalServerError,
-			echo.Map{"error": fmt.Sprintf("Error binding to bulk request: [%v]", err)},
+			echo.Map{"error": fmt.Sprintf("Error binding to bulk request: [%v]", err.Error())},
 		)
 	}
 
@@ -226,7 +275,7 @@ func (e *CharacterBindController) getCharacterBindsBulk(c echo.Context) error {
 
 	err := e.db.QueryContext(models.CharacterBind{}, c).Find(&results, r.IDs).Error
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err})
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
 	}
 
 	return c.JSON(http.StatusOK, results)

@@ -12,7 +12,7 @@ import (
 )
 
 type ForageController struct {
-	db     *database.DatabaseResolver
+	db	 *database.DatabaseResolver
 	logger *logrus.Logger
 }
 
@@ -21,19 +21,19 @@ func NewForageController(
 	logger *logrus.Logger,
 ) *ForageController {
 	return &ForageController{
-		db:     db,
+		db:	 db,
 		logger: logger,
 	}
 }
 
 func (e *ForageController) Routes() []*routes.Route {
 	return []*routes.Route{
-		routes.RegisterRoute(http.MethodDelete, "forage/:forage", e.deleteForage, nil),
-		routes.RegisterRoute(http.MethodGet, "forage/:forage", e.getForage, nil),
+		routes.RegisterRoute(http.MethodGet, "forage/:id", e.getForage, nil),
 		routes.RegisterRoute(http.MethodGet, "forages", e.listForages, nil),
-		routes.RegisterRoute(http.MethodPost, "forages/bulk", e.getForagesBulk, nil),
-		routes.RegisterRoute(http.MethodPatch, "forage/:forage", e.updateForage, nil),
 		routes.RegisterRoute(http.MethodPut, "forage", e.createForage, nil),
+		routes.RegisterRoute(http.MethodDelete, "forage/:id", e.deleteForage, nil),
+		routes.RegisterRoute(http.MethodPatch, "forage/:id", e.updateForage, nil),
+		routes.RegisterRoute(http.MethodPost, "forages/bulk", e.getForagesBulk, nil),
 	}
 }
 
@@ -70,7 +70,7 @@ func (e *ForageController) listForages(c echo.Context) error {
 // @Accept json
 // @Produce json
 // @Tags Forage
-// @Param id path int true "Id"
+// @Param id path int true "id"
 // @Param includes query string false "Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names "
 // @Param select query string false "Column names [.] separated to fetch specific fields in response"
 // @Success 200 {array} models.Forage
@@ -79,17 +79,31 @@ func (e *ForageController) listForages(c echo.Context) error {
 // @Failure 500 {string} string "Bad query request"
 // @Router /forage/{id} [get]
 func (e *ForageController) getForage(c echo.Context) error {
-	forageId, err := strconv.Atoi(c.Param("forage"))
-	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Cannot find param"})
-	}
+	var params []interface{}
+	var keys []string
 
+	// primary key param
+	id, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Cannot find param [ID]"})
+	}
+	params = append(params, id)
+	keys = append(keys, "id = ?")
+
+	// query builder
 	var result models.Forage
-	err = e.db.QueryContext(models.Forage{}, c).First(&result, forageId).Error
-	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err})
+	query := e.db.QueryContext(models.Forage{}, c)
+	for i, _ := range keys {
+		query = query.Where(keys[i], params[i])
 	}
 
+	// grab first entry
+	err = query.First(&result).Error
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
+	}
+
+	// couldn't find entity
 	if result.ID == 0 {
 		return c.JSON(http.StatusNotFound, echo.Map{"error": "Cannot find entity"})
 	}
@@ -103,7 +117,7 @@ func (e *ForageController) getForage(c echo.Context) error {
 // @Accept json
 // @Produce json
 // @Tags Forage
-// @Param id path int true "Id"
+// @Param ID path int true "ID"
 // @Param forage body models.Forage true "Forage"
 // @Success 200 {array} models.Forage
 // @Failure 404 {string} string "Cannot find entity"
@@ -115,11 +129,11 @@ func (e *ForageController) updateForage(c echo.Context) error {
 	if err := c.Bind(forage); err != nil {
 		return c.JSON(
 			http.StatusInternalServerError,
-			echo.Map{"error": fmt.Sprintf("Error binding to entity: [%v]", err)},
+			echo.Map{"error": fmt.Sprintf("Error binding to entity [%v]", err.Error())},
 		)
 	}
 
-    entity := models.Forage{}
+	entity := models.Forage{}
 	err := e.db.Get(models.Forage{}, c).Model(&models.Forage{}).First(&entity, forage.ID).Error
 	if err != nil || forage.ID == 0 {
 		return c.JSON(http.StatusNotFound, echo.Map{"error": "Cannot find entity"})
@@ -127,7 +141,7 @@ func (e *ForageController) updateForage(c echo.Context) error {
 
 	err = e.db.Get(models.Forage{}, c).Model(&entity).Select("*").Updates(&forage).Error
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error updating entity: [%v]", err)})
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error updating entity [%v]", err.Error())})
 	}
 
 	return c.JSON(http.StatusOK, forage)
@@ -149,7 +163,7 @@ func (e *ForageController) createForage(c echo.Context) error {
 	if err := c.Bind(forage); err != nil {
 		return c.JSON(
 			http.StatusInternalServerError,
-			echo.Map{"error": fmt.Sprintf("Error binding to entity: [%v]", err)},
+			echo.Map{"error": fmt.Sprintf("Error binding to entity [%v]", err.Error())},
 		)
 	}
 
@@ -157,7 +171,7 @@ func (e *ForageController) createForage(c echo.Context) error {
 	if err != nil {
 		return c.JSON(
 			http.StatusInternalServerError,
-			echo.Map{"error": fmt.Sprintf("Error inserting entity: [%v]", err)},
+			echo.Map{"error": fmt.Sprintf("Error inserting entity [%v]", err.Error())},
 		)
 	}
 
@@ -170,25 +184,38 @@ func (e *ForageController) createForage(c echo.Context) error {
 // @Accept json
 // @Produce json
 // @Tags Forage
-// @Param id path int true "Id"
+// @Param id path int true "id"
 // @Success 200 {string} string "Entity deleted successfully"
 // @Failure 404 {string} string "Cannot find entity"
 // @Failure 500 {string} string "Error binding to entity"
 // @Failure 500 {string} string "Error deleting entity"
 // @Router /forage/{id} [delete]
 func (e *ForageController) deleteForage(c echo.Context) error {
-	forageId, err := strconv.Atoi(c.Param("forage"))
+	var params []interface{}
+	var keys []string
+
+	// primary key param
+	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
 		e.logger.Error(err)
 	}
+	params = append(params, id)
+	keys = append(keys, "id = ?")
 
-	forage := new(models.Forage)
-	err = e.db.Get(models.Forage{}, c).Model(&models.Forage{}).First(&forage, forageId).Error
-	if err != nil || forage.ID == 0 {
-		return c.JSON(http.StatusNotFound, echo.Map{"error": "Cannot find entity"})
+	// query builder
+	var result models.Forage
+	query := e.db.QueryContext(models.Forage{}, c)
+	for i, _ := range keys {
+		query = query.Where(keys[i], params[i])
 	}
 
-	err = e.db.Get(models.Forage{}, c).Model(&models.Forage{}).Delete(&forage).Error
+	// grab first entry
+	err = query.First(&result).Error
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
+	}
+
+	err = e.db.Get(models.Forage{}, c).Model(&models.Forage{}).Delete(&result).Error
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Error deleting entity"})
 	}
@@ -213,7 +240,7 @@ func (e *ForageController) getForagesBulk(c echo.Context) error {
 	if err := c.Bind(r); err != nil {
 		return c.JSON(
 			http.StatusInternalServerError,
-			echo.Map{"error": fmt.Sprintf("Error binding to bulk request: [%v]", err)},
+			echo.Map{"error": fmt.Sprintf("Error binding to bulk request: [%v]", err.Error())},
 		)
 	}
 
@@ -226,7 +253,7 @@ func (e *ForageController) getForagesBulk(c echo.Context) error {
 
 	err := e.db.QueryContext(models.Forage{}, c).Find(&results, r.IDs).Error
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err})
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
 	}
 
 	return c.JSON(http.StatusOK, results)

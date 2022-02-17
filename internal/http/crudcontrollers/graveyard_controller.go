@@ -12,7 +12,7 @@ import (
 )
 
 type GraveyardController struct {
-	db     *database.DatabaseResolver
+	db	 *database.DatabaseResolver
 	logger *logrus.Logger
 }
 
@@ -21,19 +21,19 @@ func NewGraveyardController(
 	logger *logrus.Logger,
 ) *GraveyardController {
 	return &GraveyardController{
-		db:     db,
+		db:	 db,
 		logger: logger,
 	}
 }
 
 func (e *GraveyardController) Routes() []*routes.Route {
 	return []*routes.Route{
-		routes.RegisterRoute(http.MethodDelete, "graveyard/:graveyard", e.deleteGraveyard, nil),
-		routes.RegisterRoute(http.MethodGet, "graveyard/:graveyard", e.getGraveyard, nil),
+		routes.RegisterRoute(http.MethodGet, "graveyard/:id", e.getGraveyard, nil),
 		routes.RegisterRoute(http.MethodGet, "graveyards", e.listGraveyards, nil),
-		routes.RegisterRoute(http.MethodPost, "graveyards/bulk", e.getGraveyardsBulk, nil),
-		routes.RegisterRoute(http.MethodPatch, "graveyard/:graveyard", e.updateGraveyard, nil),
 		routes.RegisterRoute(http.MethodPut, "graveyard", e.createGraveyard, nil),
+		routes.RegisterRoute(http.MethodDelete, "graveyard/:id", e.deleteGraveyard, nil),
+		routes.RegisterRoute(http.MethodPatch, "graveyard/:id", e.updateGraveyard, nil),
+		routes.RegisterRoute(http.MethodPost, "graveyards/bulk", e.getGraveyardsBulk, nil),
 	}
 }
 
@@ -70,7 +70,7 @@ func (e *GraveyardController) listGraveyards(c echo.Context) error {
 // @Accept json
 // @Produce json
 // @Tags Graveyard
-// @Param id path int true "Id"
+// @Param id path int true "id"
 // @Param includes query string false "Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names "
 // @Param select query string false "Column names [.] separated to fetch specific fields in response"
 // @Success 200 {array} models.Graveyard
@@ -79,17 +79,31 @@ func (e *GraveyardController) listGraveyards(c echo.Context) error {
 // @Failure 500 {string} string "Bad query request"
 // @Router /graveyard/{id} [get]
 func (e *GraveyardController) getGraveyard(c echo.Context) error {
-	graveyardId, err := strconv.Atoi(c.Param("graveyard"))
-	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Cannot find param"})
-	}
+	var params []interface{}
+	var keys []string
 
+	// primary key param
+	id, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Cannot find param [ID]"})
+	}
+	params = append(params, id)
+	keys = append(keys, "id = ?")
+
+	// query builder
 	var result models.Graveyard
-	err = e.db.QueryContext(models.Graveyard{}, c).First(&result, graveyardId).Error
-	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err})
+	query := e.db.QueryContext(models.Graveyard{}, c)
+	for i, _ := range keys {
+		query = query.Where(keys[i], params[i])
 	}
 
+	// grab first entry
+	err = query.First(&result).Error
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
+	}
+
+	// couldn't find entity
 	if result.ID == 0 {
 		return c.JSON(http.StatusNotFound, echo.Map{"error": "Cannot find entity"})
 	}
@@ -103,7 +117,7 @@ func (e *GraveyardController) getGraveyard(c echo.Context) error {
 // @Accept json
 // @Produce json
 // @Tags Graveyard
-// @Param id path int true "Id"
+// @Param ID path int true "ID"
 // @Param graveyard body models.Graveyard true "Graveyard"
 // @Success 200 {array} models.Graveyard
 // @Failure 404 {string} string "Cannot find entity"
@@ -115,11 +129,11 @@ func (e *GraveyardController) updateGraveyard(c echo.Context) error {
 	if err := c.Bind(graveyard); err != nil {
 		return c.JSON(
 			http.StatusInternalServerError,
-			echo.Map{"error": fmt.Sprintf("Error binding to entity: [%v]", err)},
+			echo.Map{"error": fmt.Sprintf("Error binding to entity [%v]", err.Error())},
 		)
 	}
 
-    entity := models.Graveyard{}
+	entity := models.Graveyard{}
 	err := e.db.Get(models.Graveyard{}, c).Model(&models.Graveyard{}).First(&entity, graveyard.ID).Error
 	if err != nil || graveyard.ID == 0 {
 		return c.JSON(http.StatusNotFound, echo.Map{"error": "Cannot find entity"})
@@ -127,7 +141,7 @@ func (e *GraveyardController) updateGraveyard(c echo.Context) error {
 
 	err = e.db.Get(models.Graveyard{}, c).Model(&entity).Select("*").Updates(&graveyard).Error
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error updating entity: [%v]", err)})
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error updating entity [%v]", err.Error())})
 	}
 
 	return c.JSON(http.StatusOK, graveyard)
@@ -149,7 +163,7 @@ func (e *GraveyardController) createGraveyard(c echo.Context) error {
 	if err := c.Bind(graveyard); err != nil {
 		return c.JSON(
 			http.StatusInternalServerError,
-			echo.Map{"error": fmt.Sprintf("Error binding to entity: [%v]", err)},
+			echo.Map{"error": fmt.Sprintf("Error binding to entity [%v]", err.Error())},
 		)
 	}
 
@@ -157,7 +171,7 @@ func (e *GraveyardController) createGraveyard(c echo.Context) error {
 	if err != nil {
 		return c.JSON(
 			http.StatusInternalServerError,
-			echo.Map{"error": fmt.Sprintf("Error inserting entity: [%v]", err)},
+			echo.Map{"error": fmt.Sprintf("Error inserting entity [%v]", err.Error())},
 		)
 	}
 
@@ -170,25 +184,38 @@ func (e *GraveyardController) createGraveyard(c echo.Context) error {
 // @Accept json
 // @Produce json
 // @Tags Graveyard
-// @Param id path int true "Id"
+// @Param id path int true "id"
 // @Success 200 {string} string "Entity deleted successfully"
 // @Failure 404 {string} string "Cannot find entity"
 // @Failure 500 {string} string "Error binding to entity"
 // @Failure 500 {string} string "Error deleting entity"
 // @Router /graveyard/{id} [delete]
 func (e *GraveyardController) deleteGraveyard(c echo.Context) error {
-	graveyardId, err := strconv.Atoi(c.Param("graveyard"))
+	var params []interface{}
+	var keys []string
+
+	// primary key param
+	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
 		e.logger.Error(err)
 	}
+	params = append(params, id)
+	keys = append(keys, "id = ?")
 
-	graveyard := new(models.Graveyard)
-	err = e.db.Get(models.Graveyard{}, c).Model(&models.Graveyard{}).First(&graveyard, graveyardId).Error
-	if err != nil || graveyard.ID == 0 {
-		return c.JSON(http.StatusNotFound, echo.Map{"error": "Cannot find entity"})
+	// query builder
+	var result models.Graveyard
+	query := e.db.QueryContext(models.Graveyard{}, c)
+	for i, _ := range keys {
+		query = query.Where(keys[i], params[i])
 	}
 
-	err = e.db.Get(models.Graveyard{}, c).Model(&models.Graveyard{}).Delete(&graveyard).Error
+	// grab first entry
+	err = query.First(&result).Error
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
+	}
+
+	err = e.db.Get(models.Graveyard{}, c).Model(&models.Graveyard{}).Delete(&result).Error
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Error deleting entity"})
 	}
@@ -213,7 +240,7 @@ func (e *GraveyardController) getGraveyardsBulk(c echo.Context) error {
 	if err := c.Bind(r); err != nil {
 		return c.JSON(
 			http.StatusInternalServerError,
-			echo.Map{"error": fmt.Sprintf("Error binding to bulk request: [%v]", err)},
+			echo.Map{"error": fmt.Sprintf("Error binding to bulk request: [%v]", err.Error())},
 		)
 	}
 
@@ -226,7 +253,7 @@ func (e *GraveyardController) getGraveyardsBulk(c echo.Context) error {
 
 	err := e.db.QueryContext(models.Graveyard{}, c).Find(&results, r.IDs).Error
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err})
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
 	}
 
 	return c.JSON(http.StatusOK, results)

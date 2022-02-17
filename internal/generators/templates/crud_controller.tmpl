@@ -89,9 +89,7 @@ func (e *{{.EntityName}}Controller) get{{.EntityName}}(c echo.Context) error {
 	}
 	params = append(params, {{.KeyNameLowerCamel}})
 	keys = append(keys, "{{.KeyColumn}} = ?")
-
 {{.QueryParams}}
-
 	// query builder
 	var result models.{{.EntityName}}
 	query := e.db.QueryContext(models.{{.EntityName}}{}, c)
@@ -193,18 +191,31 @@ func (e *{{.EntityName}}Controller) create{{.EntityName}}(c echo.Context) error 
 // @Failure 500 {string} string "Error deleting entity"
 // @Router /{{.EntityNameSnake}}/{{"{id}"}} [delete]
 func (e *{{.EntityName}}Controller) delete{{.EntityName}}(c echo.Context) error {
+	var params []interface{}
+	var keys []string
+
+	// primary key param
 	{{.ParamLine}}
 	if err != nil {
 		e.logger.Error(err)
 	}
-
-	{{.EntityNameCamel}} := new(models.{{.EntityName}})
-	err = e.db.Get(models.{{.EntityName}}{}, c).Model(&models.{{.EntityName}}{}).First(&{{.EntityNameCamel}}, {{.KeyNameLowerCamel}}).Error
-	if err != nil || {{.EntityNameCamel}}.{{.KeyName}} == 0 {
-		return c.JSON(http.StatusNotFound, echo.Map{"error": "Cannot find entity"})
+	params = append(params, {{.KeyNameLowerCamel}})
+	keys = append(keys, "{{.KeyColumn}} = ?")
+{{.QueryParams}}
+	// query builder
+	var result models.{{.EntityName}}
+	query := e.db.QueryContext(models.{{.EntityName}}{}, c)
+	for i, _ := range keys {
+		query = query.Where(keys[i], params[i])
 	}
 
-	err = e.db.Get(models.{{.EntityName}}{}, c).Model(&models.{{.EntityName}}{}).Delete(&{{.EntityNameCamel}}).Error
+	// grab first entry
+	err = query.First(&result).Error
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
+	}
+
+	err = e.db.Get(models.{{.EntityName}}{}, c).Model(&models.{{.EntityName}}{}).Delete(&result).Error
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Error deleting entity"})
 	}

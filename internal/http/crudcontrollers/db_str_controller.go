@@ -1,10 +1,10 @@
 package crudcontrollers
 
 import (
-	"fmt"
 	"github.com/Akkadius/spire/internal/database"
 	"github.com/Akkadius/spire/internal/http/routes"
 	"github.com/Akkadius/spire/internal/models"
+	"fmt"
 	"github.com/labstack/echo/v4"
 	"github.com/sirupsen/logrus"
 	"net/http"
@@ -12,7 +12,7 @@ import (
 )
 
 type DbStrController struct {
-	db     *database.DatabaseResolver
+	db	 *database.DatabaseResolver
 	logger *logrus.Logger
 }
 
@@ -21,7 +21,7 @@ func NewDbStrController(
 	logger *logrus.Logger,
 ) *DbStrController {
 	return &DbStrController{
-		db:     db,
+		db:	 db,
 		logger: logger,
 	}
 }
@@ -202,18 +202,42 @@ func (e *DbStrController) createDbStr(c echo.Context) error {
 // @Failure 500 {string} string "Error deleting entity"
 // @Router /db_str/{id} [delete]
 func (e *DbStrController) deleteDbStr(c echo.Context) error {
+	var params []interface{}
+	var keys []string
+
+	// primary key param
 	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
 		e.logger.Error(err)
 	}
+	params = append(params, id)
+	keys = append(keys, "id = ?")
 
-	dbStr := new(models.DbStr)
-	err = e.db.Get(models.DbStr{}, c).Model(&models.DbStr{}).First(&dbStr, id).Error
-	if err != nil || dbStr.ID == 0 {
-		return c.JSON(http.StatusNotFound, echo.Map{"error": "Cannot find entity"})
+	// key param [type] position [2] type [int]
+	if len(c.QueryParam("type")) > 0 {
+		typeParam, err := strconv.Atoi(c.QueryParam("type"))
+		if err != nil {
+			return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error parsing query param [type] err [%s]", err.Error())})
+		}
+
+		params = append(params, typeParam)
+		keys = append(keys, "type = ?")
 	}
 
-	err = e.db.Get(models.DbStr{}, c).Model(&models.DbStr{}).Delete(&dbStr).Error
+	// query builder
+	var result models.DbStr
+	query := e.db.QueryContext(models.DbStr{}, c)
+	for i, _ := range keys {
+		query = query.Where(keys[i], params[i])
+	}
+
+	// grab first entry
+	err = query.First(&result).Error
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
+	}
+
+	err = e.db.Get(models.DbStr{}, c).Model(&models.DbStr{}).Delete(&result).Error
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Error deleting entity"})
 	}

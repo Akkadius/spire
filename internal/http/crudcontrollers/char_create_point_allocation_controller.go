@@ -12,7 +12,7 @@ import (
 )
 
 type CharCreatePointAllocationController struct {
-	db     *database.DatabaseResolver
+	db	 *database.DatabaseResolver
 	logger *logrus.Logger
 }
 
@@ -21,19 +21,19 @@ func NewCharCreatePointAllocationController(
 	logger *logrus.Logger,
 ) *CharCreatePointAllocationController {
 	return &CharCreatePointAllocationController{
-		db:     db,
+		db:	 db,
 		logger: logger,
 	}
 }
 
 func (e *CharCreatePointAllocationController) Routes() []*routes.Route {
 	return []*routes.Route{
-		routes.RegisterRoute(http.MethodDelete, "char_create_point_allocation/:char_create_point_allocation", e.deleteCharCreatePointAllocation, nil),
-		routes.RegisterRoute(http.MethodGet, "char_create_point_allocation/:char_create_point_allocation", e.getCharCreatePointAllocation, nil),
+		routes.RegisterRoute(http.MethodGet, "char_create_point_allocation/:id", e.getCharCreatePointAllocation, nil),
 		routes.RegisterRoute(http.MethodGet, "char_create_point_allocations", e.listCharCreatePointAllocations, nil),
-		routes.RegisterRoute(http.MethodPost, "char_create_point_allocations/bulk", e.getCharCreatePointAllocationsBulk, nil),
-		routes.RegisterRoute(http.MethodPatch, "char_create_point_allocation/:char_create_point_allocation", e.updateCharCreatePointAllocation, nil),
 		routes.RegisterRoute(http.MethodPut, "char_create_point_allocation", e.createCharCreatePointAllocation, nil),
+		routes.RegisterRoute(http.MethodDelete, "char_create_point_allocation/:id", e.deleteCharCreatePointAllocation, nil),
+		routes.RegisterRoute(http.MethodPatch, "char_create_point_allocation/:id", e.updateCharCreatePointAllocation, nil),
+		routes.RegisterRoute(http.MethodPost, "char_create_point_allocations/bulk", e.getCharCreatePointAllocationsBulk, nil),
 	}
 }
 
@@ -70,7 +70,7 @@ func (e *CharCreatePointAllocationController) listCharCreatePointAllocations(c e
 // @Accept json
 // @Produce json
 // @Tags CharCreatePointAllocation
-// @Param id path int true "Id"
+// @Param id path int true "id"
 // @Param includes query string false "Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names "
 // @Param select query string false "Column names [.] separated to fetch specific fields in response"
 // @Success 200 {array} models.CharCreatePointAllocation
@@ -79,17 +79,31 @@ func (e *CharCreatePointAllocationController) listCharCreatePointAllocations(c e
 // @Failure 500 {string} string "Bad query request"
 // @Router /char_create_point_allocation/{id} [get]
 func (e *CharCreatePointAllocationController) getCharCreatePointAllocation(c echo.Context) error {
-	charCreatePointAllocationId, err := strconv.Atoi(c.Param("char_create_point_allocation"))
-	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Cannot find param"})
-	}
+	var params []interface{}
+	var keys []string
 
+	// primary key param
+	id, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Cannot find param [ID]"})
+	}
+	params = append(params, id)
+	keys = append(keys, "id = ?")
+
+	// query builder
 	var result models.CharCreatePointAllocation
-	err = e.db.QueryContext(models.CharCreatePointAllocation{}, c).First(&result, charCreatePointAllocationId).Error
-	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err})
+	query := e.db.QueryContext(models.CharCreatePointAllocation{}, c)
+	for i, _ := range keys {
+		query = query.Where(keys[i], params[i])
 	}
 
+	// grab first entry
+	err = query.First(&result).Error
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
+	}
+
+	// couldn't find entity
 	if result.ID == 0 {
 		return c.JSON(http.StatusNotFound, echo.Map{"error": "Cannot find entity"})
 	}
@@ -103,7 +117,7 @@ func (e *CharCreatePointAllocationController) getCharCreatePointAllocation(c ech
 // @Accept json
 // @Produce json
 // @Tags CharCreatePointAllocation
-// @Param id path int true "Id"
+// @Param ID path int true "ID"
 // @Param char_create_point_allocation body models.CharCreatePointAllocation true "CharCreatePointAllocation"
 // @Success 200 {array} models.CharCreatePointAllocation
 // @Failure 404 {string} string "Cannot find entity"
@@ -115,11 +129,11 @@ func (e *CharCreatePointAllocationController) updateCharCreatePointAllocation(c 
 	if err := c.Bind(charCreatePointAllocation); err != nil {
 		return c.JSON(
 			http.StatusInternalServerError,
-			echo.Map{"error": fmt.Sprintf("Error binding to entity: [%v]", err)},
+			echo.Map{"error": fmt.Sprintf("Error binding to entity [%v]", err.Error())},
 		)
 	}
 
-    entity := models.CharCreatePointAllocation{}
+	entity := models.CharCreatePointAllocation{}
 	err := e.db.Get(models.CharCreatePointAllocation{}, c).Model(&models.CharCreatePointAllocation{}).First(&entity, charCreatePointAllocation.ID).Error
 	if err != nil || charCreatePointAllocation.ID == 0 {
 		return c.JSON(http.StatusNotFound, echo.Map{"error": "Cannot find entity"})
@@ -127,7 +141,7 @@ func (e *CharCreatePointAllocationController) updateCharCreatePointAllocation(c 
 
 	err = e.db.Get(models.CharCreatePointAllocation{}, c).Model(&entity).Select("*").Updates(&charCreatePointAllocation).Error
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error updating entity: [%v]", err)})
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error updating entity [%v]", err.Error())})
 	}
 
 	return c.JSON(http.StatusOK, charCreatePointAllocation)
@@ -149,7 +163,7 @@ func (e *CharCreatePointAllocationController) createCharCreatePointAllocation(c 
 	if err := c.Bind(charCreatePointAllocation); err != nil {
 		return c.JSON(
 			http.StatusInternalServerError,
-			echo.Map{"error": fmt.Sprintf("Error binding to entity: [%v]", err)},
+			echo.Map{"error": fmt.Sprintf("Error binding to entity [%v]", err.Error())},
 		)
 	}
 
@@ -157,7 +171,7 @@ func (e *CharCreatePointAllocationController) createCharCreatePointAllocation(c 
 	if err != nil {
 		return c.JSON(
 			http.StatusInternalServerError,
-			echo.Map{"error": fmt.Sprintf("Error inserting entity: [%v]", err)},
+			echo.Map{"error": fmt.Sprintf("Error inserting entity [%v]", err.Error())},
 		)
 	}
 
@@ -170,25 +184,38 @@ func (e *CharCreatePointAllocationController) createCharCreatePointAllocation(c 
 // @Accept json
 // @Produce json
 // @Tags CharCreatePointAllocation
-// @Param id path int true "Id"
+// @Param id path int true "id"
 // @Success 200 {string} string "Entity deleted successfully"
 // @Failure 404 {string} string "Cannot find entity"
 // @Failure 500 {string} string "Error binding to entity"
 // @Failure 500 {string} string "Error deleting entity"
 // @Router /char_create_point_allocation/{id} [delete]
 func (e *CharCreatePointAllocationController) deleteCharCreatePointAllocation(c echo.Context) error {
-	charCreatePointAllocationId, err := strconv.Atoi(c.Param("char_create_point_allocation"))
+	var params []interface{}
+	var keys []string
+
+	// primary key param
+	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
 		e.logger.Error(err)
 	}
+	params = append(params, id)
+	keys = append(keys, "id = ?")
 
-	charCreatePointAllocation := new(models.CharCreatePointAllocation)
-	err = e.db.Get(models.CharCreatePointAllocation{}, c).Model(&models.CharCreatePointAllocation{}).First(&charCreatePointAllocation, charCreatePointAllocationId).Error
-	if err != nil || charCreatePointAllocation.ID == 0 {
-		return c.JSON(http.StatusNotFound, echo.Map{"error": "Cannot find entity"})
+	// query builder
+	var result models.CharCreatePointAllocation
+	query := e.db.QueryContext(models.CharCreatePointAllocation{}, c)
+	for i, _ := range keys {
+		query = query.Where(keys[i], params[i])
 	}
 
-	err = e.db.Get(models.CharCreatePointAllocation{}, c).Model(&models.CharCreatePointAllocation{}).Delete(&charCreatePointAllocation).Error
+	// grab first entry
+	err = query.First(&result).Error
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
+	}
+
+	err = e.db.Get(models.CharCreatePointAllocation{}, c).Model(&models.CharCreatePointAllocation{}).Delete(&result).Error
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Error deleting entity"})
 	}
@@ -213,7 +240,7 @@ func (e *CharCreatePointAllocationController) getCharCreatePointAllocationsBulk(
 	if err := c.Bind(r); err != nil {
 		return c.JSON(
 			http.StatusInternalServerError,
-			echo.Map{"error": fmt.Sprintf("Error binding to bulk request: [%v]", err)},
+			echo.Map{"error": fmt.Sprintf("Error binding to bulk request: [%v]", err.Error())},
 		)
 	}
 
@@ -226,7 +253,7 @@ func (e *CharCreatePointAllocationController) getCharCreatePointAllocationsBulk(
 
 	err := e.db.QueryContext(models.CharCreatePointAllocation{}, c).Find(&results, r.IDs).Error
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err})
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
 	}
 
 	return c.JSON(http.StatusOK, results)

@@ -12,7 +12,7 @@ import (
 )
 
 type ZonePointController struct {
-	db     *database.DatabaseResolver
+	db	 *database.DatabaseResolver
 	logger *logrus.Logger
 }
 
@@ -21,19 +21,19 @@ func NewZonePointController(
 	logger *logrus.Logger,
 ) *ZonePointController {
 	return &ZonePointController{
-		db:     db,
+		db:	 db,
 		logger: logger,
 	}
 }
 
 func (e *ZonePointController) Routes() []*routes.Route {
 	return []*routes.Route{
-		routes.RegisterRoute(http.MethodDelete, "zone_point/:zone_point", e.deleteZonePoint, nil),
-		routes.RegisterRoute(http.MethodGet, "zone_point/:zone_point", e.getZonePoint, nil),
+		routes.RegisterRoute(http.MethodGet, "zone_point/:id", e.getZonePoint, nil),
 		routes.RegisterRoute(http.MethodGet, "zone_points", e.listZonePoints, nil),
-		routes.RegisterRoute(http.MethodPost, "zone_points/bulk", e.getZonePointsBulk, nil),
-		routes.RegisterRoute(http.MethodPatch, "zone_point/:zone_point", e.updateZonePoint, nil),
 		routes.RegisterRoute(http.MethodPut, "zone_point", e.createZonePoint, nil),
+		routes.RegisterRoute(http.MethodDelete, "zone_point/:id", e.deleteZonePoint, nil),
+		routes.RegisterRoute(http.MethodPatch, "zone_point/:id", e.updateZonePoint, nil),
+		routes.RegisterRoute(http.MethodPost, "zone_points/bulk", e.getZonePointsBulk, nil),
 	}
 }
 
@@ -70,7 +70,7 @@ func (e *ZonePointController) listZonePoints(c echo.Context) error {
 // @Accept json
 // @Produce json
 // @Tags ZonePoint
-// @Param id path int true "Id"
+// @Param id path int true "id"
 // @Param includes query string false "Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names "
 // @Param select query string false "Column names [.] separated to fetch specific fields in response"
 // @Success 200 {array} models.ZonePoint
@@ -79,17 +79,31 @@ func (e *ZonePointController) listZonePoints(c echo.Context) error {
 // @Failure 500 {string} string "Bad query request"
 // @Router /zone_point/{id} [get]
 func (e *ZonePointController) getZonePoint(c echo.Context) error {
-	zonePointId, err := strconv.Atoi(c.Param("zone_point"))
-	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Cannot find param"})
-	}
+	var params []interface{}
+	var keys []string
 
+	// primary key param
+	id, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Cannot find param [ID]"})
+	}
+	params = append(params, id)
+	keys = append(keys, "id = ?")
+
+	// query builder
 	var result models.ZonePoint
-	err = e.db.QueryContext(models.ZonePoint{}, c).First(&result, zonePointId).Error
-	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err})
+	query := e.db.QueryContext(models.ZonePoint{}, c)
+	for i, _ := range keys {
+		query = query.Where(keys[i], params[i])
 	}
 
+	// grab first entry
+	err = query.First(&result).Error
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
+	}
+
+	// couldn't find entity
 	if result.ID == 0 {
 		return c.JSON(http.StatusNotFound, echo.Map{"error": "Cannot find entity"})
 	}
@@ -103,7 +117,7 @@ func (e *ZonePointController) getZonePoint(c echo.Context) error {
 // @Accept json
 // @Produce json
 // @Tags ZonePoint
-// @Param id path int true "Id"
+// @Param ID path int true "ID"
 // @Param zone_point body models.ZonePoint true "ZonePoint"
 // @Success 200 {array} models.ZonePoint
 // @Failure 404 {string} string "Cannot find entity"
@@ -115,11 +129,11 @@ func (e *ZonePointController) updateZonePoint(c echo.Context) error {
 	if err := c.Bind(zonePoint); err != nil {
 		return c.JSON(
 			http.StatusInternalServerError,
-			echo.Map{"error": fmt.Sprintf("Error binding to entity: [%v]", err)},
+			echo.Map{"error": fmt.Sprintf("Error binding to entity [%v]", err.Error())},
 		)
 	}
 
-    entity := models.ZonePoint{}
+	entity := models.ZonePoint{}
 	err := e.db.Get(models.ZonePoint{}, c).Model(&models.ZonePoint{}).First(&entity, zonePoint.ID).Error
 	if err != nil || zonePoint.ID == 0 {
 		return c.JSON(http.StatusNotFound, echo.Map{"error": "Cannot find entity"})
@@ -127,7 +141,7 @@ func (e *ZonePointController) updateZonePoint(c echo.Context) error {
 
 	err = e.db.Get(models.ZonePoint{}, c).Model(&entity).Select("*").Updates(&zonePoint).Error
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error updating entity: [%v]", err)})
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error updating entity [%v]", err.Error())})
 	}
 
 	return c.JSON(http.StatusOK, zonePoint)
@@ -149,7 +163,7 @@ func (e *ZonePointController) createZonePoint(c echo.Context) error {
 	if err := c.Bind(zonePoint); err != nil {
 		return c.JSON(
 			http.StatusInternalServerError,
-			echo.Map{"error": fmt.Sprintf("Error binding to entity: [%v]", err)},
+			echo.Map{"error": fmt.Sprintf("Error binding to entity [%v]", err.Error())},
 		)
 	}
 
@@ -157,7 +171,7 @@ func (e *ZonePointController) createZonePoint(c echo.Context) error {
 	if err != nil {
 		return c.JSON(
 			http.StatusInternalServerError,
-			echo.Map{"error": fmt.Sprintf("Error inserting entity: [%v]", err)},
+			echo.Map{"error": fmt.Sprintf("Error inserting entity [%v]", err.Error())},
 		)
 	}
 
@@ -170,25 +184,38 @@ func (e *ZonePointController) createZonePoint(c echo.Context) error {
 // @Accept json
 // @Produce json
 // @Tags ZonePoint
-// @Param id path int true "Id"
+// @Param id path int true "id"
 // @Success 200 {string} string "Entity deleted successfully"
 // @Failure 404 {string} string "Cannot find entity"
 // @Failure 500 {string} string "Error binding to entity"
 // @Failure 500 {string} string "Error deleting entity"
 // @Router /zone_point/{id} [delete]
 func (e *ZonePointController) deleteZonePoint(c echo.Context) error {
-	zonePointId, err := strconv.Atoi(c.Param("zone_point"))
+	var params []interface{}
+	var keys []string
+
+	// primary key param
+	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
 		e.logger.Error(err)
 	}
+	params = append(params, id)
+	keys = append(keys, "id = ?")
 
-	zonePoint := new(models.ZonePoint)
-	err = e.db.Get(models.ZonePoint{}, c).Model(&models.ZonePoint{}).First(&zonePoint, zonePointId).Error
-	if err != nil || zonePoint.ID == 0 {
-		return c.JSON(http.StatusNotFound, echo.Map{"error": "Cannot find entity"})
+	// query builder
+	var result models.ZonePoint
+	query := e.db.QueryContext(models.ZonePoint{}, c)
+	for i, _ := range keys {
+		query = query.Where(keys[i], params[i])
 	}
 
-	err = e.db.Get(models.ZonePoint{}, c).Model(&models.ZonePoint{}).Delete(&zonePoint).Error
+	// grab first entry
+	err = query.First(&result).Error
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
+	}
+
+	err = e.db.Get(models.ZonePoint{}, c).Model(&models.ZonePoint{}).Delete(&result).Error
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Error deleting entity"})
 	}
@@ -213,7 +240,7 @@ func (e *ZonePointController) getZonePointsBulk(c echo.Context) error {
 	if err := c.Bind(r); err != nil {
 		return c.JSON(
 			http.StatusInternalServerError,
-			echo.Map{"error": fmt.Sprintf("Error binding to bulk request: [%v]", err)},
+			echo.Map{"error": fmt.Sprintf("Error binding to bulk request: [%v]", err.Error())},
 		)
 	}
 
@@ -226,7 +253,7 @@ func (e *ZonePointController) getZonePointsBulk(c echo.Context) error {
 
 	err := e.db.QueryContext(models.ZonePoint{}, c).Find(&results, r.IDs).Error
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err})
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
 	}
 
 	return c.JSON(http.StatusOK, results)

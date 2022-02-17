@@ -12,7 +12,7 @@ import (
 )
 
 type NpcTypesTintController struct {
-	db     *database.DatabaseResolver
+	db	 *database.DatabaseResolver
 	logger *logrus.Logger
 }
 
@@ -21,19 +21,19 @@ func NewNpcTypesTintController(
 	logger *logrus.Logger,
 ) *NpcTypesTintController {
 	return &NpcTypesTintController{
-		db:     db,
+		db:	 db,
 		logger: logger,
 	}
 }
 
 func (e *NpcTypesTintController) Routes() []*routes.Route {
 	return []*routes.Route{
-		routes.RegisterRoute(http.MethodDelete, "npc_types_tint/:npc_types_tint", e.deleteNpcTypesTint, nil),
-		routes.RegisterRoute(http.MethodGet, "npc_types_tint/:npc_types_tint", e.getNpcTypesTint, nil),
+		routes.RegisterRoute(http.MethodGet, "npc_types_tint/:id", e.getNpcTypesTint, nil),
 		routes.RegisterRoute(http.MethodGet, "npc_types_tints", e.listNpcTypesTints, nil),
-		routes.RegisterRoute(http.MethodPost, "npc_types_tints/bulk", e.getNpcTypesTintsBulk, nil),
-		routes.RegisterRoute(http.MethodPatch, "npc_types_tint/:npc_types_tint", e.updateNpcTypesTint, nil),
 		routes.RegisterRoute(http.MethodPut, "npc_types_tint", e.createNpcTypesTint, nil),
+		routes.RegisterRoute(http.MethodDelete, "npc_types_tint/:id", e.deleteNpcTypesTint, nil),
+		routes.RegisterRoute(http.MethodPatch, "npc_types_tint/:id", e.updateNpcTypesTint, nil),
+		routes.RegisterRoute(http.MethodPost, "npc_types_tints/bulk", e.getNpcTypesTintsBulk, nil),
 	}
 }
 
@@ -70,7 +70,7 @@ func (e *NpcTypesTintController) listNpcTypesTints(c echo.Context) error {
 // @Accept json
 // @Produce json
 // @Tags NpcTypesTint
-// @Param id path int true "Id"
+// @Param id path int true "id"
 // @Param includes query string false "Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names "
 // @Param select query string false "Column names [.] separated to fetch specific fields in response"
 // @Success 200 {array} models.NpcTypesTint
@@ -79,17 +79,31 @@ func (e *NpcTypesTintController) listNpcTypesTints(c echo.Context) error {
 // @Failure 500 {string} string "Bad query request"
 // @Router /npc_types_tint/{id} [get]
 func (e *NpcTypesTintController) getNpcTypesTint(c echo.Context) error {
-	npcTypesTintId, err := strconv.Atoi(c.Param("npc_types_tint"))
-	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Cannot find param"})
-	}
+	var params []interface{}
+	var keys []string
 
+	// primary key param
+	id, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Cannot find param [ID]"})
+	}
+	params = append(params, id)
+	keys = append(keys, "id = ?")
+
+	// query builder
 	var result models.NpcTypesTint
-	err = e.db.QueryContext(models.NpcTypesTint{}, c).First(&result, npcTypesTintId).Error
-	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err})
+	query := e.db.QueryContext(models.NpcTypesTint{}, c)
+	for i, _ := range keys {
+		query = query.Where(keys[i], params[i])
 	}
 
+	// grab first entry
+	err = query.First(&result).Error
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
+	}
+
+	// couldn't find entity
 	if result.ID == 0 {
 		return c.JSON(http.StatusNotFound, echo.Map{"error": "Cannot find entity"})
 	}
@@ -103,7 +117,7 @@ func (e *NpcTypesTintController) getNpcTypesTint(c echo.Context) error {
 // @Accept json
 // @Produce json
 // @Tags NpcTypesTint
-// @Param id path int true "Id"
+// @Param ID path int true "ID"
 // @Param npc_types_tint body models.NpcTypesTint true "NpcTypesTint"
 // @Success 200 {array} models.NpcTypesTint
 // @Failure 404 {string} string "Cannot find entity"
@@ -115,11 +129,11 @@ func (e *NpcTypesTintController) updateNpcTypesTint(c echo.Context) error {
 	if err := c.Bind(npcTypesTint); err != nil {
 		return c.JSON(
 			http.StatusInternalServerError,
-			echo.Map{"error": fmt.Sprintf("Error binding to entity: [%v]", err)},
+			echo.Map{"error": fmt.Sprintf("Error binding to entity [%v]", err.Error())},
 		)
 	}
 
-    entity := models.NpcTypesTint{}
+	entity := models.NpcTypesTint{}
 	err := e.db.Get(models.NpcTypesTint{}, c).Model(&models.NpcTypesTint{}).First(&entity, npcTypesTint.ID).Error
 	if err != nil || npcTypesTint.ID == 0 {
 		return c.JSON(http.StatusNotFound, echo.Map{"error": "Cannot find entity"})
@@ -127,7 +141,7 @@ func (e *NpcTypesTintController) updateNpcTypesTint(c echo.Context) error {
 
 	err = e.db.Get(models.NpcTypesTint{}, c).Model(&entity).Select("*").Updates(&npcTypesTint).Error
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error updating entity: [%v]", err)})
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error updating entity [%v]", err.Error())})
 	}
 
 	return c.JSON(http.StatusOK, npcTypesTint)
@@ -149,7 +163,7 @@ func (e *NpcTypesTintController) createNpcTypesTint(c echo.Context) error {
 	if err := c.Bind(npcTypesTint); err != nil {
 		return c.JSON(
 			http.StatusInternalServerError,
-			echo.Map{"error": fmt.Sprintf("Error binding to entity: [%v]", err)},
+			echo.Map{"error": fmt.Sprintf("Error binding to entity [%v]", err.Error())},
 		)
 	}
 
@@ -157,7 +171,7 @@ func (e *NpcTypesTintController) createNpcTypesTint(c echo.Context) error {
 	if err != nil {
 		return c.JSON(
 			http.StatusInternalServerError,
-			echo.Map{"error": fmt.Sprintf("Error inserting entity: [%v]", err)},
+			echo.Map{"error": fmt.Sprintf("Error inserting entity [%v]", err.Error())},
 		)
 	}
 
@@ -170,25 +184,38 @@ func (e *NpcTypesTintController) createNpcTypesTint(c echo.Context) error {
 // @Accept json
 // @Produce json
 // @Tags NpcTypesTint
-// @Param id path int true "Id"
+// @Param id path int true "id"
 // @Success 200 {string} string "Entity deleted successfully"
 // @Failure 404 {string} string "Cannot find entity"
 // @Failure 500 {string} string "Error binding to entity"
 // @Failure 500 {string} string "Error deleting entity"
 // @Router /npc_types_tint/{id} [delete]
 func (e *NpcTypesTintController) deleteNpcTypesTint(c echo.Context) error {
-	npcTypesTintId, err := strconv.Atoi(c.Param("npc_types_tint"))
+	var params []interface{}
+	var keys []string
+
+	// primary key param
+	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
 		e.logger.Error(err)
 	}
+	params = append(params, id)
+	keys = append(keys, "id = ?")
 
-	npcTypesTint := new(models.NpcTypesTint)
-	err = e.db.Get(models.NpcTypesTint{}, c).Model(&models.NpcTypesTint{}).First(&npcTypesTint, npcTypesTintId).Error
-	if err != nil || npcTypesTint.ID == 0 {
-		return c.JSON(http.StatusNotFound, echo.Map{"error": "Cannot find entity"})
+	// query builder
+	var result models.NpcTypesTint
+	query := e.db.QueryContext(models.NpcTypesTint{}, c)
+	for i, _ := range keys {
+		query = query.Where(keys[i], params[i])
 	}
 
-	err = e.db.Get(models.NpcTypesTint{}, c).Model(&models.NpcTypesTint{}).Delete(&npcTypesTint).Error
+	// grab first entry
+	err = query.First(&result).Error
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
+	}
+
+	err = e.db.Get(models.NpcTypesTint{}, c).Model(&models.NpcTypesTint{}).Delete(&result).Error
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Error deleting entity"})
 	}
@@ -213,7 +240,7 @@ func (e *NpcTypesTintController) getNpcTypesTintsBulk(c echo.Context) error {
 	if err := c.Bind(r); err != nil {
 		return c.JSON(
 			http.StatusInternalServerError,
-			echo.Map{"error": fmt.Sprintf("Error binding to bulk request: [%v]", err)},
+			echo.Map{"error": fmt.Sprintf("Error binding to bulk request: [%v]", err.Error())},
 		)
 	}
 
@@ -226,7 +253,7 @@ func (e *NpcTypesTintController) getNpcTypesTintsBulk(c echo.Context) error {
 
 	err := e.db.QueryContext(models.NpcTypesTint{}, c).Find(&results, r.IDs).Error
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err})
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
 	}
 
 	return c.JSON(http.StatusOK, results)

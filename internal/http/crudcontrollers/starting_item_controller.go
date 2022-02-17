@@ -12,7 +12,7 @@ import (
 )
 
 type StartingItemController struct {
-	db     *database.DatabaseResolver
+	db	 *database.DatabaseResolver
 	logger *logrus.Logger
 }
 
@@ -21,19 +21,19 @@ func NewStartingItemController(
 	logger *logrus.Logger,
 ) *StartingItemController {
 	return &StartingItemController{
-		db:     db,
+		db:	 db,
 		logger: logger,
 	}
 }
 
 func (e *StartingItemController) Routes() []*routes.Route {
 	return []*routes.Route{
-		routes.RegisterRoute(http.MethodDelete, "starting_item/:starting_item", e.deleteStartingItem, nil),
-		routes.RegisterRoute(http.MethodGet, "starting_item/:starting_item", e.getStartingItem, nil),
+		routes.RegisterRoute(http.MethodGet, "starting_item/:id", e.getStartingItem, nil),
 		routes.RegisterRoute(http.MethodGet, "starting_items", e.listStartingItems, nil),
-		routes.RegisterRoute(http.MethodPost, "starting_items/bulk", e.getStartingItemsBulk, nil),
-		routes.RegisterRoute(http.MethodPatch, "starting_item/:starting_item", e.updateStartingItem, nil),
 		routes.RegisterRoute(http.MethodPut, "starting_item", e.createStartingItem, nil),
+		routes.RegisterRoute(http.MethodDelete, "starting_item/:id", e.deleteStartingItem, nil),
+		routes.RegisterRoute(http.MethodPatch, "starting_item/:id", e.updateStartingItem, nil),
+		routes.RegisterRoute(http.MethodPost, "starting_items/bulk", e.getStartingItemsBulk, nil),
 	}
 }
 
@@ -70,7 +70,7 @@ func (e *StartingItemController) listStartingItems(c echo.Context) error {
 // @Accept json
 // @Produce json
 // @Tags StartingItem
-// @Param id path int true "Id"
+// @Param id path int true "id"
 // @Param includes query string false "Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names "
 // @Param select query string false "Column names [.] separated to fetch specific fields in response"
 // @Success 200 {array} models.StartingItem
@@ -79,17 +79,42 @@ func (e *StartingItemController) listStartingItems(c echo.Context) error {
 // @Failure 500 {string} string "Bad query request"
 // @Router /starting_item/{id} [get]
 func (e *StartingItemController) getStartingItem(c echo.Context) error {
-	startingItemId, err := strconv.Atoi(c.Param("starting_item"))
+	var params []interface{}
+	var keys []string
+
+	// primary key param
+	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Cannot find param"})
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Cannot find param [ID]"})
+	}
+	params = append(params, id)
+	keys = append(keys, "id = ?")
+
+	// key param [race] position [2] type [int]
+	if len(c.QueryParam("race")) > 0 {
+		raceParam, err := strconv.Atoi(c.QueryParam("race"))
+		if err != nil {
+			return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error parsing query param [race] err [%s]", err.Error())})
+		}
+
+		params = append(params, raceParam)
+		keys = append(keys, "race = ?")
 	}
 
+	// query builder
 	var result models.StartingItem
-	err = e.db.QueryContext(models.StartingItem{}, c).First(&result, startingItemId).Error
-	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err})
+	query := e.db.QueryContext(models.StartingItem{}, c)
+	for i, _ := range keys {
+		query = query.Where(keys[i], params[i])
 	}
 
+	// grab first entry
+	err = query.First(&result).Error
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
+	}
+
+	// couldn't find entity
 	if result.ID == 0 {
 		return c.JSON(http.StatusNotFound, echo.Map{"error": "Cannot find entity"})
 	}
@@ -103,7 +128,7 @@ func (e *StartingItemController) getStartingItem(c echo.Context) error {
 // @Accept json
 // @Produce json
 // @Tags StartingItem
-// @Param id path int true "Id"
+// @Param ID path int true "ID"
 // @Param starting_item body models.StartingItem true "StartingItem"
 // @Success 200 {array} models.StartingItem
 // @Failure 404 {string} string "Cannot find entity"
@@ -115,11 +140,11 @@ func (e *StartingItemController) updateStartingItem(c echo.Context) error {
 	if err := c.Bind(startingItem); err != nil {
 		return c.JSON(
 			http.StatusInternalServerError,
-			echo.Map{"error": fmt.Sprintf("Error binding to entity: [%v]", err)},
+			echo.Map{"error": fmt.Sprintf("Error binding to entity [%v]", err.Error())},
 		)
 	}
 
-    entity := models.StartingItem{}
+	entity := models.StartingItem{}
 	err := e.db.Get(models.StartingItem{}, c).Model(&models.StartingItem{}).First(&entity, startingItem.ID).Error
 	if err != nil || startingItem.ID == 0 {
 		return c.JSON(http.StatusNotFound, echo.Map{"error": "Cannot find entity"})
@@ -127,7 +152,7 @@ func (e *StartingItemController) updateStartingItem(c echo.Context) error {
 
 	err = e.db.Get(models.StartingItem{}, c).Model(&entity).Select("*").Updates(&startingItem).Error
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error updating entity: [%v]", err)})
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error updating entity [%v]", err.Error())})
 	}
 
 	return c.JSON(http.StatusOK, startingItem)
@@ -149,7 +174,7 @@ func (e *StartingItemController) createStartingItem(c echo.Context) error {
 	if err := c.Bind(startingItem); err != nil {
 		return c.JSON(
 			http.StatusInternalServerError,
-			echo.Map{"error": fmt.Sprintf("Error binding to entity: [%v]", err)},
+			echo.Map{"error": fmt.Sprintf("Error binding to entity [%v]", err.Error())},
 		)
 	}
 
@@ -157,7 +182,7 @@ func (e *StartingItemController) createStartingItem(c echo.Context) error {
 	if err != nil {
 		return c.JSON(
 			http.StatusInternalServerError,
-			echo.Map{"error": fmt.Sprintf("Error inserting entity: [%v]", err)},
+			echo.Map{"error": fmt.Sprintf("Error inserting entity [%v]", err.Error())},
 		)
 	}
 
@@ -170,25 +195,49 @@ func (e *StartingItemController) createStartingItem(c echo.Context) error {
 // @Accept json
 // @Produce json
 // @Tags StartingItem
-// @Param id path int true "Id"
+// @Param id path int true "id"
 // @Success 200 {string} string "Entity deleted successfully"
 // @Failure 404 {string} string "Cannot find entity"
 // @Failure 500 {string} string "Error binding to entity"
 // @Failure 500 {string} string "Error deleting entity"
 // @Router /starting_item/{id} [delete]
 func (e *StartingItemController) deleteStartingItem(c echo.Context) error {
-	startingItemId, err := strconv.Atoi(c.Param("starting_item"))
+	var params []interface{}
+	var keys []string
+
+	// primary key param
+	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
 		e.logger.Error(err)
 	}
+	params = append(params, id)
+	keys = append(keys, "id = ?")
 
-	startingItem := new(models.StartingItem)
-	err = e.db.Get(models.StartingItem{}, c).Model(&models.StartingItem{}).First(&startingItem, startingItemId).Error
-	if err != nil || startingItem.ID == 0 {
-		return c.JSON(http.StatusNotFound, echo.Map{"error": "Cannot find entity"})
+	// key param [race] position [2] type [int]
+	if len(c.QueryParam("race")) > 0 {
+		raceParam, err := strconv.Atoi(c.QueryParam("race"))
+		if err != nil {
+			return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error parsing query param [race] err [%s]", err.Error())})
+		}
+
+		params = append(params, raceParam)
+		keys = append(keys, "race = ?")
 	}
 
-	err = e.db.Get(models.StartingItem{}, c).Model(&models.StartingItem{}).Delete(&startingItem).Error
+	// query builder
+	var result models.StartingItem
+	query := e.db.QueryContext(models.StartingItem{}, c)
+	for i, _ := range keys {
+		query = query.Where(keys[i], params[i])
+	}
+
+	// grab first entry
+	err = query.First(&result).Error
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
+	}
+
+	err = e.db.Get(models.StartingItem{}, c).Model(&models.StartingItem{}).Delete(&result).Error
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Error deleting entity"})
 	}
@@ -213,7 +262,7 @@ func (e *StartingItemController) getStartingItemsBulk(c echo.Context) error {
 	if err := c.Bind(r); err != nil {
 		return c.JSON(
 			http.StatusInternalServerError,
-			echo.Map{"error": fmt.Sprintf("Error binding to bulk request: [%v]", err)},
+			echo.Map{"error": fmt.Sprintf("Error binding to bulk request: [%v]", err.Error())},
 		)
 	}
 
@@ -226,7 +275,7 @@ func (e *StartingItemController) getStartingItemsBulk(c echo.Context) error {
 
 	err := e.db.QueryContext(models.StartingItem{}, c).Find(&results, r.IDs).Error
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err})
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
 	}
 
 	return c.JSON(http.StatusOK, results)

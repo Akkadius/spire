@@ -12,7 +12,7 @@ import (
 )
 
 type CharacterBandolierController struct {
-	db     *database.DatabaseResolver
+	db	 *database.DatabaseResolver
 	logger *logrus.Logger
 }
 
@@ -21,19 +21,19 @@ func NewCharacterBandolierController(
 	logger *logrus.Logger,
 ) *CharacterBandolierController {
 	return &CharacterBandolierController{
-		db:     db,
+		db:	 db,
 		logger: logger,
 	}
 }
 
 func (e *CharacterBandolierController) Routes() []*routes.Route {
 	return []*routes.Route{
-		routes.RegisterRoute(http.MethodDelete, "character_bandolier/:character_bandolier", e.deleteCharacterBandolier, nil),
-		routes.RegisterRoute(http.MethodGet, "character_bandolier/:character_bandolier", e.getCharacterBandolier, nil),
+		routes.RegisterRoute(http.MethodGet, "character_bandolier/:id", e.getCharacterBandolier, nil),
 		routes.RegisterRoute(http.MethodGet, "character_bandoliers", e.listCharacterBandoliers, nil),
-		routes.RegisterRoute(http.MethodPost, "character_bandoliers/bulk", e.getCharacterBandoliersBulk, nil),
-		routes.RegisterRoute(http.MethodPatch, "character_bandolier/:character_bandolier", e.updateCharacterBandolier, nil),
 		routes.RegisterRoute(http.MethodPut, "character_bandolier", e.createCharacterBandolier, nil),
+		routes.RegisterRoute(http.MethodDelete, "character_bandolier/:id", e.deleteCharacterBandolier, nil),
+		routes.RegisterRoute(http.MethodPatch, "character_bandolier/:id", e.updateCharacterBandolier, nil),
+		routes.RegisterRoute(http.MethodPost, "character_bandoliers/bulk", e.getCharacterBandoliersBulk, nil),
 	}
 }
 
@@ -70,7 +70,7 @@ func (e *CharacterBandolierController) listCharacterBandoliers(c echo.Context) e
 // @Accept json
 // @Produce json
 // @Tags CharacterBandolier
-// @Param id path int true "Id"
+// @Param id path int true "id"
 // @Param includes query string false "Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names "
 // @Param select query string false "Column names [.] separated to fetch specific fields in response"
 // @Success 200 {array} models.CharacterBandolier
@@ -79,17 +79,53 @@ func (e *CharacterBandolierController) listCharacterBandoliers(c echo.Context) e
 // @Failure 500 {string} string "Bad query request"
 // @Router /character_bandolier/{id} [get]
 func (e *CharacterBandolierController) getCharacterBandolier(c echo.Context) error {
-	characterBandolierId, err := strconv.Atoi(c.Param("character_bandolier"))
+	var params []interface{}
+	var keys []string
+
+	// primary key param
+	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Cannot find param"})
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Cannot find param [ID]"})
+	}
+	params = append(params, id)
+	keys = append(keys, "id = ?")
+
+	// key param [bandolier_id] position [2] type [tinyint]
+	if len(c.QueryParam("bandolier_id")) > 0 {
+		bandolierIdParam, err := strconv.Atoi(c.QueryParam("bandolier_id"))
+		if err != nil {
+			return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error parsing query param [bandolier_id] err [%s]", err.Error())})
+		}
+
+		params = append(params, bandolierIdParam)
+		keys = append(keys, "bandolier_id = ?")
 	}
 
+	// key param [bandolier_slot] position [3] type [tinyint]
+	if len(c.QueryParam("bandolier_slot")) > 0 {
+		bandolierSlotParam, err := strconv.Atoi(c.QueryParam("bandolier_slot"))
+		if err != nil {
+			return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error parsing query param [bandolier_slot] err [%s]", err.Error())})
+		}
+
+		params = append(params, bandolierSlotParam)
+		keys = append(keys, "bandolier_slot = ?")
+	}
+
+	// query builder
 	var result models.CharacterBandolier
-	err = e.db.QueryContext(models.CharacterBandolier{}, c).First(&result, characterBandolierId).Error
-	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err})
+	query := e.db.QueryContext(models.CharacterBandolier{}, c)
+	for i, _ := range keys {
+		query = query.Where(keys[i], params[i])
 	}
 
+	// grab first entry
+	err = query.First(&result).Error
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
+	}
+
+	// couldn't find entity
 	if result.ID == 0 {
 		return c.JSON(http.StatusNotFound, echo.Map{"error": "Cannot find entity"})
 	}
@@ -103,7 +139,7 @@ func (e *CharacterBandolierController) getCharacterBandolier(c echo.Context) err
 // @Accept json
 // @Produce json
 // @Tags CharacterBandolier
-// @Param id path int true "Id"
+// @Param ID path int true "ID"
 // @Param character_bandolier body models.CharacterBandolier true "CharacterBandolier"
 // @Success 200 {array} models.CharacterBandolier
 // @Failure 404 {string} string "Cannot find entity"
@@ -115,11 +151,11 @@ func (e *CharacterBandolierController) updateCharacterBandolier(c echo.Context) 
 	if err := c.Bind(characterBandolier); err != nil {
 		return c.JSON(
 			http.StatusInternalServerError,
-			echo.Map{"error": fmt.Sprintf("Error binding to entity: [%v]", err)},
+			echo.Map{"error": fmt.Sprintf("Error binding to entity [%v]", err.Error())},
 		)
 	}
 
-    entity := models.CharacterBandolier{}
+	entity := models.CharacterBandolier{}
 	err := e.db.Get(models.CharacterBandolier{}, c).Model(&models.CharacterBandolier{}).First(&entity, characterBandolier.ID).Error
 	if err != nil || characterBandolier.ID == 0 {
 		return c.JSON(http.StatusNotFound, echo.Map{"error": "Cannot find entity"})
@@ -127,7 +163,7 @@ func (e *CharacterBandolierController) updateCharacterBandolier(c echo.Context) 
 
 	err = e.db.Get(models.CharacterBandolier{}, c).Model(&entity).Select("*").Updates(&characterBandolier).Error
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error updating entity: [%v]", err)})
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error updating entity [%v]", err.Error())})
 	}
 
 	return c.JSON(http.StatusOK, characterBandolier)
@@ -149,7 +185,7 @@ func (e *CharacterBandolierController) createCharacterBandolier(c echo.Context) 
 	if err := c.Bind(characterBandolier); err != nil {
 		return c.JSON(
 			http.StatusInternalServerError,
-			echo.Map{"error": fmt.Sprintf("Error binding to entity: [%v]", err)},
+			echo.Map{"error": fmt.Sprintf("Error binding to entity [%v]", err.Error())},
 		)
 	}
 
@@ -157,7 +193,7 @@ func (e *CharacterBandolierController) createCharacterBandolier(c echo.Context) 
 	if err != nil {
 		return c.JSON(
 			http.StatusInternalServerError,
-			echo.Map{"error": fmt.Sprintf("Error inserting entity: [%v]", err)},
+			echo.Map{"error": fmt.Sprintf("Error inserting entity [%v]", err.Error())},
 		)
 	}
 
@@ -170,25 +206,60 @@ func (e *CharacterBandolierController) createCharacterBandolier(c echo.Context) 
 // @Accept json
 // @Produce json
 // @Tags CharacterBandolier
-// @Param id path int true "Id"
+// @Param id path int true "id"
 // @Success 200 {string} string "Entity deleted successfully"
 // @Failure 404 {string} string "Cannot find entity"
 // @Failure 500 {string} string "Error binding to entity"
 // @Failure 500 {string} string "Error deleting entity"
 // @Router /character_bandolier/{id} [delete]
 func (e *CharacterBandolierController) deleteCharacterBandolier(c echo.Context) error {
-	characterBandolierId, err := strconv.Atoi(c.Param("character_bandolier"))
+	var params []interface{}
+	var keys []string
+
+	// primary key param
+	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
 		e.logger.Error(err)
 	}
+	params = append(params, id)
+	keys = append(keys, "id = ?")
 
-	characterBandolier := new(models.CharacterBandolier)
-	err = e.db.Get(models.CharacterBandolier{}, c).Model(&models.CharacterBandolier{}).First(&characterBandolier, characterBandolierId).Error
-	if err != nil || characterBandolier.ID == 0 {
-		return c.JSON(http.StatusNotFound, echo.Map{"error": "Cannot find entity"})
+	// key param [bandolier_id] position [2] type [tinyint]
+	if len(c.QueryParam("bandolier_id")) > 0 {
+		bandolierIdParam, err := strconv.Atoi(c.QueryParam("bandolier_id"))
+		if err != nil {
+			return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error parsing query param [bandolier_id] err [%s]", err.Error())})
+		}
+
+		params = append(params, bandolierIdParam)
+		keys = append(keys, "bandolier_id = ?")
 	}
 
-	err = e.db.Get(models.CharacterBandolier{}, c).Model(&models.CharacterBandolier{}).Delete(&characterBandolier).Error
+	// key param [bandolier_slot] position [3] type [tinyint]
+	if len(c.QueryParam("bandolier_slot")) > 0 {
+		bandolierSlotParam, err := strconv.Atoi(c.QueryParam("bandolier_slot"))
+		if err != nil {
+			return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error parsing query param [bandolier_slot] err [%s]", err.Error())})
+		}
+
+		params = append(params, bandolierSlotParam)
+		keys = append(keys, "bandolier_slot = ?")
+	}
+
+	// query builder
+	var result models.CharacterBandolier
+	query := e.db.QueryContext(models.CharacterBandolier{}, c)
+	for i, _ := range keys {
+		query = query.Where(keys[i], params[i])
+	}
+
+	// grab first entry
+	err = query.First(&result).Error
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
+	}
+
+	err = e.db.Get(models.CharacterBandolier{}, c).Model(&models.CharacterBandolier{}).Delete(&result).Error
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Error deleting entity"})
 	}
@@ -213,7 +284,7 @@ func (e *CharacterBandolierController) getCharacterBandoliersBulk(c echo.Context
 	if err := c.Bind(r); err != nil {
 		return c.JSON(
 			http.StatusInternalServerError,
-			echo.Map{"error": fmt.Sprintf("Error binding to bulk request: [%v]", err)},
+			echo.Map{"error": fmt.Sprintf("Error binding to bulk request: [%v]", err.Error())},
 		)
 	}
 
@@ -226,7 +297,7 @@ func (e *CharacterBandolierController) getCharacterBandoliersBulk(c echo.Context
 
 	err := e.db.QueryContext(models.CharacterBandolier{}, c).Find(&results, r.IDs).Error
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err})
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
 	}
 
 	return c.JSON(http.StatusOK, results)
