@@ -33,6 +33,7 @@ func NewGenerateController(options GenerateControllerContext, logger *logrus.Log
 type templateData struct {
 	RelationshipsComment  string
 	KeyName               string
+	KeyColumn             string
 	KeyNameLowerCamel     string
 	EntityName            string
 	EntityNamePlural      string
@@ -40,6 +41,8 @@ type templateData struct {
 	EntityNameSnakePlural string
 	EntityNameCamel       string
 	EntityNameCamelPlural string
+	ParamLine             string
+	QueryParams           string
 }
 
 const (
@@ -50,10 +53,18 @@ func (gc *GenerateController) Generate() {
 	keyName := ""
 	keys := GetDbSchemaKeysConfigTable(gc.options.EntityName)
 
+	if len(os.Getenv("DEBUG")) > 0 {
+		pp.Println("# Keys")
+		pp.Println(keys)
+	}
+
+	priKey := DbSchemaRowResult{}
+
 	// first pass grab id if it exists
 	for _, key := range keys {
 		if key.Column == "id" {
 			keyName = strcase.ToCamel(key.Column)
+			priKey = key
 			break
 		}
 	}
@@ -61,7 +72,6 @@ func (gc *GenerateController) Generate() {
 	// second pass if not found
 	if len(keyName) == 0 {
 		for _, key := range keys {
-			fmt.Println(key)
 			if key.ColumnKey.String == "PRI" {
 				keyName = strcase.ToCamel(key.Column)
 				break
@@ -78,22 +88,69 @@ func (gc *GenerateController) Generate() {
 		keyName = "ID"
 	}
 
-	entityName := gc.pluralize.Singular(gc.options.EntityName)
+	// build primary key param line
+	paramLine := ""
+	if priKey.DataType == "int" {
+		paramLine = fmt.Sprintf(
+			"%s, err := strconv.Atoi(c.Param(\"%s\"))",
+			strcase.ToLowerCamel(keyName),
+			strcase.ToLowerCamel(keyName),
+		)
+	}
 
+	queryParams := ""
+	// loop through secondary keys (skip first)
+	for i, key := range keys {
+		if i != 0 {
+			pp.Println(key)
+
+			// add type lines (uint / int etc.)
+			param := fmt.Sprintf(`	// key param [%s] position [%s] type [%s]
+	if len(c.QueryParam("%s")) > 0 {
+		%sParam, err := strconv.Atoi(c.QueryParam("%s"))
+		if err != nil {
+			return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error parsing query param [%s] err [%%s]", err.Error())})
+		}
+
+		params = append(params, %sParam)
+		keys = append(keys, "%s = ?")
+	}
+`,
+				key.Column,
+				key.OrdinalPosition,
+				key.DataType,
+				key.Column,
+				key.Column,
+				key.Column,
+				key.Column,
+				key.Column,
+				key.Column,
+			)
+
+			queryParams += param
+			fmt.Println(param)
+		}
+	}
+
+	entityName := gc.pluralize.Singular(gc.options.EntityName)
 	tpl, err := template.ParseFiles("./internal/generators/templates/crud_controller.tmpl")
 	templateData := templateData{
 		RelationshipsComment:  gc.options.RelationshipsComment,
 		EntityName:            strcase.ToCamel(entityName),
 		KeyName:               keyName,
 		KeyNameLowerCamel:     strcase.ToLowerCamel(keyName),
+		KeyColumn:             priKey.Column,
 		EntityNamePlural:      gc.pluralize.Plural(strcase.ToCamel(entityName)),
 		EntityNameSnake:       strcase.ToSnake(entityName),
 		EntityNameSnakePlural: gc.pluralize.Plural(strcase.ToSnake(entityName)),
 		EntityNameCamel:       strcase.ToLowerCamel(entityName),
 		EntityNameCamelPlural: gc.pluralize.Plural(strcase.ToLowerCamel(entityName)),
+		ParamLine:             paramLine,
+		QueryParams:           queryParams,
 	}
 
 	if len(os.Getenv("DEBUG")) > 0 {
+		pp.Println("# Template Data")
 		pp.Println(templateData)
 	}
 
