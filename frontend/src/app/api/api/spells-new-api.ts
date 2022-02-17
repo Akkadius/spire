@@ -82,7 +82,7 @@ export const SpellsNewApiAxiosParamCreator = function (configuration?: Configura
         /**
          * 
          * @summary Deletes SpellsNew
-         * @param {number} id Id
+         * @param {number} id id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -386,7 +386,7 @@ export const SpellsNewApiFp = function(configuration?: Configuration) {
         /**
          * 
          * @summary Deletes SpellsNew
-         * @param {number} id Id
+         * @param {number} id id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -485,7 +485,7 @@ export const SpellsNewApiFactory = function (configuration?: Configuration, base
         /**
          * 
          * @summary Deletes SpellsNew
-         * @param {number} id Id
+         * @param {number} id id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -566,7 +566,7 @@ export interface SpellsNewApiCreateSpellsNewRequest {
  */
 export interface SpellsNewApiDeleteSpellsNewRequest {
     /**
-     * Id
+     * id
      * @type {number}
      * @memberof SpellsNewApiDeleteSpellsNew
      */

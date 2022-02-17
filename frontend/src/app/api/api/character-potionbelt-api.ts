@@ -82,7 +82,7 @@ export const CharacterPotionbeltApiAxiosParamCreator = function (configuration?:
         /**
          * 
          * @summary Deletes CharacterPotionbelt
-         * @param {number} id Id
+         * @param {number} id id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -386,7 +386,7 @@ export const CharacterPotionbeltApiFp = function(configuration?: Configuration) 
         /**
          * 
          * @summary Deletes CharacterPotionbelt
-         * @param {number} id Id
+         * @param {number} id id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -485,7 +485,7 @@ export const CharacterPotionbeltApiFactory = function (configuration?: Configura
         /**
          * 
          * @summary Deletes CharacterPotionbelt
-         * @param {number} id Id
+         * @param {number} id id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -566,7 +566,7 @@ export interface CharacterPotionbeltApiCreateCharacterPotionbeltRequest {
  */
 export interface CharacterPotionbeltApiDeleteCharacterPotionbeltRequest {
     /**
-     * Id
+     * id
      * @type {number}
      * @memberof CharacterPotionbeltApiDeleteCharacterPotionbelt
      */

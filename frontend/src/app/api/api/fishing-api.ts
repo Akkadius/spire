@@ -82,7 +82,7 @@ export const FishingApiAxiosParamCreator = function (configuration?: Configurati
         /**
          * 
          * @summary Deletes Fishing
-         * @param {number} id Id
+         * @param {number} id id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -386,7 +386,7 @@ export const FishingApiFp = function(configuration?: Configuration) {
         /**
          * 
          * @summary Deletes Fishing
-         * @param {number} id Id
+         * @param {number} id id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -485,7 +485,7 @@ export const FishingApiFactory = function (configuration?: Configuration, basePa
         /**
          * 
          * @summary Deletes Fishing
-         * @param {number} id Id
+         * @param {number} id id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -566,7 +566,7 @@ export interface FishingApiCreateFishingRequest {
  */
 export interface FishingApiDeleteFishingRequest {
     /**
-     * Id
+     * id
      * @type {number}
      * @memberof FishingApiDeleteFishing
      */

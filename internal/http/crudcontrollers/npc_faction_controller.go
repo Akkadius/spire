@@ -70,7 +70,7 @@ func (e *NpcFactionController) listNpcFactions(c echo.Context) error {
 // @Accept json
 // @Produce json
 // @Tags NpcFaction
-// @Param id path int true "id"
+// @Param id path int true "Id"
 // @Param includes query string false "Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names <h4>Relationships</h4>NpcFactionEntries"
 // @Param select query string false "Column names [.] separated to fetch specific fields in response"
 // @Success 200 {array} models.NpcFaction
@@ -117,7 +117,7 @@ func (e *NpcFactionController) getNpcFaction(c echo.Context) error {
 // @Accept json
 // @Produce json
 // @Tags NpcFaction
-// @Param ID path int true "ID"
+// @Param id path int true "Id"
 // @Param npc_faction body models.NpcFaction true "NpcFaction"
 // @Success 200 {array} models.NpcFaction
 // @Failure 404 {string} string "Cannot find entity"

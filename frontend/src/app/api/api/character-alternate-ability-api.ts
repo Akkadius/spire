@@ -82,7 +82,7 @@ export const CharacterAlternateAbilityApiAxiosParamCreator = function (configura
         /**
          * 
          * @summary Deletes CharacterAlternateAbility
-         * @param {number} id Id
+         * @param {number} id id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -386,7 +386,7 @@ export const CharacterAlternateAbilityApiFp = function(configuration?: Configura
         /**
          * 
          * @summary Deletes CharacterAlternateAbility
-         * @param {number} id Id
+         * @param {number} id id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -485,7 +485,7 @@ export const CharacterAlternateAbilityApiFactory = function (configuration?: Con
         /**
          * 
          * @summary Deletes CharacterAlternateAbility
-         * @param {number} id Id
+         * @param {number} id id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -566,7 +566,7 @@ export interface CharacterAlternateAbilityApiCreateCharacterAlternateAbilityRequ
  */
 export interface CharacterAlternateAbilityApiDeleteCharacterAlternateAbilityRequest {
     /**
-     * Id
+     * id
      * @type {number}
      * @memberof CharacterAlternateAbilityApiDeleteCharacterAlternateAbility
      */

@@ -70,7 +70,7 @@ func (e *CharacterDatumController) listCharacterData(c echo.Context) error {
 // @Accept json
 // @Produce json
 // @Tags CharacterDatum
-// @Param id path int true "id"
+// @Param id path int true "Id"
 // @Param includes query string false "Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names <h4>Relationships</h4>AdventureStats<br>Buyers<br>CharRecipeLists<br>CharacterActivities<br>CharacterAltCurrencies<br>CharacterAlternateAbilities<br>CharacterAuras<br>CharacterBandoliers<br>CharacterBinds<br>CharacterBuffs<br>CharacterCorpses<br>CharacterCurrencies<br>CharacterDisciplines<br>CharacterEnabledtasks<br>CharacterInspectMessages<br>CharacterItemRecasts<br>CharacterLanguages<br>CharacterLeadershipAbilities<br>CharacterMaterials<br>CharacterMemmedSpells<br>CharacterPetBuffs<br>CharacterPetInfos<br>CharacterPetInventories<br>CharacterPotionbelts<br>CharacterSkills<br>CharacterSpells<br>CharacterTasks<br>CharacterTributes<br>CompletedTasks<br>DataBuckets<br>FactionValues<br>Friends<br>Guild<br>Guild.GuildBanks<br>Guild.GuildMembers<br>Guild.GuildRanks<br>GuildMembers<br>InstanceListPlayers<br>Inventories<br>Inventories.Item<br>Inventories.Item.DiscoveredItems<br>Keyrings<br>Mail<br>PlayerTitlesets<br>QuestGlobals<br>Timers<br>Titles<br>Traders<br>ZoneFlags"
 // @Param select query string false "Column names [.] separated to fetch specific fields in response"
 // @Success 200 {array} models.CharacterDatum
@@ -117,7 +117,7 @@ func (e *CharacterDatumController) getCharacterDatum(c echo.Context) error {
 // @Accept json
 // @Produce json
 // @Tags CharacterDatum
-// @Param ID path int true "ID"
+// @Param id path int true "Id"
 // @Param character_datum body models.CharacterDatum true "CharacterDatum"
 // @Success 200 {array} models.CharacterDatum
 // @Failure 404 {string} string "Cannot find entity"

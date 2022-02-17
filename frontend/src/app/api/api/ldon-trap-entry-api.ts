@@ -82,7 +82,7 @@ export const LdonTrapEntryApiAxiosParamCreator = function (configuration?: Confi
         /**
          * 
          * @summary Deletes LdonTrapEntry
-         * @param {number} id Id
+         * @param {number} id id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -386,7 +386,7 @@ export const LdonTrapEntryApiFp = function(configuration?: Configuration) {
         /**
          * 
          * @summary Deletes LdonTrapEntry
-         * @param {number} id Id
+         * @param {number} id id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -485,7 +485,7 @@ export const LdonTrapEntryApiFactory = function (configuration?: Configuration, 
         /**
          * 
          * @summary Deletes LdonTrapEntry
-         * @param {number} id Id
+         * @param {number} id id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -566,7 +566,7 @@ export interface LdonTrapEntryApiCreateLdonTrapEntryRequest {
  */
 export interface LdonTrapEntryApiDeleteLdonTrapEntryRequest {
     /**
-     * Id
+     * id
      * @type {number}
      * @memberof LdonTrapEntryApiDeleteLdonTrapEntry
      */

@@ -82,7 +82,7 @@ export const TaskApiAxiosParamCreator = function (configuration?: Configuration)
         /**
          * 
          * @summary Deletes Task
-         * @param {number} id Id
+         * @param {number} id id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -386,7 +386,7 @@ export const TaskApiFp = function(configuration?: Configuration) {
         /**
          * 
          * @summary Deletes Task
-         * @param {number} id Id
+         * @param {number} id id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -485,7 +485,7 @@ export const TaskApiFactory = function (configuration?: Configuration, basePath?
         /**
          * 
          * @summary Deletes Task
-         * @param {number} id Id
+         * @param {number} id id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -566,7 +566,7 @@ export interface TaskApiCreateTaskRequest {
  */
 export interface TaskApiDeleteTaskRequest {
     /**
-     * Id
+     * id
      * @type {number}
      * @memberof TaskApiDeleteTask
      */

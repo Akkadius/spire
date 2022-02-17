@@ -82,7 +82,7 @@ export const AaRankApiAxiosParamCreator = function (configuration?: Configuratio
         /**
          * 
          * @summary Deletes AaRank
-         * @param {number} id Id
+         * @param {number} id id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -386,7 +386,7 @@ export const AaRankApiFp = function(configuration?: Configuration) {
         /**
          * 
          * @summary Deletes AaRank
-         * @param {number} id Id
+         * @param {number} id id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -485,7 +485,7 @@ export const AaRankApiFactory = function (configuration?: Configuration, basePat
         /**
          * 
          * @summary Deletes AaRank
-         * @param {number} id Id
+         * @param {number} id id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -566,7 +566,7 @@ export interface AaRankApiCreateAaRankRequest {
  */
 export interface AaRankApiDeleteAaRankRequest {
     /**
-     * Id
+     * id
      * @type {number}
      * @memberof AaRankApiDeleteAaRank
      */

@@ -82,7 +82,7 @@ export const SpawnConditionApiAxiosParamCreator = function (configuration?: Conf
         /**
          * 
          * @summary Deletes SpawnCondition
-         * @param {number} id Id
+         * @param {number} id id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -386,7 +386,7 @@ export const SpawnConditionApiFp = function(configuration?: Configuration) {
         /**
          * 
          * @summary Deletes SpawnCondition
-         * @param {number} id Id
+         * @param {number} id id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -485,7 +485,7 @@ export const SpawnConditionApiFactory = function (configuration?: Configuration,
         /**
          * 
          * @summary Deletes SpawnCondition
-         * @param {number} id Id
+         * @param {number} id id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -566,7 +566,7 @@ export interface SpawnConditionApiCreateSpawnConditionRequest {
  */
 export interface SpawnConditionApiDeleteSpawnConditionRequest {
     /**
-     * Id
+     * id
      * @type {number}
      * @memberof SpawnConditionApiDeleteSpawnCondition
      */

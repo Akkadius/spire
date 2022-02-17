@@ -70,7 +70,7 @@ func (e *AdventureTemplateController) listAdventureTemplates(c echo.Context) err
 // @Accept json
 // @Produce json
 // @Tags AdventureTemplate
-// @Param id path int true "id"
+// @Param id path int true "Id"
 // @Param includes query string false "Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names "
 // @Param select query string false "Column names [.] separated to fetch specific fields in response"
 // @Success 200 {array} models.AdventureTemplate
@@ -117,7 +117,7 @@ func (e *AdventureTemplateController) getAdventureTemplate(c echo.Context) error
 // @Accept json
 // @Produce json
 // @Tags AdventureTemplate
-// @Param ID path int true "ID"
+// @Param id path int true "Id"
 // @Param adventure_template body models.AdventureTemplate true "AdventureTemplate"
 // @Success 200 {array} models.AdventureTemplate
 // @Failure 404 {string} string "Cannot find entity"

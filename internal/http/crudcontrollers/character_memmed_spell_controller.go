@@ -70,7 +70,7 @@ func (e *CharacterMemmedSpellController) listCharacterMemmedSpells(c echo.Contex
 // @Accept json
 // @Produce json
 // @Tags CharacterMemmedSpell
-// @Param id path int true "id"
+// @Param id path int true "Id"
 // @Param includes query string false "Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names "
 // @Param select query string false "Column names [.] separated to fetch specific fields in response"
 // @Success 200 {array} models.CharacterMemmedSpell
@@ -128,7 +128,7 @@ func (e *CharacterMemmedSpellController) getCharacterMemmedSpell(c echo.Context)
 // @Accept json
 // @Produce json
 // @Tags CharacterMemmedSpell
-// @Param ID path int true "ID"
+// @Param id path int true "Id"
 // @Param character_memmed_spell body models.CharacterMemmedSpell true "CharacterMemmedSpell"
 // @Success 200 {array} models.CharacterMemmedSpell
 // @Failure 404 {string} string "Cannot find entity"

@@ -70,7 +70,7 @@ func (e *CharacterCorpseController) listCharacterCorpses(c echo.Context) error {
 // @Accept json
 // @Produce json
 // @Tags CharacterCorpse
-// @Param id path int true "id"
+// @Param id path int true "Id"
 // @Param includes query string false "Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names "
 // @Param select query string false "Column names [.] separated to fetch specific fields in response"
 // @Success 200 {array} models.CharacterCorpse
@@ -117,7 +117,7 @@ func (e *CharacterCorpseController) getCharacterCorpse(c echo.Context) error {
 // @Accept json
 // @Produce json
 // @Tags CharacterCorpse
-// @Param ID path int true "ID"
+// @Param id path int true "Id"
 // @Param character_corpse body models.CharacterCorpse true "CharacterCorpse"
 // @Success 200 {array} models.CharacterCorpse
 // @Failure 404 {string} string "Cannot find entity"

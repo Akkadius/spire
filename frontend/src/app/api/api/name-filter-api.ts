@@ -82,7 +82,7 @@ export const NameFilterApiAxiosParamCreator = function (configuration?: Configur
         /**
          * 
          * @summary Deletes NameFilter
-         * @param {number} id Id
+         * @param {number} id id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -386,7 +386,7 @@ export const NameFilterApiFp = function(configuration?: Configuration) {
         /**
          * 
          * @summary Deletes NameFilter
-         * @param {number} id Id
+         * @param {number} id id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -485,7 +485,7 @@ export const NameFilterApiFactory = function (configuration?: Configuration, bas
         /**
          * 
          * @summary Deletes NameFilter
-         * @param {number} id Id
+         * @param {number} id id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -566,7 +566,7 @@ export interface NameFilterApiCreateNameFilterRequest {
  */
 export interface NameFilterApiDeleteNameFilterRequest {
     /**
-     * Id
+     * id
      * @type {number}
      * @memberof NameFilterApiDeleteNameFilter
      */

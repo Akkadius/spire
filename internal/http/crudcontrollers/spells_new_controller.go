@@ -70,7 +70,7 @@ func (e *SpellsNewController) listSpellsNews(c echo.Context) error {
 // @Accept json
 // @Produce json
 // @Tags SpellsNew
-// @Param id path int true "id"
+// @Param id path int true "Id"
 // @Param includes query string false "Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names <h4>Relationships</h4>Aura<br>BlockedSpells<br>Damageshieldtypes<br>SpellBuckets<br>SpellGlobals"
 // @Param select query string false "Column names [.] separated to fetch specific fields in response"
 // @Success 200 {array} models.SpellsNew
@@ -117,7 +117,7 @@ func (e *SpellsNewController) getSpellsNew(c echo.Context) error {
 // @Accept json
 // @Produce json
 // @Tags SpellsNew
-// @Param ID path int true "ID"
+// @Param id path int true "Id"
 // @Param spells_new body models.SpellsNew true "SpellsNew"
 // @Success 200 {array} models.SpellsNew
 // @Failure 404 {string} string "Cannot find entity"

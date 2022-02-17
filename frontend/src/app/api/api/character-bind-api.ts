@@ -82,7 +82,7 @@ export const CharacterBindApiAxiosParamCreator = function (configuration?: Confi
         /**
          * 
          * @summary Deletes CharacterBind
-         * @param {number} id Id
+         * @param {number} id id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -386,7 +386,7 @@ export const CharacterBindApiFp = function(configuration?: Configuration) {
         /**
          * 
          * @summary Deletes CharacterBind
-         * @param {number} id Id
+         * @param {number} id id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -485,7 +485,7 @@ export const CharacterBindApiFactory = function (configuration?: Configuration, 
         /**
          * 
          * @summary Deletes CharacterBind
-         * @param {number} id Id
+         * @param {number} id id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -566,7 +566,7 @@ export interface CharacterBindApiCreateCharacterBindRequest {
  */
 export interface CharacterBindApiDeleteCharacterBindRequest {
     /**
-     * Id
+     * id
      * @type {number}
      * @memberof CharacterBindApiDeleteCharacterBind
      */

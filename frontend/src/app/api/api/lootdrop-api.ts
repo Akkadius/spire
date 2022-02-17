@@ -82,7 +82,7 @@ export const LootdropApiAxiosParamCreator = function (configuration?: Configurat
         /**
          * 
          * @summary Deletes Lootdrop
-         * @param {number} id Id
+         * @param {number} id id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -386,7 +386,7 @@ export const LootdropApiFp = function(configuration?: Configuration) {
         /**
          * 
          * @summary Deletes Lootdrop
-         * @param {number} id Id
+         * @param {number} id id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -485,7 +485,7 @@ export const LootdropApiFactory = function (configuration?: Configuration, baseP
         /**
          * 
          * @summary Deletes Lootdrop
-         * @param {number} id Id
+         * @param {number} id id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -566,7 +566,7 @@ export interface LootdropApiCreateLootdropRequest {
  */
 export interface LootdropApiDeleteLootdropRequest {
     /**
-     * Id
+     * id
      * @type {number}
      * @memberof LootdropApiDeleteLootdrop
      */

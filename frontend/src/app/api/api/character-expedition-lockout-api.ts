@@ -82,7 +82,7 @@ export const CharacterExpeditionLockoutApiAxiosParamCreator = function (configur
         /**
          * 
          * @summary Deletes CharacterExpeditionLockout
-         * @param {number} id Id
+         * @param {number} id id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -386,7 +386,7 @@ export const CharacterExpeditionLockoutApiFp = function(configuration?: Configur
         /**
          * 
          * @summary Deletes CharacterExpeditionLockout
-         * @param {number} id Id
+         * @param {number} id id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -485,7 +485,7 @@ export const CharacterExpeditionLockoutApiFactory = function (configuration?: Co
         /**
          * 
          * @summary Deletes CharacterExpeditionLockout
-         * @param {number} id Id
+         * @param {number} id id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -566,7 +566,7 @@ export interface CharacterExpeditionLockoutApiCreateCharacterExpeditionLockoutRe
  */
 export interface CharacterExpeditionLockoutApiDeleteCharacterExpeditionLockoutRequest {
     /**
-     * Id
+     * id
      * @type {number}
      * @memberof CharacterExpeditionLockoutApiDeleteCharacterExpeditionLockout
      */

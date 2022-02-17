@@ -70,7 +70,7 @@ func (e *GraveyardController) listGraveyards(c echo.Context) error {
 // @Accept json
 // @Produce json
 // @Tags Graveyard
-// @Param id path int true "id"
+// @Param id path int true "Id"
 // @Param includes query string false "Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names "
 // @Param select query string false "Column names [.] separated to fetch specific fields in response"
 // @Success 200 {array} models.Graveyard
@@ -117,7 +117,7 @@ func (e *GraveyardController) getGraveyard(c echo.Context) error {
 // @Accept json
 // @Produce json
 // @Tags Graveyard
-// @Param ID path int true "ID"
+// @Param id path int true "Id"
 // @Param graveyard body models.Graveyard true "Graveyard"
 // @Success 200 {array} models.Graveyard
 // @Failure 404 {string} string "Cannot find entity"

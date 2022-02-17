@@ -82,7 +82,7 @@ export const GroundSpawnApiAxiosParamCreator = function (configuration?: Configu
         /**
          * 
          * @summary Deletes GroundSpawn
-         * @param {number} id Id
+         * @param {number} id id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -386,7 +386,7 @@ export const GroundSpawnApiFp = function(configuration?: Configuration) {
         /**
          * 
          * @summary Deletes GroundSpawn
-         * @param {number} id Id
+         * @param {number} id id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -485,7 +485,7 @@ export const GroundSpawnApiFactory = function (configuration?: Configuration, ba
         /**
          * 
          * @summary Deletes GroundSpawn
-         * @param {number} id Id
+         * @param {number} id id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -566,7 +566,7 @@ export interface GroundSpawnApiCreateGroundSpawnRequest {
  */
 export interface GroundSpawnApiDeleteGroundSpawnRequest {
     /**
-     * Id
+     * id
      * @type {number}
      * @memberof GroundSpawnApiDeleteGroundSpawn
      */

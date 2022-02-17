@@ -82,7 +82,7 @@ export const CharacterInspectMessageApiAxiosParamCreator = function (configurati
         /**
          * 
          * @summary Deletes CharacterInspectMessage
-         * @param {number} id Id
+         * @param {number} id id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -386,7 +386,7 @@ export const CharacterInspectMessageApiFp = function(configuration?: Configurati
         /**
          * 
          * @summary Deletes CharacterInspectMessage
-         * @param {number} id Id
+         * @param {number} id id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -485,7 +485,7 @@ export const CharacterInspectMessageApiFactory = function (configuration?: Confi
         /**
          * 
          * @summary Deletes CharacterInspectMessage
-         * @param {number} id Id
+         * @param {number} id id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -566,7 +566,7 @@ export interface CharacterInspectMessageApiCreateCharacterInspectMessageRequest 
  */
 export interface CharacterInspectMessageApiDeleteCharacterInspectMessageRequest {
     /**
-     * Id
+     * id
      * @type {number}
      * @memberof CharacterInspectMessageApiDeleteCharacterInspectMessage
      */

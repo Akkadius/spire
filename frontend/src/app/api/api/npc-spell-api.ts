@@ -82,7 +82,7 @@ export const NpcSpellApiAxiosParamCreator = function (configuration?: Configurat
         /**
          * 
          * @summary Deletes NpcSpell
-         * @param {number} id Id
+         * @param {number} id id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -386,7 +386,7 @@ export const NpcSpellApiFp = function(configuration?: Configuration) {
         /**
          * 
          * @summary Deletes NpcSpell
-         * @param {number} id Id
+         * @param {number} id id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -485,7 +485,7 @@ export const NpcSpellApiFactory = function (configuration?: Configuration, baseP
         /**
          * 
          * @summary Deletes NpcSpell
-         * @param {number} id Id
+         * @param {number} id id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -566,7 +566,7 @@ export interface NpcSpellApiCreateNpcSpellRequest {
  */
 export interface NpcSpellApiDeleteNpcSpellRequest {
     /**
-     * Id
+     * id
      * @type {number}
      * @memberof NpcSpellApiDeleteNpcSpell
      */

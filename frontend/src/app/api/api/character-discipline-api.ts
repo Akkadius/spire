@@ -82,7 +82,7 @@ export const CharacterDisciplineApiAxiosParamCreator = function (configuration?:
         /**
          * 
          * @summary Deletes CharacterDiscipline
-         * @param {number} id Id
+         * @param {number} id id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -386,7 +386,7 @@ export const CharacterDisciplineApiFp = function(configuration?: Configuration) 
         /**
          * 
          * @summary Deletes CharacterDiscipline
-         * @param {number} id Id
+         * @param {number} id id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -485,7 +485,7 @@ export const CharacterDisciplineApiFactory = function (configuration?: Configura
         /**
          * 
          * @summary Deletes CharacterDiscipline
-         * @param {number} id Id
+         * @param {number} id id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -566,7 +566,7 @@ export interface CharacterDisciplineApiCreateCharacterDisciplineRequest {
  */
 export interface CharacterDisciplineApiDeleteCharacterDisciplineRequest {
     /**
-     * Id
+     * id
      * @type {number}
      * @memberof CharacterDisciplineApiDeleteCharacterDiscipline
      */

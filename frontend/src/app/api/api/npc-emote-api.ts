@@ -82,7 +82,7 @@ export const NpcEmoteApiAxiosParamCreator = function (configuration?: Configurat
         /**
          * 
          * @summary Deletes NpcEmote
-         * @param {number} id Id
+         * @param {number} id id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -386,7 +386,7 @@ export const NpcEmoteApiFp = function(configuration?: Configuration) {
         /**
          * 
          * @summary Deletes NpcEmote
-         * @param {number} id Id
+         * @param {number} id id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -485,7 +485,7 @@ export const NpcEmoteApiFactory = function (configuration?: Configuration, baseP
         /**
          * 
          * @summary Deletes NpcEmote
-         * @param {number} id Id
+         * @param {number} id id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -566,7 +566,7 @@ export interface NpcEmoteApiCreateNpcEmoteRequest {
  */
 export interface NpcEmoteApiDeleteNpcEmoteRequest {
     /**
-     * Id
+     * id
      * @type {number}
      * @memberof NpcEmoteApiDeleteNpcEmote
      */

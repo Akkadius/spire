@@ -70,7 +70,7 @@ func (e *AlternateCurrencyController) listAlternateCurrencies(c echo.Context) er
 // @Accept json
 // @Produce json
 // @Tags AlternateCurrency
-// @Param id path int true "id"
+// @Param id path int true "Id"
 // @Param includes query string false "Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names "
 // @Param select query string false "Column names [.] separated to fetch specific fields in response"
 // @Success 200 {array} models.AlternateCurrency
@@ -117,7 +117,7 @@ func (e *AlternateCurrencyController) getAlternateCurrency(c echo.Context) error
 // @Accept json
 // @Produce json
 // @Tags AlternateCurrency
-// @Param ID path int true "ID"
+// @Param id path int true "Id"
 // @Param alternate_currency body models.AlternateCurrency true "AlternateCurrency"
 // @Success 200 {array} models.AlternateCurrency
 // @Failure 404 {string} string "Cannot find entity"

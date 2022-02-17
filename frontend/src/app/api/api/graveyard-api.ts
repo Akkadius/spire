@@ -82,7 +82,7 @@ export const GraveyardApiAxiosParamCreator = function (configuration?: Configura
         /**
          * 
          * @summary Deletes Graveyard
-         * @param {number} id Id
+         * @param {number} id id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -386,7 +386,7 @@ export const GraveyardApiFp = function(configuration?: Configuration) {
         /**
          * 
          * @summary Deletes Graveyard
-         * @param {number} id Id
+         * @param {number} id id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -485,7 +485,7 @@ export const GraveyardApiFactory = function (configuration?: Configuration, base
         /**
          * 
          * @summary Deletes Graveyard
-         * @param {number} id Id
+         * @param {number} id id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -566,7 +566,7 @@ export interface GraveyardApiCreateGraveyardRequest {
  */
 export interface GraveyardApiDeleteGraveyardRequest {
     /**
-     * Id
+     * id
      * @type {number}
      * @memberof GraveyardApiDeleteGraveyard
      */

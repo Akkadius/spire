@@ -82,7 +82,7 @@ export const ServerScheduledEventApiAxiosParamCreator = function (configuration?
         /**
          * 
          * @summary Deletes ServerScheduledEvent
-         * @param {number} id Id
+         * @param {number} id id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -386,7 +386,7 @@ export const ServerScheduledEventApiFp = function(configuration?: Configuration)
         /**
          * 
          * @summary Deletes ServerScheduledEvent
-         * @param {number} id Id
+         * @param {number} id id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -485,7 +485,7 @@ export const ServerScheduledEventApiFactory = function (configuration?: Configur
         /**
          * 
          * @summary Deletes ServerScheduledEvent
-         * @param {number} id Id
+         * @param {number} id id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -566,7 +566,7 @@ export interface ServerScheduledEventApiCreateServerScheduledEventRequest {
  */
 export interface ServerScheduledEventApiDeleteServerScheduledEventRequest {
     /**
-     * Id
+     * id
      * @type {number}
      * @memberof ServerScheduledEventApiDeleteServerScheduledEvent
      */

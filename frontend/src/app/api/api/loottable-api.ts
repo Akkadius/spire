@@ -82,7 +82,7 @@ export const LoottableApiAxiosParamCreator = function (configuration?: Configura
         /**
          * 
          * @summary Deletes Loottable
-         * @param {number} id Id
+         * @param {number} id id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -386,7 +386,7 @@ export const LoottableApiFp = function(configuration?: Configuration) {
         /**
          * 
          * @summary Deletes Loottable
-         * @param {number} id Id
+         * @param {number} id id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -485,7 +485,7 @@ export const LoottableApiFactory = function (configuration?: Configuration, base
         /**
          * 
          * @summary Deletes Loottable
-         * @param {number} id Id
+         * @param {number} id id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -566,7 +566,7 @@ export interface LoottableApiCreateLoottableRequest {
  */
 export interface LoottableApiDeleteLoottableRequest {
     /**
-     * Id
+     * id
      * @type {number}
      * @memberof LoottableApiDeleteLoottable
      */

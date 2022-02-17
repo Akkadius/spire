@@ -82,7 +82,7 @@ export const LoginServerListTypeApiAxiosParamCreator = function (configuration?:
         /**
          * 
          * @summary Deletes LoginServerListType
-         * @param {number} id Id
+         * @param {number} id id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -386,7 +386,7 @@ export const LoginServerListTypeApiFp = function(configuration?: Configuration) 
         /**
          * 
          * @summary Deletes LoginServerListType
-         * @param {number} id Id
+         * @param {number} id id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -485,7 +485,7 @@ export const LoginServerListTypeApiFactory = function (configuration?: Configura
         /**
          * 
          * @summary Deletes LoginServerListType
-         * @param {number} id Id
+         * @param {number} id id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -566,7 +566,7 @@ export interface LoginServerListTypeApiCreateLoginServerListTypeRequest {
  */
 export interface LoginServerListTypeApiDeleteLoginServerListTypeRequest {
     /**
-     * Id
+     * id
      * @type {number}
      * @memberof LoginServerListTypeApiDeleteLoginServerListType
      */

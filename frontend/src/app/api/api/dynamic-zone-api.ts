@@ -82,7 +82,7 @@ export const DynamicZoneApiAxiosParamCreator = function (configuration?: Configu
         /**
          * 
          * @summary Deletes DynamicZone
-         * @param {number} id Id
+         * @param {number} id id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -386,7 +386,7 @@ export const DynamicZoneApiFp = function(configuration?: Configuration) {
         /**
          * 
          * @summary Deletes DynamicZone
-         * @param {number} id Id
+         * @param {number} id id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -485,7 +485,7 @@ export const DynamicZoneApiFactory = function (configuration?: Configuration, ba
         /**
          * 
          * @summary Deletes DynamicZone
-         * @param {number} id Id
+         * @param {number} id id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -566,7 +566,7 @@ export interface DynamicZoneApiCreateDynamicZoneRequest {
  */
 export interface DynamicZoneApiDeleteDynamicZoneRequest {
     /**
-     * Id
+     * id
      * @type {number}
      * @memberof DynamicZoneApiDeleteDynamicZone
      */

@@ -82,7 +82,7 @@ export const CharacterLanguageApiAxiosParamCreator = function (configuration?: C
         /**
          * 
          * @summary Deletes CharacterLanguage
-         * @param {number} id Id
+         * @param {number} id id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -386,7 +386,7 @@ export const CharacterLanguageApiFp = function(configuration?: Configuration) {
         /**
          * 
          * @summary Deletes CharacterLanguage
-         * @param {number} id Id
+         * @param {number} id id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -485,7 +485,7 @@ export const CharacterLanguageApiFactory = function (configuration?: Configurati
         /**
          * 
          * @summary Deletes CharacterLanguage
-         * @param {number} id Id
+         * @param {number} id id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -566,7 +566,7 @@ export interface CharacterLanguageApiCreateCharacterLanguageRequest {
  */
 export interface CharacterLanguageApiDeleteCharacterLanguageRequest {
     /**
-     * Id
+     * id
      * @type {number}
      * @memberof CharacterLanguageApiDeleteCharacterLanguage
      */

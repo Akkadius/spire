@@ -82,7 +82,7 @@ export const ForageApiAxiosParamCreator = function (configuration?: Configuratio
         /**
          * 
          * @summary Deletes Forage
-         * @param {number} id Id
+         * @param {number} id id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -386,7 +386,7 @@ export const ForageApiFp = function(configuration?: Configuration) {
         /**
          * 
          * @summary Deletes Forage
-         * @param {number} id Id
+         * @param {number} id id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -485,7 +485,7 @@ export const ForageApiFactory = function (configuration?: Configuration, basePat
         /**
          * 
          * @summary Deletes Forage
-         * @param {number} id Id
+         * @param {number} id id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -566,7 +566,7 @@ export interface ForageApiCreateForageRequest {
  */
 export interface ForageApiDeleteForageRequest {
     /**
-     * Id
+     * id
      * @type {number}
      * @memberof ForageApiDeleteForage
      */

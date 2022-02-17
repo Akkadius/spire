@@ -70,7 +70,7 @@ func (e *CharacterCurrencyController) listCharacterCurrencies(c echo.Context) er
 // @Accept json
 // @Produce json
 // @Tags CharacterCurrency
-// @Param id path int true "id"
+// @Param id path int true "Id"
 // @Param includes query string false "Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names "
 // @Param select query string false "Column names [.] separated to fetch specific fields in response"
 // @Success 200 {array} models.CharacterCurrency
@@ -117,7 +117,7 @@ func (e *CharacterCurrencyController) getCharacterCurrency(c echo.Context) error
 // @Accept json
 // @Produce json
 // @Tags CharacterCurrency
-// @Param ID path int true "ID"
+// @Param id path int true "Id"
 // @Param character_currency body models.CharacterCurrency true "CharacterCurrency"
 // @Success 200 {array} models.CharacterCurrency
 // @Failure 404 {string} string "Cannot find entity"

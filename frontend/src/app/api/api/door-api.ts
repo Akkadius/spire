@@ -82,7 +82,7 @@ export const DoorApiAxiosParamCreator = function (configuration?: Configuration)
         /**
          * 
          * @summary Deletes Door
-         * @param {number} id Id
+         * @param {number} id id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -386,7 +386,7 @@ export const DoorApiFp = function(configuration?: Configuration) {
         /**
          * 
          * @summary Deletes Door
-         * @param {number} id Id
+         * @param {number} id id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -485,7 +485,7 @@ export const DoorApiFactory = function (configuration?: Configuration, basePath?
         /**
          * 
          * @summary Deletes Door
-         * @param {number} id Id
+         * @param {number} id id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -566,7 +566,7 @@ export interface DoorApiCreateDoorRequest {
  */
 export interface DoorApiDeleteDoorRequest {
     /**
-     * Id
+     * id
      * @type {number}
      * @memberof DoorApiDeleteDoor
      */

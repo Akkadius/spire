@@ -70,7 +70,7 @@ func (e *TributeController) listTributes(c echo.Context) error {
 // @Accept json
 // @Produce json
 // @Tags Tribute
-// @Param id path int true "id"
+// @Param id path int true "Id"
 // @Param includes query string false "Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names "
 // @Param select query string false "Column names [.] separated to fetch specific fields in response"
 // @Success 200 {array} models.Tribute
@@ -128,7 +128,7 @@ func (e *TributeController) getTribute(c echo.Context) error {
 // @Accept json
 // @Produce json
 // @Tags Tribute
-// @Param ID path int true "ID"
+// @Param id path int true "Id"
 // @Param tribute body models.Tribute true "Tribute"
 // @Success 200 {array} models.Tribute
 // @Failure 404 {string} string "Cannot find entity"

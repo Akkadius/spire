@@ -70,7 +70,7 @@ func (e *CharacterDisciplineController) listCharacterDisciplines(c echo.Context)
 // @Accept json
 // @Produce json
 // @Tags CharacterDiscipline
-// @Param id path int true "id"
+// @Param id path int true "Id"
 // @Param includes query string false "Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names "
 // @Param select query string false "Column names [.] separated to fetch specific fields in response"
 // @Success 200 {array} models.CharacterDiscipline
@@ -128,7 +128,7 @@ func (e *CharacterDisciplineController) getCharacterDiscipline(c echo.Context) e
 // @Accept json
 // @Produce json
 // @Tags CharacterDiscipline
-// @Param ID path int true "ID"
+// @Param id path int true "Id"
 // @Param character_discipline body models.CharacterDiscipline true "CharacterDiscipline"
 // @Success 200 {array} models.CharacterDiscipline
 // @Failure 404 {string} string "Cannot find entity"

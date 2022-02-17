@@ -82,7 +82,7 @@ export const HackerApiAxiosParamCreator = function (configuration?: Configuratio
         /**
          * 
          * @summary Deletes Hacker
-         * @param {number} id Id
+         * @param {number} id id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -386,7 +386,7 @@ export const HackerApiFp = function(configuration?: Configuration) {
         /**
          * 
          * @summary Deletes Hacker
-         * @param {number} id Id
+         * @param {number} id id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -485,7 +485,7 @@ export const HackerApiFactory = function (configuration?: Configuration, basePat
         /**
          * 
          * @summary Deletes Hacker
-         * @param {number} id Id
+         * @param {number} id id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -566,7 +566,7 @@ export interface HackerApiCreateHackerRequest {
  */
 export interface HackerApiDeleteHackerRequest {
     /**
-     * Id
+     * id
      * @type {number}
      * @memberof HackerApiDeleteHacker
      */

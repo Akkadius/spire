@@ -82,7 +82,7 @@ export const DbStrApiAxiosParamCreator = function (configuration?: Configuration
         /**
          * 
          * @summary Deletes DbStr
-         * @param {number} id Id
+         * @param {number} id id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -386,7 +386,7 @@ export const DbStrApiFp = function(configuration?: Configuration) {
         /**
          * 
          * @summary Deletes DbStr
-         * @param {number} id Id
+         * @param {number} id id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -485,7 +485,7 @@ export const DbStrApiFactory = function (configuration?: Configuration, basePath
         /**
          * 
          * @summary Deletes DbStr
-         * @param {number} id Id
+         * @param {number} id id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -566,7 +566,7 @@ export interface DbStrApiCreateDbStrRequest {
  */
 export interface DbStrApiDeleteDbStrRequest {
     /**
-     * Id
+     * id
      * @type {number}
      * @memberof DbStrApiDeleteDbStr
      */

@@ -70,7 +70,7 @@ func (e *LdonTrapTemplateController) listLdonTrapTemplates(c echo.Context) error
 // @Accept json
 // @Produce json
 // @Tags LdonTrapTemplate
-// @Param id path int true "id"
+// @Param id path int true "Id"
 // @Param includes query string false "Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names "
 // @Param select query string false "Column names [.] separated to fetch specific fields in response"
 // @Success 200 {array} models.LdonTrapTemplate
@@ -117,7 +117,7 @@ func (e *LdonTrapTemplateController) getLdonTrapTemplate(c echo.Context) error {
 // @Accept json
 // @Produce json
 // @Tags LdonTrapTemplate
-// @Param ID path int true "ID"
+// @Param id path int true "Id"
 // @Param ldon_trap_template body models.LdonTrapTemplate true "LdonTrapTemplate"
 // @Success 200 {array} models.LdonTrapTemplate
 // @Failure 404 {string} string "Cannot find entity"

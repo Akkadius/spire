@@ -70,7 +70,7 @@ func (e *NpcTypesTintController) listNpcTypesTints(c echo.Context) error {
 // @Accept json
 // @Produce json
 // @Tags NpcTypesTint
-// @Param id path int true "id"
+// @Param id path int true "Id"
 // @Param includes query string false "Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names "
 // @Param select query string false "Column names [.] separated to fetch specific fields in response"
 // @Success 200 {array} models.NpcTypesTint
@@ -117,7 +117,7 @@ func (e *NpcTypesTintController) getNpcTypesTint(c echo.Context) error {
 // @Accept json
 // @Produce json
 // @Tags NpcTypesTint
-// @Param ID path int true "ID"
+// @Param id path int true "Id"
 // @Param npc_types_tint body models.NpcTypesTint true "NpcTypesTint"
 // @Success 200 {array} models.NpcTypesTint
 // @Failure 404 {string} string "Cannot find entity"

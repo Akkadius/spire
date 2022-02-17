@@ -70,7 +70,7 @@ func (e *SpawngroupController) listSpawngroups(c echo.Context) error {
 // @Accept json
 // @Produce json
 // @Tags Spawngroup
-// @Param id path int true "id"
+// @Param id path int true "Id"
 // @Param includes query string false "Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names <h4>Relationships</h4>Spawn2"
 // @Param select query string false "Column names [.] separated to fetch specific fields in response"
 // @Success 200 {array} models.Spawngroup
@@ -117,7 +117,7 @@ func (e *SpawngroupController) getSpawngroup(c echo.Context) error {
 // @Accept json
 // @Produce json
 // @Tags Spawngroup
-// @Param ID path int true "ID"
+// @Param id path int true "Id"
 // @Param spawngroup body models.Spawngroup true "Spawngroup"
 // @Success 200 {array} models.Spawngroup
 // @Failure 404 {string} string "Cannot find entity"

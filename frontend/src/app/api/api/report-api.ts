@@ -82,7 +82,7 @@ export const ReportApiAxiosParamCreator = function (configuration?: Configuratio
         /**
          * 
          * @summary Deletes Report
-         * @param {number} id Id
+         * @param {number} id id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -386,7 +386,7 @@ export const ReportApiFp = function(configuration?: Configuration) {
         /**
          * 
          * @summary Deletes Report
-         * @param {number} id Id
+         * @param {number} id id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -485,7 +485,7 @@ export const ReportApiFactory = function (configuration?: Configuration, basePat
         /**
          * 
          * @summary Deletes Report
-         * @param {number} id Id
+         * @param {number} id id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -566,7 +566,7 @@ export interface ReportApiCreateReportRequest {
  */
 export interface ReportApiDeleteReportRequest {
     /**
-     * Id
+     * id
      * @type {number}
      * @memberof ReportApiDeleteReport
      */

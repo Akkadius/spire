@@ -70,7 +70,7 @@ func (e *CharCreatePointAllocationController) listCharCreatePointAllocations(c e
 // @Accept json
 // @Produce json
 // @Tags CharCreatePointAllocation
-// @Param id path int true "id"
+// @Param id path int true "Id"
 // @Param includes query string false "Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names "
 // @Param select query string false "Column names [.] separated to fetch specific fields in response"
 // @Success 200 {array} models.CharCreatePointAllocation
@@ -117,7 +117,7 @@ func (e *CharCreatePointAllocationController) getCharCreatePointAllocation(c ech
 // @Accept json
 // @Produce json
 // @Tags CharCreatePointAllocation
-// @Param ID path int true "ID"
+// @Param id path int true "Id"
 // @Param char_create_point_allocation body models.CharCreatePointAllocation true "CharCreatePointAllocation"
 // @Success 200 {array} models.CharCreatePointAllocation
 // @Failure 404 {string} string "Cannot find entity"

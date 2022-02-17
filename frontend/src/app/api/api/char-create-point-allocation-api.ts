@@ -82,7 +82,7 @@ export const CharCreatePointAllocationApiAxiosParamCreator = function (configura
         /**
          * 
          * @summary Deletes CharCreatePointAllocation
-         * @param {number} id Id
+         * @param {number} id id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -386,7 +386,7 @@ export const CharCreatePointAllocationApiFp = function(configuration?: Configura
         /**
          * 
          * @summary Deletes CharCreatePointAllocation
-         * @param {number} id Id
+         * @param {number} id id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -485,7 +485,7 @@ export const CharCreatePointAllocationApiFactory = function (configuration?: Con
         /**
          * 
          * @summary Deletes CharCreatePointAllocation
-         * @param {number} id Id
+         * @param {number} id id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -566,7 +566,7 @@ export interface CharCreatePointAllocationApiCreateCharCreatePointAllocationRequ
  */
 export interface CharCreatePointAllocationApiDeleteCharCreatePointAllocationRequest {
     /**
-     * Id
+     * id
      * @type {number}
      * @memberof CharCreatePointAllocationApiDeleteCharCreatePointAllocation
      */

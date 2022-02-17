@@ -70,7 +70,7 @@ func (e *DynamicZoneController) listDynamicZones(c echo.Context) error {
 // @Accept json
 // @Produce json
 // @Tags DynamicZone
-// @Param id path int true "id"
+// @Param id path int true "Id"
 // @Param includes query string false "Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names "
 // @Param select query string false "Column names [.] separated to fetch specific fields in response"
 // @Success 200 {array} models.DynamicZone
@@ -117,7 +117,7 @@ func (e *DynamicZoneController) getDynamicZone(c echo.Context) error {
 // @Accept json
 // @Produce json
 // @Tags DynamicZone
-// @Param ID path int true "ID"
+// @Param id path int true "Id"
 // @Param dynamic_zone body models.DynamicZone true "DynamicZone"
 // @Success 200 {array} models.DynamicZone
 // @Failure 404 {string} string "Cannot find entity"

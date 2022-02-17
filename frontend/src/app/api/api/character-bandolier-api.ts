@@ -82,7 +82,7 @@ export const CharacterBandolierApiAxiosParamCreator = function (configuration?: 
         /**
          * 
          * @summary Deletes CharacterBandolier
-         * @param {number} id Id
+         * @param {number} id id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -386,7 +386,7 @@ export const CharacterBandolierApiFp = function(configuration?: Configuration) {
         /**
          * 
          * @summary Deletes CharacterBandolier
-         * @param {number} id Id
+         * @param {number} id id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -485,7 +485,7 @@ export const CharacterBandolierApiFactory = function (configuration?: Configurat
         /**
          * 
          * @summary Deletes CharacterBandolier
-         * @param {number} id Id
+         * @param {number} id id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -566,7 +566,7 @@ export interface CharacterBandolierApiCreateCharacterBandolierRequest {
  */
 export interface CharacterBandolierApiDeleteCharacterBandolierRequest {
     /**
-     * Id
+     * id
      * @type {number}
      * @memberof CharacterBandolierApiDeleteCharacterBandolier
      */

@@ -82,7 +82,7 @@ export const FactionListApiAxiosParamCreator = function (configuration?: Configu
         /**
          * 
          * @summary Deletes FactionList
-         * @param {number} id Id
+         * @param {number} id id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -386,7 +386,7 @@ export const FactionListApiFp = function(configuration?: Configuration) {
         /**
          * 
          * @summary Deletes FactionList
-         * @param {number} id Id
+         * @param {number} id id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -485,7 +485,7 @@ export const FactionListApiFactory = function (configuration?: Configuration, ba
         /**
          * 
          * @summary Deletes FactionList
-         * @param {number} id Id
+         * @param {number} id id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -566,7 +566,7 @@ export interface FactionListApiCreateFactionListRequest {
  */
 export interface FactionListApiDeleteFactionListRequest {
     /**
-     * Id
+     * id
      * @type {number}
      * @memberof FactionListApiDeleteFactionList
      */

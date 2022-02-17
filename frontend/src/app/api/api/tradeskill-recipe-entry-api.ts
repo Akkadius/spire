@@ -82,7 +82,7 @@ export const TradeskillRecipeEntryApiAxiosParamCreator = function (configuration
         /**
          * 
          * @summary Deletes TradeskillRecipeEntry
-         * @param {number} id Id
+         * @param {number} id id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -386,7 +386,7 @@ export const TradeskillRecipeEntryApiFp = function(configuration?: Configuration
         /**
          * 
          * @summary Deletes TradeskillRecipeEntry
-         * @param {number} id Id
+         * @param {number} id id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -485,7 +485,7 @@ export const TradeskillRecipeEntryApiFactory = function (configuration?: Configu
         /**
          * 
          * @summary Deletes TradeskillRecipeEntry
-         * @param {number} id Id
+         * @param {number} id id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -566,7 +566,7 @@ export interface TradeskillRecipeEntryApiCreateTradeskillRecipeEntryRequest {
  */
 export interface TradeskillRecipeEntryApiDeleteTradeskillRecipeEntryRequest {
     /**
-     * Id
+     * id
      * @type {number}
      * @memberof TradeskillRecipeEntryApiDeleteTradeskillRecipeEntry
      */

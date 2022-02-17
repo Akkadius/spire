@@ -82,7 +82,7 @@ export const GuildApiAxiosParamCreator = function (configuration?: Configuration
         /**
          * 
          * @summary Deletes Guild
-         * @param {number} id Id
+         * @param {number} id id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -386,7 +386,7 @@ export const GuildApiFp = function(configuration?: Configuration) {
         /**
          * 
          * @summary Deletes Guild
-         * @param {number} id Id
+         * @param {number} id id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -485,7 +485,7 @@ export const GuildApiFactory = function (configuration?: Configuration, basePath
         /**
          * 
          * @summary Deletes Guild
-         * @param {number} id Id
+         * @param {number} id id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -566,7 +566,7 @@ export interface GuildApiCreateGuildRequest {
  */
 export interface GuildApiDeleteGuildRequest {
     /**
-     * Id
+     * id
      * @type {number}
      * @memberof GuildApiDeleteGuild
      */

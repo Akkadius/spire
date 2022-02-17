@@ -70,7 +70,7 @@ func (e *RespawnTimeController) listRespawnTimes(c echo.Context) error {
 // @Accept json
 // @Produce json
 // @Tags RespawnTime
-// @Param id path int true "id"
+// @Param id path int true "Id"
 // @Param includes query string false "Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names "
 // @Param select query string false "Column names [.] separated to fetch specific fields in response"
 // @Success 200 {array} models.RespawnTime
@@ -128,7 +128,7 @@ func (e *RespawnTimeController) getRespawnTime(c echo.Context) error {
 // @Accept json
 // @Produce json
 // @Tags RespawnTime
-// @Param ID path int true "ID"
+// @Param id path int true "Id"
 // @Param respawn_time body models.RespawnTime true "RespawnTime"
 // @Success 200 {array} models.RespawnTime
 // @Failure 404 {string} string "Cannot find entity"

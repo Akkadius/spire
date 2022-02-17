@@ -82,7 +82,7 @@ export const CharacterSkillApiAxiosParamCreator = function (configuration?: Conf
         /**
          * 
          * @summary Deletes CharacterSkill
-         * @param {number} id Id
+         * @param {number} id id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -386,7 +386,7 @@ export const CharacterSkillApiFp = function(configuration?: Configuration) {
         /**
          * 
          * @summary Deletes CharacterSkill
-         * @param {number} id Id
+         * @param {number} id id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -485,7 +485,7 @@ export const CharacterSkillApiFactory = function (configuration?: Configuration,
         /**
          * 
          * @summary Deletes CharacterSkill
-         * @param {number} id Id
+         * @param {number} id id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -566,7 +566,7 @@ export interface CharacterSkillApiCreateCharacterSkillRequest {
  */
 export interface CharacterSkillApiDeleteCharacterSkillRequest {
     /**
-     * Id
+     * id
      * @type {number}
      * @memberof CharacterSkillApiDeleteCharacterSkill
      */

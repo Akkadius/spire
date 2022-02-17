@@ -70,7 +70,7 @@ func (e *AdventureTemplateEntryFlavorController) listAdventureTemplateEntryFlavo
 // @Accept json
 // @Produce json
 // @Tags AdventureTemplateEntryFlavor
-// @Param id path int true "id"
+// @Param id path int true "Id"
 // @Param includes query string false "Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names "
 // @Param select query string false "Column names [.] separated to fetch specific fields in response"
 // @Success 200 {array} models.AdventureTemplateEntryFlavor
@@ -117,7 +117,7 @@ func (e *AdventureTemplateEntryFlavorController) getAdventureTemplateEntryFlavor
 // @Accept json
 // @Produce json
 // @Tags AdventureTemplateEntryFlavor
-// @Param ID path int true "ID"
+// @Param id path int true "Id"
 // @Param adventure_template_entry_flavor body models.AdventureTemplateEntryFlavor true "AdventureTemplateEntryFlavor"
 // @Success 200 {array} models.AdventureTemplateEntryFlavor
 // @Failure 404 {string} string "Cannot find entity"

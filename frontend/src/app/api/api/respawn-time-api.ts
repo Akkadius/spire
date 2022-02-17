@@ -82,7 +82,7 @@ export const RespawnTimeApiAxiosParamCreator = function (configuration?: Configu
         /**
          * 
          * @summary Deletes RespawnTime
-         * @param {number} id Id
+         * @param {number} id id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -386,7 +386,7 @@ export const RespawnTimeApiFp = function(configuration?: Configuration) {
         /**
          * 
          * @summary Deletes RespawnTime
-         * @param {number} id Id
+         * @param {number} id id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -485,7 +485,7 @@ export const RespawnTimeApiFactory = function (configuration?: Configuration, ba
         /**
          * 
          * @summary Deletes RespawnTime
-         * @param {number} id Id
+         * @param {number} id id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -566,7 +566,7 @@ export interface RespawnTimeApiCreateRespawnTimeRequest {
  */
 export interface RespawnTimeApiDeleteRespawnTimeRequest {
     /**
-     * Id
+     * id
      * @type {number}
      * @memberof RespawnTimeApiDeleteRespawnTime
      */

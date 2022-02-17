@@ -70,7 +70,7 @@ func (e *TrapController) listTraps(c echo.Context) error {
 // @Accept json
 // @Produce json
 // @Tags Trap
-// @Param id path int true "id"
+// @Param id path int true "Id"
 // @Param includes query string false "Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names "
 // @Param select query string false "Column names [.] separated to fetch specific fields in response"
 // @Success 200 {array} models.Trap
@@ -117,7 +117,7 @@ func (e *TrapController) getTrap(c echo.Context) error {
 // @Accept json
 // @Produce json
 // @Tags Trap
-// @Param ID path int true "ID"
+// @Param id path int true "Id"
 // @Param trap body models.Trap true "Trap"
 // @Success 200 {array} models.Trap
 // @Failure 404 {string} string "Cannot find entity"

@@ -70,7 +70,7 @@ func (e *CharacterItemRecastController) listCharacterItemRecasts(c echo.Context)
 // @Accept json
 // @Produce json
 // @Tags CharacterItemRecast
-// @Param id path int true "id"
+// @Param id path int true "Id"
 // @Param includes query string false "Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names "
 // @Param select query string false "Column names [.] separated to fetch specific fields in response"
 // @Success 200 {array} models.CharacterItemRecast
@@ -128,7 +128,7 @@ func (e *CharacterItemRecastController) getCharacterItemRecast(c echo.Context) e
 // @Accept json
 // @Produce json
 // @Tags CharacterItemRecast
-// @Param ID path int true "ID"
+// @Param id path int true "Id"
 // @Param character_item_recast body models.CharacterItemRecast true "CharacterItemRecast"
 // @Success 200 {array} models.CharacterItemRecast
 // @Failure 404 {string} string "Cannot find entity"

@@ -70,7 +70,7 @@ func (e *TaskController) listTasks(c echo.Context) error {
 // @Accept json
 // @Produce json
 // @Tags Task
-// @Param id path int true "id"
+// @Param id path int true "Id"
 // @Param includes query string false "Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names <h4>Relationships</h4>TaskActivities<br>TaskActivities.Goallists<br>TaskActivities.NpcType<br>TaskActivities.NpcType.AlternateCurrency<br>TaskActivities.NpcType.Merchantlists<br>TaskActivities.NpcType.NpcEmotes<br>TaskActivities.NpcType.NpcFactions<br>TaskActivities.NpcType.NpcFactions.NpcFactionEntries<br>TaskActivities.NpcType.NpcSpells<br>TaskActivities.NpcType.NpcSpells.NpcSpellsEntries<br>TaskActivities.NpcType.NpcTypesTint<br>TaskActivities.NpcType.Spawnentries<br>TaskActivities.NpcType.Spawnentries.Spawngroup<br>TaskActivities.NpcType.Spawnentries.Spawngroup.Spawn2<br>Tasksets"
 // @Param select query string false "Column names [.] separated to fetch specific fields in response"
 // @Success 200 {array} models.Task
@@ -117,7 +117,7 @@ func (e *TaskController) getTask(c echo.Context) error {
 // @Accept json
 // @Produce json
 // @Tags Task
-// @Param ID path int true "ID"
+// @Param id path int true "Id"
 // @Param task body models.Task true "Task"
 // @Success 200 {array} models.Task
 // @Failure 404 {string} string "Cannot find entity"

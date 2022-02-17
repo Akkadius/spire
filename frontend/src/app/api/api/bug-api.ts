@@ -82,7 +82,7 @@ export const BugApiAxiosParamCreator = function (configuration?: Configuration) 
         /**
          * 
          * @summary Deletes Bug
-         * @param {number} id Id
+         * @param {number} id id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -386,7 +386,7 @@ export const BugApiFp = function(configuration?: Configuration) {
         /**
          * 
          * @summary Deletes Bug
-         * @param {number} id Id
+         * @param {number} id id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -485,7 +485,7 @@ export const BugApiFactory = function (configuration?: Configuration, basePath?:
         /**
          * 
          * @summary Deletes Bug
-         * @param {number} id Id
+         * @param {number} id id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -566,7 +566,7 @@ export interface BugApiCreateBugRequest {
  */
 export interface BugApiDeleteBugRequest {
     /**
-     * Id
+     * id
      * @type {number}
      * @memberof BugApiDeleteBug
      */

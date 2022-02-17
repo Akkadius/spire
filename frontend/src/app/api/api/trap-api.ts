@@ -82,7 +82,7 @@ export const TrapApiAxiosParamCreator = function (configuration?: Configuration)
         /**
          * 
          * @summary Deletes Trap
-         * @param {number} id Id
+         * @param {number} id id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -386,7 +386,7 @@ export const TrapApiFp = function(configuration?: Configuration) {
         /**
          * 
          * @summary Deletes Trap
-         * @param {number} id Id
+         * @param {number} id id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -485,7 +485,7 @@ export const TrapApiFactory = function (configuration?: Configuration, basePath?
         /**
          * 
          * @summary Deletes Trap
-         * @param {number} id Id
+         * @param {number} id id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -566,7 +566,7 @@ export interface TrapApiCreateTrapRequest {
  */
 export interface TrapApiDeleteTrapRequest {
     /**
-     * Id
+     * id
      * @type {number}
      * @memberof TrapApiDeleteTrap
      */

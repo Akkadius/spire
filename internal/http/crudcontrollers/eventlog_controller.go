@@ -70,7 +70,7 @@ func (e *EventlogController) listEventlogs(c echo.Context) error {
 // @Accept json
 // @Produce json
 // @Tags Eventlog
-// @Param id path int true "id"
+// @Param id path int true "Id"
 // @Param includes query string false "Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names "
 // @Param select query string false "Column names [.] separated to fetch specific fields in response"
 // @Success 200 {array} models.Eventlog
@@ -117,7 +117,7 @@ func (e *EventlogController) getEventlog(c echo.Context) error {
 // @Accept json
 // @Produce json
 // @Tags Eventlog
-// @Param ID path int true "ID"
+// @Param id path int true "Id"
 // @Param eventlog body models.Eventlog true "Eventlog"
 // @Success 200 {array} models.Eventlog
 // @Failure 404 {string} string "Cannot find entity"

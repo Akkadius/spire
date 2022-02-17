@@ -82,7 +82,7 @@ export const GridApiAxiosParamCreator = function (configuration?: Configuration)
         /**
          * 
          * @summary Deletes Grid
-         * @param {number} id Id
+         * @param {number} id id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -386,7 +386,7 @@ export const GridApiFp = function(configuration?: Configuration) {
         /**
          * 
          * @summary Deletes Grid
-         * @param {number} id Id
+         * @param {number} id id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -485,7 +485,7 @@ export const GridApiFactory = function (configuration?: Configuration, basePath?
         /**
          * 
          * @summary Deletes Grid
-         * @param {number} id Id
+         * @param {number} id id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -566,7 +566,7 @@ export interface GridApiCreateGridRequest {
  */
 export interface GridApiDeleteGridRequest {
     /**
-     * Id
+     * id
      * @type {number}
      * @memberof GridApiDeleteGrid
      */

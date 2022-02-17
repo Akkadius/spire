@@ -82,7 +82,7 @@ export const ItemApiAxiosParamCreator = function (configuration?: Configuration)
         /**
          * 
          * @summary Deletes Item
-         * @param {number} id Id
+         * @param {number} id id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -386,7 +386,7 @@ export const ItemApiFp = function(configuration?: Configuration) {
         /**
          * 
          * @summary Deletes Item
-         * @param {number} id Id
+         * @param {number} id id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -485,7 +485,7 @@ export const ItemApiFactory = function (configuration?: Configuration, basePath?
         /**
          * 
          * @summary Deletes Item
-         * @param {number} id Id
+         * @param {number} id id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -566,7 +566,7 @@ export interface ItemApiCreateItemRequest {
  */
 export interface ItemApiDeleteItemRequest {
     /**
-     * Id
+     * id
      * @type {number}
      * @memberof ItemApiDeleteItem
      */

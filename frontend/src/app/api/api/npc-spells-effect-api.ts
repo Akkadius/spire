@@ -82,7 +82,7 @@ export const NpcSpellsEffectApiAxiosParamCreator = function (configuration?: Con
         /**
          * 
          * @summary Deletes NpcSpellsEffect
-         * @param {number} id Id
+         * @param {number} id id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -386,7 +386,7 @@ export const NpcSpellsEffectApiFp = function(configuration?: Configuration) {
         /**
          * 
          * @summary Deletes NpcSpellsEffect
-         * @param {number} id Id
+         * @param {number} id id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -485,7 +485,7 @@ export const NpcSpellsEffectApiFactory = function (configuration?: Configuration
         /**
          * 
          * @summary Deletes NpcSpellsEffect
-         * @param {number} id Id
+         * @param {number} id id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -566,7 +566,7 @@ export interface NpcSpellsEffectApiCreateNpcSpellsEffectRequest {
  */
 export interface NpcSpellsEffectApiDeleteNpcSpellsEffectRequest {
     /**
-     * Id
+     * id
      * @type {number}
      * @memberof NpcSpellsEffectApiDeleteNpcSpellsEffect
      */

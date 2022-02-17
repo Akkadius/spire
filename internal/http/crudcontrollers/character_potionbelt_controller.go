@@ -70,7 +70,7 @@ func (e *CharacterPotionbeltController) listCharacterPotionbelts(c echo.Context)
 // @Accept json
 // @Produce json
 // @Tags CharacterPotionbelt
-// @Param id path int true "id"
+// @Param id path int true "Id"
 // @Param includes query string false "Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names "
 // @Param select query string false "Column names [.] separated to fetch specific fields in response"
 // @Success 200 {array} models.CharacterPotionbelt
@@ -128,7 +128,7 @@ func (e *CharacterPotionbeltController) getCharacterPotionbelt(c echo.Context) e
 // @Accept json
 // @Produce json
 // @Tags CharacterPotionbelt
-// @Param ID path int true "ID"
+// @Param id path int true "Id"
 // @Param character_potionbelt body models.CharacterPotionbelt true "CharacterPotionbelt"
 // @Success 200 {array} models.CharacterPotionbelt
 // @Failure 404 {string} string "Cannot find entity"

@@ -70,7 +70,7 @@ func (e *TradeskillRecipeEntryController) listTradeskillRecipeEntries(c echo.Con
 // @Accept json
 // @Produce json
 // @Tags TradeskillRecipeEntry
-// @Param id path int true "id"
+// @Param id path int true "Id"
 // @Param includes query string false "Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names "
 // @Param select query string false "Column names [.] separated to fetch specific fields in response"
 // @Success 200 {array} models.TradeskillRecipeEntry
@@ -117,7 +117,7 @@ func (e *TradeskillRecipeEntryController) getTradeskillRecipeEntry(c echo.Contex
 // @Accept json
 // @Produce json
 // @Tags TradeskillRecipeEntry
-// @Param ID path int true "ID"
+// @Param id path int true "Id"
 // @Param tradeskill_recipe_entry body models.TradeskillRecipeEntry true "TradeskillRecipeEntry"
 // @Success 200 {array} models.TradeskillRecipeEntry
 // @Failure 404 {string} string "Cannot find entity"

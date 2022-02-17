@@ -70,7 +70,7 @@ func (e *DataBucketController) listDataBuckets(c echo.Context) error {
 // @Accept json
 // @Produce json
 // @Tags DataBucket
-// @Param id path int true "id"
+// @Param id path int true "Id"
 // @Param includes query string false "Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names "
 // @Param select query string false "Column names [.] separated to fetch specific fields in response"
 // @Success 200 {array} models.DataBucket
@@ -117,7 +117,7 @@ func (e *DataBucketController) getDataBucket(c echo.Context) error {
 // @Accept json
 // @Produce json
 // @Tags DataBucket
-// @Param ID path int true "ID"
+// @Param id path int true "Id"
 // @Param data_bucket body models.DataBucket true "DataBucket"
 // @Success 200 {array} models.DataBucket
 // @Failure 404 {string} string "Cannot find entity"

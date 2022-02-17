@@ -70,7 +70,7 @@ func (e *CharacterSkillController) listCharacterSkills(c echo.Context) error {
 // @Accept json
 // @Produce json
 // @Tags CharacterSkill
-// @Param id path int true "id"
+// @Param id path int true "Id"
 // @Param includes query string false "Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names "
 // @Param select query string false "Column names [.] separated to fetch specific fields in response"
 // @Success 200 {array} models.CharacterSkill
@@ -128,7 +128,7 @@ func (e *CharacterSkillController) getCharacterSkill(c echo.Context) error {
 // @Accept json
 // @Produce json
 // @Tags CharacterSkill
-// @Param ID path int true "ID"
+// @Param id path int true "Id"
 // @Param character_skill body models.CharacterSkill true "CharacterSkill"
 // @Success 200 {array} models.CharacterSkill
 // @Failure 404 {string} string "Cannot find entity"

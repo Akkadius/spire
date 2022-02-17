@@ -82,7 +82,7 @@ export const GlobalLootApiAxiosParamCreator = function (configuration?: Configur
         /**
          * 
          * @summary Deletes GlobalLoot
-         * @param {number} id Id
+         * @param {number} id id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -386,7 +386,7 @@ export const GlobalLootApiFp = function(configuration?: Configuration) {
         /**
          * 
          * @summary Deletes GlobalLoot
-         * @param {number} id Id
+         * @param {number} id id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -485,7 +485,7 @@ export const GlobalLootApiFactory = function (configuration?: Configuration, bas
         /**
          * 
          * @summary Deletes GlobalLoot
-         * @param {number} id Id
+         * @param {number} id id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -566,7 +566,7 @@ export interface GlobalLootApiCreateGlobalLootRequest {
  */
 export interface GlobalLootApiDeleteGlobalLootRequest {
     /**
-     * Id
+     * id
      * @type {number}
      * @memberof GlobalLootApiDeleteGlobalLoot
      */

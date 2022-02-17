@@ -82,7 +82,7 @@ export const TasksetApiAxiosParamCreator = function (configuration?: Configurati
         /**
          * 
          * @summary Deletes Taskset
-         * @param {number} id Id
+         * @param {number} id id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -386,7 +386,7 @@ export const TasksetApiFp = function(configuration?: Configuration) {
         /**
          * 
          * @summary Deletes Taskset
-         * @param {number} id Id
+         * @param {number} id id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -485,7 +485,7 @@ export const TasksetApiFactory = function (configuration?: Configuration, basePa
         /**
          * 
          * @summary Deletes Taskset
-         * @param {number} id Id
+         * @param {number} id id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -566,7 +566,7 @@ export interface TasksetApiCreateTasksetRequest {
  */
 export interface TasksetApiDeleteTasksetRequest {
     /**
-     * Id
+     * id
      * @type {number}
      * @memberof TasksetApiDeleteTaskset
      */

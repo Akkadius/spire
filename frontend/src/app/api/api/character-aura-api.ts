@@ -82,7 +82,7 @@ export const CharacterAuraApiAxiosParamCreator = function (configuration?: Confi
         /**
          * 
          * @summary Deletes CharacterAura
-         * @param {number} id Id
+         * @param {number} id id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -386,7 +386,7 @@ export const CharacterAuraApiFp = function(configuration?: Configuration) {
         /**
          * 
          * @summary Deletes CharacterAura
-         * @param {number} id Id
+         * @param {number} id id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -485,7 +485,7 @@ export const CharacterAuraApiFactory = function (configuration?: Configuration, 
         /**
          * 
          * @summary Deletes CharacterAura
-         * @param {number} id Id
+         * @param {number} id id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -566,7 +566,7 @@ export interface CharacterAuraApiCreateCharacterAuraRequest {
  */
 export interface CharacterAuraApiDeleteCharacterAuraRequest {
     /**
-     * Id
+     * id
      * @type {number}
      * @memberof CharacterAuraApiDeleteCharacterAura
      */

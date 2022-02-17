@@ -70,7 +70,7 @@ func (e *AccountController) listAccounts(c echo.Context) error {
 // @Accept json
 // @Produce json
 // @Tags Account
-// @Param id path int true "id"
+// @Param id path int true "Id"
 // @Param includes query string false "Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names <h4>Relationships</h4>AccountFlags<br>AccountIps<br>AccountRewards<br>BugReports<br>Sharedbanks"
 // @Param select query string false "Column names [.] separated to fetch specific fields in response"
 // @Success 200 {array} models.Account
@@ -117,7 +117,7 @@ func (e *AccountController) getAccount(c echo.Context) error {
 // @Accept json
 // @Produce json
 // @Tags Account
-// @Param ID path int true "ID"
+// @Param id path int true "Id"
 // @Param account body models.Account true "Account"
 // @Success 200 {array} models.Account
 // @Failure 404 {string} string "Cannot find entity"

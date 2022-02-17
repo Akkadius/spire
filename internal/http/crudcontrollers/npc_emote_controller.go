@@ -70,7 +70,7 @@ func (e *NpcEmoteController) listNpcEmotes(c echo.Context) error {
 // @Accept json
 // @Produce json
 // @Tags NpcEmote
-// @Param id path int true "id"
+// @Param id path int true "Id"
 // @Param includes query string false "Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names "
 // @Param select query string false "Column names [.] separated to fetch specific fields in response"
 // @Success 200 {array} models.NpcEmote
@@ -117,7 +117,7 @@ func (e *NpcEmoteController) getNpcEmote(c echo.Context) error {
 // @Accept json
 // @Produce json
 // @Tags NpcEmote
-// @Param ID path int true "ID"
+// @Param id path int true "Id"
 // @Param npc_emote body models.NpcEmote true "NpcEmote"
 // @Success 200 {array} models.NpcEmote
 // @Failure 404 {string} string "Cannot find entity"

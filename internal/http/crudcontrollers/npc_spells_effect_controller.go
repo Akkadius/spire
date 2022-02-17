@@ -70,7 +70,7 @@ func (e *NpcSpellsEffectController) listNpcSpellsEffects(c echo.Context) error {
 // @Accept json
 // @Produce json
 // @Tags NpcSpellsEffect
-// @Param id path int true "id"
+// @Param id path int true "Id"
 // @Param includes query string false "Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names <h4>Relationships</h4>NpcSpellsEffectsEntries"
 // @Param select query string false "Column names [.] separated to fetch specific fields in response"
 // @Success 200 {array} models.NpcSpellsEffect
@@ -117,7 +117,7 @@ func (e *NpcSpellsEffectController) getNpcSpellsEffect(c echo.Context) error {
 // @Accept json
 // @Produce json
 // @Tags NpcSpellsEffect
-// @Param ID path int true "ID"
+// @Param id path int true "Id"
 // @Param npc_spells_effect body models.NpcSpellsEffect true "NpcSpellsEffect"
 // @Success 200 {array} models.NpcSpellsEffect
 // @Failure 404 {string} string "Cannot find entity"

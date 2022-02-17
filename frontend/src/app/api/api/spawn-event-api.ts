@@ -82,7 +82,7 @@ export const SpawnEventApiAxiosParamCreator = function (configuration?: Configur
         /**
          * 
          * @summary Deletes SpawnEvent
-         * @param {number} id Id
+         * @param {number} id id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -386,7 +386,7 @@ export const SpawnEventApiFp = function(configuration?: Configuration) {
         /**
          * 
          * @summary Deletes SpawnEvent
-         * @param {number} id Id
+         * @param {number} id id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -485,7 +485,7 @@ export const SpawnEventApiFactory = function (configuration?: Configuration, bas
         /**
          * 
          * @summary Deletes SpawnEvent
-         * @param {number} id Id
+         * @param {number} id id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -566,7 +566,7 @@ export interface SpawnEventApiCreateSpawnEventRequest {
  */
 export interface SpawnEventApiDeleteSpawnEventRequest {
     /**
-     * Id
+     * id
      * @type {number}
      * @memberof SpawnEventApiDeleteSpawnEvent
      */
