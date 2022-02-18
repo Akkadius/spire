@@ -2870,7 +2870,7 @@ export class Spells {
   };
 
   public static getMinLevel(spell) {
-    let minLevel = 0
+    let minLevel = 255
     for (let i = 1; i <= 16; i++) {
       const classIndex = "classes_" + i
       if ((spell[classIndex] > 0) && (spell[classIndex] < 255)) {
@@ -2879,15 +2879,15 @@ export class Spells {
         }
       }
     }
-    return minLevel
+    return parseInt(String(minLevel))
   };
 
   public static getBuffDuration(spell) {
     let i            = 0
     let minLevel     = this.getMinLevel(spell)
-    let buffDuration = spell["buffduration"]
+    let buffDuration = parseInt(spell["buffduration"])
 
-    switch (spell["buffdurationformula"]) {
+    switch (parseInt(spell["buffdurationformula"])) {
       case 0:
         return 0;
       case 1:

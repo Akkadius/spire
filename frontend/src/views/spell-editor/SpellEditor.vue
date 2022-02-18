@@ -1020,7 +1020,7 @@
                     >
                       <!-- Modifier description -->
                       <div v-if="['buffduration'].includes(field.field)" style="margin-top: 8px">
-                        ({{ Math.round(spell[field.field] * 6) }} seconds)
+                        {{ humanTime(getBuffDuration(spell) * 6) }} - {{ getBuffDuration(spell) }} tic(s)
                       </div>
                     </div>
 
@@ -1450,6 +1450,9 @@ export default {
       if (field === "recourse_link") {
         this.drawSimpleSpellSelector(field)
       }
+      if (field === "nimbuseffect") {
+
+      }
     },
 
     setSubEditorFieldHighlights() {
@@ -1461,11 +1464,30 @@ export default {
         "spellanim",
         "cone_start_angle",
         "cone_stop_angle",
+        "nimbuseffect",
         "recourse_link"
       ]
       hasSubEditorFields.forEach((field) => {
         EditFormFieldUtil.setFieldHighlightHasSubEditor(field)
       })
+    },
+
+    getBuffDuration: function (spell) {
+      return Spells.getBuffDuration(spell)
+    },
+
+    humanTime: function (sec) {
+      let result = ""
+      if (sec === 0) {
+        result = "time";
+      } else {
+        let h  = Math.floor(sec / 3600);
+        let m  = Math.floor((sec - h * 3600) / 60);
+        let s  = sec - h * 3600 - m * 60;
+        result = (h > 1 ? h + " hours " : "") + (h === 1 ? "1 hour " : "") + (m > 0 ? m + " min " : "") + (s > 0 ? s + " sec" : "");
+      }
+
+      return result;
     },
 
     setFieldModifiedById(id) {
