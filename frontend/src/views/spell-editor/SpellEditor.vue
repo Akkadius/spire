@@ -630,6 +630,24 @@
                          field: 'min_range'
                        },
                        {
+                         description: '(Optional Spell Range) Min Distance for Mod',
+                         field: 'min_dist'
+                       },
+                       {
+                         description: '(Optional Spell Range) Min Distance Mod',
+                         field: 'min_dist_mod',
+                         showIf: spell['min_dist'] !== 0
+                       },
+                       {
+                         description: '(Optional Spell Range) Max Distance for Mod',
+                         field: 'max_dist'
+                       },
+                       {
+                         description: '(Optional Spell Range) Max Distance Mod',
+                         field: 'max_dist_mod',
+                         showIf: spell['max_dist'] !== 0
+                       },
+                       {
                          description: 'Target Type',
                          field: 'targettype',
                          selectData: DB_SPELL_TARGETS,
@@ -665,22 +683,6 @@
                          field: 'aemaxtargets'
                        },
                        {
-                         description: 'Min Distance for Mod',
-                         field: 'min_dist'
-                       },
-                       {
-                         description: 'Min Distance Mod',
-                         field: 'min_dist_mod'
-                       },
-                       {
-                         description: 'Max Distance for Mod',
-                         field: 'max_dist'
-                       },
-                       {
-                         description: 'Max Distance Mod',
-                         field: 'max_dist_mod'
-                       },
-                       {
                          description: 'Max Hits Type',
                          field: 'numhitstype'
                        },
@@ -704,7 +706,7 @@
 
                       <!-- checkbox -->
                       <eq-checkbox
-                        v-b-tooltip.hover.v-dark.right :title="getFieldDescription(field.field)"
+                        v-b-tooltip.hover.v-dark.top :title="getFieldDescription(field.field)"
                         class="mb-1 mt-3 d-inline-block"
                         :true-value="(typeof field.true !== 'undefined' ? field.true : 1)"
                         :false-value="(typeof field.false !== 'undefined' ? field.false : 0)"
@@ -719,7 +721,7 @@
                         :id="field.field"
                         v-model.number="spell[field.field]"
                         class="m-0 mt-1"
-                        v-b-tooltip.hover.v-dark.right :title="getFieldDescription(field.field)"
+                        v-b-tooltip.hover.v-dark.top :title="getFieldDescription(field.field)"
                         :style="(spell[field.field] === 0 ? 'opacity: .5' : '')"
                       />
 
@@ -729,7 +731,7 @@
                         :id="field.field"
                         v-model.number="spell[field.field]"
                         class="m-0 mt-1"
-                        v-b-tooltip.hover.v-dark.right :title="getFieldDescription(field.field)"
+                        v-b-tooltip.hover.v-dark.top :title="getFieldDescription(field.field)"
                         :style="(spell[field.field] === '' ? 'opacity: .5' : '')"
                       />
 
@@ -738,7 +740,7 @@
                         v-model.number="spell[field.field]"
                         class="form-control m-0 mt-1"
                         v-if="field.selectData"
-                        v-b-tooltip.hover.v-dark.right :title="getFieldDescription(field.field)"
+                        v-b-tooltip.hover.v-dark.top :title="getFieldDescription(field.field)"
                         :style="(spell[field.field] <= 0 ? 'opacity: .5' : '')"
                       >
                         <option
@@ -764,6 +766,10 @@
                         class="p-0 m-0 mt-2"
                         v-model.number="spell[field.field]"
                       >
+                      <!-- Modifier description -->
+                      <div v-if="['min_dist_mod', 'max_dist_mod'].includes(field.field)" style="margin-top: 8px">
+                        ({{ Math.round(spell[field.field] * 100) }}%)
+                      </div>
                     </div>
                   </div>
 
@@ -854,7 +860,8 @@
                     <div class="col3 pl-3">
                       <div
                         class="ml-5"
-                        v-if="field.description.includes('Time') && !field.description.includes('Timer')">
+                        v-if="field.description.includes('Time') && !field.description.includes('Timer')"
+                      >
                         ({{ (Math.round((spell[field.field] / 1000) * 10) / 10) }} sec)
                       </div>
 
@@ -1327,10 +1334,10 @@ export default {
     }
   },
   watch: {
-    'spell.cone_start_angle' () {
+    'spell.cone_start_angle'() {
       this.drawConeVisualizer()
     },
-    'spell.cone_end_angle' () {
+    'spell.cone_end_angle'() {
       this.drawConeVisualizer()
     },
 
