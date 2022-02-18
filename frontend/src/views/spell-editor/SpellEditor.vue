@@ -1211,6 +1211,18 @@
               />
             </div>
 
+            <!-- spell nimbus anim selector -->
+            <div
+              style="margin-top: 20px; width: auto;"
+              class="fade-in"
+              v-if="spellNimbusAnimSelectorActive"
+            >
+              <spell-nimbus-animation-selector
+                :selected-animation="spell.nimbuseffect"
+                :inputData.sync="spell.nimbuseffect"
+              />
+            </div>
+
             <!-- spell effect selector (Used in effectid 1-12)-->
             <div
               style="margin-top: 20px; width: auto;"
@@ -1323,6 +1335,7 @@ import SpellSpellEffectSelector      from "./components/SpellSpellEffectSelector
 import {debounce}                    from "../../app/utility/debounce";
 import EqWindowSimple                from "../../components/eq-ui/EQWindowSimple";
 import SpellConeVisualizer           from "./components/SpellConeVisualizer";
+import SpellNimbusAnimationSelector  from "./components/SpellNimbusAnimationSelector";
 
 
 const MILLISECONDS_BEFORE_WINDOW_RESET = 5000;
@@ -1330,6 +1343,7 @@ const MILLISECONDS_BEFORE_WINDOW_RESET = 5000;
 export default {
   name: "SpellEdit",
   components: {
+    SpellNimbusAnimationSelector,
     SpellConeVisualizer,
     EqWindowSimple,
     SpellSpellEffectSelector,
@@ -1374,6 +1388,7 @@ export default {
       previewSpellActive: true,
       iconSelectorActive: false,
       spellAnimSelectorActive: false,
+      spellNimbusAnimSelectorActive: false,
       freeIdSelectorActive: false,
       spaDetailPaneActive: false,
       castingAnimSelectorActive: false,
@@ -1451,7 +1466,7 @@ export default {
         this.drawSimpleSpellSelector(field)
       }
       if (field === "nimbuseffect") {
-
+        this.drawSpellNimbusAnimationSelector()
       }
     },
 
@@ -1628,15 +1643,16 @@ export default {
      * Selector / previewers
      */
     resetPreviewComponents() {
-      this.previewSpellActive        = false;
-      this.iconSelectorActive        = false;
-      this.spellAnimSelectorActive   = false;
-      this.freeIdSelectorActive      = false;
-      this.spaDetailPaneActive       = false;
-      this.castingAnimSelectorActive = false;
-      this.spellSelectorActive       = false;
-      this.simpleSpellSelectorActive = false;
-      this.coneVisualizerActive      = false;
+      this.previewSpellActive            = false;
+      this.iconSelectorActive            = false;
+      this.spellAnimSelectorActive       = false;
+      this.spellNimbusAnimSelectorActive = false;
+      this.freeIdSelectorActive          = false;
+      this.spaDetailPaneActive           = false;
+      this.castingAnimSelectorActive     = false;
+      this.spellSelectorActive           = false;
+      this.simpleSpellSelectorActive     = false;
+      this.coneVisualizerActive          = false;
 
       EditFormFieldUtil.resetFieldSubEditorHighlightedStatus()
     },
@@ -1673,6 +1689,16 @@ export default {
           this.spellAnimSelectorActive = true
         }, 100)
         EditFormFieldUtil.setFieldSubEditorHighlightedById("spellanim")
+      }
+    },
+    drawSpellNimbusAnimationSelector() {
+      if (!this.spellNimbusAnimSelectorActive) {
+        this.resetPreviewComponents()
+        this.lastResetTime = Date.now()
+        setTimeout(() => {
+          this.spellNimbusAnimSelectorActive = true
+        }, 100)
+        EditFormFieldUtil.setFieldSubEditorHighlightedById("nimbuseffect")
       }
     },
     drawIconSelector(force = false) {
