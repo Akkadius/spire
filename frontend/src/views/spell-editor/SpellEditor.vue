@@ -926,11 +926,12 @@
                        },
                        {
                          description: 'Buff Duration',
-                         field: 'buffduration'
+                         field: 'buffduration',
                        },
                        {
                          description: 'Buff Duration Formula',
-                         field: 'buffdurationformula'
+                         field: 'buffdurationformula',
+                         selectData: BUFF_DURATION_FORMULAS,
                        },
                        {
                          description: 'PVP Duration',
@@ -988,6 +989,18 @@
                         </option>
                       </select>
                     </div>
+
+                    <div
+                      class="col-2"
+                      @mouseover="processClickInputTrigger(field.field)"
+                      @click="processClickInputTrigger(field.field)"
+                    >
+                      <!-- Modifier description -->
+                      <div v-if="['buffduration'].includes(field.field)" style="margin-top: 8px">
+                        ({{ Math.round(spell[field.field] * 6) }} seconds)
+                      </div>
+                    </div>
+                    
                   </div>
                 </eq-tab>
                 <eq-tab name="Resist" class="minified-inputs">
@@ -1234,6 +1247,7 @@ import EqSpellPreview                from "../../components/eq-ui/EQSpellCardPre
 import {Spells}                      from "../../app/spells";
 import {
   BASE_VALUE_FORMULAS,
+  BUFF_DURATION_FORMULAS,
   DB_PC_NPC_ONLY_FLAG,
   DB_SPA,
   DB_SPELL_EFFECTS,
@@ -1308,6 +1322,7 @@ export default {
       DB_SPELL_TARGET_RESTRICTION: DB_SPELL_TARGET_RESTRICTION,
       DB_SPELL_ZONE_TYPE: DB_SPELL_ZONE_TYPE,
       DB_PC_NPC_ONLY_FLAG: DB_PC_NPC_ONLY_FLAG,
+      BUFF_DURATION_FORMULAS: BUFF_DURATION_FORMULAS,
       BASE_VALUE_FORMULAS: BASE_VALUE_FORMULAS,
       loaded: true,
 
