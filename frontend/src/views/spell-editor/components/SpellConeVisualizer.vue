@@ -1,5 +1,15 @@
 <template>
   <div>
+    <h6
+      class="eq-header mt-5"
+      style="position: absolute; top: 11%; left: 45%; font-size: 300%; z-index: 9999999999"
+    >Front</h6>
+
+    <h6
+      class="eq-header mt-5"
+      style="position: absolute; top: 66%; left: 45%; font-size: 300%; z-index: 9999999999"
+    >Back</h6>
+
     <svg style="position: absolute; top: 20%; left: 27%; z-index: 9999; overflow: visible">
       <path
         :d="arc"
