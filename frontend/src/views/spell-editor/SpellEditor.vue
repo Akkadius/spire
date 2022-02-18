@@ -1327,6 +1327,13 @@ export default {
     }
   },
   watch: {
+    'spell.cone_start_angle' () {
+      this.drawConeVisualizer()
+    },
+    'spell.cone_end_angle' () {
+      this.drawConeVisualizer()
+    },
+
     '$route'() {
 
       // reset state vars when we navigate away
@@ -1347,7 +1354,7 @@ export default {
 
     processClickInputTrigger(field) {
       if (field === "cone_start_angle" || field === "cone_stop_angle") {
-        this.drawConeVisualizer(field)
+        this.drawConeVisualizer()
       }
 
       console.log(field)
@@ -1580,12 +1587,13 @@ export default {
 
       EditFormFieldUtil.setFieldSubEditorHighlightedById(fieldId + "_" + effectIndex)
     },
-    drawConeVisualizer(field) {
+    drawConeVisualizer() {
       if (!this.coneVisualizerActive) {
         this.resetPreviewComponents()
         this.coneVisualizerActive = true
         this.lastResetTime        = Date.now()
-        EditFormFieldUtil.setFieldSubEditorHighlightedById(field)
+        EditFormFieldUtil.setFieldSubEditorHighlightedById("cone_start_angle")
+        EditFormFieldUtil.setFieldSubEditorHighlightedById("cone_stop_angle")
       }
     },
     drawSpaDetailPane(spa, index) {
