@@ -1404,12 +1404,12 @@ export default {
   },
   watch: {
     'spell.cone_start_angle'(newVal, oldVal) {
-      if (this.loaded) {
+      if (this.loaded && newVal && oldVal) {
         this.drawConeVisualizer()
       }
     },
     'spell.cone_end_angle'(newVal, oldVal) {
-      if (this.loaded) {
+      if (this.loaded && newVal && oldVal) {
         this.drawConeVisualizer()
       }
     },
