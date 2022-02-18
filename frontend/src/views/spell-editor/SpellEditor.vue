@@ -619,7 +619,7 @@
                 <eq-tab name="Range" class="minified-inputs">
 
                   <div
-                    class="row" v-for="field in
+                    class="row fade-in" v-for="field in
                      [
                        {
                          description: 'Spell Range',
@@ -635,9 +635,22 @@
                          selectData: DB_SPELL_TARGETS,
                        },
                        {
+                         description: 'Cone Angle Start',
+                         field: 'cone_start_angle',
+                         type: 'range',
+                         showIf: spell['targettype'] === 42 // cone spells
+                       },
+                       {
+                         description: 'Cone Angle End',
+                         field: 'cone_stop_angle',
+                         type: 'range',
+                         showIf: spell['targettype'] === 42 // cone spells
+                       },
+                       {
                          description: 'NPC Line of Sight Not Required to Cast',
                          field: 'npc_no_los',
-                         bool: true
+                         bool: true,
+                         showIf: spell['targettype'] !== 6 && spell['targettype'] !== 7 // exclude 'self' spells
                        },
                        {
                          description: 'AOE Range',
@@ -674,18 +687,6 @@
                        {
                          description: 'Max Hits Allowed',
                          field: 'numhits'
-                       },
-                       {
-                         description: 'Cone Angle Start',
-                         field: 'cone_start_angle',
-                         type: 'range',
-                         showIf: spell['targettype'] === 42
-                       },
-                       {
-                         description: 'Cone Angle End',
-                         field: 'cone_stop_angle',
-                         type: 'range',
-                         showIf: spell['targettype'] === 42
                        },
                      ]"
                     v-if="typeof field.showIf === 'undefined' || (typeof field.showIf !== 'undefined' && field.showIf)"
