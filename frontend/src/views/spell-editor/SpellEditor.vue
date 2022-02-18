@@ -287,6 +287,7 @@
 
                       <b-form-select
                         v-model.number="spell['formula_' + i]"
+                        :id="'formula_' + i"
                       >
                         <option
                           v-for="(description, index) in BASE_VALUE_FORMULAS"
