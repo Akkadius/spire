@@ -209,6 +209,23 @@
                 </eq-tab>
                 <eq-tab name="Effects" class="effect-tab">
                   <div>
+
+                    <div class="row">
+                      <div class="col-12 text-center">
+                        <div class="btn-group text-center mb-3" role="group">
+                          <b-button
+                            v-for="i in 12"
+                            :key="i"
+                            size="sm"
+                            :disabled="spell['effectid_' + i] !== 254"
+                            :variant="(visibleEffectSlots[i] ? 'warning' : 'outline-warning')"
+                            @click="toggleVisibleEffectSlot(i)"
+                          >{{ i }}
+                          </b-button>
+                        </div>
+                      </div>
+                    </div>
+
                     <b-input-group style="height: 30px; margin-bottom: 8px">
                       <template #prepend>
                         <b-input-group-text
@@ -224,7 +241,12 @@
                       <b-form-input placeholder="Formula" disabled/>
                     </b-input-group>
 
-                    <b-input-group v-for="i in 12" :key="i" style="margin-top: -1px">
+                    <b-input-group
+                      v-for="i in 12"
+                      :key="i"
+                      style="margin-top: -1px"
+                      v-if="visibleEffectSlots[i]"
+                    >
                       <template #prepend>
                         <b-input-group-text style="width: 40px; ">{{ i }}</b-input-group-text>
                       </template>
@@ -1353,6 +1375,7 @@ export default {
       selectedEffectIndex: 0,
       selectedEffectColumn: "",
 
+      visibleEffectSlots: [],
       zeroStateSelected: true,
 
       selectedSimpleSpellSelectorField: "",
@@ -1367,12 +1390,12 @@ export default {
   },
   watch: {
     'spell.cone_start_angle'(newVal, oldVal) {
-      if (loaded) {
+      if (this.loaded) {
         this.drawConeVisualizer()
       }
     },
     'spell.cone_end_angle'(newVal, oldVal) {
-      if (loaded) {
+      if (this.loaded) {
         this.drawConeVisualizer()
       }
     },
@@ -1381,8 +1404,9 @@ export default {
       this.loaded = false
 
       // reset state vars when we navigate away
-      this.notification      = ""
-      this.zeroStateSelected = true
+      this.visibleEffectSlots = []
+      this.notification       = ""
+      this.zeroStateSelected  = true
       EditFormFieldUtil.resetFieldEditedStatus()
       this.resetPreviewComponents()
       EditFormFieldUtil.resetFieldHighlightHasSubEditorStatus()
@@ -1395,6 +1419,15 @@ export default {
     this.load()
   },
   methods: {
+
+    toggleVisibleEffectSlot(slot) {
+      if (this.spell['effectid_' + slot] !== 254) {
+        return
+      }
+
+      this.visibleEffectSlots[slot] = !this.visibleEffectSlots[slot]
+      this.$forceUpdate()
+    },
 
     processClickInputTrigger(field) {
       if (field === "cone_start_angle" || field === "cone_stop_angle") {
@@ -1542,6 +1575,13 @@ export default {
 
           }, 300)
 
+          // visible slots effectid 1-12
+          for (let i = 1; i <= 12; i++) {
+            if (this.spell["effectid_" + i] !== 254) {
+              this.visibleEffectSlots[i] = true
+            }
+          }
+
           this.loaded = true
 
         })
@@ -1638,9 +1678,9 @@ export default {
     },
     drawSimpleSpellSelector(field) {
       this.resetPreviewComponents()
-      this.lastResetTime             = Date.now()
-      this.simpleSpellSelectorActive = true
-      this.selectedSimpleSpellSelectorField  = field
+      this.lastResetTime                    = Date.now()
+      this.simpleSpellSelectorActive        = true
+      this.selectedSimpleSpellSelectorField = field
 
       EditFormFieldUtil.setFieldSubEditorHighlightedById(field)
     },
@@ -1676,7 +1716,6 @@ export default {
 
 .effect-tab input, .effect-tab select {
   margin-bottom: 0;
-  height: 32px;
 }
 
 </style>
