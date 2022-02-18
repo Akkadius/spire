@@ -254,6 +254,7 @@
                       <b-form-select
                         @mouseover.native="drawSpaDetailPane(spell['effectid_' + i], i)"
                         :id="'effectid_' + i"
+                        @change="getSpaDefaultValues(spell['effectid_' + i], i)"
                         v-model.number="spell['effectid_' + i]"
                         style="width: 150px"
                       >
@@ -1336,6 +1337,7 @@ import {debounce}                    from "../../app/utility/debounce";
 import EqWindowSimple                from "../../components/eq-ui/EQWindowSimple";
 import SpellConeVisualizer           from "./components/SpellConeVisualizer";
 import SpellNimbusAnimationSelector  from "./components/SpellNimbusAnimationSelector";
+import util                          from "util";
 
 
 const MILLISECONDS_BEFORE_WINDOW_RESET = 5000;
@@ -1409,7 +1411,7 @@ export default {
 
       castingAnimField: "",
 
-      showAllFields: false,
+      showAllFields: 0,
 
       lastResetTime: Date.now(),
 
@@ -1583,6 +1585,55 @@ export default {
           EditFormFieldUtil.resetFieldEditedStatus()
         }
       })
+    },
+
+    getSpaDefaultValues(spa, index) {
+      const api   = (new SpellsNewApi(SpireApiClient.getOpenApiConfig()))
+      let whereOr = [];
+      for (let effectIndex = 1; effectIndex <= 12; effectIndex++) {
+        whereOr.push(["effectid" + effectIndex, "__", spa]);
+      }
+
+      let wheresOrs = [];
+      whereOr.forEach((filter) => {
+        const where = util.format("%s%s%s", filter[0], filter[1], filter[2])
+        wheresOrs.push(where)
+      })
+
+      let request   = {};
+      request.limit = 1;
+
+      if (Object.keys(wheresOrs).length > 0) {
+        request.whereOr = wheresOrs.join(".")
+      }
+
+      api.listSpellsNews(request).then(async (result) => {
+        if (result.status === 200) {
+          if (result.data.length > 0) {
+            const exampleData = result.data[0]
+
+            for (let i = 1; i <= 12; i++) {
+              if (exampleData['effectid_' + i] === parseInt(spa)) {
+
+                let sourceFields = [
+                  'effect_base_value_',
+                  'effect_limit_value_',
+                  'max_',
+                  'formula_'
+                ]
+
+                // set current spell to example values
+                sourceFields.forEach((field) => {
+                  this.spell[field + index] = exampleData[field + i]
+                  EditFormFieldUtil.setFieldModifiedById(field + index)
+                })
+
+              }
+            }
+          }
+        }
+      });
+
     },
 
     load() {
