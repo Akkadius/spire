@@ -347,6 +347,7 @@
                          text: true,
                        },
                      ]"
+                    @click="processClickInputTrigger(field.field)"
                   >
                     <div class="col-6 text-right p-0 m-0 mr-3 mt-3" v-if="field.bool">
                       {{ field.description }}
@@ -1176,7 +1177,7 @@
               />
             </div>
 
-            <!-- spell effect selector -->
+            <!-- spell effect selector (Used in effectid 1-12)-->
             <div
               style="margin-top: 20px; width: auto;"
               class="fade-in"
@@ -1184,8 +1185,17 @@
             >
               <spell-spell-effect-selector
                 @input="spell[selectedEffectColumn + '_' + selectedEffectIndex] = $event.spellId; setFieldModifiedById(selectedEffectColumn + '_' + selectedEffectIndex)"
-                :selected-animation="spell.spellanim"
-                :inputData.sync="spell.spellanim"
+              />
+            </div>
+
+            <!-- simple spell effect selector (Used in simple fields) -->
+            <div
+              style="margin-top: 20px; width: auto;"
+              class="fade-in"
+              v-if="simpleSpellSelectorActive"
+            >
+              <spell-spell-effect-selector
+                @input="spell[selectedSimpleSpellSelectorField] = $event.spellId; setFieldModifiedById(selectedSimpleSpellSelectorField)"
               />
             </div>
 
@@ -1334,6 +1344,7 @@ export default {
       spaDetailPaneActive: false,
       castingAnimSelectorActive: false,
       spellSelectorActive: false,
+      simpleSpellSelectorActive: false,
       coneVisualizerActive: false,
 
       spaPreviewNumber: -1,
@@ -1343,6 +1354,8 @@ export default {
       selectedEffectColumn: "",
 
       zeroStateSelected: true,
+
+      selectedSimpleSpellSelectorField: "",
 
       castingAnimField: "",
 
@@ -1387,6 +1400,9 @@ export default {
       if (field === "cone_start_angle" || field === "cone_stop_angle") {
         this.drawConeVisualizer()
       }
+      if (field === "recourse_link") {
+        this.drawSimpleSpellSelector(field)
+      }
     },
 
     setSubEditorFieldHighlights() {
@@ -1397,7 +1413,8 @@ export default {
         "icon",
         "spellanim",
         "cone_start_angle",
-        "cone_stop_angle"
+        "cone_stop_angle",
+        "recourse_link"
       ]
       hasSubEditorFields.forEach((field) => {
         EditFormFieldUtil.setFieldHighlightHasSubEditor(field)
@@ -1542,6 +1559,7 @@ export default {
       this.spaDetailPaneActive       = false;
       this.castingAnimSelectorActive = false;
       this.spellSelectorActive       = false;
+      this.simpleSpellSelectorActive = false;
       this.coneVisualizerActive      = false;
 
       EditFormFieldUtil.resetFieldSubEditorHighlightedStatus()
@@ -1617,6 +1635,14 @@ export default {
       this.selectedEffectColumn = fieldId
 
       EditFormFieldUtil.setFieldSubEditorHighlightedById(fieldId + "_" + effectIndex)
+    },
+    drawSimpleSpellSelector(field) {
+      this.resetPreviewComponents()
+      this.lastResetTime             = Date.now()
+      this.simpleSpellSelectorActive = true
+      this.selectedSimpleSpellSelectorField  = field
+
+      EditFormFieldUtil.setFieldSubEditorHighlightedById(field)
     },
     drawConeVisualizer() {
       if (!this.coneVisualizerActive) {
