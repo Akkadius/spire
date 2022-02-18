@@ -308,54 +308,66 @@
                     class="row" v-for="field in
                      [
                        {
-                         description: '(Knockback) Push Back',
-                         field: 'pushback'
+                         description: 'Push Back',
+                         field: 'pushback',
+                         category: 'Knockback'
                        },
                        {
-                         description: '(Knockback) Push Up',
-                         field: 'pushup'
+                         description: 'Push Up',
+                         field: 'pushup',
+                         category: 'Knockback'
                        },
                        {
-                         description: '(Recourse) Recourse ID',
-                         field: 'recourse_link'
+                         description: 'Recourse ID',
+                         field: 'recourse_link',
+                         category: 'Recourse',
                        },
                        {
-                         description: '(Hate) Hate Modifier',
-                         field: 'bonushate'
+                         description: 'Hate Modifier',
+                         field: 'bonushate',
+                         category: 'Hate',
                        },
                        {
-                         description: '(Hate) Spell Hate Given',
-                         field: 'hate_added'
+                         description: 'Spell Hate Given',
+                         field: 'hate_added',
+                         category: 'Hate',
                        },
                        {
-                         description: '(Hate) No Detrimental Spell Aggro',
+                         description: 'No Detrimental Spell Aggro',
                          field: 'field_198',
-                         bool: true
+                         bool: true,
+                         category: 'Hate',
                        },
                        {
-                         description: '(Viral) Viral Range',
-                         field: 'viral_range'
+                         description: 'Viral Range',
+                         field: 'viral_range',
+                         category: 'Viral'
                        },
                        {
-                         description: '(Viral) Viral Targets',
-                         field: 'viral_targets'
+                         description: 'Viral Targets',
+                         field: 'viral_targets',
+                         category: 'Viral'
                        },
                        {
-                         description: '(Viral) Viral Timer',
-                         field: 'viral_timer'
+                         description: 'Viral Timer',
+                         field: 'viral_timer',
+                         category: 'Viral'
                        },
                        {
-                         description: '(Focus) Max Targets',
-                         field: 'maxtargets'
+                         description: 'Max Targets',
+                         field: 'maxtargets',
+                         category: 'Focus'
                        },
                        {
-                         description: '(Focus) Song Base Effect Cap',
-                         field: 'songcap'
+                         description: 'Song Base Effect Cap',
+                         field: 'songcap',
+                         category: 'Focus'
                        },
                        {
-                         description: '(Focus) Not Focusable',
+                         description: 'Not Focusable',
                          field: 'not_extendable',
                          bool: true,
+                         category: 'Focus'
                        },
                        {
                          description: 'Max Critical Chance',
@@ -374,9 +386,11 @@
                     @click="processClickInputTrigger(field.field)"
                   >
                     <div class="col-6 text-right p-0 m-0 mr-3 mt-3" v-if="field.bool">
+                      <span v-if="field.category" class="font-weight-bold" style="color: yellow">{{field.category}}</span>
                       {{ field.description }}
                     </div>
                     <div class="col-6 text-right p-0 m-0 mr-3" v-if="!field.bool" style="margin-top: 10px !important">
+                      <span v-if="field.category" class="font-weight-bold" style="color: yellow">{{field.category}}</span>
                       {{ field.description }}
                     </div>
                     <div class="col-3 text-left p-0 mt-1">
@@ -735,7 +749,7 @@
 
                       <!-- checkbox -->
                       <eq-checkbox
-                        v-b-tooltip.hover.v-dark.top :title="getFieldDescription(field.field)"
+                        v-b-tooltip.hover.v-dark.lefttop :title="getFieldDescription(field.field)"
                         class="mb-1 mt-3 d-inline-block"
                         :true-value="(typeof field.true !== 'undefined' ? field.true : 1)"
                         :false-value="(typeof field.false !== 'undefined' ? field.false : 0)"
@@ -750,7 +764,7 @@
                         :id="field.field"
                         v-model.number="spell[field.field]"
                         class="m-0 mt-1"
-                        v-b-tooltip.hover.v-dark.top :title="getFieldDescription(field.field)"
+                        v-b-tooltip.hover.v-dark.lefttop :title="getFieldDescription(field.field)"
                         :style="(spell[field.field] === 0 ? 'opacity: .5' : '')"
                       />
 
@@ -760,7 +774,7 @@
                         :id="field.field"
                         v-model.number="spell[field.field]"
                         class="m-0 mt-1"
-                        v-b-tooltip.hover.v-dark.top :title="getFieldDescription(field.field)"
+                        v-b-tooltip.hover.v-dark.lefttop :title="getFieldDescription(field.field)"
                         :style="(spell[field.field] === '' ? 'opacity: .5' : '')"
                       />
 
@@ -769,7 +783,7 @@
                         v-model.number="spell[field.field]"
                         class="form-control m-0 mt-1"
                         v-if="field.selectData"
-                        v-b-tooltip.hover.v-dark.top :title="getFieldDescription(field.field)"
+                        v-b-tooltip.hover.v-dark.lefttop :title="getFieldDescription(field.field)"
                         :style="(spell[field.field] <= 0 ? 'opacity: .5' : '')"
                       >
                         <option
@@ -1802,7 +1816,7 @@ export default {
       if (!this.coneVisualizerActive) {
         this.resetPreviewComponents()
         this.coneVisualizerActive = true
-        this.lastResetTime        = Date.now()
+        this.lastResetTime        = Date.now() + 30000
         EditFormFieldUtil.setFieldSubEditorHighlightedById("cone_start_angle")
         EditFormFieldUtil.setFieldSubEditorHighlightedById("cone_stop_angle")
       }
