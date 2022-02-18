@@ -117,7 +117,7 @@ export default {
         { field: this.getSpaDefinition(this.spa).description, description: "Description" },
         { field: this.toTitleCase(this.getSpaDefinition(this.spa).base), description: "Base" },
         { field: this.toTitleCase(this.getSpaDefinition(this.spa).limit), description: "Limit" },
-        { field: this.toTitleCase(this.getSpaDefinition(this.spa).value), description: "Max" },
+        { field: this.toTitleCase(this.getSpaDefinition(this.spa).max), description: "Max" },
         // { field: this.getSpaDefinition(this.spa).notes, description: "Notes" },
       ]
 
