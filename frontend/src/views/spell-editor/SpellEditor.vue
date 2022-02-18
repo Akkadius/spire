@@ -516,7 +516,7 @@
                              bool: true
                            },
                            {
-                             description: 'Only During Fast Regen',
+                             description: 'Only During Fast Regen (Allow Rest)',
                              field: 'allowrest',
                              bool: true
                            },
@@ -880,7 +880,7 @@
                   </div>
 
                 </eq-tab>
-                <eq-tab name="Buffing" class="minified-inputs">
+                <eq-tab name="Buffs" class="minified-inputs">
                   <div
                     class="row" v-for="field in
                      [
