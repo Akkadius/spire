@@ -1000,7 +1000,7 @@
                         ({{ Math.round(spell[field.field] * 6) }} seconds)
                       </div>
                     </div>
-                    
+
                   </div>
                 </eq-tab>
                 <eq-tab name="Resist" class="minified-inputs">
