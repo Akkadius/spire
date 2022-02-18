@@ -622,6 +622,12 @@
                     class="row fade-in" v-for="field in
                      [
                        {
+                         description: 'NPC Line of Sight Not Required to Cast',
+                         field: 'npc_no_los',
+                         bool: true,
+                         showIf: spell['targettype'] !== 6 && spell['targettype'] !== 7 // exclude 'self' spells
+                       },
+                       {
                          description: 'Spell Range',
                          field: 'range'
                        },
@@ -665,22 +671,19 @@
                          showIf: spell['targettype'] === 42 // cone spells
                        },
                        {
-                         description: 'NPC Line of Sight Not Required to Cast',
-                         field: 'npc_no_los',
-                         bool: true,
-                         showIf: spell['targettype'] !== 6 && spell['targettype'] !== 7 // exclude 'self' spells
-                       },
-                       {
                          description: 'AOE Range',
-                         field: 'aoerange'
+                         field: 'aoerange',
+                         showIf: [4, 8, 24, 45].includes(spell['targettype']) // AOE target types
                        },
                        {
                          description: 'AOE Rain Waves',
-                         field: 'ae_duration'
+                         field: 'ae_duration',
+                         showIf: [4, 8, 24, 45].includes(spell['targettype']) // AOE target types
                        },
                        {
                          description: 'AOE Max Targets',
-                         field: 'aemaxtargets'
+                         field: 'aemaxtargets',
+                         showIf: [4, 8, 24, 45].includes(spell['targettype']) // AOE target types
                        },
                        {
                          description: 'Max Hits Type',
@@ -691,6 +694,7 @@
                          field: 'numhits'
                        },
                      ]"
+                    :key="field.field"
                     v-if="typeof field.showIf === 'undefined' || (typeof field.showIf !== 'undefined' && field.showIf)"
                   >
                     <div class="col-6 text-right p-0 m-0 mr-3 mt-3" v-if="field.bool">
@@ -798,7 +802,7 @@
                          field: 'recast_time'
                        },
                        {
-                         description: 'Timer Index (???)',
+                         description: 'Timer Index',
                          field: 'endur_timer_index'
                        },
                        {
@@ -1363,8 +1367,6 @@ export default {
       if (field === "cone_start_angle" || field === "cone_stop_angle") {
         this.drawConeVisualizer()
       }
-
-      console.log(field)
     },
 
     setSubEditorFieldHighlights() {
