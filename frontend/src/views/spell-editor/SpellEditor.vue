@@ -1338,14 +1338,19 @@ export default {
     }
   },
   watch: {
-    'spell.cone_start_angle'() {
-      this.drawConeVisualizer()
+    'spell.cone_start_angle'(newVal, oldVal) {
+      if (loaded) {
+        this.drawConeVisualizer()
+      }
     },
-    'spell.cone_end_angle'() {
-      this.drawConeVisualizer()
+    'spell.cone_end_angle'(newVal, oldVal) {
+      if (loaded) {
+        this.drawConeVisualizer()
+      }
     },
 
     '$route'() {
+      this.loaded = false
 
       // reset state vars when we navigate away
       this.notification      = ""
@@ -1504,6 +1509,8 @@ export default {
             this.setSubEditorFieldHighlights()
 
           }, 300)
+
+          this.loaded = true
 
         })
       }
