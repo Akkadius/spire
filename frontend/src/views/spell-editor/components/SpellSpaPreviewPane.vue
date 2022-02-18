@@ -6,25 +6,29 @@
     <!--      values correspond to what for the Spell effect you have highlighted.-->
     <!--    </div>-->
 
-    <h6 class="eq-header mt-3 mb-3">Spell Effect Details</h6>
-
     <div>
       <div
         :class="'row ' + (field.description === 'Description' ? 'mb-3' : '') + (field.description === 'Notes' ? 'mt-3' : '')"
         v-for="field in fields" :key="field.description"
       >
         <div
-          :class="'col-2 text-right m-0 p-0 pr-2 font-weight-bold'"
-          v-if="field.field !== ''"
+          :class="'col-6 text-right m-0 p-0 pr-2 font-weight-bold'"
+          v-if="field.field && field.field !== ''"
         >
           {{ field.description }}
         </div>
-        <div class="col-8 m-0 p-0" v-if="field.field !== ''">
+        <div class="col-6 m-0 p-0" v-if="field.field && field.field !== ''">
           {{ field.field }}
         </div>
       </div>
+
+      <div v-if="getSpaDefinition(spa).notes.trim() !== ''" class="text-center">
+        <h6 class="eq-header mb-3 mt-3">Notes</h6>
+        {{getSpaDefinition(spa).notes}}
+      </div>
     </div>
 
+    <div class="text-center">
     <h6 class="eq-header mb-3 mt-3" v-if="effectInfo.info !== ''">Effect Render Preview</h6>
 
     <v-runtime-template
@@ -32,8 +36,9 @@
       v-if="typeof effectInfo !== 'undefined'"
       class="pb-6 mt-3 doc"
     />
+    </div>
 
-    <div class="mb-5"></div>
+    <div class="mb-3"></div>
 
     <eq-debug :data="getSpaDefinition(spa)"/>
   </div>
@@ -113,7 +118,7 @@ export default {
         { field: this.toTitleCase(this.getSpaDefinition(this.spa).base), description: "Base" },
         { field: this.toTitleCase(this.getSpaDefinition(this.spa).limit), description: "Limit" },
         { field: this.toTitleCase(this.getSpaDefinition(this.spa).value), description: "Max" },
-        { field: this.getSpaDefinition(this.spa).notes, description: "Notes" },
+        // { field: this.getSpaDefinition(this.spa).notes, description: "Notes" },
       ]
 
       this.effectInfo = await this.getSpellEffectInfo(this.spell, this.effectIndex);

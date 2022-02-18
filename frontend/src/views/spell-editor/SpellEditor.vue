@@ -626,6 +626,10 @@
                          field: 'range'
                        },
                        {
+                         description: 'Spell Min Range',
+                         field: 'min_range'
+                       },
+                       {
                          description: 'Target Type',
                          field: 'targettype',
                          selectData: DB_SPELL_TARGETS,
@@ -646,10 +650,6 @@
                        {
                          description: 'AOE Max Targets',
                          field: 'aemaxtargets'
-                       },
-                       {
-                         description: 'Min Range',
-                         field: 'min_range'
                        },
                        {
                          description: 'Min Distance for Mod',
@@ -677,13 +677,18 @@
                        },
                        {
                          description: 'Cone Angle Start',
-                         field: 'cone_start_angle'
+                         field: 'cone_start_angle',
+                         type: 'range',
+                         showIf: spell['targettype'] === 42
                        },
                        {
                          description: 'Cone Angle End',
-                         field: 'cone_stop_angle'
+                         field: 'cone_stop_angle',
+                         type: 'range',
+                         showIf: spell['targettype'] === 42
                        },
                      ]"
+                    v-if="typeof field.showIf === 'undefined' || (typeof field.showIf !== 'undefined' && field.showIf)"
                   >
                     <div class="col-6 text-right p-0 m-0 mr-3 mt-3" v-if="field.bool">
                       {{ field.description }}
@@ -691,7 +696,10 @@
                     <div class="col-6 text-right p-0 m-0 mr-3" v-if="!field.bool" style="margin-top: 10px !important">
                       {{ field.description }}
                     </div>
-                    <div class="col-3 text-left p-0 mt-1">
+                    <div
+                      class="col-3 text-left p-0 mt-1"
+                      @click="processClickInputTrigger(field.field)"
+                    >
 
                       <!-- checkbox -->
                       <eq-checkbox
@@ -740,6 +748,21 @@
                           {{ index }}) {{ description }}
                         </option>
                       </select>
+                    </div>
+                    <div
+                      class="col-2"
+                      @mouseover="processClickInputTrigger(field.field)"
+                      @click="processClickInputTrigger(field.field)"
+                    >
+                      <input
+                        type="range"
+                        v-if="field.type === 'range'"
+                        min="0"
+                        max="360"
+                        step="5"
+                        class="p-0 m-0 mt-2"
+                        v-model.number="spell[field.field]"
+                      >
                     </div>
                   </div>
 
@@ -827,10 +850,16 @@
                         </option>
                       </select>
                     </div>
-                    <div class="col3 pl-3 mt-2">
+                    <div class="col3 pl-3">
+                      <div
+                        class="ml-5"
+                        v-if="field.description.includes('Time') && !field.description.includes('Timer')">
+                        ({{ (Math.round((spell[field.field] / 1000) * 10) / 10) }} sec)
+                      </div>
+
                       <loader-cast-bar-timer
                         class="ml-3"
-                        style="margin-top: 11px"
+                        style="margin-top: 5px"
                         color="#FF00FF"
                         v-if="field.description.includes('Time') && !field.description.includes('Timer')"
                         :time-ms="spell[field.field]"
@@ -1073,10 +1102,11 @@
           <div class="col-5">
 
             <!-- SPA Detail Pane -->
-            <eq-window
+            <eq-window-simple
               style="margin-top: 30px; margin-right: 10px; width: auto;"
               class="fade-in"
               v-if="spaDetailPaneActive"
+              title="SPA Details"
             >
               <spell-spa-preview-pane
                 :spa="spaPreviewNumber"
@@ -1085,7 +1115,7 @@
                 v-if="spaPreviewNumber >= 0"
               />
 
-            </eq-window>
+            </eq-window-simple>
 
             <!-- preview spell -->
             <eq-window
@@ -1145,6 +1175,19 @@
                 :inputData.sync="spell[castingAnimField]"
               />
             </div>
+
+            <!-- cone angle visualizer -->
+            <eq-window
+              style="margin-top: 30px; width: auto; height: 500px"
+              class="fade-in text-center"
+              title="Cone Visualizer"
+              v-if="coneVisualizerActive"
+            >
+              <spell-cone-visualizer
+                :cone-start-angle="spell.cone_start_angle"
+                :cone-stop-angle="spell.cone_stop_angle"
+              />
+            </eq-window>
 
             <!-- free id selector -->
             <eq-window
@@ -1208,6 +1251,8 @@ import {EditFormFieldUtil}           from "../../app/forms/edit-form-field-util"
 import LoaderFakeProgess             from "../../components/LoaderFakeProgress";
 import SpellSpellEffectSelector      from "./components/SpellSpellEffectSelector";
 import {debounce}                    from "../../app/utility/debounce";
+import EqWindowSimple                from "../../components/eq-ui/EQWindowSimple";
+import SpellConeVisualizer           from "./components/SpellConeVisualizer";
 
 
 const MILLISECONDS_BEFORE_WINDOW_RESET = 5000;
@@ -1215,6 +1260,8 @@ const MILLISECONDS_BEFORE_WINDOW_RESET = 5000;
 export default {
   name: "SpellEdit",
   components: {
+    SpellConeVisualizer,
+    EqWindowSimple,
     SpellSpellEffectSelector,
     LoaderFakeProgess,
     LoaderCastBarTimer,
@@ -1260,6 +1307,7 @@ export default {
       spaDetailPaneActive: false,
       castingAnimSelectorActive: false,
       spellSelectorActive: false,
+      coneVisualizerActive: false,
 
       spaPreviewNumber: -1,
       spaEffectIndex: -1,
@@ -1296,8 +1344,24 @@ export default {
   },
   methods: {
 
+    processClickInputTrigger(field) {
+      if (field === "cone_start_angle" || field === "cone_stop_angle") {
+        this.drawConeVisualizer(field)
+      }
+
+      console.log(field)
+    },
+
     setSubEditorFieldHighlights() {
-      let hasSubEditorFields = ["id", "casting_anim", "target_anim", "icon", "spellanim"]
+      let hasSubEditorFields = [
+        "id",
+        "casting_anim",
+        "target_anim",
+        "icon",
+        "spellanim",
+        "cone_start_angle",
+        "cone_stop_angle"
+      ]
       hasSubEditorFields.forEach((field) => {
         EditFormFieldUtil.setFieldHighlightHasSubEditor(field)
       })
@@ -1439,6 +1503,7 @@ export default {
       this.spaDetailPaneActive       = false;
       this.castingAnimSelectorActive = false;
       this.spellSelectorActive       = false;
+      this.coneVisualizerActive      = false;
 
       EditFormFieldUtil.resetFieldSubEditorHighlightedStatus()
     },
@@ -1446,7 +1511,7 @@ export default {
       return (Date.now() - this.lastResetTime) > MILLISECONDS_BEFORE_WINDOW_RESET
     },
 
-    previewSpell: debounce( function(force = false) {
+    previewSpell: debounce(function (force = false) {
       if (this.shouldReset() || force) {
         this.resetPreviewComponents()
         this.previewSpellActive = true;
@@ -1514,6 +1579,14 @@ export default {
 
       EditFormFieldUtil.setFieldSubEditorHighlightedById(fieldId + "_" + effectIndex)
     },
+    drawConeVisualizer(field) {
+      if (!this.coneVisualizerActive) {
+        this.resetPreviewComponents()
+        this.coneVisualizerActive = true
+        this.lastResetTime        = Date.now()
+        EditFormFieldUtil.setFieldSubEditorHighlightedById(field)
+      }
+    },
     drawSpaDetailPane(spa, index) {
       this.resetPreviewComponents()
       EditFormFieldUtil.setFieldSubEditorHighlightedById("effectid_" + index)
@@ -1537,5 +1610,7 @@ export default {
 
 .effect-tab input, .effect-tab select {
   margin-bottom: 0;
+  height: 32px;
 }
+
 </style>
