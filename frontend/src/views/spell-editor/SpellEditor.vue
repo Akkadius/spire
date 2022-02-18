@@ -718,7 +718,7 @@
                        },
                      ]"
                     :key="field.field"
-                    v-if="typeof field.showIf === 'undefined' || (typeof field.showIf !== 'undefined' && field.showIf)"
+                    v-if="typeof field.showIf === 'undefined' || (typeof field.showIf !== 'undefined' && field.showIf) || showAllFields"
                   >
                     <div class="col-6 text-right p-0 m-0 mr-3 mt-3" v-if="field.bool">
                       {{ field.description }}
@@ -801,7 +801,6 @@
                   </div>
 
                 </eq-tab>
-
 
                 <eq-tab name="Casting" class="minified-inputs">
                   <div
@@ -903,6 +902,7 @@
                   </div>
 
                 </eq-tab>
+
                 <eq-tab name="Buffs" class="minified-inputs">
                   <div
                     class="row" v-for="field in
@@ -1026,6 +1026,7 @@
 
                   </div>
                 </eq-tab>
+
                 <eq-tab name="Resist" class="minified-inputs">
                   <div
                     class="row" v-for="field in
@@ -1138,6 +1139,17 @@
                 >
                   <i class="ra ra-book mr-1"></i>
                   Save Spell
+                </div>
+              </div>
+
+              <div class="row" v-if="spell">
+                <div class="col-10"></div>
+                <div class="col-2 text-right" title="Show unknown fields">
+                  Show All Fields
+                  <eq-checkbox
+                    class="mb-2 d-inline-block"
+                    v-model.number="showAllFields"
+                  />
                 </div>
               </div>
 
@@ -1381,6 +1393,8 @@ export default {
       selectedSimpleSpellSelectorField: "",
 
       castingAnimField: "",
+
+      showAllFields: false,
 
       lastResetTime: Date.now(),
 
