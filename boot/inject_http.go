@@ -27,6 +27,7 @@ var httpSet = wire.NewSet(
 	controllers.NewAppController,
 	controllers.NewQueryController,
 	controllers.NewQuestFileApiController,
+	controllers.NewClientFilesController,
 	staticmaps.NewStaticMapController,
 	provideControllers,
 	NewRouter,
@@ -110,6 +111,7 @@ func provideControllers(
 	app *controllers.AppController,
 	query *controllers.QueryController,
 	questFileApi *controllers.QuestFileApiController,
+	clientFilesController *controllers.ClientFilesController,
 	staticMaps *staticmaps.StaticMapController,
 ) *appControllerGroups {
 	return &appControllerGroups{
@@ -129,6 +131,7 @@ func provideControllers(
 			query,
 			questFileApi,
 			staticMaps,
+			clientFilesController,
 		},
 	}
 }
