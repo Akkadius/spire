@@ -126,13 +126,6 @@
                   Reset Form
                 </div>
 
-                <b-button
-                  @click="downloadSpells()"
-                  size="sm"
-                  class="ml-3"
-                  variant="warning"
-                ><i class="fa fa-download"></i> Spells (spells_us.txt)</b-button>
-
               </div>
 
             </div>
@@ -242,11 +235,6 @@ export default {
     }
   },
   methods: {
-
-    downloadSpells() {
-      window.open(SpireApiClient.getBasePath() + "/api/v1/client-files/export/spells", '_self');
-    },
-
     updateQueryState: function () {
       let queryState = {};
 

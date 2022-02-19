@@ -45,6 +45,11 @@ export default new Router({
           meta: {title: "Player Animation Viewer"},
         },
         {
+          path: ROUTE.CLIENT_FILES,
+          component: () => import('./views/client-files/ClientFiles.vue'),
+          meta: {title: "Client Files"},
+        },
+        {
           path: ROUTE.EMITTER_VIEWER,
           component: () => import('./views/viewers/EmitterViewer.vue'),
           meta: {title: "Emitter Viewer"},
