@@ -7,6 +7,7 @@
 package boot
 
 import (
+	"github.com/Akkadius/spire/internal/clientfiles"
 	"github.com/Akkadius/spire/internal/connection"
 	"github.com/Akkadius/spire/internal/console/cmd"
 	"github.com/Akkadius/spire/internal/database"
@@ -37,7 +38,9 @@ func InitializeApplication() (App, error) {
 		return App{}, err
 	}
 	cache := provideCache()
-	helloWorldCommand := cmd.NewHelloWorldCommand(db, logger)
+	exporter := clientfiles.NewExporter(db, logger)
+	importer := clientfiles.NewImporter(db, logger)
+	helloWorldCommand := cmd.NewHelloWorldCommand(db, logger, exporter, importer)
 	generateModelsCommand := cmd.NewGenerateModelsCommand(db, logger)
 	generateControllersCommand := cmd.NewGenerateControllersCommand(db, logger)
 	helloWorldController := controllers.NewHelloWorldController(db, logger)
