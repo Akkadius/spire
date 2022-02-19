@@ -6,6 +6,8 @@ import (
 	"github.com/Akkadius/spire/internal/http/routes"
 	"github.com/labstack/echo/v4"
 	"github.com/sirupsen/logrus"
+	"golang.org/x/text/language"
+	"golang.org/x/text/message"
 	"io/ioutil"
 	"math/rand"
 	"net/http"
@@ -116,9 +118,9 @@ func (f *ClientFilesController) importFile(c echo.Context) error {
 	}
 
 	fileContents := string(fileBytes)
-
+	r := clientfiles.ImportResult{}
 	if strings.Contains(fileName, "spells_us") {
-		err = f.importer.ImportSpells(fileContents)
+		r, err = f.importer.ImportSpells(fileContents)
 		if err != nil {
 			return c.HTML(
 				http.StatusInternalServerError,
@@ -127,7 +129,7 @@ func (f *ClientFilesController) importFile(c echo.Context) error {
 		}
 	}
 	if strings.Contains(fileName, "dbstr_us") {
-		err = f.importer.ImportDbStr(fileContents)
+		r, err = f.importer.ImportDbStr(fileContents)
 		if err != nil {
 			return c.HTML(
 				http.StatusInternalServerError,
@@ -136,9 +138,12 @@ func (f *ClientFilesController) importFile(c echo.Context) error {
 		}
 	}
 
+	// for commify
+	p := message.NewPrinter(language.English)
+
 	return c.HTML(
 		http.StatusOK,
-		fmt.Sprintf("Success!"),
+		p.Sprintf("Success! Table [%v] Deleted [%d] Imported [%d]", r.Table, r.DroppedRows, r.ImportedRows),
 	)
 }
 

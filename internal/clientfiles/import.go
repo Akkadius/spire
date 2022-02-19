@@ -30,10 +30,16 @@ func (i *Importer) getDatabase() *sql.DB {
 
 const SPELL_COLUMN_LENGTH = 237
 
-func (i *Importer) ImportSpells(fileContents string) error {
+type ImportResult struct {
+	Table        string
+	ImportedRows int
+	DroppedRows  int64
+}
+
+func (i *Importer) ImportSpells(fileContents string) (ImportResult, error) {
 
 	// purge
-	i.db.Exec("DELETE FROM spells_new")
+	rowsDeleted := i.db.Exec("DELETE FROM spells_new").RowsAffected
 
 	// build column name list
 	dbColumns := database.GetTableColumnsOrdered(i.getDatabase(), "spells_new")
@@ -52,6 +58,7 @@ func (i *Importer) ImportSpells(fileContents string) error {
 	chunk := 0
 
 	// loop through lines
+	processedRows := 0
 	for _, s := range strings.Split(fileContents, "\n") {
 
 		// process columns
@@ -73,7 +80,7 @@ func (i *Importer) ImportSpells(fileContents string) error {
 		if chunk >= 250 {
 			err := i.insertBulk("spells_new", dbColumnsStr, placeholders, values)
 			if err != nil {
-				return err
+				return ImportResult{}, err
 			}
 			placeholders = nil
 			values = nil
@@ -81,28 +88,34 @@ func (i *Importer) ImportSpells(fileContents string) error {
 		}
 
 		chunk++
+		processedRows++
 	}
 
 	err := i.insertBulk("spells_new", dbColumnsStr, placeholders, values)
 	if err != nil {
-		return err
+		return ImportResult{}, err
 	}
 
-	return nil
+	return ImportResult{
+		Table:        "spells_new",
+		ImportedRows: processedRows,
+		DroppedRows:  rowsDeleted,
+	}, nil
 }
 
 const DB_STR_COLUMN_LENGTH = 4
 
-func (i *Importer) ImportDbStr(fileContents string) error {
+func (i *Importer) ImportDbStr(fileContents string) (ImportResult, error) {
 
 	// purge
-	i.db.Exec("DELETE FROM db_str")
+	rowsDeleted := i.db.Exec("DELETE FROM db_str").RowsAffected
 
 	placeholders := []string{}
 	var values []interface{}
 	chunk := 0
 
 	// loop through lines
+	processedRows := 0
 	for _, s := range strings.Split(fileContents, "\n") {
 
 		// process columns
@@ -126,7 +139,7 @@ func (i *Importer) ImportDbStr(fileContents string) error {
 		if chunk >= 10000 {
 			err := i.insertBulk("db_str", "id, type, value", placeholders, values)
 			if err != nil {
-				return err
+				return ImportResult{}, err
 			}
 			placeholders = nil
 			values = nil
@@ -134,14 +147,19 @@ func (i *Importer) ImportDbStr(fileContents string) error {
 		}
 
 		chunk++
+		processedRows++
 	}
 
 	err := i.insertBulk("db_str", "id, type, value", placeholders, values)
 	if err != nil {
-		return err
+		return ImportResult{}, err
 	}
 
-	return nil
+	return ImportResult{
+		Table:        "db_str",
+		ImportedRows: processedRows,
+		DroppedRows:  rowsDeleted,
+	}, nil
 }
 
 func (i *Importer) insertBulk(table string, columns string, placeholders []string, values []interface{}) error {

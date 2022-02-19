@@ -7,20 +7,25 @@
             <eq-window class="mt-5">
               <div class="mb-3 text-center" style="font-size: 16px">
                 <h3 class="mb-3 eq-header" style="font-size: 42px">
-                  File Upload Dropzone
+                  Client File DropZone Upload
                 </h3>
-                <div v-for="file in ['spells_us.txt', 'dbstr_us.txt']"><b>{{ file }}</b></div>
+                <div v-for="file in ['dbstr_us.txt', 'spells_us.txt']"><b>{{ file }}</b></div>
 
                 <div class="mt-3">
                   <b>Warning</b> Files will immediately overwrite all database values
                 </div>
 
-                <div class="mt-3 eq-header" v-if="successMessage" style="font-size: 42px">
+                <!-- Success -->
+                <div class="mt-3 eq-header fade-in" v-if="successMessage" style="font-size: 36px">
                   {{ successMessage }}
+                </div>
+                <div class="mt-3 fade-in" v-if="loading">
+                  <loader-fake-progess/>
                 </div>
               </div>
 
               <vue-dropzone
+                class="mt-4"
                 v-on:vdropzone-success="success"
                 v-on:vdropzone-queue-complete="queueComplete"
                 v-on:vdropzone-processing="processing"
@@ -32,16 +37,16 @@
 
           </div>
 
-          <div class="col-6">
-            <eq-window-simple title="File Downloads">
+          <div class="col-3">
+            <eq-window-simple title="File Downloads" class="p-3">
 
               <div class="row">
-                <div class="col-12 text-center">
+                <div class="col-12">
                   <div class="row">
                     <div class="col-12 mt-3">
                       <b-button
                         @click="downloadSpells()"
-                        class="ml-3"
+                        class="form-control"
                         size="sm"
                         variant="warning"
                       ><i class="fa fa-download"></i> Download Spells (spells_us.txt)
@@ -52,7 +57,7 @@
                     <div class="col-12">
                       <b-button
                         @click="downloadDbStr()"
-                        class="ml-3"
+                        class="form-control"
                         size="sm"
                         variant="warning"
                       ><i class="fa fa-download"></i> Download Database Strings (dbstr_us.txt)
@@ -73,15 +78,17 @@
 </template>
 
 <script>
-import vue2Dropzone     from 'vue2-dropzone'
+import vue2Dropzone      from 'vue2-dropzone'
 import 'vue2-dropzone/dist/vue2Dropzone.min.css'
-import {SpireApiClient} from "../../app/api/spire-api-client";
-import EqWindowSimple   from "../../components/eq-ui/EQWindowSimple";
-import EqWindow         from "../../components/eq-ui/EQWindow";
+import {SpireApiClient}  from "../../app/api/spire-api-client";
+import EqWindowSimple    from "../../components/eq-ui/EQWindowSimple";
+import EqWindow          from "../../components/eq-ui/EQWindow";
+import LoaderFakeProgess from "../../components/LoaderFakeProgress";
 
 export default {
   name: "ClientFiles.vue",
   components: {
+    LoaderFakeProgess,
     EqWindow,
     EqWindowSimple,
     vueDropzone: vue2Dropzone
@@ -89,6 +96,7 @@ export default {
   data: function () {
     return {
       successMessage: "",
+      loading: false,
 
       dropzoneOptions: {
         url: SpireApiClient.getBasePath() + "/api/v1/client-files/import/file",
@@ -112,6 +120,7 @@ export default {
     },
 
     success(file, response) {
+      this.loading = false
       console.log("file", file)
       console.log("response", response)
 
@@ -129,19 +138,21 @@ export default {
       console.log("complete")
     },
     processing(event) {
+      this.loading = true
       console.log("dropped")
       console.log(event)
     }
   }
 }
-</script>spells_us
+</script>
 
 <style>
 .vue-dropzone:hover, .vue-dropzone {
-  background-color: rgba(0, 0, 0, 0.1);
+  background-color: rgba(0, 0, 0, 0.6);
 }
 
 .dz-message {
+  font-size: 14px;
   background-color: #161a25;
   color: yellow;
 }
