@@ -4,10 +4,10 @@
       <div class="panel panel-default">
         <div class="row">
           <div class="col-6">
-            <eq-window-simple title="File Upload Dropzone">
+            <eq-window class="mt-5">
               <div class="mb-3 text-center" style="font-size: 16px">
-                <h3 class="mb-3 eq-header" style="font-size: 36px">
-                  Files that can be uploaded
+                <h3 class="mb-3 eq-header" style="font-size: 42px">
+                  File Upload Dropzone
                 </h3>
                 <div v-for="file in ['spells_us.txt', 'dbstr_us.txt']"><b>{{ file }}</b></div>
 
@@ -15,8 +15,8 @@
                   <b>Warning</b> Files will immediately overwrite all database values
                 </div>
 
-                <div class="mt-3" v-if="message" style="color: limegreen; font-weight: bold">
-                  {{ message }}
+                <div class="mt-3 eq-header" v-if="successMessage" style="font-size: 42px">
+                  {{ successMessage }}
                 </div>
               </div>
 
@@ -28,7 +28,7 @@
               ></vue-dropzone>
 
 
-            </eq-window-simple>
+            </eq-window>
 
           </div>
 
@@ -42,6 +42,7 @@
                       <b-button
                         @click="downloadSpells()"
                         class="ml-3"
+                        size="sm"
                         variant="warning"
                       ><i class="fa fa-download"></i> Download Spells (spells_us.txt)
                       </b-button>
@@ -52,6 +53,7 @@
                       <b-button
                         @click="downloadDbStr()"
                         class="ml-3"
+                        size="sm"
                         variant="warning"
                       ><i class="fa fa-download"></i> Download Database Strings (dbstr_us.txt)
                       </b-button>
@@ -75,15 +77,19 @@ import vue2Dropzone     from 'vue2-dropzone'
 import 'vue2-dropzone/dist/vue2Dropzone.min.css'
 import {SpireApiClient} from "../../app/api/spire-api-client";
 import EqWindowSimple   from "../../components/eq-ui/EQWindowSimple";
+import EqWindow         from "../../components/eq-ui/EQWindow";
 
 export default {
   name: "ClientFiles.vue",
   components: {
+    EqWindow,
     EqWindowSimple,
     vueDropzone: vue2Dropzone
   },
   data: function () {
     return {
+      successMessage: "",
+
       dropzoneOptions: {
         url: SpireApiClient.getBasePath() + "/api/v1/client-files/import/file",
         resizeWidth: 50,
@@ -93,32 +99,30 @@ export default {
         thumbnailMethod: "crop",
         // maxFilesize: 0.5,
         addRemoveLinks: true,
-
-        message: "",
       }
     }
   },
   methods: {
 
     downloadSpells() {
-      window.open(SpireApiClient.getBasePath() + "/api/v1/client-files/export/spells", '_self');
+      window.open(SpireApiClient.getBasePath() + "/api/v1/client-files/export/spells", '_blank');
     },
     downloadDbStr() {
-      window.open(SpireApiClient.getBasePath() + "/api/v1/client-files/export/dbstr", '_self');
+      window.open(SpireApiClient.getBasePath() + "/api/v1/client-files/export/dbstr", '_blank');
     },
 
     success(file, response) {
       console.log("file", file)
       console.log("response", response)
 
-      this.message = response
+      this.successMessage = response
 
       setTimeout(() => {
         this.$refs.myVueDropzone.removeAllFiles()
       }, 1000)
 
       setTimeout(() => {
-        this.message = ""
+        this.successMessage = ""
       }, 6000)
     },
     queueComplete() {
