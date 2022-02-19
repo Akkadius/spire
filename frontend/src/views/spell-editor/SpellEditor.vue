@@ -213,6 +213,7 @@
                     <div class="row">
                       <div class="col-12 text-center">
                         <div class="btn-group text-center mb-3" role="group">
+                          <b-button size="sm" variant="warning">Effect Slots</b-button>
                           <b-button
                             v-for="i in 12"
                             :key="i"
@@ -386,11 +387,11 @@
                     @click="processClickInputTrigger(field.field)"
                   >
                     <div class="col-6 text-right p-0 m-0 mr-3 mt-3" v-if="field.bool">
-                      <span v-if="field.category" class="font-weight-bold" style="color: yellow">{{field.category}}</span>
+                      <span v-if="field.category" class="font-weight-bold">{{field.category}}</span>
                       {{ field.description }}
                     </div>
                     <div class="col-6 text-right p-0 m-0 mr-3" v-if="!field.bool" style="margin-top: 10px !important">
-                      <span v-if="field.category" class="font-weight-bold" style="color: yellow">{{field.category}}</span>
+                      <span v-if="field.category" class="font-weight-bold">{{field.category}}</span>
                       {{ field.description }}
                     </div>
                     <div class="col-3 text-left p-0 mt-1">
@@ -1622,6 +1623,19 @@ export default {
         request.whereOr = wheresOrs.join(".")
       }
 
+      let sourceFields = [
+        'effect_base_value_',
+        'effect_limit_value_',
+        'max_',
+        'formula_'
+      ]
+
+      // clear
+      sourceFields.forEach((field) => {
+        this.spell[field + index] = 0
+        EditFormFieldUtil.clearFieldModifiedById(field + index)
+      })
+
       api.listSpellsNews(request).then(async (result) => {
         if (result.status === 200) {
           if (result.data.length > 0) {
@@ -1630,12 +1644,7 @@ export default {
             for (let i = 1; i <= 12; i++) {
               if (exampleData['effectid_' + i] === parseInt(spa)) {
 
-                let sourceFields = [
-                  'effect_base_value_',
-                  'effect_limit_value_',
-                  'max_',
-                  'formula_'
-                ]
+
 
                 // set current spell to example values
                 sourceFields.forEach((field) => {

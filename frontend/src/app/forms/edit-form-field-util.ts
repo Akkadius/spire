@@ -42,6 +42,13 @@ export class EditFormFieldUtil {
     }
   }
 
+  static clearFieldModifiedById(id) {
+    const target = document.getElementById(id)
+    if (target) {
+      target.classList.remove('pulsate-highlight-modified')
+    }
+  }
+
   static setFieldSubEditorHighlightedById(id) {
     const target = document.getElementById(id)
     if (target) {
