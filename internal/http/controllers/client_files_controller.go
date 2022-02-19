@@ -35,7 +35,8 @@ func NewClientFilesController(
 func (f *ClientFilesController) Routes() []*routes.Route {
 	return []*routes.Route{
 		routes.RegisterRoute(http.MethodGet, "client-files/export/spells", f.exportSpells, nil),
-		routes.RegisterRoute(http.MethodPost, "client-files/import/spells", f.importSpells, nil),
+		routes.RegisterRoute(http.MethodGet, "client-files/export/dbstr", f.exportDbStr, nil),
+		routes.RegisterRoute(http.MethodPost, "client-files/import/file", f.importFile, nil),
 	}
 }
 
@@ -63,7 +64,31 @@ func (f *ClientFilesController) exportSpells(c echo.Context) error {
 	return c.Attachment(filePath, "spells_us.txt")
 }
 
-func (f *ClientFilesController) importSpells(c echo.Context) error {
+func (f *ClientFilesController) exportDbStr(c echo.Context) error {
+	// todo, bubble error handling
+	// quick and dirty for now
+	contents := f.exporter.ExportDbStr()
+	folderPath := filepath.Join(os.TempDir(), "dbstr-export", randomString(10))
+	err := os.MkdirAll(folderPath, os.ModePerm)
+	if err != nil {
+		return c.JSON(
+			http.StatusInternalServerError,
+			echo.Map{"error": fmt.Sprintf("Error creating temp path [%v]", err.Error())},
+		)
+	}
+	filePath := filepath.Join(folderPath, "dbstr_us.txt")
+	err = os.WriteFile(filePath, []byte(contents), 0755)
+	if err != nil {
+		return c.JSON(
+			http.StatusInternalServerError,
+			echo.Map{"error": fmt.Sprintf("Error writing file [%v]", err.Error())},
+		)
+	}
+
+	return c.Attachment(filePath, "dbstr_us.txt")
+}
+
+func (f *ClientFilesController) importFile(c echo.Context) error {
 	file, err := c.FormFile("file")
 	if err != nil {
 		return err
@@ -75,14 +100,12 @@ func (f *ClientFilesController) importSpells(c echo.Context) error {
 	defer src.Close()
 
 	fileName := file.Filename
-	if !strings.Contains(fileName, "spells_us") {
+	if !strings.Contains(fileName, "spells_us") && !strings.Contains(fileName, "dbstr_us") {
 		return c.HTML(
 			http.StatusInternalServerError,
 			fmt.Sprintf("File not valid"),
 		)
 	}
-
-	//fmt.Println(fileName)
 
 	fileBytes, err := ioutil.ReadAll(src)
 	if err != nil {
@@ -93,15 +116,25 @@ func (f *ClientFilesController) importSpells(c echo.Context) error {
 	}
 
 	fileContents := string(fileBytes)
-	err = f.importer.ImportSpells(fileContents)
-	if err != nil {
-		return c.HTML(
-			http.StatusInternalServerError,
-			fmt.Sprintf("Error [%v]", err.Error()),
-		)
-	}
 
-	//fmt.Println(fileContents)
+	if strings.Contains(fileName, "spells_us") {
+		err = f.importer.ImportSpells(fileContents)
+		if err != nil {
+			return c.HTML(
+				http.StatusInternalServerError,
+				fmt.Sprintf("Error [%v]", err.Error()),
+			)
+		}
+	}
+	if strings.Contains(fileName, "dbstr_us") {
+		err = f.importer.ImportDbStr(fileContents)
+		if err != nil {
+			return c.HTML(
+				http.StatusInternalServerError,
+				fmt.Sprintf("Error [%v]", err.Error()),
+			)
+		}
+	}
 
 	return c.HTML(
 		http.StatusOK,
