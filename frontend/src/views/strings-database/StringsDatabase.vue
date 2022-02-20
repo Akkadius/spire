@@ -55,7 +55,7 @@
               <tbody>
               <tr
                 v-for="(row, index) in strings"
-                :key="row.id + row.type"
+                :key="row.id + '-' + row.type + '-' + index"
                 style="border-radius: 10px"
                 :class="isStringSelected(row) ? 'pulsate-highlight-white' : ''"
                 @click="selectString(row.id, row.type)"
@@ -77,7 +77,9 @@
           <div class="mt-3">
             ID
             <b-input
-              v-model="selectedStringObject.id"
+              v-model.number="selectedStringObject.id"
+              @keydown="updateSelectedString('id')"
+              id="selected_id"
             />
           </div>
 
@@ -87,8 +89,23 @@
               v-model="selectedStringObject.value"
               placeholder="Enter something..."
               style="height: 300px"
+              id="selected_value"
+              @keydown="updateSelectedString('value')"
             />
           </div>
+
+          <b-button
+            v-if="showSave"
+            @click="saveSelectedString()"
+            size="sm"
+            class="mt-3"
+            variant="outline-warning"
+          >
+            <i class="fa fa-save"></i>
+            Save
+          </b-button>
+
+          <b-alert show variant="warning" v-if="error" class="mt-4 mb-0">{{ error }}</b-alert>
 
         </eq-window-simple>
 
@@ -107,18 +124,20 @@
 </template>
 
 <script>
-import EqWindowSimple     from "../../components/eq-ui/EQWindowSimple";
-import EqAutoTable        from "../../components/eq-ui/EQAutoTable";
-import ContentArea        from "../../components/layout/ContentArea";
-import {DbStrApi}         from "../../app/api";
-import {SpireApiClient}   from "../../app/api/spire-api-client";
-import LoaderFakeProgress from "../../components/LoaderFakeProgress";
-import {ROUTE}            from "../../routes";
-import {DB_STR_TYPES}     from "../../app/constants/eq-db-str-constants";
+import EqWindowSimple      from "../../components/eq-ui/EQWindowSimple";
+import EqAutoTable         from "../../components/eq-ui/EQAutoTable";
+import ContentArea         from "../../components/layout/ContentArea";
+import {DbStrApi}          from "../../app/api";
+import {SpireApiClient}    from "../../app/api/spire-api-client";
+import LoaderFakeProgress  from "../../components/LoaderFakeProgress";
+import {ROUTE}             from "../../routes";
+import {DB_STR_TYPES}      from "../../app/constants/eq-db-str-constants";
+import {EditFormFieldUtil} from "../../app/forms/edit-form-field-util";
 
 // api response cache of all strings
 // this does not need to be reactive so don't put in data()
-let allStrings = []
+let allStrings       = []
+const DbStrApiClient = (new DbStrApi(SpireApiClient.getOpenApiConfig()))
 
 export default {
   name: "StringsDatabase",
@@ -139,7 +158,11 @@ export default {
       // for the sub selector pane on the right
       subSelectedId: -1,
       subSelectedType: -1,
+      showSave: false,
 
+      error: "",
+
+      originalSelectedStringObject: {},
       selectedStringObject: {},
 
       loading: false, // are we loading or not
@@ -158,19 +181,21 @@ export default {
 
   methods: {
 
-
     /**
      * Resets
      */
     reset() {
-      this.selectedType         = -1
-      this.subSelectedId        = -1
-      this.subSelectedType      = -1
-      this.selectedStringObject = {}
+      this.selectedType                 = -1
+      this.subSelectedId                = -1
+      this.subSelectedType              = -1
+      this.originalSelectedStringObject = {}
+      this.selectedStringObject         = {}
     },
     resetSelections() {
       this.subSelectedId   = -1;
       this.subSelectedType = -1;
+      this.error           = ""
+      this.showSave        = false
     },
 
     /**
@@ -241,6 +266,45 @@ export default {
       return ""
     },
 
+    async updateSelectedString(field) {
+      EditFormFieldUtil.setFieldModifiedById("selected_" + field)
+
+      this.showSave = true
+    },
+    async saveSelectedString() {
+
+      try {
+        const response = await DbStrApiClient.updateDbStr(
+          {
+            id: parseInt(this.originalSelectedStringObject.id),
+            dbStr: this.selectedStringObject
+          },
+          {
+            params: {
+              where: "type__" + this.selectedType
+            }
+          }
+        )
+
+        // success
+        if (response.status === 200 && response.data) {
+          this.resetSelections()
+          this.updateQueryState()
+          this.init(true)
+        }
+
+      } catch (err) {
+
+        // error
+        if (err.response !== 200 && err.response.data.error) {
+          console.log("error")
+          this.error = err.response.data.error
+        }
+
+      }
+
+    },
+
     /**
      * Sub editor selection
      */
@@ -248,13 +312,16 @@ export default {
       return this.subSelectedId >= 0 && this.subSelectedType >= 0
     },
     getSelectedStringObject() {
-      return allStrings.find((s) => s.type === this.subSelectedType && s.id === this.subSelectedId)
+      let r = allStrings.find((s) => s.type === this.subSelectedType && s.id === this.subSelectedId)
+
+      return typeof r === 'undefined' ? {} : r
     },
 
     selectString(stringId, typeId) {
-      this.subSelectedId        = stringId
-      this.subSelectedType      = typeId
-      this.selectedStringObject = this.getSelectedStringObject()
+      this.subSelectedId                = stringId
+      this.subSelectedType              = typeId
+      this.originalSelectedStringObject = JSON.parse(JSON.stringify(this.getSelectedStringObject()))
+      this.selectedStringObject         = this.getSelectedStringObject()
       this.updateQueryState()
     },
 
@@ -265,20 +332,21 @@ export default {
     /**
      * Initialize
      */
-    async init() {
+    async init(reset = false) {
       this.reset()
       this.loadQueryState()
-      if (allStrings && allStrings.length === 0) {
+      if (allStrings && allStrings.length === 0 || reset) {
         allStrings = await this.getAllDbStrings()
       }
       this.calculateStringTypeCounts(allStrings)
-      this.selectedStringObject = this.getSelectedStringObject()
+      this.originalSelectedStringObject = JSON.parse(JSON.stringify(this.getSelectedStringObject()))
+      this.selectedStringObject         = this.getSelectedStringObject()
       this.listData()
     },
 
     async getAllDbStrings() {
-      const api      = (new DbStrApi(SpireApiClient.getOpenApiConfig()))
-      const response = await api.listDbStrs()
+      // {orderBy: "id.type"}
+      const response = await DbStrApiClient.listDbStrs()
       if (response.status === 200 && response.data) {
         return response.data
       }
