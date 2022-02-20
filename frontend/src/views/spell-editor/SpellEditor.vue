@@ -23,7 +23,7 @@
               <!-- Loader -->
               <app-loader :is-loading="!spell" padding="5"/>
               <div v-if="!spell" class="mt-3 text-center">
-                <loader-fake-progess/>
+                <loader-fake-progress/>
               </div>
 
               <eq-tabs
@@ -1347,7 +1347,7 @@ import SpellCastingAnimationSelector from "./components/SpellCastingAnimationSel
 import {SPELL_SPA_DEFINITIONS}       from "../../app/constants/eq-spell-spa-definitions";
 import LoaderCastBarTimer            from "../../components/LoaderCastBarTimer";
 import {EditFormFieldUtil}           from "../../app/forms/edit-form-field-util";
-import LoaderFakeProgess             from "../../components/LoaderFakeProgress";
+import LoaderFakeProgress             from "../../components/LoaderFakeProgress";
 import SpellSpellEffectSelector      from "./components/SpellSpellEffectSelector";
 import {debounce}                    from "../../app/utility/debounce";
 import EqWindowSimple                from "../../components/eq-ui/EQWindowSimple";
@@ -1365,7 +1365,7 @@ export default {
     SpellConeVisualizer,
     EqWindowSimple,
     SpellSpellEffectSelector,
-    LoaderFakeProgess,
+    LoaderFakeProgress,
     LoaderCastBarTimer,
     SpellCastingAnimationSelector,
     SpellCastingAnimationPreview,

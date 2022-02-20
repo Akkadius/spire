@@ -55,7 +55,7 @@
         <div class="mb-3">
           {{ renderingImages ? 'Rendering images...' : 'Loading images...'}}
         </div>
-        <loader-fake-progess v-if="!loaded && !renderingImages"/>
+        <loader-fake-progress v-if="!loaded && !renderingImages"/>
         <eq-progress-bar :percent="100" v-if="renderingImages"/>
       </div>
 
@@ -101,7 +101,7 @@ import {App}                 from "@/constants/app";
 import EqWindow              from "@/components/eq-ui/EQWindow";
 import {ROUTE}               from "../../routes";
 import EqWindowSimple        from "../../components/eq-ui/EQWindowSimple";
-import LoaderFakeProgess     from "../../components/LoaderFakeProgress";
+import LoaderFakeProgress     from "../../components/LoaderFakeProgress";
 import EqProgressBar         from "../../components/eq-ui/EQProgressBar";
 
 const baseUrl         = App.ASSET_CDN_BASE_URL + "assets/objects/";
@@ -111,7 +111,7 @@ let itemModelExists   = {};
 let modelFiles        = {};
 
 export default {
-  components: { EqProgressBar, LoaderFakeProgess, EqWindowSimple, EqWindow, PageHeader },
+  components: { EqProgressBar, LoaderFakeProgress, EqWindowSimple, EqWindow, PageHeader },
   data() {
     return {
       itemSlotSearch: 0,

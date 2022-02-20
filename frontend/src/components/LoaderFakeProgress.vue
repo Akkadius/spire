@@ -6,7 +6,7 @@
 import EqProgressBar from "./eq-ui/EQProgressBar";
 
 export default {
-  name: 'loader-fake-progess',
+  name: 'loader-fake-progress',
   data() {
     return {
       progress: 0,
