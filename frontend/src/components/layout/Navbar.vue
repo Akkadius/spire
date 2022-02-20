@@ -88,16 +88,13 @@
 
         <!-- Navigation -->
         <ul class="navbar-nav mb-md-4">
-          <nav-section-component :config="viewerNav"/>
           <nav-section-component :config="calculatorNav"/>
-        </ul>
-
-        <h6 class="navbar-heading">
-          Tools
-        </h6>
-
-        <!-- Navigation -->
-        <ul class="navbar-nav mb-md-4">
+          <li class="nav-item">
+            <router-link class="nav-link " to="/client-files">
+              <i class="ra ra-cycle mr-1"></i> Client Files
+              <b-badge class="ml-3" variant="primary">NEW!</b-badge>
+            </router-link>
+          </li>
           <li class="nav-item">
             <router-link class="nav-link " to="/items">
               <i class="ra ra-relic-blade mr-1"></i> Items
@@ -110,12 +107,7 @@
               <b-badge class="ml-3" variant="primary">NEW!</b-badge>
             </router-link>
           </li>
-          <li class="nav-item">
-            <router-link class="nav-link " to="/client-files">
-              <i class="ra ra-cycle mr-1"></i> Client Files
-              <b-badge class="ml-3" variant="primary">NEW!</b-badge>
-            </router-link>
-          </li>
+          <nav-section-component :config="viewerNav"/>
         </ul>
 
         <!-- Heading -->
