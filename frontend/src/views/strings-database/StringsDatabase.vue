@@ -5,7 +5,7 @@
 
         <eq-window-simple title="Strings Database">
           <div class="row">
-            <div class="col-12 text-center">
+            <div :class="(selectedType >= 0 ? 'col-10' : 'col-12') + ' text-center'">
               Type
               <b-form-select
                 v-model.number="selectedType"
@@ -23,12 +23,28 @@
               </b-form-select>
             </div>
 
-            <!--            <span-->
-            <!--              class="font-weight-bold mt-5 ml-3"-->
-            <!--              v-if="strings && strings.length > 0 && !loading && !isSubEditActive()"-->
-            <!--            >-->
-            <!--              Select a row to edit-->
-            <!--            </span>-->
+            <div class="col-2 " v-if="selectedType >= 0">
+              <b-button
+                @click="createString()"
+                class="mt-5"
+                size="sm"
+                variant="outline-warning"
+              >
+                <i class="fa fa-plus"></i>
+                Create
+              </b-button>
+            </div>
+
+          </div>
+
+          <div class="row">
+            <div
+              class="col-12 text-center font-weight-bold mt-3"
+              v-if="strings && strings.length > 0 && !loading && !isSubEditActive()"
+            >
+              Select a row to edit
+            </div>
+
           </div>
 
           <loader-fake-progress v-if="loading"/>
@@ -38,6 +54,7 @@
         <eq-window-simple
           style="height: 80vh; overflow-y: scroll; overflow-x: hidden"
           class="mt-3"
+          id="db-strings-list"
           v-if="strings && strings.length > 0 && !loading"
         >
 
@@ -59,6 +76,7 @@
                 style="border-radius: 10px"
                 :class="isStringSelected(row) ? 'pulsate-highlight-white' : ''"
                 @click="selectString(row.id, row.type)"
+                :id="'string-' + row.id"
               >
                 <td>{{ row.id }}</td>
                 <td>{{ row.value }}</td>
@@ -95,7 +113,6 @@
           </div>
 
           <b-button
-            v-if="showSave"
             @click="saveSelectedString()"
             size="sm"
             class="mt-3"
@@ -105,7 +122,17 @@
             Save
           </b-button>
 
-          <b-alert show variant="warning" v-if="error" class="mt-4 mb-0">{{ error }}</b-alert>
+          <b-button
+            @click="deleteSelectedString()"
+            size="sm"
+            class="mt-3 ml-3"
+            variant="outline-danger"
+          >
+            <i class="fa fa-trash"></i>
+            Delete
+          </b-button>
+
+          <b-alert show variant="warning" v-if="message" class="mt-4 mb-0 fade-in">{{ message }}</b-alert>
 
         </eq-window-simple>
 
@@ -133,6 +160,7 @@ import LoaderFakeProgress  from "../../components/LoaderFakeProgress";
 import {ROUTE}             from "../../routes";
 import {DB_STR_TYPES}      from "../../app/constants/eq-db-str-constants";
 import {EditFormFieldUtil} from "../../app/forms/edit-form-field-util";
+import util                from "util";
 
 // api response cache of all strings
 // this does not need to be reactive so don't put in data()
@@ -158,9 +186,8 @@ export default {
       // for the sub selector pane on the right
       subSelectedId: -1,
       subSelectedType: -1,
-      showSave: false,
 
-      error: "",
+      message: "",
 
       originalSelectedStringObject: {},
       selectedStringObject: {},
@@ -194,8 +221,7 @@ export default {
     resetSelections() {
       this.subSelectedId   = -1;
       this.subSelectedType = -1;
-      this.error           = ""
-      this.showSave        = false
+      this.message         = ""
     },
 
     /**
@@ -266,10 +292,95 @@ export default {
       return ""
     },
 
+    async createString() {
+      console.log("create")
+
+      // filter list by type
+      let r = allStrings.filter((s) => s.type === parseInt(this.subSelectedType))
+        .sort((a, b) => (a.id > b.id) ? 1 : -1)
+
+      // grab last id + 1 from list
+      const newId = r[r.length - 1].id + 1
+
+      // create
+      try {
+        const response = await DbStrApiClient.createDbStr(
+          {
+            dbStr: {
+              id: newId,
+              type: parseInt(this.subSelectedType),
+              value: ""
+            }
+          }
+        )
+
+        // success
+        if (response.status === 200 && response.data) {
+          this.resetSelections()
+          this.updateQueryState()
+          this.selectString(newId, this.subSelectedType)
+          this.init(true)
+        }
+      } catch (err) {
+        if (err.response !== 200 && err.response.data.error) {
+          this.message = err.response.data.error
+        }
+      }
+    },
+
+    async deleteSelectedString() {
+      if (confirm("Are you sure you want to delete this string?")) {
+        try {
+          const response = await DbStrApiClient.deleteDbStr(
+            {
+              id: parseInt(this.subSelectedId)
+            },
+            {
+              params: {
+                where: "type__" + this.selectedType
+              }
+            }
+          )
+
+          // success
+          if (response.status === 200 && response.data) {
+
+            // get last element in current list and select it after deletion
+            let r = allStrings.filter((s) => s.type === parseInt(this.subSelectedType))
+              .sort((a, b) => (a.id > b.id) ? 1 : -1)
+
+            let lastElement = {}
+
+            // grab last element and select
+            if (r && r.length > 0) {
+              lastElement = r[r.length - 1]
+              // if we deleted the last element, let's fallback to next in line...
+              if (parseInt(lastElement.id) === parseInt(this.subSelectedId)) {
+                if (r[r.length - 2]) {
+                  lastElement = r[r.length - 2]
+                }
+              }
+            }
+
+            this.resetSelections()
+            this.updateQueryState()
+
+            if (lastElement) {
+              this.selectString(lastElement.id, this.subSelectedType)
+            }
+
+            this.init(true)
+          }
+        } catch (err) {
+          if (err.response !== 200 && err.response.data.error) {
+            this.message = err.response.data.error
+          }
+        }
+      }
+    },
+
     async updateSelectedString(field) {
       EditFormFieldUtil.setFieldModifiedById("selected_" + field)
-
-      this.showSave = true
     },
     async saveSelectedString() {
 
@@ -288,19 +399,20 @@ export default {
 
         // success
         if (response.status === 200 && response.data) {
-          this.resetSelections()
+          EditFormFieldUtil.resetFieldEditedStatus()
+
           this.updateQueryState()
           this.init(true)
+          this.message = "Saved successfully!"
+          setTimeout(() => {
+            this.message = ""
+          }, 6000)
         }
 
       } catch (err) {
-
-        // error
         if (err.response !== 200 && err.response.data.error) {
-          console.log("error")
-          this.error = err.response.data.error
+          this.message = err.response.data.error
         }
-
       }
 
     },
@@ -368,6 +480,18 @@ export default {
   },
   mounted() {
     this.init()
+
+    requestAnimationFrame(() => {
+      setTimeout(() => {
+        const container = document.getElementById("db-strings-list");
+        const target    = document.getElementById(util.format("string-%s", this.subSelectedId))
+
+        if (container && target) {
+          const top           = target.getBoundingClientRect().top
+          container.scrollTop = top - 200;
+        }
+      }, 500)
+    })
   }
 }
 </script>

@@ -8,7 +8,7 @@ export class EditFormFieldUtil {
   }
 
   static resetFieldHighlightHasSubEditorStatus() {
-    document.querySelectorAll("input, select").forEach((element) => {
+    document.querySelectorAll("input, select, textarea").forEach((element) => {
       if (element && element.classList.contains('pulsate-highlight-green')) {
         element.classList.remove('pulsate-highlight-green')
       }
@@ -16,7 +16,7 @@ export class EditFormFieldUtil {
   }
 
   static resetFieldSubEditorHighlightedStatus() {
-    document.querySelectorAll("input, select").forEach((element) => {
+    document.querySelectorAll("input, select, textarea").forEach((element) => {
       if (element && element.classList.contains('pulsate-highlight-white')) {
         element.classList.remove('pulsate-highlight-white')
       }
@@ -24,7 +24,7 @@ export class EditFormFieldUtil {
   }
 
   static resetFieldEditedStatus() {
-    document.querySelectorAll("input, select").forEach((element) => {
+    document.querySelectorAll("input, select, textarea").forEach((element) => {
       if (element && element.classList.contains('pulsate-highlight-modified')) {
         element.classList.remove('pulsate-highlight-modified')
       }
