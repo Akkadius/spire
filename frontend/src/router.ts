@@ -50,6 +50,11 @@ export default new Router({
           meta: {title: "Client Files"},
         },
         {
+          path: ROUTE.STRINGS_DATABASE,
+          component: () => import('./views/strings-database/StringsDatabase.vue'),
+          meta: {title: "Strings Database (dbstr)"},
+        },
+        {
           path: ROUTE.EMITTER_VIEWER,
           component: () => import('./views/viewers/EmitterViewer.vue'),
           meta: {title: "Emitter Viewer"},

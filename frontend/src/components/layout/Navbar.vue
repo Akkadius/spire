@@ -102,6 +102,12 @@
             </router-link>
           </li>
           <li class="nav-item">
+            <router-link class="nav-link " to="/strings-database">
+              <i class="ra ra-book mr-1"></i> Strings DB (dbstr)
+              <b-badge class="ml-3" variant="primary">NEW!</b-badge>
+            </router-link>
+          </li>
+          <li class="nav-item">
             <router-link class="nav-link " to="/spells">
               <i class="ra ra-book mr-1"></i> Spells
               <b-badge class="ml-3" variant="primary">NEW!</b-badge>

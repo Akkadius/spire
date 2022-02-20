@@ -20,7 +20,7 @@
                   {{ successMessage }}
                 </div>
                 <div class="mt-3 fade-in" v-if="loading">
-                  <loader-fake-progess/>
+                  <loader-fake-progress/>
                 </div>
               </div>
 
@@ -83,12 +83,12 @@ import 'vue2-dropzone/dist/vue2Dropzone.min.css'
 import {SpireApiClient}  from "../../app/api/spire-api-client";
 import EqWindowSimple    from "../../components/eq-ui/EQWindowSimple";
 import EqWindow          from "../../components/eq-ui/EQWindow";
-import LoaderFakeProgess from "../../components/LoaderFakeProgress";
+import LoaderFakeProgress from "../../components/LoaderFakeProgress";
 
 export default {
   name: "ClientFiles.vue",
   components: {
-    LoaderFakeProgess,
+    LoaderFakeProgress,
     EqWindow,
     EqWindowSimple,
     vueDropzone: vue2Dropzone
