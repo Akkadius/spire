@@ -253,9 +253,9 @@
                       </template>
 
                       <b-form-select
-                        @mouseover.native="drawSpaDetailPane(spell['effectid_' + i], i)"
                         :id="'effectid_' + i"
-                        @change="getSpaDefaultValues(spell['effectid_' + i], i)"
+                        @mouseover.native="drawSpaDetailPane(spell['effectid_' + i], i)"
+                        @change="getSpaDefaultValues(spell['effectid_' + i], i); drawSpaDetailPane(spell['effectid_' + i], i)"
                         v-model.number="spell['effectid_' + i]"
                         style="width: 150px"
                       >
@@ -1657,7 +1657,6 @@ export default {
           }
         }
       });
-
     },
 
     load() {

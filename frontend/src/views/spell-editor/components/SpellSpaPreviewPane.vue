@@ -62,6 +62,9 @@ export default {
   watch: {
     'effectIndex'() {
       this.load()
+    },
+    'spa'() {
+      this.load()
     }
   },
   created() {
