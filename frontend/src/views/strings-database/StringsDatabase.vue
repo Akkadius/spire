@@ -106,7 +106,8 @@
             <b-form-textarea
               v-model="selectedStringObject.value"
               placeholder="Enter something..."
-              style="height: 300px"
+              rows="5"
+              max-rows="20"
               id="selected_value"
               @keydown="updateSelectedString('value')"
             />
