@@ -93,8 +93,6 @@
               </eq-window-simple>
 
               <range-visualizer :unit-marker="rangeVisual" class="mt-3"/>
-<!--              <range-visualizer :unit-marker="87" class="mt-3"/>-->
-<!--              <range-visualizer :unit-marker="400" class="mt-3"/>-->
 
               <!-- Item Preview -->
               <div class="header mt-md-1">
@@ -135,7 +133,12 @@
 
               <div class="row">
                 <!-- Spell Preview -->
-                <div v-for="(spell, index) in spells" :key="index" style="display: inline-block; vertical-align: top" class="col-5">
+                <div
+                  v-for="(spell, index) in spells"
+                  :key="index"
+                  style="display: inline-block; vertical-align: top"
+                  class="col-5"
+                >
                   <eq-window style="margin-right: 10px; width: auto; height: 90%">
                     <eq-spell-preview :spell-data="spell"/>
                   </eq-window>
@@ -161,13 +164,15 @@
                   <npc-special-abilities
                     show-special-abilities-result="1"
                     :inputData.sync="specialAbilityInput"
-                    :abilities="specialAbilityInput"/>
+                    :abilities="specialAbilityInput"
+                  />
 
                   <h4 class="eq-header mt-4">Special Abilities Input</h4>
                   <input
                     type="text"
                     class="form-control mb-5 mt-4"
-                    v-model="specialAbilityInput">
+                    v-model="specialAbilityInput"
+                  >
 
                   The input is two-way bound with the special abilities editor
                 </eq-window>
@@ -428,8 +433,8 @@
 <script>
 // @ is an alias to /src
 
-import EqWindowSimple from "@/components/eq-ui/EQWindowSimple";
-import EqWindowFancy from "@/components/eq-ui/EQWindowFancy";
+import EqWindowSimple       from "@/components/eq-ui/EQWindowSimple";
+import EqWindowFancy        from "@/components/eq-ui/EQWindowFancy";
 import EqWindowComplex      from "@/components/eq-ui/EQWindowComplex";
 import EqWindow             from "@/components/eq-ui/EQWindow";
 import EqTabs               from "@/components/eq-ui/EQTabs";
