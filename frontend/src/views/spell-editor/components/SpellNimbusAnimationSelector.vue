@@ -12,7 +12,7 @@
         v-on:scroll="handleRender"
         id="spell-video-view-port"
       >
-        <div class="col-12">
+        <div class="col-12 mt-3">
           <div v-if="filteredAnimations && filteredAnimations.length === 0">
             No animations found...
           </div>
