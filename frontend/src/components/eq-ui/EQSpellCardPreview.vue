@@ -72,7 +72,9 @@
         <td> {{ spellData["spell_fades"] }}</td>
       </tr>
 
-      <tr v-if="spellData['typedescnum'] !== ''">
+      <tr
+        v-if="spellData['typedescnum'] !== '' && getSpellTypeDescNumName(spellData['typedescnum']) !== '' && getSpellTypeDescNumName(spellData['effectdescnum']) !== ''"
+      >
         <td class="spell-field-label">Book Category</td>
         <td> {{ getSpellTypeDescNumName(spellData["typedescnum"]) }}
           <span v-if="spellData['effectdescnum'] !== ''"> / {{
@@ -425,8 +427,6 @@ import {
   DB_SPELL_TARGETS,
   DB_SPELL_TYPEDESCNUM
 }                         from "@/app/constants/eq-spell-constants";
-import {SpellsNewApi}     from "@/app/api";
-import {SpireApiClient}   from "@/app/api/spire-api-client";
 import EqWindow           from "@/components/eq-ui/EQWindow";
 import EqDebug            from "@/components/eq-ui/EQDebug";
 import {Spells}           from "@/app/spells";
