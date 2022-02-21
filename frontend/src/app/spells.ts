@@ -3121,7 +3121,7 @@ export class Spells {
       'recast_time': 'Sets recast delay on the spell gem used in casting.',
       'buffdurationformula': 'Determines actual buff duration.',
       'buffduration': 'Duration of the buff in tics, 1 tic = 6 seconds.',
-      'ae_duration': 'Number of rain wave is, 1 wave = 2500. Use target type 8.',
+      'ae_duration': 'Number of rain wave is, 1 wave = 2500.',
       'mana': 'How much mana is required to cast this spell.',
       'effect_base_value_1': '',
       'effect_base_value_2': '',
