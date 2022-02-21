@@ -547,7 +547,7 @@
                              bool: true
                            },
                            {
-                             description: 'Only During Fast Regen (Allow Rest)',
+                             description: 'Detrimental Spell Allows Rest',
                              field: 'allowrest',
                              bool: true
                            },
