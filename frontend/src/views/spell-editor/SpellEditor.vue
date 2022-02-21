@@ -208,7 +208,7 @@
 
                 </eq-tab>
 
-                <eq-tab name="Description">
+                <eq-tab name="Description" class="minified-inputs">
                   <div
                     class="row" v-for="field in
                      [
@@ -821,7 +821,7 @@
                     :key="field.field"
                     v-if="typeof field.showIf === 'undefined' || (typeof field.showIf !== 'undefined' && field.showIf) || showAllFields"
                   >
-                    <div class="col-6 text-right p-0 m-0 mr-3 mt-3" v-if="field.bool">
+                    <div class="col-6 text-right p-0 m-0 mr-3" v-if="field.bool">
                       {{ field.description }}
                     </div>
                     <div class="col-6 text-right p-0 m-0 mr-3" v-if="!field.bool" style="margin-top: 10px !important">
@@ -834,7 +834,7 @@
                       <!-- checkbox -->
                       <eq-checkbox
                         v-b-tooltip.hover.v-dark.lefttop :title="getFieldDescription(field.field)"
-                        class="mb-1 mt-3 d-inline-block"
+                        class="mb-1 d-inline-block"
                         :true-value="(typeof field.true !== 'undefined' ? field.true : 1)"
                         :false-value="(typeof field.false !== 'undefined' ? field.false : 0)"
                         v-model.number="spell[field.field]"
