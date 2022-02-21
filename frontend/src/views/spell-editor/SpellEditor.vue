@@ -598,6 +598,11 @@
                            {
                              description: 'Time of Day',
                              field: 'time_of_day',
+                             selectData: {
+                               0: 'Any Time',
+                               1: 'Day Time',
+                               2: 'Night Time',
+                             }
                            },
                            {
                              description: 'PC or NPC Only',
