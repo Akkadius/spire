@@ -2923,6 +2923,329 @@
                 }
             }
         },
+        "/book": {
+            "put": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Book"
+                ],
+                "summary": "Creates Book",
+                "operationId": "createBook",
+                "parameters": [
+                    {
+                        "description": "Book",
+                        "name": "book",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.Book"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.Book"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Error inserting entity",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/book/{id}": {
+            "get": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Book"
+                ],
+                "summary": "Gets Book",
+                "operationId": "getBook",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names ",
+                        "name": "includes",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Column names [.] separated to fetch specific fields in response",
+                        "name": "select",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.Book"
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Entity not found",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Bad query request",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Book"
+                ],
+                "summary": "Deletes Book",
+                "operationId": "deleteBook",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Entity deleted successfully",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "404": {
+                        "description": "Cannot find entity",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Error deleting entity",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            },
+            "patch": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Book"
+                ],
+                "summary": "Updates Book",
+                "operationId": "updateBook",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Book",
+                        "name": "book",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.Book"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.Book"
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Cannot find entity",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Error updating entity",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/books": {
+            "get": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Book"
+                ],
+                "summary": "Lists Books",
+                "operationId": "listBooks",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names ",
+                        "name": "includes",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Filter on specific fields. Multiple conditions [.] separated Example: col_like_value.col2__val2",
+                        "name": "where",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Filter on specific fields (Chained ors). Multiple conditions [.] separated Example: col_like_value.col2__val2",
+                        "name": "whereOr",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Group by field. Multiple conditions [.] separated Example: field1.field2",
+                        "name": "groupBy",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Rows to limit in response (Default: 10,000)",
+                        "name": "limit",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Order by [field]",
+                        "name": "orderBy",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Order by field direction",
+                        "name": "orderDirection",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Column names [.] separated to fetch specific fields in response",
+                        "name": "select",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.Book"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Bad query request",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/books/bulk": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Book"
+                ],
+                "summary": "Gets Books in bulk",
+                "operationId": "getBooksBulk",
+                "parameters": [
+                    {
+                        "description": "body",
+                        "name": "Body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/crudcontrollers.BulkFetchByIdsGetRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.Book"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Bad query request",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
         "/bug": {
             "put": {
                 "consumes": [
@@ -7122,6 +7445,329 @@
                 }
             }
         },
+        "/character_instance_safereturn": {
+            "put": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "CharacterInstanceSafereturn"
+                ],
+                "summary": "Creates CharacterInstanceSafereturn",
+                "operationId": "createCharacterInstanceSafereturn",
+                "parameters": [
+                    {
+                        "description": "CharacterInstanceSafereturn",
+                        "name": "character_instance_safereturn",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.CharacterInstanceSafereturn"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.CharacterInstanceSafereturn"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Error inserting entity",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/character_instance_safereturn/{id}": {
+            "get": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "CharacterInstanceSafereturn"
+                ],
+                "summary": "Gets CharacterInstanceSafereturn",
+                "operationId": "getCharacterInstanceSafereturn",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names ",
+                        "name": "includes",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Column names [.] separated to fetch specific fields in response",
+                        "name": "select",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.CharacterInstanceSafereturn"
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Entity not found",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Bad query request",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "CharacterInstanceSafereturn"
+                ],
+                "summary": "Deletes CharacterInstanceSafereturn",
+                "operationId": "deleteCharacterInstanceSafereturn",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Entity deleted successfully",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "404": {
+                        "description": "Cannot find entity",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Error deleting entity",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            },
+            "patch": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "CharacterInstanceSafereturn"
+                ],
+                "summary": "Updates CharacterInstanceSafereturn",
+                "operationId": "updateCharacterInstanceSafereturn",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "CharacterInstanceSafereturn",
+                        "name": "character_instance_safereturn",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.CharacterInstanceSafereturn"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.CharacterInstanceSafereturn"
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Cannot find entity",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Error updating entity",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/character_instance_safereturns": {
+            "get": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "CharacterInstanceSafereturn"
+                ],
+                "summary": "Lists CharacterInstanceSafereturns",
+                "operationId": "listCharacterInstanceSafereturns",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names ",
+                        "name": "includes",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Filter on specific fields. Multiple conditions [.] separated Example: col_like_value.col2__val2",
+                        "name": "where",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Filter on specific fields (Chained ors). Multiple conditions [.] separated Example: col_like_value.col2__val2",
+                        "name": "whereOr",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Group by field. Multiple conditions [.] separated Example: field1.field2",
+                        "name": "groupBy",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Rows to limit in response (Default: 10,000)",
+                        "name": "limit",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Order by [field]",
+                        "name": "orderBy",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Order by field direction",
+                        "name": "orderDirection",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Column names [.] separated to fetch specific fields in response",
+                        "name": "select",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.CharacterInstanceSafereturn"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Bad query request",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/character_instance_safereturns/bulk": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "CharacterInstanceSafereturn"
+                ],
+                "summary": "Gets CharacterInstanceSafereturns in bulk",
+                "operationId": "getCharacterInstanceSafereturnsBulk",
+                "parameters": [
+                    {
+                        "description": "body",
+                        "name": "Body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/crudcontrollers.BulkFetchByIdsGetRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.CharacterInstanceSafereturn"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Bad query request",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
         "/character_item_recast": {
             "put": {
                 "consumes": [
@@ -9706,6 +10352,652 @@
                 }
             }
         },
+        "/character_task_timer": {
+            "put": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "CharacterTaskTimer"
+                ],
+                "summary": "Creates CharacterTaskTimer",
+                "operationId": "createCharacterTaskTimer",
+                "parameters": [
+                    {
+                        "description": "CharacterTaskTimer",
+                        "name": "character_task_timer",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.CharacterTaskTimer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.CharacterTaskTimer"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Error inserting entity",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/character_task_timer/{id}": {
+            "get": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "CharacterTaskTimer"
+                ],
+                "summary": "Gets CharacterTaskTimer",
+                "operationId": "getCharacterTaskTimer",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names ",
+                        "name": "includes",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Column names [.] separated to fetch specific fields in response",
+                        "name": "select",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.CharacterTaskTimer"
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Entity not found",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Bad query request",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "CharacterTaskTimer"
+                ],
+                "summary": "Deletes CharacterTaskTimer",
+                "operationId": "deleteCharacterTaskTimer",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Entity deleted successfully",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "404": {
+                        "description": "Cannot find entity",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Error deleting entity",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            },
+            "patch": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "CharacterTaskTimer"
+                ],
+                "summary": "Updates CharacterTaskTimer",
+                "operationId": "updateCharacterTaskTimer",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "CharacterTaskTimer",
+                        "name": "character_task_timer",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.CharacterTaskTimer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.CharacterTaskTimer"
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Cannot find entity",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Error updating entity",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/character_task_timers": {
+            "get": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "CharacterTaskTimer"
+                ],
+                "summary": "Lists CharacterTaskTimers",
+                "operationId": "listCharacterTaskTimers",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names ",
+                        "name": "includes",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Filter on specific fields. Multiple conditions [.] separated Example: col_like_value.col2__val2",
+                        "name": "where",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Filter on specific fields (Chained ors). Multiple conditions [.] separated Example: col_like_value.col2__val2",
+                        "name": "whereOr",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Group by field. Multiple conditions [.] separated Example: field1.field2",
+                        "name": "groupBy",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Rows to limit in response (Default: 10,000)",
+                        "name": "limit",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Order by [field]",
+                        "name": "orderBy",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Order by field direction",
+                        "name": "orderDirection",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Column names [.] separated to fetch specific fields in response",
+                        "name": "select",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.CharacterTaskTimer"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Bad query request",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/character_task_timers/bulk": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "CharacterTaskTimer"
+                ],
+                "summary": "Gets CharacterTaskTimers in bulk",
+                "operationId": "getCharacterTaskTimersBulk",
+                "parameters": [
+                    {
+                        "description": "body",
+                        "name": "Body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/crudcontrollers.BulkFetchByIdsGetRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.CharacterTaskTimer"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Bad query request",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/completed_shared_task": {
+            "put": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "CompletedSharedTask"
+                ],
+                "summary": "Creates CompletedSharedTask",
+                "operationId": "createCompletedSharedTask",
+                "parameters": [
+                    {
+                        "description": "CompletedSharedTask",
+                        "name": "completed_shared_task",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.CompletedSharedTask"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.CompletedSharedTask"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Error inserting entity",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/completed_shared_task/{id}": {
+            "get": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "CompletedSharedTask"
+                ],
+                "summary": "Gets CompletedSharedTask",
+                "operationId": "getCompletedSharedTask",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names ",
+                        "name": "includes",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Column names [.] separated to fetch specific fields in response",
+                        "name": "select",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.CompletedSharedTask"
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Entity not found",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Bad query request",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "CompletedSharedTask"
+                ],
+                "summary": "Deletes CompletedSharedTask",
+                "operationId": "deleteCompletedSharedTask",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Entity deleted successfully",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "404": {
+                        "description": "Cannot find entity",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Error deleting entity",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            },
+            "patch": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "CompletedSharedTask"
+                ],
+                "summary": "Updates CompletedSharedTask",
+                "operationId": "updateCompletedSharedTask",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "CompletedSharedTask",
+                        "name": "completed_shared_task",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.CompletedSharedTask"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.CompletedSharedTask"
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Cannot find entity",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Error updating entity",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/completed_shared_tasks": {
+            "get": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "CompletedSharedTask"
+                ],
+                "summary": "Lists CompletedSharedTasks",
+                "operationId": "listCompletedSharedTasks",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names ",
+                        "name": "includes",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Filter on specific fields. Multiple conditions [.] separated Example: col_like_value.col2__val2",
+                        "name": "where",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Filter on specific fields (Chained ors). Multiple conditions [.] separated Example: col_like_value.col2__val2",
+                        "name": "whereOr",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Group by field. Multiple conditions [.] separated Example: field1.field2",
+                        "name": "groupBy",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Rows to limit in response (Default: 10,000)",
+                        "name": "limit",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Order by [field]",
+                        "name": "orderBy",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Order by field direction",
+                        "name": "orderDirection",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Column names [.] separated to fetch specific fields in response",
+                        "name": "select",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.CompletedSharedTask"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Bad query request",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/completed_shared_tasks/bulk": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "CompletedSharedTask"
+                ],
+                "summary": "Gets CompletedSharedTasks in bulk",
+                "operationId": "getCompletedSharedTasksBulk",
+                "parameters": [
+                    {
+                        "description": "body",
+                        "name": "Body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/crudcontrollers.BulkFetchByIdsGetRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.CompletedSharedTask"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Bad query request",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
         "/content_flag": {
             "put": {
                 "consumes": [
@@ -11189,6 +12481,329 @@
                     },
                     "500": {
                         "description": "Error updating entity",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/dynamic_zone_member": {
+            "put": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "DynamicZoneMember"
+                ],
+                "summary": "Creates DynamicZoneMember",
+                "operationId": "createDynamicZoneMember",
+                "parameters": [
+                    {
+                        "description": "DynamicZoneMember",
+                        "name": "dynamic_zone_member",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.DynamicZoneMember"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.DynamicZoneMember"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Error inserting entity",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/dynamic_zone_member/{id}": {
+            "get": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "DynamicZoneMember"
+                ],
+                "summary": "Gets DynamicZoneMember",
+                "operationId": "getDynamicZoneMember",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names ",
+                        "name": "includes",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Column names [.] separated to fetch specific fields in response",
+                        "name": "select",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.DynamicZoneMember"
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Entity not found",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Bad query request",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "DynamicZoneMember"
+                ],
+                "summary": "Deletes DynamicZoneMember",
+                "operationId": "deleteDynamicZoneMember",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Entity deleted successfully",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "404": {
+                        "description": "Cannot find entity",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Error deleting entity",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            },
+            "patch": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "DynamicZoneMember"
+                ],
+                "summary": "Updates DynamicZoneMember",
+                "operationId": "updateDynamicZoneMember",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "DynamicZoneMember",
+                        "name": "dynamic_zone_member",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.DynamicZoneMember"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.DynamicZoneMember"
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Cannot find entity",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Error updating entity",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/dynamic_zone_members": {
+            "get": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "DynamicZoneMember"
+                ],
+                "summary": "Lists DynamicZoneMembers",
+                "operationId": "listDynamicZoneMembers",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names ",
+                        "name": "includes",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Filter on specific fields. Multiple conditions [.] separated Example: col_like_value.col2__val2",
+                        "name": "where",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Filter on specific fields (Chained ors). Multiple conditions [.] separated Example: col_like_value.col2__val2",
+                        "name": "whereOr",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Group by field. Multiple conditions [.] separated Example: field1.field2",
+                        "name": "groupBy",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Rows to limit in response (Default: 10,000)",
+                        "name": "limit",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Order by [field]",
+                        "name": "orderBy",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Order by field direction",
+                        "name": "orderDirection",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Column names [.] separated to fetch specific fields in response",
+                        "name": "select",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.DynamicZoneMember"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Bad query request",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/dynamic_zone_members/bulk": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "DynamicZoneMember"
+                ],
+                "summary": "Gets DynamicZoneMembers in bulk",
+                "operationId": "getDynamicZoneMembersBulk",
+                "parameters": [
+                    {
+                        "description": "body",
+                        "name": "Body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/crudcontrollers.BulkFetchByIdsGetRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.DynamicZoneMember"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Bad query request",
                         "schema": {
                             "type": "string"
                         }
@@ -15831,6 +17446,329 @@
                             "type": "array",
                             "items": {
                                 "$ref": "#/definitions/models.Hacker"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Bad query request",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/horse": {
+            "put": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Horse"
+                ],
+                "summary": "Creates Horse",
+                "operationId": "createHorse",
+                "parameters": [
+                    {
+                        "description": "Horse",
+                        "name": "horse",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.Horse"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.Horse"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Error inserting entity",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/horse/{id}": {
+            "get": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Horse"
+                ],
+                "summary": "Gets Horse",
+                "operationId": "getHorse",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names ",
+                        "name": "includes",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Column names [.] separated to fetch specific fields in response",
+                        "name": "select",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.Horse"
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Entity not found",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Bad query request",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Horse"
+                ],
+                "summary": "Deletes Horse",
+                "operationId": "deleteHorse",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Entity deleted successfully",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "404": {
+                        "description": "Cannot find entity",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Error deleting entity",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            },
+            "patch": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Horse"
+                ],
+                "summary": "Updates Horse",
+                "operationId": "updateHorse",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Horse",
+                        "name": "horse",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.Horse"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.Horse"
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Cannot find entity",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Error updating entity",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/horses": {
+            "get": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Horse"
+                ],
+                "summary": "Lists Horses",
+                "operationId": "listHorses",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names ",
+                        "name": "includes",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Filter on specific fields. Multiple conditions [.] separated Example: col_like_value.col2__val2",
+                        "name": "where",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Filter on specific fields (Chained ors). Multiple conditions [.] separated Example: col_like_value.col2__val2",
+                        "name": "whereOr",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Group by field. Multiple conditions [.] separated Example: field1.field2",
+                        "name": "groupBy",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Rows to limit in response (Default: 10,000)",
+                        "name": "limit",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Order by [field]",
+                        "name": "orderBy",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Order by field direction",
+                        "name": "orderDirection",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Column names [.] separated to fetch specific fields in response",
+                        "name": "select",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.Horse"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Bad query request",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/horses/bulk": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Horse"
+                ],
+                "summary": "Gets Horses in bulk",
+                "operationId": "getHorsesBulk",
+                "parameters": [
+                    {
+                        "description": "body",
+                        "name": "Body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/crudcontrollers.BulkFetchByIdsGetRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.Horse"
                             }
                         }
                     },
@@ -22981,6 +24919,329 @@
                 }
             }
         },
+        "/pet": {
+            "put": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Pet"
+                ],
+                "summary": "Creates Pet",
+                "operationId": "createPet",
+                "parameters": [
+                    {
+                        "description": "Pet",
+                        "name": "pet",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.Pet"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.Pet"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Error inserting entity",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/pet/{id}": {
+            "get": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Pet"
+                ],
+                "summary": "Gets Pet",
+                "operationId": "getPet",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names \u003ch4\u003eRelationships\u003c/h4\u003eNpcType\u003cbr\u003eNpcType.AlternateCurrency\u003cbr\u003eNpcType.Merchantlists\u003cbr\u003eNpcType.NpcEmotes\u003cbr\u003eNpcType.NpcFactions\u003cbr\u003eNpcType.NpcFactions.NpcFactionEntries\u003cbr\u003eNpcType.NpcSpells\u003cbr\u003eNpcType.NpcSpells.NpcSpellsEntries\u003cbr\u003eNpcType.NpcTypesTint\u003cbr\u003eNpcType.Spawnentries\u003cbr\u003eNpcType.Spawnentries.Spawngroup\u003cbr\u003eNpcType.Spawnentries.Spawngroup.Spawn2",
+                        "name": "includes",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Column names [.] separated to fetch specific fields in response",
+                        "name": "select",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.Pet"
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Entity not found",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Bad query request",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Pet"
+                ],
+                "summary": "Deletes Pet",
+                "operationId": "deletePet",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Entity deleted successfully",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "404": {
+                        "description": "Cannot find entity",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Error deleting entity",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            },
+            "patch": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Pet"
+                ],
+                "summary": "Updates Pet",
+                "operationId": "updatePet",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Pet",
+                        "name": "pet",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.Pet"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.Pet"
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Cannot find entity",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Error updating entity",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/pets": {
+            "get": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Pet"
+                ],
+                "summary": "Lists Pets",
+                "operationId": "listPets",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names \u003ch4\u003eRelationships\u003c/h4\u003eNpcType\u003cbr\u003eNpcType.AlternateCurrency\u003cbr\u003eNpcType.Merchantlists\u003cbr\u003eNpcType.NpcEmotes\u003cbr\u003eNpcType.NpcFactions\u003cbr\u003eNpcType.NpcFactions.NpcFactionEntries\u003cbr\u003eNpcType.NpcSpells\u003cbr\u003eNpcType.NpcSpells.NpcSpellsEntries\u003cbr\u003eNpcType.NpcTypesTint\u003cbr\u003eNpcType.Spawnentries\u003cbr\u003eNpcType.Spawnentries.Spawngroup\u003cbr\u003eNpcType.Spawnentries.Spawngroup.Spawn2",
+                        "name": "includes",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Filter on specific fields. Multiple conditions [.] separated Example: col_like_value.col2__val2",
+                        "name": "where",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Filter on specific fields (Chained ors). Multiple conditions [.] separated Example: col_like_value.col2__val2",
+                        "name": "whereOr",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Group by field. Multiple conditions [.] separated Example: field1.field2",
+                        "name": "groupBy",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Rows to limit in response (Default: 10,000)",
+                        "name": "limit",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Order by [field]",
+                        "name": "orderBy",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Order by field direction",
+                        "name": "orderDirection",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Column names [.] separated to fetch specific fields in response",
+                        "name": "select",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.Pet"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Bad query request",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/pets/bulk": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Pet"
+                ],
+                "summary": "Gets Pets in bulk",
+                "operationId": "getPetsBulk",
+                "parameters": [
+                    {
+                        "description": "body",
+                        "name": "Body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/crudcontrollers.BulkFetchByIdsGetRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.Pet"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Bad query request",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
         "/player_titleset": {
             "put": {
                 "consumes": [
@@ -24584,6 +26845,329 @@
                             "type": "array",
                             "items": {
                                 "$ref": "#/definitions/models.ServerScheduledEvent"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Bad query request",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/shared_task": {
+            "put": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "SharedTask"
+                ],
+                "summary": "Creates SharedTask",
+                "operationId": "createSharedTask",
+                "parameters": [
+                    {
+                        "description": "SharedTask",
+                        "name": "shared_task",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.SharedTask"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.SharedTask"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Error inserting entity",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/shared_task/{id}": {
+            "get": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "SharedTask"
+                ],
+                "summary": "Gets SharedTask",
+                "operationId": "getSharedTask",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names ",
+                        "name": "includes",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Column names [.] separated to fetch specific fields in response",
+                        "name": "select",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.SharedTask"
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Entity not found",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Bad query request",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "SharedTask"
+                ],
+                "summary": "Deletes SharedTask",
+                "operationId": "deleteSharedTask",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Entity deleted successfully",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "404": {
+                        "description": "Cannot find entity",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Error deleting entity",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            },
+            "patch": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "SharedTask"
+                ],
+                "summary": "Updates SharedTask",
+                "operationId": "updateSharedTask",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "SharedTask",
+                        "name": "shared_task",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.SharedTask"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.SharedTask"
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Cannot find entity",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Error updating entity",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/shared_tasks": {
+            "get": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "SharedTask"
+                ],
+                "summary": "Lists SharedTasks",
+                "operationId": "listSharedTasks",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names ",
+                        "name": "includes",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Filter on specific fields. Multiple conditions [.] separated Example: col_like_value.col2__val2",
+                        "name": "where",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Filter on specific fields (Chained ors). Multiple conditions [.] separated Example: col_like_value.col2__val2",
+                        "name": "whereOr",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Group by field. Multiple conditions [.] separated Example: field1.field2",
+                        "name": "groupBy",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Rows to limit in response (Default: 10,000)",
+                        "name": "limit",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Order by [field]",
+                        "name": "orderBy",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Order by field direction",
+                        "name": "orderDirection",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Column names [.] separated to fetch specific fields in response",
+                        "name": "select",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.SharedTask"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Bad query request",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/shared_tasks/bulk": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "SharedTask"
+                ],
+                "summary": "Gets SharedTasks in bulk",
+                "operationId": "getSharedTasksBulk",
+                "parameters": [
+                    {
+                        "description": "body",
+                        "name": "Body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/crudcontrollers.BulkFetchByIdsGetRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.SharedTask"
                             }
                         }
                     },
@@ -30291,6 +32875,23 @@
                 }
             }
         },
+        "models.Book": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "integer"
+                },
+                "language": {
+                    "type": "integer"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "txtfile": {
+                    "type": "string"
+                }
+            }
+        },
         "models.Bug": {
             "type": "object",
             "properties": {
@@ -31532,6 +34133,38 @@
                 }
             }
         },
+        "models.CharacterInstanceSafereturn": {
+            "type": "object",
+            "properties": {
+                "character_id": {
+                    "type": "integer"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "instance_id": {
+                    "type": "integer"
+                },
+                "instance_zone_id": {
+                    "type": "integer"
+                },
+                "safe_heading": {
+                    "type": "number"
+                },
+                "safe_x": {
+                    "type": "number"
+                },
+                "safe_y": {
+                    "type": "number"
+                },
+                "safe_z": {
+                    "type": "number"
+                },
+                "safe_zone_id": {
+                    "type": "integer"
+                }
+            }
+        },
         "models.CharacterItemRecast": {
             "type": "object",
             "properties": {
@@ -31766,6 +34399,26 @@
                 }
             }
         },
+        "models.CharacterTaskTimer": {
+            "type": "object",
+            "properties": {
+                "character_id": {
+                    "type": "integer"
+                },
+                "expire_time": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "task_id": {
+                    "type": "integer"
+                },
+                "timer_type": {
+                    "type": "integer"
+                }
+            }
+        },
         "models.CharacterTribute": {
             "type": "object",
             "properties": {
@@ -31776,6 +34429,29 @@
                     "type": "integer"
                 },
                 "tribute": {
+                    "type": "integer"
+                }
+            }
+        },
+        "models.CompletedSharedTask": {
+            "type": "object",
+            "properties": {
+                "accepted_time": {
+                    "type": "string"
+                },
+                "completion_time": {
+                    "type": "string"
+                },
+                "expire_time": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "is_locked": {
+                    "type": "integer"
+                },
+                "task_id": {
                     "type": "integer"
                 }
             }
@@ -32051,6 +34727,20 @@
                 },
                 "zone_in_z": {
                     "type": "number"
+                }
+            }
+        },
+        "models.DynamicZoneMember": {
+            "type": "object",
+            "properties": {
+                "character_id": {
+                    "type": "integer"
+                },
+                "dynamic_zone_id": {
+                    "type": "integer"
+                },
+                "id": {
+                    "type": "integer"
                 }
             }
         },
@@ -32651,6 +35341,32 @@
                 },
                 "zone": {
                     "type": "string"
+                }
+            }
+        },
+        "models.Horse": {
+            "type": "object",
+            "properties": {
+                "filename": {
+                    "type": "string"
+                },
+                "gender": {
+                    "type": "integer"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "mountspeed": {
+                    "type": "number"
+                },
+                "notes": {
+                    "type": "string"
+                },
+                "race": {
+                    "type": "integer"
+                },
+                "texture": {
+                    "type": "integer"
                 }
             }
         },
@@ -34842,6 +37558,41 @@
                 }
             }
         },
+        "models.Pet": {
+            "type": "object",
+            "properties": {
+                "equipmentset": {
+                    "type": "integer"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "monsterflag": {
+                    "type": "integer"
+                },
+                "npc_id": {
+                    "type": "integer"
+                },
+                "npc_type": {
+                    "$ref": "#/definitions/models.NpcType"
+                },
+                "petcontrol": {
+                    "type": "integer"
+                },
+                "petnaming": {
+                    "type": "integer"
+                },
+                "petpower": {
+                    "type": "integer"
+                },
+                "temp": {
+                    "type": "integer"
+                },
+                "type": {
+                    "type": "string"
+                }
+            }
+        },
         "models.PlayerTitleset": {
             "type": "object",
             "properties": {
@@ -35032,6 +37783,29 @@
                     "type": "integer"
                 },
                 "year_start": {
+                    "type": "integer"
+                }
+            }
+        },
+        "models.SharedTask": {
+            "type": "object",
+            "properties": {
+                "accepted_time": {
+                    "type": "string"
+                },
+                "completion_time": {
+                    "type": "string"
+                },
+                "expire_time": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "is_locked": {
+                    "type": "integer"
+                },
+                "task_id": {
                     "type": "integer"
                 }
             }

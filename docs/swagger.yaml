@@ -345,6 +345,17 @@ definitions:
       zoneid:
         type: integer
     type: object
+  models.Book:
+    properties:
+      id:
+        type: integer
+      language:
+        type: integer
+      name:
+        type: string
+      txtfile:
+        type: string
+    type: object
   models.Bug:
     properties:
       bug:
@@ -1166,6 +1177,27 @@ definitions:
       inspect_message:
         type: string
     type: object
+  models.CharacterInstanceSafereturn:
+    properties:
+      character_id:
+        type: integer
+      id:
+        type: integer
+      instance_id:
+        type: integer
+      instance_zone_id:
+        type: integer
+      safe_heading:
+        type: number
+      safe_x:
+        type: number
+      safe_y:
+        type: number
+      safe_z:
+        type: number
+      safe_zone_id:
+        type: integer
+    type: object
   models.CharacterItemRecast:
     properties:
       id:
@@ -1318,6 +1350,19 @@ definitions:
       type:
         type: integer
     type: object
+  models.CharacterTaskTimer:
+    properties:
+      character_id:
+        type: integer
+      expire_time:
+        type: string
+      id:
+        type: integer
+      task_id:
+        type: integer
+      timer_type:
+        type: integer
+    type: object
   models.CharacterTribute:
     properties:
       id:
@@ -1325,6 +1370,21 @@ definitions:
       tier:
         type: integer
       tribute:
+        type: integer
+    type: object
+  models.CompletedSharedTask:
+    properties:
+      accepted_time:
+        type: string
+      completion_time:
+        type: string
+      expire_time:
+        type: string
+      id:
+        type: integer
+      is_locked:
+        type: integer
+      task_id:
         type: integer
     type: object
   models.CompletedTask:
@@ -1506,6 +1566,15 @@ definitions:
         type: number
       zone_in_z:
         type: number
+    type: object
+  models.DynamicZoneMember:
+    properties:
+      character_id:
+        type: integer
+      dynamic_zone_id:
+        type: integer
+      id:
+        type: integer
     type: object
   models.Eventlog:
     properties:
@@ -1899,6 +1968,23 @@ definitions:
         type: string
       zone:
         type: string
+    type: object
+  models.Horse:
+    properties:
+      filename:
+        type: string
+      gender:
+        type: integer
+      id:
+        type: integer
+      mountspeed:
+        type: number
+      notes:
+        type: string
+      race:
+        type: integer
+      texture:
+        type: integer
     type: object
   models.InstanceList:
     properties:
@@ -3349,6 +3435,29 @@ definitions:
       zpos:
         type: number
     type: object
+  models.Pet:
+    properties:
+      equipmentset:
+        type: integer
+      id:
+        type: integer
+      monsterflag:
+        type: integer
+      npc_id:
+        type: integer
+      npc_type:
+        $ref: '#/definitions/models.NpcType'
+      petcontrol:
+        type: integer
+      petnaming:
+        type: integer
+      petpower:
+        type: integer
+      temp:
+        type: integer
+      type:
+        type: string
+    type: object
   models.PlayerTitleset:
     properties:
       char_id:
@@ -3474,6 +3583,21 @@ definitions:
       year_end:
         type: integer
       year_start:
+        type: integer
+    type: object
+  models.SharedTask:
+    properties:
+      accepted_time:
+        type: string
+      completion_time:
+        type: string
+      expire_time:
+        type: string
+      id:
+        type: integer
+      is_locked:
+        type: integer
+      task_id:
         type: integer
     type: object
   models.Sharedbank:
@@ -6741,6 +6865,223 @@ paths:
       summary: Gets BlockedSpells in bulk
       tags:
       - BlockedSpell
+  /book:
+    put:
+      consumes:
+      - application/json
+      operationId: createBook
+      parameters:
+      - description: Book
+        in: body
+        name: book
+        required: true
+        schema:
+          $ref: '#/definitions/models.Book'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Book'
+            type: array
+        "500":
+          description: Error inserting entity
+          schema:
+            type: string
+      summary: Creates Book
+      tags:
+      - Book
+  /book/{id}:
+    delete:
+      consumes:
+      - application/json
+      operationId: deleteBook
+      parameters:
+      - description: id
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Entity deleted successfully
+          schema:
+            type: string
+        "404":
+          description: Cannot find entity
+          schema:
+            type: string
+        "500":
+          description: Error deleting entity
+          schema:
+            type: string
+      summary: Deletes Book
+      tags:
+      - Book
+    get:
+      consumes:
+      - application/json
+      operationId: getBook
+      parameters:
+      - description: Id
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: 'Relationships [all] for all [number] for depth of relationships
+          to load or [.] separated relationship names '
+        in: query
+        name: includes
+        type: string
+      - description: Column names [.] separated to fetch specific fields in response
+        in: query
+        name: select
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Book'
+            type: array
+        "404":
+          description: Entity not found
+          schema:
+            type: string
+        "500":
+          description: Bad query request
+          schema:
+            type: string
+      summary: Gets Book
+      tags:
+      - Book
+    patch:
+      consumes:
+      - application/json
+      operationId: updateBook
+      parameters:
+      - description: Id
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Book
+        in: body
+        name: book
+        required: true
+        schema:
+          $ref: '#/definitions/models.Book'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Book'
+            type: array
+        "404":
+          description: Cannot find entity
+          schema:
+            type: string
+        "500":
+          description: Error updating entity
+          schema:
+            type: string
+      summary: Updates Book
+      tags:
+      - Book
+  /books:
+    get:
+      consumes:
+      - application/json
+      operationId: listBooks
+      parameters:
+      - description: 'Relationships [all] for all [number] for depth of relationships
+          to load or [.] separated relationship names '
+        in: query
+        name: includes
+        type: string
+      - description: 'Filter on specific fields. Multiple conditions [.] separated
+          Example: col_like_value.col2__val2'
+        in: query
+        name: where
+        type: string
+      - description: 'Filter on specific fields (Chained ors). Multiple conditions
+          [.] separated Example: col_like_value.col2__val2'
+        in: query
+        name: whereOr
+        type: string
+      - description: 'Group by field. Multiple conditions [.] separated Example: field1.field2'
+        in: query
+        name: groupBy
+        type: string
+      - description: 'Rows to limit in response (Default: 10,000)'
+        in: query
+        name: limit
+        type: string
+      - description: Order by [field]
+        in: query
+        name: orderBy
+        type: string
+      - description: Order by field direction
+        in: query
+        name: orderDirection
+        type: string
+      - description: Column names [.] separated to fetch specific fields in response
+        in: query
+        name: select
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Book'
+            type: array
+        "500":
+          description: Bad query request
+          schema:
+            type: string
+      summary: Lists Books
+      tags:
+      - Book
+  /books/bulk:
+    post:
+      consumes:
+      - application/json
+      operationId: getBooksBulk
+      parameters:
+      - description: body
+        in: body
+        name: Body
+        required: true
+        schema:
+          $ref: '#/definitions/crudcontrollers.BulkFetchByIdsGetRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Book'
+            type: array
+        "500":
+          description: Bad query request
+          schema:
+            type: string
+      summary: Gets Books in bulk
+      tags:
+      - Book
   /bug:
     put:
       consumes:
@@ -9562,6 +9903,223 @@ paths:
       summary: Gets CharacterInspectMessages in bulk
       tags:
       - CharacterInspectMessage
+  /character_instance_safereturn:
+    put:
+      consumes:
+      - application/json
+      operationId: createCharacterInstanceSafereturn
+      parameters:
+      - description: CharacterInstanceSafereturn
+        in: body
+        name: character_instance_safereturn
+        required: true
+        schema:
+          $ref: '#/definitions/models.CharacterInstanceSafereturn'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.CharacterInstanceSafereturn'
+            type: array
+        "500":
+          description: Error inserting entity
+          schema:
+            type: string
+      summary: Creates CharacterInstanceSafereturn
+      tags:
+      - CharacterInstanceSafereturn
+  /character_instance_safereturn/{id}:
+    delete:
+      consumes:
+      - application/json
+      operationId: deleteCharacterInstanceSafereturn
+      parameters:
+      - description: id
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Entity deleted successfully
+          schema:
+            type: string
+        "404":
+          description: Cannot find entity
+          schema:
+            type: string
+        "500":
+          description: Error deleting entity
+          schema:
+            type: string
+      summary: Deletes CharacterInstanceSafereturn
+      tags:
+      - CharacterInstanceSafereturn
+    get:
+      consumes:
+      - application/json
+      operationId: getCharacterInstanceSafereturn
+      parameters:
+      - description: Id
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: 'Relationships [all] for all [number] for depth of relationships
+          to load or [.] separated relationship names '
+        in: query
+        name: includes
+        type: string
+      - description: Column names [.] separated to fetch specific fields in response
+        in: query
+        name: select
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.CharacterInstanceSafereturn'
+            type: array
+        "404":
+          description: Entity not found
+          schema:
+            type: string
+        "500":
+          description: Bad query request
+          schema:
+            type: string
+      summary: Gets CharacterInstanceSafereturn
+      tags:
+      - CharacterInstanceSafereturn
+    patch:
+      consumes:
+      - application/json
+      operationId: updateCharacterInstanceSafereturn
+      parameters:
+      - description: Id
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: CharacterInstanceSafereturn
+        in: body
+        name: character_instance_safereturn
+        required: true
+        schema:
+          $ref: '#/definitions/models.CharacterInstanceSafereturn'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.CharacterInstanceSafereturn'
+            type: array
+        "404":
+          description: Cannot find entity
+          schema:
+            type: string
+        "500":
+          description: Error updating entity
+          schema:
+            type: string
+      summary: Updates CharacterInstanceSafereturn
+      tags:
+      - CharacterInstanceSafereturn
+  /character_instance_safereturns:
+    get:
+      consumes:
+      - application/json
+      operationId: listCharacterInstanceSafereturns
+      parameters:
+      - description: 'Relationships [all] for all [number] for depth of relationships
+          to load or [.] separated relationship names '
+        in: query
+        name: includes
+        type: string
+      - description: 'Filter on specific fields. Multiple conditions [.] separated
+          Example: col_like_value.col2__val2'
+        in: query
+        name: where
+        type: string
+      - description: 'Filter on specific fields (Chained ors). Multiple conditions
+          [.] separated Example: col_like_value.col2__val2'
+        in: query
+        name: whereOr
+        type: string
+      - description: 'Group by field. Multiple conditions [.] separated Example: field1.field2'
+        in: query
+        name: groupBy
+        type: string
+      - description: 'Rows to limit in response (Default: 10,000)'
+        in: query
+        name: limit
+        type: string
+      - description: Order by [field]
+        in: query
+        name: orderBy
+        type: string
+      - description: Order by field direction
+        in: query
+        name: orderDirection
+        type: string
+      - description: Column names [.] separated to fetch specific fields in response
+        in: query
+        name: select
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.CharacterInstanceSafereturn'
+            type: array
+        "500":
+          description: Bad query request
+          schema:
+            type: string
+      summary: Lists CharacterInstanceSafereturns
+      tags:
+      - CharacterInstanceSafereturn
+  /character_instance_safereturns/bulk:
+    post:
+      consumes:
+      - application/json
+      operationId: getCharacterInstanceSafereturnsBulk
+      parameters:
+      - description: body
+        in: body
+        name: Body
+        required: true
+        schema:
+          $ref: '#/definitions/crudcontrollers.BulkFetchByIdsGetRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.CharacterInstanceSafereturn'
+            type: array
+        "500":
+          description: Bad query request
+          schema:
+            type: string
+      summary: Gets CharacterInstanceSafereturns in bulk
+      tags:
+      - CharacterInstanceSafereturn
   /character_item_recast:
     put:
       consumes:
@@ -11298,6 +11856,440 @@ paths:
       summary: Gets CharacterSpells in bulk
       tags:
       - CharacterSpell
+  /character_task_timer:
+    put:
+      consumes:
+      - application/json
+      operationId: createCharacterTaskTimer
+      parameters:
+      - description: CharacterTaskTimer
+        in: body
+        name: character_task_timer
+        required: true
+        schema:
+          $ref: '#/definitions/models.CharacterTaskTimer'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.CharacterTaskTimer'
+            type: array
+        "500":
+          description: Error inserting entity
+          schema:
+            type: string
+      summary: Creates CharacterTaskTimer
+      tags:
+      - CharacterTaskTimer
+  /character_task_timer/{id}:
+    delete:
+      consumes:
+      - application/json
+      operationId: deleteCharacterTaskTimer
+      parameters:
+      - description: id
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Entity deleted successfully
+          schema:
+            type: string
+        "404":
+          description: Cannot find entity
+          schema:
+            type: string
+        "500":
+          description: Error deleting entity
+          schema:
+            type: string
+      summary: Deletes CharacterTaskTimer
+      tags:
+      - CharacterTaskTimer
+    get:
+      consumes:
+      - application/json
+      operationId: getCharacterTaskTimer
+      parameters:
+      - description: Id
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: 'Relationships [all] for all [number] for depth of relationships
+          to load or [.] separated relationship names '
+        in: query
+        name: includes
+        type: string
+      - description: Column names [.] separated to fetch specific fields in response
+        in: query
+        name: select
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.CharacterTaskTimer'
+            type: array
+        "404":
+          description: Entity not found
+          schema:
+            type: string
+        "500":
+          description: Bad query request
+          schema:
+            type: string
+      summary: Gets CharacterTaskTimer
+      tags:
+      - CharacterTaskTimer
+    patch:
+      consumes:
+      - application/json
+      operationId: updateCharacterTaskTimer
+      parameters:
+      - description: Id
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: CharacterTaskTimer
+        in: body
+        name: character_task_timer
+        required: true
+        schema:
+          $ref: '#/definitions/models.CharacterTaskTimer'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.CharacterTaskTimer'
+            type: array
+        "404":
+          description: Cannot find entity
+          schema:
+            type: string
+        "500":
+          description: Error updating entity
+          schema:
+            type: string
+      summary: Updates CharacterTaskTimer
+      tags:
+      - CharacterTaskTimer
+  /character_task_timers:
+    get:
+      consumes:
+      - application/json
+      operationId: listCharacterTaskTimers
+      parameters:
+      - description: 'Relationships [all] for all [number] for depth of relationships
+          to load or [.] separated relationship names '
+        in: query
+        name: includes
+        type: string
+      - description: 'Filter on specific fields. Multiple conditions [.] separated
+          Example: col_like_value.col2__val2'
+        in: query
+        name: where
+        type: string
+      - description: 'Filter on specific fields (Chained ors). Multiple conditions
+          [.] separated Example: col_like_value.col2__val2'
+        in: query
+        name: whereOr
+        type: string
+      - description: 'Group by field. Multiple conditions [.] separated Example: field1.field2'
+        in: query
+        name: groupBy
+        type: string
+      - description: 'Rows to limit in response (Default: 10,000)'
+        in: query
+        name: limit
+        type: string
+      - description: Order by [field]
+        in: query
+        name: orderBy
+        type: string
+      - description: Order by field direction
+        in: query
+        name: orderDirection
+        type: string
+      - description: Column names [.] separated to fetch specific fields in response
+        in: query
+        name: select
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.CharacterTaskTimer'
+            type: array
+        "500":
+          description: Bad query request
+          schema:
+            type: string
+      summary: Lists CharacterTaskTimers
+      tags:
+      - CharacterTaskTimer
+  /character_task_timers/bulk:
+    post:
+      consumes:
+      - application/json
+      operationId: getCharacterTaskTimersBulk
+      parameters:
+      - description: body
+        in: body
+        name: Body
+        required: true
+        schema:
+          $ref: '#/definitions/crudcontrollers.BulkFetchByIdsGetRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.CharacterTaskTimer'
+            type: array
+        "500":
+          description: Bad query request
+          schema:
+            type: string
+      summary: Gets CharacterTaskTimers in bulk
+      tags:
+      - CharacterTaskTimer
+  /completed_shared_task:
+    put:
+      consumes:
+      - application/json
+      operationId: createCompletedSharedTask
+      parameters:
+      - description: CompletedSharedTask
+        in: body
+        name: completed_shared_task
+        required: true
+        schema:
+          $ref: '#/definitions/models.CompletedSharedTask'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.CompletedSharedTask'
+            type: array
+        "500":
+          description: Error inserting entity
+          schema:
+            type: string
+      summary: Creates CompletedSharedTask
+      tags:
+      - CompletedSharedTask
+  /completed_shared_task/{id}:
+    delete:
+      consumes:
+      - application/json
+      operationId: deleteCompletedSharedTask
+      parameters:
+      - description: id
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Entity deleted successfully
+          schema:
+            type: string
+        "404":
+          description: Cannot find entity
+          schema:
+            type: string
+        "500":
+          description: Error deleting entity
+          schema:
+            type: string
+      summary: Deletes CompletedSharedTask
+      tags:
+      - CompletedSharedTask
+    get:
+      consumes:
+      - application/json
+      operationId: getCompletedSharedTask
+      parameters:
+      - description: Id
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: 'Relationships [all] for all [number] for depth of relationships
+          to load or [.] separated relationship names '
+        in: query
+        name: includes
+        type: string
+      - description: Column names [.] separated to fetch specific fields in response
+        in: query
+        name: select
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.CompletedSharedTask'
+            type: array
+        "404":
+          description: Entity not found
+          schema:
+            type: string
+        "500":
+          description: Bad query request
+          schema:
+            type: string
+      summary: Gets CompletedSharedTask
+      tags:
+      - CompletedSharedTask
+    patch:
+      consumes:
+      - application/json
+      operationId: updateCompletedSharedTask
+      parameters:
+      - description: Id
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: CompletedSharedTask
+        in: body
+        name: completed_shared_task
+        required: true
+        schema:
+          $ref: '#/definitions/models.CompletedSharedTask'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.CompletedSharedTask'
+            type: array
+        "404":
+          description: Cannot find entity
+          schema:
+            type: string
+        "500":
+          description: Error updating entity
+          schema:
+            type: string
+      summary: Updates CompletedSharedTask
+      tags:
+      - CompletedSharedTask
+  /completed_shared_tasks:
+    get:
+      consumes:
+      - application/json
+      operationId: listCompletedSharedTasks
+      parameters:
+      - description: 'Relationships [all] for all [number] for depth of relationships
+          to load or [.] separated relationship names '
+        in: query
+        name: includes
+        type: string
+      - description: 'Filter on specific fields. Multiple conditions [.] separated
+          Example: col_like_value.col2__val2'
+        in: query
+        name: where
+        type: string
+      - description: 'Filter on specific fields (Chained ors). Multiple conditions
+          [.] separated Example: col_like_value.col2__val2'
+        in: query
+        name: whereOr
+        type: string
+      - description: 'Group by field. Multiple conditions [.] separated Example: field1.field2'
+        in: query
+        name: groupBy
+        type: string
+      - description: 'Rows to limit in response (Default: 10,000)'
+        in: query
+        name: limit
+        type: string
+      - description: Order by [field]
+        in: query
+        name: orderBy
+        type: string
+      - description: Order by field direction
+        in: query
+        name: orderDirection
+        type: string
+      - description: Column names [.] separated to fetch specific fields in response
+        in: query
+        name: select
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.CompletedSharedTask'
+            type: array
+        "500":
+          description: Bad query request
+          schema:
+            type: string
+      summary: Lists CompletedSharedTasks
+      tags:
+      - CompletedSharedTask
+  /completed_shared_tasks/bulk:
+    post:
+      consumes:
+      - application/json
+      operationId: getCompletedSharedTasksBulk
+      parameters:
+      - description: body
+        in: body
+        name: Body
+        required: true
+        schema:
+          $ref: '#/definitions/crudcontrollers.BulkFetchByIdsGetRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.CompletedSharedTask'
+            type: array
+        "500":
+          description: Bad query request
+          schema:
+            type: string
+      summary: Gets CompletedSharedTasks in bulk
+      tags:
+      - CompletedSharedTask
   /content_flag:
     put:
       consumes:
@@ -12298,6 +13290,223 @@ paths:
       summary: Updates DynamicZone
       tags:
       - DynamicZone
+  /dynamic_zone_member:
+    put:
+      consumes:
+      - application/json
+      operationId: createDynamicZoneMember
+      parameters:
+      - description: DynamicZoneMember
+        in: body
+        name: dynamic_zone_member
+        required: true
+        schema:
+          $ref: '#/definitions/models.DynamicZoneMember'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.DynamicZoneMember'
+            type: array
+        "500":
+          description: Error inserting entity
+          schema:
+            type: string
+      summary: Creates DynamicZoneMember
+      tags:
+      - DynamicZoneMember
+  /dynamic_zone_member/{id}:
+    delete:
+      consumes:
+      - application/json
+      operationId: deleteDynamicZoneMember
+      parameters:
+      - description: id
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Entity deleted successfully
+          schema:
+            type: string
+        "404":
+          description: Cannot find entity
+          schema:
+            type: string
+        "500":
+          description: Error deleting entity
+          schema:
+            type: string
+      summary: Deletes DynamicZoneMember
+      tags:
+      - DynamicZoneMember
+    get:
+      consumes:
+      - application/json
+      operationId: getDynamicZoneMember
+      parameters:
+      - description: Id
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: 'Relationships [all] for all [number] for depth of relationships
+          to load or [.] separated relationship names '
+        in: query
+        name: includes
+        type: string
+      - description: Column names [.] separated to fetch specific fields in response
+        in: query
+        name: select
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.DynamicZoneMember'
+            type: array
+        "404":
+          description: Entity not found
+          schema:
+            type: string
+        "500":
+          description: Bad query request
+          schema:
+            type: string
+      summary: Gets DynamicZoneMember
+      tags:
+      - DynamicZoneMember
+    patch:
+      consumes:
+      - application/json
+      operationId: updateDynamicZoneMember
+      parameters:
+      - description: Id
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: DynamicZoneMember
+        in: body
+        name: dynamic_zone_member
+        required: true
+        schema:
+          $ref: '#/definitions/models.DynamicZoneMember'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.DynamicZoneMember'
+            type: array
+        "404":
+          description: Cannot find entity
+          schema:
+            type: string
+        "500":
+          description: Error updating entity
+          schema:
+            type: string
+      summary: Updates DynamicZoneMember
+      tags:
+      - DynamicZoneMember
+  /dynamic_zone_members:
+    get:
+      consumes:
+      - application/json
+      operationId: listDynamicZoneMembers
+      parameters:
+      - description: 'Relationships [all] for all [number] for depth of relationships
+          to load or [.] separated relationship names '
+        in: query
+        name: includes
+        type: string
+      - description: 'Filter on specific fields. Multiple conditions [.] separated
+          Example: col_like_value.col2__val2'
+        in: query
+        name: where
+        type: string
+      - description: 'Filter on specific fields (Chained ors). Multiple conditions
+          [.] separated Example: col_like_value.col2__val2'
+        in: query
+        name: whereOr
+        type: string
+      - description: 'Group by field. Multiple conditions [.] separated Example: field1.field2'
+        in: query
+        name: groupBy
+        type: string
+      - description: 'Rows to limit in response (Default: 10,000)'
+        in: query
+        name: limit
+        type: string
+      - description: Order by [field]
+        in: query
+        name: orderBy
+        type: string
+      - description: Order by field direction
+        in: query
+        name: orderDirection
+        type: string
+      - description: Column names [.] separated to fetch specific fields in response
+        in: query
+        name: select
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.DynamicZoneMember'
+            type: array
+        "500":
+          description: Bad query request
+          schema:
+            type: string
+      summary: Lists DynamicZoneMembers
+      tags:
+      - DynamicZoneMember
+  /dynamic_zone_members/bulk:
+    post:
+      consumes:
+      - application/json
+      operationId: getDynamicZoneMembersBulk
+      parameters:
+      - description: body
+        in: body
+        name: Body
+        required: true
+        schema:
+          $ref: '#/definitions/crudcontrollers.BulkFetchByIdsGetRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.DynamicZoneMember'
+            type: array
+        "500":
+          description: Bad query request
+          schema:
+            type: string
+      summary: Gets DynamicZoneMembers in bulk
+      tags:
+      - DynamicZoneMember
   /dynamic_zones:
     get:
       consumes:
@@ -15421,6 +16630,223 @@ paths:
       summary: Gets Hackers in bulk
       tags:
       - Hacker
+  /horse:
+    put:
+      consumes:
+      - application/json
+      operationId: createHorse
+      parameters:
+      - description: Horse
+        in: body
+        name: horse
+        required: true
+        schema:
+          $ref: '#/definitions/models.Horse'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Horse'
+            type: array
+        "500":
+          description: Error inserting entity
+          schema:
+            type: string
+      summary: Creates Horse
+      tags:
+      - Horse
+  /horse/{id}:
+    delete:
+      consumes:
+      - application/json
+      operationId: deleteHorse
+      parameters:
+      - description: id
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Entity deleted successfully
+          schema:
+            type: string
+        "404":
+          description: Cannot find entity
+          schema:
+            type: string
+        "500":
+          description: Error deleting entity
+          schema:
+            type: string
+      summary: Deletes Horse
+      tags:
+      - Horse
+    get:
+      consumes:
+      - application/json
+      operationId: getHorse
+      parameters:
+      - description: Id
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: 'Relationships [all] for all [number] for depth of relationships
+          to load or [.] separated relationship names '
+        in: query
+        name: includes
+        type: string
+      - description: Column names [.] separated to fetch specific fields in response
+        in: query
+        name: select
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Horse'
+            type: array
+        "404":
+          description: Entity not found
+          schema:
+            type: string
+        "500":
+          description: Bad query request
+          schema:
+            type: string
+      summary: Gets Horse
+      tags:
+      - Horse
+    patch:
+      consumes:
+      - application/json
+      operationId: updateHorse
+      parameters:
+      - description: Id
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Horse
+        in: body
+        name: horse
+        required: true
+        schema:
+          $ref: '#/definitions/models.Horse'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Horse'
+            type: array
+        "404":
+          description: Cannot find entity
+          schema:
+            type: string
+        "500":
+          description: Error updating entity
+          schema:
+            type: string
+      summary: Updates Horse
+      tags:
+      - Horse
+  /horses:
+    get:
+      consumes:
+      - application/json
+      operationId: listHorses
+      parameters:
+      - description: 'Relationships [all] for all [number] for depth of relationships
+          to load or [.] separated relationship names '
+        in: query
+        name: includes
+        type: string
+      - description: 'Filter on specific fields. Multiple conditions [.] separated
+          Example: col_like_value.col2__val2'
+        in: query
+        name: where
+        type: string
+      - description: 'Filter on specific fields (Chained ors). Multiple conditions
+          [.] separated Example: col_like_value.col2__val2'
+        in: query
+        name: whereOr
+        type: string
+      - description: 'Group by field. Multiple conditions [.] separated Example: field1.field2'
+        in: query
+        name: groupBy
+        type: string
+      - description: 'Rows to limit in response (Default: 10,000)'
+        in: query
+        name: limit
+        type: string
+      - description: Order by [field]
+        in: query
+        name: orderBy
+        type: string
+      - description: Order by field direction
+        in: query
+        name: orderDirection
+        type: string
+      - description: Column names [.] separated to fetch specific fields in response
+        in: query
+        name: select
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Horse'
+            type: array
+        "500":
+          description: Bad query request
+          schema:
+            type: string
+      summary: Lists Horses
+      tags:
+      - Horse
+  /horses/bulk:
+    post:
+      consumes:
+      - application/json
+      operationId: getHorsesBulk
+      parameters:
+      - description: body
+        in: body
+        name: Body
+        required: true
+        schema:
+          $ref: '#/definitions/crudcontrollers.BulkFetchByIdsGetRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Horse'
+            type: array
+        "500":
+          description: Bad query request
+          schema:
+            type: string
+      summary: Gets Horses in bulk
+      tags:
+      - Horse
   /instance_list:
     put:
       consumes:
@@ -20216,6 +21642,223 @@ paths:
       summary: Gets Objects in bulk
       tags:
       - Object
+  /pet:
+    put:
+      consumes:
+      - application/json
+      operationId: createPet
+      parameters:
+      - description: Pet
+        in: body
+        name: pet
+        required: true
+        schema:
+          $ref: '#/definitions/models.Pet'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Pet'
+            type: array
+        "500":
+          description: Error inserting entity
+          schema:
+            type: string
+      summary: Creates Pet
+      tags:
+      - Pet
+  /pet/{id}:
+    delete:
+      consumes:
+      - application/json
+      operationId: deletePet
+      parameters:
+      - description: id
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Entity deleted successfully
+          schema:
+            type: string
+        "404":
+          description: Cannot find entity
+          schema:
+            type: string
+        "500":
+          description: Error deleting entity
+          schema:
+            type: string
+      summary: Deletes Pet
+      tags:
+      - Pet
+    get:
+      consumes:
+      - application/json
+      operationId: getPet
+      parameters:
+      - description: Id
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Relationships [all] for all [number] for depth of relationships
+          to load or [.] separated relationship names <h4>Relationships</h4>NpcType<br>NpcType.AlternateCurrency<br>NpcType.Merchantlists<br>NpcType.NpcEmotes<br>NpcType.NpcFactions<br>NpcType.NpcFactions.NpcFactionEntries<br>NpcType.NpcSpells<br>NpcType.NpcSpells.NpcSpellsEntries<br>NpcType.NpcTypesTint<br>NpcType.Spawnentries<br>NpcType.Spawnentries.Spawngroup<br>NpcType.Spawnentries.Spawngroup.Spawn2
+        in: query
+        name: includes
+        type: string
+      - description: Column names [.] separated to fetch specific fields in response
+        in: query
+        name: select
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Pet'
+            type: array
+        "404":
+          description: Entity not found
+          schema:
+            type: string
+        "500":
+          description: Bad query request
+          schema:
+            type: string
+      summary: Gets Pet
+      tags:
+      - Pet
+    patch:
+      consumes:
+      - application/json
+      operationId: updatePet
+      parameters:
+      - description: Id
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Pet
+        in: body
+        name: pet
+        required: true
+        schema:
+          $ref: '#/definitions/models.Pet'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Pet'
+            type: array
+        "404":
+          description: Cannot find entity
+          schema:
+            type: string
+        "500":
+          description: Error updating entity
+          schema:
+            type: string
+      summary: Updates Pet
+      tags:
+      - Pet
+  /pets:
+    get:
+      consumes:
+      - application/json
+      operationId: listPets
+      parameters:
+      - description: Relationships [all] for all [number] for depth of relationships
+          to load or [.] separated relationship names <h4>Relationships</h4>NpcType<br>NpcType.AlternateCurrency<br>NpcType.Merchantlists<br>NpcType.NpcEmotes<br>NpcType.NpcFactions<br>NpcType.NpcFactions.NpcFactionEntries<br>NpcType.NpcSpells<br>NpcType.NpcSpells.NpcSpellsEntries<br>NpcType.NpcTypesTint<br>NpcType.Spawnentries<br>NpcType.Spawnentries.Spawngroup<br>NpcType.Spawnentries.Spawngroup.Spawn2
+        in: query
+        name: includes
+        type: string
+      - description: 'Filter on specific fields. Multiple conditions [.] separated
+          Example: col_like_value.col2__val2'
+        in: query
+        name: where
+        type: string
+      - description: 'Filter on specific fields (Chained ors). Multiple conditions
+          [.] separated Example: col_like_value.col2__val2'
+        in: query
+        name: whereOr
+        type: string
+      - description: 'Group by field. Multiple conditions [.] separated Example: field1.field2'
+        in: query
+        name: groupBy
+        type: string
+      - description: 'Rows to limit in response (Default: 10,000)'
+        in: query
+        name: limit
+        type: string
+      - description: Order by [field]
+        in: query
+        name: orderBy
+        type: string
+      - description: Order by field direction
+        in: query
+        name: orderDirection
+        type: string
+      - description: Column names [.] separated to fetch specific fields in response
+        in: query
+        name: select
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Pet'
+            type: array
+        "500":
+          description: Bad query request
+          schema:
+            type: string
+      summary: Lists Pets
+      tags:
+      - Pet
+  /pets/bulk:
+    post:
+      consumes:
+      - application/json
+      operationId: getPetsBulk
+      parameters:
+      - description: body
+        in: body
+        name: Body
+        required: true
+        schema:
+          $ref: '#/definitions/crudcontrollers.BulkFetchByIdsGetRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Pet'
+            type: array
+        "500":
+          description: Bad query request
+          schema:
+            type: string
+      summary: Gets Pets in bulk
+      tags:
+      - Pet
   /player_titleset:
     put:
       consumes:
@@ -21301,6 +22944,223 @@ paths:
       summary: Gets ServerScheduledEvents in bulk
       tags:
       - ServerScheduledEvent
+  /shared_task:
+    put:
+      consumes:
+      - application/json
+      operationId: createSharedTask
+      parameters:
+      - description: SharedTask
+        in: body
+        name: shared_task
+        required: true
+        schema:
+          $ref: '#/definitions/models.SharedTask'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.SharedTask'
+            type: array
+        "500":
+          description: Error inserting entity
+          schema:
+            type: string
+      summary: Creates SharedTask
+      tags:
+      - SharedTask
+  /shared_task/{id}:
+    delete:
+      consumes:
+      - application/json
+      operationId: deleteSharedTask
+      parameters:
+      - description: id
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Entity deleted successfully
+          schema:
+            type: string
+        "404":
+          description: Cannot find entity
+          schema:
+            type: string
+        "500":
+          description: Error deleting entity
+          schema:
+            type: string
+      summary: Deletes SharedTask
+      tags:
+      - SharedTask
+    get:
+      consumes:
+      - application/json
+      operationId: getSharedTask
+      parameters:
+      - description: Id
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: 'Relationships [all] for all [number] for depth of relationships
+          to load or [.] separated relationship names '
+        in: query
+        name: includes
+        type: string
+      - description: Column names [.] separated to fetch specific fields in response
+        in: query
+        name: select
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.SharedTask'
+            type: array
+        "404":
+          description: Entity not found
+          schema:
+            type: string
+        "500":
+          description: Bad query request
+          schema:
+            type: string
+      summary: Gets SharedTask
+      tags:
+      - SharedTask
+    patch:
+      consumes:
+      - application/json
+      operationId: updateSharedTask
+      parameters:
+      - description: Id
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: SharedTask
+        in: body
+        name: shared_task
+        required: true
+        schema:
+          $ref: '#/definitions/models.SharedTask'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.SharedTask'
+            type: array
+        "404":
+          description: Cannot find entity
+          schema:
+            type: string
+        "500":
+          description: Error updating entity
+          schema:
+            type: string
+      summary: Updates SharedTask
+      tags:
+      - SharedTask
+  /shared_tasks:
+    get:
+      consumes:
+      - application/json
+      operationId: listSharedTasks
+      parameters:
+      - description: 'Relationships [all] for all [number] for depth of relationships
+          to load or [.] separated relationship names '
+        in: query
+        name: includes
+        type: string
+      - description: 'Filter on specific fields. Multiple conditions [.] separated
+          Example: col_like_value.col2__val2'
+        in: query
+        name: where
+        type: string
+      - description: 'Filter on specific fields (Chained ors). Multiple conditions
+          [.] separated Example: col_like_value.col2__val2'
+        in: query
+        name: whereOr
+        type: string
+      - description: 'Group by field. Multiple conditions [.] separated Example: field1.field2'
+        in: query
+        name: groupBy
+        type: string
+      - description: 'Rows to limit in response (Default: 10,000)'
+        in: query
+        name: limit
+        type: string
+      - description: Order by [field]
+        in: query
+        name: orderBy
+        type: string
+      - description: Order by field direction
+        in: query
+        name: orderDirection
+        type: string
+      - description: Column names [.] separated to fetch specific fields in response
+        in: query
+        name: select
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.SharedTask'
+            type: array
+        "500":
+          description: Bad query request
+          schema:
+            type: string
+      summary: Lists SharedTasks
+      tags:
+      - SharedTask
+  /shared_tasks/bulk:
+    post:
+      consumes:
+      - application/json
+      operationId: getSharedTasksBulk
+      parameters:
+      - description: body
+        in: body
+        name: Body
+        required: true
+        schema:
+          $ref: '#/definitions/crudcontrollers.BulkFetchByIdsGetRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.SharedTask'
+            type: array
+        "500":
+          description: Bad query request
+          schema:
+            type: string
+      summary: Gets SharedTasks in bulk
+      tags:
+      - SharedTask
   /spawn_2:
     put:
       consumes:

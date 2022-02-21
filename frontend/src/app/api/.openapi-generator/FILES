@@ -10,6 +10,7 @@ api/adventure-template-entry-api.ts
 api/adventure-template-entry-flavor-api.ts
 api/alternate-currency-api.ts
 api/blocked-spell-api.ts
+api/book-api.ts
 api/bug-api.ts
 api/bug-report-api.ts
 api/char-create-point-allocation-api.ts
@@ -23,6 +24,7 @@ api/character-datum-api.ts
 api/character-discipline-api.ts
 api/character-expedition-lockout-api.ts
 api/character-inspect-message-api.ts
+api/character-instance-safereturn-api.ts
 api/character-item-recast-api.ts
 api/character-language-api.ts
 api/character-leadership-ability-api.ts
@@ -31,11 +33,14 @@ api/character-memmed-spell-api.ts
 api/character-potionbelt-api.ts
 api/character-skill-api.ts
 api/character-spell-api.ts
+api/character-task-timer-api.ts
+api/completed-shared-task-api.ts
 api/content-flag-api.ts
 api/data-bucket-api.ts
 api/db-str-api.ts
 api/door-api.ts
 api/dynamic-zone-api.ts
+api/dynamic-zone-member-api.ts
 api/eventlog-api.ts
 api/expedition-api.ts
 api/expedition-lockout-api.ts
@@ -50,6 +55,7 @@ api/grid-api.ts
 api/ground-spawn-api.ts
 api/guild-api.ts
 api/hacker-api.ts
+api/horse-api.ts
 api/instance-list-api.ts
 api/instance-list-player-api.ts
 api/item-api.ts
@@ -73,11 +79,13 @@ api/npc-spells-entry-api.ts
 api/npc-type-api.ts
 api/npc-types-tint-api.ts
 api/object-api.ts
+api/pet-api.ts
 api/player-titleset-api.ts
 api/report-api.ts
 api/respawn-time-api.ts
 api/saylink-api.ts
 api/server-scheduled-event-api.ts
+api/shared-task-api.ts
 api/spawn-condition-api.ts
 api/spawn-condition-value-api.ts
 api/spawn-event-api.ts
@@ -114,6 +122,7 @@ models/models-adventure-template.ts
 models/models-alternate-currency.ts
 models/models-aura.ts
 models/models-blocked-spell.ts
+models/models-book.ts
 models/models-bug-report.ts
 models/models-bug.ts
 models/models-buyer.ts
@@ -133,6 +142,7 @@ models/models-character-discipline.ts
 models/models-character-enabledtask.ts
 models/models-character-expedition-lockout.ts
 models/models-character-inspect-message.ts
+models/models-character-instance-safereturn.ts
 models/models-character-item-recast.ts
 models/models-character-language.ts
 models/models-character-leadership-ability.ts
@@ -144,8 +154,10 @@ models/models-character-pet-inventory.ts
 models/models-character-potionbelt.ts
 models/models-character-skill.ts
 models/models-character-spell.ts
+models/models-character-task-timer.ts
 models/models-character-task.ts
 models/models-character-tribute.ts
+models/models-completed-shared-task.ts
 models/models-completed-task.ts
 models/models-content-flag.ts
 models/models-damageshieldtype.ts
@@ -153,6 +165,7 @@ models/models-data-bucket.ts
 models/models-db-str.ts
 models/models-discovered-item.ts
 models/models-door.ts
+models/models-dynamic-zone-member.ts
 models/models-dynamic-zone.ts
 models/models-eventlog.ts
 models/models-expedition-lockout.ts
@@ -175,6 +188,7 @@ models/models-guild-member.ts
 models/models-guild-rank.ts
 models/models-guild.ts
 models/models-hacker.ts
+models/models-horse.ts
 models/models-instance-list-player.ts
 models/models-instance-list.ts
 models/models-inventory.ts
@@ -204,6 +218,7 @@ models/models-npc-spells-entry.ts
 models/models-npc-type.ts
 models/models-npc-types-tint.ts
 models/models-object.ts
+models/models-pet.ts
 models/models-player-titleset.ts
 models/models-quest-global.ts
 models/models-report.ts
@@ -211,6 +226,7 @@ models/models-respawn-time.ts
 models/models-saylink.ts
 models/models-server-database-connection.ts
 models/models-server-scheduled-event.ts
+models/models-shared-task.ts
 models/models-sharedbank.ts
 models/models-spawn-condition-value.ts
 models/models-spawn-condition.ts
