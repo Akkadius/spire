@@ -62,8 +62,6 @@ export default {
     },
 
     percentToUnits(percent) {
-      console.log(Math.round(this.getCurrentRangeMax() * (percent / 100)))
-
       return Math.round(this.getCurrentRangeMax() * (percent / 100))
     },
 
