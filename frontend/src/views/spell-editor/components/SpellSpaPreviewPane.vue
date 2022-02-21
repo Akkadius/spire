@@ -12,7 +12,7 @@
         v-for="field in fields" :key="field.description"
       >
         <div
-          :class="'col-6 text-right m-0 p-0 pr-2 font-weight-bold'"
+          :class="'col-2 text-right m-0 p-0 pr-2 font-weight-bold'"
           v-if="field.field && field.field !== ''"
         >
           {{ field.description }}
@@ -22,20 +22,20 @@
         </div>
       </div>
 
-      <div v-if="getSpaDefinition(spa).notes.trim() !== ''" class="text-center">
+      <div v-if="getSpaDefinition(spa).notes.trim() !== ''">
         <h6 class="eq-header mb-3 mt-3">Notes</h6>
-        {{getSpaDefinition(spa).notes}}
+        {{ getSpaDefinition(spa).notes }}
       </div>
     </div>
 
-    <div class="text-center">
-    <h6 class="eq-header mb-3 mt-3" v-if="effectInfo.info !== ''">Effect Render Preview</h6>
+    <div>
+      <h6 class="eq-header mb-3 mt-3" v-if="effectInfo.info !== ''">Effect Render Preview</h6>
 
-    <v-runtime-template
-      :template="'<span>' + effectInfo.info + '</span>'"
-      v-if="typeof effectInfo !== 'undefined'"
-      class="pb-6 mt-3 doc"
-    />
+      <v-runtime-template
+        :template="'<span>' + effectInfo.info + '</span>'"
+        v-if="typeof effectInfo !== 'undefined'"
+        class="pb-6 mt-3 doc"
+      />
     </div>
 
     <div class="mb-3"></div>

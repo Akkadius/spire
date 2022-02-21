@@ -1293,11 +1293,11 @@
           <div class="col-5">
 
             <!-- SPA Detail Pane -->
-            <eq-window-simple
+            <eq-window
               style="margin-top: 30px; margin-right: 10px; width: auto;"
               class="fade-in"
               v-if="spaDetailPaneActive"
-              title="SPA Details"
+              :title="'Effect (' + spaPreviewNumber + ') Details'"
             >
               <spell-spa-preview-pane
                 :spa="spaPreviewNumber"
@@ -1306,7 +1306,7 @@
                 v-if="spaPreviewNumber >= 0"
               />
 
-            </eq-window-simple>
+            </eq-window>
 
             <!-- preview spell -->
             <eq-window
