@@ -12,7 +12,7 @@
 
     <div v-for="tick in unitTicks">
       <div class="unit-label tick" :style="'left: ' + (tick + 1) + '%'">{{ percentToUnits(tick) }}</div>
-      <div class="rv-vertical-line-tick" :style="'left: ' + tick + '%'"></div>
+      <div class="rv-vertical-line-tick" :style="'left: ' + tick + '%'" v-if="tick > 0"></div>
     </div>
 
   </div>
@@ -82,7 +82,7 @@ export default {
 <style>
 .range-visualizer {
   border-radius: 10px;
-  border: 2px solid black;
+  border: 1px solid black;
 }
 
 .unit-label {

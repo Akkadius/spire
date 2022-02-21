@@ -665,10 +665,12 @@
                        },
                        {
                          description: 'Spell Range',
+                         type: 'range',
                          field: 'range'
                        },
                        {
                          description: 'Spell Min Range',
+                         type: 'range',
                          field: 'min_range'
                        },
                        {
@@ -697,18 +699,19 @@
                        {
                          description: 'Cone Angle Start',
                          field: 'cone_start_angle',
-                         type: 'range',
+                         type: 'cone',
                          showIf: spell['targettype'] === 42 // cone spells
                        },
                        {
                          description: 'Cone Angle End',
                          field: 'cone_stop_angle',
-                         type: 'range',
+                         type: 'cone',
                          showIf: spell['targettype'] === 42 // cone spells
                        },
                        {
                          description: 'AOE Range',
                          field: 'aoerange',
+                         type: 'range',
                          showIf: [4, 8, 24, 45].includes(spell['targettype']) // AOE target types
                        },
                        {
@@ -743,7 +746,6 @@
                       class="col-3 text-left p-0 mt-1"
                       @click="processClickInputTrigger(field.field)"
                     >
-
                       <!-- checkbox -->
                       <eq-checkbox
                         v-b-tooltip.hover.v-dark.lefttop :title="getFieldDescription(field.field)"
@@ -800,6 +802,15 @@
                       <input
                         type="range"
                         v-if="field.type === 'range'"
+                        min="0"
+                        max="1000"
+                        step="5"
+                        class="p-0 m-0 mt-2"
+                        v-model.number="spell[field.field]"
+                      >
+                      <input
+                        type="range"
+                        v-if="field.type === 'cone'"
                         min="0"
                         max="360"
                         step="5"
@@ -1300,6 +1311,16 @@
               />
             </eq-window>
 
+            <!-- range visualizer -->
+            <eq-window-simple
+              style="margin-top: 30px"
+              class="fade-in text-center"
+              title="Range Visualizer"
+              v-if="rangeVisualizerActive && spell[activeRangeField] >= 0"
+            >
+              <range-visualizer :unit-marker="spell[activeRangeField]"/>
+            </eq-window-simple>
+
             <!-- free id selector -->
             <eq-window
               title="Free Spell Ids"
@@ -1367,6 +1388,7 @@ import EqWindowSimple                from "../../components/eq-ui/EQWindowSimple
 import SpellConeVisualizer           from "./components/SpellConeVisualizer";
 import SpellNimbusAnimationSelector  from "./components/SpellNimbusAnimationSelector";
 import util                          from "util";
+import RangeVisualizer               from "../../components/tools/RangeVisualizer";
 
 
 const MILLISECONDS_BEFORE_WINDOW_RESET = 5000;
@@ -1374,6 +1396,7 @@ const MILLISECONDS_BEFORE_WINDOW_RESET = 5000;
 export default {
   name: "SpellEdit",
   components: {
+    RangeVisualizer,
     SpellNimbusAnimationSelector,
     SpellConeVisualizer,
     EqWindowSimple,
@@ -1426,6 +1449,7 @@ export default {
       spellSelectorActive: false,
       simpleSpellSelectorActive: false,
       coneVisualizerActive: false,
+      rangeVisualizerActive: false,
 
       spaPreviewNumber: -1,
       spaEffectIndex: -1,
@@ -1437,6 +1461,7 @@ export default {
       zeroStateSelected: true,
 
       selectedSimpleSpellSelectorField: "",
+      activeRangeField: "",
 
       castingAnimField: "",
 
@@ -1499,6 +1524,9 @@ export default {
       if (field === "nimbuseffect") {
         this.drawSpellNimbusAnimationSelector()
       }
+      if (["range", "aoerange", "min_range"].includes(field)) {
+        this.drawRangeVisualizer(field)
+      }
     },
 
     setSubEditorFieldHighlights() {
@@ -1511,6 +1539,9 @@ export default {
         "cone_start_angle",
         "cone_stop_angle",
         "nimbuseffect",
+        "aoerange",
+        "range",
+        "min_range",
         "recourse_link"
       ]
       hasSubEditorFields.forEach((field) => {
@@ -1739,6 +1770,7 @@ export default {
       this.spellSelectorActive           = false;
       this.simpleSpellSelectorActive     = false;
       this.coneVisualizerActive          = false;
+      this.rangeVisualizerActive         = false;
 
       EditFormFieldUtil.resetFieldSubEditorHighlightedStatus()
     },
@@ -1840,6 +1872,13 @@ export default {
         EditFormFieldUtil.setFieldSubEditorHighlightedById("cone_start_angle")
         EditFormFieldUtil.setFieldSubEditorHighlightedById("cone_stop_angle")
       }
+    },
+    drawRangeVisualizer(field) {
+      this.resetPreviewComponents()
+      this.activeRangeField      = field
+      this.rangeVisualizerActive = true
+      this.lastResetTime         = Date.now() + 5000
+      EditFormFieldUtil.setFieldSubEditorHighlightedById(field)
     },
     drawSpaDetailPane(spa, index) {
       this.resetPreviewComponents()
