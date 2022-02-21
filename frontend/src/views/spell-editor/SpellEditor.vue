@@ -1084,6 +1084,16 @@
                          bool: true
                        },
                        {
+                         description: 'Reflectable',
+                         field: 'reflectable',
+                         bool: true
+                       },
+                       {
+                         description: 'Feedbackable',
+                         field: 'field_160',
+                         bool: true
+                       },
+                       {
                          description: 'Resist Type',
                          field: 'resisttype',
                          selectData: DB_SPELL_RESISTS,
@@ -1111,14 +1121,6 @@
                        {
                          description: 'Resist Chance Limits: Max Chance',
                          field: 'max_resist'
-                       },
-                       {
-                         description: 'Reflectable',
-                         field: 'reflectable'
-                       },
-                       {
-                         description: 'Feedbackable',
-                         field: 'field_160'
                        },
                      ]"
                   >
