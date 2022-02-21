@@ -81,7 +81,7 @@ export default {
 
 <style>
 .range-visualizer {
-  border-radius: 10px;
+  border-radius: 5px;
   border: 1px solid black;
 }
 
@@ -119,10 +119,10 @@ export default {
   border-left: 2px solid rgba(255, 255, 255, 1);
   background-color: white;
   transform: translateX(-50%);
-  height: 99%;
+  height: 98%;
   position: absolute;
   display: block;
-  top: 0;
+  top: 1%;
   left: 10%;
 }
 </style>
