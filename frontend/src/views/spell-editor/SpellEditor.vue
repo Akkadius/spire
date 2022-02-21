@@ -576,10 +576,10 @@
                              field: 'zonetype',
                              selectData: DB_SPELL_ZONE_TYPE,
                            },
-                           {
-                             description: 'Environment Type',
-                             field: 'environment_type',
-                           },
+                           // {
+                           //   description: 'Environment Type',
+                           //   field: 'environment_type',
+                           // },
                            {
                              description: 'Time of Day',
                              field: 'time_of_day',
