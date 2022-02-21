@@ -259,6 +259,7 @@ export default {
       componentNavs: [
         { title: "Progress Bars", to: "/components#progress-bars" },
         { title: "Page Headers", to: "/components#page-headers" },
+        { title: "Range Visual", to: "/components#range-visual" },
         { title: "Item Preview", to: "/components#item-preview" },
         { title: "Spell Preview", to: "/components#spell-preview" },
         { title: "NPC Special Abilities", to: "/components#npc-special-abilities" },

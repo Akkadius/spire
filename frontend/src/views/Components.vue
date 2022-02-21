@@ -67,6 +67,35 @@
                 </div>
               </div>
 
+              <div class="header mt-md-1">
+                <div class="header-body">
+                  <h1 class="header-title" id="range-visual">
+                    Range Visual
+                  </h1>
+                  <p class="header-subtitle">
+                    Visualizes in game range units
+                  </p>
+                </div>
+              </div>
+
+              <eq-window-simple>
+                Range Input
+                <b-input v-model.number="rangeVisual" type="number" min="0" max="1000"/>
+
+                <input
+                  type="range"
+                  min="0"
+                  max="1000"
+                  step="1"
+                  class="p-0 m-0 mt-2"
+                  v-model.number="rangeVisual"
+                >
+              </eq-window-simple>
+
+              <range-visualizer :unit-marker="rangeVisual" class="mt-3"/>
+<!--              <range-visualizer :unit-marker="87" class="mt-3"/>-->
+<!--              <range-visualizer :unit-marker="400" class="mt-3"/>-->
+
               <!-- Item Preview -->
               <div class="header mt-md-1">
                 <div class="header-body">
@@ -401,21 +430,23 @@
 
 import EqWindowSimple from "@/components/eq-ui/EQWindowSimple";
 import EqWindowFancy from "@/components/eq-ui/EQWindowFancy";
-import EqWindowComplex from "@/components/eq-ui/EQWindowComplex";
-import EqWindow from "@/components/eq-ui/EQWindow";
-import EqTabs from "@/components/eq-ui/EQTabs";
-import EqTab from "@/components/eq-ui/EQTab";
-import EqProgressBar from "@/components/eq-ui/EQProgressBar";
-import PageHeader from "@/components/layout/PageHeader";
-import EqItemCardPreview from "@/components/eq-ui/EQItemCardPreview";
-import {EXAMPLE_ITEM_DATA} from "@/app/constants/eq-example-item-data";
-import EqSpellPreview from "@/components/eq-ui/EQSpellCardPreview";
+import EqWindowComplex      from "@/components/eq-ui/EQWindowComplex";
+import EqWindow             from "@/components/eq-ui/EQWindow";
+import EqTabs               from "@/components/eq-ui/EQTabs";
+import EqTab                from "@/components/eq-ui/EQTab";
+import EqProgressBar        from "@/components/eq-ui/EQProgressBar";
+import PageHeader           from "@/components/layout/PageHeader";
+import EqItemCardPreview    from "@/components/eq-ui/EQItemCardPreview";
+import {EXAMPLE_ITEM_DATA}  from "@/app/constants/eq-example-item-data";
+import EqSpellPreview       from "@/components/eq-ui/EQSpellCardPreview";
 import {EXAMPLE_SPELL_DATA} from "@/app/constants/eq-example-spell-data";
-import NpcSpecialAbilities from "@/components/tools/NpcSpecialAbilities";
+import NpcSpecialAbilities  from "@/components/tools/NpcSpecialAbilities";
+import RangeVisualizer      from "../components/tools/RangeVisualizer";
 
 export default {
   name: "Home",
   components: {
+    RangeVisualizer,
     NpcSpecialAbilities,
     EqSpellPreview,
     EqItemCardPreview,
@@ -434,6 +465,7 @@ export default {
       orangeProgress: 50,
       redProgress: 50,
       yellowProgress: 50,
+      rangeVisual: 157,
       items: EXAMPLE_ITEM_DATA,
       spells: EXAMPLE_SPELL_DATA,
       specialAbilityInput: "1,1,3000,50^2,1,1,1000,2340^3,1,20,0,0,0,0,100,0^4,1,0,100,0,0,0,100,0^11,1,4,150,0,0,5^29,1,50^40,1,10,10,100^7,1^10,1^14,1^19,1^22,1^25,1^26,1"

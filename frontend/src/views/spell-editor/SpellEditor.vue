@@ -387,11 +387,11 @@
                     @click="processClickInputTrigger(field.field)"
                   >
                     <div class="col-6 text-right p-0 m-0 mr-3 mt-3" v-if="field.bool">
-                      <span v-if="field.category" class="font-weight-bold">{{field.category}}</span>
+                      <span v-if="field.category" class="font-weight-bold">{{ field.category }}</span>
                       {{ field.description }}
                     </div>
                     <div class="col-6 text-right p-0 m-0 mr-3" v-if="!field.bool" style="margin-top: 10px !important">
-                      <span v-if="field.category" class="font-weight-bold">{{field.category}}</span>
+                      <span v-if="field.category" class="font-weight-bold">{{ field.category }}</span>
                       {{ field.description }}
                     </div>
                     <div class="col-3 text-left p-0 mt-1">
@@ -1347,7 +1347,7 @@ import SpellCastingAnimationSelector from "./components/SpellCastingAnimationSel
 import {SPELL_SPA_DEFINITIONS}       from "../../app/constants/eq-spell-spa-definitions";
 import LoaderCastBarTimer            from "../../components/LoaderCastBarTimer";
 import {EditFormFieldUtil}           from "../../app/forms/edit-form-field-util";
-import LoaderFakeProgress             from "../../components/LoaderFakeProgress";
+import LoaderFakeProgress            from "../../components/LoaderFakeProgress";
 import SpellSpellEffectSelector      from "./components/SpellSpellEffectSelector";
 import {debounce}                    from "../../app/utility/debounce";
 import EqWindowSimple                from "../../components/eq-ui/EQWindowSimple";
@@ -1643,7 +1643,6 @@ export default {
 
             for (let i = 1; i <= 12; i++) {
               if (exampleData['effectid_' + i] === parseInt(spa)) {
-
 
 
                 // set current spell to example values
