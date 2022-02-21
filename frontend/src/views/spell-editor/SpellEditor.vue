@@ -208,90 +208,6 @@
 
                 </eq-tab>
 
-                <eq-tab name="Description" class="minified-inputs">
-                  <div
-                    class="row" v-for="field in
-                     [
-                       {
-                         description: 'Primary Category #',
-                         field: 'typedescnum'
-                       },
-                       {
-                         description: 'Second Category 1 #',
-                         field: 'effectdescnum'
-                       },
-                       {
-                         description: 'Second Category 2 #',
-                         field: 'effectdescnum_2'
-                       },
-                       {
-                         description: 'Description #',
-                         field: 'descnum'
-                       },
-                     ]"
-                    @click="processClickInputTrigger(field.field)"
-                  >
-                    <div class="col-6 text-right p-0 m-0 mr-3 mt-3" v-if="field.bool">
-                      <span v-if="field.category" class="font-weight-bold">{{ field.category }}</span>
-                      {{ field.description }}
-                    </div>
-                    <div class="col-6 text-right p-0 m-0 mr-3" v-if="!field.bool" style="margin-top: 10px !important">
-                      <span v-if="field.category" class="font-weight-bold">{{ field.category }}</span>
-                      {{ field.description }}
-                    </div>
-                    <div class="col-3 text-left p-0 mt-1">
-
-                      <!-- checkbox -->
-                      <eq-checkbox
-                        v-b-tooltip.hover.v-dark.right :title="getFieldDescription(field.field)"
-                        class="mb-1 mt-3 d-inline-block"
-                        :true-value="(typeof field.true !== 'undefined' ? field.true : 1)"
-                        :false-value="(typeof field.false !== 'undefined' ? field.false : 0)"
-                        v-model.number="spell[field.field]"
-                        @input="spell[field.field] = $event"
-                        v-if="field.bool"
-                      />
-
-                      <!-- input number -->
-                      <b-form-input
-                        v-if="!field.selectData && !field.bool && !field.text"
-                        :id="field.field"
-                        v-model.number="spell[field.field]"
-                        class="m-0 mt-1"
-                        v-b-tooltip.hover.v-dark.right :title="getFieldDescription(field.field)"
-                        :style="(spell[field.field] === 0 ? 'opacity: .5' : '')"
-                      />
-
-                      <!-- input text -->
-                      <b-form-input
-                        v-if="!field.selectData && !field.bool && field.text"
-                        :id="field.field"
-                        v-model.number="spell[field.field]"
-                        class="m-0 mt-1"
-                        v-b-tooltip.hover.v-dark.right :title="getFieldDescription(field.field)"
-                        :style="(spell[field.field] === '' ? 'opacity: .5' : '')"
-                      />
-
-                      <!-- select -->
-                      <select
-                        v-model.number="spell[field.field]"
-                        class="form-control m-0 mt-1"
-                        v-if="field.selectData"
-                        v-b-tooltip.hover.v-dark.right :title="getFieldDescription(field.field)"
-                        :style="(spell[field.field] <= 0 ? 'opacity: .5' : '')"
-                      >
-                        <option
-                          v-for="(description, index) in field.selectData"
-                          :key="index"
-                          :value="parseInt(index)"
-                        >
-                          {{ index }}) {{ description }}
-                        </option>
-                      </select>
-                    </div>
-                  </div>
-                </eq-tab>
-
                 <eq-tab name="Effects" class="effect-tab">
                   <div>
 
@@ -547,18 +463,42 @@
                            {
                              description: 'Mana Cost',
                              field: 'mana',
+                             category: 'Cost'
                            },
                            {
                              description: 'Endurance Cost',
                              field: 'endur_cost',
+                             category: 'Cost'
                            },
                            {
                              description: 'Endurance Upkeep',
                              field: 'endur_upkeep',
+                             category: 'Cost'
+                           },
+                           {
+                             description: 'Primary Category #',
+                             field: 'typedescnum',
+                             category: 'Description'
+                           },
+                           {
+                             description: 'Second Category 1 #',
+                             field: 'effectdescnum',
+                             category: 'Description'
+                           },
+                           {
+                             description: 'Second Category 2 #',
+                             field: 'effectdescnum_2',
+                             category: 'Description'
+                           },
+                           {
+                             description: 'Description #',
+                             field: 'descnum',
+                             category: 'Description'
                            },
                          ]"
                       >
                         <div class="col-6 text-right p-0 m-0 mr-3" v-if="field.bool">
+                          <span v-if="field.category" class="font-weight-bold">{{ field.category }}</span>
                           {{ field.description }}
                         </div>
                         <div
@@ -566,6 +506,7 @@
                           v-if="!field.bool"
                           style="margin-top: 10px !important"
                         >
+                          <span v-if="field.category" class="font-weight-bold">{{ field.category }}</span>
                           {{ field.description }}
                         </div>
                         <div class="col-3 text-left p-0 mt-1">
