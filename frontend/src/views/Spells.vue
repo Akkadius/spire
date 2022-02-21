@@ -297,6 +297,7 @@ export default {
       if (this.$route.query.listType) {
         this.listType = this.$route.query.listType;
       }
+
     },
 
     selectClass: function (eqClass) {

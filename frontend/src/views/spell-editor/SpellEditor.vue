@@ -1177,13 +1177,15 @@
 
               <div class="text-center align-content-center mt-3" v-if="spell && spell.id >= 0">
 
-                <div
-                  :class="'text-center mt-2 btn-xs eq-button-fancy'"
+                <b-button
                   @click="saveSpell()"
+                  size="sm"
+                  variant="outline-warning"
                 >
-                  <i class="ra ra-book mr-1"></i>
+                  <i class="ra ra-book"></i>
                   Save Spell
-                </div>
+                </b-button>
+
               </div>
 
               <div class="row" v-if="spell">
