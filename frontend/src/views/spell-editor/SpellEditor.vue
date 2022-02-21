@@ -467,6 +467,12 @@
                            {
                              description: 'Good Effect',
                              field: 'good_effect',
+                             selectData: {
+                               0: 'Detrimental',
+                               1: 'Beneficial',
+                               2: 'Beneficial Group Only',
+                               3: 'Beneficial Group Only'
+                             }
                            },
                            {
                              description: 'Mana Cost',
