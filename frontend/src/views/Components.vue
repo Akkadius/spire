@@ -87,7 +87,7 @@
                   min="0"
                   max="1000"
                   step="1"
-                  class="p-0 m-0 mt-2"
+                  class="p-0 m-0 mt-2 form-control"
                   v-model.number="rangeVisual"
                 >
               </eq-window-simple>

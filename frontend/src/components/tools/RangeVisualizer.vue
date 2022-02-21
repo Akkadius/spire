@@ -68,7 +68,7 @@ export default {
     },
 
     unitsToPositionText(units) {
-      return this.unitsToPosition(units) + 1
+      return this.unitsToPosition(units) + 1 > 88 ? 88 : this.unitsToPosition(units) + 1
     },
     unitsToPositionLine(units) {
       return this.unitsToPosition(units)
