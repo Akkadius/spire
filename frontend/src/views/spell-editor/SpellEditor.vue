@@ -340,21 +340,6 @@
                          category: 'Hate',
                        },
                        {
-                         description: 'Viral Range',
-                         field: 'viral_range',
-                         category: 'Viral'
-                       },
-                       {
-                         description: 'Viral Targets',
-                         field: 'viral_targets',
-                         category: 'Viral'
-                       },
-                       {
-                         description: 'Viral Timer',
-                         field: 'viral_timer',
-                         category: 'Viral'
-                       },
-                       {
                          description: 'Max Targets',
                          field: 'maxtargets',
                          category: 'Focus'
@@ -985,6 +970,21 @@
                          selectData: BUFF_DURATION_FORMULAS,
                        },
                        {
+                         description: 'Viral Range',
+                         field: 'viral_range',
+                         category: 'Viral'
+                       },
+                       {
+                         description: 'Viral Targets',
+                         field: 'viral_targets',
+                         category: 'Viral'
+                       },
+                       {
+                         description: 'Viral Timer',
+                         field: 'viral_timer',
+                         category: 'Viral'
+                       },
+                       {
                          description: 'PVP Duration',
                          field: 'pvp_duration'
                        },
@@ -995,9 +995,11 @@
                      ]"
                   >
                     <div class="col-6 text-right p-0 m-0 mr-3" v-if="field.bool">
+                      <span v-if="field.category" class="font-weight-bold">{{ field.category }}</span>
                       {{ field.description }}
                     </div>
                     <div class="col-6 text-right p-0 m-0 mr-3" v-if="!field.bool" style="margin-top: 10px !important">
+                      <span v-if="field.category" class="font-weight-bold">{{ field.category }}</span>
                       {{ field.description }}
                     </div>
                     <div class="col-3 text-left p-0 mt-1">
