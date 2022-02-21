@@ -836,6 +836,11 @@
                          bool: true
                        },
                        {
+                         description: 'Cast Not Standing',
+                         field: 'cast_not_standing',
+                         bool: true
+                       },
+                       {
                          description: 'Cast Time',
                          field: 'cast_time'
                        },
@@ -854,10 +859,6 @@
                        {
                          description: 'Fizzle Adjustment',
                          field: 'basediff'
-                       },
-                       {
-                         description: 'Cast Not Standing',
-                         field: 'cast_not_standing'
                        },
                      ]"
                   >
