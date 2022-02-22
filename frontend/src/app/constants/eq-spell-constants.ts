@@ -1424,6 +1424,7 @@ export const SPELL_NIMBUSES = [
 ]
 
 export const TELEPORT_ZONE_SELECTOR_TYPE = {
+  AURAS: "auras",
   PETS: "pets",
   HORSES: "horses",
   ZONES: "zones",

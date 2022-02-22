@@ -76,33 +76,11 @@
 
                   </div>
 
-                  <!-- Spell Group -->
-                  <!--                  <div class="row">-->
-                  <!--                    <div class="col-2">-->
-                  <!--                      Spell Group-->
-                  <!--                      <b-form-input v-model.number="spell.spellgroup"/>-->
-                  <!--                    </div>-->
-                  <!--                    <div class="col-2">-->
-                  <!--                      Spell Group Rank-->
-                  <!--                      <b-form-input v-model.number="spell.rank"/>-->
-                  <!--                    </div>-->
-                  <!--                  </div>-->
-
-                  <!--                  <spell-deity-selector :spell="spell" @input="spell = $event"/>-->
-
                   <div class="row">
                     <div class="col-6 pl-0 mr-0 mt-4">
                       <spell-class-selector :spell="spell" @input="spell = $event"/>
                     </div>
                     <div class="col-6">
-
-                      <!--                      <div class="row">-->
-                      <!--                        <div class="col-12 mb-3 mt-3">-->
-                      <!--                          <h4 class="eq-header text-center">-->
-                      <!--                            Visuals-->
-                      <!--                          </h4>-->
-                      <!--                        </div>-->
-                      <!--                      </div>-->
 
                       <div
                         class="row"
@@ -537,6 +515,16 @@
                              description: 'Description #',
                              field: 'descnum',
                              category: 'Description'
+                           },
+                           {
+                             description: 'Group ID',
+                             field: 'spellgroup',
+                             category: 'Spell Groups'
+                           },
+                           {
+                             description: 'Rank',
+                             field: 'rank',
+                             category: 'Spell Rank'
                            },
                          ]"
                       >
@@ -1401,6 +1389,12 @@
               class="fade-in text-center"
               v-if="teleportZoneSelectorActive && typeof spell['teleport_zone'] !== 'undefined'"
             >
+              <spell-teleport-zone-selector-aura
+                :selected-aura-name="spell['teleport_zone']"
+                v-if="selectedTeleportZoneSelectorType === TELEPORT_ZONE_SELECTOR_TYPE.AURAS"
+                @input="processTeleportZoneAuraSelectUpdate($event)"
+              />
+
               <spell-teleport-zone-selector-horse
                 :selected-horse-name="spell['teleport_zone']"
                 v-if="selectedTeleportZoneSelectorType === TELEPORT_ZONE_SELECTOR_TYPE.HORSES"
@@ -1492,6 +1486,7 @@ import RangeVisualizer                from "../../components/tools/RangeVisualiz
 import SpellTeleportZoneSelectorZone  from "./components/SpellTeleportZoneSelectorZone";
 import SpellTeleportZoneSelectorPet   from "./components/SpellTeleportZoneSelectorPet";
 import SpellTeleportZoneSelectorHorse from "./components/SpellTeleportZoneSelectorHorse";
+import SpellTeleportZoneSelectorAura  from "./components/SpellTeleportZoneSelectorAura";
 
 
 const MILLISECONDS_BEFORE_WINDOW_RESET = 5000;
@@ -1499,6 +1494,7 @@ const MILLISECONDS_BEFORE_WINDOW_RESET = 5000;
 export default {
   name: "SpellEdit",
   components: {
+    SpellTeleportZoneSelectorAura,
     SpellTeleportZoneSelectorHorse,
     SpellTeleportZoneSelectorPet,
     SpellTeleportZoneSelectorZone,
@@ -1614,6 +1610,9 @@ export default {
   },
   methods: {
 
+    processTeleportZoneAuraSelectUpdate(event) {
+      this.spell['teleport_zone'] = event.horse.name
+    },
     processTeleportZoneHorseSelectUpdate(event) {
       this.spell['teleport_zone'] = event.horse.filename
     },
@@ -1667,7 +1666,6 @@ export default {
     },
 
     getTeleportZoneFieldName() {
-
       const selectorType = this.getTeleportZoneSelectorType()
       if (selectorType === TELEPORT_ZONE_SELECTOR_TYPE.PETS) {
         return "Select Spell Pet"
@@ -1677,6 +1675,9 @@ export default {
       }
       if (selectorType === TELEPORT_ZONE_SELECTOR_TYPE.ZONES) {
         return "Select Zone"
+      }
+      if (selectorType === TELEPORT_ZONE_SELECTOR_TYPE.AURAS) {
+        return "Select Aura"
       }
 
       return this.toTitleCase(this.getTeleportZoneSelectorType())
@@ -1699,6 +1700,9 @@ export default {
           if (notes.includes("zone short name")) {
             selectorType = TELEPORT_ZONE_SELECTOR_TYPE.ZONES
           }
+          // if (notes.includes("auras table")) {
+          //   selectorType = TELEPORT_ZONE_SELECTOR_TYPE.AURAS
+          // }
         }
       }
 
@@ -1706,8 +1710,6 @@ export default {
 
       return selectorType
     },
-
-
 
     toggleVisibleEffectSlot(slot) {
       if (this.spell['effectid_' + slot] !== 254) {
