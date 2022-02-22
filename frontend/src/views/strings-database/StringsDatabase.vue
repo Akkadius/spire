@@ -6,7 +6,6 @@
         <eq-window-simple title="Strings Database">
           <div class="row">
             <div :class="(selectedType >= 0 ? 'col-10' : 'col-12') + ' text-center'">
-              Type
               <b-form-select
                 v-model.number="selectedType"
                 @change="resetSelections(); updateQueryState()"
@@ -23,10 +22,10 @@
               </b-form-select>
             </div>
 
-            <div class="col-2 " v-if="selectedType >= 0">
+            <div class="col-2 text-center" v-if="selectedType >= 0">
               <b-button
                 @click="createString()"
-                class="mt-5"
+                class="mt-3"
                 size="sm"
                 variant="outline-warning"
               >
@@ -47,7 +46,10 @@
 
           </div>
 
-          <loader-fake-progress v-if="loading"/>
+          <div class="text-center mt-3" v-if="loading">
+            Loading
+            <loader-fake-progress class="mt-3"/>
+          </div>
 
         </eq-window-simple>
 
@@ -137,7 +139,10 @@
 
         </eq-window-simple>
 
-        <eq-window-simple :title="'String Preview Type (' + selectedStringObject.type + ') ID (' + selectedStringObject.id + ')'">
+        <eq-window-simple
+          :title="'String Preview Type (' + selectedStringObject.type + ') ID (' + selectedStringObject.id + ')'"
+          v-if="selectedStringObject.type"
+        >
           <v-runtime-template
             v-if="getSelectedStringObject()"
             :template="'<div>' + formatStringPreview(selectedStringObject.value) + '</div>'"
@@ -422,7 +427,7 @@ export default {
      * Sub editor selection
      */
     isSubEditActive() {
-      return this.subSelectedId >= 0 && this.subSelectedType >= 0
+      return this.subSelectedId >= 0 && this.subSelectedType >= 0 && Object.keys(this.selectedStringObject).length > 0
     },
     getSelectedStringObject() {
       let r = allStrings.find((s) => s.type === this.subSelectedType && s.id === this.subSelectedId)
@@ -455,12 +460,25 @@ export default {
       this.originalSelectedStringObject = JSON.parse(JSON.stringify(this.getSelectedStringObject()))
       this.selectedStringObject         = this.getSelectedStringObject()
       this.listData()
+
+      setTimeout(() => {
+        const container = document.getElementById("db-strings-list");
+        const target    = document.getElementById(util.format("string-%s", this.subSelectedId))
+
+        if (container && target) {
+          console.log(target.getBoundingClientRect())
+          const top           = target.getBoundingClientRect().top
+          container.scrollTop = top - 200;
+        }
+      }, 500)
     },
 
     async getAllDbStrings() {
+      this.loading   = true
       // {orderBy: "id.type"}
-      const response = await DbStrApiClient.listDbStrs()
+      const response = await DbStrApiClient.listDbStrs({ limit: 100000 })
       if (response.status === 200 && response.data) {
+        this.loading = false
         return response.data
       }
     },
@@ -481,18 +499,6 @@ export default {
   },
   mounted() {
     this.init()
-
-    requestAnimationFrame(() => {
-      setTimeout(() => {
-        const container = document.getElementById("db-strings-list");
-        const target    = document.getElementById(util.format("string-%s", this.subSelectedId))
-
-        if (container && target) {
-          const top           = target.getBoundingClientRect().top
-          container.scrollTop = top - 200;
-        }
-      }, 500)
-    })
   }
 }
 </script>

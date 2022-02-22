@@ -459,7 +459,9 @@
                   <div class="row">
                     <div class="col-12">
                       <div
-                        class="row" v-for="field in
+                        class="row"
+                        :key="field.field"
+                        v-for="field in
                          [
                            {
                              description: 'Is Discipline',
@@ -499,17 +501,20 @@
                            {
                              description: 'Primary Category #',
                              field: 'typedescnum',
-                             category: 'Description'
+                             category: 'Description',
+                             selectData: this.dbStrSelectData[5]
                            },
                            {
                              description: 'Second Category 1 #',
                              field: 'effectdescnum',
-                             category: 'Description'
+                             category: 'Description',
+                             selectData: this.dbStrSelectData[5]
                            },
                            {
                              description: 'Second Category 2 #',
                              field: 'effectdescnum_2',
-                             category: 'Description'
+                             category: 'Description',
+                             selectData: this.dbStrSelectData[5]
                            },
                            {
                              description: 'Description #',
@@ -579,6 +584,17 @@
                               {{ index }}) {{ description }}
                             </option>
                           </select>
+                        </div>
+                        <div class="col-2">
+                          <div v-if="field.category === 'Description'">
+                            <router-link
+                              class="btn btn-warning btn-sm mt-2"
+                              tag="button"
+                              :to="DB_STRING_EDITOR_URL + '?type=' + (field.field === 'descnum' ? 6 : 5) + '&selectedId=' + spell[field.field] "
+                            >
+                              <i class="ra ra-scroll-unfurled mr-1"></i> Strings Editor
+                            </router-link>
+                          </div>
                         </div>
                       </div>
 
@@ -1439,12 +1455,12 @@
 </template>
 
 <script>
-import EqWindowFancy                 from "../../components/eq-ui/EQWindowFancy";
-import EqWindow                      from "../../components/eq-ui/EQWindow";
-import EqTabs                        from "../../components/eq-ui/EQTabs";
-import EqTab                         from "../../components/eq-ui/EQTab";
-import EqSpellPreview                from "../../components/eq-ui/EQSpellCardPreview";
-import {Spells}                      from "../../app/spells";
+import EqWindowFancy                  from "../../components/eq-ui/EQWindowFancy";
+import EqWindow                       from "../../components/eq-ui/EQWindow";
+import EqTabs                         from "../../components/eq-ui/EQTabs";
+import EqTab                          from "../../components/eq-ui/EQTab";
+import EqSpellPreview                 from "../../components/eq-ui/EQSpellCardPreview";
+import {Spells}                       from "../../app/spells";
 import {
   BASE_VALUE_FORMULAS,
   BUFF_DURATION_FORMULAS,
@@ -1456,24 +1472,24 @@ import {
   DB_SPELL_TARGETS,
   DB_SPELL_ZONE_TYPE,
   TELEPORT_ZONE_SELECTOR_TYPE
-}                                    from "../../app/constants/eq-spell-constants";
-import {DB_SKILLS}                   from "../../app/constants/eq-skill-constants";
-import {App}                         from "../../constants/app";
-import SpellIconSelector             from "./components/SpellIconSelector";
-import SpellAnimationPreview         from "./components/SpellAnimationPreview";
-import SpellAnimationViewer          from "../viewers/SpellAnimationViewer";
-import SpellAnimationSelector        from "./components/SpellAnimationSelector";
-import EqCheckbox                    from "../../components/eq-ui/EQCheckbox";
-import {SpellsNewApi}                from "../../app/api";
-import {SpireApiClient}              from "../../app/api/spire-api-client";
-import SpellClassSelector            from "./components/SpellClassSelector";
-import SpellDeitySelector            from "./components/SpellDeitySelector";
-import FreeIdSelector                from "../../components/tools/FreeIdSelector";
-import SpellSpaPreviewPane           from "./components/SpellSpaPreviewPane";
-import SpellCastingAnimationPreview  from "./components/SpellCastingAnimationPreview";
-import SpellCastingAnimationSelector from "./components/SpellCastingAnimationSelector";
-import {SPELL_SPA_DEFINITIONS}       from "../../app/constants/eq-spell-spa-definitions";
-import LoaderCastBarTimer            from "../../components/LoaderCastBarTimer";
+}                                     from "../../app/constants/eq-spell-constants";
+import {DB_SKILLS}                    from "../../app/constants/eq-skill-constants";
+import {App}                          from "../../constants/app";
+import SpellIconSelector              from "./components/SpellIconSelector";
+import SpellAnimationPreview          from "./components/SpellAnimationPreview";
+import SpellAnimationViewer           from "../viewers/SpellAnimationViewer";
+import SpellAnimationSelector         from "./components/SpellAnimationSelector";
+import EqCheckbox                     from "../../components/eq-ui/EQCheckbox";
+import {DbStrApi, SpellsNewApi}       from "../../app/api";
+import {SpireApiClient}               from "../../app/api/spire-api-client";
+import SpellClassSelector             from "./components/SpellClassSelector";
+import SpellDeitySelector             from "./components/SpellDeitySelector";
+import FreeIdSelector                 from "../../components/tools/FreeIdSelector";
+import SpellSpaPreviewPane            from "./components/SpellSpaPreviewPane";
+import SpellCastingAnimationPreview   from "./components/SpellCastingAnimationPreview";
+import SpellCastingAnimationSelector  from "./components/SpellCastingAnimationSelector";
+import {SPELL_SPA_DEFINITIONS}        from "../../app/constants/eq-spell-spa-definitions";
+import LoaderCastBarTimer             from "../../components/LoaderCastBarTimer";
 import {EditFormFieldUtil}            from "../../app/forms/edit-form-field-util";
 import LoaderFakeProgress             from "../../components/LoaderFakeProgress";
 import SpellSpellEffectSelector       from "./components/SpellSpellEffectSelector";
@@ -1487,7 +1503,7 @@ import SpellTeleportZoneSelectorZone  from "./components/SpellTeleportZoneSelect
 import SpellTeleportZoneSelectorPet   from "./components/SpellTeleportZoneSelectorPet";
 import SpellTeleportZoneSelectorHorse from "./components/SpellTeleportZoneSelectorHorse";
 import SpellTeleportZoneSelectorAura  from "./components/SpellTeleportZoneSelectorAura";
-
+import {ROUTE}                        from "../../routes";
 
 const MILLISECONDS_BEFORE_WINDOW_RESET = 5000;
 
@@ -1539,6 +1555,7 @@ export default {
       BUFF_DURATION_FORMULAS: BUFF_DURATION_FORMULAS,
       BASE_VALUE_FORMULAS: BASE_VALUE_FORMULAS,
       TELEPORT_ZONE_SELECTOR_TYPE: TELEPORT_ZONE_SELECTOR_TYPE,
+      DB_STRING_EDITOR_URL: ROUTE.STRINGS_DATABASE,
       loaded: true,
 
       // preview / selectors
@@ -1567,6 +1584,8 @@ export default {
       selectedSimpleSpellSelectorField: "",
       activeRangeField: "",
       selectedTeleportZoneSelectorType: "",
+
+      dbStrSelectData: {},
 
       castingAnimField: "",
 
@@ -1609,6 +1628,43 @@ export default {
     this.load()
   },
   methods: {
+
+    async getDbStringsSelectData(typeId) {
+      if (this.dbStrSelectData[typeId]) {
+        return this.dbStrSelectData[typeId]
+      }
+
+      let filters = [];
+      filters.push(["type", "__", typeId]);
+
+      let wheres = [];
+      filters.forEach((filter) => {
+        const where = util.format("%s%s%s", filter[0], filter[1], filter[2])
+        wheres.push(where)
+      })
+
+      let request   = {};
+      request.limit = 100000;
+      if (Object.keys(wheres).length > 0) {
+        request.where = wheres.join(".")
+      }
+
+      const DbStrApiClient = (new DbStrApi(SpireApiClient.getOpenApiConfig()))
+      const response       = await DbStrApiClient.listDbStrs(request)
+
+      if (response.status === 200 && response.data) {
+        this.loading   = false
+        const strings  = response.data
+        let selectData = {
+          0: '--- None ---'
+        }
+        strings.forEach((string) => {
+          selectData[string.id] = string.value;
+        })
+
+        this.dbStrSelectData[typeId] = selectData
+      }
+    },
 
     processTeleportZoneAuraSelectUpdate(event) {
       this.spell['teleport_zone'] = event.horse.name
@@ -1752,6 +1808,10 @@ export default {
         "teleport_zone",
         "range",
         "min_range",
+        "typedescnum",
+        "effectdescnum",
+        "effectdescnum_2",
+        "descnum",
         "recourse_link"
       ]
       hasSubEditorFields.forEach((field) => {
@@ -1914,6 +1974,8 @@ export default {
 
     load() {
       if (this.$route.params.id > 0) {
+        this.getDbStringsSelectData(5)
+
         Spells.getSpell(this.$route.params.id).then((result) => {
           this.spell = JSON.parse(JSON.stringify(result))
 
