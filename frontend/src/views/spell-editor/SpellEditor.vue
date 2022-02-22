@@ -77,8 +77,17 @@
                   </div>
 
                   <div class="row">
-                    <div class="col-6 pl-0 mr-0 mt-4">
+                    <div class="col-6 pl-0 mr-0 mt-4 text-center">
                       <spell-class-selector :spell="spell" @input="spell = $event"/>
+
+                      <b-button
+                        @click="none()"
+                        size="sm"
+                        variant="outline-warning"
+                        class="mt-1"
+                      >
+                        <i class="fa fa-remove"></i> None
+                      </b-button>
                     </div>
                     <div class="col-6">
 
@@ -1823,6 +1832,17 @@ export default {
   },
   methods: {
 
+    none() {
+      for (let i = 1; i <= 16; i++) {
+        const classIndex = "classes_" + i
+        if (this.spell[classIndex] !== 255) {
+          EditFormFieldUtil.setFieldModifiedById(classIndex)
+        }
+
+        this.spell[classIndex] = 255
+      }
+    },
+
     async getDbStringsSelectData(typeId) {
       if (this.dbStrSelectData[typeId]) {
         return this.dbStrSelectData[typeId]
@@ -1850,7 +1870,7 @@ export default {
         this.loading   = false
         const strings  = response.data
         let selectData = {
-          0: '--- None ---'
+          0: 'None'
         }
         strings.forEach((string) => {
           selectData[string.id] = string.value;

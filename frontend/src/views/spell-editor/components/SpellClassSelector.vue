@@ -8,15 +8,15 @@
       <div class="text-center">
         {{ gClass.short }}
         <div class="text-center">
-            <span
-              @click="selectClass(classId)"
-              :style="(isClassSelected(classId) ? 'border-radius: 3px;' : 'border-radius: 3px; opacity: .6')"
-              :class="'item-' + gClass.icon + ' ' + (isClassSelected(classId) ? 'highlight-selected-inner' : '')"
-              class="mt-1 mb-2"
-            />
+          <span
+            :style="(isClassSelected(classId) ? 'border-radius: 3px;' : 'border-radius: 3px; opacity: .6')"
+            :class="'item-' + gClass.icon + ' ' + (isClassSelected(classId) ? 'highlight-selected-inner' : '')"
+            class="mt-1 mb-2"
+          />
           <b-form-input
             v-model.number="spell['classes_' + classId]"
             @change="updateParent"
+            :id="'classes_' + classId"
             style="width: 45px; display: block; padding: 0; padding-left: 9px !important"
           />
         </div>
@@ -46,6 +46,7 @@ export default {
     }
   },
   methods: {
+
     calculateFromBitmask() {
       Object.keys(this.classes).reverse().forEach((classId) => {
         const gameClass               = this.classes[classId];
