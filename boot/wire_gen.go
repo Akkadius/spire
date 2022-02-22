@@ -38,9 +38,7 @@ func InitializeApplication() (App, error) {
 		return App{}, err
 	}
 	cache := provideCache()
-	exporter := clientfiles.NewExporter(db, logger)
-	importer := clientfiles.NewImporter(db, logger)
-	helloWorldCommand := cmd.NewHelloWorldCommand(db, logger, exporter, importer)
+	helloWorldCommand := cmd.NewHelloWorldCommand(db, logger)
 	generateModelsCommand := cmd.NewGenerateModelsCommand(db, logger)
 	generateControllersCommand := cmd.NewGenerateControllersCommand(db, logger)
 	helloWorldController := controllers.NewHelloWorldController(db, logger)
@@ -62,6 +60,8 @@ func InitializeApplication() (App, error) {
 	appController := controllers.NewAppController(cache, logger)
 	queryController := controllers.NewQueryController(databaseResolver, logger)
 	questFileApiController := controllers.NewQuestFileApiController(logger)
+	exporter := clientfiles.NewExporter(db, logger)
+	importer := clientfiles.NewImporter(db, logger)
 	clientFilesController := controllers.NewClientFilesController(logger, exporter, importer)
 	staticMapController := staticmaps.NewStaticMapController(databaseResolver, logger)
 	bootAppControllerGroups := provideControllers(helloWorldController, authController, meController, analyticsController, connectionsController, docsController, questApiController, appController, queryController, questFileApiController, clientFilesController, staticMapController)

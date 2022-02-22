@@ -209,8 +209,8 @@
                 </eq-tab>
 
                 <eq-tab name="Effects" class="effect-tab">
-                  <div>
 
+                  <div class="mb-3">
                     <div class="row">
                       <div class="col-12 text-center">
                         <div class="btn-group text-center mb-3" role="group">
@@ -303,6 +303,54 @@
                     </b-input-group>
 
                   </div>
+
+                  <div
+                    class="row minified-inputs fade-in" v-for="field in
+                     [
+                       {
+                         description: getTeleportZoneFieldName(),
+                         field: 'teleport_zone',
+                         text: true,
+                         showIf: getTeleportZoneSelectorType() !== ''
+                       },
+                     ]"
+                    v-if="typeof field.showIf === 'undefined' || (typeof field.showIf !== 'undefined' && field.showIf) || showAllFields"
+                    @click="processClickInputTrigger(field.field)"
+                  >
+                    <div class="col-6 text-right p-0 m-0 mr-3 mt-3" v-if="field.bool">
+                      <span v-if="field.category" class="font-weight-bold">{{ field.category }}</span>
+                      {{ field.description }}
+                    </div>
+                    <div class="col-6 text-right p-0 m-0 mr-3" v-if="!field.bool" style="margin-top: 10px !important">
+                      <span v-if="field.category" class="font-weight-bold">{{ field.category }}</span>
+                      {{ field.description }}
+                    </div>
+                    <div class="col-3 text-left p-0 mt-1">
+
+                      <!-- input number -->
+                      <b-form-input
+                        v-if="!field.selectData && !field.bool && !field.text"
+                        :id="field.field"
+                        v-model.number="spell[field.field]"
+                        class="m-0 mt-1"
+                        v-b-tooltip.hover.v-dark.right :title="getFieldDescription(field.field)"
+                        :style="(spell[field.field] === 0 ? 'opacity: .5' : '')"
+                      />
+
+                      <!-- input text -->
+                      <b-form-input
+                        v-if="!field.selectData && !field.bool && field.text"
+                        :id="field.field"
+                        v-model.number="spell[field.field]"
+                        class="m-0 mt-1"
+                        v-b-tooltip.hover.v-dark.right :title="getFieldDescription(field.field)"
+                        :style="(spell[field.field] === '' ? 'opacity: .5' : '')"
+                      />
+
+                    </div>
+                  </div>
+
+
                 </eq-tab>
 
                 <eq-tab name="Effects+" class="minified-inputs">
@@ -363,11 +411,6 @@
                        {
                          description: 'Nimbus Type',
                          field: 'nimbuseffect'
-                       },
-                       {
-                         description: 'Teleport Zone / Pet DB ID / Item Graphic for Bolt Spells',
-                         field: 'teleport_zone',
-                         text: true,
                        },
                      ]"
                     @click="processClickInputTrigger(field.field)"
@@ -1352,6 +1395,19 @@
               <range-visualizer :unit-marker="spell[activeRangeField]"/>
             </eq-window-simple>
 
+            <!-- range visualizer -->
+            <div
+              style="margin-top: 20px"
+              class="fade-in text-center"
+              v-if="teleportZoneSelectorActive && spell['teleport_zone'] !== ''"
+            >
+              <spell-teleport-zone-selector-zone
+                :selected-zone-name="spell['teleport_zone']"
+                v-if="selectedTeleportZoneSelectorType === TELEPORT_ZONE_SELECTOR_TYPE.ZONES"
+                @input="processTeleportZoneZoneSelectUpdate($event)"
+              />
+            </div>
+
             <!-- free id selector -->
             <eq-window
               title="Free Spell Ids"
@@ -1392,7 +1448,8 @@ import {
   DB_SPELL_RESISTS,
   DB_SPELL_TARGET_RESTRICTION,
   DB_SPELL_TARGETS,
-  DB_SPELL_ZONE_TYPE
+  DB_SPELL_ZONE_TYPE,
+  TELEPORT_ZONE_SELECTOR_TYPE
 }                                    from "../../app/constants/eq-spell-constants";
 import {DB_SKILLS}                   from "../../app/constants/eq-skill-constants";
 import {App}                         from "../../constants/app";
@@ -1420,6 +1477,7 @@ import SpellConeVisualizer           from "./components/SpellConeVisualizer";
 import SpellNimbusAnimationSelector  from "./components/SpellNimbusAnimationSelector";
 import util                          from "util";
 import RangeVisualizer               from "../../components/tools/RangeVisualizer";
+import SpellTeleportZoneSelectorZone from "./components/SpellTeleportZoneSelectorZone";
 
 
 const MILLISECONDS_BEFORE_WINDOW_RESET = 5000;
@@ -1427,6 +1485,7 @@ const MILLISECONDS_BEFORE_WINDOW_RESET = 5000;
 export default {
   name: "SpellEdit",
   components: {
+    SpellTeleportZoneSelectorZone,
     RangeVisualizer,
     SpellNimbusAnimationSelector,
     SpellConeVisualizer,
@@ -1467,6 +1526,7 @@ export default {
       DB_PC_NPC_ONLY_FLAG: DB_PC_NPC_ONLY_FLAG,
       BUFF_DURATION_FORMULAS: BUFF_DURATION_FORMULAS,
       BASE_VALUE_FORMULAS: BASE_VALUE_FORMULAS,
+      TELEPORT_ZONE_SELECTOR_TYPE: TELEPORT_ZONE_SELECTOR_TYPE,
       loaded: true,
 
       // preview / selectors
@@ -1481,6 +1541,7 @@ export default {
       simpleSpellSelectorActive: false,
       coneVisualizerActive: false,
       rangeVisualizerActive: false,
+      teleportZoneSelectorActive: false,
 
       spaPreviewNumber: -1,
       spaEffectIndex: -1,
@@ -1493,6 +1554,7 @@ export default {
 
       selectedSimpleSpellSelectorField: "",
       activeRangeField: "",
+      selectedTeleportZoneSelectorType: "",
 
       castingAnimField: "",
 
@@ -1536,6 +1598,97 @@ export default {
   },
   methods: {
 
+    processTeleportZoneZoneSelectUpdate(event) {
+      console.log("[processTeleportZoneZoneSelectUpdate]")
+      // console.log(event)
+
+      const selectedZone  = event.zone;
+      const TELEPORT_SPAS = [
+        83, 88, 104, 145,
+      ]
+
+      for (let effectIndex = 1; effectIndex <= 12; effectIndex++) {
+        const spaId = parseInt(this.spell['effectid_' + effectIndex])
+        if (spaId !== 254 && TELEPORT_SPAS.includes(spaId)) {
+
+          // set zone
+
+          this.spell['teleport_zone'] = selectedZone.short_name
+          EditFormFieldUtil.setFieldModifiedById("teleport_zone")
+
+          // make revelant slots visible when a zone is selected
+          for (let slot = effectIndex; slot < (effectIndex + 4); slot++) {
+            this.visibleEffectSlots[slot] = true
+            this.$forceUpdate()
+            setTimeout(() => {
+              EditFormFieldUtil.setFieldModifiedById("effect_base_value_" + slot)
+            }, 100)
+          }
+
+          this.spell["effect_base_value_" + effectIndex]       = selectedZone.safe_x
+          this.spell["effect_base_value_" + (effectIndex + 1)] = selectedZone.safe_y
+          this.spell["effect_base_value_" + (effectIndex + 2)] = selectedZone.safe_z
+          this.spell["effect_base_value_" + (effectIndex + 3)] = selectedZone.safe_heading
+
+
+          console.log("teleport spa is [%s]", spaId)
+        }
+      }
+
+    },
+
+    toTitleCase(str) {
+      return str.replace(
+        /\w\S*/g,
+        function (txt) {
+          return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
+        }
+      );
+    },
+
+    getTeleportZoneFieldName() {
+
+      const selectorType = this.getTeleportZoneSelectorType()
+      if (selectorType === TELEPORT_ZONE_SELECTOR_TYPE.PETS) {
+        return "Select Spell Pet"
+      }
+      if (selectorType === TELEPORT_ZONE_SELECTOR_TYPE.HORSES) {
+        return "Select Spell Horse"
+      }
+      if (selectorType === TELEPORT_ZONE_SELECTOR_TYPE.ZONES) {
+        return "Select Zone"
+      }
+
+      return this.toTitleCase(this.getTeleportZoneSelectorType())
+    },
+
+    getTeleportZoneSelectorType() {
+      let selectorType = ""
+      for (let effectIndex = 1; effectIndex <= 12; effectIndex++) {
+        const spaId = this.spell['effectid_' + effectIndex]
+        if (spaId !== 254) {
+          const data  = SPELL_SPA_DEFINITIONS[spaId]
+          const notes = data.notes
+
+          if (notes.includes("pets table")) {
+            selectorType = TELEPORT_ZONE_SELECTOR_TYPE.PETS
+          }
+          if (notes.includes("horses")) {
+            selectorType = TELEPORT_ZONE_SELECTOR_TYPE.HORSES
+          }
+          if (notes.includes("zone short name")) {
+            selectorType = TELEPORT_ZONE_SELECTOR_TYPE.ZONES
+          }
+        }
+      }
+
+      console.log("[getTeleportZoneSelectorType] selectorType [%s]", selectorType)
+
+      return selectorType
+    },
+
+
+
     toggleVisibleEffectSlot(slot) {
       if (this.spell['effectid_' + slot] !== 254) {
         return
@@ -1558,6 +1711,9 @@ export default {
       if (["range", "aoerange", "min_range"].includes(field)) {
         this.drawRangeVisualizer(field)
       }
+      if (["teleport_zone"].includes(field)) {
+        this.drawTeleportZoneSelector()
+      }
     },
 
     setSubEditorFieldHighlights() {
@@ -1571,6 +1727,7 @@ export default {
         "cone_stop_angle",
         "nimbuseffect",
         "aoerange",
+        "teleport_zone",
         "range",
         "min_range",
         "recourse_link"
@@ -1802,6 +1959,7 @@ export default {
       this.simpleSpellSelectorActive     = false;
       this.coneVisualizerActive          = false;
       this.rangeVisualizerActive         = false;
+      this.teleportZoneSelectorActive    = false;
 
       EditFormFieldUtil.resetFieldSubEditorHighlightedStatus()
     },
@@ -1910,6 +2068,13 @@ export default {
       this.rangeVisualizerActive = true
       this.lastResetTime         = Date.now() + 5000
       EditFormFieldUtil.setFieldSubEditorHighlightedById(field)
+    },
+    drawTeleportZoneSelector() {
+      this.resetPreviewComponents()
+      this.selectedTeleportZoneSelectorType = this.getTeleportZoneSelectorType()
+      this.teleportZoneSelectorActive       = true
+      this.lastResetTime                    = Date.now() + 5000
+      EditFormFieldUtil.setFieldSubEditorHighlightedById("teleport_zone")
     },
     drawSpaDetailPane(spa, index) {
       this.resetPreviewComponents()
