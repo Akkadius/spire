@@ -286,10 +286,10 @@
                     class="row minified-inputs fade-in" v-for="field in
                      [
                        {
-                         description: getTeleportZoneFieldName(),
+                         description: teleportZoneFieldName,
                          field: 'teleport_zone',
                          text: true,
-                         showIf: getTeleportZoneSelectorType() !== ''
+                         showIf: teleportZoneFieldName !== ''
                        },
                      ]"
                     v-if="typeof field.showIf === 'undefined' || (typeof field.showIf !== 'undefined' && field.showIf) || showAllFields"
@@ -572,6 +572,7 @@
                           <select
                             v-model.number="spell[field.field]"
                             class="form-control m-0 mt-1"
+                            :id="field.field"
                             v-if="field.selectData"
                             v-b-tooltip.hover.v-dark.right :title="getFieldDescription(field.field)"
                             :style="(spell[field.field] <= 0 ? 'opacity: .5' : '')"
@@ -1585,7 +1586,9 @@ export default {
       activeRangeField: "",
       selectedTeleportZoneSelectorType: "",
 
+      // cache
       dbStrSelectData: {},
+      teleportZoneFieldName: "",
 
       castingAnimField: "",
 
@@ -1975,7 +1978,7 @@ export default {
     load() {
       if (this.$route.params.id > 0) {
         this.getDbStringsSelectData(5)
-
+        
         Spells.getSpell(this.$route.params.id).then((result) => {
           this.spell = JSON.parse(JSON.stringify(result))
 
@@ -2021,6 +2024,9 @@ export default {
               this.visibleEffectSlots[i] = true
             }
           }
+
+          // calc field name
+          this.teleportZoneFieldName = this.getTeleportZoneFieldName()
 
           this.loaded = true
 
