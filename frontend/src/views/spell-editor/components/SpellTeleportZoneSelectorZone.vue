@@ -18,7 +18,9 @@
         class="eq-table eq-highlight-rows"
         style="display: table; font-size: 14px; overflow-x: scroll"
       >
-        <thead>
+        <thead
+          class="eq-table-floating-header"
+        >
         <tr>
           <th></th>
           <th style="width: 60px; white-space: nowrap;"></th>
@@ -166,13 +168,11 @@ export default {
     setTimeout(() => {
       const container = document.getElementById("zone-view-container");
       const target    = document.getElementById(util.format("zone-%s", this.selectedZone))
-
-      // 230 is height of video to offset
       if (container && target) {
         const top           = target.getBoundingClientRect().top
-        container.scrollTop = top - 150;
+        container.scrollTop = top - 300;
       }
-    }, 400)
+    }, 1000)
   }
 }
 </script>

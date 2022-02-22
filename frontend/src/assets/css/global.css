@@ -193,7 +193,7 @@
 }
 
 .pulsate-highlight-white {
-    border: 3px solid white !important;
+    border: 2px solid white !important;
     animation: pulsate-highlight-white 1s infinite !important;
     border-radius: 7px;
 }
