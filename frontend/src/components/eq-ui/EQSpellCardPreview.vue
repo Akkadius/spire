@@ -498,7 +498,7 @@ export default {
 
       // reagents
       let reagents = []
-      for (let i = 0; i < 4; i++) {
+      for (let i = 0; i <= 4; i++) {
         if (this.spellData["components_" + i] > 0) {
           let reagent  = {}
           reagent.id   = this.spellData["components_" + i]
