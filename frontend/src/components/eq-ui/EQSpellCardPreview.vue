@@ -355,8 +355,6 @@
       </tr>
 
 
-      <!-- TODO: Display Reagents - the data should be passed in? -->
-
       <!-- TODO: Optionally Display Items that have this spell as a scroll / tome -->
 
       <!--      <eq-item-card-preview/>-->
@@ -384,7 +382,7 @@
 
           <div style="display: inline-block">
 
-            <div :class="'ml-1 mr-1 item-' + reagent.item.icon + '-sm'"/>
+            <div :class="'ml-1 mr-2 item-' + reagent.item.icon + '-sm'"/>
 
             <span class="mr-1">{{ reagent.item.name }}</span>
           </div>

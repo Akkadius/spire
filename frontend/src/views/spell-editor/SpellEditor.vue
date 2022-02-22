@@ -934,6 +934,66 @@
                          description: 'Fizzle Adjustment',
                          field: 'basediff'
                        },
+                       {
+                         description: 'Components # 1',
+                         field: 'components_1',
+                         category: 'Components'
+                       },
+                       {
+                         description: 'Components # 2',
+                         field: 'components_2',
+                         category: 'Components'
+                       },
+                       {
+                         description: 'Components # 3',
+                         field: 'components_3',
+                         category: 'Components'
+                       },
+                       {
+                         description: 'Components # 4',
+                         field: 'components_4',
+                         category: 'Components'
+                       },
+                       {
+                         description: 'Component Count # 1',
+                         field: 'component_counts_1',
+                         category: 'Components'
+                       },
+                       {
+                         description: 'Components Count # 2',
+                         field: 'component_counts_2',
+                         category: 'Components'
+                       },
+                       {
+                         description: 'Components Count # 3',
+                         field: 'component_counts_3',
+                         category: 'Components'
+                       },
+                       {
+                         description: 'Components Count # 4',
+                         field: 'component_counts_4',
+                         category: 'Components'
+                       },
+                       {
+                         description: 'Reagent # 1',
+                         field: 'noexpend_reagent_1',
+                         category: 'Reagent'
+                       },
+                       {
+                         description: 'Reagent # 2',
+                         field: 'noexpend_reagent_2',
+                         category: 'Reagent'
+                       },
+                       {
+                         description: 'Reagent # 3',
+                         field: 'noexpend_reagent_3',
+                         category: 'Reagent'
+                       },
+                       {
+                         description: 'Reagent # 4',
+                         field: 'noexpend_reagent_4',
+                         category: 'Reagent'
+                       },
                      ]"
                   >
                     <div class="col-6 text-right p-0 m-0 mr-3" v-if="field.bool">
@@ -1930,6 +1990,14 @@ export default {
         "effectdescnum",
         "effectdescnum_2",
         "descnum",
+        "components_1",
+        "components_2",
+        "components_3",
+        "components_4",
+        "noexpend_reagent_1",
+        "noexpend_reagent_2",
+        "noexpend_reagent_3",
+        "noexpend_reagent_4",
         "recourse_link"
       ]
       hasSubEditorFields.forEach((field) => {
