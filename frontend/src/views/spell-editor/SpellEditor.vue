@@ -1247,6 +1247,121 @@
                   </div>
 
                 </eq-tab>
+
+                <eq-tab name="Misc" class="minified-inputs">
+                  <div class="row">
+                    <div class="col-12">
+                      <div
+                        class="row"
+                        :key="field.field"
+                        v-for="field in
+                         [
+                           {
+                             description: 'Deleteable',
+                             field: 'deleteable',
+                             bool: true
+                           },
+                           {
+                             description: 'Activated',
+                             field: 'activated',
+                             bool: true
+                           },
+                           {
+                             description: 'Light Type',
+                             field: 'light_type',
+                           },
+                           {
+                             description: 'Travel Type',
+                             field: 'travel_type',
+                           },
+                           {
+                             description: 'LDON Trap',
+                             field: 'ldon_trap',
+                           },
+                           {
+                             description: 'Spell Category',
+                             field: 'spell_category',
+                           },
+                           {
+                             description: 'NPC Category',
+                             field: 'npc_category',
+                           },
+                           {
+                             description: 'NPC Usefulness',
+                             field: 'npc_usefulness',
+                           },
+                         ]"
+                      >
+                        <div class="col-6 text-right p-0 m-0 mr-3" v-if="field.bool">
+                          <span v-if="field.category" class="font-weight-bold">{{ field.category }}</span>
+                          {{ field.description }}
+                        </div>
+                        <div
+                          class="col-6 text-right p-0 m-0 mr-3"
+                          v-if="!field.bool"
+                          style="margin-top: 10px !important"
+                        >
+                          <span v-if="field.category" class="font-weight-bold">{{ field.category }}</span>
+                          {{ field.description }}
+                        </div>
+                        <div class="col-3 text-left p-0 mt-1">
+
+                          <!-- checkbox -->
+                          <eq-checkbox
+                            v-b-tooltip.hover.v-dark.right :title="getFieldDescription(field.field)"
+                            class="mb-2 d-inline-block"
+                            :true-value="(typeof field.true !== 'undefined' ? field.true : 1)"
+                            :false-value="(typeof field.false !== 'undefined' ? field.false : 0)"
+                            v-model.number="spell[field.field]"
+                            @input="spell[field.field] = $event"
+                            v-if="field.bool"
+                          />
+
+                          <!-- input -->
+                          <b-form-input
+                            v-if="!field.selectData && !field.bool"
+                            :id="field.field"
+                            v-b-tooltip.hover.v-dark.right :title="getFieldDescription(field.field)"
+                            v-model.number="spell[field.field]"
+                            class="m-0 mt-1"
+                            :style="(spell[field.field] <= 0 ? 'opacity: .5' : '')"
+                          />
+
+                          <!-- select -->
+                          <select
+                            v-model.number="spell[field.field]"
+                            class="form-control m-0 mt-1"
+                            :id="field.field"
+                            v-if="field.selectData"
+                            v-b-tooltip.hover.v-dark.right :title="getFieldDescription(field.field)"
+                            :style="(spell[field.field] <= 0 ? 'opacity: .5' : '')"
+                          >
+                            <option
+                              v-for="(description, index) in field.selectData"
+                              :key="index"
+                              :value="parseInt(index)"
+                            >
+                              {{ index }}) {{ description }}
+                            </option>
+                          </select>
+                        </div>
+                        <div class="col-2">
+                          <div v-if="field.category === 'Description'">
+                            <router-link
+                              class="btn btn-warning btn-sm mt-2"
+                              tag="button"
+                              :to="DB_STRING_EDITOR_URL + '?type=' + (field.field === 'descnum' ? 6 : 5) + '&selectedId=' + spell[field.field] "
+                            >
+                              <i class="ra ra-scroll-unfurled mr-1"></i> Strings Editor
+                            </router-link>
+                          </div>
+                        </div>
+                      </div>
+
+                    </div>
+                  </div>
+
+                </eq-tab>
               </eq-tabs>
 
               <div class="text-center align-content-center mt-4" v-if="spell && spell.id >= 0">
@@ -1978,7 +2093,7 @@ export default {
     load() {
       if (this.$route.params.id > 0) {
         this.getDbStringsSelectData(5)
-        
+
         Spells.getSpell(this.$route.params.id).then((result) => {
           this.spell = JSON.parse(JSON.stringify(result))
 
