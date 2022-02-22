@@ -1997,7 +1997,7 @@ export default {
           "noexpend_reagent_3",
           "noexpend_reagent_4"
         ].includes(field)) {
-        this.drawDrawItemSelector(field);
+        this.drawItemSelector(field);
       }
     },
 
@@ -2076,6 +2076,21 @@ export default {
         // activate spell selector
         if (["spellid", "spell id"].includes(contents)) {
           this.drawSpellSelector(effectIndex, field)
+        }
+        // activate item selector
+        if (["itemid", "item id"].includes(contents)) {
+          let fieldId = ""
+          if (field.includes("max")) {
+            fieldId = "max"
+          }
+          if (field.includes("limit")) {
+            fieldId = "effect_limit_value"
+          }
+          if (field.includes("base")) {
+            fieldId = "effect_base_value"
+          }
+
+          this.drawItemSelector(fieldId + "_" + effectIndex)
         }
       }
     },
@@ -2346,7 +2361,7 @@ export default {
 
       EditFormFieldUtil.setFieldSubEditorHighlightedById(fieldId + "_" + effectIndex)
     },
-    drawDrawItemSelector(field) {
+    drawItemSelector(field) {
       this.resetPreviewComponents()
       this.lastResetTime             = Date.now() + 5000
       this.itemSelectorActive        = true
