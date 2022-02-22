@@ -145,7 +145,6 @@ export default {
       })
 
       const result = await api.listZones({
-        limit: this.limit,
         where: wheres.join("."),
         orderBy: "expansion.short_name"
       })

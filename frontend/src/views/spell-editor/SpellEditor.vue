@@ -1401,9 +1401,15 @@
               class="fade-in text-center"
               v-if="teleportZoneSelectorActive && spell['teleport_zone'] !== ''"
             >
+              <spell-teleport-zone-selector-pet
+                :selectedPetName="spell['teleport_zone']"
+                v-if="selectedTeleportZoneSelectorType === TELEPORT_ZONE_SELECTOR_TYPE.PETS"
+                @input="processTeleportZonePetSelectUpdate($event)"
+              />
+
               <spell-teleport-zone-selector-zone
                 :selected-zone-name="spell['teleport_zone']"
-                v-if="selectedTeleportZoneSelectorType === TELEPORT_ZONE_SELECTOR_TYPE.ZONES"
+                v-if="selectedTeleportZoneSelectorType === TELEPORT_ZONE_SELECTOR_TYPE.ZONE"
                 @input="processTeleportZoneZoneSelectUpdate($event)"
               />
             </div>
@@ -1478,6 +1484,7 @@ import SpellNimbusAnimationSelector  from "./components/SpellNimbusAnimationSele
 import util                          from "util";
 import RangeVisualizer               from "../../components/tools/RangeVisualizer";
 import SpellTeleportZoneSelectorZone from "./components/SpellTeleportZoneSelectorZone";
+import SpellTeleportZoneSelectorPet  from "./components/SpellTeleportZoneSelectorPet";
 
 
 const MILLISECONDS_BEFORE_WINDOW_RESET = 5000;
@@ -1485,6 +1492,7 @@ const MILLISECONDS_BEFORE_WINDOW_RESET = 5000;
 export default {
   name: "SpellEdit",
   components: {
+    SpellTeleportZoneSelectorPet,
     SpellTeleportZoneSelectorZone,
     RangeVisualizer,
     SpellNimbusAnimationSelector,
@@ -1598,6 +1606,10 @@ export default {
   },
   methods: {
 
+    processTeleportZonePetSelectUpdate(event) {
+      this.spell['teleport_zone'] = event.pet.type
+    },
+
     processTeleportZoneZoneSelectUpdate(event) {
       console.log("[processTeleportZoneZoneSelectUpdate]")
       // console.log(event)
@@ -1630,11 +1642,9 @@ export default {
           this.spell["effect_base_value_" + (effectIndex + 2)] = selectedZone.safe_z
           this.spell["effect_base_value_" + (effectIndex + 3)] = selectedZone.safe_heading
 
-
           console.log("teleport spa is [%s]", spaId)
         }
       }
-
     },
 
     toTitleCase(str) {
