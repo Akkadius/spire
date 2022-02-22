@@ -122,6 +122,9 @@ export default {
         }
       });
       this.filteredZones = filteredZones
+      if (filteredZones.length === 0) {
+        this.filteredZones = zones;
+      }
     },
 
     getExpansionIcon(expansion) {

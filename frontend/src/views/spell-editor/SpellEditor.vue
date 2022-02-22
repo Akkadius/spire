@@ -1399,7 +1399,7 @@
             <div
               style="margin-top: 20px"
               class="fade-in text-center"
-              v-if="teleportZoneSelectorActive && spell['teleport_zone'] && spell['teleport_zone'] !== ''"
+              v-if="teleportZoneSelectorActive && typeof spell['teleport_zone'] !== 'undefined'"
             >
               <spell-teleport-zone-selector-horse
                 :selected-horse-name="spell['teleport_zone']"
@@ -1415,7 +1415,7 @@
 
               <spell-teleport-zone-selector-zone
                 :selected-zone-name="spell['teleport_zone']"
-                v-if="selectedTeleportZoneSelectorType === TELEPORT_ZONE_SELECTOR_TYPE.ZONE"
+                v-if="selectedTeleportZoneSelectorType === TELEPORT_ZONE_SELECTOR_TYPE.ZONES"
                 @input="processTeleportZoneZoneSelectUpdate($event)"
               />
             </div>
