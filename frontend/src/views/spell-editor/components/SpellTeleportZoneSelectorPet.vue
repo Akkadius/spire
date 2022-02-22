@@ -116,7 +116,12 @@ export default {
           filteredPets.push(pet)
         }
       });
+
       this.filteredPets = filteredPets
+
+      if (filteredPets.length === 0) {
+        this.filteredPets = pets;
+      }
     },
 
     getExpansionIcon(expansion) {

@@ -1399,10 +1399,16 @@
             <div
               style="margin-top: 20px"
               class="fade-in text-center"
-              v-if="teleportZoneSelectorActive && spell['teleport_zone'] !== ''"
+              v-if="teleportZoneSelectorActive && spell['teleport_zone'] && spell['teleport_zone'] !== ''"
             >
+              <spell-teleport-zone-selector-horse
+                :selected-horse-name="spell['teleport_zone']"
+                v-if="selectedTeleportZoneSelectorType === TELEPORT_ZONE_SELECTOR_TYPE.HORSES"
+                @input="processTeleportZoneHorseSelectUpdate($event)"
+              />
+
               <spell-teleport-zone-selector-pet
-                :selectedPetName="spell['teleport_zone']"
+                :selected-pet-name="spell['teleport_zone']"
                 v-if="selectedTeleportZoneSelectorType === TELEPORT_ZONE_SELECTOR_TYPE.PETS"
                 @input="processTeleportZonePetSelectUpdate($event)"
               />
@@ -1474,17 +1480,18 @@ import SpellCastingAnimationPreview  from "./components/SpellCastingAnimationPre
 import SpellCastingAnimationSelector from "./components/SpellCastingAnimationSelector";
 import {SPELL_SPA_DEFINITIONS}       from "../../app/constants/eq-spell-spa-definitions";
 import LoaderCastBarTimer            from "../../components/LoaderCastBarTimer";
-import {EditFormFieldUtil}           from "../../app/forms/edit-form-field-util";
-import LoaderFakeProgress            from "../../components/LoaderFakeProgress";
-import SpellSpellEffectSelector      from "./components/SpellSpellEffectSelector";
-import {debounce}                    from "../../app/utility/debounce";
-import EqWindowSimple                from "../../components/eq-ui/EQWindowSimple";
-import SpellConeVisualizer           from "./components/SpellConeVisualizer";
-import SpellNimbusAnimationSelector  from "./components/SpellNimbusAnimationSelector";
-import util                          from "util";
-import RangeVisualizer               from "../../components/tools/RangeVisualizer";
-import SpellTeleportZoneSelectorZone from "./components/SpellTeleportZoneSelectorZone";
-import SpellTeleportZoneSelectorPet  from "./components/SpellTeleportZoneSelectorPet";
+import {EditFormFieldUtil}            from "../../app/forms/edit-form-field-util";
+import LoaderFakeProgress             from "../../components/LoaderFakeProgress";
+import SpellSpellEffectSelector       from "./components/SpellSpellEffectSelector";
+import {debounce}                     from "../../app/utility/debounce";
+import EqWindowSimple                 from "../../components/eq-ui/EQWindowSimple";
+import SpellConeVisualizer            from "./components/SpellConeVisualizer";
+import SpellNimbusAnimationSelector   from "./components/SpellNimbusAnimationSelector";
+import util                           from "util";
+import RangeVisualizer                from "../../components/tools/RangeVisualizer";
+import SpellTeleportZoneSelectorZone  from "./components/SpellTeleportZoneSelectorZone";
+import SpellTeleportZoneSelectorPet   from "./components/SpellTeleportZoneSelectorPet";
+import SpellTeleportZoneSelectorHorse from "./components/SpellTeleportZoneSelectorHorse";
 
 
 const MILLISECONDS_BEFORE_WINDOW_RESET = 5000;
@@ -1492,6 +1499,7 @@ const MILLISECONDS_BEFORE_WINDOW_RESET = 5000;
 export default {
   name: "SpellEdit",
   components: {
+    SpellTeleportZoneSelectorHorse,
     SpellTeleportZoneSelectorPet,
     SpellTeleportZoneSelectorZone,
     RangeVisualizer,
@@ -1606,10 +1614,12 @@ export default {
   },
   methods: {
 
+    processTeleportZoneHorseSelectUpdate(event) {
+      this.spell['teleport_zone'] = event.horse.filename
+    },
     processTeleportZonePetSelectUpdate(event) {
       this.spell['teleport_zone'] = event.pet.type
     },
-
     processTeleportZoneZoneSelectUpdate(event) {
       console.log("[processTeleportZoneZoneSelectUpdate]")
       // console.log(event)
