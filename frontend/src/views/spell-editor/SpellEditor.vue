@@ -995,6 +995,7 @@
                          category: 'Reagent'
                        },
                      ]"
+                    @click="processClickInputTrigger(field.field)"
                   >
                     <div class="col-6 text-right p-0 m-0 mr-3" v-if="field.bool">
                       {{ field.description }}
@@ -1529,6 +1530,17 @@
               />
             </div>
 
+            <!-- spellitem selector -->
+            <div
+              style="margin-top: 20px; width: auto;"
+              class="fade-in"
+              v-if="itemSelectorActive"
+            >
+              <spell-item-selector
+                @input="spell[selectedItemSelectorField] = $event.id; setFieldModifiedById(selectedItemSelectorField)"
+              />
+            </div>
+
             <!-- simple spell effect selector (Used in simple fields) -->
             <div
               style="margin-top: 20px; width: auto;"
@@ -1680,12 +1692,14 @@ import SpellTeleportZoneSelectorPet   from "./components/SpellTeleportZoneSelect
 import SpellTeleportZoneSelectorHorse from "./components/SpellTeleportZoneSelectorHorse";
 import SpellTeleportZoneSelectorAura  from "./components/SpellTeleportZoneSelectorAura";
 import {ROUTE}                        from "../../routes";
+import SpellItemSelector              from "./components/SpellItemSelector";
 
 const MILLISECONDS_BEFORE_WINDOW_RESET = 5000;
 
 export default {
   name: "SpellEdit",
   components: {
+    SpellItemSelector,
     SpellTeleportZoneSelectorAura,
     SpellTeleportZoneSelectorHorse,
     SpellTeleportZoneSelectorPet,
@@ -1743,6 +1757,7 @@ export default {
       spaDetailPaneActive: false,
       castingAnimSelectorActive: false,
       spellSelectorActive: false,
+      itemSelectorActive: false,
       simpleSpellSelectorActive: false,
       coneVisualizerActive: false,
       rangeVisualizerActive: false,
@@ -1760,6 +1775,7 @@ export default {
       selectedSimpleSpellSelectorField: "",
       activeRangeField: "",
       selectedTeleportZoneSelectorType: "",
+      selectedItemSelectorField: "",
 
       // cache
       dbStrSelectData: {},
@@ -1969,6 +1985,19 @@ export default {
       }
       if (["teleport_zone"].includes(field)) {
         this.drawTeleportZoneSelector()
+      }
+      if (
+        [
+          "components_1",
+          "components_2",
+          "components_3",
+          "components_4",
+          "noexpend_reagent_1",
+          "noexpend_reagent_2",
+          "noexpend_reagent_3",
+          "noexpend_reagent_4"
+        ].includes(field)) {
+        this.drawDrawItemSelector(field);
       }
     },
 
@@ -2210,9 +2239,7 @@ export default {
 
           // calc field name
           this.teleportZoneFieldName = this.getTeleportZoneFieldName()
-
-          this.loaded = true
-
+          this.loaded                = true
         })
       }
     },
@@ -2229,6 +2256,7 @@ export default {
       this.spaDetailPaneActive           = false;
       this.castingAnimSelectorActive     = false;
       this.spellSelectorActive           = false;
+      this.itemSelectorActive            = false;
       this.simpleSpellSelectorActive     = false;
       this.coneVisualizerActive          = false;
       this.rangeVisualizerActive         = false;
@@ -2317,6 +2345,13 @@ export default {
       this.selectedEffectColumn = fieldId
 
       EditFormFieldUtil.setFieldSubEditorHighlightedById(fieldId + "_" + effectIndex)
+    },
+    drawDrawItemSelector(field) {
+      this.resetPreviewComponents()
+      this.lastResetTime             = Date.now() + 5000
+      this.itemSelectorActive        = true
+      this.selectedItemSelectorField = field
+      EditFormFieldUtil.setFieldSubEditorHighlightedById(field)
     },
     drawSimpleSpellSelector(field) {
       this.resetPreviewComponents()
