@@ -85,7 +85,7 @@ func (e *CharacterLeadershipAbilityController) getCharacterLeadershipAbility(c e
 	// primary key param
 	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Cannot find param [ID]"})
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Cannot find param [Id]"})
 	}
 	params = append(params, id)
 	keys = append(keys, "id = ?")
@@ -150,7 +150,7 @@ func (e *CharacterLeadershipAbilityController) updateCharacterLeadershipAbility(
 	// primary key param
 	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Cannot find param [ID]"})
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Cannot find param [Id]"})
 	}
 	params = append(params, id)
 	keys = append(keys, "id = ?")

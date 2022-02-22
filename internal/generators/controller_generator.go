@@ -33,6 +33,7 @@ func NewGenerateController(options GenerateControllerContext, logger *logrus.Log
 
 type templateData struct {
 	RelationshipsComment  string
+	KeyNameModelField     string
 	KeyName               string
 	KeyColumn             string
 	KeyNameLowerCamel     string
@@ -75,18 +76,33 @@ func (gc *GenerateController) Generate() {
 		for _, key := range keys {
 			if key.ColumnKey.String == "PRI" {
 				keyName = strcase.ToCamel(key.Column)
+				priKey = key
 				break
 			}
 
 			if key.OrdinalPosition == "1" {
 				keyName = strcase.ToCamel(key.Column)
+				priKey = key
 				break
 			}
 		}
 	}
 
+	newKeyName := keyName
+	// gorm uses capital "ID"
 	if keyName == "Id" {
 		keyName = "ID"
+	}
+
+	// type is a reserved word
+	if keyName == "Type" {
+		newKeyName = "TypeId"
+	}
+
+	if len(os.Getenv("DEBUG")) > 0 {
+		pp.Println("keyName")
+		pp.Println(keyName)
+		pp.Println(priKey)
 	}
 
 	// build primary key param line
@@ -94,8 +110,8 @@ func (gc *GenerateController) Generate() {
 	if strings.Contains(priKey.DataType, "int") {
 		paramLine = fmt.Sprintf(
 			"%s, err := strconv.Atoi(c.Param(\"%s\"))",
-			strcase.ToLowerCamel(keyName),
-			strcase.ToLowerCamel(keyName),
+			strcase.ToLowerCamel(newKeyName),
+			strcase.ToLowerCamel(newKeyName),
 		)
 	}
 
@@ -103,7 +119,14 @@ func (gc *GenerateController) Generate() {
 	// loop through secondary keys (skip first)
 	for i, key := range keys {
 		if i != 0 {
-			pp.Println(key)
+			if key.Column == "type" {
+				key.Column = "typeId"
+			}
+
+			if len(os.Getenv("DEBUG")) > 0 {
+				pp.Println("key.Column")
+				pp.Println(key.Column)
+			}
 
 			// add type lines (uint / int etc.)
 			param := fmt.Sprintf(`
@@ -130,7 +153,9 @@ func (gc *GenerateController) Generate() {
 			)
 
 			queryParams += param
-			fmt.Println(param)
+			if len(os.Getenv("DEBUG")) > 0 {
+				fmt.Println(param)
+			}
 		}
 	}
 
@@ -139,8 +164,9 @@ func (gc *GenerateController) Generate() {
 	templateData := templateData{
 		RelationshipsComment:  gc.options.RelationshipsComment,
 		EntityName:            strcase.ToCamel(entityName),
-		KeyName:               keyName,
-		KeyNameLowerCamel:     strcase.ToLowerCamel(keyName),
+		KeyNameModelField:     keyName,
+		KeyName:               newKeyName,
+		KeyNameLowerCamel:     strcase.ToLowerCamel(newKeyName),
 		KeyColumn:             priKey.Column,
 		EntityNamePlural:      gc.pluralize.Plural(strcase.ToCamel(entityName)),
 		EntityNameSnake:       strcase.ToSnake(entityName),
@@ -159,7 +185,7 @@ func (gc *GenerateController) Generate() {
 	var out bytes.Buffer
 	err = tpl.ExecuteTemplate(&out, "crud_controller.tmpl", templateData)
 	if err != nil {
-		fmt.Println(err)
+		gc.logger.Fatal(err)
 	}
 
 	// write file

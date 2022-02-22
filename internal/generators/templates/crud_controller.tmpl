@@ -104,7 +104,7 @@ func (e *{{.EntityName}}Controller) get{{.EntityName}}(c echo.Context) error {
 	}
 
 	// couldn't find entity
-	if result.{{.KeyName}} == 0 {
+	if result.{{.KeyNameModelField}} == 0 {
 		return c.JSON(http.StatusNotFound, echo.Map{"error": "Cannot find entity"})
 	}
 

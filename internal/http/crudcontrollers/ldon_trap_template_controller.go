@@ -85,7 +85,7 @@ func (e *LdonTrapTemplateController) getLdonTrapTemplate(c echo.Context) error {
 	// primary key param
 	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Cannot find param [ID]"})
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Cannot find param [Id]"})
 	}
 	params = append(params, id)
 	keys = append(keys, "id = ?")
@@ -139,7 +139,7 @@ func (e *LdonTrapTemplateController) updateLdonTrapTemplate(c echo.Context) erro
 	// primary key param
 	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Cannot find param [ID]"})
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Cannot find param [Id]"})
 	}
 	params = append(params, id)
 	keys = append(keys, "id = ?")
