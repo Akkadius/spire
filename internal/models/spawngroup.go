@@ -24,6 +24,14 @@ func (Spawngroup) TableName() string {
 func (Spawngroup) Relationships() []string {
     return []string{
 		"Spawn2",
+		"Spawn2.Spawnentries",
+		"Spawn2.Spawnentries.NpcType",
+		"Spawn2.Spawnentries.NpcType.AlternateCurrency",
+		"Spawn2.Spawnentries.NpcType.Merchantlists",
+		"Spawn2.Spawnentries.NpcType.NpcFactions",
+		"Spawn2.Spawnentries.NpcType.NpcFactions.NpcFactionEntries",
+		"Spawn2.Spawnentries.NpcType.NpcSpells",
+		"Spawn2.Spawnentries.NpcType.NpcSpells.NpcSpellsEntries",
 	}
 }
 

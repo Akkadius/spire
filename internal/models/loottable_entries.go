@@ -18,7 +18,16 @@ func (LoottableEntry) Relationships() []string {
     return []string{
 		"LootdropEntries",
 		"LootdropEntries.Item",
+		"LootdropEntries.Item.AlternateCurrencies",
+		"LootdropEntries.Item.CharacterCorpseItems",
 		"LootdropEntries.Item.DiscoveredItems",
+		"LootdropEntries.Item.Doors",
+		"LootdropEntries.Item.Fishings",
+		"LootdropEntries.Item.Forages",
+		"LootdropEntries.Item.GroundSpawns",
+		"LootdropEntries.Item.ItemTicks",
+		"LootdropEntries.Item.Keyrings",
+		"LootdropEntries.Lootdrop",
 	}
 }
 

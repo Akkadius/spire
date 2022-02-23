@@ -31,7 +31,23 @@ func (Inventory) TableName() string {
 func (Inventory) Relationships() []string {
     return []string{
 		"Item",
+		"Item.AlternateCurrencies",
+		"Item.CharacterCorpseItems",
 		"Item.DiscoveredItems",
+		"Item.Doors",
+		"Item.Fishings",
+		"Item.Forages",
+		"Item.GroundSpawns",
+		"Item.ItemTicks",
+		"Item.Keyrings",
+		"Item.LootdropEntries",
+		"Item.Merchantlists",
+		"Item.ObjectContents",
+		"Item.Objects",
+		"Item.StartingItems",
+		"Item.TradeskillRecipeEntries",
+		"Item.TradeskillRecipeEntries.TradeskillRecipe",
+		"Item.TributeLevels",
 	}
 }
 

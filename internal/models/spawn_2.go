@@ -44,7 +44,6 @@ func (Spawn2) Relationships() []string {
 		"Spawnentries.NpcType.NpcSpells",
 		"Spawnentries.NpcType.NpcSpells.NpcSpellsEntries",
 		"Spawnentries.Spawngroup",
-		"Spawnentries.Spawngroup.Spawn2",
 		"Spawngroup",
 	}
 }
