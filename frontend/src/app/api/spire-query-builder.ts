@@ -18,7 +18,7 @@ export class SpireQueryBuilder {
   public orderBys: string[]      = [];
   public groupBys: string[]      = [];
   public orderDirections: string = "";
-  public limitParam: number           = 100;
+  public limitParam: number      = 100;
 
   translateOperator(operator) {
     switch (operator) {

@@ -26,7 +26,7 @@ export class SpireApiClient {
   }
 
   static getOpenApiConfig() {
-    let openApiConfig = <any>{baseOptions: SpireApiClient.getAxiosConfig()}
+    let openApiConfig      = <any>{baseOptions: SpireApiClient.getAxiosConfig()}
     openApiConfig.basePath = this.getBaseV1Path()
 
     return openApiConfig
@@ -38,7 +38,7 @@ export class SpireApiClient {
 
     client.interceptors.request.use(x => {
       // @ts-ignore
-      x.meta = x.meta || {}
+      x.meta                  = x.meta || {}
       // @ts-ignore
       x.meta.requestStartedAt = Date.now()
 
