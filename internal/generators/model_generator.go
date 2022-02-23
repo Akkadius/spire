@@ -21,8 +21,8 @@ type GenerateModelContext struct {
 }
 
 type GenerateModel struct {
-	options GenerateModelContext
-	logger  *logrus.Logger
+	options      GenerateModelContext
+	logger       *logrus.Logger
 	gorm         *gorm.DB
 	pluralize    *pluralize.Client
 	debugEnabled bool
@@ -237,7 +237,7 @@ func (g *GenerateModel) Generate() []ModelGenerateResponse {
 			// nested relationships
 			rt := BaseGormModelRelationshipTemplate
 			relationshipEntries := ""
-			nestedRelationships := g.getNestedRelationshipsFromTable(table, "")
+			nestedRelationships := g.getNestedRelationshipsFromTable(table, "", "", table, 0)
 			if len(nestedRelationships) > 0 {
 				relationshipEntries = "\n"
 				for _, nested := range nestedRelationships {
@@ -321,26 +321,35 @@ func (g *GenerateModel) getRelationshipTypeModelAttributePrefix(r ForeignKeyMapp
 	return ""
 }
 
-func (g *GenerateModel) getNestedRelationshipsFromTable(table string, prefix string, rootTable ...string) []string {
+func (g *GenerateModel) getNestedRelationshipsFromTable(table string, prefix string, parentTable string, rootTable string, level int) []string {
 	relationshipNames := make([]string, 0)
 
 	if prefix != "" {
 		prefix = fmt.Sprintf("%v.", prefix)
 	}
 
+	g.debug(fmt.Sprintf("-- [getNestedRelationshipsFromTable] [%v] table [%v]", level, table))
+
+	currentLevel := level + 1
 	for _, relation := range g.options.Relationships {
 		if table != relation.Table {
 			continue
 		}
 
+		g.debug(fmt.Sprintf("-- [getNestedRelationshipsFromTable] [%v] table [%v] relation [%v] remote [%v]", level, table, relation, relation.RemoteTable))
+
 		if len(rootTable) > 0 {
-			if relation.RemoteTable == rootTable[0] {
-				g.debug(fmt.Sprintf("-- [getNestedRelationshipsFromTable] remote table is same as root table, skipping"))
+			if relation.RemoteTable == rootTable {
+				g.debug(fmt.Sprintf("-- [getNestedRelationshipsFromTable] [%v] remote table [%v] is same as root table [%v] skipping\n", level, relation.RemoteTable, rootTable))
+				continue
+			}
+		}
+		if len(parentTable) > 0 {
+			if relation.RemoteTable == parentTable {
+				g.debug(fmt.Sprintf("-- [getNestedRelationshipsFromTable] [%v] remote table [%v] is same as parent table [%v] skipping\n", level, relation.RemoteTable, parentTable))
 				break
 			}
 		}
-
-		g.debug(fmt.Sprintf("-- [getNestedRelationshipsFromTable] table [%v] relation [%v]", table, relation))
 
 		relationshipAttributeName := ""
 
@@ -357,7 +366,7 @@ func (g *GenerateModel) getNestedRelationshipsFromTable(table string, prefix str
 		passedDownPrefix := fmt.Sprintf("%v%v", prefix, relationshipAttributeName)
 		relationshipNames = append(
 			relationshipNames,
-			g.getNestedRelationshipsFromTable(relation.RemoteTable, passedDownPrefix, table)...,
+			g.getNestedRelationshipsFromTable(relation.RemoteTable, passedDownPrefix, table, rootTable, currentLevel)...,
 		)
 	}
 
