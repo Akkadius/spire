@@ -32,6 +32,7 @@ func (LootdropEntry) Relationships() []string {
 		"Item.GroundSpawns",
 		"Item.ItemTicks",
 		"Item.Keyrings",
+		"Item.LootdropEntries",
 		"Item.Merchantlists",
 		"Item.ObjectContents",
 		"Item.Objects",
@@ -40,6 +41,9 @@ func (LootdropEntry) Relationships() []string {
 		"Item.TradeskillRecipeEntries.TradeskillRecipe",
 		"Item.TributeLevels",
 		"Lootdrop",
+		"Lootdrop.LootdropEntries",
+		"Lootdrop.LoottableEntries",
+		"Lootdrop.LoottableEntries.LootdropEntries",
 	}
 }
 

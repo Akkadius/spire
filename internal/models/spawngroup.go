@@ -28,10 +28,15 @@ func (Spawngroup) Relationships() []string {
 		"Spawn2.Spawnentries.NpcType",
 		"Spawn2.Spawnentries.NpcType.AlternateCurrency",
 		"Spawn2.Spawnentries.NpcType.Merchantlists",
+		"Spawn2.Spawnentries.NpcType.NpcEmotes",
 		"Spawn2.Spawnentries.NpcType.NpcFactions",
 		"Spawn2.Spawnentries.NpcType.NpcFactions.NpcFactionEntries",
 		"Spawn2.Spawnentries.NpcType.NpcSpells",
 		"Spawn2.Spawnentries.NpcType.NpcSpells.NpcSpellsEntries",
+		"Spawn2.Spawnentries.NpcType.NpcTypesTint",
+		"Spawn2.Spawnentries.NpcType.Spawnentries",
+		"Spawn2.Spawnentries.Spawngroup",
+		"Spawn2.Spawngroup",
 	}
 }
 

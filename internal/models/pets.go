@@ -29,8 +29,11 @@ func (Pet) Relationships() []string {
 		"NpcType.NpcSpells.NpcSpellsEntries",
 		"NpcType.NpcTypesTint",
 		"NpcType.Spawnentries",
+		"NpcType.Spawnentries.NpcType",
 		"NpcType.Spawnentries.Spawngroup",
 		"NpcType.Spawnentries.Spawngroup.Spawn2",
+		"NpcType.Spawnentries.Spawngroup.Spawn2.Spawnentries",
+		"NpcType.Spawnentries.Spawngroup.Spawn2.Spawngroup",
 	}
 }
 

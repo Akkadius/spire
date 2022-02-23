@@ -46,8 +46,11 @@ func (Task) Relationships() []string {
 		"TaskActivities.NpcType.NpcSpells.NpcSpellsEntries",
 		"TaskActivities.NpcType.NpcTypesTint",
 		"TaskActivities.NpcType.Spawnentries",
+		"TaskActivities.NpcType.Spawnentries.NpcType",
 		"TaskActivities.NpcType.Spawnentries.Spawngroup",
 		"TaskActivities.NpcType.Spawnentries.Spawngroup.Spawn2",
+		"TaskActivities.NpcType.Spawnentries.Spawngroup.Spawn2.Spawnentries",
+		"TaskActivities.NpcType.Spawnentries.Spawngroup.Spawn2.Spawngroup",
 		"Tasksets",
 	}
 }
