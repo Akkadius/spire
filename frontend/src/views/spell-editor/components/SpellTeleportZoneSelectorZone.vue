@@ -60,14 +60,14 @@
 </template>
 
 <script>
-import {TELEPORT_ZONE_SELECTOR_TYPE} from "../../../app/constants/eq-spell-constants";
+import {TELEPORT_ZONE_SELECTOR_TYPE} from "@/app/constants/eq-spell-constants";
 import EqWindowSimple                from "../../../components/eq-ui/EQWindowSimple";
-import {ZoneApi}                     from "../../../app/api";
-import {SpireApiClient}              from "../../../app/api/spire-api-client";
+import {ZoneApi}                     from "@/app/api";
+import {SpireApiClient}              from "@/app/api/spire-api-client";
 import util                          from "util";
-import Expansions                    from "../../../app/utility/expansions";
+import Expansions                    from "@/app/utility/expansions";
 import EqCheckbox                    from "../../../components/eq-ui/EQCheckbox";
-import {SpireQueryBuilder}           from "../../../app/api/spire-query-builder";
+import {SpireQueryBuilder}           from "@/app/api/spire-query-builder";
 
 let zones = {}
 

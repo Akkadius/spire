@@ -45,11 +45,11 @@
 </template>
 
 <script>
-import {SPELL_SPA_DEFINITIONS} from "../../../app/constants/eq-spell-spa-definitions";
+import {SPELL_SPA_DEFINITIONS} from "@/app/constants/eq-spell-spa-definitions";
 import EqDebug                 from "../../../components/eq-ui/EQDebug";
-import {Spells}                from "../../../app/spells";
+import {Spells}                from "@/app/spells";
 import {App}                   from "../../../constants/app";
-import {Items}                 from "../../../app/items";
+import {Items}                 from "@/app/items";
 import EqWindow                from "@/components/eq-ui/EQWindow";
 
 export default {

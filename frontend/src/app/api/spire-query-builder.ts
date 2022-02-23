@@ -12,13 +12,13 @@ type QueryBuilderRequest = {
 }
 
 export class SpireQueryBuilder {
-  public selects: string[]       = [];
-  public wheres: string[]        = [];
-  public whereOrs: string[]      = [];
-  public orderBys: string[]      = [];
-  public groupBys: string[]      = [];
-  public orderDirections: string = "";
-  public limitParam: number      = 100;
+  private selects: string[]       = [];
+  private wheres: string[]        = [];
+  private whereOrs: string[]      = [];
+  private orderBys: string[]      = [];
+  private groupBys: string[]      = [];
+  private orderDirections: string = "";
+  private limitParam: number      = 100;
 
   translateOperator(operator) {
     switch (operator) {

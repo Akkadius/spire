@@ -26,7 +26,7 @@
 <script>
 import {App}                   from "@/constants/app";
 import {DB_PLAYER_CLASSES_ALL} from "@/app/constants/eq-classes-constants";
-import {DB_DIETIES_FULL}       from "../../../app/constants/eq-deities-constants";
+import {DB_DIETIES_FULL}       from "@/app/constants/eq-deities-constants";
 
 export default {
   name: "SpellDeitySelector",

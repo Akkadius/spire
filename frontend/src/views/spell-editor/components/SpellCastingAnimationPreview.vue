@@ -27,8 +27,8 @@
 
 <script>
 import {App}       from "../../../constants/app";
-import EqAssets    from "../../../app/eq-assets/eq-assets";
-import VideoViewer from "../../../app/video-viewer/video-viewer";
+import EqAssets    from "@/app/eq-assets/eq-assets";
+import VideoViewer from "@/app/video-viewer/video-viewer";
 
 export default {
   name: "SpellCastingAnimationPreview",

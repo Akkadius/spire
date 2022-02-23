@@ -67,9 +67,9 @@ import {App}             from "@/constants/app";
 import EqWindow          from "@/components/eq-ui/EQWindow";
 import spellAnimMappings from "@/app/data-maps/spell-icon-anim-name-map.json";
 import * as util         from "util";
-import VideoViewer       from "../../../app/video-viewer/video-viewer";
+import VideoViewer       from "@/app/video-viewer/video-viewer";
 import EqWindowSimple    from "../../../components/eq-ui/EQWindowSimple";
-import EqAssets          from "../../../app/eq-assets/eq-assets";
+import EqAssets          from "@/app/eq-assets/eq-assets";
 
 let animationPreviewExists = {}
 
