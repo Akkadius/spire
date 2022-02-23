@@ -141,7 +141,7 @@
 
 <script>
 import {Items}         from "@/app/items";
-import EqWindowComplex from "../../../components/eq-ui/EQWindowComplex";
+import EqWindowComplex from "@/components/eq-ui/EQWindowComplex";
 
 export default {
   name: "ItemStatScalePercentage",

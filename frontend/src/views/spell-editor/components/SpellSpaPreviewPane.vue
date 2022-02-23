@@ -46,7 +46,7 @@
 
 <script>
 import {SPELL_SPA_DEFINITIONS} from "@/app/constants/eq-spell-spa-definitions";
-import EqDebug                 from "../../../components/eq-ui/EQDebug";
+import EqDebug                 from "@/components/eq-ui/EQDebug";
 import {Spells}                from "@/app/spells";
 import {App}                   from "../../../constants/app";
 import {Items}                 from "@/app/items";

@@ -87,7 +87,7 @@ import itemTypesModelMapping from "@/constants/item-type-model-mapping.json"
 import PageHeader            from "@/components/layout/PageHeader";
 import {App}                 from "@/constants/app";
 import EqWindow              from "@/components/eq-ui/EQWindow";
-import EqWindowSimple        from "../../../components/eq-ui/EQWindowSimple";
+import EqWindowSimple        from "@/components/eq-ui/EQWindowSimple";
 
 const baseUrl         = App.ASSET_CDN_BASE_URL + "assets/objects/";
 const MAX_ITEM_IDFILE = 100000;
