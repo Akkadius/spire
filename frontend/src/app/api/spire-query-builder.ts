@@ -17,6 +17,7 @@ export class SpireQueryBuilder {
   private whereOrs: string[]      = [];
   private orderBys: string[]      = [];
   private groupBys: string[]      = [];
+  private includesParam: string[] = [];
   private orderDirections: string = "";
   private limitParam: number      = 100;
 
@@ -83,6 +84,12 @@ export class SpireQueryBuilder {
     return this
   }
 
+  includes(includes: string[]) {
+    this.includesParam = includes
+
+    return this
+  }
+
   where(field, operator, value) {
     const where = util.format(
       "%s%s%s",
@@ -131,6 +138,9 @@ export class SpireQueryBuilder {
     }
     if (Object.keys(this.groupBys).length > 0) {
       request.groupBy = this.groupBys.join(".")
+    }
+    if (Object.keys(this.includesParam).length > 0) {
+      request.includes = this.includesParam.join(",")
     }
     if (this.orderDirections) {
       request.orderDirection = this.orderDirections
