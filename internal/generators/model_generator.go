@@ -151,6 +151,7 @@ func (g *GenerateModel) Generate() []ModelGenerateResponse {
 
 			// gen model fields
 			modelFields := ""
+			structFieldNames := map[string]bool{}
 			for _, def := range g.getColumnDefinitions(table) {
 
 				g.debug(fmt.Sprintf("-- def [%v] table [%v]", def, table))
@@ -178,6 +179,8 @@ func (g *GenerateModel) Generate() []ModelGenerateResponse {
 					def.Field,
 				)
 
+				structFieldNames[structFieldName] = true
+
 				g.debug(fmt.Sprintf("-- modelField [%v]", strings.TrimSpace(modelField)))
 
 				modelFields += modelField
@@ -202,6 +205,10 @@ func (g *GenerateModel) Generate() []ModelGenerateResponse {
 				switch relation.RelationType {
 				case RelationshipType1to1:
 					relationshipAttributeName := strcase.ToCamel(g.pluralize.Singular(relation.RemoteTable))
+					if _, ok := structFieldNames[relationshipAttributeName]; ok {
+						relationshipAttributeName = relationshipAttributeName + "Relation"
+					}
+
 					modelFields += fmt.Sprintf(
 						"\t%-*s%-*s `json:\"%v,omitempty\" gorm:\"foreignKey:%v;references:%v\"`\n",
 						maxColInTable,
@@ -214,6 +221,10 @@ func (g *GenerateModel) Generate() []ModelGenerateResponse {
 					)
 				case RelationshipType1toMany:
 					relationshipAttributeName := strcase.ToCamel(g.pluralize.Plural(relation.RemoteTable))
+					if _, ok := structFieldNames[relationshipAttributeName]; ok {
+						relationshipAttributeName = relationshipAttributeName + "Relation"
+					}
+
 					modelFields += fmt.Sprintf(
 						"\t%-*s%-*s `json:\"%v,omitempty\" gorm:\"foreignKey:%v;references:%v\"`\n",
 						maxColInTable,
