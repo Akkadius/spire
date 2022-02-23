@@ -41,7 +41,6 @@ type Door struct {
 	ContentFlags           null.String `json:"content_flags" gorm:"Column:content_flags"`
 	ContentFlagsDisabled   null.String `json:"content_flags_disabled" gorm:"Column:content_flags_disabled"`
 	Item                   *Item       `json:"item,omitempty" gorm:"foreignKey:keyitem;references:id"`
-	ZoneRelation           *Zone       `json:"zone,omitempty" gorm:"foreignKey:zone;references:short_name"`
 }
 
 func (Door) TableName() string {
@@ -60,7 +59,6 @@ func (Door) Relationships() []string {
 		"Item.Fishings.NpcType",
 		"Item.Fishings.NpcType.AlternateCurrency",
 		"Item.Fishings.NpcType.Merchantlists",
-		"Item.Fishings.NpcType.Merchantlists.Item",
 		"Item.Fishings.NpcType.NpcEmotes",
 		"Item.Fishings.NpcType.NpcFactions",
 		"Item.Fishings.NpcType.NpcFactions.NpcFactionEntries",
@@ -77,9 +75,6 @@ func (Door) Relationships() []string {
 		"Item.Forages",
 		"Item.Forages.Item",
 		"Item.Forages.Zone",
-		"Item.GroundSpawns",
-		"Item.GroundSpawns.Item",
-		"Item.GroundSpawns.Zone",
 		"Item.ItemTicks",
 		"Item.Keyrings",
 		"Item.LootdropEntries",
@@ -88,8 +83,6 @@ func (Door) Relationships() []string {
 		"Item.LootdropEntries.Lootdrop.LootdropEntries",
 		"Item.LootdropEntries.Lootdrop.LoottableEntries",
 		"Item.LootdropEntries.Lootdrop.LoottableEntries.LootdropEntries",
-		"Item.Merchantlists",
-		"Item.Merchantlists.Item",
 		"Item.ObjectContents",
 		"Item.Objects",
 		"Item.Objects.Item",
@@ -100,7 +93,6 @@ func (Door) Relationships() []string {
 		"Item.TradeskillRecipeEntries",
 		"Item.TradeskillRecipeEntries.TradeskillRecipe",
 		"Item.TributeLevels",
-		"Zone",
 	}
 }
 

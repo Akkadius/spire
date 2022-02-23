@@ -205,9 +205,11 @@ func (g *GenerateModel) Generate() []ModelGenerateResponse {
 				switch relation.RelationType {
 				case RelationshipType1to1:
 					relationshipAttributeName := strcase.ToCamel(g.pluralize.Singular(relation.RemoteTable))
-					if _, ok := structFieldNames[relationshipAttributeName]; ok {
-						relationshipAttributeName = relationshipAttributeName + "Relation"
-					}
+					// TODO: Revisit later
+					//if _, ok := structFieldNames[relationshipAttributeName]; ok {
+					//	relationshipAttributeName = relationshipAttributeName + "Relation"
+					//	relationshipFieldNameSnakeCase = relationshipFieldNameSnakeCase + "_relation"
+					//}
 
 					modelFields += fmt.Sprintf(
 						"\t%-*s%-*s `json:\"%v,omitempty\" gorm:\"foreignKey:%v;references:%v\"`\n",
@@ -221,9 +223,11 @@ func (g *GenerateModel) Generate() []ModelGenerateResponse {
 					)
 				case RelationshipType1toMany:
 					relationshipAttributeName := strcase.ToCamel(g.pluralize.Plural(relation.RemoteTable))
-					if _, ok := structFieldNames[relationshipAttributeName]; ok {
-						relationshipAttributeName = relationshipAttributeName + "Relation"
-					}
+					// TODO: Revisit later
+					//if _, ok := structFieldNames[relationshipAttributeName]; ok {
+					//	relationshipAttributeName = relationshipAttributeName + "Relation"
+					//	relationshipFieldNameSnakeCase = relationshipFieldNameSnakeCase + "_relation"
+					//}
 
 					modelFields += fmt.Sprintf(
 						"\t%-*s%-*s `json:\"%v,omitempty\" gorm:\"foreignKey:%v;references:%v\"`\n",

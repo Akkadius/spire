@@ -30,7 +30,6 @@ type Trap struct {
 	MaxExpansion           uint8       `json:"max_expansion" gorm:"Column:max_expansion"`
 	ContentFlags           null.String `json:"content_flags" gorm:"Column:content_flags"`
 	ContentFlagsDisabled   null.String `json:"content_flags_disabled" gorm:"Column:content_flags_disabled"`
-	ZoneRelation           *Zone       `json:"zone,omitempty" gorm:"foreignKey:zone;references:short_name"`
 }
 
 func (Trap) TableName() string {
@@ -38,9 +37,7 @@ func (Trap) TableName() string {
 }
 
 func (Trap) Relationships() []string {
-    return []string{
-		"Zone",
-	}
+    return []string{}
 }
 
 func (Trap) Connection() string {

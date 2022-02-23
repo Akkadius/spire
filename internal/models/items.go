@@ -297,11 +297,9 @@ type Item struct {
 	Doors                   []Door                  `json:"doors,omitempty" gorm:"foreignKey:keyitem;references:id"`
 	Fishings                []Fishing               `json:"fishings,omitempty" gorm:"foreignKey:Itemid;references:id"`
 	Forages                 []Forage                `json:"forages,omitempty" gorm:"foreignKey:Itemid;references:id"`
-	GroundSpawns            []GroundSpawn           `json:"ground_spawns,omitempty" gorm:"foreignKey:item;references:id"`
 	ItemTicks               []ItemTick              `json:"item_ticks,omitempty" gorm:"foreignKey:it_itemid;references:id"`
 	Keyrings                []Keyring               `json:"keyrings,omitempty" gorm:"foreignKey:item_id;references:id"`
 	LootdropEntries         []LootdropEntry         `json:"lootdrop_entries,omitempty" gorm:"foreignKey:item_id;references:id"`
-	Merchantlists           []Merchantlist          `json:"merchantlists,omitempty" gorm:"foreignKey:item;references:id"`
 	Objects                 []Object                `json:"objects,omitempty" gorm:"foreignKey:itemid;references:id"`
 	ObjectContents          []ObjectContent         `json:"object_contents,omitempty" gorm:"foreignKey:itemid;references:id"`
 	StartingItems           []StartingItem          `json:"starting_items,omitempty" gorm:"foreignKey:itemid;references:id"`
@@ -320,13 +318,11 @@ func (Item) Relationships() []string {
 		"DiscoveredItems",
 		"Doors",
 		"Doors.Item",
-		"Doors.Zone",
 		"Fishings",
 		"Fishings.Item",
 		"Fishings.NpcType",
 		"Fishings.NpcType.AlternateCurrency",
 		"Fishings.NpcType.Merchantlists",
-		"Fishings.NpcType.Merchantlists.Item",
 		"Fishings.NpcType.NpcEmotes",
 		"Fishings.NpcType.NpcFactions",
 		"Fishings.NpcType.NpcFactions.NpcFactionEntries",
@@ -343,9 +339,6 @@ func (Item) Relationships() []string {
 		"Forages",
 		"Forages.Item",
 		"Forages.Zone",
-		"GroundSpawns",
-		"GroundSpawns.Item",
-		"GroundSpawns.Zone",
 		"ItemTicks",
 		"Keyrings",
 		"LootdropEntries",
@@ -354,8 +347,6 @@ func (Item) Relationships() []string {
 		"LootdropEntries.Lootdrop.LootdropEntries",
 		"LootdropEntries.Lootdrop.LoottableEntries",
 		"LootdropEntries.Lootdrop.LoottableEntries.LootdropEntries",
-		"Merchantlists",
-		"Merchantlists.Item",
 		"ObjectContents",
 		"Objects",
 		"Objects.Item",

@@ -18,7 +18,7 @@ type StartingItem struct {
 	MaxExpansion           uint8       `json:"max_expansion" gorm:"Column:max_expansion"`
 	ContentFlags           null.String `json:"content_flags" gorm:"Column:content_flags"`
 	ContentFlagsDisabled   null.String `json:"content_flags_disabled" gorm:"Column:content_flags_disabled"`
-	Zone                   *Zone       `json:"zone,omitempty" gorm:"foreignKey:zone_id;references:zoneidnumber"`
+	Zone                   *Zone       `json:"zone,omitempty" gorm:"foreignKey:zoneid;references:zoneidnumber"`
 	Item                   *Item       `json:"item,omitempty" gorm:"foreignKey:itemid;references:id"`
 }
 
@@ -34,13 +34,11 @@ func (StartingItem) Relationships() []string {
 		"Item.DiscoveredItems",
 		"Item.Doors",
 		"Item.Doors.Item",
-		"Item.Doors.Zone",
 		"Item.Fishings",
 		"Item.Fishings.Item",
 		"Item.Fishings.NpcType",
 		"Item.Fishings.NpcType.AlternateCurrency",
 		"Item.Fishings.NpcType.Merchantlists",
-		"Item.Fishings.NpcType.Merchantlists.Item",
 		"Item.Fishings.NpcType.NpcEmotes",
 		"Item.Fishings.NpcType.NpcFactions",
 		"Item.Fishings.NpcType.NpcFactions.NpcFactionEntries",
@@ -57,9 +55,6 @@ func (StartingItem) Relationships() []string {
 		"Item.Forages",
 		"Item.Forages.Item",
 		"Item.Forages.Zone",
-		"Item.GroundSpawns",
-		"Item.GroundSpawns.Item",
-		"Item.GroundSpawns.Zone",
 		"Item.ItemTicks",
 		"Item.Keyrings",
 		"Item.LootdropEntries",
@@ -68,8 +63,6 @@ func (StartingItem) Relationships() []string {
 		"Item.LootdropEntries.Lootdrop.LootdropEntries",
 		"Item.LootdropEntries.Lootdrop.LoottableEntries",
 		"Item.LootdropEntries.Lootdrop.LoottableEntries.LootdropEntries",
-		"Item.Merchantlists",
-		"Item.Merchantlists.Item",
 		"Item.ObjectContents",
 		"Item.Objects",
 		"Item.Objects.Item",
