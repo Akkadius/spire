@@ -106,10 +106,30 @@
         <div class="col-12 text-center mt-3">
 
           <div class="btn-group ml-3" role="group" aria-label="Basic example">
-            <b-button @click="limit = 10; triggerState()" size="sm" :variant="(parseInt(limit) === 10 ? 'warning' : 'outline-warning')">10</b-button>
-            <b-button @click="limit = 100; triggerState()" size="sm" :variant="(parseInt(limit) === 100 ? 'warning' : 'outline-warning')">100</b-button>
-            <b-button @click="limit = 250; triggerState()" size="sm" :variant="(parseInt(limit) === 250 ? 'warning' : 'outline-warning')">250</b-button>
-            <b-button @click="limit = 1000; triggerState()" size="sm" :variant="(parseInt(limit) === 1000 ? 'warning' : 'outline-warning')">1000</b-button>
+            <b-button
+              @click="limit = 10; triggerState()"
+              size="sm"
+              :variant="(parseInt(limit) === 10 ? 'warning' : 'outline-warning')"
+            >10
+            </b-button>
+            <b-button
+              @click="limit = 100; triggerState()"
+              size="sm"
+              :variant="(parseInt(limit) === 100 ? 'warning' : 'outline-warning')"
+            >100
+            </b-button>
+            <b-button
+              @click="limit = 250; triggerState()"
+              size="sm"
+              :variant="(parseInt(limit) === 250 ? 'warning' : 'outline-warning')"
+            >250
+            </b-button>
+            <b-button
+              @click="limit = 1000; triggerState()"
+              size="sm"
+              :variant="(parseInt(limit) === 1000 ? 'warning' : 'outline-warning')"
+            >1000
+            </b-button>
           </div>
 
           <b-button
@@ -168,6 +188,7 @@ import {Spells} from "@/app/spells";
 import {Items} from "@/app/items";
 import EqWindowSimple from "@/components/eq-ui/EQWindowSimple.vue";
 import SpellSpellPreviewTableSelector from "@/views/spell-editor/components/SpellSpellPreviewTableSelector.vue";
+import {SpireQueryBuilder} from "@/app/api/spire-query-builder";
 
 export default {
   name: "SpellSpellEffectSelector",
@@ -246,74 +267,58 @@ export default {
       this.loaded  = false;
       this.message = ""
 
-      const api   = (new SpellsNewApi(SpireApiClient.getOpenApiConfig()))
-      let filters = [];
-      let whereOr = [];
+      const api     = (new SpellsNewApi(SpireApiClient.getOpenApiConfig()))
+      const builder = (new SpireQueryBuilder())
 
       // filter by class and no level set
       if (this.selectedClass > 0 && this.selectedLevel === 0) {
-        filters.push(["classes" + this.selectedClass, "_gte_", "1"]);
-        filters.push(["classes" + this.selectedClass, "_lte_", "250"]);
+        builder.where("classes" + this.selectedClass, ">=", "1")
+        builder.where("classes" + this.selectedClass, "<=", "250")
+      }
+
+      let filterType = "="
+      if (parseInt(this.selectedLevelType) === 1) {
+        filterType = ">=";
+      }
+      if (parseInt(this.selectedLevelType) === 2) {
+        filterType = "<=";
       }
 
       // filter by level if class set
       if (this.selectedLevel > 0 && this.selectedClass > 0) {
-        let filterType = "__"; // equal
-        if (parseInt(this.selectedLevelType) === 1) {
-          filterType = "_gte_";
-        }
-        if (parseInt(this.selectedLevelType) === 2) {
-          filterType = "_lte_";
-        }
+        builder.where("classes" + this.selectedClass, filterType, this.selectedLevel)
+        builder.where("classes" + this.selectedClass, "<=", "250")
+      }
 
-        filters.push(["classes" + this.selectedClass, filterType, this.selectedLevel]);
-        filters.push(["classes" + this.selectedClass, "_lte_", "250"]);
+      // when no class is set but level is greater than 0
+      if (this.selectedClass === 0 && this.selectedLevel > 0) {
+        for (let i = 1; i < 16; i++) {
+          builder.whereOr("classes" + i, filterType, this.selectedLevel)
+        }
       }
 
       // if number, filter by id
       // else name
       if (!isNaN(this.spellName) && this.spellName) {
-        filters.push(["id", "__", this.spellName]);
+        builder.whereOr("id", "=", this.spellName)
       } else if (this.spellName) {
-        filters.push(["name", "_like_", this.spellName]);
+        builder.whereOr("name", "like", this.spellName)
       }
 
       if (this.selectedSpa > 0) {
         for (let effectIndex = 1; effectIndex <= 12; effectIndex++) {
-          whereOr.push(["effectid" + effectIndex, "__", this.selectedSpa]);
+          builder.whereOr("effectid" + effectIndex, "=", this.selectedSpa)
         }
       }
 
-      let wheres = [];
-      filters.forEach((filter) => {
-        const where = util.format("%s%s%s", filter[0], filter[1], filter[2])
-        wheres.push(where)
-      })
-
-      let wheresOrs = [];
-      whereOr.forEach((filter) => {
-        const where = util.format("%s%s%s", filter[0], filter[1], filter[2])
-        wheresOrs.push(where)
-      })
-
-      let request   = {};
-      this.message  = "";
-      request.limit = this.limit;
+      builder.limit(this.limit);
 
       // filter by class
       if (this.selectedClass > 0) {
-        request.orderBy = util.format("classes%s", this.selectedClass)
+        builder.orderBy([util.format("classes%s", this.selectedClass)])
       }
 
-      if (Object.keys(wheres).length > 0) {
-        request.where = wheres.join(".")
-      }
-
-      if (Object.keys(wheresOrs).length > 0) {
-        request.whereOr = wheresOrs.join(".")
-      }
-
-      api.listSpellsNews(request).then(async (result) => {
+      api.listSpellsNews(builder.get()).then(async (result) => {
         if (result.status === 200) {
           // set spells to be rendered
           this.spells = result.data

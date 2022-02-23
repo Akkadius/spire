@@ -1702,6 +1702,7 @@ import SpellTeleportZoneSelectorHorse from "./components/SpellTeleportZoneSelect
 import SpellTeleportZoneSelectorAura  from "./components/SpellTeleportZoneSelectorAura";
 import {ROUTE}                        from "../../routes";
 import SpellItemSelector              from "./components/SpellItemSelector";
+import {SpireQueryBuilder}            from "../../app/api/spire-query-builder";
 
 const MILLISECONDS_BEFORE_WINDOW_RESET = 5000;
 
@@ -1848,23 +1849,14 @@ export default {
         return this.dbStrSelectData[typeId]
       }
 
-      let filters = [];
-      filters.push(["type", "__", typeId]);
-
-      let wheres = [];
-      filters.forEach((filter) => {
-        const where = util.format("%s%s%s", filter[0], filter[1], filter[2])
-        wheres.push(where)
-      })
-
-      let request   = {};
-      request.limit = 100000;
-      if (Object.keys(wheres).length > 0) {
-        request.where = wheres.join(".")
-      }
-
       const DbStrApiClient = (new DbStrApi(SpireApiClient.getOpenApiConfig()))
-      const response       = await DbStrApiClient.listDbStrs(request)
+      const response       = await DbStrApiClient.listDbStrs(
+        (new SpireQueryBuilder()
+            .where("type", "=", typeId)
+            .limit(100000)
+            .get()
+        )
+      )
 
       if (response.status === 200 && response.data) {
         this.loading   = false

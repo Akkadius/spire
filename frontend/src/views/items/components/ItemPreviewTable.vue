@@ -147,30 +147,16 @@ export default {
     }
   },
   async created() {
-    // let itemMinis = []
-    // for (const item of this.items) {
-    //   Items.setItem(item["id"], item)
-    //
-    //   itemMinis[item["id"]] = await Items.renderItemMini("0", item["id"], 30)
-    // }
-    // this.itemMinis = itemMinis
-
-    // this.$forceUpdate()
-
     // do this once so we're not triggering vue re-renders in the loop
     this.sideLoadedItemData = Items.data
-
-    // this.title = "Items (" + this.items.length + ")";
-
-
   },
   mounted() {
-    console.log("mounted")
-
     if (this.items.length > 0) {
       setTimeout(() => {
-        new Tablesort(document.getElementById('items-table'));
-      }, 100)
+        if (document.getElementById('items-table')) {
+          new Tablesort(document.getElementById('items-table'));
+        }
+      }, 1000)
     }
   },
   props: {

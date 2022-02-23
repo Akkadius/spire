@@ -67,6 +67,7 @@ import {SpireApiClient}              from "../../../app/api/spire-api-client";
 import util                          from "util";
 import Expansions                    from "../../../app/utility/expansions";
 import EqCheckbox                    from "../../../components/eq-ui/EQCheckbox";
+import {SpireQueryBuilder}           from "../../../app/api/spire-query-builder";
 
 let zones = {}
 
@@ -135,22 +136,13 @@ export default {
     },
 
     async loadZones() {
-      const api = (new ZoneApi(SpireApiClient.getOpenApiConfig()))
-
-      let filters = [
-        ["version", "__", 0],
-      ]
-
-      let wheres = [];
-      filters.forEach((filter) => {
-        const where = util.format("%s%s%s", filter[0], filter[1], filter[2])
-        wheres.push(where)
-      })
-
-      const result = await api.listZones({
-        where: wheres.join("."),
-        orderBy: "expansion.short_name"
-      })
+      const api    = (new ZoneApi(SpireApiClient.getOpenApiConfig()))
+      const result = await api.listZones(
+        (new SpireQueryBuilder())
+          .where("version", "=", "0")
+          .orderBy(["expansion", "short_name"])
+          .get()
+      )
 
       if (result.status === 200) {
         zones              = result.data

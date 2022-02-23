@@ -67,6 +67,7 @@ import {SpireApiClient}              from "../../../app/api/spire-api-client";
 import util                          from "util";
 import Expansions                    from "../../../app/utility/expansions";
 import EqCheckbox                    from "../../../components/eq-ui/EQCheckbox";
+import {SpireQueryBuilder}           from "../../../app/api/spire-query-builder";
 
 let horses = {}
 
@@ -136,9 +137,11 @@ export default {
 
     async loadHorses() {
       const api    = (new HorseApi(SpireApiClient.getOpenApiConfig()))
-      const result = await api.listHorses({
-        groupBy: "filename",
-      })
+      const result = await api.listHorses(
+        (new SpireQueryBuilder())
+          .groupBy(["filename"])
+          .get()
+      )
 
       if (result.status === 200) {
         horses              = result.data

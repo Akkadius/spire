@@ -259,12 +259,10 @@
 import {ItemApi} from "@/app/api/api";
 import EqWindow from "@/components/eq-ui/EQWindow.vue";
 import {SpireApiClient} from "@/app/api/spire-api-client";
-import * as util from "util";
 import EqItemCardPreview from "@/components/eq-ui/EQItemCardPreview.vue";
 import {DB_CLASSES_ICONS} from "@/app/constants/eq-class-icon-constants";
 import {DB_CLASSES_SHORT, DB_PLAYER_CLASSES} from "@/app/constants/eq-classes-constants";
 import {DB_SPA} from "@/app/constants/eq-spell-constants";
-import {Items} from "@/app/items";
 import {ROUTE} from "@/routes";
 import ClassBitmaskCalculator from "@/components/tools/ClassBitmaskCalculator.vue";
 import RaceBitmaskCalculator from "@/components/tools/RaceBitmaskCalculator.vue";
@@ -273,6 +271,7 @@ import DeityBitmaskCalculator from "@/components/tools/DeityCalculator.vue";
 import itemTypes from "@/constants/item-types.json"
 import EqCheckbox from "@/components/eq-ui/EQCheckbox.vue";
 import ItemPreviewTable from "@/views/items/components/ItemPreviewTable.vue";
+import {SpireQueryBuilder} from "@/app/api/spire-query-builder";
 
 export default {
   components: {
@@ -683,170 +682,91 @@ export default {
     },
 
     listItems: function () {
-      this.loaded = false;
-
-      const api   = (new ItemApi(SpireApiClient.getOpenApiConfig()))
-      let filters = [];
-      let whereOr = [];
+      this.loaded   = false;
+      const api     = new ItemApi(SpireApiClient.getOpenApiConfig())
+      const builder = new SpireQueryBuilder()
 
       // filter by class
       if (this.selectedClasses && parseInt(this.selectedClasses) > 0 && parseInt(this.selectedClasses) !== 65535) {
         if (this.selectOnlyClassEnabled) {
-          filters.push(["classes", "__", this.selectedClasses]);
+          builder.where("classes", "=", this.selectedClasses)
         } else {
-          filters.push(["classes", "_bitwiseand_", this.selectedClasses]);
+          builder.where("classes", "&", this.selectedClasses)
         }
 
-        filters.push(["classes", "_ne_", 65535]);
+        builder.where("classes", "!=", 65535)
       } else if (this.selectedClasses && parseInt(this.selectedClasses) > 0 && parseInt(this.selectedClasses) === 65535) {
-        filters.push(["classes", "__", 65535]);
+        builder.where("classes", "=", 65535)
       }
 
       // filter by race
       if (this.selectedRaces && parseInt(this.selectedRaces) > 0 && parseInt(this.selectedRaces) !== 65535) {
-        filters.push(["races", "_bitwiseand_", this.selectedRaces]);
-        filters.push(["races", "_ne_", 65535]);
+        builder.where("classes", "&", this.selectedRaces)
+        builder.where("classes", "!=", 65535)
       } else if (this.selectedRaces && parseInt(this.selectedRaces) > 0 && parseInt(this.selectedRaces) === 65535) {
-        filters.push(["races", "__", 65535]);
+        builder.where("races", "=", 65535)
       }
 
       // filter by deity
       if (this.selectedDeities && parseInt(this.selectedDeities) > 0 && parseInt(this.selectedDeities) !== 65535) {
-        filters.push(["deity", "_bitwiseand_", this.selectedDeities]);
-        filters.push(["deity", "_ne_", 65535]);
+        builder.where("deity", "&", this.selectedDeities)
+        builder.where("deity", "!=", 65535)
       } else if (this.selectedDeities && parseInt(this.selectedDeities) > 0 && parseInt(this.selectedDeities) === 65535) {
-        filters.push(["deity", "__", 65535]);
+        builder.where("deity", "=", 65535)
       }
 
       // filter by slots
       if (this.selectedSlots && parseInt(this.selectedSlots) > 0 && parseInt(this.selectedSlots) !== 65535) {
-        filters.push(["slots", "_bitwiseand_", this.selectedSlots]);
-        filters.push(["slots", "_ne_", 65535]);
+        builder.where("slots", "&", this.selectedSlots)
+        builder.where("slots", "!=", 65535)
+
       } else if (this.selectedSlots && parseInt(this.selectedSlots) > 0 && parseInt(this.selectedSlots) === 65535) {
-        filters.push(["slots", "__", 65535]);
+        builder.where("slots", "=", 65535)
       }
 
       for (let key in this.getFiltersNonZeroValues()) {
-        const value = this.filters[key]
-        filters.push([key, "__", value])
+        builder.where(key, "=", this.filters[key])
       }
 
       // item type
       if (this.itemType && this.itemType > 0) {
-        filters.push(["itemtype", "__", this.itemType]);
+        builder.where("itemtype", "=", this.itemType)
       }
 
       // level
       if (this.selectedLevel > 0) {
-        let filterType = "__"; // equal
+        let filterType = "="
         if (parseInt(this.selectedLevelType) === 1) {
-          filterType = "_gte_";
+          filterType = ">=";
         }
         if (parseInt(this.selectedLevelType) === 2) {
-          filterType = "_lte_";
+          filterType = "<=";
         }
 
-        filters.push(["reqlevel", filterType, this.selectedLevel]);
+        builder.where("reqlevel", filterType, this.selectedLevel)
       }
 
       // if number, filter by id
       // else name
       if (!isNaN(this.itemName) && this.itemName) {
-        filters.push(["id", "__", this.itemName]);
+        builder.where("id", "=", this.itemName)
       } else if (this.itemName) {
-        filters.push(["name", "_like_", this.itemName]);
+        builder.where("name", "like", this.itemName)
       }
 
-      if (filters.length === 0) {
+      if (builder.getFilterCount() === 0) {
         this.items  = null
         this.loaded = true
         return;
       }
 
-      let wheres = [];
-      filters.forEach((filter) => {
-        const where = util.format("%s%s%s", filter[0], filter[1], filter[2])
-        wheres.push(where)
-      })
-
-      let wheresOrs = [];
-      whereOr.forEach((filter) => {
-        const where = util.format("%s%s%s", filter[0], filter[1], filter[2])
-        wheresOrs.push(where)
-      })
-
-      let request   = {};
-      request.limit = this.limit;
-
-      // filter by class
-      if (this.selectedClasses > 0) {
-        // request.orderBy = util.format("classes", this.selectedClasses)
-      }
-
-      if (Object.keys(wheres).length > 0) {
-        request.where = wheres.join(".")
-      }
-
-      if (Object.keys(wheresOrs).length > 0) {
-        request.whereOr = wheresOrs.join(".")
-      }
-
-      api.listItems(request).then(async (result) => {
+      builder.groupBy(["id"])
+      builder.limit(this.limit)
+      api.listItems(builder.get()).then(async (result) => {
         if (result.status === 200) {
           // set items to be rendered
-          this.items = result.data
-
-          // fetch spell ids that might be referenced by effects to bulk preload
-          let itemsToPreload = [];
-          result.data.forEach((item) => {
-            // for (let effectIndex = 1; effectIndex <= 12; effectIndex++) {
-            //   const spellId = Items.getItemIdFromEffectIfExists(spell, effectIndex);
-            //   if (spellId > 0) {
-            //     itemsToPreload.push(spellId);
-            //   }
-            //   const itemId = Items.getItemIdFromEffectIfExists(spell, effectIndex);
-            //   if (itemId > 0) {
-            //     itemsToPreload.push(itemId);
-            //   }
-            // }
-          })
-
-          // fetch spell ids that might be referenced by effects to bulk preload
-          result.data.forEach((item) => {
-            // for (let i = 0; i < 4; i++) {
-            //   if (spell["components_" + i] > 0) {
-            //     itemsToPreload.push(spell["components_" + i])
-            //   }
-            // }
-          });
-
-          // bulk fetch preload
-          const response = await (new ItemApi(SpireApiClient.getOpenApiConfig())).getItemsBulk({
-            body: {
-              ids: itemsToPreload
-            }
-          })
-
-          if (response.status == 200 && response.data && parseInt(response.data.length) > 0) {
-            response.data.forEach((item) => {
-              Items.setItem(item.id, item);
-            })
-          }
-
-          // items bulk fetch preload
-          api.getItemsBulk({
-            body: {
-              ids: itemsToPreload
-            }
-          }).then((response) => {
-            if (response.status == 200 && response.data && parseInt(response.data.length) > 0) {
-              response.data.forEach((item) => {
-                Items.setItem(item.id, item);
-              })
-            }
-            this.loaded = true;
-          });
-
+          this.items  = result.data
+          this.loaded = true;
         }
       })
     }

@@ -59,6 +59,7 @@ import {SpireApiClient}              from "../../../app/api/spire-api-client";
 import util                          from "util";
 import Expansions                    from "../../../app/utility/expansions";
 import EqCheckbox                    from "../../../components/eq-ui/EQCheckbox";
+import {SpireQueryBuilder}           from "../../../app/api/spire-query-builder";
 
 let pets = {}
 
@@ -133,9 +134,11 @@ export default {
 
     async loadPets() {
       const api    = (new PetApi(SpireApiClient.getOpenApiConfig()))
-      const result = await api.listPets({
-        groupBy: "type",
-      })
+      const result = await api.listPets(
+        (new SpireQueryBuilder())
+          .groupBy(["type"])
+          .get()
+      )
 
       if (result.status === 200) {
         pets              = result.data
