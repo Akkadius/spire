@@ -35,28 +35,7 @@ export default {
     AppEnv.init()
   },
 
-  updated() {
-    this.scrollToHashIfExists();
-  },
   methods: {
-    scrollToHashIfExists() {
-      // for some reason initial load there are router things that are conflicting here
-      // delay a little longer than the watcher
-      setTimeout(() => this.scrollFix(this.$route.hash), 1000);
-    },
-
-    scrollFix: function (hashbang) {
-      if (hashbang) {
-        console.log(location.hash);
-
-        location.hash = hashbang;
-        const hashTarget = hashbang.replace("#", "");
-        if (document.getElementById(hashTarget)) {
-          console.log("scrolling to", hashTarget)
-          document.getElementById(hashTarget).scrollIntoView();
-        }
-      }
-    },
 
     loadWallpaper() {
       const backgrounds = [
@@ -84,14 +63,6 @@ export default {
       }
     }
   },
-  watch: {
-    "$route"(to, from) {
-      document.title = "[Spire] " + to.meta.title || "Spire"
-    },
-    "$route.hash": function () {
-      setTimeout(() => this.scrollFix(this.$route.hash), 100);
-    }
-  }
 }
 </script>
 
