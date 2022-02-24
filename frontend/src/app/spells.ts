@@ -19,6 +19,7 @@ import {DbStrApi, SpellsNewApi} from "@/app/api";
 import {SpireApiClient} from "@/app/api/spire-api-client";
 import {App} from "@/constants/app";
 import {Items} from "@/app/items";
+import {SpireQueryBuilder} from "@/app/api/spire-query-builder";
 
 export class Spells {
   public static data           = {}
@@ -1853,7 +1854,7 @@ export class Spells {
           break;
 
         case 393: //Focus version
-          printBuffer += this.getFocusPercentRange("Healing Received", base, limit, false)  + "(v393)"
+          printBuffer += this.getFocusPercentRange("Healing Received", base, limit, false) + "(v393)"
           break;
 
         case 394:
@@ -2821,25 +2822,13 @@ export class Spells {
   };
 
   public static async getSpellGroupNameById(spellGroupId) {
-    const api = (new SpellsNewApi(SpireApiClient.getOpenApiConfig()))
-
-    let filters = [
-      ["spellgroup", "__", spellGroupId]
-    ]
-
-    let wheres = [];
-    filters.forEach((filter) => {
+    const result = await (new SpellsNewApi(SpireApiClient.getOpenApiConfig())).listSpellsNews(
       // @ts-ignore
-      wheres.push(util.format("%s%s%s", filter[0], filter[1], filter[2]))
-    })
-
-    const result = await (api.listSpellsNews(
-        {
-          limit: "1",
-          where: wheres.join("."),
-          orderBy: "id"
-        }
-      )
+      (new SpireQueryBuilder())
+        .where("spellgroup", "=", spellGroupId)
+        .orderBy(["id"])
+        .limit(1)
+        .get()
     );
 
     if (result.status === 200) {
@@ -2979,7 +2968,7 @@ export class Spells {
     let spell             = <any>await this.getSpell(renderSpellId)
     const targetTypeColor = this.getTargetTypeColor(spell["targettype"]);
 
-    let borderSize = iconSize > 16 ? 2 : 1;
+    let borderSize   = iconSize > 16 ? 2 : 1;
     let borderRadius = iconSize > 16 ? 7 : 3;
 
     return `
@@ -3038,23 +3027,12 @@ export class Spells {
   }
 
   public static async preloadDbstr() {
-    const api   = (new DbStrApi(SpireApiClient.getOpenApiConfig()))
-    let filters = [
-      ["type", "__", 6]
-    ]
-
-    if (this.dbstrPreloaded) {
-      return;
-    }
-
-
-    let wheres = [];
-    filters.forEach((filter) => {
+    const result = await (new DbStrApi(SpireApiClient.getOpenApiConfig())).listDbStrs(
       // @ts-ignore
-      wheres.push(util.format("%s%s%s", filter[0], filter[1], filter[2]))
-    })
-
-    const result = await api.listDbStrs({where: wheres.join(".")});
+      (new SpireQueryBuilder())
+        .where("type", "=", 6)
+        .get()
+    );
     if (result.status === 200) {
       if (result.data && result.data.length > 0) {
         for (let index in result.data) {
@@ -3081,19 +3059,13 @@ export class Spells {
       return this.dbstrData[id]
     }
 
-    const api   = (new DbStrApi(SpireApiClient.getOpenApiConfig()))
-    let filters = [
-      ["type", "__", 6],
-      ["id", "__", id]
-    ]
-
-    let wheres = [];
-    filters.forEach((filter) => {
+    const result = await (new DbStrApi(SpireApiClient.getOpenApiConfig())).listDbStrs(
       // @ts-ignore
-      wheres.push(util.format("%s%s%s", filter[0], filter[1], filter[2]))
-    })
-
-    const result = await api.listDbStrs({where: wheres.join(".")});
+      (new SpireQueryBuilder())
+        .where("type", "=", 6)
+        .where("id", "=", id)
+        .get()
+    );
     if (result.status === 200) {
       if (result.data && result.data.length > 0) {
         this.dbstrData[id] = <string>result.data[0].value;

@@ -1,23 +1,27 @@
 <template>
   <div v-if="npcRowData">
-    <pre v-if="npcStatusMessage" style="width: 100%; margin: 0px"
-         class="mb-2">{{ npcStatusMessage }}</pre>
+    <pre
+      v-if="npcStatusMessage" style="width: 100%; margin: 0px"
+      class="mb-2"
+    >{{ npcStatusMessage }}
+    </pre>
     <ag-grid-vue
       v-if="npcRowData"
-      style="width: 100%; height: 75vh;"
+      style="width: 100%; height: 86vh;"
       class="ag-theme-balham-dark"
       :columnDefs="npcColumnDefs"
       :gridOptions="gridOptions"
-      :rowData="npcRowData">
+      :rowData="npcRowData"
+    >
     </ag-grid-vue>
   </div>
 </template>
 
 <script>
-import {AgGridVue} from "ag-grid-vue";
-import {NpcTypeApi} from "@/app/api";
+import {AgGridVue}      from "ag-grid-vue";
+import {NpcTypeApi}     from "@/app/api";
 import {SpireApiClient} from "@/app/api/spire-api-client";
-import util from "util";
+import util             from "util";
 
 export default {
   name: "NpcListGrid",
