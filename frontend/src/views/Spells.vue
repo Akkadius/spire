@@ -23,7 +23,7 @@
             </div>
 
             <div class="row mt-2">
-              <div class="col-lg-2 col-sm-12 text-center">
+              <div class="col-lg-2 col-sm-12 text-center pl-0">
                 Spell Name or ID
                 <input
                   name="spell_name"
@@ -149,6 +149,17 @@
 
             </div>
 
+            <div class="row mt-3">
+              <div class="col-12 p-0">
+                <db-column-filter
+                  v-if="spellFields && filters"
+                  :set-filters="filters"
+                  @input="handleDbColumnFilters($event);"
+                  :columns="spellFields"
+                />
+              </div>
+            </div>
+
             <div v-if="message">
               {{ message }}
             </div>
@@ -197,10 +208,12 @@ import {Items} from "@/app/items";
 import {ROUTE} from "@/routes";
 import EqWindowSimple from "@/components/eq-ui/EQWindowSimple.vue";
 import {SpireQueryBuilder} from "@/app/api/spire-query-builder";
+import DbColumnFilter from "@/components/DbColumnFilter.vue";
 
 export default {
   name: "Spells",
   components: {
+    DbColumnFilter,
     EqWindowSimple,
     EqSpellPreviewTable,
     EqSpellPreview,
@@ -230,6 +243,10 @@ export default {
 
       message: "",
 
+      filters: [],
+
+      spellFields: [],
+
       listType: "table"
     }
   },
@@ -241,7 +258,7 @@ export default {
     },
   },
 
-  mounted() {
+  async mounted() {
     if (Object.keys(this.$route.query).length !== 0) {
       this.loadQueryState()
       Spells.preloadDbstr().then((res) => {
@@ -253,8 +270,33 @@ export default {
       Spells.preloadDbstr()
       this.loaded = true;
     }
+
+    this.spellFields = await this.getSpellFields()
   },
   methods: {
+
+    async getSpellFields() {
+      const result = await (new SpellsNewApi(SpireApiClient.getOpenApiConfig())).listSpellsNews(
+        {
+          limit: 1
+        }
+      )
+      if (result.status === 200 && result.data.length === 1) {
+        let fields = []
+        Object.keys(result.data[0]).forEach((key) => {
+          fields.push(key)
+        })
+        return fields.sort()
+      }
+
+      return [];
+    },
+
+    handleDbColumnFilters(checkboxFilters) {
+      this.filters = checkboxFilters
+      this.updateQueryState()
+    },
+
     updateQueryState: function () {
       let queryState = {};
 
@@ -276,6 +318,9 @@ export default {
       if (this.selectedLevelType !== 0) {
         queryState.levelType = this.selectedLevelType
       }
+      if (this.filters && this.filters.length > 0) {
+        queryState.filters = JSON.stringify(this.filters)
+      }
 
       this.$router.push(
         {
@@ -287,6 +332,7 @@ export default {
     },
 
     resetForm: function () {
+      this.filters           = []
       this.selectedClass     = 0;
       this.spellName         = "";
       this.spellEffect       = "";
@@ -316,6 +362,9 @@ export default {
       }
       if (this.$route.query.listType) {
         this.listType = this.$route.query.listType;
+      }
+      if (this.$route.query.filters) {
+        this.filters = JSON.parse(this.$route.query.filters);
       }
     },
 
@@ -395,6 +444,12 @@ export default {
       // filter by class
       if (this.selectedClass > 0) {
         builder.orderBy([util.format("classes%s", this.selectedClass)])
+      }
+
+      if (this.filters && this.filters.length > 0) {
+        this.filters.forEach((f) => {
+          builder.where(f.field, f.operator, f.value)
+        })
       }
 
       api.listSpellsNews(builder.get()).then(async (result) => {
