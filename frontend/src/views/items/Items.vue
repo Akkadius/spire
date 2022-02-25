@@ -10,7 +10,7 @@
             <div class="row">
               <div class="col-1">
                 <div
-                  class="row" v-for="field in formFilters()"
+                  class="row" v-for="field in getCheckboxFilters()"
                 >
                   <div class="col-9 text-right p-0 pr-2 m-0">
                     {{ field.description }}
@@ -20,8 +20,8 @@
                       class="mb-2 d-inline-block"
                       :true-value="(typeof field.true !== 'undefined' ? field.true : 1)"
                       :false-value="(typeof field.false !== 'undefined' ? field.false : 0)"
-                      v-model.number="filters[field.field]"
-                      @input="filters[field.field] = $event; triggerCheckboxFilter(field.field, (typeof field.false !== 'undefined' ? field.false : 0))"
+                      v-model.number="checkboxFilters[field.field]"
+                      @input="checkboxFilters[field.field] = $event; triggerCheckboxFilter(field.field, (typeof field.false !== 'undefined' ? field.false : 0))"
                     />
                   </div>
                 </div>
@@ -191,33 +191,20 @@
                     >
                       Reset Form
                     </div>
-
-                  </div>
-
-                </div>
-
-                <div class="row mt-2" v-if="1 < 0">
-                  <div class="col-12">
-                    <h6 class="eq-header">Filters</h6>
                   </div>
                 </div>
-                <div class="row" v-for="filter in 3" :key="filter" v-if="1 < 0">
-                  <div class="col-12" v-if="itemFields">
-                    <div class="input-group w-50">
-                      <div class="input-group-prepend">
-                        <select class="form-control">
-                          <option v-for="field in itemFields" :key="field">{{ field }}</option>
-                        </select>
-                      </div>
-                      <select class="form-control w-15">
-                        <option v-for="field in filterOptions" :key="field">{{ field }}</option>
-                      </select>
-                      <div class="input-group-append">
-                        <input type="text" class="form-control">
-                      </div>
-                    </div>
+
+                <div class="row mt-3">
+                  <div class="col-12 p-0">
+                    <db-column-filter
+                      v-if="itemFields && filters"
+                      :set-filters="filters"
+                      @input="handleDbColumnFilters($event);"
+                      :columns="itemFields"
+                    />
                   </div>
                 </div>
+
               </div>
             </div>
 
@@ -272,9 +259,11 @@ import itemTypes from "@/constants/item-types.json"
 import EqCheckbox from "@/components/eq-ui/EQCheckbox.vue";
 import ItemPreviewTable from "@/views/items/components/ItemPreviewTable.vue";
 import {SpireQueryBuilder} from "@/app/api/spire-query-builder";
+import DbColumnFilter from "@/components/DbColumnFilter";
 
 export default {
   components: {
+    DbColumnFilter,
     ItemPreviewTable,
     EqCheckbox,
     DeityBitmaskCalculator,
@@ -309,7 +298,8 @@ export default {
       // when "only" option is set
       selectOnlyClassEnabled: false,
 
-      filters: {},
+      checkboxFilters: {},
+      filters: [],
 
       selectedLevel: 0,
       selectedLevelType: 0,
@@ -317,7 +307,6 @@ export default {
       listType: "table",
 
       itemFields: [],
-      filterOptions: ["=", "<=", ">="],
 
       itemTypeOptions: [],
     }
@@ -325,7 +314,7 @@ export default {
 
   async mounted() {
 
-    this.resetFilters()
+    this.resetCheckboxFilters()
 
     if (Object.keys(this.$route.query).length !== 0) {
       this.loadQueryState()
@@ -353,7 +342,7 @@ export default {
   },
 
   watch: {
-    // reset state vars when we navigate away
+    // reset state vars when we navigate
     '$route'() {
       this.loadQueryState()
       this.listItems()
@@ -362,7 +351,12 @@ export default {
 
   methods: {
 
-    formFilters() {
+    handleDbColumnFilters(checkboxFilters) {
+      this.filters = checkboxFilters
+      this.updateQueryState()
+    },
+
+    getCheckboxFilters() {
       return [
         {
           description: 'Is Magic',
@@ -445,10 +439,10 @@ export default {
 
     getChangedFilterCount() {
       let setValues = 0
-      for (let key in this.filters) {
-        const value = this.filters[key]
+      for (let key in this.checkboxFilters) {
+        const value = this.checkboxFilters[key]
 
-        this.formFilters().forEach((filter) => {
+        this.getCheckboxFilters().forEach((filter) => {
           if (filter.field == key && typeof filter.true !== 'undefined' && filter.true == 0 && value === 0) {
             setValues++
           } else if (filter.field == key && typeof filter.true === 'undefined') {
@@ -464,10 +458,10 @@ export default {
 
     getFiltersNonZeroValues() {
       let values = {}
-      for (let key in this.filters) {
-        const value = this.filters[key]
+      for (let key in this.checkboxFilters) {
+        const value = this.checkboxFilters[key]
 
-        this.formFilters().forEach((filter) => {
+        this.getCheckboxFilters().forEach((filter) => {
           if (filter.field == key && typeof filter.true !== 'undefined' && filter.true == 0 && value === 0) {
             values[filter.field] = value
           } else if (filter.field == key && typeof filter.true === 'undefined') {
@@ -481,24 +475,24 @@ export default {
 
     triggerCheckboxFilter(field, falseValue) {
       // console.log("hello")
-      // console.log(this.filters)
+      // console.log(this.checkboxFilters)
 
-      // delete filter from filters if false value set
-      for (let key in this.filters) {
-        const value = this.filters[key]
+      // delete filter from checkboxFilters if false value set
+      for (let key in this.checkboxFilters) {
+        const value = this.checkboxFilters[key]
         if (field == key && value === falseValue) {
-          delete this.filters[key]
+          delete this.checkboxFilters[key]
         }
       }
 
       this.updateQueryState()
       this.listItems()
 
-      // if (Object.keys(this.filters).length > 0) {
+      // if (Object.keys(this.checkboxFilters).length > 0) {
       //   this.listItems()
       // }
 
-      // if no filters set, clear items result
+      // if no checkboxFilters set, clear items result
       // if (setValues === 0) {
       //   this.items = null
       // }
@@ -542,7 +536,10 @@ export default {
         queryState.classSelectOnly = 1
       }
       if (this.getChangedFilterCount() > 0) {
-        queryState.filters = JSON.stringify(this.getFiltersNonZeroValues())
+        queryState.checkboxFilters = JSON.stringify(this.getFiltersNonZeroValues())
+      }
+      if (this.filters && this.filters.length > 0) {
+        queryState.filters = JSON.stringify(this.filters)
       }
 
       this.$router.push(
@@ -554,21 +551,22 @@ export default {
       })
     },
 
-    resetFilters() {
-      this.filters = {}
+    resetCheckboxFilters() {
+      this.checkboxFilters = {}
 
-      // make sure that filters that are non-zero defaults are initialized as their
+      // make sure that checkboxFilters that are non-zero defaults are initialized as their
       // zero-values first
-      this.formFilters().forEach((filter) => {
+      this.getCheckboxFilters().forEach((filter) => {
         if (typeof filter.true !== 'undefined' && filter.true === 0) {
-          this.filters[filter.field] = 1
+          this.checkboxFilters[filter.field] = 1
         }
       })
     },
 
     resetForm: function () {
-      this.resetFilters()
+      this.resetCheckboxFilters()
 
+      this.filters           = []
       this.selectedClasses   = 0;
       this.selectedRaces     = 0;
       this.selectedSlots     = 0;
@@ -618,12 +616,15 @@ export default {
       if (parseInt(this.$route.query.classSelectOnly) === 1) {
         this.selectOnlyClassEnabled = true;
       }
-      if (this.$route.query.filters) {
+      if (this.$route.query.checkboxFilters) {
         this.resetFilters()
-        let filters = JSON.parse(this.$route.query.filters);
-        for (let key in filters) {
-          this.filters[key] = filters[key]
+        let checkboxFilters = JSON.parse(this.$route.query.checkboxFilters);
+        for (let key in checkboxFilters) {
+          this.checkboxFilters[key] = checkboxFilters[key]
         }
+      }
+      if (this.$route.query.filters) {
+        this.filters = JSON.parse(this.$route.query.filters);
       }
     },
 
@@ -683,7 +684,6 @@ export default {
 
     listItems: function () {
       this.loaded   = false;
-      const api     = new ItemApi(SpireApiClient.getOpenApiConfig())
       const builder = new SpireQueryBuilder()
 
       // filter by class
@@ -725,12 +725,18 @@ export default {
       }
 
       for (let key in this.getFiltersNonZeroValues()) {
-        builder.where(key, "=", this.filters[key])
+        builder.where(key, "=", this.checkboxFilters[key])
       }
 
       // item type
       if (this.itemType && this.itemType > 0) {
         builder.where("itemtype", "=", this.itemType)
+      }
+
+      if (this.filters && this.filters.length > 0) {
+        this.filters.forEach((f) => {
+          builder.where(f.field, f.operator, f.value)
+        })
       }
 
       // level
@@ -762,7 +768,7 @@ export default {
 
       builder.groupBy(["id"])
       builder.limit(this.limit)
-      api.listItems(builder.get()).then(async (result) => {
+      (new ItemApi(SpireApiClient.getOpenApiConfig())).listItems(builder.get()).then(async (result) => {
         if (result.status === 200) {
           // set items to be rendered
           this.items  = result.data
