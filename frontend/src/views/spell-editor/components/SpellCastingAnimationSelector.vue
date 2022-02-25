@@ -1,7 +1,5 @@
 <template>
   <div>
-    <app-loader :is-loading="!loaded" padding="8"/>
-
     <eq-window-simple
       class="text-center p-0"
     >
@@ -43,6 +41,8 @@
 
     </eq-window-simple>
 
+    <app-loader :is-loading="!loaded" padding="8"/>
+
   </div>
 </template>
 
@@ -54,6 +54,7 @@ import * as util      from "util";
 import VideoViewer    from "@/app/video-viewer/video-viewer";
 import EqWindowSimple from "@/components/eq-ui/EQWindowSimple";
 import EqAssets       from "@/app/eq-assets/eq-assets";
+import {debounce}     from "../../../app/utility/debounce";
 
 let animationPreviewExists = {}
 
@@ -77,12 +78,12 @@ export default {
     },
   },
   watch: {
-    'selectedAnimation'() {
-      this.init()
+    async 'selectedAnimation'() {
+      await this.init()
     }
   },
   methods: {
-    init() {
+    init: debounce(function () {
       this.render()
 
       console.log("[SpellCastingAnimationSelector] selected animation [%s]", this.selectedAnimation)
@@ -96,14 +97,17 @@ export default {
 
           // 230 is height of video to offset
           if (container && target) {
-            const top           = target.getBoundingClientRect().top
-            container.scrollTop = top - 150;
+            console.log("[SpellCastingAnimationSelector] target top [%s]", target.getBoundingClientRect().top)
+            // container.scrollTop = target.offsetTop
+            const top = target.getBoundingClientRect().top
+            if (target.getBoundingClientRect().top > 0) {
+              container.scrollTop = top - 150;
+            }
             VideoViewer.handleRender();
           }
         }, 100)
       }
-
-    },
+    }, 300),
     handleRender() {
       VideoViewer.handleRender()
     },
@@ -137,8 +141,8 @@ export default {
       this.$emit("update:inputData", anim);
     }
   },
-  created() {
-    this.init()
+  async created() {
+    await this.init()
   },
 }
 </script>

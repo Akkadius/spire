@@ -54,7 +54,6 @@
 
                     <div
                       class="col-2"
-                      @mouseover="drawIconSelector(false)"
                       @click="drawIconSelector(true)"
                     >
                       Icon
@@ -64,7 +63,6 @@
                     <div
                       class="col-1" v-if="spell.new_icon > 0"
                       style="margin-top: 7px"
-                      @mouseover="drawIconSelector(false)"
                       @click="drawIconSelector(true)"
                     >
                       <img
@@ -93,7 +91,6 @@
 
                       <div
                         class="row"
-                        @mouseover="drawSpellAnimationSelector(false)"
                         @click="drawSpellAnimationSelector(true)"
                       >
 
@@ -168,8 +165,7 @@
 
                         <div
                           class="col-6 text-center"
-                          @mouseover="castingAnimField = 'casting_anim'; drawCastingAnimationSelector(false)"
-                          @click="castingAnimField = 'casting_anim'; drawCastingAnimationSelector(true)"
+                          @click="castingAnimField = 'casting_anim'; drawCastingAnimationSelector()"
                         >
                           Casting Animation
 
@@ -179,8 +175,7 @@
 
                         <div
                           class="col-6 text-center"
-                          @mouseover="castingAnimField = 'target_anim'; drawCastingAnimationSelector(false)"
-                          @click="castingAnimField = 'target_anim'; drawCastingAnimationSelector(true)"
+                          @click="castingAnimField = 'target_anim'; drawCastingAnimationSelector()"
                         >
                           Target Animation
 
@@ -879,7 +874,6 @@
                     </div>
                     <div
                       class="col-2"
-                      @mouseover="processClickInputTrigger(field.field)"
                       @click="processClickInputTrigger(field.field)"
                     >
                       <input
@@ -2248,13 +2242,15 @@ export default {
 
           // hooks
           setTimeout(() => {
-            document.getElementById("spell-edit-card").removeEventListener('input', EditFormFieldUtil.setFieldModified, true);
-            document.getElementById("spell-edit-card").addEventListener('input', EditFormFieldUtil.setFieldModified)
+            const target = document.getElementById("spell-edit-card")
+            if (target) {
+              target.removeEventListener('input', EditFormFieldUtil.setFieldModified, true);
+              target.addEventListener('input', EditFormFieldUtil.setFieldModified)
+            }
 
             this.resetPreviewComponents()
             this.previewSpellActive = true
             this.setSubEditorFieldHighlights()
-
           }, 300)
 
           // visible slots effectid 1-12
@@ -2295,29 +2291,27 @@ export default {
       return (Date.now() - this.lastResetTime) > MILLISECONDS_BEFORE_WINDOW_RESET
     },
 
-    previewSpell: debounce(function (force = false) {
-      if (this.shouldReset() || force) {
+    previewSpell: debounce(function () {
+      if (this.shouldReset()) {
         this.resetPreviewComponents()
         this.previewSpellActive = true;
       }
     }, 300),
 
-    drawCastingAnimationSelector(force = false) {
-      if (!this.castingAnimSelectorActive && this.shouldReset() || force) {
-        this.resetPreviewComponents()
-        this.lastResetTime             = Date.now()
-        this.castingAnimSelectorActive = false;
+    drawCastingAnimationSelector() {
+      this.resetPreviewComponents()
+      this.lastResetTime             = Date.now()
+      this.castingAnimSelectorActive = false;
 
-        // queue this so that we can "redraw" the selector when toggling between casting and target
-        // this makes the scroll to selected animation more consistent
-        setTimeout(() => {
-          this.castingAnimSelectorActive = true;
-        }, 100)
-        EditFormFieldUtil.setFieldSubEditorHighlightedById(this.castingAnimField)
-      }
+      // queue this so that we can "redraw" the selector when toggling between casting and target
+      // this makes the scroll to selected animation more consistent
+      setTimeout(() => {
+        this.castingAnimSelectorActive = true;
+      }, 100)
+      EditFormFieldUtil.setFieldSubEditorHighlightedById(this.castingAnimField)
     },
-    drawSpellAnimationSelector(force = false) {
-      if (!this.spellAnimSelectorActive && this.shouldReset() || force) {
+    drawSpellAnimationSelector() {
+      if (!this.spellAnimSelectorActive) {
         this.resetPreviewComponents()
         this.lastResetTime = Date.now()
         setTimeout(() => {
@@ -2336,16 +2330,16 @@ export default {
         EditFormFieldUtil.setFieldSubEditorHighlightedById("nimbuseffect")
       }
     },
-    drawIconSelector(force = false) {
-      if (!this.iconSelectorActive && this.shouldReset() || force) {
+    drawIconSelector() {
+      if (!this.iconSelectorActive) {
         this.resetPreviewComponents()
         this.lastResetTime      = Date.now()
         this.iconSelectorActive = true;
         EditFormFieldUtil.setFieldSubEditorHighlightedById("icon")
       }
     },
-    drawFreeIdSelector(force = false) {
-      if (!this.freeIdSelectorActive && this.shouldReset() || force) {
+    drawFreeIdSelector() {
+      if (!this.freeIdSelectorActive) {
         this.resetPreviewComponents()
         this.lastResetTime        = Date.now()
         this.freeIdSelectorActive = true
