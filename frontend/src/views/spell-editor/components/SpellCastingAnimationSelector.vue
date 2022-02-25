@@ -99,10 +99,8 @@ export default {
           if (container && target) {
             console.log("[SpellCastingAnimationSelector] target top [%s]", target.getBoundingClientRect().top)
             // container.scrollTop = target.offsetTop
-            const top = target.getBoundingClientRect().top
-            if (target.getBoundingClientRect().top > 0) {
-              container.scrollTop = top - 150;
-            }
+            const top           = target.getBoundingClientRect().top
+            container.scrollTop = container.scrollTop + top - 150;
             VideoViewer.handleRender();
           }
         }, 100)

@@ -160,7 +160,7 @@ export default {
       const target    = document.getElementById(util.format("pet-%s", this.selectedPet))
       if (container && target) {
         const top           = target.getBoundingClientRect().top
-        container.scrollTop = top - 300;
+        container.scrollTop = container.scrollTop + top - 300;
       }
     }, 1000)
   }

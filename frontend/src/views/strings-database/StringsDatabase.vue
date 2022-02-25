@@ -199,6 +199,8 @@ export default {
       originalSelectedStringObject: {},
       selectedStringObject: {},
 
+      lastSelectedTime: Date.now(),
+
       loading: false, // are we loading or not
 
       DB_STR_TYPES: DB_STR_TYPES
@@ -209,12 +211,7 @@ export default {
     '$route'() {
       console.log("route trigger")
 
-      this.loading = true
-      setTimeout(() => {
-        this.init()
-        this.loading = false
-      }, 100)
-
+      this.init()
     },
   },
 
@@ -437,6 +434,7 @@ export default {
     },
 
     selectString(stringId, typeId) {
+      this.lastSelectedTime             = Date.now()
       this.subSelectedId                = stringId
       this.subSelectedType              = typeId
       this.originalSelectedStringObject = JSON.parse(JSON.stringify(this.getSelectedStringObject()))
@@ -490,13 +488,17 @@ export default {
     },
 
     scrollToHighlighted() {
+      if (Date.now() < (this.lastSelectedTime + 1000)) {
+        return true
+      }
+
       setTimeout(() => {
         const container = document.getElementById("db-strings-list");
         const target    = document.getElementById(util.format("string-%s", this.subSelectedId))
 
         if (container && target) {
           console.log("[StringsDatabase] target top [%s]", target.getBoundingClientRect().top)
-          container.scrollTop = target.getBoundingClientRect().top - 200;
+          container.scrollTop = container.scrollTop + target.getBoundingClientRect().top - 200;
         } else if (container && this.selectedType === 0) {
           container.scrollTop = 0
         }

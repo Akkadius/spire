@@ -156,7 +156,7 @@ export default {
       const target    = document.getElementById(util.format("aura-%s", this.selectedAura))
       if (container && target) {
         const top           = target.getBoundingClientRect().top
-        container.scrollTop = top - 300;
+        container.scrollTop = container.scrollTop + top - 300;
       }
     }, 1000)
   }

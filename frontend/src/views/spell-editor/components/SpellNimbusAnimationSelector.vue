@@ -97,7 +97,7 @@ export default {
           if (container && target) {
             const top = target.getBoundingClientRect().top
 
-            container.scrollTop = top - 250;
+            container.scrollTop = container.scrollTop + top - 250;
             VideoViewer.handleRender();
           }
 
