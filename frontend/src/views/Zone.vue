@@ -8,23 +8,32 @@
           <eq-tabs v-if="loaded && npcs" style="height: 90vh">
 
             <!-- NPCS -->
-            <eq-tab :name="'NPC(s) ' + (npcCount ? '(' + npcCount + ')' : '')" :selected="true">
+            <eq-tab
+              :name="'NPC(s) ' + (npcCount ? '(' + npcCount + ')' : '')"
+              :selected="true"
+            >
               <npc-list-grid :npcs="npcs" v-if="npcs"/>
             </eq-tab>
 
             <!-- Doors -->
-            <eq-tab :name="'Doors(s) ' + (doorCount ? '(' + doorCount + ')' : '')">
-              <eq-auto-table :data="doors"/>
+            <eq-tab
+              :name="'Doors(s) ' + (doorCount ? '(' + doorCount + ')' : '')"
+            >
+              <eq-auto-table :data="doors" style="height: 85vh"/>
             </eq-tab>
 
             <!-- Objects -->
-            <eq-tab :name="'Objects(s) ' + (objectCount ? '(' + objectCount + ')' : '')">
-              <eq-auto-table :data="objects"/>
+            <eq-tab
+              :name="'Objects(s) ' + (objectCount ? '(' + objectCount + ')' : '')"
+            >
+              <eq-auto-table :data="objects" style="height: 85vh"/>
             </eq-tab>
 
             <!-- Spawn Entries -->
-            <eq-tab :name="'Spawn Entries(s) ' + (spawnEntriesCount ? '(' + spawnEntriesCount + ')' : '')">
-              <eq-auto-table :data="spawnEntries"/>
+            <eq-tab
+              :name="'Spawn Entries(s) ' + (spawnEntriesCount ? '(' + spawnEntriesCount + ')' : '')"
+            >
+              <eq-auto-table :data="spawnEntries" style="height: 85vh"/>
             </eq-tab>
 
           </eq-tabs>
