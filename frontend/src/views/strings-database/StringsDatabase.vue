@@ -167,6 +167,7 @@ import {ROUTE}             from "../../routes";
 import {DB_STR_TYPES}      from "../../app/constants/eq-db-str-constants";
 import {EditFormFieldUtil} from "../../app/forms/edit-form-field-util";
 import util                from "util";
+import {SpireQueryBuilder} from "../../app/api/spire-query-builder";
 
 // api response cache of all strings
 // this does not need to be reactive so don't put in data()
@@ -208,7 +209,12 @@ export default {
     '$route'() {
       console.log("route trigger")
 
-      this.init()
+      this.loading = true
+      setTimeout(() => {
+        this.init()
+        this.loading = false
+      }, 100)
+
     },
   },
 
@@ -341,11 +347,9 @@ export default {
             {
               id: parseInt(this.subSelectedId)
             },
-            {
-              params: {
-                where: "type__" + this.selectedType
-              }
-            }
+            (new SpireQueryBuilder())
+              .where("type", "=", this.selectedType)
+              .get()
           )
 
           // success
@@ -396,11 +400,9 @@ export default {
             id: parseInt(this.originalSelectedStringObject.id),
             dbStr: this.selectedStringObject
           },
-          {
-            params: {
-              where: "type__" + this.selectedType
-            }
-          }
+          (new SpireQueryBuilder())
+            .where("type", "=", this.selectedType)
+            .get()
         )
 
         // success
@@ -408,7 +410,7 @@ export default {
           EditFormFieldUtil.resetFieldEditedStatus()
 
           this.updateQueryState()
-          this.init(true)
+          await this.init(true)
           this.message = "Saved successfully!"
           setTimeout(() => {
             this.message = ""
@@ -420,7 +422,6 @@ export default {
           this.message = err.response.data.error
         }
       }
-
     },
 
     /**
@@ -460,23 +461,16 @@ export default {
       this.originalSelectedStringObject = JSON.parse(JSON.stringify(this.getSelectedStringObject()))
       this.selectedStringObject         = this.getSelectedStringObject()
       this.listData()
-
-      setTimeout(() => {
-        const container = document.getElementById("db-strings-list");
-        const target    = document.getElementById(util.format("string-%s", this.subSelectedId))
-
-        if (container && target) {
-          console.log(target.getBoundingClientRect())
-          const top           = target.getBoundingClientRect().top
-          container.scrollTop = top - 200;
-        }
-      }, 500)
+      this.scrollToHighlighted()
     },
 
     async getAllDbStrings() {
       this.loading   = true
-      // {orderBy: "id.type"}
-      const response = await DbStrApiClient.listDbStrs({ limit: 100000 })
+      const response = await DbStrApiClient.listDbStrs(
+        (new SpireQueryBuilder())
+          .limit(100000)
+          .get()
+      )
       if (response.status === 200 && response.data) {
         this.loading = false
         return response.data
@@ -489,17 +483,30 @@ export default {
         if (typeof typeStringCount[string.type] === "undefined") {
           typeStringCount[string.type] = 0
         }
-
         typeStringCount[string.type]++
       })
 
       this.typeCounts = typeStringCount
+    },
+
+    scrollToHighlighted() {
+      setTimeout(() => {
+        const container = document.getElementById("db-strings-list");
+        const target    = document.getElementById(util.format("string-%s", this.subSelectedId))
+
+        if (container && target) {
+          console.log("[StringsDatabase] target top [%s]", target.getBoundingClientRect().top)
+          container.scrollTop = target.getBoundingClientRect().top - 200;
+        } else if (container && this.selectedType === 0) {
+          container.scrollTop = 0
+        }
+      }, 100)
     }
 
   },
-  mounted() {
-    this.init()
-  }
+  async mounted() {
+    await this.init()
+  },
 }
 </script>
 
