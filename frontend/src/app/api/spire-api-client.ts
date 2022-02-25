@@ -42,7 +42,8 @@ export class SpireApiClient {
       // @ts-ignore
       x.meta.requestStartedAt = Date.now()
 
-      Debug.log(`[Request Start] [${x.baseURL}${x.url}]`)
+      // ${x.baseURL}
+      Debug.log(`[Request Start] [${x.url}]`)
 
       return x
     })
@@ -59,5 +60,9 @@ export class SpireApiClient {
 
   static v1() {
     return this.newAxiosWithConfig()
+  }
+
+  static openApiArgs() {
+    return [...SpireApiClient.openApiArgs(), "", SpireApiClient.newAxiosWithConfig()]
   }
 }
