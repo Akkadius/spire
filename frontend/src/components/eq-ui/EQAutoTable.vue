@@ -14,6 +14,7 @@
         <th
           v-for="header in Object.keys(data[0])"
           v-if="!doesColumnHaveObjects(header)"
+          style="text-align: center"
         >{{ header }}
         </th>
       </tr>
@@ -21,9 +22,9 @@
       <tbody>
       <tr v-for="(row, index) in data" :key="index">
         <td
-          style="width: 1%; white-space: nowrap;"
+          style="width: 1%; white-space: nowrap; text-align: center"
           v-for="key in Object.keys(row)"
-          v-if="(typeof row[key] !== 'undefined') && !(typeof row[key] === 'object' && row[key] !== null && Object.keys(row[key]))"
+          v-if="doesRowColumnHaveObjects(row, key)"
         >
           {{ row[key] }}
         </td>
@@ -50,6 +51,9 @@ export default {
       return this.data.find((row) => {
         return typeof row[column] === 'object' && row[column] !== null && Object.keys(row[column])
       })
+    },
+    doesRowColumnHaveObjects(r, key) {
+      return (typeof r[key] !== 'undefined') && !(typeof r[key] === 'object' && r[key] !== null && Object.keys(r[key]))
     }
   }
 }
