@@ -252,6 +252,7 @@
 
                       <b-form-input
                         :id="'effect_base_value_' + i"
+                        style="padding-left: 10px !important;"
                         v-model.number="spell['effect_base_value_' + i]"
                         :class="getSpaSpellHighlights(spell['effectid_' + i], 'base')"
                         @click="processSpaFieldAction(i, spell['effectid_' + i], 'base')"
