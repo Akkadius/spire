@@ -17,7 +17,7 @@
         v-if="items.length > 0"
       >
         <table
-          id="items-table"
+          id="spell-items-table-selector"
           class="eq-table eq-highlight-rows"
           style="display: table; overflow-x: scroll"
         >
@@ -29,7 +29,11 @@
           </tr>
           </thead>
           <tbody>
-          <tr v-for="(item, index) in items" :key="item.id">
+          <tr
+            v-for="(item, index) in items"
+            :class="(isItemSelected(item) ? 'pulsate-highlight-white' : '')"
+            :key="item.id"
+            :id="'item-selection-row-' + item.id">
             <td>
               <div class="btn-group" role="group">
                 <b-button
@@ -49,7 +53,10 @@
                   :class="'fade-in item-' + item.icon" :title="item.icon"
                   style="height: 40px; width: 40px; display: inline-block"
                 />
-                <span class="ml-2" style="position:relative; top: -15px">{{ item.name }}</span>
+                <span
+                  class="ml-2"
+                  style="position:relative; top: -15px"
+                >{{ item.name }}</span>
               </div>
 
               <b-popover
@@ -108,6 +115,8 @@ export default {
       itemMinis: {},
       dbClassIcons: DB_CLASSES_ICONS,
       dbClassesShort: DB_CLASSES_SHORT,
+
+      highlightedItem: 0,
     }
   },
   async created() {
@@ -118,9 +127,12 @@ export default {
     console.log("mounted")
 
     if (this.items.length > 0) {
-      setTimeout(() => {
-        new Tablesort(document.getElementById('items-table'));
-      }, 100)
+      const target = document.getElementById('spell-items-table-selector')
+      if (target) {
+        setTimeout(() => {
+          new Tablesort(target);
+        }, 100)
+      }
     }
   },
   props: {
@@ -129,7 +141,13 @@ export default {
   methods: {
     selectItem(item) {
       this.$emit('input', item);
+      this.highlightedItem = item.id
     },
+
+    isItemSelected(item) {
+      return item.id === this.highlightedItem
+    },
+
     getClasses(item) {
       let classes      = []
       let classesValue = item.classes
