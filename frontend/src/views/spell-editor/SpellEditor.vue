@@ -823,7 +823,6 @@
                     </div>
                     <div
                       class="col-3 text-left p-0 mt-1"
-                      @mouseover="processClickInputTrigger(field.field)"
                       @click="processClickInputTrigger(field.field)"
                     >
                       <!-- checkbox -->

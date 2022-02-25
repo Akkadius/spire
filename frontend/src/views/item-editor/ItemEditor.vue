@@ -36,7 +36,7 @@
                   <div class="row">
                     <div
                       class="col-2"
-                      @mouseover="drawFreeIdSelector"
+                      @click="drawFreeIdSelector"
                       v-b-tooltip.hover.v-dark.right :title="getFieldDescription('id')"
                     >
                       Id
@@ -414,8 +414,7 @@
 
                         <!-- item model -->
                         <div
-                          @mouseover="drawItemModelSelector()"
-                          @click="drawItemModelSelector(true)"
+                          @click="drawItemModelSelector()"
                         >
                           <item-model-preview
                             :id="item.idfile"
@@ -431,7 +430,10 @@
 
                         <!-- icon -->
                         Icon
-                        <div @mouseover="drawIconSelector()" @click="drawIconSelector(true)" class="row">
+                        <div
+                          @click="drawIconSelector()"
+                          class="row"
+                        >
                           <div class="col-4">
                             <div class="d-inline-block" style="width: 50px">
                             <span
@@ -451,7 +453,10 @@
 
                         <!-- color -->
                         Color
-                        <div @mouseover="drawColorSelector()" @click="drawColorSelector(true)" class="row">
+                        <div
+                          @click="drawColorSelector()"
+                          class="row"
+                        >
                           <div class="col-2">
                             <div
                               class="mr-3"
@@ -469,7 +474,10 @@
                         </div>
 
                         <!-- Material -->
-                        <div class="row" @mouseover="drawRaceMaterialPreview">
+                        <div
+                          class="row"
+                          @click="drawRaceMaterialPreview"
+                        >
                           <div class="col-12">
                             Material
                             <select
@@ -536,14 +544,11 @@
                 </eq-tab>
 
                 <eq-tab name="Stats" class="minified-inputs">
-
                   <div class="row">
-
                     <div class="col-4">
 
                       <!-- Stats -->
                       <div class="col-12 text-center">
-
                         <div
                           class="row"
                           :key="field.field"
@@ -2184,8 +2189,8 @@ export default {
       this.resetPreviewComponents()
       this.spellEffectSelectorActive = true
     },
-    drawItemModelSelector(force = false) {
-      if ((!this.itemModelSelectorActive && this.shouldReset()) || force) {
+    drawItemModelSelector() {
+      if ((!this.itemModelSelectorActive)) {
         this.resetPreviewComponents()
         this.itemModelSelectorActive = true;
         this.lastResetTime           = Date.now()
@@ -2193,16 +2198,16 @@ export default {
         EditFormFieldUtil.setFieldSubEditorHighlightedById("idfile")
       }
     },
-    drawIconSelector(force = false) {
-      if (!this.freeIdSelectorActive || force) {
+    drawIconSelector() {
+      if (!this.freeIdSelectorActive) {
         this.resetPreviewComponents()
         this.iconSelectorActive = true;
 
         EditFormFieldUtil.setFieldSubEditorHighlightedById("icon")
       }
     },
-    drawColorSelector(force = false) {
-      if (!this.drawColorSelectorActive || force) {
+    drawColorSelector() {
+      if (!this.drawColorSelectorActive) {
         this.resetPreviewComponents()
         this.drawColorSelectorActive = true;
         this.lastResetTime           = Date.now()
@@ -2243,8 +2248,6 @@ export default {
 
     materialChange() {
       this.lastResetTime = Date.now()
-      // this.resetPreviewComponents()
-
       this.drawRaceMaterialPreviewActive = true
     },
 
