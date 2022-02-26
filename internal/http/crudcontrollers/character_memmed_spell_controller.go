@@ -1,10 +1,10 @@
 package crudcontrollers
 
 import (
+	"fmt"
 	"github.com/Akkadius/spire/internal/database"
 	"github.com/Akkadius/spire/internal/http/routes"
 	"github.com/Akkadius/spire/internal/models"
-	"fmt"
 	"github.com/labstack/echo/v4"
 	"github.com/sirupsen/logrus"
 	"net/http"
@@ -12,7 +12,7 @@ import (
 )
 
 type CharacterMemmedSpellController struct {
-	db     *database.DatabaseResolver
+	db	 *database.DatabaseResolver
 	logger *logrus.Logger
 }
 
@@ -21,19 +21,19 @@ func NewCharacterMemmedSpellController(
 	logger *logrus.Logger,
 ) *CharacterMemmedSpellController {
 	return &CharacterMemmedSpellController{
-		db:     db,
+		db:	 db,
 		logger: logger,
 	}
 }
 
 func (e *CharacterMemmedSpellController) Routes() []*routes.Route {
 	return []*routes.Route{
-		routes.RegisterRoute(http.MethodDelete, "character_memmed_spell/:character_memmed_spell", e.deleteCharacterMemmedSpell, nil),
-		routes.RegisterRoute(http.MethodGet, "character_memmed_spell/:character_memmed_spell", e.getCharacterMemmedSpell, nil),
+		routes.RegisterRoute(http.MethodGet, "character_memmed_spell/:id", e.getCharacterMemmedSpell, nil),
 		routes.RegisterRoute(http.MethodGet, "character_memmed_spells", e.listCharacterMemmedSpells, nil),
-		routes.RegisterRoute(http.MethodPost, "character_memmed_spells/bulk", e.getCharacterMemmedSpellsBulk, nil),
-		routes.RegisterRoute(http.MethodPatch, "character_memmed_spell/:character_memmed_spell", e.updateCharacterMemmedSpell, nil),
 		routes.RegisterRoute(http.MethodPut, "character_memmed_spell", e.createCharacterMemmedSpell, nil),
+		routes.RegisterRoute(http.MethodDelete, "character_memmed_spell/:id", e.deleteCharacterMemmedSpell, nil),
+		routes.RegisterRoute(http.MethodPatch, "character_memmed_spell/:id", e.updateCharacterMemmedSpell, nil),
+		routes.RegisterRoute(http.MethodPost, "character_memmed_spells/bulk", e.getCharacterMemmedSpellsBulk, nil),
 	}
 }
 
@@ -79,17 +79,42 @@ func (e *CharacterMemmedSpellController) listCharacterMemmedSpells(c echo.Contex
 // @Failure 500 {string} string "Bad query request"
 // @Router /character_memmed_spell/{id} [get]
 func (e *CharacterMemmedSpellController) getCharacterMemmedSpell(c echo.Context) error {
-	characterMemmedSpellId, err := strconv.Atoi(c.Param("character_memmed_spell"))
+	var params []interface{}
+	var keys []string
+
+	// primary key param
+	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Cannot find param"})
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Cannot find param [Id]"})
+	}
+	params = append(params, id)
+	keys = append(keys, "id = ?")
+
+	// key param [slot_id] position [2] type [smallint]
+	if len(c.QueryParam("slot_id")) > 0 {
+		slotIdParam, err := strconv.Atoi(c.QueryParam("slot_id"))
+		if err != nil {
+			return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error parsing query param [slot_id] err [%s]", err.Error())})
+		}
+
+		params = append(params, slotIdParam)
+		keys = append(keys, "slot_id = ?")
 	}
 
+	// query builder
 	var result models.CharacterMemmedSpell
-	err = e.db.QueryContext(models.CharacterMemmedSpell{}, c).First(&result, characterMemmedSpellId).Error
-	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err})
+	query := e.db.QueryContext(models.CharacterMemmedSpell{}, c)
+	for i, _ := range keys {
+		query = query.Where(keys[i], params[i])
 	}
 
+	// grab first entry
+	err = query.First(&result).Error
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
+	}
+
+	// couldn't find entity
 	if result.ID == 0 {
 		return c.JSON(http.StatusNotFound, echo.Map{"error": "Cannot find entity"})
 	}
@@ -111,26 +136,55 @@ func (e *CharacterMemmedSpellController) getCharacterMemmedSpell(c echo.Context)
 // @Failure 500 {string} string "Error updating entity"
 // @Router /character_memmed_spell/{id} [patch]
 func (e *CharacterMemmedSpellController) updateCharacterMemmedSpell(c echo.Context) error {
-	characterMemmedSpell := new(models.CharacterMemmedSpell)
-	if err := c.Bind(characterMemmedSpell); err != nil {
+	request := new(models.CharacterMemmedSpell)
+	if err := c.Bind(request); err != nil {
 		return c.JSON(
 			http.StatusInternalServerError,
-			echo.Map{"error": fmt.Sprintf("Error binding to entity: [%v]", err)},
+			echo.Map{"error": fmt.Sprintf("Error binding to entity [%v]", err.Error())},
 		)
 	}
 
-    entity := models.CharacterMemmedSpell{}
-	err := e.db.Get(models.CharacterMemmedSpell{}, c).Model(&models.CharacterMemmedSpell{}).First(&entity, characterMemmedSpell.ID).Error
-	if err != nil || characterMemmedSpell.ID == 0 {
-		return c.JSON(http.StatusNotFound, echo.Map{"error": "Cannot find entity"})
-	}
+	var params []interface{}
+	var keys []string
 
-	err = e.db.Get(models.CharacterMemmedSpell{}, c).Model(&entity).Select("*").Updates(&characterMemmedSpell).Error
+	// primary key param
+	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error updating entity: [%v]", err)})
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Cannot find param [Id]"})
+	}
+	params = append(params, id)
+	keys = append(keys, "id = ?")
+
+	// key param [slot_id] position [2] type [smallint]
+	if len(c.QueryParam("slot_id")) > 0 {
+		slotIdParam, err := strconv.Atoi(c.QueryParam("slot_id"))
+		if err != nil {
+			return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error parsing query param [slot_id] err [%s]", err.Error())})
+		}
+
+		params = append(params, slotIdParam)
+		keys = append(keys, "slot_id = ?")
 	}
 
-	return c.JSON(http.StatusOK, characterMemmedSpell)
+	// query builder
+	var result models.CharacterMemmedSpell
+	query := e.db.QueryContext(models.CharacterMemmedSpell{}, c)
+	for i, _ := range keys {
+		query = query.Where(keys[i], params[i])
+	}
+
+	// grab first entry
+	err = query.First(&result).Error
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Cannot find entity [%s]", err.Error())})
+	}
+
+	err = query.Select("*").Updates(&request).Error
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error updating entity [%v]", err.Error())})
+	}
+
+	return c.JSON(http.StatusOK, request)
 }
 
 // createCharacterMemmedSpell godoc
@@ -149,7 +203,7 @@ func (e *CharacterMemmedSpellController) createCharacterMemmedSpell(c echo.Conte
 	if err := c.Bind(characterMemmedSpell); err != nil {
 		return c.JSON(
 			http.StatusInternalServerError,
-			echo.Map{"error": fmt.Sprintf("Error binding to entity: [%v]", err)},
+			echo.Map{"error": fmt.Sprintf("Error binding to entity [%v]", err.Error())},
 		)
 	}
 
@@ -157,7 +211,7 @@ func (e *CharacterMemmedSpellController) createCharacterMemmedSpell(c echo.Conte
 	if err != nil {
 		return c.JSON(
 			http.StatusInternalServerError,
-			echo.Map{"error": fmt.Sprintf("Error inserting entity: [%v]", err)},
+			echo.Map{"error": fmt.Sprintf("Error inserting entity [%v]", err.Error())},
 		)
 	}
 
@@ -170,25 +224,49 @@ func (e *CharacterMemmedSpellController) createCharacterMemmedSpell(c echo.Conte
 // @Accept json
 // @Produce json
 // @Tags CharacterMemmedSpell
-// @Param id path int true "Id"
+// @Param id path int true "id"
 // @Success 200 {string} string "Entity deleted successfully"
 // @Failure 404 {string} string "Cannot find entity"
 // @Failure 500 {string} string "Error binding to entity"
 // @Failure 500 {string} string "Error deleting entity"
 // @Router /character_memmed_spell/{id} [delete]
 func (e *CharacterMemmedSpellController) deleteCharacterMemmedSpell(c echo.Context) error {
-	characterMemmedSpellId, err := strconv.Atoi(c.Param("character_memmed_spell"))
+	var params []interface{}
+	var keys []string
+
+	// primary key param
+	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
 		e.logger.Error(err)
 	}
+	params = append(params, id)
+	keys = append(keys, "id = ?")
 
-	characterMemmedSpell := new(models.CharacterMemmedSpell)
-	err = e.db.Get(models.CharacterMemmedSpell{}, c).Model(&models.CharacterMemmedSpell{}).First(&characterMemmedSpell, characterMemmedSpellId).Error
-	if err != nil || characterMemmedSpell.ID == 0 {
-		return c.JSON(http.StatusNotFound, echo.Map{"error": "Cannot find entity"})
+	// key param [slot_id] position [2] type [smallint]
+	if len(c.QueryParam("slot_id")) > 0 {
+		slotIdParam, err := strconv.Atoi(c.QueryParam("slot_id"))
+		if err != nil {
+			return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error parsing query param [slot_id] err [%s]", err.Error())})
+		}
+
+		params = append(params, slotIdParam)
+		keys = append(keys, "slot_id = ?")
 	}
 
-	err = e.db.Get(models.CharacterMemmedSpell{}, c).Model(&models.CharacterMemmedSpell{}).Delete(&characterMemmedSpell).Error
+	// query builder
+	var result models.CharacterMemmedSpell
+	query := e.db.QueryContext(models.CharacterMemmedSpell{}, c)
+	for i, _ := range keys {
+		query = query.Where(keys[i], params[i])
+	}
+
+	// grab first entry
+	err = query.First(&result).Error
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
+	}
+
+	err = e.db.Get(models.CharacterMemmedSpell{}, c).Model(&models.CharacterMemmedSpell{}).Delete(&result).Error
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Error deleting entity"})
 	}
@@ -213,7 +291,7 @@ func (e *CharacterMemmedSpellController) getCharacterMemmedSpellsBulk(c echo.Con
 	if err := c.Bind(r); err != nil {
 		return c.JSON(
 			http.StatusInternalServerError,
-			echo.Map{"error": fmt.Sprintf("Error binding to bulk request: [%v]", err)},
+			echo.Map{"error": fmt.Sprintf("Error binding to bulk request: [%v]", err.Error())},
 		)
 	}
 
@@ -226,7 +304,7 @@ func (e *CharacterMemmedSpellController) getCharacterMemmedSpellsBulk(c echo.Con
 
 	err := e.db.QueryContext(models.CharacterMemmedSpell{}, c).Find(&results, r.IDs).Error
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err})
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
 	}
 
 	return c.JSON(http.StatusOK, results)

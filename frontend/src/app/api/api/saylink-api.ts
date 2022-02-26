@@ -82,7 +82,7 @@ export const SaylinkApiAxiosParamCreator = function (configuration?: Configurati
         /**
          * 
          * @summary Deletes Saylink
-         * @param {number} id Id
+         * @param {number} id id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -386,7 +386,7 @@ export const SaylinkApiFp = function(configuration?: Configuration) {
         /**
          * 
          * @summary Deletes Saylink
-         * @param {number} id Id
+         * @param {number} id id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -485,7 +485,7 @@ export const SaylinkApiFactory = function (configuration?: Configuration, basePa
         /**
          * 
          * @summary Deletes Saylink
-         * @param {number} id Id
+         * @param {number} id id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -566,7 +566,7 @@ export interface SaylinkApiCreateSaylinkRequest {
  */
 export interface SaylinkApiDeleteSaylinkRequest {
     /**
-     * Id
+     * id
      * @type {number}
      * @memberof SaylinkApiDeleteSaylink
      */

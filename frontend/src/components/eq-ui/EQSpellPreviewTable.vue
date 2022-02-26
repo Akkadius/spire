@@ -1,23 +1,27 @@
 <template>
   <div>
     <div
-      class='eq-window'
-      :style="'margin-bottom: 40px; min-height: 275px; ' + (title ? 'padding-top: 30px' : 'padding-top: 0px !important')"
+      class='eq-window-simple p-0'
+      :style="'margin-bottom: 40px; ' + (title ? 'padding-top: 30px' : 'padding-top: 0px !important')"
     >
       <div class='eq-window-title-bar' v-if="title">{{ title }}</div>
-      <div :style="'padding: 10px; ' + (title ? 'margin-top: 10px' : '') ">
-        <div class='eq-window-nested-blue text-center' v-if="spells.length === 0">
+      <div :style="'' + (title ? '' : '') ">
+        <div class='eq-window-nested-blue text-center p-5' v-if="spells.length === 0">
           No spells were found
         </div>
 
-        <div class='spell-table' v-if="spells.length > 0">
+        <div
+          class='spell-table'
+          style="height: 78vh; overflow-y: scroll; overflow-x: hidden; box-shadow: rgb(0 0 0) 0px 20px 15px inset;"
+          v-if="spells.length > 0"
+        >
           <!--        <div class='eq-window-nested-blue' v-if="spells.length > 0" style="overflow-y: scroll;">-->
           <table id="tabbox1" class="eq-table eq-highlight-rows" style="display: table;">
             <thead>
             <tr>
-              <th style="width: 100px;"></th>
+              <th style="width: 180px;"></th>
               <th style="width: auto;">Id</th>
-              <th style="width: auto; min-width: 250px">Spell</th>
+              <th style="width: auto; min-width: 270px">Spell</th>
               <th style="width: auto; min-width: 300px">Level</th>
               <th style="width: 400px">Effects</th>
 
@@ -33,14 +37,27 @@
             <tbody>
             <tr v-for="(spell, index) in spells" :key="spell.id">
               <td>
-                <b-button
-                  @click="editSpell(spell.id)"
-                  size="sm"
-                  variant="outline-warning"
-                >
-                  <i class="ra ra-book"></i>
-                  Edit
-                </b-button>
+
+                <div class="btn-group" role="group">
+                  <b-button
+                    @click="editSpell(spell.id)"
+                    size="sm"
+                    variant="outline-warning"
+                  >
+                    <i class="ra ra-wrench"></i>
+                    Edit
+                  </b-button>
+
+                  <b-button
+                    @click="editSpell(spell.id, true)"
+                    size="sm"
+                    variant="outline-light"
+                  >
+                    <i class="ra ra-double-team"></i>
+                    Clone
+                  </b-button>
+                </div>
+
               </td>
               <td>
                 {{ spell.id }}
@@ -116,7 +133,6 @@ export default {
     return {
       debug: App.DEBUG,
       debugSpellEffects: false,
-      spellCdnUrl: App.ASSET_SPELL_ICONS_BASE_URL,
       spellEffectInfo: [],
       itemData: {},
       sideLoadedSpellData: {},
@@ -132,10 +148,13 @@ export default {
   },
   async created() {
     let spellMinis = []
-    for (const spell of this.spells) {
-      Spells.setSpell(spell["id"], spell)
 
-      spellMinis[spell["id"]] = await Spells.renderSpellMini("0", spell["id"], 30)
+    for (const spell of this.spells) {
+      if (!Spells.isSpellSet(spell["id"])) {
+        Spells.setSpell(spell["id"], spell)
+      }
+
+      spellMinis[spell["id"]] = await Spells.renderSpellMini(0, spell["id"], 30)
     }
     this.spellMinis = spellMinis
 
@@ -144,7 +163,7 @@ export default {
     // do this once so we're not triggering vue re-renders in the loop
     this.sideLoadedSpellData = Spells.data
 
-    // this.title = "Spells (" + this.spells.length + ")";
+    this.title = "Spells (" + this.spells.length + ")";
   },
   props: {
     spells: Array
@@ -175,10 +194,10 @@ export default {
     getBuffDuration: function (spell) {
       return Spells.getBuffDuration(spell)
     },
-    editSpell(spellId) {
+    editSpell(spellId, clone = false) {
       this.$router.push(
         {
-          path: util.format(ROUTE.SPELL_EDIT, spellId),
+          path: util.format(ROUTE.SPELL_EDIT + (clone ? "?clone" : ""), spellId),
           query: {}
         }
       ).catch(() => {

@@ -88,30 +88,32 @@
 
         <!-- Navigation -->
         <ul class="navbar-nav mb-md-4">
-          <nav-section-component :config="viewerNav"/>
           <nav-section-component :config="calculatorNav"/>
-        </ul>
-
-        <h6 class="navbar-heading">
-          Tools
-        </h6>
-
-        <!-- Navigation -->
-        <ul class="navbar-nav mb-md-4">
+          <li class="nav-item">
+            <router-link class="nav-link" to="/client-files">
+              <i class="ra ra-cycle mr-1"></i> Client Files
+              <b-badge class="ml-3" variant="primary">NEW!</b-badge>
+            </router-link>
+          </li>
           <li class="nav-item">
             <router-link class="nav-link " to="/items">
               <i class="ra ra-relic-blade mr-1"></i> Items
               <b-badge class="ml-3" variant="primary">NEW!</b-badge>
-              <b-badge class="ml-3" variant="warning">BETA (90%)</b-badge>
+            </router-link>
+          </li>
+          <li class="nav-item">
+            <router-link class="nav-link " to="/strings-database">
+              <i class="ra  ra-scroll-unfurled mr-1"></i> Strings DB
+              <b-badge class="ml-3" variant="primary">NEW!</b-badge>
             </router-link>
           </li>
           <li class="nav-item">
             <router-link class="nav-link " to="/spells">
               <i class="ra ra-book mr-1"></i> Spells
               <b-badge class="ml-3" variant="primary">NEW!</b-badge>
-              <b-badge class="ml-3" variant="warning">BETA (80%)</b-badge>
             </router-link>
           </li>
+          <nav-section-component :config="viewerNav"/>
         </ul>
 
         <!-- Heading -->
@@ -241,17 +243,6 @@ export default {
       hideNavbar: false,
       appEnv: AppEnv.getEnv(),
       appVersion: AppEnv.getVersion(),
-      componentNavs: [
-        { title: "Progress Bars", to: "/components#progress-bars" },
-        { title: "Page Headers", to: "/components#page-headers" },
-        { title: "Item Preview", to: "/components#item-preview" },
-        { title: "Spell Preview", to: "/components#spell-preview" },
-        { title: "NPC Special Abilities", to: "/components#npc-special-abilities" },
-        { title: "Table", to: "/components#table" },
-        { title: "Tabs", to: "/components#tabs" },
-        { title: "Form Elements", to: "/components#form-elements" },
-        { title: "Windows", to: "/components#windows" }
-      ],
       viewerNav: {
         label: "Viewers",
         labelIcon: "ra ra-bleeding-eye mr-1",
@@ -265,6 +256,19 @@ export default {
           { title: "Spell Animations", to: ROUTE.SPELL_ANIMATION_VIEWER, icon: "ra ra-dragon mr-1", isNew: true }
         ]
       },
+      componentNavs: [
+        { title: "Progress Bars", to: "/components#progress-bars" },
+        { title: "Page Headers", to: "/components#page-headers" },
+        { title: "Range Visual", to: "/components#range-visual" },
+        { title: "Item Preview", to: "/components#item-preview" },
+        { title: "Spell Icons", to: "/components#spell-icons" },
+        { title: "Spell Preview", to: "/components#spell-preview" },
+        { title: "NPC Special Abilities", to: "/components#npc-special-abilities" },
+        { title: "Table", to: "/components#table" },
+        { title: "Tabs", to: "/components#tabs" },
+        { title: "Form Elements", to: "/components#form-elements" },
+        { title: "Windows", to: "/components#windows" }
+      ],
       calculatorNav: {
         label: "Calculators",
         labelIcon: "ra ra-cog mr-1",

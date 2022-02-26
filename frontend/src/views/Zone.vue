@@ -1,73 +1,69 @@
 <template>
-  <div>
+  <content-area>
+    <div class="row">
+      <div class="col-12" v-if="zone && loaded">
+        <eq-window-simple class="p-0 mt-4" :title="zone.long_name">
+          <loader-fake-progress v-if="!npcs" class="mt-5 mb-5"/>
 
-    <!-- CONTENT -->
-    <div class="container-fluid">
-      <div class="panel-body">
-        <div class="panel panel-default">
+          <eq-tabs v-if="loaded && npcs" style="height: 90vh">
 
+            <!-- NPCS -->
+            <eq-tab
+              :name="'NPC(s) ' + (npcCount ? '(' + npcCount + ')' : '')"
+              :selected="true"
+            >
+              <npc-list-grid :npcs="npcs" v-if="npcs"/>
+            </eq-tab>
 
-          <div class="row">
-            <div class="col-12">
-              <eq-window class="mt-5" title="Zone">
+            <!-- Doors -->
+            <eq-tab
+              :name="'Doors(s) ' + (doorCount ? '(' + doorCount + ')' : '')"
+            >
+              <eq-auto-table :data="doors" style="height: 85vh"/>
+            </eq-tab>
 
-                <app-loader :is-loading="!loaded" padding="8"/>
+            <!-- Objects -->
+            <eq-tab
+              :name="'Objects(s) ' + (objectCount ? '(' + objectCount + ')' : '')"
+            >
+              <eq-auto-table :data="objects" style="height: 85vh"/>
+            </eq-tab>
 
+            <!-- Spawn Entries -->
+            <eq-tab
+              :name="'Spawn Entries(s) ' + (spawnEntriesCount ? '(' + spawnEntriesCount + ')' : '')"
+            >
+              <eq-auto-table :data="spawnEntries" style="height: 85vh"/>
+            </eq-tab>
 
-                <h3 class="eq-header" v-if="zone && loaded">{{ zone.long_name }}</h3>
+          </eq-tabs>
 
-                <!--                <pre v-if="zone">{{ zone }}</pre>-->
-
-                <eq-tabs v-if="loaded && npcs">
-
-                  <!-- NPCS -->
-                  <eq-tab :name="'NPC(s) ' + (npcCount ? '(' + npcCount + ')' : '')" :selected="true">
-                    <npc-list-grid :npcs="npcs" v-if="npcs"/>
-                  </eq-tab>
-
-                  <!-- Doors -->
-                  <eq-tab :name="'Doors(s) ' + (doorCount ? '(' + doorCount + ')' : '')">
-                    <eq-auto-table :data="doors"/>
-                  </eq-tab>
-
-                  <!-- Objects -->
-                  <eq-tab :name="'Objects(s) ' + (objectCount ? '(' + objectCount + ')' : '')">
-                    <eq-auto-table :data="objects"/>
-                  </eq-tab>
-
-                  <!-- Spawn Entries -->
-                  <eq-tab :name="'Spawn Entries(s) ' + (spawnEntriesCount ? '(' + spawnEntriesCount + ')' : '')">
-                    <eq-auto-table :data="spawnEntries"/>
-                  </eq-tab>
-
-                </eq-tabs>
-
-              </eq-window>
-            </div>
-          </div>
-
-        </div>
-
+        </eq-window-simple>
       </div>
     </div>
-
-  </div>
+  </content-area>
 </template>
 
 <script type="ts">
 import {DoorApi, ObjectApi, Spawn2Api, ZoneApi} from "@/app/api/api";
-import EqWindow                                 from "@/components/eq-ui/EQWindow.vue";
-import {SpireApiClient}                         from "@/app/api/spire-api-client";
-import EqCheckbox                               from "@/components/eq-ui/EQCheckbox.vue";
-import {debounce}                               from "@/app/utility/debounce.js";
-import EqTabs                                   from "@/components/eq-ui/EQTabs.vue";
-import EqTab                                    from "@/components/eq-ui/EQTab.vue";
-import util                                     from "util";
-import EqAutoTable                              from "@/components/eq-ui/EQAutoTable.vue";
-import NpcListGrid                              from "@/components/grids/NpcListGrid.vue";
+import EqWindow from "@/components/eq-ui/EQWindow.vue";
+import {SpireApiClient} from "@/app/api/spire-api-client";
+import EqCheckbox from "@/components/eq-ui/EQCheckbox.vue";
+import {debounce} from "@/app/utility/debounce.js";
+import EqTabs from "@/components/eq-ui/EQTabs.vue";
+import EqTab from "@/components/eq-ui/EQTab.vue";
+import EqAutoTable from "@/components/eq-ui/EQAutoTable.vue";
+import NpcListGrid from "@/components/grids/NpcListGrid.vue";
+import ContentArea from "@/components/layout/ContentArea.vue";
+import EqWindowSimple from "@/components/eq-ui/EQWindowSimple.vue";
+import {SpireQueryBuilder} from "@/app/api/spire-query-builder";
+import LoaderFakeProgress from "@/components/LoaderFakeProgress.vue";
 
 export default {
   components: {
+    LoaderFakeProgress,
+    EqWindowSimple,
+    ContentArea,
     NpcListGrid,
     EqAutoTable,
     EqTab,
@@ -119,7 +115,6 @@ export default {
       this.loadState()
     },
 
-
     setStateDebounce: debounce(function () {
       this.setState()
     }, 300),
@@ -144,132 +139,120 @@ export default {
     },
     loadZone: async function () {
 
-      this.npcs = null
+      this.npcs = null;
 
       // load zone
-      const zoneApi = (new ZoneApi(SpireApiClient.getOpenApiConfig()))
-      zoneApi.getZone({id: this.$route.params.zoneId}).then((result) => {
-        if (result.status === 200) {
-          this.zone          = result.data
-          this.filteredZones = result.data
+      (new ZoneApi(SpireApiClient.getOpenApiConfig()))
+        .getZone({id: this.$route.params.zoneId})
+        .then((result) => {
+          if (result.status === 200) {
+            this.zone          = result.data;
+            this.filteredZones = result.data;
 
-          // fetch NPCS
+            // fetch NPCS
+            (new Spawn2Api(SpireApiClient.getOpenApiConfig())).listSpawn2s(
+              (new SpireQueryBuilder())
+                .where("zone", "=", this.zone.short_name)
+                .where("version", "=", this.zone.version)
+                .includes(["2"])
+                .get()
+            ).then((result) => {
+              if (result.status === 200) {
+                // this.npcs     = result.data
+                // this.npcCount = result.data.length
 
-          let filters = [
-            ["zone", "__", this.zone.short_name],
-            ["version", "__", this.zone.version],
-          ]
+                // data
+                let npcs         = []
+                let spawnEntries = []
 
-          let wheres = [];
-          filters.forEach((filter) => {
-            wheres.push(util.format("%s%s%s", filter[0], filter[1], filter[2]))
-          })
+                // counts
+                let spawnEntriesCount = 0
+                let npcCount          = 0
+                result.data.forEach((row) => {
+                  // console.log(row)
 
-          const spawn2Api = (new Spawn2Api(SpireApiClient.getOpenApiConfig()))
-          spawn2Api.listSpawn2s({where: wheres.join("."), includes: "2"}).then((result) => {
-            if (result.status === 200) {
-              // this.npcs     = result.data
-              // this.npcCount = result.data.length
+                  // spawnentry
+                  if (row.spawnentries) {
+                    row.spawnentries.forEach((spawnentry) => {
 
-              // data
-              let npcs         = []
-              let spawnEntries = []
+                      // npc_type
+                      if (spawnentry.npc_type) {
+                        npcCount++
 
-              // counts
-              let spawnEntriesCount = 0
-              let npcCount          = 0
-              result.data.forEach((row) => {
-                // console.log(row)
+                        // only add the npc to the list if it doesn't exist already
+                        let npcExists = false
+                        npcs.forEach((npc) => {
+                          if (npc.id === spawnentry.npc_type.id) {
+                            npcExists = true
+                          }
+                        })
 
-                // spawnentry
-                if (row.spawnentries) {
-                  row.spawnentries.forEach((spawnentry) => {
-
-                    // npc_type
-                    if (spawnentry.npc_type) {
-                      npcCount++
-
-                      // only add the npc to the list if it doesn't exist already
-                      let npcExists = false
-                      npcs.forEach((npc) => {
-                        if (npc.id === spawnentry.npc_type.id) {
-                          npcExists = true
+                        if (!npcExists) {
+                          npcs.push(spawnentry.npc_type)
                         }
-                      })
-
-                      if (!npcExists) {
-                        npcs.push(spawnentry.npc_type)
                       }
-                    }
 
-                    spawnEntriesCount++
-                    spawnEntries.push(row)
-                  })
-                }
+                      spawnEntriesCount++
+                      spawnEntries.push(row)
+                    })
+                  }
 
-              })
+                })
 
-              // data
-              this.npcs         = npcs
-              this.spawnEntries = spawnEntries
-
-
-              // counts
-              this.npcCount          = npcCount
-              this.spawnEntriesCount = spawnEntriesCount
+                // data
+                this.npcs         = npcs
+                this.spawnEntries = spawnEntries
 
 
-              // console.log(JSON.stringify(Object.keys(npcs[0])))
-
-              // this.gridOptions.gridReady(() => {
-              //   console.log("GRID IS READY!")
-              // })
-
-              setTimeout(() => {
-                // this.gridOptions.columnApi.autoSizeAllColumns();
-              }, 300)
+                // counts
+                this.npcCount          = npcCount
+                this.spawnEntriesCount = spawnEntriesCount
 
 
-            }
-          })
+                // console.log(JSON.stringify(Object.keys(npcs[0])))
 
-          const doorApi = (new DoorApi(SpireApiClient.getOpenApiConfig()))
-          filters       = [
-            ["zone", "__", this.zone.short_name],
-            ["version", "__", this.zone.version],
-          ]
+                // this.gridOptions.gridReady(() => {
+                //   console.log("GRID IS READY!")
+                // })
 
-          wheres = [];
-          filters.forEach((filter) => {
-            wheres.push(util.format("%s%s%s", filter[0], filter[1], filter[2]))
-          })
-          doorApi.listDoors({where: wheres.join(".")}).then((result) => {
-            if (result.status === 200) {
-              this.doors     = result.data
-              this.doorCount = result.data.length
-            }
-          })
+                setTimeout(() => {
+                  // this.gridOptions.columnApi.autoSizeAllColumns();
+                }, 300)
 
-          const objectApi = (new ObjectApi(SpireApiClient.getOpenApiConfig()))
-          filters         = [
-            ["zoneid", "__", this.zone.zoneidnumber],
-            ["version", "__", this.zone.version],
-          ]
 
-          wheres = [];
-          filters.forEach((filter) => {
-            wheres.push(util.format("%s%s%s", filter[0], filter[1], filter[2]))
-          })
-          objectApi.listObjects({where: wheres.join(".")}).then((result) => {
-            if (result.status === 200) {
-              this.objects     = result.data
-              this.objectCount = result.data ? result.data.length : 0
-            }
-          })
+              }
+            });
 
-          this.loaded = true
-        }
-      })
+            (new DoorApi(SpireApiClient.getOpenApiConfig())).listDoors(
+              (new SpireQueryBuilder())
+                .where("zone", "=", this.zone.short_name)
+                .where("version", "=", this.zone.version)
+                .includes(["2"])
+                .get()
+            ).then((result) => {
+              if (result.status === 200) {
+                this.doors     = result.data
+                this.doorCount = result.data.length
+              }
+            })
+
+            const objectApi = (new ObjectApi(SpireApiClient.getOpenApiConfig()))
+            objectApi.listObjects(
+              (new SpireQueryBuilder())
+                .where("zoneid", "=", this.zone.zoneidnumber)
+                .where("version", "=", this.zone.version)
+                .includes(["2"])
+                .get()
+            ).then((result) => {
+              if (result.status === 200) {
+                this.objects     = result.data
+                this.objectCount = result.data ? result.data.length : 0
+              }
+            })
+
+            this.loaded = true
+          }
+        })
 
 
     }

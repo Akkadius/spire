@@ -52,8 +52,7 @@ func (g *GenerateControllersCommand) Handle(_ *cobra.Command, args []string) {
 
 			// todo: this needs to change later
 			//isKey := strings.Contains(key.ColumnType, "int") && !strings.Contains(key.ColumnType, "unsigned")
-			isKey := key.ColumnKey.String == "PRI" &&
-				key.Column == "id" && strings.Contains(key.ColumnType, "int")
+			isKey := key.ColumnKey.String == "PRI" && strings.Contains(key.ColumnType, "int")
 			if isKey {
 				fmt.Printf("Generating models and controllers for [%v]\n", table)
 

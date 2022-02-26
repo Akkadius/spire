@@ -82,7 +82,7 @@ export const LoginApiTokenApiAxiosParamCreator = function (configuration?: Confi
         /**
          * 
          * @summary Deletes LoginApiToken
-         * @param {number} id Id
+         * @param {number} id id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -386,7 +386,7 @@ export const LoginApiTokenApiFp = function(configuration?: Configuration) {
         /**
          * 
          * @summary Deletes LoginApiToken
-         * @param {number} id Id
+         * @param {number} id id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -485,7 +485,7 @@ export const LoginApiTokenApiFactory = function (configuration?: Configuration, 
         /**
          * 
          * @summary Deletes LoginApiToken
-         * @param {number} id Id
+         * @param {number} id id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -566,7 +566,7 @@ export interface LoginApiTokenApiCreateLoginApiTokenRequest {
  */
 export interface LoginApiTokenApiDeleteLoginApiTokenRequest {
     /**
-     * Id
+     * id
      * @type {number}
      * @memberof LoginApiTokenApiDeleteLoginApiToken
      */

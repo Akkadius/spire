@@ -82,7 +82,7 @@ export const NpcTypeApiAxiosParamCreator = function (configuration?: Configurati
         /**
          * 
          * @summary Deletes NpcType
-         * @param {number} id Id
+         * @param {number} id id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -386,7 +386,7 @@ export const NpcTypeApiFp = function(configuration?: Configuration) {
         /**
          * 
          * @summary Deletes NpcType
-         * @param {number} id Id
+         * @param {number} id id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -485,7 +485,7 @@ export const NpcTypeApiFactory = function (configuration?: Configuration, basePa
         /**
          * 
          * @summary Deletes NpcType
-         * @param {number} id Id
+         * @param {number} id id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -566,7 +566,7 @@ export interface NpcTypeApiCreateNpcTypeRequest {
  */
 export interface NpcTypeApiDeleteNpcTypeRequest {
     /**
-     * Id
+     * id
      * @type {number}
      * @memberof NpcTypeApiDeleteNpcType
      */

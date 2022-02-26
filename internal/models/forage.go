@@ -14,6 +14,8 @@ type Forage struct {
 	MaxExpansion           uint8       `json:"max_expansion" gorm:"Column:max_expansion"`
 	ContentFlags           null.String `json:"content_flags" gorm:"Column:content_flags"`
 	ContentFlagsDisabled   null.String `json:"content_flags_disabled" gorm:"Column:content_flags_disabled"`
+	Item                   *Item       `json:"item,omitempty" gorm:"foreignKey:Itemid;references:id"`
+	Zone                   *Zone       `json:"zone,omitempty" gorm:"foreignKey:zoneid;references:zoneidnumber"`
 }
 
 func (Forage) TableName() string {
@@ -21,7 +23,52 @@ func (Forage) TableName() string {
 }
 
 func (Forage) Relationships() []string {
-    return []string{}
+    return []string{
+		"Item",
+		"Item.AlternateCurrencies",
+		"Item.CharacterCorpseItems",
+		"Item.DiscoveredItems",
+		"Item.Doors",
+		"Item.Doors.Item",
+		"Item.Fishings",
+		"Item.Fishings.Item",
+		"Item.Fishings.NpcType",
+		"Item.Fishings.NpcType.AlternateCurrency",
+		"Item.Fishings.NpcType.Merchantlists",
+		"Item.Fishings.NpcType.NpcEmotes",
+		"Item.Fishings.NpcType.NpcFactions",
+		"Item.Fishings.NpcType.NpcFactions.NpcFactionEntries",
+		"Item.Fishings.NpcType.NpcSpells",
+		"Item.Fishings.NpcType.NpcSpells.NpcSpellsEntries",
+		"Item.Fishings.NpcType.NpcTypesTint",
+		"Item.Fishings.NpcType.Spawnentries",
+		"Item.Fishings.NpcType.Spawnentries.NpcType",
+		"Item.Fishings.NpcType.Spawnentries.Spawngroup",
+		"Item.Fishings.NpcType.Spawnentries.Spawngroup.Spawn2",
+		"Item.Fishings.NpcType.Spawnentries.Spawngroup.Spawn2.Spawnentries",
+		"Item.Fishings.NpcType.Spawnentries.Spawngroup.Spawn2.Spawngroup",
+		"Item.Fishings.Zone",
+		"Item.Forages",
+		"Item.ItemTicks",
+		"Item.Keyrings",
+		"Item.LootdropEntries",
+		"Item.LootdropEntries.Item",
+		"Item.LootdropEntries.Lootdrop",
+		"Item.LootdropEntries.Lootdrop.LootdropEntries",
+		"Item.LootdropEntries.Lootdrop.LoottableEntries",
+		"Item.LootdropEntries.Lootdrop.LoottableEntries.LootdropEntries",
+		"Item.ObjectContents",
+		"Item.Objects",
+		"Item.Objects.Item",
+		"Item.Objects.Zone",
+		"Item.StartingItems",
+		"Item.StartingItems.Item",
+		"Item.StartingItems.Zone",
+		"Item.TradeskillRecipeEntries",
+		"Item.TradeskillRecipeEntries.TradeskillRecipe",
+		"Item.TributeLevels",
+		"Zone",
+	}
 }
 
 func (Forage) Connection() string {

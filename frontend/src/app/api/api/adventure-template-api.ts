@@ -82,7 +82,7 @@ export const AdventureTemplateApiAxiosParamCreator = function (configuration?: C
         /**
          * 
          * @summary Deletes AdventureTemplate
-         * @param {number} id Id
+         * @param {number} id id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -386,7 +386,7 @@ export const AdventureTemplateApiFp = function(configuration?: Configuration) {
         /**
          * 
          * @summary Deletes AdventureTemplate
-         * @param {number} id Id
+         * @param {number} id id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -485,7 +485,7 @@ export const AdventureTemplateApiFactory = function (configuration?: Configurati
         /**
          * 
          * @summary Deletes AdventureTemplate
-         * @param {number} id Id
+         * @param {number} id id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -566,7 +566,7 @@ export interface AdventureTemplateApiCreateAdventureTemplateRequest {
  */
 export interface AdventureTemplateApiDeleteAdventureTemplateRequest {
     /**
-     * Id
+     * id
      * @type {number}
      * @memberof AdventureTemplateApiDeleteAdventureTemplate
      */

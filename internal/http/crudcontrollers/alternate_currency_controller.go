@@ -1,10 +1,10 @@
 package crudcontrollers
 
 import (
+	"fmt"
 	"github.com/Akkadius/spire/internal/database"
 	"github.com/Akkadius/spire/internal/http/routes"
 	"github.com/Akkadius/spire/internal/models"
-	"fmt"
 	"github.com/labstack/echo/v4"
 	"github.com/sirupsen/logrus"
 	"net/http"
@@ -12,7 +12,7 @@ import (
 )
 
 type AlternateCurrencyController struct {
-	db     *database.DatabaseResolver
+	db	 *database.DatabaseResolver
 	logger *logrus.Logger
 }
 
@@ -21,19 +21,19 @@ func NewAlternateCurrencyController(
 	logger *logrus.Logger,
 ) *AlternateCurrencyController {
 	return &AlternateCurrencyController{
-		db:     db,
+		db:	 db,
 		logger: logger,
 	}
 }
 
 func (e *AlternateCurrencyController) Routes() []*routes.Route {
 	return []*routes.Route{
-		routes.RegisterRoute(http.MethodDelete, "alternate_currency/:alternate_currency", e.deleteAlternateCurrency, nil),
-		routes.RegisterRoute(http.MethodGet, "alternate_currency/:alternate_currency", e.getAlternateCurrency, nil),
+		routes.RegisterRoute(http.MethodGet, "alternate_currency/:id", e.getAlternateCurrency, nil),
 		routes.RegisterRoute(http.MethodGet, "alternate_currencies", e.listAlternateCurrencies, nil),
-		routes.RegisterRoute(http.MethodPost, "alternate_currencies/bulk", e.getAlternateCurrenciesBulk, nil),
-		routes.RegisterRoute(http.MethodPatch, "alternate_currency/:alternate_currency", e.updateAlternateCurrency, nil),
 		routes.RegisterRoute(http.MethodPut, "alternate_currency", e.createAlternateCurrency, nil),
+		routes.RegisterRoute(http.MethodDelete, "alternate_currency/:id", e.deleteAlternateCurrency, nil),
+		routes.RegisterRoute(http.MethodPatch, "alternate_currency/:id", e.updateAlternateCurrency, nil),
+		routes.RegisterRoute(http.MethodPost, "alternate_currencies/bulk", e.getAlternateCurrenciesBulk, nil),
 	}
 }
 
@@ -79,17 +79,31 @@ func (e *AlternateCurrencyController) listAlternateCurrencies(c echo.Context) er
 // @Failure 500 {string} string "Bad query request"
 // @Router /alternate_currency/{id} [get]
 func (e *AlternateCurrencyController) getAlternateCurrency(c echo.Context) error {
-	alternateCurrencyId, err := strconv.Atoi(c.Param("alternate_currency"))
-	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Cannot find param"})
-	}
+	var params []interface{}
+	var keys []string
 
+	// primary key param
+	id, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Cannot find param [Id]"})
+	}
+	params = append(params, id)
+	keys = append(keys, "id = ?")
+
+	// query builder
 	var result models.AlternateCurrency
-	err = e.db.QueryContext(models.AlternateCurrency{}, c).First(&result, alternateCurrencyId).Error
-	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err})
+	query := e.db.QueryContext(models.AlternateCurrency{}, c)
+	for i, _ := range keys {
+		query = query.Where(keys[i], params[i])
 	}
 
+	// grab first entry
+	err = query.First(&result).Error
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
+	}
+
+	// couldn't find entity
 	if result.ID == 0 {
 		return c.JSON(http.StatusNotFound, echo.Map{"error": "Cannot find entity"})
 	}
@@ -111,26 +125,44 @@ func (e *AlternateCurrencyController) getAlternateCurrency(c echo.Context) error
 // @Failure 500 {string} string "Error updating entity"
 // @Router /alternate_currency/{id} [patch]
 func (e *AlternateCurrencyController) updateAlternateCurrency(c echo.Context) error {
-	alternateCurrency := new(models.AlternateCurrency)
-	if err := c.Bind(alternateCurrency); err != nil {
+	request := new(models.AlternateCurrency)
+	if err := c.Bind(request); err != nil {
 		return c.JSON(
 			http.StatusInternalServerError,
-			echo.Map{"error": fmt.Sprintf("Error binding to entity: [%v]", err)},
+			echo.Map{"error": fmt.Sprintf("Error binding to entity [%v]", err.Error())},
 		)
 	}
 
-    entity := models.AlternateCurrency{}
-	err := e.db.Get(models.AlternateCurrency{}, c).Model(&models.AlternateCurrency{}).First(&entity, alternateCurrency.ID).Error
-	if err != nil || alternateCurrency.ID == 0 {
-		return c.JSON(http.StatusNotFound, echo.Map{"error": "Cannot find entity"})
-	}
+	var params []interface{}
+	var keys []string
 
-	err = e.db.Get(models.AlternateCurrency{}, c).Model(&entity).Select("*").Updates(&alternateCurrency).Error
+	// primary key param
+	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error updating entity: [%v]", err)})
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Cannot find param [Id]"})
+	}
+	params = append(params, id)
+	keys = append(keys, "id = ?")
+
+	// query builder
+	var result models.AlternateCurrency
+	query := e.db.QueryContext(models.AlternateCurrency{}, c)
+	for i, _ := range keys {
+		query = query.Where(keys[i], params[i])
 	}
 
-	return c.JSON(http.StatusOK, alternateCurrency)
+	// grab first entry
+	err = query.First(&result).Error
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Cannot find entity [%s]", err.Error())})
+	}
+
+	err = query.Select("*").Updates(&request).Error
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error updating entity [%v]", err.Error())})
+	}
+
+	return c.JSON(http.StatusOK, request)
 }
 
 // createAlternateCurrency godoc
@@ -149,7 +181,7 @@ func (e *AlternateCurrencyController) createAlternateCurrency(c echo.Context) er
 	if err := c.Bind(alternateCurrency); err != nil {
 		return c.JSON(
 			http.StatusInternalServerError,
-			echo.Map{"error": fmt.Sprintf("Error binding to entity: [%v]", err)},
+			echo.Map{"error": fmt.Sprintf("Error binding to entity [%v]", err.Error())},
 		)
 	}
 
@@ -157,7 +189,7 @@ func (e *AlternateCurrencyController) createAlternateCurrency(c echo.Context) er
 	if err != nil {
 		return c.JSON(
 			http.StatusInternalServerError,
-			echo.Map{"error": fmt.Sprintf("Error inserting entity: [%v]", err)},
+			echo.Map{"error": fmt.Sprintf("Error inserting entity [%v]", err.Error())},
 		)
 	}
 
@@ -170,25 +202,38 @@ func (e *AlternateCurrencyController) createAlternateCurrency(c echo.Context) er
 // @Accept json
 // @Produce json
 // @Tags AlternateCurrency
-// @Param id path int true "Id"
+// @Param id path int true "id"
 // @Success 200 {string} string "Entity deleted successfully"
 // @Failure 404 {string} string "Cannot find entity"
 // @Failure 500 {string} string "Error binding to entity"
 // @Failure 500 {string} string "Error deleting entity"
 // @Router /alternate_currency/{id} [delete]
 func (e *AlternateCurrencyController) deleteAlternateCurrency(c echo.Context) error {
-	alternateCurrencyId, err := strconv.Atoi(c.Param("alternate_currency"))
+	var params []interface{}
+	var keys []string
+
+	// primary key param
+	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
 		e.logger.Error(err)
 	}
+	params = append(params, id)
+	keys = append(keys, "id = ?")
 
-	alternateCurrency := new(models.AlternateCurrency)
-	err = e.db.Get(models.AlternateCurrency{}, c).Model(&models.AlternateCurrency{}).First(&alternateCurrency, alternateCurrencyId).Error
-	if err != nil || alternateCurrency.ID == 0 {
-		return c.JSON(http.StatusNotFound, echo.Map{"error": "Cannot find entity"})
+	// query builder
+	var result models.AlternateCurrency
+	query := e.db.QueryContext(models.AlternateCurrency{}, c)
+	for i, _ := range keys {
+		query = query.Where(keys[i], params[i])
 	}
 
-	err = e.db.Get(models.AlternateCurrency{}, c).Model(&models.AlternateCurrency{}).Delete(&alternateCurrency).Error
+	// grab first entry
+	err = query.First(&result).Error
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
+	}
+
+	err = e.db.Get(models.AlternateCurrency{}, c).Model(&models.AlternateCurrency{}).Delete(&result).Error
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Error deleting entity"})
 	}
@@ -213,7 +258,7 @@ func (e *AlternateCurrencyController) getAlternateCurrenciesBulk(c echo.Context)
 	if err := c.Bind(r); err != nil {
 		return c.JSON(
 			http.StatusInternalServerError,
-			echo.Map{"error": fmt.Sprintf("Error binding to bulk request: [%v]", err)},
+			echo.Map{"error": fmt.Sprintf("Error binding to bulk request: [%v]", err.Error())},
 		)
 	}
 
@@ -226,7 +271,7 @@ func (e *AlternateCurrencyController) getAlternateCurrenciesBulk(c echo.Context)
 
 	err := e.db.QueryContext(models.AlternateCurrency{}, c).Find(&results, r.IDs).Error
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err})
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
 	}
 
 	return c.JSON(http.StatusOK, results)

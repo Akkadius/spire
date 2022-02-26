@@ -82,7 +82,7 @@ export const InstanceListApiAxiosParamCreator = function (configuration?: Config
         /**
          * 
          * @summary Deletes InstanceList
-         * @param {number} id Id
+         * @param {number} id id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -386,7 +386,7 @@ export const InstanceListApiFp = function(configuration?: Configuration) {
         /**
          * 
          * @summary Deletes InstanceList
-         * @param {number} id Id
+         * @param {number} id id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -485,7 +485,7 @@ export const InstanceListApiFactory = function (configuration?: Configuration, b
         /**
          * 
          * @summary Deletes InstanceList
-         * @param {number} id Id
+         * @param {number} id id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -566,7 +566,7 @@ export interface InstanceListApiCreateInstanceListRequest {
  */
 export interface InstanceListApiDeleteInstanceListRequest {
     /**
-     * Id
+     * id
      * @type {number}
      * @memberof InstanceListApiDeleteInstanceList
      */

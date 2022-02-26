@@ -1,0 +1,178 @@
+<template>
+  <div>
+    <eq-window-simple title="Zone Selector">
+      <b-input
+        v-model="zoneSearch"
+        class="form-control"
+        v-on:keyup="searchZone"
+        placeholder="Search by zone name, id..."
+      />
+    </eq-window-simple>
+
+    <eq-window-simple
+      id="zone-view-container"
+      style="height: 85vh; overflow-y: scroll;" class="p-0"
+    >
+      <table
+        id="zonetable"
+        class="eq-table eq-highlight-rows"
+        style="display: table; font-size: 14px; overflow-x: scroll"
+      >
+        <thead
+          class="eq-table-floating-header"
+        >
+        <tr>
+          <th></th>
+          <th style="width: 60px; white-space: nowrap;"></th>
+          <th style="width: 30px">ID</th>
+          <th style="width: 30px">X</th>
+          <th style="width: 30px">Y</th>
+          <th style="width: 30px">Z</th>
+          <th style="width: 100%">Name</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr
+          :id="'zone-' + zone.short_name"
+          :class="(isZoneSelected(zone) ? 'pulsate-highlight-white' : '')"
+          v-for="(zone, index) in filteredZones"
+          :key="zone.id"
+        >
+          <td>
+            <b-button
+              class="btn-dark btn-sm btn-outline-warning"
+              @click="selectZone(zone)"
+            >
+              Select
+            </b-button>
+          </td>
+          <td style="text-align: center"><img :src="getExpansionIcon(zone.expansion)"></td>
+          <td style="text-align: center" class="p-0">{{ zone.zoneidnumber }}</td>
+          <td style="text-align: center" class="p-0">{{ Math.round(zone.safe_x) }}</td>
+          <td style="text-align: center" class="p-0">{{ Math.round(zone.safe_y) }}</td>
+          <td style="text-align: center" class="p-0">{{ Math.round(zone.safe_z) }}</td>
+          <td>{{ zone.long_name }} ({{ zone.short_name }})</td>
+        </tr>
+        </tbody>
+      </table>
+    </eq-window-simple>
+  </div>
+</template>
+
+<script>
+import {TELEPORT_ZONE_SELECTOR_TYPE} from "@/app/constants/eq-spell-constants";
+import EqWindowSimple                from "@/components/eq-ui/EQWindowSimple";
+import {ZoneApi}                     from "@/app/api";
+import {SpireApiClient}              from "@/app/api/spire-api-client";
+import util                          from "util";
+import Expansions                    from "@/app/utility/expansions";
+import EqCheckbox                    from "@/components/eq-ui/EQCheckbox";
+import {SpireQueryBuilder}           from "@/app/api/spire-query-builder";
+
+let zones = {}
+
+export default {
+  name: "SpellTeleportZoneSelectorZone",
+  components: { EqCheckbox, EqWindowSimple },
+  data() {
+    return {
+      TELEPORT_ZONE_SELECTOR_TYPE: TELEPORT_ZONE_SELECTOR_TYPE,
+
+      // filtered content
+      filteredZones: {},
+
+      // search
+      zoneSearch: "",
+
+      // model we work with after the prop is passed so we can manipulate it ourselves
+      // props should not be mutated
+      selectedZone: "",
+    }
+  },
+  props: {
+    selectedZoneName: {
+      type: String,
+      required: true,
+    },
+  },
+  methods: {
+    isZoneSelected(zone) {
+      return zone.short_name.trim() === this.selectedZone
+    },
+
+    selectZone(zone) {
+      this.$emit('input', {
+        zone: zone,
+      });
+
+      this.selectedZone = zone.short_name
+    },
+
+    searchZone() {
+      const searchString = this.zoneSearch.toLowerCase().trim()
+      let filteredZones  = []
+      zones.forEach((zone) => {
+        if (
+          this.zoneSearch.trim() !== '' &&
+          (
+            zone.short_name.toLowerCase().includes(searchString) ||
+            zone.long_name.toLowerCase().includes(searchString) ||
+            zone.zoneidnumber.toString().includes(searchString)
+          )) {
+          filteredZones.push(zone)
+        }
+      });
+      this.filteredZones = filteredZones
+      if (filteredZones.length === 0) {
+        this.filteredZones = zones;
+      }
+    },
+
+    getExpansionIcon(expansion) {
+      return Expansions.getExpansionIconUrlSmall(expansion - 1) // zone table is offset by 1
+    },
+    getExpansionName(expansion) {
+      return Expansions.getExpansionName(expansion - 1) // zone table is offset by 1
+    },
+
+    async loadZones() {
+      const api    = (new ZoneApi(SpireApiClient.getOpenApiConfig()))
+      const result = await api.listZones(
+        (new SpireQueryBuilder())
+          .where("version", "=", "0")
+          .orderBy(["expansion", "short_name"])
+          .get()
+      )
+
+      if (result.status === 200) {
+        zones              = result.data
+        this.filteredZones = zones
+      }
+    },
+
+    init() {
+      this.loadZones()
+    }
+  },
+  mounted() {
+    // model we work with after the prop is passed - we can manipulate it ourselves
+    this.selectedZone = this.selectedZoneName
+    this.init()
+
+    setTimeout(() => {
+      const container = document.getElementById("zone-view-container");
+      const target    = document.getElementById(util.format("zone-%s", this.selectedZone))
+      if (container && target) {
+        const top           = target.getBoundingClientRect().top
+        container.scrollTop = container.scrollTop + top - 300;
+      }
+    }, 1000)
+  }
+}
+</script>
+
+<style scoped>
+#zonetable td {
+  vertical-align: middle !important;
+}
+</style>

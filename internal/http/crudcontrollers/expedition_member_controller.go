@@ -1,10 +1,10 @@
 package crudcontrollers
 
 import (
+	"fmt"
 	"github.com/Akkadius/spire/internal/database"
 	"github.com/Akkadius/spire/internal/http/routes"
 	"github.com/Akkadius/spire/internal/models"
-	"fmt"
 	"github.com/labstack/echo/v4"
 	"github.com/sirupsen/logrus"
 	"net/http"
@@ -12,7 +12,7 @@ import (
 )
 
 type ExpeditionMemberController struct {
-	db     *database.DatabaseResolver
+	db	 *database.DatabaseResolver
 	logger *logrus.Logger
 }
 
@@ -21,19 +21,19 @@ func NewExpeditionMemberController(
 	logger *logrus.Logger,
 ) *ExpeditionMemberController {
 	return &ExpeditionMemberController{
-		db:     db,
+		db:	 db,
 		logger: logger,
 	}
 }
 
 func (e *ExpeditionMemberController) Routes() []*routes.Route {
 	return []*routes.Route{
-		routes.RegisterRoute(http.MethodDelete, "expedition_member/:expedition_member", e.deleteExpeditionMember, nil),
-		routes.RegisterRoute(http.MethodGet, "expedition_member/:expedition_member", e.getExpeditionMember, nil),
+		routes.RegisterRoute(http.MethodGet, "expedition_member/:id", e.getExpeditionMember, nil),
 		routes.RegisterRoute(http.MethodGet, "expedition_members", e.listExpeditionMembers, nil),
-		routes.RegisterRoute(http.MethodPost, "expedition_members/bulk", e.getExpeditionMembersBulk, nil),
-		routes.RegisterRoute(http.MethodPatch, "expedition_member/:expedition_member", e.updateExpeditionMember, nil),
 		routes.RegisterRoute(http.MethodPut, "expedition_member", e.createExpeditionMember, nil),
+		routes.RegisterRoute(http.MethodDelete, "expedition_member/:id", e.deleteExpeditionMember, nil),
+		routes.RegisterRoute(http.MethodPatch, "expedition_member/:id", e.updateExpeditionMember, nil),
+		routes.RegisterRoute(http.MethodPost, "expedition_members/bulk", e.getExpeditionMembersBulk, nil),
 	}
 }
 
@@ -79,17 +79,31 @@ func (e *ExpeditionMemberController) listExpeditionMembers(c echo.Context) error
 // @Failure 500 {string} string "Bad query request"
 // @Router /expedition_member/{id} [get]
 func (e *ExpeditionMemberController) getExpeditionMember(c echo.Context) error {
-	expeditionMemberId, err := strconv.Atoi(c.Param("expedition_member"))
-	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Cannot find param"})
-	}
+	var params []interface{}
+	var keys []string
 
+	// primary key param
+	id, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Cannot find param [ID]"})
+	}
+	params = append(params, id)
+	keys = append(keys, "id = ?")
+
+	// query builder
 	var result models.ExpeditionMember
-	err = e.db.QueryContext(models.ExpeditionMember{}, c).First(&result, expeditionMemberId).Error
-	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err})
+	query := e.db.QueryContext(models.ExpeditionMember{}, c)
+	for i, _ := range keys {
+		query = query.Where(keys[i], params[i])
 	}
 
+	// grab first entry
+	err = query.First(&result).Error
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
+	}
+
+	// couldn't find entity
 	if result.ID == 0 {
 		return c.JSON(http.StatusNotFound, echo.Map{"error": "Cannot find entity"})
 	}
@@ -111,26 +125,44 @@ func (e *ExpeditionMemberController) getExpeditionMember(c echo.Context) error {
 // @Failure 500 {string} string "Error updating entity"
 // @Router /expedition_member/{id} [patch]
 func (e *ExpeditionMemberController) updateExpeditionMember(c echo.Context) error {
-	expeditionMember := new(models.ExpeditionMember)
-	if err := c.Bind(expeditionMember); err != nil {
+	request := new(models.ExpeditionMember)
+	if err := c.Bind(request); err != nil {
 		return c.JSON(
 			http.StatusInternalServerError,
-			echo.Map{"error": fmt.Sprintf("Error binding to entity: [%v]", err)},
+			echo.Map{"error": fmt.Sprintf("Error binding to entity [%v]", err.Error())},
 		)
 	}
 
-    entity := models.ExpeditionMember{}
-	err := e.db.Get(models.ExpeditionMember{}, c).Model(&models.ExpeditionMember{}).First(&entity, expeditionMember.ID).Error
-	if err != nil || expeditionMember.ID == 0 {
-		return c.JSON(http.StatusNotFound, echo.Map{"error": "Cannot find entity"})
-	}
+	var params []interface{}
+	var keys []string
 
-	err = e.db.Get(models.ExpeditionMember{}, c).Model(&entity).Select("*").Updates(&expeditionMember).Error
+	// primary key param
+	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error updating entity: [%v]", err)})
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Cannot find param [ID]"})
+	}
+	params = append(params, id)
+	keys = append(keys, "id = ?")
+
+	// query builder
+	var result models.ExpeditionMember
+	query := e.db.QueryContext(models.ExpeditionMember{}, c)
+	for i, _ := range keys {
+		query = query.Where(keys[i], params[i])
 	}
 
-	return c.JSON(http.StatusOK, expeditionMember)
+	// grab first entry
+	err = query.First(&result).Error
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Cannot find entity [%s]", err.Error())})
+	}
+
+	err = query.Select("*").Updates(&request).Error
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error updating entity [%v]", err.Error())})
+	}
+
+	return c.JSON(http.StatusOK, request)
 }
 
 // createExpeditionMember godoc
@@ -149,7 +181,7 @@ func (e *ExpeditionMemberController) createExpeditionMember(c echo.Context) erro
 	if err := c.Bind(expeditionMember); err != nil {
 		return c.JSON(
 			http.StatusInternalServerError,
-			echo.Map{"error": fmt.Sprintf("Error binding to entity: [%v]", err)},
+			echo.Map{"error": fmt.Sprintf("Error binding to entity [%v]", err.Error())},
 		)
 	}
 
@@ -157,7 +189,7 @@ func (e *ExpeditionMemberController) createExpeditionMember(c echo.Context) erro
 	if err != nil {
 		return c.JSON(
 			http.StatusInternalServerError,
-			echo.Map{"error": fmt.Sprintf("Error inserting entity: [%v]", err)},
+			echo.Map{"error": fmt.Sprintf("Error inserting entity [%v]", err.Error())},
 		)
 	}
 
@@ -170,25 +202,38 @@ func (e *ExpeditionMemberController) createExpeditionMember(c echo.Context) erro
 // @Accept json
 // @Produce json
 // @Tags ExpeditionMember
-// @Param id path int true "Id"
+// @Param id path int true "id"
 // @Success 200 {string} string "Entity deleted successfully"
 // @Failure 404 {string} string "Cannot find entity"
 // @Failure 500 {string} string "Error binding to entity"
 // @Failure 500 {string} string "Error deleting entity"
 // @Router /expedition_member/{id} [delete]
 func (e *ExpeditionMemberController) deleteExpeditionMember(c echo.Context) error {
-	expeditionMemberId, err := strconv.Atoi(c.Param("expedition_member"))
+	var params []interface{}
+	var keys []string
+
+	// primary key param
+	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
 		e.logger.Error(err)
 	}
+	params = append(params, id)
+	keys = append(keys, "id = ?")
 
-	expeditionMember := new(models.ExpeditionMember)
-	err = e.db.Get(models.ExpeditionMember{}, c).Model(&models.ExpeditionMember{}).First(&expeditionMember, expeditionMemberId).Error
-	if err != nil || expeditionMember.ID == 0 {
-		return c.JSON(http.StatusNotFound, echo.Map{"error": "Cannot find entity"})
+	// query builder
+	var result models.ExpeditionMember
+	query := e.db.QueryContext(models.ExpeditionMember{}, c)
+	for i, _ := range keys {
+		query = query.Where(keys[i], params[i])
 	}
 
-	err = e.db.Get(models.ExpeditionMember{}, c).Model(&models.ExpeditionMember{}).Delete(&expeditionMember).Error
+	// grab first entry
+	err = query.First(&result).Error
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
+	}
+
+	err = e.db.Get(models.ExpeditionMember{}, c).Model(&models.ExpeditionMember{}).Delete(&result).Error
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Error deleting entity"})
 	}
@@ -213,7 +258,7 @@ func (e *ExpeditionMemberController) getExpeditionMembersBulk(c echo.Context) er
 	if err := c.Bind(r); err != nil {
 		return c.JSON(
 			http.StatusInternalServerError,
-			echo.Map{"error": fmt.Sprintf("Error binding to bulk request: [%v]", err)},
+			echo.Map{"error": fmt.Sprintf("Error binding to bulk request: [%v]", err.Error())},
 		)
 	}
 
@@ -226,7 +271,7 @@ func (e *ExpeditionMemberController) getExpeditionMembersBulk(c echo.Context) er
 
 	err := e.db.QueryContext(models.ExpeditionMember{}, c).Find(&results, r.IDs).Error
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err})
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
 	}
 
 	return c.JSON(http.StatusOK, results)

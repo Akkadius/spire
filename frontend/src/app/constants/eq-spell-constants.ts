@@ -179,7 +179,7 @@ export const DB_SPELL_EFFECTS = {
   "369": "Decrease Corruption Counter",
 
 }
-export const DB_SPA = {
+export const DB_SPA           = {
   "0": "Current HP",
   "1": "AC",
   "2": "ATK",
@@ -1086,7 +1086,7 @@ export const DB_SPELL_WORN_ATTRIBUTE_CAP = {
   "13": "Corruption Resist"
 }
 
-export const DB_SPELL_PETCMDS = {
+export const DB_SPELL_PETCMDS    = {
   "0": "/pethealth",
   "1": "/petleader",
   "2": "/petattack",
@@ -1367,4 +1367,65 @@ export const DB_PC_NPC_ONLY_FLAG = {
   0: "None",
   1: "PCs (and mercs)",
   2: "NPCs (and not mercs)"
+}
+
+export const BASE_VALUE_FORMULAS = {
+  1: "Effect Base + Level * Multiplier",
+  60: "Effect Base / 100",
+  100: "Effect Base Value",
+  101: "Effect Base + Level / 2",
+  102: "Effect Base + Level,",
+  103: "Effect Base + Level * 2",
+  104: "Effect Base + Level * 3",
+  105: "Effect Base + Level * 4",
+  107: "Effect Base + Level / 2",
+  108: "Effect Base + Level / 3",
+  109: "Effect Base + Level / 4",
+  110: "Effect Base + Level / 5",
+  111: "Effect Base + 6 * (Level - Spell Level)",
+  112: "Effect Base + 8 * (Level - Spell Level)",
+  113: "Effect Base + 10 * (Level - Spell Level)",
+  114: "Effect Base + 15 * (Level - Spell Level)",
+  115: "Effect Base + 6 * (Level - Spell Level)",
+  116: "Effect Base + 8 * (Level - Spell Level)",
+  117: "Effect Base + 12 * (Level - Spell Level)",
+  118: "Effect Base + 20 * (Level - Spell Level)",
+  119: "Effect Base + Level / 8",
+  121: "Effect Base + Level / 3",
+  122: "Splurt",
+  123: "Random (Effect Base, Effect Max)",
+  203: "Effect Max",
+}
+
+export const BUFF_DURATION_FORMULAS = {
+  0: 'Not a Buff',
+  1: 'Lowest of Level / 2 or Duration',
+  2: 'Duration / 5 * 3',
+  3: 'Lowest of Level * 30 or Duration',
+  4: 'Duration if not 0, else 50',
+  5: 'Lowest of Duration or 3',
+  6: 'Lowest of Level / 2 or Duration',
+  7: 'Duration if not 0, else Level',
+  8: 'Lowest of Level + 10 or Duration',
+  9: 'Lowest of Level * 2 + 10 or Duration',
+  10: 'Lowest of Level * 3 + 10 or Duration',
+  11: 'Duration',
+  12: 'Duration',
+  13: 'Unknown',
+  14: 'Unknown',
+  15: 'Unknown',
+  50: '5 Days',
+  51: 'Permanent',
+  3600: 'Duration if not 0, else 3600',
+};
+
+export const SPELL_NIMBUSES = [
+  368,369,386,387,389,390,391,392,393,394,395,396,397,400,401,403,405,406,408,411,412,413,414,415,445,446,447,448,450,451,452,453,454,455,456,457,458,459,460,461,462,463,464,465,466,467,468,469,470,471,472,473,474,475,476,477,478,502,503,509,510,511,512,513,514,515,516,517,518,519,520,521,522,523,524,525,526,527,528,529,530,531,532,533,534,535,536,537,538,539,540,541,542,543,544,545,546,547,548,550,566,567,568,569,570,571,572,574,575,576,578,579,580,581,582,585,586,607,608,609,610,611,612,613,614,615,634,638,639,640,641,642,643,644,645,661,662,663,665,666,667,669,670,671,672,673
+]
+
+export const TELEPORT_ZONE_SELECTOR_TYPE = {
+  AURAS: "auras",
+  PETS: "pets",
+  HORSES: "horses",
+  ZONES: "zones",
 }

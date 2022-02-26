@@ -1,10 +1,10 @@
 package crudcontrollers
 
 import (
+	"fmt"
 	"github.com/Akkadius/spire/internal/database"
 	"github.com/Akkadius/spire/internal/http/routes"
 	"github.com/Akkadius/spire/internal/models"
-	"fmt"
 	"github.com/labstack/echo/v4"
 	"github.com/sirupsen/logrus"
 	"net/http"
@@ -12,7 +12,7 @@ import (
 )
 
 type InstanceListController struct {
-	db     *database.DatabaseResolver
+	db	 *database.DatabaseResolver
 	logger *logrus.Logger
 }
 
@@ -21,19 +21,19 @@ func NewInstanceListController(
 	logger *logrus.Logger,
 ) *InstanceListController {
 	return &InstanceListController{
-		db:     db,
+		db:	 db,
 		logger: logger,
 	}
 }
 
 func (e *InstanceListController) Routes() []*routes.Route {
 	return []*routes.Route{
-		routes.RegisterRoute(http.MethodDelete, "instance_list/:instance_list", e.deleteInstanceList, nil),
-		routes.RegisterRoute(http.MethodGet, "instance_list/:instance_list", e.getInstanceList, nil),
+		routes.RegisterRoute(http.MethodGet, "instance_list/:id", e.getInstanceList, nil),
 		routes.RegisterRoute(http.MethodGet, "instance_lists", e.listInstanceLists, nil),
-		routes.RegisterRoute(http.MethodPost, "instance_lists/bulk", e.getInstanceListsBulk, nil),
-		routes.RegisterRoute(http.MethodPatch, "instance_list/:instance_list", e.updateInstanceList, nil),
 		routes.RegisterRoute(http.MethodPut, "instance_list", e.createInstanceList, nil),
+		routes.RegisterRoute(http.MethodDelete, "instance_list/:id", e.deleteInstanceList, nil),
+		routes.RegisterRoute(http.MethodPatch, "instance_list/:id", e.updateInstanceList, nil),
+		routes.RegisterRoute(http.MethodPost, "instance_lists/bulk", e.getInstanceListsBulk, nil),
 	}
 }
 
@@ -79,17 +79,31 @@ func (e *InstanceListController) listInstanceLists(c echo.Context) error {
 // @Failure 500 {string} string "Bad query request"
 // @Router /instance_list/{id} [get]
 func (e *InstanceListController) getInstanceList(c echo.Context) error {
-	instanceListId, err := strconv.Atoi(c.Param("instance_list"))
-	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Cannot find param"})
-	}
+	var params []interface{}
+	var keys []string
 
+	// primary key param
+	id, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Cannot find param [Id]"})
+	}
+	params = append(params, id)
+	keys = append(keys, "id = ?")
+
+	// query builder
 	var result models.InstanceList
-	err = e.db.QueryContext(models.InstanceList{}, c).First(&result, instanceListId).Error
-	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err})
+	query := e.db.QueryContext(models.InstanceList{}, c)
+	for i, _ := range keys {
+		query = query.Where(keys[i], params[i])
 	}
 
+	// grab first entry
+	err = query.First(&result).Error
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
+	}
+
+	// couldn't find entity
 	if result.ID == 0 {
 		return c.JSON(http.StatusNotFound, echo.Map{"error": "Cannot find entity"})
 	}
@@ -111,26 +125,44 @@ func (e *InstanceListController) getInstanceList(c echo.Context) error {
 // @Failure 500 {string} string "Error updating entity"
 // @Router /instance_list/{id} [patch]
 func (e *InstanceListController) updateInstanceList(c echo.Context) error {
-	instanceList := new(models.InstanceList)
-	if err := c.Bind(instanceList); err != nil {
+	request := new(models.InstanceList)
+	if err := c.Bind(request); err != nil {
 		return c.JSON(
 			http.StatusInternalServerError,
-			echo.Map{"error": fmt.Sprintf("Error binding to entity: [%v]", err)},
+			echo.Map{"error": fmt.Sprintf("Error binding to entity [%v]", err.Error())},
 		)
 	}
 
-    entity := models.InstanceList{}
-	err := e.db.Get(models.InstanceList{}, c).Model(&models.InstanceList{}).First(&entity, instanceList.ID).Error
-	if err != nil || instanceList.ID == 0 {
-		return c.JSON(http.StatusNotFound, echo.Map{"error": "Cannot find entity"})
-	}
+	var params []interface{}
+	var keys []string
 
-	err = e.db.Get(models.InstanceList{}, c).Model(&entity).Select("*").Updates(&instanceList).Error
+	// primary key param
+	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error updating entity: [%v]", err)})
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Cannot find param [Id]"})
+	}
+	params = append(params, id)
+	keys = append(keys, "id = ?")
+
+	// query builder
+	var result models.InstanceList
+	query := e.db.QueryContext(models.InstanceList{}, c)
+	for i, _ := range keys {
+		query = query.Where(keys[i], params[i])
 	}
 
-	return c.JSON(http.StatusOK, instanceList)
+	// grab first entry
+	err = query.First(&result).Error
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Cannot find entity [%s]", err.Error())})
+	}
+
+	err = query.Select("*").Updates(&request).Error
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error updating entity [%v]", err.Error())})
+	}
+
+	return c.JSON(http.StatusOK, request)
 }
 
 // createInstanceList godoc
@@ -149,7 +181,7 @@ func (e *InstanceListController) createInstanceList(c echo.Context) error {
 	if err := c.Bind(instanceList); err != nil {
 		return c.JSON(
 			http.StatusInternalServerError,
-			echo.Map{"error": fmt.Sprintf("Error binding to entity: [%v]", err)},
+			echo.Map{"error": fmt.Sprintf("Error binding to entity [%v]", err.Error())},
 		)
 	}
 
@@ -157,7 +189,7 @@ func (e *InstanceListController) createInstanceList(c echo.Context) error {
 	if err != nil {
 		return c.JSON(
 			http.StatusInternalServerError,
-			echo.Map{"error": fmt.Sprintf("Error inserting entity: [%v]", err)},
+			echo.Map{"error": fmt.Sprintf("Error inserting entity [%v]", err.Error())},
 		)
 	}
 
@@ -170,25 +202,38 @@ func (e *InstanceListController) createInstanceList(c echo.Context) error {
 // @Accept json
 // @Produce json
 // @Tags InstanceList
-// @Param id path int true "Id"
+// @Param id path int true "id"
 // @Success 200 {string} string "Entity deleted successfully"
 // @Failure 404 {string} string "Cannot find entity"
 // @Failure 500 {string} string "Error binding to entity"
 // @Failure 500 {string} string "Error deleting entity"
 // @Router /instance_list/{id} [delete]
 func (e *InstanceListController) deleteInstanceList(c echo.Context) error {
-	instanceListId, err := strconv.Atoi(c.Param("instance_list"))
+	var params []interface{}
+	var keys []string
+
+	// primary key param
+	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
 		e.logger.Error(err)
 	}
+	params = append(params, id)
+	keys = append(keys, "id = ?")
 
-	instanceList := new(models.InstanceList)
-	err = e.db.Get(models.InstanceList{}, c).Model(&models.InstanceList{}).First(&instanceList, instanceListId).Error
-	if err != nil || instanceList.ID == 0 {
-		return c.JSON(http.StatusNotFound, echo.Map{"error": "Cannot find entity"})
+	// query builder
+	var result models.InstanceList
+	query := e.db.QueryContext(models.InstanceList{}, c)
+	for i, _ := range keys {
+		query = query.Where(keys[i], params[i])
 	}
 
-	err = e.db.Get(models.InstanceList{}, c).Model(&models.InstanceList{}).Delete(&instanceList).Error
+	// grab first entry
+	err = query.First(&result).Error
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
+	}
+
+	err = e.db.Get(models.InstanceList{}, c).Model(&models.InstanceList{}).Delete(&result).Error
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Error deleting entity"})
 	}
@@ -213,7 +258,7 @@ func (e *InstanceListController) getInstanceListsBulk(c echo.Context) error {
 	if err := c.Bind(r); err != nil {
 		return c.JSON(
 			http.StatusInternalServerError,
-			echo.Map{"error": fmt.Sprintf("Error binding to bulk request: [%v]", err)},
+			echo.Map{"error": fmt.Sprintf("Error binding to bulk request: [%v]", err.Error())},
 		)
 	}
 
@@ -226,7 +271,7 @@ func (e *InstanceListController) getInstanceListsBulk(c echo.Context) error {
 
 	err := e.db.QueryContext(models.InstanceList{}, c).Find(&results, r.IDs).Error
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err})
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
 	}
 
 	return c.JSON(http.StatusOK, results)

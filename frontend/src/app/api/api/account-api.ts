@@ -82,7 +82,7 @@ export const AccountApiAxiosParamCreator = function (configuration?: Configurati
         /**
          * 
          * @summary Deletes Account
-         * @param {number} id Id
+         * @param {number} id id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -386,7 +386,7 @@ export const AccountApiFp = function(configuration?: Configuration) {
         /**
          * 
          * @summary Deletes Account
-         * @param {number} id Id
+         * @param {number} id id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -485,7 +485,7 @@ export const AccountApiFactory = function (configuration?: Configuration, basePa
         /**
          * 
          * @summary Deletes Account
-         * @param {number} id Id
+         * @param {number} id id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -566,7 +566,7 @@ export interface AccountApiCreateAccountRequest {
  */
 export interface AccountApiDeleteAccountRequest {
     /**
-     * Id
+     * id
      * @type {number}
      * @memberof AccountApiDeleteAccount
      */

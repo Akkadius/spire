@@ -1,10 +1,10 @@
 package crudcontrollers
 
 import (
+	"fmt"
 	"github.com/Akkadius/spire/internal/database"
 	"github.com/Akkadius/spire/internal/http/routes"
 	"github.com/Akkadius/spire/internal/models"
-	"fmt"
 	"github.com/labstack/echo/v4"
 	"github.com/sirupsen/logrus"
 	"net/http"
@@ -12,7 +12,7 @@ import (
 )
 
 type AdventureTemplateEntryFlavorController struct {
-	db     *database.DatabaseResolver
+	db	 *database.DatabaseResolver
 	logger *logrus.Logger
 }
 
@@ -21,19 +21,19 @@ func NewAdventureTemplateEntryFlavorController(
 	logger *logrus.Logger,
 ) *AdventureTemplateEntryFlavorController {
 	return &AdventureTemplateEntryFlavorController{
-		db:     db,
+		db:	 db,
 		logger: logger,
 	}
 }
 
 func (e *AdventureTemplateEntryFlavorController) Routes() []*routes.Route {
 	return []*routes.Route{
-		routes.RegisterRoute(http.MethodDelete, "adventure_template_entry_flavor/:adventure_template_entry_flavor", e.deleteAdventureTemplateEntryFlavor, nil),
-		routes.RegisterRoute(http.MethodGet, "adventure_template_entry_flavor/:adventure_template_entry_flavor", e.getAdventureTemplateEntryFlavor, nil),
+		routes.RegisterRoute(http.MethodGet, "adventure_template_entry_flavor/:id", e.getAdventureTemplateEntryFlavor, nil),
 		routes.RegisterRoute(http.MethodGet, "adventure_template_entry_flavors", e.listAdventureTemplateEntryFlavors, nil),
-		routes.RegisterRoute(http.MethodPost, "adventure_template_entry_flavors/bulk", e.getAdventureTemplateEntryFlavorsBulk, nil),
-		routes.RegisterRoute(http.MethodPatch, "adventure_template_entry_flavor/:adventure_template_entry_flavor", e.updateAdventureTemplateEntryFlavor, nil),
 		routes.RegisterRoute(http.MethodPut, "adventure_template_entry_flavor", e.createAdventureTemplateEntryFlavor, nil),
+		routes.RegisterRoute(http.MethodDelete, "adventure_template_entry_flavor/:id", e.deleteAdventureTemplateEntryFlavor, nil),
+		routes.RegisterRoute(http.MethodPatch, "adventure_template_entry_flavor/:id", e.updateAdventureTemplateEntryFlavor, nil),
+		routes.RegisterRoute(http.MethodPost, "adventure_template_entry_flavors/bulk", e.getAdventureTemplateEntryFlavorsBulk, nil),
 	}
 }
 
@@ -79,17 +79,31 @@ func (e *AdventureTemplateEntryFlavorController) listAdventureTemplateEntryFlavo
 // @Failure 500 {string} string "Bad query request"
 // @Router /adventure_template_entry_flavor/{id} [get]
 func (e *AdventureTemplateEntryFlavorController) getAdventureTemplateEntryFlavor(c echo.Context) error {
-	adventureTemplateEntryFlavorId, err := strconv.Atoi(c.Param("adventure_template_entry_flavor"))
-	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Cannot find param"})
-	}
+	var params []interface{}
+	var keys []string
 
+	// primary key param
+	id, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Cannot find param [Id]"})
+	}
+	params = append(params, id)
+	keys = append(keys, "id = ?")
+
+	// query builder
 	var result models.AdventureTemplateEntryFlavor
-	err = e.db.QueryContext(models.AdventureTemplateEntryFlavor{}, c).First(&result, adventureTemplateEntryFlavorId).Error
-	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err})
+	query := e.db.QueryContext(models.AdventureTemplateEntryFlavor{}, c)
+	for i, _ := range keys {
+		query = query.Where(keys[i], params[i])
 	}
 
+	// grab first entry
+	err = query.First(&result).Error
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
+	}
+
+	// couldn't find entity
 	if result.ID == 0 {
 		return c.JSON(http.StatusNotFound, echo.Map{"error": "Cannot find entity"})
 	}
@@ -111,26 +125,44 @@ func (e *AdventureTemplateEntryFlavorController) getAdventureTemplateEntryFlavor
 // @Failure 500 {string} string "Error updating entity"
 // @Router /adventure_template_entry_flavor/{id} [patch]
 func (e *AdventureTemplateEntryFlavorController) updateAdventureTemplateEntryFlavor(c echo.Context) error {
-	adventureTemplateEntryFlavor := new(models.AdventureTemplateEntryFlavor)
-	if err := c.Bind(adventureTemplateEntryFlavor); err != nil {
+	request := new(models.AdventureTemplateEntryFlavor)
+	if err := c.Bind(request); err != nil {
 		return c.JSON(
 			http.StatusInternalServerError,
-			echo.Map{"error": fmt.Sprintf("Error binding to entity: [%v]", err)},
+			echo.Map{"error": fmt.Sprintf("Error binding to entity [%v]", err.Error())},
 		)
 	}
 
-    entity := models.AdventureTemplateEntryFlavor{}
-	err := e.db.Get(models.AdventureTemplateEntryFlavor{}, c).Model(&models.AdventureTemplateEntryFlavor{}).First(&entity, adventureTemplateEntryFlavor.ID).Error
-	if err != nil || adventureTemplateEntryFlavor.ID == 0 {
-		return c.JSON(http.StatusNotFound, echo.Map{"error": "Cannot find entity"})
-	}
+	var params []interface{}
+	var keys []string
 
-	err = e.db.Get(models.AdventureTemplateEntryFlavor{}, c).Model(&entity).Select("*").Updates(&adventureTemplateEntryFlavor).Error
+	// primary key param
+	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error updating entity: [%v]", err)})
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Cannot find param [Id]"})
+	}
+	params = append(params, id)
+	keys = append(keys, "id = ?")
+
+	// query builder
+	var result models.AdventureTemplateEntryFlavor
+	query := e.db.QueryContext(models.AdventureTemplateEntryFlavor{}, c)
+	for i, _ := range keys {
+		query = query.Where(keys[i], params[i])
 	}
 
-	return c.JSON(http.StatusOK, adventureTemplateEntryFlavor)
+	// grab first entry
+	err = query.First(&result).Error
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Cannot find entity [%s]", err.Error())})
+	}
+
+	err = query.Select("*").Updates(&request).Error
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error updating entity [%v]", err.Error())})
+	}
+
+	return c.JSON(http.StatusOK, request)
 }
 
 // createAdventureTemplateEntryFlavor godoc
@@ -149,7 +181,7 @@ func (e *AdventureTemplateEntryFlavorController) createAdventureTemplateEntryFla
 	if err := c.Bind(adventureTemplateEntryFlavor); err != nil {
 		return c.JSON(
 			http.StatusInternalServerError,
-			echo.Map{"error": fmt.Sprintf("Error binding to entity: [%v]", err)},
+			echo.Map{"error": fmt.Sprintf("Error binding to entity [%v]", err.Error())},
 		)
 	}
 
@@ -157,7 +189,7 @@ func (e *AdventureTemplateEntryFlavorController) createAdventureTemplateEntryFla
 	if err != nil {
 		return c.JSON(
 			http.StatusInternalServerError,
-			echo.Map{"error": fmt.Sprintf("Error inserting entity: [%v]", err)},
+			echo.Map{"error": fmt.Sprintf("Error inserting entity [%v]", err.Error())},
 		)
 	}
 
@@ -170,25 +202,38 @@ func (e *AdventureTemplateEntryFlavorController) createAdventureTemplateEntryFla
 // @Accept json
 // @Produce json
 // @Tags AdventureTemplateEntryFlavor
-// @Param id path int true "Id"
+// @Param id path int true "id"
 // @Success 200 {string} string "Entity deleted successfully"
 // @Failure 404 {string} string "Cannot find entity"
 // @Failure 500 {string} string "Error binding to entity"
 // @Failure 500 {string} string "Error deleting entity"
 // @Router /adventure_template_entry_flavor/{id} [delete]
 func (e *AdventureTemplateEntryFlavorController) deleteAdventureTemplateEntryFlavor(c echo.Context) error {
-	adventureTemplateEntryFlavorId, err := strconv.Atoi(c.Param("adventure_template_entry_flavor"))
+	var params []interface{}
+	var keys []string
+
+	// primary key param
+	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
 		e.logger.Error(err)
 	}
+	params = append(params, id)
+	keys = append(keys, "id = ?")
 
-	adventureTemplateEntryFlavor := new(models.AdventureTemplateEntryFlavor)
-	err = e.db.Get(models.AdventureTemplateEntryFlavor{}, c).Model(&models.AdventureTemplateEntryFlavor{}).First(&adventureTemplateEntryFlavor, adventureTemplateEntryFlavorId).Error
-	if err != nil || adventureTemplateEntryFlavor.ID == 0 {
-		return c.JSON(http.StatusNotFound, echo.Map{"error": "Cannot find entity"})
+	// query builder
+	var result models.AdventureTemplateEntryFlavor
+	query := e.db.QueryContext(models.AdventureTemplateEntryFlavor{}, c)
+	for i, _ := range keys {
+		query = query.Where(keys[i], params[i])
 	}
 
-	err = e.db.Get(models.AdventureTemplateEntryFlavor{}, c).Model(&models.AdventureTemplateEntryFlavor{}).Delete(&adventureTemplateEntryFlavor).Error
+	// grab first entry
+	err = query.First(&result).Error
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
+	}
+
+	err = e.db.Get(models.AdventureTemplateEntryFlavor{}, c).Model(&models.AdventureTemplateEntryFlavor{}).Delete(&result).Error
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Error deleting entity"})
 	}
@@ -213,7 +258,7 @@ func (e *AdventureTemplateEntryFlavorController) getAdventureTemplateEntryFlavor
 	if err := c.Bind(r); err != nil {
 		return c.JSON(
 			http.StatusInternalServerError,
-			echo.Map{"error": fmt.Sprintf("Error binding to bulk request: [%v]", err)},
+			echo.Map{"error": fmt.Sprintf("Error binding to bulk request: [%v]", err.Error())},
 		)
 	}
 
@@ -226,7 +271,7 @@ func (e *AdventureTemplateEntryFlavorController) getAdventureTemplateEntryFlavor
 
 	err := e.db.QueryContext(models.AdventureTemplateEntryFlavor{}, c).Find(&results, r.IDs).Error
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err})
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
 	}
 
 	return c.JSON(http.StatusOK, results)

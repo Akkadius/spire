@@ -1,10 +1,10 @@
 package crudcontrollers
 
 import (
+	"fmt"
 	"github.com/Akkadius/spire/internal/database"
 	"github.com/Akkadius/spire/internal/http/routes"
 	"github.com/Akkadius/spire/internal/models"
-	"fmt"
 	"github.com/labstack/echo/v4"
 	"github.com/sirupsen/logrus"
 	"net/http"
@@ -12,7 +12,7 @@ import (
 )
 
 type LoginServerAdminController struct {
-	db     *database.DatabaseResolver
+	db	 *database.DatabaseResolver
 	logger *logrus.Logger
 }
 
@@ -21,19 +21,19 @@ func NewLoginServerAdminController(
 	logger *logrus.Logger,
 ) *LoginServerAdminController {
 	return &LoginServerAdminController{
-		db:     db,
+		db:	 db,
 		logger: logger,
 	}
 }
 
 func (e *LoginServerAdminController) Routes() []*routes.Route {
 	return []*routes.Route{
-		routes.RegisterRoute(http.MethodDelete, "login_server_admin/:login_server_admin", e.deleteLoginServerAdmin, nil),
-		routes.RegisterRoute(http.MethodGet, "login_server_admin/:login_server_admin", e.getLoginServerAdmin, nil),
+		routes.RegisterRoute(http.MethodGet, "login_server_admin/:id", e.getLoginServerAdmin, nil),
 		routes.RegisterRoute(http.MethodGet, "login_server_admins", e.listLoginServerAdmins, nil),
-		routes.RegisterRoute(http.MethodPost, "login_server_admins/bulk", e.getLoginServerAdminsBulk, nil),
-		routes.RegisterRoute(http.MethodPatch, "login_server_admin/:login_server_admin", e.updateLoginServerAdmin, nil),
 		routes.RegisterRoute(http.MethodPut, "login_server_admin", e.createLoginServerAdmin, nil),
+		routes.RegisterRoute(http.MethodDelete, "login_server_admin/:id", e.deleteLoginServerAdmin, nil),
+		routes.RegisterRoute(http.MethodPatch, "login_server_admin/:id", e.updateLoginServerAdmin, nil),
+		routes.RegisterRoute(http.MethodPost, "login_server_admins/bulk", e.getLoginServerAdminsBulk, nil),
 	}
 }
 
@@ -79,17 +79,31 @@ func (e *LoginServerAdminController) listLoginServerAdmins(c echo.Context) error
 // @Failure 500 {string} string "Bad query request"
 // @Router /login_server_admin/{id} [get]
 func (e *LoginServerAdminController) getLoginServerAdmin(c echo.Context) error {
-	loginServerAdminId, err := strconv.Atoi(c.Param("login_server_admin"))
-	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Cannot find param"})
-	}
+	var params []interface{}
+	var keys []string
 
+	// primary key param
+	id, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Cannot find param [Id]"})
+	}
+	params = append(params, id)
+	keys = append(keys, "id = ?")
+
+	// query builder
 	var result models.LoginServerAdmin
-	err = e.db.QueryContext(models.LoginServerAdmin{}, c).First(&result, loginServerAdminId).Error
-	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err})
+	query := e.db.QueryContext(models.LoginServerAdmin{}, c)
+	for i, _ := range keys {
+		query = query.Where(keys[i], params[i])
 	}
 
+	// grab first entry
+	err = query.First(&result).Error
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
+	}
+
+	// couldn't find entity
 	if result.ID == 0 {
 		return c.JSON(http.StatusNotFound, echo.Map{"error": "Cannot find entity"})
 	}
@@ -111,26 +125,44 @@ func (e *LoginServerAdminController) getLoginServerAdmin(c echo.Context) error {
 // @Failure 500 {string} string "Error updating entity"
 // @Router /login_server_admin/{id} [patch]
 func (e *LoginServerAdminController) updateLoginServerAdmin(c echo.Context) error {
-	loginServerAdmin := new(models.LoginServerAdmin)
-	if err := c.Bind(loginServerAdmin); err != nil {
+	request := new(models.LoginServerAdmin)
+	if err := c.Bind(request); err != nil {
 		return c.JSON(
 			http.StatusInternalServerError,
-			echo.Map{"error": fmt.Sprintf("Error binding to entity: [%v]", err)},
+			echo.Map{"error": fmt.Sprintf("Error binding to entity [%v]", err.Error())},
 		)
 	}
 
-    entity := models.LoginServerAdmin{}
-	err := e.db.Get(models.LoginServerAdmin{}, c).Model(&models.LoginServerAdmin{}).First(&entity, loginServerAdmin.ID).Error
-	if err != nil || loginServerAdmin.ID == 0 {
-		return c.JSON(http.StatusNotFound, echo.Map{"error": "Cannot find entity"})
-	}
+	var params []interface{}
+	var keys []string
 
-	err = e.db.Get(models.LoginServerAdmin{}, c).Model(&entity).Select("*").Updates(&loginServerAdmin).Error
+	// primary key param
+	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error updating entity: [%v]", err)})
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Cannot find param [Id]"})
+	}
+	params = append(params, id)
+	keys = append(keys, "id = ?")
+
+	// query builder
+	var result models.LoginServerAdmin
+	query := e.db.QueryContext(models.LoginServerAdmin{}, c)
+	for i, _ := range keys {
+		query = query.Where(keys[i], params[i])
 	}
 
-	return c.JSON(http.StatusOK, loginServerAdmin)
+	// grab first entry
+	err = query.First(&result).Error
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Cannot find entity [%s]", err.Error())})
+	}
+
+	err = query.Select("*").Updates(&request).Error
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error updating entity [%v]", err.Error())})
+	}
+
+	return c.JSON(http.StatusOK, request)
 }
 
 // createLoginServerAdmin godoc
@@ -149,7 +181,7 @@ func (e *LoginServerAdminController) createLoginServerAdmin(c echo.Context) erro
 	if err := c.Bind(loginServerAdmin); err != nil {
 		return c.JSON(
 			http.StatusInternalServerError,
-			echo.Map{"error": fmt.Sprintf("Error binding to entity: [%v]", err)},
+			echo.Map{"error": fmt.Sprintf("Error binding to entity [%v]", err.Error())},
 		)
 	}
 
@@ -157,7 +189,7 @@ func (e *LoginServerAdminController) createLoginServerAdmin(c echo.Context) erro
 	if err != nil {
 		return c.JSON(
 			http.StatusInternalServerError,
-			echo.Map{"error": fmt.Sprintf("Error inserting entity: [%v]", err)},
+			echo.Map{"error": fmt.Sprintf("Error inserting entity [%v]", err.Error())},
 		)
 	}
 
@@ -170,25 +202,38 @@ func (e *LoginServerAdminController) createLoginServerAdmin(c echo.Context) erro
 // @Accept json
 // @Produce json
 // @Tags LoginServerAdmin
-// @Param id path int true "Id"
+// @Param id path int true "id"
 // @Success 200 {string} string "Entity deleted successfully"
 // @Failure 404 {string} string "Cannot find entity"
 // @Failure 500 {string} string "Error binding to entity"
 // @Failure 500 {string} string "Error deleting entity"
 // @Router /login_server_admin/{id} [delete]
 func (e *LoginServerAdminController) deleteLoginServerAdmin(c echo.Context) error {
-	loginServerAdminId, err := strconv.Atoi(c.Param("login_server_admin"))
+	var params []interface{}
+	var keys []string
+
+	// primary key param
+	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
 		e.logger.Error(err)
 	}
+	params = append(params, id)
+	keys = append(keys, "id = ?")
 
-	loginServerAdmin := new(models.LoginServerAdmin)
-	err = e.db.Get(models.LoginServerAdmin{}, c).Model(&models.LoginServerAdmin{}).First(&loginServerAdmin, loginServerAdminId).Error
-	if err != nil || loginServerAdmin.ID == 0 {
-		return c.JSON(http.StatusNotFound, echo.Map{"error": "Cannot find entity"})
+	// query builder
+	var result models.LoginServerAdmin
+	query := e.db.QueryContext(models.LoginServerAdmin{}, c)
+	for i, _ := range keys {
+		query = query.Where(keys[i], params[i])
 	}
 
-	err = e.db.Get(models.LoginServerAdmin{}, c).Model(&models.LoginServerAdmin{}).Delete(&loginServerAdmin).Error
+	// grab first entry
+	err = query.First(&result).Error
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
+	}
+
+	err = e.db.Get(models.LoginServerAdmin{}, c).Model(&models.LoginServerAdmin{}).Delete(&result).Error
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Error deleting entity"})
 	}
@@ -213,7 +258,7 @@ func (e *LoginServerAdminController) getLoginServerAdminsBulk(c echo.Context) er
 	if err := c.Bind(r); err != nil {
 		return c.JSON(
 			http.StatusInternalServerError,
-			echo.Map{"error": fmt.Sprintf("Error binding to bulk request: [%v]", err)},
+			echo.Map{"error": fmt.Sprintf("Error binding to bulk request: [%v]", err.Error())},
 		)
 	}
 
@@ -226,7 +271,7 @@ func (e *LoginServerAdminController) getLoginServerAdminsBulk(c echo.Context) er
 
 	err := e.db.QueryContext(models.LoginServerAdmin{}, c).Find(&results, r.IDs).Error
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err})
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
 	}
 
 	return c.JSON(http.StatusOK, results)

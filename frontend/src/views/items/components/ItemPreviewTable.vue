@@ -1,44 +1,64 @@
 <template>
   <div>
     <div
+      class='eq-window-simple text-center'
+      v-if="items.length === 0"
+    >
+      No items were found
+    </div>
+
+    <div
       class='eq-window'
       :style="'margin-bottom: 40px; min-height: 275px; ' + (title ? 'padding-top: 30px' : 'padding-top: 0px !important')"
+      v-if="items.length > 0"
     >
       <div class='eq-window-title-bar' v-if="title">{{ title }}</div>
-      <div :style="' ' + (title ? 'margin-top: 10px' : '') ">
-        <div class='eq-window-nested-blue text-center' v-if="items.length === 0">
-          No items were found
-        </div>
+      <div :style="' ' + (title ? 'margin-top: 10px' : 'margin-top: 30px') ">
 
         <div class='item-table' v-if="items.length > 0">
-<!--                    <div class="ml-3">Items shown ({{items.length}})</div>-->
+          <!--                    <div class="ml-3">Items shown ({{items.length}})</div>-->
 
           <!--        <div class='eq-window-nested-blue' v-if="items.length > 0" style="overflow-y: scroll;">-->
           <table id="items-table" class="eq-table eq-highlight-rows" style="display: table;">
             <thead>
             <tr>
-              <th style=" width: 100px"></th>
-              <th style="width: 100px" class="text-center">Id</th>
-              <th style="width: auto;">Name</th>
-              <th style="width: auto;">ReqLvl</th>
-              <th style="width: auto;">AC</th>
-              <th style="width: auto;">HP</th>
-              <th style="width: auto;">Mana</th>
-              <th style="width: auto;">End</th>
+              <th style="text-align: center; width: 180px"></th>
+              <th style="text-align: center; width: 100px" class="text-center">Id</th>
+              <th style="text-align: center; width: auto;">Name</th>
+              <th style="text-align: center; width: auto;">ReqLvl</th>
+              <th style="text-align: center; width: auto;">AC</th>
+              <th style="text-align: center; width: auto;">HP</th>
+              <th style="text-align: center; width: auto;">Mana</th>
+              <th style="text-align: center; width: auto;">End</th>
               <th style="width: auto;">Classes</th>
             </tr>
             </thead>
             <tbody>
             <tr v-for="(item, index) in items" :key="item.id">
               <td>
-                <b-button
-                  @click="editItem(item.id)"
-                  size="sm"
-                  variant="outline-warning"
-                >
-                  <i class="ra ra-sword"></i>
-                  Edit
-                </b-button>
+
+                <div class="btn-group" role="group">
+
+                  <b-button
+                    @click="editItem(item.id)"
+                    size="sm"
+                    variant="outline-warning"
+                  >
+                    <i class="ra ra-wrench"></i>
+                    Edit
+                  </b-button>
+
+                  <b-button
+                    @click="editItem(item.id, true)"
+                    size="sm"
+                    variant="outline-light"
+                  >
+                    <i class="ra ra-double-team"></i>
+                    Clone
+                  </b-button>
+
+                </div>
+
               </td>
               <td>
                 {{ item.id }}
@@ -111,7 +131,6 @@ export default {
     return {
       debug: App.DEBUG,
       debugItemEffects: false,
-      spellCdnUrl: App.ASSET_SPELL_ICONS_BASE_URL,
       itemCdnUrl: App.ASSET_ITEM_ICON_BASE_URL,
       itemEffectInfo: [],
       itemData: {},
@@ -127,40 +146,26 @@ export default {
     }
   },
   async created() {
-    // let itemMinis = []
-    // for (const item of this.items) {
-    //   Items.setItem(item["id"], item)
-    //
-    //   itemMinis[item["id"]] = await Items.renderItemMini("0", item["id"], 30)
-    // }
-    // this.itemMinis = itemMinis
-
-    // this.$forceUpdate()
-
     // do this once so we're not triggering vue re-renders in the loop
     this.sideLoadedItemData = Items.data
-
-    // this.title = "Items (" + this.items.length + ")";
-
-
   },
   mounted() {
-    console.log("mounted")
-
     if (this.items.length > 0) {
       setTimeout(() => {
-        new Tablesort(document.getElementById('items-table'));
-      }, 100)
+        if (document.getElementById('items-table')) {
+          new Tablesort(document.getElementById('items-table'));
+        }
+      }, 1000)
     }
   },
   props: {
     items: Array
   },
   methods: {
-    editItem(itemId) {
+    editItem(itemId, clone = false) {
       this.$router.push(
         {
-          path: util.format(ROUTE.ITEM_EDIT, itemId),
+          path: util.format(ROUTE.ITEM_EDIT + (clone ? "?clone" : ""), itemId),
           query: {}
         }
       ).catch(() => {

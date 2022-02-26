@@ -4,6 +4,9 @@ account:
   - 1-* id->sharedbank:acctid
   - 1-* id->bug_reports:account_id
   - 1-* id->account_ip:accid
+auras:
+#  - 1-1 npc_type->npc_types:id
+  - 1-1 spell_id->spells_new:id
 character_data:
   - 1-1 id->guilds:id
   - 1-* id->char_recipe_list:char_id
@@ -49,8 +52,23 @@ character_data:
   - 1-* id->instance_list_player:id
   - 1-* id->adventure_stats:player_id
   - 1-* id->timers:char_id
+doors:
+  - 1-1 keyitem->items:id
+fishing:
+  - 1-1 Itemid->items:id
+  - 1-1 zoneid->zone:zoneidnumber
+  - 1-1 npc_id->npc_types:id
+forage:
+  - 1-1 Itemid->items:id
+  - 1-1 zoneid->zone:zoneidnumber
+global_loot:
+  - 1-1 loottable_id->loottable:id
 grid:
   - 1-* id->grid_entries:gridid
+  - 1-1 zoneid->zone:zoneidnumber
+ground_spawns:
+  - 1-1 zoneid->zone:zoneidnumber
+#  - 1-1 item->items:id
 guilds:
   - 1-* id->guild_bank:guildid
   - 1-* id->guild_ranks:guild_id
@@ -61,15 +79,33 @@ instance_list:
 inventory:
   - 1-1 itemid->items:id
 items:
+  - 1-* id->alternate_currency:item_id
+  - 1-* id->character_corpse_items:item_id
   - 1-* id->discovered_items:item_id
+  - 1-* id->doors:keyitem
+  - 1-* id->fishing:Itemid
+  - 1-* id->forage:Itemid
+  - 1-* id->item_tick:it_itemid
+  - 1-* id->keyring:item_id
+  - 1-* id->lootdrop_entries:item_id
+  - 1-* id->object:itemid
+  - 1-* id->object_contents:itemid
+  - 1-* id->starting_items:itemid
+  - 1-* id->tradeskill_recipe_entries:item_id
+  - 1-* id->tribute_levels:item_id
 lootdrop:
   - 1-* id->lootdrop_entries:lootdrop_id
+  - 1-* id->loottable_entries:loottable_id
 lootdrop_entries:
   - 1-1 item_id->items:id
+  - 1-1 lootdrop_id->lootdrop:id
 loottable:
   - 1-* id->loottable_entries:loottable_id
+  - 1-* id->npc_types:loottable_id
 loottable_entries:
   - 1-* lootdrop_id->lootdrop_entries:lootdrop_id
+#merchantlist:
+#  - 1-1 item->items:id
 npc_faction:
   - 1-* id->npc_faction_entries:npc_faction_id
 npc_spells:
@@ -84,6 +120,9 @@ npc_types:
   - 1-* id->spawnentry:npcID
   - 1-* emoteid->npc_emotes:emoteid
   - 1-1 armortint_id->npc_types_tint:id
+object:
+  - 1-1 zoneid->zone:zoneidnumber
+  - 1-1 itemid->items:id
 pets:
   - 1-1 npcID->npc_types:id
 pets_equipmentset:
@@ -107,6 +146,13 @@ spells_new:
   - 1-* id->spell_buckets:spellid
   - 1-* id->spell_globals:spellid
   - 1-* id->blocked_spells:spellid
+start_zones:
+  - 1-1 zone_id->zone:zoneidnumber
+starting_items:
+  - 1-1 zoneid->zone:zoneidnumber
+  - 1-1 itemid->items:id
+tradeskill_recipe_entries:
+  - 1-1 recipe_id->tradeskill_recipe:id
 task_activities:
   - 1-1 delivertonpc->npc_types:id
   - 1-* goalid->goallists:listid

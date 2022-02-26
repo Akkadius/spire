@@ -5,26 +5,25 @@
       <div class="panel-body">
         <div class="panel panel-default">
 
-          <eq-window class="mt-5 text-center">
+          <eq-window-simple class="mt-3 p-0 pl-3">
 
             <div class="row">
               <div v-for="(icon, index) in dbClassIcons" class="text-center">
-                <div class="text-center p-1 col-lg-12 col-sm-12">
+                <div class="text-center p-0 mr-3 col-lg-12 col-sm-12">
                   {{ dbClassesShort[index] }}
                   <div class="text-center">
                     <span
                       @click="selectClass(index)"
                       :style="'width:40px;' + (isClassSelected(index) ? 'border-radius: 7px;' : 'border-radius: 7px;')"
-                      :class="'mt-1 hover-highlight-inner item-' + icon + ' ' + (isClassSelected(index) ? 'highlight-selected-inner' : '')"
+                      :class="'hover-highlight-inner item-' + icon + ' ' + (isClassSelected(index) ? 'highlight-selected-inner' : '')"
                     />
                   </div>
                 </div>
               </div>
             </div>
 
-            <div class="row mt-4">
-
-              <div class="col-lg-2 col-sm-12 text-center">
+            <div class="row mt-2">
+              <div class="col-lg-2 col-sm-12 text-center pl-0">
                 Spell Name or ID
                 <input
                   name="spell_name"
@@ -58,7 +57,7 @@
 
               </div>
 
-              <div class="col-lg-2 col-sm-12 text-center">
+              <div class="col-lg-1 col-sm-12 text-center">
                 Level
                 <select
                   name="class"
@@ -74,47 +73,98 @@
                 </select>
               </div>
 
-              <div class="col-lg-1 col-sm-12" v-if="selectedLevel">
-                <b-form-group>
-                  <b-form-radio v-model="selectedLevelType" @change="triggerStateDelayed()" value="0">Only
-                  </b-form-radio>
-                  <b-form-radio v-model="selectedLevelType" @change="triggerStateDelayed()" value="1">And Higher
-                  </b-form-radio>
-                  <b-form-radio v-model="selectedLevelType" @change="triggerStateDelayed()" value="2">And Lower
-                  </b-form-radio>
-                </b-form-group>
-              </div>
+              <div class="col-lg-6 col-sm-12 mt-3 pl-0 pr-0">
+                <div class="btn-group ml-3" role="group" v-if="selectedLevel">
+                  <b-button
+                    @click="selectedLevelType = 0; triggerStateDelayed();"
+                    size="sm"
+                    :variant="(parseInt(selectedLevelType) === 0 ? 'warning' : 'outline-warning')"
+                  >Only
+                  </b-button>
+                  <b-button
+                    @click="selectedLevelType = 1; triggerStateDelayed();"
+                    size="sm"
+                    :variant="(parseInt(selectedLevelType) === 1 ? 'warning' : 'outline-warning')"
+                  >Higher
+                  </b-button>
+                  <b-button
+                    @click="selectedLevelType = 2; triggerStateDelayed();"
+                    size="sm"
+                    :variant="(parseInt(selectedLevelType) === 2 ? 'warning' : 'outline-warning')"
+                  >Lower
+                  </b-button>
+                </div>
 
-              <div class="col-lg-2 col-sm-12 text-center">
-                List Type
-                <select
-                  id="Class"
-                  class="form-control"
-                  v-model="listType"
-                  @change="triggerState()"
-                >
-                  <option value="table">Table</option>
-                  <option value="card">Cards</option>
-                </select>
-              </div>
+                <div class="btn-group ml-3" role="group" aria-label="Basic example">
+                  <b-button
+                    alt="Display as table"
+                    @click="listType = 'table'; "
+                    size="sm"
+                    :variant="(listType === 'table' ? 'warning' : 'outline-warning')"
+                  ><i class="fa fa-table"></i></b-button>
+                  <b-button
+                    alt="Display as grid"
+                    @click="listType = 'card'; "
+                    size="sm"
+                    :variant="(listType === 'card' ? 'warning' : 'outline-warning')"
+                  ><i class="fa fa-th"></i></b-button>
+                </div>
 
-              <div class="col-lg-2 col-sm-12 p-0 pr-1 text-left">
+                <div class="btn-group ml-3" role="group" aria-label="Basic example">
+                  <b-button
+                    @click="limit = 10; triggerStateDelayed()"
+                    size="sm"
+                    :variant="(parseInt(limit) === 10 ? 'warning' : 'outline-warning')"
+                  >10
+                  </b-button>
+                  <b-button
+                    @click="limit = 100; triggerStateDelayed()"
+                    size="sm"
+                    :variant="(parseInt(limit) === 100 ? 'warning' : 'outline-warning')"
+                  >100
+                  </b-button>
+                  <b-button
+                    @click="limit = 250; triggerStateDelayed()"
+                    size="sm"
+                    :variant="(parseInt(limit) === 250 ? 'warning' : 'outline-warning')"
+                  >250
+                  </b-button>
+                  <b-button
+                    @click="limit = 1000; triggerStateDelayed()"
+                    size="sm"
+                    :variant="(parseInt(limit) === 1000 ? 'warning' : 'outline-warning')"
+                  >1000
+                  </b-button>
+                </div>
+
                 <div
-                  :class="'text-center btn-xs eq-button-fancy'"
-                  style="margin-top: 19px"
+                  :class="'text-center btn-xs eq-button-fancy ml-3'"
+                  style="line-height: 25px;"
                   @click="resetForm()"
                 >
                   Reset Form
                 </div>
+
               </div>
 
+            </div>
+
+            <div class="row mt-3">
+              <div class="col-12 p-0">
+                <db-column-filter
+                  v-if="spellFields && filters"
+                  :set-filters="filters"
+                  @input="handleDbColumnFilters($event);"
+                  :columns="spellFields"
+                />
+              </div>
             </div>
 
             <div v-if="message">
               {{ message }}
             </div>
 
-          </eq-window>
+          </eq-window-simple>
 
           <app-loader :is-loading="!loaded" padding="4"/>
 
@@ -126,7 +176,7 @@
               :key="spell.id"
               style="display: inline-block; vertical-align: top"
             >
-              <eq-window style="margin-right: 10px; width: auto; height: 90%">
+              <eq-window style="margin-right: 1px; width: auto; height: 93%">
                 <eq-spell-preview :spell-data="spell"/>
               </eq-window>
             </div>
@@ -156,10 +206,15 @@ import EqSpellPreviewTable from "@/components/eq-ui/EQSpellPreviewTable.vue";
 import {Spells} from "@/app/spells";
 import {Items} from "@/app/items";
 import {ROUTE} from "@/routes";
+import EqWindowSimple from "@/components/eq-ui/EQWindowSimple.vue";
+import {SpireQueryBuilder} from "@/app/api/spire-query-builder";
+import DbColumnFilter from "@/components/DbColumnFilter.vue";
 
 export default {
   name: "Spells",
   components: {
+    DbColumnFilter,
+    EqWindowSimple,
     EqSpellPreviewTable,
     EqSpellPreview,
     EqItemCardPreview,
@@ -170,7 +225,7 @@ export default {
     return {
       loaded: false,
       spells: null,
-      limit: 250,
+      limit: 100,
       beginRange: 10000,
       endRange: 100000,
       dbClassIcons: DB_CLASSES_ICONS,
@@ -188,11 +243,22 @@ export default {
 
       message: "",
 
+      filters: [],
+
+      spellFields: [],
+
       listType: "table"
     }
   },
 
-  mounted() {
+  watch: {
+    '$route'() {
+      this.loadQueryState()
+      this.listSpells()
+    },
+  },
+
+  async mounted() {
     if (Object.keys(this.$route.query).length !== 0) {
       this.loadQueryState()
       Spells.preloadDbstr().then((res) => {
@@ -204,8 +270,32 @@ export default {
       Spells.preloadDbstr()
       this.loaded = true;
     }
+
+    this.spellFields = await this.getSpellFields()
   },
   methods: {
+
+    async getSpellFields() {
+      const result = await (new SpellsNewApi(SpireApiClient.getOpenApiConfig())).listSpellsNews(
+        {
+          limit: 1
+        }
+      )
+      if (result.status === 200 && result.data.length === 1) {
+        let fields = []
+        Object.keys(result.data[0]).forEach((key) => {
+          fields.push(key)
+        })
+        return fields.sort()
+      }
+
+      return [];
+    },
+
+    handleDbColumnFilters(checkboxFilters) {
+      this.filters = checkboxFilters
+      this.updateQueryState()
+    },
 
     updateQueryState: function () {
       let queryState = {};
@@ -213,7 +303,7 @@ export default {
       if (this.selectedClass !== 0) {
         queryState.class = this.selectedClass
       }
-      if (this.listType !== 0) {
+      if (this.listType !== "") {
         queryState.listType = this.listType
       }
       if (this.spellName !== "") {
@@ -228,6 +318,9 @@ export default {
       if (this.selectedLevelType !== 0) {
         queryState.levelType = this.selectedLevelType
       }
+      if (this.filters && this.filters.length > 0) {
+        queryState.filters = JSON.stringify(this.filters)
+      }
 
       this.$router.push(
         {
@@ -239,12 +332,14 @@ export default {
     },
 
     resetForm: function () {
+      this.filters           = []
       this.selectedClass     = 0;
       this.spellName         = "";
       this.spellEffect       = "";
       this.selectedSpa       = -1;
       this.selectedLevel     = 0;
       this.selectedLevelType = 0;
+      this.listType          = "table"
       this.spells            = null;
       this.updateQueryState()
     },
@@ -267,6 +362,12 @@ export default {
       }
       if (this.$route.query.listType) {
         this.listType = this.$route.query.listType;
+      }
+      if (this.$route.query.filters) {
+        this.filters = JSON.parse(this.$route.query.filters);
+      }
+      else {
+        this.filters = []
       }
     },
 
@@ -297,85 +398,64 @@ export default {
       this.loaded  = false;
       this.message = ""
 
-      const api   = (new SpellsNewApi(SpireApiClient.getOpenApiConfig()))
-      let filters = [];
-      let whereOr = [];
+      const api     = (new SpellsNewApi(SpireApiClient.getOpenApiConfig()))
+      const builder = (new SpireQueryBuilder())
 
       // filter by class and no level set
       if (this.selectedClass > 0 && this.selectedLevel === 0) {
-        filters.push(["classes" + this.selectedClass, "_gte_", "1"]);
-        filters.push(["classes" + this.selectedClass, "_lte_", "250"]);
+        builder.where("classes" + this.selectedClass, ">=", "1")
+        builder.where("classes" + this.selectedClass, "<=", "250")
+      }
 
-        // exclude rk 2/3 for now
-        filters.push(["name", "_notlike_", "Rk. I"]);
+      let filterType = "="
+      if (parseInt(this.selectedLevelType) === 1) {
+        filterType = ">=";
+      }
+      if (parseInt(this.selectedLevelType) === 2) {
+        filterType = "<=";
       }
 
       // filter by level if class set
       if (this.selectedLevel > 0 && this.selectedClass > 0) {
-        let filterType = "__"; // equal
-        if (parseInt(this.selectedLevelType) === 1) {
-          filterType = "_gte_";
-        }
-        if (parseInt(this.selectedLevelType) === 2) {
-          filterType = "_lte_";
-        }
+        builder.where("classes" + this.selectedClass, filterType, this.selectedLevel)
+        builder.where("classes" + this.selectedClass, "<=", "250")
+      }
 
-        filters.push(["classes" + this.selectedClass, filterType, this.selectedLevel]);
-        filters.push(["classes" + this.selectedClass, "_lte_", "250"]);
-
-        // exclude rk 2/3 for now
-        filters.push(["name", "_notlike_", "Rk. I"]);
+      // when no class is set but level is greater than 0
+      if (this.selectedClass === 0 && this.selectedLevel > 0) {
+        for (let i = 1; i < 16; i++) {
+          builder.whereOr("classes" + i, filterType, this.selectedLevel)
+        }
       }
 
       // if number, filter by id
       // else name
       if (!isNaN(this.spellName) && this.spellName) {
-        filters.push(["id", "__", this.spellName]);
+        builder.whereOr("id", "=", this.spellName)
       } else if (this.spellName) {
-        filters.push(["name", "_like_", this.spellName]);
+        builder.whereOr("name", "like", this.spellName)
       }
 
       if (this.selectedSpa > 0) {
         for (let effectIndex = 1; effectIndex <= 12; effectIndex++) {
-          whereOr.push(["effectid" + effectIndex, "__", this.selectedSpa]);
+          builder.whereOr("effectid" + effectIndex, "=", this.selectedSpa)
         }
       }
 
-      let wheres = [];
-      filters.forEach((filter) => {
-        const where = util.format("%s%s%s", filter[0], filter[1], filter[2])
-        wheres.push(where)
-      })
-
-      let wheresOrs = [];
-      whereOr.forEach((filter) => {
-        const where = util.format("%s%s%s", filter[0], filter[1], filter[2])
-        wheresOrs.push(where)
-      })
-
-      let request   = {};
-      // this.message = "Refine search criteria to get more results...";
-      request.limit = this.limit;
-      if (this.selectedLevel && this.selectedLevel > 0) {
-        request.limit = 1000
-        this.message  = ""
-      }
-
+      builder.limit(this.limit);
 
       // filter by class
       if (this.selectedClass > 0) {
-        request.orderBy = util.format("classes%s", this.selectedClass)
+        builder.orderBy([util.format("classes%s", this.selectedClass)])
       }
 
-      if (Object.keys(wheres).length > 0) {
-        request.where = wheres.join(".")
+      if (this.filters && this.filters.length > 0) {
+        this.filters.forEach((f) => {
+          builder.where(f.f, f.o, f.v)
+        })
       }
 
-      if (Object.keys(wheresOrs).length > 0) {
-        request.whereOr = wheresOrs.join(".")
-      }
-
-      api.listSpellsNews(request).then(async (result) => {
+      api.listSpellsNews(builder.get()).then(async (result) => {
         if (result.status === 200) {
           // set spells to be rendered
           this.spells = result.data
@@ -426,7 +506,9 @@ export default {
           }).then((response) => {
             if (response.status == 200 && response.data && parseInt(response.data.length) > 0) {
               response.data.forEach((spell) => {
-                Spells.setSpell(spell.id, spell);
+                if (!Spells.isSpellSet(spell.id)) {
+                  Spells.setSpell(spell.id, spell);
+                }
               })
             }
             this.loaded = true;

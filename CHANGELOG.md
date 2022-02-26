@@ -1,3 +1,67 @@
+## [1.11.0]
+
+### Item, Spell, Database Strings Editor, Client Files and more
+
+Item and Spell editor tools are now released in full, with the most feature rich sub-editors and selectors
+
+### Item Editor
+
+* Recast delay now displays in seconds instead of milliseconds
+* Implemented sub-editors for the following fields: id, icon, idfile, material, color, augtype, proceffect, worneffect, focuseffect, scrolleffect, clickeffect, bardeffect
+ 
+![Screenshot from 2022-02-26 01-06-08](https://user-images.githubusercontent.com/3319450/155833708-ab9a56d1-7e76-424a-ba23-1f0bdb46858e.png)
+![Screenshot from 2022-02-26 01-07-23](https://user-images.githubusercontent.com/3319450/155833730-c39c8a6e-bf3a-4d21-887d-6420d4fb4f68.png)
+
+### Spell Editor
+
+* Added data translations to most remaining fields to make them more obvious to users
+* Added formulas to SPA effects
+* Conditionally display fields that are not contextually relevant unless certain fields are set
+* Fix buff duration display not properly showing times
+* Implemented a cone visualizer to real-time preview cone spells
+* Implemented a horse selector for **teleport_zone** via horse type spells
+* Implemented a pet selector for **teleport_zone** via pet type spells
+* Implemented a spell selector for spell related fields
+* Implemented a zone selector for **teleport_zone** via pet translocate / gate spells
+* Implemented an item selector for item related fields
+* Implemented buff duration formulas
+* Implemented smart Spell and Item selection inside the effects tab, where SPA fields base, limit, max will pulsate green depending on the SPA to indicate item or spell selection
+* Implemented sub-editors for the following fields: id, casting_anim, target_anim, icon, spellanim, cone_start_angle, cone_stop_angle, nimbuseffect, aoerange, teleport_zone, range, min_range, typedescnum, effectdescnum, effectdescnum_2, descnum, components_1, components_2, components_3, components_4, noexpend_reagent_1, noexpend_reagent_2, noexpend_reagent_3, noexpend_reagent_4, recourse_link
+* SPA effects are now highlighted when hovered over and selected
+* When an SPA is selected, the editor will select reference values from another spell in the database with the same SPA
+
+![Screenshot from 2022-02-26 01-05-12](https://user-images.githubusercontent.com/3319450/155833675-ecf575a5-2dd1-404e-a1c2-0988a65504ca.png)
+![Screenshot from 2022-02-26 01-03-54](https://user-images.githubusercontent.com/3319450/155833645-cbd9c839-6d43-4ee0-b505-9425381eccbb.png)
+
+### Item / Spell Editors
+
+* Added cast bar simulation components to any field that references cast times
+* Fixed sub-editor highlight selection scroll consistency issues where it would not always scroll to the selected preview
+* Implement database column filtering that is additive to the normal search fields
+* Now have cloning functionality
+* Search improvements, adding table and card toggles, result limit toggles
+* Sub-editor fields now pulsate green to indicate to the user that there is a sub-editor associated with the field
+* Sub-selectors now only activate during input click instead of on hover
+* Video viewers now display a black background by default before the video loads in
+
+### Database Strings Editor
+
+* Implemented a database strings editor that will allow users to list, create, edit and delete database strings per string type
+
+![Screenshot from 2022-02-25 23-19-53](https://user-images.githubusercontent.com/3319450/155830410-757d1a27-d7ad-419a-9805-a197fbffae3d.png)
+
+### Client Files Importer / Exporter
+
+![image](https://user-images.githubusercontent.com/3319450/155830515-e74d1b27-f2a0-4fa6-afcc-c6c93e70cd8a.png)
+
+* Implemented client files management supporting both spells_us.txt and db_str.txt
+
+### General
+
+* Added a range visualizer component that will visualize in game ranges of up to 1,000 units
+* All usage of Spell icons in the application have been replaced with sprites
+* Item card preview now shows factions
+
 ## [1.6.7]
 
 ### Quest API Explorer

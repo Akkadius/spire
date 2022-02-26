@@ -1,10 +1,10 @@
 package crudcontrollers
 
 import (
+	"fmt"
 	"github.com/Akkadius/spire/internal/database"
 	"github.com/Akkadius/spire/internal/http/routes"
 	"github.com/Akkadius/spire/internal/models"
-	"fmt"
 	"github.com/labstack/echo/v4"
 	"github.com/sirupsen/logrus"
 	"net/http"
@@ -12,7 +12,7 @@ import (
 )
 
 type CharacterAuraController struct {
-	db     *database.DatabaseResolver
+	db	 *database.DatabaseResolver
 	logger *logrus.Logger
 }
 
@@ -21,19 +21,19 @@ func NewCharacterAuraController(
 	logger *logrus.Logger,
 ) *CharacterAuraController {
 	return &CharacterAuraController{
-		db:     db,
+		db:	 db,
 		logger: logger,
 	}
 }
 
 func (e *CharacterAuraController) Routes() []*routes.Route {
 	return []*routes.Route{
-		routes.RegisterRoute(http.MethodDelete, "character_aura/:character_aura", e.deleteCharacterAura, nil),
-		routes.RegisterRoute(http.MethodGet, "character_aura/:character_aura", e.getCharacterAura, nil),
+		routes.RegisterRoute(http.MethodGet, "character_aura/:id", e.getCharacterAura, nil),
 		routes.RegisterRoute(http.MethodGet, "character_auras", e.listCharacterAuras, nil),
-		routes.RegisterRoute(http.MethodPost, "character_auras/bulk", e.getCharacterAurasBulk, nil),
-		routes.RegisterRoute(http.MethodPatch, "character_aura/:character_aura", e.updateCharacterAura, nil),
 		routes.RegisterRoute(http.MethodPut, "character_aura", e.createCharacterAura, nil),
+		routes.RegisterRoute(http.MethodDelete, "character_aura/:id", e.deleteCharacterAura, nil),
+		routes.RegisterRoute(http.MethodPatch, "character_aura/:id", e.updateCharacterAura, nil),
+		routes.RegisterRoute(http.MethodPost, "character_auras/bulk", e.getCharacterAurasBulk, nil),
 	}
 }
 
@@ -79,17 +79,42 @@ func (e *CharacterAuraController) listCharacterAuras(c echo.Context) error {
 // @Failure 500 {string} string "Bad query request"
 // @Router /character_aura/{id} [get]
 func (e *CharacterAuraController) getCharacterAura(c echo.Context) error {
-	characterAuraId, err := strconv.Atoi(c.Param("character_aura"))
+	var params []interface{}
+	var keys []string
+
+	// primary key param
+	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Cannot find param"})
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Cannot find param [Id]"})
+	}
+	params = append(params, id)
+	keys = append(keys, "id = ?")
+
+	// key param [slot] position [2] type [tinyint]
+	if len(c.QueryParam("slot")) > 0 {
+		slotParam, err := strconv.Atoi(c.QueryParam("slot"))
+		if err != nil {
+			return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error parsing query param [slot] err [%s]", err.Error())})
+		}
+
+		params = append(params, slotParam)
+		keys = append(keys, "slot = ?")
 	}
 
+	// query builder
 	var result models.CharacterAura
-	err = e.db.QueryContext(models.CharacterAura{}, c).First(&result, characterAuraId).Error
-	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err})
+	query := e.db.QueryContext(models.CharacterAura{}, c)
+	for i, _ := range keys {
+		query = query.Where(keys[i], params[i])
 	}
 
+	// grab first entry
+	err = query.First(&result).Error
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
+	}
+
+	// couldn't find entity
 	if result.ID == 0 {
 		return c.JSON(http.StatusNotFound, echo.Map{"error": "Cannot find entity"})
 	}
@@ -111,26 +136,55 @@ func (e *CharacterAuraController) getCharacterAura(c echo.Context) error {
 // @Failure 500 {string} string "Error updating entity"
 // @Router /character_aura/{id} [patch]
 func (e *CharacterAuraController) updateCharacterAura(c echo.Context) error {
-	characterAura := new(models.CharacterAura)
-	if err := c.Bind(characterAura); err != nil {
+	request := new(models.CharacterAura)
+	if err := c.Bind(request); err != nil {
 		return c.JSON(
 			http.StatusInternalServerError,
-			echo.Map{"error": fmt.Sprintf("Error binding to entity: [%v]", err)},
+			echo.Map{"error": fmt.Sprintf("Error binding to entity [%v]", err.Error())},
 		)
 	}
 
-    entity := models.CharacterAura{}
-	err := e.db.Get(models.CharacterAura{}, c).Model(&models.CharacterAura{}).First(&entity, characterAura.ID).Error
-	if err != nil || characterAura.ID == 0 {
-		return c.JSON(http.StatusNotFound, echo.Map{"error": "Cannot find entity"})
-	}
+	var params []interface{}
+	var keys []string
 
-	err = e.db.Get(models.CharacterAura{}, c).Model(&entity).Select("*").Updates(&characterAura).Error
+	// primary key param
+	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error updating entity: [%v]", err)})
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Cannot find param [Id]"})
+	}
+	params = append(params, id)
+	keys = append(keys, "id = ?")
+
+	// key param [slot] position [2] type [tinyint]
+	if len(c.QueryParam("slot")) > 0 {
+		slotParam, err := strconv.Atoi(c.QueryParam("slot"))
+		if err != nil {
+			return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error parsing query param [slot] err [%s]", err.Error())})
+		}
+
+		params = append(params, slotParam)
+		keys = append(keys, "slot = ?")
 	}
 
-	return c.JSON(http.StatusOK, characterAura)
+	// query builder
+	var result models.CharacterAura
+	query := e.db.QueryContext(models.CharacterAura{}, c)
+	for i, _ := range keys {
+		query = query.Where(keys[i], params[i])
+	}
+
+	// grab first entry
+	err = query.First(&result).Error
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Cannot find entity [%s]", err.Error())})
+	}
+
+	err = query.Select("*").Updates(&request).Error
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error updating entity [%v]", err.Error())})
+	}
+
+	return c.JSON(http.StatusOK, request)
 }
 
 // createCharacterAura godoc
@@ -149,7 +203,7 @@ func (e *CharacterAuraController) createCharacterAura(c echo.Context) error {
 	if err := c.Bind(characterAura); err != nil {
 		return c.JSON(
 			http.StatusInternalServerError,
-			echo.Map{"error": fmt.Sprintf("Error binding to entity: [%v]", err)},
+			echo.Map{"error": fmt.Sprintf("Error binding to entity [%v]", err.Error())},
 		)
 	}
 
@@ -157,7 +211,7 @@ func (e *CharacterAuraController) createCharacterAura(c echo.Context) error {
 	if err != nil {
 		return c.JSON(
 			http.StatusInternalServerError,
-			echo.Map{"error": fmt.Sprintf("Error inserting entity: [%v]", err)},
+			echo.Map{"error": fmt.Sprintf("Error inserting entity [%v]", err.Error())},
 		)
 	}
 
@@ -170,25 +224,49 @@ func (e *CharacterAuraController) createCharacterAura(c echo.Context) error {
 // @Accept json
 // @Produce json
 // @Tags CharacterAura
-// @Param id path int true "Id"
+// @Param id path int true "id"
 // @Success 200 {string} string "Entity deleted successfully"
 // @Failure 404 {string} string "Cannot find entity"
 // @Failure 500 {string} string "Error binding to entity"
 // @Failure 500 {string} string "Error deleting entity"
 // @Router /character_aura/{id} [delete]
 func (e *CharacterAuraController) deleteCharacterAura(c echo.Context) error {
-	characterAuraId, err := strconv.Atoi(c.Param("character_aura"))
+	var params []interface{}
+	var keys []string
+
+	// primary key param
+	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
 		e.logger.Error(err)
 	}
+	params = append(params, id)
+	keys = append(keys, "id = ?")
 
-	characterAura := new(models.CharacterAura)
-	err = e.db.Get(models.CharacterAura{}, c).Model(&models.CharacterAura{}).First(&characterAura, characterAuraId).Error
-	if err != nil || characterAura.ID == 0 {
-		return c.JSON(http.StatusNotFound, echo.Map{"error": "Cannot find entity"})
+	// key param [slot] position [2] type [tinyint]
+	if len(c.QueryParam("slot")) > 0 {
+		slotParam, err := strconv.Atoi(c.QueryParam("slot"))
+		if err != nil {
+			return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error parsing query param [slot] err [%s]", err.Error())})
+		}
+
+		params = append(params, slotParam)
+		keys = append(keys, "slot = ?")
 	}
 
-	err = e.db.Get(models.CharacterAura{}, c).Model(&models.CharacterAura{}).Delete(&characterAura).Error
+	// query builder
+	var result models.CharacterAura
+	query := e.db.QueryContext(models.CharacterAura{}, c)
+	for i, _ := range keys {
+		query = query.Where(keys[i], params[i])
+	}
+
+	// grab first entry
+	err = query.First(&result).Error
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
+	}
+
+	err = e.db.Get(models.CharacterAura{}, c).Model(&models.CharacterAura{}).Delete(&result).Error
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Error deleting entity"})
 	}
@@ -213,7 +291,7 @@ func (e *CharacterAuraController) getCharacterAurasBulk(c echo.Context) error {
 	if err := c.Bind(r); err != nil {
 		return c.JSON(
 			http.StatusInternalServerError,
-			echo.Map{"error": fmt.Sprintf("Error binding to bulk request: [%v]", err)},
+			echo.Map{"error": fmt.Sprintf("Error binding to bulk request: [%v]", err.Error())},
 		)
 	}
 
@@ -226,7 +304,7 @@ func (e *CharacterAuraController) getCharacterAurasBulk(c echo.Context) error {
 
 	err := e.db.QueryContext(models.CharacterAura{}, c).Find(&results, r.IDs).Error
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err})
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
 	}
 
 	return c.JSON(http.StatusOK, results)

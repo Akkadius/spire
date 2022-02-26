@@ -1,52 +1,54 @@
 <template>
   <div>
-    <div class="row mb-4">
 
-      <!-- Item Slot -->
-      <div class="col-lg-5">
+    <eq-window-simple>
+      <div class="row">
 
-        <!-- Input -->
-        <select
-          class="form-control form-control-prepended list-search"
-          v-model.lazy="itemSlotSearch"
-          @change="itemTypeSearch = 0; loadModels()"
-        >
-          <option value="0">Select Slot Filter</option>
-          <option v-for="option in itemSlotOptions" v-bind:value="option.value">
-            {{ option.text }}
-          </option>
+        <!-- Item Slot -->
+        <div class="col-lg-5">
 
-        </select>
+          <!-- Input -->
+          <select
+            class="form-control form-control-prepended list-search"
+            v-model.lazy="itemSlotSearch"
+            @change="itemTypeSearch = 0; loadModels()"
+          >
+            <option value="0">Select Slot Filter</option>
+            <option v-for="option in itemSlotOptions" v-bind:value="option.value">
+              {{ option.text }}
+            </option>
+
+          </select>
+        </div>
+
+        <!-- Item Type -->
+        <div class="col-lg-5">
+
+          <!-- Input -->
+          <select
+            class="form-control form-control-prepended list-search"
+            v-model.lazy="itemTypeSearch"
+            @change="itemSlotSearch = 0; loadModels()"
+          >
+            <option value="0">Select Item Type Filter</option>
+            <option v-for="option in itemTypeOptions" v-bind:value="option.value">
+              {{ option.text }}
+            </option>
+          </select>
+        </div>
+        <div class="col-lg-2 col-sm-12">
+          <b-button variant="primary" class="btn-dark btn-sm btn-outline-warning" @click="reset">
+            <i class="fa fa-eraser mr-1"></i>
+            Reset
+          </b-button>
+        </div>
       </div>
+    </eq-window-simple>
 
-      <!-- Item Type -->
-      <div class="col-lg-5">
-
-        <!-- Input -->
-        <select
-          class="form-control form-control-prepended list-search"
-          v-model.lazy="itemTypeSearch"
-          @change="itemSlotSearch = 0; loadModels()"
-        >
-          <option value="0">Select Item Type Filter</option>
-          <option v-for="option in itemTypeOptions" v-bind:value="option.value">
-            {{ option.text }}
-          </option>
-        </select>
-      </div>
-      <div class="col-lg-2 col-sm-12">
-        <b-button variant="primary" class="btn-dark btn-sm btn-outline-warning" @click="reset">
-          <i class="fa fa-eraser mr-1"></i>
-          Reset
-        </b-button>
-      </div>
-    </div>
-
-    <app-loader :is-loading="!loaded" padding="8"/>
-
-    <div
+    <eq-window-simple
       style="height: 85vh; overflow-y: scroll"
-      id="item-model-view-port">
+      id="item-model-view-port"
+    >
 
       <span v-if="filteredItemModels && filteredItemModels.length === 0">
         No models found...
@@ -62,12 +64,16 @@
           <span
             :id="'item-model-' + modelId"
             :class="'fade-in object-ctn-' + modelId"
-            :title="'IT' + modelId">
+            :title="'IT' + modelId"
+          >
           </span>
         </div>
       </div>
 
-    </div>
+    </eq-window-simple>
+
+    <app-loader :is-loading="!loaded" padding="4"/>
+
   </div>
 </template>
 
@@ -81,6 +87,7 @@ import itemTypesModelMapping from "@/constants/item-type-model-mapping.json"
 import PageHeader            from "@/components/layout/PageHeader";
 import {App}                 from "@/constants/app";
 import EqWindow              from "@/components/eq-ui/EQWindow";
+import EqWindowSimple        from "@/components/eq-ui/EQWindowSimple";
 
 const baseUrl         = App.ASSET_CDN_BASE_URL + "assets/objects/";
 const MAX_ITEM_IDFILE = 100000;
@@ -90,7 +97,7 @@ let modelFiles        = {};
 
 export default {
   name: "ItemModelSelector",
-  components: { EqWindow, PageHeader },
+  components: { EqWindowSimple, EqWindow, PageHeader },
   data() {
     return {
       itemSlotSearch: 0,
@@ -102,6 +109,20 @@ export default {
     }
   },
   methods: {
+
+    scrollToSelected() {
+      // bring focus to the selected model
+      // we queue this on a timeout because elements haven't been rendered yet
+      if (this.selectedModel && this.selectedModel.length > 0) {
+        setTimeout(() => {
+          const container = document.getElementById("item-model-view-port");
+          const target    = document.getElementById(util.format("item-model-%s", this.getSelectedModelNoIT()))
+          if (container && target) {
+            container.scrollTop = target.offsetTop - 300;
+          }
+        }, 100)
+      }
+    },
 
     selectItemModel(modelId) {
       this.$emit("input", util.format("IT%s", modelId));
@@ -236,17 +257,10 @@ export default {
       this.loadModels()
     }, 100);
 
-    // bring focus to the selected model
-    // we queue this on a timeout because elements haven't been rendered yet
-    if (this.selectedModel && this.selectedModel.length > 0) {
-      setTimeout(() => {
-        const container = document.getElementById("item-model-view-port");
-        const target    = document.getElementById(util.format("item-model-%s", this.getSelectedModelNoIT()))
-        if (container && target) {
-          container.scrollTop = target.offsetTop - 300;
-        }
-      }, 100)
-    }
+    this.scrollToSelected()
+  },
+  activated() {
+    this.scrollToSelected()
   },
   props: {
     selectedModel: {

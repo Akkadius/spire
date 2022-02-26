@@ -12,10 +12,12 @@ import '@/assets/css/custom.css'
 // Dashkit
 import './assets/css/theme.min.css'
 import './assets/fonts/feather/feather.min.css'
-import './assets/css/global.css'
 
 // EQ Assets - These should be moved into the assets themselves
 import '@/components/eq-ui/styles/eq-ui.css'
+
+// global custom
+import './assets/css/global.css'
 
 // font awesome
 import 'fontawesome-4.7'

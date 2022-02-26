@@ -82,7 +82,7 @@ export const InstanceListPlayerApiAxiosParamCreator = function (configuration?: 
         /**
          * 
          * @summary Deletes InstanceListPlayer
-         * @param {number} id Id
+         * @param {number} id id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -386,7 +386,7 @@ export const InstanceListPlayerApiFp = function(configuration?: Configuration) {
         /**
          * 
          * @summary Deletes InstanceListPlayer
-         * @param {number} id Id
+         * @param {number} id id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -485,7 +485,7 @@ export const InstanceListPlayerApiFactory = function (configuration?: Configurat
         /**
          * 
          * @summary Deletes InstanceListPlayer
-         * @param {number} id Id
+         * @param {number} id id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -566,7 +566,7 @@ export interface InstanceListPlayerApiCreateInstanceListPlayerRequest {
  */
 export interface InstanceListPlayerApiDeleteInstanceListPlayerRequest {
     /**
-     * Id
+     * id
      * @type {number}
      * @memberof InstanceListPlayerApiDeleteInstanceListPlayer
      */

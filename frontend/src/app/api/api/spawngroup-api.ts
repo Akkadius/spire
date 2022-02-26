@@ -82,7 +82,7 @@ export const SpawngroupApiAxiosParamCreator = function (configuration?: Configur
         /**
          * 
          * @summary Deletes Spawngroup
-         * @param {number} id Id
+         * @param {number} id id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -386,7 +386,7 @@ export const SpawngroupApiFp = function(configuration?: Configuration) {
         /**
          * 
          * @summary Deletes Spawngroup
-         * @param {number} id Id
+         * @param {number} id id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -485,7 +485,7 @@ export const SpawngroupApiFactory = function (configuration?: Configuration, bas
         /**
          * 
          * @summary Deletes Spawngroup
-         * @param {number} id Id
+         * @param {number} id id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -566,7 +566,7 @@ export interface SpawngroupApiCreateSpawngroupRequest {
  */
 export interface SpawngroupApiDeleteSpawngroupRequest {
     /**
-     * Id
+     * id
      * @type {number}
      * @memberof SpawngroupApiDeleteSpawngroup
      */

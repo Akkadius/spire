@@ -82,7 +82,7 @@ export const CharacterDatumApiAxiosParamCreator = function (configuration?: Conf
         /**
          * 
          * @summary Deletes CharacterDatum
-         * @param {number} id Id
+         * @param {number} id id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -386,7 +386,7 @@ export const CharacterDatumApiFp = function(configuration?: Configuration) {
         /**
          * 
          * @summary Deletes CharacterDatum
-         * @param {number} id Id
+         * @param {number} id id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -485,7 +485,7 @@ export const CharacterDatumApiFactory = function (configuration?: Configuration,
         /**
          * 
          * @summary Deletes CharacterDatum
-         * @param {number} id Id
+         * @param {number} id id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -566,7 +566,7 @@ export interface CharacterDatumApiCreateCharacterDatumRequest {
  */
 export interface CharacterDatumApiDeleteCharacterDatumRequest {
     /**
-     * Id
+     * id
      * @type {number}
      * @memberof CharacterDatumApiDeleteCharacterDatum
      */

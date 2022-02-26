@@ -1,10 +1,10 @@
 package crudcontrollers
 
 import (
+	"fmt"
 	"github.com/Akkadius/spire/internal/database"
 	"github.com/Akkadius/spire/internal/http/routes"
 	"github.com/Akkadius/spire/internal/models"
-	"fmt"
 	"github.com/labstack/echo/v4"
 	"github.com/sirupsen/logrus"
 	"net/http"
@@ -12,7 +12,7 @@ import (
 )
 
 type SpawnConditionController struct {
-	db     *database.DatabaseResolver
+	db	 *database.DatabaseResolver
 	logger *logrus.Logger
 }
 
@@ -21,19 +21,19 @@ func NewSpawnConditionController(
 	logger *logrus.Logger,
 ) *SpawnConditionController {
 	return &SpawnConditionController{
-		db:     db,
+		db:	 db,
 		logger: logger,
 	}
 }
 
 func (e *SpawnConditionController) Routes() []*routes.Route {
 	return []*routes.Route{
-		routes.RegisterRoute(http.MethodDelete, "spawn_condition/:spawn_condition", e.deleteSpawnCondition, nil),
-		routes.RegisterRoute(http.MethodGet, "spawn_condition/:spawn_condition", e.getSpawnCondition, nil),
+		routes.RegisterRoute(http.MethodGet, "spawn_condition/:id", e.getSpawnCondition, nil),
 		routes.RegisterRoute(http.MethodGet, "spawn_conditions", e.listSpawnConditions, nil),
-		routes.RegisterRoute(http.MethodPost, "spawn_conditions/bulk", e.getSpawnConditionsBulk, nil),
-		routes.RegisterRoute(http.MethodPatch, "spawn_condition/:spawn_condition", e.updateSpawnCondition, nil),
 		routes.RegisterRoute(http.MethodPut, "spawn_condition", e.createSpawnCondition, nil),
+		routes.RegisterRoute(http.MethodDelete, "spawn_condition/:id", e.deleteSpawnCondition, nil),
+		routes.RegisterRoute(http.MethodPatch, "spawn_condition/:id", e.updateSpawnCondition, nil),
+		routes.RegisterRoute(http.MethodPost, "spawn_conditions/bulk", e.getSpawnConditionsBulk, nil),
 	}
 }
 
@@ -79,17 +79,42 @@ func (e *SpawnConditionController) listSpawnConditions(c echo.Context) error {
 // @Failure 500 {string} string "Bad query request"
 // @Router /spawn_condition/{id} [get]
 func (e *SpawnConditionController) getSpawnCondition(c echo.Context) error {
-	spawnConditionId, err := strconv.Atoi(c.Param("spawn_condition"))
+	var params []interface{}
+	var keys []string
+
+	// primary key param
+	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Cannot find param"})
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Cannot find param [Id]"})
+	}
+	params = append(params, id)
+	keys = append(keys, "id = ?")
+
+	// key param [id] position [2] type [mediumint]
+	if len(c.QueryParam("id")) > 0 {
+		idParam, err := strconv.Atoi(c.QueryParam("id"))
+		if err != nil {
+			return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error parsing query param [id] err [%s]", err.Error())})
+		}
+
+		params = append(params, idParam)
+		keys = append(keys, "id = ?")
 	}
 
+	// query builder
 	var result models.SpawnCondition
-	err = e.db.QueryContext(models.SpawnCondition{}, c).First(&result, spawnConditionId).Error
-	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err})
+	query := e.db.QueryContext(models.SpawnCondition{}, c)
+	for i, _ := range keys {
+		query = query.Where(keys[i], params[i])
 	}
 
+	// grab first entry
+	err = query.First(&result).Error
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
+	}
+
+	// couldn't find entity
 	if result.ID == 0 {
 		return c.JSON(http.StatusNotFound, echo.Map{"error": "Cannot find entity"})
 	}
@@ -111,26 +136,55 @@ func (e *SpawnConditionController) getSpawnCondition(c echo.Context) error {
 // @Failure 500 {string} string "Error updating entity"
 // @Router /spawn_condition/{id} [patch]
 func (e *SpawnConditionController) updateSpawnCondition(c echo.Context) error {
-	spawnCondition := new(models.SpawnCondition)
-	if err := c.Bind(spawnCondition); err != nil {
+	request := new(models.SpawnCondition)
+	if err := c.Bind(request); err != nil {
 		return c.JSON(
 			http.StatusInternalServerError,
-			echo.Map{"error": fmt.Sprintf("Error binding to entity: [%v]", err)},
+			echo.Map{"error": fmt.Sprintf("Error binding to entity [%v]", err.Error())},
 		)
 	}
 
-    entity := models.SpawnCondition{}
-	err := e.db.Get(models.SpawnCondition{}, c).Model(&models.SpawnCondition{}).First(&entity, spawnCondition.ID).Error
-	if err != nil || spawnCondition.ID == 0 {
-		return c.JSON(http.StatusNotFound, echo.Map{"error": "Cannot find entity"})
-	}
+	var params []interface{}
+	var keys []string
 
-	err = e.db.Get(models.SpawnCondition{}, c).Model(&entity).Select("*").Updates(&spawnCondition).Error
+	// primary key param
+	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error updating entity: [%v]", err)})
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Cannot find param [Id]"})
+	}
+	params = append(params, id)
+	keys = append(keys, "id = ?")
+
+	// key param [id] position [2] type [mediumint]
+	if len(c.QueryParam("id")) > 0 {
+		idParam, err := strconv.Atoi(c.QueryParam("id"))
+		if err != nil {
+			return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error parsing query param [id] err [%s]", err.Error())})
+		}
+
+		params = append(params, idParam)
+		keys = append(keys, "id = ?")
 	}
 
-	return c.JSON(http.StatusOK, spawnCondition)
+	// query builder
+	var result models.SpawnCondition
+	query := e.db.QueryContext(models.SpawnCondition{}, c)
+	for i, _ := range keys {
+		query = query.Where(keys[i], params[i])
+	}
+
+	// grab first entry
+	err = query.First(&result).Error
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Cannot find entity [%s]", err.Error())})
+	}
+
+	err = query.Select("*").Updates(&request).Error
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error updating entity [%v]", err.Error())})
+	}
+
+	return c.JSON(http.StatusOK, request)
 }
 
 // createSpawnCondition godoc
@@ -149,7 +203,7 @@ func (e *SpawnConditionController) createSpawnCondition(c echo.Context) error {
 	if err := c.Bind(spawnCondition); err != nil {
 		return c.JSON(
 			http.StatusInternalServerError,
-			echo.Map{"error": fmt.Sprintf("Error binding to entity: [%v]", err)},
+			echo.Map{"error": fmt.Sprintf("Error binding to entity [%v]", err.Error())},
 		)
 	}
 
@@ -157,7 +211,7 @@ func (e *SpawnConditionController) createSpawnCondition(c echo.Context) error {
 	if err != nil {
 		return c.JSON(
 			http.StatusInternalServerError,
-			echo.Map{"error": fmt.Sprintf("Error inserting entity: [%v]", err)},
+			echo.Map{"error": fmt.Sprintf("Error inserting entity [%v]", err.Error())},
 		)
 	}
 
@@ -170,25 +224,49 @@ func (e *SpawnConditionController) createSpawnCondition(c echo.Context) error {
 // @Accept json
 // @Produce json
 // @Tags SpawnCondition
-// @Param id path int true "Id"
+// @Param id path int true "id"
 // @Success 200 {string} string "Entity deleted successfully"
 // @Failure 404 {string} string "Cannot find entity"
 // @Failure 500 {string} string "Error binding to entity"
 // @Failure 500 {string} string "Error deleting entity"
 // @Router /spawn_condition/{id} [delete]
 func (e *SpawnConditionController) deleteSpawnCondition(c echo.Context) error {
-	spawnConditionId, err := strconv.Atoi(c.Param("spawn_condition"))
+	var params []interface{}
+	var keys []string
+
+	// primary key param
+	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
 		e.logger.Error(err)
 	}
+	params = append(params, id)
+	keys = append(keys, "id = ?")
 
-	spawnCondition := new(models.SpawnCondition)
-	err = e.db.Get(models.SpawnCondition{}, c).Model(&models.SpawnCondition{}).First(&spawnCondition, spawnConditionId).Error
-	if err != nil || spawnCondition.ID == 0 {
-		return c.JSON(http.StatusNotFound, echo.Map{"error": "Cannot find entity"})
+	// key param [id] position [2] type [mediumint]
+	if len(c.QueryParam("id")) > 0 {
+		idParam, err := strconv.Atoi(c.QueryParam("id"))
+		if err != nil {
+			return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error parsing query param [id] err [%s]", err.Error())})
+		}
+
+		params = append(params, idParam)
+		keys = append(keys, "id = ?")
 	}
 
-	err = e.db.Get(models.SpawnCondition{}, c).Model(&models.SpawnCondition{}).Delete(&spawnCondition).Error
+	// query builder
+	var result models.SpawnCondition
+	query := e.db.QueryContext(models.SpawnCondition{}, c)
+	for i, _ := range keys {
+		query = query.Where(keys[i], params[i])
+	}
+
+	// grab first entry
+	err = query.First(&result).Error
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
+	}
+
+	err = e.db.Get(models.SpawnCondition{}, c).Model(&models.SpawnCondition{}).Delete(&result).Error
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Error deleting entity"})
 	}
@@ -213,7 +291,7 @@ func (e *SpawnConditionController) getSpawnConditionsBulk(c echo.Context) error 
 	if err := c.Bind(r); err != nil {
 		return c.JSON(
 			http.StatusInternalServerError,
-			echo.Map{"error": fmt.Sprintf("Error binding to bulk request: [%v]", err)},
+			echo.Map{"error": fmt.Sprintf("Error binding to bulk request: [%v]", err.Error())},
 		)
 	}
 
@@ -226,7 +304,7 @@ func (e *SpawnConditionController) getSpawnConditionsBulk(c echo.Context) error 
 
 	err := e.db.QueryContext(models.SpawnCondition{}, c).Find(&results, r.IDs).Error
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err})
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
 	}
 
 	return c.JSON(http.StatusOK, results)

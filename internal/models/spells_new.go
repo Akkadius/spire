@@ -256,6 +256,7 @@ func (SpellsNew) TableName() string {
 func (SpellsNew) Relationships() []string {
     return []string{
 		"Aura",
+		"Aura.SpellsNew",
 		"BlockedSpells",
 		"Damageshieldtypes",
 		"SpellBuckets",

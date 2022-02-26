@@ -10,7 +10,7 @@
             <div class="row">
               <div class="col-1">
                 <div
-                  class="row" v-for="field in formFilters()"
+                  class="row" v-for="field in getCheckboxFilters()"
                 >
                   <div class="col-9 text-right p-0 pr-2 m-0">
                     {{ field.description }}
@@ -20,8 +20,8 @@
                       class="mb-2 d-inline-block"
                       :true-value="(typeof field.true !== 'undefined' ? field.true : 1)"
                       :false-value="(typeof field.false !== 'undefined' ? field.false : 0)"
-                      v-model.number="filters[field.field]"
-                      @input="filters[field.field] = $event; triggerCheckboxFilter(field.field, (typeof field.false !== 'undefined' ? field.false : 0))"
+                      v-model.number="checkboxFilters[field.field]"
+                      @input="checkboxFilters[field.field] = $event; triggerCheckboxFilter(field.field, (typeof field.false !== 'undefined' ? field.false : 0))"
                     />
                   </div>
                 </div>
@@ -31,7 +31,6 @@
                 <div class="row">
                   <div class="col-12">
                     <class-bitmask-calculator
-                      :imageSize="imageSizes"
                       :centered-buttons="false"
                       :display-all-none="true"
                       :add-only-button-enabled="true"
@@ -47,7 +46,6 @@
                 <div class="row">
                   <div class="col-12">
                     <race-bitmask-calculator
-                      :imageSize="imageSizes"
                       :centered-buttons="false"
                       :display-all-none="true"
                       @fired="selectRaces()"
@@ -60,7 +58,6 @@
                 <div class="row">
                   <div class="col-12">
                     <deity-bitmask-calculator
-                      :imageSize="imageSizes"
                       :centered-buttons="false"
                       :display-all-none="true"
                       @fired="selectDeities()"
@@ -73,7 +70,6 @@
                 <div class="row">
                   <div class="col-12">
                     <inventory-slot-calculator
-                      :imageSize="imageSizes"
                       :skip-duplicate-slots="true"
                       :display-all-none="true"
                       @fired="selectSlots()"
@@ -115,7 +111,7 @@
                     </select>
                   </div>
 
-                  <div class="col-lg-2 col-sm-12 p-0 pr-1 text-center">
+                  <div class="col-lg-1 col-sm-12 p-0 pr-1 text-center">
                     Level
                     <select
                       class="form-control"
@@ -129,64 +125,86 @@
                     </select>
                   </div>
 
-                  <div class="col-lg-1 col-sm-12 text-center" v-if="selectedLevel">
-                    <b-form-group>
-                      <b-form-radio v-model="selectedLevelType" @change="triggerStateDelayed()" value="0">Only
-                      </b-form-radio>
-                      <b-form-radio v-model="selectedLevelType" @change="triggerStateDelayed()" value="1">And Higher
-                      </b-form-radio>
-                      <b-form-radio v-model="selectedLevelType" @change="triggerStateDelayed()" value="2">And Lower
-                      </b-form-radio>
-                    </b-form-group>
-                  </div>
+                  <div class="col-lg-6 col-sm-12 mt-3 pl-0 pr-0">
 
-                  <div class="col-lg-2 col-sm-12 p-0 pr-1 text-center">
-                    List Type
-                    <select
-                      id="Class"
-                      class="form-control"
-                      v-model="listType"
-                      @change="triggerState()"
-                    >
-                      <option value="table">Table</option>
-                      <option value="card">Cards</option>
-                    </select>
-                  </div>
+                    <div class="btn-group ml-3" role="group" aria-label="Basic example" v-if="selectedLevel">
+                      <b-button
+                        @click="selectedLevelType = 0; triggerStateDelayed();"
+                        size="sm"
+                        :variant="(parseInt(selectedLevelType) === 0 ? 'warning' : 'outline-warning')"
+                      >Only
+                      </b-button>
+                      <b-button
+                        @click="selectedLevelType = 1; triggerStateDelayed();"
+                        size="sm"
+                        :variant="(parseInt(selectedLevelType) === 1 ? 'warning' : 'outline-warning')"
+                      >Higher
+                      </b-button>
+                      <b-button
+                        @click="selectedLevelType = 2; triggerStateDelayed();"
+                        size="sm"
+                        :variant="(parseInt(selectedLevelType) === 2 ? 'warning' : 'outline-warning')"
+                      >Lower
+                      </b-button>
+                    </div>
 
-                  <div class="col-lg-2 col-sm-12 p-0 pr-1 text-left">
+                    <div class="btn-group ml-3" role="group" aria-label="Basic example">
+                      <b-button
+                        alt="Display as table"
+                        @click="listType = 'table'; triggerState()"
+                        size="sm"
+                        :variant="(listType === 'table' ? 'warning' : 'outline-warning')"
+                      ><i class="fa fa-table"></i></b-button>
+                      <b-button
+                        alt="Display as grid"
+                        @click="listType = 'card'; triggerState()"
+                        size="sm"
+                        :variant="(listType === 'card' ? 'warning' : 'outline-warning')"
+                      ><i class="fa fa-th"></i></b-button>
+                    </div>
+
+                    <div class="btn-group ml-3" role="group" aria-label="Basic example">
+                      <b-button
+                        @click="limit = 10; triggerStateDelayed()"
+                        size="sm"
+                        :variant="(parseInt(limit) === 10 ? 'warning' : 'outline-warning')"
+                      >10
+                      </b-button>
+                      <b-button
+                        @click="limit = 100; triggerStateDelayed()"
+                        size="sm"
+                        :variant="(parseInt(limit) === 100 ? 'warning' : 'outline-warning')"
+                      >100
+                      </b-button>
+                      <b-button
+                        @click="limit = 1000; triggerStateDelayed()"
+                        size="sm"
+                        :variant="(parseInt(limit) === 1000 ? 'warning' : 'outline-warning')"
+                      >1000
+                      </b-button>
+                    </div>
+
                     <div
-                      :class="'text-center btn-xs eq-button-fancy'"
-                      style="margin-top: 19px"
+                      :class="'text-center btn-xs eq-button-fancy ml-3'"
+                      style="line-height: 25px;"
                       @click="resetForm()"
                     >
                       Reset Form
                     </div>
                   </div>
-
                 </div>
 
-                <div class="row mt-2" v-if="1 < 0">
-                  <div class="col-12">
-                    <h6 class="eq-header">Filters</h6>
+                <div class="row mt-3">
+                  <div class="col-12 p-0">
+                    <db-column-filter
+                      v-if="itemFields && filters"
+                      :set-filters="filters"
+                      @input="handleDbColumnFilters($event);"
+                      :columns="itemFields"
+                    />
                   </div>
                 </div>
-                <div class="row" v-for="filter in 3" :key="filter" v-if="1 < 0">
-                  <div class="col-12" v-if="itemFields">
-                    <div class="input-group w-50">
-                      <div class="input-group-prepend">
-                        <select class="form-control">
-                          <option v-for="field in itemFields" :key="field">{{ field }}</option>
-                        </select>
-                      </div>
-                      <select class="form-control w-15">
-                        <option v-for="field in filterOptions" :key="field">{{ field }}</option>
-                      </select>
-                      <div class="input-group-append">
-                        <input type="text" class="form-control">
-                      </div>
-                    </div>
-                  </div>
-                </div>
+
               </div>
             </div>
 
@@ -228,12 +246,10 @@
 import {ItemApi} from "@/app/api/api";
 import EqWindow from "@/components/eq-ui/EQWindow.vue";
 import {SpireApiClient} from "@/app/api/spire-api-client";
-import * as util from "util";
 import EqItemCardPreview from "@/components/eq-ui/EQItemCardPreview.vue";
 import {DB_CLASSES_ICONS} from "@/app/constants/eq-class-icon-constants";
 import {DB_CLASSES_SHORT, DB_PLAYER_CLASSES} from "@/app/constants/eq-classes-constants";
 import {DB_SPA} from "@/app/constants/eq-spell-constants";
-import {Items} from "@/app/items";
 import {ROUTE} from "@/routes";
 import ClassBitmaskCalculator from "@/components/tools/ClassBitmaskCalculator.vue";
 import RaceBitmaskCalculator from "@/components/tools/RaceBitmaskCalculator.vue";
@@ -242,9 +258,12 @@ import DeityBitmaskCalculator from "@/components/tools/DeityCalculator.vue";
 import itemTypes from "@/constants/item-types.json"
 import EqCheckbox from "@/components/eq-ui/EQCheckbox.vue";
 import ItemPreviewTable from "@/views/items/components/ItemPreviewTable.vue";
+import {SpireQueryBuilder} from "@/app/api/spire-query-builder";
+import DbColumnFilter from "@/components/DbColumnFilter";
 
 export default {
   components: {
+    DbColumnFilter,
     ItemPreviewTable,
     EqCheckbox,
     DeityBitmaskCalculator,
@@ -262,8 +281,6 @@ export default {
       loaded: false,
       items: null,
       limit: 100,
-      beginRange: 10000,
-      endRange: 100000,
       dbClassIcons: DB_CLASSES_ICONS,
       dbClassesShort: DB_CLASSES_SHORT,
       dbClasses: DB_PLAYER_CLASSES,
@@ -281,7 +298,8 @@ export default {
       // when "only" option is set
       selectOnlyClassEnabled: false,
 
-      filters: {},
+      checkboxFilters: {},
+      filters: [],
 
       selectedLevel: 0,
       selectedLevelType: 0,
@@ -289,17 +307,14 @@ export default {
       listType: "table",
 
       itemFields: [],
-      filterOptions: ["=", "<=", ">="],
 
       itemTypeOptions: [],
-
-      imageSizes: 45,
     }
   },
 
   async mounted() {
 
-    this.resetFilters()
+    this.resetCheckboxFilters()
 
     if (Object.keys(this.$route.query).length !== 0) {
       this.loadQueryState()
@@ -325,9 +340,23 @@ export default {
       )
     }
   },
+
+  watch: {
+    // reset state vars when we navigate
+    '$route'() {
+      this.loadQueryState()
+      this.listItems()
+    },
+  },
+
   methods: {
 
-    formFilters() {
+    handleDbColumnFilters(filters) {
+      this.filters = filters
+      this.updateQueryState()
+    },
+
+    getCheckboxFilters() {
       return [
         {
           description: 'Is Magic',
@@ -410,10 +439,10 @@ export default {
 
     getChangedFilterCount() {
       let setValues = 0
-      for (let key in this.filters) {
-        const value = this.filters[key]
+      for (let key in this.checkboxFilters) {
+        const value = this.checkboxFilters[key]
 
-        this.formFilters().forEach((filter) => {
+        this.getCheckboxFilters().forEach((filter) => {
           if (filter.field == key && typeof filter.true !== 'undefined' && filter.true == 0 && value === 0) {
             setValues++
           } else if (filter.field == key && typeof filter.true === 'undefined') {
@@ -429,10 +458,10 @@ export default {
 
     getFiltersNonZeroValues() {
       let values = {}
-      for (let key in this.filters) {
-        const value = this.filters[key]
+      for (let key in this.checkboxFilters) {
+        const value = this.checkboxFilters[key]
 
-        this.formFilters().forEach((filter) => {
+        this.getCheckboxFilters().forEach((filter) => {
           if (filter.field == key && typeof filter.true !== 'undefined' && filter.true == 0 && value === 0) {
             values[filter.field] = value
           } else if (filter.field == key && typeof filter.true === 'undefined') {
@@ -446,24 +475,24 @@ export default {
 
     triggerCheckboxFilter(field, falseValue) {
       // console.log("hello")
-      // console.log(this.filters)
+      // console.log(this.checkboxFilters)
 
-      // delete filter from filters if false value set
-      for (let key in this.filters) {
-        const value = this.filters[key]
+      // delete filter from checkboxFilters if false value set
+      for (let key in this.checkboxFilters) {
+        const value = this.checkboxFilters[key]
         if (field == key && value === falseValue) {
-          delete this.filters[key]
+          delete this.checkboxFilters[key]
         }
       }
 
       this.updateQueryState()
       this.listItems()
 
-      // if (Object.keys(this.filters).length > 0) {
+      // if (Object.keys(this.checkboxFilters).length > 0) {
       //   this.listItems()
       // }
 
-      // if no filters set, clear items result
+      // if no checkboxFilters set, clear items result
       // if (setValues === 0) {
       //   this.items = null
       // }
@@ -488,7 +517,7 @@ export default {
       if (this.itemType !== -1) {
         queryState.itemType = this.itemType
       }
-      if (this.listType !== "card") {
+      if (this.listType !== "") {
         queryState.listType = this.listType
       }
       if (this.itemName !== "") {
@@ -497,14 +526,20 @@ export default {
       if (this.selectedLevel !== 0) {
         queryState.level = this.selectedLevel
       }
-      if (this.selectedLevelType !== 0) {
+      if (this.limit !== 0) {
+        queryState.limit = this.limit
+      }
+      if (this.selectedLevelType >= 0) {
         queryState.levelType = this.selectedLevelType
       }
       if (this.selectOnlyClassEnabled) {
         queryState.classSelectOnly = 1
       }
       if (this.getChangedFilterCount() > 0) {
-        queryState.filters = JSON.stringify(this.getFiltersNonZeroValues())
+        queryState.checkboxFilters = JSON.stringify(this.getFiltersNonZeroValues())
+      }
+      if (this.filters && this.filters.length > 0) {
+        queryState.filters = JSON.stringify(this.filters)
       }
 
       this.$router.push(
@@ -516,21 +551,22 @@ export default {
       })
     },
 
-    resetFilters() {
-      this.filters = {}
+    resetCheckboxFilters() {
+      this.checkboxFilters = {}
 
-      // make sure that filters that are non-zero defaults are initialized as their
+      // make sure that checkboxFilters that are non-zero defaults are initialized as their
       // zero-values first
-      this.formFilters().forEach((filter) => {
+      this.getCheckboxFilters().forEach((filter) => {
         if (typeof filter.true !== 'undefined' && filter.true === 0) {
-          this.filters[filter.field] = 1
+          this.checkboxFilters[filter.field] = 1
         }
       })
     },
 
     resetForm: function () {
-      this.resetFilters()
+      this.resetCheckboxFilters()
 
+      this.filters           = []
       this.selectedClasses   = 0;
       this.selectedRaces     = 0;
       this.selectedSlots     = 0;
@@ -539,6 +575,7 @@ export default {
       this.itemName          = "";
       this.spellEffect       = "";
       this.selectedLevel     = 0;
+      this.limit             = 100;
       this.selectedLevelType = 0;
       this.items             = null;
       this.listType          = "table"
@@ -567,6 +604,9 @@ export default {
       if (this.$route.query.level) {
         this.selectedLevel = this.$route.query.level;
       }
+      if (this.$route.query.limit) {
+        this.limit = this.$route.query.limit;
+      }
       if (this.$route.query.levelType) {
         this.selectedLevelType = this.$route.query.levelType;
       }
@@ -576,12 +616,17 @@ export default {
       if (parseInt(this.$route.query.classSelectOnly) === 1) {
         this.selectOnlyClassEnabled = true;
       }
-      if (this.$route.query.filters) {
+      if (this.$route.query.checkboxFilters) {
         this.resetFilters()
-        let filters = JSON.parse(this.$route.query.filters);
-        for (let key in filters) {
-          this.filters[key] = filters[key]
+        let checkboxFilters = JSON.parse(this.$route.query.checkboxFilters);
+        for (let key in checkboxFilters) {
+          this.checkboxFilters[key] = checkboxFilters[key]
         }
+      }
+      if (this.$route.query.filters) {
+        this.filters = JSON.parse(this.$route.query.filters);
+      } else {
+        this.filters = [];
       }
     },
 
@@ -617,7 +662,6 @@ export default {
 
     triggerState() {
       this.updateQueryState();
-      this.listItems()
     },
 
     async getItemFields() {
@@ -641,174 +685,97 @@ export default {
     },
 
     listItems: function () {
-      this.loaded = false;
-
-      const api   = (new ItemApi(SpireApiClient.getOpenApiConfig()))
-      let filters = [];
-      let whereOr = [];
+      this.loaded   = false;
+      const builder = new SpireQueryBuilder()
+      const api     = (new ItemApi(SpireApiClient.getOpenApiConfig()))
 
       // filter by class
       if (this.selectedClasses && parseInt(this.selectedClasses) > 0 && parseInt(this.selectedClasses) !== 65535) {
         if (this.selectOnlyClassEnabled) {
-          filters.push(["classes", "__", this.selectedClasses]);
+          builder.where("classes", "=", this.selectedClasses)
         } else {
-          filters.push(["classes", "_bitwiseand_", this.selectedClasses]);
+          builder.where("classes", "&", this.selectedClasses)
         }
 
-        filters.push(["classes", "_ne_", 65535]);
+        builder.where("classes", "!=", 65535)
       } else if (this.selectedClasses && parseInt(this.selectedClasses) > 0 && parseInt(this.selectedClasses) === 65535) {
-        filters.push(["classes", "__", 65535]);
+        builder.where("classes", "=", 65535)
       }
 
       // filter by race
       if (this.selectedRaces && parseInt(this.selectedRaces) > 0 && parseInt(this.selectedRaces) !== 65535) {
-        filters.push(["races", "_bitwiseand_", this.selectedRaces]);
-        filters.push(["races", "_ne_", 65535]);
+        builder.where("classes", "&", this.selectedRaces)
+        builder.where("classes", "!=", 65535)
       } else if (this.selectedRaces && parseInt(this.selectedRaces) > 0 && parseInt(this.selectedRaces) === 65535) {
-        filters.push(["races", "__", 65535]);
+        builder.where("races", "=", 65535)
       }
 
       // filter by deity
       if (this.selectedDeities && parseInt(this.selectedDeities) > 0 && parseInt(this.selectedDeities) !== 65535) {
-        filters.push(["deity", "_bitwiseand_", this.selectedDeities]);
-        filters.push(["deity", "_ne_", 65535]);
+        builder.where("deity", "&", this.selectedDeities)
+        builder.where("deity", "!=", 65535)
       } else if (this.selectedDeities && parseInt(this.selectedDeities) > 0 && parseInt(this.selectedDeities) === 65535) {
-        filters.push(["deity", "__", 65535]);
+        builder.where("deity", "=", 65535)
       }
 
       // filter by slots
       if (this.selectedSlots && parseInt(this.selectedSlots) > 0 && parseInt(this.selectedSlots) !== 65535) {
-        filters.push(["slots", "_bitwiseand_", this.selectedSlots]);
-        filters.push(["slots", "_ne_", 65535]);
+        builder.where("slots", "&", this.selectedSlots)
+        builder.where("slots", "!=", 65535)
+
       } else if (this.selectedSlots && parseInt(this.selectedSlots) > 0 && parseInt(this.selectedSlots) === 65535) {
-        filters.push(["slots", "__", 65535]);
+        builder.where("slots", "=", 65535)
       }
 
       for (let key in this.getFiltersNonZeroValues()) {
-        const value = this.filters[key]
-        filters.push([key, "__", value])
+        builder.where(key, "=", this.checkboxFilters[key])
       }
 
       // item type
       if (this.itemType && this.itemType > 0) {
-        filters.push(["itemtype", "__", this.itemType]);
+        builder.where("itemtype", "=", this.itemType)
+      }
+
+      if (this.filters && this.filters.length > 0) {
+        this.filters.forEach((f) => {
+          builder.where(f.f, f.o, f.v)
+        });
       }
 
       // level
       if (this.selectedLevel > 0) {
-        let filterType = "__"; // equal
+        let filterType = "="
         if (parseInt(this.selectedLevelType) === 1) {
-          filterType = "_gte_";
+          filterType = ">=";
         }
         if (parseInt(this.selectedLevelType) === 2) {
-          filterType = "_lte_";
+          filterType = "<=";
         }
 
-        filters.push(["reqlevel", filterType, this.selectedLevel]);
+        builder.where("reqlevel", filterType, this.selectedLevel)
       }
 
       // if number, filter by id
       // else name
       if (!isNaN(this.itemName) && this.itemName) {
-        filters.push(["id", "__", this.itemName]);
+        builder.where("id", "=", this.itemName)
       } else if (this.itemName) {
-        filters.push(["name", "_like_", this.itemName]);
+        builder.where("name", "like", this.itemName)
       }
 
-      if (filters.length === 0) {
+      if (builder.getFilterCount() === 0) {
         this.items  = null
         this.loaded = true
         return;
       }
 
-      let wheres = [];
-      filters.forEach((filter) => {
-        const where = util.format("%s%s%s", filter[0], filter[1], filter[2])
-        wheres.push(where)
-      })
-
-      let wheresOrs = [];
-      whereOr.forEach((filter) => {
-        const where = util.format("%s%s%s", filter[0], filter[1], filter[2])
-        wheresOrs.push(where)
-      })
-
-      let request   = {};
-      request.limit = this.limit;
-
-      if (this.listType === 'table') {
-        request.limit = 300;
-      }
-
-      // filter by class
-      if (this.selectedClasses > 0) {
-        // request.orderBy = util.format("classes", this.selectedClasses)
-      }
-
-      if (Object.keys(wheres).length > 0) {
-        request.where = wheres.join(".")
-      }
-
-      if (Object.keys(wheresOrs).length > 0) {
-        request.whereOr = wheresOrs.join(".")
-      }
-
-      api.listItems(request).then(async (result) => {
+      builder.groupBy(["id"])
+      builder.limit(this.limit)
+      api.listItems(builder.get()).then(async (result) => {
         if (result.status === 200) {
           // set items to be rendered
-          this.items = result.data
-
-          // fetch spell ids that might be referenced by effects to bulk preload
-          let itemsToPreload = [];
-          result.data.forEach((item) => {
-            // for (let effectIndex = 1; effectIndex <= 12; effectIndex++) {
-            //   const spellId = Items.getItemIdFromEffectIfExists(spell, effectIndex);
-            //   if (spellId > 0) {
-            //     itemsToPreload.push(spellId);
-            //   }
-            //   const itemId = Items.getItemIdFromEffectIfExists(spell, effectIndex);
-            //   if (itemId > 0) {
-            //     itemsToPreload.push(itemId);
-            //   }
-            // }
-          })
-
-          // fetch spell ids that might be referenced by effects to bulk preload
-          result.data.forEach((item) => {
-            // for (let i = 0; i < 4; i++) {
-            //   if (spell["components_" + i] > 0) {
-            //     itemsToPreload.push(spell["components_" + i])
-            //   }
-            // }
-          });
-
-          // bulk fetch preload
-          const response = await (new ItemApi(SpireApiClient.getOpenApiConfig())).getItemsBulk({
-            body: {
-              ids: itemsToPreload
-            }
-          })
-
-          if (response.status == 200 && response.data && parseInt(response.data.length) > 0) {
-            response.data.forEach((item) => {
-              Items.setItem(item.id, item);
-            })
-          }
-
-          // items bulk fetch preload
-          api.getItemsBulk({
-            body: {
-              ids: itemsToPreload
-            }
-          }).then((response) => {
-            if (response.status == 200 && response.data && parseInt(response.data.length) > 0) {
-              response.data.forEach((item) => {
-                Items.setItem(item.id, item);
-              })
-            }
-            this.loaded = true;
-          });
-
+          this.items  = result.data
+          this.loaded = true;
         }
       })
     }

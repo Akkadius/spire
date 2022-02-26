@@ -82,7 +82,7 @@ export const ExpeditionLockoutApiAxiosParamCreator = function (configuration?: C
         /**
          * 
          * @summary Deletes ExpeditionLockout
-         * @param {number} id Id
+         * @param {number} id id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -386,7 +386,7 @@ export const ExpeditionLockoutApiFp = function(configuration?: Configuration) {
         /**
          * 
          * @summary Deletes ExpeditionLockout
-         * @param {number} id Id
+         * @param {number} id id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -485,7 +485,7 @@ export const ExpeditionLockoutApiFactory = function (configuration?: Configurati
         /**
          * 
          * @summary Deletes ExpeditionLockout
-         * @param {number} id Id
+         * @param {number} id id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -566,7 +566,7 @@ export interface ExpeditionLockoutApiCreateExpeditionLockoutRequest {
  */
 export interface ExpeditionLockoutApiDeleteExpeditionLockoutRequest {
     /**
-     * Id
+     * id
      * @type {number}
      * @memberof ExpeditionLockoutApiDeleteExpeditionLockout
      */

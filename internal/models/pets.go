@@ -1,6 +1,7 @@
 package models
 
 type Pet struct {
+	ID           int      `json:"id" gorm:"Column:id"`
 	Type         string   `json:"type" gorm:"Column:type"`
 	Petpower     int      `json:"petpower" gorm:"Column:petpower"`
 	NpcID        int      `json:"npc_id" gorm:"Column:npcID"`
@@ -28,8 +29,11 @@ func (Pet) Relationships() []string {
 		"NpcType.NpcSpells.NpcSpellsEntries",
 		"NpcType.NpcTypesTint",
 		"NpcType.Spawnentries",
+		"NpcType.Spawnentries.NpcType",
 		"NpcType.Spawnentries.Spawngroup",
 		"NpcType.Spawnentries.Spawngroup.Spawn2",
+		"NpcType.Spawnentries.Spawngroup.Spawn2.Spawnentries",
+		"NpcType.Spawnentries.Spawngroup.Spawn2.Spawngroup",
 	}
 }
 

@@ -82,7 +82,7 @@ export const ZoneApiAxiosParamCreator = function (configuration?: Configuration)
         /**
          * 
          * @summary Deletes Zone
-         * @param {number} id Id
+         * @param {number} id id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -386,7 +386,7 @@ export const ZoneApiFp = function(configuration?: Configuration) {
         /**
          * 
          * @summary Deletes Zone
-         * @param {number} id Id
+         * @param {number} id id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -485,7 +485,7 @@ export const ZoneApiFactory = function (configuration?: Configuration, basePath?
         /**
          * 
          * @summary Deletes Zone
-         * @param {number} id Id
+         * @param {number} id id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -566,7 +566,7 @@ export interface ZoneApiCreateZoneRequest {
  */
 export interface ZoneApiDeleteZoneRequest {
     /**
-     * Id
+     * id
      * @type {number}
      * @memberof ZoneApiDeleteZone
      */

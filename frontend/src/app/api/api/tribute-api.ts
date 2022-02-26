@@ -82,7 +82,7 @@ export const TributeApiAxiosParamCreator = function (configuration?: Configurati
         /**
          * 
          * @summary Deletes Tribute
-         * @param {number} id Id
+         * @param {number} id id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -386,7 +386,7 @@ export const TributeApiFp = function(configuration?: Configuration) {
         /**
          * 
          * @summary Deletes Tribute
-         * @param {number} id Id
+         * @param {number} id id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -485,7 +485,7 @@ export const TributeApiFactory = function (configuration?: Configuration, basePa
         /**
          * 
          * @summary Deletes Tribute
-         * @param {number} id Id
+         * @param {number} id id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -566,7 +566,7 @@ export interface TributeApiCreateTributeRequest {
  */
 export interface TributeApiDeleteTributeRequest {
     /**
-     * Id
+     * id
      * @type {number}
      * @memberof TributeApiDeleteTribute
      */

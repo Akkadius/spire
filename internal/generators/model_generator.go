@@ -21,8 +21,8 @@ type GenerateModelContext struct {
 }
 
 type GenerateModel struct {
-	options GenerateModelContext
-	logger  *logrus.Logger
+	options      GenerateModelContext
+	logger       *logrus.Logger
 	gorm         *gorm.DB
 	pluralize    *pluralize.Client
 	debugEnabled bool
@@ -151,6 +151,7 @@ func (g *GenerateModel) Generate() []ModelGenerateResponse {
 
 			// gen model fields
 			modelFields := ""
+			structFieldNames := map[string]bool{}
 			for _, def := range g.getColumnDefinitions(table) {
 
 				g.debug(fmt.Sprintf("-- def [%v] table [%v]", def, table))
@@ -178,6 +179,8 @@ func (g *GenerateModel) Generate() []ModelGenerateResponse {
 					def.Field,
 				)
 
+				structFieldNames[structFieldName] = true
+
 				g.debug(fmt.Sprintf("-- modelField [%v]", strings.TrimSpace(modelField)))
 
 				modelFields += modelField
@@ -202,6 +205,12 @@ func (g *GenerateModel) Generate() []ModelGenerateResponse {
 				switch relation.RelationType {
 				case RelationshipType1to1:
 					relationshipAttributeName := strcase.ToCamel(g.pluralize.Singular(relation.RemoteTable))
+					// TODO: Revisit later
+					//if _, ok := structFieldNames[relationshipAttributeName]; ok {
+					//	relationshipAttributeName = relationshipAttributeName + "Relation"
+					//	relationshipFieldNameSnakeCase = relationshipFieldNameSnakeCase + "_relation"
+					//}
+
 					modelFields += fmt.Sprintf(
 						"\t%-*s%-*s `json:\"%v,omitempty\" gorm:\"foreignKey:%v;references:%v\"`\n",
 						maxColInTable,
@@ -214,6 +223,12 @@ func (g *GenerateModel) Generate() []ModelGenerateResponse {
 					)
 				case RelationshipType1toMany:
 					relationshipAttributeName := strcase.ToCamel(g.pluralize.Plural(relation.RemoteTable))
+					// TODO: Revisit later
+					//if _, ok := structFieldNames[relationshipAttributeName]; ok {
+					//	relationshipAttributeName = relationshipAttributeName + "Relation"
+					//	relationshipFieldNameSnakeCase = relationshipFieldNameSnakeCase + "_relation"
+					//}
+
 					modelFields += fmt.Sprintf(
 						"\t%-*s%-*s `json:\"%v,omitempty\" gorm:\"foreignKey:%v;references:%v\"`\n",
 						maxColInTable,
@@ -237,7 +252,7 @@ func (g *GenerateModel) Generate() []ModelGenerateResponse {
 			// nested relationships
 			rt := BaseGormModelRelationshipTemplate
 			relationshipEntries := ""
-			nestedRelationships := g.getNestedRelationshipsFromTable(table, "")
+			nestedRelationships := g.getNestedRelationshipsFromTable(table, "", []string{table}, 0)
 			if len(nestedRelationships) > 0 {
 				relationshipEntries = "\n"
 				for _, nested := range nestedRelationships {
@@ -321,26 +336,53 @@ func (g *GenerateModel) getRelationshipTypeModelAttributePrefix(r ForeignKeyMapp
 	return ""
 }
 
-func (g *GenerateModel) getNestedRelationshipsFromTable(table string, prefix string, rootTable ...string) []string {
+func exists(a []string, element string) bool {
+	for _, e := range a {
+		if e == element {
+			return true
+		}
+	}
+
+	return false
+}
+
+func (g *GenerateModel) getNestedRelationshipsFromTable(table string, prefix string, parentTables []string, level int) []string {
 	relationshipNames := make([]string, 0)
 
 	if prefix != "" {
 		prefix = fmt.Sprintf("%v.", prefix)
 	}
 
+	g.debug(fmt.Sprintf("-- [getNestedRelationshipsFromTable] [%v] table [%v]", level, table))
+
+	if exists(parentTables, table) && level > 0 {
+		return relationshipNames
+	}
+
+	parentTables = append(parentTables, table)
+	currentLevel := level + 1
 	for _, relation := range g.options.Relationships {
 		if table != relation.Table {
 			continue
 		}
 
-		if len(rootTable) > 0 {
-			if relation.RemoteTable == rootTable[0] {
-				g.debug(fmt.Sprintf("-- [getNestedRelationshipsFromTable] remote table is same as root table, skipping"))
-				break
+		g.debug(fmt.Sprintf("-- [getNestedRelationshipsFromTable] [%v] table [%v] relation [%v] remote [%v]", level, table, relation, relation.RemoteTable))
+
+		if len(parentTables) > 0 {
+			for _, parentTable := range parentTables {
+				if relation.RemoteTable == parentTable {
+					g.debug(
+						fmt.Sprintf(
+							"---- [getNestedRelationshipsFromTable] [%v] remote table [%v] is a parent table [%v] skipping\n",
+							level,
+							relation.RemoteTable,
+							parentTable,
+						),
+					)
+					continue
+				}
 			}
 		}
-
-		g.debug(fmt.Sprintf("-- [getNestedRelationshipsFromTable] table [%v] relation [%v]", table, relation))
 
 		relationshipAttributeName := ""
 
@@ -357,7 +399,7 @@ func (g *GenerateModel) getNestedRelationshipsFromTable(table string, prefix str
 		passedDownPrefix := fmt.Sprintf("%v%v", prefix, relationshipAttributeName)
 		relationshipNames = append(
 			relationshipNames,
-			g.getNestedRelationshipsFromTable(relation.RemoteTable, passedDownPrefix, table)...,
+			g.getNestedRelationshipsFromTable(relation.RemoteTable, passedDownPrefix, parentTables, currentLevel)...,
 		)
 	}
 

@@ -1,10 +1,10 @@
 package crudcontrollers
 
 import (
+	"fmt"
 	"github.com/Akkadius/spire/internal/database"
 	"github.com/Akkadius/spire/internal/http/routes"
 	"github.com/Akkadius/spire/internal/models"
-	"fmt"
 	"github.com/labstack/echo/v4"
 	"github.com/sirupsen/logrus"
 	"net/http"
@@ -12,7 +12,7 @@ import (
 )
 
 type AdventureDetailController struct {
-	db     *database.DatabaseResolver
+	db	 *database.DatabaseResolver
 	logger *logrus.Logger
 }
 
@@ -21,19 +21,19 @@ func NewAdventureDetailController(
 	logger *logrus.Logger,
 ) *AdventureDetailController {
 	return &AdventureDetailController{
-		db:     db,
+		db:	 db,
 		logger: logger,
 	}
 }
 
 func (e *AdventureDetailController) Routes() []*routes.Route {
 	return []*routes.Route{
-		routes.RegisterRoute(http.MethodDelete, "adventure_detail/:adventure_detail", e.deleteAdventureDetail, nil),
-		routes.RegisterRoute(http.MethodGet, "adventure_detail/:adventure_detail", e.getAdventureDetail, nil),
+		routes.RegisterRoute(http.MethodGet, "adventure_detail/:id", e.getAdventureDetail, nil),
 		routes.RegisterRoute(http.MethodGet, "adventure_details", e.listAdventureDetails, nil),
-		routes.RegisterRoute(http.MethodPost, "adventure_details/bulk", e.getAdventureDetailsBulk, nil),
-		routes.RegisterRoute(http.MethodPatch, "adventure_detail/:adventure_detail", e.updateAdventureDetail, nil),
 		routes.RegisterRoute(http.MethodPut, "adventure_detail", e.createAdventureDetail, nil),
+		routes.RegisterRoute(http.MethodDelete, "adventure_detail/:id", e.deleteAdventureDetail, nil),
+		routes.RegisterRoute(http.MethodPatch, "adventure_detail/:id", e.updateAdventureDetail, nil),
+		routes.RegisterRoute(http.MethodPost, "adventure_details/bulk", e.getAdventureDetailsBulk, nil),
 	}
 }
 
@@ -79,17 +79,31 @@ func (e *AdventureDetailController) listAdventureDetails(c echo.Context) error {
 // @Failure 500 {string} string "Bad query request"
 // @Router /adventure_detail/{id} [get]
 func (e *AdventureDetailController) getAdventureDetail(c echo.Context) error {
-	adventureDetailId, err := strconv.Atoi(c.Param("adventure_detail"))
-	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Cannot find param"})
-	}
+	var params []interface{}
+	var keys []string
 
+	// primary key param
+	id, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Cannot find param [Id]"})
+	}
+	params = append(params, id)
+	keys = append(keys, "id = ?")
+
+	// query builder
 	var result models.AdventureDetail
-	err = e.db.QueryContext(models.AdventureDetail{}, c).First(&result, adventureDetailId).Error
-	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err})
+	query := e.db.QueryContext(models.AdventureDetail{}, c)
+	for i, _ := range keys {
+		query = query.Where(keys[i], params[i])
 	}
 
+	// grab first entry
+	err = query.First(&result).Error
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
+	}
+
+	// couldn't find entity
 	if result.ID == 0 {
 		return c.JSON(http.StatusNotFound, echo.Map{"error": "Cannot find entity"})
 	}
@@ -111,26 +125,44 @@ func (e *AdventureDetailController) getAdventureDetail(c echo.Context) error {
 // @Failure 500 {string} string "Error updating entity"
 // @Router /adventure_detail/{id} [patch]
 func (e *AdventureDetailController) updateAdventureDetail(c echo.Context) error {
-	adventureDetail := new(models.AdventureDetail)
-	if err := c.Bind(adventureDetail); err != nil {
+	request := new(models.AdventureDetail)
+	if err := c.Bind(request); err != nil {
 		return c.JSON(
 			http.StatusInternalServerError,
-			echo.Map{"error": fmt.Sprintf("Error binding to entity: [%v]", err)},
+			echo.Map{"error": fmt.Sprintf("Error binding to entity [%v]", err.Error())},
 		)
 	}
 
-    entity := models.AdventureDetail{}
-	err := e.db.Get(models.AdventureDetail{}, c).Model(&models.AdventureDetail{}).First(&entity, adventureDetail.ID).Error
-	if err != nil || adventureDetail.ID == 0 {
-		return c.JSON(http.StatusNotFound, echo.Map{"error": "Cannot find entity"})
-	}
+	var params []interface{}
+	var keys []string
 
-	err = e.db.Get(models.AdventureDetail{}, c).Model(&entity).Select("*").Updates(&adventureDetail).Error
+	// primary key param
+	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error updating entity: [%v]", err)})
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Cannot find param [Id]"})
+	}
+	params = append(params, id)
+	keys = append(keys, "id = ?")
+
+	// query builder
+	var result models.AdventureDetail
+	query := e.db.QueryContext(models.AdventureDetail{}, c)
+	for i, _ := range keys {
+		query = query.Where(keys[i], params[i])
 	}
 
-	return c.JSON(http.StatusOK, adventureDetail)
+	// grab first entry
+	err = query.First(&result).Error
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Cannot find entity [%s]", err.Error())})
+	}
+
+	err = query.Select("*").Updates(&request).Error
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error updating entity [%v]", err.Error())})
+	}
+
+	return c.JSON(http.StatusOK, request)
 }
 
 // createAdventureDetail godoc
@@ -149,7 +181,7 @@ func (e *AdventureDetailController) createAdventureDetail(c echo.Context) error 
 	if err := c.Bind(adventureDetail); err != nil {
 		return c.JSON(
 			http.StatusInternalServerError,
-			echo.Map{"error": fmt.Sprintf("Error binding to entity: [%v]", err)},
+			echo.Map{"error": fmt.Sprintf("Error binding to entity [%v]", err.Error())},
 		)
 	}
 
@@ -157,7 +189,7 @@ func (e *AdventureDetailController) createAdventureDetail(c echo.Context) error 
 	if err != nil {
 		return c.JSON(
 			http.StatusInternalServerError,
-			echo.Map{"error": fmt.Sprintf("Error inserting entity: [%v]", err)},
+			echo.Map{"error": fmt.Sprintf("Error inserting entity [%v]", err.Error())},
 		)
 	}
 
@@ -170,25 +202,38 @@ func (e *AdventureDetailController) createAdventureDetail(c echo.Context) error 
 // @Accept json
 // @Produce json
 // @Tags AdventureDetail
-// @Param id path int true "Id"
+// @Param id path int true "id"
 // @Success 200 {string} string "Entity deleted successfully"
 // @Failure 404 {string} string "Cannot find entity"
 // @Failure 500 {string} string "Error binding to entity"
 // @Failure 500 {string} string "Error deleting entity"
 // @Router /adventure_detail/{id} [delete]
 func (e *AdventureDetailController) deleteAdventureDetail(c echo.Context) error {
-	adventureDetailId, err := strconv.Atoi(c.Param("adventure_detail"))
+	var params []interface{}
+	var keys []string
+
+	// primary key param
+	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
 		e.logger.Error(err)
 	}
+	params = append(params, id)
+	keys = append(keys, "id = ?")
 
-	adventureDetail := new(models.AdventureDetail)
-	err = e.db.Get(models.AdventureDetail{}, c).Model(&models.AdventureDetail{}).First(&adventureDetail, adventureDetailId).Error
-	if err != nil || adventureDetail.ID == 0 {
-		return c.JSON(http.StatusNotFound, echo.Map{"error": "Cannot find entity"})
+	// query builder
+	var result models.AdventureDetail
+	query := e.db.QueryContext(models.AdventureDetail{}, c)
+	for i, _ := range keys {
+		query = query.Where(keys[i], params[i])
 	}
 
-	err = e.db.Get(models.AdventureDetail{}, c).Model(&models.AdventureDetail{}).Delete(&adventureDetail).Error
+	// grab first entry
+	err = query.First(&result).Error
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
+	}
+
+	err = e.db.Get(models.AdventureDetail{}, c).Model(&models.AdventureDetail{}).Delete(&result).Error
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Error deleting entity"})
 	}
@@ -213,7 +258,7 @@ func (e *AdventureDetailController) getAdventureDetailsBulk(c echo.Context) erro
 	if err := c.Bind(r); err != nil {
 		return c.JSON(
 			http.StatusInternalServerError,
-			echo.Map{"error": fmt.Sprintf("Error binding to bulk request: [%v]", err)},
+			echo.Map{"error": fmt.Sprintf("Error binding to bulk request: [%v]", err.Error())},
 		)
 	}
 
@@ -226,7 +271,7 @@ func (e *AdventureDetailController) getAdventureDetailsBulk(c echo.Context) erro
 
 	err := e.db.QueryContext(models.AdventureDetail{}, c).Find(&results, r.IDs).Error
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err})
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
 	}
 
 	return c.JSON(http.StatusOK, results)

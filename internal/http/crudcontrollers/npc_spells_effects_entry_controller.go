@@ -1,10 +1,10 @@
 package crudcontrollers
 
 import (
+	"fmt"
 	"github.com/Akkadius/spire/internal/database"
 	"github.com/Akkadius/spire/internal/http/routes"
 	"github.com/Akkadius/spire/internal/models"
-	"fmt"
 	"github.com/labstack/echo/v4"
 	"github.com/sirupsen/logrus"
 	"net/http"
@@ -12,7 +12,7 @@ import (
 )
 
 type NpcSpellsEffectsEntryController struct {
-	db     *database.DatabaseResolver
+	db	 *database.DatabaseResolver
 	logger *logrus.Logger
 }
 
@@ -21,19 +21,19 @@ func NewNpcSpellsEffectsEntryController(
 	logger *logrus.Logger,
 ) *NpcSpellsEffectsEntryController {
 	return &NpcSpellsEffectsEntryController{
-		db:     db,
+		db:	 db,
 		logger: logger,
 	}
 }
 
 func (e *NpcSpellsEffectsEntryController) Routes() []*routes.Route {
 	return []*routes.Route{
-		routes.RegisterRoute(http.MethodDelete, "npc_spells_effects_entry/:npc_spells_effects_entry", e.deleteNpcSpellsEffectsEntry, nil),
-		routes.RegisterRoute(http.MethodGet, "npc_spells_effects_entry/:npc_spells_effects_entry", e.getNpcSpellsEffectsEntry, nil),
+		routes.RegisterRoute(http.MethodGet, "npc_spells_effects_entry/:id", e.getNpcSpellsEffectsEntry, nil),
 		routes.RegisterRoute(http.MethodGet, "npc_spells_effects_entries", e.listNpcSpellsEffectsEntries, nil),
-		routes.RegisterRoute(http.MethodPost, "npc_spells_effects_entries/bulk", e.getNpcSpellsEffectsEntriesBulk, nil),
-		routes.RegisterRoute(http.MethodPatch, "npc_spells_effects_entry/:npc_spells_effects_entry", e.updateNpcSpellsEffectsEntry, nil),
 		routes.RegisterRoute(http.MethodPut, "npc_spells_effects_entry", e.createNpcSpellsEffectsEntry, nil),
+		routes.RegisterRoute(http.MethodDelete, "npc_spells_effects_entry/:id", e.deleteNpcSpellsEffectsEntry, nil),
+		routes.RegisterRoute(http.MethodPatch, "npc_spells_effects_entry/:id", e.updateNpcSpellsEffectsEntry, nil),
+		routes.RegisterRoute(http.MethodPost, "npc_spells_effects_entries/bulk", e.getNpcSpellsEffectsEntriesBulk, nil),
 	}
 }
 
@@ -79,17 +79,31 @@ func (e *NpcSpellsEffectsEntryController) listNpcSpellsEffectsEntries(c echo.Con
 // @Failure 500 {string} string "Bad query request"
 // @Router /npc_spells_effects_entry/{id} [get]
 func (e *NpcSpellsEffectsEntryController) getNpcSpellsEffectsEntry(c echo.Context) error {
-	npcSpellsEffectsEntryId, err := strconv.Atoi(c.Param("npc_spells_effects_entry"))
-	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Cannot find param"})
-	}
+	var params []interface{}
+	var keys []string
 
+	// primary key param
+	id, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Cannot find param [Id]"})
+	}
+	params = append(params, id)
+	keys = append(keys, "id = ?")
+
+	// query builder
 	var result models.NpcSpellsEffectsEntry
-	err = e.db.QueryContext(models.NpcSpellsEffectsEntry{}, c).First(&result, npcSpellsEffectsEntryId).Error
-	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err})
+	query := e.db.QueryContext(models.NpcSpellsEffectsEntry{}, c)
+	for i, _ := range keys {
+		query = query.Where(keys[i], params[i])
 	}
 
+	// grab first entry
+	err = query.First(&result).Error
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
+	}
+
+	// couldn't find entity
 	if result.ID == 0 {
 		return c.JSON(http.StatusNotFound, echo.Map{"error": "Cannot find entity"})
 	}
@@ -111,26 +125,44 @@ func (e *NpcSpellsEffectsEntryController) getNpcSpellsEffectsEntry(c echo.Contex
 // @Failure 500 {string} string "Error updating entity"
 // @Router /npc_spells_effects_entry/{id} [patch]
 func (e *NpcSpellsEffectsEntryController) updateNpcSpellsEffectsEntry(c echo.Context) error {
-	npcSpellsEffectsEntry := new(models.NpcSpellsEffectsEntry)
-	if err := c.Bind(npcSpellsEffectsEntry); err != nil {
+	request := new(models.NpcSpellsEffectsEntry)
+	if err := c.Bind(request); err != nil {
 		return c.JSON(
 			http.StatusInternalServerError,
-			echo.Map{"error": fmt.Sprintf("Error binding to entity: [%v]", err)},
+			echo.Map{"error": fmt.Sprintf("Error binding to entity [%v]", err.Error())},
 		)
 	}
 
-    entity := models.NpcSpellsEffectsEntry{}
-	err := e.db.Get(models.NpcSpellsEffectsEntry{}, c).Model(&models.NpcSpellsEffectsEntry{}).First(&entity, npcSpellsEffectsEntry.ID).Error
-	if err != nil || npcSpellsEffectsEntry.ID == 0 {
-		return c.JSON(http.StatusNotFound, echo.Map{"error": "Cannot find entity"})
-	}
+	var params []interface{}
+	var keys []string
 
-	err = e.db.Get(models.NpcSpellsEffectsEntry{}, c).Model(&entity).Select("*").Updates(&npcSpellsEffectsEntry).Error
+	// primary key param
+	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error updating entity: [%v]", err)})
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Cannot find param [Id]"})
+	}
+	params = append(params, id)
+	keys = append(keys, "id = ?")
+
+	// query builder
+	var result models.NpcSpellsEffectsEntry
+	query := e.db.QueryContext(models.NpcSpellsEffectsEntry{}, c)
+	for i, _ := range keys {
+		query = query.Where(keys[i], params[i])
 	}
 
-	return c.JSON(http.StatusOK, npcSpellsEffectsEntry)
+	// grab first entry
+	err = query.First(&result).Error
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Cannot find entity [%s]", err.Error())})
+	}
+
+	err = query.Select("*").Updates(&request).Error
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error updating entity [%v]", err.Error())})
+	}
+
+	return c.JSON(http.StatusOK, request)
 }
 
 // createNpcSpellsEffectsEntry godoc
@@ -149,7 +181,7 @@ func (e *NpcSpellsEffectsEntryController) createNpcSpellsEffectsEntry(c echo.Con
 	if err := c.Bind(npcSpellsEffectsEntry); err != nil {
 		return c.JSON(
 			http.StatusInternalServerError,
-			echo.Map{"error": fmt.Sprintf("Error binding to entity: [%v]", err)},
+			echo.Map{"error": fmt.Sprintf("Error binding to entity [%v]", err.Error())},
 		)
 	}
 
@@ -157,7 +189,7 @@ func (e *NpcSpellsEffectsEntryController) createNpcSpellsEffectsEntry(c echo.Con
 	if err != nil {
 		return c.JSON(
 			http.StatusInternalServerError,
-			echo.Map{"error": fmt.Sprintf("Error inserting entity: [%v]", err)},
+			echo.Map{"error": fmt.Sprintf("Error inserting entity [%v]", err.Error())},
 		)
 	}
 
@@ -170,25 +202,38 @@ func (e *NpcSpellsEffectsEntryController) createNpcSpellsEffectsEntry(c echo.Con
 // @Accept json
 // @Produce json
 // @Tags NpcSpellsEffectsEntry
-// @Param id path int true "Id"
+// @Param id path int true "id"
 // @Success 200 {string} string "Entity deleted successfully"
 // @Failure 404 {string} string "Cannot find entity"
 // @Failure 500 {string} string "Error binding to entity"
 // @Failure 500 {string} string "Error deleting entity"
 // @Router /npc_spells_effects_entry/{id} [delete]
 func (e *NpcSpellsEffectsEntryController) deleteNpcSpellsEffectsEntry(c echo.Context) error {
-	npcSpellsEffectsEntryId, err := strconv.Atoi(c.Param("npc_spells_effects_entry"))
+	var params []interface{}
+	var keys []string
+
+	// primary key param
+	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
 		e.logger.Error(err)
 	}
+	params = append(params, id)
+	keys = append(keys, "id = ?")
 
-	npcSpellsEffectsEntry := new(models.NpcSpellsEffectsEntry)
-	err = e.db.Get(models.NpcSpellsEffectsEntry{}, c).Model(&models.NpcSpellsEffectsEntry{}).First(&npcSpellsEffectsEntry, npcSpellsEffectsEntryId).Error
-	if err != nil || npcSpellsEffectsEntry.ID == 0 {
-		return c.JSON(http.StatusNotFound, echo.Map{"error": "Cannot find entity"})
+	// query builder
+	var result models.NpcSpellsEffectsEntry
+	query := e.db.QueryContext(models.NpcSpellsEffectsEntry{}, c)
+	for i, _ := range keys {
+		query = query.Where(keys[i], params[i])
 	}
 
-	err = e.db.Get(models.NpcSpellsEffectsEntry{}, c).Model(&models.NpcSpellsEffectsEntry{}).Delete(&npcSpellsEffectsEntry).Error
+	// grab first entry
+	err = query.First(&result).Error
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
+	}
+
+	err = e.db.Get(models.NpcSpellsEffectsEntry{}, c).Model(&models.NpcSpellsEffectsEntry{}).Delete(&result).Error
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Error deleting entity"})
 	}
@@ -213,7 +258,7 @@ func (e *NpcSpellsEffectsEntryController) getNpcSpellsEffectsEntriesBulk(c echo.
 	if err := c.Bind(r); err != nil {
 		return c.JSON(
 			http.StatusInternalServerError,
-			echo.Map{"error": fmt.Sprintf("Error binding to bulk request: [%v]", err)},
+			echo.Map{"error": fmt.Sprintf("Error binding to bulk request: [%v]", err.Error())},
 		)
 	}
 
@@ -226,7 +271,7 @@ func (e *NpcSpellsEffectsEntryController) getNpcSpellsEffectsEntriesBulk(c echo.
 
 	err := e.db.QueryContext(models.NpcSpellsEffectsEntry{}, c).Find(&results, r.IDs).Error
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err})
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
 	}
 
 	return c.JSON(http.StatusOK, results)

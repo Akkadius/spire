@@ -6,10 +6,12 @@
 
     <div class="row">
       <div class="col-1">
-        <img
-          :src="spellCdnUrl + (spellData.new_icon > 0 ? spellData.new_icon : 1) + '.gif'"
-          :style="'width:40px;height:auto;border-radius: 10px; ' + 'border: 2px solid ' + getTargetTypeColor(this.spellData['targettype']) + '; border-radius: 7px;'"
-        >
+
+        <span
+          :style="'width: 40px; height: 40px; border: 1px solid ' + getTargetTypeColor(this.spellData['targettype']) + '; border-radius: 7px; '"
+          :class="'spell-' + spellData.new_icon + '-40'"
+        />
+
       </div>
       <div class="col-11 pl-5">
         <h6 class="eq-header" style="margin: 0px; margin-bottom: 10px">
@@ -72,7 +74,9 @@
         <td> {{ spellData["spell_fades"] }}</td>
       </tr>
 
-      <tr v-if="spellData['typedescnum'] !== ''">
+      <tr
+        v-if="spellData['typedescnum'] !== '' && getSpellTypeDescNumName(spellData['typedescnum']) !== '' && getSpellTypeDescNumName(spellData['effectdescnum']) !== ''"
+      >
         <td class="spell-field-label">Book Category</td>
         <td> {{ getSpellTypeDescNumName(spellData["typedescnum"]) }}
           <span v-if="spellData['effectdescnum'] !== ''"> / {{
@@ -353,8 +357,6 @@
       </tr>
 
 
-      <!-- TODO: Display Reagents - the data should be passed in? -->
-
       <!-- TODO: Optionally Display Items that have this spell as a scroll / tome -->
 
       <!--      <eq-item-card-preview/>-->
@@ -382,7 +384,7 @@
 
           <div style="display: inline-block">
 
-            <div :class="'ml-1 item-' + reagent.item.icon + '-sm'"/>
+            <div :class="'ml-1 mr-1 item-' + reagent.item.icon + '-sm'"/>
 
             <span class="mr-1">{{ reagent.item.name }}</span>
           </div>
@@ -425,8 +427,6 @@ import {
   DB_SPELL_TARGETS,
   DB_SPELL_TYPEDESCNUM
 }                         from "@/app/constants/eq-spell-constants";
-import {SpellsNewApi}     from "@/app/api";
-import {SpireApiClient}   from "@/app/api/spire-api-client";
 import EqWindow           from "@/components/eq-ui/EQWindow";
 import EqDebug            from "@/components/eq-ui/EQDebug";
 import {Spells}           from "@/app/spells";
@@ -456,7 +456,6 @@ export default {
     return {
       debug: App.DEBUG,
       debugSpellEffects: false,
-      spellCdnUrl: App.ASSET_SPELL_ICONS_BASE_URL,
       spellEffectInfo: [],
       itemData: {},
       sideLoadedSpellData: {},
@@ -473,8 +472,6 @@ export default {
   },
   methods: {
     async init() {
-
-      console.log("init")
 
       if (!this.spellData || !this.spellData["targettype"]) {
         return
@@ -502,7 +499,7 @@ export default {
 
       // reagents
       let reagents = []
-      for (let i = 0; i < 4; i++) {
+      for (let i = 0; i <= 4; i++) {
         if (this.spellData["components_" + i] > 0) {
           let reagent  = {}
           reagent.id   = this.spellData["components_" + i]
@@ -596,16 +593,6 @@ export default {
 
       return result;
     },
-    getSpell: async function (spellId) {
-      const api    = (new SpellsNewApi(SpireApiClient.getOpenApiConfig()))
-      const result = await api.getSpellsNew({ id: spellId })
-      if (result.status === 200) {
-        return result.data
-      }
-
-      return {}
-    },
-
     getItem: async function (itemId) {
       return await Items.getItem(itemId)
     },

@@ -82,7 +82,7 @@ export const ExpeditionMemberApiAxiosParamCreator = function (configuration?: Co
         /**
          * 
          * @summary Deletes ExpeditionMember
-         * @param {number} id Id
+         * @param {number} id id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -386,7 +386,7 @@ export const ExpeditionMemberApiFp = function(configuration?: Configuration) {
         /**
          * 
          * @summary Deletes ExpeditionMember
-         * @param {number} id Id
+         * @param {number} id id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -485,7 +485,7 @@ export const ExpeditionMemberApiFactory = function (configuration?: Configuratio
         /**
          * 
          * @summary Deletes ExpeditionMember
-         * @param {number} id Id
+         * @param {number} id id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -566,7 +566,7 @@ export interface ExpeditionMemberApiCreateExpeditionMemberRequest {
  */
 export interface ExpeditionMemberApiDeleteExpeditionMemberRequest {
     /**
-     * Id
+     * id
      * @type {number}
      * @memberof ExpeditionMemberApiDeleteExpeditionMember
      */

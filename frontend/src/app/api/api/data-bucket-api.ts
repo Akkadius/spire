@@ -82,7 +82,7 @@ export const DataBucketApiAxiosParamCreator = function (configuration?: Configur
         /**
          * 
          * @summary Deletes DataBucket
-         * @param {number} id Id
+         * @param {number} id id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -386,7 +386,7 @@ export const DataBucketApiFp = function(configuration?: Configuration) {
         /**
          * 
          * @summary Deletes DataBucket
-         * @param {number} id Id
+         * @param {number} id id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -485,7 +485,7 @@ export const DataBucketApiFactory = function (configuration?: Configuration, bas
         /**
          * 
          * @summary Deletes DataBucket
-         * @param {number} id Id
+         * @param {number} id id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -566,7 +566,7 @@ export interface DataBucketApiCreateDataBucketRequest {
  */
 export interface DataBucketApiDeleteDataBucketRequest {
     /**
-     * Id
+     * id
      * @type {number}
      * @memberof DataBucketApiDeleteDataBucket
      */

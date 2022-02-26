@@ -82,7 +82,7 @@ export const BlockedSpellApiAxiosParamCreator = function (configuration?: Config
         /**
          * 
          * @summary Deletes BlockedSpell
-         * @param {number} id Id
+         * @param {number} id id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -386,7 +386,7 @@ export const BlockedSpellApiFp = function(configuration?: Configuration) {
         /**
          * 
          * @summary Deletes BlockedSpell
-         * @param {number} id Id
+         * @param {number} id id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -485,7 +485,7 @@ export const BlockedSpellApiFactory = function (configuration?: Configuration, b
         /**
          * 
          * @summary Deletes BlockedSpell
-         * @param {number} id Id
+         * @param {number} id id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -566,7 +566,7 @@ export interface BlockedSpellApiCreateBlockedSpellRequest {
  */
 export interface BlockedSpellApiDeleteBlockedSpellRequest {
     /**
-     * Id
+     * id
      * @type {number}
      * @memberof BlockedSpellApiDeleteBlockedSpell
      */

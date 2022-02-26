@@ -1,22 +1,24 @@
 <template>
-  <div class="row text-center mt-3 mb-3">
-    <div class="col-12">
-      <div v-for="(gClass, classId) in classes" class="mb-1 d-inline-block text-center mr-2">
+  <div class="col-12 mr-0 mt-3 mb-3 text-center">
+    <div
+      v-for="(gClass, classId) in classes"
+      class="mb-1 d-inline-block text-center"
+      style="padding-right: 5px"
+    >
+      <div class="text-center">
+        {{ gClass.short }}
         <div class="text-center">
-          {{ gClass.short }}
-          <div class="text-center">
-            <span
-              @click="selectClass(classId)"
-              :style="(isClassSelected(classId) ? 'border-radius: 3px;' : 'border-radius: 3px; opacity: .6')"
-              :class="'item-' + gClass.icon + ' ' + (isClassSelected(classId) ? 'highlight-selected-inner' : '')"
-              class="mt-1 p-1 mb-2"
-            />
-            <b-form-input
-              v-model.number="spell['classes_' + classId]"
-              @change="updateParent"
-              style="width: 45px; display: block; padding: 0; padding-left: 9px !important"
-            />
-          </div>
+          <span
+            :style="(isClassSelected(classId) ? 'border-radius: 3px;' : 'border-radius: 3px; opacity: .6')"
+            :class="'item-' + gClass.icon + ' ' + (isClassSelected(classId) ? 'highlight-selected-inner' : '')"
+            class="mt-1 mb-2"
+          />
+          <b-form-input
+            v-model.number="spell['classes_' + classId]"
+            @change="updateParent"
+            :id="'classes_' + classId"
+            style="width: 45px; display: block; padding: 0; padding-left: 9px !important"
+          />
         </div>
       </div>
     </div>
@@ -44,6 +46,7 @@ export default {
     }
   },
   methods: {
+
     calculateFromBitmask() {
       Object.keys(this.classes).reverse().forEach((classId) => {
         const gameClass               = this.classes[classId];

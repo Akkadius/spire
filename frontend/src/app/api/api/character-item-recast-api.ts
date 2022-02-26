@@ -82,7 +82,7 @@ export const CharacterItemRecastApiAxiosParamCreator = function (configuration?:
         /**
          * 
          * @summary Deletes CharacterItemRecast
-         * @param {number} id Id
+         * @param {number} id id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -386,7 +386,7 @@ export const CharacterItemRecastApiFp = function(configuration?: Configuration) 
         /**
          * 
          * @summary Deletes CharacterItemRecast
-         * @param {number} id Id
+         * @param {number} id id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -485,7 +485,7 @@ export const CharacterItemRecastApiFactory = function (configuration?: Configura
         /**
          * 
          * @summary Deletes CharacterItemRecast
-         * @param {number} id Id
+         * @param {number} id id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -566,7 +566,7 @@ export interface CharacterItemRecastApiCreateCharacterItemRecastRequest {
  */
 export interface CharacterItemRecastApiDeleteCharacterItemRecastRequest {
     /**
-     * Id
+     * id
      * @type {number}
      * @memberof CharacterItemRecastApiDeleteCharacterItemRecast
      */

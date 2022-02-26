@@ -82,7 +82,7 @@ export const CharacterMaterialApiAxiosParamCreator = function (configuration?: C
         /**
          * 
          * @summary Deletes CharacterMaterial
-         * @param {number} id Id
+         * @param {number} id id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -386,7 +386,7 @@ export const CharacterMaterialApiFp = function(configuration?: Configuration) {
         /**
          * 
          * @summary Deletes CharacterMaterial
-         * @param {number} id Id
+         * @param {number} id id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -485,7 +485,7 @@ export const CharacterMaterialApiFactory = function (configuration?: Configurati
         /**
          * 
          * @summary Deletes CharacterMaterial
-         * @param {number} id Id
+         * @param {number} id id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -566,7 +566,7 @@ export interface CharacterMaterialApiCreateCharacterMaterialRequest {
  */
 export interface CharacterMaterialApiDeleteCharacterMaterialRequest {
     /**
-     * Id
+     * id
      * @type {number}
      * @memberof CharacterMaterialApiDeleteCharacterMaterial
      */

@@ -1,10 +1,10 @@
 package crudcontrollers
 
 import (
+	"fmt"
 	"github.com/Akkadius/spire/internal/database"
 	"github.com/Akkadius/spire/internal/http/routes"
 	"github.com/Akkadius/spire/internal/models"
-	"fmt"
 	"github.com/labstack/echo/v4"
 	"github.com/sirupsen/logrus"
 	"net/http"
@@ -12,7 +12,7 @@ import (
 )
 
 type NpcEmoteController struct {
-	db     *database.DatabaseResolver
+	db	 *database.DatabaseResolver
 	logger *logrus.Logger
 }
 
@@ -21,19 +21,19 @@ func NewNpcEmoteController(
 	logger *logrus.Logger,
 ) *NpcEmoteController {
 	return &NpcEmoteController{
-		db:     db,
+		db:	 db,
 		logger: logger,
 	}
 }
 
 func (e *NpcEmoteController) Routes() []*routes.Route {
 	return []*routes.Route{
-		routes.RegisterRoute(http.MethodDelete, "npc_emote/:npc_emote", e.deleteNpcEmote, nil),
-		routes.RegisterRoute(http.MethodGet, "npc_emote/:npc_emote", e.getNpcEmote, nil),
+		routes.RegisterRoute(http.MethodGet, "npc_emote/:id", e.getNpcEmote, nil),
 		routes.RegisterRoute(http.MethodGet, "npc_emotes", e.listNpcEmotes, nil),
-		routes.RegisterRoute(http.MethodPost, "npc_emotes/bulk", e.getNpcEmotesBulk, nil),
-		routes.RegisterRoute(http.MethodPatch, "npc_emote/:npc_emote", e.updateNpcEmote, nil),
 		routes.RegisterRoute(http.MethodPut, "npc_emote", e.createNpcEmote, nil),
+		routes.RegisterRoute(http.MethodDelete, "npc_emote/:id", e.deleteNpcEmote, nil),
+		routes.RegisterRoute(http.MethodPatch, "npc_emote/:id", e.updateNpcEmote, nil),
+		routes.RegisterRoute(http.MethodPost, "npc_emotes/bulk", e.getNpcEmotesBulk, nil),
 	}
 }
 
@@ -79,17 +79,31 @@ func (e *NpcEmoteController) listNpcEmotes(c echo.Context) error {
 // @Failure 500 {string} string "Bad query request"
 // @Router /npc_emote/{id} [get]
 func (e *NpcEmoteController) getNpcEmote(c echo.Context) error {
-	npcEmoteId, err := strconv.Atoi(c.Param("npc_emote"))
-	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Cannot find param"})
-	}
+	var params []interface{}
+	var keys []string
 
+	// primary key param
+	id, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Cannot find param [Id]"})
+	}
+	params = append(params, id)
+	keys = append(keys, "id = ?")
+
+	// query builder
 	var result models.NpcEmote
-	err = e.db.QueryContext(models.NpcEmote{}, c).First(&result, npcEmoteId).Error
-	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err})
+	query := e.db.QueryContext(models.NpcEmote{}, c)
+	for i, _ := range keys {
+		query = query.Where(keys[i], params[i])
 	}
 
+	// grab first entry
+	err = query.First(&result).Error
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
+	}
+
+	// couldn't find entity
 	if result.ID == 0 {
 		return c.JSON(http.StatusNotFound, echo.Map{"error": "Cannot find entity"})
 	}
@@ -111,26 +125,44 @@ func (e *NpcEmoteController) getNpcEmote(c echo.Context) error {
 // @Failure 500 {string} string "Error updating entity"
 // @Router /npc_emote/{id} [patch]
 func (e *NpcEmoteController) updateNpcEmote(c echo.Context) error {
-	npcEmote := new(models.NpcEmote)
-	if err := c.Bind(npcEmote); err != nil {
+	request := new(models.NpcEmote)
+	if err := c.Bind(request); err != nil {
 		return c.JSON(
 			http.StatusInternalServerError,
-			echo.Map{"error": fmt.Sprintf("Error binding to entity: [%v]", err)},
+			echo.Map{"error": fmt.Sprintf("Error binding to entity [%v]", err.Error())},
 		)
 	}
 
-    entity := models.NpcEmote{}
-	err := e.db.Get(models.NpcEmote{}, c).Model(&models.NpcEmote{}).First(&entity, npcEmote.ID).Error
-	if err != nil || npcEmote.ID == 0 {
-		return c.JSON(http.StatusNotFound, echo.Map{"error": "Cannot find entity"})
-	}
+	var params []interface{}
+	var keys []string
 
-	err = e.db.Get(models.NpcEmote{}, c).Model(&entity).Select("*").Updates(&npcEmote).Error
+	// primary key param
+	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error updating entity: [%v]", err)})
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Cannot find param [Id]"})
+	}
+	params = append(params, id)
+	keys = append(keys, "id = ?")
+
+	// query builder
+	var result models.NpcEmote
+	query := e.db.QueryContext(models.NpcEmote{}, c)
+	for i, _ := range keys {
+		query = query.Where(keys[i], params[i])
 	}
 
-	return c.JSON(http.StatusOK, npcEmote)
+	// grab first entry
+	err = query.First(&result).Error
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Cannot find entity [%s]", err.Error())})
+	}
+
+	err = query.Select("*").Updates(&request).Error
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error updating entity [%v]", err.Error())})
+	}
+
+	return c.JSON(http.StatusOK, request)
 }
 
 // createNpcEmote godoc
@@ -149,7 +181,7 @@ func (e *NpcEmoteController) createNpcEmote(c echo.Context) error {
 	if err := c.Bind(npcEmote); err != nil {
 		return c.JSON(
 			http.StatusInternalServerError,
-			echo.Map{"error": fmt.Sprintf("Error binding to entity: [%v]", err)},
+			echo.Map{"error": fmt.Sprintf("Error binding to entity [%v]", err.Error())},
 		)
 	}
 
@@ -157,7 +189,7 @@ func (e *NpcEmoteController) createNpcEmote(c echo.Context) error {
 	if err != nil {
 		return c.JSON(
 			http.StatusInternalServerError,
-			echo.Map{"error": fmt.Sprintf("Error inserting entity: [%v]", err)},
+			echo.Map{"error": fmt.Sprintf("Error inserting entity [%v]", err.Error())},
 		)
 	}
 
@@ -170,25 +202,38 @@ func (e *NpcEmoteController) createNpcEmote(c echo.Context) error {
 // @Accept json
 // @Produce json
 // @Tags NpcEmote
-// @Param id path int true "Id"
+// @Param id path int true "id"
 // @Success 200 {string} string "Entity deleted successfully"
 // @Failure 404 {string} string "Cannot find entity"
 // @Failure 500 {string} string "Error binding to entity"
 // @Failure 500 {string} string "Error deleting entity"
 // @Router /npc_emote/{id} [delete]
 func (e *NpcEmoteController) deleteNpcEmote(c echo.Context) error {
-	npcEmoteId, err := strconv.Atoi(c.Param("npc_emote"))
+	var params []interface{}
+	var keys []string
+
+	// primary key param
+	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
 		e.logger.Error(err)
 	}
+	params = append(params, id)
+	keys = append(keys, "id = ?")
 
-	npcEmote := new(models.NpcEmote)
-	err = e.db.Get(models.NpcEmote{}, c).Model(&models.NpcEmote{}).First(&npcEmote, npcEmoteId).Error
-	if err != nil || npcEmote.ID == 0 {
-		return c.JSON(http.StatusNotFound, echo.Map{"error": "Cannot find entity"})
+	// query builder
+	var result models.NpcEmote
+	query := e.db.QueryContext(models.NpcEmote{}, c)
+	for i, _ := range keys {
+		query = query.Where(keys[i], params[i])
 	}
 
-	err = e.db.Get(models.NpcEmote{}, c).Model(&models.NpcEmote{}).Delete(&npcEmote).Error
+	// grab first entry
+	err = query.First(&result).Error
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
+	}
+
+	err = e.db.Get(models.NpcEmote{}, c).Model(&models.NpcEmote{}).Delete(&result).Error
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Error deleting entity"})
 	}
@@ -213,7 +258,7 @@ func (e *NpcEmoteController) getNpcEmotesBulk(c echo.Context) error {
 	if err := c.Bind(r); err != nil {
 		return c.JSON(
 			http.StatusInternalServerError,
-			echo.Map{"error": fmt.Sprintf("Error binding to bulk request: [%v]", err)},
+			echo.Map{"error": fmt.Sprintf("Error binding to bulk request: [%v]", err.Error())},
 		)
 	}
 
@@ -226,7 +271,7 @@ func (e *NpcEmoteController) getNpcEmotesBulk(c echo.Context) error {
 
 	err := e.db.QueryContext(models.NpcEmote{}, c).Find(&results, r.IDs).Error
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err})
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
 	}
 
 	return c.JSON(http.StatusOK, results)

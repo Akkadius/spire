@@ -1,10 +1,10 @@
 package crudcontrollers
 
 import (
+	"fmt"
 	"github.com/Akkadius/spire/internal/database"
 	"github.com/Akkadius/spire/internal/http/routes"
 	"github.com/Akkadius/spire/internal/models"
-	"fmt"
 	"github.com/labstack/echo/v4"
 	"github.com/sirupsen/logrus"
 	"net/http"
@@ -12,7 +12,7 @@ import (
 )
 
 type EventlogController struct {
-	db     *database.DatabaseResolver
+	db	 *database.DatabaseResolver
 	logger *logrus.Logger
 }
 
@@ -21,19 +21,19 @@ func NewEventlogController(
 	logger *logrus.Logger,
 ) *EventlogController {
 	return &EventlogController{
-		db:     db,
+		db:	 db,
 		logger: logger,
 	}
 }
 
 func (e *EventlogController) Routes() []*routes.Route {
 	return []*routes.Route{
-		routes.RegisterRoute(http.MethodDelete, "eventlog/:eventlog", e.deleteEventlog, nil),
-		routes.RegisterRoute(http.MethodGet, "eventlog/:eventlog", e.getEventlog, nil),
+		routes.RegisterRoute(http.MethodGet, "eventlog/:id", e.getEventlog, nil),
 		routes.RegisterRoute(http.MethodGet, "eventlogs", e.listEventlogs, nil),
-		routes.RegisterRoute(http.MethodPost, "eventlogs/bulk", e.getEventlogsBulk, nil),
-		routes.RegisterRoute(http.MethodPatch, "eventlog/:eventlog", e.updateEventlog, nil),
 		routes.RegisterRoute(http.MethodPut, "eventlog", e.createEventlog, nil),
+		routes.RegisterRoute(http.MethodDelete, "eventlog/:id", e.deleteEventlog, nil),
+		routes.RegisterRoute(http.MethodPatch, "eventlog/:id", e.updateEventlog, nil),
+		routes.RegisterRoute(http.MethodPost, "eventlogs/bulk", e.getEventlogsBulk, nil),
 	}
 }
 
@@ -79,17 +79,31 @@ func (e *EventlogController) listEventlogs(c echo.Context) error {
 // @Failure 500 {string} string "Bad query request"
 // @Router /eventlog/{id} [get]
 func (e *EventlogController) getEventlog(c echo.Context) error {
-	eventlogId, err := strconv.Atoi(c.Param("eventlog"))
-	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Cannot find param"})
-	}
+	var params []interface{}
+	var keys []string
 
+	// primary key param
+	id, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Cannot find param [Id]"})
+	}
+	params = append(params, id)
+	keys = append(keys, "id = ?")
+
+	// query builder
 	var result models.Eventlog
-	err = e.db.QueryContext(models.Eventlog{}, c).First(&result, eventlogId).Error
-	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err})
+	query := e.db.QueryContext(models.Eventlog{}, c)
+	for i, _ := range keys {
+		query = query.Where(keys[i], params[i])
 	}
 
+	// grab first entry
+	err = query.First(&result).Error
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
+	}
+
+	// couldn't find entity
 	if result.ID == 0 {
 		return c.JSON(http.StatusNotFound, echo.Map{"error": "Cannot find entity"})
 	}
@@ -111,26 +125,44 @@ func (e *EventlogController) getEventlog(c echo.Context) error {
 // @Failure 500 {string} string "Error updating entity"
 // @Router /eventlog/{id} [patch]
 func (e *EventlogController) updateEventlog(c echo.Context) error {
-	eventlog := new(models.Eventlog)
-	if err := c.Bind(eventlog); err != nil {
+	request := new(models.Eventlog)
+	if err := c.Bind(request); err != nil {
 		return c.JSON(
 			http.StatusInternalServerError,
-			echo.Map{"error": fmt.Sprintf("Error binding to entity: [%v]", err)},
+			echo.Map{"error": fmt.Sprintf("Error binding to entity [%v]", err.Error())},
 		)
 	}
 
-    entity := models.Eventlog{}
-	err := e.db.Get(models.Eventlog{}, c).Model(&models.Eventlog{}).First(&entity, eventlog.ID).Error
-	if err != nil || eventlog.ID == 0 {
-		return c.JSON(http.StatusNotFound, echo.Map{"error": "Cannot find entity"})
-	}
+	var params []interface{}
+	var keys []string
 
-	err = e.db.Get(models.Eventlog{}, c).Model(&entity).Select("*").Updates(&eventlog).Error
+	// primary key param
+	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error updating entity: [%v]", err)})
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Cannot find param [Id]"})
+	}
+	params = append(params, id)
+	keys = append(keys, "id = ?")
+
+	// query builder
+	var result models.Eventlog
+	query := e.db.QueryContext(models.Eventlog{}, c)
+	for i, _ := range keys {
+		query = query.Where(keys[i], params[i])
 	}
 
-	return c.JSON(http.StatusOK, eventlog)
+	// grab first entry
+	err = query.First(&result).Error
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Cannot find entity [%s]", err.Error())})
+	}
+
+	err = query.Select("*").Updates(&request).Error
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error updating entity [%v]", err.Error())})
+	}
+
+	return c.JSON(http.StatusOK, request)
 }
 
 // createEventlog godoc
@@ -149,7 +181,7 @@ func (e *EventlogController) createEventlog(c echo.Context) error {
 	if err := c.Bind(eventlog); err != nil {
 		return c.JSON(
 			http.StatusInternalServerError,
-			echo.Map{"error": fmt.Sprintf("Error binding to entity: [%v]", err)},
+			echo.Map{"error": fmt.Sprintf("Error binding to entity [%v]", err.Error())},
 		)
 	}
 
@@ -157,7 +189,7 @@ func (e *EventlogController) createEventlog(c echo.Context) error {
 	if err != nil {
 		return c.JSON(
 			http.StatusInternalServerError,
-			echo.Map{"error": fmt.Sprintf("Error inserting entity: [%v]", err)},
+			echo.Map{"error": fmt.Sprintf("Error inserting entity [%v]", err.Error())},
 		)
 	}
 
@@ -170,25 +202,38 @@ func (e *EventlogController) createEventlog(c echo.Context) error {
 // @Accept json
 // @Produce json
 // @Tags Eventlog
-// @Param id path int true "Id"
+// @Param id path int true "id"
 // @Success 200 {string} string "Entity deleted successfully"
 // @Failure 404 {string} string "Cannot find entity"
 // @Failure 500 {string} string "Error binding to entity"
 // @Failure 500 {string} string "Error deleting entity"
 // @Router /eventlog/{id} [delete]
 func (e *EventlogController) deleteEventlog(c echo.Context) error {
-	eventlogId, err := strconv.Atoi(c.Param("eventlog"))
+	var params []interface{}
+	var keys []string
+
+	// primary key param
+	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
 		e.logger.Error(err)
 	}
+	params = append(params, id)
+	keys = append(keys, "id = ?")
 
-	eventlog := new(models.Eventlog)
-	err = e.db.Get(models.Eventlog{}, c).Model(&models.Eventlog{}).First(&eventlog, eventlogId).Error
-	if err != nil || eventlog.ID == 0 {
-		return c.JSON(http.StatusNotFound, echo.Map{"error": "Cannot find entity"})
+	// query builder
+	var result models.Eventlog
+	query := e.db.QueryContext(models.Eventlog{}, c)
+	for i, _ := range keys {
+		query = query.Where(keys[i], params[i])
 	}
 
-	err = e.db.Get(models.Eventlog{}, c).Model(&models.Eventlog{}).Delete(&eventlog).Error
+	// grab first entry
+	err = query.First(&result).Error
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
+	}
+
+	err = e.db.Get(models.Eventlog{}, c).Model(&models.Eventlog{}).Delete(&result).Error
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Error deleting entity"})
 	}
@@ -213,7 +258,7 @@ func (e *EventlogController) getEventlogsBulk(c echo.Context) error {
 	if err := c.Bind(r); err != nil {
 		return c.JSON(
 			http.StatusInternalServerError,
-			echo.Map{"error": fmt.Sprintf("Error binding to bulk request: [%v]", err)},
+			echo.Map{"error": fmt.Sprintf("Error binding to bulk request: [%v]", err.Error())},
 		)
 	}
 
@@ -226,7 +271,7 @@ func (e *EventlogController) getEventlogsBulk(c echo.Context) error {
 
 	err := e.db.QueryContext(models.Eventlog{}, c).Find(&results, r.IDs).Error
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err})
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
 	}
 
 	return c.JSON(http.StatusOK, results)

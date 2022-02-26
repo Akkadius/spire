@@ -1,6 +1,7 @@
 package models
 
 type Book struct {
+	ID       int    `json:"id" gorm:"Column:id"`
 	Name     string `json:"name" gorm:"Column:name"`
 	Txtfile  string `json:"txtfile" gorm:"Column:txtfile"`
 	Language int    `json:"language" gorm:"Column:language"`

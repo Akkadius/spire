@@ -82,7 +82,7 @@ export const AaAbilityApiAxiosParamCreator = function (configuration?: Configura
         /**
          * 
          * @summary Deletes AaAbility
-         * @param {number} id Id
+         * @param {number} id id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -386,7 +386,7 @@ export const AaAbilityApiFp = function(configuration?: Configuration) {
         /**
          * 
          * @summary Deletes AaAbility
-         * @param {number} id Id
+         * @param {number} id id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -485,7 +485,7 @@ export const AaAbilityApiFactory = function (configuration?: Configuration, base
         /**
          * 
          * @summary Deletes AaAbility
-         * @param {number} id Id
+         * @param {number} id id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -566,7 +566,7 @@ export interface AaAbilityApiCreateAaAbilityRequest {
  */
 export interface AaAbilityApiDeleteAaAbilityRequest {
     /**
-     * Id
+     * id
      * @type {number}
      * @memberof AaAbilityApiDeleteAaAbility
      */

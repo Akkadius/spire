@@ -82,7 +82,7 @@ export const StartingItemApiAxiosParamCreator = function (configuration?: Config
         /**
          * 
          * @summary Deletes StartingItem
-         * @param {number} id Id
+         * @param {number} id id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -386,7 +386,7 @@ export const StartingItemApiFp = function(configuration?: Configuration) {
         /**
          * 
          * @summary Deletes StartingItem
-         * @param {number} id Id
+         * @param {number} id id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -485,7 +485,7 @@ export const StartingItemApiFactory = function (configuration?: Configuration, b
         /**
          * 
          * @summary Deletes StartingItem
-         * @param {number} id Id
+         * @param {number} id id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -566,7 +566,7 @@ export interface StartingItemApiCreateStartingItemRequest {
  */
 export interface StartingItemApiDeleteStartingItemRequest {
     /**
-     * Id
+     * id
      * @type {number}
      * @memberof StartingItemApiDeleteStartingItem
      */

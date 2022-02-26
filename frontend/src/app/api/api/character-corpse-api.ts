@@ -82,7 +82,7 @@ export const CharacterCorpseApiAxiosParamCreator = function (configuration?: Con
         /**
          * 
          * @summary Deletes CharacterCorpse
-         * @param {number} id Id
+         * @param {number} id id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -386,7 +386,7 @@ export const CharacterCorpseApiFp = function(configuration?: Configuration) {
         /**
          * 
          * @summary Deletes CharacterCorpse
-         * @param {number} id Id
+         * @param {number} id id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -485,7 +485,7 @@ export const CharacterCorpseApiFactory = function (configuration?: Configuration
         /**
          * 
          * @summary Deletes CharacterCorpse
-         * @param {number} id Id
+         * @param {number} id id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -566,7 +566,7 @@ export interface CharacterCorpseApiCreateCharacterCorpseRequest {
  */
 export interface CharacterCorpseApiDeleteCharacterCorpseRequest {
     /**
-     * Id
+     * id
      * @type {number}
      * @memberof CharacterCorpseApiDeleteCharacterCorpse
      */

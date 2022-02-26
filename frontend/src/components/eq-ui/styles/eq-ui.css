@@ -74,7 +74,7 @@ input[type=checkbox].eq-checkbox:checked + label {
 [class*="eq-window"] input:focus,
 [class*="eq-window"] textarea:focus,
 [class*="eq-window"] select:focus {
-    border-color: #8aa3ff !important;
+    border-color: #8aa3ff;
 }
 
 [class*="eq-window"] {
@@ -305,8 +305,7 @@ DIV.eq-progress-bar DIV {
     position: relative;
     background-color: #ff0000;
     z-index: 1;
-    transition: width .5s;
-
+    transition: width .05s;
 }
 
 DIV.eq-progress-bar DIV:before {
@@ -874,8 +873,7 @@ h6.eq-header {
 }
 
 .eq-button-fancy:hover,
-.eq-button-fancy-highlighted
-{
+.eq-button-fancy-highlighted {
     border: 2px solid #fff300; /* some kind of blue border */
 
     /* other CSS styles */
@@ -890,4 +888,12 @@ h6.eq-header {
     -moz-box-shadow: 0px 0px 4px #fff300;
     box-shadow: 0px 0px 4px #fff300; /* some variation of blue for the shadow */
 
+}
+
+.eq-table-floating-header {
+    background-image: url(../images/light.gif);
+    position: sticky;
+    top: 0;
+    z-index: 9999;
+    box-shadow: rgb(0 0 0) 0px 20px 15px inset;
 }

@@ -1,10 +1,10 @@
 package crudcontrollers
 
 import (
+	"fmt"
 	"github.com/Akkadius/spire/internal/database"
 	"github.com/Akkadius/spire/internal/http/routes"
 	"github.com/Akkadius/spire/internal/models"
-	"fmt"
 	"github.com/labstack/echo/v4"
 	"github.com/sirupsen/logrus"
 	"net/http"
@@ -12,7 +12,7 @@ import (
 )
 
 type SaylinkController struct {
-	db     *database.DatabaseResolver
+	db	 *database.DatabaseResolver
 	logger *logrus.Logger
 }
 
@@ -21,19 +21,19 @@ func NewSaylinkController(
 	logger *logrus.Logger,
 ) *SaylinkController {
 	return &SaylinkController{
-		db:     db,
+		db:	 db,
 		logger: logger,
 	}
 }
 
 func (e *SaylinkController) Routes() []*routes.Route {
 	return []*routes.Route{
-		routes.RegisterRoute(http.MethodDelete, "saylink/:saylink", e.deleteSaylink, nil),
-		routes.RegisterRoute(http.MethodGet, "saylink/:saylink", e.getSaylink, nil),
+		routes.RegisterRoute(http.MethodGet, "saylink/:id", e.getSaylink, nil),
 		routes.RegisterRoute(http.MethodGet, "saylinks", e.listSaylinks, nil),
-		routes.RegisterRoute(http.MethodPost, "saylinks/bulk", e.getSaylinksBulk, nil),
-		routes.RegisterRoute(http.MethodPatch, "saylink/:saylink", e.updateSaylink, nil),
 		routes.RegisterRoute(http.MethodPut, "saylink", e.createSaylink, nil),
+		routes.RegisterRoute(http.MethodDelete, "saylink/:id", e.deleteSaylink, nil),
+		routes.RegisterRoute(http.MethodPatch, "saylink/:id", e.updateSaylink, nil),
+		routes.RegisterRoute(http.MethodPost, "saylinks/bulk", e.getSaylinksBulk, nil),
 	}
 }
 
@@ -79,17 +79,31 @@ func (e *SaylinkController) listSaylinks(c echo.Context) error {
 // @Failure 500 {string} string "Bad query request"
 // @Router /saylink/{id} [get]
 func (e *SaylinkController) getSaylink(c echo.Context) error {
-	saylinkId, err := strconv.Atoi(c.Param("saylink"))
-	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Cannot find param"})
-	}
+	var params []interface{}
+	var keys []string
 
+	// primary key param
+	id, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Cannot find param [Id]"})
+	}
+	params = append(params, id)
+	keys = append(keys, "id = ?")
+
+	// query builder
 	var result models.Saylink
-	err = e.db.QueryContext(models.Saylink{}, c).First(&result, saylinkId).Error
-	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err})
+	query := e.db.QueryContext(models.Saylink{}, c)
+	for i, _ := range keys {
+		query = query.Where(keys[i], params[i])
 	}
 
+	// grab first entry
+	err = query.First(&result).Error
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
+	}
+
+	// couldn't find entity
 	if result.ID == 0 {
 		return c.JSON(http.StatusNotFound, echo.Map{"error": "Cannot find entity"})
 	}
@@ -111,26 +125,44 @@ func (e *SaylinkController) getSaylink(c echo.Context) error {
 // @Failure 500 {string} string "Error updating entity"
 // @Router /saylink/{id} [patch]
 func (e *SaylinkController) updateSaylink(c echo.Context) error {
-	saylink := new(models.Saylink)
-	if err := c.Bind(saylink); err != nil {
+	request := new(models.Saylink)
+	if err := c.Bind(request); err != nil {
 		return c.JSON(
 			http.StatusInternalServerError,
-			echo.Map{"error": fmt.Sprintf("Error binding to entity: [%v]", err)},
+			echo.Map{"error": fmt.Sprintf("Error binding to entity [%v]", err.Error())},
 		)
 	}
 
-    entity := models.Saylink{}
-	err := e.db.Get(models.Saylink{}, c).Model(&models.Saylink{}).First(&entity, saylink.ID).Error
-	if err != nil || saylink.ID == 0 {
-		return c.JSON(http.StatusNotFound, echo.Map{"error": "Cannot find entity"})
-	}
+	var params []interface{}
+	var keys []string
 
-	err = e.db.Get(models.Saylink{}, c).Model(&entity).Select("*").Updates(&saylink).Error
+	// primary key param
+	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error updating entity: [%v]", err)})
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Cannot find param [Id]"})
+	}
+	params = append(params, id)
+	keys = append(keys, "id = ?")
+
+	// query builder
+	var result models.Saylink
+	query := e.db.QueryContext(models.Saylink{}, c)
+	for i, _ := range keys {
+		query = query.Where(keys[i], params[i])
 	}
 
-	return c.JSON(http.StatusOK, saylink)
+	// grab first entry
+	err = query.First(&result).Error
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Cannot find entity [%s]", err.Error())})
+	}
+
+	err = query.Select("*").Updates(&request).Error
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error updating entity [%v]", err.Error())})
+	}
+
+	return c.JSON(http.StatusOK, request)
 }
 
 // createSaylink godoc
@@ -149,7 +181,7 @@ func (e *SaylinkController) createSaylink(c echo.Context) error {
 	if err := c.Bind(saylink); err != nil {
 		return c.JSON(
 			http.StatusInternalServerError,
-			echo.Map{"error": fmt.Sprintf("Error binding to entity: [%v]", err)},
+			echo.Map{"error": fmt.Sprintf("Error binding to entity [%v]", err.Error())},
 		)
 	}
 
@@ -157,7 +189,7 @@ func (e *SaylinkController) createSaylink(c echo.Context) error {
 	if err != nil {
 		return c.JSON(
 			http.StatusInternalServerError,
-			echo.Map{"error": fmt.Sprintf("Error inserting entity: [%v]", err)},
+			echo.Map{"error": fmt.Sprintf("Error inserting entity [%v]", err.Error())},
 		)
 	}
 
@@ -170,25 +202,38 @@ func (e *SaylinkController) createSaylink(c echo.Context) error {
 // @Accept json
 // @Produce json
 // @Tags Saylink
-// @Param id path int true "Id"
+// @Param id path int true "id"
 // @Success 200 {string} string "Entity deleted successfully"
 // @Failure 404 {string} string "Cannot find entity"
 // @Failure 500 {string} string "Error binding to entity"
 // @Failure 500 {string} string "Error deleting entity"
 // @Router /saylink/{id} [delete]
 func (e *SaylinkController) deleteSaylink(c echo.Context) error {
-	saylinkId, err := strconv.Atoi(c.Param("saylink"))
+	var params []interface{}
+	var keys []string
+
+	// primary key param
+	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
 		e.logger.Error(err)
 	}
+	params = append(params, id)
+	keys = append(keys, "id = ?")
 
-	saylink := new(models.Saylink)
-	err = e.db.Get(models.Saylink{}, c).Model(&models.Saylink{}).First(&saylink, saylinkId).Error
-	if err != nil || saylink.ID == 0 {
-		return c.JSON(http.StatusNotFound, echo.Map{"error": "Cannot find entity"})
+	// query builder
+	var result models.Saylink
+	query := e.db.QueryContext(models.Saylink{}, c)
+	for i, _ := range keys {
+		query = query.Where(keys[i], params[i])
 	}
 
-	err = e.db.Get(models.Saylink{}, c).Model(&models.Saylink{}).Delete(&saylink).Error
+	// grab first entry
+	err = query.First(&result).Error
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
+	}
+
+	err = e.db.Get(models.Saylink{}, c).Model(&models.Saylink{}).Delete(&result).Error
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Error deleting entity"})
 	}
@@ -213,7 +258,7 @@ func (e *SaylinkController) getSaylinksBulk(c echo.Context) error {
 	if err := c.Bind(r); err != nil {
 		return c.JSON(
 			http.StatusInternalServerError,
-			echo.Map{"error": fmt.Sprintf("Error binding to bulk request: [%v]", err)},
+			echo.Map{"error": fmt.Sprintf("Error binding to bulk request: [%v]", err.Error())},
 		)
 	}
 
@@ -226,7 +271,7 @@ func (e *SaylinkController) getSaylinksBulk(c echo.Context) error {
 
 	err := e.db.QueryContext(models.Saylink{}, c).Find(&results, r.IDs).Error
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err})
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
 	}
 
 	return c.JSON(http.StatusOK, results)

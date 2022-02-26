@@ -36,7 +36,7 @@
                   <div class="row">
                     <div
                       class="col-2"
-                      @mouseover="drawFreeIdSelector"
+                      @click="drawFreeIdSelector"
                       v-b-tooltip.hover.v-dark.right :title="getFieldDescription('id')"
                     >
                       Id
@@ -113,6 +113,7 @@
                     <div class="col-2">
                       Min Status
                       <b-form-input
+                        :style="(item['minstatus'] === 0 ? 'opacity: .5' : '')"
                         v-model.number="item.minstatus"
                         v-b-tooltip.hover.v-dark.right
                         :title="getFieldDescription('minstatus')"
@@ -123,6 +124,7 @@
                     <div class="col-2">
                       Script File ID
                       <b-form-input
+                        :style="(item['scriptfileid'] === 0 ? 'opacity: .5' : '')"
                         v-model.number="item.scriptfileid"
                         v-b-tooltip.hover.v-dark.right
                         :title="getFieldDescription('scriptfileid')"
@@ -412,8 +414,7 @@
 
                         <!-- item model -->
                         <div
-                          @mouseover="drawItemModelSelector()"
-                          @click="drawItemModelSelector(true)"
+                          @click="drawItemModelSelector()"
                         >
                           <item-model-preview
                             :id="item.idfile"
@@ -429,7 +430,10 @@
 
                         <!-- icon -->
                         Icon
-                        <div @mouseover="drawIconSelector()" @click="drawIconSelector(true)" class="row">
+                        <div
+                          @click="drawIconSelector()"
+                          class="row"
+                        >
                           <div class="col-4">
                             <div class="d-inline-block" style="width: 50px">
                             <span
@@ -449,7 +453,10 @@
 
                         <!-- color -->
                         Color
-                        <div @mouseover="drawColorSelector()" @click="drawColorSelector(true)" class="row">
+                        <div
+                          @click="drawColorSelector()"
+                          class="row"
+                        >
                           <div class="col-2">
                             <div
                               class="mr-3"
@@ -467,13 +474,17 @@
                         </div>
 
                         <!-- Material -->
-                        <div class="row" @mouseover="drawRaceMaterialPreview">
+                        <div
+                          class="row"
+                          @click="drawRaceMaterialPreview"
+                        >
                           <div class="col-12">
                             Material
                             <select
                               v-model.number="item['material']"
                               @change="materialChange"
                               class="form-control"
+                              id="material"
                             >
                               <option
                                 v-for="(description, index) in DB_ITEM_MATERIAL"
@@ -533,14 +544,11 @@
                 </eq-tab>
 
                 <eq-tab name="Stats" class="minified-inputs">
-
                   <div class="row">
-
                     <div class="col-4">
 
                       <!-- Stats -->
                       <div class="col-12 text-center">
-
                         <div
                           class="row"
                           :key="field.field"
@@ -871,17 +879,32 @@
                           id="casttime"
                           class="mt-3"
                         />
+
+                        <loader-cast-bar-timer
+                          class="mt-3 mb-3"
+                          style="margin-left: 20px"
+                          color="#FF00FF"
+                          :time-ms="item.casttime"
+                        />
+
                         ({{ msToTime(item.casttime) }})
                       </div>
 
                       <div class="col-2 m-0 p-0 pl-3 text-center">
-                        Recast Time (ms)
+                        Recast Time (seconds)
                         <b-form-input
                           v-model.number="item.recastdelay"
                           id="recastdelay"
                           class="mt-3"
                         />
-                        ({{ msToTime(item.recastdelay) }})
+
+                        <loader-cast-bar-timer
+                          class="mt-3 mb-3"
+                          style="margin-left: 20px"
+                          color="#FF00FF"
+                          :time-ms="(item.recastdelay * 1000)"
+                        />
+
                       </div>
 
                       <div class="col-2 text-center">
@@ -935,7 +958,9 @@
                     </div>
                     <div class="col-3">
                       <b-form-input
-                        v-b-tooltip.hover.v-dark.right :title="getFieldDescription('augtype')"
+                        id="augtype"
+                        v-b-tooltip.hover.v-dark.right
+                        :title="getFieldDescription('augtype')"
                         :style="(item['augtype'] === 0 ? 'opacity: .5' : '')"
                         v-model.number="item['augtype']"
                       />
@@ -1483,17 +1508,18 @@
             </eq-window>
 
             <!-- item model selector -->
-            <eq-window
-              style="margin-top: 30px; margin-right: 10px; width: auto;"
+            <div
               class="fade-in"
               v-if="itemModelSelectorActive && item"
             >
 
-              <item-model-selector
-                :selected-model="item.idfile"
-                @input="item.idfile = $event; setFieldModifiedById('idfile')"
-              />
-            </eq-window>
+              <keep-alive>
+                <item-model-selector
+                  :selected-model="item.idfile"
+                  @input="item.idfile = $event; setFieldModifiedById('idfile')"
+                />
+              </keep-alive>
+            </div>
 
             <!-- augment type calculator -->
             <eq-window
@@ -1509,8 +1535,8 @@
             </eq-window>
 
             <!-- race material preview -->
-            <eq-window
-              style="margin-top: 30px; margin-right: 10px; width: auto;"
+            <eq-window-simple
+              style="margin-top: 20px; margin-right: 10px; width: auto;"
               class="fade-in text-center"
               v-if="drawRaceMaterialPreviewActive && item"
             >
@@ -1520,7 +1546,7 @@
                 :selected-material="item.material"
                 @input="item.material = $event; setFieldModifiedById('material')"
               />
-            </eq-window>
+            </eq-window-simple>
 
             <!-- color selector -->
             <div
@@ -1538,20 +1564,21 @@
             </div>
 
             <!-- icon selector -->
-            <eq-window
-              style="margin-top: 30px; margin-right: 10px; width: auto;"
+            <div
               class="fade-in"
               v-if="iconSelectorActive"
             >
 
-              <item-icon-selector
-                :selected-icon="item.icon"
-                @input="item.icon = $event; setFieldModifiedById('icon')"
-              />
-            </eq-window>
+              <keep-alive>
+                <item-icon-selector
+                  :selected-icon="item.icon"
+                  @input="item.icon = $event; setFieldModifiedById('icon')"
+                />
+              </keep-alive>
+            </div>
 
             <!-- free id selector -->
-            <eq-window
+            <eq-window-simple
               title="Free Item Ids"
               style="margin-top: 30px; margin-right: 10px; width: auto;"
               class="fade-in"
@@ -1565,7 +1592,7 @@
                 :with-reserved="true"
                 @input="item.id = $event; setFieldModifiedById('id')"
               />
-            </eq-window>
+            </eq-window-simple>
 
             <!-- spell effect selector -->
             <div
@@ -1592,12 +1619,20 @@ import EqWindow                from "../../components/eq-ui/EQWindow";
 import EqTabs                  from "../../components/eq-ui/EQTabs";
 import EqTab                   from "../../components/eq-ui/EQTab";
 import EqItemPreview           from "../../components/eq-ui/EQItemCardPreview";
-import {App}                   from "../../constants/app";
+import {
+  App
+}                              from "../../constants/app";
 import EqCheckbox              from "../../components/eq-ui/EQCheckbox";
-import {SpireApiClient}        from "../../app/api/spire-api-client";
+import {
+  SpireApiClient
+}                              from "../../app/api/spire-api-client";
 import FreeIdSelector          from "../../components/tools/FreeIdSelector";
-import {Items}                 from "../../app/items";
-import {ItemApi}               from "../../app/api";
+import {
+  Items
+}                              from "../../app/items";
+import {
+  ItemApi
+}                              from "../../app/api";
 import ItemModelPreview        from "./components/ItemModelPreview";
 import ItemModelSelector       from "./components/ItemModelSelector";
 import ItemIconSelector        from "./components/ItemIconSelector";
@@ -1613,7 +1648,9 @@ import {
   DB_ITEM_TYPES,
   ITEM_SIZE
 }                              from "../../app/constants/eq-item-constants";
-import {AUG_TYPES}             from "../../app/constants/eq-aug-constants";
+import {
+  AUG_TYPES
+}                              from "../../app/constants/eq-aug-constants";
 import InventorySlotCalculator from "../../components/tools/InventorySlotCalculator";
 
 import SpellEffectSelector     from "./components/ItemSpellEffectSelector";
@@ -1629,12 +1666,17 @@ import {BODYTYPES}             from "../../app/constants/eq-bodytype-constants";
 import {DB_SPELL_RESISTS}      from "../../app/constants/eq-spell-constants";
 import {DB_ITEM_BARD_TYPE}     from "../../app/constants/eq-bard-types";
 import AugBitmaskCalculator    from "../../components/tools/AugmentTypeCalculator";
+import EqWindowSimple          from "../../components/eq-ui/EQWindowSimple";
+import LoaderCastBarTimer      from "../../components/LoaderCastBarTimer";
+import {EditFormFieldUtil}     from "../../app/forms/edit-form-field-util";
 
 const MILLISECONDS_BEFORE_WINDOW_RESET = 5000;
 
 export default {
   name: "ItemEdit",
   components: {
+    LoaderCastBarTimer,
+    EqWindowSimple,
     AugBitmaskCalculator,
     ItemMaterialPreview,
     ItemColorSelector,
@@ -1661,8 +1703,6 @@ export default {
     return {
       item: null, // item record data
       originalItem: {}, // item record data; used to reference original values in tools
-
-      spellCdnUrl: App.ASSET_SPELL_ICONS_BASE_URL,
 
       // state, loaded or not
       loaded: true,
@@ -1813,7 +1853,7 @@ export default {
 
       // reset state vars when we navigate away
       this.notification = ""
-      this.resetFieldEditedStatus()
+      EditFormFieldUtil.resetFieldEditedStatus()
       this.resetPreviewComponents()
 
       // reload
@@ -1842,14 +1882,14 @@ export default {
         if (newVal > 0 && oldVal === -1) {
           this.item.maxcharges  = -1
           this.item.casttime    = 3000
-          this.item.recastdelay = 12000
+          this.item.recastdelay = 6
           this.item.clicktype   = 5
 
           setTimeout(() => {
-            this.setFieldModifiedById('maxcharges')
-            this.setFieldModifiedById('casttime')
-            this.setFieldModifiedById('recastdelay')
-            this.setFieldModifiedById('clicktype')
+            EditFormFieldUtil.setFieldModifiedById('maxcharges')
+            EditFormFieldUtil.setFieldModifiedById('casttime')
+            EditFormFieldUtil.setFieldModifiedById('recastdelay')
+            EditFormFieldUtil.setFieldModifiedById('clicktype')
 
             this.sendNotification("Set clicky defaults...")
           }, 50)
@@ -1927,14 +1967,6 @@ export default {
     },
   },
   async created() {
-    setTimeout(() => {
-      const target = document.getElementById("item-edit-card")
-      if (target) {
-        target.removeEventListener('input', this.setFieldModified, true);
-        target.addEventListener('input', this.setFieldModified)
-      }
-    }, 1000)
-
     this.load()
   },
   methods: {
@@ -1961,30 +1993,28 @@ export default {
       }
     },
 
-    setFieldModified(evt) {
-      // border: 2px #555555 solid !important;
-      evt.target.classList.add('pulsate-highlight-modified')
-    },
-
     setFieldModifiedById(id) {
-      const target = document.getElementById(id)
-      if (target) {
-        target.classList.add('pulsate-highlight-modified')
-      }
+      EditFormFieldUtil.setFieldModifiedById(id)
     },
 
-    resetFieldEditedStatus() {
-      // reset elements
-      const itemEditCard = document.getElementById("item-edit-card")
-
-      if (itemEditCard) {
-        const elements = itemEditCard.querySelectorAll("input, select");
-        elements.forEach((element) => {
-          if (element) {
-            element.classList.remove('pulsate-highlight-modified')
-          }
-        });
-      }
+    setSubEditorFieldHighlights() {
+      let hasSubEditorFields = [
+        "id",
+        "icon",
+        "idfile",
+        "material",
+        "color",
+        "augtype",
+        "proceffect",
+        "worneffect",
+        "focuseffect",
+        "scrolleffect",
+        "clickeffect",
+        "bardeffect"
+      ]
+      hasSubEditorFields.forEach((field) => {
+        EditFormFieldUtil.setFieldHighlightHasSubEditor(field)
+      })
     },
 
     dismissNotification() {
@@ -2009,7 +2039,7 @@ export default {
       }).then((result) => {
         if (result.status === 200) {
           this.sendNotification("Item updated successfully!")
-          this.resetFieldEditedStatus()
+          EditFormFieldUtil.resetFieldEditedStatus()
         }
 
         if (result.data.error) {
@@ -2030,14 +2060,15 @@ export default {
 
         if (createRes.status === 200) {
           this.sendNotification("Created new Item!")
-          this.resetFieldEditedStatus()
+          EditFormFieldUtil.resetFieldEditedStatus()
         }
       })
     },
 
     load() {
+
       if (this.$route.params.id > 0) {
-        Items.getItem(this.$route.params.id).then(result => {
+        Items.getItem(this.$route.params.id).then((result) => {
           this.item              = result
           this.updatedAt         = Date.now()
           this.previewItemActive = true
@@ -2064,7 +2095,44 @@ export default {
           )
 
           this.hexColor = hex;
+
+          // if we're cloning this item, automatically fetch an ID
+          if (this.$route.query.hasOwnProperty("clone")) {
+            SpireApiClient.v1().get("query/free-ids-reserved/items/id/name").then((response) => {
+              if (response.data) {
+
+                // grab first "reserved" entry available
+                if (response.data.data.length > 0) {
+                  this.item.id = parseInt(response.data.data[0].id)
+                  EditFormFieldUtil.setFieldModifiedById('id');
+                }
+
+                // grab first free id in range entry available
+                if (response.data.data.length === 0) {
+                  SpireApiClient.v1().get("query/free-id-ranges/items/id").then((response) => {
+                    if (response.data && response.data.data) {
+                      this.item.id = parseInt(response.data.data[0].start_id)
+                      EditFormFieldUtil.setFieldModifiedById('id')
+                    }
+                  });
+                }
+              }
+            });
+          }
         })
+
+        // hooks
+        setTimeout(() => {
+          const target = document.getElementById("item-edit-card")
+          if (target) {
+            target.removeEventListener('input', EditFormFieldUtil.setFieldModified, true);
+            target.addEventListener('input', EditFormFieldUtil.setFieldModified)
+          }
+
+          EditFormFieldUtil.resetFieldSubEditorHighlightedStatus()
+          this.setSubEditorFieldHighlights()
+
+        }, 100)
       }
     },
 
@@ -2102,6 +2170,9 @@ export default {
      * Selector / previewers
      */
     resetPreviewComponents() {
+      EditFormFieldUtil.resetFieldSubEditorHighlightedStatus()
+      this.setSubEditorFieldHighlights()
+
       this.freeIdSelectorActive            = false;
       this.iconSelectorActive              = false;
       this.itemModelSelectorActive         = false;
@@ -2127,24 +2198,30 @@ export default {
       this.resetPreviewComponents()
       this.spellEffectSelectorActive = true
     },
-    drawItemModelSelector(force = false) {
-      if ((!this.itemModelSelectorActive && this.shouldReset()) || force) {
+    drawItemModelSelector() {
+      if ((!this.itemModelSelectorActive)) {
         this.resetPreviewComponents()
         this.itemModelSelectorActive = true;
         this.lastResetTime           = Date.now()
+
+        EditFormFieldUtil.setFieldSubEditorHighlightedById("idfile")
       }
     },
-    drawIconSelector(force = false) {
-      if (!this.freeIdSelectorActive || force) {
+    drawIconSelector() {
+      if (!this.freeIdSelectorActive) {
         this.resetPreviewComponents()
         this.iconSelectorActive = true;
+
+        EditFormFieldUtil.setFieldSubEditorHighlightedById("icon")
       }
     },
-    drawColorSelector(force = false) {
-      if (!this.drawColorSelectorActive || force) {
+    drawColorSelector() {
+      if (!this.drawColorSelectorActive) {
         this.resetPreviewComponents()
         this.drawColorSelectorActive = true;
         this.lastResetTime           = Date.now()
+
+        EditFormFieldUtil.setFieldSubEditorHighlightedById("color")
       }
     },
     drawRaceMaterialPreview() {
@@ -2152,12 +2229,16 @@ export default {
         this.resetPreviewComponents()
         this.drawRaceMaterialPreviewActive = true;
         this.lastResetTime                 = Date.now()
+
+        EditFormFieldUtil.setFieldSubEditorHighlightedById("material")
       }
     },
     drawFreeIdSelector() {
       this.resetPreviewComponents()
       this.lastResetTime        = Date.now()
       this.freeIdSelectorActive = true
+
+      EditFormFieldUtil.setFieldSubEditorHighlightedById("id")
     },
     drawStatScaleTool() {
       // this.resetPreviewComponents()
@@ -2170,12 +2251,12 @@ export default {
       this.lastResetTime = Date.now()
       this.resetPreviewComponents()
       this.drawAugmentTypeCalculatorActive = true
+
+      EditFormFieldUtil.setFieldSubEditorHighlightedById("augtype")
     },
 
     materialChange() {
       this.lastResetTime = Date.now()
-      // this.resetPreviewComponents()
-
       this.drawRaceMaterialPreviewActive = true
     },
 

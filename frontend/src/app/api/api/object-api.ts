@@ -82,7 +82,7 @@ export const ObjectApiAxiosParamCreator = function (configuration?: Configuratio
         /**
          * 
          * @summary Deletes Object
-         * @param {number} id Id
+         * @param {number} id id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -386,7 +386,7 @@ export const ObjectApiFp = function(configuration?: Configuration) {
         /**
          * 
          * @summary Deletes Object
-         * @param {number} id Id
+         * @param {number} id id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -485,7 +485,7 @@ export const ObjectApiFactory = function (configuration?: Configuration, basePat
         /**
          * 
          * @summary Deletes Object
-         * @param {number} id Id
+         * @param {number} id id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -566,7 +566,7 @@ export interface ObjectApiCreateObjectRequest {
  */
 export interface ObjectApiDeleteObjectRequest {
     /**
-     * Id
+     * id
      * @type {number}
      * @memberof ObjectApiDeleteObject
      */

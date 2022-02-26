@@ -1,54 +1,63 @@
 <template>
   <div>
-    <div class="row mb-4">
 
-      <!-- Item Slot -->
-      <div class="col-5">
-        <select
-          class="form-control list-search"
-          v-model.lazy="iconSlotSearch"
-          @change="iconItemTypeSearch = 0; loadIcons()"
-        >
-          <option value="0">Select Slot Filter</option>
-          <option v-for="option in iconSlotOptions" v-bind:value="option.value">
-            {{ option.text }}
-          </option>
-        </select>
+    <!-- Inputs -->
+    <eq-window-simple>
+      <div class="row">
+
+        <!-- Item Slot -->
+        <div class="col-5">
+          <select
+            class="form-control list-search"
+            v-model.lazy="iconSlotSearch"
+            @change="iconItemTypeSearch = 0; loadIcons()"
+          >
+            <option value="0">Select Slot Filter</option>
+            <option v-for="option in iconSlotOptions" v-bind:value="option.value">
+              {{ option.text }}
+            </option>
+          </select>
+        </div>
+
+        <!-- Item Type -->
+        <div class="col-5">
+          <select
+            class="form-control list-search"
+            v-model.lazy="iconItemTypeSearch"
+            @change="iconSlotSearch = 0; loadIcons()"
+          >
+            <option value="0">Select Type Filter</option>
+            <option v-for="option in iconItemTypeOptions" v-bind:value="option.value">
+              {{ option.text }}
+            </option>
+
+          </select>
+        </div>
+
+        <div class="col-1">
+          <b-button
+            class="btn-dark btn-sm btn-outline-warning"
+            @click="reset"
+          >
+            Reset
+          </b-button>
+        </div>
+
       </div>
 
-      <!-- Item Type -->
-      <div class="col-5">
-        <select
-          class="form-control list-search"
-          v-model.lazy="iconItemTypeSearch"
-          @change="iconSlotSearch = 0; loadIcons()"
-        >
-          <option value="0">Select Type Filter</option>
-          <option v-for="option in iconItemTypeOptions" v-bind:value="option.value">
-            {{ option.text }}
-          </option>
+    </eq-window-simple>
 
-        </select>
-      </div>
-
-      <div class="col-1">
-        <b-button
-          class="btn-dark btn-sm btn-outline-warning"
-          @click="reset">
-          Reset
-        </b-button>
-      </div>
-    </div>
-
-    <app-loader :is-loading="!loaded" padding="8"/>
-
-    <div
+    <!-- Content -->
+    <eq-window-simple
       style="height: 85vh; overflow-y: scroll"
-      id="item-icon-view-port">
+      class="text-center"
+      id="item-icon-view-port"
+      v-if="filteredIcons && filteredIcons.length > 0"
+    >
 
-    <span v-if="filteredIcons && filteredIcons.length === 0">
-      No icons found...
-    </span>
+      <span v-if="filteredIcons && filteredIcons.length === 0">
+        No icons found...
+      </span>
 
       <span
         v-for="icon in filteredIcons" :key="icon" :id="'item-' + icon"
@@ -58,9 +67,13 @@
         <span
           :id="'item-icon-' + icon"
           :class="'fade-in item-' + icon + ' ' + classIsPulsating(icon)"
-          style="border: 1px solid rgb(218 218 218 / 30%); border-radius: 7px;"/>
+          :title="icon"
+          style="border: 1px solid rgb(218 218 218 / 30%); border-radius: 7px;"
+        />
       </span>
-    </div>
+    </eq-window-simple>
+
+    <app-loader :is-loading="!loaded" padding="4"/>
   </div>
 </template>
 
@@ -104,6 +117,29 @@ export default {
     },
   },
   methods: {
+    init() {
+      this.loaded = false;
+      this.loadModelMeta()
+
+      setTimeout(() => {
+        this.loadIcons()
+      }, 50);
+
+      this.scrollToSelected()
+    },
+
+    scrollToSelected() {
+      if (this.selectedIcon > 0) {
+        setTimeout(() => {
+          const container = document.getElementById("item-icon-view-port");
+          const target    = document.getElementById(util.format("item-icon-%s", this.selectedIcon))
+          if (container && target) {
+            container.scrollTop = target.offsetTop - 300;
+          }
+        }, 100)
+      }
+    },
+
     selectIcon(icon) {
       this.$emit("input", parseInt(icon));
     },
@@ -116,7 +152,6 @@ export default {
       this.loaded             = false;
       this.iconSlotSearch     = 0;
       this.iconItemTypeSearch = 0;
-      this.updateQueryState()
       this.loadIcons()
     },
 
@@ -247,27 +282,10 @@ export default {
     }
   },
   async mounted() {
-    this.loaded = false;
-    this.loadModelMeta()
-
-    setTimeout(() => {
-      this.loadIcons()
-    }, 50);
-
-    // bring focus to the selected model
-    // we queue this on a timeout because elements haven't been rendered yet
-    console.log(this.selectedIcon)
-
-    if (this.selectedIcon > 0) {
-      setTimeout(() => {
-        const container = document.getElementById("item-icon-view-port");
-        const target    = document.getElementById(util.format("item-icon-%s", this.selectedIcon))
-        if (container && target) {
-          container.scrollTop = target.offsetTop - 300;
-        }
-      }, 100)
-    }
-
+    this.init()
+  },
+  activated() {
+    this.scrollToSelected()
   }
 }
 </script>

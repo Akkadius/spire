@@ -16,6 +16,41 @@
             >
           </div>
         </div>
+
+        <div class="row">
+          <div class="col-12 text-center mt-3">
+
+            <div class="btn-group ml-3" role="group" aria-label="Basic example">
+              <b-button
+                @click="filterNimbuses = true; triggerSearch()"
+                size="sm"
+                :variant="(filterNimbuses ? 'warning' : 'outline-warning')"
+              >Nimbuses
+              </b-button>
+              <b-button
+                @click="reset(); triggerSearch()"
+                size="sm"
+                :variant="(!filterNimbuses ? 'warning' : 'outline-warning')"
+              >All
+              </b-button>
+            </div>
+
+            <div class="btn-group ml-3" role="group" aria-label="Basic example">
+              <b-button size="sm" variant="outline-warning"><i class="fa fa-clock-o"></i> Start Preview @</b-button>
+              <b-button @click="startVideoTime = 0; triggerSearch()" size="sm" :variant="(parseInt(startVideoTime) === 0 ? 'warning' : 'outline-warning')">0s</b-button>
+              <b-button @click="startVideoTime = 3; triggerSearch()" size="sm" :variant="(parseInt(startVideoTime) === 3 ? 'warning' : 'outline-warning')">3s</b-button>
+            </div>
+
+            <b-button
+              @click="reset(); triggerSearch()"
+              size="sm"
+              class="ml-3"
+              variant="outline-warning"
+            ><i class="fa fa-refresh"></i> Reset
+            </b-button>
+
+          </div>
+        </div>
       </eq-window-simple>
 
       <eq-window-simple
@@ -29,15 +64,21 @@
         <div
           class="row "
           v-on:scroll.passive="videoRender"
-          style="height: 79vh; overflow-y: scroll; box-sizing: border-box;"
+          style="height: 74vh; overflow-y: scroll; box-sizing: border-box;"
         >
           <div class="col-12">
-            <div v-for="(spell) in filteredAnimations" style="display:inline-block; position: relative;">
+            <div
+              class="fade-in"
+              v-for="(spell) in filteredAnimations"
+              :key="spell"
+              style="display:inline-block; position: relative;"
+            >
               <video
                 muted
                 loop
+                style="background-color: black;"
                 :id="'spell-' + spell"
-                :data-src="animBaseUrl + spell + '.mp4'"
+                :data-src="animBaseUrl + spell + '.mp4#t=' + startVideoTime"
                 class="video-preview spell-preview-viewer"
               >
               </video>
@@ -63,6 +104,7 @@ import {ROUTE}           from "../../routes";
 import VideoViewer       from "../../app/video-viewer/video-viewer";
 import EqAssets          from "../../app/eq-assets/eq-assets";
 import EqWindowSimple    from "../../components/eq-ui/EQWindowSimple";
+import {SPELL_NIMBUSES}  from "../../app/constants/eq-spell-constants";
 
 let itemModels = [];
 
@@ -87,26 +129,73 @@ export default {
       filteredAnimations: [],
       search: "",
       animBaseUrl: App.ASSET_SPELL_ANIMATIONS,
-      routeWatcher: null,
+      // routeWatcher: null,
+      filterNimbuses: false,
+
+      SPELL_NIMBUSES: SPELL_NIMBUSES,
+
+      startVideoTime: 0,
     }
   },
+
+  watch: {
+    // reset state vars when we navigate away
+    '$route'() {
+      this.loadQueryState()
+      this.spellAnimSearch()
+    },
+  },
+
   created() {
+    this.loadQueryState()
+
     this.init()
   },
   methods: {
+
+    reset() {
+      this.startVideoTime = 0;
+      this.filterNimbuses = false;
+    },
+
+    loadQueryState: function () {
+      if (this.$route.query.q && this.$route.query.q !== "") {
+        this.search = this.$route.query.q
+      }
+      if (this.$route.query.nimbus && this.$route.query.nimbus === "true") {
+        this.filterNimbuses = true
+      }
+      if (this.$route.query.startVideoTime && this.$route.query.nimbus !== 0) {
+        this.startVideoTime = this.$route.query.startVideoTime
+      }
+    },
+
+    updateQueryState: function () {
+      let queryState = {};
+      if (this.search !== "") {
+        queryState.q = this.search
+      }
+      if (this.filterNimbuses) {
+        queryState.nimbus = this.filterNimbuses
+      }
+      if (this.startVideoTime) {
+        queryState.startVideoTime = this.startVideoTime
+      }
+
+      this.$router.push(
+        {
+          path: ROUTE.SPELL_ANIMATION_VIEWER,
+          query: queryState
+        }
+      ).catch(() => {
+      })
+    },
+
     init() {
       if (!this.$route.query.q) {
         this.search        = ""
         this.filteredRaces = []
       }
-
-      // create route watcher
-      this.routeWatcher = this.$watch('$route.query', () => {
-        if (this.$route.query.q && this.$route.query.q !== "") {
-          this.search = this.$route.query.q
-        }
-        this.spellAnimSearch();
-      });
 
       this.render()
       this.spellAnimSearch()
@@ -130,11 +219,9 @@ export default {
       }, 500);
     },
     triggerSearch: debounce(function () {
-      this.$router.push({ path: ROUTE.SPELL_ANIMATION_VIEWER, query: { q: this.search } }).catch(err => err)
+      this.updateQueryState()
     }, 1000),
     spellAnimSearch: function () {
-      console.log("trigger")
-
       this.loaded = false
 
       let foundAnim          = {};
@@ -146,6 +233,7 @@ export default {
           const spellName   = spellAnimMapping[0].toLowerCase().trim()
           const spellAnimId = spellAnimMapping[2]
 
+          // spell name search filter
           if (spellName.includes(this.search.toLowerCase())) {
             if (!foundAnim[spellAnimId] && animationPreviewExists[spellAnimId]) {
               filteredAnimations.push(spellAnimId)
@@ -153,6 +241,17 @@ export default {
             }
           }
         }
+      }
+
+      // filter on nimbuses if filter is set
+      if (this.filterNimbuses) {
+        filteredAnimations = []
+        EqAssets.getSpellAnimationFileIds().forEach((animationId) => {
+          if (SPELL_NIMBUSES.includes(animationId)) {
+            filteredAnimations.push(animationId)
+            foundAnim[animationId] = 1
+          }
+        })
       }
 
       // Sort by spell animation number
@@ -174,9 +273,6 @@ export default {
   },
   deactivated() {
     VideoViewer.destroyScrollListener()
-
-    // remove route watcher
-    this.routeWatcher()
   },
   props: {
     isComponent: { // here for now because this viewer wasn't built as a component in mind

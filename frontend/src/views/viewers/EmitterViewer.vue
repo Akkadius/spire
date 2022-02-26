@@ -23,6 +23,7 @@
             <video
               muted
               loop
+              style="background-color: black;"
               :id="'preview-' + preview"
               :data-src="animBaseUrl + preview + '.mp4'"
               class="video-preview emitter-preview"

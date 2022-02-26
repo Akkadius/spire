@@ -82,7 +82,7 @@ export const TitleApiAxiosParamCreator = function (configuration?: Configuration
         /**
          * 
          * @summary Deletes Title
-         * @param {number} id Id
+         * @param {number} id id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -386,7 +386,7 @@ export const TitleApiFp = function(configuration?: Configuration) {
         /**
          * 
          * @summary Deletes Title
-         * @param {number} id Id
+         * @param {number} id id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -485,7 +485,7 @@ export const TitleApiFactory = function (configuration?: Configuration, basePath
         /**
          * 
          * @summary Deletes Title
-         * @param {number} id Id
+         * @param {number} id id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -566,7 +566,7 @@ export interface TitleApiCreateTitleRequest {
  */
 export interface TitleApiDeleteTitleRequest {
     /**
-     * Id
+     * id
      * @type {number}
      * @memberof TitleApiDeleteTitle
      */

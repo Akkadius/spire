@@ -1,10 +1,10 @@
 package crudcontrollers
 
 import (
+	"fmt"
 	"github.com/Akkadius/spire/internal/database"
 	"github.com/Akkadius/spire/internal/http/routes"
 	"github.com/Akkadius/spire/internal/models"
-	"fmt"
 	"github.com/labstack/echo/v4"
 	"github.com/sirupsen/logrus"
 	"net/http"
@@ -12,7 +12,7 @@ import (
 )
 
 type LoginServerListTypeController struct {
-	db     *database.DatabaseResolver
+	db	 *database.DatabaseResolver
 	logger *logrus.Logger
 }
 
@@ -21,19 +21,19 @@ func NewLoginServerListTypeController(
 	logger *logrus.Logger,
 ) *LoginServerListTypeController {
 	return &LoginServerListTypeController{
-		db:     db,
+		db:	 db,
 		logger: logger,
 	}
 }
 
 func (e *LoginServerListTypeController) Routes() []*routes.Route {
 	return []*routes.Route{
-		routes.RegisterRoute(http.MethodDelete, "login_server_list_type/:login_server_list_type", e.deleteLoginServerListType, nil),
-		routes.RegisterRoute(http.MethodGet, "login_server_list_type/:login_server_list_type", e.getLoginServerListType, nil),
+		routes.RegisterRoute(http.MethodGet, "login_server_list_type/:id", e.getLoginServerListType, nil),
 		routes.RegisterRoute(http.MethodGet, "login_server_list_types", e.listLoginServerListTypes, nil),
-		routes.RegisterRoute(http.MethodPost, "login_server_list_types/bulk", e.getLoginServerListTypesBulk, nil),
-		routes.RegisterRoute(http.MethodPatch, "login_server_list_type/:login_server_list_type", e.updateLoginServerListType, nil),
 		routes.RegisterRoute(http.MethodPut, "login_server_list_type", e.createLoginServerListType, nil),
+		routes.RegisterRoute(http.MethodDelete, "login_server_list_type/:id", e.deleteLoginServerListType, nil),
+		routes.RegisterRoute(http.MethodPatch, "login_server_list_type/:id", e.updateLoginServerListType, nil),
+		routes.RegisterRoute(http.MethodPost, "login_server_list_types/bulk", e.getLoginServerListTypesBulk, nil),
 	}
 }
 
@@ -79,17 +79,31 @@ func (e *LoginServerListTypeController) listLoginServerListTypes(c echo.Context)
 // @Failure 500 {string} string "Bad query request"
 // @Router /login_server_list_type/{id} [get]
 func (e *LoginServerListTypeController) getLoginServerListType(c echo.Context) error {
-	loginServerListTypeId, err := strconv.Atoi(c.Param("login_server_list_type"))
-	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Cannot find param"})
-	}
+	var params []interface{}
+	var keys []string
 
+	// primary key param
+	id, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Cannot find param [Id]"})
+	}
+	params = append(params, id)
+	keys = append(keys, "id = ?")
+
+	// query builder
 	var result models.LoginServerListType
-	err = e.db.QueryContext(models.LoginServerListType{}, c).First(&result, loginServerListTypeId).Error
-	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err})
+	query := e.db.QueryContext(models.LoginServerListType{}, c)
+	for i, _ := range keys {
+		query = query.Where(keys[i], params[i])
 	}
 
+	// grab first entry
+	err = query.First(&result).Error
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
+	}
+
+	// couldn't find entity
 	if result.ID == 0 {
 		return c.JSON(http.StatusNotFound, echo.Map{"error": "Cannot find entity"})
 	}
@@ -111,26 +125,44 @@ func (e *LoginServerListTypeController) getLoginServerListType(c echo.Context) e
 // @Failure 500 {string} string "Error updating entity"
 // @Router /login_server_list_type/{id} [patch]
 func (e *LoginServerListTypeController) updateLoginServerListType(c echo.Context) error {
-	loginServerListType := new(models.LoginServerListType)
-	if err := c.Bind(loginServerListType); err != nil {
+	request := new(models.LoginServerListType)
+	if err := c.Bind(request); err != nil {
 		return c.JSON(
 			http.StatusInternalServerError,
-			echo.Map{"error": fmt.Sprintf("Error binding to entity: [%v]", err)},
+			echo.Map{"error": fmt.Sprintf("Error binding to entity [%v]", err.Error())},
 		)
 	}
 
-    entity := models.LoginServerListType{}
-	err := e.db.Get(models.LoginServerListType{}, c).Model(&models.LoginServerListType{}).First(&entity, loginServerListType.ID).Error
-	if err != nil || loginServerListType.ID == 0 {
-		return c.JSON(http.StatusNotFound, echo.Map{"error": "Cannot find entity"})
-	}
+	var params []interface{}
+	var keys []string
 
-	err = e.db.Get(models.LoginServerListType{}, c).Model(&entity).Select("*").Updates(&loginServerListType).Error
+	// primary key param
+	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error updating entity: [%v]", err)})
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Cannot find param [Id]"})
+	}
+	params = append(params, id)
+	keys = append(keys, "id = ?")
+
+	// query builder
+	var result models.LoginServerListType
+	query := e.db.QueryContext(models.LoginServerListType{}, c)
+	for i, _ := range keys {
+		query = query.Where(keys[i], params[i])
 	}
 
-	return c.JSON(http.StatusOK, loginServerListType)
+	// grab first entry
+	err = query.First(&result).Error
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Cannot find entity [%s]", err.Error())})
+	}
+
+	err = query.Select("*").Updates(&request).Error
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error updating entity [%v]", err.Error())})
+	}
+
+	return c.JSON(http.StatusOK, request)
 }
 
 // createLoginServerListType godoc
@@ -149,7 +181,7 @@ func (e *LoginServerListTypeController) createLoginServerListType(c echo.Context
 	if err := c.Bind(loginServerListType); err != nil {
 		return c.JSON(
 			http.StatusInternalServerError,
-			echo.Map{"error": fmt.Sprintf("Error binding to entity: [%v]", err)},
+			echo.Map{"error": fmt.Sprintf("Error binding to entity [%v]", err.Error())},
 		)
 	}
 
@@ -157,7 +189,7 @@ func (e *LoginServerListTypeController) createLoginServerListType(c echo.Context
 	if err != nil {
 		return c.JSON(
 			http.StatusInternalServerError,
-			echo.Map{"error": fmt.Sprintf("Error inserting entity: [%v]", err)},
+			echo.Map{"error": fmt.Sprintf("Error inserting entity [%v]", err.Error())},
 		)
 	}
 
@@ -170,25 +202,38 @@ func (e *LoginServerListTypeController) createLoginServerListType(c echo.Context
 // @Accept json
 // @Produce json
 // @Tags LoginServerListType
-// @Param id path int true "Id"
+// @Param id path int true "id"
 // @Success 200 {string} string "Entity deleted successfully"
 // @Failure 404 {string} string "Cannot find entity"
 // @Failure 500 {string} string "Error binding to entity"
 // @Failure 500 {string} string "Error deleting entity"
 // @Router /login_server_list_type/{id} [delete]
 func (e *LoginServerListTypeController) deleteLoginServerListType(c echo.Context) error {
-	loginServerListTypeId, err := strconv.Atoi(c.Param("login_server_list_type"))
+	var params []interface{}
+	var keys []string
+
+	// primary key param
+	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
 		e.logger.Error(err)
 	}
+	params = append(params, id)
+	keys = append(keys, "id = ?")
 
-	loginServerListType := new(models.LoginServerListType)
-	err = e.db.Get(models.LoginServerListType{}, c).Model(&models.LoginServerListType{}).First(&loginServerListType, loginServerListTypeId).Error
-	if err != nil || loginServerListType.ID == 0 {
-		return c.JSON(http.StatusNotFound, echo.Map{"error": "Cannot find entity"})
+	// query builder
+	var result models.LoginServerListType
+	query := e.db.QueryContext(models.LoginServerListType{}, c)
+	for i, _ := range keys {
+		query = query.Where(keys[i], params[i])
 	}
 
-	err = e.db.Get(models.LoginServerListType{}, c).Model(&models.LoginServerListType{}).Delete(&loginServerListType).Error
+	// grab first entry
+	err = query.First(&result).Error
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
+	}
+
+	err = e.db.Get(models.LoginServerListType{}, c).Model(&models.LoginServerListType{}).Delete(&result).Error
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Error deleting entity"})
 	}
@@ -213,7 +258,7 @@ func (e *LoginServerListTypeController) getLoginServerListTypesBulk(c echo.Conte
 	if err := c.Bind(r); err != nil {
 		return c.JSON(
 			http.StatusInternalServerError,
-			echo.Map{"error": fmt.Sprintf("Error binding to bulk request: [%v]", err)},
+			echo.Map{"error": fmt.Sprintf("Error binding to bulk request: [%v]", err.Error())},
 		)
 	}
 
@@ -226,7 +271,7 @@ func (e *LoginServerListTypeController) getLoginServerListTypesBulk(c echo.Conte
 
 	err := e.db.QueryContext(models.LoginServerListType{}, c).Find(&results, r.IDs).Error
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err})
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
 	}
 
 	return c.JSON(http.StatusOK, results)

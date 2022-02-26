@@ -82,7 +82,7 @@ export const CharacterMemmedSpellApiAxiosParamCreator = function (configuration?
         /**
          * 
          * @summary Deletes CharacterMemmedSpell
-         * @param {number} id Id
+         * @param {number} id id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -386,7 +386,7 @@ export const CharacterMemmedSpellApiFp = function(configuration?: Configuration)
         /**
          * 
          * @summary Deletes CharacterMemmedSpell
-         * @param {number} id Id
+         * @param {number} id id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -485,7 +485,7 @@ export const CharacterMemmedSpellApiFactory = function (configuration?: Configur
         /**
          * 
          * @summary Deletes CharacterMemmedSpell
-         * @param {number} id Id
+         * @param {number} id id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -566,7 +566,7 @@ export interface CharacterMemmedSpellApiCreateCharacterMemmedSpellRequest {
  */
 export interface CharacterMemmedSpellApiDeleteCharacterMemmedSpellRequest {
     /**
-     * Id
+     * id
      * @type {number}
      * @memberof CharacterMemmedSpellApiDeleteCharacterMemmedSpell
      */

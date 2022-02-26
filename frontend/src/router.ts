@@ -1,4 +1,4 @@
-import Vue    from 'vue'
+import Vue from 'vue'
 import Router from 'vue-router'
 import {ROUTE} from "@/routes";
 import * as util from "util";
@@ -9,6 +9,37 @@ export default new Router({
   mode: 'history',
   linkActiveClass: 'active',
   linkExactActiveClass: 'active',
+  scrollBehavior(to, from, savedPosition) {
+    // console.log("[scrollBehavior] to, from, savedPosition", to, from, savedPosition)
+
+    // if title is passed
+    if (to.meta && to.meta.title) {
+      document.title = "[Spire] " + to.meta.title || "Spire"
+    }
+
+    // if link contains a hash target
+    if (to.hash) {
+      const hash = to.hash.replace("#", "");
+      const hashTarget = document.getElementById(hash)
+      if (hashTarget) {
+        setTimeout(() => {
+          hashTarget.scrollIntoView();
+        }, 400);
+        return null
+      }
+    }
+
+    // otherwise resolve the state of location prior
+    return new Promise((resolve, reject) => {
+      setTimeout(() => {
+        if (savedPosition) {
+          resolve(savedPosition)
+        } else {
+          resolve({x: 0, y: 0})
+        }
+      }, 400)
+    })
+  },
   routes: [
     {
       path: '/',
@@ -43,6 +74,16 @@ export default new Router({
           path: ROUTE.PLAYER_ANIMATION_VIEWER,
           component: () => import('./views/viewers/PlayerAnimationViewer.vue'),
           meta: {title: "Player Animation Viewer"},
+        },
+        {
+          path: ROUTE.CLIENT_FILES,
+          component: () => import('./views/client-files/ClientFiles.vue'),
+          meta: {title: "Client Files"},
+        },
+        {
+          path: ROUTE.STRINGS_DATABASE,
+          component: () => import('./views/strings-database/StringsDatabase.vue'),
+          meta: {title: "Strings Database (dbstr)"},
         },
         {
           path: ROUTE.EMITTER_VIEWER,

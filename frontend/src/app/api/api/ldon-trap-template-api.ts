@@ -82,7 +82,7 @@ export const LdonTrapTemplateApiAxiosParamCreator = function (configuration?: Co
         /**
          * 
          * @summary Deletes LdonTrapTemplate
-         * @param {number} id Id
+         * @param {number} id id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -386,7 +386,7 @@ export const LdonTrapTemplateApiFp = function(configuration?: Configuration) {
         /**
          * 
          * @summary Deletes LdonTrapTemplate
-         * @param {number} id Id
+         * @param {number} id id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -485,7 +485,7 @@ export const LdonTrapTemplateApiFactory = function (configuration?: Configuratio
         /**
          * 
          * @summary Deletes LdonTrapTemplate
-         * @param {number} id Id
+         * @param {number} id id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -566,7 +566,7 @@ export interface LdonTrapTemplateApiCreateLdonTrapTemplateRequest {
  */
 export interface LdonTrapTemplateApiDeleteLdonTrapTemplateRequest {
     /**
-     * Id
+     * id
      * @type {number}
      * @memberof LdonTrapTemplateApiDeleteLdonTrapTemplate
      */

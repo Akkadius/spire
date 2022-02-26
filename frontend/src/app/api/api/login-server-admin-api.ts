@@ -82,7 +82,7 @@ export const LoginServerAdminApiAxiosParamCreator = function (configuration?: Co
         /**
          * 
          * @summary Deletes LoginServerAdmin
-         * @param {number} id Id
+         * @param {number} id id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -386,7 +386,7 @@ export const LoginServerAdminApiFp = function(configuration?: Configuration) {
         /**
          * 
          * @summary Deletes LoginServerAdmin
-         * @param {number} id Id
+         * @param {number} id id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -485,7 +485,7 @@ export const LoginServerAdminApiFactory = function (configuration?: Configuratio
         /**
          * 
          * @summary Deletes LoginServerAdmin
-         * @param {number} id Id
+         * @param {number} id id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -566,7 +566,7 @@ export interface LoginServerAdminApiCreateLoginServerAdminRequest {
  */
 export interface LoginServerAdminApiDeleteLoginServerAdminRequest {
     /**
-     * Id
+     * id
      * @type {number}
      * @memberof LoginServerAdminApiDeleteLoginServerAdmin
      */

@@ -6,8 +6,6 @@
     <!--      values correspond to what for the Spell effect you have highlighted.-->
     <!--    </div>-->
 
-    <h6 class="eq-header mt-3 mb-3">Spell Effect Details</h6>
-
     <div>
       <div
         :class="'row ' + (field.description === 'Description' ? 'mb-3' : '') + (field.description === 'Notes' ? 'mt-3' : '')"
@@ -15,36 +13,43 @@
       >
         <div
           :class="'col-2 text-right m-0 p-0 pr-2 font-weight-bold'"
-          v-if="field.field !== ''"
+          v-if="field.field && field.field !== ''"
         >
           {{ field.description }}
         </div>
-        <div class="col-8 m-0 p-0" v-if="field.field !== ''">
+        <div class="col-6 m-0 p-0" v-if="field.field && field.field !== ''">
           {{ field.field }}
         </div>
       </div>
+
+      <div v-if="getSpaDefinition(spa).notes.trim() !== ''">
+        <h6 class="eq-header mb-3 mt-3">Notes</h6>
+        {{ getSpaDefinition(spa).notes }}
+      </div>
     </div>
 
-    <h6 class="eq-header mb-3 mt-3" v-if="effectInfo.info !== ''">Effect Render Preview</h6>
+    <div>
+      <h6 class="eq-header mb-3 mt-3" v-if="effectInfo.info !== ''">Effect Render Preview</h6>
 
-    <v-runtime-template
-      :template="'<span>' + effectInfo.info + '</span>'"
-      v-if="typeof effectInfo !== 'undefined'"
-      class="pb-6 mt-3 doc"
-    />
+      <v-runtime-template
+        :template="'<span>' + effectInfo.info + '</span>'"
+        v-if="typeof effectInfo !== 'undefined'"
+        class="pb-6 mt-3 doc"
+      />
+    </div>
 
-    <div class="mb-5"></div>
+    <div class="mb-3"></div>
 
     <eq-debug :data="getSpaDefinition(spa)"/>
   </div>
 </template>
 
 <script>
-import {SPELL_SPA_DEFINITIONS} from "../../../app/constants/eq-spell-spa-definitions";
-import EqDebug                 from "../../../components/eq-ui/EQDebug";
-import {Spells}                from "../../../app/spells";
+import {SPELL_SPA_DEFINITIONS} from "@/app/constants/eq-spell-spa-definitions";
+import EqDebug                 from "@/components/eq-ui/EQDebug";
+import {Spells}                from "@/app/spells";
 import {App}                   from "../../../constants/app";
-import {Items}                 from "../../../app/items";
+import {Items}                 from "@/app/items";
 import EqWindow                from "@/components/eq-ui/EQWindow";
 
 export default {
@@ -57,6 +62,9 @@ export default {
   watch: {
     'effectIndex'() {
       this.load()
+    },
+    'spa'() {
+      this.load()
     }
   },
   created() {
@@ -67,8 +75,6 @@ export default {
       fields: [],
       effectInfo: "",
       sideLoadedSpellData: {},
-
-      spellCdnUrl: App.ASSET_SPELL_ICONS_BASE_URL,
 
       componentId: "",
       reagents: [],
@@ -112,8 +118,8 @@ export default {
         { field: this.getSpaDefinition(this.spa).description, description: "Description" },
         { field: this.toTitleCase(this.getSpaDefinition(this.spa).base), description: "Base" },
         { field: this.toTitleCase(this.getSpaDefinition(this.spa).limit), description: "Limit" },
-        { field: this.toTitleCase(this.getSpaDefinition(this.spa).value), description: "Max" },
-        { field: this.getSpaDefinition(this.spa).notes, description: "Notes" },
+        { field: this.toTitleCase(this.getSpaDefinition(this.spa).max), description: "Max" },
+        // { field: this.getSpaDefinition(this.spa).notes, description: "Notes" },
       ]
 
       this.effectInfo = await this.getSpellEffectInfo(this.spell, this.effectIndex);

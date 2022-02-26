@@ -19,6 +19,7 @@ import {DbStrApi, SpellsNewApi} from "@/app/api";
 import {SpireApiClient} from "@/app/api/spire-api-client";
 import {App} from "@/constants/app";
 import {Items} from "@/app/items";
+import {SpireQueryBuilder} from "@/app/api/spire-query-builder";
 
 export class Spells {
   public static data           = {}
@@ -1853,7 +1854,7 @@ export class Spells {
           break;
 
         case 393: //Focus version
-          printBuffer += this.getFocusPercentRange("Healing Received", base, limit, false)  + "(v393)"
+          printBuffer += this.getFocusPercentRange("Healing Received", base, limit, false) + "(v393)"
           break;
 
         case 394:
@@ -2821,25 +2822,13 @@ export class Spells {
   };
 
   public static async getSpellGroupNameById(spellGroupId) {
-    const api = (new SpellsNewApi(SpireApiClient.getOpenApiConfig()))
-
-    let filters = [
-      ["spellgroup", "__", spellGroupId]
-    ]
-
-    let wheres = [];
-    filters.forEach((filter) => {
+    const result = await (new SpellsNewApi(SpireApiClient.getOpenApiConfig())).listSpellsNews(
       // @ts-ignore
-      wheres.push(util.format("%s%s%s", filter[0], filter[1], filter[2]))
-    })
-
-    const result = await (api.listSpellsNews(
-        {
-          limit: "1",
-          where: wheres.join("."),
-          orderBy: "id"
-        }
-      )
+      (new SpireQueryBuilder())
+        .where("spellgroup", "=", spellGroupId)
+        .orderBy(["id"])
+        .limit(1)
+        .get()
     );
 
     if (result.status === 200) {
@@ -2870,7 +2859,7 @@ export class Spells {
   };
 
   public static getMinLevel(spell) {
-    let minLevel = 0
+    let minLevel = 255
     for (let i = 1; i <= 16; i++) {
       const classIndex = "classes_" + i
       if ((spell[classIndex] > 0) && (spell[classIndex] < 255)) {
@@ -2879,15 +2868,15 @@ export class Spells {
         }
       }
     }
-    return minLevel
+    return parseInt(String(minLevel))
   };
 
   public static getBuffDuration(spell) {
     let i            = 0
     let minLevel     = this.getMinLevel(spell)
-    let buffDuration = spell["buffduration"]
+    let buffDuration = parseInt(spell["buffduration"])
 
-    switch (spell["buffdurationformula"]) {
+    switch (parseInt(spell["buffdurationformula"])) {
       case 0:
         return 0;
       case 1:
@@ -2975,23 +2964,45 @@ export class Spells {
     }
   };
 
-  public static async renderSpellMini(parentSpellId, renderSpellId, iconSize = 16) {
+  public static async renderSpellMini(parentSpellId, renderSpellId, iconSize = 12) {
     let spell             = <any>await this.getSpell(renderSpellId)
     const targetTypeColor = this.getTargetTypeColor(spell["targettype"]);
 
-    let borderSize = iconSize > 16 ? 2 : 1;
-    let borderRadius = iconSize > 16 ? 7 : 3;
+    let renderIconSize = 20;
+    let borderSize = 1;
+    let borderRadius = 3;
+    let marginLeft = 1;
+    let textTop = 10;
+    if (iconSize >= 40) {
+      renderIconSize = 40;
+      borderSize = 2;
+      borderRadius = 3;
+      marginLeft = 2;
+    }
+    else if (iconSize >= 30) {
+      renderIconSize = 30;
+      borderSize = 1;
+      borderRadius = 6;
+      marginLeft = 1;
+    }
+    else if (iconSize >= 12) {
+      renderIconSize = 12;
+      borderSize = 1;
+      borderRadius = 2;
+      marginLeft = 0;
+      textTop = 1;
+    }
 
     return `
           <div :id="${parentSpellId} + '-' + ${renderSpellId} + '-' + componentId" style="display:inline-block">
-
             <div style="display: inline-block">
-              <img
-                :src="spellCdnUrl + '' + (${spell.new_icon} > 0 ? ${spell.new_icon} : 1) + '.gif'"
-                style="width: ${iconSize}px;height:auto; border: ${borderSize}px solid ${targetTypeColor}; border-radius: ${borderRadius}px;"
-                :class="(${iconSize} > 16 ? 'mr-1' : '')"
-                >
-              <span style="color: #f7ff00">${spell.name}</span>
+              <div
+                 style="width: ${renderIconSize}px; height: ${renderIconSize}px; border: ${borderSize}px solid ${targetTypeColor}; border-radius: ${borderRadius}px; display: inline-block"
+                 :class="'spell-' + ${spell.new_icon} + '-${renderIconSize}'"
+               />
+              <span
+                :class="'ml-${marginLeft}'"
+                style="color: #f7ff00; position: relative; top: -${textTop}px;">${spell.name}</span>
             </div>
 
           </div>
@@ -3014,6 +3025,10 @@ export class Spells {
     this.data[spellId] = spell;
   }
 
+  public static isSpellSet(spellId) {
+    return this.data[spellId] && this.data[spellId].length > 0
+  }
+
   public static async getSpell(spellId) {
     if (spellId === 0) {
       return {}
@@ -3034,23 +3049,12 @@ export class Spells {
   }
 
   public static async preloadDbstr() {
-    const api   = (new DbStrApi(SpireApiClient.getOpenApiConfig()))
-    let filters = [
-      ["type", "__", 6]
-    ]
-
-    if (this.dbstrPreloaded) {
-      return;
-    }
-
-
-    let wheres = [];
-    filters.forEach((filter) => {
+    const result = await (new DbStrApi(SpireApiClient.getOpenApiConfig())).listDbStrs(
       // @ts-ignore
-      wheres.push(util.format("%s%s%s", filter[0], filter[1], filter[2]))
-    })
-
-    const result = await api.listDbStrs({where: wheres.join(".")});
+      (new SpireQueryBuilder())
+        .where("type", "=", 6)
+        .get()
+    );
     if (result.status === 200) {
       if (result.data && result.data.length > 0) {
         for (let index in result.data) {
@@ -3077,19 +3081,13 @@ export class Spells {
       return this.dbstrData[id]
     }
 
-    const api   = (new DbStrApi(SpireApiClient.getOpenApiConfig()))
-    let filters = [
-      ["type", "__", 6],
-      ["id", "__", id]
-    ]
-
-    let wheres = [];
-    filters.forEach((filter) => {
+    const result = await (new DbStrApi(SpireApiClient.getOpenApiConfig())).listDbStrs(
       // @ts-ignore
-      wheres.push(util.format("%s%s%s", filter[0], filter[1], filter[2]))
-    })
-
-    const result = await api.listDbStrs({where: wheres.join(".")});
+      (new SpireQueryBuilder())
+        .where("type", "=", 6)
+        .where("id", "=", id)
+        .get()
+    );
     if (result.status === 200) {
       if (result.data && result.data.length > 0) {
         this.dbstrData[id] = <string>result.data[0].value;
@@ -3117,7 +3115,7 @@ export class Spells {
       'recast_time': 'Sets recast delay on the spell gem used in casting.',
       'buffdurationformula': 'Determines actual buff duration.',
       'buffduration': 'Duration of the buff in tics, 1 tic = 6 seconds.',
-      'ae_duration': 'Number of rain wave is, 1 wave = 2500. Use target type 8.',
+      'ae_duration': 'Number of rain wave is, 1 wave = 2500.',
       'mana': 'How much mana is required to cast this spell.',
       'effect_base_value_1': '',
       'effect_base_value_2': '',
@@ -3157,18 +3155,18 @@ export class Spells {
       'max_12': '',
       'icon': '',
       'memicon': '',
-      'components_1': '',
-      'components_2': '',
-      'components_3': '',
-      'components_4': '',
-      'component_counts_1': '',
-      'component_counts_2': '',
-      'component_counts_3': '',
-      'component_counts_4': '',
-      'noexpend_reagent_1': '',
-      'noexpend_reagent_2': '',
-      'noexpend_reagent_3': '',
-      'noexpend_reagent_4': '',
+      'components_1': 'Item ID cost required to cast this spell',
+      'components_2': 'Item ID cost required to cast this spell',
+      'components_3': 'Item ID cost required to cast this spell',
+      'components_4': 'Item ID cost required to cast this spell',
+      'component_counts_1': 'Item count for component required to cast this spell',
+      'component_counts_2': 'Item count for component required to cast this spell',
+      'component_counts_3': 'Item count for component required to cast this spell',
+      'component_counts_4': 'Item count for component required to cast this spell',
+      'noexpend_reagent_1': 'Item ID that needs to exist in inventory to cast this spell',
+      'noexpend_reagent_2': 'Item ID that needs to exist in inventory to cast this spell',
+      'noexpend_reagent_3': 'Item ID that needs to exist in inventory to cast this spell',
+      'noexpend_reagent_4': 'Item ID that needs to exist in inventory to cast this spell',
       'formula_1': '',
       'formula_2': '',
       'formula_3': '',

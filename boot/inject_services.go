@@ -1,6 +1,7 @@
 package boot
 
 import (
+	"github.com/Akkadius/spire/internal/clientfiles"
 	"github.com/Akkadius/spire/internal/connection"
 	"github.com/Akkadius/spire/internal/desktop"
 	"github.com/Akkadius/spire/internal/github"
@@ -17,4 +18,6 @@ var serviceSet = wire.NewSet(
 	questapi.NewParseService,
 	questapi.NewQuestExamplesGithubSourcer,
 	desktop.NewWebBoot,
+	clientfiles.NewExporter,
+	clientfiles.NewImporter,
 )

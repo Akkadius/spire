@@ -23,6 +23,7 @@ type GroundSpawn struct {
 	MaxExpansion           uint8       `json:"max_expansion" gorm:"Column:max_expansion"`
 	ContentFlags           null.String `json:"content_flags" gorm:"Column:content_flags"`
 	ContentFlagsDisabled   null.String `json:"content_flags_disabled" gorm:"Column:content_flags_disabled"`
+	Zone                   *Zone       `json:"zone,omitempty" gorm:"foreignKey:zoneid;references:zoneidnumber"`
 }
 
 func (GroundSpawn) TableName() string {
@@ -30,7 +31,9 @@ func (GroundSpawn) TableName() string {
 }
 
 func (GroundSpawn) Relationships() []string {
-    return []string{}
+    return []string{
+		"Zone",
+	}
 }
 
 func (GroundSpawn) Connection() string {

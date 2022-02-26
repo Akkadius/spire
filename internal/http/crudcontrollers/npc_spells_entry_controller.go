@@ -1,10 +1,10 @@
 package crudcontrollers
 
 import (
+	"fmt"
 	"github.com/Akkadius/spire/internal/database"
 	"github.com/Akkadius/spire/internal/http/routes"
 	"github.com/Akkadius/spire/internal/models"
-	"fmt"
 	"github.com/labstack/echo/v4"
 	"github.com/sirupsen/logrus"
 	"net/http"
@@ -12,7 +12,7 @@ import (
 )
 
 type NpcSpellsEntryController struct {
-	db     *database.DatabaseResolver
+	db	 *database.DatabaseResolver
 	logger *logrus.Logger
 }
 
@@ -21,19 +21,19 @@ func NewNpcSpellsEntryController(
 	logger *logrus.Logger,
 ) *NpcSpellsEntryController {
 	return &NpcSpellsEntryController{
-		db:     db,
+		db:	 db,
 		logger: logger,
 	}
 }
 
 func (e *NpcSpellsEntryController) Routes() []*routes.Route {
 	return []*routes.Route{
-		routes.RegisterRoute(http.MethodDelete, "npc_spells_entry/:npc_spells_entry", e.deleteNpcSpellsEntry, nil),
-		routes.RegisterRoute(http.MethodGet, "npc_spells_entry/:npc_spells_entry", e.getNpcSpellsEntry, nil),
+		routes.RegisterRoute(http.MethodGet, "npc_spells_entry/:id", e.getNpcSpellsEntry, nil),
 		routes.RegisterRoute(http.MethodGet, "npc_spells_entries", e.listNpcSpellsEntries, nil),
-		routes.RegisterRoute(http.MethodPost, "npc_spells_entries/bulk", e.getNpcSpellsEntriesBulk, nil),
-		routes.RegisterRoute(http.MethodPatch, "npc_spells_entry/:npc_spells_entry", e.updateNpcSpellsEntry, nil),
 		routes.RegisterRoute(http.MethodPut, "npc_spells_entry", e.createNpcSpellsEntry, nil),
+		routes.RegisterRoute(http.MethodDelete, "npc_spells_entry/:id", e.deleteNpcSpellsEntry, nil),
+		routes.RegisterRoute(http.MethodPatch, "npc_spells_entry/:id", e.updateNpcSpellsEntry, nil),
+		routes.RegisterRoute(http.MethodPost, "npc_spells_entries/bulk", e.getNpcSpellsEntriesBulk, nil),
 	}
 }
 
@@ -79,17 +79,31 @@ func (e *NpcSpellsEntryController) listNpcSpellsEntries(c echo.Context) error {
 // @Failure 500 {string} string "Bad query request"
 // @Router /npc_spells_entry/{id} [get]
 func (e *NpcSpellsEntryController) getNpcSpellsEntry(c echo.Context) error {
-	npcSpellsEntryId, err := strconv.Atoi(c.Param("npc_spells_entry"))
-	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Cannot find param"})
-	}
+	var params []interface{}
+	var keys []string
 
+	// primary key param
+	id, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Cannot find param [Id]"})
+	}
+	params = append(params, id)
+	keys = append(keys, "id = ?")
+
+	// query builder
 	var result models.NpcSpellsEntry
-	err = e.db.QueryContext(models.NpcSpellsEntry{}, c).First(&result, npcSpellsEntryId).Error
-	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err})
+	query := e.db.QueryContext(models.NpcSpellsEntry{}, c)
+	for i, _ := range keys {
+		query = query.Where(keys[i], params[i])
 	}
 
+	// grab first entry
+	err = query.First(&result).Error
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
+	}
+
+	// couldn't find entity
 	if result.ID == 0 {
 		return c.JSON(http.StatusNotFound, echo.Map{"error": "Cannot find entity"})
 	}
@@ -111,26 +125,44 @@ func (e *NpcSpellsEntryController) getNpcSpellsEntry(c echo.Context) error {
 // @Failure 500 {string} string "Error updating entity"
 // @Router /npc_spells_entry/{id} [patch]
 func (e *NpcSpellsEntryController) updateNpcSpellsEntry(c echo.Context) error {
-	npcSpellsEntry := new(models.NpcSpellsEntry)
-	if err := c.Bind(npcSpellsEntry); err != nil {
+	request := new(models.NpcSpellsEntry)
+	if err := c.Bind(request); err != nil {
 		return c.JSON(
 			http.StatusInternalServerError,
-			echo.Map{"error": fmt.Sprintf("Error binding to entity: [%v]", err)},
+			echo.Map{"error": fmt.Sprintf("Error binding to entity [%v]", err.Error())},
 		)
 	}
 
-    entity := models.NpcSpellsEntry{}
-	err := e.db.Get(models.NpcSpellsEntry{}, c).Model(&models.NpcSpellsEntry{}).First(&entity, npcSpellsEntry.ID).Error
-	if err != nil || npcSpellsEntry.ID == 0 {
-		return c.JSON(http.StatusNotFound, echo.Map{"error": "Cannot find entity"})
-	}
+	var params []interface{}
+	var keys []string
 
-	err = e.db.Get(models.NpcSpellsEntry{}, c).Model(&entity).Select("*").Updates(&npcSpellsEntry).Error
+	// primary key param
+	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error updating entity: [%v]", err)})
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Cannot find param [Id]"})
+	}
+	params = append(params, id)
+	keys = append(keys, "id = ?")
+
+	// query builder
+	var result models.NpcSpellsEntry
+	query := e.db.QueryContext(models.NpcSpellsEntry{}, c)
+	for i, _ := range keys {
+		query = query.Where(keys[i], params[i])
 	}
 
-	return c.JSON(http.StatusOK, npcSpellsEntry)
+	// grab first entry
+	err = query.First(&result).Error
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Cannot find entity [%s]", err.Error())})
+	}
+
+	err = query.Select("*").Updates(&request).Error
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error updating entity [%v]", err.Error())})
+	}
+
+	return c.JSON(http.StatusOK, request)
 }
 
 // createNpcSpellsEntry godoc
@@ -149,7 +181,7 @@ func (e *NpcSpellsEntryController) createNpcSpellsEntry(c echo.Context) error {
 	if err := c.Bind(npcSpellsEntry); err != nil {
 		return c.JSON(
 			http.StatusInternalServerError,
-			echo.Map{"error": fmt.Sprintf("Error binding to entity: [%v]", err)},
+			echo.Map{"error": fmt.Sprintf("Error binding to entity [%v]", err.Error())},
 		)
 	}
 
@@ -157,7 +189,7 @@ func (e *NpcSpellsEntryController) createNpcSpellsEntry(c echo.Context) error {
 	if err != nil {
 		return c.JSON(
 			http.StatusInternalServerError,
-			echo.Map{"error": fmt.Sprintf("Error inserting entity: [%v]", err)},
+			echo.Map{"error": fmt.Sprintf("Error inserting entity [%v]", err.Error())},
 		)
 	}
 
@@ -170,25 +202,38 @@ func (e *NpcSpellsEntryController) createNpcSpellsEntry(c echo.Context) error {
 // @Accept json
 // @Produce json
 // @Tags NpcSpellsEntry
-// @Param id path int true "Id"
+// @Param id path int true "id"
 // @Success 200 {string} string "Entity deleted successfully"
 // @Failure 404 {string} string "Cannot find entity"
 // @Failure 500 {string} string "Error binding to entity"
 // @Failure 500 {string} string "Error deleting entity"
 // @Router /npc_spells_entry/{id} [delete]
 func (e *NpcSpellsEntryController) deleteNpcSpellsEntry(c echo.Context) error {
-	npcSpellsEntryId, err := strconv.Atoi(c.Param("npc_spells_entry"))
+	var params []interface{}
+	var keys []string
+
+	// primary key param
+	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
 		e.logger.Error(err)
 	}
+	params = append(params, id)
+	keys = append(keys, "id = ?")
 
-	npcSpellsEntry := new(models.NpcSpellsEntry)
-	err = e.db.Get(models.NpcSpellsEntry{}, c).Model(&models.NpcSpellsEntry{}).First(&npcSpellsEntry, npcSpellsEntryId).Error
-	if err != nil || npcSpellsEntry.ID == 0 {
-		return c.JSON(http.StatusNotFound, echo.Map{"error": "Cannot find entity"})
+	// query builder
+	var result models.NpcSpellsEntry
+	query := e.db.QueryContext(models.NpcSpellsEntry{}, c)
+	for i, _ := range keys {
+		query = query.Where(keys[i], params[i])
 	}
 
-	err = e.db.Get(models.NpcSpellsEntry{}, c).Model(&models.NpcSpellsEntry{}).Delete(&npcSpellsEntry).Error
+	// grab first entry
+	err = query.First(&result).Error
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
+	}
+
+	err = e.db.Get(models.NpcSpellsEntry{}, c).Model(&models.NpcSpellsEntry{}).Delete(&result).Error
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Error deleting entity"})
 	}
@@ -213,7 +258,7 @@ func (e *NpcSpellsEntryController) getNpcSpellsEntriesBulk(c echo.Context) error
 	if err := c.Bind(r); err != nil {
 		return c.JSON(
 			http.StatusInternalServerError,
-			echo.Map{"error": fmt.Sprintf("Error binding to bulk request: [%v]", err)},
+			echo.Map{"error": fmt.Sprintf("Error binding to bulk request: [%v]", err.Error())},
 		)
 	}
 
@@ -226,7 +271,7 @@ func (e *NpcSpellsEntryController) getNpcSpellsEntriesBulk(c echo.Context) error
 
 	err := e.db.QueryContext(models.NpcSpellsEntry{}, c).Find(&results, r.IDs).Error
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err})
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
 	}
 
 	return c.JSON(http.StatusOK, results)

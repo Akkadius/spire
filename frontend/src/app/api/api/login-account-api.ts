@@ -82,7 +82,7 @@ export const LoginAccountApiAxiosParamCreator = function (configuration?: Config
         /**
          * 
          * @summary Deletes LoginAccount
-         * @param {number} id Id
+         * @param {number} id id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -386,7 +386,7 @@ export const LoginAccountApiFp = function(configuration?: Configuration) {
         /**
          * 
          * @summary Deletes LoginAccount
-         * @param {number} id Id
+         * @param {number} id id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -485,7 +485,7 @@ export const LoginAccountApiFactory = function (configuration?: Configuration, b
         /**
          * 
          * @summary Deletes LoginAccount
-         * @param {number} id Id
+         * @param {number} id id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -566,7 +566,7 @@ export interface LoginAccountApiCreateLoginAccountRequest {
  */
 export interface LoginAccountApiDeleteLoginAccountRequest {
     /**
-     * Id
+     * id
      * @type {number}
      * @memberof LoginAccountApiDeleteLoginAccount
      */

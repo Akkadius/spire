@@ -82,7 +82,7 @@ export const EventlogApiAxiosParamCreator = function (configuration?: Configurat
         /**
          * 
          * @summary Deletes Eventlog
-         * @param {number} id Id
+         * @param {number} id id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -386,7 +386,7 @@ export const EventlogApiFp = function(configuration?: Configuration) {
         /**
          * 
          * @summary Deletes Eventlog
-         * @param {number} id Id
+         * @param {number} id id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -485,7 +485,7 @@ export const EventlogApiFactory = function (configuration?: Configuration, baseP
         /**
          * 
          * @summary Deletes Eventlog
-         * @param {number} id Id
+         * @param {number} id id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -566,7 +566,7 @@ export interface EventlogApiCreateEventlogRequest {
  */
 export interface EventlogApiDeleteEventlogRequest {
     /**
-     * Id
+     * id
      * @type {number}
      * @memberof EventlogApiDeleteEventlog
      */

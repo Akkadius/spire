@@ -82,7 +82,7 @@ export const LoginWorldServerApiAxiosParamCreator = function (configuration?: Co
         /**
          * 
          * @summary Deletes LoginWorldServer
-         * @param {number} id Id
+         * @param {number} id id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -386,7 +386,7 @@ export const LoginWorldServerApiFp = function(configuration?: Configuration) {
         /**
          * 
          * @summary Deletes LoginWorldServer
-         * @param {number} id Id
+         * @param {number} id id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -485,7 +485,7 @@ export const LoginWorldServerApiFactory = function (configuration?: Configuratio
         /**
          * 
          * @summary Deletes LoginWorldServer
-         * @param {number} id Id
+         * @param {number} id id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -566,7 +566,7 @@ export interface LoginWorldServerApiCreateLoginWorldServerRequest {
  */
 export interface LoginWorldServerApiDeleteLoginWorldServerRequest {
     /**
-     * Id
+     * id
      * @type {number}
      * @memberof LoginWorldServerApiDeleteLoginWorldServer
      */

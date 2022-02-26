@@ -82,7 +82,7 @@ export const PlayerTitlesetApiAxiosParamCreator = function (configuration?: Conf
         /**
          * 
          * @summary Deletes PlayerTitleset
-         * @param {number} id Id
+         * @param {number} id id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -386,7 +386,7 @@ export const PlayerTitlesetApiFp = function(configuration?: Configuration) {
         /**
          * 
          * @summary Deletes PlayerTitleset
-         * @param {number} id Id
+         * @param {number} id id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -485,7 +485,7 @@ export const PlayerTitlesetApiFactory = function (configuration?: Configuration,
         /**
          * 
          * @summary Deletes PlayerTitleset
-         * @param {number} id Id
+         * @param {number} id id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -566,7 +566,7 @@ export interface PlayerTitlesetApiCreatePlayerTitlesetRequest {
  */
 export interface PlayerTitlesetApiDeletePlayerTitlesetRequest {
     /**
-     * Id
+     * id
      * @type {number}
      * @memberof PlayerTitlesetApiDeletePlayerTitleset
      */

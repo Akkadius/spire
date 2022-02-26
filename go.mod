@@ -21,7 +21,7 @@ require (
 	github.com/iancoleman/strcase v0.1.0
 	github.com/influxdata/influxdb-client-go/v2 v2.2.2
 	github.com/joho/godotenv v1.3.0
-	github.com/k0kubun/pp/v3 v3.1.0 // indirect
+	github.com/k0kubun/pp/v3 v3.1.0
 	github.com/kr/text v0.2.0 // indirect
 	github.com/labstack/echo/v4 v4.1.16
 	github.com/mailru/easyjson v0.7.0 // indirect
@@ -38,6 +38,7 @@ require (
 	github.com/swaggo/swag v1.6.3
 	github.com/valyala/fasttemplate v1.2.0 // indirect
 	github.com/volatiletech/null/v8 v8.1.0
+	golang.org/x/text v0.3.7
 	gopkg.in/check.v1 v1.0.0-20200227125254-8fa46927fb4f // indirect
 	gopkg.in/oleiade/reflections.v1 v1.0.0 // indirect
 	gopkg.in/yaml.v3 v3.0.0-20210107192922-496545a6307b

@@ -51,7 +51,7 @@ func (s *SyncControllersToInjector) Sync() {
 		for scanner.Scan() {
 			l := scanner.Text()
 			if strings.Contains(l, "type") && strings.Contains(l, "struct") && strings.Contains(l, "Controller") {
-				l = strings.Replace(l, "type", "", -1)
+				l = strings.Replace(l, "type ", "", -1)
 				l = strings.Replace(l, "struct {", "", -1)
 				l = strings.TrimSpace(l)
 

@@ -82,7 +82,7 @@ export const CharacterLeadershipAbilityApiAxiosParamCreator = function (configur
         /**
          * 
          * @summary Deletes CharacterLeadershipAbility
-         * @param {number} id Id
+         * @param {number} id id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -386,7 +386,7 @@ export const CharacterLeadershipAbilityApiFp = function(configuration?: Configur
         /**
          * 
          * @summary Deletes CharacterLeadershipAbility
-         * @param {number} id Id
+         * @param {number} id id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -485,7 +485,7 @@ export const CharacterLeadershipAbilityApiFactory = function (configuration?: Co
         /**
          * 
          * @summary Deletes CharacterLeadershipAbility
-         * @param {number} id Id
+         * @param {number} id id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -566,7 +566,7 @@ export interface CharacterLeadershipAbilityApiCreateCharacterLeadershipAbilityRe
  */
 export interface CharacterLeadershipAbilityApiDeleteCharacterLeadershipAbilityRequest {
     /**
-     * Id
+     * id
      * @type {number}
      * @memberof CharacterLeadershipAbilityApiDeleteCharacterLeadershipAbility
      */

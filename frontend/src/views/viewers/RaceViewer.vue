@@ -59,7 +59,7 @@
           <div class="mb-3">
             {{ renderingImages ? 'Rendering images...' : 'Loading images...'}}
           </div>
-          <loader-fake-progess v-if="!loaded && !renderingImages"/>
+          <loader-fake-progress v-if="!loaded && !renderingImages"/>
           <eq-progress-bar :percent="100" v-if="renderingImages"/>
         </div>
 
@@ -117,7 +117,7 @@ import {ROUTE}           from "../../routes";
 import {SpireApiClient}  from "../../app/api/spire-api-client";
 import {ZoneApi}         from "../../app/api";
 import VideoViewer       from "../../app/video-viewer/video-viewer";
-import LoaderFakeProgess from "../../components/LoaderFakeProgress";
+import LoaderFakeProgress from "../../components/LoaderFakeProgress";
 import EqProgressBar     from "../../components/eq-ui/EQProgressBar";
 
 const baseUrl           = App.ASSET_CDN_BASE_URL + "assets/npc_models/";
@@ -128,7 +128,7 @@ let races               = [];
 let zoneToRaceIdMapping = {};
 
 export default {
-  components: { EqProgressBar, LoaderFakeProgess, EqWindowSimple, EqWindow, PageHeader },
+  components: { EqProgressBar, LoaderFakeProgress, EqWindowSimple, EqWindow, PageHeader },
   data() {
     return {
       filteredRaces: null,

@@ -82,7 +82,7 @@ export const Spawn2ApiAxiosParamCreator = function (configuration?: Configuratio
         /**
          * 
          * @summary Deletes Spawn2
-         * @param {number} id Id
+         * @param {number} id id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -386,7 +386,7 @@ export const Spawn2ApiFp = function(configuration?: Configuration) {
         /**
          * 
          * @summary Deletes Spawn2
-         * @param {number} id Id
+         * @param {number} id id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -485,7 +485,7 @@ export const Spawn2ApiFactory = function (configuration?: Configuration, basePat
         /**
          * 
          * @summary Deletes Spawn2
-         * @param {number} id Id
+         * @param {number} id id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -566,7 +566,7 @@ export interface Spawn2ApiCreateSpawn2Request {
  */
 export interface Spawn2ApiDeleteSpawn2Request {
     /**
-     * Id
+     * id
      * @type {number}
      * @memberof Spawn2ApiDeleteSpawn2
      */

@@ -1,10 +1,10 @@
 package crudcontrollers
 
 import (
+	"fmt"
 	"github.com/Akkadius/spire/internal/database"
 	"github.com/Akkadius/spire/internal/http/routes"
 	"github.com/Akkadius/spire/internal/models"
-	"fmt"
 	"github.com/labstack/echo/v4"
 	"github.com/sirupsen/logrus"
 	"net/http"
@@ -12,7 +12,7 @@ import (
 )
 
 type AaAbilityController struct {
-	db     *database.DatabaseResolver
+	db	 *database.DatabaseResolver
 	logger *logrus.Logger
 }
 
@@ -21,19 +21,19 @@ func NewAaAbilityController(
 	logger *logrus.Logger,
 ) *AaAbilityController {
 	return &AaAbilityController{
-		db:     db,
+		db:	 db,
 		logger: logger,
 	}
 }
 
 func (e *AaAbilityController) Routes() []*routes.Route {
 	return []*routes.Route{
-		routes.RegisterRoute(http.MethodDelete, "aa_ability/:aa_ability", e.deleteAaAbility, nil),
-		routes.RegisterRoute(http.MethodGet, "aa_ability/:aa_ability", e.getAaAbility, nil),
+		routes.RegisterRoute(http.MethodGet, "aa_ability/:id", e.getAaAbility, nil),
 		routes.RegisterRoute(http.MethodGet, "aa_abilities", e.listAaAbilities, nil),
-		routes.RegisterRoute(http.MethodPost, "aa_abilities/bulk", e.getAaAbilitiesBulk, nil),
-		routes.RegisterRoute(http.MethodPatch, "aa_ability/:aa_ability", e.updateAaAbility, nil),
 		routes.RegisterRoute(http.MethodPut, "aa_ability", e.createAaAbility, nil),
+		routes.RegisterRoute(http.MethodDelete, "aa_ability/:id", e.deleteAaAbility, nil),
+		routes.RegisterRoute(http.MethodPatch, "aa_ability/:id", e.updateAaAbility, nil),
+		routes.RegisterRoute(http.MethodPost, "aa_abilities/bulk", e.getAaAbilitiesBulk, nil),
 	}
 }
 
@@ -79,17 +79,31 @@ func (e *AaAbilityController) listAaAbilities(c echo.Context) error {
 // @Failure 500 {string} string "Bad query request"
 // @Router /aa_ability/{id} [get]
 func (e *AaAbilityController) getAaAbility(c echo.Context) error {
-	aaAbilityId, err := strconv.Atoi(c.Param("aa_ability"))
-	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Cannot find param"})
-	}
+	var params []interface{}
+	var keys []string
 
+	// primary key param
+	id, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Cannot find param [Id]"})
+	}
+	params = append(params, id)
+	keys = append(keys, "id = ?")
+
+	// query builder
 	var result models.AaAbility
-	err = e.db.QueryContext(models.AaAbility{}, c).First(&result, aaAbilityId).Error
-	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err})
+	query := e.db.QueryContext(models.AaAbility{}, c)
+	for i, _ := range keys {
+		query = query.Where(keys[i], params[i])
 	}
 
+	// grab first entry
+	err = query.First(&result).Error
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
+	}
+
+	// couldn't find entity
 	if result.ID == 0 {
 		return c.JSON(http.StatusNotFound, echo.Map{"error": "Cannot find entity"})
 	}
@@ -111,26 +125,44 @@ func (e *AaAbilityController) getAaAbility(c echo.Context) error {
 // @Failure 500 {string} string "Error updating entity"
 // @Router /aa_ability/{id} [patch]
 func (e *AaAbilityController) updateAaAbility(c echo.Context) error {
-	aaAbility := new(models.AaAbility)
-	if err := c.Bind(aaAbility); err != nil {
+	request := new(models.AaAbility)
+	if err := c.Bind(request); err != nil {
 		return c.JSON(
 			http.StatusInternalServerError,
-			echo.Map{"error": fmt.Sprintf("Error binding to entity: [%v]", err)},
+			echo.Map{"error": fmt.Sprintf("Error binding to entity [%v]", err.Error())},
 		)
 	}
 
-    entity := models.AaAbility{}
-	err := e.db.Get(models.AaAbility{}, c).Model(&models.AaAbility{}).First(&entity, aaAbility.ID).Error
-	if err != nil || aaAbility.ID == 0 {
-		return c.JSON(http.StatusNotFound, echo.Map{"error": "Cannot find entity"})
-	}
+	var params []interface{}
+	var keys []string
 
-	err = e.db.Get(models.AaAbility{}, c).Model(&entity).Select("*").Updates(&aaAbility).Error
+	// primary key param
+	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error updating entity: [%v]", err)})
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Cannot find param [Id]"})
+	}
+	params = append(params, id)
+	keys = append(keys, "id = ?")
+
+	// query builder
+	var result models.AaAbility
+	query := e.db.QueryContext(models.AaAbility{}, c)
+	for i, _ := range keys {
+		query = query.Where(keys[i], params[i])
 	}
 
-	return c.JSON(http.StatusOK, aaAbility)
+	// grab first entry
+	err = query.First(&result).Error
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Cannot find entity [%s]", err.Error())})
+	}
+
+	err = query.Select("*").Updates(&request).Error
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error updating entity [%v]", err.Error())})
+	}
+
+	return c.JSON(http.StatusOK, request)
 }
 
 // createAaAbility godoc
@@ -149,7 +181,7 @@ func (e *AaAbilityController) createAaAbility(c echo.Context) error {
 	if err := c.Bind(aaAbility); err != nil {
 		return c.JSON(
 			http.StatusInternalServerError,
-			echo.Map{"error": fmt.Sprintf("Error binding to entity: [%v]", err)},
+			echo.Map{"error": fmt.Sprintf("Error binding to entity [%v]", err.Error())},
 		)
 	}
 
@@ -157,7 +189,7 @@ func (e *AaAbilityController) createAaAbility(c echo.Context) error {
 	if err != nil {
 		return c.JSON(
 			http.StatusInternalServerError,
-			echo.Map{"error": fmt.Sprintf("Error inserting entity: [%v]", err)},
+			echo.Map{"error": fmt.Sprintf("Error inserting entity [%v]", err.Error())},
 		)
 	}
 
@@ -170,25 +202,38 @@ func (e *AaAbilityController) createAaAbility(c echo.Context) error {
 // @Accept json
 // @Produce json
 // @Tags AaAbility
-// @Param id path int true "Id"
+// @Param id path int true "id"
 // @Success 200 {string} string "Entity deleted successfully"
 // @Failure 404 {string} string "Cannot find entity"
 // @Failure 500 {string} string "Error binding to entity"
 // @Failure 500 {string} string "Error deleting entity"
 // @Router /aa_ability/{id} [delete]
 func (e *AaAbilityController) deleteAaAbility(c echo.Context) error {
-	aaAbilityId, err := strconv.Atoi(c.Param("aa_ability"))
+	var params []interface{}
+	var keys []string
+
+	// primary key param
+	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
 		e.logger.Error(err)
 	}
+	params = append(params, id)
+	keys = append(keys, "id = ?")
 
-	aaAbility := new(models.AaAbility)
-	err = e.db.Get(models.AaAbility{}, c).Model(&models.AaAbility{}).First(&aaAbility, aaAbilityId).Error
-	if err != nil || aaAbility.ID == 0 {
-		return c.JSON(http.StatusNotFound, echo.Map{"error": "Cannot find entity"})
+	// query builder
+	var result models.AaAbility
+	query := e.db.QueryContext(models.AaAbility{}, c)
+	for i, _ := range keys {
+		query = query.Where(keys[i], params[i])
 	}
 
-	err = e.db.Get(models.AaAbility{}, c).Model(&models.AaAbility{}).Delete(&aaAbility).Error
+	// grab first entry
+	err = query.First(&result).Error
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
+	}
+
+	err = e.db.Get(models.AaAbility{}, c).Model(&models.AaAbility{}).Delete(&result).Error
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Error deleting entity"})
 	}
@@ -213,7 +258,7 @@ func (e *AaAbilityController) getAaAbilitiesBulk(c echo.Context) error {
 	if err := c.Bind(r); err != nil {
 		return c.JSON(
 			http.StatusInternalServerError,
-			echo.Map{"error": fmt.Sprintf("Error binding to bulk request: [%v]", err)},
+			echo.Map{"error": fmt.Sprintf("Error binding to bulk request: [%v]", err.Error())},
 		)
 	}
 
@@ -226,7 +271,7 @@ func (e *AaAbilityController) getAaAbilitiesBulk(c echo.Context) error {
 
 	err := e.db.QueryContext(models.AaAbility{}, c).Find(&results, r.IDs).Error
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err})
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
 	}
 
 	return c.JSON(http.StatusOK, results)

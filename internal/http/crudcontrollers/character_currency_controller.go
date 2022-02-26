@@ -1,10 +1,10 @@
 package crudcontrollers
 
 import (
+	"fmt"
 	"github.com/Akkadius/spire/internal/database"
 	"github.com/Akkadius/spire/internal/http/routes"
 	"github.com/Akkadius/spire/internal/models"
-	"fmt"
 	"github.com/labstack/echo/v4"
 	"github.com/sirupsen/logrus"
 	"net/http"
@@ -12,7 +12,7 @@ import (
 )
 
 type CharacterCurrencyController struct {
-	db     *database.DatabaseResolver
+	db	 *database.DatabaseResolver
 	logger *logrus.Logger
 }
 
@@ -21,19 +21,19 @@ func NewCharacterCurrencyController(
 	logger *logrus.Logger,
 ) *CharacterCurrencyController {
 	return &CharacterCurrencyController{
-		db:     db,
+		db:	 db,
 		logger: logger,
 	}
 }
 
 func (e *CharacterCurrencyController) Routes() []*routes.Route {
 	return []*routes.Route{
-		routes.RegisterRoute(http.MethodDelete, "character_currency/:character_currency", e.deleteCharacterCurrency, nil),
-		routes.RegisterRoute(http.MethodGet, "character_currency/:character_currency", e.getCharacterCurrency, nil),
+		routes.RegisterRoute(http.MethodGet, "character_currency/:id", e.getCharacterCurrency, nil),
 		routes.RegisterRoute(http.MethodGet, "character_currencies", e.listCharacterCurrencies, nil),
-		routes.RegisterRoute(http.MethodPost, "character_currencies/bulk", e.getCharacterCurrenciesBulk, nil),
-		routes.RegisterRoute(http.MethodPatch, "character_currency/:character_currency", e.updateCharacterCurrency, nil),
 		routes.RegisterRoute(http.MethodPut, "character_currency", e.createCharacterCurrency, nil),
+		routes.RegisterRoute(http.MethodDelete, "character_currency/:id", e.deleteCharacterCurrency, nil),
+		routes.RegisterRoute(http.MethodPatch, "character_currency/:id", e.updateCharacterCurrency, nil),
+		routes.RegisterRoute(http.MethodPost, "character_currencies/bulk", e.getCharacterCurrenciesBulk, nil),
 	}
 }
 
@@ -79,17 +79,31 @@ func (e *CharacterCurrencyController) listCharacterCurrencies(c echo.Context) er
 // @Failure 500 {string} string "Bad query request"
 // @Router /character_currency/{id} [get]
 func (e *CharacterCurrencyController) getCharacterCurrency(c echo.Context) error {
-	characterCurrencyId, err := strconv.Atoi(c.Param("character_currency"))
-	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Cannot find param"})
-	}
+	var params []interface{}
+	var keys []string
 
+	// primary key param
+	id, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Cannot find param [Id]"})
+	}
+	params = append(params, id)
+	keys = append(keys, "id = ?")
+
+	// query builder
 	var result models.CharacterCurrency
-	err = e.db.QueryContext(models.CharacterCurrency{}, c).First(&result, characterCurrencyId).Error
-	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err})
+	query := e.db.QueryContext(models.CharacterCurrency{}, c)
+	for i, _ := range keys {
+		query = query.Where(keys[i], params[i])
 	}
 
+	// grab first entry
+	err = query.First(&result).Error
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
+	}
+
+	// couldn't find entity
 	if result.ID == 0 {
 		return c.JSON(http.StatusNotFound, echo.Map{"error": "Cannot find entity"})
 	}
@@ -111,26 +125,44 @@ func (e *CharacterCurrencyController) getCharacterCurrency(c echo.Context) error
 // @Failure 500 {string} string "Error updating entity"
 // @Router /character_currency/{id} [patch]
 func (e *CharacterCurrencyController) updateCharacterCurrency(c echo.Context) error {
-	characterCurrency := new(models.CharacterCurrency)
-	if err := c.Bind(characterCurrency); err != nil {
+	request := new(models.CharacterCurrency)
+	if err := c.Bind(request); err != nil {
 		return c.JSON(
 			http.StatusInternalServerError,
-			echo.Map{"error": fmt.Sprintf("Error binding to entity: [%v]", err)},
+			echo.Map{"error": fmt.Sprintf("Error binding to entity [%v]", err.Error())},
 		)
 	}
 
-    entity := models.CharacterCurrency{}
-	err := e.db.Get(models.CharacterCurrency{}, c).Model(&models.CharacterCurrency{}).First(&entity, characterCurrency.ID).Error
-	if err != nil || characterCurrency.ID == 0 {
-		return c.JSON(http.StatusNotFound, echo.Map{"error": "Cannot find entity"})
-	}
+	var params []interface{}
+	var keys []string
 
-	err = e.db.Get(models.CharacterCurrency{}, c).Model(&entity).Select("*").Updates(&characterCurrency).Error
+	// primary key param
+	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error updating entity: [%v]", err)})
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Cannot find param [Id]"})
+	}
+	params = append(params, id)
+	keys = append(keys, "id = ?")
+
+	// query builder
+	var result models.CharacterCurrency
+	query := e.db.QueryContext(models.CharacterCurrency{}, c)
+	for i, _ := range keys {
+		query = query.Where(keys[i], params[i])
 	}
 
-	return c.JSON(http.StatusOK, characterCurrency)
+	// grab first entry
+	err = query.First(&result).Error
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Cannot find entity [%s]", err.Error())})
+	}
+
+	err = query.Select("*").Updates(&request).Error
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error updating entity [%v]", err.Error())})
+	}
+
+	return c.JSON(http.StatusOK, request)
 }
 
 // createCharacterCurrency godoc
@@ -149,7 +181,7 @@ func (e *CharacterCurrencyController) createCharacterCurrency(c echo.Context) er
 	if err := c.Bind(characterCurrency); err != nil {
 		return c.JSON(
 			http.StatusInternalServerError,
-			echo.Map{"error": fmt.Sprintf("Error binding to entity: [%v]", err)},
+			echo.Map{"error": fmt.Sprintf("Error binding to entity [%v]", err.Error())},
 		)
 	}
 
@@ -157,7 +189,7 @@ func (e *CharacterCurrencyController) createCharacterCurrency(c echo.Context) er
 	if err != nil {
 		return c.JSON(
 			http.StatusInternalServerError,
-			echo.Map{"error": fmt.Sprintf("Error inserting entity: [%v]", err)},
+			echo.Map{"error": fmt.Sprintf("Error inserting entity [%v]", err.Error())},
 		)
 	}
 
@@ -170,25 +202,38 @@ func (e *CharacterCurrencyController) createCharacterCurrency(c echo.Context) er
 // @Accept json
 // @Produce json
 // @Tags CharacterCurrency
-// @Param id path int true "Id"
+// @Param id path int true "id"
 // @Success 200 {string} string "Entity deleted successfully"
 // @Failure 404 {string} string "Cannot find entity"
 // @Failure 500 {string} string "Error binding to entity"
 // @Failure 500 {string} string "Error deleting entity"
 // @Router /character_currency/{id} [delete]
 func (e *CharacterCurrencyController) deleteCharacterCurrency(c echo.Context) error {
-	characterCurrencyId, err := strconv.Atoi(c.Param("character_currency"))
+	var params []interface{}
+	var keys []string
+
+	// primary key param
+	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
 		e.logger.Error(err)
 	}
+	params = append(params, id)
+	keys = append(keys, "id = ?")
 
-	characterCurrency := new(models.CharacterCurrency)
-	err = e.db.Get(models.CharacterCurrency{}, c).Model(&models.CharacterCurrency{}).First(&characterCurrency, characterCurrencyId).Error
-	if err != nil || characterCurrency.ID == 0 {
-		return c.JSON(http.StatusNotFound, echo.Map{"error": "Cannot find entity"})
+	// query builder
+	var result models.CharacterCurrency
+	query := e.db.QueryContext(models.CharacterCurrency{}, c)
+	for i, _ := range keys {
+		query = query.Where(keys[i], params[i])
 	}
 
-	err = e.db.Get(models.CharacterCurrency{}, c).Model(&models.CharacterCurrency{}).Delete(&characterCurrency).Error
+	// grab first entry
+	err = query.First(&result).Error
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
+	}
+
+	err = e.db.Get(models.CharacterCurrency{}, c).Model(&models.CharacterCurrency{}).Delete(&result).Error
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Error deleting entity"})
 	}
@@ -213,7 +258,7 @@ func (e *CharacterCurrencyController) getCharacterCurrenciesBulk(c echo.Context)
 	if err := c.Bind(r); err != nil {
 		return c.JSON(
 			http.StatusInternalServerError,
-			echo.Map{"error": fmt.Sprintf("Error binding to bulk request: [%v]", err)},
+			echo.Map{"error": fmt.Sprintf("Error binding to bulk request: [%v]", err.Error())},
 		)
 	}
 
@@ -226,7 +271,7 @@ func (e *CharacterCurrencyController) getCharacterCurrenciesBulk(c echo.Context)
 
 	err := e.db.QueryContext(models.CharacterCurrency{}, c).Find(&results, r.IDs).Error
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err})
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
 	}
 
 	return c.JSON(http.StatusOK, results)

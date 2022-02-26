@@ -1,10 +1,10 @@
 package crudcontrollers
 
 import (
+	"fmt"
 	"github.com/Akkadius/spire/internal/database"
 	"github.com/Akkadius/spire/internal/http/routes"
 	"github.com/Akkadius/spire/internal/models"
-	"fmt"
 	"github.com/labstack/echo/v4"
 	"github.com/sirupsen/logrus"
 	"net/http"
@@ -12,7 +12,7 @@ import (
 )
 
 type TaskController struct {
-	db     *database.DatabaseResolver
+	db	 *database.DatabaseResolver
 	logger *logrus.Logger
 }
 
@@ -21,19 +21,19 @@ func NewTaskController(
 	logger *logrus.Logger,
 ) *TaskController {
 	return &TaskController{
-		db:     db,
+		db:	 db,
 		logger: logger,
 	}
 }
 
 func (e *TaskController) Routes() []*routes.Route {
 	return []*routes.Route{
-		routes.RegisterRoute(http.MethodDelete, "task/:task", e.deleteTask, nil),
-		routes.RegisterRoute(http.MethodGet, "task/:task", e.getTask, nil),
+		routes.RegisterRoute(http.MethodGet, "task/:id", e.getTask, nil),
 		routes.RegisterRoute(http.MethodGet, "tasks", e.listTasks, nil),
-		routes.RegisterRoute(http.MethodPost, "tasks/bulk", e.getTasksBulk, nil),
-		routes.RegisterRoute(http.MethodPatch, "task/:task", e.updateTask, nil),
 		routes.RegisterRoute(http.MethodPut, "task", e.createTask, nil),
+		routes.RegisterRoute(http.MethodDelete, "task/:id", e.deleteTask, nil),
+		routes.RegisterRoute(http.MethodPatch, "task/:id", e.updateTask, nil),
+		routes.RegisterRoute(http.MethodPost, "tasks/bulk", e.getTasksBulk, nil),
 	}
 }
 
@@ -79,17 +79,31 @@ func (e *TaskController) listTasks(c echo.Context) error {
 // @Failure 500 {string} string "Bad query request"
 // @Router /task/{id} [get]
 func (e *TaskController) getTask(c echo.Context) error {
-	taskId, err := strconv.Atoi(c.Param("task"))
-	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Cannot find param"})
-	}
+	var params []interface{}
+	var keys []string
 
+	// primary key param
+	id, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Cannot find param [Id]"})
+	}
+	params = append(params, id)
+	keys = append(keys, "id = ?")
+
+	// query builder
 	var result models.Task
-	err = e.db.QueryContext(models.Task{}, c).First(&result, taskId).Error
-	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err})
+	query := e.db.QueryContext(models.Task{}, c)
+	for i, _ := range keys {
+		query = query.Where(keys[i], params[i])
 	}
 
+	// grab first entry
+	err = query.First(&result).Error
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
+	}
+
+	// couldn't find entity
 	if result.ID == 0 {
 		return c.JSON(http.StatusNotFound, echo.Map{"error": "Cannot find entity"})
 	}
@@ -111,26 +125,44 @@ func (e *TaskController) getTask(c echo.Context) error {
 // @Failure 500 {string} string "Error updating entity"
 // @Router /task/{id} [patch]
 func (e *TaskController) updateTask(c echo.Context) error {
-	task := new(models.Task)
-	if err := c.Bind(task); err != nil {
+	request := new(models.Task)
+	if err := c.Bind(request); err != nil {
 		return c.JSON(
 			http.StatusInternalServerError,
-			echo.Map{"error": fmt.Sprintf("Error binding to entity: [%v]", err)},
+			echo.Map{"error": fmt.Sprintf("Error binding to entity [%v]", err.Error())},
 		)
 	}
 
-    entity := models.Task{}
-	err := e.db.Get(models.Task{}, c).Model(&models.Task{}).First(&entity, task.ID).Error
-	if err != nil || task.ID == 0 {
-		return c.JSON(http.StatusNotFound, echo.Map{"error": "Cannot find entity"})
-	}
+	var params []interface{}
+	var keys []string
 
-	err = e.db.Get(models.Task{}, c).Model(&entity).Select("*").Updates(&task).Error
+	// primary key param
+	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error updating entity: [%v]", err)})
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Cannot find param [Id]"})
+	}
+	params = append(params, id)
+	keys = append(keys, "id = ?")
+
+	// query builder
+	var result models.Task
+	query := e.db.QueryContext(models.Task{}, c)
+	for i, _ := range keys {
+		query = query.Where(keys[i], params[i])
 	}
 
-	return c.JSON(http.StatusOK, task)
+	// grab first entry
+	err = query.First(&result).Error
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Cannot find entity [%s]", err.Error())})
+	}
+
+	err = query.Select("*").Updates(&request).Error
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error updating entity [%v]", err.Error())})
+	}
+
+	return c.JSON(http.StatusOK, request)
 }
 
 // createTask godoc
@@ -149,7 +181,7 @@ func (e *TaskController) createTask(c echo.Context) error {
 	if err := c.Bind(task); err != nil {
 		return c.JSON(
 			http.StatusInternalServerError,
-			echo.Map{"error": fmt.Sprintf("Error binding to entity: [%v]", err)},
+			echo.Map{"error": fmt.Sprintf("Error binding to entity [%v]", err.Error())},
 		)
 	}
 
@@ -157,7 +189,7 @@ func (e *TaskController) createTask(c echo.Context) error {
 	if err != nil {
 		return c.JSON(
 			http.StatusInternalServerError,
-			echo.Map{"error": fmt.Sprintf("Error inserting entity: [%v]", err)},
+			echo.Map{"error": fmt.Sprintf("Error inserting entity [%v]", err.Error())},
 		)
 	}
 
@@ -170,25 +202,38 @@ func (e *TaskController) createTask(c echo.Context) error {
 // @Accept json
 // @Produce json
 // @Tags Task
-// @Param id path int true "Id"
+// @Param id path int true "id"
 // @Success 200 {string} string "Entity deleted successfully"
 // @Failure 404 {string} string "Cannot find entity"
 // @Failure 500 {string} string "Error binding to entity"
 // @Failure 500 {string} string "Error deleting entity"
 // @Router /task/{id} [delete]
 func (e *TaskController) deleteTask(c echo.Context) error {
-	taskId, err := strconv.Atoi(c.Param("task"))
+	var params []interface{}
+	var keys []string
+
+	// primary key param
+	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
 		e.logger.Error(err)
 	}
+	params = append(params, id)
+	keys = append(keys, "id = ?")
 
-	task := new(models.Task)
-	err = e.db.Get(models.Task{}, c).Model(&models.Task{}).First(&task, taskId).Error
-	if err != nil || task.ID == 0 {
-		return c.JSON(http.StatusNotFound, echo.Map{"error": "Cannot find entity"})
+	// query builder
+	var result models.Task
+	query := e.db.QueryContext(models.Task{}, c)
+	for i, _ := range keys {
+		query = query.Where(keys[i], params[i])
 	}
 
-	err = e.db.Get(models.Task{}, c).Model(&models.Task{}).Delete(&task).Error
+	// grab first entry
+	err = query.First(&result).Error
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
+	}
+
+	err = e.db.Get(models.Task{}, c).Model(&models.Task{}).Delete(&result).Error
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Error deleting entity"})
 	}
@@ -213,7 +258,7 @@ func (e *TaskController) getTasksBulk(c echo.Context) error {
 	if err := c.Bind(r); err != nil {
 		return c.JSON(
 			http.StatusInternalServerError,
-			echo.Map{"error": fmt.Sprintf("Error binding to bulk request: [%v]", err)},
+			echo.Map{"error": fmt.Sprintf("Error binding to bulk request: [%v]", err.Error())},
 		)
 	}
 
@@ -226,7 +271,7 @@ func (e *TaskController) getTasksBulk(c echo.Context) error {
 
 	err := e.db.QueryContext(models.Task{}, c).Find(&results, r.IDs).Error
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err})
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
 	}
 
 	return c.JSON(http.StatusOK, results)

@@ -1,10 +1,10 @@
 package crudcontrollers
 
 import (
+	"fmt"
 	"github.com/Akkadius/spire/internal/database"
 	"github.com/Akkadius/spire/internal/http/routes"
 	"github.com/Akkadius/spire/internal/models"
-	"fmt"
 	"github.com/labstack/echo/v4"
 	"github.com/sirupsen/logrus"
 	"net/http"
@@ -12,7 +12,7 @@ import (
 )
 
 type PlayerTitlesetController struct {
-	db     *database.DatabaseResolver
+	db	 *database.DatabaseResolver
 	logger *logrus.Logger
 }
 
@@ -21,19 +21,19 @@ func NewPlayerTitlesetController(
 	logger *logrus.Logger,
 ) *PlayerTitlesetController {
 	return &PlayerTitlesetController{
-		db:     db,
+		db:	 db,
 		logger: logger,
 	}
 }
 
 func (e *PlayerTitlesetController) Routes() []*routes.Route {
 	return []*routes.Route{
-		routes.RegisterRoute(http.MethodDelete, "player_titleset/:player_titleset", e.deletePlayerTitleset, nil),
-		routes.RegisterRoute(http.MethodGet, "player_titleset/:player_titleset", e.getPlayerTitleset, nil),
+		routes.RegisterRoute(http.MethodGet, "player_titleset/:id", e.getPlayerTitleset, nil),
 		routes.RegisterRoute(http.MethodGet, "player_titlesets", e.listPlayerTitlesets, nil),
-		routes.RegisterRoute(http.MethodPost, "player_titlesets/bulk", e.getPlayerTitlesetsBulk, nil),
-		routes.RegisterRoute(http.MethodPatch, "player_titleset/:player_titleset", e.updatePlayerTitleset, nil),
 		routes.RegisterRoute(http.MethodPut, "player_titleset", e.createPlayerTitleset, nil),
+		routes.RegisterRoute(http.MethodDelete, "player_titleset/:id", e.deletePlayerTitleset, nil),
+		routes.RegisterRoute(http.MethodPatch, "player_titleset/:id", e.updatePlayerTitleset, nil),
+		routes.RegisterRoute(http.MethodPost, "player_titlesets/bulk", e.getPlayerTitlesetsBulk, nil),
 	}
 }
 
@@ -79,17 +79,31 @@ func (e *PlayerTitlesetController) listPlayerTitlesets(c echo.Context) error {
 // @Failure 500 {string} string "Bad query request"
 // @Router /player_titleset/{id} [get]
 func (e *PlayerTitlesetController) getPlayerTitleset(c echo.Context) error {
-	playerTitlesetId, err := strconv.Atoi(c.Param("player_titleset"))
-	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Cannot find param"})
-	}
+	var params []interface{}
+	var keys []string
 
+	// primary key param
+	id, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Cannot find param [Id]"})
+	}
+	params = append(params, id)
+	keys = append(keys, "id = ?")
+
+	// query builder
 	var result models.PlayerTitleset
-	err = e.db.QueryContext(models.PlayerTitleset{}, c).First(&result, playerTitlesetId).Error
-	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err})
+	query := e.db.QueryContext(models.PlayerTitleset{}, c)
+	for i, _ := range keys {
+		query = query.Where(keys[i], params[i])
 	}
 
+	// grab first entry
+	err = query.First(&result).Error
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
+	}
+
+	// couldn't find entity
 	if result.ID == 0 {
 		return c.JSON(http.StatusNotFound, echo.Map{"error": "Cannot find entity"})
 	}
@@ -111,26 +125,44 @@ func (e *PlayerTitlesetController) getPlayerTitleset(c echo.Context) error {
 // @Failure 500 {string} string "Error updating entity"
 // @Router /player_titleset/{id} [patch]
 func (e *PlayerTitlesetController) updatePlayerTitleset(c echo.Context) error {
-	playerTitleset := new(models.PlayerTitleset)
-	if err := c.Bind(playerTitleset); err != nil {
+	request := new(models.PlayerTitleset)
+	if err := c.Bind(request); err != nil {
 		return c.JSON(
 			http.StatusInternalServerError,
-			echo.Map{"error": fmt.Sprintf("Error binding to entity: [%v]", err)},
+			echo.Map{"error": fmt.Sprintf("Error binding to entity [%v]", err.Error())},
 		)
 	}
 
-    entity := models.PlayerTitleset{}
-	err := e.db.Get(models.PlayerTitleset{}, c).Model(&models.PlayerTitleset{}).First(&entity, playerTitleset.ID).Error
-	if err != nil || playerTitleset.ID == 0 {
-		return c.JSON(http.StatusNotFound, echo.Map{"error": "Cannot find entity"})
-	}
+	var params []interface{}
+	var keys []string
 
-	err = e.db.Get(models.PlayerTitleset{}, c).Model(&entity).Select("*").Updates(&playerTitleset).Error
+	// primary key param
+	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error updating entity: [%v]", err)})
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Cannot find param [Id]"})
+	}
+	params = append(params, id)
+	keys = append(keys, "id = ?")
+
+	// query builder
+	var result models.PlayerTitleset
+	query := e.db.QueryContext(models.PlayerTitleset{}, c)
+	for i, _ := range keys {
+		query = query.Where(keys[i], params[i])
 	}
 
-	return c.JSON(http.StatusOK, playerTitleset)
+	// grab first entry
+	err = query.First(&result).Error
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Cannot find entity [%s]", err.Error())})
+	}
+
+	err = query.Select("*").Updates(&request).Error
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error updating entity [%v]", err.Error())})
+	}
+
+	return c.JSON(http.StatusOK, request)
 }
 
 // createPlayerTitleset godoc
@@ -149,7 +181,7 @@ func (e *PlayerTitlesetController) createPlayerTitleset(c echo.Context) error {
 	if err := c.Bind(playerTitleset); err != nil {
 		return c.JSON(
 			http.StatusInternalServerError,
-			echo.Map{"error": fmt.Sprintf("Error binding to entity: [%v]", err)},
+			echo.Map{"error": fmt.Sprintf("Error binding to entity [%v]", err.Error())},
 		)
 	}
 
@@ -157,7 +189,7 @@ func (e *PlayerTitlesetController) createPlayerTitleset(c echo.Context) error {
 	if err != nil {
 		return c.JSON(
 			http.StatusInternalServerError,
-			echo.Map{"error": fmt.Sprintf("Error inserting entity: [%v]", err)},
+			echo.Map{"error": fmt.Sprintf("Error inserting entity [%v]", err.Error())},
 		)
 	}
 
@@ -170,25 +202,38 @@ func (e *PlayerTitlesetController) createPlayerTitleset(c echo.Context) error {
 // @Accept json
 // @Produce json
 // @Tags PlayerTitleset
-// @Param id path int true "Id"
+// @Param id path int true "id"
 // @Success 200 {string} string "Entity deleted successfully"
 // @Failure 404 {string} string "Cannot find entity"
 // @Failure 500 {string} string "Error binding to entity"
 // @Failure 500 {string} string "Error deleting entity"
 // @Router /player_titleset/{id} [delete]
 func (e *PlayerTitlesetController) deletePlayerTitleset(c echo.Context) error {
-	playerTitlesetId, err := strconv.Atoi(c.Param("player_titleset"))
+	var params []interface{}
+	var keys []string
+
+	// primary key param
+	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
 		e.logger.Error(err)
 	}
+	params = append(params, id)
+	keys = append(keys, "id = ?")
 
-	playerTitleset := new(models.PlayerTitleset)
-	err = e.db.Get(models.PlayerTitleset{}, c).Model(&models.PlayerTitleset{}).First(&playerTitleset, playerTitlesetId).Error
-	if err != nil || playerTitleset.ID == 0 {
-		return c.JSON(http.StatusNotFound, echo.Map{"error": "Cannot find entity"})
+	// query builder
+	var result models.PlayerTitleset
+	query := e.db.QueryContext(models.PlayerTitleset{}, c)
+	for i, _ := range keys {
+		query = query.Where(keys[i], params[i])
 	}
 
-	err = e.db.Get(models.PlayerTitleset{}, c).Model(&models.PlayerTitleset{}).Delete(&playerTitleset).Error
+	// grab first entry
+	err = query.First(&result).Error
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
+	}
+
+	err = e.db.Get(models.PlayerTitleset{}, c).Model(&models.PlayerTitleset{}).Delete(&result).Error
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Error deleting entity"})
 	}
@@ -213,7 +258,7 @@ func (e *PlayerTitlesetController) getPlayerTitlesetsBulk(c echo.Context) error 
 	if err := c.Bind(r); err != nil {
 		return c.JSON(
 			http.StatusInternalServerError,
-			echo.Map{"error": fmt.Sprintf("Error binding to bulk request: [%v]", err)},
+			echo.Map{"error": fmt.Sprintf("Error binding to bulk request: [%v]", err.Error())},
 		)
 	}
 
@@ -226,7 +271,7 @@ func (e *PlayerTitlesetController) getPlayerTitlesetsBulk(c echo.Context) error 
 
 	err := e.db.QueryContext(models.PlayerTitleset{}, c).Find(&results, r.IDs).Error
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err})
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
 	}
 
 	return c.JSON(http.StatusOK, results)

@@ -1,10 +1,10 @@
 package crudcontrollers
 
 import (
+	"fmt"
 	"github.com/Akkadius/spire/internal/database"
 	"github.com/Akkadius/spire/internal/http/routes"
 	"github.com/Akkadius/spire/internal/models"
-	"fmt"
 	"github.com/labstack/echo/v4"
 	"github.com/sirupsen/logrus"
 	"net/http"
@@ -12,7 +12,7 @@ import (
 )
 
 type TributeController struct {
-	db     *database.DatabaseResolver
+	db	 *database.DatabaseResolver
 	logger *logrus.Logger
 }
 
@@ -21,19 +21,19 @@ func NewTributeController(
 	logger *logrus.Logger,
 ) *TributeController {
 	return &TributeController{
-		db:     db,
+		db:	 db,
 		logger: logger,
 	}
 }
 
 func (e *TributeController) Routes() []*routes.Route {
 	return []*routes.Route{
-		routes.RegisterRoute(http.MethodDelete, "tribute/:tribute", e.deleteTribute, nil),
-		routes.RegisterRoute(http.MethodGet, "tribute/:tribute", e.getTribute, nil),
+		routes.RegisterRoute(http.MethodGet, "tribute/:id", e.getTribute, nil),
 		routes.RegisterRoute(http.MethodGet, "tributes", e.listTributes, nil),
-		routes.RegisterRoute(http.MethodPost, "tributes/bulk", e.getTributesBulk, nil),
-		routes.RegisterRoute(http.MethodPatch, "tribute/:tribute", e.updateTribute, nil),
 		routes.RegisterRoute(http.MethodPut, "tribute", e.createTribute, nil),
+		routes.RegisterRoute(http.MethodDelete, "tribute/:id", e.deleteTribute, nil),
+		routes.RegisterRoute(http.MethodPatch, "tribute/:id", e.updateTribute, nil),
+		routes.RegisterRoute(http.MethodPost, "tributes/bulk", e.getTributesBulk, nil),
 	}
 }
 
@@ -79,17 +79,42 @@ func (e *TributeController) listTributes(c echo.Context) error {
 // @Failure 500 {string} string "Bad query request"
 // @Router /tribute/{id} [get]
 func (e *TributeController) getTribute(c echo.Context) error {
-	tributeId, err := strconv.Atoi(c.Param("tribute"))
+	var params []interface{}
+	var keys []string
+
+	// primary key param
+	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Cannot find param"})
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Cannot find param [Id]"})
+	}
+	params = append(params, id)
+	keys = append(keys, "id = ?")
+
+	// key param [isguild] position [5] type [tinyint]
+	if len(c.QueryParam("isguild")) > 0 {
+		isguildParam, err := strconv.Atoi(c.QueryParam("isguild"))
+		if err != nil {
+			return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error parsing query param [isguild] err [%s]", err.Error())})
+		}
+
+		params = append(params, isguildParam)
+		keys = append(keys, "isguild = ?")
 	}
 
+	// query builder
 	var result models.Tribute
-	err = e.db.QueryContext(models.Tribute{}, c).First(&result, tributeId).Error
-	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err})
+	query := e.db.QueryContext(models.Tribute{}, c)
+	for i, _ := range keys {
+		query = query.Where(keys[i], params[i])
 	}
 
+	// grab first entry
+	err = query.First(&result).Error
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
+	}
+
+	// couldn't find entity
 	if result.ID == 0 {
 		return c.JSON(http.StatusNotFound, echo.Map{"error": "Cannot find entity"})
 	}
@@ -111,26 +136,55 @@ func (e *TributeController) getTribute(c echo.Context) error {
 // @Failure 500 {string} string "Error updating entity"
 // @Router /tribute/{id} [patch]
 func (e *TributeController) updateTribute(c echo.Context) error {
-	tribute := new(models.Tribute)
-	if err := c.Bind(tribute); err != nil {
+	request := new(models.Tribute)
+	if err := c.Bind(request); err != nil {
 		return c.JSON(
 			http.StatusInternalServerError,
-			echo.Map{"error": fmt.Sprintf("Error binding to entity: [%v]", err)},
+			echo.Map{"error": fmt.Sprintf("Error binding to entity [%v]", err.Error())},
 		)
 	}
 
-    entity := models.Tribute{}
-	err := e.db.Get(models.Tribute{}, c).Model(&models.Tribute{}).First(&entity, tribute.ID).Error
-	if err != nil || tribute.ID == 0 {
-		return c.JSON(http.StatusNotFound, echo.Map{"error": "Cannot find entity"})
-	}
+	var params []interface{}
+	var keys []string
 
-	err = e.db.Get(models.Tribute{}, c).Model(&entity).Select("*").Updates(&tribute).Error
+	// primary key param
+	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error updating entity: [%v]", err)})
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Cannot find param [Id]"})
+	}
+	params = append(params, id)
+	keys = append(keys, "id = ?")
+
+	// key param [isguild] position [5] type [tinyint]
+	if len(c.QueryParam("isguild")) > 0 {
+		isguildParam, err := strconv.Atoi(c.QueryParam("isguild"))
+		if err != nil {
+			return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error parsing query param [isguild] err [%s]", err.Error())})
+		}
+
+		params = append(params, isguildParam)
+		keys = append(keys, "isguild = ?")
 	}
 
-	return c.JSON(http.StatusOK, tribute)
+	// query builder
+	var result models.Tribute
+	query := e.db.QueryContext(models.Tribute{}, c)
+	for i, _ := range keys {
+		query = query.Where(keys[i], params[i])
+	}
+
+	// grab first entry
+	err = query.First(&result).Error
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Cannot find entity [%s]", err.Error())})
+	}
+
+	err = query.Select("*").Updates(&request).Error
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error updating entity [%v]", err.Error())})
+	}
+
+	return c.JSON(http.StatusOK, request)
 }
 
 // createTribute godoc
@@ -149,7 +203,7 @@ func (e *TributeController) createTribute(c echo.Context) error {
 	if err := c.Bind(tribute); err != nil {
 		return c.JSON(
 			http.StatusInternalServerError,
-			echo.Map{"error": fmt.Sprintf("Error binding to entity: [%v]", err)},
+			echo.Map{"error": fmt.Sprintf("Error binding to entity [%v]", err.Error())},
 		)
 	}
 
@@ -157,7 +211,7 @@ func (e *TributeController) createTribute(c echo.Context) error {
 	if err != nil {
 		return c.JSON(
 			http.StatusInternalServerError,
-			echo.Map{"error": fmt.Sprintf("Error inserting entity: [%v]", err)},
+			echo.Map{"error": fmt.Sprintf("Error inserting entity [%v]", err.Error())},
 		)
 	}
 
@@ -170,25 +224,49 @@ func (e *TributeController) createTribute(c echo.Context) error {
 // @Accept json
 // @Produce json
 // @Tags Tribute
-// @Param id path int true "Id"
+// @Param id path int true "id"
 // @Success 200 {string} string "Entity deleted successfully"
 // @Failure 404 {string} string "Cannot find entity"
 // @Failure 500 {string} string "Error binding to entity"
 // @Failure 500 {string} string "Error deleting entity"
 // @Router /tribute/{id} [delete]
 func (e *TributeController) deleteTribute(c echo.Context) error {
-	tributeId, err := strconv.Atoi(c.Param("tribute"))
+	var params []interface{}
+	var keys []string
+
+	// primary key param
+	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
 		e.logger.Error(err)
 	}
+	params = append(params, id)
+	keys = append(keys, "id = ?")
 
-	tribute := new(models.Tribute)
-	err = e.db.Get(models.Tribute{}, c).Model(&models.Tribute{}).First(&tribute, tributeId).Error
-	if err != nil || tribute.ID == 0 {
-		return c.JSON(http.StatusNotFound, echo.Map{"error": "Cannot find entity"})
+	// key param [isguild] position [5] type [tinyint]
+	if len(c.QueryParam("isguild")) > 0 {
+		isguildParam, err := strconv.Atoi(c.QueryParam("isguild"))
+		if err != nil {
+			return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error parsing query param [isguild] err [%s]", err.Error())})
+		}
+
+		params = append(params, isguildParam)
+		keys = append(keys, "isguild = ?")
 	}
 
-	err = e.db.Get(models.Tribute{}, c).Model(&models.Tribute{}).Delete(&tribute).Error
+	// query builder
+	var result models.Tribute
+	query := e.db.QueryContext(models.Tribute{}, c)
+	for i, _ := range keys {
+		query = query.Where(keys[i], params[i])
+	}
+
+	// grab first entry
+	err = query.First(&result).Error
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
+	}
+
+	err = e.db.Get(models.Tribute{}, c).Model(&models.Tribute{}).Delete(&result).Error
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Error deleting entity"})
 	}
@@ -213,7 +291,7 @@ func (e *TributeController) getTributesBulk(c echo.Context) error {
 	if err := c.Bind(r); err != nil {
 		return c.JSON(
 			http.StatusInternalServerError,
-			echo.Map{"error": fmt.Sprintf("Error binding to bulk request: [%v]", err)},
+			echo.Map{"error": fmt.Sprintf("Error binding to bulk request: [%v]", err.Error())},
 		)
 	}
 
@@ -226,7 +304,7 @@ func (e *TributeController) getTributesBulk(c echo.Context) error {
 
 	err := e.db.QueryContext(models.Tribute{}, c).Find(&results, r.IDs).Error
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err})
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
 	}
 
 	return c.JSON(http.StatusOK, results)

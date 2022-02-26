@@ -82,7 +82,7 @@ export const ContentFlagApiAxiosParamCreator = function (configuration?: Configu
         /**
          * 
          * @summary Deletes ContentFlag
-         * @param {number} id Id
+         * @param {number} id id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -386,7 +386,7 @@ export const ContentFlagApiFp = function(configuration?: Configuration) {
         /**
          * 
          * @summary Deletes ContentFlag
-         * @param {number} id Id
+         * @param {number} id id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -485,7 +485,7 @@ export const ContentFlagApiFactory = function (configuration?: Configuration, ba
         /**
          * 
          * @summary Deletes ContentFlag
-         * @param {number} id Id
+         * @param {number} id id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -566,7 +566,7 @@ export interface ContentFlagApiCreateContentFlagRequest {
  */
 export interface ContentFlagApiDeleteContentFlagRequest {
     /**
-     * Id
+     * id
      * @type {number}
      * @memberof ContentFlagApiDeleteContentFlag
      */

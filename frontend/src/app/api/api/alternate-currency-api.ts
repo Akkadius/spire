@@ -82,7 +82,7 @@ export const AlternateCurrencyApiAxiosParamCreator = function (configuration?: C
         /**
          * 
          * @summary Deletes AlternateCurrency
-         * @param {number} id Id
+         * @param {number} id id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -386,7 +386,7 @@ export const AlternateCurrencyApiFp = function(configuration?: Configuration) {
         /**
          * 
          * @summary Deletes AlternateCurrency
-         * @param {number} id Id
+         * @param {number} id id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -485,7 +485,7 @@ export const AlternateCurrencyApiFactory = function (configuration?: Configurati
         /**
          * 
          * @summary Deletes AlternateCurrency
-         * @param {number} id Id
+         * @param {number} id id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -566,7 +566,7 @@ export interface AlternateCurrencyApiCreateAlternateCurrencyRequest {
  */
 export interface AlternateCurrencyApiDeleteAlternateCurrencyRequest {
     /**
-     * Id
+     * id
      * @type {number}
      * @memberof AlternateCurrencyApiDeleteAlternateCurrency
      */

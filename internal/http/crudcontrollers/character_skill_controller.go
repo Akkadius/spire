@@ -1,10 +1,10 @@
 package crudcontrollers
 
 import (
+	"fmt"
 	"github.com/Akkadius/spire/internal/database"
 	"github.com/Akkadius/spire/internal/http/routes"
 	"github.com/Akkadius/spire/internal/models"
-	"fmt"
 	"github.com/labstack/echo/v4"
 	"github.com/sirupsen/logrus"
 	"net/http"
@@ -12,7 +12,7 @@ import (
 )
 
 type CharacterSkillController struct {
-	db     *database.DatabaseResolver
+	db	 *database.DatabaseResolver
 	logger *logrus.Logger
 }
 
@@ -21,19 +21,19 @@ func NewCharacterSkillController(
 	logger *logrus.Logger,
 ) *CharacterSkillController {
 	return &CharacterSkillController{
-		db:     db,
+		db:	 db,
 		logger: logger,
 	}
 }
 
 func (e *CharacterSkillController) Routes() []*routes.Route {
 	return []*routes.Route{
-		routes.RegisterRoute(http.MethodDelete, "character_skill/:character_skill", e.deleteCharacterSkill, nil),
-		routes.RegisterRoute(http.MethodGet, "character_skill/:character_skill", e.getCharacterSkill, nil),
+		routes.RegisterRoute(http.MethodGet, "character_skill/:id", e.getCharacterSkill, nil),
 		routes.RegisterRoute(http.MethodGet, "character_skills", e.listCharacterSkills, nil),
-		routes.RegisterRoute(http.MethodPost, "character_skills/bulk", e.getCharacterSkillsBulk, nil),
-		routes.RegisterRoute(http.MethodPatch, "character_skill/:character_skill", e.updateCharacterSkill, nil),
 		routes.RegisterRoute(http.MethodPut, "character_skill", e.createCharacterSkill, nil),
+		routes.RegisterRoute(http.MethodDelete, "character_skill/:id", e.deleteCharacterSkill, nil),
+		routes.RegisterRoute(http.MethodPatch, "character_skill/:id", e.updateCharacterSkill, nil),
+		routes.RegisterRoute(http.MethodPost, "character_skills/bulk", e.getCharacterSkillsBulk, nil),
 	}
 }
 
@@ -79,17 +79,42 @@ func (e *CharacterSkillController) listCharacterSkills(c echo.Context) error {
 // @Failure 500 {string} string "Bad query request"
 // @Router /character_skill/{id} [get]
 func (e *CharacterSkillController) getCharacterSkill(c echo.Context) error {
-	characterSkillId, err := strconv.Atoi(c.Param("character_skill"))
+	var params []interface{}
+	var keys []string
+
+	// primary key param
+	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Cannot find param"})
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Cannot find param [Id]"})
+	}
+	params = append(params, id)
+	keys = append(keys, "id = ?")
+
+	// key param [skill_id] position [2] type [smallint]
+	if len(c.QueryParam("skill_id")) > 0 {
+		skillIdParam, err := strconv.Atoi(c.QueryParam("skill_id"))
+		if err != nil {
+			return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error parsing query param [skill_id] err [%s]", err.Error())})
+		}
+
+		params = append(params, skillIdParam)
+		keys = append(keys, "skill_id = ?")
 	}
 
+	// query builder
 	var result models.CharacterSkill
-	err = e.db.QueryContext(models.CharacterSkill{}, c).First(&result, characterSkillId).Error
-	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err})
+	query := e.db.QueryContext(models.CharacterSkill{}, c)
+	for i, _ := range keys {
+		query = query.Where(keys[i], params[i])
 	}
 
+	// grab first entry
+	err = query.First(&result).Error
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
+	}
+
+	// couldn't find entity
 	if result.ID == 0 {
 		return c.JSON(http.StatusNotFound, echo.Map{"error": "Cannot find entity"})
 	}
@@ -111,26 +136,55 @@ func (e *CharacterSkillController) getCharacterSkill(c echo.Context) error {
 // @Failure 500 {string} string "Error updating entity"
 // @Router /character_skill/{id} [patch]
 func (e *CharacterSkillController) updateCharacterSkill(c echo.Context) error {
-	characterSkill := new(models.CharacterSkill)
-	if err := c.Bind(characterSkill); err != nil {
+	request := new(models.CharacterSkill)
+	if err := c.Bind(request); err != nil {
 		return c.JSON(
 			http.StatusInternalServerError,
-			echo.Map{"error": fmt.Sprintf("Error binding to entity: [%v]", err)},
+			echo.Map{"error": fmt.Sprintf("Error binding to entity [%v]", err.Error())},
 		)
 	}
 
-    entity := models.CharacterSkill{}
-	err := e.db.Get(models.CharacterSkill{}, c).Model(&models.CharacterSkill{}).First(&entity, characterSkill.ID).Error
-	if err != nil || characterSkill.ID == 0 {
-		return c.JSON(http.StatusNotFound, echo.Map{"error": "Cannot find entity"})
-	}
+	var params []interface{}
+	var keys []string
 
-	err = e.db.Get(models.CharacterSkill{}, c).Model(&entity).Select("*").Updates(&characterSkill).Error
+	// primary key param
+	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error updating entity: [%v]", err)})
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Cannot find param [Id]"})
+	}
+	params = append(params, id)
+	keys = append(keys, "id = ?")
+
+	// key param [skill_id] position [2] type [smallint]
+	if len(c.QueryParam("skill_id")) > 0 {
+		skillIdParam, err := strconv.Atoi(c.QueryParam("skill_id"))
+		if err != nil {
+			return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error parsing query param [skill_id] err [%s]", err.Error())})
+		}
+
+		params = append(params, skillIdParam)
+		keys = append(keys, "skill_id = ?")
 	}
 
-	return c.JSON(http.StatusOK, characterSkill)
+	// query builder
+	var result models.CharacterSkill
+	query := e.db.QueryContext(models.CharacterSkill{}, c)
+	for i, _ := range keys {
+		query = query.Where(keys[i], params[i])
+	}
+
+	// grab first entry
+	err = query.First(&result).Error
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Cannot find entity [%s]", err.Error())})
+	}
+
+	err = query.Select("*").Updates(&request).Error
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error updating entity [%v]", err.Error())})
+	}
+
+	return c.JSON(http.StatusOK, request)
 }
 
 // createCharacterSkill godoc
@@ -149,7 +203,7 @@ func (e *CharacterSkillController) createCharacterSkill(c echo.Context) error {
 	if err := c.Bind(characterSkill); err != nil {
 		return c.JSON(
 			http.StatusInternalServerError,
-			echo.Map{"error": fmt.Sprintf("Error binding to entity: [%v]", err)},
+			echo.Map{"error": fmt.Sprintf("Error binding to entity [%v]", err.Error())},
 		)
 	}
 
@@ -157,7 +211,7 @@ func (e *CharacterSkillController) createCharacterSkill(c echo.Context) error {
 	if err != nil {
 		return c.JSON(
 			http.StatusInternalServerError,
-			echo.Map{"error": fmt.Sprintf("Error inserting entity: [%v]", err)},
+			echo.Map{"error": fmt.Sprintf("Error inserting entity [%v]", err.Error())},
 		)
 	}
 
@@ -170,25 +224,49 @@ func (e *CharacterSkillController) createCharacterSkill(c echo.Context) error {
 // @Accept json
 // @Produce json
 // @Tags CharacterSkill
-// @Param id path int true "Id"
+// @Param id path int true "id"
 // @Success 200 {string} string "Entity deleted successfully"
 // @Failure 404 {string} string "Cannot find entity"
 // @Failure 500 {string} string "Error binding to entity"
 // @Failure 500 {string} string "Error deleting entity"
 // @Router /character_skill/{id} [delete]
 func (e *CharacterSkillController) deleteCharacterSkill(c echo.Context) error {
-	characterSkillId, err := strconv.Atoi(c.Param("character_skill"))
+	var params []interface{}
+	var keys []string
+
+	// primary key param
+	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
 		e.logger.Error(err)
 	}
+	params = append(params, id)
+	keys = append(keys, "id = ?")
 
-	characterSkill := new(models.CharacterSkill)
-	err = e.db.Get(models.CharacterSkill{}, c).Model(&models.CharacterSkill{}).First(&characterSkill, characterSkillId).Error
-	if err != nil || characterSkill.ID == 0 {
-		return c.JSON(http.StatusNotFound, echo.Map{"error": "Cannot find entity"})
+	// key param [skill_id] position [2] type [smallint]
+	if len(c.QueryParam("skill_id")) > 0 {
+		skillIdParam, err := strconv.Atoi(c.QueryParam("skill_id"))
+		if err != nil {
+			return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error parsing query param [skill_id] err [%s]", err.Error())})
+		}
+
+		params = append(params, skillIdParam)
+		keys = append(keys, "skill_id = ?")
 	}
 
-	err = e.db.Get(models.CharacterSkill{}, c).Model(&models.CharacterSkill{}).Delete(&characterSkill).Error
+	// query builder
+	var result models.CharacterSkill
+	query := e.db.QueryContext(models.CharacterSkill{}, c)
+	for i, _ := range keys {
+		query = query.Where(keys[i], params[i])
+	}
+
+	// grab first entry
+	err = query.First(&result).Error
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
+	}
+
+	err = e.db.Get(models.CharacterSkill{}, c).Model(&models.CharacterSkill{}).Delete(&result).Error
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Error deleting entity"})
 	}
@@ -213,7 +291,7 @@ func (e *CharacterSkillController) getCharacterSkillsBulk(c echo.Context) error 
 	if err := c.Bind(r); err != nil {
 		return c.JSON(
 			http.StatusInternalServerError,
-			echo.Map{"error": fmt.Sprintf("Error binding to bulk request: [%v]", err)},
+			echo.Map{"error": fmt.Sprintf("Error binding to bulk request: [%v]", err.Error())},
 		)
 	}
 
@@ -226,7 +304,7 @@ func (e *CharacterSkillController) getCharacterSkillsBulk(c echo.Context) error 
 
 	err := e.db.QueryContext(models.CharacterSkill{}, c).Find(&results, r.IDs).Error
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err})
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
 	}
 
 	return c.JSON(http.StatusOK, results)

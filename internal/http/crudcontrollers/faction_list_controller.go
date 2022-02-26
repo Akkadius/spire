@@ -1,10 +1,10 @@
 package crudcontrollers
 
 import (
+	"fmt"
 	"github.com/Akkadius/spire/internal/database"
 	"github.com/Akkadius/spire/internal/http/routes"
 	"github.com/Akkadius/spire/internal/models"
-	"fmt"
 	"github.com/labstack/echo/v4"
 	"github.com/sirupsen/logrus"
 	"net/http"
@@ -12,7 +12,7 @@ import (
 )
 
 type FactionListController struct {
-	db     *database.DatabaseResolver
+	db	 *database.DatabaseResolver
 	logger *logrus.Logger
 }
 
@@ -21,19 +21,19 @@ func NewFactionListController(
 	logger *logrus.Logger,
 ) *FactionListController {
 	return &FactionListController{
-		db:     db,
+		db:	 db,
 		logger: logger,
 	}
 }
 
 func (e *FactionListController) Routes() []*routes.Route {
 	return []*routes.Route{
-		routes.RegisterRoute(http.MethodDelete, "faction_list/:faction_list", e.deleteFactionList, nil),
-		routes.RegisterRoute(http.MethodGet, "faction_list/:faction_list", e.getFactionList, nil),
+		routes.RegisterRoute(http.MethodGet, "faction_list/:id", e.getFactionList, nil),
 		routes.RegisterRoute(http.MethodGet, "faction_lists", e.listFactionLists, nil),
-		routes.RegisterRoute(http.MethodPost, "faction_lists/bulk", e.getFactionListsBulk, nil),
-		routes.RegisterRoute(http.MethodPatch, "faction_list/:faction_list", e.updateFactionList, nil),
 		routes.RegisterRoute(http.MethodPut, "faction_list", e.createFactionList, nil),
+		routes.RegisterRoute(http.MethodDelete, "faction_list/:id", e.deleteFactionList, nil),
+		routes.RegisterRoute(http.MethodPatch, "faction_list/:id", e.updateFactionList, nil),
+		routes.RegisterRoute(http.MethodPost, "faction_lists/bulk", e.getFactionListsBulk, nil),
 	}
 }
 
@@ -79,17 +79,31 @@ func (e *FactionListController) listFactionLists(c echo.Context) error {
 // @Failure 500 {string} string "Bad query request"
 // @Router /faction_list/{id} [get]
 func (e *FactionListController) getFactionList(c echo.Context) error {
-	factionListId, err := strconv.Atoi(c.Param("faction_list"))
-	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Cannot find param"})
-	}
+	var params []interface{}
+	var keys []string
 
+	// primary key param
+	id, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Cannot find param [Id]"})
+	}
+	params = append(params, id)
+	keys = append(keys, "id = ?")
+
+	// query builder
 	var result models.FactionList
-	err = e.db.QueryContext(models.FactionList{}, c).First(&result, factionListId).Error
-	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err})
+	query := e.db.QueryContext(models.FactionList{}, c)
+	for i, _ := range keys {
+		query = query.Where(keys[i], params[i])
 	}
 
+	// grab first entry
+	err = query.First(&result).Error
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
+	}
+
+	// couldn't find entity
 	if result.ID == 0 {
 		return c.JSON(http.StatusNotFound, echo.Map{"error": "Cannot find entity"})
 	}
@@ -111,26 +125,44 @@ func (e *FactionListController) getFactionList(c echo.Context) error {
 // @Failure 500 {string} string "Error updating entity"
 // @Router /faction_list/{id} [patch]
 func (e *FactionListController) updateFactionList(c echo.Context) error {
-	factionList := new(models.FactionList)
-	if err := c.Bind(factionList); err != nil {
+	request := new(models.FactionList)
+	if err := c.Bind(request); err != nil {
 		return c.JSON(
 			http.StatusInternalServerError,
-			echo.Map{"error": fmt.Sprintf("Error binding to entity: [%v]", err)},
+			echo.Map{"error": fmt.Sprintf("Error binding to entity [%v]", err.Error())},
 		)
 	}
 
-    entity := models.FactionList{}
-	err := e.db.Get(models.FactionList{}, c).Model(&models.FactionList{}).First(&entity, factionList.ID).Error
-	if err != nil || factionList.ID == 0 {
-		return c.JSON(http.StatusNotFound, echo.Map{"error": "Cannot find entity"})
-	}
+	var params []interface{}
+	var keys []string
 
-	err = e.db.Get(models.FactionList{}, c).Model(&entity).Select("*").Updates(&factionList).Error
+	// primary key param
+	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error updating entity: [%v]", err)})
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Cannot find param [Id]"})
+	}
+	params = append(params, id)
+	keys = append(keys, "id = ?")
+
+	// query builder
+	var result models.FactionList
+	query := e.db.QueryContext(models.FactionList{}, c)
+	for i, _ := range keys {
+		query = query.Where(keys[i], params[i])
 	}
 
-	return c.JSON(http.StatusOK, factionList)
+	// grab first entry
+	err = query.First(&result).Error
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Cannot find entity [%s]", err.Error())})
+	}
+
+	err = query.Select("*").Updates(&request).Error
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error updating entity [%v]", err.Error())})
+	}
+
+	return c.JSON(http.StatusOK, request)
 }
 
 // createFactionList godoc
@@ -149,7 +181,7 @@ func (e *FactionListController) createFactionList(c echo.Context) error {
 	if err := c.Bind(factionList); err != nil {
 		return c.JSON(
 			http.StatusInternalServerError,
-			echo.Map{"error": fmt.Sprintf("Error binding to entity: [%v]", err)},
+			echo.Map{"error": fmt.Sprintf("Error binding to entity [%v]", err.Error())},
 		)
 	}
 
@@ -157,7 +189,7 @@ func (e *FactionListController) createFactionList(c echo.Context) error {
 	if err != nil {
 		return c.JSON(
 			http.StatusInternalServerError,
-			echo.Map{"error": fmt.Sprintf("Error inserting entity: [%v]", err)},
+			echo.Map{"error": fmt.Sprintf("Error inserting entity [%v]", err.Error())},
 		)
 	}
 
@@ -170,25 +202,38 @@ func (e *FactionListController) createFactionList(c echo.Context) error {
 // @Accept json
 // @Produce json
 // @Tags FactionList
-// @Param id path int true "Id"
+// @Param id path int true "id"
 // @Success 200 {string} string "Entity deleted successfully"
 // @Failure 404 {string} string "Cannot find entity"
 // @Failure 500 {string} string "Error binding to entity"
 // @Failure 500 {string} string "Error deleting entity"
 // @Router /faction_list/{id} [delete]
 func (e *FactionListController) deleteFactionList(c echo.Context) error {
-	factionListId, err := strconv.Atoi(c.Param("faction_list"))
+	var params []interface{}
+	var keys []string
+
+	// primary key param
+	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
 		e.logger.Error(err)
 	}
+	params = append(params, id)
+	keys = append(keys, "id = ?")
 
-	factionList := new(models.FactionList)
-	err = e.db.Get(models.FactionList{}, c).Model(&models.FactionList{}).First(&factionList, factionListId).Error
-	if err != nil || factionList.ID == 0 {
-		return c.JSON(http.StatusNotFound, echo.Map{"error": "Cannot find entity"})
+	// query builder
+	var result models.FactionList
+	query := e.db.QueryContext(models.FactionList{}, c)
+	for i, _ := range keys {
+		query = query.Where(keys[i], params[i])
 	}
 
-	err = e.db.Get(models.FactionList{}, c).Model(&models.FactionList{}).Delete(&factionList).Error
+	// grab first entry
+	err = query.First(&result).Error
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
+	}
+
+	err = e.db.Get(models.FactionList{}, c).Model(&models.FactionList{}).Delete(&result).Error
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Error deleting entity"})
 	}
@@ -213,7 +258,7 @@ func (e *FactionListController) getFactionListsBulk(c echo.Context) error {
 	if err := c.Bind(r); err != nil {
 		return c.JSON(
 			http.StatusInternalServerError,
-			echo.Map{"error": fmt.Sprintf("Error binding to bulk request: [%v]", err)},
+			echo.Map{"error": fmt.Sprintf("Error binding to bulk request: [%v]", err.Error())},
 		)
 	}
 
@@ -226,7 +271,7 @@ func (e *FactionListController) getFactionListsBulk(c echo.Context) error {
 
 	err := e.db.QueryContext(models.FactionList{}, c).Find(&results, r.IDs).Error
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err})
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
 	}
 
 	return c.JSON(http.StatusOK, results)

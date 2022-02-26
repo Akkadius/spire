@@ -1,10 +1,10 @@
 package crudcontrollers
 
 import (
+	"fmt"
 	"github.com/Akkadius/spire/internal/database"
 	"github.com/Akkadius/spire/internal/http/routes"
 	"github.com/Akkadius/spire/internal/models"
-	"fmt"
 	"github.com/labstack/echo/v4"
 	"github.com/sirupsen/logrus"
 	"net/http"
@@ -12,7 +12,7 @@ import (
 )
 
 type ExpeditionLockoutController struct {
-	db     *database.DatabaseResolver
+	db	 *database.DatabaseResolver
 	logger *logrus.Logger
 }
 
@@ -21,19 +21,19 @@ func NewExpeditionLockoutController(
 	logger *logrus.Logger,
 ) *ExpeditionLockoutController {
 	return &ExpeditionLockoutController{
-		db:     db,
+		db:	 db,
 		logger: logger,
 	}
 }
 
 func (e *ExpeditionLockoutController) Routes() []*routes.Route {
 	return []*routes.Route{
-		routes.RegisterRoute(http.MethodDelete, "expedition_lockout/:expedition_lockout", e.deleteExpeditionLockout, nil),
-		routes.RegisterRoute(http.MethodGet, "expedition_lockout/:expedition_lockout", e.getExpeditionLockout, nil),
+		routes.RegisterRoute(http.MethodGet, "expedition_lockout/:id", e.getExpeditionLockout, nil),
 		routes.RegisterRoute(http.MethodGet, "expedition_lockouts", e.listExpeditionLockouts, nil),
-		routes.RegisterRoute(http.MethodPost, "expedition_lockouts/bulk", e.getExpeditionLockoutsBulk, nil),
-		routes.RegisterRoute(http.MethodPatch, "expedition_lockout/:expedition_lockout", e.updateExpeditionLockout, nil),
 		routes.RegisterRoute(http.MethodPut, "expedition_lockout", e.createExpeditionLockout, nil),
+		routes.RegisterRoute(http.MethodDelete, "expedition_lockout/:id", e.deleteExpeditionLockout, nil),
+		routes.RegisterRoute(http.MethodPatch, "expedition_lockout/:id", e.updateExpeditionLockout, nil),
+		routes.RegisterRoute(http.MethodPost, "expedition_lockouts/bulk", e.getExpeditionLockoutsBulk, nil),
 	}
 }
 
@@ -79,17 +79,31 @@ func (e *ExpeditionLockoutController) listExpeditionLockouts(c echo.Context) err
 // @Failure 500 {string} string "Bad query request"
 // @Router /expedition_lockout/{id} [get]
 func (e *ExpeditionLockoutController) getExpeditionLockout(c echo.Context) error {
-	expeditionLockoutId, err := strconv.Atoi(c.Param("expedition_lockout"))
-	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Cannot find param"})
-	}
+	var params []interface{}
+	var keys []string
 
+	// primary key param
+	id, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Cannot find param [Id]"})
+	}
+	params = append(params, id)
+	keys = append(keys, "id = ?")
+
+	// query builder
 	var result models.ExpeditionLockout
-	err = e.db.QueryContext(models.ExpeditionLockout{}, c).First(&result, expeditionLockoutId).Error
-	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err})
+	query := e.db.QueryContext(models.ExpeditionLockout{}, c)
+	for i, _ := range keys {
+		query = query.Where(keys[i], params[i])
 	}
 
+	// grab first entry
+	err = query.First(&result).Error
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
+	}
+
+	// couldn't find entity
 	if result.ID == 0 {
 		return c.JSON(http.StatusNotFound, echo.Map{"error": "Cannot find entity"})
 	}
@@ -111,26 +125,44 @@ func (e *ExpeditionLockoutController) getExpeditionLockout(c echo.Context) error
 // @Failure 500 {string} string "Error updating entity"
 // @Router /expedition_lockout/{id} [patch]
 func (e *ExpeditionLockoutController) updateExpeditionLockout(c echo.Context) error {
-	expeditionLockout := new(models.ExpeditionLockout)
-	if err := c.Bind(expeditionLockout); err != nil {
+	request := new(models.ExpeditionLockout)
+	if err := c.Bind(request); err != nil {
 		return c.JSON(
 			http.StatusInternalServerError,
-			echo.Map{"error": fmt.Sprintf("Error binding to entity: [%v]", err)},
+			echo.Map{"error": fmt.Sprintf("Error binding to entity [%v]", err.Error())},
 		)
 	}
 
-    entity := models.ExpeditionLockout{}
-	err := e.db.Get(models.ExpeditionLockout{}, c).Model(&models.ExpeditionLockout{}).First(&entity, expeditionLockout.ID).Error
-	if err != nil || expeditionLockout.ID == 0 {
-		return c.JSON(http.StatusNotFound, echo.Map{"error": "Cannot find entity"})
-	}
+	var params []interface{}
+	var keys []string
 
-	err = e.db.Get(models.ExpeditionLockout{}, c).Model(&entity).Select("*").Updates(&expeditionLockout).Error
+	// primary key param
+	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error updating entity: [%v]", err)})
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Cannot find param [Id]"})
+	}
+	params = append(params, id)
+	keys = append(keys, "id = ?")
+
+	// query builder
+	var result models.ExpeditionLockout
+	query := e.db.QueryContext(models.ExpeditionLockout{}, c)
+	for i, _ := range keys {
+		query = query.Where(keys[i], params[i])
 	}
 
-	return c.JSON(http.StatusOK, expeditionLockout)
+	// grab first entry
+	err = query.First(&result).Error
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Cannot find entity [%s]", err.Error())})
+	}
+
+	err = query.Select("*").Updates(&request).Error
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error updating entity [%v]", err.Error())})
+	}
+
+	return c.JSON(http.StatusOK, request)
 }
 
 // createExpeditionLockout godoc
@@ -149,7 +181,7 @@ func (e *ExpeditionLockoutController) createExpeditionLockout(c echo.Context) er
 	if err := c.Bind(expeditionLockout); err != nil {
 		return c.JSON(
 			http.StatusInternalServerError,
-			echo.Map{"error": fmt.Sprintf("Error binding to entity: [%v]", err)},
+			echo.Map{"error": fmt.Sprintf("Error binding to entity [%v]", err.Error())},
 		)
 	}
 
@@ -157,7 +189,7 @@ func (e *ExpeditionLockoutController) createExpeditionLockout(c echo.Context) er
 	if err != nil {
 		return c.JSON(
 			http.StatusInternalServerError,
-			echo.Map{"error": fmt.Sprintf("Error inserting entity: [%v]", err)},
+			echo.Map{"error": fmt.Sprintf("Error inserting entity [%v]", err.Error())},
 		)
 	}
 
@@ -170,25 +202,38 @@ func (e *ExpeditionLockoutController) createExpeditionLockout(c echo.Context) er
 // @Accept json
 // @Produce json
 // @Tags ExpeditionLockout
-// @Param id path int true "Id"
+// @Param id path int true "id"
 // @Success 200 {string} string "Entity deleted successfully"
 // @Failure 404 {string} string "Cannot find entity"
 // @Failure 500 {string} string "Error binding to entity"
 // @Failure 500 {string} string "Error deleting entity"
 // @Router /expedition_lockout/{id} [delete]
 func (e *ExpeditionLockoutController) deleteExpeditionLockout(c echo.Context) error {
-	expeditionLockoutId, err := strconv.Atoi(c.Param("expedition_lockout"))
+	var params []interface{}
+	var keys []string
+
+	// primary key param
+	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
 		e.logger.Error(err)
 	}
+	params = append(params, id)
+	keys = append(keys, "id = ?")
 
-	expeditionLockout := new(models.ExpeditionLockout)
-	err = e.db.Get(models.ExpeditionLockout{}, c).Model(&models.ExpeditionLockout{}).First(&expeditionLockout, expeditionLockoutId).Error
-	if err != nil || expeditionLockout.ID == 0 {
-		return c.JSON(http.StatusNotFound, echo.Map{"error": "Cannot find entity"})
+	// query builder
+	var result models.ExpeditionLockout
+	query := e.db.QueryContext(models.ExpeditionLockout{}, c)
+	for i, _ := range keys {
+		query = query.Where(keys[i], params[i])
 	}
 
-	err = e.db.Get(models.ExpeditionLockout{}, c).Model(&models.ExpeditionLockout{}).Delete(&expeditionLockout).Error
+	// grab first entry
+	err = query.First(&result).Error
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
+	}
+
+	err = e.db.Get(models.ExpeditionLockout{}, c).Model(&models.ExpeditionLockout{}).Delete(&result).Error
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Error deleting entity"})
 	}
@@ -213,7 +258,7 @@ func (e *ExpeditionLockoutController) getExpeditionLockoutsBulk(c echo.Context) 
 	if err := c.Bind(r); err != nil {
 		return c.JSON(
 			http.StatusInternalServerError,
-			echo.Map{"error": fmt.Sprintf("Error binding to bulk request: [%v]", err)},
+			echo.Map{"error": fmt.Sprintf("Error binding to bulk request: [%v]", err.Error())},
 		)
 	}
 
@@ -226,7 +271,7 @@ func (e *ExpeditionLockoutController) getExpeditionLockoutsBulk(c echo.Context) 
 
 	err := e.db.QueryContext(models.ExpeditionLockout{}, c).Find(&results, r.IDs).Error
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err})
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
 	}
 
 	return c.JSON(http.StatusOK, results)

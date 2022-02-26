@@ -156,6 +156,14 @@ export default {
   font-weight: 600;
 }
 
+.changelog img {
+  border-radius: 15px;
+  max-width: 95% !important;
+  text-align: center;
+  display: block;
+  margin-bottom: 5px;
+}
+
 .container {
   position: relative;
   width: 100%;
@@ -181,7 +189,4 @@ export default {
   padding-top: 15px;
 }
 
-#changelog img {
-  max-width: 100%;
-}
 </style>

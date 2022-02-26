@@ -1,10 +1,10 @@
 package crudcontrollers
 
 import (
+	"fmt"
 	"github.com/Akkadius/spire/internal/database"
 	"github.com/Akkadius/spire/internal/http/routes"
 	"github.com/Akkadius/spire/internal/models"
-	"fmt"
 	"github.com/labstack/echo/v4"
 	"github.com/sirupsen/logrus"
 	"net/http"
@@ -12,7 +12,7 @@ import (
 )
 
 type ReportController struct {
-	db     *database.DatabaseResolver
+	db	 *database.DatabaseResolver
 	logger *logrus.Logger
 }
 
@@ -21,19 +21,19 @@ func NewReportController(
 	logger *logrus.Logger,
 ) *ReportController {
 	return &ReportController{
-		db:     db,
+		db:	 db,
 		logger: logger,
 	}
 }
 
 func (e *ReportController) Routes() []*routes.Route {
 	return []*routes.Route{
-		routes.RegisterRoute(http.MethodDelete, "report/:report", e.deleteReport, nil),
-		routes.RegisterRoute(http.MethodGet, "report/:report", e.getReport, nil),
+		routes.RegisterRoute(http.MethodGet, "report/:id", e.getReport, nil),
 		routes.RegisterRoute(http.MethodGet, "reports", e.listReports, nil),
-		routes.RegisterRoute(http.MethodPost, "reports/bulk", e.getReportsBulk, nil),
-		routes.RegisterRoute(http.MethodPatch, "report/:report", e.updateReport, nil),
 		routes.RegisterRoute(http.MethodPut, "report", e.createReport, nil),
+		routes.RegisterRoute(http.MethodDelete, "report/:id", e.deleteReport, nil),
+		routes.RegisterRoute(http.MethodPatch, "report/:id", e.updateReport, nil),
+		routes.RegisterRoute(http.MethodPost, "reports/bulk", e.getReportsBulk, nil),
 	}
 }
 
@@ -79,17 +79,31 @@ func (e *ReportController) listReports(c echo.Context) error {
 // @Failure 500 {string} string "Bad query request"
 // @Router /report/{id} [get]
 func (e *ReportController) getReport(c echo.Context) error {
-	reportId, err := strconv.Atoi(c.Param("report"))
-	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Cannot find param"})
-	}
+	var params []interface{}
+	var keys []string
 
+	// primary key param
+	id, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Cannot find param [Id]"})
+	}
+	params = append(params, id)
+	keys = append(keys, "id = ?")
+
+	// query builder
 	var result models.Report
-	err = e.db.QueryContext(models.Report{}, c).First(&result, reportId).Error
-	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err})
+	query := e.db.QueryContext(models.Report{}, c)
+	for i, _ := range keys {
+		query = query.Where(keys[i], params[i])
 	}
 
+	// grab first entry
+	err = query.First(&result).Error
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
+	}
+
+	// couldn't find entity
 	if result.ID == 0 {
 		return c.JSON(http.StatusNotFound, echo.Map{"error": "Cannot find entity"})
 	}
@@ -111,26 +125,44 @@ func (e *ReportController) getReport(c echo.Context) error {
 // @Failure 500 {string} string "Error updating entity"
 // @Router /report/{id} [patch]
 func (e *ReportController) updateReport(c echo.Context) error {
-	report := new(models.Report)
-	if err := c.Bind(report); err != nil {
+	request := new(models.Report)
+	if err := c.Bind(request); err != nil {
 		return c.JSON(
 			http.StatusInternalServerError,
-			echo.Map{"error": fmt.Sprintf("Error binding to entity: [%v]", err)},
+			echo.Map{"error": fmt.Sprintf("Error binding to entity [%v]", err.Error())},
 		)
 	}
 
-    entity := models.Report{}
-	err := e.db.Get(models.Report{}, c).Model(&models.Report{}).First(&entity, report.ID).Error
-	if err != nil || report.ID == 0 {
-		return c.JSON(http.StatusNotFound, echo.Map{"error": "Cannot find entity"})
-	}
+	var params []interface{}
+	var keys []string
 
-	err = e.db.Get(models.Report{}, c).Model(&entity).Select("*").Updates(&report).Error
+	// primary key param
+	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error updating entity: [%v]", err)})
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Cannot find param [Id]"})
+	}
+	params = append(params, id)
+	keys = append(keys, "id = ?")
+
+	// query builder
+	var result models.Report
+	query := e.db.QueryContext(models.Report{}, c)
+	for i, _ := range keys {
+		query = query.Where(keys[i], params[i])
 	}
 
-	return c.JSON(http.StatusOK, report)
+	// grab first entry
+	err = query.First(&result).Error
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Cannot find entity [%s]", err.Error())})
+	}
+
+	err = query.Select("*").Updates(&request).Error
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error updating entity [%v]", err.Error())})
+	}
+
+	return c.JSON(http.StatusOK, request)
 }
 
 // createReport godoc
@@ -149,7 +181,7 @@ func (e *ReportController) createReport(c echo.Context) error {
 	if err := c.Bind(report); err != nil {
 		return c.JSON(
 			http.StatusInternalServerError,
-			echo.Map{"error": fmt.Sprintf("Error binding to entity: [%v]", err)},
+			echo.Map{"error": fmt.Sprintf("Error binding to entity [%v]", err.Error())},
 		)
 	}
 
@@ -157,7 +189,7 @@ func (e *ReportController) createReport(c echo.Context) error {
 	if err != nil {
 		return c.JSON(
 			http.StatusInternalServerError,
-			echo.Map{"error": fmt.Sprintf("Error inserting entity: [%v]", err)},
+			echo.Map{"error": fmt.Sprintf("Error inserting entity [%v]", err.Error())},
 		)
 	}
 
@@ -170,25 +202,38 @@ func (e *ReportController) createReport(c echo.Context) error {
 // @Accept json
 // @Produce json
 // @Tags Report
-// @Param id path int true "Id"
+// @Param id path int true "id"
 // @Success 200 {string} string "Entity deleted successfully"
 // @Failure 404 {string} string "Cannot find entity"
 // @Failure 500 {string} string "Error binding to entity"
 // @Failure 500 {string} string "Error deleting entity"
 // @Router /report/{id} [delete]
 func (e *ReportController) deleteReport(c echo.Context) error {
-	reportId, err := strconv.Atoi(c.Param("report"))
+	var params []interface{}
+	var keys []string
+
+	// primary key param
+	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
 		e.logger.Error(err)
 	}
+	params = append(params, id)
+	keys = append(keys, "id = ?")
 
-	report := new(models.Report)
-	err = e.db.Get(models.Report{}, c).Model(&models.Report{}).First(&report, reportId).Error
-	if err != nil || report.ID == 0 {
-		return c.JSON(http.StatusNotFound, echo.Map{"error": "Cannot find entity"})
+	// query builder
+	var result models.Report
+	query := e.db.QueryContext(models.Report{}, c)
+	for i, _ := range keys {
+		query = query.Where(keys[i], params[i])
 	}
 
-	err = e.db.Get(models.Report{}, c).Model(&models.Report{}).Delete(&report).Error
+	// grab first entry
+	err = query.First(&result).Error
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
+	}
+
+	err = e.db.Get(models.Report{}, c).Model(&models.Report{}).Delete(&result).Error
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Error deleting entity"})
 	}
@@ -213,7 +258,7 @@ func (e *ReportController) getReportsBulk(c echo.Context) error {
 	if err := c.Bind(r); err != nil {
 		return c.JSON(
 			http.StatusInternalServerError,
-			echo.Map{"error": fmt.Sprintf("Error binding to bulk request: [%v]", err)},
+			echo.Map{"error": fmt.Sprintf("Error binding to bulk request: [%v]", err.Error())},
 		)
 	}
 
@@ -226,7 +271,7 @@ func (e *ReportController) getReportsBulk(c echo.Context) error {
 
 	err := e.db.QueryContext(models.Report{}, c).Find(&results, r.IDs).Error
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err})
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
 	}
 
 	return c.JSON(http.StatusOK, results)

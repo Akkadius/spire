@@ -1,10 +1,10 @@
 package crudcontrollers
 
 import (
+	"fmt"
 	"github.com/Akkadius/spire/internal/database"
 	"github.com/Akkadius/spire/internal/http/routes"
 	"github.com/Akkadius/spire/internal/models"
-	"fmt"
 	"github.com/labstack/echo/v4"
 	"github.com/sirupsen/logrus"
 	"net/http"
@@ -12,7 +12,7 @@ import (
 )
 
 type BugReportController struct {
-	db     *database.DatabaseResolver
+	db	 *database.DatabaseResolver
 	logger *logrus.Logger
 }
 
@@ -21,19 +21,19 @@ func NewBugReportController(
 	logger *logrus.Logger,
 ) *BugReportController {
 	return &BugReportController{
-		db:     db,
+		db:	 db,
 		logger: logger,
 	}
 }
 
 func (e *BugReportController) Routes() []*routes.Route {
 	return []*routes.Route{
-		routes.RegisterRoute(http.MethodDelete, "bug_report/:bug_report", e.deleteBugReport, nil),
-		routes.RegisterRoute(http.MethodGet, "bug_report/:bug_report", e.getBugReport, nil),
+		routes.RegisterRoute(http.MethodGet, "bug_report/:id", e.getBugReport, nil),
 		routes.RegisterRoute(http.MethodGet, "bug_reports", e.listBugReports, nil),
-		routes.RegisterRoute(http.MethodPost, "bug_reports/bulk", e.getBugReportsBulk, nil),
-		routes.RegisterRoute(http.MethodPatch, "bug_report/:bug_report", e.updateBugReport, nil),
 		routes.RegisterRoute(http.MethodPut, "bug_report", e.createBugReport, nil),
+		routes.RegisterRoute(http.MethodDelete, "bug_report/:id", e.deleteBugReport, nil),
+		routes.RegisterRoute(http.MethodPatch, "bug_report/:id", e.updateBugReport, nil),
+		routes.RegisterRoute(http.MethodPost, "bug_reports/bulk", e.getBugReportsBulk, nil),
 	}
 }
 
@@ -79,17 +79,31 @@ func (e *BugReportController) listBugReports(c echo.Context) error {
 // @Failure 500 {string} string "Bad query request"
 // @Router /bug_report/{id} [get]
 func (e *BugReportController) getBugReport(c echo.Context) error {
-	bugReportId, err := strconv.Atoi(c.Param("bug_report"))
-	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Cannot find param"})
-	}
+	var params []interface{}
+	var keys []string
 
+	// primary key param
+	id, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Cannot find param [Id]"})
+	}
+	params = append(params, id)
+	keys = append(keys, "id = ?")
+
+	// query builder
 	var result models.BugReport
-	err = e.db.QueryContext(models.BugReport{}, c).First(&result, bugReportId).Error
-	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err})
+	query := e.db.QueryContext(models.BugReport{}, c)
+	for i, _ := range keys {
+		query = query.Where(keys[i], params[i])
 	}
 
+	// grab first entry
+	err = query.First(&result).Error
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
+	}
+
+	// couldn't find entity
 	if result.ID == 0 {
 		return c.JSON(http.StatusNotFound, echo.Map{"error": "Cannot find entity"})
 	}
@@ -111,26 +125,44 @@ func (e *BugReportController) getBugReport(c echo.Context) error {
 // @Failure 500 {string} string "Error updating entity"
 // @Router /bug_report/{id} [patch]
 func (e *BugReportController) updateBugReport(c echo.Context) error {
-	bugReport := new(models.BugReport)
-	if err := c.Bind(bugReport); err != nil {
+	request := new(models.BugReport)
+	if err := c.Bind(request); err != nil {
 		return c.JSON(
 			http.StatusInternalServerError,
-			echo.Map{"error": fmt.Sprintf("Error binding to entity: [%v]", err)},
+			echo.Map{"error": fmt.Sprintf("Error binding to entity [%v]", err.Error())},
 		)
 	}
 
-    entity := models.BugReport{}
-	err := e.db.Get(models.BugReport{}, c).Model(&models.BugReport{}).First(&entity, bugReport.ID).Error
-	if err != nil || bugReport.ID == 0 {
-		return c.JSON(http.StatusNotFound, echo.Map{"error": "Cannot find entity"})
-	}
+	var params []interface{}
+	var keys []string
 
-	err = e.db.Get(models.BugReport{}, c).Model(&entity).Select("*").Updates(&bugReport).Error
+	// primary key param
+	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error updating entity: [%v]", err)})
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Cannot find param [Id]"})
+	}
+	params = append(params, id)
+	keys = append(keys, "id = ?")
+
+	// query builder
+	var result models.BugReport
+	query := e.db.QueryContext(models.BugReport{}, c)
+	for i, _ := range keys {
+		query = query.Where(keys[i], params[i])
 	}
 
-	return c.JSON(http.StatusOK, bugReport)
+	// grab first entry
+	err = query.First(&result).Error
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Cannot find entity [%s]", err.Error())})
+	}
+
+	err = query.Select("*").Updates(&request).Error
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error updating entity [%v]", err.Error())})
+	}
+
+	return c.JSON(http.StatusOK, request)
 }
 
 // createBugReport godoc
@@ -149,7 +181,7 @@ func (e *BugReportController) createBugReport(c echo.Context) error {
 	if err := c.Bind(bugReport); err != nil {
 		return c.JSON(
 			http.StatusInternalServerError,
-			echo.Map{"error": fmt.Sprintf("Error binding to entity: [%v]", err)},
+			echo.Map{"error": fmt.Sprintf("Error binding to entity [%v]", err.Error())},
 		)
 	}
 
@@ -157,7 +189,7 @@ func (e *BugReportController) createBugReport(c echo.Context) error {
 	if err != nil {
 		return c.JSON(
 			http.StatusInternalServerError,
-			echo.Map{"error": fmt.Sprintf("Error inserting entity: [%v]", err)},
+			echo.Map{"error": fmt.Sprintf("Error inserting entity [%v]", err.Error())},
 		)
 	}
 
@@ -170,25 +202,38 @@ func (e *BugReportController) createBugReport(c echo.Context) error {
 // @Accept json
 // @Produce json
 // @Tags BugReport
-// @Param id path int true "Id"
+// @Param id path int true "id"
 // @Success 200 {string} string "Entity deleted successfully"
 // @Failure 404 {string} string "Cannot find entity"
 // @Failure 500 {string} string "Error binding to entity"
 // @Failure 500 {string} string "Error deleting entity"
 // @Router /bug_report/{id} [delete]
 func (e *BugReportController) deleteBugReport(c echo.Context) error {
-	bugReportId, err := strconv.Atoi(c.Param("bug_report"))
+	var params []interface{}
+	var keys []string
+
+	// primary key param
+	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
 		e.logger.Error(err)
 	}
+	params = append(params, id)
+	keys = append(keys, "id = ?")
 
-	bugReport := new(models.BugReport)
-	err = e.db.Get(models.BugReport{}, c).Model(&models.BugReport{}).First(&bugReport, bugReportId).Error
-	if err != nil || bugReport.ID == 0 {
-		return c.JSON(http.StatusNotFound, echo.Map{"error": "Cannot find entity"})
+	// query builder
+	var result models.BugReport
+	query := e.db.QueryContext(models.BugReport{}, c)
+	for i, _ := range keys {
+		query = query.Where(keys[i], params[i])
 	}
 
-	err = e.db.Get(models.BugReport{}, c).Model(&models.BugReport{}).Delete(&bugReport).Error
+	// grab first entry
+	err = query.First(&result).Error
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
+	}
+
+	err = e.db.Get(models.BugReport{}, c).Model(&models.BugReport{}).Delete(&result).Error
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Error deleting entity"})
 	}
@@ -213,7 +258,7 @@ func (e *BugReportController) getBugReportsBulk(c echo.Context) error {
 	if err := c.Bind(r); err != nil {
 		return c.JSON(
 			http.StatusInternalServerError,
-			echo.Map{"error": fmt.Sprintf("Error binding to bulk request: [%v]", err)},
+			echo.Map{"error": fmt.Sprintf("Error binding to bulk request: [%v]", err.Error())},
 		)
 	}
 
@@ -226,7 +271,7 @@ func (e *BugReportController) getBugReportsBulk(c echo.Context) error {
 
 	err := e.db.QueryContext(models.BugReport{}, c).Find(&results, r.IDs).Error
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err})
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
 	}
 
 	return c.JSON(http.StatusOK, results)

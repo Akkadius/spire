@@ -200,13 +200,13 @@ blocked_spells:
     column_type: int(11)
     column_default: ""
 books:
-  - column: name
-    data_type: varchar
+  - column: id
+    data_type: int
     column_key: PRI
     ordinal_position: "1"
     is_nullable: "NO"
-    column_type: varchar(30)
-    column_default: ''''''
+    column_type: int(20)
+    column_default: ""
 bug_reports:
   - column: id
     data_type: int
@@ -509,6 +509,14 @@ character_inspect_messages:
     is_nullable: "NO"
     column_type: int(11) unsigned
     column_default: "0"
+character_instance_safereturns:
+  - column: id
+    data_type: int
+    column_key: PRI
+    ordinal_position: "1"
+    is_nullable: "NO"
+    column_type: int(10) unsigned
+    column_default: ""
 character_item_recast:
   - column: id
     data_type: int
@@ -688,6 +696,14 @@ character_spells:
     is_nullable: "NO"
     column_type: smallint(11) unsigned
     column_default: "0"
+character_task_timers:
+  - column: id
+    data_type: int
+    column_key: PRI
+    ordinal_position: "1"
+    is_nullable: "NO"
+    column_type: int(10) unsigned
+    column_default: ""
 character_tasks:
   - column: charid
     data_type: int
@@ -719,6 +735,44 @@ command_settings:
     is_nullable: "NO"
     column_type: varchar(128)
     column_default: ''''''
+completed_shared_task_activity_state:
+  - column: shared_task_id
+    data_type: bigint
+    column_key: PRI
+    ordinal_position: "1"
+    is_nullable: "NO"
+    column_type: bigint(20)
+    column_default: ""
+  - column: activity_id
+    data_type: int
+    column_key: PRI
+    ordinal_position: "2"
+    is_nullable: "NO"
+    column_type: int(11)
+    column_default: ""
+completed_shared_task_members:
+  - column: shared_task_id
+    data_type: bigint
+    column_key: PRI
+    ordinal_position: "1"
+    is_nullable: "NO"
+    column_type: bigint(20)
+    column_default: ""
+  - column: character_id
+    data_type: bigint
+    column_key: PRI
+    ordinal_position: "2"
+    is_nullable: "NO"
+    column_type: bigint(20)
+    column_default: ""
+completed_shared_tasks:
+  - column: id
+    data_type: bigint
+    column_key: PRI
+    ordinal_position: "1"
+    is_nullable: "NO"
+    column_type: bigint(20)
+    column_default: ""
 completed_tasks:
   - column: charid
     data_type: int
@@ -803,6 +857,14 @@ doors:
     is_nullable: "NO"
     column_type: int(11)
     column_default: ""
+dynamic_zone_members:
+  - column: id
+    data_type: int
+    column_key: PRI
+    ordinal_position: "1"
+    is_nullable: "NO"
+    column_type: int(10) unsigned
+    column_default: ""
 dynamic_zones:
   - column: id
     data_type: int
@@ -820,14 +882,6 @@ eventlog:
     column_type: int(10) unsigned
     column_default: ""
 expedition_lockouts:
-  - column: id
-    data_type: int
-    column_key: PRI
-    ordinal_position: "1"
-    is_nullable: "NO"
-    column_type: int(10) unsigned
-    column_default: ""
-expedition_members:
   - column: id
     data_type: int
     column_key: PRI
@@ -1088,13 +1142,13 @@ hackers:
     column_type: int(4)
     column_default: ""
 horses:
-  - column: filename
-    data_type: varchar
+  - column: id
+    data_type: int
     column_key: PRI
     ordinal_position: "1"
     is_nullable: "NO"
-    column_type: varchar(32)
-    column_default: ''''''
+    column_type: int(20)
+    column_default: ""
 instance_list:
   - column: id
     data_type: int
@@ -1522,20 +1576,21 @@ petitions:
     column_type: int(10) unsigned
     column_default: ""
 pets:
-  - column: type
-    data_type: varchar
+  - column: id
+    data_type: int
     column_key: PRI
     ordinal_position: "1"
     is_nullable: "NO"
-    column_type: varchar(64)
-    column_default: ''''''
-  - column: petpower
+    column_type: int(20)
+    column_default: ""
+pets_beastlord_data:
+  - column: player_race
     data_type: int
     column_key: PRI
-    ordinal_position: "2"
+    ordinal_position: "1"
     is_nullable: "NO"
-    column_type: int(11)
-    column_default: "0"
+    column_type: int(10) unsigned
+    column_default: "1"
 pets_equipmentset:
   - column: set_id
     data_type: int
@@ -1688,6 +1743,59 @@ server_scheduled_events:
     ordinal_position: "1"
     is_nullable: "NO"
     column_type: int(11)
+    column_default: ""
+shared_task_activity_state:
+  - column: shared_task_id
+    data_type: bigint
+    column_key: PRI
+    ordinal_position: "1"
+    is_nullable: "NO"
+    column_type: bigint(20)
+    column_default: ""
+  - column: activity_id
+    data_type: int
+    column_key: PRI
+    ordinal_position: "2"
+    is_nullable: "NO"
+    column_type: int(11)
+    column_default: ""
+shared_task_dynamic_zones:
+  - column: shared_task_id
+    data_type: bigint
+    column_key: PRI
+    ordinal_position: "1"
+    is_nullable: "NO"
+    column_type: bigint(20)
+    column_default: ""
+  - column: dynamic_zone_id
+    data_type: int
+    column_key: PRI
+    ordinal_position: "2"
+    is_nullable: "NO"
+    column_type: int(10) unsigned
+    column_default: ""
+shared_task_members:
+  - column: shared_task_id
+    data_type: bigint
+    column_key: PRI
+    ordinal_position: "1"
+    is_nullable: "NO"
+    column_type: bigint(20)
+    column_default: ""
+  - column: character_id
+    data_type: bigint
+    column_key: PRI
+    ordinal_position: "2"
+    is_nullable: "NO"
+    column_type: bigint(20)
+    column_default: ""
+shared_tasks:
+  - column: id
+    data_type: bigint
+    column_key: PRI
+    ordinal_position: "1"
+    is_nullable: "NO"
+    column_type: bigint(20)
     column_default: ""
 skill_caps:
   - column: skillID

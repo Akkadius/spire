@@ -152,8 +152,11 @@ func (NpcType) Relationships() []string {
 		"NpcSpells.NpcSpellsEntries",
 		"NpcTypesTint",
 		"Spawnentries",
+		"Spawnentries.NpcType",
 		"Spawnentries.Spawngroup",
 		"Spawnentries.Spawngroup.Spawn2",
+		"Spawnentries.Spawngroup.Spawn2.Spawnentries",
+		"Spawnentries.Spawngroup.Spawn2.Spawngroup",
 	}
 }
 

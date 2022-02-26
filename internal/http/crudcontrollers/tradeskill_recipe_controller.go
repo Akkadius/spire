@@ -1,10 +1,10 @@
 package crudcontrollers
 
 import (
+	"fmt"
 	"github.com/Akkadius/spire/internal/database"
 	"github.com/Akkadius/spire/internal/http/routes"
 	"github.com/Akkadius/spire/internal/models"
-	"fmt"
 	"github.com/labstack/echo/v4"
 	"github.com/sirupsen/logrus"
 	"net/http"
@@ -12,7 +12,7 @@ import (
 )
 
 type TradeskillRecipeController struct {
-	db     *database.DatabaseResolver
+	db	 *database.DatabaseResolver
 	logger *logrus.Logger
 }
 
@@ -21,19 +21,19 @@ func NewTradeskillRecipeController(
 	logger *logrus.Logger,
 ) *TradeskillRecipeController {
 	return &TradeskillRecipeController{
-		db:     db,
+		db:	 db,
 		logger: logger,
 	}
 }
 
 func (e *TradeskillRecipeController) Routes() []*routes.Route {
 	return []*routes.Route{
-		routes.RegisterRoute(http.MethodDelete, "tradeskill_recipe/:tradeskill_recipe", e.deleteTradeskillRecipe, nil),
-		routes.RegisterRoute(http.MethodGet, "tradeskill_recipe/:tradeskill_recipe", e.getTradeskillRecipe, nil),
+		routes.RegisterRoute(http.MethodGet, "tradeskill_recipe/:id", e.getTradeskillRecipe, nil),
 		routes.RegisterRoute(http.MethodGet, "tradeskill_recipes", e.listTradeskillRecipes, nil),
-		routes.RegisterRoute(http.MethodPost, "tradeskill_recipes/bulk", e.getTradeskillRecipesBulk, nil),
-		routes.RegisterRoute(http.MethodPatch, "tradeskill_recipe/:tradeskill_recipe", e.updateTradeskillRecipe, nil),
 		routes.RegisterRoute(http.MethodPut, "tradeskill_recipe", e.createTradeskillRecipe, nil),
+		routes.RegisterRoute(http.MethodDelete, "tradeskill_recipe/:id", e.deleteTradeskillRecipe, nil),
+		routes.RegisterRoute(http.MethodPatch, "tradeskill_recipe/:id", e.updateTradeskillRecipe, nil),
+		routes.RegisterRoute(http.MethodPost, "tradeskill_recipes/bulk", e.getTradeskillRecipesBulk, nil),
 	}
 }
 
@@ -79,17 +79,31 @@ func (e *TradeskillRecipeController) listTradeskillRecipes(c echo.Context) error
 // @Failure 500 {string} string "Bad query request"
 // @Router /tradeskill_recipe/{id} [get]
 func (e *TradeskillRecipeController) getTradeskillRecipe(c echo.Context) error {
-	tradeskillRecipeId, err := strconv.Atoi(c.Param("tradeskill_recipe"))
-	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Cannot find param"})
-	}
+	var params []interface{}
+	var keys []string
 
+	// primary key param
+	id, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Cannot find param [Id]"})
+	}
+	params = append(params, id)
+	keys = append(keys, "id = ?")
+
+	// query builder
 	var result models.TradeskillRecipe
-	err = e.db.QueryContext(models.TradeskillRecipe{}, c).First(&result, tradeskillRecipeId).Error
-	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err})
+	query := e.db.QueryContext(models.TradeskillRecipe{}, c)
+	for i, _ := range keys {
+		query = query.Where(keys[i], params[i])
 	}
 
+	// grab first entry
+	err = query.First(&result).Error
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
+	}
+
+	// couldn't find entity
 	if result.ID == 0 {
 		return c.JSON(http.StatusNotFound, echo.Map{"error": "Cannot find entity"})
 	}
@@ -111,26 +125,44 @@ func (e *TradeskillRecipeController) getTradeskillRecipe(c echo.Context) error {
 // @Failure 500 {string} string "Error updating entity"
 // @Router /tradeskill_recipe/{id} [patch]
 func (e *TradeskillRecipeController) updateTradeskillRecipe(c echo.Context) error {
-	tradeskillRecipe := new(models.TradeskillRecipe)
-	if err := c.Bind(tradeskillRecipe); err != nil {
+	request := new(models.TradeskillRecipe)
+	if err := c.Bind(request); err != nil {
 		return c.JSON(
 			http.StatusInternalServerError,
-			echo.Map{"error": fmt.Sprintf("Error binding to entity: [%v]", err)},
+			echo.Map{"error": fmt.Sprintf("Error binding to entity [%v]", err.Error())},
 		)
 	}
 
-    entity := models.TradeskillRecipe{}
-	err := e.db.Get(models.TradeskillRecipe{}, c).Model(&models.TradeskillRecipe{}).First(&entity, tradeskillRecipe.ID).Error
-	if err != nil || tradeskillRecipe.ID == 0 {
-		return c.JSON(http.StatusNotFound, echo.Map{"error": "Cannot find entity"})
-	}
+	var params []interface{}
+	var keys []string
 
-	err = e.db.Get(models.TradeskillRecipe{}, c).Model(&entity).Select("*").Updates(&tradeskillRecipe).Error
+	// primary key param
+	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error updating entity: [%v]", err)})
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Cannot find param [Id]"})
+	}
+	params = append(params, id)
+	keys = append(keys, "id = ?")
+
+	// query builder
+	var result models.TradeskillRecipe
+	query := e.db.QueryContext(models.TradeskillRecipe{}, c)
+	for i, _ := range keys {
+		query = query.Where(keys[i], params[i])
 	}
 
-	return c.JSON(http.StatusOK, tradeskillRecipe)
+	// grab first entry
+	err = query.First(&result).Error
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Cannot find entity [%s]", err.Error())})
+	}
+
+	err = query.Select("*").Updates(&request).Error
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error updating entity [%v]", err.Error())})
+	}
+
+	return c.JSON(http.StatusOK, request)
 }
 
 // createTradeskillRecipe godoc
@@ -149,7 +181,7 @@ func (e *TradeskillRecipeController) createTradeskillRecipe(c echo.Context) erro
 	if err := c.Bind(tradeskillRecipe); err != nil {
 		return c.JSON(
 			http.StatusInternalServerError,
-			echo.Map{"error": fmt.Sprintf("Error binding to entity: [%v]", err)},
+			echo.Map{"error": fmt.Sprintf("Error binding to entity [%v]", err.Error())},
 		)
 	}
 
@@ -157,7 +189,7 @@ func (e *TradeskillRecipeController) createTradeskillRecipe(c echo.Context) erro
 	if err != nil {
 		return c.JSON(
 			http.StatusInternalServerError,
-			echo.Map{"error": fmt.Sprintf("Error inserting entity: [%v]", err)},
+			echo.Map{"error": fmt.Sprintf("Error inserting entity [%v]", err.Error())},
 		)
 	}
 
@@ -170,25 +202,38 @@ func (e *TradeskillRecipeController) createTradeskillRecipe(c echo.Context) erro
 // @Accept json
 // @Produce json
 // @Tags TradeskillRecipe
-// @Param id path int true "Id"
+// @Param id path int true "id"
 // @Success 200 {string} string "Entity deleted successfully"
 // @Failure 404 {string} string "Cannot find entity"
 // @Failure 500 {string} string "Error binding to entity"
 // @Failure 500 {string} string "Error deleting entity"
 // @Router /tradeskill_recipe/{id} [delete]
 func (e *TradeskillRecipeController) deleteTradeskillRecipe(c echo.Context) error {
-	tradeskillRecipeId, err := strconv.Atoi(c.Param("tradeskill_recipe"))
+	var params []interface{}
+	var keys []string
+
+	// primary key param
+	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
 		e.logger.Error(err)
 	}
+	params = append(params, id)
+	keys = append(keys, "id = ?")
 
-	tradeskillRecipe := new(models.TradeskillRecipe)
-	err = e.db.Get(models.TradeskillRecipe{}, c).Model(&models.TradeskillRecipe{}).First(&tradeskillRecipe, tradeskillRecipeId).Error
-	if err != nil || tradeskillRecipe.ID == 0 {
-		return c.JSON(http.StatusNotFound, echo.Map{"error": "Cannot find entity"})
+	// query builder
+	var result models.TradeskillRecipe
+	query := e.db.QueryContext(models.TradeskillRecipe{}, c)
+	for i, _ := range keys {
+		query = query.Where(keys[i], params[i])
 	}
 
-	err = e.db.Get(models.TradeskillRecipe{}, c).Model(&models.TradeskillRecipe{}).Delete(&tradeskillRecipe).Error
+	// grab first entry
+	err = query.First(&result).Error
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
+	}
+
+	err = e.db.Get(models.TradeskillRecipe{}, c).Model(&models.TradeskillRecipe{}).Delete(&result).Error
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Error deleting entity"})
 	}
@@ -213,7 +258,7 @@ func (e *TradeskillRecipeController) getTradeskillRecipesBulk(c echo.Context) er
 	if err := c.Bind(r); err != nil {
 		return c.JSON(
 			http.StatusInternalServerError,
-			echo.Map{"error": fmt.Sprintf("Error binding to bulk request: [%v]", err)},
+			echo.Map{"error": fmt.Sprintf("Error binding to bulk request: [%v]", err.Error())},
 		)
 	}
 
@@ -226,7 +271,7 @@ func (e *TradeskillRecipeController) getTradeskillRecipesBulk(c echo.Context) er
 
 	err := e.db.QueryContext(models.TradeskillRecipe{}, c).Find(&results, r.IDs).Error
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err})
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
 	}
 
 	return c.JSON(http.StatusOK, results)

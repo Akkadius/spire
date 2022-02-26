@@ -82,7 +82,7 @@ export const CharacterCurrencyApiAxiosParamCreator = function (configuration?: C
         /**
          * 
          * @summary Deletes CharacterCurrency
-         * @param {number} id Id
+         * @param {number} id id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -386,7 +386,7 @@ export const CharacterCurrencyApiFp = function(configuration?: Configuration) {
         /**
          * 
          * @summary Deletes CharacterCurrency
-         * @param {number} id Id
+         * @param {number} id id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -485,7 +485,7 @@ export const CharacterCurrencyApiFactory = function (configuration?: Configurati
         /**
          * 
          * @summary Deletes CharacterCurrency
-         * @param {number} id Id
+         * @param {number} id id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -566,7 +566,7 @@ export interface CharacterCurrencyApiCreateCharacterCurrencyRequest {
  */
 export interface CharacterCurrencyApiDeleteCharacterCurrencyRequest {
     /**
-     * Id
+     * id
      * @type {number}
      * @memberof CharacterCurrencyApiDeleteCharacterCurrency
      */

@@ -1,10 +1,10 @@
 package crudcontrollers
 
 import (
+	"fmt"
 	"github.com/Akkadius/spire/internal/database"
 	"github.com/Akkadius/spire/internal/http/routes"
 	"github.com/Akkadius/spire/internal/models"
-	"fmt"
 	"github.com/labstack/echo/v4"
 	"github.com/sirupsen/logrus"
 	"net/http"
@@ -12,7 +12,7 @@ import (
 )
 
 type SpawnEventController struct {
-	db     *database.DatabaseResolver
+	db	 *database.DatabaseResolver
 	logger *logrus.Logger
 }
 
@@ -21,19 +21,19 @@ func NewSpawnEventController(
 	logger *logrus.Logger,
 ) *SpawnEventController {
 	return &SpawnEventController{
-		db:     db,
+		db:	 db,
 		logger: logger,
 	}
 }
 
 func (e *SpawnEventController) Routes() []*routes.Route {
 	return []*routes.Route{
-		routes.RegisterRoute(http.MethodDelete, "spawn_event/:spawn_event", e.deleteSpawnEvent, nil),
-		routes.RegisterRoute(http.MethodGet, "spawn_event/:spawn_event", e.getSpawnEvent, nil),
+		routes.RegisterRoute(http.MethodGet, "spawn_event/:id", e.getSpawnEvent, nil),
 		routes.RegisterRoute(http.MethodGet, "spawn_events", e.listSpawnEvents, nil),
-		routes.RegisterRoute(http.MethodPost, "spawn_events/bulk", e.getSpawnEventsBulk, nil),
-		routes.RegisterRoute(http.MethodPatch, "spawn_event/:spawn_event", e.updateSpawnEvent, nil),
 		routes.RegisterRoute(http.MethodPut, "spawn_event", e.createSpawnEvent, nil),
+		routes.RegisterRoute(http.MethodDelete, "spawn_event/:id", e.deleteSpawnEvent, nil),
+		routes.RegisterRoute(http.MethodPatch, "spawn_event/:id", e.updateSpawnEvent, nil),
+		routes.RegisterRoute(http.MethodPost, "spawn_events/bulk", e.getSpawnEventsBulk, nil),
 	}
 }
 
@@ -79,17 +79,31 @@ func (e *SpawnEventController) listSpawnEvents(c echo.Context) error {
 // @Failure 500 {string} string "Bad query request"
 // @Router /spawn_event/{id} [get]
 func (e *SpawnEventController) getSpawnEvent(c echo.Context) error {
-	spawnEventId, err := strconv.Atoi(c.Param("spawn_event"))
-	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Cannot find param"})
-	}
+	var params []interface{}
+	var keys []string
 
+	// primary key param
+	id, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Cannot find param [Id]"})
+	}
+	params = append(params, id)
+	keys = append(keys, "id = ?")
+
+	// query builder
 	var result models.SpawnEvent
-	err = e.db.QueryContext(models.SpawnEvent{}, c).First(&result, spawnEventId).Error
-	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err})
+	query := e.db.QueryContext(models.SpawnEvent{}, c)
+	for i, _ := range keys {
+		query = query.Where(keys[i], params[i])
 	}
 
+	// grab first entry
+	err = query.First(&result).Error
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
+	}
+
+	// couldn't find entity
 	if result.ID == 0 {
 		return c.JSON(http.StatusNotFound, echo.Map{"error": "Cannot find entity"})
 	}
@@ -111,26 +125,44 @@ func (e *SpawnEventController) getSpawnEvent(c echo.Context) error {
 // @Failure 500 {string} string "Error updating entity"
 // @Router /spawn_event/{id} [patch]
 func (e *SpawnEventController) updateSpawnEvent(c echo.Context) error {
-	spawnEvent := new(models.SpawnEvent)
-	if err := c.Bind(spawnEvent); err != nil {
+	request := new(models.SpawnEvent)
+	if err := c.Bind(request); err != nil {
 		return c.JSON(
 			http.StatusInternalServerError,
-			echo.Map{"error": fmt.Sprintf("Error binding to entity: [%v]", err)},
+			echo.Map{"error": fmt.Sprintf("Error binding to entity [%v]", err.Error())},
 		)
 	}
 
-    entity := models.SpawnEvent{}
-	err := e.db.Get(models.SpawnEvent{}, c).Model(&models.SpawnEvent{}).First(&entity, spawnEvent.ID).Error
-	if err != nil || spawnEvent.ID == 0 {
-		return c.JSON(http.StatusNotFound, echo.Map{"error": "Cannot find entity"})
-	}
+	var params []interface{}
+	var keys []string
 
-	err = e.db.Get(models.SpawnEvent{}, c).Model(&entity).Select("*").Updates(&spawnEvent).Error
+	// primary key param
+	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error updating entity: [%v]", err)})
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Cannot find param [Id]"})
+	}
+	params = append(params, id)
+	keys = append(keys, "id = ?")
+
+	// query builder
+	var result models.SpawnEvent
+	query := e.db.QueryContext(models.SpawnEvent{}, c)
+	for i, _ := range keys {
+		query = query.Where(keys[i], params[i])
 	}
 
-	return c.JSON(http.StatusOK, spawnEvent)
+	// grab first entry
+	err = query.First(&result).Error
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Cannot find entity [%s]", err.Error())})
+	}
+
+	err = query.Select("*").Updates(&request).Error
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error updating entity [%v]", err.Error())})
+	}
+
+	return c.JSON(http.StatusOK, request)
 }
 
 // createSpawnEvent godoc
@@ -149,7 +181,7 @@ func (e *SpawnEventController) createSpawnEvent(c echo.Context) error {
 	if err := c.Bind(spawnEvent); err != nil {
 		return c.JSON(
 			http.StatusInternalServerError,
-			echo.Map{"error": fmt.Sprintf("Error binding to entity: [%v]", err)},
+			echo.Map{"error": fmt.Sprintf("Error binding to entity [%v]", err.Error())},
 		)
 	}
 
@@ -157,7 +189,7 @@ func (e *SpawnEventController) createSpawnEvent(c echo.Context) error {
 	if err != nil {
 		return c.JSON(
 			http.StatusInternalServerError,
-			echo.Map{"error": fmt.Sprintf("Error inserting entity: [%v]", err)},
+			echo.Map{"error": fmt.Sprintf("Error inserting entity [%v]", err.Error())},
 		)
 	}
 
@@ -170,25 +202,38 @@ func (e *SpawnEventController) createSpawnEvent(c echo.Context) error {
 // @Accept json
 // @Produce json
 // @Tags SpawnEvent
-// @Param id path int true "Id"
+// @Param id path int true "id"
 // @Success 200 {string} string "Entity deleted successfully"
 // @Failure 404 {string} string "Cannot find entity"
 // @Failure 500 {string} string "Error binding to entity"
 // @Failure 500 {string} string "Error deleting entity"
 // @Router /spawn_event/{id} [delete]
 func (e *SpawnEventController) deleteSpawnEvent(c echo.Context) error {
-	spawnEventId, err := strconv.Atoi(c.Param("spawn_event"))
+	var params []interface{}
+	var keys []string
+
+	// primary key param
+	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
 		e.logger.Error(err)
 	}
+	params = append(params, id)
+	keys = append(keys, "id = ?")
 
-	spawnEvent := new(models.SpawnEvent)
-	err = e.db.Get(models.SpawnEvent{}, c).Model(&models.SpawnEvent{}).First(&spawnEvent, spawnEventId).Error
-	if err != nil || spawnEvent.ID == 0 {
-		return c.JSON(http.StatusNotFound, echo.Map{"error": "Cannot find entity"})
+	// query builder
+	var result models.SpawnEvent
+	query := e.db.QueryContext(models.SpawnEvent{}, c)
+	for i, _ := range keys {
+		query = query.Where(keys[i], params[i])
 	}
 
-	err = e.db.Get(models.SpawnEvent{}, c).Model(&models.SpawnEvent{}).Delete(&spawnEvent).Error
+	// grab first entry
+	err = query.First(&result).Error
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
+	}
+
+	err = e.db.Get(models.SpawnEvent{}, c).Model(&models.SpawnEvent{}).Delete(&result).Error
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Error deleting entity"})
 	}
@@ -213,7 +258,7 @@ func (e *SpawnEventController) getSpawnEventsBulk(c echo.Context) error {
 	if err := c.Bind(r); err != nil {
 		return c.JSON(
 			http.StatusInternalServerError,
-			echo.Map{"error": fmt.Sprintf("Error binding to bulk request: [%v]", err)},
+			echo.Map{"error": fmt.Sprintf("Error binding to bulk request: [%v]", err.Error())},
 		)
 	}
 
@@ -226,7 +271,7 @@ func (e *SpawnEventController) getSpawnEventsBulk(c echo.Context) error {
 
 	err := e.db.QueryContext(models.SpawnEvent{}, c).Find(&results, r.IDs).Error
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err})
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
 	}
 
 	return c.JSON(http.StatusOK, results)

@@ -1,10 +1,10 @@
 package crudcontrollers
 
 import (
+	"fmt"
 	"github.com/Akkadius/spire/internal/database"
 	"github.com/Akkadius/spire/internal/http/routes"
 	"github.com/Akkadius/spire/internal/models"
-	"fmt"
 	"github.com/labstack/echo/v4"
 	"github.com/sirupsen/logrus"
 	"net/http"
@@ -12,7 +12,7 @@ import (
 )
 
 type GroundSpawnController struct {
-	db     *database.DatabaseResolver
+	db	 *database.DatabaseResolver
 	logger *logrus.Logger
 }
 
@@ -21,19 +21,19 @@ func NewGroundSpawnController(
 	logger *logrus.Logger,
 ) *GroundSpawnController {
 	return &GroundSpawnController{
-		db:     db,
+		db:	 db,
 		logger: logger,
 	}
 }
 
 func (e *GroundSpawnController) Routes() []*routes.Route {
 	return []*routes.Route{
-		routes.RegisterRoute(http.MethodDelete, "ground_spawn/:ground_spawn", e.deleteGroundSpawn, nil),
-		routes.RegisterRoute(http.MethodGet, "ground_spawn/:ground_spawn", e.getGroundSpawn, nil),
+		routes.RegisterRoute(http.MethodGet, "ground_spawn/:id", e.getGroundSpawn, nil),
 		routes.RegisterRoute(http.MethodGet, "ground_spawns", e.listGroundSpawns, nil),
-		routes.RegisterRoute(http.MethodPost, "ground_spawns/bulk", e.getGroundSpawnsBulk, nil),
-		routes.RegisterRoute(http.MethodPatch, "ground_spawn/:ground_spawn", e.updateGroundSpawn, nil),
 		routes.RegisterRoute(http.MethodPut, "ground_spawn", e.createGroundSpawn, nil),
+		routes.RegisterRoute(http.MethodDelete, "ground_spawn/:id", e.deleteGroundSpawn, nil),
+		routes.RegisterRoute(http.MethodPatch, "ground_spawn/:id", e.updateGroundSpawn, nil),
+		routes.RegisterRoute(http.MethodPost, "ground_spawns/bulk", e.getGroundSpawnsBulk, nil),
 	}
 }
 
@@ -79,17 +79,31 @@ func (e *GroundSpawnController) listGroundSpawns(c echo.Context) error {
 // @Failure 500 {string} string "Bad query request"
 // @Router /ground_spawn/{id} [get]
 func (e *GroundSpawnController) getGroundSpawn(c echo.Context) error {
-	groundSpawnId, err := strconv.Atoi(c.Param("ground_spawn"))
-	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Cannot find param"})
-	}
+	var params []interface{}
+	var keys []string
 
+	// primary key param
+	id, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Cannot find param [Id]"})
+	}
+	params = append(params, id)
+	keys = append(keys, "id = ?")
+
+	// query builder
 	var result models.GroundSpawn
-	err = e.db.QueryContext(models.GroundSpawn{}, c).First(&result, groundSpawnId).Error
-	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err})
+	query := e.db.QueryContext(models.GroundSpawn{}, c)
+	for i, _ := range keys {
+		query = query.Where(keys[i], params[i])
 	}
 
+	// grab first entry
+	err = query.First(&result).Error
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
+	}
+
+	// couldn't find entity
 	if result.ID == 0 {
 		return c.JSON(http.StatusNotFound, echo.Map{"error": "Cannot find entity"})
 	}
@@ -111,26 +125,44 @@ func (e *GroundSpawnController) getGroundSpawn(c echo.Context) error {
 // @Failure 500 {string} string "Error updating entity"
 // @Router /ground_spawn/{id} [patch]
 func (e *GroundSpawnController) updateGroundSpawn(c echo.Context) error {
-	groundSpawn := new(models.GroundSpawn)
-	if err := c.Bind(groundSpawn); err != nil {
+	request := new(models.GroundSpawn)
+	if err := c.Bind(request); err != nil {
 		return c.JSON(
 			http.StatusInternalServerError,
-			echo.Map{"error": fmt.Sprintf("Error binding to entity: [%v]", err)},
+			echo.Map{"error": fmt.Sprintf("Error binding to entity [%v]", err.Error())},
 		)
 	}
 
-    entity := models.GroundSpawn{}
-	err := e.db.Get(models.GroundSpawn{}, c).Model(&models.GroundSpawn{}).First(&entity, groundSpawn.ID).Error
-	if err != nil || groundSpawn.ID == 0 {
-		return c.JSON(http.StatusNotFound, echo.Map{"error": "Cannot find entity"})
-	}
+	var params []interface{}
+	var keys []string
 
-	err = e.db.Get(models.GroundSpawn{}, c).Model(&entity).Select("*").Updates(&groundSpawn).Error
+	// primary key param
+	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error updating entity: [%v]", err)})
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Cannot find param [Id]"})
+	}
+	params = append(params, id)
+	keys = append(keys, "id = ?")
+
+	// query builder
+	var result models.GroundSpawn
+	query := e.db.QueryContext(models.GroundSpawn{}, c)
+	for i, _ := range keys {
+		query = query.Where(keys[i], params[i])
 	}
 
-	return c.JSON(http.StatusOK, groundSpawn)
+	// grab first entry
+	err = query.First(&result).Error
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Cannot find entity [%s]", err.Error())})
+	}
+
+	err = query.Select("*").Updates(&request).Error
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error updating entity [%v]", err.Error())})
+	}
+
+	return c.JSON(http.StatusOK, request)
 }
 
 // createGroundSpawn godoc
@@ -149,7 +181,7 @@ func (e *GroundSpawnController) createGroundSpawn(c echo.Context) error {
 	if err := c.Bind(groundSpawn); err != nil {
 		return c.JSON(
 			http.StatusInternalServerError,
-			echo.Map{"error": fmt.Sprintf("Error binding to entity: [%v]", err)},
+			echo.Map{"error": fmt.Sprintf("Error binding to entity [%v]", err.Error())},
 		)
 	}
 
@@ -157,7 +189,7 @@ func (e *GroundSpawnController) createGroundSpawn(c echo.Context) error {
 	if err != nil {
 		return c.JSON(
 			http.StatusInternalServerError,
-			echo.Map{"error": fmt.Sprintf("Error inserting entity: [%v]", err)},
+			echo.Map{"error": fmt.Sprintf("Error inserting entity [%v]", err.Error())},
 		)
 	}
 
@@ -170,25 +202,38 @@ func (e *GroundSpawnController) createGroundSpawn(c echo.Context) error {
 // @Accept json
 // @Produce json
 // @Tags GroundSpawn
-// @Param id path int true "Id"
+// @Param id path int true "id"
 // @Success 200 {string} string "Entity deleted successfully"
 // @Failure 404 {string} string "Cannot find entity"
 // @Failure 500 {string} string "Error binding to entity"
 // @Failure 500 {string} string "Error deleting entity"
 // @Router /ground_spawn/{id} [delete]
 func (e *GroundSpawnController) deleteGroundSpawn(c echo.Context) error {
-	groundSpawnId, err := strconv.Atoi(c.Param("ground_spawn"))
+	var params []interface{}
+	var keys []string
+
+	// primary key param
+	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
 		e.logger.Error(err)
 	}
+	params = append(params, id)
+	keys = append(keys, "id = ?")
 
-	groundSpawn := new(models.GroundSpawn)
-	err = e.db.Get(models.GroundSpawn{}, c).Model(&models.GroundSpawn{}).First(&groundSpawn, groundSpawnId).Error
-	if err != nil || groundSpawn.ID == 0 {
-		return c.JSON(http.StatusNotFound, echo.Map{"error": "Cannot find entity"})
+	// query builder
+	var result models.GroundSpawn
+	query := e.db.QueryContext(models.GroundSpawn{}, c)
+	for i, _ := range keys {
+		query = query.Where(keys[i], params[i])
 	}
 
-	err = e.db.Get(models.GroundSpawn{}, c).Model(&models.GroundSpawn{}).Delete(&groundSpawn).Error
+	// grab first entry
+	err = query.First(&result).Error
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
+	}
+
+	err = e.db.Get(models.GroundSpawn{}, c).Model(&models.GroundSpawn{}).Delete(&result).Error
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Error deleting entity"})
 	}
@@ -213,7 +258,7 @@ func (e *GroundSpawnController) getGroundSpawnsBulk(c echo.Context) error {
 	if err := c.Bind(r); err != nil {
 		return c.JSON(
 			http.StatusInternalServerError,
-			echo.Map{"error": fmt.Sprintf("Error binding to bulk request: [%v]", err)},
+			echo.Map{"error": fmt.Sprintf("Error binding to bulk request: [%v]", err.Error())},
 		)
 	}
 
@@ -226,7 +271,7 @@ func (e *GroundSpawnController) getGroundSpawnsBulk(c echo.Context) error {
 
 	err := e.db.QueryContext(models.GroundSpawn{}, c).Find(&results, r.IDs).Error
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err})
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
 	}
 
 	return c.JSON(http.StatusOK, results)

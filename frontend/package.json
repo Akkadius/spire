@@ -37,6 +37,7 @@
     "vue-property-decorator": "^8.5.1",
     "vue-router": "^3.5.3",
     "vue2-ace-editor": "^0.0.15",
+    "vue2-dropzone": "^3.6.0",
     "vuex": "^3.6.2"
   },
   "devDependencies": {

@@ -38,7 +38,7 @@
           >
                 <span v-for="(icon, index) in dbClassIcons">
                   <div v-if="spell['classes_' + index] > 0 && spell['classes_' + index] < 255">
-                    
+
                      <span
                        style="border-radius: 4px"
                        :class="'item-' + icon + '-sm'"
@@ -79,7 +79,7 @@ import {ROUTE}            from "@/routes";
 import * as util          from "util";
 
 export default {
-  name: "EqSpellPreviewTableSelector",
+  name: "ItemSpellPreviewTableSelector",
   components: {
     EqSpellDescription,
     EqSpellEffects,
@@ -91,8 +91,6 @@ export default {
     return {
       debug: App.DEBUG,
       debugSpellEffects: false,
-      spellCdnUrl: App.ASSET_SPELL_ICONS_BASE_URL,
-      itemCdnUrl: App.ASSET_ITEM_ICON_BASE_URL,
       spellEffectInfo: [],
       itemData: {},
       sideLoadedSpellData: {},

@@ -1,10 +1,10 @@
 package crudcontrollers
 
 import (
+	"fmt"
 	"github.com/Akkadius/spire/internal/database"
 	"github.com/Akkadius/spire/internal/http/routes"
 	"github.com/Akkadius/spire/internal/models"
-	"fmt"
 	"github.com/labstack/echo/v4"
 	"github.com/sirupsen/logrus"
 	"net/http"
@@ -12,7 +12,7 @@ import (
 )
 
 type Spawn2Controller struct {
-	db     *database.DatabaseResolver
+	db	 *database.DatabaseResolver
 	logger *logrus.Logger
 }
 
@@ -21,19 +21,19 @@ func NewSpawn2Controller(
 	logger *logrus.Logger,
 ) *Spawn2Controller {
 	return &Spawn2Controller{
-		db:     db,
+		db:	 db,
 		logger: logger,
 	}
 }
 
 func (e *Spawn2Controller) Routes() []*routes.Route {
 	return []*routes.Route{
-		routes.RegisterRoute(http.MethodDelete, "spawn_2/:spawn_2", e.deleteSpawn2, nil),
-		routes.RegisterRoute(http.MethodGet, "spawn_2/:spawn_2", e.getSpawn2, nil),
+		routes.RegisterRoute(http.MethodGet, "spawn_2/:id", e.getSpawn2, nil),
 		routes.RegisterRoute(http.MethodGet, "spawn_2s", e.listSpawn2s, nil),
-		routes.RegisterRoute(http.MethodPost, "spawn_2s/bulk", e.getSpawn2sBulk, nil),
-		routes.RegisterRoute(http.MethodPatch, "spawn_2/:spawn_2", e.updateSpawn2, nil),
 		routes.RegisterRoute(http.MethodPut, "spawn_2", e.createSpawn2, nil),
+		routes.RegisterRoute(http.MethodDelete, "spawn_2/:id", e.deleteSpawn2, nil),
+		routes.RegisterRoute(http.MethodPatch, "spawn_2/:id", e.updateSpawn2, nil),
+		routes.RegisterRoute(http.MethodPost, "spawn_2s/bulk", e.getSpawn2sBulk, nil),
 	}
 }
 
@@ -79,17 +79,31 @@ func (e *Spawn2Controller) listSpawn2s(c echo.Context) error {
 // @Failure 500 {string} string "Bad query request"
 // @Router /spawn_2/{id} [get]
 func (e *Spawn2Controller) getSpawn2(c echo.Context) error {
-	spawn2Id, err := strconv.Atoi(c.Param("spawn_2"))
-	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Cannot find param"})
-	}
+	var params []interface{}
+	var keys []string
 
+	// primary key param
+	id, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Cannot find param [Id]"})
+	}
+	params = append(params, id)
+	keys = append(keys, "id = ?")
+
+	// query builder
 	var result models.Spawn2
-	err = e.db.QueryContext(models.Spawn2{}, c).First(&result, spawn2Id).Error
-	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err})
+	query := e.db.QueryContext(models.Spawn2{}, c)
+	for i, _ := range keys {
+		query = query.Where(keys[i], params[i])
 	}
 
+	// grab first entry
+	err = query.First(&result).Error
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
+	}
+
+	// couldn't find entity
 	if result.ID == 0 {
 		return c.JSON(http.StatusNotFound, echo.Map{"error": "Cannot find entity"})
 	}
@@ -111,26 +125,44 @@ func (e *Spawn2Controller) getSpawn2(c echo.Context) error {
 // @Failure 500 {string} string "Error updating entity"
 // @Router /spawn_2/{id} [patch]
 func (e *Spawn2Controller) updateSpawn2(c echo.Context) error {
-	spawn2 := new(models.Spawn2)
-	if err := c.Bind(spawn2); err != nil {
+	request := new(models.Spawn2)
+	if err := c.Bind(request); err != nil {
 		return c.JSON(
 			http.StatusInternalServerError,
-			echo.Map{"error": fmt.Sprintf("Error binding to entity: [%v]", err)},
+			echo.Map{"error": fmt.Sprintf("Error binding to entity [%v]", err.Error())},
 		)
 	}
 
-    entity := models.Spawn2{}
-	err := e.db.Get(models.Spawn2{}, c).Model(&models.Spawn2{}).First(&entity, spawn2.ID).Error
-	if err != nil || spawn2.ID == 0 {
-		return c.JSON(http.StatusNotFound, echo.Map{"error": "Cannot find entity"})
-	}
+	var params []interface{}
+	var keys []string
 
-	err = e.db.Get(models.Spawn2{}, c).Model(&entity).Select("*").Updates(&spawn2).Error
+	// primary key param
+	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error updating entity: [%v]", err)})
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Cannot find param [Id]"})
+	}
+	params = append(params, id)
+	keys = append(keys, "id = ?")
+
+	// query builder
+	var result models.Spawn2
+	query := e.db.QueryContext(models.Spawn2{}, c)
+	for i, _ := range keys {
+		query = query.Where(keys[i], params[i])
 	}
 
-	return c.JSON(http.StatusOK, spawn2)
+	// grab first entry
+	err = query.First(&result).Error
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Cannot find entity [%s]", err.Error())})
+	}
+
+	err = query.Select("*").Updates(&request).Error
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error updating entity [%v]", err.Error())})
+	}
+
+	return c.JSON(http.StatusOK, request)
 }
 
 // createSpawn2 godoc
@@ -149,7 +181,7 @@ func (e *Spawn2Controller) createSpawn2(c echo.Context) error {
 	if err := c.Bind(spawn2); err != nil {
 		return c.JSON(
 			http.StatusInternalServerError,
-			echo.Map{"error": fmt.Sprintf("Error binding to entity: [%v]", err)},
+			echo.Map{"error": fmt.Sprintf("Error binding to entity [%v]", err.Error())},
 		)
 	}
 
@@ -157,7 +189,7 @@ func (e *Spawn2Controller) createSpawn2(c echo.Context) error {
 	if err != nil {
 		return c.JSON(
 			http.StatusInternalServerError,
-			echo.Map{"error": fmt.Sprintf("Error inserting entity: [%v]", err)},
+			echo.Map{"error": fmt.Sprintf("Error inserting entity [%v]", err.Error())},
 		)
 	}
 
@@ -170,25 +202,38 @@ func (e *Spawn2Controller) createSpawn2(c echo.Context) error {
 // @Accept json
 // @Produce json
 // @Tags Spawn2
-// @Param id path int true "Id"
+// @Param id path int true "id"
 // @Success 200 {string} string "Entity deleted successfully"
 // @Failure 404 {string} string "Cannot find entity"
 // @Failure 500 {string} string "Error binding to entity"
 // @Failure 500 {string} string "Error deleting entity"
 // @Router /spawn_2/{id} [delete]
 func (e *Spawn2Controller) deleteSpawn2(c echo.Context) error {
-	spawn2Id, err := strconv.Atoi(c.Param("spawn_2"))
+	var params []interface{}
+	var keys []string
+
+	// primary key param
+	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
 		e.logger.Error(err)
 	}
+	params = append(params, id)
+	keys = append(keys, "id = ?")
 
-	spawn2 := new(models.Spawn2)
-	err = e.db.Get(models.Spawn2{}, c).Model(&models.Spawn2{}).First(&spawn2, spawn2Id).Error
-	if err != nil || spawn2.ID == 0 {
-		return c.JSON(http.StatusNotFound, echo.Map{"error": "Cannot find entity"})
+	// query builder
+	var result models.Spawn2
+	query := e.db.QueryContext(models.Spawn2{}, c)
+	for i, _ := range keys {
+		query = query.Where(keys[i], params[i])
 	}
 
-	err = e.db.Get(models.Spawn2{}, c).Model(&models.Spawn2{}).Delete(&spawn2).Error
+	// grab first entry
+	err = query.First(&result).Error
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
+	}
+
+	err = e.db.Get(models.Spawn2{}, c).Model(&models.Spawn2{}).Delete(&result).Error
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Error deleting entity"})
 	}
@@ -213,7 +258,7 @@ func (e *Spawn2Controller) getSpawn2sBulk(c echo.Context) error {
 	if err := c.Bind(r); err != nil {
 		return c.JSON(
 			http.StatusInternalServerError,
-			echo.Map{"error": fmt.Sprintf("Error binding to bulk request: [%v]", err)},
+			echo.Map{"error": fmt.Sprintf("Error binding to bulk request: [%v]", err.Error())},
 		)
 	}
 
@@ -226,7 +271,7 @@ func (e *Spawn2Controller) getSpawn2sBulk(c echo.Context) error {
 
 	err := e.db.QueryContext(models.Spawn2{}, c).Find(&results, r.IDs).Error
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err})
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
 	}
 
 	return c.JSON(http.StatusOK, results)
