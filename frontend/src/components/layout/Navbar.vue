@@ -90,7 +90,7 @@
         <ul class="navbar-nav mb-md-4">
           <nav-section-component :config="calculatorNav"/>
           <li class="nav-item">
-            <router-link class="nav-link " to="/client-files">
+            <router-link class="nav-link" to="/client-files">
               <i class="ra ra-cycle mr-1"></i> Client Files
               <b-badge class="ml-3" variant="primary">NEW!</b-badge>
             </router-link>

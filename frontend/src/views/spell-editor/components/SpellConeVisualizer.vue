@@ -1,34 +1,36 @@
 <template>
-  <div>
-    <h6
-      class="eq-header mt-5"
-      style="position: absolute; top: 11%; left: 45%; font-size: 300%; z-index: 9999999999"
-    >Front</h6>
+  <div class="cone-container">
+    <div class="inner">
+      <h6
+        class="eq-header mt-5"
+        style="position: absolute; top: 18%; left: 50%; font-size: 300%; z-index: 9999999999; margin-left: -33px;"
+      >Front</h6>
 
-    <h6
-      class="eq-header mt-5"
-      style="position: absolute; top: 66%; left: 45%; font-size: 300%; z-index: 9999999999"
-    >Back</h6>
+      <h6
+        class="eq-header mt-5"
+        style="position: absolute; bottom: 21%; left: 50%; font-size: 300%; z-index: 9999999999; margin-left: -28.5px;"
+      >Back</h6>
 
-    <svg style="position: absolute; top: 20%; left: 27%; z-index: 9999; overflow: visible">
-      <path
-        :d="arc"
-        fill="none"
-        stroke="limegreen"
-        stroke-opacity=".8"
-        stroke-width="150"
-      />
-    </svg>
+      <svg style="position: absolute; top: 50%; left: 50%; z-index: 9999; overflow: visible; margin-left: -150px; margin-top: -150px">
+        <path
+          :d="arc"
+          fill="none"
+          stroke="limegreen"
+          stroke-opacity=".8"
+          stroke-width="150"
+        />
+      </svg>
 
-    <svg style="position: absolute; top: 20%; left: 27%; overflow: visible;">
-      <path
-        :d="arc2"
-        fill="none"
-        stroke="white"
-        stroke-opacity="1"
-        stroke-width="20"
-      />
-    </svg>
+      <svg style="position: absolute; top: 50%; left: 50%; overflow: visible; margin-left: -150px; margin-top: -150px">
+        <path
+          :d="arc2"
+          fill="none"
+          stroke="white"
+          stroke-opacity="1"
+          stroke-width="20"
+        />
+      </svg>
+    </div>
   </div>
 </template>
 
@@ -75,7 +77,6 @@ export default {
       this.arc2 = this.describeArc(150, 150, 100, 0, 359.999)
 
       console.log("[SpellConeVisualizer] coneStopAngle [%s] coneStartAngle [%s] endAngle [%s]", this.coneStopAngle, this.coneStartAngle, endAngle)
-
     },
 
     polarToCartesian(centerX, centerY, radius, angleInDegrees) {
@@ -100,3 +101,23 @@ export default {
   }
 }
 </script>
+
+<style>
+.cone-container {
+  position: relative;
+  width: 500px;
+  height: 600px;
+  padding: 10px;
+  top: 50%;
+  left: 50%;
+  margin-top: -100px;
+  margin-left: -250px;
+}
+
+.inner {
+  display: inline-block;
+  margin: 0 auto;
+}
+</style>
+
+

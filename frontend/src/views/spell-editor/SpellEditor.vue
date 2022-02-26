@@ -1571,7 +1571,7 @@
 
             <!-- cone angle visualizer -->
             <eq-window
-              style="margin-top: 30px; width: auto; height: 500px"
+              style="margin-top: 30px; height: 500px"
               class="fade-in text-center"
               title="Cone Visualizer"
               v-if="coneVisualizerActive"
