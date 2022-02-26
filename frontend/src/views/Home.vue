@@ -161,7 +161,7 @@ export default {
   max-width: 95% !important;
   text-align: center;
   display: block;
-  margin: 25px auto;
+  margin-bottom: 5px;
 }
 
 .container {
@@ -189,7 +189,4 @@ export default {
   padding-top: 15px;
 }
 
-#changelog img {
-  max-width: 100%;
-}
 </style>

@@ -1,6 +1,6 @@
 ## [1.11.0]
 
-### Item, Spell, Database Strings Editor Release
+### Item, Spell, Database Strings Editor, Client Files and more
 
 Item and Spell editor tools are now released in full, with the most feature rich sub-editors and selectors
 
@@ -8,6 +8,9 @@ Item and Spell editor tools are now released in full, with the most feature rich
 
 * Recast delay now displays in seconds instead of milliseconds
 * Implemented sub-editors for the following fields: id, icon, idfile, material, color, augtype, proceffect, worneffect, focuseffect, scrolleffect, clickeffect, bardeffect
+
+![Screenshot from 2022-02-26 01-06-08](https://user-images.githubusercontent.com/3319450/155833708-ab9a56d1-7e76-424a-ba23-1f0bdb46858e.png)
+![Screenshot from 2022-02-26 01-07-23](https://user-images.githubusercontent.com/3319450/155833730-c39c8a6e-bf3a-4d21-887d-6420d4fb4f68.png)
 
 ### Spell Editor
 
@@ -26,6 +29,9 @@ Item and Spell editor tools are now released in full, with the most feature rich
 * Implemented sub-editors for the following fields: id, casting_anim, target_anim, icon, spellanim, cone_start_angle, cone_stop_angle, nimbuseffect, aoerange, teleport_zone, range, min_range, typedescnum, effectdescnum, effectdescnum_2, descnum, components_1, components_2, components_3, components_4, noexpend_reagent_1, noexpend_reagent_2, noexpend_reagent_3, noexpend_reagent_4, recourse_link
 * SPA effects are now highlighted when hovered over and selected
 * When an SPA is selected, the editor will select reference values from another spell in the database with the same SPA
+
+![Screenshot from 2022-02-26 01-05-12](https://user-images.githubusercontent.com/3319450/155833675-ecf575a5-2dd1-404e-a1c2-0988a65504ca.png)
+![Screenshot from 2022-02-26 01-03-54](https://user-images.githubusercontent.com/3319450/155833645-cbd9c839-6d43-4ee0-b505-9425381eccbb.png)
 
 ### Item / Spell Editors
 
