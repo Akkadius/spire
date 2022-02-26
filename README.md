@@ -1,8 +1,16 @@
 # Spire
 
-This readme is a WIP
+## Using Spire
+
+If you are trying to simply use Spire, download the [latest release](https://github.com/Akkadius/spire/releases). Place the executable in your EQEmulator Server directory and simply run. That's it. No dependencies, no extra steps.
+
+If you want to run Spire without an EQEmu server installation, place it in a folder alongside a `eqemu_config.json` with database information to connect to your MySQL server and it will connect all the same.
+
+Spire is currently only to be used as a local development tool, it is not safe to host publicly without protected access.
 
 ## Developer Setup
+
+These are instructions for those who are looking to develop on Spire. If you are just trying to use the tool then see **using Spire**
 
 ### Linux
 
