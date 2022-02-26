@@ -24,6 +24,7 @@
         <tr
           v-for="(spell, index) in spells"
           :key="spell.id"
+          :class="(isSpellSelected(spell) ? 'pulsate-highlight-white' : '')"
         >
           <td style="vertical-align: middle">
 
@@ -105,6 +106,8 @@ export default {
       spellMinis: {},
       dbClassIcons: DB_CLASSES_ICONS,
       dbClassesShort: DB_CLASSES_SHORT,
+
+      selectedSpellId: 0,
     }
   },
   async created() {
@@ -112,7 +115,7 @@ export default {
     for (const spell of this.spells) {
       Spells.setSpell(spell["id"], spell)
 
-      spellMinis[spell["id"]] = await Spells.renderSpellMini("0", spell["id"], 25)
+      spellMinis[spell["id"]] = await Spells.renderSpellMini("0", spell["id"], 30)
     }
     this.spellMinis = spellMinis
 
@@ -128,12 +131,18 @@ export default {
   },
   methods: {
 
+    isSpellSelected(spell) {
+      return spell.id === this.selectedSpellId
+    },
+
     selectSpell(spellId) {
       const event = {
         spellId: spellId,
       }
 
       this.$emit('input', event);
+
+      this.selectedSpellId = spellId
     },
 
     selectAsEffect(field, spell) {
