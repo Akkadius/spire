@@ -262,19 +262,22 @@
         <div v-if="itemData[effect.field] > 0 && effectData[effect.field]" class="row col-12 pl-0 mb-1">
 
           <!-- Target -->
-          <div :id="itemData[effect.field] + '-' + componentId">
-
-            <img
-              :src="spellCdnUrl + (effectData[effect.field].new_icon > 0 ? effectData[effect.field].new_icon : 1) + '.gif'"
-              :style="'width:20px;height:auto; ' + 'border: 1px solid ' + getTargetTypeColor(effectData[effect.field]['targettype']) + '; border-radius: 3px;'"
-              class="mr-1 mt-1"
-              alt=""
+          <div
+            :id="itemData[effect.field] + '-' + componentId"
+          >
+            <span
+              :style="'width: 20px; height: 20px; border: 1px solid ' + getTargetTypeColor(effectData[effect.field]['targettype']) + '; border-radius: 3px; display: inline-block'"
+              :class="'spell-' + effectData[effect.field].new_icon + '-20'"
+            />
+            <span
+              class="ml-1"
+              style="color: #f7ff00; position: relative; top: -7px;"
             >
-            {{ effectData[effect.field].name }} ({{ effect.name }})
-
-            <div v-if="['clickeffect'].includes(effect.field)" class="d-inline-block">
-              Cast ({{ itemData['casttime'] / 1000 }} sec) Recast ({{ itemData['recastdelay'] }} sec)
-            </div>
+              {{ effectData[effect.field].name }} ({{ effect.name }})
+              <div v-if="['clickeffect'].includes(effect.field)" class="d-inline-block">
+                Cast ({{ itemData['casttime'] / 1000 }} sec) Recast ({{ itemData['recastdelay'] }} sec)
+              </div>
+            </span>
 
           </div>
 
@@ -371,7 +374,6 @@ export default {
     return {
       spells: EXAMPLE_SPELL_DATA,
       cdnUrl: App.ASSET_CDN_BASE_URL,
-      spellCdnUrl: App.ASSET_SPELL_ICONS_BASE_URL,
       componentId: "",
       factionNames: [],
       stats: {

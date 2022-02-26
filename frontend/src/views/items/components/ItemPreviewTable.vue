@@ -131,7 +131,6 @@ export default {
     return {
       debug: App.DEBUG,
       debugItemEffects: false,
-      spellCdnUrl: App.ASSET_SPELL_ICONS_BASE_URL,
       itemCdnUrl: App.ASSET_ITEM_ICON_BASE_URL,
       itemEffectInfo: [],
       itemData: {},

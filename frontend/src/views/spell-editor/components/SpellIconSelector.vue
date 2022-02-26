@@ -7,24 +7,23 @@
       :class="'d-inline-block '"
       style="margin: 2px"
     >
-      <img
-        :src="spellCdnUrl + icon + '.gif'"
-        :class="classIsPulsating(icon)"
-        :style="'width:40px; height: 40px; border-radius:10px; border: 1px solid;'"
-      >
+      <span
+        :style="'width: 40px; height: 40px; border: 1px solid; border-radius: 10px; display: inline-block'"
+        :class="'spell-' + icon + '-40 ' + classIsPulsating(icon)"
+        :title="icon"
+      />
     </div>
   </div>
 </template>
 
 <script>
-import SpellIcons from "@/app/eq-assets/spell-icons-map.json";
-import {App}      from "../../../constants/app";
+import {App}    from "../../../constants/app";
+import EqAssets from "../../../app/eq-assets/eq-assets";
 
 export default {
   name: "SpellIconSelector",
   data() {
     return {
-      spellCdnUrl: App.ASSET_SPELL_ICONS_BASE_URL,
       icons: [],
     }
   },
@@ -36,13 +35,7 @@ export default {
     },
   },
   created() {
-    SpellIcons[0].contents.forEach((row) => {
-      const pieces   = row.name.split(/\//);
-      const fileName = pieces[pieces.length - 1];
-      const iconId   = fileName.replace(".gif", "")
-
-      this.icons.push(iconId);
-    })
+    this.icons = EqAssets.getSpellIcons()
   },
   methods: {
     selectIcon(icon) {

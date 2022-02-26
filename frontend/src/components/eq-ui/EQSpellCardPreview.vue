@@ -6,10 +6,12 @@
 
     <div class="row">
       <div class="col-1">
-        <img
-          :src="spellCdnUrl + (spellData.new_icon > 0 ? spellData.new_icon : 1) + '.gif'"
-          :style="'width:40px;height:auto;border-radius: 10px; ' + 'border: 2px solid ' + getTargetTypeColor(this.spellData['targettype']) + '; border-radius: 7px;'"
-        >
+
+        <span
+          :style="'width: 40px; height: 40px; border: 1px solid ' + getTargetTypeColor(this.spellData['targettype']) + '; border-radius: 7px; '"
+          :class="'spell-' + spellData.new_icon + '-40'"
+        />
+
       </div>
       <div class="col-11 pl-5">
         <h6 class="eq-header" style="margin: 0px; margin-bottom: 10px">
@@ -382,7 +384,7 @@
 
           <div style="display: inline-block">
 
-            <div :class="'ml-1 mr-2 item-' + reagent.item.icon + '-sm'"/>
+            <div :class="'ml-1 mr-1 item-' + reagent.item.icon + '-sm'"/>
 
             <span class="mr-1">{{ reagent.item.name }}</span>
           </div>
@@ -454,7 +456,6 @@ export default {
     return {
       debug: App.DEBUG,
       debugSpellEffects: false,
-      spellCdnUrl: App.ASSET_SPELL_ICONS_BASE_URL,
       spellEffectInfo: [],
       itemData: {},
       sideLoadedSpellData: {},

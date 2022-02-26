@@ -1,6 +1,7 @@
 import PlayerAnimations from '@/app/eq-assets/player-animations.json';
 import Emitters from "@/app/eq-assets/emitters.json";
-import SpellAnimations   from "@/app/eq-assets/spell-animations-map.json";
+import SpellAnimations from "@/app/eq-assets/spell-animations-map.json";
+import SpellIcons from "@/app/eq-assets/spell-icons-map.json";
 
 export default class EqAssets {
 
@@ -36,6 +37,35 @@ export default class EqAssets {
     ids.sort(function (a, b) {
       return a - b;
     });
+
+    return ids
+  }
+
+  public static spellIcons = []
+
+  public static getSpellIcons() {
+    // return cached set
+    if (this.spellIcons.length > 0) {
+      return this.spellIcons
+    }
+
+    let ids = <any>[];
+    if (SpellIcons[0].contents) {
+      SpellIcons[0].contents.forEach((row) => {
+        const pieces   = row.name.split(/\//);
+        const fileName = pieces[pieces.length - 1];
+        const iconId   = fileName.replace(".gif", "")
+
+        ids.push(iconId)
+      })
+    }
+
+    ids.sort(function (a, b) {
+      return a - b;
+    });
+
+    // cache for second retrieval
+    this.spellIcons = ids
 
     return ids
   }

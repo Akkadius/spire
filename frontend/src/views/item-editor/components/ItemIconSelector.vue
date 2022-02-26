@@ -67,6 +67,7 @@
         <span
           :id="'item-icon-' + icon"
           :class="'fade-in item-' + icon + ' ' + classIsPulsating(icon)"
+          :title="icon"
           style="border: 1px solid rgb(218 218 218 / 30%); border-radius: 7px;"
         />
       </span>

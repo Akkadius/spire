@@ -625,9 +625,8 @@ export default {
       }
       if (this.$route.query.filters) {
         this.filters = JSON.parse(this.$route.query.filters);
-      }
-      else {
-        this.filters = []
+      } else {
+        this.filters = [];
       }
     },
 
@@ -688,6 +687,7 @@ export default {
     listItems: function () {
       this.loaded   = false;
       const builder = new SpireQueryBuilder()
+      const api     = (new ItemApi(SpireApiClient.getOpenApiConfig()))
 
       // filter by class
       if (this.selectedClasses && parseInt(this.selectedClasses) > 0 && parseInt(this.selectedClasses) !== 65535) {
@@ -739,7 +739,7 @@ export default {
       if (this.filters && this.filters.length > 0) {
         this.filters.forEach((f) => {
           builder.where(f.f, f.o, f.v)
-        })
+        });
       }
 
       // level
@@ -771,7 +771,7 @@ export default {
 
       builder.groupBy(["id"])
       builder.limit(this.limit)
-      (new ItemApi(SpireApiClient.getOpenApiConfig())).listItems(builder.get()).then(async (result) => {
+      api.listItems(builder.get()).then(async (result) => {
         if (result.status === 200) {
           // set items to be rendered
           this.items  = result.data

@@ -117,6 +117,32 @@
                 </div>
               </div>
 
+              <!-- Spell Icons -->
+              <div class="header mt-md-1">
+                <div class="header-body">
+                  <h1 class="header-title" id="spell-icons">
+                    Spell Icons
+                  </h1>
+
+                </div>
+              </div>
+
+              <eq-window-simple>
+                <div class="row">
+                  <div class="col-1 text-center" v-for="n in 12">
+                    <div v-for="icon in spellIcons">
+                      {{ icon.iconSize }}
+
+                      <span
+                        :style="'width: ' + icon.iconSize + 'px; height: ' + icon.iconSize + 'px; border: 1px solid; border-radius: 3px; display: inline-block'"
+                        :class="'spell-' + (parseInt(icon.icon) + n) + '-' + icon.iconSize + ' mr-1 mt-1'"
+                      />
+                    </div>
+                  </div>
+                </div>
+
+              </eq-window-simple>
+
               <!-- Spell Preview -->
               <div class="header mt-md-1">
                 <div class="header-body">
@@ -473,7 +499,14 @@ export default {
       rangeVisual: 157,
       items: EXAMPLE_ITEM_DATA,
       spells: EXAMPLE_SPELL_DATA,
-      specialAbilityInput: "1,1,3000,50^2,1,1,1000,2340^3,1,20,0,0,0,0,100,0^4,1,0,100,0,0,0,100,0^11,1,4,150,0,0,5^29,1,50^40,1,10,10,100^7,1^10,1^14,1^19,1^22,1^25,1^26,1"
+      specialAbilityInput: "1,1,3000,50^2,1,1,1000,2340^3,1,20,0,0,0,0,100,0^4,1,0,100,0,0,0,100,0^11,1,4,150,0,0,5^29,1,50^40,1,10,10,100^7,1^10,1^14,1^19,1^22,1^25,1^26,1",
+
+      spellIcons: [
+        { icon: 50, iconSize: 12, },
+        { icon: 50, iconSize: 20, },
+        { icon: 50, iconSize: 30, },
+        { icon: 50, iconSize: 40, },
+      ],
     }
   },
   mounted() {

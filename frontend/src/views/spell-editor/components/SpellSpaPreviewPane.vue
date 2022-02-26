@@ -76,8 +76,6 @@ export default {
       effectInfo: "",
       sideLoadedSpellData: {},
 
-      spellCdnUrl: App.ASSET_SPELL_ICONS_BASE_URL,
-
       componentId: "",
       reagents: [],
 

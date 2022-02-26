@@ -2964,23 +2964,45 @@ export class Spells {
     }
   };
 
-  public static async renderSpellMini(parentSpellId, renderSpellId, iconSize = 16) {
+  public static async renderSpellMini(parentSpellId, renderSpellId, iconSize = 12) {
     let spell             = <any>await this.getSpell(renderSpellId)
     const targetTypeColor = this.getTargetTypeColor(spell["targettype"]);
 
-    let borderSize   = iconSize > 16 ? 2 : 1;
-    let borderRadius = iconSize > 16 ? 7 : 3;
+    let renderIconSize = 20;
+    let borderSize = 1;
+    let borderRadius = 3;
+    let marginLeft = 1;
+    let textTop = 10;
+    if (iconSize >= 40) {
+      renderIconSize = 40;
+      borderSize = 2;
+      borderRadius = 3;
+      marginLeft = 2;
+    }
+    else if (iconSize >= 30) {
+      renderIconSize = 30;
+      borderSize = 1;
+      borderRadius = 6;
+      marginLeft = 1;
+    }
+    else if (iconSize >= 12) {
+      renderIconSize = 12;
+      borderSize = 1;
+      borderRadius = 2;
+      marginLeft = 0;
+      textTop = 1;
+    }
 
     return `
           <div :id="${parentSpellId} + '-' + ${renderSpellId} + '-' + componentId" style="display:inline-block">
-
             <div style="display: inline-block">
-              <img
-                :src="spellCdnUrl + '' + (${spell.new_icon} > 0 ? ${spell.new_icon} : 1) + '.gif'"
-                style="width: ${iconSize}px;height:auto; border: ${borderSize}px solid ${targetTypeColor}; border-radius: ${borderRadius}px;"
-                :class="(${iconSize} > 16 ? 'mr-1' : '')"
-                >
-              <span style="color: #f7ff00">${spell.name}</span>
+              <div
+                 style="width: ${renderIconSize}px; height: ${renderIconSize}px; border: ${borderSize}px solid ${targetTypeColor}; border-radius: ${borderRadius}px; display: inline-block"
+                 :class="'spell-' + ${spell.new_icon} + '-${renderIconSize}'"
+               />
+              <span
+                :class="'ml-${marginLeft}'"
+                style="color: #f7ff00; position: relative; top: -${textTop}px;">${spell.name}</span>
             </div>
 
           </div>

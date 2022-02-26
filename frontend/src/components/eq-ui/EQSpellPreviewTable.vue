@@ -21,7 +21,7 @@
             <tr>
               <th style="width: 180px;"></th>
               <th style="width: auto;">Id</th>
-              <th style="width: auto; min-width: 250px">Spell</th>
+              <th style="width: auto; min-width: 270px">Spell</th>
               <th style="width: auto; min-width: 300px">Level</th>
               <th style="width: 400px">Effects</th>
 
@@ -133,7 +133,6 @@ export default {
     return {
       debug: App.DEBUG,
       debugSpellEffects: false,
-      spellCdnUrl: App.ASSET_SPELL_ICONS_BASE_URL,
       spellEffectInfo: [],
       itemData: {},
       sideLoadedSpellData: {},

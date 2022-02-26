@@ -60,7 +60,6 @@ export default {
   data() {
     return {
       spellEffectInfo: [],
-      spellCdnUrl: App.ASSET_SPELL_ICONS_BASE_URL,
       componentId: "",
       sideLoadedSpellData: {},
       loaded: false,

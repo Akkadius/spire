@@ -65,11 +65,12 @@
                       style="margin-top: 7px"
                       @click="drawIconSelector(true)"
                     >
-                      <img
-                        :src="spellCdnUrl + spell.new_icon + '.gif'"
-                        class="mt-3"
-                        :style="'width:35px;height:auto;border-radius: 10px; ' + 'border: 2px solid ' + getTargetTypeColor(this.spell['targettype']) + '; border-radius: 7px;'"
-                      >
+
+                      <span
+                        :style="'width: 40px; height: 40px; border: 1px solid ' + getTargetTypeColor(this.spell['targettype']) + '; border-radius: 7px; display: inline-block'"
+                        :class="'spell-' + spell.new_icon + '-40 mt-2'"
+                      />
+
                     </div>
 
                   </div>
@@ -252,7 +253,6 @@
 
                       <b-form-input
                         :id="'effect_base_value_' + i"
-                        style="padding-left: 10px !important;"
                         v-model.number="spell['effect_base_value_' + i]"
                         :class="getSpaSpellHighlights(spell['effectid_' + i], 'base')"
                         @click="processSpaFieldAction(i, spell['effectid_' + i], 'base')"
@@ -1737,7 +1737,6 @@ export default {
   data() {
     return {
       spell: null, // spell record data
-      spellCdnUrl: App.ASSET_SPELL_ICONS_BASE_URL,
 
       // constants
       DB_SPELL_EFFECTS: DB_SPELL_EFFECTS,

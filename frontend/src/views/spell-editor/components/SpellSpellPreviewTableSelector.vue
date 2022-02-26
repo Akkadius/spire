@@ -9,7 +9,9 @@
       id="spell-effect-selector-view-port"
       class='spell-table p-0'
          v-if="spells.length > 0">
-      <table class="eq-table eq-highlight-rows" style="display: table;">
+      <table
+        class="eq-table eq-highlight-rows spell-preview-table"
+        style="display: table;">
         <thead>
         <tr>
           <th></th>
@@ -91,7 +93,6 @@ export default {
     return {
       debug: App.DEBUG,
       debugSpellEffects: false,
-      spellCdnUrl: App.ASSET_SPELL_ICONS_BASE_URL,
       itemCdnUrl: App.ASSET_ITEM_ICON_BASE_URL,
       spellEffectInfo: [],
       itemData: {},
@@ -191,6 +192,10 @@ export default {
   padding-bottom: 5px;
   border-right: .1px solid #ffffff1c;
   border-left: .1px solid #ffffff1c;
+}
+
+.spell-preview-table td {
+  vertical-align: middle !important;
 }
 
 /* For Mobile */

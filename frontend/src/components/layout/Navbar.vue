@@ -261,6 +261,7 @@ export default {
         { title: "Page Headers", to: "/components#page-headers" },
         { title: "Range Visual", to: "/components#range-visual" },
         { title: "Item Preview", to: "/components#item-preview" },
+        { title: "Spell Icons", to: "/components#spell-icons" },
         { title: "Spell Preview", to: "/components#spell-preview" },
         { title: "NPC Special Abilities", to: "/components#npc-special-abilities" },
         { title: "Table", to: "/components#table" },

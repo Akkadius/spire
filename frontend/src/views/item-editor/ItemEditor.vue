@@ -1704,8 +1704,6 @@ export default {
       item: null, // item record data
       originalItem: {}, // item record data; used to reference original values in tools
 
-      spellCdnUrl: App.ASSET_SPELL_ICONS_BASE_URL,
-
       // state, loaded or not
       loaded: true,
 
