@@ -13,7 +13,7 @@ export const DB_STR_TYPES = {
   11: "Race",
   12: "Races",
   13: "Classes",
-  14: "Diety Description",
+  14: "Deity Description",
   15: "City Description",
   16: "Augmentation Type",
   17: "Currency",

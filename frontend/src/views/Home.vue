@@ -156,6 +156,14 @@ export default {
   font-weight: 600;
 }
 
+.changelog img {
+  border-radius: 15px;
+  max-width: 95% !important;
+  text-align: center;
+  display: block;
+  margin: 25px auto;
+}
+
 .container {
   position: relative;
   width: 100%;
