@@ -1,17 +1,38 @@
 <template>
   <div class="item-bg" style="max-width: 475px; padding: 5px" v-if="itemData">
 
+    <span
+      style="position: absolute; right: 7%; opacity: .8"
+      :class="'mt-2 mb-2 object-ctn-' + itemData.idfile.replace('IT', '')"
+    />
+
+    <div
+      class="col-1 text-right"
+      v-if="showEdit"
+      style="position: absolute; left: 4%; top: 70px; z-index: 9999; opacity: .7"
+    >
+      <b-button
+        variant="outline-warning"
+        v-if="showEdit"
+        @click="editItem(itemData.id)"
+        class="mt-2"
+        size="sm"
+      >
+        Edit
+      </b-button>
+    </div>
+
     <div class="row">
       <div class="col-1">
         <span :class="'fade-in item-' + itemData.icon" :title="itemData.icon">
 <!--          <span-->
-          <!--            v-if="itemData.stacksize > 1"-->
-          <!--            style="position:absolute; right: 0px; top:45px; font-size: 9px">-->
-          <!--            x{{ itemData.stacksize }}-->
-          <!--          </span>-->
+<!--            v-if="itemData.stacksize > 1"-->
+<!--            style="position:absolute; right: 0px; top:45px; font-size: 10px">-->
+<!--            ({{ itemData.stacksize }})-->
+<!--          </span>-->
         </span>
       </div>
-      <div class="col-10 pl-5">
+      <div class="col-8 pl-5">
         <h6 class="eq-header" style="margin: 0px; margin-bottom: 10px">
           {{ itemData.name }}
         </h6>
@@ -39,15 +60,6 @@
           </table>
         </div>
 
-      </div>
-      <div class="col-1 text-right" v-if="showEdit">
-        <div
-          class="eq-button-fancy"
-          style="margin-left: -40px;"
-          @click="editItem(itemData.id)"
-        >
-          Edit
-        </div>
       </div>
     </div>
 

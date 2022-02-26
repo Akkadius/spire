@@ -617,7 +617,7 @@ export default {
         this.selectOnlyClassEnabled = true;
       }
       if (this.$route.query.checkboxFilters) {
-        this.resetFilters()
+        this.resetCheckboxFilters()
         let checkboxFilters = JSON.parse(this.$route.query.checkboxFilters);
         for (let key in checkboxFilters) {
           this.checkboxFilters[key] = checkboxFilters[key]

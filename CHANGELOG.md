@@ -1,3 +1,13 @@
+## [1.11.1]
+
+### Item Card Previews
+
+* Add model preview to top right of item card preview
+* Edit button layout and UI changes
+
+![image](https://user-images.githubusercontent.com/3319450/155836002-292931ba-b1d3-46fc-bf23-ac397a138c01.png)
+![image](https://user-images.githubusercontent.com/3319450/155836156-3e228360-5713-410d-92be-6e707ec482fd.png)
+
 ## [1.11.0]
 
 ### Item, Spell, Database Strings Editor, Client Files and more
