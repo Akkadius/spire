@@ -64,7 +64,7 @@
       @click="removeFilter(filter)"
       class="d-inline-block ml-3"
       v-for="filter in filters"
-      :key="filter.field + '-' + filter.operator + '-' + filter.value"
+      :key="filter.f + '-' + filter.o + '-' + filter.v"
     >
       <i class="fa fa-remove"></i> {{ formatFilterHuman(filter) }}
     </b-button>
@@ -106,7 +106,9 @@ export default {
     }
   },
   watch: {
-    setFilters: function() {
+    setFilters: function () {
+      this.filters         = []
+      this.queuedAddFilter = false;
       this.loadSetFilters()
     }
   },
@@ -136,12 +138,12 @@ export default {
       // emit filters to parent
       let queryBuilderFilters = []
       this.filters.forEach((filter) => {
-        let operator = filter.operator
+        let operator = filter.o
 
         queryBuilderFilters.push({
-          field: filter.field,
-          operator: operator,
-          value: filter.value,
+          f: filter.f,
+          o: operator,
+          v: filter.v,
         })
       })
 
@@ -162,18 +164,18 @@ export default {
     formatFilterHuman(filter) {
       return util.format(
         "%s %s %s",
-        filter.field,
-        filter.operator,
-        filter.value,
+        filter.f,
+        filter.o,
+        filter.v,
       )
     },
 
     addFilter() {
       this.filters.push(
         {
-          field: this.fieldToAdd,
-          operator: this.operator,
-          value: this.fieldValue,
+          f: this.fieldToAdd,
+          o: this.operator,
+          v: this.fieldValue,
         }
       )
 

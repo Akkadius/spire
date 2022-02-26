@@ -43,6 +43,7 @@ export default {
     id: {
       handler: function (val, oldVal) {
         this.render()
+        VideoViewer.handleRender();
       },
     },
   },

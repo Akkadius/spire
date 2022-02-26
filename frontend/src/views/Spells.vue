@@ -366,6 +366,9 @@ export default {
       if (this.$route.query.filters) {
         this.filters = JSON.parse(this.$route.query.filters);
       }
+      else {
+        this.filters = []
+      }
     },
 
     selectClass: function (eqClass) {
@@ -448,7 +451,7 @@ export default {
 
       if (this.filters && this.filters.length > 0) {
         this.filters.forEach((f) => {
-          builder.where(f.field, f.operator, f.value)
+          builder.where(f.f, f.o, f.v)
         })
       }
 
