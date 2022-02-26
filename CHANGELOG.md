@@ -1,3 +1,13 @@
+## [1.11.2]
+
+### New Spell Icons
+
+* Added over 2,000 spell icons from the live client, now available in the spell editor and used in any spell card
+
+![image](https://user-images.githubusercontent.com/3319450/155861512-dd963f04-2670-4c9a-9122-47aa72ca2d50.png)
+![image](https://user-images.githubusercontent.com/3319450/155861531-709650ba-a529-473e-ac6b-1ba311283d4e.png)
+![image](https://user-images.githubusercontent.com/3319450/155861537-9c3e26e6-d2e2-40b7-9d89-87be90366803.png)
+
 ## [1.11.1]
 
 ### Item Card Previews

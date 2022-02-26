@@ -54,7 +54,7 @@ export default class EqAssets {
       SpellIcons[0].contents.forEach((row) => {
         const pieces   = row.name.split(/\//);
         const fileName = pieces[pieces.length - 1];
-        const iconId   = fileName.replace(".gif", "")
+        const iconId   = fileName.replace(".png", "")
 
         ids.push(iconId)
       })
