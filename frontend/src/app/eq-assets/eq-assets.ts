@@ -64,6 +64,10 @@ export default class EqAssets {
       return a - b;
     });
 
+    ids = ids.filter((id) => {
+      return parseInt(id) <= 216
+    })
+
     // cache for second retrieval
     this.spellIcons = ids
 
