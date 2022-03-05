@@ -221,7 +221,11 @@
               style="display: inline-block; vertical-align: top"
             >
               <eq-window style="margin-right: 10px; width: auto; height: 90%">
-                <eq-item-card-preview :item-data="item" :show-edit="true"/>
+                <eq-item-card-preview
+                  :item-data="item"
+                  :show-edit="true"
+                  :show-related-data="true"
+                />
               </eq-window>
             </div>
           </div>
@@ -261,6 +265,7 @@ import ItemPreviewTable from "@/views/items/components/ItemPreviewTable.vue";
 import {SpireQueryBuilder} from "@/app/api/spire-query-builder";
 import DbColumnFilter from "@/components/DbColumnFilter";
 import {DbSchema} from "@/app/db-schema";
+import {Zones} from "@/app/zones";
 
 export default {
   components: {
@@ -337,6 +342,8 @@ export default {
         }
       )
     }
+
+    Zones.getZones()
   },
 
   watch: {
@@ -753,6 +760,26 @@ export default {
 
       builder.groupBy(["id"])
       builder.limit(this.limit)
+      builder.includes([
+        "Doors",
+        "Fishings",
+        "Fishings.Zone",
+        "Forages",
+        "Forages.Zone",
+        "LootdropEntries",
+        "LootdropEntries.Lootdrop",
+        "LootdropEntries.Lootdrop.LoottableEntries",
+        "LootdropEntries.Lootdrop.LoottableEntries.Loottable",
+        "LootdropEntries.Lootdrop.LoottableEntries.Loottable.NpcTypes",
+        "LootdropEntries.Lootdrop.LoottableEntries.Loottable.NpcTypes.Spawnentries.Spawngroup.Spawn2",
+        "Objects",
+        "Objects.Zone",
+        "StartingItems",
+        "StartingItems.Zone",
+        "TradeskillRecipeEntries",
+        "TradeskillRecipeEntries.TradeskillRecipe",
+        "TributeLevels",
+      ])
       api.listItems(builder.get()).then(async (result) => {
         if (result.status === 200) {
           // set items to be rendered
