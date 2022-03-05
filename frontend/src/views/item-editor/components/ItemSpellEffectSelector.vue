@@ -57,7 +57,7 @@
 
         </div>
 
-        <div class="col-2 text-center">
+        <div class="col-3 text-center">
           Level
           <select
             name="class"
@@ -73,34 +73,81 @@
           </select>
         </div>
 
-        <div class="col-2 m-0 p-0">
-          <b-form-group>
-            <b-form-radio v-model="selectedLevelType" @change="triggerState()" value="0">Only
-            </b-form-radio>
-            <b-form-radio v-model="selectedLevelType" @change="triggerState()" value="1">And Higher
-            </b-form-radio>
-            <b-form-radio v-model="selectedLevelType" @change="triggerState()" value="2">And Lower
-            </b-form-radio>
-          </b-form-group>
-        </div>
-
-        <div class="col-1 text-center">
-          <b-button
-            class="btn-dark btn-sm btn-outline-warning mb-3"
-            @click="resetForm"
+        <div class="col-3 pl-0">
+          <div
+            class="btn-group"
+            role="group"
+            v-if="selectedLevel"
+            style="margin-top: 23px"
           >
-            Reset
-          </b-button>
-
-          <b-button
-            class="btn-dark btn-sm btn-outline-warning"
-            @click="triggerState"
-          >
-            Search
-          </b-button>
+            <b-button
+              @click="selectedLevelType = 0; listSpells();"
+              size="sm"
+              :variant="(parseInt(selectedLevelType) === 0 ? 'warning' : 'outline-warning')"
+            >Only
+            </b-button>
+            <b-button
+              @click="selectedLevelType = 1; listSpells();"
+              size="sm"
+              :variant="(parseInt(selectedLevelType) === 1 ? 'warning' : 'outline-warning')"
+            >Higher
+            </b-button>
+            <b-button
+              @click="selectedLevelType = 2; listSpells();"
+              size="sm"
+              :variant="(parseInt(selectedLevelType) === 2 ? 'warning' : 'outline-warning')"
+            >Lower
+            </b-button>
+          </div>
         </div>
 
       </div>
+
+      <div class="row mt-3 text-center">
+        <div class="col-12">
+          <div class="btn-group ml-3" role="group" aria-label="Basic example">
+            <b-button
+              @click="limit = 10; listSpells()"
+              size="sm"
+              :variant="(parseInt(limit) === 10 ? 'warning' : 'outline-warning')"
+            >10
+            </b-button>
+            <b-button
+              @click="limit = 100; listSpells()"
+              size="sm"
+              :variant="(parseInt(limit) === 100 ? 'warning' : 'outline-warning')"
+            >100
+            </b-button>
+            <b-button
+              @click="limit = 250; listSpells()"
+              size="sm"
+              :variant="(parseInt(limit) === 250 ? 'warning' : 'outline-warning')"
+            >250
+            </b-button>
+            <b-button
+              @click="limit = 1000; listSpells()"
+              size="sm"
+              :variant="(parseInt(limit) === 1000 ? 'warning' : 'outline-warning')"
+            >1000
+            </b-button>
+          </div>
+
+          <b-button
+            class="btn-dark btn-sm btn-outline-warning ml-3"
+            @click="resetForm"
+          >
+            <i class="fa fa-refresh"></i> Reset
+          </b-button>
+
+          <b-button
+            class="btn-dark btn-sm btn-outline-warning ml-3"
+            @click="triggerState"
+          >
+            <i class="fa fa-search"></i> Search
+          </b-button>
+        </div>
+      </div>
+
     </eq-window-simple>
 
     <app-loader :is-loading="!loaded" padding="4"/>
@@ -156,7 +203,7 @@ export default {
     return {
       loaded: false,
       spells: null,
-      limit: 250,
+      limit: 100,
       beginRange: 10000,
       endRange: 100000,
       dbClassIcons: DB_CLASSES_ICONS,
