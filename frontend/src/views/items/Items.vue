@@ -266,6 +266,7 @@ import {SpireQueryBuilder} from "@/app/api/spire-query-builder";
 import DbColumnFilter from "@/components/DbColumnFilter";
 import {DbSchema} from "@/app/db-schema";
 import {Zones} from "@/app/zones";
+import {Items} from "@/app/items";
 
 export default {
   components: {
@@ -760,26 +761,7 @@ export default {
 
       builder.groupBy(["id"])
       builder.limit(this.limit)
-      builder.includes([
-        "Doors",
-        "Fishings",
-        "Fishings.Zone",
-        "Forages",
-        "Forages.Zone",
-        "LootdropEntries",
-        "LootdropEntries.Lootdrop",
-        "LootdropEntries.Lootdrop.LoottableEntries",
-        "LootdropEntries.Lootdrop.LoottableEntries.Loottable",
-        "LootdropEntries.Lootdrop.LoottableEntries.Loottable.NpcTypes",
-        "LootdropEntries.Lootdrop.LoottableEntries.Loottable.NpcTypes.Spawnentries.Spawngroup.Spawn2",
-        "Objects",
-        "Objects.Zone",
-        "StartingItems",
-        "StartingItems.Zone",
-        "TradeskillRecipeEntries",
-        "TradeskillRecipeEntries.TradeskillRecipe",
-        "TributeLevels",
-      ])
+      builder.includes(Items.getRelationships())
       api.listItems(builder.get()).then(async (result) => {
         if (result.status === 200) {
           // set items to be rendered

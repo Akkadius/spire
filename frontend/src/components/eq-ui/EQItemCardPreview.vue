@@ -348,8 +348,8 @@
 
       <div class="mt-3">
         <li v-for="door in unlocksDoors">
-          <span style="color: #7b714a">{{ door.name }}</span>
-          in <span style="color: #7b714a">{{ door.zone }}</span>
+          <span class="font-weight-bold">{{ door.name }}</span>
+          in <span  class="font-weight-bold">{{ door.zone }}</span>
           @ {{door.x}}, {{door.y}}, {{door.z}}
         </li>
       </div>
@@ -361,7 +361,7 @@
 
       <div class="mt-3">
         <li v-for="drop in droppedBy">
-          <span style="color: #7b714a">{{ drop.name }}</span> in <span style="color: #7b714a">{{ drop.zone }}</span>
+          <span class="font-weight-bold">{{ drop.name }}</span> in <span class="font-weight-bold">{{ drop.zone }}</span>
         </li>
       </div>
     </div>

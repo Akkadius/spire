@@ -1504,6 +1504,7 @@
             >
               <eq-item-preview
                 :item-data="item"
+                :show-related-data="true"
               />
             </eq-window>
 
