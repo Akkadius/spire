@@ -3,7 +3,7 @@
     <div class="panel-body">
       <div class="panel panel-default">
         <div class="row">
-          <div class="col-7">
+          <div class="col-xl-7 col-lg-12">
             <eq-window style="margin-top: 30px" title="Edit Spell">
 
               <div
@@ -598,7 +598,7 @@
                               tag="button"
                               :to="DB_STRING_EDITOR_URL + '?type=' + (field.field === 'descnum' ? 6 : 5) + '&selectedId=' + spell[field.field] "
                             >
-                              <i class="ra ra-scroll-unfurled mr-1"></i> Strings Editor
+                              <i class="ra ra-scroll-unfurled mr-1"></i> Editor
                             </router-link>
                           </div>
                         </div>
@@ -1460,7 +1460,7 @@
           </div>
 
           <!-- Preview Pane -->
-          <div class="col-5">
+          <div class="col-xl-5 col-lg-12">
 
             <!-- SPA Detail Pane -->
             <eq-window
