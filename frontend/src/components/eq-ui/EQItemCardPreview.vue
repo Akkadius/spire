@@ -364,6 +364,20 @@
           <span class="font-weight-bold">{{ drop.name }}</span> in <span class="font-weight-bold">{{ drop.zone }}</span>
         </li>
       </div>
+
+      <!-- Fished In -->
+      <div v-if="fishedIn.length > 0" class="font-weight-bold mt-3">
+        Can be fished in
+      </div>
+
+      <div class="mt-3">
+        <li v-for="e in fishedIn">
+          <span class="font-weight-bold">{{ e.zone.long_name }}</span>
+          with skill <span class="font-weight-bold">{{ e.skill }}</span>
+        </li>
+      </div>
+
+
     </div>
 
     <div class="pb-4 mb-5"></div>
@@ -463,7 +477,8 @@ export default {
       // related data
       relatedData: [],
       droppedBy: [],
-      unlocksDoors: []
+      unlocksDoors: [],
+      fishedIn: []
       // augslots: {}
     }
   },
@@ -749,6 +764,7 @@ export default {
       }
       this.unlocksDoors = unlocksDoors
 
+      // loot
       if (d.lootdrop_entries) {
 
         let droppedByNpc = []
@@ -792,6 +808,21 @@ export default {
       }
 
       this.droppedBy = droppedBy.sort((a, b) => (a.name > b.name) ? 1 : -1)
+
+      // doors
+      let fishedIn = []
+      if (d.fishings) {
+        for (const e of d.fishings) {
+          fishedIn.push(
+            {
+              zone: e.zone,
+              skill: e.skill_level,
+            }
+          )
+        }
+      }
+      this.fishedIn = fishedIn
+
 
       this.relatedData = related
 
