@@ -7,30 +7,14 @@
       :class="'mt-2 mb-2 object-ctn-' + itemData.idfile.replace('IT', '')"
     />
 
-    <div
-      class="col-1 text-right"
-      v-if="showEdit"
-      style="position: absolute; left: 4%; top: 70px; z-index: 9999; opacity: .7"
-    >
-      <b-button
-        variant="outline-warning"
-        v-if="showEdit"
-        @click="editItem(itemData.id)"
-        class="mt-2"
-        size="sm"
-      >
-        Edit
-      </b-button>
-    </div>
-
     <div class="row">
       <div class="col-1">
         <span :class="'fade-in item-' + itemData.icon" :title="itemData.icon">
 <!--          <span-->
-<!--            v-if="itemData.stacksize > 1"-->
-<!--            style="position:absolute; right: 0px; top:45px; font-size: 10px">-->
-<!--            ({{ itemData.stacksize }})-->
-<!--          </span>-->
+          <!--            v-if="itemData.stacksize > 1"-->
+          <!--            style="position:absolute; right: 0px; top:45px; font-size: 10px">-->
+          <!--            ({{ itemData.stacksize }})-->
+          <!--          </span>-->
         </span>
       </div>
       <div class="col-8 pl-5">
@@ -43,6 +27,14 @@
           <table>
             <tbody>
 
+            <tr>
+              <td colspan="2" v-if="showEdit"><a
+                href="javascript:void(0)"
+                @click="editItem(itemData.id)"
+              >
+                Edit
+              </a></td>
+            </tr>
             <tr>
               <td colspan="2"> {{ getItemTags() }}</td>
             </tr>
@@ -346,6 +338,34 @@
       />
     </div>
 
+    <!-- Related Data -->
+    <div v-if="showRelatedData" class="mt-3">
+
+      <!-- Unlocks Doors -->
+      <div v-if="unlocksDoors.length > 0" class="font-weight-bold mt-3">
+        Unlocks Doors
+      </div>
+
+      <div class="mt-3">
+        <li v-for="door in unlocksDoors">
+          <span style="color: #7b714a">{{ door.name }}</span>
+          in <span style="color: #7b714a">{{ door.zone }}</span>
+          @ {{door.x}}, {{door.y}}, {{door.z}}
+        </li>
+      </div>
+
+      <!-- Dropped By -->
+      <div v-if="droppedBy.length > 0" class="font-weight-bold mt-3">
+        Dropped By
+      </div>
+
+      <div class="mt-3">
+        <li v-for="drop in droppedBy">
+          <span style="color: #7b714a">{{ drop.name }}</span> in <span style="color: #7b714a">{{ drop.zone }}</span>
+        </li>
+      </div>
+    </div>
+
     <div class="pb-4 mb-5"></div>
 
     <eq-debug :data="itemData"/>
@@ -379,6 +399,7 @@ import EqCashDisplay                   from "@/components/eq-ui/EqCashDisplay";
 import {Items}                         from "@/app/items";
 import {FactionListApi}                from "@/app/api";
 import {SpireApiClient}                from "@/app/api/spire-api-client";
+import {Zones}                         from "@/app/zones";
 
 export default {
   name: "EqItemCardPreview",
@@ -437,11 +458,17 @@ export default {
         { field: "scrolleffect", name: "Scroll Effect" },
         { field: "clickeffect", name: "Click Effect" },
         { field: "bardeffect", name: "Bard Effect" }
-      ]
+      ],
+
+      // related data
+      relatedData: [],
+      droppedBy: [],
+      unlocksDoors: []
       // augslots: {}
     }
   },
   methods: {
+
     async init() {
       const uuidv4     = require("uuid/v4")
       this.componentId = uuidv4()
@@ -500,6 +527,10 @@ export default {
       }
 
       this.secondlevel3 = data
+
+      if (this.showRelatedData) {
+        this.renderRelatedData()
+      }
     },
     editItem(itemId) {
       this.$router.push(
@@ -684,6 +715,87 @@ export default {
           return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
         }
       );
+    },
+    async getZoneLongName(shortName) {
+      const zones = await Zones.getZones()
+      zones.forEach((zone) => {
+        if (zone.short_name === shortName) {
+          return zone.long_name
+        }
+      })
+
+      return shortName
+    },
+    async renderRelatedData() {
+      let related   = []
+      let droppedBy = []
+
+      const d = this.itemData
+
+      // doors
+      let unlocksDoors = []
+      if (d.doors) {
+        for (const e of d.doors) {
+          unlocksDoors.push(
+            {
+              name: e.name,
+              zone: await Zones.getZoneLongNameByShortName(e.zone),
+              x: e.pos_x,
+              y: e.pos_y,
+              z: e.pos_z,
+            }
+          )
+        }
+      }
+      this.unlocksDoors = unlocksDoors
+
+      if (d.lootdrop_entries) {
+
+        let droppedByNpc = []
+        for (const lootdropEntry of d.lootdrop_entries) {
+          if (lootdropEntry.lootdrop && lootdropEntry.lootdrop.loottable_entries) {
+            for (const loottableEntry of lootdropEntry.lootdrop.loottable_entries) {
+              if (loottableEntry.loottable && loottableEntry.loottable.npc_types) {
+                for (const npcType of loottableEntry.loottable.npc_types) {
+                  const npcName = npcType.name.replaceAll("_", " ").replaceAll("#", "").trim()
+
+                  if (
+                    npcType.spawnentries &&
+                    npcType.spawnentries[0].spawngroup &&
+                    npcType.spawnentries[0].spawngroup.spawn_2
+                  ) {
+
+                    if (!droppedByNpc.includes(npcName)) {
+                      const zoneName = await Zones.getZoneLongNameByShortName(npcType.spawnentries[0].spawngroup.spawn_2.zone.toLowerCase())
+
+                      droppedBy.push(
+                        {
+                          name: npcName,
+                          zone: zoneName,
+                        }
+                      )
+
+                      droppedByNpc.push(npcName)
+                    }
+                  }
+
+                  // console.log(npcType)
+
+                }
+
+                // console.log(loottableEntry.loottable)
+              }
+            }
+
+          }
+        }
+      }
+
+      this.droppedBy = droppedBy.sort((a, b) => (a.name > b.name) ? 1 : -1)
+
+      this.relatedData = related
+
+      console.log("rendering related data")
     }
   },
   created: function () {
@@ -696,6 +808,11 @@ export default {
       required: true
     },
     showEdit: {
+      type: Boolean,
+      default: false,
+      required: false,
+    },
+    showRelatedData: {
       type: Boolean,
       default: false,
       required: false,
