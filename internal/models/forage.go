@@ -10,8 +10,8 @@ type Forage struct {
 	Itemid                 int         `json:"itemid" gorm:"Column:Itemid"`
 	Level                  int16       `json:"level" gorm:"Column:level"`
 	Chance                 int16       `json:"chance" gorm:"Column:chance"`
-	MinExpansion           uint8       `json:"min_expansion" gorm:"Column:min_expansion"`
-	MaxExpansion           uint8       `json:"max_expansion" gorm:"Column:max_expansion"`
+	MinExpansion           int8        `json:"min_expansion" gorm:"Column:min_expansion"`
+	MaxExpansion           int8        `json:"max_expansion" gorm:"Column:max_expansion"`
 	ContentFlags           null.String `json:"content_flags" gorm:"Column:content_flags"`
 	ContentFlagsDisabled   null.String `json:"content_flags_disabled" gorm:"Column:content_flags_disabled"`
 	Item                   *Item       `json:"item,omitempty" gorm:"foreignKey:Itemid;references:id"`

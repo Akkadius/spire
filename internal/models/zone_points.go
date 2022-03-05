@@ -22,8 +22,8 @@ type ZonePoint struct {
 	TargetInstance         uint         `json:"target_instance" gorm:"Column:target_instance"`
 	Buffer                 null.Float32 `json:"buffer" gorm:"Column:buffer"`
 	ClientVersionMask      uint         `json:"client_version_mask" gorm:"Column:client_version_mask"`
-	MinExpansion           uint8        `json:"min_expansion" gorm:"Column:min_expansion"`
-	MaxExpansion           uint8        `json:"max_expansion" gorm:"Column:max_expansion"`
+	MinExpansion           int8         `json:"min_expansion" gorm:"Column:min_expansion"`
+	MaxExpansion           int8         `json:"max_expansion" gorm:"Column:max_expansion"`
 	ContentFlags           null.String  `json:"content_flags" gorm:"Column:content_flags"`
 	ContentFlagsDisabled   null.String  `json:"content_flags_disabled" gorm:"Column:content_flags_disabled"`
 	IsVirtual              int8         `json:"is_virtual" gorm:"Column:is_virtual"`

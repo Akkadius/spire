@@ -16,8 +16,8 @@ type TradeskillRecipe struct {
 	MustLearn              int8        `json:"must_learn" gorm:"Column:must_learn"`
 	Quest                  int8        `json:"quest" gorm:"Column:quest"`
 	Enabled                int8        `json:"enabled" gorm:"Column:enabled"`
-	MinExpansion           uint8       `json:"min_expansion" gorm:"Column:min_expansion"`
-	MaxExpansion           uint8       `json:"max_expansion" gorm:"Column:max_expansion"`
+	MinExpansion           int8        `json:"min_expansion" gorm:"Column:min_expansion"`
+	MaxExpansion           int8        `json:"max_expansion" gorm:"Column:max_expansion"`
 	ContentFlags           null.String `json:"content_flags" gorm:"Column:content_flags"`
 	ContentFlagsDisabled   null.String `json:"content_flags_disabled" gorm:"Column:content_flags_disabled"`
 }

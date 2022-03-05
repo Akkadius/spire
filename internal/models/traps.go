@@ -26,8 +26,8 @@ type Trap struct {
 	Group                  int8        `json:"group" gorm:"Column:group"`
 	DespawnWhenTriggered   int8        `json:"despawn_when_triggered" gorm:"Column:despawn_when_triggered"`
 	Undetectable           int8        `json:"undetectable" gorm:"Column:undetectable"`
-	MinExpansion           uint8       `json:"min_expansion" gorm:"Column:min_expansion"`
-	MaxExpansion           uint8       `json:"max_expansion" gorm:"Column:max_expansion"`
+	MinExpansion           int8        `json:"min_expansion" gorm:"Column:min_expansion"`
+	MaxExpansion           int8        `json:"max_expansion" gorm:"Column:max_expansion"`
 	ContentFlags           null.String `json:"content_flags" gorm:"Column:content_flags"`
 	ContentFlagsDisabled   null.String `json:"content_flags_disabled" gorm:"Column:content_flags_disabled"`
 }
