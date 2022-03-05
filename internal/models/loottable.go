@@ -70,6 +70,7 @@ func (Loottable) Relationships() []string {
 		"LoottableEntries.LootdropEntries.Lootdrop",
 		"LoottableEntries.LootdropEntries.Lootdrop.LootdropEntries",
 		"LoottableEntries.LootdropEntries.Lootdrop.LoottableEntries",
+		"LoottableEntries.Loottable",
 		"NpcTypes",
 		"NpcTypes.AlternateCurrency",
 		"NpcTypes.Merchantlists",

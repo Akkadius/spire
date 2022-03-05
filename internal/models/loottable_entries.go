@@ -8,6 +8,7 @@ type LoottableEntry struct {
 	Mindrop         uint8           `json:"mindrop" gorm:"Column:mindrop"`
 	Probability     float32         `json:"probability" gorm:"Column:probability"`
 	LootdropEntries []LootdropEntry `json:"lootdrop_entries,omitempty" gorm:"foreignKey:lootdrop_id;references:lootdrop_id"`
+	Loottable       *Loottable      `json:"loottable,omitempty" gorm:"foreignKey:loottable_id;references:id"`
 }
 
 func (LoottableEntry) TableName() string {
@@ -60,6 +61,23 @@ func (LoottableEntry) Relationships() []string {
 		"LootdropEntries.Lootdrop",
 		"LootdropEntries.Lootdrop.LootdropEntries",
 		"LootdropEntries.Lootdrop.LoottableEntries",
+		"Loottable",
+		"Loottable.LoottableEntries",
+		"Loottable.NpcTypes",
+		"Loottable.NpcTypes.AlternateCurrency",
+		"Loottable.NpcTypes.Merchantlists",
+		"Loottable.NpcTypes.NpcEmotes",
+		"Loottable.NpcTypes.NpcFactions",
+		"Loottable.NpcTypes.NpcFactions.NpcFactionEntries",
+		"Loottable.NpcTypes.NpcSpells",
+		"Loottable.NpcTypes.NpcSpells.NpcSpellsEntries",
+		"Loottable.NpcTypes.NpcTypesTint",
+		"Loottable.NpcTypes.Spawnentries",
+		"Loottable.NpcTypes.Spawnentries.NpcType",
+		"Loottable.NpcTypes.Spawnentries.Spawngroup",
+		"Loottable.NpcTypes.Spawnentries.Spawngroup.Spawn2",
+		"Loottable.NpcTypes.Spawnentries.Spawngroup.Spawn2.Spawnentries",
+		"Loottable.NpcTypes.Spawnentries.Spawngroup.Spawn2.Spawngroup",
 	}
 }
 

@@ -66,6 +66,23 @@ func (LootdropEntry) Relationships() []string {
 		"Lootdrop.LootdropEntries",
 		"Lootdrop.LoottableEntries",
 		"Lootdrop.LoottableEntries.LootdropEntries",
+		"Lootdrop.LoottableEntries.Loottable",
+		"Lootdrop.LoottableEntries.Loottable.LoottableEntries",
+		"Lootdrop.LoottableEntries.Loottable.NpcTypes",
+		"Lootdrop.LoottableEntries.Loottable.NpcTypes.AlternateCurrency",
+		"Lootdrop.LoottableEntries.Loottable.NpcTypes.Merchantlists",
+		"Lootdrop.LoottableEntries.Loottable.NpcTypes.NpcEmotes",
+		"Lootdrop.LoottableEntries.Loottable.NpcTypes.NpcFactions",
+		"Lootdrop.LoottableEntries.Loottable.NpcTypes.NpcFactions.NpcFactionEntries",
+		"Lootdrop.LoottableEntries.Loottable.NpcTypes.NpcSpells",
+		"Lootdrop.LoottableEntries.Loottable.NpcTypes.NpcSpells.NpcSpellsEntries",
+		"Lootdrop.LoottableEntries.Loottable.NpcTypes.NpcTypesTint",
+		"Lootdrop.LoottableEntries.Loottable.NpcTypes.Spawnentries",
+		"Lootdrop.LoottableEntries.Loottable.NpcTypes.Spawnentries.NpcType",
+		"Lootdrop.LoottableEntries.Loottable.NpcTypes.Spawnentries.Spawngroup",
+		"Lootdrop.LoottableEntries.Loottable.NpcTypes.Spawnentries.Spawngroup.Spawn2",
+		"Lootdrop.LoottableEntries.Loottable.NpcTypes.Spawnentries.Spawngroup.Spawn2.Spawnentries",
+		"Lootdrop.LoottableEntries.Loottable.NpcTypes.Spawnentries.Spawngroup.Spawn2.Spawngroup",
 	}
 }
 

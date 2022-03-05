@@ -77,6 +77,7 @@ func (GlobalLoot) Relationships() []string {
 		"Loottable.LoottableEntries.LootdropEntries.Lootdrop",
 		"Loottable.LoottableEntries.LootdropEntries.Lootdrop.LootdropEntries",
 		"Loottable.LoottableEntries.LootdropEntries.Lootdrop.LoottableEntries",
+		"Loottable.LoottableEntries.Loottable",
 		"Loottable.NpcTypes",
 		"Loottable.NpcTypes.AlternateCurrency",
 		"Loottable.NpcTypes.Merchantlists",

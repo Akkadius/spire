@@ -95,7 +95,7 @@ items:
   - 1-* id->tribute_levels:item_id
 lootdrop:
   - 1-* id->lootdrop_entries:lootdrop_id
-  - 1-* id->loottable_entries:loottable_id
+  - 1-* id->loottable_entries:lootdrop_id
 lootdrop_entries:
   - 1-1 item_id->items:id
   - 1-1 lootdrop_id->lootdrop:id
@@ -104,6 +104,7 @@ loottable:
   - 1-* id->npc_types:loottable_id
 loottable_entries:
   - 1-* lootdrop_id->lootdrop_entries:lootdrop_id
+  - 1-1 loottable_id->loottable:id
 #merchantlist:
 #  - 1-1 item->items:id
 npc_faction:

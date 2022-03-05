@@ -12,7 +12,7 @@ type Lootdrop struct {
 	ContentFlags           null.String      `json:"content_flags" gorm:"Column:content_flags"`
 	ContentFlagsDisabled   null.String      `json:"content_flags_disabled" gorm:"Column:content_flags_disabled"`
 	LootdropEntries        []LootdropEntry  `json:"lootdrop_entries,omitempty" gorm:"foreignKey:lootdrop_id;references:id"`
-	LoottableEntries       []LoottableEntry `json:"loottable_entries,omitempty" gorm:"foreignKey:loottable_id;references:id"`
+	LoottableEntries       []LoottableEntry `json:"loottable_entries,omitempty" gorm:"foreignKey:lootdrop_id;references:id"`
 }
 
 func (Lootdrop) TableName() string {
@@ -106,6 +106,23 @@ func (Lootdrop) Relationships() []string {
 		"LoottableEntries.LootdropEntries.Item.TradeskillRecipeEntries.TradeskillRecipe",
 		"LoottableEntries.LootdropEntries.Item.TributeLevels",
 		"LoottableEntries.LootdropEntries.Lootdrop",
+		"LoottableEntries.Loottable",
+		"LoottableEntries.Loottable.LoottableEntries",
+		"LoottableEntries.Loottable.NpcTypes",
+		"LoottableEntries.Loottable.NpcTypes.AlternateCurrency",
+		"LoottableEntries.Loottable.NpcTypes.Merchantlists",
+		"LoottableEntries.Loottable.NpcTypes.NpcEmotes",
+		"LoottableEntries.Loottable.NpcTypes.NpcFactions",
+		"LoottableEntries.Loottable.NpcTypes.NpcFactions.NpcFactionEntries",
+		"LoottableEntries.Loottable.NpcTypes.NpcSpells",
+		"LoottableEntries.Loottable.NpcTypes.NpcSpells.NpcSpellsEntries",
+		"LoottableEntries.Loottable.NpcTypes.NpcTypesTint",
+		"LoottableEntries.Loottable.NpcTypes.Spawnentries",
+		"LoottableEntries.Loottable.NpcTypes.Spawnentries.NpcType",
+		"LoottableEntries.Loottable.NpcTypes.Spawnentries.Spawngroup",
+		"LoottableEntries.Loottable.NpcTypes.Spawnentries.Spawngroup.Spawn2",
+		"LoottableEntries.Loottable.NpcTypes.Spawnentries.Spawngroup.Spawn2.Spawnentries",
+		"LoottableEntries.Loottable.NpcTypes.Spawnentries.Spawngroup.Spawn2.Spawngroup",
 	}
 }
 

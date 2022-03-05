@@ -116,7 +116,7 @@ export class SpireQueryBuilder {
     return this
   }
 
-  limit(limit) {
+  limit(limit: number) {
     this.limitParam = limit
 
     return this
