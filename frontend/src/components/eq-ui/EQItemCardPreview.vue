@@ -2,6 +2,7 @@
   <div class="item-bg" style="max-width: 475px; padding: 5px" v-if="itemData">
 
     <span
+      v-if="itemData.idfile !== 'IT63'"
       style="position: absolute; right: 7%; opacity: .8"
       :class="'mt-2 mb-2 object-ctn-' + itemData.idfile.replace('IT', '')"
     />
