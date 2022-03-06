@@ -773,16 +773,6 @@ export default {
         }
       );
     },
-    async getZoneLongName(shortName) {
-      const zones = await Zones.getZones()
-      zones.forEach((zone) => {
-        if (zone.short_name === shortName) {
-          return zone.long_name
-        }
-      })
-
-      return shortName
-    },
     async renderRelatedData() {
 
       const d = this.itemData

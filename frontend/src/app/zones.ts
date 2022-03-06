@@ -4,6 +4,7 @@ import {SpireQueryBuilder} from "@/app/api/spire-query-builder";
 
 export class Zones {
   public static zones = <any>[]
+  public static zonesByShortName = <any>{}
 
   public static async getZones() {
     if (this.zones && this.zones.length > 0) {
@@ -20,6 +21,11 @@ export class Zones {
       )
     if (result.status === 200) {
       this.zones = result.data
+
+      for (let zone of this.zones) {
+        this.zonesByShortName[zone.short_name] = zone
+      }
+
       return result.data
     }
 
@@ -27,6 +33,10 @@ export class Zones {
   }
 
   public static async getZoneLongNameByShortName(shortName: string) {
+    if (this.zonesByShortName[shortName]) {
+      return this.zonesByShortName[shortName]
+    }
+
     const zones = (await this.getZones())
     for (const zone of zones) {
       if (zone.short_name === shortName) {
