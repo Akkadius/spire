@@ -349,8 +349,8 @@
       <div class="mt-3">
         <li v-for="door in unlocksDoors">
           <span class="font-weight-bold">{{ door.name }}</span>
-          in <span  class="font-weight-bold">{{ door.zone }}</span>
-          @ {{door.x}}, {{door.y}}, {{door.z}}
+          in <span class="font-weight-bold">{{ door.zone }}</span>
+          @ {{ door.x }}, {{ door.y }}, {{ door.z }}
         </li>
       </div>
 
@@ -399,16 +399,16 @@
         <li v-for="e in startingItems">
           <span class="font-weight-bold" v-if="e.class !== 0">{{ e.class }}(s)</span>
           <span v-if="e.race !== 0" class="ml-1">race
-            <span class="font-weight-bold">{{e.race}}</span>
+            <span class="font-weight-bold">{{ e.race }}</span>
           </span>
           <span v-if="e.deity !== 0" class="ml-1">deity
-            <span class="font-weight-bold">{{e.deity}}</span>
+            <span class="font-weight-bold">{{ e.deity }}</span>
           </span>
           <span v-if="e.data.charges !== 0" class="ml-1">count
-            <span class="font-weight-bold">({{e.data.item_charges}})</span>
+            <span class="font-weight-bold">({{ e.data.item_charges }})</span>
           </span>
           <span v-if="e.zone !== 0" class="ml-1">
-            <span class="font-weight-bold">({{e.zone.long_name}})</span>
+            <span class="font-weight-bold">({{ e.zone.long_name }})</span>
           </span>
         </li>
       </div>
@@ -422,7 +422,7 @@
         <li v-for="e in groundSpawns">
           In <span class="font-weight-bold" v-if="e.zone !== 0">{{ e.zone.long_name }}</span>
           <span v-if="e.data.max_x !== 0" class="ml-1">@
-            {{e.data.max_x}}, {{e.data.max_y}}, {{e.data.max_z}}
+            {{ e.data.max_x }}, {{ e.data.max_y }}, {{ e.data.max_z }}
           </span>
           <span v-if="e.data.respawn_timer !== 0" class="ml-1">respawns every
             <span class="font-weight-bold">({{ Math.round(e.data.respawn_timer / 60) }} minute(s))</span>
@@ -438,7 +438,7 @@
       <div class="mt-3">
         <li v-for="e in taskRewards">
           <span v-if="e.data.title !== ''" class="font-weight-bold">
-            {{e.data.title}} ({{e.data.id}})
+            {{ e.data.title }} ({{ e.data.id }})
           </span>
         </li>
       </div>
@@ -450,12 +450,11 @@
 
       <div class="mt-3">
         <li v-for="e in merchants">
-
           <span v-if="e.merchantName !== ''" class="font-weight-bold">
-            {{e.merchantName}}
+            {{ e.merchantName }}
           </span>
           <span v-if="e.merchantZone !== ''" class="">in zone
-            <span class="font-weight-bold">({{e.merchantZone}})</span>
+            <span class="font-weight-bold">({{ e.merchantZone }})</span>
           </span>
         </li>
       </div>
@@ -477,26 +476,26 @@ import {
   ITEM_DB_SLOTS,
   ITEM_ELEMENTS,
   ITEM_SIZE
-}                                      from "@/app/constants/eq-item-constants";
+}                                          from "@/app/constants/eq-item-constants";
 import {BODYTYPES}                         from "@/app/constants/eq-bodytype-constants";
 import {DB_CLASSES, DB_CLASSES_WEAR_SHORT} from "@/app/constants/eq-classes-constants";
-import {DB_RACE_NAMES, DB_RACES_SHORT} from "@/app/constants/eq-races-constants";
-import {DB_DIETIES, DB_DIETIES_FULL}   from "@/app/constants/eq-deities-constants";
-import EqDebug                         from "@/components/eq-ui/EQDebug";
-import {App}                           from "@/constants/app";
-import EqSpellPreview                  from "@/components/eq-ui/EQSpellCardPreview";
-import {EXAMPLE_SPELL_DATA}            from "@/app/constants/eq-example-spell-data";
-import EqWindow                        from "@/components/eq-ui/EQWindow";
-import {DB_BARD_SKILLS, DB_SKILLS}     from "@/app/constants/eq-skill-constants";
-import {AUG_TYPES}                     from "@/app/constants/eq-aug-constants";
-import {Spells}                        from "@/app/spells";
-import util                            from "util";
-import {ROUTE}                         from "@/routes";
-import EqCashDisplay                   from "@/components/eq-ui/EqCashDisplay";
-import {Items}                         from "@/app/items";
-import {FactionListApi}                from "@/app/api";
-import {SpireApiClient}                from "@/app/api/spire-api-client";
-import {Zones}                         from "@/app/zones";
+import {DB_RACE_NAMES, DB_RACES_SHORT}     from "@/app/constants/eq-races-constants";
+import {DB_DIETIES, DB_DIETIES_FULL}       from "@/app/constants/eq-deities-constants";
+import EqDebug                             from "@/components/eq-ui/EQDebug";
+import {App}                               from "@/constants/app";
+import EqSpellPreview                      from "@/components/eq-ui/EQSpellCardPreview";
+import {EXAMPLE_SPELL_DATA}                from "@/app/constants/eq-example-spell-data";
+import EqWindow                            from "@/components/eq-ui/EQWindow";
+import {DB_BARD_SKILLS, DB_SKILLS}         from "@/app/constants/eq-skill-constants";
+import {AUG_TYPES}                         from "@/app/constants/eq-aug-constants";
+import {Spells}                            from "@/app/spells";
+import util                                from "util";
+import {ROUTE}                             from "@/routes";
+import EqCashDisplay                       from "@/components/eq-ui/EqCashDisplay";
+import {Items}                             from "@/app/items";
+import {FactionListApi}                    from "@/app/api";
+import {SpireApiClient}                    from "@/app/api/spire-api-client";
+import {Zones}                             from "@/app/zones";
 
 export default {
   name: "EqItemCardPreview",
@@ -973,13 +972,15 @@ export default {
 
           const npcName = (e.npc_type && e.npc_type.name ? e.npc_type.name : '').replaceAll("_", " ").replaceAll("#", "").trim()
 
-          merchants.push(
-            {
-              merchantName: npcName,
-              merchantZone: merchantZone,
-              data: e,
-            }
-          )
+          if (npcName !== '' && merchantZone !== '') {
+            merchants.push(
+              {
+                merchantName: npcName,
+                merchantZone: merchantZone,
+                data: e,
+              }
+            )
+          }
         }
       }
       this.merchants = merchants
