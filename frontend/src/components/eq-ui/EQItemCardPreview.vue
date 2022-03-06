@@ -459,6 +459,28 @@
         </li>
       </div>
 
+      <!-- Tradeskill result -->
+      <div v-if="tradeskillResult.length > 0" class="font-weight-bold mt-3">
+        Is the result of tradeskill recipe(s)
+      </div>
+
+      <div class="mt-3">
+        <li v-for="e in tradeskillResult">
+          <span v-if="e.name !== ''" class="font-weight-bold">
+            {{ e.name }}
+          </span>
+          <span v-if="e.tradeskill !== 0">
+            <span class="font-weight-bold">({{ e.tradeskill }})</span>
+          </span>
+          <span v-if="e.trivial !== 0" class="ml-1">Trivial
+            <span class="font-weight-bold">({{ e.trivial }})</span>
+          </span>
+          <span v-if="e.id !== 0" class="ml-1">ID
+            <span class="font-weight-bold">({{ e.id }})</span>
+          </span>
+        </li>
+      </div>
+
 
     </div>
 
@@ -485,17 +507,18 @@ import EqDebug                             from "@/components/eq-ui/EQDebug";
 import {App}                               from "@/constants/app";
 import EqSpellPreview                      from "@/components/eq-ui/EQSpellCardPreview";
 import {EXAMPLE_SPELL_DATA}                from "@/app/constants/eq-example-spell-data";
-import EqWindow                            from "@/components/eq-ui/EQWindow";
-import {DB_BARD_SKILLS, DB_SKILLS}         from "@/app/constants/eq-skill-constants";
-import {AUG_TYPES}                         from "@/app/constants/eq-aug-constants";
-import {Spells}                            from "@/app/spells";
-import util                                from "util";
-import {ROUTE}                             from "@/routes";
-import EqCashDisplay                       from "@/components/eq-ui/EqCashDisplay";
-import {Items}                             from "@/app/items";
-import {FactionListApi}                    from "@/app/api";
-import {SpireApiClient}                    from "@/app/api/spire-api-client";
-import {Zones}                             from "@/app/zones";
+import EqWindow                    from "@/components/eq-ui/EQWindow";
+import {DB_BARD_SKILLS, DB_SKILLS} from "@/app/constants/eq-skill-constants";
+import {AUG_TYPES}                 from "@/app/constants/eq-aug-constants";
+import {Spells}                    from "@/app/spells";
+import util                        from "util";
+import {ROUTE}                     from "@/routes";
+import EqCashDisplay               from "@/components/eq-ui/EqCashDisplay";
+import {Items}                     from "@/app/items";
+import {FactionListApi}            from "@/app/api";
+import {SpireApiClient}            from "@/app/api/spire-api-client";
+import {Zones}                     from "@/app/zones";
+import {TRADESKILLS}               from "@/app/constants/eq-tradeskill-constants";
 
 export default {
   name: "EqItemCardPreview",
@@ -560,6 +583,7 @@ export default {
       DB_CLASSES: DB_CLASSES,
       DB_RACE_NAMES: DB_RACE_NAMES,
       DB_DIETIES_FULL: DB_DIETIES_FULL,
+      TRADESKILLS: TRADESKILLS,
 
       // related data
       droppedBy: [],
@@ -569,6 +593,7 @@ export default {
       groundSpawns: [],
       taskRewards: [],
       merchants: [],
+      tradeskillResult: [],
       startingItems: []
       // augslots: {}
     }
@@ -984,6 +1009,32 @@ export default {
         }
       }
       this.merchants = merchants
+
+      // tradeskill result
+      let tradeskillResult = []
+      if (d.tradeskill_recipe_entries) {
+        for (const e of d.tradeskill_recipe_entries) {
+
+          if (
+            this.itemData.id === e.item_id
+            && e.componentcount === 0
+            && e.successcount === 1
+          ) {
+            tradeskillResult.push(
+              {
+                name: e.tradeskill_recipe ? e.tradeskill_recipe.name : '',
+                trivial: e.tradeskill_recipe ? e.tradeskill_recipe.trivial : 0,
+                tradeskill: e.tradeskill_recipe ? TRADESKILLS[e.tradeskill_recipe.tradeskill] : 0,
+                id: e.id,
+                data: e,
+              }
+            )
+
+          }
+
+        }
+      }
+      this.tradeskillResult = tradeskillResult
 
       console.log("rendering related data")
     }
