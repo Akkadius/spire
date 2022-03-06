@@ -225,6 +225,8 @@ func (CharacterDatum) Relationships() []string {
 		"Inventories.Item.Forages",
 		"Inventories.Item.Forages.Item",
 		"Inventories.Item.Forages.Zone",
+		"Inventories.Item.GroundSpawns",
+		"Inventories.Item.GroundSpawns.Zone",
 		"Inventories.Item.ItemTicks",
 		"Inventories.Item.Keyrings",
 		"Inventories.Item.LootdropEntries",

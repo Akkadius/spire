@@ -75,6 +75,8 @@ func (Door) Relationships() []string {
 		"Item.Forages",
 		"Item.Forages.Item",
 		"Item.Forages.Zone",
+		"Item.GroundSpawns",
+		"Item.GroundSpawns.Zone",
 		"Item.ItemTicks",
 		"Item.Keyrings",
 		"Item.LootdropEntries",

@@ -305,6 +305,7 @@ type Item struct {
 	StartingItems           []StartingItem          `json:"starting_items,omitempty" gorm:"foreignKey:itemid;references:id"`
 	TradeskillRecipeEntries []TradeskillRecipeEntry `json:"tradeskill_recipe_entries,omitempty" gorm:"foreignKey:item_id;references:id"`
 	TributeLevels           []TributeLevel          `json:"tribute_levels,omitempty" gorm:"foreignKey:item_id;references:id"`
+	GroundSpawns            []GroundSpawn           `json:"ground_spawns,omitempty" gorm:"foreignKey:item;references:id"`
 }
 
 func (Item) TableName() string {
@@ -339,6 +340,8 @@ func (Item) Relationships() []string {
 		"Forages",
 		"Forages.Item",
 		"Forages.Zone",
+		"GroundSpawns",
+		"GroundSpawns.Zone",
 		"ItemTicks",
 		"Keyrings",
 		"LootdropEntries",

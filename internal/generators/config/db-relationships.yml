@@ -93,6 +93,7 @@ items:
   - 1-* id->starting_items:itemid
   - 1-* id->tradeskill_recipe_entries:item_id
   - 1-* id->tribute_levels:item_id
+  - 1-* id->ground_spawns:item
 lootdrop:
   - 1-* id->lootdrop_entries:lootdrop_id
   - 1-* id->loottable_entries:lootdrop_id

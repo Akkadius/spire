@@ -372,6 +372,8 @@ export class Items {
       "Fishings.Zone",
       "Forages",
       "Forages.Zone",
+      "GroundSpawns",
+      "GroundSpawns.Zone",
       "LootdropEntries",
       "LootdropEntries.Lootdrop",
       "LootdropEntries.Lootdrop.LoottableEntries",

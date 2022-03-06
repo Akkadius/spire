@@ -45,6 +45,8 @@ func (LoottableEntry) Relationships() []string {
 		"LootdropEntries.Item.Forages",
 		"LootdropEntries.Item.Forages.Item",
 		"LootdropEntries.Item.Forages.Zone",
+		"LootdropEntries.Item.GroundSpawns",
+		"LootdropEntries.Item.GroundSpawns.Zone",
 		"LootdropEntries.Item.ItemTicks",
 		"LootdropEntries.Item.Keyrings",
 		"LootdropEntries.Item.LootdropEntries",

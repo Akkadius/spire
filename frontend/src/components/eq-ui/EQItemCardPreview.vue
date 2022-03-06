@@ -413,6 +413,23 @@
         </li>
       </div>
 
+      <!-- Ground Spawns -->
+      <div v-if="groundSpawns.length > 0" class="font-weight-bold mt-3">
+        Is found as a ground spawn
+      </div>
+
+      <div class="mt-3">
+        <li v-for="e in groundSpawns">
+          In <span class="font-weight-bold" v-if="e.zone !== 0">{{ e.zone.long_name }}</span>
+          <span v-if="e.data.max_x !== 0" class="ml-1">@
+            {{e.data.max_x}}, {{e.data.max_y}}, {{e.data.max_z}}
+          </span>
+          <span v-if="e.data.respawn_timer !== 0" class="ml-1">respawns every
+            <span class="font-weight-bold">({{ Math.round(e.data.respawn_timer / 60) }} minute(s))</span>
+          </span>
+        </li>
+      </div>
+
 
     </div>
 
@@ -520,6 +537,7 @@ export default {
       unlocksDoors: [],
       fishedIn: [],
       foragedIn: [],
+      groundSpawns: [],
       startingItems: []
       // augslots: {}
     }
@@ -878,6 +896,20 @@ export default {
         }
       }
       this.startingItems = startingItems
+
+      // ground spawns
+      let groundSpawns = []
+      if (d.ground_spawns) {
+        for (const e of d.ground_spawns) {
+          groundSpawns.push(
+            {
+              zone: (e.zoneid > 0 ? e.zone : 0),
+              data: e,
+            }
+          )
+        }
+      }
+      this.groundSpawns = groundSpawns
 
       console.log("rendering related data")
     }

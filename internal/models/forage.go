@@ -49,6 +49,8 @@ func (Forage) Relationships() []string {
 		"Item.Fishings.NpcType.Spawnentries.Spawngroup.Spawn2.Spawngroup",
 		"Item.Fishings.Zone",
 		"Item.Forages",
+		"Item.GroundSpawns",
+		"Item.GroundSpawns.Zone",
 		"Item.ItemTicks",
 		"Item.Keyrings",
 		"Item.LootdropEntries",
