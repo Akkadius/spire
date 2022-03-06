@@ -381,6 +381,8 @@ export class Items {
       "LootdropEntries.Lootdrop.LoottableEntries.Loottable.NpcTypes",
       "LootdropEntries.Lootdrop.LoottableEntries.Loottable.NpcTypes.Spawnentries.Spawngroup.Spawn2",
       "Merchantlists",
+      "Merchantlists.NpcType",
+      "Merchantlists.NpcType.Spawnentries.Spawngroup.Spawn2",
       "Objects",
       "Objects.Zone",
       "StartingItems",

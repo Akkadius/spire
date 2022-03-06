@@ -17,6 +17,7 @@ type Merchantlist struct {
 	MaxExpansion           int8        `json:"max_expansion" gorm:"Column:max_expansion"`
 	ContentFlags           null.String `json:"content_flags" gorm:"Column:content_flags"`
 	ContentFlagsDisabled   null.String `json:"content_flags_disabled" gorm:"Column:content_flags_disabled"`
+	NpcType                *NpcType    `json:"npc_type,omitempty" gorm:"foreignKey:merchantid;references:merchant_id"`
 }
 
 func (Merchantlist) TableName() string {
@@ -24,7 +25,23 @@ func (Merchantlist) TableName() string {
 }
 
 func (Merchantlist) Relationships() []string {
-    return []string{}
+    return []string{
+		"NpcType",
+		"NpcType.AlternateCurrency",
+		"NpcType.Merchantlists",
+		"NpcType.NpcEmotes",
+		"NpcType.NpcFactions",
+		"NpcType.NpcFactions.NpcFactionEntries",
+		"NpcType.NpcSpells",
+		"NpcType.NpcSpells.NpcSpellsEntries",
+		"NpcType.NpcTypesTint",
+		"NpcType.Spawnentries",
+		"NpcType.Spawnentries.NpcType",
+		"NpcType.Spawnentries.Spawngroup",
+		"NpcType.Spawnentries.Spawngroup.Spawn2",
+		"NpcType.Spawnentries.Spawngroup.Spawn2.Spawnentries",
+		"NpcType.Spawnentries.Spawngroup.Spawn2.Spawngroup",
+	}
 }
 
 func (Merchantlist) Connection() string {

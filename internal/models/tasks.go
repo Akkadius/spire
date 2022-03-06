@@ -39,6 +39,7 @@ func (Task) Relationships() []string {
 		"TaskActivities.NpcType",
 		"TaskActivities.NpcType.AlternateCurrency",
 		"TaskActivities.NpcType.Merchantlists",
+		"TaskActivities.NpcType.Merchantlists.NpcType",
 		"TaskActivities.NpcType.NpcEmotes",
 		"TaskActivities.NpcType.NpcFactions",
 		"TaskActivities.NpcType.NpcFactions.NpcFactionEntries",

@@ -443,6 +443,23 @@
         </li>
       </div>
 
+      <!-- Merchants -->
+      <div v-if="merchants.length > 0" class="font-weight-bold mt-3">
+        Is sold by merchant(s)
+      </div>
+
+      <div class="mt-3">
+        <li v-for="e in merchants">
+
+          <span v-if="e.merchantName !== ''" class="font-weight-bold">
+            {{e.merchantName}}
+          </span>
+          <span v-if="e.merchantZone !== ''" class="">in zone
+            <span class="font-weight-bold">({{e.merchantZone}})</span>
+          </span>
+        </li>
+      </div>
+
 
     </div>
 
@@ -552,6 +569,7 @@ export default {
       foragedIn: [],
       groundSpawns: [],
       taskRewards: [],
+      merchants: [],
       startingItems: []
       // augslots: {}
     }
@@ -937,6 +955,34 @@ export default {
         }
       }
       this.taskRewards = taskRewards
+
+      // merchants
+      let merchants = []
+      if (d.merchantlists) {
+        for (const e of d.merchantlists) {
+          let merchantZone = ""
+          if (
+            e.npc_type
+            && e.npc_type.spawnentries
+            && e.npc_type.spawnentries[0]
+            && e.npc_type.spawnentries[0].spawngroup
+            && e.npc_type.spawnentries[0].spawngroup.spawn_2
+          ) {
+            merchantZone = await Zones.getZoneLongNameByShortName(e.npc_type.spawnentries[0].spawngroup.spawn_2.zone)
+          }
+
+          const npcName = (e.npc_type && e.npc_type.name ? e.npc_type.name : '').replaceAll("_", " ").replaceAll("#", "").trim()
+
+          merchants.push(
+            {
+              merchantName: npcName,
+              merchantZone: merchantZone,
+              data: e,
+            }
+          )
+        }
+      }
+      this.merchants = merchants
 
       console.log("rendering related data")
     }

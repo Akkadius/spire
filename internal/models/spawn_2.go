@@ -39,6 +39,7 @@ func (Spawn2) Relationships() []string {
 		"Spawnentries.NpcType",
 		"Spawnentries.NpcType.AlternateCurrency",
 		"Spawnentries.NpcType.Merchantlists",
+		"Spawnentries.NpcType.Merchantlists.NpcType",
 		"Spawnentries.NpcType.NpcEmotes",
 		"Spawnentries.NpcType.NpcFactions",
 		"Spawnentries.NpcType.NpcFactions.NpcFactionEntries",

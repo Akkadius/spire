@@ -145,6 +145,7 @@ func (NpcType) Relationships() []string {
     return []string{
 		"AlternateCurrency",
 		"Merchantlists",
+		"Merchantlists.NpcType",
 		"NpcEmotes",
 		"NpcFactions",
 		"NpcFactions.NpcFactionEntries",

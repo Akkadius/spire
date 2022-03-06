@@ -33,6 +33,7 @@ export class Zones {
   }
 
   public static async getZoneLongNameByShortName(shortName: string) {
+    shortName = shortName.toLowerCase()
     if (this.zonesByShortName[shortName]) {
       return this.zonesByShortName[shortName].long_name
     }
