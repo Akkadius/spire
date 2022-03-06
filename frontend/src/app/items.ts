@@ -380,12 +380,14 @@ export class Items {
       "LootdropEntries.Lootdrop.LoottableEntries.Loottable",
       "LootdropEntries.Lootdrop.LoottableEntries.Loottable.NpcTypes",
       "LootdropEntries.Lootdrop.LoottableEntries.Loottable.NpcTypes.Spawnentries.Spawngroup.Spawn2",
+      "Merchantlists",
       "Objects",
       "Objects.Zone",
       "StartingItems",
       "StartingItems.Zone",
       "TradeskillRecipeEntries",
       "TradeskillRecipeEntries.TradeskillRecipe",
+      "Tasks",
       "TributeLevels",
     ]
   }

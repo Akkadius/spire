@@ -306,6 +306,8 @@ type Item struct {
 	TradeskillRecipeEntries []TradeskillRecipeEntry `json:"tradeskill_recipe_entries,omitempty" gorm:"foreignKey:item_id;references:id"`
 	TributeLevels           []TributeLevel          `json:"tribute_levels,omitempty" gorm:"foreignKey:item_id;references:id"`
 	GroundSpawns            []GroundSpawn           `json:"ground_spawns,omitempty" gorm:"foreignKey:item;references:id"`
+	Merchantlists           []Merchantlist          `json:"merchantlists,omitempty" gorm:"foreignKey:item;references:id"`
+	Tasks                   []Task                  `json:"tasks,omitempty" gorm:"foreignKey:rewardid;references:id"`
 }
 
 func (Item) TableName() string {
@@ -367,6 +369,7 @@ func (Item) Relationships() []string {
 		"LootdropEntries.Lootdrop.LoottableEntries.Loottable.NpcTypes.Spawnentries.Spawngroup.Spawn2",
 		"LootdropEntries.Lootdrop.LoottableEntries.Loottable.NpcTypes.Spawnentries.Spawngroup.Spawn2.Spawnentries",
 		"LootdropEntries.Lootdrop.LoottableEntries.Loottable.NpcTypes.Spawnentries.Spawngroup.Spawn2.Spawngroup",
+		"Merchantlists",
 		"ObjectContents",
 		"Objects",
 		"Objects.Item",
@@ -374,6 +377,25 @@ func (Item) Relationships() []string {
 		"StartingItems",
 		"StartingItems.Item",
 		"StartingItems.Zone",
+		"Tasks",
+		"Tasks.TaskActivities",
+		"Tasks.TaskActivities.Goallists",
+		"Tasks.TaskActivities.NpcType",
+		"Tasks.TaskActivities.NpcType.AlternateCurrency",
+		"Tasks.TaskActivities.NpcType.Merchantlists",
+		"Tasks.TaskActivities.NpcType.NpcEmotes",
+		"Tasks.TaskActivities.NpcType.NpcFactions",
+		"Tasks.TaskActivities.NpcType.NpcFactions.NpcFactionEntries",
+		"Tasks.TaskActivities.NpcType.NpcSpells",
+		"Tasks.TaskActivities.NpcType.NpcSpells.NpcSpellsEntries",
+		"Tasks.TaskActivities.NpcType.NpcTypesTint",
+		"Tasks.TaskActivities.NpcType.Spawnentries",
+		"Tasks.TaskActivities.NpcType.Spawnentries.NpcType",
+		"Tasks.TaskActivities.NpcType.Spawnentries.Spawngroup",
+		"Tasks.TaskActivities.NpcType.Spawnentries.Spawngroup.Spawn2",
+		"Tasks.TaskActivities.NpcType.Spawnentries.Spawngroup.Spawn2.Spawnentries",
+		"Tasks.TaskActivities.NpcType.Spawnentries.Spawngroup.Spawn2.Spawngroup",
+		"Tasks.Tasksets",
 		"TradeskillRecipeEntries",
 		"TradeskillRecipeEntries.TradeskillRecipe",
 		"TributeLevels",

@@ -34,7 +34,7 @@ export class Zones {
 
   public static async getZoneLongNameByShortName(shortName: string) {
     if (this.zonesByShortName[shortName]) {
-      return this.zonesByShortName[shortName]
+      return this.zonesByShortName[shortName].long_name
     }
 
     const zones = (await this.getZones())

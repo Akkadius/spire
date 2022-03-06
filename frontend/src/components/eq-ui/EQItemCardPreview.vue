@@ -430,6 +430,19 @@
         </li>
       </div>
 
+      <!-- Tasks -->
+      <div v-if="taskRewards.length > 0" class="font-weight-bold mt-3">
+        Is a reward in task(s)
+      </div>
+
+      <div class="mt-3">
+        <li v-for="e in taskRewards">
+          <span v-if="e.data.title !== ''" class="font-weight-bold">
+            {{e.data.title}} ({{e.data.id}})
+          </span>
+        </li>
+      </div>
+
 
     </div>
 
@@ -538,6 +551,7 @@ export default {
       fishedIn: [],
       foragedIn: [],
       groundSpawns: [],
+      taskRewards: [],
       startingItems: []
       // augslots: {}
     }
@@ -910,6 +924,19 @@ export default {
         }
       }
       this.groundSpawns = groundSpawns
+
+      // tasks
+      let taskRewards = []
+      if (d.tasks) {
+        for (const e of d.tasks) {
+          taskRewards.push(
+            {
+              data: e,
+            }
+          )
+        }
+      }
+      this.taskRewards = taskRewards
 
       console.log("rendering related data")
     }
