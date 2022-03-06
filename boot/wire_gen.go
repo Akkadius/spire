@@ -42,7 +42,7 @@ func InitializeApplication() (App, error) {
 		return App{}, err
 	}
 	cache := provideCache()
-	helloWorldCommand := cmd.NewHelloWorldCommand(db, logger, eqEmuServerConfig)
+	helloWorldCommand := cmd.NewHelloWorldCommand(db, logger)
 	generateModelsCommand := cmd.NewGenerateModelsCommand(db, logger)
 	generateControllersCommand := cmd.NewGenerateControllersCommand(db, logger)
 	helloWorldController := controllers.NewHelloWorldController(db, logger)
