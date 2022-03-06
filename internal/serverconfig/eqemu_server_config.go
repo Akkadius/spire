@@ -1,11 +1,26 @@
-package boot
+package serverconfig
 
 import (
 	"encoding/json"
+	"fmt"
+	"github.com/Akkadius/spire/internal/pathmgmt"
+	"github.com/sirupsen/logrus"
 	"io/ioutil"
-	"log"
 	"os"
 )
+
+type EQEmuServerConfig struct {
+	logger   *logrus.Logger
+	pathmgmt *pathmgmt.PathManagement
+	config   EQEmuConfigJson
+}
+
+func NewEQEmuServerConfig(logger *logrus.Logger, pathmgmt *pathmgmt.PathManagement) *EQEmuServerConfig {
+	return &EQEmuServerConfig{
+		logger:   logger,
+		pathmgmt: pathmgmt,
+	}
+}
 
 type EQEmuConfigJson struct {
 	Server struct {
@@ -76,24 +91,36 @@ type EQEmuConfigJson struct {
 	} `json:"server"`
 }
 
-const eqemuConfigJson = "eqemu_config.json"
+func (e EQEmuServerConfig) Get() EQEmuConfigJson {
+	cfg := e.pathmgmt.GetEQEmuServerConfigFilePath()
+	e.debug("path [%v]", cfg)
 
-func getEQEmuConfig() EQEmuConfigJson {
-	if _, err := os.Stat(eqemuConfigJson); err == nil {
-		// fmt.Printf("Reading from config [%v]\n", eqemuConfigJson)
-		body, err := ioutil.ReadFile(eqemuConfigJson)
+	if len(cfg) > 0 {
+		e.debug("Reading eqemu config file [%v]", cfg)
+
+		body, err := ioutil.ReadFile(e.pathmgmt.GetEQEmuServerConfigFilePath())
 		if err != nil {
-			log.Fatalf("unable to read file: %v", err)
+			e.logger.Fatalf("unable to read file: %v", err)
 		}
 
 		config := EQEmuConfigJson{}
 		err = json.Unmarshal(body, &config)
 		if err != nil {
-			log.Fatalf("unable to unmarshal file [%v] error [%v]", eqemuConfigJson, err)
+			e.logger.Fatalf("unable to unmarshal file [%v] error [%v]", cfg, err)
 		}
 
 		return config
 	}
 
 	return EQEmuConfigJson{}
+}
+
+func (m *EQEmuServerConfig) debug(msg string, a ...interface{}) {
+	if len(os.Getenv("DEBUG")) > 0 {
+		if len(a) > 0 {
+			m.logger.Debug("[eqemu_server_config.go] " + fmt.Sprintf(msg, a...) + "\n")
+			return
+		}
+		m.logger.Debug("[eqemu_server_config.go] " + fmt.Sprintf(msg) + "\n")
+	}
 }

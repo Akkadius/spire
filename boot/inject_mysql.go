@@ -4,6 +4,7 @@ import (
 	"errors"
 	"github.com/Akkadius/spire/internal/database"
 	"github.com/Akkadius/spire/internal/env"
+	"github.com/Akkadius/spire/internal/serverconfig"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm/logger"
 	"log"
@@ -23,13 +24,13 @@ var databaseSet = wire.NewSet(
 )
 
 // we need to do this because
-func provideAppDbConnections() *database.Connections {
-	eqEmuLocalDatabase, err := provideEQEmuLocalDatabase()
+func provideAppDbConnections(serverconfig *serverconfig.EQEmuServerConfig) *database.Connections {
+	eqEmuLocalDatabase, err := provideEQEmuLocalDatabase(serverconfig)
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	spireDatabase, err := provideSpireDatabase()
+	spireDatabase, err := provideSpireDatabase(serverconfig)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -53,7 +54,7 @@ type MySQLConfig struct {
 }
 
 // return mysql config
-func getEQEmuLocalMySQLConfig() (*MySQLConfig, error) {
+func getEQEmuLocalMySQLConfig(serverconfig *serverconfig.EQEmuServerConfig) (*MySQLConfig, error) {
 	m := &MySQLConfig{
 		Password:           os.Getenv("MYSQL_EQEMU_PASSWORD"),
 		Username:           os.Getenv("MYSQL_EQEMU_USERNAME"),
@@ -62,12 +63,12 @@ func getEQEmuLocalMySQLConfig() (*MySQLConfig, error) {
 		Port:               env.GetInt("MYSQL_EQEMU_PORT", "3306"),
 		MaxIdleConnections: env.GetInt("MYSQL_MAX_IDLE_CONNECTIONS", "10"),
 		MaxOpenConnections: env.GetInt("MYSQL_MAX_OPEN_CONNECTIONS", "150"),
-		EnableLogging:      env.GetBool("MYSQL_QUERY_LOGGING", "false"),
+		EnableLogging:      isQueryLoggingEnabled(),
 		ConnMaxLifetime:    env.GetInt("MYSQL_CONNECTION_MAX_LIFE_TIME", "5"),
 	}
 
 	// load eqemu config if exists
-	config := getEQEmuConfig()
+	config := serverconfig.Get()
 	if config.Server.Database.Db != "" {
 		port, err := strconv.Atoi(config.Server.Database.Port)
 		if err != nil {
@@ -99,12 +100,20 @@ func getEQEmuLocalMySQLConfig() (*MySQLConfig, error) {
 	return m, nil
 }
 
+func isQueryLoggingEnabled() bool {
+	if env.IsAppEnvLocal() {
+		return true
+	}
+
+	return env.GetBool("MYSQL_QUERY_LOGGING", "false")
+}
+
 // provideEQEmuLocalDatabase is a Wire provider function that provides a
 // database connection, configured from the environment.
 // eqemu Local database is what is used if a remote connection is not provided otherwise
 // If someone has a local installation of spire pointed to their own database this connection would be used
-func provideEQEmuLocalDatabase() (*gorm.DB, error) {
-	config, err := getEQEmuLocalMySQLConfig()
+func provideEQEmuLocalDatabase(serverconfig *serverconfig.EQEmuServerConfig) (*gorm.DB, error) {
+	config, err := getEQEmuLocalMySQLConfig(serverconfig)
 	if err != nil {
 		return nil, err
 	}
@@ -126,7 +135,7 @@ func provideEQEmuLocalDatabase() (*gorm.DB, error) {
 			SkipDefaultTransaction:                   true,
 			DisableForeignKeyConstraintWhenMigrating: true,
 			DisableAutomaticPing:                     false,
-			Logger: logger.Default.LogMode(logMode),
+			Logger:                                   logger.Default.LogMode(logMode),
 		},
 	)
 
@@ -162,7 +171,7 @@ func getSpireMySQLConfig() (*MySQLConfig, error) {
 		Port:               env.GetInt("MYSQL_SPIRE_PORT", "3306"),
 		MaxIdleConnections: env.GetInt("MYSQL_MAX_IDLE_CONNECTIONS", "10"),
 		MaxOpenConnections: env.GetInt("MYSQL_MAX_OPEN_CONNECTIONS", "150"),
-		EnableLogging:      env.GetBool("MYSQL_QUERY_LOGGING", "false"),
+		EnableLogging:      isQueryLoggingEnabled(),
 		ConnMaxLifetime:    env.GetInt("MYSQL_CONNECTION_MAX_LIFE_TIME", "5"),
 	}
 
@@ -185,9 +194,10 @@ func getSpireMySQLConfig() (*MySQLConfig, error) {
 }
 
 // Local spire database connection
-func provideSpireDatabase() (*gorm.DB, error) {
+func provideSpireDatabase(serverconfig *serverconfig.EQEmuServerConfig) (*gorm.DB, error) {
 	// if booting from local server folder
-	if getEQEmuConfig().Server.Database.Db != "" {
+	cfg := serverconfig.Get()
+	if cfg.Server.Database.Db != "" {
 		return nil, nil
 	}
 
@@ -213,7 +223,7 @@ func provideSpireDatabase() (*gorm.DB, error) {
 			SkipDefaultTransaction:                   true,
 			DisableForeignKeyConstraintWhenMigrating: true,
 			DisableAutomaticPing:                     false,
-			Logger: logger.Default.LogMode(logMode),
+			Logger:                                   logger.Default.LogMode(logMode),
 		},
 	)
 
@@ -235,7 +245,6 @@ func provideSpireDatabase() (*gorm.DB, error) {
 	if config.MaxOpenConnections > 0 {
 		sqlDB.SetMaxOpenConns(config.MaxOpenConnections)
 	}
-
 
 	return db, nil
 }

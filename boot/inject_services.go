@@ -6,7 +6,9 @@ import (
 	"github.com/Akkadius/spire/internal/desktop"
 	"github.com/Akkadius/spire/internal/github"
 	"github.com/Akkadius/spire/internal/influx"
+	"github.com/Akkadius/spire/internal/pathmgmt"
 	"github.com/Akkadius/spire/internal/questapi"
+	"github.com/Akkadius/spire/internal/serverconfig"
 	"github.com/google/wire"
 )
 
@@ -20,4 +22,6 @@ var serviceSet = wire.NewSet(
 	desktop.NewWebBoot,
 	clientfiles.NewExporter,
 	clientfiles.NewImporter,
+	serverconfig.NewEQEmuServerConfig,
+	pathmgmt.NewPathManagement,
 )

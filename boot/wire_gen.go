@@ -19,7 +19,9 @@ import (
 	"github.com/Akkadius/spire/internal/http/middleware"
 	"github.com/Akkadius/spire/internal/http/staticmaps"
 	"github.com/Akkadius/spire/internal/influx"
+	"github.com/Akkadius/spire/internal/pathmgmt"
 	"github.com/Akkadius/spire/internal/questapi"
+	"github.com/Akkadius/spire/internal/serverconfig"
 )
 
 import (
@@ -29,20 +31,22 @@ import (
 // Injectors from wire.go:
 
 func InitializeApplication() (App, error) {
-	db, err := provideEQEmuLocalDatabase()
-	if err != nil {
-		return App{}, err
-	}
 	logger, err := provideLogger()
 	if err != nil {
 		return App{}, err
 	}
+	pathManagement := pathmgmt.NewPathManagement(logger)
+	eqEmuServerConfig := serverconfig.NewEQEmuServerConfig(logger, pathManagement)
+	db, err := provideEQEmuLocalDatabase(eqEmuServerConfig)
+	if err != nil {
+		return App{}, err
+	}
 	cache := provideCache()
-	helloWorldCommand := cmd.NewHelloWorldCommand(db, logger)
+	helloWorldCommand := cmd.NewHelloWorldCommand(db, logger, eqEmuServerConfig)
 	generateModelsCommand := cmd.NewGenerateModelsCommand(db, logger)
 	generateControllersCommand := cmd.NewGenerateControllersCommand(db, logger)
 	helloWorldController := controllers.NewHelloWorldController(db, logger)
-	connections := provideAppDbConnections()
+	connections := provideAppDbConnections(eqEmuServerConfig)
 	encrypter := encryption.NewEncrypter()
 	databaseResolver := database.NewDatabaseResolver(connections, logger, encrypter, cache)
 	authController := controllers.NewAuthController(databaseResolver, logger)
