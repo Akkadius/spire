@@ -1,3 +1,25 @@
+## [1.11.3]
+
+### Relational Item Data
+
+Item preview cards now display relational data, example below. As other tools are built out, this data can link out to those pages, for now it simply displays the data.
+
+* Can be fished in
+* Can be foraged in
+* Dropped by
+* Is a starting item for 
+* Is found as a ground spawn
+* Is sold by merchant(s)
+* Is the result of tradeskill recipe(s)
+* Is the reward of task(s)
+* Unlocks doors
+
+![image](https://user-images.githubusercontent.com/3319450/156943035-bb799182-9608-4e58-9a2a-88bf0a84947d.png)
+
+### Misc
+
+* Backend path management is now unified. Adds support for Spire being ran in a sub-folder ("bin" directory).
+
 ## [1.11.2]
 
 ### New Spell Icons
