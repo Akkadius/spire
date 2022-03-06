@@ -390,6 +390,29 @@
         </li>
       </div>
 
+      <!-- Starting Item -->
+      <div v-if="startingItems.length > 0" class="font-weight-bold mt-3">
+        Is a starting item for
+      </div>
+
+      <div class="mt-3">
+        <li v-for="e in startingItems">
+          <span class="font-weight-bold" v-if="e.class !== 0">{{ e.class }}(s)</span>
+          <span v-if="e.race !== 0" class="ml-1">race
+            <span class="font-weight-bold">{{e.race}}</span>
+          </span>
+          <span v-if="e.deity !== 0" class="ml-1">deity
+            <span class="font-weight-bold">{{e.deity}}</span>
+          </span>
+          <span v-if="e.data.charges !== 0" class="ml-1">count
+            <span class="font-weight-bold">({{e.data.item_charges}})</span>
+          </span>
+          <span v-if="e.zone !== 0" class="ml-1">
+            <span class="font-weight-bold">({{e.zone.long_name}})</span>
+          </span>
+        </li>
+      </div>
+
 
     </div>
 
@@ -408,10 +431,10 @@ import {
   ITEM_ELEMENTS,
   ITEM_SIZE
 }                                      from "@/app/constants/eq-item-constants";
-import {BODYTYPES}                     from "@/app/constants/eq-bodytype-constants";
-import {DB_CLASSES_WEAR_SHORT}         from "@/app/constants/eq-classes-constants";
+import {BODYTYPES}                         from "@/app/constants/eq-bodytype-constants";
+import {DB_CLASSES, DB_CLASSES_WEAR_SHORT} from "@/app/constants/eq-classes-constants";
 import {DB_RACE_NAMES, DB_RACES_SHORT} from "@/app/constants/eq-races-constants";
-import {DB_DIETIES}                    from "@/app/constants/eq-deities-constants";
+import {DB_DIETIES, DB_DIETIES_FULL}   from "@/app/constants/eq-deities-constants";
 import EqDebug                         from "@/components/eq-ui/EQDebug";
 import {App}                           from "@/constants/app";
 import EqSpellPreview                  from "@/components/eq-ui/EQSpellCardPreview";
@@ -487,11 +510,17 @@ export default {
         { field: "bardeffect", name: "Bard Effect" }
       ],
 
+      // constants
+      DB_CLASSES: DB_CLASSES,
+      DB_RACE_NAMES: DB_RACE_NAMES,
+      DB_DIETIES_FULL: DB_DIETIES_FULL,
+
       // related data
       droppedBy: [],
       unlocksDoors: [],
       fishedIn: [],
-      foragedIn: []
+      foragedIn: [],
+      startingItems: []
       // augslots: {}
     }
   },
@@ -842,6 +871,23 @@ export default {
         }
       }
       this.foragedIn = foragedIn
+
+      // starting items
+      let startingItems = []
+      if (d.starting_items) {
+        for (const e of d.starting_items) {
+          startingItems.push(
+            {
+              zone: (e.zoneid > 0 ? e.zone : 0),
+              class: (e.class > 0 && DB_CLASSES[e.class] ? DB_CLASSES[e.class] : 0),
+              race: (e.race > 0 && DB_RACE_NAMES[e.race] ? DB_RACE_NAMES[e.race] : 0),
+              deity: (e.deityid > 0 && DB_DIETIES_FULL[e.deityid] ? DB_DIETIES_FULL[e.deityid].name : 0),
+              data: e,
+            }
+          )
+        }
+      }
+      this.startingItems = startingItems
 
       console.log("rendering related data")
     }
