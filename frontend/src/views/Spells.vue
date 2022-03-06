@@ -209,6 +209,7 @@ import {ROUTE} from "@/routes";
 import EqWindowSimple from "@/components/eq-ui/EQWindowSimple.vue";
 import {SpireQueryBuilder} from "@/app/api/spire-query-builder";
 import DbColumnFilter from "@/components/DbColumnFilter.vue";
+import {DbSchema} from "@/app/db-schema";
 
 export default {
   name: "Spells",
@@ -271,26 +272,10 @@ export default {
       this.loaded = true;
     }
 
-    this.spellFields = await this.getSpellFields()
+    this.spellFields = await DbSchema.getTableColumns("spells_new")
+
   },
   methods: {
-
-    async getSpellFields() {
-      const result = await (new SpellsNewApi(SpireApiClient.getOpenApiConfig())).listSpellsNews(
-        {
-          limit: 1
-        }
-      )
-      if (result.status === 200 && result.data.length === 1) {
-        let fields = []
-        Object.keys(result.data[0]).forEach((key) => {
-          fields.push(key)
-        })
-        return fields.sort()
-      }
-
-      return [];
-    },
 
     handleDbColumnFilters(checkboxFilters) {
       this.filters = checkboxFilters

@@ -21,8 +21,8 @@ type Spawn2 struct {
 	CondValue              int32        `json:"cond_value" gorm:"Column:cond_value"`
 	Enabled                uint8        `json:"enabled" gorm:"Column:enabled"`
 	Animation              uint8        `json:"animation" gorm:"Column:animation"`
-	MinExpansion           uint8        `json:"min_expansion" gorm:"Column:min_expansion"`
-	MaxExpansion           uint8        `json:"max_expansion" gorm:"Column:max_expansion"`
+	MinExpansion           int8         `json:"min_expansion" gorm:"Column:min_expansion"`
+	MaxExpansion           int8         `json:"max_expansion" gorm:"Column:max_expansion"`
 	ContentFlags           null.String  `json:"content_flags" gorm:"Column:content_flags"`
 	ContentFlagsDisabled   null.String  `json:"content_flags_disabled" gorm:"Column:content_flags_disabled"`
 	Spawngroup             *Spawngroup  `json:"spawngroup,omitempty" gorm:"foreignKey:spawngroupID;references:id"`
@@ -38,7 +38,51 @@ func (Spawn2) Relationships() []string {
 		"Spawnentries",
 		"Spawnentries.NpcType",
 		"Spawnentries.NpcType.AlternateCurrency",
+		"Spawnentries.NpcType.Loottable",
+		"Spawnentries.NpcType.Loottable.LoottableEntries",
+		"Spawnentries.NpcType.Loottable.LoottableEntries.LootdropEntries",
+		"Spawnentries.NpcType.Loottable.LoottableEntries.LootdropEntries.Item",
+		"Spawnentries.NpcType.Loottable.LoottableEntries.LootdropEntries.Item.AlternateCurrencies",
+		"Spawnentries.NpcType.Loottable.LoottableEntries.LootdropEntries.Item.CharacterCorpseItems",
+		"Spawnentries.NpcType.Loottable.LoottableEntries.LootdropEntries.Item.DiscoveredItems",
+		"Spawnentries.NpcType.Loottable.LoottableEntries.LootdropEntries.Item.Doors",
+		"Spawnentries.NpcType.Loottable.LoottableEntries.LootdropEntries.Item.Doors.Item",
+		"Spawnentries.NpcType.Loottable.LoottableEntries.LootdropEntries.Item.Fishings",
+		"Spawnentries.NpcType.Loottable.LoottableEntries.LootdropEntries.Item.Fishings.Item",
+		"Spawnentries.NpcType.Loottable.LoottableEntries.LootdropEntries.Item.Fishings.NpcType",
+		"Spawnentries.NpcType.Loottable.LoottableEntries.LootdropEntries.Item.Fishings.Zone",
+		"Spawnentries.NpcType.Loottable.LoottableEntries.LootdropEntries.Item.Forages",
+		"Spawnentries.NpcType.Loottable.LoottableEntries.LootdropEntries.Item.Forages.Item",
+		"Spawnentries.NpcType.Loottable.LoottableEntries.LootdropEntries.Item.Forages.Zone",
+		"Spawnentries.NpcType.Loottable.LoottableEntries.LootdropEntries.Item.GroundSpawns",
+		"Spawnentries.NpcType.Loottable.LoottableEntries.LootdropEntries.Item.GroundSpawns.Zone",
+		"Spawnentries.NpcType.Loottable.LoottableEntries.LootdropEntries.Item.ItemTicks",
+		"Spawnentries.NpcType.Loottable.LoottableEntries.LootdropEntries.Item.Keyrings",
+		"Spawnentries.NpcType.Loottable.LoottableEntries.LootdropEntries.Item.LootdropEntries",
+		"Spawnentries.NpcType.Loottable.LoottableEntries.LootdropEntries.Item.Merchantlists",
+		"Spawnentries.NpcType.Loottable.LoottableEntries.LootdropEntries.Item.Merchantlists.NpcType",
+		"Spawnentries.NpcType.Loottable.LoottableEntries.LootdropEntries.Item.ObjectContents",
+		"Spawnentries.NpcType.Loottable.LoottableEntries.LootdropEntries.Item.Objects",
+		"Spawnentries.NpcType.Loottable.LoottableEntries.LootdropEntries.Item.Objects.Item",
+		"Spawnentries.NpcType.Loottable.LoottableEntries.LootdropEntries.Item.Objects.Zone",
+		"Spawnentries.NpcType.Loottable.LoottableEntries.LootdropEntries.Item.StartingItems",
+		"Spawnentries.NpcType.Loottable.LoottableEntries.LootdropEntries.Item.StartingItems.Item",
+		"Spawnentries.NpcType.Loottable.LoottableEntries.LootdropEntries.Item.StartingItems.Zone",
+		"Spawnentries.NpcType.Loottable.LoottableEntries.LootdropEntries.Item.Tasks",
+		"Spawnentries.NpcType.Loottable.LoottableEntries.LootdropEntries.Item.Tasks.TaskActivities",
+		"Spawnentries.NpcType.Loottable.LoottableEntries.LootdropEntries.Item.Tasks.TaskActivities.Goallists",
+		"Spawnentries.NpcType.Loottable.LoottableEntries.LootdropEntries.Item.Tasks.TaskActivities.NpcType",
+		"Spawnentries.NpcType.Loottable.LoottableEntries.LootdropEntries.Item.Tasks.Tasksets",
+		"Spawnentries.NpcType.Loottable.LoottableEntries.LootdropEntries.Item.TradeskillRecipeEntries",
+		"Spawnentries.NpcType.Loottable.LoottableEntries.LootdropEntries.Item.TradeskillRecipeEntries.TradeskillRecipe",
+		"Spawnentries.NpcType.Loottable.LoottableEntries.LootdropEntries.Item.TributeLevels",
+		"Spawnentries.NpcType.Loottable.LoottableEntries.LootdropEntries.Lootdrop",
+		"Spawnentries.NpcType.Loottable.LoottableEntries.LootdropEntries.Lootdrop.LootdropEntries",
+		"Spawnentries.NpcType.Loottable.LoottableEntries.LootdropEntries.Lootdrop.LoottableEntries",
+		"Spawnentries.NpcType.Loottable.LoottableEntries.Loottable",
+		"Spawnentries.NpcType.Loottable.NpcTypes",
 		"Spawnentries.NpcType.Merchantlists",
+		"Spawnentries.NpcType.Merchantlists.NpcType",
 		"Spawnentries.NpcType.NpcEmotes",
 		"Spawnentries.NpcType.NpcFactions",
 		"Spawnentries.NpcType.NpcFactions.NpcFactionEntries",

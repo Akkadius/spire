@@ -20,8 +20,8 @@ type StartZone struct {
 	BindY                  float32     `json:"bind_y" gorm:"Column:bind_y"`
 	BindZ                  float32     `json:"bind_z" gorm:"Column:bind_z"`
 	SelectRank             uint8       `json:"select_rank" gorm:"Column:select_rank"`
-	MinExpansion           uint8       `json:"min_expansion" gorm:"Column:min_expansion"`
-	MaxExpansion           uint8       `json:"max_expansion" gorm:"Column:max_expansion"`
+	MinExpansion           int8        `json:"min_expansion" gorm:"Column:min_expansion"`
+	MaxExpansion           int8        `json:"max_expansion" gorm:"Column:max_expansion"`
 	ContentFlags           null.String `json:"content_flags" gorm:"Column:content_flags"`
 	ContentFlagsDisabled   null.String `json:"content_flags_disabled" gorm:"Column:content_flags_disabled"`
 	Zone                   *Zone       `json:"zone,omitempty" gorm:"foreignKey:zone_id;references:zoneidnumber"`

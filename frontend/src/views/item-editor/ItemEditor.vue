@@ -1504,6 +1504,7 @@
             >
               <eq-item-preview
                 :item-data="item"
+                :show-related-data="true"
               />
             </eq-window>
 
@@ -2119,20 +2120,21 @@ export default {
               }
             });
           }
+
+          // hooks
+          setTimeout(() => {
+            const target = document.getElementById("item-edit-card")
+            if (target) {
+              target.removeEventListener('input', EditFormFieldUtil.setFieldModified, true);
+              target.addEventListener('input', EditFormFieldUtil.setFieldModified)
+            }
+
+            EditFormFieldUtil.resetFieldSubEditorHighlightedStatus()
+            this.setSubEditorFieldHighlights()
+
+          }, 100)
+
         })
-
-        // hooks
-        setTimeout(() => {
-          const target = document.getElementById("item-edit-card")
-          if (target) {
-            target.removeEventListener('input', EditFormFieldUtil.setFieldModified, true);
-            target.addEventListener('input', EditFormFieldUtil.setFieldModified)
-          }
-
-          EditFormFieldUtil.resetFieldSubEditorHighlightedStatus()
-          this.setSubEditorFieldHighlights()
-
-        }, 100)
       }
     },
 

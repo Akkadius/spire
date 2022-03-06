@@ -1,5 +1,6 @@
 import {ItemApi} from "@/app/api";
 import {SpireApiClient} from "@/app/api/spire-api-client";
+import {SpireQueryBuilder} from "@/app/api/spire-query-builder";
 
 export class Items {
   public static items = {}
@@ -19,7 +20,15 @@ export class Items {
 
     const api = (new ItemApi(SpireApiClient.getOpenApiConfig()))
     try {
-      const result = await api.getItem({id: itemId})
+      let request = (new SpireQueryBuilder())
+        .includes(Items.getRelationships())
+        .get()
+
+      // @ts-ignore
+      request.id = itemId
+
+      // @ts-ignore
+      const result = await api.getItem(request)
       if (result.status === 200 && result.data) {
         this.setItem(itemId, result.data);
         return result.data
@@ -354,6 +363,35 @@ export class Items {
     }
 
     return ''
+  }
+
+  public static getRelationships() {
+    return [
+      "Doors",
+      "Fishings",
+      "Fishings.Zone",
+      "Forages",
+      "Forages.Zone",
+      "GroundSpawns",
+      "GroundSpawns.Zone",
+      "LootdropEntries",
+      "LootdropEntries.Lootdrop",
+      "LootdropEntries.Lootdrop.LoottableEntries",
+      "LootdropEntries.Lootdrop.LoottableEntries.Loottable",
+      "LootdropEntries.Lootdrop.LoottableEntries.Loottable.NpcTypes",
+      "LootdropEntries.Lootdrop.LoottableEntries.Loottable.NpcTypes.Spawnentries.Spawngroup.Spawn2",
+      "Merchantlists",
+      "Merchantlists.NpcType",
+      "Merchantlists.NpcType.Spawnentries.Spawngroup.Spawn2",
+      "Objects",
+      "Objects.Zone",
+      "StartingItems",
+      "StartingItems.Zone",
+      "TradeskillRecipeEntries",
+      "TradeskillRecipeEntries.TradeskillRecipe",
+      "Tasks",
+      "TributeLevels",
+    ]
   }
 
 }

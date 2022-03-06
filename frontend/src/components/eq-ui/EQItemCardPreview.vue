@@ -2,34 +2,19 @@
   <div class="item-bg" style="max-width: 475px; padding: 5px" v-if="itemData">
 
     <span
+      v-if="itemData.idfile !== 'IT63'"
       style="position: absolute; right: 7%; opacity: .8"
       :class="'mt-2 mb-2 object-ctn-' + itemData.idfile.replace('IT', '')"
     />
-
-    <div
-      class="col-1 text-right"
-      v-if="showEdit"
-      style="position: absolute; left: 4%; top: 70px; z-index: 9999; opacity: .7"
-    >
-      <b-button
-        variant="outline-warning"
-        v-if="showEdit"
-        @click="editItem(itemData.id)"
-        class="mt-2"
-        size="sm"
-      >
-        Edit
-      </b-button>
-    </div>
 
     <div class="row">
       <div class="col-1">
         <span :class="'fade-in item-' + itemData.icon" :title="itemData.icon">
 <!--          <span-->
-<!--            v-if="itemData.stacksize > 1"-->
-<!--            style="position:absolute; right: 0px; top:45px; font-size: 10px">-->
-<!--            ({{ itemData.stacksize }})-->
-<!--          </span>-->
+          <!--            v-if="itemData.stacksize > 1"-->
+          <!--            style="position:absolute; right: 0px; top:45px; font-size: 10px">-->
+          <!--            ({{ itemData.stacksize }})-->
+          <!--          </span>-->
         </span>
       </div>
       <div class="col-8 pl-5">
@@ -42,6 +27,14 @@
           <table>
             <tbody>
 
+            <tr>
+              <td colspan="2" v-if="showEdit"><a
+                href="javascript:void(0)"
+                @click="editItem(itemData.id)"
+              >
+                Edit
+              </a></td>
+            </tr>
             <tr>
               <td colspan="2"> {{ getItemTags() }}</td>
             </tr>
@@ -345,6 +338,152 @@
       />
     </div>
 
+    <!-- Related Data -->
+    <div v-if="showRelatedData" class="mt-3">
+
+      <!-- Unlocks Doors -->
+      <div v-if="unlocksDoors.length > 0" class="font-weight-bold mt-3">
+        Unlocks Doors
+      </div>
+
+      <div class="mt-3">
+        <li v-for="door in unlocksDoors">
+          <span class="font-weight-bold">{{ door.name }}</span>
+          in <span class="font-weight-bold">{{ door.zone }}</span>
+          @ {{ door.x }}, {{ door.y }}, {{ door.z }}
+        </li>
+      </div>
+
+      <!-- Dropped By -->
+      <div v-if="droppedBy.length > 0" class="font-weight-bold mt-3">
+        Dropped By
+      </div>
+
+      <div class="mt-3">
+        <li v-for="drop in droppedBy">
+          <span class="font-weight-bold">{{ drop.name }}</span> in <span class="font-weight-bold">{{ drop.zone }}</span>
+        </li>
+      </div>
+
+      <!-- Fished In -->
+      <div v-if="fishedIn.length > 0" class="font-weight-bold mt-3">
+        Can be fished in
+      </div>
+
+      <div class="mt-3">
+        <li v-for="e in fishedIn">
+          <span class="font-weight-bold">{{ e.zone.long_name }}</span>
+          with skill <span class="font-weight-bold">{{ e.skill }}</span>
+        </li>
+      </div>
+
+      <!-- Foraged In -->
+      <div v-if="foragedIn.length > 0" class="font-weight-bold mt-3">
+        Can be foraged in
+      </div>
+
+      <div class="mt-3">
+        <li v-for="e in foragedIn">
+          <span class="font-weight-bold">{{ e.zone.long_name }}</span>
+          with skill <span class="font-weight-bold">{{ e.skill }}</span>
+          chance <span class="font-weight-bold">{{ e.chance }}</span>
+        </li>
+      </div>
+
+      <!-- Starting Item -->
+      <div v-if="startingItems.length > 0" class="font-weight-bold mt-3">
+        Is a starting item for
+      </div>
+
+      <div class="mt-3">
+        <li v-for="e in startingItems">
+          <span class="font-weight-bold" v-if="e.class !== 0">{{ e.class }}(s)</span>
+          <span v-if="e.race !== 0" class="ml-1">race
+            <span class="font-weight-bold">{{ e.race }}</span>
+          </span>
+          <span v-if="e.deity !== 0" class="ml-1">deity
+            <span class="font-weight-bold">{{ e.deity }}</span>
+          </span>
+          <span v-if="e.data.charges !== 0" class="ml-1">count
+            <span class="font-weight-bold">({{ e.data.item_charges }})</span>
+          </span>
+          <span v-if="e.zone !== 0" class="ml-1">
+            <span class="font-weight-bold">({{ e.zone.long_name }})</span>
+          </span>
+        </li>
+      </div>
+
+      <!-- Ground Spawns -->
+      <div v-if="groundSpawns.length > 0" class="font-weight-bold mt-3">
+        Is found as a ground spawn
+      </div>
+
+      <div class="mt-3">
+        <li v-for="e in groundSpawns">
+          In <span class="font-weight-bold" v-if="e.zone !== 0">{{ e.zone.long_name }}</span>
+          <span v-if="e.data.max_x !== 0" class="ml-1">@
+            {{ e.data.max_x }}, {{ e.data.max_y }}, {{ e.data.max_z }}
+          </span>
+          <span v-if="e.data.respawn_timer !== 0" class="ml-1">respawns every
+            <span class="font-weight-bold">({{ Math.round(e.data.respawn_timer / 60) }} minute(s))</span>
+          </span>
+        </li>
+      </div>
+
+      <!-- Tasks -->
+      <div v-if="taskRewards.length > 0" class="font-weight-bold mt-3">
+        Is a reward in task(s)
+      </div>
+
+      <div class="mt-3">
+        <li v-for="e in taskRewards">
+          <span v-if="e.data.title !== ''" class="font-weight-bold">
+            {{ e.data.title }} ({{ e.data.id }})
+          </span>
+        </li>
+      </div>
+
+      <!-- Merchants -->
+      <div v-if="merchants.length > 0" class="font-weight-bold mt-3">
+        Is sold by merchant(s)
+      </div>
+
+      <div class="mt-3">
+        <li v-for="e in merchants">
+          <span v-if="e.merchantName !== ''" class="font-weight-bold">
+            {{ e.merchantName }}
+          </span>
+          <span v-if="e.merchantZone !== ''" class="">in zone
+            <span class="font-weight-bold">({{ e.merchantZone }})</span>
+          </span>
+        </li>
+      </div>
+
+      <!-- Tradeskill result -->
+      <div v-if="tradeskillResult.length > 0" class="font-weight-bold mt-3">
+        Is the result of tradeskill recipe(s)
+      </div>
+
+      <div class="mt-3">
+        <li v-for="e in tradeskillResult">
+          <span v-if="e.name !== ''" class="font-weight-bold">
+            {{ e.name }}
+          </span>
+          <span v-if="e.tradeskill !== 0">
+            <span class="font-weight-bold">({{ e.tradeskill }})</span>
+          </span>
+          <span v-if="e.trivial !== 0" class="ml-1">Trivial
+            <span class="font-weight-bold">({{ e.trivial }})</span>
+          </span>
+          <span v-if="e.id !== 0" class="ml-1">ID
+            <span class="font-weight-bold">({{ e.id }})</span>
+          </span>
+        </li>
+      </div>
+
+
+    </div>
+
     <div class="pb-4 mb-5"></div>
 
     <eq-debug :data="itemData"/>
@@ -359,25 +498,27 @@ import {
   ITEM_DB_SLOTS,
   ITEM_ELEMENTS,
   ITEM_SIZE
-}                                      from "@/app/constants/eq-item-constants";
-import {BODYTYPES}                     from "@/app/constants/eq-bodytype-constants";
-import {DB_CLASSES_WEAR_SHORT}         from "@/app/constants/eq-classes-constants";
-import {DB_RACE_NAMES, DB_RACES_SHORT} from "@/app/constants/eq-races-constants";
-import {DB_DIETIES}                    from "@/app/constants/eq-deities-constants";
-import EqDebug                         from "@/components/eq-ui/EQDebug";
-import {App}                           from "@/constants/app";
-import EqSpellPreview                  from "@/components/eq-ui/EQSpellCardPreview";
-import {EXAMPLE_SPELL_DATA}            from "@/app/constants/eq-example-spell-data";
-import EqWindow                        from "@/components/eq-ui/EQWindow";
-import {DB_BARD_SKILLS, DB_SKILLS}     from "@/app/constants/eq-skill-constants";
-import {AUG_TYPES}                     from "@/app/constants/eq-aug-constants";
-import {Spells}                        from "@/app/spells";
-import util                            from "util";
-import {ROUTE}                         from "@/routes";
-import EqCashDisplay                   from "@/components/eq-ui/EqCashDisplay";
-import {Items}                         from "@/app/items";
-import {FactionListApi}                from "@/app/api";
-import {SpireApiClient}                from "@/app/api/spire-api-client";
+}                                          from "@/app/constants/eq-item-constants";
+import {BODYTYPES}                         from "@/app/constants/eq-bodytype-constants";
+import {DB_CLASSES, DB_CLASSES_WEAR_SHORT} from "@/app/constants/eq-classes-constants";
+import {DB_RACE_NAMES, DB_RACES_SHORT}     from "@/app/constants/eq-races-constants";
+import {DB_DIETIES, DB_DIETIES_FULL}       from "@/app/constants/eq-deities-constants";
+import EqDebug                             from "@/components/eq-ui/EQDebug";
+import {App}                               from "@/constants/app";
+import EqSpellPreview                      from "@/components/eq-ui/EQSpellCardPreview";
+import {EXAMPLE_SPELL_DATA}                from "@/app/constants/eq-example-spell-data";
+import EqWindow                    from "@/components/eq-ui/EQWindow";
+import {DB_BARD_SKILLS, DB_SKILLS} from "@/app/constants/eq-skill-constants";
+import {AUG_TYPES}                 from "@/app/constants/eq-aug-constants";
+import {Spells}                    from "@/app/spells";
+import util                        from "util";
+import {ROUTE}                     from "@/routes";
+import EqCashDisplay               from "@/components/eq-ui/EqCashDisplay";
+import {Items}                     from "@/app/items";
+import {FactionListApi}            from "@/app/api";
+import {SpireApiClient}            from "@/app/api/spire-api-client";
+import {Zones}                     from "@/app/zones";
+import {TRADESKILLS}               from "@/app/constants/eq-tradeskill-constants";
 
 export default {
   name: "EqItemCardPreview",
@@ -436,11 +577,29 @@ export default {
         { field: "scrolleffect", name: "Scroll Effect" },
         { field: "clickeffect", name: "Click Effect" },
         { field: "bardeffect", name: "Bard Effect" }
-      ]
+      ],
+
+      // constants
+      DB_CLASSES: DB_CLASSES,
+      DB_RACE_NAMES: DB_RACE_NAMES,
+      DB_DIETIES_FULL: DB_DIETIES_FULL,
+      TRADESKILLS: TRADESKILLS,
+
+      // related data
+      droppedBy: [],
+      unlocksDoors: [],
+      fishedIn: [],
+      foragedIn: [],
+      groundSpawns: [],
+      taskRewards: [],
+      merchants: [],
+      tradeskillResult: [],
+      startingItems: []
       // augslots: {}
     }
   },
   methods: {
+
     async init() {
       const uuidv4     = require("uuid/v4")
       this.componentId = uuidv4()
@@ -499,6 +658,10 @@ export default {
       }
 
       this.secondlevel3 = data
+
+      if (this.showRelatedData) {
+        this.renderRelatedData()
+      }
     },
     editItem(itemId) {
       this.$router.push(
@@ -683,6 +846,197 @@ export default {
           return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
         }
       );
+    },
+    async renderRelatedData() {
+
+      const d = this.itemData
+
+      // doors
+      let unlocksDoors = []
+      if (d.doors) {
+        for (const e of d.doors) {
+          unlocksDoors.push(
+            {
+              name: e.name,
+              zone: await Zones.getZoneLongNameByShortName(e.zone),
+              x: e.pos_x,
+              y: e.pos_y,
+              z: e.pos_z,
+            }
+          )
+        }
+      }
+      this.unlocksDoors = unlocksDoors
+
+      // loot
+      let droppedBy = []
+      if (d.lootdrop_entries) {
+        let droppedByNpc = []
+        for (const lootdropEntry of d.lootdrop_entries) {
+          if (lootdropEntry.lootdrop && lootdropEntry.lootdrop.loottable_entries) {
+            for (const loottableEntry of lootdropEntry.lootdrop.loottable_entries) {
+              if (loottableEntry.loottable && loottableEntry.loottable.npc_types) {
+                for (const npcType of loottableEntry.loottable.npc_types) {
+                  const npcName = npcType.name.replaceAll("_", " ").replaceAll("#", "").trim()
+
+                  if (
+                    npcType.spawnentries &&
+                    npcType.spawnentries[0].spawngroup &&
+                    npcType.spawnentries[0].spawngroup.spawn_2
+                  ) {
+
+                    if (!droppedByNpc.includes(npcName)) {
+                      const zoneName = await Zones.getZoneLongNameByShortName(npcType.spawnentries[0].spawngroup.spawn_2.zone.toLowerCase())
+
+                      droppedBy.push(
+                        {
+                          name: npcName,
+                          zone: zoneName,
+                        }
+                      )
+
+                      droppedByNpc.push(npcName)
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+
+      this.droppedBy = droppedBy.sort((a, b) => (a.name > b.name) ? 1 : -1)
+
+      // fishing
+      let fishedIn = []
+      if (d.fishings) {
+        for (const e of d.fishings) {
+          fishedIn.push(
+            {
+              zone: e.zone,
+              skill: e.skill_level,
+            }
+          )
+        }
+      }
+      this.fishedIn = fishedIn
+
+      // forage
+      let foragedIn = []
+      if (d.forages) {
+        for (const e of d.forages) {
+          foragedIn.push(
+            {
+              zone: e.zone,
+              skill: e.level,
+              chance: e.chance,
+            }
+          )
+        }
+      }
+      this.foragedIn = foragedIn
+
+      // starting items
+      let startingItems = []
+      if (d.starting_items) {
+        for (const e of d.starting_items) {
+          startingItems.push(
+            {
+              zone: (e.zoneid > 0 ? e.zone : 0),
+              class: (e.class > 0 && DB_CLASSES[e.class] ? DB_CLASSES[e.class] : 0),
+              race: (e.race > 0 && DB_RACE_NAMES[e.race] ? DB_RACE_NAMES[e.race] : 0),
+              deity: (e.deityid > 0 && DB_DIETIES_FULL[e.deityid] ? DB_DIETIES_FULL[e.deityid].name : 0),
+              data: e,
+            }
+          )
+        }
+      }
+      this.startingItems = startingItems
+
+      // ground spawns
+      let groundSpawns = []
+      if (d.ground_spawns) {
+        for (const e of d.ground_spawns) {
+          groundSpawns.push(
+            {
+              zone: (e.zoneid > 0 ? e.zone : 0),
+              data: e,
+            }
+          )
+        }
+      }
+      this.groundSpawns = groundSpawns
+
+      // tasks
+      let taskRewards = []
+      if (d.tasks) {
+        for (const e of d.tasks) {
+          taskRewards.push(
+            {
+              data: e,
+            }
+          )
+        }
+      }
+      this.taskRewards = taskRewards
+
+      // merchants
+      let merchants = []
+      if (d.merchantlists) {
+        for (const e of d.merchantlists) {
+          let merchantZone = ""
+          if (
+            e.npc_type
+            && e.npc_type.spawnentries
+            && e.npc_type.spawnentries[0]
+            && e.npc_type.spawnentries[0].spawngroup
+            && e.npc_type.spawnentries[0].spawngroup.spawn_2
+          ) {
+            merchantZone = await Zones.getZoneLongNameByShortName(e.npc_type.spawnentries[0].spawngroup.spawn_2.zone)
+          }
+
+          const npcName = (e.npc_type && e.npc_type.name ? e.npc_type.name : '').replaceAll("_", " ").replaceAll("#", "").trim()
+
+          if (npcName !== '' && merchantZone !== '') {
+            merchants.push(
+              {
+                merchantName: npcName,
+                merchantZone: merchantZone,
+                data: e,
+              }
+            )
+          }
+        }
+      }
+      this.merchants = merchants
+
+      // tradeskill result
+      let tradeskillResult = []
+      if (d.tradeskill_recipe_entries) {
+        for (const e of d.tradeskill_recipe_entries) {
+
+          if (
+            this.itemData.id === e.item_id
+            && e.componentcount === 0
+            && e.successcount === 1
+          ) {
+            tradeskillResult.push(
+              {
+                name: e.tradeskill_recipe ? e.tradeskill_recipe.name : '',
+                trivial: e.tradeskill_recipe ? e.tradeskill_recipe.trivial : 0,
+                tradeskill: e.tradeskill_recipe ? TRADESKILLS[e.tradeskill_recipe.tradeskill] : 0,
+                id: e.id,
+                data: e,
+              }
+            )
+
+          }
+
+        }
+      }
+      this.tradeskillResult = tradeskillResult
+
+      console.log("rendering related data")
     }
   },
   created: function () {
@@ -695,6 +1049,11 @@ export default {
       required: true
     },
     showEdit: {
+      type: Boolean,
+      default: false,
+      required: false,
+    },
+    showRelatedData: {
       type: Boolean,
       default: false,
       required: false,

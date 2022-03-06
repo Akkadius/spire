@@ -25,3 +25,5 @@ spire-windows-amd64.exe.zip
 *.sql
 dbstr.txt
 spells_us.txt
+
+eqemu_config.json

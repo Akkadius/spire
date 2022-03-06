@@ -93,9 +93,12 @@ items:
   - 1-* id->starting_items:itemid
   - 1-* id->tradeskill_recipe_entries:item_id
   - 1-* id->tribute_levels:item_id
+  - 1-* id->ground_spawns:item
+  - 1-* id->merchantlist:item
+  - 1-* id->tasks:rewardid
 lootdrop:
   - 1-* id->lootdrop_entries:lootdrop_id
-  - 1-* id->loottable_entries:loottable_id
+  - 1-* id->loottable_entries:lootdrop_id
 lootdrop_entries:
   - 1-1 item_id->items:id
   - 1-1 lootdrop_id->lootdrop:id
@@ -104,8 +107,9 @@ loottable:
   - 1-* id->npc_types:loottable_id
 loottable_entries:
   - 1-* lootdrop_id->lootdrop_entries:lootdrop_id
-#merchantlist:
-#  - 1-1 item->items:id
+  - 1-1 loottable_id->loottable:id
+merchantlist:
+  - 1-1 merchantid->npc_types:merchant_id
 npc_faction:
   - 1-* id->npc_faction_entries:npc_faction_id
 npc_spells:
@@ -120,6 +124,7 @@ npc_types:
   - 1-* id->spawnentry:npcID
   - 1-* emoteid->npc_emotes:emoteid
   - 1-1 armortint_id->npc_types_tint:id
+  - 1-1 loottable_id->loottable:id
 object:
   - 1-1 zoneid->zone:zoneidnumber
   - 1-1 itemid->items:id
@@ -146,6 +151,14 @@ spells_new:
   - 1-* id->spell_buckets:spellid
   - 1-* id->spell_globals:spellid
   - 1-* id->blocked_spells:spellid
+  - 1-* id->items:clickeffect
+#  TODO: Add support for multiple of the same type
+#  - 1-* id->items:proceffect
+#  - 1-* id->items:worneffect
+#  - 1-* id->items:scrolleffect
+#  - 1-* id->items:focuseffect
+#  - 1-* id->items:bardeffect
+  - 1-* id->npc_spells_entries:spellid
 start_zones:
   - 1-1 zone_id->zone:zoneidnumber
 starting_items:

@@ -88,7 +88,10 @@
                   style="width: 500px !important"
                 >
                   <eq-window style="margin-right: 10px; width: auto; height: 90%">
-                    <eq-item-card-preview :item-data="item"/>
+                    <eq-item-card-preview
+                      :item-data="item"
+                      :show-related-data="true"
+                    />
                   </eq-window>
                 </b-popover>
 

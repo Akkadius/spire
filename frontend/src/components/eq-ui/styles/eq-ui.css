@@ -208,6 +208,28 @@ NAV.eq-tab-box-fancy UL LI.eq-tab-open:hover {
     padding-box;
 }
 
+@media screen and (max-width: 720px) {
+    .eq-window NAV.eq-tab-box-fancy UL {
+        display: contents;
+    }
+    .tabs-details {
+        margin-top: 20px;
+    }
+    .eq-window NAV.eq-tab-box-fancy UL LI {
+        background-image: url(../images/tab_up_l.png),
+        url(../images/tab_up_r.png),
+        url(../images/tab_up_t.png) !important;
+    }
+    .eq-window NAV.eq-tab-box-fancy UL LI:hover {
+        line-height: 36px !important;
+    }
+    .eq-window NAV.eq-tab-box-fancy UL LI a:hover,
+    .eq-window NAV.eq-tab-box-fancy UL LI.eq-tab-open a {
+        color: yellow !important;
+        font-weight: bold !important;
+    }
+}
+
 .eq-window NAV.eq-tab-box-fancy UL LI {
     cursor: pointer;
     list-style-type: none;

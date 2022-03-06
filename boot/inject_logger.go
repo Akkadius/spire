@@ -5,6 +5,7 @@ import (
 	"github.com/go-errors/errors"
 	"github.com/google/wire"
 	"github.com/sirupsen/logrus"
+	"os"
 )
 
 const (
@@ -34,6 +35,14 @@ func provideLogger() (*logrus.Logger, error) {
 
 	if cnf.Formatter == LoggingFormatJson {
 		baseLogger.SetFormatter(&logrus.JSONFormatter{})
+	}
+
+	// base level
+	baseLogger.SetLevel(logrus.InfoLevel)
+
+	// debug logging
+	if len(os.Getenv("DEBUG")) > 0 {
+		baseLogger.SetLevel(logrus.DebugLevel)
 	}
 
 	baseLogger.WithFields(logrus.Fields{

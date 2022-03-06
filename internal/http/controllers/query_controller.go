@@ -24,7 +24,8 @@ func NewQueryController(db *database.DatabaseResolver, logger *logrus.Logger) *Q
 
 func (q *QueryController) Routes() []*routes.Route {
 	return []*routes.Route{
-		routes.RegisterRoute(http.MethodGet, "query/free-id-ranges/:table/:id", q.freeIdRanges, nil),
+		routes.RegisterRoute(http.MethodGet, "query/schema/table/:table", q.getTableSchema, nil),
+		routes.RegisterRoute(http.MethodGet, "query/free-ids-reserved/:table/:id/:name", q.freeIdsReserved, nil),
 		routes.RegisterRoute(http.MethodGet, "query/free-ids-reserved/:table/:id/:name", q.freeIdsReserved, nil),
 	}
 }
@@ -130,6 +131,22 @@ func (q *QueryController) freeIdRanges(c echo.Context) error {
 	}
 
 	return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Ranges not found"})
+}
+
+func (q *QueryController) getTableSchema(c echo.Context) error {
+	db, err := q.db.GetEqemuDb().DB()
+	if err != nil {
+		q.logger.Warn(err)
+	}
+
+	table := c.Param("table")
+
+	schema, err := database.GetTableSchema(db, table)
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
+	}
+
+	return c.JSON(http.StatusOK, echo.Map{"data": schema})
 }
 
 func (q *QueryController) freeIdsReserved(c echo.Context) error {

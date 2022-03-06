@@ -221,7 +221,11 @@
               style="display: inline-block; vertical-align: top"
             >
               <eq-window style="margin-right: 10px; width: auto; height: 90%">
-                <eq-item-card-preview :item-data="item" :show-edit="true"/>
+                <eq-item-card-preview
+                  :item-data="item"
+                  :show-edit="true"
+                  :show-related-data="true"
+                />
               </eq-window>
             </div>
           </div>
@@ -260,6 +264,9 @@ import EqCheckbox from "@/components/eq-ui/EQCheckbox.vue";
 import ItemPreviewTable from "@/views/items/components/ItemPreviewTable.vue";
 import {SpireQueryBuilder} from "@/app/api/spire-query-builder";
 import DbColumnFilter from "@/components/DbColumnFilter";
+import {DbSchema} from "@/app/db-schema";
+import {Zones} from "@/app/zones";
+import {Items} from "@/app/items";
 
 export default {
   components: {
@@ -318,17 +325,14 @@ export default {
 
     if (Object.keys(this.$route.query).length !== 0) {
       this.loadQueryState()
-      //Items.preloadDbstr().then((res) => {
       this.listItems()
-      //})
     }
 
     if (Object.keys(this.$route.query).length === 0) {
-      // Items.preloadDbstr()
       this.loaded = true;
     }
 
-    this.itemFields = await this.getItemFields()
+    this.itemFields = await DbSchema.getTableColumns("items")
 
     this.itemTypeOptions = [];
     for (const [type, description] of Object.entries(itemTypes)) {
@@ -339,6 +343,8 @@ export default {
         }
       )
     }
+
+    Zones.getZones()
   },
 
   watch: {
@@ -664,22 +670,6 @@ export default {
       this.updateQueryState();
     },
 
-    async getItemFields() {
-      const api     = (new ItemApi(SpireApiClient.getOpenApiConfig()))
-      let request   = {};
-      request.limit = 1;
-      const result  = await api.listItems(request)
-      if (result.status === 200 && result.data.length === 1) {
-        let fields = []
-        Object.keys(result.data[0]).forEach((key) => {
-          fields.push(key)
-        })
-        return fields.sort()
-      }
-
-      return [];
-    },
-
     isClassSelected: function (eqClass) {
       return eqClass === this.selectedClasses;
     },
@@ -771,6 +761,7 @@ export default {
 
       builder.groupBy(["id"])
       builder.limit(this.limit)
+      builder.includes(Items.getRelationships())
       api.listItems(builder.get()).then(async (result) => {
         if (result.status === 200) {
           // set items to be rendered
