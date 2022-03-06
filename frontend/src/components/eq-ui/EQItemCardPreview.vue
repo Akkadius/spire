@@ -377,6 +377,19 @@
         </li>
       </div>
 
+      <!-- Foraged In -->
+      <div v-if="foragedIn.length > 0" class="font-weight-bold mt-3">
+        Can be foraged in
+      </div>
+
+      <div class="mt-3">
+        <li v-for="e in foragedIn">
+          <span class="font-weight-bold">{{ e.zone.long_name }}</span>
+          with skill <span class="font-weight-bold">{{ e.skill }}</span>
+          chance <span class="font-weight-bold">{{ e.chance }}</span>
+        </li>
+      </div>
+
 
     </div>
 
@@ -475,10 +488,10 @@ export default {
       ],
 
       // related data
-      relatedData: [],
       droppedBy: [],
       unlocksDoors: [],
-      fishedIn: []
+      fishedIn: [],
+      foragedIn: []
       // augslots: {}
     }
   },
@@ -742,8 +755,6 @@ export default {
       return shortName
     },
     async renderRelatedData() {
-      let related   = []
-      let droppedBy = []
 
       const d = this.itemData
 
@@ -765,8 +776,8 @@ export default {
       this.unlocksDoors = unlocksDoors
 
       // loot
+      let droppedBy = []
       if (d.lootdrop_entries) {
-
         let droppedByNpc = []
         for (const lootdropEntry of d.lootdrop_entries) {
           if (lootdropEntry.lootdrop && lootdropEntry.lootdrop.loottable_entries) {
@@ -794,22 +805,16 @@ export default {
                       droppedByNpc.push(npcName)
                     }
                   }
-
-                  // console.log(npcType)
-
                 }
-
-                // console.log(loottableEntry.loottable)
               }
             }
-
           }
         }
       }
 
       this.droppedBy = droppedBy.sort((a, b) => (a.name > b.name) ? 1 : -1)
 
-      // doors
+      // fishing
       let fishedIn = []
       if (d.fishings) {
         for (const e of d.fishings) {
@@ -823,8 +828,20 @@ export default {
       }
       this.fishedIn = fishedIn
 
-
-      this.relatedData = related
+      // forage
+      let foragedIn = []
+      if (d.forages) {
+        for (const e of d.forages) {
+          foragedIn.push(
+            {
+              zone: e.zone,
+              skill: e.level,
+              chance: e.chance,
+            }
+          )
+        }
+      }
+      this.foragedIn = foragedIn
 
       console.log("rendering related data")
     }
