@@ -25,7 +25,7 @@ func NewQueryController(db *database.DatabaseResolver, logger *logrus.Logger) *Q
 func (q *QueryController) Routes() []*routes.Route {
 	return []*routes.Route{
 		routes.RegisterRoute(http.MethodGet, "query/schema/table/:table", q.getTableSchema, nil),
-		routes.RegisterRoute(http.MethodGet, "query/free-ids-reserved/:table/:id/:name", q.freeIdsReserved, nil),
+		routes.RegisterRoute(http.MethodGet, "query/free-id-ranges/:table/:id", q.freeIdRanges, nil),
 		routes.RegisterRoute(http.MethodGet, "query/free-ids-reserved/:table/:id/:name", q.freeIdsReserved, nil),
 	}
 }
