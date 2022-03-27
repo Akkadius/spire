@@ -1,6 +1,9 @@
 <template>
-  <div :class="'dropdown-menu ' + (menuRight ? 'dropdown-menu-right' : '')" :aria-labelledby="'sidebarIcon' + menuRight">
-    <a @click="loginGithub" class="dropdown-item" v-if="!user">
+  <div
+    :class="'dropdown-menu ' + (menuRight ? 'dropdown-menu-right' : '')"
+    :aria-labelledby="'sidebarIcon' + menuRight"
+  >
+    <a @click="loginGithub" class="dropdown-item" v-if="!user && githubAuthEnabled">
       <i class="fe fe-github"></i> Github Login
     </a>
     <span class="dropdown-item" v-if="user">{{ user.user_name }} ({{ user.provider }})</span>
@@ -16,12 +19,14 @@
 <script>
 import UserContext      from "@/app/user/UserContext";
 import {SpireApiClient} from "@/app/api/spire-api-client";
+import {AppEnv}         from "@/app/env/app-env";
 
 export default {
   name: "NavbarDropdownMenu",
   data() {
     return {
-      user: null
+      user: null,
+      githubAuthEnabled: AppEnv.isGithubAuthEnabled(),
     }
   },
   props: {

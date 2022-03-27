@@ -16,7 +16,7 @@
                 {{ notification }}
               </div>
 
-              <b-alert show dismissable variant="danger" v-if="error">
+              <b-alert show dismissable variant="danger" v-if="error" class="mt-2">
                 <i class="fa fa-warning"></i> {{ error }}
               </b-alert>
 
@@ -1620,9 +1620,6 @@ import EqWindow                from "../../components/eq-ui/EQWindow";
 import EqTabs                  from "../../components/eq-ui/EQTabs";
 import EqTab                   from "../../components/eq-ui/EQTab";
 import EqItemPreview           from "../../components/eq-ui/EQItemCardPreview";
-import {
-  App
-}                              from "../../constants/app";
 import EqCheckbox              from "../../components/eq-ui/EQCheckbox";
 import {
   SpireApiClient
@@ -2044,13 +2041,13 @@ export default {
         }
 
         if (result.data.error) {
-          this.notification = result.data.error
+          this.error = result.data.error
         }
 
       }).catch(async (error) => {
 
         // marshalling error
-        if (error.response.data && error.response.data.error.includes("marshal")) {
+        if (error.response.data) {
           this.error = error.response.data.error
           return
         }
@@ -2063,12 +2060,17 @@ export default {
           this.sendNotification("Created new Item!")
           EditFormFieldUtil.resetFieldEditedStatus()
         }
+
+        if (createRes.data.error) {
+          this.error = result.data.error
+        }
       })
     },
 
     load() {
 
       if (this.$route.params.id > 0) {
+        this.error = ""
         Items.getItem(this.$route.params.id).then((result) => {
           this.item              = result
           this.updatedAt         = Date.now()
@@ -2258,7 +2260,7 @@ export default {
     },
 
     materialChange() {
-      this.lastResetTime = Date.now()
+      this.lastResetTime                 = Date.now()
       this.drawRaceMaterialPreviewActive = true
     },
 

@@ -15,13 +15,13 @@
       </button>
 
       <!-- Brand -->
-<!--      <router-link class="ml-3 mt-3 d-none d-lg-block" to="/">-->
-<!--        <img-->
-<!--          src="~@/assets/img/eqemu-logo-1.png"-->
-<!--          class="navbar-brand-img mx-auto d-none d-sm-block mb-3" alt="..."-->
-<!--          style="max-height: 6rem"-->
-<!--        >-->
-<!--      </router-link>-->
+      <!--      <router-link class="ml-3 mt-3 d-none d-lg-block" to="/">-->
+      <!--        <img-->
+      <!--          src="~@/assets/img/eqemu-logo-1.png"-->
+      <!--          class="navbar-brand-img mx-auto d-none d-sm-block mb-3" alt="..."-->
+      <!--          style="max-height: 6rem"-->
+      <!--        >-->
+      <!--      </router-link>-->
 
 
       <router-link class="ml-3 mt-3" to="/">
@@ -230,7 +230,6 @@ import NavbarUserSettingsCog from "@/components/layout/NavbarUserSettingsCog";
 import UserContext           from "@/app/user/UserContext";
 import NavSectionComponent   from "@/components/layout/NavSectionComponent";
 import {ROUTE}               from "@/routes";
-import {SpireApiClient}      from "@/app/api/spire-api-client";
 import {EventBus}            from "@/app/event-bus/event-bus";
 import {AppEnv}              from "@/app/env/app-env";
 
@@ -243,6 +242,7 @@ export default {
       hideNavbar: false,
       appEnv: AppEnv.getEnv(),
       appVersion: AppEnv.getVersion(),
+      appFeatures: AppEnv.getFeatures(),
       viewerNav: {
         label: "Viewers",
         labelIcon: "ra ra-bleeding-eye mr-1",
@@ -251,7 +251,12 @@ export default {
           { title: "Race Viewer", to: ROUTE.RACE_VIEWER, icon: "ra ra-monster-skull mr-1" },
           { title: "Item Model Viewer", to: ROUTE.ITEM_VIEWER, icon: "ra ra-crossed-swords mr-1" },
           { title: "Item Icon Viewer", to: ROUTE.ITEM_ICON_VIEWER, icon: "ra ra-burning-eye mr-1" },
-          { title: "Player Animations", to: ROUTE.PLAYER_ANIMATION_VIEWER, icon: "ra ra-player-dodge mr-1", isNew: true },
+          {
+            title: "Player Animations",
+            to: ROUTE.PLAYER_ANIMATION_VIEWER,
+            icon: "ra ra-player-dodge mr-1",
+            isNew: true
+          },
           { title: "Emitter Viewer", to: ROUTE.EMITTER_VIEWER, icon: "ra  ra-droplet-splash mr-1", isNew: true },
           { title: "Spell Animations", to: ROUTE.SPELL_ANIMATION_VIEWER, icon: "ra ra-dragon mr-1", isNew: true }
         ]
@@ -305,15 +310,6 @@ export default {
   },
 
   async mounted() {
-    SpireApiClient.v1().get(`/app/env`).then((response) => {
-      if (response.data && response.data.data) {
-        const env       = response.data.data.env
-        const version   = response.data.data.version
-        this.appEnv     = env
-        this.appVersion = version
-      }
-    })
-
     this.backendBaseUrl = App.BACKEND_BASE_URL
     this.user           = await UserContext.getUser()
   },

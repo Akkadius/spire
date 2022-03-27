@@ -8,6 +8,7 @@ import (
 	gocache "github.com/patrickmn/go-cache"
 	"github.com/sirupsen/logrus"
 	"net/http"
+	"os"
 )
 
 type AppController struct {
@@ -34,9 +35,14 @@ func (d *AppController) changelog(c echo.Context) error {
 	return c.JSON(200, echo.Map{"data": changelog})
 }
 
+type Features struct {
+	GithubAuthEnabled bool `json:"github_auth_enabled"`
+}
+
 type EnvResponse struct {
-	Env     string `json:"env"`
-	Version string `json:"version"`
+	Env      string   `json:"env"`
+	Version  string   `json:"version"`
+	Features Features `json:"features"`
 }
 
 type PackageJson struct {
@@ -61,6 +67,9 @@ func (d *AppController) env(c echo.Context) error {
 		response := EnvResponse{
 			Env:     env.Get("APP_ENV", "local"),
 			Version: pkg.Version,
+			Features: Features{
+				GithubAuthEnabled: len(os.Getenv("GITHUB_CLIENT_ID")) > 0,
+			},
 		}
 
 		return c.JSON(200, echo.Map{"data": response})

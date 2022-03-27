@@ -16,7 +16,7 @@
                 {{ notification }}
               </div>
 
-              <b-alert show dismissable variant="danger" v-if="error">
+              <b-alert show dismissable variant="danger" v-if="error" class="mt-2">
                 <i class="fa fa-warning"></i> {{ error }}
               </b-alert>
 
@@ -2138,7 +2138,7 @@ export default {
       }).catch(async (error) => {
 
         // marshalling error
-        if (error.response.data && error.response.data.error.includes("marshal")) {
+        if (error.response.data) {
           this.error = error.response.data.error
           return
         }
@@ -2211,6 +2211,7 @@ export default {
 
     load() {
       if (this.$route.params.id > 0) {
+        this.error = ""
         this.getDbStringsSelectData(5)
 
         Spells.getSpell(this.$route.params.id).then((result) => {

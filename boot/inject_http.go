@@ -17,6 +17,7 @@ import (
 var httpSet = wire.NewSet(
 	appmiddleware.NewUserContextMiddleware,
 	appmiddleware.NewRequestLogMiddleware,
+	appmiddleware.NewReadOnlyMiddleware,
 	controllers.NewAnalyticsController,
 	controllers.NewHelloWorldController,
 	controllers.NewConnectionsController,
@@ -44,6 +45,7 @@ func NewRouter(
 	cg *appControllerGroups,
 	crudc *crudControllers,
 	userContextMiddleware *appmiddleware.UserContextMiddleware,
+	readOnlyModeMiddleware *appmiddleware.ReadOnlyMiddleware,
 	logMiddleware *appmiddleware.RequestLogMiddleware,
 	cache *gocache.Cache,
 ) *routes.Router {
@@ -86,6 +88,7 @@ func NewRouter(
 				cg.v1controllers,
 				userContextMiddleware.HandleHeader(),
 				userContextMiddleware.HandleQuerystring(),
+				readOnlyModeMiddleware.Handle(),
 				v1RateLimit(),
 			),
 			routes.NewControllerGroup(
@@ -98,6 +101,7 @@ func NewRouter(
 				"/api/v1/",
 				crudc.routes,
 				userContextMiddleware.HandleHeader(),
+				readOnlyModeMiddleware.Handle(),
 				v1RateLimit(),
 				middleware.GzipWithConfig(middleware.GzipConfig{Level: 1}),
 			),

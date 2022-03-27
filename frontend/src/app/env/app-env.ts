@@ -11,6 +11,15 @@ const AppEnvStaging    = "staging"
 const AppEnvProduction = "production"
 
 export class AppEnv {
+
+  static getFeatures() {
+    return this._features;
+  }
+
+  static setFeatures(value) {
+    this._features = value;
+  }
+
   static getEnv() {
     return this._env;
   }
@@ -32,8 +41,13 @@ export class AppEnv {
       ([AppEnvLocal, AppEnvDesktop, AppEnvDev].includes(this.getEnv()))
   }
 
+  static isGithubAuthEnabled() {
+    return this.getFeatures().github_auth_enabled
+  }
+
   private static _env;
   private static _version;
+  private static _features;
 
   static init() {
     SpireApiClient.v1().get("/app/env").then((response) => {
@@ -41,6 +55,7 @@ export class AppEnv {
         const data = response.data.data
         this.setEnv(data.env)
         this.setVersion(data.version)
+        this.setFeatures(data.features)
       }
     })
   }

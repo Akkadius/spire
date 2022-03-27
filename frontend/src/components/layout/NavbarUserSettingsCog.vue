@@ -58,14 +58,14 @@
 
 import {LocalSettings, Setting} from "@/app/local-settings/localsettings";
 import {App}                    from "@/constants/app";
-import {EventBus}    from "@/app/event-bus/event-bus";
+import {EventBus}               from "@/app/event-bus/event-bus";
 
 export default {
   name: "NavbarUserSettingsCog",
   data() {
     return {
       debugEnabled: LocalSettings.isDebugEnabled(),
-      tabHoverModeEnabled: LocalSettings.isTabHoverEnabled()
+      tabHoverModeEnabled: LocalSettings.isTabHoverEnabled(),
     }
   },
   methods: {
