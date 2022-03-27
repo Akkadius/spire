@@ -312,6 +312,12 @@ export default {
   async mounted() {
     this.backendBaseUrl = App.BACKEND_BASE_URL
     this.user           = await UserContext.getUser()
+
+    setTimeout(() => {
+      this.appEnv      = AppEnv.getEnv();
+      this.appVersion  = AppEnv.getVersion();
+      this.appFeatures = AppEnv.getFeatures();
+    }, 1000)
   },
 
   methods: {
