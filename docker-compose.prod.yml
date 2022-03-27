@@ -24,7 +24,7 @@ services:
       TZ: America/Chicago
       CGO_ENABLED: 0
       APP_ENV: production
-      IS_HOSTED_READ_ONLY_MODE: true
+      IS_HOSTED_READ_ONLY_MODE: 1
       TERM: xterm-256color
     ports:
       - ${IP_ADDRESS:-0.0.0.0}:80:3000
