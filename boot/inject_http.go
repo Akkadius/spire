@@ -124,6 +124,7 @@ func provideControllers(
 			connections,
 			hello,
 			docs,
+			clientFilesController,
 		},
 		v1controllersNoAuth: []routes.Controller{
 			quest,
@@ -131,7 +132,6 @@ func provideControllers(
 			query,
 			questFileApi,
 			staticMaps,
-			clientFilesController,
 		},
 	}
 }
