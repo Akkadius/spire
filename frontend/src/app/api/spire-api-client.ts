@@ -25,6 +25,15 @@ export class SpireApiClient {
     return spireAxiosConfig
   }
 
+  static getAccessTokenQueryString() {
+    const token = this.getAccessToken()
+    return token !== '' ? {'jwt': token} : {}
+  }
+
+  static getAccessToken() {
+    return UserContext.getAccessToken()
+  }
+
   static getOpenApiConfig() {
     let openApiConfig      = <any>{baseOptions: SpireApiClient.getAxiosConfig()}
     openApiConfig.basePath = this.getBaseV1Path()

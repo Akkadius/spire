@@ -65,7 +65,7 @@ func InitializeApplication() (App, error) {
 	queryController := controllers.NewQueryController(databaseResolver, logger)
 	questFileApiController := controllers.NewQuestFileApiController(logger)
 	exporter := clientfiles.NewExporter(logger)
-	importer := clientfiles.NewImporter(db, logger)
+	importer := clientfiles.NewImporter(logger)
 	clientFilesController := controllers.NewClientFilesController(logger, exporter, importer, databaseResolver)
 	staticMapController := staticmaps.NewStaticMapController(databaseResolver, logger)
 	bootAppControllerGroups := provideControllers(helloWorldController, authController, meController, analyticsController, connectionsController, docsController, questApiController, appController, queryController, questFileApiController, clientFilesController, staticMapController)

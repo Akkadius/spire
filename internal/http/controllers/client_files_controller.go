@@ -127,7 +127,8 @@ func (f *ClientFilesController) importFile(c echo.Context) error {
 	fileContents := string(fileBytes)
 	r := clientfiles.ImportResult{}
 	if strings.Contains(fileName, "spells_us") {
-		r, err = f.importer.ImportSpells(fileContents)
+		db := f.db.Get(&models.DbStr{}, c)
+		r, err = f.importer.ImportSpells(db, fileContents)
 		if err != nil {
 			return c.HTML(
 				http.StatusInternalServerError,
@@ -136,7 +137,8 @@ func (f *ClientFilesController) importFile(c echo.Context) error {
 		}
 	}
 	if strings.Contains(fileName, "dbstr_us") {
-		r, err = f.importer.ImportDbStr(fileContents)
+		db := f.db.Get(&models.DbStr{}, c)
+		r, err = f.importer.ImportDbStr(db, fileContents)
 		if err != nil {
 			return c.HTML(
 				http.StatusInternalServerError,

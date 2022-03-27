@@ -78,12 +78,14 @@
 </template>
 
 <script>
-import vue2Dropzone      from 'vue2-dropzone'
+import querystring        from 'querystring'
+import vue2Dropzone       from 'vue2-dropzone'
 import 'vue2-dropzone/dist/vue2Dropzone.min.css'
-import {SpireApiClient}  from "../../app/api/spire-api-client";
-import EqWindowSimple    from "../../components/eq-ui/EQWindowSimple";
-import EqWindow          from "../../components/eq-ui/EQWindow";
+import {SpireApiClient}   from "../../app/api/spire-api-client";
+import EqWindowSimple     from "../../components/eq-ui/EQWindowSimple";
+import EqWindow           from "../../components/eq-ui/EQWindow";
 import LoaderFakeProgress from "../../components/LoaderFakeProgress";
+import util               from "util";
 
 export default {
   name: "ClientFiles.vue",
@@ -99,7 +101,11 @@ export default {
       loading: false,
 
       dropzoneOptions: {
-        url: SpireApiClient.getBasePath() + "/api/v1/client-files/import/file",
+        url: util.format(
+          "%s/api/v1/client-files/import/file?%s",
+          SpireApiClient.getBasePath(),
+          querystring.stringify(SpireApiClient.getAccessTokenQueryString())
+        ),
         resizeWidth: 50,
         resizeHeight: 50,
         thumbnailWidth: 150,
@@ -113,10 +119,24 @@ export default {
   methods: {
 
     downloadSpells() {
-      window.open(SpireApiClient.getBasePath() + "/api/v1/client-files/export/spells", '_blank');
+      window.open(
+        util.format(
+          "%s/api/v1/client-files/export/spells?%s",
+          SpireApiClient.getBasePath(),
+          querystring.stringify(SpireApiClient.getAccessTokenQueryString())
+        ),
+        '_blank'
+      );
     },
     downloadDbStr() {
-      window.open(SpireApiClient.getBasePath() + "/api/v1/client-files/export/dbstr", '_blank');
+      window.open(
+        util.format(
+          "%s/api/v1/client-files/export/dbstr?%s",
+          SpireApiClient.getBasePath(),
+          querystring.stringify(SpireApiClient.getAccessTokenQueryString())
+        ),
+        '_blank'
+      );
     },
 
     success(file, response) {

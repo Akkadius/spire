@@ -10,17 +10,16 @@ import (
 )
 
 type Importer struct {
-	db     *gorm.DB
 	logger *logrus.Logger
 }
 
-func NewImporter(db *gorm.DB, logger *logrus.Logger) *Importer {
-	return &Importer{db: db, logger: logger}
+func NewImporter(logger *logrus.Logger) *Importer {
+	return &Importer{logger: logger}
 }
 
-func (i *Importer) getDatabase() *sql.DB {
+func (i *Importer) getDatabase(g *gorm.DB) *sql.DB {
 	// get database instance
-	db, err := i.db.DB()
+	db, err := g.DB()
 	if err != nil {
 		i.logger.Fatal(err)
 	}
@@ -36,13 +35,13 @@ type ImportResult struct {
 	DroppedRows  int64
 }
 
-func (i *Importer) ImportSpells(fileContents string) (ImportResult, error) {
+func (i *Importer) ImportSpells(db *gorm.DB, fileContents string) (ImportResult, error) {
 
 	// purge
-	rowsDeleted := i.db.Exec("DELETE FROM spells_new").RowsAffected
+	rowsDeleted := db.Exec("DELETE FROM spells_new").RowsAffected
 
 	// build column name list
-	dbColumns := database.GetTableColumnsOrdered(i.getDatabase(), "spells_new")
+	dbColumns := database.GetTableColumnsOrdered(i.getDatabase(db), "spells_new")
 	dbColumnsStr := "`" + strings.Join(dbColumns, "`, `") + "`"
 
 	// build parameter bindings string
@@ -78,7 +77,7 @@ func (i *Importer) ImportSpells(fileContents string) (ImportResult, error) {
 
 		// flush chunk
 		if chunk >= 250 {
-			err := i.insertBulk("spells_new", dbColumnsStr, placeholders, values)
+			err := i.insertBulk(db, "spells_new", dbColumnsStr, placeholders, values)
 			if err != nil {
 				return ImportResult{}, err
 			}
@@ -91,7 +90,7 @@ func (i *Importer) ImportSpells(fileContents string) (ImportResult, error) {
 		processedRows++
 	}
 
-	err := i.insertBulk("spells_new", dbColumnsStr, placeholders, values)
+	err := i.insertBulk(db, "spells_new", dbColumnsStr, placeholders, values)
 	if err != nil {
 		return ImportResult{}, err
 	}
@@ -105,10 +104,10 @@ func (i *Importer) ImportSpells(fileContents string) (ImportResult, error) {
 
 const DB_STR_COLUMN_LENGTH = 4
 
-func (i *Importer) ImportDbStr(fileContents string) (ImportResult, error) {
+func (i *Importer) ImportDbStr(db *gorm.DB, fileContents string) (ImportResult, error) {
 
 	// purge
-	rowsDeleted := i.db.Exec("DELETE FROM db_str").RowsAffected
+	rowsDeleted := db.Exec("DELETE FROM db_str").RowsAffected
 
 	placeholders := []string{}
 	var values []interface{}
@@ -137,7 +136,7 @@ func (i *Importer) ImportDbStr(fileContents string) (ImportResult, error) {
 
 		// flush chunk
 		if chunk >= 10000 {
-			err := i.insertBulk("db_str", "id, type, value", placeholders, values)
+			err := i.insertBulk(db, "db_str", "id, type, value", placeholders, values)
 			if err != nil {
 				return ImportResult{}, err
 			}
@@ -150,7 +149,7 @@ func (i *Importer) ImportDbStr(fileContents string) (ImportResult, error) {
 		processedRows++
 	}
 
-	err := i.insertBulk("db_str", "id, type, value", placeholders, values)
+	err := i.insertBulk(db, "db_str", "id, type, value", placeholders, values)
 	if err != nil {
 		return ImportResult{}, err
 	}
@@ -162,8 +161,8 @@ func (i *Importer) ImportDbStr(fileContents string) (ImportResult, error) {
 	}, nil
 }
 
-func (i *Importer) insertBulk(table string, columns string, placeholders []string, values []interface{}) error {
-	_, err := i.getDatabase().Exec(
+func (i *Importer) insertBulk(db *gorm.DB, table string, columns string, placeholders []string, values []interface{}) error {
+	_, err := i.getDatabase(db).Exec(
 		fmt.Sprintf("INSERT INTO %s (%s) VALUES %v", table, columns, strings.Join(placeholders, ", ")),
 		values...,
 	)
