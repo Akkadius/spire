@@ -130,7 +130,8 @@ func IsAppEnvProduction() bool {
 // whereas under desktop or local modes the primary connection would always be write mode
 // hosted spire has PEQ as a "view" of data and should not be able to be written to
 func IsHostedReadOnlyModeEnabled() bool {
-	return len(os.Getenv("IS_HOSTED_READ_ONLY_MODE")) > 0
+	return len(os.Getenv("IS_HOSTED_READ_ONLY_MODE")) > 0 &&
+		os.Getenv("IS_HOSTED_READ_ONLY_MODE") != "0"
 }
 
 func IsAppEnvStagingOrProduction() bool {
