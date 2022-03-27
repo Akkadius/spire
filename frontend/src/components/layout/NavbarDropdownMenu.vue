@@ -34,6 +34,10 @@ export default {
   },
   async mounted() {
     this.user = await (UserContext.getUser())
+
+    setTimeout(() => {
+      this.githubAuthEnabled = AppEnv.isGithubAuthEnabled()
+    }, 1000)
   },
   methods: {
     loginGithub: function () {

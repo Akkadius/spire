@@ -42,7 +42,7 @@ export class AppEnv {
   }
 
   static isGithubAuthEnabled() {
-    return this.getFeatures().github_auth_enabled
+    return this.getFeatures() ? this.getFeatures().github_auth_enabled : false
   }
 
   private static _env;
