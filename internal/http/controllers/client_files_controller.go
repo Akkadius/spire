@@ -3,7 +3,9 @@ package controllers
 import (
 	"fmt"
 	"github.com/Akkadius/spire/internal/clientfiles"
+	"github.com/Akkadius/spire/internal/database"
 	"github.com/Akkadius/spire/internal/http/routes"
+	"github.com/Akkadius/spire/internal/models"
 	"github.com/labstack/echo/v4"
 	"github.com/sirupsen/logrus"
 	"golang.org/x/text/language"
@@ -20,17 +22,20 @@ type ClientFilesController struct {
 	logger   *logrus.Logger
 	exporter *clientfiles.Exporter
 	importer *clientfiles.Importer
+	db       *database.DatabaseResolver
 }
 
 func NewClientFilesController(
 	logger *logrus.Logger,
 	exporter *clientfiles.Exporter,
 	importer *clientfiles.Importer,
+	db *database.DatabaseResolver,
 ) *ClientFilesController {
 	return &ClientFilesController{
 		logger:   logger,
 		exporter: exporter,
 		importer: importer,
+		db:       db,
 	}
 }
 
@@ -45,7 +50,8 @@ func (f *ClientFilesController) Routes() []*routes.Route {
 func (f *ClientFilesController) exportSpells(c echo.Context) error {
 	// todo, bubble error handling
 	// quick and dirty for now
-	contents := f.exporter.ExportSpells()
+	db := f.db.Get(&models.SpellsNew{}, c)
+	contents := f.exporter.ExportSpells(db)
 	folderPath := filepath.Join(os.TempDir(), "spell-export", randomString(10))
 	err := os.MkdirAll(folderPath, os.ModePerm)
 	if err != nil {
@@ -69,7 +75,8 @@ func (f *ClientFilesController) exportSpells(c echo.Context) error {
 func (f *ClientFilesController) exportDbStr(c echo.Context) error {
 	// todo, bubble error handling
 	// quick and dirty for now
-	contents := f.exporter.ExportDbStr()
+	db := f.db.Get(&models.DbStr{}, c)
+	contents := f.exporter.ExportDbStr(db)
 	folderPath := filepath.Join(os.TempDir(), "dbstr-export", randomString(10))
 	err := os.MkdirAll(folderPath, os.ModePerm)
 	if err != nil {

@@ -11,17 +11,16 @@ import (
 )
 
 type Exporter struct {
-	db     *gorm.DB
 	logger *logrus.Logger
 }
 
-func NewExporter(db *gorm.DB, logger *logrus.Logger) *Exporter {
-	return &Exporter{db: db, logger: logger}
+func NewExporter(logger *logrus.Logger) *Exporter {
+	return &Exporter{logger: logger}
 }
 
-func (e *Exporter) getDatabase() *sql.DB {
+func (e *Exporter) getDatabase(g *gorm.DB) *sql.DB {
 	// get database instance
-	db, err := e.db.DB()
+	db, err := g.DB()
 	if err != nil {
 		e.logger.Fatal(err)
 	}
@@ -29,11 +28,11 @@ func (e *Exporter) getDatabase() *sql.DB {
 	return db
 }
 
-func (e *Exporter) ExportSpells() string {
+func (e *Exporter) ExportSpells(db *gorm.DB) string {
 	var entries []map[string]interface{}
-	e.db.Model(&models.SpellsNew{}).Find(&entries)
+	db.Model(&models.SpellsNew{}).Find(&entries)
 
-	columns, err := database.GetTableSchema(e.getDatabase(), "spells_new")
+	columns, err := database.GetTableSchema(e.getDatabase(db), "spells_new")
 	if err != nil {
 		e.logger.Fatal(err)
 	}
@@ -51,11 +50,11 @@ func (e *Exporter) ExportSpells() string {
 	return strings.Join(rows, "\n")
 }
 
-func (e *Exporter) ExportDbStr() string {
+func (e *Exporter) ExportDbStr(db *gorm.DB) string {
 	var entries []map[string]interface{}
-	e.db.Model(&models.DbStr{}).Find(&entries)
+	db.Model(&models.DbStr{}).Find(&entries)
 
-	columns, err := database.GetTableSchema(e.getDatabase(), "db_str")
+	columns, err := database.GetTableSchema(e.getDatabase(db), "db_str")
 	if err != nil {
 		e.logger.Fatal(err)
 	}
