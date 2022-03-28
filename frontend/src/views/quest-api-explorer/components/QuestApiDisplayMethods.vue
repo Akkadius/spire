@@ -5,13 +5,15 @@
       :key="index"
       :style="(highlightedMethod === method.method ? 'background-color: rgba(106, 76, 50, 0.5);' : '') + '; overflow-y: scroll;'"
       :class="'method-scroll-' + method.method"
-      @click="highlightMethod(method); loadExamples(method.method)">
+      @click="highlightMethod(method); loadExamples(method.method)"
+    >
 
       <div class="d-inline-block">
         <button
           class='btn btn-sm btn-outline-warning mb-1 mr-2'
           @click="copyToClip(buildFullMethod(method))"
-          style="font-size: 8px; padding: 0.125rem 0.4rem; opacity: .6">
+          style="font-size: 8px; padding: 0.125rem 0.4rem; opacity: .6"
+        >
           <i class="fa fa-clipboard"></i>
         </button>
       </div>
@@ -31,7 +33,8 @@
         <a
           @click="loadExamples(method.method)" href="javascript:void(0);"
           class="d-inline-block"
-          v-if="linkedExamples[languageSelection][method.method + '(']">
+          v-if="linkedExamples[languageSelection][method.method + '(']"
+        >
           {{ method.method }}
         </a>
 
@@ -47,7 +50,8 @@
         <div
           style="color: #57A64A"
           class="d-inline-block ml-3"
-          v-if="linkedExamples[languageSelection][method.method + '('] && linkedExamples[languageSelection][method.method + '('].length > 0">
+          v-if="linkedExamples[languageSelection][method.method + '('] && linkedExamples[languageSelection][method.method + '('].length > 0"
+        >
           {{ (languageSelection === "perl" ? "#" : "--") }}
           {{ linkedExamples[languageSelection][method.method + "("].length }} Example(s)
         </div>
@@ -56,7 +60,8 @@
         <div
           style="color: #57A64A"
           class="d-inline-block ml-3"
-          v-if="method.categories && method.categories.length > 0">
+          v-if="method.categories && method.categories.length > 0"
+        >
           {{ (languageSelection === "perl" ? "#" : "--") }}
           ({{ method.categories.join(", ") }})
         </div>

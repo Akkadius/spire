@@ -19,7 +19,7 @@ export default new Router({
 
     // if link contains a hash target
     if (to.hash) {
-      const hash = to.hash.replace("#", "");
+      const hash       = to.hash.replace("#", "");
       const hashTarget = document.getElementById(hash)
       if (hashTarget) {
         setTimeout(() => {
@@ -35,7 +35,9 @@ export default new Router({
         if (savedPosition) {
           resolve(savedPosition)
         } else {
-          resolve({x: 0, y: 0})
+          if (Object.keys(to.query).length === 0) {
+            resolve({x: 0, y: 0})
+          }
         }
       }, 400)
     })
