@@ -95,21 +95,8 @@
     max-width: 100%; /* Max Width of the popover (depending on the container!) */
 }
 
-/*.bs-popover-auto>.arrow::after {*/
-/*    border-right-color: transparent;*/
-/*    border-bottom-color: transparent;*/
-/*}*/
-
-/*.bs-popover-auto[x-placement^=left]>.arrow::after, .bs-popover-left>.arrow::after {*/
-
-.bs-popover-auto[x-placement^=left] > .arrow::after, .bs-popover-left > .arrow::after,
-.bs-popover-auto[x-placement^=top] > .arrow::after, .top > .arrow::after,
-.bs-popover-auto[x-placement^=bottom] > .arrow::after, .bs-popover-bottom > .arrow::after,
-.bs-popover-auto[x-placement^=right] > .arrow::after, .bs-popover-right > .arrow::after {
-    border-right-color: transparent !important;
-    border-bottom-color: transparent !important;
-    border-top-color: transparent !important;
-    border-left-color: transparent !important;
+.popover>.arrow {
+    display: none;
 }
 
 .popover.no-bg {

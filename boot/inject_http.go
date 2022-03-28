@@ -82,7 +82,11 @@ func NewRouter(
 
 		// controller groups
 		[]*routes.ControllerGroup{
-			routes.NewControllerGroup("/auth/", cg.authControllers, []echo.MiddlewareFunc{}...),
+			routes.NewControllerGroup(
+				"/auth/",
+				cg.authControllers,
+				[]echo.MiddlewareFunc{}...,
+			),
 			routes.NewControllerGroup(
 				"/api/v1/",
 				cg.v1controllers,

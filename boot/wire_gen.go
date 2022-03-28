@@ -20,6 +20,7 @@ import (
 	"github.com/Akkadius/spire/internal/http/staticmaps"
 	"github.com/Akkadius/spire/internal/influx"
 	"github.com/Akkadius/spire/internal/pathmgmt"
+	"github.com/Akkadius/spire/internal/permissions"
 	"github.com/Akkadius/spire/internal/questapi"
 	"github.com/Akkadius/spire/internal/serverconfig"
 )
@@ -258,7 +259,9 @@ func InitializeApplication() (App, error) {
 	questApiParseCommand := cmd.NewQuestApiParseCommand(logger, parseService)
 	questExampleTestCommand := cmd.NewQuestExampleTestCommand(logger, questExamplesGithubSourcer)
 	generateRaceModelMapsCommand := cmd.NewGenerateRaceModelMapsCommand(logger)
-	v := ProvideCommands(helloWorldCommand, generateModelsCommand, generateControllersCommand, httpServeCommand, routesListCommand, generateConfigurationCommand, spireMigrateCommand, questApiParseCommand, questExampleTestCommand, generateRaceModelMapsCommand)
+	resourceList := permissions.NewResourceList(logger, router)
+	resourceListCommand := permissions.NewResourceListCommand(resourceList, logger)
+	v := ProvideCommands(helloWorldCommand, generateModelsCommand, generateControllersCommand, httpServeCommand, routesListCommand, generateConfigurationCommand, spireMigrateCommand, questApiParseCommand, questExampleTestCommand, generateRaceModelMapsCommand, resourceListCommand)
 	webBoot := desktop.NewWebBoot(logger, router)
 	app := NewApplication(db, logger, cache, v, databaseResolver, connections, router, webBoot)
 	return app, nil
