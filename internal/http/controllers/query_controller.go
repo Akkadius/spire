@@ -40,15 +40,15 @@ type StartEndRange struct {
 // freeIdRanges gets free contiguous blocks of ids
 func (q *QueryController) freeIdRanges(c echo.Context) error {
 
-	// database instance
-	db, err := q.db.Get(q.getModelFromString("model"), c).DB()
-	if err != nil {
-		q.logger.Warn(err)
-	}
-
 	// params
 	table := c.Param("table")
 	IdColumn := c.Param("id")
+
+	// database instance
+	db, err := q.db.Get(q.getModelFromString(table), c).DB()
+	if err != nil {
+		q.logger.Warn(err)
+	}
 
 	// query
 	query := fmt.Sprintf(`SELECT %v FROM %v ORDER BY %v`,
@@ -135,12 +135,12 @@ func (q *QueryController) freeIdRanges(c echo.Context) error {
 }
 
 func (q *QueryController) getTableSchema(c echo.Context) error {
-	db, err := q.db.Get(q.getModelFromString("model"), c).DB()
+	table := c.Param("table")
+
+	db, err := q.db.Get(q.getModelFromString(table), c).DB()
 	if err != nil {
 		q.logger.Warn(err)
 	}
-
-	table := c.Param("table")
 
 	schema, err := database.GetTableSchema(db, table)
 	if err != nil {
@@ -151,14 +151,14 @@ func (q *QueryController) getTableSchema(c echo.Context) error {
 }
 
 func (q *QueryController) freeIdsReserved(c echo.Context) error {
+	table := c.Param("table")
 
-	db, err := q.db.Get(q.getModelFromString("model"), c).DB()
+	db, err := q.db.Get(q.getModelFromString(table), c).DB()
 	if err != nil {
 		q.logger.Warn(err)
 	}
 
 	IdColumn := c.Param("id")
-	table := c.Param("table")
 	keyName := c.Param("name")
 
 	query := fmt.Sprintf(`select %v, %v from %v where %v like '%%placeholder%%' or %v like '%% reserved%%' order by %v`,

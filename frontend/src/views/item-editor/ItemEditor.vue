@@ -2046,10 +2046,14 @@ export default {
 
       }).catch(async (error) => {
 
-        // marshalling error
-        if (error.response.data) {
-          this.error = error.response.data.error
-          return
+        // some sort of validation error, throw error to user
+        if (error.response.data && error.response.data.error) {
+          const err           = error.response.data.error
+          const expectedError = err.includes("Cannot find entity")
+          if (!expectedError) {
+            this.error = error.response.data.error
+            return
+          }
         }
 
         const createRes = await api.createItem({
