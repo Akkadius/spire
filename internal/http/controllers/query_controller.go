@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/Akkadius/spire/internal/database"
 	"github.com/Akkadius/spire/internal/http/routes"
+	"github.com/Akkadius/spire/internal/models"
 	"github.com/labstack/echo/v4"
 	"github.com/sirupsen/logrus"
 	"net/http"
@@ -40,7 +41,7 @@ type StartEndRange struct {
 func (q *QueryController) freeIdRanges(c echo.Context) error {
 
 	// database instance
-	db, err := q.db.GetEqemuDb().DB()
+	db, err := q.db.Get(q.getModelFromString("model"), c).DB()
 	if err != nil {
 		q.logger.Warn(err)
 	}
@@ -134,7 +135,7 @@ func (q *QueryController) freeIdRanges(c echo.Context) error {
 }
 
 func (q *QueryController) getTableSchema(c echo.Context) error {
-	db, err := q.db.GetEqemuDb().DB()
+	db, err := q.db.Get(q.getModelFromString("model"), c).DB()
 	if err != nil {
 		q.logger.Warn(err)
 	}
@@ -150,7 +151,8 @@ func (q *QueryController) getTableSchema(c echo.Context) error {
 }
 
 func (q *QueryController) freeIdsReserved(c echo.Context) error {
-	db, err := q.db.GetEqemuDb().DB()
+
+	db, err := q.db.Get(q.getModelFromString("model"), c).DB()
 	if err != nil {
 		q.logger.Warn(err)
 	}
@@ -169,4 +171,18 @@ func (q *QueryController) freeIdsReserved(c echo.Context) error {
 	)
 
 	return c.JSON(http.StatusOK, echo.Map{"data": database.GenericQuery(db, query)})
+}
+
+func (q *QueryController) getModelFromString(s string) models.Modelable {
+	if s == "zone" {
+		return models.Zone{}
+	}
+	if s == "items" {
+		return models.Item{}
+	}
+	if s == "spells_new" {
+		return models.SpellsNew{}
+	}
+
+	return models.Zone{}
 }
