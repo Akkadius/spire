@@ -1667,7 +1667,6 @@ import {
   TELEPORT_ZONE_SELECTOR_TYPE
 }                                     from "../../app/constants/eq-spell-constants";
 import {DB_SKILLS}                    from "../../app/constants/eq-skill-constants";
-import {App}                          from "../../constants/app";
 import SpellIconSelector              from "./components/SpellIconSelector";
 import SpellAnimationPreview          from "./components/SpellAnimationPreview";
 import SpellAnimationViewer           from "../viewers/SpellAnimationViewer";
@@ -2127,6 +2126,7 @@ export default {
         spellsNew: this.spell
       }).then((result) => {
         if (result.status === 200) {
+          Spells.setSpell(this.spell.id, this.spell) // update cache
           this.sendNotification("Spell updated successfully!")
           EditFormFieldUtil.resetFieldEditedStatus()
         }

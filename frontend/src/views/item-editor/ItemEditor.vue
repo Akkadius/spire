@@ -2036,6 +2036,7 @@ export default {
         item: this.item
       }).then((result) => {
         if (result.status === 200) {
+          Items.setItem(this.item.id, this.item) // update cache
           this.sendNotification("Item updated successfully!")
           EditFormFieldUtil.resetFieldEditedStatus()
         }
