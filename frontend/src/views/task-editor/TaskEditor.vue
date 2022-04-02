@@ -1,8 +1,7 @@
 <template>
   <content-area>
     <div class="row">
-      <div class="col-12">
-
+      <div class="col-7">
         <eq-window-simple
           title="Task Editor"
           v-if="tasks"
@@ -10,7 +9,7 @@
           style="margin-top: 30px"
         >
           <div class="row">
-            <div :class="task ? 'col-3' : 'col-12' + ''">
+            <div :class="(task ? 'col-4' : 'col-12') + ' p-0'">
               <!-- Task List -->
               <div style="" class="">
 
@@ -19,13 +18,12 @@
                   placeholder="Filter results by name..."
                   v-model="taskSearchFilter"
                   @keyup="filterResultsByName"
-                  class="form-control ml-3" style="width: 95%"
+                  class="form-control"
                 >
 
                 <ul
                   id="task-list"
-                  style="overflow-y: scroll; height: 70vh; overflow-x: hidden; white-space:nowrap"
-                  class="eq p-1 m-3 eq-dark-background"
+                  class="eq p-1 mt-3 eq-dark-background"
                 >
 
                   <li
@@ -46,12 +44,18 @@
             </div>
 
             <!-- Task -->
-            <div class="col-5" id="my-form" v-if="task">
+            <div class="col-8" id="my-form" v-if="task">
 
-              <div class="row">
-
-                <div
-                  v-for="field in
+              <eq-tabs
+                id="task-edit-window"
+              >
+                <eq-tab
+                  name="Task"
+                  selected="true"
+                >
+                  <div class="row">
+                    <div
+                      v-for="field in
                  [
                    {
                      description: 'Task ID',
@@ -125,7 +129,7 @@
                      col: 'col-2',
                    },
                    {
-                     description: 'Level Spread',
+                     description: 'Lvl Spread',
                      field: 'level_spread',
                      fieldType: 'text',
                      col: 'col-2',
@@ -198,106 +202,104 @@
                    },
 
                  ]"
-                  :class="field.col + ' mb-3'"
+                      :class="field.col + ' mb-3'"
+                    >
+
+                      <div>
+                        {{ field.description }}
+                      </div>
+
+                      <!-- checkbox -->
+                      <eq-checkbox
+                        v-b-tooltip.hover.v-dark.right :title="getFieldDescription(field.field)"
+                        class="mb-1 mt-3 d-inline-block"
+                        :true-value="(typeof field.true !== 'undefined' ? field.true : 1)"
+                        :false-value="(typeof field.false !== 'undefined' ? field.false : 0)"
+                        v-model.number="task[field.field]"
+                        @input="task[field.field] = $event"
+                        v-if="field.fieldType === 'checkbox'"
+                      />
+
+                      <!-- input number -->
+                      <b-form-input
+                        v-if="field.fieldType === 'number'"
+                        :id="field.field"
+                        v-model.number="task[field.field]"
+                        class="m-0 mt-1"
+                        v-b-tooltip.hover.v-dark.right :title="getFieldDescription(field.field)"
+                        :style="(task[field.field] === 0 ? 'opacity: .5' : '')"
+                      />
+
+                      <!-- input text -->
+                      <b-form-input
+                        v-if="field.fieldType === 'text' || !field.fieldType"
+                        :id="field.field"
+                        v-model.number="task[field.field]"
+                        class="m-0 mt-1"
+                        v-b-tooltip.hover.v-dark.right :title="getFieldDescription(field.field)"
+                        :style="(task[field.field] === '' ? 'opacity: .5' : '')"
+                      />
+
+                      <!-- textarea -->
+                      <b-textarea
+                        v-if="field.fieldType === 'textarea'"
+                        :id="field.field"
+                        v-model="task[field.field]"
+                        class="m-0 mt-1"
+                        rows="2"
+                        max-rows="12"
+                        v-b-tooltip.hover.v-dark.right :title="getFieldDescription(field.field)"
+                        :style="(task[field.field] === '' ? 'opacity: .5' : '') + ';'"
+                      ></b-textarea>
+
+                      <!-- select -->
+                      <select
+                        v-model.number="task[field.field]"
+                        class="form-control m-0 mt-1"
+                        v-if="field.selectData"
+                        v-b-tooltip.hover.v-dark.right :title="getFieldDescription(field.field)"
+                        :style="(task[field.field] <= (typeof field.zeroValue !== 'undefined' ? field.zeroValue : 0) ? 'opacity: .5' : '')"
+                      >
+                        <option
+                          v-for="(description, index) in field.selectData"
+                          :key="index"
+                          :value="parseInt(index)"
+                        >
+                          {{ index }}) {{ description }}
+                        </option>
+                      </select>
+                    </div>
+                  </div>
+
+                </eq-tab>
+                <eq-tab
+                  name="Activities"
                 >
 
                   <div>
-                    {{ field.description }}
-                  </div>
+                    <span class="font-weight-bold">Activities</span>
 
-                  <!-- checkbox -->
-                  <eq-checkbox
-                    v-b-tooltip.hover.v-dark.right :title="getFieldDescription(field.field)"
-                    class="mb-1 mt-3 d-inline-block"
-                    :true-value="(typeof field.true !== 'undefined' ? field.true : 1)"
-                    :false-value="(typeof field.false !== 'undefined' ? field.false : 0)"
-                    v-model.number="task[field.field]"
-                    @input="task[field.field] = $event"
-                    v-if="field.fieldType === 'checkbox'"
-                  />
-
-                  <!-- input number -->
-                  <b-form-input
-                    v-if="field.fieldType === 'number'"
-                    :id="field.field"
-                    v-model.number="task[field.field]"
-                    class="m-0 mt-1"
-                    v-b-tooltip.hover.v-dark.right :title="getFieldDescription(field.field)"
-                    :style="(task[field.field] === 0 ? 'opacity: .5' : '')"
-                  />
-
-                  <!-- input text -->
-                  <b-form-input
-                    v-if="field.fieldType === 'text' || !field.fieldType"
-                    :id="field.field"
-                    v-model.number="task[field.field]"
-                    class="m-0 mt-1"
-                    v-b-tooltip.hover.v-dark.right :title="getFieldDescription(field.field)"
-                    :style="(task[field.field] === '' ? 'opacity: .5' : '')"
-                  />
-
-                  <!-- textarea -->
-                  <b-textarea
-                    v-if="field.fieldType === 'textarea'"
-                    :id="field.field"
-                    v-model="task[field.field]"
-                    class="m-0 mt-1"
-                    rows="2"
-                    max-rows="12"
-                    v-b-tooltip.hover.v-dark.right :title="getFieldDescription(field.field)"
-                    :style="(task[field.field] === '' ? 'opacity: .5' : '') + ';'"
-                  ></b-textarea>
-
-                  <!-- select -->
-                  <select
-                    v-model.number="task[field.field]"
-                    class="form-control m-0 mt-1"
-                    v-if="field.selectData"
-                    v-b-tooltip.hover.v-dark.right :title="getFieldDescription(field.field)"
-                    :style="(task[field.field] <= (typeof field.zeroValue !== 'undefined' ? field.zeroValue : 0) ? 'opacity: .5' : '')"
-                  >
-                    <option
-                      v-for="(description, index) in field.selectData"
-                      :key="index"
-                      :value="parseInt(index)"
+                    <select
+                      size="2"
+                      v-model="selectedActivity"
+                      v-bind="task.task_activities"
+                      @change="updateQueryState"
+                      class="form-control eq-input"
+                      style="overflow-x: scroll; min-height: 20vh; overflow-y: scroll"
                     >
-                      {{ index }}) {{ description }}
-                    </option>
-                  </select>
-                </div>
-              </div>
+                      <option
+                        v-for="activity in task.task_activities"
+                        :value="activity.activityid"
+                      >
+                        Step [{{ activity.step }}] Activity [{{ activity.activityid }}]
+                        {{ buildActivityDescription(activity) }}
+                      </option>
+                    </select>
 
-            </div>
-
-            <!-- Task Activities -->
-            <div
-              class="col-4"
-              v-if="task"
-            >
-
-              <span class="font-weight-bold">Activities</span>
-
-              <select
-                size="2"
-                v-model="selectedActivity"
-                v-bind="task.task_activities"
-                @change="updateQueryState"
-                class="form-control eq-input"
-                style="overflow-x: scroll; min-height: 20vh; overflow-y: scroll"
-              >
-                <option
-                  v-for="activity in task.task_activities"
-                  :value="activity.activityid"
-                >
-                  Step [{{ activity.step }}] Activity [{{ activity.activityid }}]
-                  {{ buildActivityDescription(activity) }}
-                </option>
-              </select>
-
-              <div v-if="selectedActivity !== null && task && task.task_activities[selectedActivity]">
-                <div class="row mt-3">
-                  <div
-                    v-for="field in
+                    <div v-if="selectedActivity !== null && task && task.task_activities[selectedActivity]">
+                      <div class="row mt-3">
+                        <div
+                          v-for="field in
                      [
                        {
                          description: 'Activity ID',
@@ -376,77 +378,82 @@
                          col: 'col-12',
                        },
                      ]"
-                    :class="field.col + ' mb-3'"
-                  >
-                    <div>
-                      {{ field.description }}
+                          :class="field.col + ' mb-3'"
+                        >
+                          <div>
+                            {{ field.description }}
+                          </div>
+
+                          <!-- checkbox -->
+                          <eq-checkbox
+                            v-b-tooltip.hover.v-dark.right :title="getFieldDescription(field.field)"
+                            class="mb-1 mt-3 d-inline-block"
+                            :true-value="(typeof field.true !== 'undefined' ? field.true : 1)"
+                            :false-value="(typeof field.false !== 'undefined' ? field.false : 0)"
+                            v-model.number="task.task_activities[selectedActivity][field.field]"
+                            @input="task.task_activities[selectedActivity][field.field] = $event"
+                            v-if="field.fieldType === 'checkbox'"
+                          />
+
+                          <!-- input number -->
+                          <b-form-input
+                            v-if="field.fieldType === 'number'"
+                            :id="field.field"
+                            v-model.number="task.task_activities[selectedActivity][field.field]"
+                            class="m-0 mt-1"
+                            v-b-tooltip.hover.v-dark.right :title="getFieldDescription(field.field)"
+                            :style="(task.task_activities[selectedActivity][field.field] === 0 ? 'opacity: .5' : '')"
+                          />
+
+                          <!-- input text -->
+                          <b-form-input
+                            v-if="field.fieldType === 'text' || !field.fieldType"
+                            :id="field.field"
+                            v-model.number="task.task_activities[selectedActivity][field.field]"
+                            class="m-0 mt-1"
+                            v-b-tooltip.hover.v-dark.right :title="getFieldDescription(field.field)"
+                            :style="(task.task_activities[selectedActivity][field.field] === '' ? 'opacity: .5' : '')"
+                          />
+
+                          <!-- textarea -->
+                          <b-textarea
+                            v-if="field.fieldType === 'textarea'"
+                            :id="field.field"
+                            v-model="task.task_activities[selectedActivity][field.field]"
+                            class="m-0 mt-1"
+                            rows="2"
+                            max-rows="12"
+                            v-b-tooltip.hover.v-dark.right :title="getFieldDescription(field.field)"
+                            :style="(task.task_activities[selectedActivity][field.field] === '' ? 'opacity: .5' : '') + ';'"
+                          ></b-textarea>
+
+                          <!-- select -->
+                          <select
+                            v-model.number="task.task_activities[selectedActivity][field.field]"
+                            class="form-control m-0 mt-1"
+                            v-if="field.selectData"
+                            v-b-tooltip.hover.v-dark.right :title="getFieldDescription(field.field)"
+                            :style="(task.task_activities[selectedActivity][field.field] <= (typeof field.zeroValue !== 'undefined' ? field.zeroValue : 0) ? 'opacity: .5' : '')"
+                          >
+                            <option
+                              v-for="(description, index) in field.selectData"
+                              :key="index"
+                              :value="parseInt(index)"
+                            >
+                              {{ index }}) {{ description }}
+                            </option>
+                          </select>
+                        </div>
+
+                      </div>
+
+                      <eq-debug :data="task.task_activities[selectedActivity]"/>
                     </div>
-
-                    <!-- checkbox -->
-                    <eq-checkbox
-                      v-b-tooltip.hover.v-dark.right :title="getFieldDescription(field.field)"
-                      class="mb-1 mt-3 d-inline-block"
-                      :true-value="(typeof field.true !== 'undefined' ? field.true : 1)"
-                      :false-value="(typeof field.false !== 'undefined' ? field.false : 0)"
-                      v-model.number="task.task_activities[selectedActivity][field.field]"
-                      @input="task.task_activities[selectedActivity][field.field] = $event"
-                      v-if="field.fieldType === 'checkbox'"
-                    />
-
-                    <!-- input number -->
-                    <b-form-input
-                      v-if="field.fieldType === 'number'"
-                      :id="field.field"
-                      v-model.number="task.task_activities[selectedActivity][field.field]"
-                      class="m-0 mt-1"
-                      v-b-tooltip.hover.v-dark.right :title="getFieldDescription(field.field)"
-                      :style="(task.task_activities[selectedActivity][field.field] === 0 ? 'opacity: .5' : '')"
-                    />
-
-                    <!-- input text -->
-                    <b-form-input
-                      v-if="field.fieldType === 'text' || !field.fieldType"
-                      :id="field.field"
-                      v-model.number="task.task_activities[selectedActivity][field.field]"
-                      class="m-0 mt-1"
-                      v-b-tooltip.hover.v-dark.right :title="getFieldDescription(field.field)"
-                      :style="(task.task_activities[selectedActivity][field.field] === '' ? 'opacity: .5' : '')"
-                    />
-
-                    <!-- textarea -->
-                    <b-textarea
-                      v-if="field.fieldType === 'textarea'"
-                      :id="field.field"
-                      v-model="task.task_activities[selectedActivity][field.field]"
-                      class="m-0 mt-1"
-                      rows="2"
-                      max-rows="12"
-                      v-b-tooltip.hover.v-dark.right :title="getFieldDescription(field.field)"
-                      :style="(task.task_activities[selectedActivity][field.field] === '' ? 'opacity: .5' : '') + ';'"
-                    ></b-textarea>
-
-                    <!-- select -->
-                    <select
-                      v-model.number="task.task_activities[selectedActivity][field.field]"
-                      class="form-control m-0 mt-1"
-                      v-if="field.selectData"
-                      v-b-tooltip.hover.v-dark.right :title="getFieldDescription(field.field)"
-                      :style="(task.task_activities[selectedActivity][field.field] <= (typeof field.zeroValue !== 'undefined' ? field.zeroValue : 0) ? 'opacity: .5' : '')"
-                    >
-                      <option
-                        v-for="(description, index) in field.selectData"
-                        :key="index"
-                        :value="parseInt(index)"
-                      >
-                        {{ index }}) {{ description }}
-                      </option>
-                    </select>
                   </div>
 
-                </div>
+                </eq-tab>
+              </eq-tabs>
 
-                <eq-debug :data="task.task_activities[selectedActivity]"/>
-              </div>
 
             </div>
 
@@ -454,6 +461,16 @@
 
           <eq-debug :data="task"/>
 
+        </eq-window-simple>
+      </div>
+
+      <div class="col-5">
+        <eq-window-simple
+          title="Task Preview Pane"
+          class="eq-window-hybrid"
+          style="margin-top: 30px"
+        >
+          Something
         </eq-window-simple>
       </div>
     </div>
@@ -470,14 +487,19 @@ import EqCheckbox from "@/components/eq-ui/EQCheckbox.vue";
 import {
   TASK_ACTIVITY_TYPES,
   TASK_DURATION_HUMAN,
-  TASK_DURATION_TYPES, TASK_GOAL_METHOD_TYPE,
+  TASK_DURATION_TYPES,
+  TASK_GOAL_METHOD_TYPE,
   TASK_TYPES
 } from "@/app/constants/eq-task-constants";
 import EqWindowSimple from "@/components/eq-ui/EQWindowSimple.vue";
 import EqDebug from "@/components/eq-ui/EQDebug.vue";
+import EqTabs from "@/components/eq-ui/EQTabs.vue";
+import EqTab from "@/components/eq-ui/EQTab.vue";
 
 export default {
   components: {
+    EqTab,
+    EqTabs,
     EqDebug,
     EqWindowSimple,
     EqCheckbox,
@@ -603,3 +625,13 @@ export default {
 }
 
 </script>
+
+<style>
+#task-list {
+  overflow-y: scroll;
+  height: 80vh;
+  overflow-x: hidden;
+  white-space: nowrap;
+  border-radius: 5px;
+}
+</style>

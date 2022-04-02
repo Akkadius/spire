@@ -31,7 +31,6 @@
                 <eq-tab
                   name="General"
                   :selected="true"
-
                 >
                   <div class="row">
                     <div
