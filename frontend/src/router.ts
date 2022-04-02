@@ -103,13 +103,13 @@ export default new Router({
           meta: {title: "Component Documentation"},
         },
         {
-          path: '/tasks/',
-          component: () => import('./views/Tasks.vue'),
+          path: ROUTE.TASKS,
+          component: () => import('./views/task-editor/TaskEditor.vue'),
           meta: {title: "Task Editor"},
         },
         {
           path: '/tasks/:id',
-          component: () => import('./views/Tasks.vue'),
+          component: () => import('./views/task-editor/TaskEditor.vue'),
           meta: {title: "Task Editor"},
         },
         {

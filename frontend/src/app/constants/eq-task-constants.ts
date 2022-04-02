@@ -27,6 +27,22 @@ export const TASK_ACTIVITY_TYPES = {
   100: "Give Cash",
 }
 
+export const TASK_ACTIVITY_TYPE = {
+  DELIVER: 1,
+  KILL: 2,
+  LOOT: 3,
+  SPEAK_WITH: 4,
+  EXPLORE: 5,
+  TRADESKILL: 6,
+  FISH: 7,
+  FORAGE: 8,
+  USE: 9,
+  USE2: 10,
+  TOUCH: 11,
+  GIVE: 100,
+  QUEST_SCRIPT_DRIVEN: 255,
+};
+
 export const TASK_DURATION_HUMAN = {
   0: "Infinite",
   3600: "1 hour",
