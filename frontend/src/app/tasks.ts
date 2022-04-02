@@ -93,4 +93,25 @@ export class Tasks {
       "Tasksets",
     ]
   }
+
+  public static getFieldDescriptions() {
+    return {
+      "id": "Task identifier",
+    }
+  }
+
+  public static getFieldDescription(field: string) {
+    // we do this because the payload we get back from spire API is
+    // formatted slightly different
+    let fieldLookup = field.toLowerCase().replace("_", "")
+
+    for (let key in this.getFieldDescriptions()) {
+      let keyLookup = key.toLowerCase().replace("_", "")
+      if (keyLookup === fieldLookup) {
+        return this.getFieldDescriptions()[key]
+      }
+    }
+
+    return ''
+  }
 }
