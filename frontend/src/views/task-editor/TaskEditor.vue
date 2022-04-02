@@ -3,11 +3,14 @@
     <div class="row">
       <div class="col-12">
 
-        <eq-window title="Task Editor" v-if="tasks" style="margin-top: 30px">
+        <eq-window-simple
+          title="Task Editor"
+          v-if="tasks"
+          class="eq-window-hybrid"
+          style="margin-top: 30px"
+        >
           <div class="row">
             <div :class="task ? 'col-3' : 'col-12' + ''">
-              <h3 class="eq-header" style="text-align: center">Task Selection</h3>
-
               <!-- Task List -->
               <div style="" class="">
 
@@ -42,7 +45,6 @@
 
             <!-- Task -->
             <div class="col-5" id="my-form" v-if="task">
-              <h3 class="eq-header" style="text-align: center">Task</h3>
 
               <div class="row">
 
@@ -266,8 +268,6 @@
 
             <!-- Task Activities -->
             <div class="col-4" v-if="task">
-              <h3 class="eq-header" style="text-align: center">Task Activities</h3>
-
               <select
                 size="2"
                 v-model="activitySelected"
@@ -293,7 +293,7 @@
 
           <pre class="eq p-1 m-3">{{ task }}</pre>
 
-        </eq-window>
+        </eq-window-simple>
       </div>
     </div>
   </content-area>
@@ -307,9 +307,11 @@ import {ROUTE} from "@/routes";
 import {Tasks} from "@/app/tasks";
 import EqCheckbox from "@/components/eq-ui/EQCheckbox.vue";
 import {TASK_DURATION_HUMAN, TASK_DURATION_TYPES, TASK_TYPES} from "@/app/constants/eq-task-constants";
+import EqWindowSimple from "@/components/eq-ui/EQWindowSimple.vue";
 
 export default {
   components: {
+    EqWindowSimple,
     EqCheckbox,
     ContentArea,
     EqWindow,

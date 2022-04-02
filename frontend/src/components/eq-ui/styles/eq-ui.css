@@ -574,7 +574,10 @@ A:hover {
     box-shadow: 5px 20px 20px rgba(0, 0, 0, 0.6);
     /*opacity:               0.95;*/
     transition: opacity 200ms;
+}
 
+.eq-window-hybrid {
+    background-image: url(../images/super_fancy_bg.png) !important;
 }
 
 .eq-window:hover {
