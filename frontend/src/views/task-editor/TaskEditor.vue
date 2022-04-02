@@ -23,14 +23,16 @@
                 >
 
                 <ul
+                  id="task-list"
                   style="overflow-y: scroll; height: 70vh; overflow-x: hidden; white-space:nowrap"
                   class="eq p-1 m-3 eq-dark-background"
                 >
 
                   <li
                     @click="selectTask(task)"
-                    :style="(parseInt(taskSelected) === parseInt(task.id) ? 'background-color: rgba(106, 76, 50, 0.5);' : '')"
+                    :style="(parseInt(selectedTask) === parseInt(task.id) ? 'background-color: rgba(106, 76, 50, 0.5);' : '')"
                     v-for="task in filteredTasks"
+                    :id="'task-entry-' + task.id"
                   >
                     <router-link
                       :to="'/tasks/' + task.id"
@@ -66,7 +68,8 @@
                      field: 'type',
                      fieldType: 'select',
                      col: 'col-4',
-                     selectData: TASK_TYPES
+                     selectData: TASK_TYPES,
+                     zeroValue: -1,
                    },
                    {
                      description: 'Task Description',
@@ -267,11 +270,18 @@
             </div>
 
             <!-- Task Activities -->
-            <div class="col-4" v-if="task">
+            <div
+              class="col-4"
+              v-if="task"
+            >
+
+              <span class="font-weight-bold">Activities</span>
+
               <select
                 size="2"
-                v-model="activitySelected"
+                v-model="selectedActivity"
                 v-bind="task.task_activities"
+                @change="updateQueryState"
                 class="form-control eq-input"
                 style="overflow-x: scroll; min-height: 20vh; overflow-y: scroll"
               >
@@ -279,19 +289,170 @@
                   v-for="activity in task.task_activities"
                   :value="activity.activityid"
                 >
-                  [{{ activity.step }}-{{ activity.activityid }}]
+                  Step [{{ activity.step }}] Activity [{{ activity.activityid }}]
                   {{ buildActivityDescription(activity) }}
                 </option>
               </select>
 
-              <div v-if="activitySelected !== null">
-                <pre class="eq">{{ task.task_activities[activitySelected] }}</pre>
+              <div v-if="selectedActivity !== null && task && task.task_activities[selectedActivity]">
+                <div class="row mt-3">
+                  <div
+                    v-for="field in
+                     [
+                       {
+                         description: 'Activity ID',
+                         field: 'activityid',
+                         col: 'col-6',
+                       },
+                       {
+                         description: 'Task Step',
+                         field: 'step',
+                         col: 'col-6',
+                       },
+                       {
+                         description: 'Activity Type',
+                         field: 'activitytype',
+                         fieldType: 'select',
+                         selectData: TASK_ACTIVITY_TYPES,
+                         col: 'col-6',
+                       },
+                       {
+                         description: 'Activity Target',
+                         field: 'target_name',
+                         col: 'col-6',
+                       },
+                       {
+                         description: 'Description Override',
+                         field: 'description_override',
+                         col: 'col-12',
+                       },
+                       {
+                         description: 'Goal ID',
+                         field: 'goalid',
+                         col: 'col-2',
+                       },
+                       {
+                         description: 'Goal Method',
+                         field: 'goalmethod',
+                         fieldType: 'select',
+                         selectData: TASK_GOAL_METHOD_TYPE,
+                         zeroValue: -1,
+                         col: 'col-4',
+                       },
+                       {
+                         description: 'Goal Count',
+                         field: 'goalcount',
+                         col: 'col-3',
+                       },
+                       {
+                         description: 'Activity Optional',
+                         field: 'optional',
+                         fieldType: 'checkbox',
+                         col: 'col-3',
+                       },
+                       {
+                         description: 'Deliver to NPC',
+                         field: 'delivertonpc',
+                         col: 'col-6',
+                       },
+                       {
+                         description: 'Zones',
+                         field: 'zones',
+                         col: 'col-6',
+                       },
+                       {
+                         description: 'Item List',
+                         field: 'item_list',
+                         col: 'col-6',
+                       },
+                       {
+                         description: 'Skill List',
+                         field: 'skill_list',
+                         col: 'col-6',
+                       },
+                       {
+                         description: 'Spell List',
+                         field: 'spell_list',
+                         col: 'col-12',
+                       },
+                     ]"
+                    :class="field.col + ' mb-3'"
+                  >
+                    <div>
+                      {{ field.description }}
+                    </div>
+
+                    <!-- checkbox -->
+                    <eq-checkbox
+                      v-b-tooltip.hover.v-dark.right :title="getFieldDescription(field.field)"
+                      class="mb-1 mt-3 d-inline-block"
+                      :true-value="(typeof field.true !== 'undefined' ? field.true : 1)"
+                      :false-value="(typeof field.false !== 'undefined' ? field.false : 0)"
+                      v-model.number="task.task_activities[selectedActivity][field.field]"
+                      @input="task.task_activities[selectedActivity][field.field] = $event"
+                      v-if="field.fieldType === 'checkbox'"
+                    />
+
+                    <!-- input number -->
+                    <b-form-input
+                      v-if="field.fieldType === 'number'"
+                      :id="field.field"
+                      v-model.number="task.task_activities[selectedActivity][field.field]"
+                      class="m-0 mt-1"
+                      v-b-tooltip.hover.v-dark.right :title="getFieldDescription(field.field)"
+                      :style="(task.task_activities[selectedActivity][field.field] === 0 ? 'opacity: .5' : '')"
+                    />
+
+                    <!-- input text -->
+                    <b-form-input
+                      v-if="field.fieldType === 'text' || !field.fieldType"
+                      :id="field.field"
+                      v-model.number="task.task_activities[selectedActivity][field.field]"
+                      class="m-0 mt-1"
+                      v-b-tooltip.hover.v-dark.right :title="getFieldDescription(field.field)"
+                      :style="(task.task_activities[selectedActivity][field.field] === '' ? 'opacity: .5' : '')"
+                    />
+
+                    <!-- textarea -->
+                    <b-textarea
+                      v-if="field.fieldType === 'textarea'"
+                      :id="field.field"
+                      v-model="task.task_activities[selectedActivity][field.field]"
+                      class="m-0 mt-1"
+                      rows="2"
+                      max-rows="12"
+                      v-b-tooltip.hover.v-dark.right :title="getFieldDescription(field.field)"
+                      :style="(task.task_activities[selectedActivity][field.field] === '' ? 'opacity: .5' : '') + ';'"
+                    ></b-textarea>
+
+                    <!-- select -->
+                    <select
+                      v-model.number="task.task_activities[selectedActivity][field.field]"
+                      class="form-control m-0 mt-1"
+                      v-if="field.selectData"
+                      v-b-tooltip.hover.v-dark.right :title="getFieldDescription(field.field)"
+                      :style="(task.task_activities[selectedActivity][field.field] <= (typeof field.zeroValue !== 'undefined' ? field.zeroValue : 0) ? 'opacity: .5' : '')"
+                    >
+                      <option
+                        v-for="(description, index) in field.selectData"
+                        :key="index"
+                        :value="parseInt(index)"
+                      >
+                        {{ index }}) {{ description }}
+                      </option>
+                    </select>
+                  </div>
+
+                </div>
+
+                <eq-debug :data="task.task_activities[selectedActivity]"/>
               </div>
 
             </div>
+
           </div>
 
-          <pre class="eq p-1 m-3">{{ task }}</pre>
+          <eq-debug :data="task"/>
 
         </eq-window-simple>
       </div>
@@ -306,11 +467,18 @@ import util from "util";
 import {ROUTE} from "@/routes";
 import {Tasks} from "@/app/tasks";
 import EqCheckbox from "@/components/eq-ui/EQCheckbox.vue";
-import {TASK_DURATION_HUMAN, TASK_DURATION_TYPES, TASK_TYPES} from "@/app/constants/eq-task-constants";
+import {
+  TASK_ACTIVITY_TYPES,
+  TASK_DURATION_HUMAN,
+  TASK_DURATION_TYPES, TASK_GOAL_METHOD_TYPE,
+  TASK_TYPES
+} from "@/app/constants/eq-task-constants";
 import EqWindowSimple from "@/components/eq-ui/EQWindowSimple.vue";
+import EqDebug from "@/components/eq-ui/EQDebug.vue";
 
 export default {
   components: {
+    EqDebug,
     EqWindowSimple,
     EqCheckbox,
     ContentArea,
@@ -322,32 +490,38 @@ export default {
       task: null,
       tasks: [],
       filteredTasks: [],
-      taskSelected: null,
-      activitySelected: null,
+      selectedTask: null,
+      selectedActivity: null,
       taskSearchFilter: "",
 
       TASK_TYPES: TASK_TYPES,
       TASK_DURATION_TYPES: TASK_DURATION_TYPES,
       TASK_DURATION_HUMAN: TASK_DURATION_HUMAN,
+      TASK_ACTIVITY_TYPES: TASK_ACTIVITY_TYPES,
+      TASK_GOAL_METHOD_TYPE: TASK_GOAL_METHOD_TYPE,
     }
   },
 
   watch: {
     $route(to, from) {
-      this.loadEntity()
+      this.init()
     }
   },
-  methods: {
 
+  methods: {
     getFieldDescription(field) {
       return Tasks.getFieldDescription(field);
     },
 
     async selectTask(task) {
-      this.taskSelected = task.id
-      this.$router.push({path: util.format(ROUTE.TASK_EDIT, this.taskSelected)})
-        .catch(() => {
-        })
+      this.selectedTask     = task.id
+      this.selectedActivity = -1
+
+      if (this.task && typeof this.task.task_activities[0] !== "undefined"
+        && Object.keys(this.task.task_activities[0]).length > 0) {
+        this.selectedActivity = 0
+      }
+      this.updateQueryState()
     },
 
     async filterResultsByName() {
@@ -359,26 +533,22 @@ export default {
       this.filteredTasks = filteredTasks;
     },
 
-    async loadEntity() {
+    async loadTask() {
       if (this.$route.params.id > 0) {
         this.task = (await Tasks.getTask(this.$route.params.id))
-        if (Object.keys(this.task).length > 0) {
-          this.taskSelected     = this.$route.params.id
-          this.activitySelected = null
-          return
-        }
-        // if no task found...
-        this.task = null
-      }
-    },
-    async onChange() {
-      if (typeof this.taskSelected === "undefined") {
-        return
-      }
 
-      this.$router.push({path: util.format(ROUTE.TASK_EDIT, this.taskSelected)})
-        .catch(() => {
-        })
+        setTimeout(() => {
+          const container = document.getElementById("task-list");
+          const target    = document.getElementById(util.format("task-entry-%s", this.$route.params.id))
+          if (container && target) {
+            // container.scrollTop = target.offsetTop - 100;
+            container.scrollTo({top: target.offsetTop - 150, behavior: "smooth"});
+          }
+        }, 100)
+
+        // if no task found...
+        // this.task = null
+      }
     },
     buildActivityDescription(activity) {
       return Tasks.buildActivityDescription(activity)
@@ -391,16 +561,45 @@ export default {
       }
     },
     async init() {
-      await this.loadTasks()
-      await this.loadEntity()
-    }
+      if (Object.keys(this.$route.query).length !== 0) {
+        this.loadQueryState()
+      }
+      this.loadTasks()
+      this.loadTask()
+    },
+
+    updateQueryState() {
+      // query params
+      let queryState = {};
+      if (this.selectedTask >= 0) {
+        queryState.task = this.selectedTask
+      }
+      if (this.selectedActivity >= 0) {
+        queryState.activity = this.selectedActivity
+      }
+
+      // navigation
+      this.$router.push(
+        {
+          path: util.format(ROUTE.TASK_EDIT, this.selectedTask),
+          query: queryState
+        }
+      ).catch(() => {
+      })
+    },
+
+    loadQueryState() {
+      if (typeof this.$route.query.task !== 'undefined' && parseInt(this.$route.query.task) >= 0) {
+        this.selectedTask = parseInt(this.$route.query.task);
+      }
+      if (typeof this.$route.query.activity !== 'undefined' && parseInt(this.$route.query.activity) >= 0) {
+        this.selectedActivity = parseInt(this.$route.query.activity);
+      }
+    },
   },
   async mounted() {
     await this.init()
   },
-  activated() {
-    this.init()
-  }
 }
 
 </script>

@@ -25,6 +25,7 @@ export const TASK_ACTIVITY_TYPES = {
   10: "Use",
   11: "Touch",
   100: "Give Cash",
+  255: "Quest Driven",
 }
 
 export const TASK_ACTIVITY_TYPE = {
@@ -72,4 +73,10 @@ export const TASK_REWARD_METHOD = {
   1: "List of Items (Goal List)",
   2: "Quest Controlled",
   255: "Quest Controlled",
+}
+
+export const TASK_GOAL_METHOD_TYPE = {
+  0: "Single ID",
+  1: "List (of entries)",
+  2: "Quest Controlled",
 }
