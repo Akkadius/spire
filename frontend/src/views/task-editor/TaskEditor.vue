@@ -21,25 +21,23 @@
                   class="form-control"
                 >
 
-                <ul
+                <select
                   id="task-list"
-                  class="eq p-1 mt-3 eq-dark-background"
+                  size="2"
+                  v-model="selectedTask"
+                  @change="updateQueryState"
+                  class="form-control eq-input eq p-1 mt-3 eq-dark-background"
+                  style="overflow-x: scroll; height: 80vh; overflow-y: scroll"
                 >
-
-                  <li
-                    @click="selectTask(task)"
-                    :style="(parseInt(selectedTask) === parseInt(task.id) ? 'background-color: rgba(106, 76, 50, 0.5);' : '')"
+                  <option
                     v-for="task in filteredTasks"
                     :id="'task-entry-' + task.id"
+                    :value="task.id"
                   >
-                    <router-link
-                      :to="'/tasks/' + task.id"
-                      :style="'color: #FFFFFF !important; '"
-                    >({{ task.id }}) {{ task.title }}
+                    ({{ task.id }}) {{ task.title }}
+                  </option>
+                </select>
 
-                    </router-link>
-                  </li>
-                </ul>
               </div>
             </div>
 
@@ -143,7 +141,7 @@
                    {
                      description: 'Completion Emote',
                      field: 'completion_emote',
-                     fieldType: 'text',
+                     fieldType: 'textarea',
                      col: 'col-12',
                    },
                    {
@@ -466,11 +464,81 @@
 
       <div class="col-5">
         <eq-window-simple
-          title="Task Preview Pane"
+          title="Quest Journal"
           class="eq-window-hybrid"
           style="margin-top: 30px"
         >
-          Something
+          <div class="row">
+            <div class="mb-3 col-9">
+              Tasks
+            </div>
+            <div class="col-3">
+              Request Timer: 00:00
+            </div>
+          </div>
+
+          <table class="col-12 task-window">
+            <thead class="task-window-header">
+            <tr>
+              <td style="width: 30px"></td>
+              <td style="width: 200px">Task Title</td>
+              <td>Time Left</td>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+              <td style="text-align: center; color: #d27cd2">S</td>
+              <td style="color: #d27cd2">Plight of the Undead</td>
+              <td>05:52:39</td>
+            </tr>
+            </tbody>
+          </table>
+
+          <div class="row">
+            <div class="mt-3 col-9">
+              Task Progression
+            </div>
+            <div class="col-3">
+<!--              <button class='eq-button' onclick="alert('click')">Remove</button>-->
+            </div>
+          </div>
+
+          <table class="col-12 mt-3 task-window">
+            <thead class="task-window-header">
+            <tr>
+              <td>Objective Instructions</td>
+              <td style="width: 50px">Status</td>
+              <td style="width: 200px">Zone</td>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+              <td>Create 1 Stalking Probe using tradeskills</td>
+              <td>0/1</td>
+              <td>Plane of Knowledge</td>
+            </tr>
+            <tr>
+              <td>Talk to Alga</td>
+              <td>0/1</td>
+              <td>Plane of Knowledge</td>
+            </tr>
+            <tr>
+              <td>Touch the portal to Thundercrest Isles</td>
+              <td>0/1</td>
+              <td>Plane of Knowledge</td>
+            </tr>
+            <tr>
+              <td>&nbsp;</td>
+              <td></td>
+              <td></td>
+            </tr>
+            </tbody>
+          </table>
+
+          <div class="mt-3 eq-background-dark" style="border: rgba(122, 134, 183, 0.5) 1px solid; height: 300px;">
+
+          </div>
+
         </eq-window-simple>
       </div>
     </div>
@@ -593,9 +661,6 @@ export default {
     updateQueryState() {
       // query params
       let queryState = {};
-      if (this.selectedTask >= 0) {
-        queryState.task = this.selectedTask
-      }
       if (this.selectedActivity >= 0) {
         queryState.activity = this.selectedActivity
       }
@@ -611,8 +676,8 @@ export default {
     },
 
     loadQueryState() {
-      if (typeof this.$route.query.task !== 'undefined' && parseInt(this.$route.query.task) >= 0) {
-        this.selectedTask = parseInt(this.$route.query.task);
+      if (parseInt(this.$route.params.id) >= 0) {
+        this.selectedTask = parseInt(this.$route.params.id);
       }
       if (typeof this.$route.query.activity !== 'undefined' && parseInt(this.$route.query.activity) >= 0) {
         this.selectedActivity = parseInt(this.$route.query.activity);
@@ -634,4 +699,25 @@ export default {
   white-space: nowrap;
   border-radius: 5px;
 }
+
+.task-window-header td {
+  border-right: rgba(122, 134, 183, 0.5) 1px solid;
+  padding-left: 3px;
+  padding-right: 3px;
+  color: lightskyblue;
+}
+
+.task-window-header {
+  width: 100%;
+  margin: 0;
+}
+
+.task-window {
+  border: rgba(122, 134, 183, 0.5) 1px solid;
+}
+
+.task-window td {
+  padding-left: 3px;
+}
+
 </style>

@@ -580,6 +580,10 @@ A:hover {
     background-image: url(../images/super_fancy_bg.png) !important;
 }
 
+.eq-background-dark {
+    background-image: url(../images/dark.gif);
+}
+
 .eq-window:hover {
     opacity: 1;
 }
