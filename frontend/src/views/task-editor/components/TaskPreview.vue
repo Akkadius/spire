@@ -180,7 +180,12 @@ export default {
         clearInterval(this.taskTimer)
         this.load()
       }
-    }
+    },
+    selectedActivity: {
+      handler() {
+        this.description = this.getDescription()
+      }
+    },
   },
 
   async mounted() {
@@ -209,8 +214,6 @@ export default {
 
     load() {
       this.setCountDownTimer()
-      this.getDescription()
-
       this.rewardItem         = null
       this.radiantCrystalItem = null
       this.ebonCrystalItem    = null
@@ -227,7 +230,7 @@ export default {
         })
       }
 
-      this.description = this.getDescription().trim()
+      this.description = this.getDescription()
     },
 
     replaceDescriptionContent(s) {
@@ -283,7 +286,7 @@ export default {
         n++
       }
 
-      return finalDescription
+      return finalDescription.trim()
     },
 
     getZone(activity) {
