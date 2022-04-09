@@ -2,7 +2,7 @@
   <div>
     <div v-if="platinum > 0" class="d-inline-block mr-2">
       <div :class="'ml-1 item-644-sm'" title="Platinum"/>
-      {{ platinum }}
+      {{ platinum.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") }}
     </div>
 
     <div v-if="gold > 0" class="d-inline-block mr-2">

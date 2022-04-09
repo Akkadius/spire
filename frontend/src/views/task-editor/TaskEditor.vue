@@ -8,7 +8,6 @@
           class="eq-window-hybrid"
           style="margin-top: 30px"
           @mouseover.native="previewTask()"
-
         >
           <div class="row">
             <div :class="(task ? 'col-4' : 'col-12') + ' p-0'">
@@ -174,6 +173,7 @@
                      fieldType: 'text',
                      itemIcon: '3366',
                      col: 'col-4',
+                     onclick: drawItemSelector,
                    },
                    {
                      description: 'EXP Reward',
@@ -265,6 +265,7 @@
                         :id="field.field"
                         v-model.number="task[field.field]"
                         class="m-0 mt-1"
+                        v-on="typeof field.onclick !== 'undefined' ? { click: () => field.onclick() } : {}"
                         v-b-tooltip.hover.v-dark.right :title="getFieldDescription(field.field)"
                         :style="(task[field.field] <= (typeof field.zeroValue !== 'undefined' ? field.zeroValue : 0) ? 'opacity: .5' : '')"
                       />
@@ -394,7 +395,6 @@
                              field: 'zones',
                              col: 'col-6',
                              onclick: drawZoneSelector,
-
                            },
                            // Removed until fully implemented
                            // {
@@ -497,6 +497,15 @@
 
       <div class="col-5 fade-in" v-if="task">
 
+        <div
+          style="margin-top: 20px; width: auto;"
+          class="fade-in"
+          v-if="itemSelectorActive"
+        >
+          <task-item-selector
+            @input="task['rewardid'] = $event.id; task['reward'] = $event.name; setFieldModifiedById('rewardid'); setFieldModifiedById('reward')"
+          />
+        </div>
         <task-zone-selector
           :selected-zone-id="parseInt(task.task_activities[selectedActivity].zones)"
           v-if="task && task.task_activities && task.task_activities[selectedActivity] && zoneSelectorActive"
@@ -552,11 +561,13 @@ import EqTab from "@/components/eq-ui/EQTab.vue";
 import {EditFormFieldUtil} from "@/app/forms/edit-form-field-util";
 import TaskPreview from "@/views/task-editor/components/TaskPreview.vue";
 import TaskZoneSelector from "@/views/task-editor/components/TaskZoneSelector.vue";
+import TaskItemSelector from "@/views/task-editor/components/TaskItemSelector.vue";
 
 const MILLISECONDS_BEFORE_WINDOW_RESET = 5000;
 
 export default {
   components: {
+    TaskItemSelector,
     TaskZoneSelector,
     TaskPreview,
     EqTab,
@@ -580,6 +591,7 @@ export default {
       // preview / selectors
       previewTaskActive: true,
       zoneSelectorActive: false,
+      itemSelectorActive: false,
 
       lastResetTime: Date.now(),
 
@@ -742,14 +754,15 @@ export default {
       return (Date.now() - this.lastResetTime) > MILLISECONDS_BEFORE_WINDOW_RESET
     },
 
-    previewTask() {
-      if (this.shouldReset() && !this.previewTaskActive) {
+    previewTask(force = false) {
+      if ((this.shouldReset() && !this.previewTaskActive) || force) {
         this.resetPreviewComponents()
         this.previewTaskActive = true
       }
     },
     resetPreviewComponents() {
       this.previewTaskActive  = false;
+      this.itemSelectorActive = false;
       this.zoneSelectorActive = false;
 
       EditFormFieldUtil.resetFieldSubEditorHighlightedStatus()
@@ -760,6 +773,13 @@ export default {
       this.lastResetTime      = Date.now()
       this.zoneSelectorActive = true
       EditFormFieldUtil.setFieldSubEditorHighlightedById("zones")
+    },
+    drawItemSelector() {
+      console.log("item select")
+      this.resetPreviewComponents()
+      this.lastResetTime      = Date.now()
+      this.itemSelectorActive = true
+      EditFormFieldUtil.setFieldSubEditorHighlightedById("rewardid")
     },
   },
   async mounted() {
