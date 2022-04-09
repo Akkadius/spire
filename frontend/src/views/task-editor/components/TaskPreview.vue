@@ -52,11 +52,10 @@
       <tbody>
       <tr
         v-for="activity in task.task_activities"
-        :style="'color: ' + getTaskActivityStepColor(activity)"
       >
-        <td>{{ buildActivityDescription(activity) }}</td>
+        <td :style="'color: ' + getTaskActivityStepColor(activity)">{{ buildActivityDescription(activity) }}</td>
         <td>{{ renderTaskActivityProgress(activity) }}</td>
-        <td>{{ isActivityStepActive(activity) ? getZone(activity) : '???' }}</td>
+        <td :style="'color: ' + getTaskActivityStepColor(activity)">{{ isActivityStepActive(activity) ? getZone(activity) : '???' }}</td>
       </tr>
       <tr class="this-is-a-space-row-dont-remove">
         <td>&nbsp;</td>
@@ -208,30 +207,25 @@ export default {
         return ""
       }
 
+      if (this.isTaskActivityComplete(activity)) {
+        return "Done"
+      }
+
       return util.format("%s/%s",
-        this.isTaskActivityComplete(activity) ? activity.goalcount : 0,
+        0,
         activity.goalcount
       )
     },
 
     getTaskActivityStepColor(activity) {
       const selectedActivity = parseInt(this.selectedActivity)
-
       if (activity.activityid < selectedActivity) {
-        return 'white'
+        return 'rgb(27 247 27)'
       }
-
-      console.log(this.task.task_activities[selectedActivity])
-
-      const selectedStep        = this.getStepFromActivity(this.task.task_activities[selectedActivity])
-      const currentActivityStep = this.getStepFromActivity(activity)
 
       if (!this.isActivityStepActive(activity)) {
         return 'dimgray'
       }
-
-      console.log(selectedStep)
-      console.log(currentActivityStep)
 
       return 'white'
     },

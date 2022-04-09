@@ -160,7 +160,7 @@
                      description: 'EXP Reward',
                      field: 'xpreward',
                      fieldType: 'text',
-                     col: 'col-4',
+                     col: 'col-4'
                    },
                    {
                      description: 'Cash Reward',
@@ -235,7 +235,7 @@
                         v-model.number="task[field.field]"
                         class="m-0 mt-1"
                         v-b-tooltip.hover.v-dark.right :title="getFieldDescription(field.field)"
-                        :style="(task[field.field] === '' ? 'opacity: .5' : '')"
+                        :style="(task[field.field] <= (typeof field.zeroValue !== 'undefined' ? field.zeroValue : 0) ? 'opacity: .5' : '')"
                       />
 
                       <!-- textarea -->
@@ -354,6 +354,7 @@
                          description: 'Deliver to NPC',
                          field: 'delivertonpc',
                          col: 'col-6',
+                         zeroValue: 0,
                        },
                        {
                          description: 'Zones',
@@ -410,7 +411,7 @@
                             v-model.number="task.task_activities[selectedActivity][field.field]"
                             class="m-0 mt-1"
                             v-b-tooltip.hover.v-dark.right :title="getFieldDescription(field.field)"
-                            :style="(task.task_activities[selectedActivity][field.field] === '' ? 'opacity: .5' : '')"
+                            :style="(task.task_activities[selectedActivity][field.field] <= (typeof field.zeroValue !== 'undefined' ? field.zeroValue : 0) ? 'opacity: .5' : '')"
                           />
 
                           <!-- textarea -->
