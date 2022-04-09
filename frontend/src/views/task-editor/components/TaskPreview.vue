@@ -76,18 +76,30 @@
       >
         Reward(s)
 
-        <div v-if="task.rewardid > 0 && rewardItem" class="mt-3">
+        <div v-if="task.rewardid > 0 && rewardItem">
           <item-popover
             :item="rewardItem"
-            v-if="rewardItem"
+            v-if="Object.keys(rewardItem).length > 0"
             size="regular"
+            class="mt-3"
           />
         </div>
-        <div v-if="task.reward_ebon_crystals > 0" class="mt-1">
-          {{ task.reward_ebon_crystals }} Ebon Crystals
+        <div v-if="task.reward_ebon_crystals > 0 && ebonCrystalItem">
+          <item-popover
+            :item="ebonCrystalItem"
+            v-if="Object.keys(ebonCrystalItem).length > 0"
+            size="regular"
+            class="mt-1"
+            :annotation="' (' + task.reward_ebon_crystals + ')'"
+          />
         </div>
-        <div v-if="task.reward_radiant_crystals > 0" class="mt-1">
-          {{ task.reward_radiant_crystals }} Radiant Crystals
+        <div v-if="task.reward_radiant_crystals > 0 && radiantCrystalItem" class="mt-1">
+          <item-popover
+            :item="radiantCrystalItem"
+            v-if="Object.keys(radiantCrystalItem).length > 0"
+            size="regular"
+            :annotation="' (' + task.reward_radiant_crystals + ')'"
+          />
         </div>
       </div>
 
@@ -127,7 +139,9 @@ export default {
 
       zones: {},
 
-      rewardItem: null
+      rewardItem: null,
+      radiantCrystalItem: null,
+      ebonCrystalItem: null,
     }
   },
   destroyed() {
@@ -136,9 +150,16 @@ export default {
   },
 
   watch: {
-    'task'() {
-      clearInterval(this.taskTimer)
-      this.load()
+    task: {
+      // This will let Vue know to look inside the array
+      deep: true,
+
+      // We have to move our method to a handler field
+      handler() {
+        console.log("task watch")
+        clearInterval(this.taskTimer)
+        this.load()
+      }
     }
   },
 
@@ -154,9 +175,19 @@ export default {
       this.setCountDownTimer()
       this.getDescription()
 
+      this.rewardItem         = null
+      this.radiantCrystalItem = null
+      this.ebonCrystalItem    = null
+
       if (this.task.rewardid) {
         Items.getItem(this.task.rewardid).then((r) => {
           this.rewardItem = r
+        })
+        Items.getItem(40903).then((r) => {
+          this.radiantCrystalItem = r
+        })
+        Items.getItem(40902).then((r) => {
+          this.ebonCrystalItem = r
         })
       }
     },

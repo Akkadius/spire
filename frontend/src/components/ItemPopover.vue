@@ -8,7 +8,7 @@
       <span
         class="ml-2"
         :style="'position:relative;' + (this.size === 'regular' ? 'top: -15px' : '')"
-      >{{ item.name }}</span>
+      >{{ item.name }} {{annotation}}</span>
 
     </div>
 
@@ -44,6 +44,11 @@ export default {
       type: String,
       required: false,
       default: "sm"
+    },
+    annotation: {
+      type: String,
+      required: false,
+      default: ""
     }
   },
   data() {

@@ -298,87 +298,87 @@
                       <div class="row mt-3">
                         <div
                           v-for="field in
-                     [
-                       {
-                         description: 'Activity ID',
-                         field: 'activityid',
-                         col: 'col-6',
-                         zeroValue: -1
-                       },
-                       {
-                         description: 'Task Step',
-                         field: 'step',
-                         col: 'col-6',
-                         zeroValue: -1
-                       },
-                       {
-                         description: 'Activity Type',
-                         field: 'activitytype',
-                         fieldType: 'select',
-                         selectData: TASK_ACTIVITY_TYPES,
-                         col: 'col-6',
-                       },
-                       {
-                         description: 'Activity Target',
-                         field: 'target_name',
-                         col: 'col-6',
-                       },
-                       {
-                         description: 'Description Override',
-                         field: 'description_override',
-                         col: 'col-12',
-                       },
-                       {
-                         description: 'Goal ID',
-                         field: 'goalid',
-                         col: 'col-2',
-                       },
-                       {
-                         description: 'Goal Method',
-                         field: 'goalmethod',
-                         fieldType: 'select',
-                         selectData: TASK_GOAL_METHOD_TYPE,
-                         zeroValue: -1,
-                         col: 'col-4',
-                       },
-                       {
-                         description: 'Goal Count',
-                         field: 'goalcount',
-                         col: 'col-3',
-                       },
-                       {
-                         description: 'Activity Optional',
-                         field: 'optional',
-                         fieldType: 'checkbox',
-                         col: 'col-3',
-                       },
-                       {
-                         description: 'Deliver to NPC',
-                         field: 'delivertonpc',
-                         col: 'col-6',
-                         zeroValue: 0,
-                       },
-                       {
-                         description: 'Zones',
-                         field: 'zones',
-                         col: 'col-6',
-                       },
-                       {
-                         description: 'Item List',
-                         field: 'item_list',
-                         col: 'col-6',
-                       },
-                       {
-                         description: 'Skill List',
-                         field: 'skill_list',
-                         col: 'col-6',
-                       },
-                       {
-                         description: 'Spell List',
-                         field: 'spell_list',
-                         col: 'col-12',
-                       },
-                     ]"
+                         [
+                           {
+                             description: 'Activity ID',
+                             field: 'activityid',
+                             col: 'col-6',
+                             zeroValue: -1
+                           },
+                           {
+                             description: 'Task Step',
+                             field: 'step',
+                             col: 'col-6',
+                             zeroValue: -1
+                           },
+                           {
+                             description: 'Activity Type',
+                             field: 'activitytype',
+                             fieldType: 'select',
+                             selectData: TASK_ACTIVITY_TYPES,
+                             col: 'col-6',
+                           },
+                           {
+                             description: 'Activity Target',
+                             field: 'target_name',
+                             col: 'col-6',
+                           },
+                           {
+                             description: 'Description Override',
+                             field: 'description_override',
+                             col: 'col-12',
+                           },
+                           {
+                             description: 'Goal ID',
+                             field: 'goalid',
+                             col: 'col-2',
+                           },
+                           {
+                             description: 'Goal Method',
+                             field: 'goalmethod',
+                             fieldType: 'select',
+                             selectData: TASK_GOAL_METHOD_TYPE,
+                             zeroValue: -1,
+                             col: 'col-4',
+                           },
+                           {
+                             description: 'Goal Count',
+                             field: 'goalcount',
+                             col: 'col-3',
+                           },
+                           {
+                             description: 'Activity Optional',
+                             field: 'optional',
+                             fieldType: 'checkbox',
+                             col: 'col-3',
+                           },
+                           {
+                             description: 'Deliver to NPC',
+                             field: 'delivertonpc',
+                             col: 'col-6',
+                             zeroValue: 0,
+                           },
+                           {
+                             description: 'Zones',
+                             field: 'zones',
+                             col: 'col-6',
+                           },
+                           {
+                             description: 'Item List',
+                             field: 'item_list',
+                             col: 'col-6',
+                           },
+                           {
+                             description: 'Skill List',
+                             field: 'skill_list',
+                             col: 'col-6',
+                           },
+                           {
+                             description: 'Spell List',
+                             field: 'spell_list',
+                             col: 'col-12',
+                           },
+                         ]"
                           :class="field.col + ' mb-3'"
                         >
                           <div>
@@ -465,12 +465,27 @@
         </eq-window-simple>
       </div>
 
-      <div class="col-5">
+      <div class="col-5 fade-in" v-if="task">
         <task-preview
           :task="task"
           :selected-activity="selectedActivity"
-          v-if="task"
         />
+
+        <eq-window-simple
+          title="Chat (Completion Emote)"
+          class="p-0"
+          v-if="task.completion_emote !== ''"
+        >
+          <div
+            class="mt-3 eq-background-dark p-2"
+            style="border: rgba(122, 134, 183, 0.5) 1px solid; ;"
+          >
+            <span style="color: yellow">
+              {{ task.completion_emote }}
+            </span>
+          </div>
+        </eq-window-simple>
+
       </div>
     </div>
   </content-area>
@@ -529,7 +544,7 @@ export default {
   watch: {
     $route(to, from) {
       this.init()
-    }
+    },
   },
 
   methods: {
