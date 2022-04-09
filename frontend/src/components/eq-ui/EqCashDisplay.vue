@@ -1,7 +1,7 @@
 <template>
   <div>
     <div v-if="platinum > 0" class="d-inline-block mr-2">
-      <div :class="'ml-1 item-644-sm'" title="Silver"/>
+      <div :class="'ml-1 item-644-sm'" title="Platinum"/>
       {{ platinum }}
     </div>
 
@@ -23,13 +23,11 @@
 </template>
 
 <script>
-import {App} from "@/constants/app";
 
 export default {
   name: "EqCashDisplay",
   data() {
     return {
-      cdnUrl: App.ASSET_CDN_BASE_URL,
       platinum: 0,
       gold: 0,
       silver: 0,
@@ -80,6 +78,12 @@ export default {
   watch: {
     value: function () {
       this.init()
+    },
+    price: {
+      deep: true,
+      handler() {
+        this.init()
+      }
     }
   },
 

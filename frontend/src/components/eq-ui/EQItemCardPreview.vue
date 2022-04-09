@@ -1035,8 +1035,6 @@ export default {
         }
       }
       this.tradeskillResult = tradeskillResult
-
-      console.log("rendering related data")
     }
   },
   created: function () {

@@ -67,14 +67,18 @@
       </tbody>
     </table>
 
-    <div class="mt-3 eq-background-dark p-2" style="border: rgba(122, 134, 183, 0.5) 1px solid; height: 300px;">
-      <v-runtime-template :template="getDescription()"/>
+    <div
+      class="mt-3 eq-background-dark p-2"
+      v-if="description !== '' || hasReward()"
+      style="border: rgba(122, 134, 183, 0.5) 1px solid;"
+    >
+      <v-runtime-template :template="'<div>' + description + '</div>'"/>
 
       <div
-        class="mt-3"
-        v-if="task.rewardid > 0 || task.reward_ebon_crystals > 0 || task.reward_radiant_crystals > 0"
+        :class="(description !== '' ? 'mt-3' : '')"
+        v-if="hasReward()"
       >
-        Reward(s)
+        <span class="font-weight-bold">Reward(s)</span>
 
         <div v-if="task.rewardid > 0 && rewardItem">
           <item-popover
@@ -101,6 +105,17 @@
             :annotation="' (' + task.reward_radiant_crystals + ')'"
           />
         </div>
+
+        <div v-if="task.cashreward > 0" class="mt-3">
+          <eq-cash-display
+            class="d-inline-block"
+            :price="task.cashreward"
+          />
+        </div>
+
+        <div v-if="task.xpreward > 0" class="mt-3">
+          Experience ({{task.xpreward.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}})
+        </div>
       </div>
 
     </div>
@@ -116,10 +131,12 @@ import {Zones}        from "@/app/zones";
 import util           from "util";
 import ItemPopover    from "@/components/ItemPopover";
 import {Items}        from "@/app/items";
+import EqCashDisplay  from "@/components/eq-ui/EqCashDisplay";
 
 export default {
   name: "TaskPreview",
   components: {
+    EqCashDisplay,
     ItemPopover,
     EqWindowSimple,
     "v-runtime-template": () => import("v-runtime-template")
@@ -137,6 +154,7 @@ export default {
       taskTimerDisplay: "Unlimited",
       taskDuration: "",
 
+      description: "",
       zones: {},
 
       rewardItem: null,
@@ -151,10 +169,7 @@ export default {
 
   watch: {
     task: {
-      // This will let Vue know to look inside the array
       deep: true,
-
-      // We have to move our method to a handler field
       handler() {
         console.log("task watch")
         clearInterval(this.taskTimer)
@@ -170,6 +185,14 @@ export default {
     this.zones = await Zones.getZones()
   },
   methods: {
+
+    hasReward() {
+      return this.task.rewardid > 0
+        || this.task.reward_ebon_crystals > 0
+        || this.task.reward_radiant_crystals > 0
+        || this.task.xpreward > 0
+        || this.task.cashreward > 0
+    },
 
     load() {
       this.setCountDownTimer()
@@ -190,6 +213,8 @@ export default {
           this.ebonCrystalItem = r
         })
       }
+
+      this.description = this.getDescription().trim()
     },
 
     getDescription() {
@@ -223,7 +248,7 @@ export default {
         finalDescription += parts[this.selectedActivity]
       }
 
-      return '<div>' + finalDescription + '</div>'
+      return finalDescription
     },
 
     getZone(activity) {
