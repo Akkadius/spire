@@ -32,6 +32,10 @@ export class EditFormFieldUtil {
   }
 
   static setFieldModified(evt) {
+    if (parseInt(evt.target.getAttribute('ignore-input-change')) === 1) {
+      return
+    }
+
     evt.target.classList.add('pulsate-highlight-modified');
   }
 
