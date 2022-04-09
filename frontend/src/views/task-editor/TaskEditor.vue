@@ -25,7 +25,7 @@
                   id="task-list"
                   size="2"
                   v-model="selectedTask"
-                  @change="updateQueryState"
+                  @change="selectTask()"
                   class="form-control eq-input eq p-1 mt-3 eq-dark-background"
                   style="overflow-x: scroll; height: 80vh; overflow-y: scroll"
                 >
@@ -294,7 +294,7 @@
                       </option>
                     </select>
 
-                    <div v-if="selectedActivity !== null && task && task.task_activities[selectedActivity]">
+                    <div v-if="selectedActivity !== null && task && task.task_activities && task.task_activities[selectedActivity]">
                       <div class="row mt-3">
                         <div
                           v-for="field in
@@ -303,11 +303,13 @@
                          description: 'Activity ID',
                          field: 'activityid',
                          col: 'col-6',
+                         zeroValue: -1
                        },
                        {
                          description: 'Task Step',
                          field: 'step',
                          col: 'col-6',
+                         zeroValue: -1
                        },
                        {
                          description: 'Activity Type',
@@ -535,14 +537,8 @@ export default {
       return Tasks.getFieldDescription(field);
     },
 
-    async selectTask(task) {
-      this.selectedTask     = task.id
-      this.selectedActivity = -1
-
-      if (this.task && typeof this.task.task_activities[0] !== "undefined"
-        && Object.keys(this.task.task_activities[0]).length > 0) {
-        this.selectedActivity = 0
-      }
+    async selectTask() {
+      this.selectedActivity = 0
       this.updateQueryState()
     },
 

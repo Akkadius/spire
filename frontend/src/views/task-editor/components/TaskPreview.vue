@@ -55,7 +55,9 @@
       >
         <td :style="'color: ' + getTaskActivityStepColor(activity)">{{ buildActivityDescription(activity) }}</td>
         <td>{{ renderTaskActivityProgress(activity) }}</td>
-        <td :style="'color: ' + getTaskActivityStepColor(activity)">{{ isActivityStepActive(activity) ? getZone(activity) : '???' }}</td>
+        <td :style="'color: ' + getTaskActivityStepColor(activity)">
+          {{ isActivityStepActive(activity) ? getZone(activity) : '???' }}
+        </td>
       </tr>
       <tr class="this-is-a-space-row-dont-remove">
         <td>&nbsp;</td>
@@ -67,6 +69,28 @@
 
     <div class="mt-3 eq-background-dark p-2" style="border: rgba(122, 134, 183, 0.5) 1px solid; height: 300px;">
       <v-runtime-template :template="getDescription()"/>
+
+      <div
+        class="mt-3"
+        v-if="task.rewardid > 0 || task.reward_ebon_crystals > 0 || task.reward_radiant_crystals > 0"
+      >
+        Reward(s)
+
+        <div v-if="task.rewardid > 0 && rewardItem" class="mt-3">
+          <item-popover
+            :item="rewardItem"
+            v-if="rewardItem"
+            size="regular"
+          />
+        </div>
+        <div v-if="task.reward_ebon_crystals > 0" class="mt-1">
+          {{ task.reward_ebon_crystals }} Ebon Crystals
+        </div>
+        <div v-if="task.reward_radiant_crystals > 0" class="mt-1">
+          {{ task.reward_radiant_crystals }} Radiant Crystals
+        </div>
+      </div>
+
     </div>
 
   </eq-window-simple>
@@ -78,10 +102,13 @@ import {TASK_TYPE}    from "@/app/constants/eq-task-constants";
 import {Tasks}        from "@/app/tasks";
 import {Zones}        from "@/app/zones";
 import util           from "util";
+import ItemPopover    from "@/components/ItemPopover";
+import {Items}        from "@/app/items";
 
 export default {
   name: "TaskPreview",
   components: {
+    ItemPopover,
     EqWindowSimple,
     "v-runtime-template": () => import("v-runtime-template")
   },
@@ -98,7 +125,9 @@ export default {
       taskTimerDisplay: "Unlimited",
       taskDuration: "",
 
-      zones: {}
+      zones: {},
+
+      rewardItem: null
     }
   },
   destroyed() {
@@ -109,18 +138,28 @@ export default {
   watch: {
     'task'() {
       clearInterval(this.taskTimer)
-      this.setCountDownTimer()
-      this.getDescription()
+      this.load()
     }
   },
 
   async mounted() {
-    this.setCountDownTimer()
+    this.load()
 
     // preload zones
     this.zones = await Zones.getZones()
   },
   methods: {
+
+    load() {
+      this.setCountDownTimer()
+      this.getDescription()
+
+      if (this.task.rewardid) {
+        Items.getItem(this.task.rewardid).then((r) => {
+          this.rewardItem = r
+        })
+      }
+    },
 
     getDescription() {
       const globalDescription = this.task.description.split("[")[0]
