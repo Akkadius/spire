@@ -99,7 +99,7 @@
             v-if="Object.keys(ebonCrystalItem).length > 0"
             size="regular"
             class="mt-1"
-            :annotation="' (' + task.reward_ebon_crystals + ')'"
+            :annotation="' (' + task.reward_ebon_crystals.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',') + ')'"
           />
         </div>
         <div v-if="task.reward_radiant_crystals > 0 && radiantCrystalItem" class="mt-1">
@@ -107,7 +107,7 @@
             :item="radiantCrystalItem"
             v-if="Object.keys(radiantCrystalItem).length > 0"
             size="regular"
-            :annotation="' (' + task.reward_radiant_crystals + ')'"
+            :annotation="' (' + task.reward_radiant_crystals.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',') + ')'"
           />
         </div>
 
@@ -176,7 +176,7 @@ export default {
     task: {
       deep: true,
       handler() {
-        console.log("task watch")
+        console.log("task watch trigger")
         clearInterval(this.taskTimer)
         this.load()
       }
@@ -222,13 +222,13 @@ export default {
         Items.getItem(this.task.rewardid).then((r) => {
           this.rewardItem = r
         })
-        Items.getItem(40903).then((r) => {
-          this.radiantCrystalItem = r
-        })
-        Items.getItem(40902).then((r) => {
-          this.ebonCrystalItem = r
-        })
       }
+      Items.getItem(40903).then((r) => {
+        this.radiantCrystalItem = r
+      })
+      Items.getItem(40902).then((r) => {
+        this.ebonCrystalItem = r
+      })
 
       this.description = this.getDescription()
     },
@@ -260,8 +260,8 @@ export default {
 
         // get description in part
         let desc = p
-        desc = desc.replaceAll(indexes.join(",") + ",", "")
-        desc = this.replaceDescriptionContent(desc)
+        desc     = desc.replaceAll(indexes.join(",") + ",", "")
+        desc     = this.replaceDescriptionContent(desc)
 
         // load indexes with description part
         indexes.forEach((i) => {
