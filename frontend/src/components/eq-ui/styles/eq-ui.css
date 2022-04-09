@@ -924,5 +924,5 @@ h6.eq-header {
     position: sticky;
     top: 0;
     z-index: 9999;
-    box-shadow: rgb(0 0 0) 0px 20px 15px inset;
+    /*box-shadow: rgb(0 0 0) 0px 20px 15px inset;*/
 }

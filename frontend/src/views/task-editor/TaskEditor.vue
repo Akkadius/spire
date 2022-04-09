@@ -7,19 +7,32 @@
           v-if="tasks"
           class="eq-window-hybrid"
           style="margin-top: 30px"
+          @mouseover.native="previewTask()"
+
         >
           <div class="row">
             <div :class="(task ? 'col-4' : 'col-12') + ' p-0'">
               <!-- Task List -->
               <div style="" class="">
 
-                <input
-                  type="text"
-                  placeholder="Filter results by name..."
-                  v-model="taskSearchFilter"
-                  @keyup="filterResultsByName"
-                  class="form-control"
-                >
+                <b-input-group class="mt-3">
+                  <b-form-input
+                    type="text"
+                    placeholder="Filter results by name..."
+                    v-model="taskSearchFilter"
+                    @keyup="filterResultsByName"
+                    class="form-control"
+                  />
+                  <b-input-group-append>
+                    <b-button
+                      variant="warning"
+                      style="padding: 0.3rem 0.75rem;"
+                      @click="resetFilter()"
+                    ><i class="fa fa-refresh"></i>
+                    </b-button>
+                  </b-input-group-append>
+                </b-input-group>
+
 
                 <select
                   id="task-list"
@@ -37,6 +50,10 @@
                     ({{ task.id }}) {{ task.title }}
                   </option>
                 </select>
+
+                <div class="mt-3">
+                  Showing {{ filteredTasks.length }} out of {{ tasks.length }} tasks
+                </div>
 
               </div>
             </div>
@@ -145,32 +162,37 @@
                      col: 'col-12',
                    },
                    {
-                     description: 'Reward',
+                     description: 'Reward Text',
                      field: 'reward',
                      fieldType: 'text',
+                     itemIcon: '3366',
                      col: 'col-4',
                    },
                    {
-                     description: 'Reward ID',
+                     description: 'Reward Item ID',
                      field: 'rewardid',
                      fieldType: 'text',
+                     itemIcon: '3366',
                      col: 'col-4',
                    },
                    {
                      description: 'EXP Reward',
                      field: 'xpreward',
+                     itemIcon: '2045',
                      fieldType: 'text',
                      col: 'col-4'
                    },
                    {
                      description: 'Cash Reward',
                      field: 'cashreward',
+                     itemIcon: '646',
                      fieldType: 'text',
                      col: 'col-4',
                    },
                    {
                      description: 'Faction Reward',
                      field: 'faction_reward',
+                     itemIcon: '528',
                      fieldType: 'text',
                      col: 'col-4',
                    },
@@ -178,11 +200,13 @@
                      description: 'Reward Ebon Crystals',
                      field: 'reward_ebon_crystals',
                      fieldType: 'text',
+                     itemIcon: '1535',
                      col: 'col-4',
                    },
                    {
                      description: 'Reward Radiant Crystals',
                      field: 'reward_radiant_crystals',
+                     itemIcon: '1536',
                      fieldType: 'text',
                      col: 'col-4',
                    },
@@ -190,12 +214,14 @@
                      description: 'Replay Timer Seconds',
                      field: 'replay_timer_seconds',
                      fieldType: 'text',
+                     itemIcon: '750',
                      col: 'col-4',
                    },
                    {
                      description: 'Request Timer Seconds',
                      field: 'request_timer_seconds',
                      fieldType: 'text',
+                     itemIcon: '750',
                      col: 'col-4',
                    },
 
@@ -204,6 +230,11 @@
                     >
 
                       <div>
+                        <span
+                          v-if="field.itemIcon"
+                          :class="'fade-in item-' + field.itemIcon + '-sm'"
+                          style="display: inline-block"
+                        />
                         {{ field.description }}
                       </div>
 
@@ -245,7 +276,7 @@
                         v-model="task[field.field]"
                         class="m-0 mt-1"
                         rows="2"
-                        max-rows="12"
+                        max-rows="6"
                         v-b-tooltip.hover.v-dark.right :title="getFieldDescription(field.field)"
                         :style="(task[field.field] === '' ? 'opacity: .5' : '') + ';'"
                       ></b-textarea>
@@ -359,25 +390,28 @@
                              zeroValue: 0,
                            },
                            {
-                             description: 'Zones',
+                             description: 'Zone',
                              field: 'zones',
                              col: 'col-6',
+                             onclick: drawZoneSelector,
+
                            },
-                           {
-                             description: 'Item List',
-                             field: 'item_list',
-                             col: 'col-6',
-                           },
-                           {
-                             description: 'Skill List',
-                             field: 'skill_list',
-                             col: 'col-6',
-                           },
-                           {
-                             description: 'Spell List',
-                             field: 'spell_list',
-                             col: 'col-12',
-                           },
+                           // Removed until fully implemented
+                           // {
+                           //   description: 'Item List',
+                           //   field: 'item_list',
+                           //   col: 'col-6',
+                           // },
+                           // {
+                           //   description: 'Skill List',
+                           //   field: 'skill_list',
+                           //   col: 'col-6',
+                           // },
+                           // {
+                           //   description: 'Spell List',
+                           //   field: 'spell_list',
+                           //   col: 'col-12',
+                           // },
                          ]"
                           :class="field.col + ' mb-3'"
                         >
@@ -412,6 +446,7 @@
                             :id="field.field"
                             v-model.number="task.task_activities[selectedActivity][field.field]"
                             class="m-0 mt-1"
+                            v-on="typeof field.onclick !== 'undefined' ? { click: () => field.onclick(selectedActivity) } : {}"
                             v-b-tooltip.hover.v-dark.right :title="getFieldDescription(field.field)"
                             :style="(task.task_activities[selectedActivity][field.field] <= (typeof field.zeroValue !== 'undefined' ? field.zeroValue : 0) ? 'opacity: .5' : '')"
                           />
@@ -445,19 +480,14 @@
                             </option>
                           </select>
                         </div>
-
                       </div>
-
                       <eq-debug :data="task.task_activities[selectedActivity]"/>
                     </div>
                   </div>
 
                 </eq-tab>
               </eq-tabs>
-
-
             </div>
-
           </div>
 
           <eq-debug :data="task"/>
@@ -466,25 +496,35 @@
       </div>
 
       <div class="col-5 fade-in" v-if="task">
-        <task-preview
-          :task="task"
-          :selected-activity="selectedActivity"
+
+        <task-zone-selector
+          :selected-zone-id="parseInt(task.task_activities[selectedActivity].zones)"
+          v-if="task && task.task_activities && task.task_activities[selectedActivity] && zoneSelectorActive"
+          @input="task.task_activities[selectedActivity].zones = $event.zoneId; setFieldModifiedById('zones')"
         />
 
-        <eq-window-simple
-          title="Chat (Completion Emote)"
-          class="p-0"
-          v-if="task.completion_emote !== ''"
-        >
-          <div
-            class="mt-3 eq-background-dark p-2"
-            style="border: rgba(122, 134, 183, 0.5) 1px solid; ;"
+        <div v-if="previewTaskActive">
+          <task-preview
+            :task="task"
+            :selected-activity="selectedActivity"
+          />
+
+          <eq-window-simple
+            title="Chat (Completion Emote)"
+            class="p-0"
+            v-if="task.completion_emote !== ''"
           >
+            <div
+              class="mt-3 eq-background-dark p-2"
+              style="border: rgba(122, 134, 183, 0.5) 1px solid; ;"
+            >
             <span style="color: yellow">
               {{ task.completion_emote }}
             </span>
-          </div>
-        </eq-window-simple>
+            </div>
+          </eq-window-simple>
+        </div>
+
 
       </div>
     </div>
@@ -511,9 +551,13 @@ import EqTabs from "@/components/eq-ui/EQTabs.vue";
 import EqTab from "@/components/eq-ui/EQTab.vue";
 import {EditFormFieldUtil} from "@/app/forms/edit-form-field-util";
 import TaskPreview from "@/views/task-editor/components/TaskPreview.vue";
+import TaskZoneSelector from "@/views/task-editor/components/TaskZoneSelector.vue";
+
+const MILLISECONDS_BEFORE_WINDOW_RESET = 5000;
 
 export default {
   components: {
+    TaskZoneSelector,
     TaskPreview,
     EqTab,
     EqTabs,
@@ -533,6 +577,12 @@ export default {
       selectedActivity: null,
       taskSearchFilter: "",
 
+      // preview / selectors
+      previewTaskActive: true,
+      zoneSelectorActive: false,
+
+      lastResetTime: Date.now(),
+
       TASK_TYPES: TASK_TYPES,
       TASK_DURATION_TYPES: TASK_DURATION_TYPES,
       TASK_DURATION_HUMAN: TASK_DURATION_HUMAN,
@@ -548,6 +598,17 @@ export default {
   },
 
   methods: {
+
+    setFieldModifiedById(id) {
+      EditFormFieldUtil.setFieldModifiedById(id)
+    },
+
+    resetFilter() {
+      this.filteredTasks    = this.tasks
+      this.taskSearchFilter = ""
+      this.updateQueryState()
+    },
+
     getFieldDescription(field) {
       return Tasks.getFieldDescription(field);
     },
@@ -568,6 +629,13 @@ export default {
 
     async loadTask() {
       if (this.$route.params.id > 0) {
+
+        // if we're trying to load the same selected task, bail out
+        // keeps us from propagating tons of unnecessary updates (slow)
+        if (this.task !== null && this.task && this.task.id && parseInt(this.task.id) === parseInt(this.$route.params.id)) {
+          return
+        }
+
         this.task = (await Tasks.getTask(this.$route.params.id))
 
         setTimeout(() => {
@@ -579,6 +647,18 @@ export default {
           }
 
           this.setFieldHighlights()
+
+          // hooks
+          setTimeout(() => {
+            const target = document.getElementById("task-edit-window")
+            if (target) {
+              target.removeEventListener('input', EditFormFieldUtil.setFieldModified, true);
+              target.addEventListener('input', EditFormFieldUtil.setFieldModified)
+            }
+
+            EditFormFieldUtil.resetFieldSubEditorHighlightedStatus()
+          }, 1)
+
 
         }, 1)
 
@@ -607,10 +687,15 @@ export default {
       return Tasks.buildActivityDescription(activity)
     },
     async loadTasks() {
+      if (this.tasks.length > 0) {
+        return
+      }
+
       const tasks = await Tasks.getTasks()
       if (tasks.length > 0) {
         this.tasks         = tasks
         this.filteredTasks = tasks
+        this.filterResultsByName()
       }
     },
     async init() {
@@ -626,6 +711,9 @@ export default {
       let queryState = {};
       if (this.selectedActivity >= 0) {
         queryState.activity = this.selectedActivity
+      }
+      if (this.taskSearchFilter !== "") {
+        queryState.q = this.taskSearchFilter
       }
 
       // navigation
@@ -645,6 +733,33 @@ export default {
       if (typeof this.$route.query.activity !== 'undefined' && parseInt(this.$route.query.activity) >= 0) {
         this.selectedActivity = parseInt(this.$route.query.activity);
       }
+      if (typeof this.$route.query.q !== 'undefined' && this.$route.query.q) {
+        this.taskSearchFilter = this.$route.query.q
+      }
+    },
+
+    shouldReset() {
+      return (Date.now() - this.lastResetTime) > MILLISECONDS_BEFORE_WINDOW_RESET
+    },
+
+    previewTask() {
+      if (this.shouldReset() && !this.previewTaskActive) {
+        this.resetPreviewComponents()
+        this.previewTaskActive = true
+      }
+    },
+    resetPreviewComponents() {
+      this.previewTaskActive  = false;
+      this.zoneSelectorActive = false;
+
+      EditFormFieldUtil.resetFieldSubEditorHighlightedStatus()
+    },
+    drawZoneSelector(selectedActivity) {
+      console.log("zone select", selectedActivity)
+      this.resetPreviewComponents()
+      this.lastResetTime      = Date.now()
+      this.zoneSelectorActive = true
+      EditFormFieldUtil.setFieldSubEditorHighlightedById("zones")
     },
   },
   async mounted() {
