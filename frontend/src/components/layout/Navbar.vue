@@ -113,6 +113,12 @@
               <b-badge class="ml-3" variant="primary">NEW!</b-badge>
             </router-link>
           </li>
+          <li class="nav-item">
+            <router-link class="nav-link " to="/tasks">
+              <i class="ra ra-zebra-shield mr-1"></i> Tasks
+              <b-badge class="ml-3" variant="primary">NEW!</b-badge>
+            </router-link>
+          </li>
           <nav-section-component :config="viewerNav"/>
         </ul>
 
@@ -298,7 +304,6 @@ export default {
       },
       testPageNavs: [
         { title: "Items Test", to: "/items-test" },
-        { title: "Task Editor (Non Functional)", to: "/tasks" }
       ]
     }
   },
