@@ -230,6 +230,17 @@ export default {
       this.description = this.getDescription().trim()
     },
 
+    replaceDescriptionContent(s) {
+      let d = s
+
+      d = d.replaceAll("]", "")
+      d = d.replaceAll("<BR>", "<br />")
+      d = d.replaceAll("<br>", "<br />")
+      d = d.replaceAll("<c \"", "<span style=\"color: ")
+      d = d.replaceAll("</c>", "</span>")
+      return d
+    },
+
     getDescription() {
       const globalDescription = this.task.description.split("[")[0]
       const descriptionParts  = this.task.description.split("[")
@@ -245,21 +256,19 @@ export default {
         })
 
         // get description in part
-        let description = p
-        description     = description.replaceAll(indexes.join(",") + ",", "")
-        description     = description.replaceAll("]", "")
-        description     = description.replaceAll("<BR>", "<br />")
-        description     = description.replaceAll("<br>", "<br />")
+        let desc = p
+        desc = desc.replaceAll(indexes.join(",") + ",", "")
+        desc = this.replaceDescriptionContent(desc)
 
         // load indexes with description part
         indexes.forEach((i) => {
-          parts[i - 1] = description
+          parts[i - 1] = desc
         })
       })
 
       // strip extra page breaks at end of final description
       const pageBreak      = "<br />"
-      let finalDescription = globalDescription.replaceAll("<BR>", pageBreak)
+      let finalDescription = this.replaceDescriptionContent(globalDescription)
       if (this.selectedActivity >= 0 && parts[this.selectedActivity]) {
         finalDescription += parts[this.selectedActivity]
       }

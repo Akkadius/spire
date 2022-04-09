@@ -165,7 +165,7 @@
                      field: 'reward',
                      fieldType: 'text',
                      itemIcon: '3366',
-                     col: 'col-4',
+                     col: 'col-8',
                    },
                    {
                      description: 'Reward Item ID',
@@ -201,28 +201,29 @@
                      field: 'reward_ebon_crystals',
                      fieldType: 'text',
                      itemIcon: '1535',
-                     col: 'col-4',
-                   },
-                   {
-                     description: 'Reward Radiant Crystals',
-                     field: 'reward_radiant_crystals',
-                     itemIcon: '1536',
-                     fieldType: 'text',
-                     col: 'col-4',
+                     col: 'col-6',
                    },
                    {
                      description: 'Replay Timer Seconds',
                      field: 'replay_timer_seconds',
                      fieldType: 'text',
                      itemIcon: '750',
-                     col: 'col-4',
+                     col: 'col-6',
+                   },
+
+                   {
+                     description: 'Reward Radiant Crystals',
+                     field: 'reward_radiant_crystals',
+                     itemIcon: '1536',
+                     fieldType: 'text',
+                     col: 'col-6',
                    },
                    {
                      description: 'Request Timer Seconds',
                      field: 'request_timer_seconds',
                      fieldType: 'text',
                      itemIcon: '750',
-                     col: 'col-4',
+                     col: 'col-6',
                    },
 
                  ]"
@@ -669,6 +670,7 @@ export default {
             }
 
             EditFormFieldUtil.resetFieldSubEditorHighlightedStatus()
+            EditFormFieldUtil.resetFieldEditedStatus()
           }, 1)
 
 
