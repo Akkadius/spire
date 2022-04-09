@@ -18,7 +18,7 @@
       <thead class="task-window-header">
       <tr>
         <td style="width: 30px"></td>
-        <td style="width: 200px">Task Title</td>
+        <td style="width: 300px">Task Title</td>
         <td v-if="taskTimerDisplay">Time Left</td>
       </tr>
       </thead>
@@ -53,7 +53,12 @@
       <tr
         v-for="activity in task.task_activities"
       >
-        <td :style="'color: ' + getTaskActivityStepColor(activity)">{{ buildActivityDescription(activity) }}</td>
+        <td
+          :style="'color: ' + getTaskActivityStepColor(activity)"
+          :title="buildActivityDescription(activity)"
+        >
+          {{ truncate(buildActivityDescription(activity), 50) }}
+        </td>
         <td>{{ renderTaskActivityProgress(activity) }}</td>
         <td :style="'color: ' + getTaskActivityStepColor(activity)">
           {{ isActivityStepActive(activity) ? getZone(activity) : '???' }}
@@ -114,7 +119,7 @@
         </div>
 
         <div v-if="task.xpreward > 0" class="mt-3">
-          Experience ({{task.xpreward.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}})
+          Experience ({{ task.xpreward.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") }})
         </div>
       </div>
 
@@ -186,6 +191,14 @@ export default {
   },
   methods: {
 
+    truncate(string, length) {
+      if (string.length > length) {
+        return string.substring(0, length) + '...';
+      }
+
+      return string
+    },
+
     hasReward() {
       return this.task.rewardid > 0
         || this.task.reward_ebon_crystals > 0
@@ -236,6 +249,7 @@ export default {
         description     = description.replaceAll(indexes.join(",") + ",", "")
         description     = description.replaceAll("]", "")
         description     = description.replaceAll("<BR>", "<br />")
+        description     = description.replaceAll("<br>", "<br />")
 
         // load indexes with description part
         indexes.forEach((i) => {
@@ -243,9 +257,21 @@ export default {
         })
       })
 
-      let finalDescription = globalDescription.replaceAll("<BR>", "<br />")
+      // strip extra page breaks at end of final description
+      const pageBreak      = "<br />"
+      let finalDescription = globalDescription.replaceAll("<BR>", pageBreak)
       if (this.selectedActivity >= 0 && parts[this.selectedActivity]) {
         finalDescription += parts[this.selectedActivity]
+      }
+
+      let n = 0
+      while (finalDescription.slice(-6) === pageBreak) {
+        finalDescription = finalDescription.slice(0, -6)
+
+        if (n > 100) {
+          break;
+        }
+        n++
       }
 
       return finalDescription
