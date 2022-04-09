@@ -1,7 +1,7 @@
 <template>
   <content-area>
     <div class="row">
-      <div class="col-7">
+      <div :class="(task ? 'col-7' : 'col-12') + ' p-0'">
         <eq-window-simple
           title="Task Editor"
           v-if="tasks"
@@ -32,7 +32,6 @@
                   </b-input-group-append>
                 </b-input-group>
 
-
                 <select
                   id="task-list"
                   size="2"
@@ -50,7 +49,7 @@
                   </option>
                 </select>
 
-                <div class="mt-3">
+                <div class="mt-3 text-center">
                   Showing {{ filteredTasks.length }} out of {{ tasks.length }} tasks
                 </div>
 
@@ -315,6 +314,7 @@
                       v-model="selectedActivity"
                       v-bind="task.task_activities"
                       @change="updateQueryState"
+                      ignore-input-change="1"
                       class="form-control eq-input"
                       style="overflow-x: scroll; min-height: 20vh; overflow-y: scroll"
                     >
@@ -606,11 +606,25 @@ export default {
 
   watch: {
     $route(to, from) {
+      console.log("route change")
       this.init()
     },
   },
 
+  activated() {
+    this.resetState()
+  },
+
+  deactivated() {
+
+  },
+
   methods: {
+
+    resetState() {
+      this.task  = null;
+      this.tasks = [];
+    },
 
     setFieldModifiedById(id) {
       EditFormFieldUtil.setFieldModifiedById(id)
