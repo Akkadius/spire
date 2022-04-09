@@ -5,6 +5,13 @@ export const TASK_TYPES = {
   3: "Expedition",
 }
 
+export const TASK_TYPE = {
+  TASK: 0,
+  SHARED_TASK: 1,
+  QUEST: 2,
+  EXPEDITION: 3,
+}
+
 export const TASK_DURATION_TYPES = {
   0: "None",
   1: "Short",

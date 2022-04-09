@@ -42,7 +42,7 @@
             </div>
 
             <!-- Task -->
-            <div class="col-8" id="my-form" v-if="task">
+            <div class="col-8 fade-in" id="my-form" v-if="task">
 
               <eq-tabs
                 id="task-edit-window"
@@ -148,55 +148,55 @@
                      description: 'Reward',
                      field: 'reward',
                      fieldType: 'text',
-                     col: 'col-2',
+                     col: 'col-4',
                    },
                    {
                      description: 'Reward ID',
                      field: 'rewardid',
                      fieldType: 'text',
-                     col: 'col-2',
+                     col: 'col-4',
                    },
                    {
                      description: 'EXP Reward',
                      field: 'xpreward',
                      fieldType: 'text',
-                     col: 'col-2',
+                     col: 'col-4',
                    },
                    {
                      description: 'Cash Reward',
                      field: 'cashreward',
                      fieldType: 'text',
-                     col: 'col-3',
+                     col: 'col-4',
                    },
                    {
                      description: 'Faction Reward',
                      field: 'faction_reward',
                      fieldType: 'text',
-                     col: 'col-3',
+                     col: 'col-4',
                    },
                    {
                      description: 'Reward Ebon Crystals',
                      field: 'reward_ebon_crystals',
                      fieldType: 'text',
-                     col: 'col-6',
+                     col: 'col-4',
                    },
                    {
                      description: 'Reward Radiant Crystals',
                      field: 'reward_radiant_crystals',
                      fieldType: 'text',
-                     col: 'col-6',
+                     col: 'col-4',
                    },
                    {
                      description: 'Replay Timer Seconds',
                      field: 'replay_timer_seconds',
                      fieldType: 'text',
-                     col: 'col-6',
+                     col: 'col-4',
                    },
                    {
                      description: 'Request Timer Seconds',
                      field: 'request_timer_seconds',
                      fieldType: 'text',
-                     col: 'col-6',
+                     col: 'col-4',
                    },
 
                  ]"
@@ -463,83 +463,11 @@
       </div>
 
       <div class="col-5">
-        <eq-window-simple
-          title="Quest Journal"
-          class="eq-window-hybrid"
-          style="margin-top: 30px"
-        >
-          <div class="row">
-            <div class="mb-3 col-9">
-              Tasks
-            </div>
-            <div class="col-3">
-              Request Timer: 00:00
-            </div>
-          </div>
-
-          <table class="col-12 task-window">
-            <thead class="task-window-header">
-            <tr>
-              <td style="width: 30px"></td>
-              <td style="width: 200px">Task Title</td>
-              <td>Time Left</td>
-            </tr>
-            </thead>
-            <tbody>
-            <tr>
-              <td style="text-align: center; color: #d27cd2">S</td>
-              <td style="color: #d27cd2">Plight of the Undead</td>
-              <td>05:52:39</td>
-            </tr>
-            </tbody>
-          </table>
-
-          <div class="row">
-            <div class="mt-3 col-9">
-              Task Progression
-            </div>
-            <div class="col-3">
-<!--              <button class='eq-button' onclick="alert('click')">Remove</button>-->
-            </div>
-          </div>
-
-          <table class="col-12 mt-3 task-window">
-            <thead class="task-window-header">
-            <tr>
-              <td>Objective Instructions</td>
-              <td style="width: 50px">Status</td>
-              <td style="width: 200px">Zone</td>
-            </tr>
-            </thead>
-            <tbody>
-            <tr>
-              <td>Create 1 Stalking Probe using tradeskills</td>
-              <td>0/1</td>
-              <td>Plane of Knowledge</td>
-            </tr>
-            <tr>
-              <td>Talk to Alga</td>
-              <td>0/1</td>
-              <td>Plane of Knowledge</td>
-            </tr>
-            <tr>
-              <td>Touch the portal to Thundercrest Isles</td>
-              <td>0/1</td>
-              <td>Plane of Knowledge</td>
-            </tr>
-            <tr>
-              <td>&nbsp;</td>
-              <td></td>
-              <td></td>
-            </tr>
-            </tbody>
-          </table>
-
-          <div class="mt-3 eq-background-dark" style="border: rgba(122, 134, 183, 0.5) 1px solid; height: 300px;">
-
-          </div>
-
-        </eq-window-simple>
+        <task-preview
+          :task="task"
+          :selected-activity="selectedActivity"
+          v-if="task"
+        />
       </div>
     </div>
   </content-area>
@@ -563,9 +491,12 @@ import EqWindowSimple from "@/components/eq-ui/EQWindowSimple.vue";
 import EqDebug from "@/components/eq-ui/EQDebug.vue";
 import EqTabs from "@/components/eq-ui/EQTabs.vue";
 import EqTab from "@/components/eq-ui/EQTab.vue";
+import {EditFormFieldUtil} from "@/app/forms/edit-form-field-util";
+import TaskPreview from "@/views/task-editor/components/TaskPreview.vue";
 
 export default {
   components: {
+    TaskPreview,
     EqTab,
     EqTabs,
     EqDebug,
@@ -634,11 +565,31 @@ export default {
             // container.scrollTop = target.offsetTop - 100;
             container.scrollTo({top: target.offsetTop - 150, behavior: "smooth"});
           }
-        }, 100)
+
+          this.setFieldHighlights()
+
+        }, 1)
 
         // if no task found...
         // this.task = null
       }
+    },
+    setFieldHighlights() {
+      let hasSubEditorFields = [
+        "id",
+        "description",
+        "reward",
+        "rewardid",
+        "delivertonpc",
+        "zones",
+        "item_list",
+        "skill_list",
+        "spell_list",
+        "goalid"
+      ];
+      hasSubEditorFields.forEach((field) => {
+        EditFormFieldUtil.setFieldHighlightHasSubEditor(field)
+      })
     },
     buildActivityDescription(activity) {
       return Tasks.buildActivityDescription(activity)
