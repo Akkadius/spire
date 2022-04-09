@@ -69,163 +69,164 @@
                   <div class="row">
                     <div
                       v-for="field in
-                 [
-                   {
-                     description: 'Task ID',
-                     field: 'id',
-                     col: 'col-2',
-                   },
-                   {
-                     description: 'Title',
-                     field: 'title',
-                     col: 'col-6',
-                   },
-                   {
-                     description: 'Task Type',
-                     field: 'type',
-                     fieldType: 'select',
-                     col: 'col-4',
-                     selectData: TASK_TYPES,
-                     zeroValue: -1,
-                   },
-                   {
-                     description: 'Task Description',
-                     field: 'description',
-                     fieldType: 'textarea',
-                     col: 'col-12',
-                   },
-                   {
-                     description: 'Duration Code',
-                     field: 'duration_code',
-                     fieldType: 'select',
-                     selectData: TASK_DURATION_TYPES,
-                     col: 'col-4',
-                     zeroValue: -1,
-                   },
-                   {
-                     description: 'Duration',
-                     field: 'duration',
-                     fieldType: 'text',
-                     col: 'col-4',
-                     zeroValue: -1,
-                   },
-                   {
-                     description: 'Duration (Selector)',
-                     field: 'duration',
-                     fieldType: 'select',
-                     selectData: TASK_DURATION_HUMAN,
-                     col: 'col-4',
-                     zeroValue: -1,
-                   },
-                   {
-                     description: 'Min Level',
-                     field: 'minlevel',
-                     fieldType: 'text',
-                     col: 'col-2',
-                   },
-                   {
-                     description: 'Max Level',
-                     field: 'maxlevel',
-                     fieldType: 'text',
-                     col: 'col-2',
-                   },
-                   {
-                     description: 'Min Players',
-                     field: 'min_players',
-                     fieldType: 'text',
-                     col: 'col-2',
-                   },
-                   {
-                     description: 'Max Players',
-                     field: 'max_players',
-                     fieldType: 'text',
-                     col: 'col-2',
-                   },
-                   {
-                     description: 'Lvl Spread',
-                     field: 'level_spread',
-                     fieldType: 'text',
-                     col: 'col-2',
-                   },
-                   {
-                     description: 'Repeatable',
-                     field: 'repeatable',
-                     fieldType: 'checkbox',
-                     col: 'col-2',
-                   },
-                   {
-                     description: 'Completion Emote',
-                     field: 'completion_emote',
-                     fieldType: 'textarea',
-                     col: 'col-12',
-                   },
-                   {
-                     description: 'Reward Text',
-                     field: 'reward',
-                     fieldType: 'text',
-                     itemIcon: '3366',
-                     col: 'col-8',
-                   },
-                   {
-                     description: 'Reward Item ID',
-                     field: 'rewardid',
-                     fieldType: 'text',
-                     itemIcon: '3366',
-                     col: 'col-4',
-                     onclick: drawItemSelector,
-                   },
-                   {
-                     description: 'EXP Reward',
-                     field: 'xpreward',
-                     itemIcon: '2045',
-                     fieldType: 'text',
-                     col: 'col-4'
-                   },
-                   {
-                     description: 'Cash Reward',
-                     field: 'cashreward',
-                     itemIcon: '646',
-                     fieldType: 'text',
-                     col: 'col-4',
-                   },
-                   {
-                     description: 'Faction Reward',
-                     field: 'faction_reward',
-                     itemIcon: '528',
-                     fieldType: 'text',
-                     col: 'col-4',
-                   },
-                   {
-                     description: 'Reward Ebon Crystals',
-                     field: 'reward_ebon_crystals',
-                     fieldType: 'text',
-                     itemIcon: '1535',
-                     col: 'col-6',
-                   },
-                   {
-                     description: 'Replay Timer Seconds',
-                     field: 'replay_timer_seconds',
-                     fieldType: 'text',
-                     itemIcon: '750',
-                     col: 'col-6',
-                   },
+                     [
+                       {
+                         description: 'Task ID',
+                         field: 'id',
+                         col: 'col-2',
+                         onclick: drawFreeIdSelector,
+                       },
+                       {
+                         description: 'Title',
+                         field: 'title',
+                         col: 'col-6',
+                       },
+                       {
+                         description: 'Task Type',
+                         field: 'type',
+                         fieldType: 'select',
+                         col: 'col-4',
+                         selectData: TASK_TYPES,
+                         zeroValue: -1,
+                       },
+                       {
+                         description: 'Task Description',
+                         field: 'description',
+                         fieldType: 'textarea',
+                         col: 'col-12',
+                       },
+                       {
+                         description: 'Duration Code',
+                         field: 'duration_code',
+                         fieldType: 'select',
+                         selectData: TASK_DURATION_TYPES,
+                         col: 'col-4',
+                         zeroValue: -1,
+                       },
+                       {
+                         description: 'Duration',
+                         field: 'duration',
+                         fieldType: 'text',
+                         col: 'col-4',
+                         zeroValue: -1,
+                       },
+                       {
+                         description: 'Duration (Selector)',
+                         field: 'duration',
+                         fieldType: 'select',
+                         selectData: TASK_DURATION_HUMAN,
+                         col: 'col-4',
+                         zeroValue: -1,
+                       },
+                       {
+                         description: 'Min Level',
+                         field: 'minlevel',
+                         fieldType: 'text',
+                         col: 'col-2',
+                       },
+                       {
+                         description: 'Max Level',
+                         field: 'maxlevel',
+                         fieldType: 'text',
+                         col: 'col-2',
+                       },
+                       {
+                         description: 'Min Players',
+                         field: 'min_players',
+                         fieldType: 'text',
+                         col: 'col-2',
+                       },
+                       {
+                         description: 'Max Players',
+                         field: 'max_players',
+                         fieldType: 'text',
+                         col: 'col-2',
+                       },
+                       {
+                         description: 'Lvl Spread',
+                         field: 'level_spread',
+                         fieldType: 'text',
+                         col: 'col-2',
+                       },
+                       {
+                         description: 'Repeatable',
+                         field: 'repeatable',
+                         fieldType: 'checkbox',
+                         col: 'col-2',
+                       },
+                       {
+                         description: 'Completion Emote',
+                         field: 'completion_emote',
+                         fieldType: 'textarea',
+                         col: 'col-12',
+                       },
+                       {
+                         description: 'Reward Text',
+                         field: 'reward',
+                         fieldType: 'text',
+                         itemIcon: '3366',
+                         col: 'col-8',
+                       },
+                       {
+                         description: 'Reward Item ID',
+                         field: 'rewardid',
+                         fieldType: 'text',
+                         itemIcon: '3366',
+                         col: 'col-4',
+                         onclick: drawItemSelector,
+                       },
+                       {
+                         description: 'EXP Reward',
+                         field: 'xpreward',
+                         itemIcon: '2045',
+                         fieldType: 'text',
+                         col: 'col-4'
+                       },
+                       {
+                         description: 'Cash Reward',
+                         field: 'cashreward',
+                         itemIcon: '646',
+                         fieldType: 'text',
+                         col: 'col-4',
+                       },
+                       {
+                         description: 'Faction Reward',
+                         field: 'faction_reward',
+                         itemIcon: '528',
+                         fieldType: 'text',
+                         col: 'col-4',
+                       },
+                       {
+                         description: 'Reward Ebon Crystals',
+                         field: 'reward_ebon_crystals',
+                         fieldType: 'text',
+                         itemIcon: '1535',
+                         col: 'col-6',
+                       },
+                       {
+                         description: 'Replay Timer Seconds',
+                         field: 'replay_timer_seconds',
+                         fieldType: 'text',
+                         itemIcon: '750',
+                         col: 'col-6',
+                       },
 
-                   {
-                     description: 'Reward Radiant Crystals',
-                     field: 'reward_radiant_crystals',
-                     itemIcon: '1536',
-                     fieldType: 'text',
-                     col: 'col-6',
-                   },
-                   {
-                     description: 'Request Timer Seconds',
-                     field: 'request_timer_seconds',
-                     fieldType: 'text',
-                     itemIcon: '750',
-                     col: 'col-6',
-                   },
+                       {
+                         description: 'Reward Radiant Crystals',
+                         field: 'reward_radiant_crystals',
+                         itemIcon: '1536',
+                         fieldType: 'text',
+                         col: 'col-6',
+                       },
+                       {
+                         description: 'Request Timer Seconds',
+                         field: 'request_timer_seconds',
+                         fieldType: 'text',
+                         itemIcon: '750',
+                         col: 'col-6',
+                       },
 
-                 ]"
+                     ]"
                       :class="field.col + ' mb-3'"
                     >
 
@@ -507,11 +508,30 @@
             @input="task['rewardid'] = $event.id; task['reward'] = $event.name; setFieldModifiedById('rewardid'); setFieldModifiedById('reward')"
           />
         </div>
+
+        <!-- Zone Selector -->
         <task-zone-selector
           :selected-zone-id="parseInt(task.task_activities[selectedActivity].zones)"
           v-if="task && task.task_activities && task.task_activities[selectedActivity] && zoneSelectorActive"
           @input="task.task_activities[selectedActivity].zones = $event.zoneId; setFieldModifiedById('zones')"
         />
+
+        <!-- free id selector -->
+        <eq-window-simple
+          title="Free Item Ids"
+          style="margin-top: 30px; margin-right: 10px; width: auto;"
+          class="fade-in"
+          v-if="freeIdSelectorActive"
+        >
+
+          <free-id-selector
+            table-name="tasks"
+            id-name="id"
+            name-label="title"
+            :with-reserved="true"
+            @input="task.id = $event; setFieldModifiedById('id')"
+          />
+        </eq-window-simple>
 
         <div v-if="previewTaskActive">
           <task-preview
@@ -563,11 +583,13 @@ import {EditFormFieldUtil} from "@/app/forms/edit-form-field-util";
 import TaskPreview from "@/views/task-editor/components/TaskPreview.vue";
 import TaskZoneSelector from "@/views/task-editor/components/TaskZoneSelector.vue";
 import TaskItemSelector from "@/views/task-editor/components/TaskItemSelector.vue";
+import FreeIdSelector from "@/components/tools/FreeIdSelector.vue";
 
 const MILLISECONDS_BEFORE_WINDOW_RESET = 5000;
 
 export default {
   components: {
+    FreeIdSelector,
     TaskItemSelector,
     TaskZoneSelector,
     TaskPreview,
@@ -593,6 +615,7 @@ export default {
       previewTaskActive: true,
       zoneSelectorActive: false,
       itemSelectorActive: false,
+      freeIdSelectorActive: false,
 
       lastResetTime: Date.now(),
 
@@ -780,6 +803,7 @@ export default {
       this.previewTaskActive  = false;
       this.itemSelectorActive = false;
       this.zoneSelectorActive = false;
+      this.freeIdSelectorActive = false;
 
       EditFormFieldUtil.resetFieldSubEditorHighlightedStatus()
     },
@@ -796,6 +820,13 @@ export default {
       this.lastResetTime      = Date.now()
       this.itemSelectorActive = true
       EditFormFieldUtil.setFieldSubEditorHighlightedById("rewardid")
+    },
+    drawFreeIdSelector() {
+      console.log("free id select")
+      this.resetPreviewComponents()
+      this.lastResetTime      = Date.now()
+      this.freeIdSelectorActive = true
+      EditFormFieldUtil.setFieldSubEditorHighlightedById("id")
     },
   },
   async mounted() {
