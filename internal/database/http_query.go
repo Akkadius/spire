@@ -83,7 +83,7 @@ func (d *DatabaseResolver) QueryContext(model models.Modelable, c echo.Context) 
 	}
 
 	if len(strings.Split(whereOrParam, whereDelimiter)) > 0 {
-		query = query.Where(orWheres)
+		query = query.Or(orWheres)
 	}
 
 	// order

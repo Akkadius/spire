@@ -391,6 +391,7 @@
                              field: 'delivertonpc',
                              col: 'col-6',
                              zeroValue: 0,
+                             onclick: drawNpcSelector,
                            },
                            {
                              description: 'Zone',
@@ -499,6 +500,7 @@
 
       <div class="col-5 fade-in" v-if="task">
 
+        <!-- item selector -->
         <div
           style="margin-top: 20px; width: auto;"
           class="fade-in"
@@ -514,6 +516,13 @@
           :selected-zone-id="parseInt(task.task_activities[selectedActivity].zones)"
           v-if="task && task.task_activities && task.task_activities[selectedActivity] && zoneSelectorActive"
           @input="task.task_activities[selectedActivity].zones = $event.zoneId; setFieldModifiedById('zones')"
+        />
+
+        <!-- NPC Selector -->
+        <task-npc-selector
+          :selected-npc-id="task.task_activities[selectedActivity].delivertonpc"
+          v-if="task && task.task_activities && task.task_activities[selectedActivity] && npcSelectorActive"
+          @input="task.task_activities[selectedActivity].delivertonpc = $event.npcId; setFieldModifiedById('delivertonpc')"
         />
 
         <!-- free id selector -->
@@ -584,11 +593,13 @@ import TaskPreview from "@/views/task-editor/components/TaskPreview.vue";
 import TaskZoneSelector from "@/views/task-editor/components/TaskZoneSelector.vue";
 import TaskItemSelector from "@/views/task-editor/components/TaskItemSelector.vue";
 import FreeIdSelector from "@/components/tools/FreeIdSelector.vue";
+import TaskNpcSelector from "@/views/task-editor/components/TaskNpcSelector.vue";
 
 const MILLISECONDS_BEFORE_WINDOW_RESET = 5000;
 
 export default {
   components: {
+    TaskNpcSelector,
     FreeIdSelector,
     TaskItemSelector,
     TaskZoneSelector,
@@ -614,6 +625,7 @@ export default {
       // preview / selectors
       previewTaskActive: true,
       zoneSelectorActive: false,
+      npcSelectorActive: false,
       itemSelectorActive: false,
       freeIdSelectorActive: false,
 
@@ -800,9 +812,10 @@ export default {
       }
     },
     resetPreviewComponents() {
-      this.previewTaskActive  = false;
-      this.itemSelectorActive = false;
-      this.zoneSelectorActive = false;
+      this.previewTaskActive    = false;
+      this.itemSelectorActive   = false;
+      this.zoneSelectorActive   = false;
+      this.npcSelectorActive    = false;
       this.freeIdSelectorActive = false;
 
       EditFormFieldUtil.resetFieldSubEditorHighlightedStatus()
@@ -824,9 +837,16 @@ export default {
     drawFreeIdSelector() {
       console.log("free id select")
       this.resetPreviewComponents()
-      this.lastResetTime      = Date.now()
+      this.lastResetTime        = Date.now()
       this.freeIdSelectorActive = true
       EditFormFieldUtil.setFieldSubEditorHighlightedById("id")
+    },
+    drawNpcSelector() {
+      console.log("npcSelectorActive id select")
+      this.resetPreviewComponents()
+      this.lastResetTime     = Date.now()
+      this.npcSelectorActive = true
+      EditFormFieldUtil.setFieldSubEditorHighlightedById("delivertonpc")
     },
   },
   async mounted() {

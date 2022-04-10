@@ -1,0 +1,155 @@
+<template>
+  <div>
+    <eq-window-simple title="NPC Selector">
+      <b-input
+        v-model="npcSearch"
+        class="form-control"
+        v-on:keyup.enter="searchNpc"
+        placeholder="Search by npc name, id..."
+      />
+    </eq-window-simple>
+
+    <eq-window-simple
+      id="npc-view-container"
+      v-if="filteredNpcs && filteredNpcs.length > 0"
+      style="height: 85vh; overflow-y: scroll;" class="p-0"
+    >
+      <table
+        id="npctable"
+        class="eq-table eq-highlight-rows"
+        style="display: table; font-size: 14px; overflow-x: scroll"
+      >
+        <thead
+          class="eq-table-floating-header"
+        >
+        <tr>
+          <th style="width: 30px"></th>
+          <th style="width: 30px">ID</th>
+          <th>Name</th>
+          <th>Last Name</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr
+          :id="'npc-' + npc.short_name"
+          :class="(isNpcSelected(npc) ? 'pulsate-highlight-white' : '')"
+          v-for="(npc, index) in filteredNpcs"
+          :key="npc.id"
+        >
+          <td>
+            <b-button
+              class="btn-dark btn-sm btn-outline-warning"
+              @click="selectNpc(npc)"
+            >
+              Select
+            </b-button>
+          </td>
+          <td style="text-align: center" class="p-0">{{ npc.id }}</td>
+          <td>{{ npc.name }}</td>
+          <td>{{ npc.lastname }}</td>
+        </tr>
+        </tbody>
+      </table>
+    </eq-window-simple>
+  </div>
+</template>
+
+<script>
+import EqWindowSimple      from "@/components/eq-ui/EQWindowSimple";
+import {NpcTypeApi}        from "@/app/api";
+import {SpireApiClient}    from "@/app/api/spire-api-client";
+import util                from "util";
+import Expansions          from "@/app/utility/expansions";
+import EqCheckbox          from "@/components/eq-ui/EQCheckbox";
+import {SpireQueryBuilder} from "@/app/api/spire-query-builder";
+
+export default {
+  name: "TaskNpcSelector",
+  components: { EqCheckbox, EqWindowSimple },
+  data() {
+    return {
+      // filtered content
+      filteredNpcs: {},
+
+      // search
+      npcSearch: "",
+
+      // model we work with after the prop is passed we can manipulate it ourselves props should not be mutated
+      selectedNpcIdAttr: 0,
+    }
+  },
+  props: {
+    selectedNpcId: {
+      type: Number,
+      required: true,
+    },
+  },
+  methods: {
+    isNpcSelected(npc) {
+      return parseInt(npc.id) === parseInt(this.selectedNpcIdAttr)
+    },
+
+    selectNpc(npc) {
+      this.$emit('input', {
+        npcId: npc.id,
+        npc: npc,
+      });
+
+      this.selectedNpcIdAttr = npc.id
+    },
+
+    async searchNpc() {
+      if (this.npcSearch === "") {
+        return ""
+      }
+
+      const api   = (new NpcTypeApi(SpireApiClient.getOpenApiConfig()))
+      let builder = (new SpireQueryBuilder())
+      if (this.npcSearch !== "") {
+        builder.where("name", "like", this.npcSearch)
+        builder.whereOr("lastname", "like", this.npcSearch)
+        builder.whereOr("id", "=", this.npcSearch)
+      }
+
+      const result = await api.listNpcTypes(
+        builder.orderBy(["id", "name"]).get()
+      )
+
+      if (result.status === 200) {
+        this.filteredNpcs = result.data
+      }
+    },
+
+    getExpansionIcon(expansion) {
+      return Expansions.getExpansionIconUrlSmall(expansion - 1) // npc table is offset by 1
+    },
+    getExpansionName(expansion) {
+      return Expansions.getExpansionName(expansion - 1) // npc table is offset by 1
+    },
+  },
+  mounted() {
+    this.selectedNpcIdAttr = this.selectedNpcId
+
+    if (this.selectedNpcIdAttr !== 0) {
+      this.npcSearch = this.selectedNpcIdAttr
+    }
+
+    this.searchNpc()
+
+    setTimeout(() => {
+      const container = document.getElementById("npc-view-container");
+      const target    = document.getElementById(util.format("npc-%s", this.selectedNpcIdAttr))
+      if (container && target) {
+        const top           = target.getBoundingClientRect().top
+        container.scrollTop = container.scrollTop + top - 300;
+      }
+    }, 100)
+  }
+}
+</script>
+
+<style scoped>
+#npctable td {
+  vertical-align: middle !important;
+}
+</style>
