@@ -72,6 +72,16 @@ export class Tasks {
   }
 
   // TODO: bubble up error handling
+  public static async updateTask(task: any) {
+    // @ts-ignore
+    return await this.getTaskApi().updateTask({id: task.id, task: task}, {
+      query: (new SpireQueryBuilder())
+        .includes(["TaskActivities"])
+        .get()
+    })
+  }
+
+  // TODO: bubble up error handling
   public static async deleteTaskWithActivities(task: any) {
     // @ts-ignore
     const r = await this.getTaskApi().deleteTask({id: task.id}, {})
@@ -137,13 +147,13 @@ export class Tasks {
   public static getRelationships() {
     return [
       "TaskActivities",
-      "TaskActivities.Goallists",
-      "TaskActivities.NpcType",
-      "TaskActivities.NpcType.Spawnentries",
-      "TaskActivities.NpcType.Spawnentries.NpcType",
-      "TaskActivities.NpcType.Spawnentries.Spawngroup",
-      "TaskActivities.NpcType.Spawnentries.Spawngroup.Spawn2",
-      "Tasksets",
+      // "TaskActivities.Goallists",
+      // "TaskActivities.NpcType",
+      // "TaskActivities.NpcType.Spawnentries",
+      // "TaskActivities.NpcType.Spawnentries.NpcType",
+      // "TaskActivities.NpcType.Spawnentries.Spawngroup",
+      // "TaskActivities.NpcType.Spawnentries.Spawngroup.Spawn2",
+      // "Tasksets",
     ]
   }
 

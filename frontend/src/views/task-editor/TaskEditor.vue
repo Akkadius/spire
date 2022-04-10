@@ -81,6 +81,10 @@
             <!-- Task -->
             <div class="col-8 fade-in" id="my-form" v-if="task">
 
+              <b-alert show dismissable variant="danger" v-if="error" class="mt-2">
+                <i class="fa fa-warning"></i> {{ error }}
+              </b-alert>
+
               <eq-tabs
                 id="task-edit-window"
               >
@@ -473,7 +477,7 @@
                           <b-form-input
                             v-if="field.fieldType === 'text' || !field.fieldType"
                             :id="field.field"
-                            v-model.number="task.task_activities[selectedActivity][field.field]"
+                            v-model="task.task_activities[selectedActivity][field.field]"
                             class="m-0 mt-1"
                             v-on="typeof field.onclick !== 'undefined' ? { click: () => field.onclick(selectedActivity) } : {}"
                             v-b-tooltip.hover.v-dark.right :title="getFieldDescription(field.field)"
@@ -681,6 +685,8 @@ export default {
 
       lastResetTime: Date.now(),
 
+      error: "",
+
       TASK_TYPES: TASK_TYPES,
       TASK_DURATION_TYPES: TASK_DURATION_TYPES,
       TASK_DURATION_HUMAN: TASK_DURATION_HUMAN,
@@ -700,8 +706,36 @@ export default {
 
   methods: {
 
-    saveTask() {
+    getBackendFormattedTask() {
+      let t          = this.task
+      let activities = []
+      if (t.task_activities) {
+        t.task_activities.forEach((a) => {
+          let activity   = a
+          activity.zones = activity.zones.toString()
+          activities.push(activity)
+        })
 
+        t.task_activities = activities
+      }
+
+      return t
+    },
+
+    async saveTask() {
+      try {
+        const r = await Tasks.updateTask(this.getBackendFormattedTask())
+        if (r.status === 200) {
+          EditFormFieldUtil.resetFieldEditedStatus()
+        }
+        console.log(r)
+      } catch (err) {
+        if (err.response.data.error) {
+          this.error = err.response.data.error
+        }
+      }
+
+      console.log("updated task")
     },
 
     async deleteTask() {
@@ -728,13 +762,13 @@ export default {
 
             // relink id at the task level
             let newTask = task
-            newTask.id = id
+            newTask.id  = id
 
             // relink id at the activities level
             let activities = []
             if (newTask.task_activities) {
               newTask.task_activities.forEach((a) => {
-                let activity = a
+                let activity    = a
                 activity.taskid = id
                 activities.push(activity)
               })
@@ -746,12 +780,11 @@ export default {
             const createdTask = await Tasks.createTask(newTask)
             if (createdTask.id > 0) {
               this.resetState()
-              this.selectedTask = createdTask.id
+              this.selectedTask     = createdTask.id
               this.selectedActivity = 0
-              this.tasks = []
+              this.tasks            = []
               this.updateQueryState()
             }
-
           }
         }
       }
@@ -783,7 +816,7 @@ export default {
     resetStateAll() {
       this.resetState()
       this.selectedActivity = 0
-      this.tasks = []
+      this.tasks            = []
     },
 
     setFieldModifiedById(id) {
