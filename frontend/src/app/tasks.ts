@@ -23,6 +23,7 @@ export class Tasks {
     return (new TaskActivityApi(SpireApiClient.getOpenApiConfig()));
   }
 
+  // TODO: bubble up error handling
   public static async getTask(taskId: number) {
     let request = (new SpireQueryBuilder())
       .includes(this.getRelationships())
@@ -40,6 +41,7 @@ export class Tasks {
     return {}
   }
 
+  // TODO: bubble up error handling
   public static async getTaskWithActivities(taskId: number) {
     let request = (new SpireQueryBuilder())
       .includes(["TaskActivities"])
@@ -58,6 +60,7 @@ export class Tasks {
     return {}
   }
 
+  // TODO: bubble up error handling
   public static async createTask(task: any) {
     // @ts-ignore
     const r = await this.getTaskApi().createTask({task: task}, {})
@@ -68,14 +71,11 @@ export class Tasks {
     return {}
   }
 
+  // TODO: bubble up error handling
   public static async deleteTaskWithActivities(task: any) {
     // @ts-ignore
     const r = await this.getTaskApi().deleteTask({id: task.id}, {})
     if (r.status === HttpStatus.OK) {
-      // @ts-ignore
-      // for (const a of task.task_activities) {
-      //
-      // }
       const ar = await this.getTaskActivitiesApi().deleteTaskActivity({id: task.id}, {})
       if (ar.status === HttpStatus.OK) {
         console.log(ar)
