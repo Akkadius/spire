@@ -750,40 +750,40 @@ export default {
 
     async createTask(clone = false) {
       if (clone) {
-        const id = await FreeIdFetcher.get("tasks", "id", "title")
-        if (id > 0) {
-          EditFormFieldUtil.setFieldModifiedById('id')
+        if (confirm(`Are you sure you want to copy this task? It will create a whole new copy.\n\n(${this.task.id}) ${this.task.title} `)) {
+          const id = await FreeIdFetcher.get("tasks", "id", "title")
+          if (id > 0) {
+            EditFormFieldUtil.setFieldModifiedById('id')
 
-          console.log(id)
+            // fetch task only with activities
+            const task = await Tasks.getTaskWithActivities(this.selectedTask)
+            if (task.id > 0) {
 
-          // fetch task only with activities
-          const task = await Tasks.getTaskWithActivities(this.selectedTask)
-          if (task.id > 0) {
+              // relink id at the task level
+              let newTask = task
+              newTask.id  = id
 
-            // relink id at the task level
-            let newTask = task
-            newTask.id  = id
+              // relink id at the activities level
+              let activities = []
+              if (newTask.task_activities) {
+                newTask.task_activities.forEach((a) => {
+                  let activity    = a
+                  activity.taskid = id
+                  activities.push(activity)
+                })
 
-            // relink id at the activities level
-            let activities = []
-            if (newTask.task_activities) {
-              newTask.task_activities.forEach((a) => {
-                let activity    = a
-                activity.taskid = id
-                activities.push(activity)
-              })
+                newTask.task_activities = activities
+              }
 
-              newTask.task_activities = activities
-            }
-
-            // create task
-            const createdTask = await Tasks.createTask(newTask)
-            if (createdTask.id > 0) {
-              this.resetState()
-              this.selectedTask     = createdTask.id
-              this.selectedActivity = 0
-              this.tasks            = []
-              this.updateQueryState()
+              // create task
+              const createdTask = await Tasks.createTask(newTask)
+              if (createdTask.id > 0) {
+                this.resetState()
+                this.selectedTask     = createdTask.id
+                this.selectedActivity = 0
+                this.tasks            = []
+                this.updateQueryState()
+              }
             }
           }
         }
