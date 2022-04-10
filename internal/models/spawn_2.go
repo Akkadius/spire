@@ -21,8 +21,8 @@ type Spawn2 struct {
 	CondValue              int32        `json:"cond_value" gorm:"Column:cond_value"`
 	Enabled                uint8        `json:"enabled" gorm:"Column:enabled"`
 	Animation              uint8        `json:"animation" gorm:"Column:animation"`
-	MinExpansion           int8         `json:"min_expansion" gorm:"Column:min_expansion"`
-	MaxExpansion           int8         `json:"max_expansion" gorm:"Column:max_expansion"`
+	MinExpansion           uint8        `json:"min_expansion" gorm:"Column:min_expansion"`
+	MaxExpansion           uint8        `json:"max_expansion" gorm:"Column:max_expansion"`
 	ContentFlags           null.String  `json:"content_flags" gorm:"Column:content_flags"`
 	ContentFlagsDisabled   null.String  `json:"content_flags_disabled" gorm:"Column:content_flags_disabled"`
 	Spawngroup             *Spawngroup  `json:"spawngroup,omitempty" gorm:"foreignKey:spawngroupID;references:id"`

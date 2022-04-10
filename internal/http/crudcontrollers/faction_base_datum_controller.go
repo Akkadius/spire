@@ -233,7 +233,7 @@ func (e *FactionBaseDatumController) deleteFactionBaseDatum(c echo.Context) erro
 		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
 	}
 
-	err = e.db.Get(models.FactionBaseDatum{}, c).Model(&models.FactionBaseDatum{}).Delete(&result).Error
+	err = query.Limit(10000).Delete(&result).Error
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Error deleting entity"})
 	}

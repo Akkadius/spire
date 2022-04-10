@@ -233,7 +233,7 @@ func (e *AdventureMemberController) deleteAdventureMember(c echo.Context) error 
 		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
 	}
 
-	err = e.db.Get(models.AdventureMember{}, c).Model(&models.AdventureMember{}).Delete(&result).Error
+	err = query.Limit(10000).Delete(&result).Error
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Error deleting entity"})
 	}

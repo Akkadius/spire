@@ -18,8 +18,8 @@ type GlobalLoot struct {
 	Bodytype               null.String `json:"bodytype" gorm:"Column:bodytype"`
 	Zone                   null.String `json:"zone" gorm:"Column:zone"`
 	HotZone                null.Int8   `json:"hot_zone" gorm:"Column:hot_zone"`
-	MinExpansion           int8        `json:"min_expansion" gorm:"Column:min_expansion"`
-	MaxExpansion           int8        `json:"max_expansion" gorm:"Column:max_expansion"`
+	MinExpansion           uint8       `json:"min_expansion" gorm:"Column:min_expansion"`
+	MaxExpansion           uint8       `json:"max_expansion" gorm:"Column:max_expansion"`
 	ContentFlags           null.String `json:"content_flags" gorm:"Column:content_flags"`
 	ContentFlagsDisabled   null.String `json:"content_flags_disabled" gorm:"Column:content_flags_disabled"`
 	Loottable              *Loottable  `json:"loottable,omitempty" gorm:"foreignKey:loottable_id;references:id"`

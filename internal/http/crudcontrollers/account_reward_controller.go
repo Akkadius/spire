@@ -266,7 +266,7 @@ func (e *AccountRewardController) deleteAccountReward(c echo.Context) error {
 		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
 	}
 
-	err = e.db.Get(models.AccountReward{}, c).Model(&models.AccountReward{}).Delete(&result).Error
+	err = query.Limit(10000).Delete(&result).Error
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Error deleting entity"})
 	}

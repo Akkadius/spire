@@ -266,7 +266,7 @@ func (e *CharacterAuraController) deleteCharacterAura(c echo.Context) error {
 		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
 	}
 
-	err = e.db.Get(models.CharacterAura{}, c).Model(&models.CharacterAura{}).Delete(&result).Error
+	err = query.Limit(10000).Delete(&result).Error
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Error deleting entity"})
 	}

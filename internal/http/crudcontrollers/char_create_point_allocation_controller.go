@@ -233,7 +233,7 @@ func (e *CharCreatePointAllocationController) deleteCharCreatePointAllocation(c 
 		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
 	}
 
-	err = e.db.Get(models.CharCreatePointAllocation{}, c).Model(&models.CharCreatePointAllocation{}).Delete(&result).Error
+	err = query.Limit(10000).Delete(&result).Error
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Error deleting entity"})
 	}

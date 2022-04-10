@@ -36,8 +36,8 @@ type Door struct {
 	Buffer                 float32     `json:"buffer" gorm:"Column:buffer"`
 	ClientVersionMask      uint        `json:"client_version_mask" gorm:"Column:client_version_mask"`
 	IsLdonDoor             int16       `json:"is_ldon_door" gorm:"Column:is_ldon_door"`
-	MinExpansion           int8        `json:"min_expansion" gorm:"Column:min_expansion"`
-	MaxExpansion           int8        `json:"max_expansion" gorm:"Column:max_expansion"`
+	MinExpansion           uint8       `json:"min_expansion" gorm:"Column:min_expansion"`
+	MaxExpansion           uint8       `json:"max_expansion" gorm:"Column:max_expansion"`
 	ContentFlags           null.String `json:"content_flags" gorm:"Column:content_flags"`
 	ContentFlagsDisabled   null.String `json:"content_flags_disabled" gorm:"Column:content_flags_disabled"`
 	Item                   *Item       `json:"item,omitempty" gorm:"foreignKey:keyitem;references:id"`
