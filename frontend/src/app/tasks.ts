@@ -92,6 +92,57 @@ export class Tasks {
     return ""
   }
 
+  // TODO: bubble up error handling
+  public static async createNewTaskActivity(task: any) {
+    let taskActivity        = this.getExampleActivity()
+    taskActivity.taskid     = task.id
+    taskActivity.activityid = (task.task_activities ? this.getNextActivityId(task.task_activities) : 0)
+    taskActivity.step       = (task.task_activities ? this.getLatestStep(task.task_activities) : 1)
+
+    // @ts-ignore
+    return await this.getTaskActivitiesApi()
+      .createTaskActivity(
+        {
+          taskActivity: taskActivity
+        }
+      )
+  }
+
+  // TODO: bubble up error handling
+  public static async deleteTaskActivity(activity: any) {
+    let request = (new SpireQueryBuilder())
+      .where("activityid", "=", activity.activityid)
+      .get()
+
+    // @ts-ignore
+    request.id = activity.taskid
+
+    // @ts-ignore
+    return await this.getTaskActivitiesApi()
+      .deleteTaskActivity(
+        {id: activity.taskid},
+        {query: request}
+      )
+  }
+
+  private static getNextActivityId(activities: any) {
+    let nextId = 0
+    activities.forEach((a) => {
+      nextId = a.activityid
+    })
+
+    return nextId + 1
+  }
+
+  private static getLatestStep(activities: any) {
+    let step = 0
+    activities.forEach((a) => {
+      step = a.step
+    })
+
+    return step
+  }
+
   public static buildActivityDescription(activity: any) {
     if (activity.description_override !== "") {
       return activity.description_override;
@@ -251,6 +302,26 @@ export class Tasks {
         "optional": 0
       }]
     }
-
   }
+
+  public static getExampleActivity() {
+    return {
+      "taskid": 2,
+      "activityid": 0,
+      "step": 1,
+      "activitytype": 2,
+      "target_name": "Orcs",
+      "item_list": "",
+      "skill_list": "-1",
+      "spell_list": "0",
+      "description_override": "",
+      "goalid": 1,
+      "goalmethod": 1,
+      "goalcount": 5,
+      "delivertonpc": 0,
+      "zones": "21",
+      "optional": 0
+    }
+  }
+
 }

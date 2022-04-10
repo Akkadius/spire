@@ -303,7 +303,7 @@
                       <div>
                         <span
                           v-if="field.itemIcon"
-                          :class="'fade-in item-' + field.itemIcon + '-sm'"
+                          :class="'item-' + field.itemIcon + '-sm'"
                           style="display: inline-block"
                         />
                         {{ field.description }}
@@ -386,6 +386,14 @@
 
                   <div>
                     <span class="font-weight-bold">Activities</span>
+
+                    <div class="d-inline-block">
+                      <b-button @click="createActivity()" size="sm" variant="outline-warning" class="ml-3">
+                        <i class="fa fa-plus"></i></b-button>
+                      <b-button @click="deleteActivity()" size="sm" variant="outline-danger" class="ml-3">
+                        <i class="fa fa-trash"></i></b-button>
+                    </div>
+
 
                     <select
                       size="2"
@@ -509,7 +517,7 @@
                           <div>
                             <span
                               v-if="field.itemIcon"
-                              :class="'fade-in item-' + field.itemIcon + '-sm'"
+                              :class="'item-' + field.itemIcon + '-sm'"
                               style="display: inline-block"
                             />
                             {{ field.description }}
@@ -602,7 +610,7 @@
                     @click="deleteTask()"
 
                     size="sm"
-                    variant="danger"
+                    variant="outline-danger"
                   >
                     <i class="fa fa-trash"></i>
                     Delete
@@ -773,6 +781,42 @@ export default {
 
   methods: {
 
+    async createActivity() {
+      try {
+        const r = await Tasks.createNewTaskActivity(this.task)
+        if (r.status === 200) {
+          this.task             = (await Tasks.getTask(this.$route.params.id))
+          this.selectedActivity = r.data.activityid
+        }
+      } catch (err) {
+        console.log(err)
+        if (err.response && err.response.data && err.response.data.error) {
+          this.error = err.response.data.error
+        }
+      }
+    },
+
+    async deleteActivity() {
+      try {
+        if (this.task.task_activities) {
+          for (const a of this.task.task_activities) {
+            if (parseInt(a.activityid) === parseInt(this.selectedActivity)) {
+              const r = await Tasks.deleteTaskActivity(a)
+              if (r.status === 200) {
+                this.task             = (await Tasks.getTask(this.$route.params.id))
+                this.selectedActivity = a.activityid - 1
+              }
+            }
+          }
+        }
+      } catch (err) {
+        if (err.response && err.response.data && err.response.data.error) {
+          this.error = err.response.data.error
+        }
+        console.log(err)
+      }
+    },
+
     sendNotification(message) {
       this.notification = message
       setTimeout(() => {
@@ -804,7 +848,7 @@ export default {
           this.sendNotification("Task updated!");
         }
       } catch (err) {
-        if (err.response.data.error) {
+        if (err.response && err.response.data && err.response.data.error) {
           this.error = err.response.data.error
         }
       }
@@ -856,7 +900,7 @@ export default {
             this.sendNotification("New task created successfully!")
           }
         } catch (err) {
-          if (err.response.data.error) {
+          if (err.response && err.response.data && err.response.data.error) {
             this.error = err.response.data.error
           }
         }
@@ -900,7 +944,7 @@ export default {
                 this.sendNotification("New task cloned successfully!")
               }
             } catch (err) {
-              if (err.response.data.error) {
+              if (err.response && err.response.data && err.response.data.error) {
                 this.error = err.response.data.error
               }
             }
