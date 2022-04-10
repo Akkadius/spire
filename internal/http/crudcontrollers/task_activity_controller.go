@@ -12,7 +12,7 @@ import (
 )
 
 type TaskActivityController struct {
-	db	 *database.DatabaseResolver
+	db     *database.DatabaseResolver
 	logger *logrus.Logger
 }
 
@@ -21,7 +21,7 @@ func NewTaskActivityController(
 	logger *logrus.Logger,
 ) *TaskActivityController {
 	return &TaskActivityController{
-		db:	 db,
+		db:     db,
 		logger: logger,
 	}
 }
@@ -266,7 +266,7 @@ func (e *TaskActivityController) deleteTaskActivity(c echo.Context) error {
 		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
 	}
 
-	err = e.db.Get(models.TaskActivity{}, c).Model(&models.TaskActivity{}).Delete(&result).Error
+	err = query.Limit(10000).Delete(&result).Error
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Error deleting entity"})
 	}

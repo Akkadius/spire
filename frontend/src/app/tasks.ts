@@ -1,4 +1,4 @@
-import {TaskApi} from "@/app/api";
+import {TaskActivityApi, TaskApi} from "@/app/api";
 import {SpireApiClient} from "@/app/api/spire-api-client";
 import {TASK_ACTIVITY_TYPE} from "@/app/constants/eq-task-constants";
 import {HttpStatus} from "@/app/api/http-status";
@@ -15,6 +15,14 @@ export class Tasks {
     return []
   }
 
+  public static getTaskApi() {
+    return (new TaskApi(SpireApiClient.getOpenApiConfig()));
+  }
+
+  public static getTaskActivitiesApi() {
+    return (new TaskActivityApi(SpireApiClient.getOpenApiConfig()));
+  }
+
   public static async getTask(taskId: number) {
     let request = (new SpireQueryBuilder())
       .includes(this.getRelationships())
@@ -23,10 +31,55 @@ export class Tasks {
     // @ts-ignore
     request.id = taskId
     // @ts-ignore
-    const r    = await (new TaskApi(SpireApiClient.getOpenApiConfig())).getTask(request)
+    const r    = await this.getTaskApi().getTask(request)
 
     if (r.status === HttpStatus.OK) {
       return r.data
+    }
+
+    return {}
+  }
+
+  public static async getTaskWithActivities(taskId: number) {
+    let request = (new SpireQueryBuilder())
+      .includes(["TaskActivities"])
+      .get()
+
+    // @ts-ignore
+    request.id = taskId
+    // @ts-ignore
+
+    const r = await this.getTaskApi().getTask(request)
+
+    if (r.status === HttpStatus.OK) {
+      return r.data
+    }
+
+    return {}
+  }
+
+  public static async createTask(task: any) {
+    // @ts-ignore
+    const r = await this.getTaskApi().createTask({task: task}, {})
+    if (r.status === HttpStatus.OK) {
+      return r.data
+    }
+
+    return {}
+  }
+
+  public static async deleteTaskWithActivities(task: any) {
+    // @ts-ignore
+    const r = await this.getTaskApi().deleteTask({id: task.id}, {})
+    if (r.status === HttpStatus.OK) {
+      // @ts-ignore
+      // for (const a of task.task_activities) {
+      //
+      // }
+      const ar = await this.getTaskActivitiesApi().deleteTaskActivity({id: task.id}, {})
+      if (ar.status === HttpStatus.OK) {
+        console.log(ar)
+      }
     }
 
     return {}

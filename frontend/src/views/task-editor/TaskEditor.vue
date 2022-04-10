@@ -704,9 +704,13 @@ export default {
 
     },
 
-    deleteTask() {
-      if (confirm("Are you sure you want to delete this task?")) {
-        alert('whablam!')
+    async deleteTask() {
+      if (confirm(`Are you sure you want to delete this task?\n\n(${this.task.id}) ${this.task.title} `)) {
+        const r = await Tasks.deleteTaskWithActivities(this.task)
+        console.log(r)
+
+        this.resetStateAll()
+        this.updateQueryState()
       }
     },
 
@@ -738,7 +742,16 @@ export default {
               newTask.task_activities = activities
             }
 
-            console.log(newTask)
+            // create task
+            const createdTask = await Tasks.createTask(newTask)
+            if (createdTask.id > 0) {
+              this.resetState()
+              this.selectedTask = createdTask.id
+              this.selectedActivity = 0
+              this.tasks = []
+              this.updateQueryState()
+            }
+
           }
         }
       }
@@ -765,6 +778,12 @@ export default {
       this.selectedTask     = null;
       this.selectedActivity = null;
       this.taskSearchFilter = "";
+    },
+
+    resetStateAll() {
+      this.resetState()
+      this.selectedActivity = 0
+      this.tasks = []
     },
 
     setFieldModifiedById(id) {
