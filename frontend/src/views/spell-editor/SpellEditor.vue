@@ -1698,6 +1698,7 @@ import SpellTeleportZoneSelectorAura  from "./components/SpellTeleportZoneSelect
 import {ROUTE}                        from "../../routes";
 import SpellItemSelector              from "./components/SpellItemSelector";
 import {SpireQueryBuilder}            from "../../app/api/spire-query-builder";
+import {FreeIdFetcher}                from "../../app/free-id-fetcher";
 
 const MILLISECONDS_BEFORE_WINDOW_RESET = 5000;
 
@@ -2218,32 +2219,16 @@ export default {
         this.error = ""
         this.getDbStringsSelectData(5)
 
-        Spells.getSpell(this.$route.params.id).then((result) => {
+        Spells.getSpell(this.$route.params.id).then(async (result) => {
           this.spell = JSON.parse(JSON.stringify(result))
 
           // if we're cloning this spell, automatically fetch an ID
           if (this.$route.query.hasOwnProperty("clone")) {
-
-            SpireApiClient.v1().get("query/free-ids-reserved/spells_new/id/name").then((response) => {
-              if (response.data) {
-
-                // grab first "reserved" entry available
-                if (response.data.data.length > 0) {
-                  this.spell.id = parseInt(response.data.data[0].id)
-                  EditFormFieldUtil.setFieldModifiedById("id")
-                }
-
-                // grab first free id in range entry available
-                if (response.data.data.length === 0) {
-                  SpireApiClient.v1().get("query/free-id-ranges/spells_new/id").then((response) => {
-                    if (response.data && response.data.data) {
-                      this.spell.id = parseInt(response.data.data[0].start_id)
-                      EditFormFieldUtil.setFieldModifiedById("id")
-                    }
-                  });
-                }
-              }
-            });
+            const id = await FreeIdFetcher.get("spells_new", "id", "name")
+            if (id > 0) {
+              EditFormFieldUtil.setFieldModifiedById('id')
+              this.spell.id = id
+            }
           }
 
           // hooks

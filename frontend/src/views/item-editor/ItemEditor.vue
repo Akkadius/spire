@@ -1655,17 +1655,18 @@ import {DB_SKILLS}             from "../../app/constants/eq-skill-constants";
 import ItemStatScaleTool       from "./components/ItemStatScalePercentage";
 import ItemStatScalePercentage from "./components/ItemStatScalePercentage";
 import ItemStatScaleRange      from "./components/ItemStatScaleRange";
-import ItemColorSelector       from "./components/ItemColorSelector";
-import * as util               from "util";
-import {RACES}                 from "../../app/constants/eq-race-constants";
-import ItemMaterialPreview     from "./components/ItemMaterialPreview";
-import {BODYTYPES}             from "../../app/constants/eq-bodytype-constants";
-import {DB_SPELL_RESISTS}      from "../../app/constants/eq-spell-constants";
-import {DB_ITEM_BARD_TYPE}     from "../../app/constants/eq-bard-types";
-import AugBitmaskCalculator    from "../../components/tools/AugmentTypeCalculator";
-import EqWindowSimple          from "../../components/eq-ui/EQWindowSimple";
-import LoaderCastBarTimer      from "../../components/LoaderCastBarTimer";
-import {EditFormFieldUtil}     from "../../app/forms/edit-form-field-util";
+import ItemColorSelector    from "./components/ItemColorSelector";
+import * as util            from "util";
+import {RACES}              from "../../app/constants/eq-race-constants";
+import ItemMaterialPreview  from "./components/ItemMaterialPreview";
+import {BODYTYPES}          from "../../app/constants/eq-bodytype-constants";
+import {DB_SPELL_RESISTS}   from "../../app/constants/eq-spell-constants";
+import {DB_ITEM_BARD_TYPE}  from "../../app/constants/eq-bard-types";
+import AugBitmaskCalculator from "../../components/tools/AugmentTypeCalculator";
+import EqWindowSimple       from "../../components/eq-ui/EQWindowSimple";
+import LoaderCastBarTimer   from "../../components/LoaderCastBarTimer";
+import {EditFormFieldUtil}  from "../../app/forms/edit-form-field-util";
+import {FreeIdFetcher}      from "../../app/free-id-fetcher";
 
 const MILLISECONDS_BEFORE_WINDOW_RESET = 5000;
 
@@ -2075,7 +2076,7 @@ export default {
 
       if (this.$route.params.id > 0) {
         this.error = ""
-        Items.getItem(this.$route.params.id).then((result) => {
+        Items.getItem(this.$route.params.id).then(async (result) => {
           this.item              = result
           this.updatedAt         = Date.now()
           this.previewItemActive = true
@@ -2105,26 +2106,11 @@ export default {
 
           // if we're cloning this item, automatically fetch an ID
           if (this.$route.query.hasOwnProperty("clone")) {
-            SpireApiClient.v1().get("query/free-ids-reserved/items/id/name").then((response) => {
-              if (response.data) {
-
-                // grab first "reserved" entry available
-                if (response.data.data.length > 0) {
-                  this.item.id = parseInt(response.data.data[0].id)
-                  EditFormFieldUtil.setFieldModifiedById('id');
-                }
-
-                // grab first free id in range entry available
-                if (response.data.data.length === 0) {
-                  SpireApiClient.v1().get("query/free-id-ranges/items/id").then((response) => {
-                    if (response.data && response.data.data) {
-                      this.item.id = parseInt(response.data.data[0].start_id)
-                      EditFormFieldUtil.setFieldModifiedById('id')
-                    }
-                  });
-                }
-              }
-            });
+            const id = await FreeIdFetcher.get("items", "id", "name")
+            if (id > 0) {
+              EditFormFieldUtil.setFieldModifiedById('id')
+              this.item.id = id
+            }
           }
 
           // hooks

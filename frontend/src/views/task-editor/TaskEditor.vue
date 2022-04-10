@@ -14,6 +14,28 @@
               <!-- Task List -->
               <div style="" class="">
 
+                <div class="text-center mt-3">
+                  <div class="btn-group" role="group">
+                    <b-button
+                      @click="createTask()"
+                      size="sm"
+                      variant="outline-warning"
+                    >
+                      <i class="fa fa-plus mr-1"></i>
+                      New
+                    </b-button>
+
+                    <b-button
+                      @click="createTask(true)"
+                      size="sm"
+                      variant="outline-light"
+                    >
+                      <i class="ra ra-double-team"></i>
+                      Clone
+                    </b-button>
+                  </div>
+                </div>
+
                 <b-input-group class="mt-3">
                   <b-form-input
                     type="text"
@@ -38,7 +60,7 @@
                   v-model="selectedTask"
                   @change="selectTask()"
                   class="form-control eq-input eq p-1 mt-3 eq-dark-background"
-                  style="overflow-x: scroll; height: 80vh; overflow-y: scroll"
+                  style="overflow-x: scroll; height: 75vh; overflow-y: scroll"
                 >
                   <option
                     v-for="task in filteredTasks"
@@ -239,7 +261,8 @@
                         {{ field.description }}
                         <span
                           v-if="(field.field.includes('timer_seconds') || field.field.includes('duration')) && task[field.field] > 0"
-                          class="font-weight-bold">({{ secondsToHumanTime(task[field.field]) }})</span>
+                          class="font-weight-bold"
+                        >({{ secondsToHumanTime(task[field.field]) }})</span>
                       </div>
 
                       <!-- checkbox -->
@@ -493,6 +516,29 @@
 
                 </eq-tab>
               </eq-tabs>
+
+              <div class="text-center mt-3">
+                <div class="btn-group" role="group">
+                  <b-button
+                    @click="saveTask()"
+                    size="sm"
+                    variant="outline-warning"
+                  >
+                    <i class="fa fa-save mr-1"></i>
+                    Save
+                  </b-button>
+
+                  <b-button
+                    @click="deleteTask()"
+
+                    size="sm"
+                    variant="danger"
+                  >
+                    <i class="fa fa-trash"></i>
+                    Delete
+                  </b-button>
+                </div>
+              </div>
             </div>
           </div>
 
@@ -597,6 +643,7 @@ import TaskZoneSelector from "@/views/task-editor/components/TaskZoneSelector.vu
 import TaskItemSelector from "@/views/task-editor/components/TaskItemSelector.vue";
 import FreeIdSelector from "@/components/tools/FreeIdSelector.vue";
 import TaskNpcSelector from "@/views/task-editor/components/TaskNpcSelector.vue";
+import {FreeIdFetcher} from "@/app/free-id-fetcher";
 
 const MILLISECONDS_BEFORE_WINDOW_RESET = 5000;
 
@@ -644,23 +691,61 @@ export default {
 
   watch: {
     $route(to, from) {
-      console.log("route change")
+      if (Object.keys(this.$route.params).length === 0) {
+        this.resetState()
+      }
       this.init()
     },
   },
 
-  activated() {
-    this.resetState()
-  },
-
-  deactivated() {
-
-  },
-
   methods: {
 
-    secondsToHumanTime ( seconds ) {
-      let levels = [
+    saveTask() {
+
+    },
+
+    deleteTask() {
+      if (confirm("Are you sure you want to delete this task?")) {
+        alert('whablam!')
+      }
+    },
+
+    async createTask(clone = false) {
+      if (clone) {
+        const id = await FreeIdFetcher.get("tasks", "id", "title")
+        if (id > 0) {
+          EditFormFieldUtil.setFieldModifiedById('id')
+
+          console.log(id)
+
+          // fetch task only with activities
+          const task = await Tasks.getTaskWithActivities(this.selectedTask)
+          if (task.id > 0) {
+
+            // relink id at the task level
+            let newTask = task
+            newTask.id = id
+
+            // relink id at the activities level
+            let activities = []
+            if (newTask.task_activities) {
+              newTask.task_activities.forEach((a) => {
+                let activity = a
+                activity.taskid = id
+                activities.push(activity)
+              })
+
+              newTask.task_activities = activities
+            }
+
+            console.log(newTask)
+          }
+        }
+      }
+    },
+
+    secondsToHumanTime(seconds) {
+      let levels     = [
         [Math.floor(seconds / 31536000), 'y'],
         [Math.floor((seconds % 31536000) / 86400), 'd'],
         [Math.floor(((seconds % 31536000) % 86400) / 3600), 'h'],
@@ -669,15 +754,17 @@ export default {
       ];
       let returntext = '';
       for (let i = 0, max = levels.length; i < max; i++) {
-        if ( levels[i][0] === 0 ) continue;
+        if (levels[i][0] === 0) continue;
         returntext += ' ' + levels[i][0] + '' + (levels[i][1]);
       }
       return returntext.trim();
     },
 
     resetState() {
-      this.task  = null;
-      this.tasks = [];
+      this.task             = null;
+      this.selectedTask     = null;
+      this.selectedActivity = null;
+      this.taskSearchFilter = "";
     },
 
     setFieldModifiedById(id) {

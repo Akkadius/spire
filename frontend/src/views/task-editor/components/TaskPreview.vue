@@ -168,7 +168,6 @@ export default {
     }
   },
   destroyed() {
-    console.log("Destroyed")
     clearInterval(this.taskTimer)
   },
 
@@ -176,7 +175,6 @@ export default {
     task: {
       deep: true,
       handler() {
-        console.log("task watch trigger")
         clearInterval(this.taskTimer)
         this.load()
       }
@@ -320,7 +318,7 @@ export default {
     },
 
     getStepFromActivity(activity) {
-      return activity.step
+      return activity ? activity.step : -1
     },
 
     isTaskActivityComplete(activity) {
