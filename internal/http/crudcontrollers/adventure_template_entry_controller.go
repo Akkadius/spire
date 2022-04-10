@@ -266,7 +266,7 @@ func (e *AdventureTemplateEntryController) deleteAdventureTemplateEntry(c echo.C
 		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
 	}
 
-	err = query.Limit(10000).Delete(&result).Error
+	err = e.db.Get(models.AdventureTemplateEntry{}, c).Model(&models.AdventureTemplateEntry{}).Delete(&result).Error
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Error deleting entity"})
 	}

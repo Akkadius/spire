@@ -12,8 +12,8 @@ type Fishing struct {
 	Chance                 int16       `json:"chance" gorm:"Column:chance"`
 	NpcId                  int         `json:"npc_id" gorm:"Column:npc_id"`
 	NpcChance              int         `json:"npc_chance" gorm:"Column:npc_chance"`
-	MinExpansion           uint8       `json:"min_expansion" gorm:"Column:min_expansion"`
-	MaxExpansion           uint8       `json:"max_expansion" gorm:"Column:max_expansion"`
+	MinExpansion           int8        `json:"min_expansion" gorm:"Column:min_expansion"`
+	MaxExpansion           int8        `json:"max_expansion" gorm:"Column:max_expansion"`
 	ContentFlags           null.String `json:"content_flags" gorm:"Column:content_flags"`
 	ContentFlagsDisabled   null.String `json:"content_flags_disabled" gorm:"Column:content_flags_disabled"`
 	Item                   *Item       `json:"item,omitempty" gorm:"foreignKey:Itemid;references:id"`

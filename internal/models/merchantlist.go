@@ -13,8 +13,8 @@ type Merchantlist struct {
 	AltCurrencyCost        uint16      `json:"alt_currency_cost" gorm:"Column:alt_currency_cost"`
 	ClassesRequired        int         `json:"classes_required" gorm:"Column:classes_required"`
 	Probability            int         `json:"probability" gorm:"Column:probability"`
-	MinExpansion           uint8       `json:"min_expansion" gorm:"Column:min_expansion"`
-	MaxExpansion           uint8       `json:"max_expansion" gorm:"Column:max_expansion"`
+	MinExpansion           int8        `json:"min_expansion" gorm:"Column:min_expansion"`
+	MaxExpansion           int8        `json:"max_expansion" gorm:"Column:max_expansion"`
 	ContentFlags           null.String `json:"content_flags" gorm:"Column:content_flags"`
 	ContentFlagsDisabled   null.String `json:"content_flags_disabled" gorm:"Column:content_flags_disabled"`
 	NpcType                *NpcType    `json:"npc_type,omitempty" gorm:"foreignKey:merchantid;references:merchant_id"`

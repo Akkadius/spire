@@ -266,7 +266,7 @@ func (e *SharedTaskActivityStateController) deleteSharedTaskActivityState(c echo
 		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
 	}
 
-	err = query.Limit(10000).Delete(&result).Error
+	err = e.db.Get(models.SharedTaskActivityState{}, c).Model(&models.SharedTaskActivityState{}).Delete(&result).Error
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Error deleting entity"})
 	}

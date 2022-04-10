@@ -1,6 +1,7 @@
 package models
 
 type Pet struct {
+	ID           int      `json:"id" gorm:"Column:id"`
 	Type         string   `json:"type" gorm:"Column:type"`
 	Petpower     int      `json:"petpower" gorm:"Column:petpower"`
 	NpcID        int      `json:"npc_id" gorm:"Column:npcID"`

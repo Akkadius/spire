@@ -266,7 +266,7 @@ func (e *TimerController) deleteTimer(c echo.Context) error {
 		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
 	}
 
-	err = query.Limit(10000).Delete(&result).Error
+	err = e.db.Get(models.Timer{}, c).Model(&models.Timer{}).Delete(&result).Error
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Error deleting entity"})
 	}

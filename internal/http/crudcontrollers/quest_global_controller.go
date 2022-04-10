@@ -332,7 +332,7 @@ func (e *QuestGlobalController) deleteQuestGlobal(c echo.Context) error {
 		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
 	}
 
-	err = query.Limit(10000).Delete(&result).Error
+	err = e.db.Get(models.QuestGlobal{}, c).Model(&models.QuestGlobal{}).Delete(&result).Error
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Error deleting entity"})
 	}

@@ -233,7 +233,7 @@ func (e *HackerController) deleteHacker(c echo.Context) error {
 		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
 	}
 
-	err = query.Limit(10000).Delete(&result).Error
+	err = e.db.Get(models.Hacker{}, c).Model(&models.Hacker{}).Delete(&result).Error
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Error deleting entity"})
 	}

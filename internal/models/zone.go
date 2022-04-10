@@ -92,8 +92,8 @@ type Zone struct {
 	FastRegenEndurance        int         `json:"fast_regen_endurance" gorm:"Column:fast_regen_endurance"`
 	NpcMaxAggroDist           int         `json:"npc_max_aggro_dist" gorm:"Column:npc_max_aggro_dist"`
 	MaxMovementUpdateRange    uint        `json:"max_movement_update_range" gorm:"Column:max_movement_update_range"`
-	MinExpansion              uint8       `json:"min_expansion" gorm:"Column:min_expansion"`
-	MaxExpansion              uint8       `json:"max_expansion" gorm:"Column:max_expansion"`
+	MinExpansion              int8        `json:"min_expansion" gorm:"Column:min_expansion"`
+	MaxExpansion              int8        `json:"max_expansion" gorm:"Column:max_expansion"`
 	ContentFlags              null.String `json:"content_flags" gorm:"Column:content_flags"`
 	ContentFlagsDisabled      null.String `json:"content_flags_disabled" gorm:"Column:content_flags_disabled"`
 	UnderworldTeleportIndex   int         `json:"underworld_teleport_index" gorm:"Column:underworld_teleport_index"`

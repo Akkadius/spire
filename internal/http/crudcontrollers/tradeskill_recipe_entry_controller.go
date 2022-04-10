@@ -43,7 +43,7 @@ func (e *TradeskillRecipeEntryController) Routes() []*routes.Route {
 // @Accept json
 // @Produce json
 // @Tags TradeskillRecipeEntry
-// @Param includes query string false "Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names <h4>Relationships</h4>TradeskillRecipe"
+// @Param includes query string false "Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names "
 // @Param where query string false "Filter on specific fields. Multiple conditions [.] separated Example: col_like_value.col2__val2"
 // @Param whereOr query string false "Filter on specific fields (Chained ors). Multiple conditions [.] separated Example: col_like_value.col2__val2"
 // @Param groupBy query string false "Group by field. Multiple conditions [.] separated Example: field1.field2"
@@ -71,7 +71,7 @@ func (e *TradeskillRecipeEntryController) listTradeskillRecipeEntries(c echo.Con
 // @Produce json
 // @Tags TradeskillRecipeEntry
 // @Param id path int true "Id"
-// @Param includes query string false "Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names <h4>Relationships</h4>TradeskillRecipe"
+// @Param includes query string false "Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names "
 // @Param select query string false "Column names [.] separated to fetch specific fields in response"
 // @Success 200 {array} models.TradeskillRecipeEntry
 // @Failure 404 {string} string "Entity not found"
@@ -233,7 +233,7 @@ func (e *TradeskillRecipeEntryController) deleteTradeskillRecipeEntry(c echo.Con
 		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
 	}
 
-	err = query.Limit(10000).Delete(&result).Error
+	err = e.db.Get(models.TradeskillRecipeEntry{}, c).Model(&models.TradeskillRecipeEntry{}).Delete(&result).Error
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Error deleting entity"})
 	}

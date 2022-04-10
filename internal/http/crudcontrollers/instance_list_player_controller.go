@@ -266,7 +266,7 @@ func (e *InstanceListPlayerController) deleteInstanceListPlayer(c echo.Context) 
 		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
 	}
 
-	err = query.Limit(10000).Delete(&result).Error
+	err = e.db.Get(models.InstanceListPlayer{}, c).Model(&models.InstanceListPlayer{}).Delete(&result).Error
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Error deleting entity"})
 	}

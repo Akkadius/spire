@@ -233,7 +233,7 @@ func (e *DiscoveredItemController) deleteDiscoveredItem(c echo.Context) error {
 		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
 	}
 
-	err = query.Limit(10000).Delete(&result).Error
+	err = e.db.Get(models.DiscoveredItem{}, c).Model(&models.DiscoveredItem{}).Delete(&result).Error
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Error deleting entity"})
 	}
