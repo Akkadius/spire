@@ -174,4 +174,83 @@ export class Tasks {
 
     return ''
   }
+
+  // used to seed "new" tasks in the task editor
+  public static getExampleTask() {
+    return {
+      "id": 2,
+      "type": 2,
+      "duration": 3600,
+      "duration_code": 0,
+      "title": "Example Task 2",
+      "description": "Example Task 2",
+      "reward": "XP",
+      "rewardid": 0,
+      "cashreward": 0,
+      "xpreward": 10,
+      "rewardmethod": 2,
+      "reward_radiant_crystals": 0,
+      "reward_ebon_crystals": 0,
+      "minlevel": 0,
+      "maxlevel": 0,
+      "level_spread": 0,
+      "min_players": 0,
+      "max_players": 0,
+      "repeatable": 1,
+      "faction_reward": 0,
+      "completion_emote": "",
+      "replay_timer_seconds": 0,
+      "request_timer_seconds": 0,
+      "task_activities": [{
+        "taskid": 2,
+        "activityid": 0,
+        "step": 1,
+        "activitytype": 2,
+        "target_name": "Orcs",
+        "item_list": "",
+        "skill_list": "-1",
+        "spell_list": "0",
+        "description_override": "",
+        "goalid": 1,
+        "goalmethod": 1,
+        "goalcount": 5,
+        "delivertonpc": 0,
+        "zones": "21",
+        "optional": 0
+      }, {
+        "taskid": 2,
+        "activityid": 1,
+        "step": 1,
+        "activitytype": 3,
+        "target_name": "any creature",
+        "item_list": "Rusty Items",
+        "skill_list": "-1",
+        "spell_list": "0",
+        "description_override": "",
+        "goalid": 2,
+        "goalmethod": 1,
+        "goalcount": 3,
+        "delivertonpc": 0,
+        "zones": "0",
+        "optional": 0
+      }, {
+        "taskid": 2,
+        "activityid": 2,
+        "step": 1,
+        "activitytype": 5,
+        "target_name": "",
+        "item_list": "",
+        "skill_list": "-1",
+        "spell_list": "0",
+        "description_override": "Locate the Antonica Spires in the Luclin Nexus",
+        "goalid": 1,
+        "goalmethod": 0,
+        "goalcount": 1,
+        "delivertonpc": 0,
+        "zones": "152",
+        "optional": 0
+      }]
+    }
+
+  }
 }

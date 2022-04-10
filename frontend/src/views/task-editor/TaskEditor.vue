@@ -115,6 +115,7 @@
 
               <eq-tabs
                 id="task-edit-window"
+                class="minified-inputs"
               >
                 <eq-tab
                   name="Task"
@@ -298,7 +299,8 @@
                      ]"
                       :class="field.col + ' mb-3 pl-2 pr-2'"
                     >
-                      <div class="text-center">
+                      <!--                      <div class="text-center">-->
+                      <div>
                         <span
                           v-if="field.itemIcon"
                           :class="'fade-in item-' + field.itemIcon + '-sm'"
@@ -408,68 +410,79 @@
                         <div
                           v-for="field in
                          [
-                           {
-                             description: 'Activity ID',
-                             field: 'activityid',
-                             col: 'col-6',
-                             zeroValue: -1
-                           },
+                           // User should probably not be able to manipulate this
+                           // {
+                           //   description: 'Activity ID',
+                           //   field: 'activityid',
+                           //   col: 'col-6',
+                           //   zeroValue: -1
+                           // },
                            {
                              description: 'Task Step',
                              field: 'step',
-                             col: 'col-6',
+                             itemIcon: '5739',
+                             col: 'col-2',
                              zeroValue: -1
                            },
                            {
                              description: 'Activity Type',
                              field: 'activitytype',
+                             itemIcon: '5739',
                              fieldType: 'select',
                              selectData: TASK_ACTIVITY_TYPES,
-                             col: 'col-6',
+                             col: 'col-4',
                            },
                            {
                              description: 'Activity Target',
+                             itemIcon: '5739',
                              field: 'target_name',
                              col: 'col-6',
                            },
                            {
                              description: 'Description Override',
                              field: 'description_override',
+                             itemIcon: '2275',
                              col: 'col-12',
                            },
                            {
                              description: 'Goal ID',
                              field: 'goalid',
+                             itemIcon: '3196',
                              col: 'col-2',
                            },
                            {
                              description: 'Goal Method',
                              field: 'goalmethod',
                              fieldType: 'select',
+                             itemIcon: '3196',
                              selectData: TASK_GOAL_METHOD_TYPE,
                              zeroValue: -1,
                              col: 'col-4',
                            },
                            {
                              description: 'Goal Count',
+                             itemIcon: '3196',
                              field: 'goalcount',
                              col: 'col-3',
                            },
                            {
                              description: 'Activity Optional',
                              field: 'optional',
+                             itemIcon: '4493',
                              fieldType: 'checkbox',
                              col: 'col-3',
                            },
                            {
                              description: 'Deliver to NPC',
                              field: 'delivertonpc',
+                             itemIcon: '5742',
                              col: 'col-6',
                              zeroValue: 0,
                              onclick: drawNpcSelector,
                            },
                            {
                              description: 'Zone',
+                             itemIcon: '3133',
                              field: 'zones',
                              col: 'col-6',
                              onclick: drawZoneSelector,
@@ -491,22 +504,30 @@
                            //   col: 'col-12',
                            // },
                          ]"
-                          :class="field.col + ' mb-3'"
+                          :class="field.col + ' mb-3 pl-2 pr-2'"
                         >
                           <div>
+                            <span
+                              v-if="field.itemIcon"
+                              :class="'fade-in item-' + field.itemIcon + '-sm'"
+                              style="display: inline-block"
+                            />
                             {{ field.description }}
                           </div>
 
                           <!-- checkbox -->
-                          <eq-checkbox
-                            v-b-tooltip.hover.v-dark.right :title="getFieldDescription(field.field)"
-                            class="mb-1 mt-3 d-inline-block"
-                            :true-value="(typeof field.true !== 'undefined' ? field.true : 1)"
-                            :false-value="(typeof field.false !== 'undefined' ? field.false : 0)"
-                            v-model.number="task.task_activities[selectedActivity][field.field]"
-                            @input="task.task_activities[selectedActivity][field.field] = $event"
-                            v-if="field.fieldType === 'checkbox'"
-                          />
+                          <div class="text-center">
+                            <eq-checkbox
+                              v-b-tooltip.hover.v-dark.right :title="getFieldDescription(field.field)"
+                              class="mb-1 mt-3 d-inline-block"
+                              :true-value="(typeof field.true !== 'undefined' ? field.true : 1)"
+                              :false-value="(typeof field.false !== 'undefined' ? field.false : 0)"
+                              v-model.number="task.task_activities[selectedActivity][field.field]"
+                              @input="task.task_activities[selectedActivity][field.field] = $event"
+                              v-if="field.fieldType === 'checkbox'"
+                            />
+                          </div>
+
 
                           <!-- input number -->
                           <b-form-input
@@ -803,49 +824,85 @@ export default {
       }
     },
 
-    async createTask(clone = false) {
-      if (clone) {
-        if (confirm(`Are you sure you want to copy this task? It will create a whole new copy.\n\n(${this.task.id}) ${this.task.title} `)) {
-          const id = await FreeIdFetcher.get("tasks", "id", "title")
-          if (id > 0) {
-            EditFormFieldUtil.setFieldModifiedById('id')
+    async createTask() {
+      const id = await FreeIdFetcher.get("tasks", "id", "title")
+      if (id > 0) {
+        EditFormFieldUtil.setFieldModifiedById('id')
 
-            // fetch task only with activities
-            const task = await Tasks.getTaskWithActivities(this.selectedTask)
-            if (task.id > 0) {
+        // relink id at the task level
+        let newTask = Tasks.getExampleTask()
+        newTask.id  = id
 
-              // relink id at the task level
-              let newTask = task
-              newTask.id  = id
+        // relink id at the activities level
+        let activities = []
+        if (newTask.task_activities) {
+          newTask.task_activities.forEach((a) => {
+            let activity    = a
+            activity.taskid = id
+            activities.push(activity)
+          })
 
-              // relink id at the activities level
-              let activities = []
-              if (newTask.task_activities) {
-                newTask.task_activities.forEach((a) => {
-                  let activity    = a
-                  activity.taskid = id
-                  activities.push(activity)
-                })
+          newTask.task_activities = activities
+        }
 
-                newTask.task_activities = activities
+        try {
+          const r = await Tasks.createTask(newTask)
+          if (r.status === 200) {
+            this.resetState()
+            this.selectedTask     = r.data.id
+            this.selectedActivity = 0
+            this.tasks            = []
+            this.updateQueryState()
+            this.sendNotification("New task created successfully!")
+          }
+        } catch (err) {
+          if (err.response.data.error) {
+            this.error = err.response.data.error
+          }
+        }
+      }
+    },
+
+    async cloneTask() {
+      if (confirm(`Are you sure you want to copy this task? It will create a whole new copy.\n\n(${this.task.id}) ${this.task.title} `)) {
+        const id = await FreeIdFetcher.get("tasks", "id", "title")
+        if (id > 0) {
+          EditFormFieldUtil.setFieldModifiedById('id')
+
+          // fetch task only with activities
+          const task = await Tasks.getTaskWithActivities(this.selectedTask)
+          if (task.id > 0) {
+
+            // relink id at the task level
+            let newTask = task
+            newTask.id  = id
+
+            // relink id at the activities level
+            let activities = []
+            if (newTask.task_activities) {
+              newTask.task_activities.forEach((a) => {
+                let activity    = a
+                activity.taskid = id
+                activities.push(activity)
+              })
+
+              newTask.task_activities = activities
+            }
+
+            try {
+              const r = await Tasks.createTask(newTask)
+              if (r.status === 200) {
+                this.resetState()
+                this.selectedTask     = r.data.id
+                this.selectedActivity = 0
+                this.tasks            = []
+                this.updateQueryState()
+                this.sendNotification("New task cloned successfully!")
               }
-
-              try {
-                const r = await Tasks.createTask(newTask)
-                if (r.status === 200) {
-                  this.resetState()
-                  this.selectedTask     = r.data.id
-                  this.selectedActivity = 0
-                  this.tasks            = []
-                  this.updateQueryState()
-                  this.sendNotification("New task created successfully!")
-                }
-              } catch (err) {
-                if (err.response.data.error) {
-                  this.error = err.response.data.error
-                }
+            } catch (err) {
+              if (err.response.data.error) {
+                this.error = err.response.data.error
               }
-
             }
           }
         }
