@@ -332,7 +332,7 @@ func (e *CharCreateCombinationController) deleteCharCreateCombination(c echo.Con
 		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
 	}
 
-	err = e.db.Get(models.CharCreateCombination{}, c).Model(&models.CharCreateCombination{}).Delete(&result).Error
+	err = query.Limit(10000).Delete(&result).Error
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Error deleting entity"})
 	}

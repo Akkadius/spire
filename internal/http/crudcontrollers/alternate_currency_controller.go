@@ -233,7 +233,7 @@ func (e *AlternateCurrencyController) deleteAlternateCurrency(c echo.Context) er
 		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
 	}
 
-	err = e.db.Get(models.AlternateCurrency{}, c).Model(&models.AlternateCurrency{}).Delete(&result).Error
+	err = query.Limit(10000).Delete(&result).Error
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Error deleting entity"})
 	}

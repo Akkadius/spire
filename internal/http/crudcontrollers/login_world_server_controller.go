@@ -233,7 +233,7 @@ func (e *LoginWorldServerController) deleteLoginWorldServer(c echo.Context) erro
 		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
 	}
 
-	err = e.db.Get(models.LoginWorldServer{}, c).Model(&models.LoginWorldServer{}).Delete(&result).Error
+	err = query.Limit(10000).Delete(&result).Error
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Error deleting entity"})
 	}

@@ -233,7 +233,7 @@ func (e *CharacterCorpseController) deleteCharacterCorpse(c echo.Context) error 
 		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
 	}
 
-	err = e.db.Get(models.CharacterCorpse{}, c).Model(&models.CharacterCorpse{}).Delete(&result).Error
+	err = query.Limit(10000).Delete(&result).Error
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Error deleting entity"})
 	}

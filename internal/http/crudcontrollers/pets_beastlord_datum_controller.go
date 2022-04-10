@@ -233,7 +233,7 @@ func (e *PetsBeastlordDatumController) deletePetsBeastlordDatum(c echo.Context) 
 		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
 	}
 
-	err = e.db.Get(models.PetsBeastlordDatum{}, c).Model(&models.PetsBeastlordDatum{}).Delete(&result).Error
+	err = query.Limit(10000).Delete(&result).Error
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Error deleting entity"})
 	}
