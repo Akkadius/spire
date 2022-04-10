@@ -81,8 +81,36 @@
             <!-- Task -->
             <div class="col-8 fade-in" id="my-form" v-if="task">
 
-              <b-alert show dismissable variant="danger" v-if="error" class="mt-2">
-                <i class="fa fa-warning"></i> {{ error }}
+              <!--              <div-->
+              <!--                v-if="notification"-->
+              <!--                :class="'text-center mt-2 btn-xs eq-header fade-in'"-->
+              <!--                style="width: 100%; font-size: 30px"-->
+              <!--                @click="notification = ''"-->
+              <!--              >-->
+              <!--                <i class="ra ra-book mr-1"></i>-->
+              <!--                {{ notification }}-->
+              <!--              </div>-->
+
+              <b-alert show dismissable variant="warning" v-if="notification" class="mt-2">
+                <div class="row">
+                  <div class="col-11">
+                    <i class="fa fa-info-circle mr-3"></i> {{ notification }}
+                  </div>
+                  <div class="col-1 text-right">
+                    <i class="fa fa-remove"></i>
+                  </div>
+                </div>
+              </b-alert>
+
+              <b-alert show dismissable variant="danger" v-if="error" class="mt-2" @click="error = ''">
+                <div class="row">
+                  <div class="col-11">
+                    <i class="fa fa-warning"></i> {{ error }}
+                  </div>
+                  <div class="col-1 text-right">
+                    <i class="fa fa-remove"></i>
+                  </div>
+                </div>
               </b-alert>
 
               <eq-tabs
@@ -96,34 +124,39 @@
                     <div
                       v-for="field in
                      [
-                       {
-                         description: 'Task ID',
-                         field: 'id',
-                         col: 'col-2',
-                         onclick: drawFreeIdSelector,
-                       },
+                       // {
+                       //   description: 'Task ID',
+                       //   field: 'id',
+                       //   col: 'col-2',
+                       //   itemIcon: '2275',
+                       //   onclick: drawFreeIdSelector,
+                       // },
                        {
                          description: 'Title',
                          field: 'title',
+                         itemIcon: '6840',
                          col: 'col-6',
                        },
                        {
                          description: 'Task Type',
                          field: 'type',
                          fieldType: 'select',
-                         col: 'col-4',
+                         itemIcon: '2275',
+                         col: 'col-6',
                          selectData: TASK_TYPES,
                          zeroValue: -1,
                        },
                        {
                          description: 'Task Description',
                          field: 'description',
+                         itemIcon: '2275',
                          fieldType: 'textarea',
                          col: 'col-12',
                        },
                        {
                          description: 'Duration Code',
                          field: 'duration_code',
+                         itemIcon: '750',
                          fieldType: 'select',
                          selectData: TASK_DURATION_TYPES,
                          col: 'col-4',
@@ -133,6 +166,7 @@
                          description: 'Duration',
                          field: 'duration',
                          fieldType: 'text',
+                         itemIcon: '750',
                          col: 'col-4',
                          zeroValue: -1,
                        },
@@ -141,48 +175,57 @@
                          field: 'duration',
                          fieldType: 'select',
                          selectData: TASK_DURATION_HUMAN,
+                         itemIcon: '750',
                          col: 'col-4',
                          zeroValue: -1,
                        },
                        {
                          description: 'Min Level',
                          field: 'minlevel',
+                         itemIcon: '5885',
                          fieldType: 'text',
                          col: 'col-2',
                        },
                        {
                          description: 'Max Level',
+                         itemIcon: '5885',
                          field: 'maxlevel',
+                         fieldType: 'text',
+                         col: 'col-2',
+                       },
+                       {
+                         description: 'Lvl Spread',
+                         itemIcon: '5885',
+                         field: 'level_spread',
                          fieldType: 'text',
                          col: 'col-2',
                        },
                        {
                          description: 'Min Players',
                          field: 'min_players',
+                         itemIcon: '6018',
                          fieldType: 'text',
                          col: 'col-2',
                        },
                        {
                          description: 'Max Players',
                          field: 'max_players',
+                         itemIcon: '6018',
                          fieldType: 'text',
                          col: 'col-2',
                        },
-                       {
-                         description: 'Lvl Spread',
-                         field: 'level_spread',
-                         fieldType: 'text',
-                         col: 'col-2',
-                       },
+
                        {
                          description: 'Repeatable',
                          field: 'repeatable',
+                         itemIcon: '2903',
                          fieldType: 'checkbox',
                          col: 'col-2',
                        },
                        {
                          description: 'Completion Emote',
                          field: 'completion_emote',
+                         itemIcon: '653',
                          fieldType: 'textarea',
                          col: 'col-12',
                        },
@@ -253,10 +296,9 @@
                        },
 
                      ]"
-                      :class="field.col + ' mb-3'"
+                      :class="field.col + ' mb-3 pl-2 pr-2'"
                     >
-
-                      <div>
+                      <div class="text-center">
                         <span
                           v-if="field.itemIcon"
                           :class="'fade-in item-' + field.itemIcon + '-sm'"
@@ -270,15 +312,18 @@
                       </div>
 
                       <!-- checkbox -->
-                      <eq-checkbox
-                        v-b-tooltip.hover.v-dark.right :title="getFieldDescription(field.field)"
-                        class="mb-1 mt-3 d-inline-block"
-                        :true-value="(typeof field.true !== 'undefined' ? field.true : 1)"
-                        :false-value="(typeof field.false !== 'undefined' ? field.false : 0)"
-                        v-model.number="task[field.field]"
-                        @input="task[field.field] = $event"
-                        v-if="field.fieldType === 'checkbox'"
-                      />
+                      <div class="text-center">
+                        <eq-checkbox
+                          v-b-tooltip.hover.v-dark.right :title="getFieldDescription(field.field)"
+                          class="mb-1 mt-3 d-inline-block text-center"
+                          :true-value="(typeof field.true !== 'undefined' ? field.true : 1)"
+                          :false-value="(typeof field.false !== 'undefined' ? field.false : 0)"
+                          v-model.number="task[field.field]"
+                          @input="task[field.field] = $event"
+                          v-if="field.fieldType === 'checkbox'"
+                        />
+                      </div>
+
 
                       <!-- input number -->
                       <b-form-input
@@ -685,6 +730,7 @@ export default {
 
       lastResetTime: Date.now(),
 
+      notification: "",
       error: "",
 
       TASK_TYPES: TASK_TYPES,
@@ -705,6 +751,13 @@ export default {
   },
 
   methods: {
+
+    sendNotification(message) {
+      this.notification = message
+      setTimeout(() => {
+        this.notification = ""
+      }, 5000)
+    },
 
     getBackendFormattedTask() {
       let t          = this.task
@@ -727,8 +780,8 @@ export default {
         const r = await Tasks.updateTask(this.getBackendFormattedTask())
         if (r.status === 200) {
           EditFormFieldUtil.resetFieldEditedStatus()
+          this.sendNotification("Task updated!");
         }
-        console.log(r)
       } catch (err) {
         if (err.response.data.error) {
           this.error = err.response.data.error
@@ -741,7 +794,9 @@ export default {
     async deleteTask() {
       if (confirm(`Are you sure you want to delete this task?\n\n(${this.task.id}) ${this.task.title} `)) {
         const r = await Tasks.deleteTaskWithActivities(this.task)
-        console.log(r)
+        if (r !== "") {
+          this.error = r
+        }
 
         this.resetStateAll()
         this.updateQueryState()
@@ -775,15 +830,22 @@ export default {
                 newTask.task_activities = activities
               }
 
-              // create task
-              const createdTask = await Tasks.createTask(newTask)
-              if (createdTask.id > 0) {
-                this.resetState()
-                this.selectedTask     = createdTask.id
-                this.selectedActivity = 0
-                this.tasks            = []
-                this.updateQueryState()
+              try {
+                const r = await Tasks.createTask(newTask)
+                if (r.status === 200) {
+                  this.resetState()
+                  this.selectedTask     = r.data.id
+                  this.selectedActivity = 0
+                  this.tasks            = []
+                  this.updateQueryState()
+                  this.sendNotification("New task created successfully!")
+                }
+              } catch (err) {
+                if (err.response.data.error) {
+                  this.error = err.response.data.error
+                }
               }
+
             }
           }
         }
@@ -817,6 +879,8 @@ export default {
       this.resetState()
       this.selectedActivity = 0
       this.tasks            = []
+      this.notification     = ""
+      this.error            = ""
     },
 
     setFieldModifiedById(id) {

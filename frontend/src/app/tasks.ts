@@ -63,12 +63,7 @@ export class Tasks {
   // TODO: bubble up error handling
   public static async createTask(task: any) {
     // @ts-ignore
-    const r = await this.getTaskApi().createTask({task: task}, {})
-    if (r.status === HttpStatus.OK) {
-      return r.data
-    }
-
-    return {}
+    return await this.getTaskApi().createTask({task: task}, {})
   }
 
   // TODO: bubble up error handling
@@ -83,16 +78,18 @@ export class Tasks {
 
   // TODO: bubble up error handling
   public static async deleteTaskWithActivities(task: any) {
-    // @ts-ignore
-    const r = await this.getTaskApi().deleteTask({id: task.id}, {})
-    if (r.status === HttpStatus.OK) {
-      const ar = await this.getTaskActivitiesApi().deleteTaskActivity({id: task.id}, {})
-      if (ar.status === HttpStatus.OK) {
-        console.log(ar)
+    try {
+      const r = await this.getTaskApi().deleteTask({id: task.id}, {})
+      if (r.status === HttpStatus.OK) {
+        await this.getTaskActivitiesApi().deleteTaskActivity({id: task.id}, {})
+      }
+    } catch (err) {
+      if (err.response.data.error) {
+        return err.response.data.error
       }
     }
 
-    return {}
+    return ""
   }
 
   public static buildActivityDescription(activity: any) {
