@@ -907,7 +907,7 @@ export default {
       // navigation
       this.$router.push(
         {
-          path: util.format(ROUTE.TASK_EDIT, this.selectedTask),
+          path: this.selectedTask > 0 ? util.format(ROUTE.TASK_EDIT, this.selectedTask) : ROUTE.TASKS,
           query: queryState
         }
       ).catch(() => {
