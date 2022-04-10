@@ -111,7 +111,7 @@
                          zeroValue: -1,
                        },
                        {
-                         description: 'Duration (Selector)',
+                         description: 'Duration',
                          field: 'duration',
                          fieldType: 'select',
                          selectData: TASK_DURATION_HUMAN,
@@ -237,6 +237,9 @@
                           style="display: inline-block"
                         />
                         {{ field.description }}
+                        <span
+                          v-if="(field.field.includes('timer_seconds') || field.field.includes('duration')) && task[field.field] > 0"
+                          class="font-weight-bold">({{ secondsToHumanTime(task[field.field]) }})</span>
                       </div>
 
                       <!-- checkbox -->
@@ -655,6 +658,22 @@ export default {
   },
 
   methods: {
+
+    secondsToHumanTime ( seconds ) {
+      let levels = [
+        [Math.floor(seconds / 31536000), 'y'],
+        [Math.floor((seconds % 31536000) / 86400), 'd'],
+        [Math.floor(((seconds % 31536000) % 86400) / 3600), 'h'],
+        [Math.floor((((seconds % 31536000) % 86400) % 3600) / 60), 'm'],
+        [(((seconds % 31536000) % 86400) % 3600) % 60, 's'],
+      ];
+      let returntext = '';
+      for (let i = 0, max = levels.length; i < max; i++) {
+        if ( levels[i][0] === 0 ) continue;
+        returntext += ' ' + levels[i][0] + '' + (levels[i][1]);
+      }
+      return returntext.trim();
+    },
 
     resetState() {
       this.task  = null;
