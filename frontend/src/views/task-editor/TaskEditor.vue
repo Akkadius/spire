@@ -898,10 +898,12 @@ export default {
           if (r.status === 200) {
             this.resetState()
             this.selectedTask     = r.data.id
-            this.selectedActivity = 0
-            this.tasks            = []
-            this.updateQueryState()
-            this.sendNotification("New task created successfully!")
+            setTimeout(() => {
+              this.selectedActivity = 0
+              this.tasks            = []
+              this.updateQueryState()
+              this.sendNotification("New task created successfully!")
+            }, 100)
           }
         } catch (err) {
           if (err.response && err.response.data && err.response.data.error) {
@@ -942,10 +944,13 @@ export default {
               if (r.status === 200) {
                 this.resetState()
                 this.selectedTask     = r.data.id
-                this.selectedActivity = 0
-                this.tasks            = []
-                this.updateQueryState()
-                this.sendNotification("New task cloned successfully!")
+
+                setTimeout(() => {
+                  this.selectedActivity = 0
+                  this.tasks            = []
+                  this.updateQueryState()
+                  this.sendNotification("New task cloned successfully!")
+                }, 100)
               }
             } catch (err) {
               if (err.response && err.response.data && err.response.data.error) {
@@ -1092,7 +1097,7 @@ export default {
       if (Object.keys(this.$route.query).length !== 0) {
         this.loadQueryState()
       }
-      this.loadTasks()
+      await this.loadTasks()
       this.loadTask()
     },
 
