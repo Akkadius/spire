@@ -428,6 +428,7 @@
                            {
                              description: 'Task Step',
                              field: 'step',
+                             fieldType: 'number',
                              itemIcon: '5739',
                              col: 'col-2',
                              zeroValue: -1
@@ -455,6 +456,7 @@
                            {
                              description: 'Goal ID',
                              field: 'goalid',
+                             fieldType: 'number',
                              itemIcon: '3196',
                              col: 'col-2',
                            },
@@ -471,6 +473,7 @@
                              description: 'Goal Count',
                              itemIcon: '3196',
                              field: 'goalcount',
+                             fieldType: 'number',
                              col: 'col-3',
                            },
                            {
@@ -483,6 +486,7 @@
                            {
                              description: 'Deliver to NPC',
                              field: 'delivertonpc',
+                             fieldType: 'number',
                              itemIcon: '5742',
                              col: 'col-6',
                              zeroValue: 0,
