@@ -239,7 +239,7 @@ export class Tasks {
       "rewardid": 0,
       "cashreward": 0,
       "xpreward": 10,
-      "rewardmethod": 2,
+      "rewardmethod": 0,
       "reward_radiant_crystals": 0,
       "reward_ebon_crystals": 0,
       "minlevel": 0,
