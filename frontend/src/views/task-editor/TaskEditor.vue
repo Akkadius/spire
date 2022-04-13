@@ -26,7 +26,7 @@
                     </b-button>
 
                     <b-button
-                      @click="createTask(true)"
+                      @click="cloneTask()"
                       size="sm"
                       variant="outline-light"
                     >
@@ -547,6 +547,7 @@
                             :id="field.field"
                             v-model.number="task.task_activities[selectedActivity][field.field]"
                             class="m-0 mt-1"
+                            v-on="typeof field.onclick !== 'undefined' ? { click: () => field.onclick(selectedActivity) } : {}"
                             v-b-tooltip.hover.v-dark.right :title="getFieldDescription(field.field)"
                             :style="(task.task_activities[selectedActivity][field.field] === 0 ? 'opacity: .5' : '')"
                           />
@@ -914,7 +915,7 @@ export default {
     },
 
     async cloneTask() {
-      if (confirm(`Are you sure you want to copy this task? It will create a whole new copy.\n\n(${this.task.id}) ${this.task.title} `)) {
+      if (confirm(`Are you sure you want to copy this task?\n\n(${this.task.id}) ${this.task.title} `)) {
         const id = await FreeIdFetcher.get("tasks", "id", "title")
         if (id > 0) {
           EditFormFieldUtil.setFieldModifiedById('id')
