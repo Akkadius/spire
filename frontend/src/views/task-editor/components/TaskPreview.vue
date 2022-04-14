@@ -425,6 +425,24 @@ export default {
 }
 </script>
 
-<style scoped>
+<style>
+.task-window-header td {
+  border-right: rgba(122, 134, 183, 0.5) 1px solid;
+  padding-left: 3px;
+  padding-right: 3px;
+  color: lightskyblue;
+}
 
+.task-window-header {
+  width: 100%;
+  margin: 0;
+}
+
+.task-window {
+  border: rgba(122, 134, 183, 0.5) 1px solid;
+}
+
+.task-window td {
+  padding-left: 3px;
+}
 </style>

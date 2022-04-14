@@ -130,7 +130,7 @@
                        //   field: 'id',
                        //   col: 'col-2',
                        //   itemIcon: '2275',
-                       //   onclick: drawFreeIdSelector,
+                       //   onclick: setSelectorActive,
                        // },
                        {
                          description: 'Title',
@@ -243,7 +243,7 @@
                          fieldType: 'text',
                          itemIcon: '3366',
                          col: 'col-4',
-                         onclick: drawItemSelector,
+                         onclick: setSelectorActive,
                        },
                        {
                          description: 'EXP Reward',
@@ -333,6 +333,7 @@
                         :id="field.field"
                         v-model.number="task[field.field]"
                         class="m-0 mt-1"
+                        v-on="typeof field.onclick !== 'undefined' ? { click: () => field.onclick(field.field) } : {}"
                         v-b-tooltip.hover.v-dark.right :title="getFieldDescription(field.field)"
                         :style="(task[field.field] === 0 ? 'opacity: .5' : '')"
                       />
@@ -343,7 +344,7 @@
                         :id="field.field"
                         v-model.number="task[field.field]"
                         class="m-0 mt-1"
-                        v-on="typeof field.onclick !== 'undefined' ? { click: () => field.onclick() } : {}"
+                        v-on="typeof field.onclick !== 'undefined' ? { click: () => field.onclick(field.field) } : {}"
                         v-b-tooltip.hover.v-dark.right :title="getFieldDescription(field.field)"
                         :style="(task[field.field] <= (typeof field.zeroValue !== 'undefined' ? field.zeroValue : 0) ? 'opacity: .5' : '')"
                       />
@@ -490,14 +491,14 @@
                              itemIcon: '5742',
                              col: 'col-6',
                              zeroValue: 0,
-                             onclick: drawNpcSelector,
+                             onclick: setSelectorActive,
                            },
                            {
                              description: 'Zone',
                              itemIcon: '3133',
                              field: 'zones',
                              col: 'col-6',
-                             onclick: drawZoneSelector,
+                             onclick: setSelectorActive,
                            },
                            // Removed until fully implemented
                            // {
@@ -547,7 +548,7 @@
                             :id="field.field"
                             v-model.number="task.task_activities[selectedActivity][field.field]"
                             class="m-0 mt-1"
-                            v-on="typeof field.onclick !== 'undefined' ? { click: () => field.onclick(selectedActivity) } : {}"
+                            v-on="typeof field.onclick !== 'undefined' ? { click: () => field.onclick(field.field) } : {}"
                             v-b-tooltip.hover.v-dark.right :title="getFieldDescription(field.field)"
                             :style="(task.task_activities[selectedActivity][field.field] === 0 ? 'opacity: .5' : '')"
                           />
@@ -558,7 +559,7 @@
                             :id="field.field"
                             v-model="task.task_activities[selectedActivity][field.field]"
                             class="m-0 mt-1"
-                            v-on="typeof field.onclick !== 'undefined' ? { click: () => field.onclick(selectedActivity) } : {}"
+                            v-on="typeof field.onclick !== 'undefined' ? { click: () => field.onclick(field.field) } : {}"
                             v-b-tooltip.hover.v-dark.right :title="getFieldDescription(field.field)"
                             :style="(task.task_activities[selectedActivity][field.field] <= (typeof field.zeroValue !== 'undefined' ? field.zeroValue : 0) ? 'opacity: .5' : '')"
                           />
@@ -636,7 +637,7 @@
         <div
           style="margin-top: 20px; width: auto;"
           class="fade-in"
-          v-if="itemSelectorActive"
+          v-if="selectorActive['rewardid'] || selectorActive['reward']"
         >
           <task-item-selector
             @input="task['rewardid'] = $event.id; task['reward'] = $event.name; setFieldModifiedById('rewardid'); setFieldModifiedById('reward')"
@@ -646,14 +647,14 @@
         <!-- Zone Selector -->
         <task-zone-selector
           :selected-zone-id="parseInt(task.task_activities[selectedActivity].zones)"
-          v-if="task && task.task_activities && task.task_activities[selectedActivity] && zoneSelectorActive"
+          v-if="task && task.task_activities && task.task_activities[selectedActivity] && selectorActive['zones']"
           @input="task.task_activities[selectedActivity].zones = $event.zoneId; setFieldModifiedById('zones')"
         />
 
         <!-- NPC Selector -->
         <task-npc-selector
           :selected-npc-id="task.task_activities[selectedActivity].delivertonpc"
-          v-if="task && task.task_activities && task.task_activities[selectedActivity] && npcSelectorActive"
+          v-if="task && task.task_activities && task.task_activities[selectedActivity] && selectorActive['delivertonpc']"
           @input="task.task_activities[selectedActivity].delivertonpc = $event.npcId; setFieldModifiedById('delivertonpc')"
         />
 
@@ -662,9 +663,8 @@
           title="Free Item Ids"
           style="margin-top: 30px; margin-right: 10px; width: auto;"
           class="fade-in"
-          v-if="freeIdSelectorActive"
+          v-if="selectorActive['id']"
         >
-
           <free-id-selector
             table-name="tasks"
             id-name="id"
@@ -756,11 +756,8 @@ export default {
       taskSearchFilter: "",
 
       // preview / selectors
+      selectorActive: {},
       previewTaskActive: true,
-      zoneSelectorActive: false,
-      npcSelectorActive: false,
-      itemSelectorActive: false,
-      freeIdSelectorActive: false,
 
       lastResetTime: Date.now(),
 
@@ -898,7 +895,7 @@ export default {
           const r = await Tasks.createTask(newTask)
           if (r.status === 200) {
             this.resetState()
-            this.selectedTask     = r.data.id
+            this.selectedTask = r.data.id
             setTimeout(() => {
               this.selectedActivity = 0
               this.tasks            = []
@@ -944,7 +941,7 @@ export default {
               const r = await Tasks.createTask(newTask)
               if (r.status === 200) {
                 this.resetState()
-                this.selectedTask     = r.data.id
+                this.selectedTask = r.data.id
 
                 setTimeout(() => {
                   this.selectedActivity = 0
@@ -1145,42 +1142,21 @@ export default {
       }
     },
     resetPreviewComponents() {
-      this.previewTaskActive    = false;
-      this.itemSelectorActive   = false;
-      this.zoneSelectorActive   = false;
-      this.npcSelectorActive    = false;
-      this.freeIdSelectorActive = false;
+      for (const [k, v] of Object.entries(this.selectorActive)) {
+        this.selectorActive[k] = false
+      }
 
       EditFormFieldUtil.resetFieldSubEditorHighlightedStatus()
     },
-    drawZoneSelector(selectedActivity) {
-      console.log("zone select", selectedActivity)
+    setSelectorActive(selector) {
       this.resetPreviewComponents()
-      this.lastResetTime      = Date.now()
-      this.zoneSelectorActive = true
-      EditFormFieldUtil.setFieldSubEditorHighlightedById("zones")
-    },
-    drawItemSelector() {
-      console.log("item select")
-      this.resetPreviewComponents()
-      this.lastResetTime      = Date.now()
-      this.itemSelectorActive = true
-      EditFormFieldUtil.setFieldSubEditorHighlightedById("rewardid")
-    },
-    drawFreeIdSelector() {
-      console.log("free id select")
-      this.resetPreviewComponents()
-      this.lastResetTime        = Date.now()
-      this.freeIdSelectorActive = true
-      EditFormFieldUtil.setFieldSubEditorHighlightedById("id")
-    },
-    drawNpcSelector() {
-      console.log("npcSelectorActive id select")
-      this.resetPreviewComponents()
-      this.lastResetTime     = Date.now()
-      this.npcSelectorActive = true
-      EditFormFieldUtil.setFieldSubEditorHighlightedById("delivertonpc")
-    },
+      this.previewTaskActive        = false;
+      this.lastResetTime            = Date.now()
+      this.selectorActive[selector] = true
+      this.$forceUpdate()
+
+      EditFormFieldUtil.setFieldSubEditorHighlightedById(selector)
+    }
   },
   async mounted() {
     await this.init()
@@ -1196,26 +1172,6 @@ export default {
   overflow-x: hidden;
   white-space: nowrap;
   border-radius: 5px;
-}
-
-.task-window-header td {
-  border-right: rgba(122, 134, 183, 0.5) 1px solid;
-  padding-left: 3px;
-  padding-right: 3px;
-  color: lightskyblue;
-}
-
-.task-window-header {
-  width: 100%;
-  margin: 0;
-}
-
-.task-window {
-  border: rgba(122, 134, 183, 0.5) 1px solid;
-}
-
-.task-window td {
-  padding-left: 3px;
 }
 
 </style>
