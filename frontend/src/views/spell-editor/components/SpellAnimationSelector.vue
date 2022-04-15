@@ -1,7 +1,5 @@
 <template>
   <div>
-    <app-loader :is-loading="!loaded" padding="8"/>
-
     <eq-window-simple style="width: 100%">
       <div class="row">
         <div class="col-12">

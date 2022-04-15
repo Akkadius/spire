@@ -5,8 +5,6 @@
       <div class="col-12">
         <eq-window class="mt-5" title="Zones">
 
-          <app-loader :is-loading="!loaded" padding="8"/>
-
           <div class="row" style="justify-content: center" v-if="zones">
             <div class='' style="width: 100%" v-if="loaded">
               <div class="ml-2 mt-1 pb-1">Showing ({{ resultCount }}) results</div>

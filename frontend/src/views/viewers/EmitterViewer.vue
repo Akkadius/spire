@@ -1,7 +1,5 @@
 <template>
   <div :class="isComponent ? '' : 'container-fluid'" v-if="loaded">
-    <app-loader :is-loading="!loaded" padding="8"/>
-
     <eq-window-simple
       title="Emitter Viewer"
       class="mt-4 text-center"

@@ -1,7 +1,5 @@
 <template>
   <div :class="isComponent ? '' : 'container-fluid'">
-    <app-loader :is-loading="!loaded" padding="8"/>
-
     <eq-window-simple
       title="Player Animations"
       v-if="loaded"

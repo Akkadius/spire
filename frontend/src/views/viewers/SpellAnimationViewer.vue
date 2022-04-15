@@ -1,8 +1,6 @@
 <template>
   <div>
     <div :class="isComponent ? '' : 'container-fluid'">
-      <app-loader :is-loading="!loaded" padding="8"/>
-
       <eq-window-simple title="Spell Animations" style="margin-bottom: 1px">
         <div class="row">
           <div class="col-12">

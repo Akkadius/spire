@@ -41,8 +41,6 @@
 
     </eq-window-simple>
 
-    <app-loader :is-loading="!loaded" padding="8"/>
-
   </div>
 </template>
 

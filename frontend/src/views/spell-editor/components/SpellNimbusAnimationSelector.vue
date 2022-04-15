@@ -1,7 +1,5 @@
 <template>
   <div>
-    <app-loader :is-loading="!loaded" padding="8"/>
-
     <eq-window-simple
       title="Nimbus Selector"
       class="text-center p-0"
