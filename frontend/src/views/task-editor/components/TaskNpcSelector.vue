@@ -4,6 +4,7 @@
       <b-input
         v-model="npcSearch"
         class="form-control"
+        id="search-selector"
         v-on:keyup.enter="searchNpc"
         placeholder="Search by npc name, id..."
       />
@@ -128,6 +129,11 @@ export default {
     },
   },
   mounted() {
+    const t = document.getElementById("search-selector")
+    if (t) {
+      t.focus()
+    }
+
     this.selectedNpcIdAttr = this.selectedNpcId
 
     if (this.selectedNpcIdAttr !== 0) {
