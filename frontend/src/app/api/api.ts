@@ -140,7 +140,7 @@ export * from './api/me-api';
 // export * from './api/npc-spells-effect-api';
 // export * from './api/npc-spells-effects-entry-api';
 // export * from './api/npc-spells-entry-api';
-// export * from './api/npc-type-api';
+export * from './api/npc-type-api';
 // export * from './api/npc-types-tint-api';
 // export * from './api/object-api';
 // export * from './api/object-content-api';
