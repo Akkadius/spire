@@ -895,10 +895,10 @@ export default {
           const r = await Tasks.createTask(newTask)
           if (r.status === 200) {
             this.resetState()
-            this.selectedTask = r.data.id
+            this.selectedTask     = r.data.id
+            this.selectedActivity = 0
+            this.tasks            = []
             setTimeout(() => {
-              this.selectedActivity = 0
-              this.tasks            = []
               this.updateQueryState()
               this.sendNotification("New task created successfully!")
             }, 100)
@@ -941,11 +941,11 @@ export default {
               const r = await Tasks.createTask(newTask)
               if (r.status === 200) {
                 this.resetState()
-                this.selectedTask = r.data.id
+                this.selectedTask     = r.data.id
+                this.selectedActivity = 0
+                this.tasks            = []
 
                 setTimeout(() => {
-                  this.selectedActivity = 0
-                  this.tasks            = []
                   this.updateQueryState()
                   this.sendNotification("New task cloned successfully!")
                 }, 100)

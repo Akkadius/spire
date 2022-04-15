@@ -264,7 +264,7 @@ export class Tasks {
         "description_override": "",
         "goalid": 1,
         "goalmethod": 1,
-        "goalcount": 5,
+        "goalcount": 1,
         "delivertonpc": 0,
         "zones": "21",
         "optional": 0
@@ -280,7 +280,7 @@ export class Tasks {
         "description_override": "",
         "goalid": 2,
         "goalmethod": 1,
-        "goalcount": 3,
+        "goalcount": 1,
         "delivertonpc": 0,
         "zones": "0",
         "optional": 0
@@ -317,7 +317,7 @@ export class Tasks {
       "description_override": "",
       "goalid": 1,
       "goalmethod": 1,
-      "goalcount": 5,
+      "goalcount": 1,
       "delivertonpc": 0,
       "zones": "21",
       "optional": 0
