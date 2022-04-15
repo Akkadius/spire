@@ -3,6 +3,7 @@
     <eq-window-simple title="Zone Selector">
       <b-input
         v-model="zoneSearch"
+        id="search-selector"
         class="form-control"
         v-on:keyup="searchZone"
         placeholder="Search by zone name, id..."
@@ -33,7 +34,7 @@
         </thead>
         <tbody>
         <tr
-          :id="'zone-' + zone.short_name"
+          :id="'zone-' + zone.zoneidnumber"
           :class="(isZoneSelected(zone) ? 'pulsate-highlight-white' : '')"
           v-for="(zone, index) in filteredZones"
           :key="zone.id"
@@ -97,7 +98,7 @@ export default {
   },
   methods: {
     isZoneSelected(zone) {
-      return zone.short_name.trim() === this.selectedZone
+      return zone.zoneidnumber === parseInt(this.selectedZone)
     },
 
     selectZone(zone) {
@@ -151,22 +152,35 @@ export default {
     },
 
     init() {
-      this.loadZones()
+      const t = document.getElementById("search-selector")
+      if (t) {
+        t.focus()
+      }
+
+      this.loadZones().then(() => {
+        this.scrollToSelected()
+      })
+    },
+
+    scrollToSelected() {
+      setTimeout(() => {
+        const container = document.getElementById("zone-view-container");
+        const target    = document.getElementById(util.format("zone-%s", this.selectedZone))
+        if (container && target) {
+          const top           = target.getBoundingClientRect().top
+          container.scrollTop = container.scrollTop + top - 300;
+        }
+      }, 100)
     }
   },
   mounted() {
     // model we work with after the prop is passed - we can manipulate it ourselves
-    this.selectedZone = this.selectedZoneName
-    this.init()
+    if (this.selectedZoneId > 0) {
+      this.selectedZone = this.selectedZoneId
+      this.zoneSearch   = this.selectedZoneId
+    }
 
-    setTimeout(() => {
-      const container = document.getElementById("zone-view-container");
-      const target    = document.getElementById(util.format("zone-%s", this.selectedZone))
-      if (container && target) {
-        const top           = target.getBoundingClientRect().top
-        container.scrollTop = container.scrollTop + top - 300;
-      }
-    }, 1000)
+    this.init()
   }
 }
 </script>
