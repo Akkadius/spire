@@ -722,7 +722,8 @@ import {
   TASK_ACTIVITY_TYPES,
   TASK_DURATION_HUMAN,
   TASK_DURATION_TYPES,
-  TASK_GOAL_METHOD_TYPE, TASK_REWARD_METHOD_TYPE,
+  TASK_GOAL_METHOD_TYPE,
+  TASK_REWARD_METHOD_TYPE,
   TASK_TYPES
 } from "@/app/constants/eq-task-constants";
 import EqWindowSimple from "@/components/eq-ui/EQWindowSimple.vue";

@@ -27,7 +27,7 @@
           <th style="width: 30px"></th>
           <th style="width: 30px">ID</th>
           <th>Name</th>
-          <th>Last Name</th>
+          <th>Zones</th>
         </tr>
         </thead>
         <tbody>
@@ -46,8 +46,8 @@
             </b-button>
           </td>
           <td style="text-align: center" class="p-0">{{ npc.id }}</td>
-          <td>{{ npc.name }}</td>
-          <td>{{ npc.lastname }}</td>
+          <td>{{ npc.name }} <span v-if="npc.lastname && npc.lastname.length > 0">({{npc.lastname}})</span></td>
+          <td><span v-if="npcZones[npc.id]">{{ npcZones[npc.id].join(",") }}</span></td>
         </tr>
         </tbody>
       </table>
@@ -63,6 +63,7 @@ import util                from "util";
 import Expansions          from "@/app/utility/expansions";
 import EqCheckbox          from "@/components/eq-ui/EQCheckbox";
 import {SpireQueryBuilder} from "@/app/api/spire-query-builder";
+import {Zones}             from "@/app/zones";
 
 export default {
   name: "TaskNpcSelector",
@@ -77,6 +78,9 @@ export default {
 
       // model we work with after the prop is passed we can manipulate it ourselves props should not be mutated
       selectedNpcIdAttr: 0,
+
+      // key by npcid
+      npcZones: {},
     }
   },
   props: {
@@ -112,12 +116,40 @@ export default {
         builder.whereOr("id", "=", this.npcSearch)
       }
 
+      builder.includes([
+        "Spawnentries",
+        "Spawnentries.Spawngroup",
+        "Spawnentries.Spawngroup.Spawn2",
+        "Spawnentries.Spawngroup.Spawn2.Spawnentries",
+        "Spawnentries.Spawngroup.Spawn2.Spawngroup",
+      ])
+
       const result = await api.listNpcTypes(
         builder.orderBy(["id", "name"]).get()
       )
 
       if (result.status === 200) {
         this.filteredNpcs = result.data
+
+        // get zones where npc's reside in
+        let npcZones = {}
+        for (const npc of result.data) {
+          if (
+            npc.spawnentries &&
+            npc.spawnentries[0].spawngroup &&
+            npc.spawnentries[0].spawngroup.spawn_2
+          ) {
+            const zoneName = await Zones.getZoneLongNameByShortName(npc.spawnentries[0].spawngroup.spawn_2.zone.toLowerCase())
+            if (typeof this.npcZones[npc.id] === "undefined") {
+              npcZones[npc.id] = []
+            }
+
+            npcZones[npc.id].push(`${zoneName} (${npc.spawnentries[0].spawngroup.spawn_2.version})`)
+          }
+        }
+
+        // update npcZones
+        this.npcZones = npcZones
       }
     },
 
