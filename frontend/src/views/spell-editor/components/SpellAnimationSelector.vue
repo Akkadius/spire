@@ -65,7 +65,6 @@
 import PageHeader        from "@/components/layout/PageHeader";
 import {App}             from "@/constants/app";
 import EqWindow          from "@/components/eq-ui/EQWindow";
-import spellAnimMappings from "@/app/data-maps/spell-icon-anim-name-map.json";
 import * as util         from "util";
 import VideoViewer       from "@/app/video-viewer/video-viewer";
 import EqWindowSimple    from "@/components/eq-ui/EQWindowSimple";
@@ -156,12 +155,13 @@ export default {
     triggerSearch() {
       this.spellAnimSearch();
     },
-    spellAnimSearch: function () {
+    spellAnimSearch: async function () {
       this.loaded = false
 
       let foundAnim          = {};
       let filteredAnimations = []
 
+      const spellAnimMappings = await EqAssets.getSpellAnimNameMappings()
       for (let spellAnimMapping of spellAnimMappings) {
         const spellName   = spellAnimMapping[0].toLowerCase().trim()
         const spellAnimId = spellAnimMapping[2]

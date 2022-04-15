@@ -99,7 +99,6 @@
 import PageHeader        from "@/components/layout/PageHeader";
 import {App}             from "@/constants/app";
 import EqWindow          from "@/components/eq-ui/EQWindow";
-import spellAnimMappings from "@/app/data-maps/spell-icon-anim-name-map.json";
 import {ROUTE}           from "../../routes";
 import VideoViewer       from "../../app/video-viewer/video-viewer";
 import EqAssets          from "../../app/eq-assets/eq-assets";
@@ -230,6 +229,7 @@ export default {
 
       if (this.search !== "") {
         filteredAnimations = []
+        const spellAnimMappings = await EqAssets.getSpellAnimNameMappings()
         for (let spellAnimMapping of spellAnimMappings) {
           const spellName   = spellAnimMapping[0].toLowerCase().trim()
           const spellAnimId = spellAnimMapping[2]

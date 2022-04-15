@@ -214,4 +214,22 @@ export default class EqAssets {
 
     return ids
   }
+
+  public static spellAnimNameMappings = []
+
+  public static async getSpellAnimNameMappings() {
+    // return cached set
+    if (this.spellAnimNameMappings.length > 0) {
+      return this.spellAnimNameMappings
+    }
+
+    const r = await SpireApiClient.v1().get('/static-map/spell-icon-anim-name-map.json')
+    if (r.status === HttpStatus.OK) {
+      this.spellAnimNameMappings = r.data
+      return r.data
+    }
+
+    return []
+  }
+
 }
