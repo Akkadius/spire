@@ -231,11 +231,20 @@
                          col: 'col-12',
                        },
                        {
+                         description: 'Reward Type',
+                         field: 'rewardmethod',
+                         fieldType: 'select',
+                         itemIcon: '3366',
+                         selectData: TASK_REWARD_METHOD_TYPE,
+                         zeroValue: -1,
+                         col: 'col-3',
+                       },
+                       {
                          description: 'Reward Text',
                          field: 'reward',
                          fieldType: 'text',
                          itemIcon: '3366',
-                         col: 'col-8',
+                         col: 'col-5',
                        },
                        {
                          description: 'Reward Item ID',
@@ -713,7 +722,7 @@ import {
   TASK_ACTIVITY_TYPES,
   TASK_DURATION_HUMAN,
   TASK_DURATION_TYPES,
-  TASK_GOAL_METHOD_TYPE,
+  TASK_GOAL_METHOD_TYPE, TASK_REWARD_METHOD_TYPE,
   TASK_TYPES
 } from "@/app/constants/eq-task-constants";
 import EqWindowSimple from "@/components/eq-ui/EQWindowSimple.vue";
@@ -764,6 +773,7 @@ export default {
       notification: "",
       error: "",
 
+      TASK_REWARD_METHOD_TYPE: TASK_REWARD_METHOD_TYPE,
       TASK_TYPES: TASK_TYPES,
       TASK_DURATION_TYPES: TASK_DURATION_TYPES,
       TASK_DURATION_HUMAN: TASK_DURATION_HUMAN,

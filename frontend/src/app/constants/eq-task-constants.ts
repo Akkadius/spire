@@ -87,3 +87,9 @@ export const TASK_GOAL_METHOD_TYPE = {
   1: "List (of entries)",
   2: "Quest Controlled",
 }
+
+export const TASK_REWARD_METHOD_TYPE = {
+  0: "Single ID",
+  1: "List (of entries)",
+  2: "Quest Controlled",
+}
