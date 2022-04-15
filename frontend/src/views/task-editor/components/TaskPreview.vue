@@ -88,7 +88,7 @@
         <div v-if="task.rewardid > 0 && rewardItem">
           <item-popover
             :item="rewardItem"
-            v-if="Object.keys(rewardItem).length > 0"
+            v-if="Object.keys(rewardItem).length > 0 && rewardItem > 0"
             size="regular"
             class="mt-3"
           />

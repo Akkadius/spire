@@ -37,7 +37,6 @@
 </template>
 
 <script>
-import NpcModels         from "@/app/eq-assets/npc-models-map";
 import util              from "util";
 import {RACES}           from "@/app/constants/eq-race-constants"
 import PageHeader        from "@/components/layout/PageHeader";
@@ -46,6 +45,7 @@ import EqWindow          from "@/components/eq-ui/EQWindow";
 import EqWindowSimple    from "@/components/eq-ui/EQWindowSimple";
 import {debounce}        from "@/app/utility/debounce.js";
 import {DB_PLAYER_RACES} from "@/app/constants/eq-races-constants";
+import EqAssets          from "../../../app/eq-assets/eq-assets";
 
 const baseUrl     = App.ASSET_CDN_BASE_URL + "assets/npc_models/";
 const MAX_RACE_ID = 700;
@@ -66,8 +66,8 @@ export default {
     }
   },
   watch: {
-    'selectedMaterial': function (newVal, oldVal) {
-      this.initModels()
+    'selectedMaterial': async function (newVal, oldVal) {
+      await this.initModels()
       this.loadModels()
     },
   },
@@ -159,13 +159,12 @@ export default {
 
       return raceImages
     },
-    initModels() {
+    async initModels() {
       var start = new Date().getTime();
-      NpcModels[0].contents.forEach((row) => {
-        const pieces   = row.name.split(/\//);
-        const fileName = pieces[pieces.length - 1];
 
-        modelFiles[fileName] = 1
+      const r = await EqAssets.getNpcModels()
+      r.forEach((n) => {
+        modelFiles[n.fileName] = 1
       })
 
       this.raceImages = {};
@@ -209,7 +208,7 @@ export default {
   },
   async created() {
     this.raceConstants = RACES
-    this.initModels()
+    await this.initModels()
 
     setTimeout(() => {
       this.loadModels()

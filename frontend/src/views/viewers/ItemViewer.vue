@@ -53,7 +53,7 @@
       <!-- loader -->
       <div v-if="!loaded" class="text-center justify-content-center mt-5 mb-5">
         <div class="mb-3">
-          {{ renderingImages ? 'Rendering images...' : 'Loading images...'}}
+          {{ renderingImages ? 'Rendering images...' : 'Loading images...' }}
         </div>
         <loader-fake-progress v-if="!loaded && !renderingImages"/>
         <eq-progress-bar :percent="100" v-if="renderingImages"/>
@@ -89,7 +89,6 @@
 </template>
 
 <script>
-import ItemModels            from "@/app/eq-assets/objects-map.json";
 import util                  from "util";
 import itemSlots             from "@/constants/item-slots.json"
 import itemSlotIdFileMapping from "@/constants/item-slot-idfile-mapping.json"
@@ -101,8 +100,9 @@ import {App}                 from "@/constants/app";
 import EqWindow              from "@/components/eq-ui/EQWindow";
 import {ROUTE}               from "../../routes";
 import EqWindowSimple        from "../../components/eq-ui/EQWindowSimple";
-import LoaderFakeProgress     from "../../components/LoaderFakeProgress";
+import LoaderFakeProgress    from "../../components/LoaderFakeProgress";
 import EqProgressBar         from "../../components/eq-ui/EQProgressBar";
+import EqAssets              from "../../app/eq-assets/eq-assets";
 
 const baseUrl         = App.ASSET_CDN_BASE_URL + "assets/objects/";
 const MAX_ITEM_IDFILE = 100000;
@@ -180,8 +180,8 @@ export default {
     // zero state loader
     loadModels: function () {
 
-      let curImg = new Image();
-      curImg.src = '/eq-asset-preview-master/assets/sprites/objects.png';
+      let curImg    = new Image();
+      curImg.src    = '/eq-asset-preview-master/assets/sprites/objects.png';
       curImg.onload = () => {
         this.renderingImages = true
 
@@ -243,10 +243,7 @@ export default {
     this.loaded = false;
 
     modelFiles = {};
-    ItemModels[0].contents.forEach((row) => {
-      const pieces   = row.name.split(/\//);
-      const fileName = pieces[pieces.length - 1];
-
+    (await EqAssets.getItemModelFileNames()).forEach((fileName) => {
       modelFiles[fileName] = 1
     })
 

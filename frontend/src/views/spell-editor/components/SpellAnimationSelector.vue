@@ -96,14 +96,14 @@ export default {
     this.init()
   },
   methods: {
-    init() {
+    async init() {
       console.time("[SpellAnimationSelector] init");
       if (!this.$route.query.q) {
         this.search        = ""
         this.filteredRaces = []
       }
 
-      this.render()
+      await this.render()
       this.spellAnimSearch()
 
       // bring focus to the selected video
@@ -131,10 +131,11 @@ export default {
     handleRender() {
       VideoViewer.handleRender()
     },
-    render: function () {
+    render: async function () {
       // Preload model files
       let modelFiles = [];
-      EqAssets.getSpellAnimationFileIds().forEach((animationId) => {
+      const r        = await EqAssets.getSpellAnimationFileIds()
+      r.forEach((animationId) => {
         modelFiles.push(animationId)
         animationPreviewExists[animationId] = 1
       })

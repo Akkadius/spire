@@ -78,7 +78,6 @@
 </template>
 
 <script>
-import ItemIcons            from "@/app/eq-assets/item-icons-map.json";
 import util                 from "util";
 import itemSlots            from "@/constants/item-slots.json"
 import itemTypes            from "@/constants/item-types.json"
@@ -88,6 +87,7 @@ import PageHeader           from "@/components/layout/PageHeader";
 import EqWindowSimple       from "@/components/eq-ui/EQWindowSimple";
 import EqWindowComplex      from "@/components/eq-ui/EQWindowComplex";
 import EqWindow             from "@/components/eq-ui/EQWindow";
+import EqAssets             from "../../../app/eq-assets/eq-assets";
 
 const MAX_ICON_ID = 10000;
 // const MAX_ICON_ID = 1000;
@@ -208,16 +208,14 @@ export default {
     },
 
     // load meta data
-    loadModelMeta: function () {
+    loadModelMeta: async function () {
       console.time("files");
 
       // Preload model files
       modelFiles = {};
-      ItemIcons[0].contents.forEach((row) => {
-        const pieces   = row.name.split(/\//);
-        const fileName = pieces[pieces.length - 1];
-
-        modelFiles[fileName] = 1
+      const r    = await EqAssets.getItemIcons()
+      r.forEach((file) => {
+        modelFiles[file] = 1
       })
 
       console.timeEnd("files");

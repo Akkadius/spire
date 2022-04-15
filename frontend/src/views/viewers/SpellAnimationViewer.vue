@@ -191,13 +191,13 @@ export default {
       })
     },
 
-    init() {
+    async init() {
       if (!this.$route.query.q) {
         this.search        = ""
         this.filteredRaces = []
       }
 
-      this.render()
+      await this.render()
       this.spellAnimSearch()
 
       // hook video viewer scroll listener
@@ -206,12 +206,13 @@ export default {
     videoRender() {
       VideoViewer.handleRender();
     },
-    render: function () {
-      EqAssets.getSpellAnimationFileIds().forEach((animationId) => {
+    render: async function () {
+      const r = await EqAssets.getSpellAnimationFileIds()
+      r.forEach((animationId) => {
         animationPreviewExists[animationId] = 1
       })
 
-      this.spellAnimations = EqAssets.getSpellAnimationFileIds()
+      this.spellAnimations = await EqAssets.getSpellAnimationFileIds()
       this.loaded          = true
 
       setTimeout(() => {
@@ -221,11 +222,11 @@ export default {
     triggerSearch: debounce(function () {
       this.updateQueryState()
     }, 1000),
-    spellAnimSearch: function () {
+    spellAnimSearch: async function () {
       this.loaded = false
 
       let foundAnim          = {};
-      let filteredAnimations = EqAssets.getSpellAnimationFileIds()
+      let filteredAnimations = await EqAssets.getSpellAnimationFileIds()
 
       if (this.search !== "") {
         filteredAnimations = []

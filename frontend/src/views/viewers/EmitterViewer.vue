@@ -66,7 +66,7 @@ export default {
     this.init()
   },
   methods: {
-    init() {
+    async init() {
       if (!this.$route.query.q) {
         this.search        = ""
         this.filteredRaces = []
@@ -78,7 +78,7 @@ export default {
         this.previewAnimSearch();
       });
 
-      this.render()
+      await this.render()
       this.previewAnimSearch()
 
       // hook video viewer scroll listener
@@ -87,8 +87,8 @@ export default {
     videoRender() {
       VideoViewer.handleRender();
     },
-    render: function () {
-      this.previews = EqAssets.getEmitterPreviewFileIds()
+    render: async function () {
+      this.previews = await EqAssets.getEmitterPreviewFileIds()
       this.loaded   = true
 
       setTimeout(() => {
