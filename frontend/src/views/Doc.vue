@@ -67,7 +67,7 @@ export default {
       SpireApiClient.v1().get(`/doc/${page}`).then((response) => {
         if (response.data && response.data.data) {
 
-          const hljs = require("highlight.js");
+          // const hljs = require("highlight.js");
           const md   = require("markdown-it")({
             html: true,
             xhtmlOut: false,

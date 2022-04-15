@@ -142,11 +142,11 @@ export default new Router({
           component: () => import('./views/Zones.vue'),
           meta: {title: "Zones"},
         },
-        {
-          path: '/zone/:zoneId',
-          component: () => import('./views/Zone.vue'),
-          meta: {title: "Zone"},
-        },
+        // {
+        //   path: '/zone/:zoneId',
+        //   component: () => import('./views/Zone.vue'),
+        //   meta: {title: "Zone"},
+        // },
         {
           path: '/connections',
           component: () => import('./views/Connections.vue'),

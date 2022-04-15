@@ -29,8 +29,8 @@ import "rpg-awesome/css/rpg-awesome.min.css";
 import "@/assets/css/highlight-js-vs2015.css";
 
 /* ag-grid */
-import "../node_modules/ag-grid-community/dist/styles/ag-grid.css";
-import "../node_modules/ag-grid-community/dist/styles/ag-theme-balham-dark.css";
+// import "../node_modules/ag-grid-community/dist/styles/ag-grid.css";
+// import "../node_modules/ag-grid-community/dist/styles/ag-theme-balham-dark.css";
 
 /* spritesheet assets */
 // import "../public/eq-asset-preview-master/assets/sprites/item-icons.css";
@@ -38,7 +38,7 @@ import "../node_modules/ag-grid-community/dist/styles/ag-theme-balham-dark.css";
 // import "../public/eq-asset-preview-master/assets/sprites/race-models.css";
 
 // Ag grid enterprisec
-import 'ag-grid-enterprise';
+// import 'ag-grid-enterprise';
 
 // vue-tree
 
