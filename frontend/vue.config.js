@@ -15,16 +15,19 @@ module.exports = {
   // },
 
   chainWebpack: config => {
-
     config.performance
       .maxEntrypointSize(40000000)
       .maxAssetSize(40000000)
 
-    config.plugin('copy').tap(([options]) => {
-      options[0].ignore.push('eq-asset-preview-master/**/*')
+    // ignore asset preview during development to keep build times down
+    if (process.env.NODE_ENV !== 'production') {
+      config.plugin('copy').tap(([options]) => {
+        options[0].ignore.push('eq-asset-preview-master/**/*')
 
-      return [options]
-    })
+        return [options]
+      })
+    }
+
     //
     config.output
       .filename('[name].[hash].js')
@@ -33,7 +36,7 @@ module.exports = {
 
     // config.optimization.moduleIds    = 'deterministic'
     // config.optimization.runtimeChunk = 'single'
-    config.optimization.splitChunks  = {
+    config.optimization.splitChunks = {
       cacheGroups: {
         vendor: {
           test: /[\\/]node_modules[\\/]/,
