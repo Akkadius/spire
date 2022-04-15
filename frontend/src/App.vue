@@ -39,15 +39,15 @@ export default {
 
     loadWallpaper() {
       const backgrounds = [
-        "champions-of-norrath-wallpaper.jpg",
         "faydark.png",
         "freeport.png",
         "lavastorm.png",
         "rivervale.png",
+        "oasis.png",
+        "sebilis.png",
         "qeynos.png",
         "soldungb.png",
         "spire-wall.jpg",
-        "void.jpeg",
       ]
 
       const background = util.format("%s%s",
