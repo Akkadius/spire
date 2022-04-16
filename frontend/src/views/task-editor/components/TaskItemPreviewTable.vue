@@ -133,9 +133,17 @@ export default {
         }, 100)
       }
     }
+
+    if (this.selectedItemId > 0) {
+      this.highlightedItem = this.selectedItemId
+    }
   },
   props: {
-    items: Array
+    items: Array,
+    selectedItemId: {
+      type: Number,
+      required: false,
+    },
   },
   methods: {
     selectItem(item) {

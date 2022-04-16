@@ -135,7 +135,7 @@ export default {
     }
   },
   props: {
-    items: Array
+    items: Array,
   },
   methods: {
     selectItem(item) {

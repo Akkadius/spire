@@ -190,6 +190,7 @@
 
     <task-item-preview-table
       :items="items"
+      :selected-item-id="selectedItemId"
       @input="bubbleToParent($event)"
       v-if="loaded && items && searchPerformed"
     />
@@ -214,15 +215,13 @@ import itemTypes from "@/constants/item-types.json"
 import EqCheckbox from "@/components/eq-ui/EQCheckbox.vue";
 import ItemPreviewTable from "@/views/items/components/ItemPreviewTable.vue";
 import EqWindowSimple from "@/components/eq-ui/EQWindowSimple.vue";
-import SpellItemPreviewTable from "@/views/spell-editor/components/SpellItemPreviewTable.vue";
 import {SpireQueryBuilder} from "@/app/api/spire-query-builder";
-import TaskItemPreviewTable from "@/views/spell-editor/components/SpellItemPreviewTable.vue";
+import TaskItemPreviewTable from "@/views/task-editor/components/TaskItemPreviewTable";
 
 export default {
   name: "TaskItemSelector",
   components: {
     TaskItemPreviewTable,
-    SpellItemPreviewTable,
     EqWindowSimple,
     ItemPreviewTable,
     EqCheckbox,
@@ -289,7 +288,20 @@ export default {
       )
     }
 
+    // if item is passed in, set it as the search context
+    if (this.selectedItemId > 0) {
+      this.itemName = this.selectedItemId
+      this.search()
+    }
+
     this.loaded = true;
+  },
+
+  props: {
+    selectedItemId: {
+      type: Number,
+      required: false,
+    },
   },
 
   methods: {

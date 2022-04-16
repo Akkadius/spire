@@ -479,6 +479,7 @@
                              fieldType: 'number',
                              itemIcon: '3196',
                              col: 'col-2',
+                             onclick: setSelectorActive,
                            },
                            {
                              description: 'Goal Method',
@@ -653,7 +654,7 @@
 
       <div class="col-5 fade-in" v-if="task">
 
-        <!-- item selector -->
+        <!-- (rewardid) item selector -->
         <div
           style="margin-top: 20px; width: auto;"
           class="fade-in"
@@ -664,21 +665,33 @@
           />
         </div>
 
-        <!-- Zone Selector -->
+        <!-- (goalid) item selector -->
+        <div
+          style="margin-top: 20px; width: auto;"
+          class="fade-in"
+          v-if="selectorActive['goalid'] && task.task_activities[selectedActivity].activitytype === TASK_ACTIVITY_TYPE.LOOT && task.task_activities[selectedActivity].goalmethod === 0"
+        >
+          <task-item-selector
+            :selected-item-id="task.task_activities[selectedActivity].goalid ? task.task_activities[selectedActivity].goalid : 0"
+            @input="task.task_activities[selectedActivity].goalid = $event.id; setFieldModifiedById('goalid'); postTargetNameUpdateProcessor(selectedActivity, $event, TASK_ACTIVITY_TYPE.LOOT)"
+          />
+        </div>
+
+        <!-- (zones) Zone Selector -->
         <task-zone-selector
           :selected-zone-id="parseInt(task.task_activities[selectedActivity].zones)"
           v-if="task && task.task_activities && task.task_activities[selectedActivity] && selectorActive['zones']"
           @input="task.task_activities[selectedActivity].zones = $event.zoneId; setFieldModifiedById('zones')"
         />
 
-        <!-- NPC Selector -->
+        <!-- (delivertonpc) NPC Selector -->
         <task-npc-selector
           :selected-npc-id="task.task_activities[selectedActivity].delivertonpc"
           v-if="task && task.task_activities && task.task_activities[selectedActivity] && selectorActive['delivertonpc']"
-          @input="task.task_activities[selectedActivity].delivertonpc = $event.npcId; setFieldModifiedById('delivertonpc')"
+          @input="task.task_activities[selectedActivity].delivertonpc = $event.npcId; setFieldModifiedById('delivertonpc'); postTargetNameUpdateProcessor(selectedActivity, $event, TASK_ACTIVITY_TYPE.DELIVER)"
         />
 
-        <!-- free id selector -->
+        <!-- (id) free id selector -->
         <eq-window-simple
           title="Free Item Ids"
           style="margin-top: 30px; margin-right: 10px; width: auto;"
@@ -730,6 +743,7 @@ import {ROUTE} from "@/routes";
 import {Tasks} from "@/app/tasks";
 import EqCheckbox from "@/components/eq-ui/EQCheckbox.vue";
 import {
+  TASK_ACTIVITY_TYPE,
   TASK_ACTIVITY_TYPES,
   TASK_DURATION_HUMAN,
   TASK_DURATION_TYPES,
@@ -748,6 +762,7 @@ import TaskItemSelector from "@/views/task-editor/components/TaskItemSelector.vu
 import FreeIdSelector from "@/components/tools/FreeIdSelector.vue";
 import TaskNpcSelector from "@/views/task-editor/components/TaskNpcSelector.vue";
 import {FreeIdFetcher} from "@/app/free-id-fetcher";
+import {Npcs} from "@/app/npcs";
 
 const MILLISECONDS_BEFORE_WINDOW_RESET = 5000;
 
@@ -785,6 +800,7 @@ export default {
       notification: "",
       error: "",
 
+      TASK_ACTIVITY_TYPE: TASK_ACTIVITY_TYPE,
       TASK_REWARD_METHOD_TYPE: TASK_REWARD_METHOD_TYPE,
       TASK_TYPES: TASK_TYPES,
       TASK_DURATION_TYPES: TASK_DURATION_TYPES,
@@ -804,6 +820,22 @@ export default {
   },
 
   methods: {
+
+    postTargetNameUpdateProcessor(activity, event, updateType) {
+      if (typeof this.task.task_activities[activity].target_name !== "undefined" && this.task.task_activities[activity].target_name.trim().length === 0) {
+        if (updateType === TASK_ACTIVITY_TYPE.DELIVER) {
+          this.task.task_activities[activity].target_name = Npcs.getCleanName(event.npc.name)
+          EditFormFieldUtil.setFieldModifiedById('target_name');
+        }
+        if (typeof this.task.task_activities[activity].description_override !== "undefined" && this.task.task_activities[activity].description_override.trim().length === 0) {
+          // if (updateType === TASK_ACTIVITY_TYPE.LOOT) {
+          //   this.task.task_activities[activity].target_name = event.name
+          //   EditFormFieldUtil.setFieldModifiedById('target_name');
+          // }
+
+        }
+      }
+    },
 
     async moveActivityUp() {
       const selectedActivity = this.selectedActivity
