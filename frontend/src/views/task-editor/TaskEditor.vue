@@ -665,6 +665,7 @@
           v-if="selectorActive['rewardid'] || selectorActive['reward']"
         >
           <task-item-selector
+            :selected-item-id="task.rewardid > 0 ? task.rewardid : 0"
             @input="task['rewardid'] = $event.id; task['reward'] = $event.name; setFieldModifiedById('rewardid'); setFieldModifiedById('reward')"
           />
         </div>
@@ -685,11 +686,23 @@
         <div
           style="margin-top: 20px; width: auto;"
           class="fade-in"
-          v-if="selectorActive['goalid'] &&isGoalIdNpcSelectorActive() && task.task_activities[selectedActivity].goalmethod === 0"
+          v-if="selectorActive['goalid'] && isGoalIdNpcSelectorActive() && task.task_activities[selectedActivity].goalmethod === 0"
         >
           <task-npc-selector
             :selected-npc-id="task.task_activities[selectedActivity].goalid"
             @input="task.task_activities[selectedActivity].goalid = $event.npcId; setFieldModifiedById('goalid'); postTargetNameUpdateProcessor($event, 'goalid')"
+          />
+        </div>
+
+        <!-- (goalid) explore selector -->
+        <div
+          style="margin-top: 20px; width: auto;"
+          class="fade-in"
+          v-if="selectorActive['goalid'] && isGoalIdExploreActive() && task.task_activities[selectedActivity].goalmethod === 0"
+        >
+          <task-explore-selector
+            :selected-explore-id="task.task_activities[selectedActivity].goalid"
+            @input="task.task_activities[selectedActivity].goalid = $event.id; setFieldModifiedById('goalid'); postTargetNameUpdateProcessor($event, 'goalid')"
           />
         </div>
 
@@ -779,11 +792,13 @@ import FreeIdSelector from "@/components/tools/FreeIdSelector.vue";
 import TaskNpcSelector from "@/views/task-editor/components/TaskNpcSelector.vue";
 import {FreeIdFetcher} from "@/app/free-id-fetcher";
 import {Npcs} from "@/app/npcs";
+import TaskExploreSelector from "@/views/task-editor/components/TaskExploreSelector.vue";
 
 const MILLISECONDS_BEFORE_WINDOW_RESET = 5000;
 
 export default {
   components: {
+    TaskExploreSelector,
     TaskNpcSelector,
     FreeIdSelector,
     TaskItemSelector,
@@ -879,6 +894,14 @@ export default {
         TASK_ACTIVITY_TYPE.KILL,
         TASK_ACTIVITY_TYPE.SPEAK_WITH,
         TASK_ACTIVITY_TYPE.GIVE
+      ].includes(
+        parseInt(this.task.task_activities[this.selectedActivity].activitytype)
+      )
+    },
+
+    isGoalIdExploreActive() {
+      return [
+        TASK_ACTIVITY_TYPE.EXPLORE,
       ].includes(
         parseInt(this.task.task_activities[this.selectedActivity].activitytype)
       )

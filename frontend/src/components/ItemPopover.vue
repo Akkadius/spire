@@ -51,6 +51,14 @@ export default {
       default: ""
     }
   },
+  watch: {
+    item: {
+      deep: true,
+      handler() {
+        console.log("DEEP")
+      }
+    },
+  },
   data() {
     return {
       itemEffectInfo: [],
