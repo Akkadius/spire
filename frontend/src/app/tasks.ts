@@ -151,7 +151,7 @@ export class Tasks {
     switch (activity.activitytype) {
       case TASK_ACTIVITY_TYPE.DELIVER:
         if (activity.item_list !== "") {
-          return activity.item_list
+          return "Deliver " + activity.item_list + " to " + activity.target_name;
         }
 
         return "Deliver " + activity.goalcount + " to " + activity.target_name;

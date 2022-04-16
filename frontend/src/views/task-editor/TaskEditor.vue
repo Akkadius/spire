@@ -486,7 +486,7 @@
                              fieldType: 'number',
                              itemIcon: '3196',
                              col: 'col-3',
-                             onclick: setSelectorActive,
+                             onclick: isGoalIdSelectorActive() ? setSelectorActive : () => {},
                            },
                            {
                              description: 'Goal Method',
@@ -672,11 +672,11 @@
         <div
           style="margin-top: 20px; width: auto;"
           class="fade-in"
-          v-if="selectorActive['goalid'] && [TASK_ACTIVITY_TYPE.LOOT, TASK_ACTIVITY_TYPE.TRADESKILL, TASK_ACTIVITY_TYPE.FISH, TASK_ACTIVITY_TYPE.FORAGE].includes(parseInt(task.task_activities[selectedActivity].activitytype))  && task.task_activities[selectedActivity].goalmethod === 0"
+          v-if="selectorActive['goalid'] && isGoalIdItemSelectorActive() && task.task_activities[selectedActivity].goalmethod === 0"
         >
           <task-item-selector
             :selected-item-id="task.task_activities[selectedActivity].goalid ? task.task_activities[selectedActivity].goalid : 0"
-            @input="task.task_activities[selectedActivity].goalid = $event.id; setFieldModifiedById('goalid'); postTargetNameUpdateProcessor(selectedActivity, $event, TASK_ACTIVITY_TYPE.LOOT)"
+            @input="task.task_activities[selectedActivity].goalid = $event.id; setFieldModifiedById('goalid'); postTargetNameUpdateProcessor($event)"
           />
         </div>
 
@@ -684,11 +684,11 @@
         <div
           style="margin-top: 20px; width: auto;"
           class="fade-in"
-          v-if="selectorActive['goalid'] && [TASK_ACTIVITY_TYPE.KILL, TASK_ACTIVITY_TYPE.SPEAK_WITH, TASK_ACTIVITY_TYPE.GIVE].includes(parseInt(task.task_activities[selectedActivity].activitytype)) && task.task_activities[selectedActivity].goalmethod === 0"
+          v-if="selectorActive['goalid'] &&isGoalIdNpcSelectorActive() && task.task_activities[selectedActivity].goalmethod === 0"
         >
           <task-npc-selector
             :selected-npc-id="task.task_activities[selectedActivity].goalid"
-            @input="task.task_activities[selectedActivity].goalid = $event.npcId; setFieldModifiedById('goalid'); postTargetNameUpdateProcessor(selectedActivity, $event, task.task_activities[selectedActivity].activitytype)"
+            @input="task.task_activities[selectedActivity].goalid = $event.npcId; setFieldModifiedById('goalid'); postTargetNameUpdateProcessor($event)"
           />
         </div>
 
@@ -703,7 +703,7 @@
         <task-npc-selector
           :selected-npc-id="task.task_activities[selectedActivity].delivertonpc"
           v-if="task && task.task_activities && task.task_activities[selectedActivity] && selectorActive['delivertonpc']"
-          @input="task.task_activities[selectedActivity].delivertonpc = $event.npcId; setFieldModifiedById('delivertonpc'); postTargetNameUpdateProcessor(selectedActivity, $event, TASK_ACTIVITY_TYPE.DELIVER)"
+          @input="task.task_activities[selectedActivity].delivertonpc = $event.npcId; setFieldModifiedById('delivertonpc'); postTargetNameUpdateProcessor($event)"
         />
 
         <!-- (id) free id selector -->
@@ -836,35 +836,57 @@ export default {
 
   methods: {
 
-    isItemListVisible() {
+    isGoalIdSelectorActive() {
       const activity = this.task.task_activities[this.selectedActivity]
-      if (activity) {
-        if ([1,3,6,7,8].includes(activity.activitytype)) {
-          return true
-        }
-      }
-
-      return false
+      return activity.goalmethod === 0
     },
 
-    postTargetNameUpdateProcessor(activity, event, updateType) {
-      const isTargetNameEmpty = typeof this.task.task_activities[activity].target_name !== "undefined" && this.task.task_activities[activity].target_name.trim().length === 0
-      const isDescriptionOverrideEmpty = typeof this.task.task_activities[activity].description_override !== "undefined" && this.task.task_activities[activity].description_override.trim().length === 0
+    isGoalIdItemSelectorActive() {
+      return [
+        TASK_ACTIVITY_TYPE.LOOT,
+        TASK_ACTIVITY_TYPE.TRADESKILL,
+        TASK_ACTIVITY_TYPE.DELIVER,
+        TASK_ACTIVITY_TYPE.FISH,
+        TASK_ACTIVITY_TYPE.FORAGE
+      ].includes(
+        parseInt(this.task.task_activities[this.selectedActivity].activitytype)
+      )
+    },
+
+    isGoalIdNpcSelectorActive() {
+      return [
+        TASK_ACTIVITY_TYPE.KILL,
+        TASK_ACTIVITY_TYPE.SPEAK_WITH,
+        TASK_ACTIVITY_TYPE.GIVE
+      ].includes(
+        parseInt(this.task.task_activities[this.selectedActivity].activitytype)
+      )
+    },
+
+    isItemListVisible() {
+      return this.isGoalIdItemSelectorActive()
+    },
+
+    postTargetNameUpdateProcessor(event) {
+      const selectedActivity           = this.selectedActivity
+      const updateType                 = this.task.task_activities[selectedActivity].targettype ? this.task.task_activities[selectedActivity].targettype : -1
+      const isTargetNameEmpty          = typeof this.task.task_activities[selectedActivity].target_name !== "undefined" && this.task.task_activities[selectedActivity].target_name.trim().length === 0
+      const isDescriptionOverrideEmpty = typeof this.task.task_activities[selectedActivity].description_override !== "undefined" && this.task.task_activities[selectedActivity].description_override.trim().length === 0
 
       if (isTargetNameEmpty) {
         if (updateType === TASK_ACTIVITY_TYPE.DELIVER) {
-          this.task.task_activities[activity].target_name = Npcs.getCleanName(event.npc.name)
+          this.task.task_activities[selectedActivity].target_name = Npcs.getCleanName(event.npc.name)
           EditFormFieldUtil.setFieldModifiedById('target_name');
         }
       }
 
       if (isDescriptionOverrideEmpty) {
-        if ([TASK_ACTIVITY_TYPE.LOOT].includes(updateType)) {
-          this.task.task_activities[activity].target_name = event.name
-          EditFormFieldUtil.setFieldModifiedById('target_name');
+        if (this.isGoalIdItemSelectorActive()) {
+          this.task.task_activities[selectedActivity].item_list = event.name
+          EditFormFieldUtil.setFieldModifiedById('item_list');
         }
-        if ([TASK_ACTIVITY_TYPE.KILL, TASK_ACTIVITY_TYPE.SPEAK_WITH, TASK_ACTIVITY_TYPE.GIVE].includes(updateType)) {
-          this.task.task_activities[activity].target_name = Npcs.getCleanName(event.npc.name)
+        if (this.isGoalIdNpcSelectorActive()) {
+          this.task.task_activities[selectedActivity].target_name = Npcs.getCleanName(event.npc.name)
           EditFormFieldUtil.setFieldModifiedById('target_name');
         }
       }
@@ -1228,7 +1250,6 @@ export default {
               target.addEventListener('input', EditFormFieldUtil.setFieldModified)
             }
 
-            EditFormFieldUtil.resetFieldSubEditorHighlightedStatus()
             EditFormFieldUtil.resetFieldEditedStatus()
           }, 1)
         }, 1)
@@ -1247,12 +1268,15 @@ export default {
         "zones",
         "item_list",
         "skill_list",
-        "spell_list",
-        "goalid"
+        "spell_list"
       ];
       hasSubEditorFields.forEach((field) => {
         EditFormFieldUtil.setFieldHighlightHasSubEditor(field)
       })
+
+      if (this.isGoalIdSelectorActive()) {
+        EditFormFieldUtil.setFieldHighlightHasSubEditor("goalid")
+      }
     },
     buildActivityDescription(activity) {
       return Tasks.buildActivityDescription(activity)
@@ -1274,12 +1298,11 @@ export default {
         this.loadQueryState()
       }
       await this.loadTasks()
-      this.loadTask()
-
-      setTimeout(() => {
+      this.loadTask().then(() => {
+        EditFormFieldUtil.resetFieldSubEditorHighlightedStatus()
         EditFormFieldUtil.resetFieldHighlightHasSubEditorStatus()
         this.setFieldHighlights()
-      }, 1000)
+      })
     },
 
     updateQueryState() {
