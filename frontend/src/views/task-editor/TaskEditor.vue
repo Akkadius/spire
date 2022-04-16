@@ -1312,6 +1312,7 @@ export default {
       await this.loadTasks()
       this.loadTask().then(() => {
         this.previewTask(true)
+        EditFormFieldUtil.resetFieldEditedStatus()
         EditFormFieldUtil.resetFieldSubEditorHighlightedStatus()
         EditFormFieldUtil.resetFieldHighlightHasSubEditorStatus()
         this.setFieldHighlights()
