@@ -481,7 +481,7 @@
                              col: 'col-12',
                            },
                            {
-                             description: 'Goal ID',
+                             description: 'Goal ID' + renderGoalIdDescriptor(),
                              field: 'goalid',
                              fieldType: 'number',
                              itemIcon: '3196',
@@ -836,6 +836,17 @@ export default {
   },
 
   methods: {
+
+    renderGoalIdDescriptor() {
+      if (this.isGoalIdItemSelectorActive()) {
+        return ' (Item)'
+      }
+      if (this.isGoalIdNpcSelectorActive()) {
+        return ' (NPC)'
+      }
+
+      return ""
+    },
 
     isGoalIdSelectorActive() {
       const activity = this.task.task_activities[this.selectedActivity]

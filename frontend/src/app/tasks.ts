@@ -222,6 +222,7 @@ export class Tasks {
       "optional": "Describes whether or not this activity is optional",
       "goalid": "Goal ID is different depending on your activity type as well as Goal Method",
       "description_override": "Use this to completely override other fields that otherwise influence the activity description (activity target, item list etc.)",
+      "completion_emote": "This is the message emitted to the player on completion of a task",
     }
   }
 
