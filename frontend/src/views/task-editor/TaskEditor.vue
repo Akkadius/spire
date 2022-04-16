@@ -91,27 +91,29 @@
               <!--                {{ notification }}-->
               <!--              </div>-->
 
-              <b-alert show dismissable variant="warning" v-if="notification" class="mt-2">
-                <div class="row">
-                  <div class="col-11">
-                    <i class="fa fa-info-circle mr-3"></i> {{ notification }}
+              <div style="height: 40px">
+                <b-alert show dismissable variant="danger" v-if="error" @click="error = ''">
+                  <div class="row">
+                    <div class="col-11">
+                      <i class="fa fa-warning"></i> {{ error }}
+                    </div>
+                    <div class="col-1 text-right">
+                      <i class="fa fa-remove"></i>
+                    </div>
                   </div>
-                  <div class="col-1 text-right">
-                    <i class="fa fa-remove"></i>
-                  </div>
-                </div>
-              </b-alert>
+                </b-alert>
 
-              <b-alert show dismissable variant="danger" v-if="error" class="mt-2" @click="error = ''">
-                <div class="row">
-                  <div class="col-11">
-                    <i class="fa fa-warning"></i> {{ error }}
+                <b-alert show dismissable variant="warning" v-if="notification">
+                  <div class="row">
+                    <div class="col-11">
+                      <i class="fa fa-info-circle mr-3"></i> {{ notification }}
+                    </div>
+                    <div class="col-1 text-right" @click="notification = ''">
+                      <i class="fa fa-remove"></i>
+                    </div>
                   </div>
-                  <div class="col-1 text-right">
-                    <i class="fa fa-remove"></i>
-                  </div>
-                </div>
-              </b-alert>
+                </b-alert>
+              </div>
 
               <eq-tabs
                 id="task-edit-window"
@@ -399,9 +401,17 @@
 
                     <div class="d-inline-block">
                       <b-button @click="createActivity()" size="sm" variant="outline-warning" class="ml-3">
-                        <i class="fa fa-plus"></i></b-button>
+                        <i class="fa fa-plus"></i>
+                      </b-button>
                       <b-button @click="deleteActivity()" size="sm" variant="outline-danger" class="ml-3">
-                        <i class="fa fa-trash"></i></b-button>
+                        <i class="fa fa-trash"></i>
+                      </b-button>
+                      <b-button @click="moveActivityUp()" size="sm" variant="outline-primary" class="ml-3">
+                        <i class="fa fa-arrow-up"></i>
+                      </b-button>
+                      <b-button @click="moveActivityDown()" size="sm" variant="outline-primary" class="ml-3">
+                        <i class="fa fa-arrow-down"></i>
+                      </b-button>
                     </div>
 
 
@@ -632,6 +642,7 @@
                   </b-button>
                 </div>
               </div>
+
             </div>
           </div>
 
@@ -793,6 +804,101 @@ export default {
   },
 
   methods: {
+
+    async moveActivityUp() {
+      const selectedActivity = this.selectedActivity
+      let activities         = []
+      if (this.task.task_activities && this.task.task_activities.length > 0) {
+        activities = JSON.parse(JSON.stringify(this.task.task_activities))
+      }
+
+      let matchedIndex = -1
+      for (const [index] in activities) {
+        if (parseInt(selectedActivity) === parseInt(index) && activities[index - 1]) {
+          matchedIndex = parseInt(index)
+        }
+      }
+
+      if (matchedIndex >= 0) {
+        let currentActivity      = activities[matchedIndex]
+        let previousActivity     = activities[matchedIndex - 1]
+        const currentActivityId  = activities[matchedIndex].activityid
+        const previousActivityId = activities[matchedIndex - 1].activityid
+        const currentStep        = activities[matchedIndex].step
+        const previousStep       = activities[matchedIndex - 1].step
+
+        // shift activities between current and previous
+        currentActivity.activityid  = previousActivityId
+        previousActivity.activityid = currentActivityId
+
+        // shift steps between current and previous
+        currentActivity.step  = previousStep
+        previousActivity.step = currentStep
+
+        // write current activity using the previous activity object
+        activities[matchedIndex]     = previousActivity
+        // write previous activity using the current activity object
+        activities[matchedIndex - 1] = currentActivity
+
+        // set current selected to previous since we are shifting up
+        this.selectedActivity = previousActivityId
+
+      }
+
+      // update current reactive property
+      this.task.task_activities = JSON.parse(JSON.stringify(activities))
+
+      // update the query state
+      this.updateQueryState()
+    },
+
+    moveActivityDown() {
+      const selectedActivity = this.selectedActivity
+      let activities         = []
+      if (this.task.task_activities && this.task.task_activities.length > 0) {
+        activities = JSON.parse(JSON.stringify(this.task.task_activities))
+      }
+
+      let matchedIndex = -1
+      for (const [index] in activities) {
+        console.log(index)
+        if (parseInt(selectedActivity) === parseInt(index) && activities[parseInt(index) + 1]) {
+          console.log("found matched index", index)
+          matchedIndex = parseInt(index)
+        }
+      }
+
+      if (matchedIndex >= 0) {
+        let currentActivity     = activities[matchedIndex]
+        let nextActivity        = activities[matchedIndex + 1]
+        const currentActivityId = activities[matchedIndex].activityid
+        const nextActivityId    = activities[matchedIndex + 1].activityid
+        const currentStep       = activities[matchedIndex].step
+        const nextStep          = activities[matchedIndex + 1].step
+
+        // shift activities between current and previous
+        currentActivity.activityid = nextActivityId
+        nextActivity.activityid    = currentActivityId
+
+        // shift steps between current and previous
+        currentActivity.step = nextStep
+        nextActivity.step    = currentStep
+
+        // write current activity using the previous activity object
+        activities[matchedIndex]     = nextActivity
+        // write previous activity using the current activity object
+        activities[matchedIndex + 1] = currentActivity
+
+        // set current selected to previous since we are shifting up
+        this.selectedActivity = nextActivityId
+      }
+
+      // update current reactive property
+      this.task.task_activities = JSON.parse(JSON.stringify(activities))
+
+      // update the query state
+      this.updateQueryState()
+    },
 
     async createActivity() {
       try {
