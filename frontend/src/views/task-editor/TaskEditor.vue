@@ -676,7 +676,7 @@
         >
           <task-item-selector
             :selected-item-id="task.task_activities[selectedActivity].goalid ? task.task_activities[selectedActivity].goalid : 0"
-            @input="task.task_activities[selectedActivity].goalid = $event.id; setFieldModifiedById('goalid'); postTargetNameUpdateProcessor($event)"
+            @input="task.task_activities[selectedActivity].goalid = $event.id; setFieldModifiedById('goalid'); postTargetNameUpdateProcessor($event, 'goalid')"
           />
         </div>
 
@@ -688,7 +688,7 @@
         >
           <task-npc-selector
             :selected-npc-id="task.task_activities[selectedActivity].goalid"
-            @input="task.task_activities[selectedActivity].goalid = $event.npcId; setFieldModifiedById('goalid'); postTargetNameUpdateProcessor($event)"
+            @input="task.task_activities[selectedActivity].goalid = $event.npcId; setFieldModifiedById('goalid'); postTargetNameUpdateProcessor($event, 'goalid')"
           />
         </div>
 
@@ -703,7 +703,7 @@
         <task-npc-selector
           :selected-npc-id="task.task_activities[selectedActivity].delivertonpc"
           v-if="task && task.task_activities && task.task_activities[selectedActivity] && selectorActive['delivertonpc']"
-          @input="task.task_activities[selectedActivity].delivertonpc = $event.npcId; setFieldModifiedById('delivertonpc'); postTargetNameUpdateProcessor($event)"
+          @input="task.task_activities[selectedActivity].delivertonpc = $event.npcId; setFieldModifiedById('delivertonpc'); postTargetNameUpdateProcessor($event, 'delivertonpc')"
         />
 
         <!-- (id) free id selector -->
@@ -867,20 +867,22 @@ export default {
       return this.isGoalIdItemSelectorActive()
     },
 
-    postTargetNameUpdateProcessor(event) {
+    postTargetNameUpdateProcessor(event, fieldId) {
       const selectedActivity           = this.selectedActivity
-      const updateType                 = this.task.task_activities[selectedActivity].targettype ? this.task.task_activities[selectedActivity].targettype : -1
+      const updateType                 = this.task.task_activities[selectedActivity].activitytype ? this.task.task_activities[selectedActivity].activitytype : -1
       const isTargetNameEmpty          = typeof this.task.task_activities[selectedActivity].target_name !== "undefined" && this.task.task_activities[selectedActivity].target_name.trim().length === 0
       const isDescriptionOverrideEmpty = typeof this.task.task_activities[selectedActivity].description_override !== "undefined" && this.task.task_activities[selectedActivity].description_override.trim().length === 0
 
       if (isTargetNameEmpty) {
-        if (updateType === TASK_ACTIVITY_TYPE.DELIVER) {
-          this.task.task_activities[selectedActivity].target_name = Npcs.getCleanName(event.npc.name)
-          EditFormFieldUtil.setFieldModifiedById('target_name');
-        }
+        //
+      }
+      
+      if (updateType === TASK_ACTIVITY_TYPE.DELIVER && fieldId === 'delivertonpc') {
+        this.task.task_activities[selectedActivity].target_name = Npcs.getCleanName(event.npc.name)
+        EditFormFieldUtil.setFieldModifiedById('target_name');
       }
 
-      if (isDescriptionOverrideEmpty) {
+      if (isDescriptionOverrideEmpty && fieldId === 'goalid') {
         if (this.isGoalIdItemSelectorActive()) {
           this.task.task_activities[selectedActivity].item_list = event.name
           EditFormFieldUtil.setFieldModifiedById('item_list');
@@ -1266,9 +1268,9 @@ export default {
         "rewardid",
         "delivertonpc",
         "zones",
-        "item_list",
-        "skill_list",
-        "spell_list"
+        // "item_list",
+        // "skill_list",
+        // "spell_list"
       ];
       hasSubEditorFields.forEach((field) => {
         EditFormFieldUtil.setFieldHighlightHasSubEditor(field)
