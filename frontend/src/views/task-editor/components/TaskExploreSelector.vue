@@ -22,7 +22,7 @@
 
     <eq-window-simple
       id="explore-container"
-      style="height: 45vh; overflow-y: scroll; overflow-x: hidden" class="p-0 mt-0"
+      :style="'height: ' + ((queuedCreateProximity || Object.keys(selectedExploreEntity).length > 0) ? 45 : 82) + 'vh; overflow-y: scroll; overflow-x: hidden'" class="p-0 mt-0"
     >
       <table
         id="explore-table"
@@ -590,7 +590,7 @@ export default {
     // model we work with after the prop is passed - we can manipulate it ourselves
     if (this.selectedExploreId > 0) {
       this.selectedExplore = this.selectedExploreId
-      this.exploreSearch   = this.selectedExploreId
+      // this.exploreSearch   = this.selectedExploreId
     }
 
     Zones.getZones().then((r) => {
