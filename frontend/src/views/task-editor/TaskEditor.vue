@@ -468,6 +468,13 @@
                              col: 'col-6',
                            },
                            {
+                             description: 'Item List',
+                             itemIcon: '5739',
+                             field: 'item_list',
+                             col: 'col-12',
+                             showIf: isItemListVisible()
+                           },
+                           {
                              description: 'Description Override',
                              field: 'description_override',
                              itemIcon: '2275',
@@ -522,11 +529,6 @@
                            },
                            // Removed until fully implemented
                            // {
-                           //   description: 'Item List',
-                           //   field: 'item_list',
-                           //   col: 'col-6',
-                           // },
-                           // {
                            //   description: 'Skill List',
                            //   field: 'skill_list',
                            //   col: 'col-6',
@@ -538,6 +540,7 @@
                            // },
                          ]"
                           :class="field.col + ' mb-3 pl-2 pr-2'"
+                          v-if="(typeof field.showIf !== 'undefined' && field.showIf) || typeof field.showIf === 'undefined'"
                         >
                           <div>
                             <span
@@ -669,11 +672,23 @@
         <div
           style="margin-top: 20px; width: auto;"
           class="fade-in"
-          v-if="selectorActive['goalid'] && task.task_activities[selectedActivity].activitytype === TASK_ACTIVITY_TYPE.LOOT && task.task_activities[selectedActivity].goalmethod === 0"
+          v-if="selectorActive['goalid'] && [TASK_ACTIVITY_TYPE.LOOT, TASK_ACTIVITY_TYPE.TRADESKILL, TASK_ACTIVITY_TYPE.FISH, TASK_ACTIVITY_TYPE.FORAGE].includes(parseInt(task.task_activities[selectedActivity].activitytype))  && task.task_activities[selectedActivity].goalmethod === 0"
         >
           <task-item-selector
             :selected-item-id="task.task_activities[selectedActivity].goalid ? task.task_activities[selectedActivity].goalid : 0"
             @input="task.task_activities[selectedActivity].goalid = $event.id; setFieldModifiedById('goalid'); postTargetNameUpdateProcessor(selectedActivity, $event, TASK_ACTIVITY_TYPE.LOOT)"
+          />
+        </div>
+
+        <!-- (goalid) npc selector -->
+        <div
+          style="margin-top: 20px; width: auto;"
+          class="fade-in"
+          v-if="selectorActive['goalid'] && [TASK_ACTIVITY_TYPE.KILL, TASK_ACTIVITY_TYPE.SPEAK_WITH, TASK_ACTIVITY_TYPE.GIVE].includes(parseInt(task.task_activities[selectedActivity].activitytype)) && task.task_activities[selectedActivity].goalmethod === 0"
+        >
+          <task-npc-selector
+            :selected-npc-id="task.task_activities[selectedActivity].goalid"
+            @input="task.task_activities[selectedActivity].goalid = $event.npcId; setFieldModifiedById('goalid'); postTargetNameUpdateProcessor(selectedActivity, $event, task.task_activities[selectedActivity].activitytype)"
           />
         </div>
 
@@ -821,18 +836,36 @@ export default {
 
   methods: {
 
+    isItemListVisible() {
+      const activity = this.task.task_activities[this.selectedActivity]
+      if (activity) {
+        if ([1,3,6,7,8].includes(activity.activitytype)) {
+          return true
+        }
+      }
+
+      return false
+    },
+
     postTargetNameUpdateProcessor(activity, event, updateType) {
-      if (typeof this.task.task_activities[activity].target_name !== "undefined" && this.task.task_activities[activity].target_name.trim().length === 0) {
+      const isTargetNameEmpty = typeof this.task.task_activities[activity].target_name !== "undefined" && this.task.task_activities[activity].target_name.trim().length === 0
+      const isDescriptionOverrideEmpty = typeof this.task.task_activities[activity].description_override !== "undefined" && this.task.task_activities[activity].description_override.trim().length === 0
+
+      if (isTargetNameEmpty) {
         if (updateType === TASK_ACTIVITY_TYPE.DELIVER) {
           this.task.task_activities[activity].target_name = Npcs.getCleanName(event.npc.name)
           EditFormFieldUtil.setFieldModifiedById('target_name');
         }
-        if (typeof this.task.task_activities[activity].description_override !== "undefined" && this.task.task_activities[activity].description_override.trim().length === 0) {
-          // if (updateType === TASK_ACTIVITY_TYPE.LOOT) {
-          //   this.task.task_activities[activity].target_name = event.name
-          //   EditFormFieldUtil.setFieldModifiedById('target_name');
-          // }
+      }
 
+      if (isDescriptionOverrideEmpty) {
+        if ([TASK_ACTIVITY_TYPE.LOOT].includes(updateType)) {
+          this.task.task_activities[activity].target_name = event.name
+          EditFormFieldUtil.setFieldModifiedById('target_name');
+        }
+        if ([TASK_ACTIVITY_TYPE.KILL, TASK_ACTIVITY_TYPE.SPEAK_WITH, TASK_ACTIVITY_TYPE.GIVE].includes(updateType)) {
+          this.task.task_activities[activity].target_name = Npcs.getCleanName(event.npc.name)
+          EditFormFieldUtil.setFieldModifiedById('target_name');
         }
       }
     },
@@ -1187,8 +1220,6 @@ export default {
             container.scrollTo({top: target.offsetTop - 150, behavior: "smooth"});
           }
 
-          this.setFieldHighlights()
-
           // hooks
           setTimeout(() => {
             const target = document.getElementById("task-edit-window")
@@ -1200,8 +1231,6 @@ export default {
             EditFormFieldUtil.resetFieldSubEditorHighlightedStatus()
             EditFormFieldUtil.resetFieldEditedStatus()
           }, 1)
-
-
         }, 1)
 
         // if no task found...
@@ -1246,6 +1275,11 @@ export default {
       }
       await this.loadTasks()
       this.loadTask()
+
+      setTimeout(() => {
+        EditFormFieldUtil.resetFieldHighlightHasSubEditorStatus()
+        this.setFieldHighlights()
+      }, 1000)
     },
 
     updateQueryState() {
