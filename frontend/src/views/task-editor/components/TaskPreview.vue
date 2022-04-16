@@ -85,10 +85,10 @@
       >
         <span class="font-weight-bold">Reward(s)</span>
 
-        <div v-if="task.rewardid > 0 && rewardItem">
+        <div v-if="task.rewardid > 0 && rewardItem && Object.keys(rewardItem).length > 0">
           <item-popover
             :item="rewardItem"
-            v-if="Object.keys(rewardItem).length > 0 && rewardItem > 0"
+            v-if="Object.keys(rewardItem).length > 0 && rewardItem"
             size="regular"
             class="mt-3"
           />
