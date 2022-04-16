@@ -203,7 +203,7 @@ export default {
     },
 
     hasReward() {
-      return this.task.rewardid > 0
+      return (this.task.rewardid > 0 && this.task.rewardmethod === 0)
         || this.task.reward_ebon_crystals > 0
         || this.task.reward_radiant_crystals > 0
         || this.task.xpreward > 0

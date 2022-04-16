@@ -1308,8 +1308,6 @@ export default {
       let hasSubEditorFields = [
         "id",
         "description",
-        "reward",
-        "rewardid",
         "delivertonpc",
         "zones",
         // "item_list",
@@ -1319,6 +1317,11 @@ export default {
       hasSubEditorFields.forEach((field) => {
         EditFormFieldUtil.setFieldHighlightHasSubEditor(field)
       })
+
+      if (this.task.rewardmethod === 0) {
+        EditFormFieldUtil.setFieldHighlightHasSubEditor("rewardid")
+        EditFormFieldUtil.setFieldHighlightHasSubEditor("reward")
+      }
 
       if (this.isGoalIdSelectorActive()) {
         EditFormFieldUtil.setFieldHighlightHasSubEditor("goalid")
