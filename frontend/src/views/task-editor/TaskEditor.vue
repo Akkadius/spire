@@ -485,7 +485,7 @@
                              field: 'goalid',
                              fieldType: 'number',
                              itemIcon: '3196',
-                             col: 'col-2',
+                             col: 'col-3',
                              onclick: setSelectorActive,
                            },
                            {
@@ -505,11 +505,11 @@
                              col: 'col-3',
                            },
                            {
-                             description: 'Activity Optional',
+                             description: 'Optional',
                              field: 'optional',
                              itemIcon: '4493',
                              fieldType: 'checkbox',
-                             col: 'col-3',
+                             col: 'col-2',
                            },
                            {
                              description: 'Deliver to NPC',

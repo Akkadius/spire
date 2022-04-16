@@ -208,6 +208,12 @@ export class Tasks {
   public static getFieldDescriptions() {
     return {
       "id": "Task identifier",
+      "step": "This is the logical step of your task activity, you can have many activities in one step, you have to complete all activities in one step to unlock the next step",
+      "activitytype": "This is the type of task activity, kill, loot etc.",
+      "target_name": "This describes what the activity is targeting, it is different depending on the activity. For example 'orcs' Would display 'Kill X orcs'",
+      "optional": "Describes whether or not this activity is optional",
+      "goalid": "Goal ID is different depending on your activity type as well as Goal Method",
+      "description_override": "Use this to completely override other fields that otherwise influence the activity description (activity target, item list etc.)",
     }
   }
 
