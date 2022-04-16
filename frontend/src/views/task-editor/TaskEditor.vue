@@ -518,6 +518,7 @@
                              itemIcon: '5742',
                              col: 'col-6',
                              zeroValue: 0,
+                             showIf: isDeliverToNPCActive(),
                              onclick: setSelectorActive,
                            },
                            {
@@ -839,6 +840,15 @@ export default {
     isGoalIdSelectorActive() {
       const activity = this.task.task_activities[this.selectedActivity]
       return activity.goalmethod === 0
+    },
+
+    isDeliverToNPCActive() {
+      return [
+        TASK_ACTIVITY_TYPE.DELIVER,
+        TASK_ACTIVITY_TYPE.GIVE,
+      ].includes(
+        parseInt(this.task.task_activities[this.selectedActivity].activitytype)
+      )
     },
 
     isGoalIdItemSelectorActive() {
@@ -1301,6 +1311,7 @@ export default {
       }
       await this.loadTasks()
       this.loadTask().then(() => {
+        this.previewTask(true)
         EditFormFieldUtil.resetFieldSubEditorHighlightedStatus()
         EditFormFieldUtil.resetFieldHighlightHasSubEditorStatus()
         this.setFieldHighlights()
