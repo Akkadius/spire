@@ -174,8 +174,16 @@ export class Tasks {
       case TASK_ACTIVITY_TYPE.TRADESKILL:
         return "Create " + activity.goalcount + " " + activity.target_name;
       case TASK_ACTIVITY_TYPE.FISH:
+        if (activity.item_list !== "") {
+          return "Fish for " + activity.item_list;
+        }
+
         return "Fish " + activity.goalcount;
       case TASK_ACTIVITY_TYPE.FORAGE:
+        if (activity.item_list !== "") {
+          return "Forage " + activity.item_list;
+        }
+
         return "Forage " + activity.goalcount;
       case TASK_ACTIVITY_TYPE.USE:
         return "Use " + activity.goalcount;

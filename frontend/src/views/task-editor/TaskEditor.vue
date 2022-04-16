@@ -876,7 +876,7 @@ export default {
       if (isTargetNameEmpty) {
         //
       }
-      
+
       if (updateType === TASK_ACTIVITY_TYPE.DELIVER && fieldId === 'delivertonpc') {
         this.task.task_activities[selectedActivity].target_name = Npcs.getCleanName(event.npc.name)
         EditFormFieldUtil.setFieldModifiedById('target_name');
