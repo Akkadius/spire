@@ -155,6 +155,7 @@
                          itemIcon: '2275',
                          fieldType: 'textarea',
                          col: 'col-12',
+                         onclick: setSelectorActive,
                        },
                        {
                          description: 'Duration Code',
@@ -368,6 +369,7 @@
                         class="m-0 mt-1"
                         rows="2"
                         max-rows="6"
+                        v-on="typeof field.onclick !== 'undefined' ? { click: () => field.onclick(field.field) } : {}"
                         v-b-tooltip.hover.v-dark.right :title="getFieldDescription(field.field)"
                         :style="(task[field.field] === '' ? 'opacity: .5' : '') + ';'"
                       ></b-textarea>
@@ -413,7 +415,6 @@
                         <i class="fa fa-arrow-down"></i>
                       </b-button>
                     </div>
-
 
                     <select
                       size="2"
@@ -662,6 +663,18 @@
         <div
           style="margin-top: 20px; width: auto;"
           class="fade-in"
+          v-if="selectorActive['description']"
+        >
+          <task-description-selector
+            :description="task.description"
+            @input="task['description'] = $event; setFieldModifiedById('description');"
+          ></task-description-selector>
+        </div>
+
+        <!-- (rewardid) item selector -->
+        <div
+          style="margin-top: 20px; width: auto;"
+          class="fade-in"
           v-if="selectorActive['rewardid'] || selectorActive['reward']"
         >
           <task-item-selector
@@ -793,11 +806,13 @@ import TaskNpcSelector from "@/views/task-editor/components/TaskNpcSelector.vue"
 import {FreeIdFetcher} from "@/app/free-id-fetcher";
 import {Npcs} from "@/app/npcs";
 import TaskExploreSelector from "@/views/task-editor/components/TaskExploreSelector.vue";
+import TaskDescriptionSelector from "@/views/task-editor/components/TaskDescriptionSelector.vue";
 
 const MILLISECONDS_BEFORE_WINDOW_RESET = 5000;
 
 export default {
   components: {
+    TaskDescriptionSelector,
     TaskExploreSelector,
     TaskNpcSelector,
     FreeIdSelector,
