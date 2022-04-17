@@ -55,7 +55,6 @@ export default {
     item: {
       deep: true,
       handler() {
-        console.log("DEEP")
       }
     },
   },
