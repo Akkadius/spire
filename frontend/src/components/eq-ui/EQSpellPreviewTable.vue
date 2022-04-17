@@ -4,7 +4,7 @@
       class='eq-window-simple p-0'
       :style="'margin-bottom: 40px; ' + (title ? 'padding-top: 30px' : 'padding-top: 0px !important')"
     >
-      <div class='eq-window-title-bar' v-if="title">{{ title }}</div>
+<!--      <div class='eq-window-title-bar' v-if="title">{{ title }}</div>-->
       <div :style="'' + (title ? '' : '') ">
         <div class='eq-window-nested-blue text-center p-5' v-if="spells.length === 0">
           No spells were found
@@ -12,12 +12,12 @@
 
         <div
           class='spell-table'
-          style="height: 78vh; overflow-y: scroll; overflow-x: hidden; box-shadow: rgb(0 0 0) 0px 20px 15px inset;"
+          style="height: 78vh; overflow-y: scroll; overflow-x: hidden; "
           v-if="spells.length > 0"
         >
           <!--        <div class='eq-window-nested-blue' v-if="spells.length > 0" style="overflow-y: scroll;">-->
-          <table id="tabbox1" class="eq-table eq-highlight-rows" style="display: table;">
-            <thead>
+          <table id="tabbox1" class="eq-table eq-highlight-rows" >
+            <thead class="eq-table-floating-header">
             <tr>
               <th style="width: 180px;"></th>
               <th style="width: auto;">Id</th>

@@ -40,7 +40,7 @@
                   class="btn-dark btn-sm btn-outline-warning"
                   @click="selectItem(item)"
                 >
-                  Select
+                  <i class="fa fa-arrow-left"></i>
                 </b-button>
               </div>
             </td>

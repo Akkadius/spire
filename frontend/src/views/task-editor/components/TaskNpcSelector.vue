@@ -13,7 +13,7 @@
     <eq-window-simple
       id="npc-view-container"
       v-if="filteredNpcs && filteredNpcs.length > 0"
-      style="height: 85vh; overflow-y: scroll;" class="p-0"
+      style="height: 85vh; overflow-y: scroll;" class="p-0 eq-window-hybrid"
     >
       <table
         id="npctable"
@@ -28,6 +28,7 @@
           <th style="width: 30px">ID</th>
           <th>Name</th>
           <th>Zones</th>
+          <th></th>
         </tr>
         </thead>
         <tbody>
@@ -42,12 +43,13 @@
               class="btn-dark btn-sm btn-outline-warning"
               @click="selectNpc(npc)"
             >
-              Select
+              <i class="fa fa-arrow-left"></i>
             </b-button>
           </td>
           <td style="text-align: center" class="p-0">{{ npc.id }}</td>
-          <td>{{ npc.name }} <span v-if="npc.lastname && npc.lastname.length > 0">({{npc.lastname}})</span></td>
+          <td>{{ npc.name }} <span v-if="npc.lastname && npc.lastname.length > 0">({{ npc.lastname }})</span></td>
           <td><span v-if="npcZones[npc.id]">{{ npcZones[npc.id].join(",") }}</span></td>
+          <td class="text-center"><span :class="'race-models-ctn-' + npc.race + '-' + npc.gender + '-' + npc.texture + '-' + npc.helmtexture + ''" style="zoom: 75  %;"></span></td>
         </tr>
         </tbody>
       </table>
@@ -147,6 +149,16 @@ export default {
             npcZones[npc.id].push(`${zoneName} (${npc.spawnentries[0].spawngroup.spawn_2.version})`)
           }
         }
+
+        // if (this.npcSearch !== "") {
+        //   let filtered = []
+        //   for (let index in this.filteredNpcs) {
+        //     const r = this.filteredNpcs[index]
+        //     if (npcZones[npc.id].join("").toLowerCase().includes(this.npcSearch.toLowerCase())) {
+        //       filtered.
+        //     }
+        //   }
+        // }
 
         // update npcZones
         this.npcZones = npcZones
