@@ -879,8 +879,7 @@ export default {
     },
 
     isGoalIdSelectorActive() {
-      const activity = this.task.task_activities[this.selectedActivity]
-      return activity.goalmethod === 0
+      return this.task.task_activities && this.task.task_activities[this.selectedActivity] ? this.task.task_activities[this.selectedActivity].goalmethod === 0 : false
     },
 
     isDeliverToNPCActive() {
