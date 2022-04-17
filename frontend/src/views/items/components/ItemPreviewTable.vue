@@ -68,7 +68,6 @@
                   :item="item"
                   v-if="Object.keys(item).length > 0 && item"
                   size="regular"
-                  class="mt-3"
                 />
               </td>
 
