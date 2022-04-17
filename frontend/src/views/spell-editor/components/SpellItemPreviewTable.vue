@@ -21,7 +21,7 @@
           class="eq-table eq-highlight-rows"
           style="display: table; overflow-x: scroll"
         >
-          <thead>
+          <thead class="eq-table-floating-header">
           <tr>
             <th style="text-align: center; width: 50px"></th>
             <th style="text-align: center; width: 50px" class="text-center">Id</th>
@@ -40,7 +40,7 @@
                   class="btn-dark btn-sm btn-outline-warning"
                   @click="selectItem(item)"
                 >
-                  Select
+                  <i class="fa fa-arrow-left"></i>
                 </b-button>
               </div>
             </td>
