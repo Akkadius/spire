@@ -89,18 +89,27 @@
         <!-- Navigation -->
         <ul class="navbar-nav mb-md-4">
           <nav-section-component :config="calculatorNav"/>
+          
           <li class="nav-item">
             <router-link class="nav-link" to="/client-files">
               <i class="ra ra-cycle mr-1"></i> Client Files
               <b-badge class="ml-3" variant="primary">NEW!</b-badge>
             </router-link>
           </li>
+
           <li class="nav-item">
             <router-link class="nav-link " to="/items">
               <i class="ra ra-relic-blade mr-1"></i> Items
               <b-badge class="ml-3" variant="primary">NEW!</b-badge>
             </router-link>
           </li>
+
+          <li class="nav-item">
+            <router-link class="nav-link " to="/quest-api-explorer">
+              <i class="ra ra-compass mr-2"></i> Quest API Explorer
+            </router-link>
+          </li>
+
           <li class="nav-item">
             <router-link class="nav-link " to="/strings-database">
               <i class="ra  ra-scroll-unfurled mr-1"></i> Strings DB
@@ -137,12 +146,6 @@
             </a>
           </li>
 
-          <li class="nav-item">
-            <router-link class="nav-link " to="/quest-api-explorer">
-              <i class="ra ra-compass mr-2"></i> Quest API Explorer
-            </router-link>
-          </li>
-
           <!-- Components -->
           <li class="nav-item">
             <a
@@ -155,24 +158,6 @@
             <div :class="'collapse ' + (hasRoute('components') ? 'show' : '')" id="sidebarComponents">
               <ul class="nav nav-sm flex-column">
                 <li v-for="nav in componentNavs">
-                  <router-link class="nav-link" :to="nav.to">{{ nav.title }}</router-link>
-                </li>
-              </ul>
-            </div>
-          </li>
-
-          <!-- Test Pages -->
-          <li class="nav-item">
-            <a
-              :class="'nav-link collapse ' + (hasRoute('-test') ? 'active' : 'collapsed')"
-              href="#test-pages" data-toggle="collapse" role="button"
-              aria-expanded="false" aria-controls="test-pages"
-            >
-              <i class="fe fe-box mr-1"></i> Test Pages
-            </a>
-            <div :class="'collapse ' + (hasRoute('components') ? 'show' : '')" id="test-pages">
-              <ul class="nav nav-sm flex-column">
-                <li v-for="nav in testPageNavs">
                   <router-link class="nav-link" :to="nav.to">{{ nav.title }}</router-link>
                 </li>
               </ul>
@@ -303,9 +288,6 @@ export default {
           { title: "Special Abilities Calculator", to: "/calculators#npc-special-abilities", icon: "ra ra-lion mr-1" },
         ]
       },
-      testPageNavs: [
-        { title: "Items Test", to: "/items-test" },
-      ]
     }
   },
   created() {

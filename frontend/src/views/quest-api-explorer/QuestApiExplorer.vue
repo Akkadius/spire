@@ -367,7 +367,7 @@ export default {
       searchConstantsResult: []
     }
   },
-  deactivated() {
+  destroyed() {
     Debug.log("[deactivated]")
 
     // remove route watcher
@@ -375,7 +375,7 @@ export default {
 
     document.body.removeEventListener('keyup', this.closeExampleKeyHandler)
   },
-  activated() {
+  mounted() {
     Debug.log("[activated]")
 
     this.init()

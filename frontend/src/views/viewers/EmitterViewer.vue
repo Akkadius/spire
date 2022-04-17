@@ -103,10 +103,7 @@ export default {
       }, 100);
     }
   },
-  activated() {
-    this.init()
-  },
-  deactivated() {
+  destroyed() {
     VideoViewer.destroyScrollListener()
 
     // remove route watcher
