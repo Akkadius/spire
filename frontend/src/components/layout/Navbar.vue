@@ -89,7 +89,7 @@
         <!-- Navigation -->
         <ul class="navbar-nav mb-md-4">
           <nav-section-component :config="calculatorNav"/>
-          
+
           <li class="nav-item">
             <router-link class="nav-link" to="/client-files">
               <i class="ra ra-cycle mr-1"></i> Client Files
@@ -134,7 +134,7 @@
 
         <!-- Heading -->
         <h6 class="navbar-heading">
-          Documentation
+          Spire Docs
         </h6>
 
         <!-- Navigation -->
