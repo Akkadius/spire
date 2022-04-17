@@ -106,7 +106,7 @@ export default {
         zoneId: zone.zoneidnumber,
       });
 
-      this.selectedZone = zone.short_name
+      this.selectedZone = zone.zoneidnumber
     },
 
     searchZone() {
