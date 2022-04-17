@@ -22,7 +22,8 @@
           <td style="vertical-align: middle">
             <b-button-group variant="outline-warning">
               <b-dropdown
-                block right text="Select" variant="outline-warning" size="sm"
+                block right variant="outline-warning" size="sm"
+                title="Select"
               >
                 <b-dropdown-item @click="selectAsEffect('scrolleffect', spell)">As Scroll Effect</b-dropdown-item>
                 <b-dropdown-item @click="selectAsEffect('clickeffect', spell)">As Click Effect</b-dropdown-item>
@@ -36,26 +37,29 @@
           <td
             style="text-align: center; padding: 5px; vertical-align: middle"
           >
-                <span v-for="(icon, index) in dbClassIcons">
-                  <div v-if="spell['classes_' + index] > 0 && spell['classes_' + index] < 255">
+            <span v-for="(icon, index) in dbClassIcons">
+              <div v-if="spell['classes_' + index] > 0 && spell['classes_' + index] < 255">
 
-                     <span
-                       style="border-radius: 4px"
-                       :class="'item-' + icon + '-sm'"
-                       :title="dbClassesShort[index]"
-                     />
-                    {{ dbClassesShort[index] }}
-                    ({{ spell["classes_" + index] }})
-                    </div>
-                </span>
+                 <span
+                   style="border-radius: 4px"
+                   :class="'item-' + icon + '-sm'"
+                   :title="dbClassesShort[index]"
+                 />
+                {{ dbClassesShort[index] }}
+                ({{ spell["classes_" + index] }})
+                </div>
+            </span>
           </td>
           <td style="vertical-align: middle">
             <eq-spell-effects :spell="spell"/>
           </td>
           <td style="vertical-align: middle">
-            <v-runtime-template
-              v-if="spellMinis"
-              :template="'<span>' + spellMinis[spell.id] + '</span>'"
+            <spell-popover
+              :spell="spell"
+              :size="30"
+              :spell-name-length="25"
+              v-if="spell && Object.keys(spell).length > 0"
+              class="mt-2"
             />
           </td>
         </tr>
@@ -77,47 +81,25 @@ import {DB_CLASSES_ICONS} from "@/app/constants/eq-class-icon-constants";
 import {DB_CLASSES_SHORT} from "@/app/constants/eq-classes-constants";
 import {ROUTE}            from "@/routes";
 import * as util          from "util";
+import SpellPopover       from "@/components/SpellPopover";
 
 export default {
   name: "ItemSpellPreviewTableSelector",
   components: {
+    SpellPopover,
     EqSpellDescription,
     EqSpellEffects,
     EqSpellPreview,
     EqWindow,
-    "v-runtime-template": () => import("v-runtime-template")
   },
   data() {
     return {
-      debug: App.DEBUG,
-      debugSpellEffects: false,
-      spellEffectInfo: [],
-      itemData: {},
-      sideLoadedSpellData: {},
-      componentId: "",
-      reagents: [],
-      effectDescription: "",
-      recourseLink: "",
       title: "",
-      spellMinis: {},
       dbClassIcons: DB_CLASSES_ICONS,
       dbClassesShort: DB_CLASSES_SHORT,
     }
   },
   async created() {
-    let spellMinis = []
-    for (const spell of this.spells) {
-      Spells.setSpell(spell["id"], spell)
-
-      spellMinis[spell["id"]] = await Spells.renderSpellMini("0", spell["id"], 25)
-    }
-    this.spellMinis = spellMinis
-
-    // this.$forceUpdate()
-
-    // do this once so we're not triggering vue re-renders in the loop
-    this.sideLoadedSpellData = Spells.data
-
     this.title = "Spells (" + this.spells.length + ")";
   },
   props: {
@@ -137,9 +119,6 @@ export default {
     },
     getTargetTypeColor: function (targetType) {
       return Spells.getTargetTypeColor(targetType)
-    },
-    getTargetTypeName: function (targetType) {
-      return DB_SPELL_TARGETS[targetType] ? DB_SPELL_TARGETS[targetType] : "Unknown Target (" + targetType + ")"
     },
     humanTime: function (sec) {
       let result = ""
