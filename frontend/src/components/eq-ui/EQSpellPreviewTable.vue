@@ -62,11 +62,17 @@
               <td>
                 {{ spell.id }}
               </td>
-              <td class="text-left">
-                <v-runtime-template
-                  v-if="spellMinis"
-                  :template="'<span>' + spellMinis[spell.id] + '</span>'"
+              <td class="text-left"
+              >
+
+                <spell-popover
+                  :spell="spell"
+                  :size="40"
+                  :spell-name-length="25"
+                  v-if="Object.keys(spell).length > 0 && spell"
+                  class="mt-2"
                 />
+
               </td>
               <td class="text-left">
                 <span v-for="(icon, index) in dbClassIcons">
@@ -119,50 +125,27 @@ import {DB_CLASSES_ICONS} from "@/app/constants/eq-class-icon-constants";
 import {DB_CLASSES_SHORT} from "@/app/constants/eq-classes-constants";
 import {ROUTE}            from "@/routes";
 import * as util          from "util";
+import SpellPopover       from "@/components/SpellPopover";
 
 export default {
   name: "EqSpellPreviewTable",
   components: {
+    SpellPopover,
     EqSpellDescription,
     EqSpellEffects,
     EqSpellPreview,
     EqWindow,
-    "v-runtime-template": () => import("v-runtime-template")
   },
   data() {
     return {
       debug: App.DEBUG,
       debugSpellEffects: false,
-      spellEffectInfo: [],
-      itemData: {},
-      sideLoadedSpellData: {},
-      componentId: "",
-      reagents: [],
-      effectDescription: "",
-      recourseLink: "",
       title: "",
-      spellMinis: {},
       dbClassIcons: DB_CLASSES_ICONS,
       dbClassesShort: DB_CLASSES_SHORT,
     }
   },
   async created() {
-    let spellMinis = []
-
-    for (const spell of this.spells) {
-      if (!Spells.isSpellSet(spell["id"])) {
-        Spells.setSpell(spell["id"], spell)
-      }
-
-      spellMinis[spell["id"]] = await Spells.renderSpellMini(0, spell["id"], 30)
-    }
-    this.spellMinis = spellMinis
-
-    // this.$forceUpdate()
-
-    // do this once so we're not triggering vue re-renders in the loop
-    this.sideLoadedSpellData = Spells.data
-
     this.title = "Spells (" + this.spells.length + ")";
   },
   props: {
