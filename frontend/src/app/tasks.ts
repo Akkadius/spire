@@ -151,7 +151,7 @@ export class Tasks {
     switch (activity.activitytype) {
       case TASK_ACTIVITY_TYPE.DELIVER:
         if (activity.item_list !== "") {
-          return "Deliver " + activity.item_list + " to " + activity.target_name;
+          return `Deliver ${activity.goalcount} ${activity.item_list} to ${activity.target_name}`;
         }
 
         return "Deliver " + activity.goalcount + " to " + activity.target_name;
@@ -298,7 +298,7 @@ export class Tasks {
         "spell_list": "0",
         "description_override": "",
         "goalid": 1,
-        "goalmethod": 1,
+        "goalmethod": 0,
         "goalcount": 1,
         "delivertonpc": 0,
         "zones": "21",
@@ -314,7 +314,7 @@ export class Tasks {
         "spell_list": "0",
         "description_override": "",
         "goalid": 2,
-        "goalmethod": 1,
+        "goalmethod": 0,
         "goalcount": 1,
         "delivertonpc": 0,
         "zones": "0",
@@ -351,7 +351,7 @@ export class Tasks {
       "spell_list": "0",
       "description_override": "",
       "goalid": 1,
-      "goalmethod": 1,
+      "goalmethod": 0,
       "goalcount": 1,
       "delivertonpc": 0,
       "zones": "21",
