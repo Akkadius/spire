@@ -22,7 +22,7 @@
           <table id="items-table" class="eq-table eq-highlight-rows" style="display: table;">
             <thead>
             <tr>
-              <th style="text-align: center; width: 180px"></th>
+              <th style="text-align: center; width: 100px"></th>
               <th style="text-align: center; width: 100px" class="text-center">Id</th>
               <th style="text-align: center; width: auto;">Name</th>
               <th style="text-align: center; width: auto;">ReqLvl</th>
@@ -42,19 +42,19 @@
                   <b-button
                     @click="editItem(item.id)"
                     size="sm"
+                    title="Edit"
                     variant="outline-warning"
                   >
                     <i class="ra ra-wrench"></i>
-                    Edit
                   </b-button>
 
                   <b-button
                     @click="editItem(item.id, true)"
                     size="sm"
+                    title="Clone"
                     variant="outline-light"
                   >
                     <i class="ra ra-double-team"></i>
-                    Clone
                   </b-button>
 
                 </div>
@@ -73,9 +73,9 @@
 
               <td>{{ item.reqlevel }}</td>
               <td>{{ item.ac }}</td>
-              <td>{{ item.hp }}</td>
-              <td>{{ item.mana }}</td>
-              <td>{{ item.endur }}</td>
+              <td>{{ commify(item.hp) }}</td>
+              <td>{{ commify(item.mana) }}</td>
+              <td>{{ commify(item.endur) }}</td>
               <td class="text-left">{{ getClasses(item) }}</td>
 
             </tr>
@@ -88,9 +88,7 @@
 </template>
 
 <script>
-import {Items}                                   from "@/app/items";
 import EqWindow                                  from "@/components/eq-ui/EQWindow.vue";
-import {App}                                     from "@/constants/app";
 import {DB_CLASSES_ICONS}                        from "@/app/constants/eq-class-icon-constants";
 import {DB_CLASSES_SHORT, DB_CLASSES_WEAR_SHORT} from "@/app/constants/eq-classes-constants";
 import {ROUTE}                                   from "@/routes";
@@ -104,7 +102,6 @@ export default {
     ItemPopover,
     EqWindow,
     "eq-item-card-preview": () => import("@/components/eq-ui/EQItemCardPreview.vue"),
-    "v-runtime-template": () => import("v-runtime-template")
   },
   data() {
     return {
@@ -126,6 +123,9 @@ export default {
     items: Array
   },
   methods: {
+    commify(x) {
+      return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    },
     editItem(itemId, clone = false) {
       this.$router.push(
         {

@@ -19,7 +19,7 @@
           <table id="tabbox1" class="eq-table eq-highlight-rows" >
             <thead class="eq-table-floating-header">
             <tr>
-              <th style="width: 180px;"></th>
+              <th style="width: 100px;"></th>
               <th style="width: auto;">Id</th>
               <th style="width: auto; min-width: 270px">Spell</th>
               <th style="width: auto; min-width: 300px">Level</th>
@@ -42,19 +42,21 @@
                   <b-button
                     @click="editSpell(spell.id)"
                     size="sm"
+                    title="Edit"
                     variant="outline-warning"
                   >
                     <i class="ra ra-wrench"></i>
-                    Edit
+
                   </b-button>
 
                   <b-button
                     @click="editSpell(spell.id, true)"
                     size="sm"
+                    title="Clone"
                     variant="outline-light"
                   >
                     <i class="ra ra-double-team"></i>
-                    Clone
+
                   </b-button>
                 </div>
 
@@ -67,7 +69,7 @@
 
                 <spell-popover
                   :spell="spell"
-                  :size="40"
+                  :size="30"
                   :spell-name-length="25"
                   v-if="Object.keys(spell).length > 0 && spell"
                   class="mt-2"
