@@ -960,7 +960,7 @@ export default {
       }
 
       let matchedIndex = -1
-      for (const [index] in activities) {
+      for (const index in activities) {
         if (parseInt(selectedActivity) === parseInt(index) && activities[index - 1]) {
           matchedIndex = parseInt(index)
         }
@@ -1007,7 +1007,7 @@ export default {
       }
 
       let matchedIndex = -1
-      for (const [index] in activities) {
+      for (const index in activities) {
         console.log(index)
         if (parseInt(selectedActivity) === parseInt(index) && activities[parseInt(index) + 1]) {
           console.log("found matched index", index)
