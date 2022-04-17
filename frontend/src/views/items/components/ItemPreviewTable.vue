@@ -64,37 +64,12 @@
                 {{ item.id }}
               </td>
               <td class="text-left" style="vertical-align: middle">
-                <div :id="item.id + '-popover'" style="display:inline-block; ">
-                    <span
-                      :class="'fade-in item-' + item.icon" :title="item.icon"
-                      style="height: 40px; width: 40px; display: inline-block"
-                    />
-
-                  <!--                    <img-->
-                  <!--                      :src="itemCdnUrl + 'item_' + item.icon + '.png'"-->
-                  <!--                      style="height:40px; border-radius: 25px; width:auto;"-->
-                  <!--                      class="mr-2"-->
-                  <!--                    >-->
-                  <span class="ml-2" style="position:relative; top: -15px">{{ item.name }}</span>
-
-                </div>
-
-                <b-popover
-                  :target="item.id + '-popover'"
-                  placement="auto"
-                  custom-class="no-bg"
-                  delay="1"
-                  triggers="hover focus"
-                  style="width: 500px !important"
-                >
-                  <eq-window style="margin-right: 10px; width: auto; height: 90%">
-                    <eq-item-card-preview
-                      :item-data="item"
-                      :show-related-data="true"
-                    />
-                  </eq-window>
-                </b-popover>
-
+                <item-popover
+                  :item="item"
+                  v-if="Object.keys(item).length > 0 && item"
+                  size="regular"
+                  class="mt-3"
+                />
               </td>
 
               <td>{{ item.reqlevel }}</td>
@@ -122,35 +97,22 @@ import {DB_CLASSES_SHORT, DB_CLASSES_WEAR_SHORT} from "@/app/constants/eq-classe
 import {ROUTE}                                   from "@/routes";
 import * as util                                 from "util";
 import Tablesort                                 from "@/app/utility/tablesort.js";
+import ItemPopover                               from "@/components/ItemPopover";
 
 export default {
   name: "ItemPreviewTable",
   components: {
+    ItemPopover,
     EqWindow,
     "eq-item-card-preview": () => import("@/components/eq-ui/EQItemCardPreview.vue"),
     "v-runtime-template": () => import("v-runtime-template")
   },
   data() {
     return {
-      debug: App.DEBUG,
-      debugItemEffects: false,
-      itemCdnUrl: App.ASSET_ITEM_ICON_BASE_URL,
-      itemEffectInfo: [],
-      itemData: {},
-      sideLoadedItemData: {},
-      componentId: "",
-      reagents: [],
-      effectDescription: "",
-      recourseLink: "",
       title: "",
-      itemMinis: {},
       dbClassIcons: DB_CLASSES_ICONS,
       dbClassesShort: DB_CLASSES_SHORT,
     }
-  },
-  async created() {
-    // do this once so we're not triggering vue re-renders in the loop
-    this.sideLoadedItemData = Items.data
   },
   mounted() {
     if (this.items.length > 0) {

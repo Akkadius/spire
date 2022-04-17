@@ -239,7 +239,6 @@ export class Tasks {
       "reward": "Name of reward provided for completing the task",
       "rewardid": "Item ID for the rewarded item",
       "xpreward": "Amount of experience rewarded",
-      "cashreward": "Amount of coin rewarded in copper",
       "faction_reward": "Amount of faction rewarded",
       "reward_ebon_crystals": "Number of ebon crystals rewarded",
       "reward_radiant_crystals": "Number of radiant crystals rewarded",

@@ -267,9 +267,11 @@ import DbColumnFilter from "@/components/DbColumnFilter";
 import {DbSchema} from "@/app/db-schema";
 import {Zones} from "@/app/zones";
 import {Items} from "@/app/items";
+import ItemPopover from "@/components/ItemPopover.vue";
 
 export default {
   components: {
+    ItemPopover,
     DbColumnFilter,
     ItemPreviewTable,
     EqCheckbox,

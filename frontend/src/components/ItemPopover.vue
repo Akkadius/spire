@@ -6,7 +6,7 @@
         style="display: inline-block"
       />
       <span
-        class="ml-2"
+        class="ml-3"
         :style="'position:relative;' + (this.size === 'regular' ? 'top: -15px' : '')"
       >{{ item.name }} {{annotation}}</span>
 

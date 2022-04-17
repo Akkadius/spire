@@ -48,29 +48,12 @@
               {{ item.id }}
             </td>
             <td class="text-left" style="vertical-align: middle">
-              <div :id="item.id + '-popover'" style="display:inline-block; ">
-                <span
-                  :class="'fade-in item-' + item.icon" :title="item.icon"
-                  style="height: 40px; width: 40px; display: inline-block"
-                />
-                <span
-                  class="ml-2"
-                  style="position:relative; top: -15px"
-                >{{ item.name }}</span>
-              </div>
-
-              <b-popover
-                :target="item.id + '-popover'"
-                placement="auto"
-                custom-class="no-bg"
-                delay="1"
-                triggers="hover focus"
-                style="width: 500px !important"
-              >
-                <eq-window style="margin-right: 10px; width: auto; height: 90%">
-                  <eq-item-card-preview :item-data="item"/>
-                </eq-window>
-              </b-popover>
+              <item-popover
+                :item="item"
+                v-if="Object.keys(item).length > 0 && item"
+                size="regular"
+                class="mt-3"
+              />
 
             </td>
           </tr>
@@ -89,10 +72,12 @@ import {DB_CLASSES_ICONS}                        from "@/app/constants/eq-class-
 import {DB_CLASSES_SHORT, DB_CLASSES_WEAR_SHORT} from "@/app/constants/eq-classes-constants";
 import Tablesort                                 from "@/app/utility/tablesort.js";
 import EqWindowSimple                            from "@/components/eq-ui/EQWindowSimple";
+import ItemPopover                               from "@/components/ItemPopover";
 
 export default {
   name: "TaskItemPreviewTable",
   components: {
+    ItemPopover,
     EqWindowSimple,
     EqWindow,
     "eq-item-card-preview": () => import("@/components/eq-ui/EQItemCardPreview.vue"),
