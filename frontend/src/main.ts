@@ -60,6 +60,8 @@ import "@exuanbo/file-icons-js/dist/css/file-icons.min.css"
 
 Vue.use(BootstrapVue)
 
+import 'leaflet/dist/leaflet.css';
+
 /**
  * App loader
  */

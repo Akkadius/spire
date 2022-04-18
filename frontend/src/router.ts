@@ -118,6 +118,11 @@ export default new Router({
           meta: {title: "Items Test"},
         },
         {
+          path: '/map',
+          component: () => import('./views/Map.vue'),
+          meta: {title: "Map Test"},
+        },
+        {
           path: ROUTE.SPELLS_LIST,
           component: () => import('./views/Spells.vue'),
           meta: {title: "Spells Browser"},
