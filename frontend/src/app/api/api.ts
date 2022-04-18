@@ -166,7 +166,7 @@ export * from './api/proximity-api';
 // export * from './api/shared-task-dynamic-zone-api';
 // export * from './api/shared-task-member-api';
 // export * from './api/skill-cap-api';
-// export * from './api/spawn2-api';
+export * from './api/spawn2-api';
 // export * from './api/spawn-condition-api';
 // export * from './api/spawn-condition-value-api';
 // export * from './api/spawn-event-api';
