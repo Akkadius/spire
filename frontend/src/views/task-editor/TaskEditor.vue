@@ -402,16 +402,16 @@
                     <span class="font-weight-bold">Activities</span>
 
                     <div class="d-inline-block">
-                      <b-button @click="createActivity()" size="sm" variant="outline-warning" class="ml-3">
+                      <b-button @click="createActivity()" size="sm" variant="outline-warning" class="ml-2">
                         <i class="fa fa-plus"></i>
                       </b-button>
-                      <b-button @click="deleteActivity()" size="sm" variant="outline-danger" class="ml-3">
+                      <b-button @click="deleteActivity()" size="sm" variant="outline-danger" class="ml-2">
                         <i class="fa fa-trash"></i>
                       </b-button>
-                      <b-button @click="moveActivityUp()" size="sm" variant="outline-primary" class="ml-3">
+                      <b-button @click="moveActivityUp()" size="sm" variant="outline-primary" class="ml-2">
                         <i class="fa fa-arrow-up"></i>
                       </b-button>
-                      <b-button @click="moveActivityDown()" size="sm" variant="outline-primary" class="ml-3">
+                      <b-button @click="moveActivityDown()" size="sm" variant="outline-primary" class="ml-2">
                         <i class="fa fa-arrow-down"></i>
                       </b-button>
                     </div>
@@ -1334,7 +1334,7 @@ export default {
 
       if (this.task.rewardmethod === 0) {
         EditFormFieldUtil.setFieldHighlightHasSubEditor("rewardid")
-        EditFormFieldUtil.setFieldHighlightHasSubEditor("reward")
+        // EditFormFieldUtil.setFieldHighlightHasSubEditor("reward")
       }
 
       if (this.isGoalIdSelectorActive()) {
