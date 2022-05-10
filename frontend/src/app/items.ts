@@ -417,4 +417,28 @@ export class Items {
       console.log("items.ts %s", err)
     }
   }
+
+  static async getItemModelsByName(search: string) {
+    const api = (new ItemApi(SpireApiClient.getOpenApiConfig()))
+    try {
+      let request = (new SpireQueryBuilder())
+        .select(['idfile'])
+        .where('name', 'like', search)
+        .groupBy(['idfile'])
+        .get()
+
+      // @ts-ignore
+      const result = await api.listItems(request)
+      if (result.status === 200 && result.data) {
+        let idfiles = []
+        result.data.forEach((i) => {
+          // @ts-ignore
+          idfiles.push(i.idfile.replace("IT", ""))
+        })
+        return idfiles;
+      }
+    } catch (err) {
+      console.log("items.ts %s", err)
+    }
+  }
 }

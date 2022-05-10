@@ -133,7 +133,7 @@ export default {
     },
   },
   methods: {
-    searchDebounce: debounce(function() {
+    searchDebounce: debounce(function () {
       this.loadIcons()
     }, 300),
 
@@ -169,6 +169,7 @@ export default {
     },
 
     reset: function () {
+      this.search             = ""
       this.loaded             = false;
       this.iconSlotSearch     = 0;
       this.iconItemTypeSearch = 0;
