@@ -110,7 +110,6 @@ import itemTypes             from "@/constants/item-types.json"
 import itemTypesModelMapping from "@/constants/item-type-model-mapping.json"
 import slugify               from "slugify";
 import PageHeader            from "@/components/layout/PageHeader";
-import {App}                 from "@/constants/app";
 import EqWindow              from "@/components/eq-ui/EQWindow";
 import {ROUTE}               from "../../routes";
 import EqWindowSimple        from "../../components/eq-ui/EQWindowSimple";
@@ -142,12 +141,13 @@ export default {
   },
   methods: {
 
-    triggerStateSearch: debounce(function() {
+    triggerStateSearch: debounce(function () {
       this.triggerState()
     }, 600),
 
     // reset to zero state
     reset: function () {
+      this.reset          = "";
       this.itemSlotSearch = 0;
       this.itemTypeSearch = 0;
       this.loadModels()
@@ -229,7 +229,7 @@ export default {
             }
 
             this.filteredItemModels = idFiles
-            this.loaded        = true;
+            this.loaded             = true;
             return
           }
 
