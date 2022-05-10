@@ -44,7 +44,7 @@
             v-model.lazy="itemTypeSearch"
             @change="itemSlotSearch = 0; search = ''; loadModels()"
           >
-            <option value="0">Item Type Filter</option>
+            <option value="0">Type Filter</option>
             <option v-for="option in itemTypeOptions" v-bind:value="option.value">
               {{ option.text }}
             </option>
