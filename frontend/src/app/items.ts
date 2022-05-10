@@ -394,4 +394,27 @@ export class Items {
     ]
   }
 
+  static async getItemIconsByName(search: string) {
+    const api = (new ItemApi(SpireApiClient.getOpenApiConfig()))
+    try {
+      let request = (new SpireQueryBuilder())
+        .select(['icon'])
+        .where('name', 'like', search)
+        .groupBy(['icon'])
+        .get()
+
+      // @ts-ignore
+      const result = await api.listItems(request)
+      if (result.status === 200 && result.data) {
+        let icons = []
+        result.data.forEach((i) => {
+          // @ts-ignore
+          icons.push(i.icon)
+        })
+        return icons;
+      }
+    } catch (err) {
+      console.log("items.ts %s", err)
+    }
+  }
 }
