@@ -352,7 +352,7 @@ export default {
     this.loadQueryState()
 
     this.loaded = false;
-    this.loadModelMeta()
+    await this.loadModelMeta()
 
     setTimeout(() => {
       this.loadIcons()

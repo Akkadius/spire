@@ -377,7 +377,7 @@ export default {
   async mounted() {
     this.loadQueryState()
     this.raceConstants = RACES
-    this.initModels()
+    await this.initModels()
     await this.loadRaceInventory()
     this.loadModels()
   }

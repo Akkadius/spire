@@ -288,7 +288,8 @@ export default {
     this.loaded = false;
 
     modelFiles = {};
-    (await EqAssets.getItemModelFileNames()).forEach((fileName) => {
+    const files = await EqAssets.getItemModelFileNames()
+    files.forEach((fileName) => {
       modelFiles[fileName] = 1
     })
 

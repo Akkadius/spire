@@ -61,11 +61,9 @@ export default {
       })
     }
   },
-  activated() {
+  async created() {
+    await this.render()
     VideoViewer.handleRender();
-  },
-  created() {
-    this.render()
   },
   props: {
     id: {

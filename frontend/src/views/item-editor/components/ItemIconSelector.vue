@@ -137,9 +137,9 @@ export default {
       this.loadIcons()
     }, 300),
 
-    init() {
+    async init() {
       this.loaded = false;
-      this.loadModelMeta()
+      await this.loadModelMeta()
 
       setTimeout(() => {
         this.loadIcons()

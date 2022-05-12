@@ -267,10 +267,7 @@ export default {
 
     }
   },
-  activated() {
-    this.init()
-  },
-  deactivated() {
+  beforeDestroy() {
     VideoViewer.destroyScrollListener()
   },
   props: {

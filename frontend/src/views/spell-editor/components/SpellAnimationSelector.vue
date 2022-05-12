@@ -120,7 +120,7 @@ export default {
           }
 
           console.timeEnd("[SpellAnimationSelector] scrollTo");
-        }, 1)
+        }, 100)
       }
 
       console.timeEnd("[SpellAnimationSelector] init");
@@ -188,9 +188,6 @@ export default {
     selectSpellAnim(anim) {
       this.$emit("update:inputData", anim);
     }
-  },
-  activated() {
-    this.init()
   },
 }
 </script>
