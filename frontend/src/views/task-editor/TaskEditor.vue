@@ -414,6 +414,9 @@
                       <b-button @click="moveActivityDown()" size="sm" variant="outline-primary" class="ml-2">
                         <i class="fa fa-arrow-down"></i>
                       </b-button>
+                      <b-button @click="cloneActivity()" size="sm" variant="outline-white" class="ml-2">
+                        <i class="ra ra-double-team"></i>
+                      </b-button>
                     </div>
 
                     <select
@@ -997,6 +1000,21 @@ export default {
 
       // update the query state
       this.updateQueryState()
+    },
+
+    async cloneActivity() {
+      try {
+        const r = await Tasks.cloneTaskActivity(this.getBackendFormattedTask(), this.selectedActivity)
+        if (r.status === 200) {
+          this.task             = (await Tasks.getTask(this.$route.params.id))
+          this.selectedActivity = r.data.activityid
+        }
+      } catch (err) {
+        console.log(err)
+        if (err.response && err.response.data && err.response.data.error) {
+          this.error = err.response.data.error
+        }
+      }
     },
 
     moveActivityDown() {

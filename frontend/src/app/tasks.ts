@@ -109,6 +109,22 @@ export class Tasks {
   }
 
   // TODO: bubble up error handling
+  public static async cloneTaskActivity(task: any, sourceActivityId) {
+    let taskActivity        = task.task_activities[sourceActivityId]
+    taskActivity.taskid     = task.id
+    taskActivity.activityid = (task.task_activities ? this.getNextActivityId(task.task_activities) : 0)
+    taskActivity.step       = (task.task_activities ? this.getLatestStep(task.task_activities) : 1)
+
+    // @ts-ignore
+    return await this.getTaskActivitiesApi()
+      .createTaskActivity(
+        {
+          taskActivity: taskActivity
+        }
+      )
+  }
+
+  // TODO: bubble up error handling
   public static async deleteTaskActivity(activity: any) {
     let request = (new SpireQueryBuilder())
       .where("activityid", "=", activity.activityid)
