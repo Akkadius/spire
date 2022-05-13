@@ -1122,10 +1122,6 @@ export default {
 
                 activityId++;
               }
-
-              console.log(this.task)
-
-              await this.saveTask()
             }
 
           }
