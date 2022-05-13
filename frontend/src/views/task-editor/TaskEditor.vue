@@ -1113,7 +1113,13 @@ export default {
             if (deletedSuccessfully) {
               let activityId = 0;
               for (const index in this.task.task_activities) {
-                this.task.task_activities[index].activityid = activityId
+                if (this.task.task_activities[index].activityid != activityId) {
+                  const previousId = parseInt(this.task.task_activities[index].activityid)
+                  this.task.task_activities[index].activityid = activityId
+                  console.log("Previous ID", previousId)
+                  await Tasks.updateTaskActivityId(this.task.task_activities[index], previousId)
+                }
+
                 activityId++;
               }
 

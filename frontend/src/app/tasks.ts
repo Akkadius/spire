@@ -107,6 +107,22 @@ export class Tasks {
       )
   }
 
+  public static async updateTaskActivityId(taskActivity: any, previousId: number) {
+    let request = (new SpireQueryBuilder())
+      .where("activityid", "=", previousId)
+      .get()
+
+    // @ts-ignore
+    return await this.getTaskActivitiesApi()
+      .updateTaskActivity(
+        {
+          id: taskActivity.taskid,
+          taskActivity: taskActivity
+        },
+        {query: request}
+      )
+  }
+
   public static async cloneTaskActivity(task: any, sourceActivityId) {
     let taskActivity        = task.task_activities[sourceActivityId]
     taskActivity.taskid     = task.id
