@@ -479,6 +479,7 @@
                              fieldType: 'select',
                              selectData: TASK_ACTIVITY_TYPES,
                              col: 'col-4',
+                             onchange: activityTypeChange,
                            },
                            {
                              description: 'Activity Target',
@@ -585,10 +586,21 @@
                             />
                           </div>
 
-
                           <!-- input number -->
                           <b-form-input
                             v-if="field.fieldType === 'number'"
+                            :id="field.field"
+                            v-model.number="task.task_activities[selectedActivity][field.field]"
+                            class="m-0 mt-1"
+                            v-on="typeof field.onclick !== 'undefined' ? { click: () => field.onclick(field.field) } : {}"
+                            v-b-tooltip.hover.v-dark.right :title="getFieldDescription(field.field)"
+                            :style="(task.task_activities[selectedActivity][field.field] === 0 ? 'opacity: .5' : '')"
+                          />
+
+                          <!-- input number step -->
+                          <b-form-input
+                            v-if="field.fieldType === 'step'"
+                            type="number"
                             :id="field.field"
                             v-model.number="task.task_activities[selectedActivity][field.field]"
                             class="m-0 mt-1"
@@ -626,6 +638,7 @@
                             class="form-control m-0 mt-1"
                             v-if="field.selectData"
                             v-b-tooltip.hover.v-dark.right :title="getFieldDescription(field.field)"
+                            v-on="typeof field.onchange !== 'undefined' ? { change: () => field.onchange(field.field) } : {}"
                             :style="(task.task_activities[selectedActivity][field.field] <= (typeof field.zeroValue !== 'undefined' ? field.zeroValue : 0) ? 'opacity: .5' : '')"
                           >
                             <option
@@ -840,6 +853,7 @@ export default {
   data() {
     return {
       task: null,
+      originalTask: {}, // hold original task data so we can determine when certain data has changed
       tasks: [],
       filteredTasks: [],
       selectedTask: null,
@@ -877,6 +891,25 @@ export default {
   },
 
   methods: {
+
+    activityTypeChange() {
+      if (this.task) {
+        // console.log("type change fire")
+
+        // reset certain fields when activity type is changed
+        if (this.task.task_activities[this.selectedActivity]) {
+          this.task.task_activities[this.selectedActivity].zones                = "0"
+          this.task.task_activities[this.selectedActivity].goalid               = 0
+          this.task.task_activities[this.selectedActivity].goalmethod           = 0
+          this.task.task_activities[this.selectedActivity].goalcount            = 1
+          this.task.task_activities[this.selectedActivity].optional             = 0
+          this.task.task_activities[this.selectedActivity].item_list            = ""
+          this.task.task_activities[this.selectedActivity].spell_list           = ""
+          this.task.task_activities[this.selectedActivity].target_name          = ""
+          this.task.task_activities[this.selectedActivity].description_override = ""
+        }
+      }
+    },
 
     scrollToActivity() {
       // console.log("event firing")
@@ -1369,6 +1402,10 @@ export default {
         }
 
         this.task = (await Tasks.getTask(this.$route.params.id))
+
+        // copy to original
+        Object.assign(this.originalTask, this.task);
+
 
         setTimeout(() => {
 
