@@ -1,5 +1,9 @@
 package models
 
+import (
+	"github.com/volatiletech/null/v8"
+)
+
 type TaskActivity struct {
 	Taskid              uint   `json:"taskid" gorm:"Column:taskid"`
 	Activityid          uint   `json:"activityid" gorm:"Column:activityid"`
