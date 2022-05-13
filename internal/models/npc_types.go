@@ -12,15 +12,16 @@ type NpcType struct {
 	Race                   uint16             `json:"race" gorm:"Column:race"`
 	Class                  uint8              `json:"class" gorm:"Column:class"`
 	Bodytype               int                `json:"bodytype" gorm:"Column:bodytype"`
-	Hp                     int                `json:"hp" gorm:"Column:hp"`
-	Mana                   int                `json:"mana" gorm:"Column:mana"`
+	Hp                     null.Int64         `json:"hp" gorm:"Column:hp"`
+	Mana                   null.Int64         `json:"mana" gorm:"Column:mana"`
 	Gender                 uint8              `json:"gender" gorm:"Column:gender"`
 	Texture                uint8              `json:"texture" gorm:"Column:texture"`
 	Helmtexture            uint8              `json:"helmtexture" gorm:"Column:helmtexture"`
 	Herosforgemodel        int                `json:"herosforgemodel" gorm:"Column:herosforgemodel"`
 	Size                   float32            `json:"size" gorm:"Column:size"`
-	HpRegenRate            uint               `json:"hp_regen_rate" gorm:"Column:hp_regen_rate"`
-	ManaRegenRate          uint               `json:"mana_regen_rate" gorm:"Column:mana_regen_rate"`
+	HpRegenRate            null.Int64         `json:"hp_regen_rate" gorm:"Column:hp_regen_rate"`
+	HpRegenPerSecond       null.Int64         `json:"hp_regen_per_second" gorm:"Column:hp_regen_per_second"`
+	ManaRegenRate          null.Int64         `json:"mana_regen_rate" gorm:"Column:mana_regen_rate"`
 	LoottableId            uint               `json:"loottable_id" gorm:"Column:loottable_id"`
 	MerchantId             uint               `json:"merchant_id" gorm:"Column:merchant_id"`
 	AltCurrencyId          uint               `json:"alt_currency_id" gorm:"Column:alt_currency_id"`
