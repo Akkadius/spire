@@ -88,6 +88,12 @@ export const TASK_GOAL_METHOD_TYPE = {
   2: "Quest Controlled",
 }
 
+export const TASK_GOAL_METHOD_TYPES = {
+  SINGLE_ID: 0,
+  LIST: 1,
+  QUEST_CONTROLLED: 2,
+}
+
 export const TASK_REWARD_METHOD_TYPE = {
   0: "Single ID",
   1: "List (of entries)",

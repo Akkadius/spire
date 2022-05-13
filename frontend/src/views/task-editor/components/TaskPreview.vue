@@ -155,16 +155,22 @@ export default {
   },
   data() {
     return {
+      // local display
       taskTimer: null,
       taskTimerDisplay: "Unlimited",
       taskDuration: "",
-
       description: "",
       zones: {},
 
+      // item objects for rendering
       rewardItem: null,
       radiantCrystalItem: null,
       ebonCrystalItem: null,
+
+      // this keeps track of the last loaded state so we are not forcing
+      // re-renders every time updates to the "task" object are made
+      lastLoadedItemId: 0,
+      lastTaskDuration: -1,
     }
   },
   destroyed() {
@@ -212,22 +218,28 @@ export default {
     },
 
     load() {
-      this.setCountDownTimer()
-      this.rewardItem         = null
-      this.radiantCrystalItem = null
-      this.ebonCrystalItem    = null
+      if (this.task.duration && this.task.duration !== this.lastTaskDuration) {
+        this.setCountDownTimer()
+        this.lastTaskDuration = this.task.duration
+      }
 
-      if (this.task.rewardid) {
+      if (this.task.rewardid && this.task.rewardid !== this.lastLoadedItemId) {
+        this.rewardItem = null
         Items.getItem(this.task.rewardid).then((r) => {
           this.rewardItem = r
+          this.lastLoadedItemId = this.task.rewardid
         })
       }
-      Items.getItem(40903).then((r) => {
-        this.radiantCrystalItem = r
-      })
-      Items.getItem(40902).then((r) => {
-        this.ebonCrystalItem = r
-      })
+      if (this.task.reward_radiant_crystals > 0 && !this.radiantCrystalItem) {
+        Items.getItem(40903).then((r) => {
+          this.radiantCrystalItem = r
+        })
+      }
+      if (this.task.reward_ebon_crystals > 0 && !this.radiantCrystalItem) {
+        Items.getItem(40902).then((r) => {
+          this.ebonCrystalItem = r
+        })
+      }
 
       this.description = this.getDescription()
     },

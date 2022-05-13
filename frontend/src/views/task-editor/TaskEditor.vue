@@ -532,6 +532,14 @@
                              col: 'col-2',
                            },
                            {
+                             description: 'Goal Match List',
+                             field: 'goal_match_list',
+                             fieldType: 'text',
+                             itemIcon: '3196',
+                             col: 'col-12',
+                             showIf: isGoalMatchListActive(),
+                           },
+                           {
                              description: 'Deliver to NPC',
                              field: 'delivertonpc',
                              fieldType: 'number',
@@ -613,7 +621,7 @@
                           <b-form-input
                             v-if="field.fieldType === 'text' || !field.fieldType"
                             :id="field.field"
-                            v-model="task.task_activities[selectedActivity][field.field]"
+                            v-model.lazy="task.task_activities[selectedActivity][field.field]"
                             class="m-0 mt-1"
                             v-on="typeof field.onclick !== 'undefined' ? { click: () => field.onclick(field.field) } : {}"
                             v-b-tooltip.hover.v-dark.right :title="getFieldDescription(field.field)"
@@ -812,7 +820,7 @@ import {
   TASK_ACTIVITY_TYPES,
   TASK_DURATION_HUMAN,
   TASK_DURATION_TYPES,
-  TASK_GOAL_METHOD_TYPE,
+  TASK_GOAL_METHOD_TYPE, TASK_GOAL_METHOD_TYPES,
   TASK_REWARD_METHOD_TYPE,
   TASK_TYPES
 } from "@/app/constants/eq-task-constants";
@@ -942,6 +950,10 @@ export default {
 
     isGoalIdSelectorActive() {
       return this.task.task_activities && this.task.task_activities[this.selectedActivity] ? this.task.task_activities[this.selectedActivity].goalmethod === 0 : false
+    },
+
+    isGoalMatchListActive() {
+      return this.task.task_activities[this.selectedActivity].goalmethod === TASK_GOAL_METHOD_TYPES.LIST
     },
 
     isDeliverToNPCActive() {
