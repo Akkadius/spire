@@ -92,7 +92,6 @@ export class Tasks {
     return ""
   }
 
-  // TODO: bubble up error handling
   public static async createNewTaskActivity(task: any) {
     let taskActivity        = this.getExampleActivity()
     taskActivity.taskid     = task.id
@@ -108,7 +107,6 @@ export class Tasks {
       )
   }
 
-  // TODO: bubble up error handling
   public static async cloneTaskActivity(task: any, sourceActivityId) {
     let taskActivity        = task.task_activities[sourceActivityId]
     taskActivity.taskid     = task.id

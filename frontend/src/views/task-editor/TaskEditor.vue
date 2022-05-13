@@ -29,9 +29,21 @@
                       @click="cloneTask()"
                       size="sm"
                       variant="outline-light"
+                      v-if="selectedTask"
                     >
                       <i class="ra ra-double-team"></i>
                       Clone
+                    </b-button>
+
+                    <b-button
+                      @click="deleteTask()"
+
+                      size="sm"
+                      variant="outline-danger"
+                      v-if="selectedTask"
+                    >
+                      <i class="fa fa-trash"></i>
+                      Delete
                     </b-button>
                   </div>
                 </div>
@@ -405,6 +417,9 @@
                       <b-button @click="createActivity()" size="sm" variant="outline-warning" class="ml-2">
                         <i class="fa fa-plus"></i>
                       </b-button>
+                      <b-button @click="cloneActivity()" size="sm" variant="outline-white" class="ml-2">
+                        <i class="ra ra-double-team"></i>
+                      </b-button>
                       <b-button @click="deleteActivity()" size="sm" variant="outline-danger" class="ml-2">
                         <i class="fa fa-trash"></i>
                       </b-button>
@@ -413,9 +428,6 @@
                       </b-button>
                       <b-button @click="moveActivityDown()" size="sm" variant="outline-primary" class="ml-2">
                         <i class="fa fa-arrow-down"></i>
-                      </b-button>
-                      <b-button @click="cloneActivity()" size="sm" variant="outline-white" class="ml-2">
-                        <i class="ra ra-double-team"></i>
                       </b-button>
                     </div>
 
@@ -638,16 +650,6 @@
                   >
                     <i class="fa fa-save mr-1"></i>
                     Save
-                  </b-button>
-
-                  <b-button
-                    @click="deleteTask()"
-
-                    size="sm"
-                    variant="outline-danger"
-                  >
-                    <i class="fa fa-trash"></i>
-                    Delete
                   </b-button>
                 </div>
               </div>
@@ -992,11 +994,12 @@ export default {
 
         // set current selected to previous since we are shifting up
         this.selectedActivity = previousActivityId
-
       }
 
       // update current reactive property
       this.task.task_activities = JSON.parse(JSON.stringify(activities))
+
+      await this.saveTask()
 
       // update the query state
       this.updateQueryState()
@@ -1008,6 +1011,7 @@ export default {
         if (r.status === 200) {
           this.task             = (await Tasks.getTask(this.$route.params.id))
           this.selectedActivity = r.data.activityid
+          this.sendNotification(`Task activity (${this.selectedActivity}) successfully cloned`)
         }
       } catch (err) {
         console.log(err)
@@ -1017,7 +1021,7 @@ export default {
       }
     },
 
-    moveActivityDown() {
+    async moveActivityDown() {
       const selectedActivity = this.selectedActivity
       let activities         = []
       if (this.task.task_activities && this.task.task_activities.length > 0) {
@@ -1061,6 +1065,8 @@ export default {
       // update current reactive property
       this.task.task_activities = JSON.parse(JSON.stringify(activities))
 
+      await this.saveTask()
+
       // update the query state
       this.updateQueryState()
     },
@@ -1071,6 +1077,7 @@ export default {
         if (r.status === 200) {
           this.task             = (await Tasks.getTask(this.$route.params.id))
           this.selectedActivity = r.data.activityid
+          this.sendNotification("Task activity successfully created")
         }
       } catch (err) {
         console.log(err)
@@ -1081,23 +1088,32 @@ export default {
     },
 
     async deleteActivity() {
-      try {
-        if (this.task.task_activities) {
-          for (const a of this.task.task_activities) {
-            if (parseInt(a.activityid) === parseInt(this.selectedActivity)) {
-              const r = await Tasks.deleteTaskActivity(a)
-              if (r.status === 200) {
-                this.task             = (await Tasks.getTask(this.$route.params.id))
-                this.selectedActivity = a.activityid - 1
+      if (!this.task.task_activities[this.selectedActivity]) {
+        return
+      }
+
+      const activity = this.task.task_activities[this.selectedActivity]
+
+      if (confirm(`Are you sure you want to delete this task activity?\n\n(Step ${activity.step}) Activity ${activity.activityid} \n\n` + this.buildActivityDescription(activity))) {
+        try {
+          if (this.task.task_activities) {
+            for (const a of this.task.task_activities) {
+              if (parseInt(a.activityid) === parseInt(this.selectedActivity)) {
+                const r = await Tasks.deleteTaskActivity(a)
+                if (r.status === 200) {
+                  this.task             = (await Tasks.getTask(this.$route.params.id))
+                  this.selectedActivity = a.activityid - 1
+                  this.sendNotification("Task activity successfully deleted")
+                }
               }
             }
           }
+        } catch (err) {
+          if (err.response && err.response.data && err.response.data.error) {
+            this.error = err.response.data.error
+          }
+          console.log(err)
         }
-      } catch (err) {
-        if (err.response && err.response.data && err.response.data.error) {
-          this.error = err.response.data.error
-        }
-        console.log(err)
       }
     },
 
