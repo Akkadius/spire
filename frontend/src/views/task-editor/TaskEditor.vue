@@ -433,8 +433,10 @@
 
                     <select
                       size="2"
+                      id="activities-scroll"
                       v-model="selectedActivity"
                       v-bind="task.task_activities"
+                      @mouseover="scrollToActivity"
                       @change="updateQueryState"
                       ignore-input-change="1"
                       class="form-control eq-input"
@@ -443,6 +445,7 @@
                       <option
                         v-for="activity in task.task_activities"
                         :value="activity.activityid"
+                        :id="'activities-entry' + activity.activityid"
                       >
                         Step [{{ activity.step }}] Activity [{{ activity.activityid }}]
                         {{ buildActivityDescription(activity) }}
@@ -541,6 +544,7 @@
                              description: 'Zone',
                              itemIcon: '3133',
                              field: 'zones',
+                             type: 'text',
                              col: 'col-6',
                              onclick: setSelectorActive,
                            },
@@ -848,6 +852,8 @@ export default {
 
       lastResetTime: Date.now(),
 
+      scrolledToActivity: false,
+
       notification: "",
       error: "",
 
@@ -871,6 +877,23 @@ export default {
   },
 
   methods: {
+
+    scrollToActivity() {
+      // console.log("event firing")
+
+      // activitiy list scroll to activity
+      if (!this.scrolledToActivity) {
+        if (this.selectedActivity) {
+          const container = document.getElementById("activities-scroll");
+          const target    = document.getElementById(util.format("task-entry-%s", this.selectedActivity))
+          if (container && target) {
+            container.scrollTo({top: target.offsetTop - 150, behavior: "smooth"});
+          }
+        }
+
+        this.scrolledToActivity = true
+      }
+    },
 
     renderGoalIdDescriptor() {
       if (this.isGoalIdItemSelectorActive()) {
@@ -1097,6 +1120,7 @@ export default {
         try {
           let deletedSuccessfully = false
           if (this.task.task_activities) {
+
             for (const a of this.task.task_activities) {
               if (parseInt(a.activityid) === parseInt(this.selectedActivity)) {
                 const r = await Tasks.deleteTaskActivity(a)
@@ -1113,11 +1137,12 @@ export default {
             if (deletedSuccessfully) {
               let activityId = 0;
               for (const index in this.task.task_activities) {
-                if (this.task.task_activities[index].activityid != activityId) {
-                  const previousId = parseInt(this.task.task_activities[index].activityid)
+                if (parseInt(this.task.task_activities[index].activityid) != activityId) {
+                  const previousId                            = parseInt(this.task.task_activities[index].activityid)
                   this.task.task_activities[index].activityid = activityId
-                  console.log("Previous ID", previousId)
                   await Tasks.updateTaskActivityId(this.task.task_activities[index], previousId)
+
+                  // console.log("Updating [%s] from [%s]", this.task.task_activities[index].activityid, previousId)
                 }
 
                 activityId++;
@@ -1346,6 +1371,8 @@ export default {
         this.task = (await Tasks.getTask(this.$route.params.id))
 
         setTimeout(() => {
+
+          // task list scroll to task
           const container = document.getElementById("task-list");
           const target    = document.getElementById(util.format("task-entry-%s", this.$route.params.id))
           if (container && target) {

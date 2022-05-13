@@ -35,7 +35,13 @@ export class Tasks {
     const r    = await this.getTaskApi().getTask(request)
 
     if (r.status === HttpStatus.OK) {
-      return r.data
+      let task = r.data
+
+      // @ts-ignore
+      // sort activityids before return
+      task.task_activities.sort((a, b) => (a.activityid > b.activityid) ? 1 : -1)
+
+      return task
     }
 
     return {}
@@ -109,8 +115,12 @@ export class Tasks {
 
   public static async updateTaskActivityId(taskActivity: any, previousId: number) {
     let request = (new SpireQueryBuilder())
+      .where("taskid", "=", taskActivity.taskid)
       .where("activityid", "=", previousId)
       .get()
+
+    // format zones
+    taskActivity.zones = taskActivity.zones.toString()
 
     // @ts-ignore
     return await this.getTaskActivitiesApi()
