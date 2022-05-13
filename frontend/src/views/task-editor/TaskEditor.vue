@@ -92,8 +92,8 @@
               <!--              </div>-->
 
               <div style="height: 40px">
-                <b-alert show dismissable variant="danger" v-if="error" @click="error = ''">
-                  <div class="row">
+                <b-alert show dismissable variant="danger" v-if="error">
+                  <div class="row" @click="error = ''">
                     <div class="col-11">
                       <i class="fa fa-warning"></i> {{ error }}
                     </div>
@@ -104,11 +104,11 @@
                 </b-alert>
 
                 <b-alert show dismissable variant="warning" v-if="notification">
-                  <div class="row">
+                  <div class="row" @click="notification = ''">
                     <div class="col-11">
                       <i class="fa fa-info-circle mr-3"></i> {{ notification }}
                     </div>
-                    <div class="col-1 text-right" @click="notification = ''">
+                    <div class="col-1 text-right">
                       <i class="fa fa-remove"></i>
                     </div>
                   </div>
