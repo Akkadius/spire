@@ -62,7 +62,7 @@
 
           <div
             class="mt-3"
-            v-if="field.fieldType === 'textarea' && activityDescriptions[field.index] && activityDescriptions[field.index].multiKey"
+            v-if="field.fieldType === 'textarea' && activityDescriptions[field.index] && activityDescriptions[field.index].multiKey && activityDescriptions[field.index].multiKey.length > 0"
           >
             <div v-for="activityId in activityDescriptions[field.index].multiKey.split(',')">
               {{ buildActivityDescriptionFromIndex(activityId) }}
@@ -228,6 +228,8 @@ export default {
         const description = this.activityDescriptions[key].description
         finalDescription += `[${multiKey},${description}]`
       }
+
+      finalDescription = finalDescription.replaceAll("\n", "<BR>")
 
       this.$forceUpdate()
       this.$emit('input', finalDescription);
