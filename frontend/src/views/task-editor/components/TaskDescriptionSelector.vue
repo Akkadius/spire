@@ -60,6 +60,16 @@
             max-rows="6"
           ></b-textarea>
 
+          <div
+            class="mt-3"
+            v-if="field.fieldType === 'textarea' && activityDescriptions[field.index] && activityDescriptions[field.index].multiKey"
+          >
+            <div v-for="activityId in activityDescriptions[field.index].multiKey.split(',')">
+              {{ buildActivityDescriptionFromIndex(activityId) }}
+            </div>
+          </div>
+
+
         </div>
       </div>
 
@@ -83,6 +93,7 @@
 <script>
 import EqWindowSimple from "@/components/eq-ui/EQWindowSimple";
 import EqCheckbox     from "@/components/eq-ui/EQCheckbox";
+import {Tasks}        from "@/app/tasks";
 
 export default {
   name: "TaskDescriptionSelector",
@@ -95,6 +106,10 @@ export default {
     }
   },
   props: {
+    task: {
+      type: Object,
+      required: false
+    },
     description: {
       type: String,
       required: true,
@@ -104,6 +119,12 @@ export default {
     this.init()
   },
   watch: {
+    task: {
+      handler(newVal) {
+        // this.init()
+      },
+      deep: true
+    },
     description: {
       handler(newVal) {
         // this.init()
@@ -117,6 +138,19 @@ export default {
     }
   },
   methods: {
+    buildActivityDescriptionFromIndex(index) {
+      if (this.task.task_activities[index - 1]) {
+        const activity = this.task.task_activities[index - 1]
+        const prefix   = `S[${activity.step}] A[${activity.activityid}] `
+        return prefix + this.buildActivityDescription(activity)
+      }
+      return ""
+    },
+
+    buildActivityDescription(activity) {
+      return Tasks.buildActivityDescription(activity)
+    },
+
     init() {
       this.getDescription()
     },

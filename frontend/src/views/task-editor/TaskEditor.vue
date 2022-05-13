@@ -688,6 +688,7 @@
           v-if="selectorActive['description']"
         >
           <task-description-selector
+            :task="task"
             :description="task.description"
             @input="task['description'] = $event; setFieldModifiedById('description');"
           ></task-description-selector>
