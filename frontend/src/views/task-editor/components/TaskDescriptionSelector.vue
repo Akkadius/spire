@@ -65,10 +65,12 @@
             v-if="field.fieldType === 'textarea' && activityDescriptions[field.index] && activityDescriptions[field.index].multiKey && activityDescriptions[field.index].multiKey.length > 0"
           >
             <div v-for="activityId in activityDescriptions[field.index].multiKey.split(',')">
-              {{ buildActivityDescriptionFromIndex(activityId) }}
+              <span class="font-weight-bold">
+                {{ buildActivityDescriptionFromIndex(activityId).prefix }}
+              </span>
+              {{ buildActivityDescriptionFromIndex(activityId).description }}
             </div>
           </div>
-
 
         </div>
       </div>
@@ -141,10 +143,14 @@ export default {
     buildActivityDescriptionFromIndex(index) {
       if (this.task.task_activities[index - 1]) {
         const activity = this.task.task_activities[index - 1]
-        const prefix   = `S[${activity.step}] A[${activity.activityid}] `
-        return prefix + this.buildActivityDescription(activity)
+        const prefix   = `Step [${activity.step}] Activity [${activity.activityid}] `
+        return {
+          prefix: prefix,
+          description: this.buildActivityDescription(activity)
+        }
+
       }
-      return ""
+      return {}
     },
 
     buildActivityDescription(activity) {
