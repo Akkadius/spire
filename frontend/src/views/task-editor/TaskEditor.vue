@@ -1093,9 +1093,9 @@ export default {
       }
 
       const activity = this.task.task_activities[this.selectedActivity]
-
       if (confirm(`Are you sure you want to delete this task activity?\n\n(Step ${activity.step}) Activity ${activity.activityid} \n\n` + this.buildActivityDescription(activity))) {
         try {
+          let deletedSuccessfully = false
           if (this.task.task_activities) {
             for (const a of this.task.task_activities) {
               if (parseInt(a.activityid) === parseInt(this.selectedActivity)) {
@@ -1104,9 +1104,24 @@ export default {
                   this.task             = (await Tasks.getTask(this.$route.params.id))
                   this.selectedActivity = a.activityid - 1
                   this.sendNotification("Task activity successfully deleted")
+                  deletedSuccessfully = true
                 }
               }
             }
+
+            // // reorder task activities and then save again
+            if (deletedSuccessfully) {
+              let activityId = 0;
+              for (const index in this.task.task_activities) {
+                this.task.task_activities[index].activityid = activityId
+                activityId++;
+              }
+
+              console.log(this.task)
+
+              await this.saveTask()
+            }
+
           }
         } catch (err) {
           if (err.response && err.response.data && err.response.data.error) {
