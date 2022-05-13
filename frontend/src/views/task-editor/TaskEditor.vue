@@ -831,7 +831,7 @@ import {Npcs} from "@/app/npcs";
 import TaskExploreSelector from "@/views/task-editor/components/TaskExploreSelector.vue";
 import TaskDescriptionSelector from "@/views/task-editor/components/TaskDescriptionSelector.vue";
 
-const MILLISECONDS_BEFORE_WINDOW_RESET = 5000;
+const MILLISECONDS_BEFORE_WINDOW_RESET = 10000;
 
 export default {
   components: {
