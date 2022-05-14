@@ -2,10 +2,10 @@
   <div>
     <eq-window-simple
       style="height: 95vh; overflow-y: scroll;" class="p-0 eq-window-hybrid"
-      v-if="activityType === TASK_ACTIVITY_TYPE.LOOT"
+      v-if="isItemIdMatchList()"
     >
       <div class="font-weight-bold text-center">
-        Goal Match List Preview (Loot)
+        Goal Match List Preview ({{ TASK_ACTIVITY_TYPES[activityType] }})
       </div>
 
       <div v-if="items && items.length > 0" class="text-center mt-1">
@@ -45,9 +45,13 @@
 
     <eq-window-simple
       style="height: 95vh; overflow-y: scroll;" class="p-0 eq-window-hybrid"
-      v-if="activityType === TASK_ACTIVITY_TYPE.KILL"
+      v-if="isNpcMatchList()"
     >
-      <div v-if="npcs && npcs.length > 0" class="text-center">
+      <div class="font-weight-bold text-center">
+        Goal Match List Preview ({{ TASK_ACTIVITY_TYPES[activityType] }})
+      </div>
+
+      <div v-if="npcs && npcs.length > 0" class="text-center mt-1 ">
         Found ({{ npcs.length }}) matching NPC(s)
       </div>
 
@@ -64,22 +68,24 @@
           <th style="width: 30px">ID</th>
           <th style="width: 100px">Name</th>
           <th></th>
+          <th>Search Type</th>
           <th>Zones</th>
         </tr>
         </thead>
         <tbody>
         <tr
-          :id="'npc-' + npc.short_name"
+          :id="'npc-' + npc.npc.short_name"
           v-for="(npc, index) in npcs"
-          :key="npc.id"
+          :key="npc.npc.id"
         >
-          <td style="text-align: center" class="p-0">{{ npc.id }}</td>
-          <td>{{ npc.name }} <span v-if="npc.lastname && npc.lastname.length > 0">({{ npc.lastname }})</span></td>
+          <td style="text-align: center" class="p-0">{{ npc.npc.id }}</td>
+          <td>{{ npc.npc.name }} <span v-if="npc.lastname && npc.lastname.length > 0">({{ npc.lastname }})</span></td>
           <td class="text-center"><span
-            :class="'race-models-ctn-' + npc.race + '-' + npc.gender + '-' + npc.texture + '-' + npc.helmtexture + ''"
+            :class="'race-models-ctn-' + npc.npc.race + '-' + npc.npc.gender + '-' + npc.npc.texture + '-' + npc.npc.helmtexture + ''"
             style="zoom: 75%;"
           ></span></td>
-          <td><span v-if="npcZones[npc.id]">{{ npcZones[npc.id].join(",") }}</span></td>
+          <td>{{npc.search}}</td>
+          <td><span v-if="npcZones[npc.npc.id]">{{ npcZones[npc.npc.id].join(",") }}</span></td>
         </tr>
         </tbody>
       </table>
@@ -88,14 +94,14 @@
 </template>
 
 <script>
-import EqWindowSimple       from "@/components/eq-ui/EQWindowSimple";
-import {ItemApi, Spawn2Api} from "@/app/api";
-import {SpireApiClient}     from "@/app/api/spire-api-client";
-import EqCheckbox           from "@/components/eq-ui/EQCheckbox";
-import {SpireQueryBuilder}  from "@/app/api/spire-query-builder";
-import {Zones}              from "@/app/zones";
-import {TASK_ACTIVITY_TYPE} from "@/app/constants/eq-task-constants";
-import ItemPopover          from "@/components/ItemPopover";
+import EqWindowSimple                            from "@/components/eq-ui/EQWindowSimple";
+import {ItemApi, NpcTypeApi, Spawn2Api}          from "@/app/api";
+import {SpireApiClient}                          from "@/app/api/spire-api-client";
+import EqCheckbox                                from "@/components/eq-ui/EQCheckbox";
+import {SpireQueryBuilder}                       from "@/app/api/spire-query-builder";
+import {Zones}                                   from "@/app/zones";
+import {TASK_ACTIVITY_TYPE, TASK_ACTIVITY_TYPES} from "@/app/constants/eq-task-constants";
+import ItemPopover                               from "@/components/ItemPopover";
 
 export default {
   name: "TaskGoalMatchListPreviewer",
@@ -111,6 +117,7 @@ export default {
 
       // constants
       TASK_ACTIVITY_TYPE: TASK_ACTIVITY_TYPE,
+      TASK_ACTIVITY_TYPES: TASK_ACTIVITY_TYPES,
     }
   },
   props: {
@@ -138,11 +145,33 @@ export default {
 
   methods: {
 
+    isItemIdMatchList() {
+      return [
+        TASK_ACTIVITY_TYPE.LOOT,
+        TASK_ACTIVITY_TYPE.TRADESKILL,
+        TASK_ACTIVITY_TYPE.DELIVER,
+        TASK_ACTIVITY_TYPE.FISH,
+        TASK_ACTIVITY_TYPE.FORAGE
+      ].includes(
+        parseInt(this.activityType)
+      )
+    },
+
+    isNpcMatchList() {
+      return [
+        TASK_ACTIVITY_TYPE.KILL,
+        TASK_ACTIVITY_TYPE.SPEAK_WITH,
+        // TASK_ACTIVITY_TYPE.GIVE
+      ].includes(
+        parseInt(this.activityType)
+      )
+    },
+
     async load() {
-      if (this.activityType === TASK_ACTIVITY_TYPE.KILL) {
+      if (this.isNpcMatchList()) {
         this.loadNpcMatches()
       }
-      if (this.activityType === TASK_ACTIVITY_TYPE.LOOT) {
+      if (this.isItemIdMatchList()) {
         this.loadItemMatches()
       }
     },
@@ -184,6 +213,9 @@ export default {
 
       let builder = (new SpireQueryBuilder())
       for (let zone of zones) {
+        // if (zone.length === 0) {
+        //   continue;
+        // }
         builder.where("zone", "=", zone)
       }
 
@@ -197,11 +229,18 @@ export default {
 
       this.npcs     = {}
       this.npcZones = {}
+      let npcs      = [];
+
+      // this is used only as a way to show options at the global level if things were not
+      // found at the local zone level
+      // for example if were to search "orc" from the match list, we'd only care to see orcs
+      // at the zone level if we have a zone filter
+      // if we have no matches against anything in zone we'd want to see what the global npc table
+      // could give us for matches
+      let npcNameMatches = {};
 
       const result = await api.listSpawn2s(builder.get())
-      if (result.status === 200) {
-        let npcs = [];
-
+      if (result.status === 200 && result.data) {
         for (let spawn2 of result.data) {
           if (spawn2.spawnentries) {
             for (let spawnentry of spawn2.spawnentries) {
@@ -218,9 +257,15 @@ export default {
                   // name match
                   if (n.includes(m) || nId === m) {
 
+                    npcNameMatches[m] = true
+
                     // make sure npc id isn't already added to array
-                    if (npcs.filter(e => e.id === spawnentry.npc_type.id).length === 0) {
-                      npcs.push(spawnentry.npc_type)
+                    if (npcs.filter(e => e.npc.id === spawnentry.npc_type.id).length === 0) {
+                      npcs.push({
+                        npc: spawnentry.npc_type,
+                        search: 'Zone'
+                      })
+
                     }
 
                     // create association of an NPC ID to zones
@@ -238,15 +283,38 @@ export default {
                 }
               }
             }
-
           }
         }
-
-        // 2) Load by global namespace
-        // an NPC could be quest-spawned into a zone and is still filterable
-
-        this.npcs = npcs
       }
+
+      // 2) Load by global namespace
+      // an NPC could be quest-spawned into a zone and is still filterable
+      const npcTypeApi = (new NpcTypeApi(SpireApiClient.getOpenApiConfig()))
+      builder          = (new SpireQueryBuilder())
+      const matchList  = this.goalMatchList ? this.goalMatchList : ""
+      let filterCount  = 0
+      for (let name of matchList.split("|")) {
+        if (!npcNameMatches[name] && name.length > 0) {
+          builder.where("name", "like", name)
+          filterCount++;
+        }
+      }
+
+      if (filterCount > 0) {
+        const r = await npcTypeApi.listNpcTypes(builder.get())
+        if (r.status === 200) {
+          for (let npc of r.data) {
+            if (npcs.filter(e => e.npc.id === npc.id).length === 0) {
+              npcs.push({
+                npc: npc,
+                search: 'Global'
+              })
+            }
+          }
+        }
+      }
+
+      this.npcs = npcs
     }
   },
   mounted() {
