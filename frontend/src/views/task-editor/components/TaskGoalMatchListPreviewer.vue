@@ -1,8 +1,51 @@
 <template>
   <div>
     <eq-window-simple
-      id="npc-view-container"
       style="height: 95vh; overflow-y: scroll;" class="p-0 eq-window-hybrid"
+      v-if="activityType === TASK_ACTIVITY_TYPE.LOOT"
+    >
+      <div class="font-weight-bold text-center">
+        Goal Match List Preview (Loot)
+      </div>
+
+      <div v-if="items && items.length > 0" class="text-center mt-1">
+        Found ({{ items.length }}) matching item(s)
+      </div>
+
+      <table
+        class="eq-table eq-highlight-rows"
+        style="display: table; overflow-x: scroll"
+      >
+        <thead>
+        <tr>
+          <th style="text-align: center; width: 50px" class="text-center">Id</th>
+          <th style="text-align: center;">Name</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr
+          v-for="(item, index) in items"
+          :key="item.id"
+          :id="'item-selection-row-' + item.id"
+        >
+          <td>
+            {{ item.id }}
+          </td>
+          <td class="text-left" style="vertical-align: middle">
+            <item-popover
+              :item="item"
+              v-if="Object.keys(item).length > 0 && item"
+              size="regular"
+            />
+          </td>
+        </tr>
+        </tbody>
+      </table>
+    </eq-window-simple>
+
+    <eq-window-simple
+      style="height: 95vh; overflow-y: scroll;" class="p-0 eq-window-hybrid"
+      v-if="activityType === TASK_ACTIVITY_TYPE.KILL"
     >
       <div v-if="npcs && npcs.length > 0" class="text-center">
         Found ({{ npcs.length }}) matching NPC(s)
@@ -46,23 +89,28 @@
 
 <script>
 import EqWindowSimple       from "@/components/eq-ui/EQWindowSimple";
-import {Spawn2Api}          from "@/app/api";
+import {ItemApi, Spawn2Api} from "@/app/api";
 import {SpireApiClient}     from "@/app/api/spire-api-client";
 import EqCheckbox           from "@/components/eq-ui/EQCheckbox";
 import {SpireQueryBuilder}  from "@/app/api/spire-query-builder";
 import {Zones}              from "@/app/zones";
 import {TASK_ACTIVITY_TYPE} from "@/app/constants/eq-task-constants";
+import ItemPopover          from "@/components/ItemPopover";
 
 export default {
   name: "TaskGoalMatchListPreviewer",
-  components: { EqCheckbox, EqWindowSimple },
+  components: { ItemPopover, EqCheckbox, EqWindowSimple },
   data() {
     return {
-      // filtered content
+      // result sets
       npcs: {},
+      items: {},
 
       // key by npcid
       npcZones: {},
+
+      // constants
+      TASK_ACTIVITY_TYPE: TASK_ACTIVITY_TYPE,
     }
   },
   props: {
@@ -93,6 +141,28 @@ export default {
     async load() {
       if (this.activityType === TASK_ACTIVITY_TYPE.KILL) {
         this.loadNpcMatches()
+      }
+      if (this.activityType === TASK_ACTIVITY_TYPE.LOOT) {
+        this.loadItemMatches()
+      }
+    },
+
+    async loadItemMatches() {
+      const api       = (new ItemApi(SpireApiClient.getOpenApiConfig()))
+      let builder     = (new SpireQueryBuilder())
+      const matchList = this.goalMatchList ? this.goalMatchList : ""
+      for (let m of matchList.split("|")) {
+        m = m.toLowerCase()
+        if (m.length === 0 && matchList.length !== 0) {
+          continue;
+        }
+
+        builder.whereOr("id", "=", m)
+      }
+
+      const result = await api.listItems(builder.get())
+      if (result.status === 200) {
+        this.items = result.data
       }
     },
 

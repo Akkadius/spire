@@ -1002,7 +1002,7 @@ export default {
 
     renderGoalMatchListDescription() {
       if (this.isGoalIdItemSelectorActive()) {
-        return ' (Item)'
+        return ' (Item) (List of item ids)'
       }
       if (this.isGoalIdNpcSelectorActive()) {
         return ' (NPC) (Can be NPC ID\'s or names)'
