@@ -145,7 +145,7 @@ export * from './api/npc-type-api';
 // export * from './api/object-api';
 // export * from './api/object-content-api';
 // export * from './api/perl-event-export-setting-api';
-// export * from './api/pet-api';
+export * from './api/pet-api';
 // export * from './api/petition-api';
 // export * from './api/pets-beastlord-datum-api';
 // export * from './api/pets-equipmentset-api';

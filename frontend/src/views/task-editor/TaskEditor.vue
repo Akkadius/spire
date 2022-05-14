@@ -532,12 +532,13 @@
                              col: 'col-2',
                            },
                            {
-                             description: 'Goal Match List',
+                             description: 'Goal Match List ' + renderGoalMatchListDescription() + ' Multiple entries separated by |',
                              field: 'goal_match_list',
                              fieldType: 'text',
                              itemIcon: '3196',
                              col: 'col-12',
                              showIf: isGoalMatchListActive(),
+                             onclick: setSelectorActive,
                            },
                            {
                              description: 'Deliver to NPC',
@@ -621,7 +622,7 @@
                           <b-form-input
                             v-if="field.fieldType === 'text' || !field.fieldType"
                             :id="field.field"
-                            v-model.lazy="task.task_activities[selectedActivity][field.field]"
+                            v-model="task.task_activities[selectedActivity][field.field]"
                             class="m-0 mt-1"
                             v-on="typeof field.onclick !== 'undefined' ? { click: () => field.onclick(field.field) } : {}"
                             v-b-tooltip.hover.v-dark.right :title="getFieldDescription(field.field)"
@@ -688,6 +689,20 @@
       </div>
 
       <div class="col-5 fade-in" v-if="task">
+
+        <!-- goal match list previewer -->
+        <div
+          style="margin-top: 20px; width: auto;"
+          class="fade-in"
+          v-if="selectorActive['goal_match_list'] && task.task_activities[selectedActivity] && typeof task.task_activities[selectedActivity].goal_match_list !== 'undefined'"
+        >
+          <task-goal-match-list-previewer
+            :goal-match-list="task.task_activities[selectedActivity].goal_match_list"
+            :activityType="task.task_activities[selectedActivity].activitytype"
+            :zone-ids="task.task_activities[selectedActivity].zones.toString()"
+          />
+        </div>
+
 
         <!-- (rewardid) item selector -->
         <div
@@ -838,11 +853,13 @@ import {FreeIdFetcher} from "@/app/free-id-fetcher";
 import {Npcs} from "@/app/npcs";
 import TaskExploreSelector from "@/views/task-editor/components/TaskExploreSelector.vue";
 import TaskDescriptionSelector from "@/views/task-editor/components/TaskDescriptionSelector.vue";
+import TaskGoalMatchListPreviewer from "@/views/task-editor/components/TaskGoalMatchListPreviewer.vue";
 
 const MILLISECONDS_BEFORE_WINDOW_RESET = 10000;
 
 export default {
   components: {
+    TaskGoalMatchListPreviewer,
     TaskDescriptionSelector,
     TaskExploreSelector,
     TaskNpcSelector,
@@ -943,6 +960,17 @@ export default {
       }
       if (this.isGoalIdNpcSelectorActive()) {
         return ' (NPC)'
+      }
+
+      return ""
+    },
+
+    renderGoalMatchListDescription() {
+      if (this.isGoalIdItemSelectorActive()) {
+        return ' (Item)'
+      }
+      if (this.isGoalIdNpcSelectorActive()) {
+        return ' (NPC) (Can be NPC ID\'s or names)'
       }
 
       return ""
@@ -1451,6 +1479,7 @@ export default {
         "id",
         "description",
         "delivertonpc",
+        "goal_match_list",
         "zones",
         // "item_list",
         // "skill_list",
