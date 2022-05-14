@@ -658,6 +658,14 @@
                               {{ index }}) {{ description }}
                             </option>
                           </select>
+
+                          <div
+                            v-if="field.field === 'zones' && task.task_activities[selectedActivity][field.field]"
+                            class="font-weight-bold mt-1 text-center"
+                          >
+                            {{ getZoneNames() }}
+                          </div>
+
                         </div>
                       </div>
                       <eq-debug :data="task.task_activities[selectedActivity]"/>
@@ -835,7 +843,8 @@ import {
   TASK_ACTIVITY_TYPES,
   TASK_DURATION_HUMAN,
   TASK_DURATION_TYPES,
-  TASK_GOAL_METHOD_TYPE, TASK_GOAL_METHOD_TYPES,
+  TASK_GOAL_METHOD_TYPE,
+  TASK_GOAL_METHOD_TYPES,
   TASK_REWARD_METHOD_TYPE,
   TASK_TYPES
 } from "@/app/constants/eq-task-constants";
@@ -854,6 +863,7 @@ import {Npcs} from "@/app/npcs";
 import TaskExploreSelector from "@/views/task-editor/components/TaskExploreSelector.vue";
 import TaskDescriptionSelector from "@/views/task-editor/components/TaskDescriptionSelector.vue";
 import TaskGoalMatchListPreviewer from "@/views/task-editor/components/TaskGoalMatchListPreviewer.vue";
+import {Zones} from "@/app/zones";
 
 const MILLISECONDS_BEFORE_WINDOW_RESET = 10000;
 
@@ -897,6 +907,10 @@ export default {
       notification: "",
       error: "",
 
+      // cached zone names for visual reference within the editor
+      zoneNames: {},
+
+      // constants
       TASK_ACTIVITY_TYPE: TASK_ACTIVITY_TYPE,
       TASK_REWARD_METHOD_TYPE: TASK_REWARD_METHOD_TYPE,
       TASK_TYPES: TASK_TYPES,
@@ -917,6 +931,27 @@ export default {
   },
 
   methods: {
+
+    getZoneNames() {
+      const zones   = this.task.task_activities[this.selectedActivity].zones ? this.task.task_activities[this.selectedActivity].zones.toString() : ""
+      let zoneNames = []
+      for (let z of zones.split(",")) {
+        zoneNames.push(
+          this.zoneNames[z]
+        )
+      }
+
+      return zoneNames.join(", ")
+    },
+
+    async fetchZoneNames() {
+      let zoneNames = {}
+      for (const z of (await Zones.getZones())) {
+        zoneNames[z.zoneidnumber] = z.long_name
+      }
+
+      this.zoneNames = zoneNames
+    },
 
     activityTypeChange() {
       if (this.task) {
@@ -1444,9 +1479,15 @@ export default {
 
         this.task = (await Tasks.getTask(this.$route.params.id))
 
+        // only load these once
+        if (Object.keys(this.zoneNames).length === 0) {
+          this.fetchZoneNames().then(() => {
+            this.$forceUpdate()
+          })
+        }
+
         // copy to original
         Object.assign(this.originalTask, this.task);
-
 
         setTimeout(() => {
 
@@ -1469,6 +1510,7 @@ export default {
             EditFormFieldUtil.resetFieldEditedStatus()
           }, 1)
         }, 1)
+
 
         // if no task found...
         // this.task = null
