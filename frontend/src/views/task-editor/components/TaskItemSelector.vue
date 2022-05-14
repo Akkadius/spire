@@ -530,6 +530,11 @@ export default {
               })
             }
             this.loaded = true;
+
+            if (this.items.length === 0) {
+              this.searchPerformed = false
+              this.resetForm()
+            }
           });
 
         }
