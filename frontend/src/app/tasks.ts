@@ -190,41 +190,21 @@ export class Tasks {
 
     switch (activity.activitytype) {
       case TASK_ACTIVITY_TYPE.DELIVER:
-        if (activity.item_list !== "") {
-          return `Deliver ${activity.goalcount} ${activity.item_list} to ${activity.target_name}`;
-        }
-
-        return "Deliver " + activity.goalcount + " to " + activity.target_name;
+        return `Deliver ${activity.goalcount} ${activity.item_list} to ${activity.target_name}`;
       case TASK_ACTIVITY_TYPE.KILL:
-        return "Kill " + activity.goalcount + " " + activity.target_name;
+        return `Kill ${activity.goalcount} ${activity.target_name}`;
       case TASK_ACTIVITY_TYPE.LOOT:
-        let string = "Loot " + activity.goalcount;
-        if (activity.item_list !== "") {
-          string += " " + activity.item_list
-        }
-        if (activity.target_name !== "") {
-          string += " from " + activity.target_name
-        }
-
-        return string
+        return `Loot ${activity.goalcount} ${activity.item_list} from ${activity.target_name}`;
       case TASK_ACTIVITY_TYPE.SPEAK_WITH:
         return "Speak with " + activity.target_name;
       case TASK_ACTIVITY_TYPE.EXPLORE:
         return "Explore " + activity.target_name;
       case TASK_ACTIVITY_TYPE.TRADESKILL:
-        return "Create " + activity.goalcount + " " + activity.target_name;
+        return `Create ${activity.goalcount} ${activity.item_list} using tradeskills`
       case TASK_ACTIVITY_TYPE.FISH:
-        if (activity.item_list !== "") {
-          return "Fish for " + activity.item_list;
-        }
-
-        return "Fish " + activity.goalcount;
+        return `Fish for ${activity.goalcount} ${activity.item_list}`;
       case TASK_ACTIVITY_TYPE.FORAGE:
-        if (activity.item_list !== "") {
-          return "Forage " + activity.item_list;
-        }
-
-        return "Forage " + activity.goalcount;
+        return `Forage ${activity.goalcount} ${activity.item_list}`;
       case TASK_ACTIVITY_TYPE.USE:
         return "Use " + activity.goalcount;
       case TASK_ACTIVITY_TYPE.USE2:
