@@ -502,14 +502,6 @@
                              col: 'col-12',
                            },
                            {
-                             description: 'Goal ID' + renderGoalIdDescriptor(),
-                             field: 'goalid',
-                             fieldType: 'number',
-                             itemIcon: '3196',
-                             col: 'col-3',
-                             onclick: isGoalIdSelectorActive() ? setSelectorActive : () => {},
-                           },
-                           {
                              description: 'Goal Method',
                              field: 'goalmethod',
                              fieldType: 'select',
@@ -524,6 +516,15 @@
                              field: 'goalcount',
                              fieldType: 'number',
                              col: 'col-3',
+                           },
+                           {
+                             description: 'Goal ID' + renderGoalIdDescriptor(),
+                             field: 'goalid',
+                             fieldType: 'number',
+                             itemIcon: '3196',
+                             col: 'col-3',
+                             showIf: isGoalIdSelectorActive(),
+                             onclick: isGoalIdSelectorActive() ? setSelectorActive : () => {},
                            },
                            {
                              description: 'Optional',
