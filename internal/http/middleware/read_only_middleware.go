@@ -9,6 +9,7 @@ import (
 	"github.com/labstack/echo/v4"
 	"github.com/sirupsen/logrus"
 	"net/http"
+	"strings"
 )
 
 type ReadOnlyMiddleware struct {
@@ -36,6 +37,10 @@ func (r ReadOnlyMiddleware) Handle() echo.MiddlewareFunc {
 			ignoredPostRoutes := []string{
 				"/api/v1/connection",
 				"/bulk",
+			}
+
+			if strings.Contains(c.Request().URL.Path, "/api/v1/connection") {
+				return next(c)
 			}
 
 			// allow get calls
