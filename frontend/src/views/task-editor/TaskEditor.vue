@@ -486,6 +486,7 @@
                              itemIcon: '5739',
                              field: 'target_name',
                              col: 'col-6',
+                             showIf: isActivityTargetVisible()
                            },
                            {
                              description: 'Item List',
@@ -1035,6 +1036,18 @@ export default {
         TASK_ACTIVITY_TYPE.DELIVER,
         TASK_ACTIVITY_TYPE.FISH,
         TASK_ACTIVITY_TYPE.FORAGE
+      ].includes(
+        parseInt(this.task.task_activities[this.selectedActivity].activitytype)
+      )
+    },
+
+    isActivityTargetVisible() {
+      return [
+        TASK_ACTIVITY_TYPE.KILL,
+        TASK_ACTIVITY_TYPE.LOOT,
+        TASK_ACTIVITY_TYPE.DELIVER,
+        TASK_ACTIVITY_TYPE.SPEAK_WITH,
+        TASK_ACTIVITY_TYPE.EXPLORE,
       ].includes(
         parseInt(this.task.task_activities[this.selectedActivity].activitytype)
       )
