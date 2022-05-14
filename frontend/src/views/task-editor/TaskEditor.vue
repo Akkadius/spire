@@ -129,7 +129,7 @@
 
               <eq-tabs
                 id="task-edit-window"
-                class="minified-inputs"
+                class="minified-inputs ml-2"
               >
                 <eq-tab
                   name="Task"
@@ -321,7 +321,7 @@
                        },
 
                      ]"
-                      :class="field.col + ' mb-3 pl-2 pr-2'"
+                      :class="field.col + ' mb-3 pl-1 pr-1'"
                     >
                       <!--                      <div class="text-center">-->
                       <div>
