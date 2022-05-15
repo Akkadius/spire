@@ -198,6 +198,15 @@ export default {
         container.scrollTop = container.scrollTop + top - 300;
       }
     }, 100)
+
+    // pre-select text box input
+    setTimeout(() => {
+      const input = document.getElementById('search-selector');
+      if (input) {
+        input.focus();
+        input.select();
+      }
+    }, 100)
   }
 }
 </script>
