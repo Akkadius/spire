@@ -130,6 +130,7 @@
       </div>
     </div>
 
+    <!-- Merchant -->
     <div v-if="npc.merchant_id > 0">
       <div class="font-weight-bold mb-3">This NPC sells the following items</div>
 
@@ -144,6 +145,20 @@
         <eq-cash-display
           class="d-inline-block ml-1"
           :price="e.item.price"
+        />
+      </div>
+
+    </div>
+
+    <div v-if="npc.loottable_id > 0">
+      <div class="font-weight-bold mb-3">This NPC drops the following items</div>
+
+      <div v-for="e in loot">
+        <item-popover
+          class="d-inline-block"
+          :item="e.item"
+          v-if="Object.keys(e.item).length > 0 && e.item"
+          size="sm"
         />
       </div>
 
@@ -279,7 +294,7 @@ export default {
   async mounted() {
 
     // merchants
-    if (this.npc.merchant_id > 0) {
+    if (this.npc.merchant_id > 0 && this.npc.merchantlists) {
       let merchantItems = []
       for (let listitem of this.npc.merchantlists) {
         merchantItems.push(
@@ -290,6 +305,23 @@ export default {
         )
       }
       this.merchantitems = merchantItems
+    }
+
+    // loot
+    if (this.npc.loottable_id > 0 && this.npc.loottable.loottable_entries) {
+      let lootItems = []
+      for (let l of this.npc.loottable.loottable_entries) {
+        // console.log(l)
+        for (let e of l.lootdrop_entries) {
+          // console.log(e)
+          lootItems.push(
+            {
+              item: e.item,
+            }
+          )
+        }
+      }
+      this.loot = lootItems
     }
   },
   props: {
