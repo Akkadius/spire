@@ -14,25 +14,25 @@
           class="ml-0 code-display pl-0"
           style="width: 100%; display: inline-block; padding-top: 10px !important; padding-bottom: 10px !important; border-radius: 5px"
         >
-          <div :title="'$client->AssignTask(int task_id, int npc_id);'" v-b-tooltip.hover.v-dark.left>
+          <div :title="'$client->AssignTask(int task_id);'" v-b-tooltip.hover.v-dark.left>
             <button
               class='btn btn-sm btn-outline-warning mb-1 mr-2'
-              @click="copyToClip(`$client->AssignTask(${task.id}, 0);`)"
+              @click="copyToClip(`$client->AssignTask(${task.id});`)"
               style="font-size: 8px; padding: 0.125rem 0.4rem; opacity: .6"
             >
               <i class="fa fa-clipboard"></i>
             </button>
-            <span style="color: rgb(156, 220, 254);">$client-></span>AssignTask({{ task.id }}, 0);
+            <span style="color: rgb(156, 220, 254);">$client-></span>AssignTask({{ task.id }});
           </div>
-          <div :title="'quest::taskselector(task1, task2, task3);'" v-b-tooltip.hover.v-dark.left>
+          <div :title="'$client->TaskSelector(task1, task2, task3);'" v-b-tooltip.hover.v-dark.left>
             <button
               class='btn btn-sm btn-outline-warning mb-1 mr-2'
-              @click="copyToClip(`quest::taskselector(${task.id});`)"
+              @click="copyToClip(`$client->TaskSelector(${task.id});`)"
               style="font-size: 8px; padding: 0.125rem 0.4rem; opacity: .6"
             >
               <i class="fa fa-clipboard"></i>
             </button>
-            <span style="color: rgb(156, 220, 254);">quest::</span>taskselector({{ task.id }});
+            <span style="color: rgb(156, 220, 254);">$client-></span>TaskSelector({{ task.id }});
           </div>
         </div>
 
@@ -53,22 +53,22 @@
           <div :title="'client:AssignTask(int task, int npc_id);'" v-b-tooltip.hover.v-dark.left>
             <button
               class='btn btn-sm btn-outline-warning mb-1 mr-2'
-              @click="copyToClip(`client:AssignTask(${task.id}, 0);`)"
+              @click="copyToClip(`client:AssignTask(${task.id});`)"
               style="font-size: 8px; padding: 0.125rem 0.4rem; opacity: .6"
             >
               <i class="fa fa-clipboard"></i>
             </button>
-            <span style="color: rgb(156, 220, 254);">client:</span>AssignTask({{ task.id }}, 0);
+            <span style="color: rgb(156, 220, 254);">client:</span>AssignTask({{ task.id }});
           </div>
-          <div :title="'eq.task_selector({task1, task2, task3, etc.});'" v-b-tooltip.hover.v-dark.left>
+          <div :title="'client:task_selector({task1, task2, task3, etc.});'" v-b-tooltip.hover.v-dark.left>
             <button
               class='btn btn-sm btn-outline-warning mb-1 mr-2'
-              @click="copyToClip(`eq.task_selector({${task.id}});`)"
+              @click="copyToClip(`client:TaskSelector({${task.id}});`)"
               style="font-size: 8px; padding: 0.125rem 0.4rem; opacity: .6"
             >
               <i class="fa fa-clipboard"></i>
             </button>
-            <span style="color: rgb(156, 220, 254);">eq.</span>task_selector({ {{ task.id }} });
+            <span style="color: rgb(156, 220, 254);">client:</span>TaskSelector({ {{ task.id }} });
           </div>
         </div>
 
