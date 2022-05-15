@@ -886,6 +886,11 @@
             </span>
             </div>
           </eq-window-simple>
+
+          <task-quest-example-preview
+            :task="task"
+            :selected-activity="selectedActivity"
+          />
         </div>
 
 
@@ -928,11 +933,13 @@ import TaskDescriptionSelector from "@/views/task-editor/components/TaskDescript
 import TaskGoalMatchListPreviewer from "@/views/task-editor/components/TaskGoalMatchListPreviewer.vue";
 import {Zones} from "@/app/zones";
 import ClipBoard from "@/app/clipboard/clipboard";
+import TaskQuestExamplePreview from "@/views/task-editor/components/TaskQuestExamplePreview.vue";
 
 const MILLISECONDS_BEFORE_WINDOW_RESET = 10000;
 
 export default {
   components: {
+    TaskQuestExamplePreview,
     TaskGoalMatchListPreviewer,
     TaskDescriptionSelector,
     TaskExploreSelector,
