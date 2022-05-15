@@ -484,6 +484,7 @@
                            {
                              description: 'Activity Target',
                              itemIcon: '5739',
+                             fieldType: 'text',
                              field: 'target_name',
                              col: 'col-6',
                              showIf: isActivityTargetVisible()
@@ -491,6 +492,7 @@
                            {
                              description: 'Item List',
                              itemIcon: '5739',
+                             fieldType: 'text',
                              field: 'item_list',
                              col: 'col-12',
                              showIf: isItemListVisible()
@@ -498,6 +500,7 @@
                            {
                              description: 'Description Override',
                              field: 'description_override',
+                             fieldType: 'text',
                              itemIcon: '2275',
                              col: 'col-12',
                            },
@@ -543,6 +546,14 @@
                              onclick: setSelectorActive,
                            },
                            {
+                             description: 'Quest Example (Quest Controlled)',
+                             itemIcon: '3196',
+                             field: 'quest_example',
+                             fieldType: 'popout',
+                             showIf: isActivityQuestControlled(),
+                             col: 'col-12',
+                           },
+                           {
                              description: 'Deliver to NPC',
                              field: 'delivertonpc',
                              fieldType: 'number',
@@ -556,6 +567,7 @@
                              description: 'Zone',
                              itemIcon: '3133',
                              field: 'zones',
+                             fieldType: 'text',
                              type: 'text',
                              col: 'col-6',
                              onclick: setSelectorActive,
@@ -582,6 +594,51 @@
                               style="display: inline-block"
                             />
                             {{ field.description }}
+                          </div>
+
+                          <div v-if="field.fieldType === 'popout' && field.field === 'quest_example'">
+                            <div class="mt-3">
+
+                              <!-- Perl -->
+                              <div
+                                class="ml-0 code-display pl-0"
+                                style="width: 100%; display: inline-block; padding-top: 10px !important; padding-bottom: 10px !important; border-radius: 5px"
+                                v-b-tooltip.hover.v-dark.top
+                                :title="'$client->UpdateTaskActivity(int task_id, int activity_id, int count);'"
+                              >
+                                <button
+                                  class='btn btn-sm btn-outline-warning mb-1 mr-2'
+                                  @click="copyToClip(`$client->UpdateTaskActivity(${buildQuestUpdateTaskActivityParams()});`)"
+                                  style="font-size: 8px; padding: 0.125rem 0.4rem; opacity: .6"
+                                >
+                                  <i class="fa fa-clipboard"></i>
+                                </button>
+                                <span style="color: rgb(156, 220, 254);">$client-></span>UpdateTaskActivity({{
+                                  buildQuestUpdateTaskActivityParams()
+                                }});
+                                <span style="color: rgb(87, 166, 74);"># (Perl)</span>
+                              </div>
+
+                              <!-- Lua -->
+                              <div
+                                class="ml-0 code-display pl-0"
+                                style="width: 100%; display: inline-block; padding-top: 10px !important; padding-bottom: 10px !important; border-radius: 5px"
+                                v-b-tooltip.hover.v-dark.top
+                                :title="'client:UpdateTaskActivity(int task, int activity, int count);'"
+                              >
+                                <button
+                                  class='btn btn-sm btn-outline-warning mb-1 mr-2'
+                                  @click="copyToClip(`client:UpdateTaskActivity(${buildQuestUpdateTaskActivityParams()});`)"
+                                  style="font-size: 8px; padding: 0.125rem 0.4rem; opacity: .6"
+                                >
+                                  <i class="fa fa-clipboard"></i>
+                                </button>
+                                <span style="color: rgb(156, 220, 254);">client:</span>UpdateTaskActivity({{
+                                  buildQuestUpdateTaskActivityParams()
+                                }});
+                                <span style="color: rgb(87, 166, 74);">-- (Lua)</span>
+                              </div>
+                            </div>
                           </div>
 
                           <!-- checkbox -->
@@ -622,7 +679,7 @@
 
                           <!-- input text -->
                           <b-form-input
-                            v-if="field.fieldType === 'text' || !field.fieldType"
+                            v-if="field.fieldType === 'text'"
                             :id="field.field"
                             v-model="task.task_activities[selectedActivity][field.field]"
                             class="m-0 mt-1"
@@ -661,6 +718,7 @@
                             </option>
                           </select>
 
+                          <!-- Show zone name underneath zone field -->
                           <div
                             v-if="field.field === 'zones' && task.task_activities[selectedActivity][field.field]"
                             class="font-weight-bold mt-1 text-center"
@@ -866,6 +924,7 @@ import TaskExploreSelector from "@/views/task-editor/components/TaskExploreSelec
 import TaskDescriptionSelector from "@/views/task-editor/components/TaskDescriptionSelector.vue";
 import TaskGoalMatchListPreviewer from "@/views/task-editor/components/TaskGoalMatchListPreviewer.vue";
 import {Zones} from "@/app/zones";
+import ClipBoard from "@/app/clipboard/clipboard";
 
 const MILLISECONDS_BEFORE_WINDOW_RESET = 10000;
 
@@ -920,6 +979,7 @@ export default {
       TASK_DURATION_HUMAN: TASK_DURATION_HUMAN,
       TASK_ACTIVITY_TYPES: TASK_ACTIVITY_TYPES,
       TASK_GOAL_METHOD_TYPE: TASK_GOAL_METHOD_TYPE,
+      TASK_GOAL_METHOD_TYPES: TASK_GOAL_METHOD_TYPES,
     }
   },
 
@@ -933,6 +993,24 @@ export default {
   },
 
   methods: {
+
+    isActivityQuestControlled() {
+      return this.task.task_activities[this.selectedActivity].goalmethod === TASK_GOAL_METHOD_TYPES.QUEST_CONTROLLED
+    },
+
+    buildQuestUpdateTaskActivityParams() {
+      return `${this.task.id}, ${this.selectedActivity}, 1`
+    },
+
+    copyToClip(s) {
+      ClipBoard.copyFromText(s)
+
+      this.$bvToast.toast(s, {
+        title: "Copied to Clipboard!",
+        autoHideDelay: 2000,
+        solid: true
+      })
+    },
 
     getZoneNames() {
       const zones   = this.task.task_activities[this.selectedActivity].zones ? this.task.task_activities[this.selectedActivity].zones.toString() : ""
