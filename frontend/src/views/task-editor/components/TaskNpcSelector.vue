@@ -113,9 +113,13 @@ export default {
       const api   = (new NpcTypeApi(SpireApiClient.getOpenApiConfig()))
       let builder = (new SpireQueryBuilder())
       if (this.npcSearch !== "") {
-        builder.where("name", "like", this.npcSearch)
-        builder.whereOr("lastname", "like", this.npcSearch)
-        builder.whereOr("id", "=", this.npcSearch)
+        if (parseInt(this.npcSearch) > 0) {
+          builder.whereOr("id", "=", this.npcSearch)
+        }
+        else {
+          builder.where("name", "like", this.npcSearch)
+          builder.whereOr("lastname", "like", this.npcSearch)
+        }
       }
 
       builder.includes([

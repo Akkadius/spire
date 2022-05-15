@@ -39,7 +39,9 @@ export class Tasks {
 
       // @ts-ignore
       // sort activityids before return
-      task.task_activities.sort((a, b) => (a.activityid > b.activityid) ? 1 : -1)
+      if (task.task_activities) {
+        task.task_activities.sort((a, b) => (a.activityid > b.activityid) ? 1 : -1)
+      }
 
       return task
     }
@@ -317,7 +319,7 @@ export class Tasks {
         "skill_list": "-1",
         "spell_list": "0",
         "description_override": "",
-        "goalid": 1,
+        "goalid": 0,
         "goalmethod": 0,
         "goalcount": 1,
         "delivertonpc": 0,
@@ -333,7 +335,7 @@ export class Tasks {
         "skill_list": "-1",
         "spell_list": "0",
         "description_override": "",
-        "goalid": 2,
+        "goalid": 0,
         "goalmethod": 0,
         "goalcount": 1,
         "delivertonpc": 0,
@@ -349,7 +351,7 @@ export class Tasks {
         "skill_list": "-1",
         "spell_list": "0",
         "description_override": "Locate the Antonica Spires in the Luclin Nexus",
-        "goalid": 1,
+        "goalid": 0,
         "goalmethod": 0,
         "goalcount": 1,
         "delivertonpc": 0,
@@ -370,7 +372,7 @@ export class Tasks {
       "skill_list": "-1",
       "spell_list": "0",
       "description_override": "",
-      "goalid": 1,
+      "goalid": 0,
       "goalmethod": 0,
       "goalcount": 1,
       "delivertonpc": 0,
