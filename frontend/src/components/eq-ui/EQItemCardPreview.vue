@@ -1,6 +1,5 @@
 <template>
   <div class="item-bg" style="max-width: 475px; padding: 5px" v-if="itemData">
-
     <span
       v-if="itemData.idfile !== 'IT63'"
       style="position: absolute; right: 7%; opacity: .8"
@@ -540,7 +539,7 @@ export default {
       },
       resists: {
         "Magic Resist": { stat: "mr", heroic: "heroic_mr" },
-        "Fire Resists": { stat: "fr", heroic: "heroic_fr" },
+        "Fire Resist": { stat: "fr", heroic: "heroic_fr" },
         "Cold Resist": { stat: "cr", heroic: "heroic_cr" },
         "Disease Resist": { stat: "dr", heroic: "heroic_dr" },
         "Poison Resist": { stat: "pr", heroic: "heroic_pr" },

@@ -59,7 +59,7 @@ export class Items {
   public static getResistFields() {
     return {
       "Magic Resist": {stat: "mr", heroic: "heroic_mr"},
-      "Fire Resists": {stat: "fr", heroic: "heroic_fr"},
+      "Fire Resist": {stat: "fr", heroic: "heroic_fr"},
       "Cold Resist": {stat: "cr", heroic: "heroic_cr"},
       "Disease Resist": {stat: "dr", heroic: "heroic_dr"},
       "Poison Resist": {stat: "pr", heroic: "heroic_pr"},
