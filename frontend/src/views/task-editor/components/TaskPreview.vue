@@ -142,10 +142,8 @@
           <div
             class="ml-0 code-display pl-0"
             style="width: 100%; display: inline-block; padding-top: 10px !important; padding-bottom: 10px !important; border-radius: 5px"
-            v-b-tooltip.hover.v-dark.top
-            :title="'$client->AssignTask(int task_id, int npc_id);'"
           >
-            <div>
+            <div :title="'$client->AssignTask(int task_id, int npc_id);'" v-b-tooltip.hover.v-dark.left>
               <button
                 class='btn btn-sm btn-outline-warning mb-1 mr-2'
                 @click="copyToClip(`$client->AssignTask(${task.id}, 0);`)"
@@ -155,7 +153,7 @@
               </button>
               <span style="color: rgb(156, 220, 254);">$client-></span>AssignTask({{task.id}}, 0);
             </div>
-            <div>
+            <div :title="'quest::taskselector(task1, task2, task3);'" v-b-tooltip.hover.v-dark.left>
               <button
                 class='btn btn-sm btn-outline-warning mb-1 mr-2'
                 @click="copyToClip(`quest::taskselector(${task.id});`)"
@@ -179,10 +177,8 @@
           <div
             class="ml-0 code-display pl-0"
             style="width: 100%; display: inline-block; padding-top: 10px !important; padding-bottom: 10px !important; border-radius: 5px"
-            v-b-tooltip.hover.v-dark.top
-            :title="'client:AssignTask(int task, int npc_id);'"
           >
-            <div>
+            <div :title="'client:AssignTask(int task, int npc_id);'"  v-b-tooltip.hover.v-dark.left>
               <button
                 class='btn btn-sm btn-outline-warning mb-1 mr-2'
                 @click="copyToClip(`client:AssignTask(${task.id}, 0);`)"
@@ -192,7 +188,7 @@
               </button>
               <span style="color: rgb(156, 220, 254);">client:</span>AssignTask({{ task.id }}, 0);
             </div>
-            <div>
+            <div :title="'eq.task_selector({task1, task2, task3, etc.});'"  v-b-tooltip.hover.v-dark.left>
               <button
                 class='btn btn-sm btn-outline-warning mb-1 mr-2'
                 @click="copyToClip(`eq.task_selector({${task.id}});`)"

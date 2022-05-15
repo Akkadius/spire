@@ -604,7 +604,7 @@
                                   <div
                                     class="ml-0 code-display pl-0"
                                     style="width: 100%; display: inline-block; padding-top: 10px !important; padding-bottom: 10px !important; border-radius: 5px"
-                                    v-b-tooltip.hover.v-dark.top
+                                    v-b-tooltip.hover.v-dark.left
                                     :title="'$client->UpdateTaskActivity(int task_id, int activity_id, int count);'"
                                   >
                                     <button
@@ -624,7 +624,7 @@
                                   <div
                                     class="ml-0 code-display pl-0"
                                     style="width: 100%; display: inline-block; padding-top: 10px !important; padding-bottom: 10px !important; border-radius: 5px"
-                                    v-b-tooltip.hover.v-dark.top
+                                    v-b-tooltip.hover.v-dark.left
                                     :title="'client:UpdateTaskActivity(int task, int activity, int count);'"
                                   >
                                     <button
