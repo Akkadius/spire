@@ -40,6 +40,7 @@ export class Tasks {
       // @ts-ignore
       // sort activityids before return
       if (task.task_activities) {
+        // @ts-ignore
         task.task_activities.sort((a, b) => (a.activityid > b.activityid) ? 1 : -1)
       }
 
