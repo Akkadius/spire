@@ -11,9 +11,7 @@
   "dependencies": {
     "@exuanbo/file-icons-js": "^3.3.0",
     "@types/jquery": "^3.5.9",
-    "ag-grid-community": "^25.3.0",
-    "ag-grid-enterprise": "^25.3.0",
-    "ag-grid-vue": "^25.3.0",
+    "@types/leaflet": "^1.7.9",
     "axios": "^0.18.0",
     "bootstrap": "^4.6.1",
     "bootstrap-vue": "^2.21.2",
@@ -21,6 +19,7 @@
     "core-js": "^2.6.12",
     "fontawesome-4.7": "^4.7.0",
     "jquery": "^3.6.0",
+    "leaflet": "^1.7.1",
     "markdown-it": "^12.2.0",
     "moment": "^2.29.1",
     "monaco-editor-webpack-plugin": "^7.0.1",
@@ -38,6 +37,7 @@
     "vue-router": "^3.5.3",
     "vue2-ace-editor": "^0.0.15",
     "vue2-dropzone": "^3.6.0",
+    "vue2-leaflet": "^2.7.1",
     "vuex": "^3.6.2"
   },
   "devDependencies": {
@@ -51,7 +51,8 @@
     "sass": "^1.44.0",
     "sass-loader": "^7.1.0",
     "typescript": "^3.9.10",
-    "vue-template-compiler": "^2.6.14"
+    "vue-template-compiler": "^2.6.14",
+    "webpack-cli": "^4.9.2"
   },
   "eslintConfig": {
     "root": true,

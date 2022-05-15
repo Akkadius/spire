@@ -574,7 +574,14 @@ A:hover {
     box-shadow: 5px 20px 20px rgba(0, 0, 0, 0.6);
     /*opacity:               0.95;*/
     transition: opacity 200ms;
+}
 
+.eq-window-hybrid {
+    background-image: url(../images/super_fancy_bg.png) !important;
+}
+
+.eq-background-dark {
+    background-image: url(../images/dark.gif);
 }
 
 .eq-window:hover {
@@ -664,13 +671,13 @@ A:hover {
     margin-top: 25px;
     margin-bottom: 25px;
     box-sizing: border-box;
-    background-image: url(../images/light.gif);
+    background-image: url(../images/super_fancy_bg.png);
     padding: 19px 13px 17px;
     z-index: 0;
     border-width: 2px;
     border-style: solid;
     border-color: rgb(180, 173, 134) rgb(142, 134, 107) rgb(61, 58, 48) rgb(177, 170, 142);
-    font-family: arial;
+    font-family: arial, serif;
     color: #FFFFFF;
     box-shadow: 5px 10px 20px rgba(0, 0, 0, 0.6);
     transition: opacity 200ms;
@@ -913,9 +920,9 @@ h6.eq-header {
 }
 
 .eq-table-floating-header {
-    background-image: url(../images/light.gif);
+    background-image: url(../images/super_fancy_bg.png);
     position: sticky;
     top: 0;
     z-index: 9999;
-    box-shadow: rgb(0 0 0) 0px 20px 15px inset;
+    /*box-shadow: rgb(0 0 0) 0px 20px 15px inset;*/
 }

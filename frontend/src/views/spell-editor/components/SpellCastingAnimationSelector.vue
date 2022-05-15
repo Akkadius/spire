@@ -41,8 +41,6 @@
 
     </eq-window-simple>
 
-    <app-loader :is-loading="!loaded" padding="8"/>
-
   </div>
 </template>
 
@@ -83,8 +81,8 @@ export default {
     }
   },
   methods: {
-    init: debounce(function () {
-      this.render()
+    init: debounce(async function () {
+      await this.render()
 
       console.log("[SpellCastingAnimationSelector] selected animation [%s]", this.selectedAnimation)
 
@@ -109,12 +107,13 @@ export default {
     handleRender() {
       VideoViewer.handleRender()
     },
-    render: function () {
+    render: async function () {
       console.log("render")
 
       // Preload model files
       let modelFiles = [];
-      EqAssets.getPlayerAnimationFileIds().forEach((animationId) => {
+      const r        = await EqAssets.getPlayerAnimationFileIds()
+      r.forEach((animationId) => {
         modelFiles.push(animationId)
         animationPreviewExists[animationId] = 1
       })

@@ -1,7 +1,5 @@
 <template>
   <div>
-    <app-loader :is-loading="!loaded" padding="8"/>
-
     <eq-window-simple
       title="Nimbus Selector"
       class="text-center p-0"
@@ -80,10 +78,10 @@ export default {
     this.init()
   },
   methods: {
-    init() {
+    init: async function () {
       console.time("[SpellNimbusAnimationSelector] init");
 
-      this.render()
+      await this.render()
 
       // bring focus to the selected video
       if (this.selectedAnimation > 0) {
@@ -110,10 +108,11 @@ export default {
     handleRender() {
       VideoViewer.handleRender()
     },
-    render: function () {
+    render: async function () {
       // Preload model files
       let animations = [];
-      EqAssets.getSpellAnimationFileIds().forEach((animationId) => {
+      const r        = await EqAssets.getSpellAnimationFileIds()
+      r.forEach((animationId) => {
         if (SPELL_NIMBUSES.includes(animationId)) {
           animations.push(animationId)
         }

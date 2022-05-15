@@ -4,14 +4,28 @@
     <eq-window-simple title="Item Models" style="margin-bottom: 1px">
       <div class="row">
 
+        <!-- Item Search -->
+        <div class="col-5">
+
+          <input
+            type="text"
+            class="form-control ml-2"
+            v-model="search"
+            v-on:keyup="triggerStateSearch"
+            @enter="triggerState"
+            placeholder="Search for item names to find associated models"
+          >
+
+        </div>
+
         <!-- Item Slot -->
-        <div class="col-lg-5 col-sm-12">
+        <div class="col-lg-3 col-sm-12">
 
           <!-- Input -->
           <select
             class="form-control form-control-prepended list-search"
             v-model.lazy="itemSlotSearch"
-            @change="itemTypeSearch = 0; triggerState()"
+            @change="itemTypeSearch = 0; search = ''; triggerState()"
           >
             <option value="0">Select Slot Filter</option>
             <option v-for="option in itemSlotOptions" v-bind:value="option.value">
@@ -22,13 +36,13 @@
         </div>
 
         <!-- Item Type -->
-        <div class="col-lg-6 col-sm-12">
+        <div class="col-lg-3 col-sm-12">
 
           <!-- Input -->
           <select
             class="form-control form-control-prepended list-search"
             v-model.lazy="itemTypeSearch"
-            @change="itemSlotSearch = 0; triggerState()"
+            @change="itemSlotSearch = 0; search = ''; triggerState()"
           >
             <option value="0">Select Item Type Filter</option>
             <option v-for="option in itemTypeOptions" v-bind:value="option.value">
@@ -53,7 +67,7 @@
       <!-- loader -->
       <div v-if="!loaded" class="text-center justify-content-center mt-5 mb-5">
         <div class="mb-3">
-          {{ renderingImages ? 'Rendering images...' : 'Loading images...'}}
+          {{ renderingImages ? 'Rendering images...' : 'Loading images...' }}
         </div>
         <loader-fake-progress v-if="!loaded && !renderingImages"/>
         <eq-progress-bar :percent="100" v-if="renderingImages"/>
@@ -89,7 +103,6 @@
 </template>
 
 <script>
-import ItemModels            from "@/app/eq-assets/objects-map.json";
 import util                  from "util";
 import itemSlots             from "@/constants/item-slots.json"
 import itemSlotIdFileMapping from "@/constants/item-slot-idfile-mapping.json"
@@ -97,14 +110,15 @@ import itemTypes             from "@/constants/item-types.json"
 import itemTypesModelMapping from "@/constants/item-type-model-mapping.json"
 import slugify               from "slugify";
 import PageHeader            from "@/components/layout/PageHeader";
-import {App}                 from "@/constants/app";
 import EqWindow              from "@/components/eq-ui/EQWindow";
 import {ROUTE}               from "../../routes";
 import EqWindowSimple        from "../../components/eq-ui/EQWindowSimple";
-import LoaderFakeProgress     from "../../components/LoaderFakeProgress";
+import LoaderFakeProgress    from "../../components/LoaderFakeProgress";
 import EqProgressBar         from "../../components/eq-ui/EQProgressBar";
+import EqAssets              from "../../app/eq-assets/eq-assets";
+import {debounce}            from "../../app/utility/debounce";
+import {Items}               from "../../app/items";
 
-const baseUrl         = App.ASSET_CDN_BASE_URL + "assets/objects/";
 const MAX_ITEM_IDFILE = 100000;
 let itemModels        = [];
 let itemModelExists   = {};
@@ -114,6 +128,8 @@ export default {
   components: { EqProgressBar, LoaderFakeProgress, EqWindowSimple, EqWindow, PageHeader },
   data() {
     return {
+      search: "",
+
       itemSlotSearch: 0,
       itemTypeSearch: 0,
       filteredItemModels: null,
@@ -125,8 +141,13 @@ export default {
   },
   methods: {
 
+    triggerStateSearch: debounce(function () {
+      this.triggerState()
+    }, 600),
+
     // reset to zero state
     reset: function () {
+      this.reset          = "";
       this.itemSlotSearch = 0;
       this.itemTypeSearch = 0;
       this.loadModels()
@@ -136,6 +157,9 @@ export default {
     updateQueryState: function () {
       let queryState = {};
 
+      if (this.search !== "") {
+        queryState.search = this.search
+      }
       if (this.itemSlotSearch !== 0) {
         queryState.itemModelSlot = this.itemSlotSearch
       }
@@ -160,6 +184,9 @@ export default {
       if (this.$route.query.itemModelType) {
         this.itemTypeSearch = this.$route.query.itemModelType;
       }
+      if (this.$route.query.search) {
+        this.search = this.$route.query.search;
+      }
     },
 
     triggerState() {
@@ -178,15 +205,33 @@ export default {
     },
 
     // zero state loader
-    loadModels: function () {
+    loadModels: async function () {
+      let searchModels = []
+      if (this.search.length > 0) {
+        searchModels = await Items.getItemModelsByName(this.search)
+      }
 
-      let curImg = new Image();
-      curImg.src = '/eq-asset-preview-master/assets/sprites/objects.png';
+      let curImg    = new Image();
+      curImg.src    = '/eq-asset-preview-master/assets/sprites/objects.png';
       curImg.onload = () => {
         this.renderingImages = true
 
         setTimeout(() => {
           this.renderingImages = false
+
+          // item based idfile search
+          if (this.search.length > 0) {
+            let idFiles = []
+            for (let model of searchModels) {
+              if (itemModelExists[model]) {
+                idFiles.push(model)
+              }
+            }
+
+            this.filteredItemModels = idFiles
+            this.loaded             = true;
+            return
+          }
 
           // filter by item type
           if (this.itemTypeSearch > 0) {
@@ -243,10 +288,8 @@ export default {
     this.loaded = false;
 
     modelFiles = {};
-    ItemModels[0].contents.forEach((row) => {
-      const pieces   = row.name.split(/\//);
-      const fileName = pieces[pieces.length - 1];
-
+    const files = await EqAssets.getItemModelFileNames()
+    files.forEach((fileName) => {
       modelFiles[fileName] = 1
     })
 

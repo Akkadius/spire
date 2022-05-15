@@ -563,7 +563,7 @@ export default {
       secondlevel2: {
         "AC": this.itemData.ac,
         "HP": this.itemData.hp,
-        "Hana": this.itemData.mana,
+        "Mana": this.itemData.mana,
         "End": this.itemData.endur,
         "Haste": this.itemData.haste > 0 ? (this.itemData.haste + "%") : this.itemData.haste,
         "Purity": this.itemData.purity
@@ -1035,8 +1035,6 @@ export default {
         }
       }
       this.tradeskillResult = tradeskillResult
-
-      console.log("rendering related data")
     }
   },
   created: function () {

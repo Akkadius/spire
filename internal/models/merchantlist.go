@@ -13,6 +13,9 @@ type Merchantlist struct {
 	AltCurrencyCost        uint16      `json:"alt_currency_cost" gorm:"Column:alt_currency_cost"`
 	ClassesRequired        int         `json:"classes_required" gorm:"Column:classes_required"`
 	Probability            int         `json:"probability" gorm:"Column:probability"`
+	BucketName             string      `json:"bucket_name" gorm:"Column:bucket_name"`
+	BucketValue            string      `json:"bucket_value" gorm:"Column:bucket_value"`
+	BucketComparison       null.Uint8  `json:"bucket_comparison" gorm:"Column:bucket_comparison"`
 	MinExpansion           int8        `json:"min_expansion" gorm:"Column:min_expansion"`
 	MaxExpansion           int8        `json:"max_expansion" gorm:"Column:max_expansion"`
 	ContentFlags           null.String `json:"content_flags" gorm:"Column:content_flags"`

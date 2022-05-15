@@ -4,11 +4,11 @@
       <div class="panel panel-default">
         <div class="row">
           <div class="col-6">
-            <eq-window class="mt-5">
+            <eq-window-simple title="Client File Dropzone" >
               <div class="mb-3 text-center" style="font-size: 16px">
-                <h3 class="mb-3 eq-header" style="font-size: 42px">
-                  Client File DropZone Upload
-                </h3>
+<!--                <h3 class="mb-3 eq-header" style="font-size: 42px">-->
+<!--                  Client File DropZone Upload-->
+<!--                </h3>-->
                 <div v-for="file in ['dbstr_us.txt', 'spells_us.txt']"><b>{{ file }}</b></div>
 
                 <div class="mt-3">
@@ -33,7 +33,7 @@
               ></vue-dropzone>
 
 
-            </eq-window>
+            </eq-window-simple>
 
           </div>
 

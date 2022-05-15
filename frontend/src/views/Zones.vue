@@ -3,9 +3,7 @@
 
     <div class="row">
       <div class="col-12">
-        <eq-window class="mt-5" title="Zones">
-
-          <app-loader :is-loading="!loaded" padding="8"/>
+        <eq-window-simple class="mt-5" title="Zones">
 
           <div class="row" style="justify-content: center" v-if="zones">
             <div class='' style="width: 100%" v-if="loaded">
@@ -19,7 +17,7 @@
                 v-on:keyup="setStateDebounce"
               >
 
-              <div class="eq-window-nested-blue mt-3">
+              <div class="mt-3">
                 <table
                   id="zonetable"
                   class="eq-table eq-highlight-rows"
@@ -74,7 +72,7 @@
             </div>
           </div>
 
-        </eq-window>
+        </eq-window-simple>
       </div>
     </div>
   </content-area>
@@ -91,9 +89,11 @@ import EqTabs from "@/components/eq-ui/EQTabs.vue";
 import EqTab from "@/components/eq-ui/EQTab.vue";
 import ContentArea from "@/components/layout/ContentArea.vue";
 import {SpireQueryBuilder} from "@/app/api/spire-query-builder";
+import EqWindowSimple from "@/components/eq-ui/EQWindowSimple.vue";
 
 export default {
   components: {
+    EqWindowSimple,
     ContentArea,
     EqTab,
     EqTabs,
@@ -117,7 +117,7 @@ export default {
       loaded: false,
     }
   },
-  async activated() {
+  async mounted() {
     await this.init()
 
     // route watcher
@@ -126,7 +126,7 @@ export default {
     });
 
   },
-  deactivated() {
+  destroyed() {
     // remove route watcher
     this.routeWatcher()
   },
@@ -201,7 +201,7 @@ export default {
     clickZoneRow(zone) {
       this.$router.push(
         {
-          path: '/zone/' + zone.id
+          path: '/map?zone=' + zone.short_name
         }
       ).catch(() => {
       })

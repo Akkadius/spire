@@ -29,15 +29,51 @@ func (q *StaticMapController) Routes() []*routes.Route {
 }
 
 var (
+	//go:embed emitters.json
+	emittersMap []byte
+	//go:embed item-icons-map.json
+	itemIconsMap []byte
+	//go:embed monograms-map.json
+	monogramsMap []byte
+	//go:embed npc-models-map.json
+	npcModelsMap []byte
+	//go:embed objects-map.json
+	objectsMap []byte
+	//go:embed player-animations.json
+	playerAnimationsMap []byte
 	//go:embed race-inventory-map.json
 	raceInventoryMap []byte
+	//go:embed spell-animations-map.json
+	spellAnimationsMap []byte
+	//go:embed spell-icons-map.json
+	spellIconsMap []byte
+	//go:embed spell-icon-anim-name-map.json
+	spellIconAnimNameMap []byte
 )
 
 func (q *StaticMapController) getStaticMapFileCompressed(c echo.Context) error {
 	file := []byte{}
 	switch c.Param("file") {
+	case "emitters.json":
+		file = emittersMap
+	case "item-icons-map.json":
+		file = itemIconsMap
+	case "monograms-map.json":
+		file = monogramsMap
+	case "npc-models-map.json":
+		file = npcModelsMap
+	case "objects-map.json":
+		file = objectsMap
+	case "player-animations.json":
+		file = playerAnimationsMap
+	case "spell-animations-map.json":
+		file = spellAnimationsMap
+	case "spell-icons-map.json":
+		file = spellIconsMap
 	case "race-inventory-map.json":
 		file = raceInventoryMap
+	case "spell-icon-anim-name-map.json":
+		file = spellIconAnimNameMap
 	default:
 		return fmt.Errorf("Invalid file specified")
 	}

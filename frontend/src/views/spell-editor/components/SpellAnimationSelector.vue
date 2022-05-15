@@ -1,7 +1,5 @@
 <template>
   <div>
-    <app-loader :is-loading="!loaded" padding="8"/>
-
     <eq-window-simple style="width: 100%">
       <div class="row">
         <div class="col-12">
@@ -65,7 +63,6 @@
 import PageHeader        from "@/components/layout/PageHeader";
 import {App}             from "@/constants/app";
 import EqWindow          from "@/components/eq-ui/EQWindow";
-import spellAnimMappings from "@/app/data-maps/spell-icon-anim-name-map.json";
 import * as util         from "util";
 import VideoViewer       from "@/app/video-viewer/video-viewer";
 import EqWindowSimple    from "@/components/eq-ui/EQWindowSimple";
@@ -96,14 +93,14 @@ export default {
     this.init()
   },
   methods: {
-    init() {
+    async init() {
       console.time("[SpellAnimationSelector] init");
       if (!this.$route.query.q) {
         this.search        = ""
         this.filteredRaces = []
       }
 
-      this.render()
+      await this.render()
       this.spellAnimSearch()
 
       // bring focus to the selected video
@@ -123,7 +120,7 @@ export default {
           }
 
           console.timeEnd("[SpellAnimationSelector] scrollTo");
-        }, 1)
+        }, 100)
       }
 
       console.timeEnd("[SpellAnimationSelector] init");
@@ -131,10 +128,11 @@ export default {
     handleRender() {
       VideoViewer.handleRender()
     },
-    render: function () {
+    render: async function () {
       // Preload model files
       let modelFiles = [];
-      EqAssets.getSpellAnimationFileIds().forEach((animationId) => {
+      const r        = await EqAssets.getSpellAnimationFileIds()
+      r.forEach((animationId) => {
         modelFiles.push(animationId)
         animationPreviewExists[animationId] = 1
       })
@@ -155,12 +153,13 @@ export default {
     triggerSearch() {
       this.spellAnimSearch();
     },
-    spellAnimSearch: function () {
+    spellAnimSearch: async function () {
       this.loaded = false
 
       let foundAnim          = {};
       let filteredAnimations = []
 
+      const spellAnimMappings = await EqAssets.getSpellAnimNameMappings()
       for (let spellAnimMapping of spellAnimMappings) {
         const spellName   = spellAnimMapping[0].toLowerCase().trim()
         const spellAnimId = spellAnimMapping[2]
@@ -189,9 +188,6 @@ export default {
     selectSpellAnim(anim) {
       this.$emit("update:inputData", anim);
     }
-  },
-  activated() {
-    this.init()
   },
 }
 </script>

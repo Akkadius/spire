@@ -7,6 +7,7 @@ import (
 	"github.com/Akkadius/spire/internal/models"
 	"github.com/labstack/echo/v4"
 	"github.com/sirupsen/logrus"
+	"gorm.io/gorm"
 	"net/http"
 	"strconv"
 )
@@ -43,7 +44,7 @@ func (e *GroundSpawnController) Routes() []*routes.Route {
 // @Accept json
 // @Produce json
 // @Tags GroundSpawn
-// @Param includes query string false "Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names "
+// @Param includes query string false "Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names <h4>Relationships</h4>Zone"
 // @Param where query string false "Filter on specific fields. Multiple conditions [.] separated Example: col_like_value.col2__val2"
 // @Param whereOr query string false "Filter on specific fields (Chained ors). Multiple conditions [.] separated Example: col_like_value.col2__val2"
 // @Param groupBy query string false "Group by field. Multiple conditions [.] separated Example: field1.field2"
@@ -71,7 +72,7 @@ func (e *GroundSpawnController) listGroundSpawns(c echo.Context) error {
 // @Produce json
 // @Tags GroundSpawn
 // @Param id path int true "Id"
-// @Param includes query string false "Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names "
+// @Param includes query string false "Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names <h4>Relationships</h4>Zone"
 // @Param select query string false "Column names [.] separated to fetch specific fields in response"
 // @Success 200 {array} models.GroundSpawn
 // @Failure 404 {string} string "Entity not found"
@@ -157,7 +158,7 @@ func (e *GroundSpawnController) updateGroundSpawn(c echo.Context) error {
 		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Cannot find entity [%s]", err.Error())})
 	}
 
-	err = query.Select("*").Updates(&request).Error
+	err = e.db.QueryContext(models.GroundSpawn{}, c).Select("*").Session(&gorm.Session{FullSaveAssociations: true}).Updates(&request).Error
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error updating entity [%v]", err.Error())})
 	}
@@ -233,7 +234,7 @@ func (e *GroundSpawnController) deleteGroundSpawn(c echo.Context) error {
 		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
 	}
 
-	err = e.db.Get(models.GroundSpawn{}, c).Model(&models.GroundSpawn{}).Delete(&result).Error
+	err = query.Limit(10000).Delete(&result).Error
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Error deleting entity"})
 	}

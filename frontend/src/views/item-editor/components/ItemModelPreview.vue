@@ -13,8 +13,8 @@
 </template>
 
 <script>
-import ItemModels from "@/app/eq-assets/objects-map.json";
-import * as util  from "util";
+import * as util from "util";
+import EqAssets  from "../../../app/eq-assets/eq-assets";
 
 export default {
   name: "ItemModelPreview",
@@ -31,14 +31,13 @@ export default {
     },
   },
   methods: {
-    render() {
+    async render() {
       this.previewId      = 0;
       const passedInModel = this.id.replace("IT", "")
 
-      ItemModels[0].contents.forEach((row) => {
-        const pieces   = row.name.split(/\//);
-        const fileName = pieces[pieces.length - 1];
-        const modelId  =
+      const r = await EqAssets.getItemModelFileNames()
+      r.forEach((fileName) => {
+        const modelId =
                 util.format(
                   "%s",
                   fileName.toString()
@@ -54,8 +53,8 @@ export default {
       })
     }
   },
-  created() {
-    this.render()
+  async created() {
+    await this.render()
   },
   props: {
     id: {

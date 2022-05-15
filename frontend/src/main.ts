@@ -29,8 +29,8 @@ import "rpg-awesome/css/rpg-awesome.min.css";
 import "@/assets/css/highlight-js-vs2015.css";
 
 /* ag-grid */
-import "../node_modules/ag-grid-community/dist/styles/ag-grid.css";
-import "../node_modules/ag-grid-community/dist/styles/ag-theme-balham-dark.css";
+// import "../node_modules/ag-grid-community/dist/styles/ag-grid.css";
+// import "../node_modules/ag-grid-community/dist/styles/ag-theme-balham-dark.css";
 
 /* spritesheet assets */
 // import "../public/eq-asset-preview-master/assets/sprites/item-icons.css";
@@ -38,7 +38,7 @@ import "../node_modules/ag-grid-community/dist/styles/ag-theme-balham-dark.css";
 // import "../public/eq-asset-preview-master/assets/sprites/race-models.css";
 
 // Ag grid enterprisec
-import 'ag-grid-enterprise';
+// import 'ag-grid-enterprise';
 
 // vue-tree
 
@@ -59,6 +59,17 @@ import 'sl-vue-tree/src/sl-vue-tree.js'
 import "@exuanbo/file-icons-js/dist/css/file-icons.min.css"
 
 Vue.use(BootstrapVue)
+
+import 'leaflet/dist/leaflet.css';
+import { Icon } from 'leaflet';
+
+// @ts-ignore
+delete Icon.Default.prototype._getIconUrl;
+Icon.Default.mergeOptions({
+  iconRetinaUrl: require('leaflet/dist/images/marker-icon-2x.png'),
+  iconUrl: require('leaflet/dist/images/marker-icon.png'),
+  shadowUrl: require('leaflet/dist/images/marker-shadow.png'),
+});
 
 /**
  * App loader

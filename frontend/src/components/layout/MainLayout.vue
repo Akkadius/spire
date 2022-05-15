@@ -3,9 +3,7 @@
     <dashboard-navbar></dashboard-navbar>
 
     <div class="main-content">
-      <keep-alive>
       <router-view></router-view>
-      </keep-alive>
     </div>
 
     <dashboard-footer></dashboard-footer>

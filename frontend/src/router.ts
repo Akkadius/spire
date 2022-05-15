@@ -103,19 +103,24 @@ export default new Router({
           meta: {title: "Component Documentation"},
         },
         {
-          path: '/tasks/',
-          component: () => import('./views/Tasks.vue'),
+          path: ROUTE.TASKS,
+          component: () => import('./views/task-editor/TaskEditor.vue'),
           meta: {title: "Task Editor"},
         },
         {
           path: '/tasks/:id',
-          component: () => import('./views/Tasks.vue'),
+          component: () => import('./views/task-editor/TaskEditor.vue'),
           meta: {title: "Task Editor"},
         },
         {
           path: '/items-test',
           component: () => import('./views/ItemsTest.vue'),
           meta: {title: "Items Test"},
+        },
+        {
+          path: '/map',
+          component: () => import('./views/Map.vue'),
+          meta: {title: "Map Test"},
         },
         {
           path: ROUTE.SPELLS_LIST,
@@ -142,11 +147,11 @@ export default new Router({
           component: () => import('./views/Zones.vue'),
           meta: {title: "Zones"},
         },
-        {
-          path: '/zone/:zoneId',
-          component: () => import('./views/Zone.vue'),
-          meta: {title: "Zone"},
-        },
+        // {
+        //   path: '/zone/:zoneId',
+        //   component: () => import('./views/Zone.vue'),
+        //   meta: {title: "Zone"},
+        // },
         {
           path: '/connections',
           component: () => import('./views/Connections.vue'),

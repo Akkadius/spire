@@ -5,6 +5,13 @@ export const TASK_TYPES = {
   3: "Expedition",
 }
 
+export const TASK_TYPE = {
+  TASK: 0,
+  SHARED_TASK: 1,
+  QUEST: 2,
+  EXPEDITION: 3,
+}
+
 export const TASK_DURATION_TYPES = {
   0: "None",
   1: "Short",
@@ -25,7 +32,24 @@ export const TASK_ACTIVITY_TYPES = {
   10: "Use",
   11: "Touch",
   100: "Give Cash",
+  255: "Quest Driven",
 }
+
+export const TASK_ACTIVITY_TYPE = {
+  DELIVER: 1,
+  KILL: 2,
+  LOOT: 3,
+  SPEAK_WITH: 4,
+  EXPLORE: 5,
+  TRADESKILL: 6,
+  FISH: 7,
+  FORAGE: 8,
+  USE: 9,
+  USE2: 10,
+  TOUCH: 11,
+  GIVE: 100,
+  QUEST_SCRIPT_DRIVEN: 255,
+};
 
 export const TASK_DURATION_HUMAN = {
   0: "Infinite",
@@ -56,4 +80,22 @@ export const TASK_REWARD_METHOD = {
   1: "List of Items (Goal List)",
   2: "Quest Controlled",
   255: "Quest Controlled",
+}
+
+export const TASK_GOAL_METHOD_TYPE = {
+  0: "Single ID",
+  1: "List (of entries)",
+  2: "Quest Controlled",
+}
+
+export const TASK_GOAL_METHOD_TYPES = {
+  SINGLE_ID: 0,
+  LIST: 1,
+  QUEST_CONTROLLED: 2,
+}
+
+export const TASK_REWARD_METHOD_TYPE = {
+  0: "Single ID",
+  1: "List (of entries)",
+  2: "Quest Controlled",
 }

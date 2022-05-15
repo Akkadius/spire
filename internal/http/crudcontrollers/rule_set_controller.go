@@ -7,6 +7,7 @@ import (
 	"github.com/Akkadius/spire/internal/models"
 	"github.com/labstack/echo/v4"
 	"github.com/sirupsen/logrus"
+	"gorm.io/gorm"
 	"net/http"
 	"strconv"
 )
@@ -157,7 +158,7 @@ func (e *RuleSetController) updateRuleSet(c echo.Context) error {
 		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Cannot find entity [%s]", err.Error())})
 	}
 
-	err = query.Select("*").Updates(&request).Error
+	err = e.db.QueryContext(models.RuleSet{}, c).Select("*").Session(&gorm.Session{FullSaveAssociations: true}).Updates(&request).Error
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error updating entity [%v]", err.Error())})
 	}
@@ -233,7 +234,7 @@ func (e *RuleSetController) deleteRuleSet(c echo.Context) error {
 		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
 	}
 
-	err = e.db.Get(models.RuleSet{}, c).Model(&models.RuleSet{}).Delete(&result).Error
+	err = query.Limit(10000).Delete(&result).Error
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Error deleting entity"})
 	}

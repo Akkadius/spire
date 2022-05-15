@@ -1,7 +1,5 @@
 <template>
   <div :class="isComponent ? '' : 'container-fluid'">
-    <app-loader :is-loading="!loaded" padding="8"/>
-
     <eq-window-simple
       title="Player Animations"
       v-if="loaded"
@@ -61,7 +59,7 @@ export default {
     this.init()
   },
   methods: {
-    init() {
+    async init() {
       if (!this.$route.query.q) {
         this.search        = ""
         this.filteredRaces = []
@@ -73,7 +71,7 @@ export default {
         this.previewAnimSearch();
       });
 
-      this.render()
+      await this.render()
       this.previewAnimSearch()
 
       // hook video viewer scroll listener
@@ -84,8 +82,8 @@ export default {
       VideoViewer.handleRender();
     },
 
-    render: function () {
-      this.previews = EqAssets.getPlayerAnimationFileIds()
+    render: async function () {
+      this.previews = await EqAssets.getPlayerAnimationFileIds()
       this.loaded   = true
 
       setTimeout(() => {

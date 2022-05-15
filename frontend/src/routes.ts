@@ -8,6 +8,8 @@ export const ROUTE = {
   QUEST_API_EXPLORER: "/quest-api-explorer",
   SPELLS_LIST: "/spells",
   SPELL_EDIT: "/spell/%s",
+  TASKS: "/tasks",
+  TASK_EDIT: "/tasks/%s",
   ITEMS_LIST: "/items",
   ITEM_EDIT: "/item/%s",
   ITEM_VIEWER: "/item-viewer",

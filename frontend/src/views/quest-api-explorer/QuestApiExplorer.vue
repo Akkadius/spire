@@ -1,301 +1,297 @@
 <template>
-  <!-- CONTENT -->
-  <div class="container-fluid">
-    <div class="panel-body">
-      <div class="panel panel-default">
-        <div class="row">
-          <div class="col-12">
-            <eq-window style="margin-top: 30px" title="Quest API Explorer">
-              <div v-if="loaded">
+  <content-area>
+    <eq-window-simple
+      title="Quest API Explorer"
+      class="p-2"
+    >
+      <div v-if="loaded">
 
-                <!-- Form -->
-                <div class="row" @click="resetAllState()">
-                  <div class="col-lg-1 col-sm-12 text-center">
-                    Language
-                    <b-form-select
-                      v-model="languageSelection"
-                      :options="languageOptions"
-                      @change="languageSelect();"/>
-                  </div>
-                  <div class="col-lg-2 col-sm-12 text-center">
-                    Types
-                    <b-form-select
-                      v-model="methodTypeSelection"
-                      @change="methodTypeSelectReset(); formChange(); "
-                      :options="methodTypeOptions"/>
-                  </div>
-                  <div class="col-lg-2 col-sm-12 text-center">
-                    Events
-                    <b-form-select
-                      v-model="eventSelection"
-                      @change="eventSelectReset(); formChange();"
-                      :options="eventOptions"/>
-                  </div>
-                  <div class="col-lg-2 col-sm-12 text-center">
-                    Constants
-                    <b-form-select
-                      v-model="constantSelection"
-                      @change="constantSelectReset(); formChange();"
-                      :options="constantOptions"/>
-                  </div>
-                  <div :class="'col-lg-' + (appEnvLocal ? '4' : '5') + ' col-sm-12 text-center'">
-                    Search
-                    <b-input
-                      id="quest-explorer-search"
-                      v-model="search"
-                      v-on:keyup="optionLoaded = false; onSearch(); onSearchMethodExampleLoad()"
-                      placeholder="Search for methods, events (soon constants)..."
-                    />
-                  </div>
-                  <div class="col-lg-1 col-sm-12 text-center" v-if="appEnvLocal">
-                    <b-button
-                      variant="outline-warning"
-                      @click="refreshDefinitions"
-                      size="sm"
-                      style="margin-top: 20px">
-                      <i class="fa fa-refresh"></i> Refresh
-                    </b-button>
-                  </div>
+        <!-- Form -->
+        <div class="row" @click="resetAllState()">
+          <div class="col-lg-1 col-sm-12 text-center">
+            Language
+            <b-form-select
+              v-model="languageSelection"
+              :options="languageOptions"
+              @change="languageSelect();"
+            />
+          </div>
+          <div class="col-lg-2 col-sm-12 text-center">
+            Types
+            <b-form-select
+              v-model="methodTypeSelection"
+              @change="methodTypeSelectReset(); formChange(); "
+              :options="methodTypeOptions"
+            />
+          </div>
+          <div class="col-lg-2 col-sm-12 text-center">
+            Events
+            <b-form-select
+              v-model="eventSelection"
+              @change="eventSelectReset(); formChange();"
+              :options="eventOptions"
+            />
+          </div>
+          <div class="col-lg-2 col-sm-12 text-center">
+            Constants
+            <b-form-select
+              v-model="constantSelection"
+              @change="constantSelectReset(); formChange();"
+              :options="constantOptions"
+            />
+          </div>
+          <div :class="'col-lg-' + (appEnvLocal ? '3' : '4') + ' col-sm-12 text-center'">
+            Search
+            <b-input
+              id="quest-explorer-search"
+              v-model="search"
+              v-on:keyup="optionLoaded = false; onSearch(); onSearchMethodExampleLoad()"
+              placeholder="Search for methods, events (soon constants)..."
+            />
+          </div>
+          <div class="col-lg-1 col-sm-12 text-center" v-if="appEnvLocal">
+            <b-button
+              variant="outline-warning"
+              @click="refreshDefinitions"
+              size="sm"
+              style="margin-top: 20px"
+            >
+              <i class="fa fa-refresh"></i> Refresh
+            </b-button>
+          </div>
+          <div class="col-lg-1 col-sm-12 text-center mt-3">
+            <span class="font-weight-bold">Last Updated</span> <div>{{ fromNow(api.last_refreshed) }}</div>
+          </div>
 
-                </div>
+        </div>
 
-                <div class="row">
-                  <div class="col text-center align-middle mt-2">
-                    <div class="float-right">
-                      Last Updated: {{ fromNow(api.last_refreshed) }}
-                    </div>
-                  </div>
-                </div>
+      </div>
 
+      <app-loader :is-loading="!loaded" padding="4"/>
 
+      <eq-debug :data="api" v-if="Object.keys(api).length"/>
 
-                <!-- Display Quest API Methods -->
-                <div class="row mt-2" v-if="apiMethods.length > 0">
+    </eq-window-simple>
 
-                  <!-- Methods -->
-                  <div class="col-12">
+    <eq-window-simple
+      v-if="eventSelection || apiMethods.length > 0 || (languageSelection && constantSelection && api) || (search.length > 0 && optionLoaded)"
+      class="p-0"
+    >
+      <!-- Display Quest API Methods -->
+      <div class="row mt-2" v-if="apiMethods.length > 0">
 
-                    <div
-                      class="mb-4 code-display"
-                      style="padding-left: 10px !important; padding-top: 10px !important; padding-bottom: 10px !important; white-space:nowrap"
-                      v-if="apiMethods.length > 0">
+        <!-- Methods -->
+        <div class="col-12">
 
-                      <quest-api-display-methods
-                        :language-selection="languageSelection"
-                        :linked-examples="linkedExamples"
-                        :api-methods="apiMethods"
-                        @load-quest-example="loadQuestExample"
-                      />
+          <div
+            class="mb-4 code-display"
+            style="padding-left: 10px !important; padding-top: 10px !important; padding-bottom: 10px !important; white-space:nowrap"
+            v-if="apiMethods.length > 0"
+          >
 
-                    </div>
-                  </div>
-
-                </div>
-
-                <!-- Events -->
-                <div
-                  class="row mt-2 pl-2"
-                  v-if="eventSelection"
-                  style="display:inline-block"
-                >
-                  <div class="col-12">
-                    <quest-api-display-events
-                      :language-selection="languageSelection"
-                      :events="[eventSelection]"
-                      :linked-examples="linkedExamples"
-                      :api="api"
-                      @load-quest-example="loadQuestExample"
-                    />
-                  </div>
-                </div>
-
-                <!-- Constants -->
-                <div
-                  class="row mt-2 pl-2"
-                  v-if="languageSelection && constantSelection && api && Object.keys(api).length > 0"
-                  style="display:inline-block"
-                >
-                  <div class="col-12">
-                    <quest-api-display-constants
-                      :language-selection="languageSelection"
-                      :constant-selection="constantSelection"
-                      :linked-examples="linkedExamples"
-                      :api="api"
-                      @load-quest-example="loadQuestExample"
-                    />
-                  </div>
-                </div>
-
-
-                <!-- Search Results -->
-
-                <div v-if="search.length > 0 && optionLoaded">
-                  <h3
-                    class="eq-header pb-3"
-                    style="border-bottom: 1px solid gray"
-                  >Search Results</h3>
-
-                  <div
-                    class="mt-3"
-                    v-if="search.length > 0 && searchApiResultMethods.length === 0 && searchEventsResult.length === 0">
-                    No results found...
-                  </div>
-
-                  <!-- Search: Methods -->
-                  <div class="row mt-2" v-if="searchApiResultMethods.length > 0">
-
-                    <!-- Methods -->
-                    <div class="col-12">
-
-                      <h5 class="eq-header">Methods ({{ (searchApiResultMethods.length) }})</h5>
-
-                      <div
-                        class="mb-4 code-display"
-                        style="padding-left: 10px !important; padding-top: 10px !important; padding-bottom: 10px !important; white-space:nowrap">
-
-                        <quest-api-display-methods
-                          :language-selection="languageSelection"
-                          :linked-examples="linkedExamples"
-                          :api-methods="searchApiResultMethods"
-                          @load-quest-example="loadQuestExample"
-                        />
-
-                      </div>
-                    </div>
-                  </div>
-
-                  <!-- Search: Events -->
-                  <div class="row mt-2" v-if="searchEventsResult.length > 0">
-
-                    <!-- Events -->
-                    <div class="col-12">
-
-                      <h5 class="eq-header">Events ({{ (searchEventsResult.length) }})</h5>
-
-                      <quest-api-display-events
-                        :language-selection="languageSelection"
-                        :events="searchEventsResult"
-                        :linked-examples="linkedExamples"
-                        :api="api"
-                        @load-quest-example="loadQuestExample"
-                      />
-
-                    </div>
-
-                  </div>
-
-                </div>
-
-                <app-loader :is-loading="!optionLoaded" padding="4"/>
-
-              </div>
-
-              <app-loader :is-loading="!loaded" padding="4"/>
-
-              <eq-debug :data="api" v-if="Object.keys(api).length"/>
-
-            </eq-window>
-
-            <!-- Example Previews -->
-            <div class="row mt-2 pl-2">
-              <div class="col-lg-6 col-sm-12 example-preview" v-if="displayExamples.length > 0">
-
-                <eq-window
-                  :title="'Examples (' + displayExamples.slice(0,50).length + ')'"
-                  class="mt-3"
-                >
-
-                  <div style="right: 30px; top: 10px; position: absolute"><span style="color: gray"
-                                                                                class="mr-3">(Esc)</span>
-                    <button
-                      class="btn btn-white btn-sm"
-                      @click="closeExample"
-                    >X
-                    </button>
-                  </div>
-
-                  <div class="example-preview-inner">
-                    <div v-for="(example, index) in displayExamples.slice(0,50)"
-                         :key="example.file_name + index + example.line_number">
-                      <div class="row ">
-                        <div class="col">
-                          <a href="javascript:;"
-                             class="ml-5"
-                             @click="navigateTo('https://github.com/' + example.org + '/' + example.repo + '/blob/' + example.branch + '/' + encodeURIComponent(example.file_name) + '#L' + example.line_number, example.file_name)"
-                             style="color: #b9b194"
-                          >
-                            <i class="fe fe-github"></i>
-                            {{ example.file_name + ":" + example.line_number }}
-                          </a>
-                        </div>
-
-                        <div class="col">
-                          <div class="float-right">
-                            <button
-                              @click="navigateTo('https://github.com/' + example.org + '/' + example.repo)"
-                              style="line-height: 1.40;"
-                              class="btn btn-primary btn-sm mr-2 ">
-                              <i class="fe fe-github"></i>
-                              {{ example.org + " / " + example.repo }}
-                            </button>
-                          </div>
-                        </div>
-                      </div>
-
-                      <editor
-                        v-model="example.full_contents"
-                        @init="editorInit(slug(example.file_name), example.line_number)"
-                        :id="slug(example.file_name)"
-                        :lang="languageSelection"
-                        theme="terminal"
-                        width="100%"
-                        :ref="slug(example.file_name)"
-                        height="275px"
-                        class="mt-3 mb-3 ml-5 pr-6"
-                      ></editor>
-
-                    </div>
-                  </div>
-
-                </eq-window>
-
-              </div>
-            </div>
+            <quest-api-display-methods
+              :language-selection="languageSelection"
+              :linked-examples="linkedExamples"
+              :api-methods="apiMethods"
+              @load-quest-example="loadQuestExample"
+            />
 
           </div>
         </div>
+
       </div>
 
+      <!-- Events -->
+      <div
+        class="row mt-2 pl-2"
+        v-if="eventSelection"
+        style="display:inline-block"
+      >
+        <div class="col-12">
+          <quest-api-display-events
+            :language-selection="languageSelection"
+            :events="[eventSelection]"
+            :linked-examples="linkedExamples"
+            :api="api"
+            @load-quest-example="loadQuestExample"
+          />
+        </div>
+      </div>
+
+      <!-- Constants -->
+      <div
+        class="row mt-2 pl-2"
+        v-if="languageSelection && constantSelection && api && Object.keys(api).length > 0"
+        style="display:inline-block"
+      >
+        <div class="col-12">
+          <quest-api-display-constants
+            :language-selection="languageSelection"
+            :constant-selection="constantSelection"
+            :linked-examples="linkedExamples"
+            :api="api"
+            @load-quest-example="loadQuestExample"
+          />
+        </div>
+      </div>
+
+      <!-- Search Results -->
+      <div v-if="search.length > 0 && optionLoaded">
+        <div
+          class="mt-3"
+          v-if="search.length > 0 && searchApiResultMethods.length === 0 && searchEventsResult.length === 0"
+        >
+          No results found...
+        </div>
+
+        <!-- Search: Methods -->
+        <div class="row mt-2" v-if="searchApiResultMethods.length > 0">
+
+          <!-- Methods -->
+          <div class="col-12">
+
+            <h5 class="eq-header">Methods ({{ (searchApiResultMethods.length) }})</h5>
+
+            <div
+              class="mb-4 code-display"
+              style="padding-left: 10px !important; padding-top: 10px !important; padding-bottom: 10px !important; white-space:nowrap"
+            >
+
+              <quest-api-display-methods
+                :language-selection="languageSelection"
+                :linked-examples="linkedExamples"
+                :api-methods="searchApiResultMethods"
+                @load-quest-example="loadQuestExample"
+              />
+
+            </div>
+          </div>
+        </div>
+
+        <!-- Search: Events -->
+        <div class="row mt-2" v-if="searchEventsResult.length > 0">
+
+          <!-- Events -->
+          <div class="col-12">
+
+            <h5 class="eq-header">Events ({{ (searchEventsResult.length) }})</h5>
+
+            <quest-api-display-events
+              :language-selection="languageSelection"
+              :events="searchEventsResult"
+              :linked-examples="linkedExamples"
+              :api="api"
+              @load-quest-example="loadQuestExample"
+            />
+
+          </div>
+
+        </div>
+
+      </div>
+
+      <app-loader :is-loading="!optionLoaded" padding="4"/>
+    </eq-window-simple>
+
+    <!-- Example Previews -->
+    <div class="row mt-2 pl-2">
+      <div class="col-lg-8 col-sm-12 example-preview" v-if="displayExamples.length > 0">
+
+        <eq-window-simple
+          :title="'Examples (' + displayExamples.slice(0,50).length + ')'"
+          class="mt-3"
+          @click="closeExample"
+        >
+          <div style="right: 30px; top: -12px; position: absolute">
+            <a
+              style="color: white"
+              @click="closeExample"
+            >(Esc) X
+            </a>
+          </div>
+
+          <div class="example-preview-inner ">
+            <div
+              v-for="(example, index) in displayExamples.slice(0,50)"
+              :key="example.file_name + index + example.line_number"
+              class="mr-6"
+            >
+              <div class="row ">
+                <div class="col">
+                  <a
+                    href="javascript:;"
+                    class="ml-5"
+                    @click="navigateTo('https://github.com/' + example.org + '/' + example.repo + '/blob/' + example.branch + '/' + encodeURIComponent(example.file_name) + '#L' + example.line_number, example.file_name)"
+                    style="color: #b9b194"
+                  >
+                    <i class="fe fe-github"></i>
+                    {{ example.file_name + ":" + example.line_number }}
+                  </a>
+                </div>
+
+                <div class="col">
+                  <div class="float-right">
+                    <button
+                      @click="navigateTo('https://github.com/' + example.org + '/' + example.repo)"
+                      style="line-height: 1.40;"
+                      class="btn btn-primary btn-sm mr-2 "
+                    >
+                      <i class="fe fe-github"></i>
+                      {{ example.org + " / " + example.repo }}
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              <editor
+                v-model="example.full_contents"
+                @init="editorInit(slug(example.file_name), example.line_number)"
+                :id="slug(example.file_name)"
+                :lang="languageSelection"
+                theme="terminal"
+                width="100%"
+                :ref="slug(example.file_name)"
+                height="275px"
+                class="mt-3 mb-3 ml-5 pr-6"
+              ></editor>
+
+            </div>
+          </div>
+
+        </eq-window-simple>
+
+      </div>
     </div>
 
-
-  </div>
+  </content-area>
 
 </template>
 
 <script type="ts">
-import EqWindow                 from "@/components/eq-ui/EQWindow.vue";
-import DebugDisplayComponent    from "@/components/DebugDisplayComponent.vue";
-import {SpireApiClient}         from "@/app/api/spire-api-client";
-import axios                    from "axios";
-import EqWindowSimple           from "@/components/eq-ui/EQWindowSimple.vue";
-import EqTabs                   from "@/components/eq-ui/EQTabs.vue";
-import EqTab                    from "@/components/eq-ui/EQTab.vue";
-import slugify                  from "slugify";
-import moment                   from "moment";
-import * as util                from "util";
-import QuestApiDisplayMethods   from "@/views/quest-api-explorer/components/QuestApiDisplayMethods.vue";
-import Analytics                from "@/app/analytics/analytics";
+import EqWindow from "@/components/eq-ui/EQWindow.vue";
+import DebugDisplayComponent from "@/components/DebugDisplayComponent.vue";
+import {SpireApiClient} from "@/app/api/spire-api-client";
+import axios from "axios";
+import EqWindowSimple from "@/components/eq-ui/EQWindowSimple.vue";
+import EqTabs from "@/components/eq-ui/EQTabs.vue";
+import EqTab from "@/components/eq-ui/EQTab.vue";
+import slugify from "slugify";
+import moment from "moment";
+import * as util from "util";
+import QuestApiDisplayMethods from "@/views/quest-api-explorer/components/QuestApiDisplayMethods.vue";
+import Analytics from "@/app/analytics/analytics";
 import QuestApiDisplayConstants from "@/views/quest-api-explorer/components/QuestApiDisplayConstants.vue";
-import QuestApiDisplayEvents    from "@/views/quest-api-explorer/components/QuestApiDisplayEvents.vue";
-import EqDebug                  from "@/components/eq-ui/EQDebug.vue";
-import Debug                    from "@/app/debug/debug";
-import {debounce}               from "@/app/utility/debounce";
+import QuestApiDisplayEvents from "@/views/quest-api-explorer/components/QuestApiDisplayEvents.vue";
+import EqDebug from "@/components/eq-ui/EQDebug.vue";
+import Debug from "@/app/debug/debug";
+import {debounce} from "@/app/utility/debounce";
 import {ROUTE} from "@/routes";
 import {AppEnv} from "@/app/env/app-env";
+import ContentArea from "@/components/layout/ContentArea.vue";
 
 export default {
   components: {
+    ContentArea,
     EqDebug,
     QuestApiDisplayEvents,
     QuestApiDisplayConstants,
@@ -367,7 +363,7 @@ export default {
       searchConstantsResult: []
     }
   },
-  deactivated() {
+  destroyed() {
     Debug.log("[deactivated]")
 
     // remove route watcher
@@ -375,7 +371,7 @@ export default {
 
     document.body.removeEventListener('keyup', this.closeExampleKeyHandler)
   },
-  activated() {
+  mounted() {
     Debug.log("[activated]")
 
     this.init()
@@ -783,7 +779,7 @@ export default {
 
         // console.log(this.$refs)
 
-        this.$refs[slug][0].editor.setFontSize(13)
+        this.$refs[slug][0].editor.setFontSize(16)
         this.$refs[slug][0].editor.setReadOnly(true);
         this.$refs[slug][0].editor.scrollToLine(lineNumber, true, true, () => {
         });
@@ -832,9 +828,9 @@ export default {
     getFormattedApiMethod(method) {
       const snakeCase = string => {
         return string.replace(/\W+/g, " ")
-                     .split(/ |\B(?=[A-Z])/)
-                     .map(word => word.toLowerCase())
-                     .join('_');
+          .split(/ |\B(?=[A-Z])/)
+          .map(word => word.toLowerCase())
+          .join('_');
       };
 
       let prefix = method.method_type
@@ -1016,14 +1012,14 @@ export default {
 .code-display {
   font-size: 14px !important;
   max-width: 100% !important;
-  width:     100%;
+  width: 100%;
 }
 
 .example-preview {
   position: fixed;
-  right:    0px;
-  top:      2%;
-  z-index:  9999999
+  left: 20%;
+  top: 2%;
+  z-index: 9999999
 }
 
 .example-preview-inner {

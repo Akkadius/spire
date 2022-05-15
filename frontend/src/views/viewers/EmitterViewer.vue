@@ -1,7 +1,5 @@
 <template>
   <div :class="isComponent ? '' : 'container-fluid'" v-if="loaded">
-    <app-loader :is-loading="!loaded" padding="8"/>
-
     <eq-window-simple
       title="Emitter Viewer"
       class="mt-4 text-center"
@@ -66,7 +64,7 @@ export default {
     this.init()
   },
   methods: {
-    init() {
+    async init() {
       if (!this.$route.query.q) {
         this.search        = ""
         this.filteredRaces = []
@@ -78,7 +76,7 @@ export default {
         this.previewAnimSearch();
       });
 
-      this.render()
+      await this.render()
       this.previewAnimSearch()
 
       // hook video viewer scroll listener
@@ -87,8 +85,8 @@ export default {
     videoRender() {
       VideoViewer.handleRender();
     },
-    render: function () {
-      this.previews = EqAssets.getEmitterPreviewFileIds()
+    render: async function () {
+      this.previews = await EqAssets.getEmitterPreviewFileIds()
       this.loaded   = true
 
       setTimeout(() => {
@@ -105,10 +103,7 @@ export default {
       }, 100);
     }
   },
-  activated() {
-    this.init()
-  },
-  deactivated() {
+  destroyed() {
     VideoViewer.destroyScrollListener()
 
     // remove route watcher

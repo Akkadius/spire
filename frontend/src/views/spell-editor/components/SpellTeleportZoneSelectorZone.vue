@@ -43,7 +43,7 @@
               class="btn-dark btn-sm btn-outline-warning"
               @click="selectZone(zone)"
             >
-              Select
+              <i class="fa fa-arrow-left"></i>
             </b-button>
           </td>
           <td style="text-align: center"><img :src="getExpansionIcon(zone.expansion)"></td>

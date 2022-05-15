@@ -28,9 +28,9 @@
 </template>
 
 <script>
-import {App}       from "../../../constants/app";
 import VideoViewer from "@/app/video-viewer/video-viewer";
 import EqAssets    from "@/app/eq-assets/eq-assets";
+import {App}       from "../../../constants/app";
 
 export default {
   name: "SpellAnimationPreview",
@@ -43,21 +43,21 @@ export default {
   },
   watch: {
     id: {
-      handler: function (val, oldVal) {
-        this.render()
+      handler: async function (val, oldVal) {
+        await this.render()
         VideoViewer.handleRender();
       },
     },
   },
   methods: {
-    render() {
+    async render() {
       this.previewId = 0;
 
-      EqAssets.getSpellAnimationFileIds().forEach((animationId) => {
+      const r = await EqAssets.getSpellAnimationFileIds()
+      r.forEach((animationId) => {
         if (this.id === animationId) {
-          this.previewId = this.id;
-
-          this.videoSource = this.spellAnimationUrl + this.previewId + '.mp4#t=3';
+          this.previewId   = animationId;
+          this.videoSource = this.spellAnimationUrl + animationId + '.mp4#t=3';
           return false
         }
       })
@@ -66,8 +66,8 @@ export default {
   activated() {
     VideoViewer.handleRender();
   },
-  created() {
-    this.render()
+  async created() {
+    await this.render()
   },
   props: {
     id: {

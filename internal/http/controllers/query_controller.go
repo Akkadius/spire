@@ -180,6 +180,9 @@ func (q *QueryController) getModelFromString(s string) models.Modelable {
 	if s == "items" {
 		return models.Item{}
 	}
+	if s == "tasks" {
+		return models.Task{}
+	}
 	if s == "spells_new" {
 		return models.SpellsNew{}
 	}

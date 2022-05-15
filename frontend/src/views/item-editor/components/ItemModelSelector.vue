@@ -4,16 +4,30 @@
     <eq-window-simple>
       <div class="row">
 
+        <!-- Item Search -->
+        <div class="col-lg-4">
+
+          <input
+            type="text"
+            class="form-control ml-2"
+            v-model="search"
+            v-on:keyup="loadModelsDebounce"
+            @enter="loadModels"
+            placeholder="Search for item names"
+          >
+
+        </div>
+
         <!-- Item Slot -->
-        <div class="col-lg-5">
+        <div class="col-lg-3">
 
           <!-- Input -->
           <select
             class="form-control form-control-prepended list-search"
             v-model.lazy="itemSlotSearch"
-            @change="itemTypeSearch = 0; loadModels()"
+            @change="itemTypeSearch = 0; search = ''; loadModels()"
           >
-            <option value="0">Select Slot Filter</option>
+            <option value="0">Slot Filter</option>
             <option v-for="option in itemSlotOptions" v-bind:value="option.value">
               {{ option.text }}
             </option>
@@ -22,15 +36,15 @@
         </div>
 
         <!-- Item Type -->
-        <div class="col-lg-5">
+        <div class="col-lg-3">
 
           <!-- Input -->
           <select
             class="form-control form-control-prepended list-search"
             v-model.lazy="itemTypeSearch"
-            @change="itemSlotSearch = 0; loadModels()"
+            @change="itemSlotSearch = 0; search = ''; loadModels()"
           >
-            <option value="0">Select Item Type Filter</option>
+            <option value="0">Type Filter</option>
             <option v-for="option in itemTypeOptions" v-bind:value="option.value">
               {{ option.text }}
             </option>
@@ -78,7 +92,6 @@
 </template>
 
 <script>
-import ItemModels            from "@/app/eq-assets/objects-map.json";
 import util                  from "util";
 import itemSlots             from "@/constants/item-slots.json"
 import itemSlotIdFileMapping from "@/constants/item-slot-idfile-mapping.json"
@@ -88,8 +101,10 @@ import PageHeader            from "@/components/layout/PageHeader";
 import {App}                 from "@/constants/app";
 import EqWindow              from "@/components/eq-ui/EQWindow";
 import EqWindowSimple        from "@/components/eq-ui/EQWindowSimple";
+import EqAssets              from "../../../app/eq-assets/eq-assets";
+import {debounce}            from "../../../app/utility/debounce";
+import {Items}               from "../../../app/items";
 
-const baseUrl         = App.ASSET_CDN_BASE_URL + "assets/objects/";
 const MAX_ITEM_IDFILE = 100000;
 let itemModels        = [];
 let itemModelExists   = {};
@@ -100,6 +115,7 @@ export default {
   components: { EqWindowSimple, EqWindow, PageHeader },
   data() {
     return {
+      search: "",
       itemSlotSearch: 0,
       itemTypeSearch: 0,
       filteredItemModels: null,
@@ -109,6 +125,10 @@ export default {
     }
   },
   methods: {
+
+    loadModelsDebounce: debounce(function() {
+      this.loadModels()
+    }, 600),
 
     scrollToSelected() {
       // bring focus to the selected model
@@ -144,7 +164,26 @@ export default {
     },
 
     // zero state loader
-    loadModels: function () {
+    loadModels: async function () {
+
+      let searchModels = []
+      if (this.search.length > 0) {
+        searchModels = await Items.getItemModelsByName(this.search)
+      }
+
+      // item based idfile search
+      if (this.search.length > 0) {
+        let idFiles = []
+        for (let model of searchModels) {
+          if (itemModelExists[model]) {
+            idFiles.push(model)
+          }
+        }
+
+        this.filteredItemModels = idFiles
+        this.loaded        = true;
+        return
+      }
 
       // filter by item type
       if (this.itemTypeSearch > 0) {
@@ -198,10 +237,9 @@ export default {
     this.loaded = false;
 
     modelFiles = {};
-    ItemModels[0].contents.forEach((row) => {
-      const pieces   = row.name.split(/\//);
-      const fileName = pieces[pieces.length - 1];
 
+    const r = await EqAssets.getItemModelFileNames()
+    r.forEach((fileName) => {
       modelFiles[fileName] = 1
     })
 

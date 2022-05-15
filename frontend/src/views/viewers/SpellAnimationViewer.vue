@@ -1,8 +1,6 @@
 <template>
   <div>
     <div :class="isComponent ? '' : 'container-fluid'">
-      <app-loader :is-loading="!loaded" padding="8"/>
-
       <eq-window-simple title="Spell Animations" style="margin-bottom: 1px">
         <div class="row">
           <div class="col-12">
@@ -99,7 +97,6 @@
 import PageHeader        from "@/components/layout/PageHeader";
 import {App}             from "@/constants/app";
 import EqWindow          from "@/components/eq-ui/EQWindow";
-import spellAnimMappings from "@/app/data-maps/spell-icon-anim-name-map.json";
 import {ROUTE}           from "../../routes";
 import VideoViewer       from "../../app/video-viewer/video-viewer";
 import EqAssets          from "../../app/eq-assets/eq-assets";
@@ -191,13 +188,13 @@ export default {
       })
     },
 
-    init() {
+    async init() {
       if (!this.$route.query.q) {
         this.search        = ""
         this.filteredRaces = []
       }
 
-      this.render()
+      await this.render()
       this.spellAnimSearch()
 
       // hook video viewer scroll listener
@@ -206,12 +203,13 @@ export default {
     videoRender() {
       VideoViewer.handleRender();
     },
-    render: function () {
-      EqAssets.getSpellAnimationFileIds().forEach((animationId) => {
+    render: async function () {
+      const r = await EqAssets.getSpellAnimationFileIds()
+      r.forEach((animationId) => {
         animationPreviewExists[animationId] = 1
       })
 
-      this.spellAnimations = EqAssets.getSpellAnimationFileIds()
+      this.spellAnimations = await EqAssets.getSpellAnimationFileIds()
       this.loaded          = true
 
       setTimeout(() => {
@@ -221,14 +219,15 @@ export default {
     triggerSearch: debounce(function () {
       this.updateQueryState()
     }, 1000),
-    spellAnimSearch: function () {
+    spellAnimSearch: async function () {
       this.loaded = false
 
       let foundAnim          = {};
-      let filteredAnimations = EqAssets.getSpellAnimationFileIds()
+      let filteredAnimations = await EqAssets.getSpellAnimationFileIds()
 
       if (this.search !== "") {
         filteredAnimations = []
+        const spellAnimMappings = await EqAssets.getSpellAnimNameMappings()
         for (let spellAnimMapping of spellAnimMappings) {
           const spellName   = spellAnimMapping[0].toLowerCase().trim()
           const spellAnimId = spellAnimMapping[2]
@@ -268,10 +267,7 @@ export default {
 
     }
   },
-  activated() {
-    this.init()
-  },
-  deactivated() {
+  beforeDestroy() {
     VideoViewer.destroyScrollListener()
   },
   props: {

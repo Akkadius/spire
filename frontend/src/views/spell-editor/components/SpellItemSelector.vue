@@ -274,10 +274,7 @@ export default {
 
   async mounted() {
     this.resetFilters()
-    if (Object.keys(this.$route.query).length === 0) {
-      // Items.preloadDbstr()
-      this.loaded = true;
-    }
+    this.loaded = true;
 
     this.itemFields = await this.getItemFields()
 

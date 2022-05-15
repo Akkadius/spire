@@ -39,7 +39,7 @@
               class="btn-dark btn-sm btn-outline-warning"
               @click="selectPet(pet)"
             >
-              Select
+              <i class="fa fa-arrow-left"></i>
             </b-button>
           </td>
           <td style="text-align: center">{{ pet.npc_id }}</td>

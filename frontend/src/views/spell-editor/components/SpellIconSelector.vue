@@ -40,8 +40,8 @@ export default {
       required: true
     },
   },
-  created() {
-    this.icons = EqAssets.getSpellIcons()
+  async created() {
+    this.icons = await EqAssets.getSpellIcons()
 
     if (this.selectedIcon > 0) {
       // we need 100ms delay because the videos haven't been rendered yet

@@ -4,7 +4,7 @@
       class='eq-window-simple p-0'
       :style="'margin-bottom: 40px; ' + (title ? 'padding-top: 30px' : 'padding-top: 0px !important')"
     >
-      <div class='eq-window-title-bar' v-if="title">{{ title }}</div>
+<!--      <div class='eq-window-title-bar' v-if="title">{{ title }}</div>-->
       <div :style="'' + (title ? '' : '') ">
         <div class='eq-window-nested-blue text-center p-5' v-if="spells.length === 0">
           No spells were found
@@ -12,14 +12,14 @@
 
         <div
           class='spell-table'
-          style="height: 78vh; overflow-y: scroll; overflow-x: hidden; box-shadow: rgb(0 0 0) 0px 20px 15px inset;"
+          style="height: 75vh; overflow-y: scroll; overflow-x: hidden; "
           v-if="spells.length > 0"
         >
           <!--        <div class='eq-window-nested-blue' v-if="spells.length > 0" style="overflow-y: scroll;">-->
-          <table id="tabbox1" class="eq-table eq-highlight-rows" style="display: table;">
-            <thead>
+          <table id="tabbox1" class="eq-table eq-highlight-rows" >
+            <thead class="eq-table-floating-header">
             <tr>
-              <th style="width: 180px;"></th>
+              <th style="width: 100px;"></th>
               <th style="width: auto;">Id</th>
               <th style="width: auto; min-width: 270px">Spell</th>
               <th style="width: auto; min-width: 300px">Level</th>
@@ -42,19 +42,21 @@
                   <b-button
                     @click="editSpell(spell.id)"
                     size="sm"
+                    title="Edit"
                     variant="outline-warning"
                   >
                     <i class="ra ra-wrench"></i>
-                    Edit
+
                   </b-button>
 
                   <b-button
                     @click="editSpell(spell.id, true)"
                     size="sm"
+                    title="Clone"
                     variant="outline-light"
                   >
                     <i class="ra ra-double-team"></i>
-                    Clone
+
                   </b-button>
                 </div>
 
@@ -62,11 +64,17 @@
               <td>
                 {{ spell.id }}
               </td>
-              <td class="text-left">
-                <v-runtime-template
-                  v-if="spellMinis"
-                  :template="'<span>' + spellMinis[spell.id] + '</span>'"
+              <td class="text-left"
+              >
+
+                <spell-popover
+                  :spell="spell"
+                  :size="30"
+                  :spell-name-length="25"
+                  v-if="Object.keys(spell).length > 0 && spell"
+                  class="mt-2"
                 />
+
               </td>
               <td class="text-left">
                 <span v-for="(icon, index) in dbClassIcons">
@@ -119,50 +127,27 @@ import {DB_CLASSES_ICONS} from "@/app/constants/eq-class-icon-constants";
 import {DB_CLASSES_SHORT} from "@/app/constants/eq-classes-constants";
 import {ROUTE}            from "@/routes";
 import * as util          from "util";
+import SpellPopover       from "@/components/SpellPopover";
 
 export default {
   name: "EqSpellPreviewTable",
   components: {
+    SpellPopover,
     EqSpellDescription,
     EqSpellEffects,
     EqSpellPreview,
     EqWindow,
-    "v-runtime-template": () => import("v-runtime-template")
   },
   data() {
     return {
       debug: App.DEBUG,
       debugSpellEffects: false,
-      spellEffectInfo: [],
-      itemData: {},
-      sideLoadedSpellData: {},
-      componentId: "",
-      reagents: [],
-      effectDescription: "",
-      recourseLink: "",
       title: "",
-      spellMinis: {},
       dbClassIcons: DB_CLASSES_ICONS,
       dbClassesShort: DB_CLASSES_SHORT,
     }
   },
   async created() {
-    let spellMinis = []
-
-    for (const spell of this.spells) {
-      if (!Spells.isSpellSet(spell["id"])) {
-        Spells.setSpell(spell["id"], spell)
-      }
-
-      spellMinis[spell["id"]] = await Spells.renderSpellMini(0, spell["id"], 30)
-    }
-    this.spellMinis = spellMinis
-
-    // this.$forceUpdate()
-
-    // do this once so we're not triggering vue re-renders in the loop
-    this.sideLoadedSpellData = Spells.data
-
     this.title = "Spells (" + this.spells.length + ")";
   },
   props: {

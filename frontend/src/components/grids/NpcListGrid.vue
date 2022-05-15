@@ -18,7 +18,7 @@
 </template>
 
 <script>
-import {AgGridVue}      from "ag-grid-vue";
+// import {AgGridVue}      from "ag-grid-vue";
 import {NpcTypeApi}     from "@/app/api";
 import {SpireApiClient} from "@/app/api/spire-api-client";
 import util             from "util";

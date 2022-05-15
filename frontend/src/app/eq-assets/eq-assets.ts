@@ -1,57 +1,74 @@
-import PlayerAnimations from '@/app/eq-assets/player-animations.json';
-import Emitters from "@/app/eq-assets/emitters.json";
-import SpellAnimations from "@/app/eq-assets/spell-animations-map.json";
-import SpellIcons from "@/app/eq-assets/spell-icons-map.json";
+import {SpireApiClient} from "@/app/api/spire-api-client";
+import {HttpStatus} from "@/app/api/http-status";
 
 export default class EqAssets {
 
-  public static getPlayerAnimationFileIds() {
-    let ids = <any>[];
-    if (PlayerAnimations[0].contents) {
-      PlayerAnimations[0].contents.forEach((row) => {
-        const pieces      = row.name.split(/\//);
-        const fileName    = pieces[pieces.length - 1].replace(".mp4", "");
-        const animationId = parseInt(fileName)
-        ids.push(animationId)
-      })
+  public static playerAnimations = []
+
+  public static async getPlayerAnimationFileIds() {
+    // return cached set
+    if (this.playerAnimations.length > 0) {
+      return this.playerAnimations
     }
 
-    ids.sort(function (a, b) {
-      return a - b;
-    });
+    let ids = <any>[];
+
+    const r = await SpireApiClient.v1().get('/static-map/player-animations.json')
+    if (r.status === HttpStatus.OK) {
+      if (r.data[0].contents) {
+        r.data[0].contents.forEach((row) => {
+          const pieces      = row.name.split(/\//);
+          const fileName    = pieces[pieces.length - 1].replace(".mp4", "");
+          const animationId = parseInt(fileName)
+          ids.push(animationId)
+        })
+      }
+
+      ids.sort(function (a, b) {
+        return a - b;
+      });
+    }
+
+    // cache for second retrieval
+    this.playerAnimations = ids
 
     return ids
   }
 
-  public static getEmitterPreviewFileIds() {
+  public static async getEmitterPreviewFileIds() {
     let ids = <any>[];
-    if (Emitters[0].contents) {
-      Emitters[0].contents.forEach((row) => {
-        const pieces      = row.name.split(/\//);
-        const fileName    = pieces[pieces.length - 1].replace(".mp4", "");
-        const animationId = parseInt(fileName)
-        ids.push(animationId)
-      })
-    }
+    const r = await SpireApiClient.v1().get('/static-map/emitters.json')
+    if (r.status === HttpStatus.OK) {
+      if (r.data[0].contents) {
+        r.data[0].contents.forEach((row) => {
+          const pieces      = row.name.split(/\//);
+          const fileName    = pieces[pieces.length - 1].replace(".mp4", "");
+          const animationId = parseInt(fileName)
+          ids.push(animationId)
+        })
+      }
 
-    ids.sort(function (a, b) {
-      return a - b;
-    });
+      ids.sort(function (a, b) {
+        return a - b;
+      });
+    }
 
     return ids
   }
 
   public static spellIcons = []
 
-  public static getSpellIcons() {
+  public static async getSpellIcons() {
     // return cached set
     if (this.spellIcons.length > 0) {
       return this.spellIcons
     }
 
     let ids = <any>[];
-    if (SpellIcons[0].contents) {
-      SpellIcons[0].contents.forEach((row) => {
+
+    const r = await SpireApiClient.v1().get('/static-map/spell-icons-map.json')
+    if (r.status === HttpStatus.OK) {
+      r.data[0].contents.forEach((row) => {
         const pieces   = row.name.split(/\//);
         const fileName = pieces[pieces.length - 1];
         const iconId   = fileName.replace(".png", "")
@@ -76,21 +93,24 @@ export default class EqAssets {
 
   public static spellAnimationFileIds = []
 
-  public static getSpellAnimationFileIds() {
-
+  public static async getSpellAnimationFileIds() {
     // return cached set
     if (this.spellAnimationFileIds.length > 0) {
       return this.spellAnimationFileIds
     }
 
     let ids = <any>[];
-    if (SpellAnimations[0].contents) {
-      SpellAnimations[0].contents.forEach((row) => {
-        const pieces      = row.name.split(/\//);
-        const fileName    = pieces[pieces.length - 1].replace(".mp4", "");
-        const animationId = parseInt(fileName)
-        ids.push(animationId)
-      })
+
+    const r = await SpireApiClient.v1().get('/static-map/spell-animations-map.json')
+    if (r.status === HttpStatus.OK) {
+      if (r.data[0].contents) {
+        r.data[0].contents.forEach((row) => {
+          const pieces      = row.name.split(/\//);
+          const fileName    = pieces[pieces.length - 1].replace(".mp4", "");
+          const animationId = parseInt(fileName)
+          ids.push(animationId)
+        })
+      }
     }
 
     ids.sort(function (a, b) {
@@ -102,4 +122,114 @@ export default class EqAssets {
 
     return ids
   }
+
+  public static itemIcons = []
+
+  public static async getItemIcons() {
+    // return cached set
+    if (this.itemIcons.length > 0) {
+      return this.itemIcons
+    }
+
+    let ids = <any>[];
+    const r = await SpireApiClient.v1().get('/static-map/item-icons-map.json')
+    if (r.status === HttpStatus.OK) {
+      if (r.data[0].contents) {
+        r.data[0].contents.forEach((row) => {
+          const pieces   = row.name.split(/\//);
+          const fileName = pieces[pieces.length - 1];
+          ids.push(fileName)
+        })
+      }
+    }
+
+    ids.sort(function (a, b) {
+      return a - b;
+    });
+
+    // cache for second retrieval
+    this.itemIcons = ids
+
+    return ids
+  }
+
+  public static npcModels = []
+
+  public static async getNpcModels() {
+    // return cached set
+    if (this.npcModels.length > 0) {
+      return this.npcModels
+    }
+
+    let ids = <any>[];
+    const r = await SpireApiClient.v1().get('/static-map/npc-models-map.json')
+    if (r.status === HttpStatus.OK) {
+      if (r.data[0].contents) {
+        r.data[0].contents.forEach((row) => {
+          const pieces     = row.name.split(/\//);
+          const fileName   = pieces[pieces.length - 1];
+          const paramSplit = fileName.split("_")
+          const raceId     = paramSplit[1].trim();
+          ids.push({fileName: fileName, raceId: raceId})
+        })
+      }
+    }
+
+    ids.sort(function (a, b) {
+      return a - b;
+    });
+
+    // cache for second retrieval
+    this.npcModels = ids
+
+    return ids
+  }
+
+  public static itemModelFileNames = []
+
+  public static async getItemModelFileNames() {
+    // return cached set
+    if (this.itemModelFileNames.length > 0) {
+      return this.itemModelFileNames
+    }
+
+    let ids = <any>[];
+    const r = await SpireApiClient.v1().get('/static-map/objects-map.json')
+    if (r.status === HttpStatus.OK) {
+      if (r.data[0].contents) {
+        r.data[0].contents.forEach((row) => {
+          const pieces   = row.name.split(/\//);
+          const fileName = pieces[pieces.length - 1];
+          ids.push(fileName)
+        })
+      }
+    }
+
+    ids.sort(function (a, b) {
+      return a - b;
+    });
+
+    // cache for second retrieval
+    this.itemModelFileNames = ids
+
+    return ids
+  }
+
+  public static spellAnimNameMappings = []
+
+  public static async getSpellAnimNameMappings() {
+    // return cached set
+    if (this.spellAnimNameMappings.length > 0) {
+      return this.spellAnimNameMappings
+    }
+
+    const r = await SpireApiClient.v1().get('/static-map/spell-icon-anim-name-map.json')
+    if (r.status === HttpStatus.OK) {
+      this.spellAnimNameMappings = r.data
+      return r.data
+    }
+
+    return []
+  }
+
 }

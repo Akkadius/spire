@@ -41,7 +41,7 @@
               class="btn-dark btn-sm btn-outline-warning"
               @click="selectAura(aura)"
             >
-              Select
+              <i class="fa fa-arrow-left"></i>
             </b-button>
           </td>
           <td>{{ aura.name }}</td>

@@ -6,13 +6,25 @@
       <div class="row">
 
         <!-- Item Slot -->
-        <div class="col-5">
+        <div class="col-4">
+          <input
+            type="text"
+            class="form-control ml-2"
+            v-model="search"
+            v-on:keyup="searchDebounce"
+            @enter="loadIcons"
+            placeholder="Search for item names"
+          >
+        </div>
+
+        <!-- Item Slot -->
+        <div class="col-3">
           <select
             class="form-control list-search"
             v-model.lazy="iconSlotSearch"
-            @change="iconItemTypeSearch = 0; loadIcons()"
+            @change="iconItemTypeSearch = 0; search = ''; loadIcons()"
           >
-            <option value="0">Select Slot Filter</option>
+            <option value="0">Slot Filter</option>
             <option v-for="option in iconSlotOptions" v-bind:value="option.value">
               {{ option.text }}
             </option>
@@ -20,13 +32,13 @@
         </div>
 
         <!-- Item Type -->
-        <div class="col-5">
+        <div class="col-3">
           <select
             class="form-control list-search"
             v-model.lazy="iconItemTypeSearch"
-            @change="iconSlotSearch = 0; loadIcons()"
+            @change="iconSlotSearch = 0; search = ''; loadIcons()"
           >
-            <option value="0">Select Type Filter</option>
+            <option value="0">Type Filter</option>
             <option v-for="option in iconItemTypeOptions" v-bind:value="option.value">
               {{ option.text }}
             </option>
@@ -78,7 +90,6 @@
 </template>
 
 <script>
-import ItemIcons            from "@/app/eq-assets/item-icons-map.json";
 import util                 from "util";
 import itemSlots            from "@/constants/item-slots.json"
 import itemTypes            from "@/constants/item-types.json"
@@ -88,6 +99,9 @@ import PageHeader           from "@/components/layout/PageHeader";
 import EqWindowSimple       from "@/components/eq-ui/EQWindowSimple";
 import EqWindowComplex      from "@/components/eq-ui/EQWindowComplex";
 import EqWindow             from "@/components/eq-ui/EQWindow";
+import EqAssets             from "../../../app/eq-assets/eq-assets";
+import {debounce}           from "../../../app/utility/debounce";
+import {Items}              from "../../../app/items";
 
 const MAX_ICON_ID = 10000;
 // const MAX_ICON_ID = 1000;
@@ -101,6 +115,8 @@ export default {
   components: { EqWindow, EqWindowComplex, EqWindowSimple, PageHeader },
   data() {
     return {
+      search: "",
+
       iconSlotSearch: 0,
       iconItemTypeSearch: 0,
       filteredIcons: null,
@@ -117,9 +133,13 @@ export default {
     },
   },
   methods: {
-    init() {
+    searchDebounce: debounce(function () {
+      this.loadIcons()
+    }, 300),
+
+    async init() {
       this.loaded = false;
-      this.loadModelMeta()
+      await this.loadModelMeta()
 
       setTimeout(() => {
         this.loadIcons()
@@ -149,14 +169,36 @@ export default {
     },
 
     reset: function () {
+      this.search             = ""
       this.loaded             = false;
       this.iconSlotSearch     = 0;
       this.iconItemTypeSearch = 0;
       this.loadIcons()
     },
 
-    loadIcons() {
+    async loadIcons() {
       this.loaded = false;
+
+      let searchIcons = []
+      if (this.search.length > 0) {
+        searchIcons = await Items.getItemIconsByName(this.search)
+      }
+
+      // item based icon search
+      if (this.search.length > 0) {
+        let filteredIcons = []
+        let itemAdded     = {};
+        for (let icon of searchIcons) {
+          if (iconExists[icon]) {
+            filteredIcons.push(icon)
+            itemAdded[icon] = 1
+          }
+        }
+
+        this.filteredIcons = filteredIcons
+        this.loaded        = true;
+        return
+      }
 
       // icon slot based search
       if (this.iconSlotSearch > 0) {
@@ -208,16 +250,14 @@ export default {
     },
 
     // load meta data
-    loadModelMeta: function () {
+    loadModelMeta: async function () {
       console.time("files");
 
       // Preload model files
       modelFiles = {};
-      ItemIcons[0].contents.forEach((row) => {
-        const pieces   = row.name.split(/\//);
-        const fileName = pieces[pieces.length - 1];
-
-        modelFiles[fileName] = 1
+      const r    = await EqAssets.getItemIcons()
+      r.forEach((file) => {
+        modelFiles[file] = 1
       })
 
       console.timeEnd("files");

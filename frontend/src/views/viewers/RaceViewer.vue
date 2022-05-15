@@ -57,7 +57,7 @@
         <!-- loader -->
         <div v-if="!loaded" class="text-center justify-content-center mt-5 mb-5">
           <div class="mb-3">
-            {{ renderingImages ? 'Rendering images...' : 'Loading images...'}}
+            {{ renderingImages ? 'Rendering images...' : 'Loading images...' }}
           </div>
           <loader-fake-progress v-if="!loaded && !renderingImages"/>
           <eq-progress-bar :percent="100" v-if="renderingImages"/>
@@ -105,24 +105,22 @@
 </template>
 
 <script>
-import NpcModels        from "@/app/eq-assets/npc-models-map";
-import util              from "util";
-import {RACES}           from "@/app/constants/eq-race-constants"
-import PageHeader        from "@/components/layout/PageHeader";
-import {App}             from "@/constants/app";
-import EqWindow          from "@/components/eq-ui/EQWindow";
-import EqWindowSimple    from "@/components/eq-ui/EQWindowSimple";
-import {debounce}        from "@/app/utility/debounce.js";
-import {ROUTE}           from "../../routes";
-import {SpireApiClient}  from "../../app/api/spire-api-client";
-import {ZoneApi}         from "../../app/api";
-import VideoViewer       from "../../app/video-viewer/video-viewer";
+import util               from "util";
+import {RACES}            from "@/app/constants/eq-race-constants"
+import PageHeader         from "@/components/layout/PageHeader";
+import {App}              from "@/constants/app";
+import EqWindow           from "@/components/eq-ui/EQWindow";
+import EqWindowSimple     from "@/components/eq-ui/EQWindowSimple";
+import {debounce}         from "@/app/utility/debounce.js";
+import {ROUTE}            from "../../routes";
+import {SpireApiClient}   from "../../app/api/spire-api-client";
+import {ZoneApi}          from "../../app/api";
 import LoaderFakeProgress from "../../components/LoaderFakeProgress";
-import EqProgressBar     from "../../components/eq-ui/EQProgressBar";
+import EqProgressBar      from "../../components/eq-ui/EQProgressBar";
+import EqAssets           from "../../app/eq-assets/eq-assets";
 
 const baseUrl           = App.ASSET_CDN_BASE_URL + "assets/npc_models/";
 const MAX_RACE_ID       = 700;
-let modelFileExists     = {};
 let modelFiles          = {}
 let races               = [];
 let zoneToRaceIdMapping = {};
@@ -190,8 +188,8 @@ export default {
     loadModels() {
       this.loaded = false;
 
-      let curImg = new Image();
-      curImg.src = '/eq-asset-preview-master/assets/sprites/race-models.png';
+      let curImg    = new Image();
+      curImg.src    = '/eq-asset-preview-master/assets/sprites/race-models.png';
       curImg.onload = () => {
         this.renderingImages = true
 
@@ -288,24 +286,21 @@ export default {
         meta[3]
       )
     },
-    initModels() {
+    async initModels() {
       console.time('initModels');
       console.time('modelFiles');
 
       modelFiles = {}
-      NpcModels[0].contents.forEach((row) => {
-        const pieces     = row.name.split(/\//);
-        const fileName   = pieces[pieces.length - 1];
-        const paramSplit = fileName.split("_")
-        const raceId     = paramSplit[1].trim();
 
-        modelFileExists[fileName] = 1
-
-        if (typeof modelFiles[raceId] === "undefined") {
-          modelFiles[raceId] = []
+      const r = await EqAssets.getNpcModels()
+      r.forEach((n) => {
+        if (typeof modelFiles[n.raceId] === "undefined") {
+          modelFiles[n.raceId] = []
         }
-        modelFiles[raceId].push(fileName)
+        modelFiles[n.raceId].push(n.fileName)
       })
+
+      // console.log(modelFiles)
 
       console.timeEnd('modelFiles');
 
@@ -382,7 +377,7 @@ export default {
   async mounted() {
     this.loadQueryState()
     this.raceConstants = RACES
-    this.initModels()
+    await this.initModels()
     await this.loadRaceInventory()
     this.loadModels()
   }

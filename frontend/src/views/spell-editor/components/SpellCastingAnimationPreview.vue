@@ -48,10 +48,11 @@ export default {
     },
   },
   methods: {
-    render() {
+    async render() {
       this.previewId = 0;
 
-      EqAssets.getPlayerAnimationFileIds().forEach((animationId) => {
+      const r = await EqAssets.getPlayerAnimationFileIds()
+      r.forEach((animationId) => {
         if (this.id === animationId) {
           this.previewId   = this.id;
           this.videoSource = this.playerAnimationClipUrl + this.previewId + '.mp4';
@@ -60,11 +61,9 @@ export default {
       })
     }
   },
-  activated() {
+  async created() {
+    await this.render()
     VideoViewer.handleRender();
-  },
-  created() {
-    this.render()
   },
   props: {
     id: {
