@@ -467,7 +467,7 @@
                            {
                              description: 'Task Step',
                              field: 'step',
-                             fieldType: 'number',
+                             fieldType: 'step',
                              itemIcon: '5739',
                              col: 'col-2',
                              zeroValue: -1

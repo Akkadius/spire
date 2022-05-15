@@ -1,3 +1,23 @@
+## [1.12.0]
+
+### Task Editor
+
+A fully featured task editor is now available for use in BETA.
+
+![image](https://user-images.githubusercontent.com/3319450/168457168-01227460-35fd-4a3b-a455-a17eca7db38b.png)
+
+![image](https://user-images.githubusercontent.com/3319450/168457193-3be3ae97-e292-4f40-a248-cfbed36cadce.png)
+
+![image](https://user-images.githubusercontent.com/3319450/168457197-2885598e-9c86-4a1b-966e-f66407c8a632.png)
+
+![image](https://user-images.githubusercontent.com/3319450/168457202-0d777684-ad89-42f9-aaf3-01863125d220.png)
+
+![image](https://user-images.githubusercontent.com/3319450/168457209-ebc86cf4-62fa-47a1-8866-52e3bbafeee4.png)
+
+![image](https://user-images.githubusercontent.com/3319450/168457243-ae78e9e9-55a8-4216-8112-46326b794309.png)
+
+![image](https://user-images.githubusercontent.com/3319450/168457258-5e3329d3-8dbd-4450-be89-d31950f7a821.png)
+
 ## [1.11.3]
 
 ### Relational Item Data
