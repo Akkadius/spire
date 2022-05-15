@@ -4,10 +4,11 @@
 
 <script>
 
-import * as util  from "util";
-import {App}      from "@/constants/app";
-import {EventBus} from "@/app/event-bus/event-bus";
-import {AppEnv}   from "@/app/env/app-env";
+import * as util                from "util";
+import {App}                    from "@/constants/app";
+import {EventBus}               from "@/app/event-bus/event-bus";
+import {AppEnv}                 from "@/app/env/app-env";
+import {LocalSettings, Setting} from "@/app/local-settings/localsettings";
 
 export default {
   name: "App",
@@ -25,6 +26,13 @@ export default {
       switch (String.fromCharCode(e.keyCode)) {
         case 'h':
           EventBus.$emit('HIDE_NAVBAR', true);
+          break
+        case 'd':
+          setTimeout(() => {
+            LocalSettings.set(Setting.DEBUG_MODE, !LocalSettings.isDebugEnabled())
+            App.DEBUG = !LocalSettings.isDebugEnabled()
+            EventBus.$emit('DEBUG_UPDATED', true);
+          }, 100)
           break
       }
     })
