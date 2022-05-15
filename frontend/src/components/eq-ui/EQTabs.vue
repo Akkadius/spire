@@ -1,7 +1,7 @@
 <template>
   <div>
     <nav class='eq-tab-box-fancy'>
-      <ul>
+      <ul :style="'margin-bottom: ' + bottomTabMargin + 'px !important;'">
         <li
           v-for="tab in tabs"
           :class="{ 'eq-tab-open': tab.isActive }"
@@ -10,7 +10,7 @@
         >
           <a
             @click="selectTab(tab)"
-            style="color:white">
+            style="color: white">
             {{ tab.name }}
           </a>
         </li>
@@ -33,6 +33,8 @@ export default {
   },
   created() {
     this.tabs = this.$children;
+
+    console.log("bottom tab margin is ", this.bottomTabMargin)
   },
   methods: {
     selectTabHover(selectedTab) {
@@ -52,6 +54,11 @@ export default {
       required: false,
       type: Boolean,
     },
+    bottomTabMargin: {
+      default: 20,
+      required: false,
+      type: Number
+    }
   }
 }
 </script>

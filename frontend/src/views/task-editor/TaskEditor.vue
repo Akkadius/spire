@@ -597,47 +597,50 @@
                           </div>
 
                           <div v-if="field.fieldType === 'popout' && field.field === 'quest_example'">
-                            <div class="mt-3">
+                            <div>
 
-                              <!-- Perl -->
-                              <div
-                                class="ml-0 code-display pl-0"
-                                style="width: 100%; display: inline-block; padding-top: 10px !important; padding-bottom: 10px !important; border-radius: 5px"
-                                v-b-tooltip.hover.v-dark.top
-                                :title="'$client->UpdateTaskActivity(int task_id, int activity_id, int count);'"
-                              >
-                                <button
-                                  class='btn btn-sm btn-outline-warning mb-1 mr-2'
-                                  @click="copyToClip(`$client->UpdateTaskActivity(${buildQuestUpdateTaskActivityParams()});`)"
-                                  style="font-size: 8px; padding: 0.125rem 0.4rem; opacity: .6"
-                                >
-                                  <i class="fa fa-clipboard"></i>
-                                </button>
-                                <span style="color: rgb(156, 220, 254);">$client-></span>UpdateTaskActivity({{
-                                  buildQuestUpdateTaskActivityParams()
-                                }});
-                                <span style="color: rgb(87, 166, 74);"># (Perl)</span>
-                              </div>
+                              <eq-tabs :bottom-tab-margin="10">
+                                <eq-tab name="Perl" selected="true" class="mb-0">
+                                  <div
+                                    class="ml-0 code-display pl-0"
+                                    style="width: 100%; display: inline-block; padding-top: 10px !important; padding-bottom: 10px !important; border-radius: 5px"
+                                    v-b-tooltip.hover.v-dark.top
+                                    :title="'$client->UpdateTaskActivity(int task_id, int activity_id, int count);'"
+                                  >
+                                    <button
+                                      class='btn btn-sm btn-outline-warning mb-1 mr-2'
+                                      @click="copyToClip(`$client->UpdateTaskActivity(${buildQuestUpdateTaskActivityParams()});`)"
+                                      style="font-size: 8px; padding: 0.125rem 0.4rem; opacity: .6"
+                                    >
+                                      <i class="fa fa-clipboard"></i>
+                                    </button>
+                                    <span style="color: rgb(156, 220, 254);">$client-></span>UpdateTaskActivity({{
+                                      buildQuestUpdateTaskActivityParams()
+                                    }});
+                                  </div>
+                                </eq-tab>
 
-                              <!-- Lua -->
-                              <div
-                                class="ml-0 code-display pl-0"
-                                style="width: 100%; display: inline-block; padding-top: 10px !important; padding-bottom: 10px !important; border-radius: 5px"
-                                v-b-tooltip.hover.v-dark.top
-                                :title="'client:UpdateTaskActivity(int task, int activity, int count);'"
-                              >
-                                <button
-                                  class='btn btn-sm btn-outline-warning mb-1 mr-2'
-                                  @click="copyToClip(`client:UpdateTaskActivity(${buildQuestUpdateTaskActivityParams()});`)"
-                                  style="font-size: 8px; padding: 0.125rem 0.4rem; opacity: .6"
-                                >
-                                  <i class="fa fa-clipboard"></i>
-                                </button>
-                                <span style="color: rgb(156, 220, 254);">client:</span>UpdateTaskActivity({{
-                                  buildQuestUpdateTaskActivityParams()
-                                }});
-                                <span style="color: rgb(87, 166, 74);">-- (Lua)</span>
-                              </div>
+                                <eq-tab name="Lua">
+                                  <div
+                                    class="ml-0 code-display pl-0"
+                                    style="width: 100%; display: inline-block; padding-top: 10px !important; padding-bottom: 10px !important; border-radius: 5px"
+                                    v-b-tooltip.hover.v-dark.top
+                                    :title="'client:UpdateTaskActivity(int task, int activity, int count);'"
+                                  >
+                                    <button
+                                      class='btn btn-sm btn-outline-warning mb-1 mr-2'
+                                      @click="copyToClip(`client:UpdateTaskActivity(${buildQuestUpdateTaskActivityParams()});`)"
+                                      style="font-size: 8px; padding: 0.125rem 0.4rem; opacity: .6"
+                                    >
+                                      <i class="fa fa-clipboard"></i>
+                                    </button>
+                                    <span style="color: rgb(156, 220, 254);">client:</span>UpdateTaskActivity({{
+                                      buildQuestUpdateTaskActivityParams()
+                                    }});
+                                  </div>
+                                </eq-tab>
+                              </eq-tabs>
+
                             </div>
                           </div>
 

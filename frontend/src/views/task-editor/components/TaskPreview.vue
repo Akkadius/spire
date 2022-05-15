@@ -1,131 +1,219 @@
 <template>
-  <eq-window-simple
-    title="Quest Journal"
-    class="eq-window-hybrid"
-    style="margin-top: 30px"
-    v-if="task"
-  >
-    <div class="row">
-      <div class="mb-3 col-9">
-        Tasks
-      </div>
-      <div class="col-3">
-        Request Timer: 00:00
-      </div>
-    </div>
-
-    <table class="col-12 task-window">
-      <thead class="task-window-header">
-      <tr>
-        <td style="width: 30px"></td>
-        <td style="width: 300px">Task Title</td>
-        <td v-if="taskTimerDisplay">Time Left</td>
-      </tr>
-      </thead>
-      <tbody>
-      <tr>
-        <td :style="'text-align: center; color: ' + getTaskColor()">{{ getTaskTypeDisplayCode() }}</td>
-        <td :style="'color: ' + getTaskColor()">{{ task.title }}</td>
-        <td v-if="taskTimerDisplay">{{ taskTimerDisplay }} <span v-if="taskDuration !== ''">{{ taskDuration }}</span>
-        </td>
-      </tr>
-      </tbody>
-    </table>
-
-    <div class="row">
-      <div class="mt-3 col-9">
-        Task Progression
-      </div>
-      <div class="col-3">
-        <!--              <button class='eq-button' onclick="alert('click')">Remove</button>-->
-      </div>
-    </div>
-
-    <table class="col-12 mt-3 task-window">
-      <thead class="task-window-header">
-      <tr>
-        <td>Objective Instructions</td>
-        <td style="width: 50px">Status</td>
-        <td style="width: 200px">Zone</td>
-      </tr>
-      </thead>
-      <tbody>
-      <tr
-        v-for="activity in task.task_activities"
-      >
-        <td
-          :style="'color: ' + getTaskActivityStepColor(activity)"
-          :title="buildActivityDescription(activity)"
-        >
-          {{ truncate(buildActivityDescription(activity), 50) }}
-        </td>
-        <td>{{ renderTaskActivityProgress(activity) }}</td>
-        <td :style="'color: ' + getTaskActivityStepColor(activity)">
-          {{ isActivityStepActive(activity) ? getZone(activity) : '???' }}
-        </td>
-      </tr>
-      <tr class="this-is-a-space-row-dont-remove">
-        <td>&nbsp;</td>
-        <td></td>
-        <td></td>
-      </tr>
-      </tbody>
-    </table>
-
-    <div
-      class="mt-3 eq-background-dark p-2"
-      v-if="description !== '' || hasReward()"
-      style="border: rgba(122, 134, 183, 0.5) 1px solid;"
+  <div>
+    <eq-window-simple
+      title="Quest Journal"
+      class="eq-window-hybrid"
+      style="margin-top: 30px"
+      v-if="task"
     >
-      <v-runtime-template :template="'<div>' + description + '</div>'"/>
+      <div class="row">
+        <div class="mb-3 col-9">
+          Tasks
+        </div>
+        <div class="col-3">
+          Request Timer: 00:00
+        </div>
+      </div>
+
+      <table class="col-12 task-window">
+        <thead class="task-window-header">
+        <tr>
+          <td style="width: 30px"></td>
+          <td style="width: 300px">Task Title</td>
+          <td v-if="taskTimerDisplay">Time Left</td>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+          <td :style="'text-align: center; color: ' + getTaskColor()">{{ getTaskTypeDisplayCode() }}</td>
+          <td :style="'color: ' + getTaskColor()">{{ task.title }}</td>
+          <td v-if="taskTimerDisplay">{{ taskTimerDisplay }} <span v-if="taskDuration !== ''">{{ taskDuration }}</span>
+          </td>
+        </tr>
+        </tbody>
+      </table>
+
+      <div class="row">
+        <div class="mt-3 col-9">
+          Task Progression
+        </div>
+        <div class="col-3">
+          <!--              <button class='eq-button' onclick="alert('click')">Remove</button>-->
+        </div>
+      </div>
+
+      <table class="col-12 mt-3 task-window">
+        <thead class="task-window-header">
+        <tr>
+          <td>Objective Instructions</td>
+          <td style="width: 50px">Status</td>
+          <td style="width: 200px">Zone</td>
+        </tr>
+        </thead>
+        <tbody>
+        <tr
+          v-for="activity in task.task_activities"
+        >
+          <td
+            :style="'color: ' + getTaskActivityStepColor(activity)"
+            :title="buildActivityDescription(activity)"
+          >
+            {{ truncate(buildActivityDescription(activity), 50) }}
+          </td>
+          <td>{{ renderTaskActivityProgress(activity) }}</td>
+          <td :style="'color: ' + getTaskActivityStepColor(activity)">
+            {{ isActivityStepActive(activity) ? getZone(activity) : '???' }}
+          </td>
+        </tr>
+        <tr class="this-is-a-space-row-dont-remove">
+          <td>&nbsp;</td>
+          <td></td>
+          <td></td>
+        </tr>
+        </tbody>
+      </table>
 
       <div
-        :class="(description !== '' ? 'mt-3' : '')"
-        v-if="hasReward()"
+        class="mt-3 eq-background-dark p-2"
+        v-if="description !== '' || hasReward()"
+        style="border: rgba(122, 134, 183, 0.5) 1px solid;"
       >
-        <span class="font-weight-bold">Reward(s)</span>
+        <v-runtime-template :template="'<div>' + description + '</div>'"/>
 
-        <div v-if="task.rewardid > 0 && rewardItem && Object.keys(rewardItem).length > 0">
-          <item-popover
-            :item="rewardItem"
-            v-if="Object.keys(rewardItem).length > 0 && rewardItem"
-            size="regular"
-            class="mt-3"
-          />
-        </div>
-        <div v-if="task.reward_ebon_crystals > 0 && ebonCrystalItem">
-          <item-popover
-            :item="ebonCrystalItem"
-            v-if="Object.keys(ebonCrystalItem).length > 0"
-            size="regular"
-            class="mt-1"
-            :annotation="' (' + task.reward_ebon_crystals.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',') + ')'"
-          />
-        </div>
-        <div v-if="task.reward_radiant_crystals > 0 && radiantCrystalItem" class="mt-1">
-          <item-popover
-            :item="radiantCrystalItem"
-            v-if="Object.keys(radiantCrystalItem).length > 0"
-            size="regular"
-            :annotation="' (' + task.reward_radiant_crystals.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',') + ')'"
-          />
+        <div
+          :class="(description !== '' ? 'mt-3' : '')"
+          v-if="hasReward()"
+        >
+          <span class="font-weight-bold">Reward(s)</span>
+
+          <div v-if="task.rewardid > 0 && rewardItem && Object.keys(rewardItem).length > 0">
+            <item-popover
+              :item="rewardItem"
+              v-if="Object.keys(rewardItem).length > 0 && rewardItem"
+              size="regular"
+              class="mt-3"
+            />
+          </div>
+          <div v-if="task.reward_ebon_crystals > 0 && ebonCrystalItem">
+            <item-popover
+              :item="ebonCrystalItem"
+              v-if="Object.keys(ebonCrystalItem).length > 0"
+              size="regular"
+              class="mt-1"
+              :annotation="' (' + task.reward_ebon_crystals.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',') + ')'"
+            />
+          </div>
+          <div v-if="task.reward_radiant_crystals > 0 && radiantCrystalItem" class="mt-1">
+            <item-popover
+              :item="radiantCrystalItem"
+              v-if="Object.keys(radiantCrystalItem).length > 0"
+              size="regular"
+              :annotation="' (' + task.reward_radiant_crystals.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',') + ')'"
+            />
+          </div>
+
+          <div v-if="task.cashreward > 0" class="mt-3">
+            <eq-cash-display
+              class="d-inline-block"
+              :price="task.cashreward"
+            />
+          </div>
+
+          <div v-if="task.xpreward > 0" class="mt-3">
+            Experience ({{ task.xpreward.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") }})
+          </div>
         </div>
 
-        <div v-if="task.cashreward > 0" class="mt-3">
-          <eq-cash-display
-            class="d-inline-block"
-            :price="task.cashreward"
-          />
-        </div>
-
-        <div v-if="task.xpreward > 0" class="mt-3">
-          Experience ({{ task.xpreward.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") }})
-        </div>
       </div>
 
-    </div>
+    </eq-window-simple>
 
-  </eq-window-simple>
+    <eq-window-simple
+      title="Quest Script Examples"
+      class="eq-window-hybrid p-0 pl-3 pr-3"
+      style="margin-top: 30px"
+      v-if="task"
+    >
+      <eq-tabs>
+        <eq-tab name="Perl" selected="true">
+
+          <span class="font-weight-bold">Task Assignment</span>
+
+          <div
+            class="ml-0 code-display pl-0"
+            style="width: 100%; display: inline-block; padding-top: 10px !important; padding-bottom: 10px !important; border-radius: 5px"
+            v-b-tooltip.hover.v-dark.top
+            :title="'$client->AssignTask(int task_id, int npc_id);'"
+          >
+            <div>
+              <button
+                class='btn btn-sm btn-outline-warning mb-1 mr-2'
+                @click="copyToClip(`$client->AssignTask(${task.id}, 0);`)"
+                style="font-size: 8px; padding: 0.125rem 0.4rem; opacity: .6"
+              >
+                <i class="fa fa-clipboard"></i>
+              </button>
+              <span style="color: rgb(156, 220, 254);">$client-></span>AssignTask({{task.id}}, 0);
+            </div>
+            <div>
+              <button
+                class='btn btn-sm btn-outline-warning mb-1 mr-2'
+                @click="copyToClip(`quest::taskselector(${task.id});`)"
+                style="font-size: 8px; padding: 0.125rem 0.4rem; opacity: .6"
+              >
+                <i class="fa fa-clipboard"></i>
+              </button>
+              <span style="color: rgb(156, 220, 254);">quest::</span>taskselector({{task.id}});
+            </div>
+          </div>
+
+          <div class="mt-3">
+            To see more Task methods, events, examples, see <router-link to="/quest-api-explorer?lang=perl&q=task">here</router-link>
+          </div>
+
+        </eq-tab>
+        <eq-tab name="Lua">
+
+          <span class="font-weight-bold">Task Assignment</span>
+
+          <div
+            class="ml-0 code-display pl-0"
+            style="width: 100%; display: inline-block; padding-top: 10px !important; padding-bottom: 10px !important; border-radius: 5px"
+            v-b-tooltip.hover.v-dark.top
+            :title="'client:AssignTask(int task, int npc_id);'"
+          >
+            <div>
+              <button
+                class='btn btn-sm btn-outline-warning mb-1 mr-2'
+                @click="copyToClip(`client:AssignTask(${task.id}, 0);`)"
+                style="font-size: 8px; padding: 0.125rem 0.4rem; opacity: .6"
+              >
+                <i class="fa fa-clipboard"></i>
+              </button>
+              <span style="color: rgb(156, 220, 254);">client:</span>AssignTask({{ task.id }}, 0);
+            </div>
+            <div>
+              <button
+                class='btn btn-sm btn-outline-warning mb-1 mr-2'
+                @click="copyToClip(`eq.task_selector({${task.id}});`)"
+                style="font-size: 8px; padding: 0.125rem 0.4rem; opacity: .6"
+              >
+                <i class="fa fa-clipboard"></i>
+              </button>
+              <span style="color: rgb(156, 220, 254);">eq.</span>task_selector({ {{ task.id }} });
+            </div>
+          </div>
+
+          <div class="mt-3">
+            To see more Task methods, events, examples, see <router-link to="/quest-api-explorer?lang=lua&q=task">here</router-link>
+          </div>
+
+        </eq-tab>
+      </eq-tabs>
+
+    </eq-window-simple>
+  </div>
+
 </template>
 
 <script>
@@ -137,10 +225,15 @@ import util           from "util";
 import ItemPopover    from "@/components/ItemPopover";
 import {Items}        from "@/app/items";
 import EqCashDisplay  from "@/components/eq-ui/EqCashDisplay";
+import ClipBoard      from "@/app/clipboard/clipboard";
+import EqTabs         from "@/components/eq-ui/EQTabs";
+import EqTab          from "@/components/eq-ui/EQTab";
 
 export default {
   name: "TaskPreview",
   components: {
+    EqTab,
+    EqTabs,
     EqCashDisplay,
     ItemPopover,
     EqWindowSimple,
@@ -200,6 +293,15 @@ export default {
   },
   methods: {
 
+    copyToClip(s) {
+      ClipBoard.copyFromText(s)
+
+      this.$bvToast.toast(s, {
+        title: "Copied to Clipboard!",
+        autoHideDelay: 2000,
+        solid: true
+      })
+    },
 
     truncate(string, length) {
       if (string.length > length) {
