@@ -17,7 +17,6 @@ export const DB_PLAYER_RACES = {
   522: {race: "Drakkin", short: "DRK", icon: '4486', mask: "32768"},
 };
 
-
 export const DB_RACES = {
   "65535": "All races",
   "32768": "Drakkin",
