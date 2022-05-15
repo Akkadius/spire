@@ -171,8 +171,35 @@
                 </div>
               </div>
 
+              <div class="header mt-md-1">
+                <div class="header-body">
+                  <h1 class="header-title" id="npc-card-preview">
+                    NPC Card Preview
+                  </h1>
 
-              <!-- Spell Preview -->
+                  <p class="header-subtitle">
+                    NPC Preview Component
+                  </p>
+                </div>
+              </div>
+
+              <div class="row">
+                <div
+                  v-for="npc in npcs"
+                  :key="npc.id"
+                  style="display: inline-block; vertical-align: top"
+                  class="col-6"
+                >
+                  <eq-window
+                    style="margin-right: 10px; width: auto;"
+                  >
+                    <eq-npc-card-preview
+                      :npc="npc"
+                    />
+                  </eq-window>
+                </div>
+              </div>
+
               <div class="header mt-md-1">
                 <div class="header-body">
                   <h1 class="header-title" id="npc-special-abilities">
@@ -473,10 +500,13 @@ import EqSpellPreview       from "@/components/eq-ui/EQSpellCardPreview";
 import {EXAMPLE_SPELL_DATA} from "@/app/constants/eq-example-spell-data";
 import NpcSpecialAbilities  from "@/components/tools/NpcSpecialAbilities";
 import RangeVisualizer      from "../components/tools/RangeVisualizer";
+import EqNpcCardPreview     from "../components/eq-ui/EQNpcCardPreview";
+import {EXAMPLE_NPC_DATA}   from "../app/constants/eq-example-npc-data";
 
 export default {
   name: "Home",
   components: {
+    EqNpcCardPreview,
     RangeVisualizer,
     NpcSpecialAbilities,
     EqSpellPreview,
@@ -499,6 +529,7 @@ export default {
       rangeVisual: 157,
       items: EXAMPLE_ITEM_DATA,
       spells: EXAMPLE_SPELL_DATA,
+      npcs: EXAMPLE_NPC_DATA,
       specialAbilityInput: "1,1,3000,50^2,1,1,1000,2340^3,1,20,0,0,0,0,100,0^4,1,0,100,0,0,0,100,0^11,1,4,150,0,0,5^29,1,50^40,1,10,10,100^7,1^10,1^14,1^19,1^22,1^25,1^26,1",
 
       spellIcons: [

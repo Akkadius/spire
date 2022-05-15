@@ -260,6 +260,7 @@ export default {
         { title: "Item Preview", to: "/components#item-preview" },
         { title: "Spell Icons", to: "/components#spell-icons" },
         { title: "Spell Preview", to: "/components#spell-preview" },
+        { title: "NPC Card Preview", to: "/components#npc-card-preview" },
         { title: "NPC Special Abilities", to: "/components#npc-special-abilities" },
         { title: "Table", to: "/components#table" },
         { title: "Tabs", to: "/components#tabs" },
