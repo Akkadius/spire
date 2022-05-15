@@ -122,6 +122,25 @@
       </div>
     </div>
 
+    <div v-if="npc.merchant_id > 0">
+      <div class="font-weight-bold mb-3">This NPC sells the following items</div>
+
+      <div v-for="e in merchantitems">
+        <item-popover
+          class="d-inline-block"
+          :item="e.item"
+          v-if="Object.keys(e.item).length > 0 && e.item"
+          size="sm"
+        />
+
+        <eq-cash-display
+          class="d-inline-block ml-1"
+          :price="e.item.price"
+        />
+      </div>
+
+    </div>
+
     <eq-debug :data="npc"/>
   </div>
 </template>
@@ -133,12 +152,24 @@ import {DB_PLAYER_RACES, DB_RACE_NAMES}    from "../../app/constants/eq-races-co
 import {DB_CLASSES, DB_PLAYER_CLASSES_ALL} from "../../app/constants/eq-classes-constants";
 import {BODYTYPES}                         from "../../app/constants/eq-bodytype-constants";
 import {FLYMODE}                           from "../../app/constants/eq-flymode-constants";
+import {ItemApi, MerchantlistApi}          from "../../app/api";
+import {SpireApiClient}                    from "../../app/api/spire-api-client";
+import {SpireQueryBuilder}                 from "../../app/api/spire-query-builder";
+import ItemPopover                         from "../ItemPopover";
+import {Items}                             from "../../app/items";
+import EqCashDisplay                       from "./EqCashDisplay";
 
 export default {
   name: "EqNpcCardPreview",
-  components: { EqDebug },
+  components: { EqCashDisplay, ItemPopover, EqDebug },
   data() {
     return {
+
+      loot: {},
+
+      merchantitems: [],
+
+      // field display
       rows: [
         {
           columns: [
@@ -236,6 +267,39 @@ export default {
         }
       ],
 
+    }
+  },
+  async mounted() {
+
+    // merchants
+    if (this.npc.merchant_id > 0) {
+      const api = (new MerchantlistApi(SpireApiClient.getOpenApiConfig()))
+      try {
+        let request = (new SpireQueryBuilder())
+          .where('merchantid', '=', this.npc.merchant_id)
+          .get()
+
+        request.id = this.npc.merchant_id
+
+        // @ts-ignore
+        const result = await api.listMerchantlists(request)
+        if (result.status === 200 && result.data) {
+
+          let merchantItems = []
+          for (let listitem of result.data) {
+            merchantItems.push(
+              {
+                item: (await Items.getItem(listitem.item)),
+                entry: listitem
+              }
+            )
+          }
+
+          this.merchantitems = merchantItems
+        }
+      } catch (err) {
+        console.log("items.ts %s", err)
+      }
     }
   },
   props: {
