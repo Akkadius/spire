@@ -188,10 +188,10 @@
                   v-for="npc in npcs"
                   :key="npc.id"
                   style="display: inline-block; vertical-align: top"
-                  class="col-6"
+                  class="col-6 mb-5"
                 >
                   <eq-window
-                    style="margin-right: 10px; width: auto;"
+                    style="margin-right: 10px; width: auto; height: 100%"
                   >
                     <eq-npc-card-preview
                       :npc="npc"
@@ -501,7 +501,9 @@ import {EXAMPLE_SPELL_DATA} from "@/app/constants/eq-example-spell-data";
 import NpcSpecialAbilities  from "@/components/tools/NpcSpecialAbilities";
 import RangeVisualizer      from "../components/tools/RangeVisualizer";
 import EqNpcCardPreview     from "../components/eq-ui/EQNpcCardPreview";
-import {EXAMPLE_NPC_DATA}   from "../app/constants/eq-example-npc-data";
+import {NpcTypeApi}         from "../app/api";
+import {SpireApiClient}     from "../app/api/spire-api-client";
+import {SpireQueryBuilder}  from "../app/api/spire-query-builder";
 
 export default {
   name: "Home",
@@ -529,7 +531,7 @@ export default {
       rangeVisual: 157,
       items: EXAMPLE_ITEM_DATA,
       spells: EXAMPLE_SPELL_DATA,
-      npcs: EXAMPLE_NPC_DATA,
+      npcs: {},
       specialAbilityInput: "1,1,3000,50^2,1,1,1000,2340^3,1,20,0,0,0,0,100,0^4,1,0,100,0,0,0,100,0^11,1,4,150,0,0,5^29,1,50^40,1,10,10,100^7,1^10,1^14,1^19,1^22,1^25,1^26,1",
 
       spellIcons: [
@@ -540,13 +542,51 @@ export default {
       ],
     }
   },
-  mounted() {
+  async mounted() {
     setInterval(() => {
       this.blueProgress   = Math.floor(Math.random() * 100 + 1)
       this.redProgress    = Math.floor(Math.random() * 100 + 1)
       this.orangeProgress = Math.floor(Math.random() * 100 + 1)
       this.yellowProgress = Math.floor(Math.random() * 100 + 1)
     }, 1000);
+
+    // load NPCS with relationships
+    let npcIDs = [
+      32040,
+      189009,
+      30073,
+      159691,
+      702065,
+      511,
+      68135,
+      150206,
+    ]
+
+    let builder = (new SpireQueryBuilder())
+
+    builder.includes(
+      [
+        "Merchantlists",
+        "Loottable.LoottableEntries.LootdropEntries.Item"
+      ]
+    )
+    builder.orderBy(["id"])
+
+    const response = await (new NpcTypeApi(SpireApiClient.getOpenApiConfig())).getNpcTypesBulk({
+        body: {
+          ids: npcIDs
+        },
+      },
+      {
+        query: builder.get()
+      }
+    )
+
+
+    if (response.status === 200 && response.data && parseInt(response.data.length) > 0) {
+      this.npcs = response.data
+    }
+
   },
 }
 </script>

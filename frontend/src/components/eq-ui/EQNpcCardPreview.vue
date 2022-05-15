@@ -30,6 +30,14 @@
       <div class="col-12">
         <div class="row">
           <div class="col-2 text-right font-weight-bold pr-0">
+            ID
+          </div>
+          <div class="col-4 pl-3">
+            {{ npc.id }}
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-2 text-right font-weight-bold pr-0">
             Level
           </div>
           <div class="col-4 pl-3">
@@ -213,13 +221,12 @@ export default {
           ],
         },
         {
-
           columns: [
             [
               {icon: '', label: 'See Hide', value: this.npc['see_hide'] ? "Yes" : "No", showIf: this.npc['see_hide'] > 0 },
               {icon: '', label: 'See Improved Hide', value: this.npc['see_improved_hide'] ? "Yes" : "No", showIf: this.npc['see_improved_hide'] > 0 },
               {icon: '', label: 'See Invisible', value: this.npc['see_invis'] ? "Yes" : "No", showIf: this.npc['see_invis'] > 0 },
-              {icon: '', label: 'See Invisisble Undead', value: this.npc['see_invis_undead'] ? "Yes" : "No", showIf: this.npc['see_invis_undead'] > 0 },
+              {icon: '', label: 'See Invisible Undead', value: this.npc['see_invis_undead'] ? "Yes" : "No", showIf: this.npc['see_invis_undead'] > 0 },
               {icon: '', label: 'Show Name', value: this.npc['show_name'] ? "Yes" : "No", showIf: this.npc['show_name'] > 0 },
               {icon: '', label: 'Skip Global Loot', value: this.npc['skip_global_loot'] ? "Yes" : "No", showIf: this.npc['skip_global_loot'] > 0 },
               {icon: '', label: 'Spawn Limit', value: this.npc['spawn_limit'], showIf: this.npc['spawn_limit'] > 0 },
@@ -273,33 +280,16 @@ export default {
 
     // merchants
     if (this.npc.merchant_id > 0) {
-      const api = (new MerchantlistApi(SpireApiClient.getOpenApiConfig()))
-      try {
-        let request = (new SpireQueryBuilder())
-          .where('merchantid', '=', this.npc.merchant_id)
-          .get()
-
-        request.id = this.npc.merchant_id
-
-        // @ts-ignore
-        const result = await api.listMerchantlists(request)
-        if (result.status === 200 && result.data) {
-
-          let merchantItems = []
-          for (let listitem of result.data) {
-            merchantItems.push(
-              {
-                item: (await Items.getItem(listitem.item)),
-                entry: listitem
-              }
-            )
+      let merchantItems = []
+      for (let listitem of this.npc.merchantlists) {
+        merchantItems.push(
+          {
+            item: (await Items.getItem(listitem.item)),
+            entry: listitem
           }
-
-          this.merchantitems = merchantItems
-        }
-      } catch (err) {
-        console.log("items.ts %s", err)
+        )
       }
+      this.merchantitems = merchantItems
     }
   },
   props: {
