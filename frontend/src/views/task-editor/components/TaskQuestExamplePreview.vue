@@ -50,7 +50,7 @@
           class="ml-0 code-display pl-0"
           style="width: 100%; display: inline-block; padding-top: 10px !important; padding-bottom: 10px !important; border-radius: 5px"
         >
-          <div :title="'client:AssignTask(int task, int npc_id);'" v-b-tooltip.hover.v-dark.left>
+          <div :title="'client:AssignTask(int task);'" v-b-tooltip.hover.v-dark.left>
             <button
               class='btn btn-sm btn-outline-warning mb-1 mr-2'
               @click="copyToClip(`client:AssignTask(${task.id});`)"
@@ -60,7 +60,7 @@
             </button>
             <span style="color: rgb(156, 220, 254);">client:</span>AssignTask({{ task.id }});
           </div>
-          <div :title="'client:task_selector({task1, task2, task3, etc.});'" v-b-tooltip.hover.v-dark.left>
+          <div :title="'client:TaskSelector({task1, task2, task3, etc.});'" v-b-tooltip.hover.v-dark.left>
             <button
               class='btn btn-sm btn-outline-warning mb-1 mr-2'
               @click="copyToClip(`client:TaskSelector({${task.id}});`)"
@@ -68,7 +68,7 @@
             >
               <i class="fa fa-clipboard"></i>
             </button>
-            <span style="color: rgb(156, 220, 254);">client:</span>TaskSelector({ {{ task.id }} });
+            <span style="color: rgb(156, 220, 254);">client:</span>TaskSelector({{ buildLuaAssignTaskTable() }});
           </div>
         </div>
 
@@ -99,6 +99,10 @@ export default {
     }
   },
   methods: {
+    buildLuaAssignTaskTable() {
+      return `{${this.task.id}}`
+    },
+
     copyToClip(s) {
       ClipBoard.copyFromText(s)
 
