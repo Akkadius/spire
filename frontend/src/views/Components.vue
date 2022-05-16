@@ -566,6 +566,10 @@ export default {
 
     builder.includes(
       [
+        "NpcSpell.NpcSpellsEntries.SpellsNew",
+        "NpcFactions.NpcFactionEntries",
+        "NpcFactions",
+        "NpcEmotes",
         "Merchantlists",
         "Loottable.LoottableEntries.LootdropEntries.Item"
       ]
@@ -581,7 +585,6 @@ export default {
         query: builder.get()
       }
     )
-
 
     if (response.status === 200 && response.data && parseInt(response.data.length) > 0) {
       this.npcs = response.data

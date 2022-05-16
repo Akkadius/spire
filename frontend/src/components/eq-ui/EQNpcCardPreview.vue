@@ -148,7 +148,7 @@
     </div>
 
     <!-- Merchant -->
-    <div v-if="npc.merchant_id > 0">
+    <div v-if="npc.merchant_id > 0" class="mt-3">
       <!--      <div class="font-weight-bold mb-3">This NPC sells the following items</div>-->
 
       <!--      <div v-for="e in merchantitems">-->
@@ -201,8 +201,36 @@
 
     </div>
 
+    <!-- Casted Spells -->
+    <div v-if="npc.npc_spells_id > 0" class="mt-3">
+
+      <!-- Show if under max -->
+      <div v-if="castedSpells && (castedSpells.length < maxDataEntries || showCastedSpells)" class="fade-in">
+        <div class="font-weight-bold mb-3">This NPC casts the following spells ({{ commify(castedSpells.length) }}) ({{npc.npc_spell.name}})
+          <a href="javascript:void(0);" @click="showCastedSpells = false" v-if="castedSpells.length > maxDataEntries">hide</a>
+        </div>
+
+        <div v-for="e in castedSpells">
+          <spell-popover
+            :spell="e.spell"
+            :size="20"
+            :spell-name-length="25"
+            v-if="Object.keys(e.spell).length > 0 && e.spell"
+            class="mt-2"
+          />
+        </div>
+      </div>
+
+      <!-- Prompt if over max -->
+      <div v-if="castedSpells && (castedSpells.length > maxDataEntries && !showCastedSpells)" class="font-weight-bold">
+        This NPC casts ({{ commify(castedSpells.length) }}) spells, click <a href="javascript:void(0);" @click="showCastedSpells = true">here</a>
+        to view them all
+      </div>
+
+    </div>
+
     <!-- Loot -->
-    <div v-if="npc.loottable_id > 0">
+    <div v-if="npc.loottable_id > 0" class="mt-3">
 
       <!-- Show if under max -->
       <div v-if="loot && (loot.length < maxDataEntries || showLoot)" class="fade-in">
@@ -242,19 +270,26 @@ import {FLYMODE}                           from "../../app/constants/eq-flymode-
 import ItemPopover                         from "../ItemPopover";
 import {Items}                             from "../../app/items";
 import EqCashDisplay                       from "./EqCashDisplay";
+import SpellPopover                        from "../SpellPopover";
 
 export default {
   name: "EqNpcCardPreview",
-  components: { EqCashDisplay, ItemPopover, EqDebug },
+  components: { SpellPopover, EqCashDisplay, ItemPopover, EqDebug },
   data() {
     return {
       maxDataEntries: 10, // amount of results before collapsing
 
+      // loot
       showLoot: false, // when too many results shown, toggle
-      loot: {}, // loot data
+      loot: {}, // data
 
-      merchantitems: [],
+      // merchant
+      merchantitems: [], // data
       showMerchantItems: false, // when too many results shown, toggle
+
+      // spells
+      castedSpells: [], // data
+      showCastedSpells: false,  // when too many results shown, toggle
 
       // field display
       rows: [
@@ -547,6 +582,28 @@ export default {
       // sort alpha by name
       this.loot = lootItems.sort((a, b) => {
         return a.item.name.localeCompare(b.item.name);
+      });
+    }
+
+    // casted spells
+    if (this.npc.npc_spells_id > 0 && this.npc.npc_spell) {
+      let castedSpells = []
+      for (let e of this.npc.npc_spell.npc_spells_entries) {
+
+        // make sure we don't add the same spell twice for now
+        if (castedSpells.filter(f => f.spell.id === e.spells_new.id).length === 0) {
+          castedSpells.push(
+            {
+              spell: e.spells_new,
+            }
+          )
+        }
+
+      }
+
+      // sort alpha by name
+      this.castedSpells = castedSpells.sort((a, b) => {
+        return a.spell.name.localeCompare(b.spell.name);
       });
     }
   },

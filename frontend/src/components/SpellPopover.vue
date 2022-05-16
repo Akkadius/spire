@@ -2,7 +2,7 @@
   <div v-if="spell" class="fade-in">
 
     <div
-      :id="spell.id + '-popover'"
+      :id="spell.id + '-' + popoverId + '-popover'"
       style="display:inline-block"
     >
       <span
@@ -18,7 +18,7 @@
     </div>
 
     <b-popover
-      :target="spell.id + '-popover'"
+      :target="spell.id + '-' + popoverId + '-popover'"
       placement="auto"
       custom-class="no-bg"
       delay="1"
@@ -67,6 +67,7 @@ export default {
   },
   data() {
     return {
+      popoverId: Math.random().toString(16).slice(2),
       spellEffectInfo: [],
       spellData: {},
       sideLoadedSpellData: {},
