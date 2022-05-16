@@ -12,16 +12,15 @@ type NpcType struct {
 	Race                   uint16             `json:"race" gorm:"Column:race"`
 	Class                  uint8              `json:"class" gorm:"Column:class"`
 	Bodytype               int                `json:"bodytype" gorm:"Column:bodytype"`
-	Hp                     null.Int64         `json:"hp" gorm:"Column:hp"`
-	Mana                   null.Int64         `json:"mana" gorm:"Column:mana"`
+	Hp                     int                `json:"hp" gorm:"Column:hp"`
+	Mana                   int                `json:"mana" gorm:"Column:mana"`
 	Gender                 uint8              `json:"gender" gorm:"Column:gender"`
 	Texture                uint8              `json:"texture" gorm:"Column:texture"`
 	Helmtexture            uint8              `json:"helmtexture" gorm:"Column:helmtexture"`
 	Herosforgemodel        int                `json:"herosforgemodel" gorm:"Column:herosforgemodel"`
 	Size                   float32            `json:"size" gorm:"Column:size"`
-	HpRegenRate            null.Int64         `json:"hp_regen_rate" gorm:"Column:hp_regen_rate"`
-	HpRegenPerSecond       null.Int64         `json:"hp_regen_per_second" gorm:"Column:hp_regen_per_second"`
-	ManaRegenRate          null.Int64         `json:"mana_regen_rate" gorm:"Column:mana_regen_rate"`
+	HpRegenRate            uint               `json:"hp_regen_rate" gorm:"Column:hp_regen_rate"`
+	ManaRegenRate          uint               `json:"mana_regen_rate" gorm:"Column:mana_regen_rate"`
 	LoottableId            uint               `json:"loottable_id" gorm:"Column:loottable_id"`
 	MerchantId             uint               `json:"merchant_id" gorm:"Column:merchant_id"`
 	AltCurrencyId          uint               `json:"alt_currency_id" gorm:"Column:alt_currency_id"`
@@ -196,6 +195,57 @@ func (NpcType) Relationships() []string {
 		"NpcFactions.NpcFactionEntries",
 		"NpcSpells",
 		"NpcSpells.NpcSpellsEntries",
+		"NpcSpells.NpcSpellsEntries.SpellsNew",
+		"NpcSpells.NpcSpellsEntries.SpellsNew.Aura",
+		"NpcSpells.NpcSpellsEntries.SpellsNew.Aura.SpellsNew",
+		"NpcSpells.NpcSpellsEntries.SpellsNew.BlockedSpells",
+		"NpcSpells.NpcSpellsEntries.SpellsNew.Damageshieldtypes",
+		"NpcSpells.NpcSpellsEntries.SpellsNew.Items",
+		"NpcSpells.NpcSpellsEntries.SpellsNew.Items.AlternateCurrencies",
+		"NpcSpells.NpcSpellsEntries.SpellsNew.Items.CharacterCorpseItems",
+		"NpcSpells.NpcSpellsEntries.SpellsNew.Items.DiscoveredItems",
+		"NpcSpells.NpcSpellsEntries.SpellsNew.Items.Doors",
+		"NpcSpells.NpcSpellsEntries.SpellsNew.Items.Doors.Item",
+		"NpcSpells.NpcSpellsEntries.SpellsNew.Items.Fishings",
+		"NpcSpells.NpcSpellsEntries.SpellsNew.Items.Fishings.Item",
+		"NpcSpells.NpcSpellsEntries.SpellsNew.Items.Fishings.NpcType",
+		"NpcSpells.NpcSpellsEntries.SpellsNew.Items.Fishings.Zone",
+		"NpcSpells.NpcSpellsEntries.SpellsNew.Items.Forages",
+		"NpcSpells.NpcSpellsEntries.SpellsNew.Items.Forages.Item",
+		"NpcSpells.NpcSpellsEntries.SpellsNew.Items.Forages.Zone",
+		"NpcSpells.NpcSpellsEntries.SpellsNew.Items.GroundSpawns",
+		"NpcSpells.NpcSpellsEntries.SpellsNew.Items.GroundSpawns.Zone",
+		"NpcSpells.NpcSpellsEntries.SpellsNew.Items.ItemTicks",
+		"NpcSpells.NpcSpellsEntries.SpellsNew.Items.Keyrings",
+		"NpcSpells.NpcSpellsEntries.SpellsNew.Items.LootdropEntries",
+		"NpcSpells.NpcSpellsEntries.SpellsNew.Items.LootdropEntries.Item",
+		"NpcSpells.NpcSpellsEntries.SpellsNew.Items.LootdropEntries.Lootdrop",
+		"NpcSpells.NpcSpellsEntries.SpellsNew.Items.LootdropEntries.Lootdrop.LootdropEntries",
+		"NpcSpells.NpcSpellsEntries.SpellsNew.Items.LootdropEntries.Lootdrop.LoottableEntries",
+		"NpcSpells.NpcSpellsEntries.SpellsNew.Items.LootdropEntries.Lootdrop.LoottableEntries.LootdropEntries",
+		"NpcSpells.NpcSpellsEntries.SpellsNew.Items.LootdropEntries.Lootdrop.LoottableEntries.Loottable",
+		"NpcSpells.NpcSpellsEntries.SpellsNew.Items.LootdropEntries.Lootdrop.LoottableEntries.Loottable.LoottableEntries",
+		"NpcSpells.NpcSpellsEntries.SpellsNew.Items.LootdropEntries.Lootdrop.LoottableEntries.Loottable.NpcTypes",
+		"NpcSpells.NpcSpellsEntries.SpellsNew.Items.Merchantlists",
+		"NpcSpells.NpcSpellsEntries.SpellsNew.Items.Merchantlists.NpcType",
+		"NpcSpells.NpcSpellsEntries.SpellsNew.Items.ObjectContents",
+		"NpcSpells.NpcSpellsEntries.SpellsNew.Items.Objects",
+		"NpcSpells.NpcSpellsEntries.SpellsNew.Items.Objects.Item",
+		"NpcSpells.NpcSpellsEntries.SpellsNew.Items.Objects.Zone",
+		"NpcSpells.NpcSpellsEntries.SpellsNew.Items.StartingItems",
+		"NpcSpells.NpcSpellsEntries.SpellsNew.Items.StartingItems.Item",
+		"NpcSpells.NpcSpellsEntries.SpellsNew.Items.StartingItems.Zone",
+		"NpcSpells.NpcSpellsEntries.SpellsNew.Items.Tasks",
+		"NpcSpells.NpcSpellsEntries.SpellsNew.Items.Tasks.TaskActivities",
+		"NpcSpells.NpcSpellsEntries.SpellsNew.Items.Tasks.TaskActivities.Goallists",
+		"NpcSpells.NpcSpellsEntries.SpellsNew.Items.Tasks.TaskActivities.NpcType",
+		"NpcSpells.NpcSpellsEntries.SpellsNew.Items.Tasks.Tasksets",
+		"NpcSpells.NpcSpellsEntries.SpellsNew.Items.TradeskillRecipeEntries",
+		"NpcSpells.NpcSpellsEntries.SpellsNew.Items.TradeskillRecipeEntries.TradeskillRecipe",
+		"NpcSpells.NpcSpellsEntries.SpellsNew.Items.TributeLevels",
+		"NpcSpells.NpcSpellsEntries.SpellsNew.NpcSpellsEntries",
+		"NpcSpells.NpcSpellsEntries.SpellsNew.SpellBuckets",
+		"NpcSpells.NpcSpellsEntries.SpellsNew.SpellGlobals",
 		"NpcTypesTint",
 		"Spawnentries",
 		"Spawnentries.NpcType",

@@ -116,6 +116,8 @@ npc_spells:
   - 1-* id->npc_spells_entries:npc_spells_id
 npc_spells_effects:
   - 1-* id->npc_spells_effects_entries:npc_spells_effects_id
+npc_spells_entries:
+  - 1-1 spellid->spells_new:id
 npc_types:
   - 1-1 alt_currency_id->alternate_currency:id
   - 1-* merchant_id->merchantlist:merchantid
