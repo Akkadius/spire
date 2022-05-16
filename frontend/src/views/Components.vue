@@ -567,7 +567,7 @@ export default {
     builder.includes(
       [
         "NpcSpell.NpcSpellsEntries.SpellsNew",
-        "NpcFactions.NpcFactionEntries",
+        "NpcFactions.NpcFactionEntries.FactionList",
         "NpcFactions",
         "NpcEmotes",
         "Merchantlists",

@@ -112,6 +112,8 @@ merchantlist:
   - 1-1 merchantid->npc_types:merchant_id
 npc_faction:
   - 1-* id->npc_faction_entries:npc_faction_id
+npc_faction_entries:
+  - 1-1 faction_id->faction_list:id
 npc_spells:
   - 1-* id->npc_spells_entries:npc_spells_id
 npc_spells_effects:

@@ -19,6 +19,7 @@ func (NpcFaction) TableName() string {
 func (NpcFaction) Relationships() []string {
     return []string{
 		"NpcFactionEntries",
+		"NpcFactionEntries.FactionList",
 	}
 }
 

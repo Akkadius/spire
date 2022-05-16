@@ -75,6 +75,7 @@ func (Spawngroup) Relationships() []string {
 		"Spawn2.Spawnentries.NpcType.NpcEmotes",
 		"Spawn2.Spawnentries.NpcType.NpcFactions",
 		"Spawn2.Spawnentries.NpcType.NpcFactions.NpcFactionEntries",
+		"Spawn2.Spawnentries.NpcType.NpcFactions.NpcFactionEntries.FactionList",
 		"Spawn2.Spawnentries.NpcType.NpcSpell",
 		"Spawn2.Spawnentries.NpcType.NpcSpell.NpcSpellsEntries",
 		"Spawn2.Spawnentries.NpcType.NpcSpell.NpcSpellsEntries.SpellsNew",

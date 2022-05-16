@@ -82,6 +82,7 @@ func (Task) Relationships() []string {
 		"TaskActivities.NpcType.NpcEmotes",
 		"TaskActivities.NpcType.NpcFactions",
 		"TaskActivities.NpcType.NpcFactions.NpcFactionEntries",
+		"TaskActivities.NpcType.NpcFactions.NpcFactionEntries.FactionList",
 		"TaskActivities.NpcType.NpcSpell",
 		"TaskActivities.NpcType.NpcSpell.NpcSpellsEntries",
 		"TaskActivities.NpcType.NpcSpell.NpcSpellsEntries.SpellsNew",

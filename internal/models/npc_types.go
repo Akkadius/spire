@@ -193,6 +193,7 @@ func (NpcType) Relationships() []string {
 		"NpcEmotes",
 		"NpcFactions",
 		"NpcFactions.NpcFactionEntries",
+		"NpcFactions.NpcFactionEntries.FactionList",
 		"NpcSpell",
 		"NpcSpell.NpcSpellsEntries",
 		"NpcSpell.NpcSpellsEntries.SpellsNew",

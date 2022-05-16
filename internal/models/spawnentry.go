@@ -73,6 +73,7 @@ func (Spawnentry) Relationships() []string {
 		"NpcType.NpcEmotes",
 		"NpcType.NpcFactions",
 		"NpcType.NpcFactions.NpcFactionEntries",
+		"NpcType.NpcFactions.NpcFactionEntries.FactionList",
 		"NpcType.NpcSpell",
 		"NpcType.NpcSpell.NpcSpellsEntries",
 		"NpcType.NpcSpell.NpcSpellsEntries.SpellsNew",
