@@ -1,6 +1,6 @@
 <template>
   <div v-if="item">
-    <div :id="item.id + '-popover'" style="display:inline-block; ">
+    <div :id="item.id + '-' + popoverId + '-popover'" style="display:inline-block; ">
       <span
         :class="'fade-in item-' + item.icon + (this.size === 'regular' ? '' : '-sm')" :title="item.icon"
         style="display: inline-block"
@@ -13,7 +13,7 @@
     </div>
 
     <b-popover
-      :target="item.id + '-popover'"
+      :target="item.id + '-' + popoverId + '-popover'"
       placement="auto"
       custom-class="no-bg"
       delay="1"
@@ -23,7 +23,7 @@
       <eq-window style="margin-right: 10px; width: auto; height: 90%">
         <eq-item-card-preview
           :item-data="item"
-          :show-related-data="true"
+          :show-related-data="showRelatedData"
         />
       </eq-window>
     </b-popover>
@@ -49,6 +49,11 @@ export default {
       type: String,
       required: false,
       default: ""
+    },
+    showRelatedData: {
+      type: Boolean,
+      required: false,
+      default: false
     }
   },
   watch: {
@@ -60,6 +65,7 @@ export default {
   },
   data() {
     return {
+      popoverId: Math.random().toString(16).slice(2),
       itemEffectInfo: [],
       itemData: {},
       sideLoadedItemData: {},
