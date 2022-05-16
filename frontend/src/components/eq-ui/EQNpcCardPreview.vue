@@ -172,18 +172,23 @@
           <a href="javascript:void(0);" @click="showMerchantItems = false" v-if="merchantitems.length > maxDataEntries">hide</a>
         </div>
 
-        <div v-for="e in merchantitems">
-          <item-popover
-            class="d-inline-block"
-            :item="e.item"
-            v-if="Object.keys(e.item).length > 0 && e.item"
-            size="sm"
-          />
+        <div v-for="e in merchantitems" class="row">
+          <div class="col-5">
+            <item-popover
+              class="d-inline-block"
+              :item="e.item"
+              v-if="Object.keys(e.item).length > 0 && e.item"
+              size="sm"
+            />
+          </div>
 
-          <eq-cash-display
-            class="d-inline-block ml-1"
-            :price="e.item.price"
-          />
+          <div class="col-3">
+            <eq-cash-display
+              class="d-inline-block ml-1"
+              :price="e.item.price"
+            />
+          </div>
+
         </div>
       </div>
 
