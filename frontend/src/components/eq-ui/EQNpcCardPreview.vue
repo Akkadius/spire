@@ -132,23 +132,38 @@
       </div>
     </div>
 
+    <!-- Special Abilities -->
+    <div class="mt-3" v-if="npc.special_abilities.length > 0">
+      <div class="font-weight-bold mb-3">
+        This NPC has the following special abilities ({{ parseSpecialAbilities(npc.special_abilities).length }})
+      </div>
+
+      <ul style="padding-left: 20px;">
+        <li
+          style="display: list-item; list-style-type: circle;"
+          v-for="a in parseSpecialAbilities(npc.special_abilities).sort((a, b) => a.localeCompare(b))">
+          {{ a }}
+        </li>
+      </ul>
+    </div>
+
     <!-- Merchant -->
     <div v-if="npc.merchant_id > 0">
-<!--      <div class="font-weight-bold mb-3">This NPC sells the following items</div>-->
+      <!--      <div class="font-weight-bold mb-3">This NPC sells the following items</div>-->
 
-<!--      <div v-for="e in merchantitems">-->
-<!--        <item-popover-->
-<!--          class="d-inline-block"-->
-<!--          :item="e.item"-->
-<!--          v-if="Object.keys(e.item).length > 0 && e.item"-->
-<!--          size="sm"-->
-<!--        />-->
+      <!--      <div v-for="e in merchantitems">-->
+      <!--        <item-popover-->
+      <!--          class="d-inline-block"-->
+      <!--          :item="e.item"-->
+      <!--          v-if="Object.keys(e.item).length > 0 && e.item"-->
+      <!--          size="sm"-->
+      <!--        />-->
 
-<!--        <eq-cash-display-->
-<!--          class="d-inline-block ml-1"-->
-<!--          :price="e.item.price"-->
-<!--        />-->
-<!--      </div>-->
+      <!--        <eq-cash-display-->
+      <!--          class="d-inline-block ml-1"-->
+      <!--          :price="e.item.price"-->
+      <!--        />-->
+      <!--      </div>-->
 
 
       <!-- Show if under max -->
@@ -173,13 +188,20 @@
       </div>
 
       <!-- Prompt if over max -->
-      <div v-if="merchantitems && (merchantitems.length > maxDataEntries && !showMerchantItems)" class="font-weight-bold">
-        This NPC sells ({{ commify(merchantitems.length) }}) items, click <a href="javascript:void(0);" @click="showMerchantItems = true">here</a>
+      <div
+        v-if="merchantitems && (merchantitems.length > maxDataEntries && !showMerchantItems)"
+        class="font-weight-bold"
+      >
+        This NPC sells ({{ commify(merchantitems.length) }}) items, click <a
+        href="javascript:void(0);"
+        @click="showMerchantItems = true"
+      >here</a>
         to view them all
       </div>
 
     </div>
 
+    <!-- Loot -->
     <div v-if="npc.loottable_id > 0">
 
       <!-- Show if under max -->
@@ -315,7 +337,7 @@ export default {
               },
               {
                 icon: '',
-                label: 'See Invisible Undead',
+                label: 'See Invis Undead',
                 value: this.npc['see_invis_undead'] ? "Yes" : "No",
                 showIf: this.npc['see_invis_undead'] > 0
               },
@@ -536,6 +558,9 @@ export default {
     },
   },
   methods: {
+    parseSpecialAbilities(abilities) {
+      return Npcs.specialAbilitiesToHuman(abilities)
+    },
     commify(x) {
       return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
     },
