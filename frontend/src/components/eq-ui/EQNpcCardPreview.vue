@@ -141,7 +141,8 @@
       <ul style="padding-left: 20px;">
         <li
           style="display: list-item; list-style-type: circle;"
-          v-for="a in parseSpecialAbilities(npc.special_abilities).sort((a, b) => a.localeCompare(b))">
+          v-for="a in parseSpecialAbilities(npc.special_abilities).sort((a, b) => a.localeCompare(b))"
+        >
           {{ a }}
         </li>
       </ul>
@@ -167,7 +168,7 @@
 
 
       <!-- Show if under max -->
-      <div v-if="merchantitems && (merchantitems.length < maxDataEntries || showMerchantItems)" class="fade-in">
+      <div v-if="merchantitems && merchantitems.length > 0 && (merchantitems.length < maxDataEntries || showMerchantItems)" class="fade-in">
         <div class="font-weight-bold mb-3">This NPC sells the following items ({{ commify(merchantitems.length) }})
           <a href="javascript:void(0);" @click="showMerchantItems = false" v-if="merchantitems.length > maxDataEntries">hide</a>
         </div>
@@ -194,7 +195,7 @@
 
       <!-- Prompt if over max -->
       <div
-        v-if="merchantitems && (merchantitems.length > maxDataEntries && !showMerchantItems)"
+        v-if="merchantitems && merchantitems.length > 0 &&  (merchantitems.length > maxDataEntries && !showMerchantItems)"
         class="font-weight-bold"
       >
         This NPC sells ({{ commify(merchantitems.length) }}) items, click <a
@@ -210,8 +211,12 @@
     <div v-if="npc.npc_spells_id > 0" class="mt-3">
 
       <!-- Show if under max -->
-      <div v-if="castedSpells && (castedSpells.length < maxDataEntries || showCastedSpells)" class="fade-in">
-        <div class="font-weight-bold mb-3">This NPC casts the following spells ({{ commify(castedSpells.length) }}) ({{npc.npc_spell.name}})
+      <div
+        v-if="castedSpells && castedSpells.length > 0 && (castedSpells.length < maxDataEntries || showCastedSpells)"
+        class="fade-in"
+      >
+        <div class="font-weight-bold mb-3">This NPC casts the following spells ({{ commify(castedSpells.length) }})
+          ({{ npc.npc_spell.name }})
           <a href="javascript:void(0);" @click="showCastedSpells = false" v-if="castedSpells.length > maxDataEntries">hide</a>
         </div>
 
@@ -227,9 +232,55 @@
       </div>
 
       <!-- Prompt if over max -->
-      <div v-if="castedSpells && (castedSpells.length > maxDataEntries && !showCastedSpells)" class="font-weight-bold">
-        This NPC casts ({{ commify(castedSpells.length) }}) spells, click <a href="javascript:void(0);" @click="showCastedSpells = true">here</a>
+      <div
+        v-if="castedSpells && castedSpells.length > 0 && (castedSpells.length > maxDataEntries && !showCastedSpells)"
+        class="font-weight-bold"
+      >
+        This NPC casts ({{ commify(castedSpells.length) }}) spells, click <a
+        href="javascript:void(0);"
+        @click="showCastedSpells = true"
+      >here</a>
         to view them all
+      </div>
+
+    </div>
+
+    <!-- Faction -->
+    <div v-if="npc.npc_spells_id > 0" class="mt-3">
+
+      <!-- Show if under max -->
+      <div
+        v-if="factionHits && factionHits.length > 0 && (factionHits.length < maxDataEntries || showFactionHits)"
+        class="fade-in"
+      >
+        <div class="font-weight-bold mb-3">This NPC has the following faction hits ({{ commify(factionHits.length) }})
+          <a
+            href="javascript:void(0);"
+            @click="showFactionHits = false"
+            v-if="factionHits.length > maxDataEntries"
+          >hide</a>
+        </div>
+
+        <ul style="padding-left: 20px;">
+          <li
+            style="display: list-item; list-style-type: circle;"
+            v-for="e in factionHits"
+          >
+            {{ e.name }} ({{ e.hitValue }})
+          </li>
+        </ul>
+
+      </div>
+
+      <!-- Prompt if over max -->
+      <div
+        v-if="factionHits && factionHits.length > 0 && (factionHits.length > maxDataEntries && !showFactionHits)"
+        class="font-weight-bold"
+      >
+        This NPC has ({{ commify(factionHits.length) }}) faction hits, click <a
+        href="javascript:void(0);"
+        @click="showFactionHits = true"
+      >here</a>to view them all
       </div>
 
     </div>
@@ -238,7 +289,7 @@
     <div v-if="npc.loottable_id > 0" class="mt-3">
 
       <!-- Show if under max -->
-      <div v-if="loot && (loot.length < maxDataEntries || showLoot)" class="fade-in">
+      <div v-if="loot && loot.length > 0 && (loot.length < maxDataEntries || showLoot)" class="fade-in">
         <div class="font-weight-bold mb-3">This NPC drops the following items ({{ commify(loot.length) }})
           <a href="javascript:void(0);" @click="showLoot = false" v-if="loot.length > maxDataEntries">hide</a>
         </div>
@@ -254,7 +305,7 @@
       </div>
 
       <!-- Prompt if over max -->
-      <div v-if="loot && (loot.length > maxDataEntries && !showLoot)" class="font-weight-bold">
+      <div v-if="loot && loot.length > 0 && (loot.length > maxDataEntries && !showLoot)" class="font-weight-bold">
         This NPC drops ({{ commify(loot.length) }}) items, click <a href="javascript:void(0);" @click="showLoot = true">here</a>
         to view them all
       </div>
@@ -295,6 +346,10 @@ export default {
       // spells
       castedSpells: [], // data
       showCastedSpells: false,  // when too many results shown, toggle
+
+      // faction hits
+      factionHits: [], // data
+      showFactionHits: false,  // when too many results shown, toggle
 
       // field display
       rows: [
@@ -610,6 +665,31 @@ export default {
       this.castedSpells = castedSpells.sort((a, b) => {
         return a.spell.name.localeCompare(b.spell.name);
       });
+    }
+
+    // faction
+    if (this.npc.npc_faction_id > 0 && this.npc.npc_factions) {
+      let factionHits = []
+      for (let n of this.npc.npc_factions) {
+        for (let f of n.npc_faction_entries) {
+
+          // make sure we don't add the same spell twice for now
+          if (factionHits.filter(e => f.name === e.name).length === 0) {
+            factionHits.push(
+              {
+                name: f.faction_list.name,
+                hitValue: f.value,
+              }
+            )
+          }
+        }
+      }
+
+      // sort alpha by name
+      this.factionHits = factionHits.sort((a, b) => {
+        return a.name.localeCompare(b.name);
+      });
+
     }
   },
   props: {
