@@ -1,6 +1,6 @@
 <template>
   <div>
-    <eq-window-simple style="margin-top: 20px;" class="p-1">
+    <eq-window-simple style="" class="p-1">
       <div
         class="row text-center justify-content-center mb-3"
         style="margin: 0 auto;"

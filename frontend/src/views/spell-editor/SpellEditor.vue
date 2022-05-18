@@ -1,294 +1,292 @@
 <template>
-  <div class="container-fluid">
-    <div class="panel-body">
-      <div class="panel panel-default">
-        <div class="row">
-          <div class="col-xl-7 col-lg-12">
-            <eq-window style="margin-top: 30px" title="Edit Spell">
+  <content-area>
+    <div class="row">
+      <div class="col-xl-7 col-lg-12">
+        <eq-window style="" title="Edit Spell">
 
-              <div
-                v-if="notification"
-                :class="'text-center mt-2 btn-xs eq-header fade-in'"
-                style="width: 100%; font-size: 30px"
-                @click="notification = ''"
-              >
-                <i class="ra ra-book mr-1"></i>
-                {{ notification }}
-              </div>
+          <div
+            v-if="notification"
+            :class="'text-center mt-2 btn-xs eq-header fade-in'"
+            style="width: 100%; font-size: 30px"
+            @click="notification = ''"
+          >
+            <i class="ra ra-book mr-1"></i>
+            {{ notification }}
+          </div>
 
-              <b-alert show dismissable variant="danger" v-if="error" class="mt-2">
-                <i class="fa fa-warning"></i> {{ error }}
-              </b-alert>
+          <b-alert show dismissable variant="danger" v-if="error" class="mt-2">
+            <i class="fa fa-warning"></i> {{ error }}
+          </b-alert>
 
-              <!-- Loader -->
-              <app-loader :is-loading="!spell" padding="5"/>
-              <div v-if="!spell" class="mt-3 text-center">
-                <loader-fake-progress/>
-              </div>
+          <!-- Loader -->
+          <app-loader :is-loading="!spell" padding="5"/>
+          <div v-if="!spell" class="mt-3 text-center">
+            <loader-fake-progress/>
+          </div>
 
-              <eq-tabs
-                v-if="spell && spell.id >= 0"
-                id="spell-edit-card"
-                class="spell-edit-card"
-                @mouseover.native="previewSpell(false)"
-              >
-                <eq-tab
-                  name="Basic"
-                  :selected="zeroStateSelected"
+          <eq-tabs
+            v-if="spell && spell.id >= 0"
+            id="spell-edit-card"
+            class="spell-edit-card"
+            @mouseover.native="previewSpell(false)"
+          >
+            <eq-tab
+              name="Basic"
+              :selected="zeroStateSelected"
+            >
+              <div class="row">
+                <div
+                  class="col-2"
+                  @click="drawFreeIdSelector(true)"
+                  @mouseover="drawFreeIdSelector(false)"
                 >
-                  <div class="row">
-                    <div
-                      class="col-2"
-                      @click="drawFreeIdSelector(true)"
-                      @mouseover="drawFreeIdSelector(false)"
-                    >
-                      Id
-                      <b-form-input id="id" v-model.number="spell.id"/>
-                    </div>
-                    <div class="col-7">
-                      Name
-                      <b-form-input
-                        :value="spell.name" @change="v => spell.name = v"
-                      />
-                    </div>
+                  Id
+                  <b-form-input id="id" v-model.number="spell.id"/>
+                </div>
+                <div class="col-7">
+                  Name
+                  <b-form-input
+                    :value="spell.name" @change="v => spell.name = v"
+                  />
+                </div>
 
-                    <div
-                      class="col-2"
-                      @click="drawIconSelector(true)"
-                    >
-                      Icon
-                      <b-form-input id="icon" v-model.number="spell.new_icon"/>
-                    </div>
+                <div
+                  class="col-2"
+                  @click="drawIconSelector(true)"
+                >
+                  Icon
+                  <b-form-input id="icon" v-model.number="spell.new_icon"/>
+                </div>
 
-                    <div
-                      class="col-1" v-if="spell.new_icon > 0"
-                      style="margin-top: 7px"
-                      @click="drawIconSelector(true)"
-                    >
+                <div
+                  class="col-1" v-if="spell.new_icon > 0"
+                  style="margin-top: 7px"
+                  @click="drawIconSelector(true)"
+                >
 
                       <span
                         :style="'width: 40px; height: 40px; border: 1px solid ' + getTargetTypeColor(this.spell['targettype']) + '; border-radius: 7px; display: inline-block'"
                         :class="'spell-' + spell.new_icon + '-40 mt-2'"
                       />
 
-                    </div>
+                </div>
 
-                  </div>
+              </div>
 
-                  <div class="row">
-                    <div class="col-6 pl-0 mr-0 mt-4 text-center">
-                      <spell-class-selector :spell="spell" @input="spell = $event"/>
+              <div class="row">
+                <div class="col-6 pl-0 mr-0 mt-4 text-center">
+                  <spell-class-selector :spell="spell" @input="spell = $event"/>
 
-                      <b-button
-                        @click="none()"
-                        size="sm"
-                        variant="outline-warning"
-                        class="mt-1"
-                      >
-                        <i class="fa fa-remove"></i> None
-                      </b-button>
-                    </div>
-                    <div class="col-6">
-
-                      <div
-                        class="row"
-                        @click="drawSpellAnimationSelector(true)"
-                      >
-
-                        <div class="col-12 text-center">
-                          Spell Animation
-
-                          <spell-animation-preview
-                            class="mt-1"
-                            :id="spell.spellanim"
-                          />
-                          <b-form-input id="spellanim" v-model.number="spell.spellanim" class="col-12 mt-3"/>
-                        </div>
-
-                      </div>
-
-                    </div>
-                  </div>
-
-                  <div class="row">
-                    <div class="col-6">
-                      <div class="row">
-                        <div class="col-6">
-                          You Cast
-                          <b-form-input
-                            :value="spell.you_cast" @change="v => spell.you_cast = v"
-                          />
-                        </div>
-                        <div class="col-6">
-                          Other Casts
-                          <b-form-input
-                            :value="spell.other_casts" @change="v => spell.other_casts = v"
-                          />
-                        </div>
-                      </div>
-
-                      <div class="row">
-                        <div class="col-6">
-                          Cast On You
-                          <b-form-input
-                            :value="spell.cast_on_you" @change="v => spell.cast_on_you = v"
-                          />
-                        </div>
-                        <div class="col-6">
-                          Cast On Other
-                          <b-form-input
-                            :value="spell.cast_on_other" @change="v => spell.cast_on_other = v"
-                          />
-                        </div>
-                      </div>
-
-                      <div class="row">
-                        <div class="col-6">
-                          Spell Fades
-                          <b-form-input
-                            :value="spell.spell_fades" @change="v => spell.spell_fades = v"
-                          />
-                        </div>
-                        <div class="col-6">
-                          ID File
-                          <b-form-input
-                            :value="spell.player_1" @change="v => spell.player_1 = v"
-                          />
-                        </div>
-                      </div>
-                    </div>
-                    <div
-                      class="col-6"
-                      style="text-align: center"
-                    >
-
-                      <div class="row">
-
-                        <div
-                          class="col-6 text-center"
-                          @click="castingAnimField = 'casting_anim'; drawCastingAnimationSelector()"
-                        >
-                          Casting Animation
-
-                          <spell-casting-animation-preview :id="spell.casting_anim"/>
-                          <b-form-input id="casting_anim" v-model.number="spell.casting_anim" class="col-12"/>
-                        </div>
-
-                        <div
-                          class="col-6 text-center"
-                          @click="castingAnimField = 'target_anim'; drawCastingAnimationSelector()"
-                        >
-                          Target Animation
-
-                          <spell-casting-animation-preview :id="spell.target_anim"/>
-                          <b-form-input id="target_anim" v-model.number="spell.target_anim" class="col-12"/>
-                        </div>
-
-                      </div>
-
-                    </div>
-                  </div>
-
-                </eq-tab>
-
-                <eq-tab name="Effects" class="effect-tab">
-
-                  <div class="mb-3">
-                    <div class="row">
-                      <div class="col-12 text-center">
-                        <div class="btn-group text-center mb-3" role="group">
-                          <b-button size="sm" variant="warning">Effect Slots</b-button>
-                          <b-button
-                            v-for="i in 12"
-                            :key="i"
-                            size="sm"
-                            :disabled="spell['effectid_' + i] !== 254"
-                            :variant="(visibleEffectSlots[i] ? 'warning' : 'outline-warning')"
-                            @click="toggleVisibleEffectSlot(i)"
-                          >{{ i }}
-                          </b-button>
-                        </div>
-                      </div>
-                    </div>
-
-                    <b-input-group style="height: 30px; margin-bottom: 8px">
-                      <template #prepend>
-                        <b-input-group-text
-                          style="width: 40px; "
-                        >#
-                        </b-input-group-text>
-                      </template>
-
-                      <b-form-input placeholder="Effect" disabled style="width: 150px"/>
-                      <b-form-input placeholder="Base" disabled/>
-                      <b-form-input placeholder="Limit" disabled/>
-                      <b-form-input placeholder="Max" disabled/>
-                      <b-form-input placeholder="Formula" disabled/>
-                    </b-input-group>
-
-                    <b-input-group
-                      v-for="i in 12"
-                      :key="i"
-                      style="margin-top: -1px"
-                      v-if="visibleEffectSlots[i]"
-                    >
-                      <template #prepend>
-                        <b-input-group-text style="width: 40px; ">{{ i }}</b-input-group-text>
-                      </template>
-
-                      <b-form-select
-                        :id="'effectid_' + i"
-                        @mouseover.native="drawSpaDetailPane(spell['effectid_' + i], i)"
-                        @change="getSpaDefaultValues(spell['effectid_' + i], i); drawSpaDetailPane(spell['effectid_' + i], i)"
-                        v-model.number="spell['effectid_' + i]"
-                        style="width: 150px"
-                      >
-                        <b-form-select-option
-                          v-for="(effect, id) in DB_SPA"
-                          :key="id"
-                          :value="parseInt(id)"
-                        >{{ id }}) {{ effect }}
-                        </b-form-select-option>
-                      </b-form-select>
-
-                      <b-form-input
-                        :id="'effect_base_value_' + i"
-                        v-model.number="spell['effect_base_value_' + i]"
-                        :class="getSpaSpellHighlights(spell['effectid_' + i], 'base')"
-                        @click="processSpaFieldAction(i, spell['effectid_' + i], 'base')"
-                      />
-                      <b-form-input
-                        :id="'effect_limit_value_' + i"
-                        v-model.number="spell['effect_limit_value_' + i]"
-                        :class="getSpaSpellHighlights(spell['effectid_' + i], 'limit')"
-                        @click="processSpaFieldAction(i, spell['effectid_' + i], 'limit')"
-                      />
-                      <b-form-input
-                        :id="'max_' + i"
-                        v-model.number="spell['max_' + i]"
-                        :class="getSpaSpellHighlights(spell['effectid_' + i], 'max')"
-                        @click="processSpaFieldAction(i, spell['effectid_' + i], 'max')"
-                      />
-
-                      <b-form-select
-                        v-model.number="spell['formula_' + i]"
-                        :id="'formula_' + i"
-                      >
-                        <option
-                          v-for="(description, index) in BASE_VALUE_FORMULAS"
-                          :key="index"
-                          :value="parseInt(index)"
-                        >
-                          {{ index }}) {{ description }}
-                        </option>
-                      </b-form-select>
-
-                    </b-input-group>
-
-                  </div>
+                  <b-button
+                    @click="none()"
+                    size="sm"
+                    variant="outline-warning"
+                    class="mt-1"
+                  >
+                    <i class="fa fa-remove"></i> None
+                  </b-button>
+                </div>
+                <div class="col-6">
 
                   <div
-                    class="row minified-inputs fade-in" v-for="field in
+                    class="row"
+                    @click="drawSpellAnimationSelector(true)"
+                  >
+
+                    <div class="col-12 text-center">
+                      Spell Animation
+
+                      <spell-animation-preview
+                        class="mt-1"
+                        :id="spell.spellanim"
+                      />
+                      <b-form-input id="spellanim" v-model.number="spell.spellanim" class="col-12 mt-3"/>
+                    </div>
+
+                  </div>
+
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col-6">
+                  <div class="row">
+                    <div class="col-6">
+                      You Cast
+                      <b-form-input
+                        :value="spell.you_cast" @change="v => spell.you_cast = v"
+                      />
+                    </div>
+                    <div class="col-6">
+                      Other Casts
+                      <b-form-input
+                        :value="spell.other_casts" @change="v => spell.other_casts = v"
+                      />
+                    </div>
+                  </div>
+
+                  <div class="row">
+                    <div class="col-6">
+                      Cast On You
+                      <b-form-input
+                        :value="spell.cast_on_you" @change="v => spell.cast_on_you = v"
+                      />
+                    </div>
+                    <div class="col-6">
+                      Cast On Other
+                      <b-form-input
+                        :value="spell.cast_on_other" @change="v => spell.cast_on_other = v"
+                      />
+                    </div>
+                  </div>
+
+                  <div class="row">
+                    <div class="col-6">
+                      Spell Fades
+                      <b-form-input
+                        :value="spell.spell_fades" @change="v => spell.spell_fades = v"
+                      />
+                    </div>
+                    <div class="col-6">
+                      ID File
+                      <b-form-input
+                        :value="spell.player_1" @change="v => spell.player_1 = v"
+                      />
+                    </div>
+                  </div>
+                </div>
+                <div
+                  class="col-6"
+                  style="text-align: center"
+                >
+
+                  <div class="row">
+
+                    <div
+                      class="col-6 text-center"
+                      @click="castingAnimField = 'casting_anim'; drawCastingAnimationSelector()"
+                    >
+                      Casting Animation
+
+                      <spell-casting-animation-preview :id="spell.casting_anim"/>
+                      <b-form-input id="casting_anim" v-model.number="spell.casting_anim" class="col-12"/>
+                    </div>
+
+                    <div
+                      class="col-6 text-center"
+                      @click="castingAnimField = 'target_anim'; drawCastingAnimationSelector()"
+                    >
+                      Target Animation
+
+                      <spell-casting-animation-preview :id="spell.target_anim"/>
+                      <b-form-input id="target_anim" v-model.number="spell.target_anim" class="col-12"/>
+                    </div>
+
+                  </div>
+
+                </div>
+              </div>
+
+            </eq-tab>
+
+            <eq-tab name="Effects" class="effect-tab">
+
+              <div class="mb-3">
+                <div class="row">
+                  <div class="col-12 text-center">
+                    <div class="btn-group text-center mb-3" role="group">
+                      <b-button size="sm" variant="warning">Effect Slots</b-button>
+                      <b-button
+                        v-for="i in 12"
+                        :key="i"
+                        size="sm"
+                        :disabled="spell['effectid_' + i] !== 254"
+                        :variant="(visibleEffectSlots[i] ? 'warning' : 'outline-warning')"
+                        @click="toggleVisibleEffectSlot(i)"
+                      >{{ i }}
+                      </b-button>
+                    </div>
+                  </div>
+                </div>
+
+                <b-input-group style="height: 30px; margin-bottom: 8px">
+                  <template #prepend>
+                    <b-input-group-text
+                      style="width: 40px; "
+                    >#
+                    </b-input-group-text>
+                  </template>
+
+                  <b-form-input placeholder="Effect" disabled style="width: 150px"/>
+                  <b-form-input placeholder="Base" disabled/>
+                  <b-form-input placeholder="Limit" disabled/>
+                  <b-form-input placeholder="Max" disabled/>
+                  <b-form-input placeholder="Formula" disabled/>
+                </b-input-group>
+
+                <b-input-group
+                  v-for="i in 12"
+                  :key="i"
+                  style="margin-top: -1px"
+                  v-if="visibleEffectSlots[i]"
+                >
+                  <template #prepend>
+                    <b-input-group-text style="width: 40px; ">{{ i }}</b-input-group-text>
+                  </template>
+
+                  <b-form-select
+                    :id="'effectid_' + i"
+                    @mouseover.native="drawSpaDetailPane(spell['effectid_' + i], i)"
+                    @change="getSpaDefaultValues(spell['effectid_' + i], i); drawSpaDetailPane(spell['effectid_' + i], i)"
+                    v-model.number="spell['effectid_' + i]"
+                    style="width: 150px"
+                  >
+                    <b-form-select-option
+                      v-for="(effect, id) in DB_SPA"
+                      :key="id"
+                      :value="parseInt(id)"
+                    >{{ id }}) {{ effect }}
+                    </b-form-select-option>
+                  </b-form-select>
+
+                  <b-form-input
+                    :id="'effect_base_value_' + i"
+                    v-model.number="spell['effect_base_value_' + i]"
+                    :class="getSpaSpellHighlights(spell['effectid_' + i], 'base')"
+                    @click="processSpaFieldAction(i, spell['effectid_' + i], 'base')"
+                  />
+                  <b-form-input
+                    :id="'effect_limit_value_' + i"
+                    v-model.number="spell['effect_limit_value_' + i]"
+                    :class="getSpaSpellHighlights(spell['effectid_' + i], 'limit')"
+                    @click="processSpaFieldAction(i, spell['effectid_' + i], 'limit')"
+                  />
+                  <b-form-input
+                    :id="'max_' + i"
+                    v-model.number="spell['max_' + i]"
+                    :class="getSpaSpellHighlights(spell['effectid_' + i], 'max')"
+                    @click="processSpaFieldAction(i, spell['effectid_' + i], 'max')"
+                  />
+
+                  <b-form-select
+                    v-model.number="spell['formula_' + i]"
+                    :id="'formula_' + i"
+                  >
+                    <option
+                      v-for="(description, index) in BASE_VALUE_FORMULAS"
+                      :key="index"
+                      :value="parseInt(index)"
+                    >
+                      {{ index }}) {{ description }}
+                    </option>
+                  </b-form-select>
+
+                </b-input-group>
+
+              </div>
+
+              <div
+                class="row minified-inputs fade-in" v-for="field in
                      [
                        {
                          description: teleportZoneFieldName,
@@ -297,48 +295,48 @@
                          showIf: teleportZoneFieldName !== ''
                        },
                      ]"
-                    v-if="typeof field.showIf === 'undefined' || (typeof field.showIf !== 'undefined' && field.showIf) || showAllFields"
-                    @click="processClickInputTrigger(field.field)"
-                  >
-                    <div class="col-6 text-right p-0 m-0 mr-3 mt-3" v-if="field.bool">
-                      <span v-if="field.category" class="font-weight-bold">{{ field.category }}</span>
-                      {{ field.description }}
-                    </div>
-                    <div class="col-6 text-right p-0 m-0 mr-3" v-if="!field.bool" style="margin-top: 10px !important">
-                      <span v-if="field.category" class="font-weight-bold">{{ field.category }}</span>
-                      {{ field.description }}
-                    </div>
-                    <div class="col-3 text-left p-0 mt-1">
+                v-if="typeof field.showIf === 'undefined' || (typeof field.showIf !== 'undefined' && field.showIf) || showAllFields"
+                @click="processClickInputTrigger(field.field)"
+              >
+                <div class="col-6 text-right p-0 m-0 mr-3 mt-3" v-if="field.bool">
+                  <span v-if="field.category" class="font-weight-bold">{{ field.category }}</span>
+                  {{ field.description }}
+                </div>
+                <div class="col-6 text-right p-0 m-0 mr-3" v-if="!field.bool" style="margin-top: 10px !important">
+                  <span v-if="field.category" class="font-weight-bold">{{ field.category }}</span>
+                  {{ field.description }}
+                </div>
+                <div class="col-3 text-left p-0 mt-1">
 
-                      <!-- input number -->
-                      <b-form-input
-                        v-if="!field.selectData && !field.bool && !field.text"
-                        :id="field.field"
-                        v-model.number="spell[field.field]"
-                        class="m-0 mt-1"
-                        v-b-tooltip.hover.v-dark.right :title="getFieldDescription(field.field)"
-                        :style="(spell[field.field] === 0 ? 'opacity: .5' : '')"
-                      />
+                  <!-- input number -->
+                  <b-form-input
+                    v-if="!field.selectData && !field.bool && !field.text"
+                    :id="field.field"
+                    v-model.number="spell[field.field]"
+                    class="m-0 mt-1"
+                    v-b-tooltip.hover.v-dark.right :title="getFieldDescription(field.field)"
+                    :style="(spell[field.field] === 0 ? 'opacity: .5' : '')"
+                  />
 
-                      <!-- input text -->
-                      <b-form-input
-                        v-if="!field.selectData && !field.bool && field.text"
-                        :id="field.field"
-                        v-model.number="spell[field.field]"
-                        class="m-0 mt-1"
-                        v-b-tooltip.hover.v-dark.right :title="getFieldDescription(field.field)"
-                        :style="(spell[field.field] === '' ? 'opacity: .5' : '')"
-                      />
+                  <!-- input text -->
+                  <b-form-input
+                    v-if="!field.selectData && !field.bool && field.text"
+                    :id="field.field"
+                    v-model.number="spell[field.field]"
+                    class="m-0 mt-1"
+                    v-b-tooltip.hover.v-dark.right :title="getFieldDescription(field.field)"
+                    :style="(spell[field.field] === '' ? 'opacity: .5' : '')"
+                  />
 
-                    </div>
-                  </div>
+                </div>
+              </div>
 
 
-                </eq-tab>
+            </eq-tab>
 
-                <eq-tab name="Effects+" class="minified-inputs">
-                  <div
-                    class="row" v-for="field in
+            <eq-tab name="Effects+" class="minified-inputs">
+              <div
+                class="row" v-for="field in
                      [
                        {
                          description: 'Push Back',
@@ -396,77 +394,77 @@
                          field: 'nimbuseffect'
                        },
                      ]"
-                    @click="processClickInputTrigger(field.field)"
+                @click="processClickInputTrigger(field.field)"
+              >
+                <div class="col-6 text-right p-0 m-0 mr-3 mt-3" v-if="field.bool">
+                  <span v-if="field.category" class="font-weight-bold">{{ field.category }}</span>
+                  {{ field.description }}
+                </div>
+                <div class="col-6 text-right p-0 m-0 mr-3" v-if="!field.bool" style="margin-top: 10px !important">
+                  <span v-if="field.category" class="font-weight-bold">{{ field.category }}</span>
+                  {{ field.description }}
+                </div>
+                <div class="col-3 text-left p-0 mt-1">
+
+                  <!-- checkbox -->
+                  <eq-checkbox
+                    v-b-tooltip.hover.v-dark.right :title="getFieldDescription(field.field)"
+                    class="mb-1 mt-3 d-inline-block"
+                    :true-value="(typeof field.true !== 'undefined' ? field.true : 1)"
+                    :false-value="(typeof field.false !== 'undefined' ? field.false : 0)"
+                    v-model.number="spell[field.field]"
+                    @input="spell[field.field] = $event"
+                    v-if="field.bool"
+                  />
+
+                  <!-- input number -->
+                  <b-form-input
+                    v-if="!field.selectData && !field.bool && !field.text"
+                    :id="field.field"
+                    v-model.number="spell[field.field]"
+                    class="m-0 mt-1"
+                    v-b-tooltip.hover.v-dark.right :title="getFieldDescription(field.field)"
+                    :style="(spell[field.field] === 0 ? 'opacity: .5' : '')"
+                  />
+
+                  <!-- input text -->
+                  <b-form-input
+                    v-if="!field.selectData && !field.bool && field.text"
+                    :id="field.field"
+                    v-model.number="spell[field.field]"
+                    class="m-0 mt-1"
+                    v-b-tooltip.hover.v-dark.right :title="getFieldDescription(field.field)"
+                    :style="(spell[field.field] === '' ? 'opacity: .5' : '')"
+                  />
+
+                  <!-- select -->
+                  <select
+                    v-model.number="spell[field.field]"
+                    class="form-control m-0 mt-1"
+                    v-if="field.selectData"
+                    v-b-tooltip.hover.v-dark.right :title="getFieldDescription(field.field)"
+                    :style="(spell[field.field] <= 0 ? 'opacity: .5' : '')"
                   >
-                    <div class="col-6 text-right p-0 m-0 mr-3 mt-3" v-if="field.bool">
-                      <span v-if="field.category" class="font-weight-bold">{{ field.category }}</span>
-                      {{ field.description }}
-                    </div>
-                    <div class="col-6 text-right p-0 m-0 mr-3" v-if="!field.bool" style="margin-top: 10px !important">
-                      <span v-if="field.category" class="font-weight-bold">{{ field.category }}</span>
-                      {{ field.description }}
-                    </div>
-                    <div class="col-3 text-left p-0 mt-1">
+                    <option
+                      v-for="(description, index) in field.selectData"
+                      :key="index"
+                      :value="parseInt(index)"
+                    >
+                      {{ index }}) {{ description }}
+                    </option>
+                  </select>
+                </div>
+              </div>
 
-                      <!-- checkbox -->
-                      <eq-checkbox
-                        v-b-tooltip.hover.v-dark.right :title="getFieldDescription(field.field)"
-                        class="mb-1 mt-3 d-inline-block"
-                        :true-value="(typeof field.true !== 'undefined' ? field.true : 1)"
-                        :false-value="(typeof field.false !== 'undefined' ? field.false : 0)"
-                        v-model.number="spell[field.field]"
-                        @input="spell[field.field] = $event"
-                        v-if="field.bool"
-                      />
+            </eq-tab>
 
-                      <!-- input number -->
-                      <b-form-input
-                        v-if="!field.selectData && !field.bool && !field.text"
-                        :id="field.field"
-                        v-model.number="spell[field.field]"
-                        class="m-0 mt-1"
-                        v-b-tooltip.hover.v-dark.right :title="getFieldDescription(field.field)"
-                        :style="(spell[field.field] === 0 ? 'opacity: .5' : '')"
-                      />
-
-                      <!-- input text -->
-                      <b-form-input
-                        v-if="!field.selectData && !field.bool && field.text"
-                        :id="field.field"
-                        v-model.number="spell[field.field]"
-                        class="m-0 mt-1"
-                        v-b-tooltip.hover.v-dark.right :title="getFieldDescription(field.field)"
-                        :style="(spell[field.field] === '' ? 'opacity: .5' : '')"
-                      />
-
-                      <!-- select -->
-                      <select
-                        v-model.number="spell[field.field]"
-                        class="form-control m-0 mt-1"
-                        v-if="field.selectData"
-                        v-b-tooltip.hover.v-dark.right :title="getFieldDescription(field.field)"
-                        :style="(spell[field.field] <= 0 ? 'opacity: .5' : '')"
-                      >
-                        <option
-                          v-for="(description, index) in field.selectData"
-                          :key="index"
-                          :value="parseInt(index)"
-                        >
-                          {{ index }}) {{ description }}
-                        </option>
-                      </select>
-                    </div>
-                  </div>
-
-                </eq-tab>
-
-                <eq-tab name="General" class="minified-inputs">
-                  <div class="row">
-                    <div class="col-12">
-                      <div
-                        class="row"
-                        :key="field.field"
-                        v-for="field in
+            <eq-tab name="General" class="minified-inputs">
+              <div class="row">
+                <div class="col-12">
+                  <div
+                    class="row"
+                    :key="field.field"
+                    v-for="field in
                          [
                            {
                              description: 'Is Discipline',
@@ -537,83 +535,83 @@
                              category: 'Spell Rank'
                            },
                          ]"
+                  >
+                    <div class="col-6 text-right p-0 m-0 mr-3" v-if="field.bool">
+                      <span v-if="field.category" class="font-weight-bold">{{ field.category }}</span>
+                      {{ field.description }}
+                    </div>
+                    <div
+                      class="col-6 text-right p-0 m-0 mr-3"
+                      v-if="!field.bool"
+                      style="margin-top: 10px !important"
+                    >
+                      <span v-if="field.category" class="font-weight-bold">{{ field.category }}</span>
+                      {{ field.description }}
+                    </div>
+                    <div class="col-3 text-left p-0 mt-1">
+
+                      <!-- checkbox -->
+                      <eq-checkbox
+                        v-b-tooltip.hover.v-dark.right :title="getFieldDescription(field.field)"
+                        class="mb-2 d-inline-block"
+                        :true-value="(typeof field.true !== 'undefined' ? field.true : 1)"
+                        :false-value="(typeof field.false !== 'undefined' ? field.false : 0)"
+                        v-model.number="spell[field.field]"
+                        @input="spell[field.field] = $event"
+                        v-if="field.bool"
+                      />
+
+                      <!-- input -->
+                      <b-form-input
+                        v-if="!field.selectData && !field.bool"
+                        :id="field.field"
+                        v-b-tooltip.hover.v-dark.right :title="getFieldDescription(field.field)"
+                        v-model.number="spell[field.field]"
+                        class="m-0 mt-1"
+                        :style="(spell[field.field] <= 0 ? 'opacity: .5' : '')"
+                      />
+
+                      <!-- select -->
+                      <select
+                        v-model.number="spell[field.field]"
+                        class="form-control m-0 mt-1"
+                        :id="field.field"
+                        v-if="field.selectData"
+                        v-b-tooltip.hover.v-dark.right :title="getFieldDescription(field.field)"
+                        :style="(spell[field.field] <= 0 ? 'opacity: .5' : '')"
                       >
-                        <div class="col-6 text-right p-0 m-0 mr-3" v-if="field.bool">
-                          <span v-if="field.category" class="font-weight-bold">{{ field.category }}</span>
-                          {{ field.description }}
-                        </div>
-                        <div
-                          class="col-6 text-right p-0 m-0 mr-3"
-                          v-if="!field.bool"
-                          style="margin-top: 10px !important"
+                        <option
+                          v-for="(description, index) in field.selectData"
+                          :key="index"
+                          :value="parseInt(index)"
                         >
-                          <span v-if="field.category" class="font-weight-bold">{{ field.category }}</span>
-                          {{ field.description }}
-                        </div>
-                        <div class="col-3 text-left p-0 mt-1">
-
-                          <!-- checkbox -->
-                          <eq-checkbox
-                            v-b-tooltip.hover.v-dark.right :title="getFieldDescription(field.field)"
-                            class="mb-2 d-inline-block"
-                            :true-value="(typeof field.true !== 'undefined' ? field.true : 1)"
-                            :false-value="(typeof field.false !== 'undefined' ? field.false : 0)"
-                            v-model.number="spell[field.field]"
-                            @input="spell[field.field] = $event"
-                            v-if="field.bool"
-                          />
-
-                          <!-- input -->
-                          <b-form-input
-                            v-if="!field.selectData && !field.bool"
-                            :id="field.field"
-                            v-b-tooltip.hover.v-dark.right :title="getFieldDescription(field.field)"
-                            v-model.number="spell[field.field]"
-                            class="m-0 mt-1"
-                            :style="(spell[field.field] <= 0 ? 'opacity: .5' : '')"
-                          />
-
-                          <!-- select -->
-                          <select
-                            v-model.number="spell[field.field]"
-                            class="form-control m-0 mt-1"
-                            :id="field.field"
-                            v-if="field.selectData"
-                            v-b-tooltip.hover.v-dark.right :title="getFieldDescription(field.field)"
-                            :style="(spell[field.field] <= 0 ? 'opacity: .5' : '')"
-                          >
-                            <option
-                              v-for="(description, index) in field.selectData"
-                              :key="index"
-                              :value="parseInt(index)"
-                            >
-                              {{ index }}) {{ description }}
-                            </option>
-                          </select>
-                        </div>
-                        <div class="col-2">
-                          <div v-if="field.category === 'Description'">
-                            <router-link
-                              class="btn btn-warning btn-sm mt-2"
-                              tag="button"
-                              :to="DB_STRING_EDITOR_URL + '?type=' + (field.field === 'descnum' ? 6 : 5) + '&selectedId=' + spell[field.field] "
-                            >
-                              <i class="ra ra-scroll-unfurled mr-1"></i> Editor
-                            </router-link>
-                          </div>
-                        </div>
+                          {{ index }}) {{ description }}
+                        </option>
+                      </select>
+                    </div>
+                    <div class="col-2">
+                      <div v-if="field.category === 'Description'">
+                        <router-link
+                          class="btn btn-warning btn-sm mt-2"
+                          tag="button"
+                          :to="DB_STRING_EDITOR_URL + '?type=' + (field.field === 'descnum' ? 6 : 5) + '&selectedId=' + spell[field.field] "
+                        >
+                          <i class="ra ra-scroll-unfurled mr-1"></i> Editor
+                        </router-link>
                       </div>
-
                     </div>
                   </div>
 
-                </eq-tab>
+                </div>
+              </div>
 
-                <eq-tab name="Restrictions" class="minified-inputs">
-                  <div class="row">
-                    <div class="col-12">
-                      <div
-                        class="row" v-for="field in
+            </eq-tab>
+
+            <eq-tab name="Restrictions" class="minified-inputs">
+              <div class="row">
+                <div class="col-12">
+                  <div
+                    class="row" v-for="field in
                          [
                            {
                              description: 'Can Cast out of Combat',
@@ -674,67 +672,67 @@
                              selectData: DB_PC_NPC_ONLY_FLAG,
                            },
                          ]"
+                  >
+                    <div class="col-6 text-right p-0 m-0 mr-3" v-if="field.bool">
+                      {{ field.description }}
+                    </div>
+                    <div
+                      class="col-6 text-right p-0 m-0 mr-3"
+                      v-if="!field.bool"
+                      style="margin-top: 10px !important"
+                    >
+                      {{ field.description }}
+                    </div>
+                    <div class="col-3 text-left p-0 mt-1">
+
+                      <!-- checkbox -->
+                      <eq-checkbox
+                        v-b-tooltip.hover.v-dark.right :title="getFieldDescription(field.field)"
+                        class="mb-2 d-inline-block"
+                        :true-value="(typeof field.true !== 'undefined' ? field.true : 1)"
+                        :false-value="(typeof field.false !== 'undefined' ? field.false : 0)"
+                        v-model.number="spell[field.field]"
+                        @input="spell[field.field] = $event"
+                        v-if="field.bool"
+                      />
+
+                      <!-- input -->
+                      <b-form-input
+                        v-if="!field.selectData && !field.bool"
+                        :id="field.field"
+                        v-model.number="spell[field.field]"
+                        class="m-0 mt-1"
+                        v-b-tooltip.hover.v-dark.right :title="getFieldDescription(field.field)"
+                        :style="(spell[field.field] <= 0 ? 'opacity: .5' : '')"
+                      />
+
+                      <!-- select -->
+                      <select
+                        v-model.number="spell[field.field]"
+                        class="form-control m-0 mt-1"
+                        v-if="field.selectData"
+                        :style="(spell[field.field] <= 0 ? 'opacity: .5' : '')"
+                        v-b-tooltip.hover.v-dark.right :title="getFieldDescription(field.field)"
                       >
-                        <div class="col-6 text-right p-0 m-0 mr-3" v-if="field.bool">
-                          {{ field.description }}
-                        </div>
-                        <div
-                          class="col-6 text-right p-0 m-0 mr-3"
-                          v-if="!field.bool"
-                          style="margin-top: 10px !important"
+                        <option
+                          v-for="(description, index) in field.selectData"
+                          :key="index"
+                          :value="parseInt(index)"
                         >
-                          {{ field.description }}
-                        </div>
-                        <div class="col-3 text-left p-0 mt-1">
-
-                          <!-- checkbox -->
-                          <eq-checkbox
-                            v-b-tooltip.hover.v-dark.right :title="getFieldDescription(field.field)"
-                            class="mb-2 d-inline-block"
-                            :true-value="(typeof field.true !== 'undefined' ? field.true : 1)"
-                            :false-value="(typeof field.false !== 'undefined' ? field.false : 0)"
-                            v-model.number="spell[field.field]"
-                            @input="spell[field.field] = $event"
-                            v-if="field.bool"
-                          />
-
-                          <!-- input -->
-                          <b-form-input
-                            v-if="!field.selectData && !field.bool"
-                            :id="field.field"
-                            v-model.number="spell[field.field]"
-                            class="m-0 mt-1"
-                            v-b-tooltip.hover.v-dark.right :title="getFieldDescription(field.field)"
-                            :style="(spell[field.field] <= 0 ? 'opacity: .5' : '')"
-                          />
-
-                          <!-- select -->
-                          <select
-                            v-model.number="spell[field.field]"
-                            class="form-control m-0 mt-1"
-                            v-if="field.selectData"
-                            :style="(spell[field.field] <= 0 ? 'opacity: .5' : '')"
-                            v-b-tooltip.hover.v-dark.right :title="getFieldDescription(field.field)"
-                          >
-                            <option
-                              v-for="(description, index) in field.selectData"
-                              :key="index"
-                              :value="parseInt(index)"
-                            >
-                              {{ index }}) {{ description }}
-                            </option>
-                          </select>
-                        </div>
-                      </div>
-
+                          {{ index }}) {{ description }}
+                        </option>
+                      </select>
                     </div>
                   </div>
-                </eq-tab>
 
-                <eq-tab name="Range" class="minified-inputs">
+                </div>
+              </div>
+            </eq-tab>
 
-                  <div
-                    class="row fade-in" v-for="field in
+            <eq-tab name="Range" class="minified-inputs">
+
+              <div
+                class="row fade-in" v-for="field in
                      [
                        {
                          description: 'NPC Line of Sight Not Required to Cast',
@@ -812,102 +810,102 @@
                          field: 'numhits'
                        },
                      ]"
-                    :key="field.field"
-                    v-if="typeof field.showIf === 'undefined' || (typeof field.showIf !== 'undefined' && field.showIf) || showAllFields"
+                :key="field.field"
+                v-if="typeof field.showIf === 'undefined' || (typeof field.showIf !== 'undefined' && field.showIf) || showAllFields"
+              >
+                <div class="col-6 text-right p-0 m-0 mr-3" v-if="field.bool">
+                  {{ field.description }}
+                </div>
+                <div class="col-6 text-right p-0 m-0 mr-3" v-if="!field.bool" style="margin-top: 10px !important">
+                  {{ field.description }}
+                </div>
+                <div
+                  class="col-3 text-left p-0 mt-1"
+                  @click="processClickInputTrigger(field.field)"
+                >
+                  <!-- checkbox -->
+                  <eq-checkbox
+                    v-b-tooltip.hover.v-dark.lefttop :title="getFieldDescription(field.field)"
+                    class="mb-1 d-inline-block"
+                    :true-value="(typeof field.true !== 'undefined' ? field.true : 1)"
+                    :false-value="(typeof field.false !== 'undefined' ? field.false : 0)"
+                    v-model.number="spell[field.field]"
+                    @input="spell[field.field] = $event"
+                    v-if="field.bool"
+                  />
+
+                  <!-- input number -->
+                  <b-form-input
+                    v-if="!field.selectData && !field.bool && !field.text"
+                    :id="field.field"
+                    v-model.number="spell[field.field]"
+                    class="m-0 mt-1"
+                    v-b-tooltip.hover.v-dark.lefttop :title="getFieldDescription(field.field)"
+                    :style="(spell[field.field] === 0 ? 'opacity: .5' : '')"
+                  />
+
+                  <!-- input text -->
+                  <b-form-input
+                    v-if="!field.selectData && !field.bool && field.text"
+                    :id="field.field"
+                    v-model.number="spell[field.field]"
+                    class="m-0 mt-1"
+                    v-b-tooltip.hover.v-dark.lefttop :title="getFieldDescription(field.field)"
+                    :style="(spell[field.field] === '' ? 'opacity: .5' : '')"
+                  />
+
+                  <!-- select -->
+                  <select
+                    v-model.number="spell[field.field]"
+                    class="form-control m-0 mt-1"
+                    v-if="field.selectData"
+                    v-b-tooltip.hover.v-dark.lefttop :title="getFieldDescription(field.field)"
+                    :style="(spell[field.field] <= 0 ? 'opacity: .5' : '')"
                   >
-                    <div class="col-6 text-right p-0 m-0 mr-3" v-if="field.bool">
-                      {{ field.description }}
-                    </div>
-                    <div class="col-6 text-right p-0 m-0 mr-3" v-if="!field.bool" style="margin-top: 10px !important">
-                      {{ field.description }}
-                    </div>
-                    <div
-                      class="col-3 text-left p-0 mt-1"
-                      @click="processClickInputTrigger(field.field)"
+                    <option
+                      v-for="(description, index) in field.selectData"
+                      :key="index"
+                      :value="parseInt(index)"
                     >
-                      <!-- checkbox -->
-                      <eq-checkbox
-                        v-b-tooltip.hover.v-dark.lefttop :title="getFieldDescription(field.field)"
-                        class="mb-1 d-inline-block"
-                        :true-value="(typeof field.true !== 'undefined' ? field.true : 1)"
-                        :false-value="(typeof field.false !== 'undefined' ? field.false : 0)"
-                        v-model.number="spell[field.field]"
-                        @input="spell[field.field] = $event"
-                        v-if="field.bool"
-                      />
-
-                      <!-- input number -->
-                      <b-form-input
-                        v-if="!field.selectData && !field.bool && !field.text"
-                        :id="field.field"
-                        v-model.number="spell[field.field]"
-                        class="m-0 mt-1"
-                        v-b-tooltip.hover.v-dark.lefttop :title="getFieldDescription(field.field)"
-                        :style="(spell[field.field] === 0 ? 'opacity: .5' : '')"
-                      />
-
-                      <!-- input text -->
-                      <b-form-input
-                        v-if="!field.selectData && !field.bool && field.text"
-                        :id="field.field"
-                        v-model.number="spell[field.field]"
-                        class="m-0 mt-1"
-                        v-b-tooltip.hover.v-dark.lefttop :title="getFieldDescription(field.field)"
-                        :style="(spell[field.field] === '' ? 'opacity: .5' : '')"
-                      />
-
-                      <!-- select -->
-                      <select
-                        v-model.number="spell[field.field]"
-                        class="form-control m-0 mt-1"
-                        v-if="field.selectData"
-                        v-b-tooltip.hover.v-dark.lefttop :title="getFieldDescription(field.field)"
-                        :style="(spell[field.field] <= 0 ? 'opacity: .5' : '')"
-                      >
-                        <option
-                          v-for="(description, index) in field.selectData"
-                          :key="index"
-                          :value="parseInt(index)"
-                        >
-                          {{ index }}) {{ description }}
-                        </option>
-                      </select>
-                    </div>
-                    <div
-                      class="col-2"
-                      @mouseover="processClickInputTrigger(field.field)"
-                      @click="processClickInputTrigger(field.field)"
-                    >
-                      <input
-                        type="range"
-                        v-if="field.type === 'range'"
-                        min="0"
-                        max="1000"
-                        step="5"
-                        class="p-0 m-0 mt-2"
-                        v-model.number="spell[field.field]"
-                      >
-                      <input
-                        type="range"
-                        v-if="field.type === 'cone'"
-                        min="0"
-                        max="360"
-                        step="5"
-                        class="p-0 m-0 mt-2"
-                        v-model.number="spell[field.field]"
-                      >
-                      <!-- Modifier description -->
-                      <div v-if="['min_dist_mod', 'max_dist_mod'].includes(field.field)" style="margin-top: 8px">
-                        ({{ Math.round(spell[field.field] * 100) }}%)
-                      </div>
-                    </div>
+                      {{ index }}) {{ description }}
+                    </option>
+                  </select>
+                </div>
+                <div
+                  class="col-2"
+                  @mouseover="processClickInputTrigger(field.field)"
+                  @click="processClickInputTrigger(field.field)"
+                >
+                  <input
+                    type="range"
+                    v-if="field.type === 'range'"
+                    min="0"
+                    max="1000"
+                    step="5"
+                    class="p-0 m-0 mt-2"
+                    v-model.number="spell[field.field]"
+                  >
+                  <input
+                    type="range"
+                    v-if="field.type === 'cone'"
+                    min="0"
+                    max="360"
+                    step="5"
+                    class="p-0 m-0 mt-2"
+                    v-model.number="spell[field.field]"
+                  >
+                  <!-- Modifier description -->
+                  <div v-if="['min_dist_mod', 'max_dist_mod'].includes(field.field)" style="margin-top: 8px">
+                    ({{ Math.round(spell[field.field] * 100) }}%)
                   </div>
+                </div>
+              </div>
 
-                </eq-tab>
+            </eq-tab>
 
-                <eq-tab name="Casting" class="minified-inputs">
-                  <div
-                    class="row" v-for="field in
+            <eq-tab name="Casting" class="minified-inputs">
+              <div
+                class="row" v-for="field in
                      [
                        {
                          description: 'Uninterruptable',
@@ -1000,77 +998,77 @@
                          category: 'Reagent'
                        },
                      ]"
-                    @click="processClickInputTrigger(field.field)"
+                @click="processClickInputTrigger(field.field)"
+              >
+                <div class="col-6 text-right p-0 m-0 mr-3" v-if="field.bool">
+                  {{ field.description }}
+                </div>
+                <div class="col-6 text-right p-0 m-0 mr-3" v-if="!field.bool" style="margin-top: 10px !important">
+                  {{ field.description }}
+                </div>
+                <div class="col-3 text-left p-0 mt-1">
+
+                  <!-- checkbox -->
+                  <eq-checkbox
+                    v-b-tooltip.hover.v-dark.right :title="getFieldDescription(field.field)"
+                    class="mb-2 d-inline-block"
+                    :true-value="(typeof field.true !== 'undefined' ? field.true : 1)"
+                    :false-value="(typeof field.false !== 'undefined' ? field.false : 0)"
+                    v-model.number="spell[field.field]"
+                    @input="spell[field.field] = $event"
+                    v-if="field.bool"
+                  />
+
+                  <!-- input -->
+                  <b-form-input
+                    v-if="!field.selectData && !field.bool"
+                    :id="field.field"
+                    v-b-tooltip.hover.v-dark.right :title="getFieldDescription(field.field)"
+                    v-model.number="spell[field.field]"
+                    class="m-0 mt-1"
+                    :style="(spell[field.field] <= 0 ? 'opacity: .5' : '')"
+                  />
+
+                  <!-- select -->
+                  <select
+                    v-model.number="spell[field.field]"
+                    class="form-control m-0 mt-1"
+                    v-if="field.selectData"
+                    v-b-tooltip.hover.v-dark.right :title="getFieldDescription(field.field)"
+                    :style="(spell[field.field] <= 0 ? 'opacity: .5' : '')"
                   >
-                    <div class="col-6 text-right p-0 m-0 mr-3" v-if="field.bool">
-                      {{ field.description }}
-                    </div>
-                    <div class="col-6 text-right p-0 m-0 mr-3" v-if="!field.bool" style="margin-top: 10px !important">
-                      {{ field.description }}
-                    </div>
-                    <div class="col-3 text-left p-0 mt-1">
-
-                      <!-- checkbox -->
-                      <eq-checkbox
-                        v-b-tooltip.hover.v-dark.right :title="getFieldDescription(field.field)"
-                        class="mb-2 d-inline-block"
-                        :true-value="(typeof field.true !== 'undefined' ? field.true : 1)"
-                        :false-value="(typeof field.false !== 'undefined' ? field.false : 0)"
-                        v-model.number="spell[field.field]"
-                        @input="spell[field.field] = $event"
-                        v-if="field.bool"
-                      />
-
-                      <!-- input -->
-                      <b-form-input
-                        v-if="!field.selectData && !field.bool"
-                        :id="field.field"
-                        v-b-tooltip.hover.v-dark.right :title="getFieldDescription(field.field)"
-                        v-model.number="spell[field.field]"
-                        class="m-0 mt-1"
-                        :style="(spell[field.field] <= 0 ? 'opacity: .5' : '')"
-                      />
-
-                      <!-- select -->
-                      <select
-                        v-model.number="spell[field.field]"
-                        class="form-control m-0 mt-1"
-                        v-if="field.selectData"
-                        v-b-tooltip.hover.v-dark.right :title="getFieldDescription(field.field)"
-                        :style="(spell[field.field] <= 0 ? 'opacity: .5' : '')"
-                      >
-                        <option
-                          v-for="(description, index) in field.selectData"
-                          :key="index"
-                          :value="parseInt(index)"
-                        >
-                          {{ index }}) {{ description }}
-                        </option>
-                      </select>
-                    </div>
-                    <div class="col3 pl-3">
-                      <div
-                        class="ml-5"
-                        v-if="field.description.includes('Time') && !field.description.includes('Timer')"
-                      >
-                        ({{ (Math.round((spell[field.field] / 1000) * 10) / 10) }} sec)
-                      </div>
-
-                      <loader-cast-bar-timer
-                        class="ml-3"
-                        style="margin-top: 5px"
-                        color="#FF00FF"
-                        v-if="field.description.includes('Time') && !field.description.includes('Timer')"
-                        :time-ms="spell[field.field]"
-                      />
-                    </div>
+                    <option
+                      v-for="(description, index) in field.selectData"
+                      :key="index"
+                      :value="parseInt(index)"
+                    >
+                      {{ index }}) {{ description }}
+                    </option>
+                  </select>
+                </div>
+                <div class="col3 pl-3">
+                  <div
+                    class="ml-5"
+                    v-if="field.description.includes('Time') && !field.description.includes('Timer')"
+                  >
+                    ({{ (Math.round((spell[field.field] / 1000) * 10) / 10) }} sec)
                   </div>
 
-                </eq-tab>
+                  <loader-cast-bar-timer
+                    class="ml-3"
+                    style="margin-top: 5px"
+                    color="#FF00FF"
+                    v-if="field.description.includes('Time') && !field.description.includes('Timer')"
+                    :time-ms="spell[field.field]"
+                  />
+                </div>
+              </div>
 
-                <eq-tab name="Buffs" class="minified-inputs">
-                  <div
-                    class="row" v-for="field in
+            </eq-tab>
+
+            <eq-tab name="Buffs" class="minified-inputs">
+              <div
+                class="row" v-for="field in
                      [
                        {
                          description: 'Can Not Dispell',
@@ -1145,73 +1143,73 @@
                          field: 'pvp_duration_cap'
                        },
                      ]"
+              >
+                <div class="col-6 text-right p-0 m-0 mr-3" v-if="field.bool">
+                  <span v-if="field.category" class="font-weight-bold">{{ field.category }}</span>
+                  {{ field.description }}
+                </div>
+                <div class="col-6 text-right p-0 m-0 mr-3" v-if="!field.bool" style="margin-top: 10px !important">
+                  <span v-if="field.category" class="font-weight-bold">{{ field.category }}</span>
+                  {{ field.description }}
+                </div>
+                <div class="col-3 text-left p-0 mt-1">
+
+                  <!-- checkbox -->
+                  <eq-checkbox
+                    v-b-tooltip.hover.v-dark.right :title="getFieldDescription(field.field)"
+                    class="mb-2 d-inline-block"
+                    :true-value="(typeof field.true !== 'undefined' ? field.true : 1)"
+                    :false-value="(typeof field.false !== 'undefined' ? field.false : 0)"
+                    v-model.number="spell[field.field]"
+                    @input="spell[field.field] = $event"
+                    v-if="field.bool"
+                  />
+
+                  <!-- input -->
+                  <b-form-input
+                    v-if="!field.selectData && !field.bool"
+                    :id="field.field"
+                    v-model.number="spell[field.field]"
+                    class="m-0 mt-1"
+                    v-b-tooltip.hover.v-dark.right :title="getFieldDescription(field.field)"
+                    :style="(spell[field.field] <= 0 ? 'opacity: .5' : '')"
+                  />
+
+                  <!-- select -->
+                  <select
+                    v-model.number="spell[field.field]"
+                    class="form-control m-0 mt-1"
+                    v-if="field.selectData"
+                    v-b-tooltip.hover.v-dark.right :title="getFieldDescription(field.field)"
+                    :style="(spell[field.field] <= 0 ? 'opacity: .5' : '')"
                   >
-                    <div class="col-6 text-right p-0 m-0 mr-3" v-if="field.bool">
-                      <span v-if="field.category" class="font-weight-bold">{{ field.category }}</span>
-                      {{ field.description }}
-                    </div>
-                    <div class="col-6 text-right p-0 m-0 mr-3" v-if="!field.bool" style="margin-top: 10px !important">
-                      <span v-if="field.category" class="font-weight-bold">{{ field.category }}</span>
-                      {{ field.description }}
-                    </div>
-                    <div class="col-3 text-left p-0 mt-1">
-
-                      <!-- checkbox -->
-                      <eq-checkbox
-                        v-b-tooltip.hover.v-dark.right :title="getFieldDescription(field.field)"
-                        class="mb-2 d-inline-block"
-                        :true-value="(typeof field.true !== 'undefined' ? field.true : 1)"
-                        :false-value="(typeof field.false !== 'undefined' ? field.false : 0)"
-                        v-model.number="spell[field.field]"
-                        @input="spell[field.field] = $event"
-                        v-if="field.bool"
-                      />
-
-                      <!-- input -->
-                      <b-form-input
-                        v-if="!field.selectData && !field.bool"
-                        :id="field.field"
-                        v-model.number="spell[field.field]"
-                        class="m-0 mt-1"
-                        v-b-tooltip.hover.v-dark.right :title="getFieldDescription(field.field)"
-                        :style="(spell[field.field] <= 0 ? 'opacity: .5' : '')"
-                      />
-
-                      <!-- select -->
-                      <select
-                        v-model.number="spell[field.field]"
-                        class="form-control m-0 mt-1"
-                        v-if="field.selectData"
-                        v-b-tooltip.hover.v-dark.right :title="getFieldDescription(field.field)"
-                        :style="(spell[field.field] <= 0 ? 'opacity: .5' : '')"
-                      >
-                        <option
-                          v-for="(description, index) in field.selectData"
-                          :key="index"
-                          :value="parseInt(index)"
-                        >
-                          {{ index }}) {{ description }}
-                        </option>
-                      </select>
-                    </div>
-
-                    <div
-                      class="col-2"
-                      @mouseover="processClickInputTrigger(field.field)"
-                      @click="processClickInputTrigger(field.field)"
+                    <option
+                      v-for="(description, index) in field.selectData"
+                      :key="index"
+                      :value="parseInt(index)"
                     >
-                      <!-- Modifier description -->
-                      <div v-if="['buffduration'].includes(field.field)" style="margin-top: 8px">
-                        {{ humanTime(getBuffDuration(spell) * 6) }} - {{ getBuffDuration(spell) }} tic(s)
-                      </div>
-                    </div>
+                      {{ index }}) {{ description }}
+                    </option>
+                  </select>
+                </div>
 
+                <div
+                  class="col-2"
+                  @mouseover="processClickInputTrigger(field.field)"
+                  @click="processClickInputTrigger(field.field)"
+                >
+                  <!-- Modifier description -->
+                  <div v-if="['buffduration'].includes(field.field)" style="margin-top: 8px">
+                    {{ humanTime(getBuffDuration(spell) * 6) }} - {{ getBuffDuration(spell) }} tic(s)
                   </div>
-                </eq-tab>
+                </div>
 
-                <eq-tab name="Resist" class="minified-inputs">
-                  <div
-                    class="row" v-for="field in
+              </div>
+            </eq-tab>
+
+            <eq-tab name="Resist" class="minified-inputs">
+              <div
+                class="row" v-for="field in
                      [
                        {
                          description: 'Unresistable',
@@ -1263,64 +1261,64 @@
                          field: 'max_resist'
                        },
                      ]"
+              >
+                <div class="col-6 text-right p-0 m-0 mr-3" v-if="field.bool">
+                  {{ field.description }}
+                </div>
+                <div class="col-6 text-right p-0 m-0 mr-3" v-if="!field.bool" style="margin-top: 10px !important">
+                  {{ field.description }}
+                </div>
+                <div class="col-3 text-left p-0 mt-1">
+
+                  <!-- checkbox -->
+                  <eq-checkbox
+                    v-b-tooltip.hover.v-dark.right :title="getFieldDescription(field.field)"
+                    class="mb-2 d-inline-block"
+                    :true-value="(typeof field.true !== 'undefined' ? field.true : 1)"
+                    :false-value="(typeof field.false !== 'undefined' ? field.false : 0)"
+                    v-model.number="spell[field.field]"
+                    @input="spell[field.field] = $event"
+                    v-if="field.bool"
+                  />
+
+                  <!-- input -->
+                  <b-form-input
+                    v-if="!field.selectData && !field.bool"
+                    :id="field.field"
+                    v-model.number="spell[field.field]"
+                    class="m-0 mt-1"
+                    v-b-tooltip.hover.v-dark.right :title="getFieldDescription(field.field)"
+                    :style="(spell[field.field] === 0 ? 'opacity: .5' : '')"
+                  />
+
+                  <!-- select -->
+                  <select
+                    v-model.number="spell[field.field]"
+                    class="form-control m-0 mt-1"
+                    v-if="field.selectData"
+                    v-b-tooltip.hover.v-dark.right :title="getFieldDescription(field.field)"
+                    :style="(spell[field.field] <= 0 ? 'opacity: .5' : '')"
                   >
-                    <div class="col-6 text-right p-0 m-0 mr-3" v-if="field.bool">
-                      {{ field.description }}
-                    </div>
-                    <div class="col-6 text-right p-0 m-0 mr-3" v-if="!field.bool" style="margin-top: 10px !important">
-                      {{ field.description }}
-                    </div>
-                    <div class="col-3 text-left p-0 mt-1">
+                    <option
+                      v-for="(description, index) in field.selectData"
+                      :key="index"
+                      :value="parseInt(index)"
+                    >
+                      {{ index }}) {{ description }}
+                    </option>
+                  </select>
+                </div>
+              </div>
 
-                      <!-- checkbox -->
-                      <eq-checkbox
-                        v-b-tooltip.hover.v-dark.right :title="getFieldDescription(field.field)"
-                        class="mb-2 d-inline-block"
-                        :true-value="(typeof field.true !== 'undefined' ? field.true : 1)"
-                        :false-value="(typeof field.false !== 'undefined' ? field.false : 0)"
-                        v-model.number="spell[field.field]"
-                        @input="spell[field.field] = $event"
-                        v-if="field.bool"
-                      />
+            </eq-tab>
 
-                      <!-- input -->
-                      <b-form-input
-                        v-if="!field.selectData && !field.bool"
-                        :id="field.field"
-                        v-model.number="spell[field.field]"
-                        class="m-0 mt-1"
-                        v-b-tooltip.hover.v-dark.right :title="getFieldDescription(field.field)"
-                        :style="(spell[field.field] === 0 ? 'opacity: .5' : '')"
-                      />
-
-                      <!-- select -->
-                      <select
-                        v-model.number="spell[field.field]"
-                        class="form-control m-0 mt-1"
-                        v-if="field.selectData"
-                        v-b-tooltip.hover.v-dark.right :title="getFieldDescription(field.field)"
-                        :style="(spell[field.field] <= 0 ? 'opacity: .5' : '')"
-                      >
-                        <option
-                          v-for="(description, index) in field.selectData"
-                          :key="index"
-                          :value="parseInt(index)"
-                        >
-                          {{ index }}) {{ description }}
-                        </option>
-                      </select>
-                    </div>
-                  </div>
-
-                </eq-tab>
-
-                <eq-tab name="Misc" class="minified-inputs">
-                  <div class="row">
-                    <div class="col-12">
-                      <div
-                        class="row"
-                        :key="field.field"
-                        v-for="field in
+            <eq-tab name="Misc" class="minified-inputs">
+              <div class="row">
+                <div class="col-12">
+                  <div
+                    class="row"
+                    :key="field.field"
+                    v-for="field in
                          [
                            {
                              description: 'Deleteable',
@@ -1357,294 +1355,292 @@
                              field: 'npc_usefulness',
                            },
                          ]"
+                  >
+                    <div class="col-6 text-right p-0 m-0 mr-3" v-if="field.bool">
+                      <span v-if="field.category" class="font-weight-bold">{{ field.category }}</span>
+                      {{ field.description }}
+                    </div>
+                    <div
+                      class="col-6 text-right p-0 m-0 mr-3"
+                      v-if="!field.bool"
+                      style="margin-top: 10px !important"
+                    >
+                      <span v-if="field.category" class="font-weight-bold">{{ field.category }}</span>
+                      {{ field.description }}
+                    </div>
+                    <div class="col-3 text-left p-0 mt-1">
+
+                      <!-- checkbox -->
+                      <eq-checkbox
+                        v-b-tooltip.hover.v-dark.right :title="getFieldDescription(field.field)"
+                        class="mb-2 d-inline-block"
+                        :true-value="(typeof field.true !== 'undefined' ? field.true : 1)"
+                        :false-value="(typeof field.false !== 'undefined' ? field.false : 0)"
+                        v-model.number="spell[field.field]"
+                        @input="spell[field.field] = $event"
+                        v-if="field.bool"
+                      />
+
+                      <!-- input -->
+                      <b-form-input
+                        v-if="!field.selectData && !field.bool"
+                        :id="field.field"
+                        v-b-tooltip.hover.v-dark.right :title="getFieldDescription(field.field)"
+                        v-model.number="spell[field.field]"
+                        class="m-0 mt-1"
+                        :style="(spell[field.field] <= 0 ? 'opacity: .5' : '')"
+                      />
+
+                      <!-- select -->
+                      <select
+                        v-model.number="spell[field.field]"
+                        class="form-control m-0 mt-1"
+                        :id="field.field"
+                        v-if="field.selectData"
+                        v-b-tooltip.hover.v-dark.right :title="getFieldDescription(field.field)"
+                        :style="(spell[field.field] <= 0 ? 'opacity: .5' : '')"
                       >
-                        <div class="col-6 text-right p-0 m-0 mr-3" v-if="field.bool">
-                          <span v-if="field.category" class="font-weight-bold">{{ field.category }}</span>
-                          {{ field.description }}
-                        </div>
-                        <div
-                          class="col-6 text-right p-0 m-0 mr-3"
-                          v-if="!field.bool"
-                          style="margin-top: 10px !important"
+                        <option
+                          v-for="(description, index) in field.selectData"
+                          :key="index"
+                          :value="parseInt(index)"
                         >
-                          <span v-if="field.category" class="font-weight-bold">{{ field.category }}</span>
-                          {{ field.description }}
-                        </div>
-                        <div class="col-3 text-left p-0 mt-1">
-
-                          <!-- checkbox -->
-                          <eq-checkbox
-                            v-b-tooltip.hover.v-dark.right :title="getFieldDescription(field.field)"
-                            class="mb-2 d-inline-block"
-                            :true-value="(typeof field.true !== 'undefined' ? field.true : 1)"
-                            :false-value="(typeof field.false !== 'undefined' ? field.false : 0)"
-                            v-model.number="spell[field.field]"
-                            @input="spell[field.field] = $event"
-                            v-if="field.bool"
-                          />
-
-                          <!-- input -->
-                          <b-form-input
-                            v-if="!field.selectData && !field.bool"
-                            :id="field.field"
-                            v-b-tooltip.hover.v-dark.right :title="getFieldDescription(field.field)"
-                            v-model.number="spell[field.field]"
-                            class="m-0 mt-1"
-                            :style="(spell[field.field] <= 0 ? 'opacity: .5' : '')"
-                          />
-
-                          <!-- select -->
-                          <select
-                            v-model.number="spell[field.field]"
-                            class="form-control m-0 mt-1"
-                            :id="field.field"
-                            v-if="field.selectData"
-                            v-b-tooltip.hover.v-dark.right :title="getFieldDescription(field.field)"
-                            :style="(spell[field.field] <= 0 ? 'opacity: .5' : '')"
-                          >
-                            <option
-                              v-for="(description, index) in field.selectData"
-                              :key="index"
-                              :value="parseInt(index)"
-                            >
-                              {{ index }}) {{ description }}
-                            </option>
-                          </select>
-                        </div>
-                        <div class="col-2">
-                          <div v-if="field.category === 'Description'">
-                            <router-link
-                              class="btn btn-warning btn-sm mt-2"
-                              tag="button"
-                              :to="DB_STRING_EDITOR_URL + '?type=' + (field.field === 'descnum' ? 6 : 5) + '&selectedId=' + spell[field.field] "
-                            >
-                              <i class="ra ra-scroll-unfurled mr-1"></i> Strings Editor
-                            </router-link>
-                          </div>
-                        </div>
+                          {{ index }}) {{ description }}
+                        </option>
+                      </select>
+                    </div>
+                    <div class="col-2">
+                      <div v-if="field.category === 'Description'">
+                        <router-link
+                          class="btn btn-warning btn-sm mt-2"
+                          tag="button"
+                          :to="DB_STRING_EDITOR_URL + '?type=' + (field.field === 'descnum' ? 6 : 5) + '&selectedId=' + spell[field.field] "
+                        >
+                          <i class="ra ra-scroll-unfurled mr-1"></i> Strings Editor
+                        </router-link>
                       </div>
-
                     </div>
                   </div>
 
-                </eq-tab>
-              </eq-tabs>
-
-              <div class="text-center align-content-center mt-4" v-if="spell && spell.id >= 0">
-
-                <b-button
-                  @click="saveSpell()"
-                  size="sm"
-                  variant="outline-warning"
-                >
-                  <i class="ra ra-book"></i>
-                  Save Spell
-                </b-button>
-
-              </div>
-
-              <div class="row" v-if="spell">
-                <div class="col-10"></div>
-                <div class="col-2 text-right" title="Show unknown fields">
-                  Show All Fields
-                  <eq-checkbox
-                    class="mb-2 d-inline-block"
-                    v-model.number="showAllFields"
-                  />
                 </div>
               </div>
 
+            </eq-tab>
+          </eq-tabs>
 
-            </eq-window>
+          <div class="text-center align-content-center mt-4" v-if="spell && spell.id >= 0">
+
+            <b-button
+              @click="saveSpell()"
+              size="sm"
+              variant="outline-warning"
+            >
+              <i class="ra ra-book"></i>
+              Save Spell
+            </b-button>
 
           </div>
 
-          <!-- Preview Pane -->
-          <div class="col-xl-5 col-lg-12">
-
-            <!-- SPA Detail Pane -->
-            <eq-window
-              style="margin-top: 30px; margin-right: 10px; width: auto;"
-              class="fade-in"
-              v-if="spaDetailPaneActive"
-              :title="'Effect (' + spaPreviewNumber + ') Details'"
-            >
-              <spell-spa-preview-pane
-                :spa="spaPreviewNumber"
-                :spell="spell"
-                :effect-index="spaEffectIndex"
-                v-if="spaPreviewNumber >= 0"
-              />
-
-            </eq-window>
-
-            <!-- preview spell -->
-            <eq-window
-              style="margin-top: 30px; margin-right: 10px; width: auto;"
-              v-if="previewSpellActive"
-            >
-              <eq-spell-preview
-                :spell-data="spell"
-              />
-            </eq-window>
-
-            <!-- icon selector -->
-            <eq-window
-              style="margin-top: 30px; margin-right: 10px; width: auto;"
-              class="fade-in"
-              v-if="iconSelectorActive"
-            >
-              <spell-icon-selector
-                :selected-icon="spell.new_icon"
-                :inputData.sync="spell.new_icon"
-              />
-            </eq-window>
-
-            <!-- spell anim selector -->
-            <div
-              style="margin-top: 20px; width: auto;"
-              class="fade-in"
-              v-if="spellAnimSelectorActive"
-            >
-              <spell-animation-selector
-                :selected-animation="spell.spellanim"
-                :inputData.sync="spell.spellanim"
+          <div class="row" v-if="spell">
+            <div class="col-10"></div>
+            <div class="col-2 text-right" title="Show unknown fields">
+              Show All Fields
+              <eq-checkbox
+                class="mb-2 d-inline-block"
+                v-model.number="showAllFields"
               />
             </div>
-
-            <!-- spell nimbus anim selector -->
-            <div
-              style="margin-top: 20px; width: auto;"
-              class="fade-in"
-              v-if="spellNimbusAnimSelectorActive"
-            >
-              <spell-nimbus-animation-selector
-                :selected-animation="spell.nimbuseffect"
-                :inputData.sync="spell.nimbuseffect"
-              />
-            </div>
-
-            <!-- spell effect selector (Used in effectid 1-12)-->
-            <div
-              style="margin-top: 20px; width: auto;"
-              class="fade-in"
-              v-if="spellSelectorActive"
-            >
-              <spell-spell-effect-selector
-                @input="spell[selectedEffectColumn + '_' + selectedEffectIndex] = $event.spellId; setFieldModifiedById(selectedEffectColumn + '_' + selectedEffectIndex)"
-              />
-            </div>
-
-            <!-- spellitem selector -->
-            <div
-              style="margin-top: 20px; width: auto;"
-              class="fade-in"
-              v-if="itemSelectorActive"
-            >
-              <spell-item-selector
-                @input="spell[selectedItemSelectorField] = $event.id; setFieldModifiedById(selectedItemSelectorField)"
-              />
-            </div>
-
-            <!-- simple spell effect selector (Used in simple fields) -->
-            <div
-              style="margin-top: 20px; width: auto;"
-              class="fade-in"
-              v-if="simpleSpellSelectorActive"
-            >
-              <spell-spell-effect-selector
-                @input="spell[selectedSimpleSpellSelectorField] = $event.spellId; setFieldModifiedById(selectedSimpleSpellSelectorField)"
-              />
-            </div>
-
-            <!-- spell casting anim selector -->
-            <div
-              style="margin-top: 20px; width: auto;"
-              class="fade-in"
-              v-if="castingAnimSelectorActive && spell[castingAnimField] >= 0"
-            >
-              <spell-casting-animation-selector
-                :selected-animation="spell[castingAnimField]"
-                :inputData.sync="spell[castingAnimField]"
-              />
-            </div>
-
-            <!-- cone angle visualizer -->
-            <eq-window
-              style="margin-top: 30px; height: 500px"
-              class="fade-in text-center"
-              title="Cone Visualizer"
-              v-if="coneVisualizerActive"
-            >
-              <spell-cone-visualizer
-                :cone-start-angle="spell.cone_start_angle"
-                :cone-stop-angle="spell.cone_stop_angle"
-              />
-            </eq-window>
-
-            <!-- range visualizer -->
-            <eq-window-simple
-              style="margin-top: 30px"
-              class="fade-in text-center"
-              title="Range Visualizer"
-              v-if="rangeVisualizerActive && spell[activeRangeField] >= 0"
-            >
-              <range-visualizer :unit-marker="spell[activeRangeField]"/>
-            </eq-window-simple>
-
-            <!-- range visualizer -->
-            <div
-              style="margin-top: 20px"
-              class="fade-in text-center"
-              v-if="teleportZoneSelectorActive && typeof spell['teleport_zone'] !== 'undefined'"
-            >
-              <spell-teleport-zone-selector-aura
-                :selected-aura-name="spell['teleport_zone']"
-                v-if="selectedTeleportZoneSelectorType === TELEPORT_ZONE_SELECTOR_TYPE.AURAS"
-                @input="processTeleportZoneAuraSelectUpdate($event)"
-              />
-
-              <spell-teleport-zone-selector-horse
-                :selected-horse-name="spell['teleport_zone']"
-                v-if="selectedTeleportZoneSelectorType === TELEPORT_ZONE_SELECTOR_TYPE.HORSES"
-                @input="processTeleportZoneHorseSelectUpdate($event)"
-              />
-
-              <spell-teleport-zone-selector-pet
-                :selected-pet-name="spell['teleport_zone']"
-                v-if="selectedTeleportZoneSelectorType === TELEPORT_ZONE_SELECTOR_TYPE.PETS"
-                @input="processTeleportZonePetSelectUpdate($event)"
-              />
-
-              <spell-teleport-zone-selector-zone
-                :selected-zone-name="spell['teleport_zone']"
-                v-if="selectedTeleportZoneSelectorType === TELEPORT_ZONE_SELECTOR_TYPE.ZONES"
-                @input="processTeleportZoneZoneSelectUpdate($event)"
-              />
-            </div>
-
-            <!-- free id selector -->
-            <eq-window
-              title="Free Spell Ids"
-              style="margin-top: 30px; margin-right: 10px; width: auto;"
-              class="fade-in"
-              v-if="freeIdSelectorActive"
-            >
-
-              <free-id-selector
-                table-name="spells_new"
-                id-name="id"
-                name-label="name"
-                :with-reserved="true"
-                @input="spell.id = $event"
-              />
-            </eq-window>
-
           </div>
+
+
+        </eq-window>
+
+      </div>
+
+      <!-- Preview Pane -->
+      <div class="col-xl-5 col-lg-12">
+
+        <!-- SPA Detail Pane -->
+        <eq-window
+          style=" margin-right: 10px; width: auto;"
+          class="fade-in"
+          v-if="spaDetailPaneActive"
+          :title="'Effect (' + spaPreviewNumber + ') Details'"
+        >
+          <spell-spa-preview-pane
+            :spa="spaPreviewNumber"
+            :spell="spell"
+            :effect-index="spaEffectIndex"
+            v-if="spaPreviewNumber >= 0"
+          />
+
+        </eq-window>
+
+        <!-- preview spell -->
+        <eq-window
+          style=" margin-right: 10px; width: auto;"
+          v-if="previewSpellActive"
+        >
+          <eq-spell-preview
+            :spell-data="spell"
+          />
+        </eq-window>
+
+        <!-- icon selector -->
+        <eq-window
+          style=" margin-right: 10px; width: auto;"
+          class="fade-in"
+          v-if="iconSelectorActive"
+        >
+          <spell-icon-selector
+            :selected-icon="spell.new_icon"
+            :inputData.sync="spell.new_icon"
+          />
+        </eq-window>
+
+        <!-- spell anim selector -->
+        <div
+          style=" width: auto;"
+          class="fade-in"
+          v-if="spellAnimSelectorActive"
+        >
+          <spell-animation-selector
+            :selected-animation="spell.spellanim"
+            :inputData.sync="spell.spellanim"
+          />
         </div>
+
+        <!-- spell nimbus anim selector -->
+        <div
+          style=" width: auto;"
+          class="fade-in"
+          v-if="spellNimbusAnimSelectorActive"
+        >
+          <spell-nimbus-animation-selector
+            :selected-animation="spell.nimbuseffect"
+            :inputData.sync="spell.nimbuseffect"
+          />
+        </div>
+
+        <!-- spell effect selector (Used in effectid 1-12)-->
+        <div
+          style=" width: auto;"
+          class="fade-in"
+          v-if="spellSelectorActive"
+        >
+          <spell-spell-effect-selector
+            @input="spell[selectedEffectColumn + '_' + selectedEffectIndex] = $event.spellId; setFieldModifiedById(selectedEffectColumn + '_' + selectedEffectIndex)"
+          />
+        </div>
+
+        <!-- spellitem selector -->
+        <div
+          style=" width: auto;"
+          class="fade-in"
+          v-if="itemSelectorActive"
+        >
+          <spell-item-selector
+            @input="spell[selectedItemSelectorField] = $event.id; setFieldModifiedById(selectedItemSelectorField)"
+          />
+        </div>
+
+        <!-- simple spell effect selector (Used in simple fields) -->
+        <div
+          style=" width: auto;"
+          class="fade-in"
+          v-if="simpleSpellSelectorActive"
+        >
+          <spell-spell-effect-selector
+            @input="spell[selectedSimpleSpellSelectorField] = $event.spellId; setFieldModifiedById(selectedSimpleSpellSelectorField)"
+          />
+        </div>
+
+        <!-- spell casting anim selector -->
+        <div
+          style=" width: auto;"
+          class="fade-in"
+          v-if="castingAnimSelectorActive && spell[castingAnimField] >= 0"
+        >
+          <spell-casting-animation-selector
+            :selected-animation="spell[castingAnimField]"
+            :inputData.sync="spell[castingAnimField]"
+          />
+        </div>
+
+        <!-- cone angle visualizer -->
+        <eq-window
+          style=" height: 500px"
+          class="fade-in text-center"
+          title="Cone Visualizer"
+          v-if="coneVisualizerActive"
+        >
+          <spell-cone-visualizer
+            :cone-start-angle="spell.cone_start_angle"
+            :cone-stop-angle="spell.cone_stop_angle"
+          />
+        </eq-window>
+
+        <!-- range visualizer -->
+        <eq-window-simple
+          style=""
+          class="fade-in text-center"
+          title="Range Visualizer"
+          v-if="rangeVisualizerActive && spell[activeRangeField] >= 0"
+        >
+          <range-visualizer :unit-marker="spell[activeRangeField]"/>
+        </eq-window-simple>
+
+        <!-- range visualizer -->
+        <div
+          style="margin-top: 20px"
+          class="fade-in text-center"
+          v-if="teleportZoneSelectorActive && typeof spell['teleport_zone'] !== 'undefined'"
+        >
+          <spell-teleport-zone-selector-aura
+            :selected-aura-name="spell['teleport_zone']"
+            v-if="selectedTeleportZoneSelectorType === TELEPORT_ZONE_SELECTOR_TYPE.AURAS"
+            @input="processTeleportZoneAuraSelectUpdate($event)"
+          />
+
+          <spell-teleport-zone-selector-horse
+            :selected-horse-name="spell['teleport_zone']"
+            v-if="selectedTeleportZoneSelectorType === TELEPORT_ZONE_SELECTOR_TYPE.HORSES"
+            @input="processTeleportZoneHorseSelectUpdate($event)"
+          />
+
+          <spell-teleport-zone-selector-pet
+            :selected-pet-name="spell['teleport_zone']"
+            v-if="selectedTeleportZoneSelectorType === TELEPORT_ZONE_SELECTOR_TYPE.PETS"
+            @input="processTeleportZonePetSelectUpdate($event)"
+          />
+
+          <spell-teleport-zone-selector-zone
+            :selected-zone-name="spell['teleport_zone']"
+            v-if="selectedTeleportZoneSelectorType === TELEPORT_ZONE_SELECTOR_TYPE.ZONES"
+            @input="processTeleportZoneZoneSelectUpdate($event)"
+          />
+        </div>
+
+        <!-- free id selector -->
+        <eq-window
+          title="Free Spell Ids"
+          style=" margin-right: 10px; width: auto;"
+          class="fade-in"
+          v-if="freeIdSelectorActive"
+        >
+
+          <free-id-selector
+            table-name="spells_new"
+            id-name="id"
+            name-label="name"
+            :with-reserved="true"
+            @input="spell.id = $event"
+          />
+        </eq-window>
+
       </div>
     </div>
-  </div>
+  </content-area>
 </template>
 
 <script>
@@ -1699,12 +1695,14 @@ import {ROUTE}                        from "../../routes";
 import SpellItemSelector              from "./components/SpellItemSelector";
 import {SpireQueryBuilder}            from "../../app/api/spire-query-builder";
 import {FreeIdFetcher}                from "../../app/free-id-fetcher";
+import ContentArea                    from "../../components/layout/ContentArea";
 
 const MILLISECONDS_BEFORE_WINDOW_RESET = 5000;
 
 export default {
   name: "SpellEdit",
   components: {
+    ContentArea,
     SpellItemSelector,
     SpellTeleportZoneSelectorAura,
     SpellTeleportZoneSelectorHorse,

@@ -310,3 +310,7 @@ th[role=columnheader]:hover:not(.no-sort):after {
     visibility: visible;
     opacity: 1;
 }
+
+.header {
+    margin-bottom: 1rem;
+}

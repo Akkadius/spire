@@ -761,7 +761,7 @@
 
         <!-- goal match list previewer -->
         <div
-          style="margin-top: 20px; width: auto;"
+          style="width: auto;"
           class="fade-in"
           v-if="selectorActive['goal_match_list'] && task.task_activities[selectedActivity] && typeof task.task_activities[selectedActivity].goal_match_list !== 'undefined'"
         >
@@ -773,9 +773,9 @@
         </div>
 
 
-        <!-- (rewardid) item selector -->
+        <!-- description selector -->
         <div
-          style="margin-top: 20px; width: auto;"
+          style="width: auto;"
           class="fade-in"
           v-if="selectorActive['description']"
         >
@@ -788,7 +788,7 @@
 
         <!-- (rewardid) item selector -->
         <div
-          style="margin-top: 20px; width: auto;"
+          style="width: auto;"
           class="fade-in"
           v-if="selectorActive['rewardid'] || selectorActive['reward']"
         >
@@ -800,7 +800,7 @@
 
         <!-- (goalid) item selector -->
         <div
-          style="margin-top: 20px; width: auto;"
+          style="width: auto;"
           class="fade-in"
           v-if="selectorActive['goalid'] && isGoalIdItemSelectorActive() && task.task_activities[selectedActivity].goalmethod === 0"
         >
@@ -812,7 +812,7 @@
 
         <!-- (goalid) npc selector -->
         <div
-          style="margin-top: 20px; width: auto;"
+          style="width: auto;"
           class="fade-in"
           v-if="selectorActive['goalid'] && isGoalIdNpcSelectorActive() && task.task_activities[selectedActivity].goalmethod === 0"
         >
@@ -824,7 +824,7 @@
 
         <!-- (goalid) explore selector -->
         <div
-          style="margin-top: 20px; width: auto;"
+          style="width: auto;"
           class="fade-in"
           v-if="selectorActive['goalid'] && isGoalIdExploreActive() && task.task_activities[selectedActivity].goalmethod === 0"
         >
@@ -851,7 +851,7 @@
         <!-- (id) free id selector -->
         <eq-window-simple
           title="Free Item Ids"
-          style="margin-top: 30px; margin-right: 10px; width: auto;"
+          style="margin-right: 10px; width: auto;"
           class="fade-in"
           v-if="selectorActive['id']"
         >

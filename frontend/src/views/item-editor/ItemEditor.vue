@@ -1521,7 +1521,7 @@
 
         <!-- augment type calculator -->
         <eq-window
-          style="margin-top: 30px; margin-right: 10px; width: auto;"
+          style=" margin-right: 10px; width: auto;"
           class="fade-in"
           title="Augment Type Selector"
           v-if="drawAugmentTypeCalculatorActive && item"
@@ -1534,7 +1534,7 @@
 
         <!-- race material preview -->
         <eq-window-simple
-          style="margin-top: 20px; margin-right: 10px; width: auto;"
+          style=" margin-right: 10px; width: auto;"
           class="fade-in text-center"
           v-if="drawRaceMaterialPreviewActive && item"
         >
@@ -1578,7 +1578,7 @@
         <!-- free id selector -->
         <eq-window-simple
           title="Free Item Ids"
-          style="margin-top: 30px; margin-right: 10px; width: auto;"
+          style="margin-right: 10px; width: auto;"
           class="fade-in"
           v-if="freeIdSelectorActive"
         >

@@ -1,3 +1,15 @@
+## [1.13.1]
+
+### UI Changes
+
+Made changes to various components to streamline margins, cleaner UI across all parts of the app
+
+Popups for Items and Spells now have more consistent behaviors, they stay within viewport, stay only on left or right of element - versus up/down/left/right, now have a zero delay, fade disabled to allow a cleaner experience 
+
+Default windowing has been changed across the application as well.
+
+Removed ghost margins in the scrollbar by overhauling most pages within the app to use proper element structure.
+
 ## [1.13.0]
 
 ### Basic Auth Support

@@ -2,7 +2,7 @@
   <eq-window-simple
     title="Quest Script Examples"
     class="p-0 pl-3 pr-3"
-    style="margin-top: 30px"
+    style=""
     v-if="task"
   >
     <eq-tabs>
