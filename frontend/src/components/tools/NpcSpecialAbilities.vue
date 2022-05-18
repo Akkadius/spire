@@ -33,10 +33,11 @@
       <tr>
         <td class="ability-label-top">Enrage</td>
         <td style="width:50px; text-align:center">
-          <input
-            class="ability_check" @change="calculateSpecialAbilities" v-model="ability[2]"
-            v-bind:true-value="'1'" v-bind:false-value="'0'" type="checkbox"
-          ></td>
+          <eq-checkbox
+            class="d-inline-block"
+            v-model.number="ability[2]"
+            @input="calculateSpecialAbilities"
+          /></td>
         <td>
           <input
             type="text" @change="calculateSpecialAbilities" class="ability_check_sub form-control" style=""
@@ -65,10 +66,11 @@
       <tr>
         <td class="ability-label-top">Rampage</td>
         <td style="width:50px; text-align:center">
-          <input
-            class="ability_check" @change="calculateSpecialAbilities" v-model="ability[3]"
-            v-bind:true-value="'1'" v-bind:false-value="'0'" type="checkbox"
-          ></td>
+          <eq-checkbox
+            class="d-inline-block"
+            v-model.number="ability[3]"
+            @input="calculateSpecialAbilities"
+          /></td>
         <td>
           <input
             type="text" @change="calculateSpecialAbilities" class="ability_check_sub form-control" style=""
@@ -120,10 +122,11 @@
       <tr>
         <td class="ability-label-top">AE Rampage</td>
         <td style="width:50px; text-align:center">
-          <input
-            class="ability_check" @change="calculateSpecialAbilities" v-model="ability[4]"
-            v-bind:true-value="'1'" v-bind:false-value="'0'" type="checkbox"
-          ></td>
+          <eq-checkbox
+            class="d-inline-block"
+            v-model.number="ability[4]"
+            @input="calculateSpecialAbilities"
+          /></td>
         <td>
           <input
             type="text" @change="calculateSpecialAbilities" class="ability_check_sub form-control" style=""
@@ -178,10 +181,11 @@
       <tr>
         <td class="ability-label-top">Flurry</td>
         <td style="width:50px; text-align:center">
-          <input
-            class="ability_check" @change="calculateSpecialAbilities" v-model="ability[5]"
-            v-bind:true-value="'1'" v-bind:false-value="'0'" type="checkbox"
-          ></td>
+          <eq-checkbox
+            class="d-inline-block"
+            v-model.number="ability[5]"
+            @input="calculateSpecialAbilities"
+          /></td>
         <td>
           <input
             type="text" @change="calculateSpecialAbilities" class="ability_check_sub form-control" style=""
@@ -233,10 +237,11 @@
       <tr>
         <td class="ability-label-top">Ranged Attack</td>
         <td style="width:50px; text-align:center">
-          <input
-            class="ability_check" @change="calculateSpecialAbilities" v-model="ability[11]"
-            v-bind:true-value="'1'" v-bind:false-value="'0'" type="checkbox"
-          ></td>
+          <eq-checkbox
+            class="d-inline-block"
+            v-model.number="ability[11]"
+            @input="calculateSpecialAbilities"
+          /></td>
         <td>
           <input
             type="text" @change="calculateSpecialAbilities" class="ability_check_sub form-control" style=""
@@ -278,10 +283,11 @@
       <tr>
         <td class="ability-label-top">Tunnel Vision</td>
         <td style="width:50px; text-align:center">
-          <input
-            class="ability_check" @change="calculateSpecialAbilities" v-model="ability[29]"
-            v-bind:true-value="'1'" v-bind:false-value="'0'" type="checkbox"
-          ></td>
+          <eq-checkbox
+            class="d-inline-block"
+            v-model.number="ability[29]"
+            @input="calculateSpecialAbilities"
+          /></td>
         <td>
           <input
             type="text" @change="calculateSpecialAbilities" class="ability_check_sub form-control" style=""
@@ -297,10 +303,11 @@
       <tr>
         <td class="ability-label-top">Leashed</td>
         <td style="width:50px; text-align:center">
-          <input
-            class="ability_check" @change="calculateSpecialAbilities" v-model="abilityParams[32]"
-            v-bind:true-value="'1'" v-bind:false-value="'0'" type="checkbox"
-          >
+          <eq-checkbox
+            class="d-inline-block"
+            v-model.number="ability[32]"
+            @input="calculateSpecialAbilities"
+          />
         </td>
         <td>
           <input
@@ -315,10 +322,11 @@
       <tr>
         <td class="ability-label-top">Tethered</td>
         <td style="width:50px; text-align:center">
-          <input
-            class="ability_check" @change="calculateSpecialAbilities" v-model="ability[33]"
-            v-bind:true-value="'1'" v-bind:false-value="'0'" type="checkbox"
-          ></td>
+          <eq-checkbox
+            class="d-inline-block"
+            v-model.number="ability[33]"
+            @input="calculateSpecialAbilities"
+          /></td>
         <td>
           <input
             type="text" @change="calculateSpecialAbilities" class="ability_check_sub form-control" style=""
@@ -332,10 +340,11 @@
       <tr>
         <td class="ability-label-top">Flee Percent</td>
         <td style="width:50px; text-align:center">
-          <input
-            class="ability_check" @change="calculateSpecialAbilities" v-model="ability[37]"
-            v-bind:true-value="'1'" v-bind:false-value="'0'" type="checkbox"
-          ></td>
+          <eq-checkbox
+            class="d-inline-block"
+            v-model.number="ability[37]"
+            @input="calculateSpecialAbilities"
+          /></td>
         <td>
           <input
             type="text" @change="calculateSpecialAbilities" class="ability_check_sub form-control" style=""
@@ -357,10 +366,11 @@
       <tr>
         <td class="ability-label-top">Chase Distance</td>
         <td style="width:50px; text-align:center">
-          <input
-            class="ability_check" @change="calculateSpecialAbilities" v-model="ability[40]"
-            v-bind:true-value="'1'" v-bind:false-value="'0'" type="checkbox"
-          ></td>
+          <eq-checkbox
+            class="d-inline-block"
+            v-model.number="ability[40]"
+            @input="calculateSpecialAbilities"
+          /></td>
         <td>
           <input
             type="text" @change="calculateSpecialAbilities" class="ability_check_sub form-control" style=""
@@ -387,10 +397,11 @@
       <tr>
         <td class="ability-label-top">Allow Tank</td>
         <td style="width:50px; text-align:center">
-          <input
-            class="ability_check" @change="calculateSpecialAbilities" v-model="ability[41]"
-            v-bind:true-value="'1'" v-bind:false-value="'0'" type="checkbox"
-          ></td>
+          <eq-checkbox
+            class="d-inline-block"
+            v-model.number="ability[41]"
+            @input="calculateSpecialAbilities"
+          /></td>
         <td>
           <input
             type="text" @change="calculateSpecialAbilities" class="ability_check_sub form-control" style=""
@@ -407,10 +418,11 @@
       <tr>
         <td class="ability-label-top">Casting Resist Diff</td>
         <td style="width:50px; text-align:center">
-          <input
-            class="ability_check" @change="calculateSpecialAbilities" v-model="ability[43]"
-            v-bind:true-value="'1'" v-bind:false-value="'0'" type="checkbox"
-          ></td>
+          <eq-checkbox
+            class="d-inline-block"
+            v-model.number="ability[43]"
+            @input="calculateSpecialAbilities"
+          /></td>
         <td>
           <input
             type="text" @change="calculateSpecialAbilities" class="ability_check_sub form-control" style=""
@@ -427,10 +439,14 @@
       <tr>
         <td class="ability-label-top">Counter Avoid Damage</td>
         <td style="width:50px; text-align:center">
-          <input
-            class="ability_check" @change="calculateSpecialAbilities" v-model="ability[44]"
-            v-bind:true-value="'1'" v-bind:false-value="'0'" type="checkbox"
-          ></td>
+
+          <eq-checkbox
+            class="d-inline-block"
+            v-model.number="ability[44]"
+            @input="calculateSpecialAbilities"
+          />
+
+        </td>
         <td>
           <input
             type="text" @change="calculateSpecialAbilities" class="ability_check_sub form-control" style=""
@@ -474,215 +490,21 @@
       </tr>
       </tbody>
     </table>
-    <br>
-    <table class="table-condensed flip-content" style="width: 100%">
-      <tbody>
-      <tr>
-        <td class="ability-label">Triple Attack</td>
-        <td>
-          <input
-            class="ability_check" @change="calculateSpecialAbilities" v-model="ability[6]"
-            v-bind:true-value="'1'" v-bind:false-value="'0'" type="checkbox"
-          ></td>
-        <td class="ability-label">Quad Attack</td>
-        <td>
-          <input
-            class="ability_check" @change="calculateSpecialAbilities" v-model="ability[7]"
-            v-bind:true-value="'1'" v-bind:false-value="'0'" type="checkbox"
-          ></td>
-        <td class="ability-label">Dual Wield</td>
-        <td>
-          <input
-            class="ability_check" @change="calculateSpecialAbilities" v-model="ability[8]"
-            v-bind:true-value="'1'" v-bind:false-value="'0'" type="checkbox"
-          ></td>
-      </tr>
-      <tr>
-        <td class="ability-label">Bane Attack</td>
-        <td>
-          <input
-            class="ability_check" @change="calculateSpecialAbilities" v-model="ability[9]"
-            v-bind:true-value="'1'" v-bind:false-value="'0'" type="checkbox"
-          ></td>
-        <td class="ability-label">Magic Attack</td>
-        <td>
-          <input
-            class="ability_check" @change="calculateSpecialAbilities" v-model="ability[10]"
-            v-bind:true-value="'1'" v-bind:false-value="'0'" type="checkbox"
-          ></td>
-        <td class="ability-label">Unslowable</td>
-        <td>
-          <input
-            class="ability_check" @change="calculateSpecialAbilities" v-model="ability[12]"
-            v-bind:true-value="'1'" v-bind:false-value="'0'" type="checkbox"
-          ></td>
-      </tr>
-      <tr>
-        <td class="ability-label">Unmezable</td>
-        <td>
-          <input
-            class="ability_check" @change="calculateSpecialAbilities" v-model="ability[13]"
-            v-bind:true-value="'1'" v-bind:false-value="'0'" type="checkbox"
-          ></td>
-        <td class="ability-label">Uncharmable</td>
-        <td>
-          <input
-            class="ability_check" @change="calculateSpecialAbilities" v-model="ability[14]"
-            v-bind:true-value="'1'" v-bind:false-value="'0'" type="checkbox"
-          ></td>
-        <td class="ability-label">Unstunable</td>
-        <td>
-          <input
-            class="ability_check" @change="calculateSpecialAbilities" v-model="ability[15]"
-            v-bind:true-value="'1'" v-bind:false-value="'0'" type="checkbox"
-          ></td>
-      </tr>
-      <tr>
-        <td class="ability-label">Unsnareable</td>
-        <td>
-          <input
-            class="ability_check" @change="calculateSpecialAbilities" v-model="ability[16]"
-            v-bind:true-value="'1'" v-bind:false-value="'0'" type="checkbox"
-          ></td>
-        <td class="ability-label">Unfearable</td>
-        <td>
-          <input
-            class="ability_check" @change="calculateSpecialAbilities" v-model="ability[17]"
-            v-bind:true-value="'1'" v-bind:false-value="'0'" type="checkbox"
-          ></td>
-        <td class="ability-label">Immune to Dispell</td>
-        <td>
-          <input
-            class="ability_check" @change="calculateSpecialAbilities" v-model="ability[18]"
-            v-bind:true-value="'1'" v-bind:false-value="'0'" type="checkbox"
-          ></td>
-      </tr>
-      <tr>
-        <td class="ability-label">Immune to Melee</td>
-        <td>
-          <input
-            class="ability_check" @change="calculateSpecialAbilities" v-model="ability[19]"
-            v-bind:true-value="'1'" v-bind:false-value="'0'" type="checkbox"
-          ></td>
-        <td class="ability-label">Immune to Magic</td>
-        <td>
-          <input
-            class="ability_check" @change="calculateSpecialAbilities" v-model="ability[20]"
-            v-bind:true-value="'1'" v-bind:false-value="'0'" type="checkbox"
-          ></td>
-        <td class="ability-label">Immune to Fleeing</td>
-        <td>
-          <input
-            class="ability_check" @change="calculateSpecialAbilities" v-model="ability[21]"
-            v-bind:true-value="'1'" v-bind:false-value="'0'" type="checkbox"
-          ></td>
-      </tr>
-      <tr>
-        <td class="ability-label">Immune to non-Bane Melee</td>
-        <td>
-          <input
-            class="ability_check" @change="calculateSpecialAbilities" v-model="ability[22]"
-            v-bind:true-value="'1'" v-bind:false-value="'0'" type="checkbox"
-          ></td>
-        <td class="ability-label">Immune to non-Magical Melee</td>
-        <td>
-          <input
-            class="ability_check" @change="calculateSpecialAbilities" v-model="ability[23]"
-            v-bind:true-value="'1'" v-bind:false-value="'0'" type="checkbox"
-          ></td>
-        <td class="ability-label">Will Not Aggro</td>
-        <td>
-          <input
-            class="ability_check" @change="calculateSpecialAbilities" v-model="ability[24]"
-            v-bind:true-value="'1'" v-bind:false-value="'0'" type="checkbox"
-          ></td>
-      </tr>
-      <tr>
-        <td class="ability-label">Immune to Aggro</td>
-        <td>
-          <input
-            class="ability_check" @change="calculateSpecialAbilities" v-model="ability[25]"
-            v-bind:true-value="'1'" v-bind:false-value="'0'" type="checkbox"
-          ></td>
-        <td class="ability-label">Resist Ranged Spells</td>
-        <td>
-          <input
-            class="ability_check" @change="calculateSpecialAbilities" v-model="ability[26]"
-            v-bind:true-value="'1'" v-bind:false-value="'0'" type="checkbox"
-          ></td>
-        <td class="ability-label">See through Feign Death</td>
-        <td>
-          <input
-            class="ability_check" @change="calculateSpecialAbilities" v-model="ability[27]"
-            v-bind:true-value="'1'" v-bind:false-value="'0'" type="checkbox"
-          ></td>
-      </tr>
-      <tr>
-        <td class="ability-label">Immune to Taunt</td>
-        <td>
-          <input
-            class="ability_check" @change="calculateSpecialAbilities" v-model="ability[28]"
-            v-bind:true-value="'1'" v-bind:false-value="'0'" type="checkbox"
-          ></td>
-        <td class="ability-label">Does NOT buff/heal friends</td>
-        <td>
-          <input
-            class="ability_check" @change="calculateSpecialAbilities" v-model="ability[30]"
-            v-bind:true-value="'1'" v-bind:false-value="'0'" type="checkbox"
-          ></td>
-        <td class="ability-label">Unpacifiable</td>
-        <td>
-          <input
-            class="ability_check" @change="calculateSpecialAbilities" v-model="ability[31]"
-            v-bind:true-value="'1'" v-bind:false-value="'0'" type="checkbox"
-          ></td>
-      </tr>
-      <tr>
-        <td class="ability-label">Destructible Object</td>
-        <td>
-          <input
-            class="ability_check" @change="calculateSpecialAbilities" v-model="ability[34]"
-            v-bind:true-value="'1'" v-bind:false-value="'0'" type="checkbox"
-          ></td>
-        <td class="ability-label">No Harm from Players</td>
-        <td>
-          <input
-            class="ability_check" @change="calculateSpecialAbilities" v-model="ability[35]"
-            v-bind:true-value="'1'" v-bind:false-value="'0'" type="checkbox"
-          ></td>
-        <td class="ability-label">Always Flee</td>
-        <td>
-          <input
-            class="ability_check" @change="calculateSpecialAbilities" v-model="ability[36]"
-            v-bind:true-value="'1'" v-bind:false-value="'0'" type="checkbox"
-          ></td>
-      </tr>
-      <tr>
-        <td class="ability-label">Allow Beneficial</td>
-        <td>
-          <input
-            class="ability_check" @change="calculateSpecialAbilities" v-model="ability[38]"
-            v-bind:true-value="'1'" v-bind:false-value="'0'" type="checkbox"
-          ></td>
-        <td class="ability-label">Disable Melee</td>
-        <td>
-          <input
-            class="ability_check" @change="calculateSpecialAbilities" v-model="ability[39]"
-            v-bind:true-value="'1'" v-bind:false-value="'0'" type="checkbox"
-          ></td>
-        <td class="ability-label">Ignore Root Aggro</td>
-        <td>
-          <input
-            class="ability_check" @change="calculateSpecialAbilities" v-model="ability[42]"
-            v-bind:true-value="'1'" v-bind:false-value="'0'" type="checkbox"
-          ></td>
-      </tr>
-      </tbody>
-    </table>
-    <br>
 
-    <div v-if="showSpecialAbilitiesResult">
+    <div class="row mt-3" style="margin-left: 180px">
+      <div class="col-3" v-for="c in checkboxAbilities">
+        <eq-checkbox
+          class="mb-2 d-inline-block mr-3"
+          v-model.number="ability[c.ability]"
+          @input="calculateSpecialAbilities"
+        />
+        <div class="d-inline-block">{{ c.name }}</div>
 
+      </div>
+
+    </div>
+
+    <div v-if="showSpecialAbilitiesResult" class="mt-3">
       <h4 class="eq-header">Abilities Result</h4>
       <input
         type="text" @change="calculateSpecialAbilities" class="form-control m-wrap span6" disabled
@@ -700,11 +522,12 @@ Ability Params
 </template>
 
 <script>
-import EqWindow from "@/components/eq-ui/EQWindow";
+import EqWindow   from "@/components/eq-ui/EQWindow";
+import EqCheckbox from "../eq-ui/EQCheckbox";
 
 export default {
   name: "NpcSpecialAbilities",
-  components: { EqWindow },
+  components: { EqCheckbox, EqWindow },
   props: {
     abilities: {
       type: String,
@@ -722,7 +545,40 @@ export default {
       ability: {},
       abilityParams: null,
       debug: false,
-      propWatcher: null
+      propWatcher: null,
+
+      checkboxAbilities: [
+        { name: "Triple Attack", ability: 6 },
+        { name: "Quad Attack", ability: 7 },
+        { name: "Dual Wield", ability: 8 },
+        { name: "Bane Attack", ability: 9 },
+        { name: "Magic Attack", ability: 10 },
+        { name: "Unslowable", ability: 12 },
+        { name: "Unmezable", ability: 13 },
+        { name: "Uncharmable", ability: 14 },
+        { name: "Unstunnable", ability: 15 },
+        { name: "Unsnareable", ability: 16 },
+        { name: "Unfearable", ability: 17 },
+        { name: "Immune to Dispell", ability: 18 },
+        { name: "Immune to Melee", ability: 19 },
+        { name: "Immune to Magic", ability: 20 },
+        { name: "Immune to Fleeing", ability: 21 },
+        { name: "Immune to Non-Bane Melee", ability: 22 },
+        { name: "Immune to Non-Magical Melee", ability: 23 },
+        { name: "Will Not Aggro", ability: 24 },
+        { name: "Immune to Aggro", ability: 25 },
+        { name: "Resist Ranged Spells", ability: 26 },
+        { name: "See through Feign Death", ability: 27 },
+        { name: "Immune to Taunt", ability: 28 },
+        { name: "Does NOT buff/heal friends", ability: 30 },
+        { name: "Unpacifiable", ability: 31 },
+        { name: "Destructible Object", ability: 34 },
+        { name: "No Harm from Players", ability: 35 },
+        { name: "Always Flee", ability: 36 },
+        { name: "Allow Beneficial", ability: 38 },
+        { name: "Disable Melee", ability: 39 },
+        { name: "Ignore Root Aggro", ability: 42 },
+      ]
     }
   },
   mounted() {
@@ -758,7 +614,7 @@ export default {
         const value        = abilitySplit[1].trim()
 
         if (value > 0) {
-          abilities[abilityId] = value
+          abilities[abilityId] = parseInt(value)
 
           for (let i = 2; i < abilitySplit.length; i++) {
             const value = abilitySplit[i].trim()
@@ -766,7 +622,7 @@ export default {
               params[abilityId] = {}
             }
 
-            params[abilityId][i - 2] = value
+            params[abilityId][i - 2] = parseInt(value)
           }
         }
       }
@@ -777,6 +633,9 @@ export default {
     },
     calculateSpecialAbilities: function () {
       this.$forceUpdate();
+
+      console.log("calculates")
+      console.log(this.ability)
 
       let specialAbilities = []
       for (let abilityId in this.ability) {
@@ -812,9 +671,10 @@ export default {
 .ability-label-top {
   width: 140px;
   text-align: right;
+  padding-bottom: 5px;
 }
 
-#special-abilities {
+#special-abilities input, #special-abilities select {
   margin-top: 0;
   margin-bottom: 0;
 }

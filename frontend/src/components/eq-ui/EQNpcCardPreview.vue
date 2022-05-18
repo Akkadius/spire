@@ -655,17 +655,20 @@ export default {
     if (this.npc.npc_faction_id > 0 && this.npc.npc_factions) {
       let factionHits = []
       for (let n of this.npc.npc_factions) {
-        for (let f of n.npc_faction_entries) {
+        if (n.npc_faction_entries) {
+          for (let f of n.npc_faction_entries) {
 
-          // make sure we don't add the same spell twice for now
-          if (factionHits.filter(e => f.name === e.name).length === 0) {
-            factionHits.push(
-              {
-                name: f.faction_list.name,
-                hitValue: f.value,
-              }
-            )
+            // make sure we don't add the same spell twice for now
+            if (factionHits.filter(e => f.name === e.name).length === 0) {
+              factionHits.push(
+                {
+                  name: f.faction_list.name,
+                  hitValue: f.value,
+                }
+              )
+            }
           }
+
         }
       }
 

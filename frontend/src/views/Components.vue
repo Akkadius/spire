@@ -226,10 +226,10 @@
                       :abilities="specialAbilityInput"
                     />
 
-                    <h4 class="eq-header mt-4">Special Abilities Input</h4>
+                    <h4 class="eq-header mt-3">Special Abilities Input</h4>
                     <input
                       type="text"
-                      class="form-control mb-5 mt-4"
+                      class="form-control mb-3"
                       v-model="specialAbilityInput"
                     >
 
