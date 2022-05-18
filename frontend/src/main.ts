@@ -58,7 +58,12 @@ import 'sl-vue-tree/src/sl-vue-tree.js'
 
 import "@exuanbo/file-icons-js/dist/css/file-icons.min.css"
 
-Vue.use(BootstrapVue)
+Vue.use(BootstrapVue, {
+  "BPopover": {
+    "no-fade": true,
+    "delay": 10000,
+  }
+})
 
 import 'leaflet/dist/leaflet.css';
 import { Icon } from 'leaflet';

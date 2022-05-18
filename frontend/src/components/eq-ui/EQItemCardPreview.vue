@@ -8,7 +8,7 @@
 
     <div class="row">
       <div class="col-1">
-        <span :class="'fade-in item-' + itemData.icon" :title="itemData.icon">
+        <span :class="'item-' + itemData.icon" :title="itemData.icon">
 <!--          <span-->
           <!--            v-if="itemData.stacksize > 1"-->
           <!--            style="position:absolute; right: 0px; top:45px; font-size: 10px">-->

@@ -19,9 +19,11 @@
 
     <b-popover
       :target="spell.id + '-' + popoverId + '-popover'"
-      placement="auto"
       custom-class="no-bg"
-      delay="1"
+      placement="right"
+      delay="0"
+      boundary="viewport"
+      :no-fade="true"
       triggers="hover focus"
       style="width: 500px !important"
     >
