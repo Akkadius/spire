@@ -53,9 +53,7 @@ export default {
     }
 
     this.sideLoadedSpellData = Spells.data;
-    this.itemData = Items.items;
     this.loaded = true;
-
   },
   data() {
     return {
@@ -63,7 +61,6 @@ export default {
       componentId: "",
       sideLoadedSpellData: {},
       loaded: false,
-      itemData: {},
     }
   },
   props: {

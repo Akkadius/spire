@@ -457,7 +457,6 @@ export default {
       debug: App.DEBUG,
       debugSpellEffects: false,
       spellEffectInfo: [],
-      itemData: {},
       sideLoadedSpellData: {},
       componentId: "",
       reagents: [],
@@ -520,8 +519,6 @@ export default {
       this.loadSpellDescription();
 
       this.sideLoadedSpellData = Spells.data;
-
-      this.itemData = Items.items;
     },
     getTargetTypeColor(targetType) {
       return Spells.getTargetTypeColor(targetType)

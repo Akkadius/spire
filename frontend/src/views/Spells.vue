@@ -218,7 +218,6 @@ export default {
   data() {
     return {
       loaded: false,
-      spells: null,
       limit: 100,
       beginRange: 10000,
       endRange: 100000,
@@ -250,6 +249,10 @@ export default {
       this.loadQueryState()
       this.listSpells()
     },
+  },
+
+  created() {
+    this.spells = null // we don't want reactivity so we register this here
   },
 
   async mounted() {

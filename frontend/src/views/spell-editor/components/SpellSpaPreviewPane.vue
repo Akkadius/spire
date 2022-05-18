@@ -48,8 +48,6 @@
 import {SPELL_SPA_DEFINITIONS} from "@/app/constants/eq-spell-spa-definitions";
 import EqDebug                 from "@/components/eq-ui/EQDebug";
 import {Spells}                from "@/app/spells";
-import {App}                   from "../../../constants/app";
-import {Items}                 from "@/app/items";
 import EqWindow                from "@/components/eq-ui/EQWindow";
 
 export default {
@@ -78,8 +76,6 @@ export default {
 
       componentId: "",
       reagents: [],
-
-      itemData: null,
     }
   },
   props: {
@@ -126,7 +122,6 @@ export default {
 
       // side loaded data
       this.sideLoadedSpellData = Spells.data;
-      this.itemData            = Items.items;
     },
     getSpellEffectInfo: async function (spell, effectIndex) {
       return await Spells.getSpellEffectInfo(spell, effectIndex)

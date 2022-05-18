@@ -96,7 +96,7 @@
       </div>
     </div>
 
-    <div class="mt-4 mb-5">
+    <div class="mt-4">
       <div
         class="row mt-3"
         v-for="(row, index) in rows"
@@ -152,7 +152,10 @@
     <div v-if="npc.merchant_id > 0" class="mt-3">
 
       <!-- Show if under max -->
-      <div v-if="merchantitems && merchantitems.length > 0 && (merchantitems.length < maxDataEntries || showMerchantItems)" class="fade-in">
+      <div
+        v-if="merchantitems && merchantitems.length > 0 && (merchantitems.length < maxDataEntries || showMerchantItems)"
+        class="fade-in"
+      >
         <div class="font-weight-bold mb-3">This NPC sells the following items ({{ commify(merchantitems.length) }})
           <a href="javascript:void(0);" @click="showMerchantItems = false" v-if="merchantitems.length > maxDataEntries">hide</a>
         </div>
@@ -321,18 +324,17 @@ export default {
 
       // loot
       showLoot: false, // when too many results shown, toggle
-      loot: {}, // data
 
       // merchant
-      merchantitems: [], // data
+      // merchantitems: [], // data
       showMerchantItems: false, // when too many results shown, toggle
 
       // spells
-      castedSpells: [], // data
+      // castedSpells: [], // data
       showCastedSpells: false,  // when too many results shown, toggle
 
       // faction hits
-      factionHits: [], // data
+      // factionHits: [], // data
       showFactionHits: false,  // when too many results shown, toggle
 
       // field display
@@ -589,6 +591,15 @@ export default {
 
     }
   },
+
+  created() {
+    // define these buckets here because we do not want deep reactivity here (expensive)
+    this.loot          = [];
+    this.merchantitems = []
+    this.castedSpells  = []
+    this.factionHits   = []
+
+  },
   async mounted() {
 
     // merchants
@@ -676,6 +687,8 @@ export default {
       this.factionHits = factionHits.sort((a, b) => {
         return a.name.localeCompare(b.name);
       });
+
+      this.$forceUpdate()
 
     }
   },
