@@ -684,8 +684,7 @@ A:hover {
 }
 
 .eq-window-simple {
-    padding-left: 15px;
-    padding-right: 15px;
+    padding: 20px;
 
     background-image: url(../images/super_fancy_bg.png);
 
