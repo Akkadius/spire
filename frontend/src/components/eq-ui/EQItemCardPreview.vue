@@ -2,7 +2,7 @@
   <div class="item-bg" style="min-width: 450px; max-width: 500px;" v-if="itemData">
     <span
       v-if="!['IT63', 'IT64'].includes(itemData.idfile)"
-      style="position: absolute; right: 7%; opacity: .5;"
+      style="position: absolute; right: 7%; opacity: 1;"
       :class="'mt-2 mb-2 object-ctn-' + itemData.idfile.replace('IT', '')"
     />
 

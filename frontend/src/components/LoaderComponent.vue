@@ -1,5 +1,5 @@
 <template>
-  <b-container :class="[ 'bv-example-row', 'p-' + padding ]" v-show="isLoading">
+  <b-container :class="[ 'bv-example-row', 'p-' + padding, 'mt-5 mb-5' ]" v-show="isLoading">
     <b-row class="justify-content-md-center loader">
       <li>L</li>
       <li>O</li>
