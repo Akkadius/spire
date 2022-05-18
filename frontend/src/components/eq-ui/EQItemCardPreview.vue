@@ -1,7 +1,7 @@
 <template>
-  <div class="item-bg" style="min-width: 450px; max-width: 475px;" v-if="itemData">
+  <div class="item-bg" style="min-width: 450px; max-width: 500px;" v-if="itemData">
     <span
-      v-if="itemData.idfile !== 'IT63'"
+      v-if="!['IT63', 'IT64'].includes(itemData.idfile)"
       style="position: absolute; right: 7%; opacity: .5;"
       :class="'mt-2 mb-2 object-ctn-' + itemData.idfile.replace('IT', '')"
     />
@@ -22,7 +22,7 @@
         </h6>
 
         <!-- Top level -->
-        <div class="mb-3 mt-3">
+        <div class="mt-3">
           <table>
             <tbody>
 
@@ -55,14 +55,14 @@
       </div>
     </div>
 
-    <div class="row">
+    <div class="row pl-2 pr-2">
       <div class="col-12">
 
         <!-- 2nd level -->
-        <div class="mb-3 row">
+        <div class="row mt-3">
           <!-- First Section -->
           <div class="stat-section col-4">
-            <table style="width: 125px;" class="item-preview-table">
+            <table class="item-preview-table">
               <tbody>
 
               <tr v-for="(value, stat) in secondlevel1">
@@ -83,7 +83,7 @@
 
           <!-- Second Section (AC / HP / Mana / End) -->
           <div class="stat-section col-4">
-            <table style="width: 125px;">
+            <table style="width: 100%">
               <tbody>
 
               <tr v-for="(value, stat) in secondlevel2">
@@ -104,7 +104,7 @@
 
           <!-- Third Section (Weapon Damage) -->
           <div class="stat-section col-4">
-            <table style="width: 140px;">
+            <table style="width: 100%">
               <tbody>
 
               <tr v-for="(value, stat) in secondlevel3">
@@ -115,7 +115,7 @@
 
                 <!-- Regular stat -->
                 <td style="text-align: right" v-if="value !== '' && value !== 0">
-                  {{ value }}
+                  {{ commify(value) }}
                 </td>
 
               </tr>
@@ -125,7 +125,7 @@
         </div>
 
         <!-- 3rd level -->
-        <div class="mb-3 row">
+        <div class="row mt-3">
 
           <!-- Stats -->
           <div class="stat-section col-4">
@@ -140,13 +140,13 @@
 
                 <!-- Regular stat -->
                 <td style="text-align: right" v-if="itemData[data.stat] > 0 || itemData[data.heroic] > 0">
-                  {{ itemData[data.stat] }}
+                  {{ commify(itemData[data.stat]) }}
                 </td>
 
                 <!-- Heroic -->
                 <td style="text-align: right" v-if="itemData[data.heroic] > 0">
                     <span style="color: #ffecca" v-if="itemData[data.heroic]">
-                      {{ itemData[data.heroic] > 0 ? "+" + itemData[data.heroic] : itemData[data.heroic] }}
+                      {{ commify(itemData[data.heroic] > 0 ? "+" + itemData[data.heroic] : itemData[data.heroic]) }}
                     </span>
                 </td>
               </tr>
@@ -206,14 +206,14 @@
     </div>
 
     <!-- Extra Damage Amount -->
-    <div v-if="itemData['extradmgamt'] > 0" class="mb-1 row">
+    <div v-if="itemData['extradmgamt'] > 0" class="mt-3 row">
       <div class="col-12">
         <span style="font-weight: bold" class="pr-2">{{ getExtraDmgSkill() }} Damage </span> +{{ itemData.extradmgamt }}
       </div>
     </div>
 
     <!-- Bard Skill -->
-    <div v-if="itemData['bardtype'] > 22 && itemData['bardtype'] < 65535" class="mb-1 row">
+    <div v-if="itemData['bardtype'] > 22 && itemData['bardtype'] < 65535" class="mt-3 row">
       <div class="col-12">
         <span style="font-weight: bold" class="pr-2">Bard Skill ({{ getBardSkill() }}) </span>
         {{ ((itemData.bardvalue * 10) - 100) }}%
@@ -222,21 +222,21 @@
 
     <!-- Skill Mod Type -->
     <div class="row" v-if="itemData['skillmodtype'] > 0 && itemData['skillmodvalue'] !== 0">
-      <div class="mb-1 col-12">
+      <div class="mt-3 col-12">
         <span style="font-weight: bold" class="pr-2">Skill Mod ({{ getSkillModSkill() }}) </span>
         +{{ itemData.skillmodvalue }}
       </div>
     </div>
 
     <!-- Augmentation Type -->
-    <div class="row" v-if="itemData['itemtype'] === 54">
+    <div class="row mt-3" v-if="itemData['itemtype'] === 54">
       <div class="col-12">
-        <div class="mt-3">
+        <div>
           <div style="font-weight: bold" class="pr-2">Augmentation Slot Type(s)</div>
           <div v-for="(augType, index) in getAugSlotTypes()" :key="augType">
             {{ augType }}
           </div>
-          <div class="mt-2" v-if="itemData.augrestrict > 0">
+          <div class="mt-3" v-if="itemData.augrestrict > 0">
             <span style="font-weight: bold" class="pr-2">Augmentation Restriction </span> {{ getAugRestriction() }}
           </div>
         </div>
@@ -244,9 +244,9 @@
     </div>
 
     <!-- Augment Slots -->
-    <div class="mb-3 mt-3">
+    <div class="mt-3" v-if="hasAugs">
       <div v-for="(n, i) in 5">
-        <div class="pl-0 row mb-1 " v-if="itemData['augslot_' + n + '_type'] > 0">
+        <div class="pl-0 row mt-1 " v-if="itemData['augslot_' + n + '_type'] > 0">
           <div class="col-12">
             <img
               src='~@/assets/img/icons/inventory/blank_slot.gif'
@@ -261,9 +261,9 @@
     </div>
 
     <!-- Effects -->
-    <div class="mb-3" v-if="effects && effects.length > 0">
+    <div class="mt-4" v-if="hasEffects">
       <div v-for="effect in effects" :key="effect.field" class="col-12">
-        <div v-if="itemData[effect.field] > 0 && effectData[effect.field]" class="row col-12 pl-0 mb-1">
+        <div v-if="itemData[effect.field] > 0 && effectData[effect.field]" class="row col-12 pl-0 mt-1">
 
           <!-- Target -->
           <div
@@ -294,7 +294,7 @@
             triggers="hover focus"
             style="width: 500px !important"
           >
-            <eq-window style="margin-right: 10px; width: auto; height: 90%">
+            <eq-window style="margin-right: 10px; width: auto; height: 100%">
               <eq-spell-preview :spell-data="effectData[effect.field]"/>
             </eq-window>
           </b-popover>
@@ -303,14 +303,14 @@
     </div>
 
     <!-- Bag Weight Reduction -->
-    <div v-if="itemData.bagwr" class="mb-1 row">
+    <div v-if="itemData.bagwr" class="mt-3 row">
       <div class="col-12">
         <span style="font-weight: bold" class="mr-1">Bag Weight Reduction</span> {{ itemData.bagwr }}%
       </div>
     </div>
 
     <!-- Lore -->
-    <div v-if="itemData.lore" class="mb-1 row">
+    <div v-if="itemData.lore" class="mt-3 row">
       <div class="col-12">
         <span style="font-weight: bold" class="mr-1">Lore</span> {{ itemData.lore }}
       </div>
@@ -318,7 +318,7 @@
 
     <!-- Faction -->
     <div v-for="i in 4" :key="i">
-      <div class="mb-1 row" v-if="itemData['factionmod_' + i] > 0 && factionNames[itemData['factionmod_' + i]]">
+      <div class="mt-1 row" v-if="itemData['factionmod_' + i] > 0 && factionNames[itemData['factionmod_' + i]]">
         <div class="col-12">
           <span style="font-weight: bold" class="mr-1">Faction</span>
           {{ (parseInt(itemData['factionamt_' + i]) > 0 ? "Increases" : "Decreases") }} your faction of
@@ -522,6 +522,8 @@ export default {
   components: { EqCashDisplay, EqWindow, EqSpellPreview, EqDebug },
   data() {
     return {
+      hasAugs: false,
+      hasEffects: false,
       spells: EXAMPLE_SPELL_DATA,
       cdnUrl: App.ASSET_CDN_BASE_URL,
       componentId: "",
@@ -641,6 +643,18 @@ export default {
       for (let i = 1; i <= 4; i++) {
         if (this.itemData['factionmod_' + i]) {
           factions.push(this.itemData['factionmod_' + i])
+        }
+      }
+
+      for (let i = 1; i <= 5; i++) {
+        if (this.itemData['augslot_' + i + '_type']) {
+          this.hasAugs = true
+        }
+      }
+
+      for (let e of this.effects) {
+        if (this.itemData[e]) {
+          this.hasEffects = true;
         }
       }
 
@@ -1063,7 +1077,9 @@ export default {
 
 <style>
 .stat-section {
-  padding-left: 10px;
+  padding: 0px;
+  padding-left: 5px;
+  padding-right: 5px;
   display: inline-block;
   vertical-align: top;
 }

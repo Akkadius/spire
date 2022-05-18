@@ -82,7 +82,7 @@ export const DB_ITEM_TYPES = {
   "51": "Unknown",
   "52": "Charm",
   "53": "Unknown",
-  "54": "Augmentation"
+  "54": "Aug"
 }
 
 export const DB_ITEM_CLASS = {
