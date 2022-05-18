@@ -1,12 +1,11 @@
 <template>
-  <div v-if="spell" class="fade-in">
+  <div v-if="spell">
 
     <div
       :id="spell.id + '-' + popoverId + '-popover'"
-      style="display:inline-block"
     >
       <span
-        :class="'d-inline-block fade-in spell-' + spell.new_icon + getIconClassLabelFromSize()"
+        :class="'d-inline-block spell-' + spell.new_icon + getIconClassLabelFromSize()"
         :title="spell.icon"
         :style="getBorderStyling()"
       />
@@ -27,7 +26,7 @@
       triggers="hover focus"
       style="width: 500px !important"
     >
-      <eq-window style="margin-right: 10px; width: auto; height: 90%">
+      <eq-window style="width: auto; height: 100%">
         <eq-spell-preview :spell-data="spell"/>
       </eq-window>
     </b-popover>

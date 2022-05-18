@@ -22,7 +22,7 @@
       triggers="hover focus"
       style="width: 500px !important"
     >
-      <eq-window style="margin-right: 10px; width: auto; height: 90%">
+      <eq-window style="width: auto; height: 100%">
         <eq-item-card-preview
           :item-data="item"
           :show-related-data="showRelatedData"
@@ -35,8 +35,8 @@
 
 <script>
 import EqWindow          from "./eq-ui/EQWindow";
-import EqItemCardPreview from "./eq-ui/EQItemCardPreview";
 import {Items}           from "@/app/items";
+import EqItemCardPreview from "@/components/eq-ui/EQItemCardPreview";
 
 export default {
   name: "ItemPopover",

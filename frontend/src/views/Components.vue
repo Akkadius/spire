@@ -110,8 +110,13 @@
 
               <div class="row">
                 <!-- Item Preview -->
-                <div v-for="(item, index) in items" :key="index" style="display: inline-block; vertical-align: top">
-                  <eq-window style="margin-right: 10px; width: auto; height: 90%">
+                <div
+                  v-for="(item, index) in items"
+                  class="mb-3 col-5"
+                  :key="index"
+                  style="display: inline-block; vertical-align: top"
+                >
+                  <eq-window style="width: auto; height: 100%">
                     <eq-item-card-preview :item-data="item"/>
                   </eq-window>
                 </div>
@@ -163,9 +168,9 @@
                   v-for="(spell, index) in spells"
                   :key="index"
                   style="display: inline-block; vertical-align: top"
-                  class="col-5"
+                  class="col-5 mb-3"
                 >
-                  <eq-window style="margin-right: 10px; width: auto; height: 90%">
+                  <eq-window style="width: auto; height: 100%">
                     <eq-spell-preview :spell-data="spell"/>
                   </eq-window>
                 </div>
@@ -213,22 +218,24 @@
               </div>
 
               <div class="row">
-                <eq-window style="width: 100%">
-                  <npc-special-abilities
-                    show-special-abilities-result="1"
-                    :inputData.sync="specialAbilityInput"
-                    :abilities="specialAbilityInput"
-                  />
+                <div class="col-12">
+                  <eq-window style="width: 100%">
+                    <npc-special-abilities
+                      show-special-abilities-result="1"
+                      :inputData.sync="specialAbilityInput"
+                      :abilities="specialAbilityInput"
+                    />
 
-                  <h4 class="eq-header mt-4">Special Abilities Input</h4>
-                  <input
-                    type="text"
-                    class="form-control mb-5 mt-4"
-                    v-model="specialAbilityInput"
-                  >
+                    <h4 class="eq-header mt-4">Special Abilities Input</h4>
+                    <input
+                      type="text"
+                      class="form-control mb-5 mt-4"
+                      v-model="specialAbilityInput"
+                    >
 
-                  The input is two-way bound with the special abilities editor
-                </eq-window>
+                    The input is two-way bound with the special abilities editor
+                  </eq-window>
+                </div>
               </div>
 
               <!-- Table -->
@@ -593,3 +600,9 @@ export default {
   },
 }
 </script>
+
+<style>
+.header {
+  margin-bottom: 0px;
+}
+</style>

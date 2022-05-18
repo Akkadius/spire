@@ -1,8 +1,8 @@
 <template>
-  <div class="item-bg" style="max-width: 475px; padding: 5px" v-if="itemData">
+  <div class="item-bg" style="min-width: 450px; max-width: 475px;" v-if="itemData">
     <span
       v-if="itemData.idfile !== 'IT63'"
-      style="position: absolute; right: 7%; opacity: .8"
+      style="position: absolute; right: 7%; opacity: .5;"
       :class="'mt-2 mb-2 object-ctn-' + itemData.idfile.replace('IT', '')"
     />
 
@@ -73,7 +73,7 @@
 
                 <!-- Regular stat -->
                 <td style="text-align: right" v-if="value !== '' && value !== 0">
-                  {{ value }}
+                  {{ commify(value) }}
                 </td>
 
               </tr>
@@ -94,7 +94,7 @@
 
                 <!-- Regular stat -->
                 <td style="text-align: right" v-if="value !== '' && value !== 0">
-                  {{ value }}
+                  {{ commify(value) }}
                 </td>
 
               </tr>
@@ -261,7 +261,7 @@
     </div>
 
     <!-- Effects -->
-    <div class="mb-3">
+    <div class="mb-3" v-if="effects && effects.length > 0">
       <div v-for="effect in effects" :key="effect.field" class="col-12">
         <div v-if="itemData[effect.field] > 0 && effectData[effect.field]" class="row col-12 pl-0 mb-1">
 
@@ -345,7 +345,7 @@
         Unlocks Doors
       </div>
 
-      <div class="mt-3">
+      <div class="mt-3" v-if="unlocksDoors && unlocksDoors.length > 0">
         <li v-for="door in unlocksDoors">
           <span class="font-weight-bold">{{ door.name }}</span>
           in <span class="font-weight-bold">{{ door.zone }}</span>
@@ -358,7 +358,7 @@
         Dropped By
       </div>
 
-      <div class="mt-3">
+      <div class="mt-3" v-if="droppedBy && droppedBy.length > 0">
         <li v-for="drop in droppedBy">
           <span class="font-weight-bold">{{ drop.name }}</span> in <span class="font-weight-bold">{{ drop.zone }}</span>
         </li>
@@ -369,7 +369,7 @@
         Can be fished in
       </div>
 
-      <div class="mt-3">
+      <div class="mt-3" v-if="fishedIn && fishedIn.length > 0">
         <li v-for="e in fishedIn">
           <span class="font-weight-bold">{{ e.zone.long_name }}</span>
           with skill <span class="font-weight-bold">{{ e.skill }}</span>
@@ -381,7 +381,7 @@
         Can be foraged in
       </div>
 
-      <div class="mt-3">
+      <div class="mt-3" v-if="foragedIn && foragedIn.length > 0">
         <li v-for="e in foragedIn">
           <span class="font-weight-bold">{{ e.zone.long_name }}</span>
           with skill <span class="font-weight-bold">{{ e.skill }}</span>
@@ -394,7 +394,7 @@
         Is a starting item for
       </div>
 
-      <div class="mt-3">
+      <div class="mt-3" v-if="startingItems && startingItems.length > 0">
         <li v-for="e in startingItems">
           <span class="font-weight-bold" v-if="e.class !== 0">{{ e.class }}(s)</span>
           <span v-if="e.race !== 0" class="ml-1">race
@@ -417,7 +417,7 @@
         Is found as a ground spawn
       </div>
 
-      <div class="mt-3">
+      <div class="mt-3" v-if="groundSpawns && groundSpawns.length > 0">
         <li v-for="e in groundSpawns">
           In <span class="font-weight-bold" v-if="e.zone !== 0">{{ e.zone.long_name }}</span>
           <span v-if="e.data.max_x !== 0" class="ml-1">@
@@ -434,7 +434,7 @@
         Is a reward in task(s)
       </div>
 
-      <div class="mt-3">
+      <div class="mt-3" v-if="taskRewards && taskRewards.length > 0">
         <li v-for="e in taskRewards">
           <span v-if="e.data.title !== ''" class="font-weight-bold">
             {{ e.data.title }} ({{ e.data.id }})
@@ -447,7 +447,7 @@
         Is sold by merchant(s)
       </div>
 
-      <div class="mt-3">
+      <div class="mt-3" v-if="merchants && merchants.length > 0">
         <li v-for="e in merchants">
           <span v-if="e.merchantName !== ''" class="font-weight-bold">
             {{ e.merchantName }}
@@ -463,7 +463,7 @@
         Is the result of tradeskill recipe(s)
       </div>
 
-      <div class="mt-3">
+      <div class="mt-3" v-if="tradeskillResult && tradeskillResult.length > 0">
         <li v-for="e in tradeskillResult">
           <span v-if="e.name !== ''" class="font-weight-bold">
             {{ e.name }}
@@ -482,8 +482,6 @@
 
 
     </div>
-
-    <div class="pb-4 mb-5"></div>
 
     <eq-debug :data="itemData"/>
   </div>
@@ -598,6 +596,10 @@ export default {
     }
   },
   methods: {
+
+    commify(x) {
+      return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    },
 
     async init() {
       const uuidv4     = require("uuid/v4")

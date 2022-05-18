@@ -5,7 +5,7 @@
       <div class="panel-body">
         <div class="panel panel-default">
 
-          <eq-window-simple class="mt-3 p-0 pl-3">
+          <eq-window-simple class="pt-0">
 
             <div class="row">
               <div v-for="(icon, index) in dbClassIcons" class="text-center">
@@ -172,11 +172,11 @@
           <div class="row" style="justify-content: center" v-if="loaded && listType === 'card'">
             <div
               v-for="(spell, index) in spells"
-              class="col-lg-4 col-sm-9"
+              class="col-lg-4 col-sm-9 mb-3"
               :key="spell.id"
               style="display: inline-block; vertical-align: top"
             >
-              <eq-window style="margin-right: 1px; width: auto; height: 93%">
+              <eq-window style="margin-right: 1px; width: auto; height: 100%">
                 <eq-spell-preview :spell-data="spell"/>
               </eq-window>
             </div>

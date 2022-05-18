@@ -1,7 +1,7 @@
 <template>
   <div>
     <eq-window-simple
-      style="height: 95vh; overflow-y: scroll;" class="p-0 eq-window-hybrid"
+      style="height: 95vh; overflow-y: scroll;" class="p-0"
       v-if="isItemIdMatchList()"
     >
       <div class="font-weight-bold text-center">
@@ -44,7 +44,7 @@
     </eq-window-simple>
 
     <eq-window-simple
-      style="height: 95vh; overflow-y: scroll;" class="p-0 eq-window-hybrid"
+      style="height: 95vh; overflow-y: scroll;" class="p-0"
       v-if="isNpcMatchList()"
     >
       <div class="font-weight-bold text-center">

@@ -150,22 +150,6 @@
 
     <!-- Merchant -->
     <div v-if="npc.merchant_id > 0" class="mt-3">
-      <!--      <div class="font-weight-bold mb-3">This NPC sells the following items</div>-->
-
-      <!--      <div v-for="e in merchantitems">-->
-      <!--        <item-popover-->
-      <!--          class="d-inline-block"-->
-      <!--          :item="e.item"-->
-      <!--          v-if="Object.keys(e.item).length > 0 && e.item"-->
-      <!--          size="sm"-->
-      <!--        />-->
-
-      <!--        <eq-cash-display-->
-      <!--          class="d-inline-block ml-1"-->
-      <!--          :price="e.item.price"-->
-      <!--        />-->
-      <!--      </div>-->
-
 
       <!-- Show if under max -->
       <div v-if="merchantitems && merchantitems.length > 0 && (merchantitems.length < maxDataEntries || showMerchantItems)" class="fade-in">
@@ -174,7 +158,7 @@
         </div>
 
         <div v-for="e in merchantitems" class="row">
-          <div class="col-5">
+          <div class="col-6">
             <item-popover
               class="d-inline-block"
               :item="e.item"

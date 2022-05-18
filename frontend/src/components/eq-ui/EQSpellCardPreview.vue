@@ -1,6 +1,6 @@
 <template>
   <div
-    class="pb-4" style="min-width: 400px; max-width: 500px; padding: 5px"
+    style="min-width: 400px; max-width: 500px; padding: 5px"
     v-if="spellData && spellData['targettype']"
   >
 

@@ -5,7 +5,7 @@
       <div class="panel-body">
         <div class="panel panel-default">
 
-          <eq-window class="mt-5">
+          <eq-window>
 
             <div class="row">
               <div class="col-1">
@@ -216,11 +216,11 @@
           <div class="row" style="justify-content: center" v-if="loaded && listType === 'card'">
             <div
               v-for="(item, index) in items"
-              class="col-lg-4 col-sm-9"
+              class="col-lg-4 col-sm-9 mb-3"
               :key="item.id"
               style="display: inline-block; vertical-align: top"
             >
-              <eq-window style="margin-right: 10px; width: auto; height: 90%">
+              <eq-window style="margin-right: 10px; width: auto; height: 100%">
                 <eq-item-card-preview
                   :item-data="item"
                   :show-edit="true"

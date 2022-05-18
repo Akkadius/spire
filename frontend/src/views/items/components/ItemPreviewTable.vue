@@ -101,7 +101,6 @@ export default {
   components: {
     ItemPopover,
     EqWindow,
-    "eq-item-card-preview": () => import("@/components/eq-ui/EQItemCardPreview.vue"),
   },
   data() {
     return {

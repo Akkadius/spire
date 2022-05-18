@@ -13,7 +13,7 @@
     <eq-window-simple
       id="npc-view-container"
       v-if="filteredNpcs && filteredNpcs.length > 0"
-      style="height: 85vh; overflow-y: scroll;" class="p-0 eq-window-hybrid"
+      style="height: 85vh; overflow-y: scroll;" class="p-0"
     >
       <table
         id="npctable"
