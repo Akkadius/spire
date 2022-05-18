@@ -1,107 +1,116 @@
 <template>
-  <div>
-    <div :class="isComponent ? '' : 'container-fluid'">
-      <eq-window-simple title="Spell Animations" style="margin-bottom: 1px">
-        <div class="row">
-          <div class="col-12">
-            <input
-              type="text"
-              class="form-control ml-2"
-              v-model="search"
-              v-on:keyup="triggerSearch"
-              @enter="triggerSearch"
-              placeholder="Search for spell names to find animations"
-            >
-          </div>
+  <content-area>
+    <eq-window title="Spell Animations" style="margin-bottom: 1px">
+      <div class="row">
+        <div class="col-12">
+          <input
+            type="text"
+            class="form-control ml-2"
+            v-model="search"
+            v-on:keyup="triggerSearch"
+            @enter="triggerSearch"
+            placeholder="Search for spell names to find animations"
+          >
         </div>
+      </div>
 
-        <div class="row">
-          <div class="col-12 text-center mt-3">
+      <div class="row">
+        <div class="col-12 text-center mt-3">
 
-            <div class="btn-group ml-3" role="group" aria-label="Basic example">
-              <b-button
-                @click="filterNimbuses = true; triggerSearch()"
-                size="sm"
-                :variant="(filterNimbuses ? 'warning' : 'outline-warning')"
-              >Nimbuses
-              </b-button>
-              <b-button
-                @click="reset(); triggerSearch()"
-                size="sm"
-                :variant="(!filterNimbuses ? 'warning' : 'outline-warning')"
-              >All
-              </b-button>
-            </div>
-
-            <div class="btn-group ml-3" role="group" aria-label="Basic example">
-              <b-button size="sm" variant="outline-warning"><i class="fa fa-clock-o"></i> Start Preview @</b-button>
-              <b-button @click="startVideoTime = 0; triggerSearch()" size="sm" :variant="(parseInt(startVideoTime) === 0 ? 'warning' : 'outline-warning')">0s</b-button>
-              <b-button @click="startVideoTime = 3; triggerSearch()" size="sm" :variant="(parseInt(startVideoTime) === 3 ? 'warning' : 'outline-warning')">3s</b-button>
-            </div>
-
+          <div class="btn-group ml-3" role="group" aria-label="Basic example">
+            <b-button
+              @click="filterNimbuses = true; triggerSearch()"
+              size="sm"
+              :variant="(filterNimbuses ? 'warning' : 'outline-warning')"
+            >Nimbuses
+            </b-button>
             <b-button
               @click="reset(); triggerSearch()"
               size="sm"
-              class="ml-3"
-              variant="outline-warning"
-            ><i class="fa fa-refresh"></i> Reset
+              :variant="(!filterNimbuses ? 'warning' : 'outline-warning')"
+            >All
             </b-button>
-
           </div>
-        </div>
-      </eq-window-simple>
 
-      <eq-window-simple
-        v-if="loaded"
-        class="text-center mt-3"
+          <div class="btn-group ml-3" role="group" aria-label="Basic example">
+            <b-button size="sm" variant="outline-warning"><i class="fa fa-clock-o"></i> Start Preview @</b-button>
+            <b-button
+              @click="startVideoTime = 0; triggerSearch()"
+              size="sm"
+              :variant="(parseInt(startVideoTime) === 0 ? 'warning' : 'outline-warning')"
+            >0s
+            </b-button>
+            <b-button
+              @click="startVideoTime = 3; triggerSearch()"
+              size="sm"
+              :variant="(parseInt(startVideoTime) === 3 ? 'warning' : 'outline-warning')"
+            >3s
+            </b-button>
+          </div>
+
+          <b-button
+            @click="reset(); triggerSearch()"
+            size="sm"
+            class="ml-3"
+            variant="outline-warning"
+          ><i class="fa fa-refresh"></i> Reset
+          </b-button>
+
+        </div>
+      </div>
+    </eq-window>
+
+    <eq-window-simple
+      v-if="loaded"
+      class="text-center mt-3"
+    >
+      <div v-if="filteredAnimations && filteredAnimations.length === 0">
+        No animations found...
+      </div>
+
+      <div
+        class="row "
+        v-on:scroll.passive="videoRender"
+        style="height: 74vh; overflow-y: scroll; box-sizing: border-box;"
       >
-        <div v-if="filteredAnimations && filteredAnimations.length === 0">
-          No animations found...
-        </div>
-
-        <div
-          class="row "
-          v-on:scroll.passive="videoRender"
-          style="height: 74vh; overflow-y: scroll; box-sizing: border-box;"
-        >
-          <div class="col-12">
-            <div
-              class="fade-in"
-              v-for="(spell) in filteredAnimations"
-              :key="spell"
-              style="display:inline-block; position: relative;"
+        <div class="col-12">
+          <div
+            class="fade-in"
+            v-for="(spell) in filteredAnimations"
+            :key="spell"
+            style="display:inline-block; position: relative;"
+          >
+            <video
+              muted
+              loop
+              style="background-color: black;"
+              :id="'spell-' + spell"
+              :data-src="animBaseUrl + spell + '.mp4#t=' + startVideoTime"
+              class="video-preview spell-preview-viewer"
             >
-              <video
-                muted
-                loop
-                style="background-color: black;"
-                :id="'spell-' + spell"
-                :data-src="animBaseUrl + spell + '.mp4#t=' + startVideoTime"
-                class="video-preview spell-preview-viewer"
-              >
-              </video>
-              <div class="overlay">
-                <h6 class="eq-header">{{ spell }}</h6>
-              </div>
+            </video>
+            <div class="overlay">
+              <h6 class="eq-header">{{ spell }}</h6>
             </div>
           </div>
-
-          <div class="col-12 mt-3">Videos Credits @DeadZergling</div>
         </div>
-      </eq-window-simple>
-    </div>
-  </div>
+
+        <div class="col-12 mt-3">Videos Credits @DeadZergling</div>
+      </div>
+    </eq-window-simple>
+  </content-area>
 </template>
 
 <script>
-import PageHeader        from "@/components/layout/PageHeader";
-import {App}             from "@/constants/app";
-import EqWindow          from "@/components/eq-ui/EQWindow";
-import {ROUTE}           from "../../routes";
-import VideoViewer       from "../../app/video-viewer/video-viewer";
-import EqAssets          from "../../app/eq-assets/eq-assets";
-import EqWindowSimple    from "../../components/eq-ui/EQWindowSimple";
-import {SPELL_NIMBUSES}  from "../../app/constants/eq-spell-constants";
+import PageHeader       from "@/components/layout/PageHeader";
+import {App}            from "@/constants/app";
+import EqWindow         from "@/components/eq-ui/EQWindow";
+import {ROUTE}          from "../../routes";
+import VideoViewer      from "../../app/video-viewer/video-viewer";
+import EqAssets         from "../../app/eq-assets/eq-assets";
+import EqWindowSimple   from "../../components/eq-ui/EQWindowSimple";
+import {SPELL_NIMBUSES} from "../../app/constants/eq-spell-constants";
+import ContentArea      from "../../components/layout/ContentArea";
 
 let itemModels = [];
 
@@ -118,7 +127,7 @@ function debounce(func, delay) {
 let animationPreviewExists = {}
 
 export default {
-  components: { EqWindowSimple, EqWindow, PageHeader },
+  components: { ContentArea, EqWindowSimple, EqWindow, PageHeader },
   data() {
     return {
       loaded: false,
@@ -226,7 +235,7 @@ export default {
       let filteredAnimations = await EqAssets.getSpellAnimationFileIds()
 
       if (this.search !== "") {
-        filteredAnimations = []
+        filteredAnimations      = []
         const spellAnimMappings = await EqAssets.getSpellAnimNameMappings()
         for (let spellAnimMapping of spellAnimMappings) {
           const spellName   = spellAnimMapping[0].toLowerCase().trim()

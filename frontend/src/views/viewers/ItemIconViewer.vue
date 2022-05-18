@@ -1,5 +1,5 @@
 <template>
-  <div class="container-fluid">
+  <content-area>
 
     <eq-window-simple title="Icons" style="margin-bottom: 1px">
       <div class="row">
@@ -92,7 +92,7 @@
           </span>
       </div>
     </eq-window>
-  </div>
+  </content-area>
 </template>
 
 <script>
@@ -111,6 +111,7 @@ import EqProgressBar        from "../../components/eq-ui/EQProgressBar";
 import EqAssets             from "../../app/eq-assets/eq-assets";
 import {Items}              from "../../app/items";
 import {debounce}           from "../../app/utility/debounce";
+import ContentArea          from "../../components/layout/ContentArea";
 
 const MAX_ICON_ID = 10000;
 // const MAX_ICON_ID = 1000;
@@ -120,7 +121,7 @@ let icons      = [];
 let modelFiles = {};
 
 export default {
-  components: { EqProgressBar, LoaderFakeProgress, EqWindow, EqWindowComplex, EqWindowSimple, PageHeader },
+  components: { ContentArea, EqProgressBar, LoaderFakeProgress, EqWindow, EqWindowComplex, EqWindowSimple, PageHeader },
   data() {
     return {
       search: "",

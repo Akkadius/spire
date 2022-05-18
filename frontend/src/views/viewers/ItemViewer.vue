@@ -1,5 +1,5 @@
 <template>
-  <div class="container-fluid">
+  <content-area>
 
     <eq-window-simple title="Item Models" style="margin-bottom: 1px">
       <div class="row">
@@ -99,7 +99,7 @@
 
       </div>
     </eq-window>
-  </div>
+  </content-area>
 </template>
 
 <script>
@@ -118,6 +118,7 @@ import EqProgressBar         from "../../components/eq-ui/EQProgressBar";
 import EqAssets              from "../../app/eq-assets/eq-assets";
 import {debounce}            from "../../app/utility/debounce";
 import {Items}               from "../../app/items";
+import ContentArea           from "../../components/layout/ContentArea";
 
 const MAX_ITEM_IDFILE = 100000;
 let itemModels        = [];
@@ -125,7 +126,7 @@ let itemModelExists   = {};
 let modelFiles        = {};
 
 export default {
-  components: { EqProgressBar, LoaderFakeProgress, EqWindowSimple, EqWindow, PageHeader },
+  components: { ContentArea, EqProgressBar, LoaderFakeProgress, EqWindowSimple, EqWindow, PageHeader },
   data() {
     return {
       search: "",

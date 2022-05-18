@@ -3,7 +3,7 @@
     <div class="panel-body">
       <div class="panel panel-default">
         <div class="row">
-          <div class="col-12">
+          <div class="col-12 mt-3">
             <slot></slot>
           </div>
         </div>

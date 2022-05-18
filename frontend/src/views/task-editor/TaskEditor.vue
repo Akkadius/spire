@@ -5,7 +5,6 @@
         <eq-window-simple
           title="Task Editor"
           v-if="tasks"
-          style="margin-top: 30px"
           @mouseover.native="previewTask()"
         >
           <div class="row">
