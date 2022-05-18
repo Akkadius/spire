@@ -36,6 +36,11 @@ import (
 func Serve(port uint, logger *logrus.Logger, router *routes.Router) error {
 	e := echo.New()
 
+	BootstrapMiddleware(e, router)
+	if err := BootstrapControllers(e, router.ControllerGroups()...); err != nil {
+		logger.Fatal(err)
+	}
+
 	// basic auth if env passed
 	if len(os.Getenv("BASIC_AUTH_USER")) > 0 && len(os.Getenv("BASIC_AUTH_PASSWORD")) > 0 {
 		e.Use(spiremiddleware.BasicAuthWithConfig(spiremiddleware.BasicAuthConfig{
@@ -49,11 +54,6 @@ func Serve(port uint, logger *logrus.Logger, router *routes.Router) error {
 			},
 			Realm: "basic",
 		}))
-	}
-
-	BootstrapMiddleware(e, router)
-	if err := BootstrapControllers(e, router.ControllerGroups()...); err != nil {
-		logger.Fatal(err)
 	}
 
 	e.GET("/swagger/*", docs.WrapHandler)

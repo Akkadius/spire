@@ -11,6 +11,7 @@ import (
 	"github.com/sirupsen/logrus"
 	"os"
 	"strconv"
+	"strings"
 	"time"
 )
 
@@ -57,6 +58,11 @@ func (m UserContextMiddleware) HandleQuerystring() echo.MiddlewareFunc {
 }
 
 func (m UserContextMiddleware) skipperHeader(c echo.Context) bool {
+	// Skip JWT signature validation if authenticated with basic auth
+	if strings.Contains(c.Request().Header.Get("Authorization"), "Basic") {
+		return true
+	}
+
 	// If we send an authorization header then we will go through our JWT signature validation logic
 	if c.Request().Header.Get("Authorization") != "" {
 		return false
