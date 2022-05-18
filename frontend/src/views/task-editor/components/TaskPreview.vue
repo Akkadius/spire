@@ -2,7 +2,6 @@
   <div>
     <eq-window-simple
       title="Quest Journal"
-      class="eq-window-hybrid"
       style="margin-top: 30px"
       v-if="task"
     >

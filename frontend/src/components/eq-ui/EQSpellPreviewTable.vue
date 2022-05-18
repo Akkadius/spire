@@ -1,82 +1,80 @@
 <template>
-  <div>
-    <div
-      class='eq-window-simple p-0'
-      :style="'margin-bottom: 40px; ' + (title ? 'padding-top: 30px' : 'padding-top: 0px !important')"
-    >
-<!--      <div class='eq-window-title-bar' v-if="title">{{ title }}</div>-->
-      <div :style="'' + (title ? '' : '') ">
-        <div class='eq-window-nested-blue text-center p-5' v-if="spells.length === 0">
-          No spells were found
-        </div>
+  <div
+    class='eq-window-simple p-0'
+    :style="'margin-bottom: 40px; ' + (title ? 'padding-top: 30px' : 'padding-top: 0px !important')"
+  >
+    <!--      <div class='eq-window-title-bar' v-if="title">{{ title }}</div>-->
+    <div :style="'' + (title ? '' : '') ">
+      <div class='eq-window-nested-blue text-center p-5' v-if="spells.length === 0">
+        No spells were found
+      </div>
 
-        <div
-          class='spell-table'
-          style="height: 75vh; overflow-y: scroll; overflow-x: hidden; "
-          v-if="spells.length > 0"
-        >
-          <!--        <div class='eq-window-nested-blue' v-if="spells.length > 0" style="overflow-y: scroll;">-->
-          <table id="tabbox1" class="eq-table eq-highlight-rows" >
-            <thead class="eq-table-floating-header">
-            <tr>
-              <th style="width: 100px;"></th>
-              <th style="width: auto;">Id</th>
-              <th style="width: auto; min-width: 270px">Spell</th>
-              <th style="width: auto; min-width: 300px">Level</th>
-              <th style="width: 400px">Effects</th>
+      <div
+        class='spell-table'
+        style="height: 75vh; overflow-y: scroll; overflow-x: hidden; "
+        v-if="spells.length > 0"
+      >
+        <!--        <div class='eq-window-nested-blue' v-if="spells.length > 0" style="overflow-y: scroll;">-->
+        <table id="tabbox1" class="eq-table eq-highlight-rows">
+          <thead class="eq-table-floating-header">
+          <tr>
+            <th style="width: 100px;"></th>
+            <th style="width: auto;">Id</th>
+            <th style="width: auto; min-width: 270px">Spell</th>
+            <th style="width: auto; min-width: 300px">Level</th>
+            <th style="width: 400px">Effects</th>
 
-              <th>Mana</th>
-              <th style="width: 80px">Cast</th>
-              <th style="width: 80px">Recast</th>
-              <th style="width: 120px">Duration</th>
-              <th>Target</th>
+            <th>Mana</th>
+            <th style="width: 80px">Cast</th>
+            <th style="width: 80px">Recast</th>
+            <th style="width: 120px">Duration</th>
+            <th>Target</th>
 
-              <!--              <th>Description</th>-->
-            </tr>
-            </thead>
-            <tbody>
-            <tr v-for="(spell, index) in spells" :key="spell.id">
-              <td>
+            <!--              <th>Description</th>-->
+          </tr>
+          </thead>
+          <tbody>
+          <tr v-for="(spell, index) in spells" :key="spell.id">
+            <td>
 
-                <div class="btn-group" role="group">
-                  <b-button
-                    @click="editSpell(spell.id)"
-                    size="sm"
-                    title="Edit"
-                    variant="outline-warning"
-                  >
-                    <i class="ra ra-wrench"></i>
+              <div class="btn-group" role="group">
+                <b-button
+                  @click="editSpell(spell.id)"
+                  size="sm"
+                  title="Edit"
+                  variant="outline-warning"
+                >
+                  <i class="ra ra-wrench"></i>
 
-                  </b-button>
+                </b-button>
 
-                  <b-button
-                    @click="editSpell(spell.id, true)"
-                    size="sm"
-                    title="Clone"
-                    variant="outline-light"
-                  >
-                    <i class="ra ra-double-team"></i>
+                <b-button
+                  @click="editSpell(spell.id, true)"
+                  size="sm"
+                  title="Clone"
+                  variant="outline-light"
+                >
+                  <i class="ra ra-double-team"></i>
 
-                  </b-button>
-                </div>
+                </b-button>
+              </div>
 
-              </td>
-              <td>
-                {{ spell.id }}
-              </td>
-              <td class="text-left"
-              >
-
-                <spell-popover
-                  :spell="spell"
-                  :size="30"
-                  :spell-name-length="25"
-                  v-if="Object.keys(spell).length > 0 && spell"
-                  class="mt-2"
-                />
-
-              </td>
-              <td class="text-left">
+            </td>
+            <td>
+              {{ spell.id }}
+            </td>
+            <td
+              class="text-left"
+            >
+              <spell-popover
+                :spell="spell"
+                :size="30"
+                :spell-name-length="25"
+                v-if="Object.keys(spell).length > 0 && spell"
+                class="mt-2"
+              />
+            </td>
+            <td class="text-left">
                 <span v-for="(icon, index) in dbClassIcons">
                   <div
                     v-if="spell['classes_' + index] > 0 && spell['classes_' + index] < 255"
@@ -91,25 +89,24 @@
                     ({{ spell["classes_" + index] }})
                     </div>
                 </span>
-              </td>
-              <td style="text-align: left">
-                <eq-spell-effects :spell="spell"/>
-              </td>
+            </td>
+            <td style="text-align: left">
+              <eq-spell-effects :spell="spell"/>
+            </td>
 
-              <td>{{ spell["mana"] > 0 ? spell["mana"] : "" }}</td>
-              <td> {{ (spell["cast_time"] / 1000) }} sec</td>
-              <td> {{ (spell["recast_time"] / 1000) }} sec</td>
-              <td> {{ humanTime(getBuffDuration(spell) * 6) }} {{ getBuffDuration(spell) }} tic(s)</td>
-              <td> {{ getTargetTypeName(spell["targettype"]) }}</td>
+            <td>{{ spell["mana"] > 0 ? spell["mana"] : "" }}</td>
+            <td> {{ (spell["cast_time"] / 1000) }} sec</td>
+            <td> {{ (spell["recast_time"] / 1000) }} sec</td>
+            <td> {{ humanTime(getBuffDuration(spell) * 6) }} {{ getBuffDuration(spell) }} tic(s)</td>
+            <td> {{ getTargetTypeName(spell["targettype"]) }}</td>
 
 
-              <!--              <td style="text-align: left">-->
-              <!--                <eq-spell-description :spell="spell"/>-->
-              <!--              </td>-->
-            </tr>
-            </tbody>
-          </table>
-        </div>
+            <!--              <td style="text-align: left">-->
+            <!--                <eq-spell-description :spell="spell"/>-->
+            <!--              </td>-->
+          </tr>
+          </tbody>
+        </table>
       </div>
     </div>
   </div>

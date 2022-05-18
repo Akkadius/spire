@@ -1,15 +1,18 @@
 package http
 
 import (
+	"crypto/subtle"
 	"errors"
 	"fmt"
 	"github.com/Akkadius/spire/docs"
+	spiremiddleware "github.com/Akkadius/spire/internal/http/middleware"
 	"github.com/Akkadius/spire/internal/http/routes"
 	"github.com/Akkadius/spire/internal/http/spa"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 	"github.com/sirupsen/logrus"
 	"net/http"
+	"os"
 	"unicode"
 
 	_ "github.com/Akkadius/spire/docs"
@@ -36,6 +39,21 @@ func Serve(port uint, logger *logrus.Logger, router *routes.Router) error {
 	BootstrapMiddleware(e, router)
 	if err := BootstrapControllers(e, router.ControllerGroups()...); err != nil {
 		logger.Fatal(err)
+	}
+
+	// basic auth if env passed
+	if len(os.Getenv("BASIC_AUTH_USER")) > 0 && len(os.Getenv("BASIC_AUTH_PASSWORD")) > 0 {
+		e.Use(spiremiddleware.BasicAuthWithConfig(spiremiddleware.BasicAuthConfig{
+			Validator: func(username string, password string, c echo.Context) (bool, error) {
+				// Be careful to use constant time comparison to prevent timing attacks
+				if subtle.ConstantTimeCompare([]byte(username), []byte(os.Getenv("BASIC_AUTH_USER"))) == 1 &&
+					subtle.ConstantTimeCompare([]byte(password), []byte(os.Getenv("BASIC_AUTH_PASSWORD"))) == 1 {
+					return true, nil
+				}
+				return false, nil
+			},
+			Realm: "basic",
+		}))
 	}
 
 	e.GET("/swagger/*", docs.WrapHandler)

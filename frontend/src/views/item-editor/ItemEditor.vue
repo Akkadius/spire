@@ -2,7 +2,7 @@
   <content-area>
     <div class="row">
       <div class="col-7">
-        <eq-window style="margin-top: 30px">
+        <eq-window>
 
           <div
             v-if="notification"
@@ -18,7 +18,7 @@
             <i class="fa fa-warning"></i> {{ error }}
           </b-alert>
 
-          <app-loader :is-loading="!item" class="mt-6 mb-5"/>
+          <app-loader :is-loading="!item" class="mt-3 mb-3"/>
 
           <eq-tabs
             v-if="item"
@@ -1495,7 +1495,7 @@
 
         <!-- preview item -->
         <eq-window
-          style="margin-top: 30px; margin-right: 10px; width: auto;"
+          style="margin-right: 10px; width: auto;"
           :key="item.updatedAt"
           v-if="previewItemActive && item && item.id > 0"
         >

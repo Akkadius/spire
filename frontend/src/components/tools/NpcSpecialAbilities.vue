@@ -1,23 +1,29 @@
 <template>
-  <div v-if="ability && abilityParams">
+  <div v-if="ability && abilityParams" class="minified-inputs" id="special-abilities">
     <table class="table-condensed flip-content" style="width:100%">
       <tbody>
       <tr>
-        <td class="ability-label-top">Summon</td>
+        <td class="ability-label-top pr-3">Summon</td>
         <td style="width:210px">
-          <select class="ability_check form-control" v-model="ability[1]" style="width:200px"
-                  @change="calculateSpecialAbilities">
+          <select
+            class="ability_check form-control" v-model="ability[1]" style="width:200px"
+            @change="calculateSpecialAbilities"
+          >
             <option value="0" selected="">Off</option>
             <option value="1">Summon target to NPC</option>
             <option value="2">Summon NPC to target</option>
           </select></td>
         <td style="width:230px">
-          <input type="text" @change="calculateSpecialAbilities" class="ability_check_sub form-control"
-                 style="width:230px" v-model="abilityParams[1][0]" value=""
-                 v-b-tooltip.hover title="Cooldown in ms (default: 6000)"></td>
+          <input
+            type="text" @change="calculateSpecialAbilities" class="ability_check_sub form-control"
+            style="width:230px" v-model="abilityParams[1][0]" value=""
+            v-b-tooltip.hover title="Cooldown in ms (default: 6000)"
+          ></td>
         <td>
-          <input type="text" @change="calculateSpecialAbilities" class="ability_check_sub form-control" style=""
-                 v-model="abilityParams[1][1]" value="" v-b-tooltip.hover title="HP % before summon (default: 97)">
+          <input
+            type="text" @change="calculateSpecialAbilities" class="ability_check_sub form-control" style=""
+            v-model="abilityParams[1][1]" value="" v-b-tooltip.hover title="HP % before summon (default: 97)"
+          >
         </td>
       </tr>
       </tbody>
@@ -27,21 +33,30 @@
       <tr>
         <td class="ability-label-top">Enrage</td>
         <td style="width:50px; text-align:center">
-          <input class="ability_check" @change="calculateSpecialAbilities" v-model="ability[2]"
-                 v-bind:true-value="'1'" v-bind:false-value="'0'" type="checkbox"></td>
+          <eq-checkbox
+            class="d-inline-block"
+            v-model.number="ability[2]"
+            @input="calculateSpecialAbilities"
+          /></td>
         <td>
-          <input type="text" @change="calculateSpecialAbilities" class="ability_check_sub form-control" style=""
-                 v-model="abilityParams[2][0]" value="" placeholder="0"
-                 v-b-tooltip.hover title="HP % to Enrage (rule NPC:StartEnrageValue)"></td>
+          <input
+            type="text" @change="calculateSpecialAbilities" class="ability_check_sub form-control" style=""
+            v-model="abilityParams[2][0]" value="" placeholder="0"
+            v-b-tooltip.hover title="HP % to Enrage (rule NPC:StartEnrageValue)"
+          ></td>
         <td>
-          <input type="text" @change="calculateSpecialAbilities" class="ability_check_sub form-control" style=""
-                 v-model="abilityParams[2][1]" value="" placeholder="10000" v-b-tooltip.hover
-                 title="Duration (ms) (10000)">
+          <input
+            type="text" @change="calculateSpecialAbilities" class="ability_check_sub form-control" style=""
+            v-model="abilityParams[2][1]" value="" placeholder="10000" v-b-tooltip.hover
+            title="Duration (ms) (10000)"
+          >
         </td>
         <td>
-          <input type="text" @change="calculateSpecialAbilities" class="ability_check_sub form-control" style=""
-                 v-model="abilityParams[2][2]" value="" placeholder="360000" v-b-tooltip.hover
-                 title="Cooldown (ms) (360000)">
+          <input
+            type="text" @change="calculateSpecialAbilities" class="ability_check_sub form-control" style=""
+            v-model="abilityParams[2][2]" value="" placeholder="360000" v-b-tooltip.hover
+            title="Cooldown (ms) (360000)"
+          >
         </td>
       </tr>
       </tbody>
@@ -51,36 +66,53 @@
       <tr>
         <td class="ability-label-top">Rampage</td>
         <td style="width:50px; text-align:center">
-          <input class="ability_check" @change="calculateSpecialAbilities" v-model="ability[3]"
-                 v-bind:true-value="'1'" v-bind:false-value="'0'" type="checkbox"></td>
+          <eq-checkbox
+            class="d-inline-block"
+            v-model.number="ability[3]"
+            @input="calculateSpecialAbilities"
+          /></td>
         <td>
-          <input type="text" @change="calculateSpecialAbilities" class="ability_check_sub form-control" style=""
-                 v-model="abilityParams[3][0]" value="" placeholder="20" v-b-tooltip.hover title="Proc chance"></td>
+          <input
+            type="text" @change="calculateSpecialAbilities" class="ability_check_sub form-control" style=""
+            v-model="abilityParams[3][0]" value="" placeholder="20" v-b-tooltip.hover title="Proc chance"
+          ></td>
         <td>
-          <input type="text" @change="calculateSpecialAbilities" class="ability_check_sub form-control" style=""
-                 v-model="abilityParams[3][1]" value="" placeholder="Combat:MaxRampageTargets"
-                 v-b-tooltip.hover title="Rampage target count (default: rule Combat:MaxRampageTargets)"></td>
+          <input
+            type="text" @change="calculateSpecialAbilities" class="ability_check_sub form-control" style=""
+            v-model="abilityParams[3][1]" value="" placeholder="Combat:MaxRampageTargets"
+            v-b-tooltip.hover title="Rampage target count (default: rule Combat:MaxRampageTargets)"
+          ></td>
         <td>
-          <input type="text" @change="calculateSpecialAbilities" class="ability_check_sub form-control" style=""
-                 v-model="abilityParams[3][2]" value="" placeholder="0" v-b-tooltip.hover title="Flat damage to add">
+          <input
+            type="text" @change="calculateSpecialAbilities" class="ability_check_sub form-control" style=""
+            v-model="abilityParams[3][2]" value="" placeholder="0" v-b-tooltip.hover title="Flat damage to add"
+          >
         </td>
         <td>
-          <input type="text" @change="calculateSpecialAbilities" class="ability_check_sub form-control" style=""
-                 v-model="abilityParams[3][3]" value="" placeholder="0"
-                 v-b-tooltip.hover title="Ignore % armor for this attack (0) "></td>
+          <input
+            type="text" @change="calculateSpecialAbilities" class="ability_check_sub form-control" style=""
+            v-model="abilityParams[3][3]" value="" placeholder="0"
+            v-b-tooltip.hover title="Ignore % armor for this attack (0) "
+          ></td>
         <td>
-          <input type="text" @change="calculateSpecialAbilities" class="ability_check_sub form-control" style=""
-                 v-model="abilityParams[3][4]" value="" placeholder="0"
-                 v-b-tooltip.hover title="Ignore flat armor for this attack (0)"></td>
+          <input
+            type="text" @change="calculateSpecialAbilities" class="ability_check_sub form-control" style=""
+            v-model="abilityParams[3][4]" value="" placeholder="0"
+            v-b-tooltip.hover title="Ignore flat armor for this attack (0)"
+          ></td>
         <td>
-          <input type="text" @change="calculateSpecialAbilities" class="ability_check_sub form-control" style=""
-                 v-model="abilityParams[3][5]" value="" placeholder="100" v-b-tooltip.hover
-                 title="% NPC Crit against (100)">
+          <input
+            type="text" @change="calculateSpecialAbilities" class="ability_check_sub form-control" style=""
+            v-model="abilityParams[3][5]" value="" placeholder="100" v-b-tooltip.hover
+            title="% NPC Crit against (100)"
+          >
         </td>
         <td>
-          <input type="text" @change="calculateSpecialAbilities" class="ability_check_sub form-control" style=""
-                 v-model="abilityParams[3][6]" value="" placeholder="0"
-                 v-b-tooltip.hover title="Flat crit bonus on top of npc's natual crit that can go toward this attack">
+          <input
+            type="text" @change="calculateSpecialAbilities" class="ability_check_sub form-control" style=""
+            v-model="abilityParams[3][6]" value="" placeholder="0"
+            v-b-tooltip.hover title="Flat crit bonus on top of npc's natual crit that can go toward this attack"
+          >
         </td>
       </tr>
       </tbody>
@@ -90,39 +122,56 @@
       <tr>
         <td class="ability-label-top">AE Rampage</td>
         <td style="width:50px; text-align:center">
-          <input class="ability_check" @change="calculateSpecialAbilities" v-model="ability[4]"
-                 v-bind:true-value="'1'" v-bind:false-value="'0'" type="checkbox"></td>
+          <eq-checkbox
+            class="d-inline-block"
+            v-model.number="ability[4]"
+            @input="calculateSpecialAbilities"
+          /></td>
         <td>
-          <input type="text" @change="calculateSpecialAbilities" class="ability_check_sub form-control" style=""
-                 v-model="abilityParams[4][0]" value="" placeholder="0" v-b-tooltip.hover
-                 title="Rampage target count (1)">
+          <input
+            type="text" @change="calculateSpecialAbilities" class="ability_check_sub form-control" style=""
+            v-model="abilityParams[4][0]" value="" placeholder="0" v-b-tooltip.hover
+            title="Rampage target count (1)"
+          >
         </td>
         <td>
-          <input type="text" @change="calculateSpecialAbilities" class="ability_check_sub form-control" style=""
-                 v-model="abilityParams[4][1]" value="" placeholder="100"
-                 v-b-tooltip.hover title="% of normal attack damage (100)"></td>
+          <input
+            type="text" @change="calculateSpecialAbilities" class="ability_check_sub form-control" style=""
+            v-model="abilityParams[4][1]" value="" placeholder="100"
+            v-b-tooltip.hover title="% of normal attack damage (100)"
+          ></td>
         <td>
-          <input type="text" @change="calculateSpecialAbilities" class="ability_check_sub form-control" style=""
-                 v-model="abilityParams[4][2]" value="" placeholder="0" v-b-tooltip.hover
-                 title="Flat damage bonus to add (0)">
+          <input
+            type="text" @change="calculateSpecialAbilities" class="ability_check_sub form-control" style=""
+            v-model="abilityParams[4][2]" value="" placeholder="0" v-b-tooltip.hover
+            title="Flat damage bonus to add (0)"
+          >
         </td>
         <td>
-          <input type="text" @change="calculateSpecialAbilities" class="ability_check_sub form-control" style=""
-                 v-model="abilityParams[4][3]" value="" placeholder="0"
-                 v-b-tooltip.hover title="Ignore % armor for this attack (0) "></td>
+          <input
+            type="text" @change="calculateSpecialAbilities" class="ability_check_sub form-control" style=""
+            v-model="abilityParams[4][3]" value="" placeholder="0"
+            v-b-tooltip.hover title="Ignore % armor for this attack (0) "
+          ></td>
         <td>
-          <input type="text" @change="calculateSpecialAbilities" class="ability_check_sub form-control" style=""
-                 v-model="abilityParams[4][4]" value="" placeholder="0"
-                 v-b-tooltip.hover title="Ignore flat armor for this attack (0)"></td>
+          <input
+            type="text" @change="calculateSpecialAbilities" class="ability_check_sub form-control" style=""
+            v-model="abilityParams[4][4]" value="" placeholder="0"
+            v-b-tooltip.hover title="Ignore flat armor for this attack (0)"
+          ></td>
         <td>
-          <input type="text" @change="calculateSpecialAbilities" class="ability_check_sub form-control" style=""
-                 v-model="abilityParams[4][5]" value="" placeholder="100" v-b-tooltip.hover
-                 title="% NPC Crit against (100)">
+          <input
+            type="text" @change="calculateSpecialAbilities" class="ability_check_sub form-control" style=""
+            v-model="abilityParams[4][5]" value="" placeholder="100" v-b-tooltip.hover
+            title="% NPC Crit against (100)"
+          >
         </td>
         <td>
-          <input type="text" @change="calculateSpecialAbilities" class="ability_check_sub form-control" style=""
-                 v-model="abilityParams[4][6]" value="" placeholder="0"
-                 v-b-tooltip.hover title="Flat crit bonus on top of npc's natual crit that can go toward this attack">
+          <input
+            type="text" @change="calculateSpecialAbilities" class="ability_check_sub form-control" style=""
+            v-model="abilityParams[4][6]" value="" placeholder="0"
+            v-b-tooltip.hover title="Flat crit bonus on top of npc's natual crit that can go toward this attack"
+          >
         </td>
       </tr>
       </tbody>
@@ -132,36 +181,53 @@
       <tr>
         <td class="ability-label-top">Flurry</td>
         <td style="width:50px; text-align:center">
-          <input class="ability_check" @change="calculateSpecialAbilities" v-model="ability[5]"
-                 v-bind:true-value="'1'" v-bind:false-value="'0'" type="checkbox"></td>
+          <eq-checkbox
+            class="d-inline-block"
+            v-model.number="ability[5]"
+            @input="calculateSpecialAbilities"
+          /></td>
         <td>
-          <input type="text" @change="calculateSpecialAbilities" class="ability_check_sub form-control" style=""
-                 v-model="abilityParams[5][0]" value="" placeholder="Combat:MaxFlurryHits"
-                 v-b-tooltip.hover title="Flurry attack count"></td>
+          <input
+            type="text" @change="calculateSpecialAbilities" class="ability_check_sub form-control" style=""
+            v-model="abilityParams[5][0]" value="" placeholder="Combat:MaxFlurryHits"
+            v-b-tooltip.hover title="Flurry attack count"
+          ></td>
         <td>
-          <input type="text" @change="calculateSpecialAbilities" class="ability_check_sub form-control" style=""
-                 v-model="abilityParams[5][1]" value="" placeholder="100"
-                 v-b-tooltip.hover title="Percent of a normal attack damage to deal"></td>
+          <input
+            type="text" @change="calculateSpecialAbilities" class="ability_check_sub form-control" style=""
+            v-model="abilityParams[5][1]" value="" placeholder="100"
+            v-b-tooltip.hover title="Percent of a normal attack damage to deal"
+          ></td>
         <td>
-          <input type="text" @change="calculateSpecialAbilities" class="ability_check_sub form-control" style=""
-                 v-model="abilityParams[5][2]" value="" placeholder="0" v-b-tooltip.hover title="Flat damage bonus">
+          <input
+            type="text" @change="calculateSpecialAbilities" class="ability_check_sub form-control" style=""
+            v-model="abilityParams[5][2]" value="" placeholder="0" v-b-tooltip.hover title="Flat damage bonus"
+          >
         </td>
         <td>
-          <input type="text" @change="calculateSpecialAbilities" class="ability_check_sub form-control" style=""
-                 v-model="abilityParams[5][3]" value="" placeholder="0"
-                 v-b-tooltip.hover title="Ignore % armor for this attack (0) "></td>
+          <input
+            type="text" @change="calculateSpecialAbilities" class="ability_check_sub form-control" style=""
+            v-model="abilityParams[5][3]" value="" placeholder="0"
+            v-b-tooltip.hover title="Ignore % armor for this attack (0) "
+          ></td>
         <td>
-          <input type="text" @change="calculateSpecialAbilities" class="ability_check_sub form-control" style=""
-                 v-model="abilityParams[5][4]" value="" placeholder="0"
-                 v-b-tooltip.hover title="Ignore flat armor for this attack (0)"></td>
+          <input
+            type="text" @change="calculateSpecialAbilities" class="ability_check_sub form-control" style=""
+            v-model="abilityParams[5][4]" value="" placeholder="0"
+            v-b-tooltip.hover title="Ignore flat armor for this attack (0)"
+          ></td>
         <td>
-          <input type="text" @change="calculateSpecialAbilities" class="ability_check_sub form-control" style=""
-                 v-model="abilityParams[5][5]" value="" placeholder="100"
-                 v-b-tooltip.hover title="% NPC Crit against attack (100)"></td>
+          <input
+            type="text" @change="calculateSpecialAbilities" class="ability_check_sub form-control" style=""
+            v-model="abilityParams[5][5]" value="" placeholder="100"
+            v-b-tooltip.hover title="% NPC Crit against attack (100)"
+          ></td>
         <td>
-          <input type="text" @change="calculateSpecialAbilities" class="ability_check_sub form-control" style=""
-                 v-model="abilityParams[5][6]" value="" placeholder="0"
-                 v-b-tooltip.hover title="Flat crit bonus on top of npc's natual crit that can go toward this attack">
+          <input
+            type="text" @change="calculateSpecialAbilities" class="ability_check_sub form-control" style=""
+            v-model="abilityParams[5][6]" value="" placeholder="0"
+            v-b-tooltip.hover title="Flat crit bonus on top of npc's natual crit that can go toward this attack"
+          >
         </td>
       </tr>
       </tbody>
@@ -171,31 +237,44 @@
       <tr>
         <td class="ability-label-top">Ranged Attack</td>
         <td style="width:50px; text-align:center">
-          <input class="ability_check" @change="calculateSpecialAbilities" v-model="ability[11]"
-                 v-bind:true-value="'1'" v-bind:false-value="'0'" type="checkbox"></td>
+          <eq-checkbox
+            class="d-inline-block"
+            v-model.number="ability[11]"
+            @input="calculateSpecialAbilities"
+          /></td>
         <td>
-          <input type="text" @change="calculateSpecialAbilities" class="ability_check_sub form-control" style=""
-                 v-model="abilityParams[11][0]" value="" placeholder="0" v-b-tooltip.hover title="Number of Attacks">
+          <input
+            type="text" @change="calculateSpecialAbilities" class="ability_check_sub form-control" style=""
+            v-model="abilityParams[11][0]" value="" placeholder="0" v-b-tooltip.hover title="Number of Attacks"
+          >
         </td>
         <td>
-          <input type="text" @change="calculateSpecialAbilities" class="ability_check_sub form-control" style=""
-                 v-model="abilityParams[11][1]" value="" placeholder="250" v-b-tooltip.hover
-                 title="Max Range (default: 250)">
+          <input
+            type="text" @change="calculateSpecialAbilities" class="ability_check_sub form-control" style=""
+            v-model="abilityParams[11][1]" value="" placeholder="250" v-b-tooltip.hover
+            title="Max Range (default: 250)"
+          >
         </td>
         <td>
-          <input type="text" @change="calculateSpecialAbilities" class="ability_check_sub form-control" style=""
-                 v-model="abilityParams[11][2]" value="" placeholder="0" v-b-tooltip.hover
-                 title="Percent Hit Chance Modifier">
+          <input
+            type="text" @change="calculateSpecialAbilities" class="ability_check_sub form-control" style=""
+            v-model="abilityParams[11][2]" value="" placeholder="0" v-b-tooltip.hover
+            title="Percent Hit Chance Modifier"
+          >
         </td>
         <td>
-          <input type="text" @change="calculateSpecialAbilities" class="ability_check_sub form-control" style=""
-                 v-model="abilityParams[11][3]" value="" placeholder="0" v-b-tooltip.hover
-                 title="Percent Damage Modifier">
+          <input
+            type="text" @change="calculateSpecialAbilities" class="ability_check_sub form-control" style=""
+            v-model="abilityParams[11][3]" value="" placeholder="0" v-b-tooltip.hover
+            title="Percent Damage Modifier"
+          >
         </td>
         <td>
-          <input type="text" @change="calculateSpecialAbilities" class="ability_check_sub form-control" style=""
-                 v-model="abilityParams[11][4]" value="" placeholder="25"
-                 v-b-tooltip.hover title="Min Range (default: RuleI(Combat, MinRangedAttackDist) = 25)"></td>
+          <input
+            type="text" @change="calculateSpecialAbilities" class="ability_check_sub form-control" style=""
+            v-model="abilityParams[11][4]" value="" placeholder="25"
+            v-b-tooltip.hover title="Min Range (default: RuleI(Combat, MinRangedAttackDist) = 25)"
+          ></td>
       </tr>
       </tbody>
     </table>
@@ -204,12 +283,17 @@
       <tr>
         <td class="ability-label-top">Tunnel Vision</td>
         <td style="width:50px; text-align:center">
-          <input class="ability_check" @change="calculateSpecialAbilities" v-model="ability[29]"
-                 v-bind:true-value="'1'" v-bind:false-value="'0'" type="checkbox"></td>
+          <eq-checkbox
+            class="d-inline-block"
+            v-model.number="ability[29]"
+            @input="calculateSpecialAbilities"
+          /></td>
         <td>
-          <input type="text" @change="calculateSpecialAbilities" class="ability_check_sub form-control" style=""
-                 v-model="abilityParams[29][0]" value="" placeholder="75" v-b-tooltip.hover
-                 title="Aggro modifier on non-tanks">
+          <input
+            type="text" @change="calculateSpecialAbilities" class="ability_check_sub form-control" style=""
+            v-model="abilityParams[29][0]" value="" placeholder="75" v-b-tooltip.hover
+            title="Aggro modifier on non-tanks"
+          >
         </td>
       </tr>
       </tbody>
@@ -219,12 +303,17 @@
       <tr>
         <td class="ability-label-top">Leashed</td>
         <td style="width:50px; text-align:center">
-          <input class="ability_check" @change="calculateSpecialAbilities" v-model="abilityParams[32]"
-                 v-bind:true-value="'1'" v-bind:false-value="'0'" type="checkbox">
+          <eq-checkbox
+            class="d-inline-block"
+            v-model.number="ability[32]"
+            @input="calculateSpecialAbilities"
+          />
         </td>
         <td>
-          <input type="text" @change="calculateSpecialAbilities" class="ability_check_sub form-control" style=""
-                 v-model="abilityParams[32][0]" value="" placeholder="0" v-b-tooltip.hover title="Range"></td>
+          <input
+            type="text" @change="calculateSpecialAbilities" class="ability_check_sub form-control" style=""
+            v-model="abilityParams[32][0]" value="" placeholder="0" v-b-tooltip.hover title="Range"
+          ></td>
       </tr>
       </tbody>
     </table>
@@ -233,11 +322,16 @@
       <tr>
         <td class="ability-label-top">Tethered</td>
         <td style="width:50px; text-align:center">
-          <input class="ability_check" @change="calculateSpecialAbilities" v-model="ability[33]"
-                 v-bind:true-value="'1'" v-bind:false-value="'0'" type="checkbox"></td>
+          <eq-checkbox
+            class="d-inline-block"
+            v-model.number="ability[33]"
+            @input="calculateSpecialAbilities"
+          /></td>
         <td>
-          <input type="text" @change="calculateSpecialAbilities" class="ability_check_sub form-control" style=""
-                 v-model="abilityParams[33][0]" value="" placeholder="0" v-b-tooltip.hover title="Aggo Range"></td>
+          <input
+            type="text" @change="calculateSpecialAbilities" class="ability_check_sub form-control" style=""
+            v-model="abilityParams[33][0]" value="" placeholder="0" v-b-tooltip.hover title="Aggo Range"
+          ></td>
       </tr>
       </tbody>
     </table>
@@ -246,17 +340,24 @@
       <tr>
         <td class="ability-label-top">Flee Percent</td>
         <td style="width:50px; text-align:center">
-          <input class="ability_check" @change="calculateSpecialAbilities" v-model="ability[37]"
-                 v-bind:true-value="'1'" v-bind:false-value="'0'" type="checkbox"></td>
+          <eq-checkbox
+            class="d-inline-block"
+            v-model.number="ability[37]"
+            @input="calculateSpecialAbilities"
+          /></td>
         <td>
-          <input type="text" @change="calculateSpecialAbilities" class="ability_check_sub form-control" style=""
-                 v-model="abilityParams[37][0]" value="" placeholder="0" v-b-tooltip.hover
-                 title="Percent NPC will flee at">
+          <input
+            type="text" @change="calculateSpecialAbilities" class="ability_check_sub form-control" style=""
+            v-model="abilityParams[37][0]" value="" placeholder="0" v-b-tooltip.hover
+            title="Percent NPC will flee at"
+          >
         </td>
         <td>
-          <input type="text" @change="calculateSpecialAbilities" class="ability_check_sub form-control" style=""
-                 v-model="abilityParams[37][1]" value="" placeholder="0" v-b-tooltip.hover
-                 title="Percent chance to flee"></td>
+          <input
+            type="text" @change="calculateSpecialAbilities" class="ability_check_sub form-control" style=""
+            v-model="abilityParams[37][1]" value="" placeholder="0" v-b-tooltip.hover
+            title="Percent chance to flee"
+          ></td>
       </tr>
       </tbody>
     </table>
@@ -265,20 +366,29 @@
       <tr>
         <td class="ability-label-top">Chase Distance</td>
         <td style="width:50px; text-align:center">
-          <input class="ability_check" @change="calculateSpecialAbilities" v-model="ability[40]"
-                 v-bind:true-value="'1'" v-bind:false-value="'0'" type="checkbox"></td>
+          <eq-checkbox
+            class="d-inline-block"
+            v-model.number="ability[40]"
+            @input="calculateSpecialAbilities"
+          /></td>
         <td>
-          <input type="text" @change="calculateSpecialAbilities" class="ability_check_sub form-control" style=""
-                 v-model="abilityParams[40][0]" value="" placeholder="0" v-b-tooltip.hover title="Max Chase Distance">
+          <input
+            type="text" @change="calculateSpecialAbilities" class="ability_check_sub form-control" style=""
+            v-model="abilityParams[40][0]" value="" placeholder="0" v-b-tooltip.hover title="Max Chase Distance"
+          >
         </td>
         <td>
-          <input type="text" @change="calculateSpecialAbilities" class="ability_check_sub form-control" style=""
-                 v-model="abilityParams[40][1]" value="" placeholder="0" v-b-tooltip.hover title="Min Chase Distance">
+          <input
+            type="text" @change="calculateSpecialAbilities" class="ability_check_sub form-control" style=""
+            v-model="abilityParams[40][1]" value="" placeholder="0" v-b-tooltip.hover title="Min Chase Distance"
+          >
         </td>
         <td>
-          <input type="text" @change="calculateSpecialAbilities" class="ability_check_sub form-control" style=""
-                 v-model="abilityParams[40][2]" value="" placeholder="0"
-                 v-b-tooltip.hover title="Ignore line of sight check for chasing"></td>
+          <input
+            type="text" @change="calculateSpecialAbilities" class="ability_check_sub form-control" style=""
+            v-model="abilityParams[40][2]" value="" placeholder="0"
+            v-b-tooltip.hover title="Ignore line of sight check for chasing"
+          ></td>
       </tr>
       </tbody>
     </table>
@@ -287,13 +397,18 @@
       <tr>
         <td class="ability-label-top">Allow Tank</td>
         <td style="width:50px; text-align:center">
-          <input class="ability_check" @change="calculateSpecialAbilities" v-model="ability[41]"
-                 v-bind:true-value="'1'" v-bind:false-value="'0'" type="checkbox"></td>
+          <eq-checkbox
+            class="d-inline-block"
+            v-model.number="ability[41]"
+            @input="calculateSpecialAbilities"
+          /></td>
         <td>
-          <input type="text" @change="calculateSpecialAbilities" class="ability_check_sub form-control" style=""
-                 v-model="abilityParams[41][0]" value="" placeholder="1"
-                 v-b-tooltip.hover
-                 title="Allows an NPC the opportunity to take aggro over a client if in melee range">
+          <input
+            type="text" @change="calculateSpecialAbilities" class="ability_check_sub form-control" style=""
+            v-model="abilityParams[41][0]" value="" placeholder="1"
+            v-b-tooltip.hover
+            title="Allows an NPC the opportunity to take aggro over a client if in melee range"
+          >
         </td>
       </tr>
       </tbody>
@@ -303,13 +418,17 @@
       <tr>
         <td class="ability-label-top">Casting Resist Diff</td>
         <td style="width:50px; text-align:center">
-          <input class="ability_check" @change="calculateSpecialAbilities" v-model="ability[43]"
-                 v-bind:true-value="'1'" v-bind:false-value="'0'" type="checkbox"></td>
+          <eq-checkbox
+            class="d-inline-block"
+            v-model.number="ability[43]"
+            @input="calculateSpecialAbilities"
+          /></td>
         <td>
-          <input type="text" @change="calculateSpecialAbilities" class="ability_check_sub form-control" style=""
-                 v-model="abilityParams[43][0]" value="" placeholder="0"
-                 v-b-tooltip.hover
-                 title="Set an innate resist different to be applied to all spells cast by this NPC (stacks with a spells regular resist difference)."
+          <input
+            type="text" @change="calculateSpecialAbilities" class="ability_check_sub form-control" style=""
+            v-model="abilityParams[43][0]" value="" placeholder="0"
+            v-b-tooltip.hover
+            title="Set an innate resist different to be applied to all spells cast by this NPC (stacks with a spells regular resist difference)."
           >
         </td>
       </tr>
@@ -320,191 +439,77 @@
       <tr>
         <td class="ability-label-top">Counter Avoid Damage</td>
         <td style="width:50px; text-align:center">
-          <input class="ability_check" @change="calculateSpecialAbilities" v-model="ability[44]"
-                 v-bind:true-value="'1'" v-bind:false-value="'0'" type="checkbox"></td>
-        <td>
-          <input type="text" @change="calculateSpecialAbilities" class="ability_check_sub form-control" style=""
-                 v-model="abilityParams[44][0]" value="" placeholder="0"
-                 v-b-tooltip.hover title="chance to avoid melee via dodge/parray/riposte/block skills "></td>
-        <td>
-          <input type="text" @change="calculateSpecialAbilities" class="ability_check_sub form-control" style=""
-                 v-model="abilityParams[44][1]" value="" placeholder="0-100" v-b-tooltip.hover
-                 title="Avoidance % (0-100)">
+
+          <eq-checkbox
+            class="d-inline-block"
+            v-model.number="ability[44]"
+            @input="calculateSpecialAbilities"
+          />
+
         </td>
         <td>
-          <input type="text" @change="calculateSpecialAbilities" class="ability_check_sub form-control" style=""
-                 v-model="abilityParams[44][2]" value="" placeholder="0" v-b-tooltip.hover
-                 title="% Reduction to Riposte"></td>
+          <input
+            type="text" @change="calculateSpecialAbilities" class="ability_check_sub form-control" style=""
+            v-model="abilityParams[44][0]" value="" placeholder="0"
+            v-b-tooltip.hover title="chance to avoid melee via dodge/parray/riposte/block skills "
+          ></td>
         <td>
-          <input type="text" @change="calculateSpecialAbilities" class="ability_check_sub form-control" style=""
-                 v-model="abilityParams[44][3]" value="" placeholder="0" v-b-tooltip.hover
-                 title="% Reduction to Parry">
+          <input
+            type="text" @change="calculateSpecialAbilities" class="ability_check_sub form-control" style=""
+            v-model="abilityParams[44][1]" value="" placeholder="0-100" v-b-tooltip.hover
+            title="Avoidance % (0-100)"
+          >
         </td>
         <td>
-          <input type="text" @change="calculateSpecialAbilities" class="ability_check_sub form-control" style=""
-                 v-model="abilityParams[44][4]" value="" placeholder="0" v-b-tooltip.hover
-                 title="% Reduction to Block">
+          <input
+            type="text" @change="calculateSpecialAbilities" class="ability_check_sub form-control" style=""
+            v-model="abilityParams[44][2]" value="" placeholder="0" v-b-tooltip.hover
+            title="% Reduction to Riposte"
+          ></td>
+        <td>
+          <input
+            type="text" @change="calculateSpecialAbilities" class="ability_check_sub form-control" style=""
+            v-model="abilityParams[44][3]" value="" placeholder="0" v-b-tooltip.hover
+            title="% Reduction to Parry"
+          >
         </td>
         <td>
-          <input type="text" @change="calculateSpecialAbilities" class="ability_check_sub form-control" style=""
-                 v-model="abilityParams[44][5]" value="" placeholder="0" v-b-tooltip.hover
-                 title="% Reduction to Dodge">
+          <input
+            type="text" @change="calculateSpecialAbilities" class="ability_check_sub form-control" style=""
+            v-model="abilityParams[44][4]" value="" placeholder="0" v-b-tooltip.hover
+            title="% Reduction to Block"
+          >
+        </td>
+        <td>
+          <input
+            type="text" @change="calculateSpecialAbilities" class="ability_check_sub form-control" style=""
+            v-model="abilityParams[44][5]" value="" placeholder="0" v-b-tooltip.hover
+            title="% Reduction to Dodge"
+          >
         </td>
       </tr>
       </tbody>
     </table>
-    <br>
-    <table class="table-condensed flip-content" style="width: 100%">
-      <tbody>
-      <tr>
-        <td class="ability-label">Triple Attack</td>
-        <td>
-          <input class="ability_check" @change="calculateSpecialAbilities" v-model="ability[6]"
-                 v-bind:true-value="'1'" v-bind:false-value="'0'" type="checkbox"></td>
-        <td class="ability-label">Quad Attack</td>
-        <td>
-          <input class="ability_check" @change="calculateSpecialAbilities" v-model="ability[7]"
-                 v-bind:true-value="'1'" v-bind:false-value="'0'" type="checkbox"></td>
-        <td class="ability-label">Dual Wield</td>
-        <td>
-          <input class="ability_check" @change="calculateSpecialAbilities" v-model="ability[8]"
-                 v-bind:true-value="'1'" v-bind:false-value="'0'" type="checkbox"></td>
-      </tr>
-      <tr>
-        <td class="ability-label">Bane Attack</td>
-        <td>
-          <input class="ability_check" @change="calculateSpecialAbilities" v-model="ability[9]"
-                 v-bind:true-value="'1'" v-bind:false-value="'0'" type="checkbox"></td>
-        <td class="ability-label">Magic Attack</td>
-        <td>
-          <input class="ability_check" @change="calculateSpecialAbilities" v-model="ability[10]"
-                 v-bind:true-value="'1'" v-bind:false-value="'0'" type="checkbox"></td>
-        <td class="ability-label">Unslowable</td>
-        <td>
-          <input class="ability_check" @change="calculateSpecialAbilities" v-model="ability[12]"
-                 v-bind:true-value="'1'" v-bind:false-value="'0'" type="checkbox"></td>
-      </tr>
-      <tr>
-        <td class="ability-label">Unmezable</td>
-        <td>
-          <input class="ability_check" @change="calculateSpecialAbilities" v-model="ability[13]"
-                 v-bind:true-value="'1'" v-bind:false-value="'0'" type="checkbox"></td>
-        <td class="ability-label">Uncharmable</td>
-        <td>
-          <input class="ability_check" @change="calculateSpecialAbilities" v-model="ability[14]"
-                 v-bind:true-value="'1'" v-bind:false-value="'0'" type="checkbox"></td>
-        <td class="ability-label">Unstunable</td>
-        <td>
-          <input class="ability_check" @change="calculateSpecialAbilities" v-model="ability[15]"
-                 v-bind:true-value="'1'" v-bind:false-value="'0'" type="checkbox"></td>
-      </tr>
-      <tr>
-        <td class="ability-label">Unsnareable</td>
-        <td>
-          <input class="ability_check" @change="calculateSpecialAbilities" v-model="ability[16]"
-                 v-bind:true-value="'1'" v-bind:false-value="'0'" type="checkbox"></td>
-        <td class="ability-label">Unfearable</td>
-        <td>
-          <input class="ability_check" @change="calculateSpecialAbilities" v-model="ability[17]"
-                 v-bind:true-value="'1'" v-bind:false-value="'0'" type="checkbox"></td>
-        <td class="ability-label">Immune to Dispell</td>
-        <td>
-          <input class="ability_check" @change="calculateSpecialAbilities" v-model="ability[18]"
-                 v-bind:true-value="'1'" v-bind:false-value="'0'" type="checkbox"></td>
-      </tr>
-      <tr>
-        <td class="ability-label">Immune to Melee</td>
-        <td>
-          <input class="ability_check" @change="calculateSpecialAbilities" v-model="ability[19]"
-                 v-bind:true-value="'1'" v-bind:false-value="'0'" type="checkbox"></td>
-        <td class="ability-label">Immune to Magic</td>
-        <td>
-          <input class="ability_check" @change="calculateSpecialAbilities" v-model="ability[20]"
-                 v-bind:true-value="'1'" v-bind:false-value="'0'" type="checkbox"></td>
-        <td class="ability-label">Immune to Fleeing</td>
-        <td>
-          <input class="ability_check" @change="calculateSpecialAbilities" v-model="ability[21]"
-                 v-bind:true-value="'1'" v-bind:false-value="'0'" type="checkbox"></td>
-      </tr>
-      <tr>
-        <td class="ability-label">Immune to non-Bane Melee</td>
-        <td>
-          <input class="ability_check" @change="calculateSpecialAbilities" v-model="ability[22]"
-                 v-bind:true-value="'1'" v-bind:false-value="'0'" type="checkbox"></td>
-        <td class="ability-label">Immune to non-Magical Melee</td>
-        <td>
-          <input class="ability_check" @change="calculateSpecialAbilities" v-model="ability[23]"
-                 v-bind:true-value="'1'" v-bind:false-value="'0'" type="checkbox"></td>
-        <td class="ability-label">Will Not Aggro</td>
-        <td>
-          <input class="ability_check" @change="calculateSpecialAbilities" v-model="ability[24]"
-                 v-bind:true-value="'1'" v-bind:false-value="'0'" type="checkbox"></td>
-      </tr>
-      <tr>
-        <td class="ability-label">Immune to Aggro</td>
-        <td>
-          <input class="ability_check" @change="calculateSpecialAbilities" v-model="ability[25]"
-                 v-bind:true-value="'1'" v-bind:false-value="'0'" type="checkbox"></td>
-        <td class="ability-label">Resist Ranged Spells</td>
-        <td>
-          <input class="ability_check" @change="calculateSpecialAbilities" v-model="ability[26]"
-                 v-bind:true-value="'1'" v-bind:false-value="'0'" type="checkbox"></td>
-        <td class="ability-label">See through Feign Death</td>
-        <td>
-          <input class="ability_check" @change="calculateSpecialAbilities" v-model="ability[27]"
-                 v-bind:true-value="'1'" v-bind:false-value="'0'" type="checkbox"></td>
-      </tr>
-      <tr>
-        <td class="ability-label">Immune to Taunt</td>
-        <td>
-          <input class="ability_check" @change="calculateSpecialAbilities" v-model="ability[28]"
-                 v-bind:true-value="'1'" v-bind:false-value="'0'" type="checkbox"></td>
-        <td class="ability-label">Does NOT buff/heal friends</td>
-        <td>
-          <input class="ability_check" @change="calculateSpecialAbilities" v-model="ability[30]"
-                 v-bind:true-value="'1'" v-bind:false-value="'0'" type="checkbox"></td>
-        <td class="ability-label">Unpacifiable</td>
-        <td>
-          <input class="ability_check" @change="calculateSpecialAbilities" v-model="ability[31]"
-                 v-bind:true-value="'1'" v-bind:false-value="'0'" type="checkbox"></td>
-      </tr>
-      <tr>
-        <td class="ability-label">Destructible Object</td>
-        <td>
-          <input class="ability_check" @change="calculateSpecialAbilities" v-model="ability[34]"
-                 v-bind:true-value="'1'" v-bind:false-value="'0'" type="checkbox"></td>
-        <td class="ability-label">No Harm from Players</td>
-        <td>
-          <input class="ability_check" @change="calculateSpecialAbilities" v-model="ability[35]"
-                 v-bind:true-value="'1'" v-bind:false-value="'0'" type="checkbox"></td>
-        <td class="ability-label">Always Flee</td>
-        <td>
-          <input class="ability_check" @change="calculateSpecialAbilities" v-model="ability[36]"
-                 v-bind:true-value="'1'" v-bind:false-value="'0'" type="checkbox"></td>
-      </tr>
-      <tr>
-        <td class="ability-label">Allow Beneficial</td>
-        <td>
-          <input class="ability_check" @change="calculateSpecialAbilities" v-model="ability[38]"
-                 v-bind:true-value="'1'" v-bind:false-value="'0'" type="checkbox"></td>
-        <td class="ability-label">Disable Melee</td>
-        <td>
-          <input class="ability_check" @change="calculateSpecialAbilities" v-model="ability[39]"
-                 v-bind:true-value="'1'" v-bind:false-value="'0'" type="checkbox"></td>
-        <td class="ability-label">Ignore Root Aggro</td>
-        <td>
-          <input class="ability_check" @change="calculateSpecialAbilities" v-model="ability[42]"
-                 v-bind:true-value="'1'" v-bind:false-value="'0'" type="checkbox"></td>
-      </tr>
-      </tbody>
-    </table>
-    <br>
 
-    <div v-if="showSpecialAbilitiesResult">
+    <div class="row mt-3" style="margin-left: 180px">
+      <div class="col-3" v-for="c in checkboxAbilities">
+        <eq-checkbox
+          class="mb-2 d-inline-block mr-3"
+          v-model.number="ability[c.ability]"
+          @input="calculateSpecialAbilities"
+        />
+        <div class="d-inline-block">{{ c.name }}</div>
 
+      </div>
+
+    </div>
+
+    <div v-if="showSpecialAbilitiesResult" class="mt-3">
       <h4 class="eq-header">Abilities Result</h4>
-      <input type="text" @change="calculateSpecialAbilities" class="form-control m-wrap span6" disabled
-             v-model="specialAbilitiesResult" style="width:100% !important;">
+      <input
+        type="text" @change="calculateSpecialAbilities" class="form-control m-wrap span6" disabled
+        v-model="specialAbilitiesResult" style="width:100% !important;"
+      >
 
     </div>
 
@@ -517,11 +522,12 @@ Ability Params
 </template>
 
 <script>
-import EqWindow from "@/components/eq-ui/EQWindow";
+import EqWindow   from "@/components/eq-ui/EQWindow";
+import EqCheckbox from "../eq-ui/EQCheckbox";
 
 export default {
   name: "NpcSpecialAbilities",
-  components: { EqWindow },
+  components: { EqCheckbox, EqWindow },
   props: {
     abilities: {
       type: String,
@@ -539,7 +545,40 @@ export default {
       ability: {},
       abilityParams: null,
       debug: false,
-      propWatcher: null
+      propWatcher: null,
+
+      checkboxAbilities: [
+        { name: "Triple Attack", ability: 6 },
+        { name: "Quad Attack", ability: 7 },
+        { name: "Dual Wield", ability: 8 },
+        { name: "Bane Attack", ability: 9 },
+        { name: "Magic Attack", ability: 10 },
+        { name: "Unslowable", ability: 12 },
+        { name: "Unmezable", ability: 13 },
+        { name: "Uncharmable", ability: 14 },
+        { name: "Unstunnable", ability: 15 },
+        { name: "Unsnareable", ability: 16 },
+        { name: "Unfearable", ability: 17 },
+        { name: "Immune to Dispell", ability: 18 },
+        { name: "Immune to Melee", ability: 19 },
+        { name: "Immune to Magic", ability: 20 },
+        { name: "Immune to Fleeing", ability: 21 },
+        { name: "Immune to Non-Bane Melee", ability: 22 },
+        { name: "Immune to Non-Magical Melee", ability: 23 },
+        { name: "Will Not Aggro", ability: 24 },
+        { name: "Immune to Aggro", ability: 25 },
+        { name: "Resist Ranged Spells", ability: 26 },
+        { name: "See through Feign Death", ability: 27 },
+        { name: "Immune to Taunt", ability: 28 },
+        { name: "Does NOT buff/heal friends", ability: 30 },
+        { name: "Unpacifiable", ability: 31 },
+        { name: "Destructible Object", ability: 34 },
+        { name: "No Harm from Players", ability: 35 },
+        { name: "Always Flee", ability: 36 },
+        { name: "Allow Beneficial", ability: 38 },
+        { name: "Disable Melee", ability: 39 },
+        { name: "Ignore Root Aggro", ability: 42 },
+      ]
     }
   },
   mounted() {
@@ -575,7 +614,7 @@ export default {
         const value        = abilitySplit[1].trim()
 
         if (value > 0) {
-          abilities[abilityId] = value
+          abilities[abilityId] = parseInt(value)
 
           for (let i = 2; i < abilitySplit.length; i++) {
             const value = abilitySplit[i].trim()
@@ -583,7 +622,7 @@ export default {
               params[abilityId] = {}
             }
 
-            params[abilityId][i - 2] = value
+            params[abilityId][i - 2] = parseInt(value)
           }
         }
       }
@@ -594,6 +633,9 @@ export default {
     },
     calculateSpecialAbilities: function () {
       this.$forceUpdate();
+
+      console.log("calculates")
+      console.log(this.ability)
 
       let specialAbilities = []
       for (let abilityId in this.ability) {
@@ -622,11 +664,18 @@ export default {
 
 <style scoped>
 .ability-label {
-  text-align: right
+  text-align: right;
+  padding-right: 10px;
 }
 
 .ability-label-top {
-  width:      90px;
+  width: 140px;
   text-align: right;
+  padding-bottom: 5px;
+}
+
+#special-abilities input, #special-abilities select {
+  margin-top: 0;
+  margin-bottom: 0;
 }
 </style>

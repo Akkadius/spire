@@ -2215,6 +2215,7 @@ export default {
     },
 
     load() {
+
       if (this.$route.params.id > 0) {
         this.error = ""
         this.getDbStringsSelectData(5)

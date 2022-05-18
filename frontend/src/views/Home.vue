@@ -157,7 +157,7 @@ export default {
 }
 
 .changelog img {
-  border-radius: 15px;
+  border-radius: 5px;
   max-width: 95% !important;
   text-align: center;
   display: block;

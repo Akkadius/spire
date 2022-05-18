@@ -1,7 +1,7 @@
 <template>
-  <div class='eq-window' :style="'margin-bottom: 40px; min-height: 275px; ' + (title ? 'padding-top: 30px' : 'padding-top: 0px !important')">
-    <div class='eq-window-title-bar' v-if="title">{{ title }}</div>
-    <div :style="'padding: 10px; ' + (title ? 'margin-top: 10px' : '') ">
+  <div class='eq-window-simple'>
+    <div class='eq-window-title-bar' v-if="title">{{title}}</div>
+    <div>
       <slot></slot>
     </div>
   </div>
@@ -20,5 +20,5 @@ export default {
 </script>
 
 <style scoped>
-/*@import './eq-window-styles.css';*/
+
 </style>

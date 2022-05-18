@@ -1,3 +1,11 @@
+## [1.13.0]
+
+### Basic Auth Support
+
+If you want to run Spire on a hosted webserver with very basic authentication, you now can today until a more robust users, permissions system is built out.
+
+Simply supply two environment variables `BASIC_AUTH_USER` and `BASIC_AUTH_PASSWORD` and Spire will only allow requests if you pass the basic authentication gate
+
 ## [1.12.0]
 
 ### Task Editor

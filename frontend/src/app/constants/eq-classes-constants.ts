@@ -78,7 +78,7 @@ export const DB_CLASSES = {
   "21": "GM Cleric",
   "22": "GM Paladin",
   "23": "GM Ranger",
-  "24": "GM Shadown Knight",
+  "24": "GM Shadow Knight",
   "25": "GM Druid",
   "26": "GM Monk",
   "27": "GM Bard",

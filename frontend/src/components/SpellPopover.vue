@@ -1,12 +1,10 @@
 <template>
-  <div v-if="spell" class="fade-in">
-
+  <div v-if="spell" class="d-inline-block">
     <div
-      :id="spell.id + '-popover'"
-      style="display:inline-block"
+      :id="spell.id + '-' + popoverId + '-popover'"
     >
       <span
-        :class="'d-inline-block fade-in spell-' + spell.new_icon + getIconClassLabelFromSize()"
+        :class="'d-inline-block spell-' + spell.new_icon + getIconClassLabelFromSize()"
         :title="spell.icon"
         :style="getBorderStyling()"
       />
@@ -18,14 +16,16 @@
     </div>
 
     <b-popover
-      :target="spell.id + '-popover'"
-      placement="auto"
+      :target="spell.id + '-' + popoverId + '-popover'"
       custom-class="no-bg"
-      delay="1"
+      placement="right"
+      delay="0"
+      boundary="viewport"
+      :no-fade="true"
       triggers="hover focus"
       style="width: 500px !important"
     >
-      <eq-window style="margin-right: 10px; width: auto; height: 90%">
+      <eq-window style="width: auto; height: 100%">
         <eq-spell-preview :spell-data="spell"/>
       </eq-window>
     </b-popover>
@@ -67,6 +67,7 @@ export default {
   },
   data() {
     return {
+      popoverId: Math.random().toString(16).slice(2),
       spellEffectInfo: [],
       spellData: {},
       sideLoadedSpellData: {},

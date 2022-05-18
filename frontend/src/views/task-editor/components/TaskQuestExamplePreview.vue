@@ -1,7 +1,7 @@
 <template>
   <eq-window-simple
     title="Quest Script Examples"
-    class="eq-window-hybrid p-0 pl-3 pr-3"
+    class="p-0 pl-3 pr-3"
     style="margin-top: 30px"
     v-if="task"
   >

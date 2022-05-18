@@ -683,6 +683,37 @@ A:hover {
     transition: opacity 200ms;
 }
 
+.eq-window-simple {
+    padding: 20px;
+
+    background-image: url(../images/super_fancy_bg.png);
+
+    margin-bottom: 0px;
+    margin-top: 15px;
+}
+
+/*.eq-window-simple {*/
+/*    padding-left: 20px;*/
+/*    padding-right: 20px;*/
+
+/*    background-image: url(../images/super_fancy_r.png),*/
+/*    url(../images/super_fancy_l.png),*/
+/*    url(../images/super_fancy_bg.png);*/
+
+/*    margin-bottom: 0px;*/
+
+/*    background-repeat: repeat-y,*/
+/*    repeat-y,*/
+/*    repeat;*/
+/*    background-position-x: right,*/
+/*    left,*/
+/*    left;*/
+/*    background-position-y: top,*/
+/*    top,*/
+/*    top;*/
+/*}*/
+
+
 .eq-window-simple:hover,
 .eq-window-fancy:hover,
 .eq-window-complex:hover,

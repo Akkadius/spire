@@ -1,8 +1,8 @@
 <template>
-  <div :class="isComponent ? '' : 'container-fluid'" v-if="loaded">
-    <eq-window-simple
+  <content-area>
+    <eq-window
       title="Emitter Viewer"
-      class="mt-4 text-center"
+      class="text-center"
     >
       <div v-if="filteredPreviews && filteredPreviews.length === 0">
         No previews found...
@@ -36,8 +36,8 @@
         <div class="col-12 mt-3">Videos Credits @DeadZergling</div>
       </div>
 
-    </eq-window-simple>
-  </div>
+    </eq-window>
+  </content-area>
 </template>
 
 <script>
@@ -47,9 +47,10 @@ import EqWindow       from "@/components/eq-ui/EQWindow";
 import EqWindowSimple from "../../components/eq-ui/EQWindowSimple";
 import VideoViewer    from "../../app/video-viewer/video-viewer";
 import EqAssets       from "../../app/eq-assets/eq-assets";
+import ContentArea    from "../../components/layout/ContentArea";
 
 export default {
-  components: { EqWindowSimple, EqWindow, PageHeader },
+  components: { ContentArea, EqWindowSimple, EqWindow, PageHeader },
   data() {
     return {
       loaded: false,

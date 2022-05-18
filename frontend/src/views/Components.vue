@@ -110,8 +110,13 @@
 
               <div class="row">
                 <!-- Item Preview -->
-                <div v-for="(item, index) in items" :key="index" style="display: inline-block; vertical-align: top">
-                  <eq-window style="margin-right: 10px; width: auto; height: 90%">
+                <div
+                  v-for="(item, index) in items"
+                  class="mb-3 col-5"
+                  :key="index"
+                  style="display: inline-block; vertical-align: top"
+                >
+                  <eq-window style="width: auto; height: 100%">
                     <eq-item-card-preview :item-data="item"/>
                   </eq-window>
                 </div>
@@ -163,16 +168,43 @@
                   v-for="(spell, index) in spells"
                   :key="index"
                   style="display: inline-block; vertical-align: top"
-                  class="col-5"
+                  class="col-5 mb-3"
                 >
-                  <eq-window style="margin-right: 10px; width: auto; height: 90%">
+                  <eq-window style="width: auto; height: 100%">
                     <eq-spell-preview :spell-data="spell"/>
                   </eq-window>
                 </div>
               </div>
 
+              <div class="header mt-md-1">
+                <div class="header-body">
+                  <h1 class="header-title" id="npc-card-preview">
+                    NPC Card Preview
+                  </h1>
 
-              <!-- Spell Preview -->
+                  <p class="header-subtitle">
+                    NPC Preview Component
+                  </p>
+                </div>
+              </div>
+
+              <div class="row">
+                <div
+                  v-for="npc in npcs"
+                  :key="npc.id"
+                  style="display: inline-block; vertical-align: top"
+                  class="col-6 mb-5"
+                >
+                  <eq-window
+                    style="margin-right: 10px; width: auto; height: 100%"
+                  >
+                    <eq-npc-card-preview
+                      :npc="npc"
+                    />
+                  </eq-window>
+                </div>
+              </div>
+
               <div class="header mt-md-1">
                 <div class="header-body">
                   <h1 class="header-title" id="npc-special-abilities">
@@ -186,22 +218,24 @@
               </div>
 
               <div class="row">
-                <eq-window style="width: 100%">
-                  <npc-special-abilities
-                    show-special-abilities-result="1"
-                    :inputData.sync="specialAbilityInput"
-                    :abilities="specialAbilityInput"
-                  />
+                <div class="col-12">
+                  <eq-window style="width: 100%">
+                    <npc-special-abilities
+                      show-special-abilities-result="1"
+                      :inputData.sync="specialAbilityInput"
+                      :abilities="specialAbilityInput"
+                    />
 
-                  <h4 class="eq-header mt-4">Special Abilities Input</h4>
-                  <input
-                    type="text"
-                    class="form-control mb-5 mt-4"
-                    v-model="specialAbilityInput"
-                  >
+                    <h4 class="eq-header mt-3">Special Abilities Input</h4>
+                    <input
+                      type="text"
+                      class="form-control mb-3"
+                      v-model="specialAbilityInput"
+                    >
 
-                  The input is two-way bound with the special abilities editor
-                </eq-window>
+                    The input is two-way bound with the special abilities editor
+                  </eq-window>
+                </div>
               </div>
 
               <!-- Table -->
@@ -473,10 +507,15 @@ import EqSpellPreview       from "@/components/eq-ui/EQSpellCardPreview";
 import {EXAMPLE_SPELL_DATA} from "@/app/constants/eq-example-spell-data";
 import NpcSpecialAbilities  from "@/components/tools/NpcSpecialAbilities";
 import RangeVisualizer      from "../components/tools/RangeVisualizer";
+import EqNpcCardPreview     from "../components/eq-ui/EQNpcCardPreview";
+import {NpcTypeApi}         from "../app/api";
+import {SpireApiClient}     from "../app/api/spire-api-client";
+import {SpireQueryBuilder}  from "../app/api/spire-query-builder";
 
 export default {
   name: "Home",
   components: {
+    EqNpcCardPreview,
     RangeVisualizer,
     NpcSpecialAbilities,
     EqSpellPreview,
@@ -499,6 +538,7 @@ export default {
       rangeVisual: 157,
       items: EXAMPLE_ITEM_DATA,
       spells: EXAMPLE_SPELL_DATA,
+      npcs: {},
       specialAbilityInput: "1,1,3000,50^2,1,1,1000,2340^3,1,20,0,0,0,0,100,0^4,1,0,100,0,0,0,100,0^11,1,4,150,0,0,5^29,1,50^40,1,10,10,100^7,1^10,1^14,1^19,1^22,1^25,1^26,1",
 
       spellIcons: [
@@ -509,13 +549,60 @@ export default {
       ],
     }
   },
-  mounted() {
+  async mounted() {
     setInterval(() => {
       this.blueProgress   = Math.floor(Math.random() * 100 + 1)
       this.redProgress    = Math.floor(Math.random() * 100 + 1)
       this.orangeProgress = Math.floor(Math.random() * 100 + 1)
       this.yellowProgress = Math.floor(Math.random() * 100 + 1)
     }, 1000);
+
+    // load NPCS with relationships
+    let npcIDs = [
+      32040,
+      189009,
+      30073,
+      159691,
+      702065,
+      511,
+      68135,
+      150206,
+    ]
+
+    let builder = (new SpireQueryBuilder())
+
+    builder.includes(
+      [
+        "NpcSpell.NpcSpellsEntries.SpellsNew",
+        "NpcFactions.NpcFactionEntries.FactionList",
+        "NpcFactions",
+        "NpcEmotes",
+        "Merchantlists",
+        "Loottable.LoottableEntries.LootdropEntries.Item"
+      ]
+    )
+    builder.orderBy(["id"])
+
+    const response = await (new NpcTypeApi(SpireApiClient.getOpenApiConfig())).getNpcTypesBulk({
+        body: {
+          ids: npcIDs
+        },
+      },
+      {
+        query: builder.get()
+      }
+    )
+
+    if (response.status === 200 && response.data && parseInt(response.data.length) > 0) {
+      this.npcs = response.data
+    }
+
   },
 }
 </script>
+
+<style>
+.header {
+  margin-bottom: 0px;
+}
+</style>

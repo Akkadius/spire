@@ -33,8 +33,6 @@ export default {
   },
   created() {
     this.tabs = this.$children;
-
-    console.log("bottom tab margin is ", this.bottomTabMargin)
   },
   methods: {
     selectTabHover(selectedTab) {

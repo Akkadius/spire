@@ -1,249 +1,239 @@
 <template>
-  <div>
-    <!-- CONTENT -->
-    <div class="container-fluid">
-      <div class="panel-body">
-        <div class="panel panel-default">
+  <content-area>
 
-          <eq-window class="mt-5">
-
-            <div class="row">
-              <div class="col-1">
-                <div
-                  class="row" v-for="field in getCheckboxFilters()"
-                >
-                  <div class="col-9 text-right p-0 pr-2 m-0">
-                    {{ field.description }}
-                  </div>
-                  <div class="col-3 text-left p-0">
-                    <eq-checkbox
-                      class="mb-2 d-inline-block"
-                      :true-value="(typeof field.true !== 'undefined' ? field.true : 1)"
-                      :false-value="(typeof field.false !== 'undefined' ? field.false : 0)"
-                      v-model.number="checkboxFilters[field.field]"
-                      @input="checkboxFilters[field.field] = $event; triggerCheckboxFilter(field.field, (typeof field.false !== 'undefined' ? field.false : 0))"
-                    />
-                  </div>
-                </div>
-              </div>
-
-              <div class="col-11 pl-4">
-                <div class="row">
-                  <div class="col-12">
-                    <class-bitmask-calculator
-                      :centered-buttons="false"
-                      :display-all-none="true"
-                      :add-only-button-enabled="true"
-                      :add-only-state-enabled="selectOnlyClassEnabled"
-                      @fired="selectClass()"
-                      @selectOnly="selectOnlyClassEnabled = $event"
-                      :inputData.sync="selectedClasses"
-                      :mask="selectedClasses"
-                    />
-                  </div>
-                </div>
-
-                <div class="row">
-                  <div class="col-12">
-                    <race-bitmask-calculator
-                      :centered-buttons="false"
-                      :display-all-none="true"
-                      @fired="selectRaces()"
-                      :inputData.sync="selectedRaces"
-                      :mask="selectedRaces"
-                    />
-                  </div>
-                </div>
-
-                <div class="row">
-                  <div class="col-12">
-                    <deity-bitmask-calculator
-                      :centered-buttons="false"
-                      :display-all-none="true"
-                      @fired="selectDeities()"
-                      :inputData.sync="selectedDeities"
-                      :mask="selectedDeities"
-                    />
-                  </div>
-                </div>
-
-                <div class="row">
-                  <div class="col-12">
-                    <inventory-slot-calculator
-                      :skip-duplicate-slots="true"
-                      :display-all-none="true"
-                      @fired="selectSlots()"
-                      :inputData.sync="selectedSlots"
-                      :mask="selectedSlots"
-                    />
-                  </div>
-                </div>
-
-                <div class="row mt-3">
-
-                  <div class="col-lg-2 col-sm-12 p-0 pr-1 text-center">
-                    Item Name or ID
-                    <input
-                      name="item_name"
-                      type="text"
-                      class="form-control"
-                      v-on:keyup.enter="triggerState"
-                      v-model="itemName"
-                      placeholder="Name or ID"
-                      autofocus=""
-                      id="item_name"
-                      value=""
-                    >
-                  </div>
-
-                  <div class="col-lg-2 col-sm-12 p-0 pr-1 text-center">
-                    Item Type
-                    <select
-                      id="item_type"
-                      class="form-control"
-                      v-model="itemType"
-                      @change="triggerState()"
-                    >
-                      <option value="-1">-- Select --</option>
-                      <option v-for="option in itemTypeOptions" v-bind:value="option.value">
-                        {{ option.text }}
-                      </option>
-                    </select>
-                  </div>
-
-                  <div class="col-lg-1 col-sm-12 p-0 pr-1 text-center">
-                    Level
-                    <select
-                      class="form-control"
-                      v-model="selectedLevel"
-                      @change="triggerState()"
-                    >
-                      <option value="0">-- Select --</option>
-                      <option v-for="l in 105" v-bind:value="l">
-                        {{ l }}
-                      </option>
-                    </select>
-                  </div>
-
-                  <div class="col-lg-6 col-sm-12 mt-3 pl-0 pr-0">
-
-                    <div class="btn-group ml-3" role="group" aria-label="Basic example" v-if="selectedLevel">
-                      <b-button
-                        @click="selectedLevelType = 0; triggerStateDelayed();"
-                        size="sm"
-                        :variant="(parseInt(selectedLevelType) === 0 ? 'warning' : 'outline-warning')"
-                      >Only
-                      </b-button>
-                      <b-button
-                        @click="selectedLevelType = 1; triggerStateDelayed();"
-                        size="sm"
-                        :variant="(parseInt(selectedLevelType) === 1 ? 'warning' : 'outline-warning')"
-                      >Higher
-                      </b-button>
-                      <b-button
-                        @click="selectedLevelType = 2; triggerStateDelayed();"
-                        size="sm"
-                        :variant="(parseInt(selectedLevelType) === 2 ? 'warning' : 'outline-warning')"
-                      >Lower
-                      </b-button>
-                    </div>
-
-                    <div class="btn-group ml-3" role="group" aria-label="Basic example">
-                      <b-button
-                        alt="Display as table"
-                        @click="listType = 'table'; triggerState()"
-                        size="sm"
-                        :variant="(listType === 'table' ? 'warning' : 'outline-warning')"
-                      ><i class="fa fa-table"></i></b-button>
-                      <b-button
-                        alt="Display as grid"
-                        @click="listType = 'card'; triggerState()"
-                        size="sm"
-                        :variant="(listType === 'card' ? 'warning' : 'outline-warning')"
-                      ><i class="fa fa-th"></i></b-button>
-                    </div>
-
-                    <div class="btn-group ml-3" role="group" aria-label="Basic example">
-                      <b-button
-                        @click="limit = 10; triggerStateDelayed()"
-                        size="sm"
-                        :variant="(parseInt(limit) === 10 ? 'warning' : 'outline-warning')"
-                      >10
-                      </b-button>
-                      <b-button
-                        @click="limit = 100; triggerStateDelayed()"
-                        size="sm"
-                        :variant="(parseInt(limit) === 100 ? 'warning' : 'outline-warning')"
-                      >100
-                      </b-button>
-                      <b-button
-                        @click="limit = 1000; triggerStateDelayed()"
-                        size="sm"
-                        :variant="(parseInt(limit) === 1000 ? 'warning' : 'outline-warning')"
-                      >1000
-                      </b-button>
-                    </div>
-
-                    <div
-                      :class="'text-center btn-xs eq-button-fancy ml-3'"
-                      style="line-height: 25px;"
-                      @click="resetForm()"
-                    >
-                      Reset Form
-                    </div>
-                  </div>
-                </div>
-
-                <div class="row mt-3">
-                  <div class="col-12 p-0">
-                    <db-column-filter
-                      v-if="itemFields && filters"
-                      :set-filters="filters"
-                      @input="handleDbColumnFilters($event);"
-                      :columns="itemFields"
-                    />
-                  </div>
-                </div>
-
-              </div>
+    <eq-window>
+      <div class="row">
+        <div class="col-1">
+          <div
+            class="row" v-for="field in getCheckboxFilters()"
+          >
+            <div class="col-9 text-right p-0 pr-2 m-0">
+              {{ field.description }}
             </div>
+            <div class="col-3 text-left p-0">
+              <eq-checkbox
+                class="mb-2 d-inline-block"
+                :true-value="(typeof field.true !== 'undefined' ? field.true : 1)"
+                :false-value="(typeof field.false !== 'undefined' ? field.false : 0)"
+                v-model.number="checkboxFilters[field.field]"
+                @input="checkboxFilters[field.field] = $event; triggerCheckboxFilter(field.field, (typeof field.false !== 'undefined' ? field.false : 0))"
+              />
+            </div>
+          </div>
+        </div>
 
-          </eq-window>
-
-          <app-loader :is-loading="!loaded" padding="4"/>
-
-          <!-- card rendering -->
-          <div class="row" style="justify-content: center" v-if="loaded && listType === 'card'">
-            <div
-              v-for="(item, index) in items"
-              class="col-lg-4 col-sm-9"
-              :key="item.id"
-              style="display: inline-block; vertical-align: top"
-            >
-              <eq-window style="margin-right: 10px; width: auto; height: 90%">
-                <eq-item-card-preview
-                  :item-data="item"
-                  :show-edit="true"
-                  :show-related-data="true"
-                />
-              </eq-window>
+        <div class="col-11 pl-4">
+          <div class="row">
+            <div class="col-12">
+              <class-bitmask-calculator
+                :centered-buttons="false"
+                :display-all-none="true"
+                :add-only-button-enabled="true"
+                :add-only-state-enabled="selectOnlyClassEnabled"
+                @fired="selectClass()"
+                @selectOnly="selectOnlyClassEnabled = $event"
+                :inputData.sync="selectedClasses"
+                :mask="selectedClasses"
+              />
             </div>
           </div>
 
-          <!-- table -->
-          <item-preview-table
-            :items="items"
-            v-if="loaded && listType === 'table' && items"
-          />
+          <div class="row">
+            <div class="col-12">
+              <race-bitmask-calculator
+                :centered-buttons="false"
+                :display-all-none="true"
+                @fired="selectRaces()"
+                :inputData.sync="selectedRaces"
+                :mask="selectedRaces"
+              />
+            </div>
+          </div>
 
-          <!--          <eq-spell-preview-table :items="items" v-if="loaded && listType === 'table' && items"/>-->
+          <div class="row">
+            <div class="col-12">
+              <deity-bitmask-calculator
+                :centered-buttons="false"
+                :display-all-none="true"
+                @fired="selectDeities()"
+                :inputData.sync="selectedDeities"
+                :mask="selectedDeities"
+              />
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-12">
+              <inventory-slot-calculator
+                :skip-duplicate-slots="true"
+                :display-all-none="true"
+                @fired="selectSlots()"
+                :inputData.sync="selectedSlots"
+                :mask="selectedSlots"
+              />
+            </div>
+          </div>
+
+          <div class="row mt-3">
+
+            <div class="col-lg-2 col-sm-12 p-0 pr-1 text-center">
+              Item Name or ID
+              <input
+                name="item_name"
+                type="text"
+                class="form-control"
+                v-on:keyup.enter="triggerState"
+                v-model="itemName"
+                placeholder="Name or ID"
+                autofocus=""
+                id="item_name"
+                value=""
+              >
+            </div>
+
+            <div class="col-lg-2 col-sm-12 p-0 pr-1 text-center">
+              Item Type
+              <select
+                id="item_type"
+                class="form-control"
+                v-model="itemType"
+                @change="triggerState()"
+              >
+                <option value="-1">-- Select --</option>
+                <option v-for="option in itemTypeOptions" v-bind:value="option.value">
+                  {{ option.text }}
+                </option>
+              </select>
+            </div>
+
+            <div class="col-lg-1 col-sm-12 p-0 pr-1 text-center">
+              Level
+              <select
+                class="form-control"
+                v-model="selectedLevel"
+                @change="triggerState()"
+              >
+                <option value="0">-- Select --</option>
+                <option v-for="l in 105" v-bind:value="l">
+                  {{ l }}
+                </option>
+              </select>
+            </div>
+
+            <div class="col-lg-6 col-sm-12 mt-3 pl-0 pr-0">
+
+              <div class="btn-group ml-3" role="group" aria-label="Basic example" v-if="selectedLevel">
+                <b-button
+                  @click="selectedLevelType = 0; triggerStateDelayed();"
+                  size="sm"
+                  :variant="(parseInt(selectedLevelType) === 0 ? 'warning' : 'outline-warning')"
+                >Only
+                </b-button>
+                <b-button
+                  @click="selectedLevelType = 1; triggerStateDelayed();"
+                  size="sm"
+                  :variant="(parseInt(selectedLevelType) === 1 ? 'warning' : 'outline-warning')"
+                >Higher
+                </b-button>
+                <b-button
+                  @click="selectedLevelType = 2; triggerStateDelayed();"
+                  size="sm"
+                  :variant="(parseInt(selectedLevelType) === 2 ? 'warning' : 'outline-warning')"
+                >Lower
+                </b-button>
+              </div>
+
+              <div class="btn-group ml-3" role="group" aria-label="Basic example">
+                <b-button
+                  alt="Display as table"
+                  @click="listType = 'table'; triggerState()"
+                  size="sm"
+                  :variant="(listType === 'table' ? 'warning' : 'outline-warning')"
+                ><i class="fa fa-table"></i></b-button>
+                <b-button
+                  alt="Display as grid"
+                  @click="listType = 'card'; triggerState()"
+                  size="sm"
+                  :variant="(listType === 'card' ? 'warning' : 'outline-warning')"
+                ><i class="fa fa-th"></i></b-button>
+              </div>
+
+              <div class="btn-group ml-3" role="group" aria-label="Basic example">
+                <b-button
+                  @click="limit = 10; triggerStateDelayed()"
+                  size="sm"
+                  :variant="(parseInt(limit) === 10 ? 'warning' : 'outline-warning')"
+                >10
+                </b-button>
+                <b-button
+                  @click="limit = 100; triggerStateDelayed()"
+                  size="sm"
+                  :variant="(parseInt(limit) === 100 ? 'warning' : 'outline-warning')"
+                >100
+                </b-button>
+                <b-button
+                  @click="limit = 1000; triggerStateDelayed()"
+                  size="sm"
+                  :variant="(parseInt(limit) === 1000 ? 'warning' : 'outline-warning')"
+                >1000
+                </b-button>
+              </div>
+
+              <div
+                :class="'text-center btn-xs eq-button-fancy ml-3'"
+                style="line-height: 25px;"
+                @click="resetForm()"
+              >
+                Reset Form
+              </div>
+            </div>
+          </div>
+
+          <div class="row mt-3">
+            <div class="col-12 p-0">
+              <db-column-filter
+                v-if="itemFields && filters"
+                :set-filters="filters"
+                @input="handleDbColumnFilters($event);"
+                :columns="itemFields"
+              />
+            </div>
+          </div>
 
         </div>
+      </div>
 
+    </eq-window>
+
+    <app-loader :is-loading="!loaded" padding="4"/>
+
+    <!-- card rendering -->
+    <div class="row" style="justify-content: center" v-if="loaded && listType === 'card'">
+      <div
+        v-for="(item, index) in items"
+        class="col-lg-4 col-sm-9 mb-3"
+        :key="item.id"
+        style="display: inline-block; vertical-align: top"
+      >
+        <eq-window style="margin-right: 10px; width: auto; height: 100%">
+          <eq-item-card-preview
+            :item-data="item"
+            :show-edit="true"
+            :show-related-data="true"
+          />
+        </eq-window>
       </div>
     </div>
 
-  </div>
+    <!-- table -->
+    <item-preview-table
+      :items="items"
+      v-if="loaded && listType === 'table' && items"
+    />
+
+    <!--          <eq-spell-preview-table :items="items" v-if="loaded && listType === 'table' && items"/>-->
+
+  </content-area>
 </template>
 
 <script type="ts">
@@ -268,9 +258,11 @@ import {DbSchema} from "@/app/db-schema";
 import {Zones} from "@/app/zones";
 import {Items} from "@/app/items";
 import ItemPopover from "@/components/ItemPopover.vue";
+import ContentArea from "@/components/layout/ContentArea.vue";
 
 export default {
   components: {
+    ContentArea,
     ItemPopover,
     DbColumnFilter,
     ItemPreviewTable,

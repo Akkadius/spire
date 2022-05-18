@@ -1,86 +1,85 @@
 <template>
-  <div>
-    <div class="container-fluid">
-      <eq-window-simple title="Race Viewer">
-        <div class="row">
-          <div class="col-6">
+  <content-area>
+    <eq-window title="Race Viewer">
+      <div class="row">
+        <div class="col-6">
 
-            Filter by Race Name
+          Filter by Race Name
 
-            <!-- Input -->
-            <input
-              type="text"
-              class="form-control form-control-prepended list-search mt-1"
-              v-model="raceSearch"
-              @keyup="zoneSearch = 0; triggerStateDebounce()"
-              placeholder="Filter by Race name"
-            >
-
-          </div>
-
-          <div class="col-5">
-            Find Models Available by Zone
-
-            <select
-              @change="raceSearch = ''; triggerState()"
-              v-model.number="zoneSearch"
-              class="form-control mt-1"
-            >
-              <option value="0">--- Select Zone ---</option>
-              <option
-                v-for="(z, index) in zoneList"
-                :key="z.zoneId"
-                :value="parseInt(z.zoneId)"
-              >
-                {{ z.shortName }} {{ z.zoneId }}) Races ({{ z.modelCount }}) ({{ z.longName }})
-              </option>
-            </select>
-          </div>
-
-          <div class="col-1">
-
-            <button
-              class='btn btn-outline-warning btn-sm mb-1 mr-2 mt-4'
-              @click="reset"
-            >
-              <i class="fa fa-refresh"></i> Reset
-            </button>
-
-          </div>
-
-        </div>
-
-      </eq-window-simple>
-
-      <eq-window class="mt-5">
-
-        <!-- loader -->
-        <div v-if="!loaded" class="text-center justify-content-center mt-5 mb-5">
-          <div class="mb-3">
-            {{ renderingImages ? 'Rendering images...' : 'Loading images...' }}
-          </div>
-          <loader-fake-progress v-if="!loaded && !renderingImages"/>
-          <eq-progress-bar :percent="100" v-if="renderingImages"/>
-        </div>
-
-        <div v-if="filteredRaces && filteredRaces.length === 0" class="mt-3 text-center">
-          No races found...
-        </div>
-
-        <div
-          v-if="loaded"
-          style="height: 75vh; overflow-y: scroll; "
-          id="race-viewer-viewport"
-          class="row justify-content-center align-items-center text-center"
-        >
-          <div
-            v-for="race in filteredRaces"
-            :key="race"
-            style="padding-bottom: 15px; display: inline-block; border: 2px solid rgba(218, 218, 218, .1); border-radius: 5px; min-height: 200px"
-            class="p-3 m-3 fade-in"
+          <!-- Input -->
+          <input
+            type="text"
+            class="form-control form-control-prepended list-search mt-1"
+            v-model="raceSearch"
+            @keyup="zoneSearch = 0; triggerStateDebounce()"
+            placeholder="Filter by Race name"
           >
 
-            <div class="mt-3" style="vertical-align: middle;">
+        </div>
+
+        <div class="col-5">
+          Find Models Available by Zone
+
+          <select
+            @change="raceSearch = ''; triggerState()"
+            v-model.number="zoneSearch"
+            class="form-control mt-1"
+          >
+            <option value="0">--- Select Zone ---</option>
+            <option
+              v-for="(z, index) in zoneList"
+              :key="z.zoneId"
+              :value="parseInt(z.zoneId)"
+            >
+              {{ z.shortName }} {{ z.zoneId }}) Races ({{ z.modelCount }}) ({{ z.longName }})
+            </option>
+          </select>
+        </div>
+
+        <div class="col-1">
+
+          <button
+            class='btn btn-outline-warning btn-sm mb-1 mr-2 mt-4'
+            @click="reset"
+          >
+            <i class="fa fa-refresh"></i> Reset
+          </button>
+
+        </div>
+
+      </div>
+
+    </eq-window>
+
+    <eq-window class="mt-5">
+
+      <!-- loader -->
+      <div v-if="!loaded" class="text-center justify-content-center mt-5 mb-5">
+        <div class="mb-3">
+          {{ renderingImages ? 'Rendering images...' : 'Loading images...' }}
+        </div>
+        <loader-fake-progress v-if="!loaded && !renderingImages"/>
+        <eq-progress-bar :percent="100" v-if="renderingImages"/>
+      </div>
+
+      <div v-if="filteredRaces && filteredRaces.length === 0" class="mt-3 text-center">
+        No races found...
+      </div>
+
+      <div
+        v-if="loaded"
+        style="height: 75vh; overflow-y: scroll; "
+        id="race-viewer-viewport"
+        class="row justify-content-center align-items-center text-center"
+      >
+        <div
+          v-for="race in filteredRaces"
+          :key="race"
+          style="padding-bottom: 15px; display: inline-block; border: 2px solid rgba(218, 218, 218, .1); border-radius: 5px; min-height: 200px"
+          class="p-3 m-3 fade-in"
+        >
+
+          <div class="mt-3" style="vertical-align: middle;">
 
             <span
               v-for="img in raceImages[race]"
@@ -90,18 +89,17 @@
               <span :class="'race-models-ctn-' + img"></span>
             </span>
 
-              <h6 class="eq-header mt-5"> {{ (raceConstants[race] ? raceConstants[race] : "") }} ({{ race }}) </h6>
-            </div>
-
+            <h6 class="eq-header mt-5"> {{ (raceConstants[race] ? raceConstants[race] : "") }} ({{ race }}) </h6>
           </div>
 
-          <div class="col-12 mt-3 text-center">Image Credits @Maudigan</div>
         </div>
 
-      </eq-window>
-    </div>
+        <div class="col-12 mt-3 text-center">Image Credits @Maudigan</div>
+      </div>
 
-  </div>
+    </eq-window>
+
+  </content-area>
 </template>
 
 <script>
@@ -118,6 +116,7 @@ import {ZoneApi}          from "../../app/api";
 import LoaderFakeProgress from "../../components/LoaderFakeProgress";
 import EqProgressBar      from "../../components/eq-ui/EQProgressBar";
 import EqAssets           from "../../app/eq-assets/eq-assets";
+import ContentArea        from "../../components/layout/ContentArea";
 
 const baseUrl           = App.ASSET_CDN_BASE_URL + "assets/npc_models/";
 const MAX_RACE_ID       = 700;
@@ -126,7 +125,7 @@ let races               = [];
 let zoneToRaceIdMapping = {};
 
 export default {
-  components: { EqProgressBar, LoaderFakeProgress, EqWindowSimple, EqWindow, PageHeader },
+  components: { ContentArea, EqProgressBar, LoaderFakeProgress, EqWindowSimple, EqWindow, PageHeader },
   data() {
     return {
       filteredRaces: null,
