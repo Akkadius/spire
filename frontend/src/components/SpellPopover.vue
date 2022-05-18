@@ -1,6 +1,5 @@
 <template>
-  <div v-if="spell">
-
+  <div v-if="spell" class="d-inline-block">
     <div
       :id="spell.id + '-' + popoverId + '-popover'"
     >
