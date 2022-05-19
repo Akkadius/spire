@@ -5,7 +5,8 @@
         <v-runtime-template
           :template="'<span>' + effect + '</span>'"
           v-if="typeof effect !== 'undefined'"
-          class="pb-6 mt-3 doc"/>
+          class="pb-6 mt-3 doc"
+        />
       </div>
     </div>
     <app-loader :is-loading="!loaded" size="15"/>
@@ -13,12 +14,11 @@
 </template>
 
 <script>
-import {Spells} from "@/app/spells";
-import {App} from "@/constants/app";
-import EqItemCardPreview  from "@/components/eq-ui/EQItemCardPreview.vue";
-import EqSpellPreview from "@/components/eq-ui/EQSpellCardPreview.vue";
-import EqWindow       from "@/components/eq-ui/EQWindow.vue";
-import {Items} from "@/app/items";
+import {Spells}          from "@/app/spells";
+import EqItemCardPreview from "@/components/eq-ui/EQItemCardPreview.vue";
+import EqSpellPreview    from "@/components/eq-ui/EQSpellCardPreview.vue";
+import EqWindow          from "@/components/eq-ui/EQWindow.vue";
+import {Items}           from "@/app/items";
 
 export default {
   name: "EqSpellEffects",
@@ -29,6 +29,8 @@ export default {
     EqWindow,
   },
   async created() {
+    this.itemData = Items.items
+
     // async each effect index if it exists
     // this is so loading spell effects and any subsequent ajax requests
     // do not block the card from loading
@@ -53,7 +55,7 @@ export default {
     }
 
     this.sideLoadedSpellData = Spells.data;
-    this.loaded = true;
+    this.loaded              = true;
   },
   data() {
     return {
@@ -61,6 +63,7 @@ export default {
       componentId: "",
       sideLoadedSpellData: {},
       loaded: false,
+      itemData: {},
     }
   },
   props: {

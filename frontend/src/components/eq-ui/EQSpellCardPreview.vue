@@ -365,7 +365,7 @@
     </table>
 
     <!-- Spell Effects -->
-    <h6 class="eq-header mt-3 mb-3" v-if="spellEffectInfo.length > 0">Effects</h6>
+    <h6 class="eq-header mt-3" v-if="spellEffectInfo.length > 0">Effects</h6>
     <div v-if="spellEffectInfo.length > 0">
       <div v-for="effect in spellEffectInfo">
         <v-runtime-template
@@ -377,7 +377,7 @@
     </div>
 
     <!-- Reagents -->
-    <h6 class="eq-header mt-3 mb-3" v-if="reagents.length > 0">Reagents</h6>
+    <h6 class="eq-header mt-3" v-if="reagents.length > 0">Reagents</h6>
     <div v-if="reagents.length > 0">
       <div v-for="reagent in reagents" style="width:100%">
         <div :id="reagent.id + '-' + reagent.item.id + '-' + componentId" style="display:inline-block">
@@ -406,7 +406,7 @@
       </div>
     </div>
 
-    <h6 class="eq-header mt-3 mb-3" v-if="spellData['descnum'] > 0 && effectDescription !== ''">Description</h6>
+    <h6 class="eq-header mt-3" v-if="spellData['descnum'] > 0 && effectDescription !== ''">Description</h6>
     <div class="mt-3 mb-3" v-if="spellData['descnum'] > 0 && effectDescription !== ''" style="width: 70%">
       {{ effectDescription }}
     </div>
@@ -460,12 +460,17 @@ export default {
       sideLoadedSpellData: {},
       componentId: "",
       reagents: [],
+      itemData: {},
       effectDescription: "",
       recourseLink: "",
       dbClassIcons: DB_CLASSES_ICONS,
       dbClassesShort: DB_CLASSES_SHORT
     }
   },
+  created() {
+    this.itemData = Items.items
+  },
+
   mounted() {
     this.init()
   },

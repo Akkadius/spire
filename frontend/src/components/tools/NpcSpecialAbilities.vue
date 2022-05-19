@@ -634,9 +634,6 @@ export default {
     calculateSpecialAbilities: function () {
       this.$forceUpdate();
 
-      console.log("calculates")
-      console.log(this.ability)
-
       let specialAbilities = []
       for (let abilityId in this.ability) {
         const value = parseInt(this.ability[abilityId]);
