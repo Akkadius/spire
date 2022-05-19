@@ -687,10 +687,10 @@ export default {
       this.factionHits = factionHits.sort((a, b) => {
         return a.name.localeCompare(b.name);
       });
-
-      this.$forceUpdate()
-
     }
+
+    this.$forceUpdate()
+
   },
   props: {
     npc: {

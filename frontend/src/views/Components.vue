@@ -600,7 +600,7 @@ export default {
       this.npcs = response.data
     }
 
-    console.log(this.npcs)
+    this.$forceUpdate()
 
   },
 }
