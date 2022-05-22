@@ -385,3 +385,13 @@ th[role=columnheader]:hover:not(.no-sort):after {
         filter: drop-shadow( 0 0 20px #fff) drop-shadow( 0 0 25px #e60073) drop-shadow( 0 0 40px #e60073);
     }
 }
+
+/*@media (prefers-color-scheme: dark) {*/
+/*.map-tiles {*/
+/*    filter: invert(100%);*/
+/*}*/
+
+/*.map-tiles img, .map-tiles .eq-window-simple {*/
+/*    filter: invert(100%);*/
+/*}*/
+/*}*/

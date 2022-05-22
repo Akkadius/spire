@@ -191,5 +191,5 @@ export * from './api/task-activity-api';
 // export * from './api/veteran-reward-template-api';
 export * from './api/zone-api';
 // export * from './api/zone-flag-api';
-// export * from './api/zone-point-api';
+export * from './api/zone-point-api';
 

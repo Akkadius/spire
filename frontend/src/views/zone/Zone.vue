@@ -12,8 +12,11 @@
       <div class="col-5">
         <eq-window
           class="fade-in"
-          style="max-height: 95vh; overflow-y: scroll; overflow-x: hidden">
-          <eq-npc-card-preview v-if="selectorActive['npc-hover'] && npc"
+          id="preview-pane"
+          style="max-height: 95vh; overflow-y: scroll; overflow-x: hidden"
+        >
+          <eq-npc-card-preview
+            v-if="selectorActive['npc-hover'] && npc"
             :npc="npc"
           />
         </eq-window>
@@ -46,19 +49,36 @@ export default {
   created() {
     this.npc = {}
   },
+  watch: {
+    '$route'() {
+      console.log("route trigger")
+      this.init()
+    },
+  },
+
   mounted() {
-    Navbar.collapse()
-
-    // pull from router
-    this.zone    = this.$route.params.zone
-    this.version = this.$route.query.v
-
+    this.init()
   },
   methods: {
-    setSelectorActive(selector) {
+    init() {
+      this.npc = {}
+      this.resetSelectors()
+
+      Navbar.collapse()
+
+      // pull from router
+      this.zone    = this.$route.params.zone
+      this.version = this.$route.query.v
+    },
+
+    resetSelectors() {
       for (const [k, v] of Object.entries(this.selectorActive)) {
         this.selectorActive[k] = false
       }
+    },
+
+    setSelectorActive(selector) {
+
 
       // this.resetPreviewComponents()
       // this.previewTaskActive        = false;
@@ -73,6 +93,12 @@ export default {
       this.npc = {}
       this.setSelectorActive("npc-hover")
       this.npc = n
+
+      // reset preview pane scroll to top
+      const t = document.getElementById("preview-pane");
+      if (t) {
+        t.scrollTop = 0;
+      }
     }
   }
 }

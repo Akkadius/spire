@@ -14,6 +14,7 @@
           v-if="center"
           :crs="crs"
           style="height: 94vh"
+          class="map-tiles"
           :center="center"
           :bounds="bounds"
           :min-zoom="-5"
@@ -27,19 +28,34 @@
             :weight="1"
           />
 
+          <!--          &lt;!&ndash; markers from map &ndash;&gt;-->
+          <!--          <l-marker-->
+          <!--            v-for="(marker, index) in markers"-->
+          <!--            :key="index"-->
+          <!--            :lat-lng="marker.point"-->
+          <!--            v-if="markers && markers.length > 0"-->
+          <!--          >-->
+          <!--            <l-tooltip>-->
+          <!--              <eq-window>{{ marker.label }}-->
+          <!--              </eq-window>-->
+          <!--            </l-tooltip>-->
+          <!--          </l-marker>-->
+
+          <!-- zone points -->
           <l-marker
-            v-for="(marker, index) in markers"
+            v-for="(marker, index) in zonelineMarkers"
             :key="index"
             :lat-lng="marker.point"
             v-if="markers && markers.length > 0"
+            @click="navigateToZone(marker)"
           >
             <l-tooltip>
               <eq-window>{{ marker.label }}
               </eq-window>
             </l-tooltip>
-            <!--          </l-icon>-->
           </l-marker>
 
+          <!-- NPC markers -->
           <l-marker
             v-for="(marker, index) in npcMarkers"
             :key="index + '-' + marker.npc.id"
@@ -88,7 +104,7 @@ import {LIcon, LMap, LMarker, LPolyline, LPopup, LTileLayer, LTooltip} from 'vue
 import ContentArea                                                     from "./layout/ContentArea";
 import * as L                                                          from "leaflet";
 import axios                                                           from "axios";
-import {Spawn2Api}                                                     from "../app/api";
+import {Spawn2Api, ZonePointApi}                                       from "../app/api";
 import {SpireApiClient}                                                from "../app/api/spire-api-client";
 import {SpireQueryBuilder}                                             from "../app/api/spire-query-builder";
 import EqNpcCardPreview                                                from "./eq-ui/EQNpcCardPreview";
@@ -96,6 +112,7 @@ import EqWindow                                                        from "./e
 import LoaderFakeProgress                                              from "./LoaderFakeProgress";
 import EqProgressBar                                                   from "./eq-ui/EQProgressBar";
 import {Npcs}                                                          from "../app/npcs";
+import {Zones}                                                         from "../app/zones";
 
 export default {
   name: "EqZoneMap",
@@ -123,7 +140,26 @@ export default {
     LTileLayer,
     LPolyline
   },
+  watch: {
+    zone: {
+      handler(newVal) {
+        this.loadMap()
+      },
+      deep: true
+    },
+  },
+
   methods: {
+    navigateToZone(zp) {
+      const zone = zp.zone
+      this.$router.push(
+        {
+          path: '/zone/' + zone.short_name + '?v=' + zone.version
+        }
+      ).catch(() => {
+      })
+    },
+
     getCleanName(n) {
       return Npcs.getCleanName(n)
     },
@@ -213,135 +249,172 @@ export default {
       }
 
       this.raceIconSizes = raceIconSizes
-    }
-  },
-  async mounted() {
+    },
 
-    this.dataLoaded   = false
-    this.renderingMap = false
+    async loadMap() {
 
-    await this.parseRaceIconSizes()
+      this.dataLoaded   = false
+      this.renderingMap = false
 
-    let map        = await this.getMapContents()
-    let bounds     = [0, 0, 0, 0];
-    let mapLines   = []
-    let mapMarkers = []
-    for (let line of map.split("\n")) {
-      const cols = line.replaceAll(",", "").split(/\s+/)
+      await this.parseRaceIconSizes()
 
-      // lines
-      if (cols[0].trim() === "L") {
-        const x  = cols[1].trim()
-        const y  = cols[2].trim()
-        const x2 = cols[4].trim()
-        const y2 = cols[5].trim()
-        const p  = [
-          this.createPoint(x, y),
-          this.createPoint(x2, y2),
-        ]
-        bounds   = [
-          Math.min(bounds[0], p[0].lat, p[1].lat),
-          Math.min(bounds[1], p[0].lng, p[1].lng),
-          Math.max(bounds[2], p[0].lat, p[1].lat),
-          Math.max(bounds[3], p[0].lng, p[1].lng),
-        ];
+      let map        = await this.getMapContents()
+      let bounds     = [0, 0, 0, 0];
+      let mapLines   = []
+      let mapMarkers = []
+      for (let line of map.split("\n")) {
+        const cols = line.replaceAll(",", "").split(/\s+/)
 
-        mapLines.push(p)
-      }
+        // lines
+        if (cols[0].trim() === "L") {
+          const x  = cols[1].trim()
+          const y  = cols[2].trim()
+          const x2 = cols[4].trim()
+          const y2 = cols[5].trim()
+          const p  = [
+            this.createPoint(x, y),
+            this.createPoint(x2, y2),
+          ]
+          bounds   = [
+            Math.min(bounds[0], p[0].lat, p[1].lat),
+            Math.min(bounds[1], p[0].lng, p[1].lng),
+            Math.max(bounds[2], p[0].lat, p[1].lat),
+            Math.max(bounds[3], p[0].lng, p[1].lng),
+          ];
 
-      // points
-      if (cols[0].trim() === "P") {
-        const x     = cols[1].trim()
-        const y     = cols[2].trim()
-        const label = cols[8].trim()
-
-        mapMarkers.push(
-          {
-            point: this.createPoint(x, y),
-            label: label.replaceAll("_", " "),
-          }
-        )
-      }
-    }
-
-    let npcMarkers = []
-    const api      = (new Spawn2Api(SpireApiClient.getOpenApiConfig()))
-    try {
-      // @ts-ignore
-      const result = await api.listSpawn2s(
-        (new SpireQueryBuilder())
-          .where("zone", "=", this.zone)
-          .where("version", "=", this.version)
-          .includes(
-            [
-              "Spawnentries.NpcType",
-              "Spawnentries.NpcType.NpcSpell.NpcSpellsEntries.SpellsNew",
-              "Spawnentries.NpcType.NpcFactions.NpcFactionEntries.FactionList",
-              "Spawnentries.NpcType.NpcFactions",
-              "Spawnentries.NpcType.NpcEmotes",
-              "Spawnentries.NpcType.Merchantlists.Items",
-              "Spawnentries.NpcType.Loottable.LoottableEntries.LootdropEntries.Item"
-            ]
-          )
-          .get()
-      )
-      if (result.status === 200 && result.data) {
-        setTimeout(() => {
-          this.dataLoaded = true
-          this.$forceUpdate()
-        }, 1)
-
-        for (let spawn of result.data) {
-          // make sure we have a npc associated to spawn
-          let npcName = ""
-          if (
-            spawn.spawnentries
-            && spawn.spawnentries[0]
-            && spawn.spawnentries[0].npc_type
-          ) {
-            const n = spawn.spawnentries[0].npc_type
-
-            npcName = n.name + (n.lastname ? ` (${n.lastname})` : '')
-
-            // console.log(this.raceIconSizes[this.getNpcIcon(n)])
-
-            npcMarkers.push(
-              {
-                point: this.createPoint(-spawn.x, -spawn.y),
-                label: npcName.replaceAll("_", " "),
-                npc: n,
-                iconClass: 'fade-in ' + this.getNpcIcon(n),
-                iconSize: this.raceIconSizes[this.getNpcIcon(n)] ? this.raceIconSizes[this.getNpcIcon(n)] : [30, 100]
-              }
-            )
-
-          }
+          mapLines.push(p)
         }
 
-        this.npcMarkers = npcMarkers
-        this.markers    = mapMarkers
-        this.lines      = mapLines
-        this.bounds     = [
-          [bounds[0], bounds[1]],
-          [bounds[2], bounds[3]]
-        ]
+        // points
+        if (cols[0].trim() === "P") {
+          const x     = cols[1].trim()
+          const y     = cols[2].trim()
+          const label = cols[8].trim()
 
-        this.center = [
-          (bounds[0] + bounds[2]) / 2,
-          (bounds[3] + bounds[1]) / 2
-        ];
+          mapMarkers.push(
+            {
+              point: this.createPoint(x, y),
+              label: label.replaceAll("_", " "),
+            }
+          )
+        }
       }
-    } catch (err) {
-      console.log("map.vue %s", err)
+
+      let npcMarkers = []
+      const api      = (new Spawn2Api(SpireApiClient.getOpenApiConfig()))
+      try {
+        // @ts-ignore
+        const result = await api.listSpawn2s(
+          (new SpireQueryBuilder())
+            .where("zone", "=", this.zone)
+            .where("version", "=", this.version)
+            .includes(
+              [
+                "Spawnentries.NpcType",
+                "Spawnentries.NpcType.NpcSpell.NpcSpellsEntries.SpellsNew",
+                "Spawnentries.NpcType.NpcFactions.NpcFactionEntries.FactionList",
+                "Spawnentries.NpcType.NpcFactions",
+                "Spawnentries.NpcType.NpcEmotes",
+                "Spawnentries.NpcType.Merchantlists.Items",
+                "Spawnentries.NpcType.Loottable.LoottableEntries.LootdropEntries.Item"
+              ]
+            )
+            .get()
+        )
+        if (result.status === 200 && result.data) {
+          setTimeout(() => {
+            this.dataLoaded = true
+            this.$forceUpdate()
+          }, 1)
+
+          for (let spawn of result.data) {
+            // make sure we have a npc associated to spawn
+            let npcName = ""
+            if (
+              spawn.spawnentries
+              && spawn.spawnentries[0]
+              && spawn.spawnentries[0].npc_type
+            ) {
+              const n = spawn.spawnentries[0].npc_type
+              npcName = n.name + (n.lastname ? ` (${n.lastname})` : '')
+
+              // console.log(this.raceIconSizes[this.getNpcIcon(n)])
+
+              npcMarkers.push(
+                {
+                  point: this.createPoint(-spawn.x, -spawn.y),
+                  label: npcName.replaceAll("_", " "),
+                  npc: n,
+                  iconClass: 'fade-in ' + this.getNpcIcon(n),
+                  iconSize: this.raceIconSizes[this.getNpcIcon(n)] ? this.raceIconSizes[this.getNpcIcon(n)] : [30, 100]
+                }
+              )
+
+            }
+          }
+
+
+          this.npcMarkers = npcMarkers
+          this.markers    = mapMarkers
+          this.lines      = mapLines
+          this.bounds     = [
+            [bounds[0], bounds[1]],
+            [bounds[2], bounds[3]]
+          ]
+
+          this.center = [
+            (bounds[0] + bounds[2]) / 2,
+            (bounds[3] + bounds[1]) / 2
+          ];
+        }
+      } catch (err) {
+        console.log("map.vue %s", err)
+      }
+
+      let zonePoints = []
+      const zapi     = (new ZonePointApi(SpireApiClient.getOpenApiConfig()))
+      try {
+        const result = await zapi.listZonePoints(
+          (new SpireQueryBuilder())
+            .where("zone", "=", this.zone)
+            .get()
+        )
+
+        if (result.status === 200) {
+          console.log(result.data)
+          for (let point of result.data) {
+            const z = (await Zones.getZoneById(point.target_zone_id))
+
+            zonePoints.push({
+                point: this.createPoint(-point.x, -point.y),
+                label: "Zone Point to: " + z.long_name,
+                zone: z,
+              }
+            )
+          }
+
+          this.zonelineMarkers = zonePoints
+
+          console.log(this.zonelineMarkers)
+        }
+
+      } catch (err) {
+        console.log("map.vue %s", err)
+      }
+
+      this.renderingMap = true
+      setTimeout(() => {
+        this.renderingMap = false
+      }, 10)
     }
 
-    this.renderingMap = true
-    setTimeout(() => {
-      this.renderingMap = false
-    }, 10)
+  },
+  async mounted() {
+    this.loadMap()
   },
   created() {
-    this.npcMarkers = null
+    this.zonelineMarkers = null
+    this.npcMarkers      = null
   },
   data() {
     return {
