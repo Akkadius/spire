@@ -317,7 +317,7 @@ export default {
   components: { SpellPopover, EqCashDisplay, ItemPopover, EqDebug },
   data() {
     return {
-      maxDataEntries: 10, // amount of results before collapsing
+      maxDataEntries: 20, // amount of results before collapsing
 
       // loot
       showLoot: false, // when too many results shown, toggle
@@ -597,7 +597,7 @@ export default {
       for (let listitem of this.npc.merchantlists) {
         merchantItems.push(
           {
-            item: (await Items.getItem(listitem.item)),
+            item: listitem.items && listitem.items.length > 0 ? listitem.items[0] : {},
             entry: listitem
           }
         )

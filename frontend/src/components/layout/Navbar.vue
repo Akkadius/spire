@@ -1,10 +1,18 @@
 <template>
   <nav
-    class="navbar navbar-vertical fixed-left navbar-expand-md navbar-dark navbar-vibrant"
+    class="navbar navbar-vertical fade-in fixed-left navbar-expand-md navbar-dark navbar-vibrant"
     id="sidebar"
+    style="width: 20px"
     v-if="!hideNavbar"
   >
-    <div class="container-fluid">
+    <div style="position: relative; top: 50%">
+      <i
+        class="fa fa-chevron-left"
+        style="font-size: 30px; color: gray; position: relative;"
+      ></i>
+    </div>
+
+    <div class="container-fluid" style="display: none">
 
       <!-- Toggler -->
       <button
@@ -130,6 +138,14 @@
             </router-link>
           </li>
           <nav-section-component :config="viewerNav"/>
+
+          <li class="nav-item">
+            <router-link class="nav-link " to="/zones">
+              <i class="ra ra-wooden-sign mr-2"></i> Zones
+              <b-badge class="ml-3" variant="primary">BETA</b-badge>
+              <b-badge class="ml-3" variant="primary">NEW!</b-badge>
+            </router-link>
+          </li>
         </ul>
 
         <!-- Heading -->

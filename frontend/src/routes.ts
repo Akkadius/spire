@@ -13,5 +13,6 @@ export const ROUTE = {
   ITEMS_LIST: "/items",
   ITEM_EDIT: "/item/%s",
   ITEM_VIEWER: "/item-viewer",
-  RACE_VIEWER: "/race-viewer"
+  RACE_VIEWER: "/race-viewer",
+  ZONES: "/zones"
 };

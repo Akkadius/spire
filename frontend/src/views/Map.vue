@@ -1,6 +1,15 @@
 <template>
   <content-area>
-    <div class="card mt-3">
+
+    <eq-window v-if="!dataLoaded || renderingMap" class="text-center justify-content-center">
+      <div class="mb-3">
+        {{ renderingMap ? 'Rendering map...' : 'Loading map...' }}
+      </div>
+      <loader-fake-progress v-if="!dataLoaded && !renderingMap"/>
+      <eq-progress-bar :percent="100" v-if="renderingMap"/>
+    </eq-window>
+
+    <div class="card" v-if="dataLoaded && !renderingMap">
       <l-map
         v-if="center"
         :crs="crs"
@@ -24,22 +33,39 @@
           :lat-lng="marker.point"
           v-if="markers && markers.length > 0"
         >
-          <l-tooltip>{{ marker.label }}</l-tooltip>
-<!--          </l-icon>-->
+          <l-tooltip>
+            <eq-window>{{ marker.label }}
+            </eq-window>
+          </l-tooltip>
+          <!--          </l-icon>-->
         </l-marker>
 
         <l-marker
           v-for="(marker, index) in npcMarkers"
-          :key="index"
+          :key="index + '-' + marker.npc.id"
           :lat-lng="marker.point"
           v-if="npcMarkers && npcMarkers.length > 0"
         >
-          <l-tooltip>{{ marker.label }}</l-tooltip>
+
+          <l-tooltip :options="{opacity: 1, direction: 'auto', keepView: true}">
+            <eq-window style="width:600px">
+              <eq-npc-card-preview
+                :npc="marker.npc"
+              />
+            </eq-window>
+          </l-tooltip>
+
+          <!--          <l-icon-->
+          <!--            icon-url="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII="-->
+          <!--            :class-name="marker.iconClass + '-sm'"-->
+          <!--            :iconSize="calcSmallIcons(marker.iconSize)"-->
+          <!--          >-->
+          <!--          </l-icon>-->
 
           <l-icon
             icon-url="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII="
-            :class-name="marker.iconClass"
-            :iconSize="marker.iconSize"
+            :class-name="(zoomLevel >= 1) ? marker.iconClass : marker.iconClass + '-sm'"
+            :iconSize="(zoomLevel >= 1) ? marker.iconSize : calcSmallIcons(marker.iconSize)"
           >
           </l-icon>
 
@@ -57,9 +83,17 @@ import axios                                                           from "axi
 import {Spawn2Api}                                                     from "../app/api";
 import {SpireApiClient}                                                from "../app/api/spire-api-client";
 import {SpireQueryBuilder}                                             from "../app/api/spire-query-builder";
+import EqNpcCardPreview                                                from "../components/eq-ui/EQNpcCardPreview";
+import EqWindow                                                        from "../components/eq-ui/EQWindow";
+import LoaderFakeProgress                                              from "../components/LoaderFakeProgress";
+import EqProgressBar                                                   from "../components/eq-ui/EQProgressBar";
 
 export default {
   components: {
+    EqProgressBar,
+    LoaderFakeProgress,
+    EqWindow,
+    EqNpcCardPreview,
     ContentArea,
     LMap,
     LIcon,
@@ -70,11 +104,23 @@ export default {
     LPolyline
   },
   methods: {
+    calcSmallIcons(xy) {
+      // console.log("small icon")
+      // console.log(xy)
+
+      return [
+        xy[0] / 2,
+        xy[1] / 2,
+      ]
+    },
+
     getNpcIcon(npc) {
       return 'race-models-ctn-' + npc.race + '-' + npc.gender + '-' + npc.texture + '-' + npc.helmtexture;
     },
 
     zoomUpdate(e) {
+      console.log("zoom level [%s]", e)
+
       this.zoomLevel = e
     },
     createPoint(x, y) {
@@ -121,10 +167,10 @@ export default {
         if (r.status === 200) {
           if (r.data.length > 0) {
             for (let line of r.data.split("\n")) {
-              line = line.replace(".", "")
+              line               = line.replace(".", "")
               const raceClassKey = line.split(" ")[0].trim()
-              const height = line.split("height: ")[1].split(";")[0].replace("px", "").trim()
-              const width = line.split("width: ")[1].split(";")[0].replace("px", "").trim()
+              const height       = line.split("height: ")[1].split(";")[0].replace("px", "").trim()
+              const width        = line.split("width: ")[1].split(";")[0].replace("px", "").trim()
               // console.log(raceClassKey)
               // console.log(height)
               // console.log(width)
@@ -142,6 +188,9 @@ export default {
     }
   },
   async mounted() {
+    this.dataLoaded = false
+    this.renderingMap = false
+
     await this.parseRaceIconSizes()
 
     let map        = await this.getMapContents()
@@ -193,10 +242,25 @@ export default {
       const result = await api.listSpawn2s(
         (new SpireQueryBuilder())
           .where("zone", "=", this.$route.query.zone)
-          .includes(["Spawnentries.NpcType"])
+          .includes(
+            [
+              "Spawnentries.NpcType",
+              "Spawnentries.NpcType.NpcSpell.NpcSpellsEntries.SpellsNew",
+              "Spawnentries.NpcType.NpcFactions.NpcFactionEntries.FactionList",
+              "Spawnentries.NpcType.NpcFactions",
+              "Spawnentries.NpcType.NpcEmotes",
+              "Spawnentries.NpcType.Merchantlists.Items",
+              "Spawnentries.NpcType.Loottable.LoottableEntries.LootdropEntries.Item"
+            ]
+          )
           .get()
       )
       if (result.status === 200 && result.data) {
+        setTimeout(() => {
+          this.dataLoaded = true
+          this.$forceUpdate()
+        }, 1)
+
         for (let spawn of result.data) {
           // make sure we have a npc associated to spawn
           let npcName = ""
@@ -209,42 +273,51 @@ export default {
 
             npcName = n.name + (n.lastname ? ` (${n.lastname})` : '')
 
-            console.log(this.raceIconSizes[this.getNpcIcon(n)])
+            // console.log(this.raceIconSizes[this.getNpcIcon(n)])
 
             npcMarkers.push(
               {
                 point: this.createPoint(-spawn.x, -spawn.y),
                 label: npcName.replaceAll("_", " "),
                 npc: n,
-                iconClass: this.getNpcIcon(n) + ' fade-in',
+                iconClass: 'fade-in ' + this.getNpcIcon(n),
                 iconSize: this.raceIconSizes[this.getNpcIcon(n)] ? this.raceIconSizes[this.getNpcIcon(n)] : [30, 100]
               }
             )
 
           }
         }
+
+        this.npcMarkers = npcMarkers
+        this.markers    = mapMarkers
+        this.lines      = mapLines
+        this.bounds     = [
+          [bounds[0], bounds[1]],
+          [bounds[2], bounds[3]]
+        ]
+
+        this.center = [
+          (bounds[0] + bounds[2]) / 2,
+          (bounds[3] + bounds[1]) / 2
+        ];
       }
     } catch (err) {
       console.log("map.vue %s", err)
     }
 
-    this.npcMarkers = npcMarkers
-    this.markers    = mapMarkers
-    this.lines      = mapLines
-    this.bounds     = [
-      [bounds[0], bounds[1]],
-      [bounds[2], bounds[3]]
-    ]
-
-    this.center = [
-      (bounds[0] + bounds[2]) / 2,
-      (bounds[3] + bounds[1]) / 2
-    ];
-
-  }
-  ,
+    this.renderingMap = true
+    setTimeout(() => {
+      this.renderingMap = false
+    }, 500)
+  },
+  created() {
+    this.npcMarkers = null
+  },
   data() {
     return {
+      dataLoaded: false,
+      renderingMap: false,
+
       zoom: 0,
       center: null,
 
@@ -264,7 +337,6 @@ export default {
       map: "",
 
       markers: null,
-      npcMarkers: null,
 
       raceIconSizes: {}
     };
@@ -273,4 +345,11 @@ export default {
 </script>
 
 <style>
+.leaflet-tooltip {
+  background-color: transparent;
+  border: none;
+  -webkit-box-shadow: none;
+  box-shadow: none;
+}
+
 </style>

@@ -577,7 +577,7 @@ export default {
         "NpcFactions.NpcFactionEntries.FactionList",
         "NpcFactions",
         "NpcEmotes",
-        "Merchantlists",
+        "Merchantlists.Items",
         "Loottable.LoottableEntries.LootdropEntries.Item"
       ]
     )
