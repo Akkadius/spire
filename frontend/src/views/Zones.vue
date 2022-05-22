@@ -22,7 +22,7 @@
               <img
                 v-for="(expansion, expansionId) in EXPANSIONS_FULL"
                 v-if="!getExpansionIcon(expansionId).includes('base64')"
-                v-b-tooltip.hover.v-dark
+                v-b-tooltip.hover.v-dark.left.nofade="true"
                 :title="getExpansionName(expansionId) + ' (' + expansionId + ')'"
                 :src="getExpansionIcon(expansionId)"
                 @click="zoneSearchText = ''; selectedExpansion = expansionId; updateQueryState()"
@@ -37,6 +37,7 @@
 
         <eq-window
           v-if="zones"
+          class="p-3 pt-0"
           style="height: 80vh; overflow-y: scroll; overflow-x: hidden"
         >
           <table

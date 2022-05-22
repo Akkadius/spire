@@ -2,17 +2,22 @@
   <nav
     class="navbar navbar-vertical fade-in fixed-left navbar-expand-md navbar-dark navbar-vibrant"
     id="sidebar"
-    style="width: 20px"
+    @click.self="expandNavbar()"
     v-if="!hideNavbar"
   >
-    <div style="position: relative; top: 50%">
+
+    <div
+      style="position: inherit; top: 50%; left: 10px; display: none"
+      @click="expandNavbar()"
+      id="collapse-nav-chevron"
+    >
       <i
-        class="fa fa-chevron-left"
-        style="font-size: 30px; color: gray; position: relative;"
+        class="fa fa-chevron-right navbar-chevron"
+        style="font-size: 40px; color: white; position: relative;"
       ></i>
     </div>
 
-    <div class="container-fluid" style="display: none">
+    <div class="container-fluid navbar-contents">
 
       <!-- Toggler -->
       <button
@@ -215,9 +220,13 @@
           </div>
 
           <!-- Icon -->
-          <a href="#sidebarModalSearch" class="navbar-user-link" data-toggle="modal">
+          <a
+            href="javascript:void(0)"
+            class="navbar-user-link"
+            @click="collapseNavbar"
+          >
               <span class="icon">
-                <i class="fe fe-search"></i>
+                <i class="fe fe-menu"></i>
               </span>
           </a>
 
@@ -240,6 +249,7 @@ import NavSectionComponent   from "@/components/layout/NavSectionComponent";
 import {ROUTE}               from "@/routes";
 import {EventBus}            from "@/app/event-bus/event-bus";
 import {AppEnv}              from "@/app/env/app-env";
+import {Navbar}              from "@/app/navbar";
 
 export default {
   components: { NavSectionComponent, NavbarDropdownMenu, NavbarUserSettingsCog },
@@ -308,10 +318,10 @@ export default {
     }
   },
   created() {
-    EventBus.$on("HIDE_NAVBAR", this.hideNavBar);
+    EventBus.$on("HIDE_NAVBAR", this.toggleNavbarCollapse);
   },
   destroyed() {
-    EventBus.$off("HIDE_NAVBAR", this.hideNavBar);
+    EventBus.$off("HIDE_NAVBAR", this.toggleNavbarCollapse);
   },
 
   async mounted() {
@@ -326,6 +336,15 @@ export default {
   },
 
   methods: {
+    expandNavbar() {
+      Navbar.expand()
+    },
+    collapseNavbar() {
+      Navbar.collapse()
+    },
+    toggleNavbarCollapse() {
+      Navbar.toggleCollapse()
+    },
     hideNavBar() {
       this.hideNavbar = !this.hideNavbar
     },

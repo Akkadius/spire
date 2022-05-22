@@ -276,7 +276,9 @@
     max-width: 600px;
 }
 
+/**/
 /*tablesort*/
+/**/
 th[role=columnheader]:not(.no-sort) {
     cursor: pointer;
 }
@@ -313,4 +315,73 @@ th[role=columnheader]:hover:not(.no-sort):after {
 
 .header {
     margin-bottom: 1rem;
+}
+
+
+/**/
+/* Navbar */
+/**/
+
+@media (min-width: 768px) {
+    .navbar-vertical.navbar-expand-md.fixed-left:not([style*="display: none"])~.main-content.navbar-collapsed {
+        /*display: none !important;*/
+        margin-left: 50px !important;
+    }
+}
+
+@keyframes pulsate-highlight-navbar {
+    0% {
+        -webkit-box-shadow: 0px 0px 20px rgba(252, 199, 33, .5);
+        -moz-box-shadow: 0px 0px 20px rgba(252, 199, 33, .5);
+        box-shadow: 0px 0px 20px rgba(252, 199, 33, .5);
+    }
+    50% {
+        -webkit-box-shadow: 0px 0px 0px rgba(255, 255, 255, .5);
+        -moz-box-shadow: 0px 0px 0px rgba(255, 255, 255, .5);
+        box-shadow: 0px 0px 0px rgba(255, 255, 255, .5);
+    }
+    100% {
+        -webkit-box-shadow: 0px 0px 20px rgba(252, 199, 33, .5);
+        -moz-box-shadow: 0px 0px 20px rgba(252, 199, 33, .5);
+        box-shadow: 0px 0px 20px rgba(252, 199, 33, .5);
+    }
+}
+
+.navbar:not(.navbar-collapsed) {
+    /*!* make it glow! *!*/
+
+    animation: pulsate-highlight-navbar 6s ease-in-out infinite alternate;
+}
+
+.navbar.navbar-collapsed {
+    width: 20px !important;
+
+    -webkit-border-radius: 7px;
+    -moz-border-radius: 7px;
+    border-radius: 7px;
+}
+
+.navbar.navbar-collapsed:hover {
+    -webkit-box-shadow: inset 0 0 30px #fff;
+    -moz-box-shadow: inset 0 0 30px #fff;
+    box-shadow: inset 0 0 30px #fff;
+}
+
+.navbar-contents.navbar-collapsed {
+    display: none !important;
+}
+
+.navbar-chevron {
+    filter: drop-shadow(0px 0px 20px rgb(255 243 0 / 1));
+    animation: chevron-collapsed-shadow 1.5s ease-in-out infinite alternate !important;
+}
+
+@keyframes chevron-collapsed-shadow {
+    from {
+        filter: drop-shadow( 0 0 5px #fff) drop-shadow( 0 0 15px #e60073) drop-shadow( 0 0 20px #e60073);
+    }
+
+    to {
+        filter: drop-shadow( 0 0 20px #fff) drop-shadow( 0 0 25px #e60073) drop-shadow( 0 0 40px #e60073);
+    }
 }

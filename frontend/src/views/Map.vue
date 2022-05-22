@@ -1,6 +1,5 @@
 <template>
   <content-area>
-
     <eq-window v-if="!dataLoaded || renderingMap" class="text-center justify-content-center">
       <div class="mb-3">
         {{ renderingMap ? 'Rendering map...' : 'Loading map...' }}
@@ -87,6 +86,7 @@ import EqNpcCardPreview                                                from "../
 import EqWindow                                                        from "../components/eq-ui/EQWindow";
 import LoaderFakeProgress                                              from "../components/LoaderFakeProgress";
 import EqProgressBar                                                   from "../components/eq-ui/EQProgressBar";
+import {Navbar}                                                        from "../app/navbar";
 
 export default {
   components: {
@@ -187,7 +187,12 @@ export default {
       this.raceIconSizes = raceIconSizes
     }
   },
+  beforeDestroy() {
+    Navbar.expand()
+  },
   async mounted() {
+    Navbar.collapse()
+
     this.dataLoaded = false
     this.renderingMap = false
 
