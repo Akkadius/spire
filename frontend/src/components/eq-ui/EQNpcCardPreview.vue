@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div v-if="npc">
 
     <!-- Race Model -->
     <span
@@ -152,7 +152,10 @@
     <div v-if="npc.merchant_id > 0" class="mt-3">
 
       <!-- Show if under max -->
-      <div v-if="merchantitems && merchantitems.length > 0 && (merchantitems.length < maxDataEntries || showMerchantItems)" class="fade-in">
+      <div
+        v-if="merchantitems && merchantitems.length > 0 && (merchantitems.length < maxDataEntries || showMerchantItems)"
+        class="fade-in"
+      >
         <div class="font-weight-bold mb-3">This NPC sells the following items ({{ commify(merchantitems.length) }})
           <a href="javascript:void(0);" @click="showMerchantItems = false" v-if="merchantitems.length > maxDataEntries">hide</a>
         </div>
@@ -308,7 +311,6 @@ import {DB_CLASSES, DB_PLAYER_CLASSES_ALL} from "../../app/constants/eq-classes-
 import {BODYTYPES}                         from "../../app/constants/eq-bodytype-constants";
 import {FLYMODE}                           from "../../app/constants/eq-flymode-constants";
 import ItemPopover                         from "../ItemPopover";
-import {Items}                             from "../../app/items";
 import EqCashDisplay                       from "./EqCashDisplay";
 import SpellPopover                        from "../SpellPopover";
 
@@ -590,100 +592,21 @@ export default {
     }
   },
   async mounted() {
-
-    // merchants
-    if (this.npc.merchant_id > 0 && this.npc.merchantlists) {
-      let merchantItems = []
-      for (let listitem of this.npc.merchantlists) {
-        merchantItems.push(
-          {
-            item: listitem.items && listitem.items.length > 0 ? listitem.items[0] : {},
-            entry: listitem
-          }
-        )
-      }
-      this.merchantitems = merchantItems
-    }
-
-    // loot
-    if (this.npc.loottable_id > 0 && this.npc.loottable.loottable_entries) {
-      let lootItems = []
-      for (let l of this.npc.loottable.loottable_entries) {
-        // console.log(l)
-        for (let e of l.lootdrop_entries) {
-
-          // make sure we don't add the same item twice for now
-          if (lootItems.filter(f => f.item.id === e.item.id).length === 0) {
-            lootItems.push(
-              {
-                item: e.item,
-              }
-            )
-          }
-        }
-      }
-
-      // sort alpha by name
-      this.loot = lootItems.sort((a, b) => {
-        return a.item.name.localeCompare(b.item.name);
-      });
-    }
-
-    // casted spells
-    if (this.npc.npc_spells_id > 0 && this.npc.npc_spell) {
-      let castedSpells = []
-      for (let e of this.npc.npc_spell.npc_spells_entries) {
-
-        // make sure we don't add the same spell twice for now
-        if (castedSpells.filter(f => f.spell.id === e.spells_new.id).length === 0) {
-          castedSpells.push(
-            {
-              spell: e.spells_new,
-            }
-          )
-        }
-
-      }
-
-      // sort alpha by name
-      this.castedSpells = castedSpells.sort((a, b) => {
-        return a.spell.name.localeCompare(b.spell.name);
-      });
-    }
-
-    // faction
-    if (this.npc.npc_faction_id > 0 && this.npc.npc_factions) {
-      let factionHits = []
-      for (let n of this.npc.npc_factions) {
-        if (n.npc_faction_entries) {
-          for (let f of n.npc_faction_entries) {
-
-            // make sure we don't add the same spell twice for now
-            if (factionHits.filter(e => f.name === e.name).length === 0) {
-              factionHits.push(
-                {
-                  name: f.faction_list.name,
-                  hitValue: f.value,
-                }
-              )
-            }
-          }
-
-        }
-      }
-
-      // sort alpha by name
-      this.factionHits = factionHits.sort((a, b) => {
-        return a.name.localeCompare(b.name);
-      });
-
-    }
+    this.init()
   },
   props: {
     npc: {
       type: Object,
       default: {},
       required: true
+    },
+  },
+  watch: {
+    npc: {
+      deep: true,
+      handler() {
+        this.init()
+      }
     },
   },
   methods: {
@@ -710,6 +633,95 @@ export default {
     },
     getRaceIcon() {
       return DB_PLAYER_RACES[this.npc.race] ? DB_PLAYER_RACES[this.npc.race].icon : ""
+    },
+    init() {
+      // merchants
+      if (this.npc.merchant_id > 0 && this.npc.merchantlists) {
+        let merchantItems = []
+        for (let listitem of this.npc.merchantlists) {
+          merchantItems.push(
+            {
+              item: listitem.items && listitem.items.length > 0 ? listitem.items[0] : {},
+              entry: listitem
+            }
+          )
+        }
+        this.merchantitems = merchantItems
+      }
+
+      // loot
+      if (this.npc.loottable_id > 0 && this.npc.loottable.loottable_entries) {
+        let lootItems = []
+        for (let l of this.npc.loottable.loottable_entries) {
+          // console.log(l)
+          for (let e of l.lootdrop_entries) {
+
+            // make sure we don't add the same item twice for now
+            if (lootItems.filter(f => f.item.id === e.item.id).length === 0) {
+              lootItems.push(
+                {
+                  item: e.item,
+                }
+              )
+            }
+          }
+        }
+
+        // sort alpha by name
+        this.loot = lootItems.sort((a, b) => {
+          return a.item.name.localeCompare(b.item.name);
+        });
+      }
+
+      // casted spells
+      if (this.npc.npc_spells_id > 0 && this.npc.npc_spell) {
+        let castedSpells = []
+        for (let e of this.npc.npc_spell.npc_spells_entries) {
+
+          // make sure we don't add the same spell twice for now
+          if (castedSpells.filter(f => f.spell.id === e.spells_new.id).length === 0) {
+            castedSpells.push(
+              {
+                spell: e.spells_new,
+              }
+            )
+          }
+
+        }
+
+        // sort alpha by name
+        this.castedSpells = castedSpells.sort((a, b) => {
+          return a.spell.name.localeCompare(b.spell.name);
+        });
+      }
+
+      // faction
+      if (this.npc.npc_faction_id > 0 && this.npc.npc_factions) {
+        let factionHits = []
+        for (let n of this.npc.npc_factions) {
+          if (n.npc_faction_entries) {
+            for (let f of n.npc_faction_entries) {
+
+              // make sure we don't add the same spell twice for now
+              if (factionHits.filter(e => f.name === e.name).length === 0) {
+                factionHits.push(
+                  {
+                    name: f.faction_list.name,
+                    hitValue: f.value,
+                  }
+                )
+              }
+            }
+
+          }
+        }
+
+        // sort alpha by name
+        this.factionHits = factionHits.sort((a, b) => {
+          return a.name.localeCompare(b.name);
+        });
+
+      }
     }
   }
 }

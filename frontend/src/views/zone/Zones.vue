@@ -22,7 +22,6 @@
               <img
                 v-for="(expansion, expansionId) in EXPANSIONS_FULL"
                 v-if="!getExpansionIcon(expansionId).includes('base64')"
-                v-b-tooltip.hover.v-dark.left.nofade="true"
                 :title="getExpansionName(expansionId) + ' (' + expansionId + ')'"
                 :src="getExpansionIcon(expansionId)"
                 @click="zoneSearchText = ''; selectedExpansion = expansionId; updateQueryState()"
@@ -223,7 +222,7 @@ export default {
     clickZoneRow(zone) {
       this.$router.push(
         {
-          path: '/map?zone=' + zone.short_name
+          path: '/zone/' + zone.short_name + '?v=' + zone.version
         }
       ).catch(() => {
       })

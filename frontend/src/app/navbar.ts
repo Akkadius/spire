@@ -2,9 +2,6 @@ export class Navbar {
   public static collapsed = false;
 
   public static expand() {
-    console.log("expands")
-    console.log(this.collapsed)
-
     if (this.collapsed) {
 
       let elements = [
@@ -40,7 +37,6 @@ export class Navbar {
     for (let e of elements) {
       let t = document.getElementsByClassName(e);
       if (t && t[0]) {
-        console.log(t)
         t[0].classList.add("navbar-collapsed");
       }
     }

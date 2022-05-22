@@ -1,5 +1,5 @@
 <template>
-  <content-area>
+  <div>
     <eq-window v-if="!dataLoaded || renderingMap" class="text-center justify-content-center">
       <div class="mb-3">
         {{ renderingMap ? 'Rendering map...' : 'Loading map...' }}
@@ -8,87 +8,107 @@
       <eq-progress-bar :percent="100" v-if="renderingMap"/>
     </eq-window>
 
-    <div class="card" v-if="dataLoaded && !renderingMap">
-      <l-map
-        v-if="center"
-        :crs="crs"
-        style="height: 98vh"
-        :center="center"
-        :bounds="bounds"
-        :min-zoom="-5"
-        :zoom="zoom"
-        @update:zoom="zoomUpdate"
-      >
-        <l-polyline
-          v-if="lines"
-          :lat-lngs="lines"
-          color="gray"
-          :weight="1"
-        />
-
-        <l-marker
-          v-for="(marker, index) in markers"
-          :key="index"
-          :lat-lng="marker.point"
-          v-if="markers && markers.length > 0"
+    <eq-window class="p-2" style="height: 96vh" v-if="dataLoaded && !renderingMap">
+      <div class="card">
+        <l-map
+          v-if="center"
+          :crs="crs"
+          style="height: 94vh"
+          :center="center"
+          :bounds="bounds"
+          :min-zoom="-5"
+          :zoom="zoom"
+          @update:zoom="zoomUpdate"
         >
-          <l-tooltip>
-            <eq-window>{{ marker.label }}
-            </eq-window>
-          </l-tooltip>
-          <!--          </l-icon>-->
-        </l-marker>
+          <l-polyline
+            v-if="lines"
+            :lat-lngs="lines"
+            color="gray"
+            :weight="1"
+          />
 
-        <l-marker
-          v-for="(marker, index) in npcMarkers"
-          :key="index + '-' + marker.npc.id"
-          :lat-lng="marker.point"
-          v-if="npcMarkers && npcMarkers.length > 0"
-        >
-
-          <l-tooltip :options="{opacity: 1, direction: 'auto', keepView: true}">
-            <eq-window style="width:600px">
-              <eq-npc-card-preview
-                :npc="marker.npc"
-              />
-            </eq-window>
-          </l-tooltip>
-
-          <!--          <l-icon-->
-          <!--            icon-url="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII="-->
-          <!--            :class-name="marker.iconClass + '-sm'"-->
-          <!--            :iconSize="calcSmallIcons(marker.iconSize)"-->
-          <!--          >-->
-          <!--          </l-icon>-->
-
-          <l-icon
-            icon-url="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII="
-            :class-name="(zoomLevel >= 1) ? marker.iconClass : marker.iconClass + '-sm'"
-            :iconSize="(zoomLevel >= 1) ? marker.iconSize : calcSmallIcons(marker.iconSize)"
+          <l-marker
+            v-for="(marker, index) in markers"
+            :key="index"
+            :lat-lng="marker.point"
+            v-if="markers && markers.length > 0"
           >
-          </l-icon>
+            <l-tooltip>
+              <eq-window>{{ marker.label }}
+              </eq-window>
+            </l-tooltip>
+            <!--          </l-icon>-->
+          </l-marker>
 
-        </l-marker>
-      </l-map>
-    </div>
-  </content-area>
+          <l-marker
+            v-for="(marker, index) in npcMarkers"
+            :key="index + '-' + marker.npc.id"
+            :lat-lng="marker.point"
+            @mouseover="npcMarkerHover(marker)"
+            v-if="npcMarkers && npcMarkers.length > 0"
+          >
+
+            <l-tooltip>
+              <eq-window>
+                {{ getCleanName(marker.npc.name) }}
+              </eq-window>
+            </l-tooltip>
+
+            <!--            <l-tooltip :options="{opacity: 1, direction: 'auto', keepView: true}">-->
+            <!--              <eq-window style="width:600px">-->
+            <!--                <eq-npc-card-preview-->
+            <!--                  :npc="marker.npc"-->
+            <!--                />-->
+            <!--              </eq-window>-->
+            <!--            </l-tooltip>-->
+
+            <!--          <l-icon-->
+            <!--            icon-url="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII="-->
+            <!--            :class-name="marker.iconClass + '-sm'"-->
+            <!--            :iconSize="calcSmallIcons(marker.iconSize)"-->
+            <!--          >-->
+            <!--          </l-icon>-->
+
+            <l-icon
+              icon-url="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII="
+              :class-name="(zoomLevel >= 1) ? marker.iconClass : marker.iconClass + '-sm'"
+              :iconSize="(zoomLevel >= 1) ? marker.iconSize : calcSmallIcons(marker.iconSize)"
+            >
+            </l-icon>
+
+          </l-marker>
+        </l-map>
+      </div>
+    </eq-window>
+  </div>
 </template>
 
 <script>
 import {LIcon, LMap, LMarker, LPolyline, LPopup, LTileLayer, LTooltip} from 'vue2-leaflet';
-import ContentArea                                                     from "../components/layout/ContentArea";
+import ContentArea                                                     from "./layout/ContentArea";
 import * as L                                                          from "leaflet";
 import axios                                                           from "axios";
 import {Spawn2Api}                                                     from "../app/api";
 import {SpireApiClient}                                                from "../app/api/spire-api-client";
 import {SpireQueryBuilder}                                             from "../app/api/spire-query-builder";
-import EqNpcCardPreview                                                from "../components/eq-ui/EQNpcCardPreview";
-import EqWindow                                                        from "../components/eq-ui/EQWindow";
-import LoaderFakeProgress                                              from "../components/LoaderFakeProgress";
-import EqProgressBar                                                   from "../components/eq-ui/EQProgressBar";
-import {Navbar}                                                        from "../app/navbar";
+import EqNpcCardPreview                                                from "./eq-ui/EQNpcCardPreview";
+import EqWindow                                                        from "./eq-ui/EQWindow";
+import LoaderFakeProgress                                              from "./LoaderFakeProgress";
+import EqProgressBar                                                   from "./eq-ui/EQProgressBar";
+import {Npcs}                                                          from "../app/npcs";
 
 export default {
+  name: "EqZoneMap",
+  props: {
+    zone: {
+      type: String,
+      required: true
+    },
+    version: {
+      type: String,
+      required: true
+    },
+  },
   components: {
     EqProgressBar,
     LoaderFakeProgress,
@@ -104,6 +124,14 @@ export default {
     LPolyline
   },
   methods: {
+    getCleanName(n) {
+      return Npcs.getCleanName(n)
+    },
+
+    npcMarkerHover(e) {
+      this.$emit("npc-marker-hover", e.npc);
+    },
+
     calcSmallIcons(xy) {
       // console.log("small icon")
       // console.log(xy)
@@ -140,7 +168,7 @@ export default {
       for (let p of postfix) {
         try {
           const r = await axios.get(
-            `/eq-asset-preview-master/assets/eq-maps/${this.$route.query.zone}${p}.txt`
+            `/eq-asset-preview-master/assets/eq-maps/${this.zone}${p}.txt`
           )
 
           if (r.status === 200) {
@@ -187,13 +215,9 @@ export default {
       this.raceIconSizes = raceIconSizes
     }
   },
-  beforeDestroy() {
-    Navbar.expand()
-  },
   async mounted() {
-    Navbar.collapse()
 
-    this.dataLoaded = false
+    this.dataLoaded   = false
     this.renderingMap = false
 
     await this.parseRaceIconSizes()
@@ -246,7 +270,8 @@ export default {
       // @ts-ignore
       const result = await api.listSpawn2s(
         (new SpireQueryBuilder())
-          .where("zone", "=", this.$route.query.zone)
+          .where("zone", "=", this.zone)
+          .where("version", "=", this.version)
           .includes(
             [
               "Spawnentries.NpcType",
@@ -313,7 +338,7 @@ export default {
     this.renderingMap = true
     setTimeout(() => {
       this.renderingMap = false
-    }, 500)
+    }, 10)
   },
   created() {
     this.npcMarkers = null
