@@ -10,16 +10,19 @@
         />
       </div>
       <div class="col-5">
+
+        <!-- NPC -->
         <eq-window
           class="fade-in"
           id="preview-pane"
           style="max-height: 95vh; overflow-y: scroll; overflow-x: hidden"
+          v-if="selectorActive['npc-hover'] && npc"
         >
           <eq-npc-card-preview
-            v-if="selectorActive['npc-hover'] && npc"
             :npc="npc"
           />
         </eq-window>
+
       </div>
     </div>
   </content-area>

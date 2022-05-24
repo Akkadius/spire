@@ -1,15 +1,22 @@
 <template>
   <div>
-    <eq-window v-if="!dataLoaded || renderingMap" class="text-center justify-content-center">
-      <div class="mb-3">
-        {{ renderingMap ? 'Rendering map...' : 'Loading map...' }}
-      </div>
-      <loader-fake-progress v-if="!dataLoaded && !renderingMap"/>
-      <eq-progress-bar :percent="100" v-if="renderingMap"/>
-    </eq-window>
+    <eq-window class="p-2" style="height: 96vh">
 
-    <eq-window class="p-2" style="height: 96vh" v-if="!renderingMap">
-      <div class="card">
+      <!-- Loader -->
+      <div
+        class="text-center mt-2"
+        style="position: absolute; right: 3%; color: black; z-index: 99;"
+        v-if="!npcMarkers"
+      >
+        <div class="mb-2">
+          {{ renderingMap ? 'Rendering map...' : 'Loading map...' }}
+        </div>
+        <loader-fake-progress v-if="!renderingMap"/>
+        <eq-progress-bar :percent="100" v-if="renderingMap"/>
+      </div>
+
+
+      <div class="card" v-if="!renderingMap">
         <l-map
           v-if="center"
           :crs="crs"
@@ -379,17 +386,20 @@ export default {
 
     async loadMap() {
 
-      this.dataLoaded   = false
+      // reset
+      this.markers         = null
+      this.lines           = null
+      this.npcMarkers      = null
+      this.zonelineMarkers = null
+
+      this.dataLoaded   = true
       this.renderingMap = false
 
       console.time("[EqZoneMap] parseRaceIconSizes");
       await this.parseRaceIconSizes()
       console.timeEnd("[EqZoneMap] parseRaceIconSizes");
 
-      await this.loadGridLines()
-
-      this.dataLoaded = true
-
+      this.loadGridLines()
       this.loadMapSpawns()
 
       console.time("[EqZoneMap] zone points");
