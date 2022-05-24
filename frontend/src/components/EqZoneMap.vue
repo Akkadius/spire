@@ -8,7 +8,7 @@
       <eq-progress-bar :percent="100" v-if="renderingMap"/>
     </eq-window>
 
-    <eq-window class="p-2" style="height: 96vh" v-if="dataLoaded && !renderingMap">
+    <eq-window class="p-2" style="height: 96vh" v-if="!renderingMap" v-show="dataLoaded && !renderingMap">
       <div class="card">
         <l-map
           v-if="center"
@@ -256,7 +256,11 @@ export default {
       this.dataLoaded   = false
       this.renderingMap = false
 
+      console.time("[EqZoneMap] parseRaceIconSizes");
       await this.parseRaceIconSizes()
+      console.timeEnd("[EqZoneMap] parseRaceIconSizes");
+
+      console.time("[EqZoneMap] mapContents");
 
       let map        = await this.getMapContents()
       let bounds     = [0, 0, 0, 0];
@@ -300,9 +304,18 @@ export default {
         }
       }
 
+      console.timeEnd("[EqZoneMap] mapContents");
+
+      this.renderingMap = true
+      setTimeout(() => {
+        this.renderingMap = false
+      }, 10)
+
       let npcMarkers = []
       const api      = (new Spawn2Api(SpireApiClient.getOpenApiConfig()))
       try {
+        console.time("[EqZoneMap] spawn2");
+
         // @ts-ignore
         const result = await api.listSpawn2s(
           (new SpireQueryBuilder())
@@ -322,10 +335,10 @@ export default {
             .get()
         )
         if (result.status === 200 && result.data) {
-          setTimeout(() => {
-            this.dataLoaded = true
-            this.$forceUpdate()
-          }, 1)
+          // setTimeout(() => {
+          this.dataLoaded = true
+          this.$forceUpdate()
+          // }, 1)
 
           for (let spawn of result.data) {
             // make sure we have a npc associated to spawn
@@ -343,7 +356,7 @@ export default {
               npcMarkers.push(
                 {
                   point: this.createPoint(-spawn.x, -spawn.y),
-                  label: npcName.replaceAll("_", " "),
+                  label: Npcs.getCleanName(npcName),
                   npc: n,
                   iconClass: 'fade-in ' + this.getNpcIcon(n),
                   iconSize: this.raceIconSizes[this.getNpcIcon(n)] ? this.raceIconSizes[this.getNpcIcon(n)] : [30, 100]
@@ -352,7 +365,6 @@ export default {
 
             }
           }
-
 
           this.npcMarkers = npcMarkers
           this.markers    = mapMarkers
@@ -366,23 +378,25 @@ export default {
             (bounds[0] + bounds[2]) / 2,
             (bounds[3] + bounds[1]) / 2
           ];
+
+          console.timeEnd("[EqZoneMap] spawn2");
         }
       } catch (err) {
         console.log("map.vue %s", err)
       }
 
+      console.time("[EqZoneMap] zone points");
+
       let zonePoints = []
       const zapi     = (new ZonePointApi(SpireApiClient.getOpenApiConfig()))
-      try {
-        const result = await zapi.listZonePoints(
-          (new SpireQueryBuilder())
-            .where("zone", "=", this.zone)
-            .get()
-        )
-
-        if (result.status === 200) {
-          console.log(result.data)
-          for (let point of result.data) {
+      zapi.listZonePoints(
+        (new SpireQueryBuilder())
+          .where("zone", "=", this.zone)
+          .get()
+      ).then(async (r) => {
+        if (r.status === 200) {
+          console.log(r.data)
+          for (let point of r.data) {
             const z = (await Zones.getZoneById(point.target_zone_id))
 
             zonePoints.push({
@@ -397,15 +411,9 @@ export default {
 
           console.log(this.zonelineMarkers)
         }
+      })
 
-      } catch (err) {
-        console.log("map.vue %s", err)
-      }
-
-      this.renderingMap = true
-      setTimeout(() => {
-        this.renderingMap = false
-      }, 10)
+      console.timeEnd("[EqZoneMap] zone points");
     }
 
   },
