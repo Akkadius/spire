@@ -8,7 +8,7 @@
       <eq-progress-bar :percent="100" v-if="renderingMap"/>
     </eq-window>
 
-    <eq-window class="p-2" style="height: 96vh" v-if="!renderingMap" v-show="dataLoaded && !renderingMap">
+    <eq-window class="p-2" style="height: 96vh" v-if="!renderingMap">
       <div class="card">
         <l-map
           v-if="center"
@@ -251,16 +251,8 @@ export default {
       this.raceIconSizes = raceIconSizes
     },
 
-    async loadMap() {
-
-      this.dataLoaded   = false
-      this.renderingMap = false
-
-      console.time("[EqZoneMap] parseRaceIconSizes");
-      await this.parseRaceIconSizes()
-      console.timeEnd("[EqZoneMap] parseRaceIconSizes");
-
-      console.time("[EqZoneMap] mapContents");
+    async loadGridLines() {
+      console.time("[EqZoneMap] loadGridLines");
 
       let map        = await this.getMapContents()
       let bounds     = [0, 0, 0, 0];
@@ -304,17 +296,26 @@ export default {
         }
       }
 
-      console.timeEnd("[EqZoneMap] mapContents");
+      this.markers = mapMarkers
+      this.lines   = mapLines
+      this.bounds  = [
+        [bounds[0], bounds[1]],
+        [bounds[2], bounds[3]]
+      ]
 
-      this.renderingMap = true
-      setTimeout(() => {
-        this.renderingMap = false
-      }, 10)
+      this.center = [
+        (bounds[0] + bounds[2]) / 2,
+        (bounds[3] + bounds[1]) / 2
+      ];
 
+      console.timeEnd("[EqZoneMap] loadGridLines");
+    },
+
+    async loadMapSpawns() {
       let npcMarkers = []
       const api      = (new Spawn2Api(SpireApiClient.getOpenApiConfig()))
       try {
-        console.time("[EqZoneMap] spawn2");
+        console.time("[EqZoneMap] loadMapSpawns");
 
         // @ts-ignore
         const result = await api.listSpawn2s(
@@ -336,8 +337,7 @@ export default {
         )
         if (result.status === 200 && result.data) {
           // setTimeout(() => {
-          this.dataLoaded = true
-          this.$forceUpdate()
+          // this.$forceUpdate()
           // }, 1)
 
           for (let spawn of result.data) {
@@ -367,23 +367,30 @@ export default {
           }
 
           this.npcMarkers = npcMarkers
-          this.markers    = mapMarkers
-          this.lines      = mapLines
-          this.bounds     = [
-            [bounds[0], bounds[1]],
-            [bounds[2], bounds[3]]
-          ]
 
-          this.center = [
-            (bounds[0] + bounds[2]) / 2,
-            (bounds[3] + bounds[1]) / 2
-          ];
+          this.$forceUpdate()
 
-          console.timeEnd("[EqZoneMap] spawn2");
+          console.timeEnd("[EqZoneMap] loadMapSpawns");
         }
       } catch (err) {
         console.log("map.vue %s", err)
       }
+    },
+
+    async loadMap() {
+
+      this.dataLoaded   = false
+      this.renderingMap = false
+
+      console.time("[EqZoneMap] parseRaceIconSizes");
+      await this.parseRaceIconSizes()
+      console.timeEnd("[EqZoneMap] parseRaceIconSizes");
+
+      await this.loadGridLines()
+
+      this.dataLoaded = true
+
+      this.loadMapSpawns()
 
       console.time("[EqZoneMap] zone points");
 
@@ -409,11 +416,17 @@ export default {
 
           this.zonelineMarkers = zonePoints
 
-          console.log(this.zonelineMarkers)
+          this.$forceUpdate()
+
+          // console.log(this.zonelineMarkers)
+          console.timeEnd("[EqZoneMap] zone points");
+
         }
       })
 
-      console.timeEnd("[EqZoneMap] zone points");
+
+      this.$forceUpdate()
+
     }
 
   },
