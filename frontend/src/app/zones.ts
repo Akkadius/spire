@@ -3,9 +3,9 @@ import {SpireApiClient} from "@/app/api/spire-api-client";
 import {SpireQueryBuilder} from "@/app/api/spire-query-builder";
 
 export class Zones {
-  public static zones = <any>[]
+  public static zones            = <any>[]
   public static zonesByShortName = <any>{}
-  public static zonesById = <any>{}
+  public static zonesById        = <any>{}
 
   public static async getZones() {
     if (this.zones && this.zones.length > 0) {
@@ -54,6 +54,22 @@ export class Zones {
     }
 
     return ""
+  }
+
+  public static async getZoneByShortName(shortName: string) {
+    shortName = shortName.toLowerCase()
+    if (this.zonesByShortName[shortName]) {
+      return this.zonesByShortName[shortName]
+    }
+
+    const zones = (await this.getZones())
+    for (const zone of zones) {
+      if (zone.short_name === shortName) {
+        return zone
+      }
+    }
+
+    return {}
   }
 
   public static async getZoneLongNameByShortName(shortName: string) {

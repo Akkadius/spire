@@ -28,11 +28,23 @@
           :zoom="zoom"
           @update:zoom="zoomUpdate"
         >
+
+          <!-- Draw map lines -->
           <l-polyline
             v-if="lines"
             :lat-lngs="lines"
             color="gray"
             :weight="1"
+          />
+
+          <!-- Draw pathing grid lines -->
+          <l-polyline
+            v-if="pathingGridLines"
+            :lat-lngs="pathingGridLines"
+            color="blue"
+            dashArray="5, 10"
+            :opacity=".8"
+            :weight="2"
           />
 
           <!--          &lt;!&ndash; markers from map &ndash;&gt;-->
@@ -141,7 +153,7 @@ import {LIcon, LMap, LMarker, LPolyline, LPopup, LTileLayer, LTooltip} from 'vue
 import ContentArea                                                     from "./layout/ContentArea";
 import * as L                                                          from "leaflet";
 import axios                                                           from "axios";
-import {Spawn2Api, ZonePointApi}                                       from "../app/api";
+import {GridEntryApi, Spawn2Api, ZonePointApi}                         from "../app/api";
 import {SpireApiClient}                                                from "../app/api/spire-api-client";
 import {SpireQueryBuilder}                                             from "../app/api/spire-query-builder";
 import EqNpcCardPreview                                                from "./eq-ui/EQNpcCardPreview";
@@ -208,6 +220,40 @@ export default {
     },
 
     npcMarkerHover(e) {
+      console.log(e)
+
+      // reset
+      this.pathingGridlines = []
+      if (e.grid > 0) {
+        // transform grid entries into poly lines
+        let polyLines = []
+        for (const [id, g] of this.pathingGridData.entries()) {
+          if (g && id === e.grid) {
+            console.log(g)
+
+            for (const [i, e] of g.entries()) {
+              // make sure we have a valid entry as well as
+              // a valid next point so we can draw a complete line
+              if (e && e.x && g[i + 1]) {
+                // console.log(i, e)
+                const current = e
+                const next    = g[i + 1]
+                polyLines.push(
+                  [
+                    this.createPoint(-current.x, -current.y),
+                    this.createPoint(-next.x, -next.y),
+                  ]
+                )
+              }
+            }
+          }
+        }
+
+        this.pathingGridLines = polyLines
+        this.$forceUpdate()
+      }
+
+
       this.$emit("npc-marker-hover", e.npc);
     },
 
@@ -298,8 +344,8 @@ export default {
       console.timeEnd("[EqZoneMap] parseRaceIconSizes");
     },
 
-    async loadGridLines() {
-      console.time("[EqZoneMap] loadGridLines");
+    async loadMapLines() {
+      console.time("[EqZoneMap] loadMapLines");
 
       let map        = await this.getMapContents()
       let bounds     = [0, 0, 0, 0];
@@ -355,7 +401,9 @@ export default {
         (bounds[3] + bounds[1]) / 2
       ];
 
-      console.timeEnd("[EqZoneMap] loadGridLines");
+      this.$forceUpdate()
+
+      console.timeEnd("[EqZoneMap] loadMapLines");
     },
 
     async loadDoors() {
@@ -391,7 +439,7 @@ export default {
             if (d.dest_zone !== "NONE") {
               const z = (await Zones.getZoneLongNameByShortName(d.dest_zone))
 
-              console.log(z)
+              // console.log(z)
 
               if (z !== "") {
                 doorZonePoints.push({
@@ -402,13 +450,13 @@ export default {
                   }
                 )
 
-                console.log(d)
+                // console.log(d)
               }
 
             }
           }
 
-          this.doorMarkers         = doorMarkers
+          this.doorMarkers    = doorMarkers
           this.doorZonePoints = doorZonePoints
         }
 
@@ -420,13 +468,42 @@ export default {
     },
 
     async loadMapSpawns() {
-      let npcMarkers = []
-      const api      = (new Spawn2Api(SpireApiClient.getOpenApiConfig()))
+      let npcMarkers       = []
+      const spawn2Api      = (new Spawn2Api(SpireApiClient.getOpenApiConfig()))
+      const gridEntriesApi = (new GridEntryApi(SpireApiClient.getOpenApiConfig()))
       try {
         console.time("[EqZoneMap] loadMapSpawns");
 
+
+        // grids
+        const zone = (await Zones.getZoneByShortName(this.zone))
+        const r    = await gridEntriesApi.listGridEntries(
+          (new SpireQueryBuilder())
+            .where("zoneid", "=", zone.zoneidnumber)
+            .orderBy(["gridid", "number"])
+            .get()
+        );
+        if (r.status === 200) {
+          let gridEntries = []
+          for (let e of r.data) {
+            if (typeof gridEntries[e.gridid] === "undefined") {
+              gridEntries[e.gridid] = []
+            }
+            if (typeof gridEntries[e.gridid][e.number] === "undefined") {
+              gridEntries[e.gridid][e.number] = []
+            }
+
+            gridEntries[e.gridid][e.number] =
+              {
+                x: e.x,
+                y: e.y,
+              }
+          }
+          this.pathingGridData = gridEntries
+        }
+
         // @ts-ignore
-        const result = await api.listSpawn2s(
+        const result = await spawn2Api.listSpawn2s(
           (new SpireQueryBuilder())
             .where("zone", "=", this.zone)
             .where("version", "=", this.version)
@@ -449,6 +526,11 @@ export default {
           // }, 1)
 
           for (let spawn of result.data) {
+
+            // if (spawn.pathgrid > 0) {
+            //   console.log(spawn)
+            // }
+
             // make sure we have a npc associated to spawn
             let npcName = ""
             if (
@@ -466,6 +548,7 @@ export default {
                   point: this.createPoint(-spawn.x, -spawn.y),
                   label: Npcs.getCleanName(npcName),
                   npc: n,
+                  grid: spawn.pathgrid,
                   iconClass: 'fade-in ' + this.getNpcIcon(n),
                   iconSize: this.raceIconSizes[this.getNpcIcon(n)] ? this.raceIconSizes[this.getNpcIcon(n)] : [30, 100]
                 }
@@ -525,10 +608,13 @@ export default {
       this.npcMarkers          = null
       this.doorZoneLineMarkers = null
       this.zonelineMarkers     = null
+      this.lines               = []
+      this.pathingGridlines    = []
+      this.pathingGridData     = []
 
       // load
       await this.parseRaceIconSizes()
-      this.loadGridLines()
+      this.loadMapLines()
       this.loadMapSpawns()
       this.loadDoors()
       this.loadZonePoints()
@@ -541,10 +627,13 @@ export default {
     this.loadMap()
   },
   created() {
-    this.zonelineMarkers = null
-    this.doorZonePoints  = null
-    this.npcMarkers      = null
-    this.doorMarkers     = null
+    this.zonelineMarkers  = null
+    this.doorZonePoints   = null
+    this.npcMarkers       = null
+    this.doorMarkers      = null
+    this.pathingGridData  = []
+    this.pathingGridLines = null
+    this.lines            = []
   },
   data() {
     return {
@@ -554,7 +643,6 @@ export default {
       zoomLevel: 0,
 
       bounds: null,
-      lines: [],
       crs: L.CRS.Simple,
 
       icon: L.icon({
