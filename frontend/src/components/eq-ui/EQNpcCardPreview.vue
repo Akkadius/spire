@@ -160,7 +160,10 @@
           <a href="javascript:void(0);" @click="showMerchantItems = false" v-if="merchantitems.length > maxDataEntries">hide</a>
         </div>
 
-        <div v-for="e in merchantitems" class="row">
+        <div
+          v-for="e in merchantitems"
+          class="row"
+          v-if="e.item && e.item.price && parseInt(e.item.price) > 0">
           <div class="col-6">
             <item-popover
               class="d-inline-block"
@@ -173,7 +176,7 @@
           <div class="col-3">
             <eq-cash-display
               class="d-inline-block ml-1"
-              :price="e.item.price"
+              :price="parseInt(e.item.price)"
             />
           </div>
 
@@ -427,7 +430,7 @@ export default {
       }
 
       // casted spells
-      if (this.npc.npc_spells_id > 0 && this.npc.npc_spell) {
+      if (this.npc.npc_spells_id > 0 && this.npc.npc_spell && this.npc.npc_spell.npc_spells_entries) {
         let castedSpells = []
         for (let e of this.npc.npc_spell.npc_spells_entries) {
 

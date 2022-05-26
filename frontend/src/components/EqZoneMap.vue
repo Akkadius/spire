@@ -6,17 +6,17 @@
       <div
         class="text-center mt-2"
         style="position: absolute; right: 3%; color: black; z-index: 99;"
-        v-if="!npcMarkers"
+        v-if="!isDataLoaded()"
       >
         <div class="mb-2">
-          {{ renderingMap ? 'Rendering map...' : 'Loading map...' }}
+          {{ isDataLoaded() ? 'Rendering map...' : 'Loading map...' }}
         </div>
-        <loader-fake-progress v-if="!renderingMap"/>
-        <eq-progress-bar :percent="100" v-if="renderingMap"/>
+        <loader-fake-progress v-if="!isDataLoaded()"/>
+        <eq-progress-bar :percent="100" v-if="isDataLoaded()"/>
       </div>
 
 
-      <div class="card" v-if="!renderingMap">
+      <div class="card">
         <l-map
           v-if="center"
           :crs="crs"
@@ -50,14 +50,28 @@
 
           <!-- zone points -->
           <l-marker
-            v-for="(marker, index) in zonelineMarkers"
+            v-for="(m, index) in zonelineMarkers"
             :key="index"
-            :lat-lng="marker.point"
+            :lat-lng="m.point"
             v-if="markers && markers.length > 0"
-            @click="navigateToZone(marker)"
+            @click="navigateToZone(m.zone.short_name, m.zone.version)"
           >
             <l-tooltip>
-              <eq-window>{{ marker.label }}
+              <eq-window>{{ m.label }}
+              </eq-window>
+            </l-tooltip>
+          </l-marker>
+
+          <!-- door zone points -->
+          <l-marker
+            v-for="(m, index) in doorZonePoints"
+            :key="index + '-' + m.destName + '-' + m.destInstance"
+            :lat-lng="m.point"
+            v-if="markers && markers.length > 0"
+            @click="navigateToZone(m.destName, m.destInstance)"
+          >
+            <l-tooltip>
+              <eq-window>{{ m.label }}
               </eq-window>
             </l-tooltip>
           </l-marker>
@@ -77,21 +91,6 @@
               </eq-window>
             </l-tooltip>
 
-            <!--            <l-tooltip :options="{opacity: 1, direction: 'auto', keepView: true}">-->
-            <!--              <eq-window style="width:600px">-->
-            <!--                <eq-npc-card-preview-->
-            <!--                  :npc="marker.npc"-->
-            <!--                />-->
-            <!--              </eq-window>-->
-            <!--            </l-tooltip>-->
-
-            <!--          <l-icon-->
-            <!--            icon-url="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII="-->
-            <!--            :class-name="marker.iconClass + '-sm'"-->
-            <!--            :iconSize="calcSmallIcons(marker.iconSize)"-->
-            <!--          >-->
-            <!--          </l-icon>-->
-
             <l-icon
               icon-url="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII="
               :class-name="(zoomLevel >= 1) ? marker.iconClass : marker.iconClass + '-sm'"
@@ -100,6 +99,37 @@
             </l-icon>
 
           </l-marker>
+
+          <!-- Door markers -->
+          <l-marker
+            v-for="(marker, index) in doorMarkers"
+            :key="index + '-' + marker.name"
+            :lat-lng="marker.point"
+            v-if="doorMarkers && doorMarkers.length > 0"
+          >
+
+            <l-tooltip>
+              <eq-window>
+                {{ marker.label }}
+              </eq-window>
+            </l-tooltip>
+
+            <!--            <l-icon-->
+            <!--              icon-url="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII="-->
+            <!--              :class-name="(zoomLevel >= 1) ? marker.iconClass : marker.iconClass + '-sm'"-->
+            <!--              :iconSize="(zoomLevel >= 1) ? marker.iconSize : calcSmallIcons(marker.iconSize)"-->
+            <!--            >-->
+            <!--            </l-icon>-->
+
+            <l-icon
+              icon-url="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII="
+              :class-name="marker.iconClass"
+              :iconSize="marker.iconSize"
+            >
+            </l-icon>
+
+          </l-marker>
+
         </l-map>
       </div>
     </eq-window>
@@ -120,6 +150,7 @@ import LoaderFakeProgress                                              from "./L
 import EqProgressBar                                                   from "./eq-ui/EQProgressBar";
 import {Npcs}                                                          from "../app/npcs";
 import {Zones}                                                         from "../app/zones";
+import {DoorApi}                                                       from "../app/api/api/door-api";
 
 export default {
   name: "EqZoneMap",
@@ -157,11 +188,16 @@ export default {
   },
 
   methods: {
-    navigateToZone(zp) {
-      const zone = zp.zone
+
+    // this is not a computed property because the dependencies are not reactive
+    isDataLoaded() {
+      return this.npcMarkers
+    },
+
+    navigateToZone(shortName, version) {
       this.$router.push(
         {
-          path: '/zone/' + zone.short_name + '?v=' + zone.version
+          path: `/zone/${shortName}?v=${version}`
         }
       ).catch(() => {
       })
@@ -228,6 +264,8 @@ export default {
     },
     async parseRaceIconSizes() {
 
+      console.time("[EqZoneMap] parseRaceIconSizes");
+
       // parse CSS sheet to pull sizes
       let raceIconSizes = {}
       try {
@@ -256,6 +294,8 @@ export default {
       }
 
       this.raceIconSizes = raceIconSizes
+
+      console.timeEnd("[EqZoneMap] parseRaceIconSizes");
     },
 
     async loadGridLines() {
@@ -316,6 +356,67 @@ export default {
       ];
 
       console.timeEnd("[EqZoneMap] loadGridLines");
+    },
+
+    async loadDoors() {
+      console.time("[EqZoneMap] loadDoors");
+
+      const api       = (new DoorApi(SpireApiClient.getOpenApiConfig()))
+      let doorMarkers = []
+
+      try {
+        const r = await api.listDoors(
+          (new SpireQueryBuilder())
+            .where("zone", "=", this.zone)
+            .where("version", "=", this.version)
+            .get()
+        )
+
+
+        if (r.status === 200) {
+
+          let doorZonePoints = []
+
+          for (let d of r.data) {
+            doorMarkers.push(
+              {
+                point: this.createPoint(-d.pos_x, -d.pos_y),
+                label: d.name,
+                iconClass: 'fade-in item-8057',
+                iconSize: [40, 40]
+              }
+            )
+
+            // zone teleport linked door
+            if (d.dest_zone !== "NONE") {
+              const z = (await Zones.getZoneLongNameByShortName(d.dest_zone))
+
+              console.log(z)
+
+              if (z !== "") {
+                doorZonePoints.push({
+                    point: this.createPoint(-d.pos_x, -d.pos_y),
+                    label: "(Door Click) Zone Point (" + z + ")",
+                    destName: d.dest_zone,
+                    destInstance: d.dest_instance,
+                  }
+                )
+
+                console.log(d)
+              }
+
+            }
+          }
+
+          this.doorMarkers         = doorMarkers
+          this.doorZonePoints = doorZonePoints
+        }
+
+      } catch (err) {
+        console.log("map.vue %s", err)
+      }
+
+      console.timeEnd("[EqZoneMap] loadDoors");
     },
 
     async loadMapSpawns() {
@@ -384,25 +485,8 @@ export default {
       }
     },
 
-    async loadMap() {
-
-      // reset
-      this.markers         = null
-      this.lines           = null
-      this.npcMarkers      = null
-      this.zonelineMarkers = null
-
-      this.dataLoaded   = true
-      this.renderingMap = false
-
-      console.time("[EqZoneMap] parseRaceIconSizes");
-      await this.parseRaceIconSizes()
-      console.timeEnd("[EqZoneMap] parseRaceIconSizes");
-
-      this.loadGridLines()
-      this.loadMapSpawns()
-
-      console.time("[EqZoneMap] zone points");
+    async loadZonePoints() {
+      console.time("[EqZoneMap] loadZonePoints");
 
       let zonePoints = []
       const zapi     = (new ZonePointApi(SpireApiClient.getOpenApiConfig()))
@@ -429,14 +513,27 @@ export default {
           this.$forceUpdate()
 
           // console.log(this.zonelineMarkers)
-          console.timeEnd("[EqZoneMap] zone points");
-
+          console.timeEnd("[EqZoneMap] loadZonePoints");
         }
       })
+    },
 
+    async loadMap() {
+      // reset
+      this.markers             = null
+      this.lines               = null
+      this.npcMarkers          = null
+      this.doorZoneLineMarkers = null
+      this.zonelineMarkers     = null
+
+      // load
+      await this.parseRaceIconSizes()
+      this.loadGridLines()
+      this.loadMapSpawns()
+      this.loadDoors()
+      this.loadZonePoints()
 
       this.$forceUpdate()
-
     }
 
   },
@@ -445,13 +542,12 @@ export default {
   },
   created() {
     this.zonelineMarkers = null
+    this.doorZonePoints  = null
     this.npcMarkers      = null
+    this.doorMarkers     = null
   },
   data() {
     return {
-      dataLoaded: false,
-      renderingMap: false,
-
       zoom: 0,
       center: null,
 
