@@ -7,6 +7,7 @@
           :zone="zone"
           :version="version"
           @npc-marker-hover="processNpcMarkerHover"
+          @spell-marker-hover="processSpellMarkerHover"
         />
       </div>
       <div class="col-5">
@@ -23,6 +24,18 @@
           />
         </eq-window>
 
+        <!-- Spell -->
+        <eq-window
+          class="fade-in"
+          id="preview-pane"
+          style="max-height: 95vh; overflow-y: scroll; overflow-x: hidden"
+          v-if="selectorActive['spell-hover'] && spell"
+        >
+          <eq-spell-preview
+            :spell-data="spell"
+          />
+        </eq-window>
+
       </div>
     </div>
   </content-area>
@@ -34,10 +47,11 @@ import EqWindow         from "../../components/eq-ui/EQWindow";
 import {Navbar}         from "../../app/navbar";
 import EqZoneMap        from "../../components/EqZoneMap";
 import EqNpcCardPreview from "../../components/eq-ui/EQNpcCardPreview";
+import EqSpellPreview   from "../../components/eq-ui/EQSpellCardPreview";
 
 export default {
   name: "Zone",
-  components: { EqNpcCardPreview, EqZoneMap, EqWindow, ContentArea },
+  components: { EqSpellPreview, EqNpcCardPreview, EqZoneMap, EqWindow, ContentArea },
   data() {
     return {
       zone: "",
@@ -65,6 +79,7 @@ export default {
   methods: {
     init() {
       this.npc = {}
+      this.spell = {}
       this.resetSelectors()
 
       Navbar.collapse()
@@ -81,6 +96,7 @@ export default {
     },
 
     setSelectorActive(selector) {
+      this.resetSelectors()
 
 
       // this.resetPreviewComponents()
@@ -90,6 +106,18 @@ export default {
       this.$forceUpdate()
 
       // EditFormFieldUtil.setFieldSubEditorHighlightedById(selector)
+    },
+
+    processSpellMarkerHover(s) {
+      this.spell = {}
+      this.setSelectorActive("spell-hover")
+      this.spell = s
+
+      // reset preview pane scroll to top
+      const t = document.getElementById("preview-pane");
+      if (t) {
+        t.scrollTop = 0;
+      }
     },
 
     processNpcMarkerHover(n) {

@@ -126,20 +126,35 @@
               </eq-window>
             </l-tooltip>
 
-            <!--            <l-icon-->
-            <!--              icon-url="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII="-->
-            <!--              :class-name="(zoomLevel >= 1) ? marker.iconClass : marker.iconClass + '-sm'"-->
-            <!--              :iconSize="(zoomLevel >= 1) ? marker.iconSize : calcSmallIcons(marker.iconSize)"-->
-            <!--            >-->
-            <!--            </l-icon>-->
-
             <l-icon
               icon-url="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII="
               :class-name="marker.iconClass"
               :iconSize="marker.iconSize"
             >
             </l-icon>
+          </l-marker>
 
+          <!-- Translocate markers -->
+          <l-marker
+            v-for="(m, index) in translocatePoints"
+            :key="index + '-' + m.label"
+            :lat-lng="m.point"
+            @mouseover="spellMarkerHover(m.spell)"
+            v-if="translocatePoints && translocatePoints.length > 0"
+            style="border-radius: 10px"
+          >
+            <l-tooltip>
+              <eq-window>
+                {{ m.label }}
+              </eq-window>
+            </l-tooltip>
+
+            <l-icon
+              icon-url="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII="
+              :class-name="m.iconClass"
+              :iconSize="m.iconSize"
+            >
+            </l-icon>
           </l-marker>
 
         </l-map>
@@ -153,7 +168,7 @@ import {LIcon, LMap, LMarker, LPolyline, LPopup, LTileLayer, LTooltip} from 'vue
 import ContentArea                                                     from "./layout/ContentArea";
 import * as L                                                          from "leaflet";
 import axios                                                           from "axios";
-import {GridEntryApi, Spawn2Api, ZonePointApi}                         from "../app/api";
+import {GridEntryApi, Spawn2Api, SpellsNewApi, ZonePointApi}           from "../app/api";
 import {SpireApiClient}                                                from "../app/api/spire-api-client";
 import {SpireQueryBuilder}                                             from "../app/api/spire-query-builder";
 import EqNpcCardPreview                                                from "./eq-ui/EQNpcCardPreview";
@@ -201,6 +216,7 @@ export default {
 
   methods: {
 
+
     // this is not a computed property because the dependencies are not reactive
     isDataLoaded() {
       return this.npcMarkers
@@ -223,7 +239,7 @@ export default {
       console.log(e)
 
       // reset
-      this.pathingGridlines = []
+      this.pathingGridLines = []
       if (e.grid > 0) {
         // transform grid entries into poly lines
         let polyLines = []
@@ -253,8 +269,11 @@ export default {
         this.$forceUpdate()
       }
 
-
       this.$emit("npc-marker-hover", e.npc);
+    },
+
+    spellMarkerHover(s) {
+      this.$emit("spell-marker-hover", s);
     },
 
     calcSmallIcons(xy) {
@@ -342,6 +361,48 @@ export default {
       this.raceIconSizes = raceIconSizes
 
       console.timeEnd("[EqZoneMap] parseRaceIconSizes");
+    },
+
+    async loadTranslocatePoints() {
+      const api  = (new SpellsNewApi(SpireApiClient.getOpenApiConfig()))
+
+      try {
+        const r = await api.listSpellsNews(
+          (new SpireQueryBuilder())
+            .where("teleport_zone", "=", this.zone)
+            .get()
+        )
+
+        if (r.status === 200) {
+          // used as a mechanism to stagger multiple markers on the same coordinate
+          let sameCoord = {}
+
+          let translocatePoints = []
+          for (const s of r.data) {
+            if (typeof sameCoord[s.effect_base_value_2 + s.effect_base_value_1] === "undefined") {
+              sameCoord[s.effect_base_value_2 + s.effect_base_value_1] = 0
+            }
+
+            let sameCoordOffset = sameCoord[s.effect_base_value_2 + s.effect_base_value_1] * 1
+            translocatePoints.push({
+                point: this.createPoint(-s.effect_base_value_2 + sameCoordOffset, -s.effect_base_value_1 - sameCoordOffset),
+                label: s.name,
+                spell: s,
+                iconClass: 'fade-in spell-' + s.new_icon + '-40',
+                iconSize: [40, 40]
+              }
+            )
+
+            sameCoord[s.effect_base_value_2 + s.effect_base_value_1]++
+          }
+
+          this.translocatePoints = translocatePoints
+          this.$forceUpdate()
+        }
+
+      } catch (err) {
+        console.log("map.vue %s", err)
+      }
     },
 
     async loadMapLines() {
@@ -603,14 +664,15 @@ export default {
 
     async loadMap() {
       // reset
-      this.markers             = null
-      this.lines               = null
-      this.npcMarkers          = null
-      this.doorZoneLineMarkers = null
-      this.zonelineMarkers     = null
-      this.lines               = []
-      this.pathingGridlines    = []
-      this.pathingGridData     = []
+      this.markers           = null
+      this.lines             = null
+      this.npcMarkers        = null
+      this.doorMarkers       = null
+      this.zonelineMarkers   = null
+      this.translocatePoints = null
+      this.lines             = []
+      this.pathingGridlines  = []
+      this.pathingGridData   = []
 
       // load
       await this.parseRaceIconSizes()
@@ -618,6 +680,7 @@ export default {
       this.loadMapSpawns()
       this.loadDoors()
       this.loadZonePoints()
+      this.loadTranslocatePoints()
 
       this.$forceUpdate()
     }
@@ -627,13 +690,14 @@ export default {
     this.loadMap()
   },
   created() {
-    this.zonelineMarkers  = null
-    this.doorZonePoints   = null
-    this.npcMarkers       = null
-    this.doorMarkers      = null
-    this.pathingGridData  = []
-    this.pathingGridLines = null
-    this.lines            = []
+    this.zonelineMarkers   = null
+    this.doorZonePoints    = null
+    this.translocatePoints = null
+    this.npcMarkers        = null
+    this.doorMarkers       = null
+    this.pathingGridData   = []
+    this.pathingGridLines  = null
+    this.lines             = []
   },
   data() {
     return {
