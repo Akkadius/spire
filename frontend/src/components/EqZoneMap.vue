@@ -157,6 +157,28 @@
             </l-icon>
           </l-marker>
 
+          <!-- Safe coordinate markers -->
+          <l-marker
+            v-for="(m, index) in safeCoordinateMarker"
+            :key="index + '-' + m.label"
+            :lat-lng="m.point"
+            v-if="safeCoordinateMarker && safeCoordinateMarker.length > 0"
+            style="border-radius: 10px"
+          >
+            <l-tooltip>
+              <eq-window>
+                {{ m.label }}
+              </eq-window>
+            </l-tooltip>
+
+            <l-icon
+              icon-url="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII="
+              :class-name="m.iconClass"
+              :iconSize="m.iconSize"
+            >
+            </l-icon>
+          </l-marker>
+
         </l-map>
       </div>
     </eq-window>
@@ -236,7 +258,7 @@ export default {
     },
 
     npcMarkerHover(e) {
-      console.log(e)
+      // console.log(e)
 
       // reset
       this.pathingGridLines = []
@@ -245,8 +267,6 @@ export default {
         let polyLines = []
         for (const [id, g] of this.pathingGridData.entries()) {
           if (g && id === e.grid) {
-            console.log(g)
-
             for (const [i, e] of g.entries()) {
               // make sure we have a valid entry as well as
               // a valid next point so we can draw a complete line
@@ -266,8 +286,8 @@ export default {
         }
 
         this.pathingGridLines = polyLines
-        this.$forceUpdate()
       }
+      this.$forceUpdate()
 
       this.$emit("npc-marker-hover", e.npc);
     },
@@ -363,8 +383,22 @@ export default {
       console.timeEnd("[EqZoneMap] parseRaceIconSizes");
     },
 
+    async loadSafeCoordinates() {
+      const zone          = (await Zones.getZoneByShortName(this.zone))
+      let safeCoordinates = []
+      safeCoordinates.push({
+          point: this.createPoint(-zone.safe_x, -zone.safe_y),
+          label: `Safe Coordinates (${zone.safe_x}, ${zone.safe_y}, ${zone.safe_z}) (xyz)`,
+          iconClass: 'fade-in item-6852',
+          iconSize: [40, 40]
+        }
+      )
+
+      this.safeCoordinateMarker = safeCoordinates
+    },
+
     async loadTranslocatePoints() {
-      const api  = (new SpellsNewApi(SpireApiClient.getOpenApiConfig()))
+      const api = (new SpellsNewApi(SpireApiClient.getOpenApiConfig()))
 
       try {
         const r = await api.listSpellsNews(
@@ -535,7 +569,6 @@ export default {
       try {
         console.time("[EqZoneMap] loadMapSpawns");
 
-
         // grids
         const zone = (await Zones.getZoneByShortName(this.zone))
         const r    = await gridEntriesApi.listGridEntries(
@@ -664,15 +697,16 @@ export default {
 
     async loadMap() {
       // reset
-      this.markers           = null
-      this.lines             = null
-      this.npcMarkers        = null
-      this.doorMarkers       = null
-      this.zonelineMarkers   = null
-      this.translocatePoints = null
-      this.lines             = []
-      this.pathingGridlines  = []
-      this.pathingGridData   = []
+      this.markers              = null
+      this.lines                = null
+      this.npcMarkers           = null
+      this.doorMarkers          = null
+      this.safeCoordinateMarker = null
+      this.zonelineMarkers      = null
+      this.translocatePoints    = null
+      this.lines                = []
+      this.pathingGridlines     = []
+      this.pathingGridData      = []
 
       // load
       await this.parseRaceIconSizes()
@@ -681,6 +715,7 @@ export default {
       this.loadDoors()
       this.loadZonePoints()
       this.loadTranslocatePoints()
+      this.loadSafeCoordinates()
 
       this.$forceUpdate()
     }
@@ -690,14 +725,15 @@ export default {
     this.loadMap()
   },
   created() {
-    this.zonelineMarkers   = null
-    this.doorZonePoints    = null
-    this.translocatePoints = null
-    this.npcMarkers        = null
-    this.doorMarkers       = null
-    this.pathingGridData   = []
-    this.pathingGridLines  = null
-    this.lines             = []
+    this.zonelineMarkers      = null
+    this.doorZonePoints       = null
+    this.translocatePoints    = null
+    this.npcMarkers           = null
+    this.doorMarkers          = null
+    this.safeCoordinateMarker = null
+    this.pathingGridData      = []
+    this.pathingGridLines     = null
+    this.lines                = []
   },
   data() {
     return {
