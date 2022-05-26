@@ -93,7 +93,9 @@
             v-for="(marker, index) in npcMarkers"
             :key="index + '-' + marker.npc.id"
             :lat-lng="marker.point"
-            @mouseover="npcMarkerHover(marker)"
+            :opacity="getNpcOpacity(index + '-' + marker.npc.id)"
+            @mouseover="npcMarkerHover(marker, index + '-' + marker.npc.id)"
+            @mouseleave="hoveredNpc = ''; pathingGridLines = []"
             v-if="npcMarkers && npcMarkers.length > 0"
           >
 
@@ -238,6 +240,17 @@ export default {
 
   methods: {
 
+    getNpcOpacity(elementKey) {
+      if (this.hoveredNpc === "") {
+        return 1;
+      }
+
+      if (this.hoveredNpc !== "" && this.hoveredNpc !== elementKey) {
+        return .3;
+      }
+
+      return 1;
+    },
 
     // this is not a computed property because the dependencies are not reactive
     isDataLoaded() {
@@ -257,7 +270,7 @@ export default {
       return Npcs.getCleanName(n)
     },
 
-    npcMarkerHover(e) {
+    npcMarkerHover(e, elementKey) {
       // console.log(e)
 
       // reset
@@ -267,6 +280,8 @@ export default {
         let polyLines = []
         for (const [id, g] of this.pathingGridData.entries()) {
           if (g && id === e.grid) {
+            this.hoveredNpc = elementKey
+
             for (const [i, e] of g.entries()) {
               // make sure we have a valid entry as well as
               // a valid next point so we can draw a complete line
@@ -287,7 +302,8 @@ export default {
 
         this.pathingGridLines = polyLines
       }
-      this.$forceUpdate()
+
+      // this.$forceUpdate()
 
       this.$emit("npc-marker-hover", e.npc);
     },
@@ -739,6 +755,8 @@ export default {
     return {
       zoom: 0,
       center: null,
+
+      hoveredNpc: "",
 
       zoomLevel: 0,
 
