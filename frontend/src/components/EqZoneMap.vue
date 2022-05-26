@@ -37,6 +37,18 @@
             :weight="1"
           />
 
+          <!-- grid points -->
+          <l-marker
+            v-for="(m, index) in pathingGridMarkers"
+            :key="index"
+            :lat-lng="m.point"
+            v-if="markers && markers.length > 0"
+          >
+            <l-tooltip :options="{ permanent: true, interactive: true }">
+              {{ m.label }}
+            </l-tooltip>
+          </l-marker>
+
           <!-- Draw pathing grid lines -->
           <l-polyline
             v-if="pathingGridLines"
@@ -95,7 +107,6 @@
             :lat-lng="marker.point"
             :opacity="getNpcOpacity(index + '-' + marker.npc.id)"
             @mouseover="npcMarkerHover(marker, index + '-' + marker.npc.id)"
-            @mouseleave="hoveredNpc = ''; pathingGridLines = []"
             v-if="npcMarkers && npcMarkers.length > 0"
           >
 
@@ -274,15 +285,23 @@ export default {
       // console.log(e)
 
       // reset
-      this.pathingGridLines = []
+      this.hoveredNpc = ""
+      if (this.pathingGridLines.length > 0) {
+        this.pathingGridLines   = []
+        this.pathingGridMarkers = []
+        this.$forceUpdate()
+      }
+
       if (e.grid > 0) {
         // transform grid entries into poly lines
-        let polyLines = []
+        let polyLines   = []
+        let gridMarkers = []
         for (const [id, g] of this.pathingGridData.entries()) {
           if (g && id === e.grid) {
             this.hoveredNpc = elementKey
 
             for (const [i, e] of g.entries()) {
+
               // make sure we have a valid entry as well as
               // a valid next point so we can draw a complete line
               if (e && e.x && g[i + 1]) {
@@ -296,14 +315,23 @@ export default {
                   ]
                 )
               }
+
+              if (e && e.x) {
+                // console.log(i, e)
+                gridMarkers.push(
+                  {
+                    point: this.createPoint(-e.x, -e.y),
+                    label: i,
+                  }
+                )
+              }
             }
           }
         }
 
-        this.pathingGridLines = polyLines
+        this.pathingGridLines   = polyLines
+        this.pathingGridMarkers = gridMarkers
       }
-
-      // this.$forceUpdate()
 
       this.$emit("npc-marker-hover", e.npc);
     },
@@ -531,7 +559,6 @@ export default {
             .get()
         )
 
-
         if (r.status === 200) {
 
           let doorZonePoints = []
@@ -721,7 +748,8 @@ export default {
       this.zonelineMarkers      = null
       this.translocatePoints    = null
       this.lines                = []
-      this.pathingGridlines     = []
+      this.pathingGridLines     = []
+      this.pathingGridMarkers   = null
       this.pathingGridData      = []
 
       // load
@@ -749,6 +777,7 @@ export default {
     this.safeCoordinateMarker = null
     this.pathingGridData      = []
     this.pathingGridLines     = null
+    this.pathingGridMarkers   = []
     this.lines                = []
   },
   data() {
