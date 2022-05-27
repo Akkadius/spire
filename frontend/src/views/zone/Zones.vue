@@ -73,16 +73,28 @@
               <td style="text-align: center">{{ zone.zoneidnumber }}</td>
               <td style="text-align: center">{{ zone.version }}</td>
               <td style="text-align: center">
-                <eq-checkbox :is-checked="(zone.canbind > 0)"/>
+                <eq-checkbox
+                  :disabled="true"
+                  :value="zone.canbind"
+                />
               </td>
               <td style="text-align: center">
-                <eq-checkbox :is-checked="(zone.cancombat > 0)"/>
+                <eq-checkbox
+                  :disabled="true"
+                  :value="zone.cancombat"
+                />
               </td>
               <td style="text-align: center">
-                <eq-checkbox :is-checked="(zone.canlevitate > 0)"/>
+                <eq-checkbox
+                  :disabled="true"
+                  :value="zone.canlevitate"
+                />
               </td>
               <td style="text-align: center">
-                <eq-checkbox :is-checked="(zone.castoutdoor > 0)"/>
+                <eq-checkbox
+                  :disabled="true"
+                  :value="zone.castoutdoor"
+                />
               </td>
             </tr>
             </tbody>
