@@ -3,9 +3,9 @@
     <eq-window class="p-2" style="height: 96vh">
 
       <!-- Loader -->
-      <div
-        class="text-center mt-2"
-        style="position: absolute; right: 3%; color: black; z-index: 99;"
+      <eq-window
+        class="text-center"
+        style="position: absolute; right: 3%; z-index: 99; padding: 15px; padding-top: 10px;"
         v-if="!isDataLoaded()"
       >
         <div class="mb-2">
@@ -13,8 +13,7 @@
         </div>
         <loader-fake-progress v-if="!isDataLoaded()"/>
         <eq-progress-bar :percent="100" v-if="isDataLoaded()"/>
-      </div>
-
+      </eq-window>
 
       <div class="card">
         <l-map
