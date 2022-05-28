@@ -35,8 +35,8 @@
 
 <script>
 import EqWindow           from "./eq-ui/EQWindow";
-import EqSpellCardPreview from "./eq-ui/EQSpellCardPreview";
-import EqSpellPreview     from "./eq-ui/EQSpellCardPreview";
+import EqSpellCardPreview from "./preview/EQSpellCardPreview";
+import EqSpellPreview     from "./preview/EQSpellCardPreview";
 import {Spells}           from "@/app/spells";
 
 export default {

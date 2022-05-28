@@ -1613,9 +1613,9 @@
 import EqWindowFancy           from "../../components/eq-ui/EQWindowFancy";
 import EqWindow                from "../../components/eq-ui/EQWindow";
 import EqTabs                  from "../../components/eq-ui/EQTabs";
-import EqTab                   from "../../components/eq-ui/EQTab";
-import EqItemPreview           from "../../components/eq-ui/EQItemCardPreview";
-import EqCheckbox              from "../../components/eq-ui/EQCheckbox";
+import EqTab         from "../../components/eq-ui/EQTab";
+import EqItemPreview from "../../components/preview/EQItemCardPreview";
+import EqCheckbox    from "../../components/eq-ui/EQCheckbox";
 import {
   SpireApiClient
 }                              from "../../app/api/spire-api-client";

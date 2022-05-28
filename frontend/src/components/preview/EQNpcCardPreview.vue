@@ -307,14 +307,14 @@
 </template>
 
 <script>
-import EqDebug                             from "./EQDebug";
+import EqDebug                             from "../eq-ui/EQDebug";
 import {Npcs}                              from "../../app/npcs";
 import {DB_PLAYER_RACES, DB_RACE_NAMES}    from "../../app/constants/eq-races-constants";
 import {DB_CLASSES, DB_PLAYER_CLASSES_ALL} from "../../app/constants/eq-classes-constants";
 import {BODYTYPES}                         from "../../app/constants/eq-bodytype-constants";
 import {FLYMODE}                           from "../../app/constants/eq-flymode-constants";
 import ItemPopover                         from "../ItemPopover";
-import EqCashDisplay                       from "./EqCashDisplay";
+import EqCashDisplay                       from "../eq-ui/EqCashDisplay";
 import SpellPopover                        from "../SpellPopover";
 
 export default {

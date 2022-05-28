@@ -36,7 +36,7 @@
 <script>
 import EqWindow          from "./eq-ui/EQWindow";
 import {Items}           from "@/app/items";
-import EqItemCardPreview from "@/components/eq-ui/EQItemCardPreview";
+import EqItemCardPreview from "@/components/preview/EQItemCardPreview";
 
 export default {
   name: "ItemPopover",

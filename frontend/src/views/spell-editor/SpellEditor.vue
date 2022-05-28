@@ -1647,9 +1647,9 @@
 import EqWindowFancy                  from "../../components/eq-ui/EQWindowFancy";
 import EqWindow                       from "../../components/eq-ui/EQWindow";
 import EqTabs                         from "../../components/eq-ui/EQTabs";
-import EqTab                          from "../../components/eq-ui/EQTab";
-import EqSpellPreview                 from "../../components/eq-ui/EQSpellCardPreview";
-import {Spells}                       from "../../app/spells";
+import EqTab          from "../../components/eq-ui/EQTab";
+import EqSpellPreview from "../../components/preview/EQSpellCardPreview";
+import {Spells}       from "../../app/spells";
 import {
   BASE_VALUE_FORMULAS,
   BUFF_DURATION_FORMULAS,

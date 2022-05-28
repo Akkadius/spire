@@ -204,9 +204,9 @@ import * as L                                                          from "lea
 import axios                                                           from "axios";
 import {GridEntryApi, Spawn2Api, SpellsNewApi, ZonePointApi}           from "../app/api";
 import {SpireApiClient}                                                from "../app/api/spire-api-client";
-import {SpireQueryBuilder}                                             from "../app/api/spire-query-builder";
-import EqNpcCardPreview                                                from "./eq-ui/EQNpcCardPreview";
-import EqWindow                                                        from "./eq-ui/EQWindow";
+import {SpireQueryBuilder} from "../app/api/spire-query-builder";
+import EqNpcCardPreview    from "./preview/EQNpcCardPreview";
+import EqWindow            from "./eq-ui/EQWindow";
 import LoaderFakeProgress                                              from "./LoaderFakeProgress";
 import EqProgressBar                                                   from "./eq-ui/EQProgressBar";
 import {Npcs}                                                          from "../app/npcs";

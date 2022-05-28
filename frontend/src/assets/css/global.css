@@ -331,26 +331,19 @@ th[role=columnheader]:hover:not(.no-sort):after {
 
 @keyframes pulsate-highlight-navbar {
     0% {
-        -webkit-box-shadow: 0px 0px 20px rgba(252, 199, 33, .5);
-        -moz-box-shadow: 0px 0px 20px rgba(252, 199, 33, .5);
-        box-shadow: 0px 0px 20px rgba(252, 199, 33, .5);
+        box-shadow: inset 0px 0px 0px rgba(255, 255, 255, .5);
     }
     50% {
-        -webkit-box-shadow: 0px 0px 0px rgba(255, 255, 255, .5);
-        -moz-box-shadow: 0px 0px 0px rgba(255, 255, 255, .5);
-        box-shadow: 0px 0px 0px rgba(255, 255, 255, .5);
+        box-shadow: inset 0px 0px 0px rgba(255, 255, 255, .5);
     }
     100% {
-        -webkit-box-shadow: 0px 0px 20px rgba(252, 199, 33, .5);
-        -moz-box-shadow: 0px 0px 20px rgba(252, 199, 33, .5);
-        box-shadow: 0px 0px 20px rgba(252, 199, 33, .5);
+        box-shadow: inset 0px 0px 20px rgba(255, 255, 255, 1);
     }
 }
 
 .navbar:not(.navbar-collapsed) {
     /*!* make it glow! *!*/
-
-    animation: pulsate-highlight-navbar 6s ease-in-out infinite alternate;
+    animation: pulsate-highlight-navbar 60s ease-in-out infinite alternate;
 }
 
 .navbar.navbar-collapsed {

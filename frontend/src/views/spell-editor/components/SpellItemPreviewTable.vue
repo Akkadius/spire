@@ -78,7 +78,7 @@ export default {
     ItemPopover,
     EqWindowSimple,
     EqWindow,
-    "eq-item-card-preview": () => import("@/components/eq-ui/EQItemCardPreview.vue"),
+    "eq-item-card-preview": () => import("@/components/preview/EQItemCardPreview.vue"),
     "v-runtime-template": () => import("v-runtime-template")
   },
   data() {

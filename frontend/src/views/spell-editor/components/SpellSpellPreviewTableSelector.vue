@@ -71,10 +71,10 @@
 <script>
 import {Spells}           from "@/app/spells";
 import EqWindow           from "@/components/eq-ui/EQWindow.vue";
-import EqSpellEffects     from "@/components/eq-ui/EQSpellEffects";
-import EqSpellPreview     from "@/components/eq-ui/EQSpellCardPreview.vue";
+import EqSpellEffects     from "@/components/preview/EQSpellEffects";
+import EqSpellPreview     from "@/components/preview/EQSpellCardPreview.vue";
 import {App}              from "@/constants/app";
-import EqSpellDescription from "@/components/eq-ui/EQSpellDescription";
+import EqSpellDescription from "@/components/preview/EQSpellDescription";
 import {DB_SPELL_TARGETS} from "@/app/constants/eq-spell-constants";
 import {DB_CLASSES_ICONS} from "@/app/constants/eq-class-icon-constants";
 import {DB_CLASSES_SHORT} from "@/app/constants/eq-classes-constants";

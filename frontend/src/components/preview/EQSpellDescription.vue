@@ -8,10 +8,10 @@
 </template>
 
 <script>
-import {Spells} from "@/app/spells";
-import EqItemCardPreview  from "@/components/eq-ui/EQItemCardPreview.vue";
-import EqSpellPreview from "@/components/eq-ui/EQSpellCardPreview.vue";
-import EqWindow       from "@/components/eq-ui/EQWindow.vue";
+import {Spells}          from "@/app/spells";
+import EqItemCardPreview from "@/components/preview/EQItemCardPreview.vue";
+import EqSpellPreview    from "@/components/preview/EQSpellCardPreview.vue";
+import EqWindow          from "@/components/eq-ui/EQWindow.vue";
 
 export default {
   name: "EqSpellDescription",
