@@ -48,7 +48,7 @@
             <tr>
 
               <th style="width: 60px; white-space: nowrap;"></th>
-              <th style="width: 200px; white-space: nowrap;">Expansion</th>
+              <th style="width: 200px; text-align: center; white-space: nowrap;">Expansion</th>
               <th style="width: 100px; white-space: nowrap;">Short Name</th>
 
               <th style="width: 350px">Long Name</th>
@@ -65,7 +65,7 @@
             <tr v-for="(zone, index) in filteredZones" :key="zone.id" @click="clickZoneRow(zone)">
 
               <td style="text-align: center"><img :src="getExpansionIcon(zone.expansion)"></td>
-              <td style="text-align: left">{{ getExpansionName(zone.expansion) }}</td>
+              <td style="text-align: center">{{ getExpansionName(zone.expansion) }}</td>
               <td style="text-align: right">{{ zone.short_name }}</td>
 
               <td>{{ zone.long_name }}</td>

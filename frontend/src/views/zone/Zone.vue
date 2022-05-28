@@ -12,13 +12,10 @@
       </div>
       <div class="col-5">
 
-        <eq-window
-          :style="'height: 96vh; '"
-          id="zone-preview"
+        <eq-zone-card-preview
           v-if="Object.keys(selectorActive).length === 0 && zoneData"
-        >
-          <h6 class="eq-header">{{ getZoneLongName() }}</h6>
-        </eq-window>
+          :zone="zoneData"
+        />
 
         <!-- NPC -->
         <eq-window
@@ -50,18 +47,18 @@
 </template>
 
 <script>
-import ContentArea      from "../../components/layout/ContentArea";
-import EqWindow         from "../../components/eq-ui/EQWindow";
-import {Navbar}         from "../../app/navbar";
-import EqZoneMap        from "../../components/EqZoneMap";
-import EqNpcCardPreview from "../../components/preview/EQNpcCardPreview";
-import EqSpellPreview   from "../../components/preview/EQSpellCardPreview";
-import {Zones}          from "../../app/zones";
-import {SpireApiClient} from "../../app/api/spire-api-client";
+import ContentArea       from "../../components/layout/ContentArea";
+import EqWindow          from "../../components/eq-ui/EQWindow";
+import {Navbar}          from "../../app/navbar";
+import EqZoneMap         from "../../components/EqZoneMap";
+import EqNpcCardPreview  from "../../components/preview/EQNpcCardPreview";
+import EqSpellPreview    from "../../components/preview/EQSpellCardPreview";
+import {Zones}           from "../../app/zones";
+import EqZoneCardPreview from "../../components/preview/EQZoneCardPreview";
 
 export default {
   name: "Zone",
-  components: { EqSpellPreview, EqNpcCardPreview, EqZoneMap, EqWindow, ContentArea },
+  components: { EqZoneCardPreview, EqSpellPreview, EqNpcCardPreview, EqZoneMap, EqWindow, ContentArea },
   data() {
     return {
       zone: "",
@@ -74,17 +71,9 @@ export default {
   },
   beforeDestroy() {
     Navbar.expand()
-
-    if (this.interval) {
-      clearInterval(this.interval)
-    }
   },
   created() {
-    this.npc = {}
-    this.backgroundImages = []
-
-    // cycle background images
-    this.interval = setInterval(this.setBackgroundImage, 10 * 1000)
+    this.npc              = {}
   },
   watch: {
     '$route'() {
@@ -111,49 +100,12 @@ export default {
 
       // get zone data
       this.zoneData = (await Zones.getZoneByShortName(this.zone))
-
-      // get zone wallpaper
-      this.loadBackgroundImages().then(() => {
-        this.setBackgroundImage()
-      })
-    },
-
-    async loadBackgroundImages() {
-      document.body.style.setProperty("--zone-background", "none");
-      document.body.style.setProperty("--zone-background-size", "auto");
-
-      // get zone wallpaper
-      await SpireApiClient.v1().get('/assets/zone-images/' + encodeURIComponent(this.zoneData.long_name)).then((r) => {
-        if (r.status === 200) {
-          this.backgroundImages = r.data.images
-        }
-      })
-    },
-
-    setBackgroundImage() {
-      if (this.backgroundImages) {
-        const image = this.backgroundImages[Math.floor(Math.random() * this.backgroundImages.length)];
-        console.log("IMAGE ", image)
-
-        if (image.length > 0) {
-          let img    = new Image();
-          img.src    = image;
-          img.onload = () => {
-            document.body.style.setProperty("--zone-background", "url(" + image + ")");
-            document.body.style.setProperty("--zone-background-size", "cover");
-          }
-        }
-      }
     },
 
     resetSelectors() {
       for (const [k, v] of Object.entries(this.selectorActive)) {
         this.selectorActive[k] = false
       }
-    },
-
-    getZoneLongName() {
-      return this.zoneData.long_name
     },
 
     setSelectorActive(selector) {
@@ -197,29 +149,25 @@ export default {
 </script>
 
 <style>
-:root {
-  --zone-background-size: auto;
-  --zone-background: none;
-}
-#zone-preview::before {
-  content: "";
-  /*background-size: cover !important;*/
-  background-size: var(--zone-background-size) !important;
-  background-repeat: no-repeat !important;
-  position: absolute;
-  z-index: -99999;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
-  /*background: url(https://everquest.allakhazam.com/scenery/halas-mcdaniels.jpg);*/
-  background: var(--zone-background);
-  opacity: .2;
 
-  --webkit-transition: background-image 3s ease-in-out;
-  transition: background-image 3s ease-in-out;
 
-  /*animation: fadeIn 3s;*/
-}
+/*.map-tiles::after {*/
+/*  content: "";*/
+/*  background-size: cover !important;*/
+/*  background-repeat: no-repeat !important;*/
+/*  position: absolute;*/
+/*  z-index: 1;*/
+/*  top: 0;*/
+/*  right: 0;*/
+/*  bottom: 0;*/
+/*  left: 0;*/
+/*  background: var(--zone-background) !important;*/
+/*  opacity: .1;*/
+
+/*  --webkit-transition: background-image 3s ease-in-out;*/
+/*  transition: background-image 3s ease-in-out;*/
+
+/*  !*animation: fadeIn 3s;*!*/
+/*}*/
 
 </style>
