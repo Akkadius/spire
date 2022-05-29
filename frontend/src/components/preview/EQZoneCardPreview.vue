@@ -9,7 +9,7 @@
       <h6 class="eq-header">{{ getZoneLongName() }}</h6>
 
       <eq-tabs>
-        <eq-tab name="NPCs"></eq-tab>
+        <eq-tab :selected="true" :name="'NPCs' + (npcTypes && npcTypes.length > 0 ? ` (${npcTypes.length})` : '')"></eq-tab>
         <eq-tab name="Items"></eq-tab>
         <eq-tab name="Tasks"></eq-tab>
         <eq-tab name="Sold"></eq-tab>
@@ -159,34 +159,34 @@
                 <div
                   class="col-12"
                   v-for="f in [
-                // zone level settings
-                { field: 'fast_regen_hp', description: 'Fast Regen HP' },
-                { field: 'fast_regen_mana', description: 'Fast Regen Mana' },
-                { field: 'fast_regen_endurance', description: 'Fast Regen Endurance' },
+                    // zone level settings
+                    { field: 'fast_regen_hp', description: 'Fast Regen HP' },
+                    { field: 'fast_regen_mana', description: 'Fast Regen Mana' },
+                    { field: 'fast_regen_endurance', description: 'Fast Regen Endurance' },
 
-                { field: 'npc_max_aggro_dist', description: 'NPC Max Aggro Dist', break: true },
-                { field: 'max_movement_update_range', description: 'Max Move Update Range' },
-                { field: 'underworld_teleport_index', description: 'Underworld Teleport' },
-                { field: 'lava_damage', description: 'Lava Damage', break: true },
-                { field: 'min_lava_damage', description: 'Min. Lava Damage' },
-                { field: 'gravity', description: 'Gravity', break: true },
-                { field: 'type', description: 'Zone Type', break: true },
-                { field: 'zone_exp_multiplier', description: 'Zone EXP Multiplier' },
+                    { field: 'npc_max_aggro_dist', description: 'NPC Max Aggro Dist', break: true },
+                    { field: 'max_movement_update_range', description: 'Max Move Update Range' },
+                    { field: 'underworld_teleport_index', description: 'Underworld Teleport' },
+                    { field: 'lava_damage', description: 'Lava Damage', break: true },
+                    { field: 'min_lava_damage', description: 'Min. Lava Damage' },
+                    { field: 'gravity', description: 'Gravity', break: true },
+                    { field: 'type', description: 'Zone Type', break: true },
+                    { field: 'zone_exp_multiplier', description: 'Zone EXP Multiplier' },
 
-                { field: 'maxclients', description: 'Max Clients', break: true },
-                { field: 'ruleset', description: 'Ruleset' },
+                    { field: 'maxclients', description: 'Max Clients', break: true },
+                    { field: 'ruleset', description: 'Ruleset' },
 
-                // clipping
-                { field: 'underworld', description: 'Underworld', break: true },
-                { field: 'minclip', description: 'Min Clip' },
-                { field: 'maxclip', description: 'Max Clip' },
+                    // clipping
+                    { field: 'underworld', description: 'Underworld', break: true },
+                    { field: 'minclip', description: 'Min Clip' },
+                    { field: 'maxclip', description: 'Max Clip' },
 
-                // safe
-                { field: 'safe_x', description: 'Safe X', break: true },
-                { field: 'safe_y', description: 'Safe Y' },
-                { field: 'safe_z', description: 'Safe Z' },
-                { field: 'safe_heading', description: 'Safe Heading' },
-            ]"
+                    // safe
+                    { field: 'safe_x', description: 'Safe X', break: true },
+                    { field: 'safe_y', description: 'Safe Y' },
+                    { field: 'safe_z', description: 'Safe Z' },
+                    { field: 'safe_heading', description: 'Safe Heading' },
+                ]"
                   :key="f.field"
                   v-if="typeof zone[f.field] !== 'undefined'"
                 >
@@ -210,7 +210,6 @@
         </eq-tab>
       </eq-tabs>
 
-
     </div>
 
   </eq-window>
@@ -218,11 +217,13 @@
 
 <script>
 
-import EqWindow         from "../eq-ui/EQWindow";
-import {SpireApiClient} from "../../app/api/spire-api-client";
-import EqTabs           from "../eq-ui/EQTabs";
-import EqTab            from "../eq-ui/EQTab";
-import EqCheckbox       from "../eq-ui/EQCheckbox";
+import EqWindow            from "../eq-ui/EQWindow";
+import {SpireApiClient}    from "../../app/api/spire-api-client";
+import EqTabs              from "../eq-ui/EQTabs";
+import EqTab               from "../eq-ui/EQTab";
+import EqCheckbox          from "../eq-ui/EQCheckbox";
+import {Spawn2Api}         from "../../app/api";
+import {SpireQueryBuilder} from "../../app/api/spire-query-builder";
 
 export default {
   name: "EqZoneCardPreview",
@@ -235,6 +236,9 @@ export default {
   created() {
     this.backgroundImages  = []
     this.currentImageIndex = 0
+
+    // data
+    this.npcTypes = []
 
     // cycle background images
     this.interval = setInterval(this.setBackgroundImage, 3 * 1000)
@@ -260,6 +264,8 @@ export default {
       this.loadBackgroundImages().then(() => {
         this.setBackgroundImage()
       })
+
+      this.loadNpcTypes()
     },
 
     getZoneLongName() {
@@ -301,14 +307,13 @@ export default {
     setBackgroundImage() {
       if (this.backgroundImages && this.backgroundImages.length > 0) {
         const image = this.backgroundImages[this.currentImageIndex];
-        console.log("IMAGE ", image)
+        // console.log("IMAGE ", image)
 
-
-        console.log(
-          "[EQZoneCardPreview] loadBackgroundImages Playing index [%s] out of [%s]",
-          this.currentImageIndex,
-          this.backgroundImages.length
-        )
+        // console.log(
+        //   "[EQZoneCardPreview] loadBackgroundImages Playing index [%s] out of [%s]",
+        //   this.currentImageIndex,
+        //   this.backgroundImages.length
+        // )
 
         if (image.length > 0) {
           let img     = new Image();
@@ -323,16 +328,16 @@ export default {
 
             // reset if rollover
             if (this.currentImageIndex >= this.backgroundImages.length) {
-              console.log("[EQZoneCardPreview] loadBackgroundImages resetting")
+              // console.log("[EQZoneCardPreview] loadBackgroundImages resetting")
               this.currentImageIndex = 0;
             }
           }
           img.onerror = () => {
-            console.log(
-              "[EQZoneCardPreview] loadBackgroundImages Failed to load index [%s] out of [%s]",
-              this.currentImageIndex,
-              this.backgroundImages.length
-            )
+            // console.log(
+            //   "[EQZoneCardPreview] loadBackgroundImages Failed to load index [%s] out of [%s]",
+            //   this.currentImageIndex,
+            //   this.backgroundImages.length
+            // )
 
             this.currentImageIndex++
             this.setBackgroundImage()
@@ -341,6 +346,43 @@ export default {
         }
       }
     },
+
+    async loadNpcTypes() {
+      const api   = (new Spawn2Api(SpireApiClient.getOpenApiConfig()))
+      let builder = (new SpireQueryBuilder())
+      builder.where("zone", "=", this.zone.short_name)
+      builder.where("version", "=", this.zone.version)
+      builder.includes([
+        "Spawnentries.NpcType",
+      ])
+
+      let npcTypes = [];
+      const r = await api.listSpawn2s(builder.get())
+      if (r.status === 200 && r.data) {
+        for (let spawn2 of r.data) {
+          if (spawn2.spawnentries) {
+            for (let spawnentry of spawn2.spawnentries) {
+              if (spawnentry.npc_type) {
+                npcTypes.push(
+                  {
+                    npc: spawnentry.npc_type,
+                    spawn: {
+                      x: spawn2.x,
+                      y: spawn2.y,
+                    }
+                  }
+                )
+              }
+            }
+          }
+        }
+
+        this.npcTypes = npcTypes
+
+        this.$forceUpdate()
+      }
+
+    }
   }
 }
 </script>
