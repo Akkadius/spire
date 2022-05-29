@@ -20,7 +20,7 @@
         />
 
         <eq-window
-          v-if="!isZoneCardActive"
+          v-if="!isZoneCardActive()"
           class="text-center"
         >
           <b-button
@@ -35,7 +35,7 @@
         <eq-window
           class="fade-in"
           id="preview-pane"
-          :style="'max-height: ' + (isZoneCardActive ? '95' : '87') + 'vh; overflow-y: scroll; overflow-x: hidden'"
+          :style="'max-height: ' + (isZoneCardActive() ? '95' : '87') + 'vh; overflow-y: scroll; overflow-x: hidden'"
           v-if="selectorActive['npc-hover'] && npc"
         >
           <eq-npc-card-preview
@@ -47,7 +47,7 @@
         <eq-window
           class="fade-in"
           id="preview-pane"
-          style="max-height: 95vh; overflow-y: scroll; overflow-x: hidden"
+          :style="'max-height: ' + (isZoneCardActive() ? '95' : '87') + 'vh; overflow-y: scroll; overflow-x: hidden'"
           v-if="selectorActive['spell-hover'] && spell"
         >
           <eq-spell-preview
@@ -87,11 +87,6 @@ export default {
       selectorActive: {},
     }
   },
-  computed: {
-    isZoneCardActive() {
-      return Object.keys(this.selectorActive).length > 0 && this.selectorActive['zone-preview']
-    }
-  },
   beforeDestroy() {
     Navbar.expand()
 
@@ -121,6 +116,10 @@ export default {
   },
 
   methods: {
+
+    isZoneCardActive() {
+      return Object.keys(this.selectorActive).length > 0 && this.selectorActive['zone-preview']
+    },
 
     // from zone preview card -> zone
     handleNpcShowCardEvent(e) {
