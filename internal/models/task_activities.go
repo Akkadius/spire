@@ -5,24 +5,23 @@ import (
 )
 
 type TaskActivity struct {
-	Taskid               uint        `json:"taskid" gorm:"Column:taskid"`
-	Activityid           uint        `json:"activityid" gorm:"Column:activityid"`
-	Step                 uint        `json:"step" gorm:"Column:step"`
-	Activitytype         uint8       `json:"activitytype" gorm:"Column:activitytype"`
-	TargetName           string      `json:"target_name" gorm:"Column:target_name"`
-	ItemList             string      `json:"item_list" gorm:"Column:item_list"`
-	SkillList            string      `json:"skill_list" gorm:"Column:skill_list"`
-	SpellList            string      `json:"spell_list" gorm:"Column:spell_list"`
-	DescriptionOverride  string      `json:"description_override" gorm:"Column:description_override"`
-	Goalid               uint        `json:"goalid" gorm:"Column:goalid"`
-	GoalMatchList        null.String `json:"goal_match_list" gorm:"Column:goal_match_list"`
-	Goalmethod           uint        `json:"goalmethod" gorm:"Column:goalmethod"`
-	Goalcount            null.Int    `json:"goalcount" gorm:"Column:goalcount"`
-	Delivertonpc         uint        `json:"delivertonpc" gorm:"Column:delivertonpc"`
-	Zones                string      `json:"zones" gorm:"Column:zones"`
-	Optional             int8        `json:"optional" gorm:"Column:optional"`
-	NpcType              *NpcType    `json:"npc_type,omitempty" gorm:"foreignKey:delivertonpc;references:id"`
-	Goallists            []Goallist  `json:"goallists,omitempty" gorm:"foreignKey:listid;references:goalid"`
+	Taskid               uint       `json:"taskid" gorm:"Column:taskid"`
+	Activityid           uint       `json:"activityid" gorm:"Column:activityid"`
+	Step                 uint       `json:"step" gorm:"Column:step"`
+	Activitytype         uint8      `json:"activitytype" gorm:"Column:activitytype"`
+	TargetName           string     `json:"target_name" gorm:"Column:target_name"`
+	ItemList             string     `json:"item_list" gorm:"Column:item_list"`
+	SkillList            string     `json:"skill_list" gorm:"Column:skill_list"`
+	SpellList            string     `json:"spell_list" gorm:"Column:spell_list"`
+	DescriptionOverride  string     `json:"description_override" gorm:"Column:description_override"`
+	Goalid               uint       `json:"goalid" gorm:"Column:goalid"`
+	Goalmethod           uint       `json:"goalmethod" gorm:"Column:goalmethod"`
+	Goalcount            null.Int   `json:"goalcount" gorm:"Column:goalcount"`
+	Delivertonpc         uint       `json:"delivertonpc" gorm:"Column:delivertonpc"`
+	Zones                string     `json:"zones" gorm:"Column:zones"`
+	Optional             int8       `json:"optional" gorm:"Column:optional"`
+	NpcType              *NpcType   `json:"npc_type,omitempty" gorm:"foreignKey:delivertonpc;references:id"`
+	Goallists            []Goallist `json:"goallists,omitempty" gorm:"foreignKey:listid;references:goalid"`
 }
 
 func (TaskActivity) TableName() string {
@@ -56,6 +55,7 @@ func (TaskActivity) Relationships() []string {
 		"NpcType.Loottable.LoottableEntries.LootdropEntries.Item.Keyrings",
 		"NpcType.Loottable.LoottableEntries.LootdropEntries.Item.LootdropEntries",
 		"NpcType.Loottable.LoottableEntries.LootdropEntries.Item.Merchantlists",
+		"NpcType.Loottable.LoottableEntries.LootdropEntries.Item.Merchantlists.Items",
 		"NpcType.Loottable.LoottableEntries.LootdropEntries.Item.Merchantlists.NpcType",
 		"NpcType.Loottable.LoottableEntries.LootdropEntries.Item.ObjectContents",
 		"NpcType.Loottable.LoottableEntries.LootdropEntries.Item.Objects",
@@ -76,6 +76,46 @@ func (TaskActivity) Relationships() []string {
 		"NpcType.Loottable.LoottableEntries.Loottable",
 		"NpcType.Loottable.NpcTypes",
 		"NpcType.Merchantlists",
+		"NpcType.Merchantlists.Items",
+		"NpcType.Merchantlists.Items.AlternateCurrencies",
+		"NpcType.Merchantlists.Items.CharacterCorpseItems",
+		"NpcType.Merchantlists.Items.DiscoveredItems",
+		"NpcType.Merchantlists.Items.Doors",
+		"NpcType.Merchantlists.Items.Doors.Item",
+		"NpcType.Merchantlists.Items.Fishings",
+		"NpcType.Merchantlists.Items.Fishings.Item",
+		"NpcType.Merchantlists.Items.Fishings.NpcType",
+		"NpcType.Merchantlists.Items.Fishings.Zone",
+		"NpcType.Merchantlists.Items.Forages",
+		"NpcType.Merchantlists.Items.Forages.Item",
+		"NpcType.Merchantlists.Items.Forages.Zone",
+		"NpcType.Merchantlists.Items.GroundSpawns",
+		"NpcType.Merchantlists.Items.GroundSpawns.Zone",
+		"NpcType.Merchantlists.Items.ItemTicks",
+		"NpcType.Merchantlists.Items.Keyrings",
+		"NpcType.Merchantlists.Items.LootdropEntries",
+		"NpcType.Merchantlists.Items.LootdropEntries.Item",
+		"NpcType.Merchantlists.Items.LootdropEntries.Lootdrop",
+		"NpcType.Merchantlists.Items.LootdropEntries.Lootdrop.LootdropEntries",
+		"NpcType.Merchantlists.Items.LootdropEntries.Lootdrop.LoottableEntries",
+		"NpcType.Merchantlists.Items.LootdropEntries.Lootdrop.LoottableEntries.LootdropEntries",
+		"NpcType.Merchantlists.Items.LootdropEntries.Lootdrop.LoottableEntries.Loottable",
+		"NpcType.Merchantlists.Items.LootdropEntries.Lootdrop.LoottableEntries.Loottable.LoottableEntries",
+		"NpcType.Merchantlists.Items.LootdropEntries.Lootdrop.LoottableEntries.Loottable.NpcTypes",
+		"NpcType.Merchantlists.Items.Merchantlists",
+		"NpcType.Merchantlists.Items.ObjectContents",
+		"NpcType.Merchantlists.Items.Objects",
+		"NpcType.Merchantlists.Items.Objects.Item",
+		"NpcType.Merchantlists.Items.Objects.Zone",
+		"NpcType.Merchantlists.Items.StartingItems",
+		"NpcType.Merchantlists.Items.StartingItems.Item",
+		"NpcType.Merchantlists.Items.StartingItems.Zone",
+		"NpcType.Merchantlists.Items.Tasks",
+		"NpcType.Merchantlists.Items.Tasks.TaskActivities",
+		"NpcType.Merchantlists.Items.Tasks.Tasksets",
+		"NpcType.Merchantlists.Items.TradeskillRecipeEntries",
+		"NpcType.Merchantlists.Items.TradeskillRecipeEntries.TradeskillRecipe",
+		"NpcType.Merchantlists.Items.TributeLevels",
 		"NpcType.Merchantlists.NpcType",
 		"NpcType.NpcEmotes",
 		"NpcType.NpcFactions",
@@ -115,6 +155,7 @@ func (TaskActivity) Relationships() []string {
 		"NpcType.NpcSpell.NpcSpellsEntries.SpellsNew.Items.LootdropEntries.Lootdrop.LoottableEntries.Loottable.LoottableEntries",
 		"NpcType.NpcSpell.NpcSpellsEntries.SpellsNew.Items.LootdropEntries.Lootdrop.LoottableEntries.Loottable.NpcTypes",
 		"NpcType.NpcSpell.NpcSpellsEntries.SpellsNew.Items.Merchantlists",
+		"NpcType.NpcSpell.NpcSpellsEntries.SpellsNew.Items.Merchantlists.Items",
 		"NpcType.NpcSpell.NpcSpellsEntries.SpellsNew.Items.Merchantlists.NpcType",
 		"NpcType.NpcSpell.NpcSpellsEntries.SpellsNew.Items.ObjectContents",
 		"NpcType.NpcSpell.NpcSpellsEntries.SpellsNew.Items.Objects",

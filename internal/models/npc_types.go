@@ -12,15 +12,16 @@ type NpcType struct {
 	Race                   uint16             `json:"race" gorm:"Column:race"`
 	Class                  uint8              `json:"class" gorm:"Column:class"`
 	Bodytype               int                `json:"bodytype" gorm:"Column:bodytype"`
-	Hp                     int                `json:"hp" gorm:"Column:hp"`
-	Mana                   int                `json:"mana" gorm:"Column:mana"`
+	Hp                     int64              `json:"hp" gorm:"Column:hp"`
+	Mana                   int64              `json:"mana" gorm:"Column:mana"`
 	Gender                 uint8              `json:"gender" gorm:"Column:gender"`
 	Texture                uint8              `json:"texture" gorm:"Column:texture"`
 	Helmtexture            uint8              `json:"helmtexture" gorm:"Column:helmtexture"`
 	Herosforgemodel        int                `json:"herosforgemodel" gorm:"Column:herosforgemodel"`
 	Size                   float32            `json:"size" gorm:"Column:size"`
-	HpRegenRate            uint               `json:"hp_regen_rate" gorm:"Column:hp_regen_rate"`
-	ManaRegenRate          uint               `json:"mana_regen_rate" gorm:"Column:mana_regen_rate"`
+	HpRegenRate            int64              `json:"hp_regen_rate" gorm:"Column:hp_regen_rate"`
+	HpRegenPerSecond       int64              `json:"hp_regen_per_second" gorm:"Column:hp_regen_per_second"`
+	ManaRegenRate          int64              `json:"mana_regen_rate" gorm:"Column:mana_regen_rate"`
 	LoottableId            uint               `json:"loottable_id" gorm:"Column:loottable_id"`
 	MerchantId             uint               `json:"merchant_id" gorm:"Column:merchant_id"`
 	AltCurrencyId          uint               `json:"alt_currency_id" gorm:"Column:alt_currency_id"`
@@ -167,6 +168,7 @@ func (NpcType) Relationships() []string {
 		"Loottable.LoottableEntries.LootdropEntries.Item.Keyrings",
 		"Loottable.LoottableEntries.LootdropEntries.Item.LootdropEntries",
 		"Loottable.LoottableEntries.LootdropEntries.Item.Merchantlists",
+		"Loottable.LoottableEntries.LootdropEntries.Item.Merchantlists.Items",
 		"Loottable.LoottableEntries.LootdropEntries.Item.Merchantlists.NpcType",
 		"Loottable.LoottableEntries.LootdropEntries.Item.ObjectContents",
 		"Loottable.LoottableEntries.LootdropEntries.Item.Objects",
@@ -189,6 +191,48 @@ func (NpcType) Relationships() []string {
 		"Loottable.LoottableEntries.Loottable",
 		"Loottable.NpcTypes",
 		"Merchantlists",
+		"Merchantlists.Items",
+		"Merchantlists.Items.AlternateCurrencies",
+		"Merchantlists.Items.CharacterCorpseItems",
+		"Merchantlists.Items.DiscoveredItems",
+		"Merchantlists.Items.Doors",
+		"Merchantlists.Items.Doors.Item",
+		"Merchantlists.Items.Fishings",
+		"Merchantlists.Items.Fishings.Item",
+		"Merchantlists.Items.Fishings.NpcType",
+		"Merchantlists.Items.Fishings.Zone",
+		"Merchantlists.Items.Forages",
+		"Merchantlists.Items.Forages.Item",
+		"Merchantlists.Items.Forages.Zone",
+		"Merchantlists.Items.GroundSpawns",
+		"Merchantlists.Items.GroundSpawns.Zone",
+		"Merchantlists.Items.ItemTicks",
+		"Merchantlists.Items.Keyrings",
+		"Merchantlists.Items.LootdropEntries",
+		"Merchantlists.Items.LootdropEntries.Item",
+		"Merchantlists.Items.LootdropEntries.Lootdrop",
+		"Merchantlists.Items.LootdropEntries.Lootdrop.LootdropEntries",
+		"Merchantlists.Items.LootdropEntries.Lootdrop.LoottableEntries",
+		"Merchantlists.Items.LootdropEntries.Lootdrop.LoottableEntries.LootdropEntries",
+		"Merchantlists.Items.LootdropEntries.Lootdrop.LoottableEntries.Loottable",
+		"Merchantlists.Items.LootdropEntries.Lootdrop.LoottableEntries.Loottable.LoottableEntries",
+		"Merchantlists.Items.LootdropEntries.Lootdrop.LoottableEntries.Loottable.NpcTypes",
+		"Merchantlists.Items.Merchantlists",
+		"Merchantlists.Items.ObjectContents",
+		"Merchantlists.Items.Objects",
+		"Merchantlists.Items.Objects.Item",
+		"Merchantlists.Items.Objects.Zone",
+		"Merchantlists.Items.StartingItems",
+		"Merchantlists.Items.StartingItems.Item",
+		"Merchantlists.Items.StartingItems.Zone",
+		"Merchantlists.Items.Tasks",
+		"Merchantlists.Items.Tasks.TaskActivities",
+		"Merchantlists.Items.Tasks.TaskActivities.Goallists",
+		"Merchantlists.Items.Tasks.TaskActivities.NpcType",
+		"Merchantlists.Items.Tasks.Tasksets",
+		"Merchantlists.Items.TradeskillRecipeEntries",
+		"Merchantlists.Items.TradeskillRecipeEntries.TradeskillRecipe",
+		"Merchantlists.Items.TributeLevels",
 		"Merchantlists.NpcType",
 		"NpcEmotes",
 		"NpcFactions",
@@ -228,6 +272,7 @@ func (NpcType) Relationships() []string {
 		"NpcSpell.NpcSpellsEntries.SpellsNew.Items.LootdropEntries.Lootdrop.LoottableEntries.Loottable.LoottableEntries",
 		"NpcSpell.NpcSpellsEntries.SpellsNew.Items.LootdropEntries.Lootdrop.LoottableEntries.Loottable.NpcTypes",
 		"NpcSpell.NpcSpellsEntries.SpellsNew.Items.Merchantlists",
+		"NpcSpell.NpcSpellsEntries.SpellsNew.Items.Merchantlists.Items",
 		"NpcSpell.NpcSpellsEntries.SpellsNew.Items.Merchantlists.NpcType",
 		"NpcSpell.NpcSpellsEntries.SpellsNew.Items.ObjectContents",
 		"NpcSpell.NpcSpellsEntries.SpellsNew.Items.Objects",

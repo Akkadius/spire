@@ -2,7 +2,6 @@ package models
 
 import (
 	"github.com/volatiletech/null/v8"
-	"time"
 )
 
 type Account struct {
@@ -20,11 +19,14 @@ type Account struct {
 	MiniloginIp    string          `json:"minilogin_ip" gorm:"Column:minilogin_ip"`
 	Hideme         int8            `json:"hideme" gorm:"Column:hideme"`
 	Rulesflag      uint8           `json:"rulesflag" gorm:"Column:rulesflag"`
-	Suspendeduntil time.Time       `json:"suspendeduntil" gorm:"Column:suspendeduntil"`
+	Suspendeduntil null.Time       `json:"suspendeduntil" gorm:"Column:suspendeduntil"`
 	TimeCreation   uint            `json:"time_creation" gorm:"Column:time_creation"`
 	Expansion      int8            `json:"expansion" gorm:"Column:expansion"`
 	BanReason      null.String     `json:"ban_reason" gorm:"Column:ban_reason"`
 	SuspendReason  null.String     `json:"suspend_reason" gorm:"Column:suspend_reason"`
+	CrcEqgame      null.String     `json:"crc_eqgame" gorm:"Column:crc_eqgame"`
+	CrcSkillcaps   null.String     `json:"crc_skillcaps" gorm:"Column:crc_skillcaps"`
+	CrcBasedata    null.String     `json:"crc_basedata" gorm:"Column:crc_basedata"`
 	AccountFlags   []AccountFlag   `json:"account_flags,omitempty" gorm:"foreignKey:p_accid;references:id"`
 	AccountRewards []AccountReward `json:"account_rewards,omitempty" gorm:"foreignKey:account_id;references:id"`
 	Sharedbanks    []Sharedbank    `json:"sharedbanks,omitempty" gorm:"foreignKey:acctid;references:id"`
