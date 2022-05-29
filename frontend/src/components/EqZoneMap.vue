@@ -39,7 +39,7 @@
           <!-- grid points -->
           <l-marker
             v-for="(m, index) in pathingGridMarkers"
-            :key="index"
+            :key="index + '-' + m.point.lat + '-' + m.point.lng"
             :lat-lng="m.point"
             v-if="markers && markers.length > 0"
           >

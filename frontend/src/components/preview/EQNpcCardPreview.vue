@@ -413,7 +413,7 @@ export default {
           for (let e of l.lootdrop_entries) {
 
             // make sure we don't add the same item twice for now
-            if (lootItems.filter(f => f.item.id === e.item.id).length === 0) {
+            if (e.item && lootItems.filter(f => f.item.id === e.item.id).length === 0) {
               lootItems.push(
                 {
                   item: e.item,

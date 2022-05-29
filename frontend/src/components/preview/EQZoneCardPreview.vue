@@ -2,15 +2,217 @@
   <eq-window
     id="zone-preview"
     v-if="zone"
+    class="p-0"
   >
-    <h6 class="eq-header">{{ getZoneLongName() }}</h6>
 
-    <eq-tabs>
-      <eq-tab name="Tab A"></eq-tab>
-      <eq-tab name="Tab B"></eq-tab>
-      <eq-tab name="Tab C"></eq-tab>
-      <eq-tab name="Tab D"></eq-tab>
-    </eq-tabs>
+    <div style="height: 96vh; overflow-y: scroll" class="p-3">
+      <h6 class="eq-header">{{ getZoneLongName() }}</h6>
+
+      <eq-tabs>
+        <eq-tab name="NPCs"></eq-tab>
+        <eq-tab name="Items"></eq-tab>
+        <eq-tab name="Tasks"></eq-tab>
+        <eq-tab name="Sold"></eq-tab>
+        <eq-tab name="Spells"></eq-tab>
+        <eq-tab name="Zone Connections"></eq-tab>
+        <eq-tab name="Zone">
+          <div class="row mr-4">
+            <div class="col-6">
+              <div
+                v-for="f in [
+              { field: 'id', description: 'DB ID' },
+              { field: 'zoneidnumber', description: 'Game ID' },
+              { field: 'short_name', description: 'Short Name', break: true },
+              { field: 'long_name', description: 'Long Name' },
+              { field: 'version', description: 'Version' },
+
+
+              { field: 'ztype', description: 'Zone Type', break: true },
+
+              // fog
+              // { field: 'fog_minclip', description: 'Fog Min Clip' },
+              // { field: 'fog_maxclip', description: 'Fog Max Clip' },
+              // { field: 'fog_blue', description: 'Fog Blue' },
+              // { field: 'fog_red', description: 'Fog Red' },
+              // { field: 'fog_green', description: 'Fog Green' },
+              // { field: 'fog_red_1', description: 'fog_red_1' },
+              // { field: 'fog_green_1', description: 'fog_green_1' },
+              // { field: 'fog_blue_1', description: 'fog_blue_1' },
+              // { field: 'fog_minclip_1', description: 'fog_minclip_1' },
+              // { field: 'fog_maxclip_1', description: 'fog_maxclip_1' },
+              // { field: 'fog_red_2', description: 'fog_red_2' },
+              // { field: 'fog_green_2', description: 'fog_green_2' },
+              // { field: 'fog_blue_2', description: 'fog_blue_2' },
+              // { field: 'fog_minclip_2', description: 'fog_minclip_2' },
+              // { field: 'fog_maxclip_2', description: 'fog_maxclip_2' },
+              // { field: 'fog_red_3', description: 'fog_red_3' },
+              // { field: 'fog_green_3', description: 'fog_green_3' },
+              // { field: 'fog_blue_3', description: 'fog_blue_3' },
+              // { field: 'fog_minclip_3', description: 'fog_minclip_3' },
+              // { field: 'fog_maxclip_3', description: 'fog_maxclip_3' },
+              // { field: 'fog_red_4', description: 'fog_red_4' },
+              // { field: 'fog_green_4', description: 'fog_green_4' },
+              // { field: 'fog_blue_4', description: 'fog_blue_4' },
+              // { field: 'fog_minclip_4', description: 'fog_minclip_4' },
+              // { field: 'fog_maxclip_4', description: 'fog_maxclip_4' },
+              // { field: 'fog_density', description: 'fog_density' },
+
+              // sky
+              { field: 'sky', description: 'Sky Type' },
+              { field: 'skylock', description: 'Sky Lock' },
+
+              // weather
+              // { field: 'rain_chance_1', description: 'rain_chance_1' },
+              // { field: 'rain_chance_2', description: 'rain_chance_2' },
+              // { field: 'rain_chance_3', description: 'rain_chance_3' },
+              // { field: 'rain_chance_4', description: 'rain_chance_4' },
+              // { field: 'rain_duration_1', description: 'rain_duration_1' },
+              // { field: 'rain_duration_2', description: 'rain_duration_2' },
+              // { field: 'rain_duration_3', description: 'rain_duration_3' },
+              // { field: 'rain_duration_4', description: 'rain_duration_4' },
+              // { field: 'snow_chance_1', description: 'snow_chance_1' },
+              // { field: 'snow_chance_2', description: 'snow_chance_2' },
+              // { field: 'snow_chance_3', description: 'snow_chance_3' },
+              // { field: 'snow_chance_4', description: 'snow_chance_4' },
+              // { field: 'snow_duration_1', description: 'snow_duration_1' },
+              // { field: 'snow_duration_2', description: 'snow_duration_2' },
+              // { field: 'snow_duration_3', description: 'snow_duration_3' },
+              // { field: 'snow_duration_4', description: 'snow_duration_4' },
+
+              // { field: 'file_name', description: 'File Name' },
+              { field: 'map_file_name', description: 'Map File', break: true },
+              { field: 'graveyard_id', description: 'Graveyard ID' },
+              { field: 'min_level', description: 'Min. Lvl', break: true },
+              { field: 'min_status', description: 'Min. Status' },
+
+              { field: 'timezone', description: 'Timezone', break: true },
+              { field: 'time_type', description: 'Time Type' },
+
+              { field: 'note', description: 'Note' },
+
+              { field: 'walkspeed', description: 'Walkspeed' },
+              { field: 'flag_needed', description: 'Flag Needed' },
+
+              { field: 'insttype', description: 'Instance Type' },
+              { field: 'shutdowndelay', description: 'Shutdown Delay' },
+              { field: 'expansion', description: 'Expansion' },
+
+
+              // content filtering
+              { field: 'min_expansion', description: 'Min Expansion', break: true },
+              { field: 'max_expansion', description: 'Max Expansion' },
+              { field: 'content_flags', description: 'Content Flags Enabled' },
+              { field: 'content_flags_disabled', description: 'Content Flags Disabled' },
+          ]"
+                v-if="typeof zone[f.field] !== 'undefined'"
+                :key="f.field"
+                :class="'row ' + (f.break ? 'mt-3' : '')"
+              >
+
+                <div class="col-6 text-right">
+                  <span class="font-weight-bold">{{ f.description }}</span>
+                </div>
+                <div class="col-6 pl-0">
+                  {{ zone[f.field] }}
+
+                </div>
+              </div>
+
+            </div>
+
+            <div class="col-6">
+
+              <!-- Zone Settings (Bool) -->
+              <div
+                class="col-12"
+                v-for="f in [
+              { field: 'canbind', description: 'Can Bind' },
+              { field: 'cancombat', description: 'Can Combat' },
+              { field: 'canlevitate', description: 'Can Levitate' },
+              { field: 'castoutdoor', description: 'Can Cast Outdoor' },
+              { field: 'hotzone', description: 'Is Hotzone' },
+              { field: 'peqzone', description: 'Is PEQ Zone Enabled' },
+              { field: 'suspendbuffs', description: 'Suspend Buffs' },
+          ]"
+                :key="f.field"
+                v-if="typeof zone[f.field] !== 'undefined'"
+              >
+                <div class="row">
+                  <div class="col-1 pl-0">
+                    <eq-checkbox
+                      :disabled="true"
+                      :value="zone[f.field]"
+                    />
+                  </div>
+                  <div class="col-11">
+                <span
+                  class="font-weight-bold"
+                  style="position: relative; bottom: 2px"
+                >{{ f.description }}</span>
+                  </div>
+
+                </div>
+              </div>
+
+              <!-- Zone Settings -->
+              <div class="mt-3">
+                <div
+                  class="col-12"
+                  v-for="f in [
+                // zone level settings
+                { field: 'fast_regen_hp', description: 'Fast Regen HP' },
+                { field: 'fast_regen_mana', description: 'Fast Regen Mana' },
+                { field: 'fast_regen_endurance', description: 'Fast Regen Endurance' },
+
+                { field: 'npc_max_aggro_dist', description: 'NPC Max Aggro Dist', break: true },
+                { field: 'max_movement_update_range', description: 'Max Move Update Range' },
+                { field: 'underworld_teleport_index', description: 'Underworld Teleport' },
+                { field: 'lava_damage', description: 'Lava Damage', break: true },
+                { field: 'min_lava_damage', description: 'Min. Lava Damage' },
+                { field: 'gravity', description: 'Gravity', break: true },
+                { field: 'type', description: 'Zone Type', break: true },
+                { field: 'zone_exp_multiplier', description: 'Zone EXP Multiplier' },
+
+                { field: 'maxclients', description: 'Max Clients', break: true },
+                { field: 'ruleset', description: 'Ruleset' },
+
+                // clipping
+                { field: 'underworld', description: 'Underworld', break: true },
+                { field: 'minclip', description: 'Min Clip' },
+                { field: 'maxclip', description: 'Max Clip' },
+
+                // safe
+                { field: 'safe_x', description: 'Safe X', break: true },
+                { field: 'safe_y', description: 'Safe Y' },
+                { field: 'safe_z', description: 'Safe Z' },
+                { field: 'safe_heading', description: 'Safe Heading' },
+            ]"
+                  :key="f.field"
+                  v-if="typeof zone[f.field] !== 'undefined'"
+                >
+                  <div :class="'row ' + (f.break ? 'mt-3' : '')">
+                    <div class="col-1 pl-0">
+                      {{ zone[f.field] }}
+                    </div>
+
+                    <div class="col-11">
+                <span
+                  class="font-weight-bold"
+                >{{ f.description }}</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+
+            </div>
+          </div>
+        </eq-tab>
+      </eq-tabs>
+
+
+    </div>
+
   </eq-window>
 </template>
 
@@ -20,16 +222,18 @@ import EqWindow         from "../eq-ui/EQWindow";
 import {SpireApiClient} from "../../app/api/spire-api-client";
 import EqTabs           from "../eq-ui/EQTabs";
 import EqTab            from "../eq-ui/EQTab";
+import EqCheckbox       from "../eq-ui/EQCheckbox";
+
 export default {
   name: "EqZoneCardPreview",
-  components: { EqTab, EqTabs, EqWindow },
+  components: { EqCheckbox, EqTab, EqTabs, EqWindow },
   props: {
     zone: Object,
     required: true,
   },
 
   created() {
-    this.backgroundImages = []
+    this.backgroundImages  = []
     this.currentImageIndex = 0
 
     // cycle background images
@@ -63,7 +267,7 @@ export default {
     },
 
     shuffle(array) {
-      let currentIndex = array.length,  randomIndex;
+      let currentIndex = array.length, randomIndex;
 
       // While there remain elements to shuffle.
       while (currentIndex !== 0) {
@@ -107,9 +311,9 @@ export default {
         )
 
         if (image.length > 0) {
-          let img    = new Image();
-          img.src    = image;
-          img.onload = () => {
+          let img     = new Image();
+          img.src     = image;
+          img.onload  = () => {
             // document.body.style.setProperty("--image", "url(" + image + ")");
             document.body.style.setProperty("--zone-background", "url(" + image + ")");
             document.body.style.setProperty("--zone-background-size", "cover");
@@ -152,8 +356,11 @@ export default {
 
   background-size: var(--zone-background-size) !important;
   background-repeat: no-repeat !important;
-  position: absolute;
+  background-attachment: fixed !important;
+  background-position: center !important;
+
   z-index: -99999;
+
   top: 0;
   right: 0;
   bottom: 0;

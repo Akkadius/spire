@@ -13,7 +13,7 @@
       <div class="col-5">
 
         <eq-zone-card-preview
-          style="height: 96vh;"
+          style="height: 96vh"
           v-if="selectorActive['zone-preview'] && zoneData"
           :zone="zoneData"
         />
@@ -90,6 +90,7 @@ export default {
 
   methods: {
     previewZone: debounce(function() {
+      console.log("preview zone trigger")
       this.setSelectorActive('zone-preview')
     }, 500),
 
