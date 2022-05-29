@@ -46,6 +46,7 @@ func (f *AssetsController) zoneImages(c echo.Context) error {
 
 	// bit of a hack, but helps match some zone names
 	zone = strings.ReplaceAll(zone, "The ", "")
+	zone = strings.ReplaceAll(zone, "City of ", "")
 
 	fmt.Println(zone)
 

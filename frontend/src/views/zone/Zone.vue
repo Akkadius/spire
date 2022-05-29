@@ -1,6 +1,6 @@
 <template>
   <content-area>
-    <div class="row">
+    <div class="row" @mouseover="previewZone">
       <div class="col-7">
         <eq-zone-map
           v-if="zone && version"
@@ -13,7 +13,8 @@
       <div class="col-5">
 
         <eq-zone-card-preview
-          v-if="Object.keys(selectorActive).length === 0 && zoneData"
+          style="height: 96vh;"
+          v-if="selectorActive['zone-preview'] && zoneData"
           :zone="zoneData"
         />
 
@@ -55,6 +56,7 @@ import EqNpcCardPreview  from "../../components/preview/EQNpcCardPreview";
 import EqSpellPreview    from "../../components/preview/EQSpellCardPreview";
 import {Zones}           from "../../app/zones";
 import EqZoneCardPreview from "../../components/preview/EQZoneCardPreview";
+import {debounce}        from "../../app/utility/debounce";
 
 export default {
   name: "Zone",
@@ -87,10 +89,15 @@ export default {
   },
 
   methods: {
+    previewZone: debounce(function() {
+      this.setSelectorActive('zone-preview')
+    }, 500),
+
     async init() {
       this.npc   = {}
       this.spell = {}
       this.resetSelectors()
+
 
       Navbar.collapse()
 
@@ -100,6 +107,8 @@ export default {
 
       // get zone data
       this.zoneData = (await Zones.getZoneByShortName(this.zone))
+
+      this.setSelectorActive('zone-preview')
     },
 
     resetSelectors() {
@@ -110,11 +119,6 @@ export default {
 
     setSelectorActive(selector) {
       this.resetSelectors()
-
-
-      // this.resetPreviewComponents()
-      // this.previewTaskActive        = false;
-      // this.lastResetTime            = Date.now()
       this.selectorActive[selector] = true
       this.$forceUpdate()
 
