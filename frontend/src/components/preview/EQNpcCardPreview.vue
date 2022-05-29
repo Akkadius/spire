@@ -322,7 +322,7 @@ export default {
   components: { SpellPopover, EqCashDisplay, ItemPopover, EqDebug },
   data() {
     return {
-      maxDataEntries: 20, // amount of results before collapsing
+      maxDataEntries: 15, // amount of results before collapsing
 
       // loot
       showLoot: false, // when too many results shown, toggle

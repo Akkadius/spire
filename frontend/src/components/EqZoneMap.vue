@@ -25,6 +25,8 @@
           :bounds="bounds"
           :min-zoom="-5"
           :zoom="zoom"
+          :zoom-animation="true"
+          :zoom-animation-threshold="10"
           @update:zoom="zoomUpdate"
         >
 
@@ -104,7 +106,7 @@
             v-for="(marker, index) in npcMarkers"
             :key="index + '-' + marker.npc.id"
             :lat-lng="marker.point"
-            :opacity="getNpcOpacity(index + '-' + marker.npc.id)"
+            :opacity="getNpcOpacity(index + '-' + marker.npc.id, marker.npc.id)"
             @mouseover="npcMarkerHover(marker, index + '-' + marker.npc.id)"
             v-if="npcMarkers && npcMarkers.length > 0"
           >
@@ -204,14 +206,15 @@ import * as L                                                          from "lea
 import axios                                                           from "axios";
 import {GridEntryApi, Spawn2Api, SpellsNewApi, ZonePointApi}           from "../app/api";
 import {SpireApiClient}                                                from "../app/api/spire-api-client";
-import {SpireQueryBuilder} from "../app/api/spire-query-builder";
-import EqNpcCardPreview    from "./preview/EQNpcCardPreview";
-import EqWindow            from "./eq-ui/EQWindow";
+import {SpireQueryBuilder}                                             from "../app/api/spire-query-builder";
+import EqNpcCardPreview                                                from "./preview/EQNpcCardPreview";
+import EqWindow                                                        from "./eq-ui/EQWindow";
 import LoaderFakeProgress                                              from "./LoaderFakeProgress";
 import EqProgressBar                                                   from "./eq-ui/EQProgressBar";
 import {Npcs}                                                          from "../app/npcs";
 import {Zones}                                                         from "../app/zones";
 import {DoorApi}                                                       from "../app/api/api/door-api";
+import {EventBus}                                                      from "../app/event-bus/event-bus";
 
 export default {
   name: "EqZoneMap",
@@ -250,7 +253,43 @@ export default {
 
   methods: {
 
-    getNpcOpacity(elementKey) {
+    handleNpcZoomEvent(e) {
+      console.log("[EqZoneMap] Handling Zoom event")
+      console.log(e)
+
+      this.zoomedNpcId = e.id
+
+      for (let n of this.npcMarkers) {
+        if (n.npc.id === e.id) {
+          console.log("found NPC marker at ", n)
+
+          this.zoom = -5
+
+          setTimeout(() => { this.center = n.point }, 600)
+
+
+          // this.$forceUpdate()
+
+          // if (this.zoomLevel !== 1) {
+
+            setTimeout(() => { this.zoom = 1 }, 1000)
+          // }
+
+          break;
+        }
+      }
+
+    },
+
+    getNpcOpacity(elementKey, npcId) {
+      if (this.zoomedNpcId === npcId) {
+        return 1;
+      }
+
+      if (this.zoomedNpcId > 0 && this.zoomedNpcId !== npcId) {
+        return .3;
+      }
+
       if (this.hoveredNpc === "") {
         return 1;
       }
@@ -285,6 +324,7 @@ export default {
 
       // reset
       this.hoveredNpc = ""
+      this.zoomedNpcId = 0
       if (this.pathingGridLines.length > 0) {
         this.pathingGridLines   = []
         this.pathingGridMarkers = []
@@ -579,7 +619,8 @@ export default {
               // console.log(z)
 
               if (z !== "") {
-                doorZonePoints.push({
+                doorZonePoints.push(
+                  {
                     point: this.createPoint(-d.pos_x, -d.pos_y),
                     label: "(Door Click) Zone Point (" + z + ")",
                     destName: d.dest_zone,
@@ -661,35 +702,35 @@ export default {
           // this.$forceUpdate()
           // }, 1)
 
-          for (let spawn of result.data) {
+          for (let spawn2 of result.data) {
+            if (spawn2.spawnentries) {
+              for (let spawnentry of spawn2.spawnentries) {
+                if (spawnentry.npc_type) {
 
-            // if (spawn.pathgrid > 0) {
-            //   console.log(spawn)
-            // }
+                  // if (spawn.pathgrid > 0) {
+                  //   console.log(spawn)
+                  // }
 
-            // make sure we have a npc associated to spawn
-            let npcName = ""
-            if (
-              spawn.spawnentries
-              && spawn.spawnentries[0]
-              && spawn.spawnentries[0].npc_type
-            ) {
-              const n = spawn.spawnentries[0].npc_type
-              npcName = n.name + (n.lastname ? ` (${n.lastname})` : '')
+                  // make sure we have a npc associated to spawn
+                  let npcName = ""
 
-              // console.log(this.raceIconSizes[this.getNpcIcon(n)])
+                  const n = spawnentry.npc_type
+                  npcName = n.name + (n.lastname ? ` (${n.lastname})` : '')
 
-              npcMarkers.push(
-                {
-                  point: this.createPoint(-spawn.x, -spawn.y),
-                  label: Npcs.getCleanName(npcName),
-                  npc: n,
-                  grid: spawn.pathgrid,
-                  iconClass: 'fade-in ' + this.getNpcIcon(n),
-                  iconSize: this.raceIconSizes[this.getNpcIcon(n)] ? this.raceIconSizes[this.getNpcIcon(n)] : [30, 100]
+                  // console.log(this.raceIconSizes[this.getNpcIcon(n)])
+
+                  npcMarkers.push(
+                    {
+                      point: this.createPoint(-spawn2.x, -spawn2.y),
+                      label: Npcs.getCleanName(npcName),
+                      npc: n,
+                      grid: spawn2.pathgrid,
+                      iconClass: 'fade-in ' + this.getNpcIcon(n),
+                      iconSize: this.raceIconSizes[this.getNpcIcon(n)] ? this.raceIconSizes[this.getNpcIcon(n)] : [30, 100]
+                    }
+                  )
                 }
-              )
-
+              }
             }
           }
 
@@ -767,6 +808,9 @@ export default {
   async mounted() {
     this.loadMap()
   },
+  beforeDestroy() {
+    EventBus.$off("NPC_ZOOM", this.handleNpcZoomEvent);
+  },
   created() {
     this.zonelineMarkers      = null
     this.doorZonePoints       = null
@@ -778,6 +822,8 @@ export default {
     this.pathingGridLines     = null
     this.pathingGridMarkers   = []
     this.lines                = []
+
+    EventBus.$on("NPC_ZOOM", this.handleNpcZoomEvent);
   },
   data() {
     return {
@@ -785,6 +831,8 @@ export default {
       center: null,
 
       hoveredNpc: "",
+
+      zoomedNpcId: 0,
 
       zoomLevel: 0,
 

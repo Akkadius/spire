@@ -388,3 +388,7 @@ th[role=columnheader]:hover:not(.no-sort):after {
     /*    filter: invert(100%);*/
     /*}*/
 }
+
+.leaflet-zoom-anim .leaflet-zoom-animated {
+    transition: .5s !important;
+}

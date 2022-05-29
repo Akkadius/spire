@@ -1,6 +1,6 @@
 <template>
   <content-area>
-    <div class="row" @mouseover="previewZone">
+    <div class="row">
       <div class="col-7">
         <eq-zone-map
           v-if="zone && version"
@@ -12,17 +12,30 @@
       </div>
       <div class="col-5">
 
+        <!-- Zone Card -->
         <eq-zone-card-preview
           style="height: 96vh"
-          v-if="selectorActive['zone-preview'] && zoneData"
+          v-show="selectorActive['zone-preview'] && zoneData"
           :zone="zoneData"
         />
+
+        <eq-window
+          v-if="!isZoneCardActive"
+          class="text-center"
+        >
+          <b-button
+            class="btn-dark btn-sm btn-outline-warning"
+            @click="setSelectorActive('zone-preview', true)"
+          >
+            <i class="fa fa-chevron-up"></i> Return to Zone
+          </b-button>
+        </eq-window>
 
         <!-- NPC -->
         <eq-window
           class="fade-in"
           id="preview-pane"
-          style="max-height: 95vh; overflow-y: scroll; overflow-x: hidden"
+          :style="'max-height: ' + (isZoneCardActive ? '95' : '87') + 'vh; overflow-y: scroll; overflow-x: hidden'"
           v-if="selectorActive['npc-hover'] && npc"
         >
           <eq-npc-card-preview
@@ -57,6 +70,9 @@ import EqSpellPreview    from "../../components/preview/EQSpellCardPreview";
 import {Zones}           from "../../app/zones";
 import EqZoneCardPreview from "../../components/preview/EQZoneCardPreview";
 import {debounce}        from "../../app/utility/debounce";
+import {EventBus}        from "../../app/event-bus/event-bus";
+
+const MILLISECONDS_BEFORE_WINDOW_RESET = 5000;
 
 export default {
   name: "Zone",
@@ -71,11 +87,27 @@ export default {
       selectorActive: {},
     }
   },
+  computed: {
+    isZoneCardActive() {
+      return Object.keys(this.selectorActive).length > 0 && this.selectorActive['zone-preview']
+    }
+  },
   beforeDestroy() {
     Navbar.expand()
+
+    // if (this.zonePreviewInterval) {
+    //   clearInterval(this.zonePreviewInterval)
+    // }
+
+    EventBus.$off("NPC_SHOW_CARD", this.handleNpcShowCardEvent);
   },
   created() {
-    this.npc              = {}
+    this.npc           = {}
+    this.lastResetTime = Date.now()
+
+    // this.zonePreviewInterval = setInterval(this.previewZone, 1000)
+
+    EventBus.$on("NPC_SHOW_CARD", this.handleNpcShowCardEvent);
   },
   watch: {
     '$route'() {
@@ -89,10 +121,16 @@ export default {
   },
 
   methods: {
-    previewZone: debounce(function() {
-      console.log("preview zone trigger")
+
+    // from zone preview card -> zone
+    handleNpcShowCardEvent(e) {
+      this.processNpcMarkerHover(e)
+    },
+
+    previewZone() {
+      console.log("[Zone] previewZone trigger")
       this.setSelectorActive('zone-preview')
-    }, 500),
+    },
 
     async init() {
       this.npc   = {}
@@ -109,7 +147,11 @@ export default {
       // get zone data
       this.zoneData = (await Zones.getZoneByShortName(this.zone))
 
-      this.setSelectorActive('zone-preview')
+      this.setSelectorActive('zone-preview', true)
+    },
+
+    shouldReset() {
+      return (Date.now() - this.lastResetTime) > MILLISECONDS_BEFORE_WINDOW_RESET
     },
 
     resetSelectors() {
@@ -118,17 +160,35 @@ export default {
       }
     },
 
-    setSelectorActive(selector) {
-      this.resetSelectors()
-      this.selectorActive[selector] = true
-      this.$forceUpdate()
+    setSelectorActive(selector, force = false) {
+      if (this.selectorActive[selector] && !force) {
+        // console.log(
+        //   "[Zone] setSelectorActive. Selector [%s] is already active",
+        //   selector
+        // )
+        return
+      }
+
+      if (this.shouldReset() || force) {
+        this.lastResetTime = Date.now()
+        this.resetSelectors()
+        this.selectorActive[selector] = true
+        this.$forceUpdate()
+        return
+      }
+
+      console.log(
+        "[Zone] Tried to set selector [%s] but reset time was not met (%s) ms remaining",
+        selector,
+        MILLISECONDS_BEFORE_WINDOW_RESET - (Date.now() - this.lastResetTime)
+      )
 
       // EditFormFieldUtil.setFieldSubEditorHighlightedById(selector)
     },
 
     processSpellMarkerHover(s) {
       this.spell = {}
-      this.setSelectorActive("spell-hover")
+      this.setSelectorActive("spell-hover", true)
       this.spell = s
 
       // reset preview pane scroll to top
@@ -140,7 +200,7 @@ export default {
 
     processNpcMarkerHover(n) {
       this.npc = {}
-      this.setSelectorActive("npc-hover")
+      this.setSelectorActive("npc-hover", true)
       this.npc = n
 
       // reset preview pane scroll to top

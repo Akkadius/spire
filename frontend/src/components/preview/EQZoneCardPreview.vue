@@ -4,12 +4,72 @@
     v-if="zone"
     class="p-0"
   >
-
-    <div style="height: 96vh; overflow-y: scroll" class="p-3">
+    <div class="p-3">
       <h6 class="eq-header">{{ getZoneLongName() }}</h6>
 
       <eq-tabs>
-        <eq-tab :selected="true" :name="'NPCs' + (npcTypes && npcTypes.length > 0 ? ` (${npcTypes.length})` : '')"></eq-tab>
+        <eq-tab
+          :selected="true"
+          :name="'NPCs' + (npcTypes && npcTypes.length > 0 ? ` (${npcTypes.length})` : '')"
+        >
+
+          <!-- Fake Loader -->
+          <div v-if="npcTypes.length === 0" class="mt-3 text-center">
+            Loading NPCs...
+            <loader-fake-progress class="mt-3"/>
+          </div>
+
+          <!-- NPCs Table -->
+          <div style="height: 85vh; overflow-y: scroll;" v-if="npcTypes.length > 0">
+            <table
+              id="npctable"
+              class="eq-table eq-highlight-rows"
+              style="display: table; font-size: 14px; "
+            >
+              <thead
+                class="eq-table-floating-header"
+              >
+              <tr>
+                <th></th>
+                <th class="text-center">NPC</th>
+              </tr>
+              </thead>
+              <tbody>
+              <tr
+                :id="'npc-' + n.short_name"
+                v-for="(n, index) in npcTypes"
+                :key="n.id"
+              >
+                <td class="text-center" style="width: 90px">
+                  <b-button
+                    class="btn-dark btn-sm btn-outline-warning"
+                    @click="showNpcOnMap(n.npc)"
+                    title="Show on Map"
+                  >
+                    <i class="fa fa-map-marker"></i>
+                  </b-button>
+
+                  <b-button
+                    class="btn-dark btn-sm btn-outline-warning ml-3"
+                    @click="showNpcCard(n.npc)"
+                    title="Show NPC card"
+                  >
+                    <i class="fa fa-eye"></i>
+                  </b-button>
+                </td>
+                <td style="position: relative">
+                  <npc-popover
+                    :npc="n.npc"
+                  />
+                </td>
+
+              </tr>
+              </tbody>
+            </table>
+          </div>
+
+
+        </eq-tab>
         <eq-tab name="Items"></eq-tab>
         <eq-tab name="Tasks"></eq-tab>
         <eq-tab name="Sold"></eq-tab>
@@ -224,10 +284,14 @@ import EqTab               from "../eq-ui/EQTab";
 import EqCheckbox          from "../eq-ui/EQCheckbox";
 import {Spawn2Api}         from "../../app/api";
 import {SpireQueryBuilder} from "../../app/api/spire-query-builder";
+import {Npcs}              from "../../app/npcs";
+import NpcPopover          from "../NpcPopover";
+import {EventBus}          from "../../app/event-bus/event-bus";
+import LoaderFakeProgress  from "../LoaderFakeProgress";
 
 export default {
   name: "EqZoneCardPreview",
-  components: { EqCheckbox, EqTab, EqTabs, EqWindow },
+  components: { LoaderFakeProgress, NpcPopover, EqCheckbox, EqTab, EqTabs, EqWindow },
   props: {
     zone: Object,
     required: true,
@@ -259,6 +323,19 @@ export default {
     },
   },
   methods: {
+    showNpcCard(n) {
+      EventBus.$emit('NPC_SHOW_CARD', n);
+    },
+
+    showNpcOnMap(n) {
+      console.log(n)
+      EventBus.$emit('NPC_ZOOM', n);
+    },
+
+    getCleanName(name) {
+      return Npcs.getCleanName(name)
+    },
+
     init() {
       // get zone wallpaper
       this.loadBackgroundImages().then(() => {
@@ -347,6 +424,10 @@ export default {
       }
     },
 
+    startsWithUppercase(str) {
+      return str.substr(0, 1).match(/[A-Z\u00C0-\u00DC]/);
+    },
+
     async loadNpcTypes() {
       const api   = (new Spawn2Api(SpireApiClient.getOpenApiConfig()))
       let builder = (new SpireQueryBuilder())
@@ -354,28 +435,51 @@ export default {
       builder.where("version", "=", this.zone.version)
       builder.includes([
         "Spawnentries.NpcType",
+        "Spawnentries.NpcType.NpcSpell.NpcSpellsEntries.SpellsNew",
+        "Spawnentries.NpcType.NpcFactions.NpcFactionEntries.FactionList",
+        "Spawnentries.NpcType.NpcFactions",
+        "Spawnentries.NpcType.NpcEmotes",
+        "Spawnentries.NpcType.Merchantlists.Items",
+        "Spawnentries.NpcType.Loottable.LoottableEntries.LootdropEntries.Item"
       ])
 
       let npcTypes = [];
-      const r = await api.listSpawn2s(builder.get())
+      const r      = await api.listSpawn2s(builder.get())
       if (r.status === 200 && r.data) {
         for (let spawn2 of r.data) {
           if (spawn2.spawnentries) {
             for (let spawnentry of spawn2.spawnentries) {
               if (spawnentry.npc_type) {
-                npcTypes.push(
-                  {
-                    npc: spawnentry.npc_type,
-                    spawn: {
-                      x: spawn2.x,
-                      y: spawn2.y,
+
+                // make sure we only add unique NPC IDs since spawns can use multiple
+                // of the same NPC ID
+                if (npcTypes.filter(f => f.npc.id === spawnentry.npc_type.id).length === 0) {
+                  npcTypes.push(
+                    {
+                      npc: spawnentry.npc_type,
+                      spawn: {
+                        x: spawn2.x,
+                        y: spawn2.y,
+                      }
                     }
-                  }
-                )
+                  )
+                }
+
+
               }
             }
           }
         }
+
+        // sort alpha, upper case first
+        npcTypes = npcTypes.sort((a,b) => {
+          if (this.startsWithUppercase(a.npc.name) && !this.startsWithUppercase(b.npc.name)) {
+            return -1;
+          } else if (this.startsWithUppercase(b.npc.name) && !this.startsWithUppercase(a.npc.name)) {
+            return 1;
+          }
+          return a.npc.name.localeCompare(b.npc.name);
+        });
 
         this.npcTypes = npcTypes
 
@@ -409,9 +513,15 @@ export default {
   left: 0;
 
   background: var(--zone-background);
-  opacity: .2;
+  opacity: .1;
 
   --webkit-transition: background-image 1s ease-in-out;
   transition: background-image 1s ease-in-out;
+}
+
+#npctable td {
+  vertical-align: middle;
+  padding: 10px;
+  height: 60px;
 }
 </style>
