@@ -248,7 +248,7 @@ export default {
         builder.where("expansion", "=", expansion)
       }
 
-      builder.orderBy(["expansion", "short_name"])
+      builder.orderBy(["expansion", "long_name"])
         .limit(10000)
 
       const result = await (new ZoneApi(SpireApiClient.getOpenApiConfig())).listZones(builder.get())

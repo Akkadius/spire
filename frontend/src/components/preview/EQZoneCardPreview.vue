@@ -472,7 +472,7 @@ export default {
         }
 
         // sort alpha, upper case first
-        npcTypes = npcTypes.sort((a,b) => {
+        npcTypes = npcTypes.sort((a, b) => {
           if (this.startsWithUppercase(a.npc.name) && !this.startsWithUppercase(b.npc.name)) {
             return -1;
           } else if (this.startsWithUppercase(b.npc.name) && !this.startsWithUppercase(a.npc.name)) {

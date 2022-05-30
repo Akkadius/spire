@@ -263,17 +263,18 @@ export default {
         if (n.npc.id === e.id) {
           console.log("found NPC marker at ", n)
 
-          this.zoom = -5
+          // zoom out first
+          this.zoom = this.starterZoomLevel
 
-          setTimeout(() => { this.center = n.point }, 600)
+          // center on target
+          setTimeout(() => {
+            this.center = n.point
+          }, 600)
 
-
-          // this.$forceUpdate()
-
-          // if (this.zoomLevel !== 1) {
-
-            setTimeout(() => { this.zoom = 1 }, 1000)
-          // }
+          // zoom in
+          setTimeout(() => {
+            this.zoom = 1
+          }, 1000)
 
           break;
         }
@@ -323,7 +324,7 @@ export default {
       // console.log(e)
 
       // reset
-      this.hoveredNpc = ""
+      this.hoveredNpc  = ""
       this.zoomedNpcId = 0
       if (this.pathingGridLines.length > 0) {
         this.pathingGridLines   = []
@@ -395,6 +396,10 @@ export default {
 
     zoomUpdate(e) {
       console.log("zoom level [%s]", e)
+
+      if (this.starterZoomLevel === -100) {
+        this.starterZoomLevel = e
+      }
 
       this.zoomLevel = e
     },
@@ -833,6 +838,7 @@ export default {
       hoveredNpc: "",
 
       zoomedNpcId: 0,
+      starterZoomLevel: -100,
 
       zoomLevel: 0,
 
