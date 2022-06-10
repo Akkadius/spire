@@ -47,51 +47,56 @@
           </div>
         </eq-window>
         <eq-window
-          style="overflow-x: scroll; height: 88vh"
-          id="npcs-table-container"
+          id="npcs-table-window"
           v-if="npcTypes"
+          class="p-0"
         >
-          <table
-            id="npcs-table"
-            class="eq-table eq-highlight-rows"
-            style="font-size: 14px; "
-            v-if="npcTypes && npcTypes.length > 0"
+          <div
+            id="npcs-table-container"
+            style="overflow-x: scroll; height: 85vh"
           >
-            <thead class="eq-table-floating-header" style="top: -20px">
-            <tr>
-              <th
-                v-for="(header, index) in Object.keys(npcTypes[0])"
-                :id="'column-' + header"
-                :style="previewStyles(header) + 'text-align: center; ' + getColumnHeaderWidth(header) + '' + ([0, 1].includes(index) ? ' position: sticky; z-index: 9999; background-color: rgba(25,31,41, 1); ' + getColumnStylingFromIndex(index) : '')"
-              >{{ header }}
-              </th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr
-              v-for="(row, index) in npcTypes" :key="index"
+            <table
+              id="npcs-table"
+              class="eq-table eq-highlight-rows"
+              style="font-size: 14px; "
+              v-if="npcTypes && npcTypes.length > 0"
             >
-              <td
-                :style="' text-align: center; ' + ([0, 1].includes(colIndex) ? ' position: sticky; z-index: 999; background-color: rgba(25,31,41, .6);' + getColumnStylingFromIndex(colIndex): '')"
-                v-for="(key, colIndex) in Object.keys(row)"
-                v-if="doesRowColumnHaveObjects(row, key)"
+              <thead class="eq-table-floating-header">
+              <tr>
+                <th
+                  v-for="(header, index) in Object.keys(npcTypes[0])"
+                  :id="'column-' + header"
+                  :style="previewStyles(header) + 'text-align: center; ' + getColumnHeaderWidth(header) + '' + ([0, 1].includes(index) ? ' position: sticky; z-index: 9999; background-color: rgba(25,31,41, 1); ' + getColumnStylingFromIndex(index) : '')"
+                >{{ header }}
+                </th>
+              </tr>
+              </thead>
+              <tbody>
+              <tr
+                v-for="(row, index) in npcTypes" :key="index"
               >
-                <npc-popover
-                  v-if="key === 'name'"
-                  :show-image="false"
-                  :show-label="false"
-                  :npc="row"
+                <td
+                  :style="' text-align: center; ' + ([0, 1].includes(colIndex) ? ' position: sticky; z-index: 999; background-color: rgba(25,31,41, .6);' + getColumnStylingFromIndex(colIndex): '')"
+                  v-for="(key, colIndex) in Object.keys(row)"
+                  v-if="doesRowColumnHaveObjects(row, key)"
                 >
-                  {{ row[key] }}
-                </npc-popover>
+                  <npc-popover
+                    v-if="key === 'name'"
+                    :show-image="false"
+                    :show-label="false"
+                    :npc="row"
+                  >
+                    {{ row[key] }}
+                  </npc-popover>
 
-                <span v-if="key !== 'name'">{{ row[key] }}</span>
+                  <span v-if="key !== 'name'">{{ row[key] }}</span>
 
-                <span v-if="previewField === key" style="color: yellow" class="ml-1">-> {{previewValue}}</span>
-              </td>
-            </tr>
-            </tbody>
-          </table>
+                  <span v-if="previewField === key" style="color: yellow" class="ml-1">-> {{ previewValue }}</span>
+                </td>
+              </tr>
+              </tbody>
+            </table>
+          </div>
 
         </eq-window>
       </div>
@@ -215,7 +220,7 @@ export default {
         n[e.field]       = e.value
 
         // float
-        if (this.isFloat(e.value)){
+        if (this.isFloat(e.value)) {
           n[e.field] = parseFloat(e.value)
         }
         // integer
@@ -278,7 +283,7 @@ export default {
       this.updateQueryState()
 
       // reset scroll to 0
-      const container = document.getElementById("npcs-table-container");
+      const container      = document.getElementById("npcs-table-container");
       container.scrollLeft = 0
     },
 
@@ -584,7 +589,7 @@ export default {
   --zone-background: none;
 }
 
-#npcs-table-container::before {
+#npcs-table-window::before {
   content: "";
 
   background-size: var(--zone-background-size) !important;
@@ -593,8 +598,6 @@ export default {
   background-position: center !important;
 
   z-index: -99999;
-
-  height: 100vh;
 
   top: 0;
   right: 0;

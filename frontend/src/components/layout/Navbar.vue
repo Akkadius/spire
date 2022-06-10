@@ -147,7 +147,7 @@
           <li class="nav-item">
             <router-link class="nav-link " to="/zones">
               <i class="ra ra-wooden-sign mr-2"></i> Zones
-              <b-badge class="ml-3" variant="primary">BETA</b-badge>
+              <b-badge class="ml-3" variant="primary">ALPHA</b-badge>
               <b-badge class="ml-3" variant="primary">NEW!</b-badge>
             </router-link>
           </li>

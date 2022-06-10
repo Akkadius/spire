@@ -113,6 +113,17 @@ export default {
     },
 
     selectField() {
+      this.setValue = ""
+
+      // reset
+      this.$emit(
+        'set-values-preview',
+        {
+          field: "",
+          value: ""
+        }
+      );
+
       this.$emit('field-selected', this.selectedField);
     },
 
