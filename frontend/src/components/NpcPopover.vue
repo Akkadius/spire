@@ -1,16 +1,19 @@
 <template>
   <div v-if="npc">
     <div :id="npc.id + '-' + popoverId + '-popover'" style="display:inline-block; position: relative">
-      <div style="width: 60px" class="d-inline-block ml-3 text-center">
-      <span
-        style="top: 50%"
-        :class="'race-models-ctn-' + npc.race + '-' + npc.gender + '-' + npc.texture + '-' + npc.helmtexture + '-sm'"
-      ></span>
+      <div style="width: 60px" class="d-inline-block ml-3 text-center" v-if="showImage">
+        <span
+          style="top: 50%;"
+          :class="'race-models-ctn-' + npc.race + '-' + npc.gender + '-' + npc.texture + '-' + npc.helmtexture + '-sm'"
+        ></span>
       </div>
-      <span class="ml-3 d-inline-block" style="top: 30%; position: absolute; min-width: 200px">
+      <span
+        v-if="showLabel"
+        class="ml-3 d-inline-block" style="top: 30%; position: absolute; min-width: 200px"
+      >
         {{ getCleanName(npc.name) }}
       </span>
-
+      <slot></slot>
     </div>
 
     <b-popover
@@ -46,6 +49,16 @@ export default {
       required: false,
       default: "sm"
     },
+    showImage: {
+      type: Boolean,
+      required: false,
+      default: true
+    },
+    showLabel: {
+      type: Boolean,
+      required: false,
+      default: true
+    }
   },
   watch: {
     npc: {
