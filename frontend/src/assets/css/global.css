@@ -285,7 +285,10 @@ th[role=columnheader]:not(.no-sort) {
 
 th[role=columnheader]:not(.no-sort):after {
     content: '';
-    float: right;
+    /*float: right;*/
+    position: absolute;
+    margin-left: 5px;
+
     margin-top: 7px;
     border-width: 0 4px 4px;
     border-style: solid;

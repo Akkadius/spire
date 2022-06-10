@@ -30,8 +30,19 @@
                 class="eq-table-floating-header"
               >
               <tr>
-                <th></th>
-                <th class="text-center">NPC</th>
+                <th class="text-left">
+                  <b-button
+                    style="position: absolute; bottom: 20%;"
+                    class="btn-dark btn-sm btn-outline-warning"
+                    title="NPC Grid Editor"
+                    @click="npcGridEditor()"
+                  >
+                    <i class="fa fa-th"></i>
+                  </b-button>
+                </th>
+                <th class="text-center">
+                  NPC
+                </th>
               </tr>
               </thead>
               <tbody>
@@ -288,6 +299,8 @@ import {Npcs}              from "../../app/npcs";
 import NpcPopover          from "../NpcPopover";
 import {EventBus}          from "../../app/event-bus/event-bus";
 import LoaderFakeProgress  from "../LoaderFakeProgress";
+import util                from "util";
+import {ROUTE}             from "../../routes";
 
 export default {
   name: "EqZoneCardPreview",
@@ -323,6 +336,18 @@ export default {
     },
   },
   methods: {
+    npcGridEditor() {
+      this.$router.push(
+        {
+          path: ROUTE.NPCS_EDIT.replaceAll(":zone", this.zone.short_name),
+          query: {
+            v: this.zone.version
+          }
+        }
+      ).catch(() => {
+      })
+    },
+
     showNpcCard(n) {
       EventBus.$emit('NPC_SHOW_CARD', n);
     },
@@ -464,7 +489,6 @@ export default {
                     }
                   )
                 }
-
 
               }
             }

@@ -138,6 +138,11 @@ export default new Router({
           meta: {title: "Zones"},
         },
         {
+          path: ROUTE.NPCS_EDIT,
+          component: () => import('./views/zone/NPCs.vue'),
+          meta: {title: "NPC Grid Editor"},
+        },
+        {
           path: '/zone/:zone',
           component: () => import('./views/zone/Zone.vue'),
           meta: {title: "Zone"},
