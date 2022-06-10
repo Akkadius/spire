@@ -76,7 +76,7 @@
                 v-for="(row, index) in npcTypes" :key="index"
               >
                 <td
-                  :style="' text-align: center; ' + ([0, 1].includes(colIndex) ? ' position: sticky; z-index: 999; background-color: rgba(25,31,41, .6);' + getColumnStylingFromIndex(colIndex): '')"
+                  :style="' text-align: center; ' + ([0, 1].includes(colIndex) ? ' position: sticky; z-index: 999; background-color: rgba(25,31,41, .95);' + getColumnStylingFromIndex(colIndex): '')"
                   v-for="(key, colIndex) in Object.keys(row)"
                   v-if="doesRowColumnHaveObjects(row, key)"
                 >
@@ -91,7 +91,11 @@
 
                   <span v-if="key !== 'name'">{{ row[key] }}</span>
 
-                  <span v-if="previewField === key" style="color: yellow" class="ml-1">-> {{ previewValue }}</span>
+                  <span
+                    v-if="isPreviewValueChangeable(row[key]) && previewField === key && row[key] !== getTypedField(previewValue)"
+                    style="color: yellow"
+                    class="ml-1"
+                  >-> {{ previewValue }}</span>
                 </td>
               </tr>
               </tbody>
@@ -196,6 +200,31 @@ export default {
   },
 
   methods: {
+    getTypedField(value) {
+      if (this.isFloat(value)) {
+        return parseFloat(value);
+      }
+      else if (this.isNumeric(value)) {
+        return parseInt(value);
+      }
+
+      return value
+    },
+
+    isPreviewValueChangeable(fieldValue) {
+      if (this.isFloat(fieldValue) && this.previewValue !== '') {
+        return true;
+      }
+      else if (this.isNumeric(fieldValue) && this.previewValue !== '') {
+        return true;
+      }
+      else if ((!this.isNumeric(fieldValue) && !this.isFloat(fieldValue)) && this.previewValue === '') {
+        return true;
+      }
+
+      return false
+    },
+
     previewStyles(header) {
       if (this.previewField === header) {
         return 'padding-left: 30px !important; padding-right: 30px !important; '
@@ -240,13 +269,15 @@ export default {
       this.previewField = ""
       this.previewValue = ""
 
+      this.reset()
+      this.updateQueryState()
+    },
+
+    resetPulseHighlights() {
       // strip existing columns with the header
       for (let e of document.getElementsByClassName("pulsate-highlight")) {
         e.classList.remove("pulsate-highlight")
       }
-
-      this.reset()
-      this.updateQueryState()
     },
 
     handleSetValuesPreview(e) {
@@ -261,10 +292,7 @@ export default {
       if (container && target) {
         container.scrollLeft = container.offsetLeft + target.offsetLeft - 400;
 
-        // strip existing columns with the header
-        for (let e of document.getElementsByClassName("pulsate-highlight")) {
-          e.classList.remove("pulsate-highlight")
-        }
+        this.resetPulseHighlights()
 
         // add to the target column
         target.classList.add("pulsate-highlight");
@@ -278,6 +306,12 @@ export default {
     reset() {
       this.npcNameSearch = ""
       this.filters       = []
+
+      // reset
+      this.previewField = ""
+      this.previewValue = ""
+
+      this.resetPulseHighlights()
 
       this.resetPreviewComponents()
       this.updateQueryState()

@@ -38,7 +38,7 @@
         <button
           class='btn btn-outline-warning btn-sm mt-2'
           @click="setValuesTo"
-          v-if="setValue !== ''"
+          v-if="(setValue !== '' && isDataTypeNumber(selectedField)) || (setValue === '' && !isDataTypeNumber(selectedField))"
         >
           <i class="fa fa-edit"></i> Write
         </button>
@@ -123,6 +123,8 @@ export default {
           value: ""
         }
       );
+
+      this.setValuesToPreview()
 
       this.$emit('field-selected', this.selectedField);
     },
