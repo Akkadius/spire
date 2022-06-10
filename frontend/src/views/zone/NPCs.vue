@@ -1,75 +1,106 @@
 <template>
   <content-area>
-    <eq-window
-      v-if="zoneData"
-      :title="`${zoneData.long_name} Short Name (${zoneData.short_name}) Version (${zoneData.version}) NPC(s) (${npcTypes.length})`"
-    >
-      <div class="row">
-        <div class="col-1 text-right">
-          <button
-            class='btn btn-outline-warning btn-sm mt-1'
-            @click="reset"
+
+    <div class="row">
+      <div :class="(isAnySelectorActive() ? 'col-7' : 'col-12')">
+        <eq-window
+          v-if="zoneData"
+          :title="`${zoneData.long_name} Short Name (${zoneData.short_name}) Version (${zoneData.version}) NPC(s) (${npcTypes.length})`"
+        >
+          <div class="row">
+            <div :class="(isAnySelectorActive() ? 'col-2' : 'col-1') + 'text-right'">
+              <button
+                class='btn btn-outline-warning btn-sm mt-1'
+                @click="reset"
+              >
+                <i class="fa fa-refresh"></i> Reset
+              </button>
+              <button
+                class='btn btn-outline-warning btn-sm mt-1 ml-3'
+                @click="bulkEdit()"
+              >
+                <i class="fa fa-edit"></i> Bulk Edit
+              </button>
+            </div>
+
+            <div class="col-3">
+              <b-input
+                placeholder="Search by NPC name"
+                v-on:keyup.enter="updateQueryState"
+                v-model="npcNameSearch"
+              ></b-input>
+            </div>
+
+            <div class="col-6 p-0">
+              <db-column-filter
+                v-if="npcTypeFields && filters"
+                :set-filters="filters"
+                @input="handleDbColumnFilters($event);"
+                :columns="npcTypeFields"
+              />
+            </div>
+
+
+            <!--        <div class="col-2">-->
+            <!--          {{ npcTypes.length }} NPC(s)-->
+            <!--        </div>-->
+          </div>
+        </eq-window>
+        <eq-window
+          style="overflow-x: scroll; height: 88vh"
+          id="npcs-table-container"
+          v-if="npcTypes"
+        >
+          <table
+            id="npcs-table"
+            class="eq-table eq-highlight-rows"
+            style="font-size: 14px; "
+            v-if="npcTypes && npcTypes.length > 0"
           >
-            <i class="fa fa-refresh"></i> Reset
-          </button>
-        </div>
+            <thead class="eq-table-floating-header" style="top: -20px">
+            <tr>
+              <th
+                v-for="(header, index) in Object.keys(npcTypes[0])"
+                :id="'column-' + header"
+                :style="previewStyles(header) + 'text-align: center; ' + getColumnHeaderWidth(header) + '' + ([0, 1].includes(index) ? ' position: sticky; z-index: 9999; background-color: rgba(25,31,41, 1); ' + getColumnStylingFromIndex(index) : '')"
+              >{{ header }}
+              </th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr
+              v-for="(row, index) in npcTypes" :key="index"
+            >
+              <td
+                :style="' text-align: center; ' + ([0, 1].includes(colIndex) ? ' position: sticky; z-index: 999; background-color: rgba(25,31,41, .6);' + getColumnStylingFromIndex(colIndex): '')"
+                v-for="(key, colIndex) in Object.keys(row)"
+                v-if="doesRowColumnHaveObjects(row, key)"
+              >
+                {{ row[key] }}
 
-        <div class="col-3">
-          <b-input
-            placeholder="Search by NPC name"
-            v-on:keyup.enter="updateQueryState"
-            v-model="npcNameSearch"
-          ></b-input>
-        </div>
+                <span v-if="previewField === key" style="color: yellow">{{previewValue}}</span>
+              </td>
+            </tr>
+            </tbody>
+          </table>
 
-        <div class="col-6 p-0">
-          <db-column-filter
-            v-if="npcTypeFields && filters"
-            :set-filters="filters"
-            @input="handleDbColumnFilters($event);"
-            :columns="npcTypeFields"
-          />
-        </div>
-
-
-        <!--        <div class="col-2">-->
-        <!--          {{ npcTypes.length }} NPC(s)-->
-        <!--        </div>-->
+        </eq-window>
       </div>
-    </eq-window>
-    <eq-window
-      style="overflow-x: scroll; height: 88vh"
-      v-if="npcTypes"
-    >
-      <table
-        id="npcs-table"
-        class="eq-table eq-highlight-rows"
-        style="font-size: 14px; "
-        v-if="npcTypes && npcTypes.length > 0"
-      >
-        <thead class="eq-table-floating-header" style="top: -20px">
-        <tr>
-          <th
-            v-for="(header, index) in Object.keys(npcTypes[0])"
-            :style="'text-align: center; ' + getColumnHeaderWidth(header) + '' + ([0, 1].includes(index) ? ' position: sticky; z-index: 9999; background-color: rgba(25,31,41, 1); ' + getColumnStylingFromIndex(index) : '')"
-          >{{ header }}
-          </th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr v-for="(row, index) in npcTypes" :key="index">
-          <td
-            :style="' text-align: center; ' + ([0, 1].includes(colIndex) ? ' position: sticky; z-index: 999; background-color: rgba(25,31,41, .6);' + getColumnStylingFromIndex(colIndex): '')"
-            v-for="(key, colIndex) in Object.keys(row)"
-            v-if="doesRowColumnHaveObjects(row, key)"
-          >
-            {{ row[key] }}
-          </td>
-        </tr>
-        </tbody>
-      </table>
 
-    </eq-window>
+      <div class="col-5" v-if="isAnySelectorActive()">
+        <npcs-bulk-editor
+          @field-selected="scrollToColumn($event)"
+          @set-values-preview="handleSetValuesPreview($event)"
+          @set-values-commit="handleSetValuesCommit($event)"
+          v-if="selectorActive['bulk-editor']"
+        />
+
+        <!--        <eq-window title="Test!" v-if="selectorActive['bulk-editor']">-->
+        <!--          Test!-->
+        <!--        </eq-window>-->
+      </div>
+    </div>
+
   </content-area>
 
 </template>
@@ -86,10 +117,13 @@ import Tablesort               from "@/app/utility/tablesort.js";
 import DbColumnFilter          from "../../components/DbColumnFilter";
 import {DbSchema}              from "../../app/db-schema";
 import {ROUTE}                 from "../../routes";
+import {EditFormFieldUtil}     from "../../app/forms/edit-form-field-util";
+import NpcsBulkEditor          from "./components/NpcsBulkEditor";
+import util                    from "util";
 
 export default {
   name: "NPCs",
-  components: { DbColumnFilter, ContentArea, EqWindow },
+  components: { NpcsBulkEditor, DbColumnFilter, ContentArea, EqWindow },
   data() {
     return {
       // route params
@@ -105,6 +139,13 @@ export default {
 
       // v-models
       npcNameSearch: "",
+
+      // preview / selectors
+      selectorActive: {},
+
+      // preview value
+      previewField: "",
+      previewValue: "",
     }
   },
 
@@ -129,11 +170,105 @@ export default {
   },
 
   methods: {
+    previewStyles(header) {
+      if (this.previewField === header) {
+        return 'padding-left: 30px !important; padding-right: 30px !important; '
+      }
+
+      return ''
+    },
+
+    isFloat(value) {
+      return typeof value === 'number' &&
+        !Number.isNaN(value) &&
+        !Number.isInteger(value);
+    },
+
+    isNumeric(value) {
+      return /^-?\d+$/.test(value);
+    },
+
+    async handleSetValuesCommit(e) {
+
+      console.log("event", e)
+
+
+      for (let n of this.npcTypes) {
+        console.log(n)
+
+        const npcTypeApi = (new NpcTypeApi(SpireApiClient.getOpenApiConfig()))
+
+        n[e.field]       = e.value
+
+
+        // float
+        if (this.isFloat(e.value)){
+          console.log("FLOAT")
+          n[e.field] = parseFloat(e.value)
+        }
+        // integer
+        else if (this.isNumeric(e.value)) {
+          console.log("INTEGER")
+          n[e.field] = parseInt(e.value)
+        }
+
+        await npcTypeApi.updateNpcType({
+          id: n.id,
+          npcType: n
+        })
+
+        this.$forceUpdate()
+      }
+
+      // reset
+      this.previewField = ""
+      this.previewValue = ""
+
+      // strip existing columns with the header
+      for (let e of document.getElementsByClassName("pulsate-highlight")) {
+        e.classList.remove("pulsate-highlight")
+      }
+
+      this.reset()
+      this.updateQueryState()
+    },
+
+    handleSetValuesPreview(e) {
+      this.previewField = e.field
+      this.previewValue = e.value
+    },
+
+    scrollToColumn(e) {
+      const container = document.getElementById("npcs-table-container");
+      const target    = document.getElementById(util.format("column-%s", e))
+
+      if (container && target) {
+        container.scrollLeft = container.offsetLeft + target.offsetLeft - 400;
+
+        // strip existing columns with the header
+        for (let e of document.getElementsByClassName("pulsate-highlight")) {
+          e.classList.remove("pulsate-highlight")
+        }
+
+        // add to the target column
+        target.classList.add("pulsate-highlight");
+      }
+    },
+
+    bulkEdit() {
+      this.setSelectorActive('bulk-editor')
+    },
+
     reset() {
       this.npcNameSearch = ""
-      this.filters = []
+      this.filters       = []
 
+      this.resetPreviewComponents()
       this.updateQueryState()
+
+      // reset scroll to 0
+      const container = document.getElementById("npcs-table-container");
+      container.offsetLeft = 0
     },
 
     updateQueryState: function () {
@@ -148,8 +283,6 @@ export default {
       if (this.filters && this.filters.length > 0) {
         queryState.filters = JSON.stringify(this.filters)
       }
-
-      console.log(queryState)
 
       this.$router.push(
         {
@@ -286,8 +419,6 @@ export default {
           });
         }
 
-        console.log(this.npcNameSearch)
-
         if (typeof this.npcNameSearch !== "undefined" && this.npcNameSearch !== "") {
           builder.where("name", "like", this.npcNameSearch)
         }
@@ -324,6 +455,31 @@ export default {
     startsWithUppercase(str) {
       return str.substr(0, 1).match(/[A-Z\u00C0-\u00DC]/);
     },
+
+    isAnySelectorActive() {
+      for (const [k, v] of Object.entries(this.selectorActive)) {
+        if (this.selectorActive[k]) {
+          return true;
+        }
+      }
+    },
+
+    resetPreviewComponents() {
+      for (const [k, v] of Object.entries(this.selectorActive)) {
+        this.selectorActive[k] = false
+      }
+
+      EditFormFieldUtil.resetFieldSubEditorHighlightedStatus()
+    },
+    setSelectorActive(selector) {
+      this.resetPreviewComponents()
+      this.previewTaskActive        = false;
+      this.lastResetTime            = Date.now()
+      this.selectorActive[selector] = true
+      this.$forceUpdate()
+
+      EditFormFieldUtil.setFieldSubEditorHighlightedById(selector)
+    }
   }
 }
 </script>
