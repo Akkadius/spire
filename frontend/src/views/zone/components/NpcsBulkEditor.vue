@@ -24,6 +24,7 @@
         </div>
       </div>
 
+      <!-- Set all values to -->
       <div class="row">
         <div class="col-4 text-right m-0 p-0 mt-3">
           Set all values to
@@ -39,7 +40,44 @@
           <button
             class='btn btn-outline-warning btn-sm mt-2'
             @click="setValuesTo"
-            v-if="(setValue !== '' && isDataTypeNumber(selectedField)) || (setValue === '' && !isDataTypeNumber(selectedField))"
+            v-if="(setValue !== '' && isDataTypeNumber(selectedField)) || (!isDataTypeNumber(selectedField))"
+          >
+            <i class="fa fa-edit"></i> Write
+          </button>
+
+        </div>
+      </div>
+
+      <!-- Min / Max -->
+      <div class="row" v-if="isDataTypeNumber(selectedField)">
+        <div
+          class="col-4 text-right m-0 p-0 mt-3"
+        >
+          Random Between Min / Max
+        </div>
+        <div class="col-3 text-center">
+          <b-input
+            class="form-control"
+            type="number"
+            placeholder="Min"
+            @keyup="setMinMaxValuesToPreview"
+            v-model="setMin"
+          />
+        </div>
+        <div class="col-3 text-center">
+          <b-input
+            placeholder="Max"
+            type="number"
+            class="form-control"
+            @keyup="setMinMaxValuesToPreview"
+            v-model="setMax"
+          />
+        </div>
+        <div class="col-2">
+          <button
+            class='btn btn-outline-warning btn-sm mt-2'
+            @click="setMinMaxValuesTo"
+            v-if="(setMax !== '' && setMin !== '')"
           >
             <i class="fa fa-edit"></i> Write
           </button>
@@ -48,24 +86,24 @@
       </div>
 
       <!-- Number -->
-      <!--    <div class="row" v-if="isDataTypeNumber(selectedField)">-->
-      <!--      <div class="col-4 text-right m-0 p-0 mt-2">-->
-      <!--        Select Field-->
-      <!--      </div>-->
-      <!--      <div class="col-5">-->
-      <!--        <select-->
-      <!--          class="form-control"-->
-      <!--          @change="selectField"-->
-      <!--          v-model="selectedField"-->
-      <!--        >-->
-      <!--          <option-->
-      <!--            v-for="field in npcTypeFields"-->
-      <!--            :key="field"-->
-      <!--          >{{ field }}-->
-      <!--          </option>-->
-      <!--        </select>-->
-      <!--      </div>-->
-      <!--    </div>-->
+      <!--        <div class="row" v-if="isDataTypeNumber(selectedField)">-->
+      <!--          <div class="col-4 text-right m-0 p-0 mt-2">-->
+      <!--            Select Field-->
+      <!--          </div>-->
+      <!--          <div class="col-5">-->
+      <!--            <select-->
+      <!--              class="form-control"-->
+      <!--              @change="selectField"-->
+      <!--              v-model="selectedField"-->
+      <!--            >-->
+      <!--              <option-->
+      <!--                v-for="field in npcTypeFields"-->
+      <!--                :key="field"-->
+      <!--              >{{ field }}-->
+      <!--              </option>-->
+      <!--            </select>-->
+      <!--          </div>-->
+      <!--        </div>-->
 
 
     </eq-window>
@@ -77,7 +115,8 @@
     >
       <div
         class="text-center"
-        style="height: 75vh; overflow-y: scroll; overflow-x: hidden;">
+        style="height: 75vh; overflow-y: scroll; overflow-x: hidden;"
+      >
 
         <div class="mb-3 font-weight-bold">
           Changed ({{ editFeedbackLocal.length }}) NPC(s)
@@ -117,6 +156,30 @@ export default {
       },
       deep: true
     },
+    setMin: {
+      handler(newVal) {
+        const min = parseInt(this.setMin)
+        const max = parseInt(this.setMax)
+
+        if (min !== 0 && min > max) {
+          setTimeout(() => {
+            this.setMin = this.setMax
+          }, 10)
+        }
+      },
+    },
+    setMax: {
+      handler(newVal) {
+        const min = parseInt(this.setMin)
+        const max = parseInt(this.setMax)
+
+        if (max !== 0 && max < min) {
+          setTimeout(() => {
+            this.setMax = this.setMin
+          }, 10)
+        }
+      },
+    },
   },
 
   data() {
@@ -125,6 +188,10 @@ export default {
       selectedField: "",
       setValue: "",
 
+      // min - max
+      setMin: "",
+      setMax: "",
+
       // fields
       npcTypeFields: [],
 
@@ -132,6 +199,8 @@ export default {
     }
   },
   methods: {
+
+    // set all values to
     setValuesToPreview() {
       this.$emit(
         'set-values-preview',
@@ -147,6 +216,28 @@ export default {
         {
           field: this.selectedField,
           value: this.setValue
+        }
+      );
+    },
+
+    // set all values to
+    setMinMaxValuesToPreview() {
+      this.$emit(
+        'set-min-max-values-preview',
+        {
+          field: this.selectedField,
+          min: this.setMin,
+          max: this.setMax,
+        }
+      );
+    },
+    setMinMaxValuesTo() {
+      this.$emit(
+        'set-min-max-values-commit',
+        {
+          field: this.selectedField,
+          min: this.setMin,
+          max: this.setMax,
         }
       );
     },

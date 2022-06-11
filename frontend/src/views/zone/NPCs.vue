@@ -93,11 +93,20 @@
 
                   <span v-if="key !== 'name'">{{ row[key] }}</span>
 
+                  <!-- Set all values preview -->
                   <span
-                    v-if="isPreviewValueChangeable(row[key]) && previewField === key && row[key] !== getTypedField(previewValue)"
+                    v-if="isPreviewValueChangeable(row[key], previewValue) && previewField === key && row[key] !== getTypedField(previewValue)"
                     style="color: yellow"
                     class="ml-1"
-                  >-> {{ previewValue }}</span>
+                  >-> {{ previewValue && isNumeric(previewValue) ? previewValue.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : previewValue }}</span>
+
+                  <!-- Min / Max -->
+                  <span
+                    v-if="isPreviewValueChangeable(row[key], previewMinMaxData[row.id]) && previewField === key && row[key] !== getTypedField(previewMinMaxData[row.id]) && previewMinMaxData[row.id]"
+                    style="color: yellow"
+                    class="ml-1"
+                  >-> {{ previewMinMaxData[row.id] && isNumeric(previewMinMaxData[row.id]) ? previewMinMaxData[row.id].toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : previewMinMaxData[row.id] }}</span>
+
                 </td>
               </tr>
               </tbody>
@@ -112,6 +121,8 @@
           @field-selected="scrollToColumn($event)"
           @set-values-preview="handleSetValuesPreview($event)"
           @set-values-commit="handleSetValuesCommit($event)"
+          @set-min-max-values-preview="handleMinMaxSetValuesPreview($event)"
+          @set-min-max-values-commit="handleSetValuesCommit($event)"
           :edit-feedback="bulkEditFeedback"
           v-if="selectorActive['bulk-editor']"
         />
@@ -170,6 +181,9 @@ export default {
       previewField: "",
       previewValue: "",
       bulkEditFeedback: [],
+
+      // preview min / max
+      previewMinMaxData: {}
     }
   },
 
@@ -215,12 +229,12 @@ export default {
       return value
     },
 
-    isPreviewValueChangeable(fieldValue) {
-      if (this.isFloat(fieldValue) && this.previewValue !== '') {
+    isPreviewValueChangeable(fieldValue, previewValue) {
+      if (this.isFloat(fieldValue) && previewValue !== '') {
         return true;
-      } else if (this.isNumeric(fieldValue) && this.previewValue !== '') {
+      } else if (this.isNumeric(fieldValue) && previewValue !== '') {
         return true;
-      } else if ((!this.isNumeric(fieldValue) && !this.isFloat(fieldValue)) && this.previewValue === '') {
+      } else if ((!this.isNumeric(fieldValue) && !this.isFloat(fieldValue)) && previewValue !== '') {
         return true;
       }
 
@@ -229,7 +243,7 @@ export default {
 
     previewStyles(header) {
       if (this.previewField === header) {
-        return 'padding-left: 30px !important; padding-right: 30px !important; '
+        return 'padding-left: 75px !important; padding-right: 75px !important; '
       }
 
       return ''
@@ -247,23 +261,29 @@ export default {
 
     async handleSetValuesCommit(e) {
       let editFeedback = []
-
       this.scrollToColumn(e.field)
 
       for (let n of this.npcTypes) {
+        let newValue = e.value
+
+        // when min / max is passed
+        if (e.min) {
+          newValue = this.previewMinMaxData[n.id]
+        }
+
         editFeedback.push(
-          `NPC ID (${n.id}) field [${e.field}] has changed from [${n[e.field]}] to [${e.value}]`
+          `NPC ID (${n.id}) field [${e.field}] has changed from [${n[e.field]}] to [${newValue}]`
         )
 
-        n[e.field] = e.value
+        n[e.field] = newValue
 
         // float
-        if (this.isFloat(e.value)) {
-          n[e.field] = parseFloat(e.value)
+        if (this.isFloat(newValue)) {
+          n[e.field] = parseFloat(newValue)
         }
         // integer
-        else if (this.isNumeric(e.value)) {
-          n[e.field] = parseInt(e.value)
+        else if (this.isNumeric(newValue)) {
+          n[e.field] = parseInt(newValue)
         }
 
         await Npcs.updateNpc(n.id, n);
@@ -284,10 +304,20 @@ export default {
       this.previewField = ""
       this.previewValue = ""
 
-      this.reset()
+      // this.reset()
+
+      // reset scroll to 0
+      const container      = document.getElementById("npcs-table-container");
+      container.scrollTop  = 0
+
       this.updateQueryState()
 
       this.bulkEdit()
+    },
+
+    async handleSetMinMaxValuesCommit(e) {
+      console.log("handleSetMinMaxValuesCommit")
+      console.log(e)
     },
 
     resetPulseHighlights() {
@@ -298,11 +328,33 @@ export default {
     },
 
     handleSetValuesPreview(e) {
+      // reset min max
+      this.previewMinMaxData = {}
+
       this.previewField = e.field
       this.previewValue = e.value
     },
-    scrollToColumn(e)
-    {
+    getRandomArbitrary(min, max) {
+      return Math.random() * (max - min) + min;
+    },
+
+    handleMinMaxSetValuesPreview(e) {
+      // reset other previews
+      this.previewValue = ''
+
+      const field           = e.field
+      const max             = e.max
+      const min             = e.min
+
+      this.previewField     = field
+      let previewMinMaxData = {}
+      for (let n of this.npcTypes) {
+        previewMinMaxData[n.id] = Math.round(this.getRandomArbitrary(min, max))
+      }
+
+      this.previewMinMaxData = previewMinMaxData
+    },
+    scrollToColumn(e) {
       const container = document.getElementById("npcs-table-container");
       const target    = document.getElementById(util.format("column-%s", e))
 
