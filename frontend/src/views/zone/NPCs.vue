@@ -98,14 +98,27 @@
                     v-if="isPreviewValueChangeable(row[key], previewValue) && previewField === key && row[key] !== getTypedField(previewValue)"
                     style="color: yellow"
                     class="ml-1"
-                  >-> {{ previewValue && isNumeric(previewValue) ? previewValue.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : previewValue }}</span>
+                  >-> {{
+                      previewValue && isNumeric(previewValue) ? previewValue.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : previewValue
+                    }}</span>
 
                   <!-- Min / Max -->
                   <span
                     v-if="isPreviewValueChangeable(row[key], previewMinMaxData[row.id]) && previewField === key && row[key] !== getTypedField(previewMinMaxData[row.id]) && previewMinMaxData[row.id]"
                     style="color: yellow"
                     class="ml-1"
-                  >-> {{ previewMinMaxData[row.id] && isNumeric(previewMinMaxData[row.id]) ? previewMinMaxData[row.id].toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : previewMinMaxData[row.id] }}</span>
+                  >-> {{
+                      previewMinMaxData[row.id] && isNumeric(previewMinMaxData[row.id]) ? previewMinMaxData[row.id].toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : previewMinMaxData[row.id]
+                    }}</span>
+
+                  <!-- Percentage -->
+                  <span
+                    v-if="isPreviewValueChangeable(row[key], previewPercentageData[row.id]) && previewField === key && row[key] !== getTypedField(previewPercentageData[row.id]) && previewPercentageData[row.id]"
+                    style="color: yellow"
+                    class="ml-1"
+                  >-> {{
+                      previewPercentageData[row.id] && isNumeric(previewPercentageData[row.id]) ? previewPercentageData[row.id].toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : previewPercentageData[row.id]
+                    }}</span>
 
                 </td>
               </tr>
@@ -123,6 +136,8 @@
           @set-values-commit="handleSetValuesCommit($event)"
           @set-min-max-values-preview="handleMinMaxSetValuesPreview($event)"
           @set-min-max-values-commit="handleSetValuesCommit($event)"
+          @set-percentage-values-preview="handlePercentageSetValuesPreview($event)"
+          @set-percentage-values-commit="handleSetValuesCommit($event)"
           :edit-feedback="bulkEditFeedback"
           v-if="selectorActive['bulk-editor']"
         />
@@ -183,7 +198,10 @@ export default {
       bulkEditFeedback: [],
 
       // preview min / max
-      previewMinMaxData: {}
+      previewMinMaxData: {},
+
+      // preview percentage
+      previewPercentageData: {},
     }
   },
 
@@ -271,6 +289,11 @@ export default {
           newValue = this.previewMinMaxData[n.id]
         }
 
+        // when percentage is passed
+        if (e.percentage) {
+          newValue = this.previewPercentageData[n.id]
+        }
+
         editFeedback.push(
           `NPC ID (${n.id}) field [${e.field}] has changed from [${n[e.field]}] to [${newValue}]`
         )
@@ -307,17 +330,12 @@ export default {
       // this.reset()
 
       // reset scroll to 0
-      const container      = document.getElementById("npcs-table-container");
-      container.scrollTop  = 0
+      const container     = document.getElementById("npcs-table-container");
+      container.scrollTop = 0
 
       this.updateQueryState()
 
       this.bulkEdit()
-    },
-
-    async handleSetMinMaxValuesCommit(e) {
-      console.log("handleSetMinMaxValuesCommit")
-      console.log(e)
     },
 
     resetPulseHighlights() {
@@ -329,7 +347,8 @@ export default {
 
     handleSetValuesPreview(e) {
       // reset min max
-      this.previewMinMaxData = {}
+      this.previewMinMaxData     = {}
+      this.previewPercentageData = {}
 
       this.previewField = e.field
       this.previewValue = e.value
@@ -340,11 +359,12 @@ export default {
 
     handleMinMaxSetValuesPreview(e) {
       // reset other previews
-      this.previewValue = ''
+      this.previewValue          = ''
+      this.previewPercentageData = {}
 
-      const field           = e.field
-      const max             = e.max
-      const min             = e.min
+      const field = e.field
+      const max   = e.max
+      const min   = e.min
 
       this.previewField     = field
       let previewMinMaxData = {}
@@ -353,6 +373,22 @@ export default {
       }
 
       this.previewMinMaxData = previewMinMaxData
+    },
+    handlePercentageSetValuesPreview(e) {
+      // reset other previews
+      this.previewValue      = ''
+      this.previewMinMaxData = {}
+
+      const field      = e.field
+      const percentage = e.percentage
+
+      this.previewField         = field
+      let previewPercentageData = {}
+      for (let n of this.npcTypes) {
+        previewPercentageData[n.id] = Math.round(n[field] * percentage)
+      }
+
+      this.previewPercentageData = previewPercentageData
     },
     scrollToColumn(e) {
       const container = document.getElementById("npcs-table-container");

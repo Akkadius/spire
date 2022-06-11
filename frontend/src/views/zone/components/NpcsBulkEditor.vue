@@ -85,6 +85,39 @@
         </div>
       </div>
 
+      <!-- Percentage -->
+      <div class="row" v-if="isDataTypeNumber(selectedField)">
+        <div
+          class="col-4 text-right m-0 p-0 mt-3"
+        >
+          Percentage
+        </div>
+        <div class="col-3 text-center">
+          <b-input
+            class="form-control"
+            type="number"
+            step="0.1"
+            @keyup="setPercentageToPreview"
+            v-model="setPercentage"
+          />
+        </div>
+        <div class="col-2 p-0">
+          <div
+            v-if="setPercentage"
+            class="mt-3 d-inline-block mr-3"
+          >{{ Math.round(setPercentage * 100) }}%
+          </div>
+          <button
+            class='btn btn-outline-warning btn-sm'
+            @click="setPercentageTo"
+            v-if="setPercentage"
+          >
+            <i class="fa fa-edit"></i> Write
+          </button>
+
+        </div>
+      </div>
+
       <!-- Number -->
       <!--        <div class="row" v-if="isDataTypeNumber(selectedField)">-->
       <!--          <div class="col-4 text-right m-0 p-0 mt-2">-->
@@ -192,6 +225,9 @@ export default {
       setMin: "",
       setMax: "",
 
+      // percentage
+      setPercentage: 1,
+
       // fields
       npcTypeFields: [],
 
@@ -220,7 +256,7 @@ export default {
       );
     },
 
-    // set all values to
+    // set min / max values to
     setMinMaxValuesToPreview() {
       this.$emit(
         'set-min-max-values-preview',
@@ -238,6 +274,28 @@ export default {
           field: this.selectedField,
           min: this.setMin,
           max: this.setMax,
+        }
+      );
+    },
+
+    // set min / max values to
+    setPercentageToPreview() {
+      this.$emit(
+        'set-percentage-values-preview',
+        {
+          field: this.selectedField,
+          percentage: this.setPercentage,
+        }
+      );
+    },
+    setPercentageTo() {
+      this.setPercentage = 1
+
+      this.$emit(
+        'set-percentage-values-commit',
+        {
+          field: this.selectedField,
+          percentage: this.setPercentage,
         }
       );
     },
