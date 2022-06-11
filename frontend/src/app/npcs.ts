@@ -1,12 +1,21 @@
 import {SPECIAL_ATTACKS} from "@/app/constants/eq-special-attacks";
+import {NpcTypeApi} from "@/app/api";
+import {SpireApiClient} from "@/app/api/spire-api-client";
 
 export class Npcs {
-  public static getCleanName(name) {
+  /**
+   *
+   * @param name
+   */
+  public static getCleanName(name: String) {
     name = name.replaceAll("_", " ")
     name = name.replaceAll("#", " ")
     return name
   }
 
+  /**
+   * @param abilities
+   */
   static specialAbilitiesToHuman(abilities) {
     let rAbilities = <any>[]
     for (let a of abilities.split("^")) {
@@ -172,4 +181,17 @@ export class Npcs {
 
     return rAbilities
   }
+
+  /**
+   * @param id
+   * @param npcType
+   */
+  static async updateNpc(id: number, npcType: any) {
+    const npcTypeApi = (new NpcTypeApi(SpireApiClient.getOpenApiConfig()))
+    return await npcTypeApi.updateNpcType({
+      id: id,
+      npcType: npcType
+    })
+  }
 }
+

@@ -73,7 +73,9 @@
               </thead>
               <tbody>
               <tr
-                v-for="(row, index) in npcTypes" :key="index"
+                v-for="(row, index) in npcTypes"
+                :id="'npc-' + row.id"
+                :key="index"
               >
                 <td
                   :style="' text-align: center; ' + ([0, 1].includes(colIndex) ? ' position: sticky; z-index: 999; background-color: rgba(25,31,41, .95);' + getColumnStylingFromIndex(colIndex): '')"
@@ -110,6 +112,7 @@
           @field-selected="scrollToColumn($event)"
           @set-values-preview="handleSetValuesPreview($event)"
           @set-values-commit="handleSetValuesCommit($event)"
+          :edit-feedback="bulkEditFeedback"
           v-if="selectorActive['bulk-editor']"
         />
 
@@ -139,6 +142,7 @@ import {EditFormFieldUtil}     from "../../app/forms/edit-form-field-util";
 import NpcsBulkEditor          from "./components/NpcsBulkEditor";
 import util                    from "util";
 import NpcPopover              from "../../components/NpcPopover";
+import {Npcs}                  from "../../app/npcs";
 
 export default {
   name: "NPCs",
@@ -165,6 +169,7 @@ export default {
       // preview value
       previewField: "",
       previewValue: "",
+      bulkEditFeedback: [],
     }
   },
 
@@ -203,8 +208,7 @@ export default {
     getTypedField(value) {
       if (this.isFloat(value)) {
         return parseFloat(value);
-      }
-      else if (this.isNumeric(value)) {
+      } else if (this.isNumeric(value)) {
         return parseInt(value);
       }
 
@@ -214,11 +218,9 @@ export default {
     isPreviewValueChangeable(fieldValue) {
       if (this.isFloat(fieldValue) && this.previewValue !== '') {
         return true;
-      }
-      else if (this.isNumeric(fieldValue) && this.previewValue !== '') {
+      } else if (this.isNumeric(fieldValue) && this.previewValue !== '') {
         return true;
-      }
-      else if ((!this.isNumeric(fieldValue) && !this.isFloat(fieldValue)) && this.previewValue === '') {
+      } else if ((!this.isNumeric(fieldValue) && !this.isFloat(fieldValue)) && this.previewValue === '') {
         return true;
       }
 
@@ -244,9 +246,16 @@ export default {
     },
 
     async handleSetValuesCommit(e) {
+      let editFeedback = []
+
+      this.scrollToColumn(e.field)
+
       for (let n of this.npcTypes) {
-        const npcTypeApi = (new NpcTypeApi(SpireApiClient.getOpenApiConfig()))
-        n[e.field]       = e.value
+        editFeedback.push(
+          `NPC ID (${n.id}) field [${e.field}] has changed from [${n[e.field]}] to [${e.value}]`
+        )
+
+        n[e.field] = e.value
 
         // float
         if (this.isFloat(e.value)) {
@@ -257,13 +266,19 @@ export default {
           n[e.field] = parseInt(e.value)
         }
 
-        await npcTypeApi.updateNpcType({
-          id: n.id,
-          npcType: n
-        })
+        await Npcs.updateNpc(n.id, n);
+
+        // scroll to table row entry as we are editing entries
+        const container = document.getElementById("npcs-table-container");
+        const target    = document.getElementById(util.format("npc-%s", n.id))
+        if (container && target) {
+          container.scrollTop = container.scrollTop + target.getBoundingClientRect().top - 200;
+        }
 
         this.$forceUpdate()
       }
+
+      this.bulkEditFeedback = editFeedback
 
       // reset
       this.previewField = ""
@@ -271,6 +286,8 @@ export default {
 
       this.reset()
       this.updateQueryState()
+
+      this.bulkEdit()
     },
 
     resetPulseHighlights() {
@@ -284,8 +301,8 @@ export default {
       this.previewField = e.field
       this.previewValue = e.value
     },
-
-    scrollToColumn(e) {
+    scrollToColumn(e)
+    {
       const container = document.getElementById("npcs-table-container");
       const target    = document.getElementById(util.format("column-%s", e))
 
@@ -318,6 +335,7 @@ export default {
 
       // reset scroll to 0
       const container      = document.getElementById("npcs-table-container");
+      container.scrollTop  = 0
       container.scrollLeft = 0
     },
 
