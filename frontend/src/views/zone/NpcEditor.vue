@@ -18,87 +18,111 @@
               v-for="(tab, index) in tabs"
             >
               <div class="row">
-                <div
-                  v-for="field in tab.fields"
-                  :key="field.field"
-                  :class="field.col + ' mb-3 pl-2 pr-2'"
-                >
-                  <div class="text-center" v-if="field.fType !== 'checkbox'">
-                    <span
-                      v-if="field.itemIcon"
-                      :class="'item-' + field.itemIcon + '-sm'"
-                      style="display: inline-block"
-                    />
-                    {{ field.desc }}
-                  </div>
-
-                  <!-- checkbox -->
-                  <div :class="'text-right ' + (field.inline ? 'mt-4' : '')" v-if="field.fType === 'checkbox'">
-                    <div class="d-inline-block" style="bottom: 2px; position: relative; margin-right: 1px">
-                      {{field.desc}}
-                    </div>
-                    <eq-checkbox
-                      v-b-tooltip.hover.v-dark.right :title="getFielddesc(field.field)"
-                      class="d-inline-block text-center"
-                      :true-value="(typeof field.true !== 'undefined' ? field.true : 1)"
-                      :false-value="(typeof field.false !== 'undefined' ? field.false : 0)"
-                      v-model.number="npc[field.field]"
-                      @input="npc[field.field] = $event"
-
-                    />
-                  </div>
-
-                  <!-- input number -->
-                  <b-form-input
-                    v-if="field.fType === 'number'"
-                    :id="field.field"
-                    v-model.number="npc[field.field]"
-                    class="m-0 mt-1"
-                    v-on="typeof field.onclick !== 'undefined' ? { click: () => field.onclick(field.field) } : {}"
-                    v-b-tooltip.hover.v-dark.right :title="getFielddesc(field.field)"
-                    :style="(npc[field.field] === 0 ? 'opacity: .5' : '')"
-                  />
-
-                  <!-- input text -->
-                  <b-form-input
-                    v-if="field.fType === 'text'"
-                    :id="field.field"
-                    v-model.number="npc[field.field]"
-                    class="m-0 mt-1"
-                    v-on="typeof field.onclick !== 'undefined' ? { click: () => field.onclick(field.field) } : {}"
-                    v-b-tooltip.hover.v-dark.right :title="getFielddesc(field.field)"
-                    :style="(npc[field.field] <= (typeof field.zeroValue !== 'undefined' ? field.zeroValue : 0) ? 'opacity: .5' : '')"
-                  />
-
-                  <!-- textarea -->
-                  <b-textarea
-                    v-if="field.fType === 'textarea'"
-                    :id="field.field"
-                    v-model="npc[field.field]"
-                    class="m-0 mt-1"
-                    rows="2"
-                    max-rows="6"
-                    v-on="typeof field.onclick !== 'undefined' ? { click: () => field.onclick(field.field) } : {}"
-                    v-b-tooltip.hover.v-dark.right :title="getFielddesc(field.field)"
-                    :style="(npc[field.field] === '' ? 'opacity: .5' : '') + ';'"
-                  ></b-textarea>
-
-                  <!-- select -->
-                  <select
-                    v-model.number="npc[field.field]"
-                    class="form-control m-0 mt-1"
-                    v-if="field.selectData"
-                    v-b-tooltip.hover.v-dark.right :title="getFielddesc(field.field)"
-                    :style="(npc[field.field] <= (typeof field.zeroValue !== 'undefined' ? field.zeroValue : 0) ? 'opacity: .5' : '')"
+                <div class="col-12">
+                  <div
+                    v-for="field in tab.fields"
+                    :key="field.field"
+                    :class="'row'"
                   >
-                    <option
-                      v-for="(desc, index) in field.selectData"
-                      :key="index"
-                      :value="parseInt(index)"
+
+                    <div
+                      class="col-6 text-right p-0 m-0 mr-1 mt-3"
+                      style="position: relative; bottom: 6px;"
+                      v-if="field.fType === 'checkbox'"
                     >
-                      {{ index }}) {{ desc }}
-                    </option>
-                  </select>
+                      <span v-if="field.category" class="font-weight-bold">{{ field.category }}</span>
+                      {{ field.desc }}
+                    </div>
+                    <div
+                      class="col-6 text-right p-0 m-0 mr-3"
+                      v-if="field.fType !== 'checkbox'"
+                      style="margin-top: 10px !important"
+                    >
+                      <span v-if="field.category" class="font-weight-bold">{{ field.category }}</span>
+                      {{ field.desc }}
+                    </div>
+
+                    <!--                  <div class="text-center" v-if="field.fType !== 'checkbox'">-->
+                    <!--                    <span-->
+                    <!--                      v-if="field.itemIcon"-->
+                    <!--                      :class="'item-' + field.itemIcon + '-sm'"-->
+                    <!--                      style="display: inline-block"-->
+                    <!--                    />-->
+                    <!--                    {{ field.desc }}-->
+                    <!--                  </div>-->
+
+                    <div class="col-3 text-left p-0 mt-2">
+
+                      <!-- checkbox -->
+                      <div :class="'text-left ml-2 mt-1'" v-if="field.fType === 'checkbox'">
+                        <!--                        <div class="d-inline-block" style="bottom: 2px; position: relative; margin-right: 1px">-->
+                        <!--                          {{ field.desc }}-->
+                        <!--                        </div>-->
+                        <eq-checkbox
+                          v-b-tooltip.hover.v-dark.right :title="getFielddesc(field.field)"
+                          class="d-inline-block text-center"
+                          :true-value="(typeof field.true !== 'undefined' ? field.true : 1)"
+                          :false-value="(typeof field.false !== 'undefined' ? field.false : 0)"
+                          v-model.number="npc[field.field]"
+                          @input="npc[field.field] = $event"
+
+                        />
+                      </div>
+
+                      <!-- input number -->
+                      <b-form-input
+                        v-if="field.fType === 'number'"
+                        :id="field.field"
+                        v-model.number="npc[field.field]"
+                        class="m-0 mt-1"
+                        v-on="typeof field.onclick !== 'undefined' ? { click: () => field.onclick(field.field) } : {}"
+                        v-b-tooltip.hover.v-dark.right :title="getFielddesc(field.field)"
+                        :style="(npc[field.field] === 0 ? 'opacity: .5' : '')"
+                      />
+
+                      <!-- input text -->
+                      <b-form-input
+                        v-if="field.fType === 'text'"
+                        :id="field.field"
+                        v-model.number="npc[field.field]"
+                        class="m-0 mt-1"
+                        v-on="typeof field.onclick !== 'undefined' ? { click: () => field.onclick(field.field) } : {}"
+                        v-b-tooltip.hover.v-dark.right :title="getFielddesc(field.field)"
+                        :style="(npc[field.field] <= (typeof field.zeroValue !== 'undefined' ? field.zeroValue : 0) ? 'opacity: .5' : '')"
+                      />
+
+                      <!-- textarea -->
+                      <b-textarea
+                        v-if="field.fType === 'textarea'"
+                        :id="field.field"
+                        v-model="npc[field.field]"
+                        class="m-0 mt-1"
+                        rows="2"
+                        max-rows="6"
+                        v-on="typeof field.onclick !== 'undefined' ? { click: () => field.onclick(field.field) } : {}"
+                        v-b-tooltip.hover.v-dark.right :title="getFielddesc(field.field)"
+                        :style="(npc[field.field] === '' ? 'opacity: .5' : '') + ';'"
+                      ></b-textarea>
+
+                      <!-- select -->
+                      <select
+                        v-model.number="npc[field.field]"
+                        class="form-control m-0 mt-1"
+                        v-if="field.selectData"
+                        v-b-tooltip.hover.v-dark.right :title="getFielddesc(field.field)"
+                        :style="(npc[field.field] <= (typeof field.zeroValue !== 'undefined' ? field.zeroValue : 0) ? 'opacity: .5' : '')"
+                      >
+                        <option
+                          v-for="(desc, index) in field.selectData"
+                          :key="index"
+                          :value="parseInt(index)"
+                        >
+                          {{ index }}) {{ desc }}
+                        </option>
+                      </select>
+
+                    </div>
+                  </div>
                 </div>
               </div>
 
@@ -138,18 +162,18 @@ import ClassBitmaskCalculator  from "../../components/tools/ClassBitmaskCalculat
 import RaceBitmaskCalculator   from "../../components/tools/RaceBitmaskCalculator";
 import DeityBitmaskCalculator  from "../../components/tools/DeityCalculator";
 import InventorySlotCalculator from "../../components/tools/InventorySlotCalculator";
-import AugBitmaskCalculator from "../../components/tools/AugmentTypeCalculator";
-import EqWindowSimple       from "../../components/eq-ui/EQWindowSimple";
-import LoaderCastBarTimer   from "../../components/LoaderCastBarTimer";
-import ContentArea          from "../../components/layout/ContentArea";
-import {Npcs}               from "../../app/npcs";
-import EqDebug              from "../../components/eq-ui/EQDebug";
-import EqNpcCardPreview     from "../../components/preview/EQNpcCardPreview";
-import {DB_CLASSES}         from "../../app/constants/eq-classes-constants";
-import {DB_RACE_NAMES}      from "../../app/constants/eq-races-constants";
-import {BODYTYPES}          from "../../app/constants/eq-bodytype-constants";
-import {EditFormFieldUtil}  from "../../app/forms/edit-form-field-util";
-import NpcSpecialAbilities  from "../../components/tools/NpcSpecialAbilities";
+import AugBitmaskCalculator    from "../../components/tools/AugmentTypeCalculator";
+import EqWindowSimple          from "../../components/eq-ui/EQWindowSimple";
+import LoaderCastBarTimer      from "../../components/LoaderCastBarTimer";
+import ContentArea             from "../../components/layout/ContentArea";
+import {Npcs}                  from "../../app/npcs";
+import EqDebug                 from "../../components/eq-ui/EQDebug";
+import EqNpcCardPreview        from "../../components/preview/EQNpcCardPreview";
+import {DB_CLASSES}            from "../../app/constants/eq-classes-constants";
+import {DB_RACE_NAMES}         from "../../app/constants/eq-races-constants";
+import {BODYTYPES}             from "../../app/constants/eq-bodytype-constants";
+import {EditFormFieldUtil}     from "../../app/forms/edit-form-field-util";
+import NpcSpecialAbilities     from "../../components/tools/NpcSpecialAbilities";
 
 const MILLISECONDS_BEFORE_WINDOW_RESET = 5000;
 
@@ -247,6 +271,8 @@ export default {
           "loottable_id",
           "alt_currency_id",
           "ammo_idfile",
+          "d_melee_texture_1",
+          "d_melee_texture_2",
           "npc_faction_id"
         ];
         hasSubEditorFields.forEach((field) => {
@@ -274,6 +300,9 @@ export default {
 
             { desc: 'Bodytype', field: 'bodytype', selectData: BODYTYPES, col: 'col-2', },
 
+
+            { desc: "runspeed", field: "runspeed", fType: "text", col: 'col-2' },
+            { desc: "walkspeed", field: "walkspeed", fType: "text", col: 'col-2' },
 
             // {desc: "id", field: "id", fType: "text", col: 'col-2' },
             // {desc: "name", field: "name", fType: "text", col: 'col-2' },
@@ -312,16 +341,16 @@ export default {
             // version is not really used outside of the PEQ editor
             // { desc: "version", field: "version", fType: "text", col: 'col-2' },
 
-            { desc: "private_corpse", field: "private_corpse", fType: "text", col: 'col-2' },
+            // { desc: "private_corpse", field: "private_corpse", fType: "text", col: 'col-2' },
             // {desc: "unique_spawn_by_name", field: "unique_spawn_by_name", fType: "text", col: 'col-2' },
             // {desc: "underwater", field: "underwater", fType: "text", col: 'col-2' },
             // {desc: "isquest", field: "isquest", fType: "text", col: 'col-2' },
             { desc: "emoteid", field: "emoteid", fType: "text", col: 'col-2' },
 
 
-            { desc: "peqid", field: "peqid", fType: "text", col: 'col-2' },
-            { desc: "unique_", field: "unique_", fType: "text", col: 'col-2' },
-            { desc: "fixed", field: "fixed", fType: "text", col: 'col-2' },
+            // { desc: "peqid", field: "peqid", fType: "text", col: 'col-2' },
+            // { desc: "unique_", field: "unique_", fType: "text", col: 'col-2' },
+            // { desc: "fixed", field: "fixed", fType: "text", col: 'col-2' },
             // {desc: "ignore_despawn", field: "ignore_despawn", fType: "text", col: 'col-2' },
             // {desc: "show_name", field: "show_name", fType: "text", col: 'col-2' },
             // {desc: "untargetable", field: "untargetable", fType: "text", col: 'col-2' },
@@ -350,11 +379,11 @@ export default {
         {
           name: 'Aggro',
           fields: [
+            { desc: 'Always Aggro', field: 'always_aggro', fType: 'checkbox', col: 'col-2' },
+            { desc: "NPC Aggro", field: "npc_aggro", fType: "checkbox", col: 'col-2' },
+
             { desc: "aggroradius", field: "aggroradius", fType: "text", col: 'col-2' },
             { desc: "assistradius", field: "assistradius", fType: "text", col: 'col-2' },
-
-            { desc: 'Always Aggro', field: 'always_aggro', fType: 'checkbox', col: 'col-2', inline: true },
-            { desc: "NPC Aggro", field: "npc_aggro", fType: "checkbox", col: 'col-2', inline: true },
           ]
         },
         {
@@ -365,17 +394,8 @@ export default {
             { desc: "helmtexture", field: "helmtexture", fType: "text", col: 'col-2' },
             { desc: "herosforgemodel", field: "herosforgemodel", fType: "text", col: 'col-2' },
             { desc: "size", field: "size", fType: "text", col: 'col-2' },
+            { desc: "light", field: "light", fType: "text", col: 'col-2' },
 
-            { desc: "face", field: "face", fType: "text", col: 'col-2' },
-            { desc: "luclin_hairstyle", field: "luclin_hairstyle", fType: "text", col: 'col-2' },
-            { desc: "luclin_haircolor", field: "luclin_haircolor", fType: "text", col: 'col-2' },
-            { desc: "luclin_eyecolor", field: "luclin_eyecolor", fType: "text", col: 'col-2' },
-            { desc: "luclin_eyecolor_2", field: "luclin_eyecolor_2", fType: "text", col: 'col-2' },
-            { desc: "luclin_beardcolor", field: "luclin_beardcolor", fType: "text", col: 'col-2' },
-            { desc: "luclin_beard", field: "luclin_beard", fType: "text", col: 'col-2' },
-            { desc: "drakkin_heritage", field: "drakkin_heritage", fType: "text", col: 'col-2' },
-            { desc: "drakkin_tattoo", field: "drakkin_tattoo", fType: "text", col: 'col-2' },
-            { desc: "drakkin_details", field: "drakkin_details", fType: "text", col: 'col-2' },
             { desc: "armortint_id", field: "armortint_id", fType: "text", col: 'col-2' },
             { desc: "armortint_red", field: "armortint_red", fType: "text", col: 'col-2' },
             { desc: "armortint_green", field: "armortint_green", fType: "text", col: 'col-2' },
@@ -386,15 +406,27 @@ export default {
             { desc: "handtexture", field: "handtexture", fType: "text", col: 'col-2' },
             { desc: "legtexture", field: "legtexture", fType: "text", col: 'col-2' },
             { desc: "feettexture", field: "feettexture", fType: "text", col: 'col-2' },
-            { desc: "light", field: "light", fType: "text", col: 'col-2' },
+          ]
+        },
+        {
+          name: 'Face',
+          fields: [
+            { desc: "face", field: "face", fType: "text", col: 'col-2' },
+            { desc: "luclin_hairstyle", field: "luclin_hairstyle", fType: "text", col: 'col-2' },
+            { desc: "luclin_haircolor", field: "luclin_haircolor", fType: "text", col: 'col-2' },
+            { desc: "luclin_eyecolor", field: "luclin_eyecolor", fType: "text", col: 'col-2' },
+            { desc: "luclin_eyecolor_2", field: "luclin_eyecolor_2", fType: "text", col: 'col-2' },
+            { desc: "luclin_beardcolor", field: "luclin_beardcolor", fType: "text", col: 'col-2' },
+            { desc: "luclin_beard", field: "luclin_beard", fType: "text", col: 'col-2' },
+            { desc: "drakkin_heritage", field: "drakkin_heritage", fType: "text", col: 'col-2' },
+            { desc: "drakkin_tattoo", field: "drakkin_tattoo", fType: "text", col: 'col-2' },
+            { desc: "drakkin_details", field: "drakkin_details", fType: "text", col: 'col-2' },
           ]
         },
         {
           name: 'Stats',
           fields: [
-            { desc: "mindmg", field: "mindmg", fType: "text", col: 'col-2' },
-            { desc: "maxdmg", field: "maxdmg", fType: "text", col: 'col-2' },
-            { desc: "attack_count", field: "attack_count", fType: "text", col: 'col-2' },
+
             // deprecated
             // { desc: "npcspecialattks", field: "npcspecialattks", fType: "text", col: 'col-2' },
 
@@ -405,16 +437,6 @@ export default {
             { desc: "hp_regen_per_second", field: "hp_regen_per_second", fType: "text", col: 'col-2' },
             { desc: "mana_regen_rate", field: "mana_regen_rate", fType: "text", col: 'col-2' },
 
-            { desc: "attack_speed", field: "attack_speed", fType: "text", col: 'col-2' },
-            { desc: "attack_delay", field: "attack_delay", fType: "text", col: 'col-2' },
-            { desc: "atk", field: "atk", fType: "text", col: 'col-2' },
-            { desc: "accuracy", field: "accuracy", fType: "text", col: 'col-2' },
-            { desc: "avoidance", field: "avoidance", fType: "text", col: 'col-2' },
-            { desc: "slow_mitigation", field: "slow_mitigation", fType: "text", col: 'col-2' },
-
-            { desc: "runspeed", field: "runspeed", fType: "text", col: 'col-2' },
-            { desc: "walkspeed", field: "walkspeed", fType: "text", col: 'col-2' },
-
             { desc: "str", field: "str", fType: "text", col: 'col-2' },
             { desc: "sta", field: "sta", fType: "text", col: 'col-2' },
             { desc: "dex", field: "dex", fType: "text", col: 'col-2' },
@@ -423,6 +445,18 @@ export default {
             { desc: "wis", field: "wis", fType: "text", col: 'col-2' },
             { desc: "cha", field: "cha", fType: "text", col: 'col-2' },
 
+            { desc: "spellscale", field: "spellscale", fType: "text", col: 'col-2' },
+            { desc: "healscale", field: "healscale", fType: "text", col: 'col-2' },
+
+            { desc: "scalerate", field: "scalerate", fType: "text", col: 'col-2' },
+            { desc: "maxlevel", field: "maxlevel", fType: "text", col: 'col-2' },
+
+
+          ]
+        },
+        {
+          name: 'Resists',
+          fields: [
             { desc: "mr", field: "mr", fType: "text", col: 'col-2' },
             { desc: "cr", field: "cr", fType: "text", col: 'col-2' },
             { desc: "dr", field: "dr", fType: "text", col: 'col-2' },
@@ -430,20 +464,33 @@ export default {
             { desc: "pr", field: "pr", fType: "text", col: 'col-2' },
             { desc: "corrup", field: "corrup", fType: "text", col: 'col-2' },
             { desc: "ph_r", field: "ph_r", fType: "text", col: 'col-2' },
-
-            { desc: "spellscale", field: "spellscale", fType: "text", col: 'col-2' },
-            { desc: "healscale", field: "healscale", fType: "text", col: 'col-2' },
-
-            { desc: "scalerate", field: "scalerate", fType: "text", col: 'col-2' },
-            { desc: "maxlevel", field: "maxlevel", fType: "text", col: 'col-2' },
-
-            { desc: "special_abilities", field: "special_abilities", fType: "text", col: 'col-12', onclick: this.setSelectorActive, },
-
-
           ]
         },
         {
-          name: 'Charm Stats',
+          name: 'Combat',
+          fields: [
+            { desc: "mindmg", field: "mindmg", fType: "text", col: 'col-2' },
+            { desc: "maxdmg", field: "maxdmg", fType: "text", col: 'col-2' },
+            { desc: "attack_count", field: "attack_count", fType: "text", col: 'col-2' },
+
+            { desc: "attack_speed", field: "attack_speed", fType: "text", col: 'col-2' },
+            { desc: "attack_delay", field: "attack_delay", fType: "text", col: 'col-2' },
+            { desc: "atk", field: "atk", fType: "text", col: 'col-2' },
+            { desc: "accuracy", field: "accuracy", fType: "text", col: 'col-2' },
+            { desc: "avoidance", field: "avoidance", fType: "text", col: 'col-2' },
+            { desc: "slow_mitigation", field: "slow_mitigation", fType: "text", col: 'col-2' },
+
+            {
+              desc: "special_abilities",
+              field: "special_abilities",
+              fType: "textarea",
+              col: 'col-12',
+              onclick: this.setSelectorActive,
+            },
+          ]
+        },
+        {
+          name: 'Charm',
           fields: [
             { desc: "charm_ac", field: "charm_ac", fType: "text", col: 'col-2' },
             { desc: "charm_min_dmg", field: "charm_min_dmg", fType: "text", col: 'col-2' },
@@ -477,6 +524,7 @@ export default {
             { desc: 'Always Aggro', field: 'always_aggro', fType: 'checkbox', col: 'col-2', },
             { desc: "NPC Aggro", field: "npc_aggro", fType: "checkbox", col: 'col-2' },
             { desc: "Raid Target", field: "raid_target", fType: "checkbox", col: 'col-2' },
+            { desc: "Private Corpse", field: "private_corpse", fType: "checkbox", col: 'col-2' },
 
           ]
         },
