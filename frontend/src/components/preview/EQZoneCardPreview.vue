@@ -30,7 +30,7 @@
                 class="eq-table-floating-header"
               >
               <tr>
-                <th class="text-left">
+                <th class="text-left" style="padding: 10px">
                   <b-button
                     style="position: absolute; bottom: 20%;"
                     class="btn-dark btn-sm btn-outline-warning"
@@ -51,7 +51,7 @@
                 v-for="(n, index) in npcTypes"
                 :key="n.id"
               >
-                <td class="text-center" style="width: 90px">
+                <td class="text-center" style="width: 150px">
                   <b-button
                     class="btn-dark btn-sm btn-outline-warning"
                     @click="showNpcOnMap(n.npc)"
@@ -66,6 +66,14 @@
                     title="Show NPC card"
                   >
                     <i class="fa fa-eye"></i>
+                  </b-button>
+
+                  <b-button
+                    class="btn-dark btn-sm btn-outline-warning ml-3"
+                    @click="editNpc(n.npc)"
+                    title="Edit NPC"
+                  >
+                    <i class="fa fa-edit"></i>
                   </b-button>
                 </td>
                 <td style="position: relative">
@@ -343,6 +351,15 @@ export default {
           query: {
             v: this.zone.version
           }
+        }
+      ).catch(() => {
+      })
+    },
+
+    editNpc(n) {
+      this.$router.push(
+        {
+          path: ROUTE.NPC_EDIT.replaceAll(":npc", n.id)
         }
       ).catch(() => {
       })

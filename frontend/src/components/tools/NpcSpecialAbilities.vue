@@ -491,14 +491,14 @@
       </tbody>
     </table>
 
-    <div class="row mt-3" style="margin-left: 180px">
-      <div class="col-3" v-for="c in checkboxAbilities">
+    <div class="row mt-3">
+      <div class="col-6" v-for="c in checkboxAbilities">
         <eq-checkbox
           class="mb-2 d-inline-block mr-3"
           v-model.number="ability[c.ability]"
           @input="calculateSpecialAbilities"
         />
-        <div class="d-inline-block">{{ c.name }}</div>
+        <div class="d-inline-block" style="user-select: none">{{ c.name }}</div>
 
       </div>
 
@@ -534,9 +534,9 @@ export default {
       required: true
     },
     showSpecialAbilitiesResult: {
-      type: String,
+      type: Boolean,
       required: false,
-      default: "0"
+      default: false
     }
   },
   data() {
@@ -669,9 +669,10 @@ export default {
 }
 
 .ability-label-top {
-  width: 140px;
+  width: 110px;
   text-align: right;
   padding-bottom: 5px;
+  user-select: none;
 }
 
 #special-abilities input, #special-abilities select {

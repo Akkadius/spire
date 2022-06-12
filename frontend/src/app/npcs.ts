@@ -193,5 +193,18 @@ export class Npcs {
       npcType: npcType
     })
   }
+
+  /**
+   * @param id
+   */
+  static async getNpc(id: number) {
+    const npcTypeApi = (new NpcTypeApi(SpireApiClient.getOpenApiConfig()))
+    const r = await npcTypeApi.getNpcType({
+      id: id,
+    })
+    if (r.status === 200) {
+      return r.data
+    }
+  }
 }
 

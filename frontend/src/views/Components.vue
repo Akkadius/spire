@@ -221,7 +221,7 @@
                 <div class="col-12">
                   <eq-window style="width: 100%">
                     <npc-special-abilities
-                      show-special-abilities-result="1"
+                      :show-special-abilities-result="true"
                       :inputData.sync="specialAbilityInput"
                       :abilities="specialAbilityInput"
                     />

@@ -6,6 +6,7 @@ export const ROUTE = {
   ITEM_VIEWER: "/item-viewer",
   ITEMS_LIST: "/items",
   NPCS_EDIT: "/zone/npcs/:zone",
+  NPC_EDIT: "/npc/:npc",
   PLAYER_ANIMATION_VIEWER: "/player-animation-viewer",
   QUEST_API_EXPLORER: "/quest-api-explorer",
   RACE_VIEWER: "/race-viewer",

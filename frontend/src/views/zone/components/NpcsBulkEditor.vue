@@ -148,7 +148,7 @@
     >
       <div
         class="text-center"
-        style="height: 75vh; overflow-y: scroll; overflow-x: hidden;"
+        style="height: 65vh; overflow-y: scroll; overflow-x: hidden;"
       >
 
         <div class="mb-3 font-weight-bold">
