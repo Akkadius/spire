@@ -37,7 +37,8 @@
             class="d-inline-block"
             v-model.number="ability[2]"
             @input="calculateSpecialAbilities"
-          /></td>
+          />
+        </td>
         <td>
           <input
             type="text" @change="calculateSpecialAbilities" class="ability_check_sub form-control" style=""
@@ -70,7 +71,8 @@
             class="d-inline-block"
             v-model.number="ability[3]"
             @input="calculateSpecialAbilities"
-          /></td>
+          />
+        </td>
         <td>
           <input
             type="text" @change="calculateSpecialAbilities" class="ability_check_sub form-control" style=""
@@ -126,7 +128,8 @@
             class="d-inline-block"
             v-model.number="ability[4]"
             @input="calculateSpecialAbilities"
-          /></td>
+          />
+        </td>
         <td>
           <input
             type="text" @change="calculateSpecialAbilities" class="ability_check_sub form-control" style=""
@@ -142,8 +145,14 @@
           ></td>
         <td>
           <input
-            type="text" @change="calculateSpecialAbilities" class="ability_check_sub form-control" style=""
-            v-model="abilityParams[4][2]" value="" placeholder="0" v-b-tooltip.hover
+            type="text"
+            @change="calculateSpecialAbilities"
+            class="ability_check_sub form-control"
+            style=""
+            v-model="abilityParams[4][2]"
+            value=""
+            placeholder="0"
+            v-b-tooltip.hover
             title="Flat damage bonus to add (0)"
           >
         </td>
@@ -185,7 +194,8 @@
             class="d-inline-block"
             v-model.number="ability[5]"
             @input="calculateSpecialAbilities"
-          /></td>
+          />
+        </td>
         <td>
           <input
             type="text" @change="calculateSpecialAbilities" class="ability_check_sub form-control" style=""
@@ -241,7 +251,8 @@
             class="d-inline-block"
             v-model.number="ability[11]"
             @input="calculateSpecialAbilities"
-          /></td>
+          />
+        </td>
         <td>
           <input
             type="text" @change="calculateSpecialAbilities" class="ability_check_sub form-control" style=""
@@ -287,7 +298,8 @@
             class="d-inline-block"
             v-model.number="ability[29]"
             @input="calculateSpecialAbilities"
-          /></td>
+          />
+        </td>
         <td>
           <input
             type="text" @change="calculateSpecialAbilities" class="ability_check_sub form-control" style=""
@@ -326,7 +338,8 @@
             class="d-inline-block"
             v-model.number="ability[33]"
             @input="calculateSpecialAbilities"
-          /></td>
+          />
+        </td>
         <td>
           <input
             type="text" @change="calculateSpecialAbilities" class="ability_check_sub form-control" style=""
@@ -344,7 +357,8 @@
             class="d-inline-block"
             v-model.number="ability[37]"
             @input="calculateSpecialAbilities"
-          /></td>
+          />
+        </td>
         <td>
           <input
             type="text" @change="calculateSpecialAbilities" class="ability_check_sub form-control" style=""
@@ -370,7 +384,8 @@
             class="d-inline-block"
             v-model.number="ability[40]"
             @input="calculateSpecialAbilities"
-          /></td>
+          />
+        </td>
         <td>
           <input
             type="text" @change="calculateSpecialAbilities" class="ability_check_sub form-control" style=""
@@ -401,7 +416,8 @@
             class="d-inline-block"
             v-model.number="ability[41]"
             @input="calculateSpecialAbilities"
-          /></td>
+          />
+        </td>
         <td>
           <input
             type="text" @change="calculateSpecialAbilities" class="ability_check_sub form-control" style=""
@@ -422,7 +438,8 @@
             class="d-inline-block"
             v-model.number="ability[43]"
             @input="calculateSpecialAbilities"
-          /></td>
+          />
+        </td>
         <td>
           <input
             type="text" @change="calculateSpecialAbilities" class="ability_check_sub form-control" style=""
@@ -605,6 +622,12 @@ export default {
       }
 
       for (let ability of this.abilities.split("^")) {
+        // console.log(ability)
+        // console.log(ability.length)
+
+        if (ability.length === 0) {
+          continue;
+        }
         if (ability.split(",").length === 0) {
           continue;
         }
@@ -634,8 +657,8 @@ export default {
     calculateSpecialAbilities: function () {
       this.$forceUpdate();
 
-      console.log("calculates")
-      console.log(this.ability)
+      // console.log("calculates")
+      // console.log(this.ability)
 
       let specialAbilities = []
       for (let abilityId in this.ability) {

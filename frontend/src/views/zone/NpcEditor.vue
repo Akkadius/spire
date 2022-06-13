@@ -184,17 +184,19 @@ import AugBitmaskCalculator    from "../../components/tools/AugmentTypeCalculato
 import EqWindowSimple          from "../../components/eq-ui/EQWindowSimple";
 import LoaderCastBarTimer      from "../../components/LoaderCastBarTimer";
 import ContentArea             from "../../components/layout/ContentArea";
-import {Npcs}                  from "../../app/npcs";
-import EqDebug                 from "../../components/eq-ui/EQDebug";
-import EqNpcCardPreview        from "../../components/preview/EQNpcCardPreview";
-import {DB_CLASSES}            from "../../app/constants/eq-classes-constants";
-import {DB_RACE_NAMES}         from "../../app/constants/eq-races-constants";
-import {BODYTYPES}             from "../../app/constants/eq-bodytype-constants";
-import {EditFormFieldUtil}     from "../../app/forms/edit-form-field-util";
-import NpcSpecialAbilities     from "../../components/tools/NpcSpecialAbilities";
-import {DB_SKILLS}             from "../../app/constants/eq-skill-constants";
-import {FLYMODE}               from "../../app/constants/eq-flymode-constants";
-import ItemModelSelector       from "../../components/selectors/ItemModelSelector";
+import {Npcs}              from "../../app/npcs";
+import EqDebug             from "../../components/eq-ui/EQDebug";
+import EqNpcCardPreview    from "../../components/preview/EQNpcCardPreview";
+import {DB_CLASSES}        from "../../app/constants/eq-classes-constants";
+import {DB_RACE_NAMES}     from "../../app/constants/eq-races-constants";
+import {BODYTYPES}         from "../../app/constants/eq-bodytype-constants";
+import {EditFormFieldUtil} from "../../app/forms/edit-form-field-util";
+import NpcSpecialAbilities from "../../components/tools/NpcSpecialAbilities";
+import {DB_SKILLS}         from "../../app/constants/eq-skill-constants";
+import {FLYMODE}           from "../../app/constants/eq-flymode-constants";
+import ItemModelSelector   from "../../components/selectors/ItemModelSelector";
+import {GENDER}            from "../../app/constants/eq-gender-constants";
+import {DB_ITEM_MATERIAL}  from "../../app/constants/eq-item-constants";
 
 const MILLISECONDS_BEFORE_WINDOW_RESET = 5000;
 
@@ -331,7 +333,6 @@ export default {
             { desc: 'Last Name', field: 'lastname', fType: 'text', itemIcon: '6840', },
             { desc: 'Level', field: 'level', fType: 'text', itemIcon: '6840', },
             { desc: 'Class', field: 'class', selectData: DB_CLASSES, },
-            { desc: 'Race', field: 'race', selectData: DB_RACE_NAMES, },
 
             { desc: 'Bodytype', field: 'bodytype', selectData: BODYTYPES, },
 
@@ -398,8 +399,9 @@ export default {
         {
           name: 'Appearance',
           fields: [
-            { desc: "Gender", field: "gender", fType: "text" },
-            { desc: "Texture", field: "texture", fType: "text" },
+            { desc: 'Race', field: 'race', selectData: DB_RACE_NAMES, },
+            { desc: "Gender", field: "gender", fType: "select", selectData: GENDER },
+            { desc: "Texture", field: "texture", fType: "select", selectData: DB_ITEM_MATERIAL },
             { desc: "Helm Texture", field: "helmtexture", fType: "text" },
             { desc: "Heros Forge Model", field: "herosforgemodel", fType: "text" },
             { desc: "Size", field: "size", fType: "text" },
