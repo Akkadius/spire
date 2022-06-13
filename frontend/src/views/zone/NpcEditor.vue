@@ -226,7 +226,7 @@ export default {
   data() {
     return {
       npc: null,
-      originalItem: {}, // item record data; used to reference original values in tools
+      originalNpc: {}, // item record data; used to reference original values in tools
 
       // selectors
       selectorActive: {},
@@ -235,6 +235,7 @@ export default {
       // state, loaded or not
       loaded: true,
 
+      // tabs / fields
       tabs: this.getTabs()
     }
   },
@@ -242,16 +243,16 @@ export default {
 
     // reset state vars when we navigate away
     '$route'() {
-      // this.item         = null;
+      this.npc         = null;
       // this.originalItem = {};
 
       // reset state vars when we navigate away
       // this.notification = ""
-      // EditFormFieldUtil.resetFieldEditedStatus()
-      // this.resetPreviewComponents()
+      EditFormFieldUtil.resetFieldEditedStatus()
+      this.resetPreviewComponents()
 
       // reload
-      // this.load()
+      this.load()
     },
 
   },
@@ -379,7 +380,6 @@ export default {
             // { desc: "version", field: "version", fType: "text" },
 
             { desc: "Stuck Behavior", field: "stuck_behavior", fType: "text" },
-            { desc: "Model?", field: "model", fType: "text" },
             { desc: "Flymode", field: "flymode", fType: "select", selectData: FLYMODE },
             // { desc: "always_aggro", field: "always_aggro", fType: "text" },
             { desc: "Experience Modifier", field: "exp_mod", fType: "text" },
@@ -427,7 +427,12 @@ export default {
             { desc: "Heros Forge Model", field: "herosforgemodel", fType: "text" },
             { desc: "Size", field: "size", fType: "text" },
             { desc: "Light", field: "light", fType: "text" },
-
+            { desc: "Model?", field: "model", fType: "text" },
+          ]
+        },
+        {
+          name: 'Armor',
+          fields: [
             { desc: "Armor Tint ID", field: "armortint_id", fType: "text" },
             { desc: "Armor Tint Red", field: "armortint_red", fType: "text" },
             { desc: "Armor Tint Green", field: "armortint_green", fType: "text" },
