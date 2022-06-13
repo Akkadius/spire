@@ -10,6 +10,7 @@
             v-if="npc"
             id="npc-edit-card"
             class="npc-edit-card minified-inputs"
+            @mouseover.native="previewMain()"
           >
             <eq-tab
               :name="tab.name"
@@ -135,15 +136,15 @@
       <!-- Preview / Selector Pane -->
       <div class="col-5">
 
+        <eq-window v-if="npc && !isAnySelectorActive()">
+          <eq-npc-card-preview :npc="npc"/>
+        </eq-window>
+
         <eq-window v-if="selectorActive['special_abilities']">
           <npc-special-abilities
             :abilities="npc.special_abilities"
             :inputData.sync="npc.special_abilities"
           />
-        </eq-window>
-
-        <eq-window v-if="npc && Object.keys(selectorActive).length === 0">
-          <eq-npc-card-preview :npc="npc"/>
         </eq-window>
 
         <item-model-selector
@@ -184,19 +185,19 @@ import AugBitmaskCalculator    from "../../components/tools/AugmentTypeCalculato
 import EqWindowSimple          from "../../components/eq-ui/EQWindowSimple";
 import LoaderCastBarTimer      from "../../components/LoaderCastBarTimer";
 import ContentArea             from "../../components/layout/ContentArea";
-import {Npcs}              from "@/app/npcs";
-import EqDebug             from "../../components/eq-ui/EQDebug";
-import EqNpcCardPreview    from "../../components/preview/EQNpcCardPreview";
-import {DB_CLASSES}        from "@/app/constants/eq-classes-constants";
-import {DB_RACE_NAMES}     from "@/app/constants/eq-races-constants";
-import {BODYTYPES}         from "@/app/constants/eq-bodytype-constants";
-import {EditFormFieldUtil} from "@/app/forms/edit-form-field-util";
-import NpcSpecialAbilities from "../../components/tools/NpcSpecialAbilities";
-import {DB_SKILLS}         from "@/app/constants/eq-skill-constants";
-import {FLYMODE}           from "@/app/constants/eq-flymode-constants";
-import ItemModelSelector   from "../../components/selectors/ItemModelSelector";
-import {GENDER}            from "@/app/constants/eq-gender-constants";
-import {DB_ITEM_MATERIAL}  from "@/app/constants/eq-item-constants";
+import {Npcs}                  from "@/app/npcs";
+import EqDebug                 from "../../components/eq-ui/EQDebug";
+import EqNpcCardPreview        from "../../components/preview/EQNpcCardPreview";
+import {DB_CLASSES}            from "@/app/constants/eq-classes-constants";
+import {DB_RACE_NAMES}         from "@/app/constants/eq-races-constants";
+import {BODYTYPES}             from "@/app/constants/eq-bodytype-constants";
+import {EditFormFieldUtil}     from "@/app/forms/edit-form-field-util";
+import NpcSpecialAbilities     from "../../components/tools/NpcSpecialAbilities";
+import {DB_SKILLS}             from "@/app/constants/eq-skill-constants";
+import {FLYMODE}               from "@/app/constants/eq-flymode-constants";
+import ItemModelSelector       from "../../components/selectors/ItemModelSelector";
+import {GENDER}                from "@/app/constants/eq-gender-constants";
+import {DB_ITEM_MATERIAL}      from "@/app/constants/eq-item-constants";
 
 const MILLISECONDS_BEFORE_WINDOW_RESET = 5000;
 
@@ -229,6 +230,7 @@ export default {
 
       // selectors
       selectorActive: {},
+      lastResetTime: Date.now(),
 
       // state, loaded or not
       loaded: true,
@@ -265,6 +267,22 @@ export default {
     /**
      * Selectors
      */
+    isAnySelectorActive() {
+      for (const [k, v] of Object.entries(this.selectorActive)) {
+        if (this.selectorActive[k]) {
+          return true;
+        }
+      }
+    },
+    shouldReset() {
+      return (Date.now() - this.lastResetTime) > MILLISECONDS_BEFORE_WINDOW_RESET
+    },
+    previewMain(force = false) {
+      if ((this.shouldReset() && this.isAnySelectorActive()) || force) {
+        this.resetPreviewComponents()
+        this.$forceUpdate()
+      }
+    },
     resetPreviewComponents() {
       for (const [k, v] of Object.entries(this.selectorActive)) {
         this.selectorActive[k] = false
@@ -323,6 +341,9 @@ export default {
       return Npcs.getFieldDescription(field)
     },
 
+    /**
+     * Tabs / fields
+     */
     getTabs() {
       return [
         {

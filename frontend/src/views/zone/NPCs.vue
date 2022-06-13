@@ -616,11 +616,23 @@ export default {
       return str.substr(0, 1).match(/[A-Z\u00C0-\u00DC]/);
     },
 
+    /**
+     * Selectors logic
+     */
     isAnySelectorActive() {
       for (const [k, v] of Object.entries(this.selectorActive)) {
         if (this.selectorActive[k]) {
           return true;
         }
+      }
+    },
+    shouldReset() {
+      return (Date.now() - this.lastResetTime) > MILLISECONDS_BEFORE_WINDOW_RESET
+    },
+    previewNPC(force = false) {
+      if ((this.shouldReset() && !this.previewMain) || force) {
+        this.resetPreviewComponents()
+        this.previewMain = true
       }
     },
 
@@ -633,7 +645,7 @@ export default {
     },
     setSelectorActive(selector) {
       this.resetPreviewComponents()
-      this.previewTaskActive        = false;
+      this.previewMain        = false;
       this.lastResetTime            = Date.now()
       this.selectorActive[selector] = true
       this.$forceUpdate()
@@ -645,7 +657,6 @@ export default {
     /**
      * Image slider background
      */
-
     shuffle(array) {
       let currentIndex = array.length, randomIndex;
 
