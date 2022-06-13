@@ -1626,9 +1626,9 @@ import {
 import {
   ItemApi
 }                              from "../../app/api";
-import ItemModelPreview        from "./components/ItemModelPreview";
-import ItemModelSelector       from "./components/ItemModelSelector";
-import ItemIconSelector        from "./components/ItemIconSelector";
+import ItemModelPreview  from "./components/ItemModelPreview";
+import ItemModelSelector from "../../components/selectors/ItemModelSelector";
+import ItemIconSelector  from "./components/ItemIconSelector";
 import ClassBitmaskCalculator  from "../../components/tools/ClassBitmaskCalculator";
 import RaceBitmaskCalculator   from "../../components/tools/RaceBitmaskCalculator";
 import DeityBitmaskCalculator  from "../../components/tools/DeityCalculator";

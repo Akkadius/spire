@@ -146,6 +146,24 @@
           <eq-npc-card-preview :npc="npc"/>
         </eq-window>
 
+        <item-model-selector
+          v-if="selectorActive['d_melee_texture_1']"
+          :selected-model="npc.d_melee_texture_1"
+          @input="npc.d_melee_texture_1 = $event.replaceAll('IT', ''); setFieldModifiedById('d_melee_texture_1')"
+        />
+
+        <item-model-selector
+          v-if="selectorActive['d_melee_texture_2']"
+          :selected-model="npc.d_melee_texture_2"
+          @input="npc.d_melee_texture_2 = $event.replaceAll('IT', ''); setFieldModifiedById('d_melee_texture_2')"
+        />
+
+        <item-model-selector
+          v-if="selectorActive['ammo_idfile']"
+          :selected-model="npc.ammo_idfile"
+          @input="npc.ammo_idfile = $event; setFieldModifiedById('ammo_idfile')"
+        />
+
       </div>
     </div>
   </content-area>
@@ -163,25 +181,27 @@ import RaceBitmaskCalculator   from "../../components/tools/RaceBitmaskCalculato
 import DeityBitmaskCalculator  from "../../components/tools/DeityCalculator";
 import InventorySlotCalculator from "../../components/tools/InventorySlotCalculator";
 import AugBitmaskCalculator    from "../../components/tools/AugmentTypeCalculator";
-import EqWindowSimple      from "../../components/eq-ui/EQWindowSimple";
-import LoaderCastBarTimer  from "../../components/LoaderCastBarTimer";
-import ContentArea         from "../../components/layout/ContentArea";
-import {Npcs}              from "../../app/npcs";
-import EqDebug             from "../../components/eq-ui/EQDebug";
-import EqNpcCardPreview    from "../../components/preview/EQNpcCardPreview";
-import {DB_CLASSES}        from "../../app/constants/eq-classes-constants";
-import {DB_RACE_NAMES}     from "../../app/constants/eq-races-constants";
-import {BODYTYPES}         from "../../app/constants/eq-bodytype-constants";
-import {EditFormFieldUtil} from "../../app/forms/edit-form-field-util";
-import NpcSpecialAbilities from "../../components/tools/NpcSpecialAbilities";
-import {DB_SKILLS}         from "../../app/constants/eq-skill-constants";
-import {FLYMODE}           from "../../app/constants/eq-flymode-constants";
+import EqWindowSimple          from "../../components/eq-ui/EQWindowSimple";
+import LoaderCastBarTimer      from "../../components/LoaderCastBarTimer";
+import ContentArea             from "../../components/layout/ContentArea";
+import {Npcs}                  from "../../app/npcs";
+import EqDebug                 from "../../components/eq-ui/EQDebug";
+import EqNpcCardPreview        from "../../components/preview/EQNpcCardPreview";
+import {DB_CLASSES}            from "../../app/constants/eq-classes-constants";
+import {DB_RACE_NAMES}         from "../../app/constants/eq-races-constants";
+import {BODYTYPES}             from "../../app/constants/eq-bodytype-constants";
+import {EditFormFieldUtil}     from "../../app/forms/edit-form-field-util";
+import NpcSpecialAbilities     from "../../components/tools/NpcSpecialAbilities";
+import {DB_SKILLS}             from "../../app/constants/eq-skill-constants";
+import {FLYMODE}               from "../../app/constants/eq-flymode-constants";
+import ItemModelSelector       from "../../components/selectors/ItemModelSelector";
 
 const MILLISECONDS_BEFORE_WINDOW_RESET = 5000;
 
 export default {
   name: "ItemEdit",
   components: {
+    ItemModelSelector,
     NpcSpecialAbilities,
     EqNpcCardPreview,
     EqDebug,
@@ -235,6 +255,10 @@ export default {
     this.load()
   },
   methods: {
+
+    setFieldModifiedById(field) {
+      EditFormFieldUtil.setFieldModifiedById(field)
+    },
 
     /**
      * Selectors
@@ -343,12 +367,22 @@ export default {
         {
           name: 'Weapon',
           fields: [
-            { desc: "Primary Melee Weapon Model", field: "d_melee_texture_1", fType: "text" },
+            {
+              desc: "Primary Melee Weapon Model",
+              field: "d_melee_texture_1",
+              fType: "text",
+              onclick: this.setSelectorActive
+            },
             { desc: "Primary Melee Type", field: "prim_melee_type", fType: "select", selectData: DB_SKILLS },
-            { desc: "Secondary Melee Weapon Model", field: "d_melee_texture_2", fType: "text" },
+            {
+              desc: "Secondary Melee Weapon Model",
+              field: "d_melee_texture_2",
+              fType: "text",
+              onclick: this.setSelectorActive
+            },
             { desc: "Secondary Melee Type", field: "sec_melee_type", fType: "select", selectData: DB_SKILLS },
             { desc: "Ranged Melee Type", field: "ranged_type", fType: "select", selectData: DB_SKILLS },
-            { desc: "Ammo Weapon Model", field: "ammo_idfile", fType: "text" },
+            { desc: "Ammo Weapon Model", field: "ammo_idfile", fType: "text", onclick: this.setSelectorActive },
           ]
         },
         {
