@@ -184,19 +184,19 @@ import AugBitmaskCalculator    from "../../components/tools/AugmentTypeCalculato
 import EqWindowSimple          from "../../components/eq-ui/EQWindowSimple";
 import LoaderCastBarTimer      from "../../components/LoaderCastBarTimer";
 import ContentArea             from "../../components/layout/ContentArea";
-import {Npcs}              from "../../app/npcs";
+import {Npcs}              from "@/app/npcs";
 import EqDebug             from "../../components/eq-ui/EQDebug";
 import EqNpcCardPreview    from "../../components/preview/EQNpcCardPreview";
-import {DB_CLASSES}        from "../../app/constants/eq-classes-constants";
-import {DB_RACE_NAMES}     from "../../app/constants/eq-races-constants";
-import {BODYTYPES}         from "../../app/constants/eq-bodytype-constants";
-import {EditFormFieldUtil} from "../../app/forms/edit-form-field-util";
+import {DB_CLASSES}        from "@/app/constants/eq-classes-constants";
+import {DB_RACE_NAMES}     from "@/app/constants/eq-races-constants";
+import {BODYTYPES}         from "@/app/constants/eq-bodytype-constants";
+import {EditFormFieldUtil} from "@/app/forms/edit-form-field-util";
 import NpcSpecialAbilities from "../../components/tools/NpcSpecialAbilities";
-import {DB_SKILLS}         from "../../app/constants/eq-skill-constants";
-import {FLYMODE}           from "../../app/constants/eq-flymode-constants";
+import {DB_SKILLS}         from "@/app/constants/eq-skill-constants";
+import {FLYMODE}           from "@/app/constants/eq-flymode-constants";
 import ItemModelSelector   from "../../components/selectors/ItemModelSelector";
-import {GENDER}            from "../../app/constants/eq-gender-constants";
-import {DB_ITEM_MATERIAL}  from "../../app/constants/eq-item-constants";
+import {GENDER}            from "@/app/constants/eq-gender-constants";
+import {DB_ITEM_MATERIAL}  from "@/app/constants/eq-item-constants";
 
 const MILLISECONDS_BEFORE_WINDOW_RESET = 5000;
 
