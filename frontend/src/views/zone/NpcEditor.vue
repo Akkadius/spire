@@ -59,7 +59,7 @@
                         <!--                          {{ field.desc }}-->
                         <!--                        </div>-->
                         <eq-checkbox
-                          v-b-tooltip.hover.v-dark.right :title="getFielddesc(field.field)"
+                          v-b-tooltip.hover.v-dark.right :title="getFieldDescription(field.field)"
                           class="d-inline-block text-center"
                           :true-value="(typeof field.true !== 'undefined' ? field.true : 1)"
                           :false-value="(typeof field.false !== 'undefined' ? field.false : 0)"
@@ -76,7 +76,7 @@
                         v-model.number="npc[field.field]"
                         class="m-0 mt-1"
                         v-on="typeof field.onclick !== 'undefined' ? { click: () => field.onclick(field.field) } : {}"
-                        v-b-tooltip.hover.v-dark.right :title="getFielddesc(field.field)"
+                        v-b-tooltip.hover.v-dark.right :title="getFieldDescription(field.field)"
                         :style="(npc[field.field] === 0 ? 'opacity: .5' : '')"
                       />
 
@@ -87,7 +87,7 @@
                         v-model.number="npc[field.field]"
                         class="m-0 mt-1"
                         v-on="typeof field.onclick !== 'undefined' ? { click: () => field.onclick(field.field) } : {}"
-                        v-b-tooltip.hover.v-dark.right :title="getFielddesc(field.field)"
+                        v-b-tooltip.hover.v-dark.right :title="getFieldDescription(field.field)"
                         :style="(npc[field.field] <= (typeof field.zeroValue !== 'undefined' ? field.zeroValue : 0) ? 'opacity: .5' : '')"
                       />
 
@@ -100,7 +100,7 @@
                         rows="2"
                         max-rows="6"
                         v-on="typeof field.onclick !== 'undefined' ? { click: () => field.onclick(field.field) } : {}"
-                        v-b-tooltip.hover.v-dark.right :title="getFielddesc(field.field)"
+                        v-b-tooltip.hover.v-dark.right :title="getFieldDescription(field.field)"
                         :style="(npc[field.field] === '' ? 'opacity: .5' : '') + ';'"
                       ></b-textarea>
 
@@ -109,7 +109,7 @@
                         v-model.number="npc[field.field]"
                         class="form-control m-0 mt-1"
                         v-if="field.selectData"
-                        v-b-tooltip.hover.v-dark.right :title="getFielddesc(field.field)"
+                        v-b-tooltip.hover.v-dark.right :title="getFieldDescription(field.field)"
                         :style="(npc[field.field] <= (typeof field.zeroValue !== 'undefined' ? field.zeroValue : 0) ? 'opacity: .5' : '')"
                       >
                         <option
@@ -163,17 +163,19 @@ import RaceBitmaskCalculator   from "../../components/tools/RaceBitmaskCalculato
 import DeityBitmaskCalculator  from "../../components/tools/DeityCalculator";
 import InventorySlotCalculator from "../../components/tools/InventorySlotCalculator";
 import AugBitmaskCalculator    from "../../components/tools/AugmentTypeCalculator";
-import EqWindowSimple          from "../../components/eq-ui/EQWindowSimple";
-import LoaderCastBarTimer      from "../../components/LoaderCastBarTimer";
-import ContentArea             from "../../components/layout/ContentArea";
-import {Npcs}                  from "../../app/npcs";
-import EqDebug                 from "../../components/eq-ui/EQDebug";
-import EqNpcCardPreview        from "../../components/preview/EQNpcCardPreview";
-import {DB_CLASSES}            from "../../app/constants/eq-classes-constants";
-import {DB_RACE_NAMES}         from "../../app/constants/eq-races-constants";
-import {BODYTYPES}             from "../../app/constants/eq-bodytype-constants";
-import {EditFormFieldUtil}     from "../../app/forms/edit-form-field-util";
-import NpcSpecialAbilities     from "../../components/tools/NpcSpecialAbilities";
+import EqWindowSimple      from "../../components/eq-ui/EQWindowSimple";
+import LoaderCastBarTimer  from "../../components/LoaderCastBarTimer";
+import ContentArea         from "../../components/layout/ContentArea";
+import {Npcs}              from "../../app/npcs";
+import EqDebug             from "../../components/eq-ui/EQDebug";
+import EqNpcCardPreview    from "../../components/preview/EQNpcCardPreview";
+import {DB_CLASSES}        from "../../app/constants/eq-classes-constants";
+import {DB_RACE_NAMES}     from "../../app/constants/eq-races-constants";
+import {BODYTYPES}         from "../../app/constants/eq-bodytype-constants";
+import {EditFormFieldUtil} from "../../app/forms/edit-form-field-util";
+import NpcSpecialAbilities from "../../components/tools/NpcSpecialAbilities";
+import {DB_SKILLS}         from "../../app/constants/eq-skill-constants";
+import {FLYMODE}           from "../../app/constants/eq-flymode-constants";
 
 const MILLISECONDS_BEFORE_WINDOW_RESET = 5000;
 
@@ -270,10 +272,19 @@ export default {
           "special_abilities",
           "loottable_id",
           "alt_currency_id",
+          "npc_faction_id",
+
           "ammo_idfile",
           "d_melee_texture_1",
           "d_melee_texture_2",
-          "npc_faction_id"
+
+          "face",
+          "luclin_hairstyle",
+          "luclin_haircolor",
+          "luclin_eyecolor",
+          "luclin_eyecolor_2",
+          "luclin_beardcolor",
+          "luclin_beard",
         ];
         hasSubEditorFields.forEach((field) => {
           EditFormFieldUtil.setFieldHighlightHasSubEditor(field)
@@ -282,8 +293,8 @@ export default {
 
     },
 
-    getFielddesc() {
-      return ""
+    getFieldDescription(field) {
+      return Npcs.getFieldDescription(field)
     },
 
     getTabs() {
@@ -291,136 +302,100 @@ export default {
         {
           name: 'General',
           fields: [
-            { desc: 'ID', field: 'id', fType: 'text', itemIcon: '6840', col: 'col-2', },
-            { desc: 'Name', field: 'name', fType: 'text', itemIcon: '6840', col: 'col-2', },
-            { desc: 'Last Name', field: 'lastname', fType: 'text', itemIcon: '6840', col: 'col-2', },
-            { desc: 'Level', field: 'level', fType: 'text', itemIcon: '6840', col: 'col-2', },
-            { desc: 'Class', field: 'class', selectData: DB_CLASSES, col: 'col-2', },
-            { desc: 'Race', field: 'race', selectData: DB_RACE_NAMES, col: 'col-2', },
+            { desc: 'ID', field: 'id', fType: 'text', itemIcon: '6840', },
+            { desc: 'Name', field: 'name', fType: 'text', itemIcon: '6840', },
+            { desc: 'Last Name', field: 'lastname', fType: 'text', itemIcon: '6840', },
+            { desc: 'Level', field: 'level', fType: 'text', itemIcon: '6840', },
+            { desc: 'Class', field: 'class', selectData: DB_CLASSES, },
+            { desc: 'Race', field: 'race', selectData: DB_RACE_NAMES, },
 
-            { desc: 'Bodytype', field: 'bodytype', selectData: BODYTYPES, col: 'col-2', },
+            { desc: 'Bodytype', field: 'bodytype', selectData: BODYTYPES, },
 
+            { desc: "Walk Speed", field: "walkspeed", fType: "text" },
+            { desc: "Run Speed", field: "runspeed", fType: "text" },
 
-            { desc: "runspeed", field: "runspeed", fType: "text", col: 'col-2' },
-            { desc: "walkspeed", field: "walkspeed", fType: "text", col: 'col-2' },
+            { desc: "Loottable ID", field: "loottable_id", fType: "text" },
+            { desc: "Merchant ID", field: "merchant_id", fType: "text" },
+            { desc: "Alternate Currency ID", field: "alt_currency_id", fType: "text" },
+            { desc: "NPC Spells ID", field: "npc_spells_id", fType: "text" },
+            { desc: "NPC Spell Effects ID", field: "npc_spells_effects_id", fType: "text" },
+            { desc: "NPC Faction ID", field: "npc_faction_id", fType: "text" },
+            { desc: "Adventure Template Id", field: "adventure_template_id", fType: "text" },
+            { desc: "Trap Template", field: "trap_template", fType: "text" },
+            { desc: "Emote ID", field: "emoteid", fType: "text" },
 
-            // {desc: "id", field: "id", fType: "text", col: 'col-2' },
-            // {desc: "name", field: "name", fType: "text", col: 'col-2' },
-            // {desc: "lastname", field: "lastname", fType: "text", col: 'col-2' },
-            // {desc: "level", field: "level", fType: "text", col: 'col-2' },
-            // {desc: "race", field: "race", fType: "text", col: 'col-2' },
-            // {desc: "class", field: "class", fType: "text", col: 'col-2' },
-            // {desc: "bodytype", field: "bodytype", fType: "text", col: 'col-2' },
+            { desc: "Spawn Limit", field: "spawn_limit", fType: "text" },
 
-
-            { desc: "loottable_id", field: "loottable_id", fType: "text", col: 'col-2' },
-            { desc: "merchant_id", field: "merchant_id", fType: "text", col: 'col-2' },
-            { desc: "alt_currency_id", field: "alt_currency_id", fType: "text", col: 'col-2' },
-            { desc: "npc_spells_id", field: "npc_spells_id", fType: "text", col: 'col-2' },
-            { desc: "npc_spells_effects_id", field: "npc_spells_effects_id", fType: "text", col: 'col-2' },
-            { desc: "npc_faction_id", field: "npc_faction_id", fType: "text", col: 'col-2' },
-            { desc: "adventure_template_id", field: "adventure_template_id", fType: "text", col: 'col-2' },
-            { desc: "trap_template", field: "trap_template", fType: "text", col: 'col-2' },
-
-
-            // { desc: "see_invis", field: "see_invis", fType: "text", col: 'col-2' },
-            // { desc: "see_invis_undead", field: "see_invis_undead", fType: "text", col: 'col-2' },
-            // { desc: "qglobal", field: "qglobal", fType: "text", col: 'col-2' },
-
-            // possible checkboxes
-            { desc: "spawn_limit", field: "spawn_limit", fType: "text", col: 'col-2' },
-
-            // { desc: "findable", field: "findable", fType: "text", col: 'col-2' },
-
-            // { desc: "see_hide", field: "see_hide", fType: "text", col: 'col-2' },
-            // { desc: "see_improved_hide", field: "see_improved_hide", fType: "text", col: 'col-2' },
-            // { desc: "trackable", field: "trackable", fType: "text", col: 'col-2' },
-            { desc: "isbot", field: "isbot", fType: "text", col: 'col-2' },
-            { desc: "exclude", field: "exclude", fType: "text", col: 'col-2' },
+            // ???
+            { desc: "Exclude", field: "exclude", fType: "text" },
 
             // version is not really used outside of the PEQ editor
-            // { desc: "version", field: "version", fType: "text", col: 'col-2' },
+            // { desc: "version", field: "version", fType: "text" },
 
-            // { desc: "private_corpse", field: "private_corpse", fType: "text", col: 'col-2' },
-            // {desc: "unique_spawn_by_name", field: "unique_spawn_by_name", fType: "text", col: 'col-2' },
-            // {desc: "underwater", field: "underwater", fType: "text", col: 'col-2' },
-            // {desc: "isquest", field: "isquest", fType: "text", col: 'col-2' },
-            { desc: "emoteid", field: "emoteid", fType: "text", col: 'col-2' },
-
-
-            // { desc: "peqid", field: "peqid", fType: "text", col: 'col-2' },
-            // { desc: "unique_", field: "unique_", fType: "text", col: 'col-2' },
-            // { desc: "fixed", field: "fixed", fType: "text", col: 'col-2' },
-            // {desc: "ignore_despawn", field: "ignore_despawn", fType: "text", col: 'col-2' },
-            // {desc: "show_name", field: "show_name", fType: "text", col: 'col-2' },
-            // {desc: "untargetable", field: "untargetable", fType: "text", col: 'col-2' },
-
-            // { desc: "skip_global_loot", field: "skip_global_loot", fType: "text", col: 'col-2' },
-            // { desc: "rare_spawn", field: "rare_spawn", fType: "text", col: 'col-2' },
-            { desc: "stuck_behavior", field: "stuck_behavior", fType: "text", col: 'col-2' },
-            { desc: "model", field: "model", fType: "text", col: 'col-2' },
-            { desc: "flymode", field: "flymode", fType: "text", col: 'col-2' },
-            // { desc: "always_aggro", field: "always_aggro", fType: "text", col: 'col-2' },
-            { desc: "exp_mod", field: "exp_mod", fType: "text", col: 'col-2' },
+            { desc: "Stuck Behavior", field: "stuck_behavior", fType: "text" },
+            { desc: "Model?", field: "model", fType: "text" },
+            { desc: "Flymode", field: "flymode", fType: "select", selectData: FLYMODE },
+            // { desc: "always_aggro", field: "always_aggro", fType: "text" },
+            { desc: "Experience Modifier", field: "exp_mod", fType: "text" },
 
           ],
         },
         {
           name: 'Weapon',
           fields: [
-            { desc: "ammo_idfile", field: "ammo_idfile", fType: "text", col: 'col-2' },
-            { desc: "prim_melee_type", field: "prim_melee_type", fType: "text", col: 'col-2' },
-            { desc: "sec_melee_type", field: "sec_melee_type", fType: "text", col: 'col-2' },
-            { desc: "ranged_type", field: "ranged_type", fType: "text", col: 'col-2' },
-            { desc: "d_melee_texture_1", field: "d_melee_texture_1", fType: "text", col: 'col-2' },
-            { desc: "d_melee_texture_2", field: "d_melee_texture_2", fType: "text", col: 'col-2' },
+            { desc: "Primary Melee Weapon Model", field: "d_melee_texture_1", fType: "text" },
+            { desc: "Primary Melee Type", field: "prim_melee_type", fType: "select", selectData: DB_SKILLS },
+            { desc: "Secondary Melee Weapon Model", field: "d_melee_texture_2", fType: "text" },
+            { desc: "Secondary Melee Type", field: "sec_melee_type", fType: "select", selectData: DB_SKILLS },
+            { desc: "Ranged Melee Type", field: "ranged_type", fType: "select", selectData: DB_SKILLS },
+            { desc: "Ammo Weapon Model", field: "ammo_idfile", fType: "text" },
           ]
         },
         {
           name: 'Aggro',
           fields: [
-            { desc: 'Always Aggro', field: 'always_aggro', fType: 'checkbox', col: 'col-2' },
-            { desc: "NPC Aggro", field: "npc_aggro", fType: "checkbox", col: 'col-2' },
+            { desc: 'Always Aggro', field: 'always_aggro', fType: 'checkbox' },
+            { desc: "NPC Aggro", field: "npc_aggro", fType: "checkbox" },
 
-            { desc: "aggroradius", field: "aggroradius", fType: "text", col: 'col-2' },
-            { desc: "assistradius", field: "assistradius", fType: "text", col: 'col-2' },
+            { desc: "Aggro Radius", field: "aggroradius", fType: "text" },
+            { desc: "Assist Radius", field: "assistradius", fType: "text" },
           ]
         },
         {
           name: 'Appearance',
           fields: [
-            { desc: "gender", field: "gender", fType: "text", col: 'col-2' },
-            { desc: "texture", field: "texture", fType: "text", col: 'col-2' },
-            { desc: "helmtexture", field: "helmtexture", fType: "text", col: 'col-2' },
-            { desc: "herosforgemodel", field: "herosforgemodel", fType: "text", col: 'col-2' },
-            { desc: "size", field: "size", fType: "text", col: 'col-2' },
-            { desc: "light", field: "light", fType: "text", col: 'col-2' },
+            { desc: "Gender", field: "gender", fType: "text" },
+            { desc: "Texture", field: "texture", fType: "text" },
+            { desc: "Helm Texture", field: "helmtexture", fType: "text" },
+            { desc: "Heros Forge Model", field: "herosforgemodel", fType: "text" },
+            { desc: "Size", field: "size", fType: "text" },
+            { desc: "Light", field: "light", fType: "text" },
 
-            { desc: "armortint_id", field: "armortint_id", fType: "text", col: 'col-2' },
-            { desc: "armortint_red", field: "armortint_red", fType: "text", col: 'col-2' },
-            { desc: "armortint_green", field: "armortint_green", fType: "text", col: 'col-2' },
-            { desc: "armortint_blue", field: "armortint_blue", fType: "text", col: 'col-2' },
+            { desc: "Armor Tint ID", field: "armortint_id", fType: "text" },
+            { desc: "Armor Tint Red", field: "armortint_red", fType: "text" },
+            { desc: "Armor Tint Green", field: "armortint_green", fType: "text" },
+            { desc: "Armor Tint Blue", field: "armortint_blue", fType: "text" },
 
-            { desc: "armtexture", field: "armtexture", fType: "text", col: 'col-2' },
-            { desc: "bracertexture", field: "bracertexture", fType: "text", col: 'col-2' },
-            { desc: "handtexture", field: "handtexture", fType: "text", col: 'col-2' },
-            { desc: "legtexture", field: "legtexture", fType: "text", col: 'col-2' },
-            { desc: "feettexture", field: "feettexture", fType: "text", col: 'col-2' },
+            { desc: "Arm Texture", field: "armtexture", fType: "text" },
+            { desc: "Bracer Texture", field: "bracertexture", fType: "text" },
+            { desc: "Hand Texture", field: "handtexture", fType: "text" },
+            { desc: "Leg Texture", field: "legtexture", fType: "text" },
+            { desc: "Feet Texture", field: "feettexture", fType: "text" },
           ]
         },
         {
           name: 'Face',
           fields: [
-            { desc: "face", field: "face", fType: "text", col: 'col-2' },
-            { desc: "luclin_hairstyle", field: "luclin_hairstyle", fType: "text", col: 'col-2' },
-            { desc: "luclin_haircolor", field: "luclin_haircolor", fType: "text", col: 'col-2' },
-            { desc: "luclin_eyecolor", field: "luclin_eyecolor", fType: "text", col: 'col-2' },
-            { desc: "luclin_eyecolor_2", field: "luclin_eyecolor_2", fType: "text", col: 'col-2' },
-            { desc: "luclin_beardcolor", field: "luclin_beardcolor", fType: "text", col: 'col-2' },
-            { desc: "luclin_beard", field: "luclin_beard", fType: "text", col: 'col-2' },
-            { desc: "drakkin_heritage", field: "drakkin_heritage", fType: "text", col: 'col-2' },
-            { desc: "drakkin_tattoo", field: "drakkin_tattoo", fType: "text", col: 'col-2' },
-            { desc: "drakkin_details", field: "drakkin_details", fType: "text", col: 'col-2' },
+            { desc: "Face", field: "face", fType: "text" },
+            { desc: "Hairstyle", field: "luclin_hairstyle", fType: "text" },
+            { desc: "Haircolor", field: "luclin_haircolor", fType: "text" },
+            { desc: "Eyecolor 1", field: "luclin_eyecolor", fType: "text" },
+            { desc: "Eyecolor 2", field: "luclin_eyecolor_2", fType: "text" },
+            { desc: "Beardcolor", field: "luclin_beardcolor", fType: "text" },
+            { desc: "Beard", field: "luclin_beard", fType: "text" },
+            { desc: "(Drakkin) Heritage", field: "drakkin_heritage", fType: "text" },
+            { desc: "(Drakkin) Tattoo", field: "drakkin_tattoo", fType: "text" },
+            { desc: "(Drakkin) Details", field: "drakkin_details", fType: "text" },
           ]
         },
         {
@@ -428,60 +403,58 @@ export default {
           fields: [
 
             // deprecated
-            // { desc: "npcspecialattks", field: "npcspecialattks", fType: "text", col: 'col-2' },
+            // { desc: "npcspecialattks", field: "npcspecialattks", fType: "text" },
 
-            { desc: "ac", field: "ac", fType: "text", col: 'col-2' },
-            { desc: "hp", field: "hp", fType: "text", col: 'col-2' },
-            { desc: "mana", field: "mana", fType: "text", col: 'col-2' },
-            { desc: "hp_regen_rate", field: "hp_regen_rate", fType: "text", col: 'col-2' },
-            { desc: "hp_regen_per_second", field: "hp_regen_per_second", fType: "text", col: 'col-2' },
-            { desc: "mana_regen_rate", field: "mana_regen_rate", fType: "text", col: 'col-2' },
+            { desc: "AC", field: "ac", fType: "text" },
+            { desc: "HP", field: "hp", fType: "text" },
+            { desc: "Mana", field: "mana", fType: "text" },
+            { desc: "HP Regen (Tic)", field: "hp_regen_rate", fType: "text" },
+            { desc: "HP Regen (Sec)", field: "hp_regen_per_second", fType: "text" },
+            { desc: "Mana Regen (Tic)", field: "mana_regen_rate", fType: "text" },
 
-            { desc: "str", field: "str", fType: "text", col: 'col-2' },
-            { desc: "sta", field: "sta", fType: "text", col: 'col-2' },
-            { desc: "dex", field: "dex", fType: "text", col: 'col-2' },
-            { desc: "agi", field: "agi", fType: "text", col: 'col-2' },
-            { desc: "_int", field: "_int", fType: "text", col: 'col-2' },
-            { desc: "wis", field: "wis", fType: "text", col: 'col-2' },
-            { desc: "cha", field: "cha", fType: "text", col: 'col-2' },
+            { desc: "Strength", field: "str", fType: "text" },
+            { desc: "Stamina", field: "sta", fType: "text" },
+            { desc: "Dexterity", field: "dex", fType: "text" },
+            { desc: "Agility", field: "agi", fType: "text" },
+            { desc: "Intelligence", field: "_int", fType: "text" },
+            { desc: "Wisdom", field: "wis", fType: "text" },
+            { desc: "Charisma", field: "cha", fType: "text" },
 
-            { desc: "spellscale", field: "spellscale", fType: "text", col: 'col-2' },
-            { desc: "healscale", field: "healscale", fType: "text", col: 'col-2' },
+            { desc: "Spell Scale", field: "spellscale", fType: "text" },
+            { desc: "Heal Scale", field: "healscale", fType: "text" },
 
-            { desc: "scalerate", field: "scalerate", fType: "text", col: 'col-2' },
-            { desc: "maxlevel", field: "maxlevel", fType: "text", col: 'col-2' },
-
-
+            { desc: "Scale Rate", field: "scalerate", fType: "text" },
+            { desc: "Max Level", field: "maxlevel", fType: "text" },
           ]
         },
         {
           name: 'Resists',
           fields: [
-            { desc: "mr", field: "mr", fType: "text", col: 'col-2' },
-            { desc: "cr", field: "cr", fType: "text", col: 'col-2' },
-            { desc: "dr", field: "dr", fType: "text", col: 'col-2' },
-            { desc: "fr", field: "fr", fType: "text", col: 'col-2' },
-            { desc: "pr", field: "pr", fType: "text", col: 'col-2' },
-            { desc: "corrup", field: "corrup", fType: "text", col: 'col-2' },
-            { desc: "ph_r", field: "ph_r", fType: "text", col: 'col-2' },
+            { desc: "Magic Resist", field: "mr", fType: "text" },
+            { desc: "Cold Resist", field: "cr", fType: "text" },
+            { desc: "Disease Resist", field: "dr", fType: "text" },
+            { desc: "Fire Resist", field: "fr", fType: "text" },
+            { desc: "Poison Resist", field: "pr", fType: "text" },
+            { desc: "Corruption Resist", field: "corrup", fType: "text" },
+            { desc: "Physical Resist", field: "ph_r", fType: "text" },
           ]
         },
         {
           name: 'Combat',
           fields: [
-            { desc: "mindmg", field: "mindmg", fType: "text", col: 'col-2' },
-            { desc: "maxdmg", field: "maxdmg", fType: "text", col: 'col-2' },
-            { desc: "attack_count", field: "attack_count", fType: "text", col: 'col-2' },
+            { desc: "Minimum Damage", field: "mindmg", fType: "text" },
+            { desc: "Maximum Damage", field: "maxdmg", fType: "text" },
+            { desc: "Attack Count", field: "attack_count", fType: "text" },
 
-            { desc: "attack_speed", field: "attack_speed", fType: "text", col: 'col-2' },
-            { desc: "attack_delay", field: "attack_delay", fType: "text", col: 'col-2' },
-            { desc: "atk", field: "atk", fType: "text", col: 'col-2' },
-            { desc: "accuracy", field: "accuracy", fType: "text", col: 'col-2' },
-            { desc: "avoidance", field: "avoidance", fType: "text", col: 'col-2' },
-            { desc: "slow_mitigation", field: "slow_mitigation", fType: "text", col: 'col-2' },
+            { desc: "Attack Speed", field: "attack_speed", fType: "text" },
+            { desc: "Attack Delay", field: "attack_delay", fType: "text" },
+            { desc: "Attack", field: "atk", fType: "text" },
+            { desc: "Accuracy", field: "accuracy", fType: "text" },
+            { desc: "Avoidance", field: "avoidance", fType: "text" },
+            { desc: "Slow Mitigation", field: "slow_mitigation", fType: "text" },
 
             {
-              desc: "special_abilities",
+              desc: "Special Abilities",
               field: "special_abilities",
               fType: "textarea",
               col: 'col-12',
@@ -492,40 +465,40 @@ export default {
         {
           name: 'Charm',
           fields: [
-            { desc: "charm_ac", field: "charm_ac", fType: "text", col: 'col-2' },
-            { desc: "charm_min_dmg", field: "charm_min_dmg", fType: "text", col: 'col-2' },
-            { desc: "charm_max_dmg", field: "charm_max_dmg", fType: "text", col: 'col-2' },
-            { desc: "charm_attack_delay", field: "charm_attack_delay", fType: "text", col: 'col-2' },
-            { desc: "charm_accuracy_rating", field: "charm_accuracy_rating", fType: "text", col: 'col-2' },
-            { desc: "charm_avoidance_rating", field: "charm_avoidance_rating", fType: "text", col: 'col-2' },
-            { desc: "charm_atk", field: "charm_atk", fType: "text", col: 'col-2' },
+            { desc: "AC", field: "charm_ac", fType: "text" },
+            { desc: "Minimum Damage", field: "charm_min_dmg", fType: "text" },
+            { desc: "Maximum Damage", field: "charm_max_dmg", fType: "text" },
+            { desc: "Attack Delay", field: "charm_attack_delay", fType: "text" },
+            { desc: "Accuracy Rating", field: "charm_accuracy_rating", fType: "text" },
+            { desc: "Avoidance Rating", field: "charm_avoidance_rating", fType: "text" },
+            { desc: "Attack", field: "charm_atk", fType: "text" },
           ]
         },
         {
           name: 'Settings',
           fields: [
             // checkboxes
-            { desc: 'See Hide', field: 'see_hide', fType: 'checkbox', col: 'col-2', },
-            { desc: 'See Improved Hide', field: 'see_improved_hide', fType: 'checkbox', col: 'col-2', },
-            { desc: 'See Invisible', field: 'see_invis', fType: 'checkbox', col: 'col-2', },
-            { desc: 'See Invis Undead', field: 'see_invis_undead', fType: 'checkbox', col: 'col-2', },
-            { desc: 'Show Name', field: 'show_name', fType: 'checkbox', col: 'col-2', },
-            { desc: 'Trackable', field: 'trackable', fType: 'checkbox', col: 'col-2', },
-            { desc: 'Skip Global Loot', field: 'skip_global_loot', fType: 'checkbox', col: 'col-2', },
-            { desc: 'No Target Hotkey', field: 'no_target_hotkey', fType: 'checkbox', col: 'col-2', },
-            { desc: 'Findable', field: 'findable', fType: 'checkbox', col: 'col-2', },
-            { desc: 'Untargetable', field: 'untargetable', fType: 'checkbox', col: 'col-2', },
-            { desc: 'Underwater', field: 'underwater', fType: 'checkbox', col: 'col-2', },
-            { desc: 'QGlobal', field: 'qglobal', fType: 'checkbox', col: 'col-2', },
-            { desc: 'Ignore Despawn', field: 'ignore_despawn', fType: 'checkbox', col: 'col-2', },
-            { desc: 'Quest NPC', field: 'isquest', fType: 'checkbox', col: 'col-2', },
-            { desc: 'Unique Spawn', field: 'unique_spawn_by_name', fType: 'checkbox', col: 'col-2', },
-            { desc: 'Rare Spawn', field: 'rare_spawn', fType: 'checkbox', col: 'col-2', },
-            { desc: 'Always Aggro', field: 'always_aggro', fType: 'checkbox', col: 'col-2', },
-            { desc: "NPC Aggro", field: "npc_aggro", fType: "checkbox", col: 'col-2' },
-            { desc: "Raid Target", field: "raid_target", fType: "checkbox", col: 'col-2' },
-            { desc: "Private Corpse", field: "private_corpse", fType: "checkbox", col: 'col-2' },
-
+            { desc: 'See Hide', field: 'see_hide', fType: 'checkbox', },
+            { desc: 'See Improved Hide', field: 'see_improved_hide', fType: 'checkbox', },
+            { desc: 'See Invisible', field: 'see_invis', fType: 'checkbox', },
+            { desc: 'See Invis Undead', field: 'see_invis_undead', fType: 'checkbox', },
+            { desc: 'Show Name', field: 'show_name', fType: 'checkbox', },
+            { desc: 'Trackable', field: 'trackable', fType: 'checkbox', },
+            { desc: 'Skip Global Loot', field: 'skip_global_loot', fType: 'checkbox', },
+            { desc: 'No Target Hotkey', field: 'no_target_hotkey', fType: 'checkbox', },
+            { desc: 'Findable', field: 'findable', fType: 'checkbox', },
+            { desc: 'Untargetable', field: 'untargetable', fType: 'checkbox', },
+            { desc: 'Underwater', field: 'underwater', fType: 'checkbox', },
+            { desc: 'QGlobal', field: 'qglobal', fType: 'checkbox', },
+            { desc: 'Ignore Despawn', field: 'ignore_despawn', fType: 'checkbox', },
+            { desc: 'Quest NPC', field: 'isquest', fType: 'checkbox', },
+            { desc: 'Unique Spawn', field: 'unique_spawn_by_name', fType: 'checkbox', },
+            { desc: 'Rare Spawn', field: 'rare_spawn', fType: 'checkbox', },
+            { desc: 'Always Aggro', field: 'always_aggro', fType: 'checkbox', },
+            { desc: "NPC Aggro", field: "npc_aggro", fType: "checkbox" },
+            { desc: "Raid Target", field: "raid_target", fType: "checkbox" },
+            { desc: "Private Corpse", field: "private_corpse", fType: "checkbox" },
+            { desc: "Is Bot", field: "isbot", fType: "checkbox" },
           ]
         },
       ]
