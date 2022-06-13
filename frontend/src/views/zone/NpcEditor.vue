@@ -76,7 +76,7 @@
                         :id="field.field"
                         v-model.number="npc[field.field]"
                         class="m-0 mt-1"
-                        v-on="typeof field.onclick !== 'undefined' ? { click: () => field.onclick(field.field) } : {}"
+                        v-on="field.e ? getEventHandlers(field.e, field.field) : {}"
                         v-b-tooltip.hover.v-dark.right :title="getFieldDescription(field.field)"
                         :style="(npc[field.field] === 0 ? 'opacity: .5' : '')"
                       />
@@ -87,7 +87,7 @@
                         :id="field.field"
                         v-model.number="npc[field.field]"
                         class="m-0 mt-1"
-                        v-on="typeof field.onclick !== 'undefined' ? { click: () => field.onclick(field.field) } : {}"
+                        v-on="field.e ? getEventHandlers(field.e, field.field) : {}"
                         v-b-tooltip.hover.v-dark.right :title="getFieldDescription(field.field)"
                         :style="(npc[field.field] <= (typeof field.zeroValue !== 'undefined' ? field.zeroValue : 0) ? 'opacity: .5' : '')"
                       />
@@ -100,7 +100,7 @@
                         class="m-0 mt-1"
                         rows="2"
                         max-rows="6"
-                        v-on="typeof field.onclick !== 'undefined' ? { click: () => field.onclick(field.field) } : {}"
+                        v-on="field.e ? getEventHandlers(field.e, field.field) : {}"
                         v-b-tooltip.hover.v-dark.right :title="getFieldDescription(field.field)"
                         :style="(npc[field.field] === '' ? 'opacity: .5' : '') + ';'"
                       ></b-textarea>
@@ -108,8 +108,10 @@
                       <!-- select -->
                       <select
                         v-model.number="npc[field.field]"
+                        :id="field.field"
                         class="form-control m-0 mt-1"
                         v-if="field.selectData"
+                        v-on="field.e ? getEventHandlers(field.e, field.field) : {}"
                         v-b-tooltip.hover.v-dark.right :title="getFieldDescription(field.field)"
                         :style="(npc[field.field] <= (typeof field.zeroValue !== 'undefined' ? field.zeroValue : 0) ? 'opacity: .5' : '')"
                       >
@@ -165,45 +167,51 @@
           @input="npc.ammo_idfile = $event; setFieldModifiedById('ammo_idfile')"
         />
 
+        <race-selector
+          v-if="(selectorActive['race'] || selectorActive['gender'] || selectorActive['texture'] || selectorActive['helmtexture']) && npc"
+          :race="npc.race"
+          :gender="npc.gender"
+          :texture="npc.texture"
+          :helm-texture="npc.helmtexture"
+          @selected="npc.race = $event.race; npc.gender = $event.gender; npc.texture = $event.texture; npc.helmtexture = $event.helmtexture"
+        />
+
       </div>
     </div>
   </content-area>
 </template>
 
 <script>
-import EqWindowFancy           from "../../components/eq-ui/EQWindowFancy";
-import EqWindow                from "../../components/eq-ui/EQWindow";
-import EqTabs                  from "../../components/eq-ui/EQTabs";
-import EqTab                   from "../../components/eq-ui/EQTab";
-import EqItemPreview           from "../../components/preview/EQItemCardPreview";
-import EqCheckbox              from "../../components/eq-ui/EQCheckbox";
-import ClassBitmaskCalculator  from "../../components/tools/ClassBitmaskCalculator";
-import RaceBitmaskCalculator   from "../../components/tools/RaceBitmaskCalculator";
-import DeityBitmaskCalculator  from "../../components/tools/DeityCalculator";
-import InventorySlotCalculator from "../../components/tools/InventorySlotCalculator";
-import AugBitmaskCalculator    from "../../components/tools/AugmentTypeCalculator";
-import EqWindowSimple          from "../../components/eq-ui/EQWindowSimple";
-import LoaderCastBarTimer      from "../../components/LoaderCastBarTimer";
-import ContentArea             from "../../components/layout/ContentArea";
-import {Npcs}                  from "@/app/npcs";
-import EqDebug                 from "../../components/eq-ui/EQDebug";
-import EqNpcCardPreview        from "../../components/preview/EQNpcCardPreview";
-import {DB_CLASSES}            from "@/app/constants/eq-classes-constants";
-import {DB_RACE_NAMES}         from "@/app/constants/eq-races-constants";
-import {BODYTYPES}             from "@/app/constants/eq-bodytype-constants";
-import {EditFormFieldUtil}     from "@/app/forms/edit-form-field-util";
-import NpcSpecialAbilities     from "../../components/tools/NpcSpecialAbilities";
-import {DB_SKILLS}             from "@/app/constants/eq-skill-constants";
-import {FLYMODE}               from "@/app/constants/eq-flymode-constants";
-import ItemModelSelector       from "../../components/selectors/ItemModelSelector";
-import {GENDER}                from "@/app/constants/eq-gender-constants";
-import {DB_ITEM_MATERIAL}      from "@/app/constants/eq-item-constants";
+import EqWindowFancy       from "../../components/eq-ui/EQWindowFancy";
+import EqWindow            from "../../components/eq-ui/EQWindow";
+import EqTabs              from "../../components/eq-ui/EQTabs";
+import EqTab               from "../../components/eq-ui/EQTab";
+import EqItemPreview       from "../../components/preview/EQItemCardPreview";
+import EqCheckbox          from "../../components/eq-ui/EQCheckbox";
+import EqWindowSimple      from "../../components/eq-ui/EQWindowSimple";
+import LoaderCastBarTimer  from "../../components/LoaderCastBarTimer";
+import ContentArea         from "../../components/layout/ContentArea";
+import {Npcs}              from "@/app/npcs";
+import EqDebug             from "../../components/eq-ui/EQDebug";
+import EqNpcCardPreview    from "../../components/preview/EQNpcCardPreview";
+import {DB_CLASSES}        from "@/app/constants/eq-classes-constants";
+import {DB_RACE_NAMES}     from "@/app/constants/eq-races-constants";
+import {BODYTYPES}         from "@/app/constants/eq-bodytype-constants";
+import {EditFormFieldUtil} from "@/app/forms/edit-form-field-util";
+import NpcSpecialAbilities from "../../components/tools/NpcSpecialAbilities";
+import {DB_SKILLS}         from "@/app/constants/eq-skill-constants";
+import {FLYMODE}           from "@/app/constants/eq-flymode-constants";
+import ItemModelSelector   from "../../components/selectors/ItemModelSelector";
+import {GENDER}            from "@/app/constants/eq-gender-constants";
+import {DB_ITEM_MATERIAL}  from "@/app/constants/eq-item-constants";
+import RaceSelector        from "../../components/selectors/RaceSelector";
 
-const MILLISECONDS_BEFORE_WINDOW_RESET = 5000;
+const MILLISECONDS_BEFORE_WINDOW_RESET = 10000;
 
 export default {
   name: "ItemEdit",
   components: {
+    RaceSelector,
     ItemModelSelector,
     NpcSpecialAbilities,
     EqNpcCardPreview,
@@ -211,11 +219,6 @@ export default {
     ContentArea,
     LoaderCastBarTimer,
     EqWindowSimple,
-    AugBitmaskCalculator,
-    InventorySlotCalculator,
-    DeityBitmaskCalculator,
-    RaceBitmaskCalculator,
-    ClassBitmaskCalculator,
     EqCheckbox,
     EqItemPreview,
     EqTab,
@@ -243,7 +246,7 @@ export default {
 
     // reset state vars when we navigate away
     '$route'() {
-      this.npc         = null;
+      this.npc = null;
       // this.originalItem = {};
 
       // reset state vars when we navigate away
@@ -319,6 +322,11 @@ export default {
           "alt_currency_id",
           "npc_faction_id",
 
+          "race",
+          "gender",
+          "texture",
+          "helmtexture",
+
           "ammo_idfile",
           "d_melee_texture_1",
           "d_melee_texture_2",
@@ -345,6 +353,19 @@ export default {
     /**
      * Tabs / fields
      */
+
+    getEventHandlers(e, field) {
+      let handlers = {}
+      if (e.onclick) {
+        handlers.click = () => e.onclick(field)
+      }
+      if (e.onmouseover) {
+        handlers.mouseover = () => e.onmouseover(field)
+      }
+
+      return handlers
+    },
+
     getTabs() {
       return [
         {
@@ -393,18 +414,18 @@ export default {
               desc: "Primary Melee Weapon Model",
               field: "d_melee_texture_1",
               fType: "text",
-              onclick: this.setSelectorActive
+              e: { onclick: this.setSelectorActive }
             },
             { desc: "Primary Melee Type", field: "prim_melee_type", fType: "select", selectData: DB_SKILLS },
             {
               desc: "Secondary Melee Weapon Model",
               field: "d_melee_texture_2",
               fType: "text",
-              onclick: this.setSelectorActive
+              e: { onclick: this.setSelectorActive }
             },
             { desc: "Secondary Melee Type", field: "sec_melee_type", fType: "select", selectData: DB_SKILLS },
             { desc: "Ranged Melee Type", field: "ranged_type", fType: "select", selectData: DB_SKILLS },
-            { desc: "Ammo Weapon Model", field: "ammo_idfile", fType: "text", onclick: this.setSelectorActive },
+            { desc: "Ammo Weapon Model", field: "ammo_idfile", fType: "text", e: { onclick: this.setSelectorActive } },
           ]
         },
         {
@@ -420,10 +441,22 @@ export default {
         {
           name: 'Appearance',
           fields: [
-            { desc: 'Race', field: 'race', selectData: DB_RACE_NAMES, },
-            { desc: "Gender", field: "gender", fType: "select", selectData: GENDER },
-            { desc: "Texture", field: "texture", fType: "select", selectData: DB_ITEM_MATERIAL },
-            { desc: "Helm Texture", field: "helmtexture", fType: "text" },
+            { desc: 'Race', field: 'race', selectData: DB_RACE_NAMES, e: { onmouseover: this.setSelectorActive } },
+            {
+              desc: "Gender",
+              field: "gender",
+              fType: "select",
+              selectData: GENDER,
+              e: { onmouseover: this.setSelectorActive }
+            },
+            {
+              desc: "Texture",
+              field: "texture",
+              fType: "select",
+              selectData: DB_ITEM_MATERIAL,
+              e: { onmouseover: this.setSelectorActive }
+            },
+            { desc: "Helm Texture", field: "helmtexture", fType: "text", e: { onmouseover: this.setSelectorActive } },
             { desc: "Heros Forge Model", field: "herosforgemodel", fType: "text" },
             { desc: "Size", field: "size", fType: "text" },
             { desc: "Light", field: "light", fType: "text" },
@@ -520,7 +553,7 @@ export default {
               field: "special_abilities",
               fType: "textarea",
               col: 'col-12',
-              onclick: this.setSelectorActive,
+              e: { onclick: this.setSelectorActive },
             },
           ]
         },
