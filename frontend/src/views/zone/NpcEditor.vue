@@ -176,41 +176,58 @@
           @selected="npc.race = $event.race; npc.gender = $event.gender; npc.texture = $event.texture; npc.helmtexture = $event.helmtexture"
         />
 
+        <eq-window
+          v-if="(isFacialSelectorActive()) && npc"
+          title="Facial Appearance Selector"
+        >
+          <facial-appearance-selector
+            :in-race="npc.race"
+            :in-gender="npc.gender"
+            :in-face="npc.face"
+            :in-hair="npc.luclin_hairstyle"
+            :in-hair-color="npc.luclin_haircolor"
+            :in-beard="npc.luclin_beard"
+            :in-beard-color="npc.luclin_beardcolor"
+          />
+        </eq-window>
+
       </div>
     </div>
   </content-area>
 </template>
 
 <script>
-import EqWindowFancy       from "../../components/eq-ui/EQWindowFancy";
-import EqWindow            from "../../components/eq-ui/EQWindow";
-import EqTabs              from "../../components/eq-ui/EQTabs";
-import EqTab               from "../../components/eq-ui/EQTab";
-import EqItemPreview       from "../../components/preview/EQItemCardPreview";
-import EqCheckbox          from "../../components/eq-ui/EQCheckbox";
-import EqWindowSimple      from "../../components/eq-ui/EQWindowSimple";
-import LoaderCastBarTimer  from "../../components/LoaderCastBarTimer";
-import ContentArea         from "../../components/layout/ContentArea";
-import {Npcs}              from "@/app/npcs";
-import EqDebug             from "../../components/eq-ui/EQDebug";
-import EqNpcCardPreview    from "../../components/preview/EQNpcCardPreview";
-import {DB_CLASSES}        from "@/app/constants/eq-classes-constants";
-import {DB_RACE_NAMES}     from "@/app/constants/eq-races-constants";
-import {BODYTYPES}         from "@/app/constants/eq-bodytype-constants";
-import {EditFormFieldUtil} from "@/app/forms/edit-form-field-util";
-import NpcSpecialAbilities from "../../components/tools/NpcSpecialAbilities";
-import {DB_SKILLS}         from "@/app/constants/eq-skill-constants";
-import {FLYMODE}           from "@/app/constants/eq-flymode-constants";
-import ItemModelSelector   from "../../components/selectors/ItemModelSelector";
-import {GENDER}            from "@/app/constants/eq-gender-constants";
-import {DB_ITEM_MATERIAL}  from "@/app/constants/eq-item-constants";
-import RaceSelector        from "../../components/selectors/RaceSelector";
+import EqWindowFancy            from "../../components/eq-ui/EQWindowFancy";
+import EqWindow                 from "../../components/eq-ui/EQWindow";
+import EqTabs                   from "../../components/eq-ui/EQTabs";
+import EqTab                    from "../../components/eq-ui/EQTab";
+import EqItemPreview            from "../../components/preview/EQItemCardPreview";
+import EqCheckbox               from "../../components/eq-ui/EQCheckbox";
+import EqWindowSimple           from "../../components/eq-ui/EQWindowSimple";
+import LoaderCastBarTimer       from "../../components/LoaderCastBarTimer";
+import ContentArea              from "../../components/layout/ContentArea";
+import {Npcs}                   from "@/app/npcs";
+import EqDebug                  from "../../components/eq-ui/EQDebug";
+import EqNpcCardPreview         from "../../components/preview/EQNpcCardPreview";
+import {DB_CLASSES}             from "@/app/constants/eq-classes-constants";
+import {DB_RACE_NAMES}          from "@/app/constants/eq-races-constants";
+import {BODYTYPES}              from "@/app/constants/eq-bodytype-constants";
+import {EditFormFieldUtil}      from "@/app/forms/edit-form-field-util";
+import NpcSpecialAbilities      from "../../components/tools/NpcSpecialAbilities";
+import {DB_SKILLS}              from "@/app/constants/eq-skill-constants";
+import {FLYMODE}                from "@/app/constants/eq-flymode-constants";
+import ItemModelSelector        from "../../components/selectors/ItemModelSelector";
+import {GENDER}                 from "@/app/constants/eq-gender-constants";
+import {DB_ITEM_MATERIAL}       from "@/app/constants/eq-item-constants";
+import RaceSelector             from "../../components/selectors/RaceSelector";
+import FacialAppearanceSelector from "../../components/selectors/FacialAppearanceSelector";
 
 const MILLISECONDS_BEFORE_WINDOW_RESET = 10000;
 
 export default {
   name: "ItemEdit",
   components: {
+    FacialAppearanceSelector,
     RaceSelector,
     ItemModelSelector,
     NpcSpecialAbilities,
@@ -263,6 +280,27 @@ export default {
     this.load()
   },
   methods: {
+
+    facialFields() {
+      return [
+        "face",
+        "luclin_hairstyle",
+        "luclin_haircolor",
+        "luclin_eyecolor",
+        "luclin_eyecolor_2",
+        "luclin_beard",
+        "luclin_beardcolor"
+      ]
+    },
+
+    isFacialSelectorActive() {
+      for (let f of this.facialFields()) {
+        if (this.selectorActive[f]) {
+          return true;
+        }
+      }
+      return false
+    },
 
     setFieldModifiedById(field) {
       EditFormFieldUtil.setFieldModifiedById(field)
@@ -480,13 +518,23 @@ export default {
         {
           name: 'Face',
           fields: [
-            { desc: "Face", field: "face", fType: "text" },
-            { desc: "Hairstyle", field: "luclin_hairstyle", fType: "text" },
-            { desc: "Haircolor", field: "luclin_haircolor", fType: "text" },
-            { desc: "Eyecolor 1", field: "luclin_eyecolor", fType: "text" },
-            { desc: "Eyecolor 2", field: "luclin_eyecolor_2", fType: "text" },
-            { desc: "Beardcolor", field: "luclin_beardcolor", fType: "text" },
-            { desc: "Beard", field: "luclin_beard", fType: "text" },
+            { desc: "Face", field: "face", fType: "text", e: { onmouseover: this.setSelectorActive } },
+            { desc: "Hairstyle", field: "luclin_hairstyle", fType: "text", e: { onmouseover: this.setSelectorActive } },
+            { desc: "Haircolor", field: "luclin_haircolor", fType: "text", e: { onmouseover: this.setSelectorActive } },
+            { desc: "Eyecolor 1", field: "luclin_eyecolor", fType: "text", e: { onmouseover: this.setSelectorActive } },
+            {
+              desc: "Eyecolor 2",
+              field: "luclin_eyecolor_2",
+              fType: "text",
+              e: { onmouseover: this.setSelectorActive }
+            },
+            {
+              desc: "Beardcolor",
+              field: "luclin_beardcolor",
+              fType: "text",
+              e: { onmouseover: this.setSelectorActive }
+            },
+            { desc: "Beard", field: "luclin_beard", fType: "text", e: { onmouseover: this.setSelectorActive } },
             { desc: "(Drakkin) Heritage", field: "drakkin_heritage", fType: "text" },
             { desc: "(Drakkin) Tattoo", field: "drakkin_tattoo", fType: "text" },
             { desc: "(Drakkin) Details", field: "drakkin_details", fType: "text" },

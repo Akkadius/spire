@@ -1,169 +1,208 @@
 <template>
-  <div class="row">
-    <div class="col-2">
-      <div style="width: 128px; height: 128px;">
+  <div>
+    <div
+      class="font-weight-bold text-center mt-3 mb-3"
+      v-if="!races.includes(selectedRace)">
+      Facial appearance editing is not supported for this race
+    </div>
+
+    <div class="row" v-if="races.includes(selectedRace)">
+      <div class="col-4">
+        <div style="width: 128px; height: 128px;">
         <span
           :class="`faces-race-${selectedRace}-gender-${selectedGender}-face-${selectedFace}`"
-          style="position: absolute; left: 30px; top: 30px;"
+          style="position: absolute; right: 30px; top: 30px;"
         />
-        <span
-          :class="`faces-race-${selectedRace}-gender-${selectedGender}-beard-${selectedBeard}-color-${selectedBeardColor}`"
-          style="position: absolute; left: 30px; top: 30px; z-index: 1"
-        />
-        <span
-          :class="`faces-race-${selectedRace}-gender-${selectedGender}-hair-${selectedHair}-color-${selectedHairColor}`"
-          style="position: absolute; left: 30px; top: 30px; z-index: 2"
-        />
-        <span
-          :class="`faces-race-${selectedRace}-gender-${selectedGender}-eyes-${selectedEye}`"
-          style="position: absolute; left: 30px; top: 30px; z-index: 3"
-        />
-      </div>
-    </div>
-    <div class="col-6 text-left">
-      <div class="mb-3 ml-3 font-weight-bold">
-        Facial Feature Controls
-      </div>
-
-      <!-- Race -->
-      <div class="row mb-3">
-        <div class="col-12">
-          <div class="btn-group ml-3 facial-btn-group" role="group" aria-label="Race">
-            <b-button size="sm" variant="outline-warning" class="facial-ctrl-btn" @click="cycle('race', 'decrement')">-
-            </b-button>
-            <b-input-group-prepend is-text class="facial-btn-group-text"><b>Race ({{ selectedRace }})</b>
-            </b-input-group-prepend>
-            <b-button size="sm" variant="outline-warning" class="facial-ctrl-btn" @click="cycle('race', 'increment')">+
-            </b-button>
-          </div>
-
-          <div class="ml-3 mt-1 d-inline-block">{{ getSelectedRaceName() }}</div>
-
+          <span
+            :class="`faces-race-${selectedRace}-gender-${selectedGender}-beard-${selectedBeard}-color-${selectedBeardColor}`"
+            style="position: absolute; right: 30px; top: 30px; z-index: 1"
+          />
+          <span
+            :class="`faces-race-${selectedRace}-gender-${selectedGender}-hair-${selectedHair}-color-${selectedHairColor}`"
+            style="position: absolute; right: 30px; top: 30px; z-index: 2"
+          />
+          <span
+            :class="`faces-race-${selectedRace}-gender-${selectedGender}-eyes-${selectedEye}`"
+            style="position: absolute; right: 30px; top: 30px; z-index: 3"
+          />
         </div>
       </div>
+      <div class="col-6 text-left text">
+        <!--      <div class="mb-3 ml-5 font-weight-bold">-->
+        <!--        Facial Feature Controls-->
+        <!--      </div>-->
 
-      <!-- Gender -->
-      <div class="row mb-3">
-        <div class="col-12">
-          <div class="btn-group ml-3 facial-btn-group" role="group" aria-label="Race">
-            <b-button size="sm" variant="outline-warning" class="facial-ctrl-btn" @click="cycle('gender', 'decrement')">
-              -
-            </b-button>
-            <b-input-group-prepend is-text class="facial-btn-group-text"><b>Gender ({{ selectedGender }})</b>
-            </b-input-group-prepend>
-            <b-button size="sm" variant="outline-warning" class="facial-ctrl-btn" @click="cycle('gender', 'increment')">
-              +
-            </b-button>
-          </div>
+        <!-- Spacer -->
+        <div class="mt-3"></div>
 
-          <div class="ml-3 mt-1 d-inline-block">{{ getSelectedGenderName() }}</div>
-        </div>
-      </div>
+        <!-- Race -->
+        <div class="row mb-3" v-if="!inRace">
+          <div class="col-12">
+            <div class="btn-group ml-3 facial-btn-group" role="group" aria-label="Race">
+              <b-button size="sm" variant="outline-warning" class="facial-ctrl-btn" @click="cycle('race', 'decrement')">
+                -
+              </b-button>
+              <b-input-group-prepend is-text class="facial-btn-group-text"><b>Race ({{ selectedRace }})</b>
+              </b-input-group-prepend>
+              <b-button size="sm" variant="outline-warning" class="facial-ctrl-btn" @click="cycle('race', 'increment')">
+                +
+              </b-button>
+            </div>
 
-      <!-- Face -->
-      <div class="row mb-3">
-        <div class="col-12">
-          <div class="btn-group ml-3 facial-btn-group" role="group" aria-label="Face">
-            <b-button size="sm" variant="outline-warning" class="facial-ctrl-btn" @click="cycle('face', 'decrement')">-
-            </b-button>
-            <b-input-group-prepend is-text class="facial-btn-group-text"><b>Face ({{ selectedFace }})</b>
-            </b-input-group-prepend>
-            <b-button size="sm" variant="outline-warning" class="facial-ctrl-btn" @click="cycle('face', 'increment')">+
-            </b-button>
+            <div class="ml-3 mt-1 d-inline-block">{{ getSelectedRaceName() }}</div>
+
           </div>
         </div>
-      </div>
 
-      <!-- Hair -->
-      <div class="row mb-3" v-if="hairs.length > 0">
-        <div class="col-12">
-          <div class="btn-group ml-3 facial-btn-group" role="group" aria-label="Face">
-            <b-button size="sm" variant="outline-warning" class="facial-ctrl-btn" @click="cycle('hair', 'decrement')">-
-            </b-button>
-            <b-input-group-prepend is-text class="facial-btn-group-text"><b>Hair ({{ selectedHair }})</b>
-            </b-input-group-prepend>
-            <b-button size="sm" variant="outline-warning" class="facial-ctrl-btn" @click="cycle('hair', 'increment')">+
-            </b-button>
+        <!-- Gender -->
+        <div class="row mb-3">
+          <div class="col-12">
+            <div class="btn-group ml-3 facial-btn-group" role="group" aria-label="Race">
+              <b-button
+                size="sm"
+                variant="outline-warning"
+                class="facial-ctrl-btn"
+                @click="cycle('gender', 'decrement')"
+              >
+                -
+              </b-button>
+              <b-input-group-prepend is-text class="facial-btn-group-text"><b>Gender ({{ selectedGender }})</b>
+              </b-input-group-prepend>
+              <b-button
+                size="sm"
+                variant="outline-warning"
+                class="facial-ctrl-btn"
+                @click="cycle('gender', 'increment')"
+              >
+                +
+              </b-button>
+            </div>
+
+            <div class="ml-3 mt-1 d-inline-block">{{ getSelectedGenderName() }}</div>
           </div>
         </div>
-      </div>
 
-      <!-- Hair Color -->
-      <div class="row mb-3" v-if="hairColors.length > 0">
-        <div class="col-12">
-          <div class="btn-group ml-3 facial-btn-group" role="group" aria-label="Face">
-            <b-button
-              size="sm"
-              variant="outline-warning"
-              class="facial-ctrl-btn"
-              @click="cycle('haircolor', 'decrement')"
-            >-
-            </b-button>
-            <b-input-group-prepend is-text class="facial-btn-group-text"><b>Hair Color ({{ selectedHairColor }})</b>
-            </b-input-group-prepend>
-            <b-button
-              size="sm"
-              variant="outline-warning"
-              class="facial-ctrl-btn"
-              @click="cycle('haircolor', 'increment')"
-            >+
-            </b-button>
+        <!-- Face -->
+        <div class="row mb-3">
+          <div class="col-12">
+            <div class="btn-group ml-3 facial-btn-group" role="group" aria-label="Face">
+              <b-button size="sm" variant="outline-warning" class="facial-ctrl-btn" @click="cycle('face', 'decrement')">
+                -
+              </b-button>
+              <b-input-group-prepend is-text class="facial-btn-group-text"><b>Face ({{ selectedFace }})</b>
+              </b-input-group-prepend>
+              <b-button size="sm" variant="outline-warning" class="facial-ctrl-btn" @click="cycle('face', 'increment')">
+                +
+              </b-button>
+            </div>
           </div>
         </div>
-      </div>
 
-      <!-- Beard -->
-      <div class="row mb-3" v-if="beards.length > 0">
-        <div class="col-12">
-          <div class="btn-group ml-3 facial-btn-group" role="group" aria-label="Beard">
-            <b-button size="sm" variant="outline-warning" class="facial-ctrl-btn" @click="cycle('beard', 'decrement')">-
-            </b-button>
-            <b-input-group-prepend is-text class="facial-btn-group-text"><b>Beard ({{ selectedBeard }})</b>
-            </b-input-group-prepend>
-            <b-button size="sm" variant="outline-warning" class="facial-ctrl-btn" @click="cycle('beard', 'increment')">+
-            </b-button>
+        <!-- Hair -->
+        <div class="row mb-3" v-if="hairs.length > 0">
+          <div class="col-12">
+            <div class="btn-group ml-3 facial-btn-group" role="group" aria-label="Face">
+              <b-button size="sm" variant="outline-warning" class="facial-ctrl-btn" @click="cycle('hair', 'decrement')">
+                -
+              </b-button>
+              <b-input-group-prepend is-text class="facial-btn-group-text"><b>Hair ({{ selectedHair }})</b>
+              </b-input-group-prepend>
+              <b-button size="sm" variant="outline-warning" class="facial-ctrl-btn" @click="cycle('hair', 'increment')">
+                +
+              </b-button>
+            </div>
           </div>
         </div>
-      </div>
 
-      <!-- Beard Color -->
-      <div class="row mb-3" v-if="beardColors.length > 0">
-        <div class="col-12">
-          <div class="btn-group ml-3 facial-btn-group" role="group" aria-label="Beard Color">
-            <b-button
-              size="sm"
-              variant="outline-warning"
-              class="facial-ctrl-btn"
-              @click="cycle('beardcolor', 'decrement')"
-            >-
-            </b-button>
-            <b-input-group-prepend is-text class="facial-btn-group-text"><b>Beard Color ({{ selectedBeardColor }})</b>
-            </b-input-group-prepend>
-            <b-button
-              size="sm"
-              variant="outline-warning"
-              class="facial-ctrl-btn"
-              @click="cycle('beardcolor', 'increment')"
-            >+
-            </b-button>
+        <!-- Hair Color -->
+        <div class="row mb-3" v-if="hairColors.length > 0">
+          <div class="col-12">
+            <div class="btn-group ml-3 facial-btn-group" role="group" aria-label="Face">
+              <b-button
+                size="sm"
+                variant="outline-warning"
+                class="facial-ctrl-btn"
+                @click="cycle('haircolor', 'decrement')"
+              >-
+              </b-button>
+              <b-input-group-prepend is-text class="facial-btn-group-text"><b>Hair Color ({{ selectedHairColor }})</b>
+              </b-input-group-prepend>
+              <b-button
+                size="sm"
+                variant="outline-warning"
+                class="facial-ctrl-btn"
+                @click="cycle('haircolor', 'increment')"
+              >+
+              </b-button>
+            </div>
           </div>
         </div>
-      </div>
 
-      <!-- Eyes -->
-      <div class="row mb-3">
-        <div class="col-12">
-          <div class="btn-group ml-3 facial-btn-group" role="group" aria-label="Eyes">
-            <b-button size="sm" variant="outline-warning" class="facial-ctrl-btn" @click="cycle('eyes', 'decrement')">-
-            </b-button>
-            <b-input-group-prepend is-text class="facial-btn-group-text"><b>Eye ({{ selectedEye }})</b>
-            </b-input-group-prepend>
-            <b-button size="sm" variant="outline-warning" class="facial-ctrl-btn" @click="cycle('eyes', 'increment')">+
-            </b-button>
+        <!-- Beard -->
+        <div class="row mb-3" v-if="beards.length > 0">
+          <div class="col-12">
+            <div class="btn-group ml-3 facial-btn-group" role="group" aria-label="Beard">
+              <b-button
+                size="sm"
+                variant="outline-warning"
+                class="facial-ctrl-btn"
+                @click="cycle('beard', 'decrement')"
+              >-
+              </b-button>
+              <b-input-group-prepend is-text class="facial-btn-group-text"><b>Beard ({{ selectedBeard }})</b>
+              </b-input-group-prepend>
+              <b-button
+                size="sm"
+                variant="outline-warning"
+                class="facial-ctrl-btn"
+                @click="cycle('beard', 'increment')"
+              >+
+              </b-button>
+            </div>
           </div>
         </div>
-      </div>
 
+        <!-- Beard Color -->
+        <div class="row mb-3" v-if="beardColors.length > 0">
+          <div class="col-12">
+            <div class="btn-group ml-3 facial-btn-group" role="group" aria-label="Beard Color">
+              <b-button
+                size="sm"
+                variant="outline-warning"
+                class="facial-ctrl-btn"
+                @click="cycle('beardcolor', 'decrement')"
+              >-
+              </b-button>
+              <b-input-group-prepend is-text class="facial-btn-group-text"><b>Beard Color ({{ selectedBeardColor }})</b>
+              </b-input-group-prepend>
+              <b-button
+                size="sm"
+                variant="outline-warning"
+                class="facial-ctrl-btn"
+                @click="cycle('beardcolor', 'increment')"
+              >+
+              </b-button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Eyes -->
+        <div class="row mb-3">
+          <div class="col-12">
+            <div class="btn-group ml-3 facial-btn-group" role="group" aria-label="Eyes">
+              <b-button size="sm" variant="outline-warning" class="facial-ctrl-btn" @click="cycle('eyes', 'decrement')">
+                -
+              </b-button>
+              <b-input-group-prepend is-text class="facial-btn-group-text"><b>Eye ({{ selectedEye }})</b>
+              </b-input-group-prepend>
+              <b-button size="sm" variant="outline-warning" class="facial-ctrl-btn" @click="cycle('eyes', 'increment')">
+                +
+              </b-button>
+            </div>
+          </div>
+        </div>
+
+      </div>
     </div>
   </div>
 </template>
@@ -190,6 +229,18 @@ export default {
       selectedBeardColor: 0,
     }
   },
+
+  props: {
+    inRace: { type: [Number, String], required: false },
+    inHair: { type: [Number, String], required: false },
+    inHairColor: { type: [Number, String], required: false },
+    inFace: { type: [Number, String], required: false },
+    inGender: { type: [Number, String], required: false },
+    inBeard: { type: [Number, String], required: false },
+    inEye: { type: [Number, String], required: false },
+    inBeardColor: { type: [Number, String], required: false },
+  },
+
   created() {
     // non-reactive
     this.races        = []
@@ -493,10 +544,32 @@ export default {
       }
 
       this.selectedRace = this.races[0]
-
       this.calcOptions()
-
       this.$forceUpdate()
+
+      // input from props
+      if (this.inRace) {
+        this.selectedRace = this.inRace
+      }
+      if (this.inHair) {
+        this.selectedHair = this.inHair
+      }
+      if (this.inHairColor) {
+        this.selectedHairColor = this.inHairColor
+      }
+      if (this.inGender) {
+        this.selectedGender = this.inGender
+      }
+      if (this.inFace) {
+        this.selectedFace = this.inFace
+      }
+      if (this.inBeard) {
+        this.selectedBeard = this.inBeard
+      }
+      if (this.inBeardColor) {
+        this.selectedBeardColor = this.inBeardColor
+      }
+
 
       console.log("races", this.races)
       console.log("eyes", this.eyes)
