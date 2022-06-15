@@ -697,7 +697,7 @@ export default {
                 "Spawnentries.NpcType.NpcFactions",
                 "Spawnentries.NpcType.NpcEmotes",
                 "Spawnentries.NpcType.Merchantlists.Items",
-                "Spawnentries.NpcType.Loottable.LoottableEntries.LootdropEntries.Item"
+                "Spawnentries.NpcType.Loottable.LoottableEntries.Lootdrop.LootdropEntries.Item"
               ]
             )
             .get()

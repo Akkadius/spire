@@ -482,7 +482,7 @@ export default {
         "Spawnentries.NpcType.NpcFactions",
         "Spawnentries.NpcType.NpcEmotes",
         "Spawnentries.NpcType.Merchantlists.Items",
-        "Spawnentries.NpcType.Loottable.LoottableEntries.LootdropEntries.Item"
+        "Spawnentries.NpcType.LoottableEntries.Lootdrop.LootdropEntries.Item"
       ])
 
       let npcTypes = [];
