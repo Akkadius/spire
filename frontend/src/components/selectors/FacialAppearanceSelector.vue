@@ -75,7 +75,7 @@
       </div>
 
       <!-- Hair -->
-      <div class="row mb-3">
+      <div class="row mb-3" v-if="hairs.length > 0">
         <div class="col-12">
           <div class="btn-group ml-3 facial-btn-group" role="group" aria-label="Face">
             <b-button size="sm" variant="outline-warning" class="facial-ctrl-btn" @click="cycle('hair', 'decrement')">-
