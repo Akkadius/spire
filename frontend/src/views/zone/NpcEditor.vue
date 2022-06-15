@@ -192,6 +192,10 @@
           />
         </eq-window>
 
+        <loot-selector
+          v-if="selectorActive['loottable_id']"
+        />
+
       </div>
     </div>
   </content-area>
@@ -222,12 +226,14 @@ import {GENDER}                 from "@/app/constants/eq-gender-constants";
 import {DB_ITEM_MATERIAL}       from "@/app/constants/eq-item-constants";
 import RaceSelector             from "../../components/selectors/RaceSelector";
 import FacialAppearanceSelector from "../../components/selectors/FacialAppearanceSelector";
+import LootSelector             from "../../components/selectors/LootSelector";
 
 const MILLISECONDS_BEFORE_WINDOW_RESET = 10000;
 
 export default {
   name: "ItemEdit",
   components: {
+    LootSelector,
     FacialAppearanceSelector,
     RaceSelector,
     ItemModelSelector,
@@ -433,7 +439,7 @@ export default {
             { desc: "Walk Speed", field: "walkspeed", fType: "text" },
             { desc: "Run Speed", field: "runspeed", fType: "text" },
 
-            { desc: "Loottable ID", field: "loottable_id", fType: "text" },
+            { desc: "Loottable ID", field: "loottable_id", fType: "text", e: { onclick: this.setSelectorActive } },
             { desc: "Merchant ID", field: "merchant_id", fType: "text" },
             { desc: "Alternate Currency ID", field: "alt_currency_id", fType: "text" },
             { desc: "NPC Spells ID", field: "npc_spells_id", fType: "text" },
