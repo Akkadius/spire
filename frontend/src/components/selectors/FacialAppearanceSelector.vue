@@ -216,6 +216,7 @@ export default {
     calcOptions() {
 
       // reset
+      this.eyes        = []
       this.beards      = []
       this.beardColors = []
       this.faces       = []
