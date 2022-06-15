@@ -1,6 +1,7 @@
 import {SPECIAL_ATTACKS} from "@/app/constants/eq-special-attacks";
 import {NpcTypeApi} from "@/app/api";
 import {SpireApiClient} from "@/app/api/spire-api-client";
+import {SpireQueryBuilder} from "@/app/api/spire-query-builder";
 
 export class Npcs {
   /**
@@ -199,9 +200,24 @@ export class Npcs {
    */
   static async getNpc(id: number) {
     const npcTypeApi = (new NpcTypeApi(SpireApiClient.getOpenApiConfig()))
+
+    let builder = (new SpireQueryBuilder())
+
+    builder.includes(
+      [
+        "NpcSpell.NpcSpellsEntries.SpellsNew",
+        "NpcFactions.NpcFactionEntries.FactionList",
+        "NpcFactions",
+        "NpcEmotes",
+        "Merchantlists.Items",
+        "Loottable.LoottableEntries.Lootdrop.LootdropEntries.Item"
+      ]
+    )
+
     const r = await npcTypeApi.getNpcType({
       id: id,
-    })
+    },
+      {query: builder.get()})
     if (r.status === 200) {
       return r.data
     }

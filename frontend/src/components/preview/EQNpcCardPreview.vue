@@ -409,7 +409,7 @@ export default {
       if (this.npc.loottable_id > 0 && this.npc.loottable && this.npc.loottable.loottable_entries) {
         let lootItems = []
         for (let l of this.npc.loottable.loottable_entries) {
-          console.log(l)
+          // console.log(l)
           for (let e of l.lootdrop.lootdrop_entries) {
 
             // make sure we don't add the same item twice for now
