@@ -66,7 +66,6 @@
                 <th
                   v-for="(header, index) in Object.keys(npcTypes[0])"
                   :id="'column-' + header"
-                  v-if="npcTypes[0]"
                   :style="previewStyles(header) + 'text-align: center; ' + getColumnHeaderWidth(header) + '' + ([0, 1].includes(index) ? ' position: sticky; z-index: 9999; background-color: rgba(25,31,41, 1); ' + getColumnStylingFromIndex(index) : '')"
                 >{{ header }}
                 </th>
