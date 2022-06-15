@@ -188,6 +188,7 @@
             :in-hair-color="npc.luclin_haircolor"
             :in-beard="npc.luclin_beard"
             :in-beard-color="npc.luclin_beardcolor"
+            @input="handleFacialAppearanceUpdate($event)"
           />
         </eq-window>
 
@@ -280,6 +281,19 @@ export default {
     this.load()
   },
   methods: {
+
+    /**
+     * Facial
+     */
+    handleFacialAppearanceUpdate(e) {
+      this.npc.face              = e.face;
+      this.npc.luclin_hairstyle  = e.hair;
+      this.npc.luclin_haircolor  = e.hairColor ? e.hairColor : 0;
+      this.npc.luclin_eyecolor   = e.eye;
+      this.npc.luclin_eyecolor_2 = e.eye;
+      this.npc.luclin_beard      = e.beard;
+      this.npc.luclin_beardcolor = e.beardColor;
+    },
 
     facialFields() {
       return [

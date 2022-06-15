@@ -10,7 +10,8 @@
     <div class="row" v-if="races.includes(selectedRace)">
       <div class="col-4">
         <div
-          style="width: 128px; height: 128px; position: absolute; top: 50px; right: 30px; ">
+          style="width: 128px; height: 128px; position: absolute; top: 50px; right: 30px; "
+        >
           <span
             :class="`faces-race-${selectedRace}-gender-${selectedGender}-face-${selectedFace}`"
             style="position: absolute; right: 0; top: 0; border: 1px solid #666"
@@ -358,6 +359,16 @@ export default {
       console.log("faces", this.faces)
 
       this.$forceUpdate()
+
+      this.$emit('input', {
+        face: this.selectedFace,
+        hair: this.selectedHair,
+        hairColor: this.selectedHairColor,
+        gender: this.selectedGender,
+        beard: this.selectedBeard,
+        beardColor: this.selectedBeardColor,
+        eye: this.selectedEye,
+      });
     },
 
     getSelectedRaceName() {
