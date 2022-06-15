@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div v-if="loaded" style="min-height: 250px">
     <div
       class="font-weight-bold text-center mt-3 mb-3"
       v-if="!races.includes(selectedRace)"
@@ -58,7 +58,7 @@
         </div>
 
         <!-- Gender -->
-        <div class="row mb-3">
+        <div class="row mb-3" v-if="typeof inGender === 'undefined'">
           <div class="col-12">
             <div class="btn-group ml-3 facial-btn-group" role="group" aria-label="Race">
               <b-button
@@ -222,6 +222,8 @@ export default {
   },
   data() {
     return {
+      loaded: false,
+
       selectedRace: 0,
       selectedFace: 0,
       selectedHair: 0,
@@ -360,15 +362,19 @@ export default {
 
       this.$forceUpdate()
 
-      this.$emit('input', {
-        face: this.selectedFace,
-        hair: this.selectedHair,
-        hairColor: this.selectedHairColor,
-        gender: this.selectedGender,
-        beard: this.selectedBeard,
-        beardColor: this.selectedBeardColor,
-        eye: this.selectedEye,
-      });
+      if (this.loaded) {
+        this.$emit('input',
+          {
+            face: this.selectedFace,
+            hair: this.selectedHair,
+            hairColor: this.selectedHairColor,
+            gender: this.selectedGender,
+            beard: this.selectedBeard,
+            beardColor: this.selectedBeardColor,
+            eye: this.selectedEye,
+          }
+        );
+      }
     },
 
     getSelectedRaceName() {
@@ -557,7 +563,6 @@ export default {
       }
 
       this.selectedRace = this.races[0]
-      this.calcOptions()
       this.$forceUpdate()
 
       // input from props
@@ -583,6 +588,9 @@ export default {
         this.selectedBeardColor = this.inBeardColor
       }
 
+      this.calcOptions()
+
+      this.loaded = true
 
       console.log("races", this.races)
       console.log("eyes", this.eyes)
