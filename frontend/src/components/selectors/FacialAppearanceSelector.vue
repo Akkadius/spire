@@ -1,13 +1,18 @@
 <template>
-  <div v-if="loaded" style="min-height: 250px">
+  <div style="min-height: 250px">
+    <div v-if="!loaded" class="mt-3 text-center">
+      Loading...
+      <loader-fake-progress/>
+    </div>
+
     <div
       class="font-weight-bold text-center mt-3 mb-3"
-      v-if="!races.includes(selectedRace)"
+      v-if="!races.includes(selectedRace) && loaded"
     >
       Facial appearance editing is not supported for this race
     </div>
 
-    <div class="row" v-if="races.includes(selectedRace)">
+    <div class="row" v-if="races.includes(selectedRace) && loaded">
       <div class="col-4">
         <div
           style="width: 128px; height: 128px; position: absolute; top: 50px; right: 30px; "
@@ -211,12 +216,14 @@
 </template>
 
 <script>
-import axios           from "axios";
-import {DB_RACE_NAMES} from "../../app/constants/eq-races-constants";
-import {GENDER}        from "../../app/constants/eq-gender-constants";
+import axios              from "axios";
+import {DB_RACE_NAMES}    from "../../app/constants/eq-races-constants";
+import {GENDER}           from "../../app/constants/eq-gender-constants";
+import LoaderFakeProgress from "../LoaderFakeProgress";
 
 export default {
   name: "FacialAppearanceSelector",
+  components: { LoaderFakeProgress },
   async mounted() {
     this.load()
   },
