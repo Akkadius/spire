@@ -353,7 +353,6 @@ export default {
     /**
      * Tabs / fields
      */
-
     getEventHandlers(e, field) {
       let handlers = {}
       if (e.onclick) {

@@ -9,7 +9,7 @@
 
           <div class="header mt-md-1">
             <div class="header-body">
-              <h1 class="header-title" id="progress-bars">
+              <h1 class="header-title">
                 Changelog & News
               </h1>
 

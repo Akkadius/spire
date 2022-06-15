@@ -280,6 +280,7 @@ export default {
         ]
       },
       componentNavs: [
+        { title: "Facial Appearance", to: "/components#facial-appearance" },
         { title: "Progress Bars", to: "/components#progress-bars" },
         { title: "Page Headers", to: "/components#page-headers" },
         { title: "Range Visual", to: "/components#range-visual" },
