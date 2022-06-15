@@ -2,28 +2,30 @@
   <div>
     <div
       class="font-weight-bold text-center mt-3 mb-3"
-      v-if="!races.includes(selectedRace)">
+      v-if="!races.includes(selectedRace)"
+    >
       Facial appearance editing is not supported for this race
     </div>
 
     <div class="row" v-if="races.includes(selectedRace)">
       <div class="col-4">
-        <div style="width: 128px; height: 128px;">
-        <span
-          :class="`faces-race-${selectedRace}-gender-${selectedGender}-face-${selectedFace}`"
-          style="position: absolute; right: 30px; top: 30px;"
-        />
+        <div
+          style="width: 128px; height: 128px; position: absolute; top: 50px; right: 30px; ">
+          <span
+            :class="`faces-race-${selectedRace}-gender-${selectedGender}-face-${selectedFace}`"
+            style="position: absolute; right: 0; top: 0; border: 1px solid #666"
+          />
           <span
             :class="`faces-race-${selectedRace}-gender-${selectedGender}-beard-${selectedBeard}-color-${selectedBeardColor}`"
-            style="position: absolute; right: 30px; top: 30px; z-index: 1"
+            style="position: absolute; right: 0; top: 0; z-index: 1"
           />
           <span
             :class="`faces-race-${selectedRace}-gender-${selectedGender}-hair-${selectedHair}-color-${selectedHairColor}`"
-            style="position: absolute; right: 30px; top: 30px; z-index: 2"
+            style="position: absolute; right: 0; top: 0; z-index: 2"
           />
           <span
             :class="`faces-race-${selectedRace}-gender-${selectedGender}-eyes-${selectedEye}`"
-            style="position: absolute; right: 30px; top: 30px; z-index: 3"
+            style="position: absolute; right: 0; top: 0; z-index: 3"
           />
         </div>
       </div>
