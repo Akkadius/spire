@@ -204,17 +204,18 @@ import {LIcon, LMap, LMarker, LPolyline, LPopup, LTileLayer, LTooltip} from 'vue
 import ContentArea                                                     from "./layout/ContentArea";
 import * as L                                                          from "leaflet";
 import axios                                                           from "axios";
-import {GridEntryApi, Spawn2Api, SpellsNewApi, ZonePointApi}           from "../app/api";
-import {SpireApiClient}                                                from "../app/api/spire-api-client";
-import {SpireQueryBuilder}                                             from "../app/api/spire-query-builder";
-import EqNpcCardPreview                                                from "./preview/EQNpcCardPreview";
-import EqWindow                                                        from "./eq-ui/EQWindow";
-import LoaderFakeProgress                                              from "./LoaderFakeProgress";
-import EqProgressBar                                                   from "./eq-ui/EQProgressBar";
-import {Npcs}                                                          from "../app/npcs";
-import {Zones}                                                         from "../app/zones";
-import {DoorApi}                                                       from "../app/api/api/door-api";
-import {EventBus}                                                      from "../app/event-bus/event-bus";
+import {GridEntryApi, Spawn2Api, SpellsNewApi, ZonePointApi} from "../app/api";
+import {SpireApiClient}                                      from "../app/api/spire-api-client";
+import {SpireQueryBuilder}                                   from "../app/api/spire-query-builder";
+import EqNpcCardPreview                                      from "./preview/EQNpcCardPreview";
+import EqWindow                                              from "./eq-ui/EQWindow";
+import LoaderFakeProgress                                    from "./LoaderFakeProgress";
+import EqProgressBar                                         from "./eq-ui/EQProgressBar";
+import {Npcs}                                                from "../app/npcs";
+import {Zones}                                               from "../app/zones";
+import {DoorApi}                                             from "../app/api/api/door-api";
+import {EventBus}                                            from "../app/event-bus/event-bus";
+import {Spawn}                                               from "../app/spawn";
 
 export default {
   name: "EqZoneMap",
@@ -652,7 +653,6 @@ export default {
 
     async loadMapSpawns() {
       let npcMarkers       = []
-      const spawn2Api      = (new Spawn2Api(SpireApiClient.getOpenApiConfig()))
       const gridEntriesApi = (new GridEntryApi(SpireApiClient.getOpenApiConfig()))
       try {
         console.time("[EqZoneMap] loadMapSpawns");
@@ -684,30 +684,9 @@ export default {
           this.pathingGridData = gridEntries
         }
 
-        // @ts-ignore
-        const result = await spawn2Api.listSpawn2s(
-          (new SpireQueryBuilder())
-            .where("zone", "=", this.zone)
-            .where("version", "=", this.version)
-            .includes(
-              [
-                "Spawnentries.NpcType",
-                "Spawnentries.NpcType.NpcSpell.NpcSpellsEntries.SpellsNew",
-                "Spawnentries.NpcType.NpcFactions.NpcFactionEntries.FactionList",
-                "Spawnentries.NpcType.NpcFactions",
-                "Spawnentries.NpcType.NpcEmotes",
-                "Spawnentries.NpcType.Merchantlists.Items",
-                "Spawnentries.NpcType.Loottable.LoottableEntries.Lootdrop.LootdropEntries.Item"
-              ]
-            )
-            .get()
-        )
-        if (result.status === 200 && result.data) {
-          // setTimeout(() => {
-          // this.$forceUpdate()
-          // }, 1)
-
-          for (let spawn2 of result.data) {
+        const result = await Spawn.getByZone(this.zone, this.version, true)
+        if (result.length > 0) {
+          for (let spawn2 of result) {
             if (spawn2.spawnentries) {
               for (let spawnentry of spawn2.spawnentries) {
                 if (spawnentry.npc_type) {

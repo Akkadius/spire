@@ -309,6 +309,7 @@ import {EventBus}          from "../../app/event-bus/event-bus";
 import LoaderFakeProgress  from "../LoaderFakeProgress";
 import util                from "util";
 import {ROUTE}             from "../../routes";
+import {Spawn}             from "../../app/spawn";
 
 export default {
   name: "EqZoneCardPreview",
@@ -471,24 +472,10 @@ export default {
     },
 
     async loadNpcTypes() {
-      const api   = (new Spawn2Api(SpireApiClient.getOpenApiConfig()))
-      let builder = (new SpireQueryBuilder())
-      builder.where("zone", "=", this.zone.short_name)
-      builder.where("version", "=", this.zone.version)
-      builder.includes([
-        "Spawnentries.NpcType",
-        "Spawnentries.NpcType.NpcSpell.NpcSpellsEntries.SpellsNew",
-        "Spawnentries.NpcType.NpcFactions.NpcFactionEntries.FactionList",
-        "Spawnentries.NpcType.NpcFactions",
-        "Spawnentries.NpcType.NpcEmotes",
-        "Spawnentries.NpcType.Merchantlists.Items",
-        "Spawnentries.NpcType.Loottable.LoottableEntries.Lootdrop.LootdropEntries.Item"
-      ])
-
       let npcTypes = [];
-      const r      = await api.listSpawn2s(builder.get())
-      if (r.status === 200 && r.data) {
-        for (let spawn2 of r.data) {
+      const r = await Spawn.getByZone(this.zone.short_name, this.zone.version, true)
+      if (r.length > 0) {
+        for (let spawn2 of r) {
           if (spawn2.spawnentries) {
             for (let spawnentry of spawn2.spawnentries) {
               if (spawnentry.npc_type) {
@@ -506,7 +493,6 @@ export default {
                     }
                   )
                 }
-
               }
             }
           }

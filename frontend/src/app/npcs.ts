@@ -1,5 +1,5 @@
 import {SPECIAL_ATTACKS} from "@/app/constants/eq-special-attacks";
-import {NpcTypeApi} from "@/app/api";
+import {NpcTypeApi, Spawn2Api} from "@/app/api";
 import {SpireApiClient} from "@/app/api/spire-api-client";
 import {SpireQueryBuilder} from "@/app/api/spire-query-builder";
 
@@ -200,9 +200,7 @@ export class Npcs {
    */
   static async getNpc(id: number) {
     const npcTypeApi = (new NpcTypeApi(SpireApiClient.getOpenApiConfig()))
-
-    let builder = (new SpireQueryBuilder())
-
+    let builder      = (new SpireQueryBuilder())
     builder.includes(
       [
         "NpcSpell.NpcSpellsEntries.SpellsNew",
@@ -215,12 +213,56 @@ export class Npcs {
     )
 
     const r = await npcTypeApi.getNpcType({
-      id: id,
-    },
+        id: id,
+      },
       {query: builder.get()})
     if (r.status === 200) {
       return r.data
     }
+  }
+
+  static async getNpcsByZone(zoneShortName: string, version: number, withRelations: boolean = false) {
+    const spawn2Api = (new Spawn2Api(SpireApiClient.getOpenApiConfig()))
+    const builder   = (new SpireQueryBuilder())
+
+    builder.where("zone", "=", zoneShortName)
+    builder.where("version", "=", version)
+    
+    let includes = [
+      "Spawnentries.NpcType"
+    ]
+
+    if (withRelations) {
+      includes = [...includes, ...[
+        "Spawnentries.NpcType.NpcSpell.NpcSpellsEntries.SpellsNew",
+        "Spawnentries.NpcType.NpcFactions.NpcFactionEntries.FactionList",
+        "Spawnentries.NpcType.NpcFactions",
+        "Spawnentries.NpcType.NpcEmotes",
+        "Spawnentries.NpcType.Merchantlists.Items",
+        "Spawnentries.NpcType.Loottable.LoottableEntries.Lootdrop.LootdropEntries.Item"
+      ]]
+    }
+
+    builder.includes(includes)
+
+    // @ts-ignore
+    const r = await spawn2Api.listSpawn2s(builder.get())
+    if (r.status === 200 && r.data) {
+      let npcs = <any>[]
+      for (let spawn2 of r.data) {
+        if (spawn2.spawnentries) {
+          for (let spawnentry of spawn2.spawnentries) {
+            if (spawnentry.npc_type) {
+              npcs.push(spawnentry.npc_type)
+            }
+          }
+        }
+      }
+
+      return npcs
+    }
+
+    return []
   }
 
   // these were pulled from EOC and should be refined

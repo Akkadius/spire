@@ -24,6 +24,7 @@
           <tr>
             <th
               v-for="(header, index) in Object.keys(loot[0])"
+              class="text-center"
               v-if="!doesColumnHaveObjects(loot, header)"
               :id="'column-' + header"
             >{{ header }}
@@ -59,6 +60,7 @@
 import EqWindow    from "../eq-ui/EQWindow";
 import {Loot}      from "../../app/loot";
 import LootPopover from "../LootPopover";
+import {Npcs}      from "../../app/npcs";
 
 export default {
   name: "LootSelector",
@@ -70,6 +72,9 @@ export default {
   },
   async mounted() {
     this.loot = await Loot.getLoot()
+
+
+    Npcs.getNpcsByZone("soldungb", 0)
   },
   methods: {
     doesColumnHaveObjects(data, column) {
