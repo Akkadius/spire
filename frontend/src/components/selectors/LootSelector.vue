@@ -72,9 +72,6 @@ export default {
   },
   async mounted() {
     this.loot = await Loot.getLoot()
-
-
-    Npcs.getNpcsByZone("soldungb", 0)
   },
   methods: {
     doesColumnHaveObjects(data, column) {

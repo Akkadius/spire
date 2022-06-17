@@ -4,8 +4,8 @@ import {SpireApiClient} from "@/app/api/spire-api-client";
 import {SpireQueryBuilder} from "@/app/api/spire-query-builder";
 
 export class Npcs {
+
   /**
-   *
    * @param name
    */
   public static getCleanName(name: String) {
@@ -227,7 +227,7 @@ export class Npcs {
 
     builder.where("zone", "=", zoneShortName)
     builder.where("version", "=", version)
-    
+
     let includes = [
       "Spawnentries.NpcType"
     ]
