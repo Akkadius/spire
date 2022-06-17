@@ -395,3 +395,4 @@ th[role=columnheader]:hover:not(.no-sort):after {
 .leaflet-zoom-anim .leaflet-zoom-animated {
     transition: .5s !important;
 }
+

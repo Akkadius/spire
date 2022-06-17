@@ -1,10 +1,10 @@
 <template>
   <div v-if="npc">
     <div :id="npc.id + '-' + popoverId + '-popover'" style="display:inline-block; position: relative">
-      <div style="width: 60px" class="d-inline-block ml-3 text-center" v-if="showImage">
+      <div style="width: 60px; height: 50px" class="d-inline-block ml-3 text-center" v-if="showImage">
         <span
-          style="top: 50%;"
-          :class="'race-models-ctn-' + npc.race + '-' + npc.gender + '-' + npc.texture + '-' + npc.helmtexture + '-sm'"
+          style="top: 50%; filter: drop-shadow(10px 5px 5px #000);"
+          :class="'race-models-ctn-' + getRaceImage(npc) + '-sm'"
         ></span>
       </div>
       <span
@@ -27,6 +27,8 @@
     >
       <eq-window style="width: 650px; height: 100%">
         <eq-npc-card-preview
+          :limit-entries="limitEntries"
+          :no-stats="noStats"
           :npc="npc"
         />
       </eq-window>
@@ -54,6 +56,16 @@ export default {
       required: false,
       default: true
     },
+    noStats: {
+      type: Boolean,
+      required: false,
+      default: false
+    },
+    limitEntries: {
+      type: Number,
+      required: false,
+      default: 20
+    },
     showLabel: {
       type: Boolean,
       required: false,
@@ -67,7 +79,13 @@ export default {
       }
     },
   },
+  mounted() {
+    console.log("[popover] no limit", this.noLimitEntries)
+  },
   methods: {
+    getRaceImage(npc) {
+      return Npcs.getRaceImage(npc)
+    },
     getCleanName(name) {
       return Npcs.getCleanName(name)
     },

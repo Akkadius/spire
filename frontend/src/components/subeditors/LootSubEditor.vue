@@ -60,10 +60,9 @@
 import EqWindow    from "../eq-ui/EQWindow";
 import {Loot}      from "../../app/loot";
 import LootPopover from "../LootPopover";
-import {Npcs}      from "../../app/npcs";
 
 export default {
-  name: "LootSelector",
+  name: "LootSubEditor",
   components: { LootPopover, EqWindow },
   data() {
     return {

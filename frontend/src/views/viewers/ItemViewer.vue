@@ -90,6 +90,7 @@
           class="m-1 item-model"
         >
           <span
+            style="filter: drop-shadow(10px 5px 5px #000);"
             :class="'fade-in object-ctn-' + item"
             :title="'IT' + item"
           ></span>

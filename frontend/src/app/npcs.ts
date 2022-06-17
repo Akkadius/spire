@@ -14,6 +14,29 @@ export class Npcs {
     return name
   }
 
+  public static getRaceImage(npc: any) {
+    let texture = npc.texture
+    let helmTexture = npc.helmtexture
+
+    if (this.isPlayableRace(npc.race)) {
+      if (helmTexture > 3) {
+        helmTexture = 0
+      }
+      if (texture > 16) {
+        texture = 0
+      }
+    }
+
+
+    return npc.race + '-' + npc.gender + '-' + texture + '-' + helmTexture
+  }
+
+  public static isPlayableRace(raceId: any) {
+    return [
+      1,2,3,4,5,6,7,8,9,10,11,12,128,130,330,522
+    ].includes(raceId)
+  }
+
   /**
    * @param abilities
    */
@@ -221,7 +244,7 @@ export class Npcs {
     }
   }
 
-  static async getNpcsByZone(zoneShortName: string, version: number, withRelations: boolean = false) {
+  static async getNpcsByZone(zoneShortName: string, version: number, relations: any[] = []) {
     const spawn2Api = (new Spawn2Api(SpireApiClient.getOpenApiConfig()))
     const builder   = (new SpireQueryBuilder())
 
@@ -232,7 +255,7 @@ export class Npcs {
       "Spawnentries.NpcType"
     ]
 
-    if (withRelations) {
+    if (relations.includes("all")) {
       includes = [...includes, ...[
         "Spawnentries.NpcType.NpcSpell.NpcSpellsEntries.SpellsNew",
         "Spawnentries.NpcType.NpcFactions.NpcFactionEntries.FactionList",
@@ -242,6 +265,11 @@ export class Npcs {
         "Spawnentries.NpcType.Loottable.LoottableEntries.Lootdrop.LootdropEntries.Item"
       ]]
     }
+    else if (relations.length > 0) {
+      includes = [...includes, ...relations]
+    }
+
+    builder.limit(1000000)
 
     builder.includes(includes)
 

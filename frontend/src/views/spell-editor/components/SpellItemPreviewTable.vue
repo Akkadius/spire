@@ -147,11 +147,11 @@ export default {
 </script>
 
 <style scoped>
-.eq-table tr {
+#spell-items-table-selector tr {
   border-bottom: .4px solid #ffffff1c;
 }
 
-.eq-table td {
+#spell-items-table-selector td {
   padding-top: 5px;
   padding-bottom: 5px;
   border-right: .1px solid #ffffff1c;

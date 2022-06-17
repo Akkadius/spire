@@ -86,6 +86,7 @@
             >
               <span
                 @click="selectModel(img)"
+                style="filter: drop-shadow(10px 5px 5px #000);"
                 :class="'race-models-ctn-' + img + ' ' + modelIsSelected(img)"
               />
             </span>

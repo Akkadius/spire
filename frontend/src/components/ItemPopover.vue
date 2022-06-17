@@ -2,7 +2,7 @@
   <div v-if="item">
     <div :id="item.id + '-' + popoverId + '-popover'" style="display:inline-block; ">
       <span
-        :class="'fade-in item-' + item.icon + (this.size === 'regular' ? '' : '-sm')" :title="item.icon"
+        :class="'item-' + item.icon + (this.size === 'regular' ? '' : '-sm')" :title="item.icon"
         style="display: inline-block"
       />
       <span

@@ -77,6 +77,7 @@
         >
           <span
             :id="'item-model-' + modelId"
+            style="filter: drop-shadow(10px 5px 7px #000);"
             :class="'fade-in object-ctn-' + modelId"
             :title="'IT' + modelId"
           >

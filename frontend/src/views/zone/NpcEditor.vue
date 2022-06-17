@@ -192,8 +192,13 @@
           />
         </eq-window>
 
-        <loot-selector
+        <loot-sub-editor
           v-if="selectorActive['loottable_id']"
+        />
+
+        <merchant-sub-editor
+          v-if="selectorActive['merchant_id']"
+          @input="npc.merchant_id = $event; setFieldModifiedById('merchant_id')"
         />
 
       </div>
@@ -226,14 +231,16 @@ import {GENDER}                 from "@/app/constants/eq-gender-constants";
 import {DB_ITEM_MATERIAL}       from "@/app/constants/eq-item-constants";
 import RaceSelector             from "../../components/selectors/RaceSelector";
 import FacialAppearanceSelector from "../../components/selectors/FacialAppearanceSelector";
-import LootSelector             from "../../components/selectors/LootSelector";
+import MerchantSubEditor        from "../../components/subeditors/MerchantSubEditor";
+import LootSubEditor            from "../../components/subeditors/LootSubEditor";
 
 const MILLISECONDS_BEFORE_WINDOW_RESET = 10000;
 
 export default {
   name: "ItemEdit",
   components: {
-    LootSelector,
+    LootSubEditor,
+    MerchantSubEditor,
     FacialAppearanceSelector,
     RaceSelector,
     ItemModelSelector,
@@ -365,8 +372,7 @@ export default {
      * Load
      */
     async load() {
-      this.npc = await Npcs.getNpc(this.$route.params.npc)
-
+      this.npc    = await Npcs.getNpc(this.$route.params.npc)
       this.loaded = true
 
       setTimeout(() => {
@@ -440,7 +446,7 @@ export default {
             { desc: "Run Speed", field: "runspeed", fType: "text" },
 
             { desc: "Loottable ID", field: "loottable_id", fType: "text", e: { onclick: this.setSelectorActive } },
-            { desc: "Merchant ID", field: "merchant_id", fType: "text" },
+            { desc: "Merchant ID", field: "merchant_id", fType: "text", e: { onclick: this.setSelectorActive } },
             { desc: "Alternate Currency ID", field: "alt_currency_id", fType: "text" },
             { desc: "NPC Spells ID", field: "npc_spells_id", fType: "text" },
             { desc: "NPC Spell Effects ID", field: "npc_spells_effects_id", fType: "text" },

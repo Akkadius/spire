@@ -531,6 +531,7 @@ A:hover {
 ------------------------------------------------- */
 
 .eq-window-title-bar {
+    z-index: 99999;
     position: absolute;
     overflow: hidden;
     top: -11px;

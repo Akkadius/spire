@@ -3,26 +3,26 @@
 
     <!-- Race Model -->
     <span
-      style="position: absolute; right: 7%; opacity: .8"
-      :class="'race-models-ctn-' + npc.race + '-' + npc.gender + '-' + npc.texture + '-' + npc.helmtexture"
+      style="position: absolute; right: 7%; opacity: .8; filter: drop-shadow(10px 5px 2px #000);"
+      :class="'race-models-ctn-' + getRaceImage(npc)"
     />
 
     <!-- Weapon Model 1 -->
     <span
       v-if="npc.d_melee_texture_1 > 0"
-      :style="'position: absolute; right: ' + (npc.d_melee_texture_2 > 0 ? 25 : 20) + '%; top: 5%; opacity: 1; z-index: 9999'"
+      :style="'position: absolute; right: ' + (npc.d_melee_texture_2 > 0 ? 25 : 20) + '%; top: 10px; opacity: 1; filter: drop-shadow(10px 5px 2px #000); z-index: 9999'"
       :class="'mt-2 mb-2 object-ctn-' + npc.d_melee_texture_1"
     />
 
     <!-- Weapon Model 2 -->
     <span
       v-if="npc.d_melee_texture_2 > 0"
-      style="position: absolute; right: 20%; top: 5%; opacity: .8"
+      style="position: absolute; right: 20%; top: 10px; filter: drop-shadow(10px 5px 2px #000); opacity: .8"
       :class="'mt-2 mb-2 object-ctn-' + npc.d_melee_texture_2"
     />
 
     <div class="row">
-      <div class="col-8 pl-5">
+      <div class="col-8">
         <h6 class="eq-header" style="margin: 0px; margin-bottom: 10px">
           {{ getCleanName() }} {{ (npc.lastname && npc.lastname.length > 0 ? "(" + npc.lastname + ")" : "") }}
         </h6>
@@ -82,6 +82,14 @@
             {{ getBodytype() }} ({{ npc.bodytype }})
           </div>
         </div>
+        <div class="row" v-if="npc.merchant_id > 0">
+          <div class="col-2 text-right font-weight-bold pr-0">
+            Merchant ID
+          </div>
+          <div class="col-4 pl-3">
+            {{ npc.merchant_id }}
+          </div>
+        </div>
         <div class="row" v-if="npc.armortint_red !== 0 || npc.armortint_green !== 0 || npc.armortint_blue !== 0">
           <div class="col-2 text-right font-weight-bold pr-0">
             Armor RGB
@@ -96,7 +104,7 @@
       </div>
     </div>
 
-    <div class="mt-4 mb-5">
+    <div class="mt-4 mb-5" v-if="!noStats">
       <div
         class="row mt-3"
         v-for="(row, index) in rows"
@@ -133,7 +141,7 @@
     </div>
 
     <!-- Special Abilities -->
-    <div class="mt-3" v-if="npc.special_abilities.length > 0">
+    <div class="mt-3" v-if="npc.special_abilities.length > 0 && !noStats">
       <div class="font-weight-bold mb-3">
         This NPC has the following special abilities ({{ parseSpecialAbilities(npc.special_abilities).length }})
       </div>
@@ -154,33 +162,39 @@
       <!-- Show if under max -->
       <div
         v-if="merchantitems && merchantitems.length > 0 && (merchantitems.length < maxDataEntries || showMerchantItems)"
-        class="fade-in"
+        class=""
       >
         <div class="font-weight-bold mb-3">This NPC sells the following items ({{ commify(merchantitems.length) }})
           <a href="javascript:void(0);" @click="showMerchantItems = false" v-if="merchantitems.length > maxDataEntries">hide</a>
         </div>
 
-        <div
-          v-for="e in merchantitems"
-          class="row"
-          v-if="e.item && e.item.price && parseInt(e.item.price) > 0">
-          <div class="col-6">
-            <item-popover
-              class="d-inline-block"
-              :item="e.item"
-              v-if="Object.keys(e.item).length > 0 && e.item"
-              size="sm"
-            />
-          </div>
 
-          <div class="col-3">
-            <eq-cash-display
-              class="d-inline-block ml-1"
-              :price="parseInt(e.item.price)"
-            />
-          </div>
+          <table class="ml-3 eq-table eq-highlight-rows" style="width: 95%">
+          <tbody>
+          <tr
+            v-for="e in merchantitems"
+            class="row"
+            v-if="e.item && typeof e.item.price !== 'undefined'"
+          >
+            <td style="min-width: 300px">
+              <item-popover
+                class="d-inline-block"
+                :item="e.item"
+                v-if="Object.keys(e.item).length > 0 && e.item"
+                size="sm"
+              />
+              {{ e.item.stacksize > 0 ? `(${e.item.stacksize})` : '' }}
+            </td>
+            <td>
+              <eq-cash-display
+                class="ml-1"
+                :price="parseInt(e.item.price)"
+              />
+            </td>
+          </tr>
+          </tbody>
+        </table>
 
-        </div>
       </div>
 
       <!-- Prompt if over max -->
@@ -203,7 +217,7 @@
       <!-- Show if under max -->
       <div
         v-if="castedSpells && castedSpells.length > 0 && (castedSpells.length < maxDataEntries || showCastedSpells)"
-        class="fade-in"
+        class=""
       >
         <div class="font-weight-bold mb-3">This NPC casts the following spells ({{ commify(castedSpells.length) }})
           ({{ npc.npc_spell.name }})
@@ -241,7 +255,7 @@
       <!-- Show if under max -->
       <div
         v-if="factionHits && factionHits.length > 0 && (factionHits.length < maxDataEntries || showFactionHits)"
-        class="fade-in"
+        class=""
       >
         <div class="font-weight-bold mb-3">This NPC has the following faction hits ({{ commify(factionHits.length) }})
           <a
@@ -279,7 +293,7 @@
     <div v-if="npc.loottable_id > 0" class="mt-3">
 
       <!-- Show if under max -->
-      <div v-if="loot && loot.length > 0 && (loot.length < maxDataEntries || showLoot)" class="fade-in">
+      <div v-if="loot && loot.length > 0 && (loot.length < maxDataEntries || showLoot)" class="">
         <div class="font-weight-bold mb-3">This NPC drops the following items ({{ commify(loot.length) }})
           <a href="javascript:void(0);" @click="showLoot = false" v-if="loot.length > maxDataEntries">hide</a>
         </div>
@@ -354,6 +368,16 @@ export default {
       default: {},
       required: true
     },
+    noStats: {
+      type: Boolean,
+      required: false,
+      default: false
+    },
+    limitEntries: {
+      type: Number,
+      required: false,
+      default: 20
+    },
   },
   watch: {
     npc: {
@@ -366,6 +390,9 @@ export default {
     },
   },
   methods: {
+    getRaceImage(npc) {
+      return Npcs.getRaceImage(npc)
+    },
     parseSpecialAbilities(abilities) {
       return Npcs.specialAbilitiesToHuman(abilities)
     },
@@ -391,10 +418,18 @@ export default {
       return DB_PLAYER_RACES[this.npc.race] ? DB_PLAYER_RACES[this.npc.race].icon : ""
     },
     init() {
+      console.log("[npc card] rendering for [%s]", this.npc.name)
       // merchants
       if (this.npc.merchant_id > 0 && this.npc.merchantlists) {
         let merchantItems = []
         for (let listitem of this.npc.merchantlists) {
+          // not a valid item
+          // console.log(listitem)
+          if (!listitem.items || (listitem.items && listitem.items.length === 0)) {
+            console.log("not a valid item")
+            continue;
+          }
+
           merchantItems.push(
             {
               item: listitem.items && listitem.items.length > 0 ? listitem.items[0] : {},
@@ -476,7 +511,15 @@ export default {
         this.factionHits = factionHits.sort((a, b) => {
           return a.name.localeCompare(b.name);
         });
+      }
 
+      // if no limits
+
+      console.log("[card preview] no stats", this.noStats)
+      console.log("[card preview] no limit", this.limitEntries)
+
+      if (this.limitEntries) {
+        this.maxDataEntries = this.limitEntries
       }
     },
     getCardRows() {
