@@ -138,7 +138,7 @@
       <!-- Preview / Selector Pane -->
       <div class="col-5">
 
-        <eq-window v-if="npc && !isAnySelectorActive()">
+        <eq-window v-if="npc && !isAnySelectorActive()" style="max-height: 95vh; overflow-y: scroll; overflow-x: hidden">
           <eq-npc-card-preview :npc="npc"/>
         </eq-window>
 
@@ -455,10 +455,9 @@ export default {
             { desc: "Trap Template", field: "trap_template", fType: "text" },
             { desc: "Emote ID", field: "emoteid", fType: "text" },
 
-            { desc: "Spawn Limit", field: "spawn_limit", fType: "text" },
-
-            // ???
-            { desc: "Exclude", field: "exclude", fType: "text" },
+            // add back later?
+            // { desc: "Spawn Limit", field: "spawn_limit", fType: "text" },
+            // { desc: "Exclude", field: "exclude", fType: "text" },
 
             // version is not really used outside of the PEQ editor
             // { desc: "version", field: "version", fType: "text" },

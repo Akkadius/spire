@@ -170,6 +170,10 @@ export default new Router({
       ]
     },
     {
+      path: '/break/',
+      component: () => import('./views/Break.vue')
+    },
+    {
       path: '/editor',
       component: () => import('./components/layout/QuestEditorLayout.vue'),
       meta: {title: "Editor"},
