@@ -41,12 +41,19 @@
 
     </eq-window>
 
-    <eq-window v-if="zoneSelection !== 0 && mlz && mlz.length === 0">
+    <eq-window v-if="loading">
+      <div class="text-center">
+        Loading
+        <loader-fake-progress class="mt-3"/>
+      </div>
+    </eq-window>
+
+    <eq-window v-if="!loading && zoneSelection !== 0 && mlz && mlz.length === 0">
       No merchants found in this zone...
     </eq-window>
 
     <eq-window
-      v-if="mlz && mlz.length > 0"
+      v-if="!loading && mlz && mlz.length > 0"
       class="p-2 mt-5"
       :title="'Merchants (' + mlz.length + ')'"
     >
@@ -112,14 +119,15 @@
 </template>
 
 <script>
-import EqWindow   from "../eq-ui/EQWindow";
-import {Zones}    from "../../app/zones";
-import {Npcs}     from "../../app/npcs";
-import NpcPopover from "../NpcPopover";
+import EqWindow           from "../eq-ui/EQWindow";
+import {Zones}            from "../../app/zones";
+import {Npcs}             from "../../app/npcs";
+import NpcPopover         from "../NpcPopover";
+import LoaderFakeProgress from "../LoaderFakeProgress";
 
 export default {
   name: "MerchantSubEditor",
-  components: { NpcPopover, EqWindow },
+  components: { LoaderFakeProgress, NpcPopover, EqWindow },
   async created() {
     this.mlz   = [] // by zone
     this.zones = await Zones.getZones()
@@ -129,6 +137,8 @@ export default {
       // selection
       search: "",
       zoneSelection: 0,
+
+      loading: false,
 
       // feeds selection
       zones: [],
@@ -171,14 +181,46 @@ export default {
           }
         }
 
-        return e.merchant_id > 0 && hasItems
+        return e.merchant_id > 0
       })
 
-      this.mlz = r
+      console.log(r)
+
+      const withItems = r.filter((e) => {
+        let hasItems = false
+        if (e.merchantlists) {
+          for (const e of e.merchantlists) {
+            if (e.items && e.items.length > 0) {
+              // console.log("has items")
+              // console.log(e.items)
+              hasItems = true;
+            }
+            // console.log(e)
+          }
+        }
+
+        return hasItems
+      })
+
+      this.loading = true
+
+      // edge case, if we loaded too much data and failed to load items, load each npc
+      let npcs = []
+      if (withItems.length === 0) {
+        for (let n of r) {
+          const npc = (await Npcs.getNpc(
+            n.id,
+            ["Merchantlists.Items"]
+          ))
+          npcs.push(npc)
+        }
+      }
+
+      // if our bulk loading didn't work the first time, use the second list
+      this.mlz = withItems.length === 0 ? npcs : r
       this.$forceUpdate()
 
-      console.log(r)
-      // console.log(r)
+      this.loading = false
 
     },
   }

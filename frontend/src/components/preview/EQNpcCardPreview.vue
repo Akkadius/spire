@@ -176,7 +176,7 @@
             class="row"
             v-if="e.item && typeof e.item.price !== 'undefined'"
           >
-            <td style="min-width: 300px">
+            <td style="min-width: 350px">
               <item-popover
                 class="d-inline-block"
                 :item="e.item"

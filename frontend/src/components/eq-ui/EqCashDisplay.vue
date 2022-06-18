@@ -1,5 +1,5 @@
 <template>
-  <div class="d-inline-block" style="width: 200px">
+  <div class="d-inline-block" style="width: 150px">
     <div v-if="platinum > 0" class="d-inline-block mr-2">
       <div :class="'ml-1 item-644-sm'" title="Platinum"/>
       {{ platinum.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") }}

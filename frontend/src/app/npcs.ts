@@ -220,20 +220,30 @@ export class Npcs {
 
   /**
    * @param id
+   * @param relations
    */
-  static async getNpc(id: number) {
+  static async getNpc(id: number, relations: any[] = []) {
     const npcTypeApi = (new NpcTypeApi(SpireApiClient.getOpenApiConfig()))
     let builder      = (new SpireQueryBuilder())
-    builder.includes(
-      [
+
+    let includes : any[] = [];
+    if (relations.includes("all")) {
+      includes = [...includes, ...[
         "NpcSpell.NpcSpellsEntries.SpellsNew",
         "NpcFactions.NpcFactionEntries.FactionList",
         "NpcFactions",
         "NpcEmotes",
         "Merchantlists.Items",
         "Loottable.LoottableEntries.Lootdrop.LootdropEntries.Item"
-      ]
-    )
+      ]]
+    }
+    else if (relations.length > 0) {
+      includes = [...includes, ...relations]
+    }
+
+    console.log(includes)
+
+    builder.includes(includes)
 
     const r = await npcTypeApi.getNpcType({
         id: id,
