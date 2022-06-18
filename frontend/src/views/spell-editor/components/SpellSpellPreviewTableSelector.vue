@@ -10,6 +10,7 @@
       class='spell-table p-0'
          v-if="spells.length > 0">
       <table
+        id="spell-preview-table"
         class="eq-table eq-highlight-rows spell-preview-table"
         style="display: table;">
         <thead>
@@ -192,11 +193,11 @@ export default {
 </script>
 
 <style scoped>
-.eq-table tr {
+#spell-preview-table tr {
   border-bottom: .4px solid #ffffff1c;
 }
 
-.eq-table td {
+#spell-preview-table td {
   padding-top: 5px;
   padding-bottom: 5px;
   border-right: .1px solid #ffffff1c;

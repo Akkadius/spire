@@ -4,8 +4,10 @@
       No spells were found
     </div>
 
-    <div class='spell-table' v-if="spells.length > 0">
-      <table class="eq-table eq-highlight-rows" style="display: table;">
+    <div class='spell-preview-table' v-if="spells.length > 0">
+      <table
+        id="spell-preview-table"
+        class="eq-table eq-highlight-rows" style="display: table;">
         <thead>
         <tr>
           <th></th>
@@ -150,11 +152,11 @@ export default {
 </script>
 
 <style scoped>
-.eq-table tr {
+#spell-preview-table tr {
   border-bottom: .4px solid #ffffff1c;
 }
 
-.eq-table td {
+#spell-preview-table td {
   padding-top: 5px;
   padding-bottom: 5px;
   border-right: .1px solid #ffffff1c;
@@ -163,7 +165,7 @@ export default {
 
 /* For Mobile */
 @media screen and (max-width: 540px) {
-  .spell-table {
+  .spell-preview-table {
     overflow-x: visible;
     overflow-y: scroll !important
   }
@@ -171,7 +173,7 @@ export default {
 
 /* For Tablets */
 @media screen and (min-width: 540px) and (max-width: 780px) {
-  .spell-table {
+  .spell-preview-table {
     overflow-x: visible;
     overflow-y: scroll !important
   }

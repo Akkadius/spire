@@ -15,7 +15,7 @@
         v-if="spells.length > 0"
       >
         <!--        <div class='eq-window-nested-blue' v-if="spells.length > 0" style="overflow-y: scroll;">-->
-        <table id="tabbox1" class="eq-table eq-highlight-rows">
+        <table id="spell-table" class="eq-table eq-highlight-rows">
           <thead class="eq-table-floating-header">
           <tr>
             <th style="width: 100px;"></th>
@@ -190,11 +190,11 @@ export default {
 </script>
 
 <style scoped>
-.eq-table tr {
+#spell-table tr {
   border-bottom: .4px solid #ffffff1c;
 }
 
-.eq-table td {
+#spell-table td {
   padding-top: 5px;
   padding-bottom: 5px;
   border-right: .1px solid #ffffff1c;
