@@ -97,7 +97,7 @@
             </td>
             <td>
               <npc-popover
-                :limit-entries="35"
+                :limit-entries="25"
                 :no-stats="true"
                 :npc="n"
               />
