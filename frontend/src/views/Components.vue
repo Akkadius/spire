@@ -1,6 +1,6 @@
 <template>
   <!--        <page-header title="Components" pre-title="Preview Components"/>-->
-  <content-area class="content-pop" style="width: 80%">
+  <content-area class="content-pop" style="width: 90%">
 
     <!-- Faces -->
     <div class="header mt-md-1">

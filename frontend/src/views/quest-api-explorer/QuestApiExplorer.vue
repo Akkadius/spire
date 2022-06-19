@@ -1,5 +1,5 @@
 <template>
-  <content-area>
+  <div>
     <eq-window-simple
       title="Quest API Explorer"
       class="p-2"
@@ -263,7 +263,7 @@
       </div>
     </div>
 
-  </content-area>
+  </div>
 
 </template>
 

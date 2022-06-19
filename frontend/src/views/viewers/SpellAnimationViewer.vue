@@ -1,5 +1,5 @@
 <template>
-  <content-area>
+  <div>
     <eq-window title="Spell Animations" style="margin-bottom: 1px">
       <div class="row">
         <div class="col-12">
@@ -98,7 +98,7 @@
         <div class="col-12 mt-3">Videos Credits @DeadZergling</div>
       </div>
     </eq-window-simple>
-  </content-area>
+  </div>
 </template>
 
 <script>

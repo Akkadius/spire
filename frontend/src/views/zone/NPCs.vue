@@ -1,6 +1,5 @@
 <template>
-  <content-area>
-
+  <div>
     <div class="row">
       <div :class="(isAnySelectorActive() ? 'col-7' : 'col-12')">
         <eq-window
@@ -148,7 +147,7 @@
       </div>
     </div>
 
-  </content-area>
+  </div>
 
 </template>
 

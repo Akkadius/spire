@@ -1,6 +1,5 @@
 <template>
-  <content-area>
-
+  <div>
     <eq-window-simple title="Icons" style="margin-bottom: 1px">
       <div class="row">
 
@@ -92,7 +91,7 @@
           </span>
       </div>
     </eq-window>
-  </content-area>
+  </div>
 </template>
 
 <script>

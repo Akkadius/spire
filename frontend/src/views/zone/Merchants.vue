@@ -1,5 +1,5 @@
 <template>
-  <content-area>
+  <div>
     <div class="row">
       <div :class="(Object.keys(activeMerchant).length > 0 ? 'col-7' : 'col-12')">
         <eq-window title="Merchant Editor">
@@ -95,7 +95,8 @@
                 >
 
                   <b-button
-                    class="btn-dark btn-sm btn-outline-warning"
+                    v-if="isSelector"
+                    class="btn-dark btn-sm btn-outline-warning mr-3"
                     title="Select Merchant List"
                     @click="selectMerchantList(n.merchant_id);"
                   >
@@ -103,7 +104,7 @@
                   </b-button>
 
                   <b-button
-                    class="btn-dark btn-sm btn-outline-warning ml-3"
+                    class="btn-dark btn-sm btn-outline-warning"
                     @click="editMerchantList(n.merchant_id)"
                     title="Edit Merchant List"
                   >
@@ -145,7 +146,7 @@
       </div>
     </div>
 
-  </content-area>
+  </div>
 </template>
 
 <script>
@@ -169,6 +170,14 @@ export default {
     this.zones = await Zones.getZones()
 
     this.init()
+  },
+  props: {
+    // if this component is being used as a selector
+    isSelector: {
+      type: Boolean,
+      required: false,
+      default: false
+    },
   },
   data() {
     return {
@@ -194,6 +203,7 @@ export default {
     }
   },
   watch: {
+    // when ran standalone, route drives state
     '$route'() {
       this.loadQueryState()
       this.init()
@@ -258,7 +268,6 @@ export default {
       }
 
       this.$forceUpdate()
-
       this.loading = false
     },
 

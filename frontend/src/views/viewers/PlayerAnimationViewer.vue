@@ -1,5 +1,5 @@
 <template>
-  <content-area>
+  <div>
     <eq-window
       title="Player Animations"
       v-if="loaded"
@@ -32,7 +32,7 @@
       <div class="mt-3">Videos Credits @DeadZergling</div>
         </div></div>
     </eq-window>
-  </content-area>
+  </div>
 </template>
 
 <script>

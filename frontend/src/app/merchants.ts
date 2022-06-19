@@ -43,7 +43,7 @@ export class Merchants {
       builder.where("id", "=", name)
 
     } else {
-      builder.where("name", "like", name)
+      builder.where("name", "=", name)
     }
 
     builder.includes(["Merchantlists.NpcType"])
@@ -69,6 +69,9 @@ export class Merchants {
       }
     }
 
+    if (npcIds.length === 0) {
+      return []
+    }
 
     // @ts-ignore
     let r = (await Npcs.getNpcsBulk(

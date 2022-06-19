@@ -1,5 +1,5 @@
 <template>
-  <content-area>
+  <div>
     <div class="row">
       <div :class="(isSubEditActive() ? 'col-6' : 'col-12')">
 
@@ -153,7 +153,7 @@
 
     </div>
 
-  </content-area>
+  </div>
 </template>
 
 <script>

@@ -1,5 +1,5 @@
 <template>
-  <content-area>
+  <div>
     <div class="row">
       <div class="col-xl-7 col-lg-12">
         <eq-window style="" title="Edit Spell">
@@ -1640,7 +1640,7 @@
 
       </div>
     </div>
-  </content-area>
+  </div>
 </template>
 
 <script>

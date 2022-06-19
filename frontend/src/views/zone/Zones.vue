@@ -1,6 +1,5 @@
 <template>
-  <content-area>
-
+  <div>
     <div class="row">
       <div class="col-12">
         <eq-window-simple title="Zones">
@@ -103,7 +102,7 @@
         </eq-window>
       </div>
     </div>
-  </content-area>
+  </div>
 </template>
 
 <script type="ts">

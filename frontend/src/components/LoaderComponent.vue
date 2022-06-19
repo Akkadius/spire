@@ -39,7 +39,7 @@ export default {
       required: true
     },
     padding: {
-      default: 2,
+      default: 4,
       required: false
     },
     size: {

@@ -1,6 +1,5 @@
 <template>
-  <content-area>
-
+  <div>
     <eq-window-simple title="Item Models" style="margin-bottom: 1px">
       <div class="row">
 
@@ -100,7 +99,7 @@
 
       </div>
     </eq-window>
-  </content-area>
+  </div>
 </template>
 
 <script>

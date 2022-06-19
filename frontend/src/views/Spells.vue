@@ -1,18 +1,16 @@
 <template>
-  <content-area>
-
+  <div>
     <eq-window-simple class="pt-0">
-
       <div class="row">
         <div v-for="(icon, index) in dbClassIcons" class="text-center">
           <div class="text-center p-0 mr-3 col-lg-12 col-sm-12">
             {{ dbClassesShort[index] }}
             <div class="text-center">
-                    <span
-                      @click="selectClass(index)"
-                      :style="'width:40px;' + (isClassSelected(index) ? 'border-radius: 7px;' : 'border-radius: 7px;')"
-                      :class="'hover-highlight-inner item-' + icon + ' ' + (isClassSelected(index) ? 'highlight-selected-inner' : '')"
-                    />
+              <span
+                @click="selectClass(index)"
+                :style="'width:40px;' + (isClassSelected(index) ? 'border-radius: 7px;' : 'border-radius: 7px;')"
+                :class="'hover-highlight-inner item-' + icon + ' ' + (isClassSelected(index) ? 'highlight-selected-inner' : '')"
+              />
             </div>
           </div>
         </div>
@@ -180,7 +178,7 @@
 
     <eq-spell-preview-table :spells="spells" v-if="loaded && listType === 'table' && spells"/>
 
-  </content-area>
+  </div>
 </template>
 
 <script type="ts">

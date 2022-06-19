@@ -1,5 +1,5 @@
 <template>
-  <content-area>
+  <div>
     <eq-window title="Race Viewer">
       <div class="row">
         <div class="col-6">
@@ -99,7 +99,7 @@
 
     </eq-window>
 
-  </content-area>
+  </div>
 </template>
 
 <script>

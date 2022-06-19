@@ -1,6 +1,5 @@
 <template>
-  <content-area>
-
+  <div>
     <eq-window>
       <div class="row">
         <div class="col-1">
@@ -233,7 +232,7 @@
 
     <!--          <eq-spell-preview-table :items="items" v-if="loaded && listType === 'table' && items"/>-->
 
-  </content-area>
+  </div>
 </template>
 
 <script type="ts">

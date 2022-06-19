@@ -1,5 +1,5 @@
 <template>
-  <content-area>
+  <div>
     <div class="row">
       <div class="col-7">
         <eq-zone-map
@@ -57,7 +57,7 @@
 
       </div>
     </div>
-  </content-area>
+  </div>
 </template>
 
 <script>
