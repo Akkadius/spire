@@ -276,6 +276,7 @@ export default {
 
     reset() {
       this.search         = ""
+      this.searchItemName = ""
       this.zoneSelection  = 0
       this.activeMerchant = {}
       this.mlz            = []

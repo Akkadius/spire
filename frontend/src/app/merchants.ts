@@ -2,18 +2,9 @@ import {Npcs} from "@/app/npcs";
 import {ItemApi} from "@/app/api";
 import {SpireApiClient} from "@/app/api/spire-api-client";
 import {SpireQueryBuilder} from "@/app/api/spire-query-builder";
+import {chunk} from "@/app/utility/chunk";
 
 export class Merchants {
-  static spliceIntoChunks(arr, chunkSize) {
-    const res = [];
-    while (arr.length > 0) {
-      const chunk = arr.splice(0, chunkSize);
-      // @ts-ignore
-      res.push(chunk);
-    }
-    return res;
-  }
-
   static async getMerchantsByName(name: string) {
     // @ts-ignore
     let r = (await Npcs.listNpcsByName(
@@ -47,8 +38,15 @@ export class Merchants {
 
   static async getMerchantsByItemName(name: string) {
     let builder = (new SpireQueryBuilder())
-    builder.where("name", "like", name)
-    builder.includes(["Merchantlists"])
+
+    if (parseInt(name) > 0) {
+      builder.where("id", "=", name)
+
+    } else {
+      builder.where("name", "like", name)
+    }
+
+    builder.includes(["Merchantlists.NpcType"])
 
     const items = await (new ItemApi(SpireApiClient.getOpenApiConfig()))
       .listItems(
@@ -58,15 +56,23 @@ export class Merchants {
 
     // console.log(items.data)
 
+    let npcIds: any[] = []
     for (let i of items.data) {
+      // console.log(i)
       if (i.merchantlists) {
-        console.log(i)
+        // console.log(i)
+        for (let m of i.merchantlists) {
+          if (m.npc_type) {
+            npcIds.push(m.npc_type.id)
+          }
+        }
       }
     }
 
+
     // @ts-ignore
-    let r = (await Npcs.listNpcsByName(
-      name,
+    let r = (await Npcs.getNpcsBulk(
+      npcIds,
       ["Merchantlists.Items"]
     )).filter((e) => {
       // @ts-ignore
@@ -127,9 +133,9 @@ export class Merchants {
     // edge case, if we loaded too much data and failed to load items, load each npc
     let npcs = []
     // chunk requests
-    for (let chunk of this.spliceIntoChunks(inNpcs, 10)) {
+    for (let c of chunk(inNpcs, 10)) {
       // @ts-ignore
-      let npcIds = chunk.map((e) => {
+      let npcIds = c.map((e) => {
         return e.id
       })
 
