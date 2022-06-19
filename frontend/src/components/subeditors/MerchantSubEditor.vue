@@ -162,6 +162,14 @@ export default {
     reset() {
       console.log("reset")
     },
+    spliceIntoChunks(arr, chunkSize) {
+      const res = [];
+      while (arr.length > 0) {
+        const chunk = arr.splice(0, chunkSize);
+        res.push(chunk);
+      }
+      return res;
+    },
     async doSearch() {
       const z = this.zoneSelection
       const r = (await Npcs.getNpcsByZone(
@@ -184,7 +192,7 @@ export default {
         return e.merchant_id > 0
       })
 
-      console.log(r)
+      // console.log(r)
 
       const withItems = r.filter((e) => {
         let hasItems = false
@@ -207,12 +215,14 @@ export default {
       // edge case, if we loaded too much data and failed to load items, load each npc
       let npcs = []
       if (withItems.length === 0) {
-        for (let n of r) {
-          const npc = (await Npcs.getNpc(
-            n.id,
-            ["Merchantlists.Items"]
-          ))
-          npcs.push(npc)
+        // chunk requests
+        for (let chunk of this.spliceIntoChunks(r, 50)) {
+          let npcIds = chunk.map((e) => {
+            return e.id
+          })
+
+          const b = await Npcs.getNpcsBulk(npcIds, ["Merchantlists.Items"])
+          npcs = [...npcs, ...b]
         }
       }
 
@@ -221,7 +231,6 @@ export default {
       this.$forceUpdate()
 
       this.loading = false
-
     },
   }
 }

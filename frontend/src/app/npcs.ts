@@ -15,7 +15,7 @@ export class Npcs {
   }
 
   public static getRaceImage(npc: any) {
-    let texture = npc.texture
+    let texture     = npc.texture
     let helmTexture = npc.helmtexture
 
     if (this.isPlayableRace(npc.race)) {
@@ -33,7 +33,7 @@ export class Npcs {
 
   public static isPlayableRace(raceId: any) {
     return [
-      1,2,3,4,5,6,7,8,9,10,11,12,128,130,330,522
+      1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 128, 130, 330, 522
     ].includes(raceId)
   }
 
@@ -226,7 +226,7 @@ export class Npcs {
     const npcTypeApi = (new NpcTypeApi(SpireApiClient.getOpenApiConfig()))
     let builder      = (new SpireQueryBuilder())
 
-    let includes : any[] = [];
+    let includes: any[] = [];
     if (relations.includes("all")) {
       includes = [...includes, ...[
         "NpcSpell.NpcSpellsEntries.SpellsNew",
@@ -236,12 +236,11 @@ export class Npcs {
         "Merchantlists.Items",
         "Loottable.LoottableEntries.Lootdrop.LootdropEntries.Item"
       ]]
-    }
-    else if (relations.length > 0) {
+    } else if (relations.length > 0) {
       includes = [...includes, ...relations]
     }
 
-    console.log(includes)
+    // console.log(includes)
 
     builder.includes(includes)
 
@@ -249,6 +248,46 @@ export class Npcs {
         id: id,
       },
       {query: builder.get()})
+    if (r.status === 200) {
+      return r.data
+    }
+  }
+
+  /**
+   * @param ids
+   * @param relations
+   */
+  static async getNpcsBulk(ids: number[], relations: any[] = []) {
+    const npcTypeApi = (new NpcTypeApi(SpireApiClient.getOpenApiConfig()))
+    let builder      = (new SpireQueryBuilder())
+
+    let includes: any[] = [];
+    if (relations.includes("all")) {
+      includes = [...includes, ...[
+        "NpcSpell.NpcSpellsEntries.SpellsNew",
+        "NpcFactions.NpcFactionEntries.FactionList",
+        "NpcFactions",
+        "NpcEmotes",
+        "Merchantlists.Items",
+        "Loottable.LoottableEntries.Lootdrop.LootdropEntries.Item"
+      ]]
+    } else if (relations.length > 0) {
+      includes = [...includes, ...relations]
+    }
+
+    // console.log(includes)
+
+    builder.includes(includes)
+
+    const r = await npcTypeApi.getNpcTypesBulk({
+        body: {
+          ids: ids
+        },
+      },
+      {
+        query: builder.get()
+      }
+    )
     if (r.status === 200) {
       return r.data
     }
@@ -274,8 +313,7 @@ export class Npcs {
         "Spawnentries.NpcType.Merchantlists.Items",
         "Spawnentries.NpcType.Loottable.LoottableEntries.Lootdrop.LootdropEntries.Item"
       ]]
-    }
-    else if (relations.length > 0) {
+    } else if (relations.length > 0) {
       includes = [...includes, ...relations]
     }
 
