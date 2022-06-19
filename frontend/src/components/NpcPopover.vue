@@ -11,7 +11,7 @@
         v-if="showLabel"
         class="ml-3 d-inline-block" style="top: 30%; position: absolute; min-width: 300px"
       >
-        {{ getCleanName(npc.name) }} {{ (npc.lastname.length > 0 ? ` (${npc.lastname})` : "") }}
+        {{ getCleanName(npc.name) }} {{ (npc.lastname && npc.lastname.length > 0 ? ` (${npc.lastname})` : "") }}
       </span>
       <slot></slot>
     </div>

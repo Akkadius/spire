@@ -4,23 +4,33 @@
       <div :class="(Object.keys(activeMerchant).length > 0 ? 'col-7' : 'col-12')">
         <eq-window title="Merchant Editor">
           <div class="row">
-            <div class="col-lg-5">
+            <div class="col-lg-3">
               <input
                 type="text"
                 class="form-control ml-2"
                 placeholder="Search Merchants by Name"
                 v-model="search"
-                @keyup.enter="zoneSelection = 0; updateQueryState()"
+                @keyup.enter="zoneSelection = 0; searchItemName = ''; updateQueryState()"
               >
             </div>
 
-            <div class="col-lg-5">
+            <div class="col-lg-3">
+              <input
+                type="text"
+                class="form-control ml-2"
+                placeholder="Item Name or ID"
+                v-model="searchItemName"
+                @keyup.enter="zoneSelection = 0; search = ''; updateQueryState()"
+              >
+            </div>
+
+            <div class="col-lg-4">
               <select
                 name="class"
                 id="Class"
                 class="form-control"
                 v-model="zoneSelection"
-                @change="search = ''; updateQueryState()"
+                @change="search = ''; searchItemName = ''; updateQueryState()"
               >
                 <option value="0">-- Select --</option>
                 <option v-for="z in zones" v-bind:value="{z: z.short_name, v: z.version}">
@@ -164,6 +174,7 @@ export default {
     return {
       // selection
       search: "",
+      searchItemName: "",
       zoneSelection: 0,
 
       loading: false,
@@ -202,6 +213,9 @@ export default {
       if (this.search !== '') {
         queryState.q = JSON.stringify(this.search)
       }
+      if (this.searchItemName !== '') {
+        queryState.s = JSON.stringify(this.searchItemName)
+      }
 
       this.$router.push(
         {
@@ -219,6 +233,9 @@ export default {
       if (typeof this.$route.query.q !== 'undefined' && this.$route.query.q !== '') {
         this.search = JSON.parse(this.$route.query.q);
       }
+      if (typeof this.$route.query.s !== 'undefined' && this.$route.query.s !== '') {
+        this.searchItemName = JSON.parse(this.$route.query.s);
+      }
     },
 
     /**
@@ -235,6 +252,9 @@ export default {
       }
       if (this.search.length > 0) {
         this.mlz = (await Merchants.getMerchantsByName(this.search))
+      }
+      if (this.searchItemName.length > 0) {
+        this.mlz = (await Merchants.getMerchantsByItemName(this.searchItemName))
       }
 
       this.$forceUpdate()

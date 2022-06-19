@@ -1,4 +1,7 @@
 import {Npcs} from "@/app/npcs";
+import {ItemApi} from "@/app/api";
+import {SpireApiClient} from "@/app/api/spire-api-client";
+import {SpireQueryBuilder} from "@/app/api/spire-query-builder";
 
 export class Merchants {
   static spliceIntoChunks(arr, chunkSize) {
@@ -12,6 +15,55 @@ export class Merchants {
   }
 
   static async getMerchantsByName(name: string) {
+    // @ts-ignore
+    let r = (await Npcs.listNpcsByName(
+      name,
+      ["Merchantlists.Items"]
+    )).filter((e) => {
+      // @ts-ignore
+      return e.merchant_id > 0
+    })
+
+    const withItems = r.filter((e) => {
+      let hasItems = false
+      if (e.merchantlists) {
+        for (const i of e.merchantlists) {
+          // @ts-ignore
+          if (i.items && i.items.length > 0) {
+            hasItems = true;
+          }
+        }
+      }
+
+      return hasItems
+    })
+
+    if (withItems.length === 0) {
+      r = (await this.fallBackChunkLoad(r))
+    }
+
+    return r
+  }
+
+  static async getMerchantsByItemName(name: string) {
+    let builder = (new SpireQueryBuilder())
+    builder.where("name", "like", name)
+    builder.includes(["Merchantlists"])
+
+    const items = await (new ItemApi(SpireApiClient.getOpenApiConfig()))
+      .listItems(
+        // @ts-ignore
+        builder.get()
+      )
+
+    // console.log(items.data)
+
+    for (let i of items.data) {
+      if (i.merchantlists) {
+        console.log(i)
+      }
+    }
+
     // @ts-ignore
     let r = (await Npcs.listNpcsByName(
       name,
