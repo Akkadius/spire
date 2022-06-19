@@ -14,6 +14,7 @@
 
 
 import { ModelsAlternateCurrency } from './models-alternate-currency';
+import { ModelsLoottable } from './models-loottable';
 import { ModelsMerchantlist } from './models-merchantlist';
 import { ModelsNpcEmote } from './models-npc-emote';
 import { ModelsNpcFaction } from './models-npc-faction';
@@ -368,6 +369,12 @@ export interface ModelsNpcType {
      * @type {number}
      * @memberof ModelsNpcType
      */
+    hp_regen_per_second?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof ModelsNpcType
+     */
     hp_regen_rate?: number;
     /**
      * 
@@ -417,6 +424,12 @@ export interface ModelsNpcType {
      * @memberof ModelsNpcType
      */
     light?: number;
+    /**
+     * 
+     * @type {ModelsLoottable}
+     * @memberof ModelsNpcType
+     */
+    loottable?: ModelsLoottable;
     /**
      * 
      * @type {number}
@@ -551,10 +564,10 @@ export interface ModelsNpcType {
     npc_factions?: Array<ModelsNpcFaction>;
     /**
      * 
-     * @type {Array<ModelsNpcSpell>}
+     * @type {ModelsNpcSpell}
      * @memberof ModelsNpcType
      */
-    npc_spells?: Array<ModelsNpcSpell>;
+    npc_spell?: ModelsNpcSpell;
     /**
      * 
      * @type {number}

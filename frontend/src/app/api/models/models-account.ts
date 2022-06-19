@@ -63,6 +63,24 @@ export interface ModelsAccount {
     charname?: string;
     /**
      * 
+     * @type {string}
+     * @memberof ModelsAccount
+     */
+    crc_basedata?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof ModelsAccount
+     */
+    crc_eqgame?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof ModelsAccount
+     */
+    crc_skillcaps?: string;
+    /**
+     * 
      * @type {number}
      * @memberof ModelsAccount
      */

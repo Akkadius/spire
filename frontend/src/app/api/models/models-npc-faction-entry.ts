@@ -13,6 +13,7 @@
  */
 
 
+import { ModelsFactionList } from './models-faction-list';
 
 /**
  * 
@@ -26,6 +27,12 @@ export interface ModelsNpcFactionEntry {
      * @memberof ModelsNpcFactionEntry
      */
     faction_id?: number;
+    /**
+     * 
+     * @type {ModelsFactionList}
+     * @memberof ModelsNpcFactionEntry
+     */
+    faction_list?: ModelsFactionList;
     /**
      * 
      * @type {number}

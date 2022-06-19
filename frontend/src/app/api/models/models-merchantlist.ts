@@ -13,6 +13,8 @@
  */
 
 
+import { ModelsItem } from './models-item';
+import { ModelsNpcType } from './models-npc-type';
 
 /**
  * 
@@ -58,6 +60,12 @@ export interface ModelsMerchantlist {
     item?: number;
     /**
      * 
+     * @type {Array<ModelsItem>}
+     * @memberof ModelsMerchantlist
+     */
+    items?: Array<ModelsItem>;
+    /**
+     * 
      * @type {number}
      * @memberof ModelsMerchantlist
      */
@@ -80,6 +88,12 @@ export interface ModelsMerchantlist {
      * @memberof ModelsMerchantlist
      */
     min_expansion?: number;
+    /**
+     * 
+     * @type {ModelsNpcType}
+     * @memberof ModelsMerchantlist
+     */
+    npc_type?: ModelsNpcType;
     /**
      * 
      * @type {number}

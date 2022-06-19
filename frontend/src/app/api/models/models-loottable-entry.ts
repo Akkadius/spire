@@ -13,7 +13,8 @@
  */
 
 
-import { ModelsLootdropEntry } from './models-lootdrop-entry';
+import { ModelsLootdrop } from './models-lootdrop';
+import { ModelsLoottable } from './models-loottable';
 
 /**
  * 
@@ -29,16 +30,22 @@ export interface ModelsLoottableEntry {
     droplimit?: number;
     /**
      * 
-     * @type {Array<ModelsLootdropEntry>}
+     * @type {ModelsLootdrop}
      * @memberof ModelsLoottableEntry
      */
-    lootdrop_entries?: Array<ModelsLootdropEntry>;
+    lootdrop?: ModelsLootdrop;
     /**
      * 
      * @type {number}
      * @memberof ModelsLoottableEntry
      */
     lootdrop_id?: number;
+    /**
+     * 
+     * @type {ModelsLoottable}
+     * @memberof ModelsLoottableEntry
+     */
+    loottable?: ModelsLoottable;
     /**
      * 
      * @type {number}

@@ -13,6 +13,7 @@
  */
 
 
+import { ModelsLoottable } from './models-loottable';
 
 /**
  * 
@@ -68,6 +69,12 @@ export interface ModelsGlobalLoot {
      * @memberof ModelsGlobalLoot
      */
     id?: number;
+    /**
+     * 
+     * @type {ModelsLoottable}
+     * @memberof ModelsGlobalLoot
+     */
+    loottable?: ModelsLoottable;
     /**
      * 
      * @type {number}

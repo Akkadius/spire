@@ -13,6 +13,7 @@
  */
 
 
+import { ModelsSpellsNew } from './models-spells-new';
 
 /**
  * 
@@ -80,6 +81,12 @@ export interface ModelsAura {
      * @memberof ModelsAura
      */
     spell_id?: number;
+    /**
+     * 
+     * @type {ModelsSpellsNew}
+     * @memberof ModelsAura
+     */
+    spells_new?: ModelsSpellsNew;
     /**
      * 
      * @type {number}

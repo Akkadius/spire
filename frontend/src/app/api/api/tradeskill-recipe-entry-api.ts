@@ -177,7 +177,7 @@ export const TradeskillRecipeEntryApiAxiosParamCreator = function (configuration
          * 
          * @summary Gets TradeskillRecipeEntry
          * @param {number} id Id
-         * @param {string} [includes] Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names 
+         * @param {string} [includes] Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names &lt;h4&gt;Relationships&lt;/h4&gt;TradeskillRecipe
          * @param {string} [select] Column names [.] separated to fetch specific fields in response
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -229,7 +229,7 @@ export const TradeskillRecipeEntryApiAxiosParamCreator = function (configuration
         /**
          * 
          * @summary Lists TradeskillRecipeEntries
-         * @param {string} [includes] Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names 
+         * @param {string} [includes] Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names &lt;h4&gt;Relationships&lt;/h4&gt;TradeskillRecipe
          * @param {string} [where] Filter on specific fields. Multiple conditions [.] separated Example: col_like_value.col2__val2
          * @param {string} [whereOr] Filter on specific fields (Chained ors). Multiple conditions [.] separated Example: col_like_value.col2__val2
          * @param {string} [groupBy] Group by field. Multiple conditions [.] separated Example: field1.field2
@@ -415,7 +415,7 @@ export const TradeskillRecipeEntryApiFp = function(configuration?: Configuration
          * 
          * @summary Gets TradeskillRecipeEntry
          * @param {number} id Id
-         * @param {string} [includes] Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names 
+         * @param {string} [includes] Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names &lt;h4&gt;Relationships&lt;/h4&gt;TradeskillRecipe
          * @param {string} [select] Column names [.] separated to fetch specific fields in response
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -430,7 +430,7 @@ export const TradeskillRecipeEntryApiFp = function(configuration?: Configuration
         /**
          * 
          * @summary Lists TradeskillRecipeEntries
-         * @param {string} [includes] Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names 
+         * @param {string} [includes] Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names &lt;h4&gt;Relationships&lt;/h4&gt;TradeskillRecipe
          * @param {string} [where] Filter on specific fields. Multiple conditions [.] separated Example: col_like_value.col2__val2
          * @param {string} [whereOr] Filter on specific fields (Chained ors). Multiple conditions [.] separated Example: col_like_value.col2__val2
          * @param {string} [groupBy] Group by field. Multiple conditions [.] separated Example: field1.field2
@@ -506,7 +506,7 @@ export const TradeskillRecipeEntryApiFactory = function (configuration?: Configu
          * 
          * @summary Gets TradeskillRecipeEntry
          * @param {number} id Id
-         * @param {string} [includes] Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names 
+         * @param {string} [includes] Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names &lt;h4&gt;Relationships&lt;/h4&gt;TradeskillRecipe
          * @param {string} [select] Column names [.] separated to fetch specific fields in response
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -517,7 +517,7 @@ export const TradeskillRecipeEntryApiFactory = function (configuration?: Configu
         /**
          * 
          * @summary Lists TradeskillRecipeEntries
-         * @param {string} [includes] Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names 
+         * @param {string} [includes] Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names &lt;h4&gt;Relationships&lt;/h4&gt;TradeskillRecipe
          * @param {string} [where] Filter on specific fields. Multiple conditions [.] separated Example: col_like_value.col2__val2
          * @param {string} [whereOr] Filter on specific fields (Chained ors). Multiple conditions [.] separated Example: col_like_value.col2__val2
          * @param {string} [groupBy] Group by field. Multiple conditions [.] separated Example: field1.field2
@@ -601,7 +601,7 @@ export interface TradeskillRecipeEntryApiGetTradeskillRecipeEntryRequest {
     readonly id: number
 
     /**
-     * Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names 
+     * Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names &lt;h4&gt;Relationships&lt;/h4&gt;TradeskillRecipe
      * @type {string}
      * @memberof TradeskillRecipeEntryApiGetTradeskillRecipeEntry
      */
@@ -622,7 +622,7 @@ export interface TradeskillRecipeEntryApiGetTradeskillRecipeEntryRequest {
  */
 export interface TradeskillRecipeEntryApiListTradeskillRecipeEntriesRequest {
     /**
-     * Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names 
+     * Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names &lt;h4&gt;Relationships&lt;/h4&gt;TradeskillRecipe
      * @type {string}
      * @memberof TradeskillRecipeEntryApiListTradeskillRecipeEntries
      */

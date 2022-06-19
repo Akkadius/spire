@@ -13,6 +13,7 @@
  */
 
 
+import { ModelsZone } from './models-zone';
 
 /**
  * 
@@ -128,6 +129,12 @@ export interface ModelsStartZone {
      * @memberof ModelsStartZone
      */
     z?: number;
+    /**
+     * 
+     * @type {ModelsZone}
+     * @memberof ModelsStartZone
+     */
+    zone?: ModelsZone;
     /**
      * 
      * @type {number}

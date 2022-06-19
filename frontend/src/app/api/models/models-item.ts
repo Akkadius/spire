@@ -13,7 +13,23 @@
  */
 
 
+import { ModelsAlternateCurrency } from './models-alternate-currency';
+import { ModelsCharacterCorpseItem } from './models-character-corpse-item';
 import { ModelsDiscoveredItem } from './models-discovered-item';
+import { ModelsDoor } from './models-door';
+import { ModelsFishing } from './models-fishing';
+import { ModelsForage } from './models-forage';
+import { ModelsGroundSpawn } from './models-ground-spawn';
+import { ModelsItemTick } from './models-item-tick';
+import { ModelsKeyring } from './models-keyring';
+import { ModelsLootdropEntry } from './models-lootdrop-entry';
+import { ModelsMerchantlist } from './models-merchantlist';
+import { ModelsObject } from './models-object';
+import { ModelsObjectContent } from './models-object-content';
+import { ModelsStartingItem } from './models-starting-item';
+import { ModelsTask } from './models-task';
+import { ModelsTradeskillRecipeEntry } from './models-tradeskill-recipe-entry';
+import { ModelsTributeLevel } from './models-tribute-level';
 
 /**
  * 
@@ -57,6 +73,12 @@ export interface ModelsItem {
      * @memberof ModelsItem
      */
     aint?: number;
+    /**
+     * 
+     * @type {Array<ModelsAlternateCurrency>}
+     * @memberof ModelsItem
+     */
+    alternate_currencies?: Array<ModelsAlternateCurrency>;
     /**
      * 
      * @type {number}
@@ -389,6 +411,12 @@ export interface ModelsItem {
     casttime_?: number;
     /**
      * 
+     * @type {Array<ModelsCharacterCorpseItem>}
+     * @memberof ModelsItem
+     */
+    character_corpse_items?: Array<ModelsCharacterCorpseItem>;
+    /**
+     * 
      * @type {string}
      * @memberof ModelsItem
      */
@@ -519,6 +547,12 @@ export interface ModelsItem {
      * @memberof ModelsItem
      */
     discovered_items?: Array<ModelsDiscoveredItem>;
+    /**
+     * 
+     * @type {Array<ModelsDoor>}
+     * @memberof ModelsItem
+     */
+    doors?: Array<ModelsDoor>;
     /**
      * 
      * @type {number}
@@ -677,6 +711,12 @@ export interface ModelsItem {
     filename?: string;
     /**
      * 
+     * @type {Array<ModelsFishing>}
+     * @memberof ModelsItem
+     */
+    fishings?: Array<ModelsFishing>;
+    /**
+     * 
      * @type {number}
      * @memberof ModelsItem
      */
@@ -749,6 +789,12 @@ export interface ModelsItem {
     focusunk_7?: number;
     /**
      * 
+     * @type {Array<ModelsForage>}
+     * @memberof ModelsItem
+     */
+    forages?: Array<ModelsForage>;
+    /**
+     * 
      * @type {number}
      * @memberof ModelsItem
      */
@@ -759,6 +805,12 @@ export interface ModelsItem {
      * @memberof ModelsItem
      */
     fvnodrop?: number;
+    /**
+     * 
+     * @type {Array<ModelsGroundSpawn>}
+     * @memberof ModelsItem
+     */
+    ground_spawns?: Array<ModelsGroundSpawn>;
     /**
      * 
      * @type {number}
@@ -893,6 +945,12 @@ export interface ModelsItem {
     idfile?: string;
     /**
      * 
+     * @type {Array<ModelsItemTick>}
+     * @memberof ModelsItem
+     */
+    item_ticks?: Array<ModelsItemTick>;
+    /**
+     * 
      * @type {number}
      * @memberof ModelsItem
      */
@@ -903,6 +961,12 @@ export interface ModelsItem {
      * @memberof ModelsItem
      */
     itemtype?: number;
+    /**
+     * 
+     * @type {Array<ModelsKeyring>}
+     * @memberof ModelsItem
+     */
+    keyrings?: Array<ModelsKeyring>;
     /**
      * 
      * @type {number}
@@ -933,6 +997,12 @@ export interface ModelsItem {
      * @memberof ModelsItem
      */
     light?: number;
+    /**
+     * 
+     * @type {Array<ModelsLootdropEntry>}
+     * @memberof ModelsItem
+     */
+    lootdrop_entries?: Array<ModelsLootdropEntry>;
     /**
      * 
      * @type {string}
@@ -983,6 +1053,12 @@ export interface ModelsItem {
     maxcharges?: number;
     /**
      * 
+     * @type {Array<ModelsMerchantlist>}
+     * @memberof ModelsItem
+     */
+    merchantlists?: Array<ModelsMerchantlist>;
+    /**
+     * 
      * @type {number}
      * @memberof ModelsItem
      */
@@ -1023,6 +1099,18 @@ export interface ModelsItem {
      * @memberof ModelsItem
      */
     notransfer?: number;
+    /**
+     * 
+     * @type {Array<ModelsObjectContent>}
+     * @memberof ModelsItem
+     */
+    object_contents?: Array<ModelsObjectContent>;
+    /**
+     * 
+     * @type {Array<ModelsObject>}
+     * @memberof ModelsItem
+     */
+    objects?: Array<ModelsObject>;
     /**
      * 
      * @type {number}
@@ -1367,6 +1455,12 @@ export interface ModelsItem {
     stacksize?: number;
     /**
      * 
+     * @type {Array<ModelsStartingItem>}
+     * @memberof ModelsItem
+     */
+    starting_items?: Array<ModelsStartingItem>;
+    /**
+     * 
      * @type {number}
      * @memberof ModelsItem
      */
@@ -1397,10 +1491,28 @@ export interface ModelsItem {
     svcorruption?: number;
     /**
      * 
+     * @type {Array<ModelsTask>}
+     * @memberof ModelsItem
+     */
+    tasks?: Array<ModelsTask>;
+    /**
+     * 
+     * @type {Array<ModelsTradeskillRecipeEntry>}
+     * @memberof ModelsItem
+     */
+    tradeskill_recipe_entries?: Array<ModelsTradeskillRecipeEntry>;
+    /**
+     * 
      * @type {number}
      * @memberof ModelsItem
      */
     tradeskills?: number;
+    /**
+     * 
+     * @type {Array<ModelsTributeLevel>}
+     * @memberof ModelsItem
+     */
+    tribute_levels?: Array<ModelsTributeLevel>;
     /**
      * 
      * @type {number}

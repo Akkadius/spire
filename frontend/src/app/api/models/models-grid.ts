@@ -14,6 +14,7 @@
 
 
 import { ModelsGridEntry } from './models-grid-entry';
+import { ModelsZone } from './models-zone';
 
 /**
  * 
@@ -45,6 +46,12 @@ export interface ModelsGrid {
      * @memberof ModelsGrid
      */
     type_2?: number;
+    /**
+     * 
+     * @type {ModelsZone}
+     * @memberof ModelsGrid
+     */
+    zone?: ModelsZone;
     /**
      * 
      * @type {number}

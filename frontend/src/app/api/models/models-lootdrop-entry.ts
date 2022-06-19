@@ -14,6 +14,7 @@
 
 
 import { ModelsItem } from './models-item';
+import { ModelsLootdrop } from './models-lootdrop';
 
 /**
  * 
@@ -57,6 +58,12 @@ export interface ModelsLootdropEntry {
      * @memberof ModelsLootdropEntry
      */
     item_id?: number;
+    /**
+     * 
+     * @type {ModelsLootdrop}
+     * @memberof ModelsLootdropEntry
+     */
+    lootdrop?: ModelsLootdrop;
     /**
      * 
      * @type {number}
