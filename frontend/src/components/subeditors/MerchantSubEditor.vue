@@ -216,7 +216,7 @@ export default {
       let npcs = []
       if (withItems.length === 0) {
         // chunk requests
-        for (let chunk of this.spliceIntoChunks(r, 50)) {
+        for (let chunk of this.spliceIntoChunks(r, 10)) {
           let npcIds = chunk.map((e) => {
             return e.id
           })

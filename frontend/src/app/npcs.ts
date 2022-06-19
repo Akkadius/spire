@@ -22,7 +22,7 @@ export class Npcs {
       if (helmTexture > 3) {
         helmTexture = 0
       }
-      if (texture > 16) {
+      if (texture > 16 || (texture > 3 && texture < 10)) {
         texture = 0
       }
     }

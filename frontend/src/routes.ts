@@ -16,5 +16,6 @@ export const ROUTE = {
   STRINGS_DATABASE: "/strings-database",
   TASK_EDIT: "/tasks/%s",
   TASKS: "/tasks",
+  MERCHANTS: "/merchants",
   ZONES: "/zones",
 };

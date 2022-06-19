@@ -9,14 +9,15 @@
       </div>
       <span
         v-if="showLabel"
-        class="ml-3 d-inline-block" style="top: 30%; position: absolute; min-width: 200px"
+        class="ml-3 d-inline-block" style="top: 30%; position: absolute; min-width: 300px"
       >
-        {{ getCleanName(npc.name) }}
+        {{ getCleanName(npc.name) }} {{ (npc.lastname.length > 0 ? ` (${npc.lastname})` : "") }}
       </span>
       <slot></slot>
     </div>
 
     <b-popover
+      v-if="popoverEnabled"
       :target="npc.id + '-' + popoverId + '-popover'"
       custom-class="no-bg"
       placement="right"
@@ -67,6 +68,11 @@ export default {
       default: 20
     },
     showLabel: {
+      type: Boolean,
+      required: false,
+      default: true
+    },
+    popoverEnabled: {
       type: Boolean,
       required: false,
       default: true

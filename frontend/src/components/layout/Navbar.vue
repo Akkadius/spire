@@ -118,6 +118,14 @@
           </li>
 
           <li class="nav-item">
+            <router-link class="nav-link " to="/merchants">
+              <i class="ra ra-emerald mr-2"></i> Merchants
+              <b-badge class="ml-3" variant="primary">ALPHA</b-badge>
+              <b-badge class="ml-3" variant="primary">NEW!</b-badge>
+            </router-link>
+          </li>
+
+          <li class="nav-item">
             <router-link class="nav-link " to="/quest-api-explorer">
               <i class="ra ra-compass mr-2"></i> Quest API Explorer
             </router-link>
@@ -151,6 +159,7 @@
               <b-badge class="ml-3" variant="primary">NEW!</b-badge>
             </router-link>
           </li>
+
         </ul>
 
         <!-- Heading -->
