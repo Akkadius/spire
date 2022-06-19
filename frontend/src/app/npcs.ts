@@ -219,6 +219,39 @@ export class Npcs {
   }
 
   /**
+   * @param name
+   * @param relations
+   */
+  static async listNpcsByName(name: string, relations: any[] = []) {
+    const npcTypeApi = (new NpcTypeApi(SpireApiClient.getOpenApiConfig()))
+    let builder      = (new SpireQueryBuilder())
+
+    let includes: any[] = [];
+    if (relations.includes("all")) {
+      includes = [...includes, ...[
+        "NpcSpell.NpcSpellsEntries.SpellsNew",
+        "NpcFactions.NpcFactionEntries.FactionList",
+        "NpcFactions",
+        "NpcEmotes",
+        "Merchantlists.Items",
+        "Loottable.LoottableEntries.Lootdrop.LootdropEntries.Item"
+      ]]
+    } else if (relations.length > 0) {
+      includes = [...includes, ...relations]
+    }
+
+    builder.where("name", "like", name)
+    builder.whereOr("lastname", "like", name)
+    builder.includes(includes)
+
+    // @ts-ignore
+    const r = await npcTypeApi.listNpcTypes(builder.get())
+    if (r.status === 200) {
+      return r.data
+    }
+  }
+
+  /**
    * @param id
    * @param relations
    */

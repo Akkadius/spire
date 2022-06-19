@@ -8,9 +8,9 @@
               <input
                 type="text"
                 class="form-control ml-2"
-                placeholder="Search Merchants by Item"
+                placeholder="Search Merchants by Name"
                 v-model="search"
-                @keyup.enter="updateQueryState()"
+                @keyup.enter="zoneSelection = 0; updateQueryState()"
               >
             </div>
 
@@ -20,7 +20,7 @@
                 id="Class"
                 class="form-control"
                 v-model="zoneSelection"
-                @change="updateQueryState()"
+                @change="search = ''; updateQueryState()"
               >
                 <option value="0">-- Select --</option>
                 <option v-for="z in zones" v-bind:value="{z: z.short_name, v: z.version}">
@@ -51,7 +51,7 @@
         </eq-window>
 
         <eq-window v-if="!loading && zoneSelection !== 0 && mlz && mlz.length === 0">
-          No merchants found in this zone...
+          No merchants found...
         </eq-window>
 
         <eq-window
@@ -199,6 +199,9 @@ export default {
       if (this.zoneSelection !== 0) {
         queryState.zone = JSON.stringify(this.zoneSelection)
       }
+      if (this.search !== '') {
+        queryState.q = JSON.stringify(this.search)
+      }
 
       this.$router.push(
         {
@@ -213,6 +216,9 @@ export default {
       if (typeof this.$route.query.zone !== 'undefined' && this.$route.query.zone !== 0) {
         this.zoneSelection = JSON.parse(this.$route.query.zone);
       }
+      if (typeof this.$route.query.q !== 'undefined' && this.$route.query.q !== '') {
+        this.search = JSON.parse(this.$route.query.q);
+      }
     },
 
     /**
@@ -220,10 +226,17 @@ export default {
      */
     async init() {
       this.activeMerchant = {}
+      this.mlz            = []
       this.loading        = true
       const z             = this.zoneSelection
 
-      this.mlz = (await Merchants.getMerchantsByZone(z.z, z.v))
+      if (Object.keys(this.zoneSelection).length > 0) {
+        this.mlz = (await Merchants.getMerchantsByZone(z.z, z.v))
+      }
+      if (this.search.length > 0) {
+        this.mlz = (await Merchants.getMerchantsByName(this.search))
+      }
+
       this.$forceUpdate()
 
       this.loading = false
@@ -242,10 +255,10 @@ export default {
     },
 
     reset() {
-      this.search = ""
-      this.zoneSelection = 0
+      this.search         = ""
+      this.zoneSelection  = 0
       this.activeMerchant = {}
-      this.mlz = []
+      this.mlz            = []
       this.updateQueryState()
     },
   }
