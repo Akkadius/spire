@@ -18,7 +18,7 @@
       >
         <table
           id="spell-items-table-selector"
-          class="eq-table eq-highlight-rows"
+          class="eq-table bordered eq-highlight-rows"
           style="display: table; overflow-x: scroll"
         >
           <thead>
@@ -156,17 +156,6 @@ export default {
 </script>
 
 <style scoped>
-#spell-items-table-selector tr {
-  border-bottom: .4px solid #ffffff1c;
-}
-
-#spell-items-table-selector td {
-  padding-top: 5px;
-  padding-bottom: 5px;
-  border-right: .1px solid #ffffff1c;
-  border-left: .1px solid #ffffff1c;
-}
-
 .item-table td {
   vertical-align: middle;
   text-align: center;

@@ -11,7 +11,7 @@
          v-if="spells.length > 0">
       <table
         id="spell-preview-table"
-        class="eq-table eq-highlight-rows spell-preview-table"
+        class="eq-table bordered eq-highlight-rows spell-preview-table"
         style="display: table;">
         <thead>
         <tr>
@@ -193,20 +193,6 @@ export default {
 </script>
 
 <style scoped>
-#spell-preview-table tr {
-  border-bottom: .4px solid #ffffff1c;
-}
-
-#spell-preview-table td {
-  padding-top: 5px;
-  padding-bottom: 5px;
-  border-right: .1px solid #ffffff1c;
-  border-left: .1px solid #ffffff1c;
-}
-
-.spell-preview-table td {
-  vertical-align: middle !important;
-}
 
 /* For Mobile */
 @media screen and (max-width: 540px) {

@@ -30,14 +30,13 @@
                 class="eq-table-floating-header"
               >
               <tr>
-                <th class="text-left" style="padding: 10px">
+                <th class="text-center" style="vertical-align: middle !important">
                   <b-button
-                    style="position: absolute; bottom: 20%;"
                     class="btn-dark btn-sm btn-outline-warning"
                     title="NPC Grid Editor"
                     @click="npcGridEditor()"
                   >
-                    <i class="fa fa-th"></i>
+                    <i class="fa fa-th"></i> Bulk Editor
                   </b-button>
                 </th>
                 <th class="text-center">
@@ -546,7 +545,7 @@ export default {
   transition: background-image 1s ease-in-out;
 }
 
-#npctable td {
+#npctable td, #npctable th {
   vertical-align: middle;
   padding: 10px;
   height: 60px;
