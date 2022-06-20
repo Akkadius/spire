@@ -153,6 +153,8 @@
               <tr>
                 <th class="text-center"></th>
                 <th class="text-center">Merchant ID</th>
+                <th class="text-center">Item Count</th>
+                <th class="text-center">NPC(s) Linked to Merchant Table</th>
               </tr>
               </thead>
               <tbody>
@@ -160,7 +162,8 @@
                 v-for="(m, index) in merchantLists"
                 :id="'ml-' + m.merchantid"
                 :key="index"
-                @mouseover="showMerchantList(m.merchantid)"
+                :class="(isActiveMerchant(m) ? 'pulsate-highlight-white' : '')"
+                @click="showMerchantList(m)"
               >
                 <td
                   class="text-center"
@@ -184,10 +187,21 @@
                   </b-button>
                 </td>
 
-                <td
-                  class="text-center"
-                >
-                  {{ m.merchantid }}
+                <td class="text-center" style="width: 50px">{{ m.merchantid }}</td>
+                <td class="text-center" style="width: 50px">{{ m.slot }}</td>
+                <td class="text-left">
+                  <div
+                    v-for="d in associatedNpcs[m.merchantid]"
+                  >
+                    ({{d.npc.id}}) {{getNpcCleanName(d.npc.name)}} {{d.npc.lastname ? `(${d.npc.lastname})` : ''}} ({{d.zone}})
+
+<!--                    <npc-popover-->
+<!--                      :limit-entries="25"-->
+<!--                      :additional-label="`(${d.zone})`"-->
+<!--                      :no-stats="true"-->
+<!--                      :npc="d.npc"-->
+<!--                    />-->
+                  </div>
                 </td>
               </tr>
               </tbody>
@@ -201,7 +215,7 @@
         <eq-window
           :title="`Merchant List Preview (${activeMerchantList[0].merchantid})`"
         >
-          <div style="max-height: 95vh; overflow-y: scroll; overflow-x: hidden">
+          <div style="max-height: 92vh; overflow-y: scroll; overflow-x: hidden">
             <table
               class="eq-table eq-highlight-rows minified-inputs"
               style="width: 95%"
@@ -215,6 +229,7 @@
               <tr
                 v-for="(e, i) in activeMerchantList"
                 :class="(isMerchantEntrySelected(e) ? 'pulsate-highlight-white' : '')"
+                v-if="editItems[e.item]"
               >
                 <td>
                   <!--                  <input type="text" v-model="e.item" class="mr-3 m-0" style="width: 120px">-->
@@ -519,6 +534,7 @@ import {MerchantlistApi}   from "../../app/api";
 import {SpireApiClient}    from "../../app/api/spire-api-client";
 import {SpireQueryBuilder} from "../../app/api/spire-query-builder";
 import {chunk}             from "../../app/utility/chunk";
+import {Npcs}              from "../../app/npcs";
 
 const MILLISECONDS_BEFORE_WINDOW_RESET = 5000;
 
@@ -542,6 +558,7 @@ export default {
     this.editList          = []
     this.editItems         = {}
     this.merchantLists     = []
+    this.associatedNpcs    = {}
     // editing - entry level
     this.editMerchantEntry = 0
     this.zones             = await Zones.getZones()
@@ -606,31 +623,40 @@ export default {
   },
   methods: {
 
-    async showMerchantList(merchantId) {
-      console.log("show merchant list")
-      console.log(merchantId)
+    isActiveMerchant(m) {
+      return this.activeMerchantList && this.activeMerchantList[0] && m.merchantid === this.activeMerchantList[0].merchantid
+    },
 
-      this.activeMerchantList = await Merchants.getById(merchantId)
+    getNpcCleanName(name) {
+      return Npcs.getCleanName(name)
+    },
 
-      let itemIds = []
-      for (let e of this.activeMerchantList) {
-        if (e.item > 0) {
-          itemIds.push(e.item)
+    async showMerchantList(m) {
+
+      // pluck the merchantlist off of related data
+      if (m.npc_types && m.npc_types.length > 0) {
+        this.activeMerchantList = m.npc_types[0].merchantlists
+
+        let itemIds = []
+        for (let e of this.activeMerchantList) {
+          if (e.item > 0) {
+            itemIds.push(e.item)
+          }
+        }
+
+        if (itemIds.length > 0) {
+          setTimeout(() => {
+            Items.loadItemsBulk(itemIds).then(async () => {
+              for (let e of this.activeMerchantList) {
+                if (e.item > 0) {
+                  this.editItems[e.item] = await Items.getItem(e.item)
+                }
+              }
+              this.$forceUpdate()
+            })
+          }, 10)
         }
       }
-
-      if (itemIds.length > 0) {
-        Items.loadItemsBulk(itemIds).then(async () => {
-          for (let e of this.activeMerchantList) {
-            if (e.item > 0) {
-              this.editItems[e.item] = await Items.getItem(e.item)
-            }
-          }
-          this.$forceUpdate()
-        })
-      }
-
-      this.$forceUpdate()
     },
 
     /**
@@ -937,7 +963,40 @@ export default {
         }
 
         if (r.status === 200) {
-          this.merchantLists = r.data
+          this.merchantLists = merchants
+
+          this.associatedNpcs = {}
+
+          // get associated NPCs to the merchant lists
+          for (let m of merchants) {
+            if (m.npc_types && m.npc_types.length > 0) {
+              // console.log(m)
+
+              for (let n of m.npc_types) {
+                if (n.spawnentries && n.spawnentries.length > 0) {
+                  for (let s of n.spawnentries) {
+                    // console.log(s)
+                    if (s.spawngroup && s.spawngroup.spawn_2) {
+                      if (typeof this.associatedNpcs[m.merchantid] === 'undefined') {
+                        this.associatedNpcs[m.merchantid] = []
+                      }
+
+                      this.associatedNpcs[m.merchantid].push(
+                        {
+                          npc: n,
+                          zone: s.spawngroup.spawn_2.zone
+                        }
+                      )
+                    }
+                  }
+                }
+              }
+            }
+          }
+
+          // console.log("associated")
+          // console.log(this.associatedNpcs)
+
         }
       }
 
@@ -1002,6 +1061,7 @@ export default {
       this.ml                    = []
       this.merchantLists         = []
       this.activeMerchantList    = []
+      this.associatedNpcs        = {}
     },
   }
 }
