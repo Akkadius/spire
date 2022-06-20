@@ -1,5 +1,5 @@
 import {Npcs} from "@/app/npcs";
-import {ItemApi, MerchantlistApi} from "@/app/api";
+import {ItemApi, MerchantlistApi, NpcTypeApi} from "@/app/api";
 import {SpireApiClient} from "@/app/api/spire-api-client";
 import {SpireQueryBuilder} from "@/app/api/spire-query-builder";
 import {chunk} from "@/app/utility/chunk";
@@ -148,6 +148,31 @@ export class Merchants {
       )
   }
 
+  static async getMerchantsBulk(ids: number[], relations: any[] = []) {
+    const r = await (new MerchantlistApi(SpireApiClient.getOpenApiConfig()))
+      .getMerchantlistsBulk(
+        {
+          body: {
+            ids: ids
+          }
+        },
+        {
+          query: // @ts-ignore
+            (new SpireQueryBuilder())
+              .groupBy(["merchantid"])
+              .includes(relations)
+              .orderBy(["merchantid"])
+              .orderDirection("desc")
+              .get()
+        }
+
+      )
+
+    if (r.status === 200) {
+      return r.data
+    }
+  }
+
   static async fallBackChunkLoad(inNpcs) {
     // edge case, if we loaded too much data and failed to load items, load each npc
     let npcs = []
@@ -165,11 +190,14 @@ export class Merchants {
     return npcs
   }
 
-  static async getById(id: number) {
+  static async getById(id: number, relations: any[] = []) {
     const r = await (new MerchantlistApi(SpireApiClient.getOpenApiConfig()))
       .listMerchantlists(
         // @ts-ignore
-        (new SpireQueryBuilder()).where("merchantid", "=", id).get()
+        (new SpireQueryBuilder())
+          .where("merchantid", "=", id)
+          .includes(relations)
+          .get()
       )
 
     if (r.status === 200) {

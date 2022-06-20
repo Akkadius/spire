@@ -2,14 +2,14 @@
   <div>
     <!-- Browse View -->
     <div class="row" v-if="editMerchantId === 0">
-      <div :class="(Object.keys(activeMerchant).length > 0 ? 'col-7' : 'col-12')">
+      <div :class="(Object.keys(activeMerchantNpc).length > 0 || Object.keys(activeMerchantList).length > 0 ? 'col-7' : 'col-12')">
         <eq-window title="Merchant Editor">
           <div class="row">
             <div class="col-lg-3">
               <input
                 type="text"
                 class="form-control ml-2"
-                placeholder="Search Merchants by Name"
+                placeholder="Merchants by Name"
                 v-model="search"
                 @keyup.enter="zoneSelection = 0; searchItemName = ''; updateQueryState()"
               >
@@ -25,7 +25,7 @@
               >
             </div>
 
-            <div class="col-lg-4">
+            <div class="col-lg-3">
               <select
                 name="class"
                 id="Class"
@@ -40,10 +40,18 @@
               </select>
             </div>
 
-            <div class="col-lg-2 text-center p-0 mt-1">
+            <div class="col-lg-3 text-center p-0 mt-1">
               <div class="btn-group" role="group" aria-label="Basic example">
                 <b-button title="Search" @click="updateQueryState()" size="sm" variant="outline-warning">
                   <i class="fa fa-search"></i> Search
+                </b-button>
+                <b-button
+                  title="Show all Merchant Tables"
+                  @click="reset(); showAll = true; updateQueryState()"
+                  size="sm"
+                  variant="outline-warning"
+                >
+                  <i class="ra ra-emerald"></i> All
                 </b-button>
                 <b-button title="Reset" @click="reset(); updateQueryState()" size="sm" variant="outline-danger">
                   <i class="fa fa-eraser"></i> Reset
@@ -65,6 +73,7 @@
           No merchants found...
         </eq-window>
 
+        <!-- List Merchants by NPC -->
         <eq-window
           v-if="!loading && ml && ml.length > 0"
           class="p-2 mt-5"
@@ -72,7 +81,6 @@
         >
           <div style="overflow-y: scroll; max-height: 83vh">
             <table
-              id="merchant-list-table"
               class="eq-table bordered eq-highlight-rows"
               style="font-size: 14px; "
             >
@@ -88,13 +96,12 @@
                 v-for="(n, index) in ml"
                 :id="'ml-' + n.id"
                 :key="index"
-                @mouseover="activeMerchant = n"
+                @mouseover="activeMerchantNpc = n"
               >
                 <td
                   class="text-center"
                   style="width: 100px"
                 >
-
                   <b-button
                     v-if="isSelector"
                     class="btn-dark btn-sm btn-outline-warning mr-3"
@@ -129,22 +136,125 @@
               </tbody>
             </table>
           </div>
+        </eq-window>
 
+        <!-- Merchantlist (Raw) top level data -->
+        <eq-window
+          v-if="!loading && merchantLists && merchantLists.length > 0"
+          class="p-2 mt-5"
+          :title="'Merchants (' + merchantLists.length + ')'"
+        >
+          <div style="overflow-y: scroll; max-height: 83vh">
+            <table
+              class="eq-table bordered eq-highlight-rows"
+              style="font-size: 14px; "
+            >
+              <thead class="eq-table-floating-header">
+              <tr>
+                <th class="text-center"></th>
+                <th class="text-center">Merchant ID</th>
+              </tr>
+              </thead>
+              <tbody>
+              <tr
+                v-for="(m, index) in merchantLists"
+                :id="'ml-' + m.merchantid"
+                :key="index"
+                @mouseover="showMerchantList(m.merchantid)"
+              >
+                <td
+                  class="text-center"
+                  style="width: 50px"
+                >
+                  <b-button
+                    v-if="isSelector"
+                    class="btn-dark btn-sm btn-outline-warning mr-3"
+                    title="Select Merchant List"
+                    @click="selectMerchantList(m.merchantid);"
+                  >
+                    <i class="fa fa-arrow-left"></i>
+                  </b-button>
+
+                  <b-button
+                    class="btn-dark btn-sm btn-outline-warning"
+                    @click="editMerchantList(m.merchantid)"
+                    title="Edit Merchant List"
+                  >
+                    <i class="fa fa-edit"></i>
+                  </b-button>
+                </td>
+
+                <td
+                  class="text-center"
+                >
+                  {{ m.merchantid }}
+                </td>
+              </tr>
+              </tbody>
+            </table>
+          </div>
         </eq-window>
       </div>
 
-      <div :class="(Object.keys(activeMerchant).length > 0 ? 'col-5' : 'col-12')">
+      <!-- Active Merchant (raw) pane -->
+      <div v-if="activeMerchantList && Object.keys(activeMerchantList).length > 0" class="col-5">
         <eq-window
-          v-if="Object.keys(activeMerchant).length > 0"
+          :title="`Merchant List Preview (${activeMerchantList[0].merchantid})`"
+        >
+          <div style="max-height: 95vh; overflow-y: scroll; overflow-x: hidden">
+            <table
+              class="eq-table eq-highlight-rows minified-inputs"
+              style="width: 95%"
+            >
+              <thead>
+              <tr>
+                <th>Item</th>
+              </tr>
+              </thead>
+              <tbody>
+              <tr
+                v-for="(e, i) in activeMerchantList"
+                :class="(isMerchantEntrySelected(e) ? 'pulsate-highlight-white' : '')"
+              >
+                <td>
+                  <!--                  <input type="text" v-model="e.item" class="mr-3 m-0" style="width: 120px">-->
+                  <item-popover
+                    class="d-inline-block"
+                    :item="editItems[e.item]"
+                    v-if="editItems[e.item] && Object.keys(editItems[e.item]).length > 0"
+                    size="sm"
+                  />
+
+                  {{ editItems[e.item] && editItems[e.item].stacksize > 0 ? `(${editItems[e.item].stacksize})` : '' }}
+                  <eq-cash-display
+                    class="ml-1"
+                    :price="parseInt(editItems[e.item].price)"
+                    v-if="editItems[e.item]"
+                  />
+                </td>
+              </tr>
+              </tbody>
+            </table>
+          </div>
+        </eq-window>
+      </div>
+
+
+      <!-- Active Merchant (NPC) pane -->
+      <div :class="(Object.keys(activeMerchantNpc).length > 0 ? 'col-5' : 'col-12')">
+        <eq-window
+          v-if="Object.keys(activeMerchantNpc).length > 0"
           style="max-height: 95vh; overflow-y: scroll; overflow-x: hidden"
         >
           <eq-npc-card-preview
-            :npc="activeMerchant"
+            :npc="activeMerchantNpc"
             :no-stats="true"
             :limit-entries="1000"
           />
         </eq-window>
       </div>
+
+
     </div>
 
     <!-- Edit View -->
@@ -391,20 +501,25 @@
 </template>
 
 <script>
-import {Zones}            from "../../app/zones";
-import ContentArea        from "../../components/layout/ContentArea";
-import EqWindow           from "../../components/eq-ui/EQWindow";
-import LoaderFakeProgress from "../../components/LoaderFakeProgress";
-import NpcPopover         from "../../components/NpcPopover";
-import {ROUTE}            from "../../routes";
-import EqNpcCardPreview   from "../../components/preview/EQNpcCardPreview";
-import {Merchants}        from "../../app/merchants";
-import ItemPopover        from "../../components/ItemPopover";
-import EqCashDisplay      from "../../components/eq-ui/EqCashDisplay";
-import {Items}            from "../../app/items";
-import EqCheckbox         from "../../components/eq-ui/EQCheckbox";
-import EqDebug            from "../../components/eq-ui/EQDebug";
-import ItemSelector       from "../../components/selectors/ItemSelector";
+import {Zones}             from "../../app/zones";
+import ContentArea         from "../../components/layout/ContentArea";
+import EqWindow            from "../../components/eq-ui/EQWindow";
+import LoaderFakeProgress  from "../../components/LoaderFakeProgress";
+import NpcPopover          from "../../components/NpcPopover";
+import {ROUTE}             from "../../routes";
+import EqNpcCardPreview    from "../../components/preview/EQNpcCardPreview";
+import {Merchants}         from "../../app/merchants";
+import ItemPopover         from "../../components/ItemPopover";
+import EqCashDisplay       from "../../components/eq-ui/EqCashDisplay";
+import {Items}             from "../../app/items";
+import EqCheckbox          from "../../components/eq-ui/EQCheckbox";
+import EqDebug             from "../../components/eq-ui/EQDebug";
+import ItemSelector        from "../../components/selectors/ItemSelector";
+import {MerchantlistApi}   from "../../app/api";
+import {SpireApiClient}    from "../../app/api/spire-api-client";
+import {SpireQueryBuilder} from "../../app/api/spire-query-builder";
+import {chunk}             from "../../app/utility/chunk";
+import {Npcs}              from "../../app/npcs";
 
 const MILLISECONDS_BEFORE_WINDOW_RESET = 5000;
 
@@ -427,6 +542,7 @@ export default {
     this.ml                = []
     this.editList          = []
     this.editItems         = {}
+    this.merchantLists     = []
     // editing - entry level
     this.editMerchantEntry = 0
     this.zones             = await Zones.getZones()
@@ -459,6 +575,7 @@ export default {
 
       // state
       addItem: false,
+      showAll: false,
 
       editMerchantEntryFields: [
         { desc: "faction_required", field: "faction_required", fType: "text" },
@@ -473,7 +590,8 @@ export default {
       ],
 
       // preview
-      activeMerchant: {},
+      activeMerchantNpc: {},
+      activeMerchantList: {},
 
       // feeds selection
       zones: [],
@@ -488,6 +606,33 @@ export default {
     },
   },
   methods: {
+
+    async showMerchantList(merchantId) {
+      console.log("show merchant list")
+      console.log(merchantId)
+
+      this.activeMerchantList = await Merchants.getById(merchantId)
+
+      let itemIds = []
+      for (let e of this.activeMerchantList) {
+        if (e.item > 0) {
+          itemIds.push(e.item)
+        }
+      }
+
+      if (itemIds.length > 0) {
+        Items.loadItemsBulk(itemIds).then(async () => {
+          for (let e of this.activeMerchantList) {
+            if (e.item > 0) {
+              this.editItems[e.item] = await Items.getItem(e.item)
+            }
+          }
+          this.$forceUpdate()
+        })
+      }
+
+      this.$forceUpdate()
+    },
 
     /**
      * Merchant List entry editing functions
@@ -671,6 +816,9 @@ export default {
       if (this.addItem) {
         queryState.addItem = this.addItem
       }
+      if (this.showAll) {
+        queryState.showAll = this.showAll
+      }
       if (this.search !== '') {
         queryState.q = this.search
       }
@@ -712,16 +860,19 @@ export default {
       if (typeof this.$route.query.addItem !== 'undefined' && this.$route.query.addItem) {
         this.addItem = true;
       }
+      if (typeof this.$route.query.showAll !== 'undefined' && this.$route.query.showAll) {
+        this.showAll = true;
+      }
     },
 
     /**
      * Init
      */
     async init() {
-      this.activeMerchant = {}
-      this.ml             = []
-      this.loading        = true
-      const z             = this.zoneSelection
+      this.activeMerchantNpc = {}
+      this.ml                = []
+      this.loading           = true
+      const z                = this.zoneSelection
 
       if (Object.keys(this.zoneSelection).length > 0) {
         this.ml = (await Merchants.getMerchantsByZone(z.z, z.v))
@@ -753,6 +904,46 @@ export default {
           if (e.slot === parseInt(this.editMerchantEntrySlot)) {
             this.editMerchantEntry = e
           }
+        }
+      }
+
+      if (this.showAll) {
+        console.log("show all")
+        // @ts-ignore
+        const r = await (new MerchantlistApi(SpireApiClient.getOpenApiConfig()))
+          .listMerchantlists(
+            // @ts-ignore
+            (new SpireQueryBuilder())
+              .groupBy(["merchantid"])
+              .orderBy(["merchantid"])
+              .orderDirection("desc")
+              .limit(100000)
+              .get()
+          )
+
+        let merchantIds = []
+        if (r.status === 200) {
+          merchantIds = r.data.map((e) => {
+            return e.merchantid
+          })
+        }
+        console.log(merchantIds)
+        // .includes(["NpcType.Spawnentries.Spawngroup.Spawn2"])
+
+        // chunk requests
+        let merchants = []
+        for (let c of chunk(merchantIds, 500)) {
+          const b = await Merchants.getMerchantsBulk(c, ["NpcType.Spawnentries.Spawngroup.Spawn2", "NpcType.Merchantlists"])
+          console.log(b)
+
+          // @ts-ignore
+          merchants = [...merchants, ...b]
+        }
+
+        if (r.status === 200) {
+          this.merchantLists = r.data
+
+          console.log(this.merchantLists)
         }
       }
 
@@ -807,6 +998,7 @@ export default {
 
 
     reset() {
+      this.showAll               = false;
       this.addItem               = false
       this.search                = ""
       this.searchItemName        = ""
@@ -814,8 +1006,10 @@ export default {
       this.editMerchantId        = 0
       this.editMerchantEntry     = 0
       this.editMerchantEntrySlot = 0
-      this.activeMerchant        = {}
+      this.activeMerchantNpc     = {}
       this.ml                    = []
+      this.merchantLists         = []
+      this.activeMerchantList    = []
     },
   }
 }
