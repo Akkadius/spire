@@ -1,5 +1,5 @@
 import {Npcs} from "@/app/npcs";
-import {ItemApi} from "@/app/api";
+import {ItemApi, MerchantlistApi} from "@/app/api";
 import {SpireApiClient} from "@/app/api/spire-api-client";
 import {SpireQueryBuilder} from "@/app/api/spire-query-builder";
 import {chunk} from "@/app/utility/chunk";
@@ -132,6 +132,22 @@ export class Merchants {
     return r
   }
 
+  static async deleteMerchantEntry(merchantId: number, slotId: number) {
+    let request = (new SpireQueryBuilder())
+      .where("merchantid", "=", merchantId)
+      .where("slot", "=", slotId)
+      .get()
+
+    // @ts-ignore
+    return await (new MerchantlistApi(SpireApiClient.getOpenApiConfig()))
+      .deleteMerchantlist(
+        {
+          id: merchantId,
+        },
+        {query: request}
+      )
+  }
+
   static async fallBackChunkLoad(inNpcs) {
     // edge case, if we loaded too much data and failed to load items, load each npc
     let npcs = []
@@ -147,5 +163,51 @@ export class Merchants {
       npcs    = [...npcs, ...b]
     }
     return npcs
+  }
+
+  static async getById(id: number) {
+    const r = await (new MerchantlistApi(SpireApiClient.getOpenApiConfig()))
+      .listMerchantlists(
+        // @ts-ignore
+        (new SpireQueryBuilder()).where("merchantid", "=", id).get()
+      )
+
+    if (r.status === 200) {
+      return r.data
+    }
+
+    return []
+  }
+
+  static async updateSlotForEntry(merchantId: number, currentSlot: number, destinationEntry: any) {
+    let request = (new SpireQueryBuilder())
+      .where("merchantid", "=", merchantId)
+      .where("slot", "=", currentSlot)
+      .get()
+
+    // @ts-ignore
+    return await (new MerchantlistApi(SpireApiClient.getOpenApiConfig()))
+      .updateMerchantlist(
+        {
+          id: merchantId,
+          merchantlist: destinationEntry
+        },
+        {query: request}
+      )
+  }
+
+  static async addItemToMerchant(merchantId: number, newSlot: any, itemId: any) {
+    const newMerchantEntry = {
+      merchantid: merchantId,
+      slot: newSlot,
+      item: itemId,
+    }
+
+    // @ts-ignore
+    return await (new MerchantlistApi(SpireApiClient.getOpenApiConfig()))
+      .createMerchantlist(
+        {merchantlist: newMerchantEntry}
+      )
+    s
   }
 }

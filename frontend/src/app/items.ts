@@ -40,6 +40,21 @@ export class Items {
     return {}
   }
 
+  public static async loadItemsBulk(ids: any[]) {
+    // items bulk fetch preload
+    const r = await (new ItemApi(SpireApiClient.getOpenApiConfig())).getItemsBulk({
+      body: {
+        ids: ids
+      }
+    })
+
+    if (r.status == 200 && r.data) {
+      r.data.forEach((item) => {
+        Items.setItem(item.id, item);
+      })
+    }
+  }
+
   public static getItems() {
     return this.items;
   }

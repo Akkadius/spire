@@ -1,6 +1,7 @@
 <template>
   <div>
-    <div class="row">
+    <!-- Browse View -->
+    <div class="row" v-if="editMerchantId === 0">
       <div :class="(Object.keys(activeMerchant).length > 0 ? 'col-7' : 'col-12')">
         <eq-window title="Merchant Editor">
           <div class="row">
@@ -44,7 +45,7 @@
                 <b-button title="Search" @click="updateQueryState()" size="sm" variant="outline-warning">
                   <i class="fa fa-search"></i> Search
                 </b-button>
-                <b-button title="Reset" @click="reset()" size="sm" variant="outline-danger">
+                <b-button title="Reset" @click="reset(); updateQueryState()" size="sm" variant="outline-danger">
                   <i class="fa fa-eraser"></i> Reset
                 </b-button>
               </div>
@@ -60,14 +61,14 @@
           </div>
         </eq-window>
 
-        <eq-window v-if="!loading && zoneSelection !== 0 && mlz && mlz.length === 0">
+        <eq-window v-if="!loading && zoneSelection !== 0 && ml && ml.length === 0">
           No merchants found...
         </eq-window>
 
         <eq-window
-          v-if="!loading && mlz && mlz.length > 0"
+          v-if="!loading && ml && ml.length > 0"
           class="p-2 mt-5"
-          :title="'Merchants (' + mlz.length + ')'"
+          :title="'Merchants (' + ml.length + ')'"
         >
           <div style="overflow-y: scroll; max-height: 83vh">
             <table
@@ -84,8 +85,8 @@
               </thead>
               <tbody>
               <tr
-                v-for="(n, index) in mlz"
-                :id="'mlz-' + n.id"
+                v-for="(n, index) in ml"
+                :id="'ml-' + n.id"
                 :key="index"
                 @mouseover="activeMerchant = n"
               >
@@ -146,6 +147,246 @@
       </div>
     </div>
 
+    <!-- Edit View -->
+    <div class="row" v-if="editMerchantId > 0">
+      <div :class="(Object.keys(editMerchantEntry).length > 0 || addItem ? 'col-7' : 'col-12')">
+        <eq-window :title='`Edit Merchant (${editMerchantId})`'>
+          <!--          <pre style="width: 100%">{{editList}}</pre>-->
+
+          <div v-if="editList && editList.length === 0" class="font-weight-bold mb-3">
+            There are no items on this Merchant, perhaps you should add some?
+          </div>
+
+          <div class="btn-group" role="group">
+            <router-link
+              size="sm"
+              class="btn btn-outline-warning btn-sm"
+              to="/merchants" tag="button"
+            >
+              <i class="fa fa-arrow-left mr-1"></i>
+              Go back to Merchants
+            </router-link>
+
+            <b-button
+              size="sm"
+              variant="outline-warning"
+              @click="addItemToMerchantListQueue()"
+            >
+              <i class="fa fa-plus mr-1"></i>
+              Add Item
+            </b-button>
+          </div>
+
+          <div
+            v-if="editList && editList.length > 0"
+            class=""
+          >
+            <table
+              class="eq-table eq-highlight-rows minified-inputs"
+              style="width: 95%"
+            >
+              <thead>
+              <tr>
+                <th class="text-center" style="width: 100px">Actions</th>
+                <th class="text-center" style="width: 50px">Slot</th>
+                <th>Item</th>
+              </tr>
+              </thead>
+              <tbody>
+              <tr
+                v-for="(e, i) in editList"
+                :class="(isMerchantEntrySelected(e) ? 'pulsate-highlight-white' : '')"
+              >
+                <td class="text-left p-0">
+                  <b-button
+                    variant="primary"
+                    class="btn-dark btn-sm btn-outline-danger ml-1"
+                    style="padding: 0px 4px;"
+                    title="Edit"
+                    @click="deleteMerchantRow(e)"
+                  >
+                    <i class="fa fa-trash"></i>
+                  </b-button>
+
+                  <b-button
+                    variant="primary"
+                    class="btn-dark btn-sm btn-outline-success ml-1"
+                    style="padding: 0px 4px;"
+                    title="Edit"
+                    @click="editMerchantRow(e)"
+                  >
+                    <i class="fa fa-pencil"></i>
+                  </b-button>
+
+                  <b-button
+                    variant="primary"
+                    class="btn-dark btn-sm btn-outline-light ml-1"
+                    style="padding: 0px 4px;"
+                    title="Move slot up"
+                    @click="moveSlotUp(e)"
+                    v-if="editList[i - 1]"
+                  >
+                    <i class="fa fa-arrow-up"></i>
+                  </b-button>
+
+                  <b-button
+                    variant="primary"
+                    class="btn-dark btn-sm btn-outline-light ml-1"
+                    style="padding: 0px 4px;"
+                    title="Move slot down"
+                    @click="moveSlotDown(e)"
+                    v-if="editList[i + 1]"
+                  >
+                    <i class="fa fa-arrow-down"></i>
+                  </b-button>
+                </td>
+                <td class="text-center p-0">
+                  {{ e.slot }}
+                </td>
+                <td>
+                  <!--                  <input type="text" v-model="e.item" class="mr-3 m-0" style="width: 120px">-->
+                  <item-popover
+                    class="d-inline-block"
+                    :item="editItems[e.item]"
+                    v-if="editItems[e.item] && Object.keys(editItems[e.item]).length > 0"
+                    size="sm"
+                  />
+
+                  {{ editItems[e.item] && editItems[e.item].stacksize > 0 ? `(${editItems[e.item].stacksize})` : '' }}
+                  <eq-cash-display
+                    class="ml-1"
+                    :price="parseInt(editItems[e.item].price)"
+                    v-if="editItems[e.item]"
+                  />
+                </td>
+              </tr>
+              </tbody>
+            </table>
+
+          </div>
+
+        </eq-window>
+      </div>
+
+      <div class="col-5" v-if="(Object.keys(editMerchantEntry).length > 0)">
+        <eq-window :title="`Edit Merchant List Entry (${editMerchantEntrySlot})`">
+          <div
+            v-for="field in editMerchantEntryFields"
+            :key="field.field"
+            :class="'row'"
+          >
+            <div
+              class="col-4 text-right p-0 m-0 mr-1 mt-3"
+              style="position: relative; bottom: 6px;"
+              v-if="field.fType === 'checkbox'"
+            >
+              <span v-if="field.category" class="font-weight-bold">{{ field.category }}</span>
+              {{ field.desc }}
+            </div>
+            <div
+              class="col-4 text-right p-0 m-0 mr-3"
+              v-if="field.fType !== 'checkbox'"
+              style="margin-top: 10px !important"
+            >
+              <span v-if="field.category" class="font-weight-bold">{{ field.category }}</span>
+              {{ field.desc }}
+            </div>
+
+            <!--                  <div class="text-center" v-if="field.fType !== 'checkbox'">-->
+            <!--                    <span-->
+            <!--                      v-if="field.itemIcon"-->
+            <!--                      :class="'item-' + field.itemIcon + '-sm'"-->
+            <!--                      style="display: inline-block"-->
+            <!--                    />-->
+            <!--                    {{ field.desc }}-->
+            <!--                  </div>-->
+
+            <div class="col-7 text-left p-0 mt-2">
+
+              <!-- checkbox -->
+              <div :class="'text-left ml-2 mt-1'" v-if="field.fType === 'checkbox'">
+                <!--                        <div class="d-inline-block" style="bottom: 2px; position: relative; margin-right: 1px">-->
+                <!--                          {{ field.desc }}-->
+                <!--                        </div>-->
+                <eq-checkbox
+                  v-b-tooltip.hover.v-dark.right :title="getFieldDescription(field.field)"
+                  class="d-inline-block text-center"
+                  :true-value="(typeof field.true !== 'undefined' ? field.true : 1)"
+                  :false-value="(typeof field.false !== 'undefined' ? field.false : 0)"
+                  v-model.number="editMerchantEntry[field.field]"
+                  @input="editMerchantEntry[field.field] = $event"
+
+                />
+              </div>
+
+              <!-- input number -->
+              <b-form-input
+                v-if="field.fType === 'number'"
+                :id="field.field"
+                v-model.number="editMerchantEntry[field.field]"
+                class="m-0 mt-1"
+                v-on="field.e ? getEventHandlers(field.e, field.field) : {}"
+                v-b-tooltip.hover.v-dark.right :title="getFieldDescription(field.field)"
+                :style="(editMerchantEntry[field.field] === 0 ? 'opacity: .5' : '')"
+              />
+
+              <!-- input text -->
+              <b-form-input
+                v-if="field.fType === 'text'"
+                :id="field.field"
+                v-model.number="editMerchantEntry[field.field]"
+                class="m-0 mt-1"
+                v-on="field.e ? getEventHandlers(field.e, field.field) : {}"
+                v-b-tooltip.hover.v-dark.right :title="getFieldDescription(field.field)"
+                :style="(editMerchantEntry[field.field] <= (typeof field.zeroValue !== 'undefined' ? field.zeroValue : 0) ? 'opacity: .5' : '')"
+              />
+
+              <!-- textarea -->
+              <b-textarea
+                v-if="field.fType === 'textarea'"
+                :id="field.field"
+                v-model="editMerchantEntry[field.field]"
+                class="m-0 mt-1"
+                rows="2"
+                max-rows="6"
+                v-on="field.e ? getEventHandlers(field.e, field.field) : {}"
+                v-b-tooltip.hover.v-dark.right :title="getFieldDescription(field.field)"
+                :style="(editMerchantEntry[field.field] === '' ? 'opacity: .5' : '') + ';'"
+              ></b-textarea>
+
+              <!-- select -->
+              <select
+                v-model.number="editMerchantEntry[field.field]"
+                :id="field.field"
+                class="form-control m-0 mt-1"
+                v-if="field.selectData"
+                v-on="field.e ? getEventHandlers(field.e, field.field) : {}"
+                v-b-tooltip.hover.v-dark.right :title="getFieldDescription(field.field)"
+                :style="(editMerchantEntry[field.field] <= (typeof field.zeroValue !== 'undefined' ? field.zeroValue : 0) ? 'opacity: .5' : '')"
+              >
+                <option
+                  v-for="(desc, index) in field.selectData"
+                  :key="index"
+                  :value="parseInt(index)"
+                >
+                  {{ index }}) {{ desc }}
+                </option>
+              </select>
+
+            </div>
+          </div>
+
+          <eq-debug :data="editMerchantEntry"/>
+        </eq-window>
+      </div>
+
+      <div class="col-5" v-if="addItem">
+        <item-selector
+          @input="addItemToMerchantList($event)"
+        />
+      </div>
+    </div>
+
   </div>
 </template>
 
@@ -158,16 +399,37 @@ import NpcPopover         from "../../components/NpcPopover";
 import {ROUTE}            from "../../routes";
 import EqNpcCardPreview   from "../../components/preview/EQNpcCardPreview";
 import {Merchants}        from "../../app/merchants";
+import ItemPopover        from "../../components/ItemPopover";
+import EqCashDisplay      from "../../components/eq-ui/EqCashDisplay";
+import {Items}            from "../../app/items";
+import EqCheckbox         from "../../components/eq-ui/EQCheckbox";
+import EqDebug            from "../../components/eq-ui/EQDebug";
+import ItemSelector       from "../../components/selectors/ItemSelector";
 
 const MILLISECONDS_BEFORE_WINDOW_RESET = 5000;
 
 export default {
   name: "MerchantSubEditor",
-  components: { EqNpcCardPreview, NpcPopover, LoaderFakeProgress, EqWindow, ContentArea },
+  components: {
+    ItemSelector,
+    EqDebug,
+    EqCheckbox,
+    EqCashDisplay,
+    ItemPopover,
+    EqNpcCardPreview,
+    NpcPopover,
+    LoaderFakeProgress,
+    EqWindow,
+    ContentArea
+  },
   async created() {
     this.loadQueryState()
-    this.mlz   = [] // by zone
-    this.zones = await Zones.getZones()
+    this.ml                = []
+    this.editList          = []
+    this.editItems         = {}
+    // editing - entry level
+    this.editMerchantEntry = 0
+    this.zones             = await Zones.getZones()
 
     this.init()
   },
@@ -192,24 +454,210 @@ export default {
       selectorActive: {},
       lastResetTime: Date.now(),
 
+      // editing
+      editMerchantId: 0,
+
+      // state
+      addItem: false,
+
+      editMerchantEntryFields: [
+        { desc: "faction_required", field: "faction_required", fType: "text" },
+        { desc: "level_required", field: "level_required", fType: "text" },
+        { desc: "alt_currency_cost", field: "alt_currency_cost", fType: "text" },
+        { desc: "classes_required", field: "classes_required", fType: "text" },
+        { desc: "probability", field: "probability", fType: "text" },
+        { desc: "min_expansion", field: "min_expansion", fType: "text" },
+        { desc: "max_expansion", field: "max_expansion", fType: "text" },
+        { desc: "content_flags", field: "content_flags", fType: "text" },
+        { desc: "content_flags_disabled", field: "content_flags_disabled", fType: "text" },
+      ],
+
       // preview
       activeMerchant: {},
 
       // feeds selection
       zones: [],
-
-      // merchant list
-      ml: [],
     }
   },
   watch: {
     // when ran standalone, route drives state
     '$route'() {
+      this.reset()
       this.loadQueryState()
       this.init()
     },
   },
   methods: {
+
+    /**
+     * Merchant List entry editing functions
+     */
+    async reorderItems() {
+      console.log("[MerchantSubEditor] Reordering items")
+
+      let startingRewriteSlot = 0
+      for (let [i, e] of this.editList.entries()) {
+        if (this.editList[i + 1] && this.editList[i]) {
+          const isGap = (this.editList[i + 1].slot - this.editList[i].slot) > 1
+          // console.log(
+          //   "[MerchantSubEditor] isGap current [%s] next [%s] gap [%s]",
+          //   this.editList[i].slot,
+          //   this.editList[i + 1].slot,
+          //   isGap
+          // )
+
+          // on our first gap set the first rewrite slot to renumber the rest of the entries
+          if (isGap && startingRewriteSlot === 0) {
+            startingRewriteSlot = this.editList[i].slot + 1
+          }
+
+          if (startingRewriteSlot > 0) {
+            let desiredEntry  = JSON.parse(JSON.stringify(this.editList[i + 1]))
+            desiredEntry.slot = startingRewriteSlot
+
+            await Merchants.updateSlotForEntry(
+              e.merchantid,
+              this.editList[i + 1].slot,
+              desiredEntry
+            )
+          }
+
+          if (startingRewriteSlot !== 0) {
+            startingRewriteSlot++
+          }
+        }
+      }
+
+    },
+    editMerchantRow(row) {
+      console.log("[MerchantSubEditor] Editing merchant row slot [%s]", row.slot)
+
+      this.addItem               = false
+      this.editMerchantEntrySlot = row.slot
+      this.updateQueryState()
+      this.$forceUpdate()
+    },
+    async deleteMerchantRow(row) {
+      console.log("[MerchantSubEditor] Deleting merchant row slot [%s]", row.slot)
+
+      await Merchants.deleteMerchantEntry(row.merchantid, row.slot)
+      this.editList = this.editList.filter((e) => {
+        return e.slot !== row.slot
+      })
+
+      this.refreshMerchantlistEntries()
+    },
+    async refreshMerchantlistEntries() {
+      await this.reorderItems()
+
+      // reset so we can reload after deleting entry
+      this.editList              = []
+      this.editMerchantEntrySlot = 0
+
+      this.init()
+    },
+
+    async addItemToMerchantList(e) {
+      const itemId = e.id
+      let newSlot  = this.editList[this.editList.length - 1] ? this.editList[this.editList.length - 1].slot + 1 : 1
+
+      await Merchants.addItemToMerchant(
+        parseInt(this.editMerchantId),
+        newSlot,
+        itemId
+      )
+
+      this.refreshMerchantlistEntries()
+    },
+
+    addItemToMerchantListQueue() {
+      this.editMerchantEntry     = 0
+      this.editMerchantEntrySlot = 0
+
+      console.log("[MerchantSubEditor] Queue adding new item (sub editor)")
+      this.addItem = true
+      this.updateQueryState()
+    },
+    async moveEntry(e, direction) {
+      for (let [i, entry] of this.editList.entries()) {
+        if (this.editList[i] && this.editList[i].slot === e.slot) {
+          let accessIndex = 0
+          if (direction === "up") {
+            accessIndex = i - 1
+          }
+          if (direction === "down") {
+            accessIndex = i + 1
+          }
+
+          console.log("we found the slot to move! [%s]", e.slot)
+
+          if (this.editList[accessIndex]) {
+            const entryToMove    = JSON.parse(JSON.stringify(e))
+            const entryToReplace = JSON.parse(JSON.stringify(this.editList[accessIndex]))
+            const toMoveSlot     = entryToMove.slot
+            const toReplaceSlot  = entryToReplace.slot
+            const originalItemId = entryToMove.item
+
+            // console.log("entry to move", entryToMove)
+            // console.log("entry to replace", entryToReplace)
+
+            // move the current one up (update slot), temporarily set the item to -1
+            let firstEntryMove  = entryToMove
+            firstEntryMove.slot = toReplaceSlot
+            firstEntryMove.item = -1
+
+            // console.log("#1")
+
+            await Merchants.updateSlotForEntry(
+              e.merchantid,
+              toReplaceSlot,
+              firstEntryMove
+            )
+
+            // move the entry to replace down
+            let secondEntryMove  = entryToReplace
+            secondEntryMove.slot = toMoveSlot
+
+            // console.log("#2")
+
+            await Merchants.updateSlotForEntry(
+              e.merchantid,
+              toMoveSlot,
+              secondEntryMove
+            )
+
+            // console.log("#3")
+
+            // move the previous current on back to original item
+            let lastEntryMove   = entryToMove
+            firstEntryMove.slot = toReplaceSlot
+            firstEntryMove.item = originalItemId
+
+            await Merchants.updateSlotForEntry(
+              e.merchantid,
+              toReplaceSlot,
+              lastEntryMove
+            )
+          }
+        }
+      }
+
+      await this.refreshMerchantlistEntries()
+    },
+
+    async moveSlotUp(e) {
+      await this.moveEntry(e, "up")
+
+      console.log("[MerchantSubEditor] moveSlotUp [%s]", e.slot)
+    },
+    async moveSlotDown(e) {
+      await this.moveEntry(e, "down")
+
+      console.log("[MerchantSubEditor] moveSlotDown [%s]", e.slot)
+    },
+    isMerchantEntrySelected(e) {
+      return e.slot === this.editMerchantEntry.slot;
+    },
 
     /**
      * State
@@ -220,11 +668,20 @@ export default {
       if (this.zoneSelection !== 0) {
         queryState.zone = JSON.stringify(this.zoneSelection)
       }
+      if (this.addItem) {
+        queryState.addItem = this.addItem
+      }
       if (this.search !== '') {
-        queryState.q = JSON.stringify(this.search)
+        queryState.q = this.search
       }
       if (this.searchItemName !== '') {
-        queryState.s = JSON.stringify(this.searchItemName)
+        queryState.s = this.searchItemName
+      }
+      if (this.editMerchantId !== 0) {
+        queryState.edit = this.editMerchantId
+      }
+      if (this.editMerchantEntrySlot !== 0) {
+        queryState.e = this.editMerchantEntrySlot
       }
 
       this.$router.push(
@@ -241,10 +698,19 @@ export default {
         this.zoneSelection = JSON.parse(this.$route.query.zone);
       }
       if (typeof this.$route.query.q !== 'undefined' && this.$route.query.q !== '') {
-        this.search = JSON.parse(this.$route.query.q);
+        this.search = this.$route.query.q;
       }
       if (typeof this.$route.query.s !== 'undefined' && this.$route.query.s !== '') {
-        this.searchItemName = JSON.parse(this.$route.query.s);
+        this.searchItemName = this.$route.query.s;
+      }
+      if (typeof this.$route.query.edit !== 'undefined' && this.$route.query.edit !== 0) {
+        this.editMerchantId = this.$route.query.edit;
+      }
+      if (typeof this.$route.query.e !== 'undefined' && parseInt(this.$route.query.e) !== 0) {
+        this.editMerchantEntrySlot = parseInt(this.$route.query.e);
+      }
+      if (typeof this.$route.query.addItem !== 'undefined' && this.$route.query.addItem) {
+        this.addItem = true;
       }
     },
 
@@ -253,22 +719,75 @@ export default {
      */
     async init() {
       this.activeMerchant = {}
-      this.mlz            = []
+      this.ml             = []
       this.loading        = true
       const z             = this.zoneSelection
 
       if (Object.keys(this.zoneSelection).length > 0) {
-        this.mlz = (await Merchants.getMerchantsByZone(z.z, z.v))
+        this.ml = (await Merchants.getMerchantsByZone(z.z, z.v))
       }
       if (this.search.length > 0) {
-        this.mlz = (await Merchants.getMerchantsByName(this.search))
+        this.ml = (await Merchants.getMerchantsByName(this.search))
       }
       if (this.searchItemName.length > 0) {
-        this.mlz = (await Merchants.getMerchantsByItemName(this.searchItemName))
+        this.ml = (await Merchants.getMerchantsByItemName(this.searchItemName))
+      }
+
+      if (this.editMerchantId > 0) {
+        console.log("[MerchantSubEditor] Editing merchant [%s]", this.editMerchantId)
+
+        // this is to keep the same list from being redrawn / reloaded repeatedly
+        let sameListLoaded = this.editList.find((e) => {
+          return e.merchantid === parseInt(this.editMerchantId)
+        })
+
+        if (typeof sameListLoaded === 'undefined') {
+          await this.loadEditMerchant()
+        }
+      }
+      console.log("this.editMerchantEntrySlot", this.editMerchantEntrySlot)
+
+      if (this.editMerchantEntrySlot) {
+        console.log("[MerchantSubEditor] Editing merchant entry slot [%s]", this.editMerchantEntrySlot)
+        for (let e of this.editList) {
+          if (e.slot === parseInt(this.editMerchantEntrySlot)) {
+            this.editMerchantEntry = e
+          }
+        }
       }
 
       this.$forceUpdate()
       this.loading = false
+    },
+
+    async loadEditMerchant() {
+      this.editList = await Merchants.getById(this.editMerchantId)
+
+      console.log(this.editList)
+
+      let itemIds = []
+      for (let e of this.editList) {
+        if (e.item > 0) {
+          itemIds.push(e.item)
+        }
+      }
+      if (itemIds.length > 0) {
+        Items.loadItemsBulk(itemIds).then(async () => {
+          for (let e of this.editList) {
+            if (e.item > 0) {
+              this.editItems[e.item] = await Items.getItem(e.item)
+            }
+          }
+          this.$forceUpdate()
+        })
+      }
+    },
+
+    /**
+     * Misc
+     */
+    getFieldDescription(field) {
+      return ""
     },
 
     /**
@@ -276,6 +795,9 @@ export default {
      */
     editMerchantList(merchantId) {
       console.log("[MerchantSubEditor] Editing [%s]", merchantId)
+      this.reset()
+      this.editMerchantId = merchantId
+      this.updateQueryState()
     },
     selectMerchantList(merchantId) {
       console.log("[MerchantSubEditor] Selecting [%s]", merchantId)
@@ -283,13 +805,17 @@ export default {
       this.$emit('input', merchantId);
     },
 
+
     reset() {
-      this.search         = ""
-      this.searchItemName = ""
-      this.zoneSelection  = 0
-      this.activeMerchant = {}
-      this.mlz            = []
-      this.updateQueryState()
+      this.addItem               = false
+      this.search                = ""
+      this.searchItemName        = ""
+      this.zoneSelection         = 0
+      this.editMerchantId        = 0
+      this.editMerchantEntry     = 0
+      this.editMerchantEntrySlot = 0
+      this.activeMerchant        = {}
+      this.ml                    = []
     },
   }
 }

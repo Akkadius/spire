@@ -140,7 +140,7 @@ export default new Router({
         {
           path: ROUTE.MERCHANTS,
           component: () => import('./views/zone/Merchants.vue'),
-          meta: {title: "Zones"},
+          meta: {title: "Merchants"},
         },
         {
           path: ROUTE.NPCS_EDIT,

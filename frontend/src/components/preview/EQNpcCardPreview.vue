@@ -168,12 +168,10 @@
           <a href="javascript:void(0);" @click="showMerchantItems = false" v-if="merchantitems.length > maxDataEntries">hide</a>
         </div>
 
-
-          <table class="ml-3 eq-table eq-highlight-rows" style="width: 95%">
+          <table class="eq-table eq-highlight-rows" style="width: 95%">
           <tbody>
           <tr
             v-for="e in merchantitems"
-            class="row"
             v-if="e.item && typeof e.item.price !== 'undefined'"
           >
             <td style="min-width: 390px">

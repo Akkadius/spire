@@ -242,6 +242,13 @@ export default {
     }
   },
 
+  watch: {
+    'inRace'() {
+      // console.log("race changed")
+      this.load()
+    },
+  },
+
   props: {
     inRace: { type: [Number, String], required: false },
     inHair: { type: [Number, String], required: false },
@@ -263,6 +270,9 @@ export default {
     this.hairs        = []
     this.hairColors   = []
     this.cssSheetData = []
+
+    // console.log("created")
+    // console.log(this.inRace)
 
     // eyes
     // hair
@@ -293,7 +303,7 @@ export default {
         const gender = parseInt(d[2])
 
         if (raceId === this.selectedRace && gender === this.selectedGender) {
-          console.log(l)
+          // console.log(l)
 
           const type     = d[3]
           const value    = parseInt(d[4])
@@ -361,11 +371,11 @@ export default {
         this.selectedBeardColor = this.beardColors[0]
       }
 
-      console.log("hairs", this.hairs)
-      console.log("hairColors", this.hairColors)
-      console.log("beards", this.beards)
-      console.log("beardColors", this.beardColors)
-      console.log("faces", this.faces)
+      // console.log("hairs", this.hairs)
+      // console.log("hairColors", this.hairColors)
+      // console.log("beards", this.beards)
+      // console.log("beardColors", this.beardColors)
+      // console.log("faces", this.faces)
 
       this.$forceUpdate()
 
@@ -574,34 +584,34 @@ export default {
 
       // input from props
       if (this.inRace) {
-        this.selectedRace = this.inRace
+        this.selectedRace = parseInt(this.inRace)
       }
       if (this.inHair) {
-        this.selectedHair = this.inHair
+        this.selectedHair = parseInt(this.inHair)
       }
       if (this.inHairColor) {
-        this.selectedHairColor = this.inHairColor
+        this.selectedHairColor = parseInt(this.inHairColor)
       }
       if (this.inGender) {
-        this.selectedGender = this.inGender
+        this.selectedGender = parseInt(this.inGender)
       }
       if (this.inFace) {
-        this.selectedFace = this.inFace
+        this.selectedFace = parseInt(this.inFace)
       }
       if (this.inBeard) {
-        this.selectedBeard = this.inBeard
+        this.selectedBeard = parseInt(this.inBeard)
       }
       if (this.inBeardColor) {
-        this.selectedBeardColor = this.inBeardColor
+        this.selectedBeardColor = parseInt(this.inBeardColor)
       }
 
       this.calcOptions()
 
       this.loaded = true
 
-      console.log("races", this.races)
-      console.log("eyes", this.eyes)
-      console.log("hairs", this.hairs)
+      // console.log("races", this.races)
+      // console.log("eyes", this.eyes)
+      // console.log("hairs", this.hairs)
       // console.log("cssSheetData", this.cssSheetData)
       // console.log("hairColors", this.hairColors)
     }
