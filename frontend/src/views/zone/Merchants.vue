@@ -15,7 +15,7 @@
               >
             </div>
 
-            <div class="col-lg-3">
+            <div class="col-lg-2">
               <input
                 type="text"
                 class="form-control ml-2"
@@ -25,10 +25,8 @@
               >
             </div>
 
-            <div class="col-lg-3">
+            <div class="col-lg-2">
               <select
-                name="class"
-                id="Class"
                 class="form-control"
                 v-model="zoneSelection"
                 @change="search = ''; searchItemName = ''; updateQueryState()"
@@ -40,7 +38,7 @@
               </select>
             </div>
 
-            <div class="col-lg-3 text-center p-0 mt-1">
+            <div class="col-lg-5 text-center p-0 mt-1">
               <div class="btn-group" role="group" aria-label="Basic example">
                 <b-button title="Search" @click="updateQueryState()" size="sm" variant="outline-warning">
                   <i class="fa fa-search"></i> Search
@@ -55,6 +53,14 @@
                 </b-button>
                 <b-button title="Reset" @click="reset(); updateQueryState()" size="sm" variant="outline-danger">
                   <i class="fa fa-eraser"></i> Reset
+                </b-button>
+                <b-button
+                  title="Create New Merchant Table"
+                  @click="createNewMerchant();"
+                  size="sm"
+                  variant="outline-success"
+                >
+                  <i class="ra ra-emerald"></i> New Merchant
                 </b-button>
               </div>
             </div>
@@ -653,6 +659,16 @@ export default {
   },
   methods: {
 
+    async createNewMerchant() {
+      const r                    = await Merchants.create()
+      if (r.status === 200) {
+        this.editMerchantId        = r.data.merchantid
+        this.addItem               = false
+        this.updateQueryState()
+        this.$forceUpdate()
+      }
+    },
+
     async deleteMerchantList(m) {
       if (confirm(`Are you sure you want to delete this Merchant? (${m.merchantid}) with (${m.slot}) items?`)) {
         await Merchants.deleteMerchant(m.merchantid)
@@ -1022,7 +1038,7 @@ export default {
       }
 
       if (r.status === 200) {
-        this.merchantLists = merchants
+        this.merchantLists  = merchants
         this.associatedNpcs = {}
 
         // get associated NPCs to the merchant lists

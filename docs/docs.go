@@ -62167,8 +62167,11 @@ const docTemplate = `{
                 "min_expansion": {
                     "type": "integer"
                 },
-                "npc_type": {
-                    "$ref": "#/definitions/models.NpcType"
+                "npc_types": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/models.NpcType"
+                    }
                 },
                 "probability": {
                     "type": "integer"

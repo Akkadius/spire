@@ -1,5 +1,5 @@
 import {Npcs} from "@/app/npcs";
-import {ItemApi, MerchantlistApi, NpcTypeApi} from "@/app/api";
+import {ItemApi, MerchantlistApi} from "@/app/api";
 import {SpireApiClient} from "@/app/api/spire-api-client";
 import {SpireQueryBuilder} from "@/app/api/spire-query-builder";
 import {chunk} from "@/app/utility/chunk";
@@ -46,7 +46,7 @@ export class Merchants {
       builder.where("name", "=", name)
     }
 
-    builder.includes(["Merchantlists.NpcType"])
+    builder.includes(["Merchantlists.NpcTypes"])
 
     const items = await (new ItemApi(SpireApiClient.getOpenApiConfig()))
       .listItems(
@@ -62,8 +62,10 @@ export class Merchants {
       if (i.merchantlists) {
         // console.log(i)
         for (let m of i.merchantlists) {
-          if (m.npc_type) {
-            npcIds.push(m.npc_type.id)
+          if (m.npc_types) {
+            for (let n of m.npc_types) {
+              npcIds.push(n.id)
+            }
           }
         }
       }
@@ -165,7 +167,6 @@ export class Merchants {
               .orderDirection("desc")
               .get()
         }
-
       )
 
     if (r.status === 200) {
@@ -238,7 +239,33 @@ export class Merchants {
       )
   }
 
+  static async create() {
+    const r = await (new MerchantlistApi(SpireApiClient.getOpenApiConfig()))
+      .listMerchantlists(
+        // @ts-ignore
+        (new SpireQueryBuilder())
+          .orderBy(["merchantid"])
+          .orderDirection("desc")
+          .limit(1)
+          .get()
+      )
+
+    const newMerchantId    = r.status === 200 && r.data && r.data[0] && r.data[0].merchantid ? r.data[0].merchantid + 1 : 0
+    const newMerchantEntry = {
+      merchantid: newMerchantId,
+      slot: 1,
+      item: 1001,
+    }
+
+    // @ts-ignore
+    return await (new MerchantlistApi(SpireApiClient.getOpenApiConfig()))
+      .createMerchantlist(
+        {merchantlist: newMerchantEntry}
+      )
+  }
+
   static async deleteMerchant(merchantid: number) {
+
     // @ts-ignore
     return await (new MerchantlistApi(SpireApiClient.getOpenApiConfig()))
       .deleteMerchantlist(

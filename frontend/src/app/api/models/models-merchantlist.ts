@@ -90,10 +90,10 @@ export interface ModelsMerchantlist {
     min_expansion?: number;
     /**
      * 
-     * @type {ModelsNpcType}
+     * @type {Array<ModelsNpcType>}
      * @memberof ModelsMerchantlist
      */
-    npc_type?: ModelsNpcType;
+    npc_types?: Array<ModelsNpcType>;
     /**
      * 
      * @type {number}
