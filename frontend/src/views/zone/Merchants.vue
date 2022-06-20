@@ -167,7 +167,7 @@
               >
                 <td
                   class="text-center"
-                  style="width: 50px"
+                  style="width: 120px"
                 >
                   <b-button
                     v-if="isSelector"
@@ -176,6 +176,14 @@
                     @click="selectMerchantList(m.merchantid);"
                   >
                     <i class="fa fa-arrow-left"></i>
+                  </b-button>
+
+                  <b-button
+                    class="btn-dark btn-sm btn-outline-danger mr-3"
+                    @click="deleteMerchantList(m)"
+                    title="Delete Merchant List"
+                  >
+                    <i class="fa fa-trash-o"></i>
                   </b-button>
 
                   <b-button
@@ -284,7 +292,7 @@
           </div>
 
           <div class="row">
-            <div class="col-4">
+            <div class="col-6">
               <div class="btn-group d-inline-block" role="group">
                 <b-button
                   size="sm"
@@ -303,6 +311,16 @@
                   <i class="fa fa-plus mr-1"></i>
                   Add Item
                 </b-button>
+
+                <b-button
+                  class="btn-dark btn-sm btn-outline-danger mr-3"
+                  @click="deleteMerchantListFromEdit(editList[0])"
+                  title="Delete Merchant List"
+                  v-if="editList && editList[0]"
+                >
+                  <i class="fa fa-trash-o"></i> Delete Merchant
+                </b-button>
+
               </div>
             </div>
             <div class="col-2 text-center" v-if="applyingChanges">
@@ -635,6 +653,23 @@ export default {
   },
   methods: {
 
+    async deleteMerchantList(m) {
+      if (confirm(`Are you sure you want to delete this Merchant? (${m.merchantid}) with (${m.slot}) items?`)) {
+        await Merchants.deleteMerchant(m.merchantid)
+        this.loading = true
+        await this.showAllMerchants()
+        this.$forceUpdate()
+        this.loading = false
+      }
+    },
+
+    async deleteMerchantListFromEdit(m) {
+      if (confirm(`Are you sure you want to delete this Merchant? (${m.merchantid}) with (${m.slot}) items?`)) {
+        await Merchants.deleteMerchant(m.merchantid)
+        this.refreshMerchantlistEntries()
+      }
+    },
+
     isActiveMerchant(m) {
       return this.activeMerchantList && this.activeMerchantList[0] && m.merchantid === this.activeMerchantList[0].merchantid
     },
@@ -949,75 +984,78 @@ export default {
       }
 
       if (this.showAll) {
-        console.log("show all")
-        // @ts-ignore
-        const r = await (new MerchantlistApi(SpireApiClient.getOpenApiConfig()))
-          .listMerchantlists(
-            // @ts-ignore
-            (new SpireQueryBuilder())
-              .groupBy(["merchantid"])
-              .orderBy(["merchantid"])
-              .orderDirection("desc")
-              .limit(100000)
-              .get()
-          )
+        await this.showAllMerchants()
+      }
 
-        let merchantIds = []
-        if (r.status === 200) {
-          merchantIds = r.data.map((e) => {
-            return e.merchantid
-          })
-        }
+      this.$forceUpdate()
+      this.loading = false
+    },
 
-        // chunk requests
-        let merchants = []
-        for (let c of chunk(merchantIds, 500)) {
-          const b = await Merchants.getMerchantsBulk(c, ["NpcTypes.Spawnentries.Spawngroup.Spawn2", "NpcTypes.Merchantlists"])
-
+    async showAllMerchants() {
+      console.log("show all")
+      // @ts-ignore
+      const r = await (new MerchantlistApi(SpireApiClient.getOpenApiConfig()))
+        .listMerchantlists(
           // @ts-ignore
-          merchants = [...merchants, ...b]
-        }
+          (new SpireQueryBuilder())
+            .groupBy(["merchantid"])
+            .orderBy(["merchantid"])
+            .orderDirection("desc")
+            .limit(100000)
+            .get()
+        )
 
-        if (r.status === 200) {
-          this.merchantLists = merchants
+      let merchantIds = []
+      if (r.status === 200) {
+        merchantIds = r.data.map((e) => {
+          return e.merchantid
+        })
+      }
 
-          this.associatedNpcs = {}
+      // chunk requests
+      let merchants = []
+      for (let c of chunk(merchantIds, 500)) {
+        const b = await Merchants.getMerchantsBulk(c, ["NpcTypes.Spawnentries.Spawngroup.Spawn2", "NpcTypes.Merchantlists"])
 
-          // get associated NPCs to the merchant lists
-          for (let m of merchants) {
-            if (m.npc_types && m.npc_types.length > 0) {
-              // console.log(m)
+        // @ts-ignore
+        merchants = [...merchants, ...b]
+      }
 
-              for (let n of m.npc_types) {
-                if (n.spawnentries && n.spawnentries.length > 0) {
-                  for (let s of n.spawnentries) {
-                    // console.log(s)
-                    if (s.spawngroup && s.spawngroup.spawn_2) {
-                      if (typeof this.associatedNpcs[m.merchantid] === 'undefined') {
-                        this.associatedNpcs[m.merchantid] = []
-                      }
+      if (r.status === 200) {
+        this.merchantLists = merchants
+        this.associatedNpcs = {}
 
-                      this.associatedNpcs[m.merchantid].push(
-                        {
-                          npc: n,
-                          zone: s.spawngroup.spawn_2.zone
-                        }
-                      )
+        // get associated NPCs to the merchant lists
+        for (let m of merchants) {
+          if (m.npc_types && m.npc_types.length > 0) {
+            // console.log(m)
+
+            for (let n of m.npc_types) {
+              if (n.spawnentries && n.spawnentries.length > 0) {
+                for (let s of n.spawnentries) {
+                  // console.log(s)
+                  if (s.spawngroup && s.spawngroup.spawn_2) {
+                    if (typeof this.associatedNpcs[m.merchantid] === 'undefined') {
+                      this.associatedNpcs[m.merchantid] = []
                     }
+
+                    this.associatedNpcs[m.merchantid].push(
+                      {
+                        npc: n,
+                        zone: s.spawngroup.spawn_2.zone
+                      }
+                    )
                   }
                 }
               }
             }
           }
-
-          // console.log("associated")
-          // console.log(this.associatedNpcs)
-
         }
-      }
 
-      this.$forceUpdate()
-      this.loading = false
+        // console.log("associated")
+        // console.log(this.associatedNpcs)
+
+      }
     },
 
     async loadEditMerchant() {

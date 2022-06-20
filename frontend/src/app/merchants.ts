@@ -237,4 +237,12 @@ export class Merchants {
         {merchantlist: newMerchantEntry}
       )
   }
+
+  static async deleteMerchant(merchantid: number) {
+    // @ts-ignore
+    return await (new MerchantlistApi(SpireApiClient.getOpenApiConfig()))
+      .deleteMerchantlist(
+        {id: merchantid}
+      )
+  }
 }
