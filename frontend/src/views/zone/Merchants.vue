@@ -193,14 +193,15 @@
                   <div
                     v-for="d in associatedNpcs[m.merchantid]"
                   >
-                    ({{d.npc.id}}) {{getNpcCleanName(d.npc.name)}} {{d.npc.lastname ? `(${d.npc.lastname})` : ''}} ({{d.zone}})
+                    ({{ d.npc.id }}) {{ getNpcCleanName(d.npc.name) }} {{ d.npc.lastname ? `(${d.npc.lastname})` : '' }}
+                    ({{ d.zone }})
 
-<!--                    <npc-popover-->
-<!--                      :limit-entries="25"-->
-<!--                      :additional-label="`(${d.zone})`"-->
-<!--                      :no-stats="true"-->
-<!--                      :npc="d.npc"-->
-<!--                    />-->
+                    <!--                    <npc-popover-->
+                    <!--                      :limit-entries="25"-->
+                    <!--                      :additional-label="`(${d.zone})`"-->
+                    <!--                      :no-stats="true"-->
+                    <!--                      :npc="d.npc"-->
+                    <!--                    />-->
                   </div>
                 </td>
               </tr>
@@ -282,24 +283,34 @@
             There are no items on this Merchant, perhaps you should add some?
           </div>
 
-          <div class="btn-group" role="group">
-            <router-link
-              size="sm"
-              class="btn btn-outline-warning btn-sm"
-              to="/merchants" tag="button"
-            >
-              <i class="fa fa-arrow-left mr-1"></i>
-              Go back to Merchants
-            </router-link>
+          <div class="row">
+            <div class="col-4">
+              <div class="btn-group d-inline-block" role="group">
+                <b-button
+                  size="sm"
+                  variant="warning"
+                  @click="$router.go(-1)"
+                >
+                  <i class="fa fa-arrow-left mr-1"></i>
+                  Go back to Merchants
+                </b-button>
 
-            <b-button
-              size="sm"
-              variant="outline-warning"
-              @click="addItemToMerchantListQueue()"
-            >
-              <i class="fa fa-plus mr-1"></i>
-              Add Item
-            </b-button>
+                <b-button
+                  size="sm"
+                  variant="outline-warning"
+                  @click="addItemToMerchantListQueue()"
+                >
+                  <i class="fa fa-plus mr-1"></i>
+                  Add Item
+                </b-button>
+              </div>
+            </div>
+            <div class="col-2 text-center" v-if="applyingChanges">
+              <div class="ml-3 p-0 m-0">
+                Applying changes... Please wait...
+                <loader-fake-progress class="mt-2"/>
+              </div>
+            </div>
           </div>
 
           <div
@@ -581,6 +592,7 @@ export default {
       zoneSelection: 0,
 
       loading: false,
+      applyingChanges: false,
 
       // selectors
       selectorActive: {},
@@ -665,6 +677,8 @@ export default {
     async reorderItems() {
       console.log("[MerchantSubEditor] Reordering items")
 
+      this.applyingChanges = true
+
       let startingRewriteSlot = 0
       for (let [i, e] of this.editList.entries()) {
         if (this.editList[i + 1] && this.editList[i]) {
@@ -697,6 +711,8 @@ export default {
           }
         }
       }
+
+      this.applyingChanges = false
 
     },
     editMerchantRow(row) {
