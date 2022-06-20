@@ -519,7 +519,6 @@ import {MerchantlistApi}   from "../../app/api";
 import {SpireApiClient}    from "../../app/api/spire-api-client";
 import {SpireQueryBuilder} from "../../app/api/spire-query-builder";
 import {chunk}             from "../../app/utility/chunk";
-import {Npcs}              from "../../app/npcs";
 
 const MILLISECONDS_BEFORE_WINDOW_RESET = 5000;
 
@@ -927,14 +926,11 @@ export default {
             return e.merchantid
           })
         }
-        console.log(merchantIds)
-        // .includes(["NpcType.Spawnentries.Spawngroup.Spawn2"])
 
         // chunk requests
         let merchants = []
         for (let c of chunk(merchantIds, 500)) {
-          const b = await Merchants.getMerchantsBulk(c, ["NpcType.Spawnentries.Spawngroup.Spawn2", "NpcType.Merchantlists"])
-          console.log(b)
+          const b = await Merchants.getMerchantsBulk(c, ["NpcTypes.Spawnentries.Spawngroup.Spawn2", "NpcTypes.Merchantlists"])
 
           // @ts-ignore
           merchants = [...merchants, ...b]
@@ -942,8 +938,6 @@ export default {
 
         if (r.status === 200) {
           this.merchantLists = r.data
-
-          console.log(this.merchantLists)
         }
       }
 
@@ -953,8 +947,6 @@ export default {
 
     async loadEditMerchant() {
       this.editList = await Merchants.getById(this.editMerchantId)
-
-      console.log(this.editList)
 
       let itemIds = []
       for (let e of this.editList) {

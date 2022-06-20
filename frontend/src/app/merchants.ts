@@ -236,6 +236,5 @@ export class Merchants {
       .createMerchantlist(
         {merchantlist: newMerchantEntry}
       )
-    s
   }
 }
