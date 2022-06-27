@@ -101,7 +101,7 @@
               <tr
                 v-for="(n, index) in ml"
                 :id="'ml-' + n.id"
-                :key="index"
+                :key="'ml-' + n.id + '-' + n.merchant_id"
                 @mouseover="activeMerchantNpc = n"
               >
                 <td
@@ -244,6 +244,7 @@
               <tr
                 v-for="(e, i) in activeMerchantList"
                 :class="(isMerchantEntrySelected(e) ? 'pulsate-highlight-white' : '')"
+                :key="e.slot + '-' + e.item"
                 v-if="editItems[e.item]"
               >
                 <td>
@@ -355,6 +356,7 @@
               <tbody>
               <tr
                 v-for="(e, i) in editList"
+                :key="e.slot + '-' + e.item"
                 :class="(isMerchantEntrySelected(e) ? 'pulsate-highlight-white' : '')"
               >
                 <td class="text-left p-0">
@@ -702,7 +704,7 @@ export default {
 
         let itemIds = []
         for (let e of this.activeMerchantList) {
-          if (e.item > 0) {
+          if (e.item > 0 && !this.editItems[e.item]) {
             itemIds.push(e.item)
           }
         }
@@ -711,7 +713,7 @@ export default {
           setTimeout(() => {
             Items.loadItemsBulk(itemIds).then(async () => {
               for (let e of this.activeMerchantList) {
-                if (e.item > 0) {
+                if (e.item > 0 && !this.editItems[e.item]) {
                   this.editItems[e.item] = await Items.getItem(e.item)
                 }
               }
@@ -1003,6 +1005,7 @@ export default {
         await this.showAllMerchants()
       }
 
+      console.log("triggering force update")
       this.$forceUpdate()
       this.loading = false
     },
@@ -1079,14 +1082,14 @@ export default {
 
       let itemIds = []
       for (let e of this.editList) {
-        if (e.item > 0) {
+        if (e.item > 0 && !this.editItems[e.item]) {
           itemIds.push(e.item)
         }
       }
       if (itemIds.length > 0) {
         Items.loadItemsBulk(itemIds).then(async () => {
           for (let e of this.editList) {
-            if (e.item > 0) {
+            if (e.item > 0 && !this.editItems[e.item]) {
               this.editItems[e.item] = await Items.getItem(e.item)
             }
           }
