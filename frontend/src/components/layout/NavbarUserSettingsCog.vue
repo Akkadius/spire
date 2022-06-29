@@ -44,6 +44,24 @@
         </div>
       </div>
 
+      <div class="row mb-4">
+        <div class="col-4 text-right">
+          Enable Alpha Tools
+          <b-form-checkbox
+            v-model="alphaToolsEnabled"
+            name="check-button"
+            @change="alphaUpdate"
+            switch
+            class="d-inline-block ml-3"
+          />
+        </div>
+        <div class="col-8">
+          <small class="text-muted">
+            Tools in alpha are enabled
+          </small>
+        </div>
+      </div>
+
 
       <template #modal-footer>
         <div class="">
@@ -66,6 +84,7 @@ export default {
     return {
       debugEnabled: LocalSettings.isDebugEnabled(),
       tabHoverModeEnabled: LocalSettings.isTabHoverEnabled(),
+      alphaToolsEnabled: LocalSettings.isAlphaEnabled(),
     }
   },
   methods: {
@@ -76,6 +95,14 @@ export default {
         App.DEBUG = this.debugEnabled
         EventBus.$emit('DEBUG_UPDATED', true);
       }, 100)
+    },
+    alphaUpdate() {
+      // checkbox apparently hasn't had enough time to update reactively... queue it
+      setTimeout(() => {
+        LocalSettings.set(Setting.ALPHA_ENABLED, this.alphaToolsEnabled)
+        App.ALPHA_TOOLS_ENABLED = this.alphaToolsEnabled
+        EventBus.$emit('ALPHA_ENABLED', true);
+      }, 10)
     },
     updateSetting(name, value) {
       LocalSettings.set(name, value)

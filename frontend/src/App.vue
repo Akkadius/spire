@@ -40,7 +40,9 @@ export default {
     this.loadWallpaper();
 
     // init app env / version
-    AppEnv.init()
+    AppEnv.init().then(() => {
+      EventBus.$emit('APP_ENV_LOADED', true);
+    })
   },
 
   methods: {

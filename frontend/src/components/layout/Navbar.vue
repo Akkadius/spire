@@ -117,7 +117,7 @@
             </router-link>
           </li>
 
-          <li class="nav-item">
+          <li class="nav-item" v-if="alphaEnabled">
             <router-link class="nav-link " to="/merchants">
               <i class="ra ra-emerald mr-2"></i> Merchants
               <b-badge class="ml-3" variant="primary">ALPHA</b-badge>
@@ -152,7 +152,7 @@
           </li>
           <nav-section-component :config="viewerNav"/>
 
-          <li class="nav-item">
+          <li class="nav-item" v-if="alphaEnabled">
             <router-link class="nav-link " to="/zones">
               <i class="ra ra-wooden-sign mr-2"></i> Zones
               <b-badge class="ml-3" variant="primary">ALPHA</b-badge>
@@ -267,6 +267,7 @@ export default {
       backendBaseUrl: "",
       user: null,
       hideNavbar: false,
+      alphaEnabled: App.ALPHA_TOOLS_ENABLED,
       appEnv: AppEnv.getEnv(),
       appVersion: AppEnv.getVersion(),
       appFeatures: AppEnv.getFeatures(),
@@ -329,23 +330,29 @@ export default {
   },
   created() {
     EventBus.$on("HIDE_NAVBAR", this.toggleNavbarCollapse);
+    EventBus.$on("APP_ENV_LOADED", this.handleAppEnvLoaded);
+    EventBus.$on("ALPHA_ENABLED", this.handleAppAlphaEnabled);
   },
   destroyed() {
     EventBus.$off("HIDE_NAVBAR", this.toggleNavbarCollapse);
+    EventBus.$off("APP_ENV_LOADED", this.handleAppEnvLoaded);
+    EventBus.$off("ALPHA_ENABLED", this.handleAppAlphaEnabled);
   },
 
   async mounted() {
     this.backendBaseUrl = App.BACKEND_BASE_URL
     this.user           = await UserContext.getUser()
-
-    setTimeout(() => {
-      this.appEnv      = AppEnv.getEnv();
-      this.appVersion  = AppEnv.getVersion();
-      this.appFeatures = AppEnv.getFeatures();
-    }, 1000)
   },
 
   methods: {
+    handleAppAlphaEnabled() {
+      this.alphaEnabled = App.ALPHA_TOOLS_ENABLED
+    },
+    handleAppEnvLoaded() {
+      this.appEnv      = AppEnv.getEnv();
+      this.appVersion  = AppEnv.getVersion();
+      this.appFeatures = AppEnv.getFeatures();
+    },
     expandNavbar() {
       Navbar.expand()
     },

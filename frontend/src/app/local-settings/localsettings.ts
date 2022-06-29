@@ -1,6 +1,7 @@
 export class Setting {
   static DEBUG_MODE = "debug-mode";
   static TAB_HOVER  = "tab-hover";
+  static ALPHA_ENABLED  = "alpha-enabled";
 }
 
 export class LocalSettings {
@@ -16,5 +17,9 @@ export class LocalSettings {
 
   static isTabHoverEnabled() {
     return this.get(Setting.TAB_HOVER) === "true" ? this.get(Setting.TAB_HOVER) : false
+  }
+
+  static isAlphaEnabled() {
+    return this.get(Setting.ALPHA_ENABLED) === "true" ? this.get(Setting.ALPHA_ENABLED) : false
   }
 }
