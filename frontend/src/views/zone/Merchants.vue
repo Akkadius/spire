@@ -243,7 +243,6 @@
               <tbody>
               <tr
                 v-for="(e, i) in activeMerchantList"
-                :class="(isMerchantEntrySelected(e) ? 'pulsate-highlight-white' : '')"
                 :key="e.slot + '-' + e.item"
                 v-if="editItems[e.item]"
               >
