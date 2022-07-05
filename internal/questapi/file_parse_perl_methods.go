@@ -175,11 +175,7 @@ func (c *ParseService) parsePerlMethods(contents string, perlMethods map[string]
 
 					methodFull := methodName
 					if len(methodType) > 0 {
-						if strings.Contains(methodName, "LockPick") {
-							methodFull = methodType + "_" + strings.ReplaceAll(methodName, "LockPick", "Lockpick")
-						} else {
-							methodFull = methodType + "_" + methodFull
-						}
+						methodFull = methodType + "_" + methodFull
 					}
 
 					// Only add to functions if it exists in definition map or is a quest method
