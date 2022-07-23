@@ -146,6 +146,8 @@ export default {
   },
   async created() {
     this.title = "Spells (" + this.spells.length + ")";
+
+    
   },
   props: {
     spells: Array

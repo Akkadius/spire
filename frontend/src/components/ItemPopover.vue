@@ -58,25 +58,11 @@ export default {
       default: false
     }
   },
-  watch: {
-    item: {
-      deep: true,
-      handler() {
-      }
-    },
-  },
   data() {
     return {
       popoverId: Math.random().toString(16).slice(2),
       itemEffectInfo: [],
-      itemData: {},
-      sideLoadedItemData: {},
-      componentId: "",
-      reagents: [],
     }
-  },
-  mounted() {
-    this.sideLoadedItemData = Items.data
   },
   components: { EqItemCardPreview, EqWindow }
 }

@@ -62,6 +62,11 @@ func (c *ParseService) parseLuaMethods(contents string, fileName string, luaMeth
 		if strings.Contains(l, "const char *") {
 			l = strings.ReplaceAll(l, "const char *", "string ")
 		}
+
+		if strings.Contains(l, "const char*") {
+			l = strings.ReplaceAll(l, "const char*", "string")
+		}
+
 		if strings.Contains(l, "const char") {
 			l = strings.ReplaceAll(l, "const char", "string")
 		}

@@ -279,7 +279,6 @@ export default {
   data() {
     return {
       loaded: false,
-      items: null,
       limit: 100,
       dbClassIcons: DB_CLASSES_ICONS,
       dbClassesShort: DB_CLASSES_SHORT,
@@ -310,6 +309,10 @@ export default {
 
       itemTypeOptions: [],
     }
+  },
+
+  created() {
+    this.items = null;
   },
 
   async mounted() {
