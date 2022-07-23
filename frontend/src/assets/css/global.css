@@ -344,10 +344,10 @@ th[role=columnheader]:hover:not(.no-sort):after {
     }
 }
 
-.navbar:not(.navbar-collapsed) {
-    /*!* make it glow! *!*/
-    animation: pulsate-highlight-navbar 60s ease-in-out infinite alternate;
-}
+/*.navbar:not(.navbar-collapsed) {*/
+/*    !*!* make it glow! *!*!*/
+/*    animation: pulsate-highlight-navbar 60s ease-in-out infinite alternate;*/
+/*}*/
 
 .navbar.navbar-collapsed {
     width: 20px !important;

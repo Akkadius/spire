@@ -34,7 +34,10 @@ export const App = {
   ASSET_INVENTORY_SLOT_URL: ASSET_CDN_BASE_URL_INT + 'assets/inventory/',
   ASSET_SPRITE_ITEM_ICONS_URL: ASSET_CDN_BASE_URL_INT + 'assets/sprites/item-icons.css',
   BACKEND_BASE_URL: (process.env.VUE_APP_BACKEND_BASE_URL ? process.env.VUE_APP_BACKEND_BASE_URL : window.location.origin),
+
+  // app level
   DEBUG: LocalSettings.get(Setting.DEBUG_MODE) === "true",
   ALPHA_TOOLS_ENABLED: LocalSettings.get(Setting.ALPHA_ENABLED) === "true",
+  SPELL_LEGACY_ICONS_ENABLED: LocalSettings.get(Setting.SPELL_LEGACY_ICONS) === "true",
   // DEBUG: true,
 }

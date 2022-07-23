@@ -2,6 +2,7 @@ export class Setting {
   static DEBUG_MODE = "debug-mode";
   static TAB_HOVER  = "tab-hover";
   static ALPHA_ENABLED  = "alpha-enabled";
+  static SPELL_LEGACY_ICONS  = "spell-legacy-icons";
 }
 
 export class LocalSettings {
@@ -21,5 +22,9 @@ export class LocalSettings {
 
   static isAlphaEnabled() {
     return this.get(Setting.ALPHA_ENABLED) === "true" ? this.get(Setting.ALPHA_ENABLED) : false
+  }
+
+  static isSpellLegacyIconsEnabled() {
+    return this.get(Setting.SPELL_LEGACY_ICONS) === "true" ? this.get(Setting.SPELL_LEGACY_ICONS) : false
   }
 }
