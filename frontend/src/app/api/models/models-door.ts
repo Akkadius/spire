@@ -13,6 +13,7 @@
  */
 
 
+import { ModelsItem } from './models-item';
 
 /**
  * 
@@ -140,6 +141,12 @@ export interface ModelsDoor {
      * @memberof ModelsDoor
      */
     is_ldon_door?: number;
+    /**
+     * 
+     * @type {ModelsItem}
+     * @memberof ModelsDoor
+     */
+    item?: ModelsItem;
     /**
      * 
      * @type {number}

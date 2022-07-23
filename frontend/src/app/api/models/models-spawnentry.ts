@@ -36,6 +36,30 @@ export interface ModelsSpawnentry {
     condition_value_filter?: number;
     /**
      * 
+     * @type {string}
+     * @memberof ModelsSpawnentry
+     */
+    content_flags?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof ModelsSpawnentry
+     */
+    content_flags_disabled?: string;
+    /**
+     * 
+     * @type {number}
+     * @memberof ModelsSpawnentry
+     */
+    max_expansion?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof ModelsSpawnentry
+     */
+    min_expansion?: number;
+    /**
+     * 
      * @type {number}
      * @memberof ModelsSpawnentry
      */

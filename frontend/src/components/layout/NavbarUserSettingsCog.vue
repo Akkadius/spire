@@ -8,6 +8,7 @@
 
     <b-modal id="user-settings-modal" centered title="Settings" size="lg">
 
+      <!-- Debug Mode -->
       <div class="row mb-4">
         <div class="col-4 text-right">
           Debug Mode
@@ -26,6 +27,7 @@
         </div>
       </div>
 
+      <!-- Tab hovering -->
       <div class="row mb-4">
         <div class="col-4 text-right">
           Enable Tab Hover
@@ -44,6 +46,45 @@
         </div>
       </div>
 
+      <!-- Alpha -->
+      <div class="row mb-4">
+        <div class="col-4 text-right">
+          Enable Alpha Tools
+          <b-form-checkbox
+            v-model="alphaToolsEnabled"
+            name="check-button"
+            @change="alphaUpdate"
+            switch
+            class="d-inline-block ml-3"
+          />
+        </div>
+        <div class="col-8">
+          <small class="text-muted">
+            Tools in alpha are enabled
+          </small>
+          <span class="badge badge-primary">ALPHA</span>
+
+        </div>
+      </div>
+
+      <!-- Spell Legacy Icons -->
+      <div class="row mb-4">
+        <div class="col-4 text-right">
+          Spell Legacy Icons
+          <b-form-checkbox
+            v-model="spellLegacyIcons"
+            name="check-button"
+            @change="spellLegacyIconsUpdate"
+            switch
+            class="d-inline-block ml-3"
+          />
+        </div>
+        <div class="col-8">
+          <small class="text-muted">
+            Enables legacy spell icons
+          </small>
+        </div>
+      </div>
 
       <template #modal-footer>
         <div class="">
@@ -66,6 +107,8 @@ export default {
     return {
       debugEnabled: LocalSettings.isDebugEnabled(),
       tabHoverModeEnabled: LocalSettings.isTabHoverEnabled(),
+      alphaToolsEnabled: LocalSettings.isAlphaEnabled(),
+      spellLegacyIcons: LocalSettings.isSpellLegacyIconsEnabled(),
     }
   },
   methods: {
@@ -76,6 +119,22 @@ export default {
         App.DEBUG = this.debugEnabled
         EventBus.$emit('DEBUG_UPDATED', true);
       }, 100)
+    },
+    alphaUpdate() {
+      // checkbox apparently hasn't had enough time to update reactively... queue it
+      setTimeout(() => {
+        LocalSettings.set(Setting.ALPHA_ENABLED, this.alphaToolsEnabled)
+        App.ALPHA_TOOLS_ENABLED = this.alphaToolsEnabled
+        EventBus.$emit('ALPHA_ENABLED', true);
+      }, 10)
+    },
+    spellLegacyIconsUpdate() {
+      // checkbox apparently hasn't had enough time to update reactively... queue it
+      setTimeout(() => {
+        LocalSettings.set(Setting.SPELL_LEGACY_ICONS, this.spellLegacyIcons)
+        App.SPELL_LEGACY_ICONS_ENABLED = this.spellLegacyIcons
+        EventBus.$emit('SPELL_LEGACY_ICONS_ENABLED', true);
+      }, 10)
     },
     updateSetting(name, value) {
       LocalSettings.set(name, value)

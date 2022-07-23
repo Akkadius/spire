@@ -13,6 +13,7 @@
  */
 
 
+import { ModelsZone } from './models-zone';
 
 /**
  * 
@@ -122,6 +123,12 @@ export interface ModelsGroundSpawn {
      * @memberof ModelsGroundSpawn
      */
     version?: number;
+    /**
+     * 
+     * @type {ModelsZone}
+     * @memberof ModelsGroundSpawn
+     */
+    zone?: ModelsZone;
     /**
      * 
      * @type {number}

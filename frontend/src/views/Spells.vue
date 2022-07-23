@@ -1,18 +1,16 @@
 <template>
-  <content-area>
-
+  <div>
     <eq-window-simple class="pt-0">
-
       <div class="row">
         <div v-for="(icon, index) in dbClassIcons" class="text-center">
           <div class="text-center p-0 mr-3 col-lg-12 col-sm-12">
             {{ dbClassesShort[index] }}
             <div class="text-center">
-                    <span
-                      @click="selectClass(index)"
-                      :style="'width:40px;' + (isClassSelected(index) ? 'border-radius: 7px;' : 'border-radius: 7px;')"
-                      :class="'hover-highlight-inner item-' + icon + ' ' + (isClassSelected(index) ? 'highlight-selected-inner' : '')"
-                    />
+              <span
+                @click="selectClass(index)"
+                :style="'width:40px;' + (isClassSelected(index) ? 'border-radius: 7px;' : 'border-radius: 7px;')"
+                :class="'hover-highlight-inner item-' + icon + ' ' + (isClassSelected(index) ? 'highlight-selected-inner' : '')"
+              />
             </div>
           </div>
         </div>
@@ -180,20 +178,20 @@
 
     <eq-spell-preview-table :spells="spells" v-if="loaded && listType === 'table' && spells"/>
 
-  </content-area>
+  </div>
 </template>
 
 <script type="ts">
 import {ItemApi, SpellsNewApi} from "@/app/api/api";
 import EqWindow from "@/components/eq-ui/EQWindow.vue";
 import {SpireApiClient} from "@/app/api/spire-api-client";
-import EqItemCardPreview from "@/components/eq-ui/EQItemCardPreview.vue";
+import EqItemCardPreview from "@/components/preview/EQItemCardPreview.vue";
 import * as util from "util";
-import EqSpellPreview from "@/components/eq-ui/EQSpellCardPreview.vue";
+import EqSpellPreview from "@/components/preview/EQSpellCardPreview.vue";
 import {DB_CLASSES_ICONS} from "@/app/constants/eq-class-icon-constants";
 import {DB_CLASSES_SHORT, DB_PLAYER_CLASSES} from "@/app/constants/eq-classes-constants";
 import {DB_SPA} from "@/app/constants/eq-spell-constants";
-import EqSpellPreviewTable from "@/components/eq-ui/EQSpellPreviewTable.vue";
+import EqSpellPreviewTable from "@/components/preview/EQSpellPreviewTable.vue";
 import {Spells} from "@/app/spells";
 import {Items} from "@/app/items";
 import {ROUTE} from "@/routes";

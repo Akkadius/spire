@@ -1,10 +1,23 @@
 <template>
   <nav
-    class="navbar navbar-vertical fixed-left navbar-expand-md navbar-dark navbar-vibrant"
+    class="navbar navbar-vertical fade-in fixed-left navbar-expand-md navbar-dark navbar-vibrant"
     id="sidebar"
+    @click.self="expandNavbar()"
     v-if="!hideNavbar"
   >
-    <div class="container-fluid">
+
+    <div
+      style="position: inherit; top: 50%; left: 10px; display: none"
+      @click="expandNavbar()"
+      id="collapse-nav-chevron"
+    >
+      <i
+        class="fa fa-chevron-right navbar-chevron"
+        style="font-size: 40px; color: white; position: relative;"
+      ></i>
+    </div>
+
+    <div class="container-fluid navbar-contents">
 
       <!-- Toggler -->
       <button
@@ -104,6 +117,14 @@
             </router-link>
           </li>
 
+          <li class="nav-item" v-if="alphaEnabled">
+            <router-link class="nav-link " to="/merchants">
+              <i class="ra ra-emerald mr-2"></i> Merchants
+              <b-badge class="ml-3" variant="primary">ALPHA</b-badge>
+              <b-badge class="ml-3" variant="primary">NEW!</b-badge>
+            </router-link>
+          </li>
+
           <li class="nav-item">
             <router-link class="nav-link " to="/quest-api-explorer">
               <i class="ra ra-compass mr-2"></i> Quest API Explorer
@@ -130,6 +151,15 @@
             </router-link>
           </li>
           <nav-section-component :config="viewerNav"/>
+
+          <li class="nav-item" v-if="alphaEnabled">
+            <router-link class="nav-link " to="/zones">
+              <i class="ra ra-wooden-sign mr-2"></i> Zones
+              <b-badge class="ml-3" variant="primary">ALPHA</b-badge>
+              <b-badge class="ml-3" variant="primary">NEW!</b-badge>
+            </router-link>
+          </li>
+
         </ul>
 
         <!-- Heading -->
@@ -199,9 +229,13 @@
           </div>
 
           <!-- Icon -->
-          <a href="#sidebarModalSearch" class="navbar-user-link" data-toggle="modal">
+          <a
+            href="javascript:void(0)"
+            class="navbar-user-link"
+            @click="collapseNavbar"
+          >
               <span class="icon">
-                <i class="fe fe-search"></i>
+                <i class="fe fe-menu"></i>
               </span>
           </a>
 
@@ -224,6 +258,7 @@ import NavSectionComponent   from "@/components/layout/NavSectionComponent";
 import {ROUTE}               from "@/routes";
 import {EventBus}            from "@/app/event-bus/event-bus";
 import {AppEnv}              from "@/app/env/app-env";
+import {Navbar}              from "@/app/navbar";
 
 export default {
   components: { NavSectionComponent, NavbarDropdownMenu, NavbarUserSettingsCog },
@@ -232,6 +267,7 @@ export default {
       backendBaseUrl: "",
       user: null,
       hideNavbar: false,
+      alphaEnabled: App.ALPHA_TOOLS_ENABLED,
       appEnv: AppEnv.getEnv(),
       appVersion: AppEnv.getVersion(),
       appFeatures: AppEnv.getFeatures(),
@@ -254,6 +290,7 @@ export default {
         ]
       },
       componentNavs: [
+        { title: "Facial Appearance", to: "/components#facial-appearance" },
         { title: "Progress Bars", to: "/components#progress-bars" },
         { title: "Page Headers", to: "/components#page-headers" },
         { title: "Range Visual", to: "/components#range-visual" },
@@ -292,24 +329,39 @@ export default {
     }
   },
   created() {
-    EventBus.$on("HIDE_NAVBAR", this.hideNavBar);
+    EventBus.$on("HIDE_NAVBAR", this.toggleNavbarCollapse);
+    EventBus.$on("APP_ENV_LOADED", this.handleAppEnvLoaded);
+    EventBus.$on("ALPHA_ENABLED", this.handleAppAlphaEnabled);
   },
   destroyed() {
-    EventBus.$off("HIDE_NAVBAR", this.hideNavBar);
+    EventBus.$off("HIDE_NAVBAR", this.toggleNavbarCollapse);
+    EventBus.$off("APP_ENV_LOADED", this.handleAppEnvLoaded);
+    EventBus.$off("ALPHA_ENABLED", this.handleAppAlphaEnabled);
   },
 
   async mounted() {
     this.backendBaseUrl = App.BACKEND_BASE_URL
     this.user           = await UserContext.getUser()
-
-    setTimeout(() => {
-      this.appEnv      = AppEnv.getEnv();
-      this.appVersion  = AppEnv.getVersion();
-      this.appFeatures = AppEnv.getFeatures();
-    }, 1000)
   },
 
   methods: {
+    handleAppAlphaEnabled() {
+      this.alphaEnabled = App.ALPHA_TOOLS_ENABLED
+    },
+    handleAppEnvLoaded() {
+      this.appEnv      = AppEnv.getEnv();
+      this.appVersion  = AppEnv.getVersion();
+      this.appFeatures = AppEnv.getFeatures();
+    },
+    expandNavbar() {
+      Navbar.expand()
+    },
+    collapseNavbar() {
+      Navbar.collapse()
+    },
+    toggleNavbarCollapse() {
+      Navbar.toggleCollapse()
+    },
     hideNavBar() {
       this.hideNavbar = !this.hideNavbar
     },

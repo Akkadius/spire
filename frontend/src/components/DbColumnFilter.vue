@@ -2,6 +2,7 @@
   <div>
     <b-button
       size="sm"
+      class="mt-1"
       variant="outline-warning"
       @click="queueColumnFilter"
       v-if="!queuedAddFilter"

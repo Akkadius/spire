@@ -1,5 +1,5 @@
 <template>
-  <content-area>
+  <div>
     <eq-window
       title="Emitter Viewer"
       class="text-center"
@@ -37,7 +37,7 @@
       </div>
 
     </eq-window>
-  </content-area>
+  </div>
 </template>
 
 <script>

@@ -2,7 +2,7 @@
   <div class="item-bg" style="min-width: 450px; max-width: 500px;" v-if="itemData">
     <span
       v-if="!['IT63', 'IT64'].includes(itemData.idfile)"
-      style="position: absolute; right: 7%; opacity: 1;"
+      style="position: absolute; right: 7%; opacity: .8; filter: drop-shadow(10px 5px 7px #000);"
       :class="'mt-2 mb-2 object-ctn-' + itemData.idfile.replace('IT', '')"
     />
 
@@ -501,16 +501,16 @@ import {DB_CLASSES, DB_CLASSES_WEAR_SHORT} from "@/app/constants/eq-classes-cons
 import {DB_RACE_NAMES, DB_RACES_SHORT}     from "@/app/constants/eq-races-constants";
 import {DB_DIETIES, DB_DIETIES_FULL}       from "@/app/constants/eq-deities-constants";
 import EqDebug                             from "@/components/eq-ui/EQDebug";
-import {App}                               from "@/constants/app";
-import EqSpellPreview                      from "@/components/eq-ui/EQSpellCardPreview";
-import {EXAMPLE_SPELL_DATA}                from "@/app/constants/eq-example-spell-data";
+import {App}                from "@/constants/app";
+import EqSpellPreview       from "@/components/preview/EQSpellCardPreview";
+import {EXAMPLE_SPELL_DATA} from "@/app/constants/eq-example-spell-data";
 import EqWindow                    from "@/components/eq-ui/EQWindow";
 import {DB_BARD_SKILLS, DB_SKILLS} from "@/app/constants/eq-skill-constants";
 import {AUG_TYPES}                 from "@/app/constants/eq-aug-constants";
 import {Spells}                    from "@/app/spells";
-import util                        from "util";
-import {ROUTE}                     from "@/routes";
-import EqCashDisplay               from "@/components/eq-ui/EqCashDisplay";
+import util          from "util";
+import {ROUTE}       from "@/routes";
+import EqCashDisplay from "@/components/eq-ui/EqCashDisplay";
 import {Items}                     from "@/app/items";
 import {FactionListApi}            from "@/app/api";
 import {SpireApiClient}            from "@/app/api/spire-api-client";

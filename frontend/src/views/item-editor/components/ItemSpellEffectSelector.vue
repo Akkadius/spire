@@ -175,14 +175,14 @@
 import {ItemApi, SpellsNewApi} from "@/app/api/api";
 import EqWindow from "@/components/eq-ui/EQWindow.vue";
 import {SpireApiClient} from "@/app/api/spire-api-client";
-import EqItemCardPreview from "@/components/eq-ui/EQItemCardPreview.vue";
+import EqItemCardPreview from "@/components/preview/EQItemCardPreview.vue";
 import * as util from "util";
-import EqSpellPreview from "@/components/eq-ui/EQSpellCardPreview.vue";
+import EqSpellPreview from "@/components/preview/EQSpellCardPreview.vue";
 import {DB_CLASSES_ICONS} from "@/app/constants/eq-class-icon-constants";
 import {App} from "@/constants/app";
 import {DB_CLASSES_SHORT, DB_PLAYER_CLASSES} from "@/app/constants/eq-classes-constants";
 import {DB_SPA} from "@/app/constants/eq-spell-constants";
-import EqSpellPreviewTable from "@/components/eq-ui/EQSpellPreviewTable.vue";
+import EqSpellPreviewTable from "@/components/preview/EQSpellPreviewTable.vue";
 import {Spells} from "@/app/spells";
 import {Items} from "@/app/items";
 import ItemSpellPreviewTableSelector from "@/views/item-editor/components/ItemSpellPreviewTableSelector.vue";

@@ -13,6 +13,9 @@
  */
 
 
+import { ModelsItem } from './models-item';
+import { ModelsNpcType } from './models-npc-type';
+import { ModelsZone } from './models-zone';
 
 /**
  * 
@@ -46,6 +49,12 @@ export interface ModelsFishing {
     id?: number;
     /**
      * 
+     * @type {ModelsItem}
+     * @memberof ModelsFishing
+     */
+    item?: ModelsItem;
+    /**
+     * 
      * @type {number}
      * @memberof ModelsFishing
      */
@@ -76,10 +85,22 @@ export interface ModelsFishing {
     npc_id?: number;
     /**
      * 
+     * @type {ModelsNpcType}
+     * @memberof ModelsFishing
+     */
+    npc_type?: ModelsNpcType;
+    /**
+     * 
      * @type {number}
      * @memberof ModelsFishing
      */
     skill_level?: number;
+    /**
+     * 
+     * @type {ModelsZone}
+     * @memberof ModelsFishing
+     */
+    zone?: ModelsZone;
     /**
      * 
      * @type {number}

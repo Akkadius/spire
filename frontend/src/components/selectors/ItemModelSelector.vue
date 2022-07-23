@@ -77,6 +77,7 @@
         >
           <span
             :id="'item-model-' + modelId"
+            style="filter: drop-shadow(10px 5px 7px #000);"
             :class="'fade-in object-ctn-' + modelId"
             :title="'IT' + modelId"
           >
@@ -100,10 +101,10 @@ import itemTypesModelMapping from "@/constants/item-type-model-mapping.json"
 import PageHeader            from "@/components/layout/PageHeader";
 import {App}                 from "@/constants/app";
 import EqWindow              from "@/components/eq-ui/EQWindow";
-import EqWindowSimple        from "@/components/eq-ui/EQWindowSimple";
-import EqAssets              from "../../../app/eq-assets/eq-assets";
-import {debounce}            from "../../../app/utility/debounce";
-import {Items}               from "../../../app/items";
+import EqWindowSimple from "@/components/eq-ui/EQWindowSimple";
+import EqAssets       from "../../app/eq-assets/eq-assets";
+import {debounce}     from "../../app/utility/debounce";
+import {Items}        from "../../app/items";
 
 const MAX_ITEM_IDFILE = 100000;
 let itemModels        = [];
@@ -302,7 +303,7 @@ export default {
   },
   props: {
     selectedModel: {
-      type: String,
+      type: [Number, String],
       default: "",
       required: true
     },

@@ -14,6 +14,7 @@
 
 
 import { ModelsLoottableEntry } from './models-loottable-entry';
+import { ModelsNpcType } from './models-npc-type';
 
 /**
  * 
@@ -87,6 +88,12 @@ export interface ModelsLoottable {
      * @memberof ModelsLoottable
      */
     name?: string;
+    /**
+     * 
+     * @type {Array<ModelsNpcType>}
+     * @memberof ModelsLoottable
+     */
+    npc_types?: Array<ModelsNpcType>;
 }
 
 

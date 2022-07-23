@@ -1,5 +1,5 @@
 <template>
-  <content-area>
+  <div>
     <eq-window title="Race Viewer">
       <div class="row">
         <div class="col-6">
@@ -86,7 +86,7 @@
               :title="getImageTitleDescription(img)"
               :key="img"
             >
-              <span :class="'race-models-ctn-' + img"></span>
+              <span :class="'race-models-ctn-' + img" style="filter: drop-shadow(10px 5px 7px #000);"></span>
             </span>
 
             <h6 class="eq-header mt-5"> {{ (raceConstants[race] ? raceConstants[race] : "") }} ({{ race }}) </h6>
@@ -99,7 +99,7 @@
 
     </eq-window>
 
-  </content-area>
+  </div>
 </template>
 
 <script>

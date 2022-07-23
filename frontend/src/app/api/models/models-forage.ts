@@ -13,6 +13,8 @@
  */
 
 
+import { ModelsItem } from './models-item';
+import { ModelsZone } from './models-zone';
 
 /**
  * 
@@ -46,6 +48,12 @@ export interface ModelsForage {
     id?: number;
     /**
      * 
+     * @type {ModelsItem}
+     * @memberof ModelsForage
+     */
+    item?: ModelsItem;
+    /**
+     * 
      * @type {number}
      * @memberof ModelsForage
      */
@@ -68,6 +76,12 @@ export interface ModelsForage {
      * @memberof ModelsForage
      */
     min_expansion?: number;
+    /**
+     * 
+     * @type {ModelsZone}
+     * @memberof ModelsForage
+     */
+    zone?: ModelsZone;
     /**
      * 
      * @type {number}

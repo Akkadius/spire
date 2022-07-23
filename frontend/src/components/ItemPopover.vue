@@ -2,13 +2,13 @@
   <div v-if="item">
     <div :id="item.id + '-' + popoverId + '-popover'" style="display:inline-block; ">
       <span
-        :class="'fade-in item-' + item.icon + (this.size === 'regular' ? '' : '-sm')" :title="item.icon"
+        :class="'item-' + item.icon + (this.size === 'regular' ? '' : '-sm')" :title="item.icon"
         style="display: inline-block"
       />
       <span
         class="ml-3"
         :style="'position:relative;' + (this.size === 'regular' ? 'top: -15px' : '')"
-      >{{ item.name }} {{annotation}}</span>
+      >{{ item.name }} {{annotation}} <slot></slot></span>
 
     </div>
 
@@ -36,7 +36,7 @@
 <script>
 import EqWindow          from "./eq-ui/EQWindow";
 import {Items}           from "@/app/items";
-import EqItemCardPreview from "@/components/eq-ui/EQItemCardPreview";
+import EqItemCardPreview from "@/components/preview/EQItemCardPreview";
 
 export default {
   name: "ItemPopover",

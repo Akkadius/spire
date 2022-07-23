@@ -13,6 +13,8 @@
  */
 
 
+import { ModelsItem } from './models-item';
+import { ModelsZone } from './models-zone';
 
 /**
  * 
@@ -62,6 +64,12 @@ export interface ModelsObject {
      * @memberof ModelsObject
      */
     id?: number;
+    /**
+     * 
+     * @type {ModelsItem}
+     * @memberof ModelsObject
+     */
+    item?: ModelsItem;
     /**
      * 
      * @type {number}
@@ -188,6 +196,12 @@ export interface ModelsObject {
      * @memberof ModelsObject
      */
     ypos?: number;
+    /**
+     * 
+     * @type {ModelsZone}
+     * @memberof ModelsObject
+     */
+    zone?: ModelsZone;
     /**
      * 
      * @type {number}

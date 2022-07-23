@@ -16,6 +16,8 @@
 import { ModelsAura } from './models-aura';
 import { ModelsBlockedSpell } from './models-blocked-spell';
 import { ModelsDamageshieldtype } from './models-damageshieldtype';
+import { ModelsItem } from './models-item';
+import { ModelsNpcSpellsEntry } from './models-npc-spells-entry';
 import { ModelsSpellBucket } from './models-spell-bucket';
 import { ModelsSpellGlobal } from './models-spell-global';
 
@@ -975,6 +977,12 @@ export interface ModelsSpellsNew {
     is_discipline?: number;
     /**
      * 
+     * @type {Array<ModelsItem>}
+     * @memberof ModelsSpellsNew
+     */
+    items?: Array<ModelsItem>;
+    /**
+     * 
      * @type {number}
      * @memberof ModelsSpellsNew
      */
@@ -1195,6 +1203,12 @@ export interface ModelsSpellsNew {
      * @memberof ModelsSpellsNew
      */
     npc_no_los?: number;
+    /**
+     * 
+     * @type {Array<ModelsNpcSpellsEntry>}
+     * @memberof ModelsSpellsNew
+     */
+    npc_spells_entries?: Array<ModelsNpcSpellsEntry>;
     /**
      * 
      * @type {number}

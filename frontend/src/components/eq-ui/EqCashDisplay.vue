@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="d-inline-block" style="min-width: 150px">
     <div v-if="platinum > 0" class="d-inline-block mr-2">
       <div :class="'ml-1 item-644-sm'" title="Platinum"/>
       {{ platinum.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") }}
@@ -18,6 +18,11 @@
     <div v-if="copper > 0" class="d-inline-block mr-2">
       <div :class="'ml-1 item-647-sm'" title="Copper"/>
       {{ copper }}
+    </div>
+
+    <div v-if="hasNoCost()" class="d-inline-block mr-2">
+      <div :class="'ml-1 item-644-sm'" title="Platinum"/>
+      0
     </div>
   </div>
 </template>
@@ -46,6 +51,9 @@ export default {
     },
   },
   methods: {
+    hasNoCost() {
+      return this.price === 0
+    },
     calc: function () {
       this.value = parseInt(this.platinum + this.gold + this.silver + this.copper)
     },

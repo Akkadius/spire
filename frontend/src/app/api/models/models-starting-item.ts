@@ -13,6 +13,8 @@
  */
 
 
+import { ModelsItem } from './models-item';
+import { ModelsZone } from './models-zone';
 
 /**
  * 
@@ -58,6 +60,12 @@ export interface ModelsStartingItem {
     id?: number;
     /**
      * 
+     * @type {ModelsItem}
+     * @memberof ModelsStartingItem
+     */
+    item?: ModelsItem;
+    /**
+     * 
      * @type {number}
      * @memberof ModelsStartingItem
      */
@@ -92,6 +100,12 @@ export interface ModelsStartingItem {
      * @memberof ModelsStartingItem
      */
     slot?: number;
+    /**
+     * 
+     * @type {ModelsZone}
+     * @memberof ModelsStartingItem
+     */
+    zone?: ModelsZone;
     /**
      * 
      * @type {number}

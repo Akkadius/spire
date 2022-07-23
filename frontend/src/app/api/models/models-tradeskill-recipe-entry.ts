@@ -13,6 +13,7 @@
  */
 
 
+import { ModelsTradeskillRecipe } from './models-tradeskill-recipe';
 
 /**
  * 
@@ -68,6 +69,12 @@ export interface ModelsTradeskillRecipeEntry {
      * @memberof ModelsTradeskillRecipeEntry
      */
     successcount?: number;
+    /**
+     * 
+     * @type {ModelsTradeskillRecipe}
+     * @memberof ModelsTradeskillRecipeEntry
+     */
+    tradeskill_recipe?: ModelsTradeskillRecipe;
 }
 
 

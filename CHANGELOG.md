@@ -1,3 +1,10 @@
+## [1.13.2]
+
+### Alpha Minor Release
+
+* Minor release that publishes early versions of NPC, Merchant editor etc.
+* Support for legacy spell icons through user settings
+
 ## [1.13.1]
 
 ### UI Changes

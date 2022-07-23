@@ -126,7 +126,7 @@ export const GridApiAxiosParamCreator = function (configuration?: Configuration)
          * 
          * @summary Gets Grid
          * @param {number} id Id
-         * @param {string} [includes] Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names &lt;h4&gt;Relationships&lt;/h4&gt;GridEntries
+         * @param {string} [includes] Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names &lt;h4&gt;Relationships&lt;/h4&gt;GridEntries&lt;br&gt;Zone
          * @param {string} [select] Column names [.] separated to fetch specific fields in response
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -229,7 +229,7 @@ export const GridApiAxiosParamCreator = function (configuration?: Configuration)
         /**
          * 
          * @summary Lists Grids
-         * @param {string} [includes] Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names &lt;h4&gt;Relationships&lt;/h4&gt;GridEntries
+         * @param {string} [includes] Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names &lt;h4&gt;Relationships&lt;/h4&gt;GridEntries&lt;br&gt;Zone
          * @param {string} [where] Filter on specific fields. Multiple conditions [.] separated Example: col_like_value.col2__val2
          * @param {string} [whereOr] Filter on specific fields (Chained ors). Multiple conditions [.] separated Example: col_like_value.col2__val2
          * @param {string} [groupBy] Group by field. Multiple conditions [.] separated Example: field1.field2
@@ -401,7 +401,7 @@ export const GridApiFp = function(configuration?: Configuration) {
          * 
          * @summary Gets Grid
          * @param {number} id Id
-         * @param {string} [includes] Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names &lt;h4&gt;Relationships&lt;/h4&gt;GridEntries
+         * @param {string} [includes] Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names &lt;h4&gt;Relationships&lt;/h4&gt;GridEntries&lt;br&gt;Zone
          * @param {string} [select] Column names [.] separated to fetch specific fields in response
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -430,7 +430,7 @@ export const GridApiFp = function(configuration?: Configuration) {
         /**
          * 
          * @summary Lists Grids
-         * @param {string} [includes] Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names &lt;h4&gt;Relationships&lt;/h4&gt;GridEntries
+         * @param {string} [includes] Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names &lt;h4&gt;Relationships&lt;/h4&gt;GridEntries&lt;br&gt;Zone
          * @param {string} [where] Filter on specific fields. Multiple conditions [.] separated Example: col_like_value.col2__val2
          * @param {string} [whereOr] Filter on specific fields (Chained ors). Multiple conditions [.] separated Example: col_like_value.col2__val2
          * @param {string} [groupBy] Group by field. Multiple conditions [.] separated Example: field1.field2
@@ -496,7 +496,7 @@ export const GridApiFactory = function (configuration?: Configuration, basePath?
          * 
          * @summary Gets Grid
          * @param {number} id Id
-         * @param {string} [includes] Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names &lt;h4&gt;Relationships&lt;/h4&gt;GridEntries
+         * @param {string} [includes] Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names &lt;h4&gt;Relationships&lt;/h4&gt;GridEntries&lt;br&gt;Zone
          * @param {string} [select] Column names [.] separated to fetch specific fields in response
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -517,7 +517,7 @@ export const GridApiFactory = function (configuration?: Configuration, basePath?
         /**
          * 
          * @summary Lists Grids
-         * @param {string} [includes] Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names &lt;h4&gt;Relationships&lt;/h4&gt;GridEntries
+         * @param {string} [includes] Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names &lt;h4&gt;Relationships&lt;/h4&gt;GridEntries&lt;br&gt;Zone
          * @param {string} [where] Filter on specific fields. Multiple conditions [.] separated Example: col_like_value.col2__val2
          * @param {string} [whereOr] Filter on specific fields (Chained ors). Multiple conditions [.] separated Example: col_like_value.col2__val2
          * @param {string} [groupBy] Group by field. Multiple conditions [.] separated Example: field1.field2
@@ -587,7 +587,7 @@ export interface GridApiGetGridRequest {
     readonly id: number
 
     /**
-     * Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names &lt;h4&gt;Relationships&lt;/h4&gt;GridEntries
+     * Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names &lt;h4&gt;Relationships&lt;/h4&gt;GridEntries&lt;br&gt;Zone
      * @type {string}
      * @memberof GridApiGetGrid
      */
@@ -622,7 +622,7 @@ export interface GridApiGetGridsBulkRequest {
  */
 export interface GridApiListGridsRequest {
     /**
-     * Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names &lt;h4&gt;Relationships&lt;/h4&gt;GridEntries
+     * Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names &lt;h4&gt;Relationships&lt;/h4&gt;GridEntries&lt;br&gt;Zone
      * @type {string}
      * @memberof GridApiListGrids
      */

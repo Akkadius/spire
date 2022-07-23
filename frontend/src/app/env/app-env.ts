@@ -49,14 +49,13 @@ export class AppEnv {
   private static _version;
   private static _features;
 
-  static init() {
-    SpireApiClient.v1().get("/app/env").then((response) => {
-      if (response.data && response.data.data) {
-        const data = response.data.data
-        this.setEnv(data.env)
-        this.setVersion(data.version)
-        this.setFeatures(data.features)
-      }
-    })
+  static async init() {
+    const r = await SpireApiClient.v1().get("/app/env")
+    if (r.data && r.data.data) {
+      const data = r.data.data
+      this.setEnv(data.env)
+      this.setVersion(data.version)
+      this.setFeatures(data.features)
+    }
   }
 }

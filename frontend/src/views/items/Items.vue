@@ -1,6 +1,5 @@
 <template>
-  <content-area>
-
+  <div>
     <eq-window>
       <div class="row">
         <div class="col-1">
@@ -233,14 +232,14 @@
 
     <!--          <eq-spell-preview-table :items="items" v-if="loaded && listType === 'table' && items"/>-->
 
-  </content-area>
+  </div>
 </template>
 
 <script type="ts">
 import {ItemApi} from "@/app/api/api";
 import EqWindow from "@/components/eq-ui/EQWindow.vue";
 import {SpireApiClient} from "@/app/api/spire-api-client";
-import EqItemCardPreview from "@/components/eq-ui/EQItemCardPreview.vue";
+import EqItemCardPreview from "@/components/preview/EQItemCardPreview.vue";
 import {DB_CLASSES_ICONS} from "@/app/constants/eq-class-icon-constants";
 import {DB_CLASSES_SHORT, DB_PLAYER_CLASSES} from "@/app/constants/eq-classes-constants";
 import {DB_SPA} from "@/app/constants/eq-spell-constants";

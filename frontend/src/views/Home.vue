@@ -1,6 +1,5 @@
 <template>
   <div class="container-fluid">
-
     <div class="row justify-content-center">
       <div class="col-12 col-lg-10 col-xl-10 content-pop">
         <!--        <page-header title="Components" pre-title="Preview Components"/>-->
@@ -9,7 +8,7 @@
 
           <div class="header mt-md-1">
             <div class="header-body">
-              <h1 class="header-title" id="progress-bars">
+              <h1 class="header-title">
                 Changelog & News
               </h1>
 

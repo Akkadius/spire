@@ -4,8 +4,10 @@
       No spells were found
     </div>
 
-    <div class='spell-table' v-if="spells.length > 0">
-      <table class="eq-table eq-highlight-rows" style="display: table;">
+    <div class='spell-preview-table' v-if="spells.length > 0">
+      <table
+        id="spell-preview-table"
+        class="eq-table bordered eq-highlight-rows" style="display: table;">
         <thead>
         <tr>
           <th></th>
@@ -50,10 +52,10 @@
                 </div>
             </span>
           </td>
-          <td style="vertical-align: middle">
+          <td style="vertical-align: middle" class="text-left">
             <eq-spell-effects :spell="spell"/>
           </td>
-          <td style="vertical-align: middle">
+          <td style="vertical-align: middle" class="text-left">
             <spell-popover
               :spell="spell"
               :size="30"
@@ -72,10 +74,10 @@
 <script>
 import {Spells}           from "@/app/spells";
 import EqWindow           from "@/components/eq-ui/EQWindow.vue";
-import EqSpellEffects     from "@/components/eq-ui/EQSpellEffects";
-import EqSpellPreview     from "@/components/eq-ui/EQSpellCardPreview.vue";
+import EqSpellEffects     from "@/components/preview/EQSpellEffects";
+import EqSpellPreview     from "@/components/preview/EQSpellCardPreview.vue";
 import {App}              from "@/constants/app";
-import EqSpellDescription from "@/components/eq-ui/EQSpellDescription";
+import EqSpellDescription from "@/components/preview/EQSpellDescription";
 import {DB_SPELL_TARGETS} from "@/app/constants/eq-spell-constants";
 import {DB_CLASSES_ICONS} from "@/app/constants/eq-class-icon-constants";
 import {DB_CLASSES_SHORT} from "@/app/constants/eq-classes-constants";
@@ -150,20 +152,10 @@ export default {
 </script>
 
 <style scoped>
-.eq-table tr {
-  border-bottom: .4px solid #ffffff1c;
-}
-
-.eq-table td {
-  padding-top: 5px;
-  padding-bottom: 5px;
-  border-right: .1px solid #ffffff1c;
-  border-left: .1px solid #ffffff1c;
-}
 
 /* For Mobile */
 @media screen and (max-width: 540px) {
-  .spell-table {
+  .spell-preview-table {
     overflow-x: visible;
     overflow-y: scroll !important
   }
@@ -171,7 +163,7 @@ export default {
 
 /* For Tablets */
 @media screen and (min-width: 540px) and (max-width: 780px) {
-  .spell-table {
+  .spell-preview-table {
     overflow-x: visible;
     overflow-y: scroll !important
   }

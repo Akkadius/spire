@@ -13,6 +13,7 @@
  */
 
 
+import { ModelsSpellsNew } from './models-spells-new';
 
 /**
  * 
@@ -86,6 +87,12 @@ export interface ModelsNpcSpellsEntry {
      * @memberof ModelsNpcSpellsEntry
      */
     spellid?: number;
+    /**
+     * 
+     * @type {ModelsSpellsNew}
+     * @memberof ModelsNpcSpellsEntry
+     */
+    spells_new?: ModelsSpellsNew;
     /**
      * 
      * @type {number}

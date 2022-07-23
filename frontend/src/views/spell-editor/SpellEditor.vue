@@ -1,5 +1,5 @@
 <template>
-  <content-area>
+  <div>
     <div class="row">
       <div class="col-xl-7 col-lg-12">
         <eq-window style="" title="Edit Spell">
@@ -1640,16 +1640,16 @@
 
       </div>
     </div>
-  </content-area>
+  </div>
 </template>
 
 <script>
 import EqWindowFancy                  from "../../components/eq-ui/EQWindowFancy";
 import EqWindow                       from "../../components/eq-ui/EQWindow";
 import EqTabs                         from "../../components/eq-ui/EQTabs";
-import EqTab                          from "../../components/eq-ui/EQTab";
-import EqSpellPreview                 from "../../components/eq-ui/EQSpellCardPreview";
-import {Spells}                       from "../../app/spells";
+import EqTab          from "../../components/eq-ui/EQTab";
+import EqSpellPreview from "../../components/preview/EQSpellCardPreview";
+import {Spells}       from "../../app/spells";
 import {
   BASE_VALUE_FORMULAS,
   BUFF_DURATION_FORMULAS,

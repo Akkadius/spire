@@ -1,5 +1,5 @@
 <template>
-  <content-area>
+  <div>
     <div class="row">
       <div class="col-6">
         <eq-window-simple title="Client File Dropzone">
@@ -70,7 +70,7 @@
 
     </div>
 
-  </content-area>
+  </div>
 </template>
 
 <script>

@@ -1,6 +1,5 @@
 <template>
-  <content-area>
-
+  <div>
     <eq-window-simple title="Item Models" style="margin-bottom: 1px">
       <div class="row">
 
@@ -90,6 +89,7 @@
           class="m-1 item-model"
         >
           <span
+            style="filter: drop-shadow(10px 5px 5px #000);"
             :class="'fade-in object-ctn-' + item"
             :title="'IT' + item"
           ></span>
@@ -99,7 +99,7 @@
 
       </div>
     </eq-window>
-  </content-area>
+  </div>
 </template>
 
 <script>

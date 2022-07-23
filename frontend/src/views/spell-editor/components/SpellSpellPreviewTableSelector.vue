@@ -10,7 +10,8 @@
       class='spell-table p-0'
          v-if="spells.length > 0">
       <table
-        class="eq-table eq-highlight-rows spell-preview-table"
+        id="spell-preview-table"
+        class="eq-table bordered eq-highlight-rows spell-preview-table"
         style="display: table;">
         <thead>
         <tr>
@@ -71,10 +72,10 @@
 <script>
 import {Spells}           from "@/app/spells";
 import EqWindow           from "@/components/eq-ui/EQWindow.vue";
-import EqSpellEffects     from "@/components/eq-ui/EQSpellEffects";
-import EqSpellPreview     from "@/components/eq-ui/EQSpellCardPreview.vue";
+import EqSpellEffects     from "@/components/preview/EQSpellEffects";
+import EqSpellPreview     from "@/components/preview/EQSpellCardPreview.vue";
 import {App}              from "@/constants/app";
-import EqSpellDescription from "@/components/eq-ui/EQSpellDescription";
+import EqSpellDescription from "@/components/preview/EQSpellDescription";
 import {DB_SPELL_TARGETS} from "@/app/constants/eq-spell-constants";
 import {DB_CLASSES_ICONS} from "@/app/constants/eq-class-icon-constants";
 import {DB_CLASSES_SHORT} from "@/app/constants/eq-classes-constants";
@@ -192,20 +193,6 @@ export default {
 </script>
 
 <style scoped>
-.eq-table tr {
-  border-bottom: .4px solid #ffffff1c;
-}
-
-.eq-table td {
-  padding-top: 5px;
-  padding-bottom: 5px;
-  border-right: .1px solid #ffffff1c;
-  border-left: .1px solid #ffffff1c;
-}
-
-.spell-preview-table td {
-  vertical-align: middle !important;
-}
 
 /* For Mobile */
 @media screen and (max-width: 540px) {

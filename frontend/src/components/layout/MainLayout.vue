@@ -3,7 +3,9 @@
     <dashboard-navbar></dashboard-navbar>
 
     <div class="main-content">
-      <router-view></router-view>
+      <content-area>
+        <router-view></router-view>
+      </content-area>
     </div>
 
     <dashboard-footer></dashboard-footer>
@@ -15,19 +17,21 @@
 </template>
 
 <script lang="ts">
-  import DashboardFooter from './Footer.vue'
-  import DashboardHeader from './Header.vue'
-  import DashboardNavbar from './Navbar.vue'
-  import BackToTop from 'vue-backtotop'
+import DashboardFooter from './Footer.vue'
+import DashboardHeader from './Header.vue'
+import DashboardNavbar from './Navbar.vue'
+import BackToTop from 'vue-backtotop'
+import ContentArea from "@/components/layout/ContentArea.vue";
 
-  export default {
-    components: {
-      DashboardFooter,
-      DashboardHeader,
-      DashboardNavbar,
-      BackToTop
-    },
-  }
+export default {
+  components: {
+    ContentArea,
+    DashboardFooter,
+    DashboardHeader,
+    DashboardNavbar,
+    BackToTop
+  },
+}
 </script>
 
 <style>

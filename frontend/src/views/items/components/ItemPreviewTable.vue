@@ -19,7 +19,7 @@
           <!--                    <div class="ml-3">Items shown ({{items.length}})</div>-->
 
           <!--        <div class='eq-window-nested-blue' v-if="items.length > 0" style="overflow-y: scroll;">-->
-          <table id="items-table" class="eq-table eq-highlight-rows" style="display: table;">
+          <table id="items-table" class="eq-table bordered eq-highlight-rows" style="display: table;">
             <thead>
             <tr>
               <th style="text-align: center; width: 100px"></th>
@@ -151,16 +151,6 @@ export default {
 </script>
 
 <style scoped>
-.eq-table tr {
-  border-bottom: .4px solid #ffffff1c;
-}
-
-.eq-table td {
-  padding-top: 5px;
-  padding-bottom: 5px;
-  border-right: .1px solid #ffffff1c;
-  border-left: .1px solid #ffffff1c;
-}
 
 .item-table td {
   vertical-align: middle;

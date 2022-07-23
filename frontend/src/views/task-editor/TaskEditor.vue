@@ -1,5 +1,5 @@
 <template>
-  <content-area>
+  <div>
     <div class="row">
       <div :class="(task ? 'col-7' : 'col-12') + ' p-0'">
         <eq-window-simple
@@ -894,7 +894,7 @@
 
       </div>
     </div>
-  </content-area>
+  </div>
 </template>
 
 <script type="ts">

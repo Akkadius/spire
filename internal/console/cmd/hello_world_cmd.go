@@ -1,12 +1,12 @@
 package cmd
 
 import (
-	"encoding/json"
 	"fmt"
-	"github.com/Akkadius/spire/internal/models"
+	"github.com/anaskhan96/soup"
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
 	"gorm.io/gorm"
+	"strings"
 )
 
 type HelloWorldCommand struct {
@@ -36,16 +36,40 @@ func NewHelloWorldCommand(db *gorm.DB, logger *logrus.Logger) *HelloWorldCommand
 }
 
 // Handle implementation of the Command interface
-func (c *HelloWorldCommand) Handle(cmd *cobra.Command, _ []string) {
-	var npcTypes []models.NpcType
-	query := c.db.Model(&models.NpcType{})
-	query = query.Limit(10)
-	query = query.Find(&npcTypes)
-
-	for _, npcType := range npcTypes {
-		n, _ := json.Marshal(npcType)
-		fmt.Println(string(n))
+func (c *HelloWorldCommand) Handle(cmd *cobra.Command, args []string) {
+	resp, err := soup.Get("https://everquest.allakhazam.com/db/zone.html?ztype=0")
+	if err != nil {
+		fmt.Println(err)
 	}
+
+	//fmt.Println(resp)
+
+	zone := ""
+	if len(args) > 0 {
+		zone = args[0]
+	}
+	images := []string{}
+	doc := soup.HTMLParse(resp)
+	for _, link := range doc.FindAll("a") {
+		if strings.Contains(link.Attrs()["href"], "zstrat") && strings.Contains(link.Text(), zone) {
+			fmt.Println(link.Text(), "| Link :", link.Attrs()["href"])
+
+			// grab zone level
+			r, err := soup.Get("https://everquest.allakhazam.com" + link.Attrs()["href"])
+			if err != nil {
+				fmt.Println(err)
+			}
+
+			d := soup.HTMLParse(r)
+			for _, l := range d.FindAll("a") {
+				if strings.Contains(l.Attrs()["href"], "scenery") {
+					images = append(images, l.Attrs()["href"])
+				}
+			}
+		}
+	}
+
+	fmt.Println(images)
 }
 
 // Validate implementation of the Command interface

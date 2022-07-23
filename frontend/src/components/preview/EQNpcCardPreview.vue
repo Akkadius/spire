@@ -1,28 +1,28 @@
 <template>
-  <div>
+  <div v-if="npc">
 
     <!-- Race Model -->
     <span
-      style="position: absolute; right: 7%; opacity: .8"
-      :class="'race-models-ctn-' + npc.race + '-' + npc.gender + '-' + npc.texture + '-' + npc.helmtexture"
+      style="position: absolute; right: 7%; opacity: .8; filter: drop-shadow(10px 5px 2px #000);"
+      :class="'race-models-ctn-' + getRaceImage(npc)"
     />
 
     <!-- Weapon Model 1 -->
     <span
       v-if="npc.d_melee_texture_1 > 0"
-      :style="'position: absolute; right: ' + (npc.d_melee_texture_2 > 0 ? 25 : 20) + '%; top: 5%; opacity: 1; z-index: 9999'"
+      :style="'position: absolute; right: ' + (npc.d_melee_texture_2 > 0 ? 25 : 20) + '%; top: 10px; opacity: 1; filter: drop-shadow(10px 5px 2px #000); z-index: 9999'"
       :class="'mt-2 mb-2 object-ctn-' + npc.d_melee_texture_1"
     />
 
     <!-- Weapon Model 2 -->
     <span
       v-if="npc.d_melee_texture_2 > 0"
-      style="position: absolute; right: 20%; top: 5%; opacity: .8"
+      style="position: absolute; right: 20%; top: 10px; filter: drop-shadow(10px 5px 2px #000); opacity: .8"
       :class="'mt-2 mb-2 object-ctn-' + npc.d_melee_texture_2"
     />
 
     <div class="row">
-      <div class="col-8 pl-5">
+      <div class="col-8">
         <h6 class="eq-header" style="margin: 0px; margin-bottom: 10px">
           {{ getCleanName() }} {{ (npc.lastname && npc.lastname.length > 0 ? "(" + npc.lastname + ")" : "") }}
         </h6>
@@ -82,6 +82,14 @@
             {{ getBodytype() }} ({{ npc.bodytype }})
           </div>
         </div>
+        <div class="row" v-if="npc.merchant_id > 0">
+          <div class="col-2 text-right font-weight-bold pr-0">
+            Merchant ID
+          </div>
+          <div class="col-4 pl-3">
+            {{ npc.merchant_id }}
+          </div>
+        </div>
         <div class="row" v-if="npc.armortint_red !== 0 || npc.armortint_green !== 0 || npc.armortint_blue !== 0">
           <div class="col-2 text-right font-weight-bold pr-0">
             Armor RGB
@@ -96,7 +104,7 @@
       </div>
     </div>
 
-    <div class="mt-4">
+    <div class="mt-4 mb-5" v-if="!noStats">
       <div
         class="row mt-3"
         v-for="(row, index) in rows"
@@ -133,7 +141,7 @@
     </div>
 
     <!-- Special Abilities -->
-    <div class="mt-3" v-if="npc.special_abilities.length > 0">
+    <div class="mt-3" v-if="npc.special_abilities.length > 0 && !noStats">
       <div class="font-weight-bold mb-3">
         This NPC has the following special abilities ({{ parseSpecialAbilities(npc.special_abilities).length }})
       </div>
@@ -154,30 +162,37 @@
       <!-- Show if under max -->
       <div
         v-if="merchantitems && merchantitems.length > 0 && (merchantitems.length < maxDataEntries || showMerchantItems)"
-        class="fade-in"
+        class=""
       >
         <div class="font-weight-bold mb-3">This NPC sells the following items ({{ commify(merchantitems.length) }})
           <a href="javascript:void(0);" @click="showMerchantItems = false" v-if="merchantitems.length > maxDataEntries">hide</a>
         </div>
 
-        <div v-for="e in merchantitems" class="row">
-          <div class="col-6">
-            <item-popover
-              class="d-inline-block"
-              :item="e.item"
-              v-if="Object.keys(e.item).length > 0 && e.item"
-              size="sm"
-            />
-          </div>
+          <table class="eq-table eq-highlight-rows" style="width: 95%">
+          <tbody>
+          <tr
+            v-for="e in merchantitems"
+            v-if="e.item && typeof e.item.price !== 'undefined'"
+          >
+            <td style="min-width: 390px">
+              <item-popover
+                class="d-inline-block"
+                :item="e.item"
+                v-if="Object.keys(e.item).length > 0 && e.item"
+                size="sm"
+              />
+              {{ e.item.stacksize > 0 ? `(${e.item.stacksize})` : '' }}
+            </td>
+            <td>
+              <eq-cash-display
+                class="ml-1"
+                :price="parseInt(e.item.price)"
+              />
+            </td>
+          </tr>
+          </tbody>
+        </table>
 
-          <div class="col-3">
-            <eq-cash-display
-              class="d-inline-block ml-1"
-              :price="e.item.price"
-            />
-          </div>
-
-        </div>
       </div>
 
       <!-- Prompt if over max -->
@@ -200,7 +215,7 @@
       <!-- Show if under max -->
       <div
         v-if="castedSpells && castedSpells.length > 0 && (castedSpells.length < maxDataEntries || showCastedSpells)"
-        class="fade-in"
+        class=""
       >
         <div class="font-weight-bold mb-3">This NPC casts the following spells ({{ commify(castedSpells.length) }})
           ({{ npc.npc_spell.name }})
@@ -238,7 +253,7 @@
       <!-- Show if under max -->
       <div
         v-if="factionHits && factionHits.length > 0 && (factionHits.length < maxDataEntries || showFactionHits)"
-        class="fade-in"
+        class=""
       >
         <div class="font-weight-bold mb-3">This NPC has the following faction hits ({{ commify(factionHits.length) }})
           <a
@@ -276,7 +291,7 @@
     <div v-if="npc.loottable_id > 0" class="mt-3">
 
       <!-- Show if under max -->
-      <div v-if="loot && loot.length > 0 && (loot.length < maxDataEntries || showLoot)" class="fade-in">
+      <div v-if="loot && loot.length > 0 && (loot.length < maxDataEntries || showLoot)" class="">
         <div class="font-weight-bold mb-3">This NPC drops the following items ({{ commify(loot.length) }})
           <a href="javascript:void(0);" @click="showLoot = false" v-if="loot.length > maxDataEntries">hide</a>
         </div>
@@ -304,15 +319,14 @@
 </template>
 
 <script>
-import EqDebug                             from "./EQDebug";
+import EqDebug                             from "../eq-ui/EQDebug";
 import {Npcs}                              from "../../app/npcs";
 import {DB_PLAYER_RACES, DB_RACE_NAMES}    from "../../app/constants/eq-races-constants";
 import {DB_CLASSES, DB_PLAYER_CLASSES_ALL} from "../../app/constants/eq-classes-constants";
 import {BODYTYPES}                         from "../../app/constants/eq-bodytype-constants";
 import {FLYMODE}                           from "../../app/constants/eq-flymode-constants";
 import ItemPopover                         from "../ItemPopover";
-import {Items}                             from "../../app/items";
-import EqCashDisplay                       from "./EqCashDisplay";
+import EqCashDisplay                       from "../eq-ui/EqCashDisplay";
 import SpellPopover                        from "../SpellPopover";
 
 export default {
@@ -320,25 +334,194 @@ export default {
   components: { SpellPopover, EqCashDisplay, ItemPopover, EqDebug },
   data() {
     return {
-      maxDataEntries: 10, // amount of results before collapsing
+      maxDataEntries: 15, // amount of results before collapsing
 
       // loot
       showLoot: false, // when too many results shown, toggle
+      loot: {}, // data
 
       // merchant
-      // merchantitems: [], // data
+      merchantitems: [], // data
       showMerchantItems: false, // when too many results shown, toggle
 
       // spells
-      // castedSpells: [], // data
+      castedSpells: [], // data
       showCastedSpells: false,  // when too many results shown, toggle
 
       // faction hits
-      // factionHits: [], // data
+      factionHits: [], // data
       showFactionHits: false,  // when too many results shown, toggle
 
       // field display
-      rows: [
+      rows: this.getCardRows(),
+
+    }
+  },
+  async mounted() {
+    this.init()
+  },
+  props: {
+    npc: {
+      type: Object,
+      default: {},
+      required: true
+    },
+    noStats: {
+      type: Boolean,
+      required: false,
+      default: false
+    },
+    limitEntries: {
+      type: Number,
+      required: false,
+      default: 20
+    },
+  },
+  watch: {
+    npc: {
+      deep: true,
+      handler() {
+        this.init()
+        this.rows = this.getCardRows()
+        this.$forceUpdate()
+      }
+    },
+  },
+  methods: {
+    getRaceImage(npc) {
+      return Npcs.getRaceImage(npc)
+    },
+    parseSpecialAbilities(abilities) {
+      return Npcs.specialAbilitiesToHuman(abilities)
+    },
+    commify(x) {
+      return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    },
+    getCleanName() {
+      return Npcs.getCleanName(this.npc.name)
+    },
+    getRaceName(raceId) {
+      return DB_RACE_NAMES[raceId]
+    },
+    getClassName(classId) {
+      return DB_CLASSES[classId]
+    },
+    getBodytype() {
+      return BODYTYPES[this.npc.bodytype]
+    },
+    getClassIcon() {
+      return DB_PLAYER_CLASSES_ALL[this.npc.class] ? DB_PLAYER_CLASSES_ALL[this.npc.class].icon : ""
+    },
+    getRaceIcon() {
+      return DB_PLAYER_RACES[this.npc.race] ? DB_PLAYER_RACES[this.npc.race].icon : ""
+    },
+    init() {
+      console.log("[npc card] rendering for [%s]", this.npc.name)
+      // merchants
+      if (this.npc.merchant_id > 0 && this.npc.merchantlists) {
+        let merchantItems = []
+        for (let listitem of this.npc.merchantlists) {
+          // not a valid item
+          // console.log(listitem)
+          if (!listitem.items || (listitem.items && listitem.items.length === 0)) {
+            console.log("not a valid item")
+            continue;
+          }
+
+          merchantItems.push(
+            {
+              item: listitem.items && listitem.items.length > 0 ? listitem.items[0] : {},
+              entry: listitem
+            }
+          )
+        }
+        this.merchantitems = merchantItems
+      }
+
+      // loot
+      if (this.npc.loottable_id > 0 && this.npc.loottable && this.npc.loottable.loottable_entries) {
+        let lootItems = []
+        for (let l of this.npc.loottable.loottable_entries) {
+          // console.log(l)
+          for (let e of l.lootdrop.lootdrop_entries) {
+
+            // make sure we don't add the same item twice for now
+            if (e.item && lootItems.filter(f => f.item.id === e.item.id).length === 0) {
+              lootItems.push(
+                {
+                  item: e.item,
+                }
+              )
+            }
+          }
+        }
+
+        // sort alpha by name
+        this.loot = lootItems.sort((a, b) => {
+          return a.item.name.localeCompare(b.item.name);
+        });
+      }
+
+      // casted spells
+      if (this.npc.npc_spells_id > 0 && this.npc.npc_spell && this.npc.npc_spell.npc_spells_entries) {
+        let castedSpells = []
+        for (let e of this.npc.npc_spell.npc_spells_entries) {
+
+          // make sure we don't add the same spell twice for now
+          if (castedSpells.filter(f => f.spell.id === e.spells_new.id).length === 0) {
+            castedSpells.push(
+              {
+                spell: e.spells_new,
+              }
+            )
+          }
+
+        }
+
+        // sort alpha by name
+        this.castedSpells = castedSpells.sort((a, b) => {
+          return a.spell.name.localeCompare(b.spell.name);
+        });
+      }
+
+      // faction
+      if (this.npc.npc_faction_id > 0 && this.npc.npc_factions) {
+        let factionHits = []
+        for (let n of this.npc.npc_factions) {
+          if (n.npc_faction_entries) {
+            for (let f of n.npc_faction_entries) {
+
+              // make sure we don't add the same spell twice for now
+              if (factionHits.filter(e => f.name === e.name).length === 0) {
+                factionHits.push(
+                  {
+                    name: f.faction_list.name,
+                    hitValue: f.value,
+                  }
+                )
+              }
+            }
+
+          }
+        }
+
+        // sort alpha by name
+        this.factionHits = factionHits.sort((a, b) => {
+          return a.name.localeCompare(b.name);
+        });
+      }
+
+      // if no limits
+
+      console.log("[card preview] no stats", this.noStats)
+      console.log("[card preview] no limit", this.limitEntries)
+
+      if (this.limitEntries) {
+        this.maxDataEntries = this.limitEntries
+      }
+    },
+    getCardRows() {
+      return [
         {
           columns: [
             [
@@ -587,142 +770,7 @@ export default {
             ]
           ]
         }
-      ],
-
-    }
-  },
-
-  created() {
-    // define these buckets here because we do not want deep reactivity here (expensive)
-    this.loot          = [];
-    this.merchantitems = []
-    this.castedSpells  = []
-    this.factionHits   = []
-
-  },
-  async mounted() {
-
-    // merchants
-    if (this.npc.merchant_id > 0 && this.npc.merchantlists) {
-      let merchantItems = []
-      for (let listitem of this.npc.merchantlists) {
-        merchantItems.push(
-          {
-            item: (await Items.getItem(listitem.item)),
-            entry: listitem
-          }
-        )
-      }
-      this.merchantitems = merchantItems
-    }
-
-    // loot
-    if (this.npc.loottable_id > 0 && this.npc.loottable.loottable_entries) {
-      let lootItems = []
-      for (let l of this.npc.loottable.loottable_entries) {
-        // console.log(l)
-        for (let e of l.lootdrop_entries) {
-
-          // make sure we don't add the same item twice for now
-          if (lootItems.filter(f => f.item.id === e.item.id).length === 0) {
-            lootItems.push(
-              {
-                item: e.item,
-              }
-            )
-          }
-        }
-      }
-
-      // sort alpha by name
-      this.loot = lootItems.sort((a, b) => {
-        return a.item.name.localeCompare(b.item.name);
-      });
-    }
-
-    // casted spells
-    if (this.npc.npc_spells_id > 0 && this.npc.npc_spell) {
-      let castedSpells = []
-      for (let e of this.npc.npc_spell.npc_spells_entries) {
-
-        // make sure we don't add the same spell twice for now
-        if (castedSpells.filter(f => f.spell.id === e.spells_new.id).length === 0) {
-          castedSpells.push(
-            {
-              spell: e.spells_new,
-            }
-          )
-        }
-
-      }
-
-      // sort alpha by name
-      this.castedSpells = castedSpells.sort((a, b) => {
-        return a.spell.name.localeCompare(b.spell.name);
-      });
-    }
-
-    // faction
-    if (this.npc.npc_faction_id > 0 && this.npc.npc_factions) {
-      let factionHits = []
-      for (let n of this.npc.npc_factions) {
-        if (n.npc_faction_entries) {
-          for (let f of n.npc_faction_entries) {
-
-            // make sure we don't add the same spell twice for now
-            if (factionHits.filter(e => f.name === e.name).length === 0) {
-              factionHits.push(
-                {
-                  name: f.faction_list.name,
-                  hitValue: f.value,
-                }
-              )
-            }
-          }
-
-        }
-      }
-
-      // sort alpha by name
-      this.factionHits = factionHits.sort((a, b) => {
-        return a.name.localeCompare(b.name);
-      });
-    }
-
-    this.$forceUpdate()
-
-  },
-  props: {
-    npc: {
-      type: Object,
-      default: {},
-      required: true
-    },
-  },
-  methods: {
-    parseSpecialAbilities(abilities) {
-      return Npcs.specialAbilitiesToHuman(abilities)
-    },
-    commify(x) {
-      return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-    },
-    getCleanName() {
-      return Npcs.getCleanName(this.npc.name)
-    },
-    getRaceName(raceId) {
-      return DB_RACE_NAMES[raceId]
-    },
-    getClassName(classId) {
-      return DB_CLASSES[classId]
-    },
-    getBodytype() {
-      return BODYTYPES[this.npc.bodytype]
-    },
-    getClassIcon() {
-      return DB_PLAYER_CLASSES_ALL[this.npc.class] ? DB_PLAYER_CLASSES_ALL[this.npc.class].icon : ""
-    },
-    getRaceIcon() {
-      return DB_PLAYER_RACES[this.npc.race] ? DB_PLAYER_RACES[this.npc.race].icon : ""
+      ]
     }
   }
 }

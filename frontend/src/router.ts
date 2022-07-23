@@ -113,16 +113,6 @@ export default new Router({
           meta: {title: "Task Editor"},
         },
         {
-          path: '/items-test',
-          component: () => import('./views/ItemsTest.vue'),
-          meta: {title: "Items Test"},
-        },
-        {
-          path: '/map',
-          component: () => import('./views/Map.vue'),
-          meta: {title: "Map Test"},
-        },
-        {
           path: ROUTE.SPELLS_LIST,
           component: () => import('./views/Spells.vue'),
           meta: {title: "Spells Browser"},
@@ -143,15 +133,30 @@ export default new Router({
           meta: {title: "Item Edit"},
         },
         {
-          path: '/zones',
-          component: () => import('./views/Zones.vue'),
+          path: ROUTE.ZONES,
+          component: () => import('./views/zone/Zones.vue'),
           meta: {title: "Zones"},
         },
-        // {
-        //   path: '/zone/:zoneId',
-        //   component: () => import('./views/Zone.vue'),
-        //   meta: {title: "Zone"},
-        // },
+        {
+          path: ROUTE.MERCHANTS,
+          component: () => import('./views/zone/Merchants.vue'),
+          meta: {title: "Merchants"},
+        },
+        {
+          path: ROUTE.NPCS_EDIT,
+          component: () => import('./views/zone/NPCs.vue'),
+          meta: {title: "NPC Grid Editor"},
+        },
+        {
+          path: ROUTE.NPC_EDIT,
+          component: () => import('./views/zone/NpcEditor.vue'),
+          meta: {title: "NPC Editor"},
+        },
+        {
+          path: '/zone/:zone',
+          component: () => import('./views/zone/Zone.vue'),
+          meta: {title: "Zone"},
+        },
         {
           path: '/connections',
           component: () => import('./views/Connections.vue'),
@@ -168,6 +173,10 @@ export default new Router({
           meta: {title: "Calculators"},
         },
       ]
+    },
+    {
+      path: '/break/',
+      component: () => import('./views/Break.vue')
     },
     {
       path: '/editor',

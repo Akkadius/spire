@@ -14,6 +14,7 @@
 
 
 import { ModelsLootdropEntry } from './models-lootdrop-entry';
+import { ModelsLoottableEntry } from './models-loottable-entry';
 
 /**
  * 
@@ -45,6 +46,12 @@ export interface ModelsLootdrop {
      * @memberof ModelsLootdrop
      */
     lootdrop_entries?: Array<ModelsLootdropEntry>;
+    /**
+     * 
+     * @type {Array<ModelsLoottableEntry>}
+     * @memberof ModelsLootdrop
+     */
+    loottable_entries?: Array<ModelsLoottableEntry>;
     /**
      * 
      * @type {number}

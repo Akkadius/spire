@@ -531,6 +531,7 @@ A:hover {
 ------------------------------------------------- */
 
 .eq-window-title-bar {
+    z-index: 99999;
     position: absolute;
     overflow: hidden;
     top: -11px;
@@ -859,6 +860,20 @@ table.eq-table TFOOT TR TD {
 /* makes rows highlight in brown */
 table.eq-highlight-rows TBODY TR:hover {
     background: linear-gradient(180deg, rgba(123, 113, 74, 1) 0%, rgba(123, 113, 74, 0.4) 50%, rgba(123, 113, 74, 1) 100%);
+}
+
+table.bordered tr {
+    border-bottom: .4px solid #ffffff1c;
+}
+
+table.bordered TBODY TR TD {
+    padding-top: 5px;
+    padding-bottom: 5px;
+    border-right: .1px solid #ffffff1c;
+    border-left: .1px solid #ffffff1c;
+
+    vertical-align: middle;
+    text-align: center;
 }
 
 @font-face {

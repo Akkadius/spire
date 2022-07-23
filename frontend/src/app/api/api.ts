@@ -96,8 +96,8 @@ export * from './api/db-str-api';
 // export * from './api/gm-ip-api';
 // export * from './api/goallist-api';
 // export * from './api/graveyard-api';
-// export * from './api/grid-api';
-// export * from './api/grid-entry-api';
+export * from './api/grid-api';
+export * from './api/grid-entry-api';
 // export * from './api/ground-spawn-api';
 // export * from './api/group-id-api';
 // export * from './api/guild-api';
@@ -191,5 +191,5 @@ export * from './api/task-activity-api';
 // export * from './api/veteran-reward-template-api';
 export * from './api/zone-api';
 // export * from './api/zone-flag-api';
-// export * from './api/zone-point-api';
+export * from './api/zone-point-api';
 

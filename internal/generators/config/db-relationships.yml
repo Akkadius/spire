@@ -106,10 +106,11 @@ loottable:
   - 1-* id->loottable_entries:loottable_id
   - 1-* id->npc_types:loottable_id
 loottable_entries:
-  - 1-* lootdrop_id->lootdrop_entries:lootdrop_id
+  - 1-1 lootdrop_id->lootdrop:id
   - 1-1 loottable_id->loottable:id
 merchantlist:
-  - 1-1 merchantid->npc_types:merchant_id
+  - 1-* merchantid->npc_types:merchant_id
+  - 1-* item->items:id
 npc_faction:
   - 1-* id->npc_faction_entries:npc_faction_id
 npc_faction_entries:
