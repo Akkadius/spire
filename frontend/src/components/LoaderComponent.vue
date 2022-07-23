@@ -1,6 +1,11 @@
 <template>
-  <b-container :class="[ 'bv-example-row', 'p-' + padding ]" v-show="isLoading">
-    <b-row class="justify-content-md-center loader">
+  <b-container
+    style="min-height: 100px;"
+    :class="[ 'bv-example-row', 'p-' + padding ]"
+
+    v-show="isLoading">
+    <b-row
+      :class="'justify-content-md-center loader'">
       <li>L</li>
       <li>O</li>
       <li>A</li>
