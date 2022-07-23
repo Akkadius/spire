@@ -75,7 +75,7 @@
           </div>
         </eq-window>
 
-        <eq-window v-if="!loading && zoneSelection !== 0 && ml && ml.length === 0">
+        <eq-window v-if="isNavigated() && !loading && ml && ml.length === 0">
           No merchants found...
         </eq-window>
 
@@ -659,6 +659,10 @@ export default {
     },
   },
   methods: {
+
+    isNavigated() {
+      return Object.keys(this.$route.query).length
+    },
 
     async createNewMerchant() {
       const r                    = await Merchants.create()
