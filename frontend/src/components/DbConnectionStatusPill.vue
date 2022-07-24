@@ -8,8 +8,13 @@
     <div
       class="card-body connection-status-box"
       style="padding: 5px; padding-left: 15px; text-align: left;"
+      v-b-tooltip.v-dark.hover
+      :title="getConnectionDescription()"
     >
-      <div class="avatar avatar-sm mr-2" style="height: 15px; width: 15px" :title="connectionStatus">
+      <div
+        class="avatar avatar-sm mr-3"
+        style="height: 10px; width: 10px"
+      >
         <img
           :style="'background-color: ' + getConnectionStatusColor() + '; margin-bottom: 5px; transition: background-color 300ms;'"
           src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg=="
@@ -25,6 +30,7 @@
 import {SpireApiClient} from "../app/api/spire-api-client";
 import {EventBus}       from "@/app/event-bus/event-bus";
 import {ROUTE}          from "@/routes";
+import util             from "util";
 
 export default {
   name: "DbConnectionStatusPill",
@@ -46,6 +52,14 @@ export default {
   },
 
   methods: {
+    getConnectionDescription() {
+      return util.format(
+        "Host: %s Status: %s",
+        this.connection.database_connection.db_host,
+        this.connectionStatus
+      )
+    },
+
     navigateConnections() {
       this.$router.push(
         {
@@ -71,7 +85,7 @@ export default {
       // connection status
       SpireApiClient.v1().get('/connections').then((r) => {
 
-        this.connection = {}
+        this.connection       = {}
         this.connectionStatus = "connecting"
 
         if (r.data && r.data.data) {
@@ -89,9 +103,9 @@ export default {
 
           if (Object.keys(this.connection).length === 0) {
             // console.log("There is no non-default connection active")
-            this.connection.database_connection = {}
+            this.connection.database_connection      = {}
             this.connection.database_connection.name = "Local (Default)"
-            this.connectionStatus = "online"
+            this.connectionStatus                    = "online"
           }
 
         }
