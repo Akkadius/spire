@@ -8,6 +8,7 @@ export const ROUTE = {
   ITEMS_LIST: "/items",
   LOGIN: "/login",
   LOGOUT: "/logout",
+  HOME: "/",
   NPCS_EDIT: "/zone/npcs/:zone",
   NPC_EDIT: "/npc/:npc",
   PLAYER_ANIMATION_VIEWER: "/player-animation-viewer",

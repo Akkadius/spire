@@ -1,10 +1,13 @@
 <template>
-  <content-area class="text-center centered">
-    <div class="row justify-content-center">
+  <content-area class="text-center fade-in">
+
+    <div class="row justify-content-center mt-8">
       <div class="col-3">
 
-        <router-link class="ml-3 mt-3 mb-3" to="/">
-          <h1 class="text-center eq-header small-mobile">
+        <router-link class="ml-3 mt-3 mb-3" :to="ROUTE.HOME">
+          <h1
+            style="font-size: 100px"
+            class="text-center eq-header small-mobile">
             Spire
           </h1>
         </router-link>
@@ -30,12 +33,14 @@
 <script>
 import ContentArea from "../components/layout/ContentArea";
 import {AppEnv}    from "../app/env/app-env";
+import {ROUTE}     from "../routes";
 export default {
   name: 'Login.vue',
   components: { ContentArea },
   data() {
     return {
       githubAuthEnabled: AppEnv.isGithubAuthEnabled(),
+      ROUTE: ROUTE,
     }
   },
   mounted() {
