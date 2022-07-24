@@ -188,8 +188,9 @@
 
     <app-loader :is-loading="!loaded" padding="4"/>
 
-    <spell-item-preview-table
+    <task-item-preview-table
       :items="items"
+      :selected-item-id="selectedItemId"
       @input="bubbleToParent($event)"
       v-if="loaded && items && searchPerformed"
     />
@@ -214,13 +215,13 @@ import itemTypes from "@/constants/item-types.json"
 import EqCheckbox from "@/components/eq-ui/EQCheckbox.vue";
 import ItemPreviewTable from "@/views/items/components/ItemPreviewTable.vue";
 import EqWindowSimple from "@/components/eq-ui/EQWindowSimple.vue";
-import SpellItemPreviewTable from "@/views/spell-editor/components/SpellItemPreviewTable.vue";
 import {SpireQueryBuilder} from "@/app/api/spire-query-builder";
+import TaskItemPreviewTable from "@/views/tasks/components/TaskItemPreviewTable";
 
 export default {
-  name: "SpellItemSelector",
+  name: "TaskItemSelector",
   components: {
-    SpellItemPreviewTable,
+    TaskItemPreviewTable,
     EqWindowSimple,
     ItemPreviewTable,
     EqCheckbox,
@@ -274,7 +275,6 @@ export default {
 
   async mounted() {
     this.resetFilters()
-    this.loaded = true;
 
     this.itemFields = await this.getItemFields()
 
@@ -287,6 +287,21 @@ export default {
         }
       )
     }
+
+    // if item is passed in, set it as the search context
+    if (this.selectedItemId > 0) {
+      this.itemName = this.selectedItemId
+      this.search()
+    }
+
+    this.loaded = true;
+  },
+
+  props: {
+    selectedItemId: {
+      type: Number,
+      required: false,
+    },
   },
 
   methods: {
@@ -515,6 +530,11 @@ export default {
               })
             }
             this.loaded = true;
+
+            if (this.items.length === 0) {
+              this.searchPerformed = false
+              this.resetForm()
+            }
           });
 
         }

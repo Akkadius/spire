@@ -919,19 +919,19 @@ import EqDebug from "@/components/eq-ui/EQDebug.vue";
 import EqTabs from "@/components/eq-ui/EQTabs.vue";
 import EqTab from "@/components/eq-ui/EQTab.vue";
 import {EditFormFieldUtil} from "@/app/forms/edit-form-field-util";
-import TaskPreview from "@/views/task-editor/components/TaskPreview.vue";
-import TaskZoneSelector from "@/views/task-editor/components/TaskZoneSelector.vue";
-import TaskItemSelector from "@/views/task-editor/components/TaskItemSelector.vue";
+import TaskPreview from "@/views/tasks/components/TaskPreview.vue";
+import TaskZoneSelector from "@/views/tasks/components/TaskZoneSelector.vue";
+import TaskItemSelector from "@/views/tasks/components/TaskItemSelector.vue";
 import FreeIdSelector from "@/components/tools/FreeIdSelector.vue";
-import TaskNpcSelector from "@/views/task-editor/components/TaskNpcSelector.vue";
+import TaskNpcSelector from "@/views/tasks/components/TaskNpcSelector.vue";
 import {FreeIdFetcher} from "@/app/free-id-fetcher";
 import {Npcs} from "@/app/npcs";
-import TaskExploreSelector from "@/views/task-editor/components/TaskExploreSelector.vue";
-import TaskDescriptionSelector from "@/views/task-editor/components/TaskDescriptionSelector.vue";
-import TaskGoalMatchListPreviewer from "@/views/task-editor/components/TaskGoalMatchListPreviewer.vue";
+import TaskExploreSelector from "@/views/tasks/components/TaskExploreSelector.vue";
+import TaskDescriptionSelector from "@/views/tasks/components/TaskDescriptionSelector.vue";
+import TaskGoalMatchListPreviewer from "@/views/tasks/components/TaskGoalMatchListPreviewer.vue";
 import {Zones} from "@/app/zones";
 import ClipBoard from "@/app/clipboard/clipboard";
-import TaskQuestExamplePreview from "@/views/task-editor/components/TaskQuestExamplePreview.vue";
+import TaskQuestExamplePreview from "@/views/tasks/components/TaskQuestExamplePreview.vue";
 
 const MILLISECONDS_BEFORE_WINDOW_RESET = 10000;
 

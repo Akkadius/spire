@@ -1,6 +1,6 @@
 <template>
   <div>
-    <eq-window-simple style="">
+    <eq-window-simple style="" class="p-1">
       <div
         class="row text-center justify-content-center mb-3"
         style="margin: 0 auto;"
@@ -57,7 +57,7 @@
 
         </div>
 
-        <div class="col-3 text-center">
+        <div class="col-2 text-center">
           Level
           <select
             name="class"
@@ -73,27 +73,22 @@
           </select>
         </div>
 
-        <div class="col-3 pl-0">
-          <div
-            class="btn-group"
-            role="group"
-            v-if="selectedLevel"
-            style="margin-top: 23px"
-          >
+        <div class="col-2 m-0 p-0">
+          <div class="btn-group ml-3 mt-4" role="group">
             <b-button
-              @click="selectedLevelType = 0; listSpells();"
+              @click="selectedLevelType = 0; triggerState();"
               size="sm"
               :variant="(parseInt(selectedLevelType) === 0 ? 'warning' : 'outline-warning')"
             >Only
             </b-button>
             <b-button
-              @click="selectedLevelType = 1; listSpells();"
+              @click="selectedLevelType = 1; triggerState();"
               size="sm"
               :variant="(parseInt(selectedLevelType) === 1 ? 'warning' : 'outline-warning')"
             >Higher
             </b-button>
             <b-button
-              @click="selectedLevelType = 2; listSpells();"
+              @click="selectedLevelType = 2; triggerState();"
               size="sm"
               :variant="(parseInt(selectedLevelType) === 2 ? 'warning' : 'outline-warning')"
             >Lower
@@ -101,31 +96,36 @@
           </div>
         </div>
 
+        <div class="col-1 text-center">
+
+        </div>
+
       </div>
 
-      <div class="row mt-3 text-center">
-        <div class="col-12">
+      <div class="row">
+        <div class="col-12 text-center mt-3">
+
           <div class="btn-group ml-3" role="group" aria-label="Basic example">
             <b-button
-              @click="limit = 10; listSpells()"
+              @click="limit = 10; triggerState()"
               size="sm"
               :variant="(parseInt(limit) === 10 ? 'warning' : 'outline-warning')"
             >10
             </b-button>
             <b-button
-              @click="limit = 100; listSpells()"
+              @click="limit = 100; triggerState()"
               size="sm"
               :variant="(parseInt(limit) === 100 ? 'warning' : 'outline-warning')"
             >100
             </b-button>
             <b-button
-              @click="limit = 250; listSpells()"
+              @click="limit = 250; triggerState()"
               size="sm"
               :variant="(parseInt(limit) === 250 ? 'warning' : 'outline-warning')"
             >250
             </b-button>
             <b-button
-              @click="limit = 1000; listSpells()"
+              @click="limit = 1000; triggerState()"
               size="sm"
               :variant="(parseInt(limit) === 1000 ? 'warning' : 'outline-warning')"
             >1000
@@ -133,18 +133,19 @@
           </div>
 
           <b-button
-            class="btn-dark btn-sm btn-outline-warning ml-3"
+            class="btn-dark btn-sm btn-outline-warning mb-3 ml-3 mt-3"
             @click="resetForm"
           >
-            <i class="fa fa-refresh"></i> Reset
+            <i class="fa fa-refresh"/> Reset
           </b-button>
 
           <b-button
             class="btn-dark btn-sm btn-outline-warning ml-3"
             @click="triggerState"
           >
-            <i class="fa fa-search"></i> Search
+            <i class="fa fa-search"/> Search
           </b-button>
+
         </div>
       </div>
 
@@ -153,15 +154,15 @@
     <app-loader :is-loading="!loaded" padding="4"/>
 
     <eq-window-simple
-      style="overflow-y: scroll; overflow-x: hidden; height: 60vh"
-      id="spell-effect-selector-view-port"
+      :title="'Spells (' + spells.length + ')'"
+      class="p-0"
       v-if="loaded && spells"
     >
       <div v-if="message">
         {{ message }}
       </div>
 
-      <item-spell-preview-table-selector
+      <spell-spell-preview-table-selector
         :spells="spells"
         @input="bubbleToParent($event)"
         v-if="loaded && spells"
@@ -185,14 +186,14 @@ import {DB_SPA} from "@/app/constants/eq-spell-constants";
 import EqSpellPreviewTable from "@/components/preview/EQSpellPreviewTable.vue";
 import {Spells} from "@/app/spells";
 import {Items} from "@/app/items";
-import ItemSpellPreviewTableSelector from "@/views/item-editor/components/ItemSpellPreviewTableSelector.vue";
 import EqWindowSimple from "@/components/eq-ui/EQWindowSimple.vue";
+import SpellSpellPreviewTableSelector from "@/views/spells/components/SpellSpellPreviewTableSelector.vue";
 import {SpireQueryBuilder} from "@/app/api/spire-query-builder";
 
 export default {
-  name: "SpellEffectSelector",
+  name: "SpellSpellEffectSelector",
   components: {
-    ItemSpellPreviewTableSelector,
+    SpellSpellPreviewTableSelector,
     EqWindowSimple,
     EqSpellPreviewTable,
     EqSpellPreview,

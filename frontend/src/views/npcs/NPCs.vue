@@ -163,9 +163,9 @@ import Tablesort               from "@/app/utility/tablesort.js";
 import DbColumnFilter          from "../../components/DbColumnFilter";
 import {DbSchema}              from "../../app/db-schema";
 import {ROUTE}                 from "../../routes";
-import {EditFormFieldUtil}     from "../../app/forms/edit-form-field-util";
-import NpcsBulkEditor          from "./components/NpcsBulkEditor";
-import util                    from "util";
+import {EditFormFieldUtil} from "../../app/forms/edit-form-field-util";
+import NpcsBulkEditor      from "./components/NpcsBulkEditor";
+import util                from "util";
 import NpcPopover              from "../../components/NpcPopover";
 import {Npcs}                  from "../../app/npcs";
 

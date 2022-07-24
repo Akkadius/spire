@@ -1123,7 +1123,6 @@ export default {
       this.$emit('input', merchantId);
     },
 
-
     reset() {
       this.showAll               = false;
       this.addItem               = false

@@ -1613,9 +1613,9 @@
 import EqWindowFancy           from "../../components/eq-ui/EQWindowFancy";
 import EqWindow                from "../../components/eq-ui/EQWindow";
 import EqTabs                  from "../../components/eq-ui/EQTabs";
-import EqTab         from "../../components/eq-ui/EQTab";
-import EqItemPreview from "../../components/preview/EQItemCardPreview";
-import EqCheckbox    from "../../components/eq-ui/EQCheckbox";
+import EqTab                   from "../../components/eq-ui/EQTab";
+import EqItemPreview           from "../../components/preview/EQItemCardPreview";
+import EqCheckbox              from "../../components/eq-ui/EQCheckbox";
 import {
   SpireApiClient
 }                              from "../../app/api/spire-api-client";
@@ -1626,9 +1626,9 @@ import {
 import {
   ItemApi
 }                              from "../../app/api";
-import ItemModelPreview  from "./components/ItemModelPreview";
-import ItemModelSelector from "../../components/selectors/ItemModelSelector";
-import ItemIconSelector  from "./components/ItemIconSelector";
+import ItemModelPreview        from "./components/ItemModelPreview";
+import ItemModelSelector       from "../../components/selectors/ItemModelSelector";
+import ItemIconSelector        from "./components/ItemIconSelector";
 import ClassBitmaskCalculator  from "../../components/tools/ClassBitmaskCalculator";
 import RaceBitmaskCalculator   from "../../components/tools/RaceBitmaskCalculator";
 import DeityBitmaskCalculator  from "../../components/tools/DeityCalculator";

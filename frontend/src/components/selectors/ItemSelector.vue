@@ -216,7 +216,7 @@ import EqCheckbox from "@/components/eq-ui/EQCheckbox.vue";
 import ItemPreviewTable from "@/views/items/components/ItemPreviewTable.vue";
 import EqWindowSimple from "@/components/eq-ui/EQWindowSimple.vue";
 import {SpireQueryBuilder} from "@/app/api/spire-query-builder";
-import TaskItemPreviewTable from "@/views/task-editor/components/TaskItemPreviewTable.vue";
+import TaskItemPreviewTable from "@/views/tasks/components/TaskItemPreviewTable.vue";
 import ItemSelectorPreviewTable from "@/components/selectors/ItemSelectorPreviewTable.vue";
 
 export default {

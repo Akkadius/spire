@@ -1664,9 +1664,9 @@ import {
 }                                     from "../../app/constants/eq-spell-constants";
 import {DB_SKILLS}                    from "../../app/constants/eq-skill-constants";
 import SpellIconSelector              from "./components/SpellIconSelector";
-import SpellAnimationPreview          from "./components/SpellAnimationPreview";
-import SpellAnimationViewer           from "../viewers/SpellAnimationViewer";
-import SpellAnimationSelector         from "./components/SpellAnimationSelector";
+import SpellAnimationPreview  from "./components/SpellAnimationPreview";
+import SpellAnimationViewer   from "../asset-viewers/SpellAnimationViewer";
+import SpellAnimationSelector from "./components/SpellAnimationSelector";
 import EqCheckbox                     from "../../components/eq-ui/EQCheckbox";
 import {DbStrApi, SpellsNewApi}       from "../../app/api";
 import {SpireApiClient}               from "../../app/api/spire-api-client";
