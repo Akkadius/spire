@@ -396,20 +396,20 @@ export default {
           if (isGap && startingRewriteSlot === 0) {
             startingRewriteSlot = this.editList[i].slot
           }
+        }
 
-          if (startingRewriteSlot > 0) {
-            let desiredEntry  = JSON.parse(JSON.stringify(this.editList[i]))
-            desiredEntry.slot = startingRewriteSlot
+        if (startingRewriteSlot > 0) {
+          let desiredEntry  = JSON.parse(JSON.stringify(this.editList[i]))
+          desiredEntry.slot = startingRewriteSlot
 
-            if (this.editList[i].slot !== startingRewriteSlot) {
-              await Merchants.deleteMerchantEntry(e.merchantid, e.slot)
-              await Merchants.addMerchantListEntry(desiredEntry)
-            }
+          if (this.editList[i].slot !== startingRewriteSlot) {
+            await Merchants.deleteMerchantEntry(e.merchantid, e.slot)
+            await Merchants.addMerchantListEntry(desiredEntry)
           }
+        }
 
-          if (startingRewriteSlot !== 0) {
-            startingRewriteSlot++
-          }
+        if (startingRewriteSlot !== 0) {
+          startingRewriteSlot++
         }
       }
 
