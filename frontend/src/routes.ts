@@ -1,10 +1,13 @@
 export const ROUTE = {
   CLIENT_FILES: "/client-files",
+  DATABASE_CONNECTIONS: "/connections",
   EMITTER_VIEWER: "/emitter-viewer",
   ITEM_EDIT: "/item/%s",
   ITEM_ICON_VIEWER: "/item-icon-viewer",
   ITEM_VIEWER: "/item-viewer",
   ITEMS_LIST: "/items",
+  LOGIN: "/login",
+  LOGOUT: "/logout",
   NPCS_EDIT: "/zone/npcs/:zone",
   NPC_EDIT: "/npc/:npc",
   PLAYER_ANIMATION_VIEWER: "/player-animation-viewer",

@@ -117,14 +117,7 @@ func (d *DatabaseResolver) ResolveUserEqemuConnection(model models.Modelable, us
 	}
 
 	// get servers from database
-	var conn models.UserServerDatabaseConnection
-	relationships := models.UserServerDatabaseConnection{}.Relationships()
-	query := d.GetSpireDb().Model(&models.UserServerDatabaseConnection{})
-	for _, relationship := range relationships {
-		query = query.Preload(relationship)
-	}
-
-	query.Where("user_id = ? and active = 1", user.ID).First(&conn)
+	conn := d.GetUserConnection(user)
 
 	// if we don't have an active connection
 	// this will then fallback to the locally defined eqemu instance
@@ -347,4 +340,17 @@ func (d *DatabaseResolver) handleOrWheres(query *gorm.DB, filter string) *gorm.D
 	}
 
 	return query
+}
+
+func (d *DatabaseResolver) GetUserConnection(user models.User) models.UserServerDatabaseConnection {
+	var conn models.UserServerDatabaseConnection
+	relationships := models.UserServerDatabaseConnection{}.Relationships()
+	query := d.GetSpireDb().Model(&models.UserServerDatabaseConnection{})
+	for _, relationship := range relationships {
+		query = query.Preload(relationship)
+	}
+
+	query.Where("user_id = ? and active = 1", user.ID).First(&conn)
+
+	return conn
 }

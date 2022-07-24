@@ -241,6 +241,8 @@
 
         </div>
 
+        <!-- Active Database Connection Status -->
+        <db-connection-status-pill/>
 
       </div> <!-- / .navbar-collapse -->
 
@@ -250,18 +252,19 @@
 
 <script>
 
-import {App}                 from "@/constants/app";
-import NavbarDropdownMenu    from "@/components/layout/NavbarDropdownMenu";
-import NavbarUserSettingsCog from "@/components/layout/NavbarUserSettingsCog";
-import UserContext           from "@/app/user/UserContext";
-import NavSectionComponent   from "@/components/layout/NavSectionComponent";
-import {ROUTE}               from "@/routes";
-import {EventBus}            from "@/app/event-bus/event-bus";
-import {AppEnv}              from "@/app/env/app-env";
-import {Navbar}              from "@/app/navbar";
+import {App}                  from "@/constants/app";
+import NavbarDropdownMenu     from "@/components/layout/NavbarDropdownMenu";
+import NavbarUserSettingsCog  from "@/components/layout/NavbarUserSettingsCog";
+import UserContext            from "@/app/user/UserContext";
+import NavSectionComponent    from "@/components/layout/NavSectionComponent";
+import {ROUTE}                from "@/routes";
+import {EventBus}             from "@/app/event-bus/event-bus";
+import {AppEnv}               from "@/app/env/app-env";
+import {Navbar}               from "@/app/navbar";
+import DbConnectionStatusPill from "@/components/DbConnectionStatusPill";
 
 export default {
-  components: { NavSectionComponent, NavbarDropdownMenu, NavbarUserSettingsCog },
+  components: { DbConnectionStatusPill, NavSectionComponent, NavbarDropdownMenu, NavbarUserSettingsCog },
   data() {
     return {
       backendBaseUrl: "",
@@ -326,6 +329,8 @@ export default {
           { title: "Special Abilities Calculator", to: "/calculators#npc-special-abilities", icon: "ra ra-lion mr-1" },
         ]
       },
+
+
     }
   },
   created() {
@@ -396,6 +401,13 @@ export default {
   .small-mobile {
     font-size: 40px !important;
   }
+}
+
+.connection-status-box {
+  display: block; /* or inline-block */
+  text-overflow: ellipsis;
+  word-wrap: break-word;
+  overflow: hidden;
 }
 
 </style>

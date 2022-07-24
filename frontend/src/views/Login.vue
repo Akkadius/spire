@@ -1,24 +1,48 @@
 <template>
-  <div class="text-center centered" style="width:400px">
-    <form class="form-signin" style="top:50%;">
-      <h1 class="h3 mb-3 font-weight-normal">Spire</h1>
+  <content-area class="text-center centered">
+    <div class="row justify-content-center">
+      <div class="col-3">
 
-      <!--      <a class="btn btn-lg btn-dark btn-block" @click="auth('github')" style="color:white">-->
-      <a class="btn btn-lg btn-dark btn-block" @click="loginGithub()" style="color:white">
-        <i class="fe fe-github"></i>
-        Sign in with Github
-      </a>
+        <router-link class="ml-3 mt-3 mb-3" to="/">
+          <h1 class="text-center eq-header small-mobile">
+            Spire
+          </h1>
+        </router-link>
 
-      <!--
-      <p class="mt-5 mb-3 text-muted">&copy; 2017-2019</p>
-      -->
-    </form>
-  </div>
+        <div class="card">
+          <div class="card-body">
+            <form class="form-signin" style="top:50%;">
+
+              <a class="btn btn-lg btn-dark btn-block" @click="loginGithub()" style="color:white">
+                <i class="fe fe-github"></i>
+                Sign in with Github
+              </a>
+
+            </form>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </content-area>
 </template>
 
 <script>
+import ContentArea from "../components/layout/ContentArea";
+import {AppEnv}    from "../app/env/app-env";
 export default {
   name: 'Login.vue',
+  components: { ContentArea },
+  data() {
+    return {
+      githubAuthEnabled: AppEnv.isGithubAuthEnabled(),
+    }
+  },
+  mounted() {
+    setTimeout(() => {
+      this.githubAuthEnabled = AppEnv.isGithubAuthEnabled()
+    }, 1000)
+  },
   methods: {
     loginGithub: function () {
       const width  = 800
