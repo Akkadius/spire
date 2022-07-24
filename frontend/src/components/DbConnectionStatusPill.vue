@@ -76,8 +76,6 @@ export default {
 
         if (r.data && r.data.data) {
           r.data.data.forEach(connection => {
-            console.log(connection)
-
             const connectionId = connection.id
 
             if (connection.active) {
@@ -85,14 +83,12 @@ export default {
 
               SpireApiClient.v1().get(`/connection-check/${connectionId}`).then((cr) => {
                 this.connectionStatus = cr.data.data.message
-                console.log(cr)
               })
             }
           })
 
           if (Object.keys(this.connection).length === 0) {
-            console.log("There is no non-default connection active")
-
+            // console.log("There is no non-default connection active")
             this.connection.database_connection = {}
             this.connection.database_connection.name = "Local (Default)"
             this.connectionStatus = "online"

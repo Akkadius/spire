@@ -21,5 +21,6 @@ export const ROUTE = {
   TASK_EDIT: "/tasks/%s",
   TASKS: "/tasks",
   MERCHANTS: "/merchants",
+  MERCHANT_EDIT: "/merchant/%s",
   ZONES: "/zones",
 };

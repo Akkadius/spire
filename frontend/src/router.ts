@@ -143,6 +143,11 @@ export default new Router({
           meta: {title: "Merchants"},
         },
         {
+          path: util.format(ROUTE.MERCHANT_EDIT, ":id"),
+          component: () => import('./views/merchants/MerchantEdit.vue'),
+          meta: {title: "Merchant Edit"},
+        },
+        {
           path: ROUTE.NPCS_EDIT,
           component: () => import('./views/npcs/NPCs.vue'),
           meta: {title: "NPC Grid Editor"},
