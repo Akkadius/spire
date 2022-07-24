@@ -376,21 +376,17 @@ export default {
 
       let startingRewriteSlot = 0
       for (let [i, e] of this.editList.entries()) {
+
+        // when the first slot so happens to be not starting at 1
+        if (i === 0 && parseInt(e.slot) !== 1) {
+          startingRewriteSlot = 1
+        }
+
+        console.log("i [%s] slot [%s]", i, e.slot)
+
+        // gap logic
         if (this.editList[i + 1] && this.editList[i]) {
           const isGap = (this.editList[i + 1].slot - this.editList[i].slot) > 1
-          // console.log(
-          //   "[MerchantSubEditor] isGap current [%s] next [%s] gap [%s]",
-          //   this.editList[i].slot,
-          //   this.editList[i + 1].slot,
-          //   isGap
-          // )
-
-          console.log("i [%s] slot [%s]", i, e.slot)
-
-          // when the first slot so happens to be not starting at 1
-          if (i === 0 && parseInt(e.slot) !== 1) {
-            startingRewriteSlot = 1
-          }
 
           // on our first gap set the first rewrite slot to renumber the rest of the entries
           if (isGap && startingRewriteSlot === 0) {
