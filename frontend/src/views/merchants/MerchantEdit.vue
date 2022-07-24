@@ -40,10 +40,10 @@
 
               </div>
             </div>
-            <div class="col-2 text-center" v-if="applyingChanges">
+            <div class="col-6 text-right" v-if="applyingChanges">
               <div class="ml-3 p-0 m-0">
-                Applying changes... Please wait...
-                <loader-fake-progress class="mt-2"/>
+                Applying
+                <loader-fake-progress class="ml-3 mt-2 d-inline-block"/>
               </div>
             </div>
           </div>
@@ -51,12 +51,12 @@
           <div
             v-if="editList && editList.length > 0"
             class=""
+            style="height: 87vh; overflow-y: scroll"
           >
             <table
               class="eq-table eq-highlight-rows minified-inputs"
-              style="width: 95%"
             >
-              <thead>
+              <thead class="eq-table-floating-header">
               <tr>
                 <th class="text-center" style="width: 100px">Actions</th>
                 <th class="text-center" style="width: 50px">Slot</th>
@@ -75,6 +75,7 @@
                     class="btn-dark btn-sm btn-outline-danger ml-1"
                     style="padding: 0px 4px;"
                     title="Edit"
+                    :disabled="applyingChanges"
                     @click="deleteMerchantRow(e)"
                   >
                     <i class="fa fa-trash"></i>
@@ -85,6 +86,7 @@
                     class="btn-dark btn-sm btn-outline-success ml-1"
                     style="padding: 0px 4px;"
                     title="Edit"
+                    :disabled="applyingChanges"
                     @click="editMerchantRow(e)"
                   >
                     <i class="fa fa-pencil"></i>
@@ -96,6 +98,7 @@
                     style="padding: 0px 4px;"
                     title="Move slot up"
                     @click="moveSlotUp(e)"
+                    :disabled="applyingChanges"
                     v-if="editList[i - 1]"
                   >
                     <i class="fa fa-arrow-up"></i>
@@ -106,6 +109,7 @@
                     class="btn-dark btn-sm btn-outline-light ml-1"
                     style="padding: 0px 4px;"
                     title="Move slot down"
+                    :disabled="applyingChanges"
                     @click="moveSlotDown(e)"
                     v-if="editList[i + 1]"
                   >
@@ -115,7 +119,7 @@
                 <td class="text-center p-0">
                   {{ e.slot }}
                 </td>
-                <td>
+                <td :style="(applyingChanges ? 'opacity: .2' : '')">
                   <!--                  <input type="text" v-model="e.item" class="mr-3 m-0" style="width: 120px">-->
                   <item-popover
                     class="d-inline-block"
@@ -171,7 +175,15 @@ import MerchantlistEntryEdit from "./components/MerchantlistEntryEdit";
 
 export default {
   name: "MerchantEdit",
-  components: { MerchantlistEntryEdit, ItemSelector, ContentArea, LoaderFakeProgress, ItemPopover, EqCashDisplay, EqWindow },
+  components: {
+    MerchantlistEntryEdit,
+    ItemSelector,
+    ContentArea,
+    LoaderFakeProgress,
+    ItemPopover,
+    EqCashDisplay,
+    EqWindow
+  },
   data() {
     return {
       // editing
@@ -202,7 +214,7 @@ export default {
     this.loadQueryState()
     this.ml             = []
     this.editList       = []
-    this.itemData      = {}
+    this.itemData       = {}
     this.merchantLists  = []
     this.associatedNpcs = {}
 
@@ -228,12 +240,12 @@ export default {
     },
 
     reset() {
-      this.editMerchantId = 0
+      this.editMerchantId        = 0
       this.editMerchantEntrySlot = 0
-      this.editMerchantEntry = {}
-      this.addItem = false
-      this.resetTime = Date.now()
-      this.returnQuery = {}
+      this.editMerchantEntry     = {}
+      this.addItem               = false
+      this.resetTime             = Date.now()
+      this.returnQuery           = {}
     },
 
     /**
@@ -373,20 +385,26 @@ export default {
           //   isGap
           // )
 
+          console.log("i [%s] slot [%s]", i, e.slot)
+
+          // when the first slot so happens to be not starting at 1
+          if (i === 0 && parseInt(e.slot) !== 1) {
+            startingRewriteSlot = 1
+          }
+
           // on our first gap set the first rewrite slot to renumber the rest of the entries
           if (isGap && startingRewriteSlot === 0) {
-            startingRewriteSlot = this.editList[i].slot + 1
+            startingRewriteSlot = this.editList[i].slot
           }
 
           if (startingRewriteSlot > 0) {
-            let desiredEntry  = JSON.parse(JSON.stringify(this.editList[i + 1]))
+            let desiredEntry  = JSON.parse(JSON.stringify(this.editList[i]))
             desiredEntry.slot = startingRewriteSlot
 
-            await Merchants.updateSlotForEntry(
-              e.merchantid,
-              this.editList[i + 1].slot,
-              desiredEntry
-            )
+            if (this.editList[i].slot !== startingRewriteSlot) {
+              await Merchants.deleteMerchantEntry(e.merchantid, e.slot)
+              await Merchants.addMerchantListEntry(desiredEntry)
+            }
           }
 
           if (startingRewriteSlot !== 0) {
@@ -417,13 +435,16 @@ export default {
       this.refreshMerchantlistEntries()
     },
     async refreshMerchantlistEntries() {
-      await this.reorderItems()
+      this.applyingChanges = true
+      setTimeout(async () => {
+        await this.reorderItems()
 
-      // reset so we can reload after deleting entry
-      this.editList              = []
-      this.editMerchantEntrySlot = 0
+        // reset so we can reload after deleting entry
+        this.editList              = []
+        this.editMerchantEntrySlot = 0
 
-      this.init()
+        this.init()
+      }, 1)
     },
 
     async addItemToMerchantList(e) {

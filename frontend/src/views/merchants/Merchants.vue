@@ -241,22 +241,22 @@
               <tr
                 v-for="(e, i) in activeMerchantList"
                 :key="e.slot + '-' + e.item"
-                v-if="editItems[e.item]"
+                v-if="itemData[e.item]"
               >
                 <td>
                   <!--                  <input type="text" v-model="e.item" class="mr-3 m-0" style="width: 120px">-->
                   <item-popover
                     class="d-inline-block"
-                    :item="editItems[e.item]"
-                    v-if="editItems[e.item] && Object.keys(editItems[e.item]).length > 0"
+                    :item="itemData[e.item]"
+                    v-if="itemData[e.item] && Object.keys(itemData[e.item]).length > 0"
                     size="sm"
                   />
 
-                  {{ editItems[e.item] && editItems[e.item].stacksize > 0 ? `(${editItems[e.item].stacksize})` : '' }}
+                  {{ itemData[e.item] && itemData[e.item].stacksize > 0 ? `(${itemData[e.item].stacksize})` : '' }}
                   <eq-cash-display
                     class="ml-1"
-                    :price="parseInt(editItems[e.item].price)"
-                    v-if="editItems[e.item]"
+                    :price="parseInt(itemData[e.item].price)"
+                    v-if="itemData[e.item]"
                   />
                 </td>
               </tr>
@@ -330,7 +330,7 @@ export default {
     this.loadQueryState()
     this.ml             = []
     this.editList       = []
-    this.editItems      = {}
+    this.itemData      = {}
     this.merchantLists  = []
     this.associatedNpcs = {}
 
@@ -363,7 +363,6 @@ export default {
       lastResetTime: Date.now(),
 
       // state
-      addItem: false,
       showAll: false,
 
       // preview
@@ -393,7 +392,6 @@ export default {
       if (r.status === 200) {
         // router navigate here
         // this.editMerchantId = parseInt(r.data.merchantid)
-        this.addItem        = false
         this.updateQueryState()
         this.$forceUpdate()
       }
@@ -402,6 +400,7 @@ export default {
     async deleteMerchantList(m) {
       if (confirm(`Are you sure you want to delete this Merchant? (${m.merchantid}) with (${m.slot}) items?`)) {
         await Merchants.deleteMerchant(m.merchantid)
+        this.activeMerchantList = {}
         this.loading = true
         await this.showAllMerchants()
         this.$forceUpdate()
@@ -425,7 +424,7 @@ export default {
 
         let itemIds = []
         for (let e of this.activeMerchantList) {
-          if (e.item > 0 && !this.editItems[e.item]) {
+          if (e.item > 0 && !this.itemData[e.item]) {
             itemIds.push(e.item)
           }
         }
@@ -434,8 +433,8 @@ export default {
           setTimeout(() => {
             Items.loadItemsBulk(itemIds).then(async () => {
               for (let e of this.activeMerchantList) {
-                if (e.item > 0 && !this.editItems[e.item]) {
-                  this.editItems[e.item] = await Items.getItem(e.item)
+                if (e.item > 0 && !this.itemData[e.item]) {
+                  this.itemData[e.item] = await Items.getItem(e.item)
                 }
               }
               this.$forceUpdate()
@@ -454,9 +453,6 @@ export default {
       if (this.zoneSelection !== 0) {
         queryState.zone = JSON.stringify(this.zoneSelection)
       }
-      if (this.addItem) {
-        queryState.addItem = this.addItem
-      }
       if (this.showAll) {
         queryState.showAll = this.showAll
       }
@@ -465,9 +461,6 @@ export default {
       }
       if (this.searchItemName !== '') {
         queryState.s = this.searchItemName
-      }
-      if (this.editMerchantEntrySlot !== 0) {
-        queryState.e = this.editMerchantEntrySlot
       }
 
       this.$router.push(
@@ -488,12 +481,6 @@ export default {
       }
       if (typeof this.$route.query.s !== 'undefined' && this.$route.query.s !== '') {
         this.searchItemName = this.$route.query.s;
-      }
-      if (typeof this.$route.query.e !== 'undefined' && parseInt(this.$route.query.e) !== 0) {
-        this.editMerchantEntrySlot = parseInt(this.$route.query.e);
-      }
-      if (typeof this.$route.query.addItem !== 'undefined' && this.$route.query.addItem) {
-        this.addItem = true;
       }
       if (typeof this.$route.query.showAll !== 'undefined' && this.$route.query.showAll) {
         this.showAll = true;
@@ -621,7 +608,6 @@ export default {
 
     reset() {
       this.showAll               = false;
-      this.addItem               = false
       this.search                = ""
       this.searchItemName        = ""
       this.zoneSelection         = 0

@@ -225,6 +225,14 @@ export class Merchants {
       )
   }
 
+  static async addMerchantListEntry(merchantlistEntry: any){
+    // @ts-ignore
+    return await (new MerchantlistApi(SpireApiClient.getOpenApiConfig()))
+      .createMerchantlist(
+        {merchantlist: merchantlistEntry}
+      )
+  }
+
   static async addItemToMerchant(merchantId: number, newSlot: any, itemId: any) {
     const newMerchantEntry = {
       merchantid: merchantId,
