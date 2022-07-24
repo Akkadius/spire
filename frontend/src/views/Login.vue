@@ -12,11 +12,11 @@
           </h1>
         </router-link>
 
-        <div class="card">
+        <div class="card" v-if="hasAuthOptions()">
           <div class="card-body">
             <form class="form-signin" style="top:50%;">
 
-              <a class="btn btn-lg btn-dark btn-block" @click="loginGithub()" style="color:white">
+              <a class="btn btn-lg btn-dark btn-block" @click="loginGithub()" style="color:white" v-if="githubAuthEnabled">
                 <i class="fe fe-github"></i>
                 Sign in with Github
               </a>
@@ -24,6 +24,11 @@
             </form>
           </div>
         </div>
+
+        <h2
+          class="text-center eq-header small-mobile">
+          Login
+        </h2>
 
       </div>
     </div>
@@ -49,6 +54,9 @@ export default {
     }, 1000)
   },
   methods: {
+    hasAuthOptions() {
+      return this.githubAuthEnabled
+    },
     loginGithub: function () {
       const width  = 800
       const height = 800
