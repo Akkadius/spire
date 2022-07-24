@@ -417,6 +417,7 @@ export default {
     setDefaultActive() {
       SpireApiClient.v1().post(`/connection-default/set-active`).then((response) => {
         if (response.data && response.data.data) {
+          EventBus.$emit('DB_CONNECTION_CHANGE', true);
           this.listConnections()
         }
       })

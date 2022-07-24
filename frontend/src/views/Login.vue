@@ -73,19 +73,7 @@ body {
   padding-bottom:   40px;
   background-color: #f5f5f5;
 }
-.centered {
-  position:          fixed;
-  top:               50%;
-  left:              50%;
-  transform:         translate(-50%, -50%);
-  -webkit-transform: translate(-50%, -50%);
-  -moz-transform:    translate(-50%, -50%);
-  -o-transform:      translate(-50%, -50%);
-  -ms-transform:     translate(-50%, -50%);
-  font-size:         20px;
-  padding:           5px;
-  z-index:           100;
-}
+
 .form-signin {
   width:     100%;
   max-width: 330px;

@@ -1,7 +1,7 @@
 <template>
-  <div>
+  <div class="centered">
     <div class="row justify-content-center">
-      <div class="col-6">
+      <div class="col-12">
         <eq-window-simple
           title="Client File Drop Zone"
           class="text-center"
@@ -27,7 +27,8 @@
           <!-- Buttons -->
           <div class="row">
             <div class="col-12">
-              <b-button @click="downloadSpells" size="sm" variant="warning"><i class="fa fa-cloud-download"></i>
+              <b-button @click="downloadSpells" size="sm" variant="warning">
+                <i class="fa fa-cloud-download"></i>
                 Spells (spells_us.txt)
               </b-button>
               <b-button @click="downloadDbStr" size="sm" variant="warning" class="ml-3">
