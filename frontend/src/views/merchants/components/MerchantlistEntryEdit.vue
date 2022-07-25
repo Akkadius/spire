@@ -4,7 +4,7 @@
       <div
         v-for="field in editMerchantEntryFields"
         :key="field.field"
-        :class="'row'"
+        :class="'row minified-inputs'"
       >
         <div
           class="col-4 text-right p-0 m-0 mr-1 mt-3"
@@ -132,15 +132,15 @@ export default {
   data() {
     return {
       editMerchantEntryFields: [
-        { desc: "faction_required", field: "faction_required", fType: "text" },
-        { desc: "level_required", field: "level_required", fType: "text" },
-        { desc: "alt_currency_cost", field: "alt_currency_cost", fType: "text" },
-        { desc: "classes_required", field: "classes_required", fType: "text" },
-        { desc: "probability", field: "probability", fType: "text" },
-        { desc: "min_expansion", field: "min_expansion", fType: "text" },
-        { desc: "max_expansion", field: "max_expansion", fType: "text" },
-        { desc: "content_flags", field: "content_flags", fType: "text" },
-        { desc: "content_flags_disabled", field: "content_flags_disabled", fType: "text" },
+        { desc: "Faction Requirement", field: "faction_required", fType: "text" },
+        { desc: "Level Requirement", field: "level_required", fType: "text" },
+        { desc: "Alternate Currency Cost", field: "alt_currency_cost", fType: "text" },
+        { desc: "Classes Required", field: "classes_required", fType: "text" },
+        { desc: "Probability", field: "probability", fType: "text" },
+        { desc: "Min Expansion", field: "min_expansion", fType: "text" },
+        { desc: "Max Expansion", field: "max_expansion", fType: "text" },
+        { desc: "Content Flags", field: "content_flags", fType: "text" },
+        { desc: "Content Flags Disabled", field: "content_flags_disabled", fType: "text" },
       ],
     }
   },
