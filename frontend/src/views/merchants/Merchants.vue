@@ -391,9 +391,7 @@ export default {
       const r = await Merchants.create()
       if (r.status === 200) {
         // router navigate here
-        // this.editMerchantId = parseInt(r.data.merchantid)
-        this.updateQueryState()
-        this.$forceUpdate()
+        this.editMerchantList(r.data.merchantid)
       }
     },
 
