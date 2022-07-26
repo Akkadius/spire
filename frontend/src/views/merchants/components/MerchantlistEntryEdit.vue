@@ -107,14 +107,15 @@
           <content-flag-selector
             v-if="field.fType === 'content-flag'"
             :value="editMerchantEntry[field.field]"
-            @input="editMerchantEntry[field.field] = $event; rerender = Date.now()"
-            :key="rerender"
+            @input="editMerchantEntry[field.field] = $event; rerenderContentFlags = Date.now()"
+            :key="rerenderContentFlags"
           />
 
           <content-expansion-selector
             v-if="field.fType === 'content-expansion'"
             :value="editMerchantEntry[field.field]"
-            @input="editMerchantEntry[field.field] = $event;"
+            @input="editMerchantEntry[field.field] = $event; rerenderExpansion = Date.now()"
+            :key="rerenderExpansion"
           />
 
         </div>
@@ -176,8 +177,9 @@ export default {
       notification: "",
       error: "",
 
-      // rerender property
-      rerender: 0,
+      // rerender properties
+      rerenderContentFlags: 0,
+      rerenderExpansion: 0,
 
       // fields
       editMerchantEntryFields: [

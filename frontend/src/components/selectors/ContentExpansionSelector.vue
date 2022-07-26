@@ -45,6 +45,7 @@ export default {
   },
   methods: {
     selectExpansion(expansion) {
+      console.log("select expansion [%s] value [%s]", expansion, this.value)
       expansion = parseInt(expansion)
       // loop avoidance - keep from circular updating
       if (this.value !== expansion) {
