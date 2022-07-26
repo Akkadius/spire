@@ -203,7 +203,7 @@ export default {
         { desc: "Faction Requirement", field: "faction_required", fType: "text" },
         { desc: "Level Requirement", field: "level_required", fType: "text" },
         { desc: "Alternate Currency Cost", field: "alt_currency_cost", fType: "text" },
-        { desc: "Classes Required", field: "classes_required", fType: "classes" },
+        { desc: "Enabled with Classes", field: "classes_required", fType: "classes" },
         { desc: "Probability", field: "probability", fType: "text" },
         { desc: "Min Expansion", field: "min_expansion", fType: "content-expansion" },
         { desc: "Max Expansion", field: "max_expansion", fType: "content-expansion" },
@@ -219,6 +219,7 @@ export default {
      */
     getFieldDescription(field) {
       const descriptions = {
+        "classes_required": "This Merchant entry is enabled the client falls within the classes selected",
         "min_expansion": "This Merchant entry is enabled when the server's current expansion is above this value if not -1",
         "max_expansion": "This Merchant entry is enabled when the server's current expansion is below this value if not -1",
         "content_flags": "This Merchant entry is enabled when these content flags are enabled on the server",
