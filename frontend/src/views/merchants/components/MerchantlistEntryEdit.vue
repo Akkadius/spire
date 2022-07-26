@@ -109,6 +109,7 @@
             :value="editMerchantEntry[field.field]"
             @input="editMerchantEntry[field.field] = $event; rerenderContentFlags = Date.now()"
             :key="rerenderContentFlags"
+            v-b-tooltip.hover.v-dark.right :title="getFieldDescription(field.field)"
           />
 
           <content-expansion-selector
@@ -116,6 +117,20 @@
             :value="editMerchantEntry[field.field]"
             @input="editMerchantEntry[field.field] = $event; rerenderExpansion = Date.now()"
             :key="rerenderExpansion"
+            v-b-tooltip.hover.v-dark.right :title="getFieldDescription(field.field)"
+          />
+
+          <class-bitmask-calculator
+            v-if="field.fType === 'classes'"
+            style="border-radius: 15px; min-height: 150px;"
+            class="text-center mt-3"
+            :show-text-top="false"
+            :show-text-side="true"
+            :imageSize="38"
+            :centered-buttons="true"
+            @input="editMerchantEntry[field.field] = parseInt($event); rerenderClasses = Date.now()"
+            :key="rerenderClasses"
+            :mask="editMerchantEntry[field.field]"
           />
 
         </div>
@@ -156,10 +171,11 @@ import {Merchants}              from "../../../app/merchants";
 import InfoErrorBanner          from "../../../components/InfoErrorBanner";
 import ContentFlagSelector      from "../../../components/selectors/ContentFlagSelector";
 import ContentExpansionSelector from "../../../components/selectors/ContentExpansionSelector";
+import ClassBitmaskCalculator   from "../../../components/tools/ClassBitmaskCalculator";
 
 export default {
   name: "MerchantlistEntryEdit",
-  components: { ContentExpansionSelector, ContentFlagSelector, InfoErrorBanner, EqCheckbox, EqWindow, EqDebug },
+  components: { ClassBitmaskCalculator, ContentExpansionSelector, ContentFlagSelector, InfoErrorBanner, EqCheckbox, EqWindow, EqDebug },
   props: {
     editMerchantEntry: {
       type: Object,
@@ -180,13 +196,14 @@ export default {
       // rerender properties
       rerenderContentFlags: 0,
       rerenderExpansion: 0,
+      rerenderClasses: 0,
 
       // fields
       editMerchantEntryFields: [
         { desc: "Faction Requirement", field: "faction_required", fType: "text" },
         { desc: "Level Requirement", field: "level_required", fType: "text" },
         { desc: "Alternate Currency Cost", field: "alt_currency_cost", fType: "text" },
-        { desc: "Classes Required", field: "classes_required", fType: "text" },
+        { desc: "Classes Required", field: "classes_required", fType: "classes" },
         { desc: "Probability", field: "probability", fType: "text" },
         { desc: "Min Expansion", field: "min_expansion", fType: "content-expansion" },
         { desc: "Max Expansion", field: "max_expansion", fType: "content-expansion" },
@@ -197,18 +214,28 @@ export default {
   },
   methods: {
 
-    // need to force update to re-propogate object update to the component
-    handleContentFlagUpdate(field, e) {
-      console.log("[handleContentFlagUpdate] field [%s] val [%s]", field, e)
-      this.editMerchantEntry[field] = e
-      this.$forceUpdate()
-    },
-
     /**
      * Misc
      */
     getFieldDescription(field) {
-      return ""
+      const descriptions = {
+        "min_expansion": "This Merchant entry is enabled when the server's current expansion is above this value if not -1",
+        "max_expansion": "This Merchant entry is enabled when the server's current expansion is below this value if not -1",
+        "content_flags": "This Merchant entry is enabled when these content flags are enabled on the server",
+        "content_flags_disabled": "This Merchant entry is enabled when these content flags are disabled on the server",
+        "probability": "This Merchant entry is enabled on successful roll on the spawn of the Merchant (0-100%)",
+      }
+
+      // we do this because the payload we get back from spire API is
+      // formatted slightly different
+      let fieldLookup = field.toLowerCase().replace("_", "")
+
+      for (let key in descriptions) {
+        let keyLookup = key.toLowerCase().replace("_", "")
+        if (keyLookup === fieldLookup) {
+          return descriptions[key]
+        }
+      }
     },
 
 
