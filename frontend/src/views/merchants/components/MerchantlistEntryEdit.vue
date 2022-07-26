@@ -104,8 +104,37 @@
             </option>
           </select>
 
+          <content-flag-selector
+            v-if="field.fType === 'content-flag'"
+            :value="editMerchantEntry[field.field]"
+            @input="editMerchantEntry[field.field] = $event; rerender = Date.now()"
+            :key="rerender"
+          />
+
         </div>
       </div>
+
+      <!-- Save -->
+      <div class="row">
+        <div class="col-12 text-center mt-3">
+          <b-button
+            @click="save()"
+            size="sm"
+            variant="outline-warning"
+          >
+            <i class="ra ra-save"></i>
+            Save
+          </b-button>
+        </div>
+      </div>
+
+      <!-- Notification / Error -->
+      <info-error-banner
+        :notification="notification"
+        :error="error"
+        @dismiss-error="error = ''"
+        @dismiss-notification="notification = ''"
+      />
 
       <eq-debug :data="editMerchantEntry"/>
     </eq-window>
@@ -113,12 +142,16 @@
 </template>
 
 <script>
-import EqDebug    from "../../../components/eq-ui/EQDebug";
-import EqWindow   from "../../../components/eq-ui/EQWindow";
-import EqCheckbox from "../../../components/eq-ui/EQCheckbox";
+import EqDebug             from "../../../components/eq-ui/EQDebug";
+import EqWindow            from "../../../components/eq-ui/EQWindow";
+import EqCheckbox          from "../../../components/eq-ui/EQCheckbox";
+import {Merchants}         from "../../../app/merchants";
+import InfoErrorBanner     from "../../../components/InfoErrorBanner";
+import ContentFlagSelector from "../../../components/selectors/ContentFlagSelector";
+
 export default {
   name: "MerchantlistEntryEdit",
-  components: { EqCheckbox, EqWindow, EqDebug },
+  components: { ContentFlagSelector, InfoErrorBanner, EqCheckbox, EqWindow, EqDebug },
   props: {
     editMerchantEntry: {
       type: Object,
@@ -131,6 +164,15 @@ export default {
   },
   data() {
     return {
+
+      // local notification / error state
+      notification: "",
+      error: "",
+
+      // rerender property
+      rerender: 0,
+
+      // fields
       editMerchantEntryFields: [
         { desc: "Faction Requirement", field: "faction_required", fType: "text" },
         { desc: "Level Requirement", field: "level_required", fType: "text" },
@@ -139,18 +181,53 @@ export default {
         { desc: "Probability", field: "probability", fType: "text" },
         { desc: "Min Expansion", field: "min_expansion", fType: "text" },
         { desc: "Max Expansion", field: "max_expansion", fType: "text" },
-        { desc: "Content Flags", field: "content_flags", fType: "text" },
-        { desc: "Content Flags Disabled", field: "content_flags_disabled", fType: "text" },
+        { desc: "Enabled on Content Flag(s)", field: "content_flags", fType: "content-flag" },
+        { desc: "Disabled on Content Flag(s)", field: "content_flags_disabled", fType: "content-flag" },
       ],
     }
   },
   methods: {
+
+    // need to force update to re-propogate object update to the component
+    handleContentFlagUpdate(field, e) {
+      console.log("[handleContentFlagUpdate] field [%s] val [%s]", field, e)
+      this.editMerchantEntry[field] = e
+      this.$forceUpdate()
+    },
+
     /**
      * Misc
      */
     getFieldDescription(field) {
       return ""
     },
+
+
+    /**
+     * Save
+     */
+    async save() {
+      let e = this.editMerchantEntry
+
+      // test error
+      // e.classes_required = 909032540354
+
+      try {
+        const r = await Merchants.updateSlotForEntry(
+          e.merchantid,
+          e.slot,
+          e
+        )
+        if (r.status === 200) {
+          this.notification = `Saved!`
+        }
+      } catch (err) {
+        console.log(err)
+        if (err.response && err.response.data && err.response.data.error) {
+          this.error = err.response.data.error
+        }
+      }
+    }
 
   }
 }
