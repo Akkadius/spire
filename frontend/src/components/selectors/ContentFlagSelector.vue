@@ -3,7 +3,7 @@
     <b-form-group label-for="tags-component-select" class="mb-0">
       <!-- Prop `add-on-change` is needed to enable adding tags vie the `change` event -->
 
-<!--      {{inputVal}}-->
+      <!--      {{inputVal}}-->
       <b-form-tags
         id="tags-component-select"
         v-model="inputVal"
@@ -32,7 +32,8 @@
           >
             <template #first>
               <!-- This is required to prevent bugs with Safari -->
-              <option disabled value="">{{availableOptions.length === 0 ? 'All Flags Selected' : 'Add a flag...'}}</option>
+              <option disabled value="">{{ availableOptions.length === 0 ? 'All Flags Selected' : 'Add a flag...' }}
+              </option>
             </template>
           </b-form-select>
         </template>
@@ -42,8 +43,7 @@
 </template>
 
 <script>
-import {ContentFlagApi} from "../../app/api";
-import {SpireApiClient} from "../../app/api/spire-api-client";
+import {ContentFlags} from "../../app/content-flags";
 
 export default {
   name: "ContentFlagSelector",
@@ -59,13 +59,11 @@ export default {
   async mounted() {
     // @ts-ignore
     let flags = []
-    const r   = await (new ContentFlagApi(SpireApiClient.getOpenApiConfig())).listContentFlags()
-    if (r.status === 200) {
-      for (let f of r.data) {
-        flags.push(f.flag_name)
-      }
-      this.options = flags
+
+    for (let f of await ContentFlags.get()) {
+      flags.push(f.flag_name)
     }
+    this.options = flags
     this.calcAvailableOptions()
   },
   methods: {
