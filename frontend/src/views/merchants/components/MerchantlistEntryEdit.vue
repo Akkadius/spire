@@ -111,6 +111,12 @@
             :key="rerender"
           />
 
+          <content-expansion-selector
+            v-if="field.fType === 'content-expansion'"
+            :value="editMerchantEntry[field.field]"
+            @input="editMerchantEntry[field.field] = $event;"
+          />
+
         </div>
       </div>
 
@@ -142,16 +148,17 @@
 </template>
 
 <script>
-import EqDebug             from "../../../components/eq-ui/EQDebug";
-import EqWindow            from "../../../components/eq-ui/EQWindow";
-import EqCheckbox          from "../../../components/eq-ui/EQCheckbox";
-import {Merchants}         from "../../../app/merchants";
-import InfoErrorBanner     from "../../../components/InfoErrorBanner";
-import ContentFlagSelector from "../../../components/selectors/ContentFlagSelector";
+import EqDebug                  from "../../../components/eq-ui/EQDebug";
+import EqWindow                 from "../../../components/eq-ui/EQWindow";
+import EqCheckbox               from "../../../components/eq-ui/EQCheckbox";
+import {Merchants}              from "../../../app/merchants";
+import InfoErrorBanner          from "../../../components/InfoErrorBanner";
+import ContentFlagSelector      from "../../../components/selectors/ContentFlagSelector";
+import ContentExpansionSelector from "../../../components/selectors/ContentExpansionSelector";
 
 export default {
   name: "MerchantlistEntryEdit",
-  components: { ContentFlagSelector, InfoErrorBanner, EqCheckbox, EqWindow, EqDebug },
+  components: { ContentExpansionSelector, ContentFlagSelector, InfoErrorBanner, EqCheckbox, EqWindow, EqDebug },
   props: {
     editMerchantEntry: {
       type: Object,
@@ -179,8 +186,8 @@ export default {
         { desc: "Alternate Currency Cost", field: "alt_currency_cost", fType: "text" },
         { desc: "Classes Required", field: "classes_required", fType: "text" },
         { desc: "Probability", field: "probability", fType: "text" },
-        { desc: "Min Expansion", field: "min_expansion", fType: "text" },
-        { desc: "Max Expansion", field: "max_expansion", fType: "text" },
+        { desc: "Min Expansion", field: "min_expansion", fType: "content-expansion" },
+        { desc: "Max Expansion", field: "max_expansion", fType: "content-expansion" },
         { desc: "Enabled on Content Flag(s)", field: "content_flags", fType: "content-flag" },
         { desc: "Disabled on Content Flag(s)", field: "content_flags_disabled", fType: "content-flag" },
       ],

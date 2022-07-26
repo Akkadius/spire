@@ -16,6 +16,10 @@ export default class Expansions {
       return EXPANSION_NAMES[expansionId]
     }
 
+    if (expansionId === -1) {
+      return 'All'
+    }
+
     // return unknown expansion if not found
     return 'Unknown'
   }
