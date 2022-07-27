@@ -72,6 +72,27 @@
             :style="(editMerchantEntry[field.field] <= (typeof field.zeroValue !== 'undefined' ? field.zeroValue : 0) ? 'opacity: .5' : '')"
           />
 
+          <!-- range -->
+          <b-form-input
+            v-if="field.fType === 'range'"
+            type="range"
+            :id="field.field"
+            :min="field.min"
+            :max="field.max"
+            style="width: 80%"
+            v-model.number="editMerchantEntry[field.field]"
+            class="m-0 mt-1 d-inline-block"
+            v-on="field.e ? getEventHandlers(field.e, field.field) : {}"
+            v-b-tooltip.hover.v-dark.right :title="getFieldDescription(field.field)"
+            :style="(editMerchantEntry[field.field] <= (typeof field.zeroValue !== 'undefined' ? field.zeroValue : 0) ? 'opacity: .5' : '')"
+            @change="rerenderProbability = Date.now()"
+            :key="rerenderProbability"
+          />
+
+          <div v-if="field.fType === 'range'" class="d-inline-block ml-3" :key="rerenderProbability + '-visual'">
+            ({{editMerchantEntry[field.field]}}) %
+          </div>
+
           <!-- textarea -->
           <b-textarea
             v-if="field.fType === 'textarea'"
@@ -197,6 +218,7 @@ export default {
       rerenderContentFlags: 0,
       rerenderExpansion: 0,
       rerenderClasses: 0,
+      rerenderProbability: 0,
 
       // fields
       editMerchantEntryFields: [
@@ -204,7 +226,7 @@ export default {
         { desc: "Level Requirement", field: "level_required", fType: "text" },
         { desc: "Alternate Currency Cost", field: "alt_currency_cost", fType: "text" },
         { desc: "Enabled with Classes", field: "classes_required", fType: "classes" },
-        { desc: "Probability", field: "probability", fType: "text" },
+        { desc: "Probability", field: "probability", fType: "range", min: 0, max: 100 },
         { desc: "Min Expansion", field: "min_expansion", fType: "content-expansion" },
         { desc: "Max Expansion", field: "max_expansion", fType: "content-expansion" },
         { desc: "Enabled on Content Flag(s)", field: "content_flags", fType: "content-flag" },
