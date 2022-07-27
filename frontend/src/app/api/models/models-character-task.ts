@@ -50,6 +50,12 @@ export interface ModelsCharacterTask {
      * @memberof ModelsCharacterTask
      */
     type?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof ModelsCharacterTask
+     */
+    was_rewarded?: number;
 }
 
 

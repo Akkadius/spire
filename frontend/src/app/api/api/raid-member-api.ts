@@ -234,13 +234,14 @@ export const RaidMemberApiAxiosParamCreator = function (configuration?: Configur
          * @param {string} [whereOr] Filter on specific fields (Chained ors). Multiple conditions [.] separated Example: col_like_value.col2__val2
          * @param {string} [groupBy] Group by field. Multiple conditions [.] separated Example: field1.field2
          * @param {string} [limit] Rows to limit in response (Default: 10,000)
+         * @param {number} [page] Pagination page
          * @param {string} [orderBy] Order by [field]
          * @param {string} [orderDirection] Order by field direction
          * @param {string} [select] Column names [.] separated to fetch specific fields in response
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        listRaidMembers: async (includes?: string, where?: string, whereOr?: string, groupBy?: string, limit?: string, orderBy?: string, orderDirection?: string, select?: string, options: any = {}): Promise<RequestArgs> => {
+        listRaidMembers: async (includes?: string, where?: string, whereOr?: string, groupBy?: string, limit?: string, page?: number, orderBy?: string, orderDirection?: string, select?: string, options: any = {}): Promise<RequestArgs> => {
             const localVarPath = `/raid_members`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, 'https://example.com');
@@ -271,6 +272,10 @@ export const RaidMemberApiAxiosParamCreator = function (configuration?: Configur
 
             if (limit !== undefined) {
                 localVarQueryParameter['limit'] = limit;
+            }
+
+            if (page !== undefined) {
+                localVarQueryParameter['page'] = page;
             }
 
             if (orderBy !== undefined) {
@@ -435,14 +440,15 @@ export const RaidMemberApiFp = function(configuration?: Configuration) {
          * @param {string} [whereOr] Filter on specific fields (Chained ors). Multiple conditions [.] separated Example: col_like_value.col2__val2
          * @param {string} [groupBy] Group by field. Multiple conditions [.] separated Example: field1.field2
          * @param {string} [limit] Rows to limit in response (Default: 10,000)
+         * @param {number} [page] Pagination page
          * @param {string} [orderBy] Order by [field]
          * @param {string} [orderDirection] Order by field direction
          * @param {string} [select] Column names [.] separated to fetch specific fields in response
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async listRaidMembers(includes?: string, where?: string, whereOr?: string, groupBy?: string, limit?: string, orderBy?: string, orderDirection?: string, select?: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<ModelsRaidMember>>> {
-            const localVarAxiosArgs = await RaidMemberApiAxiosParamCreator(configuration).listRaidMembers(includes, where, whereOr, groupBy, limit, orderBy, orderDirection, select, options);
+        async listRaidMembers(includes?: string, where?: string, whereOr?: string, groupBy?: string, limit?: string, page?: number, orderBy?: string, orderDirection?: string, select?: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<ModelsRaidMember>>> {
+            const localVarAxiosArgs = await RaidMemberApiAxiosParamCreator(configuration).listRaidMembers(includes, where, whereOr, groupBy, limit, page, orderBy, orderDirection, select, options);
             return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
                 const axiosRequestArgs = {...localVarAxiosArgs.options, url: (configuration?.basePath || basePath) + localVarAxiosArgs.url};
                 return axios.request(axiosRequestArgs);
@@ -522,14 +528,15 @@ export const RaidMemberApiFactory = function (configuration?: Configuration, bas
          * @param {string} [whereOr] Filter on specific fields (Chained ors). Multiple conditions [.] separated Example: col_like_value.col2__val2
          * @param {string} [groupBy] Group by field. Multiple conditions [.] separated Example: field1.field2
          * @param {string} [limit] Rows to limit in response (Default: 10,000)
+         * @param {number} [page] Pagination page
          * @param {string} [orderBy] Order by [field]
          * @param {string} [orderDirection] Order by field direction
          * @param {string} [select] Column names [.] separated to fetch specific fields in response
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        listRaidMembers(includes?: string, where?: string, whereOr?: string, groupBy?: string, limit?: string, orderBy?: string, orderDirection?: string, select?: string, options?: any): AxiosPromise<Array<ModelsRaidMember>> {
-            return RaidMemberApiFp(configuration).listRaidMembers(includes, where, whereOr, groupBy, limit, orderBy, orderDirection, select, options).then((request) => request(axios, basePath));
+        listRaidMembers(includes?: string, where?: string, whereOr?: string, groupBy?: string, limit?: string, page?: number, orderBy?: string, orderDirection?: string, select?: string, options?: any): AxiosPromise<Array<ModelsRaidMember>> {
+            return RaidMemberApiFp(configuration).listRaidMembers(includes, where, whereOr, groupBy, limit, page, orderBy, orderDirection, select, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -657,6 +664,13 @@ export interface RaidMemberApiListRaidMembersRequest {
     readonly limit?: string
 
     /**
+     * Pagination page
+     * @type {number}
+     * @memberof RaidMemberApiListRaidMembers
+     */
+    readonly page?: number
+
+    /**
      * Order by [field]
      * @type {string}
      * @memberof RaidMemberApiListRaidMembers
@@ -763,7 +777,7 @@ export class RaidMemberApi extends BaseAPI {
      * @memberof RaidMemberApi
      */
     public listRaidMembers(requestParameters: RaidMemberApiListRaidMembersRequest = {}, options?: any) {
-        return RaidMemberApiFp(this.configuration).listRaidMembers(requestParameters.includes, requestParameters.where, requestParameters.whereOr, requestParameters.groupBy, requestParameters.limit, requestParameters.orderBy, requestParameters.orderDirection, requestParameters.select, options).then((request) => request(this.axios, this.basePath));
+        return RaidMemberApiFp(this.configuration).listRaidMembers(requestParameters.includes, requestParameters.where, requestParameters.whereOr, requestParameters.groupBy, requestParameters.limit, requestParameters.page, requestParameters.orderBy, requestParameters.orderDirection, requestParameters.select, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**

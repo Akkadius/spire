@@ -208,6 +208,21 @@ export class Merchants {
     return []
   }
 
+  static async getTotalMerchants() {
+    const r = await (new MerchantlistApi(SpireApiClient.getOpenApiConfig()))
+      .listMerchantlists(
+        // @ts-ignore
+        (new SpireQueryBuilder())
+          .groupBy(["merchantid"])
+          .orderBy(["merchantid"])
+          .orderDirection("desc")
+          .limit(100000000)
+          .get()
+      )
+
+    return r.data.length
+  }
+
   static async updateSlotForEntry(merchantId: number, currentSlot: number, destinationEntry: any) {
     let request = (new SpireQueryBuilder())
       .where("merchantid", "=", merchantId)

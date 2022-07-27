@@ -234,13 +234,14 @@ export const NpcEmoteApiAxiosParamCreator = function (configuration?: Configurat
          * @param {string} [whereOr] Filter on specific fields (Chained ors). Multiple conditions [.] separated Example: col_like_value.col2__val2
          * @param {string} [groupBy] Group by field. Multiple conditions [.] separated Example: field1.field2
          * @param {string} [limit] Rows to limit in response (Default: 10,000)
+         * @param {number} [page] Pagination page
          * @param {string} [orderBy] Order by [field]
          * @param {string} [orderDirection] Order by field direction
          * @param {string} [select] Column names [.] separated to fetch specific fields in response
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        listNpcEmotes: async (includes?: string, where?: string, whereOr?: string, groupBy?: string, limit?: string, orderBy?: string, orderDirection?: string, select?: string, options: any = {}): Promise<RequestArgs> => {
+        listNpcEmotes: async (includes?: string, where?: string, whereOr?: string, groupBy?: string, limit?: string, page?: number, orderBy?: string, orderDirection?: string, select?: string, options: any = {}): Promise<RequestArgs> => {
             const localVarPath = `/npc_emotes`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, 'https://example.com');
@@ -271,6 +272,10 @@ export const NpcEmoteApiAxiosParamCreator = function (configuration?: Configurat
 
             if (limit !== undefined) {
                 localVarQueryParameter['limit'] = limit;
+            }
+
+            if (page !== undefined) {
+                localVarQueryParameter['page'] = page;
             }
 
             if (orderBy !== undefined) {
@@ -435,14 +440,15 @@ export const NpcEmoteApiFp = function(configuration?: Configuration) {
          * @param {string} [whereOr] Filter on specific fields (Chained ors). Multiple conditions [.] separated Example: col_like_value.col2__val2
          * @param {string} [groupBy] Group by field. Multiple conditions [.] separated Example: field1.field2
          * @param {string} [limit] Rows to limit in response (Default: 10,000)
+         * @param {number} [page] Pagination page
          * @param {string} [orderBy] Order by [field]
          * @param {string} [orderDirection] Order by field direction
          * @param {string} [select] Column names [.] separated to fetch specific fields in response
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async listNpcEmotes(includes?: string, where?: string, whereOr?: string, groupBy?: string, limit?: string, orderBy?: string, orderDirection?: string, select?: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<ModelsNpcEmote>>> {
-            const localVarAxiosArgs = await NpcEmoteApiAxiosParamCreator(configuration).listNpcEmotes(includes, where, whereOr, groupBy, limit, orderBy, orderDirection, select, options);
+        async listNpcEmotes(includes?: string, where?: string, whereOr?: string, groupBy?: string, limit?: string, page?: number, orderBy?: string, orderDirection?: string, select?: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<ModelsNpcEmote>>> {
+            const localVarAxiosArgs = await NpcEmoteApiAxiosParamCreator(configuration).listNpcEmotes(includes, where, whereOr, groupBy, limit, page, orderBy, orderDirection, select, options);
             return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
                 const axiosRequestArgs = {...localVarAxiosArgs.options, url: (configuration?.basePath || basePath) + localVarAxiosArgs.url};
                 return axios.request(axiosRequestArgs);
@@ -522,14 +528,15 @@ export const NpcEmoteApiFactory = function (configuration?: Configuration, baseP
          * @param {string} [whereOr] Filter on specific fields (Chained ors). Multiple conditions [.] separated Example: col_like_value.col2__val2
          * @param {string} [groupBy] Group by field. Multiple conditions [.] separated Example: field1.field2
          * @param {string} [limit] Rows to limit in response (Default: 10,000)
+         * @param {number} [page] Pagination page
          * @param {string} [orderBy] Order by [field]
          * @param {string} [orderDirection] Order by field direction
          * @param {string} [select] Column names [.] separated to fetch specific fields in response
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        listNpcEmotes(includes?: string, where?: string, whereOr?: string, groupBy?: string, limit?: string, orderBy?: string, orderDirection?: string, select?: string, options?: any): AxiosPromise<Array<ModelsNpcEmote>> {
-            return NpcEmoteApiFp(configuration).listNpcEmotes(includes, where, whereOr, groupBy, limit, orderBy, orderDirection, select, options).then((request) => request(axios, basePath));
+        listNpcEmotes(includes?: string, where?: string, whereOr?: string, groupBy?: string, limit?: string, page?: number, orderBy?: string, orderDirection?: string, select?: string, options?: any): AxiosPromise<Array<ModelsNpcEmote>> {
+            return NpcEmoteApiFp(configuration).listNpcEmotes(includes, where, whereOr, groupBy, limit, page, orderBy, orderDirection, select, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -657,6 +664,13 @@ export interface NpcEmoteApiListNpcEmotesRequest {
     readonly limit?: string
 
     /**
+     * Pagination page
+     * @type {number}
+     * @memberof NpcEmoteApiListNpcEmotes
+     */
+    readonly page?: number
+
+    /**
      * Order by [field]
      * @type {string}
      * @memberof NpcEmoteApiListNpcEmotes
@@ -763,7 +777,7 @@ export class NpcEmoteApi extends BaseAPI {
      * @memberof NpcEmoteApi
      */
     public listNpcEmotes(requestParameters: NpcEmoteApiListNpcEmotesRequest = {}, options?: any) {
-        return NpcEmoteApiFp(this.configuration).listNpcEmotes(requestParameters.includes, requestParameters.where, requestParameters.whereOr, requestParameters.groupBy, requestParameters.limit, requestParameters.orderBy, requestParameters.orderDirection, requestParameters.select, options).then((request) => request(this.axios, this.basePath));
+        return NpcEmoteApiFp(this.configuration).listNpcEmotes(requestParameters.includes, requestParameters.where, requestParameters.whereOr, requestParameters.groupBy, requestParameters.limit, requestParameters.page, requestParameters.orderBy, requestParameters.orderDirection, requestParameters.select, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**

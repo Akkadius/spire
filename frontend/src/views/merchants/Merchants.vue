@@ -151,9 +151,10 @@
         <eq-window
           v-if="!loading && merchantLists && merchantLists.length > 0"
           class="p-2 mt-5"
-          :title="'Merchants (' + merchantLists.length + ')'"
+          :title="'Merchants (' + totalRows + ')'"
         >
-          <div style="overflow-y: scroll; max-height: 83vh">
+          <div style="overflow-y: scroll; max-height: 77vh">
+
             <table
               class="eq-table bordered eq-highlight-rows"
               style="font-size: 14px; "
@@ -170,7 +171,7 @@
               <tr
                 v-for="(m, index) in merchantLists"
                 :id="'ml-' + m.merchantid"
-                :key="index"
+                :key="'ml-' + m.merchantid"
                 :class="(isActiveMerchant(m) ? 'pulsate-highlight-white' : '')"
                 @click="showMerchantList(m)"
               >
@@ -218,7 +219,22 @@
               </tr>
               </tbody>
             </table>
+
           </div>
+
+          <div class="row text-center">
+            <div class="col-12 mt-3">
+              <b-pagination
+                class="text-center mb-1"
+                v-model="currentPage"
+                :total-rows="totalRows"
+                hide-ellipsis="true"
+                :per-page="100"
+                @change="paginate"
+              />
+            </div>
+          </div>
+
         </eq-window>
       </div>
 
@@ -351,6 +367,10 @@ export default {
   data() {
     return {
 
+      // pagination (all)
+      currentPage: 1,
+      totalRows: 0,
+
       // selection
       search: "",
       searchItemName: "",
@@ -382,6 +402,17 @@ export default {
     },
   },
   methods: {
+
+    paginate() {
+      // models aren't quite updated when we trigger this so queue the pagination
+      setTimeout(() => {
+        console.log("We're paginating")
+        console.log(this.currentPage)
+        console.log(this.totalRows)
+        this.updateQueryState()
+      }, 100)
+
+    },
 
     isNavigated() {
       return Object.keys(this.$route.query).length
@@ -454,6 +485,9 @@ export default {
       if (this.showAll) {
         queryState.showAll = this.showAll
       }
+      if (this.currentPage > 0) {
+        queryState.page = this.currentPage
+      }
       if (this.search !== '') {
         queryState.q = this.search
       }
@@ -479,6 +513,9 @@ export default {
       }
       if (typeof this.$route.query.s !== 'undefined' && this.$route.query.s !== '') {
         this.searchItemName = this.$route.query.s;
+      }
+      if (typeof this.$route.query.page !== 'undefined' && parseInt(this.$route.query.page) !== 0) {
+        this.currentPage = parseInt(this.$route.query.page);
       }
       if (typeof this.$route.query.showAll !== 'undefined' && this.$route.query.showAll) {
         this.showAll = true;
@@ -515,6 +552,11 @@ export default {
 
     async showAllMerchants() {
       console.log("show all")
+
+      if (this.totalRows === 0) {
+        this.totalRows = await Merchants.getTotalMerchants()
+      }
+
       // @ts-ignore
       const r = await (new MerchantlistApi(SpireApiClient.getOpenApiConfig()))
         .listMerchantlists(
@@ -523,7 +565,8 @@ export default {
             .groupBy(["merchantid"])
             .orderBy(["merchantid"])
             .orderDirection("desc")
-            .limit(100000)
+            .limit(100)
+            .page(this.currentPage)
             .get()
         )
 
