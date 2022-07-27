@@ -222,13 +222,13 @@
 
           </div>
 
-          <div class="row text-center">
-            <div class="col-12 mt-3">
+          <div class="row text-center justify-content-center">
+            <div class="col-12 text-center mt-3">
               <b-pagination
-                class="text-center mb-1"
+                class="mb-1"
                 v-model="currentPage"
                 :total-rows="totalRows"
-                hide-ellipsis="true"
+                :hide-ellipsis="true"
                 :per-page="100"
                 @change="paginate"
               />

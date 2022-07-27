@@ -399,6 +399,9 @@ th[role=columnheader]:hover:not(.no-sort):after {
 /*pagination*/
 .pagination .page-item {
     color: transparent;
+}
+
+.pagination {
     display: inline-flex;
 }
 
