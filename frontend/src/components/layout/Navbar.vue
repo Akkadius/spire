@@ -172,7 +172,7 @@
 
           <li class="nav-item">
             <a class="nav-link " :href="backendBaseUrl + '/swagger/index.html'" target="swagger">
-              <i class="ra ra-book mr-2"></i> Spire API
+              <i class="ra ra-book mr-1"></i> Spire API
             </a>
           </li>
 
@@ -183,7 +183,7 @@
               href="#sidebarComponents" data-toggle="collapse" role="button"
               aria-expanded="false" aria-controls="sidebarComponents"
             >
-              <i class="fe fe-book-open mr-1"></i> Components
+              <i class="ra ra-burst-blob mr-1"></i> Components
             </a>
             <div :class="'collapse ' + (hasRoute('components') ? 'show' : '')" id="sidebarComponents">
               <ul class="nav nav-sm flex-column">
