@@ -119,7 +119,7 @@
 
           <li class="nav-item" v-if="alphaEnabled">
             <router-link class="nav-link " to="/merchants">
-              <i class="ra ra-emerald mr-2"></i> Merchants
+              <i class="ra ra-emerald mr-1"></i> Merchants
               <b-badge class="ml-3" variant="primary">ALPHA</b-badge>
               <b-badge class="ml-3" variant="primary">NEW!</b-badge>
             </router-link>
@@ -127,7 +127,7 @@
 
           <li class="nav-item">
             <router-link class="nav-link " to="/quest-api-explorer">
-              <i class="ra ra-compass mr-2"></i> Quest API Explorer
+              <i class="ra ra-compass mr-1"></i> Quest API Explorer
             </router-link>
           </li>
 
