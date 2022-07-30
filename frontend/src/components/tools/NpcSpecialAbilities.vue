@@ -562,7 +562,6 @@ export default {
       ability: {},
       abilityParams: null,
       debug: false,
-      propWatcher: null,
 
       checkboxAbilities: [
         { name: "Triple Attack", ability: 6 },
@@ -604,13 +603,18 @@ export default {
     // run calculator to update result
     this.calculateSpecialAbilities()
   },
+  watch: {
+    abilities: {
+      deep: true,
+      handler() {
+        this.drawValues()
+        this.calculateSpecialAbilities()
+      }
+    },
+  },
+
   activated() {
     this.calculateSpecialAbilities()
-
-    this.propWatcher = this.$watch("abilities", (newVal, oldVal) => {
-      this.drawValues()
-      this.calculateSpecialAbilities()
-    });
   },
   methods: {
     drawValues: function () {
