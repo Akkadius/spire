@@ -135,7 +135,13 @@
             Delete
           </b-button>
 
-          <b-alert show variant="warning" v-if="message" class="mt-4 mb-0 fade-in">{{ message }}</b-alert>
+          <!-- Notification / Error -->
+          <info-error-banner
+            :notification="notification"
+            :error="error"
+            @dismiss-error="error = ''"
+            @dismiss-notification="notification = ''"
+          />
 
         </eq-window-simple>
 
@@ -168,6 +174,7 @@ import {DB_STR_TYPES}      from "../../app/constants/eq-db-str-constants";
 import {EditFormFieldUtil} from "../../app/forms/edit-form-field-util";
 import util                from "util";
 import {SpireQueryBuilder} from "../../app/api/spire-query-builder";
+import InfoErrorBanner     from "../../components/InfoErrorBanner";
 
 // api response cache of all strings
 // this does not need to be reactive so don't put in data()
@@ -177,6 +184,7 @@ const DbStrApiClient = (new DbStrApi(SpireApiClient.getOpenApiConfig()))
 export default {
   name: "StringsDatabase",
   components: {
+    InfoErrorBanner,
     LoaderFakeProgress: LoaderFakeProgress,
     ContentArea,
     EqAutoTable,
@@ -194,7 +202,8 @@ export default {
       subSelectedId: -1,
       subSelectedType: -1,
 
-      message: "",
+      error: "",
+      notification: "",
 
       originalSelectedStringObject: {},
       selectedStringObject: {},
@@ -210,7 +219,7 @@ export default {
   watch: {
     '$route'() {
       console.log("route trigger")
-
+      this.reset()
       this.init()
     },
   },
@@ -230,7 +239,6 @@ export default {
     resetSelections() {
       this.subSelectedId   = -1;
       this.subSelectedType = -1;
-      this.message         = ""
     },
 
     /**
@@ -332,7 +340,7 @@ export default {
         }
       } catch (err) {
         if (err.response !== 200 && err.response.data.error) {
-          this.message = err.response.data.error
+          this.error = err.response.data.error
         }
       }
     },
@@ -372,6 +380,8 @@ export default {
             this.resetSelections()
             this.updateQueryState()
 
+            this.notification = "Deleted successfully"
+
             if (lastElement) {
               this.selectString(lastElement.id, this.subSelectedType)
             }
@@ -380,7 +390,7 @@ export default {
           }
         } catch (err) {
           if (err.response !== 200 && err.response.data.error) {
-            this.message = err.response.data.error
+            this.error = err.response.data.error
           }
         }
       }
@@ -397,9 +407,11 @@ export default {
             id: parseInt(this.originalSelectedStringObject.id),
             dbStr: this.selectedStringObject
           },
-          (new SpireQueryBuilder())
-            .where("type", "=", this.selectedType)
-            .get()
+          {
+            query: (new SpireQueryBuilder())
+              .where("type", "=", this.selectedType)
+              .get()
+          }
         )
 
         // success
@@ -408,15 +420,12 @@ export default {
 
           this.updateQueryState()
           await this.init(true)
-          this.message = "Saved successfully!"
-          setTimeout(() => {
-            this.message = ""
-          }, 6000)
+          this.notification = "Saved successfully!"
         }
 
       } catch (err) {
         if (err.response !== 200 && err.response.data.error) {
-          this.message = err.response.data.error
+          this.error = err.response.data.error
         }
       }
     },
@@ -450,7 +459,6 @@ export default {
      * Initialize
      */
     async init(reset = false) {
-      this.reset()
       this.loadQueryState()
       if (allStrings && allStrings.length === 0 || reset) {
         allStrings = await this.getAllDbStrings()
