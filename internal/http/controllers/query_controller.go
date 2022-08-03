@@ -28,6 +28,7 @@ func (q *QueryController) Routes() []*routes.Route {
 		routes.RegisterRoute(http.MethodGet, "query/schema/table/:table", q.getTableSchema, nil),
 		routes.RegisterRoute(http.MethodGet, "query/free-id-ranges/:table/:id", q.freeIdRanges, nil),
 		routes.RegisterRoute(http.MethodGet, "query/free-ids-reserved/:table/:id/:name", q.freeIdsReserved, nil),
+		routes.RegisterRoute(http.MethodGet, "query/expansion-stats", q.expansionStats, nil),
 	}
 }
 
@@ -188,4 +189,27 @@ func (q *QueryController) getModelFromString(s string) models.Modelable {
 	}
 
 	return models.Zone{}
+}
+
+func (q *QueryController) expansionStats(c echo.Context) error {
+	db, err := q.db.Get(q.getModelFromString("zone"), c).DB()
+	if err != nil {
+		q.logger.Warn(err)
+	}
+
+	// gather content tables
+	query := fmt.Sprintf(`SELECT TABLE_NAME, COLUMN_NAME, DATA_TYPE, IS_NULLABLE, COLUMN_DEFAULT FROM INFORMATION_SCHEMA.COLUMNS WHERE column_name LIKE 'min_expansion'`)
+	tableNames := []string{}
+	for _, m := range database.GenericQuery(db, query) {
+		tableNames = append(tableNames, m["TABLE_NAME"])
+	}
+
+	response := map[string][]map[string]string{}
+
+	for _, name := range tableNames {
+		q := fmt.Sprintf("select count(*) as count, min_expansion FROM %v WHERE `min_expansion` > -1 GROUP BY `min_expansion`", name)
+		response[name] = database.GenericQuery(db, q)
+	}
+
+	return c.JSON(http.StatusOK, echo.Map{"data": response})
 }

@@ -177,6 +177,11 @@ export default new Router({
           component: () => import('./views/Calculators.vue'),
           meta: {title: "Calculators"},
         },
+        {
+          path: '/expansions',
+          component: () => import('./views/Expansion.vue'),
+          meta: {title: "Expansions"},
+        },
       ]
     },
     {
