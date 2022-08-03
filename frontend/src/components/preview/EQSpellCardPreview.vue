@@ -131,12 +131,20 @@
 
       <tr v-if="spellData['in_combat'] === 0 && spellData['outof_combat'] !== 0">
         <td class="spell-field-label">Restriction</td>
-        <td> Out of Combat Only</td>
+        <td>
+          <span v-if="spellData['good_effect'] === 0"> Target must be Out of Combat </span>
+          <span v-if="spellData['good_effect'] === 1"> Caster must be Out of Combat </span>
+          <span v-if="spellData['good_effect'] === 2"> Caster must be Out of Combat </span>
+        </td>
       </tr>
 
       <tr v-if="spellData['in_combat'] !== 0 && spellData['outof_combat'] == 0">
         <td class="spell-field-label">Restriction</td>
-        <td> In Combat Only</td>
+        <td>
+          <span v-if="spellData['good_effect'] === 0"> Target must be In Combat </span>
+          <span v-if="spellData['good_effect'] === 1"> Caster must be In Combat </span>
+          <span v-if="spellData['good_effect'] === 2"> Caster must be In Combat </span>
+        </td>
       </tr>
 
       <tr v-if="spellData['field_234'] !== 0">
