@@ -234,13 +234,14 @@ export const CharacterAuraApiAxiosParamCreator = function (configuration?: Confi
          * @param {string} [whereOr] Filter on specific fields (Chained ors). Multiple conditions [.] separated Example: col_like_value.col2__val2
          * @param {string} [groupBy] Group by field. Multiple conditions [.] separated Example: field1.field2
          * @param {string} [limit] Rows to limit in response (Default: 10,000)
+         * @param {number} [page] Pagination page
          * @param {string} [orderBy] Order by [field]
          * @param {string} [orderDirection] Order by field direction
          * @param {string} [select] Column names [.] separated to fetch specific fields in response
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        listCharacterAuras: async (includes?: string, where?: string, whereOr?: string, groupBy?: string, limit?: string, orderBy?: string, orderDirection?: string, select?: string, options: any = {}): Promise<RequestArgs> => {
+        listCharacterAuras: async (includes?: string, where?: string, whereOr?: string, groupBy?: string, limit?: string, page?: number, orderBy?: string, orderDirection?: string, select?: string, options: any = {}): Promise<RequestArgs> => {
             const localVarPath = `/character_auras`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, 'https://example.com');
@@ -271,6 +272,10 @@ export const CharacterAuraApiAxiosParamCreator = function (configuration?: Confi
 
             if (limit !== undefined) {
                 localVarQueryParameter['limit'] = limit;
+            }
+
+            if (page !== undefined) {
+                localVarQueryParameter['page'] = page;
             }
 
             if (orderBy !== undefined) {
@@ -435,14 +440,15 @@ export const CharacterAuraApiFp = function(configuration?: Configuration) {
          * @param {string} [whereOr] Filter on specific fields (Chained ors). Multiple conditions [.] separated Example: col_like_value.col2__val2
          * @param {string} [groupBy] Group by field. Multiple conditions [.] separated Example: field1.field2
          * @param {string} [limit] Rows to limit in response (Default: 10,000)
+         * @param {number} [page] Pagination page
          * @param {string} [orderBy] Order by [field]
          * @param {string} [orderDirection] Order by field direction
          * @param {string} [select] Column names [.] separated to fetch specific fields in response
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async listCharacterAuras(includes?: string, where?: string, whereOr?: string, groupBy?: string, limit?: string, orderBy?: string, orderDirection?: string, select?: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<ModelsCharacterAura>>> {
-            const localVarAxiosArgs = await CharacterAuraApiAxiosParamCreator(configuration).listCharacterAuras(includes, where, whereOr, groupBy, limit, orderBy, orderDirection, select, options);
+        async listCharacterAuras(includes?: string, where?: string, whereOr?: string, groupBy?: string, limit?: string, page?: number, orderBy?: string, orderDirection?: string, select?: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<ModelsCharacterAura>>> {
+            const localVarAxiosArgs = await CharacterAuraApiAxiosParamCreator(configuration).listCharacterAuras(includes, where, whereOr, groupBy, limit, page, orderBy, orderDirection, select, options);
             return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
                 const axiosRequestArgs = {...localVarAxiosArgs.options, url: (configuration?.basePath || basePath) + localVarAxiosArgs.url};
                 return axios.request(axiosRequestArgs);
@@ -522,14 +528,15 @@ export const CharacterAuraApiFactory = function (configuration?: Configuration, 
          * @param {string} [whereOr] Filter on specific fields (Chained ors). Multiple conditions [.] separated Example: col_like_value.col2__val2
          * @param {string} [groupBy] Group by field. Multiple conditions [.] separated Example: field1.field2
          * @param {string} [limit] Rows to limit in response (Default: 10,000)
+         * @param {number} [page] Pagination page
          * @param {string} [orderBy] Order by [field]
          * @param {string} [orderDirection] Order by field direction
          * @param {string} [select] Column names [.] separated to fetch specific fields in response
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        listCharacterAuras(includes?: string, where?: string, whereOr?: string, groupBy?: string, limit?: string, orderBy?: string, orderDirection?: string, select?: string, options?: any): AxiosPromise<Array<ModelsCharacterAura>> {
-            return CharacterAuraApiFp(configuration).listCharacterAuras(includes, where, whereOr, groupBy, limit, orderBy, orderDirection, select, options).then((request) => request(axios, basePath));
+        listCharacterAuras(includes?: string, where?: string, whereOr?: string, groupBy?: string, limit?: string, page?: number, orderBy?: string, orderDirection?: string, select?: string, options?: any): AxiosPromise<Array<ModelsCharacterAura>> {
+            return CharacterAuraApiFp(configuration).listCharacterAuras(includes, where, whereOr, groupBy, limit, page, orderBy, orderDirection, select, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -657,6 +664,13 @@ export interface CharacterAuraApiListCharacterAurasRequest {
     readonly limit?: string
 
     /**
+     * Pagination page
+     * @type {number}
+     * @memberof CharacterAuraApiListCharacterAuras
+     */
+    readonly page?: number
+
+    /**
      * Order by [field]
      * @type {string}
      * @memberof CharacterAuraApiListCharacterAuras
@@ -763,7 +777,7 @@ export class CharacterAuraApi extends BaseAPI {
      * @memberof CharacterAuraApi
      */
     public listCharacterAuras(requestParameters: CharacterAuraApiListCharacterAurasRequest = {}, options?: any) {
-        return CharacterAuraApiFp(this.configuration).listCharacterAuras(requestParameters.includes, requestParameters.where, requestParameters.whereOr, requestParameters.groupBy, requestParameters.limit, requestParameters.orderBy, requestParameters.orderDirection, requestParameters.select, options).then((request) => request(this.axios, this.basePath));
+        return CharacterAuraApiFp(this.configuration).listCharacterAuras(requestParameters.includes, requestParameters.where, requestParameters.whereOr, requestParameters.groupBy, requestParameters.limit, requestParameters.page, requestParameters.orderBy, requestParameters.orderDirection, requestParameters.select, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**

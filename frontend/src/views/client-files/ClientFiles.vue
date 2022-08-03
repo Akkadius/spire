@@ -1,76 +1,60 @@
 <template>
-  <div>
-    <div class="row">
-      <div class="col-6">
-        <eq-window-simple title="Client File Dropzone">
-          <div class="mb-3 text-center" style="font-size: 16px">
-            <!--                <h3 class="mb-3 eq-header" style="font-size: 42px">-->
-            <!--                  Client File DropZone Upload-->
-            <!--                </h3>-->
-            <div v-for="file in ['dbstr_us.txt', 'spells_us.txt']"><b>{{ file }}</b></div>
+  <content-area class="text-center">
+    <eq-window-simple
+      title="Client File Drop Zone"
+      style="width: 700px"
+      class="mt-5"
+    >
+      <div
+        class="mb-3"
+        style="font-size: 16px"
+      >
 
-            <div class="mt-3">
-              <b>Warning</b> Files will immediately overwrite all database values
-            </div>
-
-            <!-- Success -->
-            <div class="mt-3 eq-header fade-in" v-if="successMessage" style="font-size: 36px">
-              {{ successMessage }}
-            </div>
-            <div class="mt-3 fade-in" v-if="loading">
-              <loader-fake-progress/>
-            </div>
-          </div>
-
-          <vue-dropzone
-            class="mt-4"
-            v-on:vdropzone-success="success"
-            v-on:vdropzone-queue-complete="queueComplete"
-            v-on:vdropzone-processing="processing"
-            ref="myVueDropzone" id="dropzone" :options="dropzoneOptions"
-          ></vue-dropzone>
-
-
-        </eq-window-simple>
-
+        <!-- Success -->
+        <div
+          class="mt-3 eq-header fade-in"
+          v-if="successMessage"
+          style="font-size: 36px"
+        >
+          {{ successMessage }}
+        </div>
+        <div class="mt-3 fade-in" v-if="loading">
+          <loader-fake-progress/>
+        </div>
       </div>
 
-      <div class="col-3">
-        <eq-window-simple title="File Downloads" class="p-3">
-
-          <div class="row">
-            <div class="col-12">
-              <div class="row">
-                <div class="col-12 mt-3">
-                  <b-button
-                    @click="downloadSpells()"
-                    class="form-control"
-                    size="sm"
-                    variant="warning"
-                  ><i class="fa fa-download"></i> Download Spells (spells_us.txt)
-                  </b-button>
-                </div>
-              </div>
-              <div class="row mt-3">
-                <div class="col-12">
-                  <b-button
-                    @click="downloadDbStr()"
-                    class="form-control"
-                    size="sm"
-                    variant="warning"
-                  ><i class="fa fa-download"></i> Download Database Strings (dbstr_us.txt)
-                  </b-button>
-                </div>
-              </div>
-            </div>
-          </div>
-
-        </eq-window-simple>
+      <!-- Buttons -->
+      <div class="row">
+        <div class="col-12">
+          <b-button @click="downloadSpells" size="sm" variant="warning">
+            <i class="fa fa-cloud-download"></i>
+            Spells (spells_us.txt)
+          </b-button>
+          <b-button @click="downloadDbStr" size="sm" variant="warning" class="ml-3">
+            <i class="fa fa-cloud-download"></i> DB Strings (dbstr_us.txt)
+          </b-button>
+        </div>
       </div>
 
-    </div>
+      <!-- Dropzone -->
+      <vue-dropzone
+        class="mt-4"
+        v-on:vdropzone-success="success"
+        v-on:vdropzone-queue-complete="queueComplete"
+        v-on:vdropzone-processing="processing"
+        ref="myVueDropzone"
+        id="dropzone"
+        :options="dropzoneOptions"
+      />
 
-  </div>
+      <div class="mt-4" style="color: red">
+        <b>WARNING</b> Files will immediately overwrite all database values
+      </div>
+
+
+    </eq-window-simple>
+
+  </content-area>
 </template>
 
 <script>

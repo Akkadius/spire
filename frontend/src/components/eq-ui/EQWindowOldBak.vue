@@ -9,7 +9,7 @@
 
 <script>
 export default {
-  name: 'EqWindow',
+  name: 'EqWindowOldBak',
   props: {
     title: {
       type: String,

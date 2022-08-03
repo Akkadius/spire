@@ -32,6 +32,11 @@ func (c *DbConnectionCreateService) GetEncKey(userId uint) string {
 
 func (c *DbConnectionCreateService) Handle(ctx *contexts.ConnectionCreateContext) error {
 
+	// validate valid user before creating
+	if ctx.UserId() == 0 {
+		return errors.New("user must be logged in to create connections")
+	}
+
 	// validate connection doesn't already exist
 	var con models.ServerDatabaseConnection
 	c.db.GetSpireDb().Where(

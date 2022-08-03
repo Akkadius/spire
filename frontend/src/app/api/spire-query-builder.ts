@@ -9,6 +9,7 @@ type QueryBuilderRequest = {
   groupBy: string;
   includes: string;
   limit: number;
+  page: number;
 }
 
 export class SpireQueryBuilder {
@@ -20,6 +21,7 @@ export class SpireQueryBuilder {
   private includesParam: string[] = [];
   private orderDirections: string = "";
   private limitParam: number      = 1000;
+  private pageParam: number       = 0;
 
   translateOperator(operator) {
     switch (operator) {
@@ -122,6 +124,12 @@ export class SpireQueryBuilder {
     return this
   }
 
+  page(page: number) {
+    this.pageParam = page
+
+    return this
+  }
+
   get() {
     let request = {} as QueryBuilderRequest;
     if (Object.keys(this.wheres).length > 0) {
@@ -145,6 +153,13 @@ export class SpireQueryBuilder {
     if (this.orderDirections) {
       request.orderDirection = this.orderDirections
     }
+    console.log(this.pageParam)
+
+    if (this.pageParam > 0) {
+      request.page = (this.pageParam - 1)
+    }
+
+    console.log(request)
 
     request.limit = this.limitParam
 

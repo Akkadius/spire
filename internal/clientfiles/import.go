@@ -56,6 +56,8 @@ func (i *Importer) ImportSpells(db *gorm.DB, fileContents string) (ImportResult,
 	var values []interface{}
 	chunk := 0
 
+	i.logger.Debugf("[import] Database columns [%v]\n", len(dbColumns))
+
 	// loop through lines
 	processedRows := 0
 	for _, s := range strings.Split(fileContents, "\n") {
@@ -89,6 +91,8 @@ func (i *Importer) ImportSpells(db *gorm.DB, fileContents string) (ImportResult,
 		chunk++
 		processedRows++
 	}
+
+	i.logger.Debugf("[import] Processed rows [%v]\n", processedRows)
 
 	err := i.insertBulk(db, "spells_new", dbColumnsStr, placeholders, values)
 	if err != nil {

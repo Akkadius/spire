@@ -119,7 +119,7 @@
 
           <li class="nav-item" v-if="alphaEnabled">
             <router-link class="nav-link " to="/merchants">
-              <i class="ra ra-emerald mr-2"></i> Merchants
+              <i class="ra ra-emerald mr-1"></i> Merchants
               <b-badge class="ml-3" variant="primary">ALPHA</b-badge>
               <b-badge class="ml-3" variant="primary">NEW!</b-badge>
             </router-link>
@@ -127,7 +127,7 @@
 
           <li class="nav-item">
             <router-link class="nav-link " to="/quest-api-explorer">
-              <i class="ra ra-compass mr-2"></i> Quest API Explorer
+              <i class="ra ra-compass mr-1"></i> Quest API Explorer
             </router-link>
           </li>
 
@@ -172,7 +172,7 @@
 
           <li class="nav-item">
             <a class="nav-link " :href="backendBaseUrl + '/swagger/index.html'" target="swagger">
-              <i class="ra ra-book mr-2"></i> Spire API
+              <i class="ra ra-book mr-1"></i> Spire API
             </a>
           </li>
 
@@ -183,7 +183,7 @@
               href="#sidebarComponents" data-toggle="collapse" role="button"
               aria-expanded="false" aria-controls="sidebarComponents"
             >
-              <i class="fe fe-book-open mr-1"></i> Components
+              <i class="ra ra-burst-blob mr-1"></i> Components
             </a>
             <div :class="'collapse ' + (hasRoute('components') ? 'show' : '')" id="sidebarComponents">
               <ul class="nav nav-sm flex-column">
@@ -241,6 +241,8 @@
 
         </div>
 
+        <!-- Active Database Connection Status -->
+        <db-connection-status-pill/>
 
       </div> <!-- / .navbar-collapse -->
 
@@ -250,18 +252,19 @@
 
 <script>
 
-import {App}                 from "@/constants/app";
-import NavbarDropdownMenu    from "@/components/layout/NavbarDropdownMenu";
-import NavbarUserSettingsCog from "@/components/layout/NavbarUserSettingsCog";
-import UserContext           from "@/app/user/UserContext";
-import NavSectionComponent   from "@/components/layout/NavSectionComponent";
-import {ROUTE}               from "@/routes";
-import {EventBus}            from "@/app/event-bus/event-bus";
-import {AppEnv}              from "@/app/env/app-env";
-import {Navbar}              from "@/app/navbar";
+import {App}                  from "@/constants/app";
+import NavbarDropdownMenu     from "@/components/layout/NavbarDropdownMenu";
+import NavbarUserSettingsCog  from "@/components/layout/NavbarUserSettingsCog";
+import UserContext            from "@/app/user/UserContext";
+import NavSectionComponent    from "@/components/layout/NavSectionComponent";
+import {ROUTE}                from "@/routes";
+import {EventBus}             from "@/app/event-bus/event-bus";
+import {AppEnv}               from "@/app/env/app-env";
+import {Navbar}               from "@/app/navbar";
+import DbConnectionStatusPill from "@/components/DbConnectionStatusPill";
 
 export default {
-  components: { NavSectionComponent, NavbarDropdownMenu, NavbarUserSettingsCog },
+  components: { DbConnectionStatusPill, NavSectionComponent, NavbarDropdownMenu, NavbarUserSettingsCog },
   data() {
     return {
       backendBaseUrl: "",
@@ -326,6 +329,8 @@ export default {
           { title: "Special Abilities Calculator", to: "/calculators#npc-special-abilities", icon: "ra ra-lion mr-1" },
         ]
       },
+
+
     }
   },
   created() {
@@ -396,6 +401,13 @@ export default {
   .small-mobile {
     font-size: 40px !important;
   }
+}
+
+.connection-status-box {
+  display: block; /* or inline-block */
+  text-overflow: ellipsis;
+  word-wrap: break-word;
+  overflow: hidden;
 }
 
 </style>

@@ -54,27 +54,27 @@ export default new Router({
         },
         {
           path: ROUTE.RACE_VIEWER,
-          component: () => import('./views/viewers/RaceViewer.vue'),
+          component: () => import('./views/asset-viewers/RaceViewer.vue'),
           meta: {title: "Race Viewer"},
         },
         {
           path: ROUTE.ITEM_VIEWER,
-          component: () => import('./views/viewers/ItemViewer.vue'),
+          component: () => import('./views/asset-viewers/ItemViewer.vue'),
           meta: {title: "Item Viewer"},
         },
         {
           path: ROUTE.ITEM_ICON_VIEWER,
-          component: () => import('./views/viewers/ItemIconViewer.vue'),
+          component: () => import('./views/asset-viewers/ItemIconViewer.vue'),
           meta: {title: "Item Icon Viewer"},
         },
         {
           path: ROUTE.SPELL_ANIMATION_VIEWER,
-          component: () => import('./views/viewers/SpellAnimationViewer.vue'),
+          component: () => import('./views/asset-viewers/SpellAnimationViewer.vue'),
           meta: {title: "Spell Animations"},
         },
         {
           path: ROUTE.PLAYER_ANIMATION_VIEWER,
-          component: () => import('./views/viewers/PlayerAnimationViewer.vue'),
+          component: () => import('./views/asset-viewers/PlayerAnimationViewer.vue'),
           meta: {title: "Player Animation Viewer"},
         },
         {
@@ -89,7 +89,7 @@ export default new Router({
         },
         {
           path: ROUTE.EMITTER_VIEWER,
-          component: () => import('./views/viewers/EmitterViewer.vue'),
+          component: () => import('./views/asset-viewers/EmitterViewer.vue'),
           meta: {title: "Emitter Viewer"},
         },
         {
@@ -104,22 +104,22 @@ export default new Router({
         },
         {
           path: ROUTE.TASKS,
-          component: () => import('./views/task-editor/TaskEditor.vue'),
+          component: () => import('./views/tasks/TaskEditor.vue'),
           meta: {title: "Task Editor"},
         },
         {
           path: '/tasks/:id',
-          component: () => import('./views/task-editor/TaskEditor.vue'),
+          component: () => import('./views/tasks/TaskEditor.vue'),
           meta: {title: "Task Editor"},
         },
         {
           path: ROUTE.SPELLS_LIST,
-          component: () => import('./views/Spells.vue'),
+          component: () => import('./views/spells/Spells.vue'),
           meta: {title: "Spells Browser"},
         },
         {
           path: util.format(ROUTE.SPELL_EDIT, ":id"),
-          component: () => import('./views/spell-editor/SpellEditor.vue'),
+          component: () => import('./views/spells/SpellEditor.vue'),
           meta: {title: "Spell Edit"},
         },
         {
@@ -129,7 +129,7 @@ export default new Router({
         },
         {
           path: util.format(ROUTE.ITEM_EDIT, ":id"),
-          component: () => import('./views/item-editor/ItemEditor.vue'),
+          component: () => import('./views/items/ItemEditor.vue'),
           meta: {title: "Item Edit"},
         },
         {
@@ -139,17 +139,22 @@ export default new Router({
         },
         {
           path: ROUTE.MERCHANTS,
-          component: () => import('./views/zone/Merchants.vue'),
+          component: () => import('./views/merchants/Merchants.vue'),
           meta: {title: "Merchants"},
         },
         {
+          path: util.format(ROUTE.MERCHANT_EDIT, ":id"),
+          component: () => import('./views/merchants/MerchantEdit.vue'),
+          meta: {title: "Merchant Edit"},
+        },
+        {
           path: ROUTE.NPCS_EDIT,
-          component: () => import('./views/zone/NPCs.vue'),
+          component: () => import('./views/npcs/NPCs.vue'),
           meta: {title: "NPC Grid Editor"},
         },
         {
           path: ROUTE.NPC_EDIT,
-          component: () => import('./views/zone/NpcEditor.vue'),
+          component: () => import('./views/npcs/NpcEditor.vue'),
           meta: {title: "NPC Editor"},
         },
         {

@@ -48,6 +48,12 @@ export interface ModelsTaskActivity {
     description_override?: string;
     /**
      * 
+     * @type {string}
+     * @memberof ModelsTaskActivity
+     */
+    goal_match_list?: string;
+    /**
+     * 
      * @type {number}
      * @memberof ModelsTaskActivity
      */
@@ -118,6 +124,12 @@ export interface ModelsTaskActivity {
      * @memberof ModelsTaskActivity
      */
     taskid?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof ModelsTaskActivity
+     */
+    zone_version?: number;
     /**
      * 
      * @type {string}

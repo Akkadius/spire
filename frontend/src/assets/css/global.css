@@ -396,3 +396,28 @@ th[role=columnheader]:hover:not(.no-sort):after {
     transition: .5s !important;
 }
 
+/*pagination*/
+.pagination .page-item {
+    color: transparent;
+}
+
+.pagination {
+    display: inline-flex;
+}
+
+.page, .page-link {
+    padding: 0.4rem 0.75rem;
+}
+
+.pagination .page-link {
+    color: white;
+    background-color: transparent !important;
+}
+.page-item.active .page, .page-item.active .page-link {
+    border-color: #f6c343;
+    color: #f6c343 !important;
+}
+
+.pagination .page-item.active .page-link {
+    color: gray;
+}

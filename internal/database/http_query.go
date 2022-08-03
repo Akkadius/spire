@@ -114,6 +114,16 @@ func (d *DatabaseResolver) QueryContext(model models.Modelable, c echo.Context) 
 	}
 	query = query.Limit(queryLimit)
 
+	// paging
+	queryParamOffset := c.QueryParam("page")
+	if len(queryParamOffset) > 0 {
+		queryOffset, err := strconv.Atoi(queryParamOffset)
+		if err != nil {
+			d.logger.Warn(err)
+		}
+		query = query.Offset(queryOffset * queryLimit)
+	}
+
 	// assocations
 	links := c.QueryParam("includes")
 	for _, association := range strings.Split(links, linksDelimiter) {

@@ -73,7 +73,7 @@
 // export * from './api/completed-shared-task-activity-state-api';
 // export * from './api/completed-shared-task-member-api';
 // export * from './api/completed-task-api';
-// export * from './api/content-flag-api';
+export * from './api/content-flag-api';
 // export * from './api/damageshieldtype-api';
 // export * from './api/data-bucket-api';
 export * from './api/db-str-api';

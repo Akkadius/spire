@@ -252,7 +252,7 @@ import itemTypes from "@/constants/item-types.json"
 import EqCheckbox from "@/components/eq-ui/EQCheckbox.vue";
 import ItemPreviewTable from "@/views/items/components/ItemPreviewTable.vue";
 import {SpireQueryBuilder} from "@/app/api/spire-query-builder";
-import DbColumnFilter from "@/components/DbColumnFilter";
+import DbColumnFilter from "@/components/DbColumnFilter.vue";
 import {DbSchema} from "@/app/db-schema";
 import {Zones} from "@/app/zones";
 import {Items} from "@/app/items";

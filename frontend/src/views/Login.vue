@@ -1,25 +1,62 @@
 <template>
-  <div class="text-center centered" style="width:400px">
-    <form class="form-signin" style="top:50%;">
-      <h1 class="h3 mb-3 font-weight-normal">Spire</h1>
+  <content-area class="text-center fade-in">
 
-      <!--      <a class="btn btn-lg btn-dark btn-block" @click="auth('github')" style="color:white">-->
-      <a class="btn btn-lg btn-dark btn-block" @click="loginGithub()" style="color:white">
-        <i class="fe fe-github"></i>
-        Sign in with Github
-      </a>
+    <div class="row justify-content-center mt-8">
+      <div class="col-3">
 
-      <!--
-      <p class="mt-5 mb-3 text-muted">&copy; 2017-2019</p>
-      -->
-    </form>
-  </div>
+        <router-link class="ml-3 mt-3 mb-3" :to="ROUTE.HOME">
+          <h1
+            style="font-size: 100px"
+            class="text-center eq-header small-mobile">
+            Spire
+          </h1>
+        </router-link>
+
+        <div class="card" v-if="hasAuthOptions()">
+          <div class="card-body">
+            <form class="form-signin" style="top:50%;">
+
+              <a class="btn btn-lg btn-dark btn-block" @click="loginGithub()" style="color:white" v-if="githubAuthEnabled">
+                <i class="fe fe-github"></i>
+                Sign in with Github
+              </a>
+
+            </form>
+          </div>
+        </div>
+
+        <h2
+          class="text-center eq-header small-mobile">
+          Login
+        </h2>
+
+      </div>
+    </div>
+  </content-area>
 </template>
 
 <script>
+import ContentArea from "../components/layout/ContentArea";
+import {AppEnv}    from "../app/env/app-env";
+import {ROUTE}     from "../routes";
 export default {
   name: 'Login.vue',
+  components: { ContentArea },
+  data() {
+    return {
+      githubAuthEnabled: AppEnv.isGithubAuthEnabled(),
+      ROUTE: ROUTE,
+    }
+  },
+  mounted() {
+    setTimeout(() => {
+      this.githubAuthEnabled = AppEnv.isGithubAuthEnabled()
+    }, 1000)
+  },
   methods: {
+    hasAuthOptions() {
+      return this.githubAuthEnabled
+    },
     loginGithub: function () {
       const width  = 800
       const height = 800
@@ -49,19 +86,7 @@ body {
   padding-bottom:   40px;
   background-color: #f5f5f5;
 }
-.centered {
-  position:          fixed;
-  top:               50%;
-  left:              50%;
-  transform:         translate(-50%, -50%);
-  -webkit-transform: translate(-50%, -50%);
-  -moz-transform:    translate(-50%, -50%);
-  -o-transform:      translate(-50%, -50%);
-  -ms-transform:     translate(-50%, -50%);
-  font-size:         20px;
-  padding:           5px;
-  z-index:           100;
-}
+
 .form-signin {
   width:     100%;
   max-width: 330px;

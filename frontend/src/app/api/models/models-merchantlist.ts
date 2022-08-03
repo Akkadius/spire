@@ -33,6 +33,24 @@ export interface ModelsMerchantlist {
      * @type {number}
      * @memberof ModelsMerchantlist
      */
+    bucket_comparison?: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof ModelsMerchantlist
+     */
+    bucket_name?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof ModelsMerchantlist
+     */
+    bucket_value?: string;
+    /**
+     * 
+     * @type {number}
+     * @memberof ModelsMerchantlist
+     */
     classes_required?: number;
     /**
      * 

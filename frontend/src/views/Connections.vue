@@ -5,7 +5,7 @@
       <div class="container-fluid">
 
         <div class="row justify-content-between align-items-center mt-5">
-          <div class="col-12 col-md-9 col-xl-7">
+          <div class="col-12">
             <h2 class="mb-2">
               Database Connection Properties
             </h2>
@@ -16,7 +16,7 @@
         </div>
 
         <b-tabs class="mt-4" content-class="mt-5" fill>
-          <b-tab title="Connections" :active="connections.length > 0">
+          <b-tab title="Connections" :active="connections && connections.length > 0">
 
             <!-- Default Local -->
             <div class="card" v-if="defaultConnection">
@@ -34,10 +34,6 @@
 
                 <!-- List group -->
                 <div class="list-group list-group-flush my-n3">
-
-                  <div v-if="connections.length === 0">
-                    No database connections, you can create a new one
-                  </div>
 
                   <div class="list-group-item">
                     <div class="row align-items-center">
@@ -113,8 +109,12 @@
                 <!-- List group -->
                 <div class="list-group list-group-flush my-n3">
 
-                  <div v-if="connections.length === 0">
+                  <div v-if="connections.length === 0 && isLoggedIn()">
                     No database connections, you can create a new one
+                  </div>
+
+                  <div v-if="!isLoggedIn()">
+                    You must log in to create connections
                   </div>
 
                   <div class="list-group-item" v-for="connection in connections">
@@ -217,7 +217,10 @@
 
           </b-tab>
 
-          <b-tab title="Create New" :active="connections.length === 0">
+          <b-tab
+            title="Create New"
+            v-if="isLoggedIn()"
+            :active="connections.length === 0 && isLoggedIn()">
 
             <div class="form-row">
               <div class="form-group col-md-12">
@@ -358,6 +361,8 @@ import {App}                 from "@/constants/app";
 import axios                 from "axios"
 import {SpireApiClient}      from "@/app/api/spire-api-client";
 import DebugDisplayComponent from "@/components/DebugDisplayComponent.vue";
+import {EventBus} from "@/app/event-bus/event-bus";
+import UserContext from "@/app/user/UserContext";
 
 export default {
   components: {
@@ -377,12 +382,20 @@ export default {
       isDefaultActive: false,
       connections: null,
       connectionStatuses: {},
+
+      user: {},
     }
   },
-  mounted() {
+  async mounted() {
     this.listConnections()
+
+    this.user = await (UserContext.getUser())
   },
   methods: {
+    isLoggedIn() {
+      return this.user && Object.keys(this.user).length
+    },
+
     switchPasswordVisibility() {
       this.passwordFieldType = this.passwordFieldType === 'password' ? 'text' : 'password'
     },
@@ -396,6 +409,7 @@ export default {
     setActiveConnection(connectionId) {
       SpireApiClient.v1().post(`/connection/${connectionId}/set-active`).then((response) => {
         if (response.data && response.data.data) {
+          EventBus.$emit('DB_CONNECTION_CHANGE', true);
           this.listConnections()
         }
       })
@@ -403,6 +417,7 @@ export default {
     setDefaultActive() {
       SpireApiClient.v1().post(`/connection-default/set-active`).then((response) => {
         if (response.data && response.data.data) {
+          EventBus.$emit('DB_CONNECTION_CHANGE', true);
           this.listConnections()
         }
       })
@@ -435,20 +450,10 @@ export default {
       // default local
       SpireApiClient.v1().get('/connection-default').then((response) => {
         if (response.data && response.data.data) {
-          console.log(response.data.data)
-
           this.defaultConnection = response.data.data
-
-          // response.data.data.forEach(connection => {
-          //   const connectionId = connection.id
-          //
-          //   SpireApiClient.v1().get(`/connection-check/${connectionId}`).then((response) => {
-          //     this.connectionStatuses[connectionId] = response.data.data.message
-          //     this.$forceUpdate()
-          //   })
-          // })
         }
       })
+
     },
     createConnection() {
       this.errorMessage   = null

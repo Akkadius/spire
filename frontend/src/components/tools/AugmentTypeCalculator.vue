@@ -43,7 +43,7 @@ export default {
       required: false
     },
     mask: {
-      type: Number,
+      type: [Number, String],
       required: false
     }
   },
