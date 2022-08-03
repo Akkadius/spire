@@ -174,7 +174,7 @@
             v-for="e in merchantitems"
             v-if="e.item && typeof e.item.price !== 'undefined'"
           >
-            <td style="min-width: 390px">
+            <td>
               <item-popover
                 class="d-inline-block"
                 :item="e.item"
@@ -182,10 +182,14 @@
                 size="sm"
               />
               {{ e.item.stacksize > 0 ? `(${e.item.stacksize})` : '' }}
+
+              <content-filter-display-pills :filter-data="e.entry"/>
+
             </td>
             <td>
               <eq-cash-display
                 class="ml-1"
+                style="min-width: 150px"
                 :price="parseInt(e.item.price)"
               />
             </td>
@@ -328,10 +332,13 @@ import {FLYMODE}                           from "../../app/constants/eq-flymode-
 import ItemPopover                         from "../ItemPopover";
 import EqCashDisplay                       from "../eq-ui/EqCashDisplay";
 import SpellPopover                        from "../SpellPopover";
+import ExpansionIcon                       from "./ExpansionIcon";
+import ContentFlagPills                    from "./ContentFlagPills";
+import ContentFilterDisplayPills           from "./ContentFilterDisplayPills";
 
 export default {
   name: "EqNpcCardPreview",
-  components: { SpellPopover, EqCashDisplay, ItemPopover, EqDebug },
+  components: { ContentFilterDisplayPills, ContentFlagPills, ExpansionIcon, SpellPopover, EqCashDisplay, ItemPopover, EqDebug },
   data() {
     return {
       maxDataEntries: 15, // amount of results before collapsing

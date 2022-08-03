@@ -1,26 +1,26 @@
 <template>
-  <div class="d-inline-block" style="min-width: 150px">
-    <div v-if="platinum > 0" class="d-inline-block mr-2">
+  <div class="d-inline-block">
+    <div v-if="platinum > 0" class="d-inline-block mr-1">
       <div :class="'ml-1 item-644-sm'" title="Platinum"/>
       {{ platinum.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") }}
     </div>
 
-    <div v-if="gold > 0" class="d-inline-block mr-2">
+    <div v-if="gold > 0" class="d-inline-block mr-1">
       <div :class="'ml-1 item-645-sm'" title="Silver"/>
       {{ gold }}
     </div>
 
-    <div v-if="silver > 0" class="d-inline-block mr-2">
+    <div v-if="silver > 0" class="d-inline-block mr-1">
       <div :class="'ml-1 item-646-sm'" title="Silver"/>
       {{ silver }}
     </div>
 
-    <div v-if="copper > 0" class="d-inline-block mr-2">
+    <div v-if="copper > 0" class="d-inline-block mr-1">
       <div :class="'ml-1 item-647-sm'" title="Copper"/>
       {{ copper }}
     </div>
 
-    <div v-if="hasNoCost()" class="d-inline-block mr-2">
+    <div v-if="hasNoCost()" class="d-inline-block mr-1">
       <div :class="'ml-1 item-644-sm'" title="Platinum"/>
       0
     </div>

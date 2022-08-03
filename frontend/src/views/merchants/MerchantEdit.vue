@@ -134,6 +134,9 @@
                     :price="parseInt(itemData[e.item].price)"
                     v-if="itemData[e.item]"
                   />
+
+                  <content-filter-display-pills :filter-data="e"/>
+
                 </td>
               </tr>
               </tbody>
@@ -160,22 +163,28 @@
 </template>
 
 <script>
-import EqWindow              from "../../components/eq-ui/EQWindow";
-import EqCashDisplay         from "../../components/eq-ui/EqCashDisplay";
-import ItemPopover           from "../../components/ItemPopover";
-import LoaderFakeProgress    from "../../components/LoaderFakeProgress";
-import {Merchants}           from "../../app/merchants";
-import ContentArea           from "../../components/layout/ContentArea";
-import {ROUTE}               from "../../routes";
-import {Zones}               from "../../app/zones";
-import util                  from "util";
-import {Items}               from "../../app/items";
-import ItemSelector          from "../../components/selectors/ItemSelector";
-import MerchantlistEntryEdit from "./components/MerchantlistEntryEdit";
+import EqWindow                  from "../../components/eq-ui/EQWindow";
+import EqCashDisplay             from "../../components/eq-ui/EqCashDisplay";
+import ItemPopover               from "../../components/ItemPopover";
+import LoaderFakeProgress        from "../../components/LoaderFakeProgress";
+import {Merchants}               from "../../app/merchants";
+import ContentArea               from "../../components/layout/ContentArea";
+import {ROUTE}                   from "../../routes";
+import {Zones}                   from "../../app/zones";
+import util                      from "util";
+import {Items}                   from "../../app/items";
+import ItemSelector              from "../../components/selectors/ItemSelector";
+import MerchantlistEntryEdit     from "./components/MerchantlistEntryEdit";
+import ExpansionIcon             from "../../components/preview/ExpansionIcon";
+import ContentFlagPills          from "../../components/preview/ContentFlagPills";
+import ContentFilterDisplayPills from "../../components/preview/ContentFilterDisplayPills";
 
 export default {
   name: "MerchantEdit",
   components: {
+    ContentFilterDisplayPills,
+    ContentFlagPills,
+    ExpansionIcon,
     MerchantlistEntryEdit,
     ItemSelector,
     ContentArea,
