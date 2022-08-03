@@ -5,6 +5,7 @@
         title="Enabled when this content flag is enabled"
         pill
         variant="warning"
+        :key="f"
         v-for="f in flagsEnabled.split(',')"
       >{{ f }}
       </b-badge>
@@ -14,6 +15,7 @@
         title="Disabled when this content flag is enabled"
         pill
         variant="danger"
+        :key="f"
         v-for="f in flagsDisabled.split(',')"
       >{{ f }}
       </b-badge>
