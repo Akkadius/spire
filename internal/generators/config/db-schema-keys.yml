@@ -592,6 +592,21 @@ character_memmed_spells:
     is_nullable: "NO"
     column_type: smallint(11) unsigned
     column_default: "0"
+character_peqzone_flags:
+  - column: id
+    data_type: int
+    column_key: PRI
+    ordinal_position: "1"
+    is_nullable: "NO"
+    column_type: int(11)
+    column_default: "0"
+  - column: zone_id
+    data_type: int
+    column_key: PRI
+    ordinal_position: "2"
+    is_nullable: "NO"
+    column_type: int(11)
+    column_default: "0"
 character_pet_buffs:
   - column: char_id
     data_type: int
@@ -841,6 +856,14 @@ db_str:
     is_nullable: "NO"
     column_type: int(10)
     column_default: ""
+discord_webhooks:
+  - column: id
+    data_type: int
+    column_key: PRI
+    ordinal_position: "1"
+    is_nullable: "NO"
+    column_type: int(11)
+    column_default: ""
 discovered_items:
   - column: item_id
     data_type: int
@@ -858,6 +881,14 @@ doors:
     column_type: int(11)
     column_default: ""
 dynamic_zone_members:
+  - column: id
+    data_type: int
+    column_key: PRI
+    ordinal_position: "1"
+    is_nullable: "NO"
+    column_type: int(10) unsigned
+    column_default: ""
+dynamic_zone_templates:
   - column: id
     data_type: int
     column_key: PRI
@@ -1433,6 +1464,20 @@ merchantlist_temp:
     ordinal_position: "2"
     is_nullable: "NO"
     column_type: tinyint(3) unsigned
+    column_default: "0"
+  - column: zone_id
+    data_type: int
+    column_key: PRI
+    ordinal_position: "3"
+    is_nullable: "NO"
+    column_type: int(11)
+    column_default: "0"
+  - column: instance_id
+    data_type: int
+    column_key: PRI
+    ordinal_position: "4"
+    is_nullable: "NO"
+    column_type: int(11)
     column_default: "0"
 name_filter:
   - column: id
