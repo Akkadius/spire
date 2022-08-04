@@ -158,6 +158,11 @@ export default new Router({
           meta: {title: "NPC Editor"},
         },
         {
+          path: ROUTE.NPC_EMOTES_EDIT,
+          component: () => import('./views/npcs/NpcEmotesEditor.vue'),
+          meta: {title: "NPC Emotes Editor"},
+        },
+        {
           path: '/zone/:zone',
           component: () => import('./views/zone/Zone.vue'),
           meta: {title: "Zone"},

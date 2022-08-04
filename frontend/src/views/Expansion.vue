@@ -1,5 +1,5 @@
 <template>
-  <content-area>
+  <content-area style="padding: 0px !important">
     <eq-window title="Expansion Stats">
       <div style="overflow-y: hidden; overflow-x: scroll">
         Filters by Expansion and Table
@@ -14,7 +14,9 @@
             <th class="sticky-first-column">
               Table
             </th>
-            <th v-for="(e, index) in expansions"><expansion-icon :expansion="index"/></th>
+            <th v-for="(e, index) in expansions">
+              <expansion-icon :expansion="index"/>
+            </th>
           </tr>
           </thead>
           <tbody>
@@ -23,9 +25,11 @@
             :key="t"
           >
             <td class="sticky-first-column">
-              {{t}}
+              {{ t }}
             </td>
-            <td v-for="(e, index) in expansions">{{ expansionData[t] && expansionData[t][index] ? expansionData[t][index] : 0 }}</td>
+            <td v-for="(e, index) in expansions">
+              {{ expansionData[t] && expansionData[t][index] ? expansionData[t][index] : 0 }}
+            </td>
           </tr>
           </tbody>
         </table>

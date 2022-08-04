@@ -132,7 +132,7 @@ export * from './api/me-api';
 export * from './api/merchantlist-api';
 // export * from './api/merchantlist-temp-api';
 // export * from './api/name-filter-api';
-// export * from './api/npc-emote-api';
+export * from './api/npc-emote-api';
 // export * from './api/npc-faction-api';
 // export * from './api/npc-faction-entry-api';
 // export * from './api/npc-scale-global-base-api';
