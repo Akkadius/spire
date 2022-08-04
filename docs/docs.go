@@ -58464,6 +58464,9 @@ const docTemplate = `{
                 "expansion": {
                     "type": "integer"
                 },
+                "flymode": {
+                    "type": "integer"
+                },
                 "gmspeed": {
                     "type": "integer"
                 },
@@ -58471,6 +58474,12 @@ const docTemplate = `{
                     "type": "integer"
                 },
                 "id": {
+                    "type": "integer"
+                },
+                "ignore_tells": {
+                    "type": "integer"
+                },
+                "invulnerable": {
                     "type": "integer"
                 },
                 "karma": {
@@ -58903,9 +58912,6 @@ const docTemplate = `{
         "models.Book": {
             "type": "object",
             "properties": {
-                "id": {
-                    "type": "integer"
-                },
                 "language": {
                     "type": "integer"
                 },
@@ -60520,6 +60526,9 @@ const docTemplate = `{
                 "task_id": {
                     "type": "integer"
                 },
+                "timer_group": {
+                    "type": "integer"
+                },
                 "timer_type": {
                     "type": "integer"
                 }
@@ -60734,6 +60743,9 @@ const docTemplate = `{
                 "doorisopen": {
                     "type": "integer"
                 },
+                "dz_switch_id": {
+                    "type": "integer"
+                },
                 "guild": {
                     "type": "integer"
                 },
@@ -60815,6 +60827,9 @@ const docTemplate = `{
                     "type": "number"
                 },
                 "compass_zone_id": {
+                    "type": "integer"
+                },
+                "dz_switch_id": {
                     "type": "integer"
                 },
                 "has_zone_in": {
@@ -61586,9 +61601,6 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "gender": {
-                    "type": "integer"
-                },
-                "id": {
                     "type": "integer"
                 },
                 "mountspeed": {
@@ -62986,6 +62998,9 @@ const docTemplate = `{
         "models.LogsysCategory": {
             "type": "object",
             "properties": {
+                "discord_webhook_id": {
+                    "type": "integer"
+                },
                 "log_category_description": {
                     "type": "string"
                 },
@@ -62993,6 +63008,9 @@ const docTemplate = `{
                     "type": "integer"
                 },
                 "log_to_console": {
+                    "type": "integer"
+                },
+                "log_to_discord": {
                     "type": "integer"
                 },
                 "log_to_file": {
@@ -63255,6 +63273,9 @@ const docTemplate = `{
                 "charges": {
                     "type": "integer"
                 },
+                "instance_id": {
+                    "type": "integer"
+                },
                 "itemid": {
                     "type": "integer"
                 },
@@ -63262,6 +63283,9 @@ const docTemplate = `{
                     "type": "integer"
                 },
                 "slot": {
+                    "type": "integer"
+                },
+                "zone_id": {
                     "type": "integer"
                 }
             }
@@ -64276,9 +64300,6 @@ const docTemplate = `{
             "type": "object",
             "properties": {
                 "equipmentset": {
-                    "type": "integer"
-                },
-                "id": {
                     "type": "integer"
                 },
                 "monsterflag": {
@@ -66058,6 +66079,9 @@ const docTemplate = `{
                 "duration_code": {
                     "type": "integer"
                 },
+                "dz_template_id": {
+                    "type": "integer"
+                },
                 "faction_reward": {
                     "type": "integer"
                 },
@@ -66065,6 +66089,9 @@ const docTemplate = `{
                     "type": "integer"
                 },
                 "level_spread": {
+                    "type": "integer"
+                },
+                "lock_activity_id": {
                     "type": "integer"
                 },
                 "max_players": {
@@ -66082,7 +66109,13 @@ const docTemplate = `{
                 "repeatable": {
                     "type": "integer"
                 },
+                "replay_timer_group": {
+                    "type": "integer"
+                },
                 "replay_timer_seconds": {
+                    "type": "integer"
+                },
+                "request_timer_group": {
                     "type": "integer"
                 },
                 "request_timer_seconds": {
@@ -66091,10 +66124,10 @@ const docTemplate = `{
                 "reward": {
                     "type": "string"
                 },
-                "reward_ebon_crystals": {
+                "reward_point_type": {
                     "type": "integer"
                 },
-                "reward_radiant_crystals": {
+                "reward_points": {
                     "type": "integer"
                 },
                 "rewardid": {

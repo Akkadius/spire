@@ -49,6 +49,12 @@ export interface ModelsDynamicZone {
      * @type {number}
      * @memberof ModelsDynamicZone
      */
+    dz_switch_id?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof ModelsDynamicZone
+     */
     has_zone_in?: number;
     /**
      * 

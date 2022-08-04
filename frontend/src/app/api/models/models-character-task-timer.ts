@@ -49,6 +49,12 @@ export interface ModelsCharacterTaskTimer {
      * @type {number}
      * @memberof ModelsCharacterTaskTimer
      */
+    timer_group?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof ModelsCharacterTaskTimer
+     */
     timer_type?: number;
 }
 

@@ -90,6 +90,12 @@ export interface ModelsAccount {
      * @type {number}
      * @memberof ModelsAccount
      */
+    flymode?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof ModelsAccount
+     */
     gmspeed?: number;
     /**
      * 
@@ -103,6 +109,18 @@ export interface ModelsAccount {
      * @memberof ModelsAccount
      */
     id?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof ModelsAccount
+     */
+    ignore_tells?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof ModelsAccount
+     */
+    invulnerable?: number;
     /**
      * 
      * @type {number}

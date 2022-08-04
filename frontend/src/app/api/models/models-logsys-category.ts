@@ -22,6 +22,12 @@
 export interface ModelsLogsysCategory {
     /**
      * 
+     * @type {number}
+     * @memberof ModelsLogsysCategory
+     */
+    discord_webhook_id?: number;
+    /**
+     * 
      * @type {string}
      * @memberof ModelsLogsysCategory
      */
@@ -38,6 +44,12 @@ export interface ModelsLogsysCategory {
      * @memberof ModelsLogsysCategory
      */
     log_to_console?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof ModelsLogsysCategory
+     */
+    log_to_discord?: number;
     /**
      * 
      * @type {number}

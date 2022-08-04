@@ -119,11 +119,17 @@ definitions:
         type: string
       expansion:
         type: integer
+      flymode:
+        type: integer
       gmspeed:
         type: integer
       hideme:
         type: integer
       id:
+        type: integer
+      ignore_tells:
+        type: integer
+      invulnerable:
         type: integer
       karma:
         type: integer
@@ -407,8 +413,6 @@ definitions:
     type: object
   models.Book:
     properties:
-      id:
-        type: integer
       language:
         type: integer
       name:
@@ -1473,6 +1477,8 @@ definitions:
         type: integer
       task_id:
         type: integer
+      timer_group:
+        type: integer
       timer_type:
         type: integer
     type: object
@@ -1612,6 +1618,8 @@ definitions:
         type: integer
       doorisopen:
         type: integer
+      dz_switch_id:
+        type: integer
       guild:
         type: integer
       heading:
@@ -1666,6 +1674,8 @@ definitions:
       compass_z:
         type: number
       compass_zone_id:
+        type: integer
+      dz_switch_id:
         type: integer
       has_zone_in:
         type: integer
@@ -2171,8 +2181,6 @@ definitions:
       filename:
         type: string
       gender:
-        type: integer
-      id:
         type: integer
       mountspeed:
         type: number
@@ -3098,11 +3106,15 @@ definitions:
     type: object
   models.LogsysCategory:
     properties:
+      discord_webhook_id:
+        type: integer
       log_category_description:
         type: string
       log_category_id:
         type: integer
       log_to_console:
+        type: integer
+      log_to_discord:
         type: integer
       log_to_file:
         type: integer
@@ -3275,11 +3287,15 @@ definitions:
     properties:
       charges:
         type: integer
+      instance_id:
+        type: integer
       itemid:
         type: integer
       npcid:
         type: integer
       slot:
+        type: integer
+      zone_id:
         type: integer
     type: object
   models.NameFilter:
@@ -3951,8 +3967,6 @@ definitions:
   models.Pet:
     properties:
       equipmentset:
-        type: integer
-      id:
         type: integer
       monsterflag:
         type: integer
@@ -5127,11 +5141,15 @@ definitions:
         type: integer
       duration_code:
         type: integer
+      dz_template_id:
+        type: integer
       faction_reward:
         type: integer
       id:
         type: integer
       level_spread:
+        type: integer
+      lock_activity_id:
         type: integer
       max_players:
         type: integer
@@ -5143,15 +5161,19 @@ definitions:
         type: integer
       repeatable:
         type: integer
+      replay_timer_group:
+        type: integer
       replay_timer_seconds:
+        type: integer
+      request_timer_group:
         type: integer
       request_timer_seconds:
         type: integer
       reward:
         type: string
-      reward_ebon_crystals:
+      reward_point_type:
         type: integer
-      reward_radiant_crystals:
+      reward_points:
         type: integer
       rewardid:
         type: integer

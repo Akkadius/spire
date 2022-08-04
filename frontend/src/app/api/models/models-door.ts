@@ -110,6 +110,12 @@ export interface ModelsDoor {
      * @type {number}
      * @memberof ModelsDoor
      */
+    dz_switch_id?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof ModelsDoor
+     */
     guild?: number;
     /**
      * 

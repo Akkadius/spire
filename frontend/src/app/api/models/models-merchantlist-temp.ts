@@ -31,6 +31,12 @@ export interface ModelsMerchantlistTemp {
      * @type {number}
      * @memberof ModelsMerchantlistTemp
      */
+    instance_id?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof ModelsMerchantlistTemp
+     */
     itemid?: number;
     /**
      * 
@@ -44,6 +50,12 @@ export interface ModelsMerchantlistTemp {
      * @memberof ModelsMerchantlistTemp
      */
     slot?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof ModelsMerchantlistTemp
+     */
+    zone_id?: number;
 }
 
 

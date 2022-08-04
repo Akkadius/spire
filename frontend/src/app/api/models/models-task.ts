@@ -57,6 +57,12 @@ export interface ModelsTask {
      * @type {number}
      * @memberof ModelsTask
      */
+    dz_template_id?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof ModelsTask
+     */
     faction_reward?: number;
     /**
      * 
@@ -70,6 +76,12 @@ export interface ModelsTask {
      * @memberof ModelsTask
      */
     level_spread?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof ModelsTask
+     */
+    lock_activity_id?: number;
     /**
      * 
      * @type {number}
@@ -105,7 +117,19 @@ export interface ModelsTask {
      * @type {number}
      * @memberof ModelsTask
      */
+    replay_timer_group?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof ModelsTask
+     */
     replay_timer_seconds?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof ModelsTask
+     */
+    request_timer_group?: number;
     /**
      * 
      * @type {number}
@@ -123,13 +147,13 @@ export interface ModelsTask {
      * @type {number}
      * @memberof ModelsTask
      */
-    reward_ebon_crystals?: number;
+    reward_point_type?: number;
     /**
      * 
      * @type {number}
      * @memberof ModelsTask
      */
-    reward_radiant_crystals?: number;
+    reward_points?: number;
     /**
      * 
      * @type {number}

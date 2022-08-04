@@ -32,12 +32,6 @@ export interface ModelsPet {
      * @type {number}
      * @memberof ModelsPet
      */
-    id?: number;
-    /**
-     * 
-     * @type {number}
-     * @memberof ModelsPet
-     */
     monsterflag?: number;
     /**
      * 

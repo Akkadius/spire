@@ -37,12 +37,6 @@ export interface ModelsHorse {
      * @type {number}
      * @memberof ModelsHorse
      */
-    id?: number;
-    /**
-     * 
-     * @type {number}
-     * @memberof ModelsHorse
-     */
     mountspeed?: number;
     /**
      * 
