@@ -1,5 +1,5 @@
 <template>
-  <div class="row mt-3" v-if="localNotification || localError">
+  <div class="row" v-if="localNotification || localError">
     <div class="col-12">
 
       <!-- Notification -->

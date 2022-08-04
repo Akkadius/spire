@@ -1,3 +1,11 @@
+## [1.13.3]
+
+### New Task Fields Minor Update
+
+* Add basic support for new task fields dz_template_id, lock_activity_id, replay_timer_group, request_timer_group, reward_point_type, reward_points
+* More in depth selectors will be added for these fields later
+* Fix the task editor's ability to save based on recent database schema changes
+
 ## [1.13.2]
 
 ### Alpha Minor Release

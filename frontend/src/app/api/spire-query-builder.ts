@@ -153,13 +153,10 @@ export class SpireQueryBuilder {
     if (this.orderDirections) {
       request.orderDirection = this.orderDirections
     }
-    console.log(this.pageParam)
 
     if (this.pageParam > 0) {
       request.page = (this.pageParam - 1)
     }
-
-    console.log(request)
 
     request.limit = this.limitParam
 

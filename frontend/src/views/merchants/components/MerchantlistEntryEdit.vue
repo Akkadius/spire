@@ -173,6 +173,7 @@
 
       <!-- Notification / Error -->
       <info-error-banner
+        class="mt-3"
         :notification="notification"
         :error="error"
         @dismiss-error="error = ''"

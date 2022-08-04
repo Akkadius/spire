@@ -102,27 +102,15 @@
               <!--              </div>-->
 
               <div style="height: 40px">
-                <b-alert show dismissable variant="danger" v-if="error">
-                  <div class="row" @click="error = ''">
-                    <div class="col-11">
-                      <i class="fa fa-warning"></i> {{ error }}
-                    </div>
-                    <div class="col-1 text-right">
-                      <i class="fa fa-remove"></i>
-                    </div>
-                  </div>
-                </b-alert>
 
-                <b-alert show dismissable variant="warning" v-if="notification">
-                  <div class="row" @click="notification = ''">
-                    <div class="col-11">
-                      <i class="fa fa-info-circle mr-3"></i> {{ notification }}
-                    </div>
-                    <div class="col-1 text-right">
-                      <i class="fa fa-remove"></i>
-                    </div>
-                  </div>
-                </b-alert>
+                <!-- Notification / Error -->
+                <info-error-banner
+                  :notification="notification"
+                  :error="error"
+                  @dismiss-error="error = ''"
+                  @dismiss-notification="notification = ''"
+                  class="mt-0"
+                />
               </div>
 
               <eq-tabs
@@ -166,6 +154,22 @@
                          fieldType: 'textarea',
                          col: 'col-12',
                          onclick: setSelectorActive,
+                       },
+                       {
+                         description: 'Dynamic Zone Template ID',
+                         field: 'dz_template_id',
+                         itemIcon: '4004',
+                         fieldType: 'text',
+                         col: 'col-6',
+                         zeroValue: -1,
+                       },
+                       {
+                         description: 'Lock Task on Activity ID',
+                         field: 'lock_activity_id',
+                         itemIcon: '1077',
+                         fieldType: 'text',
+                         col: 'col-6',
+                         zeroValue: -1,
                        },
                        {
                          description: 'Duration Code',
@@ -289,14 +293,28 @@
                          col: 'col-4',
                        },
                        {
-                         description: 'Reward Ebon Crystals',
-                         field: 'reward_ebon_crystals',
+                         description: 'Reward Point Type',
+                         field: 'reward_point_type',
+                         itemIcon: '1955',
                          fieldType: 'text',
-                         itemIcon: '1535',
                          col: 'col-6',
                        },
                        {
-                         description: 'Replay Timer Seconds',
+                         description: 'Reward Points',
+                         field: 'reward_points',
+                         itemIcon: '1955',
+                         fieldType: 'text',
+                         col: 'col-6',
+                       },
+                       {
+                         description: 'Replay Timer Group',
+                         field: 'replay_timer_group',
+                         fieldType: 'text',
+                         itemIcon: '750',
+                         col: 'col-6',
+                       },
+                       {
+                         description: 'Replay Timer (sec)',
                          field: 'replay_timer_seconds',
                          fieldType: 'text',
                          itemIcon: '750',
@@ -304,14 +322,14 @@
                        },
 
                        {
-                         description: 'Reward Radiant Crystals',
-                         field: 'reward_radiant_crystals',
-                         itemIcon: '1536',
+                         description: 'Request Timer Group',
+                         field: 'request_timer_group',
+                         itemIcon: '750',
                          fieldType: 'text',
                          col: 'col-6',
                        },
                        {
-                         description: 'Request Timer Seconds',
+                         description: 'Request Timer (sec)',
                          field: 'request_timer_seconds',
                          fieldType: 'text',
                          itemIcon: '750',
@@ -932,11 +950,13 @@ import TaskGoalMatchListPreviewer from "@/views/tasks/components/TaskGoalMatchLi
 import {Zones} from "@/app/zones";
 import ClipBoard from "@/app/clipboard/clipboard";
 import TaskQuestExamplePreview from "@/views/tasks/components/TaskQuestExamplePreview.vue";
+import InfoErrorBanner from "@/components/InfoErrorBanner.vue";
 
 const MILLISECONDS_BEFORE_WINDOW_RESET = 10000;
 
 export default {
   components: {
+    InfoErrorBanner,
     TaskQuestExamplePreview,
     TaskGoalMatchListPreviewer,
     TaskDescriptionSelector,
@@ -1370,9 +1390,6 @@ export default {
 
     sendNotification(message) {
       this.notification = message
-      setTimeout(() => {
-        this.notification = ""
-      }, 5000)
     },
 
     getBackendFormattedTask() {
