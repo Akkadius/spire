@@ -14,6 +14,9 @@ type Account struct {
 	LsId           null.String     `json:"ls_id" gorm:"Column:ls_id"`
 	LsaccountId    null.Uint       `json:"lsaccount_id" gorm:"Column:lsaccount_id"`
 	Gmspeed        uint8           `json:"gmspeed" gorm:"Column:gmspeed"`
+	Invulnerable   null.Int8       `json:"invulnerable" gorm:"Column:invulnerable"`
+	Flymode        null.Int8       `json:"flymode" gorm:"Column:flymode"`
+	IgnoreTells    null.Int8       `json:"ignore_tells" gorm:"Column:ignore_tells"`
 	Revoked        uint8           `json:"revoked" gorm:"Column:revoked"`
 	Karma          uint            `json:"karma" gorm:"Column:karma"`
 	MiniloginIp    string          `json:"minilogin_ip" gorm:"Column:minilogin_ip"`

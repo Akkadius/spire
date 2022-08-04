@@ -9,6 +9,7 @@ type CharacterTaskTimer struct {
 	CharacterId  uint      `json:"character_id" gorm:"Column:character_id"`
 	TaskId       uint      `json:"task_id" gorm:"Column:task_id"`
 	TimerType    int       `json:"timer_type" gorm:"Column:timer_type"`
+	TimerGroup   int       `json:"timer_group" gorm:"Column:timer_group"`
 	ExpireTime   time.Time `json:"expire_time" gorm:"Column:expire_time"`
 }
 

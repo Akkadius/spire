@@ -10,6 +10,8 @@ type LogsysCategory struct {
 	LogToConsole             null.Int16  `json:"log_to_console" gorm:"Column:log_to_console"`
 	LogToFile                null.Int16  `json:"log_to_file" gorm:"Column:log_to_file"`
 	LogToGmsay               null.Int16  `json:"log_to_gmsay" gorm:"Column:log_to_gmsay"`
+	LogToDiscord             null.Int16  `json:"log_to_discord" gorm:"Column:log_to_discord"`
+	DiscordWebhookId         null.Int    `json:"discord_webhook_id" gorm:"Column:discord_webhook_id"`
 }
 
 func (LogsysCategory) TableName() string {

@@ -5,7 +5,6 @@ import (
 )
 
 type Horse struct {
-	ID         int         `json:"id" gorm:"Column:id"`
 	Filename   string      `json:"filename" gorm:"Column:filename"`
 	Race       int16       `json:"race" gorm:"Column:race"`
 	Gender     int8        `json:"gender" gorm:"Column:gender"`
