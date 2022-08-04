@@ -413,6 +413,8 @@ definitions:
     type: object
   models.Book:
     properties:
+      id:
+        type: integer
       language:
         type: integer
       name:
@@ -2181,6 +2183,8 @@ definitions:
       filename:
         type: string
       gender:
+        type: integer
+      id:
         type: integer
       mountspeed:
         type: number
@@ -3967,6 +3971,8 @@ definitions:
   models.Pet:
     properties:
       equipmentset:
+        type: integer
+      id:
         type: integer
       monsterflag:
         type: integer

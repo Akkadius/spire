@@ -25,6 +25,12 @@ export interface ModelsBook {
      * @type {number}
      * @memberof ModelsBook
      */
+    id?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof ModelsBook
+     */
     language?: number;
     /**
      * 

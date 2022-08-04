@@ -58912,6 +58912,9 @@ const docTemplate = `{
         "models.Book": {
             "type": "object",
             "properties": {
+                "id": {
+                    "type": "integer"
+                },
                 "language": {
                     "type": "integer"
                 },
@@ -61601,6 +61604,9 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "gender": {
+                    "type": "integer"
+                },
+                "id": {
                     "type": "integer"
                 },
                 "mountspeed": {
@@ -64300,6 +64306,9 @@ const docTemplate = `{
             "type": "object",
             "properties": {
                 "equipmentset": {
+                    "type": "integer"
+                },
+                "id": {
                     "type": "integer"
                 },
                 "monsterflag": {

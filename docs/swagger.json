@@ -58904,6 +58904,9 @@
         "models.Book": {
             "type": "object",
             "properties": {
+                "id": {
+                    "type": "integer"
+                },
                 "language": {
                     "type": "integer"
                 },
@@ -61593,6 +61596,9 @@
                     "type": "string"
                 },
                 "gender": {
+                    "type": "integer"
+                },
+                "id": {
                     "type": "integer"
                 },
                 "mountspeed": {
@@ -64292,6 +64298,9 @@
             "type": "object",
             "properties": {
                 "equipmentset": {
+                    "type": "integer"
+                },
+                "id": {
                     "type": "integer"
                 },
                 "monsterflag": {
