@@ -53,7 +53,7 @@ export class Tasks {
   // TODO: bubble up error handling
   public static async getTaskWithActivities(taskId: number) {
     let request = (new SpireQueryBuilder())
-      .includes(["TaskActivities"])
+      .includes(this.getRelationships())
       .get()
 
     // @ts-ignore
@@ -225,6 +225,7 @@ export class Tasks {
 
   public static getRelationships() {
     return [
+      "AlternateCurrency.Item",
       "TaskActivities",
       // "TaskActivities.Goallists",
       // "TaskActivities.NpcType",

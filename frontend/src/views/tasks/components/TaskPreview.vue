@@ -92,21 +92,13 @@
               class="mt-3"
             />
           </div>
-          <div v-if="task.reward_ebon_crystals > 0 && ebonCrystalItem">
+          <div v-if="task.alternate_currency.item">
             <item-popover
-              :item="ebonCrystalItem"
-              v-if="Object.keys(ebonCrystalItem).length > 0"
+              :item="task.alternate_currency.item"
+              v-if="Object.keys(task.alternate_currency.item).length > 0"
               size="regular"
               class="mt-1"
-              :annotation="' (' + task.reward_ebon_crystals.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',') + ')'"
-            />
-          </div>
-          <div v-if="task.reward_radiant_crystals > 0 && radiantCrystalItem" class="mt-1">
-            <item-popover
-              :item="radiantCrystalItem"
-              v-if="Object.keys(radiantCrystalItem).length > 0"
-              size="regular"
-              :annotation="' (' + task.reward_radiant_crystals.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',') + ')'"
+              :annotation="' (' + task.reward_points.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',') + ')'"
             />
           </div>
 
@@ -171,8 +163,6 @@ export default {
 
       // item objects for rendering
       rewardItem: null,
-      radiantCrystalItem: null,
-      ebonCrystalItem: null,
 
       // this keeps track of the last loaded state so we are not forcing
       // re-renders every time updates to the "task" object are made
@@ -234,16 +224,6 @@ export default {
         Items.getItem(this.task.rewardid).then((r) => {
           this.rewardItem       = r
           this.lastLoadedItemId = this.task.rewardid
-        })
-      }
-      if (this.task.reward_radiant_crystals > 0 && !this.radiantCrystalItem) {
-        Items.getItem(40903).then((r) => {
-          this.radiantCrystalItem = r
-        })
-      }
-      if (this.task.reward_ebon_crystals > 0 && !this.radiantCrystalItem) {
-        Items.getItem(40902).then((r) => {
-          this.ebonCrystalItem = r
         })
       }
 
