@@ -72,7 +72,7 @@
             >
               <thead class="eq-table-floating-header">
               <tr>
-                <th class="text-center" style="width: 100px">Actions</th>
+                <th class="text-center" style="width: 120px">Actions</th>
                 <th class="text-center" style="width: 50px">Slot</th>
                 <th>Item</th>
               </tr>
@@ -87,7 +87,7 @@
                   <b-button
                     variant="primary"
                     class="btn-dark btn-sm btn-outline-danger ml-1"
-                    style="padding: 0px 4px;"
+                    style="padding: 0px 6px;"
                     title="Edit"
                     :disabled="applyingChanges"
                     @click="deleteMerchantRow(e)"
@@ -98,7 +98,7 @@
                   <b-button
                     variant="primary"
                     class="btn-dark btn-sm btn-outline-success ml-1"
-                    style="padding: 0px 4px;"
+                    style="padding: 0px 6px;"
                     title="Edit"
                     :disabled="applyingChanges"
                     @click="editMerchantRow(e)"
@@ -109,7 +109,7 @@
                   <b-button
                     variant="primary"
                     class="btn-dark btn-sm btn-outline-light ml-1"
-                    style="padding: 0px 4px;"
+                    style="padding: 0px 6px;"
                     title="Move slot up"
                     @click="moveSlotUp(e)"
                     :disabled="applyingChanges"
@@ -121,7 +121,7 @@
                   <b-button
                     variant="primary"
                     class="btn-dark btn-sm btn-outline-light ml-1"
-                    style="padding: 0px 4px;"
+                    style="padding: 0px 6px;"
                     title="Move slot down"
                     :disabled="applyingChanges"
                     @click="moveSlotDown(e)"
@@ -135,6 +135,17 @@
                 </td>
                 <td :style="(applyingChanges ? 'opacity: .2' : '')">
                   <!--                  <input type="text" v-model="e.item" class="mr-3 m-0" style="width: 120px">-->
+
+                  <b-button
+                    variant="primary"
+                    class="btn-dark btn-sm btn-outline-success mr-3"
+                    style="padding: 0px 6px;"
+                    title="Edit Item"
+                    @click="editItem(e.item)"
+                  >
+                    <i class="fa fa-pencil-square"></i>
+                  </b-button>
+
                   <item-popover
                     class="d-inline-block"
                     :item="itemData[e.item]"
@@ -255,6 +266,16 @@ export default {
   },
 
   methods: {
+
+    editItem(itemId) {
+      this.$router.push(
+        {
+          path: util.format(ROUTE.ITEM_EDIT, itemId),
+          query: {}
+        }
+      ).catch(() => {
+      })
+    },
 
     goBack() {
       console.log(this.$route.query.return0)
