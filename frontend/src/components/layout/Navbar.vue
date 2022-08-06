@@ -117,13 +117,7 @@
             </router-link>
           </li>
 
-          <li class="nav-item" v-if="alphaEnabled">
-            <router-link class="nav-link " to="/merchants">
-              <i class="ra ra-emerald mr-1"></i> Merchants
-              <b-badge class="ml-3" variant="primary">ALPHA</b-badge>
-              <b-badge class="ml-3" variant="primary">NEW!</b-badge>
-            </router-link>
-          </li>
+          <nav-section-component :config="npcNav" v-if="alphaEnabled"/>
 
           <li class="nav-item">
             <router-link class="nav-link " to="/quest-api-explorer">
@@ -274,6 +268,29 @@ export default {
       appEnv: AppEnv.getEnv(),
       appVersion: AppEnv.getVersion(),
       appFeatures: AppEnv.getFeatures(),
+      npcNav: {
+        label: "NPCs",
+        labelIcon: "ra ra-dragon mr-1",
+        routePrefixMatches: ["npc", "merchant"],
+        navs: [
+          {
+            title: "Merchants",
+            to: ROUTE.MERCHANTS,
+            icon: "ra ra-emerald mr-1",
+            isAlpha: true,
+            isNew: true,
+            routes: ['merchant', 'merchants']
+          },
+          {
+            title: "Emotes",
+            to: ROUTE.NPC_EMOTES_EDIT,
+            icon: "ra ra-death-skull mr-1",
+            isAlpha: true,
+            isNew: true,
+            routes: ['npc-emotes']
+          },
+        ]
+      },
       viewerNav: {
         label: "Viewers",
         labelIcon: "ra ra-bleeding-eye mr-1",

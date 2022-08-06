@@ -1,139 +1,179 @@
 <template>
-  <div>
+  <content-area style="padding: 0px !important">
     <div class="row">
       <div :class="(isSubEditActive() ? 'col-6' : 'col-12')">
-
-        <eq-window-simple title="Strings Database">
-          <div class="row">
-            <div :class="(selectedType >= 0 ? 'col-10' : 'col-12') + ' text-center'">
-              <b-form-select
-                v-model.number="selectedType"
-                @change="resetSelections(); updateQueryState()"
-                class="mt-3 form-control"
-              >
-                <option value="-1">--- Select ---</option>
-                <option
-                  v-for="(description, index) in DB_STR_TYPES"
-                  :key="index"
-                  :value="parseInt(index)"
-                >
-                  {{ index }}) {{ description }} ({{ typeCounts[index] ? commify(typeCounts[index]) : 0 }})
-                </option>
-              </b-form-select>
-            </div>
-
-            <div class="col-2 text-center" v-if="selectedType >= 0">
-              <b-button
-                @click="createString()"
-                class="mt-3"
-                size="sm"
-                variant="outline-warning"
-              >
-                <i class="fa fa-plus"></i>
-                Create
-              </b-button>
-            </div>
-
-          </div>
-
-          <div class="row">
-            <div
-              class="col-12 text-center font-weight-bold mt-3"
-              v-if="strings && strings.length > 0 && !loading && !isSubEditActive()"
-            >
-              Select a row to edit
-            </div>
-
-          </div>
-
-          <div class="text-center mt-3" v-if="loading">
-            Loading
-            <loader-fake-progress class="mt-3"/>
-          </div>
-
-        </eq-window-simple>
-
-        <eq-window-simple
-          style="height: 80vh; overflow-y: scroll; overflow-x: hidden"
-          class="mt-3"
-          id="db-strings-list"
-          v-if="strings && strings.length > 0 && !loading"
+        <eq-window
+          title="NPC Emotes"
+          class="p-0"
         >
 
-          <div class='eq-window-nested-blue' style="width: 100%;">
+          <div class="row minified-inputs mt-4 text-center">
+            <div class="col-3 p-0 text-right">
+              <div class="d-inline-block btn-group ml-4 text-right" role="group" style="margin-top: 26px">
+                <b-button
+                  size="sm"
+                  variant="outline-warning"
+                  @click="reset(); rows = []; loading = true; updateQueryState(); init()"
+                >
+                  <i class="fa fa-refresh mr-1"></i>
+                  Reset
+                </b-button>
+                <b-button
+                  size="sm"
+                  variant="outline-warning"
+                  @click="newEmote()"
+                >
+                  <i class="fa fa-plus mr-1"></i>
+                  New
+                </b-button>
+              </div>
+            </div>
+            <div class="col-2">
+              Event
+              <b-form-select
+                v-model="eventSelection"
+                @change="subSelectedId = -1; rows = []; updateQueryState()"
+                :options="NPC_EMOTE_EVENTS"
+              />
+            </div>
+            <div class="col-2">
+              Type
+              <b-form-select
+                v-model="typeSelection"
+                @change="subSelectedId = -1; rows = []; updateQueryState()"
+                :options="NPC_EMOTE_TYPES"
+              />
+            </div>
+            <div class="col-2">
+              Search
+              <b-form-input
+                v-model="search"
+                v-on:keyup="subSelectedId = -1; rows = []; loading = true; updateQueryStateDebounce()"
+                placeholder="Search by text or id"
+              />
+            </div>
+          </div>
+
+          <div
+            id="emote-viewport"
+            style="max-height: 85vh; overflow-y: scroll; overflow-x: hidden"
+          >
+            <app-loader :is-loading="loading" padding="4"/>
+
             <table
-              class="eq-table eq-highlight-rows"
-              style="display: table; overflow-x: scroll " v-if="strings && strings.length > 0"
+              class="eq-table eq-highlight-rows row-table emotes-table"
+              style="display: table; font-size: 14px; overflow-x: scroll"
+              v-if="rows && rows.length > 0"
+              id="emotes-table"
             >
-              <thead>
+              <thead
+                class="eq-table-floating-header"
+              >
               <tr>
-                <th style="width: 100px">Id</th>
-                <th>Value</th>
+                <th
+                  v-for="(header, index) in Object.keys(rows[0]).filter((f) => { return !filterColumns.includes(f) })"
+                  :id="'column-' + header"
+                  :style="(header === 'text' ? 'text-align: left' : 'text-align: center') + ';' + getColumnWidth(header)"
+                >{{ header }}
+                </th>
               </tr>
               </thead>
               <tbody>
               <tr
-                v-for="(row, index) in strings"
-                :key="row.id + '-' + row.type + '-' + index"
-                style="border-radius: 10px"
-                :class="isStringSelected(row) ? 'pulsate-highlight-white' : ''"
-                @click="selectString(row.id, row.type)"
-                :id="'string-' + row.id"
+                :id="'row-' + e.id"
+                v-for="(e, index) in rows"
+                :key="e.id"
+                :class="isRowSelected(e) ? 'pulsate-highlight-white' : ''"
+                @click="selectEmote(e)"
               >
-                <td>{{ row.id }}</td>
-                <td>{{ row.value }}</td>
+                <td
+                  :style="(key === 'text' ? 'text-align: left' : 'text-align: center')"
+                  v-for="(key, colIndex) in Object.keys(e).filter((f) => { return !filterColumns.includes(f) })"
+                >
+                  <div class="d-inline-block" v-if="!['type', 'event_'].includes(key)">
+                    {{ e[key] }}
+                  </div>
+
+                  <div class="d-inline-block" v-if="key === 'type'">
+                    {{ NPC_EMOTE_TYPES[e[key]] ? NPC_EMOTE_TYPES[e[key]] : "" }}
+                  </div>
+
+                  <div class="d-inline-block" v-if="key === 'event_'">
+                    {{ NPC_EMOTE_EVENTS[e[key]] ? NPC_EMOTE_EVENTS[e[key]] : "" }}
+                  </div>
+                </td>
+
               </tr>
               </tbody>
             </table>
           </div>
-
-        </eq-window-simple>
-
+        </eq-window>
       </div>
-
       <div class="col-6 fade-in" v-if="isSubEditActive()">
-        <eq-window-simple title="Edit Database String">
+        <eq-window-simple
+          :title="'Edit NPC Emote (' + subSelectedId + ')'"
+        >
 
-          <div class="mt-3">
-            ID
-            <b-input
-              v-model.number="selectedStringObject.id"
-              @keydown="updateSelectedString('id')"
-              id="selected_id"
-            />
+          <div class="mt-3">Emote ID
+            <b-input v-model.number="selectedEmote.emoteid"/>
           </div>
 
-          <div class="mt-3">
-            Value
-            <b-form-textarea
-              v-model="selectedStringObject.value"
-              placeholder="Enter something..."
-              rows="5"
-              max-rows="20"
-              id="selected_value"
-              @keydown="updateSelectedString('value')"
-            />
+          <div class="mt-3">Event
+            <select
+              v-model.number="selectedEmote.event_"
+              class="form-control"
+            >
+              <option
+                v-for="(description, index) in NPC_EMOTE_EVENTS"
+                :key="index"
+                :value="parseInt(index)"
+              >
+                {{ index }}) {{ description }}
+              </option>
+            </select>
           </div>
 
-          <b-button
-            @click="saveSelectedString()"
-            size="sm"
-            class="mt-3"
-            variant="outline-warning"
-          >
-            <i class="fa fa-save"></i>
-            Save
-          </b-button>
+          <div class="mt-3">Type
+            <select
+              v-model.number="selectedEmote.type"
+              class="form-control"
+            >
+              <option
+                v-for="(description, index) in NPC_EMOTE_TYPES"
+                :key="index"
+                :value="parseInt(index)"
+              >
+                {{ index }}) {{ description }}
+              </option>
+            </select>
+          </div>
 
-          <b-button
-            @click="deleteSelectedString()"
-            size="sm"
-            class="mt-3 ml-3"
-            variant="outline-danger"
-          >
-            <i class="fa fa-trash"></i>
-            Delete
-          </b-button>
+          <div class="mt-3">Text
+            <b-textarea v-model.number="selectedEmote.text"/>
+          </div>
+
+          <div class="row mt-4">
+            <div class="col-12">
+              <b-button
+                @click="save()"
+                size="sm"
+                variant="outline-warning"
+              >
+                <i class="fa fa-save"></i>
+                Save
+              </b-button>
+
+              <b-button
+                @click="deleteEmote()"
+                size="sm"
+                class="ml-3"
+                variant="outline-danger"
+              >
+                <i class="fa fa-trash"></i>
+                Delete
+              </b-button>
+            </div>
+          </div>
 
           <!-- Notification / Error -->
           <info-error-banner
@@ -145,47 +185,34 @@
           />
 
         </eq-window-simple>
-
-        <eq-window-simple
-          :title="'String Preview Type (' + selectedStringObject.type + ') ID (' + selectedStringObject.id + ')'"
-          v-if="selectedStringObject.type"
-        >
-          <v-runtime-template
-            v-if="getSelectedStringObject()"
-            :template="'<div>' + formatStringPreview(selectedStringObject.value) + '</div>'"
-          />
-        </eq-window-simple>
       </div>
-
-
     </div>
 
-  </div>
+  </content-area>
 </template>
 
 <script>
-import EqWindowSimple      from "../../components/eq-ui/EQWindowSimple";
-import EqAutoTable         from "../../components/eq-ui/EQAutoTable";
-import ContentArea             from "../../components/layout/ContentArea";
-import {DbStrApi, NpcEmoteApi} from "../../app/api";
-import {SpireApiClient}        from "../../app/api/spire-api-client";
-import LoaderFakeProgress  from "../../components/LoaderFakeProgress";
-import {ROUTE}             from "../../routes";
-import {DB_STR_TYPES}      from "../../app/constants/eq-db-str-constants";
-import {EditFormFieldUtil} from "../../app/forms/edit-form-field-util";
-import util                from "util";
-import {SpireQueryBuilder} from "../../app/api/spire-query-builder";
-import InfoErrorBanner     from "../../components/InfoErrorBanner";
+import EqWindowSimple                      from "../../components/eq-ui/EQWindowSimple";
+import EqAutoTable                         from "../../components/eq-ui/EQAutoTable";
+import ContentArea                         from "../../components/layout/ContentArea";
+import {NpcEmoteApi}                       from "../../app/api";
+import {SpireApiClient}                    from "../../app/api/spire-api-client";
+import LoaderFakeProgress                  from "../../components/LoaderFakeProgress";
+import {ROUTE}                             from "../../routes";
+import {SpireQueryBuilder}                 from "../../app/api/spire-query-builder";
+import InfoErrorBanner                     from "../../components/InfoErrorBanner";
+import EqWindow                            from "../../components/eq-ui/EQWindow";
+import {NPC_EMOTE_EVENTS, NPC_EMOTE_TYPES} from "../../app/constants/eq-npc-emotes";
+import Tablesort                           from "../../app/utility/tablesort";
+import {scrollToTarget}                    from "../../app/utility/scrollToTarget";
+import {debounce}                          from "../../app/utility/debounce";
 
-// api response cache of all strings
-// this does not need to be reactive so don't put in data()
-let allEmotes       = []
-const DbStrApiClient = (new DbStrApi(SpireApiClient.getOpenApiConfig()))
 const NpcEmoteClient = (new NpcEmoteApi(SpireApiClient.getOpenApiConfig()))
 
 export default {
   name: "NpcEmotesEditor",
   components: {
+    EqWindow,
     InfoErrorBanner,
     LoaderFakeProgress: LoaderFakeProgress,
     ContentArea,
@@ -195,26 +222,31 @@ export default {
   },
   data() {
     return {
-      strings: [], // strings to be viewed
-      typeCounts: {}, // stores the counts per type (select)
 
-      selectedType: -1, // selected state
+      // table
+      rows: [],
+      filterColumns: [],
 
       // for the sub selector pane on the right
       subSelectedId: -1,
-      subSelectedType: -1,
+      selectedEmote: {},
 
+      // api responses
       error: "",
       notification: "",
 
-      originalSelectedStringObject: {},
-      selectedStringObject: {},
+      // selection
+      eventSelection: -1,
+      typeSelection: -1,
+      search: "",
+
+      // constants
+      NPC_EMOTE_TYPES: NPC_EMOTE_TYPES,
+      NPC_EMOTE_EVENTS: NPC_EMOTE_EVENTS,
 
       lastSelectedTime: Date.now(),
 
       loading: false, // are we loading or not
-
-      DB_STR_TYPES: DB_STR_TYPES
     }
   },
 
@@ -228,19 +260,34 @@ export default {
 
   methods: {
 
+    updateQueryStateDebounce: debounce(function () {
+      this.updateQueryState()
+    }, 600),
+
+    getColumnWidth(field) {
+      if (field === 'event_') {
+        return 'width: 130px;'
+      }
+      if (field === 'type') {
+        return 'width: 140px;'
+      }
+
+      return ''
+    },
+
     /**
      * Resets
      */
     reset() {
-      this.selectedType                 = -1
-      this.subSelectedId                = -1
-      this.subSelectedType              = -1
-      this.originalSelectedStringObject = {}
-      this.selectedStringObject         = {}
+      this.search         = ""
+      this.error          = ""
+      this.notification   = ""
+      this.eventSelection = -1
+      this.typeSelection  = -1
+      this.subSelectedId  = -1
     },
     resetSelections() {
-      this.subSelectedId   = -1;
-      this.subSelectedType = -1;
+      this.subSelectedId = -1
     },
 
     /**
@@ -249,11 +296,17 @@ export default {
     updateQueryState: function () {
       let queryState = {};
 
-      if (this.selectedType !== -1) {
-        queryState.type = this.selectedType
-      }
       if (this.subSelectedId !== -1) {
         queryState.selectedId = this.subSelectedId
+      }
+      if (this.eventSelection !== -1) {
+        queryState.event = this.eventSelection
+      }
+      if (this.typeSelection !== -1) {
+        queryState.type = this.typeSelection
+      }
+      if (this.search !== "") {
+        queryState.search = this.search
       }
 
       this.$router.push(
@@ -267,217 +320,187 @@ export default {
 
     loadQueryState() {
       console.log("loading query state")
-      if (this.$route.query.type >= 0) {
-        this.selectedType    = parseInt(this.$route.query.type);
-        this.subSelectedType = parseInt(this.$route.query.type);
-      }
       if (this.$route.query.selectedId >= 0) {
         this.subSelectedId = parseInt(this.$route.query.selectedId);
-        console.log("selected object", this.selectedStringObject)
-
       }
-
-      console.log("selected type", this.selectedType)
-      console.log("sub selected type", this.subSelectedType)
-      console.log("sub selected id", this.subSelectedId)
-
-    },
-
-    /**
-     * Helpers
-     */
-    listData() {
-      this.loading = true
-      let strings  = []
-      allEmotes.forEach((string) => {
-        if (string.type === parseInt(this.selectedType)) {
-          strings.push(string)
-        }
-      });
-
-      this.strings = strings
-      this.loading = false
-    },
-    commify(x) {
-      return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-    },
-    replaceAll(str, find, replace) {
-      return str.replace(new RegExp(find, 'g'), replace);
-    },
-    formatStringPreview(contents) {
-      if (contents) {
-        return this.replaceAll(contents, "<BR>", "<BR/>")
+      if (this.$route.query.event >= 0) {
+        this.eventSelection = parseInt(this.$route.query.event);
       }
-      return ""
-    },
-
-    async createString() {
-      console.log("create")
-
-      // filter list by type
-      let r = allEmotes.filter((s) => s.type === parseInt(this.subSelectedType))
-        .sort((a, b) => (a.id > b.id) ? 1 : -1)
-
-      // grab last id + 1 from list
-      const newId = r[r.length - 1].id + 1
-
-      // create
-      try {
-        const response = await DbStrApiClient.createDbStr(
-          {
-            dbStr: {
-              id: newId,
-              type: parseInt(this.subSelectedType),
-              value: ""
-            }
-          }
-        )
-
-        // success
-        if (response.status === 200 && response.data) {
-          this.resetSelections()
-          this.updateQueryState()
-          this.selectString(newId, this.subSelectedType)
-          this.init(true)
-        }
-      } catch (err) {
-        if (err.response !== 200 && err.response.data.error) {
-          this.error = err.response.data.error
-        }
+      if (this.$route.query.type >= 0) {
+        this.typeSelection = parseInt(this.$route.query.type);
       }
-    },
-
-    async deleteSelectedString() {
-      if (confirm("Are you sure you want to delete this string?")) {
-        try {
-          const response = await DbStrApiClient.deleteDbStr(
-            {
-              id: parseInt(this.subSelectedId)
-            },
-            (new SpireQueryBuilder())
-              .where("type", "=", this.selectedType)
-              .get()
-          )
-
-          // success
-          if (response.status === 200 && response.data) {
-
-            // get last element in current list and select it after deletion
-            let r = allEmotes.filter((s) => s.type === parseInt(this.subSelectedType))
-              .sort((a, b) => (a.id > b.id) ? 1 : -1)
-
-            let lastElement = {}
-
-            // grab last element and select
-            if (r && r.length > 0) {
-              lastElement = r[r.length - 1]
-              // if we deleted the last element, let's fallback to next in line...
-              if (parseInt(lastElement.id) === parseInt(this.subSelectedId)) {
-                if (r[r.length - 2]) {
-                  lastElement = r[r.length - 2]
-                }
-              }
-            }
-
-            this.resetSelections()
-            this.updateQueryState()
-
-            this.notification = "Deleted successfully"
-
-            if (lastElement) {
-              this.selectString(lastElement.id, this.subSelectedType)
-            }
-
-            this.init(true)
-          }
-        } catch (err) {
-          if (err.response !== 200 && err.response.data.error) {
-            this.error = err.response.data.error
-          }
-        }
-      }
-    },
-
-    async updateSelectedString(field) {
-      EditFormFieldUtil.setFieldModifiedById("selected_" + field)
-    },
-    async saveSelectedString() {
-
-      try {
-        const response = await DbStrApiClient.updateDbStr(
-          {
-            id: parseInt(this.originalSelectedStringObject.id),
-            dbStr: this.selectedStringObject
-          },
-          {
-            query: (new SpireQueryBuilder())
-              .where("type", "=", this.selectedType)
-              .get()
-          }
-        )
-
-        // success
-        if (response.status === 200 && response.data) {
-          EditFormFieldUtil.resetFieldEditedStatus()
-
-          this.updateQueryState()
-          await this.init(true)
-          this.notification = "Saved successfully!"
-        }
-
-      } catch (err) {
-        if (err.response !== 200 && err.response.data.error) {
-          this.error = err.response.data.error
-        }
+      if (this.$route.query.search !== "") {
+        this.search = this.$route.query.search;
       }
     },
 
     /**
      * Sub editor selection
      */
-    isSubEditActive() {
-      return this.subSelectedId >= 0 && this.subSelectedType >= 0 && Object.keys(this.selectedStringObject).length > 0
-    },
-    getSelectedStringObject() {
-      let r = allEmotes.find((s) => s.type === this.subSelectedType && s.id === this.subSelectedId)
-
-      return typeof r === 'undefined' ? {} : r
-    },
-
-    selectString(stringId, typeId) {
-      this.lastSelectedTime             = Date.now()
-      this.subSelectedId                = stringId
-      this.subSelectedType              = typeId
-      this.originalSelectedStringObject = JSON.parse(JSON.stringify(this.getSelectedStringObject()))
-      this.selectedStringObject         = this.getSelectedStringObject()
+    selectEmote(e) {
+      this.subSelectedId = e.id
       this.updateQueryState()
     },
 
-    isStringSelected(string) {
-      return string.id === this.subSelectedId && string.type === this.subSelectedType
+    isSubEditActive() {
+      return this.subSelectedId >= 0
+    },
+
+    isRowSelected(e) {
+      return e.id === this.subSelectedId
+    },
+
+    async newEmote() {
+
+      let nextEmoteId = 0
+      for (const e of this.rows) {
+        if (e.emoteid > nextEmoteId) {
+          nextEmoteId = e.emoteid
+        }
+      }
+
+      try {
+        const r = await NpcEmoteClient.createNpcEmote(
+          {
+            npcEmote: {
+              emoteid: nextEmoteId + 1,
+              event_: 1,
+              type: 0,
+              text: "You will not evade me!",
+            }
+          }
+        )
+        if (r.status === 200) {
+          if (r.data.id > 0) {
+            this.notification  = "New emote created!"
+            this.subSelectedId = r.data.id
+            this.rows          = []
+            this.updateQueryState()
+          }
+        }
+      } catch (err) {
+        if (err.response.data.error) {
+          this.error = err.response.data.error
+        }
+      }
+    },
+
+    async save() {
+      try {
+        const r = await NpcEmoteClient.updateNpcEmote(
+          {
+            id: this.selectedEmote.id,
+            npcEmote: this.selectedEmote
+          }
+        )
+        if (r.status === 200) {
+          this.notification = "Emote data saved!"
+        }
+      } catch (err) {
+        if (err.response.data.error) {
+          this.error = err.response.data.error
+        }
+      }
+    },
+
+    async deleteEmote() {
+      if (confirm("Are you sure you want to delete this emote (" + this.subSelectedId + ")?")) {
+        try {
+          const r = await NpcEmoteClient.deleteNpcEmote(
+            {
+              id: this.selectedEmote.id,
+            }
+          )
+
+          if (r.status === 200) {
+            this.notification = "Emote deleted!"
+            this.reset()
+
+            // convenience - we grab the last element in the list if we deleted the last element in the table
+            const deletedLastElement = this.selectedEmote.id === this.rows[this.rows.length - 1].id
+            if (deletedLastElement) {
+              this.subSelectedId = this.rows[this.rows.length - 2].id
+            }
+
+            this.rows = []
+            this.updateQueryState()
+          }
+        } catch (err) {
+          console.log(err)
+          if (err.response && err.response.data && err.response.data.error) {
+            this.error = err.response.data.error
+          }
+        }
+      }
     },
 
     /**
      * Initialize
      */
     async init(reset = false) {
+      this.loading = true
       this.loadQueryState()
-      if (allEmotes && allEmotes.length === 0 || reset) {
-        allEmotes = await this.getAllNpcEmotes()
+      if (this.rows && this.rows.length === 0 || reset) {
+        this.rows         = await this.getAllNpcEmotes()
+        this.originalRows = JSON.parse(JSON.stringify(this.rows))
       }
-      this.calculateStringTypeCounts(allEmotes)
-      this.originalSelectedStringObject = JSON.parse(JSON.stringify(this.getSelectedStringObject()))
-      this.selectedStringObject         = this.getSelectedStringObject()
-      this.listData()
-      this.scrollToHighlighted()
+
+      setTimeout(() => {
+        if (document.getElementById('emotes-table')) {
+          new Tablesort(document.getElementById('emotes-table'));
+        }
+      }, 100)
+
+      if (this.subSelectedId > 0) {
+        for (const e of this.rows) {
+          if (e.id === this.subSelectedId) {
+            this.selectedEmote = JSON.parse(JSON.stringify(e))
+          }
+        }
+
+        scrollToTarget(
+          "emote-viewport",
+          'row-' + this.subSelectedId
+        )
+      }
+
+      // filters
+      let rows = []
+      if (this.eventSelection > -1 || this.typeSelection > -1 || this.search !== "") {
+        for (const r of this.originalRows) {
+          if (this.eventSelection > -1 && r.event_ !== this.eventSelection) {
+            continue
+          }
+          if (this.typeSelection > -1 && r.type !== this.typeSelection) {
+            continue;
+          }
+          if (this.search && this.search !== "" && r.text &&
+            !r.text.toLowerCase().includes(this.search.toLowerCase()) &&
+            !r.id.toString().includes(this.search)) {
+            continue;
+          }
+
+          rows.push(r)
+        }
+
+        if (rows.length > 0) {
+          this.rows = rows
+        }
+      }
+
+      this.loading = false
+
+      // this.scrollToHighlighted()
     },
 
     async getAllNpcEmotes() {
-      this.loading   = true
+      this.loading = true
+
+      let builder = (new SpireQueryBuilder())
+        .limit(100000)
+
       const response = await NpcEmoteClient.listNpcEmotes(
-        (new SpireQueryBuilder())
-          .limit(100000)
-          .get()
+        builder.get()
       )
       if (response.status === 200 && response.data) {
         this.loading = false
@@ -485,36 +508,9 @@ export default {
       }
     },
 
-    calculateStringTypeCounts(allEmotes) {
-      let typeStringCount = {}
-      allEmotes.forEach((string) => {
-        if (typeof typeStringCount[string.type] === "undefined") {
-          typeStringCount[string.type] = 0
-        }
-        typeStringCount[string.type]++
-      })
-
-      this.typeCounts = typeStringCount
-    },
-
-    scrollToHighlighted() {
-      if (Date.now() < (this.lastSelectedTime + 1000)) {
-        return true
-      }
-
-      setTimeout(() => {
-        const container = document.getElementById("db-strings-list");
-        const target    = document.getElementById(util.format("string-%s", this.subSelectedId))
-
-        if (container && target) {
-          console.log("[StringsDatabase] target top [%s]", target.getBoundingClientRect().top)
-          container.scrollTop = container.scrollTop + target.getBoundingClientRect().top - 200;
-        } else if (container && this.selectedType === 0) {
-          container.scrollTop = 0
-        }
-      }, 100)
-    }
-
+  },
+  created() {
+    this.originalRows = []
   },
   async mounted() {
     await this.init()
@@ -522,6 +518,8 @@ export default {
 }
 </script>
 
-<style scoped>
-
+<style>
+.emotes-table td {
+  vertical-align: middle !important;
+}
 </style>
