@@ -9,7 +9,6 @@ function scrollTo(containerId, targetId, offset = 300) {
     if (container && target) {
       // @ts-ignore
       container.scrollTop = target.offsetTop - offset;
-      console.log("scroll trigger", container, target)
     }
   }, 100)
 }

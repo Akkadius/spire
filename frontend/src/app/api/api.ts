@@ -79,6 +79,7 @@ export * from './api/content-flag-api';
 export * from './api/db-str-api';
 // export * from './api/discovered-item-api';
 // export * from './api/door-api';
+export * from './api/dynamic-zone-template-api'
 // export * from './api/dynamic-zone-api';
 // export * from './api/dynamic-zone-member-api';
 // export * from './api/eventlog-api';

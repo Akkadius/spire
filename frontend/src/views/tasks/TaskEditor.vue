@@ -158,6 +158,7 @@
                        {
                          description: 'Dynamic Zone Template ID',
                          field: 'dz_template_id',
+                         onclick: setSelectorActive,
                          itemIcon: '4004',
                          fieldType: 'text',
                          col: 'col-6',
@@ -875,6 +876,13 @@
           @input="task.reward_point_type = $event; setFieldModifiedById('reward_point_type');"
         />
 
+        <!-- reward_point_type selector -->
+        <dynamic-zone-template-selector
+          v-if="task && selectorActive['dz_template_id']"
+          :selected-id="task.dz_template_id"
+          @input="task.dz_template_id = $event; setFieldModifiedById('dz_template_id');"
+        />
+
         <!-- (id) free id selector -->
         <eq-window-simple
           title="Free Item Ids"
@@ -961,11 +969,13 @@ import ClipBoard from "@/app/clipboard/clipboard";
 import TaskQuestExamplePreview from "@/views/tasks/components/TaskQuestExamplePreview.vue";
 import InfoErrorBanner from "@/components/InfoErrorBanner.vue";
 import AlternateCurrencySelector from "@/components/selectors/AlternateCurrencySelector.vue";
+import DynamicZoneTemplateSelector from "@/components/selectors/DynamicZoneTemplateSelector.vue";
 
 const MILLISECONDS_BEFORE_WINDOW_RESET = 10000;
 
 export default {
   components: {
+    DynamicZoneTemplateSelector,
     AlternateCurrencySelector,
     InfoErrorBanner,
     TaskQuestExamplePreview,
@@ -1652,6 +1662,7 @@ export default {
         "goal_match_list",
         "zones",
         "reward_point_type",
+        "dz_template_id",
         // "item_list",
         // "skill_list",
         // "spell_list"
