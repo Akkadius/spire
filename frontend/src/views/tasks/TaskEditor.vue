@@ -312,6 +312,7 @@
                        {
                          description: 'Replay Timer Group',
                          field: 'replay_timer_group',
+                         onclick: setSelectorActive,
                          fieldType: 'text',
                          itemIcon: '750',
                          col: 'col-6',
@@ -323,10 +324,10 @@
                          itemIcon: '750',
                          col: 'col-6',
                        },
-
                        {
                          description: 'Request Timer Group',
                          field: 'request_timer_group',
+                         onclick: setSelectorActive,
                          itemIcon: '750',
                          fieldType: 'text',
                          col: 'col-6',
@@ -877,11 +878,27 @@
           @input="task.reward_point_type = $event; setFieldModifiedById('reward_point_type');"
         />
 
-        <!-- reward_point_type selector -->
+        <!-- dz_template_id selector -->
         <dynamic-zone-template-selector
           v-if="task && selectorActive['dz_template_id']"
           :selected-id="task.dz_template_id"
           @input="task.dz_template_id = $event; setFieldModifiedById('dz_template_id');"
+        />
+
+        <!-- replay_timer_group selector -->
+        <task-replay-request-group-selector
+          v-if="task && selectorActive['replay_timer_group']"
+          :selected-id="task.replay_timer_group"
+          replay-field="replay_timer_group"
+          @input="task.replay_timer_group = $event; setFieldModifiedById('replay_timer_group');"
+        />
+
+        <!-- request_timer_group selector -->
+        <task-replay-request-group-selector
+          v-if="task && selectorActive['request_timer_group']"
+          :selected-id="task.request_timer_group"
+          replay-field="request_timer_group"
+          @input="task.request_timer_group = $event; setFieldModifiedById('request_timer_group');"
         />
 
         <!-- (id) free id selector -->
@@ -971,11 +988,13 @@ import TaskQuestExamplePreview from "@/views/tasks/components/TaskQuestExamplePr
 import InfoErrorBanner from "@/components/InfoErrorBanner.vue";
 import AlternateCurrencySelector from "@/components/selectors/AlternateCurrencySelector.vue";
 import DynamicZoneTemplateSelector from "@/components/selectors/DynamicZoneTemplateSelector.vue";
+import TaskReplayRequestGroupSelector from "@/views/tasks/components/TaskReplayRequestGroupSelector.vue";
 
 const MILLISECONDS_BEFORE_WINDOW_RESET = 10000;
 
 export default {
   components: {
+    TaskReplayRequestGroupSelector,
     DynamicZoneTemplateSelector,
     AlternateCurrencySelector,
     InfoErrorBanner,
@@ -1677,6 +1696,8 @@ export default {
         "zones",
         "reward_point_type",
         "dz_template_id",
+        "replay_timer_group",
+        "request_timer_group",
         // "item_list",
         // "skill_list",
         // "spell_list"

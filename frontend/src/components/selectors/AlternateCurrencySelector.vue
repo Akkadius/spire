@@ -62,8 +62,8 @@ import EqWindow               from "@/components/eq-ui/EQWindow";
 import {AlternateCurrencyApi} from "@/app/api";
 import {SpireApiClient}       from "@/app/api/spire-api-client";
 import ItemPopover            from "@/components/ItemPopover";
-import {SpireQueryBuilder}    from "@/app/api/spire-query-builder";
-import {scrollTo}             from "@/app/utility/scrollTo";
+import {SpireQueryBuilder} from "@/app/api/spire-query-builder";
+import {scrollToTarget}    from "@/app/utility/scrollToTarget";
 
 export default {
   name: "AlternateCurrencySelector",
@@ -91,7 +91,7 @@ export default {
     }
 
     if (this.selectedCurrency > 0) {
-      scrollTo(
+      scrollToTarget(
         "alternate-currency-viewport",
         'currency-' + this.selectedCurrency
       )

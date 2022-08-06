@@ -1,4 +1,4 @@
-function scrollTo(containerId, targetId, offset = 300) {
+function scrollToTarget(containerId, targetId, offset = 300) {
   // bring focus to the selected model
   // we queue this on a timeout because elements haven't been rendered yet
   setTimeout(() => {
@@ -13,4 +13,4 @@ function scrollTo(containerId, targetId, offset = 300) {
   }, 100)
 }
 
-export {scrollTo}
+export {scrollToTarget}

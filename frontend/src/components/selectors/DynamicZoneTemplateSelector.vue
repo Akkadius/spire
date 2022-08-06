@@ -70,7 +70,7 @@
 <script>
 import EqWindow                 from "@/components/eq-ui/EQWindow";
 import {SpireApiClient}         from "@/app/api/spire-api-client";
-import {scrollTo}               from "@/app/utility/scrollTo";
+import {scrollToTarget}         from "@/app/utility/scrollToTarget";
 import {DynamicZoneTemplateApi} from "@/app/api";
 
 export default {
@@ -96,7 +96,7 @@ export default {
     }
 
     if (this.selectedId > 0) {
-      scrollTo(
+      scrollToTarget(
         "dynamic-zone-template-viewport",
         'row-' + this.selectedId
       )
