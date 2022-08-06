@@ -103,6 +103,28 @@ func (e *MerchantlistTempController) getMerchantlistTemp(c echo.Context) error {
 		keys = append(keys, "slot = ?")
 	}
 
+	// key param [zone_id] position [3] type [int]
+	if len(c.QueryParam("zone_id")) > 0 {
+		zoneIdParam, err := strconv.Atoi(c.QueryParam("zone_id"))
+		if err != nil {
+			return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error parsing query param [zone_id] err [%s]", err.Error())})
+		}
+
+		params = append(params, zoneIdParam)
+		keys = append(keys, "zone_id = ?")
+	}
+
+	// key param [instance_id] position [4] type [int]
+	if len(c.QueryParam("instance_id")) > 0 {
+		instanceIdParam, err := strconv.Atoi(c.QueryParam("instance_id"))
+		if err != nil {
+			return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error parsing query param [instance_id] err [%s]", err.Error())})
+		}
+
+		params = append(params, instanceIdParam)
+		keys = append(keys, "instance_id = ?")
+	}
+
 	// query builder
 	var result models.MerchantlistTemp
 	query := e.db.QueryContext(models.MerchantlistTemp{}, c)
@@ -166,6 +188,28 @@ func (e *MerchantlistTempController) updateMerchantlistTemp(c echo.Context) erro
 
 		params = append(params, slotParam)
 		keys = append(keys, "slot = ?")
+	}
+
+	// key param [zone_id] position [3] type [int]
+	if len(c.QueryParam("zone_id")) > 0 {
+		zoneIdParam, err := strconv.Atoi(c.QueryParam("zone_id"))
+		if err != nil {
+			return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error parsing query param [zone_id] err [%s]", err.Error())})
+		}
+
+		params = append(params, zoneIdParam)
+		keys = append(keys, "zone_id = ?")
+	}
+
+	// key param [instance_id] position [4] type [int]
+	if len(c.QueryParam("instance_id")) > 0 {
+		instanceIdParam, err := strconv.Atoi(c.QueryParam("instance_id"))
+		if err != nil {
+			return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error parsing query param [instance_id] err [%s]", err.Error())})
+		}
+
+		params = append(params, instanceIdParam)
+		keys = append(keys, "instance_id = ?")
 	}
 
 	// query builder
@@ -253,6 +297,28 @@ func (e *MerchantlistTempController) deleteMerchantlistTemp(c echo.Context) erro
 
 		params = append(params, slotParam)
 		keys = append(keys, "slot = ?")
+	}
+
+	// key param [zone_id] position [3] type [int]
+	if len(c.QueryParam("zone_id")) > 0 {
+		zoneIdParam, err := strconv.Atoi(c.QueryParam("zone_id"))
+		if err != nil {
+			return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error parsing query param [zone_id] err [%s]", err.Error())})
+		}
+
+		params = append(params, zoneIdParam)
+		keys = append(keys, "zone_id = ?")
+	}
+
+	// key param [instance_id] position [4] type [int]
+	if len(c.QueryParam("instance_id")) > 0 {
+		instanceIdParam, err := strconv.Atoi(c.QueryParam("instance_id"))
+		if err != nil {
+			return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error parsing query param [instance_id] err [%s]", err.Error())})
+		}
+
+		params = append(params, instanceIdParam)
+		keys = append(keys, "instance_id = ?")
 	}
 
 	// query builder

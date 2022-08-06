@@ -13,6 +13,7 @@
  */
 
 
+import { ModelsAlternateCurrency } from './models-alternate-currency';
 import { ModelsTaskActivity } from './models-task-activity';
 import { ModelsTaskset } from './models-taskset';
 
@@ -22,6 +23,12 @@ import { ModelsTaskset } from './models-taskset';
  * @interface ModelsTask
  */
 export interface ModelsTask {
+    /**
+     * 
+     * @type {ModelsAlternateCurrency}
+     * @memberof ModelsTask
+     */
+    alternate_currency?: ModelsAlternateCurrency;
     /**
      * 
      * @type {number}

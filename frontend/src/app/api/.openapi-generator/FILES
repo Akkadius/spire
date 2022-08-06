@@ -48,6 +48,7 @@ api/character-language-api.ts
 api/character-leadership-ability-api.ts
 api/character-material-api.ts
 api/character-memmed-spell-api.ts
+api/character-peqzone-flag-api.ts
 api/character-pet-buff-api.ts
 api/character-pet-info-api.ts
 api/character-pet-inventory-api.ts
@@ -64,10 +65,12 @@ api/content-flag-api.ts
 api/damageshieldtype-api.ts
 api/data-bucket-api.ts
 api/db-str-api.ts
+api/discord-webhook-api.ts
 api/discovered-item-api.ts
 api/door-api.ts
 api/dynamic-zone-api.ts
 api/dynamic-zone-member-api.ts
+api/dynamic-zone-template-api.ts
 api/eventlog-api.ts
 api/expedition-api.ts
 api/expedition-lockout-api.ts
@@ -232,6 +235,7 @@ models/models-character-language.ts
 models/models-character-leadership-ability.ts
 models/models-character-material.ts
 models/models-character-memmed-spell.ts
+models/models-character-peqzone-flag.ts
 models/models-character-pet-buff.ts
 models/models-character-pet-info.ts
 models/models-character-pet-inventory.ts
@@ -249,9 +253,11 @@ models/models-content-flag.ts
 models/models-damageshieldtype.ts
 models/models-data-bucket.ts
 models/models-db-str.ts
+models/models-discord-webhook.ts
 models/models-discovered-item.ts
 models/models-door.ts
 models/models-dynamic-zone-member.ts
+models/models-dynamic-zone-template.ts
 models/models-dynamic-zone.ts
 models/models-eventlog.ts
 models/models-expedition-lockout.ts

@@ -13,32 +13,25 @@
  */
 
 
-import { ModelsItem } from './models-item';
 
 /**
  * 
  * @export
- * @interface ModelsAlternateCurrency
+ * @interface ModelsCharacterPeqzoneFlag
  */
-export interface ModelsAlternateCurrency {
+export interface ModelsCharacterPeqzoneFlag {
     /**
      * 
      * @type {number}
-     * @memberof ModelsAlternateCurrency
+     * @memberof ModelsCharacterPeqzoneFlag
      */
     id?: number;
     /**
      * 
-     * @type {ModelsItem}
-     * @memberof ModelsAlternateCurrency
-     */
-    item?: ModelsItem;
-    /**
-     * 
      * @type {number}
-     * @memberof ModelsAlternateCurrency
+     * @memberof ModelsCharacterPeqzoneFlag
      */
-    item_id?: number;
+    zone_id?: number;
 }
 
 
