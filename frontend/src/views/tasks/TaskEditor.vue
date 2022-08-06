@@ -297,6 +297,7 @@
                          field: 'reward_point_type',
                          itemIcon: '1955',
                          fieldType: 'text',
+                         onclick: setSelectorActive,
                          col: 'col-6',
                        },
                        {
@@ -395,8 +396,9 @@
                         :id="field.field"
                         v-model="task[field.field]"
                         class="m-0 mt-1"
-                        rows="2"
+                        rows="1"
                         max-rows="6"
+                        style="max-height: 75px"
                         v-on="typeof field.onclick !== 'undefined' ? { click: () => field.onclick(field.field) } : {}"
                         v-b-tooltip.hover.v-dark.right :title="getFieldDescription(field.field)"
                         :style="(task[field.field] === '' ? 'opacity: .5' : '') + ';'"
@@ -866,6 +868,13 @@
           @input="task.task_activities[selectedActivity].delivertonpc = $event.npcId; setFieldModifiedById('delivertonpc'); postTargetNameUpdateProcessor($event, 'delivertonpc')"
         />
 
+        <!-- reward_point_type selector -->
+        <alternate-currency-selector
+          v-if="task && selectorActive['reward_point_type']"
+          :selected-currency="task.reward_point_type"
+          @input="task.reward_point_type = $event; setFieldModifiedById('reward_point_type');"
+        />
+
         <!-- (id) free id selector -->
         <eq-window-simple
           title="Free Item Ids"
@@ -951,11 +960,13 @@ import {Zones} from "@/app/zones";
 import ClipBoard from "@/app/clipboard/clipboard";
 import TaskQuestExamplePreview from "@/views/tasks/components/TaskQuestExamplePreview.vue";
 import InfoErrorBanner from "@/components/InfoErrorBanner.vue";
+import AlternateCurrencySelector from "@/components/selectors/AlternateCurrencySelector.vue";
 
 const MILLISECONDS_BEFORE_WINDOW_RESET = 10000;
 
 export default {
   components: {
+    AlternateCurrencySelector,
     InfoErrorBanner,
     TaskQuestExamplePreview,
     TaskGoalMatchListPreviewer,
@@ -1263,7 +1274,7 @@ export default {
         if (r.status === 200) {
           this.task             = (await Tasks.getTask(this.$route.params.id))
           this.selectedActivity = r.data.activityid
-          this.sendNotification(`Task activity (${this.selectedActivity}) successfully cloned`)
+          this.notification = `Task activity (${this.selectedActivity}) successfully cloned`
         }
       } catch (err) {
         console.log(err)
@@ -1329,7 +1340,7 @@ export default {
         if (r.status === 200) {
           this.task             = (await Tasks.getTask(this.$route.params.id))
           this.selectedActivity = r.data.activityid
-          this.sendNotification("Task activity successfully created")
+          this.notification = "Task activity successfully created"
         }
       } catch (err) {
         console.log(err)
@@ -1356,7 +1367,7 @@ export default {
                 if (r.status === 200) {
                   this.task             = (await Tasks.getTask(this.$route.params.id))
                   this.selectedActivity = a.activityid - 1
-                  this.sendNotification("Task activity successfully deleted")
+                  this.notification = "Task activity successfully deleted"
                   deletedSuccessfully = true
                 }
               }
@@ -1413,7 +1424,7 @@ export default {
         const r = await Tasks.updateTask(this.getBackendFormattedTask())
         if (r.status === 200) {
           EditFormFieldUtil.resetFieldEditedStatus()
-          this.sendNotification("Task updated!");
+          this.notification = "Task updated!";
         }
       } catch (err) {
         if (err.response && err.response.data && err.response.data.error) {
@@ -1466,7 +1477,7 @@ export default {
             this.tasks            = []
             setTimeout(() => {
               this.updateQueryState()
-              this.sendNotification("New task created successfully!")
+              this.notification = "New task created successfully!"
             }, 100)
           }
         } catch (err) {
@@ -1513,7 +1524,7 @@ export default {
 
                 setTimeout(() => {
                   this.updateQueryState()
-                  this.sendNotification("New task cloned successfully!")
+                  this.notification = "New task cloned successfully!"
                 }, 100)
               }
             } catch (err) {
@@ -1640,6 +1651,7 @@ export default {
         "delivertonpc",
         "goal_match_list",
         "zones",
+        "reward_point_type",
         // "item_list",
         // "skill_list",
         // "spell_list"

@@ -4,6 +4,8 @@ account:
   - 1-* id->sharedbank:acctid
   - 1-* id->bug_reports:account_id
   - 1-* id->account_ip:accid
+alternate_currency:
+  - 1-1 item_id->items:id
 auras:
 #  - 1-1 npc_type->npc_types:id
   - 1-1 spell_id->spells_new:id
@@ -177,3 +179,4 @@ task_activities:
 tasks:
   - 1-* id->task_activities:taskid
   - 1-* id->tasksets:taskid
+  - 1-1 reward_point_type->alternate_currency:id
