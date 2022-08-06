@@ -168,7 +168,8 @@
                          description: 'Lock Task on Activity ID',
                          field: 'lock_activity_id',
                          itemIcon: '1077',
-                         fieldType: 'text',
+                         fieldType: 'select',
+                         selectData: buildTaskActivitySelection(),
                          col: 'col-6',
                          zeroValue: -1,
                        },
@@ -1042,6 +1043,15 @@ export default {
   },
 
   methods: {
+
+    buildTaskActivitySelection() {
+      let activities = {}
+      for (const a of this.task.task_activities) {
+        activities[a.activityid] = a.activityid + " " + Tasks.buildActivityDescription(a)
+      }
+
+      return activities
+    },
 
     isActivityQuestControlled() {
       return this.task.task_activities[this.selectedActivity].goalmethod === TASK_GOAL_METHOD_TYPES.QUEST_CONTROLLED

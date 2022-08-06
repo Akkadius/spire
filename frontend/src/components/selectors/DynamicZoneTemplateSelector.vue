@@ -9,7 +9,7 @@
       <table
         class="eq-table eq-highlight-rows row-table"
         style="display: table; font-size: 14px; overflow-x: scroll"
-        v-if="rows"
+        v-if="rows && rows.length > 0"
       >
         <thead
           class="eq-table-floating-header"
