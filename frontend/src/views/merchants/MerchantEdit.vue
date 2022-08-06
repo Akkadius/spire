@@ -8,7 +8,7 @@
             There are no items on this Merchant, perhaps you should add some?
           </div>
 
-          <div class="row">
+          <div class="row mb-1">
             <div class="col-6">
               <div class="btn-group d-inline-block" role="group">
                 <b-button
@@ -37,15 +37,29 @@
                 >
                   <i class="fa fa-trash-o"></i> Delete Merchant
                 </b-button>
-
               </div>
             </div>
+
+            <div class="col-6" v-if="!applyingChanges">
+              <div>
+                <info-error-banner
+                  :slim="true"
+                  :notification="notification"
+                  :error="error"
+                  @dismiss-error="error = ''"
+                  @dismiss-notification="notification = ''"
+                  class="mt-0"
+                />
+              </div>
+            </div>
+
             <div class="col-6 text-right" v-if="applyingChanges">
               <div class="ml-3 p-0 m-0">
                 Applying
                 <loader-fake-progress class="ml-3 mt-2 d-inline-block"/>
               </div>
             </div>
+
           </div>
 
           <div
@@ -178,10 +192,12 @@ import MerchantlistEntryEdit     from "./components/MerchantlistEntryEdit";
 import ExpansionIcon             from "../../components/preview/ExpansionIcon";
 import ContentFlagPills          from "../../components/preview/ContentFlagPills";
 import ContentFilterDisplayPills from "../../components/preview/ContentFilterDisplayPills";
+import InfoErrorBanner           from "../../components/InfoErrorBanner";
 
 export default {
   name: "MerchantEdit",
   components: {
+    InfoErrorBanner,
     ContentFilterDisplayPills,
     ContentFlagPills,
     ExpansionIcon,
@@ -198,6 +214,10 @@ export default {
       // editing
       editMerchantId: 0,
       editMerchantEntrySlot: 0,
+
+      // api notify / error
+      notification: "",
+      error: "",
 
       // state
       addItem: false,
@@ -383,38 +403,47 @@ export default {
 
       this.applyingChanges = true
 
-      let startingRewriteSlot = 0
-      for (let [i, e] of this.editList.entries()) {
+      try {
 
-        // when the first slot so happens to be not starting at 1
-        if (i === 0 && parseInt(e.slot) !== 1) {
-          startingRewriteSlot = 1
-        }
+        let startingRewriteSlot = 0
+        for (let [i, e] of this.editList.entries()) {
 
-        console.log("i [%s] slot [%s]", i, e.slot)
+          // when the first slot so happens to be not starting at 1
+          if (i === 0 && parseInt(e.slot) !== 1) {
+            startingRewriteSlot = 1
+          }
 
-        // gap logic
-        if (this.editList[i + 1] && this.editList[i]) {
-          const isGap = (this.editList[i + 1].slot - this.editList[i].slot) > 1
+          console.log("i [%s] slot [%s]", i, e.slot)
 
-          // on our first gap set the first rewrite slot to renumber the rest of the entries
-          if (isGap && startingRewriteSlot === 0) {
-            startingRewriteSlot = this.editList[i].slot
+          // gap logic
+          if (this.editList[i + 1] && this.editList[i]) {
+            const isGap = (this.editList[i + 1].slot - this.editList[i].slot) > 1
+
+            // on our first gap set the first rewrite slot to renumber the rest of the entries
+            if (isGap && startingRewriteSlot === 0) {
+              startingRewriteSlot = this.editList[i].slot
+            }
+          }
+
+          if (startingRewriteSlot > 0) {
+            let desiredEntry  = JSON.parse(JSON.stringify(this.editList[i]))
+            desiredEntry.slot = startingRewriteSlot
+
+            if (this.editList[i].slot !== startingRewriteSlot) {
+              await Merchants.deleteMerchantEntry(e.merchantid, e.slot)
+              await Merchants.addMerchantListEntry(desiredEntry)
+            }
+          }
+
+          if (startingRewriteSlot !== 0) {
+            startingRewriteSlot++
           }
         }
 
-        if (startingRewriteSlot > 0) {
-          let desiredEntry  = JSON.parse(JSON.stringify(this.editList[i]))
-          desiredEntry.slot = startingRewriteSlot
-
-          if (this.editList[i].slot !== startingRewriteSlot) {
-            await Merchants.deleteMerchantEntry(e.merchantid, e.slot)
-            await Merchants.addMerchantListEntry(desiredEntry)
-          }
-        }
-
-        if (startingRewriteSlot !== 0) {
-          startingRewriteSlot++
+        // this.notification = "Items reordered!"
+      } catch (err) {
+        if (err.response && err.response.data && err.response.data.error) {
+          this.error = "Error! " + err.response.data.error
         }
       }
 
@@ -432,7 +461,18 @@ export default {
     async deleteMerchantRow(row) {
       console.log("[MerchantSubEditor] Deleting merchant row slot [%s]", row.slot)
 
-      await Merchants.deleteMerchantEntry(row.merchantid, row.slot)
+      this.resetNotifications()
+
+      try {
+        await Merchants.deleteMerchantEntry(row.merchantid, row.slot)
+
+        this.notification = "Entry deleted!"
+      } catch (err) {
+        if (err.response && err.response.data && err.response.data.error) {
+          this.error = "Error! " + err.response.data.error
+        }
+      }
+
       this.editList = this.editList.filter((e) => {
         return e.slot !== row.slot
       })
@@ -452,15 +492,38 @@ export default {
       }, 1)
     },
 
+    resetNotifications() {
+      this.notification = ""
+      this.error = ""
+    },
+
     async addItemToMerchantList(e) {
       const itemId = e.id
       let newSlot  = this.editList[this.editList.length - 1] ? this.editList[this.editList.length - 1].slot + 1 : 1
 
-      await Merchants.addItemToMerchant(
-        parseInt(this.editMerchantId),
-        newSlot,
-        itemId
-      )
+      this.resetNotifications()
+
+      // error if already added to merchant
+      for (let e of this.editList) {
+        if (e.item === itemId) {
+          this.error = "Error: Item already added to Merchant!"
+          return;
+        }
+      }
+
+      try {
+        await Merchants.addItemToMerchant(
+          parseInt(this.editMerchantId),
+          newSlot,
+          itemId
+        )
+
+        this.notification = "Item added to Merchant!"
+      } catch (err) {
+        if (err.response && err.response.data && err.response.data.error) {
+          this.error = "Error! " + err.response.data.error
+        }
+      }
 
       this.refreshMerchantlistEntries()
     },

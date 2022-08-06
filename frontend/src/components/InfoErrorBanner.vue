@@ -3,7 +3,14 @@
     <div class="col-12">
 
       <!-- Notification -->
-      <b-alert show dismissable variant="warning" class="mb-0" v-if="localNotification">
+      <b-alert
+        show
+        dismissable
+        variant="warning"
+        class="mb-0"
+        v-if="localNotification"
+        :style="(slim ? 'padding: 0.3rem 1.25rem;' : '')"
+      >
         <div class="row" @click="dismissNotification()">
           <div class="col-11">
             <i class="fa fa-info-circle mr-3"></i> {{ localNotification }}
@@ -15,7 +22,14 @@
       </b-alert>
 
       <!-- Error -->
-      <b-alert show dismissable variant="danger" v-if="localError" class="mb-0">
+      <b-alert
+        show
+        dismissable
+        variant="danger"
+        v-if="localError && !localNotification"
+        :style="(slim ? 'padding: 0.3rem 1.25rem;' : '')"
+        class="mb-0"
+      >
         <div class="row" @click="dismissError()">
           <div class="col-11">
             <i class="fa fa-warning mr-3"></i> {{ localError }}
@@ -42,11 +56,23 @@ export default {
       type: String,
       required: false
     },
+    slim: {
+      type: Boolean,
+      required: false
+    },
   },
   data() {
     return {
       localNotification: "",
       localError: "",
+    }
+  },
+  mounted() {
+    if (this.notification && this.notification.length > 0) {
+      this.sendNotification(this.notification, 5000)
+    }
+    if (this.error && this.error.length > 0) {
+      this.localError = this.error
     }
   },
   watch: {
