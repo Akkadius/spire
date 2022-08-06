@@ -1045,9 +1045,13 @@ export default {
   methods: {
 
     buildTaskActivitySelection() {
-      let activities = {}
-      for (const a of this.task.task_activities) {
-        activities[a.activityid] = a.activityid + " " + Tasks.buildActivityDescription(a)
+      let activities = {
+        "-1": "None"
+      }
+      if (this.task && this.task.task_activities) {
+        for (const a of this.task.task_activities) {
+          activities[a.activityid] = a.activityid + " " + Tasks.buildActivityDescription(a)
+        }
       }
 
       return activities
