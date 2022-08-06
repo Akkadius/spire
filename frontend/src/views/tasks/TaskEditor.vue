@@ -399,8 +399,6 @@
                         :id="field.field"
                         v-model="task[field.field]"
                         class="m-0 mt-1"
-                        rows="1"
-                        max-rows="6"
                         style="max-height: 75px"
                         v-on="typeof field.onclick !== 'undefined' ? { click: () => field.onclick(field.field) } : {}"
                         v-b-tooltip.hover.v-dark.right :title="getFieldDescription(field.field)"
