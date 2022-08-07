@@ -525,7 +525,6 @@ export default {
       hasAugs: false,
       hasEffects: false,
       spells: EXAMPLE_SPELL_DATA,
-      cdnUrl: App.ASSET_CDN_BASE_URL,
       componentId: "",
       factionNames: [],
       stats: {
@@ -653,7 +652,7 @@ export default {
       }
 
       for (let e of this.effects) {
-        if (this.itemData[e]) {
+        if (this.itemData[e.field]) {
           this.hasEffects = true;
         }
       }
