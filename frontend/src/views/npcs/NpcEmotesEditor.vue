@@ -476,7 +476,9 @@ export default {
           }
           if (this.search && this.search !== "" && r.text &&
             !r.text.toLowerCase().includes(this.search.toLowerCase()) &&
-            !r.id.toString().includes(this.search)) {
+            !r.id.toString().includes(this.search) &&
+            !r.emoteid.toString().includes(this.search)
+          ) {
             continue;
           }
 
