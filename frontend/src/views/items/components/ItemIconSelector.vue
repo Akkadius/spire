@@ -6,15 +6,18 @@
       <div class="row">
 
         <!-- Item Slot -->
-        <div class="col-4">
-          <input
-            type="text"
-            class="form-control ml-2"
-            v-model="search"
-            v-on:keyup="searchDebounce"
-            @enter="loadIcons"
-            placeholder="Search for item names"
-          >
+        <div class="col-4 p-0">
+          <div class="input-group">
+            <input
+              type="text"
+              class="form-control ml-2"
+              v-model="search"
+              v-on:keyup="searchDebounce"
+              @enter="loadIcons"
+              placeholder="Search by item name"
+            >
+          </div>
+
         </div>
 
         <!-- Item Slot -->
@@ -22,7 +25,7 @@
           <select
             class="form-control list-search"
             v-model.lazy="iconSlotSearch"
-            @change="iconItemTypeSearch = 0; search = ''; loadIcons()"
+            @change="iconItemTypeSearch = 0; searchByModel = false; search = ''; loadIcons()"
           >
             <option value="0">Slot Filter</option>
             <option v-for="option in iconSlotOptions" v-bind:value="option.value">
@@ -36,7 +39,7 @@
           <select
             class="form-control list-search"
             v-model.lazy="iconItemTypeSearch"
-            @change="iconSlotSearch = 0; search = ''; loadIcons()"
+            @change="iconSlotSearch = 0; searchByModel = false; search = ''; loadIcons()"
           >
             <option value="0">Type Filter</option>
             <option v-for="option in iconItemTypeOptions" v-bind:value="option.value">
@@ -59,9 +62,19 @@
 
     </eq-window-simple>
 
+    <eq-window v-if="findByModel" class="text-center p-3">
+      <div class="mb-3 font-weight-bold">Click to search by item model</div>
+      <div style="border: 1px solid rgba(218, 218, 218, 0.3); border-radius: 7px;" @click="searchIconByModel">
+          <span
+            :class="'mt-2 mb-2 fade-in object-ctn-' + findByModel.replace('IT', '')"
+            style="filter: drop-shadow(rgb(0, 0, 0) 10px 5px 7px);"
+          />
+      </div>
+    </eq-window>
+
     <!-- Content -->
     <eq-window-simple
-      style="height: 85vh; overflow-y: scroll"
+      :style="'height: ' + (findByModel ? 70 : 85) + 'vh; overflow-y: scroll; overflow-x: hidden'"
       class="text-center"
       id="item-icon-view-port"
       v-if="filteredIcons && filteredIcons.length > 0"
@@ -98,10 +111,13 @@ import itemTypesIconMapping from "@/constants/item-type-icon-mapping.json"
 import PageHeader           from "@/components/layout/PageHeader";
 import EqWindowSimple       from "@/components/eq-ui/EQWindowSimple";
 import EqWindowComplex      from "@/components/eq-ui/EQWindowComplex";
-import EqWindow   from "@/components/eq-ui/EQWindow";
-import EqAssets   from "../../../app/eq-assets/eq-assets";
-import {debounce} from "../../../app/utility/debounce";
-import {Items}    from "../../../app/items";
+import EqWindow             from "@/components/eq-ui/EQWindow";
+import EqAssets             from "../../../app/eq-assets/eq-assets";
+import {debounce}           from "../../../app/utility/debounce";
+import {Items}              from "../../../app/items";
+import {ItemApi}            from "../../../app/api";
+import {SpireApiClient}     from "../../../app/api/spire-api-client";
+import {SpireQueryBuilder}  from "../../../app/api/spire-query-builder";
 
 const MAX_ICON_ID = 10000;
 // const MAX_ICON_ID = 1000;
@@ -122,7 +138,9 @@ export default {
       filteredIcons: null,
       iconSlotOptions: null,
       iconItemTypeOptions: null,
-      loaded: false
+      loaded: false,
+
+      searchByModel: false,
     }
   },
   props: {
@@ -131,9 +149,23 @@ export default {
       default: 0,
       required: true
     },
+    findByModel: {
+      type: [Number, String],
+      default: "",
+      required: false
+    },
   },
   methods: {
+    searchIconByModel() {
+      console.log("Trigger")
+      this.searchByModel  = true
+      this.itemTypeSearch = 0
+      this.itemSlotSearch = 0
+      this.loadIcons()
+    },
+
     searchDebounce: debounce(function () {
+      this.searchByModel = false
       this.loadIcons()
     }, 300),
 
@@ -219,6 +251,28 @@ export default {
 
         this.filteredIcons = filteredIcons
         this.loaded        = true;
+        return;
+      }
+
+      // item model based search
+      if (this.searchByModel) {
+        const api         = (new ItemApi(SpireApiClient.getOpenApiConfig()))
+        const r           = await api.listItems(
+          (new SpireQueryBuilder())
+            .where("idfile", "=", this.findByModel)
+            .groupBy(["icon"])
+            .get()
+        )
+        let filteredIcons = []
+        if (r.status === 200) {
+          for (let i of r.data) {
+            if (iconExists[i.icon]) {
+              filteredIcons.push(i.icon)
+            }
+          }
+        }
+        this.filteredIcons = filteredIcons
+        this.loaded        = true
         return;
       }
 

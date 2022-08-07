@@ -35,7 +35,7 @@
           <select
             class="form-control form-control-prepended list-search"
             v-model.lazy="itemSlotSearch"
-            @change="itemTypeSearch = 0; search = ''; loadModels()"
+            @change="itemTypeSearch = 0; searchByIcon = false; search = ''; loadModels()"
           >
             <option value="0">Slot Filter</option>
             <option v-for="option in itemSlotOptions" v-bind:value="option.value">
@@ -52,7 +52,7 @@
           <select
             class="form-control form-control-prepended list-search"
             v-model.lazy="itemTypeSearch"
-            @change="itemSlotSearch = 0; search = ''; loadModels()"
+            @change="itemSlotSearch = 0; search = ''; searchByIcon = false;  loadModels()"
           >
             <option value="0">Type Filter</option>
             <option v-for="option in itemTypeOptions" v-bind:value="option.value">
@@ -143,10 +143,14 @@ export default {
 
     searchModelsByIcon() {
       this.searchByIcon = true
+      this.itemTypeSearch = 0
+      this.itemSlotSearch = 0
+
       this.loadModels()
     },
 
     loadModelsDebounce: debounce(function () {
+      this.searchByIcon = false;
       this.loadModels()
     }, 600),
 

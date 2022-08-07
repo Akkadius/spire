@@ -1564,13 +1564,11 @@
           class="fade-in"
           v-if="iconSelectorActive"
         >
-
-          <keep-alive>
-            <item-icon-selector
-              :selected-icon="item.icon"
-              @input="item.icon = $event; setFieldModifiedById('icon')"
-            />
-          </keep-alive>
+          <item-icon-selector
+            :selected-icon="item.icon"
+            :find-by-model="item.idfile"
+            @input="item.icon = $event; setFieldModifiedById('icon')"
+          />
         </div>
 
         <!-- free id selector -->
