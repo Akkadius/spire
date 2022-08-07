@@ -2,7 +2,7 @@
   <content-area style="padding: 0px !important">
     <div class="row">
       <div :class="(Object.keys(editMerchantEntry).length > 0 || addItem ? 'col-7' : 'col-12')">
-        <eq-window :title='`Edit Merchant (${editMerchantId})`'>
+        <eq-window :title='`Edit Merchant (${editMerchantId})`' class="pr-0">
 
           <div v-if="editList && editList.length === 0" class="font-weight-bold mb-3">
             There are no items on this Merchant, perhaps you should add some?
