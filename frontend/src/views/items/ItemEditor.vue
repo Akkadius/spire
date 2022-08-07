@@ -1510,13 +1510,11 @@
           class="fade-in"
           v-if="itemModelSelectorActive && item"
         >
-
-          <keep-alive>
-            <item-model-selector
-              :selected-model="item.idfile"
-              @input="item.idfile = $event; setFieldModifiedById('idfile')"
-            />
-          </keep-alive>
+          <item-model-selector
+            :selected-model="item.idfile"
+            :find-by-icon="item.icon"
+            @input="item.idfile = $event; setFieldModifiedById('idfile')"
+          />
         </div>
 
         <!-- augment type calculator -->

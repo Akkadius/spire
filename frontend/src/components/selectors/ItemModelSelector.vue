@@ -2,20 +2,30 @@
   <div>
 
     <eq-window-simple>
-      <div class="row">
+      <div class="row ">
 
         <!-- Item Search -->
-        <div class="col-lg-4">
+        <div class="col-lg-4 p-0">
+          <div class="input-group">
+            <input
+              type="text"
+              class="form-control ml-2"
+              v-model="search"
+              v-on:keyup="loadModelsDebounce"
+              @enter="loadModels"
+              placeholder="Search item name"
+            >
 
-          <input
-            type="text"
-            class="form-control ml-2"
-            v-model="search"
-            v-on:keyup="loadModelsDebounce"
-            @enter="loadModels"
-            placeholder="Search for item names"
-          >
+            <div class="input-group-append" v-if="findByIcon">
+              <span
+                :class="'fade-in item-' + findByIcon + ' ml-1'"
+                style="border: 1px solid rgba(218, 218, 218, 0.3); border-radius: 7px;"
+                title="Search models by icon"
+                @click="searchModelsByIcon"
+              />
+            </div>
 
+          </div>
         </div>
 
         <!-- Item Slot -->
@@ -50,6 +60,7 @@
             </option>
           </select>
         </div>
+
         <div class="col-lg-2 col-sm-12">
           <b-button variant="primary" class="btn-dark btn-sm btn-outline-warning" @click="reset">
             <i class="fa fa-eraser mr-1"></i>
@@ -99,12 +110,14 @@ import itemSlotIdFileMapping from "@/constants/item-slot-idfile-mapping.json"
 import itemTypes             from "@/constants/item-types.json"
 import itemTypesModelMapping from "@/constants/item-type-model-mapping.json"
 import PageHeader            from "@/components/layout/PageHeader";
-import {App}                 from "@/constants/app";
 import EqWindow              from "@/components/eq-ui/EQWindow";
-import EqWindowSimple from "@/components/eq-ui/EQWindowSimple";
-import EqAssets       from "../../app/eq-assets/eq-assets";
-import {debounce}     from "../../app/utility/debounce";
-import {Items}        from "../../app/items";
+import EqWindowSimple        from "@/components/eq-ui/EQWindowSimple";
+import EqAssets              from "../../app/eq-assets/eq-assets";
+import {debounce}            from "../../app/utility/debounce";
+import {Items}               from "../../app/items";
+import {ItemApi}             from "../../app/api";
+import {SpireApiClient}      from "../../app/api/spire-api-client";
+import {SpireQueryBuilder}   from "../../app/api/spire-query-builder";
 
 const MAX_ITEM_IDFILE = 100000;
 let itemModels        = [];
@@ -120,6 +133,7 @@ export default {
       itemSlotSearch: 0,
       itemTypeSearch: 0,
       filteredItemModels: null,
+      searchByIcon: false,
       itemSlotOptions: [],
       itemTypeOptions: null,
       loaded: false
@@ -127,7 +141,12 @@ export default {
   },
   methods: {
 
-    loadModelsDebounce: debounce(function() {
+    searchModelsByIcon() {
+      this.searchByIcon = true
+      this.loadModels()
+    },
+
+    loadModelsDebounce: debounce(function () {
       this.loadModels()
     }, 600),
 
@@ -182,7 +201,7 @@ export default {
         }
 
         this.filteredItemModels = idFiles
-        this.loaded        = true;
+        this.loaded             = true;
         return
       }
 
@@ -205,6 +224,30 @@ export default {
         this.filteredItemModels = idFiles
         this.loaded             = true
         return
+      }
+
+      // item icon based search
+      if (this.searchByIcon) {
+        const api = (new ItemApi(SpireApiClient.getOpenApiConfig()))
+        const r = await api.listItems(
+          (new SpireQueryBuilder())
+            .where("icon", "=", this.findByIcon)
+            .groupBy(["idfile"])
+            .get()
+        )
+        let idFiles = []
+        if (r.status === 200) {
+          for (let i of r.data) {
+            const file = i.idfile.replace("IT", "")
+
+            if (itemModelExists[file]) {
+              idFiles.push(file)
+            }
+          }
+        }
+        this.filteredItemModels = idFiles
+        this.loaded             = true
+        return;
       }
 
       // item slot search
@@ -306,6 +349,11 @@ export default {
       type: [Number, String],
       default: "",
       required: true
+    },
+    findByIcon: {
+      type: [Number, String],
+      default: "",
+      required: false
     },
   },
 }
