@@ -316,6 +316,7 @@ export default {
       let zones = []
       if (n.spawnentries) {
         for (let e of n.spawnentries) {
+          e.spawngroup.spawn_2.zone = e.spawngroup.spawn_2.zone.toLowerCase()
           if (!zones.includes(e.spawngroup.spawn_2.zone)) {
             zones.push(e.spawngroup.spawn_2.zone)
           }
