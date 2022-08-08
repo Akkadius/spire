@@ -110,10 +110,9 @@
         </eq-window>
       </div>
       <div class="col-6 fade-in" v-if="isSubEditActive()">
-        <eq-window-simple
+        <eq-window
           :title="'Edit NPC Emote (' + subSelectedId + ')'"
         >
-
           <div class="mt-3">Emote ID
             <b-input v-model.number="selectedEmote.emoteid"/>
           </div>
@@ -184,7 +183,51 @@
             @dismiss-notification="notification = ''"
           />
 
-        </eq-window-simple>
+        </eq-window>
+
+        <eq-window
+          class="mt-5"
+          :title="'Emote ID (' + selectedEmote.emoteid + ') NPC(s) (' + npcs.length + ')'"
+          v-if="selectedEmote && selectedEmote.emoteid && npcs && npcs.length > 0"
+        >
+          <div style="max-height: 46vh; overflow-y: scroll; overflow-x: hidden">
+            <table
+              id="npctable"
+              class="eq-table eq-highlight-rows"
+              style="display: table; font-size: 14px; "
+            >
+              <thead
+                class="eq-table-floating-header"
+              >
+              <tr>
+                <th>
+                  NPC
+                </th>
+                <th>
+                  Zone(s)
+                </th>
+              </tr>
+              </thead>
+              <tbody>
+              <tr
+                :id="'npc-' + n.short_name"
+                v-for="(n, index) in npcs"
+                :key="n.id"
+              >
+                <td style="position: relative">
+                  <npc-popover
+                    :npc="n"
+                  />
+                </td>
+                <td style="vertical-align: middle">
+                  {{ getZonesByNpc(n).join(",") }}
+                </td>
+
+              </tr>
+              </tbody>
+            </table>
+          </div>
+        </eq-window>
       </div>
     </div>
 
@@ -206,12 +249,15 @@ import {NPC_EMOTE_EVENTS, NPC_EMOTE_TYPES} from "../../app/constants/eq-npc-emot
 import Tablesort                           from "../../app/utility/tablesort";
 import {scrollToTarget}                    from "../../app/utility/scrollToTarget";
 import {debounce}                          from "../../app/utility/debounce";
+import {Npcs}                              from "../../app/npcs";
+import NpcPopover                          from "../../components/NpcPopover";
 
 const NpcEmoteClient = (new NpcEmoteApi(SpireApiClient.getOpenApiConfig()))
 
 export default {
   name: "NpcEmotesEditor",
   components: {
+    NpcPopover,
     EqWindow,
     InfoErrorBanner,
     LoaderFakeProgress: LoaderFakeProgress,
@@ -240,6 +286,9 @@ export default {
       typeSelection: -1,
       search: "",
 
+      // npcs that use the emote
+      npcs: [],
+
       // constants
       NPC_EMOTE_TYPES: NPC_EMOTE_TYPES,
       NPC_EMOTE_EVENTS: NPC_EMOTE_EVENTS,
@@ -259,6 +308,35 @@ export default {
   },
 
   methods: {
+
+    getZonesByNpc(n) {
+
+      console.log(n)
+
+      let zones = []
+      if (n.spawnentries) {
+        for (let e of n.spawnentries) {
+          if (!zones.includes(e.spawngroup.spawn_2.zone)) {
+            zones.push(e.spawngroup.spawn_2.zone)
+          }
+        }
+      }
+
+      return zones
+    },
+
+    async loadNpcsByEmote(e) {
+      this.npcs = await Npcs.listNpcsByEmoteId(e.emoteid,
+        [
+          "NpcSpell.NpcSpellsEntries.SpellsNew",
+          "NpcFactions.NpcFactionEntries.FactionList",
+          "NpcFactions",
+          "NpcEmotes",
+          "Merchantlists.Items",
+          "Loottable.LoottableEntries.Lootdrop.LootdropEntries.Item",
+          "Spawnentries.Spawngroup.Spawn2"
+        ])
+    },
 
     updateQueryStateDebounce: debounce(function () {
       this.updateQueryState()
@@ -285,6 +363,7 @@ export default {
       this.eventSelection = -1
       this.typeSelection  = -1
       this.subSelectedId  = -1
+      this.npcs           = []
     },
     resetSelections() {
       this.subSelectedId = -1
@@ -455,6 +534,7 @@ export default {
         for (const e of this.rows) {
           if (e.id === this.subSelectedId) {
             this.selectedEmote = JSON.parse(JSON.stringify(e))
+            this.loadNpcsByEmote(this.selectedEmote)
           }
         }
 

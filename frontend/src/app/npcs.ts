@@ -252,6 +252,38 @@ export class Npcs {
   }
 
   /**
+   * @param emoteId
+   * @param relations
+   */
+  static async listNpcsByEmoteId(emoteId: number, relations: any[] = []) {
+    const npcTypeApi = (new NpcTypeApi(SpireApiClient.getOpenApiConfig()))
+    let builder      = (new SpireQueryBuilder())
+
+    let includes: any[] = [];
+    if (relations.includes("all")) {
+      includes = [...includes, ...[
+        "NpcSpell.NpcSpellsEntries.SpellsNew",
+        "NpcFactions.NpcFactionEntries.FactionList",
+        "NpcFactions",
+        "NpcEmotes",
+        "Merchantlists.Items",
+        "Loottable.LoottableEntries.Lootdrop.LootdropEntries.Item"
+      ]]
+    } else if (relations.length > 0) {
+      includes = [...includes, ...relations]
+    }
+
+    builder.where("emoteid", "=", emoteId)
+    builder.includes(includes)
+
+    // @ts-ignore
+    const r = await npcTypeApi.listNpcTypes(builder.get())
+    if (r.status === 200) {
+      return r.data
+    }
+  }
+
+  /**
    * @param id
    * @param relations
    */
