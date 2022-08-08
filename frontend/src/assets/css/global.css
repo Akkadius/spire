@@ -180,9 +180,8 @@
 }
 
 .pulsate-highlight-white {
-    border: 2px solid white !important;
+    border: 1px solid white !important;
     animation: pulsate-highlight-white 1s infinite !important;
-    border-radius: 7px;
 }
 
 @keyframes pulsate-highlight-green {
@@ -407,6 +406,7 @@ th[role=columnheader]:hover:not(.no-sort):after {
 
 .page, .page-link {
     padding: 0.4rem 0.75rem;
+    border-color: #ffffff1c;
 }
 
 .pagination .page-link {

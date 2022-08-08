@@ -163,6 +163,11 @@ export default new Router({
           meta: {title: "NPC Emotes Editor"},
         },
         {
+          path: ROUTE.NPC_SPELLS_EDIT,
+          component: () => import('./views/npcs/NpcSpellsEditor.vue'),
+          meta: {title: "NPC Spells Editor"},
+        },
+        {
           path: '/zone/:zone',
           component: () => import('./views/zone/Zone.vue'),
           meta: {title: "Zone"},

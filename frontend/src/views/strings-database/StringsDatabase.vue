@@ -401,7 +401,6 @@ export default {
       EditFormFieldUtil.setFieldModifiedById("selected_" + field)
     },
     async saveSelectedString() {
-
       try {
         const response = await DbStrApiClient.updateDbStr(
           {

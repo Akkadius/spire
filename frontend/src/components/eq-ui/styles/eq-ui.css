@@ -867,13 +867,16 @@ table.bordered tr {
 }
 
 table.bordered TBODY TR TD {
-    padding-top: 5px;
-    padding-bottom: 5px;
+    padding-top: 4px;
+    padding-bottom: 4px;
     border-right: .1px solid #ffffff1c;
     border-left: .1px solid #ffffff1c;
 
     vertical-align: middle;
-    text-align: center;
+}
+
+table.bordered TH {
+    vertical-align: middle;
 }
 
 @font-face {

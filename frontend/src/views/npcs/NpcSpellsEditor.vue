@@ -3,10 +3,9 @@
     <div class="row">
       <div :class="(isSubEditActive() ? 'col-6' : 'col-12')">
         <eq-window
-          title="NPC Emotes"
+          title="NPC Spells"
           class="p-0"
         >
-
           <div class="row minified-inputs mt-4 text-center">
             <div class="col-3 p-0 text-right">
               <div class="d-inline-block btn-group ml-4 text-right" role="group" style="margin-top: 26px">
@@ -28,22 +27,22 @@
                 </b-button>
               </div>
             </div>
-            <div class="col-2">
-              Event
-              <b-form-select
-                v-model="eventSelection"
-                @change="subSelectedId = -1; rows = []; updateQueryState()"
-                :options="NPC_EMOTE_EVENTS"
-              />
-            </div>
-            <div class="col-2">
-              Type
-              <b-form-select
-                v-model="typeSelection"
-                @change="subSelectedId = -1; rows = []; updateQueryState()"
-                :options="NPC_EMOTE_TYPES"
-              />
-            </div>
+            <!--            <div class="col-2">-->
+            <!--              Event-->
+            <!--              <b-form-select-->
+            <!--                v-model="eventSelection"-->
+            <!--                @change="subSelectedId = -1; rows = []; updateQueryState()"-->
+            <!--                :options="NPC_EMOTE_EVENTS"-->
+            <!--              />-->
+            <!--            </div>-->
+            <!--            <div class="col-2">-->
+            <!--              Type-->
+            <!--              <b-form-select-->
+            <!--                v-model="typeSelection"-->
+            <!--                @change="subSelectedId = -1; rows = []; updateQueryState()"-->
+            <!--                :options="NPC_EMOTE_TYPES"-->
+            <!--              />-->
+            <!--            </div>-->
             <div class="col-2">
               Search
               <b-form-input
@@ -52,14 +51,19 @@
                 placeholder="Search by text or id"
               />
             </div>
+
+            <div class="col-2" v-if="loading">
+              <div class="text-center" style="margin-top: 17px">
+              Loading...
+              <loader-fake-progress/>
+              </div>
+            </div>
           </div>
 
           <div
-            id="emote-viewport"
-            style="max-height: 85vh; overflow-y: scroll; overflow-x: hidden"
+            id="npc-spell-viewport"
+            style="max-height: 80vh; overflow-y: scroll"
           >
-            <app-loader :is-loading="loading" padding="4"/>
-
             <table
               class="eq-table bordered eq-highlight-rows row-table emotes-table"
               style="display: table; font-size: 14px; overflow-x: scroll"
@@ -70,12 +74,10 @@
                 class="eq-table-floating-header"
               >
               <tr>
-                <th
-                  v-for="(header, index) in Object.keys(rows[0]).filter((f) => { return !filterColumns.includes(f) })"
-                  :id="'column-' + header"
-                  :style="(header === 'text' ? 'text-align: left' : 'text-align: center') + ';' + getColumnWidth(header)"
-                >{{ header }}
-                </th>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Parent List ID</th>
+                <th>Spell Count</th>
               </tr>
               </thead>
               <tbody>
@@ -84,111 +86,47 @@
                 v-for="(e, index) in rows"
                 :key="e.id"
                 :class="isRowSelected(e) ? 'pulsate-highlight-white' : ''"
-                @click="selectEmote(e)"
+                @click="selectSpellSet(e)"
               >
-                <td
-                  :style="(key === 'text' ? 'text-align: left' : 'text-align: center')"
-                  v-for="(key, colIndex) in Object.keys(e).filter((f) => { return !filterColumns.includes(f) })"
-                >
-                  <div class="d-inline-block" v-if="!['type', 'event_'].includes(key)">
-                    {{ e[key] }}
-                  </div>
-
-                  <div class="d-inline-block" v-if="key === 'type'">
-                    {{ NPC_EMOTE_TYPES[e[key]] ? NPC_EMOTE_TYPES[e[key]] : "" }}
-                  </div>
-
-                  <div class="d-inline-block" v-if="key === 'event_'">
-                    {{ NPC_EMOTE_EVENTS[e[key]] ? NPC_EMOTE_EVENTS[e[key]] : "" }}
-                  </div>
-                </td>
-
+                <td>{{ e.id }}</td>
+                <td>{{ e.name }}</td>
+                <td>{{ e.parent_list }}</td>
+                <td>{{ getSpellCount(e) }}</td>
               </tr>
               </tbody>
             </table>
+
+
+          </div>
+
+          <div class="row text-center justify-content-center">
+            <div class="col-12 text-center mt-3">
+              <b-pagination
+                :key="currentPage"
+                class="mb-3"
+                v-model="currentPage"
+                :total-rows="totalRows"
+                :hide-ellipsis="true"
+                :per-page="pageSize"
+                @change="paginate"
+              />
+            </div>
           </div>
         </eq-window>
       </div>
       <div class="col-6 fade-in" v-if="isSubEditActive()">
-        <eq-window
-          :title="'Edit NPC Emote (' + subSelectedId + ')'"
-        >
-          <div class="mt-3">Emote ID
-            <b-input v-model.number="selectedEmote.emoteid"/>
+        <eq-window :title="selectedSpellSet.name" class="p-2">
+          <div style="max-height: 93vh; overflow-y: scroll; overflow-x: hidden">
+            <npc-spell-preview
+              :spells="selectedSpellSet"
+            />
           </div>
-
-          <div class="mt-3">Event
-            <select
-              v-model.number="selectedEmote.event_"
-              class="form-control"
-            >
-              <option
-                v-for="(description, index) in NPC_EMOTE_EVENTS"
-                :key="index"
-                :value="parseInt(index)"
-              >
-                {{ index }}) {{ description }}
-              </option>
-            </select>
-          </div>
-
-          <div class="mt-3">Type
-            <select
-              v-model.number="selectedEmote.type"
-              class="form-control"
-            >
-              <option
-                v-for="(description, index) in NPC_EMOTE_TYPES"
-                :key="index"
-                :value="parseInt(index)"
-              >
-                {{ index }}) {{ description }}
-              </option>
-            </select>
-          </div>
-
-          <div class="mt-3">Text
-            <b-textarea v-model.number="selectedEmote.text"/>
-          </div>
-
-          <div class="row mt-4">
-            <div class="col-12">
-              <b-button
-                @click="save()"
-                size="sm"
-                variant="outline-warning"
-              >
-                <i class="fa fa-save"></i>
-                Save
-              </b-button>
-
-              <b-button
-                @click="deleteEmote()"
-                size="sm"
-                class="ml-3"
-                variant="outline-danger"
-              >
-                <i class="fa fa-trash"></i>
-                Delete
-              </b-button>
-            </div>
-          </div>
-
-          <!-- Notification / Error -->
-          <info-error-banner
-            class="mt-3"
-            :notification="notification"
-            :error="error"
-            @dismiss-error="error = ''"
-            @dismiss-notification="notification = ''"
-          />
-
         </eq-window>
 
         <eq-window
           class="mt-5"
-          :title="'Emote ID (' + selectedEmote.emoteid + ') NPC(s) (' + npcs.length + ')'"
-          v-if="selectedEmote && selectedEmote.emoteid && npcs && npcs.length > 0"
+          :title="'Emote ID (' + selectedSpellSet.emoteid + ') NPC(s) (' + npcs.length + ')'"
+          v-if="selectedSpellSet && selectedSpellSet.emoteid && npcs && npcs.length > 0"
         >
           <div style="max-height: 46vh; overflow-y: scroll; overflow-x: hidden">
             <table
@@ -238,7 +176,7 @@
 import EqWindowSimple                      from "../../components/eq-ui/EQWindowSimple";
 import EqAutoTable                         from "../../components/eq-ui/EQAutoTable";
 import ContentArea                         from "../../components/layout/ContentArea";
-import {NpcEmoteApi}                       from "../../app/api";
+import {NpcSpellApi}                       from "../../app/api";
 import {SpireApiClient}                    from "../../app/api/spire-api-client";
 import LoaderFakeProgress                  from "../../components/LoaderFakeProgress";
 import {ROUTE}                             from "../../routes";
@@ -251,12 +189,16 @@ import {scrollToTarget}                    from "../../app/utility/scrollToTarge
 import {debounce}                          from "../../app/utility/debounce";
 import {Npcs}                              from "../../app/npcs";
 import NpcPopover                          from "../../components/NpcPopover";
+import NpcSpellPreview                     from "../../components/preview/NpcSpellPreview";
+import EqDebug                             from "../../components/eq-ui/EQDebug";
 
-const NpcEmoteClient = (new NpcEmoteApi(SpireApiClient.getOpenApiConfig()))
+const NpcSpellsClient = (new NpcSpellApi(SpireApiClient.getOpenApiConfig()))
 
 export default {
-  name: "NpcEmotesEditor",
+  name: "NpcSpellsEditor",
   components: {
+    EqDebug,
+    NpcSpellPreview,
     NpcPopover,
     EqWindow,
     InfoErrorBanner,
@@ -269,13 +211,19 @@ export default {
   data() {
     return {
 
+      // pagination (all)
+      lastPage: 0, // this keeps track of last page in state
+      currentPage: 1,
+      totalRows: 0,
+      pageSize: 25,
+
       // table
       rows: [],
       filterColumns: [],
 
       // for the sub selector pane on the right
       subSelectedId: -1,
-      selectedEmote: {},
+      selectedSpellSet: {},
 
       // api responses
       error: "",
@@ -308,6 +256,21 @@ export default {
   },
 
   methods: {
+
+    getSpellCount(e) {
+      return e.npc_spells_entries ? e.npc_spells_entries.length : 0
+    },
+
+    paginate() {
+      // models aren't quite updated when we trigger this so queue the pagination
+      setTimeout(() => {
+        console.log("We're paginating")
+        console.log(this.currentPage)
+        console.log(this.totalRows)
+        this.updateQueryState()
+      }, 100)
+
+    },
 
     getZonesByNpc(n) {
       let zones = []
@@ -355,6 +318,7 @@ export default {
      * Resets
      */
     reset() {
+      this.currentPage    = 1
       this.search         = ""
       this.error          = ""
       this.notification   = ""
@@ -382,13 +346,16 @@ export default {
       if (this.typeSelection !== -1) {
         queryState.type = this.typeSelection
       }
+      if (this.currentPage > 0) {
+        queryState.page = this.currentPage
+      }
       if (this.search !== "") {
         queryState.search = this.search
       }
 
       this.$router.push(
         {
-          path: ROUTE.NPC_EMOTES_EDIT,
+          path: ROUTE.NPC_SPELLS_EDIT,
           query: queryState
         }
       ).catch(() => {
@@ -409,12 +376,16 @@ export default {
       if (this.$route.query.search !== "") {
         this.search = this.$route.query.search;
       }
+      if (typeof this.$route.query.page !== 'undefined' && parseInt(this.$route.query.page) !== 0) {
+        this.currentPage = parseInt(this.$route.query.page);
+        console.log("current page", this.currentPage)
+      }
     },
 
     /**
      * Sub editor selection
      */
-    selectEmote(e) {
+    selectSpellSet(e) {
       this.subSelectedId = e.id
       this.updateQueryState()
     },
@@ -437,7 +408,7 @@ export default {
       }
 
       try {
-        const r = await NpcEmoteClient.createNpcEmote(
+        const r = await NpcSpellsClient.createNpcEmote(
           {
             npcEmote: {
               emoteid: nextEmoteId + 1,
@@ -464,10 +435,10 @@ export default {
 
     async save() {
       try {
-        const r = await NpcEmoteClient.updateNpcEmote(
+        const r = await NpcSpellsClient.updateNpcEmote(
           {
-            id: this.selectedEmote.id,
-            npcEmote: this.selectedEmote
+            id: this.selectedSpellSet.id,
+            npcEmote: this.selectedSpellSet
           }
         )
         if (r.status === 200) {
@@ -483,9 +454,9 @@ export default {
     async deleteEmote() {
       if (confirm("Are you sure you want to delete this emote (" + this.subSelectedId + ")?")) {
         try {
-          const r = await NpcEmoteClient.deleteNpcEmote(
+          const r = await NpcSpellsClient.deleteNpcEmote(
             {
-              id: this.selectedEmote.id,
+              id: this.selectedSpellSet.id,
             }
           )
 
@@ -494,7 +465,7 @@ export default {
             this.reset()
 
             // convenience - we grab the last element in the list if we deleted the last element in the table
-            const deletedLastElement = this.selectedEmote.id === this.rows[this.rows.length - 1].id
+            const deletedLastElement = this.selectedSpellSet.id === this.rows[this.rows.length - 1].id
             if (deletedLastElement) {
               this.subSelectedId = this.rows[this.rows.length - 2].id
             }
@@ -515,10 +486,19 @@ export default {
      * Initialize
      */
     async init(reset = false) {
-      this.loading = true
+      if (this.totalRows === 0) {
+        this.totalRows = await this.getNpcSpellCount()
+      }
       this.loadQueryState()
-      if (this.rows && this.rows.length === 0 || reset) {
-        this.rows         = await this.getAllNpcEmotes()
+
+      console.log("last page", this.lastPage)
+      console.log("current page", this.currentPage)
+
+      if (this.lastPage !== this.currentPage || reset) {
+        console.log("reloading content")
+        this.loading      = true
+        this.lastPage     = this.currentPage
+        this.rows         = await this.getNpcSpells()
         this.originalRows = JSON.parse(JSON.stringify(this.rows))
       }
 
@@ -531,15 +511,11 @@ export default {
       if (this.subSelectedId > 0) {
         for (const e of this.rows) {
           if (e.id === this.subSelectedId) {
-            this.selectedEmote = JSON.parse(JSON.stringify(e))
-            this.loadNpcsByEmote(this.selectedEmote)
+            this.selectedSpellSet = JSON.parse(JSON.stringify(e))
+            // re-hook up later
+            // this.loadNpcsByEmote(this.selectedSpellSet)
           }
         }
-
-        scrollToTarget(
-          "emote-viewport",
-          'row-' + this.subSelectedId
-        )
       }
 
       // filters
@@ -573,17 +549,33 @@ export default {
       // this.scrollToHighlighted()
     },
 
-    async getAllNpcEmotes() {
-      this.loading = true
-
+    async getNpcSpellCount() {
       let builder = (new SpireQueryBuilder())
+        .select(["id"])
         .limit(100000)
 
-      const response = await NpcEmoteClient.listNpcEmotes(
+      const response = await NpcSpellsClient.listNpcSpells(
         builder.get()
       )
       if (response.status === 200 && response.data) {
-        this.loading = false
+        return response.data.length
+      }
+
+      return 0
+    },
+
+    async getNpcSpells() {
+      let builder = (new SpireQueryBuilder())
+        .page(this.currentPage)
+        .includes([
+          "NpcSpellsEntries.SpellsNew",
+        ])
+        .limit(this.pageSize)
+
+      const response = await NpcSpellsClient.listNpcSpells(
+        builder.get()
+      )
+      if (response.status === 200 && response.data) {
         return response.data
       }
     },
@@ -594,6 +586,14 @@ export default {
   },
   async mounted() {
     await this.init()
+
+    if (this.subSelectedId > 0) {
+      scrollToTarget(
+        "npc-spell-viewport",
+        'row-' + this.subSelectedId
+      )
+    }
+
   },
 }
 </script>

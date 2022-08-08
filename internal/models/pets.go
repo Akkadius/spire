@@ -165,6 +165,7 @@ func (Pet) Relationships() []string {
 		"NpcType.NpcFactions.NpcFactionEntries",
 		"NpcType.NpcFactions.NpcFactionEntries.FactionList",
 		"NpcType.NpcSpell",
+		"NpcType.NpcSpell.NpcSpell",
 		"NpcType.NpcSpell.NpcSpellsEntries",
 		"NpcType.NpcSpell.NpcSpellsEntries.SpellsNew",
 		"NpcType.NpcSpell.NpcSpellsEntries.SpellsNew.Aura",

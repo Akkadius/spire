@@ -171,6 +171,7 @@ func (Spawngroup) Relationships() []string {
 		"Spawn2.Spawnentries.NpcType.NpcFactions.NpcFactionEntries",
 		"Spawn2.Spawnentries.NpcType.NpcFactions.NpcFactionEntries.FactionList",
 		"Spawn2.Spawnentries.NpcType.NpcSpell",
+		"Spawn2.Spawnentries.NpcType.NpcSpell.NpcSpell",
 		"Spawn2.Spawnentries.NpcType.NpcSpell.NpcSpellsEntries",
 		"Spawn2.Spawnentries.NpcType.NpcSpell.NpcSpellsEntries.SpellsNew",
 		"Spawn2.Spawnentries.NpcType.NpcSpell.NpcSpellsEntries.SpellsNew.Aura",

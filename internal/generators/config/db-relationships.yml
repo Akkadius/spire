@@ -119,6 +119,7 @@ npc_faction_entries:
   - 1-1 faction_id->faction_list:id
 npc_spells:
   - 1-* id->npc_spells_entries:npc_spells_id
+  - 1-1 parent_list->npc_spells:id
 npc_spells_effects:
   - 1-* id->npc_spells_effects_entries:npc_spells_effects_id
 npc_spells_entries:

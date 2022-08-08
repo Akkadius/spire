@@ -137,7 +137,7 @@ export * from './api/npc-emote-api';
 // export * from './api/npc-faction-api';
 // export * from './api/npc-faction-entry-api';
 // export * from './api/npc-scale-global-base-api';
-// export * from './api/npc-spell-api';
+export * from './api/npc-spell-api';
 // export * from './api/npc-spells-effect-api';
 // export * from './api/npc-spells-effects-entry-api';
 // export * from './api/npc-spells-entry-api';

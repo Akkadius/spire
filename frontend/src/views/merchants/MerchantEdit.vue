@@ -68,7 +68,7 @@
             style="height: 87vh; overflow-y: scroll"
           >
             <table
-              class="eq-table eq-highlight-rows minified-inputs"
+              class="eq-table bordered eq-highlight-rows minified-inputs"
             >
               <thead class="eq-table-floating-header">
               <tr>

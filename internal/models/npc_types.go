@@ -290,6 +290,7 @@ func (NpcType) Relationships() []string {
 		"NpcFactions.NpcFactionEntries",
 		"NpcFactions.NpcFactionEntries.FactionList",
 		"NpcSpell",
+		"NpcSpell.NpcSpell",
 		"NpcSpell.NpcSpellsEntries",
 		"NpcSpell.NpcSpellsEntries.SpellsNew",
 		"NpcSpell.NpcSpellsEntries.SpellsNew.Aura",

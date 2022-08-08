@@ -274,6 +274,14 @@ export default {
         routePrefixMatches: ["npc", "merchant"],
         navs: [
           {
+            title: "Emotes",
+            to: ROUTE.NPC_EMOTES_EDIT,
+            icon: "ra ra-death-skull mr-1",
+            isAlpha: true,
+            isNew: true,
+            routes: ['npc-emotes']
+          },
+          {
             title: "Merchants",
             to: ROUTE.MERCHANTS,
             icon: "ra ra-emerald mr-1",
@@ -282,12 +290,12 @@ export default {
             routes: ['merchant', 'merchants']
           },
           {
-            title: "Emotes",
-            to: ROUTE.NPC_EMOTES_EDIT,
-            icon: "ra ra-death-skull mr-1",
+            title: "Spells",
+            to: ROUTE.NPC_SPELLS_EDIT,
+            icon: "ra ra-flame-symbol mr-1",
             isAlpha: true,
             isNew: true,
-            routes: ['npc-emotes']
+            routes: ['npc-spells']
           },
         ]
       },
