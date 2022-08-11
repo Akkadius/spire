@@ -1,6 +1,5 @@
 <template>
   <div v-if="spells">
-
     <div
       class="mt-3 text-center font-weight-bold p-3"
       v-if="spells && !spells.npc_spells_entries"
@@ -26,7 +25,7 @@
       </thead>
       <tbody>
       <tr
-        v-for="e in sortEntries(spells.npc_spells_entries)"
+        v-for="e in spellsList"
         :id="'spell-' + e.id"
         :key="'spell-' + e.id"
       >
@@ -52,9 +51,12 @@
 </template>
 
 <script>
-import SpellPopover      from "../SpellPopover";
-import EqDebug           from "../eq-ui/EQDebug";
-import {NPC_SPELL_TYPES} from "../../app/constants/eq-npc-spells";
+import SpellPopover        from "../SpellPopover";
+import EqDebug             from "../eq-ui/EQDebug";
+import {NPC_SPELL_TYPES}   from "../../app/constants/eq-npc-spells";
+import {SpireQueryBuilder} from "../../app/api/spire-query-builder";
+import {NpcSpellApi}       from "../../app/api";
+import {SpireApiClient}    from "../../app/api/spire-api-client";
 
 export default {
   name: "NpcSpellPreview",
@@ -62,6 +64,8 @@ export default {
   data() {
     return {
       NPC_SPELL_TYPES: NPC_SPELL_TYPES,
+
+      spellsList: [],
 
       fields: {
         "type": 0,
@@ -76,6 +80,40 @@ export default {
       }
     }
   },
+  watch: {
+    spells: {
+      deep: true,
+      async handler() {
+        console.log("spell preview watcher")
+
+        let spellsList = this.spells && this.spells.npc_spells_entries && this.spells.npc_spells_entries.length > 0
+          ? JSON.parse(JSON.stringify(this.spells.npc_spells_entries))
+          : []
+
+        if (this.spells.parent_list > 0) {
+          const NpcSpellsClient = (new NpcSpellApi(SpireApiClient.getOpenApiConfig()))
+          const r               = await NpcSpellsClient.getNpcSpell({ id: this.spells.parent_list },
+            {
+              query:
+                (new SpireQueryBuilder())
+                  .includes([
+                    "NpcSpellsEntries.SpellsNew",
+                  ])
+                  .limit(100000)
+                  .get()
+            }
+          )
+
+          if (r.status === 200 && r.data && r.data.npc_spells_entries) {
+            spellsList = spellsList.concat(r.data.npc_spells_entries)
+          }
+        }
+
+        this.spellsList = spellsList
+          .sort((a, b) => (a.priority < b.priority) ? 1 : -1)
+      }
+    },
+  },
   props: {
     spells: {
       type: Object,
@@ -83,10 +121,10 @@ export default {
     },
   },
   methods: {
-    sortEntries(e) {
-      return e.sort((a, b) => (a.priority < b.priority) ? 1 : -1)
-    },
     getRecastDelay(e) {
+      if (e.recast_delay === -2) {
+        return 0
+      }
       if (e.recast_delay === -1) {
         return e.spells_new.recast_time / 1000
       }

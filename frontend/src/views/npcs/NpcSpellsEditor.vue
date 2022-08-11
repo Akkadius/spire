@@ -74,6 +74,7 @@
                 class="eq-table-floating-header"
               >
               <tr>
+                <th style="width: 50px"></th>
                 <th>ID</th>
                 <th>Name</th>
                 <th>Parent List ID</th>
@@ -88,7 +89,18 @@
                 :class="isRowSelected(e) ? 'pulsate-highlight-white' : ''"
                 @click="selectSpellSet(e)"
               >
-                <td>{{ e.id }}</td>
+                <td class="text-center">
+                  <b-button
+                    variant="primary"
+                    class="btn-dark btn-sm btn-outline-success"
+                    style="padding: 0px 6px;"
+                    title="Edit Spell set"
+                    @click="editNpcSpellSet(e)"
+                  >
+                    <i class="fa fa-pencil-square"></i>
+                  </b-button>
+                </td>
+                <td class="text-center">{{ e.id }}</td>
                 <td>{{ e.name }}</td>
                 <td>{{ e.parent_list }}</td>
                 <td>{{ getSpellCount(e) }}</td>
@@ -256,6 +268,10 @@ export default {
   },
 
   methods: {
+
+    editNpcSpellSet(e) {
+
+    },
 
     getSpellCount(e) {
       return e.npc_spells_entries ? e.npc_spells_entries.length : 0
