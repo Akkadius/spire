@@ -36,9 +36,10 @@
 </template>
 
 <script>
-import ContentArea from "../components/layout/ContentArea";
-import {AppEnv}    from "../app/env/app-env";
-import {ROUTE}     from "../routes";
+import ContentArea      from "../components/layout/ContentArea";
+import {AppEnv}         from "../app/env/app-env";
+import {ROUTE}          from "../routes";
+import {SpireApiClient} from "../app/api/spire-api-client";
 export default {
   name: 'Login.vue',
   components: { ContentArea },
@@ -62,7 +63,7 @@ export default {
       const height = 800
       const left   = (screen.width / 2) - (width / 2);
       const top    = (screen.height / 2) - (height / 2);
-      const url    = process.env.VUE_APP_BACKEND_BASE_URL + '/auth/github';
+      const url    = SpireApiClient.getBasePath() + '/auth/github';
       const title  = 'Github'
       const win    = window.open(url, title, 'toolbar=no, location=no, directories=no, status=no, menubar=no, scrollbars=no, resizable=no, copyhistory=no, width=' + width + ', height=' + height + ', top=' + top + ', left=' + left);
       var timer    = setInterval(() => {
