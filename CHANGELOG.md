@@ -1,3 +1,10 @@
+## [1.13.4]
+
+### Misc Fixes
+
+* [Task Editor] Fix an issue with `zone_version` field being populated with `null` on save of new activities
+* [Merchant Editor] Fix an issue where the delete icon hover was showing "edit" instead of "delete"
+
 ## [1.13.3]
 
 ### New Task Fields Minor Update

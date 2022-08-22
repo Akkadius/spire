@@ -330,6 +330,7 @@ export class Tasks {
         "goalcount": 1,
         "delivertonpc": 0,
         "zones": "21",
+        "zone_version": -1,
         "optional": 0
       }, {
         "taskid": 2,
@@ -346,6 +347,7 @@ export class Tasks {
         "goalcount": 1,
         "delivertonpc": 0,
         "zones": "0",
+        "zone_version": -1,
         "optional": 0
       }, {
         "taskid": 2,
@@ -362,6 +364,7 @@ export class Tasks {
         "goalcount": 1,
         "delivertonpc": 0,
         "zones": "152",
+        "zone_version": -1,
         "optional": 0
       }]
     }
@@ -383,6 +386,7 @@ export class Tasks {
       "goalcount": 1,
       "delivertonpc": 0,
       "zones": "21",
+      "zone_version": -1,
       "optional": 0
     }
   }

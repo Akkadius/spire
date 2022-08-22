@@ -88,7 +88,7 @@
                     variant="primary"
                     class="btn-dark btn-sm btn-outline-danger ml-1"
                     style="padding: 0px 6px;"
-                    title="Edit"
+                    title="Delete"
                     :disabled="applyingChanges"
                     @click="deleteMerchantRow(e)"
                   >
