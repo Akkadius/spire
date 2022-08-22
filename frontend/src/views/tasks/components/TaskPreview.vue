@@ -92,7 +92,7 @@
               class="mt-3"
             />
           </div>
-          <div v-if="task.alternate_currency.item">
+          <div v-if="task.alternate_currency && task.alternate_currency.item">
             <item-popover
               :item="task.alternate_currency.item"
               v-if="Object.keys(task.alternate_currency.item).length > 0"

@@ -1,3 +1,9 @@
+## [1.13.5]
+
+### Fixes
+
+* [Task Editor] Fix issue with task activities saving properly
+
 ## [1.13.4]
 
 ### Misc Fixes

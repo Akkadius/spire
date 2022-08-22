@@ -1462,7 +1462,15 @@ export default {
 
     async saveTask() {
       try {
-        const r = await Tasks.updateTask(this.getBackendFormattedTask())
+        const t = this.getBackendFormattedTask()
+        const r = await Tasks.updateTask(t)
+
+        if (t && t.task_activities) {
+          for (let a of t.task_activities) {
+            await Tasks.updateTaskActivityId(a, a.activityid)
+          }
+        }
+
         if (r.status === 200) {
           EditFormFieldUtil.resetFieldEditedStatus()
           this.notification = "Task updated!";

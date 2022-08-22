@@ -78,11 +78,7 @@ export class Tasks {
   // TODO: bubble up error handling
   public static async updateTask(task: any) {
     // @ts-ignore
-    return await this.getTaskApi().updateTask({id: task.id, task: task}, {
-      query: (new SpireQueryBuilder())
-        .includes(["TaskActivities"])
-        .get()
-    })
+    return await this.getTaskApi().updateTask({id: task.id, task: task})
   }
 
   // TODO: bubble up error handling
