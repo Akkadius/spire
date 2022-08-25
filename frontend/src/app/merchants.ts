@@ -253,6 +253,12 @@ export class Merchants {
       merchantid: merchantId,
       slot: newSlot,
       item: itemId,
+      faction_required: -1100,
+      classes_required: 65535,
+      probability: 100,
+      min_expansion: -1,
+      max_expansion: -1,
+      bucket_comparison: 0,
     }
 
     // @ts-ignore

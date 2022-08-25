@@ -1,3 +1,9 @@
+## [1.13.6]
+
+### Fixes
+
+* [Merchant Editor] Fix issue with new items being added not having proper defaults keeping Merchant items from loading properly
+
 ## [1.13.5]
 
 ### Fixes
