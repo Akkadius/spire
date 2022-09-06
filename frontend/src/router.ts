@@ -168,6 +168,11 @@ export default new Router({
           meta: {title: "NPC Spells Editor"},
         },
         {
+          path: util.format(ROUTE.NPC_SPELL_EDIT, ":id"),
+          component: () => import('./views/npcs/NpcSpellListEditor.vue'),
+          meta: {title: "NPC Spells List Editor"},
+        },
+        {
           path: '/zone/:zone',
           component: () => import('./views/zone/Zone.vue'),
           meta: {title: "Zone"},

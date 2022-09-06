@@ -155,7 +155,7 @@
 
     <eq-window-simple
       :title="'Spells (' + spells.length + ')'"
-      class="p-0"
+      class="p-0 mt-5"
       v-if="loaded && spells"
     >
       <div v-if="message">
@@ -187,11 +187,11 @@ import EqSpellPreviewTable from "@/components/preview/EQSpellPreviewTable.vue";
 import {Spells} from "@/app/spells";
 import {Items} from "@/app/items";
 import EqWindowSimple from "@/components/eq-ui/EQWindowSimple.vue";
-import SpellSpellPreviewTableSelector from "@/views/spells/components/SpellSpellPreviewTableSelector.vue";
+import SpellSpellPreviewTableSelector from "@/components/selectors/SpellPreviewTableSelector.vue";
 import {SpireQueryBuilder} from "@/app/api/spire-query-builder";
 
 export default {
-  name: "SpellSpellEffectSelector",
+  name: "SpellSelector",
   components: {
     SpellSpellPreviewTableSelector,
     EqWindowSimple,
@@ -230,11 +230,10 @@ export default {
   mounted() {
     if (Object.keys(this.$route.query).length === 0) {
       Spells.preloadDbstr()
-      this.loaded = true;
     }
+    this.loaded = true;
   },
   methods: {
-
     bubbleToParent(event) {
       this.$emit('input', event);
     },

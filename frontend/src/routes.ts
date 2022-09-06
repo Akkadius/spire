@@ -13,6 +13,7 @@ export const ROUTE = {
   NPC_EDIT: "/npc/:npc",
   NPC_EMOTES_EDIT: "/npc-emotes",
   NPC_SPELLS_EDIT: "/npc-spells",
+  NPC_SPELL_EDIT: "/npc-spell/%s",
   PLAYER_ANIMATION_VIEWER: "/player-animation-viewer",
   QUEST_API_EXPLORER: "/quest-api-explorer",
   RACE_VIEWER: "/race-viewer",

@@ -7,7 +7,7 @@
     <div class='spell-preview-table' v-if="spells.length > 0">
       <table
         id="spell-preview-table"
-        class="eq-table bordered eq-highlight-rows" style="display: table;">
+        class="eq-table bordered eq-highlight-rows p-0" style="display: table;">
         <thead>
         <tr>
           <th></th>

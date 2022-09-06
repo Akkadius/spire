@@ -251,6 +251,17 @@ export class Npcs {
     }
   }
 
+  static getBaseNpcRelationships() {
+    return [
+      "NpcSpell.NpcSpellsEntries.SpellsNew",
+      "NpcFactions.NpcFactionEntries.FactionList",
+      "NpcFactions",
+      "NpcEmotes",
+      "Merchantlists.Items",
+      "Loottable.LoottableEntries.Lootdrop.LootdropEntries.Item"
+    ]
+  }
+
   /**
    * @param emoteId
    * @param relations
@@ -261,20 +272,39 @@ export class Npcs {
 
     let includes: any[] = [];
     if (relations.includes("all")) {
-      includes = [...includes, ...[
-        "NpcSpell.NpcSpellsEntries.SpellsNew",
-        "NpcFactions.NpcFactionEntries.FactionList",
-        "NpcFactions",
-        "NpcEmotes",
-        "Merchantlists.Items",
-        "Loottable.LoottableEntries.Lootdrop.LootdropEntries.Item"
-      ]]
+      includes = [...includes, ...this.getBaseNpcRelationships()]
     } else if (relations.length > 0) {
       includes = [...includes, ...relations]
     }
 
     builder.where("emoteid", "=", emoteId)
     builder.includes(includes)
+
+    // @ts-ignore
+    const r = await npcTypeApi.listNpcTypes(builder.get())
+    if (r.status === 200) {
+      return r.data
+    }
+  }
+
+  /**
+   * @param npcSpellsId
+   * @param relations
+   */
+  static async listNpcsByNpcSpellsId(npcSpellsId: number, relations: any[] = []) {
+    const npcTypeApi = (new NpcTypeApi(SpireApiClient.getOpenApiConfig()))
+    let builder      = (new SpireQueryBuilder())
+
+    let includes: any[] = [];
+    if (relations.includes("all")) {
+      includes = [...includes, ...this.getBaseNpcRelationships()]
+    } else if (relations.length > 0) {
+      includes = [...includes, ...relations]
+    }
+
+    builder.where("npc_spells_id", "=", npcSpellsId)
+    builder.includes(includes)
+    builder.limit(100)
 
     // @ts-ignore
     const r = await npcTypeApi.listNpcTypes(builder.get())
