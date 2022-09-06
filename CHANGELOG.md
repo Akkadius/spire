@@ -1,3 +1,15 @@
+## [1.13.7]
+
+### [NPC Spells Editor] Early alpha release
+
+* Automatic spell type detection
+* List previews
+* Manage NPC spell sets fully
+* NPC preview
+* Search
+* Spell list nesting highlighting
+* Table pagination
+
 ## [1.13.6]
 
 ### Fixes
