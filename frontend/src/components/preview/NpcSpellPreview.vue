@@ -40,6 +40,8 @@
           style="min-width: 80px;"
           v-if="editButtons"
         >
+          {{(e.is_parented ? `Parent List (${e.npc_spells_id})` : '')}}
+
           <b-button
             variant="primary"
             class="btn-dark btn-sm btn-outline-success"
