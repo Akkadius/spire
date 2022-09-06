@@ -15,7 +15,7 @@
     >
       <thead class="eq-table-floating-header">
       <tr>
-        <th v-if="editButtons" style="width: 70px"></th>
+        <th v-if="editButtons"></th>
         <th>Spell</th>
         <th>Type</th>
         <th>Mana</th>
@@ -33,9 +33,11 @@
         :id="'spell-list-entry-' + e.id"
         :key="'spell-' + e.id"
         :class="(highlightedSpell && e.id === highlightedSpell ? 'pulsate-highlight-white' : '')"
+        :style="(e.is_parented ? 'background-color: rgb(0 255 255 / 20%);' : '')"
       >
         <td
           class="text-center pl-0 pr-0"
+          style="min-width: 80px;"
           v-if="editButtons"
         >
           <b-button
@@ -44,6 +46,7 @@
             style="padding: 0px 6px;"
             title="Edit spell entry"
             @click="editSpellListEntry(e)"
+            v-if="!e.is_parented"
           >
             <i class="fa fa-pencil-square"></i>
           </b-button>
@@ -54,12 +57,13 @@
             style="padding: 0px 6px;"
             title="Delete spell entry"
             @click="deleteSpellListEntry(e)"
+            v-if="!e.is_parented"
           >
             <i class="fa fa-trash"></i>
           </b-button>
         </td>
 
-        <td>
+        <td style="min-width: 220px">
           <spell-popover
             :spell="e.spells_new"
             :size="20"
@@ -193,6 +197,10 @@ export default {
                 .get()
           }
         )
+
+        for (const [i, e] of r.data.npc_spells_entries.entries()) {
+          r.data.npc_spells_entries[i].is_parented = true
+        }
 
         if (r.status === 200 && r.data && r.data.npc_spells_entries) {
           spellsList = spellsList.concat(r.data.npc_spells_entries)

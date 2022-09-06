@@ -71,7 +71,7 @@
                     class="btn-dark btn-sm btn-outline-success"
                     style="padding: 0px 6px;"
                     title="Edit Spell Set"
-                    @click="editNpcSpellSet(e)"
+                    @click="editNpcSpellSet(e.id)"
                   >
                     <i class="fa fa-pencil-square"></i>
                   </b-button>
@@ -98,7 +98,20 @@
                 </td>
                 <td class="text-center">{{ e.id }}</td>
                 <td>{{ e.name }}</td>
-                <td>{{ e.parent_list }}</td>
+                <td>
+                  {{ e.parent_list }}
+
+                  <b-button
+                    variant="primary"
+                    class="btn-dark btn-sm btn-outline-success ml-1"
+                    style="padding: 0px 6px;"
+                    title="Edit Parent Spell Set"
+                    @click="editNpcSpellSet(e.parent_list)"
+                    v-if="e.parent_list > 0"
+                  >
+                    <i class="fa fa-pencil-square"></i>
+                  </b-button>
+                </td>
                 <td>{{ getSpellCount(e) }}</td>
               </tr>
               </tbody>
@@ -243,6 +256,7 @@ export default {
       // for the sub selector pane on the right
       subSelectedId: -1,
       selectedSpellSet: {},
+      parentList: [],
 
       // api responses
       error: "",
@@ -281,10 +295,10 @@ export default {
       this.init()
     },
 
-    editNpcSpellSet(e) {
+    editNpcSpellSet(id) {
       this.$router.push(
         {
-          path: util.format(ROUTE.NPC_SPELL_EDIT, e.id)
+          path: util.format(ROUTE.NPC_SPELL_EDIT, id)
         }
       ).catch(() => {
       })
@@ -358,7 +372,6 @@ export default {
     },
 
     async loadNpcsBySpellSet(npcSpellsId) {
-
       this.npcs = await Npcs.listNpcsByNpcSpellsId(
         npcSpellsId,
         [
@@ -501,6 +514,7 @@ export default {
           if (e.id === this.subSelectedId) {
             this.selectedSpellSet = JSON.parse(JSON.stringify(e))
             this.loadNpcsBySpellSet(this.subSelectedId)
+            this.parentList = []
           }
         }
       }

@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="row">
-      <div class="col-7">
+      <div :class="(!areSelectorsActive() ? 'col-12' : 'col-7')">
         <eq-window
           v-if="spellSet && spellSet.npc_spells_entries && spellSet.npc_spells_entries.length"
           :title="`NPC Spells Editor ID (${spellSet.id}) [${spellSet.name}] Count (${spellSet.npc_spells_entries.length})`"
@@ -52,7 +52,7 @@
           </div>
         </eq-window>
       </div>
-      <div class="col-5">
+      <div :class="(areSelectorsActive() ? 'col-5' : '')">
         <div
           style="width: auto;"
           class="fade-in"
@@ -290,6 +290,10 @@ export default {
 
   methods: {
 
+    areSelectorsActive() {
+      return this.editingSpellEntryId > 0 || this.selectorActive['spell-selector']
+    },
+
     async saveSpellListEntry() {
       try {
         const api = (new NpcSpellsEntryApi(SpireApiClient.getOpenApiConfig()))
@@ -493,7 +497,7 @@ export default {
           "npc-spell-preview-list-viewport",
           'spell-list-entry-' + entryId
         )
-      }, 500)
+      }, 100)
     },
 
     async getNpcSpell() {
