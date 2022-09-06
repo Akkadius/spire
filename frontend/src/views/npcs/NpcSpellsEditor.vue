@@ -12,50 +12,27 @@
                 <b-button
                   size="sm"
                   variant="outline-warning"
-                  @click="reset(); rows = []; loading = true; updateQueryState(); init()"
+                  @click="zeroState();"
                 >
                   <i class="fa fa-refresh mr-1"></i>
                   Reset
                 </b-button>
-                <b-button
-                  size="sm"
-                  variant="outline-warning"
-                  @click="newEmote()"
-                >
-                  <i class="fa fa-plus mr-1"></i>
-                  New
-                </b-button>
               </div>
             </div>
-            <!--            <div class="col-2">-->
-            <!--              Event-->
-            <!--              <b-form-select-->
-            <!--                v-model="eventSelection"-->
-            <!--                @change="subSelectedId = -1; rows = []; updateQueryState()"-->
-            <!--                :options="NPC_EMOTE_EVENTS"-->
-            <!--              />-->
-            <!--            </div>-->
-            <!--            <div class="col-2">-->
-            <!--              Type-->
-            <!--              <b-form-select-->
-            <!--                v-model="typeSelection"-->
-            <!--                @change="subSelectedId = -1; rows = []; updateQueryState()"-->
-            <!--                :options="NPC_EMOTE_TYPES"-->
-            <!--              />-->
-            <!--            </div>-->
-            <div class="col-2">
+
+            <div class="col-4">
               Search
               <b-form-input
                 v-model="search"
-                v-on:keyup="subSelectedId = -1; rows = []; loading = true; updateQueryStateDebounce()"
+                v-on:keyup="doSearch()"
                 placeholder="Search by text or id"
               />
             </div>
 
             <div class="col-2" v-if="loading">
               <div class="text-center" style="margin-top: 17px">
-              Loading...
-              <loader-fake-progress/>
+                Loading...
+                <loader-fake-progress/>
               </div>
             </div>
           </div>
@@ -65,16 +42,16 @@
             style="max-height: 80vh; overflow-y: scroll"
           >
             <table
-              class="eq-table bordered eq-highlight-rows row-table emotes-table"
+              class="eq-table bordered eq-highlight-rows row-table npc-spell-sets-table"
               style="display: table; font-size: 14px; overflow-x: scroll"
               v-if="rows && rows.length > 0"
-              id="emotes-table"
+              id="npc-spell-sets-table"
             >
               <thead
                 class="eq-table-floating-header"
               >
               <tr>
-                <th style="width: 50px"></th>
+                <th style="width: 100px"></th>
                 <th>ID</th>
                 <th>Name</th>
                 <th>Parent List ID</th>
@@ -87,22 +64,54 @@
                 v-for="(e, index) in rows"
                 :key="e.id"
                 :class="isRowSelected(e) ? 'pulsate-highlight-white' : ''"
-                @click="selectSpellSet(e)"
               >
-                <td class="text-center">
+                <td class="text-center pl-0 pr-0">
                   <b-button
                     variant="primary"
                     class="btn-dark btn-sm btn-outline-success"
                     style="padding: 0px 6px;"
-                    title="Edit Spell set"
-                    @click="editNpcSpellSet(e)"
+                    title="Edit Spell Set"
+                    @click="editNpcSpellSet(e.id)"
                   >
                     <i class="fa fa-pencil-square"></i>
+                  </b-button>
+
+                  <b-button
+                    variant="primary"
+                    class="btn btn-dark btn-sm btn-outline-danger ml-1 btn-primary"
+                    style="padding: 0px 6px;"
+                    title="Delete spell entry"
+                    @click="deleteNpcSpellSet(e)"
+                  >
+                    <i class="fa fa-trash"></i>
+                  </b-button>
+
+                  <b-button
+                    variant="primary"
+                    class="btn-dark btn-sm btn-outline-white ml-1"
+                    style="padding: 0px 6px;"
+                    title="View Spell Set"
+                    @click="selectSpellSet(e)"
+                  >
+                    <i class="fa fa-eye"></i>
                   </b-button>
                 </td>
                 <td class="text-center">{{ e.id }}</td>
                 <td>{{ e.name }}</td>
-                <td>{{ e.parent_list }}</td>
+                <td>
+                  {{ e.parent_list }}
+
+                  <b-button
+                    variant="primary"
+                    class="btn-dark btn-sm btn-outline-success ml-1"
+                    style="padding: 0px 6px;"
+                    title="Edit Parent Spell Set"
+                    @click="editNpcSpellSet(e.parent_list)"
+                    v-if="e.parent_list > 0"
+                  >
+                    <i class="fa fa-pencil-square"></i>
+                  </b-button>
+                </td>
                 <td>{{ getSpellCount(e) }}</td>
               </tr>
               </tbody>
@@ -111,6 +120,7 @@
 
           </div>
 
+          <!-- Pagination -->
           <div class="row text-center justify-content-center">
             <div class="col-12 text-center mt-3">
               <b-pagination
@@ -124,23 +134,31 @@
               />
             </div>
           </div>
+
         </eq-window>
       </div>
+
+      <!-- Preview Pane -->
       <div class="col-6 fade-in" v-if="isSubEditActive()">
-        <eq-window :title="selectedSpellSet.name" class="p-2">
-          <div style="max-height: 93vh; overflow-y: scroll; overflow-x: hidden">
+        <eq-window
+          v-if="selectedSpellSet && selectedSpellSet.npc_spells_entries && selectedSpellSet.npc_spells_entries.length"
+          :title="`NPC Spells ID (${selectedSpellSet.id}) [${selectedSpellSet.name}] Count (${selectedSpellSet.npc_spells_entries.length})`"
+          class="p-2"
+        >
+          <div style="max-height: 44vh; overflow-y: scroll; overflow-x: hidden">
             <npc-spell-preview
               :spells="selectedSpellSet"
             />
           </div>
         </eq-window>
 
+        <!-- Show NPC(s) that use this spell set -->
         <eq-window
-          class="mt-5"
-          :title="'Emote ID (' + selectedSpellSet.emoteid + ') NPC(s) (' + npcs.length + ')'"
-          v-if="selectedSpellSet && selectedSpellSet.emoteid && npcs && npcs.length > 0"
+          class="mt-5 p-0"
+          :title="`NPC Spells Set ID (${selectedSpellSet.id}) (${selectedSpellSet.name}) NPC(s) (${npcs.length}) ` + (npcs.length === 100 ? '(Max 100)' : '')"
+          v-if="selectedSpellSet && selectedSpellSet.id && npcs && npcs.length > 0"
         >
-          <div style="max-height: 46vh; overflow-y: scroll; overflow-x: hidden">
+          <div style="max-height: 45vh; overflow-y: scroll; overflow-x: hidden">
             <table
               id="npctable"
               class="eq-table eq-highlight-rows"
@@ -150,7 +168,7 @@
                 class="eq-table-floating-header"
               >
               <tr>
-                <th>
+                <th class="text-center">
                   NPC
                 </th>
                 <th>
@@ -178,6 +196,7 @@
             </table>
           </div>
         </eq-window>
+
       </div>
     </div>
 
@@ -185,24 +204,25 @@
 </template>
 
 <script>
-import EqWindowSimple                      from "../../components/eq-ui/EQWindowSimple";
-import EqAutoTable                         from "../../components/eq-ui/EQAutoTable";
-import ContentArea                         from "../../components/layout/ContentArea";
-import {NpcSpellApi}                       from "../../app/api";
-import {SpireApiClient}                    from "../../app/api/spire-api-client";
-import LoaderFakeProgress                  from "../../components/LoaderFakeProgress";
-import {ROUTE}                             from "../../routes";
-import {SpireQueryBuilder}                 from "../../app/api/spire-query-builder";
-import InfoErrorBanner                     from "../../components/InfoErrorBanner";
-import EqWindow                            from "../../components/eq-ui/EQWindow";
-import {NPC_EMOTE_EVENTS, NPC_EMOTE_TYPES} from "../../app/constants/eq-npc-emotes";
-import Tablesort                           from "../../app/utility/tablesort";
-import {scrollToTarget}                    from "../../app/utility/scrollToTarget";
-import {debounce}                          from "../../app/utility/debounce";
-import {Npcs}                              from "../../app/npcs";
-import NpcPopover                          from "../../components/NpcPopover";
-import NpcSpellPreview                     from "../../components/preview/NpcSpellPreview";
-import EqDebug                             from "../../components/eq-ui/EQDebug";
+import EqWindowSimple      from "../../components/eq-ui/EQWindowSimple";
+import EqAutoTable         from "../../components/eq-ui/EQAutoTable";
+import ContentArea         from "../../components/layout/ContentArea";
+import {NpcSpellApi}       from "../../app/api";
+import {SpireApiClient}    from "../../app/api/spire-api-client";
+import LoaderFakeProgress  from "../../components/LoaderFakeProgress";
+import {ROUTE}             from "../../routes";
+import {SpireQueryBuilder} from "../../app/api/spire-query-builder";
+import InfoErrorBanner     from "../../components/InfoErrorBanner";
+import EqWindow            from "../../components/eq-ui/EQWindow";
+import Tablesort           from "../../app/utility/tablesort";
+import {scrollToTarget}    from "../../app/utility/scrollToTarget";
+import {debounce}          from "../../app/utility/debounce";
+import {Npcs}              from "../../app/npcs";
+import NpcPopover          from "../../components/NpcPopover";
+import NpcSpellPreview     from "../../components/preview/NpcSpellPreview";
+import EqDebug             from "../../components/eq-ui/EQDebug";
+import util                from "util";
+import {NpcSpellsEntryApi} from "../../app/api/api/npc-spells-entry-api";
 
 const NpcSpellsClient = (new NpcSpellApi(SpireApiClient.getOpenApiConfig()))
 
@@ -236,22 +256,17 @@ export default {
       // for the sub selector pane on the right
       subSelectedId: -1,
       selectedSpellSet: {},
+      parentList: [],
 
       // api responses
       error: "",
       notification: "",
 
       // selection
-      eventSelection: -1,
-      typeSelection: -1,
       search: "",
 
       // npcs that use the emote
       npcs: [],
-
-      // constants
-      NPC_EMOTE_TYPES: NPC_EMOTE_TYPES,
-      NPC_EMOTE_EVENTS: NPC_EMOTE_EVENTS,
 
       lastSelectedTime: Date.now(),
 
@@ -269,8 +284,60 @@ export default {
 
   methods: {
 
-    editNpcSpellSet(e) {
+    zeroState() {
+      this.reset()
+      // lastPage: 0, // this keeps track of last page in state
+      //   currentPage: 1,
+      this.lastPage = 0;
 
+      this.loading = true;
+      this.updateQueryState();
+      this.init()
+    },
+
+    editNpcSpellSet(id) {
+      this.$router.push(
+        {
+          path: util.format(ROUTE.NPC_SPELL_EDIT, id)
+        }
+      ).catch(() => {
+      })
+    },
+
+    async deleteNpcSpellSet(e) {
+      const entriesCount = (e && e.npc_spells_entries && e.npc_spells_entries.length ? e.npc_spells_entries.length : 0)
+
+      if (confirm(`Are you sure you want to delete this NPC spell set and all of its entries? \n\nEntries (${entriesCount})`)) {
+        try {
+          const r = await (new NpcSpellApi(SpireApiClient.getOpenApiConfig()))
+            .deleteNpcSpell({ id: e.id })
+
+          if (r.status === 200 && e.npc_spells_entries) {
+            // delete every entry individually (for now)
+            for (const row of e.npc_spells_entries) {
+              await (new NpcSpellsEntryApi(SpireApiClient.getOpenApiConfig()))
+                .deleteNpcSpellsEntry({ id: row.id })
+            }
+          }
+
+          this.reset()
+          // also resetting...
+          this.lastPage  = 0;
+          this.rows      = []
+          this.totalRows = 0
+          // reload
+          this.init()
+
+        } catch (err) {
+          if (err && err.response && err.response.data.error) {
+            if (err.response && err.response.data && err.response.data.error) {
+              this.error = err.response.data.error
+            }
+          } else {
+            this.error = err
+          }
+        }
+      }
     },
 
     getSpellCount(e) {
@@ -292,9 +359,11 @@ export default {
       let zones = []
       if (n.spawnentries) {
         for (let e of n.spawnentries) {
-          e.spawngroup.spawn_2.zone = e.spawngroup.spawn_2.zone.toLowerCase()
-          if (!zones.includes(e.spawngroup.spawn_2.zone)) {
-            zones.push(e.spawngroup.spawn_2.zone)
+          if (e.spawngroup && e.spawngroup.spawn_2 && e.spawngroup.spawn_2.zone) {
+            e.spawngroup.spawn_2.zone = e.spawngroup.spawn_2.zone.toLowerCase()
+            if (!zones.includes(e.spawngroup.spawn_2.zone)) {
+              zones.push(e.spawngroup.spawn_2.zone)
+            }
           }
         }
       }
@@ -302,20 +371,28 @@ export default {
       return zones
     },
 
-    async loadNpcsByEmote(e) {
-      this.npcs = await Npcs.listNpcsByEmoteId(e.emoteid,
+    async loadNpcsBySpellSet(npcSpellsId) {
+      this.npcs = await Npcs.listNpcsByNpcSpellsId(
+        npcSpellsId,
         [
-          "NpcSpell.NpcSpellsEntries.SpellsNew",
-          "NpcFactions.NpcFactionEntries.FactionList",
-          "NpcFactions",
-          "NpcEmotes",
-          "Merchantlists.Items",
-          "Loottable.LoottableEntries.Lootdrop.LootdropEntries.Item",
-          "Spawnentries.Spawngroup.Spawn2"
-        ])
+          "Spawnentries.Spawngroup.Spawn2",
+        ]
+      )
+
+      // load extra data if we don't have too many NPCs
+      if (this.npcs && this.npcs.length < 50) {
+        this.npcs = await Npcs.listNpcsByNpcSpellsId(
+          npcSpellsId,
+          [...["Spawnentries.Spawngroup.Spawn2"], ...Npcs.getBaseNpcRelationships()]
+        )
+      }
     },
 
-    updateQueryStateDebounce: debounce(function () {
+    doSearch: debounce(function () {
+      this.subSelectedId = -1;
+      this.rows          = [];
+      this.loading       = true;
+      this.lastPage      = 0;
       this.updateQueryState()
     }, 600),
 
@@ -334,14 +411,12 @@ export default {
      * Resets
      */
     reset() {
-      this.currentPage    = 1
-      this.search         = ""
-      this.error          = ""
-      this.notification   = ""
-      this.eventSelection = -1
-      this.typeSelection  = -1
-      this.subSelectedId  = -1
-      this.npcs           = []
+      this.currentPage   = 1
+      this.search        = ""
+      this.error         = ""
+      this.notification  = ""
+      this.subSelectedId = -1
+      this.npcs          = []
     },
     resetSelections() {
       this.subSelectedId = -1
@@ -356,18 +431,14 @@ export default {
       if (this.subSelectedId !== -1) {
         queryState.selectedId = this.subSelectedId
       }
-      if (this.eventSelection !== -1) {
-        queryState.event = this.eventSelection
-      }
-      if (this.typeSelection !== -1) {
-        queryState.type = this.typeSelection
-      }
       if (this.currentPage > 0) {
         queryState.page = this.currentPage
       }
       if (this.search !== "") {
         queryState.search = this.search
       }
+
+      console.log("[npc-spells-editor] Updating query state", queryState)
 
       this.$router.push(
         {
@@ -383,12 +454,7 @@ export default {
       if (this.$route.query.selectedId >= 0) {
         this.subSelectedId = parseInt(this.$route.query.selectedId);
       }
-      if (this.$route.query.event >= 0) {
-        this.eventSelection = parseInt(this.$route.query.event);
-      }
-      if (this.$route.query.type >= 0) {
-        this.typeSelection = parseInt(this.$route.query.type);
-      }
+
       if (this.$route.query.search !== "") {
         this.search = this.$route.query.search;
       }
@@ -396,6 +462,8 @@ export default {
         this.currentPage = parseInt(this.$route.query.page);
         console.log("current page", this.currentPage)
       }
+
+      console.log("query params", this.$route.query)
     },
 
     /**
@@ -414,113 +482,30 @@ export default {
       return e.id === this.subSelectedId
     },
 
-    async newEmote() {
-
-      let nextEmoteId = 0
-      for (const e of this.rows) {
-        if (e.emoteid > nextEmoteId) {
-          nextEmoteId = e.emoteid
-        }
-      }
-
-      try {
-        const r = await NpcSpellsClient.createNpcEmote(
-          {
-            npcEmote: {
-              emoteid: nextEmoteId + 1,
-              event_: 1,
-              type: 0,
-              text: "You will not evade me!",
-            }
-          }
-        )
-        if (r.status === 200) {
-          if (r.data.id > 0) {
-            this.notification  = "New emote created!"
-            this.subSelectedId = r.data.id
-            this.rows          = []
-            this.updateQueryState()
-          }
-        }
-      } catch (err) {
-        if (err.response.data.error) {
-          this.error = err.response.data.error
-        }
-      }
-    },
-
-    async save() {
-      try {
-        const r = await NpcSpellsClient.updateNpcEmote(
-          {
-            id: this.selectedSpellSet.id,
-            npcEmote: this.selectedSpellSet
-          }
-        )
-        if (r.status === 200) {
-          this.notification = "Emote data saved!"
-        }
-      } catch (err) {
-        if (err.response.data.error) {
-          this.error = err.response.data.error
-        }
-      }
-    },
-
-    async deleteEmote() {
-      if (confirm("Are you sure you want to delete this emote (" + this.subSelectedId + ")?")) {
-        try {
-          const r = await NpcSpellsClient.deleteNpcEmote(
-            {
-              id: this.selectedSpellSet.id,
-            }
-          )
-
-          if (r.status === 200) {
-            this.notification = "Emote deleted!"
-            this.reset()
-
-            // convenience - we grab the last element in the list if we deleted the last element in the table
-            const deletedLastElement = this.selectedSpellSet.id === this.rows[this.rows.length - 1].id
-            if (deletedLastElement) {
-              this.subSelectedId = this.rows[this.rows.length - 2].id
-            }
-
-            this.rows = []
-            this.updateQueryState()
-          }
-        } catch (err) {
-          console.log(err)
-          if (err.response && err.response.data && err.response.data.error) {
-            this.error = err.response.data.error
-          }
-        }
-      }
-    },
-
     /**
      * Initialize
      */
     async init(reset = false) {
+      this.loadQueryState()
+
       if (this.totalRows === 0) {
         this.totalRows = await this.getNpcSpellCount()
       }
-      this.loadQueryState()
 
-      console.log("last page", this.lastPage)
-      console.log("current page", this.currentPage)
+      // console.log("last page", this.lastPage)
+      // console.log("current page", this.currentPage)
 
       if (this.lastPage !== this.currentPage || reset) {
         console.log("reloading content")
         this.loading      = true
-        this.lastPage     = this.currentPage
+        this.lastPage     = parseInt(this.currentPage)
         this.rows         = await this.getNpcSpells()
         this.originalRows = JSON.parse(JSON.stringify(this.rows))
       }
 
       setTimeout(() => {
-        if (document.getElementById('emotes-table')) {
-          new Tablesort(document.getElementById('emotes-table'));
+        if (document.getElementById('npc-spell-sets-table')) {
+          new Tablesort(document.getElementById('npc-spell-sets-table'));
         }
       }, 100)
 
@@ -528,47 +513,33 @@ export default {
         for (const e of this.rows) {
           if (e.id === this.subSelectedId) {
             this.selectedSpellSet = JSON.parse(JSON.stringify(e))
-            // re-hook up later
-            // this.loadNpcsByEmote(this.selectedSpellSet)
+            this.loadNpcsBySpellSet(this.subSelectedId)
+            this.parentList = []
           }
-        }
-      }
-
-      // filters
-      let rows = []
-      if (this.eventSelection > -1 || this.typeSelection > -1 || this.search !== "") {
-        for (const r of this.originalRows) {
-          if (this.eventSelection > -1 && r.event_ !== this.eventSelection) {
-            continue
-          }
-          if (this.typeSelection > -1 && r.type !== this.typeSelection) {
-            continue;
-          }
-          if (this.search && this.search !== "" && r.text &&
-            !r.text.toLowerCase().includes(this.search.toLowerCase()) &&
-            !r.id.toString().includes(this.search) &&
-            !r.emoteid.toString().includes(this.search)
-          ) {
-            continue;
-          }
-
-          rows.push(r)
-        }
-
-        if (rows.length > 0) {
-          this.rows = rows
         }
       }
 
       this.loading = false
+    },
 
-      // this.scrollToHighlighted()
+    isNumeric(value) {
+      return /^-?\d+$/.test(value);
     },
 
     async getNpcSpellCount() {
       let builder = (new SpireQueryBuilder())
         .select(["id"])
         .limit(100000)
+
+      if (this.search && this.search.length > 0) {
+        if (this.isNumeric(this.search)) {
+          builder.where("id", "=", this.search)
+        } else {
+          builder.where("name", "like", this.search)
+        }
+      }
+
+      // console.log("SEARCH IS (count) ", this.search)
 
       const response = await NpcSpellsClient.listNpcSpells(
         builder.get()
@@ -581,12 +552,29 @@ export default {
     },
 
     async getNpcSpells() {
+      console.log("getnpcspells", this.currentPage)
+
+      if (typeof this.$route.query.page !== 'undefined' && parseInt(this.$route.query.page) !== 0) {
+        this.currentPage = parseInt(this.$route.query.page);
+        console.log("current page", this.currentPage)
+      }
+
       let builder = (new SpireQueryBuilder())
         .page(this.currentPage)
         .includes([
           "NpcSpellsEntries.SpellsNew",
         ])
         .limit(this.pageSize)
+
+      if (this.search && this.search.length > 0) {
+        if (this.isNumeric(this.search)) {
+          builder.where("id", "=", this.search)
+        } else {
+          builder.where("name", "like", this.search)
+        }
+      }
+
+      // console.log("SEARCH IS (data) ", this.search)
 
       const response = await NpcSpellsClient.listNpcSpells(
         builder.get()
@@ -609,13 +597,12 @@ export default {
         'row-' + this.subSelectedId
       )
     }
-
   },
 }
 </script>
 
 <style>
-.emotes-table td {
+.npc-spell-sets-table td {
   vertical-align: middle !important;
 }
 </style>

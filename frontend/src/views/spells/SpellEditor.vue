@@ -1528,7 +1528,7 @@
           class="fade-in"
           v-if="spellSelectorActive"
         >
-          <spell-spell-effect-selector
+          <spell-selector
             @input="spell[selectedEffectColumn + '_' + selectedEffectIndex] = $event.spellId; setFieldModifiedById(selectedEffectColumn + '_' + selectedEffectIndex)"
           />
         </div>
@@ -1550,7 +1550,7 @@
           class="fade-in"
           v-if="simpleSpellSelectorActive"
         >
-          <spell-spell-effect-selector
+          <spell-selector
             @input="spell[selectedSimpleSpellSelectorField] = $event.spellId; setFieldModifiedById(selectedSimpleSpellSelectorField)"
           />
         </div>
@@ -1647,9 +1647,9 @@
 import EqWindowFancy                  from "../../components/eq-ui/EQWindowFancy";
 import EqWindow                       from "../../components/eq-ui/EQWindow";
 import EqTabs                         from "../../components/eq-ui/EQTabs";
-import EqTab          from "../../components/eq-ui/EQTab";
-import EqSpellPreview from "../../components/preview/EQSpellCardPreview";
-import {Spells}       from "../../app/spells";
+import EqTab                          from "../../components/eq-ui/EQTab";
+import EqSpellPreview                 from "../../components/preview/EQSpellCardPreview";
+import {Spells}                       from "../../app/spells";
 import {
   BASE_VALUE_FORMULAS,
   BUFF_DURATION_FORMULAS,
@@ -1664,9 +1664,9 @@ import {
 }                                     from "../../app/constants/eq-spell-constants";
 import {DB_SKILLS}                    from "../../app/constants/eq-skill-constants";
 import SpellIconSelector              from "./components/SpellIconSelector";
-import SpellAnimationPreview  from "./components/SpellAnimationPreview";
-import SpellAnimationViewer   from "../asset-viewers/SpellAnimationViewer";
-import SpellAnimationSelector from "./components/SpellAnimationSelector";
+import SpellAnimationPreview          from "./components/SpellAnimationPreview";
+import SpellAnimationViewer           from "../asset-viewers/SpellAnimationViewer";
+import SpellAnimationSelector         from "./components/SpellAnimationSelector";
 import EqCheckbox                     from "../../components/eq-ui/EQCheckbox";
 import {DbStrApi, SpellsNewApi}       from "../../app/api";
 import {SpireApiClient}               from "../../app/api/spire-api-client";
@@ -1680,7 +1680,7 @@ import {SPELL_SPA_DEFINITIONS}        from "../../app/constants/eq-spell-spa-def
 import LoaderCastBarTimer             from "../../components/LoaderCastBarTimer";
 import {EditFormFieldUtil}            from "../../app/forms/edit-form-field-util";
 import LoaderFakeProgress             from "../../components/LoaderFakeProgress";
-import SpellSpellEffectSelector       from "./components/SpellSpellEffectSelector";
+import SpellSelector                  from "../../components/selectors/SpellSelector";
 import {debounce}                     from "../../app/utility/debounce";
 import EqWindowSimple                 from "../../components/eq-ui/EQWindowSimple";
 import SpellConeVisualizer            from "./components/SpellConeVisualizer";
@@ -1712,7 +1712,7 @@ export default {
     SpellNimbusAnimationSelector,
     SpellConeVisualizer,
     EqWindowSimple,
-    SpellSpellEffectSelector,
+    SpellSelector,
     LoaderFakeProgress,
     LoaderCastBarTimer,
     SpellCastingAnimationSelector,

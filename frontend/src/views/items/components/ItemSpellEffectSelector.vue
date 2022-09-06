@@ -1,6 +1,6 @@
 <template>
   <div>
-    <eq-window-simple style="">
+    <eq-window style="">
       <div
         class="row text-center justify-content-center mb-3"
         style="margin: 0 auto;"
@@ -148,13 +148,14 @@
         </div>
       </div>
 
-    </eq-window-simple>
+    </eq-window>
 
     <app-loader :is-loading="!loaded" padding="4"/>
 
     <eq-window-simple
       style="overflow-y: scroll; overflow-x: hidden; height: 60vh"
       id="spell-effect-selector-view-port"
+      class="p-0"
       v-if="loaded && spells"
     >
       <div v-if="message">

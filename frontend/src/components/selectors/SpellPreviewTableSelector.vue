@@ -83,7 +83,7 @@ import {ROUTE}            from "@/routes";
 import * as util          from "util";
 
 export default {
-  name: "SpellSpellPreviewTableSelector",
+  name: "SpellPreviewTableSelector",
   components: {
     EqSpellDescription,
     EqSpellEffects,

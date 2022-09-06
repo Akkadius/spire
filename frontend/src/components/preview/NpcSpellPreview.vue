@@ -11,25 +11,61 @@
       class="eq-table bordered eq-highlight-rows"
       style="font-size: 14px; "
       v-if="spells && spells.npc_spells_entries"
+      id="npc-spell-preview-list-table"
     >
       <thead class="eq-table-floating-header">
       <tr>
+        <th v-if="editButtons"></th>
         <th>Spell</th>
         <th>Type</th>
         <th>Mana</th>
         <th>Priority</th>
         <th>Recast</th>
-        <th>Min / Max Lvl</th>
-        <th>Min / Max HP</th>
+        <th>Min Lvl</th>
+        <th>Max Lvl</th>
+        <th>Min HP</th>
+        <th>Max HP</th>
       </tr>
       </thead>
       <tbody>
       <tr
         v-for="e in spellsList"
-        :id="'spell-' + e.id"
+        :id="'spell-list-entry-' + e.id"
         :key="'spell-' + e.id"
+        :class="(highlightedSpell && e.id === highlightedSpell ? 'pulsate-highlight-white' : '')"
+        :style="(e.is_parented ? 'background-color: rgb(0 255 255 / 20%);' : '')"
       >
-        <td>
+        <td
+          class="text-center pl-0 pr-0"
+          style="min-width: 80px;"
+          v-if="editButtons"
+        >
+          {{(e.is_parented ? `Parent List (${e.npc_spells_id})` : '')}}
+
+          <b-button
+            variant="primary"
+            class="btn-dark btn-sm btn-outline-success"
+            style="padding: 0px 6px;"
+            title="Edit spell entry"
+            @click="editSpellListEntry(e)"
+            v-if="!e.is_parented"
+          >
+            <i class="fa fa-pencil-square"></i>
+          </b-button>
+
+          <b-button
+            variant="primary"
+            class="btn btn-dark btn-sm btn-outline-danger ml-1 btn-primary"
+            style="padding: 0px 6px;"
+            title="Delete spell entry"
+            @click="deleteSpellListEntry(e)"
+            v-if="!e.is_parented"
+          >
+            <i class="fa fa-trash"></i>
+          </b-button>
+        </td>
+
+        <td style="min-width: 220px">
           <spell-popover
             :spell="e.spells_new"
             :size="20"
@@ -41,8 +77,10 @@
         <td>{{ getManacost(e) }}</td>
         <td>{{ e.priority }}</td>
         <td>{{ getRecastDelay(e) }}s</td>
-        <td>{{ e.minlevel }} / {{ e.maxlevel }}</td>
-        <td>{{ e.min_hp }} / {{ e.max_hp }}</td>
+        <td>{{ e.minlevel }}</td>
+        <td>{{ e.maxlevel }}</td>
+        <td>{{ e.min_hp }}</td>
+        <td>{{ e.max_hp }}</td>
       </tr>
       </tbody>
     </table>
@@ -57,6 +95,8 @@ import {NPC_SPELL_TYPES}   from "../../app/constants/eq-npc-spells";
 import {SpireQueryBuilder} from "../../app/api/spire-query-builder";
 import {NpcSpellApi}       from "../../app/api";
 import {SpireApiClient}    from "../../app/api/spire-api-client";
+import Tablesort           from "../../app/utility/tablesort";
+import {NpcSpellsEntryApi} from "../../app/api/api/npc-spells-entry-api";
 
 export default {
   name: "NpcSpellPreview",
@@ -84,13 +124,70 @@ export default {
     spells: {
       deep: true,
       async handler() {
-        console.log("spell preview watcher")
+        this.init()
+      }
+    },
+    highlightedSpell: {
+      handler() {
 
-        let spellsList = this.spells && this.spells.npc_spells_entries && this.spells.npc_spells_entries.length > 0
-          ? JSON.parse(JSON.stringify(this.spells.npc_spells_entries))
-          : []
+      }
+    }
+  },
+  props: {
+    spells: {
+      type: Object,
+      required: false
+    },
+    editButtons: {
+      type: Boolean,
+      required: false,
+      default: false,
+    },
+    highlightedSpell: {
+      type: [Number, String],
+      required: false,
+      default: 0
+    }
+  },
+  mounted() {
+    this.init()
+  },
+  methods: {
 
-        if (this.spells.parent_list > 0) {
+    editSpellListEntry(e) {
+      console.log("edit spell", e)
+      this.$emit("edit-spell", e);
+    },
+
+    async deleteSpellListEntry(e) {
+      if (confirm(`Are you sure you want to delete this spell? \n\n(${e.spells_new.name}) (${e.spells_new.id})?`)) {
+
+        try {
+          await (new NpcSpellsEntryApi(SpireApiClient.getOpenApiConfig()))
+            .deleteNpcSpellsEntry({ id: e.id })
+            .then(() => {
+              this.$emit("reload-parent", true);
+              this.$emit("notification", "Spell deleted successfully!");
+            })
+        } catch (err) {
+          if (err.response.data.error) {
+            if (err.response && err.response.data && err.response.data.error) {
+              this.$emit("error", err.response.data.error);
+            }
+          }
+        }
+      }
+    },
+
+    async init() {
+      console.log("spell preview watcher")
+
+      let spellsList = this.spells && this.spells.npc_spells_entries && this.spells.npc_spells_entries.length > 0
+        ? JSON.parse(JSON.stringify(this.spells.npc_spells_entries))
+        : []
+
+      if (this.spells.parent_list > 0) {
+        try {
           const NpcSpellsClient = (new NpcSpellApi(SpireApiClient.getOpenApiConfig()))
           const r               = await NpcSpellsClient.getNpcSpell({ id: this.spells.parent_list },
             {
@@ -104,23 +201,38 @@ export default {
             }
           )
 
+          for (const [i, e] of r.data.npc_spells_entries.entries()) {
+            r.data.npc_spells_entries[i].is_parented = true
+          }
+
           if (r.status === 200 && r.data && r.data.npc_spells_entries) {
             spellsList = spellsList.concat(r.data.npc_spells_entries)
           }
+        } catch (err) {
+          if (err.response.data.error) {
+            console.log("Error fetching parent list", err)
+          }
         }
-
-        this.spellsList = spellsList
-          .sort((a, b) => (a.priority < b.priority) ? 1 : -1)
       }
+
+      this.spellsList = spellsList
+        .sort((a, b) => {
+          if (a.minlevel === b.minlevel) {
+            return a.spells_new.name.localeCompare(b.spells_new.name)
+          }
+
+          return (b.minlevel < a.minlevel) ? 1 : -1
+        })
+
+      // table sort
+      const target = document.getElementById('npc-spell-preview-list-table')
+      if (target) {
+        setTimeout(() => {
+          new Tablesort(target);
+        }, 100)
+      }
+
     },
-  },
-  props: {
-    spells: {
-      type: Object,
-      required: false
-    },
-  },
-  methods: {
     getRecastDelay(e) {
       if (e.recast_delay === -2) {
         return 0

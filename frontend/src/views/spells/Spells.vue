@@ -409,9 +409,9 @@ export default {
       // if number, filter by id
       // else name
       if (!isNaN(this.spellName) && this.spellName) {
-        builder.whereOr("id", "=", this.spellName)
+        builder.where("id", "=", this.spellName)
       } else if (this.spellName) {
-        builder.whereOr("name", "like", this.spellName)
+        builder.where("name", "like", this.spellName)
       }
 
       if (this.selectedSpa > 0) {
