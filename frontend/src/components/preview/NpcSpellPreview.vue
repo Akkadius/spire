@@ -158,7 +158,7 @@ export default {
     },
 
     async deleteSpellListEntry(e) {
-      if (confirm(`Are you sure you want to delete this Spell? \n\n(${e.spells_new.name}) (${e.spells_new.id})?`)) {
+      if (confirm(`Are you sure you want to delete this spell? \n\n(${e.spells_new.name}) (${e.spells_new.id})?`)) {
 
         try {
           await (new NpcSpellsEntryApi(SpireApiClient.getOpenApiConfig()))

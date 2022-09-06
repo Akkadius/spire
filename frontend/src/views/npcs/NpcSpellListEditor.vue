@@ -239,6 +239,7 @@ import util                from "util";
 import EqCheckbox          from "../../components/eq-ui/EQCheckbox";
 import SpellPopover        from "../../components/SpellPopover";
 import {NPC_SPELL_TYPES}   from "../../app/constants/eq-npc-spells";
+import {Spells}            from "../../app/spells";
 
 export default {
   name: "NpcSpellListEditor",
@@ -435,9 +436,89 @@ export default {
       }, 50)
     },
 
+    calculateNpcSpellTypeFromSpell(e) {
+      // console.log("calculateNpcSpellTypeFromSpell", e)
+
+      for (let effectIndex = 1; effectIndex <= 12; effectIndex++) {
+
+        // pets
+        if ([33, 106, 71].includes(e["effectid_" + effectIndex])) {
+          console.log("[npc-spell-list-editor] detected pet spell SPA [%s]", e["effectid_" + effectIndex])
+          return 32;
+        }
+
+        // charm
+        if ([22].includes(e["effectid_" + effectIndex])) {
+          console.log("[npc-spell-list-editor] detected charm spell SPA [%s]", e["effectid_" + effectIndex])
+          return 4096;
+        }
+
+        // snare
+        if ([128].includes(e["effectid_" + effectIndex])) {
+          console.log("[npc-spell-list-editor] detected snare spell SPA [%s]", e["effectid_" + effectIndex])
+          return 128;
+        }
+
+        // dispell
+        if ([209].includes(e["effectid_" + effectIndex])) {
+          console.log("[npc-spell-list-editor] detected dispell spell SPA [%s]", e["effectid_" + effectIndex])
+          return 512;
+        }
+
+        // mez
+        if ([31].includes(e["effectid_" + effectIndex])) {
+          console.log("[npc-spell-list-editor] detected mez spell SPA [%s]", e["effectid_" + effectIndex])
+          return 2048;
+        }
+
+        // heal
+        if (e["effectid_" + effectIndex] === 0 && e["effect_base_value_" + effectIndex] > 0 && e.good_effect === 1) {
+          console.log("[npc-spell-list-editor] detected heal SPA [%s]", e["effectid_" + effectIndex])
+          return 2;
+        }
+
+        // nuke
+        if (e["effectid_" + effectIndex] === 0 && e["effect_base_value_" + effectIndex] > 0 && e.good_effect === 0) {
+          console.log("[npc-spell-list-editor] detected nuke SPA [%s]", e["effectid_" + effectIndex])
+          return 1;
+        }
+
+        // DOT
+        if (e["effectid_" + effectIndex] === 0 && e["effect_base_value_" + effectIndex] !== 0 && e.good_effect === 0 && e.buffduration > 0) {
+          console.log("[npc-spell-list-editor] detected DOT SPA [%s]", e["effectid_" + effectIndex])
+          return 256;
+        }
+
+        // buff
+        if (e.good_effect === 1) {
+          console.log("[npc-spell-list-editor] detected buff SPA [%s]", e["effectid_" + effectIndex])
+          return 8;
+        }
+      }
+
+
+      // 1: "Nuke",
+      //   2: "Heal",
+      //   4: "Root",
+      //   8: "Buff",
+      //   16: "Escape",
+      //   32: "Pet",
+      //   64: "Lifetap",
+      //   128: "Snare",
+      //   256: "DOT",
+      //   512: "Dispel",
+      //   1024: "In-Combat Buff",
+      //   2048: "Mez",
+      //   4096: "Charm"
+
+      return 1;
+    },
+
     async addSpellToList(spellId) {
       this.resetNotifications()
       console.log(this.$route.params)
+
+      const spell = await Spells.getSpell(spellId)
 
       try {
         const npcSpellsId = parseInt(this.$route.params.id)
@@ -447,7 +528,7 @@ export default {
             npcSpellsEntry: {
               "npc_spells_id": npcSpellsId,
               "spellid": parseInt(spellId),
-              "type": 2,
+              "type": this.calculateNpcSpellTypeFromSpell(spell),
               "minlevel": 51,
               "maxlevel": 59,
               "manacost": -1,
