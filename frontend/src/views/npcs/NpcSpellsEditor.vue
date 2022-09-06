@@ -65,7 +65,7 @@
                 :key="e.id"
                 :class="isRowSelected(e) ? 'pulsate-highlight-white' : ''"
               >
-                <td class="text-center">
+                <td class="text-center pl-0 pr-0">
                   <b-button
                     variant="primary"
                     class="btn-dark btn-sm btn-outline-success"
@@ -74,6 +74,16 @@
                     @click="editNpcSpellSet(e)"
                   >
                     <i class="fa fa-pencil-square"></i>
+                  </b-button>
+
+                  <b-button
+                    variant="primary"
+                    class="btn btn-dark btn-sm btn-outline-danger ml-1 btn-primary"
+                    style="padding: 0px 6px;"
+                    title="Delete spell entry"
+                    @click="deleteNpcSpellSet(e)"
+                  >
+                    <i class="fa fa-trash"></i>
                   </b-button>
 
                   <b-button
@@ -199,6 +209,7 @@ import NpcPopover          from "../../components/NpcPopover";
 import NpcSpellPreview     from "../../components/preview/NpcSpellPreview";
 import EqDebug             from "../../components/eq-ui/EQDebug";
 import util                from "util";
+import {NpcSpellsEntryApi} from "../../app/api/api/npc-spells-entry-api";
 
 const NpcSpellsClient = (new NpcSpellApi(SpireApiClient.getOpenApiConfig()))
 
@@ -279,6 +290,42 @@ export default {
       })
     },
 
+    async deleteNpcSpellSet(e) {
+      const entriesCount = (e && e.npc_spells_entries && e.npc_spells_entries.length ? e.npc_spells_entries.length : 0)
+
+      if (confirm(`Are you sure you want to delete this NPC spell set and all of its entries? \n\nEntries (${entriesCount})`)) {
+        try {
+          const r = await (new NpcSpellApi(SpireApiClient.getOpenApiConfig()))
+            .deleteNpcSpell({ id: e.id })
+
+          if (r.status === 200 && e.npc_spells_entries) {
+            // delete every entry individually (for now)
+            for (const row of e.npc_spells_entries) {
+              await (new NpcSpellsEntryApi(SpireApiClient.getOpenApiConfig()))
+                .deleteNpcSpellsEntry({ id: row.id })
+            }
+          }
+
+          this.reset()
+          // also resetting...
+          this.lastPage  = 0;
+          this.rows      = []
+          this.totalRows = 0
+          // reload
+          this.init()
+
+        } catch (err) {
+          if (err && err.response && err.response.data.error) {
+            if (err.response && err.response.data && err.response.data.error) {
+              this.error = err.response.data.error
+            }
+          } else {
+            this.error = err
+          }
+        }
+      }
+    },
+
     getSpellCount(e) {
       return e.npc_spells_entries ? e.npc_spells_entries.length : 0
     },
@@ -353,7 +400,6 @@ export default {
     reset() {
       this.currentPage   = 1
       this.search        = ""
-      this.error         = ""
       this.error         = ""
       this.notification  = ""
       this.subSelectedId = -1

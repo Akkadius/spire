@@ -21,9 +21,10 @@
         <th>Mana</th>
         <th>Priority</th>
         <th>Recast</th>
-        <th>MinLvl</th>
-        <th>MaxLvl</th>
-        <th>Min / Max HP</th>
+        <th>Min Lvl</th>
+        <th>Max Lvl</th>
+        <th>Min HP</th>
+        <th>Max HP</th>
       </tr>
       </thead>
       <tbody>
@@ -72,7 +73,8 @@
         <td>{{ getRecastDelay(e) }}s</td>
         <td>{{ e.minlevel }}</td>
         <td>{{ e.maxlevel }}</td>
-        <td>{{ e.min_hp }} / {{ e.max_hp }}</td>
+        <td>{{ e.min_hp }}</td>
+        <td>{{ e.max_hp }}</td>
       </tr>
       </tbody>
     </table>

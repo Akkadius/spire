@@ -8,7 +8,7 @@
           class="p-0"
         >
           <div class="row mb-2">
-            <div class="col-6">
+            <div class="col-3">
               <div class="mt-4 ml-3">
                 <b-button
                   @click="addSpellListEntry()"
@@ -21,7 +21,7 @@
               </div>
             </div>
 
-            <div class="col-6">
+            <div class="col-9">
               <!-- Notification / Error -->
               <info-error-banner
                 class="mr-1"
@@ -64,8 +64,158 @@
         </div>
 
         <div v-if="editingSpellEntryId > 0">
-          <eq-window>
-            We're editing!
+          <eq-window :title="`Editing NPC Spell List (${editingSpellEntryId})`">
+            <div
+              v-for="field in editingSpellEntryFields"
+              :key="field.field"
+              :class="'row minified-inputs'"
+            >
+              <div
+                class="col-4 text-right p-0 m-0 mr-1 mt-3"
+                style="position: relative; bottom: 6px;"
+                v-if="field.fType === 'checkbox'"
+              >
+                <span v-if="field.category" class="font-weight-bold">{{ field.category }}</span>
+                {{ field.desc }}
+              </div>
+              <div
+                class="col-4 text-right p-0 m-0 mr-3"
+                v-if="field.fType !== 'checkbox'"
+                style="margin-top: 10px !important"
+              >
+                <span v-if="field.category" class="font-weight-bold">{{ field.category }}</span>
+                {{ field.desc }}
+              </div>
+
+              <div class="col-7 text-left p-0 mt-2">
+
+                <div
+                  class="text-left"
+                  v-if="field.field === 'spellid' && editingSpellEntry.spells_new && editingSpellEntry.spells_new.id > 0"
+                >
+
+                  <spell-popover
+                    :spell="editingSpellEntry.spells_new"
+                    :size="20"
+                    v-if="Object.keys(editingSpellEntry.spells_new).length > 0 && editingSpellEntry.spells_new"
+                    class="mt-2"
+                  />
+
+                </div>
+
+                <!-- checkbox -->
+                <div :class="'text-left ml-2 mt-1'" v-if="field.fType === 'checkbox'">
+                  <eq-checkbox
+                    v-b-tooltip.hover.v-dark.right :title="getFieldDescription(field.field)"
+                    class="d-inline-block text-center"
+                    :true-value="(typeof field.true !== 'undefined' ? field.true : 1)"
+                    :false-value="(typeof field.false !== 'undefined' ? field.false : 0)"
+                    v-model.number="editingSpellEntry[field.field]"
+                    @input="editingSpellEntry[field.field] = $event"
+
+                  />
+                </div>
+
+                <!-- input number -->
+                <b-form-input
+                  v-if="field.fType === 'number'"
+                  :id="field.field"
+                  v-model.number="editingSpellEntry[field.field]"
+                  class="m-0 mt-1"
+                  v-on="field.e ? getEventHandlers(field.e, field.field) : {}"
+                  v-b-tooltip.hover.v-dark.right :title="getFieldDescription(field.field)"
+                  :style="(editingSpellEntry[field.field] === 0 ? 'opacity: .5' : '')"
+                />
+
+                <!-- range -->
+                <b-form-input
+                  v-if="field.fType === 'range'"
+                  type="range"
+                  :id="field.field"
+                  :min="field.min"
+                  :max="field.max"
+                  style="width: 80%"
+                  v-model.number="editingSpellEntry[field.field]"
+                  class="m-0 mt-1 d-inline-block"
+                  v-on="field.e ? getEventHandlers(field.e, field.field) : {}"
+                  v-b-tooltip.hover.v-dark.right :title="getFieldDescription(field.field)"
+                  :style="(editingSpellEntry[field.field] <= (typeof field.zeroValue !== 'undefined' ? field.zeroValue : 0) ? 'opacity: .5' : '')"
+                  @change="rerenderProbability = Date.now()"
+                  :key="rerenderProbability"
+                />
+
+                <div v-if="field.fType === 'range'" class="d-inline-block ml-3" :key="rerenderProbability + '-visual'">
+                  ({{ editingSpellEntry[field.field] }})
+                </div>
+
+                <!-- input text -->
+                <b-form-input
+                  v-if="field.fType === 'text'"
+                  :id="field.field"
+                  v-model.number="editingSpellEntry[field.field]"
+                  class="m-0 mt-1"
+                  v-on="field.e ? getEventHandlers(field.e, field.field) : {}"
+                  v-b-tooltip.hover.v-dark.right :title="getFieldDescription(field.field)"
+                  :style="(editingSpellEntry[field.field] <= (typeof field.zeroValue !== 'undefined' ? field.zeroValue : 0) ? 'opacity: .5' : '')"
+                />
+
+                <div
+                  class="text-center"
+                  v-if="['manacost', 'recast_delay'].includes(field.field) && parseInt(editingSpellEntry[field.field]) === -1 && editingSpellEntry.spells_new"
+                >
+                  <span class="font-weight-bold">(Spell) {{ field.desc }}</span>
+                  {{ editingSpellEntry.spells_new[field.spellField] }}
+                </div>
+                <!--                {{editingSpellEntry}}-->
+
+                <!-- textarea -->
+                <b-textarea
+                  v-if="field.fType === 'textarea'"
+                  :id="field.field"
+                  v-model="editingSpellEntry[field.field]"
+                  class="m-0 mt-1"
+                  rows="2"
+                  max-rows="6"
+                  v-on="field.e ? getEventHandlers(field.e, field.field) : {}"
+                  v-b-tooltip.hover.v-dark.right :title="getFieldDescription(field.field)"
+                  :style="(editingSpellEntry[field.field] === '' ? 'opacity: .5' : '') + ';'"
+                ></b-textarea>
+
+                <!-- select -->
+                <select
+                  v-model.number="editingSpellEntry[field.field]"
+                  :id="field.field"
+                  class="form-control m-0 mt-1"
+                  v-if="field.selectData"
+                  v-on="field.e ? getEventHandlers(field.e, field.field) : {}"
+                  v-b-tooltip.hover.v-dark.right :title="getFieldDescription(field.field)"
+                  :style="(editingSpellEntry[field.field] <= (typeof field.zeroValue !== 'undefined' ? field.zeroValue : 0) ? 'opacity: .5' : '')"
+                >
+                  <option
+                    v-for="(desc, index) in field.selectData"
+                    :key="index"
+                    :value="parseInt(index)"
+                  >
+                    {{ index }}) {{ desc }}
+                  </option>
+                </select>
+
+              </div>
+            </div>
+
+            <div class="text-center">
+              <b-button
+                @click="saveSpellListEntry()"
+                size="sm"
+                class="mt-3"
+                variant="outline-warning"
+              >
+                <i class="fa fa-save"></i>
+                Save
+              </b-button>
+            </div>
+
+
           </eq-window>
         </div>
       </div>
@@ -86,10 +236,13 @@ import {scrollToTarget}    from "../../app/utility/scrollToTarget";
 import InfoErrorBanner     from "../../components/InfoErrorBanner";
 import {ROUTE}             from "../../routes";
 import util                from "util";
+import EqCheckbox          from "../../components/eq-ui/EQCheckbox";
+import SpellPopover        from "../../components/SpellPopover";
+import {NPC_SPELL_TYPES}   from "../../app/constants/eq-npc-spells";
 
 export default {
   name: "NpcSpellListEditor",
-  components: { InfoErrorBanner, SpellSelector, NpcSpellPreview, EqWindow },
+  components: { SpellPopover, EqCheckbox, InfoErrorBanner, SpellSelector, NpcSpellPreview, EqWindow },
   data() {
     return {
       spellSet: {},
@@ -106,8 +259,22 @@ export default {
       editingSpellEntry: {}, // object itself
 
       lastResetTime: Date.now(),
+      rerenderProbability: 0,
 
       highlightedSpellId: 0,
+
+      // fields
+      editingSpellEntryFields: [
+        { desc: "Spell Type", field: "type", fType: "select", selectData: NPC_SPELL_TYPES },
+        { desc: "Priority", field: "priority", fType: "range", min: 0, max: 100 },
+        { desc: "Mana Cost", field: "manacost", fType: "text", spellField: 'mana' },
+        { desc: "Recast Delay", field: "recast_delay", fType: "text", spellField: 'recast_time' },
+        { desc: "Minimum Level", field: "minlevel", fType: "text" },
+        { desc: "Maximum Level", field: "maxlevel", fType: "text" },
+        { desc: "Min HP", field: "min_hp", fType: "text" },
+        { desc: "Max HP", field: "max_hp", fType: "text" },
+        { desc: "Resist Adjust", field: "resist_adjust", fType: "text" },
+      ],
     }
   },
   async mounted() {
@@ -122,6 +289,74 @@ export default {
   },
 
   methods: {
+
+    async saveSpellListEntry() {
+      try {
+        const api = (new NpcSpellsEntryApi(SpireApiClient.getOpenApiConfig()))
+        let entry = JSON.parse(JSON.stringify(this.editingSpellEntry))
+        delete entry.spells_new;
+
+        console.log("entry is ", entry)
+
+        const r = await api.updateNpcSpellsEntry(
+          {
+            id: entry.id,
+            npcSpellsEntry: entry
+          })
+
+        if (r.status === 200) {
+          this.notification = "Updated spell list entry!"
+          this.init()
+        }
+
+      } catch (err) {
+        if (err.response.data.error) {
+          if (err.response && err.response.data && err.response.data.error) {
+            this.error = "Error! " + err.response.data.error
+          }
+        }
+      }
+    },
+
+    getFieldDescription(field) {
+      const descriptions = {
+        "priority": "Higher this number, the more likely-hood the NPC will choose to cast this Spell",
+        "minlevel": "Spell only casts if NPC is above this level (default 1)",
+        "maxlevel": "Spell only casts if NPC is below this level (default 255)",
+        "manacost": "How much this spell costs when the NPC casts (-2 no cast time) (-1 use mana cost from spell data)",
+        "recast_delay": "Seconds before NPC can recast spell (-1 - Spell default)",
+        "resist_adjust": "",
+        "min_hp": "Spell only casts if above this number if non-zero",
+        "max_hp": "Spell only casts if below this number if non-zero",
+      }
+
+      // we do this because the payload we get back from spire API is
+      // formatted slightly different
+      let fieldLookup = field.toLowerCase().replace("_", "")
+
+      for (let key in descriptions) {
+        let keyLookup = key.toLowerCase().replace("_", "")
+        if (keyLookup === fieldLookup) {
+          return descriptions[key]
+        }
+      }
+    },
+
+    /**
+     * Tabs / fields
+     */
+    getEventHandlers(e, field) {
+      let handlers = {}
+      if (e.onclick) {
+        handlers.click = () => e.onclick(field)
+      }
+      if (e.onmouseover) {
+        handlers.mouseover = () => e.onmouseover(field)
+      }
+
+      return handlers
+    },
+
     /**
      * State
      */
@@ -166,7 +401,7 @@ export default {
     },
 
     resetNotifications() {
-      this.error = ""
+      this.error        = ""
       this.notification = ""
     },
 
@@ -180,17 +415,24 @@ export default {
         })
 
         if (Object.keys(selectedSpellEntry).length > 0) {
-          this.editingSpellEntsry = selectedSpellEntry
+          this.editingSpellEntry = selectedSpellEntry
         }
+
+        this.scrollToSpellListEntry(this.editingSpellEntryId)
       }
     },
 
     addSpellListEntry() {
-      console.log("add spell list entry")
-      this.setSelectorActive('spell-selector')
+      this.reset()
+      this.resetNotifications()
+      this.updateQueryState()
+      setTimeout(() => {
+        this.setSelectorActive('spell-selector')
+      }, 50)
     },
+
     async addSpellToList(spellId) {
-     this.resetNotifications()
+      this.resetNotifications()
       console.log(this.$route.params)
 
       try {

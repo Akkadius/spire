@@ -238,6 +238,21 @@ export default {
   methods: {
 
     /**
+     * Tabs / fields
+     */
+    getEventHandlers(e, field) {
+      let handlers = {}
+      if (e.onclick) {
+        handlers.click = () => e.onclick(field)
+      }
+      if (e.onmouseover) {
+        handlers.mouseover = () => e.onmouseover(field)
+      }
+
+      return handlers
+    },
+
+    /**
      * Misc
      */
     getFieldDescription(field) {
