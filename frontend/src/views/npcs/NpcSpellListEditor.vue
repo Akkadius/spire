@@ -3,8 +3,8 @@
     <div class="row">
       <div :class="(!areSelectorsActive() ? 'col-12' : 'col-7')">
         <eq-window
-          v-if="spellSet && spellSet.npc_spells_entries && spellSet.npc_spells_entries.length"
-          :title="`NPC Spells Editor ID (${spellSet.id}) [${spellSet.name}] Count (${spellSet.npc_spells_entries.length})`"
+          v-if="spellSet"
+          :title="`NPC Spells Editor ID (${spellSet.id}) [${spellSet.name}] Count (${(spellSet.npc_spells_entries ? spellSet.npc_spells_entries.length : 0)})`"
           class="p-0"
         >
           <div class="row mb-2">
@@ -290,6 +290,10 @@ export default {
   },
 
   methods: {
+
+    hasSpellEntries() {
+      return this.spellSet.npc_spells_entries && this.spellSet.npc_spells_entries.length
+    },
 
     areSelectorsActive() {
       return this.editingSpellEntryId > 0 || this.selectorActive['spell-selector']

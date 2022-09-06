@@ -185,25 +185,31 @@ export default {
         : []
 
       if (this.spells.parent_list > 0) {
-        const NpcSpellsClient = (new NpcSpellApi(SpireApiClient.getOpenApiConfig()))
-        const r               = await NpcSpellsClient.getNpcSpell({ id: this.spells.parent_list },
-          {
-            query:
-              (new SpireQueryBuilder())
-                .includes([
-                  "NpcSpellsEntries.SpellsNew",
-                ])
-                .limit(100000)
-                .get()
+        try {
+          const NpcSpellsClient = (new NpcSpellApi(SpireApiClient.getOpenApiConfig()))
+          const r               = await NpcSpellsClient.getNpcSpell({ id: this.spells.parent_list },
+            {
+              query:
+                (new SpireQueryBuilder())
+                  .includes([
+                    "NpcSpellsEntries.SpellsNew",
+                  ])
+                  .limit(100000)
+                  .get()
+            }
+          )
+
+          for (const [i, e] of r.data.npc_spells_entries.entries()) {
+            r.data.npc_spells_entries[i].is_parented = true
           }
-        )
 
-        for (const [i, e] of r.data.npc_spells_entries.entries()) {
-          r.data.npc_spells_entries[i].is_parented = true
-        }
-
-        if (r.status === 200 && r.data && r.data.npc_spells_entries) {
-          spellsList = spellsList.concat(r.data.npc_spells_entries)
+          if (r.status === 200 && r.data && r.data.npc_spells_entries) {
+            spellsList = spellsList.concat(r.data.npc_spells_entries)
+          }
+        } catch (err) {
+          if (err.response.data.error) {
+            console.log("Error fetching parent list", err)
+          }
         }
       }
 

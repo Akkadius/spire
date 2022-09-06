@@ -498,7 +498,7 @@ export default {
       if (this.lastPage !== this.currentPage || reset) {
         console.log("reloading content")
         this.loading      = true
-        this.lastPage     = this.currentPage
+        this.lastPage     = parseInt(this.currentPage)
         this.rows         = await this.getNpcSpells()
         this.originalRows = JSON.parse(JSON.stringify(this.rows))
       }
@@ -552,6 +552,13 @@ export default {
     },
 
     async getNpcSpells() {
+      console.log("getnpcspells", this.currentPage)
+
+      if (typeof this.$route.query.page !== 'undefined' && parseInt(this.$route.query.page) !== 0) {
+        this.currentPage = parseInt(this.$route.query.page);
+        console.log("current page", this.currentPage)
+      }
+
       let builder = (new SpireQueryBuilder())
         .page(this.currentPage)
         .includes([
