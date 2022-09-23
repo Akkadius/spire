@@ -28,6 +28,24 @@
 
 ![image](https://user-images.githubusercontent.com/3319450/192069348-59bd8e7f-35c1-44dc-81ee-b09644e3a910.png)
 
+<hr>
+
+- [Why Spire?](#why-spire)
+- [Using Spire - Locally](#using-spire---locally)
+- [Using Spire - Hosted](#using-spire---hosted)
+- [Using Spire - Locally, but Remote](#using-spire---locally-but-remote)
+- [Developer Setup](#developer-setup)
+- [Linux  Development Setup](#linux--development-setup)
+  - [Linux - Clone](#linux---clone)
+  - [Linux - Install](#linux---install)
+  - [Linux - Install - What happens](#linux---install---what-happens)
+- [Windows Development Setup](#windows-development-setup)
+  - [Windows - Pre-Requisites](#windows---pre-requisites)
+  - [Windows - Clone](#windows---clone)
+  - [Windows - Init](#windows---init)
+  - [Windows - Install Environment](#windows---install-environment)
+  - [Windows - Running Development Watchers](#windows---running-development-watchers)
+
 ## Why Spire?
 
 The motive for Spire is simple, to empower creativity in the super fans of EverQuest creating content on emulated servers.
@@ -68,47 +86,45 @@ If you want to run Spire without an EQEmu server installation, place it in an em
 
 ![enter image description here](https://user-images.githubusercontent.com/3319450/192069126-b1daf88a-b728-4e9f-90eb-6715dd49e924.png)  
 
-These are instructions for those who are looking to develop on Spire. If you are just trying to use the tool then see **using Spire**  
+These are instructions for those who are looking to develop on Spire. If you are just trying to use the tool then see the **using Spire** sections.
   
-### Linux  Development Setup
+## Linux  Development Setup
 
 These instructions assume you have **git**, **node,** **docker** already installed. All of the dependencies are taken care of within the docker environment.
 
 First clone Spire, copy the base `.env.dev` file to the `.env` used by Spire in local development and run `make install` in one line below.
 
-#### Clone
+### Linux - Clone
 
 ```
 git clone https://github.com/Akkadius/spire.git
 ```  
 
-####  Install
+###  Linux - Install
 
 ```
 cd spire && cp .env.dev .env && make install
 ```
 
-#### What Install Does
-
-Magic. But if you're curious
+### Linux - Install - What happens
 
 * MariaDB container gets initialized with credentials held in `.env` (make mysql-init)
 * A ProjectEQ database gets seeded into the database container from http://db.projecteq.net/api/v1/dump/latest (make seed-peq-database) to a database called `peq`
 * Spire tables get installed to a separate `spire` database (make seed-spire-tables)
 * Installs static assets (icons, images, preview images) (make install-assets) from https://github.com/Akkadius/eq-asset-preview
   
-### Windows Development Setup
+## Windows Development Setup
   
 For Windows development environment, install the following pre-requisites before proceeding with the next steps  
   
-#### Windows Pre-Requisites   
+### Windows - Pre-Requisites   
   
 * Install [Windows Git](https://git-scm.com/download/win) (For Git Bash)  
 * Install [Docker](https://docs.docker.com/desktop/windows/install/) you may need to install additional kernel components for WSL2 which will be instructed in the Docker installation  
   
 All other necessary software gets automatically installed through the subsequent automated steps  
   
-#### Clone  
+### Windows - Clone  
   
 Clone Spire to a directory of your choosing  
   
@@ -116,7 +132,7 @@ Clone Spire to a directory of your choosing
 git clone https://github.com/Akkadius/spire.git  
 ```  
   
-#### Windows Init  
+### Windows - Init  
   
 Once you have your pre-requisites installed you will need to run `windows-init.bat` on the top level folder as **administrator**  
   
@@ -132,10 +148,10 @@ This init step will perform the following **automatically**
 * Initializes the Backend `.env.dev` to `.env`  
 * Launches a Git Bash (MinGW) shell when done for the following steps  
   
-#### Development Environment Install  
+### Windows - Install Environment
   
-In a MinGW shell, which you should have after Windows Init batch file is done running - you run the following command  
-  
+In a MinGW shell, which you should have after Windows Init batch file is done running - you run the following command
+
 ```  
 make install  
 ```  
@@ -152,7 +168,7 @@ Make install will do the following things automatically
   
 At this point the installation should be complete and you should have everything that you need to develop. For good measure and because this is Windows we're talking about, you should probably reboot  
   
-#### Running Development Watchers  
+### Windows - Running Development Watchers  
   
 To run the backend and frontend development servers in Windows; there are simply two top level batch scripts that you can run  
   
