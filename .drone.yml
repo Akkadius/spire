@@ -1,6 +1,15 @@
 kind: pipeline
 name: default
 
+# Limits how many of these builds can run on the drone runner at a time, this isn't about cores
+concurrency:
+  limit: 1
+
+volumes:
+  - name: cache
+    host:
+      path: /home/go/pkg
+
 steps:
   - name: spire-build-release
     image: akkadius/spire:go-workspace
@@ -13,3 +22,6 @@ steps:
     when:
       branch: [ "master" ]
       event: [ push ]
+    volumes:
+      - name: cache
+        path: /home/go/pkg
