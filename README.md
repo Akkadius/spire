@@ -37,6 +37,8 @@
 - [Feature Requests](#feature-requests)
 - [Reporting Bugs](#reporting-bugs)
 - [Contributing](#contributing)
+  - [Contributing - Project Layout - Backend](#contributing---project-layout---backend)
+  - [Contributing - Project Layout - Frontend](#contributing---project-layout---frontend)
   - [Contributing - Learning Resources](#contributing---learning-resources)
   - [Contributing - Cutting a Release](#contributing---cutting-a-release)
 - [Developer Setup](#developer-setup)
@@ -103,6 +105,50 @@ Found a bug? Please file an [issue](https://github.com/Akkadius/spire/issues) in
 ## Contributing
 
 Want to help contribute to Spire? Anyone can submit [pull requests](https://github.com/Akkadius/spire/pulls) however learning the skills required to work in this project might require some extra help and learning resources.
+
+### Contributing - Project Layout - Backend
+
+| Path | Description |
+|-:|--|
+| ./main.go | Application entrypoint |
+| ./boot| Application dependency injection folder. Where the application gets wired up, Google Wire is ran, wire sets are defined |
+| ./boot/app.go | Where the application object itself is defined |
+| ./boot/wire.go | Main Google wire definition file, builds the application from wire sets defined and produces `wire_gen.go` which is used by `main.go` |
+| ./boot/docs | Where Swagger documentation gets automatically generated `make generate-swagger` (Ran from host). Also where echo-web serves the Swagger documentation which can be navigated at `/swagger/index.html` (API Docs in left navpane in Spire) |
+| ./internal | Where core application packages are held. These are internal packages unique to Spire |
+| ./internal/models | Where GORM models are kept |
+| ./internal/pathmgmt | Where application path logic is held. Used to detect EQEmu server locations|
+| ./internal/unzip | Unzip utility |
+| ./internal/github | Github source downloader utility, used in the Quest API explorer |
+| ./internal/permissions | Permissions logic |
+| ./internal/console | Where most application console commands are held|
+| ./internal/influx | InfluxDB client, used for telemetry|
+| ./internal/clientfiles | EverQuest client files manipulation package. Currently handles importing and exporting of Spells and DbStr|
+| ./internal/desktop | Package that handles opening up Spire in desktop environments when the application executable is double clicked |
+| ./internal/http | Core application HTTP package. Routes, middleware, controllers are held here |
+| ./internal/env | Env helper package|
+| ./internal/connection | Database connection package, used for checking and creating database connections in hosted setups |
+| ./internal/serverconfig | Package used for handling interacting with the eqemu server config|
+| ./internal/database | Application database package |
+| ./internal/updater | Package responsible for handling the automatic update routine in Spire. Has both Windows and Linux logic within and is ran on bootup in `main.go` |
+| ./internal/encryption | Encryption package. Currently used for encrypting held credentials and sensitive information in the database |
+| ./internal/questapi | Quest API Explorer package |
+| ./internal/generators | Package that holds all code generation logic. Currently has generators for the db schema config, models, controllers. Configuration for generators are held in the `./internal/generators/config` folder. Used for example to define database relationships   |
+
+### Contributing - Project Layout - Frontend
+
+| Path | Description |
+|-:|--|
+| ./frontend/src/App.vue | Application entrypoint Vue file |
+| ./frontend/src/main.ts | Application entrypoint Typescript file - Where global CSS, components sheets get imported, Vue instance is constructed |
+| ./frontend/src/router.ts | Where application routes are defined. Frontend routes get mapped to view `*.vue` pages (in the ./views folder) |
+| ./frontend/src/routes.ts | Constants of route definitions. Used in `router.ts` as well other parts of the app to keep consistent route definitions |
+| ./frontend/src/views | Where main application pages (Editors etc.) and folders are contained.  |
+| ./frontend/src/components | Where application components are held. These are components that don't necessarily belong to any specific page or tool and are used cross-application. |
+| ./frontend/src/app | Main Vue app folder. Where business logic is kept for common classes, utilities, domain objects. |
+| ./frontend/src/app/api | Where Spire's code generated API client is outputted. |
+| ./frontend/src/app/constants | Where application constant definitions are kept. |
+| ./frontend/src/public | Where static assets are held. Things not included by webpack, index.html etc. Mainly served here during development. In production the assets are served directly by the backend |
 
 ### Contributing - Learning Resources
 
