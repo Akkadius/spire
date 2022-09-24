@@ -126,15 +126,31 @@ Conveniently, there are two make commands that run the development watchers for 
 
 #### Linux - Backend Web API Development Watcher
 
+Re-compiles and runs the backend webserver when changes are detected in `*.go` files.
+
 ```
 make watch-be
 ```
 
+![image](https://user-images.githubusercontent.com/3319450/192075174-f08ee34a-3ebb-48a6-8c5a-c0b35ec101d3.png)
+
 #### Linux - Frontend Vue Development Watcher
+
+Re-compiles and runs the backend webserver when changes are detected in the `./frontend` folder (Ignores `node_modules` and `public`)
 
 ```
 make watch-fe
 ```
+
+![image](https://user-images.githubusercontent.com/3319450/192075149-5a7e0c42-384b-4d7f-a60c-a54696cf6c6f.png)
+
+
+#### Linux - Browse
+
+At this point, you should be able to browse to http://localhost:8080 to view the development server.
+
+![image](https://user-images.githubusercontent.com/3319450/192075125-2b7ec374-ef79-432e-b6ea-5be0eda8184f.png)
+
 
 ## Windows Development Setup
  
