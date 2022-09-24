@@ -20,6 +20,7 @@ api/aura-api.ts
 api/base-datum-api.ts
 api/blocked-spell-api.ts
 api/book-api.ts
+api/bot-datum-api.ts
 api/bug-api.ts
 api/bug-report-api.ts
 api/buyer-api.ts
@@ -75,6 +76,7 @@ api/eventlog-api.ts
 api/expedition-api.ts
 api/expedition-lockout-api.ts
 api/expedition-member-api.ts
+api/faction-association-api.ts
 api/faction-base-datum-api.ts
 api/faction-list-api.ts
 api/faction-list-mod-api.ts
@@ -207,6 +209,7 @@ models/models-aura.ts
 models/models-base-datum.ts
 models/models-blocked-spell.ts
 models/models-book.ts
+models/models-bot-datum.ts
 models/models-bug-report.ts
 models/models-bug.ts
 models/models-buyer.ts
@@ -263,6 +266,7 @@ models/models-eventlog.ts
 models/models-expedition-lockout.ts
 models/models-expedition-member.ts
 models/models-expedition.ts
+models/models-faction-association.ts
 models/models-faction-base-datum.ts
 models/models-faction-list-mod.ts
 models/models-faction-list.ts

@@ -107,6 +107,12 @@ export interface ModelsNpcSpell {
     name?: string;
     /**
      * 
+     * @type {ModelsNpcSpell}
+     * @memberof ModelsNpcSpell
+     */
+    npc_spell?: ModelsNpcSpell;
+    /**
+     * 
      * @type {Array<ModelsNpcSpellsEntry>}
      * @memberof ModelsNpcSpell
      */
