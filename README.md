@@ -181,7 +181,7 @@ make watch-be
 
 #### Linux - Frontend Vue Development Watcher
 
-Re-compiles and runs the backend webserver when changes are detected in the `./frontend` folder (Ignores `node_modules` and `public`)
+Runs the Vue development webserver and hot-reload's when changes are detected in the `./frontend` folder (Ignores `node_modules` and `public`). Changes are reflected real-time in the browser.
 
 ```
 make watch-fe
