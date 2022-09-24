@@ -14,7 +14,7 @@
   </a>
 </p>
 
-<p align="center">Powered by Vue and Golang</p>
+<p align="center">Powered by Golang and Vue</p>
 
 <hr>
 
