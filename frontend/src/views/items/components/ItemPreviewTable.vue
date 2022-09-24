@@ -35,29 +35,25 @@
             </thead>
             <tbody>
             <tr v-for="(item, index) in items" :key="item.id">
-              <td>
+              <td class="p-0 text-center">
 
-                <div class="btn-group" role="group">
+                <b-button
+                  @click="editItem(item.id)"
+                  size="sm"
+                  title="Edit"
+                  class="btn btn-dark btn-outline-success mr-2"
+                >
+                  <i class="fa fa-pencil-square"></i>
+                </b-button>
 
-                  <b-button
-                    @click="editItem(item.id)"
-                    size="sm"
-                    title="Edit"
-                    variant="outline-warning"
-                  >
-                    <i class="ra ra-wrench"></i>
-                  </b-button>
-
-                  <b-button
-                    @click="editItem(item.id, true)"
-                    size="sm"
-                    title="Clone"
-                    variant="outline-light"
-                  >
-                    <i class="ra ra-double-team"></i>
-                  </b-button>
-
-                </div>
+                <b-button
+                  @click="editItem(item.id, true)"
+                  size="sm"
+                  title="Clone"
+                  variant="outline-light"
+                >
+                  <i class="ra ra-double-team"></i>
+                </b-button>
 
               </td>
               <td>

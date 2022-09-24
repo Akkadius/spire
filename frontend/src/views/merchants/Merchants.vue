@@ -95,7 +95,7 @@
             >
               <thead class="eq-table-floating-header">
               <tr>
-                <th></th>
+                <th style="width: 80px"></th>
                 <th class="text-center" style="width: 80px">Merchant ID</th>
                 <th>Merchant (NPC)</th>
               </tr>
@@ -109,7 +109,6 @@
               >
                 <td
                   class="text-center"
-                  style="width: 100px"
                 >
                   <b-button
                     v-if="isSelector"
@@ -121,12 +120,14 @@
                   </b-button>
 
                   <b-button
-                    class="btn-dark btn-sm btn-outline-warning"
                     @click="editMerchantList(n.merchant_id)"
+                    size="sm"
                     title="Edit Merchant List"
+                    class="btn btn-dark btn-outline-success mr-2"
                   >
-                    <i class="fa fa-edit"></i>
+                    <i class="fa fa-pencil-square"></i>
                   </b-button>
+
                 </td>
                 <td
                   class="text-center"

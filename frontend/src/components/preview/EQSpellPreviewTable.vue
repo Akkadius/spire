@@ -18,7 +18,7 @@
         <table id="spell-table" class="eq-table bordered eq-highlight-rows">
           <thead class="eq-table-floating-header">
           <tr>
-            <th style="width: 100px;"></th>
+            <th style="width: 90px;"></th>
             <th style="width: auto;">Id</th>
             <th style="width: auto; min-width: 270px">Spell</th>
             <th style="width: auto; min-width: 300px">Level</th>
@@ -35,29 +35,26 @@
           </thead>
           <tbody>
           <tr v-for="(spell, index) in spells" :key="spell.id">
-            <td>
+            <td class="p-0 text-center">
 
-              <div class="btn-group" role="group">
-                <b-button
-                  @click="editSpell(spell.id)"
-                  size="sm"
-                  title="Edit"
-                  variant="outline-warning"
-                >
-                  <i class="ra ra-wrench"></i>
+              <b-button
+                @click="editSpell(spell.id)"
+                size="sm"
+                title="Edit"
+                class="btn btn-dark btn-outline-success mr-2"
+              >
+                <i class="fa fa-pencil-square"></i>
+              </b-button>
 
-                </b-button>
+              <b-button
+                @click="editSpell(spell.id, true)"
+                size="sm"
+                title="Clone"
+                variant="outline-light"
+              >
+                <i class="ra ra-double-team"></i>
 
-                <b-button
-                  @click="editSpell(spell.id, true)"
-                  size="sm"
-                  title="Clone"
-                  variant="outline-light"
-                >
-                  <i class="ra ra-double-team"></i>
-
-                </b-button>
-              </div>
+              </b-button>
 
             </td>
             <td>
@@ -147,7 +144,7 @@ export default {
   async created() {
     this.title = "Spells (" + this.spells.length + ")";
 
-    
+
   },
   props: {
     spells: Array
