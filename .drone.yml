@@ -6,9 +6,12 @@ concurrency:
   limit: 1
 
 volumes:
-  - name: cache
+  - name: cache-be
     host:
       path: /home/go/pkg
+  - name: cache-fe
+    host:
+      path: /home/go/src/frontend/node_modules
 
 steps:
   - name: spire-build-release
@@ -23,5 +26,7 @@ steps:
       branch: [ "master" ]
       event: [ push ]
     volumes:
-      - name: cache
+      - name: cache-be
         path: /home/go/pkg
+      - name: cache-fe
+        path: /home/go/src/frontend/node_modules
