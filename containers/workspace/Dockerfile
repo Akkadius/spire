@@ -1,14 +1,14 @@
 #############################################
 # go workspace
 #############################################
-FROM debian:10-slim
+FROM debian:11-slim
 
 ARG PUID=1000
 ENV PUID ${PUID}
 ARG PGID=1000
 ENV PGID ${PGID}
 
-ENV GO_VERSION 1.17.3
+ENV GO_VERSION 1.19.1
 
 RUN apt-get update -yqq && \
     groupadd -g ${PGID} go && \
@@ -35,7 +35,7 @@ RUN apt-get update && apt-get install -y \
     mariadb-client \
     zip \
     unzip \
- && rm -rf /var/lib/apt/lists/* \
+ && rm -rf /var/lib/apt/lists/*
 
 #############################################
 # install go
@@ -78,16 +78,15 @@ USER go
 # air   - Go project hot reload
 # packr - Pack filesystem into go binary
 #############################################
-RUN go get -u github.com/cosmtrek/air
-RUN go get -u github.com/gobuffalo/packr/packr
-RUN go get -u github.com/swaggo/swag/cmd/swag
-RUN go get -u github.com/swaggo/echo-swagger
-RUN go get -u github.com/google/wire/cmd/wire
+RUN go install github.com/cosmtrek/air@latest
+RUN go install github.com/gobuffalo/packr/packr@v1.30.1
+RUN go install github.com/swaggo/swag/cmd/swag@latest
+RUN go install github.com/google/wire/cmd/wire@latest
 
 #############################################
 # node
 #############################################
-RUN curl -sL https://deb.nodesource.com/setup_12.x | sudo bash && \
+RUN curl -sL https://deb.nodesource.com/setup_14.x | sudo bash && \
     sudo apt-get update && sudo apt-get install -y nodejs && sudo rm -rf /var/lib/apt/lists/*
 
 RUN sudo npm install -g gh-release

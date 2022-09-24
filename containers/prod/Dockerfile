@@ -1,14 +1,14 @@
 #############################################
 # go workspace
 #############################################
-FROM debian:10-slim
+FROM debian:11-slim
 
 ARG PUID=1000
 ENV PUID ${PUID}
 ARG PGID=1000
 ENV PGID ${PGID}
 
-ENV GO_VERSION 1.17.3
+ENV GO_VERSION 1.19.1
 
 RUN apt-get update -yqq && \
     groupadd -g ${PGID} go && \
@@ -29,7 +29,7 @@ RUN apt-get update && apt-get install -y \
     mariadb-client \
     zip \
     unzip \
- && rm -rf /var/lib/apt/lists/*
+    && rm -rf /var/lib/apt/lists/*
 
 #############################################
 # install go
@@ -59,13 +59,13 @@ RUN chsh -s /bin/bash go
 
 USER go
 
-RUN go get -u github.com/cosmtrek/air
-RUN go get -u github.com/gobuffalo/packr/packr
+RUN go install github.com/cosmtrek/air@latest
+RUN go install github.com/gobuffalo/packr/packr@latest
 
 #############################################
 # node
 #############################################
-RUN curl -sL https://deb.nodesource.com/setup_12.x | sudo bash && \
+RUN curl -sL https://deb.nodesource.com/setup_14.x | sudo bash && \
     sudo apt-get update && sudo apt-get install -y nodejs && sudo rm -rf /var/lib/apt/lists/*
 
 # Remove sudo; we needed it during build steps to make per-user installs smoother
