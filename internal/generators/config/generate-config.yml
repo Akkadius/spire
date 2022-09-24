@@ -3,6 +3,8 @@ database:
   # will also perform partial matches
   ignore_tables:
     - qs_
+    - proximities_backup_
+    - task_activities_backup_
 #    - perl_event_export_settings
     - group_leader
   table_connections:

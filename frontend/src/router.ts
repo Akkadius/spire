@@ -103,6 +103,11 @@ export default new Router({
           meta: {title: "Component Documentation"},
         },
         {
+          path: '/testbot',
+          component: () => import('./views/TestBot.vue'),
+          meta: {title: "Test Bot Page"},
+        },
+        {
           path: ROUTE.TASKS,
           component: () => import('./views/tasks/TaskEditor.vue'),
           meta: {title: "Task Editor"},

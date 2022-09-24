@@ -1208,6 +1208,336 @@ books:
     is_nullable: "NO"
     column_type: int(11)
     column_default: "0"
+bot_data:
+  - column: bot_id
+    data_type: int
+    column_key: PRI
+    ordinal_position: "1"
+    is_nullable: "NO"
+    column_type: int(10) unsigned
+    column_default: ""
+  - column: owner_id
+    data_type: int
+    column_key: ""
+    ordinal_position: "2"
+    is_nullable: "NO"
+    column_type: int(10) unsigned
+    column_default: ""
+  - column: spells_id
+    data_type: int
+    column_key: ""
+    ordinal_position: "3"
+    is_nullable: "NO"
+    column_type: int(10) unsigned
+    column_default: "0"
+  - column: name
+    data_type: varchar
+    column_key: ""
+    ordinal_position: "4"
+    is_nullable: "NO"
+    column_type: varchar(64)
+    column_default: ''''''
+  - column: last_name
+    data_type: varchar
+    column_key: ""
+    ordinal_position: "5"
+    is_nullable: "NO"
+    column_type: varchar(64)
+    column_default: ''''''
+  - column: title
+    data_type: varchar
+    column_key: ""
+    ordinal_position: "6"
+    is_nullable: "NO"
+    column_type: varchar(32)
+    column_default: ''''''
+  - column: suffix
+    data_type: varchar
+    column_key: ""
+    ordinal_position: "7"
+    is_nullable: "NO"
+    column_type: varchar(32)
+    column_default: ''''''
+  - column: zone_id
+    data_type: smallint
+    column_key: ""
+    ordinal_position: "8"
+    is_nullable: "NO"
+    column_type: smallint(6)
+    column_default: "0"
+  - column: gender
+    data_type: tinyint
+    column_key: ""
+    ordinal_position: "9"
+    is_nullable: "NO"
+    column_type: tinyint(4)
+    column_default: "0"
+  - column: race
+    data_type: smallint
+    column_key: ""
+    ordinal_position: "10"
+    is_nullable: "NO"
+    column_type: smallint(6)
+    column_default: "0"
+  - column: class
+    data_type: tinyint
+    column_key: ""
+    ordinal_position: "11"
+    is_nullable: "NO"
+    column_type: tinyint(4)
+    column_default: "0"
+  - column: level
+    data_type: tinyint
+    column_key: ""
+    ordinal_position: "12"
+    is_nullable: "NO"
+    column_type: tinyint(3) unsigned
+    column_default: "0"
+  - column: deity
+    data_type: int
+    column_key: ""
+    ordinal_position: "13"
+    is_nullable: "NO"
+    column_type: int(10) unsigned
+    column_default: "0"
+  - column: creation_day
+    data_type: int
+    column_key: ""
+    ordinal_position: "14"
+    is_nullable: "NO"
+    column_type: int(10) unsigned
+    column_default: "0"
+  - column: last_spawn
+    data_type: int
+    column_key: ""
+    ordinal_position: "15"
+    is_nullable: "NO"
+    column_type: int(10) unsigned
+    column_default: "0"
+  - column: time_spawned
+    data_type: int
+    column_key: ""
+    ordinal_position: "16"
+    is_nullable: "NO"
+    column_type: int(10) unsigned
+    column_default: "0"
+  - column: size
+    data_type: float
+    column_key: ""
+    ordinal_position: "17"
+    is_nullable: "NO"
+    column_type: float
+    column_default: "0"
+  - column: face
+    data_type: int
+    column_key: ""
+    ordinal_position: "18"
+    is_nullable: "NO"
+    column_type: int(11)
+    column_default: "1"
+  - column: hair_color
+    data_type: int
+    column_key: ""
+    ordinal_position: "19"
+    is_nullable: "NO"
+    column_type: int(11)
+    column_default: "1"
+  - column: hair_style
+    data_type: int
+    column_key: ""
+    ordinal_position: "20"
+    is_nullable: "NO"
+    column_type: int(11)
+    column_default: "1"
+  - column: beard
+    data_type: int
+    column_key: ""
+    ordinal_position: "21"
+    is_nullable: "NO"
+    column_type: int(11)
+    column_default: "0"
+  - column: beard_color
+    data_type: int
+    column_key: ""
+    ordinal_position: "22"
+    is_nullable: "NO"
+    column_type: int(11)
+    column_default: "1"
+  - column: eye_color_1
+    data_type: int
+    column_key: ""
+    ordinal_position: "23"
+    is_nullable: "NO"
+    column_type: int(11)
+    column_default: "1"
+  - column: eye_color_2
+    data_type: int
+    column_key: ""
+    ordinal_position: "24"
+    is_nullable: "NO"
+    column_type: int(11)
+    column_default: "1"
+  - column: drakkin_heritage
+    data_type: int
+    column_key: ""
+    ordinal_position: "25"
+    is_nullable: "NO"
+    column_type: int(11)
+    column_default: "0"
+  - column: drakkin_tattoo
+    data_type: int
+    column_key: ""
+    ordinal_position: "26"
+    is_nullable: "NO"
+    column_type: int(11)
+    column_default: "0"
+  - column: drakkin_details
+    data_type: int
+    column_key: ""
+    ordinal_position: "27"
+    is_nullable: "NO"
+    column_type: int(11)
+    column_default: "0"
+  - column: ac
+    data_type: smallint
+    column_key: ""
+    ordinal_position: "28"
+    is_nullable: "NO"
+    column_type: smallint(6)
+    column_default: "0"
+  - column: atk
+    data_type: mediumint
+    column_key: ""
+    ordinal_position: "29"
+    is_nullable: "NO"
+    column_type: mediumint(9)
+    column_default: "0"
+  - column: hp
+    data_type: int
+    column_key: ""
+    ordinal_position: "30"
+    is_nullable: "NO"
+    column_type: int(11)
+    column_default: "0"
+  - column: mana
+    data_type: int
+    column_key: ""
+    ordinal_position: "31"
+    is_nullable: "NO"
+    column_type: int(11)
+    column_default: "0"
+  - column: str
+    data_type: mediumint
+    column_key: ""
+    ordinal_position: "32"
+    is_nullable: "NO"
+    column_type: mediumint(9)
+    column_default: "75"
+  - column: sta
+    data_type: mediumint
+    column_key: ""
+    ordinal_position: "33"
+    is_nullable: "NO"
+    column_type: mediumint(9)
+    column_default: "75"
+  - column: cha
+    data_type: mediumint
+    column_key: ""
+    ordinal_position: "34"
+    is_nullable: "NO"
+    column_type: mediumint(9)
+    column_default: "75"
+  - column: dex
+    data_type: mediumint
+    column_key: ""
+    ordinal_position: "35"
+    is_nullable: "NO"
+    column_type: mediumint(9)
+    column_default: "75"
+  - column: int
+    data_type: mediumint
+    column_key: ""
+    ordinal_position: "36"
+    is_nullable: "NO"
+    column_type: mediumint(9)
+    column_default: "75"
+  - column: agi
+    data_type: mediumint
+    column_key: ""
+    ordinal_position: "37"
+    is_nullable: "NO"
+    column_type: mediumint(9)
+    column_default: "75"
+  - column: wis
+    data_type: mediumint
+    column_key: ""
+    ordinal_position: "38"
+    is_nullable: "NO"
+    column_type: mediumint(9)
+    column_default: "75"
+  - column: fire
+    data_type: smallint
+    column_key: ""
+    ordinal_position: "39"
+    is_nullable: "NO"
+    column_type: smallint(6)
+    column_default: "0"
+  - column: cold
+    data_type: smallint
+    column_key: ""
+    ordinal_position: "40"
+    is_nullable: "NO"
+    column_type: smallint(6)
+    column_default: "0"
+  - column: magic
+    data_type: smallint
+    column_key: ""
+    ordinal_position: "41"
+    is_nullable: "NO"
+    column_type: smallint(6)
+    column_default: "0"
+  - column: poison
+    data_type: smallint
+    column_key: ""
+    ordinal_position: "42"
+    is_nullable: "NO"
+    column_type: smallint(6)
+    column_default: "0"
+  - column: disease
+    data_type: smallint
+    column_key: ""
+    ordinal_position: "43"
+    is_nullable: "NO"
+    column_type: smallint(6)
+    column_default: "0"
+  - column: corruption
+    data_type: smallint
+    column_key: ""
+    ordinal_position: "44"
+    is_nullable: "NO"
+    column_type: smallint(6)
+    column_default: "0"
+  - column: show_helm
+    data_type: int
+    column_key: ""
+    ordinal_position: "45"
+    is_nullable: "NO"
+    column_type: int(10) unsigned
+    column_default: "0"
+  - column: follow_distance
+    data_type: int
+    column_key: ""
+    ordinal_position: "46"
+    is_nullable: "NO"
+    column_type: int(10) unsigned
+    column_default: "200"
+  - column: stop_melee_level
+    data_type: tinyint
+    column_key: ""
+    ordinal_position: "47"
+    is_nullable: "NO"
+    column_type: tinyint(3) unsigned
+    column_default: "255"
 bug_reports:
   - column: id
     data_type: int
@@ -5137,6 +5467,154 @@ expeditions:
     ordinal_position: "4"
     is_nullable: "NO"
     column_type: tinyint(3) unsigned
+    column_default: "0"
+faction_association:
+  - column: id
+    data_type: int
+    column_key: PRI
+    ordinal_position: "1"
+    is_nullable: "NO"
+    column_type: int(10)
+    column_default: ""
+  - column: id_1
+    data_type: int
+    column_key: ""
+    ordinal_position: "2"
+    is_nullable: "NO"
+    column_type: int(10)
+    column_default: "0"
+  - column: mod_1
+    data_type: float
+    column_key: ""
+    ordinal_position: "3"
+    is_nullable: "NO"
+    column_type: float
+    column_default: "0"
+  - column: id_2
+    data_type: int
+    column_key: ""
+    ordinal_position: "4"
+    is_nullable: "NO"
+    column_type: int(10)
+    column_default: "0"
+  - column: mod_2
+    data_type: float
+    column_key: ""
+    ordinal_position: "5"
+    is_nullable: "NO"
+    column_type: float
+    column_default: "0"
+  - column: id_3
+    data_type: int
+    column_key: ""
+    ordinal_position: "6"
+    is_nullable: "NO"
+    column_type: int(10)
+    column_default: "0"
+  - column: mod_3
+    data_type: float
+    column_key: ""
+    ordinal_position: "7"
+    is_nullable: "NO"
+    column_type: float
+    column_default: "0"
+  - column: id_4
+    data_type: int
+    column_key: ""
+    ordinal_position: "8"
+    is_nullable: "NO"
+    column_type: int(10)
+    column_default: "0"
+  - column: mod_4
+    data_type: float
+    column_key: ""
+    ordinal_position: "9"
+    is_nullable: "NO"
+    column_type: float
+    column_default: "0"
+  - column: id_5
+    data_type: int
+    column_key: ""
+    ordinal_position: "10"
+    is_nullable: "NO"
+    column_type: int(10)
+    column_default: "0"
+  - column: mod_5
+    data_type: float
+    column_key: ""
+    ordinal_position: "11"
+    is_nullable: "NO"
+    column_type: float
+    column_default: "0"
+  - column: id_6
+    data_type: int
+    column_key: ""
+    ordinal_position: "12"
+    is_nullable: "NO"
+    column_type: int(10)
+    column_default: "0"
+  - column: mod_6
+    data_type: float
+    column_key: ""
+    ordinal_position: "13"
+    is_nullable: "NO"
+    column_type: float
+    column_default: "0"
+  - column: id_7
+    data_type: int
+    column_key: ""
+    ordinal_position: "14"
+    is_nullable: "NO"
+    column_type: int(10)
+    column_default: "0"
+  - column: mod_7
+    data_type: float
+    column_key: ""
+    ordinal_position: "15"
+    is_nullable: "NO"
+    column_type: float
+    column_default: "0"
+  - column: id_8
+    data_type: int
+    column_key: ""
+    ordinal_position: "16"
+    is_nullable: "NO"
+    column_type: int(10)
+    column_default: "0"
+  - column: mod_8
+    data_type: float
+    column_key: ""
+    ordinal_position: "17"
+    is_nullable: "NO"
+    column_type: float
+    column_default: "0"
+  - column: id_9
+    data_type: int
+    column_key: ""
+    ordinal_position: "18"
+    is_nullable: "NO"
+    column_type: int(10)
+    column_default: "0"
+  - column: mod_9
+    data_type: float
+    column_key: ""
+    ordinal_position: "19"
+    is_nullable: "NO"
+    column_type: float
+    column_default: "0"
+  - column: id_10
+    data_type: int
+    column_key: ""
+    ordinal_position: "20"
+    is_nullable: "NO"
+    column_type: int(10)
+    column_default: "0"
+  - column: mod_10
+    data_type: float
+    column_key: ""
+    ordinal_position: "21"
+    is_nullable: "NO"
+    column_type: float
     column_default: "0"
 faction_base_data:
   - column: client_faction_id
@@ -11057,6 +11535,13 @@ npc_types:
     is_nullable: "NO"
     column_type: int(11)
     column_default: "100"
+  - column: faction_amount
+    data_type: int
+    column_key: ""
+    ordinal_position: "125"
+    is_nullable: "NO"
+    column_type: int(10)
+    column_default: "0"
 npc_types_tint:
   - column: id
     data_type: int
@@ -11908,63 +12393,6 @@ profanity_list:
     is_nullable: "NO"
     column_type: varchar(16)
     column_default: ""
-proximities:
-  - column: zoneid
-    data_type: int
-    column_key: PRI
-    ordinal_position: "1"
-    is_nullable: "NO"
-    column_type: int(10) unsigned
-    column_default: "0"
-  - column: exploreid
-    data_type: int
-    column_key: PRI
-    ordinal_position: "2"
-    is_nullable: "NO"
-    column_type: int(10) unsigned
-    column_default: "0"
-  - column: minx
-    data_type: float
-    column_key: ""
-    ordinal_position: "3"
-    is_nullable: "NO"
-    column_type: float(14,6)
-    column_default: "0.000000"
-  - column: maxx
-    data_type: float
-    column_key: ""
-    ordinal_position: "4"
-    is_nullable: "NO"
-    column_type: float(14,6)
-    column_default: "0.000000"
-  - column: miny
-    data_type: float
-    column_key: ""
-    ordinal_position: "5"
-    is_nullable: "NO"
-    column_type: float(14,6)
-    column_default: "0.000000"
-  - column: maxy
-    data_type: float
-    column_key: ""
-    ordinal_position: "6"
-    is_nullable: "NO"
-    column_type: float(14,6)
-    column_default: "0.000000"
-  - column: minz
-    data_type: float
-    column_key: ""
-    ordinal_position: "7"
-    is_nullable: "NO"
-    column_type: float(14,6)
-    column_default: "0.000000"
-  - column: maxz
-    data_type: float
-    column_key: ""
-    ordinal_position: "8"
-    is_nullable: "NO"
-    column_type: float(14,6)
-    column_default: "0.000000"
 quest_globals:
   - column: charid
     data_type: int
@@ -15038,48 +15466,48 @@ task_activities:
     is_nullable: "NO"
     column_type: int(11) unsigned
     column_default: "0"
-  - column: step
+  - column: req_activity_id
     data_type: int
     column_key: ""
     ordinal_position: "3"
     is_nullable: "NO"
-    column_type: int(11) unsigned
+    column_type: int(11)
+    column_default: "-1"
+  - column: step
+    data_type: int
+    column_key: ""
+    ordinal_position: "4"
+    is_nullable: "NO"
+    column_type: int(11)
     column_default: "0"
   - column: activitytype
     data_type: tinyint
     column_key: ""
-    ordinal_position: "4"
+    ordinal_position: "5"
     is_nullable: "NO"
     column_type: tinyint(3) unsigned
     column_default: "0"
   - column: target_name
     data_type: varchar
     column_key: ""
-    ordinal_position: "5"
+    ordinal_position: "6"
     is_nullable: "NO"
     column_type: varchar(64)
     column_default: ''''''
-  - column: item_list
-    data_type: varchar
-    column_key: ""
-    ordinal_position: "6"
-    is_nullable: "NO"
-    column_type: varchar(128)
-    column_default: ''''''
-  - column: skill_list
-    data_type: varchar
+  - column: goalmethod
+    data_type: int
     column_key: ""
     ordinal_position: "7"
     is_nullable: "NO"
-    column_type: varchar(64)
-    column_default: '''-1'''
-  - column: spell_list
-    data_type: varchar
+    column_type: int(10) unsigned
+    column_default: "0"
+  - column: goalcount
+    data_type: int
     column_key: ""
     ordinal_position: "8"
-    is_nullable: "NO"
-    column_type: varchar(64)
-    column_default: '''0'''
+    is_nullable: "YES"
+    column_type: int(11)
+    column_default: "1"
   - column: description_override
     data_type: varchar
     column_key: ""
@@ -15087,59 +15515,136 @@ task_activities:
     is_nullable: "NO"
     column_type: varchar(128)
     column_default: ''''''
-  - column: goalid
+  - column: npc_id
     data_type: int
     column_key: ""
     ordinal_position: "10"
     is_nullable: "NO"
-    column_type: int(11) unsigned
+    column_type: int(10) unsigned
     column_default: "0"
-  - column: goal_match_list
-    data_type: text
-    column_key: ""
-    ordinal_position: "11"
-    is_nullable: "YES"
-    column_type: text
-    column_default: "NULL"
-  - column: goalmethod
+  - column: npc_goal_id
     data_type: int
     column_key: ""
-    ordinal_position: "12"
+    ordinal_position: "11"
     is_nullable: "NO"
     column_type: int(10) unsigned
     column_default: "0"
-  - column: goalcount
+  - column: npc_match_list
+    data_type: text
+    column_key: ""
+    ordinal_position: "12"
+    is_nullable: "YES"
+    column_type: text
+    column_default: "NULL"
+  - column: item_id
     data_type: int
     column_key: ""
     ordinal_position: "13"
-    is_nullable: "YES"
-    column_type: int(11)
-    column_default: "1"
-  - column: delivertonpc
+    is_nullable: "NO"
+    column_type: int(10) unsigned
+    column_default: "0"
+  - column: item_goal_id
     data_type: int
     column_key: ""
     ordinal_position: "14"
     is_nullable: "NO"
-    column_type: int(11) unsigned
+    column_type: int(10) unsigned
     column_default: "0"
+  - column: item_id_list
+    data_type: text
+    column_key: ""
+    ordinal_position: "15"
+    is_nullable: "YES"
+    column_type: text
+    column_default: "NULL"
+  - column: item_list
+    data_type: varchar
+    column_key: ""
+    ordinal_position: "16"
+    is_nullable: "NO"
+    column_type: varchar(128)
+    column_default: ''''''
+  - column: dz_switch_id
+    data_type: int
+    column_key: ""
+    ordinal_position: "17"
+    is_nullable: "NO"
+    column_type: int(11)
+    column_default: "0"
+  - column: min_x
+    data_type: float
+    column_key: ""
+    ordinal_position: "18"
+    is_nullable: "NO"
+    column_type: float
+    column_default: "0"
+  - column: min_y
+    data_type: float
+    column_key: ""
+    ordinal_position: "19"
+    is_nullable: "NO"
+    column_type: float
+    column_default: "0"
+  - column: min_z
+    data_type: float
+    column_key: ""
+    ordinal_position: "20"
+    is_nullable: "NO"
+    column_type: float
+    column_default: "0"
+  - column: max_x
+    data_type: float
+    column_key: ""
+    ordinal_position: "21"
+    is_nullable: "NO"
+    column_type: float
+    column_default: "0"
+  - column: max_y
+    data_type: float
+    column_key: ""
+    ordinal_position: "22"
+    is_nullable: "NO"
+    column_type: float
+    column_default: "0"
+  - column: max_z
+    data_type: float
+    column_key: ""
+    ordinal_position: "23"
+    is_nullable: "NO"
+    column_type: float
+    column_default: "0"
+  - column: skill_list
+    data_type: varchar
+    column_key: ""
+    ordinal_position: "24"
+    is_nullable: "NO"
+    column_type: varchar(64)
+    column_default: '''-1'''
+  - column: spell_list
+    data_type: varchar
+    column_key: ""
+    ordinal_position: "25"
+    is_nullable: "NO"
+    column_type: varchar(64)
+    column_default: '''0'''
   - column: zones
     data_type: varchar
     column_key: ""
-    ordinal_position: "15"
+    ordinal_position: "26"
     is_nullable: "NO"
     column_type: varchar(64)
     column_default: ''''''
   - column: zone_version
     data_type: int
     column_key: ""
-    ordinal_position: "16"
+    ordinal_position: "27"
     is_nullable: "YES"
     column_type: int(11)
     column_default: "-1"
   - column: optional
     data_type: tinyint
     column_key: ""
-    ordinal_position: "17"
+    ordinal_position: "28"
     is_nullable: "NO"
     column_type: tinyint(1)
     column_default: "0"
@@ -15333,6 +15838,13 @@ tasks:
     is_nullable: "NO"
     column_type: int(11)
     column_default: "-1"
+  - column: faction_amount
+    data_type: int
+    column_key: ""
+    ordinal_position: "28"
+    is_nullable: "NO"
+    column_type: int(10)
+    column_default: "0"
 tasksets:
   - column: id
     data_type: int
