@@ -99,7 +99,7 @@ test: ##@dev Runs local tests
 #----------------------
 
 watch-fe: ##@dev-watch Runs frontend watcher
-	cd frontend && npm run dev
+	$(COMPOSE_COMMAND) exec workspace bash -c "cd frontend && npm run dev"
 
 watch-be: ##@dev-watch Runs backend watcher
 	$(COMPOSE_COMMAND) exec workspace bash -c "air -c .air.toml"
@@ -174,6 +174,10 @@ install-assets: ##@install Installs assets
 	$(DRUNPREFIX) $(COMPOSE_COMMAND) exec workspace bash -c 'curl --compressed -o /tmp/assets.zip -L https://github.com/Akkadius/eq-asset-preview/archive/refs/heads/master.zip'
 	$(DRUNPREFIX) $(COMPOSE_COMMAND) exec workspace bash -c 'unzip -o /tmp/assets.zip -d /tmp/assets'
 	$(DRUNPREFIX) $(COMPOSE_COMMAND) exec workspace bash -c 'cp -R /tmp/assets/eq-asset-preview-master/ ./frontend/public/'
+
+install-frontend: ##@install Install and initialize frontend packages
+	cp frontend/.env.example frontend/.env
+	$(DRUNPREFIX) $(COMPOSE_COMMAND) exec workspace bash -c 'cd frontend && npm install'
 
 #----------------------
 # mysql
