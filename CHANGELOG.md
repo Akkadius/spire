@@ -1,8 +1,9 @@
-## [1.13.8]
+## [1.13.9]
 
-### Test release
+### [Task Editor] Minor Update
 
-* Test release
+* Minimal update to restore task editor functionality from schema changes https://github.com/EQEmu/Server/pull/2402
+* Proximity functionality will be broken until new fields are handled
 
 ## [1.13.7]
 

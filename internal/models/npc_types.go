@@ -129,6 +129,7 @@ type NpcType struct {
 	Flymode                int8               `json:"flymode" gorm:"Column:flymode"`
 	AlwaysAggro            int8               `json:"always_aggro" gorm:"Column:always_aggro"`
 	ExpMod                 int                `json:"exp_mod" gorm:"Column:exp_mod"`
+	FactionAmount          int                `json:"faction_amount" gorm:"Column:faction_amount"`
 	AlternateCurrency      *AlternateCurrency `json:"alternate_currency,omitempty" gorm:"foreignKey:alt_currency_id;references:id"`
 	Merchantlists          []Merchantlist     `json:"merchantlists,omitempty" gorm:"foreignKey:merchantid;references:merchant_id"`
 	NpcFactions            []NpcFaction       `json:"npc_factions,omitempty" gorm:"foreignKey:id;references:npc_faction_id"`
@@ -185,8 +186,6 @@ func (NpcType) Relationships() []string {
 		"AlternateCurrency.Item.Tasks",
 		"AlternateCurrency.Item.Tasks.AlternateCurrency",
 		"AlternateCurrency.Item.Tasks.TaskActivities",
-		"AlternateCurrency.Item.Tasks.TaskActivities.Goallists",
-		"AlternateCurrency.Item.Tasks.TaskActivities.NpcType",
 		"AlternateCurrency.Item.Tasks.Tasksets",
 		"AlternateCurrency.Item.TradeskillRecipeEntries",
 		"AlternateCurrency.Item.TradeskillRecipeEntries.TradeskillRecipe",
@@ -228,8 +227,6 @@ func (NpcType) Relationships() []string {
 		"Loottable.LoottableEntries.Lootdrop.LootdropEntries.Item.Tasks.AlternateCurrency",
 		"Loottable.LoottableEntries.Lootdrop.LootdropEntries.Item.Tasks.AlternateCurrency.Item",
 		"Loottable.LoottableEntries.Lootdrop.LootdropEntries.Item.Tasks.TaskActivities",
-		"Loottable.LoottableEntries.Lootdrop.LootdropEntries.Item.Tasks.TaskActivities.Goallists",
-		"Loottable.LoottableEntries.Lootdrop.LootdropEntries.Item.Tasks.TaskActivities.NpcType",
 		"Loottable.LoottableEntries.Lootdrop.LootdropEntries.Item.Tasks.Tasksets",
 		"Loottable.LoottableEntries.Lootdrop.LootdropEntries.Item.TradeskillRecipeEntries",
 		"Loottable.LoottableEntries.Lootdrop.LootdropEntries.Item.TradeskillRecipeEntries.TradeskillRecipe",
@@ -278,8 +275,6 @@ func (NpcType) Relationships() []string {
 		"Merchantlists.Items.Tasks.AlternateCurrency",
 		"Merchantlists.Items.Tasks.AlternateCurrency.Item",
 		"Merchantlists.Items.Tasks.TaskActivities",
-		"Merchantlists.Items.Tasks.TaskActivities.Goallists",
-		"Merchantlists.Items.Tasks.TaskActivities.NpcType",
 		"Merchantlists.Items.Tasks.Tasksets",
 		"Merchantlists.Items.TradeskillRecipeEntries",
 		"Merchantlists.Items.TradeskillRecipeEntries.TradeskillRecipe",
@@ -338,8 +333,6 @@ func (NpcType) Relationships() []string {
 		"NpcSpell.NpcSpellsEntries.SpellsNew.Items.Tasks.AlternateCurrency",
 		"NpcSpell.NpcSpellsEntries.SpellsNew.Items.Tasks.AlternateCurrency.Item",
 		"NpcSpell.NpcSpellsEntries.SpellsNew.Items.Tasks.TaskActivities",
-		"NpcSpell.NpcSpellsEntries.SpellsNew.Items.Tasks.TaskActivities.Goallists",
-		"NpcSpell.NpcSpellsEntries.SpellsNew.Items.Tasks.TaskActivities.NpcType",
 		"NpcSpell.NpcSpellsEntries.SpellsNew.Items.Tasks.Tasksets",
 		"NpcSpell.NpcSpellsEntries.SpellsNew.Items.TradeskillRecipeEntries",
 		"NpcSpell.NpcSpellsEntries.SpellsNew.Items.TradeskillRecipeEntries.TradeskillRecipe",

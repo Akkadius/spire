@@ -7,23 +7,32 @@ import (
 type TaskActivity struct {
 	Taskid               uint        `json:"taskid" gorm:"Column:taskid"`
 	Activityid           uint        `json:"activityid" gorm:"Column:activityid"`
-	Step                 uint        `json:"step" gorm:"Column:step"`
+	ReqActivityId        int         `json:"req_activity_id" gorm:"Column:req_activity_id"`
+	Step                 int         `json:"step" gorm:"Column:step"`
 	Activitytype         uint8       `json:"activitytype" gorm:"Column:activitytype"`
 	TargetName           string      `json:"target_name" gorm:"Column:target_name"`
-	ItemList             string      `json:"item_list" gorm:"Column:item_list"`
-	SkillList            string      `json:"skill_list" gorm:"Column:skill_list"`
-	SpellList            string      `json:"spell_list" gorm:"Column:spell_list"`
-	DescriptionOverride  string      `json:"description_override" gorm:"Column:description_override"`
-	Goalid               uint        `json:"goalid" gorm:"Column:goalid"`
-	GoalMatchList        null.String `json:"goal_match_list" gorm:"Column:goal_match_list"`
 	Goalmethod           uint        `json:"goalmethod" gorm:"Column:goalmethod"`
 	Goalcount            null.Int    `json:"goalcount" gorm:"Column:goalcount"`
-	Delivertonpc         uint        `json:"delivertonpc" gorm:"Column:delivertonpc"`
+	DescriptionOverride  string      `json:"description_override" gorm:"Column:description_override"`
+	NpcId                uint        `json:"npc_id" gorm:"Column:npc_id"`
+	NpcGoalId            uint        `json:"npc_goal_id" gorm:"Column:npc_goal_id"`
+	NpcMatchList         null.String `json:"npc_match_list" gorm:"Column:npc_match_list"`
+	ItemId               uint        `json:"item_id" gorm:"Column:item_id"`
+	ItemGoalId           uint        `json:"item_goal_id" gorm:"Column:item_goal_id"`
+	ItemIdList           null.String `json:"item_id_list" gorm:"Column:item_id_list"`
+	ItemList             string      `json:"item_list" gorm:"Column:item_list"`
+	DzSwitchId           int         `json:"dz_switch_id" gorm:"Column:dz_switch_id"`
+	MinX                 float32     `json:"min_x" gorm:"Column:min_x"`
+	MinY                 float32     `json:"min_y" gorm:"Column:min_y"`
+	MinZ                 float32     `json:"min_z" gorm:"Column:min_z"`
+	MaxX                 float32     `json:"max_x" gorm:"Column:max_x"`
+	MaxY                 float32     `json:"max_y" gorm:"Column:max_y"`
+	MaxZ                 float32     `json:"max_z" gorm:"Column:max_z"`
+	SkillList            string      `json:"skill_list" gorm:"Column:skill_list"`
+	SpellList            string      `json:"spell_list" gorm:"Column:spell_list"`
 	Zones                string      `json:"zones" gorm:"Column:zones"`
 	ZoneVersion          null.Int    `json:"zone_version" gorm:"Column:zone_version"`
 	Optional             int8        `json:"optional" gorm:"Column:optional"`
-	NpcType              *NpcType    `json:"npc_type,omitempty" gorm:"foreignKey:delivertonpc;references:id"`
-	Goallists            []Goallist  `json:"goallists,omitempty" gorm:"foreignKey:listid;references:goalid"`
 }
 
 func (TaskActivity) TableName() string {
@@ -31,211 +40,7 @@ func (TaskActivity) TableName() string {
 }
 
 func (TaskActivity) Relationships() []string {
-    return []string{
-		"Goallists",
-		"NpcType",
-		"NpcType.AlternateCurrency",
-		"NpcType.AlternateCurrency.Item",
-		"NpcType.AlternateCurrency.Item.AlternateCurrencies",
-		"NpcType.AlternateCurrency.Item.CharacterCorpseItems",
-		"NpcType.AlternateCurrency.Item.DiscoveredItems",
-		"NpcType.AlternateCurrency.Item.Doors",
-		"NpcType.AlternateCurrency.Item.Doors.Item",
-		"NpcType.AlternateCurrency.Item.Fishings",
-		"NpcType.AlternateCurrency.Item.Fishings.Item",
-		"NpcType.AlternateCurrency.Item.Fishings.NpcType",
-		"NpcType.AlternateCurrency.Item.Fishings.Zone",
-		"NpcType.AlternateCurrency.Item.Forages",
-		"NpcType.AlternateCurrency.Item.Forages.Item",
-		"NpcType.AlternateCurrency.Item.Forages.Zone",
-		"NpcType.AlternateCurrency.Item.GroundSpawns",
-		"NpcType.AlternateCurrency.Item.GroundSpawns.Zone",
-		"NpcType.AlternateCurrency.Item.ItemTicks",
-		"NpcType.AlternateCurrency.Item.Keyrings",
-		"NpcType.AlternateCurrency.Item.LootdropEntries",
-		"NpcType.AlternateCurrency.Item.LootdropEntries.Item",
-		"NpcType.AlternateCurrency.Item.LootdropEntries.Lootdrop",
-		"NpcType.AlternateCurrency.Item.LootdropEntries.Lootdrop.LootdropEntries",
-		"NpcType.AlternateCurrency.Item.LootdropEntries.Lootdrop.LoottableEntries",
-		"NpcType.AlternateCurrency.Item.LootdropEntries.Lootdrop.LoottableEntries.Lootdrop",
-		"NpcType.AlternateCurrency.Item.LootdropEntries.Lootdrop.LoottableEntries.Loottable",
-		"NpcType.AlternateCurrency.Item.LootdropEntries.Lootdrop.LoottableEntries.Loottable.LoottableEntries",
-		"NpcType.AlternateCurrency.Item.LootdropEntries.Lootdrop.LoottableEntries.Loottable.NpcTypes",
-		"NpcType.AlternateCurrency.Item.Merchantlists",
-		"NpcType.AlternateCurrency.Item.Merchantlists.Items",
-		"NpcType.AlternateCurrency.Item.Merchantlists.NpcTypes",
-		"NpcType.AlternateCurrency.Item.ObjectContents",
-		"NpcType.AlternateCurrency.Item.Objects",
-		"NpcType.AlternateCurrency.Item.Objects.Item",
-		"NpcType.AlternateCurrency.Item.Objects.Zone",
-		"NpcType.AlternateCurrency.Item.StartingItems",
-		"NpcType.AlternateCurrency.Item.StartingItems.Item",
-		"NpcType.AlternateCurrency.Item.StartingItems.Zone",
-		"NpcType.AlternateCurrency.Item.Tasks",
-		"NpcType.AlternateCurrency.Item.Tasks.AlternateCurrency",
-		"NpcType.AlternateCurrency.Item.Tasks.TaskActivities",
-		"NpcType.AlternateCurrency.Item.Tasks.Tasksets",
-		"NpcType.AlternateCurrency.Item.TradeskillRecipeEntries",
-		"NpcType.AlternateCurrency.Item.TradeskillRecipeEntries.TradeskillRecipe",
-		"NpcType.AlternateCurrency.Item.TributeLevels",
-		"NpcType.Loottable",
-		"NpcType.Loottable.LoottableEntries",
-		"NpcType.Loottable.LoottableEntries.Lootdrop",
-		"NpcType.Loottable.LoottableEntries.Lootdrop.LootdropEntries",
-		"NpcType.Loottable.LoottableEntries.Lootdrop.LootdropEntries.Item",
-		"NpcType.Loottable.LoottableEntries.Lootdrop.LootdropEntries.Item.AlternateCurrencies",
-		"NpcType.Loottable.LoottableEntries.Lootdrop.LootdropEntries.Item.AlternateCurrencies.Item",
-		"NpcType.Loottable.LoottableEntries.Lootdrop.LootdropEntries.Item.CharacterCorpseItems",
-		"NpcType.Loottable.LoottableEntries.Lootdrop.LootdropEntries.Item.DiscoveredItems",
-		"NpcType.Loottable.LoottableEntries.Lootdrop.LootdropEntries.Item.Doors",
-		"NpcType.Loottable.LoottableEntries.Lootdrop.LootdropEntries.Item.Doors.Item",
-		"NpcType.Loottable.LoottableEntries.Lootdrop.LootdropEntries.Item.Fishings",
-		"NpcType.Loottable.LoottableEntries.Lootdrop.LootdropEntries.Item.Fishings.Item",
-		"NpcType.Loottable.LoottableEntries.Lootdrop.LootdropEntries.Item.Fishings.NpcType",
-		"NpcType.Loottable.LoottableEntries.Lootdrop.LootdropEntries.Item.Fishings.Zone",
-		"NpcType.Loottable.LoottableEntries.Lootdrop.LootdropEntries.Item.Forages",
-		"NpcType.Loottable.LoottableEntries.Lootdrop.LootdropEntries.Item.Forages.Item",
-		"NpcType.Loottable.LoottableEntries.Lootdrop.LootdropEntries.Item.Forages.Zone",
-		"NpcType.Loottable.LoottableEntries.Lootdrop.LootdropEntries.Item.GroundSpawns",
-		"NpcType.Loottable.LoottableEntries.Lootdrop.LootdropEntries.Item.GroundSpawns.Zone",
-		"NpcType.Loottable.LoottableEntries.Lootdrop.LootdropEntries.Item.ItemTicks",
-		"NpcType.Loottable.LoottableEntries.Lootdrop.LootdropEntries.Item.Keyrings",
-		"NpcType.Loottable.LoottableEntries.Lootdrop.LootdropEntries.Item.LootdropEntries",
-		"NpcType.Loottable.LoottableEntries.Lootdrop.LootdropEntries.Item.Merchantlists",
-		"NpcType.Loottable.LoottableEntries.Lootdrop.LootdropEntries.Item.Merchantlists.Items",
-		"NpcType.Loottable.LoottableEntries.Lootdrop.LootdropEntries.Item.Merchantlists.NpcTypes",
-		"NpcType.Loottable.LoottableEntries.Lootdrop.LootdropEntries.Item.ObjectContents",
-		"NpcType.Loottable.LoottableEntries.Lootdrop.LootdropEntries.Item.Objects",
-		"NpcType.Loottable.LoottableEntries.Lootdrop.LootdropEntries.Item.Objects.Item",
-		"NpcType.Loottable.LoottableEntries.Lootdrop.LootdropEntries.Item.Objects.Zone",
-		"NpcType.Loottable.LoottableEntries.Lootdrop.LootdropEntries.Item.StartingItems",
-		"NpcType.Loottable.LoottableEntries.Lootdrop.LootdropEntries.Item.StartingItems.Item",
-		"NpcType.Loottable.LoottableEntries.Lootdrop.LootdropEntries.Item.StartingItems.Zone",
-		"NpcType.Loottable.LoottableEntries.Lootdrop.LootdropEntries.Item.Tasks",
-		"NpcType.Loottable.LoottableEntries.Lootdrop.LootdropEntries.Item.Tasks.AlternateCurrency",
-		"NpcType.Loottable.LoottableEntries.Lootdrop.LootdropEntries.Item.Tasks.AlternateCurrency.Item",
-		"NpcType.Loottable.LoottableEntries.Lootdrop.LootdropEntries.Item.Tasks.TaskActivities",
-		"NpcType.Loottable.LoottableEntries.Lootdrop.LootdropEntries.Item.Tasks.Tasksets",
-		"NpcType.Loottable.LoottableEntries.Lootdrop.LootdropEntries.Item.TradeskillRecipeEntries",
-		"NpcType.Loottable.LoottableEntries.Lootdrop.LootdropEntries.Item.TradeskillRecipeEntries.TradeskillRecipe",
-		"NpcType.Loottable.LoottableEntries.Lootdrop.LootdropEntries.Item.TributeLevels",
-		"NpcType.Loottable.LoottableEntries.Lootdrop.LootdropEntries.Lootdrop",
-		"NpcType.Loottable.LoottableEntries.Lootdrop.LoottableEntries",
-		"NpcType.Loottable.LoottableEntries.Loottable",
-		"NpcType.Loottable.NpcTypes",
-		"NpcType.Merchantlists",
-		"NpcType.Merchantlists.Items",
-		"NpcType.Merchantlists.Items.AlternateCurrencies",
-		"NpcType.Merchantlists.Items.AlternateCurrencies.Item",
-		"NpcType.Merchantlists.Items.CharacterCorpseItems",
-		"NpcType.Merchantlists.Items.DiscoveredItems",
-		"NpcType.Merchantlists.Items.Doors",
-		"NpcType.Merchantlists.Items.Doors.Item",
-		"NpcType.Merchantlists.Items.Fishings",
-		"NpcType.Merchantlists.Items.Fishings.Item",
-		"NpcType.Merchantlists.Items.Fishings.NpcType",
-		"NpcType.Merchantlists.Items.Fishings.Zone",
-		"NpcType.Merchantlists.Items.Forages",
-		"NpcType.Merchantlists.Items.Forages.Item",
-		"NpcType.Merchantlists.Items.Forages.Zone",
-		"NpcType.Merchantlists.Items.GroundSpawns",
-		"NpcType.Merchantlists.Items.GroundSpawns.Zone",
-		"NpcType.Merchantlists.Items.ItemTicks",
-		"NpcType.Merchantlists.Items.Keyrings",
-		"NpcType.Merchantlists.Items.LootdropEntries",
-		"NpcType.Merchantlists.Items.LootdropEntries.Item",
-		"NpcType.Merchantlists.Items.LootdropEntries.Lootdrop",
-		"NpcType.Merchantlists.Items.LootdropEntries.Lootdrop.LootdropEntries",
-		"NpcType.Merchantlists.Items.LootdropEntries.Lootdrop.LoottableEntries",
-		"NpcType.Merchantlists.Items.LootdropEntries.Lootdrop.LoottableEntries.Lootdrop",
-		"NpcType.Merchantlists.Items.LootdropEntries.Lootdrop.LoottableEntries.Loottable",
-		"NpcType.Merchantlists.Items.LootdropEntries.Lootdrop.LoottableEntries.Loottable.LoottableEntries",
-		"NpcType.Merchantlists.Items.LootdropEntries.Lootdrop.LoottableEntries.Loottable.NpcTypes",
-		"NpcType.Merchantlists.Items.Merchantlists",
-		"NpcType.Merchantlists.Items.ObjectContents",
-		"NpcType.Merchantlists.Items.Objects",
-		"NpcType.Merchantlists.Items.Objects.Item",
-		"NpcType.Merchantlists.Items.Objects.Zone",
-		"NpcType.Merchantlists.Items.StartingItems",
-		"NpcType.Merchantlists.Items.StartingItems.Item",
-		"NpcType.Merchantlists.Items.StartingItems.Zone",
-		"NpcType.Merchantlists.Items.Tasks",
-		"NpcType.Merchantlists.Items.Tasks.AlternateCurrency",
-		"NpcType.Merchantlists.Items.Tasks.AlternateCurrency.Item",
-		"NpcType.Merchantlists.Items.Tasks.TaskActivities",
-		"NpcType.Merchantlists.Items.Tasks.Tasksets",
-		"NpcType.Merchantlists.Items.TradeskillRecipeEntries",
-		"NpcType.Merchantlists.Items.TradeskillRecipeEntries.TradeskillRecipe",
-		"NpcType.Merchantlists.Items.TributeLevels",
-		"NpcType.Merchantlists.NpcTypes",
-		"NpcType.NpcEmotes",
-		"NpcType.NpcFactions",
-		"NpcType.NpcFactions.NpcFactionEntries",
-		"NpcType.NpcFactions.NpcFactionEntries.FactionList",
-		"NpcType.NpcSpell",
-		"NpcType.NpcSpell.NpcSpell",
-		"NpcType.NpcSpell.NpcSpellsEntries",
-		"NpcType.NpcSpell.NpcSpellsEntries.SpellsNew",
-		"NpcType.NpcSpell.NpcSpellsEntries.SpellsNew.Aura",
-		"NpcType.NpcSpell.NpcSpellsEntries.SpellsNew.Aura.SpellsNew",
-		"NpcType.NpcSpell.NpcSpellsEntries.SpellsNew.BlockedSpells",
-		"NpcType.NpcSpell.NpcSpellsEntries.SpellsNew.Damageshieldtypes",
-		"NpcType.NpcSpell.NpcSpellsEntries.SpellsNew.Items",
-		"NpcType.NpcSpell.NpcSpellsEntries.SpellsNew.Items.AlternateCurrencies",
-		"NpcType.NpcSpell.NpcSpellsEntries.SpellsNew.Items.AlternateCurrencies.Item",
-		"NpcType.NpcSpell.NpcSpellsEntries.SpellsNew.Items.CharacterCorpseItems",
-		"NpcType.NpcSpell.NpcSpellsEntries.SpellsNew.Items.DiscoveredItems",
-		"NpcType.NpcSpell.NpcSpellsEntries.SpellsNew.Items.Doors",
-		"NpcType.NpcSpell.NpcSpellsEntries.SpellsNew.Items.Doors.Item",
-		"NpcType.NpcSpell.NpcSpellsEntries.SpellsNew.Items.Fishings",
-		"NpcType.NpcSpell.NpcSpellsEntries.SpellsNew.Items.Fishings.Item",
-		"NpcType.NpcSpell.NpcSpellsEntries.SpellsNew.Items.Fishings.NpcType",
-		"NpcType.NpcSpell.NpcSpellsEntries.SpellsNew.Items.Fishings.Zone",
-		"NpcType.NpcSpell.NpcSpellsEntries.SpellsNew.Items.Forages",
-		"NpcType.NpcSpell.NpcSpellsEntries.SpellsNew.Items.Forages.Item",
-		"NpcType.NpcSpell.NpcSpellsEntries.SpellsNew.Items.Forages.Zone",
-		"NpcType.NpcSpell.NpcSpellsEntries.SpellsNew.Items.GroundSpawns",
-		"NpcType.NpcSpell.NpcSpellsEntries.SpellsNew.Items.GroundSpawns.Zone",
-		"NpcType.NpcSpell.NpcSpellsEntries.SpellsNew.Items.ItemTicks",
-		"NpcType.NpcSpell.NpcSpellsEntries.SpellsNew.Items.Keyrings",
-		"NpcType.NpcSpell.NpcSpellsEntries.SpellsNew.Items.LootdropEntries",
-		"NpcType.NpcSpell.NpcSpellsEntries.SpellsNew.Items.LootdropEntries.Item",
-		"NpcType.NpcSpell.NpcSpellsEntries.SpellsNew.Items.LootdropEntries.Lootdrop",
-		"NpcType.NpcSpell.NpcSpellsEntries.SpellsNew.Items.LootdropEntries.Lootdrop.LootdropEntries",
-		"NpcType.NpcSpell.NpcSpellsEntries.SpellsNew.Items.LootdropEntries.Lootdrop.LoottableEntries",
-		"NpcType.NpcSpell.NpcSpellsEntries.SpellsNew.Items.LootdropEntries.Lootdrop.LoottableEntries.Lootdrop",
-		"NpcType.NpcSpell.NpcSpellsEntries.SpellsNew.Items.LootdropEntries.Lootdrop.LoottableEntries.Loottable",
-		"NpcType.NpcSpell.NpcSpellsEntries.SpellsNew.Items.LootdropEntries.Lootdrop.LoottableEntries.Loottable.LoottableEntries",
-		"NpcType.NpcSpell.NpcSpellsEntries.SpellsNew.Items.LootdropEntries.Lootdrop.LoottableEntries.Loottable.NpcTypes",
-		"NpcType.NpcSpell.NpcSpellsEntries.SpellsNew.Items.Merchantlists",
-		"NpcType.NpcSpell.NpcSpellsEntries.SpellsNew.Items.Merchantlists.Items",
-		"NpcType.NpcSpell.NpcSpellsEntries.SpellsNew.Items.Merchantlists.NpcTypes",
-		"NpcType.NpcSpell.NpcSpellsEntries.SpellsNew.Items.ObjectContents",
-		"NpcType.NpcSpell.NpcSpellsEntries.SpellsNew.Items.Objects",
-		"NpcType.NpcSpell.NpcSpellsEntries.SpellsNew.Items.Objects.Item",
-		"NpcType.NpcSpell.NpcSpellsEntries.SpellsNew.Items.Objects.Zone",
-		"NpcType.NpcSpell.NpcSpellsEntries.SpellsNew.Items.StartingItems",
-		"NpcType.NpcSpell.NpcSpellsEntries.SpellsNew.Items.StartingItems.Item",
-		"NpcType.NpcSpell.NpcSpellsEntries.SpellsNew.Items.StartingItems.Zone",
-		"NpcType.NpcSpell.NpcSpellsEntries.SpellsNew.Items.Tasks",
-		"NpcType.NpcSpell.NpcSpellsEntries.SpellsNew.Items.Tasks.AlternateCurrency",
-		"NpcType.NpcSpell.NpcSpellsEntries.SpellsNew.Items.Tasks.AlternateCurrency.Item",
-		"NpcType.NpcSpell.NpcSpellsEntries.SpellsNew.Items.Tasks.TaskActivities",
-		"NpcType.NpcSpell.NpcSpellsEntries.SpellsNew.Items.Tasks.Tasksets",
-		"NpcType.NpcSpell.NpcSpellsEntries.SpellsNew.Items.TradeskillRecipeEntries",
-		"NpcType.NpcSpell.NpcSpellsEntries.SpellsNew.Items.TradeskillRecipeEntries.TradeskillRecipe",
-		"NpcType.NpcSpell.NpcSpellsEntries.SpellsNew.Items.TributeLevels",
-		"NpcType.NpcSpell.NpcSpellsEntries.SpellsNew.NpcSpellsEntries",
-		"NpcType.NpcSpell.NpcSpellsEntries.SpellsNew.SpellBuckets",
-		"NpcType.NpcSpell.NpcSpellsEntries.SpellsNew.SpellGlobals",
-		"NpcType.NpcTypesTint",
-		"NpcType.Spawnentries",
-		"NpcType.Spawnentries.NpcType",
-		"NpcType.Spawnentries.Spawngroup",
-		"NpcType.Spawnentries.Spawngroup.Spawn2",
-		"NpcType.Spawnentries.Spawngroup.Spawn2.Spawnentries",
-		"NpcType.Spawnentries.Spawngroup.Spawn2.Spawngroup",
-	}
+    return []string{}
 }
 
 func (TaskActivity) Connection() string {

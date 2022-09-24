@@ -174,9 +174,8 @@ starting_items:
   - 1-1 itemid->items:id
 tradeskill_recipe_entries:
   - 1-1 recipe_id->tradeskill_recipe:id
-task_activities:
-  - 1-1 delivertonpc->npc_types:id
-  - 1-* goalid->goallists:listid
+#task_activities:
+#  - 1-* goalid->goallists:listid
 tasks:
   - 1-* id->task_activities:taskid
   - 1-* id->tasksets:taskid
