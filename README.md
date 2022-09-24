@@ -36,6 +36,9 @@
 - [Using Spire - Locally, but Remote](#using-spire---locally-but-remote)
 - [Feature Requests](#feature-requests)
 - [Reporting Bugs](#reporting-bugs)
+- [Contributing](#contributing)
+  - [Contributing - Learning Resources](#contributing---learning-resources)
+  - [Contributing - Cutting a Release](#contributing---cutting-a-release)
 - [Developer Setup](#developer-setup)
 - [Linux  Development Setup](#linux--development-setup)
   - [Linux - Clone](#linux---clone)
@@ -113,12 +116,17 @@ Want to help contribute to Spire? Anyone can submit [pull requests](https://gith
 | Backend | Google Wire - Dependency Injection | [Google Wire Github](https://github.com/google/wire) - [Tutorial](https://github.com/google/wire/blob/main/_tutorial/README.md)
 | Backend | Go Dot Env (.env file loader) | [joho/godotenv](https://github.com/joho/godotenv) |
 | Backend | Echo Swagger - Used to serve swagger docs | [Echo Swagger Github](https://github.com/swaggo/echo-swagger) |
-| Backend | Swaggo Generator - Used to code generate swagger documentation | [Swaggo](https://github.com/swaggo/swag)
+| Backend | Swaggo Generator - Used to code generate swagger documentation | [Swaggo](https://github.com/swaggo/swag) |
 
+### Contributing - Cutting a Release
 
+When looking to cut a new release of Spire, a PR will need to be made that resembles the following [example here](https://github.com/Akkadius/spire/commit/a5327c4968a08165434620bcedebe438a6500bb6). A version tag will need to be declared in both `CHANGELOG.md` containing proper release notes and the same version number will need to be updated in `package.json`. 
 
+![image](https://user-images.githubusercontent.com/3319450/192076279-53e5f727-599b-4bcc-9ec2-e3fb1c5b971e.png)
 
-  
+When the changes are committed to `master` the Drone CI pipeline will automatically take care of the rest and publish the release to the [releases page](https://github.com/Akkadius/spire/releases)
+
+  ![image](https://user-images.githubusercontent.com/3319450/192076335-f5e0b810-1240-45e9-91e1-52def88845fb.png)
 
 ## Developer Setup  
   
