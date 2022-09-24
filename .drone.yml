@@ -22,7 +22,7 @@ steps:
     commands:
       - sudo chown -R go /drone/src
       - sudo chown -R go /home/go/pkg
-      - sudo chown -R go /home/go/src/frontend/node_modules
+      - sudo chown -R go /drone/src/frontend/node_modules
       - ./scripts/build-release.sh
     when:
       branch: [ "master" ]
@@ -31,4 +31,4 @@ steps:
       - name: cache-be
         path: /home/go/pkg
       - name: cache-fe
-        path: /home/go/src/frontend/node_modules
+        path: /drone/src/frontend/node_modules
