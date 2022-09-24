@@ -1,3 +1,7 @@
+## [1.13.10]
+
+* Addresses an issue where connections endpoint was hit when booting the app. When Spire does not have a Spire database, it panics the backend. https://github.com/Akkadius/spire/issues/63
+
 ## [1.13.9]
 
 ### [Task Editor] Minor Update

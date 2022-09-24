@@ -172,7 +172,7 @@
 
                 <!-- Recommended Level -->
                 <div class="col-2" :style="(item['reclevel'] === 0 ? 'opacity: .5' : '')">
-                  Recommended Level
+                  Rec. Level
                   <b-form-input
                     v-model.number="item.reclevel"
                     v-b-tooltip.hover.v-dark.right

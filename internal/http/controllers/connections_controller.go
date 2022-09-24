@@ -138,14 +138,16 @@ func (cc *ConnectionsController) create(c echo.Context) error {
 func (cc *ConnectionsController) list(c echo.Context) error {
 	var results []models.UserServerDatabaseConnection
 	relationships := models.UserServerDatabaseConnection{}.Relationships()
-	query := cc.db.GetSpireDb().Model(&models.UserServerDatabaseConnection{})
-	for _, relationship := range relationships {
-		query = query.Preload(relationship)
-	}
+	if cc.db.GetSpireDb() != nil {
+		query := cc.db.GetSpireDb().Model(&models.UserServerDatabaseConnection{})
+		for _, relationship := range relationships {
+			query = query.Preload(relationship)
+		}
 
-	err := query.Where("user_id = ?", request.GetUser(c).ID).Find(&results).Error
-	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err})
+		err := query.Where("user_id = ?", request.GetUser(c).ID).Find(&results).Error
+		if err != nil {
+			return c.JSON(http.StatusInternalServerError, echo.Map{"error": err})
+		}
 	}
 
 	return c.JSON(http.StatusOK, echo.Map{"data": results})
