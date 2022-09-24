@@ -83,12 +83,12 @@ If you want to run Spire without an EQEmu server installation, place it in an em
 **Spire is currently only to be used as a local development tool, it is not safe to host publicly without protected access until authentication and roles are implemented. (On the roadmap)**  
   
 ## Developer Setup  
-
-![enter image description here](https://user-images.githubusercontent.com/3319450/192069126-b1daf88a-b728-4e9f-90eb-6715dd49e924.png)  
-
+  
 These are instructions for those who are looking to develop on Spire. If you are just trying to use the tool then see the **using Spire** sections.
   
 ## Linux  Development Setup
+
+![enter image description here](https://user-images.githubusercontent.com/3319450/192069126-b1daf88a-b728-4e9f-90eb-6715dd49e924.png)
 
 These instructions assume you have **git**, **node,** **docker** already installed. All of the dependencies are taken care of within the docker environment.
 
@@ -114,7 +114,9 @@ cd spire && cp .env.dev .env && make install
 * Installs static assets (icons, images, preview images) (make install-assets) from https://github.com/Akkadius/eq-asset-preview
   
 ## Windows Development Setup
-  
+ 
+![image](https://user-images.githubusercontent.com/3319450/192071001-ca2c314a-6436-4f37-a02b-a55595906b12.png)
+
 For Windows development environment, install the following pre-requisites before proceeding with the next steps  
   
 ### Windows - Pre-Requisites   
