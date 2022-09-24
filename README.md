@@ -122,7 +122,8 @@ Want to help contribute to Spire? Anyone can submit [pull requests](https://gith
 
 When looking to cut a new release of Spire, a PR will need to be made that resembles the following [example here](https://github.com/Akkadius/spire/commit/a5327c4968a08165434620bcedebe438a6500bb6). A version tag will need to be declared in both `CHANGELOG.md` containing proper release notes and the same version number will need to be updated in `package.json`. 
 
-![image](https://user-images.githubusercontent.com/3319450/192076279-53e5f727-599b-4bcc-9ec2-e3fb1c5b971e.png)
+![image](https://user-images.githubusercontent.com/3319450/192076389-0c18c58c-21de-4319-b5eb-d41801a0a063.png)
+
 
 When the changes are committed to `master` the Drone CI pipeline will automatically take care of the rest and publish the release to the [releases page](https://github.com/Akkadius/spire/releases)
 
