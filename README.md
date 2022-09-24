@@ -34,6 +34,8 @@
 - [Using Spire - Locally](#using-spire---locally)
 - [Using Spire - Hosted](#using-spire---hosted)
 - [Using Spire - Locally, but Remote](#using-spire---locally-but-remote)
+- [Feature Requests](#feature-requests)
+- [Reporting Bugs](#reporting-bugs)
 - [Developer Setup](#developer-setup)
 - [Linux  Development Setup](#linux--development-setup)
   - [Linux - Clone](#linux---clone)
@@ -54,6 +56,8 @@ The motive for Spire is simple, to empower creativity in the super fans of EverQ
 
 Rich, deep, tooling that leaves no stone un-turned for quality and intuitiveness.
 
+Built for the long haul with code generation to make keeping things up to date far easier.
+
 ## Using Spire - Locally
   
 Download the [latest release](https://github.com/Akkadius/spire/releases). for your operating system.
@@ -72,11 +76,12 @@ Spire on your development server instantly.
 
 If you don't want to install Spire, but you just want to have it connected to your database over the internet similar to how EOC worked (If you're familiar with it) - you can do so by using the hosted Spire at http://spire.akkadius.com/ and navigate to the login page @ http://spire.akkadius.com/login
 
-![image](https://user-images.githubusercontent.com/3319450/192070246-0429cadb-dc10-4744-bf8e-7ab864d696e1.png)
+![image](https://user-images.githubusercontent.com/3319450/192075339-69893324-0c0c-45a6-827e-4deaa0a338bb.png)
 
 Once you've signed in with your Github account, you can manage your server connections. Navigate to **Create New** to create a new connection. Once you have connections created it is easy to switch between your connections and they are displayed at the bottom left.
 
-![image](https://user-images.githubusercontent.com/3319450/192070299-3328da5f-00e4-4c0a-9082-0c92511a3e5e.png)
+![image](https://user-images.githubusercontent.com/3319450/192075441-6e2e6caf-671b-462c-9d44-9ad13ee726fd.png)
+
 
 ## Using Spire - Locally, but Remote
 
@@ -84,6 +89,37 @@ If you want to run Spire without an EQEmu server installation, place it in an em
   
 **Spire is currently only to be used as a local development tool, it is not safe to host publicly without protected access until authentication and roles are implemented. (On the roadmap)**  
   
+## Feature Requests
+
+Interested in a feature in Spire? Please file an [issue](https://github.com/Akkadius/spire/issues) in the issue tracker with the prefix `[Feature Request]`
+ 
+## Reporting Bugs
+
+Found a bug? Please file an [issue](https://github.com/Akkadius/spire/issues) in the issue tracker with the prefix `[Bug]`
+
+## Contributing
+
+Want to help contribute to Spire? Anyone can submit [pull requests](https://github.com/Akkadius/spire/pulls) however learning the skills required to work in this project might require some extra help and learning resources.
+
+### Contributing - Learning Resources
+
+| Area | Topic | Resource |
+|--|--|--|
+| Frontend | Learning Vue | [Learn Vue 2 - Step by Step](https://laracasts.com/series/learn-vue-2-step-by-step) |
+| Backend | Learning Go | [Learn Go Programming - Golang Tutorial for Beginners](https://www.youtube.com/watch?v=YS4e4q9oBaU) |
+| Backend | Go CLI Library used in Spire| [Cobra Github](https://github.com/spf13/cobra) |
+| Backend | Web Framework Used in Spire | [Echo Web Labstack Docs](https://echo.labstack.com/) 
+| Backend | Database Interaction (ORM) | [Gorm - The fantastic ORM library for Golang](https://gorm.io/) |
+| Backend | Google Wire - Dependency Injection | [Google Wire Github](https://github.com/google/wire) - [Tutorial](https://github.com/google/wire/blob/main/_tutorial/README.md)
+| Backend | Go Dot Env (.env file loader) | [joho/godotenv](https://github.com/joho/godotenv) |
+| Backend | Echo Swagger - Used to serve swagger docs | [Echo Swagger Github](https://github.com/swaggo/echo-swagger) |
+| Backend | Swaggo Generator - Used to code generate swagger documentation | [Swaggo](https://github.com/swaggo/swag)
+
+
+
+
+  
+
 ## Developer Setup  
   
 These are instructions for those who are looking to develop on Spire. If you are just trying to use the tool then see the **using Spire** sections.
@@ -149,8 +185,7 @@ make watch-fe
 
 At this point, you should be able to browse to http://localhost:8080 to view the development server.
 
-![image](https://user-images.githubusercontent.com/3319450/192075125-2b7ec374-ef79-432e-b6ea-5be0eda8184f.png)
-
+![image](https://user-images.githubusercontent.com/3319450/192075588-2c7f4383-deab-4881-ab2f-a216dbccb7f7.png)
 
 ## Windows Development Setup
  
