@@ -29,6 +29,7 @@
 // export * from './api/adventure-template-entry-api';
 // export * from './api/adventure-template-entry-flavor-api';
 export * from './api/alternate-currency-api';
+export * from './api/bot-datum-api'
 // export * from './api/aura-api';
 // export * from './api/base-datum-api';
 // export * from './api/blocked-spell-api';

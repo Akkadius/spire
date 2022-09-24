@@ -119,6 +119,8 @@
 
           <nav-section-component :config="npcNav" v-if="alphaEnabled"/>
 
+          <nav-section-component :config="botNav" v-if="alphaEnabled"/>
+
           <li class="nav-item">
             <router-link class="nav-link " to="/quest-api-explorer">
               <i class="ra ra-compass mr-1"></i> Quest API Explorer
@@ -296,6 +298,21 @@ export default {
             isAlpha: true,
             isNew: true,
             routes: ['npc-spells']
+          },
+        ]
+      },
+      botNav: {
+        label: "Bot",
+        labelIcon: "ra ra-dragon mr-1",
+        routePrefixMatches: ["npc", "merchant"],
+        navs: [
+          {
+            title: "Bot Test",
+            to: '/testbot',
+            icon: "ra ra-death-skull mr-1",
+            isAlpha: true,
+            isNew: true,
+            routes: ['testbot']
           },
         ]
       },
