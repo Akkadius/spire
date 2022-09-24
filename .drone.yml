@@ -21,6 +21,8 @@ steps:
         from_secret: GH_RELEASE_GITHUB_API_TOKEN
     commands:
       - sudo chown -R go /drone/src
+      - sudo chown -R go /home/go/pkg
+      - sudo chown -R go /home/go/src/frontend/node_modules
       - ./scripts/build-release.sh
     when:
       branch: [ "master" ]
