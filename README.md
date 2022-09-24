@@ -39,8 +39,10 @@
   - [Linux - Clone](#linux---clone)
   - [Linux - Install](#linux---install)
   - [Linux - Install - What happens](#linux---install---what-happens)
+  - [Linux - Running Development Watchers](#linux---running-development-watchers)
 - [Windows Development Setup](#windows-development-setup)
   - [Windows - Pre-Requisites](#windows---pre-requisites)
+  - [Windows - Docker](#windows---docker)
   - [Windows - Clone](#windows---clone)
   - [Windows - Init](#windows---init)
   - [Windows - Install Environment](#windows---install-environment)
@@ -92,9 +94,13 @@ These are instructions for those who are looking to develop on Spire. If you are
 
 These instructions assume you have **git**, **node,** **docker** already installed. All of the dependencies are taken care of within the docker environment.
 
-First clone Spire, copy the base `.env.dev` file to the `.env` used by Spire in local development and run `make install` in one line below.
+* Git - Install with your package manager
+* [Node](https://nodejs.org/en/download/package-manager/)
+* [Docker](https://docs.docker.com/engine/install/ubuntu/)
 
 ### Linux - Clone
+
+First clone Spire, copy the base `.env.dev` file to the `.env` used by Spire in local development and run `make install` in one line below.
 
 ```
 git clone https://github.com/Akkadius/spire.git
@@ -103,7 +109,7 @@ git clone https://github.com/Akkadius/spire.git
 ###  Linux - Install
 
 ```
-cd spire && cp .env.dev .env && make install
+cd spire && cp .env.dev .env && make install && make install-frontend
 ```
 
 ### Linux - Install - What happens
@@ -112,7 +118,24 @@ cd spire && cp .env.dev .env && make install
 * A ProjectEQ database gets seeded into the database container from http://db.projecteq.net/api/v1/dump/latest (make seed-peq-database) to a database called `peq`
 * Spire tables get installed to a separate `spire` database (make seed-spire-tables)
 * Installs static assets (icons, images, preview images) (make install-assets) from https://github.com/Akkadius/eq-asset-preview
-  
+* Installs `frontend/.env.example` which is required in development to properly route API requests to the development backend (VUE_APP_BACKEND_BASE_URL=http://localhost:3000) (make install-frontend)
+
+### Linux - Running Development Watchers
+
+Conveniently, there are two make commands that run the development watchers for both the back-end and the front-end.
+
+#### Linux - Backend Web API Development Watcher
+
+```
+make watch-be
+```
+
+#### Linux - Frontend Vue Development Watcher
+
+```
+make watch-fe
+```
+
 ## Windows Development Setup
  
 ![image](https://user-images.githubusercontent.com/3319450/192071001-ca2c314a-6436-4f37-a02b-a55595906b12.png)
@@ -125,7 +148,15 @@ For Windows development environment, install the following pre-requisites before
 * Install [Docker](https://docs.docker.com/desktop/windows/install/) you may need to install additional kernel components for WSL2 which will be instructed in the Docker installation  
   
 All other necessary software gets automatically installed through the subsequent automated steps  
-  
+ 
+### Windows - Docker   
+
+Windows for Docker can be terrible on performance, for this reason a lot of the development environment operations are done at the host level to keep things simple, fast. 
+
+You **can** use the workspace bash container but do know it comes with a performance hit. The containerized MariaDB database is also a convenience as well. 
+
+You **can** point the `.env` to a separate eqemu server installation if you want to avoid Docker altogether and run everything on the host.  
+
 ### Windows - Clone  
   
 Clone Spire to a directory of your choosing  
@@ -162,13 +193,14 @@ If you don't have a MinGW window already open from the previous step; either cli
   
 Make install will do the following things automatically  
   
-* Build the `workspace` docker image; the workspace contains Go and many other utilities installed and fully working out of the box. For windows users we will try to run as many things on the host as much as possible to avoid performance or compatibility issues. This can be bashed into using `windows-workspace-bash.bat` * Build the `mysql` docker image which will contain a basic `mariadb` instance with a relatively tuned database configuration  
+* Build the `workspace` docker image; the workspace contains Go and many other utilities installed and fully working out of the box. For windows users we will try to run as many things on the host as much as possible to avoid performance or compatibility issues. This can be bashed into using `windows-workspace-bash.bat`
+* Build the `mysql` docker image which will contain a basic `mariadb` instance with a relatively tuned database configuration  
 * Initializes a local MariaDB instance that you can access from localhost port `33066` (Note the extra 6 so we don't conflict with a local install)  
 * Creates local databases `peq` and `spire`  
 * Seeds the latest ProjectEQ database for development purposes to the local `peq` database  
 * Seeds the local Spire database tables to the `spire` database  
   
-At this point the installation should be complete and you should have everything that you need to develop. For good measure and because this is Windows we're talking about, you should probably reboot  
+At this point the installation should be complete and you should have everything that you need to develop. For good measure and because this is Windows, you should probably reboot  
   
 ### Windows - Running Development Watchers  
   
