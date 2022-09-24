@@ -1,3 +1,9 @@
+## [1.13.8]
+
+### Test release
+
+* Test release
+
 ## [1.13.7]
 
 ### [NPC Spells Editor] Early alpha release
