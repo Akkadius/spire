@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # changes types so models compile
-sed -i \
+sed -i.bak \
   -e 's/null.String/string/' \
   -e 's/null.Uint64/uint64/' \
   -e 's/null.Uint32/uint32/' \
@@ -21,4 +21,4 @@ sed -i \
 swag init -g internal/http/http.go
 
 # revert temp changes
-git checkout internal/models/
+find ./internal/models/ -name "*.bak" -exec sh -c 'mv -f $0 ${0%.bak}' {} \;
