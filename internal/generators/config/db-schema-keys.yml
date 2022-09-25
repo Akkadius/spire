@@ -207,6 +207,14 @@ books:
     is_nullable: "NO"
     column_type: int(20)
     column_default: ""
+bot_data:
+  - column: bot_id
+    data_type: int
+    column_key: PRI
+    ordinal_position: "1"
+    is_nullable: "NO"
+    column_type: int(10) unsigned
+    column_default: ""
 bug_reports:
   - column: id
     data_type: int
@@ -927,6 +935,14 @@ expeditions:
     ordinal_position: "1"
     is_nullable: "NO"
     column_type: int(10) unsigned
+    column_default: ""
+faction_association:
+  - column: id
+    data_type: int
+    column_key: PRI
+    ordinal_position: "1"
+    is_nullable: "NO"
+    column_type: int(10)
     column_default: ""
 faction_base_data:
   - column: client_faction_id
@@ -1667,21 +1683,6 @@ player_titlesets:
     is_nullable: "NO"
     column_type: int(11) unsigned
     column_default: ""
-proximities:
-  - column: zoneid
-    data_type: int
-    column_key: PRI
-    ordinal_position: "1"
-    is_nullable: "NO"
-    column_type: int(10) unsigned
-    column_default: "0"
-  - column: exploreid
-    data_type: int
-    column_key: PRI
-    ordinal_position: "2"
-    is_nullable: "NO"
-    column_type: int(10) unsigned
-    column_default: "0"
 quest_globals:
   - column: charid
     data_type: int

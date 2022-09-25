@@ -12,38 +12,38 @@ import (
 	"strconv"
 )
 
-type TaskActivityController struct {
+type BotDatumController struct {
 	db	 *database.DatabaseResolver
 	logger *logrus.Logger
 }
 
-func NewTaskActivityController(
+func NewBotDatumController(
 	db *database.DatabaseResolver,
 	logger *logrus.Logger,
-) *TaskActivityController {
-	return &TaskActivityController{
+) *BotDatumController {
+	return &BotDatumController{
 		db:	 db,
 		logger: logger,
 	}
 }
 
-func (e *TaskActivityController) Routes() []*routes.Route {
+func (e *BotDatumController) Routes() []*routes.Route {
 	return []*routes.Route{
-		routes.RegisterRoute(http.MethodGet, "task_activity/:taskid", e.getTaskActivity, nil),
-		routes.RegisterRoute(http.MethodGet, "task_activities", e.listTaskActivities, nil),
-		routes.RegisterRoute(http.MethodPut, "task_activity", e.createTaskActivity, nil),
-		routes.RegisterRoute(http.MethodDelete, "task_activity/:taskid", e.deleteTaskActivity, nil),
-		routes.RegisterRoute(http.MethodPatch, "task_activity/:taskid", e.updateTaskActivity, nil),
-		routes.RegisterRoute(http.MethodPost, "task_activities/bulk", e.getTaskActivitiesBulk, nil),
+		routes.RegisterRoute(http.MethodGet, "bot_datum/:botId", e.getBotDatum, nil),
+		routes.RegisterRoute(http.MethodGet, "bot_data", e.listBotData, nil),
+		routes.RegisterRoute(http.MethodPut, "bot_datum", e.createBotDatum, nil),
+		routes.RegisterRoute(http.MethodDelete, "bot_datum/:botId", e.deleteBotDatum, nil),
+		routes.RegisterRoute(http.MethodPatch, "bot_datum/:botId", e.updateBotDatum, nil),
+		routes.RegisterRoute(http.MethodPost, "bot_data/bulk", e.getBotDataBulk, nil),
 	}
 }
 
-// listTaskActivities godoc
-// @Id listTaskActivities
-// @Summary Lists TaskActivities
+// listBotData godoc
+// @Id listBotData
+// @Summary Lists BotData
 // @Accept json
 // @Produce json
-// @Tags TaskActivity
+// @Tags BotDatum
 // @Param includes query string false "Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names "
 // @Param where query string false "Filter on specific fields. Multiple conditions [.] separated Example: col_like_value.col2__val2"
 // @Param whereOr query string false "Filter on specific fields (Chained ors). Multiple conditions [.] separated Example: col_like_value.col2__val2"
@@ -53,12 +53,12 @@ func (e *TaskActivityController) Routes() []*routes.Route {
 // @Param orderBy query string false "Order by [field]"
 // @Param orderDirection query string false "Order by field direction"
 // @Param select query string false "Column names [.] separated to fetch specific fields in response"
-// @Success 200 {array} models.TaskActivity
+// @Success 200 {array} models.BotDatum
 // @Failure 500 {string} string "Bad query request"
-// @Router /task_activities [get]
-func (e *TaskActivityController) listTaskActivities(c echo.Context) error {
-	var results []models.TaskActivity
-	err := e.db.QueryContext(models.TaskActivity{}, c).Find(&results).Error
+// @Router /bot_data [get]
+func (e *BotDatumController) listBotData(c echo.Context) error {
+	var results []models.BotDatum
+	err := e.db.QueryContext(models.BotDatum{}, c).Find(&results).Error
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err})
 	}
@@ -66,46 +66,35 @@ func (e *TaskActivityController) listTaskActivities(c echo.Context) error {
 	return c.JSON(http.StatusOK, results)
 }
 
-// getTaskActivity godoc
-// @Id getTaskActivity
-// @Summary Gets TaskActivity
+// getBotDatum godoc
+// @Id getBotDatum
+// @Summary Gets BotDatum
 // @Accept json
 // @Produce json
-// @Tags TaskActivity
+// @Tags BotDatum
 // @Param id path int true "Id"
 // @Param includes query string false "Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names "
 // @Param select query string false "Column names [.] separated to fetch specific fields in response"
-// @Success 200 {array} models.TaskActivity
+// @Success 200 {array} models.BotDatum
 // @Failure 404 {string} string "Entity not found"
 // @Failure 500 {string} string "Cannot find param"
 // @Failure 500 {string} string "Bad query request"
-// @Router /task_activity/{id} [get]
-func (e *TaskActivityController) getTaskActivity(c echo.Context) error {
+// @Router /bot_datum/{id} [get]
+func (e *BotDatumController) getBotDatum(c echo.Context) error {
 	var params []interface{}
 	var keys []string
 
 	// primary key param
-	taskid, err := strconv.Atoi(c.Param("taskid"))
+	botId, err := strconv.Atoi(c.Param("botId"))
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Cannot find param [Taskid]"})
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Cannot find param [BotId]"})
 	}
-	params = append(params, taskid)
-	keys = append(keys, "taskid = ?")
-
-	// key param [activityid] position [2] type [int]
-	if len(c.QueryParam("activityid")) > 0 {
-		activityidParam, err := strconv.Atoi(c.QueryParam("activityid"))
-		if err != nil {
-			return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error parsing query param [activityid] err [%s]", err.Error())})
-		}
-
-		params = append(params, activityidParam)
-		keys = append(keys, "activityid = ?")
-	}
+	params = append(params, botId)
+	keys = append(keys, "bot_id = ?")
 
 	// query builder
-	var result models.TaskActivity
-	query := e.db.QueryContext(models.TaskActivity{}, c)
+	var result models.BotDatum
+	query := e.db.QueryContext(models.BotDatum{}, c)
 	for i, _ := range keys {
 		query = query.Where(keys[i], params[i])
 	}
@@ -117,28 +106,28 @@ func (e *TaskActivityController) getTaskActivity(c echo.Context) error {
 	}
 
 	// couldn't find entity
-	if result.Taskid == 0 {
+	if result.BotId == 0 {
 		return c.JSON(http.StatusNotFound, echo.Map{"error": "Cannot find entity"})
 	}
 
 	return c.JSON(http.StatusOK, result)
 }
 
-// updateTaskActivity godoc
-// @Id updateTaskActivity
-// @Summary Updates TaskActivity
+// updateBotDatum godoc
+// @Id updateBotDatum
+// @Summary Updates BotDatum
 // @Accept json
 // @Produce json
-// @Tags TaskActivity
+// @Tags BotDatum
 // @Param id path int true "Id"
-// @Param task_activity body models.TaskActivity true "TaskActivity"
-// @Success 200 {array} models.TaskActivity
+// @Param bot_datum body models.BotDatum true "BotDatum"
+// @Success 200 {array} models.BotDatum
 // @Failure 404 {string} string "Cannot find entity"
 // @Failure 500 {string} string "Error binding to entity"
 // @Failure 500 {string} string "Error updating entity"
-// @Router /task_activity/{id} [patch]
-func (e *TaskActivityController) updateTaskActivity(c echo.Context) error {
-	request := new(models.TaskActivity)
+// @Router /bot_datum/{id} [patch]
+func (e *BotDatumController) updateBotDatum(c echo.Context) error {
+	request := new(models.BotDatum)
 	if err := c.Bind(request); err != nil {
 		return c.JSON(
 			http.StatusInternalServerError,
@@ -150,27 +139,16 @@ func (e *TaskActivityController) updateTaskActivity(c echo.Context) error {
 	var keys []string
 
 	// primary key param
-	taskid, err := strconv.Atoi(c.Param("taskid"))
+	botId, err := strconv.Atoi(c.Param("botId"))
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Cannot find param [Taskid]"})
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Cannot find param [BotId]"})
 	}
-	params = append(params, taskid)
-	keys = append(keys, "taskid = ?")
-
-	// key param [activityid] position [2] type [int]
-	if len(c.QueryParam("activityid")) > 0 {
-		activityidParam, err := strconv.Atoi(c.QueryParam("activityid"))
-		if err != nil {
-			return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error parsing query param [activityid] err [%s]", err.Error())})
-		}
-
-		params = append(params, activityidParam)
-		keys = append(keys, "activityid = ?")
-	}
+	params = append(params, botId)
+	keys = append(keys, "bot_id = ?")
 
 	// query builder
-	var result models.TaskActivity
-	query := e.db.QueryContext(models.TaskActivity{}, c)
+	var result models.BotDatum
+	query := e.db.QueryContext(models.BotDatum{}, c)
 	for i, _ := range keys {
 		query = query.Where(keys[i], params[i])
 	}
@@ -181,7 +159,7 @@ func (e *TaskActivityController) updateTaskActivity(c echo.Context) error {
 		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Cannot find entity [%s]", err.Error())})
 	}
 
-	err = e.db.QueryContext(models.TaskActivity{}, c).Select("*").Session(&gorm.Session{FullSaveAssociations: true}).Updates(&request).Error
+	err = e.db.QueryContext(models.BotDatum{}, c).Select("*").Session(&gorm.Session{FullSaveAssociations: true}).Updates(&request).Error
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error updating entity [%v]", err.Error())})
 	}
@@ -189,27 +167,27 @@ func (e *TaskActivityController) updateTaskActivity(c echo.Context) error {
 	return c.JSON(http.StatusOK, request)
 }
 
-// createTaskActivity godoc
-// @Id createTaskActivity
-// @Summary Creates TaskActivity
+// createBotDatum godoc
+// @Id createBotDatum
+// @Summary Creates BotDatum
 // @Accept json
 // @Produce json
-// @Param task_activity body models.TaskActivity true "TaskActivity"
-// @Tags TaskActivity
-// @Success 200 {array} models.TaskActivity
+// @Param bot_datum body models.BotDatum true "BotDatum"
+// @Tags BotDatum
+// @Success 200 {array} models.BotDatum
 // @Failure 500 {string} string "Error binding to entity"
 // @Failure 500 {string} string "Error inserting entity"
-// @Router /task_activity [put]
-func (e *TaskActivityController) createTaskActivity(c echo.Context) error {
-	taskActivity := new(models.TaskActivity)
-	if err := c.Bind(taskActivity); err != nil {
+// @Router /bot_datum [put]
+func (e *BotDatumController) createBotDatum(c echo.Context) error {
+	botDatum := new(models.BotDatum)
+	if err := c.Bind(botDatum); err != nil {
 		return c.JSON(
 			http.StatusInternalServerError,
 			echo.Map{"error": fmt.Sprintf("Error binding to entity [%v]", err.Error())},
 		)
 	}
 
-	err := e.db.Get(models.TaskActivity{}, c).Model(&models.TaskActivity{}).Create(&taskActivity).Error
+	err := e.db.Get(models.BotDatum{}, c).Model(&models.BotDatum{}).Create(&botDatum).Error
 	if err != nil {
 		return c.JSON(
 			http.StatusInternalServerError,
@@ -217,47 +195,36 @@ func (e *TaskActivityController) createTaskActivity(c echo.Context) error {
 		)
 	}
 
-	return c.JSON(http.StatusOK, taskActivity)
+	return c.JSON(http.StatusOK, botDatum)
 }
 
-// deleteTaskActivity godoc
-// @Id deleteTaskActivity
-// @Summary Deletes TaskActivity
+// deleteBotDatum godoc
+// @Id deleteBotDatum
+// @Summary Deletes BotDatum
 // @Accept json
 // @Produce json
-// @Tags TaskActivity
-// @Param id path int true "taskid"
+// @Tags BotDatum
+// @Param id path int true "botId"
 // @Success 200 {string} string "Entity deleted successfully"
 // @Failure 404 {string} string "Cannot find entity"
 // @Failure 500 {string} string "Error binding to entity"
 // @Failure 500 {string} string "Error deleting entity"
-// @Router /task_activity/{id} [delete]
-func (e *TaskActivityController) deleteTaskActivity(c echo.Context) error {
+// @Router /bot_datum/{id} [delete]
+func (e *BotDatumController) deleteBotDatum(c echo.Context) error {
 	var params []interface{}
 	var keys []string
 
 	// primary key param
-	taskid, err := strconv.Atoi(c.Param("taskid"))
+	botId, err := strconv.Atoi(c.Param("botId"))
 	if err != nil {
 		e.logger.Error(err)
 	}
-	params = append(params, taskid)
-	keys = append(keys, "taskid = ?")
-
-	// key param [activityid] position [2] type [int]
-	if len(c.QueryParam("activityid")) > 0 {
-		activityidParam, err := strconv.Atoi(c.QueryParam("activityid"))
-		if err != nil {
-			return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error parsing query param [activityid] err [%s]", err.Error())})
-		}
-
-		params = append(params, activityidParam)
-		keys = append(keys, "activityid = ?")
-	}
+	params = append(params, botId)
+	keys = append(keys, "bot_id = ?")
 
 	// query builder
-	var result models.TaskActivity
-	query := e.db.QueryContext(models.TaskActivity{}, c)
+	var result models.BotDatum
+	query := e.db.QueryContext(models.BotDatum{}, c)
 	for i, _ := range keys {
 		query = query.Where(keys[i], params[i])
 	}
@@ -276,18 +243,18 @@ func (e *TaskActivityController) deleteTaskActivity(c echo.Context) error {
 	return c.JSON(http.StatusOK, echo.Map{"success": "Entity deleted successfully"})
 }
 
-// getTaskActivitiesBulk godoc
-// @Id getTaskActivitiesBulk
-// @Summary Gets TaskActivities in bulk
+// getBotDataBulk godoc
+// @Id getBotDataBulk
+// @Summary Gets BotData in bulk
 // @Accept json
 // @Produce json
 // @Param Body body BulkFetchByIdsGetRequest true "body"
-// @Tags TaskActivity
-// @Success 200 {array} models.TaskActivity
+// @Tags BotDatum
+// @Success 200 {array} models.BotDatum
 // @Failure 500 {string} string "Bad query request"
-// @Router /task_activities/bulk [post]
-func (e *TaskActivityController) getTaskActivitiesBulk(c echo.Context) error {
-	var results []models.TaskActivity
+// @Router /bot_data/bulk [post]
+func (e *BotDatumController) getBotDataBulk(c echo.Context) error {
+	var results []models.BotDatum
 
 	r := new(BulkFetchByIdsGetRequest)
 	if err := c.Bind(r); err != nil {
@@ -304,7 +271,7 @@ func (e *TaskActivityController) getTaskActivitiesBulk(c echo.Context) error {
 		)
 	}
 
-	err := e.db.QueryContext(models.TaskActivity{}, c).Find(&results, r.IDs).Error
+	err := e.db.QueryContext(models.BotDatum{}, c).Find(&results, r.IDs).Error
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
 	}

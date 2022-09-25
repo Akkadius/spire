@@ -12,38 +12,38 @@ import (
 	"strconv"
 )
 
-type TaskActivityController struct {
+type FactionAssociationController struct {
 	db	 *database.DatabaseResolver
 	logger *logrus.Logger
 }
 
-func NewTaskActivityController(
+func NewFactionAssociationController(
 	db *database.DatabaseResolver,
 	logger *logrus.Logger,
-) *TaskActivityController {
-	return &TaskActivityController{
+) *FactionAssociationController {
+	return &FactionAssociationController{
 		db:	 db,
 		logger: logger,
 	}
 }
 
-func (e *TaskActivityController) Routes() []*routes.Route {
+func (e *FactionAssociationController) Routes() []*routes.Route {
 	return []*routes.Route{
-		routes.RegisterRoute(http.MethodGet, "task_activity/:taskid", e.getTaskActivity, nil),
-		routes.RegisterRoute(http.MethodGet, "task_activities", e.listTaskActivities, nil),
-		routes.RegisterRoute(http.MethodPut, "task_activity", e.createTaskActivity, nil),
-		routes.RegisterRoute(http.MethodDelete, "task_activity/:taskid", e.deleteTaskActivity, nil),
-		routes.RegisterRoute(http.MethodPatch, "task_activity/:taskid", e.updateTaskActivity, nil),
-		routes.RegisterRoute(http.MethodPost, "task_activities/bulk", e.getTaskActivitiesBulk, nil),
+		routes.RegisterRoute(http.MethodGet, "faction_association/:id", e.getFactionAssociation, nil),
+		routes.RegisterRoute(http.MethodGet, "faction_associations", e.listFactionAssociations, nil),
+		routes.RegisterRoute(http.MethodPut, "faction_association", e.createFactionAssociation, nil),
+		routes.RegisterRoute(http.MethodDelete, "faction_association/:id", e.deleteFactionAssociation, nil),
+		routes.RegisterRoute(http.MethodPatch, "faction_association/:id", e.updateFactionAssociation, nil),
+		routes.RegisterRoute(http.MethodPost, "faction_associations/bulk", e.getFactionAssociationsBulk, nil),
 	}
 }
 
-// listTaskActivities godoc
-// @Id listTaskActivities
-// @Summary Lists TaskActivities
+// listFactionAssociations godoc
+// @Id listFactionAssociations
+// @Summary Lists FactionAssociations
 // @Accept json
 // @Produce json
-// @Tags TaskActivity
+// @Tags FactionAssociation
 // @Param includes query string false "Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names "
 // @Param where query string false "Filter on specific fields. Multiple conditions [.] separated Example: col_like_value.col2__val2"
 // @Param whereOr query string false "Filter on specific fields (Chained ors). Multiple conditions [.] separated Example: col_like_value.col2__val2"
@@ -53,12 +53,12 @@ func (e *TaskActivityController) Routes() []*routes.Route {
 // @Param orderBy query string false "Order by [field]"
 // @Param orderDirection query string false "Order by field direction"
 // @Param select query string false "Column names [.] separated to fetch specific fields in response"
-// @Success 200 {array} models.TaskActivity
+// @Success 200 {array} models.FactionAssociation
 // @Failure 500 {string} string "Bad query request"
-// @Router /task_activities [get]
-func (e *TaskActivityController) listTaskActivities(c echo.Context) error {
-	var results []models.TaskActivity
-	err := e.db.QueryContext(models.TaskActivity{}, c).Find(&results).Error
+// @Router /faction_associations [get]
+func (e *FactionAssociationController) listFactionAssociations(c echo.Context) error {
+	var results []models.FactionAssociation
+	err := e.db.QueryContext(models.FactionAssociation{}, c).Find(&results).Error
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err})
 	}
@@ -66,46 +66,35 @@ func (e *TaskActivityController) listTaskActivities(c echo.Context) error {
 	return c.JSON(http.StatusOK, results)
 }
 
-// getTaskActivity godoc
-// @Id getTaskActivity
-// @Summary Gets TaskActivity
+// getFactionAssociation godoc
+// @Id getFactionAssociation
+// @Summary Gets FactionAssociation
 // @Accept json
 // @Produce json
-// @Tags TaskActivity
+// @Tags FactionAssociation
 // @Param id path int true "Id"
 // @Param includes query string false "Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names "
 // @Param select query string false "Column names [.] separated to fetch specific fields in response"
-// @Success 200 {array} models.TaskActivity
+// @Success 200 {array} models.FactionAssociation
 // @Failure 404 {string} string "Entity not found"
 // @Failure 500 {string} string "Cannot find param"
 // @Failure 500 {string} string "Bad query request"
-// @Router /task_activity/{id} [get]
-func (e *TaskActivityController) getTaskActivity(c echo.Context) error {
+// @Router /faction_association/{id} [get]
+func (e *FactionAssociationController) getFactionAssociation(c echo.Context) error {
 	var params []interface{}
 	var keys []string
 
 	// primary key param
-	taskid, err := strconv.Atoi(c.Param("taskid"))
+	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Cannot find param [Taskid]"})
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Cannot find param [Id]"})
 	}
-	params = append(params, taskid)
-	keys = append(keys, "taskid = ?")
-
-	// key param [activityid] position [2] type [int]
-	if len(c.QueryParam("activityid")) > 0 {
-		activityidParam, err := strconv.Atoi(c.QueryParam("activityid"))
-		if err != nil {
-			return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error parsing query param [activityid] err [%s]", err.Error())})
-		}
-
-		params = append(params, activityidParam)
-		keys = append(keys, "activityid = ?")
-	}
+	params = append(params, id)
+	keys = append(keys, "id = ?")
 
 	// query builder
-	var result models.TaskActivity
-	query := e.db.QueryContext(models.TaskActivity{}, c)
+	var result models.FactionAssociation
+	query := e.db.QueryContext(models.FactionAssociation{}, c)
 	for i, _ := range keys {
 		query = query.Where(keys[i], params[i])
 	}
@@ -117,28 +106,28 @@ func (e *TaskActivityController) getTaskActivity(c echo.Context) error {
 	}
 
 	// couldn't find entity
-	if result.Taskid == 0 {
+	if result.ID == 0 {
 		return c.JSON(http.StatusNotFound, echo.Map{"error": "Cannot find entity"})
 	}
 
 	return c.JSON(http.StatusOK, result)
 }
 
-// updateTaskActivity godoc
-// @Id updateTaskActivity
-// @Summary Updates TaskActivity
+// updateFactionAssociation godoc
+// @Id updateFactionAssociation
+// @Summary Updates FactionAssociation
 // @Accept json
 // @Produce json
-// @Tags TaskActivity
+// @Tags FactionAssociation
 // @Param id path int true "Id"
-// @Param task_activity body models.TaskActivity true "TaskActivity"
-// @Success 200 {array} models.TaskActivity
+// @Param faction_association body models.FactionAssociation true "FactionAssociation"
+// @Success 200 {array} models.FactionAssociation
 // @Failure 404 {string} string "Cannot find entity"
 // @Failure 500 {string} string "Error binding to entity"
 // @Failure 500 {string} string "Error updating entity"
-// @Router /task_activity/{id} [patch]
-func (e *TaskActivityController) updateTaskActivity(c echo.Context) error {
-	request := new(models.TaskActivity)
+// @Router /faction_association/{id} [patch]
+func (e *FactionAssociationController) updateFactionAssociation(c echo.Context) error {
+	request := new(models.FactionAssociation)
 	if err := c.Bind(request); err != nil {
 		return c.JSON(
 			http.StatusInternalServerError,
@@ -150,27 +139,16 @@ func (e *TaskActivityController) updateTaskActivity(c echo.Context) error {
 	var keys []string
 
 	// primary key param
-	taskid, err := strconv.Atoi(c.Param("taskid"))
+	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Cannot find param [Taskid]"})
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Cannot find param [Id]"})
 	}
-	params = append(params, taskid)
-	keys = append(keys, "taskid = ?")
-
-	// key param [activityid] position [2] type [int]
-	if len(c.QueryParam("activityid")) > 0 {
-		activityidParam, err := strconv.Atoi(c.QueryParam("activityid"))
-		if err != nil {
-			return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error parsing query param [activityid] err [%s]", err.Error())})
-		}
-
-		params = append(params, activityidParam)
-		keys = append(keys, "activityid = ?")
-	}
+	params = append(params, id)
+	keys = append(keys, "id = ?")
 
 	// query builder
-	var result models.TaskActivity
-	query := e.db.QueryContext(models.TaskActivity{}, c)
+	var result models.FactionAssociation
+	query := e.db.QueryContext(models.FactionAssociation{}, c)
 	for i, _ := range keys {
 		query = query.Where(keys[i], params[i])
 	}
@@ -181,7 +159,7 @@ func (e *TaskActivityController) updateTaskActivity(c echo.Context) error {
 		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Cannot find entity [%s]", err.Error())})
 	}
 
-	err = e.db.QueryContext(models.TaskActivity{}, c).Select("*").Session(&gorm.Session{FullSaveAssociations: true}).Updates(&request).Error
+	err = e.db.QueryContext(models.FactionAssociation{}, c).Select("*").Session(&gorm.Session{FullSaveAssociations: true}).Updates(&request).Error
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error updating entity [%v]", err.Error())})
 	}
@@ -189,27 +167,27 @@ func (e *TaskActivityController) updateTaskActivity(c echo.Context) error {
 	return c.JSON(http.StatusOK, request)
 }
 
-// createTaskActivity godoc
-// @Id createTaskActivity
-// @Summary Creates TaskActivity
+// createFactionAssociation godoc
+// @Id createFactionAssociation
+// @Summary Creates FactionAssociation
 // @Accept json
 // @Produce json
-// @Param task_activity body models.TaskActivity true "TaskActivity"
-// @Tags TaskActivity
-// @Success 200 {array} models.TaskActivity
+// @Param faction_association body models.FactionAssociation true "FactionAssociation"
+// @Tags FactionAssociation
+// @Success 200 {array} models.FactionAssociation
 // @Failure 500 {string} string "Error binding to entity"
 // @Failure 500 {string} string "Error inserting entity"
-// @Router /task_activity [put]
-func (e *TaskActivityController) createTaskActivity(c echo.Context) error {
-	taskActivity := new(models.TaskActivity)
-	if err := c.Bind(taskActivity); err != nil {
+// @Router /faction_association [put]
+func (e *FactionAssociationController) createFactionAssociation(c echo.Context) error {
+	factionAssociation := new(models.FactionAssociation)
+	if err := c.Bind(factionAssociation); err != nil {
 		return c.JSON(
 			http.StatusInternalServerError,
 			echo.Map{"error": fmt.Sprintf("Error binding to entity [%v]", err.Error())},
 		)
 	}
 
-	err := e.db.Get(models.TaskActivity{}, c).Model(&models.TaskActivity{}).Create(&taskActivity).Error
+	err := e.db.Get(models.FactionAssociation{}, c).Model(&models.FactionAssociation{}).Create(&factionAssociation).Error
 	if err != nil {
 		return c.JSON(
 			http.StatusInternalServerError,
@@ -217,47 +195,36 @@ func (e *TaskActivityController) createTaskActivity(c echo.Context) error {
 		)
 	}
 
-	return c.JSON(http.StatusOK, taskActivity)
+	return c.JSON(http.StatusOK, factionAssociation)
 }
 
-// deleteTaskActivity godoc
-// @Id deleteTaskActivity
-// @Summary Deletes TaskActivity
+// deleteFactionAssociation godoc
+// @Id deleteFactionAssociation
+// @Summary Deletes FactionAssociation
 // @Accept json
 // @Produce json
-// @Tags TaskActivity
-// @Param id path int true "taskid"
+// @Tags FactionAssociation
+// @Param id path int true "id"
 // @Success 200 {string} string "Entity deleted successfully"
 // @Failure 404 {string} string "Cannot find entity"
 // @Failure 500 {string} string "Error binding to entity"
 // @Failure 500 {string} string "Error deleting entity"
-// @Router /task_activity/{id} [delete]
-func (e *TaskActivityController) deleteTaskActivity(c echo.Context) error {
+// @Router /faction_association/{id} [delete]
+func (e *FactionAssociationController) deleteFactionAssociation(c echo.Context) error {
 	var params []interface{}
 	var keys []string
 
 	// primary key param
-	taskid, err := strconv.Atoi(c.Param("taskid"))
+	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
 		e.logger.Error(err)
 	}
-	params = append(params, taskid)
-	keys = append(keys, "taskid = ?")
-
-	// key param [activityid] position [2] type [int]
-	if len(c.QueryParam("activityid")) > 0 {
-		activityidParam, err := strconv.Atoi(c.QueryParam("activityid"))
-		if err != nil {
-			return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error parsing query param [activityid] err [%s]", err.Error())})
-		}
-
-		params = append(params, activityidParam)
-		keys = append(keys, "activityid = ?")
-	}
+	params = append(params, id)
+	keys = append(keys, "id = ?")
 
 	// query builder
-	var result models.TaskActivity
-	query := e.db.QueryContext(models.TaskActivity{}, c)
+	var result models.FactionAssociation
+	query := e.db.QueryContext(models.FactionAssociation{}, c)
 	for i, _ := range keys {
 		query = query.Where(keys[i], params[i])
 	}
@@ -276,18 +243,18 @@ func (e *TaskActivityController) deleteTaskActivity(c echo.Context) error {
 	return c.JSON(http.StatusOK, echo.Map{"success": "Entity deleted successfully"})
 }
 
-// getTaskActivitiesBulk godoc
-// @Id getTaskActivitiesBulk
-// @Summary Gets TaskActivities in bulk
+// getFactionAssociationsBulk godoc
+// @Id getFactionAssociationsBulk
+// @Summary Gets FactionAssociations in bulk
 // @Accept json
 // @Produce json
 // @Param Body body BulkFetchByIdsGetRequest true "body"
-// @Tags TaskActivity
-// @Success 200 {array} models.TaskActivity
+// @Tags FactionAssociation
+// @Success 200 {array} models.FactionAssociation
 // @Failure 500 {string} string "Bad query request"
-// @Router /task_activities/bulk [post]
-func (e *TaskActivityController) getTaskActivitiesBulk(c echo.Context) error {
-	var results []models.TaskActivity
+// @Router /faction_associations/bulk [post]
+func (e *FactionAssociationController) getFactionAssociationsBulk(c echo.Context) error {
+	var results []models.FactionAssociation
 
 	r := new(BulkFetchByIdsGetRequest)
 	if err := c.Bind(r); err != nil {
@@ -304,7 +271,7 @@ func (e *TaskActivityController) getTaskActivitiesBulk(c echo.Context) error {
 		)
 	}
 
-	err := e.db.QueryContext(models.TaskActivity{}, c).Find(&results, r.IDs).Error
+	err := e.db.QueryContext(models.FactionAssociation{}, c).Find(&results, r.IDs).Error
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
 	}
