@@ -131,7 +131,7 @@ seed-spire-tables: ##@seed
 # generate
 #----------------------
 
-generate-api-pipeline: ##@generate Runs entire API generation pipeline, backend models and controllers with frontend client
+generate-api-pipeline: ##@generate Runs entire API generation pipeline, backend models and controllers with frontend client (Run in workspace)
 	@./scripts/banner.sh "Generating generation config"
 	go run main.go generate:config
 	@./scripts/banner.sh "Generating backend models"
