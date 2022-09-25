@@ -137,8 +137,9 @@ generate-axios-client: ##@generate Generate Axios client (Run outside workspace 
         -g typescript-axios \
         -o /local/frontend/src/app/api/ \
         -c /local/openapi-generator-config.yaml
+	./scripts/strip-axios-client-comments.sh
 
-generate-axios-client-local: ##@generate Generate Axios client (Run outside workspace container)
+generate-axios-client-local:
 	# sudo npm install @openapitools/openapi-generator-cli -g
 	openapi-generator-cli version-manager set 5.0.0
 	openapi-generator-cli generate --enable-post-process-file \
