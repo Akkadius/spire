@@ -131,22 +131,29 @@ seed-spire-tables: ##@seed
 # generate
 #----------------------
 
-generate-axios-client: ##@generate Generate Axios client (Run outside workspace container)
-	$(DRUNPREFIX) docker run --rm -v "$${PWD}:/local" openapitools/openapi-generator-cli:v5.0.0 generate \
-        -i /local/docs/swagger.yaml \
-        -g typescript-axios \
-        -o /local/frontend/src/app/api/ \
-        -c /local/openapi-generator-config.yaml
-	./scripts/strip-axios-client-comments.sh
+generate-api-pipeline: ##@generate Runs entire API generation pipeline, backend models and controllers with frontend client
+	@./scripts/banner.sh "Generating generation config"
+	go run main.go generate:config
+	@./scripts/banner.sh "Generating backend models"
+	go run main.go generate:models
+	@./scripts/banner.sh "Generating backend controllers"
+	go run main.go generate:controllers
+	@./scripts/banner.sh "Generating Swagger spec"
+	make generate-swagger
+	@./scripts/banner.sh "Generating frontend Typescript axios client"
+	make generate-axios-client-local
+	@./scripts/banner.sh "Generation pipeline complete"
 
 generate-axios-client-local:
 	# sudo npm install @openapitools/openapi-generator-cli -g
-	openapi-generator-cli version-manager set 5.0.0
-	openapi-generator-cli generate --enable-post-process-file \
+	sudo openapi-generator-cli version-manager set 5.0.0
+	sudo openapi-generator-cli generate --enable-post-process-file \
         -i ./docs/swagger.yaml \
         -g typescript-axios \
         -o ./frontend/src/app/api/ \
         -c ./openapi-generator-config.yaml
+	git checkout master ./frontend/src/app/api/api.ts
+	./scripts/strip-axios-client-comments.sh
 
 generate-swagger: ##@generate Generate swagger docs (Run in workspace container)
 	./scripts/generate-swagger.sh

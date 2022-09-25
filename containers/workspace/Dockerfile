@@ -35,6 +35,7 @@ RUN apt-get update && apt-get install -y \
     mariadb-client \
     zip \
     unzip \
+    default-jre \
  && rm -rf /var/lib/apt/lists/*
 
 #############################################
@@ -90,6 +91,7 @@ RUN curl -sL https://deb.nodesource.com/setup_14.x | sudo bash && \
     sudo apt-get update && sudo apt-get install -y nodejs && sudo rm -rf /var/lib/apt/lists/*
 
 RUN sudo npm install -g gh-release
+RUN sudo npm install @openapitools/openapi-generator-cli -g
 
 #############################################
 # bash

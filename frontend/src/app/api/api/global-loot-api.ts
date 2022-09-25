@@ -299,3 +299,60 @@ export const GlobalLootApiFactory = function (configuration?: Configuration, bas
         getGlobalLootsBulk(body: CrudcontrollersBulkFetchByIdsGetRequest, options?: any): AxiosPromise<Array<ModelsGlobalLoot>> {
             return GlobalLootApiFp(configuration).getGlobalLootsBulk(body, options).then((request) => request(axios, basePath));
         },
+        listGlobalLoots(includes?: string, where?: string, whereOr?: string, groupBy?: string, limit?: string, page?: number, orderBy?: string, orderDirection?: string, select?: string, options?: any): AxiosPromise<Array<ModelsGlobalLoot>> {
+            return GlobalLootApiFp(configuration).listGlobalLoots(includes, where, whereOr, groupBy, limit, page, orderBy, orderDirection, select, options).then((request) => request(axios, basePath));
+        },
+        updateGlobalLoot(id: number, globalLoot: ModelsGlobalLoot, options?: any): AxiosPromise<Array<ModelsGlobalLoot>> {
+            return GlobalLootApiFp(configuration).updateGlobalLoot(id, globalLoot, options).then((request) => request(axios, basePath));
+        },
+    };
+};
+export interface GlobalLootApiCreateGlobalLootRequest {
+    readonly globalLoot: ModelsGlobalLoot
+}
+export interface GlobalLootApiDeleteGlobalLootRequest {
+    readonly id: number
+}
+export interface GlobalLootApiGetGlobalLootRequest {
+    readonly id: number
+    readonly includes?: string
+    readonly select?: string
+}
+export interface GlobalLootApiGetGlobalLootsBulkRequest {
+    readonly body: CrudcontrollersBulkFetchByIdsGetRequest
+}
+export interface GlobalLootApiListGlobalLootsRequest {
+    readonly includes?: string
+    readonly where?: string
+    readonly whereOr?: string
+    readonly groupBy?: string
+    readonly limit?: string
+    readonly page?: number
+    readonly orderBy?: string
+    readonly orderDirection?: string
+    readonly select?: string
+}
+export interface GlobalLootApiUpdateGlobalLootRequest {
+    readonly id: number
+    readonly globalLoot: ModelsGlobalLoot
+}
+export class GlobalLootApi extends BaseAPI {
+    public createGlobalLoot(requestParameters: GlobalLootApiCreateGlobalLootRequest, options?: any) {
+        return GlobalLootApiFp(this.configuration).createGlobalLoot(requestParameters.globalLoot, options).then((request) => request(this.axios, this.basePath));
+    }
+    public deleteGlobalLoot(requestParameters: GlobalLootApiDeleteGlobalLootRequest, options?: any) {
+        return GlobalLootApiFp(this.configuration).deleteGlobalLoot(requestParameters.id, options).then((request) => request(this.axios, this.basePath));
+    }
+    public getGlobalLoot(requestParameters: GlobalLootApiGetGlobalLootRequest, options?: any) {
+        return GlobalLootApiFp(this.configuration).getGlobalLoot(requestParameters.id, requestParameters.includes, requestParameters.select, options).then((request) => request(this.axios, this.basePath));
+    }
+    public getGlobalLootsBulk(requestParameters: GlobalLootApiGetGlobalLootsBulkRequest, options?: any) {
+        return GlobalLootApiFp(this.configuration).getGlobalLootsBulk(requestParameters.body, options).then((request) => request(this.axios, this.basePath));
+    }
+    public listGlobalLoots(requestParameters: GlobalLootApiListGlobalLootsRequest = {}, options?: any) {
+        return GlobalLootApiFp(this.configuration).listGlobalLoots(requestParameters.includes, requestParameters.where, requestParameters.whereOr, requestParameters.groupBy, requestParameters.limit, requestParameters.page, requestParameters.orderBy, requestParameters.orderDirection, requestParameters.select, options).then((request) => request(this.axios, this.basePath));
+    }
+    public updateGlobalLoot(requestParameters: GlobalLootApiUpdateGlobalLootRequest, options?: any) {
+        return GlobalLootApiFp(this.configuration).updateGlobalLoot(requestParameters.id, requestParameters.globalLoot, options).then((request) => request(this.axios, this.basePath));
+    }
+}
