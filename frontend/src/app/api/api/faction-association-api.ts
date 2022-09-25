@@ -21,26 +21,26 @@ import { BASE_PATH, COLLECTION_FORMATS, RequestArgs, BaseAPI, RequiredError } fr
 // @ts-ignore
 import { CrudcontrollersBulkFetchByIdsGetRequest } from '../models';
 // @ts-ignore
-import { ModelsTaskActivity } from '../models';
+import { ModelsFactionAssociation } from '../models';
 /**
- * TaskActivityApi - axios parameter creator
+ * FactionAssociationApi - axios parameter creator
  * @export
  */
-export const TaskActivityApiAxiosParamCreator = function (configuration?: Configuration) {
+export const FactionAssociationApiAxiosParamCreator = function (configuration?: Configuration) {
     return {
         /**
          * 
-         * @summary Creates TaskActivity
-         * @param {ModelsTaskActivity} taskActivity TaskActivity
+         * @summary Creates FactionAssociation
+         * @param {ModelsFactionAssociation} factionAssociation FactionAssociation
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        createTaskActivity: async (taskActivity: ModelsTaskActivity, options: any = {}): Promise<RequestArgs> => {
-            // verify required parameter 'taskActivity' is not null or undefined
-            if (taskActivity === null || taskActivity === undefined) {
-                throw new RequiredError('taskActivity','Required parameter taskActivity was null or undefined when calling createTaskActivity.');
+        createFactionAssociation: async (factionAssociation: ModelsFactionAssociation, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'factionAssociation' is not null or undefined
+            if (factionAssociation === null || factionAssociation === undefined) {
+                throw new RequiredError('factionAssociation','Required parameter factionAssociation was null or undefined when calling createFactionAssociation.');
             }
-            const localVarPath = `/task_activity`;
+            const localVarPath = `/faction_association`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, 'https://example.com');
             let baseOptions;
@@ -66,13 +66,13 @@ export const TaskActivityApiAxiosParamCreator = function (configuration?: Config
             localVarUrlObj.search = (new URLSearchParams(queryParameters)).toString();
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            const nonString = typeof taskActivity !== 'string';
+            const nonString = typeof factionAssociation !== 'string';
             const needsSerialization = nonString && configuration && configuration.isJsonMime
                 ? configuration.isJsonMime(localVarRequestOptions.headers['Content-Type'])
                 : nonString;
             localVarRequestOptions.data =  needsSerialization
-                ? JSON.stringify(taskActivity !== undefined ? taskActivity : {})
-                : (taskActivity || "");
+                ? JSON.stringify(factionAssociation !== undefined ? factionAssociation : {})
+                : (factionAssociation || "");
 
             return {
                 url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
@@ -81,17 +81,17 @@ export const TaskActivityApiAxiosParamCreator = function (configuration?: Config
         },
         /**
          * 
-         * @summary Deletes TaskActivity
-         * @param {number} id taskid
+         * @summary Deletes FactionAssociation
+         * @param {number} id id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        deleteTaskActivity: async (id: number, options: any = {}): Promise<RequestArgs> => {
+        deleteFactionAssociation: async (id: number, options: any = {}): Promise<RequestArgs> => {
             // verify required parameter 'id' is not null or undefined
             if (id === null || id === undefined) {
-                throw new RequiredError('id','Required parameter id was null or undefined when calling deleteTaskActivity.');
+                throw new RequiredError('id','Required parameter id was null or undefined when calling deleteFactionAssociation.');
             }
-            const localVarPath = `/task_activity/{id}`
+            const localVarPath = `/faction_association/{id}`
                 .replace(`{${"id"}}`, encodeURIComponent(String(id)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, 'https://example.com');
@@ -124,70 +124,19 @@ export const TaskActivityApiAxiosParamCreator = function (configuration?: Config
         },
         /**
          * 
-         * @summary Gets TaskActivities in bulk
-         * @param {CrudcontrollersBulkFetchByIdsGetRequest} body body
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getTaskActivitiesBulk: async (body: CrudcontrollersBulkFetchByIdsGetRequest, options: any = {}): Promise<RequestArgs> => {
-            // verify required parameter 'body' is not null or undefined
-            if (body === null || body === undefined) {
-                throw new RequiredError('body','Required parameter body was null or undefined when calling getTaskActivitiesBulk.');
-            }
-            const localVarPath = `/task_activities/bulk`;
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, 'https://example.com');
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-
-    
-            localVarHeaderParameter['Content-Type'] = 'application/json';
-
-            const queryParameters = new URLSearchParams(localVarUrlObj.search);
-            for (const key in localVarQueryParameter) {
-                queryParameters.set(key, localVarQueryParameter[key]);
-            }
-            for (const key in options.query) {
-                queryParameters.set(key, options.query[key]);
-            }
-            localVarUrlObj.search = (new URLSearchParams(queryParameters)).toString();
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            const nonString = typeof body !== 'string';
-            const needsSerialization = nonString && configuration && configuration.isJsonMime
-                ? configuration.isJsonMime(localVarRequestOptions.headers['Content-Type'])
-                : nonString;
-            localVarRequestOptions.data =  needsSerialization
-                ? JSON.stringify(body !== undefined ? body : {})
-                : (body || "");
-
-            return {
-                url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * 
-         * @summary Gets TaskActivity
+         * @summary Gets FactionAssociation
          * @param {number} id Id
          * @param {string} [includes] Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names 
          * @param {string} [select] Column names [.] separated to fetch specific fields in response
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getTaskActivity: async (id: number, includes?: string, select?: string, options: any = {}): Promise<RequestArgs> => {
+        getFactionAssociation: async (id: number, includes?: string, select?: string, options: any = {}): Promise<RequestArgs> => {
             // verify required parameter 'id' is not null or undefined
             if (id === null || id === undefined) {
-                throw new RequiredError('id','Required parameter id was null or undefined when calling getTaskActivity.');
+                throw new RequiredError('id','Required parameter id was null or undefined when calling getFactionAssociation.');
             }
-            const localVarPath = `/task_activity/{id}`
+            const localVarPath = `/faction_association/{id}`
                 .replace(`{${"id"}}`, encodeURIComponent(String(id)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, 'https://example.com');
@@ -228,7 +177,58 @@ export const TaskActivityApiAxiosParamCreator = function (configuration?: Config
         },
         /**
          * 
-         * @summary Lists TaskActivities
+         * @summary Gets FactionAssociations in bulk
+         * @param {CrudcontrollersBulkFetchByIdsGetRequest} body body
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getFactionAssociationsBulk: async (body: CrudcontrollersBulkFetchByIdsGetRequest, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'body' is not null or undefined
+            if (body === null || body === undefined) {
+                throw new RequiredError('body','Required parameter body was null or undefined when calling getFactionAssociationsBulk.');
+            }
+            const localVarPath = `/faction_associations/bulk`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, 'https://example.com');
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            const queryParameters = new URLSearchParams(localVarUrlObj.search);
+            for (const key in localVarQueryParameter) {
+                queryParameters.set(key, localVarQueryParameter[key]);
+            }
+            for (const key in options.query) {
+                queryParameters.set(key, options.query[key]);
+            }
+            localVarUrlObj.search = (new URLSearchParams(queryParameters)).toString();
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            const nonString = typeof body !== 'string';
+            const needsSerialization = nonString && configuration && configuration.isJsonMime
+                ? configuration.isJsonMime(localVarRequestOptions.headers['Content-Type'])
+                : nonString;
+            localVarRequestOptions.data =  needsSerialization
+                ? JSON.stringify(body !== undefined ? body : {})
+                : (body || "");
+
+            return {
+                url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @summary Lists FactionAssociations
          * @param {string} [includes] Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names 
          * @param {string} [where] Filter on specific fields. Multiple conditions [.] separated Example: col_like_value.col2__val2
          * @param {string} [whereOr] Filter on specific fields (Chained ors). Multiple conditions [.] separated Example: col_like_value.col2__val2
@@ -241,8 +241,8 @@ export const TaskActivityApiAxiosParamCreator = function (configuration?: Config
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        listTaskActivities: async (includes?: string, where?: string, whereOr?: string, groupBy?: string, limit?: string, page?: number, orderBy?: string, orderDirection?: string, select?: string, options: any = {}): Promise<RequestArgs> => {
-            const localVarPath = `/task_activities`;
+        listFactionAssociations: async (includes?: string, where?: string, whereOr?: string, groupBy?: string, limit?: string, page?: number, orderBy?: string, orderDirection?: string, select?: string, options: any = {}): Promise<RequestArgs> => {
+            const localVarPath = `/faction_associations`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, 'https://example.com');
             let baseOptions;
@@ -310,22 +310,22 @@ export const TaskActivityApiAxiosParamCreator = function (configuration?: Config
         },
         /**
          * 
-         * @summary Updates TaskActivity
+         * @summary Updates FactionAssociation
          * @param {number} id Id
-         * @param {ModelsTaskActivity} taskActivity TaskActivity
+         * @param {ModelsFactionAssociation} factionAssociation FactionAssociation
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        updateTaskActivity: async (id: number, taskActivity: ModelsTaskActivity, options: any = {}): Promise<RequestArgs> => {
+        updateFactionAssociation: async (id: number, factionAssociation: ModelsFactionAssociation, options: any = {}): Promise<RequestArgs> => {
             // verify required parameter 'id' is not null or undefined
             if (id === null || id === undefined) {
-                throw new RequiredError('id','Required parameter id was null or undefined when calling updateTaskActivity.');
+                throw new RequiredError('id','Required parameter id was null or undefined when calling updateFactionAssociation.');
             }
-            // verify required parameter 'taskActivity' is not null or undefined
-            if (taskActivity === null || taskActivity === undefined) {
-                throw new RequiredError('taskActivity','Required parameter taskActivity was null or undefined when calling updateTaskActivity.');
+            // verify required parameter 'factionAssociation' is not null or undefined
+            if (factionAssociation === null || factionAssociation === undefined) {
+                throw new RequiredError('factionAssociation','Required parameter factionAssociation was null or undefined when calling updateFactionAssociation.');
             }
-            const localVarPath = `/task_activity/{id}`
+            const localVarPath = `/faction_association/{id}`
                 .replace(`{${"id"}}`, encodeURIComponent(String(id)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, 'https://example.com');
@@ -352,13 +352,13 @@ export const TaskActivityApiAxiosParamCreator = function (configuration?: Config
             localVarUrlObj.search = (new URLSearchParams(queryParameters)).toString();
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            const nonString = typeof taskActivity !== 'string';
+            const nonString = typeof factionAssociation !== 'string';
             const needsSerialization = nonString && configuration && configuration.isJsonMime
                 ? configuration.isJsonMime(localVarRequestOptions.headers['Content-Type'])
                 : nonString;
             localVarRequestOptions.data =  needsSerialization
-                ? JSON.stringify(taskActivity !== undefined ? taskActivity : {})
-                : (taskActivity || "");
+                ? JSON.stringify(factionAssociation !== undefined ? factionAssociation : {})
+                : (factionAssociation || "");
 
             return {
                 url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
@@ -369,20 +369,20 @@ export const TaskActivityApiAxiosParamCreator = function (configuration?: Config
 };
 
 /**
- * TaskActivityApi - functional programming interface
+ * FactionAssociationApi - functional programming interface
  * @export
  */
-export const TaskActivityApiFp = function(configuration?: Configuration) {
+export const FactionAssociationApiFp = function(configuration?: Configuration) {
     return {
         /**
          * 
-         * @summary Creates TaskActivity
-         * @param {ModelsTaskActivity} taskActivity TaskActivity
+         * @summary Creates FactionAssociation
+         * @param {ModelsFactionAssociation} factionAssociation FactionAssociation
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async createTaskActivity(taskActivity: ModelsTaskActivity, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<ModelsTaskActivity>>> {
-            const localVarAxiosArgs = await TaskActivityApiAxiosParamCreator(configuration).createTaskActivity(taskActivity, options);
+        async createFactionAssociation(factionAssociation: ModelsFactionAssociation, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<ModelsFactionAssociation>>> {
+            const localVarAxiosArgs = await FactionAssociationApiAxiosParamCreator(configuration).createFactionAssociation(factionAssociation, options);
             return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
                 const axiosRequestArgs = {...localVarAxiosArgs.options, url: (configuration?.basePath || basePath) + localVarAxiosArgs.url};
                 return axios.request(axiosRequestArgs);
@@ -390,13 +390,13 @@ export const TaskActivityApiFp = function(configuration?: Configuration) {
         },
         /**
          * 
-         * @summary Deletes TaskActivity
-         * @param {number} id taskid
+         * @summary Deletes FactionAssociation
+         * @param {number} id id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async deleteTaskActivity(id: number, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<string>> {
-            const localVarAxiosArgs = await TaskActivityApiAxiosParamCreator(configuration).deleteTaskActivity(id, options);
+        async deleteFactionAssociation(id: number, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<string>> {
+            const localVarAxiosArgs = await FactionAssociationApiAxiosParamCreator(configuration).deleteFactionAssociation(id, options);
             return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
                 const axiosRequestArgs = {...localVarAxiosArgs.options, url: (configuration?.basePath || basePath) + localVarAxiosArgs.url};
                 return axios.request(axiosRequestArgs);
@@ -404,29 +404,15 @@ export const TaskActivityApiFp = function(configuration?: Configuration) {
         },
         /**
          * 
-         * @summary Gets TaskActivities in bulk
-         * @param {CrudcontrollersBulkFetchByIdsGetRequest} body body
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async getTaskActivitiesBulk(body: CrudcontrollersBulkFetchByIdsGetRequest, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<ModelsTaskActivity>>> {
-            const localVarAxiosArgs = await TaskActivityApiAxiosParamCreator(configuration).getTaskActivitiesBulk(body, options);
-            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
-                const axiosRequestArgs = {...localVarAxiosArgs.options, url: (configuration?.basePath || basePath) + localVarAxiosArgs.url};
-                return axios.request(axiosRequestArgs);
-            };
-        },
-        /**
-         * 
-         * @summary Gets TaskActivity
+         * @summary Gets FactionAssociation
          * @param {number} id Id
          * @param {string} [includes] Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names 
          * @param {string} [select] Column names [.] separated to fetch specific fields in response
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async getTaskActivity(id: number, includes?: string, select?: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<ModelsTaskActivity>>> {
-            const localVarAxiosArgs = await TaskActivityApiAxiosParamCreator(configuration).getTaskActivity(id, includes, select, options);
+        async getFactionAssociation(id: number, includes?: string, select?: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<ModelsFactionAssociation>>> {
+            const localVarAxiosArgs = await FactionAssociationApiAxiosParamCreator(configuration).getFactionAssociation(id, includes, select, options);
             return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
                 const axiosRequestArgs = {...localVarAxiosArgs.options, url: (configuration?.basePath || basePath) + localVarAxiosArgs.url};
                 return axios.request(axiosRequestArgs);
@@ -434,7 +420,21 @@ export const TaskActivityApiFp = function(configuration?: Configuration) {
         },
         /**
          * 
-         * @summary Lists TaskActivities
+         * @summary Gets FactionAssociations in bulk
+         * @param {CrudcontrollersBulkFetchByIdsGetRequest} body body
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async getFactionAssociationsBulk(body: CrudcontrollersBulkFetchByIdsGetRequest, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<ModelsFactionAssociation>>> {
+            const localVarAxiosArgs = await FactionAssociationApiAxiosParamCreator(configuration).getFactionAssociationsBulk(body, options);
+            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
+                const axiosRequestArgs = {...localVarAxiosArgs.options, url: (configuration?.basePath || basePath) + localVarAxiosArgs.url};
+                return axios.request(axiosRequestArgs);
+            };
+        },
+        /**
+         * 
+         * @summary Lists FactionAssociations
          * @param {string} [includes] Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names 
          * @param {string} [where] Filter on specific fields. Multiple conditions [.] separated Example: col_like_value.col2__val2
          * @param {string} [whereOr] Filter on specific fields (Chained ors). Multiple conditions [.] separated Example: col_like_value.col2__val2
@@ -447,8 +447,8 @@ export const TaskActivityApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async listTaskActivities(includes?: string, where?: string, whereOr?: string, groupBy?: string, limit?: string, page?: number, orderBy?: string, orderDirection?: string, select?: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<ModelsTaskActivity>>> {
-            const localVarAxiosArgs = await TaskActivityApiAxiosParamCreator(configuration).listTaskActivities(includes, where, whereOr, groupBy, limit, page, orderBy, orderDirection, select, options);
+        async listFactionAssociations(includes?: string, where?: string, whereOr?: string, groupBy?: string, limit?: string, page?: number, orderBy?: string, orderDirection?: string, select?: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<ModelsFactionAssociation>>> {
+            const localVarAxiosArgs = await FactionAssociationApiAxiosParamCreator(configuration).listFactionAssociations(includes, where, whereOr, groupBy, limit, page, orderBy, orderDirection, select, options);
             return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
                 const axiosRequestArgs = {...localVarAxiosArgs.options, url: (configuration?.basePath || basePath) + localVarAxiosArgs.url};
                 return axios.request(axiosRequestArgs);
@@ -456,14 +456,14 @@ export const TaskActivityApiFp = function(configuration?: Configuration) {
         },
         /**
          * 
-         * @summary Updates TaskActivity
+         * @summary Updates FactionAssociation
          * @param {number} id Id
-         * @param {ModelsTaskActivity} taskActivity TaskActivity
+         * @param {ModelsFactionAssociation} factionAssociation FactionAssociation
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async updateTaskActivity(id: number, taskActivity: ModelsTaskActivity, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<ModelsTaskActivity>>> {
-            const localVarAxiosArgs = await TaskActivityApiAxiosParamCreator(configuration).updateTaskActivity(id, taskActivity, options);
+        async updateFactionAssociation(id: number, factionAssociation: ModelsFactionAssociation, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<ModelsFactionAssociation>>> {
+            const localVarAxiosArgs = await FactionAssociationApiAxiosParamCreator(configuration).updateFactionAssociation(id, factionAssociation, options);
             return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
                 const axiosRequestArgs = {...localVarAxiosArgs.options, url: (configuration?.basePath || basePath) + localVarAxiosArgs.url};
                 return axios.request(axiosRequestArgs);
@@ -473,56 +473,56 @@ export const TaskActivityApiFp = function(configuration?: Configuration) {
 };
 
 /**
- * TaskActivityApi - factory interface
+ * FactionAssociationApi - factory interface
  * @export
  */
-export const TaskActivityApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
+export const FactionAssociationApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
     return {
         /**
          * 
-         * @summary Creates TaskActivity
-         * @param {ModelsTaskActivity} taskActivity TaskActivity
+         * @summary Creates FactionAssociation
+         * @param {ModelsFactionAssociation} factionAssociation FactionAssociation
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        createTaskActivity(taskActivity: ModelsTaskActivity, options?: any): AxiosPromise<Array<ModelsTaskActivity>> {
-            return TaskActivityApiFp(configuration).createTaskActivity(taskActivity, options).then((request) => request(axios, basePath));
+        createFactionAssociation(factionAssociation: ModelsFactionAssociation, options?: any): AxiosPromise<Array<ModelsFactionAssociation>> {
+            return FactionAssociationApiFp(configuration).createFactionAssociation(factionAssociation, options).then((request) => request(axios, basePath));
         },
         /**
          * 
-         * @summary Deletes TaskActivity
-         * @param {number} id taskid
+         * @summary Deletes FactionAssociation
+         * @param {number} id id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        deleteTaskActivity(id: number, options?: any): AxiosPromise<string> {
-            return TaskActivityApiFp(configuration).deleteTaskActivity(id, options).then((request) => request(axios, basePath));
+        deleteFactionAssociation(id: number, options?: any): AxiosPromise<string> {
+            return FactionAssociationApiFp(configuration).deleteFactionAssociation(id, options).then((request) => request(axios, basePath));
         },
         /**
          * 
-         * @summary Gets TaskActivities in bulk
-         * @param {CrudcontrollersBulkFetchByIdsGetRequest} body body
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getTaskActivitiesBulk(body: CrudcontrollersBulkFetchByIdsGetRequest, options?: any): AxiosPromise<Array<ModelsTaskActivity>> {
-            return TaskActivityApiFp(configuration).getTaskActivitiesBulk(body, options).then((request) => request(axios, basePath));
-        },
-        /**
-         * 
-         * @summary Gets TaskActivity
+         * @summary Gets FactionAssociation
          * @param {number} id Id
          * @param {string} [includes] Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names 
          * @param {string} [select] Column names [.] separated to fetch specific fields in response
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getTaskActivity(id: number, includes?: string, select?: string, options?: any): AxiosPromise<Array<ModelsTaskActivity>> {
-            return TaskActivityApiFp(configuration).getTaskActivity(id, includes, select, options).then((request) => request(axios, basePath));
+        getFactionAssociation(id: number, includes?: string, select?: string, options?: any): AxiosPromise<Array<ModelsFactionAssociation>> {
+            return FactionAssociationApiFp(configuration).getFactionAssociation(id, includes, select, options).then((request) => request(axios, basePath));
         },
         /**
          * 
-         * @summary Lists TaskActivities
+         * @summary Gets FactionAssociations in bulk
+         * @param {CrudcontrollersBulkFetchByIdsGetRequest} body body
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getFactionAssociationsBulk(body: CrudcontrollersBulkFetchByIdsGetRequest, options?: any): AxiosPromise<Array<ModelsFactionAssociation>> {
+            return FactionAssociationApiFp(configuration).getFactionAssociationsBulk(body, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @summary Lists FactionAssociations
          * @param {string} [includes] Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names 
          * @param {string} [where] Filter on specific fields. Multiple conditions [.] separated Example: col_like_value.col2__val2
          * @param {string} [whereOr] Filter on specific fields (Chained ors). Multiple conditions [.] separated Example: col_like_value.col2__val2
@@ -535,260 +535,260 @@ export const TaskActivityApiFactory = function (configuration?: Configuration, b
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        listTaskActivities(includes?: string, where?: string, whereOr?: string, groupBy?: string, limit?: string, page?: number, orderBy?: string, orderDirection?: string, select?: string, options?: any): AxiosPromise<Array<ModelsTaskActivity>> {
-            return TaskActivityApiFp(configuration).listTaskActivities(includes, where, whereOr, groupBy, limit, page, orderBy, orderDirection, select, options).then((request) => request(axios, basePath));
+        listFactionAssociations(includes?: string, where?: string, whereOr?: string, groupBy?: string, limit?: string, page?: number, orderBy?: string, orderDirection?: string, select?: string, options?: any): AxiosPromise<Array<ModelsFactionAssociation>> {
+            return FactionAssociationApiFp(configuration).listFactionAssociations(includes, where, whereOr, groupBy, limit, page, orderBy, orderDirection, select, options).then((request) => request(axios, basePath));
         },
         /**
          * 
-         * @summary Updates TaskActivity
+         * @summary Updates FactionAssociation
          * @param {number} id Id
-         * @param {ModelsTaskActivity} taskActivity TaskActivity
+         * @param {ModelsFactionAssociation} factionAssociation FactionAssociation
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        updateTaskActivity(id: number, taskActivity: ModelsTaskActivity, options?: any): AxiosPromise<Array<ModelsTaskActivity>> {
-            return TaskActivityApiFp(configuration).updateTaskActivity(id, taskActivity, options).then((request) => request(axios, basePath));
+        updateFactionAssociation(id: number, factionAssociation: ModelsFactionAssociation, options?: any): AxiosPromise<Array<ModelsFactionAssociation>> {
+            return FactionAssociationApiFp(configuration).updateFactionAssociation(id, factionAssociation, options).then((request) => request(axios, basePath));
         },
     };
 };
 
 /**
- * Request parameters for createTaskActivity operation in TaskActivityApi.
+ * Request parameters for createFactionAssociation operation in FactionAssociationApi.
  * @export
- * @interface TaskActivityApiCreateTaskActivityRequest
+ * @interface FactionAssociationApiCreateFactionAssociationRequest
  */
-export interface TaskActivityApiCreateTaskActivityRequest {
+export interface FactionAssociationApiCreateFactionAssociationRequest {
     /**
-     * TaskActivity
-     * @type {ModelsTaskActivity}
-     * @memberof TaskActivityApiCreateTaskActivity
+     * FactionAssociation
+     * @type {ModelsFactionAssociation}
+     * @memberof FactionAssociationApiCreateFactionAssociation
      */
-    readonly taskActivity: ModelsTaskActivity
+    readonly factionAssociation: ModelsFactionAssociation
 }
 
 /**
- * Request parameters for deleteTaskActivity operation in TaskActivityApi.
+ * Request parameters for deleteFactionAssociation operation in FactionAssociationApi.
  * @export
- * @interface TaskActivityApiDeleteTaskActivityRequest
+ * @interface FactionAssociationApiDeleteFactionAssociationRequest
  */
-export interface TaskActivityApiDeleteTaskActivityRequest {
+export interface FactionAssociationApiDeleteFactionAssociationRequest {
     /**
-     * taskid
+     * id
      * @type {number}
-     * @memberof TaskActivityApiDeleteTaskActivity
+     * @memberof FactionAssociationApiDeleteFactionAssociation
      */
     readonly id: number
 }
 
 /**
- * Request parameters for getTaskActivitiesBulk operation in TaskActivityApi.
+ * Request parameters for getFactionAssociation operation in FactionAssociationApi.
  * @export
- * @interface TaskActivityApiGetTaskActivitiesBulkRequest
+ * @interface FactionAssociationApiGetFactionAssociationRequest
  */
-export interface TaskActivityApiGetTaskActivitiesBulkRequest {
-    /**
-     * body
-     * @type {CrudcontrollersBulkFetchByIdsGetRequest}
-     * @memberof TaskActivityApiGetTaskActivitiesBulk
-     */
-    readonly body: CrudcontrollersBulkFetchByIdsGetRequest
-}
-
-/**
- * Request parameters for getTaskActivity operation in TaskActivityApi.
- * @export
- * @interface TaskActivityApiGetTaskActivityRequest
- */
-export interface TaskActivityApiGetTaskActivityRequest {
+export interface FactionAssociationApiGetFactionAssociationRequest {
     /**
      * Id
      * @type {number}
-     * @memberof TaskActivityApiGetTaskActivity
+     * @memberof FactionAssociationApiGetFactionAssociation
      */
     readonly id: number
 
     /**
      * Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names 
      * @type {string}
-     * @memberof TaskActivityApiGetTaskActivity
+     * @memberof FactionAssociationApiGetFactionAssociation
      */
     readonly includes?: string
 
     /**
      * Column names [.] separated to fetch specific fields in response
      * @type {string}
-     * @memberof TaskActivityApiGetTaskActivity
+     * @memberof FactionAssociationApiGetFactionAssociation
      */
     readonly select?: string
 }
 
 /**
- * Request parameters for listTaskActivities operation in TaskActivityApi.
+ * Request parameters for getFactionAssociationsBulk operation in FactionAssociationApi.
  * @export
- * @interface TaskActivityApiListTaskActivitiesRequest
+ * @interface FactionAssociationApiGetFactionAssociationsBulkRequest
  */
-export interface TaskActivityApiListTaskActivitiesRequest {
+export interface FactionAssociationApiGetFactionAssociationsBulkRequest {
+    /**
+     * body
+     * @type {CrudcontrollersBulkFetchByIdsGetRequest}
+     * @memberof FactionAssociationApiGetFactionAssociationsBulk
+     */
+    readonly body: CrudcontrollersBulkFetchByIdsGetRequest
+}
+
+/**
+ * Request parameters for listFactionAssociations operation in FactionAssociationApi.
+ * @export
+ * @interface FactionAssociationApiListFactionAssociationsRequest
+ */
+export interface FactionAssociationApiListFactionAssociationsRequest {
     /**
      * Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names 
      * @type {string}
-     * @memberof TaskActivityApiListTaskActivities
+     * @memberof FactionAssociationApiListFactionAssociations
      */
     readonly includes?: string
 
     /**
      * Filter on specific fields. Multiple conditions [.] separated Example: col_like_value.col2__val2
      * @type {string}
-     * @memberof TaskActivityApiListTaskActivities
+     * @memberof FactionAssociationApiListFactionAssociations
      */
     readonly where?: string
 
     /**
      * Filter on specific fields (Chained ors). Multiple conditions [.] separated Example: col_like_value.col2__val2
      * @type {string}
-     * @memberof TaskActivityApiListTaskActivities
+     * @memberof FactionAssociationApiListFactionAssociations
      */
     readonly whereOr?: string
 
     /**
      * Group by field. Multiple conditions [.] separated Example: field1.field2
      * @type {string}
-     * @memberof TaskActivityApiListTaskActivities
+     * @memberof FactionAssociationApiListFactionAssociations
      */
     readonly groupBy?: string
 
     /**
      * Rows to limit in response (Default: 10,000)
      * @type {string}
-     * @memberof TaskActivityApiListTaskActivities
+     * @memberof FactionAssociationApiListFactionAssociations
      */
     readonly limit?: string
 
     /**
      * Pagination page
      * @type {number}
-     * @memberof TaskActivityApiListTaskActivities
+     * @memberof FactionAssociationApiListFactionAssociations
      */
     readonly page?: number
 
     /**
      * Order by [field]
      * @type {string}
-     * @memberof TaskActivityApiListTaskActivities
+     * @memberof FactionAssociationApiListFactionAssociations
      */
     readonly orderBy?: string
 
     /**
      * Order by field direction
      * @type {string}
-     * @memberof TaskActivityApiListTaskActivities
+     * @memberof FactionAssociationApiListFactionAssociations
      */
     readonly orderDirection?: string
 
     /**
      * Column names [.] separated to fetch specific fields in response
      * @type {string}
-     * @memberof TaskActivityApiListTaskActivities
+     * @memberof FactionAssociationApiListFactionAssociations
      */
     readonly select?: string
 }
 
 /**
- * Request parameters for updateTaskActivity operation in TaskActivityApi.
+ * Request parameters for updateFactionAssociation operation in FactionAssociationApi.
  * @export
- * @interface TaskActivityApiUpdateTaskActivityRequest
+ * @interface FactionAssociationApiUpdateFactionAssociationRequest
  */
-export interface TaskActivityApiUpdateTaskActivityRequest {
+export interface FactionAssociationApiUpdateFactionAssociationRequest {
     /**
      * Id
      * @type {number}
-     * @memberof TaskActivityApiUpdateTaskActivity
+     * @memberof FactionAssociationApiUpdateFactionAssociation
      */
     readonly id: number
 
     /**
-     * TaskActivity
-     * @type {ModelsTaskActivity}
-     * @memberof TaskActivityApiUpdateTaskActivity
+     * FactionAssociation
+     * @type {ModelsFactionAssociation}
+     * @memberof FactionAssociationApiUpdateFactionAssociation
      */
-    readonly taskActivity: ModelsTaskActivity
+    readonly factionAssociation: ModelsFactionAssociation
 }
 
 /**
- * TaskActivityApi - object-oriented interface
+ * FactionAssociationApi - object-oriented interface
  * @export
- * @class TaskActivityApi
+ * @class FactionAssociationApi
  * @extends {BaseAPI}
  */
-export class TaskActivityApi extends BaseAPI {
+export class FactionAssociationApi extends BaseAPI {
     /**
      * 
-     * @summary Creates TaskActivity
-     * @param {TaskActivityApiCreateTaskActivityRequest} requestParameters Request parameters.
+     * @summary Creates FactionAssociation
+     * @param {FactionAssociationApiCreateFactionAssociationRequest} requestParameters Request parameters.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof TaskActivityApi
+     * @memberof FactionAssociationApi
      */
-    public createTaskActivity(requestParameters: TaskActivityApiCreateTaskActivityRequest, options?: any) {
-        return TaskActivityApiFp(this.configuration).createTaskActivity(requestParameters.taskActivity, options).then((request) => request(this.axios, this.basePath));
+    public createFactionAssociation(requestParameters: FactionAssociationApiCreateFactionAssociationRequest, options?: any) {
+        return FactionAssociationApiFp(this.configuration).createFactionAssociation(requestParameters.factionAssociation, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
      * 
-     * @summary Deletes TaskActivity
-     * @param {TaskActivityApiDeleteTaskActivityRequest} requestParameters Request parameters.
+     * @summary Deletes FactionAssociation
+     * @param {FactionAssociationApiDeleteFactionAssociationRequest} requestParameters Request parameters.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof TaskActivityApi
+     * @memberof FactionAssociationApi
      */
-    public deleteTaskActivity(requestParameters: TaskActivityApiDeleteTaskActivityRequest, options?: any) {
-        return TaskActivityApiFp(this.configuration).deleteTaskActivity(requestParameters.id, options).then((request) => request(this.axios, this.basePath));
+    public deleteFactionAssociation(requestParameters: FactionAssociationApiDeleteFactionAssociationRequest, options?: any) {
+        return FactionAssociationApiFp(this.configuration).deleteFactionAssociation(requestParameters.id, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
      * 
-     * @summary Gets TaskActivities in bulk
-     * @param {TaskActivityApiGetTaskActivitiesBulkRequest} requestParameters Request parameters.
+     * @summary Gets FactionAssociation
+     * @param {FactionAssociationApiGetFactionAssociationRequest} requestParameters Request parameters.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof TaskActivityApi
+     * @memberof FactionAssociationApi
      */
-    public getTaskActivitiesBulk(requestParameters: TaskActivityApiGetTaskActivitiesBulkRequest, options?: any) {
-        return TaskActivityApiFp(this.configuration).getTaskActivitiesBulk(requestParameters.body, options).then((request) => request(this.axios, this.basePath));
+    public getFactionAssociation(requestParameters: FactionAssociationApiGetFactionAssociationRequest, options?: any) {
+        return FactionAssociationApiFp(this.configuration).getFactionAssociation(requestParameters.id, requestParameters.includes, requestParameters.select, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
      * 
-     * @summary Gets TaskActivity
-     * @param {TaskActivityApiGetTaskActivityRequest} requestParameters Request parameters.
+     * @summary Gets FactionAssociations in bulk
+     * @param {FactionAssociationApiGetFactionAssociationsBulkRequest} requestParameters Request parameters.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof TaskActivityApi
+     * @memberof FactionAssociationApi
      */
-    public getTaskActivity(requestParameters: TaskActivityApiGetTaskActivityRequest, options?: any) {
-        return TaskActivityApiFp(this.configuration).getTaskActivity(requestParameters.id, requestParameters.includes, requestParameters.select, options).then((request) => request(this.axios, this.basePath));
+    public getFactionAssociationsBulk(requestParameters: FactionAssociationApiGetFactionAssociationsBulkRequest, options?: any) {
+        return FactionAssociationApiFp(this.configuration).getFactionAssociationsBulk(requestParameters.body, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
      * 
-     * @summary Lists TaskActivities
-     * @param {TaskActivityApiListTaskActivitiesRequest} requestParameters Request parameters.
+     * @summary Lists FactionAssociations
+     * @param {FactionAssociationApiListFactionAssociationsRequest} requestParameters Request parameters.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof TaskActivityApi
+     * @memberof FactionAssociationApi
      */
-    public listTaskActivities(requestParameters: TaskActivityApiListTaskActivitiesRequest = {}, options?: any) {
-        return TaskActivityApiFp(this.configuration).listTaskActivities(requestParameters.includes, requestParameters.where, requestParameters.whereOr, requestParameters.groupBy, requestParameters.limit, requestParameters.page, requestParameters.orderBy, requestParameters.orderDirection, requestParameters.select, options).then((request) => request(this.axios, this.basePath));
+    public listFactionAssociations(requestParameters: FactionAssociationApiListFactionAssociationsRequest = {}, options?: any) {
+        return FactionAssociationApiFp(this.configuration).listFactionAssociations(requestParameters.includes, requestParameters.where, requestParameters.whereOr, requestParameters.groupBy, requestParameters.limit, requestParameters.page, requestParameters.orderBy, requestParameters.orderDirection, requestParameters.select, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
      * 
-     * @summary Updates TaskActivity
-     * @param {TaskActivityApiUpdateTaskActivityRequest} requestParameters Request parameters.
+     * @summary Updates FactionAssociation
+     * @param {FactionAssociationApiUpdateFactionAssociationRequest} requestParameters Request parameters.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof TaskActivityApi
+     * @memberof FactionAssociationApi
      */
-    public updateTaskActivity(requestParameters: TaskActivityApiUpdateTaskActivityRequest, options?: any) {
-        return TaskActivityApiFp(this.configuration).updateTaskActivity(requestParameters.id, requestParameters.taskActivity, options).then((request) => request(this.axios, this.basePath));
+    public updateFactionAssociation(requestParameters: FactionAssociationApiUpdateFactionAssociationRequest, options?: any) {
+        return FactionAssociationApiFp(this.configuration).updateFactionAssociation(requestParameters.id, requestParameters.factionAssociation, options).then((request) => request(this.axios, this.basePath));
     }
 }

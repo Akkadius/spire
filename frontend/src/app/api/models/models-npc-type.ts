@@ -303,6 +303,12 @@ export interface ModelsNpcType {
      * @type {number}
      * @memberof ModelsNpcType
      */
+    faction_amount?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof ModelsNpcType
+     */
     feettexture?: number;
     /**
      * 

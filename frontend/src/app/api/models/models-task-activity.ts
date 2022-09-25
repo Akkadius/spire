@@ -13,8 +13,6 @@
  */
 
 
-import { ModelsGoallist } from './models-goallist';
-import { ModelsNpcType } from './models-npc-type';
 
 /**
  * 
@@ -36,22 +34,16 @@ export interface ModelsTaskActivity {
     activitytype?: number;
     /**
      * 
-     * @type {number}
-     * @memberof ModelsTaskActivity
-     */
-    delivertonpc?: number;
-    /**
-     * 
      * @type {string}
      * @memberof ModelsTaskActivity
      */
     description_override?: string;
     /**
      * 
-     * @type {string}
+     * @type {number}
      * @memberof ModelsTaskActivity
      */
-    goal_match_list?: string;
+    dz_switch_id?: number;
     /**
      * 
      * @type {number}
@@ -63,19 +55,25 @@ export interface ModelsTaskActivity {
      * @type {number}
      * @memberof ModelsTaskActivity
      */
-    goalid?: number;
-    /**
-     * 
-     * @type {Array<ModelsGoallist>}
-     * @memberof ModelsTaskActivity
-     */
-    goallists?: Array<ModelsGoallist>;
+    goalmethod?: number;
     /**
      * 
      * @type {number}
      * @memberof ModelsTaskActivity
      */
-    goalmethod?: number;
+    item_goal_id?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof ModelsTaskActivity
+     */
+    item_id?: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof ModelsTaskActivity
+     */
+    item_id_list?: string;
     /**
      * 
      * @type {string}
@@ -84,16 +82,70 @@ export interface ModelsTaskActivity {
     item_list?: string;
     /**
      * 
-     * @type {ModelsNpcType}
+     * @type {number}
      * @memberof ModelsTaskActivity
      */
-    npc_type?: ModelsNpcType;
+    max_x?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof ModelsTaskActivity
+     */
+    max_y?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof ModelsTaskActivity
+     */
+    max_z?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof ModelsTaskActivity
+     */
+    min_x?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof ModelsTaskActivity
+     */
+    min_y?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof ModelsTaskActivity
+     */
+    min_z?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof ModelsTaskActivity
+     */
+    npc_goal_id?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof ModelsTaskActivity
+     */
+    npc_id?: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof ModelsTaskActivity
+     */
+    npc_match_list?: string;
     /**
      * 
      * @type {number}
      * @memberof ModelsTaskActivity
      */
     optional?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof ModelsTaskActivity
+     */
+    req_activity_id?: number;
     /**
      * 
      * @type {string}

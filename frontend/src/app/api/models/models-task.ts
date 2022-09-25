@@ -70,6 +70,12 @@ export interface ModelsTask {
      * @type {number}
      * @memberof ModelsTask
      */
+    faction_amount?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof ModelsTask
+     */
     faction_reward?: number;
     /**
      * 

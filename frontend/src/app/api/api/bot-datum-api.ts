@@ -21,26 +21,26 @@ import { BASE_PATH, COLLECTION_FORMATS, RequestArgs, BaseAPI, RequiredError } fr
 // @ts-ignore
 import { CrudcontrollersBulkFetchByIdsGetRequest } from '../models';
 // @ts-ignore
-import { ModelsTaskActivity } from '../models';
+import { ModelsBotDatum } from '../models';
 /**
- * TaskActivityApi - axios parameter creator
+ * BotDatumApi - axios parameter creator
  * @export
  */
-export const TaskActivityApiAxiosParamCreator = function (configuration?: Configuration) {
+export const BotDatumApiAxiosParamCreator = function (configuration?: Configuration) {
     return {
         /**
          * 
-         * @summary Creates TaskActivity
-         * @param {ModelsTaskActivity} taskActivity TaskActivity
+         * @summary Creates BotDatum
+         * @param {ModelsBotDatum} botDatum BotDatum
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        createTaskActivity: async (taskActivity: ModelsTaskActivity, options: any = {}): Promise<RequestArgs> => {
-            // verify required parameter 'taskActivity' is not null or undefined
-            if (taskActivity === null || taskActivity === undefined) {
-                throw new RequiredError('taskActivity','Required parameter taskActivity was null or undefined when calling createTaskActivity.');
+        createBotDatum: async (botDatum: ModelsBotDatum, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'botDatum' is not null or undefined
+            if (botDatum === null || botDatum === undefined) {
+                throw new RequiredError('botDatum','Required parameter botDatum was null or undefined when calling createBotDatum.');
             }
-            const localVarPath = `/task_activity`;
+            const localVarPath = `/bot_datum`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, 'https://example.com');
             let baseOptions;
@@ -66,13 +66,13 @@ export const TaskActivityApiAxiosParamCreator = function (configuration?: Config
             localVarUrlObj.search = (new URLSearchParams(queryParameters)).toString();
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            const nonString = typeof taskActivity !== 'string';
+            const nonString = typeof botDatum !== 'string';
             const needsSerialization = nonString && configuration && configuration.isJsonMime
                 ? configuration.isJsonMime(localVarRequestOptions.headers['Content-Type'])
                 : nonString;
             localVarRequestOptions.data =  needsSerialization
-                ? JSON.stringify(taskActivity !== undefined ? taskActivity : {})
-                : (taskActivity || "");
+                ? JSON.stringify(botDatum !== undefined ? botDatum : {})
+                : (botDatum || "");
 
             return {
                 url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
@@ -81,17 +81,17 @@ export const TaskActivityApiAxiosParamCreator = function (configuration?: Config
         },
         /**
          * 
-         * @summary Deletes TaskActivity
-         * @param {number} id taskid
+         * @summary Deletes BotDatum
+         * @param {number} id botId
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        deleteTaskActivity: async (id: number, options: any = {}): Promise<RequestArgs> => {
+        deleteBotDatum: async (id: number, options: any = {}): Promise<RequestArgs> => {
             // verify required parameter 'id' is not null or undefined
             if (id === null || id === undefined) {
-                throw new RequiredError('id','Required parameter id was null or undefined when calling deleteTaskActivity.');
+                throw new RequiredError('id','Required parameter id was null or undefined when calling deleteBotDatum.');
             }
-            const localVarPath = `/task_activity/{id}`
+            const localVarPath = `/bot_datum/{id}`
                 .replace(`{${"id"}}`, encodeURIComponent(String(id)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, 'https://example.com');
@@ -124,17 +124,17 @@ export const TaskActivityApiAxiosParamCreator = function (configuration?: Config
         },
         /**
          * 
-         * @summary Gets TaskActivities in bulk
+         * @summary Gets BotData in bulk
          * @param {CrudcontrollersBulkFetchByIdsGetRequest} body body
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getTaskActivitiesBulk: async (body: CrudcontrollersBulkFetchByIdsGetRequest, options: any = {}): Promise<RequestArgs> => {
+        getBotDataBulk: async (body: CrudcontrollersBulkFetchByIdsGetRequest, options: any = {}): Promise<RequestArgs> => {
             // verify required parameter 'body' is not null or undefined
             if (body === null || body === undefined) {
-                throw new RequiredError('body','Required parameter body was null or undefined when calling getTaskActivitiesBulk.');
+                throw new RequiredError('body','Required parameter body was null or undefined when calling getBotDataBulk.');
             }
-            const localVarPath = `/task_activities/bulk`;
+            const localVarPath = `/bot_data/bulk`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, 'https://example.com');
             let baseOptions;
@@ -175,19 +175,19 @@ export const TaskActivityApiAxiosParamCreator = function (configuration?: Config
         },
         /**
          * 
-         * @summary Gets TaskActivity
+         * @summary Gets BotDatum
          * @param {number} id Id
          * @param {string} [includes] Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names 
          * @param {string} [select] Column names [.] separated to fetch specific fields in response
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getTaskActivity: async (id: number, includes?: string, select?: string, options: any = {}): Promise<RequestArgs> => {
+        getBotDatum: async (id: number, includes?: string, select?: string, options: any = {}): Promise<RequestArgs> => {
             // verify required parameter 'id' is not null or undefined
             if (id === null || id === undefined) {
-                throw new RequiredError('id','Required parameter id was null or undefined when calling getTaskActivity.');
+                throw new RequiredError('id','Required parameter id was null or undefined when calling getBotDatum.');
             }
-            const localVarPath = `/task_activity/{id}`
+            const localVarPath = `/bot_datum/{id}`
                 .replace(`{${"id"}}`, encodeURIComponent(String(id)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, 'https://example.com');
@@ -228,7 +228,7 @@ export const TaskActivityApiAxiosParamCreator = function (configuration?: Config
         },
         /**
          * 
-         * @summary Lists TaskActivities
+         * @summary Lists BotData
          * @param {string} [includes] Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names 
          * @param {string} [where] Filter on specific fields. Multiple conditions [.] separated Example: col_like_value.col2__val2
          * @param {string} [whereOr] Filter on specific fields (Chained ors). Multiple conditions [.] separated Example: col_like_value.col2__val2
@@ -241,8 +241,8 @@ export const TaskActivityApiAxiosParamCreator = function (configuration?: Config
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        listTaskActivities: async (includes?: string, where?: string, whereOr?: string, groupBy?: string, limit?: string, page?: number, orderBy?: string, orderDirection?: string, select?: string, options: any = {}): Promise<RequestArgs> => {
-            const localVarPath = `/task_activities`;
+        listBotData: async (includes?: string, where?: string, whereOr?: string, groupBy?: string, limit?: string, page?: number, orderBy?: string, orderDirection?: string, select?: string, options: any = {}): Promise<RequestArgs> => {
+            const localVarPath = `/bot_data`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, 'https://example.com');
             let baseOptions;
@@ -310,22 +310,22 @@ export const TaskActivityApiAxiosParamCreator = function (configuration?: Config
         },
         /**
          * 
-         * @summary Updates TaskActivity
+         * @summary Updates BotDatum
          * @param {number} id Id
-         * @param {ModelsTaskActivity} taskActivity TaskActivity
+         * @param {ModelsBotDatum} botDatum BotDatum
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        updateTaskActivity: async (id: number, taskActivity: ModelsTaskActivity, options: any = {}): Promise<RequestArgs> => {
+        updateBotDatum: async (id: number, botDatum: ModelsBotDatum, options: any = {}): Promise<RequestArgs> => {
             // verify required parameter 'id' is not null or undefined
             if (id === null || id === undefined) {
-                throw new RequiredError('id','Required parameter id was null or undefined when calling updateTaskActivity.');
+                throw new RequiredError('id','Required parameter id was null or undefined when calling updateBotDatum.');
             }
-            // verify required parameter 'taskActivity' is not null or undefined
-            if (taskActivity === null || taskActivity === undefined) {
-                throw new RequiredError('taskActivity','Required parameter taskActivity was null or undefined when calling updateTaskActivity.');
+            // verify required parameter 'botDatum' is not null or undefined
+            if (botDatum === null || botDatum === undefined) {
+                throw new RequiredError('botDatum','Required parameter botDatum was null or undefined when calling updateBotDatum.');
             }
-            const localVarPath = `/task_activity/{id}`
+            const localVarPath = `/bot_datum/{id}`
                 .replace(`{${"id"}}`, encodeURIComponent(String(id)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, 'https://example.com');
@@ -352,13 +352,13 @@ export const TaskActivityApiAxiosParamCreator = function (configuration?: Config
             localVarUrlObj.search = (new URLSearchParams(queryParameters)).toString();
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            const nonString = typeof taskActivity !== 'string';
+            const nonString = typeof botDatum !== 'string';
             const needsSerialization = nonString && configuration && configuration.isJsonMime
                 ? configuration.isJsonMime(localVarRequestOptions.headers['Content-Type'])
                 : nonString;
             localVarRequestOptions.data =  needsSerialization
-                ? JSON.stringify(taskActivity !== undefined ? taskActivity : {})
-                : (taskActivity || "");
+                ? JSON.stringify(botDatum !== undefined ? botDatum : {})
+                : (botDatum || "");
 
             return {
                 url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
@@ -369,20 +369,20 @@ export const TaskActivityApiAxiosParamCreator = function (configuration?: Config
 };
 
 /**
- * TaskActivityApi - functional programming interface
+ * BotDatumApi - functional programming interface
  * @export
  */
-export const TaskActivityApiFp = function(configuration?: Configuration) {
+export const BotDatumApiFp = function(configuration?: Configuration) {
     return {
         /**
          * 
-         * @summary Creates TaskActivity
-         * @param {ModelsTaskActivity} taskActivity TaskActivity
+         * @summary Creates BotDatum
+         * @param {ModelsBotDatum} botDatum BotDatum
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async createTaskActivity(taskActivity: ModelsTaskActivity, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<ModelsTaskActivity>>> {
-            const localVarAxiosArgs = await TaskActivityApiAxiosParamCreator(configuration).createTaskActivity(taskActivity, options);
+        async createBotDatum(botDatum: ModelsBotDatum, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<ModelsBotDatum>>> {
+            const localVarAxiosArgs = await BotDatumApiAxiosParamCreator(configuration).createBotDatum(botDatum, options);
             return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
                 const axiosRequestArgs = {...localVarAxiosArgs.options, url: (configuration?.basePath || basePath) + localVarAxiosArgs.url};
                 return axios.request(axiosRequestArgs);
@@ -390,13 +390,13 @@ export const TaskActivityApiFp = function(configuration?: Configuration) {
         },
         /**
          * 
-         * @summary Deletes TaskActivity
-         * @param {number} id taskid
+         * @summary Deletes BotDatum
+         * @param {number} id botId
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async deleteTaskActivity(id: number, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<string>> {
-            const localVarAxiosArgs = await TaskActivityApiAxiosParamCreator(configuration).deleteTaskActivity(id, options);
+        async deleteBotDatum(id: number, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<string>> {
+            const localVarAxiosArgs = await BotDatumApiAxiosParamCreator(configuration).deleteBotDatum(id, options);
             return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
                 const axiosRequestArgs = {...localVarAxiosArgs.options, url: (configuration?.basePath || basePath) + localVarAxiosArgs.url};
                 return axios.request(axiosRequestArgs);
@@ -404,13 +404,13 @@ export const TaskActivityApiFp = function(configuration?: Configuration) {
         },
         /**
          * 
-         * @summary Gets TaskActivities in bulk
+         * @summary Gets BotData in bulk
          * @param {CrudcontrollersBulkFetchByIdsGetRequest} body body
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async getTaskActivitiesBulk(body: CrudcontrollersBulkFetchByIdsGetRequest, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<ModelsTaskActivity>>> {
-            const localVarAxiosArgs = await TaskActivityApiAxiosParamCreator(configuration).getTaskActivitiesBulk(body, options);
+        async getBotDataBulk(body: CrudcontrollersBulkFetchByIdsGetRequest, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<ModelsBotDatum>>> {
+            const localVarAxiosArgs = await BotDatumApiAxiosParamCreator(configuration).getBotDataBulk(body, options);
             return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
                 const axiosRequestArgs = {...localVarAxiosArgs.options, url: (configuration?.basePath || basePath) + localVarAxiosArgs.url};
                 return axios.request(axiosRequestArgs);
@@ -418,15 +418,15 @@ export const TaskActivityApiFp = function(configuration?: Configuration) {
         },
         /**
          * 
-         * @summary Gets TaskActivity
+         * @summary Gets BotDatum
          * @param {number} id Id
          * @param {string} [includes] Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names 
          * @param {string} [select] Column names [.] separated to fetch specific fields in response
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async getTaskActivity(id: number, includes?: string, select?: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<ModelsTaskActivity>>> {
-            const localVarAxiosArgs = await TaskActivityApiAxiosParamCreator(configuration).getTaskActivity(id, includes, select, options);
+        async getBotDatum(id: number, includes?: string, select?: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<ModelsBotDatum>>> {
+            const localVarAxiosArgs = await BotDatumApiAxiosParamCreator(configuration).getBotDatum(id, includes, select, options);
             return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
                 const axiosRequestArgs = {...localVarAxiosArgs.options, url: (configuration?.basePath || basePath) + localVarAxiosArgs.url};
                 return axios.request(axiosRequestArgs);
@@ -434,7 +434,7 @@ export const TaskActivityApiFp = function(configuration?: Configuration) {
         },
         /**
          * 
-         * @summary Lists TaskActivities
+         * @summary Lists BotData
          * @param {string} [includes] Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names 
          * @param {string} [where] Filter on specific fields. Multiple conditions [.] separated Example: col_like_value.col2__val2
          * @param {string} [whereOr] Filter on specific fields (Chained ors). Multiple conditions [.] separated Example: col_like_value.col2__val2
@@ -447,8 +447,8 @@ export const TaskActivityApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async listTaskActivities(includes?: string, where?: string, whereOr?: string, groupBy?: string, limit?: string, page?: number, orderBy?: string, orderDirection?: string, select?: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<ModelsTaskActivity>>> {
-            const localVarAxiosArgs = await TaskActivityApiAxiosParamCreator(configuration).listTaskActivities(includes, where, whereOr, groupBy, limit, page, orderBy, orderDirection, select, options);
+        async listBotData(includes?: string, where?: string, whereOr?: string, groupBy?: string, limit?: string, page?: number, orderBy?: string, orderDirection?: string, select?: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<ModelsBotDatum>>> {
+            const localVarAxiosArgs = await BotDatumApiAxiosParamCreator(configuration).listBotData(includes, where, whereOr, groupBy, limit, page, orderBy, orderDirection, select, options);
             return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
                 const axiosRequestArgs = {...localVarAxiosArgs.options, url: (configuration?.basePath || basePath) + localVarAxiosArgs.url};
                 return axios.request(axiosRequestArgs);
@@ -456,14 +456,14 @@ export const TaskActivityApiFp = function(configuration?: Configuration) {
         },
         /**
          * 
-         * @summary Updates TaskActivity
+         * @summary Updates BotDatum
          * @param {number} id Id
-         * @param {ModelsTaskActivity} taskActivity TaskActivity
+         * @param {ModelsBotDatum} botDatum BotDatum
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async updateTaskActivity(id: number, taskActivity: ModelsTaskActivity, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<ModelsTaskActivity>>> {
-            const localVarAxiosArgs = await TaskActivityApiAxiosParamCreator(configuration).updateTaskActivity(id, taskActivity, options);
+        async updateBotDatum(id: number, botDatum: ModelsBotDatum, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<ModelsBotDatum>>> {
+            const localVarAxiosArgs = await BotDatumApiAxiosParamCreator(configuration).updateBotDatum(id, botDatum, options);
             return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
                 const axiosRequestArgs = {...localVarAxiosArgs.options, url: (configuration?.basePath || basePath) + localVarAxiosArgs.url};
                 return axios.request(axiosRequestArgs);
@@ -473,56 +473,56 @@ export const TaskActivityApiFp = function(configuration?: Configuration) {
 };
 
 /**
- * TaskActivityApi - factory interface
+ * BotDatumApi - factory interface
  * @export
  */
-export const TaskActivityApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
+export const BotDatumApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
     return {
         /**
          * 
-         * @summary Creates TaskActivity
-         * @param {ModelsTaskActivity} taskActivity TaskActivity
+         * @summary Creates BotDatum
+         * @param {ModelsBotDatum} botDatum BotDatum
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        createTaskActivity(taskActivity: ModelsTaskActivity, options?: any): AxiosPromise<Array<ModelsTaskActivity>> {
-            return TaskActivityApiFp(configuration).createTaskActivity(taskActivity, options).then((request) => request(axios, basePath));
+        createBotDatum(botDatum: ModelsBotDatum, options?: any): AxiosPromise<Array<ModelsBotDatum>> {
+            return BotDatumApiFp(configuration).createBotDatum(botDatum, options).then((request) => request(axios, basePath));
         },
         /**
          * 
-         * @summary Deletes TaskActivity
-         * @param {number} id taskid
+         * @summary Deletes BotDatum
+         * @param {number} id botId
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        deleteTaskActivity(id: number, options?: any): AxiosPromise<string> {
-            return TaskActivityApiFp(configuration).deleteTaskActivity(id, options).then((request) => request(axios, basePath));
+        deleteBotDatum(id: number, options?: any): AxiosPromise<string> {
+            return BotDatumApiFp(configuration).deleteBotDatum(id, options).then((request) => request(axios, basePath));
         },
         /**
          * 
-         * @summary Gets TaskActivities in bulk
+         * @summary Gets BotData in bulk
          * @param {CrudcontrollersBulkFetchByIdsGetRequest} body body
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getTaskActivitiesBulk(body: CrudcontrollersBulkFetchByIdsGetRequest, options?: any): AxiosPromise<Array<ModelsTaskActivity>> {
-            return TaskActivityApiFp(configuration).getTaskActivitiesBulk(body, options).then((request) => request(axios, basePath));
+        getBotDataBulk(body: CrudcontrollersBulkFetchByIdsGetRequest, options?: any): AxiosPromise<Array<ModelsBotDatum>> {
+            return BotDatumApiFp(configuration).getBotDataBulk(body, options).then((request) => request(axios, basePath));
         },
         /**
          * 
-         * @summary Gets TaskActivity
+         * @summary Gets BotDatum
          * @param {number} id Id
          * @param {string} [includes] Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names 
          * @param {string} [select] Column names [.] separated to fetch specific fields in response
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getTaskActivity(id: number, includes?: string, select?: string, options?: any): AxiosPromise<Array<ModelsTaskActivity>> {
-            return TaskActivityApiFp(configuration).getTaskActivity(id, includes, select, options).then((request) => request(axios, basePath));
+        getBotDatum(id: number, includes?: string, select?: string, options?: any): AxiosPromise<Array<ModelsBotDatum>> {
+            return BotDatumApiFp(configuration).getBotDatum(id, includes, select, options).then((request) => request(axios, basePath));
         },
         /**
          * 
-         * @summary Lists TaskActivities
+         * @summary Lists BotData
          * @param {string} [includes] Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names 
          * @param {string} [where] Filter on specific fields. Multiple conditions [.] separated Example: col_like_value.col2__val2
          * @param {string} [whereOr] Filter on specific fields (Chained ors). Multiple conditions [.] separated Example: col_like_value.col2__val2
@@ -535,260 +535,260 @@ export const TaskActivityApiFactory = function (configuration?: Configuration, b
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        listTaskActivities(includes?: string, where?: string, whereOr?: string, groupBy?: string, limit?: string, page?: number, orderBy?: string, orderDirection?: string, select?: string, options?: any): AxiosPromise<Array<ModelsTaskActivity>> {
-            return TaskActivityApiFp(configuration).listTaskActivities(includes, where, whereOr, groupBy, limit, page, orderBy, orderDirection, select, options).then((request) => request(axios, basePath));
+        listBotData(includes?: string, where?: string, whereOr?: string, groupBy?: string, limit?: string, page?: number, orderBy?: string, orderDirection?: string, select?: string, options?: any): AxiosPromise<Array<ModelsBotDatum>> {
+            return BotDatumApiFp(configuration).listBotData(includes, where, whereOr, groupBy, limit, page, orderBy, orderDirection, select, options).then((request) => request(axios, basePath));
         },
         /**
          * 
-         * @summary Updates TaskActivity
+         * @summary Updates BotDatum
          * @param {number} id Id
-         * @param {ModelsTaskActivity} taskActivity TaskActivity
+         * @param {ModelsBotDatum} botDatum BotDatum
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        updateTaskActivity(id: number, taskActivity: ModelsTaskActivity, options?: any): AxiosPromise<Array<ModelsTaskActivity>> {
-            return TaskActivityApiFp(configuration).updateTaskActivity(id, taskActivity, options).then((request) => request(axios, basePath));
+        updateBotDatum(id: number, botDatum: ModelsBotDatum, options?: any): AxiosPromise<Array<ModelsBotDatum>> {
+            return BotDatumApiFp(configuration).updateBotDatum(id, botDatum, options).then((request) => request(axios, basePath));
         },
     };
 };
 
 /**
- * Request parameters for createTaskActivity operation in TaskActivityApi.
+ * Request parameters for createBotDatum operation in BotDatumApi.
  * @export
- * @interface TaskActivityApiCreateTaskActivityRequest
+ * @interface BotDatumApiCreateBotDatumRequest
  */
-export interface TaskActivityApiCreateTaskActivityRequest {
+export interface BotDatumApiCreateBotDatumRequest {
     /**
-     * TaskActivity
-     * @type {ModelsTaskActivity}
-     * @memberof TaskActivityApiCreateTaskActivity
+     * BotDatum
+     * @type {ModelsBotDatum}
+     * @memberof BotDatumApiCreateBotDatum
      */
-    readonly taskActivity: ModelsTaskActivity
+    readonly botDatum: ModelsBotDatum
 }
 
 /**
- * Request parameters for deleteTaskActivity operation in TaskActivityApi.
+ * Request parameters for deleteBotDatum operation in BotDatumApi.
  * @export
- * @interface TaskActivityApiDeleteTaskActivityRequest
+ * @interface BotDatumApiDeleteBotDatumRequest
  */
-export interface TaskActivityApiDeleteTaskActivityRequest {
+export interface BotDatumApiDeleteBotDatumRequest {
     /**
-     * taskid
+     * botId
      * @type {number}
-     * @memberof TaskActivityApiDeleteTaskActivity
+     * @memberof BotDatumApiDeleteBotDatum
      */
     readonly id: number
 }
 
 /**
- * Request parameters for getTaskActivitiesBulk operation in TaskActivityApi.
+ * Request parameters for getBotDataBulk operation in BotDatumApi.
  * @export
- * @interface TaskActivityApiGetTaskActivitiesBulkRequest
+ * @interface BotDatumApiGetBotDataBulkRequest
  */
-export interface TaskActivityApiGetTaskActivitiesBulkRequest {
+export interface BotDatumApiGetBotDataBulkRequest {
     /**
      * body
      * @type {CrudcontrollersBulkFetchByIdsGetRequest}
-     * @memberof TaskActivityApiGetTaskActivitiesBulk
+     * @memberof BotDatumApiGetBotDataBulk
      */
     readonly body: CrudcontrollersBulkFetchByIdsGetRequest
 }
 
 /**
- * Request parameters for getTaskActivity operation in TaskActivityApi.
+ * Request parameters for getBotDatum operation in BotDatumApi.
  * @export
- * @interface TaskActivityApiGetTaskActivityRequest
+ * @interface BotDatumApiGetBotDatumRequest
  */
-export interface TaskActivityApiGetTaskActivityRequest {
+export interface BotDatumApiGetBotDatumRequest {
     /**
      * Id
      * @type {number}
-     * @memberof TaskActivityApiGetTaskActivity
+     * @memberof BotDatumApiGetBotDatum
      */
     readonly id: number
 
     /**
      * Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names 
      * @type {string}
-     * @memberof TaskActivityApiGetTaskActivity
+     * @memberof BotDatumApiGetBotDatum
      */
     readonly includes?: string
 
     /**
      * Column names [.] separated to fetch specific fields in response
      * @type {string}
-     * @memberof TaskActivityApiGetTaskActivity
+     * @memberof BotDatumApiGetBotDatum
      */
     readonly select?: string
 }
 
 /**
- * Request parameters for listTaskActivities operation in TaskActivityApi.
+ * Request parameters for listBotData operation in BotDatumApi.
  * @export
- * @interface TaskActivityApiListTaskActivitiesRequest
+ * @interface BotDatumApiListBotDataRequest
  */
-export interface TaskActivityApiListTaskActivitiesRequest {
+export interface BotDatumApiListBotDataRequest {
     /**
      * Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names 
      * @type {string}
-     * @memberof TaskActivityApiListTaskActivities
+     * @memberof BotDatumApiListBotData
      */
     readonly includes?: string
 
     /**
      * Filter on specific fields. Multiple conditions [.] separated Example: col_like_value.col2__val2
      * @type {string}
-     * @memberof TaskActivityApiListTaskActivities
+     * @memberof BotDatumApiListBotData
      */
     readonly where?: string
 
     /**
      * Filter on specific fields (Chained ors). Multiple conditions [.] separated Example: col_like_value.col2__val2
      * @type {string}
-     * @memberof TaskActivityApiListTaskActivities
+     * @memberof BotDatumApiListBotData
      */
     readonly whereOr?: string
 
     /**
      * Group by field. Multiple conditions [.] separated Example: field1.field2
      * @type {string}
-     * @memberof TaskActivityApiListTaskActivities
+     * @memberof BotDatumApiListBotData
      */
     readonly groupBy?: string
 
     /**
      * Rows to limit in response (Default: 10,000)
      * @type {string}
-     * @memberof TaskActivityApiListTaskActivities
+     * @memberof BotDatumApiListBotData
      */
     readonly limit?: string
 
     /**
      * Pagination page
      * @type {number}
-     * @memberof TaskActivityApiListTaskActivities
+     * @memberof BotDatumApiListBotData
      */
     readonly page?: number
 
     /**
      * Order by [field]
      * @type {string}
-     * @memberof TaskActivityApiListTaskActivities
+     * @memberof BotDatumApiListBotData
      */
     readonly orderBy?: string
 
     /**
      * Order by field direction
      * @type {string}
-     * @memberof TaskActivityApiListTaskActivities
+     * @memberof BotDatumApiListBotData
      */
     readonly orderDirection?: string
 
     /**
      * Column names [.] separated to fetch specific fields in response
      * @type {string}
-     * @memberof TaskActivityApiListTaskActivities
+     * @memberof BotDatumApiListBotData
      */
     readonly select?: string
 }
 
 /**
- * Request parameters for updateTaskActivity operation in TaskActivityApi.
+ * Request parameters for updateBotDatum operation in BotDatumApi.
  * @export
- * @interface TaskActivityApiUpdateTaskActivityRequest
+ * @interface BotDatumApiUpdateBotDatumRequest
  */
-export interface TaskActivityApiUpdateTaskActivityRequest {
+export interface BotDatumApiUpdateBotDatumRequest {
     /**
      * Id
      * @type {number}
-     * @memberof TaskActivityApiUpdateTaskActivity
+     * @memberof BotDatumApiUpdateBotDatum
      */
     readonly id: number
 
     /**
-     * TaskActivity
-     * @type {ModelsTaskActivity}
-     * @memberof TaskActivityApiUpdateTaskActivity
+     * BotDatum
+     * @type {ModelsBotDatum}
+     * @memberof BotDatumApiUpdateBotDatum
      */
-    readonly taskActivity: ModelsTaskActivity
+    readonly botDatum: ModelsBotDatum
 }
 
 /**
- * TaskActivityApi - object-oriented interface
+ * BotDatumApi - object-oriented interface
  * @export
- * @class TaskActivityApi
+ * @class BotDatumApi
  * @extends {BaseAPI}
  */
-export class TaskActivityApi extends BaseAPI {
+export class BotDatumApi extends BaseAPI {
     /**
      * 
-     * @summary Creates TaskActivity
-     * @param {TaskActivityApiCreateTaskActivityRequest} requestParameters Request parameters.
+     * @summary Creates BotDatum
+     * @param {BotDatumApiCreateBotDatumRequest} requestParameters Request parameters.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof TaskActivityApi
+     * @memberof BotDatumApi
      */
-    public createTaskActivity(requestParameters: TaskActivityApiCreateTaskActivityRequest, options?: any) {
-        return TaskActivityApiFp(this.configuration).createTaskActivity(requestParameters.taskActivity, options).then((request) => request(this.axios, this.basePath));
+    public createBotDatum(requestParameters: BotDatumApiCreateBotDatumRequest, options?: any) {
+        return BotDatumApiFp(this.configuration).createBotDatum(requestParameters.botDatum, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
      * 
-     * @summary Deletes TaskActivity
-     * @param {TaskActivityApiDeleteTaskActivityRequest} requestParameters Request parameters.
+     * @summary Deletes BotDatum
+     * @param {BotDatumApiDeleteBotDatumRequest} requestParameters Request parameters.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof TaskActivityApi
+     * @memberof BotDatumApi
      */
-    public deleteTaskActivity(requestParameters: TaskActivityApiDeleteTaskActivityRequest, options?: any) {
-        return TaskActivityApiFp(this.configuration).deleteTaskActivity(requestParameters.id, options).then((request) => request(this.axios, this.basePath));
+    public deleteBotDatum(requestParameters: BotDatumApiDeleteBotDatumRequest, options?: any) {
+        return BotDatumApiFp(this.configuration).deleteBotDatum(requestParameters.id, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
      * 
-     * @summary Gets TaskActivities in bulk
-     * @param {TaskActivityApiGetTaskActivitiesBulkRequest} requestParameters Request parameters.
+     * @summary Gets BotData in bulk
+     * @param {BotDatumApiGetBotDataBulkRequest} requestParameters Request parameters.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof TaskActivityApi
+     * @memberof BotDatumApi
      */
-    public getTaskActivitiesBulk(requestParameters: TaskActivityApiGetTaskActivitiesBulkRequest, options?: any) {
-        return TaskActivityApiFp(this.configuration).getTaskActivitiesBulk(requestParameters.body, options).then((request) => request(this.axios, this.basePath));
+    public getBotDataBulk(requestParameters: BotDatumApiGetBotDataBulkRequest, options?: any) {
+        return BotDatumApiFp(this.configuration).getBotDataBulk(requestParameters.body, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
      * 
-     * @summary Gets TaskActivity
-     * @param {TaskActivityApiGetTaskActivityRequest} requestParameters Request parameters.
+     * @summary Gets BotDatum
+     * @param {BotDatumApiGetBotDatumRequest} requestParameters Request parameters.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof TaskActivityApi
+     * @memberof BotDatumApi
      */
-    public getTaskActivity(requestParameters: TaskActivityApiGetTaskActivityRequest, options?: any) {
-        return TaskActivityApiFp(this.configuration).getTaskActivity(requestParameters.id, requestParameters.includes, requestParameters.select, options).then((request) => request(this.axios, this.basePath));
+    public getBotDatum(requestParameters: BotDatumApiGetBotDatumRequest, options?: any) {
+        return BotDatumApiFp(this.configuration).getBotDatum(requestParameters.id, requestParameters.includes, requestParameters.select, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
      * 
-     * @summary Lists TaskActivities
-     * @param {TaskActivityApiListTaskActivitiesRequest} requestParameters Request parameters.
+     * @summary Lists BotData
+     * @param {BotDatumApiListBotDataRequest} requestParameters Request parameters.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof TaskActivityApi
+     * @memberof BotDatumApi
      */
-    public listTaskActivities(requestParameters: TaskActivityApiListTaskActivitiesRequest = {}, options?: any) {
-        return TaskActivityApiFp(this.configuration).listTaskActivities(requestParameters.includes, requestParameters.where, requestParameters.whereOr, requestParameters.groupBy, requestParameters.limit, requestParameters.page, requestParameters.orderBy, requestParameters.orderDirection, requestParameters.select, options).then((request) => request(this.axios, this.basePath));
+    public listBotData(requestParameters: BotDatumApiListBotDataRequest = {}, options?: any) {
+        return BotDatumApiFp(this.configuration).listBotData(requestParameters.includes, requestParameters.where, requestParameters.whereOr, requestParameters.groupBy, requestParameters.limit, requestParameters.page, requestParameters.orderBy, requestParameters.orderDirection, requestParameters.select, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
      * 
-     * @summary Updates TaskActivity
-     * @param {TaskActivityApiUpdateTaskActivityRequest} requestParameters Request parameters.
+     * @summary Updates BotDatum
+     * @param {BotDatumApiUpdateBotDatumRequest} requestParameters Request parameters.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof TaskActivityApi
+     * @memberof BotDatumApi
      */
-    public updateTaskActivity(requestParameters: TaskActivityApiUpdateTaskActivityRequest, options?: any) {
-        return TaskActivityApiFp(this.configuration).updateTaskActivity(requestParameters.id, requestParameters.taskActivity, options).then((request) => request(this.axios, this.basePath));
+    public updateBotDatum(requestParameters: BotDatumApiUpdateBotDatumRequest, options?: any) {
+        return BotDatumApiFp(this.configuration).updateBotDatum(requestParameters.id, requestParameters.botDatum, options).then((request) => request(this.axios, this.basePath));
     }
 }
