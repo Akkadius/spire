@@ -24,7 +24,7 @@ export interface ModelsTask {
     replay_timer_seconds?: number;
     request_timer_group?: number;
     request_timer_seconds?: number;
-    reward_list?: string;
+    reward_id_list?: string;
     reward_method?: number;
     reward_point_type?: number;
     reward_points?: number;

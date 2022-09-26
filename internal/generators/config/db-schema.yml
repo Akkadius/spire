@@ -15655,7 +15655,7 @@ tasks:
     is_nullable: "NO"
     column_type: varchar(64)
     column_default: ''''''
-  - column: reward_list
+  - column: reward_id_list
     data_type: text
     column_key: ""
     ordinal_position: "8"
