@@ -201,7 +201,7 @@
                        },
                        {
                          description: 'Min Level',
-                         field: 'minlevel',
+                         field: 'min_level',
                          itemIcon: '5885',
                          fieldType: 'text',
                          col: 'col-2',
@@ -209,7 +209,7 @@
                        {
                          description: 'Max Level',
                          itemIcon: '5885',
-                         field: 'maxlevel',
+                         field: 'max_level',
                          fieldType: 'text',
                          col: 'col-2',
                        },
@@ -251,7 +251,7 @@
                        },
                        {
                          description: 'Reward Type',
-                         field: 'rewardmethod',
+                         field: 'reward_method',
                          fieldType: 'select',
                          itemIcon: '3366',
                          selectData: TASK_REWARD_METHOD_TYPE,
@@ -260,14 +260,14 @@
                        },
                        {
                          description: 'Reward Text',
-                         field: 'reward',
+                         field: 'reward_text',
                          fieldType: 'text',
                          itemIcon: '3366',
                          col: 'col-5',
                        },
                        {
-                         description: 'Reward Item ID',
-                         field: 'rewardid',
+                         description: 'Reward Item ID(s)',
+                         field: 'reward_id_list',
                          fieldType: 'text',
                          itemIcon: '3366',
                          col: 'col-4',
@@ -275,14 +275,14 @@
                        },
                        {
                          description: 'EXP Reward',
-                         field: 'xpreward',
+                         field: 'exp_reward',
                          itemIcon: '2045',
                          fieldType: 'text',
                          col: 'col-4'
                        },
                        {
                          description: 'Cash Reward',
-                         field: 'cashreward',
+                         field: 'cash_reward',
                          itemIcon: '646',
                          fieldType: 'text',
                          col: 'col-4',
@@ -1120,10 +1120,12 @@ export default {
         // reset certain fields when activity type is changed
         if (this.task.task_activities[this.selectedActivity]) {
           this.task.task_activities[this.selectedActivity].zones                = "0"
-          this.task.task_activities[this.selectedActivity].goalid               = 0
+          // this.task.task_activities[this.selectedActivity].goalid               = 0
           this.task.task_activities[this.selectedActivity].goalmethod           = 0
           this.task.task_activities[this.selectedActivity].goalcount            = 1
           this.task.task_activities[this.selectedActivity].optional             = 0
+          this.task.task_activities[this.selectedActivity].item_id_list         = ""
+          this.task.task_activities[this.selectedActivity].npc_match_list       = ""
           this.task.task_activities[this.selectedActivity].item_list            = ""
           this.task.task_activities[this.selectedActivity].spell_list           = ""
           this.task.task_activities[this.selectedActivity].target_name          = ""
