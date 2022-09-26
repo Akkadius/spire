@@ -214,26 +214,38 @@ export default {
         || this.task.cashreward > 0
     },
 
+    created() {
+      this.previousRewardItems = ""
+    },
+
     async load() {
       if (this.task.duration && this.task.duration !== this.lastTaskDuration) {
         this.setCountDownTimer()
         this.lastTaskDuration = this.task.duration
       }
 
-      this.rewardItems = []
+      // bust cache if the reward is different when we redraw this component
+      if (this.previousRewardItems !== this.task.reward_id_list) {
+        this.rewardItems = []
+      }
 
       // load multiple rewards
       if (this.task.reward_id_list && this.task.reward_id_list.length > 0) {
-        const items = this.task.reward_id_list.split("|").map(function (x) {
+        const items = this.task.reward_id_list.split("|").map((x) => {
           return parseInt(x, 10);
         });
-        if (items.length > 0) {
+
+        // we check to see if items is the same as previous reward items because
+        // when changing fields we end up redrawing this area
+        // we already loaded
+        if (items.length > 0 && this.previousRewardItems !== items) {
           await Items.loadItemsBulk(items);
           let rewardItems = []
           for (let item of items) {
             rewardItems.push(await Items.getItem(item))
           }
           this.rewardItems = rewardItems
+          this.previousRewardItems = items
 
           console.log(rewardItems)
         }
