@@ -484,6 +484,11 @@
                            //   zeroValue: -1
                            // },
                            {
+                              fieldType: 'header',
+                              text: 'Activity',
+                              col: 'col-12'
+                           },
+                           {
                              description: 'Task Step',
                              field: 'step',
                              fieldType: 'step',
@@ -497,24 +502,63 @@
                              itemIcon: '5739',
                              fieldType: 'select',
                              selectData: TASK_ACTIVITY_TYPES,
-                             col: 'col-4',
+                             col: 'col-3',
                              onchange: activityTypeChange,
+                           },
+                           // {
+                           //   description: 'Goal Method',
+                           //   field: 'goalmethod',
+                           //   fieldType: 'select',
+                           //   itemIcon: '3196',
+                           //   selectData: TASK_GOAL_METHOD_TYPE,
+                           //   zeroValue: -1,
+                           //   col: 'col-4',
+                           // },
+                           {
+                             description: 'Goal Count',
+                             itemIcon: '3196',
+                             field: 'goalcount',
+                             fieldType: 'number',
+                             col: 'col-2',
+                           },
+                           {
+                             description: 'Quest Controlled',
+                             field: 'goalmethod',
+                             itemIcon: '869',
+                             fieldType: 'checkbox',
+                             true: 2,
+                             col: 'col-3',
+                           },
+                           {
+                             description: 'Optional',
+                             field: 'optional',
+                             itemIcon: '6696',
+                             fieldType: 'checkbox',
+                             col: 'col-2',
+                           },
+                           {
+                              fieldType: 'header',
+                              text: 'Activity Description',
+                              col: 'col-12',
+                              info: 'Activity descriptions are built using either name & target fields or using the description override',
+                           },
+                           {
+                             description: 'Item Name(s)',
+                             itemIcon: '2275',
+                             fieldType: 'text',
+                             field: 'item_list',
+                             col: 'col-6',
+                             style: isDescriptionOverrideSet() ? 'opacity: .2;' : 'opacity: 1;',
+                             showIf: isItemListVisible()
                            },
                            {
                              description: 'Activity Target',
-                             itemIcon: '5739',
+                             itemIcon: '2275',
                              fieldType: 'text',
                              field: 'target_name',
                              col: 'col-6',
+                             style: isDescriptionOverrideSet() ? 'opacity: .2;' : 'opacity: 1;',
                              showIf: isActivityTargetVisible()
-                           },
-                           {
-                             description: 'Item List',
-                             itemIcon: '5739',
-                             fieldType: 'text',
-                             field: 'item_list',
-                             col: 'col-12',
-                             showIf: isItemListVisible()
                            },
                            {
                              description: 'Description Override',
@@ -523,37 +567,20 @@
                              itemIcon: '2275',
                              col: 'col-12',
                            },
+                           // {
+                           //   description: 'Goal ID' + renderGoalIdDescriptor(),
+                           //   field: 'goalid',
+                           //   fieldType: 'number',
+                           //   itemIcon: '3196',
+                           //   col: 'col-3',
+                           //   showIf: isGoalIdSelectorActive(),
+                           //   onclick: isGoalIdSelectorActive() ? setSelectorActive : () => {},
+                           // },
                            {
-                             description: 'Goal Method',
-                             field: 'goalmethod',
-                             fieldType: 'select',
-                             itemIcon: '3196',
-                             selectData: TASK_GOAL_METHOD_TYPE,
-                             zeroValue: -1,
-                             col: 'col-4',
-                           },
-                           {
-                             description: 'Goal Count',
-                             itemIcon: '3196',
-                             field: 'goalcount',
-                             fieldType: 'number',
-                             col: 'col-3',
-                           },
-                           {
-                             description: 'Goal ID' + renderGoalIdDescriptor(),
-                             field: 'goalid',
-                             fieldType: 'number',
-                             itemIcon: '3196',
-                             col: 'col-3',
-                             showIf: isGoalIdSelectorActive(),
-                             onclick: isGoalIdSelectorActive() ? setSelectorActive : () => {},
-                           },
-                           {
-                             description: 'Optional',
-                             field: 'optional',
-                             itemIcon: '4493',
-                             fieldType: 'checkbox',
-                             col: 'col-2',
+                              fieldType: 'header',
+                              text: 'Activity Filters',
+                              col: 'col-12',
+                              info: 'Filters determine what the activity update applies to, zone, items, npc\'s etc.',
                            },
                            {
                              description: 'Goal Match List ' + renderGoalMatchListDescription() + ' Multiple entries separated by |',
@@ -563,14 +590,6 @@
                              col: 'col-12',
                              showIf: isGoalMatchListActive(),
                              onclick: setSelectorActive,
-                           },
-                           {
-                             description: 'Quest Example (Quest Controlled)',
-                             itemIcon: '3196',
-                             field: 'quest_example',
-                             fieldType: 'popout',
-                             showIf: isActivityQuestControlled(),
-                             col: 'col-12',
                            },
                            {
                              description: 'Deliver to NPC',
@@ -583,14 +602,24 @@
                              onclick: setSelectorActive,
                            },
                            {
-                             description: 'Zone',
-                             itemIcon: '3133',
+                             description: 'Zone(s)',
+                             itemIcon: '6849',
                              field: 'zones',
                              fieldType: 'text',
                              type: 'text',
                              col: 'col-6',
                              onclick: setSelectorActive,
                            },
+
+                           {
+                             description: 'Quest Example (Quest Controlled)',
+                             itemIcon: '3196',
+                             field: 'quest_example',
+                             fieldType: 'popout',
+                             showIf: isActivityQuestControlled(),
+                             col: 'col-12',
+                           },
+
                            // Removed until fully implemented
                            // {
                            //   description: 'Skill List',
@@ -605,8 +634,27 @@
                          ]"
                           :class="field.col + ' mb-3 pl-2 pr-2'"
                           v-if="(typeof field.showIf !== 'undefined' && field.showIf) || typeof field.showIf === 'undefined'"
+                          :style="(typeof field.style !== 'undefined' && field.style) || typeof field.style === 'undefined'"
                         >
-                          <div>
+
+                          <div
+                            v-if="field.fieldType === 'header'"
+                          >
+                            <span
+                              class="font-weight-bold"
+                            >
+                              {{ field.text }}
+                              <i
+                                v-b-tooltip.hover.v-dark.topright
+                                :title="field.info"
+                                v-if="field.info"
+                                style="color: #6b614a"
+                                class="fa fa-info-circle"
+                              />
+                            </span>
+                          </div>
+
+                          <div v-if="field.description">
                             <span
                               v-if="field.itemIcon"
                               :class="'item-' + field.itemIcon + '-sm'"
@@ -617,7 +665,6 @@
 
                           <div v-if="field.fieldType === 'popout' && field.field === 'quest_example'">
                             <div>
-
                               <eq-tabs :bottom-tab-margin="10">
                                 <eq-tab name="Perl" selected="true" class="mb-0">
                                   <div
@@ -1202,6 +1249,10 @@ export default {
       )
     },
 
+    isDescriptionOverrideSet() {
+      return this.task.task_activities[this.selectedActivity].description_override.length > 0
+    },
+
     isActivityTargetVisible() {
       return [
         TASK_ACTIVITY_TYPE.KILL,
@@ -1317,7 +1368,7 @@ export default {
         if (r.status === 200) {
           this.task             = (await Tasks.getTask(this.$route.params.id))
           this.selectedActivity = r.data.activityid
-          this.notification = `Task activity (${this.selectedActivity}) successfully cloned`
+          this.notification     = `Task activity (${this.selectedActivity}) successfully cloned`
         }
       } catch (err) {
         console.log(err)
@@ -1383,7 +1434,7 @@ export default {
         if (r.status === 200) {
           this.task             = (await Tasks.getTask(this.$route.params.id))
           this.selectedActivity = r.data.activityid
-          this.notification = "Task activity successfully created"
+          this.notification     = "Task activity successfully created"
         }
       } catch (err) {
         console.log(err)
@@ -1410,8 +1461,8 @@ export default {
                 if (r.status === 200) {
                   this.task             = (await Tasks.getTask(this.$route.params.id))
                   this.selectedActivity = a.activityid - 1
-                  this.notification = "Task activity successfully deleted"
-                  deletedSuccessfully = true
+                  this.notification     = "Task activity successfully deleted"
+                  deletedSuccessfully   = true
                 }
               }
             }

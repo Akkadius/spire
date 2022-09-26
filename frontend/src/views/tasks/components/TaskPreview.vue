@@ -84,12 +84,14 @@
         >
           <span class="font-weight-bold">Reward(s)</span>
 
-          <div v-if="task.rewardid > 0 && rewardItem && Object.keys(rewardItem).length > 0">
+          <div
+            v-for="item in rewardItems"
+          >
             <item-popover
-              :item="rewardItem"
-              v-if="Object.keys(rewardItem).length > 0 && rewardItem"
+              :item="item"
+              v-if="Object.keys(item).length > 0 && item"
               size="regular"
-              class="mt-3"
+              class="mt-1"
             />
           </div>
           <div v-if="task.alternate_currency && task.alternate_currency.item">
@@ -102,15 +104,15 @@
             />
           </div>
 
-          <div v-if="task.cashreward > 0" class="mt-3">
+          <div v-if="task.cash_reward > 0" class="mt-3">
             <eq-cash-display
               class="d-inline-block"
-              :price="task.cashreward"
+              :price="task.cash_reward"
             />
           </div>
 
-          <div v-if="task.xpreward > 0" class="mt-3">
-            Experience ({{ task.xpreward.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") }})
+          <div v-if="task.exp_reward > 0" class="mt-3">
+            Experience ({{ task.exp_reward.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") }})
           </div>
         </div>
 
@@ -162,11 +164,10 @@ export default {
       zones: {},
 
       // item objects for rendering
-      rewardItem: null,
+      rewardItems: [],
 
       // this keeps track of the last loaded state so we are not forcing
       // re-renders every time updates to the "task" object are made
-      lastLoadedItemId: 0,
       lastTaskDuration: -1,
     }
   },
@@ -206,25 +207,36 @@ export default {
     },
 
     hasReward() {
-      return (this.task.rewardid > 0 && this.task.rewardmethod === 0)
+      return (this.rewardItems.length > 0)
         || this.task.reward_ebon_crystals > 0
         || this.task.reward_radiant_crystals > 0
         || this.task.xpreward > 0
         || this.task.cashreward > 0
     },
 
-    load() {
+    async load() {
       if (this.task.duration && this.task.duration !== this.lastTaskDuration) {
         this.setCountDownTimer()
         this.lastTaskDuration = this.task.duration
       }
 
-      if (this.task.rewardid && this.task.rewardid !== this.lastLoadedItemId) {
-        this.rewardItem = null
-        Items.getItem(this.task.rewardid).then((r) => {
-          this.rewardItem       = r
-          this.lastLoadedItemId = this.task.rewardid
-        })
+      this.rewardItems = []
+
+      // load multiple rewards
+      if (this.task.reward_id_list && this.task.reward_id_list.length > 0) {
+        const items = this.task.reward_id_list.split("|").map(function (x) {
+          return parseInt(x, 10);
+        });
+        if (items.length > 0) {
+          await Items.loadItemsBulk(items);
+          let rewardItems = []
+          for (let item of items) {
+            rewardItems.push(await Items.getItem(item))
+          }
+          this.rewardItems = rewardItems
+
+          console.log(rewardItems)
+        }
       }
 
       this.description = this.getDescription()
@@ -295,6 +307,14 @@ export default {
             return zone.long_name
           }
         }
+      }
+
+      if (activity.zones === 0) {
+        return "ALL"
+      }
+
+      if (activity.zones === -1) {
+        return "Unknown"
       }
 
       return ""
