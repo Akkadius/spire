@@ -144,7 +144,7 @@ generate-api-pipeline: ##@generate Runs entire API generation pipeline, backend 
 	make generate-axios-client-local
 	@./scripts/banner.sh "Generation pipeline complete"
 
-generate-axios-client-local:
+generate-axios-client-local: ##@generate Generate Axios client from Swagger spec
 	# sudo npm install @openapitools/openapi-generator-cli -g
 	sudo openapi-generator-cli version-manager set 5.0.0
 	sudo openapi-generator-cli generate --enable-post-process-file \
