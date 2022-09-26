@@ -620,6 +620,62 @@
                              col: 'col-12',
                            },
 
+                           {
+                              fieldType: 'header',
+                              text: 'Explore',
+                              col: 'col-12',
+                              info: 'Below defines the exploration boundary',
+                              showIf: isGoalIdExploreActive(),
+                           },
+                           {
+                             description: 'Min X',
+                             field: 'min_x',
+                             fieldType: 'number',
+                             itemIcon: '6851',
+                             col: 'col-2',
+                             showIf: isGoalIdExploreActive()
+                           },
+                           {
+                             description: 'Max X',
+                             field: 'max_x',
+                             fieldType: 'number',
+                             itemIcon: '6851',
+                             col: 'col-2',
+                             showIf: isGoalIdExploreActive()
+                           },
+                           {
+                             description: 'Min Y',
+                             field: 'min_y',
+                             fieldType: 'number',
+                             itemIcon: '6851',
+                             col: 'col-2',
+                             showIf: isGoalIdExploreActive()
+                           },
+                           {
+                             description: 'Max Y',
+                             field: 'max_y',
+                             fieldType: 'number',
+                             itemIcon: '6851',
+                             col: 'col-2',
+                             showIf: isGoalIdExploreActive()
+                           },
+                           {
+                             description: 'Min Z',
+                             field: 'min_z',
+                             fieldType: 'number',
+                             itemIcon: '6851',
+                             col: 'col-2',
+                             showIf: isGoalIdExploreActive()
+                           },
+                           {
+                             description: 'Max Z',
+                             field: 'max_z',
+                             fieldType: 'number',
+                             itemIcon: '6851',
+                             col: 'col-2',
+                             showIf: isGoalIdExploreActive()
+                           },
+
                            // Removed until fully implemented
                            // {
                            //   description: 'Skill List',
@@ -638,7 +694,7 @@
                         >
 
                           <div
-                            v-if="field.fieldType === 'header'"
+                            v-if="field.fieldType === 'header' && ((typeof field.showIf !== 'undefined' && field.showIf) || typeof field.showIf === 'undefined')"
                           >
                             <span
                               class="font-weight-bold"
@@ -654,6 +710,7 @@
                             </span>
                           </div>
 
+                          <!-- Description -->
                           <div v-if="field.description">
                             <span
                               v-if="field.itemIcon"
@@ -661,6 +718,14 @@
                               style="display: inline-block"
                             />
                             {{ field.description }}
+
+                            <!-- Show zone name -->
+                            <div
+                              v-if="field.field === 'zones' && task.task_activities[selectedActivity][field.field]"
+                              class="font-weight-bold mt-1 text-center d-inline-block ml-1"
+                            >
+                              {{ getZoneNames() }}
+                            </div>
                           </div>
 
                           <div v-if="field.fieldType === 'popout' && field.field === 'quest_example'">
@@ -786,14 +851,6 @@
                               {{ index }}) {{ description }}
                             </option>
                           </select>
-
-                          <!-- Show zone name underneath zone field -->
-                          <div
-                            v-if="field.field === 'zones' && task.task_activities[selectedActivity][field.field]"
-                            class="font-weight-bold mt-1 text-center"
-                          >
-                            {{ getZoneNames() }}
-                          </div>
 
                         </div>
                       </div>

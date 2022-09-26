@@ -86,6 +86,7 @@
 
           <div
             v-for="item in rewardItems"
+            :key="item.id"
           >
             <item-popover
               :item="item"
@@ -225,6 +226,9 @@ export default {
       }
 
       // bust cache if the reward is different when we redraw this component
+      // console.log(this.previousRewardItems)
+      // console.log(this.task.reward_id_list)
+      // console.log(this.previousRewardItems !== this.task.reward_id_list)
       if (this.previousRewardItems !== this.task.reward_id_list) {
         this.rewardItems = []
       }
@@ -245,9 +249,7 @@ export default {
             rewardItems.push(await Items.getItem(item))
           }
           this.rewardItems = rewardItems
-          this.previousRewardItems = items
-
-          console.log(rewardItems)
+          this.previousRewardItems = this.task.reward_id_list.toString()
         }
       }
 
