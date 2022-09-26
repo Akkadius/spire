@@ -404,7 +404,6 @@ export class Items {
       "StartingItems.Zone",
       "TradeskillRecipeEntries",
       "TradeskillRecipeEntries.TradeskillRecipe",
-      "Tasks",
       "TributeLevels",
     ]
   }

@@ -85,7 +85,6 @@ export * from './models-forage';
 export * from './models-friend';
 export * from './models-global-loot';
 export * from './models-gm-ip';
-export * from './models-goallist';
 export * from './models-graveyard';
 export * from './models-grid';
 export * from './models-grid-entry';

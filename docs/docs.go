@@ -27983,335 +27983,6 @@ const docTemplate = `{
                 }
             }
         },
-        "/goallist": {
-            "put": {
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Goallist"
-                ],
-                "summary": "Creates Goallist",
-                "operationId": "createGoallist",
-                "parameters": [
-                    {
-                        "description": "Goallist",
-                        "name": "goallist",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/models.Goallist"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/models.Goallist"
-                            }
-                        }
-                    },
-                    "500": {
-                        "description": "Error inserting entity",
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                }
-            }
-        },
-        "/goallist/{id}": {
-            "get": {
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Goallist"
-                ],
-                "summary": "Gets Goallist",
-                "operationId": "getGoallist",
-                "parameters": [
-                    {
-                        "type": "integer",
-                        "description": "Id",
-                        "name": "id",
-                        "in": "path",
-                        "required": true
-                    },
-                    {
-                        "type": "string",
-                        "description": "Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names ",
-                        "name": "includes",
-                        "in": "query"
-                    },
-                    {
-                        "type": "string",
-                        "description": "Column names [.] separated to fetch specific fields in response",
-                        "name": "select",
-                        "in": "query"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/models.Goallist"
-                            }
-                        }
-                    },
-                    "404": {
-                        "description": "Entity not found",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    "500": {
-                        "description": "Bad query request",
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                }
-            },
-            "delete": {
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Goallist"
-                ],
-                "summary": "Deletes Goallist",
-                "operationId": "deleteGoallist",
-                "parameters": [
-                    {
-                        "type": "integer",
-                        "description": "listid",
-                        "name": "id",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Entity deleted successfully",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    "404": {
-                        "description": "Cannot find entity",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    "500": {
-                        "description": "Error deleting entity",
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                }
-            },
-            "patch": {
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Goallist"
-                ],
-                "summary": "Updates Goallist",
-                "operationId": "updateGoallist",
-                "parameters": [
-                    {
-                        "type": "integer",
-                        "description": "Id",
-                        "name": "id",
-                        "in": "path",
-                        "required": true
-                    },
-                    {
-                        "description": "Goallist",
-                        "name": "goallist",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/models.Goallist"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/models.Goallist"
-                            }
-                        }
-                    },
-                    "404": {
-                        "description": "Cannot find entity",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    "500": {
-                        "description": "Error updating entity",
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                }
-            }
-        },
-        "/goallists": {
-            "get": {
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Goallist"
-                ],
-                "summary": "Lists Goallists",
-                "operationId": "listGoallists",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names ",
-                        "name": "includes",
-                        "in": "query"
-                    },
-                    {
-                        "type": "string",
-                        "description": "Filter on specific fields. Multiple conditions [.] separated Example: col_like_value.col2__val2",
-                        "name": "where",
-                        "in": "query"
-                    },
-                    {
-                        "type": "string",
-                        "description": "Filter on specific fields (Chained ors). Multiple conditions [.] separated Example: col_like_value.col2__val2",
-                        "name": "whereOr",
-                        "in": "query"
-                    },
-                    {
-                        "type": "string",
-                        "description": "Group by field. Multiple conditions [.] separated Example: field1.field2",
-                        "name": "groupBy",
-                        "in": "query"
-                    },
-                    {
-                        "type": "string",
-                        "description": "Rows to limit in response (Default: 10,000)",
-                        "name": "limit",
-                        "in": "query"
-                    },
-                    {
-                        "type": "integer",
-                        "description": "Pagination page",
-                        "name": "page",
-                        "in": "query"
-                    },
-                    {
-                        "type": "string",
-                        "description": "Order by [field]",
-                        "name": "orderBy",
-                        "in": "query"
-                    },
-                    {
-                        "type": "string",
-                        "description": "Order by field direction",
-                        "name": "orderDirection",
-                        "in": "query"
-                    },
-                    {
-                        "type": "string",
-                        "description": "Column names [.] separated to fetch specific fields in response",
-                        "name": "select",
-                        "in": "query"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/models.Goallist"
-                            }
-                        }
-                    },
-                    "500": {
-                        "description": "Bad query request",
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                }
-            }
-        },
-        "/goallists/bulk": {
-            "post": {
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Goallist"
-                ],
-                "summary": "Gets Goallists in bulk",
-                "operationId": "getGoallistsBulk",
-                "parameters": [
-                    {
-                        "description": "body",
-                        "name": "Body",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/crudcontrollers.BulkFetchByIdsGetRequest"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/models.Goallist"
-                            }
-                        }
-                    },
-                    "500": {
-                        "description": "Bad query request",
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                }
-            }
-        },
         "/graveyard": {
             "put": {
                 "consumes": [
@@ -63204,17 +62875,6 @@ const docTemplate = `{
                 }
             }
         },
-        "models.Goallist": {
-            "type": "object",
-            "properties": {
-                "entry": {
-                    "type": "integer"
-                },
-                "listid": {
-                    "type": "integer"
-                }
-            }
-        },
         "models.Graveyard": {
             "type": "object",
             "properties": {
@@ -68046,7 +67706,7 @@ const docTemplate = `{
                 "alternate_currency": {
                     "$ref": "#/definitions/models.AlternateCurrency"
                 },
-                "cashreward": {
+                "cash_reward": {
                     "type": "integer"
                 },
                 "completion_emote": {
@@ -68064,6 +67724,9 @@ const docTemplate = `{
                 "dz_template_id": {
                     "type": "integer"
                 },
+                "exp_reward": {
+                    "type": "integer"
+                },
                 "faction_amount": {
                     "type": "integer"
                 },
@@ -68079,16 +67742,16 @@ const docTemplate = `{
                 "lock_activity_id": {
                     "type": "integer"
                 },
+                "max_level": {
+                    "type": "integer"
+                },
                 "max_players": {
                     "type": "integer"
                 },
-                "maxlevel": {
+                "min_level": {
                     "type": "integer"
                 },
                 "min_players": {
-                    "type": "integer"
-                },
-                "minlevel": {
                     "type": "integer"
                 },
                 "repeatable": {
@@ -68106,8 +67769,11 @@ const docTemplate = `{
                 "request_timer_seconds": {
                     "type": "integer"
                 },
-                "reward": {
+                "reward_list": {
                     "type": "string"
+                },
+                "reward_method": {
+                    "type": "integer"
                 },
                 "reward_point_type": {
                     "type": "integer"
@@ -68115,11 +67781,8 @@ const docTemplate = `{
                 "reward_points": {
                     "type": "integer"
                 },
-                "rewardid": {
-                    "type": "integer"
-                },
-                "rewardmethod": {
-                    "type": "integer"
+                "reward_text": {
+                    "type": "string"
                 },
                 "task_activities": {
                     "type": "array",
@@ -68137,9 +67800,6 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "type": {
-                    "type": "integer"
-                },
-                "xpreward": {
                     "type": "integer"
                 }
             }
@@ -68165,12 +67825,6 @@ const docTemplate = `{
                 "goalmethod": {
                     "type": "integer"
                 },
-                "item_goal_id": {
-                    "type": "integer"
-                },
-                "item_id": {
-                    "type": "integer"
-                },
                 "item_id_list": {
                     "type": "string"
                 },
@@ -68194,12 +67848,6 @@ const docTemplate = `{
                 },
                 "min_z": {
                     "type": "number"
-                },
-                "npc_goal_id": {
-                    "type": "integer"
-                },
-                "npc_id": {
-                    "type": "integer"
                 },
                 "npc_match_list": {
                     "type": "string"

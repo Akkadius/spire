@@ -2155,13 +2155,6 @@ definitions:
       name:
         type: string
     type: object
-  models.Goallist:
-    properties:
-      entry:
-        type: integer
-      listid:
-        type: integer
-    type: object
   models.Graveyard:
     properties:
       heading:
@@ -5354,7 +5347,7 @@ definitions:
     properties:
       alternate_currency:
         $ref: '#/definitions/models.AlternateCurrency'
-      cashreward:
+      cash_reward:
         type: integer
       completion_emote:
         type: string
@@ -5366,6 +5359,8 @@ definitions:
         type: integer
       dz_template_id:
         type: integer
+      exp_reward:
+        type: integer
       faction_amount:
         type: integer
       faction_reward:
@@ -5376,13 +5371,13 @@ definitions:
         type: integer
       lock_activity_id:
         type: integer
+      max_level:
+        type: integer
       max_players:
         type: integer
-      maxlevel:
+      min_level:
         type: integer
       min_players:
-        type: integer
-      minlevel:
         type: integer
       repeatable:
         type: integer
@@ -5394,16 +5389,16 @@ definitions:
         type: integer
       request_timer_seconds:
         type: integer
-      reward:
+      reward_list:
         type: string
+      reward_method:
+        type: integer
       reward_point_type:
         type: integer
       reward_points:
         type: integer
-      rewardid:
-        type: integer
-      rewardmethod:
-        type: integer
+      reward_text:
+        type: string
       task_activities:
         items:
           $ref: '#/definitions/models.TaskActivity'
@@ -5415,8 +5410,6 @@ definitions:
       title:
         type: string
       type:
-        type: integer
-      xpreward:
         type: integer
     type: object
   models.TaskActivity:
@@ -5432,10 +5425,6 @@ definitions:
       goalcount:
         type: integer
       goalmethod:
-        type: integer
-      item_goal_id:
-        type: integer
-      item_id:
         type: integer
       item_id_list:
         type: string
@@ -5453,10 +5442,6 @@ definitions:
         type: number
       min_z:
         type: number
-      npc_goal_id:
-        type: integer
-      npc_id:
-        type: integer
       npc_match_list:
         type: string
       optional:
@@ -24782,227 +24767,6 @@ paths:
       summary: Gets GmIps in bulk
       tags:
       - GmIp
-  /goallist:
-    put:
-      consumes:
-      - application/json
-      operationId: createGoallist
-      parameters:
-      - description: Goallist
-        in: body
-        name: goallist
-        required: true
-        schema:
-          $ref: '#/definitions/models.Goallist'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            items:
-              $ref: '#/definitions/models.Goallist'
-            type: array
-        "500":
-          description: Error inserting entity
-          schema:
-            type: string
-      summary: Creates Goallist
-      tags:
-      - Goallist
-  /goallist/{id}:
-    delete:
-      consumes:
-      - application/json
-      operationId: deleteGoallist
-      parameters:
-      - description: listid
-        in: path
-        name: id
-        required: true
-        type: integer
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: Entity deleted successfully
-          schema:
-            type: string
-        "404":
-          description: Cannot find entity
-          schema:
-            type: string
-        "500":
-          description: Error deleting entity
-          schema:
-            type: string
-      summary: Deletes Goallist
-      tags:
-      - Goallist
-    get:
-      consumes:
-      - application/json
-      operationId: getGoallist
-      parameters:
-      - description: Id
-        in: path
-        name: id
-        required: true
-        type: integer
-      - description: 'Relationships [all] for all [number] for depth of relationships
-          to load or [.] separated relationship names '
-        in: query
-        name: includes
-        type: string
-      - description: Column names [.] separated to fetch specific fields in response
-        in: query
-        name: select
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            items:
-              $ref: '#/definitions/models.Goallist'
-            type: array
-        "404":
-          description: Entity not found
-          schema:
-            type: string
-        "500":
-          description: Bad query request
-          schema:
-            type: string
-      summary: Gets Goallist
-      tags:
-      - Goallist
-    patch:
-      consumes:
-      - application/json
-      operationId: updateGoallist
-      parameters:
-      - description: Id
-        in: path
-        name: id
-        required: true
-        type: integer
-      - description: Goallist
-        in: body
-        name: goallist
-        required: true
-        schema:
-          $ref: '#/definitions/models.Goallist'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            items:
-              $ref: '#/definitions/models.Goallist'
-            type: array
-        "404":
-          description: Cannot find entity
-          schema:
-            type: string
-        "500":
-          description: Error updating entity
-          schema:
-            type: string
-      summary: Updates Goallist
-      tags:
-      - Goallist
-  /goallists:
-    get:
-      consumes:
-      - application/json
-      operationId: listGoallists
-      parameters:
-      - description: 'Relationships [all] for all [number] for depth of relationships
-          to load or [.] separated relationship names '
-        in: query
-        name: includes
-        type: string
-      - description: 'Filter on specific fields. Multiple conditions [.] separated
-          Example: col_like_value.col2__val2'
-        in: query
-        name: where
-        type: string
-      - description: 'Filter on specific fields (Chained ors). Multiple conditions
-          [.] separated Example: col_like_value.col2__val2'
-        in: query
-        name: whereOr
-        type: string
-      - description: 'Group by field. Multiple conditions [.] separated Example: field1.field2'
-        in: query
-        name: groupBy
-        type: string
-      - description: 'Rows to limit in response (Default: 10,000)'
-        in: query
-        name: limit
-        type: string
-      - description: Pagination page
-        in: query
-        name: page
-        type: integer
-      - description: Order by [field]
-        in: query
-        name: orderBy
-        type: string
-      - description: Order by field direction
-        in: query
-        name: orderDirection
-        type: string
-      - description: Column names [.] separated to fetch specific fields in response
-        in: query
-        name: select
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            items:
-              $ref: '#/definitions/models.Goallist'
-            type: array
-        "500":
-          description: Bad query request
-          schema:
-            type: string
-      summary: Lists Goallists
-      tags:
-      - Goallist
-  /goallists/bulk:
-    post:
-      consumes:
-      - application/json
-      operationId: getGoallistsBulk
-      parameters:
-      - description: body
-        in: body
-        name: Body
-        required: true
-        schema:
-          $ref: '#/definitions/crudcontrollers.BulkFetchByIdsGetRequest'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            items:
-              $ref: '#/definitions/models.Goallist'
-            type: array
-        "500":
-          description: Bad query request
-          schema:
-            type: string
-      summary: Gets Goallists in bulk
-      tags:
-      - Goallist
   /graveyard:
     put:
       consumes:

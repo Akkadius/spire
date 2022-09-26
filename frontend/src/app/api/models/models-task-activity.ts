@@ -5,8 +5,6 @@ export interface ModelsTaskActivity {
     dz_switch_id?: number;
     goalcount?: number;
     goalmethod?: number;
-    item_goal_id?: number;
-    item_id?: number;
     item_id_list?: string;
     item_list?: string;
     max_x?: number;
@@ -15,8 +13,6 @@ export interface ModelsTaskActivity {
     min_x?: number;
     min_y?: number;
     min_z?: number;
-    npc_goal_id?: number;
-    npc_id?: number;
     npc_match_list?: string;
     optional?: number;
     req_activity_id?: number;

@@ -1044,21 +1044,6 @@ gm_ips:
     is_nullable: "NO"
     column_type: varchar(15)
     column_default: ""
-goallists:
-  - column: listid
-    data_type: int
-    column_key: PRI
-    ordinal_position: "1"
-    is_nullable: "NO"
-    column_type: int(10) unsigned
-    column_default: "0"
-  - column: entry
-    data_type: int
-    column_key: PRI
-    ordinal_position: "2"
-    is_nullable: "NO"
-    column_type: int(10) unsigned
-    column_default: "0"
 graveyard:
   - column: id
     data_type: int

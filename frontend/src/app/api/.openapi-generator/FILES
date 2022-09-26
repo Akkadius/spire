@@ -86,7 +86,6 @@ api/forage-api.ts
 api/friend-api.ts
 api/global-loot-api.ts
 api/gm-ip-api.ts
-api/goallist-api.ts
 api/graveyard-api.ts
 api/grid-api.ts
 api/grid-entry-api.ts
@@ -276,7 +275,6 @@ models/models-forage.ts
 models/models-friend.ts
 models/models-global-loot.ts
 models/models-gm-ip.ts
-models/models-goallist.ts
 models/models-graveyard.ts
 models/models-grid-entry.ts
 models/models-grid.ts

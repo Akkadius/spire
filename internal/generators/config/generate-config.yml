@@ -5,6 +5,7 @@ database:
     - qs_
     - proximities_backup_
     - task_activities_backup_
+    - backup
 #    - perl_event_export_settings
     - group_leader
   table_connections:
