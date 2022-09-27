@@ -84,6 +84,10 @@
         >
           <span class="font-weight-bold">Reward(s)</span>
 
+          <div v-if="task.reward_text" style="color: magenta" class="mt-1">
+            {{ task.reward_text }}
+          </div>
+
           <div
             v-for="item in rewardItems"
             :key="item.id"
@@ -106,6 +110,7 @@
           </div>
 
           <div v-if="task.cash_reward > 0" class="mt-3">
+            Cash
             <eq-cash-display
               class="d-inline-block"
               :price="task.cash_reward"
@@ -211,8 +216,8 @@ export default {
       return (this.rewardItems.length > 0)
         || this.task.reward_ebon_crystals > 0
         || this.task.reward_radiant_crystals > 0
-        || this.task.xpreward > 0
-        || this.task.cashreward > 0
+        || this.task.exp_reward > 0
+        || this.task.cash_reward > 0
     },
 
     created() {
@@ -248,7 +253,7 @@ export default {
           for (let item of items) {
             rewardItems.push(await Items.getItem(item))
           }
-          this.rewardItems = rewardItems
+          this.rewardItems         = rewardItems
           this.previousRewardItems = this.task.reward_id_list.toString()
         }
       }
