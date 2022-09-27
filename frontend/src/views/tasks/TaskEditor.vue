@@ -624,7 +624,7 @@
                               fieldType: 'header',
                               text: 'Explore',
                               col: 'col-12',
-                              info: 'Below defines the exploration boundary',
+                              info: 'Defines the exploration boundary',
                               showIf: isGoalIdExploreActive(),
                            },
                            {
@@ -1081,7 +1081,6 @@ import FreeIdSelector from "@/components/tools/FreeIdSelector.vue";
 import TaskNpcSelector from "@/views/tasks/components/TaskNpcSelector.vue";
 import {FreeIdFetcher} from "@/app/free-id-fetcher";
 import {Npcs} from "@/app/npcs";
-import TaskExploreSelector from "@/views/tasks/components/TaskExploreSelector.vue";
 import TaskDescriptionSelector from "@/views/tasks/components/TaskDescriptionSelector.vue";
 import TaskGoalMatchListPreviewer from "@/views/tasks/components/TaskGoalMatchListPreviewer.vue";
 import {Zones} from "@/app/zones";
@@ -1103,7 +1102,6 @@ export default {
     TaskQuestExamplePreview,
     TaskGoalMatchListPreviewer,
     TaskDescriptionSelector,
-    TaskExploreSelector,
     TaskNpcSelector,
     FreeIdSelector,
     TaskItemSelector,

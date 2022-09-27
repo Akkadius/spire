@@ -142,7 +142,6 @@ export * from './models-pets-beastlord-datum';
 export * from './models-pets-equipmentset';
 export * from './models-pets-equipmentset-entry';
 export * from './models-player-titleset';
-export * from './models-proximity';
 export * from './models-quest-global';
 export * from './models-raid-detail';
 export * from './models-raid-leader';
