@@ -17,7 +17,7 @@
                     <b-button
                       @click="createTask()"
                       size="sm"
-                      variant="outline-warning"
+                      variant="outline-warning btn-dark"
                     >
                       <i class="fa fa-plus mr-1"></i>
                       New
@@ -26,7 +26,7 @@
                     <b-button
                       @click="cloneTask()"
                       size="sm"
-                      variant="outline-light"
+                      variant="outline-light btn-dark"
                       v-if="selectedTask"
                     >
                       <i class="ra ra-double-team"></i>
@@ -37,7 +37,7 @@
                       @click="deleteTask()"
 
                       size="sm"
-                      variant="outline-danger"
+                      variant="outline-danger btn-dark"
                       v-if="selectedTask"
                     >
                       <i class="fa fa-trash"></i>
@@ -427,24 +427,23 @@
                 <eq-tab
                   name="Activities"
                 >
-
                   <div>
                     <span class="font-weight-bold">Activities</span>
 
                     <div class="d-inline-block">
-                      <b-button @click="createActivity()" size="sm" variant="outline-warning" class="ml-2">
+                      <b-button @click="createActivity()" size="sm" variant="outline-warning btn-dark" class="ml-2">
                         <i class="fa fa-plus"></i>
                       </b-button>
-                      <b-button @click="cloneActivity()" size="sm" variant="outline-white" class="ml-2">
+                      <b-button @click="cloneActivity()" size="sm" variant="outline-white btn-dark" class="ml-2">
                         <i class="ra ra-double-team"></i>
                       </b-button>
-                      <b-button @click="deleteActivity()" size="sm" variant="outline-danger" class="ml-2">
+                      <b-button @click="deleteActivity()" size="sm" variant="outline-danger btn-dark" class="ml-2">
                         <i class="fa fa-trash"></i>
                       </b-button>
-                      <b-button @click="moveActivityUp()" size="sm" variant="outline-primary" class="ml-2">
+                      <b-button @click="moveActivityUp()" size="sm" variant="outline-primary btn-dark" class="ml-2">
                         <i class="fa fa-arrow-up"></i>
                       </b-button>
-                      <b-button @click="moveActivityDown()" size="sm" variant="outline-primary" class="ml-2">
+                      <b-button @click="moveActivityDown()" size="sm" variant="outline-primary btn-dark" class="ml-2">
                         <i class="fa fa-arrow-down"></i>
                       </b-button>
                     </div>
