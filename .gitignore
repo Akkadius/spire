@@ -3,6 +3,7 @@ vendor/
 .idea
 spire
 data/
+_data/
 bin/
 tmp/
 quests/

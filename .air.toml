@@ -25,6 +25,7 @@ exclude_dir = [
 	"quests",
 	"vendor",
 	"public",
+	"_data",
 	"data",
 	"containers"
 ]

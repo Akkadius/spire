@@ -56,6 +56,11 @@ func Serve(port uint, logger *logrus.Logger, router *routes.Router) error {
 		}))
 	}
 
+	e.Use(spiremiddleware.LoggerWithConfig(spiremiddleware.LoggerConfig{
+		Format: "[${time_rfc3339}] [${status}] [${method}] [${uri}] [${latency_human}]\n",
+		Output: e.Logger.Output(),
+	}))
+
 	e.GET("/swagger/*", docs.WrapHandler)
 	e.GET("/api/v1/routes", listRoutes)
 

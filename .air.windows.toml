@@ -15,7 +15,7 @@ full_bin = "spire http:serve --port=3001 null"
 # Watch these filename extensions.
 include_ext = ["go", "tpl", "tmpl", "html"]
 # Ignore these filename extensions or directories.
-exclude_dir = ["assets", "tmp", "vendor", "frontend", "data", ".idea", "public"]
+exclude_dir = ["assets", "tmp", "vendor", "frontend", "data", "_data", ".idea", "public"]
 # Watch these directories if you specified.
 include_dir = []
 # Exclude files.
