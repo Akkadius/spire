@@ -213,11 +213,11 @@ export default {
     },
 
     hasReward() {
-      return (this.rewardItems.length > 0)
+      return ((this.rewardItems.length > 0)
         || this.task.reward_ebon_crystals > 0
         || this.task.reward_radiant_crystals > 0
         || this.task.exp_reward > 0
-        || this.task.cash_reward > 0
+        || this.task.cash_reward > 0) && this.task.reward_method !== 2
     },
 
     created() {

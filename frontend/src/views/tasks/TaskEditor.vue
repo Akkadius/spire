@@ -249,13 +249,12 @@
                          fieldType: 'textarea',
                          col: 'col-12',
                        },
-                       {
-                         description: 'Reward Type',
+                      {
+                         description: 'Quest Controlled',
                          field: 'reward_method',
-                         fieldType: 'select',
                          itemIcon: '3366',
-                         selectData: TASK_REWARD_METHOD_TYPE,
-                         zeroValue: -1,
+                         fieldType: 'checkbox',
+                         true: 2,
                          col: 'col-3',
                        },
                        {
@@ -584,7 +583,7 @@
                            },
                            {
                              description: 'Goal Match List ' + renderGoalMatchListDescription() + ' Multiple entries separated by |',
-                             field: 'goal_match_list',
+                             field: 'npc_match_list',
                              fieldType: 'text',
                              itemIcon: '3196',
                              col: 'col-12',
@@ -610,7 +609,6 @@
                              col: 'col-6',
                              onclick: setSelectorActive,
                            },
-
                            {
                              description: 'Quest Example (Quest Controlled)',
                              itemIcon: '3196',
@@ -619,7 +617,6 @@
                              showIf: isActivityQuestControlled(),
                              col: 'col-12',
                            },
-
                            {
                               fieldType: 'header',
                               text: 'Explore',
@@ -944,18 +941,6 @@
           <task-npc-selector
             :selected-npc-id="task.task_activities[selectedActivity].goalid"
             @input="task.task_activities[selectedActivity].goalid = $event.npcId; setFieldModifiedById('goalid'); postTargetNameUpdateProcessor($event, 'goalid')"
-          />
-        </div>
-
-        <!-- (goalid) explore selector -->
-        <div
-          style="width: auto;"
-          class="fade-in"
-          v-if="selectorActive['goalid'] && isGoalIdExploreActive() && task.task_activities[selectedActivity].goalmethod === 0"
-        >
-          <task-explore-selector
-            :selected-explore-id="task.task_activities[selectedActivity].goalid"
-            @input="task.task_activities[selectedActivity].goalid = $event.id; setFieldModifiedById('goalid'); postTargetNameUpdateProcessor($event, 'goalid')"
           />
         </div>
 
