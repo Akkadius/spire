@@ -966,6 +966,18 @@
           />
         </div>
 
+        <!-- item_id_list_select -->
+        <div
+          style="width: auto;"
+          class="fade-in"
+          v-if="selectorActive['item_id_list_select']"
+        >
+          <task-item-selector
+            :selected-item-id="task.reward_id_list > 0 ? task.reward_id_list : 0"
+            @input="addItemToActivityItemMatchList($event.id); setFieldModifiedById('reward_id_list');"
+          />
+        </div>
+
         <!-- (zones) Zone Selector -->
         <task-zone-selector
           :selected-zone-id="parseInt(task.task_activities[selectedActivity].zones)"
@@ -1163,22 +1175,31 @@ export default {
 
   methods: {
 
-    itemMatchListItemSelector() {
+    addItemToActivityItemMatchList(itemId) {
+      let list = this.task.task_activities[this.selectedActivity]
+        .item_id_list
+        .split("|")
 
+      if (!list.includes(itemId.toString())) {
+        list.push(itemId.toString())
+      }
+
+      this.task.task_activities[this.selectedActivity].item_id_list = list.join("|")
+    },
+
+    itemMatchListItemSelector() {
+      this.setSelectorActive('item_id_list_select')
     },
 
     npcMatchListSuffixDescription() {
       const type = parseInt(this.task.task_activities[this.selectedActivity].activitytype)
       if (type === TASK_ACTIVITY_TYPE.KILL) {
         return 'To be killed'
-      }
-      else if (type === TASK_ACTIVITY_TYPE.LOOT) {
+      } else if (type === TASK_ACTIVITY_TYPE.LOOT) {
         return 'To be looted from (optional)'
-      }
-      else if (type === TASK_ACTIVITY_TYPE.SPEAK_WITH) {
+      } else if (type === TASK_ACTIVITY_TYPE.SPEAK_WITH) {
         return 'To be spoken with'
-      }
-      else if (this.isDeliverToNPCActive()) {
+      } else if (this.isDeliverToNPCActive()) {
         return 'To be delivered to'
       }
 
@@ -1188,17 +1209,13 @@ export default {
       const type = parseInt(this.task.task_activities[this.selectedActivity].activitytype)
       if (type === TASK_ACTIVITY_TYPE.DELIVER) {
         return 'Item(s) to be delivered'
-      }
-      else if (type === TASK_ACTIVITY_TYPE.TRADESKILL) {
+      } else if (type === TASK_ACTIVITY_TYPE.TRADESKILL) {
         return 'Item(s) to be created'
-      }
-      else if (type === TASK_ACTIVITY_TYPE.FISH) {
+      } else if (type === TASK_ACTIVITY_TYPE.FISH) {
         return 'Item(s) to be fished'
-      }
-      else if (type === TASK_ACTIVITY_TYPE.FORAGE) {
+      } else if (type === TASK_ACTIVITY_TYPE.FORAGE) {
         return 'Item(s) to be foraged'
-      }
-      else if (type === TASK_ACTIVITY_TYPE.LOOT) {
+      } else if (type === TASK_ACTIVITY_TYPE.LOOT) {
         return 'Item(s) to be looted'
       }
 
