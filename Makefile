@@ -167,6 +167,8 @@ build: ##@install Build
 
 publish: ##@images
 	docker push akkadius/spire:go-workspace
+	docker tag akkadius/spire:go-workspace akkadius/spire:go-workspace-v11
+	docker push akkadius/spire:go-workspace-v11
 
 install: ##@install Runs installer
 	$(DRUNPREFIX) $(COMPOSE_COMMAND) build
