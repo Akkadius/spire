@@ -190,7 +190,6 @@
 
     <task-item-preview-table
       :items="items"
-      :selected-item-id="selectedItemId"
       @input="bubbleToParent($event)"
       v-if="loaded && items && searchPerformed"
     />
@@ -288,20 +287,7 @@ export default {
       )
     }
 
-    // if item is passed in, set it as the search context
-    if (this.selectedItemId > 0) {
-      this.itemName = this.selectedItemId
-      this.search()
-    }
-
     this.loaded = true;
-  },
-
-  props: {
-    selectedItemId: {
-      type: Number,
-      required: false,
-    },
   },
 
   methods: {

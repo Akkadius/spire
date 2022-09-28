@@ -17,7 +17,7 @@
                     <b-button
                       @click="createTask()"
                       size="sm"
-                      variant="outline-warning"
+                      variant="outline-warning btn-dark"
                     >
                       <i class="fa fa-plus mr-1"></i>
                       New
@@ -26,7 +26,7 @@
                     <b-button
                       @click="cloneTask()"
                       size="sm"
-                      variant="outline-light"
+                      variant="outline-light btn-dark"
                       v-if="selectedTask"
                     >
                       <i class="ra ra-double-team"></i>
@@ -37,7 +37,7 @@
                       @click="deleteTask()"
 
                       size="sm"
-                      variant="outline-danger"
+                      variant="outline-danger btn-dark"
                       v-if="selectedTask"
                     >
                       <i class="fa fa-trash"></i>
@@ -201,7 +201,7 @@
                        },
                        {
                          description: 'Min Level',
-                         field: 'minlevel',
+                         field: 'min_level',
                          itemIcon: '5885',
                          fieldType: 'text',
                          col: 'col-2',
@@ -209,7 +209,7 @@
                        {
                          description: 'Max Level',
                          itemIcon: '5885',
-                         field: 'maxlevel',
+                         field: 'max_level',
                          fieldType: 'text',
                          col: 'col-2',
                        },
@@ -249,40 +249,39 @@
                          fieldType: 'textarea',
                          col: 'col-12',
                        },
-                       {
-                         description: 'Reward Type',
-                         field: 'rewardmethod',
-                         fieldType: 'select',
+                      {
+                         description: 'Quest Controlled',
+                         field: 'reward_method',
                          itemIcon: '3366',
-                         selectData: TASK_REWARD_METHOD_TYPE,
-                         zeroValue: -1,
+                         fieldType: 'checkbox',
+                         true: 2,
                          col: 'col-3',
                        },
                        {
                          description: 'Reward Text',
-                         field: 'reward',
+                         field: 'reward_text',
                          fieldType: 'text',
                          itemIcon: '3366',
                          col: 'col-5',
                        },
                        {
-                         description: 'Reward Item ID',
-                         field: 'rewardid',
-                         fieldType: 'text',
+                         description: 'Reward Item ID(s)',
+                         field: 'reward_id_list',
+                         fieldType: 'reward_id_list',
                          itemIcon: '3366',
                          col: 'col-4',
                          onclick: setSelectorActive,
                        },
                        {
                          description: 'EXP Reward',
-                         field: 'xpreward',
+                         field: 'exp_reward',
                          itemIcon: '2045',
                          fieldType: 'text',
                          col: 'col-4'
                        },
                        {
                          description: 'Cash Reward',
-                         field: 'cashreward',
+                         field: 'cash_reward',
                          itemIcon: '646',
                          fieldType: 'text',
                          col: 'col-4',
@@ -393,6 +392,27 @@
                         :style="(task[field.field] <= (typeof field.zeroValue !== 'undefined' ? field.zeroValue : 0) ? 'opacity: .5' : '')"
                       />
 
+                      <!-- reward_id_list -->
+                      <b-input-group v-if="field.fieldType === 'reward_id_list'">
+                        <b-form-input
+                          :id="field.field"
+                          v-model.number="task[field.field]"
+                          class="m-0 mt-1"
+                          v-on="typeof field.onclick !== 'undefined' ? { click: () => field.onclick(field.field) } : {}"
+                          v-b-tooltip.hover.v-dark.right :title="getFieldDescription(field.field)"
+                          :style="(task[field.field] <= (typeof field.zeroValue !== 'undefined' ? field.zeroValue : 0) ? 'opacity: .5' : '')"
+                        />
+                        <b-button
+                          @click="rewardIdMatchListItemSelector()"
+                          size="sm"
+                          v-b-tooltip.hover.v-dark.right :title="'Add entries to list'"
+                          style="height: 29px; padding-right: 5px; margin-top: 3px;"
+                          variant="btn btn btn-dark btn-outline-success btn-secondary btn-sm"
+                        >
+                          <i class="fa fa-pencil-square mr-1"></i>
+                        </b-button>
+                      </b-input-group>
+
                       <!-- textarea -->
                       <b-textarea
                         v-if="field.fieldType === 'textarea'"
@@ -428,24 +448,23 @@
                 <eq-tab
                   name="Activities"
                 >
-
                   <div>
                     <span class="font-weight-bold">Activities</span>
 
                     <div class="d-inline-block">
-                      <b-button @click="createActivity()" size="sm" variant="outline-warning" class="ml-2">
+                      <b-button @click="createActivity()" size="sm" variant="outline-warning btn-dark" class="ml-2">
                         <i class="fa fa-plus"></i>
                       </b-button>
-                      <b-button @click="cloneActivity()" size="sm" variant="outline-white" class="ml-2">
+                      <b-button @click="cloneActivity()" size="sm" variant="outline-white btn-dark" class="ml-2">
                         <i class="ra ra-double-team"></i>
                       </b-button>
-                      <b-button @click="deleteActivity()" size="sm" variant="outline-danger" class="ml-2">
+                      <b-button @click="deleteActivity()" size="sm" variant="outline-danger btn-dark" class="ml-2">
                         <i class="fa fa-trash"></i>
                       </b-button>
-                      <b-button @click="moveActivityUp()" size="sm" variant="outline-primary" class="ml-2">
+                      <b-button @click="moveActivityUp()" size="sm" variant="outline-primary btn-dark" class="ml-2">
                         <i class="fa fa-arrow-up"></i>
                       </b-button>
-                      <b-button @click="moveActivityDown()" size="sm" variant="outline-primary" class="ml-2">
+                      <b-button @click="moveActivityDown()" size="sm" variant="outline-primary btn-dark" class="ml-2">
                         <i class="fa fa-arrow-down"></i>
                       </b-button>
                     </div>
@@ -456,7 +475,7 @@
                       v-model="selectedActivity"
                       v-bind="task.task_activities"
                       @mouseover="scrollToActivity"
-                      @change="updateQueryState"
+                      @change="selectActivity"
                       ignore-input-change="1"
                       class="form-control eq-input"
                       style="overflow-x: scroll; min-height: 20vh; overflow-y: scroll"
@@ -484,6 +503,11 @@
                            //   zeroValue: -1
                            // },
                            {
+                              fieldType: 'header',
+                              text: 'Activity',
+                              col: 'col-12'
+                           },
+                           {
                              description: 'Task Step',
                              field: 'step',
                              fieldType: 'step',
@@ -497,24 +521,63 @@
                              itemIcon: '5739',
                              fieldType: 'select',
                              selectData: TASK_ACTIVITY_TYPES,
-                             col: 'col-4',
+                             col: 'col-3',
                              onchange: activityTypeChange,
+                           },
+                           // {
+                           //   description: 'Goal Method',
+                           //   field: 'goalmethod',
+                           //   fieldType: 'select',
+                           //   itemIcon: '3196',
+                           //   selectData: TASK_GOAL_METHOD_TYPE,
+                           //   zeroValue: -1,
+                           //   col: 'col-4',
+                           // },
+                           {
+                             description: 'Goal Count',
+                             itemIcon: '3196',
+                             field: 'goalcount',
+                             fieldType: 'number',
+                             col: 'col-2',
+                           },
+                           {
+                             description: 'Quest Controlled',
+                             field: 'goalmethod',
+                             itemIcon: '869',
+                             fieldType: 'checkbox',
+                             true: 2,
+                             col: 'col-3',
+                           },
+                           {
+                             description: 'Optional',
+                             field: 'optional',
+                             itemIcon: '6696',
+                             fieldType: 'checkbox',
+                             col: 'col-2',
+                           },
+                           {
+                              fieldType: 'header',
+                              text: 'Activity Description',
+                              col: 'col-12',
+                              info: 'Activity descriptions are built using either name & target fields or using the description override',
+                           },
+                           {
+                             description: 'Item Name(s)',
+                             itemIcon: '2275',
+                             fieldType: 'text',
+                             field: 'item_list',
+                             col: 'col-6',
+                             style: isDescriptionOverrideSet() ? 'opacity: .2;' : 'opacity: 1;',
+                             showIf: isItemListVisible()
                            },
                            {
                              description: 'Activity Target',
-                             itemIcon: '5739',
+                             itemIcon: '2275',
                              fieldType: 'text',
                              field: 'target_name',
                              col: 'col-6',
+                             style: isDescriptionOverrideSet() ? 'opacity: .2;' : 'opacity: 1;',
                              showIf: isActivityTargetVisible()
-                           },
-                           {
-                             description: 'Item List',
-                             itemIcon: '5739',
-                             fieldType: 'text',
-                             field: 'item_list',
-                             col: 'col-12',
-                             showIf: isItemListVisible()
                            },
                            {
                              description: 'Description Override',
@@ -523,45 +586,56 @@
                              itemIcon: '2275',
                              col: 'col-12',
                            },
+                           // {
+                           //   description: 'Goal ID' + renderGoalIdDescriptor(),
+                           //   field: 'goalid',
+                           //   fieldType: 'number',
+                           //   itemIcon: '3196',
+                           //   col: 'col-3',
+                           //   showIf: isGoalIdSelectorActive(),
+                           //   onclick: isGoalIdSelectorActive() ? setSelectorActive : () => {},
+                           // },
                            {
-                             description: 'Goal Method',
-                             field: 'goalmethod',
-                             fieldType: 'select',
-                             itemIcon: '3196',
-                             selectData: TASK_GOAL_METHOD_TYPE,
-                             zeroValue: -1,
-                             col: 'col-4',
+                              fieldType: 'header',
+                              text: 'Activity Filters',
+                              col: 'col-12',
+                              info: 'Filters determine what the activity update applies to, zone, items, npc\'s etc.',
                            },
                            {
-                             description: 'Goal Count',
-                             itemIcon: '3196',
-                             field: 'goalcount',
-                             fieldType: 'number',
-                             col: 'col-3',
-                           },
-                           {
-                             description: 'Goal ID' + renderGoalIdDescriptor(),
-                             field: 'goalid',
-                             fieldType: 'number',
-                             itemIcon: '3196',
-                             col: 'col-3',
-                             showIf: isGoalIdSelectorActive(),
-                             onclick: isGoalIdSelectorActive() ? setSelectorActive : () => {},
-                           },
-                           {
-                             description: 'Optional',
-                             field: 'optional',
-                             itemIcon: '4493',
-                             fieldType: 'checkbox',
-                             col: 'col-2',
-                           },
-                           {
-                             description: 'Goal Match List ' + renderGoalMatchListDescription() + ' Multiple entries separated by |',
-                             field: 'goal_match_list',
+                             description: 'Zone(s)',
+                             itemIcon: '6849',
+                             field: 'zones',
                              fieldType: 'text',
-                             itemIcon: '3196',
+                             type: 'text',
+                             col: 'col-9',
+                             onclick: setSelectorActive,
+                           },
+                           {
+                             description: 'Zone Version',
+                             itemIcon: '6849',
+                             field: 'zone_version',
+                             fieldType: 'number',
+                             type: 'text',
+                             col: 'col-3',
+                           },
+                           {
+                             description: 'NPC Match List (' + npcMatchListSuffixDescription() + ')',
+                             itemIcon: '6849',
+                             field: 'npc_match_list',
+                             fieldType: 'text',
+                             showIf: isNpcMatchListSelectorActive(),
+                             info: 'Use partial or full NPC names or exact IDs to match for this activity update. Example (10343|orc|gnoll)',
                              col: 'col-12',
-                             showIf: isGoalMatchListActive(),
+                             onclick: setSelectorActive,
+                           },
+                           {
+                             description: 'Item Match List (' + itemMatchListSuffixDescription() + ')',
+                             itemIcon: '6849',
+                             field: 'item_id_list',
+                             fieldType: 'item_id_list',
+                             showIf: isItemMatchListSelectorActive(),
+                             info: 'Use exact item IDs to match for this activity update',
+                             col: 'col-12',
                              onclick: setSelectorActive,
                            },
                            {
@@ -573,24 +647,61 @@
                              col: 'col-12',
                            },
                            {
-                             description: 'Deliver to NPC',
-                             field: 'delivertonpc',
-                             fieldType: 'number',
-                             itemIcon: '5742',
-                             col: 'col-6',
-                             zeroValue: 0,
-                             showIf: isDeliverToNPCActive(),
-                             onclick: setSelectorActive,
+                              fieldType: 'header',
+                              text: 'Explore',
+                              col: 'col-12',
+                              info: 'Defines the exploration boundary',
+                              showIf: isGoalIdExploreActive(),
                            },
                            {
-                             description: 'Zone',
-                             itemIcon: '3133',
-                             field: 'zones',
-                             fieldType: 'text',
-                             type: 'text',
-                             col: 'col-6',
-                             onclick: setSelectorActive,
+                             description: 'Min X',
+                             field: 'min_x',
+                             fieldType: 'number',
+                             itemIcon: '6851',
+                             col: 'col-2',
+                             showIf: isGoalIdExploreActive()
                            },
+                           {
+                             description: 'Max X',
+                             field: 'max_x',
+                             fieldType: 'number',
+                             itemIcon: '6851',
+                             col: 'col-2',
+                             showIf: isGoalIdExploreActive()
+                           },
+                           {
+                             description: 'Min Y',
+                             field: 'min_y',
+                             fieldType: 'number',
+                             itemIcon: '6851',
+                             col: 'col-2',
+                             showIf: isGoalIdExploreActive()
+                           },
+                           {
+                             description: 'Max Y',
+                             field: 'max_y',
+                             fieldType: 'number',
+                             itemIcon: '6851',
+                             col: 'col-2',
+                             showIf: isGoalIdExploreActive()
+                           },
+                           {
+                             description: 'Min Z',
+                             field: 'min_z',
+                             fieldType: 'number',
+                             itemIcon: '6851',
+                             col: 'col-2',
+                             showIf: isGoalIdExploreActive()
+                           },
+                           {
+                             description: 'Max Z',
+                             field: 'max_z',
+                             fieldType: 'number',
+                             itemIcon: '6851',
+                             col: 'col-2',
+                             showIf: isGoalIdExploreActive()
+                           },
+
                            // Removed until fully implemented
                            // {
                            //   description: 'Skill List',
@@ -605,19 +716,54 @@
                          ]"
                           :class="field.col + ' mb-3 pl-2 pr-2'"
                           v-if="(typeof field.showIf !== 'undefined' && field.showIf) || typeof field.showIf === 'undefined'"
+                          :style="(typeof field.style !== 'undefined' && field.style) || typeof field.style === 'undefined'"
                         >
-                          <div>
+
+                          <!-- Header -->
+                          <div
+                            v-if="field.fieldType === 'header' && ((typeof field.showIf !== 'undefined' && field.showIf) || typeof field.showIf === 'undefined')"
+                          >
+                            <span
+                              class="font-weight-bold"
+                            >
+                              {{ field.text }}
+                              <i
+                                v-b-tooltip.hover.v-dark.topright
+                                :title="field.info"
+                                v-if="field.info"
+                                style="color: #6b614a"
+                                class="fa fa-info-circle"
+                              />
+                            </span>
+                          </div>
+
+                          <!-- Description -->
+                          <div v-if="field.description">
                             <span
                               v-if="field.itemIcon"
                               :class="'item-' + field.itemIcon + '-sm'"
                               style="display: inline-block"
                             />
                             {{ field.description }}
+                            <i
+                              v-b-tooltip.hover.v-dark.topright
+                              :title="field.info"
+                              v-if="field.info"
+                              style="color: #6b614a"
+                              class="fa fa-info-circle"
+                            />
+
+                            <!-- Show zone name -->
+                            <div
+                              v-if="field.field === 'zones' && task.task_activities[selectedActivity][field.field]"
+                              class="font-weight-bold mt-1 text-center d-inline-block ml-1"
+                            >
+                              {{ getZoneNames() }}
+                            </div>
                           </div>
 
                           <div v-if="field.fieldType === 'popout' && field.field === 'quest_example'">
                             <div>
-
                               <eq-tabs :bottom-tab-margin="10">
                                 <eq-tab name="Perl" selected="true" class="mb-0">
                                   <div
@@ -710,6 +856,27 @@
                             :style="(task.task_activities[selectedActivity][field.field] <= (typeof field.zeroValue !== 'undefined' ? field.zeroValue : 0) ? 'opacity: .5' : '')"
                           />
 
+                          <!-- input text -->
+                          <b-input-group v-if="field.fieldType === 'item_id_list'">
+                            <b-form-input
+                              :id="field.field"
+                              v-model="task.task_activities[selectedActivity][field.field]"
+                              class="m-0 mt-1"
+                              v-on="typeof field.onclick !== 'undefined' ? { click: () => field.onclick(field.field) } : {}"
+                              v-b-tooltip.hover.v-dark.right :title="getFieldDescription(field.field)"
+                              :style="(task.task_activities[selectedActivity][field.field] <= (typeof field.zeroValue !== 'undefined' ? field.zeroValue : 0) ? 'opacity: .5' : '')"
+                            />
+                            <b-button
+                              @click="itemMatchListItemSelector()"
+                              size="sm"
+                              v-b-tooltip.hover.v-dark.right :title="'Add entries to list'"
+                              style="height: 29px; padding-right: 5px; margin-top: 3px;"
+                              variant="btn btn btn-dark btn-outline-success btn-secondary btn-sm"
+                            >
+                              <i class="fa fa-pencil-square mr-1"></i>
+                            </b-button>
+                          </b-input-group>
+
                           <!-- textarea -->
                           <b-textarea
                             v-if="field.fieldType === 'textarea'"
@@ -740,14 +907,6 @@
                             </option>
                           </select>
 
-                          <!-- Show zone name underneath zone field -->
-                          <div
-                            v-if="field.field === 'zones' && task.task_activities[selectedActivity][field.field]"
-                            class="font-weight-bold mt-1 text-center"
-                          >
-                            {{ getZoneNames() }}
-                          </div>
-
                         </div>
                       </div>
                       <eq-debug :data="task.task_activities[selectedActivity]"/>
@@ -762,7 +921,7 @@
                   <b-button
                     @click="saveTask()"
                     size="sm"
-                    variant="outline-warning"
+                    variant="outline-warning btn-dark"
                   >
                     <i class="fa fa-save mr-1"></i>
                     Save
@@ -780,19 +939,40 @@
 
       <div class="col-5 fade-in" v-if="task">
 
-        <!-- goal match list previewer -->
+        <!-- npc_match_list preview -->
         <div
           style="width: auto;"
           class="fade-in"
-          v-if="selectorActive['goal_match_list'] && task.task_activities[selectedActivity] && typeof task.task_activities[selectedActivity].goal_match_list !== 'undefined'"
+          v-if="selectorActive['npc_match_list'] && task.task_activities[selectedActivity] && typeof task.task_activities[selectedActivity].npc_match_list !== 'undefined'"
         >
-          <task-goal-match-list-previewer
-            :goal-match-list="task.task_activities[selectedActivity].goal_match_list"
-            :activityType="task.task_activities[selectedActivity].activitytype"
-            :zone-ids="task.task_activities[selectedActivity].zones.toString()"
+          <task-npc-match-list-previewer
+            :activity="task.task_activities[selectedActivity]"
           />
         </div>
 
+        <!-- reward_id_list preview -->
+        <div
+          style="width: auto;"
+          class="fade-in"
+          v-if="selectorActive['reward_id_list'] && task['reward_id_list']"
+        >
+          <task-item-match-list-previewer
+            :id-list="task.reward_id_list"
+            @remove-item="task.reward_id_list = removeItemFromMatchList(task.reward_id_list, $event)"
+          />
+        </div>
+
+        <!-- item_id_list preview -->
+        <div
+          style="width: auto;"
+          class="fade-in"
+          v-if="selectorActive['item_id_list'] && task.task_activities[selectedActivity] && typeof task.task_activities[selectedActivity].item_id_list !== 'undefined'"
+        >
+          <task-item-match-list-previewer
+            :id-list="task.task_activities[selectedActivity].item_id_list"
+            @remove-item="task.task_activities[selectedActivity].item_id_list = removeItemFromMatchList(task.task_activities[selectedActivity].item_id_list, $event)"
+          />
+        </div>
 
         <!-- description selector -->
         <div
@@ -804,54 +984,28 @@
             :task="task"
             :description="task.description"
             @input="task['description'] = $event; setFieldModifiedById('description');"
-          ></task-description-selector>
+          />
         </div>
 
-        <!-- (rewardid) item selector -->
+        <!-- reward_id_list_select -->
         <div
           style="width: auto;"
           class="fade-in"
-          v-if="selectorActive['rewardid'] || selectorActive['reward']"
+          v-if="selectorActive['reward_id_list_select']"
         >
           <task-item-selector
-            :selected-item-id="task.rewardid > 0 ? task.rewardid : 0"
-            @input="task['rewardid'] = $event.id; task['reward'] = $event.name; setFieldModifiedById('rewardid'); setFieldModifiedById('reward')"
+            @input="task['reward_id_list'] = addItemToMatchList(task['reward_id_list'], $event.id); setFieldModifiedById('reward_id_list')"
           />
         </div>
 
-        <!-- (goalid) item selector -->
+        <!-- item_id_list_select -->
         <div
           style="width: auto;"
           class="fade-in"
-          v-if="selectorActive['goalid'] && isGoalIdItemSelectorActive() && task.task_activities[selectedActivity].goalmethod === 0"
+          v-if="selectorActive['item_id_list_select']"
         >
           <task-item-selector
-            :selected-item-id="task.task_activities[selectedActivity].goalid ? task.task_activities[selectedActivity].goalid : 0"
-            @input="task.task_activities[selectedActivity].goalid = $event.id; setFieldModifiedById('goalid'); postTargetNameUpdateProcessor($event, 'goalid')"
-          />
-        </div>
-
-        <!-- (goalid) npc selector -->
-        <div
-          style="width: auto;"
-          class="fade-in"
-          v-if="selectorActive['goalid'] && isGoalIdNpcSelectorActive() && task.task_activities[selectedActivity].goalmethod === 0"
-        >
-          <task-npc-selector
-            :selected-npc-id="task.task_activities[selectedActivity].goalid"
-            @input="task.task_activities[selectedActivity].goalid = $event.npcId; setFieldModifiedById('goalid'); postTargetNameUpdateProcessor($event, 'goalid')"
-          />
-        </div>
-
-        <!-- (goalid) explore selector -->
-        <div
-          style="width: auto;"
-          class="fade-in"
-          v-if="selectorActive['goalid'] && isGoalIdExploreActive() && task.task_activities[selectedActivity].goalmethod === 0"
-        >
-          <task-explore-selector
-            :selected-explore-id="task.task_activities[selectedActivity].goalid"
-            @input="task.task_activities[selectedActivity].goalid = $event.id; setFieldModifiedById('goalid'); postTargetNameUpdateProcessor($event, 'goalid')"
+            @input="task.task_activities[selectedActivity].item_id_list = addItemToMatchList(task.task_activities[selectedActivity].item_id_list, $event.id); setFieldModifiedById('reward_id_list');"
           />
         </div>
 
@@ -859,14 +1013,7 @@
         <task-zone-selector
           :selected-zone-id="parseInt(task.task_activities[selectedActivity].zones)"
           v-if="task && task.task_activities && task.task_activities[selectedActivity] && selectorActive['zones']"
-          @input="task.task_activities[selectedActivity].zones = $event.zoneId; setFieldModifiedById('zones')"
-        />
-
-        <!-- (delivertonpc) NPC Selector -->
-        <task-npc-selector
-          :selected-npc-id="task.task_activities[selectedActivity].delivertonpc"
-          v-if="task && task.task_activities && task.task_activities[selectedActivity] && selectorActive['delivertonpc']"
-          @input="task.task_activities[selectedActivity].delivertonpc = $event.npcId; setFieldModifiedById('delivertonpc'); postTargetNameUpdateProcessor($event, 'delivertonpc')"
+          @input="task.task_activities[selectedActivity].zones = $event.zoneId; task.task_activities[selectedActivity].npc_match_list = ''; setFieldModifiedById('zones')"
         />
 
         <!-- reward_point_type selector -->
@@ -974,12 +1121,10 @@ import TaskPreview from "@/views/tasks/components/TaskPreview.vue";
 import TaskZoneSelector from "@/views/tasks/components/TaskZoneSelector.vue";
 import TaskItemSelector from "@/views/tasks/components/TaskItemSelector.vue";
 import FreeIdSelector from "@/components/tools/FreeIdSelector.vue";
-import TaskNpcSelector from "@/views/tasks/components/TaskNpcSelector.vue";
 import {FreeIdFetcher} from "@/app/free-id-fetcher";
 import {Npcs} from "@/app/npcs";
-import TaskExploreSelector from "@/views/tasks/components/TaskExploreSelector.vue";
 import TaskDescriptionSelector from "@/views/tasks/components/TaskDescriptionSelector.vue";
-import TaskGoalMatchListPreviewer from "@/views/tasks/components/TaskGoalMatchListPreviewer.vue";
+import TaskNpcMatchListPreviewer from "@/views/tasks/components/TaskNpcMatchListPreviewer.vue";
 import {Zones} from "@/app/zones";
 import ClipBoard from "@/app/clipboard/clipboard";
 import TaskQuestExamplePreview from "@/views/tasks/components/TaskQuestExamplePreview.vue";
@@ -987,20 +1132,20 @@ import InfoErrorBanner from "@/components/InfoErrorBanner.vue";
 import AlternateCurrencySelector from "@/components/selectors/AlternateCurrencySelector.vue";
 import DynamicZoneTemplateSelector from "@/components/selectors/DynamicZoneTemplateSelector.vue";
 import TaskReplayRequestGroupSelector from "@/views/tasks/components/TaskReplayRequestGroupSelector.vue";
+import TaskItemMatchListPreviewer from "@/views/tasks/components/TaskItemMatchListPreviewer.vue";
 
 const MILLISECONDS_BEFORE_WINDOW_RESET = 10000;
 
 export default {
   components: {
+    TaskItemMatchListPreviewer,
     TaskReplayRequestGroupSelector,
     DynamicZoneTemplateSelector,
     AlternateCurrencySelector,
     InfoErrorBanner,
     TaskQuestExamplePreview,
-    TaskGoalMatchListPreviewer,
+    TaskNpcMatchListPreviewer,
     TaskDescriptionSelector,
-    TaskExploreSelector,
-    TaskNpcSelector,
     FreeIdSelector,
     TaskItemSelector,
     TaskZoneSelector,
@@ -1061,6 +1206,75 @@ export default {
 
   methods: {
 
+    async saveIfModified() {
+      if (EditFormFieldUtil.anyFieldsHaveBeenEdited()) {
+        await this.saveTask()
+      }
+    },
+
+    async selectActivity() {
+      await this.saveIfModified()
+      this.updateQueryState()
+    },
+
+    removeItemFromMatchList(list, id) {
+      let newList = list.split("|")
+      const index = newList.indexOf(id.toString());
+      if (index > -1) {
+        newList.splice(index, 1);
+      }
+
+      return newList.join("|")
+    },
+
+    addItemToMatchList(list, itemId) {
+      let newList = list.split("|")
+
+      if (!newList.includes(itemId.toString())) {
+        newList.push(itemId.toString())
+      }
+
+      return newList.filter(Number).join("|")
+    },
+
+    rewardIdMatchListItemSelector() {
+      this.setSelectorActive('reward_id_list_select')
+    },
+    itemMatchListItemSelector() {
+      this.setSelectorActive('item_id_list_select')
+    },
+
+    npcMatchListSuffixDescription() {
+      const type = parseInt(this.task.task_activities[this.selectedActivity].activitytype)
+      if (type === TASK_ACTIVITY_TYPE.KILL) {
+        return 'To be killed'
+      } else if (type === TASK_ACTIVITY_TYPE.LOOT) {
+        return 'To be looted from (optional)'
+      } else if (type === TASK_ACTIVITY_TYPE.SPEAK_WITH) {
+        return 'To be spoken with'
+      } else if (this.isDeliverToNPCActive()) {
+        return 'To be delivered to'
+      }
+
+      return '???';
+    },
+    itemMatchListSuffixDescription() {
+      const type = parseInt(this.task.task_activities[this.selectedActivity].activitytype)
+      if (type === TASK_ACTIVITY_TYPE.DELIVER) {
+        return 'Item(s) to be delivered'
+      } else if (type === TASK_ACTIVITY_TYPE.TRADESKILL) {
+        return 'Item(s) to be created'
+      } else if (type === TASK_ACTIVITY_TYPE.FISH) {
+        return 'Item(s) to be fished'
+      } else if (type === TASK_ACTIVITY_TYPE.FORAGE) {
+        return 'Item(s) to be foraged'
+      } else if (type === TASK_ACTIVITY_TYPE.LOOT) {
+        return 'Item(s) to be looted'
+      }
+
+      return '???';
+    },
+
     buildTaskActivitySelection() {
       let activities = {
         "-1": "None"
@@ -1120,10 +1334,12 @@ export default {
         // reset certain fields when activity type is changed
         if (this.task.task_activities[this.selectedActivity]) {
           this.task.task_activities[this.selectedActivity].zones                = "0"
-          this.task.task_activities[this.selectedActivity].goalid               = 0
+          // this.task.task_activities[this.selectedActivity].goalid               = 0
           this.task.task_activities[this.selectedActivity].goalmethod           = 0
           this.task.task_activities[this.selectedActivity].goalcount            = 1
           this.task.task_activities[this.selectedActivity].optional             = 0
+          this.task.task_activities[this.selectedActivity].item_id_list         = ""
+          this.task.task_activities[this.selectedActivity].npc_match_list       = ""
           this.task.task_activities[this.selectedActivity].item_list            = ""
           this.task.task_activities[this.selectedActivity].spell_list           = ""
           this.task.task_activities[this.selectedActivity].target_name          = ""
@@ -1153,7 +1369,7 @@ export default {
       if (this.isGoalIdItemSelectorActive()) {
         return ' (Item)'
       }
-      if (this.isGoalIdNpcSelectorActive()) {
+      if (this.isNpcMatchListSelectorActive()) {
         return ' (NPC)'
       }
 
@@ -1164,7 +1380,7 @@ export default {
       if (this.isGoalIdItemSelectorActive()) {
         return ' (Item) (List of item ids)'
       }
-      if (this.isGoalIdNpcSelectorActive()) {
+      if (this.isNpcMatchListSelectorActive()) {
         return ' (NPC) (Can be NPC ID\'s or names)'
       }
 
@@ -1173,10 +1389,6 @@ export default {
 
     isGoalIdSelectorActive() {
       return this.task.task_activities && this.task.task_activities[this.selectedActivity] ? this.task.task_activities[this.selectedActivity].goalmethod === 0 : false
-    },
-
-    isGoalMatchListActive() {
-      return this.task.task_activities[this.selectedActivity].goalmethod === TASK_GOAL_METHOD_TYPES.LIST
     },
 
     isDeliverToNPCActive() {
@@ -1200,6 +1412,10 @@ export default {
       )
     },
 
+    isDescriptionOverrideSet() {
+      return this.task.task_activities[this.selectedActivity].description_override.length > 0
+    },
+
     isActivityTargetVisible() {
       return [
         TASK_ACTIVITY_TYPE.KILL,
@@ -1212,11 +1428,24 @@ export default {
       )
     },
 
-    isGoalIdNpcSelectorActive() {
+    isNpcMatchListSelectorActive() {
       return [
         TASK_ACTIVITY_TYPE.KILL,
         TASK_ACTIVITY_TYPE.SPEAK_WITH,
+        TASK_ACTIVITY_TYPE.DELIVER,
         TASK_ACTIVITY_TYPE.GIVE
+      ].includes(
+        parseInt(this.task.task_activities[this.selectedActivity].activitytype)
+      )
+    },
+
+    isItemMatchListSelectorActive() {
+      return [
+        TASK_ACTIVITY_TYPE.LOOT,
+        TASK_ACTIVITY_TYPE.TRADESKILL,
+        TASK_ACTIVITY_TYPE.FISH,
+        TASK_ACTIVITY_TYPE.FORAGE,
+        TASK_ACTIVITY_TYPE.DELIVER
       ].includes(
         parseInt(this.task.task_activities[this.selectedActivity].activitytype)
       )
@@ -1244,17 +1473,12 @@ export default {
         //
       }
 
-      if (updateType === TASK_ACTIVITY_TYPE.DELIVER && fieldId === 'delivertonpc') {
-        this.task.task_activities[selectedActivity].target_name = Npcs.getCleanName(event.npc.name)
-        EditFormFieldUtil.setFieldModifiedById('target_name');
-      }
-
       if (isDescriptionOverrideEmpty && fieldId === 'goalid') {
         if (this.isGoalIdItemSelectorActive()) {
           this.task.task_activities[selectedActivity].item_list = event.name
           EditFormFieldUtil.setFieldModifiedById('item_list');
         }
-        if (this.isGoalIdNpcSelectorActive()) {
+        if (this.isNpcMatchListSelectorActive()) {
           this.task.task_activities[selectedActivity].target_name = Npcs.getCleanName(event.npc.name)
           EditFormFieldUtil.setFieldModifiedById('target_name');
         }
@@ -1310,12 +1534,13 @@ export default {
     },
 
     async cloneActivity() {
+      await this.saveIfModified()
       try {
         const r = await Tasks.cloneTaskActivity(this.getBackendFormattedTask(), this.selectedActivity)
         if (r.status === 200) {
           this.task             = (await Tasks.getTask(this.$route.params.id))
           this.selectedActivity = r.data.activityid
-          this.notification = `Task activity (${this.selectedActivity}) successfully cloned`
+          this.notification     = `Task activity (${this.selectedActivity}) successfully cloned`
         }
       } catch (err) {
         console.log(err)
@@ -1326,6 +1551,7 @@ export default {
     },
 
     async moveActivityDown() {
+      await this.saveIfModified()
       const selectedActivity = this.selectedActivity
       let activities         = []
       if (this.task.task_activities && this.task.task_activities.length > 0) {
@@ -1334,7 +1560,7 @@ export default {
 
       let matchedIndex = -1
       for (const index in activities) {
-        console.log(index)
+        // console.log(index)
         if (parseInt(selectedActivity) === parseInt(index) && activities[parseInt(index) + 1]) {
           console.log("found matched index", index)
           matchedIndex = parseInt(index)
@@ -1377,11 +1603,12 @@ export default {
 
     async createActivity() {
       try {
+        await this.saveIfModified()
         const r = await Tasks.createNewTaskActivity(this.task)
         if (r.status === 200) {
           this.task             = (await Tasks.getTask(this.$route.params.id))
           this.selectedActivity = r.data.activityid
-          this.notification = "Task activity successfully created"
+          this.notification     = "Task activity successfully created"
         }
       } catch (err) {
         console.log(err)
@@ -1392,6 +1619,7 @@ export default {
     },
 
     async deleteActivity() {
+      await this.saveTask()
       if (!this.task.task_activities[this.selectedActivity]) {
         return
       }
@@ -1408,8 +1636,8 @@ export default {
                 if (r.status === 200) {
                   this.task             = (await Tasks.getTask(this.$route.params.id))
                   this.selectedActivity = a.activityid - 1
-                  this.notification = "Task activity successfully deleted"
-                  deletedSuccessfully = true
+                  this.notification     = "Task activity successfully deleted"
+                  deletedSuccessfully   = true
                 }
               }
             }
@@ -1697,8 +1925,9 @@ export default {
       let hasSubEditorFields = [
         "id",
         "description",
-        "delivertonpc",
-        "goal_match_list",
+        "reward_id_list",
+        "item_id_list",
+        "npc_match_list",
         "zones",
         "reward_point_type",
         "dz_template_id",

@@ -33,7 +33,8 @@
             v-for="(item, index) in items"
             :class="(isItemSelected(item) ? 'pulsate-highlight-white' : '')"
             :key="item.id"
-            :id="'item-selection-row-' + item.id">
+            :id="'item-selection-row-' + item.id"
+          >
             <td>
               <div class="btn-group" role="group">
                 <b-button
@@ -118,16 +119,9 @@ export default {
       }
     }
 
-    if (this.selectedItemId > 0) {
-      this.highlightedItem = this.selectedItemId
-    }
   },
   props: {
     items: Array,
-    selectedItemId: {
-      type: Number,
-      required: false,
-    },
   },
   methods: {
     selectItem(item) {

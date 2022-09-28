@@ -6045,21 +6045,6 @@ gm_ips:
     is_nullable: "NO"
     column_type: varchar(15)
     column_default: ""
-goallists:
-  - column: listid
-    data_type: int
-    column_key: PRI
-    ordinal_position: "1"
-    is_nullable: "NO"
-    column_type: int(10) unsigned
-    column_default: "0"
-  - column: entry
-    data_type: int
-    column_key: PRI
-    ordinal_position: "2"
-    is_nullable: "NO"
-    column_type: int(10) unsigned
-    column_default: "0"
 graveyard:
   - column: id
     data_type: int
@@ -15515,136 +15500,108 @@ task_activities:
     is_nullable: "NO"
     column_type: varchar(128)
     column_default: ''''''
-  - column: npc_id
-    data_type: int
-    column_key: ""
-    ordinal_position: "10"
-    is_nullable: "NO"
-    column_type: int(10) unsigned
-    column_default: "0"
-  - column: npc_goal_id
-    data_type: int
-    column_key: ""
-    ordinal_position: "11"
-    is_nullable: "NO"
-    column_type: int(10) unsigned
-    column_default: "0"
   - column: npc_match_list
     data_type: text
     column_key: ""
-    ordinal_position: "12"
+    ordinal_position: "10"
     is_nullable: "YES"
     column_type: text
     column_default: "NULL"
-  - column: item_id
-    data_type: int
-    column_key: ""
-    ordinal_position: "13"
-    is_nullable: "NO"
-    column_type: int(10) unsigned
-    column_default: "0"
-  - column: item_goal_id
-    data_type: int
-    column_key: ""
-    ordinal_position: "14"
-    is_nullable: "NO"
-    column_type: int(10) unsigned
-    column_default: "0"
   - column: item_id_list
     data_type: text
     column_key: ""
-    ordinal_position: "15"
+    ordinal_position: "11"
     is_nullable: "YES"
     column_type: text
     column_default: "NULL"
   - column: item_list
     data_type: varchar
     column_key: ""
-    ordinal_position: "16"
+    ordinal_position: "12"
     is_nullable: "NO"
     column_type: varchar(128)
     column_default: ''''''
   - column: dz_switch_id
     data_type: int
     column_key: ""
-    ordinal_position: "17"
+    ordinal_position: "13"
     is_nullable: "NO"
     column_type: int(11)
     column_default: "0"
   - column: min_x
     data_type: float
     column_key: ""
-    ordinal_position: "18"
+    ordinal_position: "14"
     is_nullable: "NO"
     column_type: float
     column_default: "0"
   - column: min_y
     data_type: float
     column_key: ""
-    ordinal_position: "19"
+    ordinal_position: "15"
     is_nullable: "NO"
     column_type: float
     column_default: "0"
   - column: min_z
     data_type: float
     column_key: ""
-    ordinal_position: "20"
+    ordinal_position: "16"
     is_nullable: "NO"
     column_type: float
     column_default: "0"
   - column: max_x
     data_type: float
     column_key: ""
-    ordinal_position: "21"
+    ordinal_position: "17"
     is_nullable: "NO"
     column_type: float
     column_default: "0"
   - column: max_y
     data_type: float
     column_key: ""
-    ordinal_position: "22"
+    ordinal_position: "18"
     is_nullable: "NO"
     column_type: float
     column_default: "0"
   - column: max_z
     data_type: float
     column_key: ""
-    ordinal_position: "23"
+    ordinal_position: "19"
     is_nullable: "NO"
     column_type: float
     column_default: "0"
   - column: skill_list
     data_type: varchar
     column_key: ""
-    ordinal_position: "24"
+    ordinal_position: "20"
     is_nullable: "NO"
     column_type: varchar(64)
     column_default: '''-1'''
   - column: spell_list
     data_type: varchar
     column_key: ""
-    ordinal_position: "25"
+    ordinal_position: "21"
     is_nullable: "NO"
     column_type: varchar(64)
     column_default: '''0'''
   - column: zones
     data_type: varchar
     column_key: ""
-    ordinal_position: "26"
+    ordinal_position: "22"
     is_nullable: "NO"
     column_type: varchar(64)
     column_default: ''''''
   - column: zone_version
     data_type: int
     column_key: ""
-    ordinal_position: "27"
+    ordinal_position: "23"
     is_nullable: "YES"
     column_type: int(11)
     column_default: "-1"
   - column: optional
     data_type: tinyint
     column_key: ""
-    ordinal_position: "28"
+    ordinal_position: "24"
     is_nullable: "NO"
     column_type: tinyint(1)
     column_default: "0"
@@ -15691,41 +15648,41 @@ tasks:
     is_nullable: "NO"
     column_type: text
     column_default: ""
-  - column: reward
+  - column: reward_text
     data_type: varchar
     column_key: ""
     ordinal_position: "7"
     is_nullable: "NO"
     column_type: varchar(64)
     column_default: ''''''
-  - column: rewardid
-    data_type: int
+  - column: reward_id_list
+    data_type: text
     column_key: ""
     ordinal_position: "8"
-    is_nullable: "NO"
-    column_type: int(11) unsigned
+    is_nullable: "YES"
+    column_type: text
     column_default: "0"
-  - column: cashreward
+  - column: cash_reward
     data_type: int
     column_key: ""
     ordinal_position: "9"
     is_nullable: "NO"
     column_type: int(11) unsigned
     column_default: "0"
-  - column: xpreward
+  - column: exp_reward
     data_type: int
     column_key: ""
     ordinal_position: "10"
     is_nullable: "NO"
     column_type: int(10)
     column_default: "0"
-  - column: rewardmethod
+  - column: reward_method
     data_type: tinyint
     column_key: ""
     ordinal_position: "11"
     is_nullable: "NO"
     column_type: tinyint(3) unsigned
-    column_default: "2"
+    column_default: "0"
   - column: reward_points
     data_type: int
     column_key: ""
@@ -15740,14 +15697,14 @@ tasks:
     is_nullable: "NO"
     column_type: int(11)
     column_default: "0"
-  - column: minlevel
+  - column: min_level
     data_type: tinyint
     column_key: ""
     ordinal_position: "14"
     is_nullable: "NO"
     column_type: tinyint(3) unsigned
     column_default: "0"
-  - column: maxlevel
+  - column: max_level
     data_type: tinyint
     column_key: ""
     ordinal_position: "15"

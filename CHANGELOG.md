@@ -1,3 +1,86 @@
+## [2.0.0] [Task Editor] Major Task Update(s)
+
+![image](https://user-images.githubusercontent.com/3319450/192701596-13a3fbbe-7c46-47ca-8f54-16de57c3c8d9.png)
+
+### Changes
+
+* Added sectional descriptions and info indicators
+* Description building should be more clear and concise
+* Explore details are now inline with the activity
+* Fields `item_id` and `item_goal_id` combine into `item_id_list` which can contain a single item or list of items that are pipe delimited `|` Example (37025|37029|37032)
+* Fields `npc_id` and `npc_goal_id` combine into `npc_match_list` which can contain a single NPC or a list of NPC's that are pipe delimited `|` Example (4007|4009|4013|4024|4036|4043|4078|4080) and can also contain NPC names as partials (orc|gnoll|bear)
+* Instead of `goalmethod` and `rewardmethod` displayed as dropdowns. It simply is a checkbox that displays **Quest Controlled**
+* Performance and caching updates
+* Resolved issues with tasks saving inconsistently
+* Reward window should now display multiple items
+* Task rewards now support multiple items inline
+* Tasks now save automatically when a field is modified and activity actions are invoked
+* Tasks now set proper defaults for `req_activity_id` (-1)
+
+See Server PR for more major system change details https://github.com/EQEmu/Server/pull/2449
+
+### NPC Match List Support
+
+Match lists are **| pipe separated lists** containing NPC ID(s) or partial (wildcard) NPC names. This is very useful especially when trying to filter activity updates by name.
+
+NPC match lists are available with the following activity types
+
+* Deliver
+* Kill
+* Speak with
+* Give
+
+Fields `npc_id` and `npc_goal_id` have combined 
+
+![image](https://user-images.githubusercontent.com/3319450/192702240-025ba8ac-c09f-458e-ae29-73d8d3379e03.png)
+
+### Item Match List Support
+
+To bring similar flexibility to that there of **NPC Match List(s)**, multiple item's can be used for the following activity types.
+
+* Deliver
+* Loot
+* Tradeskill
+* Fish
+* Forage
+
+![image](https://user-images.githubusercontent.com/3319450/192705534-d9f02103-1b2e-4f53-8eb9-c2cc46ce7e00.png)
+
+
+### Exploration Box Changes
+
+Exploration used to be managed by the **proximities** table. Part of the recent waves of simplification this is now managed on the **task_activities** table to simplify. As a result explore boxes are now visible within the activity pane instead of breaking out as their own sub-editor when editing an explore activity type.
+
+![image](https://user-images.githubusercontent.com/3319450/192704930-aa0efda8-b196-43a5-8311-755481327763.png)
+
+### Multiple Item Reward(s)
+
+Not only are multiple rewards now possible through the **Reward Item ID(s)** field (**separated by |**) you can also see them render in the **Task Preview Window**
+
+![image](https://user-images.githubusercontent.com/3319450/192703822-f234928b-4e89-4f65-b7de-9123cd90ff48.png)
+
+### Field Usage Matrix
+
+To be updated in official documentation
+
+| activity\_type | activity\_type\_description | item\_id\_list | npc\_match\_list | dz\_switch\_id                    | min\_x | max\_x | min\_y | max\_y | min\_z | max\_z | skill\_list   | spell\_list   | item\_list                               | target\_name                           | Description Format                                 |
+| -------------- | --------------------------- | -------------- | ---------------- | --------------------------------- | ------ | ------ | ------ | ------ | ------ | ------ | ------------- | ------------- | ---------------------------------------- | -------------------------------------- | -------------------------------------------------- |
+| 1              | Deliver                     | x              | x                | \-                                | o      | o      | o      | o      | o      | o      | \-            | \-            | Name of Item(s)                          | Name of NPC                            | Deliver (goalcount) (item\_list) to (target\_name) |
+| 2              | Kill                        | \-             | x                | \-                                | o      | o      | o      | o      | o      | o      | \-            | \-            | \-                                       | Name of NPC                            | Kill (goalcount) (target\_name)                    |
+| 3              | Loot                        | x              | o                | \-                                | o      | o      | o      | o      | o      | o      | \-            | \-            | Name of Item(s)                          | Name of NPC                            | Loot (goalcount) (item\_list) from (target\_name)  |
+| 4              | Speak With                  | \-             | x                | \-                                | o      | o      | o      | o      | o      | o      | \-            | \-            | \-                                       | Name of NPC                            | Speak with (target\_name)                          |
+| 5              | Explore                     | \-             | \-               | \-                                | x      | x      | x      | x      | x      | x      | \-            | \-            | \-                                       | Name of Explore Area                   | Explore (target\_name)                             |
+| 6              | Tradeskill                  | x              | \-               | \-                                | o      | o      | o      | o      | o      | o      | \-            | \-            | Name of Item(s)                          | \-                                     | Create (goalcount) (item\_list) using tradeskills  |
+| 7              | Fish                        | x              | \-               | \-                                | o      | o      | o      | o      | o      | o      | \-            | \-            | Name of Item(s)                          | \-                                     | Fish for (goalcount) (item\_list)                  |
+| 8              | Forage                      | x              | \-               | \-                                | o      | o      | o      | o      | o      | o      | \-            | \-            | Name of Item(s)<br>Forage x (item\_list) | \-                                     | Forage (goalcount) (item\_list)                    |
+| 9              | Use (Cast On)               | \-             | \-               | \-                                | o      | o      | o      | o      | o      | o      | \-            | Spell name(s) | \-                                       | Name (Anything)                        | Use (spell\_list) on (target\_name)                |
+| 10             | Use2 (Skill On)             | \-             | \-               | \-                                | o      | o      | o      | o      | o      | o      | Skill name(s) | \-            | \-                                       | Name (Anything)                        | Use (skill\_list) on (target\_name)                |
+| 11             | Touch                       | \-             | \-               | x<br>(doors table dz\_switch\_id) | o      | o      | o      | o      | o      | o      | \-            | \-            | \-                                       | Name of Touch Target<br>(Touch target) | Touch (target\_name)                               |
+| 100            | Give                        | \-             | x                | \-                                | o      | o      | o      | o      | o      | o      | \-            | \-            | \-                                       | Name of NPC                            | Give (goal\_count) to (target\_name)               |
+| 255            | Quest Script                | \-             | \-               | \-                                | o      | o      | o      | o      | o      | o      | \-            | \-            | \-                                       | \-                                     | \-                                                 |
+
+
+
 ## [1.13.10]
 
 * Addresses an issue where connections endpoint was hit when booting the app. When Spire does not have a Spire database, it panics the backend. https://github.com/Akkadius/spire/issues/63

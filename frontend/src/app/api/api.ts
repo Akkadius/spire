@@ -152,7 +152,6 @@ export * from './api/pet-api';
 // export * from './api/pets-equipmentset-api';
 // export * from './api/pets-equipmentset-entry-api';
 // export * from './api/player-titleset-api';
-export * from './api/proximity-api';
 // export * from './api/quest-global-api';
 // export * from './api/raid-detail-api';
 // export * from './api/raid-member-api';

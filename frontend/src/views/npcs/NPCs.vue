@@ -56,7 +56,7 @@
           >
             <table
               id="npcs-table"
-              class="eq-table eq-highlight-rows"
+              class="eq-table eq-highlight-rows bordered"
               style="font-size: 14px; "
               v-if="npcTypes && npcTypes.length > 0"
             >

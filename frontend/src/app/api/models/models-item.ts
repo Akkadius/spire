@@ -12,7 +12,6 @@ import { ModelsMerchantlist } from './models-merchantlist';
 import { ModelsObject } from './models-object';
 import { ModelsObjectContent } from './models-object-content';
 import { ModelsStartingItem } from './models-starting-item';
-import { ModelsTask } from './models-task';
 import { ModelsTradeskillRecipeEntry } from './models-tradeskill-recipe-entry';
 import { ModelsTributeLevel } from './models-tribute-level';
 export interface ModelsItem {
@@ -258,7 +257,6 @@ export interface ModelsItem {
     subtype?: number;
     summonedflag?: number;
     svcorruption?: number;
-    tasks?: Array<ModelsTask>;
     tradeskill_recipe_entries?: Array<ModelsTradeskillRecipeEntry>;
     tradeskills?: number;
     tribute_levels?: Array<ModelsTributeLevel>;

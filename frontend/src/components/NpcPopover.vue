@@ -11,7 +11,7 @@
         v-if="showLabel"
         class="ml-3 d-inline-block" style="top: 30%; position: absolute; min-width: 300px"
       >
-        {{ getCleanName(npc.name) }} {{ (npc.lastname && npc.lastname.length > 0 ? ` (${npc.lastname})` : "") }} {{additionalLabel ? additionalLabel : ""}}
+        {{ getCleanName(npc.name) }} {{ formatLastName(npc.lastname) }} {{additionalLabel ? additionalLabel : ""}}
       </span>
       <slot></slot>
     </div>
@@ -66,6 +66,11 @@ export default {
       required: false,
       default: false
     },
+    showLastName: {
+      type: Boolean,
+      required: false,
+      default: true
+    },
     limitEntries: {
       type: Number,
       required: false,
@@ -93,6 +98,13 @@ export default {
     console.log("[popover] no limit", this.noLimitEntries)
   },
   methods: {
+    formatLastName(name) {
+      if (!this.showLastName) {
+        return ''
+      }
+
+      return (npc.lastname && npc.lastname.length > 0 ? ` (${npc.lastname})` : "")
+    },
     getRaceImage(npc) {
       return Npcs.getRaceImage(npc)
     },

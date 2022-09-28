@@ -61,9 +61,6 @@ func NewRouter(
 		[]echo.MiddlewareFunc{
 			logMiddleware.Handle(),
 			//middleware.Logger(), // json logger
-			middleware.LoggerWithConfig(middleware.LoggerConfig{
-				Format: "method=${method}, uri=${uri}, status=${status}, time=${latency_human}\n",
-			}),
 			middleware.Recover(),
 			middleware.CORSWithConfig(
 				middleware.CORSConfig{

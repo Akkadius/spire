@@ -6,18 +6,6 @@
 
         <div class="container-fluid">
 
-          <div class="header mt-md-1">
-            <div class="header-body">
-              <h1 class="header-title">
-                Changelog & News
-              </h1>
-
-              <p class="header-subtitle">
-                See the latest Spire changes here!
-              </p>
-            </div>
-          </div>
-
           <div class="row" id="changelog">
             <div class="col-12">
               <v-runtime-template class="changelog" :template="changelog"/>
@@ -80,7 +68,8 @@ export default {
           html: true,
           xhtmlOut: false,
           breaks: true,
-          typographer: false
+          typographer: false,
+          linkify: true
         });
 
         markdownRaw = md.render(markdownRaw);
@@ -115,7 +104,18 @@ export default {
             //append anchor after heading text
             $heading.append($anchor);
           });
+
+          document.querySelectorAll("table").forEach((e) => {
+            if (e) {
+              e.classList.add('eq-table')
+              e.classList.add('bordered')
+              e.outerHTML = "<div class='eq-window-simple mt-3 mb-3 p-0' style='overflow-y: hidden'>" + e.outerHTML + "</div>"
+            }
+          });
+
         }, 100)
+
+
 
       }
     })
@@ -151,8 +151,8 @@ export default {
   -webkit-text-size-adjust: 100%;
 }
 
-.changelog h1, .changelog h2, .changelog h3, .changelog h4, .changelog h5, .changelog h6 {
-  font-weight: 600;
+.anchor-heading {
+  margin-top: 20px !important;
 }
 
 .changelog img {
@@ -186,6 +186,14 @@ export default {
   height: 100%;
   padding-bottom: 30px;
   padding-top: 15px;
+}
+
+.changelog code {
+  padding: 0.2em 0.4em;
+  margin: 0;
+  color: red;
+  background-color: rgba(110, 118, 129, .4);
+  border-radius: 6px;
 }
 
 </style>

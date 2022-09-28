@@ -48,7 +48,7 @@ services:
     ports:
       - ${IP_ADDRESS:-0.0.0.0}:33066:3306
     volumes:
-      - ./data/mariadb:/var/lib/mysql:delegated
+      - ./_data/mariadb:/var/lib/mysql:delegated
     environment:
       - MYSQL_DATABASE=${MYSQL_DATABASE}
       - MYSQL_USER=${MYSQL_USERNAME}
@@ -67,7 +67,7 @@ services:
     restart: unless-stopped
     image: influxdb:latest
     volumes:
-      - ./data/influxdb/:/var/lib/influxdb
+      - ./_data/influxdb/:/var/lib/influxdb
     environment:
       - INFLUXDB_DB=db0
       - INFLUXDB_ADMIN_USER=${INFLUXDB_USERNAME:-admin}
@@ -82,7 +82,7 @@ services:
     ports:
       - ${IP_ADDRESS:-0.0.0.0}:3030:3000
     volumes:
-      - ./data/grafana/:/var/lib/grafana
+      - ./_data/grafana/:/var/lib/grafana
     depends_on:
       - influxdb
     environment:

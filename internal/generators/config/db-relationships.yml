@@ -97,7 +97,6 @@ items:
   - 1-* id->tribute_levels:item_id
   - 1-* id->ground_spawns:item
   - 1-* id->merchantlist:item
-  - 1-* id->tasks:rewardid
 lootdrop:
   - 1-* id->lootdrop_entries:lootdrop_id
   - 1-* id->loottable_entries:lootdrop_id

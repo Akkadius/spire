@@ -97,7 +97,7 @@ func (m UserContextMiddleware) successHandler(c echo.Context) {
 		panic("Failed to convert JWT UserID")
 	}
 
-	m.logger.Debugln(fmt.Sprintf("JWT validation success as user [%v]", userId))
+	//m.logger.Debugln(fmt.Sprintf("JWT validation success as user [%v]", userId))
 
 	// cache user context for 10 minutes to refrain from repeated DB hits
 	userKey := fmt.Sprintf("user-%v", userId)

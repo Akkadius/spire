@@ -109,7 +109,9 @@ export class Merchants {
     let r = (await Npcs.getNpcsByZone(
       zone,
       version,
-      ["Spawnentries.NpcType.Merchantlists.Items"]
+      {
+        relations: ["Spawnentries.NpcType.Merchantlists.Items"]
+      }
     )).filter((e) => {
       return e.merchant_id > 0
     })

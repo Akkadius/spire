@@ -14,11 +14,7 @@ type TaskActivity struct {
 	Goalmethod           uint        `json:"goalmethod" gorm:"Column:goalmethod"`
 	Goalcount            null.Int    `json:"goalcount" gorm:"Column:goalcount"`
 	DescriptionOverride  string      `json:"description_override" gorm:"Column:description_override"`
-	NpcId                uint        `json:"npc_id" gorm:"Column:npc_id"`
-	NpcGoalId            uint        `json:"npc_goal_id" gorm:"Column:npc_goal_id"`
 	NpcMatchList         null.String `json:"npc_match_list" gorm:"Column:npc_match_list"`
-	ItemId               uint        `json:"item_id" gorm:"Column:item_id"`
-	ItemGoalId           uint        `json:"item_goal_id" gorm:"Column:item_goal_id"`
 	ItemIdList           null.String `json:"item_id_list" gorm:"Column:item_id_list"`
 	ItemList             string      `json:"item_list" gorm:"Column:item_list"`
 	DzSwitchId           int         `json:"dz_switch_id" gorm:"Column:dz_switch_id"`

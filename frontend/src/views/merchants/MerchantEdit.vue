@@ -22,7 +22,7 @@
 
                 <b-button
                   size="sm"
-                  variant="outline-warning"
+                  variant="outline-warning btn-dark"
                   @click="addItemToMerchantListQueue()"
                 >
                   <i class="fa fa-plus mr-1"></i>

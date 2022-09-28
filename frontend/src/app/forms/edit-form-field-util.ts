@@ -23,6 +23,16 @@ export class EditFormFieldUtil {
     });
   }
 
+  static anyFieldsHaveBeenEdited() {
+    let edited = false
+    document.querySelectorAll("input, select, textarea").forEach((element) => {
+      if (element && element.classList.contains('pulsate-highlight-modified')) {
+        edited = true
+      }
+    });
+    return edited
+  }
+
   static resetFieldEditedStatus() {
     document.querySelectorAll("input, select, textarea").forEach((element) => {
       if (element && element.classList.contains('pulsate-highlight-modified')) {

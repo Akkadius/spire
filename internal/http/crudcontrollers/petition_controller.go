@@ -7,7 +7,6 @@ import (
 	"github.com/Akkadius/spire/internal/models"
 	"github.com/labstack/echo/v4"
 	"github.com/sirupsen/logrus"
-	"gorm.io/gorm"
 	"net/http"
 	"strconv"
 )
@@ -159,7 +158,7 @@ func (e *PetitionController) updatePetition(c echo.Context) error {
 		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Cannot find entity [%s]", err.Error())})
 	}
 
-	err = e.db.QueryContext(models.Petition{}, c).Select("*").Session(&gorm.Session{FullSaveAssociations: true}).Updates(&request).Error
+	err = e.db.QueryContext(models.Petition{}, c).Updates(&request).Error
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error updating entity [%v]", err.Error())})
 	}

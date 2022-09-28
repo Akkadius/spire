@@ -16,7 +16,7 @@
     >
       <table
         id="zonetable"
-        class="eq-table eq-highlight-rows"
+        class="eq-table eq-highlight-rows bordered"
         style="display: table; font-size: 14px; overflow-x: scroll"
       >
         <thead

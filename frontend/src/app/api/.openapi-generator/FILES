@@ -86,7 +86,6 @@ api/forage-api.ts
 api/friend-api.ts
 api/global-loot-api.ts
 api/gm-ip-api.ts
-api/goallist-api.ts
 api/graveyard-api.ts
 api/grid-api.ts
 api/grid-entry-api.ts
@@ -143,7 +142,6 @@ api/pets-beastlord-datum-api.ts
 api/pets-equipmentset-api.ts
 api/pets-equipmentset-entry-api.ts
 api/player-titleset-api.ts
-api/proximity-api.ts
 api/quest-global-api.ts
 api/raid-detail-api.ts
 api/raid-member-api.ts
@@ -276,7 +274,6 @@ models/models-forage.ts
 models/models-friend.ts
 models/models-global-loot.ts
 models/models-gm-ip.ts
-models/models-goallist.ts
 models/models-graveyard.ts
 models/models-grid-entry.ts
 models/models-grid.ts
@@ -334,7 +331,6 @@ models/models-pets-beastlord-datum.ts
 models/models-pets-equipmentset-entry.ts
 models/models-pets-equipmentset.ts
 models/models-player-titleset.ts
-models/models-proximity.ts
 models/models-quest-global.ts
 models/models-raid-detail.ts
 models/models-raid-leader.ts

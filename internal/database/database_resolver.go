@@ -11,6 +11,7 @@ import (
 	"github.com/sirupsen/logrus"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
+	"gorm.io/gorm/logger"
 	"os"
 	"strings"
 	"time"
@@ -186,12 +187,18 @@ func (d *DatabaseResolver) ResolveUserEqemuConnection(model models.Modelable, us
 		dbName,
 	)
 
+	logMode := logger.Silent
+	if env.GetBool("MYSQL_QUERY_LOGGING", "false") {
+		logMode = logger.Info
+	}
+
 	db, err := gorm.Open(
 		mysql.Open(dsn),
 		&gorm.Config{
 			SkipDefaultTransaction:                   true,
 			DisableForeignKeyConstraintWhenMigrating: true,
 			DisableAutomaticPing:                     false,
+			Logger:                                   logger.Default.LogMode(logMode),
 		},
 	)
 

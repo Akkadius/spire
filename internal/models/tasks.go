@@ -1,5 +1,9 @@
 package models
 
+import (
+	"github.com/volatiletech/null/v8"
+)
+
 type Task struct {
 	ID                    uint               `json:"id" gorm:"Column:id"`
 	Type                  int8               `json:"type" gorm:"Column:type"`
@@ -7,15 +11,15 @@ type Task struct {
 	DurationCode          int8               `json:"duration_code" gorm:"Column:duration_code"`
 	Title                 string             `json:"title" gorm:"Column:title"`
 	Description           string             `json:"description" gorm:"Column:description"`
-	Reward                string             `json:"reward" gorm:"Column:reward"`
-	Rewardid              uint               `json:"rewardid" gorm:"Column:rewardid"`
-	Cashreward            uint               `json:"cashreward" gorm:"Column:cashreward"`
-	Xpreward              int                `json:"xpreward" gorm:"Column:xpreward"`
-	Rewardmethod          uint8              `json:"rewardmethod" gorm:"Column:rewardmethod"`
+	RewardText            string             `json:"reward_text" gorm:"Column:reward_text"`
+	RewardIdList          null.String        `json:"reward_id_list" gorm:"Column:reward_id_list"`
+	CashReward            uint               `json:"cash_reward" gorm:"Column:cash_reward"`
+	ExpReward             int                `json:"exp_reward" gorm:"Column:exp_reward"`
+	RewardMethod          uint8              `json:"reward_method" gorm:"Column:reward_method"`
 	RewardPoints          int                `json:"reward_points" gorm:"Column:reward_points"`
 	RewardPointType       int                `json:"reward_point_type" gorm:"Column:reward_point_type"`
-	Minlevel              uint8              `json:"minlevel" gorm:"Column:minlevel"`
-	Maxlevel              uint8              `json:"maxlevel" gorm:"Column:maxlevel"`
+	MinLevel              uint8              `json:"min_level" gorm:"Column:min_level"`
+	MaxLevel              uint8              `json:"max_level" gorm:"Column:max_level"`
 	LevelSpread           uint               `json:"level_spread" gorm:"Column:level_spread"`
 	MinPlayers            uint               `json:"min_players" gorm:"Column:min_players"`
 	MaxPlayers            uint               `json:"max_players" gorm:"Column:max_players"`
@@ -175,7 +179,6 @@ func (Task) Relationships() []string {
 		"AlternateCurrency.Item.StartingItems",
 		"AlternateCurrency.Item.StartingItems.Item",
 		"AlternateCurrency.Item.StartingItems.Zone",
-		"AlternateCurrency.Item.Tasks",
 		"AlternateCurrency.Item.TradeskillRecipeEntries",
 		"AlternateCurrency.Item.TradeskillRecipeEntries.TradeskillRecipe",
 		"AlternateCurrency.Item.TributeLevels",

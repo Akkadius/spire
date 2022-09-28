@@ -84,12 +84,19 @@
         >
           <span class="font-weight-bold">Reward(s)</span>
 
-          <div v-if="task.rewardid > 0 && rewardItem && Object.keys(rewardItem).length > 0">
+          <div v-if="task.reward_text" style="color: magenta" class="mt-1">
+            {{ task.reward_text }}
+          </div>
+
+          <div
+            v-for="item in rewardItems"
+            :key="item.id"
+          >
             <item-popover
-              :item="rewardItem"
-              v-if="Object.keys(rewardItem).length > 0 && rewardItem"
+              :item="item"
+              v-if="Object.keys(item).length > 0 && item"
               size="regular"
-              class="mt-3"
+              class="mt-1"
             />
           </div>
           <div v-if="task.alternate_currency && task.alternate_currency.item">
@@ -102,15 +109,16 @@
             />
           </div>
 
-          <div v-if="task.cashreward > 0" class="mt-3">
+          <div v-if="task.cash_reward > 0" class="mt-3">
+            Cash
             <eq-cash-display
               class="d-inline-block"
-              :price="task.cashreward"
+              :price="task.cash_reward"
             />
           </div>
 
-          <div v-if="task.xpreward > 0" class="mt-3">
-            Experience ({{ task.xpreward.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") }})
+          <div v-if="task.exp_reward > 0" class="mt-3">
+            Experience ({{ task.exp_reward.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") }})
           </div>
         </div>
 
@@ -162,11 +170,10 @@ export default {
       zones: {},
 
       // item objects for rendering
-      rewardItem: null,
+      rewardItems: [],
 
       // this keeps track of the last loaded state so we are not forcing
       // re-renders every time updates to the "task" object are made
-      lastLoadedItemId: 0,
       lastTaskDuration: -1,
     }
   },
@@ -206,25 +213,49 @@ export default {
     },
 
     hasReward() {
-      return (this.task.rewardid > 0 && this.task.rewardmethod === 0)
+      return ((this.rewardItems.length > 0)
         || this.task.reward_ebon_crystals > 0
         || this.task.reward_radiant_crystals > 0
-        || this.task.xpreward > 0
-        || this.task.cashreward > 0
+        || this.task.exp_reward > 0
+        || this.task.cash_reward > 0) && this.task.reward_method !== 2
     },
 
-    load() {
+    created() {
+      this.previousRewardItems = ""
+    },
+
+    async load() {
       if (this.task.duration && this.task.duration !== this.lastTaskDuration) {
         this.setCountDownTimer()
         this.lastTaskDuration = this.task.duration
       }
 
-      if (this.task.rewardid && this.task.rewardid !== this.lastLoadedItemId) {
-        this.rewardItem = null
-        Items.getItem(this.task.rewardid).then((r) => {
-          this.rewardItem       = r
-          this.lastLoadedItemId = this.task.rewardid
-        })
+      // bust cache if the reward is different when we redraw this component
+      // console.log(this.previousRewardItems)
+      // console.log(this.task.reward_id_list)
+      // console.log(this.previousRewardItems !== this.task.reward_id_list)
+      if (this.previousRewardItems !== this.task.reward_id_list.toString()) {
+        this.rewardItems = []
+      }
+
+      // load multiple rewards
+      if (this.task.reward_id_list && this.task.reward_id_list.length > 0 && this.rewardItems.length === 0) {
+        const items = this.task.reward_id_list.split("|").map((x) => {
+          return parseInt(x, 10);
+        });
+
+        // we check to see if items is the same as previous reward items because
+        // when changing fields we end up redrawing this area
+        // we already loaded
+        if (items.length > 0 && this.previousRewardItems !== items) {
+          await Items.loadItemsBulk(items);
+          let rewardItems = []
+          for (let item of items) {
+            rewardItems.push(await Items.getItem(item))
+          }
+          this.rewardItems         = rewardItems
+          this.previousRewardItems = this.task.reward_id_list.toString()
+        }
       }
 
       this.description = this.getDescription()
@@ -295,6 +326,14 @@ export default {
             return zone.long_name
           }
         }
+      }
+
+      if (activity.zones === 0) {
+        return "ALL"
+      }
+
+      if (activity.zones === -1) {
+        return "Unknown"
       }
 
       return ""

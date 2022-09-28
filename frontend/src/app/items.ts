@@ -52,6 +52,8 @@ export class Items {
       r.data.forEach((item) => {
         Items.setItem(item.id, item);
       })
+
+      return r.data
     }
   }
 
@@ -404,7 +406,6 @@ export class Items {
       "StartingItems.Zone",
       "TradeskillRecipeEntries",
       "TradeskillRecipeEntries.TradeskillRecipe",
-      "Tasks",
       "TributeLevels",
     ]
   }
