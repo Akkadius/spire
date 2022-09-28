@@ -4,7 +4,7 @@
       style="height: 95vh; overflow-y: scroll; overflow-x: hidden" class="p-0"
     >
       <div class="font-weight-bold text-center">
-        Goal Match List Preview ({{ TASK_ACTIVITY_TYPES[activity.activitytype] }})
+        Item Match List Preview
       </div>
 
       <div v-if="items && items.length > 0" class="text-center mt-1">
@@ -57,11 +57,10 @@
 </template>
 
 <script>
-import EqWindowSimple                            from "@/components/eq-ui/EQWindowSimple";
-import EqCheckbox                                from "@/components/eq-ui/EQCheckbox";
-import {TASK_ACTIVITY_TYPE, TASK_ACTIVITY_TYPES} from "@/app/constants/eq-task-constants";
-import ItemPopover                               from "@/components/ItemPopover";
-import {Items}                                   from "@/app/items";
+import EqWindowSimple from "@/components/eq-ui/EQWindowSimple";
+import EqCheckbox     from "@/components/eq-ui/EQCheckbox";
+import ItemPopover    from "@/components/ItemPopover";
+import {Items}        from "@/app/items";
 
 export default {
   name: "TaskItemMatchListPreviewer",
@@ -70,21 +69,17 @@ export default {
     return {
       // result sets
       items: {},
-
-      // constants
-      TASK_ACTIVITY_TYPE: TASK_ACTIVITY_TYPE,
-      TASK_ACTIVITY_TYPES: TASK_ACTIVITY_TYPES,
     }
   },
   props: {
-    activity: {
-      type: Object,
+    idList: {
+      type: String,
       required: true,
     },
   },
 
   watch: {
-    activity: {
+    idList: {
       deep: true,
       handler() {
         this.load()
@@ -103,22 +98,17 @@ export default {
 
     async loadItemMatches() {
       let items = []
-      for (let m of this.activity.item_id_list.split("|")) {
+      for (let m of this.idList.split("|")) {
         m = m.toLowerCase()
-        if (m.length === 0 && this.activity.item_id_list.length !== 0) {
+        if (m.length === 0 && this.idList.length !== 0) {
           continue;
         }
 
         items.push(parseInt(m))
       }
 
-      console.log(items)
-
       this.items = await Items.loadItemsBulk(items)
-
-      console.log(this.items)
     },
-
   },
   mounted() {
     this.load()

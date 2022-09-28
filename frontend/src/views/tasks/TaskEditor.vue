@@ -267,7 +267,7 @@
                        {
                          description: 'Reward Item ID(s)',
                          field: 'reward_id_list',
-                         fieldType: 'text',
+                         fieldType: 'reward_id_list',
                          itemIcon: '3366',
                          col: 'col-4',
                          onclick: setSelectorActive,
@@ -391,6 +391,27 @@
                         v-b-tooltip.hover.v-dark.right :title="getFieldDescription(field.field)"
                         :style="(task[field.field] <= (typeof field.zeroValue !== 'undefined' ? field.zeroValue : 0) ? 'opacity: .5' : '')"
                       />
+
+                      <!-- reward_id_list -->
+                      <b-input-group v-if="field.fieldType === 'reward_id_list'">
+                        <b-form-input
+                          :id="field.field"
+                          v-model.number="task[field.field]"
+                          class="m-0 mt-1"
+                          v-on="typeof field.onclick !== 'undefined' ? { click: () => field.onclick(field.field) } : {}"
+                          v-b-tooltip.hover.v-dark.right :title="getFieldDescription(field.field)"
+                          :style="(task[field.field] <= (typeof field.zeroValue !== 'undefined' ? field.zeroValue : 0) ? 'opacity: .5' : '')"
+                        />
+                        <b-button
+                          @click="rewardIdMatchListItemSelector()"
+                          size="sm"
+                          v-b-tooltip.hover.v-dark.right :title="'Add entries to list'"
+                          style="height: 29px; padding-right: 5px; margin-top: 3px;"
+                          variant="btn btn btn-dark btn-outline-success btn-secondary btn-sm"
+                        >
+                          <i class="fa fa-pencil-square mr-1"></i>
+                        </b-button>
+                      </b-input-group>
 
                       <!-- textarea -->
                       <b-textarea
@@ -929,6 +950,18 @@
           />
         </div>
 
+        <!-- reward_id_list preview -->
+        <div
+          style="width: auto;"
+          class="fade-in"
+          v-if="selectorActive['reward_id_list'] && task['reward_id_list']"
+        >
+          <task-item-match-list-previewer
+            :id-list="task.reward_id_list"
+            @remove-item="task.reward_id_list = removeItemFromMatchList(task.reward_id_list, $event)"
+          />
+        </div>
+
         <!-- item_id_list preview -->
         <div
           style="width: auto;"
@@ -936,7 +969,7 @@
           v-if="selectorActive['item_id_list'] && task.task_activities[selectedActivity] && typeof task.task_activities[selectedActivity].item_id_list !== 'undefined'"
         >
           <task-item-match-list-previewer
-            :activity="task.task_activities[selectedActivity]"
+            :id-list="task.task_activities[selectedActivity].item_id_list"
             @remove-item="task.task_activities[selectedActivity].item_id_list = removeItemFromMatchList(task.task_activities[selectedActivity].item_id_list, $event)"
           />
         </div>
@@ -951,19 +984,17 @@
             :task="task"
             :description="task.description"
             @input="task['description'] = $event; setFieldModifiedById('description');"
-          ></task-description-selector>
+          />
         </div>
 
-        <!-- (reward_id_list) item selector -->
-        <!-- TODO: UPDATE THIS FROM (rewardid) -->
+        <!-- reward_id_list_select -->
         <div
           style="width: auto;"
           class="fade-in"
-          v-if="selectorActive['reward_id_list'] || selectorActive['reward_id_list']"
+          v-if="selectorActive['reward_id_list_select']"
         >
           <task-item-selector
-            :selected-item-id="task.reward_id_list > 0 ? task.reward_id_list : 0"
-            @input="task['reward_id_list'] = $event.id; task['reward_id_list'] = $event.name; setFieldModifiedById('reward_id_list'); setFieldModifiedById('reward_id_list')"
+            @input="task['reward_id_list'] = addItemToMatchList(task['reward_id_list'], $event.id); setFieldModifiedById('reward_id_list')"
           />
         </div>
 
@@ -974,8 +1005,7 @@
           v-if="selectorActive['item_id_list_select']"
         >
           <task-item-selector
-            :selected-item-id="task.reward_id_list > 0 ? task.reward_id_list : 0"
-            @input="task.task_activities[selectedActivity].item_id_list = addItemToActivityItemMatchList(task.task_activities[selectedActivity].item_id_list, $event.id); setFieldModifiedById('reward_id_list');"
+            @input="task.task_activities[selectedActivity].item_id_list = addItemToMatchList(task.task_activities[selectedActivity].item_id_list, $event.id); setFieldModifiedById('reward_id_list');"
           />
         </div>
 
@@ -1186,16 +1216,19 @@ export default {
       return newList.join("|")
     },
 
-    addItemToActivityItemMatchList(list, itemId) {
+    addItemToMatchList(list, itemId) {
       let newList = list.split("|")
 
       if (!newList.includes(itemId.toString())) {
         newList.push(itemId.toString())
       }
 
-      return newList.join("|")
+      return newList.filter(Number).join("|")
     },
 
+    rewardIdMatchListItemSelector() {
+      this.setSelectorActive('reward_id_list_select')
+    },
     itemMatchListItemSelector() {
       this.setSelectorActive('item_id_list_select')
     },
