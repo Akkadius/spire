@@ -12,6 +12,10 @@
         the filtered zone(s)
       </div>
 
+      <div v-if="npcs.length === 0" class="text-center mt-3 font-weight-bold">
+        No NPC(s) were found
+      </div>
+
       <!-- Fake Loader -->
       <div v-if="!loaded" class="mt-3 text-center">
         <!--        <loader-fake-progress class="mt-3"/>-->

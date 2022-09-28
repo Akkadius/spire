@@ -11,6 +11,10 @@
         Found ({{ items.length }}) matching item(s)
       </div>
 
+      <div v-if="items.length === 0" class="text-center mt-3 font-weight-bold">
+        No item(s) were found
+      </div>
+
       <table
         class="eq-table eq-highlight-rows bordered"
         style="display: table; overflow-x: scroll; overflow-y: hidden"
