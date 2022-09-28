@@ -2,7 +2,6 @@
   <div>
     <eq-window-simple
       style="height: 95vh; overflow-y: scroll; overflow-x: hidden" class="p-0"
-      v-if="isNpcMatchList()"
     >
       <div class="font-weight-bold text-center">
         Goal Match List Preview ({{ TASK_ACTIVITY_TYPES[activity.activitytype] }})
