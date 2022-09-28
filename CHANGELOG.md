@@ -1,6 +1,6 @@
 ## [2.0.0] 
 
-## [Task Editor] Major Task Update(s)
+### [Task Editor] Major Task Update(s)
 
 ![image](https://user-images.githubusercontent.com/3319450/192701596-13a3fbbe-7c46-47ca-8f54-16de57c3c8d9.png)
 
@@ -48,7 +48,6 @@ To bring similar flexibility to that there of **NPC Match List(s)**, multiple it
 
 ![image](https://user-images.githubusercontent.com/3319450/192705534-d9f02103-1b2e-4f53-8eb9-c2cc46ce7e00.png)
 
-
 ### Exploration Box Changes
 
 Exploration used to be managed by the **proximities** table. Part of the recent waves of simplification this is now managed on the **task_activities** table to simplify. As a result explore boxes are now visible within the activity pane instead of breaking out as their own sub-editor when editing an explore activity type.
@@ -80,7 +79,6 @@ To be updated in official documentation
 | 11             | Touch                       | \-             | \-               | x<br>(doors table dz\_switch\_id) | o      | o      | o      | o      | o      | o      | \-            | \-            | \-                                       | Name of Touch Target<br>(Touch target) | Touch (target\_name)                               |
 | 100            | Give                        | \-             | x                | \-                                | o      | o      | o      | o      | o      | o      | \-            | \-            | \-                                       | Name of NPC                            | Give (goal\_count) to (target\_name)               |
 | 255            | Quest Script                | \-             | \-               | \-                                | o      | o      | o      | o      | o      | o      | \-            | \-            | \-                                       | \-                                     | \-                                                 |
-
 
 ## [1.13.10]
 
