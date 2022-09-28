@@ -624,7 +624,7 @@
                              field: 'npc_match_list',
                              fieldType: 'text',
                              showIf: isNpcMatchListSelectorActive(),
-                             info: 'Use partial or full NPC names or exact IDs to match for this activity update',
+                             info: 'Use partial or full NPC names or exact IDs to match for this activity update. Example (10343|orc|gnoll)',
                              col: 'col-12',
                              onclick: setSelectorActive,
                            },

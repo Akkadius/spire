@@ -239,7 +239,7 @@ export class Tasks {
       "step": "This is the logical step of your task activity, you can have many activities in one step, you have to complete all activities in one step to unlock the next step",
       "activitytype": "This is the type of task activity, kill, loot etc.",
       "item_list": "Name of items mentioned in task description",
-      "npc_match_list": "Names or IDs of NPC's separated by | Ex: (10343|orc|gnoll)",
+      "npc_match_list": "Names or IDs of NPC's separated by | Example (10343|orc|gnoll)",
       "item_id_list": "IDs of items separated by | Ex: (10343|24232|34243)",
       "target_name": "This describes what the activity is targeting, it is different depending on the activity. For example 'orcs' Would display 'Kill X orcs'",
       "optional": "Describes whether or not this activity is optional",

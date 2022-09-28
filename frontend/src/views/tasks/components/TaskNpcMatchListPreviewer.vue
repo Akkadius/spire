@@ -108,12 +108,8 @@ export default {
 
       // 1) Load by zone
       // TODO: skip loading globally for now, maybe implement later
-      let zones = []
-      let npcs  = [];
-
-
-      console.log("this.activity.zones", this.activity.zones)
-
+      let zones           = []
+      let npcs            = [];
       this.activity.zones = this.activity.zones.toString();
       if (this.activity.zones && this.activity.zones !== 0) {
 
@@ -144,13 +140,9 @@ export default {
             if (this.activity.npc_match_list && this.activity.npc_match_list.length > 0) {
               found = false
               for (let m of this.activity.npc_match_list.split("|")) {
-
-                console.log(m)
-
                 if (m === "") {
                   continue;
                 }
-
 
                 if (
                   m.toString() === n.id.toString()
@@ -172,7 +164,25 @@ export default {
 
           }
         }
+        this.npcs = npcs
+      }
 
+      // Global
+      if (this.npcs.length === 0 && this.activity.npc_match_list.length > 0) {
+        let npcIds = []
+        for (let m of this.activity.npc_match_list.split("|")) {
+          if (m === "") {
+            continue;
+          }
+          npcIds.push(parseInt(m))
+        }
+        let npcs = []
+        for (let n of await Npcs.getNpcsBulk(npcIds)) {
+          npcs.push({
+            npc: n,
+            search: 'Global'
+          })
+        }
         this.npcs = npcs
       }
 

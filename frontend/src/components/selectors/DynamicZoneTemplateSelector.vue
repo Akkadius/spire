@@ -7,7 +7,7 @@
       </div>
 
       <table
-        class="eq-table eq-highlight-rows row-table"
+        class="eq-table eq-highlight-rows row-table bordered"
         style="display: table; font-size: 14px; overflow-x: scroll"
         v-if="rows && rows.length > 0"
       >
