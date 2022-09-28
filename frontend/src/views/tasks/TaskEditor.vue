@@ -475,7 +475,7 @@
                       v-model="selectedActivity"
                       v-bind="task.task_activities"
                       @mouseover="scrollToActivity"
-                      @change="updateQueryState"
+                      @change="selectActivity"
                       ignore-input-change="1"
                       class="form-control eq-input"
                       style="overflow-x: scroll; min-height: 20vh; overflow-y: scroll"
@@ -1206,6 +1206,17 @@ export default {
 
   methods: {
 
+    async saveIfModified() {
+      if (EditFormFieldUtil.anyFieldsHaveBeenEdited()) {
+        await this.saveTask()
+      }
+    },
+
+    async selectActivity() {
+      await this.saveIfModified()
+      this.updateQueryState()
+    },
+
     removeItemFromMatchList(list, id) {
       let newList = list.split("|")
       const index = newList.indexOf(id.toString());
@@ -1523,6 +1534,7 @@ export default {
     },
 
     async cloneActivity() {
+      await this.saveIfModified()
       try {
         const r = await Tasks.cloneTaskActivity(this.getBackendFormattedTask(), this.selectedActivity)
         if (r.status === 200) {
@@ -1539,6 +1551,7 @@ export default {
     },
 
     async moveActivityDown() {
+      await this.saveIfModified()
       const selectedActivity = this.selectedActivity
       let activities         = []
       if (this.task.task_activities && this.task.task_activities.length > 0) {
@@ -1547,7 +1560,7 @@ export default {
 
       let matchedIndex = -1
       for (const index in activities) {
-        console.log(index)
+        // console.log(index)
         if (parseInt(selectedActivity) === parseInt(index) && activities[parseInt(index) + 1]) {
           console.log("found matched index", index)
           matchedIndex = parseInt(index)
@@ -1590,6 +1603,7 @@ export default {
 
     async createActivity() {
       try {
+        await this.saveIfModified()
         const r = await Tasks.createNewTaskActivity(this.task)
         if (r.status === 200) {
           this.task             = (await Tasks.getTask(this.$route.params.id))
@@ -1605,6 +1619,7 @@ export default {
     },
 
     async deleteActivity() {
+      await this.saveTask()
       if (!this.task.task_activities[this.selectedActivity]) {
         return
       }
@@ -1910,6 +1925,7 @@ export default {
       let hasSubEditorFields = [
         "id",
         "description",
+        "reward_id_list",
         "item_id_list",
         "npc_match_list",
         "zones",
