@@ -12,10 +12,16 @@
         Found ({{ npcs.length }}) matching NPC(s). <br> NPC(s) can still be matched if they are quest spawned and within the filtered zone(s)
       </div>
 
+      <!-- Fake Loader -->
+      <div v-if="!loaded" class="mt-3 text-center">
+<!--        <loader-fake-progress class="mt-3"/>-->
+        <app-loader :is-loading="!loaded"/>
+      </div>
+
       <table
         id="npctable"
         class="eq-table eq-highlight-rows bordered"
-        v-if="npcs && npcs.length > 0"
+        v-if="npcs && npcs.length > 0 && loaded"
         style="display: table; font-size: 14px; overflow-x: scroll"
       >
         <thead
@@ -35,7 +41,7 @@
         >
           <td style="text-align: center">{{ npc.npc.id }}</td>
           <td style="min-width: 250px">
-            <npc-popover :npc="npc.npc" size="regular"/>
+            <npc-popover :npc="npc.npc" size="regular" :show-last-name="false"/>
           </td>
           <td>{{ npc.search }}</td>
         </tr>
@@ -56,14 +62,17 @@ import {TASK_ACTIVITY_TYPE, TASK_ACTIVITY_TYPES} from "@/app/constants/eq-task-c
 import ItemPopover                               from "@/components/ItemPopover";
 import NpcPopover                                from "@/components/NpcPopover";
 import {Npcs}                                    from "@/app/npcs";
+import LoaderFakeProgress                        from "@/components/LoaderFakeProgress";
 
 export default {
   name: "TaskNpcMatchListPreviewer",
-  components: { NpcPopover, ItemPopover, EqCheckbox, EqWindowSimple },
+  components: { LoaderFakeProgress, NpcPopover, ItemPopover, EqCheckbox, EqWindowSimple },
   data() {
     return {
       // result sets
       npcs: {},
+
+      loaded: false,
 
       // constants
       TASK_ACTIVITY_TYPE: TASK_ACTIVITY_TYPE,
@@ -104,7 +113,9 @@ export default {
 
     async load() {
       if (this.isNpcMatchList()) {
-        this.loadNpcMatches()
+        setTimeout(() => {
+          this.loadNpcMatches()
+        }, 1)
       }
     },
 
@@ -180,7 +191,7 @@ export default {
         this.npcs = npcs
       }
 
-
+      this.loaded = true
     }
   },
   mounted() {
