@@ -17,7 +17,7 @@
     >
       <table
         id="npctable"
-        class="eq-table eq-highlight-rows"
+        class="eq-table eq-highlight-rows bordered"
         style="display: table; font-size: 14px; overflow-x: scroll"
       >
         <thead
@@ -26,9 +26,8 @@
         <tr>
           <th style="width: 30px"></th>
           <th style="width: 30px">ID</th>
-          <th>Name</th>
+          <th>NPC</th>
           <th>Zones</th>
-          <th></th>
         </tr>
         </thead>
         <tbody>
@@ -46,10 +45,11 @@
               <i class="fa fa-arrow-left"></i>
             </b-button>
           </td>
-          <td style="text-align: center" class="p-0">{{ npc.id }}</td>
-          <td>{{ npc.name }} <span v-if="npc.lastname && npc.lastname.length > 0">({{ npc.lastname }})</span></td>
+          <td style="text-align: center">{{ npc.id }}</td>
+          <td style="min-width: 250px">
+            <npc-popover :npc="npc" size="regular"/>
+          </td>
           <td><span v-if="npcZones[npc.id]">{{ npcZones[npc.id].join(",") }}</span></td>
-          <td class="text-center"><span :class="'race-models-ctn-' + npc.race + '-' + npc.gender + '-' + npc.texture + '-' + npc.helmtexture + ''" style="zoom: 75  %;"></span></td>
         </tr>
         </tbody>
       </table>
@@ -66,10 +66,12 @@ import Expansions          from "@/app/utility/expansions";
 import EqCheckbox          from "@/components/eq-ui/EQCheckbox";
 import {SpireQueryBuilder} from "@/app/api/spire-query-builder";
 import {Zones}             from "@/app/zones";
+import NpcPopover          from "@/components/NpcPopover";
+import {Npcs}              from "@/app/npcs";
 
 export default {
   name: "TaskNpcSelector",
-  components: { EqCheckbox, EqWindowSimple },
+  components: { NpcPopover, EqCheckbox, EqWindowSimple },
   data() {
     return {
       // filtered content
@@ -78,31 +80,19 @@ export default {
       // search
       npcSearch: "",
 
-      // model we work with after the prop is passed we can manipulate it ourselves props should not be mutated
-      selectedNpcIdAttr: 0,
-
       // key by npcid
       npcZones: {},
     }
   },
   props: {
-    selectedNpcId: {
-      type: Number,
-      required: true,
-    },
+    activity: Object
   },
   methods: {
-    isNpcSelected(npc) {
-      return parseInt(npc.id) === parseInt(this.selectedNpcIdAttr)
-    },
-
     selectNpc(npc) {
       this.$emit('input', {
         npcId: npc.id,
         npc: npc,
       });
-
-      this.selectedNpcIdAttr = npc.id
     },
 
     async searchNpc() {
@@ -110,63 +100,82 @@ export default {
         return ""
       }
 
-      const api   = (new NpcTypeApi(SpireApiClient.getOpenApiConfig()))
-      let builder = (new SpireQueryBuilder())
-      if (this.npcSearch !== "") {
-        if (parseInt(this.npcSearch) > 0) {
-          builder.whereOr("id", "=", this.npcSearch)
-        }
-        else {
-          builder.where("name", "like", this.npcSearch)
-          builder.whereOr("lastname", "like", this.npcSearch)
+      // let npcs = []
+
+      if (this.activity.zones.length > 0) {
+        for (let zone of this.activity.zones) {
+          const z = await Zones.getZoneById(zone)
+
+          console.log("zone is", z)
+          console.log("zone sn is", z.short_name)
+
+          const npcs = await Npcs.getNpcsByZone(
+            z.short_name,
+            this.activity.zone_version
+          )
+
+          console.log(npcs)
         }
       }
 
-      builder.includes([
-        "Spawnentries",
-        "Spawnentries.Spawngroup",
-        "Spawnentries.Spawngroup.Spawn2",
-        "Spawnentries.Spawngroup.Spawn2.Spawnentries",
-        "Spawnentries.Spawngroup.Spawn2.Spawngroup",
-      ])
 
-      const result = await api.listNpcTypes(
-        builder.orderBy(["id", "name"]).get()
-      )
-
-      if (result.status === 200) {
-        this.filteredNpcs = result.data
-
-        // get zones where npc's reside in
-        let npcZones = {}
-        for (const npc of result.data) {
-          if (
-            npc.spawnentries &&
-            npc.spawnentries[0].spawngroup &&
-            npc.spawnentries[0].spawngroup.spawn_2
-          ) {
-            const zoneName = await Zones.getZoneLongNameByShortName(npc.spawnentries[0].spawngroup.spawn_2.zone.toLowerCase())
-            if (typeof this.npcZones[npc.id] === "undefined") {
-              npcZones[npc.id] = []
-            }
-
-            npcZones[npc.id].push(`${zoneName} (${npc.spawnentries[0].spawngroup.spawn_2.version})`)
-          }
-        }
-
-        // if (this.npcSearch !== "") {
-        //   let filtered = []
-        //   for (let index in this.filteredNpcs) {
-        //     const r = this.filteredNpcs[index]
-        //     if (npcZones[npc.id].join("").toLowerCase().includes(this.npcSearch.toLowerCase())) {
-        //       filtered.
-        //     }
-        //   }
-        // }
-
-        // update npcZones
-        this.npcZones = npcZones
-      }
+      // const api   = (new NpcTypeApi(SpireApiClient.getOpenApiConfig()))
+      // let builder = (new SpireQueryBuilder())
+      // if (this.npcSearch !== "") {
+      //   if (parseInt(this.npcSearch) > 0) {
+      //     builder.whereOr("id", "=", this.npcSearch)
+      //   }
+      //   else {
+      //     builder.where("name", "like", this.npcSearch)
+      //     builder.whereOr("lastname", "like", this.npcSearch)
+      //   }
+      // }
+      //
+      // builder.includes([
+      //   "Spawnentries",
+      //   "Spawnentries.Spawngroup",
+      //   "Spawnentries.Spawngroup.Spawn2",
+      //   "Spawnentries.Spawngroup.Spawn2.Spawnentries",
+      //   "Spawnentries.Spawngroup.Spawn2.Spawngroup",
+      // ])
+      //
+      // const result = await api.listNpcTypes(
+      //   builder.orderBy(["id", "name"]).get()
+      // )
+      //
+      // if (result.status === 200) {
+      //   this.filteredNpcs = result.data
+      //
+      //   // get zones where npc's reside in
+      //   let npcZones = {}
+      //   for (const npc of result.data) {
+      //     if (
+      //       npc.spawnentries &&
+      //       npc.spawnentries[0].spawngroup &&
+      //       npc.spawnentries[0].spawngroup.spawn_2
+      //     ) {
+      //       const zoneName = await Zones.getZoneLongNameByShortName(npc.spawnentries[0].spawngroup.spawn_2.zone.toLowerCase())
+      //       if (typeof this.npcZones[npc.id] === "undefined") {
+      //         npcZones[npc.id] = []
+      //       }
+      //
+      //       npcZones[npc.id].push(`${zoneName} (v${npc.spawnentries[0].spawngroup.spawn_2.version})`)
+      //     }
+      //   }
+      //
+      //   // if (this.npcSearch !== "") {
+      //   //   let filtered = []
+      //   //   for (let index in this.filteredNpcs) {
+      //   //     const r = this.filteredNpcs[index]
+      //   //     if (npcZones[npc.id].join("").toLowerCase().includes(this.npcSearch.toLowerCase())) {
+      //   //       filtered.
+      //   //     }
+      //   //   }
+      //   // }
+      //
+      //   // update npcZones
+      //   this.npcZones = npcZones
+      // }
     },
 
     getExpansionIcon(expansion) {
@@ -182,22 +191,7 @@ export default {
       t.focus()
     }
 
-    this.selectedNpcIdAttr = this.selectedNpcId
-
-    if (this.selectedNpcIdAttr !== 0) {
-      this.npcSearch = this.selectedNpcIdAttr
-    }
-
     this.searchNpc()
-
-    setTimeout(() => {
-      const container = document.getElementById("npc-view-container");
-      const target    = document.getElementById(util.format("npc-%s", this.selectedNpcIdAttr))
-      if (container && target) {
-        const top           = target.getBoundingClientRect().top
-        container.scrollTop = container.scrollTop + top - 300;
-      }
-    }, 100)
 
     // pre-select text box input
     setTimeout(() => {
@@ -207,6 +201,7 @@ export default {
         input.select();
       }
     }, 100)
+
   }
 }
 </script>

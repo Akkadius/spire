@@ -104,7 +104,7 @@
               <tr
                 v-for="(n, index) in ml"
                 :id="'ml-' + n.id"
-                :key="'ml-' + n.id + '-' + n.merchant_id"
+                :key="'ml-' + index + '-' + n.id + '-' + n.merchant_id"
                 @mouseover="activeMerchantNpc = n"
               >
                 <td
@@ -172,7 +172,7 @@
               <tr
                 v-for="(m, index) in merchantLists"
                 :id="'ml-' + m.merchantid"
-                :key="'ml-' + m.merchantid"
+                :key="'ml-' + index + '-' + n.id + '-' + n.merchant_id"
                 :class="(isActiveMerchant(m) ? 'pulsate-highlight-white' : '')"
                 @click="showMerchantList(m)"
               >

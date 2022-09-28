@@ -1,11 +1,11 @@
 <template>
   <div>
     <eq-window-simple
-      style="height: 95vh; overflow-y: scroll;" class="p-0"
+      style="height: 95vh; overflow-y: scroll; overflow-x: hidden" class="p-0"
       v-if="isItemIdMatchList()"
     >
       <div class="font-weight-bold text-center">
-        Goal Match List Preview ({{ TASK_ACTIVITY_TYPES[activityType] }})
+        Goal Match List Preview ({{ TASK_ACTIVITY_TYPES[activity.activitytype] }})
       </div>
 
       <div v-if="items && items.length > 0" class="text-center mt-1">
@@ -13,7 +13,7 @@
       </div>
 
       <table
-        class="eq-table eq-highlight-rows"
+        class="eq-table eq-highlight-rows bordered"
         style="display: table; overflow-x: scroll"
       >
         <thead>
@@ -44,11 +44,11 @@
     </eq-window-simple>
 
     <eq-window-simple
-      style="height: 95vh; overflow-y: scroll;" class="p-0"
+      style="height: 95vh; overflow-y: scroll; overflow-x: hidden" class="p-0"
       v-if="isNpcMatchList()"
     >
       <div class="font-weight-bold text-center">
-        Goal Match List Preview ({{ TASK_ACTIVITY_TYPES[activityType] }})
+        Goal Match List Preview ({{ TASK_ACTIVITY_TYPES[activity.activitytype] }})
       </div>
 
       <div v-if="npcs && npcs.length > 0" class="text-center mt-1 ">
@@ -57,7 +57,7 @@
 
       <table
         id="npctable"
-        class="eq-table eq-highlight-rows"
+        class="eq-table eq-highlight-rows bordered"
         v-if="npcs && npcs.length > 0"
         style="display: table; font-size: 14px; overflow-x: scroll"
       >
@@ -66,26 +66,21 @@
         >
         <tr>
           <th style="width: 30px">ID</th>
-          <th style="width: 100px">Name</th>
           <th></th>
           <th>Search Type</th>
-          <th>Zones</th>
         </tr>
         </thead>
         <tbody>
         <tr
           :id="'npc-' + npc.npc.short_name"
           v-for="(npc, index) in npcs"
-          :key="npc.npc.id"
+          :key="index + '-' + npc.npc.id"
         >
-          <td style="text-align: center" class="p-0">{{ npc.npc.id }}</td>
-          <td>{{ npc.npc.name }} <span v-if="npc.lastname && npc.lastname.length > 0">({{ npc.lastname }})</span></td>
-          <td class="text-center"><span
-            :class="'race-models-ctn-' + npc.npc.race + '-' + npc.npc.gender + '-' + npc.npc.texture + '-' + npc.npc.helmtexture + ''"
-            style="zoom: 75%;"
-          ></span></td>
-          <td>{{npc.search}}</td>
-          <td><span v-if="npcZones[npc.npc.id]">{{ npcZones[npc.npc.id].join(",") }}</span></td>
+          <td style="text-align: center">{{ npc.npc.id }}</td>
+          <td style="min-width: 250px">
+            <npc-popover :npc="npc.npc" size="regular"/>
+          </td>
+          <td>{{ npc.search }}</td>
         </tr>
         </tbody>
       </table>
@@ -95,25 +90,24 @@
 
 <script>
 import EqWindowSimple                            from "@/components/eq-ui/EQWindowSimple";
-import {ItemApi, NpcTypeApi, Spawn2Api}          from "@/app/api";
+import {ItemApi, NpcTypeApi}                     from "@/app/api";
 import {SpireApiClient}                          from "@/app/api/spire-api-client";
 import EqCheckbox                                from "@/components/eq-ui/EQCheckbox";
 import {SpireQueryBuilder}                       from "@/app/api/spire-query-builder";
 import {Zones}                                   from "@/app/zones";
 import {TASK_ACTIVITY_TYPE, TASK_ACTIVITY_TYPES} from "@/app/constants/eq-task-constants";
 import ItemPopover                               from "@/components/ItemPopover";
+import NpcPopover                                from "@/components/NpcPopover";
+import {Npcs}                                    from "@/app/npcs";
 
 export default {
   name: "TaskGoalMatchListPreviewer",
-  components: { ItemPopover, EqCheckbox, EqWindowSimple },
+  components: { NpcPopover, ItemPopover, EqCheckbox, EqWindowSimple },
   data() {
     return {
       // result sets
       npcs: {},
       items: {},
-
-      // key by npcid
-      npcZones: {},
 
       // constants
       TASK_ACTIVITY_TYPE: TASK_ACTIVITY_TYPE,
@@ -121,30 +115,26 @@ export default {
     }
   },
   props: {
-    goalMatchList: {
-      type: String,
-      required: false,
-    },
-    activityType: {
-      type: Number,
+    activity: {
+      type: Object,
       required: true,
     },
-    zoneIds: {
-      type: String,
-      required: false,
-    }
   },
 
   watch: {
-    goalMatchList: {
+    activity: {
+      deep: true,
       handler() {
         this.load()
       }
     },
   },
 
-  methods: {
+  created() {
+    this.zoneCache = {}
+  },
 
+  methods: {
     isItemIdMatchList() {
       return [
         TASK_ACTIVITY_TYPE.LOOT,
@@ -153,7 +143,7 @@ export default {
         TASK_ACTIVITY_TYPE.FISH,
         TASK_ACTIVITY_TYPE.FORAGE
       ].includes(
-        parseInt(this.activityType)
+        parseInt(this.activity.activitytype)
       )
     },
 
@@ -163,7 +153,7 @@ export default {
         TASK_ACTIVITY_TYPE.SPEAK_WITH,
         // TASK_ACTIVITY_TYPE.GIVE
       ].includes(
-        parseInt(this.activityType)
+        parseInt(this.activity.activitytype)
       )
     },
 
@@ -197,18 +187,72 @@ export default {
 
     async loadNpcMatches() {
 
+      console.log(this.activity.zones)
+      console.log("loading npc matches")
+
       // 1) Load by zone
-      const api = (new Spawn2Api(SpireApiClient.getOpenApiConfig()))
       let zones = []
-      if (this.zoneIds && this.zoneIds.length > 0) {
-        for (let zoneId of this.zoneIds.split(",")) {
-          zones.push(
-            (await Zones.getZoneById(parseInt(zoneId))).short_name
-          )
+      let npcs  = [];
+
+      this.activity.zones = this.activity.zones.toString();
+      if (this.activity.zones && this.activity.zones !== 0) {
+
+        console.log("NPC zone search", this.activity.zones)
+
+        // build zone names
+        if (this.activity.zones && this.activity.zones.length > 0) {
+          for (let zoneId of this.activity.zones.split(",")) {
+            zones.push(
+              (await Zones.getZoneById(parseInt(zoneId))).short_name
+            )
+          }
         }
+
+        console.log("zones", zones)
+
+        for (let zone of zones) {
+          console.log("zone", zone)
+          console.log("version", parseInt(this.activity.zone_version))
+
+          // cache zone npcs so we don't hit it realtime
+          let zoneNpcs = []
+          if (this.zoneCache[this.activity.zones]) {
+            zoneNpcs = this.zoneCache[this.activity.zones]
+          } else {
+            zoneNpcs = (await Npcs.getNpcsByZone(zone, parseInt(this.activity.zone_version)))
+            this.zoneCache[this.activity.zones] = zoneNpcs
+          }
+
+          for (let n of zoneNpcs) {
+            let found = false
+            for (let m of this.activity.npc_match_list.split("|")) {
+              if (m === "") {
+                continue;
+              }
+
+              if (m.toString() === n.id.toString() || n.name.toLowerCase().includes(m.toLowerCase())) {
+                found = true;
+                break;
+              }
+            }
+
+            if (found) {
+              npcs.push({
+                npc: n,
+                search: `Zone [${zone}]`
+              })
+            }
+
+          }
+        }
+
+
+        this.npcs = npcs
       }
 
-      console.log("[match list previewer] Zone ID", this.zoneIds)
+      return;
+
+      console.log("[match list previewer] Zone ID", this.activity.zones)
       console.log("[match list previewer] Zones", zones)
 
       let builder = (new SpireQueryBuilder())
@@ -227,9 +271,7 @@ export default {
         "Spawnentries.NpcType",
       ])
 
-      this.npcs     = {}
-      this.npcZones = {}
-      let npcs      = [];
+      this.npcs = {}
 
       // this is used only as a way to show options at the global level if things were not
       // found at the local zone level
@@ -238,54 +280,6 @@ export default {
       // if we have no matches against anything in zone we'd want to see what the global npc table
       // could give us for matches
       let npcNameMatches = {};
-
-      const result = await api.listSpawn2s(builder.get())
-      if (result.status === 200 && result.data) {
-        for (let spawn2 of result.data) {
-          if (spawn2.spawnentries) {
-            for (let spawnentry of spawn2.spawnentries) {
-              if (spawnentry.npc_type) {
-                const n         = spawnentry.npc_type.name.toLowerCase()
-                const nId       = spawnentry.npc_type.id.toString()
-                const matchList = this.goalMatchList ? this.goalMatchList : ""
-                for (let m of matchList.split("|")) {
-                  m = m.toLowerCase()
-                  if (m.length === 0 && matchList.length !== 0) {
-                    continue;
-                  }
-
-                  // name match
-                  if (n.includes(m) || nId === m) {
-
-                    npcNameMatches[m] = true
-
-                    // make sure npc id isn't already added to array
-                    if (npcs.filter(e => e.npc.id === spawnentry.npc_type.id).length === 0) {
-                      npcs.push({
-                        npc: spawnentry.npc_type,
-                        search: 'Zone'
-                      })
-
-                    }
-
-                    // create association of an NPC ID to zones
-                    for (let zone of zones) {
-                      if (typeof this.npcZones[spawnentry.npc_type.id] === "undefined") {
-                        this.npcZones[spawnentry.npc_type.id] = []
-                      }
-
-                      // make sure we haven't added the same zone twice
-                      if (this.npcZones[spawnentry.npc_type.id].filter(e => e === zone).length === 0) {
-                        this.npcZones[spawnentry.npc_type.id].push(zone)
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
 
       // 2) Load by global namespace
       // an NPC could be quest-spawned into a zone and is still filterable

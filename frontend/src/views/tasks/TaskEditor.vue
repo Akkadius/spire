@@ -581,15 +581,6 @@
                               info: 'Filters determine what the activity update applies to, zone, items, npc\'s etc.',
                            },
                            {
-                             description: 'Goal Match List ' + renderGoalMatchListDescription() + ' Multiple entries separated by |',
-                             field: 'npc_match_list',
-                             fieldType: 'text',
-                             itemIcon: '3196',
-                             col: 'col-12',
-                             showIf: isGoalMatchListActive(),
-                             onclick: setSelectorActive,
-                           },
-                           {
                              description: 'Deliver to NPC',
                              field: 'delivertonpc',
                              fieldType: 'number',
@@ -606,6 +597,15 @@
                              fieldType: 'text',
                              type: 'text',
                              col: 'col-6',
+                             onclick: setSelectorActive,
+                           },
+                           {
+                             description: 'NPC Match List',
+                             itemIcon: '6849',
+                             field: 'npc_match_list',
+                             fieldType: 'npc_match_list',
+                             type: 'text',
+                             col: 'col-12',
                              onclick: setSelectorActive,
                            },
                            {
@@ -689,6 +689,7 @@
                           :style="(typeof field.style !== 'undefined' && field.style) || typeof field.style === 'undefined'"
                         >
 
+                          <!-- Header -->
                           <div
                             v-if="field.fieldType === 'header' && ((typeof field.showIf !== 'undefined' && field.showIf) || typeof field.showIf === 'undefined')"
                           >
@@ -818,6 +819,27 @@
                             :style="(task.task_activities[selectedActivity][field.field] <= (typeof field.zeroValue !== 'undefined' ? field.zeroValue : 0) ? 'opacity: .5' : '')"
                           />
 
+                          <!-- input text -->
+                          <b-input-group v-if="field.fieldType === 'npc_match_list'">
+                            <b-form-input
+                              :id="field.field"
+                              v-model="task.task_activities[selectedActivity][field.field]"
+                              class="m-0 mt-1"
+                              v-on="typeof field.onclick !== 'undefined' ? { click: () => field.onclick(field.field) } : {}"
+                              v-b-tooltip.hover.v-dark.right :title="getFieldDescription(field.field)"
+                              :style="(task.task_activities[selectedActivity][field.field] <= (typeof field.zeroValue !== 'undefined' ? field.zeroValue : 0) ? 'opacity: .5' : '')"
+                            />
+                            <b-button
+                              @click="editNpcMatchList()"
+                              size="sm"
+                              v-b-tooltip.hover.v-dark.right :title="'Add entries to list'"
+                              style="height: 29px; padding-right: 5px; margin-top: 3px;"
+                              variant="btn btn btn-dark btn-outline-success btn-secondary btn-sm"
+                            >
+                              <i class="fa fa-pencil-square mr-1"></i>
+                            </b-button>
+                          </b-input-group>
+
                           <!-- textarea -->
                           <b-textarea
                             v-if="field.fieldType === 'textarea'"
@@ -880,19 +902,16 @@
 
       <div class="col-5 fade-in" v-if="task">
 
-        <!-- goal match list previewer -->
+        <!-- npc_match_list preview -->
         <div
           style="width: auto;"
           class="fade-in"
-          v-if="selectorActive['goal_match_list'] && task.task_activities[selectedActivity] && typeof task.task_activities[selectedActivity].goal_match_list !== 'undefined'"
+          v-if="selectorActive['npc_match_list'] && task.task_activities[selectedActivity] && typeof task.task_activities[selectedActivity].npc_match_list !== 'undefined'"
         >
-          <task-goal-match-list-previewer
-            :goal-match-list="task.task_activities[selectedActivity].goal_match_list"
-            :activityType="task.task_activities[selectedActivity].activitytype"
-            :zone-ids="task.task_activities[selectedActivity].zones.toString()"
+          <task-match-list-previewer
+            :activity="task.task_activities[selectedActivity]"
           />
         </div>
-
 
         <!-- description selector -->
         <div
@@ -907,19 +926,21 @@
           ></task-description-selector>
         </div>
 
-        <!-- (rewardid) item selector -->
+        <!-- (reward_id_list) item selector -->
+        <!-- TODO: UPDATE THIS FROM (rewardid) -->
         <div
           style="width: auto;"
           class="fade-in"
-          v-if="selectorActive['rewardid'] || selectorActive['reward']"
+          v-if="selectorActive['reward_id_list'] || selectorActive['reward_id_list']"
         >
           <task-item-selector
-            :selected-item-id="task.rewardid > 0 ? task.rewardid : 0"
-            @input="task['rewardid'] = $event.id; task['reward'] = $event.name; setFieldModifiedById('rewardid'); setFieldModifiedById('reward')"
+            :selected-item-id="task.reward_id_list > 0 ? task.reward_id_list : 0"
+            @input="task['reward_id_list'] = $event.id; task['reward_id_list'] = $event.name; setFieldModifiedById('reward_id_list'); setFieldModifiedById('reward_id_list')"
           />
         </div>
 
         <!-- (goalid) item selector -->
+        <!-- TODO: UPDATE TO USE item_id_list -->
         <div
           style="width: auto;"
           class="fade-in"
@@ -932,14 +953,15 @@
         </div>
 
         <!-- (goalid) npc selector -->
+        <!-- TODO: UPDATE TO USE npc_match_list -->
         <div
           style="width: auto;"
           class="fade-in"
-          v-if="selectorActive['goalid'] && isGoalIdNpcSelectorActive() && task.task_activities[selectedActivity].goalmethod === 0"
+          v-if="selectorActive['npc_match_list_edit'] && isNpcMatchListSelectorActive() && task.task_activities[selectedActivity].goalmethod !== 2"
         >
           <task-npc-selector
-            :selected-npc-id="task.task_activities[selectedActivity].goalid"
-            @input="task.task_activities[selectedActivity].goalid = $event.npcId; setFieldModifiedById('goalid'); postTargetNameUpdateProcessor($event, 'goalid')"
+            :task="task.task_activities[selectedActivity]"
+            @input="task.task_activities[selectedActivity].npc_match_list = $event.result; setFieldModifiedById('npc_match_list'); postTargetNameUpdateProcessor($event, 'npc_match_list')"
           />
         </div>
 
@@ -1066,7 +1088,7 @@ import TaskNpcSelector from "@/views/tasks/components/TaskNpcSelector.vue";
 import {FreeIdFetcher} from "@/app/free-id-fetcher";
 import {Npcs} from "@/app/npcs";
 import TaskDescriptionSelector from "@/views/tasks/components/TaskDescriptionSelector.vue";
-import TaskGoalMatchListPreviewer from "@/views/tasks/components/TaskGoalMatchListPreviewer.vue";
+import TaskMatchListPreviewer from "@/views/tasks/components/TaskMatchListPreviewer.vue";
 import {Zones} from "@/app/zones";
 import ClipBoard from "@/app/clipboard/clipboard";
 import TaskQuestExamplePreview from "@/views/tasks/components/TaskQuestExamplePreview.vue";
@@ -1084,7 +1106,7 @@ export default {
     AlternateCurrencySelector,
     InfoErrorBanner,
     TaskQuestExamplePreview,
-    TaskGoalMatchListPreviewer,
+    TaskMatchListPreviewer,
     TaskDescriptionSelector,
     TaskNpcSelector,
     FreeIdSelector,
@@ -1146,6 +1168,10 @@ export default {
   },
 
   methods: {
+
+    editNpcMatchList() {
+      this.setSelectorActive('npc_match_list_edit')
+    },
 
     buildTaskActivitySelection() {
       let activities = {
@@ -1241,7 +1267,7 @@ export default {
       if (this.isGoalIdItemSelectorActive()) {
         return ' (Item)'
       }
-      if (this.isGoalIdNpcSelectorActive()) {
+      if (this.isNpcMatchListSelectorActive()) {
         return ' (NPC)'
       }
 
@@ -1252,7 +1278,7 @@ export default {
       if (this.isGoalIdItemSelectorActive()) {
         return ' (Item) (List of item ids)'
       }
-      if (this.isGoalIdNpcSelectorActive()) {
+      if (this.isNpcMatchListSelectorActive()) {
         return ' (NPC) (Can be NPC ID\'s or names)'
       }
 
@@ -1261,10 +1287,6 @@ export default {
 
     isGoalIdSelectorActive() {
       return this.task.task_activities && this.task.task_activities[this.selectedActivity] ? this.task.task_activities[this.selectedActivity].goalmethod === 0 : false
-    },
-
-    isGoalMatchListActive() {
-      return this.task.task_activities[this.selectedActivity].goalmethod === TASK_GOAL_METHOD_TYPES.LIST
     },
 
     isDeliverToNPCActive() {
@@ -1304,7 +1326,7 @@ export default {
       )
     },
 
-    isGoalIdNpcSelectorActive() {
+    isNpcMatchListSelectorActive() {
       return [
         TASK_ACTIVITY_TYPE.KILL,
         TASK_ACTIVITY_TYPE.SPEAK_WITH,
@@ -1346,7 +1368,7 @@ export default {
           this.task.task_activities[selectedActivity].item_list = event.name
           EditFormFieldUtil.setFieldModifiedById('item_list');
         }
-        if (this.isGoalIdNpcSelectorActive()) {
+        if (this.isNpcMatchListSelectorActive()) {
           this.task.task_activities[selectedActivity].target_name = Npcs.getCleanName(event.npc.name)
           EditFormFieldUtil.setFieldModifiedById('target_name');
         }
@@ -1790,7 +1812,8 @@ export default {
         "id",
         "description",
         "delivertonpc",
-        "goal_match_list",
+        "item_id_list",
+        "npc_match_list",
         "zones",
         "reward_point_type",
         "dz_template_id",

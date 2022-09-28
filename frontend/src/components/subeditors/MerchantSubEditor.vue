@@ -74,7 +74,7 @@
           <tr
             v-for="(n, index) in mlz"
             :id="'mlz-' + n.id"
-            :key="index"
+            :key="'ml-' + n.id + '-' + n.merchant_id"
           >
             <td
               class="text-center"
@@ -175,7 +175,9 @@ export default {
       const r = (await Npcs.getNpcsByZone(
         z.short_name,
         z.version,
-        ["Spawnentries.NpcType.Merchantlists.Items"]
+        {
+          relations: ["Spawnentries.NpcType.Merchantlists.Items"]
+        }
       )).filter((e) => {
         let hasItems = false
         if (e.merchantlists) {
@@ -222,6 +224,7 @@ export default {
           })
 
           const b = await Npcs.getNpcsBulk(npcIds, ["Merchantlists.Items"])
+
           npcs = [...npcs, ...b]
         }
       }

@@ -3,6 +3,11 @@ import {NpcTypeApi, Spawn2Api} from "@/app/api";
 import {SpireApiClient} from "@/app/api/spire-api-client";
 import {SpireQueryBuilder} from "@/app/api/spire-query-builder";
 
+type NpcByZoneQueryRequest = {
+  relations?: string[];
+  uniqueEntries?: Boolean;
+}
+
 export class Npcs {
 
   /**
@@ -370,8 +375,6 @@ export class Npcs {
       includes = [...includes, ...relations]
     }
 
-    // console.log(includes)
-
     builder.includes(includes)
 
     const r = await npcTypeApi.getNpcTypesBulk({
@@ -388,18 +391,31 @@ export class Npcs {
     }
   }
 
-  static async getNpcsByZone(zoneShortName: string, version: number, relations: any[] = []) {
+  static async getNpcsByZone(
+    zoneShortName: string,
+    version: number                = 0,
+    request: NpcByZoneQueryRequest = {
+      relations: [],
+      uniqueEntries: true
+    }
+  ) {
     const spawn2Api = (new Spawn2Api(SpireApiClient.getOpenApiConfig()))
     const builder   = (new SpireQueryBuilder())
 
     builder.where("zone", "=", zoneShortName)
-    builder.where("version", "=", version)
+
+    if (version === -1) {
+      builder.where("version", ">=", version)
+    } else {
+      builder.where("version", "=", version)
+    }
 
     let includes = [
       "Spawnentries.NpcType"
     ]
 
-    if (relations.includes("all")) {
+    // @ts-ignore
+    if (request.relations.includes("all")) {
       includes = [...includes, ...[
         "Spawnentries.NpcType.NpcSpell.NpcSpellsEntries.SpellsNew",
         "Spawnentries.NpcType.NpcFactions.NpcFactionEntries.FactionList",
@@ -408,8 +424,10 @@ export class Npcs {
         "Spawnentries.NpcType.Merchantlists.Items",
         "Spawnentries.NpcType.Loottable.LoottableEntries.Lootdrop.LootdropEntries.Item"
       ]]
-    } else if (relations.length > 0) {
-      includes = [...includes, ...relations]
+      // @ts-ignore
+    } else if (request.relations.length > 0) {
+      // @ts-ignore
+      includes = [...includes, ...request.relations]
     }
 
     builder.limit(1000000)
@@ -424,12 +442,28 @@ export class Npcs {
         if (spawn2.spawnentries) {
           for (let spawnentry of spawn2.spawnentries) {
             if (spawnentry.npc_type) {
-              npcs.push(spawnentry.npc_type)
+
+              // only add unique entries
+              if (request.uniqueEntries) {
+                let found = npcs.find((e) => {
+                  // @ts-ignore
+                  return e.id === spawnentry.npc_type.id
+                })
+
+                if (!found) {
+                  npcs.push(spawnentry.npc_type)
+                }
+              }
+              else {
+                npcs.push(spawnentry.npc_type)
+              }
+
             }
           }
         }
       }
 
+      // filter by unique npc ids
       return npcs
     }
 
