@@ -239,7 +239,7 @@ export default {
       }
 
       // load multiple rewards
-      if (this.task.reward_id_list && this.task.reward_id_list.length > 0) {
+      if (this.task.reward_id_list && this.task.reward_id_list.length > 0 && this.rewardItems === 0) {
         const items = this.task.reward_id_list.split("|").map((x) => {
           return parseInt(x, 10);
         });
