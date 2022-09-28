@@ -937,6 +937,7 @@
         >
           <task-item-match-list-previewer
             :activity="task.task_activities[selectedActivity]"
+            @remove-item="task.task_activities[selectedActivity].item_id_list = removeItemFromMatchList(task.task_activities[selectedActivity].item_id_list, $event)"
           />
         </div>
 
@@ -974,7 +975,7 @@
         >
           <task-item-selector
             :selected-item-id="task.reward_id_list > 0 ? task.reward_id_list : 0"
-            @input="addItemToActivityItemMatchList($event.id); setFieldModifiedById('reward_id_list');"
+            @input="task.task_activities[selectedActivity].item_id_list = addItemToActivityItemMatchList(task.task_activities[selectedActivity].item_id_list, $event.id); setFieldModifiedById('reward_id_list');"
           />
         </div>
 
@@ -1175,16 +1176,24 @@ export default {
 
   methods: {
 
-    addItemToActivityItemMatchList(itemId) {
-      let list = this.task.task_activities[this.selectedActivity]
-        .item_id_list
-        .split("|")
-
-      if (!list.includes(itemId.toString())) {
-        list.push(itemId.toString())
+    removeItemFromMatchList(list, id) {
+      let newList = list.split("|")
+      const index = newList.indexOf(id.toString());
+      if (index > -1) {
+        newList.splice(index, 1);
       }
 
-      this.task.task_activities[this.selectedActivity].item_id_list = list.join("|")
+      return newList.join("|")
+    },
+
+    addItemToActivityItemMatchList(list, itemId) {
+      let newList = list.split("|")
+
+      if (!newList.includes(itemId.toString())) {
+        newList.push(itemId.toString())
+      }
+
+      return newList.join("|")
     },
 
     itemMatchListItemSelector() {

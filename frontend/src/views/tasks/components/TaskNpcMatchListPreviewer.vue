@@ -23,7 +23,7 @@
         id="npctable"
         class="eq-table eq-highlight-rows bordered"
         v-if="npcs && npcs.length > 0 && loaded"
-        style="display: table; font-size: 14px; overflow-x: scroll"
+        style="display: table; font-size: 14px; overflow-x: scroll; overflow-y: hidden"
       >
         <thead
           class="eq-table-floating-header"

@@ -13,10 +13,11 @@
 
       <table
         class="eq-table eq-highlight-rows bordered"
-        style="display: table; overflow-x: scroll"
+        style="display: table; overflow-x: scroll; overflow-y: hidden"
       >
         <thead>
         <tr>
+          <th style="width: 60px"></th>
           <th style="text-align: center; width: 50px" class="text-center">Id</th>
           <th style="text-align: center;">Name</th>
         </tr>
@@ -27,6 +28,17 @@
           :key="item.id"
           :id="'item-selection-row-' + item.id"
         >
+          <td>
+            <div class="btn-group" role="group">
+              <b-button
+                class="btn-dark btn-sm btn-outline-danger"
+                @click="removeItem(item)"
+                title="Remove item from list"
+              >
+                <i class="fa fa-trash-o"></i>
+              </b-button>
+            </div>
+          </td>
           <td>
             {{ item.id }}
           </td>
@@ -81,6 +93,10 @@ export default {
   },
 
   methods: {
+    removeItem(item) {
+      this.$emit('remove-item', item.id);
+    },
+
     async load() {
       this.loadItemMatches()
     },
