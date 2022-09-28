@@ -581,30 +581,29 @@
                               info: 'Filters determine what the activity update applies to, zone, items, npc\'s etc.',
                            },
                            {
-                             description: 'Deliver to NPC',
-                             field: 'delivertonpc',
-                             fieldType: 'number',
-                             itemIcon: '5742',
-                             col: 'col-6',
-                             zeroValue: 0,
-                             showIf: isDeliverToNPCActive(),
-                             onclick: setSelectorActive,
-                           },
-                           {
                              description: 'Zone(s)',
                              itemIcon: '6849',
                              field: 'zones',
                              fieldType: 'text',
                              type: 'text',
-                             col: 'col-6',
+                             col: 'col-9',
                              onclick: setSelectorActive,
                            },
                            {
-                             description: 'NPC Match List',
+                             description: 'Zone Version',
+                             itemIcon: '6849',
+                             field: 'zone_version',
+                             fieldType: 'number',
+                             type: 'text',
+                             col: 'col-3',
+                           },
+                           {
+                             description: 'NPC Match List (' + npcMatchListSuffixDescription() + ')',
                              itemIcon: '6849',
                              field: 'npc_match_list',
-                             fieldType: 'npc_match_list',
-                             type: 'text',
+                             fieldType: 'text',
+                             showIf: isNpcMatchListSelectorActive(),
+                             info: 'Use partial or full NPC names or exact IDs to match for this activity update',
                              col: 'col-12',
                              onclick: setSelectorActive,
                            },
@@ -715,6 +714,13 @@
                               style="display: inline-block"
                             />
                             {{ field.description }}
+                            <i
+                              v-b-tooltip.hover.v-dark.topright
+                              :title="field.info"
+                              v-if="field.info"
+                              style="color: #6b614a"
+                              class="fa fa-info-circle"
+                            />
 
                             <!-- Show zone name -->
                             <div
@@ -819,27 +825,6 @@
                             :style="(task.task_activities[selectedActivity][field.field] <= (typeof field.zeroValue !== 'undefined' ? field.zeroValue : 0) ? 'opacity: .5' : '')"
                           />
 
-                          <!-- input text -->
-                          <b-input-group v-if="field.fieldType === 'npc_match_list'">
-                            <b-form-input
-                              :id="field.field"
-                              v-model="task.task_activities[selectedActivity][field.field]"
-                              class="m-0 mt-1"
-                              v-on="typeof field.onclick !== 'undefined' ? { click: () => field.onclick(field.field) } : {}"
-                              v-b-tooltip.hover.v-dark.right :title="getFieldDescription(field.field)"
-                              :style="(task.task_activities[selectedActivity][field.field] <= (typeof field.zeroValue !== 'undefined' ? field.zeroValue : 0) ? 'opacity: .5' : '')"
-                            />
-                            <b-button
-                              @click="editNpcMatchList()"
-                              size="sm"
-                              v-b-tooltip.hover.v-dark.right :title="'Add entries to list'"
-                              style="height: 29px; padding-right: 5px; margin-top: 3px;"
-                              variant="btn btn btn-dark btn-outline-success btn-secondary btn-sm"
-                            >
-                              <i class="fa fa-pencil-square mr-1"></i>
-                            </b-button>
-                          </b-input-group>
-
                           <!-- textarea -->
                           <b-textarea
                             v-if="field.fieldType === 'textarea'"
@@ -908,7 +893,7 @@
           class="fade-in"
           v-if="selectorActive['npc_match_list'] && task.task_activities[selectedActivity] && typeof task.task_activities[selectedActivity].npc_match_list !== 'undefined'"
         >
-          <task-match-list-previewer
+          <task-npc-match-list-previewer
             :activity="task.task_activities[selectedActivity]"
           />
         </div>
@@ -952,31 +937,11 @@
           />
         </div>
 
-        <!-- (goalid) npc selector -->
-        <!-- TODO: UPDATE TO USE npc_match_list -->
-        <div
-          style="width: auto;"
-          class="fade-in"
-          v-if="selectorActive['npc_match_list_edit'] && isNpcMatchListSelectorActive() && task.task_activities[selectedActivity].goalmethod !== 2"
-        >
-          <task-npc-selector
-            :task="task.task_activities[selectedActivity]"
-            @input="task.task_activities[selectedActivity].npc_match_list = $event.result; setFieldModifiedById('npc_match_list'); postTargetNameUpdateProcessor($event, 'npc_match_list')"
-          />
-        </div>
-
         <!-- (zones) Zone Selector -->
         <task-zone-selector
           :selected-zone-id="parseInt(task.task_activities[selectedActivity].zones)"
           v-if="task && task.task_activities && task.task_activities[selectedActivity] && selectorActive['zones']"
-          @input="task.task_activities[selectedActivity].zones = $event.zoneId; setFieldModifiedById('zones')"
-        />
-
-        <!-- (delivertonpc) NPC Selector -->
-        <task-npc-selector
-          :selected-npc-id="task.task_activities[selectedActivity].delivertonpc"
-          v-if="task && task.task_activities && task.task_activities[selectedActivity] && selectorActive['delivertonpc']"
-          @input="task.task_activities[selectedActivity].delivertonpc = $event.npcId; setFieldModifiedById('delivertonpc'); postTargetNameUpdateProcessor($event, 'delivertonpc')"
+          @input="task.task_activities[selectedActivity].zones = $event.zoneId; task.task_activities[selectedActivity].npc_match_list = ''; setFieldModifiedById('zones')"
         />
 
         <!-- reward_point_type selector -->
@@ -1084,11 +1049,10 @@ import TaskPreview from "@/views/tasks/components/TaskPreview.vue";
 import TaskZoneSelector from "@/views/tasks/components/TaskZoneSelector.vue";
 import TaskItemSelector from "@/views/tasks/components/TaskItemSelector.vue";
 import FreeIdSelector from "@/components/tools/FreeIdSelector.vue";
-import TaskNpcSelector from "@/views/tasks/components/TaskNpcSelector.vue";
 import {FreeIdFetcher} from "@/app/free-id-fetcher";
 import {Npcs} from "@/app/npcs";
 import TaskDescriptionSelector from "@/views/tasks/components/TaskDescriptionSelector.vue";
-import TaskMatchListPreviewer from "@/views/tasks/components/TaskMatchListPreviewer.vue";
+import TaskNpcMatchListPreviewer from "@/views/tasks/components/TaskNpcMatchListPreviewer.vue";
 import {Zones} from "@/app/zones";
 import ClipBoard from "@/app/clipboard/clipboard";
 import TaskQuestExamplePreview from "@/views/tasks/components/TaskQuestExamplePreview.vue";
@@ -1106,9 +1070,8 @@ export default {
     AlternateCurrencySelector,
     InfoErrorBanner,
     TaskQuestExamplePreview,
-    TaskMatchListPreviewer,
+    TaskNpcMatchListPreviewer,
     TaskDescriptionSelector,
-    TaskNpcSelector,
     FreeIdSelector,
     TaskItemSelector,
     TaskZoneSelector,
@@ -1169,8 +1132,22 @@ export default {
 
   methods: {
 
-    editNpcMatchList() {
-      this.setSelectorActive('npc_match_list_edit')
+    npcMatchListSuffixDescription() {
+      const type = parseInt(this.task.task_activities[this.selectedActivity].activitytype)
+      if (type === TASK_ACTIVITY_TYPE.KILL) {
+        return 'To be killed'
+      }
+      else if (type === TASK_ACTIVITY_TYPE.LOOT) {
+        return 'To be looted from (optional)'
+      }
+      else if (type === TASK_ACTIVITY_TYPE.SPEAK_WITH) {
+        return 'To be spoken with'
+      }
+      else if (this.isDeliverToNPCActive()) {
+        return 'To be delivered to'
+      }
+
+      return '';
     },
 
     buildTaskActivitySelection() {
@@ -1330,6 +1307,7 @@ export default {
       return [
         TASK_ACTIVITY_TYPE.KILL,
         TASK_ACTIVITY_TYPE.SPEAK_WITH,
+        TASK_ACTIVITY_TYPE.DELIVER,
         TASK_ACTIVITY_TYPE.GIVE
       ].includes(
         parseInt(this.task.task_activities[this.selectedActivity].activitytype)
@@ -1356,11 +1334,6 @@ export default {
 
       if (isTargetNameEmpty) {
         //
-      }
-
-      if (updateType === TASK_ACTIVITY_TYPE.DELIVER && fieldId === 'delivertonpc') {
-        this.task.task_activities[selectedActivity].target_name = Npcs.getCleanName(event.npc.name)
-        EditFormFieldUtil.setFieldModifiedById('target_name');
       }
 
       if (isDescriptionOverrideEmpty && fieldId === 'goalid') {
@@ -1811,7 +1784,6 @@ export default {
       let hasSubEditorFields = [
         "id",
         "description",
-        "delivertonpc",
         "item_id_list",
         "npc_match_list",
         "zones",

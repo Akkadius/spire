@@ -247,6 +247,7 @@ export class Tasks {
       "goalmethod": "Determine if this activity is updated via Quest or not.",
       "goalcount": "Required count of this activity to be completed.",
       "zones": "Zone ID(s) that correspond to this update. For example the client needs to be in this zone in order to receive the update. [-1 = Unknown, 0 = ALL] | Multiple example (3,10,30)",
+      "zone_version": "Zone version(s) that correspond to this update. (-1 = ALL)",
       "description_override": "Use this to completely override other fields that otherwise influence the activity description (activity target, item list etc.)",
       "title": "The title of your task",
       "type": "The type of task you are making",

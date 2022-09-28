@@ -52,7 +52,7 @@
       </div>
 
       <div v-if="npcs && npcs.length > 0" class="text-center mt-1 ">
-        Found ({{ npcs.length }}) matching NPC(s)
+        Found ({{ npcs.length }}) matching NPC(s). <br> NPC(s) can still be matched if they are quest spawned and within the filtered zone(s)
       </div>
 
       <table
@@ -90,7 +90,7 @@
 
 <script>
 import EqWindowSimple                            from "@/components/eq-ui/EQWindowSimple";
-import {ItemApi, NpcTypeApi}                     from "@/app/api";
+import {ItemApi}                                 from "@/app/api";
 import {SpireApiClient}                          from "@/app/api/spire-api-client";
 import EqCheckbox                                from "@/components/eq-ui/EQCheckbox";
 import {SpireQueryBuilder}                       from "@/app/api/spire-query-builder";
@@ -150,6 +150,7 @@ export default {
     isNpcMatchList() {
       return [
         TASK_ACTIVITY_TYPE.KILL,
+        TASK_ACTIVITY_TYPE.DELIVER,
         TASK_ACTIVITY_TYPE.SPEAK_WITH,
         // TASK_ACTIVITY_TYPE.GIVE
       ].includes(
@@ -187,17 +188,16 @@ export default {
 
     async loadNpcMatches() {
 
-      console.log(this.activity.zones)
-      console.log("loading npc matches")
-
       // 1) Load by zone
+      // TODO: skip loading globally for now, maybe implement later
       let zones = []
       let npcs  = [];
 
+
+      console.log("this.activity.zones", this.activity.zones)
+
       this.activity.zones = this.activity.zones.toString();
       if (this.activity.zones && this.activity.zones !== 0) {
-
-        console.log("NPC zone search", this.activity.zones)
 
         // build zone names
         if (this.activity.zones && this.activity.zones.length > 0) {
@@ -208,31 +208,40 @@ export default {
           }
         }
 
-        console.log("zones", zones)
-
         for (let zone of zones) {
-          console.log("zone", zone)
-          console.log("version", parseInt(this.activity.zone_version))
 
           // cache zone npcs so we don't hit it realtime
           let zoneNpcs = []
           if (this.zoneCache[this.activity.zones]) {
             zoneNpcs = this.zoneCache[this.activity.zones]
           } else {
-            zoneNpcs = (await Npcs.getNpcsByZone(zone, parseInt(this.activity.zone_version)))
+            zoneNpcs                            = (await Npcs.getNpcsByZone(zone, parseInt(this.activity.zone_version)))
             this.zoneCache[this.activity.zones] = zoneNpcs
           }
 
           for (let n of zoneNpcs) {
-            let found = false
-            for (let m of this.activity.npc_match_list.split("|")) {
-              if (m === "") {
-                continue;
-              }
+            let found = true
 
-              if (m.toString() === n.id.toString() || n.name.toLowerCase().includes(m.toLowerCase())) {
-                found = true;
-                break;
+            // if match list is not empty - lets filter
+            if (this.activity.npc_match_list && this.activity.npc_match_list.length > 0) {
+              found = false
+              for (let m of this.activity.npc_match_list.split("|")) {
+
+                console.log(m)
+
+                if (m === "") {
+                  continue;
+                }
+
+
+                if (
+                  m.toString() === n.id.toString()
+                  || n.name.toLowerCase().includes(m.toLowerCase())
+                  || Npcs.getCleanName(n.name).toLowerCase().includes(m.toLowerCase())
+                ) {
+                  found = true;
+                  break;
+                }
               }
             }
 
@@ -246,69 +255,10 @@ export default {
           }
         }
 
-
         this.npcs = npcs
       }
 
-      return;
 
-      console.log("[match list previewer] Zone ID", this.activity.zones)
-      console.log("[match list previewer] Zones", zones)
-
-      let builder = (new SpireQueryBuilder())
-      for (let zone of zones) {
-        // if (zone.length === 0) {
-        //   continue;
-        // }
-        builder.where("zone", "=", zone)
-      }
-
-      if (zones.length > 0) {
-        builder.where("version", "=", 0)
-      }
-
-      builder.includes([
-        "Spawnentries.NpcType",
-      ])
-
-      this.npcs = {}
-
-      // this is used only as a way to show options at the global level if things were not
-      // found at the local zone level
-      // for example if were to search "orc" from the match list, we'd only care to see orcs
-      // at the zone level if we have a zone filter
-      // if we have no matches against anything in zone we'd want to see what the global npc table
-      // could give us for matches
-      let npcNameMatches = {};
-
-      // 2) Load by global namespace
-      // an NPC could be quest-spawned into a zone and is still filterable
-      const npcTypeApi = (new NpcTypeApi(SpireApiClient.getOpenApiConfig()))
-      builder          = (new SpireQueryBuilder())
-      const matchList  = this.goalMatchList ? this.goalMatchList : ""
-      let filterCount  = 0
-      for (let name of matchList.split("|")) {
-        if (!npcNameMatches[name] && name.length > 0) {
-          builder.where("name", "like", name)
-          filterCount++;
-        }
-      }
-
-      if (filterCount > 0) {
-        const r = await npcTypeApi.listNpcTypes(builder.get())
-        if (r.status === 200) {
-          for (let npc of r.data) {
-            if (npcs.filter(e => e.npc.id === npc.id).length === 0) {
-              npcs.push({
-                npc: npc,
-                search: 'Global'
-              })
-            }
-          }
-        }
-      }
-
-      this.npcs = npcs
     }
   },
   mounted() {
