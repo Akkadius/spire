@@ -921,7 +921,7 @@
                   <b-button
                     @click="saveTask()"
                     size="sm"
-                    variant="outline-warning"
+                    variant="outline-warning btn-dark"
                   >
                     <i class="fa fa-save mr-1"></i>
                     Save

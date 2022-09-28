@@ -234,12 +234,12 @@ export default {
       // console.log(this.previousRewardItems)
       // console.log(this.task.reward_id_list)
       // console.log(this.previousRewardItems !== this.task.reward_id_list)
-      if (this.previousRewardItems !== this.task.reward_id_list) {
+      if (this.previousRewardItems !== this.task.reward_id_list.toString()) {
         this.rewardItems = []
       }
 
       // load multiple rewards
-      if (this.task.reward_id_list && this.task.reward_id_list.length > 0 && this.rewardItems === 0) {
+      if (this.task.reward_id_list && this.task.reward_id_list.length > 0 && this.rewardItems.length === 0) {
         const items = this.task.reward_id_list.split("|").map((x) => {
           return parseInt(x, 10);
         });
