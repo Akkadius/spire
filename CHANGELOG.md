@@ -1,4 +1,6 @@
-## [2.0.0] [Task Editor] Major Task Update(s)
+## [2.0.0] 
+
+## [Task Editor] Major Task Update(s)
 
 ![image](https://user-images.githubusercontent.com/3319450/192701596-13a3fbbe-7c46-47ca-8f54-16de57c3c8d9.png)
 
@@ -78,7 +80,6 @@ To be updated in official documentation
 | 11             | Touch                       | \-             | \-               | x<br>(doors table dz\_switch\_id) | o      | o      | o      | o      | o      | o      | \-            | \-            | \-                                       | Name of Touch Target<br>(Touch target) | Touch (target\_name)                               |
 | 100            | Give                        | \-             | x                | \-                                | o      | o      | o      | o      | o      | o      | \-            | \-            | \-                                       | Name of NPC                            | Give (goal\_count) to (target\_name)               |
 | 255            | Quest Script                | \-             | \-               | \-                                | o      | o      | o      | o      | o      | o      | \-            | \-            | \-                                       | \-                                     | \-                                                 |
-
 
 
 ## [1.13.10]
