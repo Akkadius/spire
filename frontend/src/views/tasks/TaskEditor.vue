@@ -608,6 +608,16 @@
                              onclick: setSelectorActive,
                            },
                            {
+                             description: 'Item Match List (' + itemMatchListSuffixDescription() + ')',
+                             itemIcon: '6849',
+                             field: 'item_id_list',
+                             fieldType: 'item_id_list',
+                             showIf: isItemMatchListSelectorActive(),
+                             info: 'Use exact item IDs to match for this activity update',
+                             col: 'col-12',
+                             onclick: setSelectorActive,
+                           },
+                           {
                              description: 'Quest Example (Quest Controlled)',
                              itemIcon: '3196',
                              field: 'quest_example',
@@ -825,6 +835,27 @@
                             :style="(task.task_activities[selectedActivity][field.field] <= (typeof field.zeroValue !== 'undefined' ? field.zeroValue : 0) ? 'opacity: .5' : '')"
                           />
 
+                          <!-- input text -->
+                          <b-input-group v-if="field.fieldType === 'item_id_list'">
+                            <b-form-input
+                              :id="field.field"
+                              v-model="task.task_activities[selectedActivity][field.field]"
+                              class="m-0 mt-1"
+                              v-on="typeof field.onclick !== 'undefined' ? { click: () => field.onclick(field.field) } : {}"
+                              v-b-tooltip.hover.v-dark.right :title="getFieldDescription(field.field)"
+                              :style="(task.task_activities[selectedActivity][field.field] <= (typeof field.zeroValue !== 'undefined' ? field.zeroValue : 0) ? 'opacity: .5' : '')"
+                            />
+                            <b-button
+                              @click="itemMatchListItemSelector()"
+                              size="sm"
+                              v-b-tooltip.hover.v-dark.right :title="'Add entries to list'"
+                              style="height: 29px; padding-right: 5px; margin-top: 3px;"
+                              variant="btn btn btn-dark btn-outline-success btn-secondary btn-sm"
+                            >
+                              <i class="fa fa-pencil-square mr-1"></i>
+                            </b-button>
+                          </b-input-group>
+
                           <!-- textarea -->
                           <b-textarea
                             v-if="field.fieldType === 'textarea'"
@@ -898,6 +929,17 @@
           />
         </div>
 
+        <!-- item_id_list preview -->
+        <div
+          style="width: auto;"
+          class="fade-in"
+          v-if="selectorActive['item_id_list'] && task.task_activities[selectedActivity] && typeof task.task_activities[selectedActivity].item_id_list !== 'undefined'"
+        >
+          <task-item-match-list-previewer
+            :activity="task.task_activities[selectedActivity]"
+          />
+        </div>
+
         <!-- description selector -->
         <div
           style="width: auto;"
@@ -921,19 +963,6 @@
           <task-item-selector
             :selected-item-id="task.reward_id_list > 0 ? task.reward_id_list : 0"
             @input="task['reward_id_list'] = $event.id; task['reward_id_list'] = $event.name; setFieldModifiedById('reward_id_list'); setFieldModifiedById('reward_id_list')"
-          />
-        </div>
-
-        <!-- (goalid) item selector -->
-        <!-- TODO: UPDATE TO USE item_id_list -->
-        <div
-          style="width: auto;"
-          class="fade-in"
-          v-if="selectorActive['goalid'] && isGoalIdItemSelectorActive() && task.task_activities[selectedActivity].goalmethod === 0"
-        >
-          <task-item-selector
-            :selected-item-id="task.task_activities[selectedActivity].goalid ? task.task_activities[selectedActivity].goalid : 0"
-            @input="task.task_activities[selectedActivity].goalid = $event.id; setFieldModifiedById('goalid'); postTargetNameUpdateProcessor($event, 'goalid')"
           />
         </div>
 
@@ -1060,11 +1089,13 @@ import InfoErrorBanner from "@/components/InfoErrorBanner.vue";
 import AlternateCurrencySelector from "@/components/selectors/AlternateCurrencySelector.vue";
 import DynamicZoneTemplateSelector from "@/components/selectors/DynamicZoneTemplateSelector.vue";
 import TaskReplayRequestGroupSelector from "@/views/tasks/components/TaskReplayRequestGroupSelector.vue";
+import TaskItemMatchListPreviewer from "@/views/tasks/components/TaskItemMatchListPreviewer.vue";
 
 const MILLISECONDS_BEFORE_WINDOW_RESET = 10000;
 
 export default {
   components: {
+    TaskItemMatchListPreviewer,
     TaskReplayRequestGroupSelector,
     DynamicZoneTemplateSelector,
     AlternateCurrencySelector,
@@ -1132,6 +1163,10 @@ export default {
 
   methods: {
 
+    itemMatchListItemSelector() {
+
+    },
+
     npcMatchListSuffixDescription() {
       const type = parseInt(this.task.task_activities[this.selectedActivity].activitytype)
       if (type === TASK_ACTIVITY_TYPE.KILL) {
@@ -1147,7 +1182,27 @@ export default {
         return 'To be delivered to'
       }
 
-      return '';
+      return '???';
+    },
+    itemMatchListSuffixDescription() {
+      const type = parseInt(this.task.task_activities[this.selectedActivity].activitytype)
+      if (type === TASK_ACTIVITY_TYPE.DELIVER) {
+        return 'Item(s) to be delivered'
+      }
+      else if (type === TASK_ACTIVITY_TYPE.TRADESKILL) {
+        return 'Item(s) to be created'
+      }
+      else if (type === TASK_ACTIVITY_TYPE.FISH) {
+        return 'Item(s) to be fished'
+      }
+      else if (type === TASK_ACTIVITY_TYPE.FORAGE) {
+        return 'Item(s) to be foraged'
+      }
+      else if (type === TASK_ACTIVITY_TYPE.LOOT) {
+        return 'Item(s) to be looted'
+      }
+
+      return '???';
     },
 
     buildTaskActivitySelection() {
@@ -1309,6 +1364,18 @@ export default {
         TASK_ACTIVITY_TYPE.SPEAK_WITH,
         TASK_ACTIVITY_TYPE.DELIVER,
         TASK_ACTIVITY_TYPE.GIVE
+      ].includes(
+        parseInt(this.task.task_activities[this.selectedActivity].activitytype)
+      )
+    },
+
+    isItemMatchListSelectorActive() {
+      return [
+        TASK_ACTIVITY_TYPE.LOOT,
+        TASK_ACTIVITY_TYPE.TRADESKILL,
+        TASK_ACTIVITY_TYPE.FISH,
+        TASK_ACTIVITY_TYPE.FORAGE,
+        TASK_ACTIVITY_TYPE.DELIVER
       ].includes(
         parseInt(this.task.task_activities[this.selectedActivity].activitytype)
       )

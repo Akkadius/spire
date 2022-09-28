@@ -9,12 +9,13 @@
       </div>
 
       <div v-if="npcs && npcs.length > 0" class="text-center mt-1 ">
-        Found ({{ npcs.length }}) matching NPC(s). <br> NPC(s) can still be matched if they are quest spawned and within the filtered zone(s)
+        Found ({{ npcs.length }}) matching NPC(s). <br> NPC(s) can still be matched if they are quest spawned and within
+        the filtered zone(s)
       </div>
 
       <!-- Fake Loader -->
       <div v-if="!loaded" class="mt-3 text-center">
-<!--        <loader-fake-progress class="mt-3"/>-->
+        <!--        <loader-fake-progress class="mt-3"/>-->
         <app-loader :is-loading="!loaded"/>
       </div>
 
@@ -53,10 +54,7 @@
 
 <script>
 import EqWindowSimple                            from "@/components/eq-ui/EQWindowSimple";
-import {ItemApi}                                 from "@/app/api";
-import {SpireApiClient}                          from "@/app/api/spire-api-client";
 import EqCheckbox                                from "@/components/eq-ui/EQCheckbox";
-import {SpireQueryBuilder}                       from "@/app/api/spire-query-builder";
 import {Zones}                                   from "@/app/zones";
 import {TASK_ACTIVITY_TYPE, TASK_ACTIVITY_TYPES} from "@/app/constants/eq-task-constants";
 import ItemPopover                               from "@/components/ItemPopover";
@@ -100,23 +98,11 @@ export default {
   },
 
   methods: {
-    isNpcMatchList() {
-      return [
-        TASK_ACTIVITY_TYPE.KILL,
-        TASK_ACTIVITY_TYPE.DELIVER,
-        TASK_ACTIVITY_TYPE.SPEAK_WITH,
-        // TASK_ACTIVITY_TYPE.GIVE
-      ].includes(
-        parseInt(this.activity.activitytype)
-      )
-    },
 
     async load() {
-      if (this.isNpcMatchList()) {
-        setTimeout(() => {
-          this.loadNpcMatches()
-        }, 1)
-      }
+      setTimeout(() => {
+        this.loadNpcMatches()
+      }, 1)
     },
 
     async loadNpcMatches() {

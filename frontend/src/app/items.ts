@@ -52,6 +52,8 @@ export class Items {
       r.data.forEach((item) => {
         Items.setItem(item.id, item);
       })
+
+      return r.data
     }
   }
 
