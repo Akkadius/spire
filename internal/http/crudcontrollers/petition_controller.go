@@ -7,7 +7,6 @@ import (
 	"github.com/Akkadius/spire/internal/models"
 	"github.com/labstack/echo/v4"
 	"github.com/sirupsen/logrus"
-	"gorm.io/gorm"
 	"net/http"
 	"strconv"
 )
