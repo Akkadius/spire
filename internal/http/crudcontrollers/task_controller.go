@@ -7,12 +7,13 @@ import (
 	"github.com/Akkadius/spire/internal/models"
 	"github.com/labstack/echo/v4"
 	"github.com/sirupsen/logrus"
+	"gorm.io/gorm"
 	"net/http"
 	"strconv"
 )
 
 type TaskController struct {
-	db     *database.DatabaseResolver
+	db	 *database.DatabaseResolver
 	logger *logrus.Logger
 }
 
@@ -21,7 +22,7 @@ func NewTaskController(
 	logger *logrus.Logger,
 ) *TaskController {
 	return &TaskController{
-		db:     db,
+		db:	 db,
 		logger: logger,
 	}
 }

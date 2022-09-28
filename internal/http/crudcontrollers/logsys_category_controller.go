@@ -159,7 +159,7 @@ func (e *LogsysCategoryController) updateLogsysCategory(c echo.Context) error {
 		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Cannot find entity [%s]", err.Error())})
 	}
 
-	err = e.db.QueryContext(models.LogsysCategory{}, c).Select("*").Session(&gorm.Session{FullSaveAssociations: true}).Updates(&request).Error
+	err = e.db.QueryContext(models.LogsysCategory{}, c).Updates(&request).Error
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error updating entity [%v]", err.Error())})
 	}
