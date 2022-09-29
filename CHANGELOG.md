@@ -1,3 +1,9 @@
+## [2.0.2]
+
+### [Connection Manager]
+
+Fix an issue where you weren't able to switch active connections
+
 ## [2.0.1]
 
 ### [Merchant Editor] Minor fix

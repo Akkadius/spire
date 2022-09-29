@@ -182,7 +182,8 @@ func (cc *ConnectionsController) setActive(c echo.Context) error {
 
 	q := db.Model(models.UserServerDatabaseConnection{})
 	q.Where("user_id = ?", user.ID).Update("active", "0")
-	q.Where("user_id = ? and id = ?", user.ID, connectionId).Update("active", "1")
+	q = db.Model(models.UserServerDatabaseConnection{})
+	q.Where("user_id = ? and id = ?", user.ID, connectionId).Update("active", 1)
 
 	cc.clearConnection(c)
 
