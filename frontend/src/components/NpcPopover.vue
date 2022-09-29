@@ -103,7 +103,7 @@ export default {
         return ''
       }
 
-      return (npc.lastname && npc.lastname.length > 0 ? ` (${npc.lastname})` : "")
+      return (name && name.length > 0 ? ` (${name})` : "")
     },
     getRaceImage(npc) {
       return Npcs.getRaceImage(npc)

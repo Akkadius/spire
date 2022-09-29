@@ -1,3 +1,9 @@
+## [2.0.1]
+
+### [Merchant Editor] Minor fix
+
+Fix issue where Merchant Editor wasn't rendering NPC preview cards properly
+
 ## [2.0.0] 
 
 ### [Task Editor] Major Task Update(s)
