@@ -1,28 +1,29 @@
 <template>
   <div class="d-inline-block">
-    <div v-if="platinum > 0" class="d-inline-block mr-1">
-      <div :class="'ml-1 item-644-sm'" title="Platinum"/>
+    <div v-if="platinum > 0" class="d-inline-block cash-line">
       {{ platinum.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") }}
+      <div :class="'item-644-sm'" title="Platinum"/>
     </div>
 
-    <div v-if="gold > 0" class="d-inline-block mr-1">
-      <div :class="'ml-1 item-645-sm'" title="Silver"/>
+    <div v-if="gold > 0" class="d-inline-block cash-line">
       {{ gold }}
+      <div :class="'item-645-sm'" title="Gold"/>
     </div>
 
-    <div v-if="silver > 0" class="d-inline-block mr-1">
-      <div :class="'ml-1 item-646-sm'" title="Silver"/>
+    <div v-if="silver > 0" class="d-inline-block cash-line">
       {{ silver }}
+      <div :class="'item-646-sm'" title="Silver"/>
     </div>
 
-    <div v-if="copper > 0" class="d-inline-block mr-1">
-      <div :class="'ml-1 item-647-sm'" title="Copper"/>
+    <div v-if="copper > 0" class="d-inline-block cash-line">
       {{ copper }}
+
+      <div :class="'item-647-sm'" title="Copper"/>
     </div>
 
-    <div v-if="hasNoCost()" class="d-inline-block mr-1">
-      <div :class="'ml-1 item-644-sm'" title="Platinum"/>
+    <div v-if="hasNoCost()" class="d-inline-block cash-line">
       0
+      <div :class="'item-644-sm'" title="Platinum"/>
     </div>
   </div>
 </template>
@@ -100,3 +101,10 @@ export default {
   }
 }
 </script>
+
+<style>
+.cash-line {
+  margin-right: 5px;
+  margin-left: 5px;
+}
+</style>

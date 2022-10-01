@@ -271,7 +271,7 @@ export default {
       npcNav: {
         label: "NPCs",
         labelIcon: "ra ra-dragon mr-1",
-        routePrefixMatches: ["npc", "merchant"],
+        routePrefixMatches: ["npc", "merchant", "loot"],
         navs: [
           {
             title: "Emotes",
@@ -296,6 +296,14 @@ export default {
             isAlpha: true,
             isNew: true,
             routes: ['npc-spells']
+          },
+          {
+            title: "Loot",
+            to: ROUTE.LOOT,
+            icon: "ra ra-sword mr-1",
+            isAlpha: true,
+            isNew: true,
+            routes: ['loot']
           },
         ]
       },

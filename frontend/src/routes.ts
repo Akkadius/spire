@@ -6,6 +6,7 @@ export const ROUTE = {
   ITEM_ICON_VIEWER: "/item-icon-viewer",
   ITEM_VIEWER: "/item-viewer",
   ITEMS_LIST: "/items",
+  LOOT: "/loot",
   LOGIN: "/login",
   LOGOUT: "/logout",
   HOME: "/",
