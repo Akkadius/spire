@@ -7,7 +7,7 @@
       </div>
 
       <table
-        class="eq-table eq-highlight-rows currency-table"
+        class="eq-table eq-highlight-rows currency-table bordered"
         style="display: table; font-size: 14px; overflow-x: scroll"
         v-if="currencies"
       >

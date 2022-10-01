@@ -396,7 +396,7 @@
                       <b-input-group v-if="field.fieldType === 'reward_id_list'">
                         <b-form-input
                           :id="field.field"
-                          v-model.number="task[field.field]"
+                          v-model="task[field.field]"
                           class="m-0 mt-1"
                           v-on="typeof field.onclick !== 'undefined' ? { click: () => field.onclick(field.field) } : {}"
                           v-b-tooltip.hover.v-dark.right :title="getFieldDescription(field.field)"

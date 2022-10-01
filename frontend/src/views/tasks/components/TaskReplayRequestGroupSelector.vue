@@ -14,7 +14,7 @@
 
       <div class="mt-3">
         <button
-          class='btn btn-sm btn-outline-warning mb-1 mr-2'
+          class='btn btn-sm btn-outline-warning btn-dark mb-1 mr-2'
           @click="setUnusedId()"
         >
           <i class="fa fa-arrow-left"></i>
@@ -23,7 +23,7 @@
       </div>
 
       <table
-        class="eq-table eq-highlight-rows row-table"
+        class="eq-table eq-highlight-rows row-table bordered"
         style="display: table; font-size: 14px; overflow-x: scroll"
         v-if="replayGroupIds && replayGroupIds.length > 0"
       >

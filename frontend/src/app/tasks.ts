@@ -293,7 +293,7 @@ export class Tasks {
       "title": "Example Task 2",
       "description": "Example Task 2",
       "reward_text": "XP",
-      "reward_id_list": 0,
+      "reward_id_list": "",
       "cash_reward": 0,
       "exp_reward": 10,
       "reward_method": 0,

@@ -1,3 +1,10 @@
+## [2.0.3]
+
+### [Task Editor] Minor Fixes
+
+* Fix an issue where `item_id_list` was binding to an integer instead of a string
+* Adjust UI elements in sub-editor panes (bordered tables)
+
 ## [2.0.2]
 
 ### [Connection Manager]
