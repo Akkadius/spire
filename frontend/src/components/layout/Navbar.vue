@@ -312,14 +312,14 @@ export default {
             isNew: true,
             routes: ['npc-spells']
           },
-          // {
-          //   title: "Loot",
-          //   to: ROUTE.LOOT,
-          //   icon: "ra ra-sword mr-1",
-          //   isAlpha: true,
-          //   isNew: true,
-          //   routes: ['loot']
-          // },
+          {
+            title: "Loot",
+            to: ROUTE.LOOT,
+            icon: "ra ra-sword mr-1",
+            isAlpha: true,
+            isNew: true,
+            routes: ['loot']
+          },
         ]
       },
       viewerNav: {
