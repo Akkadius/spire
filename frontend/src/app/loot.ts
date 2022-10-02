@@ -1,9 +1,11 @@
-import {LoottableApi, ZoneApi} from "@/app/api";
+import {LoottableApi, MerchantlistApi, ZoneApi} from "@/app/api";
 import {SpireApiClient} from "@/app/api/spire-api-client";
 import {SpireQueryBuilder} from "@/app/api/spire-query-builder";
 
 export class Loot {
-  public static async getLoot() {
+
+
+  public static async listLootTables() {
     const result = await (new LoottableApi(SpireApiClient.getOpenApiConfig()))
       .listLoottables(
         // @ts-ignore
@@ -22,6 +24,20 @@ export class Loot {
     }
 
     return {}
+  }
+
+  // @TODO: Swap this out with an actual count endpoint later
+  static async getTotalLootTables() {
+    const r = await (new LoottableApi(SpireApiClient.getOpenApiConfig()))
+      .listLoottables(
+        // @ts-ignore
+        (new SpireQueryBuilder())
+          .select(["id"])
+          .limit(100000000)
+          .get()
+      );
+
+    return r.data.length
   }
 
 }

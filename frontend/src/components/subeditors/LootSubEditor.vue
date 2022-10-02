@@ -70,7 +70,7 @@ export default {
     }
   },
   async mounted() {
-    this.loot = await Loot.getLoot()
+    this.loot = await Loot.listLootTables()
   },
   methods: {
     doesColumnHaveObjects(data, column) {

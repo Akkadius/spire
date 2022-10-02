@@ -210,6 +210,7 @@ export class Merchants {
     return []
   }
 
+  // @TODO: Swap this out with an actual count endpoint later
   static async getTotalMerchants() {
     const r = await (new MerchantlistApi(SpireApiClient.getOpenApiConfig()))
       .listMerchantlists(

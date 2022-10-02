@@ -5,8 +5,10 @@
     v-if="loot"
     class="p-0"
   >
-    <div class="pb-3 mt-3 p-3" style="max-height: 94vh; overflow-y: scroll; overflow-x: hidden">
-
+    <div
+      class="pb-3 mt-3 p-3"
+      style="max-height: 94vh; overflow-y: scroll; overflow-x: hidden"
+    >
       <!--      {{loot}}-->
 
       <!--      <div class="mb-3 mt-3">-->
@@ -45,7 +47,7 @@
             <td>
               <item-popover
                 :item="lde.item"
-                size="regular"
+                size="sm"
                 style="min-width: 200px"
                 class="d-inline-block ml-1"
               />
@@ -55,12 +57,43 @@
           </tr>
           </tbody>
         </table>
-
       </div>
 
+      <table
+        v-if="loot.npc_types.length > 0"
+        id="npctable"
+        class="eq-table eq-highlight-rows bordered"
+        style="display: table; font-size: 14px; "
+      >
+        <thead
+          class="eq-table-floating-header"
+        >
+        <tr>
+          <th>ID</th>
+          <th class="text-center">
+            NPC
+          </th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr
+          v-for="(n, index) in loot.npc_types"
+          :key="index + '-' + n.id"
+        >
+          <td>
+            {{n.id}}
+          </td>
+          <td style="position: relative">
+            <npc-popover
+              :npc="n"
+            />
+          </td>
 
-      <!--      <eq-debug :data="loot"></eq-debug>-->
+        </tr>
+        </tbody>
+      </table>
 
+      <eq-debug :data="loot"></eq-debug>
 
     </div>
 
