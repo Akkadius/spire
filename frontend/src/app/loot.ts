@@ -4,7 +4,6 @@ import {SpireQueryBuilder} from "@/app/api/spire-query-builder";
 
 export class Loot {
 
-
   public static async listLootTables() {
     const result = await (new LoottableApi(...SpireApi.cfg()))
       .listLoottables(
