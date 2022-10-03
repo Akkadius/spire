@@ -133,6 +133,11 @@ export default new Router({
           meta: {title: "Item Edit"},
         },
         {
+          path: ROUTE.LOOT,
+          component: () => import('./views/loot/Loot.vue'),
+          meta: {title: "Loot Edit"},
+        },
+        {
           path: ROUTE.ZONES,
           component: () => import('./views/zone/Zones.vue'),
           meta: {title: "Zones"},

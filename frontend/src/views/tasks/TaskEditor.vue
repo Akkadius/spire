@@ -556,6 +556,16 @@
                              col: 'col-2',
                            },
                            {
+                             description: 'Required Activity ',
+                             itemIcon: '3196',
+                             field: 'req_activity_id',
+                             fieldType: 'number',
+                             col: 'col-12',
+                             fieldType: 'select',
+                             selectData: buildTaskRequiredActivitySelection(),
+                             zeroValue: -1,
+                           },
+                           {
                               fieldType: 'header',
                               text: 'Activity Description',
                               col: 'col-12',
@@ -1282,6 +1292,19 @@ export default {
       if (this.task && this.task.task_activities) {
         for (const a of this.task.task_activities) {
           activities[a.activityid] = a.activityid + " " + Tasks.buildActivityDescription(a)
+        }
+      }
+
+      return activities
+    },
+
+    buildTaskRequiredActivitySelection() {
+      let activities = {
+        "-1": "None"
+      }
+      if (this.task && this.task.task_activities) {
+        for (const a of this.task.task_activities) {
+          activities[a.activityid] = Tasks.buildActivityDescription(a)
         }
       }
 

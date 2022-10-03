@@ -352,7 +352,6 @@ export default {
         console.log(this.totalRows)
         this.updateQueryState()
       }, 100)
-
     },
 
     getZonesByNpc(n) {
