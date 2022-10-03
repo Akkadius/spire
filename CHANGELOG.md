@@ -1,3 +1,13 @@
+## [2.1.0]
+
+### [Task Editor] Task Preview Requisite Activity ID
+
+Adds support for task requisite activity ID.
+
+Tasks for example in Dragons of Norrath have activities that are not sequential and can be unlocked early in task progression. This update adds support on the editor side.
+
+![image](https://user-images.githubusercontent.com/3319450/193499479-657c0a76-0b49-4509-a324-10524f3b11f9.png)
+
 ## [2.0.3]
 
 ### [Task Editor] Minor Fixes

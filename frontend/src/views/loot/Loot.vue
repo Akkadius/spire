@@ -80,6 +80,13 @@
         </eq-window>
       </div>
       <div class="col-5">
+
+        <eq-window
+          v-if="Object.keys(previewedTable).length === 0"
+        >
+          Select a table on the left to preview
+        </eq-window>
+
         <eq-loot-card-preview
           v-if="Object.keys(previewedTable).length > 0"
           :loot="previewedTable"
