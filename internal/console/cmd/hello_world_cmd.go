@@ -1,12 +1,11 @@
 package cmd
 
 import (
-	"fmt"
-	"github.com/anaskhan96/soup"
+	"github.com/Akkadius/spire/internal/database"
+	"github.com/Akkadius/spire/internal/models"
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
 	"gorm.io/gorm"
-	"strings"
 )
 
 type HelloWorldCommand struct {
@@ -37,39 +36,31 @@ func NewHelloWorldCommand(db *gorm.DB, logger *logrus.Logger) *HelloWorldCommand
 
 // Handle implementation of the Command interface
 func (c *HelloWorldCommand) Handle(cmd *cobra.Command, args []string) {
-	resp, err := soup.Get("https://everquest.allakhazam.com/db/zone.html?ztype=0")
+	// grab first entry
+	var source models.Task
+	err := c.db.Where("id", 1).First(&source).Error
 	if err != nil {
-		fmt.Println(err)
+		c.logger.Println(err)
 	}
 
-	//fmt.Println(resp)
+	//pp.Println(source)
 
-	zone := ""
-	if len(args) > 0 {
-		zone = args[0]
-	}
-	images := []string{}
-	doc := soup.HTMLParse(resp)
-	for _, link := range doc.FindAll("a") {
-		if strings.Contains(link.Attrs()["href"], "zstrat") && strings.Contains(link.Text(), zone) {
-			fmt.Println(link.Text(), "| Link :", link.Attrs()["href"])
+	var dest = source
+	dest.Type = 1
+	dest.ExpReward = 30002
+	dest.Description = "Some new description3"
 
-			// grab zone level
-			r, err := soup.Get("https://everquest.allakhazam.com" + link.Attrs()["href"])
-			if err != nil {
-				fmt.Println(err)
-			}
+	//differences := database.CompareModels(source, dest)
 
-			d := soup.HTMLParse(r)
-			for _, l := range d.FindAll("a") {
-				if strings.Contains(l.Attrs()["href"], "scenery") {
-					images = append(images, l.Attrs()["href"])
-				}
-			}
-		}
-	}
+	c.db.Model(&dest).Updates(database.ResultDifference(source, dest))
 
-	fmt.Println(images)
+	//for _, d := range differences {
+	//	query.Update(d.Field, d.New)
+	//}
+
+	//pp.Println(dataSource)
+	//pp.Println(dataDest)
+
 }
 
 // Validate implementation of the Command interface

@@ -9,6 +9,8 @@ import (
 	"github.com/k0kubun/pp/v3"
 	"github.com/labstack/echo/v4"
 	"github.com/sirupsen/logrus"
+	"golang.org/x/text/cases"
+	"golang.org/x/text/language"
 	"os"
 	"sort"
 	"strings"
@@ -134,7 +136,7 @@ func (c *ResourceList) Get() []Resource {
 				// title case
 				title := resource
 				title = strings.ReplaceAll(title, "_", " ")
-				title = strings.Title(title)
+				title = cases.Title(language.English).String(title)
 
 				// count routes per resource
 				resourceRouteCount[title]++

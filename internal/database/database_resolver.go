@@ -198,6 +198,7 @@ func (d *DatabaseResolver) ResolveUserEqemuConnection(model models.Modelable, us
 			SkipDefaultTransaction:                   true,
 			DisableForeignKeyConstraintWhenMigrating: true,
 			DisableAutomaticPing:                     false,
+			FullSaveAssociations:                     false,
 			Logger:                                   logger.Default.LogMode(logMode),
 		},
 	)
