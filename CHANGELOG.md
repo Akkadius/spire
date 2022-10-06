@@ -1,3 +1,9 @@
+## [2.1.1]
+
+### [Items] Item Slot Ordering
+
+Item slots "Ammo" and "Power Source" were swapped.
+
 ## [2.1.0]
 
 ### [Task Editor] Task Preview Requisite Activity ID
