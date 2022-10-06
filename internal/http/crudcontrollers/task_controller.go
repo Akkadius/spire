@@ -7,12 +7,13 @@ import (
 	"github.com/Akkadius/spire/internal/models"
 	"github.com/labstack/echo/v4"
 	"github.com/sirupsen/logrus"
+	"gorm.io/gorm"
 	"net/http"
 	"strconv"
 )
 
 type TaskController struct {
-	db	 *database.DatabaseResolver
+	db	   *database.DatabaseResolver
 	logger *logrus.Logger
 }
 
@@ -21,7 +22,7 @@ func NewTaskController(
 	logger *logrus.Logger,
 ) *TaskController {
 	return &TaskController{
-		db:	 db,
+		db:	    db,
 		logger: logger,
 	}
 }
@@ -158,7 +159,8 @@ func (e *TaskController) updateTask(c echo.Context) error {
 		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Cannot find entity [%s]", err.Error())})
 	}
 
-	err = e.db.QueryContext(models.Task{}, c).Updates(&request).Error
+	// save top-level using only changes
+	err = query.Session(&gorm.Session{FullSaveAssociations: false}).Updates(database.ResultDifference(result, request)).Error
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error updating entity [%v]", err.Error())})
 	}

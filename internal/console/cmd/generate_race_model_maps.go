@@ -87,7 +87,7 @@ func (c *GenerateRaceModelMapsCommand) Handle(cmd *cobra.Command, _ []string) {
 	doc := soup.HTMLParse(contents)
 	for i := 0; i < 1000; i++ {
 
-		// add new race entry
+		// add New race entry
 		raceEntry := RaceEntry{}
 		raceEntry.RaceId = i
 
@@ -168,7 +168,7 @@ func (c *GenerateRaceModelMapsCommand) Handle(cmd *cobra.Command, _ []string) {
 			if len(li) > 0 {
 				for _, entry := range li {
 
-					// new source entry
+					// New source entry
 					source := Source{}
 
 					// text of li
@@ -227,7 +227,7 @@ func (c *GenerateRaceModelMapsCommand) Handle(cmd *cobra.Command, _ []string) {
 								modelCode = neutralModel
 							}
 
-							// new model
+							// New model
 							model := Model{
 								Code:           modelCode,
 								Gender:         gender,

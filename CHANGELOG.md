@@ -1,3 +1,9 @@
+## [2.2.1]
+
+### [Update Logic] Only Update What's Changed
+
+Update logic for all saves has been rewritten to only update fields that have changed. This will also as a side effect resolve an issue where when values are set to zero, the object would not properly save.
+
 ## [2.1.1]
 
 ### [Items] Item Slot Ordering

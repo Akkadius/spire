@@ -135,6 +135,7 @@ func provideEQEmuLocalDatabase(serverconfig *serverconfig.EQEmuServerConfig) (*g
 			SkipDefaultTransaction:                   true,
 			DisableForeignKeyConstraintWhenMigrating: true,
 			DisableAutomaticPing:                     false,
+			FullSaveAssociations:                     false,
 			Logger:                                   logger.Default.LogMode(logMode),
 		},
 	)
@@ -223,6 +224,7 @@ func provideSpireDatabase(serverconfig *serverconfig.EQEmuServerConfig) (*gorm.D
 			SkipDefaultTransaction:                   true,
 			DisableForeignKeyConstraintWhenMigrating: true,
 			DisableAutomaticPing:                     false,
+			FullSaveAssociations:                     false,
 			Logger:                                   logger.Default.LogMode(logMode),
 		},
 	)
