@@ -15,6 +15,18 @@
           </div>
         </div>
 
+        <!-- Modal -->
+        <b-modal id="add-developer-server-modal" centered title="Add Developer to Server" size="lg">
+
+          This is where we load developers and add
+
+          <template #modal-footer>
+            <div class="">
+
+            </div>
+          </template>
+        </b-modal>
+
         <b-tabs class="mt-4" content-class="mt-5" fill>
           <b-tab title="Connections" :active="connections && connections.length > 0">
 
@@ -162,12 +174,13 @@
                         <!-- Users -->
 
                         <h4 v-if="connection.database_connection.user_server_database_connections.length > 0" class="mb-0 mt-1">
-                          Developers <a class="btn btn-sm btn-white btn-danger ml-2 pt-0 pb-0" v-if="isOwnerOfConnection(connection)"><i class="fa fa-plus"/> Add</a>
+                          Developers <a class="btn btn-sm btn-white btn-danger ml-2 pt-0 pb-0" v-if="isOwnerOfConnection(connection)" v-b-modal.add-developer-server-modal><i class="fa fa-plus"/> Add</a>
                         </h4>
 
-                        <b-avatar-group rounded="lg" overlap="0.05" class="d-inline-block">
+                        <b-avatar-group rounded="lg" overlap="0.05" class="d-inline-block mt-1">
                           <b-avatar
                             v-for="user in connection.database_connection.user_server_database_connections"
+                            :key="user.user.id"
                             :src="user.user.avatar"
                             variant="info"
                             v-b-tooltip.hover.v-dark.top
@@ -400,6 +413,7 @@
         <!--        <pre v-if="debug" class="mt-4 highlight html bg-dark hljs xml">{{ database }}</pre>-->
       </div>
     </div>
+
   </div>
 
 </template>
