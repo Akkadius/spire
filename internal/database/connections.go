@@ -35,6 +35,8 @@ var spireTables = []models.Modelable{
 	&models.ServerDatabaseConnection{},
 	&models.AnalyticEvent{},
 	&models.AnalyticEventCount{},
+	&models.UserEventLog{},
+	&models.UserServerResourcePermission{},
 }
 
 func (c Connections) SpireMigrate(drop bool) {

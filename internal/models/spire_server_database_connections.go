@@ -25,7 +25,7 @@ type ServerDatabaseConnection struct {
 }
 
 func (ServerDatabaseConnection) TableName() string {
-	return "server_database_connections"
+	return "spire_server_database_connections"
 }
 
 func (ServerDatabaseConnection) Relationships() []string {

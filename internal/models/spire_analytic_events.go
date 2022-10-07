@@ -15,7 +15,7 @@ type AnalyticEvent struct {
 }
 
 func (AnalyticEvent) TableName() string {
-	return "analytic_events"
+	return "spire_analytic_events"
 }
 
 func (AnalyticEvent) Relationships() []string {

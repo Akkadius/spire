@@ -17,7 +17,7 @@ type UserServerDatabaseConnection struct {
 }
 
 func (UserServerDatabaseConnection) TableName() string {
-	return "user_server_database_connections"
+	return "spire_user_server_database_connections"
 }
 
 func (UserServerDatabaseConnection) Relationships() []string {

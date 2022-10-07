@@ -13,7 +13,7 @@ type AnalyticEventCount struct {
 }
 
 func (AnalyticEventCount) TableName() string {
-	return "analytic_event_counts"
+	return "spire_analytic_event_counts"
 }
 
 func (AnalyticEventCount) Relationships() []string {

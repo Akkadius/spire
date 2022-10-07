@@ -1,0 +1,27 @@
+package models
+
+import (
+	"time"
+)
+
+type UserEventLog struct {
+	ID                         uint                     `json:"id" gorm:"primary_key,AUTO_INCREMENT"`
+	UserId                     uint                     `json:"user_id"`
+	ServerDatabaseConnectionId uint                     `json:"server_database_connection_id"`
+	EventName                  string                   `json:"event_name" db:"event_name"`
+	Data                       string                   `json:"data" db:"data"`
+	CreatedAt                  time.Time                `json:"created_at" gorm:"Column:created_at"`
+	ServerDatabaseConnection   ServerDatabaseConnection `json:"database_connection,omitempty" gorm:"foreignKey:ServerDatabaseConnectionId;association_foreignkey:Id"`
+}
+
+func (UserEventLog) TableName() string {
+	return "spire_user_event_log"
+}
+
+func (UserEventLog) Relationships() []string {
+	return []string{}
+}
+
+func (UserEventLog) Connection() string {
+	return "spire"
+}
