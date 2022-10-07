@@ -65,9 +65,11 @@
                       <div class="col-auto">
 
                         <!-- Button -->
-                        <a class="btn btn-sm btn-outline-primary d-none d-md-inline-block"
-                           @click="setDefaultActive()"
-                           v-if="!isDefaultActive">
+                        <a
+                          class="btn btn-sm btn-outline-primary d-none d-md-inline-block"
+                          @click="setDefaultActive()"
+                          v-if="!isDefaultActive"
+                        >
                           <i class="fe fe-activity"></i> Set Active
                         </a>
 
@@ -76,9 +78,10 @@
                         </a>
 
                         <!-- The application shouldn't even boot if this isn't available -->
-                        <a class="btn btn-sm btn-white btn-danger ml-2"
-                           v-b-tooltip.hover
-                           v-b-tooltip.v-outline-success
+                        <a
+                          class="btn btn-sm btn-white btn-danger ml-2"
+                          v-b-tooltip.hover
+                          v-b-tooltip.v-outline-success
                         >
                           <span class="text-success">●</span> Online
                         </a>
@@ -100,7 +103,7 @@
                 <!-- Title -->
                 <h4 class="card-header-title">
                   <i class="fe fe-database"></i>
-                  User Remote Database Connection(s)
+                  User Remote Database Connections ({{connections.length}})
                 </h4>
 
               </div>
@@ -135,7 +138,7 @@
                           {{ connection.database_connection.name }}
                         </h4>
 
-                        <p class="card-text small text-muted">
+                        <p class="card-text small text-muted mb-2">
                           <b>Host</b> {{ connection.database_connection.db_host }}
                           <b>Port</b> {{ connection.database_connection.db_port }}
                           <b>Database Name</b> {{ connection.database_connection.db_name }}
@@ -146,20 +149,47 @@
                           Content Connection
                         </h4>
 
-                        <p class="card-text small text-muted" v-if="connection.database_connection.content_db_username !== ''">
+                        <p
+                          class="card-text small text-muted mb-2"
+                          v-if="connection.database_connection.content_db_username !== ''"
+                        >
                           <b>Host</b> {{ connection.database_connection.content_db_host }}
                           <b>Port</b> {{ connection.database_connection.content_db_port }}
                           <b>Database Name</b> {{ connection.database_connection.content_db_name }}
                           <b>User</b> {{ connection.database_connection.content_db_username }}
                         </p>
 
+                        <!-- Users -->
+
+                        <h4 v-if="connection.database_connection.user_server_database_connections.length > 0" class="mb-0 mt-1">
+                          Developers <a class="btn btn-sm btn-white btn-danger ml-2 pt-0 pb-0" v-if="isOwnerOfConnection(connection)"><i class="fa fa-plus"/> Add</a>
+                        </h4>
+
+                        <b-avatar-group rounded="lg" overlap="0.05" class="d-inline-block">
+                          <b-avatar
+                            v-for="user in connection.database_connection.user_server_database_connections"
+                            :src="user.user.avatar"
+                            variant="info"
+                            v-b-tooltip.hover.v-dark.top
+                            :title="user.user.user_name + (user.created_by === user.user.id ? ' (Owner)' : '')"
+                          />
+                        </b-avatar-group>
+
                       </div>
                       <div class="col-auto">
 
+                        <!-- Loader -->
+                        <i
+                          class="fa fa-spinner fa-pulse fa-3x fa-fw"
+                          v-if="connection.active === 0 && (!connectionStatuses[connection.id])"
+                        />
+
                         <!-- Button -->
-                        <a class="btn btn-sm btn-outline-primary d-none d-md-inline-block"
-                           @click="setActiveConnection(connection.id)"
-                           v-if="connection.active === 0 && (connectionStatuses[connection.id] && !connectionStatuses[connection.id].includes('error'))">
+                        <a
+                          class="btn btn-sm btn-outline-primary d-none d-md-inline-block"
+                          @click="setActiveConnection(connection.id)"
+                          v-if="connection.active === 0 && (connectionStatuses[connection.id] && !connectionStatuses[connection.id].includes('error'))"
+                        >
                           <i class="fe fe-activity"></i> Set Active
                         </a>
 
@@ -167,22 +197,25 @@
                           <span class="text-success">●</span> Active Connection
                         </a>
 
-                        <a class="btn btn-sm btn-danger ml-2"
-                           v-if="connectionStatuses[connection.id] && connectionStatuses[connection.id].includes('error')"
-                           v-b-tooltip.hover
-                           v-b-tooltip.v-danger
-                           :title="connectionStatuses[connection.id]">
+                        <a
+                          class="btn btn-sm btn-danger ml-2"
+                          v-if="connectionStatuses[connection.id] && connectionStatuses[connection.id].includes('error')"
+                          v-b-tooltip.hover
+                          v-b-tooltip.v-danger
+                          :title="connectionStatuses[connection.id]"
+                        >
                           <span class="text-white">●</span> Offline
                         </a>
 
-                        <a class="btn btn-sm btn-white btn-danger ml-2"
-                           v-if="connectionStatuses[connection.id] && !connectionStatuses[connection.id].includes('error')"
-                           v-b-tooltip.hover
-                           v-b-tooltip.v-outline-success
-                           :title="connectionStatuses[connection.id]">
+                        <a
+                          class="btn btn-sm btn-white btn-danger ml-2"
+                          v-if="connectionStatuses[connection.id] && !connectionStatuses[connection.id].includes('error')"
+                          v-b-tooltip.hover
+                          v-b-tooltip.v-outline-success
+                          :title="connectionStatuses[connection.id]"
+                        >
                           <span class="text-success">●</span> Online
                         </a>
-
 
                       </div>
 
@@ -192,8 +225,10 @@
                         <div class="dropdown">
 
                           <!-- Toggle -->
-                          <a href="#" class="dropdown-ellipses dropdown-toggle" role="button" data-toggle="dropdown"
-                             aria-haspopup="true" aria-expanded="false">
+                          <a
+                            href="#" class="dropdown-ellipses dropdown-toggle" role="button" data-toggle="dropdown"
+                            aria-haspopup="true" aria-expanded="false"
+                          >
                             <i class="fe fe-more-vertical"></i>
                           </a>
 
@@ -220,13 +255,16 @@
           <b-tab
             title="Create New"
             v-if="isLoggedIn()"
-            :active="connections.length === 0 && isLoggedIn()">
+            :active="connections.length === 0 && isLoggedIn()"
+          >
 
             <div class="form-row">
               <div class="form-group col-md-12">
                 <label class="form-label">Database Connection Name</label>
-                <input type="text" placeholder="My EverQuest Emulator Server" class="form-control"
-                       v-model="database.connection_name"/>
+                <input
+                  type="text" placeholder="My EverQuest Emulator Server" class="form-control"
+                  v-model="database.connection_name"
+                />
               </div>
 
               <div class="form-group col-md-4">
@@ -254,11 +292,14 @@
                 <label class="form-label">Database Password</label>
 
                 <div class="input-group">
-                  <input :type="passwordFieldType" class="form-control" placeholder="password"
-                         v-model="database.db_password"/>
+                  <input
+                    :type="passwordFieldType" class="form-control" placeholder="password"
+                    v-model="database.db_password"
+                  />
                   <span class="input-group-append">
                   <button class="btn btn-primary" type="button" @click="switchPasswordVisibility()"><i
-                    class="fa fa-eye"></i>
+                    class="fa fa-eye"
+                  ></i>
                       Show / Hide
                   </button>
                 </span>
@@ -267,15 +308,19 @@
             </div>
             <div class="form-row ml-0 mt-3">
               <div class="col">
-                <button class="btn btn-primary" type="button"
-                        @click="addContentDb ? addContentDb = false : addContentDb = true">
+                <button
+                  class="btn btn-primary" type="button"
+                  @click="addContentDb ? addContentDb = false : addContentDb = true"
+                >
                   <i class="fe fe-database"></i>
                   Add Content Database
                 </button>
               </div>
               <div class="col-auto">
-                <button class="btn btn-white ml-3" type="button"
-                        @click="createConnection()">
+                <button
+                  class="btn btn-white ml-3" type="button"
+                  @click="createConnection()"
+                >
                   <i class="fe fe-plus"></i>
                   Create Connection
                 </button>
@@ -285,7 +330,8 @@
             <b-alert variant="primary" show class="p-3 mt-4 mb-5" v-if="addContentDb">
               <i class="fe fe-info"></i>
               Note: Content database connections are optional and not required. See <a
-              href="https://eqemu.gitbook.io/server/categories/database/multi-tenancy" style="color:white">here</a> for
+              href="https://eqemu.gitbook.io/server/categories/database/multi-tenancy" style="color:white"
+            >here</a> for
               more info
             </b-alert>
 
@@ -318,7 +364,8 @@
                   <input :type="passwordFieldType" class="form-control" v-model="database.content_db_password"/>
                   <span class="input-group-append">
                   <button class="btn btn-primary" type="button" @click="switchPasswordVisibility()"><i
-                    class="fa fa-eye"></i>
+                    class="fa fa-eye"
+                  ></i>
                       Show / Hide
                   </button>
                 </span>
@@ -333,7 +380,8 @@
         <b-alert
           :show="(errorMessage !== '')" v-if="errorMessage"
           class="mt-5 mb-5"
-          variant="danger">
+          variant="danger"
+        >
           <i class="fe fe-alert-triangle"></i>
           {{ errorMessage }}
         </b-alert>
@@ -341,7 +389,8 @@
         <b-alert
           :show="(successMessage !== '')" v-if="successMessage"
           class="mt-5 mb-5"
-          variant="success">
+          variant="success"
+        >
           <i class="fe fe-database"></i>
           {{ successMessage }}
         </b-alert>
@@ -356,10 +405,10 @@
 </template>
 
 <script type="ts">
-import EqWindow              from "@/components/eq-ui/EQWindow.vue";
-import {App}                 from "@/constants/app";
-import axios                 from "axios"
-import {SpireApiClient}      from "@/app/api/spire-api-client";
+import EqWindow from "@/components/eq-ui/EQWindow.vue";
+import {App} from "@/constants/app";
+import axios from "axios"
+import {SpireApiClient} from "@/app/api/spire-api-client";
 import DebugDisplayComponent from "@/components/DebugDisplayComponent.vue";
 import {EventBus} from "@/app/event-bus/event-bus";
 import UserContext from "@/app/user/UserContext";
@@ -392,6 +441,10 @@ export default {
     this.user = await (UserContext.getUser())
   },
   methods: {
+    isOwnerOfConnection(connection) {
+      return this.user.id === connection.created_by
+    },
+
     isLoggedIn() {
       return this.user && Object.keys(this.user).length
     },

@@ -144,7 +144,7 @@ func (cc *ConnectionsController) list(c echo.Context) error {
 			query = query.Preload(relationship)
 		}
 
-		err := query.Where("user_id = ?", request.GetUser(c).ID).Find(&results).Error
+		err := query.Or("user_id = ?", request.GetUser(c).ID).Find(&results).Error
 		if err != nil {
 			return c.JSON(http.StatusInternalServerError, echo.Map{"error": err})
 		}
