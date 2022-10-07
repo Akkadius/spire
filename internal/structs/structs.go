@@ -105,16 +105,18 @@ func (s *Struct) FillMap(out map[string]interface{}) {
 			name = tagName
 		}
 
-		// prefer json tag
-		json := field.Tag.Get("json")
-		if json != "" {
-			if strings.Contains(json, ",") {
-				split := strings.Split(json, ",")
-				if len(split) > 0 {
-					name = strings.TrimSpace(split[0])
+		// prefer gorm tag
+		gorm := field.Tag.Get("gorm")
+		if gorm != "" {
+			if strings.Contains(gorm, "Column:") {
+				if strings.Contains(gorm, ",") {
+					split := strings.Split(gorm, ",")
+					if len(split) > 0 {
+						name = strings.TrimSpace(split[0])
+					}
 				}
-			} else {
-				name = json
+
+				name = strings.TrimSpace(strings.ReplaceAll(gorm, "Column:", ""))
 			}
 		}
 
