@@ -11,7 +11,7 @@ type Controller interface {
 	Routes() []*Route
 }
 
-// new controller group
+// NewControllerGroup wraps controllers and their accompanied middleware
 func NewControllerGroup(
 	routePrefix string,
 	controllers []Controller,

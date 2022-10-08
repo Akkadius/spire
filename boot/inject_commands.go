@@ -2,7 +2,6 @@ package boot
 
 import (
 	"github.com/Akkadius/spire/internal/console/cmd"
-	"github.com/Akkadius/spire/internal/permissions"
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/google/wire"
 	"github.com/spf13/cobra"
@@ -20,7 +19,6 @@ var commandSet = wire.NewSet(
 	cmd.NewSpireMigrateCommand,
 	cmd.NewQuestExampleTestCommand,
 	cmd.NewGenerateRaceModelMapsCommand,
-	permissions.NewResourceListCommand,
 	ProvideCommands,
 )
 
@@ -36,7 +34,6 @@ func ProvideCommands(
 	questApiParseCommand *cmd.QuestApiParseCommand,
 	questExampleTestCommand *cmd.QuestExampleTestCommand,
 	generateRaceModelMapsCommand *cmd.GenerateRaceModelMapsCommand,
-	resourceListCmd *permissions.ResourceListCommand,
 ) []*cobra.Command {
 	return []*cobra.Command{
 		helloWorldCommand.Command(),
@@ -49,6 +46,5 @@ func ProvideCommands(
 		questApiParseCommand.Command(),
 		questExampleTestCommand.Command(),
 		generateRaceModelMapsCommand.Command(),
-		resourceListCmd.Command(),
 	}
 }

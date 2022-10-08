@@ -3,9 +3,8 @@ package permissions
 import (
 	"fmt"
 	"github.com/Akkadius/spire/internal/console"
-	"github.com/Akkadius/spire/internal/http"
-	"github.com/Akkadius/spire/internal/http/routes"
 	"github.com/gertd/go-pluralize"
+	"github.com/iancoleman/strcase"
 	"github.com/k0kubun/pp/v3"
 	"github.com/labstack/echo/v4"
 	"github.com/sirupsen/logrus"
@@ -18,14 +17,12 @@ import (
 
 type ResourceList struct {
 	logger *logrus.Logger
-	router *routes.Router
 	debug  bool
 }
 
-func NewResourceList(logger *logrus.Logger, router *routes.Router) *ResourceList {
+func NewResourceList(logger *logrus.Logger) *ResourceList {
 	return &ResourceList{
 		logger: logger,
-		router: router,
 		debug:  len(os.Getenv("DEBUG")) > 0,
 	}
 }
@@ -39,20 +36,23 @@ func (c *ResourceList) RegisterManualResources() map[string][]string {
 }
 
 type Resource struct {
-	name    string
-	matches []string
+	Name               string   `json:"name"`       // used for visual display in the UI
+	Identifier         string   `json:"identifier"` // used for backend storage identification
+	RouteMatchPrefixes []string `json:"-"`          // used for matching routes in middleware
 }
 
-// Get returns a complete list of resources
-func (c *ResourceList) Get() []Resource {
-
-	// bring up echo instance
-	e := echo.New()
-	http.BootstrapMiddleware(e, c.router)
-	if err := http.BootstrapControllers(e, c.router.ControllerGroups()...); err != nil {
-		c.logger.Fatal(err)
-	}
-
+// GetResources returns a complete list of resources
+//
+// @example
+//   permissions.Resource{
+//    Name:               "Npc Type",
+//    Identifier:         "NPC_TYPE",
+//    RouteMatchPrefixes: []string{
+//      "npc_type",
+//      "npc_types",
+//    },
+//  },
+func (c *ResourceList) GetResources(routes []*echo.Route) []Resource {
 	type Route struct {
 		Method string `json:"method"`
 		Path   string `json:"path"`
@@ -65,7 +65,7 @@ func (c *ResourceList) Get() []Resource {
 
 	// Loop through echo r
 	r := make([]Route, 0)
-	for _, route := range e.Routes() {
+	for _, route := range routes {
 
 		// Only unique append r once
 		if !routeDefined[route.Path] {
@@ -91,7 +91,7 @@ func (c *ResourceList) Get() []Resource {
 		}
 	}
 
-	// sort r by path name
+	// sort r by path Name
 	sort.Slice(r, func(i, j int) bool {
 		if r[i].Path != r[j].Path {
 			return r[i].Path < r[j].Path
@@ -110,8 +110,20 @@ func (c *ResourceList) Get() []Resource {
 	pluralizeClient := pluralize.NewClient()
 	resourceRouteCount := map[string]int{}
 
+	// manual string transformations for resource names
+	t := make(map[string]string)
+	t["Ip"] = "IP"
+	t["Aa"] = "AA"
+	t["Gm"] = "GM"
+	t["Id"] = "ID"
+
 	// loop through routes
 	for _, route := range r {
+
+		// Print routes preview
+		// @example
+		// | /api/v1/zones      | GET  |
+		// | /api/v1/zones/bulk | POST |
 		if c.debug {
 			fmt.Printf(
 				"| %-*v | %-*v | \n",
@@ -124,6 +136,7 @@ func (c *ResourceList) Get() []Resource {
 
 		// match on v1 routes
 		if strings.Contains(route.Path, "/api/v1/") {
+			// the first parameter after `v1` is what we're describing as the "resource"
 			params := strings.Split(route.Path, "/")
 			resource := ""
 			if len(params) > 0 {
@@ -137,6 +150,11 @@ func (c *ResourceList) Get() []Resource {
 				title := resource
 				title = strings.ReplaceAll(title, "_", " ")
 				title = cases.Title(language.English).String(title)
+
+				// manual transforms
+				for o, n := range t {
+					title = strings.ReplaceAll(title, o, n)
+				}
 
 				// count routes per resource
 				resourceRouteCount[title]++
@@ -170,21 +188,22 @@ func (c *ResourceList) Get() []Resource {
 	}
 
 	// list of resources
-	res := []Resource{}
+	var res []Resource
 	for resource, val := range resources {
 		res = append(res, Resource{
-			name:    resource,
-			matches: val,
+			Name:               resource,
+			RouteMatchPrefixes: val,
+			Identifier:         strcase.ToScreamingSnake(resource),
 		})
 	}
 
-	// sort resources
+	// sort resources by name
 	sort.Slice(res, func(i, j int) bool {
-		return res[i].name < res[j].name
+		return res[i].Name < res[j].Name
 	})
 
 	if c.debug {
-		console.PrintBanner(fmt.Sprintf("Total Routes [%v] Unique Routes [%v]", len(e.Routes()), len(r)), bannerLength)
+		console.PrintBanner(fmt.Sprintf("Total Routes [%v] Unique Routes [%v]", len(routes), len(r)), bannerLength)
 
 		pp.Println("# Resources")
 		pp.Println(res)
