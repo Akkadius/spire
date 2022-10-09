@@ -39,6 +39,15 @@
       </a>
     </template>
 
+    <info-error-banner
+      :slim="true"
+      :notification="notification"
+      :error="error"
+      @dismiss-error="error = ''"
+      @dismiss-notification="notification = ''"
+      class="mt-3"
+    />
+
     <div v-if="isOwnerOfConnection()">
       User is owner of connection and has no limitations
     </div>
@@ -91,15 +100,6 @@
         </div>
       </div>
     </div>
-
-    <info-error-banner
-      :slim="true"
-      :notification="notification"
-      :error="error"
-      @dismiss-error="error = ''"
-      @dismiss-notification="notification = ''"
-      class="mt-3"
-    />
 
     <template #modal-footer>
       <div class="">
@@ -168,10 +168,32 @@ export default {
         this.selectedPermissions[p.identifier][type] = this.selectedAllToggle[type]
       }
 
+      this.submitPermissions()
     },
 
     showChanges(identifier) {
-      console.log(identifier, JSON.stringify(this.selectedPermissions[identifier]))
+      this.submitPermissions()
+    },
+
+    async submitPermissions() {
+      let payload = []
+      for (let p of this.permissions) {
+        let e = {}
+
+        e.permission = p.identifier
+        e.read       = this.selectedPermissions[p.identifier].read
+        e.write      = this.selectedPermissions[p.identifier].write
+
+        payload.push(e)
+      }
+
+      const r = await SpireApiClient.v1().post(
+        `connection-permissions/${this.connection.id}/user/${this.user.id}`,
+        payload
+      )
+      if (r.status === 200) {
+
+      }
     },
 
     isOwnerOfConnection() {
@@ -210,13 +232,16 @@ export default {
     async init() {
       // console.log("manage developer modal init")
 
-      this.notification = ""
-      this.error        = ""
+      this.notification        = ""
+      this.error               = ""
+      this.selectedPermissions = {};
+      this.permissions         = []
+      this.selectedAllToggle   = {}
 
       // list permissions
       if (!this.isOwnerOfConnection()) {
 
-        // get resources
+        // get resources mapping list
         const r = await SpireApiClient.v1().get(`permissions/resources`)
         if (r.status === 200) {
           this.permissions = r.data
@@ -233,7 +258,15 @@ export default {
 
           // set permission selection
           this.selectedPermissions = permissions
+        }
 
+        // user perms
+        const userPerms = await SpireApiClient.v1().get(`connection-permissions/${this.connection.id}/user/${this.user.id}`)
+        if (userPerms.status === 200) {
+          for (let p of userPerms.data) {
+            this.selectedPermissions[p.resource_name].read  = p.can_read === 1
+            this.selectedPermissions[p.resource_name].write = p.can_write === 1
+          }
         }
       }
     }

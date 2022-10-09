@@ -45,13 +45,21 @@ func NewConnectionsController(
 
 func (cc *ConnectionsController) Routes() []*routes.Route {
 	return []*routes.Route{
+
+		// connection
 		routes.RegisterRoute(http.MethodPost, "connection", cc.create, nil),
 		routes.RegisterRoute(http.MethodGet, "connections", cc.list, nil),
 		routes.RegisterRoute(http.MethodGet, "connection-check/:connection", cc.check, nil),
 		routes.RegisterRoute(http.MethodPost, "connection/:connection/set-active", cc.setActive, nil),
 		routes.RegisterRoute(http.MethodDelete, "connection/:connection", cc.delete, nil),
+
+		// user add / remove
 		routes.RegisterRoute(http.MethodPost, "connection/:connection_id/add-user/:user_id", cc.addUser, nil),
 		routes.RegisterRoute(http.MethodDelete, "connection/:connection_id/add-user/:user_id", cc.deleteUser, nil),
+
+		// permission
+		routes.RegisterRoute(http.MethodPost, "connection-permissions/:connection_id/user/:user_id", cc.savePermissions, nil),
+		routes.RegisterRoute(http.MethodGet, "connection-permissions/:connection_id/user/:user_id", cc.getPermissions, nil),
 
 		// default connection(s)
 		routes.RegisterRoute(http.MethodGet, "connection-default", cc.getDefault, nil),
@@ -358,8 +366,158 @@ func (cc *ConnectionsController) deleteUser(c echo.Context) error {
 		Where("user_id = ? and server_database_connection_id = ?", userId, connectionId).
 		Delete(&models.UserServerDatabaseConnection{}).Error
 
+	// Delete entries first
+	err = cc.db.GetSpireDb().
+		Where("user_id = ? and server_database_connection_id = ?", userId, connectionId).
+		Delete(&models.UserServerResourcePermission{}).Error
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err})
+	}
+
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err})
+	}
+
+	return c.JSON(http.StatusOK, echo.Map{"data": echo.Map{"message": "Success"}})
+}
+
+func (cc *ConnectionsController) savePermissions(c echo.Context) error {
+
+	// request user context
+	ctx := request.GetUser(c)
+
+	// params
+	userId, err := strconv.ParseUint(c.Param("user_id"), 10, 64)
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err})
+	}
+	connectionId, err := strconv.ParseUint(c.Param("connection_id"), 10, 64)
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err})
+	}
+
+	// Validate: Invoking user is owner of connection
+	// Validate: Connection inquired is valid
+	var conn models.UserServerDatabaseConnection
+	err = cc.db.GetSpireDb().Where("created_by = ? and server_database_connection_id = ?", ctx.ID, connectionId).First(&conn).Error
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err})
+	}
+	if uint64(conn.ID) != connectionId {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Invoking user does not own this connection"})
+	}
+
+	// Validate: User inquired is valid
+	var user models.User
+	err = cc.db.GetSpireDb().Where("id = ?", userId).First(&user).Error
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err})
+	}
+	if uint64(user.ID) != userId {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "User does not exist"})
+	}
+
+	type Permissions []struct {
+		Permission string `json:"permission"`
+		Read       bool   `json:"read"`
+		Write      bool   `json:"write"`
+	}
+
+	var permissions Permissions
+	if err := c.Bind(&permissions); err != nil {
+		return c.JSON(
+			http.StatusInternalServerError,
+			echo.Map{"error": fmt.Sprintf("Error binding to entity [%v]", err.Error())},
+		)
+	}
+
+	var addPermissions []models.UserServerResourcePermission
+	for _, permission := range permissions {
+		var p models.UserServerResourcePermission
+		p.ServerDatabaseConnectionId = uint(connectionId)
+		p.ResourceName = permission.Permission
+
+		canRead := 0
+		if permission.Read {
+			canRead = 1
+		}
+
+		canWrite := 0
+		if permission.Write {
+			canWrite = 1
+		}
+
+		p.UserId = uint(userId)
+		p.CanRead = uint8(canRead)
+		p.CanWrite = uint8(canWrite)
+
+		addPermissions = append(addPermissions, p)
+	}
+
+	// Delete entries first
+	err = cc.db.GetSpireDb().
+		Where("user_id = ? and server_database_connection_id = ?", userId, connectionId).
+		Delete(&models.UserServerResourcePermission{}).Error
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err})
+	}
+
+	// Bulk Insert
+	err = cc.db.GetSpireDb().
+		CreateInBatches(addPermissions, 1000).Error
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err})
+	}
+
+	return c.JSON(http.StatusOK, echo.Map{"data": echo.Map{"message": "Success"}})
+}
+
+func (cc *ConnectionsController) getPermissions(c echo.Context) error {
+
+	// request user context
+	ctx := request.GetUser(c)
+
+	// params
+	userId, err := strconv.ParseUint(c.Param("user_id"), 10, 64)
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err})
+	}
+	connectionId, err := strconv.ParseUint(c.Param("connection_id"), 10, 64)
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err})
+	}
+
+	// Validate: Invoking user is owner of connection
+	// Validate: Connection inquired is valid
+	var conn models.UserServerDatabaseConnection
+	err = cc.db.GetSpireDb().Where("created_by = ? and server_database_connection_id = ?", ctx.ID, connectionId).First(&conn).Error
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err})
+	}
+	if uint64(conn.ID) != connectionId {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Invoking user does not own this connection"})
+	}
+
+	// Validate: User inquired is valid
+	var user models.User
+	err = cc.db.GetSpireDb().Where("id = ?", userId).First(&user).Error
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err})
+	}
+	if uint64(user.ID) != userId {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "User does not exist"})
+	}
+
+	var results []models.UserServerResourcePermission
+	if cc.db.GetSpireDb() != nil {
+		query := cc.db.GetSpireDb().Model(&models.UserServerResourcePermission{})
+
+		err := query.Where("user_id = ? and server_database_connection_id = ?", userId, connectionId).Find(&results).Error
+		if err != nil {
+			return c.JSON(http.StatusInternalServerError, echo.Map{"error": err})
+		}
+
+		return c.JSON(http.StatusOK, results)
 	}
 
 	return c.JSON(http.StatusOK, echo.Map{"data": echo.Map{"message": "Success"}})
