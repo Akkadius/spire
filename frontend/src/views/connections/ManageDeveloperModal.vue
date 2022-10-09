@@ -89,7 +89,6 @@ export default {
   methods: {
     async deleteUserFromConn() {
       if (confirm(`Are you sure you want to remove this user from this connection?`)) {
-        console.log("lol?")
         try {
           const r = await SpireApiClient.v1().delete(`connection/${this.connection.id}/add-user/${this.user.id}`)
           if (r.status === 200) {
