@@ -1,3 +1,9 @@
+## [2.2.2]
+
+### [Update Logic] Handle Nullables
+
+Resolved an issue where nullable fields were not properly being picked up in new update logic.
+
 ## [2.2.1]
 
 ### [Update Logic] Only Update What's Changed

@@ -155,6 +155,18 @@ func (s *Struct) FillMap(out map[string]interface{}) {
 			continue
 		}
 
+		valueMap, ok := finalVal.(map[string]interface{})
+		if ok {
+			if _, boolOk := valueMap["Valid"].(bool); boolOk {
+				for k, v := range valueMap {
+					if k != "Valid" {
+						//fmt.Printf("key[%v] value[%v]\n", k, v)
+						finalVal = v
+					}
+				}
+			}
+		}
+
 		if isSubStruct && (tagOpts.Has("flatten")) {
 			for k := range finalVal.(map[string]interface{}) {
 				out[k] = finalVal.(map[string]interface{})[k]
