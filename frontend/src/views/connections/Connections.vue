@@ -21,6 +21,11 @@
           :connection="addDeveloperToConnection"
         />
 
+        <manage-developer-modal
+          :user="managedUser"
+          :connection="managedUserConnection"
+        />
+
         <b-tabs class="mt-4" content-class="mt-5" fill>
           <b-tab title="Connections" :active="connections && connections.length > 0">
 
@@ -46,10 +51,11 @@
                       <div class="col-auto">
 
                         <!-- Avatar -->
-                        <div class="avatar">
-                          <!--                          <img src="~@/assets/img/eqemu-avatar.png" alt="..." class="avatar-img rounded">-->
-                          <img src="~@/assets/img/mysql-logo.png" alt="..." class="avatar-img rounded">
-                        </div>
+                        <!--                        <div class="avatar">-->
+                        <!--                          <img src="~@/assets/img/mysql-logo.png" class="avatar-img rounded">-->
+                        <!--                        </div>-->
+
+                        <i class="fe fe-database" style="font-size: 50px; color: rgb(189 195 204)"></i>
 
                       </div>
                       <div class="col ml-n2">
@@ -135,10 +141,12 @@
                       <div class="col-auto">
 
                         <!-- Avatar -->
-                        <a href="#!" class="avatar">
-                          <!--                          <img src="~@/assets/img/eqemu-avatar.png" alt="..." class="avatar-img rounded">-->
-                          <img src="~@/assets/img/mysql-logo.png" alt="..." class="avatar-img rounded">
-                        </a>
+                        <!--                        <a href="#!" class="avatar">-->
+                        <!--                                                    <img src="~@/assets/img/eqemu-avatar.png" alt="..." class="avatar-img rounded">-->
+                        <!--                          <img src="~@/assets/img/mysql-logo.png" alt="..." class="avatar-img rounded">-->
+                        <!--                        </a>-->
+
+                        <i class="fe fe-database" style="font-size: 50px; color: rgb(189 195 204)"></i>
 
                       </div>
                       <div class="col ml-n2">
@@ -185,14 +193,18 @@
                         </h4>
 
                         <b-avatar-group rounded="lg" overlap="0.05" class="d-inline-block mt-1">
-                          <b-avatar
+                          <div
                             v-for="user in connection.database_connection.user_server_database_connections"
                             :key="user.user.id"
-                            :src="user.user.avatar"
-                            variant="info"
-                            v-b-tooltip.hover.v-dark.top
-                            :title="user.user.user_name + (user.created_by === user.user.id ? ' (Owner)' : '')"
-                          />
+                            @click="manageUser(user.user, connection)"
+                          >
+                            <b-avatar
+                              :src="user.user.avatar"
+                              variant="info"
+                              v-b-tooltip.hover.v-dark.top
+                              :title="user.user.user_name + (user.created_by === user.user.id ? ' (Owner)' : '')"
+                            />
+                          </div>
                         </b-avatar-group>
 
                       </div>
@@ -393,7 +405,6 @@
               </div>
             </div>
 
-
           </b-tab>
         </b-tabs>
 
@@ -434,9 +445,11 @@ import DebugDisplayComponent from "@/components/DebugDisplayComponent.vue";
 import {EventBus} from "@/app/event-bus/event-bus";
 import UserContext from "@/app/user/UserContext";
 import AddDeveloperModal from "@/views/connections/AddDeveloperModal.vue";
+import ManageDeveloperModal from "@/views/connections/ManageDeveloperModal.vue";
 
 export default {
   components: {
+    ManageDeveloperModal,
     AddDeveloperModal,
     DebugDisplayComponent,
     EqWindow,
@@ -457,7 +470,11 @@ export default {
 
       user: {},
 
-      addDeveloperToConnection: {},
+      // modals
+      addDeveloperToConnection: {}, // AddDeveloperToModal
+
+      managedUser: {}, // ManageDeveloperModal
+      managedUserConnection: {} // ManageDeveloperModal
     }
   },
   async mounted() {
@@ -466,6 +483,17 @@ export default {
     this.user = await (UserContext.getUser())
   },
   methods: {
+    manageUser(user, connection) {
+      console.log("CLIKC!")
+      this.managedUser = user
+      this.managedUserConnection = connection
+
+      // I don't remember why I needed to queue this
+      setTimeout(() => {
+        this.$bvModal.show('manage-developer-modal')
+      }, 10)
+    },
+
     reloadConnections() {
       this.listConnections()
     },

@@ -26,9 +26,9 @@
       <b-list-group-item
         class="d-flex align-items-center"
         v-for="user in usersToAdd"
+        :key="user.id"
       >
         <b-avatar
-          :key="user.id"
           :src="user.avatar"
           size="30"
           variant="info"
