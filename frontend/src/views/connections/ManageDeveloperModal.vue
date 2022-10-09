@@ -44,7 +44,52 @@
     </div>
 
     <div v-if="!isOwnerOfConnection()">
-      User stuff
+
+      <!-- Header -->
+      <div class="row mt-1 mb-3">
+        <div class="col-5 text-right font-weight-bold">Resource</div>
+        <div class="col-7 text-muted">
+          Permission
+        </div>
+      </div>
+
+      <!-- All -->
+      <div class="row mt-1 mb-3">
+        <div class="col-5 text-right">ALL</div>
+        <div class="col-7">
+          <b-form-checkbox
+            switch
+            v-for="option in options"
+            v-model="selectedAllToggle[option.value]"
+            :aria-describedby="option.text"
+            @change="toggleAll(option.value)"
+            name="flavour-4a"
+            inline
+          >
+            {{ option.text }}
+          </b-form-checkbox>
+        </div>
+      </div>
+
+      <div
+        class="row mt-1" v-for="p in permissions"
+        :key="p.name"
+      >
+        <div class="col-5 text-right">{{ p.name }}</div>
+        <div class="col-7">
+          <b-form-checkbox
+            switch
+            v-for="option in options"
+            v-model="selectedPermissions[p.identifier][option.value]"
+            :aria-describedby="option.text"
+            @change="showChanges(p.identifier)"
+            name="flavour-4a"
+            inline
+          >
+            {{ option.text }}
+          </b-form-checkbox>
+        </div>
+      </div>
     </div>
 
     <info-error-banner
@@ -73,6 +118,19 @@ export default {
   components: { InfoErrorBanner },
   data() {
     return {
+
+      selectedPermissions: {},
+
+      // permissions
+      permissions: [],
+
+      selectedAllToggle: {},
+
+      options: [
+        // { text: 'Read and Write', value: 'Read and Write' },
+        { text: 'Read', value: 'read' },
+        { text: 'Write', value: 'write' },
+      ],
 
       // notification / errors
       notification: "",
@@ -104,6 +162,19 @@ export default {
     },
   },
   methods: {
+
+    toggleAll(type) {
+      console.log("toggle all", type, this.selectedAllToggle[type])
+
+      for (let p of this.permissions) {
+        this.selectedPermissions[p.identifier][type] = this.selectedAllToggle[type]
+      }
+
+    },
+
+    showChanges(identifier) {
+      console.log(identifier, JSON.stringify(this.selectedPermissions[identifier]))
+    },
 
     isOwnerOfConnection() {
       return this.user.id === this.connection.created_by
@@ -138,11 +209,35 @@ export default {
       this.$bvModal.hide('manage-developer-modal')
     },
 
-    init() {
+    async init() {
       // console.log("manage developer modal init")
 
       this.notification = ""
       this.error        = ""
+
+      // list permissions
+      if (!this.isOwnerOfConnection()) {
+
+        // get resources
+        const r = await SpireApiClient.v1().get(`permissions/resources`)
+        if (r.status === 200) {
+          this.permissions = r.data
+
+          // loop through permissions
+          let permissions = {}
+          for (let p of r.data) {
+            if (typeof permissions[p.identifier] === "undefined") {
+              permissions[p.identifier] = {}
+            }
+            permissions[p.identifier].read  = false
+            permissions[p.identifier].write = false
+          }
+
+          // set permission selection
+          this.selectedPermissions = permissions
+
+        }
+      }
     }
   }
 }
