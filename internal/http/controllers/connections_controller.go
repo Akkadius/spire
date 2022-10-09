@@ -51,6 +51,7 @@ func (cc *ConnectionsController) Routes() []*routes.Route {
 		routes.RegisterRoute(http.MethodPost, "connection/:connection/set-active", cc.setActive, nil),
 		routes.RegisterRoute(http.MethodDelete, "connection/:connection", cc.delete, nil),
 		routes.RegisterRoute(http.MethodPost, "connection/:connection_id/add-user/:user_id", cc.addUser, nil),
+		routes.RegisterRoute(http.MethodDelete, "connection/:connection_id/add-user/:user_id", cc.deleteUser, nil),
 
 		// default connection(s)
 		routes.RegisterRoute(http.MethodGet, "connection-default", cc.getDefault, nil),
@@ -243,7 +244,6 @@ func (cc *ConnectionsController) defaultSetActive(c echo.Context) error {
 	return c.JSON(http.StatusOK, echo.Map{"data": echo.Map{"message": "Success"}})
 }
 
-// set default connection active
 func (cc *ConnectionsController) addUser(c echo.Context) error {
 
 	// request user context
@@ -294,6 +294,63 @@ func (cc *ConnectionsController) addUser(c echo.Context) error {
 	userConnection.ServerDatabaseConnectionId = uint(connectionId)
 	userConnection.CreatedBy = ctx.ID
 	err = cc.db.GetSpireDb().Create(&userConnection).Error
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err})
+	}
+
+	return c.JSON(http.StatusOK, echo.Map{"data": echo.Map{"message": "Success"}})
+}
+
+func (cc *ConnectionsController) deleteUser(c echo.Context) error {
+
+	// request user context
+	ctx := request.GetUser(c)
+
+	// TODO: Consolidate validation for add/delete as they are similar
+
+	// params
+	userId, err := strconv.ParseUint(c.Param("user_id"), 10, 64)
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err})
+	}
+	connectionId, err := strconv.ParseUint(c.Param("connection_id"), 10, 64)
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err})
+	}
+
+	// Validate: Invoking user is owner of connection
+	// Validate: Connection inquired is valid
+	var conn models.UserServerDatabaseConnection
+	err = cc.db.GetSpireDb().Where("created_by = ? and server_database_connection_id = ?", ctx.ID, connectionId).First(&conn).Error
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err})
+	}
+	if uint64(conn.ID) != connectionId {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Invoking user does not own this connection"})
+	}
+
+	// Validate: User inquired is valid
+	var user models.User
+	err = cc.db.GetSpireDb().Where("id = ?", userId).First(&user).Error
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err})
+	}
+	if uint64(user.ID) != userId {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "User does not exist"})
+	}
+
+	// Validate: User doesn't already exist on connection
+	var connUser models.UserServerDatabaseConnection
+	_ = cc.db.GetSpireDb().Where("user_id = ? and server_database_connection_id = ?", userId, connectionId).First(&connUser).Error
+	if connUser.UserId == 0 {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "User does not exists on connection!"})
+	}
+
+	// Delete
+	err = cc.db.GetSpireDb().
+		Where("user_id = ? and server_database_connection_id = ?", userId, connectionId).
+		Delete(&models.UserServerDatabaseConnection{}).Error
+
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err})
 	}

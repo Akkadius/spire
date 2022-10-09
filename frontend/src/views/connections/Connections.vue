@@ -22,6 +22,7 @@
         />
 
         <manage-developer-modal
+          @reload-connections="reloadConnections()"
           :user="managedUser"
           :connection="managedUserConnection"
         />
@@ -484,7 +485,6 @@ export default {
   },
   methods: {
     manageUser(user, connection) {
-      console.log("CLIKC!")
       this.managedUser = user
       this.managedUserConnection = connection
 

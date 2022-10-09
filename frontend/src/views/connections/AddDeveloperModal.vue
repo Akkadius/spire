@@ -14,7 +14,7 @@
     />
 
     <div class="mt-3" v-if="usersToAdd.length === 0">
-      No users found, please refine search criteria
+      No users found, you've added them all, or please refine search criteria
     </div>
 
     <div class="mt-3" v-if="usersToAdd.length > 0">
