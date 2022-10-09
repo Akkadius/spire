@@ -16,16 +16,10 @@
         </div>
 
         <!-- Modal -->
-        <b-modal id="add-developer-server-modal" centered title="Add Developer to Server" size="lg">
-
-          This is where we load developers and add
-
-          <template #modal-footer>
-            <div class="">
-
-            </div>
-          </template>
-        </b-modal>
+        <add-developer-modal
+          @reload-connections="reloadConnections()"
+          :connection="addDeveloperToConnection"
+        />
 
         <b-tabs class="mt-4" content-class="mt-5" fill>
           <b-tab title="Connections" :active="connections && connections.length > 0">
@@ -115,7 +109,7 @@
                 <!-- Title -->
                 <h4 class="card-header-title">
                   <i class="fe fe-database"></i>
-                  User Remote Database Connections ({{connections.length}})
+                  User Remote Database Connections ({{ connections.length }})
                 </h4>
 
               </div>
@@ -132,7 +126,11 @@
                     You must log in to create connections
                   </div>
 
-                  <div class="list-group-item" v-for="connection in connections">
+                  <div
+                    class="list-group-item"
+                    :key="connection.id"
+                    v-for="connection in connections"
+                  >
                     <div class="row align-items-center">
                       <div class="col-auto">
 
@@ -173,8 +171,17 @@
 
                         <!-- Users -->
 
-                        <h4 v-if="connection.database_connection.user_server_database_connections.length > 0" class="mb-0 mt-1">
-                          Developers <a class="btn btn-sm btn-white btn-danger ml-2 pt-0 pb-0" v-if="isOwnerOfConnection(connection)" v-b-modal.add-developer-server-modal><i class="fa fa-plus"/> Add</a>
+                        <h4
+                          v-if="connection.database_connection.user_server_database_connections.length > 0"
+                          class="mb-1 mt-1"
+                        >
+                          Developers
+                          <a
+                            class="btn btn-sm btn-white btn-danger ml-2 pt-0 pb-0"
+                            v-if="isOwnerOfConnection(connection)"
+                            @click="addDeveloperToServerModal(connection)"
+                            v-b-modal.add-developer-server-connection-modal
+                          ><i class="fa fa-plus"/> Add</a>
                         </h4>
 
                         <b-avatar-group rounded="lg" overlap="0.05" class="d-inline-block mt-1">
@@ -426,9 +433,11 @@ import {SpireApiClient} from "@/app/api/spire-api-client";
 import DebugDisplayComponent from "@/components/DebugDisplayComponent.vue";
 import {EventBus} from "@/app/event-bus/event-bus";
 import UserContext from "@/app/user/UserContext";
+import AddDeveloperModal from "@/views/connections/AddDeveloperModal.vue";
 
 export default {
   components: {
+    AddDeveloperModal,
     DebugDisplayComponent,
     EqWindow,
     "page-header": () => import("@/components/layout/PageHeader.vue")
@@ -447,6 +456,8 @@ export default {
       connectionStatuses: {},
 
       user: {},
+
+      addDeveloperToConnection: {},
     }
   },
   async mounted() {
@@ -455,6 +466,14 @@ export default {
     this.user = await (UserContext.getUser())
   },
   methods: {
+    reloadConnections() {
+      this.listConnections()
+    },
+
+    addDeveloperToServerModal(connection) {
+      this.addDeveloperToConnection = connection
+    },
+
     isOwnerOfConnection(connection) {
       return this.user.id === connection.created_by
     },

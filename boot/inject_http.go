@@ -31,6 +31,7 @@ var httpSet = wire.NewSet(
 	controllers.NewClientFilesController,
 	controllers.NewAssetsController,
 	controllers.NewPermissionsController,
+	controllers.NewUsersController,
 	staticmaps.NewStaticMapController,
 	provideControllers,
 	NewRouter,
@@ -128,6 +129,7 @@ func provideControllers(
 	staticMaps *staticmaps.StaticMapController,
 	assetsController *controllers.AssetsController,
 	permissionsController *controllers.PermissionsController,
+	usersController *controllers.UsersController,
 ) *appControllerGroups {
 	return &appControllerGroups{
 		authControllers: []routes.Controller{
@@ -142,6 +144,7 @@ func provideControllers(
 			query,
 			clientFilesController,
 			permissionsController,
+			usersController,
 		},
 		v1controllersNoAuth: []routes.Controller{
 			quest,
