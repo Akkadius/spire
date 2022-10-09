@@ -119,13 +119,11 @@ export default {
   data() {
     return {
 
-      selectedPermissions: {},
 
       // permissions
+      selectedPermissions: {},
       permissions: [],
-
       selectedAllToggle: {},
-
       options: [
         // { text: 'Read and Write', value: 'Read and Write' },
         { text: 'Read', value: 'read' },
