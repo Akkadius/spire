@@ -184,7 +184,7 @@ export default new Router({
         },
         {
           path: '/connections',
-          component: () => import('./views/Connections.vue'),
+          component: () => import('./views/connections/Connections.vue'),
           meta: {title: "Manage Database Connections"},
         },
         {
