@@ -346,6 +346,13 @@ func (cc *ConnectionsController) deleteUser(c echo.Context) error {
 		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "User does not exists on connection!"})
 	}
 
+	// Validate: user to be removed is not the owner
+	var serverDatabaseConn models.ServerDatabaseConnection
+	_ = cc.db.GetSpireDb().Where("created_by = ? and id = ?", userId, connectionId).First(&serverDatabaseConn).Error
+	if serverDatabaseConn.ID > 0 {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Cannot delete owner of connection"})
+	}
+
 	// Delete
 	err = cc.db.GetSpireDb().
 		Where("user_id = ? and server_database_connection_id = ?", userId, connectionId).

@@ -9,13 +9,24 @@
 
     <template #modal-header>
       <div class="">
+
+        <b-avatar
+          :src="user.avatar"
+          variant="info"
+          v-b-tooltip.hover.v-dark.top
+          :title="user.user_name"
+          size="30"
+          class="mr-1"
+        />
+
         {{ `Manage Developer [${user.user_name}] for connection [${connection.database_connection.name}]` }}
 
         <b-button
           variant="danger"
-          class="btn-sm ml-1"
+          class="btn-sm ml-3"
           style="padding: 0px 6px;"
           @click="deleteUserFromConn()"
+          v-if="!isOwnerOfConnection()"
         >
           <i class="fa fa-trash"></i>
           Remove User
@@ -28,7 +39,13 @@
       </a>
     </template>
 
-    this is where developer managed
+    <div v-if="isOwnerOfConnection()">
+      User is owner of connection and has no limitations
+    </div>
+
+    <div v-if="!isOwnerOfConnection()">
+      User stuff
+    </div>
 
     <info-error-banner
       :slim="true"
@@ -87,6 +104,11 @@ export default {
     },
   },
   methods: {
+
+    isOwnerOfConnection() {
+      return this.user.id === this.connection.created_by
+    },
+
     async deleteUserFromConn() {
       if (confirm(`Are you sure you want to remove this user from this connection?`)) {
         try {
@@ -118,6 +140,9 @@ export default {
 
     init() {
       // console.log("manage developer modal init")
+
+      this.notification = ""
+      this.error        = ""
     }
   }
 }
