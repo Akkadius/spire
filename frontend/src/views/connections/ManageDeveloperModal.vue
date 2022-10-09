@@ -69,6 +69,7 @@
           <b-form-checkbox
             switch
             v-for="option in options"
+            :key="option.value"
             v-model="selectedAllToggle[option.value]"
             :aria-describedby="option.text"
             @change="toggleAll(option.value)"
@@ -89,6 +90,7 @@
           <b-form-checkbox
             switch
             v-for="option in options"
+            :key="option.value"
             v-model="selectedPermissions[p.identifier][option.value]"
             :aria-describedby="option.text"
             @change="showChanges(p.identifier)"
