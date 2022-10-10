@@ -1611,11 +1611,11 @@ import EqWindow                from "../../components/eq-ui/EQWindow";
 import EqTabs                  from "../../components/eq-ui/EQTabs";
 import EqTab                   from "../../components/eq-ui/EQTab";
 import EqItemPreview           from "../../components/preview/EQItemCardPreview";
-import EqCheckbox              from "../../components/eq-ui/EQCheckbox";
+import EqCheckbox     from "../../components/eq-ui/EQCheckbox";
 import {
-  SpireApiClient
-}                              from "../../app/api/spire-api-client";
-import FreeIdSelector          from "../../components/tools/FreeIdSelector";
+  SpireApi
+}                     from "../../app/api/spire-api";
+import FreeIdSelector from "../../components/tools/FreeIdSelector";
 import {
   Items
 }                              from "../../app/items";
@@ -2024,7 +2024,7 @@ export default {
       this.error        = ""
       this.notification = ""
 
-      const api = (new ItemApi(SpireApiClient.getOpenApiConfig()))
+      const api = (new ItemApi(...SpireApi.cfg()))
       api.updateItem({
         id: this.item.id,
         item: this.item

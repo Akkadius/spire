@@ -512,9 +512,9 @@ import util          from "util";
 import {ROUTE}       from "@/routes";
 import EqCashDisplay from "@/components/eq-ui/EqCashDisplay";
 import {Items}                     from "@/app/items";
-import {FactionListApi}            from "@/app/api";
-import {SpireApiClient}            from "@/app/api/spire-api-client";
-import {Zones}                     from "@/app/zones";
+import {FactionListApi} from "@/app/api";
+import {SpireApi}       from "../../app/api/spire-api";
+import {Zones}          from "@/app/zones";
 import {TRADESKILLS}               from "@/app/constants/eq-tradeskill-constants";
 
 export default {
@@ -658,7 +658,7 @@ export default {
       }
 
       if (factions.length > 0) {
-        const response = await (new FactionListApi(SpireApiClient.getOpenApiConfig())).getFactionListsBulk({
+        const response = await (new FactionListApi(...SpireApi.cfg())).getFactionListsBulk({
           body: {
             ids: factions
           }

@@ -2,7 +2,8 @@ import axios from "axios";
 import UserContext from "@/app/user/UserContext";
 import Debug from "@/app/debug/debug";
 
-export class SpireApiClient {
+
+export class SpireApi {
   static getBasePath() {
     return process.env.VUE_APP_BACKEND_BASE_URL && process.env.NODE_ENV !== 'production' ?
       process.env.VUE_APP_BACKEND_BASE_URL :
@@ -30,20 +31,20 @@ export class SpireApiClient {
     return token !== '' ? {'jwt': token} : {}
   }
 
-  static getAccessToken() {
+  private static getAccessToken() {
     return UserContext.getAccessToken()
   }
 
   static cfg() {
-   return [
-     this.getOpenApiConfig(),
-     this.getBaseV1Path(),
-     this.newAxiosWithConfig()
-   ]
+    return [
+      this.getOpenApiConfig(),
+      this.getBaseV1Path(),
+      spireAxios
+    ]
   }
 
-  static getOpenApiConfig() {
-    let openApiConfig      = <any>{baseOptions: SpireApiClient.getAxiosConfig()}
+  private static getOpenApiConfig() {
+    let openApiConfig      = <any>{baseOptions: SpireApi.getAxiosConfig()}
     openApiConfig.basePath = this.getBaseV1Path()
 
     return openApiConfig
@@ -86,10 +87,10 @@ export class SpireApiClient {
   }
 
   static v1() {
-    return this.newAxiosWithConfig()
-  }
-
-  static openApiArgs() {
-    return [...SpireApiClient.openApiArgs(), "", SpireApiClient.newAxiosWithConfig()]
+    return spireAxios
   }
 }
+
+// singleton - we don't want to create a new instance every single time
+// helpers are invoked
+const spireAxios = SpireApi.newAxiosWithConfig()

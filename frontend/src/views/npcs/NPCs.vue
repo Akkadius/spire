@@ -157,7 +157,7 @@ import ContentArea             from "../../components/layout/ContentArea";
 import {Navbar}                from "../../app/navbar";
 import {Zones}                 from "../../app/zones";
 import {NpcTypeApi, Spawn2Api} from "../../app/api";
-import {SpireApiClient}        from "../../app/api/spire-api-client";
+import {SpireApi}              from "../../app/api/spire-api";
 import {SpireQueryBuilder}     from "../../app/api/spire-query-builder";
 import Tablesort               from "@/app/utility/tablesort.js";
 import DbColumnFilter          from "../../components/DbColumnFilter";
@@ -536,7 +536,7 @@ export default {
       // First pass
       // We grab NPC IDs by spawn zone / version and then do a bulk call with
       // filters as a second pass
-      const api   = (new Spawn2Api(SpireApiClient.getOpenApiConfig()))
+      const api   = (new Spawn2Api(...SpireApi.cfg()))
       let builder = (new SpireQueryBuilder())
       builder.where("zone", "=", this.zoneData.short_name)
       builder.where("version", "=", this.zoneData.version)
@@ -569,7 +569,7 @@ export default {
         }
 
         // second pass
-        const npcTypeApi = (new NpcTypeApi(SpireApiClient.getOpenApiConfig()))
+        const npcTypeApi = (new NpcTypeApi(...SpireApi.cfg()))
         builder          = (new SpireQueryBuilder())
 
         if (this.filters && this.filters.length > 0) {
@@ -681,7 +681,7 @@ export default {
       document.body.style.setProperty("--zone-background-size", "auto");
 
       // get zone wallpaper
-      await SpireApiClient.v1().get('/assets/zone-images/' + encodeURIComponent(this.zoneData.long_name)).then((r) => {
+      await SpireApi.v1().get('/assets/zone-images/' + encodeURIComponent(this.zoneData.long_name)).then((r) => {
         if (r.status === 200) {
           this.backgroundImages = this.shuffle(r.data.images)
         }

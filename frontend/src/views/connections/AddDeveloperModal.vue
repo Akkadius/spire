@@ -64,8 +64,8 @@
 </template>
 
 <script>
-import {SpireApiClient} from "@/app/api/spire-api-client";
-import InfoErrorBanner  from "@/components/InfoErrorBanner";
+import {SpireApi}      from "../../app/api/spire-api";
+import InfoErrorBanner from "@/components/InfoErrorBanner";
 
 export default {
   name: "AddDeveloperModal",
@@ -110,7 +110,7 @@ export default {
 
     async addUser(user) {
       try {
-        const r = await SpireApiClient.v1().post(`connection/${this.connection.id}/add-user/${user.id}`)
+        const r = await SpireApi.v1().post(`connection/${this.connection.id}/add-user/${user.id}`)
         if (r.status === 200) {
           this.$bvModal.hide('add-developer-server-connection-modal')
           this.$emit("reload-connections", true);
@@ -139,7 +139,7 @@ export default {
         return e.user.id
       })
 
-      SpireApiClient.v1().get('users', { params: { q: this.search } }).then((r) => {
+      SpireApi.v1().get('users', { params: { q: this.search } }).then((r) => {
         if (r.status === 200) {
 
           // only show users that aren't already on the connection

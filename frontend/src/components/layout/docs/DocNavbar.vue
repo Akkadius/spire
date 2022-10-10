@@ -118,8 +118,8 @@
 
 import {App}              from "@/constants/app";
 import NavbarDropdownMenu from "@/components/layout/NavbarDropdownMenu";
-import UserContext        from "@/app/user/UserContext";
-import {SpireApiClient}   from "@/app/api/spire-api-client";
+import UserContext from "@/app/user/UserContext";
+import {SpireApi}  from "../../../app/api/spire-api";
 
 export default {
   components: {
@@ -149,7 +149,7 @@ export default {
     this.backendBaseUrl = App.BACKEND_BASE_URL
     this.user           = await UserContext.getUser()
 
-    SpireApiClient.v1().get(`/doc/SUMMARY`).then((response) => {
+    SpireApi.v1().get(`/doc/SUMMARY`).then((response) => {
       if (response.data && response.data.data) {
 
         const md = require("markdown-it")({

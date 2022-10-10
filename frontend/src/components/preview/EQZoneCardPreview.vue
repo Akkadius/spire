@@ -295,9 +295,9 @@
 
 <script>
 
-import EqWindow            from "../eq-ui/EQWindow";
-import {SpireApiClient}    from "../../app/api/spire-api-client";
-import EqTabs              from "../eq-ui/EQTabs";
+import EqWindow   from "../eq-ui/EQWindow";
+import {SpireApi} from "../../app/api/spire-api";
+import EqTabs     from "../eq-ui/EQTabs";
 import EqTab               from "../eq-ui/EQTab";
 import EqCheckbox          from "../eq-ui/EQCheckbox";
 import {Spawn2Api}         from "../../app/api";
@@ -416,7 +416,7 @@ export default {
       document.body.style.setProperty("--zone-background-size", "auto");
 
       // get zone wallpaper
-      await SpireApiClient.v1().get('/assets/zone-images/' + encodeURIComponent(this.zone.long_name)).then((r) => {
+      await SpireApi.v1().get('/assets/zone-images/' + encodeURIComponent(this.zone.long_name)).then((r) => {
         if (r.status === 200) {
           this.backgroundImages = this.shuffle(r.data.images)
         }

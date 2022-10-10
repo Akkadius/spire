@@ -270,7 +270,7 @@
 <script type="ts">
 import EqWindow from "@/components/eq-ui/EQWindow.vue";
 import DebugDisplayComponent from "@/components/DebugDisplayComponent.vue";
-import {SpireApiClient} from "@/app/api/spire-api-client";
+import {SpireApi} from "../../app/api/spire-api";
 import axios from "axios";
 import EqWindowSimple from "@/components/eq-ui/EQWindowSimple.vue";
 import EqTabs from "@/components/eq-ui/EQTabs.vue";
@@ -380,7 +380,7 @@ export default {
     refreshDefinitions() {
       this.loaded = false
 
-      SpireApiClient.v1().post('quest-api/refresh-definitions').then((response) => {
+      SpireApi.v1().post('quest-api/refresh-definitions').then((response) => {
         if (response.status === 200) {
           this.init()
         }
@@ -549,7 +549,7 @@ export default {
       document.body.addEventListener('keyup', this.closeExampleKeyHandler)
 
       // load data from api
-      SpireApiClient.v1().get('/quest-api/definitions').then((response) => {
+      SpireApi.v1().get('/quest-api/definitions').then((response) => {
         if (response.data && response.data.data) {
           this.api    = response.data.data
           this.loaded = true
@@ -975,7 +975,7 @@ export default {
       const repo        = "projecteqquests"
       const branch      = "master"
       const exampleRepo = util.format('/quest-api/source-examples/org/%s/repo/%s/branch/%s', org, repo, branch)
-      const response    = await SpireApiClient.v1().post(exampleRepo, {
+      const response    = await SpireApi.v1().post(exampleRepo, {
         "search_terms": searchTerms,
         "language": this.languageSelection
       })

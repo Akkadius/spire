@@ -1,10 +1,10 @@
 import {Spawn2Api} from "@/app/api";
-import {SpireApiClient} from "@/app/api/spire-api-client";
+import {SpireApi} from "./api/spire-api";
 import {SpireQueryBuilder} from "@/app/api/spire-query-builder";
 
 export class Spawn {
   public static async getByZone(zoneShortName: string, version: number, withRelations: boolean = false) {
-    const spawn2Api = (new Spawn2Api(SpireApiClient.getOpenApiConfig()))
+    const spawn2Api = (new Spawn2Api(...SpireApi.cfg()))
     const builder   = (new SpireQueryBuilder())
 
     builder.where("zone", "=", zoneShortName)

@@ -238,9 +238,9 @@
 import EqWindowSimple                      from "../../components/eq-ui/EQWindowSimple";
 import EqAutoTable                         from "../../components/eq-ui/EQAutoTable";
 import ContentArea                         from "../../components/layout/ContentArea";
-import {NpcEmoteApi}                       from "../../app/api";
-import {SpireApiClient}                    from "../../app/api/spire-api-client";
-import LoaderFakeProgress                  from "../../components/LoaderFakeProgress";
+import {NpcEmoteApi}      from "../../app/api";
+import {SpireApi}         from "../../app/api/spire-api";
+import LoaderFakeProgress from "../../components/LoaderFakeProgress";
 import {ROUTE}                             from "../../routes";
 import {SpireQueryBuilder}                 from "../../app/api/spire-query-builder";
 import InfoErrorBanner                     from "../../components/InfoErrorBanner";
@@ -252,7 +252,7 @@ import {debounce}                          from "../../app/utility/debounce";
 import {Npcs}                              from "../../app/npcs";
 import NpcPopover                          from "../../components/NpcPopover";
 
-const NpcEmoteClient = (new NpcEmoteApi(SpireApiClient.getOpenApiConfig()))
+const NpcEmoteClient = (new NpcEmoteApi(...SpireApi.cfg()))
 
 export default {
   name: "NpcEmotesEditor",

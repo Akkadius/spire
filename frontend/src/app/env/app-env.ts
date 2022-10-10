@@ -1,6 +1,6 @@
 //   static DEBUG_MODE = "debug-mode";
 
-import {SpireApiClient} from "@/app/api/spire-api-client";
+import {SpireApi} from "../api/spire-api";
 
 // these should be mirrored with env/app.go
 const AppEnvTesting    = "testing"
@@ -50,7 +50,7 @@ export class AppEnv {
   private static _features;
 
   static async init() {
-    const r = await SpireApiClient.v1().get("/app/env")
+    const r = await SpireApi.v1().get("/app/env")
     if (r.data && r.data.data) {
       const data = r.data.data
       this.setEnv(data.env)

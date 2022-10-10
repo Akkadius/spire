@@ -6,7 +6,6 @@ import (
 	"github.com/labstack/echo/v4"
 	gocache "github.com/patrickmn/go-cache"
 	"github.com/sirupsen/logrus"
-	"net/http"
 )
 
 type PermissionsMiddleware struct {
@@ -31,7 +30,7 @@ func (r PermissionsMiddleware) Handle() echo.MiddlewareFunc {
 			if ctx.ID > 0 {
 				r.logger.Printf("Permissions middleware user [%v]\n", ctx.ID)
 
-				return c.JSON(http.StatusUnauthorized, echo.Map{"error": "User does not have permission to access this resource"})
+				//return c.JSON(http.StatusUnauthorized, echo.Map{"error": "User does not have permission to access this resource"})
 			}
 
 			return next(c)

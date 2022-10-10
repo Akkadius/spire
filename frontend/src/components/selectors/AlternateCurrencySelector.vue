@@ -60,7 +60,7 @@
 <script>
 import EqWindow               from "@/components/eq-ui/EQWindow";
 import {AlternateCurrencyApi} from "@/app/api";
-import {SpireApiClient}       from "@/app/api/spire-api-client";
+import {SpireApi}             from "../../app/api/spire-api";
 import ItemPopover            from "@/components/ItemPopover";
 import {SpireQueryBuilder} from "@/app/api/spire-query-builder";
 import {scrollToTarget}    from "@/app/utility/scrollToTarget";
@@ -80,7 +80,7 @@ export default {
     }
   },
   async mounted() {
-    const api = (new AlternateCurrencyApi(SpireApiClient.getOpenApiConfig()))
+    const api = (new AlternateCurrencyApi(...SpireApi.cfg()))
     const r   = await api.listAlternateCurrencies(
       (new SpireQueryBuilder())
         .includes(['Item'])

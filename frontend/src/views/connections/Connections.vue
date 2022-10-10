@@ -442,7 +442,7 @@
 import EqWindow from "@/components/eq-ui/EQWindow.vue";
 import {App} from "@/constants/app";
 import axios from "axios"
-import {SpireApiClient} from "@/app/api/spire-api-client";
+import {SpireApi} from "../../app/api/spire-api";
 import DebugDisplayComponent from "@/components/DebugDisplayComponent.vue";
 import {EventBus} from "@/app/event-bus/event-bus";
 import UserContext from "@/app/user/UserContext";
@@ -520,14 +520,14 @@ export default {
       this.passwordFieldType = this.passwordFieldType === 'password' ? 'text' : 'password'
     },
     deleteConnection(connectionId) {
-      SpireApiClient.v1().delete(`/connection/${connectionId}`).then((response) => {
+      SpireApi.v1().delete(`/connection/${connectionId}`).then((response) => {
         if (response.data && response.data.data) {
           this.listConnections()
         }
       })
     },
     setActiveConnection(connectionId) {
-      SpireApiClient.v1().post(`/connection/${connectionId}/set-active`).then((response) => {
+      SpireApi.v1().post(`/connection/${connectionId}/set-active`).then((response) => {
         if (response.data && response.data.data) {
           EventBus.$emit('DB_CONNECTION_CHANGE', true);
           this.listConnections()
@@ -535,7 +535,7 @@ export default {
       })
     },
     setDefaultActive() {
-      SpireApiClient.v1().post(`/connection-default/set-active`).then((response) => {
+      SpireApi.v1().post(`/connection-default/set-active`).then((response) => {
         if (response.data && response.data.data) {
           EventBus.$emit('DB_CONNECTION_CHANGE', true);
           this.listConnections()
@@ -545,7 +545,7 @@ export default {
     listConnections() {
 
       // user defined
-      SpireApiClient.v1().get('/connections').then((response) => {
+      SpireApi.v1().get('/connections').then((response) => {
         if (response.data && response.data.data) {
           this.connections = response.data.data
 
@@ -557,7 +557,7 @@ export default {
               isDefaultActive = false
             }
 
-            SpireApiClient.v1().get(`/connection-check/${connectionId}`).then((response) => {
+            SpireApi.v1().get(`/connection-check/${connectionId}`).then((response) => {
               this.connectionStatuses[connectionId] = response.data.data.message
               this.$forceUpdate()
             })
@@ -568,7 +568,7 @@ export default {
       })
 
       // default local
-      SpireApiClient.v1().get('/connection-default').then((response) => {
+      SpireApi.v1().get('/connection-default').then((response) => {
         if (response.data && response.data.data) {
           this.defaultConnection = response.data.data
         }
@@ -579,7 +579,7 @@ export default {
       this.errorMessage   = null
       this.successMessage = null
 
-      SpireApiClient.v1().post('/connection', this.database).then((response) => {
+      SpireApi.v1().post('/connection', this.database).then((response) => {
         console.log(response);
 
         this.successMessage = response.data.data

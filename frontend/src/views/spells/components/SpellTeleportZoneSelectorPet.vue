@@ -55,7 +55,7 @@
 import {TELEPORT_ZONE_SELECTOR_TYPE} from "@/app/constants/eq-spell-constants";
 import EqWindowSimple                from "@/components/eq-ui/EQWindowSimple";
 import {PetApi}                      from "@/app/api";
-import {SpireApiClient}              from "@/app/api/spire-api-client";
+import {SpireApi}              from "@/app/api/spire-api";
 import util                          from "util";
 import Expansions                    from "@/app/utility/expansions";
 import EqCheckbox                    from "@/components/eq-ui/EQCheckbox";
@@ -133,7 +133,7 @@ export default {
     },
 
     async loadPets() {
-      const api    = (new PetApi(SpireApiClient.getOpenApiConfig()))
+      const api    = (new PetApi(...SpireApi.cfg()))
       const result = await api.listPets(
         (new SpireQueryBuilder())
           .groupBy(["type"])

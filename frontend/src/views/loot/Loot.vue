@@ -104,7 +104,7 @@ import LootPopover         from "../../components/LootPopover";
 import EqLootCardPreview   from "../../components/preview/EQLootCardPreview";
 import {ROUTE}             from "../../routes";
 import {LoottableApi}      from "../../app/api";
-import {SpireApiClient}    from "../../app/api/spire-api-client";
+import {SpireApi}          from "../../app/api/spire-api";
 import {SpireQueryBuilder} from "../../app/api/spire-query-builder";
 import {debounce}          from "../../app/utility/debounce";
 
@@ -167,7 +167,7 @@ export default {
         builder.where("name", "like", this.search);
       }
 
-      const r = await (new LoottableApi(SpireApiClient.getOpenApiConfig()))
+      const r = await (new LoottableApi(...SpireApi.cfg()))
         .listLoottables(
           // @ts-ignore
           builder.get()
@@ -189,7 +189,7 @@ export default {
         builder.where("name", "like", this.search);
       }
 
-      const r = await (new LoottableApi(SpireApiClient.getOpenApiConfig()))
+      const r = await (new LoottableApi(...SpireApi.cfg()))
         .listLoottables(
           // @ts-ignore
           builder.get()

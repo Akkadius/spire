@@ -1,4 +1,4 @@
-import {SpireApiClient} from "@/app/api/spire-api-client";
+import {SpireApi} from "../api/spire-api";
 import {HttpStatus} from "@/app/api/http-status";
 
 export default class EqAssets {
@@ -13,7 +13,7 @@ export default class EqAssets {
 
     let ids = <any>[];
 
-    const r = await SpireApiClient.v1().get('/static-map/player-animations.json')
+    const r = await SpireApi.v1().get('/static-map/player-animations.json')
     if (r.status === HttpStatus.OK) {
       if (r.data[0].contents) {
         r.data[0].contents.forEach((row) => {
@@ -37,7 +37,7 @@ export default class EqAssets {
 
   public static async getEmitterPreviewFileIds() {
     let ids = <any>[];
-    const r = await SpireApiClient.v1().get('/static-map/emitters.json')
+    const r = await SpireApi.v1().get('/static-map/emitters.json')
     if (r.status === HttpStatus.OK) {
       if (r.data[0].contents) {
         r.data[0].contents.forEach((row) => {
@@ -66,7 +66,7 @@ export default class EqAssets {
 
     let ids = <any>[];
 
-    const r = await SpireApiClient.v1().get('/static-map/spell-icons-map.json')
+    const r = await SpireApi.v1().get('/static-map/spell-icons-map.json')
     if (r.status === HttpStatus.OK) {
       r.data[0].contents.forEach((row) => {
         const pieces   = row.name.split(/\//);
@@ -101,7 +101,7 @@ export default class EqAssets {
 
     let ids = <any>[];
 
-    const r = await SpireApiClient.v1().get('/static-map/spell-animations-map.json')
+    const r = await SpireApi.v1().get('/static-map/spell-animations-map.json')
     if (r.status === HttpStatus.OK) {
       if (r.data[0].contents) {
         r.data[0].contents.forEach((row) => {
@@ -132,7 +132,7 @@ export default class EqAssets {
     }
 
     let ids = <any>[];
-    const r = await SpireApiClient.v1().get('/static-map/item-icons-map.json')
+    const r = await SpireApi.v1().get('/static-map/item-icons-map.json')
     if (r.status === HttpStatus.OK) {
       if (r.data[0].contents) {
         r.data[0].contents.forEach((row) => {
@@ -162,7 +162,7 @@ export default class EqAssets {
     }
 
     let ids = <any>[];
-    const r = await SpireApiClient.v1().get('/static-map/npc-models-map.json')
+    const r = await SpireApi.v1().get('/static-map/npc-models-map.json')
     if (r.status === HttpStatus.OK) {
       if (r.data[0].contents) {
         r.data[0].contents.forEach((row) => {
@@ -194,7 +194,7 @@ export default class EqAssets {
     }
 
     let ids = <any>[];
-    const r = await SpireApiClient.v1().get('/static-map/objects-map.json')
+    const r = await SpireApi.v1().get('/static-map/objects-map.json')
     if (r.status === HttpStatus.OK) {
       if (r.data[0].contents) {
         r.data[0].contents.forEach((row) => {
@@ -223,7 +223,7 @@ export default class EqAssets {
       return this.spellAnimNameMappings
     }
 
-    const r = await SpireApiClient.v1().get('/static-map/spell-icon-anim-name-map.json')
+    const r = await SpireApi.v1().get('/static-map/spell-icon-anim-name-map.json')
     if (r.status === HttpStatus.OK) {
       this.spellAnimNameMappings = r.data
       return r.data

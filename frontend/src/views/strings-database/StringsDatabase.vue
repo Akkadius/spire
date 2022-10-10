@@ -167,9 +167,9 @@
 import EqWindowSimple      from "../../components/eq-ui/EQWindowSimple";
 import EqAutoTable         from "../../components/eq-ui/EQAutoTable";
 import ContentArea         from "../../components/layout/ContentArea";
-import {DbStrApi}          from "../../app/api";
-import {SpireApiClient}    from "../../app/api/spire-api-client";
-import LoaderFakeProgress  from "../../components/LoaderFakeProgress";
+import {DbStrApi}         from "../../app/api";
+import {SpireApi}         from "../../app/api/spire-api";
+import LoaderFakeProgress from "../../components/LoaderFakeProgress";
 import {ROUTE}             from "../../routes";
 import {DB_STR_TYPES}      from "../../app/constants/eq-db-str-constants";
 import {EditFormFieldUtil} from "../../app/forms/edit-form-field-util";
@@ -180,7 +180,7 @@ import InfoErrorBanner     from "../../components/InfoErrorBanner";
 // api response cache of all strings
 // this does not need to be reactive so don't put in data()
 let allStrings       = []
-const DbStrApiClient = (new DbStrApi(SpireApiClient.getOpenApiConfig()))
+const DbStrApiClient = (new DbStrApi(...SpireApi.cfg()))
 
 export default {
   name: "StringsDatabase",

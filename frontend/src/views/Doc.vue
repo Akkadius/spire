@@ -30,7 +30,7 @@
 </template>
 
 <script>
-import {SpireApiClient} from "@/app/api/spire-api-client";
+import {SpireApi} from "@/app/api/spire-api";
 
 export default {
   components: {
@@ -64,7 +64,7 @@ export default {
     docInit() {
       const page = encodeURIComponent(this.$route.params.doc)
 
-      SpireApiClient.v1().get(`/doc/${page}`).then((response) => {
+      SpireApi.v1().get(`/doc/${page}`).then((response) => {
         if (response.data && response.data.data) {
 
           // const hljs = require("highlight.js");

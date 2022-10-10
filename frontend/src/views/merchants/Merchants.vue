@@ -316,9 +316,9 @@ import {Items}               from "../../app/items";
 import EqCheckbox            from "../../components/eq-ui/EQCheckbox";
 import EqDebug               from "../../components/eq-ui/EQDebug";
 import ItemSelector          from "../../components/selectors/ItemSelector";
-import {MerchantlistApi}     from "../../app/api";
-import {SpireApiClient}      from "../../app/api/spire-api-client";
-import {SpireQueryBuilder}   from "../../app/api/spire-query-builder";
+import {MerchantlistApi}   from "../../app/api";
+import {SpireApi}          from "../../app/api/spire-api";
+import {SpireQueryBuilder} from "../../app/api/spire-query-builder";
 import {chunk}               from "../../app/utility/chunk";
 import {Npcs}                from "../../app/npcs";
 import MerchantlistEntryEdit from "./components/MerchantlistEntryEdit";
@@ -559,7 +559,7 @@ export default {
       }
 
       // @ts-ignore
-      const r = await (new MerchantlistApi(SpireApiClient.getOpenApiConfig()))
+      const r = await (new MerchantlistApi(...SpireApi.cfg()))
         .listMerchantlists(
           // @ts-ignore
           (new SpireQueryBuilder())

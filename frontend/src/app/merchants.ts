@@ -1,6 +1,6 @@
 import {Npcs} from "@/app/npcs";
 import {ItemApi, MerchantlistApi} from "@/app/api";
-import {SpireApiClient} from "@/app/api/spire-api-client";
+import {SpireApi} from "./api/spire-api";
 import {SpireQueryBuilder} from "@/app/api/spire-query-builder";
 import {chunk} from "@/app/utility/chunk";
 
@@ -48,7 +48,7 @@ export class Merchants {
 
     builder.includes(["Merchantlists.NpcTypes"])
 
-    const items = await (new ItemApi(SpireApiClient.getOpenApiConfig()))
+    const items = await (new ItemApi(...SpireApi.cfg()))
       .listItems(
         // @ts-ignore
         builder.get()
@@ -143,7 +143,7 @@ export class Merchants {
       .get()
 
     // @ts-ignore
-    return await (new MerchantlistApi(SpireApiClient.getOpenApiConfig()))
+    return await (new MerchantlistApi(...SpireApi.cfg()))
       .deleteMerchantlist(
         {
           id: merchantId,
@@ -153,7 +153,7 @@ export class Merchants {
   }
 
   static async getMerchantsBulk(ids: number[], relations: any[] = []) {
-    const r = await (new MerchantlistApi(SpireApiClient.getOpenApiConfig()))
+    const r = await (new MerchantlistApi(...SpireApi.cfg()))
       .getMerchantlistsBulk(
         {
           body: {
@@ -194,7 +194,7 @@ export class Merchants {
   }
 
   static async getById(id: number, relations: any[] = []) {
-    const r = await (new MerchantlistApi(SpireApiClient.getOpenApiConfig()))
+    const r = await (new MerchantlistApi(...SpireApi.cfg()))
       .listMerchantlists(
         // @ts-ignore
         (new SpireQueryBuilder())
@@ -212,7 +212,7 @@ export class Merchants {
 
   // @TODO: Swap this out with an actual count endpoint later
   static async getTotalMerchants() {
-    const r = await (new MerchantlistApi(SpireApiClient.getOpenApiConfig()))
+    const r = await (new MerchantlistApi(...SpireApi.cfg()))
       .listMerchantlists(
         // @ts-ignore
         (new SpireQueryBuilder())
@@ -233,7 +233,7 @@ export class Merchants {
       .get()
 
     // @ts-ignore
-    return await (new MerchantlistApi(SpireApiClient.getOpenApiConfig()))
+    return await (new MerchantlistApi(...SpireApi.cfg()))
       .updateMerchantlist(
         {
           id: merchantId,
@@ -245,7 +245,7 @@ export class Merchants {
 
   static async addMerchantListEntry(merchantlistEntry: any){
     // @ts-ignore
-    return await (new MerchantlistApi(SpireApiClient.getOpenApiConfig()))
+    return await (new MerchantlistApi(...SpireApi.cfg()))
       .createMerchantlist(
         {merchantlist: merchantlistEntry}
       )
@@ -265,14 +265,14 @@ export class Merchants {
     }
 
     // @ts-ignore
-    return await (new MerchantlistApi(SpireApiClient.getOpenApiConfig()))
+    return await (new MerchantlistApi(...SpireApi.cfg()))
       .createMerchantlist(
         {merchantlist: newMerchantEntry}
       )
   }
 
   static async create() {
-    const r = await (new MerchantlistApi(SpireApiClient.getOpenApiConfig()))
+    const r = await (new MerchantlistApi(...SpireApi.cfg()))
       .listMerchantlists(
         // @ts-ignore
         (new SpireQueryBuilder())
@@ -290,7 +290,7 @@ export class Merchants {
     }
 
     // @ts-ignore
-    return await (new MerchantlistApi(SpireApiClient.getOpenApiConfig()))
+    return await (new MerchantlistApi(...SpireApi.cfg()))
       .createMerchantlist(
         {merchantlist: newMerchantEntry}
       )
@@ -299,7 +299,7 @@ export class Merchants {
   static async deleteMerchant(merchantid: number) {
 
     // @ts-ignore
-    return await (new MerchantlistApi(SpireApiClient.getOpenApiConfig()))
+    return await (new MerchantlistApi(...SpireApi.cfg()))
       .deleteMerchantlist(
         {id: merchantid}
       )

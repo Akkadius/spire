@@ -13,9 +13,9 @@
 </template>
 
 <script>
-import MonacoEditor                   from 'vue-monaco'
-import {SpireApiClient}               from "../../app/api/spire-api-client";
-import axios                          from "axios";
+import MonacoEditor from 'vue-monaco'
+import {SpireApi}   from "../../app/api/spire-api";
+import axios        from "axios";
 import * as util                      from "util";
 import {NpcTypeApi, TaskApi, ZoneApi} from "../../app/api";
 import {EventBus}                     from "../../app/event-bus/event-bus";
@@ -39,7 +39,7 @@ export default {
   async mounted() {
     let languages = ['lua', 'perl']
 
-    SpireApiClient.v1().get('/quest-api/definitions').then((response) => {
+    SpireApi.v1().get('/quest-api/definitions').then((response) => {
       if (response.data && response.data.data) {
         let api = response.data.data
         languages.forEach((language) => {
@@ -222,7 +222,7 @@ export default {
       let result      = {}
       let suggestions = []
 
-      result = await (new ZoneApi(SpireApiClient.getOpenApiConfig())).listZones({ orderBy: "zoneidnumber" })
+      result = await (new ZoneApi(...SpireApi.cfg())).listZones({ orderBy: "zoneidnumber" })
       if (result.status === 200) {
         // console.log(result.data)
 
@@ -245,7 +245,7 @@ export default {
         })
       }
 
-      result = await (new NpcTypeApi(SpireApiClient.getOpenApiConfig())).listNpcTypes({ orderBy: "id" })
+      result = await (new NpcTypeApi(...SpireApi.cfg())).listNpcTypes({ orderBy: "id" })
       if (result.status === 200) {
         result.data.forEach((n) => {
           suggestions.push({
@@ -256,7 +256,7 @@ export default {
         })
       }
 
-      result = await (new TaskApi(SpireApiClient.getOpenApiConfig())).listTasks({ orderBy: "id" })
+      result = await (new TaskApi(...SpireApi.cfg())).listTasks({ orderBy: "id" })
       if (result.status === 200) {
         result.data.forEach((t) => {
           suggestions.push({

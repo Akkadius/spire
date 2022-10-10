@@ -60,9 +60,9 @@
 import NavbarDropdownMenu    from "@/components/layout/NavbarDropdownMenu";
 import NavbarUserSettingsCog from "@/components/layout/NavbarUserSettingsCog";
 import NavSectionComponent   from "@/components/layout/NavSectionComponent";
-import SlVueTree             from "sl-vue-tree"
-import {SpireApiClient}      from "@/app/api/spire-api-client";
-import path                  from "path"
+import SlVueTree  from "sl-vue-tree"
+import {SpireApi} from "../../app/api/spire-api";
+import path       from "path"
 import * as util             from "util";
 import {EventBus}            from "@/app/event-bus/event-bus";
 // import "node_modules/sl-vue-tree/sl-vue-tree-dark.css"
@@ -84,7 +84,7 @@ export default {
     // expose instance to the global namespace for better debugging
     window.slVueTree = this.$refs.slVueTree;
 
-    SpireApiClient.v1().get('/quest-file-api/list').then((response) => {
+    SpireApi.v1().get('/quest-file-api/list').then((response) => {
       if (response.data) {
 
         this.files = response.data.files
@@ -200,7 +200,7 @@ export default {
           console.log(children)
 
           slVueTree.updateNode(nodes[0].path, { children: children });
-          
+
           // this.loadedFolders.push(fileName)
           // this.loadTree()
 
@@ -217,7 +217,7 @@ export default {
 
             // console.log(fullFileName)
 
-            SpireApiClient.v1().get(util.format('/quest-file-api/%s', encodeURIComponent(fullFileName))).then((response) => {
+            SpireApi.v1().get(util.format('/quest-file-api/%s', encodeURIComponent(fullFileName))).then((response) => {
               if (response.data) {
                 // console.log(repsonse.data.contents)
 

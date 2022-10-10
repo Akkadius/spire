@@ -118,8 +118,8 @@
 </template>
 
 <script>
-import {SpireApiClient} from "@/app/api/spire-api-client";
-import InfoErrorBanner  from "@/components/InfoErrorBanner";
+import {SpireApi}      from "../../app/api/spire-api";
+import InfoErrorBanner from "@/components/InfoErrorBanner";
 import UserContext      from "@/app/user/UserContext";
 
 export default {
@@ -182,7 +182,7 @@ export default {
         payload.push(e)
       }
 
-      const r = await SpireApiClient.v1().post(
+      const r = await SpireApi.v1().post(
         `connection-permissions/${this.connection.server_database_connection_id}/user/${this.user.id}`,
         payload
       )
@@ -206,7 +206,7 @@ export default {
     async deleteUserFromConn() {
       if (confirm(`Are you sure you want to remove this user from this connection?`)) {
         try {
-          const r = await SpireApiClient.v1().delete(`connection/${this.connection.server_database_connection_id}/add-user/${this.user.id}`)
+          const r = await SpireApi.v1().delete(`connection/${this.connection.server_database_connection_id}/add-user/${this.user.id}`)
           if (r.status === 200) {
 
             // modal success
@@ -247,7 +247,7 @@ export default {
       if (!this.isSelectedUserOwnerOfConnection()) {
 
         // get resources mapping list
-        const r = await SpireApiClient.v1().get(`permissions/resources`)
+        const r = await SpireApi.v1().get(`permissions/resources`)
         if (r.status === 200) {
           this.permissions = r.data
 
@@ -267,7 +267,7 @@ export default {
 
         try {
           // user perms
-          const userPerms = await SpireApiClient.v1().get(`connection-permissions/${this.connection.server_database_connection_id}/user/${this.user.id}`)
+          const userPerms = await SpireApi.v1().get(`connection-permissions/${this.connection.server_database_connection_id}/user/${this.user.id}`)
           if (userPerms.status === 200) {
             let permissions = {}
 

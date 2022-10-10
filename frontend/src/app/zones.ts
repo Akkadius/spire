@@ -1,5 +1,5 @@
 import {ZoneApi} from "@/app/api";
-import {SpireApiClient} from "@/app/api/spire-api-client";
+import {SpireApi} from "./api/spire-api";
 import {SpireQueryBuilder} from "@/app/api/spire-query-builder";
 
 export class Zones {
@@ -12,7 +12,7 @@ export class Zones {
       return this.zones
     }
 
-    const result = await (new ZoneApi(SpireApiClient.getOpenApiConfig()))
+    const result = await (new ZoneApi(...SpireApi.cfg()))
       .listZones(
         // @ts-ignore
         (new SpireQueryBuilder())

@@ -16,7 +16,7 @@ import {BODYTYPES} from "@/app/constants/eq-bodytype-constants";
 import util from "util";
 import {DB_CLASSES, DB_CLASSES_WEAR_SHORT} from "@/app/constants/eq-classes-constants";
 import {DbStrApi, SpellsNewApi} from "@/app/api";
-import {SpireApiClient} from "@/app/api/spire-api-client";
+import {SpireApi} from "./api/spire-api";
 import {App} from "@/constants/app";
 import {Items} from "@/app/items";
 import {SpireQueryBuilder} from "@/app/api/spire-query-builder";
@@ -2822,7 +2822,7 @@ export class Spells {
   };
 
   public static async getSpellGroupNameById(spellGroupId) {
-    const result = await (new SpellsNewApi(SpireApiClient.getOpenApiConfig())).listSpellsNews(
+    const result = await (new SpellsNewApi(...SpireApi.cfg())).listSpellsNews(
       // @ts-ignore
       (new SpireQueryBuilder())
         .where("spellgroup", "=", spellGroupId)
@@ -3038,7 +3038,7 @@ export class Spells {
       return this.data[spellId]
     }
 
-    const api    = (new SpellsNewApi(SpireApiClient.getOpenApiConfig()))
+    const api    = (new SpellsNewApi(...SpireApi.cfg()))
     const result = await api.getSpellsNew({id: spellId})
     if (result.status === 200 && result.data) {
       this.setSpell(spellId, result.data);
@@ -3049,7 +3049,7 @@ export class Spells {
   }
 
   public static async preloadDbstr() {
-    const result = await (new DbStrApi(SpireApiClient.getOpenApiConfig())).listDbStrs(
+    const result = await (new DbStrApi(...SpireApi.cfg())).listDbStrs(
       // @ts-ignore
       (new SpireQueryBuilder())
         .where("type", "=", 6)
@@ -3081,7 +3081,7 @@ export class Spells {
       return this.dbstrData[id]
     }
 
-    const result = await (new DbStrApi(SpireApiClient.getOpenApiConfig())).listDbStrs(
+    const result = await (new DbStrApi(...SpireApi.cfg())).listDbStrs(
       // @ts-ignore
       (new SpireQueryBuilder())
         .where("type", "=", 6)

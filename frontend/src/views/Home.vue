@@ -21,9 +21,9 @@
 <script>
 
 import EqWindow         from "@/components/eq-ui/EQWindow";
-import UserContext      from "@/app/user/UserContext";
-import {SpireApiClient} from "../app/api/spire-api-client";
-import * as util        from "util";
+import UserContext from "@/app/user/UserContext";
+import {SpireApi}  from "../app/api/spire-api";
+import * as util   from "util";
 import VideoViewer      from "../app/video-viewer/video-viewer";
 
 export default {
@@ -40,7 +40,7 @@ export default {
   async mounted() {
     this.userContext = await (UserContext.getUser())
 
-    SpireApiClient.v1().get(`/app/changelog`).then((response) => {
+    SpireApi.v1().get(`/app/changelog`).then((response) => {
       if (response.data && response.data.data) {
 
         let markdownRaw = response.data.data

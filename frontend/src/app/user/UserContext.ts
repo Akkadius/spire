@@ -1,7 +1,7 @@
 // import api from '@/app/core/api-client';
 
 import {MeApi}          from "@/app/api";
-import {SpireApiClient} from "@/app/api/spire-api-client";
+import {SpireApi} from "../api/spire-api";
 
 const TOKEN_KEY = 'spire-web-access-token-' + location.host;
 
@@ -23,7 +23,7 @@ export default class UserContext {
       const result = await ((new MeApi({
           accessToken: undefined,
           apiKey: undefined,
-          basePath: SpireApiClient.getBaseV1Path(),
+          basePath: SpireApi.getBaseV1Path(),
           // @ts-ignore
           formDataCtor: undefined,
           password: "",
@@ -31,7 +31,7 @@ export default class UserContext {
           isJsonMime(mime: string): boolean {
             return false;
           },
-          baseOptions: SpireApiClient.getAxiosConfig()
+          baseOptions: SpireApi.getAxiosConfig()
         })
       ).me())
 
