@@ -270,10 +270,7 @@ func (cc *ConnectionsController) addUser(c echo.Context) error {
 	// Validate: Invoking user is owner of connection
 	// Validate: Connection inquired is valid
 	var conn models.UserServerDatabaseConnection
-	err = cc.db.GetSpireDb().Where("created_by = ? and server_database_connection_id = ?", ctx.ID, connectionId).First(&conn).Error
-	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err})
-	}
+	_ = cc.db.GetSpireDb().Where("created_by = ? and server_database_connection_id = ?", ctx.ID, connectionId).First(&conn).Error
 	if uint64(conn.ID) != connectionId {
 		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Invoking user does not own this connection"})
 	}
@@ -329,10 +326,7 @@ func (cc *ConnectionsController) deleteUser(c echo.Context) error {
 	// Validate: Invoking user is owner of connection
 	// Validate: Connection inquired is valid
 	var conn models.UserServerDatabaseConnection
-	err = cc.db.GetSpireDb().Where("created_by = ? and server_database_connection_id = ?", ctx.ID, connectionId).First(&conn).Error
-	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err})
-	}
+	_ = cc.db.GetSpireDb().Where("created_by = ? and server_database_connection_id = ?", ctx.ID, connectionId).First(&conn).Error
 	if uint64(conn.ID) != connectionId {
 		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Invoking user does not own this connection"})
 	}
@@ -399,10 +393,7 @@ func (cc *ConnectionsController) savePermissions(c echo.Context) error {
 	// Validate: Invoking user is owner of connection
 	// Validate: Connection inquired is valid
 	var conn models.UserServerDatabaseConnection
-	err = cc.db.GetSpireDb().Where("created_by = ? and server_database_connection_id = ?", ctx.ID, connectionId).First(&conn).Error
-	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err})
-	}
+	_ = cc.db.GetSpireDb().Where("created_by = ? and server_database_connection_id = ?", ctx.ID, connectionId).First(&conn).Error
 	if uint64(conn.ID) != connectionId {
 		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Invoking user does not own this connection"})
 	}
@@ -487,25 +478,28 @@ func (cc *ConnectionsController) getPermissions(c echo.Context) error {
 		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err})
 	}
 
-	// Validate: Invoking user is owner of connection
+	// Validate: Invoking user is member of connection
+	var userConn models.UserServerDatabaseConnection
+	_ = cc.db.GetSpireDb().Where("user_id = ? and server_database_connection_id = ?", ctx.ID, connectionId).First(&userConn).Error
+
+	isOwnerOfConnection := userConn.CreatedBy == ctx.ID
+
 	// Validate: Connection inquired is valid
-	var conn models.UserServerDatabaseConnection
-	err = cc.db.GetSpireDb().Where("created_by = ? and server_database_connection_id = ?", ctx.ID, connectionId).First(&conn).Error
-	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err})
-	}
-	if uint64(conn.ID) != connectionId {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Invoking user does not own this connection"})
+	var conn models.ServerDatabaseConnection
+	_ = cc.db.GetSpireDb().Where("id = ?", connectionId).First(&conn).Error
+	if uint64(conn.ID) != connectionId && uint64(userConn.ID) != connectionId {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Connection requested is invalid"})
 	}
 
 	// Validate: User inquired is valid
 	var user models.User
-	err = cc.db.GetSpireDb().Where("id = ?", userId).First(&user).Error
-	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err})
-	}
+	_ = cc.db.GetSpireDb().Where("id = ?", userId).First(&user).Error
 	if uint64(user.ID) != userId {
 		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "User does not exist"})
+	}
+
+	if !isOwnerOfConnection && userId != uint64(ctx.ID) {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "User does not own connection or is not user itself"})
 	}
 
 	var results []models.UserServerResourcePermission

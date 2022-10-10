@@ -201,6 +201,7 @@
                           >
                             <b-avatar
                               :src="user.user.avatar"
+                              class="hover-highlight"
                               variant="info"
                               v-b-tooltip.hover.v-dark.top
                               :title="user.user.user_name + (user.created_by === user.user.id ? ' (Owner)' : '')"
@@ -484,6 +485,11 @@ export default {
     this.user = await (UserContext.getUser())
   },
   methods: {
+
+    // canViewPermissions(user) {
+    //   return this.isOwnerOfConnection() || this.user.id === user.id
+    // },
+
     manageUser(user, connection) {
       this.managedUser = user
       this.managedUserConnection = connection

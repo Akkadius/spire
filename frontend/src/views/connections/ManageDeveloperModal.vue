@@ -5,6 +5,7 @@
     centered
     :title="`Manage Developer [${user.user_name}] for connection [${connection.database_connection.name}]`"
     size="lg"
+    @show="init()"
   >
 
     <template #modal-header>
@@ -26,7 +27,7 @@
           class="btn-sm ml-3"
           style="padding: 0px 6px;"
           @click="deleteUserFromConn()"
-          v-if="!isOwnerOfConnection()"
+          v-if="!isSelectedUserOwnerOfConnection() && isCurrentUserOwnerOfConnection()"
         >
           <i class="fa fa-trash"></i>
           Remove User
@@ -45,62 +46,67 @@
       :error="error"
       @dismiss-error="error = ''"
       @dismiss-notification="notification = ''"
-      class="mt-3"
+      class="mb-3"
     />
 
-    <div v-if="isOwnerOfConnection()">
+    <div v-if="isSelectedUserOwnerOfConnection()">
       User is owner of connection and has no limitations
     </div>
 
-    <div v-if="!isOwnerOfConnection()">
+    <div v-if="!isSelectedUserOwnerOfConnection()">
 
-      <!-- Header -->
-      <div class="row mt-1 mb-3">
-        <div class="col-5 text-right font-weight-bold">Resource</div>
-        <div class="col-7 text-muted">
-          Permission
+      <div id="permissions" v-if="canViewPermissions()">
+        <!-- Header -->
+        <div class="row mt-1 mb-3">
+          <div class="col-5 text-right font-weight-bold">Resource</div>
+          <div class="col-7 text-muted">
+            Permission
+          </div>
+        </div>
+
+        <!-- All -->
+        <div class="row mt-1 mb-3">
+          <div class="col-5 text-right">ALL</div>
+          <div class="col-7">
+            <b-form-checkbox
+              switch
+              v-for="option in options"
+              :disabled="!isCurrentUserOwnerOfConnection()"
+              :key="option.value"
+              v-model="selectedAllToggle[option.value]"
+              :aria-describedby="option.text"
+              @change="toggleAll(option.value)"
+              name="flavour-4a"
+              inline
+            >
+              {{ option.text }}
+            </b-form-checkbox>
+          </div>
+        </div>
+
+        <div
+          class="row mt-1" v-for="p in permissions"
+          :key="p.name"
+        >
+          <div class="col-5 text-right">{{ p.name }}</div>
+          <div class="col-7">
+            <b-form-checkbox
+              switch
+              v-for="option in options"
+              :key="option.value"
+              :disabled="!isCurrentUserOwnerOfConnection()"
+              v-model="selectedPermissions[p.identifier][option.value]"
+              :aria-describedby="option.text"
+              @change="showChanges(p.identifier)"
+              name="flavour-4a"
+              inline
+            >
+              {{ option.text }}
+            </b-form-checkbox>
+          </div>
         </div>
       </div>
 
-      <!-- All -->
-      <div class="row mt-1 mb-3">
-        <div class="col-5 text-right">ALL</div>
-        <div class="col-7">
-          <b-form-checkbox
-            switch
-            v-for="option in options"
-            :key="option.value"
-            v-model="selectedAllToggle[option.value]"
-            :aria-describedby="option.text"
-            @change="toggleAll(option.value)"
-            name="flavour-4a"
-            inline
-          >
-            {{ option.text }}
-          </b-form-checkbox>
-        </div>
-      </div>
-
-      <div
-        class="row mt-1" v-for="p in permissions"
-        :key="p.name"
-      >
-        <div class="col-5 text-right">{{ p.name }}</div>
-        <div class="col-7">
-          <b-form-checkbox
-            switch
-            v-for="option in options"
-            :key="option.value"
-            v-model="selectedPermissions[p.identifier][option.value]"
-            :aria-describedby="option.text"
-            @change="showChanges(p.identifier)"
-            name="flavour-4a"
-            inline
-          >
-            {{ option.text }}
-          </b-form-checkbox>
-        </div>
-      </div>
     </div>
 
     <template #modal-footer>
@@ -114,6 +120,7 @@
 <script>
 import {SpireApiClient} from "@/app/api/spire-api-client";
 import InfoErrorBanner  from "@/components/InfoErrorBanner";
+import UserContext      from "@/app/user/UserContext";
 
 export default {
   name: "ManageDeveloperModal",
@@ -121,6 +128,7 @@ export default {
   data() {
     return {
 
+      userContext: {},
 
       // permissions
       selectedPermissions: {},
@@ -147,22 +155,7 @@ export default {
       required: true
     },
   },
-  watch: {
-    user: {
-      handler() {
-        this.init()
-      },
-      deep: true
-    },
-    connection: {
-      handler() {
-        this.init()
-      },
-      deep: true
-    },
-  },
   methods: {
-
     toggleAll(type) {
       console.log("toggle all", type, this.selectedAllToggle[type])
 
@@ -190,7 +183,7 @@ export default {
       }
 
       const r = await SpireApiClient.v1().post(
-        `connection-permissions/${this.connection.id}/user/${this.user.id}`,
+        `connection-permissions/${this.connection.server_database_connection_id}/user/${this.user.id}`,
         payload
       )
       if (r.status === 200) {
@@ -198,14 +191,22 @@ export default {
       }
     },
 
-    isOwnerOfConnection() {
+    canViewPermissions() {
+      return this.isCurrentUserOwnerOfConnection() || this.userContext.id === this.user.id
+    },
+
+    isCurrentUserOwnerOfConnection() {
+      return this.userContext.id === this.connection.created_by
+    },
+
+    isSelectedUserOwnerOfConnection() {
       return this.user.id === this.connection.created_by
     },
 
     async deleteUserFromConn() {
       if (confirm(`Are you sure you want to remove this user from this connection?`)) {
         try {
-          const r = await SpireApiClient.v1().delete(`connection/${this.connection.id}/add-user/${this.user.id}`)
+          const r = await SpireApiClient.v1().delete(`connection/${this.connection.server_database_connection_id}/add-user/${this.user.id}`)
           if (r.status === 200) {
 
             // modal success
@@ -234,14 +235,16 @@ export default {
     async init() {
       // console.log("manage developer modal init")
 
-      this.notification        = ""
-      this.error               = ""
-      this.selectedPermissions = {};
-      this.permissions         = []
-      this.selectedAllToggle   = {}
+      this.notification = ""
+      this.error        = ""
+      // this.selectedPermissions = {};
+      // this.permissions         = []
+      this.selectedAllToggle = {}
+
+      this.userContext = await (UserContext.getUser())
 
       // list permissions
-      if (!this.isOwnerOfConnection()) {
+      if (!this.isSelectedUserOwnerOfConnection()) {
 
         // get resources mapping list
         const r = await SpireApiClient.v1().get(`permissions/resources`)
@@ -262,14 +265,39 @@ export default {
           this.selectedPermissions = permissions
         }
 
-        // user perms
-        const userPerms = await SpireApiClient.v1().get(`connection-permissions/${this.connection.id}/user/${this.user.id}`)
-        if (userPerms.status === 200) {
-          for (let p of userPerms.data) {
-            this.selectedPermissions[p.resource_name].read  = p.can_read === 1
-            this.selectedPermissions[p.resource_name].write = p.can_write === 1
+        try {
+          // user perms
+          const userPerms = await SpireApiClient.v1().get(`connection-permissions/${this.connection.server_database_connection_id}/user/${this.user.id}`)
+          if (userPerms.status === 200) {
+            let permissions = {}
+
+            for (let p of r.data) {
+              if (typeof permissions[p.identifier] === "undefined") {
+                permissions[p.identifier] = {}
+              }
+            }
+
+            for (let p of userPerms.data) {
+              if (typeof permissions[p.resource_name] === "undefined") {
+                permissions[p.resource_name] = {}
+              }
+              // permissions[p.identifier].read  = false
+              // permissions[p.identifier].write = false
+
+              permissions[p.resource_name].read  = p.can_read === 1
+              permissions[p.resource_name].write = p.can_write === 1
+            }
+
+            this.selectedPermissions = permissions
+          }
+
+        } catch (err) {
+          // error notify
+          if (err.response && err.response.data && err.response.data.error) {
+            this.error = err.response.data.error
           }
         }
+
       }
     }
   }
