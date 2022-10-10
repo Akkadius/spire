@@ -12,13 +12,13 @@ import (
 type PermissionsController struct {
 	logger      *logrus.Logger
 	db          *database.DatabaseResolver
-	permissions *permissions.ResourceList
+	permissions *permissions.Service
 }
 
 func NewPermissionsController(
 	logger *logrus.Logger,
 	db *database.DatabaseResolver,
-	permissions *permissions.ResourceList,
+	permissions *permissions.Service,
 ) *PermissionsController {
 	return &PermissionsController{
 		logger:      logger,

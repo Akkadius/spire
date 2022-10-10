@@ -5,7 +5,7 @@ import (
 )
 
 type UserServerResourcePermission struct {
-	ID                         uint                     `json:"id" gorm:"primary_key,AUTO_INCREMENT"`
+	ID                         uint64                   `json:"id" gorm:"primary_key,AUTO_INCREMENT"`
 	UserId                     uint                     `json:"user_id"`
 	ServerDatabaseConnectionId uint                     `json:"server_database_connection_id"`
 	ResourceName               string                   `json:"resource_name" db:"resource_name"`

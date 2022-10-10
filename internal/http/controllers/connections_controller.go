@@ -9,6 +9,7 @@ import (
 	"github.com/Akkadius/spire/internal/http/request"
 	"github.com/Akkadius/spire/internal/http/routes"
 	"github.com/Akkadius/spire/internal/models"
+	"github.com/Akkadius/spire/internal/permissions"
 	"github.com/labstack/echo/v4"
 	gocache "github.com/patrickmn/go-cache"
 	"github.com/sirupsen/logrus"
@@ -25,6 +26,7 @@ type ConnectionsController struct {
 	cache                     *gocache.Cache
 	dbConnectionCreateService *connection.DbConnectionCreateService
 	dbConnectionCheckService  *connection.DbConnectionCheckService
+	permissions               *permissions.Service
 }
 
 func NewConnectionsController(
@@ -33,11 +35,13 @@ func NewConnectionsController(
 	cache *gocache.Cache,
 	dbConnectionCreateService *connection.DbConnectionCreateService,
 	dbConnectionCheckService *connection.DbConnectionCheckService,
+	permissions *permissions.Service,
 ) *ConnectionsController {
 	return &ConnectionsController{
 		db:                        db,
 		logger:                    logger,
 		cache:                     cache,
+		permissions:               permissions,
 		dbConnectionCreateService: dbConnectionCreateService,
 		dbConnectionCheckService:  dbConnectionCheckService,
 	}
@@ -459,6 +463,9 @@ func (cc *ConnectionsController) savePermissions(c echo.Context) error {
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err})
 	}
+
+	// clear cache
+	cc.permissions.ClearUserPermissionsCache(userId)
 
 	return c.JSON(http.StatusOK, echo.Map{"data": echo.Map{"message": "Success"}})
 }

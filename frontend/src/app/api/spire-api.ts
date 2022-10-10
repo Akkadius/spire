@@ -71,9 +71,16 @@ export class SpireApi {
     }, error => {
       console.log("401 error", error)
       if (error.response.status === 401) {
-        console.log("401 error", error)
+        console.log("401 error", error.response)
+
+        // blanket error for now
+        if (error.response.data && error.response.data.error) {
+          alert(error.response.data.error)
+        }
+
       }
-      return error;
+
+      return Promise.reject(error);
     });
 
     client.interceptors.response.use(x => {
