@@ -120,7 +120,7 @@
 <script>
 import {SpireApi}      from "../../app/api/spire-api";
 import InfoErrorBanner from "@/components/InfoErrorBanner";
-import UserContext      from "@/app/user/UserContext";
+import UserContext     from "@/app/user/UserContext";
 
 export default {
   name: "ManageDeveloperModal",
@@ -172,14 +172,44 @@ export default {
 
     async submitPermissions() {
       let payload = []
+
+      // read/write all's
+      let canReadAll  = true
+      let canWriteAll = true
+      for (let p of this.permissions) {
+        if (!this.selectedPermissions[p.identifier].read) {
+          canReadAll = false
+        }
+        if (!this.selectedPermissions[p.identifier].write) {
+          canWriteAll = false
+        }
+      }
+
+      if (canReadAll || canWriteAll) {
+        let e        = {}
+        e.permission = "ALL"
+        e.read       = canReadAll
+        e.write      = canWriteAll
+        payload.push(e)
+      }
+
+      // individual perms
       for (let p of this.permissions) {
         let e = {}
 
         e.permission = p.identifier
-        e.read       = this.selectedPermissions[p.identifier].read
-        e.write      = this.selectedPermissions[p.identifier].write
+        if (!canReadAll) {
+          e.read = this.selectedPermissions[p.identifier].read
+        }
+        if (!canWriteAll) {
+          e.write = this.selectedPermissions[p.identifier].write
+        }
 
-        payload.push(e)
+        console.log(e)
+
+        if (e.read || e.write) {
+          payload.push(e)
+        }
       }
 
       const r = await SpireApi.v1().post(
@@ -288,10 +318,35 @@ export default {
               permissions[p.resource_name].write = p.can_write === 1
             }
 
+            // for ALL top level permissions
+            // set all permissions when set
+            for (let p of this.permissions) {
+              if (typeof permissions[p.identifier] === "undefined") {
+                permissions[p.identifier] = {}
+              }
+            }
+
+            for (let up of userPerms.data) {
+              if (up.resource_name === 'ALL' && up.can_read) {
+                this.selectedAllToggle['read'] = true
+                for (let p of this.permissions) {
+                  permissions[p.identifier].read = true
+                }
+              }
+              if (up.resource_name === 'ALL' && up.can_write) {
+                this.selectedAllToggle['write'] = true
+                for (let p of this.permissions) {
+                  permissions[p.identifier].write = true
+                }
+              }
+            }
+
             this.selectedPermissions = permissions
           }
 
         } catch (err) {
+          console.log(err)
+
           // error notify
           if (err.response && err.response.data && err.response.data.error) {
             this.error = err.response.data.error
