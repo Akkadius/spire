@@ -76,6 +76,8 @@ func (d *DatabaseResolver) GetEncKey(userId uint) string {
 
 func (d *DatabaseResolver) ResolveUserEqemuConnection(model models.Modelable, user models.User) *gorm.DB {
 
+	// TODO: Mutex handling in edge cases
+
 	// use default otherwise key off of another connection type
 	connectionType := "default"
 	if model.Connection() == d.contentConnectionName {

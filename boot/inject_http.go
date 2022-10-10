@@ -18,6 +18,7 @@ var httpSet = wire.NewSet(
 	appmiddleware.NewUserContextMiddleware,
 	appmiddleware.NewRequestLogMiddleware,
 	appmiddleware.NewReadOnlyMiddleware,
+	appmiddleware.NewPermissionsMiddleware,
 	controllers.NewAnalyticsController,
 	controllers.NewHelloWorldController,
 	controllers.NewConnectionsController,
@@ -49,6 +50,7 @@ func NewRouter(
 	crudc *crudControllers,
 	userContextMiddleware *appmiddleware.UserContextMiddleware,
 	readOnlyModeMiddleware *appmiddleware.ReadOnlyMiddleware,
+	permissionsMiddleware *appmiddleware.PermissionsMiddleware,
 	logMiddleware *appmiddleware.RequestLogMiddleware,
 	cache *gocache.Cache,
 ) *routes.Router {
@@ -106,6 +108,7 @@ func NewRouter(
 				crudc.routes,
 				userContextMiddleware.HandleHeader(),
 				readOnlyModeMiddleware.Handle(),
+				permissionsMiddleware.Handle(),
 				v1RateLimit(),
 				middleware.GzipWithConfig(middleware.GzipConfig{Level: 1}),
 			),

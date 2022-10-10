@@ -34,6 +34,14 @@ export class SpireApiClient {
     return UserContext.getAccessToken()
   }
 
+  static cfg() {
+   return [
+     this.getOpenApiConfig(),
+     this.getBaseV1Path(),
+     this.newAxiosWithConfig()
+   ]
+  }
+
   static getOpenApiConfig() {
     let openApiConfig      = <any>{baseOptions: SpireApiClient.getAxiosConfig()}
     openApiConfig.basePath = this.getBaseV1Path()
@@ -56,6 +64,16 @@ export class SpireApiClient {
 
       return x
     })
+
+    client.interceptors.response.use(response => {
+      return response;
+    }, error => {
+      console.log("401 error", error)
+      if (error.response.status === 401) {
+        console.log("401 error", error)
+      }
+      return error;
+    });
 
     client.interceptors.response.use(x => {
       // @ts-ignore

@@ -3,15 +3,14 @@ import {SpireApiClient} from "@/app/api/spire-api-client";
 import {TASK_ACTIVITY_TYPE} from "@/app/constants/eq-task-constants";
 import {HttpStatus} from "@/app/api/http-status";
 import {SpireQueryBuilder} from "@/app/api/spire-query-builder";
-
 export class Tasks {
 
   public static async getTasks() {
-    const r = await (new TaskApi(SpireApiClient.getOpenApiConfig())).listTasks()
+    const r = await (new TaskApi(...SpireApiClient.cfg())).listTasks()
     if (r.status === HttpStatus.OK) {
       return r.data
     }
-
+    
     return []
   }
 
