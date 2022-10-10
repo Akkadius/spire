@@ -1,3 +1,10 @@
+## [2.2.3]
+
+### [Task Editor] Save Action Freezing
+
+* Added save action freezing to inputs and buttons when work is being done to change the database. This will ensure that actions are complete before subsequent actions can potentially mess up task data.
+* Added a "Fix and re-order task activities" button to fix broken task activities ordering if it were to be in a bad state. Button does nothing if the task is correct
+
 ## [2.2.2]
 
 ### [Update Logic] Handle Nullables

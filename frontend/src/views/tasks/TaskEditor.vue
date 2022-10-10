@@ -17,6 +17,7 @@
                     <b-button
                       @click="createTask()"
                       size="sm"
+                      :disabled="saveFreeze"
                       variant="outline-warning btn-dark"
                     >
                       <i class="fa fa-plus mr-1"></i>
@@ -26,6 +27,7 @@
                     <b-button
                       @click="cloneTask()"
                       size="sm"
+                      :disabled="saveFreeze"
                       variant="outline-light btn-dark"
                       v-if="selectedTask"
                     >
@@ -35,7 +37,7 @@
 
                     <b-button
                       @click="deleteTask()"
-
+                      :disabled="saveFreeze"
                       size="sm"
                       variant="outline-danger btn-dark"
                       v-if="selectedTask"
@@ -51,6 +53,7 @@
                     type="text"
                     placeholder="Filter results by name..."
                     v-model="taskSearchFilter"
+                    :disabled="saveFreeze"
                     @keyup="filterResultsByName"
                     class="form-control"
                   />
@@ -66,6 +69,7 @@
 
                 <select
                   id="task-list"
+                  :disabled="saveFreeze"
                   size="2"
                   v-model="selectedTask"
                   @change="selectTask()"
@@ -427,6 +431,7 @@
 
                       <!-- select -->
                       <select
+                        :disabled="saveFreeze"
                         v-model.number="task[field.field]"
                         class="form-control m-0 mt-1"
                         v-if="field.selectData"
@@ -452,24 +457,65 @@
                     <span class="font-weight-bold">Activities</span>
 
                     <div class="d-inline-block">
-                      <b-button @click="createActivity()" size="sm" variant="outline-warning btn-dark" class="ml-2">
+                      <b-button
+                        @click="createActivity()"
+                        :disabled="saveFreeze"
+                        size="sm"
+                        variant="outline-warning btn-dark"
+                        class="ml-2"
+                      >
                         <i class="fa fa-plus"></i>
                       </b-button>
-                      <b-button @click="cloneActivity()" size="sm" variant="outline-white btn-dark" class="ml-2">
+                      <b-button
+                        @click="cloneActivity()"
+                        :disabled="saveFreeze"
+                        size="sm"
+                        variant="outline-white btn-dark"
+                        class="ml-2"
+                      >
                         <i class="ra ra-double-team"></i>
                       </b-button>
-                      <b-button @click="deleteActivity()" size="sm" variant="outline-danger btn-dark" class="ml-2">
+                      <b-button
+                        @click="deleteActivity()"
+                        :disabled="saveFreeze"
+                        size="sm"
+                        variant="outline-danger btn-dark"
+                        class="ml-2"
+                      >
                         <i class="fa fa-trash"></i>
                       </b-button>
-                      <b-button @click="moveActivityUp()" size="sm" variant="outline-primary btn-dark" class="ml-2">
+                      <b-button
+                        @click="moveActivityUp()"
+                        :disabled="saveFreeze"
+                        size="sm"
+                        variant="outline-primary btn-dark"
+                        class="ml-2"
+                      >
                         <i class="fa fa-arrow-up"></i>
                       </b-button>
-                      <b-button @click="moveActivityDown()" size="sm" variant="outline-primary btn-dark" class="ml-2">
+                      <b-button
+                        @click="moveActivityDown()"
+                        :disabled="saveFreeze"
+                        size="sm"
+                        variant="outline-primary btn-dark"
+                        class="ml-2"
+                      >
                         <i class="fa fa-arrow-down"></i>
+                      </b-button>
+                      <b-button
+                        @click="forceReorderTaskActivities()"
+                        :disabled="saveFreeze"
+                        size="sm"
+                        variant="outline-white btn-dark"
+                        class="ml-2"
+                        title="Fix and re-order task activities"
+                      >
+                        <i class="fa fa-wrench"></i>
                       </b-button>
                     </div>
 
                     <select
+                      :disabled="saveFreeze"
                       size="2"
                       id="activities-scroll"
                       v-model="selectedActivity"
@@ -930,6 +976,7 @@
                 <div class="btn-group" role="group">
                   <b-button
                     @click="saveTask()"
+                    :disabled="saveFreeze"
                     size="sm"
                     variant="outline-warning btn-dark"
                   >
@@ -1189,6 +1236,8 @@ export default {
 
       notification: "",
       error: "",
+
+      saveFreeze: false, // freezes inputs when actions are occurring
 
       // cached zone names for visual reference within the editor
       zoneNames: {},
@@ -1509,6 +1558,8 @@ export default {
     },
 
     async moveActivityUp() {
+      this.saveFreeze = true
+
       const selectedActivity = this.selectedActivity
       let activities         = []
       if (this.task.task_activities && this.task.task_activities.length > 0) {
@@ -1554,9 +1605,13 @@ export default {
 
       // update the query state
       this.updateQueryState()
+
+      this.saveFreeze = false
     },
 
     async cloneActivity() {
+      this.saveFreeze = true
+
       await this.saveIfModified()
       try {
         const r = await Tasks.cloneTaskActivity(this.getBackendFormattedTask(), this.selectedActivity)
@@ -1571,9 +1626,13 @@ export default {
           this.error = err.response.data.error
         }
       }
+
+      this.saveFreeze = false
     },
 
     async moveActivityDown() {
+      this.saveFreeze = true
+
       await this.saveIfModified()
       const selectedActivity = this.selectedActivity
       let activities         = []
@@ -1622,9 +1681,13 @@ export default {
 
       // update the query state
       this.updateQueryState()
+
+      this.saveFreeze = false
     },
 
     async createActivity() {
+      this.saveFreeze = true
+
       try {
         await this.saveIfModified()
         const r = await Tasks.createNewTaskActivity(this.task)
@@ -1639,17 +1702,22 @@ export default {
           this.error = err.response.data.error
         }
       }
+
+      this.saveFreeze = false
     },
 
     async deleteActivity() {
-      await this.saveTask()
       if (!this.task.task_activities[this.selectedActivity]) {
         return
       }
 
       const activity = this.task.task_activities[this.selectedActivity]
       if (confirm(`Are you sure you want to delete this task activity?\n\n(Step ${activity.step}) Activity ${activity.activityid} \n\n` + this.buildActivityDescription(activity))) {
+        this.saveFreeze = true
+
         try {
+          await this.saveTask()
+
           let deletedSuccessfully = false
           if (this.task.task_activities) {
 
@@ -1667,18 +1735,7 @@ export default {
 
             // // reorder task activities and then save again
             if (deletedSuccessfully) {
-              let activityId = 0;
-              for (const index in this.task.task_activities) {
-                if (parseInt(this.task.task_activities[index].activityid) != activityId) {
-                  const previousId                            = parseInt(this.task.task_activities[index].activityid)
-                  this.task.task_activities[index].activityid = activityId
-                  await Tasks.updateTaskActivityId(this.task.task_activities[index], previousId)
-
-                  // console.log("Updating [%s] from [%s]", this.task.task_activities[index].activityid, previousId)
-                }
-
-                activityId++;
-              }
+              this.reorderTaskActivities()
             }
 
           }
@@ -1688,6 +1745,29 @@ export default {
           }
           console.log(err)
         }
+
+        this.saveFreeze = false
+      }
+    },
+
+    async forceReorderTaskActivities() {
+      if (confirm(`Fix and reorder task activities? This can fix activities that have gaps or are not sequential and can cause the server to not load the activities properly.`)) {
+        this.saveFreeze = true
+        await this.reorderTaskActivities()
+        this.saveFreeze = false
+      }
+    },
+
+    async reorderTaskActivities() {
+      let activityId = 0;
+      for (const index in this.task.task_activities) {
+        if (parseInt(this.task.task_activities[index].activityid) != activityId) {
+          const previousId                            = parseInt(this.task.task_activities[index].activityid)
+          this.task.task_activities[index].activityid = activityId
+          await Tasks.updateTaskActivityId(this.task.task_activities[index], previousId)
+        }
+
+        activityId++;
       }
     },
 
