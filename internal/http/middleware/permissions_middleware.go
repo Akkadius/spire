@@ -44,8 +44,6 @@ func (r PermissionsMiddleware) Handle() echo.MiddlewareFunc {
 
 			if user.ID > 0 {
 
-				//r.logger.Debugf("Permissions middleware user [%v]\n", user.ID)
-
 				// key for the users database connection identifier
 				connectionIdKey := fmt.Sprintf("active-connection-%v", user.ID)
 
@@ -72,7 +70,7 @@ func (r PermissionsMiddleware) Handle() echo.MiddlewareFunc {
 
 						if r.debug >= 3 {
 							r.logger.Debugf(
-								"Permissions middleware user [%v] connectionId [%v] pass [%v] resource [%v]\n",
+								"[permissions] middleware user [%v] connectionId [%v] pass [%v] resource [%v]\n",
 								user.ID,
 								connectionId,
 								pass,
