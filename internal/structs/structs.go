@@ -160,7 +160,6 @@ func (s *Struct) FillMap(out map[string]interface{}) {
 			if _, boolOk := valueMap["Valid"].(bool); boolOk {
 				for k, v := range valueMap {
 					if k != "Valid" {
-						//fmt.Printf("key[%v] value[%v]\n", k, v)
 						finalVal = v
 					}
 				}
@@ -172,6 +171,16 @@ func (s *Struct) FillMap(out map[string]interface{}) {
 				out[k] = finalVal.(map[string]interface{})[k]
 			}
 		} else {
+
+			// if this is an interface, we don't care, discard
+			// we only care about flat top level maps in this function
+			if strings.Contains(reflect.TypeOf(finalVal).String(), "interface {}") {
+				continue
+			}
+
+			//pp.Println(reflect.TypeOf(finalVal).String())
+			//pp.Println(finalVal)
+
 			out[name] = finalVal
 		}
 	}

@@ -13,7 +13,7 @@ import (
 )
 
 type TaskController struct {
-	db	   *database.DatabaseResolver
+	db     *database.DatabaseResolver
 	logger *logrus.Logger
 }
 
@@ -22,7 +22,7 @@ func NewTaskController(
 	logger *logrus.Logger,
 ) *TaskController {
 	return &TaskController{
-		db:	    db,
+		db:     db,
 		logger: logger,
 	}
 }

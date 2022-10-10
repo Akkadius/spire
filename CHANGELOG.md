@@ -1,3 +1,9 @@
+## [2.2.4]
+
+### [Task Editor] Update Logic Fixes
+
+* Fix issue with nested objects showing up in save actions, preventing some things from saving properly
+
 ## [2.2.3]
 
 ### [Task Editor] Save Action Freezing
