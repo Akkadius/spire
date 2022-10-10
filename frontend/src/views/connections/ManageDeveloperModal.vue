@@ -6,6 +6,7 @@
     :title="`Manage Developer [${user.user_name}] for connection [${connection.database_connection.name}]`"
     size="lg"
     @show="init()"
+    @hidden="reset()"
   >
 
     <template #modal-header>
@@ -262,15 +263,16 @@ export default {
       this.$bvModal.hide('manage-developer-modal')
     },
 
+    reset() {
+      this.notification        = ""
+      this.error               = ""
+      this.selectedPermissions = {};
+      this.permissions         = []
+      this.selectedAllToggle   = {}
+    },
+
     async init() {
       // console.log("manage developer modal init")
-
-      this.notification = ""
-      this.error        = ""
-      // this.selectedPermissions = {};
-      // this.permissions         = []
-      this.selectedAllToggle = {}
-
       this.userContext = await (UserContext.getUser())
 
       // list permissions

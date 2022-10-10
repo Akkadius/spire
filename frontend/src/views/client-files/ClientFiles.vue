@@ -1,9 +1,9 @@
 <template>
-  <content-area class="text-center">
+  <content-area class="text-center" style="padding: 0 !important">
     <eq-window-simple
       title="Client File Drop Zone"
       style="width: 700px"
-      class="mt-5"
+      class="mt-3 p-0"
     >
       <div
         class="mb-3"
