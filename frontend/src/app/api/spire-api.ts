@@ -75,7 +75,10 @@ export class SpireApi {
 
         // blanket error for now
         if (error.response.data && error.response.data.error) {
-          alert(error.response.data.error)
+          setTimeout(() => {
+            alert(error.response.data.error)
+
+          }, 500)
         }
 
       }
