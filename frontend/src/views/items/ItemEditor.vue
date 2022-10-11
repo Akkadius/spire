@@ -2071,11 +2071,13 @@ export default {
       if (this.$route.params.id > 0) {
         this.error = ""
         Items.getItem(this.$route.params.id).then(async (result) => {
-          this.item              = result
+          // clone object but don't copy listeners
+          const item             = JSON.parse(JSON.stringify(result))
+          this.item              = item
           this.updatedAt         = Date.now()
           this.previewItemActive = true
 
-          Object.assign(this.originalItem, result);
+          Object.assign(this.originalItem, item);
 
           let hex = util.format("#%s", this.toHex(this.item.color))
 

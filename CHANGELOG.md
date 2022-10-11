@@ -1,3 +1,9 @@
+## [2.2.5]
+
+### [Item Editor] Item Caching
+
+* Fixed issue where item being cloned and reassigned to new ID's would reflect wrongly display after save
+
 ## [2.2.4]
 
 ### [Task Editor] Update Logic Fixes
