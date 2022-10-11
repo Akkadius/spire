@@ -265,7 +265,7 @@ func (s *Service) CanAccessResource(c echo.Context, user models.User, connection
 			http.MethodPut,
 		},
 		c.Request().Method,
-	)
+	) && !strings.Contains(c.Request().URL.Path, "/bulk")
 
 	// global level rules
 	if p.canReadAll && !isWriteRequest {
@@ -291,11 +291,6 @@ func (s *Service) CanAccessResource(c echo.Context, user models.User, connection
 
 		for _, up := range p.permissions {
 			for _, prefix := range up.RouteMatchPrefixes {
-
-				if resource == "items" {
-					pp.Println(prefix)
-				}
-
 				if prefix == resource {
 					if s.debug >= 3 {
 						s.logger.Info(pp.Sprintf("[permissions] user [%v] FOUND MATCH FOR PREFIX [%v]\n", user.UserName, prefix))
@@ -357,8 +352,8 @@ func (s *Service) getUserPermissions(c echo.Context, user models.User, connectio
 
 	var p userPermissions
 
-	p.canReadAll = true
-	p.canWriteAll = true
+	p.canReadAll = false
+	p.canWriteAll = false
 
 	// fetch permissions
 	var userServerResourcePermissions []models.UserServerResourcePermission
@@ -372,6 +367,17 @@ func (s *Service) getUserPermissions(c echo.Context, user models.User, connectio
 	_ = s.db.GetSpireDb().Where("created_by = ? and id = ?", user.ID, connectionId).First(&serverDatabaseConn).Error
 	if serverDatabaseConn.ID > 0 {
 		p.isConnectionOwner = true
+	}
+
+	for _, up := range userServerResourcePermissions {
+		if up.ResourceName == "ALL" {
+			if up.CanWrite == 1 {
+				p.canWriteAll = true
+			}
+			if up.CanRead == 1 {
+				p.canReadAll = true
+			}
+		}
 	}
 
 	// if connection owner, we don't need to check permissions
@@ -398,14 +404,6 @@ func (s *Service) getUserPermissions(c echo.Context, user models.User, connectio
 				if r.Identifier == up.ResourceName {
 					r.CanRead = up.CanRead == 1
 					r.CanWrite = up.CanWrite == 1
-
-					// top level objects, set them false once we find first occurrence
-					if up.CanRead != 1 && p.canReadAll {
-						p.canReadAll = false
-					}
-					if up.CanWrite != 1 && p.canWriteAll {
-						p.canWriteAll = false
-					}
 
 					userResourcePermissions = append(userResourcePermissions, r)
 				}
