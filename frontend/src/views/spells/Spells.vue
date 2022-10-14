@@ -176,7 +176,11 @@
       </div>
     </div>
 
-    <eq-spell-preview-table :spells="spells" v-if="loaded && listType === 'table' && spells"/>
+    <eq-spell-preview-table
+      @reload-list="listSpells()"
+      :spells="spells"
+      v-if="loaded && listType === 'table' && spells"
+    />
 
   </div>
 </template>
@@ -184,7 +188,7 @@
 <script type="ts">
 import {ItemApi, SpellsNewApi} from "@/app/api/api";
 import EqWindow from "@/components/eq-ui/EQWindow.vue";
-import {SpireApi} from "../../app/api/spire-api";
+import {SpireApi} from "@/app/api/spire-api";
 import EqItemCardPreview from "@/components/preview/EQItemCardPreview.vue";
 import * as util from "util";
 import EqSpellPreview from "@/components/preview/EQSpellCardPreview.vue";

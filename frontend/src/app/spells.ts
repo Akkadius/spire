@@ -2969,28 +2969,26 @@ export class Spells {
     const targetTypeColor = this.getTargetTypeColor(spell["targettype"]);
 
     let renderIconSize = 20;
-    let borderSize = 1;
-    let borderRadius = 3;
-    let marginLeft = 1;
-    let textTop = 10;
+    let borderSize     = 1;
+    let borderRadius   = 3;
+    let marginLeft     = 1;
+    let textTop        = 10;
     if (iconSize >= 40) {
       renderIconSize = 40;
-      borderSize = 2;
-      borderRadius = 3;
-      marginLeft = 2;
-    }
-    else if (iconSize >= 30) {
+      borderSize     = 2;
+      borderRadius   = 3;
+      marginLeft     = 2;
+    } else if (iconSize >= 30) {
       renderIconSize = 30;
-      borderSize = 1;
-      borderRadius = 6;
-      marginLeft = 1;
-    }
-    else if (iconSize >= 12) {
+      borderSize     = 1;
+      borderRadius   = 6;
+      marginLeft     = 1;
+    } else if (iconSize >= 12) {
       renderIconSize = 12;
-      borderSize = 1;
-      borderRadius = 2;
-      marginLeft = 0;
-      textTop = 1;
+      borderSize     = 1;
+      borderRadius   = 2;
+      marginLeft     = 0;
+      textTop        = 1;
     }
 
     return `
@@ -3353,4 +3351,15 @@ export class Spells {
   }
 
 
+  static async deleteSpell(id) {
+    try {
+      // @ts-ignore
+      const r = await (new SpellsNewApi(...SpireApi.cfg())).deleteSpellsNew({id: id})
+      if (r.status === 200 && r.data) {
+        return r.data
+      }
+    } catch (err) {
+      return Promise.reject(err)
+    }
+  }
 }
