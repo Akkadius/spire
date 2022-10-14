@@ -155,7 +155,7 @@
 
                   {{ itemData[e.item] && itemData[e.item].stacksize > 0 ? `(${itemData[e.item].stacksize})` : '' }}
                   <eq-cash-display
-                    class="ml-1"
+                    class="ml-3"
                     :price="parseInt(itemData[e.item].price)"
                     v-if="itemData[e.item]"
                   />

@@ -457,4 +457,16 @@ export class Items {
       console.log("items.ts %s", err)
     }
   }
+
+  static async deleteItem(id) {
+    try {
+      // @ts-ignore
+      const r = await (new ItemApi(...SpireApi.cfg())).deleteItem({id: id})
+      if (r.status === 200 && r.data) {
+        return r.data
+      }
+    } catch (err) {
+      return Promise.reject(err)
+    }
+  }
 }

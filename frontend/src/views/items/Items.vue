@@ -227,6 +227,7 @@
     <!-- table -->
     <item-preview-table
       :items="items"
+      @reload-list="listItems"
       v-if="loaded && listType === 'table' && items"
     />
 
