@@ -132,10 +132,7 @@ export default {
     },
 
     getExpansionIcon(expansion) {
-      return Expansions.getExpansionIconUrlSmall(expansion - 1) // zone table is offset by 1
-    },
-    getExpansionName(expansion) {
-      return Expansions.getExpansionName(expansion - 1) // zone table is offset by 1
+      return Expansions.getExpansionIconUrlSmall(expansion)
     },
 
     async loadZones() {

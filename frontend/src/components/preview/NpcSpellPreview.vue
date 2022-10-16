@@ -218,7 +218,11 @@ export default {
       this.spellsList = spellsList
         .sort((a, b) => {
           if (a.minlevel === b.minlevel) {
-            return a.spells_new.name.localeCompare(b.spells_new.name)
+            return a.spells_new &&
+              b.spells_new &&
+              b.spells_new.name &&
+              a.spells_new.name &&
+              a.spells_new.name.localeCompare(b.spells_new.name)
           }
 
           return (b.minlevel < a.minlevel) ? 1 : -1

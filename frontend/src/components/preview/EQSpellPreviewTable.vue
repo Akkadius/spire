@@ -60,7 +60,7 @@
 
               <b-button
                 @click="editSpell(spell.id, true)"
-                style="width: 28px; height: 28px"
+                style="width: 30px; height: 28px"
                 size="sm"
                 title="Clone"
                 variant="outline-light"

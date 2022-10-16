@@ -125,13 +125,6 @@ export default {
       }
     },
 
-    getExpansionIcon(expansion) {
-      return Expansions.getExpansionIconUrlSmall(expansion - 1) // pet table is offset by 1
-    },
-    getExpansionName(expansion) {
-      return Expansions.getExpansionName(expansion - 1) // pet table is offset by 1
-    },
-
     async loadPets() {
       const api    = (new PetApi(...SpireApi.cfg()))
       const result = await api.listPets(

@@ -61,7 +61,7 @@
                 <b-button
                   @click="editItem(item.id, true)"
                   size="sm"
-                  style="width: 28px; height: 28px"
+                  style="width: 30px; height: 28px"
                   title="Clone"
                   variant="outline-light"
                 >
