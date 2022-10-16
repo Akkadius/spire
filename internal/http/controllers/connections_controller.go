@@ -56,6 +56,7 @@ func (cc *ConnectionsController) Routes() []*routes.Route {
 		routes.RegisterRoute(http.MethodGet, "connection-check/:connection", cc.check, nil),
 		routes.RegisterRoute(http.MethodPost, "connection/:connection/set-active", cc.setActive, nil),
 		routes.RegisterRoute(http.MethodDelete, "connection/:connection", cc.delete, nil),
+		routes.RegisterRoute(http.MethodGet, "connection/:connection_id/audit-log", cc.auditLog, nil),
 
 		// user add / remove
 		routes.RegisterRoute(http.MethodPost, "connection/:connection_id/add-user/:user_id", cc.addUser, nil),
@@ -481,7 +482,6 @@ func (cc *ConnectionsController) savePermissions(c echo.Context) error {
 }
 
 func (cc *ConnectionsController) getPermissions(c echo.Context) error {
-
 	// request user context
 	ctx := request.GetUser(c)
 
@@ -532,4 +532,58 @@ func (cc *ConnectionsController) getPermissions(c echo.Context) error {
 	}
 
 	return c.JSON(http.StatusOK, echo.Map{"data": echo.Map{"message": "Success"}})
+}
+
+func (cc *ConnectionsController) auditLog(c echo.Context) error {
+	// request user context
+	ctx := request.GetUser(c)
+
+	// param
+	connectionId, err := strconv.ParseUint(c.Param("connection_id"), 10, 64)
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err})
+	}
+
+	// Validate: Invoking user is owner of connection
+	var conn models.ServerDatabaseConnection
+	_ = cc.db.GetSpireDb().Where("created_by = ? and id = ?", ctx.ID, connectionId).First(&conn).Error
+	if uint64(conn.ID) != connectionId {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Invoking user does not own this connection"})
+	}
+
+	// paging
+	pageSize := 1000
+	queryOffset := 0
+	page, err := strconv.ParseInt(c.QueryParam("page"), 10, 64)
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err})
+	}
+	if page > 0 {
+		queryOffset = int(page - 1)
+	}
+
+	// query
+	var results []models.UserEventLog
+	query := cc.db.GetSpireDb().Model(&models.UserEventLog{}).
+		Preload("User").
+		Where("server_database_connection_id = ?", connectionId).
+		Limit(pageSize).
+		Offset(queryOffset * pageSize).
+		Order("id DESC")
+	_ = query.Find(&results).Error
+
+	// count
+	var count int64
+	cc.db.GetSpireDb().Model(&models.UserEventLog{}).
+		Where("server_database_connection_id = ?", connectionId).
+		Distinct("id").Count(&count)
+
+	return c.JSON(
+		http.StatusOK,
+		echo.Map{
+			"limit":      pageSize,
+			"total_rows": count,
+			"data":       results,
+		},
+	)
 }

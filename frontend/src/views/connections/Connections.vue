@@ -254,7 +254,7 @@
                         <!-- Audit log -->
                         <a
                           class="btn btn-sm btn-white ml-1"
-                          @click="setActiveConnection(connection.id)"
+                          @click="viewAuditLog(connection.id)"
                           title="View audit log"
                           v-b-tooltip.hover.v-dark.top
                           v-if="isCurrentUserOwnerOfConnection(connection)"
@@ -459,6 +459,8 @@ import {EventBus} from "@/app/event-bus/event-bus";
 import UserContext from "@/app/user/UserContext";
 import AddDeveloperModal from "@/views/connections/AddDeveloperModal.vue";
 import ManageDeveloperModal from "@/views/connections/ManageDeveloperModal.vue";
+import util from "util";
+import {ROUTE} from "@/routes";
 
 export default {
   components: {
@@ -496,6 +498,15 @@ export default {
     this.user = await (UserContext.getUser())
   },
   methods: {
+
+    viewAuditLog(connectionId) {
+      this.$router.push(
+        {
+          path: util.format(ROUTE.DATABASE_CONNECTION_AUDIT_LOG, connectionId)
+        }
+      ).catch(() => {
+      })
+    },
 
     canViewPermissions(user, connection) {
       return this.isCurrentUserOwnerOfConnection(connection) || this.user.id === user.id
