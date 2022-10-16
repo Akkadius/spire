@@ -63,7 +63,11 @@ func (e UserEvent) LogUserEvent(c echo.Context, eventName string, description st
 				fmt.Sprintf("[**Spire Audit Log**] [**%v**] [**%v**] %v", name, user.UserName, description),
 			)
 
-			// monitor webhook
+		}
+
+		// monitor webhook
+		if conn.ServerDatabaseConnection.ID > 0 {
+			name := conn.ServerDatabaseConnection.Name
 			monitor := os.Getenv("DISCORD_MONITOR_URL")
 			if len(monitor) > 0 {
 				_ = discord.SendDiscordWebhook(
