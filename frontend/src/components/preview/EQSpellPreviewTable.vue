@@ -18,7 +18,7 @@
         <table id="spell-table" class="eq-table bordered eq-highlight-rows">
           <thead class="eq-table-floating-header">
           <tr>
-            <th style="width: 110px;"></th>
+            <th style="width: 140px;"></th>
             <th style="width: auto;">Id</th>
             <th style="width: auto; min-width: 270px">Spell</th>
             <th style="width: auto; min-width: 300px">Level</th>
@@ -38,7 +38,19 @@
             <td class="p-0 text-center">
 
               <b-button
+                variant="primary"
+                size="sm"
+                style="width: 28px; height: 28px"
+                class="btn-dark btn-outline-danger mr-2"
+                title="Delete"
+                @click="deleteSpell(spell)"
+              >
+                <i class="fa fa-trash"></i>
+              </b-button>
+
+              <b-button
                 @click="editSpell(spell.id)"
+                style="width: 28px; height: 28px"
                 size="sm"
                 title="Edit"
                 class="btn btn-dark btn-outline-success mr-2"
@@ -48,6 +60,7 @@
 
               <b-button
                 @click="editSpell(spell.id, true)"
+                style="width: 30px; height: 28px"
                 size="sm"
                 title="Clone"
                 variant="outline-light"
@@ -122,6 +135,7 @@ import {DB_CLASSES_SHORT} from "@/app/constants/eq-classes-constants";
 import {ROUTE}            from "@/routes";
 import * as util          from "util";
 import SpellPopover       from "@/components/SpellPopover";
+import {Items}            from "@/app/items";
 
 export default {
   name: "EqSpellPreviewTable",
@@ -150,6 +164,13 @@ export default {
     spells: Array
   },
   methods: {
+    async deleteSpell(spell) {
+      if (confirm(`Are you sure you want to permanently delete this spell? [${spell.name}] (${spell.id})`)) {
+        await Spells.deleteSpell(spell.id)
+        this.$emit("reload-list", true);
+      }
+    },
+
     getClasses: function (spell) {
       return Spells.getClasses(spell)
     },

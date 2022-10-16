@@ -1,5 +1,5 @@
 import {ContentFlagApi} from "@/app/api";
-import {SpireApiClient} from "@/app/api/spire-api-client";
+import {SpireApi} from "./api/spire-api";
 
 export class ContentFlags {
   public static flags = <any>[]
@@ -9,7 +9,7 @@ export class ContentFlags {
       return this.flags
     }
 
-    const r = await (new ContentFlagApi(SpireApiClient.getOpenApiConfig())).listContentFlags()
+    const r = await (new ContentFlagApi(...SpireApi.cfg())).listContentFlags()
     if (r.status === 200) {
       this.flags = r.data
       return r.data

@@ -1,4 +1,4 @@
-alias cmd='go run main.go'
+alias cmd='rm internal/http/spa/*packr.go && go run main.go'
 alias c='cmd'
 alias tests='go test -count=1 ./...'
 alias test='tests'

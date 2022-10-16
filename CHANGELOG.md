@@ -1,3 +1,44 @@
+## [2.3.0]
+
+### [Database Connections] Users, Permissions & Audit Logging
+
+### Users
+
+Users can now be added to server connections that you own. Any user that has a user on Spire, hosted or local is available to add to a connection.
+
+![image](https://user-images.githubusercontent.com/3319450/196054882-99f6f778-8844-4362-8c4c-708bafc715e4.png)
+
+![image](https://user-images.githubusercontent.com/3319450/196054944-40816080-fe7e-4e25-8692-a9d63db3713a.png)
+
+### Permissions
+
+With users, come permissions. You are now able to manage permissions with both read and write for every resource available through Spire. You can also use **ALL** to grant users to all read or write.
+
+![image](https://user-images.githubusercontent.com/3319450/196055017-925c6188-d7fa-4cf9-8af1-17f66a93281e.png)
+
+### Audit Logging
+
+With users (Developers) come the need to monitor bad actors and mistakes!
+
+![image](https://user-images.githubusercontent.com/3319450/196055080-67e25106-9fb6-45aa-83d5-f92e95a3bc97.png)
+
+View audit logs
+
+![image](https://user-images.githubusercontent.com/3319450/196055087-9cf119b3-c496-470a-8a1d-fae4813395f8.png)
+
+#### Discord Webhook Audit Logging
+
+![image](https://user-images.githubusercontent.com/3319450/196055054-0578b668-fd4a-43e2-8dce-4762b29cfdd1.png)
+
+![image](https://user-images.githubusercontent.com/3319450/196055117-a70d2d7b-21c7-4d32-ab75-f369653843e0.png)
+
+### Misc Changes
+
+* Item editor now has a delete button
+* Spell editor now has a delete button
+* Fix expansion offsets to no longer be offset by 1 per recent server changes
+* Fix cash display to be more properly horizontally aligned
+
 ## [2.2.5]
 
 ### [Item Editor] Item Caching

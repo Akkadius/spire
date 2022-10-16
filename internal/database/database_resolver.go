@@ -76,6 +76,8 @@ func (d *DatabaseResolver) GetEncKey(userId uint) string {
 
 func (d *DatabaseResolver) ResolveUserEqemuConnection(model models.Modelable, user models.User) *gorm.DB {
 
+	// TODO: Mutex handling in edge cases
+
 	// use default otherwise key off of another connection type
 	connectionType := "default"
 	if model.Connection() == d.contentConnectionName {
@@ -95,8 +97,16 @@ func (d *DatabaseResolver) ResolveUserEqemuConnection(model models.Modelable, us
 
 	// fetch connection id from memory first if exists
 	connectionId := uint(0)
-	connectionIdKey := fmt.Sprintf("active-connection-%v-%v", user.ID, connectionType)
-	cachedConn, found := d.cache.Get(connectionIdKey)
+
+	// key for the users database connection identifier
+	connectionIdKey := fmt.Sprintf("active-connection-%v", user.ID)
+
+	// this holds the key for the database instance itself
+	// keyed off of the connection type (default, content)
+	connectionKey := fmt.Sprintf("active-connection-%v-%v", user.ID, connectionType)
+
+	// find cached connection
+	cachedConn, found := d.cache.Get(connectionKey)
 	if found {
 		connectionId = cachedConn.(uint)
 
@@ -128,6 +138,7 @@ func (d *DatabaseResolver) ResolveUserEqemuConnection(model models.Modelable, us
 		d.remoteDatabases[connectionType][conn.ID] = d.connections.EqemuDb()
 
 		// add connection id to memory
+		d.cache.Set(connectionKey, conn.ServerDatabaseConnection.ID, 10*time.Minute)
 		d.cache.Set(connectionIdKey, conn.ServerDatabaseConnection.ID, 10*time.Minute)
 
 		return d.connections.EqemuDb()
@@ -137,6 +148,7 @@ func (d *DatabaseResolver) ResolveUserEqemuConnection(model models.Modelable, us
 	if conn.ID > 0 {
 
 		// add connection id to memory
+		d.cache.Set(connectionKey, conn.ServerDatabaseConnection.ID, 10*time.Minute)
 		d.cache.Set(connectionIdKey, conn.ServerDatabaseConnection.ID, 10*time.Minute)
 
 		// If existing connection exists, return it

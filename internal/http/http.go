@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"github.com/Akkadius/spire/docs"
+	"github.com/Akkadius/spire/internal/banner"
 	spiremiddleware "github.com/Akkadius/spire/internal/http/middleware"
 	"github.com/Akkadius/spire/internal/http/routes"
 	"github.com/Akkadius/spire/internal/http/spa"
@@ -70,6 +71,9 @@ func Serve(port uint, logger *logrus.Logger, router *routes.Router) error {
 	e.Use(s.Spa().MiddlewareHandler())
 
 	e.HTTPErrorHandler = errorHandler
+	e.HideBanner = true
+
+	banner.Print()
 
 	return e.Start(fmt.Sprintf(":%v", port))
 }

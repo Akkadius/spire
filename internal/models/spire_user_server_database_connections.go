@@ -14,15 +14,18 @@ type UserServerDatabaseConnection struct {
 	UpdatedAt                  time.Time                `json:"updated_at" gorm:"Column:updated_at"`
 	DeletedAt                  *time.Time               `json:"deleted_at" gorm:"Column:deleted_at"`
 	ServerDatabaseConnection   ServerDatabaseConnection `json:"database_connection,omitempty" gorm:"foreignKey:ServerDatabaseConnectionId;association_foreignkey:Id"`
+	User                       User                     `json:"user,omitempty" gorm:"foreignKey:ID;references:UserId"`
 }
 
 func (UserServerDatabaseConnection) TableName() string {
-	return "user_server_database_connections"
+	return "spire_user_server_database_connections"
 }
 
 func (UserServerDatabaseConnection) Relationships() []string {
 	return []string{
 		"ServerDatabaseConnection",
+		"ServerDatabaseConnection.UserServerDatabaseConnection",
+		"ServerDatabaseConnection.UserServerDatabaseConnection.User",
 	}
 }
 

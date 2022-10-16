@@ -175,7 +175,7 @@
 <script type="ts">
 import {ItemApi, SpellsNewApi} from "@/app/api/api";
 import EqWindow from "@/components/eq-ui/EQWindow.vue";
-import {SpireApiClient} from "@/app/api/spire-api-client";
+import {SpireApi} from "../../../app/api/spire-api";
 import EqItemCardPreview from "@/components/preview/EQItemCardPreview.vue";
 import * as util from "util";
 import EqSpellPreview from "@/components/preview/EQSpellCardPreview.vue";
@@ -267,7 +267,7 @@ export default {
       this.loaded  = false;
       this.message = ""
 
-      const api     = (new SpellsNewApi(SpireApiClient.getOpenApiConfig()))
+      const api     = (new SpellsNewApi(...SpireApi.cfg()))
       const builder = (new SpireQueryBuilder())
 
       // filter by class and no level set
@@ -349,7 +349,7 @@ export default {
           });
 
           // bulk fetch preload
-          const response = await (new ItemApi(SpireApiClient.getOpenApiConfig())).getItemsBulk({
+          const response = await (new ItemApi(...SpireApi.cfg())).getItemsBulk({
             body: {
               ids: itemsToPreload
             }

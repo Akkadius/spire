@@ -63,7 +63,7 @@
 import {TELEPORT_ZONE_SELECTOR_TYPE} from "@/app/constants/eq-spell-constants";
 import EqWindowSimple                from "@/components/eq-ui/EQWindowSimple";
 import {ZoneApi}                     from "@/app/api";
-import {SpireApiClient}              from "@/app/api/spire-api-client";
+import {SpireApi}              from "@/app/api/spire-api";
 import util                          from "util";
 import Expansions                    from "@/app/utility/expansions";
 import EqCheckbox                    from "@/components/eq-ui/EQCheckbox";
@@ -129,14 +129,11 @@ export default {
     },
 
     getExpansionIcon(expansion) {
-      return Expansions.getExpansionIconUrlSmall(expansion - 1) // zone table is offset by 1
-    },
-    getExpansionName(expansion) {
-      return Expansions.getExpansionName(expansion - 1) // zone table is offset by 1
+      return Expansions.getExpansionIconUrlSmall(expansion)
     },
 
     async loadZones() {
-      const api    = (new ZoneApi(SpireApiClient.getOpenApiConfig()))
+      const api    = (new ZoneApi(...SpireApi.cfg()))
       const result = await api.listZones(
         (new SpireQueryBuilder())
           .where("version", "=", "0")

@@ -24,7 +24,6 @@ type Account struct {
 	Rulesflag      uint8           `json:"rulesflag" gorm:"Column:rulesflag"`
 	Suspendeduntil null.Time       `json:"suspendeduntil" gorm:"Column:suspendeduntil"`
 	TimeCreation   uint            `json:"time_creation" gorm:"Column:time_creation"`
-	Expansion      int8            `json:"expansion" gorm:"Column:expansion"`
 	BanReason      null.String     `json:"ban_reason" gorm:"Column:ban_reason"`
 	SuspendReason  null.String     `json:"suspend_reason" gorm:"Column:suspend_reason"`
 	CrcEqgame      null.String     `json:"crc_eqgame" gorm:"Column:crc_eqgame"`

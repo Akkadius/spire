@@ -42,7 +42,7 @@
 <script>
 import ContentArea       from "../components/layout/ContentArea";
 import EqWindow          from "../components/eq-ui/EQWindow";
-import {SpireApiClient}  from "../app/api/spire-api-client";
+import {SpireApi}        from "../app/api/spire-api";
 import {EXPANSIONS_FULL} from "../app/constants/eq-expansions";
 import ExpansionIcon     from "../components/preview/ExpansionIcon";
 
@@ -59,7 +59,7 @@ export default {
   mounted() {
     let expansionData = {}
     let tables        = []
-    SpireApiClient.v1().get(`query/expansion-stats`).then((r) => {
+    SpireApi.v1().get(`query/expansion-stats`).then((r) => {
       if (r.data && r.data.data) {
         for (const [table, values] of Object.entries(r.data.data)) {
           // console.log(table, values)

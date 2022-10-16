@@ -1,9 +1,9 @@
 <template>
-  <content-area class="text-center">
+  <content-area class="text-center" style="padding: 0 !important">
     <eq-window-simple
       title="Client File Drop Zone"
       style="width: 700px"
-      class="mt-5"
+      class="mt-3 p-0"
     >
       <div
         class="mb-3"
@@ -61,8 +61,8 @@
 import querystring        from 'querystring'
 import vue2Dropzone       from 'vue2-dropzone'
 import 'vue2-dropzone/dist/vue2Dropzone.min.css'
-import {SpireApiClient}   from "../../app/api/spire-api-client";
-import EqWindowSimple     from "../../components/eq-ui/EQWindowSimple";
+import {SpireApi}     from "../../app/api/spire-api";
+import EqWindowSimple from "../../components/eq-ui/EQWindowSimple";
 import EqWindow           from "../../components/eq-ui/EQWindow";
 import LoaderFakeProgress from "../../components/LoaderFakeProgress";
 import util               from "util";
@@ -85,8 +85,8 @@ export default {
       dropzoneOptions: {
         url: util.format(
           "%s/api/v1/client-files/import/file?%s",
-          SpireApiClient.getBasePath(),
-          querystring.stringify(SpireApiClient.getAccessTokenQueryString())
+          SpireApi.getBasePath(),
+          querystring.stringify(SpireApi.getAccessTokenQueryString())
         ),
         resizeWidth: 50,
         resizeHeight: 50,
@@ -104,8 +104,8 @@ export default {
       window.open(
         util.format(
           "%s/api/v1/client-files/export/spells?%s",
-          SpireApiClient.getBasePath(),
-          querystring.stringify(SpireApiClient.getAccessTokenQueryString())
+          SpireApi.getBasePath(),
+          querystring.stringify(SpireApi.getAccessTokenQueryString())
         ),
         '_blank'
       );
@@ -114,8 +114,8 @@ export default {
       window.open(
         util.format(
           "%s/api/v1/client-files/export/dbstr?%s",
-          SpireApiClient.getBasePath(),
-          querystring.stringify(SpireApiClient.getAccessTokenQueryString())
+          SpireApi.getBasePath(),
+          querystring.stringify(SpireApi.getAccessTokenQueryString())
         ),
         '_blank'
       );

@@ -22,7 +22,7 @@
           <table id="items-table" class="eq-table bordered eq-highlight-rows" style="display: table;">
             <thead>
             <tr>
-              <th style="text-align: center; width: 100px"></th>
+              <th style="text-align: center; width: 120px"></th>
               <th style="text-align: center; width: 100px" class="text-center">Id</th>
               <th style="text-align: center; width: auto;">Name</th>
               <th style="text-align: center; width: auto;">ReqLvl</th>
@@ -38,8 +38,20 @@
               <td class="p-0 text-center">
 
                 <b-button
+                  variant="primary"
+                  size="sm"
+                  style="width: 28px; height: 28px"
+                  class="btn-dark btn-outline-danger mr-2"
+                  title="Delete"
+                  @click="deleteItem(item)"
+                >
+                  <i class="fa fa-trash"></i>
+                </b-button>
+
+                <b-button
                   @click="editItem(item.id)"
                   size="sm"
+                  style="width: 28px; height: 28px"
                   title="Edit"
                   class="btn btn-dark btn-outline-success mr-2"
                 >
@@ -49,6 +61,7 @@
                 <b-button
                   @click="editItem(item.id, true)"
                   size="sm"
+                  style="width: 30px; height: 28px"
                   title="Clone"
                   variant="outline-light"
                 >
@@ -91,6 +104,7 @@ import {ROUTE}                                   from "@/routes";
 import * as util                                 from "util";
 import Tablesort                                 from "@/app/utility/tablesort.js";
 import ItemPopover                               from "@/components/ItemPopover";
+import {Items}                                   from "@/app/items";
 
 export default {
   name: "ItemPreviewTable",
@@ -118,6 +132,14 @@ export default {
     items: Array
   },
   methods: {
+
+    async deleteItem(item) {
+      if (confirm(`Are you sure you want to permanently delete this item? [${item.name}] (${item.id})`)) {
+        await Items.deleteItem(item.id)
+        this.$emit("reload-list", true);
+      }
+    },
+
     commify(x) {
       return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
     },

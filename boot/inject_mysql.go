@@ -101,9 +101,9 @@ func getEQEmuLocalMySQLConfig(serverconfig *serverconfig.EQEmuServerConfig) (*My
 }
 
 func isQueryLoggingEnabled() bool {
-	if env.IsAppEnvLocal() {
-		return true
-	}
+	//if env.IsAppEnvLocal() {
+	//	return true
+	//}
 
 	return env.GetBool("MYSQL_QUERY_LOGGING", "false")
 }

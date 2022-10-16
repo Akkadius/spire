@@ -16,7 +16,7 @@ import {BODYTYPES} from "@/app/constants/eq-bodytype-constants";
 import util from "util";
 import {DB_CLASSES, DB_CLASSES_WEAR_SHORT} from "@/app/constants/eq-classes-constants";
 import {DbStrApi, SpellsNewApi} from "@/app/api";
-import {SpireApiClient} from "@/app/api/spire-api-client";
+import {SpireApi} from "./api/spire-api";
 import {App} from "@/constants/app";
 import {Items} from "@/app/items";
 import {SpireQueryBuilder} from "@/app/api/spire-query-builder";
@@ -2822,7 +2822,7 @@ export class Spells {
   };
 
   public static async getSpellGroupNameById(spellGroupId) {
-    const result = await (new SpellsNewApi(SpireApiClient.getOpenApiConfig())).listSpellsNews(
+    const result = await (new SpellsNewApi(...SpireApi.cfg())).listSpellsNews(
       // @ts-ignore
       (new SpireQueryBuilder())
         .where("spellgroup", "=", spellGroupId)
@@ -2969,28 +2969,26 @@ export class Spells {
     const targetTypeColor = this.getTargetTypeColor(spell["targettype"]);
 
     let renderIconSize = 20;
-    let borderSize = 1;
-    let borderRadius = 3;
-    let marginLeft = 1;
-    let textTop = 10;
+    let borderSize     = 1;
+    let borderRadius   = 3;
+    let marginLeft     = 1;
+    let textTop        = 10;
     if (iconSize >= 40) {
       renderIconSize = 40;
-      borderSize = 2;
-      borderRadius = 3;
-      marginLeft = 2;
-    }
-    else if (iconSize >= 30) {
+      borderSize     = 2;
+      borderRadius   = 3;
+      marginLeft     = 2;
+    } else if (iconSize >= 30) {
       renderIconSize = 30;
-      borderSize = 1;
-      borderRadius = 6;
-      marginLeft = 1;
-    }
-    else if (iconSize >= 12) {
+      borderSize     = 1;
+      borderRadius   = 6;
+      marginLeft     = 1;
+    } else if (iconSize >= 12) {
       renderIconSize = 12;
-      borderSize = 1;
-      borderRadius = 2;
-      marginLeft = 0;
-      textTop = 1;
+      borderSize     = 1;
+      borderRadius   = 2;
+      marginLeft     = 0;
+      textTop        = 1;
     }
 
     return `
@@ -3038,7 +3036,7 @@ export class Spells {
       return this.data[spellId]
     }
 
-    const api    = (new SpellsNewApi(SpireApiClient.getOpenApiConfig()))
+    const api    = (new SpellsNewApi(...SpireApi.cfg()))
     const result = await api.getSpellsNew({id: spellId})
     if (result.status === 200 && result.data) {
       this.setSpell(spellId, result.data);
@@ -3049,7 +3047,7 @@ export class Spells {
   }
 
   public static async preloadDbstr() {
-    const result = await (new DbStrApi(SpireApiClient.getOpenApiConfig())).listDbStrs(
+    const result = await (new DbStrApi(...SpireApi.cfg())).listDbStrs(
       // @ts-ignore
       (new SpireQueryBuilder())
         .where("type", "=", 6)
@@ -3081,7 +3079,7 @@ export class Spells {
       return this.dbstrData[id]
     }
 
-    const result = await (new DbStrApi(SpireApiClient.getOpenApiConfig())).listDbStrs(
+    const result = await (new DbStrApi(...SpireApi.cfg())).listDbStrs(
       // @ts-ignore
       (new SpireQueryBuilder())
         .where("type", "=", 6)
@@ -3353,4 +3351,15 @@ export class Spells {
   }
 
 
+  static async deleteSpell(id) {
+    try {
+      // @ts-ignore
+      const r = await (new SpellsNewApi(...SpireApi.cfg())).deleteSpellsNew({id: id})
+      if (r.status === 200 && r.data) {
+        return r.data
+      }
+    } catch (err) {
+      return Promise.reject(err)
+    }
+  }
 }

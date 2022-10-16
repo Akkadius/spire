@@ -201,7 +201,7 @@
 <script type="ts">
 import {ItemApi} from "@/app/api/api";
 import EqWindow from "@/components/eq-ui/EQWindow.vue";
-import {SpireApiClient} from "@/app/api/spire-api-client";
+import {SpireApi} from "../../app/api/spire-api";
 import EqItemCardPreview from "@/components/preview/EQItemCardPreview.vue";
 import {DB_CLASSES_ICONS} from "@/app/constants/eq-class-icon-constants";
 import {DB_CLASSES_SHORT, DB_PLAYER_CLASSES} from "@/app/constants/eq-classes-constants";
@@ -397,7 +397,7 @@ export default {
     },
 
     async getItemFields() {
-      const api     = (new ItemApi(SpireApiClient.getOpenApiConfig()))
+      const api     = (new ItemApi(...SpireApi.cfg()))
       let request   = {};
       request.limit = 1;
       const result  = await api.listItems(request)
@@ -419,7 +419,7 @@ export default {
     listItems: function () {
       this.loaded = false;
 
-      const api     = (new ItemApi(SpireApiClient.getOpenApiConfig()))
+      const api     = (new ItemApi(...SpireApi.cfg()))
       const builder = new SpireQueryBuilder()
 
       // filter by class
@@ -508,7 +508,7 @@ export default {
           let itemsToPreload = [];
 
           // bulk fetch preload
-          const response = await (new ItemApi(SpireApiClient.getOpenApiConfig())).getItemsBulk({
+          const response = await (new ItemApi(...SpireApi.cfg())).getItemsBulk({
             body: {
               ids: itemsToPreload
             }

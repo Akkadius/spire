@@ -184,8 +184,13 @@ export default new Router({
         },
         {
           path: '/connections',
-          component: () => import('./views/Connections.vue'),
+          component: () => import('./views/connections/Connections.vue'),
           meta: {title: "Manage Database Connections"},
+        },
+        {
+          path: util.format(ROUTE.DATABASE_CONNECTION_AUDIT_LOG, ":connection"),
+          component: () => import('./views/connections/AuditLog.vue'),
+          meta: {title: "Audit Log"},
         },
         {
           path: ROUTE.QUEST_API_EXPLORER,

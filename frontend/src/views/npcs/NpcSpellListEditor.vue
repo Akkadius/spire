@@ -228,9 +228,9 @@
 import EqWindow            from "../../components/eq-ui/EQWindow";
 import NpcSpellPreview     from "../../components/preview/NpcSpellPreview";
 import {SpireQueryBuilder} from "../../app/api/spire-query-builder";
-import {NpcSpellApi}       from "../../app/api";
-import {SpireApiClient}    from "../../app/api/spire-api-client";
-import SpellSelector       from "../../components/selectors/SpellSelector";
+import {NpcSpellApi} from "../../app/api";
+import {SpireApi}    from "../../app/api/spire-api";
+import SpellSelector from "../../components/selectors/SpellSelector";
 import {NpcSpellsEntryApi} from "../../app/api/api/npc-spells-entry-api";
 import {scrollToTarget}    from "../../app/utility/scrollToTarget";
 import InfoErrorBanner     from "../../components/InfoErrorBanner";
@@ -301,7 +301,7 @@ export default {
 
     async saveSpellListEntry() {
       try {
-        const api = (new NpcSpellsEntryApi(SpireApiClient.getOpenApiConfig()))
+        const api = (new NpcSpellsEntryApi(...SpireApi.cfg()))
         let entry = JSON.parse(JSON.stringify(this.editingSpellEntry))
         delete entry.spells_new;
 
@@ -526,7 +526,7 @@ export default {
 
       try {
         const npcSpellsId = parseInt(this.$route.params.id)
-        const api         = (new NpcSpellsEntryApi(SpireApiClient.getOpenApiConfig()))
+        const api         = (new NpcSpellsEntryApi(...SpireApi.cfg()))
         const r           = await api.createNpcSpellsEntry(
           {
             npcSpellsEntry: {
@@ -592,7 +592,7 @@ export default {
         ])
 
       try {
-        const r = await (new NpcSpellApi(SpireApiClient.getOpenApiConfig()))
+        const r = await (new NpcSpellApi(...SpireApi.cfg()))
           .getNpcSpell(
             {
               id: this.$route.params.id,

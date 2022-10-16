@@ -23,12 +23,12 @@ require (
 	github.com/google/wire v0.5.0
 	github.com/iancoleman/strcase v0.2.0
 	github.com/inconshreveable/mousetrap v1.0.1 // indirect
-	github.com/influxdata/influxdb-client-go/v2 v2.10.0
+	github.com/influxdata/influxdb-client-go/v2 v2.11.0
 	github.com/influxdata/line-protocol v0.0.0-20210922203350-b1ad95c89adf // indirect
 	github.com/joho/godotenv v1.4.0
 	github.com/k0kubun/pp/v3 v3.1.0
 	github.com/labstack/echo/v4 v4.9.0
-	github.com/labstack/gommon v0.3.1
+	github.com/labstack/gommon v0.4.0
 	github.com/mattn/go-colorable v0.1.13 // indirect
 	github.com/muesli/termenv v0.13.0
 	github.com/oleiade/reflections v1.0.1 // indirect
@@ -43,15 +43,16 @@ require (
 	github.com/valyala/fasttemplate v1.2.1
 	github.com/volatiletech/null/v8 v8.1.2
 	github.com/volatiletech/strmangle v0.0.4 // indirect
-	golang.org/x/crypto v0.0.0-20220926161630-eccd6366d1be // indirect
-	golang.org/x/net v0.0.0-20220926192436-02166a98028e // indirect
-	golang.org/x/sys v0.0.0-20220926163933-8cfa568d3c25 // indirect
+	golang.org/x/crypto v0.0.0-20221005025214-4161e89ecf1b // indirect
+	golang.org/x/net v0.0.0-20221004154528-8021a29435af // indirect
+	golang.org/x/oauth2 v0.0.0-20221006150949-b44042a4b9c1 // indirect
+	golang.org/x/sys v0.0.0-20221006211917-84dc82d7e875 // indirect
 	golang.org/x/text v0.3.7
 	golang.org/x/time v0.0.0-20220922220347-f3bd1da661af // indirect
 	golang.org/x/tools v0.1.12 // indirect
 	golang.org/x/xerrors v0.0.0-20220907171357-04be3eba64a2 // indirect
 	gopkg.in/oleiade/reflections.v1 v1.0.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1
-	gorm.io/driver/mysql v1.3.6
-	gorm.io/gorm v1.23.10
+	gorm.io/driver/mysql v1.4.1
+	gorm.io/gorm v1.24.0
 )

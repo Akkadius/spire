@@ -35,6 +35,8 @@ var spireTables = []models.Modelable{
 	&models.ServerDatabaseConnection{},
 	&models.AnalyticEvent{},
 	&models.AnalyticEventCount{},
+	&models.UserEventLog{},
+	&models.UserServerResourcePermission{},
 }
 
 func (c Connections) SpireMigrate(drop bool) {
@@ -45,15 +47,5 @@ func (c Connections) SpireMigrate(drop bool) {
 		}
 		fmt.Printf("Migrating table [%v]\n", table.TableName())
 		_ = c.SpireDb().Migrator().AutoMigrate(table)
-
-		//indexes, ok := table.(models.Indexable)
-		//if ok {
-		//	fmt.Printf("Running indexes for [%v]\n", table.TableName())
-		//
-		//	for indexName, indexKeys := range indexes.Indexes() {
-		//		c.SpireDb().Model(table).Migrator().AddIndex(indexName, indexKeys...)
-		//		fmt.Printf("Adding index for [%v] index [%v] keys %v\n", table.TableName(), indexName, indexKeys)
-		//	}
-		//}
 	}
 }

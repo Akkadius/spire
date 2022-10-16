@@ -59,7 +59,7 @@
 import {TELEPORT_ZONE_SELECTOR_TYPE} from "@/app/constants/eq-spell-constants";
 import EqWindowSimple                from "@/components/eq-ui/EQWindowSimple";
 import {AuraApi}                     from "@/app/api";
-import {SpireApiClient}              from "@/app/api/spire-api-client";
+import {SpireApi}              from "@/app/api/spire-api";
 import util                          from "util";
 import Expansions                    from "@/app/utility/expansions";
 import EqCheckbox                    from "@/components/eq-ui/EQCheckbox";
@@ -123,15 +123,8 @@ export default {
       }
     },
 
-    getExpansionIcon(expansion) {
-      return Expansions.getExpansionIconUrlSmall(expansion - 1) // aura table is offset by 1
-    },
-    getExpansionName(expansion) {
-      return Expansions.getExpansionName(expansion - 1) // aura table is offset by 1
-    },
-
     async loadAuras() {
-      const api    = (new AuraApi(SpireApiClient.getOpenApiConfig()))
+      const api    = (new AuraApi(...SpireApi.cfg()))
       const result = await api.listAuras({
         groupBy: "name",
       })

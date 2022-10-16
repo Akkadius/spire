@@ -1460,7 +1460,7 @@ export default {
     },
 
     isGoalIdSelectorActive() {
-      return this.task.task_activities && this.task.task_activities[this.selectedActivity] ? this.task.task_activities[this.selectedActivity].goalmethod === 0 : false
+      return this.task && this.task.task_activities && this.task.task_activities[this.selectedActivity] ? this.task.task_activities[this.selectedActivity].goalmethod === 0 : false
     },
 
     isDeliverToNPCActive() {
@@ -2044,7 +2044,7 @@ export default {
         EditFormFieldUtil.setFieldHighlightHasSubEditor(field)
       })
 
-      if (this.task.rewardmethod === 0) {
+      if (this.task && this.task.reward_method === 0) {
         EditFormFieldUtil.setFieldHighlightHasSubEditor("rewardid")
         // EditFormFieldUtil.setFieldHighlightHasSubEditor("reward")
       }

@@ -115,9 +115,9 @@ import EqWindowSimple        from "@/components/eq-ui/EQWindowSimple";
 import EqAssets              from "../../app/eq-assets/eq-assets";
 import {debounce}            from "../../app/utility/debounce";
 import {Items}               from "../../app/items";
-import {ItemApi}             from "../../app/api";
-import {SpireApiClient}      from "../../app/api/spire-api-client";
-import {SpireQueryBuilder}   from "../../app/api/spire-query-builder";
+import {ItemApi}           from "../../app/api";
+import {SpireApi}          from "../../app/api/spire-api";
+import {SpireQueryBuilder} from "../../app/api/spire-query-builder";
 
 const MAX_ITEM_IDFILE = 100000;
 let itemModels        = [];
@@ -232,7 +232,7 @@ export default {
 
       // item icon based search
       if (this.searchByIcon) {
-        const api = (new ItemApi(SpireApiClient.getOpenApiConfig()))
+        const api = (new ItemApi(...SpireApi.cfg()))
         const r = await api.listItems(
           (new SpireQueryBuilder())
             .where("icon", "=", this.findByIcon)

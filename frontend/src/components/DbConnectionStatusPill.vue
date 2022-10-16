@@ -27,8 +27,8 @@
 </template>
 
 <script>
-import {SpireApiClient} from "../app/api/spire-api-client";
-import {EventBus}       from "@/app/event-bus/event-bus";
+import {SpireApi} from "../app/api/spire-api";
+import {EventBus} from "@/app/event-bus/event-bus";
 import {ROUTE}          from "@/routes";
 import util             from "util";
 
@@ -83,7 +83,7 @@ export default {
 
     fetchConnection() {
       // connection status
-      SpireApiClient.v1().get('/connections').then((r) => {
+      SpireApi.v1().get('/connections').then((r) => {
 
         this.connection       = {}
         this.connectionStatus = "connecting"
@@ -95,7 +95,7 @@ export default {
             if (connection.active) {
               this.connection = connection
 
-              SpireApiClient.v1().get(`/connection-check/${connectionId}`).then((cr) => {
+              SpireApi.v1().get(`/connection-check/${connectionId}`).then((cr) => {
                 this.connectionStatus = cr.data.data.message
               })
             }

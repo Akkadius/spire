@@ -616,7 +616,7 @@ func (g *GenerateModel) isValidRelationshipType(relationshipType string) bool {
 }
 
 func (g *GenerateModel) debug(msg string) {
-	if g.debugEnabled || env.GetBool("DEBUG", "false") {
+	if g.debugEnabled || env.GetInt("DEBUG", "0") > 0 {
 		console.Info("[Debug] [model_generator.go] " + msg)
 	}
 }

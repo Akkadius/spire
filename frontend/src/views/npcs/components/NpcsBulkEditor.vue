@@ -169,7 +169,7 @@
 import EqWindowComplex     from "../../../components/eq-ui/EQWindowComplex";
 import EqWindow            from "../../../components/eq-ui/EQWindow";
 import {NpcTypeApi}        from "../../../app/api";
-import {SpireApiClient}    from "../../../app/api/spire-api-client";
+import {SpireApi}          from "../../../app/api/spire-api";
 import {SpireQueryBuilder} from "../../../app/api/spire-query-builder";
 
 export default {
@@ -336,7 +336,7 @@ export default {
 
     // get example npc record for determining data types
     let fields  = []
-    const api   = (new NpcTypeApi(SpireApiClient.getOpenApiConfig()))
+    const api   = (new NpcTypeApi(...SpireApi.cfg()))
     let builder = (new SpireQueryBuilder())
     api.listNpcTypes(
       builder.orderBy(["id"]).limit(1).get()

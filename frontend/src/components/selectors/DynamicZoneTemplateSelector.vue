@@ -68,9 +68,9 @@
 </template>
 
 <script>
-import EqWindow                 from "@/components/eq-ui/EQWindow";
-import {SpireApiClient}         from "@/app/api/spire-api-client";
-import {scrollToTarget}         from "@/app/utility/scrollToTarget";
+import EqWindow         from "@/components/eq-ui/EQWindow";
+import {SpireApi}       from "../../app/api/spire-api";
+import {scrollToTarget} from "@/app/utility/scrollToTarget";
 import {DynamicZoneTemplateApi} from "@/app/api";
 
 export default {
@@ -89,7 +89,7 @@ export default {
     }
   },
   async mounted() {
-    const api = (new DynamicZoneTemplateApi(SpireApiClient.getOpenApiConfig()))
+    const api = (new DynamicZoneTemplateApi(...SpireApi.cfg()))
     const r   = await api.listDynamicZoneTemplates()
     if (r.status === 200) {
       this.rows = r.data

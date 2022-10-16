@@ -76,7 +76,7 @@
 <script>
 import EqWindow            from "../../../components/eq-ui/EQWindow";
 import {TaskApi}           from "@/app/api";
-import {SpireApiClient}    from "@/app/api/spire-api-client";
+import {SpireApi}          from "../../../app/api/spire-api";
 import {SpireQueryBuilder} from "@/app/api/spire-query-builder";
 import {scrollToTarget}    from "@/app/utility/scrollToTarget";
 
@@ -113,7 +113,7 @@ export default {
   },
   methods: {
     async init() {
-      const r = await (new TaskApi(SpireApiClient.getOpenApiConfig())).listTasks(
+      const r = await (new TaskApi(...SpireApi.cfg())).listTasks(
         (new SpireQueryBuilder())
           .orderBy([this.replayField])
           .get()

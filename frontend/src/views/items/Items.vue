@@ -227,6 +227,7 @@
     <!-- table -->
     <item-preview-table
       :items="items"
+      @reload-list="listItems"
       v-if="loaded && listType === 'table' && items"
     />
 
@@ -238,7 +239,7 @@
 <script type="ts">
 import {ItemApi} from "@/app/api/api";
 import EqWindow from "@/components/eq-ui/EQWindow.vue";
-import {SpireApiClient} from "@/app/api/spire-api-client";
+import {SpireApi} from "../../app/api/spire-api";
 import EqItemCardPreview from "@/components/preview/EQItemCardPreview.vue";
 import {DB_CLASSES_ICONS} from "@/app/constants/eq-class-icon-constants";
 import {DB_CLASSES_SHORT, DB_PLAYER_CLASSES} from "@/app/constants/eq-classes-constants";
@@ -673,7 +674,7 @@ export default {
     listItems: function () {
       this.loaded   = false;
       const builder = new SpireQueryBuilder()
-      const api     = (new ItemApi(SpireApiClient.getOpenApiConfig()))
+      const api     = (new ItemApi(...SpireApi.cfg()))
 
       // filter by class
       if (this.selectedClasses && parseInt(this.selectedClasses) > 0 && parseInt(this.selectedClasses) !== 65535) {

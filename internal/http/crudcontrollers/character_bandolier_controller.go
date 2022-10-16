@@ -2,6 +2,7 @@ package crudcontrollers
 
 import (
 	"fmt"
+	"github.com/Akkadius/spire/internal/auditlog"
 	"github.com/Akkadius/spire/internal/database"
 	"github.com/Akkadius/spire/internal/http/routes"
 	"github.com/Akkadius/spire/internal/models"
@@ -10,20 +11,24 @@ import (
 	"gorm.io/gorm"
 	"net/http"
 	"strconv"
+	"strings"
 )
 
 type CharacterBandolierController struct {
-	db	   *database.DatabaseResolver
-	logger *logrus.Logger
+	db       *database.DatabaseResolver
+	logger   *logrus.Logger
+	auditLog *auditlog.UserEvent
 }
 
 func NewCharacterBandolierController(
 	db *database.DatabaseResolver,
 	logger *logrus.Logger,
+	auditLog *auditlog.UserEvent,
 ) *CharacterBandolierController {
 	return &CharacterBandolierController{
-		db:	    db,
-		logger: logger,
+		db:       db,
+		logger:   logger,
+		auditLog: auditLog,
 	}
 }
 
@@ -204,9 +209,28 @@ func (e *CharacterBandolierController) updateCharacterBandolier(c echo.Context) 
 	}
 
 	// save top-level using only changes
-	err = query.Session(&gorm.Session{FullSaveAssociations: false}).Updates(database.ResultDifference(result, request)).Error
+	diff := database.ResultDifference(result, request)
+	err = query.Session(&gorm.Session{FullSaveAssociations: false}).Updates(diff).Error
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error updating entity [%v]", err.Error())})
+	}
+
+	// log update event
+	if e.db.GetSpireDb() != nil && len(diff) > 0 {
+		// build ids
+		var ids []string
+		for i, _ := range keys {
+			param := fmt.Sprintf("%v", params[i])
+			ids = append(ids, fmt.Sprintf("%v", strings.ReplaceAll(keys[i], "?", param)))
+		}
+		// build fields updated
+		var fieldsUpdated []string
+		for k, v := range diff {
+			fieldsUpdated = append(fieldsUpdated, fmt.Sprintf("%v = %v", k, v))
+		}
+		// record event
+		event := fmt.Sprintf("Updated [CharacterBandolier] [%v] fields [%v]", strings.Join(ids, ", "), strings.Join(fieldsUpdated, ", "))
+		e.auditLog.LogUserEvent(c, "UPDATE", event)
 	}
 
 	return c.JSON(http.StatusOK, request)
@@ -238,6 +262,20 @@ func (e *CharacterBandolierController) createCharacterBandolier(c echo.Context) 
 			http.StatusInternalServerError,
 			echo.Map{"error": fmt.Sprintf("Error inserting entity [%v]", err.Error())},
 		)
+	}
+
+	// log create event
+	if e.db.GetSpireDb() != nil {
+		// diff between an empty model and the created
+		diff := database.ResultDifference(models.CharacterBandolier{}, characterBandolier)
+		// build fields created
+		var fields []string
+		for k, v := range diff {
+			fields = append(fields, fmt.Sprintf("%v = %v", k, v))
+		}
+		// record event
+		event := fmt.Sprintf("Created [CharacterBandolier] [%v] data [%v]", characterBandolier.ID, strings.Join(fields, ", "))
+		e.auditLog.LogUserEvent(c, "CREATE", event)
 	}
 
 	return c.JSON(http.StatusOK, characterBandolier)
@@ -305,6 +343,19 @@ func (e *CharacterBandolierController) deleteCharacterBandolier(c echo.Context) 
 	err = query.Limit(10000).Delete(&result).Error
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Error deleting entity"})
+	}
+
+	// log delete event
+	if e.db.GetSpireDb() != nil {
+		// build ids
+		var ids []string
+		for i, _ := range keys {
+			param := fmt.Sprintf("%v", params[i])
+			ids = append(ids, fmt.Sprintf("%v", strings.ReplaceAll(keys[i], "?", param)))
+		}
+		// record event
+		event := fmt.Sprintf("Deleted [CharacterBandolier] [%v] keys [%v]", result.ID, strings.Join(ids, ", "))
+		e.auditLog.LogUserEvent(c, "DELETE", event)
 	}
 
 	return c.JSON(http.StatusOK, echo.Map{"success": "Entity deleted successfully"})

@@ -93,9 +93,9 @@ import SpellPopover        from "../SpellPopover";
 import EqDebug             from "../eq-ui/EQDebug";
 import {NPC_SPELL_TYPES}   from "../../app/constants/eq-npc-spells";
 import {SpireQueryBuilder} from "../../app/api/spire-query-builder";
-import {NpcSpellApi}       from "../../app/api";
-import {SpireApiClient}    from "../../app/api/spire-api-client";
-import Tablesort           from "../../app/utility/tablesort";
+import {NpcSpellApi} from "../../app/api";
+import {SpireApi}    from "../../app/api/spire-api";
+import Tablesort     from "../../app/utility/tablesort";
 import {NpcSpellsEntryApi} from "../../app/api/api/npc-spells-entry-api";
 
 export default {
@@ -163,7 +163,7 @@ export default {
       if (confirm(`Are you sure you want to delete this spell? \n\n(${e.spells_new.name}) (${e.spells_new.id})?`)) {
 
         try {
-          await (new NpcSpellsEntryApi(SpireApiClient.getOpenApiConfig()))
+          await (new NpcSpellsEntryApi(...SpireApi.cfg()))
             .deleteNpcSpellsEntry({ id: e.id })
             .then(() => {
               this.$emit("reload-parent", true);
@@ -188,7 +188,7 @@ export default {
 
       if (this.spells.parent_list > 0) {
         try {
-          const NpcSpellsClient = (new NpcSpellApi(SpireApiClient.getOpenApiConfig()))
+          const NpcSpellsClient = (new NpcSpellApi(...SpireApi.cfg()))
           const r               = await NpcSpellsClient.getNpcSpell({ id: this.spells.parent_list },
             {
               query:
@@ -218,7 +218,11 @@ export default {
       this.spellsList = spellsList
         .sort((a, b) => {
           if (a.minlevel === b.minlevel) {
-            return a.spells_new.name.localeCompare(b.spells_new.name)
+            return a.spells_new &&
+              b.spells_new &&
+              b.spells_new.name &&
+              a.spells_new.name &&
+              a.spells_new.name.localeCompare(b.spells_new.name)
           }
 
           return (b.minlevel < a.minlevel) ? 1 : -1

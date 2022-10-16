@@ -18,6 +18,7 @@ var httpSet = wire.NewSet(
 	appmiddleware.NewUserContextMiddleware,
 	appmiddleware.NewRequestLogMiddleware,
 	appmiddleware.NewReadOnlyMiddleware,
+	appmiddleware.NewPermissionsMiddleware,
 	controllers.NewAnalyticsController,
 	controllers.NewHelloWorldController,
 	controllers.NewConnectionsController,
@@ -30,6 +31,8 @@ var httpSet = wire.NewSet(
 	controllers.NewQuestFileApiController,
 	controllers.NewClientFilesController,
 	controllers.NewAssetsController,
+	controllers.NewPermissionsController,
+	controllers.NewUsersController,
 	staticmaps.NewStaticMapController,
 	provideControllers,
 	NewRouter,
@@ -47,6 +50,7 @@ func NewRouter(
 	crudc *crudControllers,
 	userContextMiddleware *appmiddleware.UserContextMiddleware,
 	readOnlyModeMiddleware *appmiddleware.ReadOnlyMiddleware,
+	permissionsMiddleware *appmiddleware.PermissionsMiddleware,
 	logMiddleware *appmiddleware.RequestLogMiddleware,
 	cache *gocache.Cache,
 ) *routes.Router {
@@ -104,6 +108,7 @@ func NewRouter(
 				crudc.routes,
 				userContextMiddleware.HandleHeader(),
 				readOnlyModeMiddleware.Handle(),
+				permissionsMiddleware.Handle(),
 				v1RateLimit(),
 				middleware.GzipWithConfig(middleware.GzipConfig{Level: 1}),
 			),
@@ -126,6 +131,8 @@ func provideControllers(
 	clientFilesController *controllers.ClientFilesController,
 	staticMaps *staticmaps.StaticMapController,
 	assetsController *controllers.AssetsController,
+	permissionsController *controllers.PermissionsController,
+	usersController *controllers.UsersController,
 ) *appControllerGroups {
 	return &appControllerGroups{
 		authControllers: []routes.Controller{
@@ -139,6 +146,8 @@ func provideControllers(
 			docs,
 			query,
 			clientFilesController,
+			permissionsController,
+			usersController,
 		},
 		v1controllersNoAuth: []routes.Controller{
 			quest,

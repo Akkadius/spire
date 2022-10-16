@@ -421,3 +421,8 @@ th[role=columnheader]:hover:not(.no-sort):after {
 .pagination .page-item.active .page-link {
     color: gray;
 }
+
+/*switch inputs - were too blended with white background */
+.custom-control-input:disabled~.custom-control-label::before, .custom-control-input[disabled]~.custom-control-label::before {
+    background-color: #f6f6f6;
+}

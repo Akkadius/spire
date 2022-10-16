@@ -516,9 +516,9 @@ import {EXAMPLE_SPELL_DATA}     from "@/app/constants/eq-example-spell-data";
 import NpcSpecialAbilities      from "@/components/tools/NpcSpecialAbilities";
 import RangeVisualizer          from "../components/tools/RangeVisualizer";
 import EqNpcCardPreview         from "../components/preview/EQNpcCardPreview";
-import {NpcTypeApi}             from "../app/api";
-import {SpireApiClient}         from "../app/api/spire-api-client";
-import {SpireQueryBuilder}      from "../app/api/spire-query-builder";
+import {NpcTypeApi}        from "../app/api";
+import {SpireApi}          from "../app/api/spire-api";
+import {SpireQueryBuilder} from "../app/api/spire-query-builder";
 import ContentArea              from "../components/layout/ContentArea";
 import FacialAppearanceSelector from "../components/selectors/FacialAppearanceSelector";
 
@@ -598,7 +598,7 @@ export default {
     )
     builder.orderBy(["id"])
 
-    const response = await (new NpcTypeApi(SpireApiClient.getOpenApiConfig())).getNpcTypesBulk({
+    const response = await (new NpcTypeApi(...SpireApi.cfg())).getNpcTypesBulk({
         body: {
           ids: npcIDs
         },

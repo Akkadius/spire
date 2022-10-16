@@ -20,7 +20,7 @@ type User struct {
 }
 
 func (User) TableName() string {
-	return "users"
+	return "spire_users"
 }
 
 func (User) Relationships() []string {

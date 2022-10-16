@@ -1,6 +1,7 @@
 package boot
 
 import (
+	"github.com/Akkadius/spire/internal/auditlog"
 	"github.com/Akkadius/spire/internal/clientfiles"
 	"github.com/Akkadius/spire/internal/connection"
 	"github.com/Akkadius/spire/internal/desktop"
@@ -10,6 +11,7 @@ import (
 	"github.com/Akkadius/spire/internal/permissions"
 	"github.com/Akkadius/spire/internal/questapi"
 	"github.com/Akkadius/spire/internal/serverconfig"
+	"github.com/gertd/go-pluralize"
 	"github.com/google/wire"
 )
 
@@ -25,5 +27,7 @@ var serviceSet = wire.NewSet(
 	clientfiles.NewImporter,
 	serverconfig.NewEQEmuServerConfig,
 	pathmgmt.NewPathManagement,
-	permissions.NewResourceList,
+	permissions.NewService,
+	pluralize.NewClient,
+	auditlog.NewUserEvent,
 )

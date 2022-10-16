@@ -24,7 +24,7 @@ func LoadEnvFileIfExists() error {
 		_ = os.Setenv("APP_ENV", "local")
 	}
 
-	if IsAppEnvLocalOrTesting() && !envLoaded {
+	if !envLoaded {
 		// use dev or testing envs depending on the environment
 		envLoadMsg := ""
 		envFile := ""

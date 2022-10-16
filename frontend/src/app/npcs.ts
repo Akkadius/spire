@@ -1,6 +1,6 @@
 import {SPECIAL_ATTACKS} from "@/app/constants/eq-special-attacks";
 import {NpcTypeApi, Spawn2Api} from "@/app/api";
-import {SpireApiClient} from "@/app/api/spire-api-client";
+import {SpireApi} from "./api/spire-api";
 import {SpireQueryBuilder} from "@/app/api/spire-query-builder";
 
 type NpcByZoneQueryRequest = {
@@ -216,7 +216,7 @@ export class Npcs {
    * @param npcType
    */
   static async updateNpc(id: number, npcType: any) {
-    const npcTypeApi = (new NpcTypeApi(SpireApiClient.getOpenApiConfig()))
+    const npcTypeApi = (new NpcTypeApi(...SpireApi.cfg()))
     return await npcTypeApi.updateNpcType({
       id: id,
       npcType: npcType
@@ -228,7 +228,7 @@ export class Npcs {
    * @param relations
    */
   static async listNpcsByName(name: string, relations: any[] = []) {
-    const npcTypeApi = (new NpcTypeApi(SpireApiClient.getOpenApiConfig()))
+    const npcTypeApi = (new NpcTypeApi(...SpireApi.cfg()))
     let builder      = (new SpireQueryBuilder())
 
     let includes: any[] = [];
@@ -272,7 +272,7 @@ export class Npcs {
    * @param relations
    */
   static async listNpcsByEmoteId(emoteId: number, relations: any[] = []) {
-    const npcTypeApi = (new NpcTypeApi(SpireApiClient.getOpenApiConfig()))
+    const npcTypeApi = (new NpcTypeApi(...SpireApi.cfg()))
     let builder      = (new SpireQueryBuilder())
 
     let includes: any[] = [];
@@ -297,7 +297,7 @@ export class Npcs {
    * @param relations
    */
   static async listNpcsByNpcSpellsId(npcSpellsId: number, relations: any[] = []) {
-    const npcTypeApi = (new NpcTypeApi(SpireApiClient.getOpenApiConfig()))
+    const npcTypeApi = (new NpcTypeApi(...SpireApi.cfg()))
     let builder      = (new SpireQueryBuilder())
 
     let includes: any[] = [];
@@ -323,7 +323,7 @@ export class Npcs {
    * @param relations
    */
   static async getNpc(id: number, relations: any[] = []) {
-    const npcTypeApi = (new NpcTypeApi(SpireApiClient.getOpenApiConfig()))
+    const npcTypeApi = (new NpcTypeApi(...SpireApi.cfg()))
     let builder      = (new SpireQueryBuilder())
 
     let includes: any[] = [];
@@ -358,7 +358,7 @@ export class Npcs {
    * @param relations
    */
   static async getNpcsBulk(ids: number[], relations: any[] = []) {
-    const npcTypeApi = (new NpcTypeApi(SpireApiClient.getOpenApiConfig()))
+    const npcTypeApi = (new NpcTypeApi(...SpireApi.cfg()))
     let builder      = (new SpireQueryBuilder())
 
     let includes: any[] = [];
@@ -399,7 +399,7 @@ export class Npcs {
       uniqueEntries: true
     }
   ) {
-    const spawn2Api = (new Spawn2Api(SpireApiClient.getOpenApiConfig()))
+    const spawn2Api = (new Spawn2Api(...SpireApi.cfg()))
     const builder   = (new SpireQueryBuilder())
 
     builder.where("zone", "=", zoneShortName)

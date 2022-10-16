@@ -1668,9 +1668,9 @@ import SpellAnimationPreview          from "./components/SpellAnimationPreview";
 import SpellAnimationViewer           from "../asset-viewers/SpellAnimationViewer";
 import SpellAnimationSelector         from "./components/SpellAnimationSelector";
 import EqCheckbox                     from "../../components/eq-ui/EQCheckbox";
-import {DbStrApi, SpellsNewApi}       from "../../app/api";
-import {SpireApiClient}               from "../../app/api/spire-api-client";
-import SpellClassSelector             from "./components/SpellClassSelector";
+import {DbStrApi, SpellsNewApi} from "../../app/api";
+import {SpireApi}               from "../../app/api/spire-api";
+import SpellClassSelector       from "./components/SpellClassSelector";
 import SpellDeitySelector             from "./components/SpellDeitySelector";
 import FreeIdSelector                 from "../../components/tools/FreeIdSelector";
 import SpellSpaPreviewPane            from "./components/SpellSpaPreviewPane";
@@ -1842,7 +1842,7 @@ export default {
         return this.dbStrSelectData[typeId]
       }
 
-      const DbStrApiClient = (new DbStrApi(SpireApiClient.getOpenApiConfig()))
+      const DbStrApiClient = (new DbStrApi(...SpireApi.cfg()))
       const response       = await DbStrApiClient.listDbStrs(
         (new SpireQueryBuilder()
             .where("type", "=", typeId)
@@ -2119,7 +2119,7 @@ export default {
       this.error        = ""
       this.notification = ""
 
-      const api = (new SpellsNewApi(SpireApiClient.getOpenApiConfig()))
+      const api = (new SpellsNewApi(...SpireApi.cfg()))
       api.updateSpellsNew({
         id: this.spell.id,
         spellsNew: this.spell
@@ -2158,7 +2158,7 @@ export default {
     },
 
     getSpaDefaultValues(spa, index) {
-      const api   = (new SpellsNewApi(SpireApiClient.getOpenApiConfig()))
+      const api   = (new SpellsNewApi(...SpireApi.cfg()))
       let whereOr = [];
       for (let effectIndex = 1; effectIndex <= 12; effectIndex++) {
         whereOr.push(["effectid" + effectIndex, "__", spa]);

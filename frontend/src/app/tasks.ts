@@ -1,13 +1,12 @@
 import {TaskActivityApi, TaskApi} from "@/app/api";
-import {SpireApiClient} from "@/app/api/spire-api-client";
+import {SpireApi} from "./api/spire-api";
 import {TASK_ACTIVITY_TYPE} from "@/app/constants/eq-task-constants";
 import {HttpStatus} from "@/app/api/http-status";
 import {SpireQueryBuilder} from "@/app/api/spire-query-builder";
-
 export class Tasks {
 
   public static async getTasks() {
-    const r = await (new TaskApi(SpireApiClient.getOpenApiConfig())).listTasks()
+    const r = await (new TaskApi(...SpireApi.cfg())).listTasks()
     if (r.status === HttpStatus.OK) {
       return r.data
     }
@@ -16,11 +15,11 @@ export class Tasks {
   }
 
   public static getTaskApi() {
-    return (new TaskApi(SpireApiClient.getOpenApiConfig()));
+    return (new TaskApi(...SpireApi.cfg()));
   }
 
   public static getTaskActivitiesApi() {
-    return (new TaskActivityApi(SpireApiClient.getOpenApiConfig()));
+    return (new TaskActivityApi(...SpireApi.cfg()));
   }
 
   // TODO: bubble up error handling

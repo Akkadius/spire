@@ -57,8 +57,8 @@
 </template>
 
 <script>
-import {SpireApiClient} from "../../app/api/spire-api-client";
-import * as util        from "util";
+import {SpireApi} from "../../app/api/spire-api";
+import * as util  from "util";
 import EqTabs           from "../eq-ui/EQTabs";
 import EqTab            from "../eq-ui/EQTab";
 
@@ -96,7 +96,7 @@ export default {
     }
   },
   mounted() {
-    SpireApiClient.v1().get(
+    SpireApi.v1().get(
       util.format(
         `query/free-id-ranges/%s/%s`,
         this.tableName,
@@ -109,7 +109,7 @@ export default {
     });
 
     if (this.withReserved) {
-      SpireApiClient.v1().get(
+      SpireApi.v1().get(
         util.format(
           `query/free-ids-reserved/%s/%s/%s`,
           this.tableName,

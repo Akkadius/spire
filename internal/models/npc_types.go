@@ -129,6 +129,7 @@ type NpcType struct {
 	Flymode                int8               `json:"flymode" gorm:"Column:flymode"`
 	AlwaysAggro            int8               `json:"always_aggro" gorm:"Column:always_aggro"`
 	ExpMod                 int                `json:"exp_mod" gorm:"Column:exp_mod"`
+	HeroicStrikethrough    int                `json:"heroic_strikethrough" gorm:"Column:heroic_strikethrough"`
 	FactionAmount          int                `json:"faction_amount" gorm:"Column:faction_amount"`
 	AlternateCurrency      *AlternateCurrency `json:"alternate_currency,omitempty" gorm:"foreignKey:alt_currency_id;references:id"`
 	Merchantlists          []Merchantlist     `json:"merchantlists,omitempty" gorm:"foreignKey:merchantid;references:merchant_id"`

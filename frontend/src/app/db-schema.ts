@@ -1,9 +1,9 @@
-import {SpireApiClient} from "@/app/api/spire-api-client";
+import {SpireApi} from "./api/spire-api";
 import util from "util";
 
 export class DbSchema {
   public static async getTableSchema(tableName: string) {
-    const r = await SpireApiClient.v1().get(util.format("query/schema/table/%s", tableName))
+    const r = await SpireApi.v1().get(util.format("query/schema/table/%s", tableName))
     if (r.data && r.data.data) {
       return r.data.data
     }

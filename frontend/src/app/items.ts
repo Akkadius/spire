@@ -1,5 +1,5 @@
 import {ItemApi} from "@/app/api";
-import {SpireApiClient} from "@/app/api/spire-api-client";
+import {SpireApi} from "./api/spire-api";
 import {SpireQueryBuilder} from "@/app/api/spire-query-builder";
 
 export class Items {
@@ -18,7 +18,7 @@ export class Items {
       return this.items[itemId]
     }
 
-    const api = (new ItemApi(SpireApiClient.getOpenApiConfig()))
+    const api = (new ItemApi(...SpireApi.cfg()))
     try {
       let request = (new SpireQueryBuilder())
         .includes(Items.getRelationships())
@@ -42,7 +42,7 @@ export class Items {
 
   public static async loadItemsBulk(ids: any[]) {
     // items bulk fetch preload
-    const r = await (new ItemApi(SpireApiClient.getOpenApiConfig())).getItemsBulk({
+    const r = await (new ItemApi(...SpireApi.cfg())).getItemsBulk({
       body: {
         ids: ids
       }
@@ -411,7 +411,7 @@ export class Items {
   }
 
   static async getItemIconsByName(search: string) {
-    const api = (new ItemApi(SpireApiClient.getOpenApiConfig()))
+    const api = (new ItemApi(...SpireApi.cfg()))
     try {
       let request = (new SpireQueryBuilder())
         .select(['icon'])
@@ -435,7 +435,7 @@ export class Items {
   }
 
   static async getItemModelsByName(search: string) {
-    const api = (new ItemApi(SpireApiClient.getOpenApiConfig()))
+    const api = (new ItemApi(...SpireApi.cfg()))
     try {
       let request = (new SpireQueryBuilder())
         .select(['idfile'])
@@ -455,6 +455,18 @@ export class Items {
       }
     } catch (err) {
       console.log("items.ts %s", err)
+    }
+  }
+
+  static async deleteItem(id) {
+    try {
+      // @ts-ignore
+      const r = await (new ItemApi(...SpireApi.cfg())).deleteItem({id: id})
+      if (r.status === 200 && r.data) {
+        return r.data
+      }
+    } catch (err) {
+      return Promise.reject(err)
     }
   }
 }

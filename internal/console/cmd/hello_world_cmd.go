@@ -43,24 +43,12 @@ func (c *HelloWorldCommand) Handle(cmd *cobra.Command, args []string) {
 		c.logger.Println(err)
 	}
 
-	//pp.Println(source)
-
 	var dest = source
 	dest.Type = 1
 	dest.ExpReward = 30002
 	dest.Description = "Some new description3"
 
-	//differences := database.CompareModels(source, dest)
-
 	c.db.Model(&dest).Updates(database.ResultDifference(source, dest))
-
-	//for _, d := range differences {
-	//	query.Update(d.Field, d.New)
-	//}
-
-	//pp.Println(dataSource)
-	//pp.Println(dataDest)
-
 }
 
 // Validate implementation of the Command interface

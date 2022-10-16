@@ -108,7 +108,7 @@
 <script type="ts">
 import {ZoneApi} from "@/app/api/api";
 import EqWindow from "@/components/eq-ui/EQWindow.vue";
-import {SpireApiClient} from "@/app/api/spire-api-client";
+import {SpireApi} from "../../app/api/spire-api";
 import Expansions from "@/app/utility/expansions";
 import EqCheckbox from "@/components/eq-ui/EQCheckbox.vue";
 import {debounce} from "@/app/utility/debounce.js";
@@ -225,10 +225,10 @@ export default {
       this.resultCount = this.filteredZones.length
     },
     getExpansionIcon(expansion) {
-      return Expansions.getExpansionIconUrlSmall(expansion - 1) // zone table is offset by 1
+      return Expansions.getExpansionIconUrlSmall(expansion)
     },
     getExpansionName(expansion) {
-      return Expansions.getExpansionName(expansion - 1) // zone table is offset by 1
+      return Expansions.getExpansionName(expansion)
     },
     clickZoneRow(zone) {
       this.$router.push(
@@ -250,7 +250,7 @@ export default {
       builder.orderBy(["expansion", "long_name"])
         .limit(10000)
 
-      const result = await (new ZoneApi(SpireApiClient.getOpenApiConfig())).listZones(builder.get())
+      const result = await (new ZoneApi(...SpireApi.cfg())).listZones(builder.get())
       if (result.status === 200) {
         this.zones         = result.data
         this.filteredZones = result.data

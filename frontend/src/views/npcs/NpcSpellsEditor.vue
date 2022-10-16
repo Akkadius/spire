@@ -207,9 +207,9 @@
 import EqWindowSimple      from "../../components/eq-ui/EQWindowSimple";
 import EqAutoTable         from "../../components/eq-ui/EQAutoTable";
 import ContentArea         from "../../components/layout/ContentArea";
-import {NpcSpellApi}       from "../../app/api";
-import {SpireApiClient}    from "../../app/api/spire-api-client";
-import LoaderFakeProgress  from "../../components/LoaderFakeProgress";
+import {NpcSpellApi}      from "../../app/api";
+import {SpireApi}         from "../../app/api/spire-api";
+import LoaderFakeProgress from "../../components/LoaderFakeProgress";
 import {ROUTE}             from "../../routes";
 import {SpireQueryBuilder} from "../../app/api/spire-query-builder";
 import InfoErrorBanner     from "../../components/InfoErrorBanner";
@@ -224,7 +224,7 @@ import EqDebug             from "../../components/eq-ui/EQDebug";
 import util                from "util";
 import {NpcSpellsEntryApi} from "../../app/api/api/npc-spells-entry-api";
 
-const NpcSpellsClient = (new NpcSpellApi(SpireApiClient.getOpenApiConfig()))
+const NpcSpellsClient = (new NpcSpellApi(...SpireApi.cfg()))
 
 export default {
   name: "NpcSpellsEditor",
@@ -309,13 +309,13 @@ export default {
 
       if (confirm(`Are you sure you want to delete this NPC spell set and all of its entries? \n\nEntries (${entriesCount})`)) {
         try {
-          const r = await (new NpcSpellApi(SpireApiClient.getOpenApiConfig()))
+          const r = await (new NpcSpellApi(...SpireApi.cfg()))
             .deleteNpcSpell({ id: e.id })
 
           if (r.status === 200 && e.npc_spells_entries) {
             // delete every entry individually (for now)
             for (const row of e.npc_spells_entries) {
-              await (new NpcSpellsEntryApi(SpireApiClient.getOpenApiConfig()))
+              await (new NpcSpellsEntryApi(...SpireApi.cfg()))
                 .deleteNpcSpellsEntry({ id: row.id })
             }
           }

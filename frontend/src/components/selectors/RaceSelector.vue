@@ -110,9 +110,9 @@ import {RACES}            from "@/app/constants/eq-race-constants"
 import PageHeader         from "@/components/layout/PageHeader";
 import EqWindow           from "@/components/eq-ui/EQWindow";
 import EqWindowSimple     from "@/components/eq-ui/EQWindowSimple";
-import {debounce}         from "@/app/utility/debounce.js";
-import {SpireApiClient}   from "../../app/api/spire-api-client";
-import {ZoneApi}          from "../../app/api";
+import {debounce} from "@/app/utility/debounce.js";
+import {SpireApi} from "../../app/api/spire-api";
+import {ZoneApi}  from "../../app/api";
 import LoaderFakeProgress from "../../components/LoaderFakeProgress";
 import EqProgressBar      from "../../components/eq-ui/EQProgressBar";
 import EqAssets           from "../../app/eq-assets/eq-assets";
@@ -348,7 +348,7 @@ export default {
       this.loadModels()
     },
     async loadRaceInventory() {
-      const result = await SpireApiClient.v1().get('/static-map/race-inventory-map.json')
+      const result = await SpireApi.v1().get('/static-map/race-inventory-map.json')
 
       // zero out
       zoneToRaceIdMapping = {};
@@ -370,7 +370,7 @@ export default {
 
       // after we load race inventory data
       let zoneList   = [];
-      let zoneResult = await (new ZoneApi(SpireApiClient.getOpenApiConfig())).listZones({
+      let zoneResult = await (new ZoneApi(...SpireApi.cfg())).listZones({
         where: "version__0",
         orderBy: "short_name",
         groupBy: "zoneidnumber"

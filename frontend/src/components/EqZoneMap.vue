@@ -205,7 +205,7 @@ import ContentArea                                                     from "./l
 import * as L                                                          from "leaflet";
 import axios                                                           from "axios";
 import {GridEntryApi, Spawn2Api, SpellsNewApi, ZonePointApi} from "../app/api";
-import {SpireApiClient}                                      from "../app/api/spire-api-client";
+import {SpireApi}                                            from "../app/api/spire-api";
 import {SpireQueryBuilder}                                   from "../app/api/spire-query-builder";
 import EqNpcCardPreview                                      from "./preview/EQNpcCardPreview";
 import EqWindow                                              from "./eq-ui/EQWindow";
@@ -487,7 +487,7 @@ export default {
     },
 
     async loadTranslocatePoints() {
-      const api = (new SpellsNewApi(SpireApiClient.getOpenApiConfig()))
+      const api = (new SpellsNewApi(...SpireApi.cfg()))
 
       try {
         const r = await api.listSpellsNews(
@@ -593,7 +593,7 @@ export default {
     async loadDoors() {
       console.time("[EqZoneMap] loadDoors");
 
-      const api       = (new DoorApi(SpireApiClient.getOpenApiConfig()))
+      const api       = (new DoorApi(...SpireApi.cfg()))
       let doorMarkers = []
 
       try {
@@ -653,7 +653,7 @@ export default {
 
     async loadMapSpawns() {
       let npcMarkers       = []
-      const gridEntriesApi = (new GridEntryApi(SpireApiClient.getOpenApiConfig()))
+      const gridEntriesApi = (new GridEntryApi(...SpireApi.cfg()))
       try {
         console.time("[EqZoneMap] loadMapSpawns");
 
@@ -733,7 +733,7 @@ export default {
       console.time("[EqZoneMap] loadZonePoints");
 
       let zonePoints = []
-      const zapi     = (new ZonePointApi(SpireApiClient.getOpenApiConfig()))
+      const zapi     = (new ZonePointApi(...SpireApi.cfg()))
       zapi.listZonePoints(
         (new SpireQueryBuilder())
           .where("zone", "=", this.zone)
