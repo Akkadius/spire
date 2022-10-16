@@ -179,13 +179,11 @@ func (e *TaskController) updateTask(c echo.Context) error {
 			param := fmt.Sprintf("%v", params[i])
 			ids = append(ids, fmt.Sprintf("%v", strings.ReplaceAll(keys[i], "?", param)))
 		}
-
 		// build fields updated
 		var fieldsUpdated []string
 		for k, v := range diff {
 			fieldsUpdated = append(fieldsUpdated, fmt.Sprintf("%v = %v", k, v))
 		}
-
 		// record event
 		event := fmt.Sprintf("Updated [Task] [%v] fields [%v]", strings.Join(ids, ", "), strings.Join(fieldsUpdated, ", "))
 		e.auditLog.LogUserEvent(c, "UPDATE", event)
@@ -226,13 +224,11 @@ func (e *TaskController) createTask(c echo.Context) error {
 	if e.db.GetSpireDb() != nil {
 		// diff between an empty model and the created
 		diff := database.ResultDifference(models.Task{}, task)
-
 		// build fields created
 		var fields []string
 		for k, v := range diff {
 			fields = append(fields, fmt.Sprintf("%v = %v", k, v))
 		}
-
 		// record event
 		event := fmt.Sprintf("Created [Task] [%v] data [%v]", task.ID, strings.Join(fields, ", "))
 		e.auditLog.LogUserEvent(c, "CREATE", event)
@@ -291,7 +287,6 @@ func (e *TaskController) deleteTask(c echo.Context) error {
 			param := fmt.Sprintf("%v", params[i])
 			ids = append(ids, fmt.Sprintf("%v", strings.ReplaceAll(keys[i], "?", param)))
 		}
-
 		// record event
 		event := fmt.Sprintf("Deleted [Task] [%v] keys [%v]", result.ID, strings.Join(ids, ", "))
 		e.auditLog.LogUserEvent(c, "DELETE", event)
