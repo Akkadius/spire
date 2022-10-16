@@ -69,11 +69,12 @@
 
       <div class="text-center">
         <b-pagination
+          v-if="!loading"
           class="mb-1 mt-1"
           v-model="currentPage"
           :total-rows="totalRows"
           :hide-ellipsis="true"
-          :per-page="1000"
+          per-page="1000"
           @change="paginate"
         />
       </div>
@@ -160,6 +161,8 @@ export default {
     },
 
     init() {
+      this.totalRows   = 0
+      this.currentPage = 1
       this.loadQueryState()
       this.loading = true
       this.rows    = []
