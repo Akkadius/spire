@@ -27,10 +27,7 @@ func LoadEnvFileIfExists() error {
 	if !envLoaded {
 		// use dev or testing envs depending on the environment
 		envLoadMsg := ""
-		envFile := ""
-		if IsAppEnvLocal() {
-			envFile = ".env"
-		}
+		envFile := ".env"
 		if IsAppEnvTesting() {
 			envFile = ".env.testing"
 		}
