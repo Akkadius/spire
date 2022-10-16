@@ -270,7 +270,7 @@
                         <a
                           class="btn btn-sm btn-white ml-1"
                           @click="setDiscordWebhookLogs(connection)"
-                          title="Set Discord Webhook Logs"
+                          title="Set Discord webhook logs"
                           v-b-tooltip.hover.v-dark.top
                           v-if="isCurrentUserOwnerOfConnection(connection)"
                         >
@@ -282,7 +282,7 @@
 
                       </div>
 
-                      <div class="col-auto" v-if="isCurrentUserOwnerOfConnection(connection)">
+                      <div class="col-auto p-0" v-if="isCurrentUserOwnerOfConnection(connection)">
 
                         <!-- Dropdown -->
                         <div class="dropdown">
