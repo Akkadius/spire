@@ -56,7 +56,11 @@
 
     <div v-if="!isSelectedUserOwnerOfConnection()">
 
-      <div id="permissions" v-if="canViewPermissions()">
+      <div v-if="!canViewPermissions()">
+        Can not view user permissions
+      </div>
+
+      <div id="permissions" v-if="canViewPermissions() && permissionsLoaded">
         <!-- Header -->
         <div class="row mt-1 mb-3">
           <div class="col-5 text-right font-weight-bold">Resource</div>
@@ -130,6 +134,8 @@ export default {
     return {
 
       userContext: {},
+
+      permissionsLoaded: false,
 
       // permissions
       selectedPermissions: {},
@@ -206,20 +212,22 @@ export default {
           e.write = this.selectedPermissions[p.identifier].write
         }
 
-        console.log(e)
-
         if (e.read || e.write) {
           payload.push(e)
         }
       }
-
-      const r = await SpireApi.v1().post(
-        `connection-permissions/${this.connection.server_database_connection_id}/user/${this.user.id}`,
-        payload
-      )
-      if (r.status === 200) {
-
+      try {
+        const r = await SpireApi.v1().post(
+          `connection-permissions/${this.connection.server_database_connection_id}/user/${this.user.id}`,
+          payload
+        )
+      } catch (err) {
+        // error notify
+        if (err.response && err.response.data && err.response.data.error) {
+          this.error = err.response.data.error
+        }
       }
+
     },
 
     canViewPermissions() {
@@ -227,11 +235,11 @@ export default {
     },
 
     isCurrentUserOwnerOfConnection() {
-      return this.userContext.id === this.connection.created_by
+      return this.userContext.id === this.connection.database_connection.created_by
     },
 
     isSelectedUserOwnerOfConnection() {
-      return this.user.id === this.connection.created_by
+      return this.user.id === this.connection.database_connection.created_by
     },
 
     async deleteUserFromConn() {
@@ -298,6 +306,7 @@ export default {
         }
 
         try {
+          this.permissionsLoaded = false;
           // user perms
           const userPerms = await SpireApi.v1().get(`connection-permissions/${this.connection.server_database_connection_id}/user/${this.user.id}`)
           if (userPerms.status === 200) {
@@ -344,6 +353,7 @@ export default {
             }
 
             this.selectedPermissions = permissions
+            this.permissionsLoaded = true;
           }
 
         } catch (err) {

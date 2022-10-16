@@ -187,7 +187,7 @@
                           Developers
                           <a
                             class="btn btn-sm btn-white btn-danger ml-2 pt-0 pb-0"
-                            v-if="isOwnerOfConnection(connection)"
+                            v-if="isCurrentUserOwnerOfConnection(connection)"
                             @click="addDeveloperToServerModal(connection)"
                             v-b-modal.add-developer-server-connection-modal
                           ><i class="fa fa-plus"/> Add</a>
@@ -201,10 +201,10 @@
                           >
                             <b-avatar
                               :src="user.user.avatar"
-                              class="hover-highlight"
+                              class="hover-highlight mr-1"
                               variant="info"
                               v-b-tooltip.hover.v-dark.top
-                              :title="user.user.user_name + (user.created_by === user.user.id ? ' (Owner)' : '')"
+                              :title="user.user.user_name + (isUserOwnerOfConnection(user.user, connection) ? ' (Owner)' : '')"
                             />
                           </div>
                         </b-avatar-group>
@@ -251,9 +251,20 @@
                           <span class="text-success">●</span> Online
                         </a>
 
+                        <!-- Audit log -->
+                        <a
+                          class="btn btn-sm btn-white ml-1"
+                          @click="setActiveConnection(connection.id)"
+                          title="View audit log"
+                          v-b-tooltip.hover.v-dark.top
+                          v-if="isCurrentUserOwnerOfConnection(connection)"
+                        >
+                          <i class="ra ra-bleeding-eye"></i>
+                        </a>
+
                       </div>
 
-                      <div class="col-auto">
+                      <div class="col-auto" v-if="isCurrentUserOwnerOfConnection(connection)">
 
                         <!-- Dropdown -->
                         <div class="dropdown">
@@ -486,11 +497,15 @@ export default {
   },
   methods: {
 
-    // canViewPermissions(user) {
-    //   return this.isOwnerOfConnection() || this.user.id === user.id
-    // },
+    canViewPermissions(user, connection) {
+      return this.isCurrentUserOwnerOfConnection(connection) || this.user.id === user.id
+    },
 
     manageUser(user, connection) {
+      // if (!this.canViewPermissions(user, connection)) {
+      //   return;
+      // }
+
       this.managedUser = user
       this.managedUserConnection = connection
 
@@ -508,8 +523,12 @@ export default {
       this.addDeveloperToConnection = connection
     },
 
-    isOwnerOfConnection(connection) {
-      return this.user.id === connection.created_by
+    isCurrentUserOwnerOfConnection(connection) {
+      return this.user.id === connection.database_connection.created_by
+    },
+
+    isUserOwnerOfConnection(user, connection) {
+      return user.id === connection.database_connection.created_by
     },
 
     isLoggedIn() {
@@ -520,11 +539,13 @@ export default {
       this.passwordFieldType = this.passwordFieldType === 'password' ? 'text' : 'password'
     },
     deleteConnection(connectionId) {
-      SpireApi.v1().delete(`/connection/${connectionId}`).then((response) => {
-        if (response.data && response.data.data) {
-          this.listConnections()
-        }
-      })
+      if (confirm("Are you sure you want to delete this connection and everything associated to it? This is permanent")) {
+        SpireApi.v1().delete(`/connection/${connectionId}`).then((response) => {
+          if (response.data && response.data.data) {
+            this.listConnections()
+          }
+        })
+      }
     },
     setActiveConnection(connectionId) {
       SpireApi.v1().post(`/connection/${connectionId}/set-active`).then((response) => {
@@ -580,8 +601,6 @@ export default {
       this.successMessage = null
 
       SpireApi.v1().post('/connection', this.database).then((response) => {
-        console.log(response);
-
         this.successMessage = response.data.data
         this.listConnections()
       }, (error) => {

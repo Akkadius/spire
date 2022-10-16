@@ -88,6 +88,7 @@ type ConnectionCreateRequest struct {
 
 func (cc *ConnectionsController) clearConnection(c echo.Context) {
 	user := request.GetUser(c)
+	cc.cache.Delete(fmt.Sprintf("active-connection-%v", user.ID))
 	cc.cache.Delete(fmt.Sprintf("active-connection-%v-default", user.ID))
 	cc.cache.Delete(fmt.Sprintf("active-connection-%v-eqemu_content", user.ID))
 }
@@ -206,19 +207,31 @@ func (cc *ConnectionsController) setActive(c echo.Context) error {
 }
 
 func (cc *ConnectionsController) delete(c echo.Context) error {
-	connectionId := c.Param("connection")
 	user := request.GetUser(c)
 	db := cc.db.GetSpireDb()
 
-	var conn models.UserServerDatabaseConnection
-	err := cc.db.GetSpireDb().Where("user_id = ? and id = ?", user.ID, connectionId).First(&conn).Error
+	connectionId, err := strconv.ParseUint(c.Param("connection"), 10, 64)
 	if err != nil {
-		return err
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err})
 	}
 
-	db.Delete(models.UserServerDatabaseConnection{}, connectionId)
-	db.Where("id = ?", conn.ServerDatabaseConnectionId).Delete(models.ServerDatabaseConnection{})
+	// Validate: Invoking user is owner of connection
+	var conn models.ServerDatabaseConnection
+	_ = cc.db.GetSpireDb().Where("created_by = ? and id = ?", user.ID, connectionId).First(&conn).Error
+	if uint64(conn.ID) != connectionId {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Invoking user does not own this connection"})
+	}
 
+	// delete users associated to connection
+	db.Where("server_database_connection_id = ?", conn.ID).Delete(models.UserServerDatabaseConnection{})
+	// delete event logs
+	db.Where("server_database_connection_id = ?", conn.ID).Delete(models.UserEventLog{})
+	// delete permissions
+	db.Where("server_database_connection_id = ?", conn.ID).Delete(models.UserServerResourcePermission{})
+	// delete connection itself
+	db.Where("id = ?", conn.ID).Delete(models.ServerDatabaseConnection{})
+
+	// clear cache
 	cc.clearConnection(c)
 
 	return c.JSON(http.StatusOK, echo.Map{"data": echo.Map{"message": "Success"}})
@@ -272,9 +285,8 @@ func (cc *ConnectionsController) addUser(c echo.Context) error {
 	}
 
 	// Validate: Invoking user is owner of connection
-	// Validate: Connection inquired is valid
-	var conn models.UserServerDatabaseConnection
-	_ = cc.db.GetSpireDb().Where("created_by = ? and server_database_connection_id = ?", ctx.ID, connectionId).First(&conn).Error
+	var conn models.ServerDatabaseConnection
+	_ = cc.db.GetSpireDb().Where("created_by = ? and id = ?", ctx.ID, connectionId).First(&conn).Error
 	if uint64(conn.ID) != connectionId {
 		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Invoking user does not own this connection"})
 	}
@@ -328,9 +340,8 @@ func (cc *ConnectionsController) deleteUser(c echo.Context) error {
 	}
 
 	// Validate: Invoking user is owner of connection
-	// Validate: Connection inquired is valid
-	var conn models.UserServerDatabaseConnection
-	_ = cc.db.GetSpireDb().Where("created_by = ? and server_database_connection_id = ?", ctx.ID, connectionId).First(&conn).Error
+	var conn models.ServerDatabaseConnection
+	_ = cc.db.GetSpireDb().Where("created_by = ? and id = ?", ctx.ID, connectionId).First(&conn).Error
 	if uint64(conn.ID) != connectionId {
 		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Invoking user does not own this connection"})
 	}
@@ -395,9 +406,8 @@ func (cc *ConnectionsController) savePermissions(c echo.Context) error {
 	}
 
 	// Validate: Invoking user is owner of connection
-	// Validate: Connection inquired is valid
-	var conn models.UserServerDatabaseConnection
-	_ = cc.db.GetSpireDb().Where("created_by = ? and server_database_connection_id = ?", ctx.ID, connectionId).First(&conn).Error
+	var conn models.ServerDatabaseConnection
+	_ = cc.db.GetSpireDb().Where("created_by = ? and id = ?", ctx.ID, connectionId).First(&conn).Error
 	if uint64(conn.ID) != connectionId {
 		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Invoking user does not own this connection"})
 	}
