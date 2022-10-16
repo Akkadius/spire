@@ -74,7 +74,7 @@
           v-model="currentPage"
           :total-rows="totalRows"
           :hide-ellipsis="true"
-          per-page="1000"
+          per-page="20"
           @change="paginate"
         />
       </div>

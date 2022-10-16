@@ -27,6 +27,10 @@
           :connection="managedUserConnection"
         />
 
+        <manage-discord-connection-modal
+          :connection="discordConnection"
+        />
+
         <b-tabs class="mt-4" content-class="mt-5" fill>
           <b-tab title="Connections" :active="connections && connections.length > 0">
 
@@ -262,6 +266,20 @@
                           <i class="ra ra-bleeding-eye"></i>
                         </a>
 
+                        <!-- Discord -->
+                        <a
+                          class="btn btn-sm btn-white ml-1"
+                          @click="setDiscordWebhookLogs(connection)"
+                          title="Set Discord Webhook Logs"
+                          v-b-tooltip.hover.v-dark.top
+                          v-if="isCurrentUserOwnerOfConnection(connection)"
+                        >
+                          <img
+                            src="~@/assets/img/discord-logo-small.8530e062.png"
+                            style="width: 25px; height: 25px"
+                          >
+                        </a>
+
                       </div>
 
                       <div class="col-auto" v-if="isCurrentUserOwnerOfConnection(connection)">
@@ -461,9 +479,11 @@ import AddDeveloperModal from "@/views/connections/AddDeveloperModal.vue";
 import ManageDeveloperModal from "@/views/connections/ManageDeveloperModal.vue";
 import util from "util";
 import {ROUTE} from "@/routes";
+import ManageDiscordConnectionModal from "@/views/connections/ManageDiscordConnectionModal.vue";
 
 export default {
   components: {
+    ManageDiscordConnectionModal,
     ManageDeveloperModal,
     AddDeveloperModal,
     DebugDisplayComponent,
@@ -488,6 +508,8 @@ export default {
       // modals
       addDeveloperToConnection: {}, // AddDeveloperToModal
 
+      discordConnection: {}, // ManageDiscordConnectionModal
+
       managedUser: {}, // ManageDeveloperModal
       managedUserConnection: {} // ManageDeveloperModal
     }
@@ -498,6 +520,15 @@ export default {
     this.user = await (UserContext.getUser())
   },
   methods: {
+
+    setDiscordWebhookLogs(connection) {
+      this.discordConnection = connection
+
+      // I don't remember why I needed to queue this
+      setTimeout(() => {
+        this.$bvModal.show('manage-discord-connection-modal')
+      }, 10)
+    },
 
     viewAuditLog(connectionId) {
       this.$router.push(

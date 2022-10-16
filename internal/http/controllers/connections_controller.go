@@ -66,6 +66,10 @@ func (cc *ConnectionsController) Routes() []*routes.Route {
 		routes.RegisterRoute(http.MethodPost, "connection-permissions/:connection_id/user/:user_id", cc.savePermissions, nil),
 		routes.RegisterRoute(http.MethodGet, "connection-permissions/:connection_id/user/:user_id", cc.getPermissions, nil),
 
+		// discord
+		routes.RegisterRoute(http.MethodPost, "connection/:connection_id/discord-webhook", cc.setDiscordWebhook, nil),
+		routes.RegisterRoute(http.MethodGet, "connection/:connection_id/discord-webhook", cc.getDiscordWebhook, nil),
+
 		// default connection(s)
 		routes.RegisterRoute(http.MethodGet, "connection-default", cc.getDefault, nil),
 		routes.RegisterRoute(http.MethodPost, "connection-default/set-active", cc.defaultSetActive, nil),
@@ -552,7 +556,7 @@ func (cc *ConnectionsController) auditLog(c echo.Context) error {
 	}
 
 	// paging
-	pageSize := 1000
+	pageSize := 20
 	queryOffset := 0
 	page, err := strconv.ParseInt(c.QueryParam("page"), 10, 64)
 	if err != nil {
@@ -585,5 +589,76 @@ func (cc *ConnectionsController) auditLog(c echo.Context) error {
 			"total_rows": count,
 			"data":       results,
 		},
+	)
+}
+
+type DiscordWebhookRequest struct {
+	WebhookUrl string `json:"webhook_url"`
+}
+
+func (cc *ConnectionsController) setDiscordWebhook(c echo.Context) error {
+	// request user context
+	ctx := request.GetUser(c)
+
+	// param
+	connectionId, err := strconv.ParseUint(c.Param("connection_id"), 10, 64)
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err})
+	}
+
+	// Validate: Invoking user is owner of connection
+	var conn models.ServerDatabaseConnection
+	_ = cc.db.GetSpireDb().Where("created_by = ? and id = ?", ctx.ID, connectionId).First(&conn).Error
+	if uint64(conn.ID) != connectionId {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Invoking user does not own this connection"})
+	}
+
+	webhookUrl := new(DiscordWebhookRequest)
+	if err := c.Bind(webhookUrl); err != nil {
+		return c.JSON(
+			http.StatusInternalServerError,
+			echo.Map{"error": fmt.Sprintf("Error binding to entity [%v]", err.Error())},
+		)
+	}
+
+	if len(webhookUrl.WebhookUrl) > 0 {
+		conn.DiscordWebhookUrl = webhookUrl.WebhookUrl
+		_ = cc.db.GetSpireDb().
+			Model(&conn).
+			Where("created_by = ? and id = ?", ctx.ID, connectionId).
+			Update("discord_webhook_url", webhookUrl.WebhookUrl)
+
+		return c.JSON(
+			http.StatusOK,
+			"Webhook updated successfully!",
+		)
+	}
+
+	return c.JSON(
+		http.StatusInternalServerError,
+		echo.Map{"error": "Failed to update discord webhook"},
+	)
+}
+
+func (cc *ConnectionsController) getDiscordWebhook(c echo.Context) error {
+	// request user context
+	ctx := request.GetUser(c)
+
+	// param
+	connectionId, err := strconv.ParseUint(c.Param("connection_id"), 10, 64)
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err})
+	}
+
+	// Validate: Invoking user is owner of connection
+	var conn models.ServerDatabaseConnection
+	_ = cc.db.GetSpireDb().Where("created_by = ? and id = ?", ctx.ID, connectionId).First(&conn).Error
+	if uint64(conn.ID) != connectionId {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Invoking user does not own this connection"})
+	}
+
+	return c.JSON(
+		http.StatusOK,
+		conn.DiscordWebhookUrl,
 	)
 }
