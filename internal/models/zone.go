@@ -67,6 +67,7 @@ type Zone struct {
 	Shutdowndelay             uint64      `json:"shutdowndelay" gorm:"Column:shutdowndelay"`
 	Peqzone                   int8        `json:"peqzone" gorm:"Column:peqzone"`
 	Expansion                 int8        `json:"expansion" gorm:"Column:expansion"`
+	BypassExpansionCheck      int8        `json:"bypass_expansion_check" gorm:"Column:bypass_expansion_check"`
 	Suspendbuffs              uint8       `json:"suspendbuffs" gorm:"Column:suspendbuffs"`
 	RainChance1               int         `json:"rain_chance_1" gorm:"Column:rain_chance1"`
 	RainChance2               int         `json:"rain_chance_2" gorm:"Column:rain_chance2"`
