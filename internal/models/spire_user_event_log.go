@@ -6,9 +6,9 @@ import (
 
 type UserEventLog struct {
 	ID                         uint                     `json:"id" gorm:"primary_key,AUTO_INCREMENT"`
-	UserId                     uint                     `json:"user_id"`
-	ServerDatabaseConnectionId uint                     `json:"server_database_connection_id"`
-	EventName                  string                   `json:"event_name" db:"event_name"`
+	UserId                     uint                     `json:"user_id" db:"user_id"`
+	ServerDatabaseConnectionId uint                     `json:"server_database_connection_id" db:"server_database_connection_id" gorm:"index:server_database_connection_id_event;index:server_database_connection_id"`
+	EventName                  string                   `json:"event_name" db:"event_name" gorm:"index:server_database_connection_id_event"`
 	Data                       string                   `json:"data" db:"data"`
 	CreatedAt                  time.Time                `json:"created_at" gorm:"Column:created_at"`
 	ServerDatabaseConnection   ServerDatabaseConnection `json:"database_connection,omitempty" gorm:"foreignKey:ServerDatabaseConnectionId;association_foreignkey:Id"`

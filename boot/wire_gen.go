@@ -7,6 +7,7 @@
 package boot
 
 import (
+	"github.com/Akkadius/spire/internal/auditlog"
 	"github.com/Akkadius/spire/internal/clientfiles"
 	"github.com/Akkadius/spire/internal/connection"
 	"github.com/Akkadius/spire/internal/console/cmd"
@@ -242,7 +243,8 @@ func InitializeApplication() (App, error) {
 	startZoneController := crudcontrollers.NewStartZoneController(databaseResolver, logger)
 	startingItemController := crudcontrollers.NewStartingItemController(databaseResolver, logger)
 	taskActivityController := crudcontrollers.NewTaskActivityController(databaseResolver, logger)
-	taskController := crudcontrollers.NewTaskController(databaseResolver, logger)
+	userEvent := auditlog.NewUserEvent(databaseResolver, logger, cache)
+	taskController := crudcontrollers.NewTaskController(databaseResolver, logger, userEvent)
 	tasksetController := crudcontrollers.NewTasksetController(databaseResolver, logger)
 	timerController := crudcontrollers.NewTimerController(databaseResolver, logger)
 	titleController := crudcontrollers.NewTitleController(databaseResolver, logger)

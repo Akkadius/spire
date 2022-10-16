@@ -1,6 +1,7 @@
 package boot
 
 import (
+	"github.com/Akkadius/spire/internal/auditlog"
 	"github.com/Akkadius/spire/internal/clientfiles"
 	"github.com/Akkadius/spire/internal/connection"
 	"github.com/Akkadius/spire/internal/desktop"
@@ -28,4 +29,5 @@ var serviceSet = wire.NewSet(
 	pathmgmt.NewPathManagement,
 	permissions.NewService,
 	pluralize.NewClient,
+	auditlog.NewUserEvent,
 )
