@@ -2,7 +2,7 @@
 
 ### [Database Connections] Users, Permissions & Audit Logging
 
-### Users
+### Users 
 
 Users can now be added to server connections that you own. Any user that has a user on Spire, hosted or local is available to add to a connection.
 
