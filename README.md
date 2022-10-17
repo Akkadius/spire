@@ -316,3 +316,9 @@ To run the backend and frontend development servers in Windows; there are simply
 * `windows-frontend-web-dev.bat` This will run the NodeJS Webpack watcher which will serve the frontend web development instance and will hot reload any changes made to the frontend codebase on the fly  
   
 Both of these scripts are designed to kill an already running instance when it is ran again
+
+## Basic Auth
+
+If you want to run Spire on a hosted webserver with very basic authentication, you now can today until a more robust users, permissions system is built out.
+
+Simply supply two environment variables `BASIC_AUTH_USER` and `BASIC_AUTH_PASSWORD` and Spire will only allow requests if you pass the basic authentication gate
