@@ -123,14 +123,17 @@ func provideEQEmuLocalDatabase(serverconfig *serverconfig.EQEmuServerConfig) (*g
 		logMode = logger.Info
 	}
 
-	db, err := gorm.Open(mysql.Open(fmt.Sprintf(
-		"%v:%v@tcp(%v:%v)/%v?charset=utf8&parseTime=True&loc=Local",
-		config.Username,
-		config.Password,
-		config.Host,
-		config.Port,
-		config.Database,
-	)),
+	db, err := gorm.Open(mysql.New(mysql.Config{
+		DSN: fmt.Sprintf(
+			"%v:%v@tcp(%v:%v)/%v?charset=utf8&parseTime=True&loc=Local",
+			config.Username,
+			config.Password,
+			config.Host,
+			config.Port,
+			config.Database,
+		),
+		DisableWithReturning: true,
+	}),
 		&gorm.Config{
 			SkipDefaultTransaction:                   true,
 			DisableForeignKeyConstraintWhenMigrating: true,
@@ -212,14 +215,17 @@ func provideSpireDatabase(serverconfig *serverconfig.EQEmuServerConfig) (*gorm.D
 		logMode = logger.Info
 	}
 
-	db, err := gorm.Open(mysql.Open(fmt.Sprintf(
-		"%v:%v@tcp(%v:%v)/%v?charset=utf8&parseTime=True&loc=Local",
-		config.Username,
-		config.Password,
-		config.Host,
-		config.Port,
-		config.Database,
-	)),
+	db, err := gorm.Open(mysql.New(mysql.Config{
+		DSN: fmt.Sprintf(
+			"%v:%v@tcp(%v:%v)/%v?charset=utf8&parseTime=True&loc=Local",
+			config.Username,
+			config.Password,
+			config.Host,
+			config.Port,
+			config.Database,
+		),
+		DisableWithReturning: true,
+	}),
 		&gorm.Config{
 			SkipDefaultTransaction:                   true,
 			DisableForeignKeyConstraintWhenMigrating: true,

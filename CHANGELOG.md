@@ -1,3 +1,9 @@
+## [2.3.1] 
+
+### [Cloning] Minor fix
+
+Fix issue where older database versions do not support the MySQL clause `RETURNING id`. This disables the newer syntax allowing creates to work properly again.
+
 ## [2.3.0]
 
 ### [Database Connections] Users, Permissions & Audit Logging

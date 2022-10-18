@@ -1649,17 +1649,18 @@ import ItemStatScalePercentage from "./components/ItemStatScalePercentage";
 import ItemStatScaleRange      from "./components/ItemStatScaleRange";
 import ItemColorSelector       from "./components/ItemColorSelector";
 import * as util               from "util";
-import {RACES}                 from "../../app/constants/eq-race-constants";
-import ItemMaterialPreview     from "./components/ItemMaterialPreview";
-import {BODYTYPES}             from "../../app/constants/eq-bodytype-constants";
-import {DB_SPELL_RESISTS}      from "../../app/constants/eq-spell-constants";
-import {DB_ITEM_BARD_TYPE}     from "../../app/constants/eq-bard-types";
-import AugBitmaskCalculator    from "../../components/tools/AugmentTypeCalculator";
-import EqWindowSimple          from "../../components/eq-ui/EQWindowSimple";
-import LoaderCastBarTimer      from "../../components/LoaderCastBarTimer";
-import {EditFormFieldUtil}     from "../../app/forms/edit-form-field-util";
-import {FreeIdFetcher}         from "../../app/free-id-fetcher";
-import ContentArea             from "../../components/layout/ContentArea";
+import {RACES}              from "../../app/constants/eq-race-constants";
+import ItemMaterialPreview  from "./components/ItemMaterialPreview";
+import {BODYTYPES}          from "../../app/constants/eq-bodytype-constants";
+import {DB_SPELL_RESISTS}   from "../../app/constants/eq-spell-constants";
+import {DB_ITEM_BARD_TYPE}  from "../../app/constants/eq-bard-types";
+import AugBitmaskCalculator from "../../components/tools/AugmentTypeCalculator";
+import EqWindowSimple       from "../../components/eq-ui/EQWindowSimple";
+import LoaderCastBarTimer   from "../../components/LoaderCastBarTimer";
+import {EditFormFieldUtil}  from "../../app/forms/edit-form-field-util";
+import {FreeIdFetcher}      from "../../app/free-id-fetcher";
+import ContentArea          from "../../components/layout/ContentArea";
+import {ROUTE}              from "../../routes";
 
 const MILLISECONDS_BEFORE_WINDOW_RESET = 5000;
 
@@ -2051,18 +2052,35 @@ export default {
           }
         }
 
-        const createRes = await api.createItem({
-          item: this.item
-        })
+        try {
+          const createRes = await api.createItem({
+            item: this.item
+          })
 
-        if (createRes.status === 200) {
-          this.sendNotification("Created new Item!")
-          EditFormFieldUtil.resetFieldEditedStatus()
+          if (createRes.status === 200) {
+            this.sendNotification("Created new Item! Redirecting to new item")
+            EditFormFieldUtil.resetFieldEditedStatus()
+
+            setTimeout(() => {
+              this.$router.push(
+                {
+                  path: util.format(ROUTE.ITEM_EDIT, this.item.id)
+                }
+              ).catch(() => {
+              })
+            }, 3000)
+
+
+          }
+          if (createRes.data.error) {
+            this.error = result.data.error
+          }
+        } catch (err) {
+          if (err.response.data.error) {
+            this.error = err.response.data.error
+          }
         }
 
-        if (createRes.data.error) {
-          this.error = result.data.error
-        }
       })
     },
 

@@ -205,7 +205,10 @@ func (d *DatabaseResolver) ResolveUserEqemuConnection(model models.Modelable, us
 	}
 
 	db, err := gorm.Open(
-		mysql.Open(dsn),
+		mysql.New(mysql.Config{
+			DSN:                  dsn,
+			DisableWithReturning: true,
+		}),
 		&gorm.Config{
 			SkipDefaultTransaction:                   true,
 			DisableForeignKeyConstraintWhenMigrating: true,
