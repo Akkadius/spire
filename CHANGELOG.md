@@ -1,3 +1,13 @@
+## [2.3.3]
+
+### [Items] Negative Values Preview
+
+Item preview renders now properly show negative values.
+
+![image](https://user-images.githubusercontent.com/3319450/197303792-2c4a4404-f53a-4955-bf73-1850cbf117a2.png)
+
+![image](https://user-images.githubusercontent.com/3319450/197303805-4d089d23-906a-441f-a77b-3e2864a7bf72.png)
+
 ## [2.3.2]
 
 ### [Items] Click Type Naming

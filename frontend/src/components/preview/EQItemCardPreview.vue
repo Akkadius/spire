@@ -134,18 +134,18 @@
               <tr v-for="(data, stat) in stats">
 
                 <!-- Label -->
-                <td style="font-weight: bold" v-if="itemData[data.stat] > 0 || itemData[data.heroic] > 0">
+                <td style="font-weight: bold" v-if="itemData[data.stat] !== 0 || itemData[data.heroic] !== 0">
                   {{ stat }}
                 </td>
 
                 <!-- Regular stat -->
-                <td style="text-align: right" v-if="itemData[data.stat] > 0 || itemData[data.heroic] > 0">
+                <td style="text-align: right" v-if="itemData[data.stat] !== 0 || itemData[data.heroic] !== 0">
                   {{ commify(itemData[data.stat]) }}
                 </td>
 
                 <!-- Heroic -->
-                <td style="text-align: right" v-if="itemData[data.heroic] > 0">
-                    <span style="color: #ffecca" v-if="itemData[data.heroic]">
+                <td style="text-align: right" v-if="itemData[data.heroic] !== 0">
+                    <span style="color: #ffecca">
                       {{ commify(itemData[data.heroic] > 0 ? "+" + itemData[data.heroic] : itemData[data.heroic]) }}
                     </span>
                 </td>
@@ -162,18 +162,18 @@
                 <!-- Label -->
                 <td
                   style="font-weight: bold; min-width: 95px"
-                  v-if="itemData[data.stat] > 0 || itemData[data.heroic] > 0"
+                  v-if="itemData[data.stat] !== 0 || itemData[data.heroic] !== 0"
                 >
                   {{ stat }}
                 </td>
 
                 <!-- Regular stat -->
-                <td style="text-align: right" v-if="itemData[data.stat] > 0 || itemData[data.heroic] > 0">
+                <td style="text-align: right" v-if="itemData[data.stat] !== 0 || itemData[data.heroic] !== 0">
                   {{ itemData[data.stat] }}
                 </td>
 
                 <!-- Heroic -->
-                <td style="text-align: right; color: #ffecca" v-if="itemData[data.heroic] > 0">
+                <td style="text-align: right; color: #ffecca" v-if="itemData[data.heroic] !== 0">
                   {{ itemData[data.heroic] > 0 ? "+" + itemData[data.heroic] : itemData[data.heroic] }}
                 </td>
               </tr>
@@ -187,12 +187,12 @@
               <tr v-for="(field, stat) in mod3">
 
                 <!-- Label -->
-                <td style="font-weight: bold" v-if="itemData[field] > 0">
+                <td style="font-weight: bold" v-if="itemData[field] !== 0">
                   {{ stat }}
                 </td>
 
                 <!-- Regular stat -->
-                <td style="text-align: right" v-if="itemData[field] > 0">
+                <td style="text-align: right" v-if="itemData[field] !== 0">
                   {{ itemData[field] }}
                 </td>
 
