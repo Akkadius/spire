@@ -174,7 +174,7 @@ export class Items {
       "augdistiller": "",
       "dotshielding": "",
       "dr": "The amount of Disease Resist provided by this item.",
-      "clicktype": "(1 or 3 = Clickable from Inventory), (4 = Must Equip to Cast), (5 = Rogue Poison)",
+      "clicktype": "1 = Clickable from Inventory with Level, 3 = Expendable, 4 = Must Equip to Click, 5 = Clickable from Inventory with Level, Race, and Class",
       "clicklevel2": "This is the level that the click effect will be cast as.",
       "elemdmgtype": "",
       "elemdmgamt": "",
