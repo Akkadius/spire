@@ -920,10 +920,10 @@
                       <option
                         v-for="(e, index) in [
                               {desc: 'None', value: 0},
-                              {desc: 'Clickable from Inventory', value: 1},
-                              {desc: 'Clickable from Inventory', value: 3},
-                              {desc: 'Must Equip to Cast', value: 4},
-                              {desc: 'Clickable from Inventory', value: 5},
+                              {desc: 'Clickable from Inventory with Level', value: 1},
+                              {desc: 'Expendable', value: 3},
+                              {desc: 'Must Equip to Click', value: 4},
+                              {desc: 'Clickable from Inventory with Level, Race, and Class', value: 5},
                             ]"
                         :key="e.value"
                         :value="parseInt(e.value)"

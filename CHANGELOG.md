@@ -1,3 +1,9 @@
+## [2.3.2]
+
+### [Items] Click Type Naming
+
+Click Types were named improperly and not fully descriptive.
+
 ## [2.3.1] 
 
 ### [Cloning] Minor fix
