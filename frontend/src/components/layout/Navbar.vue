@@ -349,6 +349,11 @@ export default {
           { title: "Class Calculator", to: "/calculators#class-bitmask-calculator", icon: "ra ra-lion mr-1" },
           { title: "Deity Calculator", to: "/calculators#deity-bitmask-calculator", icon: "ra ra-venomous-snake mr-1" },
           {
+            title: "Client Version Calculator",
+            to: "/calculators#client-version-calculator",
+            icon: "ra ra-lever mr-1"
+          },
+          {
             title: "Expansions Calculator",
             to: "/calculators#expansions-bitmask-calculator",
             icon: "ra ra-lever mr-1"
