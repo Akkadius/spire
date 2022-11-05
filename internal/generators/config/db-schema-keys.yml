@@ -213,7 +213,15 @@ bot_data:
     column_key: PRI
     ordinal_position: "1"
     is_nullable: "NO"
-    column_type: int(10) unsigned
+    column_type: int(11) unsigned
+    column_default: ""
+bot_spells_entries:
+  - column: id
+    data_type: int
+    column_key: PRI
+    ordinal_position: "1"
+    is_nullable: "NO"
+    column_type: int(11) unsigned
     column_default: ""
 bug_reports:
   - column: id
@@ -501,6 +509,13 @@ character_exp_modifiers:
     is_nullable: "NO"
     column_type: int(11)
     column_default: ""
+  - column: instance_version
+    data_type: int
+    column_key: PRI
+    ordinal_position: "3"
+    is_nullable: "NO"
+    column_type: int(11)
+    column_default: "-1"
 character_expedition_lockouts:
   - column: id
     data_type: int

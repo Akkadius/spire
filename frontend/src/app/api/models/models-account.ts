@@ -13,7 +13,6 @@ export interface ModelsAccount {
     crc_basedata?: string;
     crc_eqgame?: string;
     crc_skillcaps?: string;
-    expansion?: number;
     flymode?: number;
     gmspeed?: number;
     hideme?: number;

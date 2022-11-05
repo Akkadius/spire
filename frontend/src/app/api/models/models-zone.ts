@@ -1,4 +1,5 @@
 export interface ModelsZone {
+    bypass_expansion_check?: number;
     canbind?: number;
     cancombat?: number;
     canlevitate?: number;

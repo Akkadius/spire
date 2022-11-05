@@ -6604,6 +6604,335 @@ const docTemplate = `{
                 }
             }
         },
+        "/bot_spells_entries": {
+            "get": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "BotSpellsEntry"
+                ],
+                "summary": "Lists BotSpellsEntries",
+                "operationId": "listBotSpellsEntries",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names ",
+                        "name": "includes",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Filter on specific fields. Multiple conditions [.] separated Example: col_like_value.col2__val2",
+                        "name": "where",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Filter on specific fields (Chained ors). Multiple conditions [.] separated Example: col_like_value.col2__val2",
+                        "name": "whereOr",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Group by field. Multiple conditions [.] separated Example: field1.field2",
+                        "name": "groupBy",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Rows to limit in response (Default: 10,000)",
+                        "name": "limit",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Pagination page",
+                        "name": "page",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Order by [field]",
+                        "name": "orderBy",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Order by field direction",
+                        "name": "orderDirection",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Column names [.] separated to fetch specific fields in response",
+                        "name": "select",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.BotSpellsEntry"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Bad query request",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/bot_spells_entries/bulk": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "BotSpellsEntry"
+                ],
+                "summary": "Gets BotSpellsEntries in bulk",
+                "operationId": "getBotSpellsEntriesBulk",
+                "parameters": [
+                    {
+                        "description": "body",
+                        "name": "Body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/crudcontrollers.BulkFetchByIdsGetRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.BotSpellsEntry"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Bad query request",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/bot_spells_entry": {
+            "put": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "BotSpellsEntry"
+                ],
+                "summary": "Creates BotSpellsEntry",
+                "operationId": "createBotSpellsEntry",
+                "parameters": [
+                    {
+                        "description": "BotSpellsEntry",
+                        "name": "bot_spells_entry",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.BotSpellsEntry"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.BotSpellsEntry"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Error inserting entity",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/bot_spells_entry/{id}": {
+            "get": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "BotSpellsEntry"
+                ],
+                "summary": "Gets BotSpellsEntry",
+                "operationId": "getBotSpellsEntry",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names ",
+                        "name": "includes",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Column names [.] separated to fetch specific fields in response",
+                        "name": "select",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.BotSpellsEntry"
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Entity not found",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Bad query request",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "BotSpellsEntry"
+                ],
+                "summary": "Deletes BotSpellsEntry",
+                "operationId": "deleteBotSpellsEntry",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Entity deleted successfully",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "404": {
+                        "description": "Cannot find entity",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Error deleting entity",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            },
+            "patch": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "BotSpellsEntry"
+                ],
+                "summary": "Updates BotSpellsEntry",
+                "operationId": "updateBotSpellsEntry",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "BotSpellsEntry",
+                        "name": "bot_spells_entry",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.BotSpellsEntry"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.BotSpellsEntry"
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Cannot find entity",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Error updating entity",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
         "/bug": {
             "put": {
                 "consumes": [
@@ -59448,9 +59777,6 @@ const docTemplate = `{
                 "crc_skillcaps": {
                     "type": "string"
                 },
-                "expansion": {
-                    "type": "integer"
-                },
                 "flymode": {
                     "type": "integer"
                 },
@@ -60058,6 +60384,56 @@ const docTemplate = `{
                     "type": "integer"
                 },
                 "zone_id": {
+                    "type": "integer"
+                }
+            }
+        },
+        "models.BotSpellsEntry": {
+            "type": "object",
+            "properties": {
+                "bucket_comparison": {
+                    "type": "integer"
+                },
+                "bucket_name": {
+                    "type": "string"
+                },
+                "bucket_value": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "manacost": {
+                    "type": "integer"
+                },
+                "max_hp": {
+                    "type": "integer"
+                },
+                "maxlevel": {
+                    "type": "integer"
+                },
+                "min_hp": {
+                    "type": "integer"
+                },
+                "minlevel": {
+                    "type": "integer"
+                },
+                "npc_spells_id": {
+                    "type": "integer"
+                },
+                "priority": {
+                    "type": "integer"
+                },
+                "recast_delay": {
+                    "type": "integer"
+                },
+                "resist_adjust": {
+                    "type": "integer"
+                },
+                "spellid": {
+                    "type": "integer"
+                },
+                "type": {
                     "type": "integer"
                 }
             }
@@ -61338,6 +61714,9 @@ const docTemplate = `{
                 },
                 "exp_modifier": {
                     "type": "number"
+                },
+                "instance_version": {
+                    "type": "integer"
                 },
                 "zone_id": {
                     "type": "integer"
@@ -65089,6 +65468,9 @@ const docTemplate = `{
                 "helmtexture": {
                     "type": "integer"
                 },
+                "heroic_strikethrough": {
+                    "type": "integer"
+                },
                 "herosforgemodel": {
                     "type": "integer"
                 },
@@ -65966,9 +66348,6 @@ const docTemplate = `{
                 "content_db_name": {
                     "type": "string"
                 },
-                "content_db_password": {
-                    "type": "string"
-                },
                 "content_db_port": {
                     "type": "string"
                 },
@@ -65990,9 +66369,6 @@ const docTemplate = `{
                 "db_name": {
                     "type": "string"
                 },
-                "db_password": {
-                    "type": "string"
-                },
                 "db_port": {
                     "type": "string"
                 },
@@ -66010,6 +66386,12 @@ const docTemplate = `{
                 },
                 "updated_at": {
                     "type": "string"
+                },
+                "user_server_database_connections": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/models.UserServerDatabaseConnection"
+                    }
                 }
             }
         },
@@ -67891,6 +68273,9 @@ const docTemplate = `{
                 "updated_at": {
                     "type": "string"
                 },
+                "user": {
+                    "$ref": "#/definitions/models.User"
+                },
                 "user_id": {
                     "type": "integer"
                 }
@@ -67919,6 +68304,9 @@ const docTemplate = `{
         "models.Zone": {
             "type": "object",
             "properties": {
+                "bypass_expansion_check": {
+                    "type": "integer"
+                },
                 "canbind": {
                     "type": "integer"
                 },

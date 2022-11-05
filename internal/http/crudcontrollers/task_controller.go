@@ -186,7 +186,6 @@ func (e *TaskController) updateTask(c echo.Context) error {
 		}
 		// record event
 		event := fmt.Sprintf("Updated [Task] [%v] fields [%v]", strings.Join(ids, ", "), strings.Join(fieldsUpdated, ", "))
-
 		e.auditLog.LogUserEvent(c, "UPDATE", event)
 	}
 
