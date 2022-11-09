@@ -168,7 +168,6 @@
                   v-if="field.selectData"
                   v-on="field.e ? getEventHandlers(field.e, field.field) : {}"
                   v-b-tooltip.hover.v-dark.right :title="getFieldDescription(field.field)"
-                  :style="(editingSpellEntry[field.field] <= (typeof field.zeroValue !== 'undefined' ? field.zeroValue : 0) ? 'opacity: .5' : '')"
                 >
                   <option
                     v-for="(desc, index) in field.selectData"
@@ -217,6 +216,7 @@ import EqCheckbox          from "../../components/eq-ui/EQCheckbox";
 import SpellPopover        from "../../components/SpellPopover";
 import {BOT_SPELL_TYPES}   from "../../app/constants/eq-bot-spells";
 import {Spells}            from "../../app/spells";
+import {DATA_BUCKET_COMPARISONS} from "../../app/constants/eq-data-bucket-comparisons";
 
 export default {
   name: "BotSpellListEditor",
@@ -254,7 +254,7 @@ export default {
         { desc: "Resist Adjust", field: "resist_adjust", fType: "text" },
         { desc: "Bucket Name", field: "bucket_name", fType: "text" },
         { desc: "Bucket Value", field: "bucket_value", fType: "text" },
-        { desc: "Bucket Comparison", field: "bucket_comparison", fType: "text" },
+        { desc: "Bucket Comparison", field: "bucket_comparison", fType: "select", selectData: DATA_BUCKET_COMPARISONS },
       ],
     }
   },
@@ -317,9 +317,9 @@ export default {
         "resist_adjust": "",
         "min_hp": "Spell only casts if above this number if non-zero",
         "max_hp": "Spell only casts if below this number if non-zero",
-        "bucket_name": "",
-        "bucket_value": "",
-        "bucket_comparison": "",
+        "bucket_name": "Spell only casts if a matching Character or Bot Data bucket name is found",
+        "bucket_value": "Spell only casts if a matching Data bucket value is found",
+        "bucket_comparison": "Comparison Types",
       }
 
       // we do this because the payload we get back from spire API is
@@ -483,8 +483,8 @@ export default {
         }
       }
 
-
-      // 1: "Nuke",
+      // Need to add support for additional bot spell types (will be expanding further)
+      //   1: "Nuke",
       //   2: "Heal",
       //   4: "Root",
       //   8: "Buff",
@@ -497,6 +497,15 @@ export default {
       //   1024: "In-Combat Buff",
       //   2048: "Mez",
       //   4096: "Charm"
+      //   8192: "Slow",
+      //   16384: "Debuff",
+      //   32768: "Cure",
+      //   65536: "Resurrect",
+      //   131072: "Hate Reduction",
+      //   262144: "In Combat Buff Song",
+      //   524288: "Out Of Combat Buff Song",
+      //   1048576: "Pre Combat Buff",
+      //   2097152: "Pre Combat Buff Song"
 
       return 1;
     },
