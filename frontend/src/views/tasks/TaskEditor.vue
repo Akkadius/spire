@@ -1870,7 +1870,8 @@ export default {
 
     async cloneTask() {
       if (confirm(`Are you sure you want to copy this task?\n\n(${this.task.id}) ${this.task.title} `)) {
-        const id = await FreeIdFetcher.get("tasks", "id", "title")
+        this.saveFreeze = true
+        const id        = await FreeIdFetcher.get("tasks", "id", "title")
         if (id > 0) {
           EditFormFieldUtil.setFieldModifiedById('id')
 
@@ -1891,7 +1892,7 @@ export default {
                 activities.push(activity)
               })
 
-              newTask.task_activities = activities
+              delete newTask.task_activities
             }
 
             try {
@@ -1901,6 +1902,12 @@ export default {
                 this.selectedTask     = r.data.id
                 this.selectedActivity = 0
                 this.tasks            = []
+
+                if (activities) {
+                  for (let a of activities) {
+                    await Tasks.saveTaskActivity(a)
+                  }
+                }
 
                 setTimeout(() => {
                   this.updateQueryState()
@@ -1914,6 +1921,7 @@ export default {
             }
           }
         }
+        this.saveFreeze = false
       }
     },
 

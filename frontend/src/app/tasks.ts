@@ -131,6 +131,16 @@ export class Tasks {
       )
   }
 
+  public static async saveTaskActivity(activity: any) {
+    // @ts-ignore
+    return await this.getTaskActivitiesApi()
+      .createTaskActivity(
+        {
+          taskActivity: activity
+        }
+      )
+  }
+
   public static async cloneTaskActivity(task: any, sourceActivityId) {
     let taskActivity        = task.task_activities[sourceActivityId]
     taskActivity.taskid     = task.id

@@ -1,3 +1,9 @@
+## [2.3.4]
+
+### [Tasks] Fix Cloning with Activities
+
+Fixed an issue where task cloning did not fully clone all associated activities
+
 ## [2.3.3]
 
 ### [Items] Negative Values Preview
