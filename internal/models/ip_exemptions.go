@@ -6,8 +6,8 @@ import (
 
 type IpExemption struct {
 	ExemptionId      int         `json:"exemption_id" gorm:"Column:exemption_id"`
-	ExemptionIp      null.String `json:"exemption_ip" gorm:"Column:exemption_ip"`
-	ExemptionAmount  null.Int    `json:"exemption_amount" gorm:"Column:exemption_amount"`
+	ExemptionIp      string `json:"exemption_ip" gorm:"Column:exemption_ip"`
+	ExemptionAmount  int    `json:"exemption_amount" gorm:"Column:exemption_amount"`
 }
 
 func (IpExemption) TableName() string {

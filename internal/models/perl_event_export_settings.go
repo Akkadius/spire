@@ -6,12 +6,12 @@ import (
 
 type PerlEventExportSetting struct {
 	EventId           int         `json:"event_id" gorm:"Column:event_id"`
-	EventDescription  null.String `json:"event_description" gorm:"Column:event_description"`
-	ExportQglobals    null.Int16  `json:"export_qglobals" gorm:"Column:export_qglobals"`
-	ExportMob         null.Int16  `json:"export_mob" gorm:"Column:export_mob"`
-	ExportZone        null.Int16  `json:"export_zone" gorm:"Column:export_zone"`
-	ExportItem        null.Int16  `json:"export_item" gorm:"Column:export_item"`
-	ExportEvent       null.Int16  `json:"export_event" gorm:"Column:export_event"`
+	EventDescription  string `json:"event_description" gorm:"Column:event_description"`
+	ExportQglobals    int16  `json:"export_qglobals" gorm:"Column:export_qglobals"`
+	ExportMob         int16  `json:"export_mob" gorm:"Column:export_mob"`
+	ExportZone        int16  `json:"export_zone" gorm:"Column:export_zone"`
+	ExportItem        int16  `json:"export_item" gorm:"Column:export_item"`
+	ExportEvent       int16  `json:"export_event" gorm:"Column:export_event"`
 }
 
 func (PerlEventExportSetting) TableName() string {

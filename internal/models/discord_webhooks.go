@@ -6,10 +6,10 @@ import (
 
 type DiscordWebhook struct {
 	ID           int         `json:"id" gorm:"Column:id"`
-	WebhookName  null.String `json:"webhook_name" gorm:"Column:webhook_name"`
-	WebhookUrl   null.String `json:"webhook_url" gorm:"Column:webhook_url"`
-	CreatedAt    null.Time   `json:"created_at" gorm:"Column:created_at"`
-	DeletedAt    null.Time   `json:"deleted_at" gorm:"Column:deleted_at"`
+	WebhookName  string `json:"webhook_name" gorm:"Column:webhook_name"`
+	WebhookUrl   string `json:"webhook_url" gorm:"Column:webhook_url"`
+	CreatedAt    time.Time   `json:"created_at" gorm:"Column:created_at"`
+	DeletedAt    time.Time   `json:"deleted_at" gorm:"Column:deleted_at"`
 }
 
 func (DiscordWebhook) TableName() string {

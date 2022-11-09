@@ -17,42 +17,42 @@ type CharacterCorpse struct {
 	Heading          float32    `json:"heading" gorm:"Column:heading"`
 	TimeOfDeath      time.Time  `json:"time_of_death" gorm:"Column:time_of_death"`
 	GuildConsentId   uint       `json:"guild_consent_id" gorm:"Column:guild_consent_id"`
-	IsRezzed         null.Uint8 `json:"is_rezzed" gorm:"Column:is_rezzed"`
+	IsRezzed         uint8 `json:"is_rezzed" gorm:"Column:is_rezzed"`
 	IsBuried         int8       `json:"is_buried" gorm:"Column:is_buried"`
 	WasAtGraveyard   int8       `json:"was_at_graveyard" gorm:"Column:was_at_graveyard"`
-	IsLocked         null.Int8  `json:"is_locked" gorm:"Column:is_locked"`
-	Exp              null.Uint  `json:"exp" gorm:"Column:exp"`
-	Size             null.Uint  `json:"size" gorm:"Column:size"`
-	Level            null.Uint  `json:"level" gorm:"Column:level"`
-	Race             null.Uint  `json:"race" gorm:"Column:race"`
-	Gender           null.Uint  `json:"gender" gorm:"Column:gender"`
-	Class            null.Uint  `json:"class" gorm:"Column:class"`
-	Deity            null.Uint  `json:"deity" gorm:"Column:deity"`
-	Texture          null.Uint  `json:"texture" gorm:"Column:texture"`
-	HelmTexture      null.Uint  `json:"helm_texture" gorm:"Column:helm_texture"`
-	Copper           null.Uint  `json:"copper" gorm:"Column:copper"`
-	Silver           null.Uint  `json:"silver" gorm:"Column:silver"`
-	Gold             null.Uint  `json:"gold" gorm:"Column:gold"`
-	Platinum         null.Uint  `json:"platinum" gorm:"Column:platinum"`
-	HairColor        null.Uint  `json:"hair_color" gorm:"Column:hair_color"`
-	BeardColor       null.Uint  `json:"beard_color" gorm:"Column:beard_color"`
-	EyeColor1        null.Uint  `json:"eye_color_1" gorm:"Column:eye_color_1"`
-	EyeColor2        null.Uint  `json:"eye_color_2" gorm:"Column:eye_color_2"`
-	HairStyle        null.Uint  `json:"hair_style" gorm:"Column:hair_style"`
-	Face             null.Uint  `json:"face" gorm:"Column:face"`
-	Beard            null.Uint  `json:"beard" gorm:"Column:beard"`
-	DrakkinHeritage  null.Uint  `json:"drakkin_heritage" gorm:"Column:drakkin_heritage"`
-	DrakkinTattoo    null.Uint  `json:"drakkin_tattoo" gorm:"Column:drakkin_tattoo"`
-	DrakkinDetails   null.Uint  `json:"drakkin_details" gorm:"Column:drakkin_details"`
-	Wc1              null.Uint  `json:"wc_1" gorm:"Column:wc_1"`
-	Wc2              null.Uint  `json:"wc_2" gorm:"Column:wc_2"`
-	Wc3              null.Uint  `json:"wc_3" gorm:"Column:wc_3"`
-	Wc4              null.Uint  `json:"wc_4" gorm:"Column:wc_4"`
-	Wc5              null.Uint  `json:"wc_5" gorm:"Column:wc_5"`
-	Wc6              null.Uint  `json:"wc_6" gorm:"Column:wc_6"`
-	Wc7              null.Uint  `json:"wc_7" gorm:"Column:wc_7"`
-	Wc8              null.Uint  `json:"wc_8" gorm:"Column:wc_8"`
-	Wc9              null.Uint  `json:"wc_9" gorm:"Column:wc_9"`
+	IsLocked         int8  `json:"is_locked" gorm:"Column:is_locked"`
+	Exp              uint  `json:"exp" gorm:"Column:exp"`
+	Size             uint  `json:"size" gorm:"Column:size"`
+	Level            uint  `json:"level" gorm:"Column:level"`
+	Race             uint  `json:"race" gorm:"Column:race"`
+	Gender           uint  `json:"gender" gorm:"Column:gender"`
+	Class            uint  `json:"class" gorm:"Column:class"`
+	Deity            uint  `json:"deity" gorm:"Column:deity"`
+	Texture          uint  `json:"texture" gorm:"Column:texture"`
+	HelmTexture      uint  `json:"helm_texture" gorm:"Column:helm_texture"`
+	Copper           uint  `json:"copper" gorm:"Column:copper"`
+	Silver           uint  `json:"silver" gorm:"Column:silver"`
+	Gold             uint  `json:"gold" gorm:"Column:gold"`
+	Platinum         uint  `json:"platinum" gorm:"Column:platinum"`
+	HairColor        uint  `json:"hair_color" gorm:"Column:hair_color"`
+	BeardColor       uint  `json:"beard_color" gorm:"Column:beard_color"`
+	EyeColor1        uint  `json:"eye_color_1" gorm:"Column:eye_color_1"`
+	EyeColor2        uint  `json:"eye_color_2" gorm:"Column:eye_color_2"`
+	HairStyle        uint  `json:"hair_style" gorm:"Column:hair_style"`
+	Face             uint  `json:"face" gorm:"Column:face"`
+	Beard            uint  `json:"beard" gorm:"Column:beard"`
+	DrakkinHeritage  uint  `json:"drakkin_heritage" gorm:"Column:drakkin_heritage"`
+	DrakkinTattoo    uint  `json:"drakkin_tattoo" gorm:"Column:drakkin_tattoo"`
+	DrakkinDetails   uint  `json:"drakkin_details" gorm:"Column:drakkin_details"`
+	Wc1              uint  `json:"wc_1" gorm:"Column:wc_1"`
+	Wc2              uint  `json:"wc_2" gorm:"Column:wc_2"`
+	Wc3              uint  `json:"wc_3" gorm:"Column:wc_3"`
+	Wc4              uint  `json:"wc_4" gorm:"Column:wc_4"`
+	Wc5              uint  `json:"wc_5" gorm:"Column:wc_5"`
+	Wc6              uint  `json:"wc_6" gorm:"Column:wc_6"`
+	Wc7              uint  `json:"wc_7" gorm:"Column:wc_7"`
+	Wc8              uint  `json:"wc_8" gorm:"Column:wc_8"`
+	Wc9              uint  `json:"wc_9" gorm:"Column:wc_9"`
 }
 
 func (CharacterCorpse) TableName() string {

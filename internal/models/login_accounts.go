@@ -10,11 +10,11 @@ type LoginAccount struct {
 	AccountName        string      `json:"account_name" gorm:"Column:account_name"`
 	AccountPassword    string      `json:"account_password" gorm:"Column:account_password"`
 	AccountEmail       string      `json:"account_email" gorm:"Column:account_email"`
-	SourceLoginserver  null.String `json:"source_loginserver" gorm:"Column:source_loginserver"`
+	SourceLoginserver  string `json:"source_loginserver" gorm:"Column:source_loginserver"`
 	LastIpAddress      string      `json:"last_ip_address" gorm:"Column:last_ip_address"`
 	LastLoginDate      time.Time   `json:"last_login_date" gorm:"Column:last_login_date"`
-	CreatedAt          null.Time   `json:"created_at" gorm:"Column:created_at"`
-	UpdatedAt          null.Time   `json:"updated_at" gorm:"Column:updated_at"`
+	CreatedAt          time.Time   `json:"created_at" gorm:"Column:created_at"`
+	UpdatedAt          time.Time   `json:"updated_at" gorm:"Column:updated_at"`
 }
 
 func (LoginAccount) TableName() string {

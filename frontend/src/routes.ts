@@ -16,6 +16,8 @@ export const ROUTE = {
   NPC_EMOTES_EDIT: "/npc-emotes",
   NPC_SPELLS_EDIT: "/npc-spells",
   NPC_SPELL_EDIT: "/npc-spell/%s",
+  BOT_SPELLS_EDIT: "/bot-spells",
+  BOT_SPELL_EDIT: "/bot-spell/%s",
   PLAYER_ANIMATION_VIEWER: "/player-animation-viewer",
   QUEST_API_EXPLORER: "/quest-api-explorer",
   RACE_VIEWER: "/race-viewer",

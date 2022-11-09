@@ -10,7 +10,7 @@ type PetsBeastlordDatum struct {
 	Texture       uint8       `json:"texture" gorm:"Column:texture"`
 	HelmTexture   uint8       `json:"helm_texture" gorm:"Column:helm_texture"`
 	Gender        uint8       `json:"gender" gorm:"Column:gender"`
-	SizeModifier  null.String `json:"size_modifier" gorm:"Column:size_modifier"`
+	SizeModifier  string `json:"size_modifier" gorm:"Column:size_modifier"`
 	Face          uint8       `json:"face" gorm:"Column:face"`
 }
 

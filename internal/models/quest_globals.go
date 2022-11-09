@@ -10,7 +10,7 @@ type QuestGlobal struct {
 	Zoneid  int      `json:"zoneid" gorm:"Column:zoneid"`
 	Name    string   `json:"name" gorm:"Column:name"`
 	Value   string   `json:"value" gorm:"Column:value"`
-	Expdate null.Int `json:"expdate" gorm:"Column:expdate"`
+	Expdate int `json:"expdate" gorm:"Column:expdate"`
 }
 
 func (QuestGlobal) TableName() string {

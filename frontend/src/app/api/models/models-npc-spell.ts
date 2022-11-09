@@ -1,6 +1,8 @@
+import { ModelsBotSpellsEntry } from './models-bot-spells-entry';
 import { ModelsNpcSpellsEntry } from './models-npc-spells-entry';
 export interface ModelsNpcSpell {
     attack_proc?: number;
+    bot_spells_entries?: Array<ModelsBotSpellsEntry>;
     defensive_proc?: number;
     dproc_chance?: number;
     engaged_b_other_chance?: number;

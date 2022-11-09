@@ -6,8 +6,8 @@ import (
 
 type LevelExpMod struct {
 	Level      int          `json:"level" gorm:"Column:level"`
-	ExpMod     null.Float32 `json:"exp_mod" gorm:"Column:exp_mod"`
-	AaExpMod   null.Float32 `json:"aa_exp_mod" gorm:"Column:aa_exp_mod"`
+	ExpMod     float32 `json:"exp_mod" gorm:"Column:exp_mod"`
+	AaExpMod   float32 `json:"aa_exp_mod" gorm:"Column:aa_exp_mod"`
 }
 
 func (LevelExpMod) TableName() string {

@@ -101,6 +101,8 @@
 
         <!-- Navigation -->
         <ul class="navbar-nav mb-md-4">
+          <nav-section-component :config="botNav" v-if="alphaEnabled"/>
+
           <nav-section-component :config="calculatorNav"/>
 
           <li class="nav-item">
@@ -268,6 +270,21 @@ export default {
       appEnv: AppEnv.getEnv(),
       appVersion: AppEnv.getVersion(),
       appFeatures: AppEnv.getFeatures(),
+      botNav: {
+        label: "Bots",
+        labelIcon: "ra ra-reactor mr-1",
+        routePrefixMatches: ["bot"],
+        navs: [
+          {
+            title: "Spells",
+            to: ROUTE.BOT_SPELLS_EDIT,
+            icon: "ra ra-regeneration mr-1",
+            isAlpha: true,
+            isNew: true,
+            routes: ['bot-spells']
+          },
+        ]
+      },
       npcNav: {
         label: "NPCs",
         labelIcon: "ra ra-dragon mr-1",

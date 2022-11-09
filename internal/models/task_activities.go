@@ -12,10 +12,10 @@ type TaskActivity struct {
 	Activitytype         uint8       `json:"activitytype" gorm:"Column:activitytype"`
 	TargetName           string      `json:"target_name" gorm:"Column:target_name"`
 	Goalmethod           uint        `json:"goalmethod" gorm:"Column:goalmethod"`
-	Goalcount            null.Int    `json:"goalcount" gorm:"Column:goalcount"`
+	Goalcount            int    `json:"goalcount" gorm:"Column:goalcount"`
 	DescriptionOverride  string      `json:"description_override" gorm:"Column:description_override"`
-	NpcMatchList         null.String `json:"npc_match_list" gorm:"Column:npc_match_list"`
-	ItemIdList           null.String `json:"item_id_list" gorm:"Column:item_id_list"`
+	NpcMatchList         string `json:"npc_match_list" gorm:"Column:npc_match_list"`
+	ItemIdList           string `json:"item_id_list" gorm:"Column:item_id_list"`
 	ItemList             string      `json:"item_list" gorm:"Column:item_list"`
 	DzSwitchId           int         `json:"dz_switch_id" gorm:"Column:dz_switch_id"`
 	MinX                 float32     `json:"min_x" gorm:"Column:min_x"`
@@ -27,7 +27,7 @@ type TaskActivity struct {
 	SkillList            string      `json:"skill_list" gorm:"Column:skill_list"`
 	SpellList            string      `json:"spell_list" gorm:"Column:spell_list"`
 	Zones                string      `json:"zones" gorm:"Column:zones"`
-	ZoneVersion          null.Int    `json:"zone_version" gorm:"Column:zone_version"`
+	ZoneVersion          int    `json:"zone_version" gorm:"Column:zone_version"`
 	Optional             int8        `json:"optional" gorm:"Column:optional"`
 }
 

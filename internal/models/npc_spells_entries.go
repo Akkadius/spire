@@ -14,9 +14,9 @@ type NpcSpellsEntry struct {
 	Manacost      int16      `json:"manacost" gorm:"Column:manacost"`
 	RecastDelay   int        `json:"recast_delay" gorm:"Column:recast_delay"`
 	Priority      int16      `json:"priority" gorm:"Column:priority"`
-	ResistAdjust  null.Int   `json:"resist_adjust" gorm:"Column:resist_adjust"`
-	MinHp         null.Int16 `json:"min_hp" gorm:"Column:min_hp"`
-	MaxHp         null.Int16 `json:"max_hp" gorm:"Column:max_hp"`
+	ResistAdjust  int   `json:"resist_adjust" gorm:"Column:resist_adjust"`
+	MinHp         int16 `json:"min_hp" gorm:"Column:min_hp"`
+	MaxHp         int16 `json:"max_hp" gorm:"Column:max_hp"`
 	SpellsNew     *SpellsNew `json:"spells_new,omitempty" gorm:"foreignKey:spellid;references:id"`
 }
 
@@ -30,6 +30,12 @@ func (NpcSpellsEntry) Relationships() []string {
 		"SpellsNew.Aura",
 		"SpellsNew.Aura.SpellsNew",
 		"SpellsNew.BlockedSpells",
+		"SpellsNew.BotSpellsEntries",
+		"SpellsNew.BotSpellsEntries.NpcSpell",
+		"SpellsNew.BotSpellsEntries.NpcSpell.BotSpellsEntries",
+		"SpellsNew.BotSpellsEntries.NpcSpell.NpcSpell",
+		"SpellsNew.BotSpellsEntries.NpcSpell.NpcSpellsEntries",
+		"SpellsNew.BotSpellsEntries.SpellsNew",
 		"SpellsNew.Damageshieldtypes",
 		"SpellsNew.Items",
 		"SpellsNew.Items.AlternateCurrencies",
@@ -60,6 +66,9 @@ func (NpcSpellsEntry) Relationships() []string {
 		"SpellsNew.Items.Fishings.NpcType.NpcFactions.NpcFactionEntries",
 		"SpellsNew.Items.Fishings.NpcType.NpcFactions.NpcFactionEntries.FactionList",
 		"SpellsNew.Items.Fishings.NpcType.NpcSpell",
+		"SpellsNew.Items.Fishings.NpcType.NpcSpell.BotSpellsEntries",
+		"SpellsNew.Items.Fishings.NpcType.NpcSpell.BotSpellsEntries.NpcSpell",
+		"SpellsNew.Items.Fishings.NpcType.NpcSpell.BotSpellsEntries.SpellsNew",
 		"SpellsNew.Items.Fishings.NpcType.NpcSpell.NpcSpell",
 		"SpellsNew.Items.Fishings.NpcType.NpcSpell.NpcSpellsEntries",
 		"SpellsNew.Items.Fishings.NpcType.NpcTypesTint",
@@ -97,6 +106,9 @@ func (NpcSpellsEntry) Relationships() []string {
 		"SpellsNew.Items.LootdropEntries.Lootdrop.LoottableEntries.Loottable.NpcTypes.NpcFactions.NpcFactionEntries",
 		"SpellsNew.Items.LootdropEntries.Lootdrop.LoottableEntries.Loottable.NpcTypes.NpcFactions.NpcFactionEntries.FactionList",
 		"SpellsNew.Items.LootdropEntries.Lootdrop.LoottableEntries.Loottable.NpcTypes.NpcSpell",
+		"SpellsNew.Items.LootdropEntries.Lootdrop.LoottableEntries.Loottable.NpcTypes.NpcSpell.BotSpellsEntries",
+		"SpellsNew.Items.LootdropEntries.Lootdrop.LoottableEntries.Loottable.NpcTypes.NpcSpell.BotSpellsEntries.NpcSpell",
+		"SpellsNew.Items.LootdropEntries.Lootdrop.LoottableEntries.Loottable.NpcTypes.NpcSpell.BotSpellsEntries.SpellsNew",
 		"SpellsNew.Items.LootdropEntries.Lootdrop.LoottableEntries.Loottable.NpcTypes.NpcSpell.NpcSpell",
 		"SpellsNew.Items.LootdropEntries.Lootdrop.LoottableEntries.Loottable.NpcTypes.NpcSpell.NpcSpellsEntries",
 		"SpellsNew.Items.LootdropEntries.Lootdrop.LoottableEntries.Loottable.NpcTypes.NpcTypesTint",
@@ -126,6 +138,9 @@ func (NpcSpellsEntry) Relationships() []string {
 		"SpellsNew.Items.Merchantlists.NpcTypes.NpcFactions.NpcFactionEntries",
 		"SpellsNew.Items.Merchantlists.NpcTypes.NpcFactions.NpcFactionEntries.FactionList",
 		"SpellsNew.Items.Merchantlists.NpcTypes.NpcSpell",
+		"SpellsNew.Items.Merchantlists.NpcTypes.NpcSpell.BotSpellsEntries",
+		"SpellsNew.Items.Merchantlists.NpcTypes.NpcSpell.BotSpellsEntries.NpcSpell",
+		"SpellsNew.Items.Merchantlists.NpcTypes.NpcSpell.BotSpellsEntries.SpellsNew",
 		"SpellsNew.Items.Merchantlists.NpcTypes.NpcSpell.NpcSpell",
 		"SpellsNew.Items.Merchantlists.NpcTypes.NpcSpell.NpcSpellsEntries",
 		"SpellsNew.Items.Merchantlists.NpcTypes.NpcTypesTint",

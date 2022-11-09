@@ -6,14 +6,14 @@ import (
 
 type SpellsNew struct {
 	ID                   int                `json:"id" gorm:"Column:id"`
-	Name                 null.String        `json:"name" gorm:"Column:name"`
-	Player1              null.String        `json:"player_1" gorm:"Column:player_1"`
-	TeleportZone         null.String        `json:"teleport_zone" gorm:"Column:teleport_zone"`
-	YouCast              null.String        `json:"you_cast" gorm:"Column:you_cast"`
-	OtherCasts           null.String        `json:"other_casts" gorm:"Column:other_casts"`
-	CastOnYou            null.String        `json:"cast_on_you" gorm:"Column:cast_on_you"`
-	CastOnOther          null.String        `json:"cast_on_other" gorm:"Column:cast_on_other"`
-	SpellFades           null.String        `json:"spell_fades" gorm:"Column:spell_fades"`
+	Name                 string        `json:"name" gorm:"Column:name"`
+	Player1              string        `json:"player_1" gorm:"Column:player_1"`
+	TeleportZone         string        `json:"teleport_zone" gorm:"Column:teleport_zone"`
+	YouCast              string        `json:"you_cast" gorm:"Column:you_cast"`
+	OtherCasts           string        `json:"other_casts" gorm:"Column:other_casts"`
+	CastOnYou            string        `json:"cast_on_you" gorm:"Column:cast_on_you"`
+	CastOnOther          string        `json:"cast_on_other" gorm:"Column:cast_on_other"`
+	SpellFades           string        `json:"spell_fades" gorm:"Column:spell_fades"`
 	Range                int                `json:"range" gorm:"Column:range"`
 	Aoerange             int                `json:"aoerange" gorm:"Column:aoerange"`
 	Pushback             int                `json:"pushback" gorm:"Column:pushback"`
@@ -161,8 +161,8 @@ type SpellsNew struct {
 	Field153             int                `json:"field_153" gorm:"Column:field153"`
 	ShortBuffBox         int                `json:"short_buff_box" gorm:"Column:short_buff_box"`
 	Descnum              int                `json:"descnum" gorm:"Column:descnum"`
-	Typedescnum          null.Int           `json:"typedescnum" gorm:"Column:typedescnum"`
-	Effectdescnum        null.Int           `json:"effectdescnum" gorm:"Column:effectdescnum"`
+	Typedescnum          int           `json:"typedescnum" gorm:"Column:typedescnum"`
+	Effectdescnum        int           `json:"effectdescnum" gorm:"Column:effectdescnum"`
 	Effectdescnum2       int                `json:"effectdescnum_2" gorm:"Column:effectdescnum2"`
 	NpcNoLos             int                `json:"npc_no_los" gorm:"Column:npc_no_los"`
 	Field160             int                `json:"field_160" gorm:"Column:field160"`
@@ -188,8 +188,8 @@ type SpellsNew struct {
 	SpellCategory        int                `json:"spell_category" gorm:"Column:spell_category"`
 	PvpDuration          int                `json:"pvp_duration" gorm:"Column:pvp_duration"`
 	PvpDurationCap       int                `json:"pvp_duration_cap" gorm:"Column:pvp_duration_cap"`
-	PcnpcOnlyFlag        null.Int           `json:"pcnpc_only_flag" gorm:"Column:pcnpc_only_flag"`
-	CastNotStanding      null.Int           `json:"cast_not_standing" gorm:"Column:cast_not_standing"`
+	PcnpcOnlyFlag        int           `json:"pcnpc_only_flag" gorm:"Column:pcnpc_only_flag"`
+	CastNotStanding      int           `json:"cast_not_standing" gorm:"Column:cast_not_standing"`
 	CanMgb               int                `json:"can_mgb" gorm:"Column:can_mgb"`
 	Nodispell            int                `json:"nodispell" gorm:"Column:nodispell"`
 	NpcCategory          int                `json:"npc_category" gorm:"Column:npc_category"`
@@ -198,38 +198,38 @@ type SpellsNew struct {
 	MaxResist            int                `json:"max_resist" gorm:"Column:MaxResist"`
 	ViralTargets         int                `json:"viral_targets" gorm:"Column:viral_targets"`
 	ViralTimer           int                `json:"viral_timer" gorm:"Column:viral_timer"`
-	Nimbuseffect         null.Int           `json:"nimbuseffect" gorm:"Column:nimbuseffect"`
+	Nimbuseffect         int           `json:"nimbuseffect" gorm:"Column:nimbuseffect"`
 	ConeStartAngle       int                `json:"cone_start_angle" gorm:"Column:ConeStartAngle"`
 	ConeStopAngle        int                `json:"cone_stop_angle" gorm:"Column:ConeStopAngle"`
 	Sneaking             int                `json:"sneaking" gorm:"Column:sneaking"`
 	NotExtendable        int                `json:"not_extendable" gorm:"Column:not_extendable"`
 	Field198             int                `json:"field_198" gorm:"Column:field198"`
 	Field199             int                `json:"field_199" gorm:"Column:field199"`
-	Suspendable          null.Int           `json:"suspendable" gorm:"Column:suspendable"`
+	Suspendable          int           `json:"suspendable" gorm:"Column:suspendable"`
 	ViralRange           int                `json:"viral_range" gorm:"Column:viral_range"`
-	Songcap              null.Int           `json:"songcap" gorm:"Column:songcap"`
-	Field203             null.Int           `json:"field_203" gorm:"Column:field203"`
-	Field204             null.Int           `json:"field_204" gorm:"Column:field204"`
+	Songcap              int           `json:"songcap" gorm:"Column:songcap"`
+	Field203             int           `json:"field_203" gorm:"Column:field203"`
+	Field204             int           `json:"field_204" gorm:"Column:field204"`
 	NoBlock              int                `json:"no_block" gorm:"Column:no_block"`
-	Field206             null.Int           `json:"field_206" gorm:"Column:field206"`
-	Spellgroup           null.Int           `json:"spellgroup" gorm:"Column:spellgroup"`
+	Field206             int           `json:"field_206" gorm:"Column:field206"`
+	Spellgroup           int           `json:"spellgroup" gorm:"Column:spellgroup"`
 	Rank                 int                `json:"rank" gorm:"Column:rank"`
-	Field209             null.Int           `json:"field_209" gorm:"Column:field209"`
-	Field210             null.Int           `json:"field_210" gorm:"Column:field210"`
+	Field209             int           `json:"field_209" gorm:"Column:field209"`
+	Field210             int           `json:"field_210" gorm:"Column:field210"`
 	CastRestriction      int                `json:"cast_restriction" gorm:"Column:CastRestriction"`
-	Allowrest            null.Int           `json:"allowrest" gorm:"Column:allowrest"`
+	Allowrest            int           `json:"allowrest" gorm:"Column:allowrest"`
 	InCombat             int                `json:"in_combat" gorm:"Column:InCombat"`
 	OutofCombat          int                `json:"outof_combat" gorm:"Column:OutofCombat"`
-	Field215             null.Int           `json:"field_215" gorm:"Column:field215"`
-	Field216             null.Int           `json:"field_216" gorm:"Column:field216"`
-	Field217             null.Int           `json:"field_217" gorm:"Column:field217"`
+	Field215             int           `json:"field_215" gorm:"Column:field215"`
+	Field216             int           `json:"field_216" gorm:"Column:field216"`
+	Field217             int           `json:"field_217" gorm:"Column:field217"`
 	Aemaxtargets         int                `json:"aemaxtargets" gorm:"Column:aemaxtargets"`
-	Maxtargets           null.Int           `json:"maxtargets" gorm:"Column:maxtargets"`
-	Field220             null.Int           `json:"field_220" gorm:"Column:field220"`
-	Field221             null.Int           `json:"field_221" gorm:"Column:field221"`
-	Field222             null.Int           `json:"field_222" gorm:"Column:field222"`
-	Field223             null.Int           `json:"field_223" gorm:"Column:field223"`
-	Persistdeath         null.Int           `json:"persistdeath" gorm:"Column:persistdeath"`
+	Maxtargets           int           `json:"maxtargets" gorm:"Column:maxtargets"`
+	Field220             int           `json:"field_220" gorm:"Column:field220"`
+	Field221             int           `json:"field_221" gorm:"Column:field221"`
+	Field222             int           `json:"field_222" gorm:"Column:field222"`
+	Field223             int           `json:"field_223" gorm:"Column:field223"`
+	Persistdeath         int           `json:"persistdeath" gorm:"Column:persistdeath"`
 	Field225             int                `json:"field_225" gorm:"Column:field225"`
 	Field226             int                `json:"field_226" gorm:"Column:field226"`
 	MinDist              float32            `json:"min_dist" gorm:"Column:min_dist"`
@@ -249,6 +249,7 @@ type SpellsNew struct {
 	BlockedSpells        []BlockedSpell     `json:"blocked_spells,omitempty" gorm:"foreignKey:spellid;references:id"`
 	Items                []Item             `json:"items,omitempty" gorm:"foreignKey:clickeffect;references:id"`
 	NpcSpellsEntries     []NpcSpellsEntry   `json:"npc_spells_entries,omitempty" gorm:"foreignKey:spellid;references:id"`
+	BotSpellsEntries     []BotSpellsEntry   `json:"bot_spells_entries,omitempty" gorm:"foreignKey:spellid;references:id"`
 }
 
 func (SpellsNew) TableName() string {
@@ -260,6 +261,13 @@ func (SpellsNew) Relationships() []string {
 		"Aura",
 		"Aura.SpellsNew",
 		"BlockedSpells",
+		"BotSpellsEntries",
+		"BotSpellsEntries.NpcSpell",
+		"BotSpellsEntries.NpcSpell.BotSpellsEntries",
+		"BotSpellsEntries.NpcSpell.NpcSpell",
+		"BotSpellsEntries.NpcSpell.NpcSpellsEntries",
+		"BotSpellsEntries.NpcSpell.NpcSpellsEntries.SpellsNew",
+		"BotSpellsEntries.SpellsNew",
 		"Damageshieldtypes",
 		"Items",
 		"Items.AlternateCurrencies",
@@ -290,6 +298,9 @@ func (SpellsNew) Relationships() []string {
 		"Items.Fishings.NpcType.NpcFactions.NpcFactionEntries",
 		"Items.Fishings.NpcType.NpcFactions.NpcFactionEntries.FactionList",
 		"Items.Fishings.NpcType.NpcSpell",
+		"Items.Fishings.NpcType.NpcSpell.BotSpellsEntries",
+		"Items.Fishings.NpcType.NpcSpell.BotSpellsEntries.NpcSpell",
+		"Items.Fishings.NpcType.NpcSpell.BotSpellsEntries.SpellsNew",
 		"Items.Fishings.NpcType.NpcSpell.NpcSpell",
 		"Items.Fishings.NpcType.NpcSpell.NpcSpellsEntries",
 		"Items.Fishings.NpcType.NpcSpell.NpcSpellsEntries.SpellsNew",
@@ -328,6 +339,9 @@ func (SpellsNew) Relationships() []string {
 		"Items.LootdropEntries.Lootdrop.LoottableEntries.Loottable.NpcTypes.NpcFactions.NpcFactionEntries",
 		"Items.LootdropEntries.Lootdrop.LoottableEntries.Loottable.NpcTypes.NpcFactions.NpcFactionEntries.FactionList",
 		"Items.LootdropEntries.Lootdrop.LoottableEntries.Loottable.NpcTypes.NpcSpell",
+		"Items.LootdropEntries.Lootdrop.LoottableEntries.Loottable.NpcTypes.NpcSpell.BotSpellsEntries",
+		"Items.LootdropEntries.Lootdrop.LoottableEntries.Loottable.NpcTypes.NpcSpell.BotSpellsEntries.NpcSpell",
+		"Items.LootdropEntries.Lootdrop.LoottableEntries.Loottable.NpcTypes.NpcSpell.BotSpellsEntries.SpellsNew",
 		"Items.LootdropEntries.Lootdrop.LoottableEntries.Loottable.NpcTypes.NpcSpell.NpcSpell",
 		"Items.LootdropEntries.Lootdrop.LoottableEntries.Loottable.NpcTypes.NpcSpell.NpcSpellsEntries",
 		"Items.LootdropEntries.Lootdrop.LoottableEntries.Loottable.NpcTypes.NpcSpell.NpcSpellsEntries.SpellsNew",
@@ -358,6 +372,9 @@ func (SpellsNew) Relationships() []string {
 		"Items.Merchantlists.NpcTypes.NpcFactions.NpcFactionEntries",
 		"Items.Merchantlists.NpcTypes.NpcFactions.NpcFactionEntries.FactionList",
 		"Items.Merchantlists.NpcTypes.NpcSpell",
+		"Items.Merchantlists.NpcTypes.NpcSpell.BotSpellsEntries",
+		"Items.Merchantlists.NpcTypes.NpcSpell.BotSpellsEntries.NpcSpell",
+		"Items.Merchantlists.NpcTypes.NpcSpell.BotSpellsEntries.SpellsNew",
 		"Items.Merchantlists.NpcTypes.NpcSpell.NpcSpell",
 		"Items.Merchantlists.NpcTypes.NpcSpell.NpcSpellsEntries",
 		"Items.Merchantlists.NpcTypes.NpcSpell.NpcSpellsEntries.SpellsNew",

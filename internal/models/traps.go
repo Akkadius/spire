@@ -28,8 +28,8 @@ type Trap struct {
 	Undetectable           int8        `json:"undetectable" gorm:"Column:undetectable"`
 	MinExpansion           int8        `json:"min_expansion" gorm:"Column:min_expansion"`
 	MaxExpansion           int8        `json:"max_expansion" gorm:"Column:max_expansion"`
-	ContentFlags           null.String `json:"content_flags" gorm:"Column:content_flags"`
-	ContentFlagsDisabled   null.String `json:"content_flags_disabled" gorm:"Column:content_flags_disabled"`
+	ContentFlags           string `json:"content_flags" gorm:"Column:content_flags"`
+	ContentFlagsDisabled   string `json:"content_flags_disabled" gorm:"Column:content_flags_disabled"`
 }
 
 func (Trap) TableName() string {

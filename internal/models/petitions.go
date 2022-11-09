@@ -11,7 +11,7 @@ type Petition struct {
 	Accountname  string      `json:"accountname" gorm:"Column:accountname"`
 	Lastgm       string      `json:"lastgm" gorm:"Column:lastgm"`
 	Petitiontext string      `json:"petitiontext" gorm:"Column:petitiontext"`
-	Gmtext       null.String `json:"gmtext" gorm:"Column:gmtext"`
+	Gmtext       string `json:"gmtext" gorm:"Column:gmtext"`
 	Zone         string      `json:"zone" gorm:"Column:zone"`
 	Urgency      int         `json:"urgency" gorm:"Column:urgency"`
 	Charclass    int         `json:"charclass" gorm:"Column:charclass"`

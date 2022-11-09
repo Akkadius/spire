@@ -7,7 +7,7 @@ import (
 type NpcType struct {
 	ID                     int                `json:"id" gorm:"Column:id"`
 	Name                   string             `json:"name" gorm:"Column:name"`
-	Lastname               null.String        `json:"lastname" gorm:"Column:lastname"`
+	Lastname               string        `json:"lastname" gorm:"Column:lastname"`
 	Level                  uint8              `json:"level" gorm:"Column:level"`
 	Race                   uint16             `json:"race" gorm:"Column:race"`
 	Class                  uint8              `json:"class" gorm:"Column:class"`
@@ -29,12 +29,12 @@ type NpcType struct {
 	NpcSpellsEffectsId     uint               `json:"npc_spells_effects_id" gorm:"Column:npc_spells_effects_id"`
 	NpcFactionId           int                `json:"npc_faction_id" gorm:"Column:npc_faction_id"`
 	AdventureTemplateId    uint               `json:"adventure_template_id" gorm:"Column:adventure_template_id"`
-	TrapTemplate           null.Uint          `json:"trap_template" gorm:"Column:trap_template"`
+	TrapTemplate           uint          `json:"trap_template" gorm:"Column:trap_template"`
 	Mindmg                 uint               `json:"mindmg" gorm:"Column:mindmg"`
 	Maxdmg                 uint               `json:"maxdmg" gorm:"Column:maxdmg"`
 	AttackCount            int16              `json:"attack_count" gorm:"Column:attack_count"`
 	Npcspecialattks        string             `json:"npcspecialattks" gorm:"Column:npcspecialattks"`
-	SpecialAbilities       null.String        `json:"special_abilities" gorm:"Column:special_abilities"`
+	SpecialAbilities       string        `json:"special_abilities" gorm:"Column:special_abilities"`
 	Aggroradius            uint               `json:"aggroradius" gorm:"Column:aggroradius"`
 	Assistradius           uint               `json:"assistradius" gorm:"Column:assistradius"`
 	Face                   uint               `json:"face" gorm:"Column:face"`
@@ -115,15 +115,15 @@ type NpcType struct {
 	IgnoreDespawn          int8               `json:"ignore_despawn" gorm:"Column:ignore_despawn"`
 	ShowName               int8               `json:"show_name" gorm:"Column:show_name"`
 	Untargetable           int8               `json:"untargetable" gorm:"Column:untargetable"`
-	CharmAc                null.Int16         `json:"charm_ac" gorm:"Column:charm_ac"`
-	CharmMinDmg            null.Int           `json:"charm_min_dmg" gorm:"Column:charm_min_dmg"`
-	CharmMaxDmg            null.Int           `json:"charm_max_dmg" gorm:"Column:charm_max_dmg"`
-	CharmAttackDelay       null.Int8          `json:"charm_attack_delay" gorm:"Column:charm_attack_delay"`
-	CharmAccuracyRating    null.Int32         `json:"charm_accuracy_rating" gorm:"Column:charm_accuracy_rating"`
-	CharmAvoidanceRating   null.Int32         `json:"charm_avoidance_rating" gorm:"Column:charm_avoidance_rating"`
-	CharmAtk               null.Int32         `json:"charm_atk" gorm:"Column:charm_atk"`
-	SkipGlobalLoot         null.Int8          `json:"skip_global_loot" gorm:"Column:skip_global_loot"`
-	RareSpawn              null.Int8          `json:"rare_spawn" gorm:"Column:rare_spawn"`
+	CharmAc                int16         `json:"charm_ac" gorm:"Column:charm_ac"`
+	CharmMinDmg            int           `json:"charm_min_dmg" gorm:"Column:charm_min_dmg"`
+	CharmMaxDmg            int           `json:"charm_max_dmg" gorm:"Column:charm_max_dmg"`
+	CharmAttackDelay       int8          `json:"charm_attack_delay" gorm:"Column:charm_attack_delay"`
+	CharmAccuracyRating    int32         `json:"charm_accuracy_rating" gorm:"Column:charm_accuracy_rating"`
+	CharmAvoidanceRating   int32         `json:"charm_avoidance_rating" gorm:"Column:charm_avoidance_rating"`
+	CharmAtk               int32         `json:"charm_atk" gorm:"Column:charm_atk"`
+	SkipGlobalLoot         int8          `json:"skip_global_loot" gorm:"Column:skip_global_loot"`
+	RareSpawn              int8          `json:"rare_spawn" gorm:"Column:rare_spawn"`
 	StuckBehavior          int8               `json:"stuck_behavior" gorm:"Column:stuck_behavior"`
 	Model                  int16              `json:"model" gorm:"Column:model"`
 	Flymode                int8               `json:"flymode" gorm:"Column:flymode"`
@@ -272,12 +272,67 @@ func (NpcType) Relationships() []string {
 		"NpcFactions.NpcFactionEntries",
 		"NpcFactions.NpcFactionEntries.FactionList",
 		"NpcSpell",
+		"NpcSpell.BotSpellsEntries",
+		"NpcSpell.BotSpellsEntries.NpcSpell",
+		"NpcSpell.BotSpellsEntries.SpellsNew",
+		"NpcSpell.BotSpellsEntries.SpellsNew.Aura",
+		"NpcSpell.BotSpellsEntries.SpellsNew.Aura.SpellsNew",
+		"NpcSpell.BotSpellsEntries.SpellsNew.BlockedSpells",
+		"NpcSpell.BotSpellsEntries.SpellsNew.BotSpellsEntries",
+		"NpcSpell.BotSpellsEntries.SpellsNew.Damageshieldtypes",
+		"NpcSpell.BotSpellsEntries.SpellsNew.Items",
+		"NpcSpell.BotSpellsEntries.SpellsNew.Items.AlternateCurrencies",
+		"NpcSpell.BotSpellsEntries.SpellsNew.Items.AlternateCurrencies.Item",
+		"NpcSpell.BotSpellsEntries.SpellsNew.Items.CharacterCorpseItems",
+		"NpcSpell.BotSpellsEntries.SpellsNew.Items.DiscoveredItems",
+		"NpcSpell.BotSpellsEntries.SpellsNew.Items.Doors",
+		"NpcSpell.BotSpellsEntries.SpellsNew.Items.Doors.Item",
+		"NpcSpell.BotSpellsEntries.SpellsNew.Items.Fishings",
+		"NpcSpell.BotSpellsEntries.SpellsNew.Items.Fishings.Item",
+		"NpcSpell.BotSpellsEntries.SpellsNew.Items.Fishings.NpcType",
+		"NpcSpell.BotSpellsEntries.SpellsNew.Items.Fishings.Zone",
+		"NpcSpell.BotSpellsEntries.SpellsNew.Items.Forages",
+		"NpcSpell.BotSpellsEntries.SpellsNew.Items.Forages.Item",
+		"NpcSpell.BotSpellsEntries.SpellsNew.Items.Forages.Zone",
+		"NpcSpell.BotSpellsEntries.SpellsNew.Items.GroundSpawns",
+		"NpcSpell.BotSpellsEntries.SpellsNew.Items.GroundSpawns.Zone",
+		"NpcSpell.BotSpellsEntries.SpellsNew.Items.ItemTicks",
+		"NpcSpell.BotSpellsEntries.SpellsNew.Items.Keyrings",
+		"NpcSpell.BotSpellsEntries.SpellsNew.Items.LootdropEntries",
+		"NpcSpell.BotSpellsEntries.SpellsNew.Items.LootdropEntries.Item",
+		"NpcSpell.BotSpellsEntries.SpellsNew.Items.LootdropEntries.Lootdrop",
+		"NpcSpell.BotSpellsEntries.SpellsNew.Items.LootdropEntries.Lootdrop.LootdropEntries",
+		"NpcSpell.BotSpellsEntries.SpellsNew.Items.LootdropEntries.Lootdrop.LoottableEntries",
+		"NpcSpell.BotSpellsEntries.SpellsNew.Items.LootdropEntries.Lootdrop.LoottableEntries.Lootdrop",
+		"NpcSpell.BotSpellsEntries.SpellsNew.Items.LootdropEntries.Lootdrop.LoottableEntries.Loottable",
+		"NpcSpell.BotSpellsEntries.SpellsNew.Items.LootdropEntries.Lootdrop.LoottableEntries.Loottable.LoottableEntries",
+		"NpcSpell.BotSpellsEntries.SpellsNew.Items.LootdropEntries.Lootdrop.LoottableEntries.Loottable.NpcTypes",
+		"NpcSpell.BotSpellsEntries.SpellsNew.Items.Merchantlists",
+		"NpcSpell.BotSpellsEntries.SpellsNew.Items.Merchantlists.Items",
+		"NpcSpell.BotSpellsEntries.SpellsNew.Items.Merchantlists.NpcTypes",
+		"NpcSpell.BotSpellsEntries.SpellsNew.Items.ObjectContents",
+		"NpcSpell.BotSpellsEntries.SpellsNew.Items.Objects",
+		"NpcSpell.BotSpellsEntries.SpellsNew.Items.Objects.Item",
+		"NpcSpell.BotSpellsEntries.SpellsNew.Items.Objects.Zone",
+		"NpcSpell.BotSpellsEntries.SpellsNew.Items.StartingItems",
+		"NpcSpell.BotSpellsEntries.SpellsNew.Items.StartingItems.Item",
+		"NpcSpell.BotSpellsEntries.SpellsNew.Items.StartingItems.Zone",
+		"NpcSpell.BotSpellsEntries.SpellsNew.Items.TradeskillRecipeEntries",
+		"NpcSpell.BotSpellsEntries.SpellsNew.Items.TradeskillRecipeEntries.TradeskillRecipe",
+		"NpcSpell.BotSpellsEntries.SpellsNew.Items.TributeLevels",
+		"NpcSpell.BotSpellsEntries.SpellsNew.NpcSpellsEntries",
+		"NpcSpell.BotSpellsEntries.SpellsNew.NpcSpellsEntries.SpellsNew",
+		"NpcSpell.BotSpellsEntries.SpellsNew.SpellBuckets",
+		"NpcSpell.BotSpellsEntries.SpellsNew.SpellGlobals",
 		"NpcSpell.NpcSpell",
 		"NpcSpell.NpcSpellsEntries",
 		"NpcSpell.NpcSpellsEntries.SpellsNew",
 		"NpcSpell.NpcSpellsEntries.SpellsNew.Aura",
 		"NpcSpell.NpcSpellsEntries.SpellsNew.Aura.SpellsNew",
 		"NpcSpell.NpcSpellsEntries.SpellsNew.BlockedSpells",
+		"NpcSpell.NpcSpellsEntries.SpellsNew.BotSpellsEntries",
+		"NpcSpell.NpcSpellsEntries.SpellsNew.BotSpellsEntries.NpcSpell",
+		"NpcSpell.NpcSpellsEntries.SpellsNew.BotSpellsEntries.SpellsNew",
 		"NpcSpell.NpcSpellsEntries.SpellsNew.Damageshieldtypes",
 		"NpcSpell.NpcSpellsEntries.SpellsNew.Items",
 		"NpcSpell.NpcSpellsEntries.SpellsNew.Items.AlternateCurrencies",

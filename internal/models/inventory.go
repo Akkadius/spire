@@ -7,17 +7,17 @@ import (
 type Inventory struct {
 	Charid              uint        `json:"charid" gorm:"Column:charid"`
 	Slotid              uint32      `json:"slotid" gorm:"Column:slotid"`
-	Itemid              null.Uint   `json:"itemid" gorm:"Column:itemid"`
-	Charges             null.Uint16 `json:"charges" gorm:"Column:charges"`
+	Itemid              uint   `json:"itemid" gorm:"Column:itemid"`
+	Charges             uint16 `json:"charges" gorm:"Column:charges"`
 	Color               uint        `json:"color" gorm:"Column:color"`
 	Augslot1            uint32      `json:"augslot_1" gorm:"Column:augslot1"`
 	Augslot2            uint32      `json:"augslot_2" gorm:"Column:augslot2"`
 	Augslot3            uint32      `json:"augslot_3" gorm:"Column:augslot3"`
 	Augslot4            uint32      `json:"augslot_4" gorm:"Column:augslot4"`
-	Augslot5            null.Uint32 `json:"augslot_5" gorm:"Column:augslot5"`
+	Augslot5            uint32 `json:"augslot_5" gorm:"Column:augslot5"`
 	Augslot6            int32       `json:"augslot_6" gorm:"Column:augslot6"`
 	Instnodrop          uint8       `json:"instnodrop" gorm:"Column:instnodrop"`
-	CustomData          null.String `json:"custom_data" gorm:"Column:custom_data"`
+	CustomData          string `json:"custom_data" gorm:"Column:custom_data"`
 	Ornamenticon        uint        `json:"ornamenticon" gorm:"Column:ornamenticon"`
 	Ornamentidfile      uint        `json:"ornamentidfile" gorm:"Column:ornamentidfile"`
 	OrnamentHeroModel   int         `json:"ornament_hero_model" gorm:"Column:ornament_hero_model"`
@@ -59,12 +59,28 @@ func (Inventory) Relationships() []string {
 		"Item.Fishings.NpcType.NpcFactions.NpcFactionEntries",
 		"Item.Fishings.NpcType.NpcFactions.NpcFactionEntries.FactionList",
 		"Item.Fishings.NpcType.NpcSpell",
+		"Item.Fishings.NpcType.NpcSpell.BotSpellsEntries",
+		"Item.Fishings.NpcType.NpcSpell.BotSpellsEntries.NpcSpell",
+		"Item.Fishings.NpcType.NpcSpell.BotSpellsEntries.SpellsNew",
+		"Item.Fishings.NpcType.NpcSpell.BotSpellsEntries.SpellsNew.Aura",
+		"Item.Fishings.NpcType.NpcSpell.BotSpellsEntries.SpellsNew.Aura.SpellsNew",
+		"Item.Fishings.NpcType.NpcSpell.BotSpellsEntries.SpellsNew.BlockedSpells",
+		"Item.Fishings.NpcType.NpcSpell.BotSpellsEntries.SpellsNew.BotSpellsEntries",
+		"Item.Fishings.NpcType.NpcSpell.BotSpellsEntries.SpellsNew.Damageshieldtypes",
+		"Item.Fishings.NpcType.NpcSpell.BotSpellsEntries.SpellsNew.Items",
+		"Item.Fishings.NpcType.NpcSpell.BotSpellsEntries.SpellsNew.NpcSpellsEntries",
+		"Item.Fishings.NpcType.NpcSpell.BotSpellsEntries.SpellsNew.NpcSpellsEntries.SpellsNew",
+		"Item.Fishings.NpcType.NpcSpell.BotSpellsEntries.SpellsNew.SpellBuckets",
+		"Item.Fishings.NpcType.NpcSpell.BotSpellsEntries.SpellsNew.SpellGlobals",
 		"Item.Fishings.NpcType.NpcSpell.NpcSpell",
 		"Item.Fishings.NpcType.NpcSpell.NpcSpellsEntries",
 		"Item.Fishings.NpcType.NpcSpell.NpcSpellsEntries.SpellsNew",
 		"Item.Fishings.NpcType.NpcSpell.NpcSpellsEntries.SpellsNew.Aura",
 		"Item.Fishings.NpcType.NpcSpell.NpcSpellsEntries.SpellsNew.Aura.SpellsNew",
 		"Item.Fishings.NpcType.NpcSpell.NpcSpellsEntries.SpellsNew.BlockedSpells",
+		"Item.Fishings.NpcType.NpcSpell.NpcSpellsEntries.SpellsNew.BotSpellsEntries",
+		"Item.Fishings.NpcType.NpcSpell.NpcSpellsEntries.SpellsNew.BotSpellsEntries.NpcSpell",
+		"Item.Fishings.NpcType.NpcSpell.NpcSpellsEntries.SpellsNew.BotSpellsEntries.SpellsNew",
 		"Item.Fishings.NpcType.NpcSpell.NpcSpellsEntries.SpellsNew.Damageshieldtypes",
 		"Item.Fishings.NpcType.NpcSpell.NpcSpellsEntries.SpellsNew.Items",
 		"Item.Fishings.NpcType.NpcSpell.NpcSpellsEntries.SpellsNew.NpcSpellsEntries",
@@ -105,12 +121,28 @@ func (Inventory) Relationships() []string {
 		"Item.LootdropEntries.Lootdrop.LoottableEntries.Loottable.NpcTypes.NpcFactions.NpcFactionEntries",
 		"Item.LootdropEntries.Lootdrop.LoottableEntries.Loottable.NpcTypes.NpcFactions.NpcFactionEntries.FactionList",
 		"Item.LootdropEntries.Lootdrop.LoottableEntries.Loottable.NpcTypes.NpcSpell",
+		"Item.LootdropEntries.Lootdrop.LoottableEntries.Loottable.NpcTypes.NpcSpell.BotSpellsEntries",
+		"Item.LootdropEntries.Lootdrop.LoottableEntries.Loottable.NpcTypes.NpcSpell.BotSpellsEntries.NpcSpell",
+		"Item.LootdropEntries.Lootdrop.LoottableEntries.Loottable.NpcTypes.NpcSpell.BotSpellsEntries.SpellsNew",
+		"Item.LootdropEntries.Lootdrop.LoottableEntries.Loottable.NpcTypes.NpcSpell.BotSpellsEntries.SpellsNew.Aura",
+		"Item.LootdropEntries.Lootdrop.LoottableEntries.Loottable.NpcTypes.NpcSpell.BotSpellsEntries.SpellsNew.Aura.SpellsNew",
+		"Item.LootdropEntries.Lootdrop.LoottableEntries.Loottable.NpcTypes.NpcSpell.BotSpellsEntries.SpellsNew.BlockedSpells",
+		"Item.LootdropEntries.Lootdrop.LoottableEntries.Loottable.NpcTypes.NpcSpell.BotSpellsEntries.SpellsNew.BotSpellsEntries",
+		"Item.LootdropEntries.Lootdrop.LoottableEntries.Loottable.NpcTypes.NpcSpell.BotSpellsEntries.SpellsNew.Damageshieldtypes",
+		"Item.LootdropEntries.Lootdrop.LoottableEntries.Loottable.NpcTypes.NpcSpell.BotSpellsEntries.SpellsNew.Items",
+		"Item.LootdropEntries.Lootdrop.LoottableEntries.Loottable.NpcTypes.NpcSpell.BotSpellsEntries.SpellsNew.NpcSpellsEntries",
+		"Item.LootdropEntries.Lootdrop.LoottableEntries.Loottable.NpcTypes.NpcSpell.BotSpellsEntries.SpellsNew.NpcSpellsEntries.SpellsNew",
+		"Item.LootdropEntries.Lootdrop.LoottableEntries.Loottable.NpcTypes.NpcSpell.BotSpellsEntries.SpellsNew.SpellBuckets",
+		"Item.LootdropEntries.Lootdrop.LoottableEntries.Loottable.NpcTypes.NpcSpell.BotSpellsEntries.SpellsNew.SpellGlobals",
 		"Item.LootdropEntries.Lootdrop.LoottableEntries.Loottable.NpcTypes.NpcSpell.NpcSpell",
 		"Item.LootdropEntries.Lootdrop.LoottableEntries.Loottable.NpcTypes.NpcSpell.NpcSpellsEntries",
 		"Item.LootdropEntries.Lootdrop.LoottableEntries.Loottable.NpcTypes.NpcSpell.NpcSpellsEntries.SpellsNew",
 		"Item.LootdropEntries.Lootdrop.LoottableEntries.Loottable.NpcTypes.NpcSpell.NpcSpellsEntries.SpellsNew.Aura",
 		"Item.LootdropEntries.Lootdrop.LoottableEntries.Loottable.NpcTypes.NpcSpell.NpcSpellsEntries.SpellsNew.Aura.SpellsNew",
 		"Item.LootdropEntries.Lootdrop.LoottableEntries.Loottable.NpcTypes.NpcSpell.NpcSpellsEntries.SpellsNew.BlockedSpells",
+		"Item.LootdropEntries.Lootdrop.LoottableEntries.Loottable.NpcTypes.NpcSpell.NpcSpellsEntries.SpellsNew.BotSpellsEntries",
+		"Item.LootdropEntries.Lootdrop.LoottableEntries.Loottable.NpcTypes.NpcSpell.NpcSpellsEntries.SpellsNew.BotSpellsEntries.NpcSpell",
+		"Item.LootdropEntries.Lootdrop.LoottableEntries.Loottable.NpcTypes.NpcSpell.NpcSpellsEntries.SpellsNew.BotSpellsEntries.SpellsNew",
 		"Item.LootdropEntries.Lootdrop.LoottableEntries.Loottable.NpcTypes.NpcSpell.NpcSpellsEntries.SpellsNew.Damageshieldtypes",
 		"Item.LootdropEntries.Lootdrop.LoottableEntries.Loottable.NpcTypes.NpcSpell.NpcSpellsEntries.SpellsNew.Items",
 		"Item.LootdropEntries.Lootdrop.LoottableEntries.Loottable.NpcTypes.NpcSpell.NpcSpellsEntries.SpellsNew.NpcSpellsEntries",
@@ -143,12 +175,28 @@ func (Inventory) Relationships() []string {
 		"Item.Merchantlists.NpcTypes.NpcFactions.NpcFactionEntries",
 		"Item.Merchantlists.NpcTypes.NpcFactions.NpcFactionEntries.FactionList",
 		"Item.Merchantlists.NpcTypes.NpcSpell",
+		"Item.Merchantlists.NpcTypes.NpcSpell.BotSpellsEntries",
+		"Item.Merchantlists.NpcTypes.NpcSpell.BotSpellsEntries.NpcSpell",
+		"Item.Merchantlists.NpcTypes.NpcSpell.BotSpellsEntries.SpellsNew",
+		"Item.Merchantlists.NpcTypes.NpcSpell.BotSpellsEntries.SpellsNew.Aura",
+		"Item.Merchantlists.NpcTypes.NpcSpell.BotSpellsEntries.SpellsNew.Aura.SpellsNew",
+		"Item.Merchantlists.NpcTypes.NpcSpell.BotSpellsEntries.SpellsNew.BlockedSpells",
+		"Item.Merchantlists.NpcTypes.NpcSpell.BotSpellsEntries.SpellsNew.BotSpellsEntries",
+		"Item.Merchantlists.NpcTypes.NpcSpell.BotSpellsEntries.SpellsNew.Damageshieldtypes",
+		"Item.Merchantlists.NpcTypes.NpcSpell.BotSpellsEntries.SpellsNew.Items",
+		"Item.Merchantlists.NpcTypes.NpcSpell.BotSpellsEntries.SpellsNew.NpcSpellsEntries",
+		"Item.Merchantlists.NpcTypes.NpcSpell.BotSpellsEntries.SpellsNew.NpcSpellsEntries.SpellsNew",
+		"Item.Merchantlists.NpcTypes.NpcSpell.BotSpellsEntries.SpellsNew.SpellBuckets",
+		"Item.Merchantlists.NpcTypes.NpcSpell.BotSpellsEntries.SpellsNew.SpellGlobals",
 		"Item.Merchantlists.NpcTypes.NpcSpell.NpcSpell",
 		"Item.Merchantlists.NpcTypes.NpcSpell.NpcSpellsEntries",
 		"Item.Merchantlists.NpcTypes.NpcSpell.NpcSpellsEntries.SpellsNew",
 		"Item.Merchantlists.NpcTypes.NpcSpell.NpcSpellsEntries.SpellsNew.Aura",
 		"Item.Merchantlists.NpcTypes.NpcSpell.NpcSpellsEntries.SpellsNew.Aura.SpellsNew",
 		"Item.Merchantlists.NpcTypes.NpcSpell.NpcSpellsEntries.SpellsNew.BlockedSpells",
+		"Item.Merchantlists.NpcTypes.NpcSpell.NpcSpellsEntries.SpellsNew.BotSpellsEntries",
+		"Item.Merchantlists.NpcTypes.NpcSpell.NpcSpellsEntries.SpellsNew.BotSpellsEntries.NpcSpell",
+		"Item.Merchantlists.NpcTypes.NpcSpell.NpcSpellsEntries.SpellsNew.BotSpellsEntries.SpellsNew",
 		"Item.Merchantlists.NpcTypes.NpcSpell.NpcSpellsEntries.SpellsNew.Damageshieldtypes",
 		"Item.Merchantlists.NpcTypes.NpcSpell.NpcSpellsEntries.SpellsNew.Items",
 		"Item.Merchantlists.NpcTypes.NpcSpell.NpcSpellsEntries.SpellsNew.NpcSpellsEntries",

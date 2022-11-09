@@ -6,7 +6,7 @@ import (
 
 type SpawnEvent struct {
 	ID          uint        `json:"id" gorm:"Column:id"`
-	Zone        null.String `json:"zone" gorm:"Column:zone"`
+	Zone        string `json:"zone" gorm:"Column:zone"`
 	CondId      uint32      `json:"cond_id" gorm:"Column:cond_id"`
 	Name        string      `json:"name" gorm:"Column:name"`
 	Period      uint        `json:"period" gorm:"Column:period"`

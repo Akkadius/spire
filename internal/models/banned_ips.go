@@ -6,7 +6,7 @@ import (
 
 type BannedIp struct {
 	IpAddress  string      `json:"ip_address" gorm:"Column:ip_address"`
-	Notes      null.String `json:"notes" gorm:"Column:notes"`
+	Notes      string `json:"notes" gorm:"Column:notes"`
 }
 
 func (BannedIp) TableName() string {

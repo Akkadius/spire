@@ -15,7 +15,7 @@ type Bug struct {
 	Z      float32     `json:"z" gorm:"Column:z"`
 	Type   string      `json:"type" gorm:"Column:type"`
 	Flag   uint8       `json:"flag" gorm:"Column:flag"`
-	Target null.String `json:"target" gorm:"Column:target"`
+	Target string `json:"target" gorm:"Column:target"`
 	Bug    string      `json:"bug" gorm:"Column:bug"`
 	Date   time.Time   `json:"date" gorm:"Column:date"`
 	Status uint8       `json:"status" gorm:"Column:status"`
