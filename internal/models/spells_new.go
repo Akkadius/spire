@@ -248,8 +248,8 @@ type SpellsNew struct {
 	SpellGlobals         []SpellGlobal      `json:"spell_globals,omitempty" gorm:"foreignKey:spellid;references:id"`
 	BlockedSpells        []BlockedSpell     `json:"blocked_spells,omitempty" gorm:"foreignKey:spellid;references:id"`
 	Items                []Item             `json:"items,omitempty" gorm:"foreignKey:clickeffect;references:id"`
-	BotSpellsEntries     []BotSpellsEntry   `json:"bot_spells_entries,omitempty" gorm:"foreignKey:spellid;references:id"`
 	NpcSpellsEntries     []NpcSpellsEntry   `json:"npc_spells_entries,omitempty" gorm:"foreignKey:spellid;references:id"`
+	BotSpellsEntries     []BotSpellsEntry   `json:"bot_spells_entries,omitempty" gorm:"foreignKey:spellid;references:id"`
 }
 
 func (SpellsNew) TableName() string {

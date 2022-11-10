@@ -285,5 +285,5 @@ func (BotSpellsEntry) Relationships() []string {
 }
 
 func (BotSpellsEntry) Connection() string {
-    return "eqemu_content"
+    return ""
 }
