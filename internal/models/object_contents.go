@@ -12,11 +12,11 @@ type ObjectContent struct {
 	Itemid   uint        `json:"itemid" gorm:"Column:itemid"`
 	Charges  int16       `json:"charges" gorm:"Column:charges"`
 	Droptime time.Time   `json:"droptime" gorm:"Column:droptime"`
-	Augslot1 uint32 `json:"augslot_1" gorm:"Column:augslot1"`
-	Augslot2 uint32 `json:"augslot_2" gorm:"Column:augslot2"`
-	Augslot3 uint32 `json:"augslot_3" gorm:"Column:augslot3"`
-	Augslot4 uint32 `json:"augslot_4" gorm:"Column:augslot4"`
-	Augslot5 uint32 `json:"augslot_5" gorm:"Column:augslot5"`
+	Augslot1 null.Uint32 `json:"augslot_1" gorm:"Column:augslot1"`
+	Augslot2 null.Uint32 `json:"augslot_2" gorm:"Column:augslot2"`
+	Augslot3 null.Uint32 `json:"augslot_3" gorm:"Column:augslot3"`
+	Augslot4 null.Uint32 `json:"augslot_4" gorm:"Column:augslot4"`
+	Augslot5 null.Uint32 `json:"augslot_5" gorm:"Column:augslot5"`
 	Augslot6 int32       `json:"augslot_6" gorm:"Column:augslot6"`
 }
 

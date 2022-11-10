@@ -16,8 +16,8 @@ type StartingItem struct {
 	Slot                   int32       `json:"slot" gorm:"Column:slot"`
 	MinExpansion           int8        `json:"min_expansion" gorm:"Column:min_expansion"`
 	MaxExpansion           int8        `json:"max_expansion" gorm:"Column:max_expansion"`
-	ContentFlags           string `json:"content_flags" gorm:"Column:content_flags"`
-	ContentFlagsDisabled   string `json:"content_flags_disabled" gorm:"Column:content_flags_disabled"`
+	ContentFlags           null.String `json:"content_flags" gorm:"Column:content_flags"`
+	ContentFlagsDisabled   null.String `json:"content_flags_disabled" gorm:"Column:content_flags_disabled"`
 	Zone                   *Zone       `json:"zone,omitempty" gorm:"foreignKey:zoneid;references:zoneidnumber"`
 	Item                   *Item       `json:"item,omitempty" gorm:"foreignKey:itemid;references:id"`
 }

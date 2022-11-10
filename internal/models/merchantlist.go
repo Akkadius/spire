@@ -15,11 +15,11 @@ type Merchantlist struct {
 	Probability            int         `json:"probability" gorm:"Column:probability"`
 	BucketName             string      `json:"bucket_name" gorm:"Column:bucket_name"`
 	BucketValue            string      `json:"bucket_value" gorm:"Column:bucket_value"`
-	BucketComparison       uint8  `json:"bucket_comparison" gorm:"Column:bucket_comparison"`
+	BucketComparison       null.Uint8  `json:"bucket_comparison" gorm:"Column:bucket_comparison"`
 	MinExpansion           int8        `json:"min_expansion" gorm:"Column:min_expansion"`
 	MaxExpansion           int8        `json:"max_expansion" gorm:"Column:max_expansion"`
-	ContentFlags           string `json:"content_flags" gorm:"Column:content_flags"`
-	ContentFlagsDisabled   string `json:"content_flags_disabled" gorm:"Column:content_flags_disabled"`
+	ContentFlags           null.String `json:"content_flags" gorm:"Column:content_flags"`
+	ContentFlagsDisabled   null.String `json:"content_flags_disabled" gorm:"Column:content_flags_disabled"`
 	NpcTypes               []NpcType   `json:"npc_types,omitempty" gorm:"foreignKey:merchant_id;references:merchantid"`
 	Items                  []Item      `json:"items,omitempty" gorm:"foreignKey:id;references:item"`
 }

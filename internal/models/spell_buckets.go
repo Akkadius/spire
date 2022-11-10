@@ -6,8 +6,8 @@ import (
 
 type SpellBucket struct {
 	Spellid uint64      `json:"spellid" gorm:"Column:spellid"`
-	Key     string `json:"key" gorm:"Column:key"`
-	Value   string `json:"value" gorm:"Column:value"`
+	Key     null.String `json:"key" gorm:"Column:key"`
+	Value   null.String `json:"value" gorm:"Column:value"`
 }
 
 func (SpellBucket) TableName() string {

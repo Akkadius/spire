@@ -10,7 +10,7 @@ type Hacker struct {
 	Account string      `json:"account" gorm:"Column:account"`
 	Name    string      `json:"name" gorm:"Column:name"`
 	Hacked  string      `json:"hacked" gorm:"Column:hacked"`
-	Zone    string `json:"zone" gorm:"Column:zone"`
+	Zone    null.String `json:"zone" gorm:"Column:zone"`
 	Date    time.Time   `json:"date" gorm:"Column:date"`
 }
 

@@ -9,8 +9,8 @@ type Lootdrop struct {
 	Name                   string           `json:"name" gorm:"Column:name"`
 	MinExpansion           int8             `json:"min_expansion" gorm:"Column:min_expansion"`
 	MaxExpansion           int8             `json:"max_expansion" gorm:"Column:max_expansion"`
-	ContentFlags           string      `json:"content_flags" gorm:"Column:content_flags"`
-	ContentFlagsDisabled   string      `json:"content_flags_disabled" gorm:"Column:content_flags_disabled"`
+	ContentFlags           null.String      `json:"content_flags" gorm:"Column:content_flags"`
+	ContentFlagsDisabled   null.String      `json:"content_flags_disabled" gorm:"Column:content_flags_disabled"`
 	LootdropEntries        []LootdropEntry  `json:"lootdrop_entries,omitempty" gorm:"foreignKey:lootdrop_id;references:id"`
 	LoottableEntries       []LoottableEntry `json:"loottable_entries,omitempty" gorm:"foreignKey:lootdrop_id;references:id"`
 }

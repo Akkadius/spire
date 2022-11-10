@@ -6,7 +6,7 @@ import (
 
 type NpcSpell struct {
 	ID                       uint             `json:"id" gorm:"Column:id"`
-	Name                     string      `json:"name" gorm:"Column:name"`
+	Name                     null.String      `json:"name" gorm:"Column:name"`
 	ParentList               uint             `json:"parent_list" gorm:"Column:parent_list"`
 	AttackProc               int16            `json:"attack_proc" gorm:"Column:attack_proc"`
 	ProcChance               int8             `json:"proc_chance" gorm:"Column:proc_chance"`
@@ -27,8 +27,8 @@ type NpcSpell struct {
 	IdleNoSpRecastMax        uint             `json:"idle_no_sp_recast_max" gorm:"Column:idle_no_sp_recast_max"`
 	IdleBChance              uint8            `json:"idle_b_chance" gorm:"Column:idle_b_chance"`
 	NpcSpellsEntries         []NpcSpellsEntry `json:"npc_spells_entries,omitempty" gorm:"foreignKey:npc_spells_id;references:id"`
-	NpcSpell                 *NpcSpell        `json:"npc_spell,omitempty" gorm:"foreignKey:parent_list;references:id"`
 	BotSpellsEntries         []BotSpellsEntry `json:"bot_spells_entries,omitempty" gorm:"foreignKey:npc_spells_id;references:id"`
+	NpcSpell                 *NpcSpell        `json:"npc_spell,omitempty" gorm:"foreignKey:parent_list;references:id"`
 }
 
 func (NpcSpell) TableName() string {

@@ -170,9 +170,9 @@ type Item struct {
 	Scrolllevel2            int                     `json:"scrolllevel_2" gorm:"Column:scrolllevel2"`
 	Scrolllevel             int                     `json:"scrolllevel" gorm:"Column:scrolllevel"`
 	UNK157                  int                     `json:"unk_157" gorm:"Column:UNK157"`
-	Serialized              time.Time               `json:"serialized" gorm:"Column:serialized"`
-	Verified                time.Time               `json:"verified" gorm:"Column:verified"`
-	Serialization           string             `json:"serialization" gorm:"Column:serialization"`
+	Serialized              null.Time               `json:"serialized" gorm:"Column:serialized"`
+	Verified                null.Time               `json:"verified" gorm:"Column:verified"`
+	Serialization           null.String             `json:"serialization" gorm:"Column:serialization"`
 	Source                  string                  `json:"source" gorm:"Column:source"`
 	UNK033                  int                     `json:"unk_033" gorm:"Column:UNK033"`
 	Lorefile                string                  `json:"lorefile" gorm:"Column:lorefile"`
@@ -189,7 +189,7 @@ type Item struct {
 	UNK120                  int                     `json:"unk_120" gorm:"Column:UNK120"`
 	UNK121                  int                     `json:"unk_121" gorm:"Column:UNK121"`
 	Questitemflag           int                     `json:"questitemflag" gorm:"Column:questitemflag"`
-	UNK132                  string             `json:"unk_132" gorm:"Column:UNK132"`
+	UNK132                  null.String             `json:"unk_132" gorm:"Column:UNK132"`
 	Clickunk5               int                     `json:"clickunk_5" gorm:"Column:clickunk5"`
 	Clickunk6               string                  `json:"clickunk_6" gorm:"Column:clickunk6"`
 	Clickunk7               int                     `json:"clickunk_7" gorm:"Column:clickunk7"`

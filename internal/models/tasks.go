@@ -12,7 +12,7 @@ type Task struct {
 	Title                 string             `json:"title" gorm:"Column:title"`
 	Description           string             `json:"description" gorm:"Column:description"`
 	RewardText            string             `json:"reward_text" gorm:"Column:reward_text"`
-	RewardIdList          string        `json:"reward_id_list" gorm:"Column:reward_id_list"`
+	RewardIdList          null.String        `json:"reward_id_list" gorm:"Column:reward_id_list"`
 	CashReward            uint               `json:"cash_reward" gorm:"Column:cash_reward"`
 	ExpReward             int                `json:"exp_reward" gorm:"Column:exp_reward"`
 	RewardMethod          uint8              `json:"reward_method" gorm:"Column:reward_method"`

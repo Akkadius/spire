@@ -5,7 +5,7 @@ import (
 )
 
 type DbVersion struct {
-	Version int `json:"version" gorm:"Column:version"`
+	Version null.Int `json:"version" gorm:"Column:version"`
 }
 
 func (DbVersion) TableName() string {

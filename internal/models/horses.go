@@ -11,7 +11,7 @@ type Horse struct {
 	Gender     int8        `json:"gender" gorm:"Column:gender"`
 	Texture    int8        `json:"texture" gorm:"Column:texture"`
 	Mountspeed float32     `json:"mountspeed" gorm:"Column:mountspeed"`
-	Notes      string `json:"notes" gorm:"Column:notes"`
+	Notes      null.String `json:"notes" gorm:"Column:notes"`
 }
 
 func (Horse) TableName() string {

@@ -11,8 +11,8 @@ type Spawnentry struct {
 	ConditionValueFilter   int32       `json:"condition_value_filter" gorm:"Column:condition_value_filter"`
 	MinExpansion           int8        `json:"min_expansion" gorm:"Column:min_expansion"`
 	MaxExpansion           int8        `json:"max_expansion" gorm:"Column:max_expansion"`
-	ContentFlags           string `json:"content_flags" gorm:"Column:content_flags"`
-	ContentFlagsDisabled   string `json:"content_flags_disabled" gorm:"Column:content_flags_disabled"`
+	ContentFlags           null.String `json:"content_flags" gorm:"Column:content_flags"`
+	ContentFlagsDisabled   null.String `json:"content_flags_disabled" gorm:"Column:content_flags_disabled"`
 	Spawngroup             *Spawngroup `json:"spawngroup,omitempty" gorm:"foreignKey:spawngroupID;references:id"`
 	NpcType                *NpcType    `json:"npc_type,omitempty" gorm:"foreignKey:npcID;references:id"`
 }

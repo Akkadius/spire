@@ -14,7 +14,7 @@ type Object struct {
 	Heading                float32     `json:"heading" gorm:"Column:heading"`
 	Itemid                 int         `json:"itemid" gorm:"Column:itemid"`
 	Charges                uint16      `json:"charges" gorm:"Column:charges"`
-	Objectname             string `json:"objectname" gorm:"Column:objectname"`
+	Objectname             null.String `json:"objectname" gorm:"Column:objectname"`
 	Type                   int         `json:"type" gorm:"Column:type"`
 	Icon                   int         `json:"icon" gorm:"Column:icon"`
 	Unknown08              int32       `json:"unknown_08" gorm:"Column:unknown08"`
@@ -30,11 +30,11 @@ type Object struct {
 	Size                   float32     `json:"size" gorm:"Column:size"`
 	TiltX                  float32     `json:"tilt_x" gorm:"Column:tilt_x"`
 	TiltY                  float32     `json:"tilt_y" gorm:"Column:tilt_y"`
-	DisplayName            string `json:"display_name" gorm:"Column:display_name"`
+	DisplayName            null.String `json:"display_name" gorm:"Column:display_name"`
 	MinExpansion           int8        `json:"min_expansion" gorm:"Column:min_expansion"`
 	MaxExpansion           int8        `json:"max_expansion" gorm:"Column:max_expansion"`
-	ContentFlags           string `json:"content_flags" gorm:"Column:content_flags"`
-	ContentFlagsDisabled   string `json:"content_flags_disabled" gorm:"Column:content_flags_disabled"`
+	ContentFlags           null.String `json:"content_flags" gorm:"Column:content_flags"`
+	ContentFlagsDisabled   null.String `json:"content_flags_disabled" gorm:"Column:content_flags_disabled"`
 	Zone                   *Zone       `json:"zone,omitempty" gorm:"foreignKey:zoneid;references:zoneidnumber"`
 	Item                   *Item       `json:"item,omitempty" gorm:"foreignKey:itemid;references:id"`
 }

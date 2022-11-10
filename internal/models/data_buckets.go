@@ -6,9 +6,9 @@ import (
 
 type DataBucket struct {
 	ID      uint64      `json:"id" gorm:"Column:id"`
-	Key     string `json:"key" gorm:"Column:key"`
-	Value   string `json:"value" gorm:"Column:value"`
-	Expires uint   `json:"expires" gorm:"Column:expires"`
+	Key     null.String `json:"key" gorm:"Column:key"`
+	Value   null.String `json:"value" gorm:"Column:value"`
+	Expires null.Uint   `json:"expires" gorm:"Column:expires"`
 }
 
 func (DataBucket) TableName() string {

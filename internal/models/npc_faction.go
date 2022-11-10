@@ -6,7 +6,7 @@ import (
 
 type NpcFaction struct {
 	ID                    int               `json:"id" gorm:"Column:id"`
-	Name                  string       `json:"name" gorm:"Column:name"`
+	Name                  null.String       `json:"name" gorm:"Column:name"`
 	Primaryfaction        int               `json:"primaryfaction" gorm:"Column:primaryfaction"`
 	IgnorePrimaryAssist   int8              `json:"ignore_primary_assist" gorm:"Column:ignore_primary_assist"`
 	NpcFactionEntries     []NpcFactionEntry `json:"npc_faction_entries,omitempty" gorm:"foreignKey:npc_faction_id;references:id"`

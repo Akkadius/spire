@@ -106,7 +106,7 @@ type CharacterDatum struct {
 	AaPointsSpentOld             uint                         `json:"aa_points_spent_old" gorm:"Column:aa_points_spent_old"`
 	AaPointsOld                  uint                         `json:"aa_points_old" gorm:"Column:aa_points_old"`
 	ELastInvsnapshot             uint                         `json:"e_last_invsnapshot" gorm:"Column:e_last_invsnapshot"`
-	DeletedAt                    time.Time                    `json:"deleted_at" gorm:"Column:deleted_at"`
+	DeletedAt                    null.Time                    `json:"deleted_at" gorm:"Column:deleted_at"`
 	Guild                        *Guild                       `json:"guild,omitempty" gorm:"foreignKey:id;references:id"`
 	CharRecipeLists              []CharRecipeList             `json:"char_recipe_lists,omitempty" gorm:"foreignKey:char_id;references:id"`
 	CharacterAltCurrencies       []CharacterAltCurrency       `json:"character_alt_currencies,omitempty" gorm:"foreignKey:char_id;references:id"`

@@ -9,7 +9,7 @@ type CharacterActivity struct {
 	Taskid     uint      `json:"taskid" gorm:"Column:taskid"`
 	Activityid uint      `json:"activityid" gorm:"Column:activityid"`
 	Donecount  uint      `json:"donecount" gorm:"Column:donecount"`
-	Completed  int8 `json:"completed" gorm:"Column:completed"`
+	Completed  null.Int8 `json:"completed" gorm:"Column:completed"`
 }
 
 func (CharacterActivity) TableName() string {

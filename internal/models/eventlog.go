@@ -8,10 +8,10 @@ import (
 type Eventlog struct {
 	ID              uint        `json:"id" gorm:"Column:id"`
 	Accountname     string      `json:"accountname" gorm:"Column:accountname"`
-	Accountid       uint   `json:"accountid" gorm:"Column:accountid"`
+	Accountid       null.Uint   `json:"accountid" gorm:"Column:accountid"`
 	Status          int         `json:"status" gorm:"Column:status"`
 	Charname        string      `json:"charname" gorm:"Column:charname"`
-	Target          string `json:"target" gorm:"Column:target"`
+	Target          null.String `json:"target" gorm:"Column:target"`
 	Time            time.Time   `json:"time" gorm:"Column:time"`
 	Descriptiontype string      `json:"descriptiontype" gorm:"Column:descriptiontype"`
 	Description     string      `json:"description" gorm:"Column:description"`

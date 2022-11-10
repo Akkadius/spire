@@ -10,9 +10,9 @@ type GuildBank struct {
 	Slot        uint        `json:"slot" gorm:"Column:slot"`
 	Itemid      uint        `json:"itemid" gorm:"Column:itemid"`
 	Qty         uint        `json:"qty" gorm:"Column:qty"`
-	Donator     string `json:"donator" gorm:"Column:donator"`
+	Donator     null.String `json:"donator" gorm:"Column:donator"`
 	Permissions uint8       `json:"permissions" gorm:"Column:permissions"`
-	Whofor      string `json:"whofor" gorm:"Column:whofor"`
+	Whofor      null.String `json:"whofor" gorm:"Column:whofor"`
 }
 
 func (GuildBank) TableName() string {

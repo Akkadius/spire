@@ -6,11 +6,11 @@ import (
 
 type LoginApiToken struct {
 	ID         int         `json:"id" gorm:"Column:id"`
-	Token      string `json:"token" gorm:"Column:token"`
-	CanWrite   int    `json:"can_write" gorm:"Column:can_write"`
-	CanRead    int    `json:"can_read" gorm:"Column:can_read"`
-	CreatedAt  time.Time   `json:"created_at" gorm:"Column:created_at"`
-	UpdatedAt  time.Time   `json:"updated_at" gorm:"Column:updated_at"`
+	Token      null.String `json:"token" gorm:"Column:token"`
+	CanWrite   null.Int    `json:"can_write" gorm:"Column:can_write"`
+	CanRead    null.Int    `json:"can_read" gorm:"Column:can_read"`
+	CreatedAt  null.Time   `json:"created_at" gorm:"Column:created_at"`
+	UpdatedAt  null.Time   `json:"updated_at" gorm:"Column:updated_at"`
 }
 
 func (LoginApiToken) TableName() string {

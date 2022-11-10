@@ -7,7 +7,7 @@ import (
 type Spawn2 struct {
 	ID                     int          `json:"id" gorm:"Column:id"`
 	SpawngroupID           int          `json:"spawngroup_id" gorm:"Column:spawngroupID"`
-	Zone                   string  `json:"zone" gorm:"Column:zone"`
+	Zone                   null.String  `json:"zone" gorm:"Column:zone"`
 	Version                int16        `json:"version" gorm:"Column:version"`
 	X                      float32      `json:"x" gorm:"Column:x"`
 	Y                      float32      `json:"y" gorm:"Column:y"`
@@ -23,8 +23,8 @@ type Spawn2 struct {
 	Animation              uint8        `json:"animation" gorm:"Column:animation"`
 	MinExpansion           int8         `json:"min_expansion" gorm:"Column:min_expansion"`
 	MaxExpansion           int8         `json:"max_expansion" gorm:"Column:max_expansion"`
-	ContentFlags           string  `json:"content_flags" gorm:"Column:content_flags"`
-	ContentFlagsDisabled   string  `json:"content_flags_disabled" gorm:"Column:content_flags_disabled"`
+	ContentFlags           null.String  `json:"content_flags" gorm:"Column:content_flags"`
+	ContentFlagsDisabled   null.String  `json:"content_flags_disabled" gorm:"Column:content_flags_disabled"`
 	Spawngroup             *Spawngroup  `json:"spawngroup,omitempty" gorm:"foreignKey:spawngroupID;references:id"`
 	Spawnentries           []Spawnentry `json:"spawnentries,omitempty" gorm:"foreignKey:spawngroupID;references:spawngroupID"`
 }

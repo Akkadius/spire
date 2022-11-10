@@ -19,7 +19,7 @@ type AdventureTemplate struct {
 	AssaY             float32     `json:"assa_y" gorm:"Column:assa_y"`
 	AssaZ             float32     `json:"assa_z" gorm:"Column:assa_z"`
 	AssaH             float32     `json:"assa_h" gorm:"Column:assa_h"`
-	Text              string `json:"text" gorm:"Column:text"`
+	Text              null.String `json:"text" gorm:"Column:text"`
 	Duration          uint        `json:"duration" gorm:"Column:duration"`
 	ZoneInTime        uint        `json:"zone_in_time" gorm:"Column:zone_in_time"`
 	WinPoints         uint16      `json:"win_points" gorm:"Column:win_points"`

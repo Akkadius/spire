@@ -7,7 +7,7 @@ import (
 type Door struct {
 	ID                     int         `json:"id" gorm:"Column:id"`
 	Doorid                 int16       `json:"doorid" gorm:"Column:doorid"`
-	Zone                   string `json:"zone" gorm:"Column:zone"`
+	Zone                   null.String `json:"zone" gorm:"Column:zone"`
 	Version                int16       `json:"version" gorm:"Column:version"`
 	Name                   string      `json:"name" gorm:"Column:name"`
 	PosY                   float32     `json:"pos_y" gorm:"Column:pos_y"`
@@ -24,7 +24,7 @@ type Door struct {
 	DisableTimer           int8        `json:"disable_timer" gorm:"Column:disable_timer"`
 	Doorisopen             int16       `json:"doorisopen" gorm:"Column:doorisopen"`
 	DoorParam              int         `json:"door_param" gorm:"Column:door_param"`
-	DestZone               string `json:"dest_zone" gorm:"Column:dest_zone"`
+	DestZone               null.String `json:"dest_zone" gorm:"Column:dest_zone"`
 	DestInstance           uint        `json:"dest_instance" gorm:"Column:dest_instance"`
 	DestX                  float32     `json:"dest_x" gorm:"Column:dest_x"`
 	DestY                  float32     `json:"dest_y" gorm:"Column:dest_y"`
@@ -39,8 +39,8 @@ type Door struct {
 	DzSwitchId             int         `json:"dz_switch_id" gorm:"Column:dz_switch_id"`
 	MinExpansion           int8        `json:"min_expansion" gorm:"Column:min_expansion"`
 	MaxExpansion           int8        `json:"max_expansion" gorm:"Column:max_expansion"`
-	ContentFlags           string `json:"content_flags" gorm:"Column:content_flags"`
-	ContentFlagsDisabled   string `json:"content_flags_disabled" gorm:"Column:content_flags_disabled"`
+	ContentFlags           null.String `json:"content_flags" gorm:"Column:content_flags"`
+	ContentFlagsDisabled   null.String `json:"content_flags_disabled" gorm:"Column:content_flags_disabled"`
 	Item                   *Item       `json:"item,omitempty" gorm:"foreignKey:keyitem;references:id"`
 }
 
