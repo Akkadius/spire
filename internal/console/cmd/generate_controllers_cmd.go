@@ -56,25 +56,9 @@ func (g *GenerateControllersCommand) Handle(_ *cobra.Command, args []string) {
 			if isKey {
 				fmt.Printf("Generating models and controllers for [%v]\n", table)
 
-				modelMeta := generators.NewGenerateModel(
-					generators.GenerateModelContext{
-						TablesToGenerate: []string{table},
-					},
-					g.logger,
-					g.db,
-				).Generate()
-
-				relationships := ""
-				for _, meta := range modelMeta {
-					if meta.Table == table {
-						relationships = strings.Join(meta.GormRelationships, "<br>")
-					}
-				}
-
 				generators.NewGenerateController(
 					generators.GenerateControllerContext{
-						EntityName:           table,
-						RelationshipsComment: relationships,
+						EntityName: table,
 					},
 					g.logger,
 				).Generate()

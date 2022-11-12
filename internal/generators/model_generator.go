@@ -77,12 +77,7 @@ type ForeignKeyMappings struct {
 	RelationType string `json:"relation_type"` // relationship type
 }
 
-type ModelGenerateResponse struct {
-	Table             string
-	GormRelationships []string
-}
-
-func (g *GenerateModel) Generate() []ModelGenerateResponse {
+func (g *GenerateModel) Generate() {
 	g.options.Relationships = g.loadRelationships()
 	relationships := g.options.Relationships
 	tableNames := g.getTableNames()
@@ -91,9 +86,6 @@ func (g *GenerateModel) Generate() []ModelGenerateResponse {
 	if len(g.options.TablesToGenerate) == 0 {
 		g.options.TablesToGenerate = GetDatabaseTables()
 	}
-
-	// metadata to respond with
-	modelGenerateResponse := make([]ModelGenerateResponse, len(g.options.TablesToGenerate))
 
 	// TablesToGenerate is just a list of tables table1,table2
 	for _, genModel := range g.options.TablesToGenerate {
@@ -311,17 +303,11 @@ func (g *GenerateModel) Generate() []ModelGenerateResponse {
 
 			fmt.Println(fmt.Sprintf("Generated [%v]", fileName))
 
-			modelGenerateResponse = append(
-				modelGenerateResponse, ModelGenerateResponse{
-					Table:             table,
-					GormRelationships: nestedRelationships,
-				},
-			)
+			// Table:             table,
+			// GormRelationships: nestedRelationships,
 
 		}
 	}
-
-	return modelGenerateResponse
 }
 
 // return relationship type model prefix

@@ -49,7 +49,7 @@ func (e *RaidDetailController) Routes() []*routes.Route {
 // @Accept json
 // @Produce json
 // @Tags RaidDetail
-// @Param includes query string false "Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names <h4>Relationships</h4>RaidLeaders<br>RaidMembers"
+// @Param includes query string false "Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names"
 // @Param where query string false "Filter on specific fields. Multiple conditions [.] separated Example: col_like_value.col2__val2"
 // @Param whereOr query string false "Filter on specific fields (Chained ors). Multiple conditions [.] separated Example: col_like_value.col2__val2"
 // @Param groupBy query string false "Group by field. Multiple conditions [.] separated Example: field1.field2"
@@ -78,7 +78,7 @@ func (e *RaidDetailController) listRaidDetails(c echo.Context) error {
 // @Produce json
 // @Tags RaidDetail
 // @Param id path int true "Id"
-// @Param includes query string false "Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names <h4>Relationships</h4>RaidLeaders<br>RaidMembers"
+// @Param includes query string false "Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names"
 // @Param select query string false "Column names [.] separated to fetch specific fields in response"
 // @Success 200 {array} models.RaidDetail
 // @Failure 404 {string} string "Entity not found"
