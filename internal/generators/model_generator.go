@@ -1,11 +1,13 @@
 package generators
 
 import (
+	"encoding/json"
 	"fmt"
 	"github.com/Akkadius/spire/internal/console"
 	"github.com/Akkadius/spire/internal/env"
 	"github.com/gertd/go-pluralize"
 	"github.com/iancoleman/strcase"
+	"github.com/k0kubun/pp/v3"
 	"github.com/sirupsen/logrus"
 	"gopkg.in/yaml.v3"
 	"gorm.io/gorm"
@@ -77,6 +79,12 @@ type ForeignKeyMappings struct {
 	RelationType string `json:"relation_type"` // relationship type
 }
 
+type ModelRelationships struct {
+	Table         string   `json:"table"`
+	ModelName     string   `json:"model_name"`
+	Relationships []string `json:"relationships"`
+}
+
 func (g *GenerateModel) Generate() {
 	g.options.Relationships = g.loadRelationships()
 	relationships := g.options.Relationships
@@ -86,6 +94,8 @@ func (g *GenerateModel) Generate() {
 	if len(g.options.TablesToGenerate) == 0 {
 		g.options.TablesToGenerate = GetDatabaseTables()
 	}
+
+	var modelRelationships []ModelRelationships
 
 	// TablesToGenerate is just a list of tables table1,table2
 	for _, genModel := range g.options.TablesToGenerate {
@@ -303,11 +313,41 @@ func (g *GenerateModel) Generate() {
 
 			fmt.Println(fmt.Sprintf("Generated [%v]", fileName))
 
-			// Table:             table,
-			// GormRelationships: nestedRelationships,
-
+			modelRelationships = append(modelRelationships, ModelRelationships{
+				Table:         table,
+				ModelName:     g.pluralize.Singular(strcase.ToCamel(table)),
+				Relationships: nestedRelationships,
+			})
 		}
 	}
+
+	// when we've likely generated all
+	// write [internal/http/staticmaps/model-relationships.json]
+	// used for API documentation within Spire
+	if len(modelRelationships) > 1 {
+		pp.Println(modelRelationships)
+
+		// json
+		jsonData, _ := json.Marshal(modelRelationships)
+
+		// create file
+		f, err := os.Create("internal/http/staticmaps/model-relationships.json")
+		if err != nil {
+			g.logger.Fatal(err)
+		}
+
+		defer f.Close()
+
+		// write
+		_, err = f.Write(jsonData)
+		if err != nil {
+			g.logger.Fatal(err)
+		}
+	}
+
+	sort.Slice(modelRelationships, func(i, j int) bool {
+		return modelRelationships[i].Table < modelRelationships[j].Table
+	})
 }
 
 // return relationship type model prefix
@@ -391,7 +431,7 @@ func (g *GenerateModel) getNestedRelationshipsFromTable(table string, prefix str
 
 	sort.Strings(relationshipNames)
 
-	g.debug(fmt.Sprintf("-- [getNestedRelationshipsFromTable] relationshipNames [%v]", relationshipNames))
+	//g.debug(fmt.Sprintf("-- [getNestedRelationshipsFromTable] relationshipNames [%v]", relationshipNames))
 
 	return relationshipNames
 }

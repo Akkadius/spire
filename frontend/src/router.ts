@@ -203,6 +203,11 @@ export default new Router({
           meta: {title: "Calculators"},
         },
         {
+          path: ROUTE.API_MODEL_RELATIONSHIP_EXPLORER,
+          component: () => import('./views/api/ModelRelationshipExplorer.vue'),
+          meta: {title: "API Model Relationship Explorer"},
+        },
+        {
           path: '/expansions',
           component: () => import('./views/Expansion.vue'),
           meta: {title: "Expansions"},

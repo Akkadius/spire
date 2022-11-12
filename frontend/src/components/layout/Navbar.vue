@@ -167,11 +167,7 @@
         <!-- Navigation -->
         <ul class="navbar-nav mb-md-4">
 
-          <li class="nav-item">
-            <a class="nav-link " :href="backendBaseUrl + '/swagger/index.html'" target="swagger">
-              <i class="ra ra-book mr-1"></i> Spire API
-            </a>
-          </li>
+          <nav-section-component :config="spireApiNav"/>
 
           <!-- Components -->
           <li class="nav-item">
@@ -259,6 +255,7 @@ import {EventBus}             from "@/app/event-bus/event-bus";
 import {AppEnv}               from "@/app/env/app-env";
 import {Navbar}               from "@/app/navbar";
 import DbConnectionStatusPill from "@/components/DbConnectionStatusPill";
+import {SpireApi}             from "@/app/api/spire-api";
 
 export default {
   components: { DbConnectionStatusPill, NavSectionComponent, NavbarDropdownMenu, NavbarUserSettingsCog },
@@ -341,6 +338,15 @@ export default {
           },
           { title: "Emitter Viewer", to: ROUTE.EMITTER_VIEWER, icon: "ra  ra-droplet-splash mr-1", isNew: true },
           { title: "Spell Animations", to: ROUTE.SPELL_ANIMATION_VIEWER, icon: "ra ra-dragon mr-1", isNew: true }
+        ]
+      },
+      spireApiNav: {
+        label: "Spire API Docs",
+        labelIcon: "ra ra-book mr-1",
+        routePrefixMatches: ["swagger", "model-viewer"],
+        navs: [
+          { title: "Swagger API", to: SpireApi.getBasePath() + '/swagger/index.html', icon: "ra ra-monster-skull mr-1" },
+          { title: "Model Relationship Explorer", to: ROUTE.API_MODEL_RELATIONSHIP_EXPLORER, icon: "ra ra-kaleidoscope mr-1" },
         ]
       },
       componentNavs: [
