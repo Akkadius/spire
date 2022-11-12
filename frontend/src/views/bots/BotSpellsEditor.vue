@@ -35,7 +35,19 @@
                 <loader-fake-progress/>
               </div>
             </div>
+
           </div>
+
+          <!-- Notification / Error -->
+          <info-error-banner
+            class="mr-3 ml-3"
+            style="margin-top: 20px"
+            :notification="notification"
+            :error="error"
+            :slim="true"
+            @dismiss-error="error = ''"
+            @dismiss-notification="notification = ''"
+          />
 
           <div
             id="bot-spell-viewport"
@@ -87,7 +99,7 @@
                 </td>
                 <td class="text-center">{{ e.id }}</td>
                 <td>{{ e.name }}</td>
-              
+
                 <td>{{ getSpellCount(e) }}</td>
               </tr>
               </tbody>
@@ -135,9 +147,9 @@
 import EqWindowSimple      from "../../components/eq-ui/EQWindowSimple";
 import EqAutoTable         from "../../components/eq-ui/EQAutoTable";
 import ContentArea         from "../../components/layout/ContentArea";
-import {NpcSpellApi}      from "../../app/api";
-import {SpireApi}         from "../../app/api/spire-api";
-import LoaderFakeProgress from "../../components/LoaderFakeProgress";
+import {NpcSpellApi}       from "../../app/api";
+import {SpireApi}          from "../../app/api/spire-api";
+import LoaderFakeProgress  from "../../components/LoaderFakeProgress";
 import {ROUTE}             from "../../routes";
 import {SpireQueryBuilder} from "../../app/api/spire-query-builder";
 import InfoErrorBanner     from "../../components/InfoErrorBanner";
@@ -346,9 +358,17 @@ export default {
 
       if (this.lastPage !== this.currentPage || reset) {
         console.log("reloading content")
-        this.loading      = true
-        this.lastPage     = parseInt(this.currentPage)
-        this.rows         = await this.getBotSpells()
+        this.loading  = true
+        this.lastPage = parseInt(this.currentPage)
+
+        try {
+          this.rows = await this.getBotSpells()
+        } catch (err) {
+          if (err.response.data.error) {
+            this.error = err.response.data.error
+          }
+        }
+
         this.originalRows = JSON.parse(JSON.stringify(this.rows))
       }
 
@@ -385,6 +405,9 @@ export default {
           builder.where("name", "like", this.search)
         }
       }
+
+      builder.where("id", ">=", 3001)
+      builder.where("id", "<=", 3016)
 
       // console.log("SEARCH IS (count) ", this.search)
 
