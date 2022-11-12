@@ -11,6 +11,14 @@
               <div class="d-inline-block btn-group ml-4 text-right" role="group" style="margin-top: 26px">
                 <b-button
                   size="sm"
+                  variant="outline-success"
+                  @click="createNew()"
+                >
+                  <i class="fa fa-plus mr-1"></i>
+                  Create
+                </b-button>
+                <b-button
+                  size="sm"
                   variant="outline-warning"
                   @click="zeroState();"
                 >
@@ -207,9 +215,9 @@
 import EqWindowSimple      from "../../components/eq-ui/EQWindowSimple";
 import EqAutoTable         from "../../components/eq-ui/EQAutoTable";
 import ContentArea         from "../../components/layout/ContentArea";
-import {NpcSpellApi}      from "../../app/api";
-import {SpireApi}         from "../../app/api/spire-api";
-import LoaderFakeProgress from "../../components/LoaderFakeProgress";
+import {NpcSpellApi}       from "../../app/api";
+import {SpireApi}          from "../../app/api/spire-api";
+import LoaderFakeProgress  from "../../components/LoaderFakeProgress";
 import {ROUTE}             from "../../routes";
 import {SpireQueryBuilder} from "../../app/api/spire-query-builder";
 import InfoErrorBanner     from "../../components/InfoErrorBanner";
@@ -283,6 +291,36 @@ export default {
   },
 
   methods: {
+
+    async createNew() {
+      console.log("create")
+
+      const api = (new NpcSpellApi(...SpireApi.cfg()))
+      try {
+        const r = await api.createNpcSpell(
+          {
+            npcSpell: {
+              name: "New Spells List"
+            }
+          }
+        )
+
+        if (r.status === 200) {
+          if (r.data.id > 0) {
+            this.editNpcSpellSet(r.data.id)
+          }
+        }
+
+      } catch (e) {
+        if (e && e.response && e.response.data.error) {
+          if (e.response && e.response.data && e.response.data.error) {
+            this.error = e.response.data.error
+          }
+        } else {
+          this.error = e
+        }
+      }
+    },
 
     zeroState() {
       this.reset()
