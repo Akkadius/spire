@@ -4,29 +4,33 @@
       <div :class="(!areSelectorsActive() ? 'col-12' : 'col-7')">
         <eq-window
           v-if="spellSet"
-          :title="`NPC Spells Editor ID (${spellSet.id}) [${spellSet.name}] Count (${(spellSet.npc_spells_entries ? spellSet.npc_spells_entries.length : 0)})`"
+          :title="`Bot Spells Editor ID (${spellSet.id}) [${spellSet.name}] Count (${(spellSet.bot_spells_entries ? spellSet.bot_spells_entries.length : 0)})`"
           class="p-0"
         >
-          <div class="row">
+          <div class="row mb-2">
             <div class="col-4">
-              <div class="btn-group d-inline-block mt-4 ml-3" role="group">
-                <b-button
-                  size="sm"
-                  variant="outline-success"
-                  @click="goBack"
-                >
-                  <i class="fa fa-arrow-left mr-1"></i>
-                  Go back to Spell Lists
-                </b-button>
+              <div class="mt-4 ml-3">
 
-                <b-button
-                  @click="addSpellListEntry()"
-                  size="sm"
-                  variant="outline-warning"
-                >
-                  <i class="fa fa-plus mr-1"></i>
-                  Add Spell
-                </b-button>
+                <div class="btn-group d-inline-block" role="group">
+                  <b-button
+                    size="sm"
+                    variant="outline-success"
+                    @click="goBack"
+                  >
+                    <i class="fa fa-arrow-left mr-1"></i>
+                    Go back to Spell Lists
+                  </b-button>
+
+                  <b-button
+                    @click="addSpellListEntry()"
+                    size="sm"
+                    variant="outline-warning"
+                  >
+                    <i class="fa fa-plus mr-1"></i>
+                    Add Spell
+                  </b-button>
+                </div>
+
               </div>
             </div>
 
@@ -45,24 +49,11 @@
 
           </div>
 
-          <div class="row ml-1 mt-3">
-            <div class="col-lg-3">
-              Spell Set Name
-              <input
-                type="text"
-                class="form-control"
-                placeholder="Spell Set Name"
-                @change="saveSpellSet"
-                v-model="spellSet.name"
-              >
-            </div>
-          </div>
-
           <div
-            id="npc-spell-preview-list-viewport"
+            id="bot-spell-preview-list-viewport"
             style="max-height: 90vh; overflow-y: scroll; overflow-x: hidden"
           >
-            <npc-spell-preview
+            <bot-spell-preview
               :spells="spellSet"
               :edit-buttons="true"
               :highlighted-spell="highlightedSpellId"
@@ -86,7 +77,7 @@
         </div>
 
         <div v-if="editingSpellEntryId > 0">
-          <eq-window :title="`Editing NPC Spell List (${editingSpellEntryId})`">
+          <eq-window :title="`Editing Bot Spell List (${editingSpellEntryId})`">
             <div
               v-for="field in editingSpellEntryFields"
               :key="field.field"
@@ -149,27 +140,6 @@
                   :style="(editingSpellEntry[field.field] === 0 ? 'opacity: .5' : '')"
                 />
 
-                <!-- range -->
-                <b-form-input
-                  v-if="field.fType === 'range'"
-                  type="range"
-                  :id="field.field"
-                  :min="field.min"
-                  :max="field.max"
-                  style="width: 80%"
-                  v-model.number="editingSpellEntry[field.field]"
-                  class="m-0 mt-1 d-inline-block"
-                  v-on="field.e ? getEventHandlers(field.e, field.field) : {}"
-                  v-b-tooltip.hover.v-dark.right :title="getFieldDescription(field.field)"
-                  :style="(editingSpellEntry[field.field] <= (typeof field.zeroValue !== 'undefined' ? field.zeroValue : 0) ? 'opacity: .5' : '')"
-                  @change="rerenderProbability = Date.now()"
-                  :key="rerenderProbability"
-                />
-
-                <div v-if="field.fType === 'range'" class="d-inline-block ml-3" :key="rerenderProbability + '-visual'">
-                  ({{ editingSpellEntry[field.field] }})
-                </div>
-
                 <!-- input text -->
                 <b-form-input
                   v-if="field.fType === 'text'"
@@ -211,7 +181,6 @@
                   v-if="field.selectData"
                   v-on="field.e ? getEventHandlers(field.e, field.field) : {}"
                   v-b-tooltip.hover.v-dark.right :title="getFieldDescription(field.field)"
-                  :style="(editingSpellEntry[field.field] <= (typeof field.zeroValue !== 'undefined' ? field.zeroValue : 0) ? 'opacity: .5' : '')"
                 >
                   <option
                     v-for="(desc, index) in field.selectData"
@@ -236,8 +205,6 @@
                 Save
               </b-button>
             </div>
-
-
           </eq-window>
         </div>
       </div>
@@ -247,25 +214,26 @@
 </template>
 
 <script>
-import EqWindow            from "../../components/eq-ui/EQWindow";
-import NpcSpellPreview     from "../../components/preview/NpcSpellPreview";
-import {SpireQueryBuilder} from "../../app/api/spire-query-builder";
-import {NpcSpellApi}       from "../../app/api";
-import {SpireApi}          from "../../app/api/spire-api";
-import SpellSelector       from "../../components/selectors/SpellSelector";
-import {NpcSpellsEntryApi} from "../../app/api/api/npc-spells-entry-api";
-import {scrollToTarget}    from "../../app/utility/scrollToTarget";
-import InfoErrorBanner     from "../../components/InfoErrorBanner";
-import {ROUTE}             from "../../routes";
-import util                from "util";
-import EqCheckbox          from "../../components/eq-ui/EQCheckbox";
-import SpellPopover        from "../../components/SpellPopover";
-import {NPC_SPELL_TYPES}   from "../../app/constants/eq-npc-spells";
-import {Spells}            from "../../app/spells";
+import EqWindow                  from "../../components/eq-ui/EQWindow";
+import BotSpellPreview           from "../../components/preview/BotSpellPreview";
+import {SpireQueryBuilder}       from "../../app/api/spire-query-builder";
+import {NpcSpellApi}             from "../../app/api";
+import {SpireApi}                from "../../app/api/spire-api";
+import SpellSelector             from "../../components/selectors/SpellSelector";
+import {BotSpellsEntryApi}       from "../../app/api/api/bot-spells-entry-api";
+import {scrollToTarget}          from "../../app/utility/scrollToTarget";
+import InfoErrorBanner           from "../../components/InfoErrorBanner";
+import {ROUTE}                   from "../../routes";
+import util                      from "util";
+import EqCheckbox                from "../../components/eq-ui/EQCheckbox";
+import SpellPopover              from "../../components/SpellPopover";
+import {BOT_SPELL_TYPES}         from "../../app/constants/eq-bot-spells";
+import {Spells}                  from "../../app/spells";
+import {DATA_BUCKET_COMPARISONS} from "../../app/constants/eq-data-bucket-comparisons";
 
 export default {
-  name: "NpcSpellListEditor",
-  components: { SpellPopover, EqCheckbox, InfoErrorBanner, SpellSelector, NpcSpellPreview, EqWindow },
+  name: "BotSpellListEditor",
+  components: { SpellPopover, EqCheckbox, InfoErrorBanner, SpellSelector, BotSpellPreview, EqWindow },
   data() {
     return {
       spellSet: {},
@@ -288,8 +256,8 @@ export default {
 
       // fields
       editingSpellEntryFields: [
-        { desc: "Spell Type", field: "type", fType: "select", selectData: NPC_SPELL_TYPES },
-        { desc: "Priority", field: "priority", fType: "range", min: 0, max: 100 },
+        { desc: "Spell Type", field: "type", fType: "select", selectData: BOT_SPELL_TYPES },
+        { desc: "Priority", field: "priority", fType: "text" },
         { desc: "Mana Cost", field: "manacost", fType: "text", spellField: 'mana' },
         { desc: "Recast Delay", field: "recast_delay", fType: "text", spellField: 'recast_time' },
         { desc: "Minimum Level", field: "minlevel", fType: "text" },
@@ -297,6 +265,9 @@ export default {
         { desc: "Min HP", field: "min_hp", fType: "text" },
         { desc: "Max HP", field: "max_hp", fType: "text" },
         { desc: "Resist Adjust", field: "resist_adjust", fType: "text" },
+        { desc: "Bucket Name", field: "bucket_name", fType: "text" },
+        { desc: "Bucket Value", field: "bucket_value", fType: "text" },
+        { desc: "Bucket Comparison", field: "bucket_comparison", fType: "select", selectData: DATA_BUCKET_COMPARISONS },
       ],
     }
   },
@@ -313,49 +284,8 @@ export default {
 
   methods: {
 
-    async saveSpellSet() {
-
-      // clone
-      let payload = JSON.parse(JSON.stringify(this.spellSet))
-      delete payload.npc_spells_entries
-
-      // save
-      const api = (new NpcSpellApi(...SpireApi.cfg()))
-
-      try {
-        const r = await api.updateNpcSpell(
-          {
-            id: payload.id,
-            npcSpell: payload
-          }
-        )
-
-        if (r.status === 200) {
-          this.notification = "Updated spell set!"
-        }
-      } catch (e) {
-        console.log(e)
-
-        if (e.response.data.error) {
-          if (e.response && e.response.data && e.response.data.error) {
-            this.error = "Error! " + e.response.data.error
-          }
-        }
-      }
-
-    },
-
-    goBack() {
-      this.$router.push(
-        {
-          path: ROUTE.NPC_SPELLS_EDIT
-        }
-      ).catch(() => {
-      })
-    },
-
     hasSpellEntries() {
-      return this.spellSet.npc_spells_entries && this.spellSet.npc_spells_entries.length
+      return this.spellSet.bot_spells_entries && this.spellSet.bot_spells_entries.length
     },
 
     areSelectorsActive() {
@@ -364,16 +294,16 @@ export default {
 
     async saveSpellListEntry() {
       try {
-        const api = (new NpcSpellsEntryApi(...SpireApi.cfg()))
+        const api = (new BotSpellsEntryApi(...SpireApi.cfg()))
         let entry = JSON.parse(JSON.stringify(this.editingSpellEntry))
         delete entry.spells_new;
 
         console.log("entry is ", entry)
 
-        const r = await api.updateNpcSpellsEntry(
+        const r = await api.updateBotSpellsEntry(
           {
             id: entry.id,
-            npcSpellsEntry: entry
+            botSpellsEntry: entry
           })
 
         if (r.status === 200) {
@@ -392,14 +322,17 @@ export default {
 
     getFieldDescription(field) {
       const descriptions = {
-        "priority": "Higher this number, the more likely-hood the NPC will choose to cast this Spell",
-        "minlevel": "Spell only casts if NPC is above this level (default 1)",
-        "maxlevel": "Spell only casts if NPC is below this level (default 255)",
-        "manacost": "How much this spell costs when the NPC casts (-2 no cast time) (-1 use mana cost from spell data)",
-        "recast_delay": "Seconds before NPC can recast spell (-1 - Spell default)",
+        "priority": "Lower this number, the more likely-hood the Bot will choose to cast this Spell",
+        "minlevel": "Spell only casts if Bot is above this level (default 1)",
+        "maxlevel": "Spell only casts if Bot is below this level (default 255)",
+        "manacost": "How much this spell costs when the Bot casts (-2 no cast time) (-1 use mana cost from spell data)",
+        "recast_delay": "Milliseconds before Bot can recast spell (-1 - Spell default)",
         "resist_adjust": "",
         "min_hp": "Spell only casts if above this number if non-zero",
         "max_hp": "Spell only casts if below this number if non-zero",
+        "bucket_name": "Spell only casts if a matching Character or Bot Data bucket name is found",
+        "bucket_value": "Spell only casts if a matching Data bucket value is found",
+        "bucket_comparison": "Comparison Types",
       }
 
       // we do this because the payload we get back from spire API is
@@ -443,7 +376,7 @@ export default {
 
       this.$router.push(
         {
-          path: util.format(ROUTE.NPC_SPELL_EDIT, npcSpellsId),
+          path: util.format(ROUTE.BOT_SPELL_EDIT, npcSpellsId),
           query: queryState
         }
       ).catch(() => {
@@ -479,10 +412,10 @@ export default {
 
     async init() {
       this.loadQueryState()
-      this.spellSet = await this.getNpcSpell()
+      this.spellSet = await this.getBotSpell()
 
       if (this.editingSpellEntryId > 0) {
-        const selectedSpellEntry = this.spellSet.npc_spells_entries.find((e) => {
+        const selectedSpellEntry = this.spellSet.bot_spells_entries.find((e) => {
           return e.id === this.editingSpellEntryId
         })
 
@@ -494,6 +427,15 @@ export default {
       }
     },
 
+    goBack() {
+      this.$router.push(
+        {
+          path: ROUTE.BOT_SPELLS_EDIT
+        }
+      ).catch(() => {
+      })
+    },
+
     addSpellListEntry() {
       this.reset()
       this.resetNotifications()
@@ -503,68 +445,68 @@ export default {
       }, 50)
     },
 
-    calculateNpcSpellTypeFromSpell(e) {
-      // console.log("calculateNpcSpellTypeFromSpell", e)
+    calculateBotSpellTypeFromSpell(e) {
+      // console.log("calculateBotSpellTypeFromSpell", e)
 
       for (let effectIndex = 1; effectIndex <= 12; effectIndex++) {
 
         // pets
         if ([33, 106, 71].includes(e["effectid_" + effectIndex])) {
-          console.log("[npc-spell-list-editor] detected pet spell SPA [%s]", e["effectid_" + effectIndex])
+          console.log("[bot-spell-list-editor] detected pet spell SPA [%s]", e["effectid_" + effectIndex])
           return 32;
         }
 
         // charm
         if ([22].includes(e["effectid_" + effectIndex])) {
-          console.log("[npc-spell-list-editor] detected charm spell SPA [%s]", e["effectid_" + effectIndex])
+          console.log("[bot-spell-list-editor] detected charm spell SPA [%s]", e["effectid_" + effectIndex])
           return 4096;
         }
 
         // snare
         if ([128].includes(e["effectid_" + effectIndex])) {
-          console.log("[npc-spell-list-editor] detected snare spell SPA [%s]", e["effectid_" + effectIndex])
+          console.log("[bot-spell-list-editor] detected snare spell SPA [%s]", e["effectid_" + effectIndex])
           return 128;
         }
 
         // dispell
         if ([209].includes(e["effectid_" + effectIndex])) {
-          console.log("[npc-spell-list-editor] detected dispell spell SPA [%s]", e["effectid_" + effectIndex])
+          console.log("[bot-spell-list-editor] detected dispell spell SPA [%s]", e["effectid_" + effectIndex])
           return 512;
         }
 
         // mez
         if ([31].includes(e["effectid_" + effectIndex])) {
-          console.log("[npc-spell-list-editor] detected mez spell SPA [%s]", e["effectid_" + effectIndex])
+          console.log("[bot-spell-list-editor] detected mez spell SPA [%s]", e["effectid_" + effectIndex])
           return 2048;
         }
 
         // heal
         if (e["effectid_" + effectIndex] === 0 && e["effect_base_value_" + effectIndex] > 0 && e.good_effect === 1) {
-          console.log("[npc-spell-list-editor] detected heal SPA [%s]", e["effectid_" + effectIndex])
+          console.log("[bot-spell-list-editor] detected heal SPA [%s]", e["effectid_" + effectIndex])
           return 2;
         }
 
         // nuke
         if (e["effectid_" + effectIndex] === 0 && e["effect_base_value_" + effectIndex] > 0 && e.good_effect === 0) {
-          console.log("[npc-spell-list-editor] detected nuke SPA [%s]", e["effectid_" + effectIndex])
+          console.log("[bot-spell-list-editor] detected nuke SPA [%s]", e["effectid_" + effectIndex])
           return 1;
         }
 
         // DOT
         if (e["effectid_" + effectIndex] === 0 && e["effect_base_value_" + effectIndex] !== 0 && e.good_effect === 0 && e.buffduration > 0) {
-          console.log("[npc-spell-list-editor] detected DOT SPA [%s]", e["effectid_" + effectIndex])
+          console.log("[bot-spell-list-editor] detected DOT SPA [%s]", e["effectid_" + effectIndex])
           return 256;
         }
 
         // buff
         if (e.good_effect === 1) {
-          console.log("[npc-spell-list-editor] detected buff SPA [%s]", e["effectid_" + effectIndex])
+          console.log("[bot-spell-list-editor] detected buff SPA [%s]", e["effectid_" + effectIndex])
           return 8;
         }
       }
 
-
-      // 1: "Nuke",
+      // Need to add support for additional bot spell types (will be expanding further)
+      //   1: "Nuke",
       //   2: "Heal",
       //   4: "Root",
       //   8: "Buff",
@@ -577,6 +519,15 @@ export default {
       //   1024: "In-Combat Buff",
       //   2048: "Mez",
       //   4096: "Charm"
+      //   8192: "Slow",
+      //   16384: "Debuff",
+      //   32768: "Cure",
+      //   65536: "Resurrect",
+      //   131072: "Hate Reduction",
+      //   262144: "In Combat Buff Song",
+      //   524288: "Out Of Combat Buff Song",
+      //   1048576: "Pre Combat Buff",
+      //   2097152: "Pre Combat Buff Song"
 
       return 1;
     },
@@ -589,13 +540,13 @@ export default {
 
       try {
         const npcSpellsId = parseInt(this.$route.params.id)
-        const api         = (new NpcSpellsEntryApi(...SpireApi.cfg()))
-        const r           = await api.createNpcSpellsEntry(
+        const api         = (new BotSpellsEntryApi(...SpireApi.cfg()))
+        const r           = await api.createBotSpellsEntry(
           {
-            npcSpellsEntry: {
+            botSpellsEntry: {
               "npc_spells_id": npcSpellsId,
               "spellid": parseInt(spellId),
-              "type": this.calculateNpcSpellTypeFromSpell(spell),
+              "type": this.calculateBotSpellTypeFromSpell(spell),
               "minlevel": 0,
               "maxlevel": 0,
               "manacost": -1,
@@ -604,6 +555,9 @@ export default {
               "resist_adjust": null,
               "min_hp": 0,
               "max_hp": 0,
+              "bucket_name": "",
+              "bucket_value": "",
+              "bucket_comparison": 0,
             }
           })
 
@@ -620,7 +574,7 @@ export default {
               console.log("We're getting spell", spellId)
 
               // find the spell entry in the stack by spell ID and then scroll to it
-              const selectedSpellEntry = this.spellSet.npc_spells_entries.find((e) => {
+              const selectedSpellEntry = this.spellSet.bot_spells_entries.find((e) => {
                 return e.spells_new && e.spells_new.id === spellId
               })
 
@@ -642,16 +596,16 @@ export default {
 
       setTimeout(() => {
         scrollToTarget(
-          "npc-spell-preview-list-viewport",
+          "bot-spell-preview-list-viewport",
           'spell-list-entry-' + entryId
         )
       }, 100)
     },
 
-    async getNpcSpell() {
+    async getBotSpell() {
       let builder = (new SpireQueryBuilder())
         .includes([
-          "NpcSpellsEntries.SpellsNew",
+          "BotSpellsEntries.SpellsNew",
         ])
 
       try {

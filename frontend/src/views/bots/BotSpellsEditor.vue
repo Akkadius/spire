@@ -1,22 +1,14 @@
 <template>
   <content-area style="padding: 0px !important">
     <div class="row">
-      <div :class="(isSubEditActive() ? 'col-6' : 'col-12')">
+      <div :class="(isSubEditActive() ? 'col-4' : 'col-12')">
         <eq-window
-          title="NPC Spells"
+          title="Bot Spells"
           class="p-0"
         >
           <div class="row minified-inputs mt-4 text-center">
             <div class="col-3 p-0 text-right">
               <div class="d-inline-block btn-group ml-4 text-right" role="group" style="margin-top: 26px">
-                <b-button
-                  size="sm"
-                  variant="outline-success"
-                  @click="createNew()"
-                >
-                  <i class="fa fa-plus mr-1"></i>
-                  Create
-                </b-button>
                 <b-button
                   size="sm"
                   variant="outline-warning"
@@ -43,17 +35,29 @@
                 <loader-fake-progress/>
               </div>
             </div>
+
           </div>
 
+          <!-- Notification / Error -->
+          <info-error-banner
+            class="mr-3 ml-3"
+            style="margin-top: 20px"
+            :notification="notification"
+            :error="error"
+            :slim="true"
+            @dismiss-error="error = ''"
+            @dismiss-notification="notification = ''"
+          />
+
           <div
-            id="npc-spell-viewport"
+            id="bot-spell-viewport"
             style="max-height: 80vh; overflow-y: scroll"
           >
             <table
-              class="eq-table bordered eq-highlight-rows row-table npc-spell-sets-table"
+              class="eq-table bordered eq-highlight-rows row-table bot-spell-sets-table"
               style="display: table; font-size: 14px; overflow-x: scroll"
               v-if="rows && rows.length > 0"
-              id="npc-spell-sets-table"
+              id="bot-spell-sets-table"
             >
               <thead
                 class="eq-table-floating-header"
@@ -62,7 +66,6 @@
                 <th style="width: 100px"></th>
                 <th>ID</th>
                 <th>Name</th>
-                <th>Parent List ID</th>
                 <th>Spell Count</th>
               </tr>
               </thead>
@@ -79,19 +82,9 @@
                     class="btn-dark btn-sm btn-outline-success"
                     style="padding: 0px 6px;"
                     title="Edit Spell Set"
-                    @click="editNpcSpellSet(e.id)"
+                    @click="editBotSpellSet(e.id)"
                   >
                     <i class="fa fa-pencil-square"></i>
-                  </b-button>
-
-                  <b-button
-                    variant="primary"
-                    class="btn btn-dark btn-sm btn-outline-danger ml-1 btn-primary"
-                    style="padding: 0px 6px;"
-                    title="Delete spell entry"
-                    @click="deleteNpcSpellSet(e)"
-                  >
-                    <i class="fa fa-trash"></i>
                   </b-button>
 
                   <b-button
@@ -106,26 +99,11 @@
                 </td>
                 <td class="text-center">{{ e.id }}</td>
                 <td>{{ e.name }}</td>
-                <td>
-                  {{ e.parent_list }}
 
-                  <b-button
-                    variant="primary"
-                    class="btn-dark btn-sm btn-outline-success ml-1"
-                    style="padding: 0px 6px;"
-                    title="Edit Parent Spell Set"
-                    @click="editNpcSpellSet(e.parent_list)"
-                    v-if="e.parent_list > 0"
-                  >
-                    <i class="fa fa-pencil-square"></i>
-                  </b-button>
-                </td>
                 <td>{{ getSpellCount(e) }}</td>
               </tr>
               </tbody>
             </table>
-
-
           </div>
 
           <!-- Pagination -->
@@ -147,64 +125,18 @@
       </div>
 
       <!-- Preview Pane -->
-      <div class="col-6 fade-in" v-if="isSubEditActive()">
+      <div class="col-8 fade-in" v-if="isSubEditActive()">
         <eq-window
-          v-if="selectedSpellSet && selectedSpellSet.npc_spells_entries && selectedSpellSet.npc_spells_entries.length"
-          :title="`NPC Spells ID (${selectedSpellSet.id}) [${selectedSpellSet.name}] Count (${selectedSpellSet.npc_spells_entries.length})`"
+          v-if="selectedSpellSet && selectedSpellSet.bot_spells_entries && selectedSpellSet.bot_spells_entries.length"
+          :title="`Bot Spells ID (${selectedSpellSet.id}) [${selectedSpellSet.name}] Count (${selectedSpellSet.bot_spells_entries.length})`"
           class="p-2"
         >
-          <div style="max-height: 44vh; overflow-y: scroll; overflow-x: hidden">
-            <npc-spell-preview
+          <div style="max-height: 88vh; overflow-y: scroll; overflow-x: hidden">
+            <bot-spell-preview
               :spells="selectedSpellSet"
             />
           </div>
         </eq-window>
-
-        <!-- Show NPC(s) that use this spell set -->
-        <eq-window
-          class="mt-5 p-0"
-          :title="`NPC Spells Set ID (${selectedSpellSet.id}) (${selectedSpellSet.name}) NPC(s) (${npcs.length}) ` + (npcs.length === 100 ? '(Max 100)' : '')"
-          v-if="selectedSpellSet && selectedSpellSet.id && npcs && npcs.length > 0"
-        >
-          <div style="max-height: 45vh; overflow-y: scroll; overflow-x: hidden">
-            <table
-              id="npctable"
-              class="eq-table eq-highlight-rows"
-              style="display: table; font-size: 14px; "
-            >
-              <thead
-                class="eq-table-floating-header"
-              >
-              <tr>
-                <th class="text-center">
-                  NPC
-                </th>
-                <th>
-                  Zone(s)
-                </th>
-              </tr>
-              </thead>
-              <tbody>
-              <tr
-                :id="'npc-' + n.short_name"
-                v-for="(n, index) in npcs"
-                :key="n.id"
-              >
-                <td style="position: relative">
-                  <npc-popover
-                    :npc="n"
-                  />
-                </td>
-                <td style="vertical-align: middle">
-                  {{ getZonesByNpc(n).join(",") }}
-                </td>
-
-              </tr>
-              </tbody>
-            </table>
-          </div>
-        </eq-window>
-
       </div>
     </div>
 
@@ -225,21 +157,17 @@ import EqWindow            from "../../components/eq-ui/EQWindow";
 import Tablesort           from "../../app/utility/tablesort";
 import {scrollToTarget}    from "../../app/utility/scrollToTarget";
 import {debounce}          from "../../app/utility/debounce";
-import {Npcs}              from "../../app/npcs";
-import NpcPopover          from "../../components/NpcPopover";
-import NpcSpellPreview     from "../../components/preview/NpcSpellPreview";
+import BotSpellPreview     from "../../components/preview/BotSpellPreview";
 import EqDebug             from "../../components/eq-ui/EQDebug";
 import util                from "util";
-import {NpcSpellsEntryApi} from "../../app/api/api/npc-spells-entry-api";
 
-const NpcSpellsClient = (new NpcSpellApi(...SpireApi.cfg()))
+const BotSpellsClient = (new NpcSpellApi(...SpireApi.cfg()))
 
 export default {
-  name: "NpcSpellsEditor",
+  name: "BotSpellsEditor",
   components: {
     EqDebug,
-    NpcSpellPreview,
-    NpcPopover,
+    BotSpellPreview,
     EqWindow,
     InfoErrorBanner,
     LoaderFakeProgress: LoaderFakeProgress,
@@ -264,7 +192,6 @@ export default {
       // for the sub selector pane on the right
       subSelectedId: -1,
       selectedSpellSet: {},
-      parentList: [],
 
       // api responses
       error: "",
@@ -272,9 +199,6 @@ export default {
 
       // selection
       search: "",
-
-      // npcs that use the emote
-      npcs: [],
 
       lastSelectedTime: Date.now(),
 
@@ -292,34 +216,6 @@ export default {
 
   methods: {
 
-    async createNew() {
-      const api = (new NpcSpellApi(...SpireApi.cfg()))
-      try {
-        const r = await api.createNpcSpell(
-          {
-            npcSpell: {
-              name: "New Spells List"
-            }
-          }
-        )
-
-        if (r.status === 200) {
-          if (r.data.id > 0) {
-            this.editNpcSpellSet(r.data.id)
-          }
-        }
-
-      } catch (e) {
-        if (e && e.response && e.response.data.error) {
-          if (e.response && e.response.data && e.response.data.error) {
-            this.error = e.response.data.error
-          }
-        } else {
-          this.error = e
-        }
-      }
-    },
-
     zeroState() {
       this.reset()
       // lastPage: 0, // this keeps track of last page in state
@@ -331,53 +227,17 @@ export default {
       this.init()
     },
 
-    editNpcSpellSet(id) {
+    editBotSpellSet(id) {
       this.$router.push(
         {
-          path: util.format(ROUTE.NPC_SPELL_EDIT, id)
+          path: util.format(ROUTE.BOT_SPELL_EDIT, id)
         }
       ).catch(() => {
       })
     },
 
-    async deleteNpcSpellSet(e) {
-      const entriesCount = (e && e.npc_spells_entries && e.npc_spells_entries.length ? e.npc_spells_entries.length : 0)
-
-      if (confirm(`Are you sure you want to delete this NPC spell set and all of its entries? \n\nEntries (${entriesCount})`)) {
-        try {
-          const r = await (new NpcSpellApi(...SpireApi.cfg()))
-            .deleteNpcSpell({ id: e.id })
-
-          if (r.status === 200 && e.npc_spells_entries) {
-            // delete every entry individually (for now)
-            for (const row of e.npc_spells_entries) {
-              await (new NpcSpellsEntryApi(...SpireApi.cfg()))
-                .deleteNpcSpellsEntry({ id: row.id })
-            }
-          }
-
-          this.reset()
-          // also resetting...
-          this.lastPage  = 0;
-          this.rows      = []
-          this.totalRows = 0
-          // reload
-          this.init()
-
-        } catch (err) {
-          if (err && err.response && err.response.data.error) {
-            if (err.response && err.response.data && err.response.data.error) {
-              this.error = err.response.data.error
-            }
-          } else {
-            this.error = err
-          }
-        }
-      }
-    },
-
     getSpellCount(e) {
-      return e.npc_spells_entries ? e.npc_spells_entries.length : 0
+      return e.bot_spells_entries ? e.bot_spells_entries.length : 0
     },
 
     paginate() {
@@ -388,39 +248,6 @@ export default {
         console.log(this.totalRows)
         this.updateQueryState()
       }, 100)
-    },
-
-    getZonesByNpc(n) {
-      let zones = []
-      if (n.spawnentries) {
-        for (let e of n.spawnentries) {
-          if (e.spawngroup && e.spawngroup.spawn_2 && e.spawngroup.spawn_2.zone) {
-            e.spawngroup.spawn_2.zone = e.spawngroup.spawn_2.zone.toLowerCase()
-            if (!zones.includes(e.spawngroup.spawn_2.zone)) {
-              zones.push(e.spawngroup.spawn_2.zone)
-            }
-          }
-        }
-      }
-
-      return zones
-    },
-
-    async loadNpcsBySpellSet(npcSpellsId) {
-      this.npcs = await Npcs.listNpcsByNpcSpellsId(
-        npcSpellsId,
-        [
-          "Spawnentries.Spawngroup.Spawn2",
-        ]
-      )
-
-      // load extra data if we don't have too many NPCs
-      if (this.npcs && this.npcs.length < 50) {
-        this.npcs = await Npcs.listNpcsByNpcSpellsId(
-          npcSpellsId,
-          [...["Spawnentries.Spawngroup.Spawn2"], ...Npcs.getBaseNpcRelationships()]
-        )
-      }
     },
 
     doSearch: debounce(function () {
@@ -451,7 +278,6 @@ export default {
       this.error         = ""
       this.notification  = ""
       this.subSelectedId = -1
-      this.npcs          = []
     },
     resetSelections() {
       this.subSelectedId = -1
@@ -473,11 +299,11 @@ export default {
         queryState.search = this.search
       }
 
-      console.log("[npc-spells-editor] Updating query state", queryState)
+      console.log("[bot-spells-editor] Updating query state", queryState)
 
       this.$router.push(
         {
-          path: ROUTE.NPC_SPELLS_EDIT,
+          path: ROUTE.BOT_SPELLS_EDIT,
           query: queryState
         }
       ).catch(() => {
@@ -524,7 +350,7 @@ export default {
       this.loadQueryState()
 
       if (this.totalRows === 0) {
-        this.totalRows = await this.getNpcSpellCount()
+        this.totalRows = await this.getBotSpellCount()
       }
 
       // console.log("last page", this.lastPage)
@@ -532,15 +358,23 @@ export default {
 
       if (this.lastPage !== this.currentPage || reset) {
         console.log("reloading content")
-        this.loading      = true
-        this.lastPage     = parseInt(this.currentPage)
-        this.rows         = await this.getNpcSpells()
+        this.loading  = true
+        this.lastPage = parseInt(this.currentPage)
+
+        try {
+          this.rows = await this.getBotSpells()
+        } catch (err) {
+          if (err.response.data.error) {
+            this.error = err.response.data.error
+          }
+        }
+
         this.originalRows = JSON.parse(JSON.stringify(this.rows))
       }
 
       setTimeout(() => {
-        if (document.getElementById('npc-spell-sets-table')) {
-          new Tablesort(document.getElementById('npc-spell-sets-table'));
+        if (document.getElementById('bot-spell-sets-table')) {
+          new Tablesort(document.getElementById('bot-spell-sets-table'));
         }
       }, 100)
 
@@ -548,8 +382,6 @@ export default {
         for (const e of this.rows) {
           if (e.id === this.subSelectedId) {
             this.selectedSpellSet = JSON.parse(JSON.stringify(e))
-            this.loadNpcsBySpellSet(this.subSelectedId)
-            this.parentList = []
           }
         }
       }
@@ -561,7 +393,7 @@ export default {
       return /^-?\d+$/.test(value);
     },
 
-    async getNpcSpellCount() {
+    async getBotSpellCount() {
       let builder = (new SpireQueryBuilder())
         .select(["id"])
         .limit(100000)
@@ -574,9 +406,12 @@ export default {
         }
       }
 
+      builder.where("id", ">=", 3001)
+      builder.where("id", "<=", 3016)
+
       // console.log("SEARCH IS (count) ", this.search)
 
-      const response = await NpcSpellsClient.listNpcSpells(
+      const response = await BotSpellsClient.listNpcSpells(
         builder.get()
       )
       if (response.status === 200 && response.data) {
@@ -586,8 +421,8 @@ export default {
       return 0
     },
 
-    async getNpcSpells() {
-      console.log("getnpcspells", this.currentPage)
+    async getBotSpells() {
+      console.log("getbotspells", this.currentPage)
 
       if (typeof this.$route.query.page !== 'undefined' && parseInt(this.$route.query.page) !== 0) {
         this.currentPage = parseInt(this.$route.query.page);
@@ -597,8 +432,10 @@ export default {
       let builder = (new SpireQueryBuilder())
         .page(this.currentPage)
         .includes([
-          "NpcSpellsEntries.SpellsNew",
+          "BotSpellsEntries.SpellsNew",
         ])
+        .where("id", ">=", 3001)
+        .where("id", "<=", 3016)
         .limit(this.pageSize)
 
       if (this.search && this.search.length > 0) {
@@ -611,7 +448,7 @@ export default {
 
       // console.log("SEARCH IS (data) ", this.search)
 
-      const response = await NpcSpellsClient.listNpcSpells(
+      const response = await BotSpellsClient.listNpcSpells(
         builder.get()
       )
       if (response.status === 200 && response.data) {
@@ -628,7 +465,7 @@ export default {
 
     if (this.subSelectedId > 0) {
       scrollToTarget(
-        "npc-spell-viewport",
+        "bot-spell-viewport",
         'row-' + this.subSelectedId
       )
     }
@@ -637,7 +474,7 @@ export default {
 </script>
 
 <style>
-.npc-spell-sets-table td {
+.bot-spell-sets-table td {
   vertical-align: middle !important;
 }
 </style>

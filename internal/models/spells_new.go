@@ -249,6 +249,7 @@ type SpellsNew struct {
 	BlockedSpells        []BlockedSpell     `json:"blocked_spells,omitempty" gorm:"foreignKey:spellid;references:id"`
 	Items                []Item             `json:"items,omitempty" gorm:"foreignKey:clickeffect;references:id"`
 	NpcSpellsEntries     []NpcSpellsEntry   `json:"npc_spells_entries,omitempty" gorm:"foreignKey:spellid;references:id"`
+	BotSpellsEntries     []BotSpellsEntry   `json:"bot_spells_entries,omitempty" gorm:"foreignKey:spellid;references:id"`
 }
 
 func (SpellsNew) TableName() string {
@@ -260,6 +261,13 @@ func (SpellsNew) Relationships() []string {
 		"Aura",
 		"Aura.SpellsNew",
 		"BlockedSpells",
+		"BotSpellsEntries",
+		"BotSpellsEntries.NpcSpell",
+		"BotSpellsEntries.NpcSpell.BotSpellsEntries",
+		"BotSpellsEntries.NpcSpell.NpcSpell",
+		"BotSpellsEntries.NpcSpell.NpcSpellsEntries",
+		"BotSpellsEntries.NpcSpell.NpcSpellsEntries.SpellsNew",
+		"BotSpellsEntries.SpellsNew",
 		"Damageshieldtypes",
 		"Items",
 		"Items.AlternateCurrencies",
@@ -290,6 +298,9 @@ func (SpellsNew) Relationships() []string {
 		"Items.Fishings.NpcType.NpcFactions.NpcFactionEntries",
 		"Items.Fishings.NpcType.NpcFactions.NpcFactionEntries.FactionList",
 		"Items.Fishings.NpcType.NpcSpell",
+		"Items.Fishings.NpcType.NpcSpell.BotSpellsEntries",
+		"Items.Fishings.NpcType.NpcSpell.BotSpellsEntries.NpcSpell",
+		"Items.Fishings.NpcType.NpcSpell.BotSpellsEntries.SpellsNew",
 		"Items.Fishings.NpcType.NpcSpell.NpcSpell",
 		"Items.Fishings.NpcType.NpcSpell.NpcSpellsEntries",
 		"Items.Fishings.NpcType.NpcSpell.NpcSpellsEntries.SpellsNew",
@@ -328,6 +339,9 @@ func (SpellsNew) Relationships() []string {
 		"Items.LootdropEntries.Lootdrop.LoottableEntries.Loottable.NpcTypes.NpcFactions.NpcFactionEntries",
 		"Items.LootdropEntries.Lootdrop.LoottableEntries.Loottable.NpcTypes.NpcFactions.NpcFactionEntries.FactionList",
 		"Items.LootdropEntries.Lootdrop.LoottableEntries.Loottable.NpcTypes.NpcSpell",
+		"Items.LootdropEntries.Lootdrop.LoottableEntries.Loottable.NpcTypes.NpcSpell.BotSpellsEntries",
+		"Items.LootdropEntries.Lootdrop.LoottableEntries.Loottable.NpcTypes.NpcSpell.BotSpellsEntries.NpcSpell",
+		"Items.LootdropEntries.Lootdrop.LoottableEntries.Loottable.NpcTypes.NpcSpell.BotSpellsEntries.SpellsNew",
 		"Items.LootdropEntries.Lootdrop.LoottableEntries.Loottable.NpcTypes.NpcSpell.NpcSpell",
 		"Items.LootdropEntries.Lootdrop.LoottableEntries.Loottable.NpcTypes.NpcSpell.NpcSpellsEntries",
 		"Items.LootdropEntries.Lootdrop.LoottableEntries.Loottable.NpcTypes.NpcSpell.NpcSpellsEntries.SpellsNew",
@@ -358,6 +372,9 @@ func (SpellsNew) Relationships() []string {
 		"Items.Merchantlists.NpcTypes.NpcFactions.NpcFactionEntries",
 		"Items.Merchantlists.NpcTypes.NpcFactions.NpcFactionEntries.FactionList",
 		"Items.Merchantlists.NpcTypes.NpcSpell",
+		"Items.Merchantlists.NpcTypes.NpcSpell.BotSpellsEntries",
+		"Items.Merchantlists.NpcTypes.NpcSpell.BotSpellsEntries.NpcSpell",
+		"Items.Merchantlists.NpcTypes.NpcSpell.BotSpellsEntries.SpellsNew",
 		"Items.Merchantlists.NpcTypes.NpcSpell.NpcSpell",
 		"Items.Merchantlists.NpcTypes.NpcSpell.NpcSpellsEntries",
 		"Items.Merchantlists.NpcTypes.NpcSpell.NpcSpellsEntries.SpellsNew",

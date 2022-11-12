@@ -21,6 +21,7 @@ api/base-datum-api.ts
 api/blocked-spell-api.ts
 api/book-api.ts
 api/bot-datum-api.ts
+api/bot-spells-entry-api.ts
 api/bug-api.ts
 api/bug-report-api.ts
 api/buyer-api.ts
@@ -208,6 +209,7 @@ models/models-base-datum.ts
 models/models-blocked-spell.ts
 models/models-book.ts
 models/models-bot-datum.ts
+models/models-bot-spells-entry.ts
 models/models-bug-report.ts
 models/models-bug.ts
 models/models-buyer.ts

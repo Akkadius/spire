@@ -207,6 +207,16 @@ export default new Router({
           component: () => import('./views/Expansion.vue'),
           meta: {title: "Expansions"},
         },
+        {
+          path: ROUTE.BOT_SPELLS_EDIT,
+          component: () => import('./views/bots/BotSpellsEditor.vue'),
+          meta: {title: "Bot Spells List Editor"},
+        },
+        {
+          path: util.format(ROUTE.BOT_SPELL_EDIT, ":id"),
+          component: () => import('./views/bots/BotSpellListEditor.vue'),
+          meta: {title: "Bot Spells List Editor"},
+        },
       ]
     },
     {

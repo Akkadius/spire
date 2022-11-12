@@ -1,5 +1,6 @@
 import { ModelsAura } from './models-aura';
 import { ModelsBlockedSpell } from './models-blocked-spell';
+import { ModelsBotSpellsEntry } from './models-bot-spells-entry';
 import { ModelsDamageshieldtype } from './models-damageshieldtype';
 import { ModelsItem } from './models-item';
 import { ModelsNpcSpellsEntry } from './models-npc-spells-entry';
@@ -15,6 +16,7 @@ export interface ModelsSpellsNew {
     basediff?: number;
     blocked_spells?: Array<ModelsBlockedSpell>;
     bonushate?: number;
+    bot_spells_entries?: Array<ModelsBotSpellsEntry>;
     buffduration?: number;
     buffdurationformula?: number;
     can_mgb?: number;

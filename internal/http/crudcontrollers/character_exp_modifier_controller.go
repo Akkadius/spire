@@ -108,6 +108,17 @@ func (e *CharacterExpModifierController) getCharacterExpModifier(c echo.Context)
 		keys = append(keys, "zone_id = ?")
 	}
 
+	// key param [instance_version] position [3] type [int]
+	if len(c.QueryParam("instance_version")) > 0 {
+		instanceVersionParam, err := strconv.Atoi(c.QueryParam("instance_version"))
+		if err != nil {
+			return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error parsing query param [instance_version] err [%s]", err.Error())})
+		}
+
+		params = append(params, instanceVersionParam)
+		keys = append(keys, "instance_version = ?")
+	}
+
 	// query builder
 	var result models.CharacterExpModifier
 	query := e.db.QueryContext(models.CharacterExpModifier{}, c)
@@ -171,6 +182,17 @@ func (e *CharacterExpModifierController) updateCharacterExpModifier(c echo.Conte
 
 		params = append(params, zoneIdParam)
 		keys = append(keys, "zone_id = ?")
+	}
+
+	// key param [instance_version] position [3] type [int]
+	if len(c.QueryParam("instance_version")) > 0 {
+		instanceVersionParam, err := strconv.Atoi(c.QueryParam("instance_version"))
+		if err != nil {
+			return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error parsing query param [instance_version] err [%s]", err.Error())})
+		}
+
+		params = append(params, instanceVersionParam)
+		keys = append(keys, "instance_version = ?")
 	}
 
 	// query builder
@@ -292,6 +314,17 @@ func (e *CharacterExpModifierController) deleteCharacterExpModifier(c echo.Conte
 
 		params = append(params, zoneIdParam)
 		keys = append(keys, "zone_id = ?")
+	}
+
+	// key param [instance_version] position [3] type [int]
+	if len(c.QueryParam("instance_version")) > 0 {
+		instanceVersionParam, err := strconv.Atoi(c.QueryParam("instance_version"))
+		if err != nil {
+			return c.JSON(http.StatusInternalServerError, echo.Map{"error": fmt.Sprintf("Error parsing query param [instance_version] err [%s]", err.Error())})
+		}
+
+		params = append(params, instanceVersionParam)
+		keys = append(keys, "instance_version = ?")
 	}
 
 	// query builder

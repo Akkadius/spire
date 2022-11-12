@@ -19,6 +19,7 @@ export * from './models-base-datum';
 export * from './models-blocked-spell';
 export * from './models-book';
 export * from './models-bot-datum';
+export * from './models-bot-spells-entry';
 export * from './models-bug';
 export * from './models-bug-report';
 export * from './models-buyer';

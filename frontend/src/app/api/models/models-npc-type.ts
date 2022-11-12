@@ -62,6 +62,7 @@ export interface ModelsNpcType {
     handtexture?: number;
     healscale?: number;
     helmtexture?: number;
+    heroic_strikethrough?: number;
     herosforgemodel?: number;
     hp?: number;
     hp_regen_per_second?: number;
