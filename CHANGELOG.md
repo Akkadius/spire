@@ -1,3 +1,17 @@
+## [2.4.0]
+
+### [Bots] Spell Editor (Aeodoin)
+
+- Added Bot Spells Entries database relationships to NPC Spells, and Spells New
+- Added Bot Nav Tab
+- Added Bot Spells under Bot Nav
+- Bot Spells pulls Bot Spell Data from bot_spells_entries table
+- Same features/functionality as NPC Spells (View spell sets, edit, add new spells to spell set, delete spells from spell set) I removed the ability to delete the Bot Spell list.
+
+![image](https://user-images.githubusercontent.com/3319450/201459665-f92080ee-e730-4737-a610-a921de89cbb5.png)
+
+![image](https://user-images.githubusercontent.com/3319450/201459702-962c8dd9-1d28-4492-b007-bb5ca7a1de38.png)
+
 ## [2.3.4]
 
 ### [Tasks] Fix Cloning with Activities
