@@ -30,7 +30,7 @@
               </div>
             </div>
 
-            <div class="col-9">
+            <div class="col-8">
               <!-- Notification / Error -->
               <info-error-banner
                 class="mr-1"
