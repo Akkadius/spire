@@ -1,6 +1,7 @@
 <template>
   <nav
     class="navbar navbar-vertical fade-in fixed-left navbar-expand-md navbar-dark navbar-vibrant"
+    style="overflow-y: overlay"
     id="sidebar"
     @click.self="expandNavbar()"
     v-if="!hideNavbar"
