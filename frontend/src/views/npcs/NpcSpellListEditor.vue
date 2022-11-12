@@ -8,8 +8,17 @@
           class="p-0"
         >
           <div class="row mb-2">
-            <div class="col-3">
-              <div class="mt-4 ml-3">
+            <div class="col-4">
+              <div class="btn-group d-inline-block mt-4 ml-3" role="group">
+                <b-button
+                  size="sm"
+                  variant="outline-success"
+                  @click="goBack"
+                >
+                  <i class="fa fa-arrow-left mr-1"></i>
+                  Go back to Spell Lists
+                </b-button>
+
                 <b-button
                   @click="addSpellListEntry()"
                   size="sm"
@@ -290,6 +299,15 @@ export default {
   },
 
   methods: {
+
+    goBack() {
+      this.$router.push(
+        {
+          path: ROUTE.NPC_SPELLS_EDIT
+        }
+      ).catch(() => {
+      })
+    },
 
     hasSpellEntries() {
       return this.spellSet.npc_spells_entries && this.spellSet.npc_spells_entries.length

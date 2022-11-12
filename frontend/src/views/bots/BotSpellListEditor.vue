@@ -8,16 +8,29 @@
           class="p-0"
         >
           <div class="row mb-2">
-            <div class="col-3">
+            <div class="col-4">
               <div class="mt-4 ml-3">
-                <b-button
-                  @click="addSpellListEntry()"
-                  size="sm"
-                  variant="outline-warning"
-                >
-                  <i class="fa fa-plus mr-1"></i>
-                  Add Spell
-                </b-button>
+
+                <div class="btn-group d-inline-block" role="group">
+                  <b-button
+                    size="sm"
+                    variant="outline-success"
+                    @click="goBack"
+                  >
+                    <i class="fa fa-arrow-left mr-1"></i>
+                    Go back to Spell Lists
+                  </b-button>
+
+                  <b-button
+                    @click="addSpellListEntry()"
+                    size="sm"
+                    variant="outline-warning"
+                  >
+                    <i class="fa fa-plus mr-1"></i>
+                    Add Spell
+                  </b-button>
+                </div>
+
               </div>
             </div>
 
@@ -126,7 +139,7 @@
                   v-b-tooltip.hover.v-dark.right :title="getFieldDescription(field.field)"
                   :style="(editingSpellEntry[field.field] === 0 ? 'opacity: .5' : '')"
                 />
-                
+
                 <!-- input text -->
                 <b-form-input
                   v-if="field.fType === 'text'"
@@ -201,21 +214,21 @@
 </template>
 
 <script>
-import EqWindow            from "../../components/eq-ui/EQWindow";
-import BotSpellPreview     from "../../components/preview/BotSpellPreview";
-import {SpireQueryBuilder} from "../../app/api/spire-query-builder";
-import {NpcSpellApi} from "../../app/api";
-import {SpireApi}    from "../../app/api/spire-api";
-import SpellSelector from "../../components/selectors/SpellSelector";
-import {BotSpellsEntryApi} from "../../app/api/api/bot-spells-entry-api";
-import {scrollToTarget}    from "../../app/utility/scrollToTarget";
-import InfoErrorBanner     from "../../components/InfoErrorBanner";
-import {ROUTE}             from "../../routes";
-import util                from "util";
-import EqCheckbox          from "../../components/eq-ui/EQCheckbox";
-import SpellPopover        from "../../components/SpellPopover";
-import {BOT_SPELL_TYPES}   from "../../app/constants/eq-bot-spells";
-import {Spells}            from "../../app/spells";
+import EqWindow                  from "../../components/eq-ui/EQWindow";
+import BotSpellPreview           from "../../components/preview/BotSpellPreview";
+import {SpireQueryBuilder}       from "../../app/api/spire-query-builder";
+import {NpcSpellApi}             from "../../app/api";
+import {SpireApi}                from "../../app/api/spire-api";
+import SpellSelector             from "../../components/selectors/SpellSelector";
+import {BotSpellsEntryApi}       from "../../app/api/api/bot-spells-entry-api";
+import {scrollToTarget}          from "../../app/utility/scrollToTarget";
+import InfoErrorBanner           from "../../components/InfoErrorBanner";
+import {ROUTE}                   from "../../routes";
+import util                      from "util";
+import EqCheckbox                from "../../components/eq-ui/EQCheckbox";
+import SpellPopover              from "../../components/SpellPopover";
+import {BOT_SPELL_TYPES}         from "../../app/constants/eq-bot-spells";
+import {Spells}                  from "../../app/spells";
 import {DATA_BUCKET_COMPARISONS} from "../../app/constants/eq-data-bucket-comparisons";
 
 export default {
@@ -412,6 +425,15 @@ export default {
 
         this.scrollToSpellListEntry(this.editingSpellEntryId)
       }
+    },
+
+    goBack() {
+      this.$router.push(
+        {
+          path: ROUTE.BOT_SPELLS_EDIT
+        }
+      ).catch(() => {
+      })
     },
 
     addSpellListEntry() {
