@@ -7,7 +7,7 @@
           :title="`NPC Spells Editor ID (${spellSet.id}) [${spellSet.name}] Count (${(spellSet.npc_spells_entries ? spellSet.npc_spells_entries.length : 0)})`"
           class="p-0"
         >
-          <div class="row mb-2">
+          <div class="row">
             <div class="col-4">
               <div class="btn-group d-inline-block mt-4 ml-3" role="group">
                 <b-button
@@ -43,6 +43,19 @@
               />
             </div>
 
+          </div>
+
+          <div class="row ml-1 mt-3">
+            <div class="col-lg-3">
+              Spell Set Name
+              <input
+                type="text"
+                class="form-control"
+                placeholder="Spell Set Name"
+                @change="saveSpellSet"
+                v-model="spellSet.name"
+              >
+            </div>
           </div>
 
           <div
@@ -237,9 +250,9 @@
 import EqWindow            from "../../components/eq-ui/EQWindow";
 import NpcSpellPreview     from "../../components/preview/NpcSpellPreview";
 import {SpireQueryBuilder} from "../../app/api/spire-query-builder";
-import {NpcSpellApi} from "../../app/api";
-import {SpireApi}    from "../../app/api/spire-api";
-import SpellSelector from "../../components/selectors/SpellSelector";
+import {NpcSpellApi}       from "../../app/api";
+import {SpireApi}          from "../../app/api/spire-api";
+import SpellSelector       from "../../components/selectors/SpellSelector";
 import {NpcSpellsEntryApi} from "../../app/api/api/npc-spells-entry-api";
 import {scrollToTarget}    from "../../app/utility/scrollToTarget";
 import InfoErrorBanner     from "../../components/InfoErrorBanner";
@@ -299,6 +312,38 @@ export default {
   },
 
   methods: {
+
+    async saveSpellSet() {
+
+      // clone
+      let payload = JSON.parse(JSON.stringify(this.spellSet))
+      delete payload.npc_spells_entries
+
+      // save
+      const api = (new NpcSpellApi(...SpireApi.cfg()))
+
+      try {
+        const r = await api.updateNpcSpell(
+          {
+            id: payload.id,
+            npcSpell: payload
+          }
+        )
+
+        if (r.status === 200) {
+          this.notification = "Updated spell set!"
+        }
+      } catch (e) {
+        console.log(e)
+
+        if (e.response.data.error) {
+          if (e.response && e.response.data && e.response.data.error) {
+            this.error = "Error! " + e.response.data.error
+          }
+        }
+      }
+
+    },
 
     goBack() {
       this.$router.push(

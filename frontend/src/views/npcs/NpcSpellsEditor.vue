@@ -293,8 +293,6 @@ export default {
   methods: {
 
     async createNew() {
-      console.log("create")
-
       const api = (new NpcSpellApi(...SpireApi.cfg()))
       try {
         const r = await api.createNpcSpell(
