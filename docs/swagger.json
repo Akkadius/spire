@@ -60383,13 +60383,28 @@
         "models.BotSpellsEntry": {
             "type": "object",
             "properties": {
+                "bucket_comparison": {
+                    "type": "integer"
+                },
+                "bucket_name": {
+                    "type": "string"
+                },
+                "bucket_value": {
+                    "type": "string"
+                },
                 "id": {
                     "type": "integer"
                 },
                 "manacost": {
                     "type": "integer"
                 },
+                "max_hp": {
+                    "type": "integer"
+                },
                 "maxlevel": {
+                    "type": "integer"
+                },
+                "min_hp": {
                     "type": "integer"
                 },
                 "minlevel": {

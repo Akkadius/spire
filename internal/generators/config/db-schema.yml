@@ -1599,21 +1599,21 @@ bot_spells_entries:
     data_type: int
     column_key: ""
     ordinal_position: "10"
-    is_nullable: "YES"
+    is_nullable: "NO"
     column_type: int(11)
-    column_default: "NULL"
+    column_default: "0"
   - column: min_hp
     data_type: smallint
     column_key: ""
     ordinal_position: "11"
-    is_nullable: "YES"
+    is_nullable: "NO"
     column_type: smallint(5)
     column_default: "0"
   - column: max_hp
     data_type: smallint
     column_key: ""
     ordinal_position: "12"
-    is_nullable: "YES"
+    is_nullable: "NO"
     column_type: smallint(5)
     column_default: "0"
   - column: bucket_name
@@ -1634,7 +1634,7 @@ bot_spells_entries:
     data_type: tinyint
     column_key: ""
     ordinal_position: "15"
-    is_nullable: "YES"
+    is_nullable: "NO"
     column_type: tinyint(3) unsigned
     column_default: "0"
 bug_reports:

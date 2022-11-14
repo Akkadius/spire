@@ -1,9 +1,5 @@
 package models
 
-import (
-	"github.com/volatiletech/null/v8"
-)
-
 type BotSpellsEntry struct {
 	ID                uint       `json:"id" gorm:"Column:id"`
 	NpcSpellsId       int        `json:"npc_spells_id" gorm:"Column:npc_spells_id"`
@@ -14,12 +10,12 @@ type BotSpellsEntry struct {
 	Manacost          int16      `json:"manacost" gorm:"Column:manacost"`
 	RecastDelay       int        `json:"recast_delay" gorm:"Column:recast_delay"`
 	Priority          int16      `json:"priority" gorm:"Column:priority"`
-	ResistAdjust      null.Int   `json:"resist_adjust" gorm:"Column:resist_adjust"`
-	MinHp             null.Int16 `json:"min_hp" gorm:"Column:min_hp"`
-	MaxHp             null.Int16 `json:"max_hp" gorm:"Column:max_hp"`
+	ResistAdjust      int        `json:"resist_adjust" gorm:"Column:resist_adjust"`
+	MinHp             int16      `json:"min_hp" gorm:"Column:min_hp"`
+	MaxHp             int16      `json:"max_hp" gorm:"Column:max_hp"`
 	BucketName        string     `json:"bucket_name" gorm:"Column:bucket_name"`
 	BucketValue       string     `json:"bucket_value" gorm:"Column:bucket_value"`
-	BucketComparison  null.Uint8 `json:"bucket_comparison" gorm:"Column:bucket_comparison"`
+	BucketComparison  uint8      `json:"bucket_comparison" gorm:"Column:bucket_comparison"`
 	NpcSpell          *NpcSpell  `json:"npc_spell,omitempty" gorm:"foreignKey:npc_spells_id;references:id"`
 	SpellsNew         *SpellsNew `json:"spells_new,omitempty" gorm:"foreignKey:spellid;references:id"`
 }

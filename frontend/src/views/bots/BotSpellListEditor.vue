@@ -552,7 +552,7 @@ export default {
               "manacost": -1,
               "recast_delay": 60,
               "priority": 1,
-              "resist_adjust": null,
+              "resist_adjust": 0,
               "min_hp": 0,
               "max_hp": 0,
               "bucket_name": "",
