@@ -262,6 +262,18 @@ func (c *ParseService) parsePerlEvents(files map[string]string) []PerlEvent {
 										continue
 									}
 
+									// remove duplicates from results
+									hasEvent := false
+									for _, p := range perlEvents {
+										if p.EventIdentifier == finalEvent && p.EntityType == eventType {
+											hasEvent = true
+											break
+										}
+									}
+									if hasEvent {
+										continue
+									}
+
 									perlEvents = append(
 										perlEvents, PerlEvent{
 											EntityType:      eventType,
