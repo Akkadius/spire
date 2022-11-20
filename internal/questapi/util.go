@@ -1,5 +1,7 @@
 package questapi
 
+import "unicode"
+
 // Find takes a slice and looks for an element in it. If found it will
 // return it's key, otherwise it will return -1 and a bool of false.
 func Find(slice []string, val string) bool {
@@ -19,4 +21,13 @@ func indexOf(element string, data []string) int {
 		}
 	}
 	return -1 //not found.
+}
+
+func IsUpper(s string) bool {
+	for _, r := range s {
+		if !unicode.IsUpper(r) && unicode.IsLetter(r) {
+			return false
+		}
+	}
+	return true
 }

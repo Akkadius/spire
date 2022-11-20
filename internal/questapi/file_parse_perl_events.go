@@ -95,7 +95,7 @@ func (c *ParseService) parsePerlEvents(files map[string]string) []PerlEvent {
 						// @eg parse->EventNPC(EVENT_KILLED_MERIT, this, c, "killed", 0);
 						// @result EVENT_KILLED_MERIT
 						eventSplit := strings.Split(l, "(EVENT_")
-						if len(eventSplit) > 0 {
+						if len(eventSplit) > 1 {
 							eventSplit2 := strings.Split(eventSplit[1], ",")
 							if len(eventSplit2) > 0 {
 								event = "EVENT_" + strings.TrimSpace(eventSplit2[0])
@@ -254,6 +254,11 @@ func (c *ParseService) parsePerlEvents(files map[string]string) []PerlEvent {
 									}
 
 									if finalEvent == "evt.event_id" {
+										continue
+									}
+
+									// remove events that aren't all upper (for perl)
+									if !IsUpper(event) {
 										continue
 									}
 
