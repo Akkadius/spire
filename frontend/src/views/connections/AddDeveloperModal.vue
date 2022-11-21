@@ -110,7 +110,7 @@ export default {
 
     async addUser(user) {
       try {
-        const r = await SpireApi.v1().post(`connection/${this.connection.id}/add-user/${user.id}`)
+        const r = await SpireApi.v1().post(`connection/${this.connection.server_database_connection_id}/add-user/${user.id}`)
         if (r.status === 200) {
           this.$bvModal.hide('add-developer-server-connection-modal')
           this.$emit("reload-connections", true);
