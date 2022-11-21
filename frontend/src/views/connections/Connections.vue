@@ -258,7 +258,7 @@
                         <!-- Audit log -->
                         <a
                           class="btn btn-sm btn-white ml-1"
-                          @click="viewAuditLog(connection.id)"
+                          @click="viewAuditLog(connection.server_database_connection_id)"
                           title="View audit log"
                           v-b-tooltip.hover.v-dark.top
                           v-if="isCurrentUserOwnerOfConnection(connection)"
