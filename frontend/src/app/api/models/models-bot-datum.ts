@@ -16,6 +16,7 @@ export interface ModelsBotDatum {
     drakkin_details?: number;
     drakkin_heritage?: number;
     drakkin_tattoo?: number;
+    expansion_bitmask?: number;
     eye_color_1?: number;
     eye_color_2?: number;
     face?: number;

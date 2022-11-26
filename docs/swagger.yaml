@@ -422,6 +422,56 @@ definitions:
       txtfile:
         type: string
     type: object
+  models.BotBuff:
+    properties:
+      bot_id:
+        type: integer
+      buffs_index:
+        type: integer
+      caster_level:
+        type: integer
+      caston_x:
+        type: integer
+      caston_y:
+        type: integer
+      caston_z:
+        type: integer
+      corruption_counters:
+        type: integer
+      curse_counters:
+        type: integer
+      disease_counters:
+        type: integer
+      dot_rune:
+        type: integer
+      duration_formula:
+        type: integer
+      extra_di_chance:
+        type: integer
+      instrument_mod:
+        type: integer
+      magic_rune:
+        type: integer
+      melee_rune:
+        type: integer
+      numhits:
+        type: integer
+      persistent:
+        type: integer
+      poison_counters:
+        type: integer
+      spell_id:
+        type: integer
+      tics_remaining:
+        type: integer
+    type: object
+  models.BotCreateCombination:
+    properties:
+      classes:
+        type: integer
+      race:
+        type: integer
+    type: object
   models.BotDatum:
     properties:
       ac:
@@ -457,6 +507,8 @@ definitions:
       drakkin_heritage:
         type: integer
       drakkin_tattoo:
+        type: integer
+      expansion_bitmask:
         type: integer
       eye_color_1:
         type: integer
@@ -519,13 +571,250 @@ definitions:
       zone_id:
         type: integer
     type: object
+  models.BotGroup:
+    properties:
+      auto_spawn:
+        type: integer
+      group_leader_id:
+        type: integer
+      group_name:
+        type: string
+      groups_index:
+        type: integer
+    type: object
+  models.BotGroupMember:
+    properties:
+      bot_id:
+        type: integer
+      group_members_index:
+        type: integer
+      groups_index:
+        type: integer
+    type: object
+  models.BotGuildMember:
+    properties:
+      alt:
+        type: integer
+      banker:
+        type: integer
+      bot_id:
+        type: integer
+      guild_id:
+        type: integer
+      last_tribute:
+        type: integer
+      public_note:
+        type: string
+      rank:
+        type: integer
+      total_tribute:
+        type: integer
+      tribute_enable:
+        type: integer
+    type: object
+  models.BotHealRotation:
+    properties:
+      adaptive_targeting:
+        type: integer
+      bot_id:
+        type: integer
+      casting_override:
+        type: integer
+      critical_hp_base:
+        type: string
+      critical_hp_chain:
+        type: string
+      critical_hp_cloth:
+        type: string
+      critical_hp_leather:
+        type: string
+      critical_hp_plate:
+        type: string
+      fast_heals:
+        type: integer
+      heal_rotation_index:
+        type: integer
+      interval:
+        type: integer
+      safe_hp_base:
+        type: string
+      safe_hp_chain:
+        type: string
+      safe_hp_cloth:
+        type: string
+      safe_hp_leather:
+        type: string
+      safe_hp_plate:
+        type: string
+    type: object
+  models.BotHealRotationMember:
+    properties:
+      bot_id:
+        type: integer
+      heal_rotation_index:
+        type: integer
+      member_index:
+        type: integer
+    type: object
+  models.BotHealRotationTarget:
+    properties:
+      heal_rotation_index:
+        type: integer
+      target_index:
+        type: integer
+      target_name:
+        type: string
+    type: object
+  models.BotInspectMessage:
+    properties:
+      bot_id:
+        type: integer
+      inspect_message:
+        type: string
+    type: object
+  models.BotInventory:
+    properties:
+      augment_1:
+        type: integer
+      augment_2:
+        type: integer
+      augment_3:
+        type: integer
+      augment_4:
+        type: integer
+      augment_5:
+        type: integer
+      augment_6:
+        type: integer
+      bot_id:
+        type: integer
+      inst_charges:
+        type: integer
+      inst_color:
+        type: integer
+      inst_custom_data:
+        type: string
+      inst_no_drop:
+        type: integer
+      inventories_index:
+        type: integer
+      item_id:
+        type: integer
+      ornament_hero_model:
+        type: integer
+      ornament_icon:
+        type: integer
+      ornament_id_file:
+        type: integer
+      slot_id:
+        type: integer
+    type: object
+  models.BotOwnerOption:
+    properties:
+      option_type:
+        type: integer
+      option_value:
+        type: integer
+      owner_id:
+        type: integer
+    type: object
+  models.BotPet:
+    properties:
+      bot_id:
+        type: integer
+      hp:
+        type: integer
+      mana:
+        type: integer
+      name:
+        type: string
+      pets_index:
+        type: integer
+      spell_id:
+        type: integer
+    type: object
+  models.BotPetBuff:
+    properties:
+      caster_level:
+        type: integer
+      duration:
+        type: integer
+      pet_buffs_index:
+        type: integer
+      pets_index:
+        type: integer
+      spell_id:
+        type: integer
+    type: object
+  models.BotPetInventory:
+    properties:
+      item_id:
+        type: integer
+      pet_inventories_index:
+        type: integer
+      pets_index:
+        type: integer
+    type: object
+  models.BotSpellCastingChance:
+    properties:
+      class_id:
+        type: integer
+      id:
+        type: integer
+      n_hsnd_value:
+        type: integer
+      p_d_value:
+        type: integer
+      p_h_value:
+        type: integer
+      p_hd_value:
+        type: integer
+      p_hn_value:
+        type: integer
+      p_hnd_value:
+        type: integer
+      p_hs_value:
+        type: integer
+      p_hsd_value:
+        type: integer
+      p_hsn_value:
+        type: integer
+      p_hsnd_value:
+        type: integer
+      p_n_value:
+        type: integer
+      p_nd_value:
+        type: integer
+      p_s_value:
+        type: integer
+      p_sd_value:
+        type: integer
+      p_sn_value:
+        type: integer
+      p_snd_value:
+        type: integer
+      spell_type_index:
+        type: integer
+      stance_index:
+        type: integer
+    type: object
   models.BotSpellsEntry:
     properties:
+      bucket_comparison:
+        type: integer
+      bucket_name:
+        type: string
+      bucket_value:
+        type: string
       id:
         type: integer
       manacost:
         type: integer
+      max_hp:
+        type: integer
       maxlevel:
+        type: integer
+      min_hp:
         type: integer
       minlevel:
         type: integer
@@ -544,6 +833,22 @@ definitions:
       spells_new:
         $ref: '#/definitions/models.SpellsNew'
       type:
+        type: integer
+    type: object
+  models.BotStance:
+    properties:
+      bot_id:
+        type: integer
+      stance_id:
+        type: integer
+    type: object
+  models.BotTimer:
+    properties:
+      bot_id:
+        type: integer
+      timer_id:
+        type: integer
+      timer_value:
         type: integer
     type: object
   models.Bug:
@@ -10203,6 +10508,448 @@ paths:
       summary: Gets Books in bulk
       tags:
       - Book
+  /bot_buff:
+    put:
+      consumes:
+      - application/json
+      operationId: createBotBuff
+      parameters:
+      - description: BotBuff
+        in: body
+        name: bot_buff
+        required: true
+        schema:
+          $ref: '#/definitions/models.BotBuff'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.BotBuff'
+            type: array
+        "500":
+          description: Error inserting entity
+          schema:
+            type: string
+      summary: Creates BotBuff
+      tags:
+      - BotBuff
+  /bot_buff/{id}:
+    delete:
+      consumes:
+      - application/json
+      operationId: deleteBotBuff
+      parameters:
+      - description: buffsIndex
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Entity deleted successfully
+          schema:
+            type: string
+        "404":
+          description: Cannot find entity
+          schema:
+            type: string
+        "500":
+          description: Error deleting entity
+          schema:
+            type: string
+      summary: Deletes BotBuff
+      tags:
+      - BotBuff
+    get:
+      consumes:
+      - application/json
+      operationId: getBotBuff
+      parameters:
+      - description: Id
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Relationships [all] for all [number] for depth of relationships
+          to load or [.] separated relationship names
+        in: query
+        name: includes
+        type: string
+      - description: Column names [.] separated to fetch specific fields in response
+        in: query
+        name: select
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.BotBuff'
+            type: array
+        "404":
+          description: Entity not found
+          schema:
+            type: string
+        "500":
+          description: Bad query request
+          schema:
+            type: string
+      summary: Gets BotBuff
+      tags:
+      - BotBuff
+    patch:
+      consumes:
+      - application/json
+      operationId: updateBotBuff
+      parameters:
+      - description: Id
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: BotBuff
+        in: body
+        name: bot_buff
+        required: true
+        schema:
+          $ref: '#/definitions/models.BotBuff'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.BotBuff'
+            type: array
+        "404":
+          description: Cannot find entity
+          schema:
+            type: string
+        "500":
+          description: Error updating entity
+          schema:
+            type: string
+      summary: Updates BotBuff
+      tags:
+      - BotBuff
+  /bot_buffs:
+    get:
+      consumes:
+      - application/json
+      operationId: listBotBuffs
+      parameters:
+      - description: Relationships [all] for all [number] for depth of relationships
+          to load or [.] separated relationship names
+        in: query
+        name: includes
+        type: string
+      - description: 'Filter on specific fields. Multiple conditions [.] separated
+          Example: col_like_value.col2__val2'
+        in: query
+        name: where
+        type: string
+      - description: 'Filter on specific fields (Chained ors). Multiple conditions
+          [.] separated Example: col_like_value.col2__val2'
+        in: query
+        name: whereOr
+        type: string
+      - description: 'Group by field. Multiple conditions [.] separated Example: field1.field2'
+        in: query
+        name: groupBy
+        type: string
+      - description: 'Rows to limit in response (Default: 10,000)'
+        in: query
+        name: limit
+        type: string
+      - description: Pagination page
+        in: query
+        name: page
+        type: integer
+      - description: Order by [field]
+        in: query
+        name: orderBy
+        type: string
+      - description: Order by field direction
+        in: query
+        name: orderDirection
+        type: string
+      - description: Column names [.] separated to fetch specific fields in response
+        in: query
+        name: select
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.BotBuff'
+            type: array
+        "500":
+          description: Bad query request
+          schema:
+            type: string
+      summary: Lists BotBuffs
+      tags:
+      - BotBuff
+  /bot_buffs/bulk:
+    post:
+      consumes:
+      - application/json
+      operationId: getBotBuffsBulk
+      parameters:
+      - description: body
+        in: body
+        name: Body
+        required: true
+        schema:
+          $ref: '#/definitions/crudcontrollers.BulkFetchByIdsGetRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.BotBuff'
+            type: array
+        "500":
+          description: Bad query request
+          schema:
+            type: string
+      summary: Gets BotBuffs in bulk
+      tags:
+      - BotBuff
+  /bot_create_combination:
+    put:
+      consumes:
+      - application/json
+      operationId: createBotCreateCombination
+      parameters:
+      - description: BotCreateCombination
+        in: body
+        name: bot_create_combination
+        required: true
+        schema:
+          $ref: '#/definitions/models.BotCreateCombination'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.BotCreateCombination'
+            type: array
+        "500":
+          description: Error inserting entity
+          schema:
+            type: string
+      summary: Creates BotCreateCombination
+      tags:
+      - BotCreateCombination
+  /bot_create_combination/{id}:
+    delete:
+      consumes:
+      - application/json
+      operationId: deleteBotCreateCombination
+      parameters:
+      - description: race
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Entity deleted successfully
+          schema:
+            type: string
+        "404":
+          description: Cannot find entity
+          schema:
+            type: string
+        "500":
+          description: Error deleting entity
+          schema:
+            type: string
+      summary: Deletes BotCreateCombination
+      tags:
+      - BotCreateCombination
+    get:
+      consumes:
+      - application/json
+      operationId: getBotCreateCombination
+      parameters:
+      - description: Id
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Relationships [all] for all [number] for depth of relationships
+          to load or [.] separated relationship names
+        in: query
+        name: includes
+        type: string
+      - description: Column names [.] separated to fetch specific fields in response
+        in: query
+        name: select
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.BotCreateCombination'
+            type: array
+        "404":
+          description: Entity not found
+          schema:
+            type: string
+        "500":
+          description: Bad query request
+          schema:
+            type: string
+      summary: Gets BotCreateCombination
+      tags:
+      - BotCreateCombination
+    patch:
+      consumes:
+      - application/json
+      operationId: updateBotCreateCombination
+      parameters:
+      - description: Id
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: BotCreateCombination
+        in: body
+        name: bot_create_combination
+        required: true
+        schema:
+          $ref: '#/definitions/models.BotCreateCombination'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.BotCreateCombination'
+            type: array
+        "404":
+          description: Cannot find entity
+          schema:
+            type: string
+        "500":
+          description: Error updating entity
+          schema:
+            type: string
+      summary: Updates BotCreateCombination
+      tags:
+      - BotCreateCombination
+  /bot_create_combinations:
+    get:
+      consumes:
+      - application/json
+      operationId: listBotCreateCombinations
+      parameters:
+      - description: Relationships [all] for all [number] for depth of relationships
+          to load or [.] separated relationship names
+        in: query
+        name: includes
+        type: string
+      - description: 'Filter on specific fields. Multiple conditions [.] separated
+          Example: col_like_value.col2__val2'
+        in: query
+        name: where
+        type: string
+      - description: 'Filter on specific fields (Chained ors). Multiple conditions
+          [.] separated Example: col_like_value.col2__val2'
+        in: query
+        name: whereOr
+        type: string
+      - description: 'Group by field. Multiple conditions [.] separated Example: field1.field2'
+        in: query
+        name: groupBy
+        type: string
+      - description: 'Rows to limit in response (Default: 10,000)'
+        in: query
+        name: limit
+        type: string
+      - description: Pagination page
+        in: query
+        name: page
+        type: integer
+      - description: Order by [field]
+        in: query
+        name: orderBy
+        type: string
+      - description: Order by field direction
+        in: query
+        name: orderDirection
+        type: string
+      - description: Column names [.] separated to fetch specific fields in response
+        in: query
+        name: select
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.BotCreateCombination'
+            type: array
+        "500":
+          description: Bad query request
+          schema:
+            type: string
+      summary: Lists BotCreateCombinations
+      tags:
+      - BotCreateCombination
+  /bot_create_combinations/bulk:
+    post:
+      consumes:
+      - application/json
+      operationId: getBotCreateCombinationsBulk
+      parameters:
+      - description: body
+        in: body
+        name: Body
+        required: true
+        schema:
+          $ref: '#/definitions/crudcontrollers.BulkFetchByIdsGetRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.BotCreateCombination'
+            type: array
+        "500":
+          description: Bad query request
+          schema:
+            type: string
+      summary: Gets BotCreateCombinations in bulk
+      tags:
+      - BotCreateCombination
   /bot_data:
     get:
       consumes:
@@ -10424,6 +11171,2879 @@ paths:
       summary: Updates BotDatum
       tags:
       - BotDatum
+  /bot_group:
+    put:
+      consumes:
+      - application/json
+      operationId: createBotGroup
+      parameters:
+      - description: BotGroup
+        in: body
+        name: bot_group
+        required: true
+        schema:
+          $ref: '#/definitions/models.BotGroup'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.BotGroup'
+            type: array
+        "500":
+          description: Error inserting entity
+          schema:
+            type: string
+      summary: Creates BotGroup
+      tags:
+      - BotGroup
+  /bot_group/{id}:
+    delete:
+      consumes:
+      - application/json
+      operationId: deleteBotGroup
+      parameters:
+      - description: groupsIndex
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Entity deleted successfully
+          schema:
+            type: string
+        "404":
+          description: Cannot find entity
+          schema:
+            type: string
+        "500":
+          description: Error deleting entity
+          schema:
+            type: string
+      summary: Deletes BotGroup
+      tags:
+      - BotGroup
+    get:
+      consumes:
+      - application/json
+      operationId: getBotGroup
+      parameters:
+      - description: Id
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Relationships [all] for all [number] for depth of relationships
+          to load or [.] separated relationship names
+        in: query
+        name: includes
+        type: string
+      - description: Column names [.] separated to fetch specific fields in response
+        in: query
+        name: select
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.BotGroup'
+            type: array
+        "404":
+          description: Entity not found
+          schema:
+            type: string
+        "500":
+          description: Bad query request
+          schema:
+            type: string
+      summary: Gets BotGroup
+      tags:
+      - BotGroup
+    patch:
+      consumes:
+      - application/json
+      operationId: updateBotGroup
+      parameters:
+      - description: Id
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: BotGroup
+        in: body
+        name: bot_group
+        required: true
+        schema:
+          $ref: '#/definitions/models.BotGroup'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.BotGroup'
+            type: array
+        "404":
+          description: Cannot find entity
+          schema:
+            type: string
+        "500":
+          description: Error updating entity
+          schema:
+            type: string
+      summary: Updates BotGroup
+      tags:
+      - BotGroup
+  /bot_group_member:
+    put:
+      consumes:
+      - application/json
+      operationId: createBotGroupMember
+      parameters:
+      - description: BotGroupMember
+        in: body
+        name: bot_group_member
+        required: true
+        schema:
+          $ref: '#/definitions/models.BotGroupMember'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.BotGroupMember'
+            type: array
+        "500":
+          description: Error inserting entity
+          schema:
+            type: string
+      summary: Creates BotGroupMember
+      tags:
+      - BotGroupMember
+  /bot_group_member/{id}:
+    delete:
+      consumes:
+      - application/json
+      operationId: deleteBotGroupMember
+      parameters:
+      - description: groupMembersIndex
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Entity deleted successfully
+          schema:
+            type: string
+        "404":
+          description: Cannot find entity
+          schema:
+            type: string
+        "500":
+          description: Error deleting entity
+          schema:
+            type: string
+      summary: Deletes BotGroupMember
+      tags:
+      - BotGroupMember
+    get:
+      consumes:
+      - application/json
+      operationId: getBotGroupMember
+      parameters:
+      - description: Id
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Relationships [all] for all [number] for depth of relationships
+          to load or [.] separated relationship names
+        in: query
+        name: includes
+        type: string
+      - description: Column names [.] separated to fetch specific fields in response
+        in: query
+        name: select
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.BotGroupMember'
+            type: array
+        "404":
+          description: Entity not found
+          schema:
+            type: string
+        "500":
+          description: Bad query request
+          schema:
+            type: string
+      summary: Gets BotGroupMember
+      tags:
+      - BotGroupMember
+    patch:
+      consumes:
+      - application/json
+      operationId: updateBotGroupMember
+      parameters:
+      - description: Id
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: BotGroupMember
+        in: body
+        name: bot_group_member
+        required: true
+        schema:
+          $ref: '#/definitions/models.BotGroupMember'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.BotGroupMember'
+            type: array
+        "404":
+          description: Cannot find entity
+          schema:
+            type: string
+        "500":
+          description: Error updating entity
+          schema:
+            type: string
+      summary: Updates BotGroupMember
+      tags:
+      - BotGroupMember
+  /bot_group_members:
+    get:
+      consumes:
+      - application/json
+      operationId: listBotGroupMembers
+      parameters:
+      - description: Relationships [all] for all [number] for depth of relationships
+          to load or [.] separated relationship names
+        in: query
+        name: includes
+        type: string
+      - description: 'Filter on specific fields. Multiple conditions [.] separated
+          Example: col_like_value.col2__val2'
+        in: query
+        name: where
+        type: string
+      - description: 'Filter on specific fields (Chained ors). Multiple conditions
+          [.] separated Example: col_like_value.col2__val2'
+        in: query
+        name: whereOr
+        type: string
+      - description: 'Group by field. Multiple conditions [.] separated Example: field1.field2'
+        in: query
+        name: groupBy
+        type: string
+      - description: 'Rows to limit in response (Default: 10,000)'
+        in: query
+        name: limit
+        type: string
+      - description: Pagination page
+        in: query
+        name: page
+        type: integer
+      - description: Order by [field]
+        in: query
+        name: orderBy
+        type: string
+      - description: Order by field direction
+        in: query
+        name: orderDirection
+        type: string
+      - description: Column names [.] separated to fetch specific fields in response
+        in: query
+        name: select
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.BotGroupMember'
+            type: array
+        "500":
+          description: Bad query request
+          schema:
+            type: string
+      summary: Lists BotGroupMembers
+      tags:
+      - BotGroupMember
+  /bot_group_members/bulk:
+    post:
+      consumes:
+      - application/json
+      operationId: getBotGroupMembersBulk
+      parameters:
+      - description: body
+        in: body
+        name: Body
+        required: true
+        schema:
+          $ref: '#/definitions/crudcontrollers.BulkFetchByIdsGetRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.BotGroupMember'
+            type: array
+        "500":
+          description: Bad query request
+          schema:
+            type: string
+      summary: Gets BotGroupMembers in bulk
+      tags:
+      - BotGroupMember
+  /bot_groups:
+    get:
+      consumes:
+      - application/json
+      operationId: listBotGroups
+      parameters:
+      - description: Relationships [all] for all [number] for depth of relationships
+          to load or [.] separated relationship names
+        in: query
+        name: includes
+        type: string
+      - description: 'Filter on specific fields. Multiple conditions [.] separated
+          Example: col_like_value.col2__val2'
+        in: query
+        name: where
+        type: string
+      - description: 'Filter on specific fields (Chained ors). Multiple conditions
+          [.] separated Example: col_like_value.col2__val2'
+        in: query
+        name: whereOr
+        type: string
+      - description: 'Group by field. Multiple conditions [.] separated Example: field1.field2'
+        in: query
+        name: groupBy
+        type: string
+      - description: 'Rows to limit in response (Default: 10,000)'
+        in: query
+        name: limit
+        type: string
+      - description: Pagination page
+        in: query
+        name: page
+        type: integer
+      - description: Order by [field]
+        in: query
+        name: orderBy
+        type: string
+      - description: Order by field direction
+        in: query
+        name: orderDirection
+        type: string
+      - description: Column names [.] separated to fetch specific fields in response
+        in: query
+        name: select
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.BotGroup'
+            type: array
+        "500":
+          description: Bad query request
+          schema:
+            type: string
+      summary: Lists BotGroups
+      tags:
+      - BotGroup
+  /bot_groups/bulk:
+    post:
+      consumes:
+      - application/json
+      operationId: getBotGroupsBulk
+      parameters:
+      - description: body
+        in: body
+        name: Body
+        required: true
+        schema:
+          $ref: '#/definitions/crudcontrollers.BulkFetchByIdsGetRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.BotGroup'
+            type: array
+        "500":
+          description: Bad query request
+          schema:
+            type: string
+      summary: Gets BotGroups in bulk
+      tags:
+      - BotGroup
+  /bot_guild_member:
+    put:
+      consumes:
+      - application/json
+      operationId: createBotGuildMember
+      parameters:
+      - description: BotGuildMember
+        in: body
+        name: bot_guild_member
+        required: true
+        schema:
+          $ref: '#/definitions/models.BotGuildMember'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.BotGuildMember'
+            type: array
+        "500":
+          description: Error inserting entity
+          schema:
+            type: string
+      summary: Creates BotGuildMember
+      tags:
+      - BotGuildMember
+  /bot_guild_member/{id}:
+    delete:
+      consumes:
+      - application/json
+      operationId: deleteBotGuildMember
+      parameters:
+      - description: botId
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Entity deleted successfully
+          schema:
+            type: string
+        "404":
+          description: Cannot find entity
+          schema:
+            type: string
+        "500":
+          description: Error deleting entity
+          schema:
+            type: string
+      summary: Deletes BotGuildMember
+      tags:
+      - BotGuildMember
+    get:
+      consumes:
+      - application/json
+      operationId: getBotGuildMember
+      parameters:
+      - description: Id
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Relationships [all] for all [number] for depth of relationships
+          to load or [.] separated relationship names
+        in: query
+        name: includes
+        type: string
+      - description: Column names [.] separated to fetch specific fields in response
+        in: query
+        name: select
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.BotGuildMember'
+            type: array
+        "404":
+          description: Entity not found
+          schema:
+            type: string
+        "500":
+          description: Bad query request
+          schema:
+            type: string
+      summary: Gets BotGuildMember
+      tags:
+      - BotGuildMember
+    patch:
+      consumes:
+      - application/json
+      operationId: updateBotGuildMember
+      parameters:
+      - description: Id
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: BotGuildMember
+        in: body
+        name: bot_guild_member
+        required: true
+        schema:
+          $ref: '#/definitions/models.BotGuildMember'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.BotGuildMember'
+            type: array
+        "404":
+          description: Cannot find entity
+          schema:
+            type: string
+        "500":
+          description: Error updating entity
+          schema:
+            type: string
+      summary: Updates BotGuildMember
+      tags:
+      - BotGuildMember
+  /bot_guild_members:
+    get:
+      consumes:
+      - application/json
+      operationId: listBotGuildMembers
+      parameters:
+      - description: Relationships [all] for all [number] for depth of relationships
+          to load or [.] separated relationship names
+        in: query
+        name: includes
+        type: string
+      - description: 'Filter on specific fields. Multiple conditions [.] separated
+          Example: col_like_value.col2__val2'
+        in: query
+        name: where
+        type: string
+      - description: 'Filter on specific fields (Chained ors). Multiple conditions
+          [.] separated Example: col_like_value.col2__val2'
+        in: query
+        name: whereOr
+        type: string
+      - description: 'Group by field. Multiple conditions [.] separated Example: field1.field2'
+        in: query
+        name: groupBy
+        type: string
+      - description: 'Rows to limit in response (Default: 10,000)'
+        in: query
+        name: limit
+        type: string
+      - description: Pagination page
+        in: query
+        name: page
+        type: integer
+      - description: Order by [field]
+        in: query
+        name: orderBy
+        type: string
+      - description: Order by field direction
+        in: query
+        name: orderDirection
+        type: string
+      - description: Column names [.] separated to fetch specific fields in response
+        in: query
+        name: select
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.BotGuildMember'
+            type: array
+        "500":
+          description: Bad query request
+          schema:
+            type: string
+      summary: Lists BotGuildMembers
+      tags:
+      - BotGuildMember
+  /bot_guild_members/bulk:
+    post:
+      consumes:
+      - application/json
+      operationId: getBotGuildMembersBulk
+      parameters:
+      - description: body
+        in: body
+        name: Body
+        required: true
+        schema:
+          $ref: '#/definitions/crudcontrollers.BulkFetchByIdsGetRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.BotGuildMember'
+            type: array
+        "500":
+          description: Bad query request
+          schema:
+            type: string
+      summary: Gets BotGuildMembers in bulk
+      tags:
+      - BotGuildMember
+  /bot_heal_rotation:
+    put:
+      consumes:
+      - application/json
+      operationId: createBotHealRotation
+      parameters:
+      - description: BotHealRotation
+        in: body
+        name: bot_heal_rotation
+        required: true
+        schema:
+          $ref: '#/definitions/models.BotHealRotation'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.BotHealRotation'
+            type: array
+        "500":
+          description: Error inserting entity
+          schema:
+            type: string
+      summary: Creates BotHealRotation
+      tags:
+      - BotHealRotation
+  /bot_heal_rotation/{id}:
+    delete:
+      consumes:
+      - application/json
+      operationId: deleteBotHealRotation
+      parameters:
+      - description: healRotationIndex
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Entity deleted successfully
+          schema:
+            type: string
+        "404":
+          description: Cannot find entity
+          schema:
+            type: string
+        "500":
+          description: Error deleting entity
+          schema:
+            type: string
+      summary: Deletes BotHealRotation
+      tags:
+      - BotHealRotation
+    get:
+      consumes:
+      - application/json
+      operationId: getBotHealRotation
+      parameters:
+      - description: Id
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Relationships [all] for all [number] for depth of relationships
+          to load or [.] separated relationship names
+        in: query
+        name: includes
+        type: string
+      - description: Column names [.] separated to fetch specific fields in response
+        in: query
+        name: select
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.BotHealRotation'
+            type: array
+        "404":
+          description: Entity not found
+          schema:
+            type: string
+        "500":
+          description: Bad query request
+          schema:
+            type: string
+      summary: Gets BotHealRotation
+      tags:
+      - BotHealRotation
+    patch:
+      consumes:
+      - application/json
+      operationId: updateBotHealRotation
+      parameters:
+      - description: Id
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: BotHealRotation
+        in: body
+        name: bot_heal_rotation
+        required: true
+        schema:
+          $ref: '#/definitions/models.BotHealRotation'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.BotHealRotation'
+            type: array
+        "404":
+          description: Cannot find entity
+          schema:
+            type: string
+        "500":
+          description: Error updating entity
+          schema:
+            type: string
+      summary: Updates BotHealRotation
+      tags:
+      - BotHealRotation
+  /bot_heal_rotation_member:
+    put:
+      consumes:
+      - application/json
+      operationId: createBotHealRotationMember
+      parameters:
+      - description: BotHealRotationMember
+        in: body
+        name: bot_heal_rotation_member
+        required: true
+        schema:
+          $ref: '#/definitions/models.BotHealRotationMember'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.BotHealRotationMember'
+            type: array
+        "500":
+          description: Error inserting entity
+          schema:
+            type: string
+      summary: Creates BotHealRotationMember
+      tags:
+      - BotHealRotationMember
+  /bot_heal_rotation_member/{id}:
+    delete:
+      consumes:
+      - application/json
+      operationId: deleteBotHealRotationMember
+      parameters:
+      - description: memberIndex
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Entity deleted successfully
+          schema:
+            type: string
+        "404":
+          description: Cannot find entity
+          schema:
+            type: string
+        "500":
+          description: Error deleting entity
+          schema:
+            type: string
+      summary: Deletes BotHealRotationMember
+      tags:
+      - BotHealRotationMember
+    get:
+      consumes:
+      - application/json
+      operationId: getBotHealRotationMember
+      parameters:
+      - description: Id
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Relationships [all] for all [number] for depth of relationships
+          to load or [.] separated relationship names
+        in: query
+        name: includes
+        type: string
+      - description: Column names [.] separated to fetch specific fields in response
+        in: query
+        name: select
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.BotHealRotationMember'
+            type: array
+        "404":
+          description: Entity not found
+          schema:
+            type: string
+        "500":
+          description: Bad query request
+          schema:
+            type: string
+      summary: Gets BotHealRotationMember
+      tags:
+      - BotHealRotationMember
+    patch:
+      consumes:
+      - application/json
+      operationId: updateBotHealRotationMember
+      parameters:
+      - description: Id
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: BotHealRotationMember
+        in: body
+        name: bot_heal_rotation_member
+        required: true
+        schema:
+          $ref: '#/definitions/models.BotHealRotationMember'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.BotHealRotationMember'
+            type: array
+        "404":
+          description: Cannot find entity
+          schema:
+            type: string
+        "500":
+          description: Error updating entity
+          schema:
+            type: string
+      summary: Updates BotHealRotationMember
+      tags:
+      - BotHealRotationMember
+  /bot_heal_rotation_members:
+    get:
+      consumes:
+      - application/json
+      operationId: listBotHealRotationMembers
+      parameters:
+      - description: Relationships [all] for all [number] for depth of relationships
+          to load or [.] separated relationship names
+        in: query
+        name: includes
+        type: string
+      - description: 'Filter on specific fields. Multiple conditions [.] separated
+          Example: col_like_value.col2__val2'
+        in: query
+        name: where
+        type: string
+      - description: 'Filter on specific fields (Chained ors). Multiple conditions
+          [.] separated Example: col_like_value.col2__val2'
+        in: query
+        name: whereOr
+        type: string
+      - description: 'Group by field. Multiple conditions [.] separated Example: field1.field2'
+        in: query
+        name: groupBy
+        type: string
+      - description: 'Rows to limit in response (Default: 10,000)'
+        in: query
+        name: limit
+        type: string
+      - description: Pagination page
+        in: query
+        name: page
+        type: integer
+      - description: Order by [field]
+        in: query
+        name: orderBy
+        type: string
+      - description: Order by field direction
+        in: query
+        name: orderDirection
+        type: string
+      - description: Column names [.] separated to fetch specific fields in response
+        in: query
+        name: select
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.BotHealRotationMember'
+            type: array
+        "500":
+          description: Bad query request
+          schema:
+            type: string
+      summary: Lists BotHealRotationMembers
+      tags:
+      - BotHealRotationMember
+  /bot_heal_rotation_members/bulk:
+    post:
+      consumes:
+      - application/json
+      operationId: getBotHealRotationMembersBulk
+      parameters:
+      - description: body
+        in: body
+        name: Body
+        required: true
+        schema:
+          $ref: '#/definitions/crudcontrollers.BulkFetchByIdsGetRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.BotHealRotationMember'
+            type: array
+        "500":
+          description: Bad query request
+          schema:
+            type: string
+      summary: Gets BotHealRotationMembers in bulk
+      tags:
+      - BotHealRotationMember
+  /bot_heal_rotation_target:
+    put:
+      consumes:
+      - application/json
+      operationId: createBotHealRotationTarget
+      parameters:
+      - description: BotHealRotationTarget
+        in: body
+        name: bot_heal_rotation_target
+        required: true
+        schema:
+          $ref: '#/definitions/models.BotHealRotationTarget'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.BotHealRotationTarget'
+            type: array
+        "500":
+          description: Error inserting entity
+          schema:
+            type: string
+      summary: Creates BotHealRotationTarget
+      tags:
+      - BotHealRotationTarget
+  /bot_heal_rotation_target/{id}:
+    delete:
+      consumes:
+      - application/json
+      operationId: deleteBotHealRotationTarget
+      parameters:
+      - description: targetIndex
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Entity deleted successfully
+          schema:
+            type: string
+        "404":
+          description: Cannot find entity
+          schema:
+            type: string
+        "500":
+          description: Error deleting entity
+          schema:
+            type: string
+      summary: Deletes BotHealRotationTarget
+      tags:
+      - BotHealRotationTarget
+    get:
+      consumes:
+      - application/json
+      operationId: getBotHealRotationTarget
+      parameters:
+      - description: Id
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Relationships [all] for all [number] for depth of relationships
+          to load or [.] separated relationship names
+        in: query
+        name: includes
+        type: string
+      - description: Column names [.] separated to fetch specific fields in response
+        in: query
+        name: select
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.BotHealRotationTarget'
+            type: array
+        "404":
+          description: Entity not found
+          schema:
+            type: string
+        "500":
+          description: Bad query request
+          schema:
+            type: string
+      summary: Gets BotHealRotationTarget
+      tags:
+      - BotHealRotationTarget
+    patch:
+      consumes:
+      - application/json
+      operationId: updateBotHealRotationTarget
+      parameters:
+      - description: Id
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: BotHealRotationTarget
+        in: body
+        name: bot_heal_rotation_target
+        required: true
+        schema:
+          $ref: '#/definitions/models.BotHealRotationTarget'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.BotHealRotationTarget'
+            type: array
+        "404":
+          description: Cannot find entity
+          schema:
+            type: string
+        "500":
+          description: Error updating entity
+          schema:
+            type: string
+      summary: Updates BotHealRotationTarget
+      tags:
+      - BotHealRotationTarget
+  /bot_heal_rotation_targets:
+    get:
+      consumes:
+      - application/json
+      operationId: listBotHealRotationTargets
+      parameters:
+      - description: Relationships [all] for all [number] for depth of relationships
+          to load or [.] separated relationship names
+        in: query
+        name: includes
+        type: string
+      - description: 'Filter on specific fields. Multiple conditions [.] separated
+          Example: col_like_value.col2__val2'
+        in: query
+        name: where
+        type: string
+      - description: 'Filter on specific fields (Chained ors). Multiple conditions
+          [.] separated Example: col_like_value.col2__val2'
+        in: query
+        name: whereOr
+        type: string
+      - description: 'Group by field. Multiple conditions [.] separated Example: field1.field2'
+        in: query
+        name: groupBy
+        type: string
+      - description: 'Rows to limit in response (Default: 10,000)'
+        in: query
+        name: limit
+        type: string
+      - description: Pagination page
+        in: query
+        name: page
+        type: integer
+      - description: Order by [field]
+        in: query
+        name: orderBy
+        type: string
+      - description: Order by field direction
+        in: query
+        name: orderDirection
+        type: string
+      - description: Column names [.] separated to fetch specific fields in response
+        in: query
+        name: select
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.BotHealRotationTarget'
+            type: array
+        "500":
+          description: Bad query request
+          schema:
+            type: string
+      summary: Lists BotHealRotationTargets
+      tags:
+      - BotHealRotationTarget
+  /bot_heal_rotation_targets/bulk:
+    post:
+      consumes:
+      - application/json
+      operationId: getBotHealRotationTargetsBulk
+      parameters:
+      - description: body
+        in: body
+        name: Body
+        required: true
+        schema:
+          $ref: '#/definitions/crudcontrollers.BulkFetchByIdsGetRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.BotHealRotationTarget'
+            type: array
+        "500":
+          description: Bad query request
+          schema:
+            type: string
+      summary: Gets BotHealRotationTargets in bulk
+      tags:
+      - BotHealRotationTarget
+  /bot_heal_rotations:
+    get:
+      consumes:
+      - application/json
+      operationId: listBotHealRotations
+      parameters:
+      - description: Relationships [all] for all [number] for depth of relationships
+          to load or [.] separated relationship names
+        in: query
+        name: includes
+        type: string
+      - description: 'Filter on specific fields. Multiple conditions [.] separated
+          Example: col_like_value.col2__val2'
+        in: query
+        name: where
+        type: string
+      - description: 'Filter on specific fields (Chained ors). Multiple conditions
+          [.] separated Example: col_like_value.col2__val2'
+        in: query
+        name: whereOr
+        type: string
+      - description: 'Group by field. Multiple conditions [.] separated Example: field1.field2'
+        in: query
+        name: groupBy
+        type: string
+      - description: 'Rows to limit in response (Default: 10,000)'
+        in: query
+        name: limit
+        type: string
+      - description: Pagination page
+        in: query
+        name: page
+        type: integer
+      - description: Order by [field]
+        in: query
+        name: orderBy
+        type: string
+      - description: Order by field direction
+        in: query
+        name: orderDirection
+        type: string
+      - description: Column names [.] separated to fetch specific fields in response
+        in: query
+        name: select
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.BotHealRotation'
+            type: array
+        "500":
+          description: Bad query request
+          schema:
+            type: string
+      summary: Lists BotHealRotations
+      tags:
+      - BotHealRotation
+  /bot_heal_rotations/bulk:
+    post:
+      consumes:
+      - application/json
+      operationId: getBotHealRotationsBulk
+      parameters:
+      - description: body
+        in: body
+        name: Body
+        required: true
+        schema:
+          $ref: '#/definitions/crudcontrollers.BulkFetchByIdsGetRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.BotHealRotation'
+            type: array
+        "500":
+          description: Bad query request
+          schema:
+            type: string
+      summary: Gets BotHealRotations in bulk
+      tags:
+      - BotHealRotation
+  /bot_inspect_message:
+    put:
+      consumes:
+      - application/json
+      operationId: createBotInspectMessage
+      parameters:
+      - description: BotInspectMessage
+        in: body
+        name: bot_inspect_message
+        required: true
+        schema:
+          $ref: '#/definitions/models.BotInspectMessage'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.BotInspectMessage'
+            type: array
+        "500":
+          description: Error inserting entity
+          schema:
+            type: string
+      summary: Creates BotInspectMessage
+      tags:
+      - BotInspectMessage
+  /bot_inspect_message/{id}:
+    delete:
+      consumes:
+      - application/json
+      operationId: deleteBotInspectMessage
+      parameters:
+      - description: botId
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Entity deleted successfully
+          schema:
+            type: string
+        "404":
+          description: Cannot find entity
+          schema:
+            type: string
+        "500":
+          description: Error deleting entity
+          schema:
+            type: string
+      summary: Deletes BotInspectMessage
+      tags:
+      - BotInspectMessage
+    get:
+      consumes:
+      - application/json
+      operationId: getBotInspectMessage
+      parameters:
+      - description: Id
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Relationships [all] for all [number] for depth of relationships
+          to load or [.] separated relationship names
+        in: query
+        name: includes
+        type: string
+      - description: Column names [.] separated to fetch specific fields in response
+        in: query
+        name: select
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.BotInspectMessage'
+            type: array
+        "404":
+          description: Entity not found
+          schema:
+            type: string
+        "500":
+          description: Bad query request
+          schema:
+            type: string
+      summary: Gets BotInspectMessage
+      tags:
+      - BotInspectMessage
+    patch:
+      consumes:
+      - application/json
+      operationId: updateBotInspectMessage
+      parameters:
+      - description: Id
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: BotInspectMessage
+        in: body
+        name: bot_inspect_message
+        required: true
+        schema:
+          $ref: '#/definitions/models.BotInspectMessage'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.BotInspectMessage'
+            type: array
+        "404":
+          description: Cannot find entity
+          schema:
+            type: string
+        "500":
+          description: Error updating entity
+          schema:
+            type: string
+      summary: Updates BotInspectMessage
+      tags:
+      - BotInspectMessage
+  /bot_inspect_messages:
+    get:
+      consumes:
+      - application/json
+      operationId: listBotInspectMessages
+      parameters:
+      - description: Relationships [all] for all [number] for depth of relationships
+          to load or [.] separated relationship names
+        in: query
+        name: includes
+        type: string
+      - description: 'Filter on specific fields. Multiple conditions [.] separated
+          Example: col_like_value.col2__val2'
+        in: query
+        name: where
+        type: string
+      - description: 'Filter on specific fields (Chained ors). Multiple conditions
+          [.] separated Example: col_like_value.col2__val2'
+        in: query
+        name: whereOr
+        type: string
+      - description: 'Group by field. Multiple conditions [.] separated Example: field1.field2'
+        in: query
+        name: groupBy
+        type: string
+      - description: 'Rows to limit in response (Default: 10,000)'
+        in: query
+        name: limit
+        type: string
+      - description: Pagination page
+        in: query
+        name: page
+        type: integer
+      - description: Order by [field]
+        in: query
+        name: orderBy
+        type: string
+      - description: Order by field direction
+        in: query
+        name: orderDirection
+        type: string
+      - description: Column names [.] separated to fetch specific fields in response
+        in: query
+        name: select
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.BotInspectMessage'
+            type: array
+        "500":
+          description: Bad query request
+          schema:
+            type: string
+      summary: Lists BotInspectMessages
+      tags:
+      - BotInspectMessage
+  /bot_inspect_messages/bulk:
+    post:
+      consumes:
+      - application/json
+      operationId: getBotInspectMessagesBulk
+      parameters:
+      - description: body
+        in: body
+        name: Body
+        required: true
+        schema:
+          $ref: '#/definitions/crudcontrollers.BulkFetchByIdsGetRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.BotInspectMessage'
+            type: array
+        "500":
+          description: Bad query request
+          schema:
+            type: string
+      summary: Gets BotInspectMessages in bulk
+      tags:
+      - BotInspectMessage
+  /bot_inventories:
+    get:
+      consumes:
+      - application/json
+      operationId: listBotInventories
+      parameters:
+      - description: Relationships [all] for all [number] for depth of relationships
+          to load or [.] separated relationship names
+        in: query
+        name: includes
+        type: string
+      - description: 'Filter on specific fields. Multiple conditions [.] separated
+          Example: col_like_value.col2__val2'
+        in: query
+        name: where
+        type: string
+      - description: 'Filter on specific fields (Chained ors). Multiple conditions
+          [.] separated Example: col_like_value.col2__val2'
+        in: query
+        name: whereOr
+        type: string
+      - description: 'Group by field. Multiple conditions [.] separated Example: field1.field2'
+        in: query
+        name: groupBy
+        type: string
+      - description: 'Rows to limit in response (Default: 10,000)'
+        in: query
+        name: limit
+        type: string
+      - description: Pagination page
+        in: query
+        name: page
+        type: integer
+      - description: Order by [field]
+        in: query
+        name: orderBy
+        type: string
+      - description: Order by field direction
+        in: query
+        name: orderDirection
+        type: string
+      - description: Column names [.] separated to fetch specific fields in response
+        in: query
+        name: select
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.BotInventory'
+            type: array
+        "500":
+          description: Bad query request
+          schema:
+            type: string
+      summary: Lists BotInventories
+      tags:
+      - BotInventory
+  /bot_inventories/bulk:
+    post:
+      consumes:
+      - application/json
+      operationId: getBotInventoriesBulk
+      parameters:
+      - description: body
+        in: body
+        name: Body
+        required: true
+        schema:
+          $ref: '#/definitions/crudcontrollers.BulkFetchByIdsGetRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.BotInventory'
+            type: array
+        "500":
+          description: Bad query request
+          schema:
+            type: string
+      summary: Gets BotInventories in bulk
+      tags:
+      - BotInventory
+  /bot_inventory:
+    put:
+      consumes:
+      - application/json
+      operationId: createBotInventory
+      parameters:
+      - description: BotInventory
+        in: body
+        name: bot_inventory
+        required: true
+        schema:
+          $ref: '#/definitions/models.BotInventory'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.BotInventory'
+            type: array
+        "500":
+          description: Error inserting entity
+          schema:
+            type: string
+      summary: Creates BotInventory
+      tags:
+      - BotInventory
+  /bot_inventory/{id}:
+    delete:
+      consumes:
+      - application/json
+      operationId: deleteBotInventory
+      parameters:
+      - description: inventoriesIndex
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Entity deleted successfully
+          schema:
+            type: string
+        "404":
+          description: Cannot find entity
+          schema:
+            type: string
+        "500":
+          description: Error deleting entity
+          schema:
+            type: string
+      summary: Deletes BotInventory
+      tags:
+      - BotInventory
+    get:
+      consumes:
+      - application/json
+      operationId: getBotInventory
+      parameters:
+      - description: Id
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Relationships [all] for all [number] for depth of relationships
+          to load or [.] separated relationship names
+        in: query
+        name: includes
+        type: string
+      - description: Column names [.] separated to fetch specific fields in response
+        in: query
+        name: select
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.BotInventory'
+            type: array
+        "404":
+          description: Entity not found
+          schema:
+            type: string
+        "500":
+          description: Bad query request
+          schema:
+            type: string
+      summary: Gets BotInventory
+      tags:
+      - BotInventory
+    patch:
+      consumes:
+      - application/json
+      operationId: updateBotInventory
+      parameters:
+      - description: Id
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: BotInventory
+        in: body
+        name: bot_inventory
+        required: true
+        schema:
+          $ref: '#/definitions/models.BotInventory'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.BotInventory'
+            type: array
+        "404":
+          description: Cannot find entity
+          schema:
+            type: string
+        "500":
+          description: Error updating entity
+          schema:
+            type: string
+      summary: Updates BotInventory
+      tags:
+      - BotInventory
+  /bot_owner_option:
+    put:
+      consumes:
+      - application/json
+      operationId: createBotOwnerOption
+      parameters:
+      - description: BotOwnerOption
+        in: body
+        name: bot_owner_option
+        required: true
+        schema:
+          $ref: '#/definitions/models.BotOwnerOption'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.BotOwnerOption'
+            type: array
+        "500":
+          description: Error inserting entity
+          schema:
+            type: string
+      summary: Creates BotOwnerOption
+      tags:
+      - BotOwnerOption
+  /bot_owner_option/{id}:
+    delete:
+      consumes:
+      - application/json
+      operationId: deleteBotOwnerOption
+      parameters:
+      - description: ownerId
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Entity deleted successfully
+          schema:
+            type: string
+        "404":
+          description: Cannot find entity
+          schema:
+            type: string
+        "500":
+          description: Error deleting entity
+          schema:
+            type: string
+      summary: Deletes BotOwnerOption
+      tags:
+      - BotOwnerOption
+    get:
+      consumes:
+      - application/json
+      operationId: getBotOwnerOption
+      parameters:
+      - description: Id
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Relationships [all] for all [number] for depth of relationships
+          to load or [.] separated relationship names
+        in: query
+        name: includes
+        type: string
+      - description: Column names [.] separated to fetch specific fields in response
+        in: query
+        name: select
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.BotOwnerOption'
+            type: array
+        "404":
+          description: Entity not found
+          schema:
+            type: string
+        "500":
+          description: Bad query request
+          schema:
+            type: string
+      summary: Gets BotOwnerOption
+      tags:
+      - BotOwnerOption
+    patch:
+      consumes:
+      - application/json
+      operationId: updateBotOwnerOption
+      parameters:
+      - description: Id
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: BotOwnerOption
+        in: body
+        name: bot_owner_option
+        required: true
+        schema:
+          $ref: '#/definitions/models.BotOwnerOption'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.BotOwnerOption'
+            type: array
+        "404":
+          description: Cannot find entity
+          schema:
+            type: string
+        "500":
+          description: Error updating entity
+          schema:
+            type: string
+      summary: Updates BotOwnerOption
+      tags:
+      - BotOwnerOption
+  /bot_owner_options:
+    get:
+      consumes:
+      - application/json
+      operationId: listBotOwnerOptions
+      parameters:
+      - description: Relationships [all] for all [number] for depth of relationships
+          to load or [.] separated relationship names
+        in: query
+        name: includes
+        type: string
+      - description: 'Filter on specific fields. Multiple conditions [.] separated
+          Example: col_like_value.col2__val2'
+        in: query
+        name: where
+        type: string
+      - description: 'Filter on specific fields (Chained ors). Multiple conditions
+          [.] separated Example: col_like_value.col2__val2'
+        in: query
+        name: whereOr
+        type: string
+      - description: 'Group by field. Multiple conditions [.] separated Example: field1.field2'
+        in: query
+        name: groupBy
+        type: string
+      - description: 'Rows to limit in response (Default: 10,000)'
+        in: query
+        name: limit
+        type: string
+      - description: Pagination page
+        in: query
+        name: page
+        type: integer
+      - description: Order by [field]
+        in: query
+        name: orderBy
+        type: string
+      - description: Order by field direction
+        in: query
+        name: orderDirection
+        type: string
+      - description: Column names [.] separated to fetch specific fields in response
+        in: query
+        name: select
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.BotOwnerOption'
+            type: array
+        "500":
+          description: Bad query request
+          schema:
+            type: string
+      summary: Lists BotOwnerOptions
+      tags:
+      - BotOwnerOption
+  /bot_owner_options/bulk:
+    post:
+      consumes:
+      - application/json
+      operationId: getBotOwnerOptionsBulk
+      parameters:
+      - description: body
+        in: body
+        name: Body
+        required: true
+        schema:
+          $ref: '#/definitions/crudcontrollers.BulkFetchByIdsGetRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.BotOwnerOption'
+            type: array
+        "500":
+          description: Bad query request
+          schema:
+            type: string
+      summary: Gets BotOwnerOptions in bulk
+      tags:
+      - BotOwnerOption
+  /bot_pet:
+    put:
+      consumes:
+      - application/json
+      operationId: createBotPet
+      parameters:
+      - description: BotPet
+        in: body
+        name: bot_pet
+        required: true
+        schema:
+          $ref: '#/definitions/models.BotPet'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.BotPet'
+            type: array
+        "500":
+          description: Error inserting entity
+          schema:
+            type: string
+      summary: Creates BotPet
+      tags:
+      - BotPet
+  /bot_pet/{id}:
+    delete:
+      consumes:
+      - application/json
+      operationId: deleteBotPet
+      parameters:
+      - description: petsIndex
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Entity deleted successfully
+          schema:
+            type: string
+        "404":
+          description: Cannot find entity
+          schema:
+            type: string
+        "500":
+          description: Error deleting entity
+          schema:
+            type: string
+      summary: Deletes BotPet
+      tags:
+      - BotPet
+    get:
+      consumes:
+      - application/json
+      operationId: getBotPet
+      parameters:
+      - description: Id
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Relationships [all] for all [number] for depth of relationships
+          to load or [.] separated relationship names
+        in: query
+        name: includes
+        type: string
+      - description: Column names [.] separated to fetch specific fields in response
+        in: query
+        name: select
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.BotPet'
+            type: array
+        "404":
+          description: Entity not found
+          schema:
+            type: string
+        "500":
+          description: Bad query request
+          schema:
+            type: string
+      summary: Gets BotPet
+      tags:
+      - BotPet
+    patch:
+      consumes:
+      - application/json
+      operationId: updateBotPet
+      parameters:
+      - description: Id
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: BotPet
+        in: body
+        name: bot_pet
+        required: true
+        schema:
+          $ref: '#/definitions/models.BotPet'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.BotPet'
+            type: array
+        "404":
+          description: Cannot find entity
+          schema:
+            type: string
+        "500":
+          description: Error updating entity
+          schema:
+            type: string
+      summary: Updates BotPet
+      tags:
+      - BotPet
+  /bot_pet_buff:
+    put:
+      consumes:
+      - application/json
+      operationId: createBotPetBuff
+      parameters:
+      - description: BotPetBuff
+        in: body
+        name: bot_pet_buff
+        required: true
+        schema:
+          $ref: '#/definitions/models.BotPetBuff'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.BotPetBuff'
+            type: array
+        "500":
+          description: Error inserting entity
+          schema:
+            type: string
+      summary: Creates BotPetBuff
+      tags:
+      - BotPetBuff
+  /bot_pet_buff/{id}:
+    delete:
+      consumes:
+      - application/json
+      operationId: deleteBotPetBuff
+      parameters:
+      - description: petBuffsIndex
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Entity deleted successfully
+          schema:
+            type: string
+        "404":
+          description: Cannot find entity
+          schema:
+            type: string
+        "500":
+          description: Error deleting entity
+          schema:
+            type: string
+      summary: Deletes BotPetBuff
+      tags:
+      - BotPetBuff
+    get:
+      consumes:
+      - application/json
+      operationId: getBotPetBuff
+      parameters:
+      - description: Id
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Relationships [all] for all [number] for depth of relationships
+          to load or [.] separated relationship names
+        in: query
+        name: includes
+        type: string
+      - description: Column names [.] separated to fetch specific fields in response
+        in: query
+        name: select
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.BotPetBuff'
+            type: array
+        "404":
+          description: Entity not found
+          schema:
+            type: string
+        "500":
+          description: Bad query request
+          schema:
+            type: string
+      summary: Gets BotPetBuff
+      tags:
+      - BotPetBuff
+    patch:
+      consumes:
+      - application/json
+      operationId: updateBotPetBuff
+      parameters:
+      - description: Id
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: BotPetBuff
+        in: body
+        name: bot_pet_buff
+        required: true
+        schema:
+          $ref: '#/definitions/models.BotPetBuff'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.BotPetBuff'
+            type: array
+        "404":
+          description: Cannot find entity
+          schema:
+            type: string
+        "500":
+          description: Error updating entity
+          schema:
+            type: string
+      summary: Updates BotPetBuff
+      tags:
+      - BotPetBuff
+  /bot_pet_buffs:
+    get:
+      consumes:
+      - application/json
+      operationId: listBotPetBuffs
+      parameters:
+      - description: Relationships [all] for all [number] for depth of relationships
+          to load or [.] separated relationship names
+        in: query
+        name: includes
+        type: string
+      - description: 'Filter on specific fields. Multiple conditions [.] separated
+          Example: col_like_value.col2__val2'
+        in: query
+        name: where
+        type: string
+      - description: 'Filter on specific fields (Chained ors). Multiple conditions
+          [.] separated Example: col_like_value.col2__val2'
+        in: query
+        name: whereOr
+        type: string
+      - description: 'Group by field. Multiple conditions [.] separated Example: field1.field2'
+        in: query
+        name: groupBy
+        type: string
+      - description: 'Rows to limit in response (Default: 10,000)'
+        in: query
+        name: limit
+        type: string
+      - description: Pagination page
+        in: query
+        name: page
+        type: integer
+      - description: Order by [field]
+        in: query
+        name: orderBy
+        type: string
+      - description: Order by field direction
+        in: query
+        name: orderDirection
+        type: string
+      - description: Column names [.] separated to fetch specific fields in response
+        in: query
+        name: select
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.BotPetBuff'
+            type: array
+        "500":
+          description: Bad query request
+          schema:
+            type: string
+      summary: Lists BotPetBuffs
+      tags:
+      - BotPetBuff
+  /bot_pet_buffs/bulk:
+    post:
+      consumes:
+      - application/json
+      operationId: getBotPetBuffsBulk
+      parameters:
+      - description: body
+        in: body
+        name: Body
+        required: true
+        schema:
+          $ref: '#/definitions/crudcontrollers.BulkFetchByIdsGetRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.BotPetBuff'
+            type: array
+        "500":
+          description: Bad query request
+          schema:
+            type: string
+      summary: Gets BotPetBuffs in bulk
+      tags:
+      - BotPetBuff
+  /bot_pet_inventories:
+    get:
+      consumes:
+      - application/json
+      operationId: listBotPetInventories
+      parameters:
+      - description: Relationships [all] for all [number] for depth of relationships
+          to load or [.] separated relationship names
+        in: query
+        name: includes
+        type: string
+      - description: 'Filter on specific fields. Multiple conditions [.] separated
+          Example: col_like_value.col2__val2'
+        in: query
+        name: where
+        type: string
+      - description: 'Filter on specific fields (Chained ors). Multiple conditions
+          [.] separated Example: col_like_value.col2__val2'
+        in: query
+        name: whereOr
+        type: string
+      - description: 'Group by field. Multiple conditions [.] separated Example: field1.field2'
+        in: query
+        name: groupBy
+        type: string
+      - description: 'Rows to limit in response (Default: 10,000)'
+        in: query
+        name: limit
+        type: string
+      - description: Pagination page
+        in: query
+        name: page
+        type: integer
+      - description: Order by [field]
+        in: query
+        name: orderBy
+        type: string
+      - description: Order by field direction
+        in: query
+        name: orderDirection
+        type: string
+      - description: Column names [.] separated to fetch specific fields in response
+        in: query
+        name: select
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.BotPetInventory'
+            type: array
+        "500":
+          description: Bad query request
+          schema:
+            type: string
+      summary: Lists BotPetInventories
+      tags:
+      - BotPetInventory
+  /bot_pet_inventories/bulk:
+    post:
+      consumes:
+      - application/json
+      operationId: getBotPetInventoriesBulk
+      parameters:
+      - description: body
+        in: body
+        name: Body
+        required: true
+        schema:
+          $ref: '#/definitions/crudcontrollers.BulkFetchByIdsGetRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.BotPetInventory'
+            type: array
+        "500":
+          description: Bad query request
+          schema:
+            type: string
+      summary: Gets BotPetInventories in bulk
+      tags:
+      - BotPetInventory
+  /bot_pet_inventory:
+    put:
+      consumes:
+      - application/json
+      operationId: createBotPetInventory
+      parameters:
+      - description: BotPetInventory
+        in: body
+        name: bot_pet_inventory
+        required: true
+        schema:
+          $ref: '#/definitions/models.BotPetInventory'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.BotPetInventory'
+            type: array
+        "500":
+          description: Error inserting entity
+          schema:
+            type: string
+      summary: Creates BotPetInventory
+      tags:
+      - BotPetInventory
+  /bot_pet_inventory/{id}:
+    delete:
+      consumes:
+      - application/json
+      operationId: deleteBotPetInventory
+      parameters:
+      - description: petInventoriesIndex
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Entity deleted successfully
+          schema:
+            type: string
+        "404":
+          description: Cannot find entity
+          schema:
+            type: string
+        "500":
+          description: Error deleting entity
+          schema:
+            type: string
+      summary: Deletes BotPetInventory
+      tags:
+      - BotPetInventory
+    get:
+      consumes:
+      - application/json
+      operationId: getBotPetInventory
+      parameters:
+      - description: Id
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Relationships [all] for all [number] for depth of relationships
+          to load or [.] separated relationship names
+        in: query
+        name: includes
+        type: string
+      - description: Column names [.] separated to fetch specific fields in response
+        in: query
+        name: select
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.BotPetInventory'
+            type: array
+        "404":
+          description: Entity not found
+          schema:
+            type: string
+        "500":
+          description: Bad query request
+          schema:
+            type: string
+      summary: Gets BotPetInventory
+      tags:
+      - BotPetInventory
+    patch:
+      consumes:
+      - application/json
+      operationId: updateBotPetInventory
+      parameters:
+      - description: Id
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: BotPetInventory
+        in: body
+        name: bot_pet_inventory
+        required: true
+        schema:
+          $ref: '#/definitions/models.BotPetInventory'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.BotPetInventory'
+            type: array
+        "404":
+          description: Cannot find entity
+          schema:
+            type: string
+        "500":
+          description: Error updating entity
+          schema:
+            type: string
+      summary: Updates BotPetInventory
+      tags:
+      - BotPetInventory
+  /bot_pets:
+    get:
+      consumes:
+      - application/json
+      operationId: listBotPets
+      parameters:
+      - description: Relationships [all] for all [number] for depth of relationships
+          to load or [.] separated relationship names
+        in: query
+        name: includes
+        type: string
+      - description: 'Filter on specific fields. Multiple conditions [.] separated
+          Example: col_like_value.col2__val2'
+        in: query
+        name: where
+        type: string
+      - description: 'Filter on specific fields (Chained ors). Multiple conditions
+          [.] separated Example: col_like_value.col2__val2'
+        in: query
+        name: whereOr
+        type: string
+      - description: 'Group by field. Multiple conditions [.] separated Example: field1.field2'
+        in: query
+        name: groupBy
+        type: string
+      - description: 'Rows to limit in response (Default: 10,000)'
+        in: query
+        name: limit
+        type: string
+      - description: Pagination page
+        in: query
+        name: page
+        type: integer
+      - description: Order by [field]
+        in: query
+        name: orderBy
+        type: string
+      - description: Order by field direction
+        in: query
+        name: orderDirection
+        type: string
+      - description: Column names [.] separated to fetch specific fields in response
+        in: query
+        name: select
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.BotPet'
+            type: array
+        "500":
+          description: Bad query request
+          schema:
+            type: string
+      summary: Lists BotPets
+      tags:
+      - BotPet
+  /bot_pets/bulk:
+    post:
+      consumes:
+      - application/json
+      operationId: getBotPetsBulk
+      parameters:
+      - description: body
+        in: body
+        name: Body
+        required: true
+        schema:
+          $ref: '#/definitions/crudcontrollers.BulkFetchByIdsGetRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.BotPet'
+            type: array
+        "500":
+          description: Bad query request
+          schema:
+            type: string
+      summary: Gets BotPets in bulk
+      tags:
+      - BotPet
+  /bot_spell_casting_chance:
+    put:
+      consumes:
+      - application/json
+      operationId: createBotSpellCastingChance
+      parameters:
+      - description: BotSpellCastingChance
+        in: body
+        name: bot_spell_casting_chance
+        required: true
+        schema:
+          $ref: '#/definitions/models.BotSpellCastingChance'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.BotSpellCastingChance'
+            type: array
+        "500":
+          description: Error inserting entity
+          schema:
+            type: string
+      summary: Creates BotSpellCastingChance
+      tags:
+      - BotSpellCastingChance
+  /bot_spell_casting_chance/{id}:
+    delete:
+      consumes:
+      - application/json
+      operationId: deleteBotSpellCastingChance
+      parameters:
+      - description: id
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Entity deleted successfully
+          schema:
+            type: string
+        "404":
+          description: Cannot find entity
+          schema:
+            type: string
+        "500":
+          description: Error deleting entity
+          schema:
+            type: string
+      summary: Deletes BotSpellCastingChance
+      tags:
+      - BotSpellCastingChance
+    get:
+      consumes:
+      - application/json
+      operationId: getBotSpellCastingChance
+      parameters:
+      - description: Id
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Relationships [all] for all [number] for depth of relationships
+          to load or [.] separated relationship names
+        in: query
+        name: includes
+        type: string
+      - description: Column names [.] separated to fetch specific fields in response
+        in: query
+        name: select
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.BotSpellCastingChance'
+            type: array
+        "404":
+          description: Entity not found
+          schema:
+            type: string
+        "500":
+          description: Bad query request
+          schema:
+            type: string
+      summary: Gets BotSpellCastingChance
+      tags:
+      - BotSpellCastingChance
+    patch:
+      consumes:
+      - application/json
+      operationId: updateBotSpellCastingChance
+      parameters:
+      - description: Id
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: BotSpellCastingChance
+        in: body
+        name: bot_spell_casting_chance
+        required: true
+        schema:
+          $ref: '#/definitions/models.BotSpellCastingChance'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.BotSpellCastingChance'
+            type: array
+        "404":
+          description: Cannot find entity
+          schema:
+            type: string
+        "500":
+          description: Error updating entity
+          schema:
+            type: string
+      summary: Updates BotSpellCastingChance
+      tags:
+      - BotSpellCastingChance
+  /bot_spell_casting_chances:
+    get:
+      consumes:
+      - application/json
+      operationId: listBotSpellCastingChances
+      parameters:
+      - description: Relationships [all] for all [number] for depth of relationships
+          to load or [.] separated relationship names
+        in: query
+        name: includes
+        type: string
+      - description: 'Filter on specific fields. Multiple conditions [.] separated
+          Example: col_like_value.col2__val2'
+        in: query
+        name: where
+        type: string
+      - description: 'Filter on specific fields (Chained ors). Multiple conditions
+          [.] separated Example: col_like_value.col2__val2'
+        in: query
+        name: whereOr
+        type: string
+      - description: 'Group by field. Multiple conditions [.] separated Example: field1.field2'
+        in: query
+        name: groupBy
+        type: string
+      - description: 'Rows to limit in response (Default: 10,000)'
+        in: query
+        name: limit
+        type: string
+      - description: Pagination page
+        in: query
+        name: page
+        type: integer
+      - description: Order by [field]
+        in: query
+        name: orderBy
+        type: string
+      - description: Order by field direction
+        in: query
+        name: orderDirection
+        type: string
+      - description: Column names [.] separated to fetch specific fields in response
+        in: query
+        name: select
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.BotSpellCastingChance'
+            type: array
+        "500":
+          description: Bad query request
+          schema:
+            type: string
+      summary: Lists BotSpellCastingChances
+      tags:
+      - BotSpellCastingChance
+  /bot_spell_casting_chances/bulk:
+    post:
+      consumes:
+      - application/json
+      operationId: getBotSpellCastingChancesBulk
+      parameters:
+      - description: body
+        in: body
+        name: Body
+        required: true
+        schema:
+          $ref: '#/definitions/crudcontrollers.BulkFetchByIdsGetRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.BotSpellCastingChance'
+            type: array
+        "500":
+          description: Bad query request
+          schema:
+            type: string
+      summary: Gets BotSpellCastingChances in bulk
+      tags:
+      - BotSpellCastingChance
   /bot_spells_entries:
     get:
       consumes:
@@ -10645,6 +14265,448 @@ paths:
       summary: Updates BotSpellsEntry
       tags:
       - BotSpellsEntry
+  /bot_stance:
+    put:
+      consumes:
+      - application/json
+      operationId: createBotStance
+      parameters:
+      - description: BotStance
+        in: body
+        name: bot_stance
+        required: true
+        schema:
+          $ref: '#/definitions/models.BotStance'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.BotStance'
+            type: array
+        "500":
+          description: Error inserting entity
+          schema:
+            type: string
+      summary: Creates BotStance
+      tags:
+      - BotStance
+  /bot_stance/{id}:
+    delete:
+      consumes:
+      - application/json
+      operationId: deleteBotStance
+      parameters:
+      - description: botId
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Entity deleted successfully
+          schema:
+            type: string
+        "404":
+          description: Cannot find entity
+          schema:
+            type: string
+        "500":
+          description: Error deleting entity
+          schema:
+            type: string
+      summary: Deletes BotStance
+      tags:
+      - BotStance
+    get:
+      consumes:
+      - application/json
+      operationId: getBotStance
+      parameters:
+      - description: Id
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Relationships [all] for all [number] for depth of relationships
+          to load or [.] separated relationship names
+        in: query
+        name: includes
+        type: string
+      - description: Column names [.] separated to fetch specific fields in response
+        in: query
+        name: select
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.BotStance'
+            type: array
+        "404":
+          description: Entity not found
+          schema:
+            type: string
+        "500":
+          description: Bad query request
+          schema:
+            type: string
+      summary: Gets BotStance
+      tags:
+      - BotStance
+    patch:
+      consumes:
+      - application/json
+      operationId: updateBotStance
+      parameters:
+      - description: Id
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: BotStance
+        in: body
+        name: bot_stance
+        required: true
+        schema:
+          $ref: '#/definitions/models.BotStance'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.BotStance'
+            type: array
+        "404":
+          description: Cannot find entity
+          schema:
+            type: string
+        "500":
+          description: Error updating entity
+          schema:
+            type: string
+      summary: Updates BotStance
+      tags:
+      - BotStance
+  /bot_stances:
+    get:
+      consumes:
+      - application/json
+      operationId: listBotStances
+      parameters:
+      - description: Relationships [all] for all [number] for depth of relationships
+          to load or [.] separated relationship names
+        in: query
+        name: includes
+        type: string
+      - description: 'Filter on specific fields. Multiple conditions [.] separated
+          Example: col_like_value.col2__val2'
+        in: query
+        name: where
+        type: string
+      - description: 'Filter on specific fields (Chained ors). Multiple conditions
+          [.] separated Example: col_like_value.col2__val2'
+        in: query
+        name: whereOr
+        type: string
+      - description: 'Group by field. Multiple conditions [.] separated Example: field1.field2'
+        in: query
+        name: groupBy
+        type: string
+      - description: 'Rows to limit in response (Default: 10,000)'
+        in: query
+        name: limit
+        type: string
+      - description: Pagination page
+        in: query
+        name: page
+        type: integer
+      - description: Order by [field]
+        in: query
+        name: orderBy
+        type: string
+      - description: Order by field direction
+        in: query
+        name: orderDirection
+        type: string
+      - description: Column names [.] separated to fetch specific fields in response
+        in: query
+        name: select
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.BotStance'
+            type: array
+        "500":
+          description: Bad query request
+          schema:
+            type: string
+      summary: Lists BotStances
+      tags:
+      - BotStance
+  /bot_stances/bulk:
+    post:
+      consumes:
+      - application/json
+      operationId: getBotStancesBulk
+      parameters:
+      - description: body
+        in: body
+        name: Body
+        required: true
+        schema:
+          $ref: '#/definitions/crudcontrollers.BulkFetchByIdsGetRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.BotStance'
+            type: array
+        "500":
+          description: Bad query request
+          schema:
+            type: string
+      summary: Gets BotStances in bulk
+      tags:
+      - BotStance
+  /bot_timer:
+    put:
+      consumes:
+      - application/json
+      operationId: createBotTimer
+      parameters:
+      - description: BotTimer
+        in: body
+        name: bot_timer
+        required: true
+        schema:
+          $ref: '#/definitions/models.BotTimer'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.BotTimer'
+            type: array
+        "500":
+          description: Error inserting entity
+          schema:
+            type: string
+      summary: Creates BotTimer
+      tags:
+      - BotTimer
+  /bot_timer/{id}:
+    delete:
+      consumes:
+      - application/json
+      operationId: deleteBotTimer
+      parameters:
+      - description: botId
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Entity deleted successfully
+          schema:
+            type: string
+        "404":
+          description: Cannot find entity
+          schema:
+            type: string
+        "500":
+          description: Error deleting entity
+          schema:
+            type: string
+      summary: Deletes BotTimer
+      tags:
+      - BotTimer
+    get:
+      consumes:
+      - application/json
+      operationId: getBotTimer
+      parameters:
+      - description: Id
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Relationships [all] for all [number] for depth of relationships
+          to load or [.] separated relationship names
+        in: query
+        name: includes
+        type: string
+      - description: Column names [.] separated to fetch specific fields in response
+        in: query
+        name: select
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.BotTimer'
+            type: array
+        "404":
+          description: Entity not found
+          schema:
+            type: string
+        "500":
+          description: Bad query request
+          schema:
+            type: string
+      summary: Gets BotTimer
+      tags:
+      - BotTimer
+    patch:
+      consumes:
+      - application/json
+      operationId: updateBotTimer
+      parameters:
+      - description: Id
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: BotTimer
+        in: body
+        name: bot_timer
+        required: true
+        schema:
+          $ref: '#/definitions/models.BotTimer'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.BotTimer'
+            type: array
+        "404":
+          description: Cannot find entity
+          schema:
+            type: string
+        "500":
+          description: Error updating entity
+          schema:
+            type: string
+      summary: Updates BotTimer
+      tags:
+      - BotTimer
+  /bot_timers:
+    get:
+      consumes:
+      - application/json
+      operationId: listBotTimers
+      parameters:
+      - description: Relationships [all] for all [number] for depth of relationships
+          to load or [.] separated relationship names
+        in: query
+        name: includes
+        type: string
+      - description: 'Filter on specific fields. Multiple conditions [.] separated
+          Example: col_like_value.col2__val2'
+        in: query
+        name: where
+        type: string
+      - description: 'Filter on specific fields (Chained ors). Multiple conditions
+          [.] separated Example: col_like_value.col2__val2'
+        in: query
+        name: whereOr
+        type: string
+      - description: 'Group by field. Multiple conditions [.] separated Example: field1.field2'
+        in: query
+        name: groupBy
+        type: string
+      - description: 'Rows to limit in response (Default: 10,000)'
+        in: query
+        name: limit
+        type: string
+      - description: Pagination page
+        in: query
+        name: page
+        type: integer
+      - description: Order by [field]
+        in: query
+        name: orderBy
+        type: string
+      - description: Order by field direction
+        in: query
+        name: orderDirection
+        type: string
+      - description: Column names [.] separated to fetch specific fields in response
+        in: query
+        name: select
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.BotTimer'
+            type: array
+        "500":
+          description: Bad query request
+          schema:
+            type: string
+      summary: Lists BotTimers
+      tags:
+      - BotTimer
+  /bot_timers/bulk:
+    post:
+      consumes:
+      - application/json
+      operationId: getBotTimersBulk
+      parameters:
+      - description: body
+        in: body
+        name: Body
+        required: true
+        schema:
+          $ref: '#/definitions/crudcontrollers.BulkFetchByIdsGetRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.BotTimer'
+            type: array
+        "500":
+          description: Bad query request
+          schema:
+            type: string
+      summary: Gets BotTimers in bulk
+      tags:
+      - BotTimer
   /bug:
     put:
       consumes:

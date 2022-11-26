@@ -239,6 +239,11 @@ func GetDbSchemaKeysConfigTable(table string) []DbSchemaRowResult {
 func GetDatabaseTables() []string {
 	tables := []string{}
 	for table := range GetDbSchemaConfig() {
+		// skip spire tables
+		if strings.Contains("spire_", table) {
+			continue
+		}
+		
 		tables = append(tables, table)
 	}
 	return tables

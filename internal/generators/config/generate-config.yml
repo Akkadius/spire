@@ -6,6 +6,8 @@ database:
     - proximities
     - task_activities_backup_
     - backup
+    - vw_
+    - peq_admin
 #    - perl_event_export_settings
     - group_leader
   table_connections:

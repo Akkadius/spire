@@ -6275,6 +6275,664 @@ const docTemplate = `{
                 }
             }
         },
+        "/bot_buff": {
+            "put": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "BotBuff"
+                ],
+                "summary": "Creates BotBuff",
+                "operationId": "createBotBuff",
+                "parameters": [
+                    {
+                        "description": "BotBuff",
+                        "name": "bot_buff",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.BotBuff"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.BotBuff"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Error inserting entity",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/bot_buff/{id}": {
+            "get": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "BotBuff"
+                ],
+                "summary": "Gets BotBuff",
+                "operationId": "getBotBuff",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names",
+                        "name": "includes",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Column names [.] separated to fetch specific fields in response",
+                        "name": "select",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.BotBuff"
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Entity not found",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Bad query request",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "BotBuff"
+                ],
+                "summary": "Deletes BotBuff",
+                "operationId": "deleteBotBuff",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "buffsIndex",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Entity deleted successfully",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "404": {
+                        "description": "Cannot find entity",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Error deleting entity",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            },
+            "patch": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "BotBuff"
+                ],
+                "summary": "Updates BotBuff",
+                "operationId": "updateBotBuff",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "BotBuff",
+                        "name": "bot_buff",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.BotBuff"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.BotBuff"
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Cannot find entity",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Error updating entity",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/bot_buffs": {
+            "get": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "BotBuff"
+                ],
+                "summary": "Lists BotBuffs",
+                "operationId": "listBotBuffs",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names",
+                        "name": "includes",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Filter on specific fields. Multiple conditions [.] separated Example: col_like_value.col2__val2",
+                        "name": "where",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Filter on specific fields (Chained ors). Multiple conditions [.] separated Example: col_like_value.col2__val2",
+                        "name": "whereOr",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Group by field. Multiple conditions [.] separated Example: field1.field2",
+                        "name": "groupBy",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Rows to limit in response (Default: 10,000)",
+                        "name": "limit",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Pagination page",
+                        "name": "page",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Order by [field]",
+                        "name": "orderBy",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Order by field direction",
+                        "name": "orderDirection",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Column names [.] separated to fetch specific fields in response",
+                        "name": "select",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.BotBuff"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Bad query request",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/bot_buffs/bulk": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "BotBuff"
+                ],
+                "summary": "Gets BotBuffs in bulk",
+                "operationId": "getBotBuffsBulk",
+                "parameters": [
+                    {
+                        "description": "body",
+                        "name": "Body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/crudcontrollers.BulkFetchByIdsGetRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.BotBuff"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Bad query request",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/bot_create_combination": {
+            "put": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "BotCreateCombination"
+                ],
+                "summary": "Creates BotCreateCombination",
+                "operationId": "createBotCreateCombination",
+                "parameters": [
+                    {
+                        "description": "BotCreateCombination",
+                        "name": "bot_create_combination",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.BotCreateCombination"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.BotCreateCombination"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Error inserting entity",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/bot_create_combination/{id}": {
+            "get": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "BotCreateCombination"
+                ],
+                "summary": "Gets BotCreateCombination",
+                "operationId": "getBotCreateCombination",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names",
+                        "name": "includes",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Column names [.] separated to fetch specific fields in response",
+                        "name": "select",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.BotCreateCombination"
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Entity not found",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Bad query request",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "BotCreateCombination"
+                ],
+                "summary": "Deletes BotCreateCombination",
+                "operationId": "deleteBotCreateCombination",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "race",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Entity deleted successfully",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "404": {
+                        "description": "Cannot find entity",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Error deleting entity",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            },
+            "patch": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "BotCreateCombination"
+                ],
+                "summary": "Updates BotCreateCombination",
+                "operationId": "updateBotCreateCombination",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "BotCreateCombination",
+                        "name": "bot_create_combination",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.BotCreateCombination"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.BotCreateCombination"
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Cannot find entity",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Error updating entity",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/bot_create_combinations": {
+            "get": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "BotCreateCombination"
+                ],
+                "summary": "Lists BotCreateCombinations",
+                "operationId": "listBotCreateCombinations",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names",
+                        "name": "includes",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Filter on specific fields. Multiple conditions [.] separated Example: col_like_value.col2__val2",
+                        "name": "where",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Filter on specific fields (Chained ors). Multiple conditions [.] separated Example: col_like_value.col2__val2",
+                        "name": "whereOr",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Group by field. Multiple conditions [.] separated Example: field1.field2",
+                        "name": "groupBy",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Rows to limit in response (Default: 10,000)",
+                        "name": "limit",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Pagination page",
+                        "name": "page",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Order by [field]",
+                        "name": "orderBy",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Order by field direction",
+                        "name": "orderDirection",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Column names [.] separated to fetch specific fields in response",
+                        "name": "select",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.BotCreateCombination"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Bad query request",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/bot_create_combinations/bulk": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "BotCreateCombination"
+                ],
+                "summary": "Gets BotCreateCombinations in bulk",
+                "operationId": "getBotCreateCombinationsBulk",
+                "parameters": [
+                    {
+                        "description": "body",
+                        "name": "Body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/crudcontrollers.BulkFetchByIdsGetRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.BotCreateCombination"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Bad query request",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
         "/bot_data": {
             "get": {
                 "consumes": [
@@ -6604,6 +7262,4283 @@ const docTemplate = `{
                 }
             }
         },
+        "/bot_group": {
+            "put": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "BotGroup"
+                ],
+                "summary": "Creates BotGroup",
+                "operationId": "createBotGroup",
+                "parameters": [
+                    {
+                        "description": "BotGroup",
+                        "name": "bot_group",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.BotGroup"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.BotGroup"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Error inserting entity",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/bot_group/{id}": {
+            "get": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "BotGroup"
+                ],
+                "summary": "Gets BotGroup",
+                "operationId": "getBotGroup",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names",
+                        "name": "includes",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Column names [.] separated to fetch specific fields in response",
+                        "name": "select",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.BotGroup"
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Entity not found",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Bad query request",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "BotGroup"
+                ],
+                "summary": "Deletes BotGroup",
+                "operationId": "deleteBotGroup",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "groupsIndex",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Entity deleted successfully",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "404": {
+                        "description": "Cannot find entity",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Error deleting entity",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            },
+            "patch": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "BotGroup"
+                ],
+                "summary": "Updates BotGroup",
+                "operationId": "updateBotGroup",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "BotGroup",
+                        "name": "bot_group",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.BotGroup"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.BotGroup"
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Cannot find entity",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Error updating entity",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/bot_group_member": {
+            "put": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "BotGroupMember"
+                ],
+                "summary": "Creates BotGroupMember",
+                "operationId": "createBotGroupMember",
+                "parameters": [
+                    {
+                        "description": "BotGroupMember",
+                        "name": "bot_group_member",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.BotGroupMember"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.BotGroupMember"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Error inserting entity",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/bot_group_member/{id}": {
+            "get": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "BotGroupMember"
+                ],
+                "summary": "Gets BotGroupMember",
+                "operationId": "getBotGroupMember",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names",
+                        "name": "includes",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Column names [.] separated to fetch specific fields in response",
+                        "name": "select",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.BotGroupMember"
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Entity not found",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Bad query request",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "BotGroupMember"
+                ],
+                "summary": "Deletes BotGroupMember",
+                "operationId": "deleteBotGroupMember",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "groupMembersIndex",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Entity deleted successfully",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "404": {
+                        "description": "Cannot find entity",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Error deleting entity",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            },
+            "patch": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "BotGroupMember"
+                ],
+                "summary": "Updates BotGroupMember",
+                "operationId": "updateBotGroupMember",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "BotGroupMember",
+                        "name": "bot_group_member",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.BotGroupMember"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.BotGroupMember"
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Cannot find entity",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Error updating entity",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/bot_group_members": {
+            "get": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "BotGroupMember"
+                ],
+                "summary": "Lists BotGroupMembers",
+                "operationId": "listBotGroupMembers",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names",
+                        "name": "includes",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Filter on specific fields. Multiple conditions [.] separated Example: col_like_value.col2__val2",
+                        "name": "where",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Filter on specific fields (Chained ors). Multiple conditions [.] separated Example: col_like_value.col2__val2",
+                        "name": "whereOr",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Group by field. Multiple conditions [.] separated Example: field1.field2",
+                        "name": "groupBy",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Rows to limit in response (Default: 10,000)",
+                        "name": "limit",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Pagination page",
+                        "name": "page",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Order by [field]",
+                        "name": "orderBy",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Order by field direction",
+                        "name": "orderDirection",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Column names [.] separated to fetch specific fields in response",
+                        "name": "select",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.BotGroupMember"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Bad query request",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/bot_group_members/bulk": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "BotGroupMember"
+                ],
+                "summary": "Gets BotGroupMembers in bulk",
+                "operationId": "getBotGroupMembersBulk",
+                "parameters": [
+                    {
+                        "description": "body",
+                        "name": "Body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/crudcontrollers.BulkFetchByIdsGetRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.BotGroupMember"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Bad query request",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/bot_groups": {
+            "get": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "BotGroup"
+                ],
+                "summary": "Lists BotGroups",
+                "operationId": "listBotGroups",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names",
+                        "name": "includes",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Filter on specific fields. Multiple conditions [.] separated Example: col_like_value.col2__val2",
+                        "name": "where",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Filter on specific fields (Chained ors). Multiple conditions [.] separated Example: col_like_value.col2__val2",
+                        "name": "whereOr",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Group by field. Multiple conditions [.] separated Example: field1.field2",
+                        "name": "groupBy",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Rows to limit in response (Default: 10,000)",
+                        "name": "limit",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Pagination page",
+                        "name": "page",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Order by [field]",
+                        "name": "orderBy",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Order by field direction",
+                        "name": "orderDirection",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Column names [.] separated to fetch specific fields in response",
+                        "name": "select",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.BotGroup"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Bad query request",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/bot_groups/bulk": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "BotGroup"
+                ],
+                "summary": "Gets BotGroups in bulk",
+                "operationId": "getBotGroupsBulk",
+                "parameters": [
+                    {
+                        "description": "body",
+                        "name": "Body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/crudcontrollers.BulkFetchByIdsGetRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.BotGroup"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Bad query request",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/bot_guild_member": {
+            "put": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "BotGuildMember"
+                ],
+                "summary": "Creates BotGuildMember",
+                "operationId": "createBotGuildMember",
+                "parameters": [
+                    {
+                        "description": "BotGuildMember",
+                        "name": "bot_guild_member",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.BotGuildMember"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.BotGuildMember"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Error inserting entity",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/bot_guild_member/{id}": {
+            "get": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "BotGuildMember"
+                ],
+                "summary": "Gets BotGuildMember",
+                "operationId": "getBotGuildMember",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names",
+                        "name": "includes",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Column names [.] separated to fetch specific fields in response",
+                        "name": "select",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.BotGuildMember"
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Entity not found",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Bad query request",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "BotGuildMember"
+                ],
+                "summary": "Deletes BotGuildMember",
+                "operationId": "deleteBotGuildMember",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "botId",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Entity deleted successfully",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "404": {
+                        "description": "Cannot find entity",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Error deleting entity",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            },
+            "patch": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "BotGuildMember"
+                ],
+                "summary": "Updates BotGuildMember",
+                "operationId": "updateBotGuildMember",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "BotGuildMember",
+                        "name": "bot_guild_member",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.BotGuildMember"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.BotGuildMember"
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Cannot find entity",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Error updating entity",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/bot_guild_members": {
+            "get": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "BotGuildMember"
+                ],
+                "summary": "Lists BotGuildMembers",
+                "operationId": "listBotGuildMembers",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names",
+                        "name": "includes",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Filter on specific fields. Multiple conditions [.] separated Example: col_like_value.col2__val2",
+                        "name": "where",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Filter on specific fields (Chained ors). Multiple conditions [.] separated Example: col_like_value.col2__val2",
+                        "name": "whereOr",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Group by field. Multiple conditions [.] separated Example: field1.field2",
+                        "name": "groupBy",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Rows to limit in response (Default: 10,000)",
+                        "name": "limit",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Pagination page",
+                        "name": "page",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Order by [field]",
+                        "name": "orderBy",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Order by field direction",
+                        "name": "orderDirection",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Column names [.] separated to fetch specific fields in response",
+                        "name": "select",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.BotGuildMember"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Bad query request",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/bot_guild_members/bulk": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "BotGuildMember"
+                ],
+                "summary": "Gets BotGuildMembers in bulk",
+                "operationId": "getBotGuildMembersBulk",
+                "parameters": [
+                    {
+                        "description": "body",
+                        "name": "Body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/crudcontrollers.BulkFetchByIdsGetRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.BotGuildMember"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Bad query request",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/bot_heal_rotation": {
+            "put": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "BotHealRotation"
+                ],
+                "summary": "Creates BotHealRotation",
+                "operationId": "createBotHealRotation",
+                "parameters": [
+                    {
+                        "description": "BotHealRotation",
+                        "name": "bot_heal_rotation",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.BotHealRotation"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.BotHealRotation"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Error inserting entity",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/bot_heal_rotation/{id}": {
+            "get": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "BotHealRotation"
+                ],
+                "summary": "Gets BotHealRotation",
+                "operationId": "getBotHealRotation",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names",
+                        "name": "includes",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Column names [.] separated to fetch specific fields in response",
+                        "name": "select",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.BotHealRotation"
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Entity not found",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Bad query request",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "BotHealRotation"
+                ],
+                "summary": "Deletes BotHealRotation",
+                "operationId": "deleteBotHealRotation",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "healRotationIndex",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Entity deleted successfully",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "404": {
+                        "description": "Cannot find entity",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Error deleting entity",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            },
+            "patch": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "BotHealRotation"
+                ],
+                "summary": "Updates BotHealRotation",
+                "operationId": "updateBotHealRotation",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "BotHealRotation",
+                        "name": "bot_heal_rotation",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.BotHealRotation"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.BotHealRotation"
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Cannot find entity",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Error updating entity",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/bot_heal_rotation_member": {
+            "put": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "BotHealRotationMember"
+                ],
+                "summary": "Creates BotHealRotationMember",
+                "operationId": "createBotHealRotationMember",
+                "parameters": [
+                    {
+                        "description": "BotHealRotationMember",
+                        "name": "bot_heal_rotation_member",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.BotHealRotationMember"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.BotHealRotationMember"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Error inserting entity",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/bot_heal_rotation_member/{id}": {
+            "get": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "BotHealRotationMember"
+                ],
+                "summary": "Gets BotHealRotationMember",
+                "operationId": "getBotHealRotationMember",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names",
+                        "name": "includes",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Column names [.] separated to fetch specific fields in response",
+                        "name": "select",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.BotHealRotationMember"
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Entity not found",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Bad query request",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "BotHealRotationMember"
+                ],
+                "summary": "Deletes BotHealRotationMember",
+                "operationId": "deleteBotHealRotationMember",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "memberIndex",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Entity deleted successfully",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "404": {
+                        "description": "Cannot find entity",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Error deleting entity",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            },
+            "patch": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "BotHealRotationMember"
+                ],
+                "summary": "Updates BotHealRotationMember",
+                "operationId": "updateBotHealRotationMember",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "BotHealRotationMember",
+                        "name": "bot_heal_rotation_member",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.BotHealRotationMember"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.BotHealRotationMember"
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Cannot find entity",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Error updating entity",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/bot_heal_rotation_members": {
+            "get": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "BotHealRotationMember"
+                ],
+                "summary": "Lists BotHealRotationMembers",
+                "operationId": "listBotHealRotationMembers",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names",
+                        "name": "includes",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Filter on specific fields. Multiple conditions [.] separated Example: col_like_value.col2__val2",
+                        "name": "where",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Filter on specific fields (Chained ors). Multiple conditions [.] separated Example: col_like_value.col2__val2",
+                        "name": "whereOr",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Group by field. Multiple conditions [.] separated Example: field1.field2",
+                        "name": "groupBy",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Rows to limit in response (Default: 10,000)",
+                        "name": "limit",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Pagination page",
+                        "name": "page",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Order by [field]",
+                        "name": "orderBy",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Order by field direction",
+                        "name": "orderDirection",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Column names [.] separated to fetch specific fields in response",
+                        "name": "select",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.BotHealRotationMember"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Bad query request",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/bot_heal_rotation_members/bulk": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "BotHealRotationMember"
+                ],
+                "summary": "Gets BotHealRotationMembers in bulk",
+                "operationId": "getBotHealRotationMembersBulk",
+                "parameters": [
+                    {
+                        "description": "body",
+                        "name": "Body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/crudcontrollers.BulkFetchByIdsGetRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.BotHealRotationMember"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Bad query request",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/bot_heal_rotation_target": {
+            "put": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "BotHealRotationTarget"
+                ],
+                "summary": "Creates BotHealRotationTarget",
+                "operationId": "createBotHealRotationTarget",
+                "parameters": [
+                    {
+                        "description": "BotHealRotationTarget",
+                        "name": "bot_heal_rotation_target",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.BotHealRotationTarget"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.BotHealRotationTarget"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Error inserting entity",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/bot_heal_rotation_target/{id}": {
+            "get": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "BotHealRotationTarget"
+                ],
+                "summary": "Gets BotHealRotationTarget",
+                "operationId": "getBotHealRotationTarget",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names",
+                        "name": "includes",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Column names [.] separated to fetch specific fields in response",
+                        "name": "select",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.BotHealRotationTarget"
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Entity not found",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Bad query request",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "BotHealRotationTarget"
+                ],
+                "summary": "Deletes BotHealRotationTarget",
+                "operationId": "deleteBotHealRotationTarget",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "targetIndex",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Entity deleted successfully",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "404": {
+                        "description": "Cannot find entity",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Error deleting entity",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            },
+            "patch": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "BotHealRotationTarget"
+                ],
+                "summary": "Updates BotHealRotationTarget",
+                "operationId": "updateBotHealRotationTarget",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "BotHealRotationTarget",
+                        "name": "bot_heal_rotation_target",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.BotHealRotationTarget"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.BotHealRotationTarget"
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Cannot find entity",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Error updating entity",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/bot_heal_rotation_targets": {
+            "get": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "BotHealRotationTarget"
+                ],
+                "summary": "Lists BotHealRotationTargets",
+                "operationId": "listBotHealRotationTargets",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names",
+                        "name": "includes",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Filter on specific fields. Multiple conditions [.] separated Example: col_like_value.col2__val2",
+                        "name": "where",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Filter on specific fields (Chained ors). Multiple conditions [.] separated Example: col_like_value.col2__val2",
+                        "name": "whereOr",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Group by field. Multiple conditions [.] separated Example: field1.field2",
+                        "name": "groupBy",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Rows to limit in response (Default: 10,000)",
+                        "name": "limit",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Pagination page",
+                        "name": "page",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Order by [field]",
+                        "name": "orderBy",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Order by field direction",
+                        "name": "orderDirection",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Column names [.] separated to fetch specific fields in response",
+                        "name": "select",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.BotHealRotationTarget"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Bad query request",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/bot_heal_rotation_targets/bulk": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "BotHealRotationTarget"
+                ],
+                "summary": "Gets BotHealRotationTargets in bulk",
+                "operationId": "getBotHealRotationTargetsBulk",
+                "parameters": [
+                    {
+                        "description": "body",
+                        "name": "Body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/crudcontrollers.BulkFetchByIdsGetRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.BotHealRotationTarget"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Bad query request",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/bot_heal_rotations": {
+            "get": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "BotHealRotation"
+                ],
+                "summary": "Lists BotHealRotations",
+                "operationId": "listBotHealRotations",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names",
+                        "name": "includes",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Filter on specific fields. Multiple conditions [.] separated Example: col_like_value.col2__val2",
+                        "name": "where",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Filter on specific fields (Chained ors). Multiple conditions [.] separated Example: col_like_value.col2__val2",
+                        "name": "whereOr",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Group by field. Multiple conditions [.] separated Example: field1.field2",
+                        "name": "groupBy",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Rows to limit in response (Default: 10,000)",
+                        "name": "limit",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Pagination page",
+                        "name": "page",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Order by [field]",
+                        "name": "orderBy",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Order by field direction",
+                        "name": "orderDirection",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Column names [.] separated to fetch specific fields in response",
+                        "name": "select",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.BotHealRotation"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Bad query request",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/bot_heal_rotations/bulk": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "BotHealRotation"
+                ],
+                "summary": "Gets BotHealRotations in bulk",
+                "operationId": "getBotHealRotationsBulk",
+                "parameters": [
+                    {
+                        "description": "body",
+                        "name": "Body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/crudcontrollers.BulkFetchByIdsGetRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.BotHealRotation"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Bad query request",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/bot_inspect_message": {
+            "put": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "BotInspectMessage"
+                ],
+                "summary": "Creates BotInspectMessage",
+                "operationId": "createBotInspectMessage",
+                "parameters": [
+                    {
+                        "description": "BotInspectMessage",
+                        "name": "bot_inspect_message",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.BotInspectMessage"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.BotInspectMessage"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Error inserting entity",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/bot_inspect_message/{id}": {
+            "get": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "BotInspectMessage"
+                ],
+                "summary": "Gets BotInspectMessage",
+                "operationId": "getBotInspectMessage",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names",
+                        "name": "includes",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Column names [.] separated to fetch specific fields in response",
+                        "name": "select",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.BotInspectMessage"
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Entity not found",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Bad query request",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "BotInspectMessage"
+                ],
+                "summary": "Deletes BotInspectMessage",
+                "operationId": "deleteBotInspectMessage",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "botId",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Entity deleted successfully",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "404": {
+                        "description": "Cannot find entity",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Error deleting entity",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            },
+            "patch": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "BotInspectMessage"
+                ],
+                "summary": "Updates BotInspectMessage",
+                "operationId": "updateBotInspectMessage",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "BotInspectMessage",
+                        "name": "bot_inspect_message",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.BotInspectMessage"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.BotInspectMessage"
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Cannot find entity",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Error updating entity",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/bot_inspect_messages": {
+            "get": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "BotInspectMessage"
+                ],
+                "summary": "Lists BotInspectMessages",
+                "operationId": "listBotInspectMessages",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names",
+                        "name": "includes",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Filter on specific fields. Multiple conditions [.] separated Example: col_like_value.col2__val2",
+                        "name": "where",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Filter on specific fields (Chained ors). Multiple conditions [.] separated Example: col_like_value.col2__val2",
+                        "name": "whereOr",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Group by field. Multiple conditions [.] separated Example: field1.field2",
+                        "name": "groupBy",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Rows to limit in response (Default: 10,000)",
+                        "name": "limit",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Pagination page",
+                        "name": "page",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Order by [field]",
+                        "name": "orderBy",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Order by field direction",
+                        "name": "orderDirection",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Column names [.] separated to fetch specific fields in response",
+                        "name": "select",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.BotInspectMessage"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Bad query request",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/bot_inspect_messages/bulk": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "BotInspectMessage"
+                ],
+                "summary": "Gets BotInspectMessages in bulk",
+                "operationId": "getBotInspectMessagesBulk",
+                "parameters": [
+                    {
+                        "description": "body",
+                        "name": "Body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/crudcontrollers.BulkFetchByIdsGetRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.BotInspectMessage"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Bad query request",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/bot_inventories": {
+            "get": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "BotInventory"
+                ],
+                "summary": "Lists BotInventories",
+                "operationId": "listBotInventories",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names",
+                        "name": "includes",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Filter on specific fields. Multiple conditions [.] separated Example: col_like_value.col2__val2",
+                        "name": "where",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Filter on specific fields (Chained ors). Multiple conditions [.] separated Example: col_like_value.col2__val2",
+                        "name": "whereOr",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Group by field. Multiple conditions [.] separated Example: field1.field2",
+                        "name": "groupBy",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Rows to limit in response (Default: 10,000)",
+                        "name": "limit",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Pagination page",
+                        "name": "page",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Order by [field]",
+                        "name": "orderBy",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Order by field direction",
+                        "name": "orderDirection",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Column names [.] separated to fetch specific fields in response",
+                        "name": "select",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.BotInventory"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Bad query request",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/bot_inventories/bulk": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "BotInventory"
+                ],
+                "summary": "Gets BotInventories in bulk",
+                "operationId": "getBotInventoriesBulk",
+                "parameters": [
+                    {
+                        "description": "body",
+                        "name": "Body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/crudcontrollers.BulkFetchByIdsGetRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.BotInventory"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Bad query request",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/bot_inventory": {
+            "put": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "BotInventory"
+                ],
+                "summary": "Creates BotInventory",
+                "operationId": "createBotInventory",
+                "parameters": [
+                    {
+                        "description": "BotInventory",
+                        "name": "bot_inventory",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.BotInventory"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.BotInventory"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Error inserting entity",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/bot_inventory/{id}": {
+            "get": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "BotInventory"
+                ],
+                "summary": "Gets BotInventory",
+                "operationId": "getBotInventory",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names",
+                        "name": "includes",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Column names [.] separated to fetch specific fields in response",
+                        "name": "select",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.BotInventory"
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Entity not found",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Bad query request",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "BotInventory"
+                ],
+                "summary": "Deletes BotInventory",
+                "operationId": "deleteBotInventory",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "inventoriesIndex",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Entity deleted successfully",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "404": {
+                        "description": "Cannot find entity",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Error deleting entity",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            },
+            "patch": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "BotInventory"
+                ],
+                "summary": "Updates BotInventory",
+                "operationId": "updateBotInventory",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "BotInventory",
+                        "name": "bot_inventory",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.BotInventory"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.BotInventory"
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Cannot find entity",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Error updating entity",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/bot_owner_option": {
+            "put": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "BotOwnerOption"
+                ],
+                "summary": "Creates BotOwnerOption",
+                "operationId": "createBotOwnerOption",
+                "parameters": [
+                    {
+                        "description": "BotOwnerOption",
+                        "name": "bot_owner_option",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.BotOwnerOption"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.BotOwnerOption"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Error inserting entity",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/bot_owner_option/{id}": {
+            "get": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "BotOwnerOption"
+                ],
+                "summary": "Gets BotOwnerOption",
+                "operationId": "getBotOwnerOption",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names",
+                        "name": "includes",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Column names [.] separated to fetch specific fields in response",
+                        "name": "select",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.BotOwnerOption"
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Entity not found",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Bad query request",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "BotOwnerOption"
+                ],
+                "summary": "Deletes BotOwnerOption",
+                "operationId": "deleteBotOwnerOption",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "ownerId",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Entity deleted successfully",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "404": {
+                        "description": "Cannot find entity",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Error deleting entity",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            },
+            "patch": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "BotOwnerOption"
+                ],
+                "summary": "Updates BotOwnerOption",
+                "operationId": "updateBotOwnerOption",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "BotOwnerOption",
+                        "name": "bot_owner_option",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.BotOwnerOption"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.BotOwnerOption"
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Cannot find entity",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Error updating entity",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/bot_owner_options": {
+            "get": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "BotOwnerOption"
+                ],
+                "summary": "Lists BotOwnerOptions",
+                "operationId": "listBotOwnerOptions",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names",
+                        "name": "includes",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Filter on specific fields. Multiple conditions [.] separated Example: col_like_value.col2__val2",
+                        "name": "where",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Filter on specific fields (Chained ors). Multiple conditions [.] separated Example: col_like_value.col2__val2",
+                        "name": "whereOr",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Group by field. Multiple conditions [.] separated Example: field1.field2",
+                        "name": "groupBy",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Rows to limit in response (Default: 10,000)",
+                        "name": "limit",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Pagination page",
+                        "name": "page",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Order by [field]",
+                        "name": "orderBy",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Order by field direction",
+                        "name": "orderDirection",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Column names [.] separated to fetch specific fields in response",
+                        "name": "select",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.BotOwnerOption"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Bad query request",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/bot_owner_options/bulk": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "BotOwnerOption"
+                ],
+                "summary": "Gets BotOwnerOptions in bulk",
+                "operationId": "getBotOwnerOptionsBulk",
+                "parameters": [
+                    {
+                        "description": "body",
+                        "name": "Body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/crudcontrollers.BulkFetchByIdsGetRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.BotOwnerOption"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Bad query request",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/bot_pet": {
+            "put": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "BotPet"
+                ],
+                "summary": "Creates BotPet",
+                "operationId": "createBotPet",
+                "parameters": [
+                    {
+                        "description": "BotPet",
+                        "name": "bot_pet",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.BotPet"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.BotPet"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Error inserting entity",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/bot_pet/{id}": {
+            "get": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "BotPet"
+                ],
+                "summary": "Gets BotPet",
+                "operationId": "getBotPet",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names",
+                        "name": "includes",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Column names [.] separated to fetch specific fields in response",
+                        "name": "select",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.BotPet"
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Entity not found",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Bad query request",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "BotPet"
+                ],
+                "summary": "Deletes BotPet",
+                "operationId": "deleteBotPet",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "petsIndex",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Entity deleted successfully",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "404": {
+                        "description": "Cannot find entity",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Error deleting entity",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            },
+            "patch": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "BotPet"
+                ],
+                "summary": "Updates BotPet",
+                "operationId": "updateBotPet",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "BotPet",
+                        "name": "bot_pet",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.BotPet"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.BotPet"
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Cannot find entity",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Error updating entity",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/bot_pet_buff": {
+            "put": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "BotPetBuff"
+                ],
+                "summary": "Creates BotPetBuff",
+                "operationId": "createBotPetBuff",
+                "parameters": [
+                    {
+                        "description": "BotPetBuff",
+                        "name": "bot_pet_buff",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.BotPetBuff"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.BotPetBuff"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Error inserting entity",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/bot_pet_buff/{id}": {
+            "get": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "BotPetBuff"
+                ],
+                "summary": "Gets BotPetBuff",
+                "operationId": "getBotPetBuff",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names",
+                        "name": "includes",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Column names [.] separated to fetch specific fields in response",
+                        "name": "select",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.BotPetBuff"
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Entity not found",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Bad query request",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "BotPetBuff"
+                ],
+                "summary": "Deletes BotPetBuff",
+                "operationId": "deleteBotPetBuff",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "petBuffsIndex",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Entity deleted successfully",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "404": {
+                        "description": "Cannot find entity",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Error deleting entity",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            },
+            "patch": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "BotPetBuff"
+                ],
+                "summary": "Updates BotPetBuff",
+                "operationId": "updateBotPetBuff",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "BotPetBuff",
+                        "name": "bot_pet_buff",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.BotPetBuff"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.BotPetBuff"
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Cannot find entity",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Error updating entity",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/bot_pet_buffs": {
+            "get": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "BotPetBuff"
+                ],
+                "summary": "Lists BotPetBuffs",
+                "operationId": "listBotPetBuffs",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names",
+                        "name": "includes",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Filter on specific fields. Multiple conditions [.] separated Example: col_like_value.col2__val2",
+                        "name": "where",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Filter on specific fields (Chained ors). Multiple conditions [.] separated Example: col_like_value.col2__val2",
+                        "name": "whereOr",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Group by field. Multiple conditions [.] separated Example: field1.field2",
+                        "name": "groupBy",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Rows to limit in response (Default: 10,000)",
+                        "name": "limit",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Pagination page",
+                        "name": "page",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Order by [field]",
+                        "name": "orderBy",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Order by field direction",
+                        "name": "orderDirection",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Column names [.] separated to fetch specific fields in response",
+                        "name": "select",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.BotPetBuff"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Bad query request",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/bot_pet_buffs/bulk": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "BotPetBuff"
+                ],
+                "summary": "Gets BotPetBuffs in bulk",
+                "operationId": "getBotPetBuffsBulk",
+                "parameters": [
+                    {
+                        "description": "body",
+                        "name": "Body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/crudcontrollers.BulkFetchByIdsGetRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.BotPetBuff"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Bad query request",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/bot_pet_inventories": {
+            "get": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "BotPetInventory"
+                ],
+                "summary": "Lists BotPetInventories",
+                "operationId": "listBotPetInventories",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names",
+                        "name": "includes",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Filter on specific fields. Multiple conditions [.] separated Example: col_like_value.col2__val2",
+                        "name": "where",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Filter on specific fields (Chained ors). Multiple conditions [.] separated Example: col_like_value.col2__val2",
+                        "name": "whereOr",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Group by field. Multiple conditions [.] separated Example: field1.field2",
+                        "name": "groupBy",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Rows to limit in response (Default: 10,000)",
+                        "name": "limit",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Pagination page",
+                        "name": "page",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Order by [field]",
+                        "name": "orderBy",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Order by field direction",
+                        "name": "orderDirection",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Column names [.] separated to fetch specific fields in response",
+                        "name": "select",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.BotPetInventory"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Bad query request",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/bot_pet_inventories/bulk": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "BotPetInventory"
+                ],
+                "summary": "Gets BotPetInventories in bulk",
+                "operationId": "getBotPetInventoriesBulk",
+                "parameters": [
+                    {
+                        "description": "body",
+                        "name": "Body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/crudcontrollers.BulkFetchByIdsGetRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.BotPetInventory"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Bad query request",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/bot_pet_inventory": {
+            "put": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "BotPetInventory"
+                ],
+                "summary": "Creates BotPetInventory",
+                "operationId": "createBotPetInventory",
+                "parameters": [
+                    {
+                        "description": "BotPetInventory",
+                        "name": "bot_pet_inventory",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.BotPetInventory"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.BotPetInventory"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Error inserting entity",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/bot_pet_inventory/{id}": {
+            "get": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "BotPetInventory"
+                ],
+                "summary": "Gets BotPetInventory",
+                "operationId": "getBotPetInventory",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names",
+                        "name": "includes",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Column names [.] separated to fetch specific fields in response",
+                        "name": "select",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.BotPetInventory"
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Entity not found",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Bad query request",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "BotPetInventory"
+                ],
+                "summary": "Deletes BotPetInventory",
+                "operationId": "deleteBotPetInventory",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "petInventoriesIndex",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Entity deleted successfully",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "404": {
+                        "description": "Cannot find entity",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Error deleting entity",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            },
+            "patch": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "BotPetInventory"
+                ],
+                "summary": "Updates BotPetInventory",
+                "operationId": "updateBotPetInventory",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "BotPetInventory",
+                        "name": "bot_pet_inventory",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.BotPetInventory"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.BotPetInventory"
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Cannot find entity",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Error updating entity",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/bot_pets": {
+            "get": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "BotPet"
+                ],
+                "summary": "Lists BotPets",
+                "operationId": "listBotPets",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names",
+                        "name": "includes",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Filter on specific fields. Multiple conditions [.] separated Example: col_like_value.col2__val2",
+                        "name": "where",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Filter on specific fields (Chained ors). Multiple conditions [.] separated Example: col_like_value.col2__val2",
+                        "name": "whereOr",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Group by field. Multiple conditions [.] separated Example: field1.field2",
+                        "name": "groupBy",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Rows to limit in response (Default: 10,000)",
+                        "name": "limit",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Pagination page",
+                        "name": "page",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Order by [field]",
+                        "name": "orderBy",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Order by field direction",
+                        "name": "orderDirection",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Column names [.] separated to fetch specific fields in response",
+                        "name": "select",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.BotPet"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Bad query request",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/bot_pets/bulk": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "BotPet"
+                ],
+                "summary": "Gets BotPets in bulk",
+                "operationId": "getBotPetsBulk",
+                "parameters": [
+                    {
+                        "description": "body",
+                        "name": "Body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/crudcontrollers.BulkFetchByIdsGetRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.BotPet"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Bad query request",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/bot_spell_casting_chance": {
+            "put": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "BotSpellCastingChance"
+                ],
+                "summary": "Creates BotSpellCastingChance",
+                "operationId": "createBotSpellCastingChance",
+                "parameters": [
+                    {
+                        "description": "BotSpellCastingChance",
+                        "name": "bot_spell_casting_chance",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.BotSpellCastingChance"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.BotSpellCastingChance"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Error inserting entity",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/bot_spell_casting_chance/{id}": {
+            "get": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "BotSpellCastingChance"
+                ],
+                "summary": "Gets BotSpellCastingChance",
+                "operationId": "getBotSpellCastingChance",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names",
+                        "name": "includes",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Column names [.] separated to fetch specific fields in response",
+                        "name": "select",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.BotSpellCastingChance"
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Entity not found",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Bad query request",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "BotSpellCastingChance"
+                ],
+                "summary": "Deletes BotSpellCastingChance",
+                "operationId": "deleteBotSpellCastingChance",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Entity deleted successfully",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "404": {
+                        "description": "Cannot find entity",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Error deleting entity",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            },
+            "patch": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "BotSpellCastingChance"
+                ],
+                "summary": "Updates BotSpellCastingChance",
+                "operationId": "updateBotSpellCastingChance",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "BotSpellCastingChance",
+                        "name": "bot_spell_casting_chance",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.BotSpellCastingChance"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.BotSpellCastingChance"
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Cannot find entity",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Error updating entity",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/bot_spell_casting_chances": {
+            "get": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "BotSpellCastingChance"
+                ],
+                "summary": "Lists BotSpellCastingChances",
+                "operationId": "listBotSpellCastingChances",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names",
+                        "name": "includes",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Filter on specific fields. Multiple conditions [.] separated Example: col_like_value.col2__val2",
+                        "name": "where",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Filter on specific fields (Chained ors). Multiple conditions [.] separated Example: col_like_value.col2__val2",
+                        "name": "whereOr",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Group by field. Multiple conditions [.] separated Example: field1.field2",
+                        "name": "groupBy",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Rows to limit in response (Default: 10,000)",
+                        "name": "limit",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Pagination page",
+                        "name": "page",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Order by [field]",
+                        "name": "orderBy",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Order by field direction",
+                        "name": "orderDirection",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Column names [.] separated to fetch specific fields in response",
+                        "name": "select",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.BotSpellCastingChance"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Bad query request",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/bot_spell_casting_chances/bulk": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "BotSpellCastingChance"
+                ],
+                "summary": "Gets BotSpellCastingChances in bulk",
+                "operationId": "getBotSpellCastingChancesBulk",
+                "parameters": [
+                    {
+                        "description": "body",
+                        "name": "Body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/crudcontrollers.BulkFetchByIdsGetRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.BotSpellCastingChance"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Bad query request",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
         "/bot_spells_entries": {
             "get": {
                 "consumes": [
@@ -6926,6 +11861,664 @@ const docTemplate = `{
                     },
                     "500": {
                         "description": "Error updating entity",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/bot_stance": {
+            "put": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "BotStance"
+                ],
+                "summary": "Creates BotStance",
+                "operationId": "createBotStance",
+                "parameters": [
+                    {
+                        "description": "BotStance",
+                        "name": "bot_stance",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.BotStance"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.BotStance"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Error inserting entity",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/bot_stance/{id}": {
+            "get": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "BotStance"
+                ],
+                "summary": "Gets BotStance",
+                "operationId": "getBotStance",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names",
+                        "name": "includes",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Column names [.] separated to fetch specific fields in response",
+                        "name": "select",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.BotStance"
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Entity not found",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Bad query request",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "BotStance"
+                ],
+                "summary": "Deletes BotStance",
+                "operationId": "deleteBotStance",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "botId",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Entity deleted successfully",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "404": {
+                        "description": "Cannot find entity",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Error deleting entity",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            },
+            "patch": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "BotStance"
+                ],
+                "summary": "Updates BotStance",
+                "operationId": "updateBotStance",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "BotStance",
+                        "name": "bot_stance",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.BotStance"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.BotStance"
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Cannot find entity",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Error updating entity",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/bot_stances": {
+            "get": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "BotStance"
+                ],
+                "summary": "Lists BotStances",
+                "operationId": "listBotStances",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names",
+                        "name": "includes",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Filter on specific fields. Multiple conditions [.] separated Example: col_like_value.col2__val2",
+                        "name": "where",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Filter on specific fields (Chained ors). Multiple conditions [.] separated Example: col_like_value.col2__val2",
+                        "name": "whereOr",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Group by field. Multiple conditions [.] separated Example: field1.field2",
+                        "name": "groupBy",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Rows to limit in response (Default: 10,000)",
+                        "name": "limit",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Pagination page",
+                        "name": "page",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Order by [field]",
+                        "name": "orderBy",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Order by field direction",
+                        "name": "orderDirection",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Column names [.] separated to fetch specific fields in response",
+                        "name": "select",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.BotStance"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Bad query request",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/bot_stances/bulk": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "BotStance"
+                ],
+                "summary": "Gets BotStances in bulk",
+                "operationId": "getBotStancesBulk",
+                "parameters": [
+                    {
+                        "description": "body",
+                        "name": "Body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/crudcontrollers.BulkFetchByIdsGetRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.BotStance"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Bad query request",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/bot_timer": {
+            "put": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "BotTimer"
+                ],
+                "summary": "Creates BotTimer",
+                "operationId": "createBotTimer",
+                "parameters": [
+                    {
+                        "description": "BotTimer",
+                        "name": "bot_timer",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.BotTimer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.BotTimer"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Error inserting entity",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/bot_timer/{id}": {
+            "get": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "BotTimer"
+                ],
+                "summary": "Gets BotTimer",
+                "operationId": "getBotTimer",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names",
+                        "name": "includes",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Column names [.] separated to fetch specific fields in response",
+                        "name": "select",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.BotTimer"
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Entity not found",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Bad query request",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "BotTimer"
+                ],
+                "summary": "Deletes BotTimer",
+                "operationId": "deleteBotTimer",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "botId",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Entity deleted successfully",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "404": {
+                        "description": "Cannot find entity",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Error deleting entity",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            },
+            "patch": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "BotTimer"
+                ],
+                "summary": "Updates BotTimer",
+                "operationId": "updateBotTimer",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "BotTimer",
+                        "name": "bot_timer",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.BotTimer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.BotTimer"
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Cannot find entity",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Error updating entity",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/bot_timers": {
+            "get": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "BotTimer"
+                ],
+                "summary": "Lists BotTimers",
+                "operationId": "listBotTimers",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names",
+                        "name": "includes",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Filter on specific fields. Multiple conditions [.] separated Example: col_like_value.col2__val2",
+                        "name": "where",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Filter on specific fields (Chained ors). Multiple conditions [.] separated Example: col_like_value.col2__val2",
+                        "name": "whereOr",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Group by field. Multiple conditions [.] separated Example: field1.field2",
+                        "name": "groupBy",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Rows to limit in response (Default: 10,000)",
+                        "name": "limit",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Pagination page",
+                        "name": "page",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Order by [field]",
+                        "name": "orderBy",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Order by field direction",
+                        "name": "orderDirection",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Column names [.] separated to fetch specific fields in response",
+                        "name": "select",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.BotTimer"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Bad query request",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/bot_timers/bulk": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "BotTimer"
+                ],
+                "summary": "Gets BotTimers in bulk",
+                "operationId": "getBotTimersBulk",
+                "parameters": [
+                    {
+                        "description": "body",
+                        "name": "Body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/crudcontrollers.BulkFetchByIdsGetRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.BotTimer"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Bad query request",
                         "schema": {
                             "type": "string"
                         }
@@ -60242,6 +65835,82 @@ const docTemplate = `{
                 }
             }
         },
+        "models.BotBuff": {
+            "type": "object",
+            "properties": {
+                "bot_id": {
+                    "type": "integer"
+                },
+                "buffs_index": {
+                    "type": "integer"
+                },
+                "caster_level": {
+                    "type": "integer"
+                },
+                "caston_x": {
+                    "type": "integer"
+                },
+                "caston_y": {
+                    "type": "integer"
+                },
+                "caston_z": {
+                    "type": "integer"
+                },
+                "corruption_counters": {
+                    "type": "integer"
+                },
+                "curse_counters": {
+                    "type": "integer"
+                },
+                "disease_counters": {
+                    "type": "integer"
+                },
+                "dot_rune": {
+                    "type": "integer"
+                },
+                "duration_formula": {
+                    "type": "integer"
+                },
+                "extra_di_chance": {
+                    "type": "integer"
+                },
+                "instrument_mod": {
+                    "type": "integer"
+                },
+                "magic_rune": {
+                    "type": "integer"
+                },
+                "melee_rune": {
+                    "type": "integer"
+                },
+                "numhits": {
+                    "type": "integer"
+                },
+                "persistent": {
+                    "type": "integer"
+                },
+                "poison_counters": {
+                    "type": "integer"
+                },
+                "spell_id": {
+                    "type": "integer"
+                },
+                "tics_remaining": {
+                    "type": "integer"
+                }
+            }
+        },
+        "models.BotCreateCombination": {
+            "type": "object",
+            "properties": {
+                "classes": {
+                    "type": "integer"
+                },
+                "race": {
+                    "type": "integer"
+                }
+            }
+        },
         "models.BotDatum": {
             "type": "object",
             "properties": {
@@ -60294,6 +65963,9 @@ const docTemplate = `{
                     "type": "integer"
                 },
                 "drakkin_tattoo": {
+                    "type": "integer"
+                },
+                "expansion_bitmask": {
                     "type": "integer"
                 },
                 "eye_color_1": {
@@ -60388,16 +66060,378 @@ const docTemplate = `{
                 }
             }
         },
+        "models.BotGroup": {
+            "type": "object",
+            "properties": {
+                "auto_spawn": {
+                    "type": "integer"
+                },
+                "group_leader_id": {
+                    "type": "integer"
+                },
+                "group_name": {
+                    "type": "string"
+                },
+                "groups_index": {
+                    "type": "integer"
+                }
+            }
+        },
+        "models.BotGroupMember": {
+            "type": "object",
+            "properties": {
+                "bot_id": {
+                    "type": "integer"
+                },
+                "group_members_index": {
+                    "type": "integer"
+                },
+                "groups_index": {
+                    "type": "integer"
+                }
+            }
+        },
+        "models.BotGuildMember": {
+            "type": "object",
+            "properties": {
+                "alt": {
+                    "type": "integer"
+                },
+                "banker": {
+                    "type": "integer"
+                },
+                "bot_id": {
+                    "type": "integer"
+                },
+                "guild_id": {
+                    "type": "integer"
+                },
+                "last_tribute": {
+                    "type": "integer"
+                },
+                "public_note": {
+                    "type": "string"
+                },
+                "rank": {
+                    "type": "integer"
+                },
+                "total_tribute": {
+                    "type": "integer"
+                },
+                "tribute_enable": {
+                    "type": "integer"
+                }
+            }
+        },
+        "models.BotHealRotation": {
+            "type": "object",
+            "properties": {
+                "adaptive_targeting": {
+                    "type": "integer"
+                },
+                "bot_id": {
+                    "type": "integer"
+                },
+                "casting_override": {
+                    "type": "integer"
+                },
+                "critical_hp_base": {
+                    "type": "string"
+                },
+                "critical_hp_chain": {
+                    "type": "string"
+                },
+                "critical_hp_cloth": {
+                    "type": "string"
+                },
+                "critical_hp_leather": {
+                    "type": "string"
+                },
+                "critical_hp_plate": {
+                    "type": "string"
+                },
+                "fast_heals": {
+                    "type": "integer"
+                },
+                "heal_rotation_index": {
+                    "type": "integer"
+                },
+                "interval": {
+                    "type": "integer"
+                },
+                "safe_hp_base": {
+                    "type": "string"
+                },
+                "safe_hp_chain": {
+                    "type": "string"
+                },
+                "safe_hp_cloth": {
+                    "type": "string"
+                },
+                "safe_hp_leather": {
+                    "type": "string"
+                },
+                "safe_hp_plate": {
+                    "type": "string"
+                }
+            }
+        },
+        "models.BotHealRotationMember": {
+            "type": "object",
+            "properties": {
+                "bot_id": {
+                    "type": "integer"
+                },
+                "heal_rotation_index": {
+                    "type": "integer"
+                },
+                "member_index": {
+                    "type": "integer"
+                }
+            }
+        },
+        "models.BotHealRotationTarget": {
+            "type": "object",
+            "properties": {
+                "heal_rotation_index": {
+                    "type": "integer"
+                },
+                "target_index": {
+                    "type": "integer"
+                },
+                "target_name": {
+                    "type": "string"
+                }
+            }
+        },
+        "models.BotInspectMessage": {
+            "type": "object",
+            "properties": {
+                "bot_id": {
+                    "type": "integer"
+                },
+                "inspect_message": {
+                    "type": "string"
+                }
+            }
+        },
+        "models.BotInventory": {
+            "type": "object",
+            "properties": {
+                "augment_1": {
+                    "type": "integer"
+                },
+                "augment_2": {
+                    "type": "integer"
+                },
+                "augment_3": {
+                    "type": "integer"
+                },
+                "augment_4": {
+                    "type": "integer"
+                },
+                "augment_5": {
+                    "type": "integer"
+                },
+                "augment_6": {
+                    "type": "integer"
+                },
+                "bot_id": {
+                    "type": "integer"
+                },
+                "inst_charges": {
+                    "type": "integer"
+                },
+                "inst_color": {
+                    "type": "integer"
+                },
+                "inst_custom_data": {
+                    "type": "string"
+                },
+                "inst_no_drop": {
+                    "type": "integer"
+                },
+                "inventories_index": {
+                    "type": "integer"
+                },
+                "item_id": {
+                    "type": "integer"
+                },
+                "ornament_hero_model": {
+                    "type": "integer"
+                },
+                "ornament_icon": {
+                    "type": "integer"
+                },
+                "ornament_id_file": {
+                    "type": "integer"
+                },
+                "slot_id": {
+                    "type": "integer"
+                }
+            }
+        },
+        "models.BotOwnerOption": {
+            "type": "object",
+            "properties": {
+                "option_type": {
+                    "type": "integer"
+                },
+                "option_value": {
+                    "type": "integer"
+                },
+                "owner_id": {
+                    "type": "integer"
+                }
+            }
+        },
+        "models.BotPet": {
+            "type": "object",
+            "properties": {
+                "bot_id": {
+                    "type": "integer"
+                },
+                "hp": {
+                    "type": "integer"
+                },
+                "mana": {
+                    "type": "integer"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "pets_index": {
+                    "type": "integer"
+                },
+                "spell_id": {
+                    "type": "integer"
+                }
+            }
+        },
+        "models.BotPetBuff": {
+            "type": "object",
+            "properties": {
+                "caster_level": {
+                    "type": "integer"
+                },
+                "duration": {
+                    "type": "integer"
+                },
+                "pet_buffs_index": {
+                    "type": "integer"
+                },
+                "pets_index": {
+                    "type": "integer"
+                },
+                "spell_id": {
+                    "type": "integer"
+                }
+            }
+        },
+        "models.BotPetInventory": {
+            "type": "object",
+            "properties": {
+                "item_id": {
+                    "type": "integer"
+                },
+                "pet_inventories_index": {
+                    "type": "integer"
+                },
+                "pets_index": {
+                    "type": "integer"
+                }
+            }
+        },
+        "models.BotSpellCastingChance": {
+            "type": "object",
+            "properties": {
+                "class_id": {
+                    "type": "integer"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "n_hsnd_value": {
+                    "type": "integer"
+                },
+                "p_d_value": {
+                    "type": "integer"
+                },
+                "p_h_value": {
+                    "type": "integer"
+                },
+                "p_hd_value": {
+                    "type": "integer"
+                },
+                "p_hn_value": {
+                    "type": "integer"
+                },
+                "p_hnd_value": {
+                    "type": "integer"
+                },
+                "p_hs_value": {
+                    "type": "integer"
+                },
+                "p_hsd_value": {
+                    "type": "integer"
+                },
+                "p_hsn_value": {
+                    "type": "integer"
+                },
+                "p_hsnd_value": {
+                    "type": "integer"
+                },
+                "p_n_value": {
+                    "type": "integer"
+                },
+                "p_nd_value": {
+                    "type": "integer"
+                },
+                "p_s_value": {
+                    "type": "integer"
+                },
+                "p_sd_value": {
+                    "type": "integer"
+                },
+                "p_sn_value": {
+                    "type": "integer"
+                },
+                "p_snd_value": {
+                    "type": "integer"
+                },
+                "spell_type_index": {
+                    "type": "integer"
+                },
+                "stance_index": {
+                    "type": "integer"
+                }
+            }
+        },
         "models.BotSpellsEntry": {
             "type": "object",
             "properties": {
+                "bucket_comparison": {
+                    "type": "integer"
+                },
+                "bucket_name": {
+                    "type": "string"
+                },
+                "bucket_value": {
+                    "type": "string"
+                },
                 "id": {
                     "type": "integer"
                 },
                 "manacost": {
                     "type": "integer"
                 },
+                "max_hp": {
+                    "type": "integer"
+                },
                 "maxlevel": {
+                    "type": "integer"
+                },
+                "min_hp": {
                     "type": "integer"
                 },
                 "minlevel": {
@@ -60425,6 +66459,31 @@ const docTemplate = `{
                     "$ref": "#/definitions/models.SpellsNew"
                 },
                 "type": {
+                    "type": "integer"
+                }
+            }
+        },
+        "models.BotStance": {
+            "type": "object",
+            "properties": {
+                "bot_id": {
+                    "type": "integer"
+                },
+                "stance_id": {
+                    "type": "integer"
+                }
+            }
+        },
+        "models.BotTimer": {
+            "type": "object",
+            "properties": {
+                "bot_id": {
+                    "type": "integer"
+                },
+                "timer_id": {
+                    "type": "integer"
+                },
+                "timer_value": {
                     "type": "integer"
                 }
             }

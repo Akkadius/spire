@@ -207,6 +207,30 @@ books:
     is_nullable: "NO"
     column_type: int(20)
     column_default: ""
+bot_buffs:
+  - column: buffs_index
+    data_type: int
+    column_key: PRI
+    ordinal_position: "1"
+    is_nullable: "NO"
+    column_type: int(11) unsigned
+    column_default: ""
+bot_command_settings:
+  - column: bot_command
+    data_type: varchar
+    column_key: PRI
+    ordinal_position: "1"
+    is_nullable: "NO"
+    column_type: varchar(128)
+    column_default: ''''''
+bot_create_combinations:
+  - column: race
+    data_type: int
+    column_key: PRI
+    ordinal_position: "1"
+    is_nullable: "NO"
+    column_type: int(10) unsigned
+    column_default: "0"
 bot_data:
   - column: bot_id
     data_type: int
@@ -214,6 +238,117 @@ bot_data:
     ordinal_position: "1"
     is_nullable: "NO"
     column_type: int(11) unsigned
+    column_default: ""
+bot_group_members:
+  - column: group_members_index
+    data_type: int
+    column_key: PRI
+    ordinal_position: "1"
+    is_nullable: "NO"
+    column_type: int(10) unsigned
+    column_default: ""
+bot_groups:
+  - column: groups_index
+    data_type: int
+    column_key: PRI
+    ordinal_position: "1"
+    is_nullable: "NO"
+    column_type: int(10) unsigned
+    column_default: ""
+bot_guild_members:
+  - column: bot_id
+    data_type: int
+    column_key: PRI
+    ordinal_position: "1"
+    is_nullable: "NO"
+    column_type: int(11)
+    column_default: "0"
+bot_heal_rotation_members:
+  - column: member_index
+    data_type: int
+    column_key: PRI
+    ordinal_position: "1"
+    is_nullable: "NO"
+    column_type: int(11) unsigned
+    column_default: ""
+bot_heal_rotation_targets:
+  - column: target_index
+    data_type: int
+    column_key: PRI
+    ordinal_position: "1"
+    is_nullable: "NO"
+    column_type: int(11) unsigned
+    column_default: ""
+bot_heal_rotations:
+  - column: heal_rotation_index
+    data_type: int
+    column_key: PRI
+    ordinal_position: "1"
+    is_nullable: "NO"
+    column_type: int(11) unsigned
+    column_default: ""
+bot_inspect_messages:
+  - column: bot_id
+    data_type: int
+    column_key: PRI
+    ordinal_position: "1"
+    is_nullable: "NO"
+    column_type: int(11) unsigned
+    column_default: ""
+bot_inventories:
+  - column: inventories_index
+    data_type: int
+    column_key: PRI
+    ordinal_position: "1"
+    is_nullable: "NO"
+    column_type: int(10) unsigned
+    column_default: ""
+bot_owner_options:
+  - column: owner_id
+    data_type: int
+    column_key: PRI
+    ordinal_position: "1"
+    is_nullable: "NO"
+    column_type: int(11) unsigned
+    column_default: ""
+  - column: option_type
+    data_type: smallint
+    column_key: PRI
+    ordinal_position: "2"
+    is_nullable: "NO"
+    column_type: smallint(3) unsigned
+    column_default: ""
+bot_pet_buffs:
+  - column: pet_buffs_index
+    data_type: int
+    column_key: PRI
+    ordinal_position: "1"
+    is_nullable: "NO"
+    column_type: int(10) unsigned
+    column_default: ""
+bot_pet_inventories:
+  - column: pet_inventories_index
+    data_type: int
+    column_key: PRI
+    ordinal_position: "1"
+    is_nullable: "NO"
+    column_type: int(10) unsigned
+    column_default: ""
+bot_pets:
+  - column: pets_index
+    data_type: int
+    column_key: PRI
+    ordinal_position: "1"
+    is_nullable: "NO"
+    column_type: int(10) unsigned
+    column_default: ""
+bot_spell_casting_chances:
+  - column: id
+    data_type: int
+    column_key: PRI
+    ordinal_position: "1"
+    is_nullable: "NO"
+    column_type: int(11)
     column_default: ""
 bot_spells_entries:
   - column: id
@@ -223,6 +358,22 @@ bot_spells_entries:
     is_nullable: "NO"
     column_type: int(11) unsigned
     column_default: ""
+bot_stances:
+  - column: bot_id
+    data_type: int
+    column_key: PRI
+    ordinal_position: "1"
+    is_nullable: "NO"
+    column_type: int(11) unsigned
+    column_default: "0"
+bot_timers:
+  - column: bot_id
+    data_type: int
+    column_key: PRI
+    ordinal_position: "1"
+    is_nullable: "NO"
+    column_type: int(11) unsigned
+    column_default: "0"
 bug_reports:
   - column: id
     data_type: int
