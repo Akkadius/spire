@@ -1,3 +1,9 @@
+## [2.4.1]
+
+### [Bots] Minor fix (Aeadoin)
+
+- Fixed an issue when adding new Spells to the Bot Spell List.
+
 ## [2.4.0]
 
 ### [Bots] Spell Editor (Aeodoin)
