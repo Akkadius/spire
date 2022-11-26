@@ -116,7 +116,7 @@ export default {
         "manacost": -1,
         "recast_delay": -1,
         "priority": 0,
-        "resist_adjust": null,
+        "resist_adjust": 0,
         "bucket_name": "",
         "bucket_value": "",
         "bucket_comparison": 0,
