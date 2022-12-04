@@ -229,18 +229,6 @@ export default new Router({
       component: () => import('./views/Break.vue')
     },
     {
-      path: '/editor',
-      component: () => import('./components/layout/QuestEditorLayout.vue'),
-      meta: {title: "Editor"},
-      children: [
-        {
-          path: '/',
-          component: () => import('./views/quest-editor/QuestEditor.vue'),
-          meta: {title: "Editor"},
-        },
-      ]
-    },
-    {
       path: '/docs',
       component: () => import('./components/layout/docs/DocLayout.vue'),
       children: [
