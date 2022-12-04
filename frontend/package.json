@@ -23,7 +23,6 @@
     "markdown-it": "^12.2.0",
     "moment": "^2.29.1",
     "rpg-awesome": "^0.2.0",
-    "sl-vue-tree": "^1.8.5",
     "slugify": "^1.6.3",
     "superagent": "^6.1.0",
     "v-runtime-template": "^1.10.0",
