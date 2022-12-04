@@ -42,6 +42,7 @@ export default {
     SpireApi.v1().get('/quest-api/definitions').then((response) => {
       if (response.data && response.data.data) {
         let api = response.data.data
+        let languages = ['lua', 'perl']
         languages.forEach((language) => {
           let suggestions = [];
 
@@ -106,7 +107,6 @@ export default {
                 // m.methodPrefix = `\$ ` + m.methodPrefix.toLowerCase()
                 languageQuestPrepend = ""
               }
-
             }
 
             // this is label friendly, doesn't include completion indexes
@@ -142,6 +142,8 @@ export default {
 
               insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet
             }
+
+            console.log(completionSnippet)
 
             suggestions.push(completionSnippet)
           })

@@ -14,6 +14,7 @@ type ParseService struct {
 	cache      *gocache.Cache
 	downloader *github.GithubSourceDownloader
 	files      map[string]string
+	snippets   map[string]string
 }
 
 func NewParseService(
@@ -93,6 +94,26 @@ func (c *ParseService) Source(
 	return c.files
 }
 
+// Source source files
+func (c *ParseService) SourceSnippets(
+	org string,
+	repo string,
+	branch string,
+	forceRefresh bool,
+) map[string]string {
+
+	// return cache if not refresh
+	if !forceRefresh && len(c.snippets) > 0 {
+		return c.snippets
+	}
+
+	// set to memory
+	c.snippets = c.downloader.Source(org, repo, branch, forceRefresh)
+
+	// return local reference
+	return c.snippets
+}
+
 // Parse parses methods from our source
 func (c *ParseService) Parse(forceRefresh bool) QuestApiResponse {
 	// if lock set, return
@@ -103,6 +124,7 @@ func (c *ParseService) Parse(forceRefresh bool) QuestApiResponse {
 
 	// pull files in
 	c.Source("EQEmu", "Server", "master", forceRefresh)
+	c.SourceSnippets("EQEmu", "spire-quest-snippets", "main", forceRefresh)
 
 	// return cached copy
 	if len(perlMethods) > 0 && len(luaMethods) > 0 && !forceRefresh {
@@ -226,4 +248,12 @@ func (c *ParseService) apiResponse() QuestApiResponse {
 			LuaConstants: luaConstants,
 		},
 	}
+}
+
+func (c *ParseService) GetSnippets() map[string]string {
+	if len(c.snippets) == 0 {
+		c.SourceSnippets("EQEmu", "spire-quest-snippets", "main", true)
+	}
+
+	return c.snippets
 }
