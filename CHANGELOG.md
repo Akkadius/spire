@@ -1,3 +1,9 @@
+## [2.4.2]
+
+### [Items] Ammo / Powersource
+
+- Fixed a minor issue where ammo / power source slots were flip flopped in the item editor.
+
 ## [2.4.1]
 
 ### [Bots] Minor fix (Aeadoin)

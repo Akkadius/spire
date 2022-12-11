@@ -1,6 +1,6 @@
 export const ITEM_DB_SLOTS = {
-  "4194304": "Power Source",
-  "2097152": "Ammo",
+  "4194304": "Ammo",
+  "2097152": "Power Source",
   "1048576": "Waist",
   "524288": "Feet",
   "262144": "Legs",
