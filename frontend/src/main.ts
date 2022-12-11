@@ -28,33 +28,11 @@ import "rpg-awesome/css/rpg-awesome.min.css";
 // highlight js css
 import "@/assets/css/highlight-js-vs2015.css";
 
-/* ag-grid */
-// import "../node_modules/ag-grid-community/dist/styles/ag-grid.css";
-// import "../node_modules/ag-grid-community/dist/styles/ag-theme-balham-dark.css";
-
 /* spritesheet assets */
 // import "../public/eq-asset-preview-master/assets/sprites/item-icons.css";
 // import "../public/eq-asset-preview-master/assets/sprites/objects.css";
 // import "../public/eq-asset-preview-master/assets/sprites/race-models.css";
 
-// Ag grid enterprisec
-// import 'ag-grid-enterprise';
-
-// vue-tree
-
-import 'sl-vue-tree/src/sl-vue-tree-dark.css'
-import 'sl-vue-tree/src/sl-vue-tree.js'
-
-// import {BVConfigPlugin} from 'bootstrap-vue';
-
-// Vue.use(BVConfigPlugin, {
-//   BTooltip: {
-//     delay: {
-//       show: 0,
-//       hide: 0,
-//     },
-//   },
-// });
 
 import "@exuanbo/file-icons-js/dist/css/file-icons.min.css"
 
