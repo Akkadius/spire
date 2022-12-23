@@ -1,6 +1,7 @@
 package boot
 
 import (
+	"github.com/Akkadius/spire/internal/assets"
 	"github.com/Akkadius/spire/internal/http/controllers"
 	appmiddleware "github.com/Akkadius/spire/internal/http/middleware"
 	"github.com/Akkadius/spire/internal/http/routes"
@@ -9,7 +10,6 @@ import (
 	"github.com/google/wire"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
-	gocache "github.com/patrickmn/go-cache"
 	"net/http"
 	"time"
 )
@@ -52,7 +52,7 @@ func NewRouter(
 	readOnlyModeMiddleware *appmiddleware.ReadOnlyMiddleware,
 	permissionsMiddleware *appmiddleware.PermissionsMiddleware,
 	logMiddleware *appmiddleware.RequestLogMiddleware,
-	cache *gocache.Cache,
+	assets *assets.SpireAssets,
 ) *routes.Router {
 	return routes.NewHttpRouter(
 
@@ -80,6 +80,7 @@ func NewRouter(
 					},
 				},
 			),
+			assets.ServeStatic(),
 		},
 
 		// controller groups

@@ -1,6 +1,7 @@
 package boot
 
 import (
+	"github.com/Akkadius/spire/internal/assets"
 	"github.com/Akkadius/spire/internal/auditlog"
 	"github.com/Akkadius/spire/internal/clientfiles"
 	"github.com/Akkadius/spire/internal/connection"
@@ -30,4 +31,5 @@ var serviceSet = wire.NewSet(
 	permissions.NewService,
 	pluralize.NewClient,
 	auditlog.NewUserEvent,
+	assets.NewSpireAssets,
 )

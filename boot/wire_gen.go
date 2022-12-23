@@ -7,6 +7,7 @@
 package boot
 
 import (
+	"github.com/Akkadius/spire/internal/assets"
 	"github.com/Akkadius/spire/internal/auditlog"
 	"github.com/Akkadius/spire/internal/clientfiles"
 	"github.com/Akkadius/spire/internal/connection"
@@ -281,7 +282,8 @@ func InitializeApplication() (App, error) {
 	readOnlyMiddleware := middleware.NewReadOnlyMiddleware(databaseResolver, logger)
 	permissionsMiddleware := middleware.NewPermissionsMiddleware(databaseResolver, logger, cache, service)
 	requestLogMiddleware := middleware.NewRequestLogMiddleware(client)
-	router := NewRouter(bootAppControllerGroups, bootCrudControllers, userContextMiddleware, readOnlyMiddleware, permissionsMiddleware, requestLogMiddleware, cache)
+	spireAssets := assets.NewSpireAssets(logger, cache, githubSourceDownloader)
+	router := NewRouter(bootAppControllerGroups, bootCrudControllers, userContextMiddleware, readOnlyMiddleware, permissionsMiddleware, requestLogMiddleware, spireAssets)
 	httpServeCommand := cmd.NewHttpServeCommand(logger, router)
 	routesListCommand := cmd.NewRoutesListCommand(router, logger)
 	generateConfigurationCommand := cmd.NewGenerateConfigurationCommand(databaseResolver, logger)

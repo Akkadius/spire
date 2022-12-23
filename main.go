@@ -1,7 +1,9 @@
 package main
 
 import (
+	"bufio"
 	_ "embed"
+	"fmt"
 	"github.com/Akkadius/spire/boot"
 	"github.com/Akkadius/spire/internal/console"
 	"github.com/Akkadius/spire/internal/env"
@@ -18,13 +20,13 @@ func main() {
 
 	// load env
 	if err := env.LoadEnvFileIfExists(); err != nil {
-		log.Fatal(err)
+		Fatal(err)
 	}
 
 	// boot app
 	app, err := boot.InitializeApplication()
 	if err != nil {
-		log.Fatal(err)
+		Fatal(err)
 	}
 
 	// load embedded resources
@@ -38,8 +40,14 @@ func main() {
 
 	// run cmd
 	if err := console.Run(app.Commands()); err != nil {
-		log.Fatal(err)
+		Fatal(err)
 	}
+}
+
+func Fatal(err error) {
+	log.Println(err)
+	fmt.Print("Press any to continue...")
+	_, _ = bufio.NewReader(os.Stdin).ReadBytes('\n')
 }
 
 var (

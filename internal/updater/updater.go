@@ -5,11 +5,13 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"github.com/Akkadius/spire/internal/download"
 	"github.com/Akkadius/spire/internal/env"
 	"github.com/Akkadius/spire/internal/unzip"
 	"github.com/google/go-github/v41/github"
 	"log"
 	"os"
+	"path"
 	"path/filepath"
 	"runtime"
 )
@@ -130,7 +132,12 @@ func (s UpdaterService) CheckForUpdates() {
 			fmt.Printf("Found matching release [%s]\n", assetName)
 
 			// download
-			downloadFile(downloadUrl, os.TempDir())
+			file := path.Base(downloadUrl)
+			downloadPath := filepath.Join(os.TempDir(), file)
+			err := download.WithProgress(downloadPath, downloadUrl)
+			if err != nil {
+				log.Println(err)
+			}
 
 			// linux
 			if runtime.GOOS == "linux" {

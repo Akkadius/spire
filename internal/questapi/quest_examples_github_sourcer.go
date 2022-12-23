@@ -57,7 +57,7 @@ func (q *QuestExamplesGithubSourcer) Source(
 	}
 
 	// set to memory
-	q.files = q.downloader.Source(org, repo, branch, forceRefresh)
+	q.files = q.downloader.Source(org, repo, branch, forceRefresh).Files
 
 	// return local reference
 	return q.files

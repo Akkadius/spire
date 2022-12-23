@@ -7,11 +7,13 @@ import (
 	"github.com/sirupsen/logrus"
 	"log"
 	"net"
+	gohttp "net/http"
 	"os"
 	"os/exec"
 	"os/signal"
 	"runtime"
 	"strconv"
+	"time"
 )
 
 type WebBoot struct {
@@ -48,7 +50,12 @@ func (c *WebBoot) Boot() {
 	}()
 
 	// open browser window
-	openBrowser(fmt.Sprintf("http://localhost:%v", port))
+	web := fmt.Sprintf("http://localhost:%v", port)
+	err := waitForSiteToBeAvailable(web, time.Minute*15)
+	if err != nil {
+		c.logger.Fatal(err)
+	}
+	openBrowser(web)
 
 	// wait for signal to kill
 	ch := make(chan os.Signal, 1)
@@ -101,4 +108,24 @@ func openBrowser(url string) {
 		log.Fatal(err)
 	}
 
+}
+
+func waitForSiteToBeAvailable(URL string, timeout time.Duration) error {
+	ch := make(chan bool)
+	go func() {
+		for {
+			_, err := gohttp.Get(URL)
+			if err == nil {
+				ch <- true
+			}
+			time.Sleep(10 * time.Millisecond)
+		}
+	}()
+
+	select {
+	case <-ch:
+		return nil
+	case <-time.After(timeout):
+		return fmt.Errorf("server did not reply after %v", timeout)
+	}
 }

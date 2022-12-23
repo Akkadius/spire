@@ -88,7 +88,7 @@ func (c *ParseService) Source(
 	}
 
 	// set to memory
-	c.files = c.downloader.Source(org, repo, branch, forceRefresh)
+	c.files = c.downloader.Source(org, repo, branch, forceRefresh).Files
 
 	// return local reference
 	return c.files
@@ -108,7 +108,7 @@ func (c *ParseService) SourceSnippets(
 	}
 
 	// set to memory
-	c.snippets = c.downloader.Source(org, repo, branch, forceRefresh)
+	c.snippets = c.downloader.Source(org, repo, branch, forceRefresh).Files
 
 	// return local reference
 	return c.snippets

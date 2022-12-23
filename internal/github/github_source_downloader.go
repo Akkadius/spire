@@ -2,50 +2,52 @@ package github
 
 import (
 	"fmt"
+	"github.com/Akkadius/spire/internal/download"
 	"github.com/Akkadius/spire/internal/unzip"
 	gocache "github.com/patrickmn/go-cache"
 	"github.com/sirupsen/logrus"
-	"io"
 	"io/ioutil"
-	"net/http"
 	"os"
 	"path/filepath"
-	"runtime"
 	"strings"
 	"time"
 )
 
 type GithubSourceDownloader struct {
-	logger *logrus.Logger
-	cache      *gocache.Cache
+	logger         *logrus.Logger
+	cache          *gocache.Cache
+	sourceUserDir  bool // if set, sources files to user directory
+	sourcedDirPath string
+}
+
+func (g *GithubSourceDownloader) SourceToUserCacheDir(sourceUserDir bool) {
+	g.sourceUserDir = sourceUserDir
 }
 
 func NewGithubSourceDownloader(logger *logrus.Logger, cache *gocache.Cache) *GithubSourceDownloader {
 	return &GithubSourceDownloader{logger: logger, cache: cache}
 }
 
-// sources quest files and returns filename:contents
-func (g *GithubSourceDownloader) Source(org string, repo string, branch string, forceRefresh bool) map[string]string {
+type SourceResult struct {
+	Files      map[string]string
+	ZippedPath string
+}
 
+// Source downloads files and returns filename:contents
+func (g *GithubSourceDownloader) Source(org string, repo string, branch string, forceRefresh bool) SourceResult {
 	lockKey := fmt.Sprintf("%v-%v-%v", org, repo, branch)
 	// if lock set, return
 	_, found := g.cache.Get(lockKey)
 	if found {
-		return nil
+		return SourceResult{}
 	}
 
 	g.cache.Set(lockKey, 1, time.Minute*10)
 
 	// repo params
-	repoDir := fmt.Sprintf("%v/%v-%v/", os.TempDir(), repo, branch)
-	if runtime.GOOS == "windows" {
-		repoDir = fmt.Sprintf("%v\\%v-%v\\", os.TempDir(), repo, branch)
-	}
-
+	repoDir := g.GetSourcedDirPath(repo, branch)
 	repoZipUrl := fmt.Sprintf("https://github.com/%v/%v/archive/%v.zip", org, repo, branch)
-
-	//unzipLoc := fmt.Sprintf("%v/quests/", os.TempDir())
-	zipFileLocalLoc := fmt.Sprintf("%v/%v.zip", os.TempDir(), repo)
+	zipFileLocalLoc := fmt.Sprintf("%v/%v.zip", g.GetSourceRoot(), repo)
 
 	if forceRefresh {
 		err := os.RemoveAll(repoDir)
@@ -66,6 +68,12 @@ func (g *GithubSourceDownloader) Source(org string, repo string, branch string, 
 		if err != nil {
 			g.logger.Error(err)
 		}
+	}
+
+	zippedPath := ""
+	files, _ := ioutil.ReadDir(repoDir)
+	if len(files) > 0 {
+		zippedPath = filepath.Join(repoDir, files[0].Name())
 	}
 
 	var unzippedFiles = map[string]string{}
@@ -91,11 +99,14 @@ func (g *GithubSourceDownloader) Source(org string, repo string, branch string, 
 					g.logger.Error(err)
 				}
 
-				fileName := strings.ReplaceAll(path, fmt.Sprintf("%v%v-%v/", repoDir, repo, branch), "")
-				if runtime.GOOS == "windows" {
-					fileName = strings.ReplaceAll(path, fmt.Sprintf("%v%v-%v\\", repoDir, repo, branch), "")
-					fileName = strings.ReplaceAll(fileName, "\\", "/")
-				}
+				// construct relative path
+				// remove base file path
+				fileName := strings.ReplaceAll(path, repoDir, "")
+				// strip top two directory levels
+				dirs := strings.Split(fileName, string(filepath.Separator))
+				dirs = dirs[2:]
+
+				fileName = strings.Join(dirs, string(filepath.Separator))
 
 				unzippedFiles[fileName] = string(data)
 			}
@@ -107,31 +118,50 @@ func (g *GithubSourceDownloader) Source(org string, repo string, branch string, 
 		g.logger.Error(err)
 	}
 
+	// file exists
+	if _, err := os.Stat(zipFileLocalLoc); err == nil {
+		err = os.Remove(zipFileLocalLoc)
+		if err != nil {
+			g.logger.Fatal(err)
+		}
+	}
+
 	// delete lock
 	g.cache.Delete(lockKey)
 
-	return unzippedFiles
+	return SourceResult{
+		Files:      unzippedFiles,
+		ZippedPath: zippedPath + "/",
+	}
 }
 
 // downloadFile will download a url to a local file. It's efficient because it will
 // write as it downloads and not load the whole file into memory.
 func (g *GithubSourceDownloader) downloadFile(filepath string, url string) error {
-
-	// Get the data
-	resp, err := http.Get(url)
+	err := download.WithProgress(filepath, url)
 	if err != nil {
 		return err
 	}
-	defer resp.Body.Close()
 
-	// Create the file
-	out, err := os.Create(filepath)
-	if err != nil {
-		return err
-	}
-	defer out.Close()
-
-	// Write the body to file
-	_, err = io.Copy(out, resp.Body)
 	return err
+}
+
+// GetSourceRoot returns user cache dir or temp dir
+// eg /home/user/.cache/ or /tmp/
+func (g *GithubSourceDownloader) GetSourceRoot() string {
+	userDir, err := os.UserCacheDir()
+	if err != nil {
+		g.logger.Error(err)
+	}
+	if len(userDir) > 0 {
+		return userDir
+	}
+
+	return os.TempDir()
+}
+
+// GetSourcedDirPath returns the sourced download path
+// eg /home/user/.cache/<repo>-<branch> or /tmp/<repo>-<branch>
+func (g *GithubSourceDownloader) GetSourcedDirPath(repo string, branch string) string {
+	return filepath.Join(g.GetSourceRoot(), fmt.Sprintf("%v-%v", repo, branch))
 }

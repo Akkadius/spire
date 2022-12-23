@@ -1,8 +1,11 @@
-## [2.4.2]
+## [2.5.0]
 
-### [Items] Ammo / Powersource
+### Spire Binary Size Reduction
 
-- Fixed a minor issue where ammo / power source slots were flip flopped in the item editor.
+- Spire is now 26MB compressed and 55MB raw from original 516MB compressed and 738MB raw. 13x reduction in binary size
+- Static assets are now decoupled from the executable binary and are now downloaded once during the first initial boot of Spire. They won't ever need to download again unless assets update.
+- Static assets will also automatically update when there are new assets.
+- This will make Spire releases faster, the distributed binary leaner and also result in less wasted bandwidth
 
 ## [2.4.1]
 
