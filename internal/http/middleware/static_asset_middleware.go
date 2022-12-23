@@ -79,6 +79,10 @@ func StaticAsset(config StaticConfig) echo.MiddlewareFunc {
 
 			p := c.Request().URL.Path
 
+			if strings.Contains(p, "/swagger/") {
+				return next(c)
+			}
+
 			if strings.HasSuffix(c.Path(), "*") { // When serving from a group, e.g. `/static*`.
 				p = c.Param("*")
 			}
