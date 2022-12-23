@@ -1,3 +1,10 @@
+## [2.5.1]
+
+### Windows Fixes
+
+- Resolved issues with windows downloading logic
+- Resolved issues with windows path resolution in static asset serving
+
 ## [2.5.0]
 
 ### Spire Binary Size Reduction

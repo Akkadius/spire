@@ -16,12 +16,20 @@ func WithProgress(destinationPath, downloadUrl string) error {
 	fmt.Printf("[Downloading] URL [%v]\n", downloadUrl)
 	fmt.Printf("[Downloading] To [%v]\n\n", destinationPath)
 
-	tempDestinationPath := destinationPath + ".tmp"
-	req, _ := http.NewRequest("GET", downloadUrl, nil)
-	resp, _ := http.DefaultClient.Do(req)
-	defer resp.Body.Close()
+	//tempDestinationPath := destinationPath + ".tmp"
+	req, err := http.NewRequest("GET", downloadUrl, nil)
+	if err != nil {
+		return err
+	}
+	resp, err := http.DefaultClient.Do(req)
+	if err != nil {
+		return err
+	}
 
-	f, _ := os.OpenFile(tempDestinationPath, os.O_CREATE|os.O_WRONLY, 0644)
+	f, err := os.OpenFile(destinationPath, os.O_CREATE|os.O_WRONLY, 0644)
+	if err != nil {
+		return err
+	}
 
 	bar := progressbar.NewOptions64(
 		resp.ContentLength,
@@ -37,10 +45,27 @@ func WithProgress(destinationPath, downloadUrl string) error {
 		progressbar.OptionSetRenderBlankState(true),
 	)
 
-	io.Copy(io.MultiWriter(f, bar), resp.Body)
-	os.Rename(tempDestinationPath, destinationPath)
+	_, err = io.Copy(io.MultiWriter(f, bar), resp.Body)
+	if err != nil {
+		return err
+	}
 
-	fmt.Println("")
+	err = resp.Body.Close()
+	if err != nil {
+		return err
+	}
+
+	err = f.Close()
+	if err != nil {
+		return err
+	}
+
+	//err = os.Rename(tempDestinationPath, destinationPath)
+	//if err != nil {
+	//	return err
+	//}
+
+	fmt.Printf("\n")
 
 	return nil
 }

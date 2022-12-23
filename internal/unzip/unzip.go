@@ -21,19 +21,17 @@ func New(src string, dest string) Unzip {
 
 func (uz Unzip) Extract() error {
 
-	fmt.Println("Extraction of " + uz.Src + " started!")
+	fmt.Println("[Zip] Extraction of [" + uz.Src + "] started!")
 
 	r, err := zip.OpenReader(uz.Src)
 	if err != nil {
 		return err
 	}
-	defer func() {
-		if err := r.Close(); err != nil {
-			panic(err)
-		}
-	}()
 
-	os.MkdirAll(uz.Dest, 0755)
+	err = os.MkdirAll(uz.Dest, 0755)
+	if err != nil {
+		return err
+	}
 
 	// Closure to address file descriptors issue with all the deferred .Close() methods
 	extractAndWriteFile := func(f *zip.File) error {
@@ -41,11 +39,6 @@ func (uz Unzip) Extract() error {
 		if err != nil {
 			return err
 		}
-		defer func() {
-			if err := rc.Close(); err != nil {
-				panic(err)
-			}
-		}()
 
 		path := filepath.Join(uz.Dest, f.Name)
 		if !strings.HasPrefix(path, filepath.Clean(uz.Dest)+string(os.PathSeparator)) {
@@ -53,24 +46,36 @@ func (uz Unzip) Extract() error {
 		}
 
 		if f.FileInfo().IsDir() {
-			os.MkdirAll(path, f.Mode())
+			err := os.MkdirAll(path, f.Mode())
+			if err != nil {
+				return err
+			}
 		} else {
-			os.MkdirAll(filepath.Dir(path), f.Mode())
+			err := os.MkdirAll(filepath.Dir(path), f.Mode())
+			if err != nil {
+				return err
+			}
 			f, err := os.OpenFile(path, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, f.Mode())
 			if err != nil {
 				return err
 			}
-			defer func() {
-				if err := f.Close(); err != nil {
-					panic(err)
-				}
-			}()
 
 			_, err = io.Copy(f, rc)
 			if err != nil {
 				return err
 			}
+
+			if err := f.Close(); err != nil {
+				if err != nil {
+					return err
+				}
+			}
 		}
+
+		if err := rc.Close(); err != nil {
+			return err
+		}
+
 		return nil
 	}
 
@@ -84,7 +89,12 @@ func (uz Unzip) Extract() error {
 		}
 	}
 
-	fmt.Println("Extraction of " + uz.Src + " finished!")
+	err = r.Close()
+	if err != nil {
+		return err
+	}
+
+	fmt.Printf("[Zip] Extracted (%v) files in [%v]!\n\n", len(r.File), uz.Src)
 
 	return nil
 }

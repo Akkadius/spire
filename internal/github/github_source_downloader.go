@@ -47,7 +47,7 @@ func (g *GithubSourceDownloader) Source(org string, repo string, branch string, 
 	// repo params
 	repoDir := g.GetSourcedDirPath(repo, branch)
 	repoZipUrl := fmt.Sprintf("https://github.com/%v/%v/archive/%v.zip", org, repo, branch)
-	zipFileLocalLoc := fmt.Sprintf("%v/%v.zip", g.GetSourceRoot(), repo)
+	zipFileLocalLoc := filepath.Join(g.GetSourceRoot(), fmt.Sprintf("%v.zip", repo))
 
 	if forceRefresh {
 		err := os.RemoveAll(repoDir)

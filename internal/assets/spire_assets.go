@@ -55,7 +55,7 @@ func (a SpireAssets) ServeStatic() echo.MiddlewareFunc {
 	// serve
 	return appmiddleware.StaticAsset(appmiddleware.StaticConfig{
 		Root:        "/",
-		StripPrefix: "/eq-asset-preview-master",
+		StripPrefix: string(filepath.Separator) + "eq-asset-preview-master",
 		Filesystem:  http.Dir(r.ZippedPath),
 	})
 }
