@@ -15,7 +15,7 @@ public/
 spire.exe
 spire.exe~
 
-frontend/public/eq-asset-preview-master/
+frontend/public/eq-asset-preview-master
 internal/http/spa/a_spa-packr.go
 
 spire-linux-amd64
@@ -29,3 +29,4 @@ spells_us.txt
 
 eqemu_config.json
 eqemu_config.json*
+

@@ -2,6 +2,7 @@ package assets
 
 import (
 	"fmt"
+	"github.com/Akkadius/spire/internal/env"
 	"github.com/Akkadius/spire/internal/github"
 	appmiddleware "github.com/Akkadius/spire/internal/http/middleware"
 	"github.com/labstack/echo/v4"
@@ -57,6 +58,32 @@ func (a SpireAssets) ServeStatic() echo.MiddlewareFunc {
 		r := downloader.Source(organization, repository, branch, false)
 		if len(r.ZippedPath) > 0 {
 			zippedPath = r.ZippedPath
+		}
+	}
+
+	// in development, perform a symlink between the downloaded assets and the frontend public directory
+	// the reason for this is that in development we run the Vue development web server
+	// and assets resolve relative to the webserver running assets there - so they need
+	// to be available via the FE web dev server
+	// this is a convenience
+	if len(zippedPath) > 0 {
+		if env.IsAppEnvDev() {
+			symlinkTarget := filepath.Join("./frontend/public/eq-asset-preview-master")
+
+			// remove link if exists
+			if _, err := os.Lstat(symlinkTarget); err == nil {
+				if err := os.Remove(symlinkTarget); err != nil {
+					a.logger.Errorf("failed to unlink: %+v", err)
+				}
+			} else if os.IsNotExist(err) {
+				a.logger.Errorf("failed to check symlink: %+v", err)
+			}
+
+			// relink
+			err := os.Symlink(a.getZippedPath(), symlinkTarget)
+			if err != nil {
+				a.logger.Fatal(err)
+			}
 		}
 	}
 
