@@ -7,6 +7,7 @@ import (
 	"github.com/labstack/echo/v4"
 	gocache "github.com/patrickmn/go-cache"
 	"github.com/sirupsen/logrus"
+	"io/ioutil"
 	"net/http"
 	"os"
 	"path/filepath"
@@ -47,15 +48,45 @@ func (a SpireAssets) ServeStatic() echo.MiddlewareFunc {
 		}
 	}
 
-	// source
-	branch := fmt.Sprintf("v%v", version)
-	a.downloader.SourceToUserCacheDir(true)
-	r := a.downloader.Source(organization, repository, branch, false)
+	zippedPath := a.getZippedPath()
+	if !a.AssetsExists() && len(zippedPath) == 0 {
+		downloader := github.NewGithubSourceDownloader(a.logger, a.cache)
+		branch := fmt.Sprintf("v%v", version)
+		downloader.SourceToUserCacheDir(true)
+		downloader.SetReadFiles(false)
+		r := downloader.Source(organization, repository, branch, false)
+		if len(r.ZippedPath) > 0 {
+			zippedPath = r.ZippedPath
+		}
+	}
 
 	// serve
 	return appmiddleware.StaticAsset(appmiddleware.StaticConfig{
 		Root:        "/",
 		StripPrefix: string(filepath.Separator) + "eq-asset-preview-master",
-		Filesystem:  http.Dir(r.ZippedPath),
+		Filesystem:  http.Dir(zippedPath),
 	})
+}
+
+func (a SpireAssets) AssetsExists() bool {
+	if _, err := os.Stat(a.getRepoDir()); err == nil {
+		return true
+	}
+
+	return false
+}
+
+func (a SpireAssets) getZippedPath() string {
+	repoDir := a.getRepoDir()
+	zippedPath := ""
+	files, _ := ioutil.ReadDir(repoDir)
+	if len(files) > 0 {
+		zippedPath = filepath.Join(repoDir, files[0].Name())
+	}
+
+	return zippedPath
+}
+
+func (a SpireAssets) getRepoDir() string {
+	return filepath.Join(a.downloader.GetSourceRoot(), fmt.Sprintf("%v-v%v", repository, version))
 }

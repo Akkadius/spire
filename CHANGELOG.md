@@ -1,3 +1,9 @@
+## [2.5.2]
+
+### Downloader Optimizations
+
+- Made some optimizations to the downloading of assets and bootstrapping of assets
+
 ## [2.5.1]
 
 ### Windows Fixes

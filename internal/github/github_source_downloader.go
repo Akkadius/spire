@@ -18,6 +18,11 @@ type GithubSourceDownloader struct {
 	cache          *gocache.Cache
 	sourceUserDir  bool // if set, sources files to user directory
 	sourcedDirPath string
+	readFiles      bool // if set, will open files and return contents
+}
+
+func (g *GithubSourceDownloader) SetReadFiles(readFiles bool) {
+	g.readFiles = readFiles
 }
 
 func (g *GithubSourceDownloader) SourceToUserCacheDir(sourceUserDir bool) {
@@ -25,7 +30,7 @@ func (g *GithubSourceDownloader) SourceToUserCacheDir(sourceUserDir bool) {
 }
 
 func NewGithubSourceDownloader(logger *logrus.Logger, cache *gocache.Cache) *GithubSourceDownloader {
-	return &GithubSourceDownloader{logger: logger, cache: cache}
+	return &GithubSourceDownloader{logger: logger, cache: cache, readFiles: true}
 }
 
 type SourceResult struct {
@@ -79,43 +84,45 @@ func (g *GithubSourceDownloader) Source(org string, repo string, branch string, 
 	var unzippedFiles = map[string]string{}
 
 	// walk files
-	err := filepath.Walk(
-		repoDir,
-		func(path string, info os.FileInfo, err error) error {
-			if err != nil {
-				return err
-			}
+	if g.readFiles {
+		err := filepath.Walk(
+			repoDir,
+			func(path string, info os.FileInfo, err error) error {
+				if err != nil {
+					return err
+				}
 
-			// stat file
-			fi, err := os.Stat(path)
-			if err != nil {
-				g.logger.Error(err)
-			}
-
-			// if regular file - not dir
-			if fi.Mode().IsRegular() {
-				data, err := ioutil.ReadFile(path)
+				// stat file
+				fi, err := os.Stat(path)
 				if err != nil {
 					g.logger.Error(err)
 				}
 
-				// construct relative path
-				// remove base file path
-				fileName := strings.ReplaceAll(path, repoDir, "")
-				// strip top two directory levels
-				dirs := strings.Split(fileName, string(filepath.Separator))
-				dirs = dirs[2:]
+				// if regular file - not dir
+				if fi.Mode().IsRegular() {
+					data, err := ioutil.ReadFile(path)
+					if err != nil {
+						g.logger.Error(err)
+					}
 
-				fileName = strings.Join(dirs, string(filepath.Separator))
+					// construct relative path
+					// remove base file path
+					fileName := strings.ReplaceAll(path, repoDir, "")
+					// strip top two directory levels
+					dirs := strings.Split(fileName, string(filepath.Separator))
+					dirs = dirs[2:]
 
-				unzippedFiles[fileName] = string(data)
-			}
+					fileName = strings.Join(dirs, string(filepath.Separator))
 
-			return nil
-		},
-	)
-	if err != nil {
-		g.logger.Error(err)
+					unzippedFiles[fileName] = string(data)
+				}
+
+				return nil
+			},
+		)
+		if err != nil {
+			g.logger.Error(err)
+		}
 	}
 
 	// file exists
