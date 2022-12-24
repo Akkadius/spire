@@ -1,3 +1,9 @@
+## [2.5.3]
+
+### Spire Application Icon
+
+- Application icon has been added to windows
+
 ## [2.5.2]
 
 ### Downloader Optimizations
