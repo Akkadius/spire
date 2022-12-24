@@ -26,6 +26,12 @@
 - Static assets will also automatically update when there are new assets.
 - This will make Spire releases faster, the distributed binary leaner and also result in less wasted bandwidth
 
+## [2.4.2]
+
+### [Items] Ammo / Powersource
+
+- Fixed a minor issue where ammo / power source slots were flip-flopped in the item editor.
+
 ## [2.4.1]
 
 ### [Bots] Minor fix (Aeadoin)
