@@ -38,7 +38,7 @@ func (m PathManagement) GetEQEmuServerPath() string {
 
 	// second detect one level up (we're in bin folder)
 	parentLevelPath := filepath.Join(cwd, "..", eqemuConfigFileName)
-	if _, err := os.Stat(topLevelPath); err == nil {
+	if _, err := os.Stat(parentLevelPath); err == nil {
 		m.debug("[GetEQEmuServerPath] parent level config path found @ [%v]", parentLevelPath)
 		return filepath.Dir(parentLevelPath)
 	}
