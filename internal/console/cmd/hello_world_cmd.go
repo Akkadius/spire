@@ -1,8 +1,6 @@
 package cmd
 
 import (
-	"github.com/Akkadius/spire/internal/database"
-	"github.com/Akkadius/spire/internal/models"
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
 	"gorm.io/gorm"
@@ -36,19 +34,7 @@ func NewHelloWorldCommand(db *gorm.DB, logger *logrus.Logger) *HelloWorldCommand
 
 // Handle implementation of the Command interface
 func (c *HelloWorldCommand) Handle(cmd *cobra.Command, args []string) {
-	// grab first entry
-	var source models.Task
-	err := c.db.Where("id", 1).First(&source).Error
-	if err != nil {
-		c.logger.Println(err)
-	}
 
-	var dest = source
-	dest.Type = 1
-	dest.ExpReward = 30002
-	dest.Description = "Some new description3"
-
-	c.db.Model(&dest).Updates(database.ResultDifference(source, dest))
 }
 
 // Validate implementation of the Command interface

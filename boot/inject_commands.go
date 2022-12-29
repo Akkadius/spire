@@ -11,6 +11,8 @@ import (
 // command set
 var commandSet = wire.NewSet(
 	cmd.NewHelloWorldCommand,
+	cmd.NewAdminPingOcculus,
+	cmd.NewUserCreateCommand,
 	cmd.NewGenerateModelsCommand,
 	cmd.NewGenerateControllersCommand,
 	cmd.NewHttpServeCommand,
@@ -27,6 +29,8 @@ var commandSet = wire.NewSet(
 // commands provider
 func ProvideCommands(
 	helloWorldCommand *cmd.HelloWorldCommand,
+	adminPingOcculus *cmd.AdminPingOcculus,
+	userCreateCommand *cmd.UserCreateCommand,
 	generateModelsCommand *cmd.GenerateModelsCommand,
 	generateControllersCommand *cmd.GenerateControllersCommand,
 	httpServeCommand *cmd.HttpServeCommand,
@@ -39,7 +43,9 @@ func ProvideCommands(
 	changelogCmd *eqemuchangelog.ChangelogCommand,
 ) []*cobra.Command {
 	return []*cobra.Command{
+		adminPingOcculus.Command(),
 		helloWorldCommand.Command(),
+		userCreateCommand.Command(),
 		generateModelsCommand.Command(),
 		generateControllersCommand.Command(),
 		httpServeCommand.Command(),

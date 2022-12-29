@@ -13,6 +13,7 @@ type User struct {
 	Email                        string                         `db:"email" json:"email"`
 	Avatar                       string                         `db:"avatar" json:"avatar"`
 	Provider                     string                         `db:"provider" json:"provider"`
+	Password                     string                         `db:"password" json:"-"`
 	CreatedAt                    time.Time                      `db:"created_at" json:"created_at"`
 	UpdatedAt                    time.Time                      `db:"updated_at" json:"updated_at"`
 	ServerDatabaseConnections    []ServerDatabaseConnection     `json:"owned_connections,omitempty" gorm:"foreignKey:CreatedBy;association_foreignkey:Id"`
