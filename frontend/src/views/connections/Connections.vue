@@ -64,8 +64,7 @@
 <!--                        <i class="fe fe-database" style="font-size: 50px; color: rgb(189 195 204)"></i>-->
 
                         <img
-                          class="mr-3"
-                          style="height: 120px; width: auto; border-radius: 40px; opacity: .7"
+                          :style="'height: 120px; width: auto; border-radius: 40px; opacity: ' + (isDefaultActive ? '1' : '.5')"
                           src="@/assets/img/eq-logo.jpg">
 
                       </div>
@@ -160,8 +159,7 @@
 <!--                        <i class="fe fe-database" style="font-size: 50px; color: rgb(189 195 204)"></i>-->
 
                         <img
-                          class="mr-3"
-                          style="height: 120px; width: auto; border-radius: 40px; opacity: .7"
+                          :style="'height: 120px; width: auto; border-radius: 40px; opacity: ' + (connection.active === 1 ? '1' : '.5')"
                           src="@/assets/img/eq-logo.jpg">
 
                       </div>
