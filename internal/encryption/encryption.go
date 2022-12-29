@@ -47,7 +47,8 @@ func NewEncrypter(
 }
 
 func (e *Encrypter) Encrypt(text string, keyString string) string {
-	key := []byte(keyString)
+	//key := []byte(keyString)
+	key, _ := hex.DecodeString(keyString)
 	plaintext := []byte(text)
 
 	block, err := aes.NewCipher(key)
@@ -71,7 +72,8 @@ func (e *Encrypter) Encrypt(text string, keyString string) string {
 }
 
 func (e *Encrypter) Decrypt(encryptedString string, keyString string) string {
-	key := []byte(keyString)
+	//key := []byte(keyString)
+	key, _ := hex.DecodeString(keyString)
 	enc, _ := hex.DecodeString(encryptedString)
 
 	//Create a new Cipher Block from the key
