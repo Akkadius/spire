@@ -209,7 +209,7 @@ cd spire && cp .env.dev .env && make install && make install-frontend
 * A ProjectEQ database gets seeded into the database container from http://db.projecteq.net/api/v1/dump/latest (make seed-peq-database) to a database called `peq`
 * Spire tables get installed to a separate `spire` database (make seed-spire-tables)
 * Installs static assets (icons, images, preview images) (make install-assets) from https://github.com/Akkadius/eq-asset-preview
-* Installs `frontend/.env.example` which is required in development to properly route API requests to the development backend (`VUE_APP_BACKEND_BASE_URL`=http://localhost:3000) (make install-frontend)
+* Installs `frontend/.env.example` which is required in development to properly route API requests to the development backend (`VUE_APP_BACKEND_BASE_URL`=http://localhost:3010) (make install-frontend)
 
 ### Linux - Running Development Watchers
 

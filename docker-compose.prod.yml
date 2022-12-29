@@ -27,7 +27,7 @@ services:
       IS_HOSTED_READ_ONLY_MODE: 1
       TERM: xterm-256color
     ports:
-      - ${IP_ADDRESS:-0.0.0.0}:80:3000
+      - ${IP_ADDRESS:-0.0.0.0}:80:3010
     networks:
       - backend
     command: "air -c .air.prod.toml"

@@ -29,7 +29,7 @@ services:
       APP_ENV: local
       TERM: xterm-256color
     ports:
-      - ${IP_ADDRESS:-0.0.0.0}:3000:3000
+      - ${IP_ADDRESS:-0.0.0.0}:3010:3010
       - ${IP_ADDRESS:-0.0.0.0}:8080:8080
     networks:
       - backend
@@ -80,7 +80,7 @@ services:
     build:
       context: ./containers/grafana
     ports:
-      - ${IP_ADDRESS:-0.0.0.0}:3030:3000
+      - ${IP_ADDRESS:-0.0.0.0}:3030:3010
     volumes:
       - ./_data/grafana/:/var/lib/grafana
     depends_on:
