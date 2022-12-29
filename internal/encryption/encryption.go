@@ -173,7 +173,6 @@ func GenerateRandomString(n int) (string, error) {
 // ComparePassword is used to compare a user-inputted password to a hash to see
 // if the password matches or not.
 func (e *Encrypter) ComparePassword(password, hash string) (bool, error) {
-
 	parts := strings.Split(hash, "$")
 
 	c := e.passwordConfig

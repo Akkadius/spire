@@ -33,6 +33,7 @@ func NewAuthController(db *database.DatabaseResolver, logger *logrus.Logger, use
 
 func (a *AuthController) Routes() []*routes.Route {
 	return []*routes.Route{
+		routes.RegisterRoute(http.MethodPost, "login", a.login, nil),
 		routes.RegisterRoute(http.MethodGet, "github", a.githubRedirectHandler, nil),
 		routes.RegisterRoute(http.MethodGet, "github/callback", a.githubCallbackHandler, nil),
 	}
@@ -113,4 +114,27 @@ func (a *AuthController) githubCallbackHandler(c echo.Context) error {
 	fmt.Println(callbackUrl)
 
 	return c.Redirect(http.StatusMovedPermanently, callbackUrl)
+}
+
+type LoginRequest struct {
+	Username string `json:"username"`
+	Password string `json:"password"`
+}
+
+func (a *AuthController) login(c echo.Context) error {
+	u := new(LoginRequest)
+	if err := c.Bind(u); err != nil {
+		return c.String(http.StatusBadRequest, "bad request")
+	}
+
+	passwordValid, err := a.user.CheckUserLogin(u.Username, u.Password)
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
+	}
+
+	if !passwordValid {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Password invalid"})
+	}
+
+	return c.JSON(http.StatusOK, echo.Map{"data": echo.Map{"message": "Login success"}})
 }

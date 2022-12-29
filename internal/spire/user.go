@@ -64,9 +64,21 @@ func (s UserService) CreateUser(user models.User) (models.User, error) {
 	var newUser models.User
 	s.db.GetSpireDb().FirstOrCreate(&newUser, user)
 
-	if newUser.ID > 0 {
-		s.logger.Infof("[user] Created user ID [%v]", newUser.ID)
+	return newUser, nil
+}
+
+func (s UserService) CheckUserLogin(username string, password string) (bool, error) {
+	var user models.User
+	s.db.GetSpireDb().Where("user_name = ?", username).First(&user)
+
+	if user.ID == 0 {
+		return false, errors.New("User does not exist")
 	}
 
-	return newUser, nil
+	match, err := s.crypt.ComparePassword(password, user.Password)
+	if err != nil {
+		return false, err
+	}
+
+	return match, nil
 }
