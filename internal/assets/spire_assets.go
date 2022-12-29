@@ -75,8 +75,6 @@ func (a SpireAssets) ServeStatic() echo.MiddlewareFunc {
 				if err := os.Remove(symlinkTarget); err != nil {
 					a.logger.Errorf("failed to unlink: %+v", err)
 				}
-			} else if os.IsNotExist(err) {
-				a.logger.Errorf("failed to check symlink: %+v", err)
 			}
 
 			// relink

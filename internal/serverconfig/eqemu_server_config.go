@@ -116,7 +116,7 @@ func (e EQEmuServerConfig) Get() EQEmuConfigJson {
 }
 
 func (m *EQEmuServerConfig) debug(msg string, a ...interface{}) {
-	if len(os.Getenv("DEBUG")) > 0 {
+	if len(os.Getenv("DEBUG")) >= 3 {
 		if len(a) > 0 {
 			m.logger.Debug("[eqemu_server_config.go] " + fmt.Sprintf(msg, a...) + "\n")
 			return

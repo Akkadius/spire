@@ -61,7 +61,7 @@ func (m PathManagement) GetEQEmuServerConfigFilePath() string {
 }
 
 func (m *PathManagement) debug(msg string, a ...interface{}) {
-	if len(os.Getenv("DEBUG")) > 0 {
+	if len(os.Getenv("DEBUG")) >= 3 {
 		if len(a) > 0 {
 			m.logger.Debug("[pathmgmt.go] " + fmt.Sprintf(msg, a...) + "\n")
 			return
