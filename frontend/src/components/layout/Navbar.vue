@@ -41,7 +41,11 @@
       <router-link class="ml-3 mt-3" to="/">
         <h1 class="text-center eq-header small-mobile">
           Spire
+<!--          <h3 class="text-center eq-header small-mobile d-inline" style="font-size: 40px">-->
+<!--            [Admin]-->
+<!--          </h3>-->
         </h1>
+
 
       </router-link>
 
