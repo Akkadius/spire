@@ -35,7 +35,9 @@ func NewUserService(
 func (s UserService) CreateUser(user models.User) (models.User, error) {
 	// check if user exists
 	var users []models.User
-	s.db.GetSpireDb().Where("user_name = ?", user.UserName).Find(&users)
+	s.db.GetSpireDb().
+		Where("user_name = ? and provider = ?", user.UserName, user.Provider).
+		Find(&users)
 	if len(users) > 0 {
 		return models.User{}, errors.New("User already exists")
 	}

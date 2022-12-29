@@ -41,6 +41,7 @@
                 <!-- Title -->
                 <h4 class="card-header-title">
                   <i class="fe fe-database"></i>
+
                   {{ defaultConnection.database_connection.name }}
                 </h4>
                 <small class="text-muted">Latest of ProjectEQ data, active when not logged in, read-only</small>
@@ -60,7 +61,12 @@
                         <!--                          <img src="~@/assets/img/mysql-logo.png" class="avatar-img rounded">-->
                         <!--                        </div>-->
 
-                        <i class="fe fe-database" style="font-size: 50px; color: rgb(189 195 204)"></i>
+<!--                        <i class="fe fe-database" style="font-size: 50px; color: rgb(189 195 204)"></i>-->
+
+                        <img
+                          class="mr-3"
+                          style="height: 120px; width: auto; border-radius: 40px; opacity: .7"
+                          src="@/assets/img/eq-logo.jpg">
 
                       </div>
                       <div class="col ml-n2">
@@ -151,7 +157,12 @@
                         <!--                          <img src="~@/assets/img/mysql-logo.png" alt="..." class="avatar-img rounded">-->
                         <!--                        </a>-->
 
-                        <i class="fe fe-database" style="font-size: 50px; color: rgb(189 195 204)"></i>
+<!--                        <i class="fe fe-database" style="font-size: 50px; color: rgb(189 195 204)"></i>-->
+
+                        <img
+                          class="mr-3"
+                          style="height: 120px; width: auto; border-radius: 40px; opacity: .7"
+                          src="@/assets/img/eq-logo.jpg">
 
                       </div>
                       <div class="col ml-n2">
