@@ -60,7 +60,7 @@ func InitializeApplication() (App, error) {
 	generateModelsCommand := cmd.NewGenerateModelsCommand(db, logger)
 	generateControllersCommand := cmd.NewGenerateControllersCommand(db, logger)
 	helloWorldController := controllers.NewHelloWorldController(db, logger)
-	authController := controllers.NewAuthController(databaseResolver, logger)
+	authController := controllers.NewAuthController(databaseResolver, logger, userService)
 	meController := controllers.NewMeController()
 	client := influx.NewClient()
 	analyticsController := controllers.NewAnalyticsController(logger, client, databaseResolver)

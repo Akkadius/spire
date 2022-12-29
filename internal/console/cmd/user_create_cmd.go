@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/Akkadius/spire/internal/database"
 	"github.com/Akkadius/spire/internal/encryption"
+	"github.com/Akkadius/spire/internal/models"
 	"github.com/Akkadius/spire/internal/spire"
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
@@ -49,8 +50,15 @@ func (c *UserCreateCommand) Handle(_ *cobra.Command, args []string) {
 	username := args[0]
 	password := args[1]
 
+	user := models.User{
+		UserName: username,
+		FullName: username,
+		Password: password,
+		Provider: spire.LOGIN_PROVIDER_LOCAL,
+	}
+
 	// new user
-	newUser, err := c.user.CreateUser(username, password)
+	newUser, err := c.user.CreateUser(user)
 	if err != nil {
 		c.logger.Error(err)
 	}
