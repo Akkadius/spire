@@ -203,7 +203,7 @@
           class="mt-3"
           @click="closeExample"
         >
-          <div style="right: 30px; top: -12px; position: absolute">
+          <div style="right: 30px; top: -10px; position: absolute; z-index: 999999">
             <a
               style="color: white"
               @click="closeExample"
