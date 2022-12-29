@@ -126,8 +126,6 @@ func (e *Encrypter) initializeEncryption() {
 		}
 	} else if env.IsEnvLoaded() && len(env.Get("APP_KEY", "")) == 0 {
 		e.logger.Fatal("[encryption] Application key is not defined, it must be set in [.env]")
-	} else {
-		e.logger.Fatal("[encryption] Application key is not defined")
 	}
 }
 
