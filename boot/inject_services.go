@@ -40,6 +40,7 @@ var serviceSet = wire.NewSet(
 	eqemuchangelog.NewChangelog,
 	eqemuanalytics.NewReleases,
 	provideSpireOnboarding,
+	spire.NewUserService,
 )
 
 func provideSpireOnboarding(connections *database.Connections) *spire.Onboarding {

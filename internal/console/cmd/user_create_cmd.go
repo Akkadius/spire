@@ -4,31 +4,29 @@ import (
 	"fmt"
 	"github.com/Akkadius/spire/internal/database"
 	"github.com/Akkadius/spire/internal/encryption"
-	"github.com/Akkadius/spire/internal/models"
-	"github.com/Akkadius/spire/internal/serverconfig"
-	"github.com/k0kubun/pp/v3"
+	"github.com/Akkadius/spire/internal/spire"
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
-	"time"
 )
 
 type UserCreateCommand struct {
-	db           *database.DatabaseResolver
-	logger       *logrus.Logger
-	command      *cobra.Command
-	serverconfig *serverconfig.EQEmuServerConfig
-	crypt        *encryption.Encrypter
+	db      *database.DatabaseResolver
+	logger  *logrus.Logger
+	command *cobra.Command
+	crypt   *encryption.Encrypter
+	user    *spire.UserService
 }
 
 func (c *UserCreateCommand) Command() *cobra.Command {
 	return c.command
 }
 
-func NewUserCreateCommand(db *database.DatabaseResolver, logger *logrus.Logger, crypt *encryption.Encrypter) *UserCreateCommand {
+func NewUserCreateCommand(db *database.DatabaseResolver, logger *logrus.Logger, crypt *encryption.Encrypter, user *spire.UserService) *UserCreateCommand {
 	i := &UserCreateCommand{
 		db:     db,
 		logger: logger,
 		crypt:  crypt,
+		user:   user,
 		command: &cobra.Command{
 			Use:   "user:create [username] [password]",
 			Short: "Creates a local database user",
@@ -47,32 +45,15 @@ func (c *UserCreateCommand) Handle(_ *cobra.Command, args []string) {
 		return
 	}
 
+	// args
 	username := args[0]
 	password := args[1]
 
-	encrypted := c.crypt.Encrypt(password, c.crypt.GetEncryptionKey())
-	decrypted := c.crypt.Decrypt(encrypted, c.crypt.GetEncryptionKey())
-
-	pp.Printf("Decrypted password is [%v]", decrypted)
-
-	var users []models.User
-	c.db.GetSpireDb().Where("user_name = ?", username).Find(&users)
-	if len(users) > 0 {
-		c.logger.Error("[user] User already exists")
-		return
+	// new user
+	newUser, err := c.user.CreateUser(username, password)
+	if err != nil {
+		c.logger.Error(err)
 	}
-
-	var newUser models.User
-	c.db.GetSpireDb().FirstOrCreate(
-		&newUser, models.User{
-			UserName:  username,
-			FullName:  username,
-			Password:  c.crypt.Encrypt(password, c.crypt.GetEncryptionKey()),
-			Provider:  "local",
-			CreatedAt: time.Time{},
-			UpdatedAt: time.Time{},
-		},
-	)
 
 	if newUser.ID > 0 {
 		c.logger.Infof("[user] Created user ID [%v]", newUser.ID)

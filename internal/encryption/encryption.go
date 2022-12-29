@@ -4,23 +4,35 @@ import (
 	"crypto/aes"
 	"crypto/cipher"
 	"crypto/rand"
+	"crypto/subtle"
+	"encoding/base64"
 	"encoding/hex"
 	"fmt"
 	"github.com/Akkadius/spire/internal/env"
 	"github.com/Akkadius/spire/internal/serverconfig"
 	"github.com/sirupsen/logrus"
+	"golang.org/x/crypto/argon2"
 	"io"
 	"math/big"
+	"strings"
 )
 
+type PasswordConfig struct {
+	time    uint32
+	memory  uint32
+	threads uint8
+	keyLen  uint32
+}
+
 type Encrypter struct {
-	logger        *logrus.Logger
-	serverconfig  *serverconfig.EQEmuServerConfig
-	encryptionKey string
+	logger         *logrus.Logger
+	serverconfig   *serverconfig.EQEmuServerConfig
+	encryptionKey  string
+	passwordConfig *PasswordConfig
 }
 
 func (e *Encrypter) GetEncryptionKey() string {
-	return fmt.Sprintf("%v", e.encryptionKey)
+	return fmt.Sprintf("%x", e.encryptionKey)
 }
 
 func (e *Encrypter) SetEncryptionKey(encryptionKey string) {
@@ -34,6 +46,12 @@ func NewEncrypter(
 	e := &Encrypter{
 		logger:       logger,
 		serverconfig: serverconfig,
+		passwordConfig: &PasswordConfig{
+			time:    1,
+			memory:  64 * 1024,
+			threads: 4,
+			keyLen:  32,
+		},
 	}
 
 	e.initializeEncryption()
@@ -47,7 +65,6 @@ func NewEncrypter(
 }
 
 func (e *Encrypter) Encrypt(text string, keyString string) string {
-	//key := []byte(keyString)
 	key, _ := hex.DecodeString(keyString)
 	plaintext := []byte(text)
 
@@ -72,7 +89,6 @@ func (e *Encrypter) Encrypt(text string, keyString string) string {
 }
 
 func (e *Encrypter) Decrypt(encryptedString string, keyString string) string {
-	//key := []byte(keyString)
 	key, _ := hex.DecodeString(keyString)
 	enc, _ := hex.DecodeString(encryptedString)
 
@@ -152,4 +168,54 @@ func GenerateRandomString(n int) (string, error) {
 	}
 
 	return string(ret), nil
+}
+
+// ComparePassword is used to compare a user-inputted password to a hash to see
+// if the password matches or not.
+func (e *Encrypter) ComparePassword(password, hash string) (bool, error) {
+
+	parts := strings.Split(hash, "$")
+
+	c := e.passwordConfig
+	_, err := fmt.Sscanf(parts[3], "m=%d,t=%d,p=%d", &c.memory, &c.time, &c.threads)
+	if err != nil {
+		return false, err
+	}
+
+	salt, err := base64.RawStdEncoding.DecodeString(parts[4])
+	if err != nil {
+		return false, err
+	}
+
+	decodedHash, err := base64.RawStdEncoding.DecodeString(parts[5])
+	if err != nil {
+		return false, err
+	}
+	c.keyLen = uint32(len(decodedHash))
+
+	comparisonHash := argon2.IDKey([]byte(password), salt, c.time, c.memory, c.threads, c.keyLen)
+
+	return subtle.ConstantTimeCompare(decodedHash, comparisonHash) == 1, nil
+}
+
+// GeneratePassword is used to generate a new password hash for storing and
+// comparing at a later date.
+func (e *Encrypter) GeneratePassword(password string) (string, error) {
+	c := e.passwordConfig
+
+	// Generate a Salt
+	salt := make([]byte, 16)
+	if _, err := rand.Read(salt); err != nil {
+		return "", err
+	}
+
+	hash := argon2.IDKey([]byte(password), salt, c.time, c.memory, c.threads, c.keyLen)
+
+	// Base64 encode the salt and hashed password.
+	b64Salt := base64.RawStdEncoding.EncodeToString(salt)
+	b64Hash := base64.RawStdEncoding.EncodeToString(hash)
+
+	format := "$argon2id$v=%d$m=%d,t=%d,p=%d$%s$%s"
+	full := fmt.Sprintf(format, argon2.Version, c.memory, c.time, c.threads, b64Salt, b64Hash)
+	return full, nil
 }

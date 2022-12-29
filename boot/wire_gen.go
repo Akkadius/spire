@@ -28,6 +28,7 @@ import (
 	"github.com/Akkadius/spire/internal/permissions"
 	"github.com/Akkadius/spire/internal/questapi"
 	"github.com/Akkadius/spire/internal/serverconfig"
+	"github.com/Akkadius/spire/internal/spire"
 	"github.com/gertd/go-pluralize"
 )
 
@@ -54,7 +55,8 @@ func InitializeApplication() (App, error) {
 	connections := provideAppDbConnections(eqEmuServerConfig, logger)
 	encrypter := encryption.NewEncrypter(logger, eqEmuServerConfig)
 	databaseResolver := database.NewDatabaseResolver(connections, logger, encrypter, cache)
-	userCreateCommand := cmd.NewUserCreateCommand(databaseResolver, logger, encrypter)
+	userService := spire.NewUserService(databaseResolver, logger, encrypter)
+	userCreateCommand := cmd.NewUserCreateCommand(databaseResolver, logger, encrypter, userService)
 	generateModelsCommand := cmd.NewGenerateModelsCommand(db, logger)
 	generateControllersCommand := cmd.NewGenerateControllersCommand(db, logger)
 	helloWorldController := controllers.NewHelloWorldController(db, logger)
