@@ -28,16 +28,6 @@
         <span class="navbar-toggler-icon"></span>
       </button>
 
-      <!-- Brand -->
-      <!--      <router-link class="ml-3 mt-3 d-none d-lg-block" to="/">-->
-      <!--        <img-->
-      <!--          src="~@/assets/img/eqemu-logo-1.png"-->
-      <!--          class="navbar-brand-img mx-auto d-none d-sm-block mb-3" alt="..."-->
-      <!--          style="max-height: 6rem"-->
-      <!--        >-->
-      <!--      </router-link>-->
-
-
       <router-link class="ml-3 mt-3" to="/">
         <h1 class="text-center eq-header small-mobile">
           Spire
@@ -49,14 +39,6 @@
 
       </router-link>
 
-      <!--      <hr class="dropdown-divider">-->
-
-
-      <!--      <hr class="dropdown-divider">-->
-
-      <!--      <h4 class=" text-center menuetto-header mt-2" style="font-size: 34px">-->
-      <!--        Tools-->
-      <!--      </h4>-->
 
       <!-- User (xs) -->
       <div class="navbar-user d-md-none">
@@ -86,22 +68,9 @@
       <!-- Collapse -->
       <div class="collapse navbar-collapse" id="sidebarCollapse">
 
-        <!-- Form -->
-        <!--        <form class="mt-4 mb-3 d-md-none">-->
-        <!--          <div class="input-group input-group-rounded input-group-merge">-->
-        <!--            <input type="search" class="form-control form-control-rounded form-control-prepended" placeholder="Search"-->
-        <!--                   aria-label="Search">-->
-        <!--            <div class="input-group-prepend">-->
-        <!--              <div class="input-group-text">-->
-        <!--                <span class="fe fe-search"></span>-->
-        <!--              </div>-->
-        <!--            </div>-->
-        <!--          </div>-->
-        <!--        </form>-->
-
         <!-- Heading -->
         <h6 class="navbar-heading mt-3">
-          Tools
+          Content Tools
         </h6>
 
         <!-- Navigation -->
@@ -349,8 +318,16 @@ export default {
         labelIcon: "ra ra-book mr-1",
         routePrefixMatches: ["swagger", "model-viewer"],
         navs: [
-          { title: "Swagger API", to: SpireApi.getBasePath() + '/swagger/index.html', icon: "ra ra-monster-skull mr-1" },
-          { title: "Model Relationship Explorer", to: ROUTE.API_MODEL_RELATIONSHIP_EXPLORER, icon: "ra ra-kaleidoscope mr-1" },
+          {
+            title: "Swagger API",
+            to: SpireApi.getBasePath() + '/swagger/index.html',
+            icon: "ra ra-monster-skull mr-1"
+          },
+          {
+            title: "Model Relationship Explorer",
+            to: ROUTE.API_MODEL_RELATIONSHIP_EXPLORER,
+            icon: "ra ra-kaleidoscope mr-1"
+          },
         ]
       },
       componentNavs: [
