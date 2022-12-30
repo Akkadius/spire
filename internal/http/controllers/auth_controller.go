@@ -92,23 +92,32 @@ func (a *AuthController) githubCallbackHandler(c echo.Context) error {
 	//spew.Dump(github)
 	//spew.Dump(token)
 
-	u := models.User{
-		UserName:  github.Username,
-		FullName:  github.FullName,
-		FirstName: github.FirstName,
-		LastName:  github.LastName,
-		Email:     github.Email,
-		Avatar:    github.Avatar,
-		Provider:  spire.LOGIN_PROVIDER_GITHUB,
+	var user models.User
+	s.db.GetSpireDb().Where("user_name = ? and provider = ?", username, spire.LOGIN_PROVIDER_LOCAL).First(&user)
+
+	if user.ID == 0 {
+		u := models.User{
+			UserName:  github.Username,
+			FullName:  github.FullName,
+			FirstName: github.FirstName,
+			LastName:  github.LastName,
+			Email:     github.Email,
+			Avatar:    github.Avatar,
+			Provider:  spire.LOGIN_PROVIDER_GITHUB,
+		}
+
+		// new github
+		newUser, err := a.user.CreateUser(u)
+		if err != nil {
+			a.logger.Error(err)
+		}
+
+		if newUser.ID > 0 {
+			user.ID = newUser.ID
+		}
 	}
 
-	// new github
-	newUser, err := a.user.CreateUser(u)
-	if err != nil {
-		a.logger.Error(err)
-	}
-
-	newToken, _ := createJwtToken(fmt.Sprintf("%v", newUser.ID))
+	newToken, _ := createJwtToken(fmt.Sprintf("%v", user.ID))
 	callbackUrl := fmt.Sprintf("%s/fe-auth-callback?jwt=%s", os.Getenv("VUE_APP_FRONTEND_BASE_URL"), newToken)
 
 	fmt.Println(callbackUrl)

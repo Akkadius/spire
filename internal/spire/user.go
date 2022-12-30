@@ -71,7 +71,7 @@ func (s UserService) CreateUser(user models.User) (models.User, error) {
 
 func (s UserService) CheckUserLogin(username string, password string) (bool, error) {
 	var user models.User
-	s.db.GetSpireDb().Where("user_name = ?", username).First(&user)
+	s.db.GetSpireDb().Where("user_name = ? and provider = ?", username, LOGIN_PROVIDER_LOCAL).First(&user)
 
 	if user.ID == 0 {
 		return false, errors.New("User does not exist")
