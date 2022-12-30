@@ -80,6 +80,7 @@ export default {
       handler(newVal) {
         console.log("[InfoErrorBanner] notification watcher [%s]", this.notification)
         this.sendNotification(this.notification, 5000)
+        this.dismissError()
       },
     },
     error: {
@@ -87,6 +88,7 @@ export default {
         console.log("[InfoErrorBanner] error watcher [%s]", this.error)
 
         this.localError = this.error
+        this.dismissNotification()
       },
     },
   },

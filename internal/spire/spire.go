@@ -3,6 +3,7 @@ package spire
 import (
 	"github.com/Akkadius/spire/internal/database"
 	"github.com/Akkadius/spire/internal/env"
+	"github.com/Akkadius/spire/internal/models"
 	"github.com/Akkadius/spire/internal/serverconfig"
 	"github.com/go-sql-driver/mysql"
 	"github.com/sirupsen/logrus"
@@ -41,7 +42,7 @@ func NewSpire(
 }
 
 func (o *SpireInit) Init() {
-	o.CheckIfAppInitialized()
+	o.isInitialized = o.CheckIfAppInitialized()
 
 	// if we've set the app up initially but new settings have been added
 	// let's automatically run them
@@ -83,6 +84,11 @@ func (o *SpireInit) GetInstallationTables() []string {
 	return o.connections.GetMigrationTables()
 }
 
-func (o *SpireInit) CheckIfAppInitialized() {
-	// do stuff
+func (o *SpireInit) CheckIfAppInitialized() bool {
+	var settings []models.Setting
+	o.connections.SpireDb().Find(&settings)
+	var adminUser models.User
+	o.connections.SpireDb().Where("is_admin = 1").First(&adminUser)
+
+	return len(settings) > 0 && adminUser.ID != 0
 }

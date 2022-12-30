@@ -4,22 +4,23 @@
       <div class="col-sm-12 col-lg-6 justify-content-center">
         <h1 style="font-size: 100px" class="text-center eq-header small-mobile">Spire Setup</h1>
 
-        <eq-window style="font-size: 14px;" class="p-0 m-0">
-          <div
-            class="p-4"
-            style="height: 83vh; overflow-y: scroll; overflow-x: hidden"
-          >
-            <p
-              style="font-size: 14px"
-            >
+        <info-error-banner
+          :slim="true"
+          :notification="notification"
+          :error="error"
+          @dismiss-error="error = ''"
+          @dismiss-notification="notification = ''"
+          class="mt-0"
+        />
+
+        <div style="height: 80vh; overflow-y: scroll; overflow-x: hidden">
+          <eq-window>
+            <p style="font-size: 14px" class="m-0">
               It appears that you are using Spire for the first time. Let's walk you through a brief setup...
             </p>
+          </eq-window>
 
-            <div class="row mt-3">
-              <div class="col-12">
-                <h3 class="eq-header">Settings</h3>
-              </div>
-            </div>
+          <eq-window title="Settings" class="mt-5">
 
             <!-- Auth enabled -->
             <div class="row mt-3 unselectable">
@@ -69,12 +70,9 @@
               </div>
             </div>
 
-            <div class="row mt-3">
-              <div class="col-12">
-                <h3 class="eq-header">Database</h3>
-              </div>
-            </div>
+          </eq-window>
 
+          <eq-window title="Database" class="mt-5">
             <small>
               Spire will use your database to store settings and configuration as it relates to Spire and will use your
               EverQuest Emulator database instance for communication with tooling. This user must have access to create
@@ -97,15 +95,9 @@
                 </div>
               </div>
             </div>
+          </eq-window>
 
-            <!-- Installation Actions -->
-
-            <div class="row mt-3">
-              <div class="col-12">
-                <h3 class="eq-header">Install</h3>
-              </div>
-            </div>
-
+          <eq-window title="Installation Actions" class="mt-5">
             <div
               class="mt-3"
               v-if="form.auth_enabled"
@@ -143,17 +135,25 @@
               </div>
             </div>
 
-            <button class='eq-button' @click="finish">Finish</button>
-
+            <button
+              :disabled="result && Object.keys(result).length > 0"
+              :style="'opacity: ' + (result && Object.keys(result).length > 0 ? '.5' : '1')"
+              class='eq-button'
+              @click="finish"
+            >Finish
+            </button>
 
             <!-- Debug -->
-            <eq-debug :data="result" class="text-left"/>
-            <eq-debug :data="form" class="text-left"/>
-            <eq-debug :data="connection" class="text-left"/>
-            <eq-debug :data="tables" class="text-left"/>
 
-          </div>
-        </eq-window>
+            <eq-window v-if="debug">
+              <eq-debug :data="result" class="text-left"/>
+              <eq-debug :data="form" class="text-left"/>
+              <eq-debug :data="connection" class="text-left"/>
+              <eq-debug :data="tables" class="text-left"/>
+            </eq-window>
+
+          </eq-window>
+        </div>
 
 
       </div>
@@ -162,21 +162,29 @@
 </template>
 
 <script>
-import ContentArea from "../components/layout/ContentArea";
-import {AppEnv}    from "@/app/env/app-env";
-import {ROUTE}     from "@/routes";
-import EqWindow    from "@/components/eq-ui/EQWindow.vue";
-import EqCheckbox  from "@/components/eq-ui/EQCheckbox.vue";
-import {SpireApi}  from "@/app/api/spire-api";
-import EqDebug     from "@/components/eq-ui/EQDebug.vue";
+import ContentArea     from "../components/layout/ContentArea";
+import {AppEnv}        from "@/app/env/app-env";
+import {ROUTE}         from "@/routes";
+import EqWindow        from "@/components/eq-ui/EQWindow.vue";
+import EqCheckbox      from "@/components/eq-ui/EQCheckbox.vue";
+import {SpireApi}      from "@/app/api/spire-api";
+import EqDebug         from "@/components/eq-ui/EQDebug.vue";
+import {LocalSettings} from "@/app/local-settings/localsettings";
+import InfoErrorBanner from "@/components/InfoErrorBanner.vue";
 
 export default {
   name: 'Login.vue',
-  components: { EqDebug, EqCheckbox, EqWindow, ContentArea },
+  components: { InfoErrorBanner, EqDebug, EqCheckbox, EqWindow, ContentArea },
   data() {
     return {
+      debug: false,
+
       githubAuthEnabled: AppEnv.isGithubAuthEnabled(),
       ROUTE: ROUTE,
+
+      // api responses
+      error: "",
+      notification: "",
 
       // form data
       form: {
@@ -200,6 +208,8 @@ export default {
     }
   },
   async mounted() {
+    this.debug = LocalSettings.get("debug-mode") === "true"
+
     const r = await SpireApi.v1().get("/app/onboarding-info")
     if (r.data && r.data.data) {
       this.connection = r.data.data.connection_info
@@ -209,9 +219,17 @@ export default {
   methods: {
     async finish() {
       if (confirm(`Are you sure this is how you want to install your Spire installation?`)) {
-        const r = await SpireApi.v1().post("/app/onboard-initialize", this.form)
-        if (r.data) {
-          this.result = r.data
+        try {
+          const r = await SpireApi.v1().post("/app/onboard-initialize", this.form)
+          if (r.data && r.status === 200) {
+            this.result       = r.data
+            this.notification = "Installation succeeded! Redirecting momentarily..."
+          }
+        } catch (err) {
+          // error notify
+          if (err.response && err.response.data && err.response.data.error) {
+            this.error = err.response.data.error
+          }
         }
       }
     },
