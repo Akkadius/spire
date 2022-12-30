@@ -5,6 +5,7 @@ import (
 	"github.com/Akkadius/spire/internal/connection"
 	"github.com/Akkadius/spire/internal/connection/contexts"
 	"github.com/Akkadius/spire/internal/database"
+	"github.com/Akkadius/spire/internal/encryption"
 	"github.com/Akkadius/spire/internal/env"
 	"github.com/Akkadius/spire/internal/models"
 	"github.com/Akkadius/spire/internal/serverconfig"
@@ -24,6 +25,7 @@ type SpireInit struct {
 	dbConnectionCreateService *connection.DbConnectionCreateService
 	cache                     *gocache.Cache
 	settings                  *Settings
+	crypt                     *encryption.Encrypter
 }
 
 func NewSpire(
@@ -32,6 +34,7 @@ func NewSpire(
 	logger *logrus.Logger,
 	settings *Settings,
 	cache *gocache.Cache,
+	crypt *encryption.Encrypter,
 	dbConnectionCreateService *connection.DbConnectionCreateService,
 ) *SpireInit {
 	i := &SpireInit{
@@ -41,6 +44,7 @@ func NewSpire(
 		cache:                     cache,
 		settings:                  settings,
 		serverconfig:              serverconfig,
+		crypt:                     crypt,
 		dbConnectionCreateService: dbConnectionCreateService,
 	}
 
@@ -132,13 +136,39 @@ func (o *SpireInit) SourceSpireTables() error {
 // into Spire tables from the emulator server configuration
 func (o *SpireInit) CreateDefaultDatabaseConnectionFromConfig(user models.User) error {
 	db := o.connections.SpireDb()
-
-	// delete users associated to connection
-	db.Where("user_id = ?", user.ID).Delete(models.UserServerDatabaseConnection{})
-	// delete connection itself
-	db.Where("created_by = ?", user.ID).Delete(models.ServerDatabaseConnection{})
-
 	cfg := o.serverconfig.Get()
+
+	// connection already exists, let's just update it
+	var c models.ServerDatabaseConnection
+	db.Where("id = 1").First(&c)
+	if c.ID > 0 {
+		c.DbHost = cfg.Server.Database.Host
+		c.DbPort = cfg.Server.Database.Port
+		c.DbName = cfg.Server.Database.Db
+		c.DbUsername = cfg.Server.Database.Username
+		c.DbPassword = o.crypt.Encrypt(cfg.Server.Database.Password, o.GetEncKey(user.ID))
+
+		// content db if exists
+		if len(cfg.Server.ContentDatabase.Host) > 0 {
+			c.ContentDbHost = cfg.Server.ContentDatabase.Host
+		}
+		if len(cfg.Server.ContentDatabase.Port) > 0 {
+			c.ContentDbPort = cfg.Server.ContentDatabase.Port
+		}
+		if len(cfg.Server.ContentDatabase.Db) > 0 {
+			c.ContentDbName = cfg.Server.ContentDatabase.Db
+		}
+		if len(cfg.Server.ContentDatabase.Username) > 0 {
+			c.ContentDbUsername = cfg.Server.ContentDatabase.Username
+		}
+		if len(cfg.Server.ContentDatabase.Password) > 0 {
+			c.ContentDbPassword = o.crypt.Encrypt(cfg.Server.ContentDatabase.Password, o.GetEncKey(user.ID))
+		}
+
+		db.Save(&c)
+
+		return nil
+	}
 
 	// context
 	ctx, err := contexts.NewConnectionCreateContext(
@@ -183,12 +213,9 @@ func (o *SpireInit) CreateDefaultDatabaseConnectionFromConfig(user models.User) 
 	o.cache.Delete(fmt.Sprintf("active-connection-%v-default", user.ID))
 	o.cache.Delete(fmt.Sprintf("active-connection-%v-eqemu_content", user.ID))
 
-	// hack to reset the indexes back to 1
-	// local spire instances won't have any more than one database connection anyhow
-	// local spire instances won't be able to support having multiple connections to manage
-	db.Exec(fmt.Sprintf("UPDATE %v SET server_database_connection_id = 1", models.UserServerDatabaseConnection{}.TableName()))
-	db.Exec(fmt.Sprintf("UPDATE %v SET id = 1", models.UserServerDatabaseConnection{}.TableName()))
-	db.Exec(fmt.Sprintf("UPDATE %v SET id = 1", models.ServerDatabaseConnection{}.TableName()))
-
 	return nil
+}
+
+func (o *SpireInit) GetEncKey(userId uint) string {
+	return fmt.Sprintf("%v-%v", env.Get("APP_KEY", ""), userId)
 }

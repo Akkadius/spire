@@ -76,7 +76,7 @@ func InitializeApplication() (App, error) {
 	questExamplesGithubSourcer := questapi.NewQuestExamplesGithubSourcer(logger, cache, githubSourceDownloader)
 	questApiController := controllers.NewQuestApiController(logger, parseService, questExamplesGithubSourcer)
 	settings := spire.NewSettings(connections, logger)
-	spireInit := spire.NewSpire(connections, eqEmuServerConfig, logger, settings, cache, dbConnectionCreateService)
+	spireInit := spire.NewSpire(connections, eqEmuServerConfig, logger, settings, cache, encrypter, dbConnectionCreateService)
 	appController := controllers.NewAppController(cache, logger, spireInit, userService, settings)
 	queryController := controllers.NewQueryController(databaseResolver, logger)
 	questFileApiController := controllers.NewQuestFileApiController(logger)
