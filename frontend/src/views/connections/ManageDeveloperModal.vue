@@ -171,6 +171,7 @@ export default {
       }
 
       this.submitPermissions()
+      this.$forceUpdate()
     },
 
     showChanges(identifier) {

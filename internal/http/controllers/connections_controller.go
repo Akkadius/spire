@@ -10,6 +10,7 @@ import (
 	"github.com/Akkadius/spire/internal/http/routes"
 	"github.com/Akkadius/spire/internal/models"
 	"github.com/Akkadius/spire/internal/permissions"
+	"github.com/Akkadius/spire/internal/spire"
 	"github.com/labstack/echo/v4"
 	gocache "github.com/patrickmn/go-cache"
 	"github.com/sirupsen/logrus"
@@ -27,6 +28,7 @@ type ConnectionsController struct {
 	dbConnectionCreateService *connection.DbConnectionCreateService
 	dbConnectionCheckService  *connection.DbConnectionCheckService
 	permissions               *permissions.Service
+	spireInit                 *spire.SpireInit
 }
 
 func NewConnectionsController(
@@ -36,6 +38,7 @@ func NewConnectionsController(
 	dbConnectionCreateService *connection.DbConnectionCreateService,
 	dbConnectionCheckService *connection.DbConnectionCheckService,
 	permissions *permissions.Service,
+	spireInit *spire.SpireInit,
 ) *ConnectionsController {
 	return &ConnectionsController{
 		db:                        db,
@@ -44,6 +47,7 @@ func NewConnectionsController(
 		permissions:               permissions,
 		dbConnectionCreateService: dbConnectionCreateService,
 		dbConnectionCheckService:  dbConnectionCheckService,
+		spireInit:                 spireInit,
 	}
 }
 
@@ -218,6 +222,14 @@ func (cc *ConnectionsController) delete(c echo.Context) error {
 	connectionId, err := strconv.ParseUint(c.Param("connection"), 10, 64)
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err})
+	}
+
+	// local setups - prevent from deleting main connection
+	if cc.spireInit.IsAuthEnabled() && connectionId == 1 {
+		return c.JSON(
+			http.StatusInternalServerError,
+			echo.Map{"error": "Cannot delete this connection, it is tied to your server configuration"},
+		)
 	}
 
 	// Validate: Invoking user is owner of connection

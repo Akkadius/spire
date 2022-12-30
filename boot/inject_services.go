@@ -40,5 +40,5 @@ var serviceSet = wire.NewSet(
 	eqemuanalytics.NewReleases,
 	spireuser.NewUserService,
 	spire.NewSettings,
-	spire.NewSpire,
+	spire.NewSpireInit,
 )

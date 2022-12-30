@@ -28,7 +28,7 @@ type SpireInit struct {
 	crypt                     *encryption.Encrypter
 }
 
-func NewSpire(
+func NewSpireInit(
 	connections *database.Connections,
 	serverconfig *serverconfig.EQEmuServerConfig,
 	logger *logrus.Logger,
@@ -218,4 +218,8 @@ func (o *SpireInit) CreateDefaultDatabaseConnectionFromConfig(user models.User) 
 
 func (o *SpireInit) GetEncKey(userId uint) string {
 	return fmt.Sprintf("%v-%v", env.Get("APP_KEY", ""), userId)
+}
+
+func (o *SpireInit) IsAuthEnabled() bool {
+	return o.settings.IsSettingEnabled(SettingAuthEnabled)
 }
