@@ -34,8 +34,7 @@ export default {
   methods: {
 
     loadKeypressBindings() {
-      var self = this
-      window.addEventListener("keypress", function (e) {
+      window.addEventListener("keypress", (e) => {
         if (e.srcElement.tagName !== "BODY" && e.srcElement.tagName !== "A") {
           return
         }
@@ -47,6 +46,12 @@ export default {
         switch (String.fromCharCode(e.keyCode)) {
           case 'h':
             EventBus.$emit('HIDE_NAVBAR', true);
+            break
+          case 'b':
+            this.$router.push({ path: '/break' })
+            break
+          case '`':
+            this.$router.push({ path: '/' })
             break
           case 'd':
             setTimeout(() => {
