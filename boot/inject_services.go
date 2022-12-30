@@ -5,9 +5,7 @@ import (
 	"github.com/Akkadius/spire/internal/auditlog"
 	"github.com/Akkadius/spire/internal/clientfiles"
 	"github.com/Akkadius/spire/internal/connection"
-	"github.com/Akkadius/spire/internal/database"
 	"github.com/Akkadius/spire/internal/desktop"
-	"github.com/Akkadius/spire/internal/env"
 	"github.com/Akkadius/spire/internal/eqemuanalytics"
 	"github.com/Akkadius/spire/internal/eqemuchangelog"
 	"github.com/Akkadius/spire/internal/github"
@@ -20,7 +18,6 @@ import (
 	"github.com/Akkadius/spire/internal/spireuser"
 	"github.com/gertd/go-pluralize"
 	"github.com/google/wire"
-	"github.com/sirupsen/logrus"
 )
 
 var serviceSet = wire.NewSet(
@@ -41,21 +38,7 @@ var serviceSet = wire.NewSet(
 	assets.NewSpireAssets,
 	eqemuchangelog.NewChangelog,
 	eqemuanalytics.NewReleases,
-	provideSpireOnboarding,
 	spireuser.NewUserService,
 	spire.NewSettings,
+	spire.NewSpire,
 )
-
-func provideSpireOnboarding(
-	connections *database.Connections,
-	serverconfig *serverconfig.EQEmuServerConfig,
-	logger *logrus.Logger,
-	settings *spire.Settings,
-) *spire.SpireInit {
-	o := spire.NewSpire(connections, serverconfig, logger, settings)
-	if env.IsAppEnvLocal() {
-		o.Init()
-	}
-
-	return o
-}

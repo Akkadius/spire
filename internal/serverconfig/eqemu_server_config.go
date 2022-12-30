@@ -91,6 +91,13 @@ type EQEmuConfigJson struct {
 			Username string `json:"username"`
 			Password string `json:"password"`
 		} `json:"database"`
+		ContentDatabase struct {
+			Db       string `json:"db"`
+			Host     string `json:"host"`
+			Port     string `json:"port"`
+			Username string `json:"username"`
+			Password string `json:"password"`
+		} `json:"content_database,omitempty"`
 		Files struct {
 			Opcodes     string `json:"opcodes"`
 			MailOpcodes string `json:"mail_opcodes"`

@@ -37,7 +37,7 @@
             :active="(connections && connections.length > 0)"
           >
             <!-- Default Local -->
-            <div class="card" v-if="defaultConnection">
+            <div class="card" v-if="defaultConnection && isAppProduction()">
               <div class="card-header">
 
                 <!-- Title -->
@@ -128,7 +128,7 @@
                 <!-- Title -->
                 <h4 class="card-header-title">
                   <i class="fe fe-database"></i>
-                  User Remote Database Connections ({{ connections.length }})
+                  User Database Connections ({{ connections.length }})
                 </h4>
 
               </div>
@@ -330,6 +330,7 @@
 
           <b-tab
             title="Create New"
+            v-if="canCreateNewConnection()"
             :active="(connections.length === 0)"
           >
 
@@ -492,6 +493,7 @@ import ManageDeveloperModal from "@/views/connections/ManageDeveloperModal.vue";
 import util from "util";
 import {ROUTE} from "@/routes";
 import ManageDiscordConnectionModal from "@/views/connections/ManageDiscordConnectionModal.vue";
+import {AppEnv} from "@/app/env/app-env";
 
 export default {
   components: {
@@ -531,6 +533,18 @@ export default {
     this.user = await (UserContext.getUser())
   },
   methods: {
+
+    isAppProduction() {
+      return AppEnv.isAppProduction()
+    },
+
+    canCreateNewConnection() {
+      if (AppEnv.isAppProduction()) {
+        return true
+      }
+
+      return false;
+    },
 
     setDiscordWebhookLogs(connection) {
       this.discordConnection = connection

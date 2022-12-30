@@ -56,8 +56,12 @@ export class AppEnv {
       ([AppEnvLocal, AppEnvDesktop, AppEnvDev].includes(this.getEnv()))
   }
 
+  static isAppProduction() {
+    return this.getEnv() === AppEnvProduction
+  }
+
   static isGithubAuthEnabled() {
-    return this.getFeatures() ? this.getFeatures().github_auth_enabled : false
+    return this.getFeatures() ? this.getFeatures().github_auth_enabled && this.isAppProduction() : false
   }
 
   static isLocalAuthEnabled() {

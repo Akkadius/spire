@@ -39,6 +39,7 @@ func (c *DbConnectionCreateService) Handle(ctx *contexts.ConnectionCreateContext
 
 	// validate connection doesn't already exist
 	var con models.ServerDatabaseConnection
+
 	c.db.GetSpireDb().Where(
 		"name = ? and db_host = ? and db_name = ? and db_port = ? and db_username = ?",
 		ctx.ConnectionName(),
