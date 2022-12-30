@@ -7,7 +7,6 @@ import (
 	"github.com/Akkadius/spire/internal/models"
 	"github.com/Akkadius/spire/internal/spire"
 	"github.com/Akkadius/spire/internal/spireuser"
-	"github.com/k0kubun/pp/v3"
 	"github.com/labstack/echo/v4"
 	gocache "github.com/patrickmn/go-cache"
 	"github.com/sirupsen/logrus"
@@ -58,10 +57,11 @@ type Features struct {
 }
 
 type EnvResponse struct {
-	Env              string   `json:"env"`
-	Version          string   `json:"version"`
-	Features         Features `json:"features"`
-	SpireInitialized bool     `json:"is_spire_initialized"`
+	Env              string           `json:"env"`
+	Version          string           `json:"version"`
+	Features         Features         `json:"features"`
+	Settings         []models.Setting `json:"settings"`
+	SpireInitialized bool             `json:"is_spire_initialized"`
 }
 
 type PackageJson struct {
@@ -89,6 +89,7 @@ func (d *AppController) env(c echo.Context) error {
 			Features: Features{
 				GithubAuthEnabled: len(os.Getenv("GITHUB_CLIENT_ID")) > 0,
 			},
+			Settings:         d.settings.GetSettings(),
 			SpireInitialized: d.onboarding.IsInitialized(),
 		}
 
@@ -122,6 +123,12 @@ func (d *AppController) initializeApp(c echo.Context) error {
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}
 
+	// init spire tables
+	err := d.onboarding.SourceSpireTables()
+	if err != nil {
+		return c.JSON(http.StatusBadRequest, echo.Map{"error": err.Error()})
+	}
+
 	// auth
 	if r.AuthEnabled == 1 {
 		// new user
@@ -145,8 +152,6 @@ func (d *AppController) initializeApp(c echo.Context) error {
 
 	// re-initialize again as if we just started up the app
 	d.onboarding.Init()
-
-	pp.Println(r)
 
 	return c.JSON(http.StatusOK, echo.Map{"data": "Ok"})
 }

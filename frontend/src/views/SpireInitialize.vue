@@ -224,6 +224,14 @@ export default {
           if (r.data && r.status === 200) {
             this.result       = r.data
             this.notification = "Installation succeeded! Redirecting momentarily..."
+
+            const init = await AppEnv.init()
+            if (init) {
+              setTimeout(() => {
+                this.$router.push(ROUTE.HOME).catch((e) => {
+                })
+              }, 3000)
+            }
           }
         } catch (err) {
           // error notify

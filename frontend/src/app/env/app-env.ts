@@ -27,6 +27,14 @@ export class AppEnv {
     this._features = value;
   }
 
+  static getSettings() {
+    return this._settings;
+  }
+
+  static setSettings(value) {
+    this._settings = value;
+  }
+
   static getEnv() {
     return this._env;
   }
@@ -52,9 +60,19 @@ export class AppEnv {
     return this.getFeatures() ? this.getFeatures().github_auth_enabled : false
   }
 
+  static isLocalAuthEnabled() {
+    for (let s of this.getSettings()) {
+      if (s.setting === "AUTH_ENABLED" && s.value === "true") {
+        return true
+      }
+    }
+    return false
+  }
+
   private static _env;
   private static _version;
   private static _features;
+  private static _settings;
   private static _is_spire_initialized;
 
   static async init() {
@@ -64,6 +82,7 @@ export class AppEnv {
       this.setEnv(data.env)
       this.setVersion(data.version)
       this.setFeatures(data.features)
+      this.setSettings(data.settings)
       this.setIsSpireInitialized(data.is_spire_initialized)
 
       return true;

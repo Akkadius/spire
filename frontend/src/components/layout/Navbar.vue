@@ -51,9 +51,9 @@
             href="#" id="sidebarIcon" class="dropdown-toggle" role="button" data-toggle="dropdown" aria-haspopup="true"
             aria-expanded="false"
           >
-            <div class="avatar avatar-sm avatar-online">
+            <div :class="'avatar avatar-sm ' + (isUserLoggedIn() ? 'avatar-online' : '')">
               <img
-                :src="user ? user.avatar : require('@/assets/img/eqemu-avatar.png')"
+                :src="getUserAvatar()"
                 class="avatar-img rounded-circle" alt="..."
               >
             </div>
@@ -183,7 +183,7 @@
             >
               <div class="avatar avatar-sm avatar-online">
                 <img
-                  :src="user ? user.avatar : require('@/assets/img/eqemu-avatar.png')"
+                  :src="getUserAvatar()"
                   class="avatar-img rounded-circle" alt="..."
                 >
               </div>
@@ -393,6 +393,18 @@ export default {
   },
 
   methods: {
+    isUserLoggedIn() {
+      return this.user && this.user.avatar && this.user.avatar.length > 0
+    },
+
+    getUserAvatar() {
+      if (this.user && this.user.avatar && this.user.avatar.length > 0) {
+        return this.avatar
+      }
+
+      return require('@/assets/img/spire.png')
+    },
+
     handleAppAlphaEnabled() {
       this.alphaEnabled = App.ALPHA_TOOLS_ENABLED
     },

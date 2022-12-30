@@ -38,7 +38,7 @@ func (o *Settings) InitSettings() {
 	}
 
 	var currentSettings []models.Setting
-	o.connections.SpireDb().Find(&currentSettings)
+	o.connections.SpireDbNoLog().Find(&currentSettings)
 
 	// inject defaults
 	var settingsToCreate []models.Setting
@@ -56,43 +56,59 @@ func (o *Settings) InitSettings() {
 
 	// if we don't have some of the default settings, inject them
 	if len(settingsToCreate) > 0 {
-		o.connections.SpireDb().Create(settingsToCreate)
+		o.connections.SpireDbNoLog().Create(settingsToCreate)
 	}
 }
 
 // LoadSettings will load settings into memory
 func (o *Settings) LoadSettings() {
 	var currentSettings []models.Setting
-	o.connections.SpireDb().Find(&currentSettings)
+	o.connections.SpireDbNoLog().Find(&currentSettings)
 	o.settings = currentSettings
 }
 
 // EnableSetting will enable settings that have true/false value
 func (o *Settings) EnableSetting(setting string) {
 	var s models.Setting
-	o.connections.SpireDb().First(&s, "setting = ?", setting)
+	o.connections.SpireDbNoLog().First(&s, "setting = ?", setting)
 	if s.ID == 0 {
 		s.Setting = setting
 		s.Value = "true"
-		o.connections.SpireDb().Create(&s)
+		o.connections.SpireDbNoLog().Create(&s)
 	}
 	if s.ID > 0 {
 		s.Value = "true"
-		o.connections.SpireDb().Save(&s)
+		o.connections.SpireDbNoLog().Save(&s)
 	}
 }
 
 // DisableSetting will enable settings that have true/false value
 func (o *Settings) DisableSetting(setting string) {
 	var s models.Setting
-	o.connections.SpireDb().First(&s, "setting = ?", setting)
+	o.connections.SpireDbNoLog().First(&s, "setting = ?", setting)
 	if s.ID == 0 {
 		s.Setting = setting
 		s.Value = "false"
-		o.connections.SpireDb().Create(&s)
+		o.connections.SpireDbNoLog().Create(&s)
 	}
 	if s.ID > 0 {
 		s.Value = "false"
-		o.connections.SpireDb().Save(&s)
+		o.connections.SpireDbNoLog().Save(&s)
 	}
+}
+
+// IsSettingEnabled checks if a setting is enabled (boolean)
+// out of what is loaded into memory
+func (o *Settings) IsSettingEnabled(setting string) bool {
+	for _, s := range o.settings {
+		if s.Setting == setting {
+			return s.Value == "true"
+		}
+	}
+
+	return false
+}
+
+func (o *Settings) GetSettings() []models.Setting {
+	return o.settings
 }

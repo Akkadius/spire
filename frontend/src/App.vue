@@ -10,6 +10,7 @@ import {EventBus}               from "@/app/event-bus/event-bus";
 import {AppEnv}                 from "@/app/env/app-env";
 import {LocalSettings, Setting} from "@/app/local-settings/localsettings";
 import {ROUTE}                  from "@/routes";
+import UserContext              from "@/app/user/UserContext";
 
 export default {
   name: "App",
@@ -23,6 +24,7 @@ export default {
     if (init) {
       EventBus.$emit('APP_ENV_LOADED', true);
       this.checkAppInitialization()
+      this.checkIfUserNeedsToAuth()
     }
     setTimeout(() => {
       this.checkAppInitialization()
@@ -37,6 +39,16 @@ export default {
   },
 
   methods: {
+
+    async checkIfUserNeedsToAuth() {
+      if (AppEnv.isSpireInitialized() &&
+        AppEnv.isLocalAuthEnabled() &&
+        UserContext.getAccessToken().length === 0 &&
+        this.$route.fullPath !== ROUTE.LOGIN) {
+        await this.$router.push(ROUTE.LOGIN).catch((e) => {
+        })
+      }
+    },
 
     async checkAppInitialization() {
       // capture user under conditions
@@ -116,6 +128,7 @@ export default {
       }
     }
   },
+
 }
 </script>
 

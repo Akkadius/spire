@@ -49,7 +49,7 @@ func (o *SpireInit) Init() {
 	// otherwise these settings get populated when a user first sets up their
 	// spire instance
 	if o.isInitialized {
-		o.connections.SpireMigrate(false)
+		_ = o.connections.SpireMigrate(false)
 		o.settings.InitSettings()
 	}
 
@@ -67,7 +67,7 @@ func (o *SpireInit) SetIsInitialized(isInitialized bool) {
 // GetConnectionInfo will get the connection info for Spire to display to the
 // user while going through the initial onboarding and setup pages
 func (o *SpireInit) GetConnectionInfo() *mysql.Config {
-	f, ok := o.connections.SpireDb().Config.Dialector.(*gormMysql.Dialector)
+	f, ok := o.connections.SpireDbNoLog().Config.Dialector.(*gormMysql.Dialector)
 	if ok {
 		p, err := mysql.ParseDSN(f.DSN)
 		if err != nil {
@@ -86,9 +86,17 @@ func (o *SpireInit) GetInstallationTables() []string {
 
 func (o *SpireInit) CheckIfAppInitialized() bool {
 	var settings []models.Setting
-	o.connections.SpireDb().Find(&settings)
+	o.connections.SpireDbNoLog().Find(&settings)
 	var adminUser models.User
-	o.connections.SpireDb().Where("is_admin = 1").First(&adminUser)
+	o.connections.SpireDbNoLog().Where("is_admin = 1").First(&adminUser)
 
 	return len(settings) > 0 && adminUser.ID != 0
+}
+
+func (o *SpireInit) SourceSpireTables() error {
+	err := o.connections.SpireMigrate(false)
+	if err != nil {
+		return err
+	}
+	return nil
 }

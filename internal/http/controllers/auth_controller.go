@@ -140,7 +140,7 @@ func (a *AuthController) login(c echo.Context) error {
 		return c.String(http.StatusBadRequest, "bad request")
 	}
 
-	passwordValid, err := a.user.CheckUserLogin(u.Username, u.Password)
+	passwordValid, err, user := a.user.CheckUserLogin(u.Username, u.Password)
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
 	}
@@ -149,5 +149,15 @@ func (a *AuthController) login(c echo.Context) error {
 		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Password invalid"})
 	}
 
-	return c.JSON(http.StatusOK, echo.Map{"data": echo.Map{"message": "Login success"}})
+	newToken, _ := createJwtToken(fmt.Sprintf("%v", user.ID))
+
+	return c.JSON(
+		http.StatusOK,
+		echo.Map{
+			"data": echo.Map{
+				"message": "Login success",
+				"token":   newToken,
+			},
+		},
+	)
 }

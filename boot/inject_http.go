@@ -22,6 +22,7 @@ var httpSet = wire.NewSet(
 	appmiddleware.NewRequestLogMiddleware,
 	appmiddleware.NewReadOnlyMiddleware,
 	appmiddleware.NewPermissionsMiddleware,
+	appmiddleware.NewLocalUserAuthMiddleware,
 	controllers.NewAnalyticsController,
 	controllers.NewHelloWorldController,
 	controllers.NewConnectionsController,
@@ -59,6 +60,7 @@ func NewRouter(
 	readOnlyModeMiddleware *appmiddleware.ReadOnlyMiddleware,
 	permissionsMiddleware *appmiddleware.PermissionsMiddleware,
 	logMiddleware *appmiddleware.RequestLogMiddleware,
+	localUserAuthMiddleware *appmiddleware.LocalUserAuthMiddleware,
 	assets *assets.SpireAssets,
 ) *routes.Router {
 	return routes.NewHttpRouter(
@@ -102,6 +104,7 @@ func NewRouter(
 				cg.v1controllers,
 				userContextMiddleware.HandleHeader(),
 				userContextMiddleware.HandleQuerystring(),
+				localUserAuthMiddleware.Handle(),
 				readOnlyModeMiddleware.Handle(),
 				v1RateLimit(),
 			),
@@ -122,6 +125,7 @@ func NewRouter(
 				crudc.routes,
 				userContextMiddleware.HandleHeader(),
 				readOnlyModeMiddleware.Handle(),
+				localUserAuthMiddleware.Handle(),
 				permissionsMiddleware.Handle(),
 				v1RateLimit(),
 				middleware.GzipWithConfig(middleware.GzipConfig{Level: 1}),

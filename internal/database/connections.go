@@ -23,6 +23,10 @@ func (c Connections) SpireDb() *gorm.DB {
 	return c.spireDb
 }
 
+func (c Connections) SpireDbNoLog() *gorm.DB {
+	return c.spireDb.Session(&gorm.Session{Logger: logger.Default.LogMode(logger.Silent)})
+}
+
 func NewConnections(
 	spire *gorm.DB,
 	EQEmu *gorm.DB,
@@ -47,7 +51,7 @@ var spireTables = []models.Modelable{
 	&models.Setting{},
 }
 
-func (c Connections) SpireMigrate(drop bool) {
+func (c Connections) SpireMigrate(drop bool) error {
 	for _, table := range spireTables {
 		if drop {
 			fmt.Printf("Dropping table [%v]\n", table.TableName())
@@ -67,9 +71,10 @@ func (c Connections) SpireMigrate(drop bool) {
 		// always run migration incase there are schema changes
 		err := migrator.AutoMigrate(table)
 		if err != nil {
-			c.logger.Error(err)
+			return err
 		}
 	}
+	return nil
 }
 
 func (c Connections) GetMigrationTables() []string {

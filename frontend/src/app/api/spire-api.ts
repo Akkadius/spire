@@ -1,6 +1,7 @@
 import axios from "axios";
 import UserContext from "@/app/user/UserContext";
 import Debug from "@/app/debug/debug";
+import {ROUTE} from "@/routes";
 
 
 export class SpireApi {
@@ -73,11 +74,15 @@ export class SpireApi {
       if (error.response.status === 401) {
         console.log("401 error", error.response)
 
+        // when we're not authorized (logged in)
+        // redirect to login screen
+        window.location.href = ROUTE.LOGIN
+        return
+
         // blanket error for now
         if (error.response.data && error.response.data.error) {
           setTimeout(() => {
             alert(error.response.data.error)
-
           }, 500)
         }
 
@@ -99,8 +104,12 @@ export class SpireApi {
   static v1() {
     return spireAxios
   }
+
+  static reloadAxios() {
+    spireAxios = SpireApi.newAxiosWithConfig()
+  }
 }
 
 // singleton - we don't want to create a new instance every single time
 // helpers are invoked
-const spireAxios = SpireApi.newAxiosWithConfig()
+let spireAxios = SpireApi.newAxiosWithConfig()
