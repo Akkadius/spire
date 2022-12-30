@@ -7,7 +7,8 @@
         <eq-window style="font-size: 14px;" class="p-0 m-0">
           <div
             class="p-4"
-            style="height: 80vh; overflow-y: scroll; overflow-x: hidden">
+            style="height: 83vh; overflow-y: scroll; overflow-x: hidden"
+          >
             <p
               style="font-size: 14px"
             >
@@ -25,7 +26,8 @@
               <div class="col-6 text-right">
                 <div class="font-weight-bold mb-3">Authentication</div>
                 Do you want Spire to run with authentication? <br>
-                <small class="text-muted">(This will require a user login in order to use this instance of Spire.)</small>
+                <small class="text-muted">(This will require a user login in order to use this instance of
+                  Spire.)</small>
               </div>
               <div class="col-6 text-left">
                 <eq-checkbox
@@ -75,7 +77,8 @@
 
             <small>
               Spire will use your database to store settings and configuration as it relates to Spire and will use your
-              EverQuest Emulator database instance for communication with tooling. This user must have access to create tables within the following database.
+              EverQuest Emulator database instance for communication with tooling. This user must have access to create
+              tables within the following database.
             </small>
 
             <div
@@ -105,7 +108,8 @@
 
             <div
               class="mt-3"
-              v-if="form.auth_enabled">
+              v-if="form.auth_enabled"
+            >
               <small class="font-weight-bold">
                 Spire will enable authentication
               </small>
@@ -113,7 +117,8 @@
 
             <div
               class="mt-3"
-              v-if="form.auth_enabled && form.username && form.username.length > 0">
+              v-if="form.auth_enabled && form.username && form.username.length > 0"
+            >
               <small class="font-weight-bold">
                 Spire will create the following admin user ({{ form.username }})
               </small>
@@ -142,6 +147,7 @@
 
 
             <!-- Debug -->
+            <eq-debug :data="result" class="text-left"/>
             <eq-debug :data="form" class="text-left"/>
             <eq-debug :data="connection" class="text-left"/>
             <eq-debug :data="tables" class="text-left"/>
@@ -163,7 +169,6 @@ import EqWindow    from "@/components/eq-ui/EQWindow.vue";
 import EqCheckbox  from "@/components/eq-ui/EQCheckbox.vue";
 import {SpireApi}  from "@/app/api/spire-api";
 import EqDebug     from "@/components/eq-ui/EQDebug.vue";
-import {Items}     from "@/app/items";
 
 export default {
   name: 'Login.vue',
@@ -183,6 +188,8 @@ export default {
       connection: {},
       tables: {},
 
+      result: {},
+
       connfields: [
         { field: "Source", value: "Emulator Server Configuration" },
         { field: "Host", value: "Addr" },
@@ -198,13 +205,14 @@ export default {
       this.connection = r.data.data.connection_info
       this.tables     = r.data.data.tables
     }
-
-
   },
   methods: {
-    finish() {
+    async finish() {
       if (confirm(`Are you sure this is how you want to install your Spire installation?`)) {
-
+        const r = await SpireApi.v1().post("/app/onboard-initialize", this.form)
+        if (r.data) {
+          this.result = r.data
+        }
       }
     },
 

@@ -4,7 +4,10 @@ import (
 	"encoding/json"
 	"github.com/Akkadius/spire/internal/env"
 	"github.com/Akkadius/spire/internal/http/routes"
+	"github.com/Akkadius/spire/internal/models"
 	"github.com/Akkadius/spire/internal/spire"
+	"github.com/Akkadius/spire/internal/spireuser"
+	"github.com/k0kubun/pp/v3"
 	"github.com/labstack/echo/v4"
 	gocache "github.com/patrickmn/go-cache"
 	"github.com/sirupsen/logrus"
@@ -16,19 +19,30 @@ type AppController struct {
 	cache      *gocache.Cache
 	logger     *logrus.Logger
 	onboarding *spire.SpireInit
+	spireuser  *spireuser.UserService
+	settings   *spire.Settings
 }
 
-func NewAppController(cache *gocache.Cache, logger *logrus.Logger, onboarding *spire.SpireInit) *AppController {
+func NewAppController(
+	cache *gocache.Cache,
+	logger *logrus.Logger,
+	onboarding *spire.SpireInit,
+	spireuser *spireuser.UserService,
+	settings *spire.Settings,
+) *AppController {
 	return &AppController{
 		cache:      cache,
 		logger:     logger,
 		onboarding: onboarding,
+		spireuser:  spireuser,
+		settings:   settings,
 	}
 }
 
 func (d *AppController) Routes() []*routes.Route {
 	return []*routes.Route{
 		routes.RegisterRoute(http.MethodGet, "app/onboarding-info", d.getOnboardingInfo, nil),
+		routes.RegisterRoute(http.MethodPost, "app/onboard-initialize", d.initializeApp, nil),
 		routes.RegisterRoute(http.MethodGet, "app/changelog", d.changelog, nil),
 		routes.RegisterRoute(http.MethodGet, "app/env", d.env, nil),
 	}
@@ -93,4 +107,44 @@ func (d *AppController) getOnboardingInfo(c echo.Context) error {
 			},
 		},
 	)
+}
+
+type OnboardInitializeAppRequestStruct struct {
+	AuthEnabled int    `json:"auth_enabled"`
+	Username    string `json:"username"`
+	Password    string `json:"password"`
+}
+
+func (d *AppController) initializeApp(c echo.Context) error {
+	// body - bind
+	r := new(OnboardInitializeAppRequestStruct)
+	if err := c.Bind(r); err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
+	}
+
+	// new user
+	user := models.User{
+		UserName: r.Username,
+		FullName: r.Username,
+		Password: r.Password,
+		Provider: spireuser.LOGIN_PROVIDER_LOCAL,
+		IsAdmin:  true,
+	}
+
+	_, err := d.spireuser.CreateUser(user)
+	if err != nil {
+		return c.JSON(http.StatusBadRequest, echo.Map{"error": err.Error()})
+	}
+
+	// auth
+	if r.AuthEnabled == 1 {
+		d.settings.EnableSetting(spire.SETTING_AUTH_ENABLED)
+	}
+
+	// re-initialize again as if we just started up the app
+	d.onboarding.Init()
+
+	pp.Println(r)
+
+	return c.JSON(http.StatusOK, echo.Map{"data": "Ok"})
 }

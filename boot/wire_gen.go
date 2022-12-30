@@ -28,6 +28,7 @@ import (
 	"github.com/Akkadius/spire/internal/permissions"
 	"github.com/Akkadius/spire/internal/questapi"
 	"github.com/Akkadius/spire/internal/serverconfig"
+	"github.com/Akkadius/spire/internal/spire"
 	"github.com/Akkadius/spire/internal/spireuser"
 	"github.com/gertd/go-pluralize"
 )
@@ -74,8 +75,9 @@ func InitializeApplication() (App, error) {
 	parseService := questapi.NewParseService(logger, cache, githubSourceDownloader)
 	questExamplesGithubSourcer := questapi.NewQuestExamplesGithubSourcer(logger, cache, githubSourceDownloader)
 	questApiController := controllers.NewQuestApiController(logger, parseService, questExamplesGithubSourcer)
-	spire := provideSpireOnboarding(connections, eqEmuServerConfig, logger)
-	appController := controllers.NewAppController(cache, logger, spire)
+	settings := spire.NewSettings(connections, logger)
+	spireInit := provideSpireOnboarding(connections, eqEmuServerConfig, logger, settings)
+	appController := controllers.NewAppController(cache, logger, spireInit, userService, settings)
 	queryController := controllers.NewQueryController(databaseResolver, logger)
 	questFileApiController := controllers.NewQuestFileApiController(logger)
 	exporter := clientfiles.NewExporter(logger)
@@ -307,6 +309,6 @@ func InitializeApplication() (App, error) {
 	changelogCommand := eqemuchangelog.NewChangelogCommand(db, logger, changelog)
 	v := ProvideCommands(helloWorldCommand, adminPingOcculus, userCreateCommand, generateModelsCommand, generateControllersCommand, httpServeCommand, routesListCommand, generateConfigurationCommand, spireMigrateCommand, questApiParseCommand, questExampleTestCommand, generateRaceModelMapsCommand, changelogCommand)
 	webBoot := desktop.NewWebBoot(logger, router)
-	app := NewApplication(db, logger, cache, v, databaseResolver, connections, router, webBoot, spire)
+	app := NewApplication(db, logger, cache, v, databaseResolver, connections, router, webBoot, spireInit)
 	return app, nil
 }

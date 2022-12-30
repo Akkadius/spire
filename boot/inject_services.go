@@ -43,14 +43,16 @@ var serviceSet = wire.NewSet(
 	eqemuanalytics.NewReleases,
 	provideSpireOnboarding,
 	spireuser.NewUserService,
+	spire.NewSettings,
 )
 
 func provideSpireOnboarding(
 	connections *database.Connections,
 	serverconfig *serverconfig.EQEmuServerConfig,
 	logger *logrus.Logger,
+	settings *spire.Settings,
 ) *spire.SpireInit {
-	o := spire.NewSpire(connections, serverconfig, logger)
+	o := spire.NewSpire(connections, serverconfig, logger, settings)
 	if env.IsAppEnvLocal() {
 		o.Init()
 	}
