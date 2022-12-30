@@ -31,9 +31,11 @@
           :connection="discordConnection"
         />
 
-        <b-tabs class="mt-4" content-class="mt-5" fill>
-          <b-tab title="Connections" :active="connections && connections.length > 0">
-
+        <b-tabs class="mt-4" content-class="mt-5" fill v-if="connections">
+          <b-tab
+            title="Connections"
+            :active="(connections && connections.length > 0)"
+          >
             <!-- Default Local -->
             <div class="card" v-if="defaultConnection">
               <div class="card-header">
@@ -61,11 +63,12 @@
                         <!--                          <img src="~@/assets/img/mysql-logo.png" class="avatar-img rounded">-->
                         <!--                        </div>-->
 
-<!--                        <i class="fe fe-database" style="font-size: 50px; color: rgb(189 195 204)"></i>-->
+                        <!--                        <i class="fe fe-database" style="font-size: 50px; color: rgb(189 195 204)"></i>-->
 
                         <img
                           :style="'height: 120px; width: auto; border-radius: 40px; opacity: ' + (isDefaultActive ? '1' : '.5')"
-                          src="@/assets/img/eq-logo.jpg">
+                          src="@/assets/img/eq-logo.jpg"
+                        >
 
                       </div>
                       <div class="col ml-n2">
@@ -156,11 +159,12 @@
                         <!--                          <img src="~@/assets/img/mysql-logo.png" alt="..." class="avatar-img rounded">-->
                         <!--                        </a>-->
 
-<!--                        <i class="fe fe-database" style="font-size: 50px; color: rgb(189 195 204)"></i>-->
+                        <!--                        <i class="fe fe-database" style="font-size: 50px; color: rgb(189 195 204)"></i>-->
 
                         <img
                           :style="'height: 120px; width: auto; border-radius: 40px; opacity: ' + (connection.active === 1 ? '1' : '.5')"
-                          src="@/assets/img/eq-logo.jpg">
+                          src="@/assets/img/eq-logo.jpg"
+                        >
 
                       </div>
                       <div class="col ml-n2">
@@ -326,8 +330,7 @@
 
           <b-tab
             title="Create New"
-            v-if="isLoggedIn()"
-            :active="connections.length === 0 && isLoggedIn()"
+            :active="(connections.length === 0)"
           >
 
             <div class="form-row">
@@ -524,8 +527,7 @@ export default {
     }
   },
   async mounted() {
-    this.listConnections()
-
+    await this.listConnections()
     this.user = await (UserContext.getUser())
   },
   methods: {
@@ -557,7 +559,7 @@ export default {
       //   return;
       // }
 
-      this.managedUser = user
+      this.managedUser           = user
       this.managedUserConnection = connection
 
       // I don't remember why I needed to queue this
@@ -583,7 +585,7 @@ export default {
     },
 
     isLoggedIn() {
-      return this.user && Object.keys(this.user).length
+      return this.user && Object.keys(this.user).length > 0
     },
 
     switchPasswordVisibility() {
@@ -614,37 +616,35 @@ export default {
         }
       })
     },
-    listConnections() {
+    async listConnections() {
 
       // user defined
-      SpireApi.v1().get('/connections').then((response) => {
-        if (response.data && response.data.data) {
-          this.connections = response.data.data
+      const r = await SpireApi.v1().get('/connections')
+      if (r.data && r.data.data) {
+        this.connections = r.data.data
 
-          let isDefaultActive = true
-          response.data.data.forEach(connection => {
-            const connectionId = connection.id
+        let isDefaultActive = true
+        r.data.data.forEach(connection => {
+          const connectionId = connection.id
 
-            if (connection.active) {
-              isDefaultActive = false
-            }
+          if (connection.active) {
+            isDefaultActive = false
+          }
 
-            SpireApi.v1().get(`/connection-check/${connectionId}`).then((response) => {
-              this.connectionStatuses[connectionId] = response.data.data.message
-              this.$forceUpdate()
-            })
+          SpireApi.v1().get(`/connection-check/${connectionId}`).then((response) => {
+            this.connectionStatuses[connectionId] = response.data.data.message
+            this.$forceUpdate()
           })
+        })
 
-          this.isDefaultActive = isDefaultActive
-        }
-      })
+        this.isDefaultActive = isDefaultActive
+      }
 
       // default local
-      SpireApi.v1().get('/connection-default').then((response) => {
-        if (response.data && response.data.data) {
-          this.defaultConnection = response.data.data
-        }
-      })
+      const rd = await SpireApi.v1().get('/connection-default')
+      if (rd.data && rd.data.data) {
+        this.defaultConnection = rd.data.data
+      }
 
     },
     createConnection() {
