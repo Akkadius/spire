@@ -60,7 +60,8 @@
             </b-button>
           </div>
           <div class="col-lg-1 col-sm-12 text-center mt-3">
-            <span class="font-weight-bold">Last Updated</span> <div>{{ fromNow(api.last_refreshed) }}</div>
+            <span class="font-weight-bold">Last Updated</span>
+            <div>{{ fromNow(api.last_refreshed) }}</div>
           </div>
 
         </div>
@@ -263,6 +264,32 @@
       </div>
     </div>
 
+    <div class="card mt-3" v-if="isZeroState()">
+      <div class="card-body">
+
+        <div class="header mt-md-1 mb-3">
+          <h1>
+            <img src="@/assets/img/vscode-logo.png" style="height: 50px; width: auto" class="mr-3">
+            Spire Quest API Completions - VSCode Plugin
+          </h1>
+
+          <p class="header-subtitle">
+            Like the Quest API explorer? Have all of the EverQuest Emulator server Quest API readily available and always up to date within
+            your editor by using Visual Studio Code and using Spire's plugin extension all completely for free!
+          </p>
+
+        </div>
+
+        <iframe
+          frameborder="0"
+          allowtransparency="true"
+          style="width: 100%; height: 69vh; border-radius: 10px"
+          src="https://marketplace.visualstudio.com/items?itemName=Akkadius.eqemu-spire-quest-api&ssr=false#overview"
+        />
+
+      </div>
+    </div>
+
   </div>
 
 </template>
@@ -377,6 +404,10 @@ export default {
     this.init()
   },
   methods: {
+    isZeroState() {
+      return Object.keys(this.$route.query).length === 0
+    },
+
     refreshDefinitions() {
       this.loaded = false
 
