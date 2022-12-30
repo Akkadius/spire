@@ -28,7 +28,7 @@ import (
 	"github.com/Akkadius/spire/internal/permissions"
 	"github.com/Akkadius/spire/internal/questapi"
 	"github.com/Akkadius/spire/internal/serverconfig"
-	"github.com/Akkadius/spire/internal/spire"
+	"github.com/Akkadius/spire/internal/spireuser"
 	"github.com/gertd/go-pluralize"
 )
 
@@ -55,7 +55,7 @@ func InitializeApplication() (App, error) {
 	connections := provideAppDbConnections(eqEmuServerConfig, logger)
 	encrypter := encryption.NewEncrypter(logger, eqEmuServerConfig)
 	databaseResolver := database.NewDatabaseResolver(connections, logger, encrypter, cache)
-	userService := spire.NewUserService(databaseResolver, logger, encrypter)
+	userService := spireuser.NewUserService(databaseResolver, logger, encrypter)
 	userCreateCommand := cmd.NewUserCreateCommand(databaseResolver, logger, encrypter, userService)
 	generateModelsCommand := cmd.NewGenerateModelsCommand(db, logger)
 	generateControllersCommand := cmd.NewGenerateControllersCommand(db, logger)
@@ -74,7 +74,8 @@ func InitializeApplication() (App, error) {
 	parseService := questapi.NewParseService(logger, cache, githubSourceDownloader)
 	questExamplesGithubSourcer := questapi.NewQuestExamplesGithubSourcer(logger, cache, githubSourceDownloader)
 	questApiController := controllers.NewQuestApiController(logger, parseService, questExamplesGithubSourcer)
-	appController := controllers.NewAppController(cache, logger)
+	spire := provideSpireOnboarding(connections, eqEmuServerConfig, logger)
+	appController := controllers.NewAppController(cache, logger, spire)
 	queryController := controllers.NewQueryController(databaseResolver, logger)
 	questFileApiController := controllers.NewQuestFileApiController(logger)
 	exporter := clientfiles.NewExporter(logger)
@@ -306,7 +307,6 @@ func InitializeApplication() (App, error) {
 	changelogCommand := eqemuchangelog.NewChangelogCommand(db, logger, changelog)
 	v := ProvideCommands(helloWorldCommand, adminPingOcculus, userCreateCommand, generateModelsCommand, generateControllersCommand, httpServeCommand, routesListCommand, generateConfigurationCommand, spireMigrateCommand, questApiParseCommand, questExampleTestCommand, generateRaceModelMapsCommand, changelogCommand)
 	webBoot := desktop.NewWebBoot(logger, router)
-	onboarding := provideSpireOnboarding(connections)
-	app := NewApplication(db, logger, cache, v, databaseResolver, connections, router, webBoot, onboarding)
+	app := NewApplication(db, logger, cache, v, databaseResolver, connections, router, webBoot, spire)
 	return app, nil
 }

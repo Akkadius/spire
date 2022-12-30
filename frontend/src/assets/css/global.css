@@ -436,3 +436,11 @@ th[role=columnheader]:hover:not(.no-sort):after {
 .custom-control-input:disabled~.custom-control-label::before, .custom-control-input[disabled]~.custom-control-label::before {
     background-color: #f6f6f6;
 }
+
+.unselectable {
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: -moz-none;
+    -o-user-select: none;
+    user-select: none;
+}

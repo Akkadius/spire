@@ -2,10 +2,11 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import {ROUTE} from "@/routes";
 import * as util from "util";
+import {AppEnv} from "@/app/env/app-env";
 
 Vue.use(Router)
 
-export default new Router({
+const router = new Router({
   mode: 'history',
   linkActiveClass: 'active',
   linkExactActiveClass: 'active',
@@ -264,9 +265,40 @@ export default new Router({
       meta: {title: "Login"},
     },
     {
+      path: ROUTE.SPIRE_INITIALIZE,
+      component: () => import('./views/SpireInitialize.vue'),
+      meta: {title: "Spire Setup"},
+    },
+    {
       path: '/fe-auth-callback',
       component: () => import('./views/AuthCallback.vue'),
       meta: {title: "Authentication Callback"},
     },
   ]
 })
+
+// router middleware
+router.beforeEach(async (to, from, next) => {
+  // console.log("Middleware from [%s] to [%s]", from, to)
+  // console.log(from)
+  // console.log(to)
+  // console.log("Is spire initialized", AppEnv.isSpireInitialized())
+
+  // ensure appenv has been initialized first
+  if (typeof AppEnv.isSpireInitialized() !== 'undefined') {
+    // capture user under conditions
+    if (!AppEnv.isSpireInitialized() && to.fullPath !== ROUTE.SPIRE_INITIALIZE) {
+      console.log("hello")
+      // re-route to spire setup if not setup yet
+      router.push(ROUTE.SPIRE_INITIALIZE).catch((e) => {
+      })
+    } else if (AppEnv.isSpireInitialized() && to.fullPath === ROUTE.SPIRE_INITIALIZE) {
+      router.push(ROUTE.HOME).catch((e) => {
+      })
+    }
+  }
+
+  next()
+})
+
+export default router;

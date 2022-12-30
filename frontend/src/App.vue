@@ -9,19 +9,24 @@ import {App}                    from "@/constants/app";
 import {EventBus}               from "@/app/event-bus/event-bus";
 import {AppEnv}                 from "@/app/env/app-env";
 import {LocalSettings, Setting} from "@/app/local-settings/localsettings";
+import {ROUTE}                  from "@/routes";
 
 export default {
   name: "App",
-  mounted() {
+  async mounted() {
 
     this.loadKeypressBindings();
     this.loadWallpaper();
     this.loadSpellIconSettings();
 
-    // init app env / version
-    AppEnv.init().then(() => {
+    const init = await AppEnv.init()
+    if (init) {
       EventBus.$emit('APP_ENV_LOADED', true);
-    })
+      this.checkAppInitialization()
+    }
+    setTimeout(() => {
+      this.checkAppInitialization()
+    }, 1)
   },
 
   created() {
@@ -32,6 +37,17 @@ export default {
   },
 
   methods: {
+
+    async checkAppInitialization() {
+      // capture user under conditions
+      if (!AppEnv.isSpireInitialized() && this.$route.fullPath !== ROUTE.SPIRE_INITIALIZE) {
+        await this.$router.push(ROUTE.SPIRE_INITIALIZE).catch((e) => {
+        })
+      } else if (AppEnv.isSpireInitialized() && this.$route.fullPath === ROUTE.SPIRE_INITIALIZE) {
+        await this.$router.push(ROUTE.HOME).catch((e) => {
+        })
+      }
+    },
 
     loadKeypressBindings() {
       window.addEventListener("keypress", (e) => {

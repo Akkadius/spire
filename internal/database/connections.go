@@ -39,11 +39,12 @@ var spireTables = []models.Modelable{
 	&models.User{},
 	&models.UserServerDatabaseConnection{},
 	&models.ServerDatabaseConnection{},
-	&models.AnalyticEvent{},
+	&models.Setting{},
 	&models.AnalyticEventCount{},
 	&models.UserEventLog{},
 	&models.UserServerResourcePermission{},
 	&models.CrashReport{},
+	&models.Setting{},
 }
 
 func (c Connections) SpireMigrate(drop bool) {
@@ -69,4 +70,13 @@ func (c Connections) SpireMigrate(drop bool) {
 			c.logger.Error(err)
 		}
 	}
+}
+
+func (c Connections) GetMigrationTables() []string {
+	var tables []string
+	for _, table := range spireTables {
+		tables = append(tables, table.TableName())
+	}
+
+	return tables
 }

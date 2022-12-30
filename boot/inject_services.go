@@ -17,8 +17,10 @@ import (
 	"github.com/Akkadius/spire/internal/questapi"
 	"github.com/Akkadius/spire/internal/serverconfig"
 	"github.com/Akkadius/spire/internal/spire"
+	"github.com/Akkadius/spire/internal/spireuser"
 	"github.com/gertd/go-pluralize"
 	"github.com/google/wire"
+	"github.com/sirupsen/logrus"
 )
 
 var serviceSet = wire.NewSet(
@@ -40,13 +42,17 @@ var serviceSet = wire.NewSet(
 	eqemuchangelog.NewChangelog,
 	eqemuanalytics.NewReleases,
 	provideSpireOnboarding,
-	spire.NewUserService,
+	spireuser.NewUserService,
 )
 
-func provideSpireOnboarding(connections *database.Connections) *spire.Onboarding {
-	o := spire.NewOnboarding(connections)
+func provideSpireOnboarding(
+	connections *database.Connections,
+	serverconfig *serverconfig.EQEmuServerConfig,
+	logger *logrus.Logger,
+) *spire.SpireInit {
+	o := spire.NewSpire(connections, serverconfig, logger)
 	if env.IsAppEnvLocal() {
-		o.InitSpire()
+		o.Init()
 	}
 
 	return o

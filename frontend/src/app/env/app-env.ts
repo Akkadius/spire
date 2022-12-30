@@ -11,6 +11,13 @@ const AppEnvStaging    = "staging"
 const AppEnvProduction = "production"
 
 export class AppEnv {
+  static isSpireInitialized() {
+    return this._is_spire_initialized;
+  }
+
+  static setIsSpireInitialized(value) {
+    this._is_spire_initialized = value;
+  }
 
   static getFeatures() {
     return this._features;
@@ -48,6 +55,7 @@ export class AppEnv {
   private static _env;
   private static _version;
   private static _features;
+  private static _is_spire_initialized;
 
   static async init() {
     const r = await SpireApi.v1().get("/app/env")
@@ -56,6 +64,10 @@ export class AppEnv {
       this.setEnv(data.env)
       this.setVersion(data.version)
       this.setFeatures(data.features)
+      this.setIsSpireInitialized(data.is_spire_initialized)
+
+      return true;
     }
+    return false;
   }
 }

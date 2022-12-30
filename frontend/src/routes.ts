@@ -8,6 +8,7 @@ export const ROUTE = {
   ITEM_ICON_VIEWER: "/item-icon-viewer",
   ITEM_VIEWER: "/item-viewer",
   ITEMS_LIST: "/items",
+  SPIRE_INITIALIZE: "/initialize",
   LOOT: "/loot",
   LOGIN: "/login",
   LOGOUT: "/logout",

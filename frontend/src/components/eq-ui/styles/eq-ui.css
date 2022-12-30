@@ -435,7 +435,7 @@ A:hover {
     position: relative;
 
     background-size: 100%;
-    background-repeat: no-repeat;
+    background-repeat: round;
     width: auto;
     padding: 10px;
     font-size: 14px;
@@ -974,4 +974,8 @@ h6.eq-header {
     top: 0;
     z-index: 9999;
     /*box-shadow: rgb(0 0 0) 0px 20px 15px inset;*/
+}
+
+.eq-window-simple .text-muted {
+    color: #89e2ff !important;
 }
