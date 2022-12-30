@@ -10,8 +10,8 @@ import (
 )
 
 const (
-	LOGIN_PROVIDER_LOCAL  = "local"
-	LOGIN_PROVIDER_GITHUB = "github"
+	LoginProviderLocal  = "local"
+	LoginProviderGithub = "github"
 )
 
 type UserService struct {
@@ -46,11 +46,11 @@ func (s UserService) CreateUser(user models.User) (models.User, error) {
 		return models.User{}, errors.New("Username must be at least 3 characters")
 	}
 
-	if len(user.Password) < 8 && user.Provider == LOGIN_PROVIDER_LOCAL {
+	if len(user.Password) < 8 && user.Provider == LoginProviderLocal {
 		return models.User{}, errors.New("Password must be at least 8 characters")
 	}
 
-	if user.Provider == LOGIN_PROVIDER_LOCAL {
+	if user.Provider == LoginProviderLocal {
 		hash, err := s.crypt.GeneratePassword(user.Password)
 		if err != nil {
 			return models.User{}, err
@@ -71,7 +71,7 @@ func (s UserService) CreateUser(user models.User) (models.User, error) {
 
 func (s UserService) CheckUserLogin(username string, password string) (bool, error, models.User) {
 	var user models.User
-	s.db.GetSpireDb().Where("user_name = ? and provider = ?", username, LOGIN_PROVIDER_LOCAL).First(&user)
+	s.db.GetSpireDb().Where("user_name = ? and provider = ?", username, LoginProviderLocal).First(&user)
 
 	if user.ID == 0 {
 		return false, errors.New("User does not exist"), models.User{}

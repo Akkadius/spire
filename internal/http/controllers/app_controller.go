@@ -136,7 +136,7 @@ func (d *AppController) initializeApp(c echo.Context) error {
 			UserName: r.Username,
 			FullName: r.Username,
 			Password: r.Password,
-			Provider: spireuser.LOGIN_PROVIDER_LOCAL,
+			Provider: spireuser.LoginProviderLocal,
 			IsAdmin:  true,
 		}
 
@@ -145,9 +145,9 @@ func (d *AppController) initializeApp(c echo.Context) error {
 			return c.JSON(http.StatusBadRequest, echo.Map{"error": err.Error()})
 		}
 
-		d.settings.EnableSetting(spire.SETTING_AUTH_ENABLED)
+		d.settings.EnableSetting(spire.SettingAuthEnabled)
 	} else {
-		d.settings.DisableSetting(spire.SETTING_AUTH_ENABLED)
+		d.settings.DisableSetting(spire.SettingAuthEnabled)
 	}
 
 	// re-initialize again as if we just started up the app

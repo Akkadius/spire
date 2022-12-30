@@ -45,7 +45,7 @@ func (r LocalUserAuthMiddleware) Handle() echo.MiddlewareFunc {
 
 			if user.ID == 0 &&
 				r.spireInit.IsInitialized() &&
-				r.settings.IsSettingEnabled(spire.SETTING_AUTH_ENABLED) {
+				r.settings.IsSettingEnabled(spire.SettingAuthEnabled) {
 				return c.JSON(
 					http.StatusUnauthorized,
 					echo.Map{"error": fmt.Sprintf("You are not logged in")},

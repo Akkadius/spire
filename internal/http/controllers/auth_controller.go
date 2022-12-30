@@ -97,7 +97,7 @@ func (a *AuthController) githubCallbackHandler(c echo.Context) error {
 	//spew.Dump(token)
 
 	var user models.User
-	a.db.GetSpireDb().Where("user_name = ? and provider = ?", github.Username, spireuser.LOGIN_PROVIDER_GITHUB).First(&user)
+	a.db.GetSpireDb().Where("user_name = ? and provider = ?", github.Username, spireuser.LoginProviderGithub).First(&user)
 
 	if user.ID == 0 {
 		u := models.User{
@@ -107,7 +107,7 @@ func (a *AuthController) githubCallbackHandler(c echo.Context) error {
 			LastName:  github.LastName,
 			Email:     github.Email,
 			Avatar:    github.Avatar,
-			Provider:  spireuser.LOGIN_PROVIDER_GITHUB,
+			Provider:  spireuser.LoginProviderGithub,
 		}
 
 		// new github

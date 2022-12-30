@@ -42,6 +42,8 @@ func NewSpire(
 }
 
 func (o *SpireInit) Init() {
+	o.settings.LoadSettings()
+
 	o.isInitialized = o.CheckIfAppInitialized()
 
 	// if we've set the app up initially but new settings have been added
@@ -52,8 +54,6 @@ func (o *SpireInit) Init() {
 		_ = o.connections.SpireMigrate(false)
 		o.settings.InitSettings()
 	}
-
-	o.settings.LoadSettings()
 }
 
 func (o *SpireInit) IsInitialized() bool {
@@ -85,12 +85,17 @@ func (o *SpireInit) GetInstallationTables() []string {
 }
 
 func (o *SpireInit) CheckIfAppInitialized() bool {
-	var settings []models.Setting
-	o.connections.SpireDbNoLog().Find(&settings)
-	var adminUser models.User
-	o.connections.SpireDbNoLog().Where("is_admin = 1").First(&adminUser)
+	if o.settings.IsSettingEnabled(SettingAuthEnabled) {
+		var adminUser models.User
+		o.connections.SpireDbNoLog().Where("is_admin = 1").First(&adminUser)
+		return adminUser.ID != 0
+	}
 
-	return len(settings) > 0 && adminUser.ID != 0
+	if o.settings.IsSettingDisabled(SettingAuthEnabled) {
+		return true
+	}
+
+	return false
 }
 
 func (o *SpireInit) SourceSpireTables() error {

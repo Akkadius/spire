@@ -54,7 +54,7 @@ func (c *UserCreateCommand) Handle(_ *cobra.Command, args []string) {
 		UserName: username,
 		FullName: username,
 		Password: password,
-		Provider: spireuser.LOGIN_PROVIDER_LOCAL,
+		Provider: spireuser.LoginProviderLocal,
 	}
 
 	// new user

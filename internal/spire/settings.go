@@ -7,7 +7,7 @@ import (
 )
 
 const (
-	SETTING_AUTH_ENABLED = "AUTH_ENABLED"
+	SettingAuthEnabled = "AUTH_ENABLED"
 )
 
 type Settings struct {
@@ -32,7 +32,7 @@ func NewSettings(
 func (o *Settings) InitSettings() {
 	defaultSettings := []models.Setting{
 		models.Setting{
-			Setting: SETTING_AUTH_ENABLED,
+			Setting: SettingAuthEnabled,
 			Value:   "false",
 		},
 	}
@@ -97,6 +97,10 @@ func (o *Settings) DisableSetting(setting string) {
 	}
 }
 
+func (o *Settings) GetSettings() []models.Setting {
+	return o.settings
+}
+
 // IsSettingEnabled checks if a setting is enabled (boolean)
 // out of what is loaded into memory
 func (o *Settings) IsSettingEnabled(setting string) bool {
@@ -109,6 +113,14 @@ func (o *Settings) IsSettingEnabled(setting string) bool {
 	return false
 }
 
-func (o *Settings) GetSettings() []models.Setting {
-	return o.settings
+// IsSettingDisabled checks if a setting is disabled (boolean)
+// out of what is loaded into memory
+func (o *Settings) IsSettingDisabled(setting string) bool {
+	for _, s := range o.settings {
+		if s.Setting == setting {
+			return s.Value == "false"
+		}
+	}
+
+	return false
 }
