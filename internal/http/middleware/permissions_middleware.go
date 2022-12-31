@@ -81,8 +81,8 @@ func (r PermissionsMiddleware) Handle() echo.MiddlewareFunc {
 						// did not pass ACL
 						if !pass {
 							return c.JSON(
-								http.StatusUnauthorized,
-								echo.Map{"error": fmt.Sprintf("You do not have permission to access this resource [%v]", resource)},
+								http.StatusForbidden,
+								echo.Map{"error": fmt.Sprintf("You do not have permission to %v this resource [%v]", r.getAccessDescription(c), resource)},
 							)
 						}
 
@@ -96,4 +96,12 @@ func (r PermissionsMiddleware) Handle() echo.MiddlewareFunc {
 			return next(c)
 		}
 	}
+}
+
+func (r PermissionsMiddleware) getAccessDescription(c echo.Context) string {
+	if r.permissions.IsWriteRequest(c) {
+		return "write to"
+	}
+
+	return "read"
 }

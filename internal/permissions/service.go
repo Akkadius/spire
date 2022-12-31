@@ -239,6 +239,17 @@ type userPermissions struct {
 	permissions       []Resource
 }
 
+func (s *Service) IsWriteRequest(c echo.Context) bool {
+	return contains(
+		[]string{
+			http.MethodPatch,
+			http.MethodPost,
+			http.MethodPut,
+		},
+		c.Request().Method,
+	) && !strings.Contains(c.Request().URL.Path, "/bulk")
+}
+
 func (s *Service) CanAccessResource(c echo.Context, user models.User, connectionId uint) bool {
 	p := s.getUserPermissions(c, user, connectionId)
 
@@ -258,14 +269,7 @@ func (s *Service) CanAccessResource(c echo.Context, user models.User, connection
 		return true
 	}
 
-	isWriteRequest := contains(
-		[]string{
-			http.MethodPatch,
-			http.MethodPost,
-			http.MethodPut,
-		},
-		c.Request().Method,
-	) && !strings.Contains(c.Request().URL.Path, "/bulk")
+	isWriteRequest := s.IsWriteRequest(c)
 
 	// global level rules
 	if p.canReadAll && !isWriteRequest {
