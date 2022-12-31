@@ -246,6 +246,18 @@ const router = new Router({
       ]
     },
     {
+      path: '/admin',
+      component: () => import('./components/layout/MainLayout.vue'),
+      children: [
+        {
+          path: '/',
+          component: () => import('./views/admin/Dashboard.vue'),
+          meta: {title: "Dashboard"},
+        },
+      ]
+    },
+
+    {
       path: '/break/',
       component: () => import('./views/Break.vue')
     },

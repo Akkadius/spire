@@ -74,6 +74,7 @@ func (a *AdminController) occulusProxy(c echo.Context) error {
 				c.Response().Header().Add(key, value)
 			}
 		}
+		c.Response().Header().Add("Access-Control-Allow-Origin", "*")
 	}
 
 	return c.String(
