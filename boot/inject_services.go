@@ -10,6 +10,7 @@ import (
 	"github.com/Akkadius/spire/internal/eqemuchangelog"
 	"github.com/Akkadius/spire/internal/github"
 	"github.com/Akkadius/spire/internal/influx"
+	"github.com/Akkadius/spire/internal/occulus"
 	"github.com/Akkadius/spire/internal/pathmgmt"
 	"github.com/Akkadius/spire/internal/permissions"
 	"github.com/Akkadius/spire/internal/questapi"
@@ -41,4 +42,5 @@ var serviceSet = wire.NewSet(
 	spireuser.NewUserService,
 	spire.NewSettings,
 	spire.NewSpireInit,
+	occulus.NewOcculusProxy,
 )

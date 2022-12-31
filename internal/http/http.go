@@ -116,6 +116,8 @@ func BootstrapControllers(e *echo.Echo, controllerGroups ...*routes.ControllerGr
 func registerRoutes(controller routes.Controller, g *echo.Group) error {
 	for _, r := range controller.Routes() {
 		switch r.Method() {
+		case "ANY":
+			g.Any(r.Route(), r.Handler(), r.Middlewares()...)
 		case http.MethodGet:
 			g.GET(r.Route(), r.Handler(), r.Middlewares()...)
 		case http.MethodPost:

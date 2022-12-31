@@ -24,6 +24,7 @@ import (
 	"github.com/Akkadius/spire/internal/http/middleware"
 	"github.com/Akkadius/spire/internal/http/staticmaps"
 	"github.com/Akkadius/spire/internal/influx"
+	"github.com/Akkadius/spire/internal/occulus"
 	"github.com/Akkadius/spire/internal/pathmgmt"
 	"github.com/Akkadius/spire/internal/permissions"
 	"github.com/Akkadius/spire/internal/questapi"
@@ -52,7 +53,8 @@ func InitializeApplication() (App, error) {
 	}
 	cache := provideCache()
 	helloWorldCommand := cmd.NewHelloWorldCommand(db, logger)
-	adminPingOcculus := cmd.NewAdminPingOcculus(db, logger, eqEmuServerConfig)
+	occulusProxy := occulus.NewOcculusProxy(logger, eqEmuServerConfig)
+	adminPingOcculus := cmd.NewAdminPingOcculus(db, logger, eqEmuServerConfig, occulusProxy)
 	connections := provideAppDbConnections(eqEmuServerConfig, logger)
 	encrypter := encryption.NewEncrypter(logger, eqEmuServerConfig)
 	databaseResolver := database.NewDatabaseResolver(connections, logger, encrypter, cache)
@@ -92,7 +94,8 @@ func InitializeApplication() (App, error) {
 	changelog := eqemuchangelog.NewChangelog()
 	eqemuChangelogController := eqemuchangelog.NewEqemuChangelogController(logger, databaseResolver, changelog)
 	deployController := deploy.NewDeployController(logger)
-	bootAppControllerGroups := provideControllers(helloWorldController, authController, meController, analyticsController, connectionsController, docsController, questApiController, appController, queryController, questFileApiController, clientFilesController, staticMapController, assetsController, permissionsController, usersController, eqemuanalyticsAnalyticsController, eqemuChangelogController, deployController)
+	adminController := controllers.NewAdminController(logger, databaseResolver, occulusProxy)
+	bootAppControllerGroups := provideControllers(helloWorldController, authController, meController, analyticsController, connectionsController, docsController, questApiController, appController, queryController, questFileApiController, clientFilesController, staticMapController, assetsController, permissionsController, usersController, eqemuanalyticsAnalyticsController, eqemuChangelogController, deployController, adminController)
 	userEvent := auditlog.NewUserEvent(databaseResolver, logger, cache)
 	aaAbilityController := crudcontrollers.NewAaAbilityController(databaseResolver, logger, userEvent)
 	aaRankController := crudcontrollers.NewAaRankController(databaseResolver, logger, userEvent)

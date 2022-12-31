@@ -1,16 +1,12 @@
 package cmd
 
 import (
-	"bytes"
-	"encoding/json"
-	"fmt"
+	"github.com/Akkadius/spire/internal/occulus"
 	"github.com/Akkadius/spire/internal/serverconfig"
 	"github.com/k0kubun/pp/v3"
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
 	"gorm.io/gorm"
-	"io"
-	"net/http"
 )
 
 type AdminPingOcculus struct {
@@ -18,17 +14,24 @@ type AdminPingOcculus struct {
 	logger       *logrus.Logger
 	command      *cobra.Command
 	serverconfig *serverconfig.EQEmuServerConfig
+	occulus      *occulus.OcculusProxy
 }
 
 func (c *AdminPingOcculus) Command() *cobra.Command {
 	return c.command
 }
 
-func NewAdminPingOcculus(db *gorm.DB, logger *logrus.Logger, serverconfig *serverconfig.EQEmuServerConfig) *AdminPingOcculus {
+func NewAdminPingOcculus(
+	db *gorm.DB,
+	logger *logrus.Logger,
+	serverconfig *serverconfig.EQEmuServerConfig,
+	occulus *occulus.OcculusProxy,
+) *AdminPingOcculus {
 	i := &AdminPingOcculus{
 		db:           db,
 		logger:       logger,
 		serverconfig: serverconfig,
+		occulus:      occulus,
 		command: &cobra.Command{
 			Use:   "admin:ping-occulus",
 			Short: "Pings Occulus",
@@ -43,71 +46,19 @@ func NewAdminPingOcculus(db *gorm.DB, logger *logrus.Logger, serverconfig *serve
 
 // Handle implementation of the Command interface
 func (c *AdminPingOcculus) Handle(cmd *cobra.Command, args []string) {
-	config := c.serverconfig.Get()
-	//pp.Println(config.WebAdmin)
-
-	type PostBody struct {
-		Username string `json:"username"`
-		Password string `json:"password"`
-	}
-	postBody := PostBody{
-		Username: "admin",
-		Password: config.WebAdmin.Application.Admin.Password,
-	}
-
-	payload, err := json.Marshal(postBody)
+	// login
+	err := c.occulus.Login()
 	if err != nil {
 		c.logger.Error(err)
 	}
 
-	resp, err := http.Post(
-		"http://192.168.65.115:3000/api/v1/auth/login", "application/json",
-		bytes.NewBuffer(payload),
-	)
+	// test getting process counts
+	counts, err := c.occulus.GetProcessCounts()
 	if err != nil {
 		c.logger.Error(err)
 	}
 
-	defer resp.Body.Close()
-
-	b, err := io.ReadAll(resp.Body)
-	if err != nil {
-		c.logger.Error(err)
-	}
-
-	type LoginResponse struct {
-		Success     string `json:"success"`
-		AccessToken string `json:"access_token"`
-	}
-
-	var loginResponse LoginResponse
-	err = json.Unmarshal(b, &loginResponse)
-	if err != nil {
-		c.logger.Error(err)
-	}
-
-	pp.Println(loginResponse)
-
-	req, err := http.NewRequest("GET", "http://192.168.65.115:3000/api/v1/server/process_counts", nil)
-	if err != nil {
-		c.logger.Error(err)
-	}
-	req.Header.Add("Accept", `application/json`)
-	req.Header.Add("Authorization", fmt.Sprintf("Bearer %s", loginResponse.AccessToken))
-
-	res, err := http.DefaultClient.Do(req)
-	if err != nil {
-		c.logger.Error(err)
-	}
-
-	defer res.Body.Close()
-
-	b, err = io.ReadAll(res.Body)
-	if err != nil {
-		c.logger.Error(err)
-	}
-
-	pp.Println(string(b))
+	pp.Println(counts)
 }
 
 // Validate implementation of the Command interface

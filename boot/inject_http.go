@@ -39,6 +39,7 @@ var httpSet = wire.NewSet(
 	controllers.NewUsersController,
 	eqemuanalytics.NewAnalyticsController,
 	eqemuchangelog.NewEqemuChangelogController,
+	controllers.NewAdminController,
 	staticmaps.NewStaticMapController,
 	deploy.NewDeployController,
 	provideControllers,
@@ -154,6 +155,7 @@ func provideControllers(
 	analyticsController *eqemuanalytics.AnalyticsController,
 	changelogController *eqemuchangelog.EqemuChangelogController,
 	deployController *deploy.DeployController,
+	adminController *controllers.AdminController,
 ) *appControllerGroups {
 	return &appControllerGroups{
 		authControllers: []routes.Controller{
@@ -169,6 +171,7 @@ func provideControllers(
 			clientFilesController,
 			permissionsController,
 			usersController,
+			adminController,
 		},
 		v1controllersNoAuth: []routes.Controller{
 			quest,
