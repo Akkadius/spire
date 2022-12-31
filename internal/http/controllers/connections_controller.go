@@ -391,15 +391,14 @@ func (cc *ConnectionsController) deleteUser(c echo.Context) error {
 	err = cc.db.GetSpireDb().
 		Where("user_id = ? and server_database_connection_id = ?", userId, connectionId).
 		Delete(&models.UserServerDatabaseConnection{}).Error
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err})
+	}
 
 	// Delete entries first
 	err = cc.db.GetSpireDb().
 		Where("user_id = ? and server_database_connection_id = ?", userId, connectionId).
 		Delete(&models.UserServerResourcePermission{}).Error
-	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err})
-	}
-
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err})
 	}

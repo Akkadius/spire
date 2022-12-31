@@ -333,7 +333,6 @@ export default {
       })
     },
     async listConnections() {
-
       // user defined
       const r = await SpireApi.v1().get('/connections')
       if (r.data && r.data.data) {

@@ -20,6 +20,7 @@ export default {
     this.loadWallpaper();
     this.loadSpellIconSettings();
 
+    this.user  = await UserContext.getUser()
     const init = await AppEnv.init()
     if (init) {
       EventBus.$emit('APP_ENV_LOADED', true);

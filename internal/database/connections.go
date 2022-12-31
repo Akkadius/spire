@@ -43,7 +43,7 @@ var spireTables = []models.Modelable{
 	&models.User{},
 	&models.UserServerDatabaseConnection{},
 	&models.ServerDatabaseConnection{},
-	&models.Setting{},
+	&models.AnalyticEvent{},
 	&models.AnalyticEventCount{},
 	&models.UserEventLog{},
 	&models.UserServerResourcePermission{},

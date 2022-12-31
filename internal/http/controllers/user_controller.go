@@ -3,31 +3,38 @@ package controllers
 import (
 	"fmt"
 	"github.com/Akkadius/spire/internal/database"
+	"github.com/Akkadius/spire/internal/http/request"
 	"github.com/Akkadius/spire/internal/http/routes"
 	"github.com/Akkadius/spire/internal/models"
+	"github.com/Akkadius/spire/internal/spireuser"
 	"github.com/labstack/echo/v4"
 	"github.com/sirupsen/logrus"
 	"net/http"
 )
 
 type UsersController struct {
-	db     *database.DatabaseResolver
-	logger *logrus.Logger
+	db        *database.DatabaseResolver
+	logger    *logrus.Logger
+	spireuser *spireuser.UserService
 }
 
 func NewUsersController(
 	db *database.DatabaseResolver,
 	logger *logrus.Logger,
+	spireuser *spireuser.UserService,
 ) *UsersController {
 	return &UsersController{
-		db:     db,
-		logger: logger,
+		db:        db,
+		logger:    logger,
+		spireuser: spireuser,
 	}
 }
 
 func (a *UsersController) Routes() []*routes.Route {
 	return []*routes.Route{
 		routes.RegisterRoute(http.MethodGet, "users", a.list, nil),
+		routes.RegisterRoute(http.MethodPut, "user", a.create, nil),
+		routes.RegisterRoute(http.MethodDelete, "user/:id", a.delete, nil),
 	}
 }
 
@@ -53,4 +60,104 @@ func (a *UsersController) list(c echo.Context) error {
 	}
 
 	return c.JSON(http.StatusOK, echo.Map{"error": "No users found"})
+}
+
+type UserCreateRequest struct {
+	Username string `json:"username"`
+	Password string `json:"password"`
+}
+
+// create endpoint is currently primarily in use for local spire users
+// assumptions in logic are based around its use
+func (a *UsersController) create(c echo.Context) error {
+
+	// validation: not admin
+	u := request.GetUser(c)
+	if !u.IsAdmin {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "You are not an administrator"})
+	}
+
+	r := new(UserCreateRequest)
+	if err := c.Bind(r); err != nil {
+		return c.String(http.StatusBadRequest, "bad request")
+	}
+
+	// new user
+	user := models.User{
+		UserName: r.Username,
+		FullName: r.Username,
+		Password: r.Password,
+		Provider: spireuser.LoginProviderLocal,
+		IsAdmin:  false,
+	}
+
+	newUser, err := a.spireuser.CreateUser(user)
+	if err != nil {
+		return c.JSON(http.StatusBadRequest, echo.Map{"error": err.Error()})
+	}
+
+	// associate user with connection
+	var uc models.UserServerDatabaseConnection
+	uc.UserId = newUser.ID
+	uc.Active = 1
+	uc.ServerDatabaseConnectionId = 1
+	uc.CreatedBy = u.ID
+	err = a.db.GetSpireDb().Create(&uc).Error
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err})
+	}
+
+	return c.JSON(http.StatusOK, "User created successfully!")
+}
+
+// delete endpoint is currently primarily in use for local spire users
+// assumptions in logic are based around its use
+func (a *UsersController) delete(c echo.Context) error {
+
+	// validation: not admin
+	u := request.GetUser(c)
+	if !u.IsAdmin {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "You are not an administrator"})
+	}
+
+	userId := c.Param("id")
+
+	// validation: can't delete admin
+	var checkUser models.User
+	err := a.db.GetSpireDb().Where("id = ?", userId).First(&checkUser).Error
+	if checkUser.IsAdmin {
+		return c.JSON(http.StatusBadRequest, echo.Map{"error": "Cannot delete an admin!"})
+	}
+
+	// validation: can't delete self
+	if userId == fmt.Sprintf("%v", u.ID) {
+		return c.JSON(http.StatusBadRequest, echo.Map{"error": "Cannot delete self!"})
+	}
+
+	// delete user
+	err = a.db.GetSpireDb().Where("id = ?", userId).Delete(&models.User{}).Error
+	if err != nil {
+		return c.JSON(http.StatusBadRequest, echo.Map{"error": err.Error()})
+	}
+
+	// hard-coded local database injected connection
+	connectionId := 1
+
+	// Delete
+	err = a.db.GetSpireDb().
+		Where("user_id = ? and server_database_connection_id = ?", userId, connectionId).
+		Delete(&models.UserServerDatabaseConnection{}).Error
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err})
+	}
+
+	// Delete entries first
+	err = a.db.GetSpireDb().
+		Where("user_id = ? and server_database_connection_id = ?", userId, connectionId).
+		Delete(&models.UserServerResourcePermission{}).Error
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err})
+	}
+
+	return c.JSON(http.StatusOK, "User deleted successfully!")
 }

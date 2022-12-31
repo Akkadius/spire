@@ -177,9 +177,6 @@ export default {
           this.error = err.response.data.error
         }
       }
-
-      console.log(this.username)
-      console.log(this.password)
     },
 
     hasAuthOptions() {

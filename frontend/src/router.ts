@@ -204,6 +204,11 @@ const router = new Router({
           meta: {title: "Manage Database Connections"},
         },
         {
+          path: ROUTE.USER_MANAGEMENT,
+          component: () => import('./views/user/UserManagement.vue'),
+          meta: {title: "Manage Spire Users"},
+        },
+        {
           path: util.format(ROUTE.DATABASE_CONNECTION_AUDIT_LOG, ":connection"),
           component: () => import('./views/connections/AuditLog.vue'),
           meta: {title: "Audit Log"},

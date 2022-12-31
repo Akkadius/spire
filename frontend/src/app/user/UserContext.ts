@@ -1,14 +1,23 @@
 // import api from '@/app/core/api-client';
 
-import {MeApi}          from "@/app/api";
+import {MeApi} from "@/app/api";
 import {SpireApi} from "../api/spire-api";
 
 const TOKEN_KEY = 'spire-web-access-token-' + location.host;
 
 export default class UserContext {
-  private static user: any        = {};
+  private static user: any          = {};
   private static loaded: boolean;
-  private static permissions: any = {};
+  private static permissions: any   = {};
+  private static _is_admin: boolean = false;
+
+  static isAdmin() {
+    return this._is_admin
+  }
+
+  static setIsAdmin(value) {
+    this._is_admin = value
+  }
 
   /**
    * Get user data
@@ -41,10 +50,13 @@ export default class UserContext {
         this.user   = result.data
         this.loaded = true
 
+        if (this.user.is_admin) {
+          this.setIsAdmin(true)
+        }
+
         return this.user
       }
-    }
-    catch (e) {
+    } catch (e) {
       // squash
     }
 
@@ -58,6 +70,7 @@ export default class UserContext {
     this.user        = {};
     this.loaded      = false;
     this.permissions = {};
+    this._is_admin   = false
   }
 
   /**

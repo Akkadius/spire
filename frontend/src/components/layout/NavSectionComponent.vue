@@ -79,8 +79,6 @@ export default {
   created() {
     const uuidv4 = require("uuid/v4")
     this.navId   = uuidv4()
-
-    console.log(this.config)
   }
 }
 </script>

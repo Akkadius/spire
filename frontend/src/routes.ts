@@ -34,5 +34,6 @@ export const ROUTE = {
   TASKS: "/tasks",
   MERCHANTS: "/merchants",
   MERCHANT_EDIT: "/merchant/%s",
+  USER_MANAGEMENT: "/users",
   ZONES: "/zones",
 };
