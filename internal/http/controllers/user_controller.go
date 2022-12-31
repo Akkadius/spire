@@ -3,6 +3,7 @@ package controllers
 import (
 	"fmt"
 	"github.com/Akkadius/spire/internal/database"
+	"github.com/Akkadius/spire/internal/encryption"
 	"github.com/Akkadius/spire/internal/http/request"
 	"github.com/Akkadius/spire/internal/http/routes"
 	"github.com/Akkadius/spire/internal/models"
@@ -16,17 +17,20 @@ type UsersController struct {
 	db        *database.DatabaseResolver
 	logger    *logrus.Logger
 	spireuser *spireuser.UserService
+	crypt     *encryption.Encrypter
 }
 
 func NewUsersController(
 	db *database.DatabaseResolver,
 	logger *logrus.Logger,
 	spireuser *spireuser.UserService,
+	crypt *encryption.Encrypter,
 ) *UsersController {
 	return &UsersController{
 		db:        db,
 		logger:    logger,
 		spireuser: spireuser,
+		crypt:     crypt,
 	}
 }
 
@@ -35,6 +39,7 @@ func (a *UsersController) Routes() []*routes.Route {
 		routes.RegisterRoute(http.MethodGet, "users", a.list, nil),
 		routes.RegisterRoute(http.MethodPut, "user", a.create, nil),
 		routes.RegisterRoute(http.MethodDelete, "user/:id", a.delete, nil),
+		routes.RegisterRoute(http.MethodPost, "user/:id/password-reset", a.passwordReset, nil),
 	}
 }
 
@@ -125,6 +130,10 @@ func (a *UsersController) delete(c echo.Context) error {
 	// validation: can't delete admin
 	var checkUser models.User
 	err := a.db.GetSpireDb().Where("id = ?", userId).First(&checkUser).Error
+	if err != nil {
+		return c.JSON(http.StatusBadRequest, echo.Map{"error": err.Error()})
+	}
+
 	if checkUser.IsAdmin {
 		return c.JSON(http.StatusBadRequest, echo.Map{"error": "Cannot delete an admin!"})
 	}
@@ -160,4 +169,39 @@ func (a *UsersController) delete(c echo.Context) error {
 	}
 
 	return c.JSON(http.StatusOK, "User deleted successfully!")
+}
+
+type PasswordResetRequest struct {
+	Password string `json:"password"`
+}
+
+func (a *UsersController) passwordReset(c echo.Context) error {
+	// validation: not admin
+	u := request.GetUser(c)
+	if !u.IsAdmin {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "You are not an administrator"})
+	}
+
+	r := new(PasswordResetRequest)
+	if err := c.Bind(r); err != nil {
+		return c.String(http.StatusBadRequest, "bad request")
+	}
+
+	userId := c.Param("id")
+
+	var user models.User
+	err := a.db.GetSpireDb().Where("id = ?", userId).First(&user).Error
+	if err != nil {
+		return c.JSON(http.StatusBadRequest, echo.Map{"error": err.Error()})
+	}
+
+	hash, err := a.crypt.GeneratePassword(r.Password)
+	if err != nil {
+		return c.JSON(http.StatusBadRequest, echo.Map{"error": err.Error()})
+	}
+	user.Password = hash
+
+	a.db.GetSpireDb().Save(&user)
+
+	return c.JSON(http.StatusOK, "User password reset successfully!")
 }

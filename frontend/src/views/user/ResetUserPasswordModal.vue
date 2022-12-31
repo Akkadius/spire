@@ -1,21 +1,11 @@
 <template>
   <b-modal
-    id="create-user-modal"
+    id="reset-user-password-modal"
     centered
-    title="Create Local Spire User"
+    :title="`Reset Password For User [${user.user_name}] (${user.id})`"
     size="lg"
     @show="init()"
   >
-    <div>
-      Username
-      <b-form-input
-        v-model="username"
-        id="username"
-        name="username"
-        autocomplete="off"
-        placeholder="Username"
-      />
-    </div>
 
     <div class="mt-3">
       Password
@@ -59,8 +49,8 @@
 
     <b-button
       class="mt-5 btn-white form-control"
-      @click="createUser()"
-    ><i class="fa fa-plus"></i> Create User
+      @click="resetPassword()"
+    ><i class="fe fe-lock"></i> Reset Password
     </b-button>
 
     <info-error-banner
@@ -85,13 +75,12 @@ import InfoErrorBanner from "@/components/InfoErrorBanner";
 import {SpireApi}      from "@/app/api/spire-api";
 
 export default {
-  name: "CreateUserModal",
+  name: "ResetUserPasswordModal",
   components: { InfoErrorBanner },
   data() {
     return {
 
       // form
-      username: "",
       password: "",
       passwordConfirm: "",
       showPassword: false,
@@ -101,17 +90,18 @@ export default {
       error: "",
     }
   },
+  props: {
+    user: {
+      type: Object,
+    },
+  },
   mounted() {
     this.init()
   },
   methods: {
-    async createUser() {
+    async resetPassword() {
 
       // validation
-      if (this.username.length === 0) {
-        this.error = "Username is empty!"
-        return;
-      }
       if (this.password.length === 0) {
         this.error = "Password is empty!"
         return;
@@ -130,17 +120,16 @@ export default {
       }
 
       try {
-        const r = await SpireApi.v1().put('user', {
-          username: this.username,
+        const r = await SpireApi.v1().post(`user/${this.user.id}/password-reset`, {
           password: this.password,
         })
         if (r.status === 200) {
-          this.notification = "User created successfully!"
+          this.notification = "User password reset successfully!"
 
           this.$emit("reload-users", true);
 
           setTimeout(() => {
-            this.$bvModal.hide('create-user-modal')
+            this.$bvModal.hide('reset-user-password-modal')
           }, 2000)
         }
       } catch (e) {
@@ -152,7 +141,6 @@ export default {
     },
     init() {
       // reset
-      this.username        = ""
       this.password        = ""
       this.passwordConfirm = ""
       this.showPassword    = false

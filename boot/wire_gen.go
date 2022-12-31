@@ -86,7 +86,7 @@ func InitializeApplication() (App, error) {
 	staticMapController := staticmaps.NewStaticMapController(databaseResolver, logger)
 	assetsController := controllers.NewAssetsController(logger, databaseResolver)
 	permissionsController := controllers.NewPermissionsController(logger, databaseResolver, service)
-	usersController := controllers.NewUsersController(databaseResolver, logger, userService)
+	usersController := controllers.NewUsersController(databaseResolver, logger, userService, encrypter)
 	releases := eqemuanalytics.NewReleases()
 	eqemuanalyticsAnalyticsController := eqemuanalytics.NewAnalyticsController(logger, databaseResolver, releases)
 	changelog := eqemuchangelog.NewChangelog()

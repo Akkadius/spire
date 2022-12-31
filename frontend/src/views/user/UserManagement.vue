@@ -5,6 +5,10 @@
       @reload-users="listUsers()"
     />
 
+    <reset-user-password-modal
+      :user="resetPasswordUser"
+    />
+
     <div class="row justify-content-center">
       <div class="col-12 col-lg-10 col-xl-8 content-pop">
         <div class="container-fluid">
@@ -44,24 +48,32 @@
             <b-list-group class="mt-3">
               <b-list-group-item
                 class="d-flex align-items-center"
-                v-for="user in users"
-                :key="user.id"
+                v-for="u in users"
+                :key="u.id"
               >
                 <b-avatar
-                  :src="user.avatar"
+                  :src="u.avatar"
                   size="30"
                   variant="info"
                   v-b-tooltip.hover.v-dark.top
-                  :title="user.user_name"
+                  :title="u.user_name"
                   class="mr-3"
                 />
-                <span class="mr-auto">{{ user.user_name }}</span>
-                <b-badge>{{ toTitleCase(user.provider) }}</b-badge>
+                <span class="mr-auto">{{ u.user_name }}</span>
 
-                <a class="btn btn-sm btn-danger ml-3" @click="deleteUser(user)">
+                <a class="btn btn-sm btn-white mr-3" @click="resetPassword(u)">
+                  <i class="fe fe-lock"></i>
+                  Reset Password
+                </a>
+
+                <a class="btn btn-sm btn-danger mr-3" @click="deleteUser(u)" v-if="u.id !== user.id">
                   <i class="fa fa-trash"></i>
                   Delete
                 </a>
+
+                <b-badge>{{ toTitleCase(u.provider) }}</b-badge>
+
+
               </b-list-group-item>
             </b-list-group>
 
@@ -75,16 +87,24 @@
 </template>
 
 <script>
-import ContentArea     from "@/components/layout/ContentArea.vue";
-import {SpireApi}      from "@/app/api/spire-api";
-import CreateUserModal from "@/views/user/CreateUserModal.vue";
-import InfoErrorBanner from "@/components/InfoErrorBanner.vue";
+import ContentArea            from "@/components/layout/ContentArea.vue";
+import {SpireApi}             from "@/app/api/spire-api";
+import CreateUserModal        from "@/views/user/CreateUserModal.vue";
+import InfoErrorBanner        from "@/components/InfoErrorBanner.vue";
+import UserContext            from "@/app/user/UserContext";
+import ResetUserPasswordModal from "@/views/user/ResetUserPasswordModal.vue";
 
 export default {
   name: "UserManagement",
-  components: { InfoErrorBanner, CreateUserModal, ContentArea },
+  components: { ResetUserPasswordModal, InfoErrorBanner, CreateUserModal, ContentArea },
   data() {
     return {
+
+      // current user
+      user: {},
+
+      resetPasswordUser: {},
+
       // user list
       users: [],
 
@@ -94,6 +114,11 @@ export default {
     }
   },
   methods: {
+
+    resetPassword(user) {
+      this.resetPasswordUser = user
+      this.$bvModal.show('reset-user-password-modal')
+    },
 
     createUser() {
       this.$bvModal.show('create-user-modal')
@@ -134,6 +159,8 @@ export default {
     }
   },
   async mounted() {
+    this.user = await UserContext.getUser()
+
     this.listUsers()
   }
 }

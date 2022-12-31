@@ -38,7 +38,6 @@ export default {
   },
   methods: {
     isAdmin() {
-
       return this.user.is_admin
     }
   },
