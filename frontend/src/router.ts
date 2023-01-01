@@ -265,6 +265,11 @@ const router = new Router({
           component: () => import('./views/admin/ZoneServers.vue'),
           meta: {title: "Zone Servers"},
         },
+        {
+          path: 'zoneservers/:port/netstats',
+          component: () => import('./views/admin/NetStats.vue'),
+          meta: {title: "Netstats"},
+        },
       ]
     },
 

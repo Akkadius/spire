@@ -18,7 +18,7 @@
               <span class="h2 fe text-muted mb-0 fe-layers mr-3"></span>
 
               <router-link
-                :to="'/deployment/'"
+                :to="''"
                 style="color:#2364d2;font-weight:200;font-size: 18px;"
                 v-if="zone.zone_long_name"
               >
@@ -45,12 +45,21 @@
                   <span v-if="zone.instance_id">Instance: {{ zone.instance_id }}</span>
                 </span>
                 <span class="text-muted ml-2" style="font-size:12px">  </span>
+
                 <router-link
                   class="text-muted ml-2"
                   :to="`zoneservers/${zone.client_port}/logs`"
                   style="font-size:12px"
                 >
                   <i class="fe fe-play"></i> Stream Logs
+                </router-link>
+
+                <router-link
+                  class="text-muted ml-2"
+                  :to="`zoneservers/${zone.client_port}/netstats`"
+                  style="font-size:12px"
+                >
+                  <i class="fe fe-airplay"></i> Network Stats
                 </router-link>
               </div>
 
