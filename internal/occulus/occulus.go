@@ -62,7 +62,8 @@ func (o *OcculusProxy) Login() error {
 		return err
 	}
 
-	resp, err := http.Post(
+	client := o.getHttpClient()
+	resp, err := client.Post(
 		fmt.Sprintf("%v/api/v1/auth/login", baseUrl),
 		"application/json",
 		bytes.NewBuffer(payload),
@@ -154,9 +155,7 @@ func (o *OcculusProxy) ProxyRequest(c echo.Context) (*http.Response, []byte, err
 	r.URL = targetUrl
 	r.Header.Set("Authorization", fmt.Sprintf("Bearer %v", o.AuthToken()))
 
-	client := http.Client{
-		Timeout: 30 * time.Second,
-	}
+	client := o.getHttpClient()
 	res, err := client.Do(r)
 	if err != nil {
 		return nil, nil, err
@@ -170,4 +169,10 @@ func (o *OcculusProxy) ProxyRequest(c echo.Context) (*http.Response, []byte, err
 	defer res.Body.Close()
 
 	return res, body, nil
+}
+
+func (o *OcculusProxy) getHttpClient() http.Client {
+	return http.Client{
+		Timeout: 30 * time.Second,
+	}
 }

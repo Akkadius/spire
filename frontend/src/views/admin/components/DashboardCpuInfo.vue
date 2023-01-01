@@ -1,11 +1,11 @@
 <template>
-  <div class="col-md-6 col-lg-6">
+  <div>
     <div class="card">
       <div class="card-header">
         <h4 class="card-header-title" v-if="cpuLoad.length">CPU(s) ({{ cpuLoad.length }})
         </h4>
       </div>
-      <div class="card-body" style="height: 15rem; padding: 15px; overflow-y:scroll">
+      <div class="card-body" style="padding: 15px; overflow-y:scroll">
         <ul class="list-unstyled list-separated">
           <li class="list-separated-item">
 
