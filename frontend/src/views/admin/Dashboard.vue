@@ -1,26 +1,5 @@
 <template>
   <div class="col-12">
-    <div class="card">
-      <div class="card-body">
-        <div class="row align-items-center">
-          <div class="col">
-
-            <h6 class="header-pretitle">
-              Dashboard
-            </h6>
-
-            <h1 class="header-title">
-              <span v-if="stats.long_name">{{ stats.long_name }}</span>
-            </h1>
-          </div>
-
-          <div class="col-auto">
-            <server-process-button-component/>
-          </div>
-        </div>
-      </div>
-    </div>
-
     <app-loader :is-loading="!loaded"></app-loader>
 
     <div class="row row-cards" v-if="loaded">
@@ -52,7 +31,7 @@
 
       <!-- Right side -->
       <div class="col-lg-6">
-        <players-online></players-online>
+        <players-online-component/>
       </div>
     </div>
   </div>
@@ -65,14 +44,14 @@ import DashboardCpuInfo             from "@/views/admin/components/DashboardCpuI
 import DashboardSystemInfo          from "@/views/admin/components/DashboardSystemInfo";
 import Timer                        from "@/app/timer/timer";
 import {EqemuAdminClient}           from "@/app/api/eqemu-admin-client-occulus";
-import PlayersOnline                from "@/views/admin/components/PlayersOnline";
 import DashboardCounter             from "@/views/admin/components/DashboardCounter.vue";
 import {OS}                         from "@/app/os/os";
+import PlayersOnlineComponent       from "@/views/admin/components/PlayersOnlineComponent.vue";
 
 export default {
   components: {
+    PlayersOnlineComponent,
     DashboardCounter,
-    PlayersOnline,
     DashboardSystemInfo,
     DashboardCpuInfo,
     DashboardProcessCounts,

@@ -14,10 +14,22 @@
     </a>
 
     <div class="dropdown-menu dropdown-menu-right">
-      <a href="#" @click="startServerModal" class="dropdown-item">Power On [p]</a>
-      <a href="#" @click="stopServerModal" class="dropdown-item">Power Off [s]</a>
-      <a href="#" @click="restartServerModal" class="dropdown-item">Restart [r]</a>
-      <a href="#" @click="cancelServerRestartModal" class="dropdown-item">Cancel Restart [c]</a>
+      <a href="#" @click="startServerModal" class="dropdown-item">
+        <small class="text-muted"><i class="fa fa-keyboard-o" aria-hidden="true"></i> (p)</small>
+        Power On
+      </a>
+      <a href="#" @click="stopServerModal" class="dropdown-item">
+        <small class="text-muted"><i class="fa fa-keyboard-o" aria-hidden="true"></i> (s)</small>
+        Power Off
+      </a>
+      <a href="#" @click="restartServerModal" class="dropdown-item">
+        <small class="text-muted"><i class="fa fa-keyboard-o" aria-hidden="true"></i> (r)</small>
+        Restart [r]
+      </a>
+      <a href="#" @click="cancelServerRestartModal" class="dropdown-item">
+        <small class="text-muted"><i class="fa fa-keyboard-o" aria-hidden="true"></i> (c)</small>
+        Cancel Restart [c]
+      </a>
     </div>
 
     <!-- Start Server -->

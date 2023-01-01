@@ -3,6 +3,7 @@ import Router from 'vue-router'
 import {ROUTE} from "@/routes";
 import * as util from "util";
 import {AppEnv} from "@/app/env/app-env";
+import {EventBus} from "@/app/event-bus/event-bus";
 
 Vue.use(Router)
 
@@ -246,13 +247,18 @@ const router = new Router({
       ]
     },
     {
-      path: '/admin',
-      component: () => import('./components/layout/MainLayout.vue'),
+      path: ROUTE.ADMIN_ROOT,
+      component: () => import('./views/admin/layout/AdminLayout.vue'),
       children: [
         {
           path: '/',
           component: () => import('./views/admin/Dashboard.vue'),
           meta: {title: "Dashboard"},
+        },
+        {
+          path: 'players-online',
+          component: () => import('./views/admin/PlayersOnline.vue'),
+          meta: {title: "Players Online"},
         },
       ]
     },
@@ -314,6 +320,8 @@ router.beforeEach(async (to, from, next) => {
       })
     }
   }
+
+  EventBus.$emit('ROUTE_CHANGE', true);
 
   next()
 })

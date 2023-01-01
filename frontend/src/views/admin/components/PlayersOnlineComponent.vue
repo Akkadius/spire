@@ -97,8 +97,7 @@
 
         </div>
 
-
-        <div class="card-body" v-if="!clientList && loaded">
+        <div class="card-body" v-if="clientList && clientList.length === 0 && loaded">
           There are currently no players online...
         </div>
 
@@ -117,7 +116,7 @@ import {DB_RACES_ICONS}            from "@/app/constants/eq-race-icon-constants"
 import {EqemuAdminClient}          from "@/app/api/eqemu-admin-client-occulus";
 
 export default {
-  name: 'PlayersOnline',
+  name: 'PlayersOnlineComponent',
 
   props: {
     fullList: {
@@ -134,7 +133,7 @@ export default {
       DB_CLASSES_ICONS: {},
       DB_RACES_ICONS: {},
       eqClientVersionConstants: {},
-      clientList: null,
+      clientList: [],
       filteredClientList: null,
       playersOnlineChart: null,
       playerSearchFilter: null
@@ -223,7 +222,7 @@ export default {
         return false
       }
 
-      var clientList = []
+      let clientList = []
       if (apiClientList.length > 0) {
         apiClientList.forEach(function (row) {
           if (row.character_id === 0) {

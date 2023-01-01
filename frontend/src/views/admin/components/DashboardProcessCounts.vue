@@ -77,8 +77,6 @@ export default {
     }
 
     Timer.timer['process-counts'] = setInterval(async () => {
-      console.log("process counts trigger")
-
       this.loaded = false
       if (!document.hidden) {
         this.processCounts = await EqemuAdminClient.getProcessCounts()

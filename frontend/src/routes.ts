@@ -1,5 +1,7 @@
 export const ROUTE = {
   API_MODEL_RELATIONSHIP_EXPLORER: "/api/model-relationship-explorer",
+  ADMIN_ROOT: "/admin",
+  ADMIN_PLAYERS_ONLINE: "/admin/players-online",
   DATABASE_CONNECTION_AUDIT_LOG: "/connection/%s/audit-log",
   CLIENT_FILES: "/client-files",
   DATABASE_CONNECTIONS: "/connections",

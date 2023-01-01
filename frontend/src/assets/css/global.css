@@ -437,10 +437,32 @@ th[role=columnheader]:hover:not(.no-sort):after {
     background-color: #f6f6f6;
 }
 
+/*makes element unselectable*/
 .unselectable {
     -webkit-user-select: none;
     -khtml-user-select: none;
     -moz-user-select: -moz-none;
     -o-user-select: none;
     user-select: none;
+}
+
+#sidebar {
+    -webkit-transition: opacity .3s linear;
+    -moz-transition: opacity .3s linear;
+    -o-transition: opacity .3s linear;
+    transition: opacity .3s linear;
+}
+
+.sidebar-reset {
+    opacity: .8;
+}
+
+.sidebar-normal {
+    background-image: linear-gradient(to bottom right, rgb(21 21 21 / 90%), rgb(191 126 70 / 90%)), url(~@/assets/img/eq-wallpaper-1.jpg) !important;
+    opacity: 1;
+}
+
+.sidebar-admin {
+    background-image: linear-gradient(to bottom right, rgb(21 21 21 / 90%), rgb(152 80 80 / 90%)), url(~@/assets/img/eq-wallpaper-1.jpg) !important;
+    opacity: 1;
 }

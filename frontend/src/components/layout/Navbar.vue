@@ -31,22 +31,14 @@
       <router-link class="ml-3 mt-3" to="/">
         <h1 class="text-center eq-header small-mobile">
           Spire
-<!--          <h3 class="text-center eq-header small-mobile d-inline" style="font-size: 40px">-->
-<!--            [Admin]-->
-<!--          </h3>-->
+          <!--          <h3 class="text-center eq-header small-mobile d-inline" style="font-size: 40px">-->
+          <!--            [Admin]-->
+          <!--          </h3>-->
         </h1>
-
-
       </router-link>
 
-
-      <!-- User (xs) -->
       <div class="navbar-user d-md-none">
-
-        <!-- Dropdown -->
         <div class="dropdown">
-
-          <!-- Toggle -->
           <a
             href="#" id="sidebarIcon" class="dropdown-toggle" role="button" data-toggle="dropdown" aria-haspopup="true"
             aria-expanded="false"
@@ -58,109 +50,127 @@
               >
             </div>
           </a>
-
           <navbar-dropdown-menu menu-right="1"/>
-
         </div>
-
       </div>
 
-      <!-- Collapse -->
       <div class="collapse navbar-collapse" id="sidebarCollapse">
+        <div v-if="isAppLocal()">
+          <h6 class="navbar-heading mt-3">
+            Admin
+          </h6>
 
-        <!-- Heading -->
-        <h6 class="navbar-heading mt-3">
-          Content Tools
-        </h6>
+          <ul class="navbar-nav mb-md-4">
+            <li class="nav-item">
+              <router-link class="nav-link" :to="ROUTE.ADMIN_ROOT" exact>
+                <i class="ra ra-eye-shield mr-1"></i> Server Admin
+                <b-badge class="ml-3" variant="primary">NEW!</b-badge>
+              </router-link>
+            </li>
 
-        <!-- Navigation -->
-        <ul class="navbar-nav mb-md-4">
-          <nav-section-component :config="botNav" v-if="alphaEnabled"/>
-
-          <nav-section-component :config="calculatorNav"/>
-
-          <li class="nav-item">
-            <router-link class="nav-link" to="/client-files">
-              <i class="ra ra-cycle mr-1"></i> Client Files
-              <b-badge class="ml-3" variant="primary">NEW!</b-badge>
-            </router-link>
-          </li>
-
-          <li class="nav-item">
-            <router-link class="nav-link " to="/items">
-              <i class="ra ra-relic-blade mr-1"></i> Items
-              <b-badge class="ml-3" variant="primary">NEW!</b-badge>
-            </router-link>
-          </li>
-
-          <nav-section-component :config="npcNav" v-if="alphaEnabled"/>
-
-          <li class="nav-item">
-            <router-link class="nav-link " to="/quest-api-explorer">
-              <i class="ra ra-compass mr-1"></i> Quest API Explorer
-            </router-link>
-          </li>
-
-          <li class="nav-item">
-            <router-link class="nav-link " to="/strings-database">
-              <i class="ra  ra-scroll-unfurled mr-1"></i> Strings DB
-              <b-badge class="ml-3" variant="primary">NEW!</b-badge>
-            </router-link>
-          </li>
-          <li class="nav-item">
-            <router-link class="nav-link " to="/spells">
-              <i class="ra ra-book mr-1"></i> Spells
-              <b-badge class="ml-3" variant="primary">NEW!</b-badge>
-            </router-link>
-          </li>
-          <li class="nav-item">
-            <router-link class="nav-link " to="/tasks">
-              <i class="ra ra-zebra-shield mr-1"></i> Tasks
-              <b-badge class="ml-3" variant="primary">BETA</b-badge>
-              <b-badge class="ml-3" variant="primary">NEW!</b-badge>
-            </router-link>
-          </li>
-          <nav-section-component :config="viewerNav"/>
-
-          <li class="nav-item" v-if="alphaEnabled">
-            <router-link class="nav-link " to="/zones">
-              <i class="ra ra-wooden-sign mr-2"></i> Zones
-              <b-badge class="ml-3" variant="primary">ALPHA</b-badge>
-              <b-badge class="ml-3" variant="primary">NEW!</b-badge>
-            </router-link>
-          </li>
-
-        </ul>
-
-        <!-- Heading -->
-        <h6 class="navbar-heading">
-          Spire Docs
-        </h6>
-
-        <!-- Navigation -->
-        <ul class="navbar-nav mb-md-4">
-
-          <nav-section-component :config="spireApiNav"/>
-
-          <!-- Components -->
-          <li class="nav-item">
-            <a
-              :class="'nav-link collapse ' + (hasRoute('components') ? 'active' : 'collapsed')"
-              href="#sidebarComponents" data-toggle="collapse" role="button"
-              aria-expanded="false" aria-controls="sidebarComponents"
-            >
-              <i class="ra ra-burst-blob mr-1"></i> Components
-            </a>
-            <div :class="'collapse ' + (hasRoute('components') ? 'show' : '')" id="sidebarComponents">
-              <ul class="nav nav-sm flex-column">
-                <li v-for="nav in componentNavs">
-                  <router-link class="nav-link" :to="nav.to">{{ nav.title }}</router-link>
-                </li>
-              </ul>
+            <div v-if="isInAdmin()">
+              <li class="nav-item">
+                <router-link class="nav-link" :to="ROUTE.ADMIN_PLAYERS_ONLINE" exact>
+                  <i class="ra ra-double-team mr-1"></i> Players Online
+                </router-link>
+              </li>
             </div>
-          </li>
 
-        </ul>
+          </ul>
+        </div>
+
+        <div v-if="!isInAdmin()">
+          <h6 class="navbar-heading mt-3">
+            Content Tools
+          </h6>
+
+          <ul class="navbar-nav mb-md-4">
+            <nav-section-component :config="botNav" v-if="alphaEnabled"/>
+            <nav-section-component :config="calculatorNav"/>
+
+            <li class="nav-item">
+              <router-link class="nav-link" to="/client-files">
+                <i class="ra ra-cycle mr-1"></i> Client Files
+                <b-badge class="ml-3" variant="primary">NEW!</b-badge>
+              </router-link>
+            </li>
+
+            <li class="nav-item">
+              <router-link class="nav-link " to="/items">
+                <i class="ra ra-relic-blade mr-1"></i> Items
+                <b-badge class="ml-3" variant="primary">NEW!</b-badge>
+              </router-link>
+            </li>
+
+            <nav-section-component :config="npcNav" v-if="alphaEnabled"/>
+
+            <li class="nav-item">
+              <router-link class="nav-link " to="/quest-api-explorer">
+                <i class="ra ra-compass mr-1"></i> Quest API Explorer
+              </router-link>
+            </li>
+
+            <li class="nav-item">
+              <router-link class="nav-link " to="/strings-database">
+                <i class="ra  ra-scroll-unfurled mr-1"></i> Strings DB
+                <b-badge class="ml-3" variant="primary">NEW!</b-badge>
+              </router-link>
+            </li>
+            <li class="nav-item">
+              <router-link class="nav-link " to="/spells">
+                <i class="ra ra-book mr-1"></i> Spells
+                <b-badge class="ml-3" variant="primary">NEW!</b-badge>
+              </router-link>
+            </li>
+            <li class="nav-item">
+              <router-link class="nav-link " to="/tasks">
+                <i class="ra ra-zebra-shield mr-1"></i> Tasks
+                <b-badge class="ml-3" variant="primary">BETA</b-badge>
+                <b-badge class="ml-3" variant="primary">NEW!</b-badge>
+              </router-link>
+            </li>
+            <nav-section-component :config="viewerNav"/>
+
+            <li class="nav-item" v-if="alphaEnabled">
+              <router-link class="nav-link " to="/zones">
+                <i class="ra ra-wooden-sign mr-2"></i> Zones
+                <b-badge class="ml-3" variant="primary">ALPHA</b-badge>
+                <b-badge class="ml-3" variant="primary">NEW!</b-badge>
+              </router-link>
+            </li>
+
+          </ul>
+
+          <!-- Heading -->
+          <h6 class="navbar-heading">
+            Spire Docs
+          </h6>
+
+          <!-- Navigation -->
+          <ul class="navbar-nav mb-md-4">
+
+            <nav-section-component :config="spireApiNav"/>
+
+            <!-- Components -->
+            <li class="nav-item">
+              <a
+                :class="'nav-link collapse ' + (hasRoute('components') ? 'active' : 'collapsed')"
+                href="#sidebarComponents" data-toggle="collapse" role="button"
+                aria-expanded="false" aria-controls="sidebarComponents"
+              >
+                <i class="ra ra-burst-blob mr-1"></i> Components
+              </a>
+              <div :class="'collapse ' + (hasRoute('components') ? 'show' : '')" id="sidebarComponents">
+                <ul class="nav nav-sm flex-column">
+                  <li v-for="nav in componentNavs">
+                    <router-link class="nav-link" :to="nav.to">{{ nav.title }}</router-link>
+                  </li>
+                </ul>
+              </div>
+            </li>
+
+          </ul>
+        </div>
 
         <h6 class="navbar-heading" v-if="appVersion">
           Version ({{ appEnv }}) {{ appVersion }}
@@ -231,9 +241,18 @@ import DbConnectionStatusPill from "@/components/DbConnectionStatusPill";
 import {SpireApi}             from "@/app/api/spire-api";
 
 export default {
+  computed: {
+    ROUTE() {
+      return ROUTE
+    }
+  },
   components: { DbConnectionStatusPill, NavSectionComponent, NavbarDropdownMenu, NavbarUserSettingsCog },
   data() {
     return {
+
+      // state
+      lastPartition: "default",
+
       backendBaseUrl: "",
       user: null,
       hideNavbar: false,
@@ -380,19 +399,41 @@ export default {
     EventBus.$on("HIDE_NAVBAR", this.toggleNavbarCollapse);
     EventBus.$on("APP_ENV_LOADED", this.handleAppEnvLoaded);
     EventBus.$on("ALPHA_ENABLED", this.handleAppAlphaEnabled);
+    EventBus.$on("ROUTE_CHANGE", this.handleRouteChange);
   },
   destroyed() {
     EventBus.$off("HIDE_NAVBAR", this.toggleNavbarCollapse);
     EventBus.$off("APP_ENV_LOADED", this.handleAppEnvLoaded);
     EventBus.$off("ALPHA_ENABLED", this.handleAppAlphaEnabled);
+    EventBus.$off("ROUTE_CHANGE", this.handleRouteChange);
   },
 
   async mounted() {
     this.backendBaseUrl = App.BACKEND_BASE_URL
     this.user           = await UserContext.getUser()
+
+    // sidebar
+    this.setSidebarStyle()
   },
 
   methods: {
+
+    isInAdmin() {
+      return this.$route.path.includes("/admin")
+    },
+
+    getPartitionName() {
+      if (this.isInAdmin()) {
+        return "admin"
+      }
+
+      return "default"
+    },
+
+    isAppLocal() {
+      return AppEnv.isAppLocal()
+    },
+
     isUserLoggedIn() {
       return this.user && this.user.avatar && this.user.avatar.length > 0
     },
@@ -405,6 +446,41 @@ export default {
       return require('@/assets/img/spire.png')
     },
 
+    setSidebarStyle() {
+      setTimeout(() => {
+        if (this.lastPartition !== this.getPartitionName()) {
+          const sidebar = document.getElementById("sidebar")
+
+          if (sidebar) {
+            // remove all classes
+            sidebar.classList.remove("sidebar-admin")
+            sidebar.classList.remove("sidebar-normal")
+
+            // trigger reset class
+            // this tricks color animation to bring opacity down before transitioning back
+            // up with the other sidebar classes
+            sidebar.classList.add("sidebar-reset")
+
+            setTimeout(() => {
+              if (this.isInAdmin()) {
+                sidebar.classList.remove("sidebar-reset")
+                sidebar.classList.add("sidebar-admin")
+              } else {
+                sidebar.classList.remove("sidebar-reset")
+                sidebar.classList.add("sidebar-normal")
+              }
+            }, 300)
+          }
+
+          this.lastPartition = this.getPartitionName()
+        }
+      }, 10)
+    },
+
+    handleRouteChange() {
+      console.log("route change", this.$route.path)
+      this.setSidebarStyle()
+    },
     handleAppAlphaEnabled() {
       this.alphaEnabled = App.ALPHA_TOOLS_ENABLED
     },
