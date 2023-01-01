@@ -1,5 +1,5 @@
 <template>
-  <div class="col-12">
+  <div>
     <app-loader :is-loading="!loaded"></app-loader>
 
     <div class="row row-cards" v-if="loaded">

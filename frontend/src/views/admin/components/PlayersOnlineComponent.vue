@@ -8,7 +8,10 @@
             <form>
               <div class="input-group input-group-flush">
                 <div class="input-group-prepend">
-                    <span class="input-group-text" style="background-color: transparent !important; border: none !important">
+                    <span
+                      class="input-group-text"
+                      style="background-color: transparent !important; border: none !important"
+                    >
                       <i class="fe fe-search"></i>
                     </span>
                 </div>
@@ -72,7 +75,9 @@
               <td>
             <span v-if="client.server && client.server.zone_name">
               {{ client.server.zone_name }}
-              <span class="badge badge-soft-primary">{{ client.server.zone_id }} ({{ client.server.instance_id }})</span>
+              <span class="badge badge-soft-primary">{{ client.server.zone_id }} ({{
+                  client.server.instance_id
+                }})</span>
             </span>
                 <span v-if="!client.server && client.online == 1">
               Character Select
