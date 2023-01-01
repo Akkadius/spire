@@ -75,6 +75,7 @@ func (c *ParseService) parseLuaMethods(contents string, fileName string, luaMeth
 		// luabind::adl::object lua_get_zone_time(lua_State *L) {
 		if strings.Contains(l, "{") {
 			l = strings.ReplaceAll(l, "luabind::adl::object", "object")
+			l = strings.ReplaceAll(l, "luabind::object", "object")
 			l = strings.ReplaceAll(l, "State *L, ", "")
 			l = strings.ReplaceAll(l, "State *L", "")
 		}
@@ -111,6 +112,8 @@ func (c *ParseService) parseLuaMethods(contents string, fileName string, luaMeth
 				l = strings.ReplaceAll(l, " {", "")
 				l = strings.ReplaceAll(l, "std::string ", "string ")
 				l = strings.ReplaceAll(l, " const", "")
+				l = strings.ReplaceAll(l, "luabind::object", "")
+				l = strings.ReplaceAll(l, "luabind::adl::object", "")
 
 				if strings.Contains(l, "::") {
 					split := strings.Split(l, "::")
