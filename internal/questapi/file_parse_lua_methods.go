@@ -78,6 +78,8 @@ func (c *ParseService) parseLuaMethods(contents string, fileName string, luaMeth
 			l = strings.ReplaceAll(l, "luabind::object", "object")
 			l = strings.ReplaceAll(l, "State *L, ", "")
 			l = strings.ReplaceAll(l, "State *L", "")
+			l = strings.ReplaceAll(l, "State* L, ", "")
+			l = strings.ReplaceAll(l, "State* L", "")
 		}
 		//fmt.Println(l)
 
@@ -114,6 +116,8 @@ func (c *ParseService) parseLuaMethods(contents string, fileName string, luaMeth
 				l = strings.ReplaceAll(l, " const", "")
 				l = strings.ReplaceAll(l, "luabind::object", "")
 				l = strings.ReplaceAll(l, "luabind::adl::object", "")
+				l = strings.ReplaceAll(l, "State* L, ", "")
+				l = strings.ReplaceAll(l, "State* L", "")
 
 				if strings.Contains(l, "::") {
 					split := strings.Split(l, "::")
