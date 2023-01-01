@@ -4,7 +4,7 @@
       <div class="row align-items-center">
         <div class="col">
           <h6 class="header-pretitle">
-            Dashboard
+            {{pageName}}
           </h6>
 
           <h1 class="header-title">
@@ -23,16 +23,45 @@
 <script>
 import ServerProcessButtonComponent from "@/views/admin/components/ServerProcessButtonComponent.vue";
 import {EqemuAdminClient}           from "@/app/api/eqemu-admin-client-occulus";
+import {EventBus}                   from "@/app/event-bus/event-bus";
 
 export default {
   name: "AdminHeader",
   components: { ServerProcessButtonComponent },
   data() {
     return {
+      pageName: "",
+
       stats: {},
     }
   },
+  beforeDestroy() {
+    window.removeEventListener('keypress', this.keypressHandler)
+    EventBus.$off("ROUTE_CHANGE", this.handleRouteChange);
+  },
+  created() {
+    EventBus.$on("ROUTE_CHANGE", this.handleRouteChange);
+
+    EqemuAdminClient.getDashboardStats().then(r => {
+      if (r) {
+        this.stats = r
+      }
+    })
+
+    window.addEventListener('keypress', this.keypressHandler)
+
+    // initial page name set
+    if (this.$route.meta && this.$route.meta.title) {
+      this.pageName = this.$route.meta.title
+    }
+  },
   methods: {
+    handleRouteChange(e) {
+      if (e && e.meta && e.meta.title) {
+        this.pageName = e.meta.title
+      }
+    },
+
     keypressHandler(e) {
       if (e.srcElement.tagName !== 'BODY' && e.srcElement.tagName !== 'A') {
         return
@@ -73,18 +102,6 @@ export default {
       }
     }
   },
-  beforeDestroy() {
-    window.removeEventListener('keypress', this.keypressHandler)
-  },
-  created() {
-    EqemuAdminClient.getDashboardStats().then(r => {
-      if (r) {
-        this.stats = r
-      }
-    })
-
-    window.addEventListener('keypress', this.keypressHandler)
-  }
 }
 </script>
 

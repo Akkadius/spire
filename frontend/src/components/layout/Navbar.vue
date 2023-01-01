@@ -68,13 +68,16 @@
               </router-link>
             </li>
 
-            <div v-if="isInAdmin()">
-              <li class="nav-item">
-                <router-link class="nav-link" :to="ROUTE.ADMIN_PLAYERS_ONLINE" exact>
-                  <i class="ra ra-double-team mr-1"></i> Players Online
-                </router-link>
-              </li>
-            </div>
+            <li class="nav-item" v-if="isInAdmin()">
+              <router-link class="nav-link" :to="ROUTE.ADMIN_PLAYERS_ONLINE" exact>
+                <i class="ra ra-double-team mr-1"></i> Players Online
+              </router-link>
+            </li>
+            <li class="nav-item" v-if="isInAdmin()">
+              <router-link class="nav-link" :to="ROUTE.ADMIN_ZONE_SERVERS" exact>
+                <i class="ra ra-tower mr-1"></i> Zone Servers
+              </router-link>
+            </li>
 
           </ul>
         </div>

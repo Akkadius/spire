@@ -260,6 +260,11 @@ const router = new Router({
           component: () => import('./views/admin/PlayersOnline.vue'),
           meta: {title: "Players Online"},
         },
+        {
+          path: 'zones',
+          component: () => import('./views/admin/ZoneServers.vue'),
+          meta: {title: "Zone Servers"},
+        },
       ]
     },
 
@@ -321,7 +326,7 @@ router.beforeEach(async (to, from, next) => {
     }
   }
 
-  EventBus.$emit('ROUTE_CHANGE', true);
+  EventBus.$emit('ROUTE_CHANGE', to);
 
   next()
 })
