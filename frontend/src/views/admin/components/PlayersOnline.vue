@@ -260,15 +260,14 @@ export default {
     await this.buildPlayersOnlineList()
 
     this.loaded = true
-    var self    = this
 
     if (Timer.timer['players-online']) {
       clearInterval(Timer.timer['players-online'])
     }
 
-    Timer.timer['players-online'] = setInterval(function () {
+    Timer.timer['players-online'] = setInterval(() => {
       if (!document.hidden) {
-        self.buildPlayersOnlineList()
+        this.buildPlayersOnlineList()
       }
     }, 5000)
 
