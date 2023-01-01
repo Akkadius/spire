@@ -173,6 +173,6 @@ func (o *OcculusProxy) ProxyRequest(c echo.Context) (*http.Response, []byte, err
 
 func (o *OcculusProxy) getHttpClient() http.Client {
 	return http.Client{
-		Timeout: 120 * time.Second,
+		Timeout: 300 * time.Second,
 	}
 }

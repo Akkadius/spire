@@ -223,7 +223,7 @@ export default {
       const apiClientList = await EqemuAdminClient.getWorldClientList()
       this.refreshing     = false
       if (!apiClientList) {
-        this.clientList = null
+        this.clientList = []
         return false
       }
 
@@ -238,7 +238,7 @@ export default {
       }
 
       if (clientList.length === 0) {
-        this.clientList = null
+        this.clientList = []
         return false
       }
 
