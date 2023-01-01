@@ -1,3 +1,9 @@
+## [2.5.4]
+
+### Lua Object Return Methods
+
+- Fixes Lua Object Return Methods not showing in Lua Methods
+
 ## [2.5.3]
 
 ### Spire Application Icon
