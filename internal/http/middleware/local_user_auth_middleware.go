@@ -10,6 +10,7 @@ import (
 	gocache "github.com/patrickmn/go-cache"
 	"github.com/sirupsen/logrus"
 	"net/http"
+	"strings"
 )
 
 type LocalUserAuthMiddleware struct {
@@ -45,6 +46,7 @@ func (r LocalUserAuthMiddleware) Handle() echo.MiddlewareFunc {
 
 			if user.ID == 0 &&
 				r.spireInit.IsInitialized() &&
+				!strings.Contains(c.Request().RequestURI, "admin/occulus/download/") &&
 				r.settings.IsSettingEnabled(spire.SettingAuthEnabled) {
 				return c.JSON(
 					http.StatusUnauthorized,

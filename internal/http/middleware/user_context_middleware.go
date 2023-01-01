@@ -68,6 +68,10 @@ func (m UserContextMiddleware) skipperHeader(c echo.Context) bool {
 		return false
 	}
 
+	if strings.Contains(c.Request().RequestURI, "admin/occulus/download/") {
+		return true
+	}
+
 	// When we don't send an authorization header, we assume that the request
 	// is not an authenticated user we will simply use the local default
 	// PEQ database instance
@@ -79,6 +83,10 @@ func (m UserContextMiddleware) skipperQuery(c echo.Context) bool {
 	// If we send a query param header then we will go through our JWT signature validation logic
 	if c.QueryParam("jwt") != "" {
 		return false
+	}
+
+	if strings.Contains(c.Request().RequestURI, "admin/occulus/download/") {
+		return true
 	}
 
 	// When we don't send an authorization header, we assume that the request

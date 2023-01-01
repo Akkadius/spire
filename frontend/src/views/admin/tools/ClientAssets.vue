@@ -19,32 +19,40 @@
             <tbody>
             <tr>
               <td class="text-right">
-                <a :href="backendBaseUrl + '/download/spells'" target="spells_download"
-                   class="btn btn-white mb-2"><i
-                  class="fe fe-download mr-2"></i>spells_us.txt</a>
+                <a
+                  :href="buildLink('/download/spells')" target="spells_download"
+                  class="btn btn-white mb-2"
+                ><i
+                  class="fe fe-download mr-2"
+                ></i>spells_us.txt</a>
               </td>
               <td class="td-center">Generates and zips a spells file for use with an EverQuest client</td>
             </tr>
             <tr>
               <td class="text-right">
-                <a :href="backendBaseUrl + '/download/dbstring'" target="dbstr_download" class="btn btn-white mb-2"><i
-                  class="fe fe-download mr-2"></i>dbstr_us.txt</a>
+                <a :href="buildLink('/download/dbstring')" target="dbstr_download" class="btn btn-white mb-2"><i
+                  class="fe fe-download mr-2"
+                ></i>dbstr_us.txt</a>
               </td>
               <td class="td-center">Generates and zips a strings file for use with an EverQuest client
               </td>
             </tr>
             <tr>
               <td class="text-right">
-                <a :href="backendBaseUrl + '/download/skills'" target="skills_download"
-                   class="btn btn-white mb-2"><i
-                  class="fe fe-download mr-2"></i>SkillCaps.txt</a>
+                <a
+                  :href="buildLink('/download/skills')" target="skills_download"
+                  class="btn btn-white mb-2"
+                ><i
+                  class="fe fe-download mr-2"
+                ></i>SkillCaps.txt</a>
               </td>
               <td class="td-center">Generates and zips a skills file for use with an EverQuest client</td>
             </tr>
             <tr>
               <td class="text-right">
-                <a :href="backendBaseUrl + '/download/basedata'" target="base_data" class="btn btn-white mb-2"><i
-                  class="fe fe-download mr-2"></i>BaseData.txt</a>
+                <a :href="buildLink('/download/basedata')" target="base_data" class="btn btn-white mb-2"><i
+                  class="fe fe-download mr-2"
+                ></i>BaseData.txt</a>
               </td>
               <td class="td-center">Generates and zips a base data file for use with an EverQuest client
               </td>
@@ -58,22 +66,27 @@
 </template>
 
 <script>
-  import {EqemuAdminClient} from "@/app/api/eqemu-admin-client-occulus";
+import {EqemuAdminClient} from "@/app/api/eqemu-admin-client-occulus";
+import util               from "util";
 
-  export default {
-    data() {
-      return {
-        backendBaseUrl: ''
-      }
-    },
-    created() {
-      this.backendBaseUrl = EqemuAdminClient.getBaseUrl()
+export default {
+  data() {
+    return {}
+  },
+  methods: {
+    buildLink(link) {
+      return util.format(
+        "%s/api/v1/admin/occulus%s",
+        EqemuAdminClient.getBaseUrl(),
+        link,
+      )
     }
-  }
+  },
+}
 </script>
 
 <style scoped>
-  .td-center {
-    text-align: center
-  }
+.td-center {
+  text-align: center
+}
 </style>
