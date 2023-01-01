@@ -270,6 +270,47 @@ const router = new Router({
           component: () => import('./views/admin/NetStats.vue'),
           meta: {title: "Netstats"},
         },
+        {
+          path: 'configuration',
+          component: () => import('./views/admin/configuration/Configuration.vue'),
+          children: [
+            {
+              path: '/',
+              component: () => import('./views/admin/configuration/WorldServerSettings.vue'),
+              meta: {title: "World Server Settings"},
+            },
+            {
+              path: 'settings/zoneserver',
+              component: () => import('./views/admin/configuration/ZoneServerSettings.vue'),
+              meta: {title: "Zone Server Settings"},
+            },
+            {
+              path: 'settings/ucs',
+              component: () => import('./views/admin/configuration/UcsSettings.vue'),
+              meta: {title: "UCS Config"},
+            },
+            {
+              path: 'settings/discord',
+              component: () => import('./views/admin/configuration/DiscordSettings.vue'),
+              meta: {title: "Discord Config"},
+            },
+            {
+              path: 'settings/database',
+              component: () => import('./views/admin/configuration/Database.vue'),
+              meta: {title: "Database Config"},
+            },
+            {
+              path: 'server-rules',
+              component: () => import('./views/admin/configuration/ServerRules.vue'),
+              meta: {title: "Server Rules"},
+            },
+            {
+              path: 'motd',
+              component: () => import('./views/admin/configuration/Motd.vue'),
+              meta: {title: "Message of the Day"},
+            }
+          ]
+        },
       ]
     },
 

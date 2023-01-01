@@ -355,7 +355,16 @@ export default {
 
     this.loaded = true
 
-    // this.$toast.info('Netstat listener started...', 'Netstat', { position: 'bottomRight' })
+    this.$bvToast.toast(
+     'Netstat listener started...',
+      {
+        title: "Netstats",
+        toaster: 'b-toaster-top-center',
+        variant: 'info',
+        autoHideDelay: 3000,
+        appendToast: false
+      }
+    )
 
     this.refreshCharts()
 

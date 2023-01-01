@@ -14,28 +14,29 @@
 }
 
 ::-webkit-scrollbar-thumb {
-    background-color: rgba(255,255,255, .3);
+    background-color: rgba(255, 255, 255, .3);
     border-radius: 20px;
     border: 6px solid transparent;
     background-clip: content-box;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-    background-color: rgba(255,255,255, .8);
+    background-color: rgba(255, 255, 255, .8);
     border-radius: 20px;
     background-clip: content-box;
     border: 6px solid transparent;
 }
 
 ::-webkit-scrollbar-corner {
-    background: rgba(0,0,0,0);
+    background: rgba(0, 0, 0, 0);
 }
 
 .navbar::-webkit-scrollbar-thumb {
-    background-color: rgba(255,255,255, .1);
+    background-color: rgba(255, 255, 255, .1);
 }
+
 .navbar::-webkit-scrollbar-thumb:hover {
-    background-color: rgba(255,255,255, .3);
+    background-color: rgba(255, 255, 255, .3);
 }
 
 .menuetto-header {
@@ -395,7 +396,6 @@ th[role=columnheader]:hover:not(.no-sort):after {
     /*.map-tiles {*/
     /*    filter: invert(100%);*/
     /*}*/
-
     /*.map-tiles img, .map-tiles .eq-window-simple {*/
     /*    filter: invert(100%);*/
     /*}*/
@@ -423,6 +423,7 @@ th[role=columnheader]:hover:not(.no-sort):after {
     color: white;
     background-color: transparent !important;
 }
+
 .page-item.active .page, .page-item.active .page-link {
     border-color: #f6c343;
     color: #f6c343 !important;
@@ -433,7 +434,7 @@ th[role=columnheader]:hover:not(.no-sort):after {
 }
 
 /*switch inputs - were too blended with white background */
-.custom-control-input:disabled~.custom-control-label::before, .custom-control-input[disabled]~.custom-control-label::before {
+.custom-control-input:disabled ~ .custom-control-label::before, .custom-control-input[disabled] ~ .custom-control-label::before {
     background-color: #f6f6f6;
 }
 
@@ -465,4 +466,15 @@ th[role=columnheader]:hover:not(.no-sort):after {
 .sidebar-admin {
     background-image: linear-gradient(to bottom right, rgb(21 21 21 / 90%), rgb(152 80 80 / 90%)), url(~@/assets/img/eq-wallpaper-1.jpg) !important;
     opacity: 1;
+}
+
+/* Fix weird coloring issue*/
+.input-group.input-group-merge > .input-group-prepend > .input-group-text {
+    background-color: transparent !important;
+    border: 1px solid #d2ddec !important;
+}
+
+.input-group-flush > .input-group-append > .input-group-text, .input-group-flush > .input-group-prepend > .input-group-text {
+    background-color: transparent !important;
+    border: 1px solid transparent !important;
 }

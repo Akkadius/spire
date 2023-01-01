@@ -78,6 +78,11 @@
                 <i class="ra ra-tower mr-1"></i> Zone Servers
               </router-link>
             </li>
+            <li class="nav-item" v-if="isInAdmin()">
+              <router-link class="nav-link" :to="ROUTE.ADMIN_CONFIGURATION">
+                <i class="ra ra-cog mr-1"></i> Configuration
+              </router-link>
+            </li>
 
           </ul>
         </div>

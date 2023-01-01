@@ -3,6 +3,7 @@ export const ROUTE = {
   ADMIN_ROOT: "/admin",
   ADMIN_PLAYERS_ONLINE: "/admin/players-online",
   ADMIN_ZONE_SERVERS: "/admin/zones",
+  ADMIN_CONFIGURATION: "/admin/configuration",
   DATABASE_CONNECTION_AUDIT_LOG: "/connection/%s/audit-log",
   CLIENT_FILES: "/client-files",
   DATABASE_CONNECTIONS: "/connections",

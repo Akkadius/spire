@@ -10,7 +10,7 @@
                 <div class="input-group-prepend">
                     <span
                       class="input-group-text"
-                      style="background-color: transparent !important; border: none !important"
+
                     >
                       <i class="fe fe-search"></i>
                     </span>
