@@ -83,6 +83,11 @@
                 <i class="ra ra-cog mr-1"></i> Configuration
               </router-link>
             </li>
+            <li class="nav-item" v-if="isInAdmin()">
+              <router-link class="nav-link" :to="ROUTE.ADMIN_TOOLS">
+                <i class="ra ra-wrench mr-1"></i> Tools
+              </router-link>
+            </li>
 
           </ul>
         </div>

@@ -272,6 +272,7 @@ const router = new Router({
         },
         {
           path: 'configuration',
+          meta: {title: "Configuration"},
           component: () => import('./views/admin/configuration/Configuration.vue'),
           children: [
             {
@@ -311,6 +312,38 @@ const router = new Router({
             }
           ]
         },
+        {
+          path: 'tools',
+          meta: {title: "Tools"},
+          component: () => import('./views/admin/tools/Tools.vue'),
+          children: [
+            {
+              path: 'logs',
+              component: () => import('./views/admin/tools/Logs.vue'),
+              meta: {title: "Server Logs"},
+            },
+            {
+              path: 'backups',
+              component: () => import('./views/admin/tools/Backups.vue'),
+              meta: {title: "Backups"},
+            },
+            {
+              path: 'server-code',
+              component: () => import('./views/admin/tools/ServerCode.vue'),
+              meta: {title: "Code Management"},
+            },
+            {
+              path: 'server-quests',
+              component: () => import('./views/admin/tools/ServerQuests.vue'),
+              meta: {title: "Quests Management"},
+            },
+            {
+              path: 'client-assets',
+              component: () => import('./views/admin/tools/ClientAssets.vue'),
+              meta: {title: "Client Asset Management"},
+            },
+          ]
+        }
       ]
     },
 
