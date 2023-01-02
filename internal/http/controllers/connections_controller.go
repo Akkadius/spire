@@ -28,7 +28,7 @@ type ConnectionsController struct {
 	dbConnectionCreateService *connection.DbConnectionCreateService
 	dbConnectionCheckService  *connection.DbConnectionCheckService
 	permissions               *permissions.Service
-	spireInit                 *spire.SpireInit
+	spireInit                 *spire.Init
 }
 
 func NewConnectionsController(
@@ -38,7 +38,7 @@ func NewConnectionsController(
 	dbConnectionCreateService *connection.DbConnectionCreateService,
 	dbConnectionCheckService *connection.DbConnectionCheckService,
 	permissions *permissions.Service,
-	spireInit *spire.SpireInit,
+	spireInit *spire.Init,
 ) *ConnectionsController {
 	return &ConnectionsController{
 		db:                        db,

@@ -15,9 +15,9 @@ import (
 	gormMysql "gorm.io/driver/mysql"
 )
 
-// SpireInit is a type responsible for bootstrapping and initializing the application
+// Init is a type responsible for bootstrapping and initializing the application
 // where this lives may change
-type SpireInit struct {
+type Init struct {
 	connections               *database.Connections
 	logger                    *logrus.Logger
 	isInitialized             bool // determines if spire as an app is initialized or not
@@ -28,7 +28,7 @@ type SpireInit struct {
 	crypt                     *encryption.Encrypter
 }
 
-func NewSpireInit(
+func NewInit(
 	connections *database.Connections,
 	serverconfig *serverconfig.EQEmuServerConfig,
 	logger *logrus.Logger,
@@ -36,8 +36,8 @@ func NewSpireInit(
 	cache *gocache.Cache,
 	crypt *encryption.Encrypter,
 	dbConnectionCreateService *connection.DbConnectionCreateService,
-) *SpireInit {
-	i := &SpireInit{
+) *Init {
+	i := &Init{
 		connections:               connections,
 		logger:                    logger,
 		isInitialized:             false,
@@ -60,7 +60,7 @@ func NewSpireInit(
 	return i
 }
 
-func (o *SpireInit) Init() {
+func (o *Init) Init() {
 	o.settings.LoadSettings()
 	o.isInitialized = o.CheckIfAppInitialized()
 
@@ -82,17 +82,17 @@ func (o *SpireInit) Init() {
 	}
 }
 
-func (o *SpireInit) IsInitialized() bool {
+func (o *Init) IsInitialized() bool {
 	return o.isInitialized
 }
 
-func (o *SpireInit) SetIsInitialized(isInitialized bool) {
+func (o *Init) SetIsInitialized(isInitialized bool) {
 	o.isInitialized = isInitialized
 }
 
 // GetConnectionInfo will get the connection info for Spire to display to the
 // user while going through the initial onboarding and setup pages
-func (o *SpireInit) GetConnectionInfo() *mysql.Config {
+func (o *Init) GetConnectionInfo() *mysql.Config {
 	f, ok := o.connections.SpireDbNoLog().Config.Dialector.(*gormMysql.Dialector)
 	if ok {
 		p, err := mysql.ParseDSN(f.DSN)
@@ -106,11 +106,11 @@ func (o *SpireInit) GetConnectionInfo() *mysql.Config {
 }
 
 // GetInstallationTables will return installation tables
-func (o *SpireInit) GetInstallationTables() []string {
+func (o *Init) GetInstallationTables() []string {
 	return o.connections.GetMigrationTables()
 }
 
-func (o *SpireInit) CheckIfAppInitialized() bool {
+func (o *Init) CheckIfAppInitialized() bool {
 	if o.settings.IsSettingEnabled(SettingAuthEnabled) {
 		var adminUser models.User
 		o.connections.SpireDbNoLog().Where("is_admin = 1").First(&adminUser)
@@ -124,7 +124,7 @@ func (o *SpireInit) CheckIfAppInitialized() bool {
 	return false
 }
 
-func (o *SpireInit) SourceSpireTables() error {
+func (o *Init) SourceSpireTables() error {
 	err := o.connections.SpireMigrate(false)
 	if err != nil {
 		return err
@@ -134,7 +134,7 @@ func (o *SpireInit) SourceSpireTables() error {
 
 // CreateDefaultDatabaseConnectionFromConfig injects database connection configuration
 // into Spire tables from the emulator server configuration
-func (o *SpireInit) CreateDefaultDatabaseConnectionFromConfig(user models.User) error {
+func (o *Init) CreateDefaultDatabaseConnectionFromConfig(user models.User) error {
 	db := o.connections.SpireDb()
 	cfg := o.serverconfig.Get()
 
@@ -216,10 +216,10 @@ func (o *SpireInit) CreateDefaultDatabaseConnectionFromConfig(user models.User) 
 	return nil
 }
 
-func (o *SpireInit) GetEncKey(userId uint) string {
+func (o *Init) GetEncKey(userId uint) string {
 	return fmt.Sprintf("%v-%v", env.Get("APP_KEY", ""), userId)
 }
 
-func (o *SpireInit) IsAuthEnabled() bool {
+func (o *Init) IsAuthEnabled() bool {
 	return o.settings.IsSettingEnabled(SettingAuthEnabled)
 }

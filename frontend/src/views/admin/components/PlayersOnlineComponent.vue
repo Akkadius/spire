@@ -79,7 +79,7 @@
                   client.server.instance_id
                 }})</span>
             </span>
-                <span v-if="!client.server && client.online == 1">
+                <span v-if="!client.server && client.online === 1">
               Character Select
             </span>
                 <span v-if="!client.server && client.online > 0">

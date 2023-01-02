@@ -12,13 +12,13 @@ import (
 type AdminController struct {
 	db      *database.DatabaseResolver
 	logger  *logrus.Logger
-	occulus *occulus.OcculusProxy
+	occulus *occulus.Proxy
 }
 
 func NewAdminController(
 	logger *logrus.Logger,
 	db *database.DatabaseResolver,
-	occulus *occulus.OcculusProxy,
+	occulus *occulus.Proxy,
 ) *AdminController {
 	return &AdminController{
 		logger:  logger,

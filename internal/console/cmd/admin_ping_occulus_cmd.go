@@ -14,7 +14,7 @@ type AdminPingOcculus struct {
 	logger       *logrus.Logger
 	command      *cobra.Command
 	serverconfig *serverconfig.EQEmuServerConfig
-	occulus      *occulus.OcculusProxy
+	occulus      *occulus.Proxy
 }
 
 func (c *AdminPingOcculus) Command() *cobra.Command {
@@ -25,7 +25,7 @@ func NewAdminPingOcculus(
 	db *gorm.DB,
 	logger *logrus.Logger,
 	serverconfig *serverconfig.EQEmuServerConfig,
-	occulus *occulus.OcculusProxy,
+	occulus *occulus.Proxy,
 ) *AdminPingOcculus {
 	i := &AdminPingOcculus{
 		db:           db,

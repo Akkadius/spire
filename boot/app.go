@@ -23,7 +23,7 @@ type App struct {
 	db            *database.DatabaseResolver
 	router        *routes.Router
 	desktop       *desktop.WebBoot
-	onboarding    *spire.SpireInit
+	onboarding    *spire.Init
 }
 
 func (a App) Cache() *gocache.Cache {
@@ -52,7 +52,7 @@ func NewApplication(
 	dbConnections *database.Connections,
 	router *routes.Router,
 	desktop *desktop.WebBoot,
-	onboarding *spire.SpireInit,
+	onboarding *spire.Init,
 ) App {
 	return App{
 		context:       context.Background(),

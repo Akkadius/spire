@@ -15,17 +15,17 @@ import (
 	"time"
 )
 
-type OcculusProxy struct {
+type Proxy struct {
 	authToken    string // holds the authentication token
 	logger       *logrus.Logger
 	serverconfig *serverconfig.EQEmuServerConfig
 }
 
-func NewOcculusProxy(
+func NewProxy(
 	logger *logrus.Logger,
 	serverconfig *serverconfig.EQEmuServerConfig,
-) *OcculusProxy {
-	return &OcculusProxy{
+) *Proxy {
+	return &Proxy{
 		logger:       logger,
 		serverconfig: serverconfig}
 }
@@ -34,11 +34,11 @@ const (
 	baseUrl = "http://localhost:3000"
 )
 
-func (o *OcculusProxy) AuthToken() string {
+func (o *Proxy) AuthToken() string {
 	return o.authToken
 }
 
-func (o *OcculusProxy) SetAuthToken(authToken string) {
+func (o *Proxy) SetAuthToken(authToken string) {
 	o.authToken = authToken
 }
 
@@ -49,7 +49,7 @@ type LoginRequestBody struct {
 }
 
 // Login is the main method used to logging into the Occulus admin panel
-func (o *OcculusProxy) Login() error {
+func (o *Proxy) Login() error {
 	config := o.serverconfig.Get()
 
 	postBody := LoginRequestBody{
@@ -103,7 +103,7 @@ type GetProcessCountsResponse struct {
 	Loginserver int `json:"loginserver"`
 }
 
-func (o *OcculusProxy) GetProcessCounts() (GetProcessCountsResponse, error) {
+func (o *Proxy) GetProcessCounts() (GetProcessCountsResponse, error) {
 	endpoint := fmt.Sprintf("%v/api/v1/server/process_counts", baseUrl)
 	req, err := http.NewRequest("GET", endpoint, nil)
 	if err != nil {
@@ -133,7 +133,7 @@ func (o *OcculusProxy) GetProcessCounts() (GetProcessCountsResponse, error) {
 	return processCountsResponse, nil
 }
 
-func (o *OcculusProxy) ProxyRequest(c echo.Context) (*http.Response, []byte, error) {
+func (o *Proxy) ProxyRequest(c echo.Context) (*http.Response, []byte, error) {
 	err := o.Login()
 	if err != nil {
 		return nil, nil, err
@@ -171,7 +171,7 @@ func (o *OcculusProxy) ProxyRequest(c echo.Context) (*http.Response, []byte, err
 	return res, body, nil
 }
 
-func (o *OcculusProxy) getHttpClient() http.Client {
+func (o *Proxy) getHttpClient() http.Client {
 	return http.Client{
 		Timeout: 300 * time.Second,
 	}

@@ -471,7 +471,7 @@ th[role=columnheader]:hover:not(.no-sort):after {
 /* Fix weird coloring issue*/
 .input-group.input-group-merge > .input-group-prepend > .input-group-text {
     background-color: transparent !important;
-    border: 1px solid #d2ddec !important;
+    border: 1px solid transparent !important;
 }
 
 .input-group-flush > .input-group-append > .input-group-text, .input-group-flush > .input-group-prepend > .input-group-text {

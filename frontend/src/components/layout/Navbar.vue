@@ -64,28 +64,56 @@
             <li class="nav-item">
               <router-link class="nav-link" :to="ROUTE.ADMIN_ROOT" exact>
                 <i class="ra ra-eye-shield mr-1"></i> Server Admin
-                <b-badge class="ml-3" variant="primary">NEW!</b-badge>
+                <b-badge class="ml-3" variant="primary" v-if="!isInAdmin()">NEW!</b-badge>
+
+                <b-badge class="ml-3" variant="primary" v-if="isInAdmin()">
+                  <i class="fe fe-eye"></i>
+                  Occulus
+                </b-badge>
+
               </router-link>
+
+
             </li>
 
             <li class="nav-item" v-if="isInAdmin()">
               <router-link class="nav-link" :to="ROUTE.ADMIN_PLAYERS_ONLINE" exact>
                 <i class="ra ra-double-team mr-1"></i> Players Online
+                <b-badge class="ml-3" variant="primary">
+                  <i class="fe fe-eye"></i>
+                  Occulus
+                </b-badge>
+
               </router-link>
             </li>
             <li class="nav-item" v-if="isInAdmin()">
               <router-link class="nav-link" :to="ROUTE.ADMIN_ZONE_SERVERS" exact>
                 <i class="ra ra-tower mr-1"></i> Zone Servers
+
+                <b-badge class="ml-3" variant="primary">
+                  <i class="fe fe-eye"></i>
+                  Occulus
+                </b-badge>
               </router-link>
             </li>
             <li class="nav-item" v-if="isInAdmin()">
               <router-link class="nav-link" :to="ROUTE.ADMIN_CONFIGURATION">
                 <i class="ra ra-cog mr-1"></i> Configuration
+
+                <b-badge class="ml-3" variant="primary">
+                  <i class="fe fe-eye"></i>
+                  Occulus
+                </b-badge>
               </router-link>
             </li>
             <li class="nav-item" v-if="isInAdmin()">
               <router-link class="nav-link" :to="ROUTE.ADMIN_TOOLS">
                 <i class="ra ra-wrench mr-1"></i> Tools
+
+                <b-badge class="ml-3" variant="primary">
+                  <i class="fe fe-eye"></i>
+                  Occulus
+                </b-badge>
               </router-link>
             </li>
 

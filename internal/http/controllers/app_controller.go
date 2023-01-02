@@ -17,7 +17,7 @@ import (
 type AppController struct {
 	cache      *gocache.Cache
 	logger     *logrus.Logger
-	onboarding *spire.SpireInit
+	onboarding *spire.Init
 	spireuser  *spireuser.UserService
 	settings   *spire.Settings
 }
@@ -25,7 +25,7 @@ type AppController struct {
 func NewAppController(
 	cache *gocache.Cache,
 	logger *logrus.Logger,
-	onboarding *spire.SpireInit,
+	onboarding *spire.Init,
 	spireuser *spireuser.UserService,
 	settings *spire.Settings,
 ) *AppController {

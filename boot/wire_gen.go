@@ -53,7 +53,7 @@ func InitializeApplication() (App, error) {
 	}
 	cache := provideCache()
 	helloWorldCommand := cmd.NewHelloWorldCommand(db, logger)
-	occulusProxy := occulus.NewOcculusProxy(logger, eqEmuServerConfig)
+	occulusProxy := occulus.NewProxy(logger, eqEmuServerConfig)
 	adminPingOcculus := cmd.NewAdminPingOcculus(db, logger, eqEmuServerConfig, occulusProxy)
 	connections := provideAppDbConnections(eqEmuServerConfig, logger)
 	encrypter := encryption.NewEncrypter(logger, eqEmuServerConfig)
@@ -72,7 +72,7 @@ func InitializeApplication() (App, error) {
 	pluralizeClient := pluralize.NewClient()
 	service := permissions.NewService(databaseResolver, cache, logger, pluralizeClient)
 	settings := spire.NewSettings(connections, logger)
-	spireInit := spire.NewSpireInit(connections, eqEmuServerConfig, logger, settings, cache, encrypter, dbConnectionCreateService)
+	spireInit := spire.NewInit(connections, eqEmuServerConfig, logger, settings, cache, encrypter, dbConnectionCreateService)
 	connectionsController := controllers.NewConnectionsController(databaseResolver, logger, cache, dbConnectionCreateService, dbConnectionCheckService, service, spireInit)
 	docsController := controllers.NewDocsController(databaseResolver, logger)
 	githubSourceDownloader := github.NewGithubSourceDownloader(logger, cache)

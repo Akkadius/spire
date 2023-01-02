@@ -18,22 +18,13 @@
 
     <div class="card">
       <div class="card-body">
-        <div class="input-group input-group-lg input-group-merge mb-3">
           <input
             type="text"
-            class="form-control form-control-prepended list-search"
+            class="form-control form-control-prepended list-search mb-3"
             @keyup="filterRules"
             v-model="ruleFilter"
             placeholder="Search rules..."
           >
-
-          <div class="input-group-prepend">
-            <div class="input-group-text">
-              <span class="fe fe-search"></span>
-            </div>
-          </div>
-
-        </div>
 
         <div class="row">
           <div class="col-12">

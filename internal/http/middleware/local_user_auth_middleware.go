@@ -18,7 +18,7 @@ type LocalUserAuthMiddleware struct {
 	cache     *gocache.Cache
 	logger    *logrus.Logger
 	debug     int
-	spireInit *spire.SpireInit
+	spireInit *spire.Init
 	settings  *spire.Settings
 }
 
@@ -27,7 +27,7 @@ func NewLocalUserAuthMiddleware(
 	logger *logrus.Logger,
 	cache *gocache.Cache,
 	settings *spire.Settings,
-	spireInit *spire.SpireInit,
+	spireInit *spire.Init,
 ) *LocalUserAuthMiddleware {
 	return &LocalUserAuthMiddleware{
 		db:        db,

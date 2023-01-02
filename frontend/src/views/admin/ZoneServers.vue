@@ -6,10 +6,13 @@
 
     <div
       :class="['card', 'mb-3']"
-      v-for="zone in zoneList"
       v-if="processStats[zone.zone_os_pid]"
+      v-for="zone in zoneList"
     >
-      <div :class="['card-body', 'lift', 'btn-default']" style="box-shadow: 0 2px 4px 0 rgba(30,55,90,.1);">
+      <div
+        :class="['card-body', 'lift', 'btn-default', 'card-slim']"
+        style="box-shadow: 0 2px 4px 0 rgba(30,55,90,.1);"
+      >
         <div class="row align-items-center">
 
           <div class="col ml-n1">
@@ -17,53 +20,49 @@
 
               <span class="h2 fe text-muted mb-0 fe-layers mr-3"></span>
 
-              <router-link
-                :to="''"
-                style="color:#2364d2;font-weight:200;font-size: 18px;"
-                v-if="zone.zone_long_name"
-              >
-                {{ (zone.zone_long_name ? zone.zone_long_name : 'Standby Zone') }}
-              </router-link>
+              <a href="#" style="color:#2364d2;font-weight:200;font-size: 18px;" v-if="zone.zone_long_name">
+                {{ formatZoneName(zone.zone_long_name ? zone.zone_long_name : 'Standby Zone') }}
+              </a>
 
               <span style="color:#666;font-weight:200;font-size: 18px;" class="text-muted" v-if="!zone.zone_long_name">
                 Ready for players...
               </span>
 
-              <div class="mt-2" v-if="zone.zone_long_name">
-                <div class="connector"></div>
-                <a class="avatar-xs" data-toggle="tooltip" title="" data-original-title="Created by">
-                  <img
-                    src="~@/assets/img/eqemu-avatar.png"
-                    style="height:20px;width:20px; border: 1px solid #666;"
-                    class="avatar-img rounded-circle ml-2"
-                  >
-                </a>
-                <span class="text-muted ml-2" style="font-size:12px">
-                  {{ zone.is_static_zone === true ? 'Static' : 'Dynamic' }}
-                  {{ zone.zone_name }}
+              <router-link
+                class="text-muted ml-2"
+                :to="`zoneservers/${zone.client_port}/logs`"
+                style="font-size:12px"
+              >
+                <i class="fe fe-play"></i> Stream Logs
+              </router-link>
+
+              <router-link
+                class="text-muted ml-2"
+                :to="`zoneservers/${zone.client_port}/netstats`"
+                style="font-size:12px"
+              >
+                <i class="fe fe-airplay"></i> Network Stats
+              </router-link>
+
+            </h4>
+          </div>
+
+          <div class="col-auto" v-if="zone.zone_name">
+            <p class="card-text small text-muted mb-1 mt-2">
+              <span class="text-muted ml-2" style="font-size:12px">
+                  {{ formatZoneName(zone.zone_name) }}
                   ({{ zone.zone_id }})
                   <span v-if="zone.instance_id">Instance: {{ zone.instance_id }}</span>
                 </span>
-                <span class="text-muted ml-2" style="font-size:12px">  </span>
+            </p>
+          </div>
 
-                <router-link
-                  class="text-muted ml-2"
-                  :to="`zoneservers/${zone.client_port}/logs`"
-                  style="font-size:12px"
-                >
-                  <i class="fe fe-play"></i> Stream Logs
-                </router-link>
-
-                <router-link
-                  class="text-muted ml-2"
-                  :to="`zoneservers/${zone.client_port}/netstats`"
-                  style="font-size:12px"
-                >
-                  <i class="fe fe-airplay"></i> Network Stats
-                </router-link>
-              </div>
-
-            </h4>
+          <div class="col-auto">
+            <p class="card-text small text-muted mb-1 mt-2">
+              <span class="text-muted ml-2" style="font-size:12px">
+                  {{ zone.is_static_zone === true ? 'Static' : 'Dynamic' }}
+              </span>
+            </p>
           </div>
 
           <div class="col-auto">
@@ -87,7 +86,7 @@
 
           <div class="col-auto">
             <p class="card-text small text-muted mb-1 mt-2" v-if="processStats[zone.zone_os_pid]">
-              <i class="fe fe-cpu"></i> {{ parseFloat(processStats[zone.zone_os_pid].cpu / 100).toFixed(2) }} %
+              <i class="fe fe-cpu"></i> {{ parseFloat(processStats[zone.zone_os_pid].cpu).toFixed(2) }} %
             </p>
           </div>
 
@@ -145,6 +144,10 @@ export default {
     }, 1000)
   },
   methods: {
+    formatZoneName(name) {
+      return name.replaceAll("UNKNOWN", "Idle")
+    },
+
     async killZone(pid) {
       if (confirm("Are you sure that you want to kill this process pid (" + pid + ")?")) {
         await EqemuAdminClient.killProcessByPid(pid)
