@@ -34,7 +34,7 @@ func WithProgress(destinationPath, downloadUrl string) error {
 		}
 	}
 
-	f, err := os.OpenFile(destinationPath, os.O_CREATE|os.O_WRONLY, 0644)
+	f, err := os.OpenFile(destinationPath, os.O_CREATE|os.O_WRONLY, 0755)
 	if err != nil {
 		return err
 	}

@@ -19,20 +19,24 @@ type Proxy struct {
 	authToken    string // holds the authentication token
 	logger       *logrus.Logger
 	serverconfig *serverconfig.EQEmuServerConfig
+	process      *ProcessManagement
 }
 
 func NewProxy(
 	logger *logrus.Logger,
 	serverconfig *serverconfig.EQEmuServerConfig,
+	process *ProcessManagement,
 ) *Proxy {
 	return &Proxy{
 		logger:       logger,
-		serverconfig: serverconfig}
+		serverconfig: serverconfig,
+		process:      process,
+	}
 }
 
-const (
-	baseUrl = "http://localhost:3000"
-)
+func (o *Proxy) GetBaseUrl() string {
+	return fmt.Sprintf("http://localhost:%v", o.process.Port())
+}
 
 func (o *Proxy) AuthToken() string {
 	return o.authToken
@@ -64,7 +68,7 @@ func (o *Proxy) Login() error {
 
 	client := o.getHttpClient()
 	resp, err := client.Post(
-		fmt.Sprintf("%v/api/v1/auth/login", baseUrl),
+		fmt.Sprintf("%v/api/v1/auth/login", o.GetBaseUrl()),
 		"application/json",
 		bytes.NewBuffer(payload),
 	)
@@ -104,7 +108,7 @@ type GetProcessCountsResponse struct {
 }
 
 func (o *Proxy) GetProcessCounts() (GetProcessCountsResponse, error) {
-	endpoint := fmt.Sprintf("%v/api/v1/server/process_counts", baseUrl)
+	endpoint := fmt.Sprintf("%v/api/v1/server/process_counts", o.GetBaseUrl())
 	req, err := http.NewRequest("GET", endpoint, nil)
 	if err != nil {
 		return GetProcessCountsResponse{}, nil
@@ -145,9 +149,9 @@ func (o *Proxy) ProxyRequest(c echo.Context) (*http.Response, []byte, error) {
 	// rewrites
 	requestUrl := strings.ReplaceAll(r.RequestURI, "/admin/occulus", "")
 	r.RequestURI = ""
-	r.Host = baseUrl
+	r.Host = o.GetBaseUrl()
 
-	targetUrl, err := url.Parse(fmt.Sprintf("%v%v", baseUrl, requestUrl))
+	targetUrl, err := url.Parse(fmt.Sprintf("%v%v", o.GetBaseUrl(), requestUrl))
 	if err != nil {
 		return nil, nil, err
 	}

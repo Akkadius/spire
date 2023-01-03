@@ -22,7 +22,7 @@ func NewPathManagement(logger *logrus.Logger) *PathManagement {
 
 const eqemuConfigFileName = "eqemu_config.json"
 
-func (m PathManagement) GetEQEmuServerPath() string {
+func (m *PathManagement) GetEQEmuServerPath() string {
 	// get current path
 	cwd, err := os.Getwd()
 	if err != nil {
@@ -48,7 +48,7 @@ func (m PathManagement) GetEQEmuServerPath() string {
 	return ""
 }
 
-func (m PathManagement) GetEQEmuServerConfigFilePath() string {
+func (m *PathManagement) GetEQEmuServerConfigFilePath() string {
 	path := filepath.Join(m.GetEQEmuServerPath(), eqemuConfigFileName)
 	if _, err := os.Stat(path); err == nil {
 		m.debug("[GetEQEmuServerConfigFilePath] found @ [%v]", path)

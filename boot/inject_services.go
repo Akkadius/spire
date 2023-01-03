@@ -43,4 +43,5 @@ var serviceSet = wire.NewSet(
 	spire.NewSettings,
 	spire.NewInit,
 	occulus.NewProxy,
+	occulus.NewProcessManagement,
 )
