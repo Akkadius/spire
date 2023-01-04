@@ -16,6 +16,7 @@ export const ROUTE = {
   ADMIN_TOOL_SERVER_QUESTS: "/admin/tools/server-quests",
   ADMIN_TOOL_BACKUPS: "/admin/tools/backups",
   ADMIN_TOOL_CLIENT_FILE_DOWNLOADS: "/admin/tools/client-assets",
+  ADMIN_TOOL_PLAYER_EVENT_LOGS: "/admin/tools/player-event-logs",
   ADMIN_TOOLS: "/admin/tools",
   ADMIN_OCCULUS_REQUIRED: "/admin/occulus-required",
   DATABASE_CONNECTION_AUDIT_LOG: "/connection/%s/audit-log",

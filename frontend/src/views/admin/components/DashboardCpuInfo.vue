@@ -2,7 +2,7 @@
   <div v-if="sysinfo && Object.keys(sysinfo).length > 0">
     <div class="card">
       <div class="card-header">
-        <h4 class="card-header-title" v-if="cpuLoad.length">CPU(s) ({{ cpuLoad.length }})
+        <h4 class="card-header-title" v-if="cpuLoad.length">CPU (s) ({{ cpuLoad.length }})
         </h4>
       </div>
       <div class="card-body" style="padding: 15px; overflow-y:scroll">

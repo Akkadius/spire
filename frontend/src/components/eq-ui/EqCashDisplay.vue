@@ -15,7 +15,7 @@
       <div :class="'item-646-sm cash-icon'" title="Silver"/>
     </div>
 
-    <div v-if="copper > 0" class="d-inline-block cash-line">
+    <div v-if="copper > 0" class="d-inline-block cash-line" style="margin-right: 0 !important">
       {{ copper }}
 
       <div :class="'item-647-sm cash-icon'" title="Copper"/>
@@ -107,6 +107,7 @@ export default {
   margin-right: 5px;
   margin-left: 0px;
 }
+
 .cash-icon {
   position: relative;
   top: 2px;

@@ -339,6 +339,12 @@ const router = new Router({
           component: () => import('./views/admin/tools/ClientAssets.vue'),
           meta: {title: "Client Asset Management", occulus: true},
         },
+
+        {
+          path: ROUTE.ADMIN_TOOL_PLAYER_EVENT_LOGS,
+          component: () => import('./views/admin/player-event-logs/PlayerEventLogs.vue'),
+          meta: {title: "Player Event Logs Explorer" },
+        },
       ]
     },
 

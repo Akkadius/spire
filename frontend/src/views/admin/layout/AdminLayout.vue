@@ -4,7 +4,7 @@
 
     <div class="main-content">
       <content-area>
-        <admin-header/>
+        <admin-header v-if="isLocal"/>
 
         <router-view></router-view>
       </content-area>
@@ -25,6 +25,7 @@ import Footer from "@/components/layout/Footer.vue";
 import ContentArea from "@/components/layout/ContentArea.vue";
 import Navbar from "@/components/layout/Navbar.vue";
 import AdminHeader from "@/views/admin/layout/AdminHeader.vue";
+import {AppEnv} from "@/app/env/app-env";
 
 export default {
   components: {
@@ -34,6 +35,16 @@ export default {
     Header,
     Footer,
     BackToTop
+  },
+  data() {
+    return {
+      isLocal: false,
+    }
+  },
+  mounted() {
+    setTimeout(() => {
+      this.isLocal = AppEnv.isAppLocal()
+    }, 100)
   },
 }
 </script>

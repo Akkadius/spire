@@ -837,6 +837,10 @@ table.eq-table THEAD TR TH {
     border-collapse: collapse;
     text-align: left;
     white-space: nowrap;
+
+    border-right: 0.1px solid #ffffff1c;
+    border-left: 0.1px solid #ffffff1c;
+    border-bottom: 1px solid #ffffff1c;
 }
 
 table.eq-table TBODY TR TD {
@@ -972,8 +976,13 @@ h6.eq-header {
     background-image: url(../images/super_fancy_bg.png);
     position: sticky;
     top: 0;
+    border-collapse: separate;
     z-index: 9999;
-    /*box-shadow: rgb(0 0 0) 0px 20px 15px inset;*/
+    border-bottom: 1px solid #ffffff1c;
+}
+
+.eq-table-floating-header {
+    box-shadow: inset 0 1px 0 #ffffff1c, inset 0 -1px 0 #ffffff1c;
 }
 
 .eq-window-simple .text-muted {
