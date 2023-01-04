@@ -66273,6 +66273,9 @@ const docTemplate = `{
                 "spell_type": {
                     "type": "integer"
                 },
+                "spells_new": {
+                    "$ref": "#/definitions/models.SpellsNew"
+                },
                 "title_sid": {
                     "type": "integer"
                 },

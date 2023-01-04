@@ -63,10 +63,10 @@ import PlayerEventDisplayComponent from "@/views/admin/player-event-logs/compone
 
 // GM_COMMAND           | [x] Implemented Formatter
 // ZONING               | [x] Implemented Formatter
-// AA_GAIN              | [] Implemented Formatter
+// AA_GAIN              | [x] Implemented Formatter
 // AA_PURCHASE          | [] Implemented Formatter
-// FORAGE_SUCCESS       | [] Implemented Formatter
-// FORAGE_FAILURE       | [] Implemented Formatter
+// FORAGE_SUCCESS       | [x] Implemented Formatter
+// FORAGE_FAILURE       | [x] Implemented Formatter
 // FISH_SUCCESS         | [x] Implemented Formatter
 // FISH_FAILURE         | [x] Implemented Formatter
 // ITEM_DESTROY         | [x] Implemented Formatter

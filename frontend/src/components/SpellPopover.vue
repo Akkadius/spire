@@ -44,7 +44,7 @@ export default {
   props: {
     spell: Object,
     size: { // options: 12,20,30,40
-      type: Number,
+      type: [Number, String],
       required: false,
       default: 40
     },
@@ -118,7 +118,7 @@ export default {
         return ' border: 1px solid ' + this.getTargetTypeColor()
       }
       else if (this.size <= 20) {
-        return 'border-radius: 5px; border: .5px solid ' + this.getTargetTypeColor()
+        return 'position: relative; top: 5px; border-radius: 5px; border: .5px solid ' + this.getTargetTypeColor()
       }
       else if (this.size <= 30) {
         return 'border-radius: 5px; border: 1px solid ' + this.getTargetTypeColor()
@@ -131,7 +131,7 @@ export default {
         return 'top: -3px'
       }
       else if (this.size <= 20) {
-        return 'top: -7px'
+        return 'top: 0px'
       }
       else if (this.size <= 30) {
         return 'top: -10px'

@@ -1,3 +1,4 @@
+import { ModelsSpellsNew } from './models-spells-new';
 export interface ModelsAaRank {
     cost?: number;
     desc_sid?: number;
@@ -10,6 +11,7 @@ export interface ModelsAaRank {
     recast_time?: number;
     spell?: number;
     spell_type?: number;
+    spells_new?: ModelsSpellsNew;
     title_sid?: number;
     upper_hotkey_sid?: number;
 }

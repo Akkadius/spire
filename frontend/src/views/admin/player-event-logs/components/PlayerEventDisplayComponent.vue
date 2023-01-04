@@ -39,6 +39,15 @@
       <item-popover :item="itemData[event(e).item_id]" class="ml-1 d-inline-block"/>
     </div>
 
+    <div v-if="e.event_type_id === PLAYER_EVENT.FORAGE_FAILURE">
+      Failed to forage!
+    </div>
+
+    <div v-if="e.event_type_id === PLAYER_EVENT.FORAGE_SUCCESS">
+      We found something!
+      <item-popover :item="itemData[event(e).item_id]" class="ml-1 d-inline-block"/>
+    </div>
+
     <div v-if="e.event_type_id === PLAYER_EVENT.MERCHANT_SELL">
       Sold
       <item-popover :item="itemData[event(e).item_id]" class="ml-1 font-weight-bold d-inline-block"/>
@@ -89,7 +98,7 @@
     </div>
 
     <div v-if="e.event_type_id === PLAYER_EVENT.LEVEL_GAIN">
-      Leveled up (+{{event(e).levels_gained}}) to
+      Leveled up (+{{ event(e).levels_gained }}) to
       <span class="font-weight-bold">
       {{ event(e).to_level }}
       </span>
@@ -100,7 +109,7 @@
     </div>
 
     <div v-if="e.event_type_id === PLAYER_EVENT.LEVEL_LOSS">
-      Leveled down (-{{event(e).levels_lost}}) to
+      Leveled down (-{{ event(e).levels_lost }}) to
       <span class="font-weight-bold">
       {{ event(e).to_level }}
       </span>
@@ -108,6 +117,23 @@
       <span class="font-weight-bold">
       {{ event(e).from_level }}
       </span>
+    </div>
+
+    <div v-if="e.event_type_id === PLAYER_EVENT.AA_PURCHASE">
+      Purchased AA rank
+
+      <span
+        v-if="aaData[event(e).aa_id].aa_ability && aaData[event(e).aa_id].aa_ability.name"
+        class="font-weight-bold">{{ aaData[event(e).aa_id].aa_ability.name }}</span>
+
+      <spell-popover
+        v-if="aaData[event(e).aa_id] && aaData[event(e).aa_id].spells_new"
+        class="ml-1 font-weight-bold"
+        size="20"
+        :spell="aaData[event(e).aa_id].spells_new"
+      />
+      at cost
+      <span class="font-weight-bold">{{ event(e).aa_cost }}</span>
     </div>
 
   </div>
@@ -123,10 +149,12 @@ import {Npcs}         from "@/app/npcs";
 import NpcPopover     from "@/components/NpcPopover.vue";
 import EqCashDisplay  from "@/components/eq-ui/EqCashDisplay.vue";
 import {Zones}        from "@/app/zones";
+import {AA}           from "@/app/aa";
+import SpellPopover   from "@/components/SpellPopover.vue";
 
 export default {
   name: "PlayerEventDisplayComponent",
-  components: { EqCashDisplay, NpcPopover, ItemPopover },
+  components: { SpellPopover, EqCashDisplay, NpcPopover, ItemPopover },
   props: {
     e: Object, // event
   },
@@ -138,6 +166,7 @@ export default {
       itemData: {},
       npcData: {},
       zoneData: {},
+      aaData: {},
     }
   },
   async mounted() {
@@ -154,16 +183,17 @@ export default {
     if (p.to_zone_id && p.to_zone_id > 0) {
       this.zoneData[p.to_zone_id] = await Zones.getZoneById(p.to_zone_id)
     }
+    if (p.aa_id && p.aa_id > 0) {
+      this.aaData[p.aa_id] = await AA.getAARankById(p.aa_id)
+    }
 
     this.$forceUpdate()
   },
   methods: {
     async getItem(itemId) {
-      console.log(await Items.getItem(itemId))
       return await Items.getItem(itemId)
     },
     event(e) {
-      console.log(JSON.parse(e.event_data))
       return JSON.parse(e.event_data)
     },
     fromNow(time) {
