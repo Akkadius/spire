@@ -385,29 +385,9 @@ router.beforeEach(async (to, from, next) => {
   // console.log(from)
   // console.log(to)
 
-  // when entering routes that require a local installation
-  // and occulus, lets inform the users by landing them
-  // into a notice route
-  // @ts-ignore
-  if (to && to.meta && to.meta.occulus && !AppEnv.isAppLocal) {
-    router.push(ROUTE.ADMIN_OCCULUS_REQUIRED).catch((e) => {
-    })
-  }
-
-  // console.log("Is spire initialized", AppEnv.isSpireInitialized())
-
-  // ensure appenv has been initialized first
-  if (typeof AppEnv.isSpireInitialized() !== 'undefined') {
-    // capture user under conditions
-    if (!AppEnv.isSpireInitialized() && to.fullPath !== ROUTE.SPIRE_INITIALIZE) {
-      console.log("hello")
-      // re-route to spire setup if not setup yet
-      router.push(ROUTE.SPIRE_INITIALIZE).catch((e) => {
-      })
-    } else if (AppEnv.isSpireInitialized() && to.fullPath === ROUTE.SPIRE_INITIALIZE) {
-      router.push(ROUTE.HOME).catch((e) => {
-      })
-    }
+  if (typeof AppEnv.getEnv() !== 'undefined') {
+    AppEnv.routeCheckOcculus(to, router)
+    AppEnv.routeCheckSpireInitialized(to, router)
   }
 
   EventBus.$emit('ROUTE_CHANGE', to);

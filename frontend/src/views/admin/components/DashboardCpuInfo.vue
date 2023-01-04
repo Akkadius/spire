@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div v-if="sysinfo && Object.keys(sysinfo).length > 0">
     <div class="card">
       <div class="card-header">
         <h4 class="card-header-title" v-if="cpuLoad.length">CPU(s) ({{ cpuLoad.length }})

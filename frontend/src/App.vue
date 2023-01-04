@@ -11,6 +11,7 @@ import {AppEnv}                 from "@/app/env/app-env";
 import {LocalSettings, Setting} from "@/app/local-settings/localsettings";
 import {ROUTE}                  from "@/routes";
 import UserContext              from "@/app/user/UserContext";
+import router                   from "@/router";
 
 export default {
   name: "App",
@@ -24,11 +25,12 @@ export default {
     const init = await AppEnv.init()
     if (init) {
       EventBus.$emit('APP_ENV_LOADED', true);
-      this.checkAppInitialization()
+      AppEnv.routeCheckOcculus(this.$route, this.$router)
+      AppEnv.routeCheckSpireInitialized(this.$route, this.$router)
       this.checkIfUserNeedsToAuth()
     }
     setTimeout(() => {
-      this.checkAppInitialization()
+      AppEnv.routeCheckSpireInitialized(this.$route, this.$router)
     }, 1)
   },
 
@@ -47,17 +49,6 @@ export default {
         UserContext.getAccessToken().length === 0 &&
         this.$route.fullPath !== ROUTE.LOGIN) {
         await this.$router.push(ROUTE.LOGIN).catch((e) => {
-        })
-      }
-    },
-
-    async checkAppInitialization() {
-      // capture user under conditions
-      if (!AppEnv.isSpireInitialized() && this.$route.fullPath !== ROUTE.SPIRE_INITIALIZE) {
-        await this.$router.push(ROUTE.SPIRE_INITIALIZE).catch((e) => {
-        })
-      } else if (AppEnv.isSpireInitialized() && this.$route.fullPath === ROUTE.SPIRE_INITIALIZE) {
-        await this.$router.push(ROUTE.HOME).catch((e) => {
         })
       }
     },

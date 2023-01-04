@@ -1,6 +1,9 @@
 //   static DEBUG_MODE = "debug-mode";
 
 import {SpireApi} from "../api/spire-api";
+import VueRouter, {Route} from "vue-router";
+import {ROUTE} from "@/routes";
+import router from "@/router";
 
 // these should be mirrored with env/app.go
 const AppEnvTesting    = "testing"
@@ -92,5 +95,29 @@ export class AppEnv {
       return true;
     }
     return false;
+  }
+
+  // a check that happens during routing if within an Occulus-based
+  // module to re-route the user to a notification view that informs the user
+  // that occulus and local is required
+  static routeCheckOcculus(to: Route, router: VueRouter) {
+    // @ts-ignore
+    if (to && to.meta && to.meta.occulus && !AppEnv.isAppLocal()) {
+      router.push(ROUTE.ADMIN_OCCULUS_REQUIRED).catch((e) => {
+      })
+    }
+  }
+
+  static routeCheckSpireInitialized(to: Route, router: VueRouter) {
+    // @ts-ignore
+    if (!AppEnv.isSpireInitialized() && to.fullPath !== ROUTE.SPIRE_INITIALIZE) {
+      console.log("hello")
+      // re-route to spire setup if not setup yet
+      router.push(ROUTE.SPIRE_INITIALIZE).catch((e) => {
+      })
+    } else if (AppEnv.isSpireInitialized() && to.fullPath === ROUTE.SPIRE_INITIALIZE) {
+      router.push(ROUTE.HOME).catch((e) => {
+      })
+    }
   }
 }
