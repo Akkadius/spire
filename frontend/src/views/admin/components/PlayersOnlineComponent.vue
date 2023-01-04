@@ -23,7 +23,7 @@
 
       <div class="card">
         <div
-          style="height: 78vh; overflow-y: scroll"
+          style="max-height: 78vh; overflow-y: scroll"
           class="table-responsive mb-0"
           v-if="filteredClientList"
         >
