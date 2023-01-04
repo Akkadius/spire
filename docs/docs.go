@@ -73205,8 +73205,14 @@ const docTemplate = `{
         "models.PlayerEventLog": {
             "type": "object",
             "properties": {
+                "account": {
+                    "$ref": "#/definitions/models.Account"
+                },
                 "account_id": {
                     "type": "integer"
+                },
+                "character_datum": {
+                    "$ref": "#/definitions/models.CharacterDatum"
                 },
                 "character_id": {
                     "type": "integer"
@@ -73240,6 +73246,9 @@ const docTemplate = `{
                 },
                 "z": {
                     "type": "number"
+                },
+                "zone": {
+                    "$ref": "#/definitions/models.Zone"
                 },
                 "zone_id": {
                     "type": "integer"

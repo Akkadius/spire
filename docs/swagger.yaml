@@ -4630,8 +4630,12 @@ definitions:
     type: object
   models.PlayerEventLog:
     properties:
+      account:
+        $ref: '#/definitions/models.Account'
       account_id:
         type: integer
+      character_datum:
+        $ref: '#/definitions/models.CharacterDatum'
       character_id:
         type: integer
       created_at:
@@ -4654,6 +4658,8 @@ definitions:
         type: number
       z:
         type: number
+      zone:
+        $ref: '#/definitions/models.Zone'
       zone_id:
         type: integer
     type: object
