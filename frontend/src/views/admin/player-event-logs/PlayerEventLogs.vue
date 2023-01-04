@@ -91,7 +91,7 @@ import {AA}                        from "@/app/aa";
 // TRADE                | [] Implemented Formatter
 // GIVE_ITEM            | [] Implemented Formatter
 // SAY                  | [x] Implemented Formatter
-// REZ_ACCEPTED         | [] Implemented Formatter
+// REZ_ACCEPTED         | [x] Implemented Formatter
 // DEATH                | [x] Implemented Formatter
 // COMBINE_FAILURE      | [x] Implemented Formatter
 // COMBINE_SUCCESS      | [x] Implemented Formatter
