@@ -1,53 +1,53 @@
 <template>
   <div class="row">
     <div class="col-12">
+      <div class="card mb-3" v-if="clientList.length > 0">
+        <div class="card-body pt-0 pb-0 pl-3 pr-3">
+          <div class="input-group input-group-flush">
+            <div class="input-group-prepend">
+              <span class="input-group-text"><i class="fe fe-search"></i></span>
+            </div>
+            <input
+              class="list-search form-control"
+              type="search"
+              placeholder="Search for player(s) or zone..."
+              @keyup="filterPlayers"
+              v-model="playerSearchFilter"
+            >
+          </div>
+        </div>
+
+      </div>
+
+      <app-loader :is-loading="!loaded" padding="4"></app-loader>
+
       <div class="card">
-        <div class="card-header">
-          <div class="col">
-
-            <form>
-              <div class="input-group input-group-flush">
-                <div class="input-group-prepend">
-                    <span
-                      class="input-group-text"
-
-                    >
-                      <i class="fe fe-search"></i>
-                    </span>
-                </div>
-                <input
-                  class="list-search form-control"
-                  type="search"
-                  placeholder="Search for player(s) or zone..."
-                  @keyup="filterPlayers"
-                  v-model="playerSearchFilter"
-                >
-              </div>
-            </form>
+        <div
+          style="height: 78vh; overflow-y: scroll"
+          class="table-responsive mb-0"
+          v-if="filteredClientList"
+        >
+          <div
+            v-if="Object.keys(filteredClientList).length > listLimitSize && !fullList"
+            class="m-3"
+          >
+            Too many online ({{ clientList.length }}) to display, for full list see
+            <router-link class="ml-2" style="color: lightblue" :to="ROUTE.ADMIN_PLAYERS_ONLINE">
+              <i class="fe fe-user"></i> Players
+              Online
+            </router-link>
           </div>
 
-          <div class="col-auto">
+          <div
+            v-if="(Object.keys(filteredClientList).length < listLimitSize && !fullList) || fullList"
+            class="m-3"
+          >
             <h4 class="card-header-title" v-if="loaded">Players Online ({{ clientList ? clientList.length : 0 }})</h4>
             <h4 class="card-header-title" v-if="!loaded">Loading...</span></h4>
           </div>
 
-        </div>
-
-        <app-loader :is-loading="!loaded" padding="4"></app-loader>
-
-        <div class="table-responsive" v-if="filteredClientList">
-
-          <div v-if="Object.keys(filteredClientList).length > listLimitSize && !fullList" class="m-4">
-            <b-alert variant="primary" show><i class="fe fe-info"></i>
-              Too many online to display, for full list see
-              <router-link class="ml-2 btn btn-sm btn-white" to="/players-online"><i class="fe fe-user"></i> Players
-                Online
-              </router-link>
-            </b-alert>
-          </div>
-
-          <table class="table table-sm table-nowrap players-online">
-            <thead>
+          <table class="table table-sm table-nowrap players-online sticky">
+            <thead class="sticky">
             <tr>
               <th style="width: 100px"></th>
               <th>Player</th>
@@ -118,10 +118,16 @@ import eqClassIntToStringConstants from "@/app/constants/eq-class-int-to-string-
 import {DB_CLASSES_ICONS}          from "@/app/constants/eq-class-icon-constants";
 import eqClientVersionConstants    from "@/app/constants/eq-client-version-constants";
 import {DB_RACES_ICONS}            from "@/app/constants/eq-race-icon-constants";
+import {ROUTE}                     from "@/routes";
 import {EqemuAdminClient}          from "@/app/api/eqemu-admin-client-occulus";
 
 export default {
   name: 'PlayersOnlineComponent',
+  computed: {
+    ROUTE() {
+      return ROUTE
+    }
+  },
 
   props: {
     fullList: {
@@ -310,6 +316,7 @@ export default {
 
 <style scoped>
 .players-online td {
+  border-radius: 10px;
   padding: 0.4rem;
   padding-top: 0.5rem;
   padding-right: 0.5rem;

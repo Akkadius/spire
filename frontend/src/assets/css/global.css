@@ -502,3 +502,14 @@ th[role=columnheader]:hover:not(.no-sort):after {
     height: calc(1em + 1rem) !important;
     padding: 0.25rem 0.5rem !important;
 }
+
+/*sticky tables */
+.sticky table {
+    position: relative;
+}
+
+.sticky thead {
+    position: sticky;
+    top: 0;
+    z-index: 9999;
+}

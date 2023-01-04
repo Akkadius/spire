@@ -4,15 +4,17 @@
 
     <span v-if="zoneList.length === 0 && loaded">Zoneservers are offline</span>
 
-    <input
-      type="text"
-      class="form-control form-control-prepended list-search mb-3"
-      @keyup="updateQueryState"
-      v-model="search"
-      placeholder="Filter zones..."
-    >
+    <div class="mr-4">
+      <input
+        type="text"
+        class="form-control form-control-prepended list-search mb-3"
+        @keyup="updateQueryState"
+        v-model="search"
+        placeholder="Filter zones..."
+      >
+    </div>
 
-    <div style="max-height: 85vh; overflow-y: scroll">
+    <div style="max-height: 80vh; overflow-y: scroll">
       <div
         :class="['card', 'mb-3']"
         v-if="processStats[zone.zone_os_pid]"
