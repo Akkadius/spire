@@ -8,6 +8,9 @@ database:
     - backup
     - vw_
     - peq_admin
+    - spire_
+    - tool_
+    - goallists
 #    - perl_event_export_settings
     - group_leader
   table_connections:

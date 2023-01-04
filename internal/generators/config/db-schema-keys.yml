@@ -350,6 +350,14 @@ bot_spell_casting_chances:
     is_nullable: "NO"
     column_type: int(11)
     column_default: ""
+bot_spell_settings:
+  - column: id
+    data_type: int
+    column_key: PRI
+    ordinal_position: "1"
+    is_nullable: "NO"
+    column_type: int(11) unsigned
+    column_default: ""
 bot_spells_entries:
   - column: id
     data_type: int
@@ -1278,20 +1286,19 @@ group_id:
     is_nullable: "NO"
     column_type: int(4)
     column_default: ""
+  - column: name
+    data_type: varchar
+    column_key: PRI
+    ordinal_position: "3"
+    is_nullable: "NO"
+    column_type: varchar(64)
+    column_default: ""
   - column: ismerc
     data_type: tinyint
     column_key: PRI
     ordinal_position: "4"
     is_nullable: "NO"
     column_type: tinyint(3)
-    column_default: "0"
-guild_members:
-  - column: char_id
-    data_type: int
-    column_key: PRI
-    ordinal_position: "1"
-    is_nullable: "NO"
-    column_type: int(11)
     column_default: "0"
 guild_ranks:
   - column: guild_id
@@ -1825,6 +1832,22 @@ pets_equipmentset_entries:
     ordinal_position: "2"
     is_nullable: "NO"
     column_type: int(11)
+    column_default: ""
+player_event_log_settings:
+  - column: id
+    data_type: bigint
+    column_key: PRI
+    ordinal_position: "1"
+    is_nullable: "NO"
+    column_type: bigint(20)
+    column_default: ""
+player_event_logs:
+  - column: id
+    data_type: bigint
+    column_key: PRI
+    ordinal_position: "1"
+    is_nullable: "NO"
+    column_type: bigint(20)
     column_default: ""
 player_titlesets:
   - column: id

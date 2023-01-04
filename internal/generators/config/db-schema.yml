@@ -1716,6 +1716,20 @@ bot_data:
     is_nullable: "NO"
     column_type: int(11)
     column_default: "-1"
+  - column: enforce_spell_settings
+    data_type: tinyint
+    column_key: ""
+    ordinal_position: "49"
+    is_nullable: "NO"
+    column_type: tinyint(2) unsigned
+    column_default: "0"
+  - column: archery_setting
+    data_type: tinyint
+    column_key: ""
+    ordinal_position: "50"
+    is_nullable: "NO"
+    column_type: tinyint(2) unsigned
+    column_default: "0"
 bot_group_members:
   - column: group_members_index
     data_type: int
@@ -2387,6 +2401,56 @@ bot_spell_casting_chances:
     is_nullable: "NO"
     column_type: tinyint(3) unsigned
     column_default: "0"
+bot_spell_settings:
+  - column: id
+    data_type: int
+    column_key: PRI
+    ordinal_position: "1"
+    is_nullable: "NO"
+    column_type: int(11) unsigned
+    column_default: ""
+  - column: bot_id
+    data_type: int
+    column_key: ""
+    ordinal_position: "2"
+    is_nullable: "NO"
+    column_type: int(11)
+    column_default: "0"
+  - column: spell_id
+    data_type: smallint
+    column_key: ""
+    ordinal_position: "3"
+    is_nullable: "NO"
+    column_type: smallint(5)
+    column_default: "0"
+  - column: priority
+    data_type: smallint
+    column_key: ""
+    ordinal_position: "4"
+    is_nullable: "NO"
+    column_type: smallint(5)
+    column_default: "0"
+  - column: min_hp
+    data_type: smallint
+    column_key: ""
+    ordinal_position: "5"
+    is_nullable: "NO"
+    column_type: smallint(5)
+    column_default: "0"
+  - column: max_hp
+    data_type: smallint
+    column_key: ""
+    ordinal_position: "6"
+    is_nullable: "NO"
+    column_type: smallint(5)
+    column_default: "0"
+  - column: is_enabled
+    data_type: tinyint
+    column_key: ""
+    ordinal_position: "7"
+    is_nullable: "NO"
+    column_type: tinyint(1) unsigned
+    column_default: "1"
 bot_spells_entries:
   - column: id
     data_type: int
@@ -2490,7 +2554,7 @@ bot_spells_entries:
     data_type: tinyint
     column_key: ""
     ordinal_position: "15"
-    is_nullable: "YES"
+    is_nullable: "NO"
     column_type: tinyint(3) unsigned
     column_default: "0"
 bot_stances:
@@ -5624,6 +5688,13 @@ db_version:
     is_nullable: "YES"
     column_type: int(11)
     column_default: "0"
+  - column: bots_version
+    data_type: int
+    column_key: ""
+    ordinal_position: "2"
+    is_nullable: "YES"
+    column_type: int(11)
+    column_default: "0"
 discord_webhooks:
   - column: id
     data_type: int
@@ -7324,7 +7395,7 @@ group_id:
     column_default: ""
   - column: name
     data_type: varchar
-    column_key: ""
+    column_key: PRI
     ordinal_position: "3"
     is_nullable: "NO"
     column_type: varchar(64)
@@ -7396,7 +7467,7 @@ guild_bank:
 guild_members:
   - column: char_id
     data_type: int
-    column_key: PRI
+    column_key: ""
     ordinal_position: "1"
     is_nullable: "NO"
     column_type: int(11)
@@ -13354,6 +13425,134 @@ pets_equipmentset_entries:
     is_nullable: "NO"
     column_type: int(11)
     column_default: ""
+player_event_log_settings:
+  - column: id
+    data_type: bigint
+    column_key: PRI
+    ordinal_position: "1"
+    is_nullable: "NO"
+    column_type: bigint(20)
+    column_default: ""
+  - column: event_name
+    data_type: varchar
+    column_key: ""
+    ordinal_position: "2"
+    is_nullable: "YES"
+    column_type: varchar(100)
+    column_default: "NULL"
+  - column: event_enabled
+    data_type: tinyint
+    column_key: ""
+    ordinal_position: "3"
+    is_nullable: "YES"
+    column_type: tinyint(1)
+    column_default: "NULL"
+  - column: retention_days
+    data_type: int
+    column_key: ""
+    ordinal_position: "4"
+    is_nullable: "YES"
+    column_type: int(11)
+    column_default: "0"
+  - column: discord_webhook_id
+    data_type: int
+    column_key: ""
+    ordinal_position: "5"
+    is_nullable: "YES"
+    column_type: int(11)
+    column_default: "0"
+player_event_logs:
+  - column: id
+    data_type: bigint
+    column_key: PRI
+    ordinal_position: "1"
+    is_nullable: "NO"
+    column_type: bigint(20)
+    column_default: ""
+  - column: account_id
+    data_type: bigint
+    column_key: ""
+    ordinal_position: "2"
+    is_nullable: "YES"
+    column_type: bigint(20)
+    column_default: "NULL"
+  - column: character_id
+    data_type: bigint
+    column_key: ""
+    ordinal_position: "3"
+    is_nullable: "YES"
+    column_type: bigint(20)
+    column_default: "NULL"
+  - column: zone_id
+    data_type: int
+    column_key: ""
+    ordinal_position: "4"
+    is_nullable: "YES"
+    column_type: int(11)
+    column_default: "NULL"
+  - column: instance_id
+    data_type: int
+    column_key: ""
+    ordinal_position: "5"
+    is_nullable: "YES"
+    column_type: int(11)
+    column_default: "NULL"
+  - column: x
+    data_type: float
+    column_key: ""
+    ordinal_position: "6"
+    is_nullable: "YES"
+    column_type: float
+    column_default: "NULL"
+  - column: "y"
+    data_type: float
+    column_key: ""
+    ordinal_position: "7"
+    is_nullable: "YES"
+    column_type: float
+    column_default: "NULL"
+  - column: z
+    data_type: float
+    column_key: ""
+    ordinal_position: "8"
+    is_nullable: "YES"
+    column_type: float
+    column_default: "NULL"
+  - column: heading
+    data_type: float
+    column_key: ""
+    ordinal_position: "9"
+    is_nullable: "YES"
+    column_type: float
+    column_default: "NULL"
+  - column: event_type_id
+    data_type: int
+    column_key: MUL
+    ordinal_position: "10"
+    is_nullable: "YES"
+    column_type: int(11)
+    column_default: "NULL"
+  - column: event_type_name
+    data_type: varchar
+    column_key: ""
+    ordinal_position: "11"
+    is_nullable: "YES"
+    column_type: varchar(255)
+    column_default: "NULL"
+  - column: event_data
+    data_type: longtext
+    column_key: ""
+    ordinal_position: "12"
+    is_nullable: "YES"
+    column_type: longtext
+    column_default: "NULL"
+  - column: created_at
+    data_type: datetime
+    column_key: ""
+    ordinal_position: "13"
+    is_nullable: "YES"
+    column_type: datetime
+    column_default: "NULL"
 player_titlesets:
   - column: id
     data_type: int
