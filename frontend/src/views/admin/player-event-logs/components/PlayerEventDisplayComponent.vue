@@ -82,6 +82,10 @@
       />
     </div>
 
+    <div v-if="e.event_type_id === PLAYER_EVENT.REZ_ACCEPTED">
+      Accepted resurrection
+    </div>
+
     <div v-if="e.event_type_id === PLAYER_EVENT.MERCHANT_SELL">
       Sold
       <item-popover :item="itemData[event(e).item_id]" class="ml-1 font-weight-bold d-inline-block"/>
