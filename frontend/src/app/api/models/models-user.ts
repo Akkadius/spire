@@ -3,10 +3,12 @@ import { ModelsUserServerDatabaseConnection } from './models-user-server-databas
 export interface ModelsUser {
     avatar?: string;
     created_at?: string;
+    deleted_at?: string;
     email?: string;
     first_name?: string;
     full_name?: string;
     id?: number;
+    is_admin?: boolean;
     last_name?: string;
     owned_connections?: Array<ModelsServerDatabaseConnection>;
     provider?: string;

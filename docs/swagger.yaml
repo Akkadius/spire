@@ -478,6 +478,8 @@ definitions:
         type: integer
       agi:
         type: integer
+      archery_setting:
+        type: integer
       atk:
         type: integer
       beard:
@@ -507,6 +509,8 @@ definitions:
       drakkin_heritage:
         type: integer
       drakkin_tattoo:
+        type: integer
+      enforce_spell_settings:
         type: integer
       expansion_bitmask:
         type: integer
@@ -796,6 +800,23 @@ definitions:
       spell_type_index:
         type: integer
       stance_index:
+        type: integer
+    type: object
+  models.BotSpellSetting:
+    properties:
+      bot_id:
+        type: integer
+      id:
+        type: integer
+      is_enabled:
+        type: integer
+      max_hp:
+        type: integer
+      min_hp:
+        type: integer
+      priority:
+        type: integer
+      spell_id:
         type: integer
     type: object
   models.BotSpellsEntry:
@@ -4607,6 +4628,48 @@ definitions:
       slot:
         type: integer
     type: object
+  models.PlayerEventLog:
+    properties:
+      account_id:
+        type: integer
+      character_id:
+        type: integer
+      created_at:
+        type: string
+      event_data:
+        type: string
+      event_type_id:
+        type: integer
+      event_type_name:
+        type: string
+      heading:
+        type: number
+      id:
+        type: integer
+      instance_id:
+        type: integer
+      x:
+        type: number
+      "y":
+        type: number
+      z:
+        type: number
+      zone_id:
+        type: integer
+    type: object
+  models.PlayerEventLogSetting:
+    properties:
+      discord_webhook_id:
+        type: integer
+      event_enabled:
+        type: integer
+      event_name:
+        type: string
+      id:
+        type: integer
+      retention_days:
+        type: integer
+    type: object
   models.PlayerTitleset:
     properties:
       char_id:
@@ -5985,6 +6048,8 @@ definitions:
         type: string
       created_at:
         type: string
+      deleted_at:
+        type: string
       email:
         type: string
       first_name:
@@ -5993,6 +6058,8 @@ definitions:
         type: string
       id:
         type: integer
+      is_admin:
+        type: boolean
       last_name:
         type: string
       owned_connections:
@@ -14044,6 +14111,227 @@ paths:
       summary: Gets BotSpellCastingChances in bulk
       tags:
       - BotSpellCastingChance
+  /bot_spell_setting:
+    put:
+      consumes:
+      - application/json
+      operationId: createBotSpellSetting
+      parameters:
+      - description: BotSpellSetting
+        in: body
+        name: bot_spell_setting
+        required: true
+        schema:
+          $ref: '#/definitions/models.BotSpellSetting'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.BotSpellSetting'
+            type: array
+        "500":
+          description: Error inserting entity
+          schema:
+            type: string
+      summary: Creates BotSpellSetting
+      tags:
+      - BotSpellSetting
+  /bot_spell_setting/{id}:
+    delete:
+      consumes:
+      - application/json
+      operationId: deleteBotSpellSetting
+      parameters:
+      - description: id
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Entity deleted successfully
+          schema:
+            type: string
+        "404":
+          description: Cannot find entity
+          schema:
+            type: string
+        "500":
+          description: Error deleting entity
+          schema:
+            type: string
+      summary: Deletes BotSpellSetting
+      tags:
+      - BotSpellSetting
+    get:
+      consumes:
+      - application/json
+      operationId: getBotSpellSetting
+      parameters:
+      - description: Id
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Relationships [all] for all [number] for depth of relationships
+          to load or [.] separated relationship names
+        in: query
+        name: includes
+        type: string
+      - description: Column names [.] separated to fetch specific fields in response
+        in: query
+        name: select
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.BotSpellSetting'
+            type: array
+        "404":
+          description: Entity not found
+          schema:
+            type: string
+        "500":
+          description: Bad query request
+          schema:
+            type: string
+      summary: Gets BotSpellSetting
+      tags:
+      - BotSpellSetting
+    patch:
+      consumes:
+      - application/json
+      operationId: updateBotSpellSetting
+      parameters:
+      - description: Id
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: BotSpellSetting
+        in: body
+        name: bot_spell_setting
+        required: true
+        schema:
+          $ref: '#/definitions/models.BotSpellSetting'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.BotSpellSetting'
+            type: array
+        "404":
+          description: Cannot find entity
+          schema:
+            type: string
+        "500":
+          description: Error updating entity
+          schema:
+            type: string
+      summary: Updates BotSpellSetting
+      tags:
+      - BotSpellSetting
+  /bot_spell_settings:
+    get:
+      consumes:
+      - application/json
+      operationId: listBotSpellSettings
+      parameters:
+      - description: Relationships [all] for all [number] for depth of relationships
+          to load or [.] separated relationship names
+        in: query
+        name: includes
+        type: string
+      - description: 'Filter on specific fields. Multiple conditions [.] separated
+          Example: col_like_value.col2__val2'
+        in: query
+        name: where
+        type: string
+      - description: 'Filter on specific fields (Chained ors). Multiple conditions
+          [.] separated Example: col_like_value.col2__val2'
+        in: query
+        name: whereOr
+        type: string
+      - description: 'Group by field. Multiple conditions [.] separated Example: field1.field2'
+        in: query
+        name: groupBy
+        type: string
+      - description: 'Rows to limit in response (Default: 10,000)'
+        in: query
+        name: limit
+        type: string
+      - description: Pagination page
+        in: query
+        name: page
+        type: integer
+      - description: Order by [field]
+        in: query
+        name: orderBy
+        type: string
+      - description: Order by field direction
+        in: query
+        name: orderDirection
+        type: string
+      - description: Column names [.] separated to fetch specific fields in response
+        in: query
+        name: select
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.BotSpellSetting'
+            type: array
+        "500":
+          description: Bad query request
+          schema:
+            type: string
+      summary: Lists BotSpellSettings
+      tags:
+      - BotSpellSetting
+  /bot_spell_settings/bulk:
+    post:
+      consumes:
+      - application/json
+      operationId: getBotSpellSettingsBulk
+      parameters:
+      - description: body
+        in: body
+        name: Body
+        required: true
+        schema:
+          $ref: '#/definitions/crudcontrollers.BulkFetchByIdsGetRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.BotSpellSetting'
+            type: array
+        "500":
+          description: Bad query request
+          schema:
+            type: string
+      summary: Gets BotSpellSettings in bulk
+      tags:
+      - BotSpellSetting
   /bot_spells_entries:
     get:
       consumes:
@@ -41022,6 +41310,448 @@ paths:
       summary: Gets PetsEquipmentsets in bulk
       tags:
       - PetsEquipmentset
+  /player_event_log:
+    put:
+      consumes:
+      - application/json
+      operationId: createPlayerEventLog
+      parameters:
+      - description: PlayerEventLog
+        in: body
+        name: player_event_log
+        required: true
+        schema:
+          $ref: '#/definitions/models.PlayerEventLog'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.PlayerEventLog'
+            type: array
+        "500":
+          description: Error inserting entity
+          schema:
+            type: string
+      summary: Creates PlayerEventLog
+      tags:
+      - PlayerEventLog
+  /player_event_log/{id}:
+    delete:
+      consumes:
+      - application/json
+      operationId: deletePlayerEventLog
+      parameters:
+      - description: id
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Entity deleted successfully
+          schema:
+            type: string
+        "404":
+          description: Cannot find entity
+          schema:
+            type: string
+        "500":
+          description: Error deleting entity
+          schema:
+            type: string
+      summary: Deletes PlayerEventLog
+      tags:
+      - PlayerEventLog
+    get:
+      consumes:
+      - application/json
+      operationId: getPlayerEventLog
+      parameters:
+      - description: Id
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Relationships [all] for all [number] for depth of relationships
+          to load or [.] separated relationship names
+        in: query
+        name: includes
+        type: string
+      - description: Column names [.] separated to fetch specific fields in response
+        in: query
+        name: select
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.PlayerEventLog'
+            type: array
+        "404":
+          description: Entity not found
+          schema:
+            type: string
+        "500":
+          description: Bad query request
+          schema:
+            type: string
+      summary: Gets PlayerEventLog
+      tags:
+      - PlayerEventLog
+    patch:
+      consumes:
+      - application/json
+      operationId: updatePlayerEventLog
+      parameters:
+      - description: Id
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: PlayerEventLog
+        in: body
+        name: player_event_log
+        required: true
+        schema:
+          $ref: '#/definitions/models.PlayerEventLog'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.PlayerEventLog'
+            type: array
+        "404":
+          description: Cannot find entity
+          schema:
+            type: string
+        "500":
+          description: Error updating entity
+          schema:
+            type: string
+      summary: Updates PlayerEventLog
+      tags:
+      - PlayerEventLog
+  /player_event_log_setting:
+    put:
+      consumes:
+      - application/json
+      operationId: createPlayerEventLogSetting
+      parameters:
+      - description: PlayerEventLogSetting
+        in: body
+        name: player_event_log_setting
+        required: true
+        schema:
+          $ref: '#/definitions/models.PlayerEventLogSetting'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.PlayerEventLogSetting'
+            type: array
+        "500":
+          description: Error inserting entity
+          schema:
+            type: string
+      summary: Creates PlayerEventLogSetting
+      tags:
+      - PlayerEventLogSetting
+  /player_event_log_setting/{id}:
+    delete:
+      consumes:
+      - application/json
+      operationId: deletePlayerEventLogSetting
+      parameters:
+      - description: id
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Entity deleted successfully
+          schema:
+            type: string
+        "404":
+          description: Cannot find entity
+          schema:
+            type: string
+        "500":
+          description: Error deleting entity
+          schema:
+            type: string
+      summary: Deletes PlayerEventLogSetting
+      tags:
+      - PlayerEventLogSetting
+    get:
+      consumes:
+      - application/json
+      operationId: getPlayerEventLogSetting
+      parameters:
+      - description: Id
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Relationships [all] for all [number] for depth of relationships
+          to load or [.] separated relationship names
+        in: query
+        name: includes
+        type: string
+      - description: Column names [.] separated to fetch specific fields in response
+        in: query
+        name: select
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.PlayerEventLogSetting'
+            type: array
+        "404":
+          description: Entity not found
+          schema:
+            type: string
+        "500":
+          description: Bad query request
+          schema:
+            type: string
+      summary: Gets PlayerEventLogSetting
+      tags:
+      - PlayerEventLogSetting
+    patch:
+      consumes:
+      - application/json
+      operationId: updatePlayerEventLogSetting
+      parameters:
+      - description: Id
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: PlayerEventLogSetting
+        in: body
+        name: player_event_log_setting
+        required: true
+        schema:
+          $ref: '#/definitions/models.PlayerEventLogSetting'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.PlayerEventLogSetting'
+            type: array
+        "404":
+          description: Cannot find entity
+          schema:
+            type: string
+        "500":
+          description: Error updating entity
+          schema:
+            type: string
+      summary: Updates PlayerEventLogSetting
+      tags:
+      - PlayerEventLogSetting
+  /player_event_log_settings:
+    get:
+      consumes:
+      - application/json
+      operationId: listPlayerEventLogSettings
+      parameters:
+      - description: Relationships [all] for all [number] for depth of relationships
+          to load or [.] separated relationship names
+        in: query
+        name: includes
+        type: string
+      - description: 'Filter on specific fields. Multiple conditions [.] separated
+          Example: col_like_value.col2__val2'
+        in: query
+        name: where
+        type: string
+      - description: 'Filter on specific fields (Chained ors). Multiple conditions
+          [.] separated Example: col_like_value.col2__val2'
+        in: query
+        name: whereOr
+        type: string
+      - description: 'Group by field. Multiple conditions [.] separated Example: field1.field2'
+        in: query
+        name: groupBy
+        type: string
+      - description: 'Rows to limit in response (Default: 10,000)'
+        in: query
+        name: limit
+        type: string
+      - description: Pagination page
+        in: query
+        name: page
+        type: integer
+      - description: Order by [field]
+        in: query
+        name: orderBy
+        type: string
+      - description: Order by field direction
+        in: query
+        name: orderDirection
+        type: string
+      - description: Column names [.] separated to fetch specific fields in response
+        in: query
+        name: select
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.PlayerEventLogSetting'
+            type: array
+        "500":
+          description: Bad query request
+          schema:
+            type: string
+      summary: Lists PlayerEventLogSettings
+      tags:
+      - PlayerEventLogSetting
+  /player_event_log_settings/bulk:
+    post:
+      consumes:
+      - application/json
+      operationId: getPlayerEventLogSettingsBulk
+      parameters:
+      - description: body
+        in: body
+        name: Body
+        required: true
+        schema:
+          $ref: '#/definitions/crudcontrollers.BulkFetchByIdsGetRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.PlayerEventLogSetting'
+            type: array
+        "500":
+          description: Bad query request
+          schema:
+            type: string
+      summary: Gets PlayerEventLogSettings in bulk
+      tags:
+      - PlayerEventLogSetting
+  /player_event_logs:
+    get:
+      consumes:
+      - application/json
+      operationId: listPlayerEventLogs
+      parameters:
+      - description: Relationships [all] for all [number] for depth of relationships
+          to load or [.] separated relationship names
+        in: query
+        name: includes
+        type: string
+      - description: 'Filter on specific fields. Multiple conditions [.] separated
+          Example: col_like_value.col2__val2'
+        in: query
+        name: where
+        type: string
+      - description: 'Filter on specific fields (Chained ors). Multiple conditions
+          [.] separated Example: col_like_value.col2__val2'
+        in: query
+        name: whereOr
+        type: string
+      - description: 'Group by field. Multiple conditions [.] separated Example: field1.field2'
+        in: query
+        name: groupBy
+        type: string
+      - description: 'Rows to limit in response (Default: 10,000)'
+        in: query
+        name: limit
+        type: string
+      - description: Pagination page
+        in: query
+        name: page
+        type: integer
+      - description: Order by [field]
+        in: query
+        name: orderBy
+        type: string
+      - description: Order by field direction
+        in: query
+        name: orderDirection
+        type: string
+      - description: Column names [.] separated to fetch specific fields in response
+        in: query
+        name: select
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.PlayerEventLog'
+            type: array
+        "500":
+          description: Bad query request
+          schema:
+            type: string
+      summary: Lists PlayerEventLogs
+      tags:
+      - PlayerEventLog
+  /player_event_logs/bulk:
+    post:
+      consumes:
+      - application/json
+      operationId: getPlayerEventLogsBulk
+      parameters:
+      - description: body
+        in: body
+        name: Body
+        required: true
+        schema:
+          $ref: '#/definitions/crudcontrollers.BulkFetchByIdsGetRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.PlayerEventLog'
+            type: array
+        "500":
+          description: Bad query request
+          schema:
+            type: string
+      summary: Gets PlayerEventLogs in bulk
+      tags:
+      - PlayerEventLog
   /player_titleset:
     put:
       consumes:

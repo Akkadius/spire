@@ -14,6 +14,7 @@ sed -i.bak \
   -e 's/null.Int8/int8/' \
   -e 's/null.Int/int/' \
   -e 's/null.Time/time.Time/' \
+  -e 's/gorm.DeletedAt/time.Time/' \
   -e 's/null.Float32/float32/' \
   -e 's/null.Float64/float64/' ./internal/models/*
 
