@@ -246,6 +246,8 @@ const router = new Router({
         },
       ]
     },
+
+    // Admin
     {
       path: ROUTE.ADMIN_ROOT,
       component: () => import('./views/admin/layout/AdminLayout.vue'),
@@ -271,79 +273,67 @@ const router = new Router({
           meta: {title: "Netstats"},
         },
         {
-          path: 'configuration',
-          meta: {title: "Configuration"},
-          component: () => import('./views/admin/configuration/Configuration.vue'),
-          children: [
-            {
-              path: 'settings/worldserver',
-              component: () => import('./views/admin/configuration/WorldServerSettings.vue'),
-              meta: {title: "World Server Settings"},
-            },
-            {
-              path: 'settings/zoneserver',
-              component: () => import('./views/admin/configuration/ZoneServerSettings.vue'),
-              meta: {title: "Zone Server Settings"},
-            },
-            {
-              path: 'settings/ucs',
-              component: () => import('./views/admin/configuration/UcsSettings.vue'),
-              meta: {title: "UCS Config"},
-            },
-            {
-              path: 'settings/discord',
-              component: () => import('./views/admin/configuration/DiscordSettings.vue'),
-              meta: {title: "Discord Config"},
-            },
-            {
-              path: 'settings/database',
-              component: () => import('./views/admin/configuration/Database.vue'),
-              meta: {title: "Database Config"},
-            },
-            {
-              path: 'server-rules',
-              component: () => import('./views/admin/configuration/ServerRules.vue'),
-              meta: {title: "Server Rules"},
-            },
-            {
-              path: 'motd',
-              component: () => import('./views/admin/configuration/Motd.vue'),
-              meta: {title: "Message of the Day"},
-            }
-          ]
+          path: ROUTE.ADMIN_CONFIG_WORLDSERVER,
+          component: () => import('./views/admin/configuration/WorldServerSettings.vue'),
+          meta: {title: "World Server Settings"},
         },
         {
-          path: 'tools',
-          meta: {title: "Tools"},
-          component: () => import('./views/admin/tools/Tools.vue'),
-          children: [
-            {
-              path: 'logs',
-              component: () => import('./views/admin/tools/Logs.vue'),
-              meta: {title: "Server Logs"},
-            },
-            {
-              path: 'backups',
-              component: () => import('./views/admin/tools/Backups.vue'),
-              meta: {title: "Backups"},
-            },
-            {
-              path: 'server-code',
-              component: () => import('./views/admin/tools/ServerCode.vue'),
-              meta: {title: "Code Management"},
-            },
-            {
-              path: 'server-quests',
-              component: () => import('./views/admin/tools/ServerQuests.vue'),
-              meta: {title: "Quests Management"},
-            },
-            {
-              path: 'client-assets',
-              component: () => import('./views/admin/tools/ClientAssets.vue'),
-              meta: {title: "Client Asset Management"},
-            },
-          ]
-        }
+          path: ROUTE.ADMIN_CONFIG_ZONESERVER,
+          component: () => import('./views/admin/configuration/ZoneServerSettings.vue'),
+          meta: {title: "Zone Server Settings"},
+        },
+        {
+          path: ROUTE.ADMIN_CONFIG_UCS,
+          component: () => import('./views/admin/configuration/UcsSettings.vue'),
+          meta: {title: "UCS Config"},
+        },
+        {
+          path: ROUTE.ADMIN_CONFIG_DISCORD,
+          component: () => import('./views/admin/configuration/DiscordSettings.vue'),
+          meta: {title: "Discord Config"},
+        },
+        {
+          path: ROUTE.ADMIN_CONFIG_DATABASE,
+          component: () => import('./views/admin/configuration/Database.vue'),
+          meta: {title: "Database Config"},
+        },
+        {
+          path: ROUTE.ADMIN_CONFIG_SERVER_RULES,
+          component: () => import('./views/admin/configuration/ServerRules.vue'),
+          meta: {title: "Server Rules"},
+        },
+        {
+          path: ROUTE.ADMIN_CONFIG_MOTD,
+          component: () => import('./views/admin/configuration/Motd.vue'),
+          meta: {title: "Message of the Day"},
+        },
+
+        // tools
+        {
+          path: ROUTE.ADMIN_TOOL_LOGS,
+          component: () => import('./views/admin/tools/Logs.vue'),
+          meta: {title: "Server Logs"},
+        },
+        {
+          path: ROUTE.ADMIN_TOOL_BACKUPS,
+          component: () => import('./views/admin/tools/Backups.vue'),
+          meta: {title: "Backups"},
+        },
+        {
+          path: ROUTE.ADMIN_TOOL_SERVER_CODE,
+          component: () => import('./views/admin/tools/ServerCode.vue'),
+          meta: {title: "Code Management"},
+        },
+        {
+          path: ROUTE.ADMIN_TOOL_SERVER_QUESTS,
+          component: () => import('./views/admin/tools/ServerQuests.vue'),
+          meta: {title: "Quests Management"},
+        },
+        {
+          path: ROUTE.ADMIN_TOOL_CLIENT_FILE_DOWNLOADS,
+          component: () => import('./views/admin/tools/ClientAssets.vue'),
+          meta: {title: "Client Asset Management"},
+        },
       ]
     },
 

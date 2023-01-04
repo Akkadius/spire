@@ -97,29 +97,8 @@
               </router-link>
             </li>
 
-            <li class="nav-item" v-if="isInAdmin()">
-              <router-link class="nav-link" :to="ROUTE.ADMIN_CONFIGURATION">
-                <i class="ra ra-cog mr-1"></i> Configuration
-
-                <b-badge class="ml-3" variant="primary">
-                  <i class="fe fe-eye"></i>
-                  Occulus
-                </b-badge>
-              </router-link>
-            </li>
-
-            <nav-section-component :config="adminConfigurationNav"/>
-
-            <li class="nav-item" v-if="isInAdmin()">
-              <router-link class="nav-link" :to="ROUTE.ADMIN_TOOLS">
-                <i class="ra ra-wrench mr-1"></i> Tools
-
-                <b-badge class="ml-3" variant="primary">
-                  <i class="fe fe-eye"></i>
-                  Occulus
-                </b-badge>
-              </router-link>
-            </li>
+            <nav-section-component :config="adminConfigurationNav" v-if="isInAdmin()"/>
+            <nav-section-component :config="adminToolNav" v-if="isInAdmin()"/>
 
           </ul>
         </div>
@@ -135,7 +114,7 @@
 
             <li class="nav-item">
               <router-link class="nav-link" to="/client-files">
-                <i class="ra ra-cycle mr-1"></i> Client Files
+                <i class="ra ra-cycle mr-1"></i> Client File
                 <b-badge class="ml-3" variant="primary">NEW!</b-badge>
               </router-link>
             </li>
@@ -364,13 +343,25 @@ export default {
         labelIcon: "ra ra-cog mr-1",
         routePrefixMatch: "admin/configuration",
         navs: [
-          { title: "Database", to: ROUTE.ADMIN_CONFIG_DATABASE, icon: "ra ra-cog mr-1" },
-          { title: "Discord", to: ROUTE.ADMIN_CONFIG_DISCORD, icon: "ra ra-cog mr-1" },
-          { title: "Message of the Day", to: ROUTE.ADMIN_CONFIG_MOTD, icon: "ra ra-cog mr-1" },
-          { title: "Server Rules", to: ROUTE.ADMIN_CONFIG_SERVER_RULES, icon: "ra ra-cog mr-1" },
-          { title: "UCS", to: ROUTE.ADMIN_CONFIG_UCS, icon: "ra ra-cog mr-1" },
-          { title: "World Server", to: ROUTE.ADMIN_CONFIG_WORLDSERVER, icon: "ra ra-cog mr-1" },
-          { title: "Zone Server", to: ROUTE.ADMIN_CONFIG_ZONESERVER, icon: "ra ra-cog mr-1" },
+          { title: "Database", to: ROUTE.ADMIN_CONFIG_DATABASE, icon: "ra ra-book mr-1", isOcculus: true },
+          { title: "Discord", to: ROUTE.ADMIN_CONFIG_DISCORD, icon: "ra ra-cog mr-1", isOcculus: true },
+          { title: "MOTD", to: ROUTE.ADMIN_CONFIG_MOTD, icon: "ra ra-wooden-sign mr-1", isOcculus: true },
+          { title: "Server Rules", to: ROUTE.ADMIN_CONFIG_SERVER_RULES, icon: "ra ra-interdiction mr-1", isOcculus: true },
+          { title: "UCS", to: ROUTE.ADMIN_CONFIG_UCS, icon: "ra ra-speech-bubbles mr-1", isOcculus: true },
+          { title: "World Server", to: ROUTE.ADMIN_CONFIG_WORLDSERVER, icon: "ra ra-double-team mr-1", isOcculus: true },
+          { title: "Zone Server", to: ROUTE.ADMIN_CONFIG_ZONESERVER, icon: "ra ra-player mr-1", isOcculus: true },
+        ]
+      },
+      adminToolNav: {
+        label: "Tools",
+        labelIcon: "ra ra-wrench mr-1",
+        routePrefixMatch: "admin/tools",
+        navs: [
+          { title: "Logs", to: ROUTE.ADMIN_TOOL_LOGS, icon: "fe fe-book mr-1", isOcculus: true },
+          { title: "Code", to: ROUTE.ADMIN_TOOL_SERVER_CODE, icon: "fa fa-code-fork mr-1", isOcculus: true },
+          { title: "Quests", to: ROUTE.ADMIN_TOOL_SERVER_QUESTS, icon: "fa fa-code-fork mr-1", isOcculus: true },
+          { title: "Backups", to: ROUTE.ADMIN_TOOL_BACKUPS, icon: "fe fe-download-cloud mr-1", isOcculus: true },
+          { title: "Client Downloads", to: ROUTE.ADMIN_TOOL_CLIENT_FILE_DOWNLOADS, icon: "fe fe-download-cloud mr-1", isOcculus: true },
         ]
       },
       viewerNav: {

@@ -478,3 +478,11 @@ th[role=columnheader]:hover:not(.no-sort):after {
     background-color: transparent !important;
     border: 1px solid transparent !important;
 }
+
+.navbar-nav .nav-link>.fe,
+.navbar-nav .nav-link>.ra,
+.navbar-nav .nav-link>.fa
+{
+    font-size: .8125rem;
+    min-width: 14px !important;
+}

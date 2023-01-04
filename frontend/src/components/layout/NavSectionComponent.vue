@@ -27,6 +27,12 @@
             <i :class="nav.icon" v-if="nav.icon"></i>{{ nav.title }}
             <b-badge class="ml-3" variant="primary" v-if="nav.isAlpha">ALPHA</b-badge>
             <b-badge class="ml-3" variant="primary" v-if="nav.isNew">NEW!</b-badge>
+
+            <b-badge class="ml-2" variant="primary" v-if="nav.isOcculus">
+              <i class="fe fe-eye"></i>
+              Occulus
+            </b-badge>
+
           </router-link>
 
           <!-- external link -->
@@ -39,12 +45,6 @@
             <i :class="nav.icon" v-if="nav.icon"></i>{{ nav.title }}
             <b-badge class="ml-3" variant="primary" v-if="nav.isAlpha">ALPHA</b-badge>
             <b-badge class="ml-3" variant="primary" v-if="nav.isNew">NEW!</b-badge>
-
-            <b-badge class="ml-3" variant="primary" v-if="nav.isOcculus">
-              <i class="fe fe-eye"></i>
-              Occulus
-            </b-badge>
-
           </a>
         </li>
       </ul>
