@@ -276,7 +276,7 @@ const router = new Router({
           component: () => import('./views/admin/configuration/Configuration.vue'),
           children: [
             {
-              path: '/',
+              path: 'settings/worldserver',
               component: () => import('./views/admin/configuration/WorldServerSettings.vue'),
               meta: {title: "World Server Settings"},
             },

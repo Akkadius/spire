@@ -96,6 +96,7 @@
                 </b-badge>
               </router-link>
             </li>
+
             <li class="nav-item" v-if="isInAdmin()">
               <router-link class="nav-link" :to="ROUTE.ADMIN_CONFIGURATION">
                 <i class="ra ra-cog mr-1"></i> Configuration
@@ -106,6 +107,9 @@
                 </b-badge>
               </router-link>
             </li>
+
+            <nav-section-component :config="adminConfigurationNav"/>
+
             <li class="nav-item" v-if="isInAdmin()">
               <router-link class="nav-link" :to="ROUTE.ADMIN_TOOLS">
                 <i class="ra ra-wrench mr-1"></i> Tools
@@ -353,6 +357,20 @@ export default {
           //   isNew: true,
           //   routes: ['loot']
           // },
+        ]
+      },
+      adminConfigurationNav: {
+        label: "Configuration",
+        labelIcon: "ra ra-cog mr-1",
+        routePrefixMatch: "admin/configuration",
+        navs: [
+          { title: "Database", to: ROUTE.ADMIN_CONFIG_DATABASE, icon: "ra ra-cog mr-1" },
+          { title: "Discord", to: ROUTE.ADMIN_CONFIG_DISCORD, icon: "ra ra-cog mr-1" },
+          { title: "Message of the Day", to: ROUTE.ADMIN_CONFIG_MOTD, icon: "ra ra-cog mr-1" },
+          { title: "Server Rules", to: ROUTE.ADMIN_CONFIG_SERVER_RULES, icon: "ra ra-cog mr-1" },
+          { title: "UCS", to: ROUTE.ADMIN_CONFIG_UCS, icon: "ra ra-cog mr-1" },
+          { title: "World Server", to: ROUTE.ADMIN_CONFIG_WORLDSERVER, icon: "ra ra-cog mr-1" },
+          { title: "Zone Server", to: ROUTE.ADMIN_CONFIG_ZONESERVER, icon: "ra ra-cog mr-1" },
         ]
       },
       viewerNav: {

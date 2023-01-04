@@ -7,7 +7,6 @@ import (
 	"github.com/Akkadius/spire/internal/env"
 	"github.com/Akkadius/spire/internal/pathmgmt"
 	"github.com/google/go-github/v41/github"
-	"github.com/k0kubun/pp/v3"
 	"github.com/shirou/gopsutil/v3/process"
 	"github.com/sirupsen/logrus"
 	"io/ioutil"
@@ -132,7 +131,7 @@ func (m *ProcessManagement) Run() error {
 	// run binary
 	go func() {
 		for {
-			pp.Println("Running binary")
+			m.logger.Infof("[Occulus.ProcessManagement] Running binary [%v]\n", downloadPath)
 			cmd := exec.Command(downloadPath, "web", fmt.Sprintf("%v", port))
 			err = cmd.Run()
 			if err != nil {
