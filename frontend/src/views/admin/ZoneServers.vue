@@ -179,9 +179,6 @@ export default {
 
     // state
     updateQueryState() {
-      console.log("update query state")
-      console.log(this.search)
-
       let q = {};
       if (this.search !== "") {
         q.search = this.search
@@ -223,7 +220,6 @@ export default {
     filterZoneList(list) {
       let zoneList = []
       for (let z of list) {
-        console.log(z)
         if (
           z.zone_name.toLowerCase().includes(this.search) ||
           z.zone_long_name.toLowerCase().includes(this.search) ||

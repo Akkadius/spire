@@ -21,9 +21,11 @@
             <div style="max-height: 67vh; overflow-y: scroll">
               <p
                 @click="viewLogTrigger(log)"
-                v-for="log in filteredLogs" :key="log"
+                v-for="log in filteredLogs"
+                :key="log"
+                style="font-size: 14px; color: rgb(35, 100, 210)"
                 class="truncate"
-              >{{ log.split('logs/')[1] }}</p>
+              ><i class="fa fa-file"></i> {{ log.split('logs/')[1] }}</p>
             </div>
 
           </div>
@@ -32,7 +34,9 @@
       </div>
 
       <div class="col-12 col-xl-8">
-        <div class="card">
+        <app-loader :is-loading="!loaded"/>
+
+        <div class="card" v-if="loaded">
           <div class="card-header" v-if="currentLogName">
             {{ currentLogName }}
           </div>
@@ -57,18 +61,18 @@
 </template>
 
 <script>
-import util               from 'util'
 import {EqemuAdminClient} from "@/app/api/eqemu-admin-client-occulus";
 
 export default {
   name: 'Logs',
   data() {
     return {
-      logs: null,
-      filteredLogs: null,
-      filter: null,
-      currentLogName: null,
-      logOutput: null
+      loaded: false,
+      logs: [],
+      filteredLogs: [],
+      filter: "",
+      currentLogName: "",
+      logOutput: ""
     }
   },
   watch: {
@@ -77,13 +81,6 @@ export default {
     }
   },
   async created() {
-    setTimeout(() => {
-      if (document.getElementsByClassName("content-area").length > 0) {
-        const container = document.getElementsByClassName("content-area")[0];
-        container.setAttribute('style', 'max-width: 95% !important');
-      }
-    }, 10)
-
     let r = await EqemuAdminClient.getServerLogs()
     if (r && r.status === 200) {
       this.logs = r.data
@@ -91,12 +88,6 @@ export default {
 
     this.filterLogs()
     this.viewLog()
-  },
-  beforeDestroy() {
-    if (document.getElementsByClassName("content-area").length > 0) {
-      const container          = document.getElementsByClassName("content-area")[0];
-      container.style.maxWidth = null;
-    }
   },
   methods: {
     filterLogs() {
@@ -122,18 +113,26 @@ export default {
       )
     },
     async viewLog() {
-      if (!this.$route.query.log) {
-        return false
-      }
+      this.loaded = false
+      this.logOutput = ""
 
-      const log = this.$route.query.log
+      setTimeout(async () => {
+        if (!this.$route.query.log) {
+          this.loaded = true
+          return false
+        }
 
-      let r = await EqemuAdminClient.getServerLog(log)
-      if (r && r.status === 200) {
-        this.logOutput = r.data.fileContents
-      }
+        const log = this.$route.query.log
 
-      this.currentLogName = log.split('logs/')[1].trim();
+        let r = await EqemuAdminClient.getServerLog(log)
+        if (r && r.status === 200) {
+          this.logOutput = r.data.fileContents
+        }
+
+        this.currentLogName = log.split('logs/')[1].trim();
+
+        this.loaded = true
+      }, 100)
     }
   }
 }
@@ -144,7 +143,6 @@ export default {
   width: 450px !important;
   white-space: nowrap;
   overflow: hidden;
-  color: blue;
   font-size: 14px;
   margin-bottom: 0;
 

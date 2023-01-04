@@ -17,6 +17,7 @@ export const ROUTE = {
   ADMIN_TOOL_BACKUPS: "/admin/tools/backups",
   ADMIN_TOOL_CLIENT_FILE_DOWNLOADS: "/admin/tools/client-assets",
   ADMIN_TOOLS: "/admin/tools",
+  ADMIN_OCCULUS_REQUIRED: "/admin/occulus-required",
   DATABASE_CONNECTION_AUDIT_LOG: "/connection/%s/audit-log",
   CLIENT_FILES: "/client-files",
   DATABASE_CONNECTIONS: "/connections",

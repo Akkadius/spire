@@ -249,90 +249,95 @@ const router = new Router({
 
     // Admin
     {
+      path: ROUTE.ADMIN_OCCULUS_REQUIRED,
+      component: () => import('./views/admin/OcculusRequire.vue'),
+      meta: {title: "Occulus Required" },
+    },
+    {
       path: ROUTE.ADMIN_ROOT,
       component: () => import('./views/admin/layout/AdminLayout.vue'),
       children: [
         {
           path: '/',
           component: () => import('./views/admin/Dashboard.vue'),
-          meta: {title: "Dashboard"},
+          meta: {title: "Dashboard", occulus: true},
         },
         {
           path: 'players-online',
           component: () => import('./views/admin/PlayersOnline.vue'),
-          meta: {title: "Players Online"},
+          meta: {title: "Players Online", occulus: true},
         },
         {
           path: 'zones',
           component: () => import('./views/admin/ZoneServers.vue'),
-          meta: {title: "Zone Servers"},
+          meta: {title: "Zone Servers", occulus: true},
         },
         {
           path: 'zoneservers/:port/netstats',
           component: () => import('./views/admin/NetStats.vue'),
-          meta: {title: "Netstats"},
+          meta: {title: "Netstats", occulus: true},
         },
         {
           path: ROUTE.ADMIN_CONFIG_WORLDSERVER,
           component: () => import('./views/admin/configuration/WorldServerSettings.vue'),
-          meta: {title: "World Server Settings"},
+          meta: {title: "World Server Settings", occulus: true},
         },
         {
           path: ROUTE.ADMIN_CONFIG_ZONESERVER,
           component: () => import('./views/admin/configuration/ZoneServerSettings.vue'),
-          meta: {title: "Zone Server Settings"},
+          meta: {title: "Zone Server Settings", occulus: true},
         },
         {
           path: ROUTE.ADMIN_CONFIG_UCS,
           component: () => import('./views/admin/configuration/UcsSettings.vue'),
-          meta: {title: "UCS Config"},
+          meta: {title: "UCS Config", occulus: true},
         },
         {
           path: ROUTE.ADMIN_CONFIG_DISCORD,
           component: () => import('./views/admin/configuration/DiscordSettings.vue'),
-          meta: {title: "Discord Config"},
+          meta: {title: "Discord Config", occulus: true},
         },
         {
           path: ROUTE.ADMIN_CONFIG_DATABASE,
           component: () => import('./views/admin/configuration/Database.vue'),
-          meta: {title: "Database Config"},
+          meta: {title: "Database Config", occulus: true},
         },
         {
           path: ROUTE.ADMIN_CONFIG_SERVER_RULES,
           component: () => import('./views/admin/configuration/ServerRules.vue'),
-          meta: {title: "Server Rules"},
+          meta: {title: "Server Rules", occulus: true},
         },
         {
           path: ROUTE.ADMIN_CONFIG_MOTD,
           component: () => import('./views/admin/configuration/Motd.vue'),
-          meta: {title: "Message of the Day"},
+          meta: {title: "Message of the Day", occulus: true},
         },
 
         // tools
         {
           path: ROUTE.ADMIN_TOOL_LOGS,
           component: () => import('./views/admin/tools/Logs.vue'),
-          meta: {title: "Server Logs"},
+          meta: {title: "Server Logs", occulus: true},
         },
         {
           path: ROUTE.ADMIN_TOOL_BACKUPS,
           component: () => import('./views/admin/tools/Backups.vue'),
-          meta: {title: "Backups"},
+          meta: {title: "Backups", occulus: true},
         },
         {
           path: ROUTE.ADMIN_TOOL_SERVER_CODE,
           component: () => import('./views/admin/tools/ServerCode.vue'),
-          meta: {title: "Code Management"},
+          meta: {title: "Code Management", occulus: true },
         },
         {
           path: ROUTE.ADMIN_TOOL_SERVER_QUESTS,
           component: () => import('./views/admin/tools/ServerQuests.vue'),
-          meta: {title: "Quests Management"},
+          meta: {title: "Quests Management", occulus: true},
         },
         {
           path: ROUTE.ADMIN_TOOL_CLIENT_FILE_DOWNLOADS,
           component: () => import('./views/admin/tools/ClientAssets.vue'),
-          meta: {title: "Client Asset Management"},
+          meta: {title: "Client Asset Management", occulus: true},
         },
       ]
     },
@@ -379,6 +384,16 @@ router.beforeEach(async (to, from, next) => {
   // console.log("Middleware from [%s] to [%s]", from, to)
   // console.log(from)
   // console.log(to)
+
+  // when entering routes that require a local installation
+  // and occulus, lets inform the users by landing them
+  // into a notice route
+  // @ts-ignore
+  if (to && to.meta && to.meta.occulus && !AppEnv.isAppLocal) {
+    router.push(ROUTE.ADMIN_OCCULUS_REQUIRED).catch((e) => {
+    })
+  }
+
   // console.log("Is spire initialized", AppEnv.isSpireInitialized())
 
   // ensure appenv has been initialized first

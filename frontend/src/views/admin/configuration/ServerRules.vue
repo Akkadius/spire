@@ -40,7 +40,7 @@
                 >
                   <thead>
                   <tr>
-                    <th class="sorting" tabindex="0" style="width: 60px">ID</th>
+                    <th class="sorting" tabindex="0" style="width: 60px">RID</th>
                     <th class="sorting" tabindex="0" style="width: 320px !important">Rule Name</th>
                     <th class="sorting" tabindex="0" style="width: 250px">Value</th>
                     <th class="sorting" tabindex="0">Description</th>
@@ -50,7 +50,7 @@
 
                   <!-- Loop through rules -->
                   <tr v-for="(rule, index) in filteredRules" :key="index">
-                    <td class="">{{ rule.ruleset_id }}</td>
+                    <td style="text-align: center">{{ rule.ruleset_id }}</td>
                     <td>{{ rule.rule_name }}</td>
 
                     <td>
