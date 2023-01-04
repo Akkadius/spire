@@ -30,16 +30,10 @@
           <div class="col-12">
             <div
               class="card mb-0"
-
             >
-
-              <div class="card-header">
-                Rows ({{ filteredRules.length }})
-              </div>
-
               <div
                 class="table-responsive mb-0"
-                style="max-height: 55vh; overflow-y: scroll"
+                style="max-height: 61vh; overflow-y: scroll"
               >
                 <table
                   class="table table-sm table-nowrap card-table rule_table"

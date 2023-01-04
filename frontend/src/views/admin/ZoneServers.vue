@@ -4,14 +4,21 @@
 
     <span v-if="zoneList.length === 0 && loaded">Zoneservers are offline</span>
 
-    <div class="mr-4">
-      <input
-        type="text"
-        class="form-control form-control-prepended list-search mb-3"
-        @keyup="updateQueryState"
-        v-model="search"
-        placeholder="Filter zones..."
-      >
+    <div class="card mb-3 mr-4">
+      <div class="card-body pt-0 pb-0 pl-3 pr-3">
+        <div class="input-group input-group-flush">
+          <div class="input-group-prepend">
+            <span class="input-group-text"><i class="fe fe-search"></i></span>
+          </div>
+          <input
+            class="list-search form-control"
+            type="search"
+            @keyup="updateQueryState"
+            v-model="search"
+            placeholder="Filter zones..."
+          >
+        </div>
+      </div>
     </div>
 
     <div style="max-height: 80vh; overflow-y: scroll">
