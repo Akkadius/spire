@@ -39,9 +39,12 @@ func NewProcessManagement(pathmgmt *pathmgmt.PathManagement, logger *logrus.Logg
 		logger:   logger,
 	}
 
-	err := i.Run()
-	if err != nil {
-		logger.Error(err)
+	// only run Occulus initialization in local environment
+	if env.IsAppEnvLocal() {
+		err := i.Run()
+		if err != nil {
+			logger.Error(err)
+		}
 	}
 
 	return i

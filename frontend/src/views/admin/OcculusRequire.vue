@@ -4,7 +4,7 @@
 
     <div class="main-content">
       <content-area class="text-center fade-in">
-        <h1 class="eq-header mt-8">
+        <h1 class="eq-header mt-8" style="font-size: 120px">
           Occulus
         </h1>
 
