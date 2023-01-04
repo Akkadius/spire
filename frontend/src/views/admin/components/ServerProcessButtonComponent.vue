@@ -43,7 +43,6 @@
       ok-title="Start Server"
       @ok="startServer"
     >
-
       <p class="pt-3 pb-3">Are you sure you want to start server?</p>
 
       <LauncherOptions :launcherConfig="launcher"></LauncherOptions>
@@ -126,7 +125,7 @@ export default {
   data() {
     return {
       delayedRestart: 0,
-      launcher: null,
+      launcher: {},
     }
   },
   async mounted() {

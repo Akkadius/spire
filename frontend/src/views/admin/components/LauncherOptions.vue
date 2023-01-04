@@ -19,7 +19,6 @@
           name="check-button"
           switch
           class="custom-control custom-switch"
-
           @change="saveLauncherOptions()"
         >
           Run Loginserver
@@ -54,6 +53,9 @@
           runQueryServ: false
         }
       }
+    },
+    created() {
+      this.launcher = this.launcherConfig
     },
     watch: {
       launcherConfig: function (newValue) {

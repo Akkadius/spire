@@ -528,7 +528,6 @@ export default {
     },
 
     handleRouteChange() {
-      console.log("route change", this.$route.path)
       this.setSidebarStyle()
     },
     handleAppAlphaEnabled() {
