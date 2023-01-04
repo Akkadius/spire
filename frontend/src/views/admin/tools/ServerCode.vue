@@ -34,7 +34,7 @@
       <div class="card-footer bg-dark pb-0" v-if="buildOutput">
         <pre
           id="build-output" class="highlight html bg-dark hljs xml mb-0"
-          style="color: #569CD6; height: 55vh; overflow-y: scroll"
+          style="color: #569CD6; height: 66vh; overflow-y: scroll"
         >
 {{ buildOutput }}
         </pre>

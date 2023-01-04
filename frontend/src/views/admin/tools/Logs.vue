@@ -8,7 +8,7 @@
           <div class="card-header">
             Logs
           </div>
-          <div class="card-body">
+          <div class="card-body p-3">
 
             <input
               type="text"
@@ -18,7 +18,7 @@
               v-model="filter"
             >
 
-            <div style="max-height: 56vh; overflow-y: scroll">
+            <div style="max-height: 67vh; overflow-y: scroll">
               <p
                 @click="viewLogTrigger(log)"
                 v-for="log in filteredLogs" :key="log"
@@ -43,7 +43,7 @@
           <div class="card-footer bg-dark pb-0 p-0" v-if="logOutput">
             <pre
               id="log-output" class="highlight html bg-dark hljs xml mb-0"
-              style="color: #569CD6; max-height: 67vh; overflow-y: scroll"
+              style="color: #569CD6; max-height: 76vh; overflow-y: scroll"
             >{{ logOutput }}
             </pre>
           </div>
