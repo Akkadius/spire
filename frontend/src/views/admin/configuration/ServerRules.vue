@@ -17,31 +17,39 @@
     </div>
 
     <div class="card">
-      <div class="card-body">
-          <input
-            type="text"
-            class="form-control form-control-prepended list-search mb-3"
-            @keyup="filterRules"
-            v-model="ruleFilter"
-            placeholder="Search rules..."
-          >
+      <div class="card-body p-3">
+        <input
+          type="text"
+          class="form-control form-control-prepended list-search mb-3"
+          @keyup="updateQueryState()"
+          v-model="search"
+          placeholder="Search rules..."
+        >
 
         <div class="row">
           <div class="col-12">
-            <div class="card">
+            <div
+              class="card mb-0"
+
+            >
 
               <div class="card-header">
                 Rows ({{ filteredRules.length }})
               </div>
 
-              <div class="table-responsive mb-0">
-                <table class="table table-sm table-nowrap card-table" style="table-layout: fixed;">
+              <div
+                class="table-responsive mb-0"
+                style="max-height: 57vh; overflow-y: scroll"
+              >
+                <table
+                  class="table table-sm table-nowrap card-table rule_table"
+                >
                   <thead>
-                  <tr role="row">
+                  <tr>
                     <th class="sorting" tabindex="0" style="width: 60px">ID</th>
-                    <th class="sorting" tabindex="0" style="width: 300px !important">Rule Name</th>
-                    <th class="sorting" tabindex="0" style="width: 300px">Description</th>
-                    <th class="sorting" tabindex="0">Value</th>
+                    <th class="sorting" tabindex="0" style="width: 320px !important">Rule Name</th>
+                    <th class="sorting" tabindex="0" style="width: 250px">Value</th>
+                    <th class="sorting" tabindex="0">Description</th>
                   </tr>
                   </thead>
                   <tbody>
@@ -51,26 +59,20 @@
                     <td class="">{{ rule.ruleset_id }}</td>
                     <td>{{ rule.rule_name }}</td>
 
-                    <td class="text-muted" style="overflow: auto; white-space: normal;">
-                      {{ rule.notes }}
-                    </td>
-
                     <td>
 
                       <label
                         class="pb-2 pt-2"
                         v-if="rule.rule_value === 'true' || rule.rule_value === 'false'"
                       >
-                        <input
-                          type="checkbox"
-                          name="custom-switch-checkbox"
-                          v-bind:true-value="'true'"
-                          v-bind:false-value="'false'"
+                        <b-form-checkbox
+                          value="true"
+                          unchecked-value="false"
+                          :checked="rule.rule_value"
                           v-model="rule.rule_value"
                           @change="updateRule(rule)"
-                          class="custom-switch-input"
-                        >
-                        <span class="custom-switch-indicator"></span>
+                          switch
+                        />
                       </label>
 
                       <span v-if="!(rule.rule_value === 'true' || rule.rule_value === 'false')">
@@ -82,6 +84,10 @@
                   </span>
 
                       <!-- {{rule.rule_value}} -->
+                    </td>
+
+                    <td class="text-muted" style="overflow: auto; white-space: normal;">
+                      {{ rule.notes }}
                     </td>
 
                   </tr>
@@ -98,23 +104,59 @@
 
 <script>
 import {EqemuAdminClient} from "@/app/api/eqemu-admin-client-occulus";
+import {ROUTE}            from "@/routes";
 
 export default {
   data() {
     return {
-      rules: null,
-      filteredRules: null,
+      search: "",
+
+      rules: [],
+      filteredRules: [],
       loaded: false,
-      ruleFilter: null
     }
   },
+
+  watch: {
+    search: {
+      handler() {
+        this.filterRules()
+      },
+    },
+  },
+
   async created() {
     this.rules = await EqemuAdminClient.getServerRules();
     this.filterRules();
     this.loaded = true;
     // this.initTable()
+
+    this.loadQueryState()
   },
   methods: {
+
+    updateQueryState() {
+      let q = {};
+
+      if (this.search !== "") {
+        q.search = this.search
+      }
+
+      this.$router.push(
+        {
+          path: ROUTE.ADMIN_CONFIG_SERVER_RULES,
+          query: q
+        }
+      ).catch(() => {
+      })
+    },
+
+    loadQueryState() {
+      if (this.$route.query.search.length > 0) {
+        this.search = this.$route.query.search
+      }
+    },
+
     async updateRule(rule) {
       const response = await EqemuAdminClient.postServerRule(rule);
       if (response.success) {
@@ -122,7 +164,7 @@ export default {
           response.success,
           {
             title: "Rule updated!",
-            toaster: 'b-toaster-bottom-center',
+            toaster: 'b-toaster-bottom-right',
             autoHideDelay: 3000,
             solid: true,
             appendToast: false
@@ -131,7 +173,7 @@ export default {
       }
     },
     filterRules() {
-      if (!this.ruleFilter) {
+      if (!this.search) {
         this.filteredRules = this.rules;
         return;
       }
@@ -139,8 +181,8 @@ export default {
       let filteredRules = [];
       this.rules.forEach(row => {
         if (
-          row.rule_name.toLowerCase().includes(this.ruleFilter.toLowerCase()) ||
-          row.notes.toLowerCase().includes(this.ruleFilter.toLowerCase())
+          row.rule_name.toLowerCase().includes(this.search.toLowerCase()) ||
+          row.notes.toLowerCase().includes(this.search.toLowerCase())
         ) {
           filteredRules.push(row)
         }
@@ -151,3 +193,15 @@ export default {
   }
 }
 </script>
+
+<style>
+.rule_table table {
+  position: relative;
+}
+
+.rule_table thead {
+  position: sticky;
+  top: 0;
+  z-index: 9999;
+}
+</style>

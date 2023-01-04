@@ -479,10 +479,26 @@ th[role=columnheader]:hover:not(.no-sort):after {
     border: 1px solid transparent !important;
 }
 
+/*sets icons to be consistent across the different icon libraries*/
 .navbar-nav .nav-link>.fe,
 .navbar-nav .nav-link>.ra,
 .navbar-nav .nav-link>.fa
 {
     font-size: .8125rem;
     min-width: 14px !important;
+}
+
+/*white cards don't show transparent scrollbars*/
+.card *::-webkit-scrollbar-thumb {
+    background-color: rgb(0 0 0 / 20%);
+}
+
+/*slim up table padding for slim tables*/
+.table-sm td, .table-sm th {
+    padding: 0.5rem;
+}
+
+.table-sm input {
+    height: calc(1em + 1rem) !important;
+    padding: 0.25rem 0.5rem !important;
 }
