@@ -60,11 +60,12 @@ import moment                      from "moment/moment";
 import {DB_CLASSES_ICONS}          from "@/app/constants/eq-class-icon-constants";
 import {DB_RACES_ICONS}            from "@/app/constants/eq-race-icon-constants";
 import PlayerEventDisplayComponent from "@/views/admin/player-event-logs/components/PlayerEventDisplayComponent.vue";
+import {AA}                        from "@/app/aa";
 
 // GM_COMMAND           | [x] Implemented Formatter
 // ZONING               | [x] Implemented Formatter
 // AA_GAIN              | [x] Implemented Formatter
-// AA_PURCHASE          | [] Implemented Formatter
+// AA_PURCHASE          | [x] Implemented Formatter
 // FORAGE_SUCCESS       | [x] Implemented Formatter
 // FORAGE_FAILURE       | [x] Implemented Formatter
 // FISH_SUCCESS         | [x] Implemented Formatter
@@ -74,35 +75,35 @@ import PlayerEventDisplayComponent from "@/views/admin/player-event-logs/compone
 // WENT_OFFLINE         | [x] Implemented Formatter
 // LEVEL_GAIN           | [x] Implemented Formatter
 // LEVEL_LOSS           | [x] Implemented Formatter
-// LOOT_ITEM            | [] Implemented Formatter
+// LOOT_ITEM            | [x] Implemented Formatter
 // MERCHANT_PURCHASE    | [x] Implemented Formatter
 // MERCHANT_SELL        | [x] Implemented Formatter
-// GROUP_JOIN           | [] Implemented Formatter
-// GROUP_LEAVE          | [] Implemented Formatter
-// RAID_JOIN            | [] Implemented Formatter
-// RAID_LEAVE           | [] Implemented Formatter
-// GROUNDSPAWN_PICKUP   | [] Implemented Formatter
+// GROUP_JOIN           | [] Implemented Formatter - not implemented in server
+// GROUP_LEAVE          | [] Implemented Formatter - not implemented in server
+// RAID_JOIN            | [] Implemented Formatter - not implemented in server
+// RAID_LEAVE           | [] Implemented Formatter - not implemented in server
+// GROUNDSPAWN_PICKUP   | [x] Implemented Formatter
 // NPC_HANDIN           | [] Implemented Formatter
 // SKILL_UP             | [x] Implemented Formatter
-// TASK_ACCEPT          | [] Implemented Formatter
+// TASK_ACCEPT          | [x] Implemented Formatter
 // TASK_UPDATE          | [] Implemented Formatter
 // TASK_COMPLETE        | [] Implemented Formatter
 // TRADE                | [] Implemented Formatter
 // GIVE_ITEM            | [] Implemented Formatter
 // SAY                  | [x] Implemented Formatter
 // REZ_ACCEPTED         | [] Implemented Formatter
-// DEATH                | [] Implemented Formatter
-// COMBINE_FAILURE      | [] Implemented Formatter
-// COMBINE_SUCCESS      | [] Implemented Formatter
-// DROPPED_ITEM         | [] Implemented Formatter
+// DEATH                | [x] Implemented Formatter
+// COMBINE_FAILURE      | [x] Implemented Formatter
+// COMBINE_SUCCESS      | [x] Implemented Formatter
+// DROPPED_ITEM         | [x] Implemented Formatter
 // SPLIT_MONEY          | [] Implemented Formatter
-// DZ_JOIN              | [] Implemented Formatter
-// DZ_LEAVE             | [] Implemented Formatter
+// DZ_JOIN              | [] Implemented Formatter - not implemented in server
+// DZ_LEAVE             | [] Implemented Formatter - not implemented in server
 // TRADER_PURCHASE      | [] Implemented Formatter
 // TRADER_SELL          | [] Implemented Formatter
-// BANDOLIER_CREATE     | [] Implemented Formatter
-// BANDOLIER_SWAP       | [] Implemented Formatter
-// DISCOVER_ITEM        | [] Implemented Formatter
+// BANDOLIER_CREATE     | [] Implemented Formatter - not implemented in server
+// BANDOLIER_SWAP       | [] Implemented Formatter - not implemented in server
+// DISCOVER_ITEM        | [x] Implemented Formatter
 
 export default {
   name: "PlayerEventLogs",
@@ -142,6 +143,8 @@ export default {
     },
   },
   async mounted() {
+    await AA.preLoad()
+
     let builder = (new SpireQueryBuilder())
     builder.includes(
       [
@@ -156,9 +159,12 @@ export default {
     // @ts-ignore
     const api = (new PlayerEventLogApi(...SpireApi.cfg()))
     const r   = await api.listPlayerEventLogs(builder.get())
+    let events = []
     if (r.status === 200) {
-      this.events = r.data
+      events = r.data
     }
+
+    this.events = events
   }
 }
 </script>

@@ -31,7 +31,7 @@ const (
 	lesserThanEqual  = "_lte_"
 )
 
-const defaultLimit = 10000
+const defaultLimit = 1000
 
 func (d *DatabaseResolver) QueryContext(model models.Modelable, c echo.Context) *gorm.DB {
 	query := d.Get(model, c).Table(model.TableName())

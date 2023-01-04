@@ -20,7 +20,7 @@ export class SpireQueryBuilder {
   private groupBys: string[]      = [];
   private includesParam: string[] = [];
   private orderDirections: string = "";
-  private limitParam: number      = 1000;
+  private limitParam: number      = 0;
   private pageParam: number       = 0;
 
   translateOperator(operator) {
@@ -158,7 +158,9 @@ export class SpireQueryBuilder {
       request.page = (this.pageParam - 1)
     }
 
-    request.limit = this.limitParam
+    if (this.limitParam) {
+      request.limit = this.limitParam
+    }
 
     return request
   }

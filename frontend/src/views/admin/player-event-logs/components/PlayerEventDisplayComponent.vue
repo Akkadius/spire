@@ -48,6 +48,40 @@
       <item-popover :item="itemData[event(e).item_id]" class="ml-1 d-inline-block"/>
     </div>
 
+    <div v-if="e.event_type_id === PLAYER_EVENT.COMBINE_FAILURE">
+      Failed to combine recipe <span class="font-weight-bold">{{ event(e).recipe_name }}</span>
+      ({{ event(e).recipe_id }})
+      <span v-if="TRADESKILLS[event(e).tradeskill_id]">
+        tradeskill
+        <span class="font-weight-bold">{{ TRADESKILLS[event(e).tradeskill_id] }}</span>
+      </span>
+    </div>
+
+    <div v-if="e.event_type_id === PLAYER_EVENT.COMBINE_SUCCESS">
+      Successfully combined recipe <span class="font-weight-bold">{{ event(e).recipe_name }}</span>
+      ({{ event(e).recipe_id }})
+      <span v-if="TRADESKILLS[event(e).tradeskill_id]">
+        tradeskill
+        <span class="font-weight-bold">{{ TRADESKILLS[event(e).tradeskill_id] }}</span>
+      </span>
+    </div>
+
+    <div v-if="e.event_type_id === PLAYER_EVENT.DROPPED_ITEM">
+      Dropped item
+      <item-popover
+        :item="itemData[event(e).item_id]"
+        class="mr-1 font-weight-bold d-inline-block"
+      />({{event(e).charges}})
+    </div>
+
+    <div v-if="e.event_type_id === PLAYER_EVENT.DISCOVER_ITEM">
+      Discover item
+      <item-popover
+        :item="itemData[event(e).item_id]"
+        class="mr-1 font-weight-bold d-inline-block"
+      />
+    </div>
+
     <div v-if="e.event_type_id === PLAYER_EVENT.MERCHANT_SELL">
       Sold
       <item-popover :item="itemData[event(e).item_id]" class="ml-1 font-weight-bold d-inline-block"/>
@@ -119,22 +153,72 @@
       </span>
     </div>
 
+    <div v-if="e.event_type_id === PLAYER_EVENT.AA_GAIN">
+      Gained <span class="font-weight-bold">{{ event(e).aa_gained }}</span> AA point(s)
+    </div>
+
     <div v-if="e.event_type_id === PLAYER_EVENT.AA_PURCHASE">
-      Purchased AA rank
+      Purchased AA <span class="font-weight-bold">{{ getAADescription(event(e).aa_id) }}</span>
 
-      <span
-        v-if="aaData[event(e).aa_id].aa_ability && aaData[event(e).aa_id].aa_ability.name"
-        class="font-weight-bold">{{ aaData[event(e).aa_id].aa_ability.name }}</span>
-
-      <spell-popover
+      <span v-if="aaData[event(e).aa_id] && aaData[event(e).aa_id].spells_new">
+      (<spell-popover
         v-if="aaData[event(e).aa_id] && aaData[event(e).aa_id].spells_new"
         class="ml-1 font-weight-bold"
         size="20"
         :spell="aaData[event(e).aa_id].spells_new"
-      />
+      />)
+        </span>
       at cost
       <span class="font-weight-bold">{{ event(e).aa_cost }}</span>
     </div>
+
+    <div v-if="e.event_type_id === PLAYER_EVENT.LOOT_ITEM">
+      Looted
+      <item-popover :item="itemData[event(e).item_id]" class="ml-1 font-weight-bold d-inline-block"/>
+      ({{ event(e).charges }})
+      from
+      <npc-popover :npc="npcData[event(e).npc_id]" :show-image="false" class="d-inline-block font-weight-bold"/>
+    </div>
+
+    <div v-if="e.event_type_id === PLAYER_EVENT.GROUNDSPAWN_PICKUP">
+      Picked up
+      <item-popover :item="itemData[event(e).item_id]" class="ml-1 font-weight-bold d-inline-block"/>
+      ({{ event(e).charges }})
+      from the ground!
+    </div>
+
+    <div v-if="e.event_type_id === PLAYER_EVENT.GROUNDSPAWN_PICKUP">
+      Picked up
+      <item-popover :item="itemData[event(e).item_id]" class="ml-1 font-weight-bold d-inline-block"/>
+      ({{ event(e).charges }})
+      from the ground!
+    </div>
+
+    <div v-if="e.event_type_id === PLAYER_EVENT.TASK_ACCEPT">
+      Accepted task <span class="font-weight-bold">{{ event(e).task_name }}</span> ({{ event(e).task_id }})
+      <span v-if="event(e).npc_id">
+      from
+        <npc-popover
+          :npc="npcData[event(e).npc_id]"
+          :show-image="false"
+          class="d-inline-block font-weight-bold"
+          v-if="event(e).npc_id"
+        />
+      </span>
+    </div>
+
+    <div v-if="e.event_type_id === PLAYER_EVENT.DEATH">
+      Died
+      <span v-if="event(e).killer_id">
+      by
+        <span
+          class="font-weight-bold"
+          v-if="event(e).killer_id && !npcData[event(e).killer_id]"
+        >{{ event(e).killer_name }}
+        </span>
+      </span>
+    </div>
+
 
   </div>
 </template>
@@ -151,6 +235,7 @@ import EqCashDisplay  from "@/components/eq-ui/EqCashDisplay.vue";
 import {Zones}        from "@/app/zones";
 import {AA}           from "@/app/aa";
 import SpellPopover   from "@/components/SpellPopover.vue";
+import {TRADESKILLS}  from "@/app/constants/eq-tradeskill-constants";
 
 export default {
   name: "PlayerEventDisplayComponent",
@@ -162,6 +247,7 @@ export default {
     return {
       PLAYER_EVENT: PLAYER_EVENT,
       DB_SKILLS: DB_SKILLS,
+      TRADESKILLS: TRADESKILLS,
 
       itemData: {},
       npcData: {},
@@ -190,6 +276,14 @@ export default {
     this.$forceUpdate()
   },
   methods: {
+    getAADescription(rankId) {
+      const r = AA.getAARankByRankId(rankId)
+      if (r && r.id > 0) {
+        return AA.getAANameDbString(r.title_sid).value
+      }
+
+      return ""
+    },
     async getItem(itemId) {
       return await Items.getItem(itemId)
     },

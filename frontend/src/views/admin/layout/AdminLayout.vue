@@ -43,6 +43,7 @@ export default {
   },
   mounted() {
     setTimeout(() => {
+      // @ts-ignore
       this.isLocal = AppEnv.isAppLocal()
     }, 100)
   },
