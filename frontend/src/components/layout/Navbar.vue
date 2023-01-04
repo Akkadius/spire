@@ -87,7 +87,7 @@
               </router-link>
             </li>
             <li class="nav-item" v-if="isInAdmin()">
-              <router-link class="nav-link" :to="ROUTE.ADMIN_ZONE_SERVERS" exact>
+              <router-link class="nav-link" :to="ROUTE.ADMIN_ZONE_SERVERS">
                 <i class="ra ra-tower mr-1"></i> Zone Servers
 
                 <b-badge class="ml-3" variant="primary">

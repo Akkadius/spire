@@ -2,38 +2,42 @@
   <div>
     <app-loader :is-loading="!loaded"></app-loader>
 
-    <div class="row row-cards" v-if="loaded">
-      <dashboard-counter name="Accounts" icon="user" :counter="kFormatter(stats.accounts)"/>
-      <dashboard-counter name="Characters" icon="user" :counter="kFormatter(stats.characters)"/>
-      <dashboard-counter name="Guilds" icon="shield" :counter="kFormatter(stats.guilds)"/>
-    </div>
+    <div style="max-height: 85vh; overflow-y: scroll; overflow-x: hidden">
+      <div class="row row-cards" v-if="loaded">
+        <dashboard-counter name="Accounts" icon="user" :counter="kFormatter(stats.accounts)"/>
+        <dashboard-counter name="Characters" icon="user" :counter="kFormatter(stats.characters)"/>
+        <dashboard-counter name="Guilds" icon="shield" :counter="kFormatter(stats.guilds)"/>
+      </div>
 
-    <div class="row row-cards" v-if="loaded">
-      <dashboard-counter name="Items" icon="award" :counter="kFormatter(stats.items)"/>
-      <dashboard-counter name="NPCs" icon="gitlab" :counter="kFormatter(stats.npcs)"/>
-      <dashboard-counter name="Server Uptime" :counter="stats.uptime"/>
-    </div>
+      <div class="row row-cards" v-if="loaded">
+        <dashboard-counter name="Items" icon="award" :counter="kFormatter(stats.items)"/>
+        <dashboard-counter name="NPCs" icon="gitlab" :counter="kFormatter(stats.npcs)"/>
+        <dashboard-counter name="Server Uptime" :counter="stats.uptime"/>
+      </div>
 
-    <div class="row row-cards" v-if="loaded">
-      <div class="col-lg-6">
+      <div class="row row-cards" v-if="loaded">
+        <div class="col-lg-6">
 
-        <div class="row">
-          <div class="col-sm-6 col-lg-6">
-            <dashboard-process-counts/>
-            <dashboard-system-info :sysinfo="sysinfo"/>
+          <div class="row">
+            <div class="col-sm-6 col-lg-6">
+              <dashboard-process-counts/>
+              <dashboard-system-info :sysinfo="sysinfo"/>
+            </div>
+            <div class="col-sm-6 col-lg-6">
+              <dashboard-cpu-info :sysinfo="sysinfo"/>
+            </div>
           </div>
-          <div class="col-sm-6 col-lg-6">
-            <dashboard-cpu-info :sysinfo="sysinfo"/>
-          </div>
+
         </div>
 
-      </div>
-
-      <!-- Right side -->
-      <div class="col-lg-6">
-        <players-online-component/>
+        <!-- Right side -->
+        <div class="col-lg-6">
+          <players-online-component/>
+        </div>
       </div>
     </div>
+
+
   </div>
 </template>
 

@@ -4,129 +4,144 @@
 
     <span v-if="zoneList.length === 0 && loaded">Zoneservers are offline</span>
 
-    <div
-      :class="['card', 'mb-3']"
-      v-if="processStats[zone.zone_os_pid]"
-      v-for="zone in zoneList"
+    <input
+      type="text"
+      class="form-control form-control-prepended list-search mb-3"
+      @keyup="updateQueryState"
+      v-model="search"
+      placeholder="Filter zones..."
     >
+
+    <div style="max-height: 85vh; overflow-y: scroll">
       <div
-        :class="['card-body', 'lift', 'btn-default', 'card-slim']"
-        style="box-shadow: 0 2px 4px 0 rgba(30,55,90,.1);"
+        :class="['card', 'mb-3']"
+        v-if="processStats[zone.zone_os_pid]"
+        v-for="zone in filterZoneList(zoneList)"
       >
-        <div class="row align-items-center">
+        <div
+          :class="['card-body', 'lift', 'btn-default', 'card-slim']"
+          style="box-shadow: 0 2px 4px 0 rgba(30,55,90,.1);"
+        >
+          <div class="row align-items-center">
 
-          <div class="col ml-n1">
-            <h4 class="mb-1">
+            <div class="col ml-n1">
+              <h4 class="mb-1">
 
-              <span class="h2 fe text-muted mb-0 fe-layers mr-3"></span>
+                <span class="h2 fe text-muted mb-0 fe-layers mr-3"></span>
 
-              <a href="#" style="color:#2364d2;font-weight:200;font-size: 18px;" v-if="zone.zone_long_name">
-                {{ formatZoneName(zone.zone_long_name ? zone.zone_long_name : 'Standby Zone') }}
-              </a>
+                <a href="#" style="color:#2364d2;font-weight:200;font-size: 18px;" v-if="zone.zone_long_name">
+                  {{ formatZoneName(zone.zone_long_name ? zone.zone_long_name : 'Standby Zone') }}
+                </a>
 
-              <span style="color:#666;font-weight:200;font-size: 18px;" class="text-muted" v-if="!zone.zone_long_name">
+                <span style="color:#666;font-weight:200;font-size: 18px;" class="text-muted" v-if="!zone.zone_long_name">
                 Ready for players...
               </span>
 
-              <router-link
-                class="text-muted ml-2"
-                :to="`zoneservers/${zone.client_port}/logs`"
-                style="font-size:12px"
-              >
-                <i class="fe fe-play"></i> Stream Logs
-              </router-link>
+                <router-link
+                  class="text-muted ml-2"
+                  :to="`zoneservers/${zone.client_port}/logs`"
+                  style="font-size:12px"
+                >
+                  <i class="fe fe-play"></i> Stream Logs
+                </router-link>
 
-              <router-link
-                class="text-muted ml-2"
-                :to="`zoneservers/${zone.client_port}/netstats`"
-                style="font-size:12px"
-              >
-                <i class="fe fe-airplay"></i> Network Stats
-              </router-link>
+                <router-link
+                  class="text-muted ml-2"
+                  :to="`zoneservers/${zone.client_port}/netstats`"
+                  style="font-size:12px"
+                >
+                  <i class="fe fe-airplay"></i> Network Stats
+                </router-link>
 
-            </h4>
-          </div>
+              </h4>
+            </div>
 
-          <div class="col-auto" v-if="zone.zone_name">
-            <p class="card-text small text-muted mb-1 mt-2">
+            <div class="col-auto" v-if="zone.zone_name">
+              <p class="card-text small text-muted mb-1 mt-2">
               <span class="text-muted ml-2" style="font-size:12px">
                   {{ formatZoneName(zone.zone_name) }}
                   ({{ zone.zone_id }})
                   <span v-if="zone.instance_id">Instance: {{ zone.instance_id }}</span>
                 </span>
-            </p>
-          </div>
+              </p>
+            </div>
 
-          <div class="col-auto">
-            <p class="card-text small text-muted mb-1 mt-2">
+            <div class="col-auto">
+              <p class="card-text small text-muted mb-1 mt-2">
               <span class="text-muted ml-2" style="font-size:12px">
                   {{ zone.is_static_zone === true ? 'Static' : 'Dynamic' }}
               </span>
-            </p>
+              </p>
+            </div>
+
+            <div class="col-auto">
+              <p class="card-text small text-muted mb-1 mt-2">
+                <i class="fe fe-proc"></i> PID {{ zone.zone_os_pid }}
+              </p>
+            </div>
+
+            <div class="col-auto">
+              <p class="card-text small text-muted mb-1 mt-2">
+                <i class="fe fe-cloud"></i> Port {{ zone.client_port }}
+              </p>
+            </div>
+
+
+            <div class="col-auto">
+              <p class="card-text small text-muted mb-1 mt-2">
+                <i class="fe fe-users"></i> {{ zone.number_players }}
+              </p>
+            </div>
+
+            <div class="col-auto">
+              <p class="card-text small text-muted mb-1 mt-2" v-if="processStats[zone.zone_os_pid]">
+                <i class="fe fe-cpu"></i> {{ parseFloat(processStats[zone.zone_os_pid].cpu).toFixed(2) }} %
+              </p>
+            </div>
+
+            <div class="col-auto">
+              <p class="card-text small text-muted mb-1 mt-2" v-if="processStats[zone.zone_os_pid]">
+                {{ parseFloat(processStats[zone.zone_os_pid].memory / 1024 / 1024).toFixed(2) }}MB
+              </p>
+            </div>
+
+            <div class="col-auto">
+              <p class="card-text small text-muted mb-1 mt-2" v-if="processStats[zone.zone_os_pid]">
+                <i class="fe fe-clock"></i>
+                {{ parseFloat(processStats[zone.zone_os_pid].elapsed / 1000 / 60 / 60).toFixed(2) }}h
+              </p>
+            </div>
+
+            <div class="col-auto">
+              <a
+                class="text-muted"
+                href="javascript:void(0)"
+                @click="killZone(zone.zone_os_pid)"
+                style="font-size:12px"
+              >
+                <i class="fa fa-power-off"></i> Kill Zone
+              </a>
+            </div>
+
           </div>
-
-          <div class="col-auto">
-            <p class="card-text small text-muted mb-1 mt-2">
-              <i class="fe fe-proc"></i> PID {{ zone.zone_os_pid }}
-            </p>
-          </div>
-
-          <div class="col-auto">
-            <p class="card-text small text-muted mb-1 mt-2">
-              <i class="fe fe-cloud"></i> Port {{ zone.client_port }}
-            </p>
-          </div>
-
-
-          <div class="col-auto">
-            <p class="card-text small text-muted mb-1 mt-2">
-              <i class="fe fe-users"></i> {{ zone.number_players }}
-            </p>
-          </div>
-
-          <div class="col-auto">
-            <p class="card-text small text-muted mb-1 mt-2" v-if="processStats[zone.zone_os_pid]">
-              <i class="fe fe-cpu"></i> {{ parseFloat(processStats[zone.zone_os_pid].cpu).toFixed(2) }} %
-            </p>
-          </div>
-
-          <div class="col-auto">
-            <p class="card-text small text-muted mb-1 mt-2" v-if="processStats[zone.zone_os_pid]">
-              {{ parseFloat(processStats[zone.zone_os_pid].memory / 1024 / 1024).toFixed(2) }}MB
-            </p>
-          </div>
-
-          <div class="col-auto">
-            <p class="card-text small text-muted mb-1 mt-2" v-if="processStats[zone.zone_os_pid]">
-              <i class="fe fe-clock"></i>
-              {{ parseFloat(processStats[zone.zone_os_pid].elapsed / 1000 / 60 / 60).toFixed(2) }}h
-            </p>
-          </div>
-
-          <div class="col-auto">
-            <a
-              class="text-muted"
-              href="javascript:void(0)"
-              @click="killZone(zone.zone_os_pid)"
-              style="font-size:12px"
-            >
-              <i class="fa fa-power-off"></i> Kill Zone
-            </a>
-          </div>
-
         </div>
       </div>
     </div>
+
+
   </div>
 </template>
 
 <script>
 import {EqemuAdminClient} from "@/app/api/eqemu-admin-client-occulus";
+import {ROUTE}            from "@/routes";
 
 export default {
   name: "ZoneServers",
   data() {
     return {
+      search: "",
+
       zoneList: [],
       processStats: {},
       loaded: false,
@@ -134,16 +149,49 @@ export default {
       chartLoaded: false
     }
   },
+
+  watch: {
+    '$route'() {
+      this.loadQueryState()
+    },
+  },
+
   async created() {
-    let self = this
+    this.loadQueryState()
     this.getZoneList()
-    this.zoneServerLoop = setInterval(function () {
+
+    this.zoneServerLoop = setInterval(() => {
       if (!document.hidden) {
-        self.getZoneList()
+        this.getZoneList()
       }
     }, 1000)
   },
   methods: {
+
+    // state
+    updateQueryState() {
+      console.log("update query state")
+      console.log(this.search)
+
+      let q = {};
+      if (this.search !== "") {
+        q.search = this.search
+      }
+
+      this.$router.push(
+        {
+          path: ROUTE.ADMIN_ZONE_SERVERS,
+          query: q
+        }
+      ).catch(() => {
+      })
+    },
+    loadQueryState() {
+      if (this.$route.query.search && this.$route.query.search.length > 0) {
+        this.search = this.$route.query.search
+      }
+    },
+
     formatZoneName(name) {
       return name.replaceAll("UNKNOWN", "Idle")
     },
@@ -158,10 +206,25 @@ export default {
     async getZoneList() {
       const zoneList = await EqemuAdminClient.getZoneList()
       this.loaded    = true
-      if (zoneList !== null && zoneList.zone_list !== null && Object.keys(zoneList).length > 0 && Object.keys(zoneList.process_stats).length > 0) {
+      if (zoneList && zoneList.zone_list !== null && Object.keys(zoneList).length > 0 && Object.keys(zoneList.process_stats).length > 0) {
         this.zoneList     = zoneList.zone_list
         this.processStats = zoneList.process_stats
       }
+    },
+    filterZoneList(list) {
+      let zoneList = []
+      for (let z of list) {
+        console.log(z)
+        if (
+          z.zone_name.toLowerCase().includes(this.search) ||
+          z.zone_long_name.toLowerCase().includes(this.search) ||
+          z.client_port.toString().includes(this.search)
+        ) {
+          zoneList.push(z)
+        }
+      }
+
+      return zoneList
     }
   },
   destroyed() {

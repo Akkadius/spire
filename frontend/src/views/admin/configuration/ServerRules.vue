@@ -39,7 +39,7 @@
 
               <div
                 class="table-responsive mb-0"
-                style="max-height: 57vh; overflow-y: scroll"
+                style="max-height: 55vh; overflow-y: scroll"
               >
                 <table
                   class="table table-sm table-nowrap card-table rule_table"
@@ -118,10 +118,9 @@ export default {
   },
 
   watch: {
-    search: {
-      handler() {
-        this.filterRules()
-      },
+    '$route'() {
+      this.loadQueryState()
+      this.filterRules()
     },
   },
 
@@ -132,6 +131,7 @@ export default {
     // this.initTable()
 
     this.loadQueryState()
+    this.filterRules()
   },
   methods: {
 
@@ -152,7 +152,7 @@ export default {
     },
 
     loadQueryState() {
-      if (this.$route.query.search.length > 0) {
+      if (this.$route.query.search && this.$route.query.search.length > 0) {
         this.search = this.$route.query.search
       }
     },
