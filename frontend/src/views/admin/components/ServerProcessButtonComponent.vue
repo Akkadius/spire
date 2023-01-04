@@ -190,7 +190,8 @@ export default {
     notify(title, message) {
       this.$bvToast.toast(message, {
         title: title,
-        solid: true
+        solid: true,
+        toaster: 'b-toaster-top-center',
       })
     },
 
