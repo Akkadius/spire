@@ -11,6 +11,7 @@ export const ROUTE = {
   ADMIN_CONFIG_UCS: "/admin/configuration/settings/ucs",
   ADMIN_CONFIG_WORLDSERVER: "/admin/configuration/settings/worldserver",
   ADMIN_CONFIG_ZONESERVER: "/admin/configuration/settings/zoneserver",
+  ADMIN_CONFIG_LOG_SETTINGS: "/admin/configuration/logs",
   ADMIN_TOOL_LOGS: "/admin/tools/logs",
   ADMIN_TOOL_SERVER_CODE: "/admin/tools/server-code",
   ADMIN_TOOL_SERVER_QUESTS: "/admin/tools/server-quests",

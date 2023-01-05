@@ -313,6 +313,12 @@ const router = new Router({
           meta: {title: "Message of the Day", occulus: true},
         },
 
+        {
+          path: ROUTE.ADMIN_CONFIG_LOG_SETTINGS,
+          component: () => import('./views/admin/configuration/LogSettings.vue'),
+          meta: {title: "Log Settings" },
+        },
+
         // tools
         {
           path: ROUTE.ADMIN_TOOL_LOGS,

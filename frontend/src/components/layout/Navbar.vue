@@ -345,6 +345,7 @@ export default {
         navs: [
           { title: "Database", to: ROUTE.ADMIN_CONFIG_DATABASE, icon: "ra ra-book mr-1", isOcculus: true },
           { title: "Discord", to: ROUTE.ADMIN_CONFIG_DISCORD, icon: "ra ra-cog mr-1", isOcculus: true },
+          { title: "Logs", to: ROUTE.ADMIN_CONFIG_LOG_SETTINGS, icon: "ra ra-scroll-unfurled mr-1" },
           { title: "MOTD", to: ROUTE.ADMIN_CONFIG_MOTD, icon: "ra ra-wooden-sign mr-1", isOcculus: true },
           { title: "Server Rules", to: ROUTE.ADMIN_CONFIG_SERVER_RULES, icon: "ra ra-interdiction mr-1", isOcculus: true },
           { title: "UCS", to: ROUTE.ADMIN_CONFIG_UCS, icon: "ra ra-speech-bubbles mr-1", isOcculus: true },
