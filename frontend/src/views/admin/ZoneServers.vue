@@ -48,7 +48,7 @@
 
                 <router-link
                   class="text-muted ml-2"
-                  :to="`zoneservers/${zone.client_port}/logs`"
+                  :to="`zoneservers/${zone.client_port}/logs?zone=${zone.zone_long_name}`"
                   style="font-size:12px"
                 >
                   <i class="fe fe-play"></i> Stream Logs

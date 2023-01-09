@@ -1,7 +1,14 @@
 <template>
-  <div class="col-12">
-    <div class="row">
-      <div class="col-lg-2 order-lg-0 mb-4 p-0">
+  <div class="col-12 p-0">
+
+    <div class="card" v-if="logCategories.length === 0">
+      <div class="card-body">
+          Zone not loaded
+      </div>
+    </div>
+
+    <div class="row" v-if="logCategories.length > 0">
+      <div class="col-lg-2 order-lg-0 mb-4 pr-0">
         <div class="card">
           <div class="card-header">
             <h4>Logging Categories</h4>
@@ -70,7 +77,7 @@ const LOG_STREAM_TRUNCATE_CHARACTER_LENGTH = 300000;
 export default {
   data() {
     return {
-      logCategories: {},
+      logCategories: [],
       logData: '',
       zonePort: 0,
       zoneAttributes: null,
@@ -80,6 +87,16 @@ export default {
     }
   },
   async created() {
+    console.log(this.$route)
+
+    this.$route.meta.title = "Zone Log Streaming"
+    if (this.$route.query.zone) {
+      console.log(this.$route)
+      this.$route.meta.title = `Zone Log Streaming (${this.$route.query.zone})`
+      // this.$forceUpdate()
+      // console.log(this.$route.meta)
+
+    }
 
     this.zonePort = this.$route.params.port
 
@@ -122,10 +139,6 @@ export default {
         this.logData    = logString.substring(0, LOG_STREAM_TRUNCATE_CHARACTER_LENGTH)
       }
     }
-  },
-  beforeDestroy() {
-    const container          = document.getElementsByClassName("content-area")[0];
-    container.style.maxWidth = null;
   },
   destroyed() {
     this.ws.close()
