@@ -21,7 +21,6 @@ require (
 	github.com/labstack/gommon v0.4.0
 	github.com/muesli/termenv v0.13.0
 	github.com/patrickmn/go-cache v2.1.0+incompatible
-	github.com/reiver/go-telnet v0.0.0-20180421082511-9ff0b2ab096e
 	github.com/schollz/progressbar/v3 v3.12.2
 	github.com/shirou/gopsutil/v3 v3.22.12
 	github.com/sirupsen/logrus v1.9.0
@@ -32,6 +31,7 @@ require (
 	github.com/swaggo/swag v1.8.6
 	github.com/valyala/fasttemplate v1.2.1
 	github.com/volatiletech/null/v8 v8.1.2
+	github.com/ziutek/telnet v0.0.0-20180329124119-c3b780dc415b
 	golang.org/x/crypto v0.0.0-20221005025214-4161e89ecf1b
 	golang.org/x/text v0.3.7
 	gopkg.in/yaml.v3 v3.0.1
@@ -73,7 +73,6 @@ require (
 	github.com/pkg/errors v0.9.1 // indirect
 	github.com/pmezard/go-difflib v1.0.0 // indirect
 	github.com/power-devops/perfstat v0.0.0-20210106213030-5aafc221ea8c // indirect
-	github.com/reiver/go-oi v1.0.0 // indirect
 	github.com/rivo/uniseg v0.4.3 // indirect
 	github.com/rogpeppe/go-internal v1.9.0 // indirect
 	github.com/tklauser/go-sysconf v0.3.11 // indirect

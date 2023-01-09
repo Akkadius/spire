@@ -8,6 +8,7 @@ import (
 	"github.com/Akkadius/spire/internal/desktop"
 	"github.com/Akkadius/spire/internal/eqemuanalytics"
 	"github.com/Akkadius/spire/internal/eqemuchangelog"
+	"github.com/Akkadius/spire/internal/eqemuserverapi"
 	"github.com/Akkadius/spire/internal/github"
 	"github.com/Akkadius/spire/internal/influx"
 	"github.com/Akkadius/spire/internal/occulus"
@@ -17,6 +18,7 @@ import (
 	"github.com/Akkadius/spire/internal/serverconfig"
 	"github.com/Akkadius/spire/internal/spire"
 	"github.com/Akkadius/spire/internal/spireuser"
+	"github.com/Akkadius/spire/internal/telnet"
 	"github.com/gertd/go-pluralize"
 	"github.com/google/wire"
 )
@@ -44,4 +46,6 @@ var serviceSet = wire.NewSet(
 	spire.NewInit,
 	occulus.NewProxy,
 	occulus.NewProcessManagement,
+	telnet.NewClient,
+	eqemuserverapi.NewClient,
 )
