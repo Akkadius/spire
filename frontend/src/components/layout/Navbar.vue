@@ -345,7 +345,7 @@ export default {
         navs: [
           { title: "Database", to: ROUTE.ADMIN_CONFIG_DATABASE, icon: "ra ra-book mr-1", isOcculus: true },
           { title: "Discord", to: ROUTE.ADMIN_CONFIG_DISCORD, icon: "ra ra-cog mr-1", isOcculus: true },
-          { title: "Logs", to: ROUTE.ADMIN_CONFIG_LOG_SETTINGS, icon: "ra ra-scroll-unfurled mr-1" },
+          { title: "Log Settings", to: ROUTE.ADMIN_CONFIG_LOG_SETTINGS, icon: "ra ra-scroll-unfurled mr-1" },
           { title: "MOTD", to: ROUTE.ADMIN_CONFIG_MOTD, icon: "ra ra-wooden-sign mr-1", isOcculus: true },
           { title: "Server Rules", to: ROUTE.ADMIN_CONFIG_SERVER_RULES, icon: "ra ra-interdiction mr-1", isOcculus: true },
           { title: "UCS", to: ROUTE.ADMIN_CONFIG_UCS, icon: "ra ra-speech-bubbles mr-1", isOcculus: true },
@@ -358,8 +358,8 @@ export default {
         labelIcon: "ra ra-wrench mr-1",
         routePrefixMatch: "admin/tools",
         navs: [
-          { title: "Logs", to: ROUTE.ADMIN_TOOL_LOGS, icon: "fe fe-book mr-1", isOcculus: true },
           { title: "Code", to: ROUTE.ADMIN_TOOL_SERVER_CODE, icon: "fa fa-code-fork mr-1", isOcculus: true },
+          { title: "File Logs", to: ROUTE.ADMIN_TOOL_LOGS, icon: "fe fe-book mr-1", isOcculus: true },
           { title: "Quests", to: ROUTE.ADMIN_TOOL_SERVER_QUESTS, icon: "fa fa-code-fork mr-1", isOcculus: true },
           { title: "Backups", to: ROUTE.ADMIN_TOOL_BACKUPS, icon: "fe fe-download-cloud mr-1", isOcculus: true },
           { title: "Client Downloads", to: ROUTE.ADMIN_TOOL_CLIENT_FILE_DOWNLOADS, icon: "fe fe-download-cloud mr-1", isOcculus: true },
