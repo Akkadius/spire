@@ -278,6 +278,11 @@ const router = new Router({
           meta: {title: "Netstats", occulus: true},
         },
         {
+          path: 'zoneservers/:port/logs',
+          component: () => import('./views/admin/ZoneLogs.vue'),
+          meta: {title: "Zone Logs (Streamed)", occulus: true},
+        },
+        {
           path: ROUTE.ADMIN_CONFIG_WORLDSERVER,
           component: () => import('./views/admin/configuration/WorldServerSettings.vue'),
           meta: {title: "World Server Settings", occulus: true},

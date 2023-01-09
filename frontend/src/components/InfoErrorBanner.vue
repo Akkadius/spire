@@ -113,7 +113,6 @@ export default {
       this.localNotification = message
 
       if (this.notificationTimer) {
-        console.log("clearing timeout", this.notificationTimer)
         clearTimeout(this.notificationTimer);
       }
 

@@ -1,7 +1,7 @@
 <template>
   <div class="row">
     <div class="col-12">
-      <div class="card mb-3" v-if="clientList.length > 0">
+      <div class="card mb-3" v-if="clientList.length > 0 && filteredClientList.length > 0 && loaded">
         <div class="card-body pt-0 pb-0 pl-3 pr-3">
           <div class="input-group input-group-flush">
             <div class="input-group-prepend">
@@ -21,11 +21,11 @@
 
       <app-loader :is-loading="!loaded" padding="4"></app-loader>
 
-      <div class="card">
+      <div class="card" v-if="loaded">
         <div
           style="max-height: 78vh; overflow-y: scroll"
           class="table-responsive mb-0"
-          v-if="filteredClientList"
+          v-if="filteredClientList && Object.keys(filteredClientList).length > 0 && loaded"
         >
           <div
             v-if="Object.keys(filteredClientList).length > listLimitSize && !fullList"
@@ -39,7 +39,7 @@
           </div>
 
           <div
-            v-if="Object.keys(filteredClientList).length > 0 && ((Object.keys(filteredClientList).length < listLimitSize && !fullList) || fullList)"
+            v-if="(Object.keys(filteredClientList).length < listLimitSize && !fullList) || fullList"
             class="m-3"
           >
             <h4 class="card-header-title" v-if="loaded">Players Online ({{ clientList ? clientList.length : 0 }})</h4>
