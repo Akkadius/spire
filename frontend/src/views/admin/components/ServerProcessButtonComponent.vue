@@ -60,7 +60,19 @@
       ok-title="Stop Server"
       @ok="stopServer"
     >
-      Are you sure you want to stop your server?
+      <p class="pt-3 pb-3">Are you sure you want to stop your server?</p>
+
+      <b-card
+        header="Stop Announcement Warning"
+      >
+        <b-card-text>
+          <b-form-radio v-model="delayedStop" name="some-radios" value="0">None</b-form-radio>
+          <b-form-radio v-model="delayedStop" name="some-radios" :value="5 * 60">5 Minute(s)</b-form-radio>
+          <b-form-radio v-model="delayedStop" name="some-radios" :value="10 * 60">10 Minute(s)</b-form-radio>
+          <b-form-radio v-model="delayedStop" name="some-radios" :value="15 * 60">15 Minute(s)</b-form-radio>
+          <b-form-radio v-model="delayedStop" name="some-radios" :value="30 * 60">30 Minute(s)</b-form-radio>
+        </b-card-text>
+      </b-card>
     </b-modal>
 
     <!-- Restart Server -->
@@ -125,6 +137,7 @@ export default {
   data() {
     return {
       delayedRestart: 0,
+      delayedStop: 0,
       launcher: {},
     }
   },
@@ -152,8 +165,13 @@ export default {
       this.$root.$emit('bv::show::modal', 'stop-server-modal')
     },
     stopServer() {
-      EqemuAdminClient.stopServer();
-      this.notify("Server Stopped", "Server has been stopped!");
+      EqemuAdminClient.stopServer({ timer: this.delayedStop });
+      if (this.delayedStop > 0) {
+        this.notify("Server Stopped", "Server delayed stop timer started!");
+      }
+      else {
+        this.notify("Server Stopped", "Server has been stopped!");
+      }
       this.notifyProcessChange()
     },
 

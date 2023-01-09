@@ -39,14 +39,17 @@
           </div>
 
           <div
-            v-if="(Object.keys(filteredClientList).length < listLimitSize && !fullList) || fullList"
+            v-if="Object.keys(filteredClientList).length > 0 && ((Object.keys(filteredClientList).length < listLimitSize && !fullList) || fullList)"
             class="m-3"
           >
             <h4 class="card-header-title" v-if="loaded">Players Online ({{ clientList ? clientList.length : 0 }})</h4>
             <h4 class="card-header-title" v-if="!loaded">Loading...</span></h4>
           </div>
 
-          <table class="table table-sm table-nowrap players-online sticky">
+          <table
+            v-if="Object.keys(filteredClientList).length > 0"
+            class="table table-sm table-nowrap players-online sticky"
+          >
             <thead class="sticky">
             <tr>
               <th style="width: 100px"></th>
@@ -59,7 +62,6 @@
             </thead>
 
             <tbody
-              v-if="Object.keys(filteredClientList).length > 0"
               style="padding: 30px; overflow-y: scroll !important"
             >
 
@@ -158,22 +160,24 @@ export default {
   methods: {
 
     filterPlayers() {
+      this.filteredClientList = []
+
       if (!this.playerSearchFilter) {
         this.filteredClientList = this.clientList;
         return;
       }
 
       let clients = [];
-      this.clientList.forEach(client => {
+      this.clientList.forEach(c => {
         const filter = this.playerSearchFilter.toLowerCase();
 
         if (
-          client.name.toLowerCase().includes(filter) ||
-          (client.server && client.server.zone_long_name.toLowerCase().includes(filter)) ||
-          (client.server && client.server.zone_name.toLowerCase().includes(filter)) ||
-          (client.ip && this.intToIP(client.ip).includes(filter))
+          c.name.toLowerCase().includes(filter) ||
+          (c.server && c.server.zone_long_name.toLowerCase().includes(filter)) ||
+          (c.server && c.server.zone_name.toLowerCase().includes(filter)) ||
+          (c.ip && this.intToIP(c.ip).includes(filter))
         ) {
-          clients.push(client);
+          clients.push(c);
         }
       })
 
@@ -225,6 +229,8 @@ export default {
      * @returns {boolean}
      */
     async buildPlayersOnlineList() {
+      this.filteredClientList = []
+
       this.refreshing     = true
       const apiClientList = await EqemuAdminClient.getWorldClientList()
       this.refreshing     = false

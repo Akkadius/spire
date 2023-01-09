@@ -65,6 +65,9 @@ export default {
     return {
       localNotification: "",
       localError: "",
+
+      notificationTimer: null,
+      errorTimer: null,
     }
   },
   mounted() {
@@ -79,7 +82,7 @@ export default {
     notification: {
       handler(newVal) {
         console.log("[InfoErrorBanner] notification watcher [%s]", this.notification)
-        this.sendNotification(this.notification, 5000)
+        this.sendNotification(this.notification)
         if (this.notification.length > 0) {
           this.dismissError()
         }
@@ -109,8 +112,13 @@ export default {
     sendNotification(message) {
       this.localNotification = message
 
+      if (this.notificationTimer) {
+        console.log("clearing timeout", this.notificationTimer)
+        clearTimeout(this.notificationTimer);
+      }
+
       // dismiss in interval
-      setTimeout(() => {
+      this.notificationTimer = setTimeout(() => {
         this.dismissNotification()
       }, 5000)
     },

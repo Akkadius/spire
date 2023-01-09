@@ -1,6 +1,7 @@
 package occulus
 
 import (
+	"bufio"
 	"context"
 	"fmt"
 	"github.com/Akkadius/spire/internal/download"
@@ -17,6 +18,7 @@ import (
 	"runtime"
 	"strconv"
 	"strings"
+	"time"
 )
 
 type ProcessManagement struct {
@@ -134,9 +136,30 @@ func (m *ProcessManagement) Run() error {
 	// run binary
 	go func() {
 		for {
-			m.logger.Infof("[Occulus.ProcessManagement] Running binary [%v]\n", downloadPath)
-			cmd := exec.Command(downloadPath, "web", fmt.Sprintf("%v", port))
-			err = cmd.Run()
+			time.Sleep(500 * time.Millisecond)
+
+			runPath := downloadPath
+			developmentRunCmd := env.Get("OCCULUS_DEV_CMD", "")
+			if len(developmentRunCmd) > 0 {
+				runPath = developmentRunCmd
+			}
+
+			m.logger.Infof("[Occulus.ProcessManagement] Running binary/command [%v] via port [%v]\n", runPath, port)
+			cmd := exec.Command(runPath, "web", fmt.Sprintf("%v", port))
+
+			stdout, _ := cmd.StdoutPipe()
+			err := cmd.Start()
+			if err != nil {
+				m.logger.Error(err)
+			}
+
+			scanner := bufio.NewScanner(stdout)
+			scanner.Split(bufio.ScanLines)
+			for scanner.Scan() {
+				m.logger.Printf("[Occulus] %v\n", scanner.Text())
+			}
+
+			err = cmd.Wait()
 			if err != nil {
 				m.logger.Error(err)
 			}

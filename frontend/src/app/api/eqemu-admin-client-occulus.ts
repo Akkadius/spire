@@ -162,8 +162,8 @@ export class EqemuAdminClient {
     return this.get('/zoneserver/list')
   }
 
-  static async stopServer() {
-    return this.get('/server/stop')
+  static async stopServer(data: any) {
+    return this.post('/server/stop', data)
   }
 
   static async startServer() {
