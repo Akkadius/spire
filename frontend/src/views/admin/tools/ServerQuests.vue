@@ -33,7 +33,7 @@
 
 <script>
 
-import {EqemuAdminClient} from "@/app/api/eqemu-admin-client-occulus";
+import {OcculusClient} from "@/app/api/eqemu-admin-client-occulus";
 
 export default {
   name: 'ServerQuests',
@@ -52,11 +52,11 @@ export default {
       this.branches      = null
       this.currentBranch = null
 
-      let r = await EqemuAdminClient.getServerQuestsBranches()
+      let r = await OcculusClient.getServerQuestsBranches()
       if (r && r.status === 200) {
         const branchesResult = r.data
 
-        let rcb = (await EqemuAdminClient.getServerQuestsBranch())
+        let rcb = (await OcculusClient.getServerQuestsBranch())
         if (rcb && rcb.status === 200) {
           const currentBranch = rcb.data.trim()
           this.currentBranch  = currentBranch
@@ -77,7 +77,7 @@ export default {
     },
     async setBranch() {
       this.buildOutput = 'One moment...'
-      const result = await EqemuAdminClient.setServerQuestsBranch(this.currentBranch);
+      const result = await OcculusClient.setServerQuestsBranch(this.currentBranch);
       if (result.status === 200) {
         this.buildOutput = result.data
       }

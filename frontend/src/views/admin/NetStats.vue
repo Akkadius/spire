@@ -204,7 +204,7 @@
 </template>
 
 <script>
-import {EqemuAdminClient} from "@/app/api/eqemu-admin-client-occulus";
+import {OcculusClient} from "@/app/api/eqemu-admin-client-occulus";
 
 export default {
   name: 'NetStats',
@@ -232,16 +232,16 @@ export default {
   async created() {
     this.zonePort = this.$route.params.port
 
-    EqemuAdminClient.getZoneAttributes(this.zonePort).then(response => {
+    OcculusClient.getZoneAttributes(this.zonePort).then(response => {
       this.zoneAttributes = response[0]
     })
 
-    EqemuAdminClient.getZoneClientList(this.zonePort).then(response => {
+    OcculusClient.getZoneClientList(this.zonePort).then(response => {
       this.zoneClientList      = response
       this.zoneClientListCount = Object.keys(response).length
     })
 
-    EqemuAdminClient.getZoneNpcList(this.zonePort).then(response => {
+    OcculusClient.getZoneNpcList(this.zonePort).then(response => {
       this.zoneNpcList      = response
       this.zoneNpcListCount = Object.keys(response).length
     })
@@ -281,7 +281,7 @@ export default {
      * Initialize Charts
      * @type {string}
      */
-    const data = await EqemuAdminClient.getZoneNetstatChartData(this.zonePort)
+    const data = await OcculusClient.getZoneNetstatChartData(this.zonePort)
 
     this.$options.chart_packet_types_sent = c3.generate(
       $.extend(chart_base_config, {
@@ -379,7 +379,7 @@ export default {
   },
   methods: {
     getClientNetstats() {
-      EqemuAdminClient.getZoneClientNetstats(this.zonePort).then(data => {
+      OcculusClient.getZoneClientNetstats(this.zonePort).then(data => {
         $('#client-netstats tbody').empty()
 
         for (var row in data) {
@@ -415,7 +415,7 @@ export default {
       return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')
     },
     refreshCharts() {
-      EqemuAdminClient.getZoneNetstatChartData(this.zonePort).then(data => {
+      OcculusClient.getZoneNetstatChartData(this.zonePort).then(data => {
         this.$options.chart_packet_types_sent.load(data.sent_packet_types)
         this.$options.chart_packet_types_receive.load(data.receive_packet_types)
         this.$options.chart_ping.load(data.ping)

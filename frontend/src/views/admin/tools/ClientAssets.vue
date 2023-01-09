@@ -66,8 +66,8 @@
 </template>
 
 <script>
-import {EqemuAdminClient} from "@/app/api/eqemu-admin-client-occulus";
-import util               from "util";
+import {OcculusClient} from "@/app/api/eqemu-admin-client-occulus";
+import util            from "util";
 
 export default {
   data() {
@@ -77,7 +77,7 @@ export default {
     buildLink(link) {
       return util.format(
         "%s/api/v1/admin/occulus%s",
-        EqemuAdminClient.getBaseUrl(),
+        OcculusClient.getBaseUrl(),
         link,
       )
     }

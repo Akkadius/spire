@@ -97,8 +97,8 @@
 </template>
 
 <script>
-import {EqemuAdminClient} from "@/app/api/eqemu-admin-client-occulus";
-import {ROUTE}            from "@/routes";
+import {OcculusClient} from "@/app/api/eqemu-admin-client-occulus";
+import {ROUTE}         from "@/routes";
 
 export default {
   data() {
@@ -119,7 +119,7 @@ export default {
   },
 
   async created() {
-    this.rules = await EqemuAdminClient.getServerRules();
+    this.rules = await OcculusClient.getServerRules();
     this.filterRules();
     this.loaded = true;
     // this.initTable()
@@ -152,7 +152,7 @@ export default {
     },
 
     async updateRule(rule) {
-      const response = await EqemuAdminClient.postServerRule(rule);
+      const response = await OcculusClient.postServerRule(rule);
       if (response.success) {
         this.$bvToast.toast(
           response.success,

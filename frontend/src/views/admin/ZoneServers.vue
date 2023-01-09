@@ -142,8 +142,8 @@
 </template>
 
 <script>
-import {EqemuAdminClient} from "@/app/api/eqemu-admin-client-occulus";
-import {ROUTE}            from "@/routes";
+import {OcculusClient} from "@/app/api/eqemu-admin-client-occulus";
+import {ROUTE}         from "@/routes";
 
 export default {
   name: "ZoneServers",
@@ -204,13 +204,13 @@ export default {
 
     async killZone(pid) {
       if (confirm("Are you sure that you want to kill this process pid (" + pid + ")?")) {
-        await EqemuAdminClient.killProcessByPid(pid)
+        await OcculusClient.killProcessByPid(pid)
         this.zoneList = []
         this.getZoneList()
       }
     },
     async getZoneList() {
-      const zoneList = await EqemuAdminClient.getZoneList()
+      const zoneList = await OcculusClient.getZoneList()
       this.loaded    = true
       if (zoneList && zoneList.zone_list !== null && Object.keys(zoneList).length > 0 && Object.keys(zoneList.process_stats).length > 0) {
         this.zoneList     = zoneList.zone_list

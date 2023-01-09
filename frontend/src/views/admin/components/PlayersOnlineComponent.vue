@@ -121,7 +121,7 @@ import {DB_CLASSES_ICONS}          from "@/app/constants/eq-class-icon-constants
 import eqClientVersionConstants    from "@/app/constants/eq-client-version-constants";
 import {DB_RACES_ICONS}            from "@/app/constants/eq-race-icon-constants";
 import {ROUTE}                     from "@/routes";
-import {EqemuAdminClient}          from "@/app/api/eqemu-admin-client-occulus";
+import {OcculusClient}             from "@/app/api/eqemu-admin-client-occulus";
 
 export default {
   name: 'PlayersOnlineComponent',
@@ -232,7 +232,7 @@ export default {
       this.filteredClientList = []
 
       this.refreshing     = true
-      const apiClientList = await EqemuAdminClient.getWorldClientList()
+      const apiClientList = await OcculusClient.getWorldClientList()
       this.refreshing     = false
       if (!apiClientList) {
         this.clientList = []

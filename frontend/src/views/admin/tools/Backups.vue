@@ -84,8 +84,8 @@
 </template>
 
 <script>
-import * as util          from 'util'
-import {EqemuAdminClient} from "@/app/api/eqemu-admin-client-occulus";
+import * as util       from 'util'
+import {OcculusClient} from "@/app/api/eqemu-admin-client-occulus";
 
 export default {
   data() {
@@ -140,7 +140,7 @@ export default {
         }
       )
 
-      const response           = await EqemuAdminClient.downloadBackup(backupType)
+      const response           = await OcculusClient.downloadBackup(backupType)
       const contentDisposition = response.request.getResponseHeader('Content-Disposition')
       const fileName           = contentDisposition.match(/"(.*?)"/)[1]
       const url                = window.URL.createObjectURL(response.data)

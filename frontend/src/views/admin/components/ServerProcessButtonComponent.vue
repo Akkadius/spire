@@ -125,8 +125,8 @@
 
 <script>
 
-import {EqemuAdminClient} from "@/app/api/eqemu-admin-client-occulus";
-import {EventBus}         from "@/app/event-bus/event-bus";
+import {OcculusClient} from "@/app/api/eqemu-admin-client-occulus";
+import {EventBus}      from "@/app/event-bus/event-bus";
 import LauncherOptions    from "@/views/admin/components/LauncherOptions.vue";
 
 export default {
@@ -142,7 +142,7 @@ export default {
     }
   },
   async mounted() {
-    const result  = await EqemuAdminClient.getLauncherConfig();
+    const result  = await OcculusClient.getLauncherConfig();
     this.launcher = result.data;
   },
   methods: {
@@ -153,7 +153,7 @@ export default {
       this.$root.$emit('bv::show::modal', 'start-server-modal')
     },
     startServer() {
-      EqemuAdminClient.startServer();
+      OcculusClient.startServer();
       this.notify("Server Start", "Server is starting!");
       this.notifyProcessChange()
     },
@@ -165,7 +165,7 @@ export default {
       this.$root.$emit('bv::show::modal', 'stop-server-modal')
     },
     stopServer() {
-      EqemuAdminClient.stopServer({ timer: this.delayedStop });
+      OcculusClient.stopServer({ timer: this.delayedStop });
       if (this.delayedStop > 0) {
         this.notify("Server Stopped", "Server delayed stop timer started!");
       }
@@ -183,7 +183,7 @@ export default {
       this.delayedRestart = 0;
     },
     restartServer() {
-      EqemuAdminClient.restartServer({ timer: this.delayedRestart });
+      OcculusClient.restartServer({ timer: this.delayedRestart });
       if (this.delayedRestart > 0) {
         this.notify("Server Restarted", "Server restart warning timer has been started!");
       } else {
@@ -200,7 +200,7 @@ export default {
       this.delayedRestart = 0;
     },
     cancelRestartServer() {
-      EqemuAdminClient.cancelRestartServer({ cancel: 1 });
+      OcculusClient.cancelRestartServer({ cancel: 1 });
       this.notify("Server Restart Cancelled", "Server restart has been cancelled");
     },
 

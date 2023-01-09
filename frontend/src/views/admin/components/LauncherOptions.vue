@@ -40,7 +40,7 @@
 
 <script>
 
-  import {EqemuAdminClient} from "@/app/api/eqemu-admin-client-occulus";
+  import {OcculusClient} from "@/app/api/eqemu-admin-client-occulus";
 
   export default {
     name: 'LauncherOptions',
@@ -64,7 +64,7 @@
     },
     methods: {
       saveLauncherOptions () {
-        EqemuAdminClient.postLauncherConfig(this.launcher)
+        OcculusClient.postLauncherConfig(this.launcher)
       }
     }
   }

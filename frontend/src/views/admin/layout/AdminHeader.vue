@@ -22,7 +22,7 @@
 
 <script>
 import ServerProcessButtonComponent from "@/views/admin/components/ServerProcessButtonComponent.vue";
-import {EqemuAdminClient}           from "@/app/api/eqemu-admin-client-occulus";
+import {OcculusClient}              from "@/app/api/eqemu-admin-client-occulus";
 import {EventBus}                   from "@/app/event-bus/event-bus";
 
 export default {
@@ -42,7 +42,7 @@ export default {
   created() {
     EventBus.$on("ROUTE_CHANGE", this.handleRouteChange);
 
-    EqemuAdminClient.getDashboardStats().then(r => {
+    OcculusClient.getDashboardStats().then(r => {
       if (r) {
         this.stats = r
       }

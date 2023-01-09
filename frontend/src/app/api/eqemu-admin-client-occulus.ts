@@ -1,7 +1,7 @@
 import axios, {AxiosRequestConfig} from 'axios'
 import util from "util";
 
-export class EqemuAdminClient {
+export class OcculusClient {
 
   /**
    * Base URL for admin api

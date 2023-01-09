@@ -46,7 +46,7 @@
 </template>
 
 <script>
-import {EqemuAdminClient} from "@/app/api/eqemu-admin-client-occulus";
+import {OcculusClient} from "@/app/api/eqemu-admin-client-occulus";
 
 export default {
   data() {
@@ -56,13 +56,13 @@ export default {
     }
   },
   async created() {
-    this.serverConfig = await EqemuAdminClient.getServerConfig()
+    this.serverConfig = await OcculusClient.getServerConfig()
 
     this.loaded = true
   },
   methods: {
     submitServerConfig: async function () {
-      const result = await EqemuAdminClient.postServerConfig(this.serverConfig)
+      const result = await OcculusClient.postServerConfig(this.serverConfig)
 
       if (result.success) {
         this.$bvToast.toast(

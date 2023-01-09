@@ -46,8 +46,8 @@
 
 <script>
 
-import Timer              from "@/app/timer/timer";
-import {EqemuAdminClient} from "@/app/api/eqemu-admin-client-occulus";
+import Timer           from "@/app/timer/timer";
+import {OcculusClient} from "@/app/api/eqemu-admin-client-occulus";
 
 export default {
   name: 'ServerCode',
@@ -70,11 +70,11 @@ export default {
       this.branches      = null
       this.currentBranch = null
 
-      let r = await EqemuAdminClient.getServerCodeBranches()
+      let r = await OcculusClient.getServerCodeBranches()
       if (r && r.status === 200) {
         const branchesResult = r.data
 
-        let rcb = (await EqemuAdminClient.getServerCodeBranch())
+        let rcb = (await OcculusClient.getServerCodeBranch())
         if (rcb && rcb.status === 200) {
           const currentBranch = rcb.data.trim()
           this.currentBranch  = currentBranch
@@ -95,9 +95,9 @@ export default {
     },
     async buildCode() {
       this.buildOutput = 'Building...'
-      await EqemuAdminClient.setServerCodeBranch(this.currentBranch);
-      await EqemuAdminClient.updateServerCode();
-      EqemuAdminClient.buildServerCode();
+      await OcculusClient.setServerCodeBranch(this.currentBranch);
+      await OcculusClient.updateServerCode();
+      OcculusClient.buildServerCode();
       this.watchServerBuild()
     },
 
@@ -107,7 +107,7 @@ export default {
       }
 
       Timer.timer['code-build-update-interval'] = setInterval(async () => {
-        let r = (await EqemuAdminClient.getBuildStatus())
+        let r = (await OcculusClient.getBuildStatus())
         if (r && r.status === 200) {
           this.buildOutput = r.data.log
         }
@@ -120,7 +120,7 @@ export default {
     },
 
     async cancelBuild() {
-      await EqemuAdminClient.cancelServerBuild()
+      await OcculusClient.cancelServerBuild()
       this.buildOutput = 'Build cancelled'
       clearInterval(Timer.timer['code-build-update-interval'])
     }

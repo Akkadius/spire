@@ -46,9 +46,9 @@ import ServerProcessButtonComponent from "@/views/admin/components/ServerProcess
 import DashboardProcessCounts       from "@/views/admin/components/DashboardProcessCounts";
 import DashboardCpuInfo             from "@/views/admin/components/DashboardCpuInfo";
 import DashboardSystemInfo          from "@/views/admin/components/DashboardSystemInfo";
-import Timer                        from "@/app/timer/timer";
-import {EqemuAdminClient}           from "@/app/api/eqemu-admin-client-occulus";
-import DashboardCounter             from "@/views/admin/components/DashboardCounter.vue";
+import Timer            from "@/app/timer/timer";
+import {OcculusClient}  from "@/app/api/eqemu-admin-client-occulus";
+import DashboardCounter from "@/views/admin/components/DashboardCounter.vue";
 import {OS}                         from "@/app/os/os";
 import PlayersOnlineComponent       from "@/views/admin/components/PlayersOnlineComponent.vue";
 
@@ -74,7 +74,7 @@ export default {
     clearInterval(Timer.timer['sys-info'])
   },
   created: async function () {
-    EqemuAdminClient.getDashboardStats().then(response => {
+    OcculusClient.getDashboardStats().then(response => {
       if (response) {
         this.stats = response
         this.checkLoaded()
@@ -105,7 +105,7 @@ export default {
     },
 
     loadSysInfo: function () {
-      EqemuAdminClient.getSysInfo().then(response => {
+      OcculusClient.getSysInfo().then(response => {
         if (response) {
           this.sysinfo = response
         }

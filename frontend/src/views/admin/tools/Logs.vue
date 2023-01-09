@@ -61,7 +61,7 @@
 </template>
 
 <script>
-import {EqemuAdminClient} from "@/app/api/eqemu-admin-client-occulus";
+import {OcculusClient} from "@/app/api/eqemu-admin-client-occulus";
 
 export default {
   name: 'Logs',
@@ -81,7 +81,7 @@ export default {
     }
   },
   async created() {
-    let r = await EqemuAdminClient.getServerLogs()
+    let r = await OcculusClient.getServerLogs()
     if (r && r.status === 200) {
       this.logs = r.data
     }
@@ -124,7 +124,7 @@ export default {
 
         const log = this.$route.query.log
 
-        let r = await EqemuAdminClient.getServerLog(log)
+        let r = await OcculusClient.getServerLog(log)
         if (r && r.status === 200) {
           this.logOutput = r.data.fileContents
         }

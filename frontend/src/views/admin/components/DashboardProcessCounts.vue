@@ -32,9 +32,9 @@
 
 <script>
 
-import Timer              from "@/app/timer/timer";
-import {EqemuAdminClient} from "@/app/api/eqemu-admin-client-occulus";
-import {EventBus}         from "@/app/event-bus/event-bus";
+import Timer           from "@/app/timer/timer";
+import {OcculusClient} from "@/app/api/eqemu-admin-client-occulus";
+import {EventBus}      from "@/app/event-bus/event-bus";
 import {OS}               from "@/app/os/os";
 
 export default {
@@ -57,7 +57,7 @@ export default {
   mounted() {
     let self = this
     EventBus.$on('process-change', async function (event) {
-      self.processCounts = await EqemuAdminClient.getProcessCounts()
+      self.processCounts = await OcculusClient.getProcessCounts()
     })
   },
 
@@ -65,7 +65,7 @@ export default {
    * Create
    */
   async created() {
-    this.processCounts = await EqemuAdminClient.getProcessCounts()
+    this.processCounts = await OcculusClient.getProcessCounts()
     this.loaded        = true
 
     /**
@@ -79,7 +79,7 @@ export default {
     Timer.timer['process-counts'] = setInterval(async () => {
       this.loaded = false
       if (!document.hidden) {
-        this.processCounts = await EqemuAdminClient.getProcessCounts()
+        this.processCounts = await OcculusClient.getProcessCounts()
       }
       this.loaded = true
     }, (OS.get() === "Linux" ? 1000 : 5000))

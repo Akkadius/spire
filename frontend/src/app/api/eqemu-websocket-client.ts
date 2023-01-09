@@ -1,5 +1,5 @@
 import * as util from 'util'
-import {EqemuAdminClient} from "@/app/api/eqemu-admin-client-occulus";
+import {OcculusClient} from "@/app/api/eqemu-admin-client-occulus";
 
 export class EqemuWebsocketClient {
   private uuid: string = ''
@@ -18,7 +18,7 @@ export class EqemuWebsocketClient {
   }
 
   getWebsocketUrl() {
-    let url  = new URL(EqemuAdminClient.getBaseUrl());
+    let url  = new URL(OcculusClient.getBaseUrl());
     // @ts-ignore
     url.port = this.port
 
@@ -30,7 +30,7 @@ export class EqemuWebsocketClient {
    */
   public async initClient(port: number) {
     this.ws = new Promise(async (resolve, reject) => {
-      const auth = await EqemuAdminClient.getWebsocketAuthorization()
+      const auth = await OcculusClient.getWebsocketAuthorization()
       this.port  = port
       this.ws    = new WebSocket('ws://' + this.getWebsocketUrl().host)
       this.uuid  = this.generateUUID()
