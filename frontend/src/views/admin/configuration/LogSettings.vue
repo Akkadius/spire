@@ -21,13 +21,13 @@
 
       <div style="height: 84vh; overflow-y: scroll">
         <table class="eq-table eq-highlight-rows bordered log-settings">
-          <thead>
+          <thead class="eq-table-floating-header">
           <tr>
             <th>ID</th>
             <th class="text-right">Category</th>
-            <th>Console</th>
-            <th>File</th>
-            <th>GM (In-Game)</th>
+            <th>Console Log Level</th>
+            <th>File Log Level</th>
+            <th>GM (In-Game) Log Level</th>
             <!--          <th>Discord</th>-->
           </tr>
 

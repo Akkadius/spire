@@ -41,14 +41,6 @@ func NewProcessManagement(pathmgmt *pathmgmt.PathManagement, logger *logrus.Logg
 		logger:   logger,
 	}
 
-	// only run Occulus initialization in local environment
-	if env.IsAppEnvLocal() {
-		err := i.Run()
-		if err != nil {
-			logger.Error(err)
-		}
-	}
-
 	return i
 }
 
@@ -122,21 +114,21 @@ func (m *ProcessManagement) Run() error {
 		}
 	}
 
-	// free port
-	port := m.FindFreePort()
-	if port > 0 {
-		m.logger.Infof("[Occulus.ProcessManagement] Found free port @ [%v]\n", port)
-		m.SetPort(port)
-	}
-
-	if port == 0 {
-		m.logger.Fatalf("[Occulus.ProcessManagement] Failed to find free port\n")
-	}
-
 	// run binary
 	go func() {
 		for {
 			time.Sleep(500 * time.Millisecond)
+
+			// free port
+			port := m.FindFreePort()
+			if port > 0 {
+				m.logger.Infof("[Occulus.ProcessManagement] Found free port @ [%v]\n", port)
+				m.SetPort(port)
+			}
+
+			if port == 0 {
+				m.logger.Fatalf("[Occulus.ProcessManagement] Failed to find free port\n")
+			}
 
 			runPath := downloadPath
 			developmentRunCmd := env.Get("OCCULUS_DEV_CMD", "")

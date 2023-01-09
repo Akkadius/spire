@@ -5,6 +5,7 @@ import (
 	"github.com/Akkadius/spire/internal/deploy"
 	"github.com/Akkadius/spire/internal/eqemuanalytics"
 	"github.com/Akkadius/spire/internal/eqemuchangelog"
+	apphttp "github.com/Akkadius/spire/internal/http"
 	"github.com/Akkadius/spire/internal/http/controllers"
 	appmiddleware "github.com/Akkadius/spire/internal/http/middleware"
 	"github.com/Akkadius/spire/internal/http/routes"
@@ -18,6 +19,7 @@ import (
 )
 
 var httpSet = wire.NewSet(
+	apphttp.NewServer,
 	appmiddleware.NewUserContextMiddleware,
 	appmiddleware.NewRequestLogMiddleware,
 	appmiddleware.NewReadOnlyMiddleware,

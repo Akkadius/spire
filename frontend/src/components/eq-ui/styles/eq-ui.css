@@ -833,7 +833,7 @@ table.eq-table THEAD TR TH {
     color: #8aa3ff;
     vertical-align: top;
     margin: 0px;
-    padding: 20px 15px 5px;
+    padding: 20px 15px 15px;
     border-collapse: collapse;
     text-align: left;
     white-space: nowrap;
