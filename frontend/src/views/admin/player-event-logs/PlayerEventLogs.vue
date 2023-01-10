@@ -104,7 +104,12 @@
               </a>({{ e.zone.zoneidnumber }})
             </td>
 
-            <td class="text-right">{{ e.event_type_name }} ({{ e.event_type_id }})</td>
+            <td class="text-right">
+              <a
+                class="ml-1"
+                @click="eventType = e.event_type_id; updateQueryState()"
+              >{{ e.event_type_name }}</a> ({{ e.event_type_id }})
+            </td>
 
             <td style="vertical-align: middle; text-align: left">
               <player-event-display-component
