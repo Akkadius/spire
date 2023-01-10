@@ -51,7 +51,15 @@
             <th style="width: 230px">File Log Level</th>
             <th style="width: 230px">GM (In-Game) Log Level</th>
             <th style="width: 230px">Discord Log Level</th>
-            <th>Discord Webhook</th>
+            <th>
+              <router-link
+                style="color: #8aa3ff"
+                :to="ROUTE.ADMIN_CONFIG_DISCORD_WEBHOOK_SETTINGS"
+              >
+                Discord Webhook
+                <i class="fa fa-arrow-right"></i>
+              </router-link>
+            </th>
           </tr>
 
           </thead>
@@ -226,7 +234,7 @@
                   v-for="w in discordWebhooks"
                   :key="w.id"
                   :value="w.id"
-                >Name [{{ w.webhook_name }}] ID ({{ w.id }})
+                >({{ w.id }}) {{ w.webhook_name }}
                 </option>
               </select>
 
@@ -259,6 +267,8 @@ export default {
   data() {
     return {
       search: "",
+
+      ROUTE: ROUTE,
 
       settings: [],
       discordWebhooks: [],
