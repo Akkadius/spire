@@ -9,6 +9,7 @@ package boot
 import (
 	"github.com/Akkadius/spire/internal/assets"
 	"github.com/Akkadius/spire/internal/auditlog"
+	"github.com/Akkadius/spire/internal/backup"
 	"github.com/Akkadius/spire/internal/clientfiles"
 	"github.com/Akkadius/spire/internal/connection"
 	"github.com/Akkadius/spire/internal/console/cmd"
@@ -55,9 +56,8 @@ func InitializeApplication() (App, error) {
 		return App{}, err
 	}
 	cache := provideCache()
-	client := telnet.NewClient(logger)
-	eqemuserverapiClient := eqemuserverapi.NewClient(client)
-	helloWorldCommand := cmd.NewHelloWorldCommand(db, logger, eqemuserverapiClient)
+	mysql := backup.NewMysql(logger, pathManagement)
+	helloWorldCommand := cmd.NewHelloWorldCommand(db, logger, mysql)
 	processManagement := occulus.NewProcessManagement(pathManagement, logger)
 	proxy := occulus.NewProxy(logger, eqEmuServerConfig, processManagement)
 	adminPingOcculus := cmd.NewAdminPingOcculus(db, logger, eqEmuServerConfig, proxy)
@@ -71,8 +71,8 @@ func InitializeApplication() (App, error) {
 	helloWorldController := controllers.NewHelloWorldController(db, logger)
 	authController := controllers.NewAuthController(databaseResolver, logger, userService)
 	meController := controllers.NewMeController()
-	influxClient := influx.NewClient()
-	analyticsController := controllers.NewAnalyticsController(logger, influxClient, databaseResolver)
+	client := influx.NewClient()
+	analyticsController := controllers.NewAnalyticsController(logger, client, databaseResolver)
 	dbConnectionCreateService := connection.NewDbConnectionCreateService(databaseResolver, logger, encrypter)
 	dbConnectionCheckService := connection.NewDbConnectionCheckService(databaseResolver, logger, encrypter)
 	pluralizeClient := pluralize.NewClient()
@@ -100,9 +100,12 @@ func InitializeApplication() (App, error) {
 	permissionsController := permissions.NewPermissionsController(logger, databaseResolver, service)
 	usersController := spireuser.NewUsersController(databaseResolver, logger, userService, encrypter)
 	controller := occulus.NewController(logger, databaseResolver, proxy)
+	telnetClient := telnet.NewClient(logger)
+	eqemuserverapiClient := eqemuserverapi.NewClient(telnetClient)
 	eqemuserverapiController := eqemuserverapi.NewController(databaseResolver, logger, eqemuserverapiClient, eqEmuServerConfig)
 	serverconfigController := serverconfig.NewController(logger, eqEmuServerConfig)
-	bootAppControllerGroups := provideControllers(helloWorldController, authController, meController, analyticsController, connectionsController, docsController, questApiController, appController, queryController, clientFilesController, staticMapController, eqemuanalyticsAnalyticsController, eqemuChangelogController, deployController, assetsController, permissionsController, usersController, controller, eqemuserverapiController, serverconfigController)
+	backupController := backup.NewController(logger, mysql, pathManagement)
+	bootAppControllerGroups := provideControllers(helloWorldController, authController, meController, analyticsController, connectionsController, docsController, questApiController, appController, queryController, clientFilesController, staticMapController, eqemuanalyticsAnalyticsController, eqemuChangelogController, deployController, assetsController, permissionsController, usersController, controller, eqemuserverapiController, serverconfigController, backupController)
 	userEvent := auditlog.NewUserEvent(databaseResolver, logger, cache)
 	aaAbilityController := crudcontrollers.NewAaAbilityController(databaseResolver, logger, userEvent)
 	aaRankController := crudcontrollers.NewAaRankController(databaseResolver, logger, userEvent)
@@ -309,7 +312,7 @@ func InitializeApplication() (App, error) {
 	userContextMiddleware := middleware.NewUserContextMiddleware(databaseResolver, cache, logger)
 	readOnlyMiddleware := middleware.NewReadOnlyMiddleware(databaseResolver, logger)
 	permissionsMiddleware := middleware.NewPermissionsMiddleware(databaseResolver, logger, cache, service)
-	requestLogMiddleware := middleware.NewRequestLogMiddleware(influxClient)
+	requestLogMiddleware := middleware.NewRequestLogMiddleware(client)
 	localUserAuthMiddleware := middleware.NewLocalUserAuthMiddleware(databaseResolver, logger, cache, settings, init)
 	spireAssets := assets.NewSpireAssets(logger, cache, githubSourceDownloader)
 	router := NewRouter(bootAppControllerGroups, bootCrudControllers, userContextMiddleware, readOnlyMiddleware, permissionsMiddleware, requestLogMiddleware, localUserAuthMiddleware, spireAssets)

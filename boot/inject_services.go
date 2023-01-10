@@ -3,6 +3,7 @@ package boot
 import (
 	"github.com/Akkadius/spire/internal/assets"
 	"github.com/Akkadius/spire/internal/auditlog"
+	"github.com/Akkadius/spire/internal/backup"
 	"github.com/Akkadius/spire/internal/clientfiles"
 	"github.com/Akkadius/spire/internal/connection"
 	"github.com/Akkadius/spire/internal/desktop"
@@ -48,4 +49,5 @@ var serviceSet = wire.NewSet(
 	occulus.NewProcessManagement,
 	telnet.NewClient,
 	eqemuserverapi.NewClient,
+	backup.NewMysql,
 )

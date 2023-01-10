@@ -1,7 +1,7 @@
 package cmd
 
 import (
-	"github.com/Akkadius/spire/internal/eqemuserverapi"
+	"github.com/Akkadius/spire/internal/backup"
 	"github.com/k0kubun/pp/v3"
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
@@ -9,17 +9,21 @@ import (
 )
 
 type HelloWorldCommand struct {
-	db             *gorm.DB
-	logger         *logrus.Logger
-	command        *cobra.Command
-	eqemuserverapi *eqemuserverapi.Client
+	db      *gorm.DB
+	logger  *logrus.Logger
+	command *cobra.Command
+	backup  *backup.Mysql
 }
 
 func (c *HelloWorldCommand) Command() *cobra.Command {
 	return c.command
 }
 
-func NewHelloWorldCommand(db *gorm.DB, logger *logrus.Logger, eqemuserverapi *eqemuserverapi.Client) *HelloWorldCommand {
+func NewHelloWorldCommand(
+	db *gorm.DB,
+	logger *logrus.Logger,
+	backup *backup.Mysql,
+) *HelloWorldCommand {
 	i := &HelloWorldCommand{
 		db:     db,
 		logger: logger,
@@ -27,7 +31,7 @@ func NewHelloWorldCommand(db *gorm.DB, logger *logrus.Logger, eqemuserverapi *eq
 			Use:   "hello:hello-world",
 			Short: "Says hello world",
 		},
-		eqemuserverapi: eqemuserverapi,
+		backup: backup,
 	}
 
 	i.command.Args = i.Validate
@@ -38,12 +42,18 @@ func NewHelloWorldCommand(db *gorm.DB, logger *logrus.Logger, eqemuserverapi *eq
 
 // Handle implementation of the Command interface
 func (c *HelloWorldCommand) Handle(cmd *cobra.Command, args []string) {
-	r, err := c.eqemuserverapi.GetReloadTypes()
-	pp.Println(r)
-
-	if err != nil {
-		c.logger.Error(err)
-	}
+	pp.Println(
+		c.backup.Backup(backup.BackupRequest{
+			DumpAllTables:   true,
+			ContentTables:   false,
+			PlayerTables:    false,
+			BotTables:       false,
+			StateTables:     false,
+			SystemTables:    false,
+			QueryServTables: false,
+			LoginTables:     false,
+		}),
+	)
 }
 
 // Validate implementation of the Command interface

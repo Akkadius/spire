@@ -323,6 +323,11 @@ const router = new Router({
           meta: {title: "Quest Hot Reload Settings", occulus: true},
         },
         {
+          path: ROUTE.ADMIN_TOOL_DATABASE_BACKUP,
+          component: () => import('./views/admin/tools/DatabaseBackup.vue'),
+          meta: {title: "Database Backup"},
+        },
+        {
           path: ROUTE.ADMIN_CONFIG_MOTD,
           component: () => import('./views/admin/configuration/Motd.vue'),
           meta: {title: "Message of the Day", occulus: true},

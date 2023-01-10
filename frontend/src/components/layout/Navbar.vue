@@ -363,6 +363,7 @@ export default {
           { title: "Code", to: ROUTE.ADMIN_TOOL_SERVER_CODE, icon: "fa fa-code-fork mr-1", isOcculus: true },
           { title: "File Logs", to: ROUTE.ADMIN_TOOL_LOGS, icon: "fe fe-book mr-1", isOcculus: true },
           { title: "Quests", to: ROUTE.ADMIN_TOOL_SERVER_QUESTS, icon: "fa fa-code-fork mr-1", isOcculus: true },
+          { title: "Database Backup", to: ROUTE.ADMIN_TOOL_DATABASE_BACKUP, icon: "fa fa-database mr-1"},
           { title: "Backups", to: ROUTE.ADMIN_TOOL_BACKUPS, icon: "fe fe-download-cloud mr-1", isOcculus: true },
           { title: "Client Downloads", to: ROUTE.ADMIN_TOOL_CLIENT_FILE_DOWNLOADS, icon: "fe fe-download-cloud mr-1", isOcculus: true },
           { title: "Player Event Log Viewer", to: ROUTE.ADMIN_TOOL_PLAYER_EVENT_LOGS, icon: "ra ra-kaleidoscope mr-1" },

@@ -2,6 +2,7 @@ package boot
 
 import (
 	"github.com/Akkadius/spire/internal/assets"
+	"github.com/Akkadius/spire/internal/backup"
 	"github.com/Akkadius/spire/internal/clientfiles"
 	"github.com/Akkadius/spire/internal/deploy"
 	"github.com/Akkadius/spire/internal/eqemuanalytics"
@@ -52,6 +53,7 @@ var httpSet = wire.NewSet(
 	deploy.NewDeployController,
 	eqemuserverapi.NewController,
 	serverconfig.NewController,
+	backup.NewController,
 	provideControllers,
 	NewRouter,
 )
@@ -167,6 +169,7 @@ func provideControllers(
 	adminController *occulus.Controller,
 	eqemuserverapiController *eqemuserverapi.Controller,
 	serverconfigController *serverconfig.Controller,
+	backupController *backup.Controller,
 ) *appControllerGroups {
 	return &appControllerGroups{
 		authControllers: []routes.Controller{
@@ -185,6 +188,7 @@ func provideControllers(
 			adminController,
 			eqemuserverapiController,
 			serverconfigController,
+			backupController,
 		},
 		v1controllersNoAuth: []routes.Controller{
 			quest,

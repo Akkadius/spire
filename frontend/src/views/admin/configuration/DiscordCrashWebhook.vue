@@ -43,11 +43,9 @@
 </template>
 
 <script>
-import {OcculusClient}     from "@/app/api/eqemu-admin-client-occulus";
-import EqWindow            from "@/components/eq-ui/EQWindow.vue";
-import {DiscordWebhookApi} from "@/app/api/api/discord-webhook-api";
-import {SpireApi}          from "@/app/api/spire-api";
-import InfoErrorBanner     from "@/components/InfoErrorBanner.vue";
+import {OcculusClient} from "@/app/api/eqemu-admin-client-occulus";
+import EqWindow        from "@/components/eq-ui/EQWindow.vue";
+import InfoErrorBanner from "@/components/InfoErrorBanner.vue";
 
 export default {
   components: { InfoErrorBanner, EqWindow },

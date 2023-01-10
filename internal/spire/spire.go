@@ -139,7 +139,7 @@ func (o *Init) SourceSpireTables() error {
 // CreateDefaultDatabaseConnectionFromConfig injects database connection configuration
 // into Spire tables from the emulator server configuration
 func (o *Init) CreateDefaultDatabaseConnectionFromConfig(user models.User) error {
-	db := o.connections.SpireDb()
+	db := o.connections.SpireDbNoLog()
 	cfg := o.serverconfig.Get()
 
 	// connection already exists, let's just update it
