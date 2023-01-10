@@ -1,75 +1,83 @@
 <template>
-  <div>
+  <eq-window>
 
-    <div class="card">
-      <div class="card-body">
-        <div class="row justify-content-between align-items-center">
-          <div class="col-12 col-md-9 col-xl-7">
-            <h2 class="">
-              Server Rules
-            </h2>
-            <p class="text-muted mb-md-0">
-              Server rules can change the behavior of your server
-            </p>
-          </div>
-        </div>
+    <div
+      class="row justify-content-center"
+      style="position: absolute; top: 0%; z-index: 9999999; width: 100%"
+    >
+      <div class="col-6">
+        <info-error-banner
+          style="width: 100%"
+          :slim="true"
+          :notification="notification"
+          :error="error"
+          @dismiss-error="error = ''"
+          @dismiss-notification="notification = ''"
+          class="mt-3"
+        />
       </div>
     </div>
 
-    <div class="card">
-      <div class="card-body p-3">
-        <input
-          type="text"
-          class="form-control form-control-prepended list-search mb-3"
-          @keyup="updateQueryState()"
-          v-model="search"
-          placeholder="Search rules..."
-        >
+    <div style="max-height: 80vh; overflow-y: scroll">
 
-        <div class="row">
-          <div class="col-12">
-            <div
-              class="card mb-0"
+      <div class="row">
+        <div class="col-11">
+          <b-form-input
+            type="text"
+            class="form-control list-search"
+            @keyup="updateQueryState()"
+            v-model="search"
+            placeholder="Search rules..."
+          />
+        </div>
+
+        <div class="col-1">
+          <button
+            title="Reset"
+            class="eq-button m-0"
+            @click="search = ''; updateQueryState()"
+          ><i class="fa fa-refresh"></i> Reset
+          </button>
+        </div>
+      </div>
+
+      <table
+        class="eq-table eq-highlight-rows bordered log-settings mt-3"
+      >
+        <thead class="eq-table-floating-header">
+        <tr>
+          <th tabindex="0" style="width: 60px">RID</th>
+          <th tabindex="0" style="width: 320px !important">Rule Name</th>
+          <th tabindex="0" style="width: 250px">Value</th>
+          <th tabindex="0">Description</th>
+        </tr>
+        </thead>
+        <tbody>
+
+        <!-- Loop through rules -->
+        <tr v-for="(rule, index) in filteredRules" :key="index">
+          <td style="text-align: center">{{ rule.ruleset_id }}</td>
+          <td>{{ rule.rule_name }}</td>
+
+          <td class="text-center">
+
+            <label
+              class="pb-2 pt-2"
+              v-if="rule.rule_value === 'true' || rule.rule_value === 'false'"
             >
-              <div
-                class="table-responsive mb-0"
-                style="max-height: 61vh; overflow-y: scroll"
-              >
-                <table
-                  class="table table-sm table-nowrap card-table rule_table"
-                >
-                  <thead>
-                  <tr>
-                    <th class="sorting" tabindex="0" style="width: 60px">RID</th>
-                    <th class="sorting" tabindex="0" style="width: 320px !important">Rule Name</th>
-                    <th class="sorting" tabindex="0" style="width: 250px">Value</th>
-                    <th class="sorting" tabindex="0">Description</th>
-                  </tr>
-                  </thead>
-                  <tbody>
+              <eq-checkbox
+                :fade-when-not-true="true"
+                class="d-inline-block mt-1"
+                true-value="true"
+                false-value="false"
+                v-model="rule.rule_value"
+                @change="updateRule(rule)"
+              />
+            </label>
 
-                  <!-- Loop through rules -->
-                  <tr v-for="(rule, index) in filteredRules" :key="index">
-                    <td style="text-align: center">{{ rule.ruleset_id }}</td>
-                    <td>{{ rule.rule_name }}</td>
-
-                    <td>
-
-                      <label
-                        class="pb-2 pt-2"
-                        v-if="rule.rule_value === 'true' || rule.rule_value === 'false'"
-                      >
-                        <b-form-checkbox
-                          value="true"
-                          unchecked-value="false"
-                          :checked="rule.rule_value"
-                          v-model="rule.rule_value"
-                          @change="updateRule(rule)"
-                          switch
-                        />
-                      </label>
-
-                      <span v-if="!(rule.rule_value === 'true' || rule.rule_value === 'false')">
+            <span
+              v-if="!(rule.rule_value === 'true' || rule.rule_value === 'false')"
+            >
                       <input
                         type="text" class="form-control"
                         v-model="rule.rule_value"
@@ -77,30 +85,33 @@
                       >
                   </span>
 
-                      <!-- {{rule.rule_value}} -->
-                    </td>
+            <!-- {{rule.rule_value}} -->
+          </td>
 
-                    <td class="text-muted" style="overflow: auto; white-space: normal;">
-                      {{ rule.notes }}
-                    </td>
+          <td class="text-muted" style="overflow: auto; white-space: normal;">
+            {{ rule.notes }}
+          </td>
 
-                  </tr>
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+        </tr>
+        </tbody>
+      </table>
     </div>
-  </div>
+
+  </eq-window>
+
 </template>
 
 <script>
-import {OcculusClient} from "@/app/api/eqemu-admin-client-occulus";
-import {ROUTE}         from "@/routes";
+import {ROUTE}             from "@/routes";
+import EqWindow            from "@/components/eq-ui/EQWindow.vue";
+import EqCheckbox          from "@/components/eq-ui/EQCheckbox.vue";
+import {SpireApi}          from "@/app/api/spire-api";
+import {RuleValueApi}      from "@/app/api/api/rule-value-api";
+import InfoErrorBanner     from "@/components/InfoErrorBanner.vue";
+import {SpireQueryBuilder} from "@/app/api/spire-query-builder";
 
 export default {
+  components: { InfoErrorBanner, EqCheckbox, EqWindow },
   data() {
     return {
       search: "",
@@ -108,6 +119,10 @@ export default {
       rules: [],
       filteredRules: [],
       loaded: false,
+
+      // notification / errors
+      notification: "",
+      error: "",
     }
   },
 
@@ -119,7 +134,8 @@ export default {
   },
 
   async created() {
-    this.rules = await OcculusClient.getServerRules();
+    await this.loadRules()
+
     this.filterRules();
     this.loaded = true;
     // this.initTable()
@@ -128,6 +144,13 @@ export default {
     this.filterRules()
   },
   methods: {
+
+    async loadRules() {
+      let r = await (new RuleValueApi(...SpireApi.cfg())).listRuleValues()
+      if (r.status === 200) {
+        this.rules = r.data
+      }
+    },
 
     updateQueryState() {
       let q = {};
@@ -151,20 +174,38 @@ export default {
       }
     },
 
-    async updateRule(rule) {
-      const response = await OcculusClient.postServerRule(rule);
-      if (response.success) {
-        this.$bvToast.toast(
-          response.success,
+    async updateRule(e) {
+      try {
+        const r = await (new RuleValueApi(...SpireApi.cfg())).updateRuleValue(
           {
-            title: "Rule updated!",
-            toaster: 'b-toaster-bottom-right',
-            autoHideDelay: 3000,
-            solid: true,
-            appendToast: false
+            id: e.ruleset_id,
+            ruleValue: e
+          },
+          {
+            query: (new SpireQueryBuilder())
+              .where("ruleset_id", "=", e.ruleset_id)
+              .where("rule_name", "=", e.rule_name)
+              .get()
           }
         )
+        if (r.status === 200) {
+          this.notification = `Updated rule (${e.ruleset_id}) [${e.rule_name}] to value (${e.rule_value})!`
+          this.loadRules()
+
+          const r = await SpireApi.v1().post("eqemuserver/reload/rules")
+          if (r.status === 200) {
+            setTimeout(() => {
+              this.notification = "Server rules reloaded in-game!"
+            }, 1000)
+          }
+        }
+      } catch (e) {
+        // error notify
+        if (e.response && e.response.data && e.response.data.error) {
+          this.error = e.response.data.error
+        }
       }
+
     },
     filterRules() {
       if (!this.search) {

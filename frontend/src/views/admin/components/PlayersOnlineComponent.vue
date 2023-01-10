@@ -1,7 +1,7 @@
 <template>
   <div class="row">
     <div class="col-12">
-      <div class="card mb-3" v-if="clientList.length > 0 && filteredClientList.length > 0 && loaded">
+      <div class="card mb-3" v-if="clientList.length > 0 && filteredClientList.length > 0">
         <div class="card-body pt-0 pb-0 pl-3 pr-3">
           <div class="input-group input-group-flush">
             <div class="input-group-prepend">
@@ -21,11 +21,10 @@
 
       <app-loader :is-loading="!loaded" padding="4"></app-loader>
 
-      <div class="card" v-if="loaded">
+      <div class="card">
         <div
           style="max-height: 78vh; overflow-y: scroll"
           class="table-responsive mb-0"
-          v-if="filteredClientList && Object.keys(filteredClientList).length > 0 && loaded"
         >
           <div
             v-if="Object.keys(filteredClientList).length > listLimitSize && !fullList"
@@ -65,7 +64,10 @@
               style="padding: 30px; overflow-y: scroll !important"
             >
 
-            <tr v-for="(client, index) in filteredClientList.slice().reverse().slice(0, listLimitSize)" :key="index">
+            <tr
+              v-for="(client, index) in filteredClientList.slice().reverse().slice(0, listLimitSize)"
+              :key="client.name"
+            >
               <td class="w-10" style="text-align:center">
                 <div class="avatar-list avatar-list-stacked">
                   <img class="avatar-img rounded-circle" style="width:25px" :src="getClassImage(client.class)">
@@ -142,12 +144,11 @@ export default {
     return {
       listLimitSize: null,
       loaded: false,
-      refreshing: false,
       DB_CLASSES_ICONS: {},
       DB_RACES_ICONS: {},
       eqClientVersionConstants: {},
       clientList: [],
-      filteredClientList: null,
+      filteredClientList: [],
       playersOnlineChart: null,
       playerSearchFilter: null
     }
@@ -229,12 +230,9 @@ export default {
      * @returns {boolean}
      */
     async buildPlayersOnlineList() {
-      this.filteredClientList = []
-
-      this.refreshing     = true
       const apiClientList = await OcculusClient.getWorldClientList()
-      this.refreshing     = false
       if (!apiClientList) {
+        this.filteredClientList = []
         this.clientList = []
         return false
       }

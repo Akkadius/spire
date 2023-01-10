@@ -348,7 +348,7 @@ export default {
           { title: "Discord Webhooks", to: ROUTE.ADMIN_CONFIG_DISCORD_WEBHOOK_SETTINGS, icon: "ra ra-cog mr-1" },
           { title: "Log Settings", to: ROUTE.ADMIN_CONFIG_LOG_SETTINGS, icon: "ra ra-scroll-unfurled mr-1" },
           { title: "MOTD", to: ROUTE.ADMIN_CONFIG_MOTD, icon: "ra ra-wooden-sign mr-1", isOcculus: true },
-          { title: "Server Rules", to: ROUTE.ADMIN_CONFIG_SERVER_RULES, icon: "ra ra-interdiction mr-1", isOcculus: true },
+          { title: "Server Rules", to: ROUTE.ADMIN_CONFIG_SERVER_RULES, icon: "ra ra-interdiction mr-1" },
           { title: "UCS", to: ROUTE.ADMIN_CONFIG_UCS, icon: "ra ra-speech-bubbles mr-1", isOcculus: true },
           { title: "World Server", to: ROUTE.ADMIN_CONFIG_WORLDSERVER, icon: "ra ra-double-team mr-1", isOcculus: true },
           { title: "Zone Server", to: ROUTE.ADMIN_CONFIG_ZONESERVER, icon: "ra ra-player mr-1", isOcculus: true },

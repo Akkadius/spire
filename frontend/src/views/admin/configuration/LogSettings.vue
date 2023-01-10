@@ -17,10 +17,33 @@
       </div>
     </div>
 
-    <eq-window title="Log Settings" class="p-1 minified-inputs">
+    <eq-window title="Log Settings">
 
-      <div style="height: 84vh; overflow-y: scroll">
-        <table class="eq-table eq-highlight-rows bordered log-settings">
+      <div style="max-height: 84vh; overflow-y: scroll">
+
+        <div class="row mt-3 mb-4">
+          <div class="col-11">
+            <b-form-input
+              type="text"
+              class="form-control list-search"
+              @keyup="updateQueryState()"
+              v-model="search"
+              placeholder="Search log settings..."
+            />
+          </div>
+
+          <div class="col-1">
+            <button
+              title="Reset"
+              class="eq-button m-0"
+              @click="search = ''; updateQueryState()"
+            ><i class="fa fa-refresh"></i> Reset
+            </button>
+          </div>
+        </div>
+
+
+        <table class="eq-table eq-highlight-rows bordered log-settings minified-inputs">
           <thead class="eq-table-floating-header">
           <tr>
             <th class="text-right" style="width: 200px">(ID) Category</th>
@@ -33,7 +56,10 @@
 
           </thead>
           <tbody>
-          <tr v-for="s in settings">
+          <tr
+            v-for="s in filteredSettings(settings)"
+            :key="s.log_category_id"
+          >
             <td class="text-right">({{ s.log_category_id }}) {{ s.log_category_description }}</td>
             <td>
               <div class="d-inline-block mr-3">
@@ -200,7 +226,7 @@
                   v-for="w in discordWebhooks"
                   :key="w.id"
                   :value="w.id"
-                >Name [{{ w.webhook_name }}] ID ({{w.id}})
+                >Name [{{ w.webhook_name }}] ID ({{ w.id }})
                 </option>
               </select>
 
@@ -225,12 +251,15 @@ import EqDebug             from "@/components/eq-ui/EQDebug.vue";
 import InfoErrorBanner     from "@/components/InfoErrorBanner.vue";
 import util                from "util";
 import {DiscordWebhookApi} from "@/app/api/api/discord-webhook-api";
+import {ROUTE}             from "@/routes";
 
 export default {
   name: "LogSettings",
   components: { InfoErrorBanner, EqDebug, EqCheckbox, EqWindow },
   data() {
     return {
+      search: "",
+
       settings: [],
       discordWebhooks: [],
 
@@ -240,6 +269,8 @@ export default {
     }
   },
   async mounted() {
+    this.loadQueryState()
+
     let r = await (new LogsysCategoryApi(...SpireApi.cfg())).listLogsysCategories()
     if (r.status === 200) {
       this.settings = r.data
@@ -252,9 +283,39 @@ export default {
     }
   },
   methods: {
-    async save(e) {
-      console.log(e)
+    filteredSettings(s) {
+      return s.filter((e) => {
+        if (this.search && this.search.length > 0) {
+          return e.log_category_description.toLowerCase().includes(this.search.toLowerCase())
+        }
 
+        return e
+      })
+    },
+
+    updateQueryState() {
+      let q = {};
+
+      if (this.search !== "") {
+        q.search = this.search
+      }
+
+      this.$router.push(
+        {
+          path: ROUTE.ADMIN_CONFIG_LOG_SETTINGS,
+          query: q
+        }
+      ).catch(() => {
+      })
+    },
+
+    loadQueryState() {
+      if (this.$route.query.search && this.$route.query.search.length > 0) {
+        this.search = this.$route.query.search
+      }
+    },
+
+    async save(e) {
       if (e.log_to_discord > 0 && e.discord_webhook_id === 0) {
         this.error = `Discord Webhook needs to be assigned for this log category [${e.log_category_description}] to work!`
         return;

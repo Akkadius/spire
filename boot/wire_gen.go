@@ -100,7 +100,7 @@ func InitializeApplication() (App, error) {
 	permissionsController := permissions.NewPermissionsController(logger, databaseResolver, service)
 	usersController := spireuser.NewUsersController(databaseResolver, logger, userService, encrypter)
 	controller := occulus.NewController(logger, databaseResolver, proxy)
-	eqemuserverapiController := eqemuserverapi.NewController(databaseResolver, logger, eqemuserverapiClient)
+	eqemuserverapiController := eqemuserverapi.NewController(databaseResolver, logger, eqemuserverapiClient, eqEmuServerConfig)
 	bootAppControllerGroups := provideControllers(helloWorldController, authController, meController, analyticsController, connectionsController, docsController, questApiController, appController, queryController, clientFilesController, staticMapController, eqemuanalyticsAnalyticsController, eqemuChangelogController, deployController, assetsController, permissionsController, usersController, controller, eqemuserverapiController)
 	userEvent := auditlog.NewUserEvent(databaseResolver, logger, cache)
 	aaAbilityController := crudcontrollers.NewAaAbilityController(databaseResolver, logger, userEvent)

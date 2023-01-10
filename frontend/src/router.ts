@@ -315,7 +315,7 @@ const router = new Router({
         {
           path: ROUTE.ADMIN_CONFIG_SERVER_RULES,
           component: () => import('./views/admin/configuration/ServerRules.vue'),
-          meta: {title: "Server Rules", occulus: true},
+          meta: {title: "Server Rules"},
         },
         {
           path: ROUTE.ADMIN_CONFIG_MOTD,

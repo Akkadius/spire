@@ -57,20 +57,20 @@ export default {
     label: {
       type: String,
       required: false,
-      default: false,
+      default: "",
     },
     value: {
-      type: Number,
+      type: [Number, String],
       required: false,
       default: 0,
     },
     trueValue: {
-      type: Number,
+      type: [Number, String],
       required: false,
       default: 1,
     },
     falseValue: {
-      type: Number,
+      type: [Number, String],
       required: false,
       default: 0,
     }

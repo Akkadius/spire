@@ -3,7 +3,7 @@
     <div class="card">
       <div class="card-header">
         <h4 class="card-header-title">Server Processes</h4>
-<!--        <b-spinner variant="primary" label="Spinning" small class="ml-3" v-if="!loaded"></b-spinner>-->
+        <!--        <b-spinner variant="primary" label="Spinning" small class="ml-3" v-if="!loaded"></b-spinner>-->
       </div>
       <table class="table card-table">
         <tbody>
@@ -35,7 +35,7 @@
 import Timer           from "@/app/timer/timer";
 import {OcculusClient} from "@/app/api/eqemu-admin-client-occulus";
 import {EventBus}      from "@/app/event-bus/event-bus";
-import {OS}               from "@/app/os/os";
+import {OS}            from "@/app/os/os";
 
 export default {
   name: 'DashboardProcessCounts',
@@ -55,9 +55,8 @@ export default {
    * Mounted
    */
   mounted() {
-    let self = this
-    EventBus.$on('process-change', async function (event) {
-      self.processCounts = await OcculusClient.getProcessCounts()
+    EventBus.$on('process-change', async (event) => {
+      this.processCounts = await OcculusClient.getProcessCounts()
     })
   },
 
