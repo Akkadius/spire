@@ -6,6 +6,7 @@ import (
 	"github.com/Akkadius/spire/internal/deploy"
 	"github.com/Akkadius/spire/internal/eqemuanalytics"
 	"github.com/Akkadius/spire/internal/eqemuchangelog"
+	"github.com/Akkadius/spire/internal/eqemuserverapi"
 	apphttp "github.com/Akkadius/spire/internal/http"
 	"github.com/Akkadius/spire/internal/http/controllers"
 	appmiddleware "github.com/Akkadius/spire/internal/http/middleware"
@@ -48,6 +49,7 @@ var httpSet = wire.NewSet(
 	occulus.NewController,
 	staticmaps.NewStaticMapController,
 	deploy.NewDeployController,
+	eqemuserverapi.NewController,
 	provideControllers,
 	NewRouter,
 )
@@ -161,6 +163,7 @@ func provideControllers(
 	permissionsController *permissions.PermissionsController,
 	usersController *spireuser.UsersController,
 	adminController *occulus.Controller,
+	eqemuserverapiController *eqemuserverapi.Controller,
 ) *appControllerGroups {
 	return &appControllerGroups{
 		authControllers: []routes.Controller{
@@ -177,6 +180,7 @@ func provideControllers(
 			permissionsController,
 			usersController,
 			adminController,
+			eqemuserverapiController,
 		},
 		v1controllersNoAuth: []routes.Controller{
 			quest,
