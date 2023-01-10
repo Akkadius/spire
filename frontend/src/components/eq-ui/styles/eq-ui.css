@@ -836,7 +836,7 @@ table.eq-table THEAD TR TH {
     padding: 20px 15px 15px;
     border-collapse: collapse;
     text-align: left;
-    white-space: nowrap;
+    white-space: normal;
 
     border-right: 0.1px solid #ffffff1c;
     border-left: 0.1px solid #ffffff1c;
@@ -986,5 +986,5 @@ h6.eq-header {
 }
 
 .eq-window-simple .text-muted {
-    color: #89e2ff !important;
+    color: #81959c !important;
 }

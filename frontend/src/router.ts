@@ -298,9 +298,14 @@ const router = new Router({
           meta: {title: "UCS Config", occulus: true},
         },
         {
-          path: ROUTE.ADMIN_CONFIG_DISCORD,
-          component: () => import('./views/admin/configuration/DiscordSettings.vue'),
-          meta: {title: "Discord Config", occulus: true},
+          path: ROUTE.ADMIN_CONFIG_DISCORD_CRASH_WEBHOOK,
+          component: () => import('./views/admin/configuration/DiscordCrashWebhook.vue'),
+          meta: {title: "Discord Crash Webhook", occulus: true},
+        },
+        {
+          path: ROUTE.ADMIN_CONFIG_DISCORD_WEBHOOK_SETTINGS,
+          component: () => import('./views/admin/configuration/DiscordWebhooks.vue'),
+          meta: {title: "Discord Webhook Settings"},
         },
         {
           path: ROUTE.ADMIN_CONFIG_DATABASE,
