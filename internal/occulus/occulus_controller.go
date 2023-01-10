@@ -1,33 +1,32 @@
-package controllers
+package occulus
 
 import (
 	"github.com/Akkadius/spire/internal/database"
 	"github.com/Akkadius/spire/internal/http/routes"
-	"github.com/Akkadius/spire/internal/occulus"
 	"github.com/labstack/echo/v4"
 	"github.com/sirupsen/logrus"
 	"net/http"
 )
 
-type AdminController struct {
+type Controller struct {
 	db      *database.DatabaseResolver
 	logger  *logrus.Logger
-	occulus *occulus.Proxy
+	occulus *Proxy
 }
 
-func NewAdminController(
+func NewController(
 	logger *logrus.Logger,
 	db *database.DatabaseResolver,
-	occulus *occulus.Proxy,
-) *AdminController {
-	return &AdminController{
+	occulus *Proxy,
+) *Controller {
+	return &Controller{
 		logger:  logger,
 		occulus: occulus,
 		db:      db,
 	}
 }
 
-func (a *AdminController) Routes() []*routes.Route {
+func (a *Controller) Routes() []*routes.Route {
 	return []*routes.Route{
 		routes.RegisterRoute(http.MethodGet, "admin/test", a.test, nil),
 		routes.RegisterRoute("ANY", "admin/occulus/*", a.occulusProxy, nil),
@@ -42,7 +41,7 @@ type AdminEventRequest struct {
 }
 
 // searches quest examples
-func (a *AdminController) test(c echo.Context) error {
+func (a *Controller) test(c echo.Context) error {
 
 	// result
 	return c.JSON(
@@ -53,7 +52,7 @@ func (a *AdminController) test(c echo.Context) error {
 	)
 }
 
-func (a *AdminController) occulusProxy(c echo.Context) error {
+func (a *Controller) occulusProxy(c echo.Context) error {
 	response, body, err := a.occulus.ProxyRequest(c)
 	if err != nil {
 		return c.JSON(

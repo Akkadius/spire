@@ -38,21 +38,12 @@ func NewHelloWorldCommand(db *gorm.DB, logger *logrus.Logger, eqemuserverapi *eq
 
 // Handle implementation of the Command interface
 func (c *HelloWorldCommand) Handle(cmd *cobra.Command, args []string) {
+	r, err := c.eqemuserverapi.GetReloadTypes()
+	pp.Println(r)
 
-	i := 0
-	for {
-		list, err := c.eqemuserverapi.GetWorldClientList()
-		if err != nil {
-			c.logger.Error(err)
-		}
-
-		i++
-		pp.Println(list)
-		pp.Println(i)
-
-		//time.Sleep(500 * time.Millisecond)
+	if err != nil {
+		c.logger.Error(err)
 	}
-
 }
 
 // Validate implementation of the Command interface

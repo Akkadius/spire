@@ -2,6 +2,7 @@ package eqemuserverapi
 
 import (
 	"encoding/json"
+	"fmt"
 	"github.com/Akkadius/spire/internal/telnet"
 )
 
@@ -122,4 +123,50 @@ func (c *Client) GetWorldClientList() (WorldClientList, error) {
 	}
 
 	return clientList, nil
+}
+
+type ReloadResponse struct {
+	Data []struct {
+		Message string `json:"message"`
+	} `json:"data"`
+	ExecutionTime string `json:"execution_time"`
+	Method        string `json:"method"`
+}
+
+func (c *Client) Reload(reloadType string) (ReloadResponse, error) {
+	o, err := c.telnet.Command(fmt.Sprintf("api reload %v", reloadType))
+	if err != nil {
+		return ReloadResponse{}, err
+	}
+	var r ReloadResponse
+	err = json.Unmarshal([]byte(o), &r)
+	if err != nil {
+		return ReloadResponse{}, err
+	}
+
+	return r, nil
+}
+
+type ReloadTypesResponse struct {
+	Data []struct {
+		Command     string `json:"command"`
+		Description string `json:"description"`
+		Opcode      int    `json:"opcode"`
+	} `json:"data"`
+	ExecutionTime string `json:"execution_time"`
+	Method        string `json:"method"`
+}
+
+func (c *Client) GetReloadTypes() (ReloadTypesResponse, error) {
+	o, err := c.telnet.Command("api get_reload_types")
+	if err != nil {
+		return ReloadTypesResponse{}, err
+	}
+	var r ReloadTypesResponse
+	err = json.Unmarshal([]byte(o), &r)
+	if err != nil {
+		return ReloadTypesResponse{}, err
+	}
+
+	return r, nil
 }

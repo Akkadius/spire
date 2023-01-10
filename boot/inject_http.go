@@ -2,6 +2,7 @@ package boot
 
 import (
 	"github.com/Akkadius/spire/internal/assets"
+	"github.com/Akkadius/spire/internal/clientfiles"
 	"github.com/Akkadius/spire/internal/deploy"
 	"github.com/Akkadius/spire/internal/eqemuanalytics"
 	"github.com/Akkadius/spire/internal/eqemuchangelog"
@@ -11,6 +12,10 @@ import (
 	"github.com/Akkadius/spire/internal/http/routes"
 	"github.com/Akkadius/spire/internal/http/staticmaps"
 	"github.com/Akkadius/spire/internal/models"
+	"github.com/Akkadius/spire/internal/occulus"
+	"github.com/Akkadius/spire/internal/permissions"
+	"github.com/Akkadius/spire/internal/questapi"
+	"github.com/Akkadius/spire/internal/spireuser"
 	"github.com/google/wire"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
@@ -31,17 +36,16 @@ var httpSet = wire.NewSet(
 	controllers.NewMeController,
 	controllers.NewAuthController,
 	controllers.NewDocsController,
-	controllers.NewQuestApiController,
+	questapi.NewQuestApiController,
 	controllers.NewAppController,
 	controllers.NewQueryController,
-	controllers.NewQuestFileApiController,
-	controllers.NewClientFilesController,
-	controllers.NewAssetsController,
-	controllers.NewPermissionsController,
-	controllers.NewUsersController,
 	eqemuanalytics.NewAnalyticsController,
 	eqemuchangelog.NewEqemuChangelogController,
-	controllers.NewAdminController,
+	clientfiles.NewClientFilesController,
+	assets.NewAssetsController,
+	permissions.NewPermissionsController,
+	spireuser.NewUsersController,
+	occulus.NewController,
 	staticmaps.NewStaticMapController,
 	deploy.NewDeployController,
 	provideControllers,
@@ -145,19 +149,18 @@ func provideControllers(
 	analytics *controllers.AnalyticsController,
 	connections *controllers.ConnectionsController,
 	docs *controllers.DocsController,
-	quest *controllers.QuestApiController,
+	quest *questapi.QuestApiController,
 	app *controllers.AppController,
 	query *controllers.QueryController,
-	questFileApi *controllers.QuestFileApiController,
-	clientFilesController *controllers.ClientFilesController,
+	clientFilesController *clientfiles.ClientFilesController,
 	staticMaps *staticmaps.StaticMapController,
-	assetsController *controllers.AssetsController,
-	permissionsController *controllers.PermissionsController,
-	usersController *controllers.UsersController,
 	analyticsController *eqemuanalytics.AnalyticsController,
 	changelogController *eqemuchangelog.EqemuChangelogController,
 	deployController *deploy.DeployController,
-	adminController *controllers.AdminController,
+	assetsController *assets.AssetsController,
+	permissionsController *permissions.PermissionsController,
+	usersController *spireuser.UsersController,
+	adminController *occulus.Controller,
 ) *appControllerGroups {
 	return &appControllerGroups{
 		authControllers: []routes.Controller{
@@ -178,7 +181,6 @@ func provideControllers(
 		v1controllersNoAuth: []routes.Controller{
 			quest,
 			app,
-			questFileApi,
 			staticMaps,
 			assetsController,
 			changelogController,

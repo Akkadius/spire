@@ -1,4 +1,4 @@
-package controllers
+package spireuser
 
 import (
 	"fmt"
@@ -7,7 +7,6 @@ import (
 	"github.com/Akkadius/spire/internal/http/request"
 	"github.com/Akkadius/spire/internal/http/routes"
 	"github.com/Akkadius/spire/internal/models"
-	"github.com/Akkadius/spire/internal/spireuser"
 	"github.com/labstack/echo/v4"
 	"github.com/sirupsen/logrus"
 	"net/http"
@@ -16,14 +15,14 @@ import (
 type UsersController struct {
 	db        *database.DatabaseResolver
 	logger    *logrus.Logger
-	spireuser *spireuser.UserService
+	spireuser *UserService
 	crypt     *encryption.Encrypter
 }
 
 func NewUsersController(
 	db *database.DatabaseResolver,
 	logger *logrus.Logger,
-	spireuser *spireuser.UserService,
+	spireuser *UserService,
 	crypt *encryption.Encrypter,
 ) *UsersController {
 	return &UsersController{
@@ -92,7 +91,7 @@ func (a *UsersController) create(c echo.Context) error {
 		UserName: r.Username,
 		FullName: r.Username,
 		Password: r.Password,
-		Provider: spireuser.LoginProviderLocal,
+		Provider: LoginProviderLocal,
 		IsAdmin:  false,
 	}
 

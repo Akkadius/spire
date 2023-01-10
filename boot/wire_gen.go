@@ -18,6 +18,7 @@ import (
 	"github.com/Akkadius/spire/internal/encryption"
 	"github.com/Akkadius/spire/internal/eqemuanalytics"
 	"github.com/Akkadius/spire/internal/eqemuchangelog"
+	"github.com/Akkadius/spire/internal/eqemuserverapi"
 	"github.com/Akkadius/spire/internal/github"
 	"github.com/Akkadius/spire/internal/http"
 	"github.com/Akkadius/spire/internal/http/controllers"
@@ -32,6 +33,7 @@ import (
 	"github.com/Akkadius/spire/internal/serverconfig"
 	"github.com/Akkadius/spire/internal/spire"
 	"github.com/Akkadius/spire/internal/spireuser"
+	"github.com/Akkadius/spire/internal/telnet"
 	"github.com/gertd/go-pluralize"
 )
 
@@ -53,7 +55,9 @@ func InitializeApplication() (App, error) {
 		return App{}, err
 	}
 	cache := provideCache()
-	helloWorldCommand := cmd.NewHelloWorldCommand(db, logger)
+	client := telnet.NewClient(logger)
+	eqemuserverapiClient := eqemuserverapi.NewClient(client)
+	helloWorldCommand := cmd.NewHelloWorldCommand(db, logger, eqemuserverapiClient)
 	processManagement := occulus.NewProcessManagement(pathManagement, logger)
 	proxy := occulus.NewProxy(logger, eqEmuServerConfig, processManagement)
 	adminPingOcculus := cmd.NewAdminPingOcculus(db, logger, eqEmuServerConfig, proxy)
@@ -67,8 +71,8 @@ func InitializeApplication() (App, error) {
 	helloWorldController := controllers.NewHelloWorldController(db, logger)
 	authController := controllers.NewAuthController(databaseResolver, logger, userService)
 	meController := controllers.NewMeController()
-	client := influx.NewClient()
-	analyticsController := controllers.NewAnalyticsController(logger, client, databaseResolver)
+	influxClient := influx.NewClient()
+	analyticsController := controllers.NewAnalyticsController(logger, influxClient, databaseResolver)
 	dbConnectionCreateService := connection.NewDbConnectionCreateService(databaseResolver, logger, encrypter)
 	dbConnectionCheckService := connection.NewDbConnectionCheckService(databaseResolver, logger, encrypter)
 	pluralizeClient := pluralize.NewClient()
@@ -80,24 +84,23 @@ func InitializeApplication() (App, error) {
 	githubSourceDownloader := github.NewGithubSourceDownloader(logger, cache)
 	parseService := questapi.NewParseService(logger, cache, githubSourceDownloader)
 	questExamplesGithubSourcer := questapi.NewQuestExamplesGithubSourcer(logger, cache, githubSourceDownloader)
-	questApiController := controllers.NewQuestApiController(logger, parseService, questExamplesGithubSourcer)
+	questApiController := questapi.NewQuestApiController(logger, parseService, questExamplesGithubSourcer)
 	appController := controllers.NewAppController(cache, logger, init, userService, settings)
 	queryController := controllers.NewQueryController(databaseResolver, logger)
-	questFileApiController := controllers.NewQuestFileApiController(logger)
 	exporter := clientfiles.NewExporter(logger)
 	importer := clientfiles.NewImporter(logger)
-	clientFilesController := controllers.NewClientFilesController(logger, exporter, importer, databaseResolver)
+	clientFilesController := clientfiles.NewClientFilesController(logger, exporter, importer, databaseResolver)
 	staticMapController := staticmaps.NewStaticMapController(databaseResolver, logger)
-	assetsController := controllers.NewAssetsController(logger, databaseResolver)
-	permissionsController := controllers.NewPermissionsController(logger, databaseResolver, service)
-	usersController := controllers.NewUsersController(databaseResolver, logger, userService, encrypter)
 	releases := eqemuanalytics.NewReleases()
 	eqemuanalyticsAnalyticsController := eqemuanalytics.NewAnalyticsController(logger, databaseResolver, releases)
 	changelog := eqemuchangelog.NewChangelog()
 	eqemuChangelogController := eqemuchangelog.NewEqemuChangelogController(logger, databaseResolver, changelog)
 	deployController := deploy.NewDeployController(logger)
-	adminController := controllers.NewAdminController(logger, databaseResolver, proxy)
-	bootAppControllerGroups := provideControllers(helloWorldController, authController, meController, analyticsController, connectionsController, docsController, questApiController, appController, queryController, questFileApiController, clientFilesController, staticMapController, assetsController, permissionsController, usersController, eqemuanalyticsAnalyticsController, eqemuChangelogController, deployController, adminController)
+	assetsController := assets.NewAssetsController(logger, databaseResolver)
+	permissionsController := permissions.NewPermissionsController(logger, databaseResolver, service)
+	usersController := spireuser.NewUsersController(databaseResolver, logger, userService, encrypter)
+	controller := occulus.NewController(logger, databaseResolver, proxy)
+	bootAppControllerGroups := provideControllers(helloWorldController, authController, meController, analyticsController, connectionsController, docsController, questApiController, appController, queryController, clientFilesController, staticMapController, eqemuanalyticsAnalyticsController, eqemuChangelogController, deployController, assetsController, permissionsController, usersController, controller)
 	userEvent := auditlog.NewUserEvent(databaseResolver, logger, cache)
 	aaAbilityController := crudcontrollers.NewAaAbilityController(databaseResolver, logger, userEvent)
 	aaRankController := crudcontrollers.NewAaRankController(databaseResolver, logger, userEvent)
@@ -304,7 +307,7 @@ func InitializeApplication() (App, error) {
 	userContextMiddleware := middleware.NewUserContextMiddleware(databaseResolver, cache, logger)
 	readOnlyMiddleware := middleware.NewReadOnlyMiddleware(databaseResolver, logger)
 	permissionsMiddleware := middleware.NewPermissionsMiddleware(databaseResolver, logger, cache, service)
-	requestLogMiddleware := middleware.NewRequestLogMiddleware(client)
+	requestLogMiddleware := middleware.NewRequestLogMiddleware(influxClient)
 	localUserAuthMiddleware := middleware.NewLocalUserAuthMiddleware(databaseResolver, logger, cache, settings, init)
 	spireAssets := assets.NewSpireAssets(logger, cache, githubSourceDownloader)
 	router := NewRouter(bootAppControllerGroups, bootCrudControllers, userContextMiddleware, readOnlyMiddleware, permissionsMiddleware, requestLogMiddleware, localUserAuthMiddleware, spireAssets)
