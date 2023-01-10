@@ -2,9 +2,11 @@ package spireuser
 
 import (
 	"errors"
+	"fmt"
 	"github.com/Akkadius/spire/internal/database"
 	"github.com/Akkadius/spire/internal/encryption"
 	"github.com/Akkadius/spire/internal/models"
+	gocache "github.com/patrickmn/go-cache"
 	"github.com/sirupsen/logrus"
 	"time"
 )
@@ -18,17 +20,20 @@ type UserService struct {
 	db     *database.DatabaseResolver
 	logger *logrus.Logger
 	crypt  *encryption.Encrypter
+	cache  *gocache.Cache
 }
 
 func NewUserService(
 	db *database.DatabaseResolver,
 	logger *logrus.Logger,
 	crypt *encryption.Encrypter,
+	cache *gocache.Cache,
 ) *UserService {
 	return &UserService{
 		db:     db,
 		logger: logger,
 		crypt:  crypt,
+		cache:  cache,
 	}
 }
 
@@ -83,4 +88,11 @@ func (s UserService) CheckUserLogin(username string, password string) (bool, err
 	}
 
 	return match, nil, user
+}
+
+func (s UserService) PurgeUserCache(userId uint) {
+	s.cache.Delete(fmt.Sprintf("active-connection-%v", userId))
+	s.cache.Delete(fmt.Sprintf("active-connection-%v-default", userId))
+	s.cache.Delete(fmt.Sprintf("active-connection-%v-eqemu_content", userId))
+	s.cache.Delete(fmt.Sprintf("active-user-db-connection-%v", userId))
 }

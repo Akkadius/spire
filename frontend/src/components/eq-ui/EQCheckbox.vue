@@ -60,17 +60,17 @@ export default {
       default: "",
     },
     value: {
-      type: [Number, String],
+      type: [Number, String, Boolean],
       required: false,
       default: 0,
     },
     trueValue: {
-      type: [Number, String],
+      type: [Number, String, Boolean],
       required: false,
       default: 1,
     },
     falseValue: {
-      type: [Number, String],
+      type: [Number, String, Boolean],
       required: false,
       default: 0,
     }

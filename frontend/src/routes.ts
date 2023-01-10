@@ -9,6 +9,7 @@ export const ROUTE = {
   ADMIN_CONFIG_DISCORD_WEBHOOK_SETTINGS: "/admin/configuration/settings/discord-webhook-settings",
   ADMIN_CONFIG_MOTD: "/admin/configuration/motd",
   ADMIN_CONFIG_SERVER_RULES: "/admin/configuration/server-rules",
+  ADMIN_CONFIG_QUEST_HOT_RELOAD: "/admin/configuration/quest-hot-reload",
   ADMIN_CONFIG_UCS: "/admin/configuration/settings/ucs",
   ADMIN_CONFIG_WORLDSERVER: "/admin/configuration/settings/worldserver",
   ADMIN_CONFIG_ZONESERVER: "/admin/configuration/settings/zoneserver",

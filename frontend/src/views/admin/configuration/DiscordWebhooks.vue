@@ -18,7 +18,7 @@
       </div>
     </div>
 
-    <eq-window title="Logging Webhooks" class="mt-5 p-3 pt-4">
+    <eq-window title="Logging Webhooks" class="p-3 pt-4">
       <div class="form-group col-md-12 mb-0 p-0">
 
         <div class="row">

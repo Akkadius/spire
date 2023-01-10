@@ -9,6 +9,7 @@ import (
 	"github.com/Akkadius/spire/internal/env"
 	"github.com/Akkadius/spire/internal/models"
 	"github.com/Akkadius/spire/internal/serverconfig"
+	"github.com/Akkadius/spire/internal/spireuser"
 	"github.com/go-sql-driver/mysql"
 	gocache "github.com/patrickmn/go-cache"
 	"github.com/sirupsen/logrus"
@@ -26,6 +27,7 @@ type Init struct {
 	cache                     *gocache.Cache
 	settings                  *Settings
 	crypt                     *encryption.Encrypter
+	spireuser                 *spireuser.UserService
 }
 
 func NewInit(
@@ -36,6 +38,7 @@ func NewInit(
 	cache *gocache.Cache,
 	crypt *encryption.Encrypter,
 	dbConnectionCreateService *connection.DbConnectionCreateService,
+	spireuser *spireuser.UserService,
 ) *Init {
 	i := &Init{
 		connections:               connections,
@@ -46,6 +49,7 @@ func NewInit(
 		serverconfig:              serverconfig,
 		crypt:                     crypt,
 		dbConnectionCreateService: dbConnectionCreateService,
+		spireuser:                 spireuser,
 	}
 
 	if env.IsAppEnvLocal() {
@@ -149,20 +153,22 @@ func (o *Init) CreateDefaultDatabaseConnectionFromConfig(user models.User) error
 		c.DbPassword = o.crypt.Encrypt(cfg.Server.Database.Password, o.GetEncKey(user.ID))
 
 		// content db if exists
-		if len(cfg.Server.ContentDatabase.Host) > 0 {
-			c.ContentDbHost = cfg.Server.ContentDatabase.Host
-		}
-		if len(cfg.Server.ContentDatabase.Port) > 0 {
-			c.ContentDbPort = cfg.Server.ContentDatabase.Port
-		}
-		if len(cfg.Server.ContentDatabase.Db) > 0 {
-			c.ContentDbName = cfg.Server.ContentDatabase.Db
-		}
-		if len(cfg.Server.ContentDatabase.Username) > 0 {
-			c.ContentDbUsername = cfg.Server.ContentDatabase.Username
-		}
-		if len(cfg.Server.ContentDatabase.Password) > 0 {
-			c.ContentDbPassword = o.crypt.Encrypt(cfg.Server.ContentDatabase.Password, o.GetEncKey(user.ID))
+		if cfg.Server.ContentDatabase != nil {
+			if len(cfg.Server.ContentDatabase.Host) > 0 {
+				c.ContentDbHost = cfg.Server.ContentDatabase.Host
+			}
+			if len(cfg.Server.ContentDatabase.Port) > 0 {
+				c.ContentDbPort = cfg.Server.ContentDatabase.Port
+			}
+			if len(cfg.Server.ContentDatabase.Db) > 0 {
+				c.ContentDbName = cfg.Server.ContentDatabase.Db
+			}
+			if len(cfg.Server.ContentDatabase.Username) > 0 {
+				c.ContentDbUsername = cfg.Server.ContentDatabase.Username
+			}
+			if len(cfg.Server.ContentDatabase.Password) > 0 {
+				c.ContentDbPassword = o.crypt.Encrypt(cfg.Server.ContentDatabase.Password, o.GetEncKey(user.ID))
+			}
 		}
 
 		db.Save(&c)
@@ -209,9 +215,7 @@ func (o *Init) CreateDefaultDatabaseConnectionFromConfig(user models.User) error
 	}
 
 	// purge any connection caching if exists
-	o.cache.Delete(fmt.Sprintf("active-connection-%v", user.ID))
-	o.cache.Delete(fmt.Sprintf("active-connection-%v-default", user.ID))
-	o.cache.Delete(fmt.Sprintf("active-connection-%v-eqemu_content", user.ID))
+	o.spireuser.PurgeUserCache(user.ID)
 
 	return nil
 }

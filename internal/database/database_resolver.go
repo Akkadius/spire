@@ -366,6 +366,14 @@ func (d *DatabaseResolver) handleOrWheres(query *gorm.DB, filter string) *gorm.D
 }
 
 func (d *DatabaseResolver) GetUserConnection(user models.User) models.UserServerDatabaseConnection {
+	// cache
+	key := fmt.Sprintf("active-user-db-connection-%v", user.ID)
+	cachedConn, found := d.cache.Get(key)
+	if found {
+		return cachedConn.(models.UserServerDatabaseConnection)
+	}
+
+	// cache miss
 	var conn models.UserServerDatabaseConnection
 	relationships := models.UserServerDatabaseConnection{}.Relationships()
 	query := d.GetSpireDb().Model(&models.UserServerDatabaseConnection{})
@@ -374,6 +382,9 @@ func (d *DatabaseResolver) GetUserConnection(user models.User) models.UserServer
 	}
 
 	query.Where("user_id = ? and active = 1", user.ID).First(&conn)
+
+	// set cache
+	d.cache.Set(key, conn, 10*time.Minute)
 
 	return conn
 }

@@ -22,6 +22,14 @@ func NewEQEmuServerConfig(logger *logrus.Logger, pathmgmt *pathmgmt.PathManageme
 	}
 }
 
+type DatabaseConfig struct {
+	Db       string `json:"db,omitempty"`
+	Host     string `json:"host,omitempty"`
+	Port     string `json:"port,omitempty"`
+	Username string `json:"username,omitempty"`
+	Password string `json:"password,omitempty"`
+}
+
 type EQEmuConfigJson struct {
 	Server struct {
 		Zones struct {
@@ -31,13 +39,7 @@ type EQEmuConfigJson struct {
 				High string `json:"high"`
 			} `json:"ports"`
 		} `json:"zones,omitempty"`
-		Qsdatabase struct {
-			Host     string `json:"host"`
-			Port     string `json:"port"`
-			Username string `json:"username"`
-			Password string `json:"password"`
-			Db       string `json:"db"`
-		} `json:"qsdatabase,omitempty"`
+		Qsdatabase *DatabaseConfig `json:"qsdatabase,omitempty"`
 		Chatserver struct {
 			Port string `json:"port"`
 			Host string `json:"host"`
@@ -84,21 +86,9 @@ type EQEmuConfigJson struct {
 				Port     string `json:"port"`
 			} `json:"loginserver3,omitempty"`
 		} `json:"world"`
-		Database struct {
-			Db       string `json:"db"`
-			Host     string `json:"host"`
-			Port     string `json:"port"`
-			Username string `json:"username"`
-			Password string `json:"password"`
-		} `json:"database"`
-		ContentDatabase struct {
-			Db       string `json:"db"`
-			Host     string `json:"host"`
-			Port     string `json:"port"`
-			Username string `json:"username"`
-			Password string `json:"password"`
-		} `json:"content_database,omitempty"`
-		Files struct {
+		Database        *DatabaseConfig `json:"database"`
+		ContentDatabase *DatabaseConfig `json:"content_database,omitempty"`
+		Files           struct {
 			Opcodes     string `json:"opcodes"`
 			MailOpcodes string `json:"mail_opcodes"`
 		} `json:"files"`
@@ -118,12 +108,16 @@ type EQEmuConfigJson struct {
 			} `json:"admin,omitempty"`
 		} `json:"application,omitempty"`
 		Launcher struct {
-			RunSharedMemory  bool `json:"runSharedMemory,omitempty"`
-			RunLoginserver   bool `json:"runLoginserver,omitempty"`
-			RunQueryServ     bool `json:"runQueryServ,omitempty"`
-			IsRunning        bool `json:"isRunning,omitempty"`
-			MinZoneProcesses int  `json:"minZoneProcesses,omitempty"`
+			RunSharedMemory  bool   `json:"runSharedMemory"`
+			RunLoginserver   bool   `json:"runLoginserver"`
+			RunQueryServ     bool   `json:"runQueryServ"`
+			IsRunning        bool   `json:"isRunning"`
+			MinZoneProcesses int    `json:"minZoneProcesses"`
+			StaticZones      string `json:"staticZones,omitempty"`
 		} `json:"launcher,omitempty"`
+		Quests struct {
+			HotReload bool `json:"hotReload"`
+		} `json:"quests"`
 		ServerCodePath string `json:"serverCodePath,omitempty"`
 	} `json:"web-admin,omitempty"`
 	Spire struct {
@@ -169,14 +163,16 @@ func (e EQEmuServerConfig) Exists() bool {
 	return len(e.pathmgmt.GetEQEmuServerConfigFilePath()) > 0
 }
 
-func (e EQEmuServerConfig) Save(c EQEmuConfigJson) {
+func (e EQEmuServerConfig) Save(c EQEmuConfigJson) error {
 	file, err := json.MarshalIndent(c, "", " ")
 	if err != nil {
-		e.logger.Error(err)
+		return err
 	}
 
 	err = os.WriteFile(e.pathmgmt.GetEQEmuServerConfigFilePath(), file, 0755)
 	if err != nil {
-		e.logger.Error(err)
+		return err
 	}
+
+	return nil
 }

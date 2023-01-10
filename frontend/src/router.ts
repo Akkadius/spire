@@ -318,6 +318,11 @@ const router = new Router({
           meta: {title: "Server Rules"},
         },
         {
+          path: ROUTE.ADMIN_CONFIG_QUEST_HOT_RELOAD,
+          component: () => import('./views/admin/configuration/QuestHotReload.vue'),
+          meta: {title: "Quest Hot Reload Settings", occulus: true},
+        },
+        {
           path: ROUTE.ADMIN_CONFIG_MOTD,
           component: () => import('./views/admin/configuration/Motd.vue'),
           meta: {title: "Message of the Day", occulus: true},

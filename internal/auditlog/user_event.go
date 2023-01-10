@@ -53,7 +53,6 @@ func (e UserEvent) LogUserEvent(c echo.Context, eventName string, description st
 		event.Data = description
 		_ = e.db.GetSpireDb().Create(&event)
 
-		// todo - cache this later
 		conn := e.db.GetUserConnection(user)
 		if len(conn.ServerDatabaseConnection.DiscordWebhookUrl) > 0 {
 			// connection webhook
@@ -62,7 +61,6 @@ func (e UserEvent) LogUserEvent(c echo.Context, eventName string, description st
 				conn.ServerDatabaseConnection.DiscordWebhookUrl,
 				fmt.Sprintf("[**Spire Audit Log**] [**%v**] [**%v**] %v", name, user.UserName, description),
 			)
-
 		}
 
 		// monitor webhook
