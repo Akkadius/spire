@@ -18,12 +18,11 @@
       </div>
     </div>
 
-    <eq-window title="Quest Hot Reload Settings">
+    <eq-window title="Quest Hot Reload Settings" v-if="configExists()">
 
       <div class="row">
         <div class="col-3 text-right mt-3">
           <eq-checkbox
-            v-if="configExists()"
             label="Quest Hot Reloading"
             class="d-inline-block"
             :true-value="true"
@@ -49,7 +48,7 @@
     <eq-window
       title="Hot Reload Rule Settings"
       class="mt-5"
-      v-if="config['web-admin'].quests.hotReload"
+      v-if="configExists()"
     >
       <table
         class="eq-table eq-highlight-rows bordered log-settings mt-3"
