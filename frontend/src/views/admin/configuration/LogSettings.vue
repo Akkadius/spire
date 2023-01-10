@@ -19,7 +19,7 @@
 
     <eq-window title="Log Settings">
 
-      <div style="max-height: 80vh; overflow-y: scroll">
+      <div style="max-height: 80vh; overflow-y: scroll; overflow-x: hidden">
 
         <div class="row mb-3">
           <div class="col-11">
