@@ -274,7 +274,7 @@ export default {
       this.zoneData[p.to_zone_id] = await Zones.getZoneById(p.to_zone_id)
     }
     if (p.aa_id && p.aa_id > 0) {
-      this.aaData[p.aa_id] = await AA.getAARankById(p.aa_id)
+      this.aaData[p.aa_id] = await AA.getAARankByRankId(p.aa_id)
     }
 
     this.$forceUpdate()

@@ -2,10 +2,53 @@
   <div>
     <eq-window title="Player Event Log Explorer">
       <div
-        style="height: 80vh; overflow-y: scroll"
+        style="max-height: 80vh; overflow-y: scroll;  overflow-x: hidden"
       >
+        <app-loader :is-loading="loading"/>
+
+        <div v-if="!loading">
+
+          <div class="row mb-3">
+            <div class="col-11">
+              <!--              <b-form-input-->
+              <!--                type="text"-->
+              <!--                class="form-control list-search"-->
+              <!--                @keyup="updateQueryState()"-->
+              <!--                v-model="search"-->
+              <!--                placeholder="Search log settings..."-->
+              <!--              />-->
+              <select
+                class="form-control form-control-prepended list-search"
+                v-model="eventType"
+                @change="updateQueryState()"
+              >
+                <option value="0">-- Select Event Type --</option>
+                <option v-for="s in settings" v-bind:value="s.id">
+                  {{ s.event_name }} ({{ s.id }})
+                </option>
+
+              </select>
+
+            </div>
+
+            <div class="col-1">
+              <button
+                title="Reset"
+                class="eq-button m-0"
+                @click="reset(); updateQueryState()"
+              ><i class="fa fa-refresh"></i> Reset
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div v-if="events.length === 0" class="font-weight-bold text-center mt-3">
+          No events found
+        </div>
+
         <table
           class="eq-table eq-highlight-rows bordered player-events"
+          v-if="events.length > 0"
         >
           <thead class="eq-table-floating-header">
           <tr>
@@ -19,7 +62,7 @@
           </tr>
           </thead>
           <tbody>
-          <tr v-for="e in events">
+          <tr v-for="e in events" :key="e.id">
             <td>{{ commify(e.id) }}</td>
             <td>
 
@@ -38,7 +81,9 @@
             <td class="text-right">{{ e.event_type_name }} ({{ e.event_type_id }})</td>
 
             <td style="vertical-align: middle; text-align: left">
-              <player-event-display-component :e="e"/>
+              <player-event-display-component
+                :e="e"
+              />
               <!--              <pre style="width: 100%">{{ e.event_data }}</pre>-->
             </td>
             <td>{{ fromNow(e.created_at) }}</td>
@@ -61,6 +106,11 @@ import {DB_CLASSES_ICONS}          from "@/app/constants/eq-class-icon-constants
 import {DB_RACES_ICONS}            from "@/app/constants/eq-race-icon-constants";
 import PlayerEventDisplayComponent from "@/views/admin/player-event-logs/components/PlayerEventDisplayComponent.vue";
 import {AA}                        from "@/app/aa";
+import {Zones}                     from "@/app/zones";
+import {Npcs}                      from "@/app/npcs";
+import {Items}                     from "@/app/items";
+import {ROUTE}                     from "@/routes";
+import {PlayerEventLogSettingApi}  from "@/app/api/api/player-event-log-setting-api";
 
 // GM_COMMAND           | [x] Implemented Formatter
 // ZONING               | [x] Implemented Formatter
@@ -110,10 +160,59 @@ export default {
   components: { PlayerEventDisplayComponent, EqWindow },
   data() {
     return {
+      search: "",
+      eventType: 0,
+
+      loading: false,
+
+      settings: [],
+
       events: [],
     }
   },
+  watch: {
+    $route(to, from) {
+      this.loadQueryState()
+      setTimeout(() => {
+        this.loadEvents();
+      }, 1)
+    }
+  },
   methods: {
+    reset() {
+      this.search    = "";
+      this.eventType = 0;
+    },
+
+    updateQueryState() {
+      let q = {};
+
+      if (this.search !== "") {
+        q.search = this.search
+      }
+      if (parseInt(this.eventType) !== 0) {
+        q.eventType = parseInt(this.eventType)
+      }
+
+      this.$router.push(
+        {
+          path: ROUTE.ADMIN_TOOL_PLAYER_EVENT_LOGS,
+          query: q
+        }
+      ).catch(() => {
+      })
+    },
+
+    loadQueryState() {
+      if (this.$route.query.search && this.$route.query.search.length > 0) {
+        this.search = this.$route.query.search
+      }
+
+      if (this.$route.query.eventType && parseInt(this.$route.query.eventType) > 0) {
+        this.eventType = parseInt(this.$route.query.eventType)
+      }
+    },
+
     commify(x) {
       return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
     },
@@ -141,30 +240,67 @@ export default {
 
       return 'data:image/gif;base64,R0lGODlhAQABAIAAAMLCwgAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw=='
     },
+    async loadEvents() {
+      let builder = (new SpireQueryBuilder())
+      builder.includes(
+        [
+          "Account",
+          "CharacterDatum",
+          "Zone",
+        ]
+      )
+
+      if (this.eventType) {
+        builder.where("event_type_id", "=", this.eventType)
+      }
+
+      builder.orderBy(["created_at"])
+      builder.orderDirection("desc")
+
+      // @ts-ignore
+      const r    = await (new PlayerEventLogApi(...SpireApi.cfg())).listPlayerEventLogs(builder.get())
+      let events = []
+      if (r.status === 200) {
+        events = r.data
+      }
+
+      let npcIds  = []
+      let itemIds = []
+      for (let e of events) {
+        let d = JSON.parse(e.event_data)
+        if (d && d.npc_id) {
+          npcIds.push(d.npc_id)
+        }
+        if (d && d.item_id) {
+          itemIds.push(d.item_id)
+        }
+      }
+
+      await Promise.all(
+        [
+          AA.preLoad(),
+          Zones.getZones(),
+          Npcs.getNpcsBulk(npcIds),
+          Items.loadItemsBulk(itemIds)
+        ]
+      ).then(async (r) => {
+        console.log("Preloading done")
+        this.events  = events
+        this.loading = false
+      });
+    }
   },
   async mounted() {
-    await AA.preLoad()
-
-    let builder = (new SpireQueryBuilder())
-    builder.includes(
-      [
-        "Account",
-        "CharacterDatum",
-        "Zone",
-      ]
-    )
-    builder.orderBy(["created_at"])
-    builder.orderDirection("desc")
-
-    // @ts-ignore
-    const api = (new PlayerEventLogApi(...SpireApi.cfg()))
-    const r   = await api.listPlayerEventLogs(builder.get())
-    let events = []
+    this.loadQueryState()
+    const r = await (new PlayerEventLogSettingApi(...SpireApi.cfg())).listPlayerEventLogSettings()
     if (r.status === 200) {
-      events = r.data
+      this.settings = r.data
     }
 
-    this.events = events
+    this.loading = true
+    setTimeout(() => {
+      this.loadEvents();
+    }, 1)
   }
 }
 </script>

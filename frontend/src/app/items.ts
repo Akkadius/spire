@@ -41,6 +41,10 @@ export class Items {
   }
 
   public static async loadItemsBulk(ids: any[]) {
+    if (ids.length === 0) {
+      return []
+    }
+
     // items bulk fetch preload
     const r = await (new ItemApi(...SpireApi.cfg())).getItemsBulk({
       body: {

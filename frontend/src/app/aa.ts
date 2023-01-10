@@ -10,13 +10,23 @@ export class AA {
   public static _dbStrs    = <any>[]
 
   static async preLoad() {
+    if (this._aaRanks.length > 0) {
+      return
+    }
+
     let builder = (new SpireQueryBuilder())
     builder.limit(100000)
 
     await Promise.all(
       [
         // @ts-ignore
-        (new AaRankApi(...SpireApi.cfg())).listAaRanks(builder.get()),
+        (new AaRankApi(...SpireApi.cfg())).listAaRanks(
+          // @ts-ignore
+          (new SpireQueryBuilder())
+            .includes(["AaAbility", "SpellsNew"])
+            .limit(100000000)
+            .get()
+        ),
         // @ts-ignore
         (new AaAbilityApi(...SpireApi.cfg())).listAaAbilities(builder.get()),
         // @ts-ignore
