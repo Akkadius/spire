@@ -328,6 +328,11 @@ const router = new Router({
           meta: {title: "Database Backup"},
         },
         {
+          path: ROUTE.ADMIN_TOOL_SERVER_RELOAD,
+          component: () => import('./views/admin/tools/ServerReload.vue'),
+          meta: {title: "Server Reload API"},
+        },
+        {
           path: ROUTE.ADMIN_CONFIG_MOTD,
           component: () => import('./views/admin/configuration/Motd.vue'),
           meta: {title: "Message of the Day", occulus: true},

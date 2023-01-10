@@ -18,6 +18,7 @@ export const ROUTE = {
   ADMIN_TOOL_SERVER_CODE: "/admin/tools/server-code",
   ADMIN_TOOL_SERVER_QUESTS: "/admin/tools/server-quests",
   ADMIN_TOOL_DATABASE_BACKUP: "/admin/tools/database-backup",
+  ADMIN_TOOL_SERVER_RELOAD: "/admin/tools/server-reload",
   ADMIN_TOOL_BACKUPS: "/admin/tools/backups",
   ADMIN_TOOL_CLIENT_FILE_DOWNLOADS: "/admin/tools/client-assets",
   ADMIN_TOOL_PLAYER_EVENT_LOGS: "/admin/tools/player-event-logs",
