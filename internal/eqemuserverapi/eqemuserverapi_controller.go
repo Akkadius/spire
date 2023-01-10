@@ -1,6 +1,7 @@
 package eqemuserverapi
 
 import (
+	"fmt"
 	"github.com/Akkadius/spire/internal/database"
 	"github.com/Akkadius/spire/internal/http/routes"
 	"github.com/Akkadius/spire/internal/serverconfig"
@@ -43,7 +44,10 @@ func (a *Controller) Routes() []*routes.Route {
 func (a *Controller) getReloadTypes(c echo.Context) error {
 	types, err := a.eqemuserverapi.GetReloadTypes()
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err})
+		return c.JSON(
+			http.StatusInternalServerError,
+			echo.Map{"error": fmt.Sprintf("Failed to connect to gameserver [%v]", err.Error())},
+		)
 	}
 
 	return c.JSON(http.StatusOK, types)
@@ -53,7 +57,10 @@ func (a *Controller) reload(c echo.Context) error {
 	reloadType := c.Param("type")
 	r, err := a.eqemuserverapi.Reload(reloadType)
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err})
+		return c.JSON(
+			http.StatusInternalServerError,
+			echo.Map{"error": fmt.Sprintf("Failed to connect to gameserver [%v]", err.Error())},
+		)
 	}
 
 	return c.JSON(http.StatusOK, r)
