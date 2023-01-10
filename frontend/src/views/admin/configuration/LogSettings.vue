@@ -4,7 +4,7 @@
       class="row justify-content-center"
       style="position: absolute; top: 0%; z-index: 9999999; width: 100%"
     >
-      <div class="col-3">
+      <div class="col-4">
         <info-error-banner
           style="width: 100%"
           :slim="true"
@@ -23,7 +23,7 @@
         <table class="eq-table eq-highlight-rows bordered log-settings">
           <thead class="eq-table-floating-header">
           <tr>
-            <th class="text-right" style="width: 180px">(ID) Category</th>
+            <th class="text-right" style="width: 200px">(ID) Category</th>
             <th style="width: 230px">Console Log Level</th>
             <th style="width: 230px">File Log Level</th>
             <th style="width: 230px">GM (In-Game) Log Level</th>
@@ -208,6 +208,7 @@ import {LogsysCategoryApi} from "@/app/api/api/logsys-category-api";
 import EqCheckbox          from "@/components/eq-ui/EQCheckbox.vue";
 import EqDebug             from "@/components/eq-ui/EQDebug.vue";
 import InfoErrorBanner     from "@/components/InfoErrorBanner.vue";
+import util                from "util";
 
 export default {
   name: "LogSettings",
@@ -243,8 +244,20 @@ export default {
           this.notification = ""
           // we have to queue timeout to reset the notification dismiss timer
           setTimeout(() => {
-            this.notification = "Settings updated!"
+            this.notification =
+              util.format(
+                "Settings updated for [%s] (%s)!",
+                e.log_category_description,
+                e.log_category_id
+              )
           }, 1)
+
+          const r = await SpireApi.v1().post("eqemuserver/reload/logs")
+          if (r.status === 200) {
+            setTimeout(() => {
+              this.notification = "Server logs reloaded in-game!"
+            }, 1000)
+          }
         }
       } catch (e) {
         // error notify
@@ -252,6 +265,8 @@ export default {
           this.error = e.response.data.error
         }
       }
+
+
     }
   }
 }
