@@ -17,7 +17,7 @@
       </div>
     </div>
 
-    <eq-window title="Log Settings" class="p-1">
+    <eq-window title="Log Settings" class="p-1 minified-inputs">
 
       <div style="height: 84vh; overflow-y: scroll">
         <table class="eq-table eq-highlight-rows bordered log-settings">
@@ -28,7 +28,7 @@
             <th style="width: 230px">File Log Level</th>
             <th style="width: 230px">GM (In-Game) Log Level</th>
             <th style="width: 230px">Discord Log Level</th>
-            <th>Discord Webhook ID</th>
+            <th>Discord Webhook</th>
           </tr>
 
           </thead>
@@ -188,7 +188,22 @@
             <td
               :style="(s.log_to_discord > 0 && s.discord_webhook_id === 0 ? 'color: red' : '')"
               :title="(s.log_to_discord > 0 && s.discord_webhook_id === 0 ? 'Webhook needs to be assigned' : '')"
-            >{{ s.discord_webhook_id }}
+            >
+              <select
+                :style="(s.log_to_discord > 0 && s.discord_webhook_id === 0 ? 'border-color: red' : '')"
+                :title="(s.log_to_discord > 0 && s.discord_webhook_id === 0 ? 'Webhook needs to be assigned' : '')"
+                @change="save(s)"
+                class="form-control m-0" v-model="s.discord_webhook_id"
+              >
+                <option :value="0">--- None ---</option>
+                <option
+                  v-for="w in discordWebhooks"
+                  :key="w.id"
+                  :value="w.id"
+                >Name [{{ w.webhook_name }}] ID ({{w.id}})
+                </option>
+              </select>
+
             </td>
           </tr>
           </tbody>
@@ -209,6 +224,7 @@ import EqCheckbox          from "@/components/eq-ui/EQCheckbox.vue";
 import EqDebug             from "@/components/eq-ui/EQDebug.vue";
 import InfoErrorBanner     from "@/components/InfoErrorBanner.vue";
 import util                from "util";
+import {DiscordWebhookApi} from "@/app/api/api/discord-webhook-api";
 
 export default {
   name: "LogSettings",
@@ -216,6 +232,7 @@ export default {
   data() {
     return {
       settings: [],
+      discordWebhooks: [],
 
       // notification / errors
       notification: "",
@@ -223,14 +240,26 @@ export default {
     }
   },
   async mounted() {
-    const r = await (new LogsysCategoryApi(...SpireApi.cfg())).listLogsysCategories()
+    let r = await (new LogsysCategoryApi(...SpireApi.cfg())).listLogsysCategories()
     if (r.status === 200) {
       this.settings = r.data
+    }
+
+    r = await (new DiscordWebhookApi(...SpireApi.cfg())).listDiscordWebhooks()
+    if (r.status === 200) {
+      this.discordWebhooks = r.data
+      console.log(this.discordWebhooks)
     }
   },
   methods: {
     async save(e) {
       console.log(e)
+
+      if (e.log_to_discord > 0 && e.discord_webhook_id === 0) {
+        this.error = `Discord Webhook needs to be assigned for this log category [${e.log_category_description}] to work!`
+        return;
+      }
+
       try {
         const r = await (new LogsysCategoryApi(...SpireApi.cfg()))
           .updateLogsysCategory(
