@@ -126,7 +126,7 @@ func (c *Client) GetWorldClientList() (WorldClientList, error) {
 }
 
 type ReloadResponse struct {
-	Data []struct {
+	Data struct {
 		Message string `json:"message"`
 	} `json:"data"`
 	ExecutionTime string `json:"execution_time"`

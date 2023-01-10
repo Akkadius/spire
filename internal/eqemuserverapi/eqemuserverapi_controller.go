@@ -48,6 +48,6 @@ func (a *Controller) reload(c echo.Context) error {
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err})
 	}
-	
+
 	return c.JSON(http.StatusOK, r)
 }
