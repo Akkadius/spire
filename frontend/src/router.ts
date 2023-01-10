@@ -337,11 +337,15 @@ const router = new Router({
           component: () => import('./views/admin/configuration/Motd.vue'),
           meta: {title: "Message of the Day", occulus: true},
         },
-
         {
           path: ROUTE.ADMIN_CONFIG_LOG_SETTINGS,
           component: () => import('./views/admin/configuration/LogSettings.vue'),
           meta: {title: "Log Settings" },
+        },
+        {
+          path: ROUTE.ADMIN_CONFIG_PLAYER_EVENT_LOGS,
+          component: () => import('./views/admin/configuration/PlayerEventLogSettings.vue'),
+          meta: {title: "Player Event Log Settings" },
         },
 
         // tools

@@ -348,6 +348,7 @@ export default {
           { title: "Discord Webhooks", to: ROUTE.ADMIN_CONFIG_DISCORD_WEBHOOK_SETTINGS, icon: "ra ra-cog mr-1" },
           { title: "Log Settings", to: ROUTE.ADMIN_CONFIG_LOG_SETTINGS, icon: "ra ra-scroll-unfurled mr-1" },
           { title: "MOTD", to: ROUTE.ADMIN_CONFIG_MOTD, icon: "ra ra-wooden-sign mr-1", isOcculus: true },
+          { title: "Player Event Settings", to: ROUTE.ADMIN_CONFIG_PLAYER_EVENT_LOGS, icon: "ra ra-telescope mr-1" },
           { title: "Quest Hot Reload", to: ROUTE.ADMIN_CONFIG_QUEST_HOT_RELOAD, icon: "ra ra-alien-fire mr-1", isOcculus: true },
           { title: "Server Rules", to: ROUTE.ADMIN_CONFIG_SERVER_RULES, icon: "ra ra-interdiction mr-1" },
           { title: "UCS", to: ROUTE.ADMIN_CONFIG_UCS, icon: "ra ra-speech-bubbles mr-1", isOcculus: true },
@@ -365,7 +366,7 @@ export default {
           { title: "Code", to: ROUTE.ADMIN_TOOL_SERVER_CODE, icon: "fa fa-code-fork mr-1", isOcculus: true },
           { title: "Database Backup", to: ROUTE.ADMIN_TOOL_DATABASE_BACKUP, icon: "fa fa-database mr-1"},
           { title: "File Logs", to: ROUTE.ADMIN_TOOL_LOGS, icon: "fe fe-book mr-1", isOcculus: true },
-          { title: "Player Event Log Viewer", to: ROUTE.ADMIN_TOOL_PLAYER_EVENT_LOGS, icon: "ra ra-kaleidoscope mr-1" },
+          { title: "Player Event Log Viewer", to: ROUTE.ADMIN_TOOL_PLAYER_EVENT_LOGS, icon: "ra ra-telescope mr-1" },
           { title: "Quests", to: ROUTE.ADMIN_TOOL_SERVER_QUESTS, icon: "fa fa-code-fork mr-1", isOcculus: true },
           { title: "Reloading (Global)", to: ROUTE.ADMIN_TOOL_SERVER_RELOAD, icon: "fa fa-refresh mr-1" },
         ]

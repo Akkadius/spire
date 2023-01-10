@@ -42,7 +42,6 @@
         </div>
       </div>
 
-
     </eq-window>
 
     <eq-window
