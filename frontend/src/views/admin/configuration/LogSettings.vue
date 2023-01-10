@@ -23,19 +23,18 @@
         <table class="eq-table eq-highlight-rows bordered log-settings">
           <thead class="eq-table-floating-header">
           <tr>
-            <th>ID</th>
-            <th class="text-right">Category</th>
-            <th>Console Log Level</th>
-            <th>File Log Level</th>
-            <th>GM (In-Game) Log Level</th>
-            <!--          <th>Discord</th>-->
+            <th class="text-right" style="width: 180px">(ID) Category</th>
+            <th style="width: 230px">Console Log Level</th>
+            <th style="width: 230px">File Log Level</th>
+            <th style="width: 230px">GM (In-Game) Log Level</th>
+            <th style="width: 230px">Discord Log Level</th>
+            <th>Discord Webhook ID</th>
           </tr>
 
           </thead>
           <tbody>
           <tr v-for="s in settings">
-            <td>{{ s.log_category_id }}</td>
-            <td class="text-right">{{ s.log_category_description }}</td>
+            <td class="text-right">({{ s.log_category_id }}) {{ s.log_category_description }}</td>
             <td>
               <div class="d-inline-block mr-3">
                 <eq-checkbox
@@ -149,7 +148,48 @@
                 />
               </div>
             </td>
-            <!--          <td>{{ s.log_to_discord }}</td>-->
+            <td>
+              <div class="d-inline-block mr-3">
+                <eq-checkbox
+                  label="Off"
+                  :fade-when-not-true="true"
+                  class="d-inline-block"
+                  :true-value="0"
+                  :false-value="0"
+                  v-model="s.log_to_discord"
+                  @change="save(s)"
+                />
+              </div>
+
+              <div class="d-inline-block mr-3">
+                <eq-checkbox
+                  label="Normal"
+                  :fade-when-not-true="true"
+                  class="d-inline-block"
+                  :true-value="1"
+                  :false-value="0"
+                  v-model="s.log_to_discord"
+                  @change="save(s)"
+                />
+              </div>
+
+              <div class="d-inline-block">
+                <eq-checkbox
+                  label="Detail"
+                  :fade-when-not-true="true"
+                  class="d-inline-block"
+                  :true-value="3"
+                  :false-value="0"
+                  v-model="s.log_to_discord"
+                  @change="save(s)"
+                />
+              </div>
+            </td>
+            <td
+              :style="(s.log_to_discord > 0 && s.discord_webhook_id === 0 ? 'color: red' : '')"
+              :title="(s.log_to_discord > 0 && s.discord_webhook_id === 0 ? 'Webhook needs to be assigned' : '')"
+            >{{ s.discord_webhook_id }}
+            </td>
           </tr>
           </tbody>
         </table>

@@ -2,6 +2,8 @@
   <div
     v-if="id"
     :style="getStyle()"
+    @mouseover="hovered = true"
+    @mouseout="hovered = false"
   >
     <span v-if="label">{{label}}</span>
     <input
@@ -24,7 +26,8 @@ export default {
   name: "EqCheckbox",
   data() {
     return {
-      id: ""
+      id: "",
+      hovered: false,
     }
   },
   computed: {
@@ -81,8 +84,12 @@ export default {
     },
     getStyle() {
       if (this.fadeWhenNotTrue) {
+        if (this.hovered) {
+          return 'opacity: 1; font-weight: bold;'
+        }
+
         if (this.value !== this.trueValue) {
-          return 'opacity: .5'
+          return 'opacity: .3'
         }
         return 'opacity: 1'
       }
