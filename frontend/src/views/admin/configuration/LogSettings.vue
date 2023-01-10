@@ -19,9 +19,9 @@
 
     <eq-window title="Log Settings">
 
-      <div style="max-height: 84vh; overflow-y: scroll">
+      <div style="max-height: 80vh; overflow-y: scroll">
 
-        <div class="row mt-3 mb-4">
+        <div class="row mb-3">
           <div class="col-11">
             <b-form-input
               type="text"
