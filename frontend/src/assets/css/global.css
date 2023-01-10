@@ -512,3 +512,7 @@ th[role=columnheader]:hover:not(.no-sort):after {
     position: sticky;
     top: 0;
 }
+
+a:hover {
+    cursor:pointer;
+}

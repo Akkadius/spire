@@ -9,14 +9,8 @@
         <div v-if="!loading">
 
           <div class="row mb-3">
-            <div class="col-11">
-              <!--              <b-form-input-->
-              <!--                type="text"-->
-              <!--                class="form-control list-search"-->
-              <!--                @keyup="updateQueryState()"-->
-              <!--                v-model="search"-->
-              <!--                placeholder="Search log settings..."-->
-              <!--              />-->
+            <div class="col-2 text-center font-weight-bold">
+              Event Type
               <select
                 class="form-control form-control-prepended list-search"
                 v-model="eventType"
@@ -28,13 +22,35 @@
                 </option>
 
               </select>
+            </div>
 
+            <div class="col-2 text-center font-weight-bold">
+              Zone ID
+              <b-form-input
+                type="text"
+                class="form-control list-search"
+                @keyup="updateQueryState()"
+                v-model="zoneId"
+                placeholder="Zone ID"
+              />
+            </div>
+
+            <div class="col-2 text-center font-weight-bold">
+              Character ID
+              <b-form-input
+                type="text"
+                class="form-control list-search"
+                @keyup="updateQueryState()"
+                v-model="characterId"
+                placeholder="Character ID"
+              />
             </div>
 
             <div class="col-1">
               <button
                 title="Reset"
                 class="eq-button m-0"
+                style="margin-top: 20px !important"
                 @click="reset(); updateQueryState()"
               ><i class="fa fa-refresh"></i> Reset
               </button>
@@ -70,13 +86,23 @@
                 <img class="avatar-img rounded-circle" style="width:20px" :src="getClassImage(e.character_datum.class)">
                 <img class="avatar-img rounded-circle" style="width:20px" :src="getRaceImage(e.character_datum.race)">
 
-                <span class="ml-1">
+                <a
+                  class="ml-1"
+                  @click="characterId = e.character_datum.id; updateQueryState()"
+                >
                   {{ e.character_datum.name }}
-                </span>
+                </a>
 
               </div>
             </td>
-            <td>{{ e.zone.long_name }} ({{ e.zone.zoneidnumber }})</td>
+            <td>
+              <a
+                class="ml-1"
+                @click="zoneId = e.zone.zoneidnumber; updateQueryState()"
+              >
+                {{ e.zone.long_name }}
+              </a>({{ e.zone.zoneidnumber }})
+            </td>
 
             <td class="text-right">{{ e.event_type_name }} ({{ e.event_type_id }})</td>
 
@@ -162,6 +188,8 @@ export default {
     return {
       search: "",
       eventType: 0,
+      zoneId: null,
+      characterId: null,
 
       loading: false,
 
@@ -180,8 +208,10 @@ export default {
   },
   methods: {
     reset() {
-      this.search    = "";
-      this.eventType = 0;
+      this.search      = "";
+      this.eventType   = 0;
+      this.zoneId      = null
+      this.characterId = null
     },
 
     updateQueryState() {
@@ -192,6 +222,12 @@ export default {
       }
       if (parseInt(this.eventType) !== 0) {
         q.eventType = parseInt(this.eventType)
+      }
+      if (this.zoneId && parseInt(this.zoneId) !== 0) {
+        q.zoneId = parseInt(this.zoneId)
+      }
+      if (this.characterId && parseInt(this.characterId) !== 0) {
+        q.characterId = parseInt(this.characterId)
       }
 
       this.$router.push(
@@ -207,9 +243,14 @@ export default {
       if (this.$route.query.search && this.$route.query.search.length > 0) {
         this.search = this.$route.query.search
       }
-
       if (this.$route.query.eventType && parseInt(this.$route.query.eventType) > 0) {
         this.eventType = parseInt(this.$route.query.eventType)
+      }
+      if (this.$route.query.zoneId && parseInt(this.$route.query.zoneId) > 0) {
+        this.zoneId = parseInt(this.$route.query.zoneId)
+      }
+      if (this.$route.query.characterId && parseInt(this.$route.query.characterId) > 0) {
+        this.characterId = parseInt(this.$route.query.characterId)
       }
     },
 
@@ -252,6 +293,14 @@ export default {
 
       if (this.eventType) {
         builder.where("event_type_id", "=", this.eventType)
+      }
+
+      if (this.characterId > 0) {
+        builder.where("character_id", "=", this.characterId)
+      }
+
+      if (this.zoneId > 0) {
+        builder.where("zone_id", "=", this.zoneId)
       }
 
       builder.orderBy(["created_at"])
@@ -308,5 +357,8 @@ export default {
 <style scoped>
 .player-events td, .player-events th {
   text-align: center;
+}
+.player-events td A {
+  color: lightblue !important;
 }
 </style>
