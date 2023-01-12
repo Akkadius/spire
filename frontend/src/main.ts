@@ -25,14 +25,16 @@ import 'fontawesome-4.7'
 // rpg awesome icons
 import "rpg-awesome/css/rpg-awesome.min.css";
 
-// highlight js css
-import "@/assets/css/highlight-js-vs2015.css";
+import 'highlight.js/styles/tomorrow-night-bright.css';
+
+import hljs from 'highlight.js';
+import json from 'highlight.js/lib/languages/json.js';
+hljs.registerLanguage('json', json);
 
 /* spritesheet assets */
 // import "../public/eq-asset-preview-master/assets/sprites/item-icons.css";
 // import "../public/eq-asset-preview-master/assets/sprites/objects.css";
 // import "../public/eq-asset-preview-master/assets/sprites/race-models.css";
-
 
 import "@exuanbo/file-icons-js/dist/css/file-icons.min.css"
 

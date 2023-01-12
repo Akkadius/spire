@@ -1,14 +1,14 @@
 <template>
   <div>
 
-    <app-loader :is-loading="loading"/>
+    <app-loader :is-loading="initialLoading"/>
 
     <eq-window
-      v-if="!loading"
+      v-if="!initialLoading"
       class="pb-1"
       title="Player Event Log Explorer"
     >
-      <div v-if="!loading">
+      <div v-if="!initialLoading">
         <div class="row mb-3">
           <div class="col-2 text-center font-weight-bold">
             Event Type
@@ -75,10 +75,9 @@
     </eq-window>
 
     <eq-window
-      v-if="!loading"
+      v-if="!initialLoading"
       class="p-1"
     >
-
       <div v-if="events.length === 0" class="font-weight-bold text-center p-3">
         No events found with specified criteria.
       </div>
@@ -87,6 +86,7 @@
         style="max-height: 72vh; overflow-y: scroll;  overflow-x: hidden"
       >
         <table
+          :style="(loading ? 'opacity:.3' : 'opacity:1')"
           class="eq-table eq-highlight-rows bordered player-events"
           v-if="events.length > 0"
         >
@@ -97,8 +97,9 @@
             <th style="width: 200px">Zone</th>
 
             <th class="text-center" style="width: 175px">Event Type</th>
+            <th class="text-center" style="width: 90px">Raw</th>
             <th class="text-center">Event</th>
-            <th>Time</th>
+            <th style="width: 110px">Time</th>
           </tr>
           </thead>
           <tbody>
@@ -139,11 +140,26 @@
               >{{ e.event_type_name }}</a> ({{ e.event_type_id }})
             </td>
 
+            <td style="vertical-align: middle; text-align: center">
+              <pre
+                v-if="showRaw[e.id]"
+                class="text-left code fade-in"
+                style="width: 100%; padding: 0 !important; margin-bottom: 0 !important"
+              ><code class="language-json">{{ e.event_data.replaceAll("    ", "  ") }}</code></pre>
+              <button
+                title="View raw"
+                @click="showRawEvent(e)"
+                v-if="!showRaw[e.id] && Object.keys(JSON.parse(e.event_data)).length > 0"
+                class="btn btn-sm btn-warning"
+                style="font-size: 10px"
+              >
+                <i class="fa fa-search"></i> ({{ Object.keys(JSON.parse(e.event_data)).length }})
+              </button>
+            </td>
             <td style="vertical-align: middle; text-align: left">
               <player-event-display-component
                 :e="e"
               />
-              <!--              <pre style="width: 100%">{{ e.event_data }}</pre>-->
             </td>
             <td>{{ fromNow(e.created_at) }}</td>
           </tr>
@@ -171,6 +187,9 @@ import {Items}                     from "@/app/items";
 import {ROUTE}                     from "@/routes";
 import {PlayerEventLogSettingApi}  from "@/app/api/api/player-event-log-setting-api";
 import Timer                       from "@/app/timer/timer";
+import EqProgressBar               from "@/components/eq-ui/EQProgressBar.vue";
+import LoaderFakeProgress          from "@/components/LoaderFakeProgress.vue";
+import hljs                        from "highlight.js";
 
 // GM_COMMAND           | [x] Implemented Formatter
 // ZONING               | [x] Implemented Formatter
@@ -217,7 +236,7 @@ import Timer                       from "@/app/timer/timer";
 
 export default {
   name: "PlayerEventLogs",
-  components: { PlayerEventDisplayComponent, EqWindow },
+  components: { LoaderFakeProgress, EqProgressBar, PlayerEventDisplayComponent, EqWindow },
   data() {
     return {
       search: "",
@@ -227,6 +246,8 @@ export default {
 
       refreshInterval: 5000,
 
+      showRaw: {},
+
       timerOptions: [
         { timer: 1000 },
         { timer: 5000 },
@@ -235,6 +256,7 @@ export default {
       ],
 
       loading: false,
+      initialLoading: false,
 
       settings: [],
 
@@ -247,6 +269,8 @@ export default {
       this.loadQueryState()
       this.stopTimer()
       this.startTimer()
+
+      this.loading = true
       setTimeout(() => {
         this.loadEvents();
       }, 1)
@@ -254,11 +278,25 @@ export default {
   },
   methods: {
 
+    showRawEvent(e) {
+      this.showRaw[e.id] = 1
+      this.$forceUpdate()
+
+      setTimeout(() => {
+        // hljs.initHighlighting()
+        for (let b of document.querySelectorAll('pre code')) {
+          hljs.highlightBlock(b)
+        }
+      }, 10)
+
+    },
+
     reset() {
       this.search      = "";
       this.eventType   = 0;
       this.zoneId      = null
       this.characterId = null
+      this.showRaw     = {}
     },
 
     updateQueryState() {
@@ -366,6 +404,8 @@ export default {
         builder.where("zone_id", "=", this.zoneId)
       }
 
+      builder.limit(100)
+
       builder.orderBy(["created_at"])
       builder.orderDirection("desc")
 
@@ -405,14 +445,16 @@ export default {
           ]
         ).then(async (r) => {
           console.log("Preloading done")
-          this.events  = events
-          this.loading = false
+          this.events         = events
+          this.initialLoading = false
+          this.loading        = false
+
         });
       } else {
-        this.events  = events
-        this.loading = false
+        this.events         = events
+        this.initialLoading = false
+        this.loading        = false
       }
-
     },
 
     startTimer() {
@@ -447,7 +489,7 @@ export default {
 
     this.startTimer()
 
-    this.loading = true
+    this.initialLoading = true
     setTimeout(() => {
       this.loadEvents();
     }, 1)

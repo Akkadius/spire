@@ -48,10 +48,10 @@
           <thead class="eq-table-floating-header">
           <tr>
             <th class="text-right" style="width: 200px">(ID) Event Name</th>
-            <th style="width: 230px">Event Enabled</th>
-            <th style="width: 230px">
+            <th style="width: 140px">Event Enabled</th>
+            <th style="width: 400px">
               Retention Days
-              <small class="text-muted">
+              <small class="text-muted d-block">
                 Determines how long in days that these events are kept in the database before world automatically truncates them
               </small>
             </th>
