@@ -265,7 +265,7 @@ const router = new Router({
         {
           path: 'players-online',
           component: () => import('./views/admin/PlayersOnline.vue'),
-          meta: {title: "Players Online", occulus: true},
+          meta: {title: "Players Online"},
         },
         {
           path: 'zones',

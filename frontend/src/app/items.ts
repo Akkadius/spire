@@ -473,4 +473,8 @@ export class Items {
       return Promise.reject(err)
     }
   }
+
+  static cacheExists(item_id) {
+    return this.items[item_id];
+  }
 }

@@ -87,4 +87,8 @@ export class Zones {
 
     return ""
   }
+
+  static isPreloaded() {
+    return this.zones.length > 0;
+  }
 }

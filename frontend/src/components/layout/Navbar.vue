@@ -79,11 +79,6 @@
             <li class="nav-item" v-if="isInAdmin()">
               <router-link class="nav-link" :to="ROUTE.ADMIN_PLAYERS_ONLINE" exact>
                 <i class="ra ra-double-team mr-1"></i> Players Online
-                <b-badge class="ml-3" variant="primary">
-                  <i class="fe fe-eye"></i>
-                  Occulus
-                </b-badge>
-
               </router-link>
             </li>
             <li class="nav-item" v-if="isInAdmin()">

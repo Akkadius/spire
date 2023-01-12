@@ -35,6 +35,8 @@ func NewController(
 
 func (a *Controller) Routes() []*routes.Route {
 	return []*routes.Route{
+		routes.RegisterRoute(http.MethodGet, "eqemuserver/zone-list", a.getZoneList, nil),
+		routes.RegisterRoute(http.MethodGet, "eqemuserver/client-list", a.getClientList, nil),
 		routes.RegisterRoute(http.MethodGet, "eqemuserver/server-stats", a.getServerStats, nil),
 		routes.RegisterRoute(http.MethodGet, "eqemuserver/reload-types", a.getReloadTypes, nil),
 		routes.RegisterRoute(http.MethodPost, "eqemuserver/reload/:type", a.reload, nil),
@@ -116,4 +118,28 @@ func (a *Controller) getServerStats(c echo.Context) error {
 	r.ServerName = a.serverconfig.Get().Server.World.Longname
 
 	return c.JSON(http.StatusOK, r)
+}
+
+func (a *Controller) getClientList(c echo.Context) error {
+	types, err := a.eqemuserverapi.GetWorldClientList()
+	if err != nil {
+		return c.JSON(
+			http.StatusInternalServerError,
+			echo.Map{"error": fmt.Sprintf("Failed to connect to gameserver [%v]", err.Error())},
+		)
+	}
+
+	return c.JSON(http.StatusOK, types)
+}
+
+func (a *Controller) getZoneList(c echo.Context) error {
+	types, err := a.eqemuserverapi.GetZoneList()
+	if err != nil {
+		return c.JSON(
+			http.StatusInternalServerError,
+			echo.Map{"error": fmt.Sprintf("Failed to connect to gameserver [%v]", err.Error())},
+		)
+	}
+
+	return c.JSON(http.StatusOK, types)
 }

@@ -9,8 +9,12 @@ export class AA {
   public static _aaAbility = <any>[]
   public static _dbStrs    = <any>[]
 
+  static isPreloaded() {
+    return this._aaRanks.length > 0
+  }
+
   static async preLoad() {
-    if (this._aaRanks.length > 0) {
+    if (this.isPreloaded()) {
       return
     }
 

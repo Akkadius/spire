@@ -124,6 +124,7 @@ import eqClientVersionConstants    from "@/app/constants/eq-client-version-const
 import {DB_RACES_ICONS}            from "@/app/constants/eq-race-icon-constants";
 import {ROUTE}                     from "@/routes";
 import {OcculusClient}             from "@/app/api/eqemu-admin-client-occulus";
+import {SpireApi}                  from "@/app/api/spire-api";
 
 export default {
   name: 'PlayersOnlineComponent',
@@ -230,30 +231,34 @@ export default {
      * @returns {boolean}
      */
     async buildPlayersOnlineList() {
-      const apiClientList = await OcculusClient.getWorldClientList()
-      if (!apiClientList) {
-        this.filteredClientList = []
-        this.clientList = []
-        return false
-      }
 
-      let clientList = []
-      if (apiClientList.length > 0) {
-        apiClientList.forEach(function (row) {
-          if (row.character_id === 0) {
-            return
-          }
-          clientList.push(row)
-        })
-      }
+      const r = await SpireApi.v1().get("eqemuserver/client-list")
+      if (r.status === 200) {
+        const apiClientList = r.data.data
+        if (!apiClientList) {
+          this.filteredClientList = []
+          this.clientList         = []
+          return false
+        }
 
-      if (clientList.length === 0) {
-        this.clientList = []
-        return false
-      }
+        let clientList = []
+        if (apiClientList.length > 0) {
+          apiClientList.forEach(function (row) {
+            if (row.character_id === 0) {
+              return
+            }
+            clientList.push(row)
+          })
+        }
 
-      this.clientList = clientList
-      this.filterPlayers()
+        if (clientList.length === 0) {
+          this.clientList = []
+          return false
+        }
+
+        this.clientList = clientList
+        this.filterPlayers()
+      }
     }
   },
 
@@ -283,7 +288,7 @@ export default {
       if (!document.hidden) {
         this.buildPlayersOnlineList()
       }
-    }, 5000)
+    }, 1000)
 
     /**
      * Classes Online breakdown

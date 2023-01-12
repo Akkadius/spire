@@ -1,84 +1,112 @@
 <template>
   <div>
-    <eq-window title="Player Event Log Explorer">
-      <div
-        style="max-height: 80vh; overflow-y: scroll;  overflow-x: hidden"
-      >
-        <app-loader :is-loading="loading"/>
 
-        <div v-if="!loading">
+    <app-loader :is-loading="loading"/>
 
-          <div class="row mb-3">
-            <div class="col-2 text-center font-weight-bold">
-              Event Type
-              <select
-                class="form-control form-control-prepended list-search"
-                v-model="eventType"
-                @change="updateQueryState()"
-              >
-                <option value="0">-- Select Event Type --</option>
-                <option v-for="s in settings" v-bind:value="s.id">
-                  {{ s.event_name }} ({{ s.id }})
-                </option>
+    <eq-window
+      v-if="!loading"
+      class="pb-1"
+      title="Player Event Log Explorer"
+    >
+      <div v-if="!loading">
+        <div class="row mb-3">
+          <div class="col-2 text-center font-weight-bold">
+            Event Type
+            <select
+              class="form-control form-control-prepended list-search"
+              v-model="eventType"
+              @change="updateQueryState()"
+            >
+              <option value="0">-- Select Event Type --</option>
+              <option v-for="s in settings" v-bind:value="s.id">
+                {{ s.event_name }} ({{ s.id }})
+              </option>
 
-              </select>
-            </div>
+            </select>
+          </div>
 
-            <div class="col-2 text-center font-weight-bold">
-              Zone ID
-              <b-form-input
-                type="text"
-                class="form-control list-search"
-                @keyup="updateQueryState()"
-                v-model="zoneId"
-                placeholder="Zone ID"
-              />
-            </div>
+          <div class="col-2 text-center font-weight-bold">
+            Zone ID
+            <b-form-input
+              type="text"
+              class="form-control list-search"
+              @keyup="updateQueryState()"
+              v-model="zoneId"
+              placeholder="Zone ID"
+            />
+          </div>
 
-            <div class="col-2 text-center font-weight-bold">
-              Character ID
-              <b-form-input
-                type="text"
-                class="form-control list-search"
-                @keyup="updateQueryState()"
-                v-model="characterId"
-                placeholder="Character ID"
-              />
-            </div>
+          <div class="col-2 text-center font-weight-bold">
+            Character ID
+            <b-form-input
+              type="text"
+              class="form-control list-search"
+              @keyup="updateQueryState()"
+              v-model="characterId"
+              placeholder="Character ID"
+            />
+          </div>
 
-            <div class="col-1">
-              <button
-                title="Reset"
-                class="eq-button m-0"
-                style="margin-top: 20px !important"
-                @click="reset(); updateQueryState()"
-              ><i class="fa fa-refresh"></i> Reset
-              </button>
-            </div>
+          <div class="col-1 text-center font-weight-bold">
+            Auto Refresh
+            <select
+              class="form-control form-control-prepended list-search"
+              v-model="refreshInterval"
+              @change="updateQueryState()"
+            >
+              <option v-for="s in timerOptions" v-bind:value="s.timer">
+                {{ secondsToHumanTime(s.timer / 1000) }}
+              </option>
+
+            </select>
+          </div>
+
+          <div class="col-1">
+            <button
+              title="Reset"
+              class="eq-button m-0"
+              style="margin-top: 20px !important"
+              @click="reset(); updateQueryState()"
+            ><i class="fa fa-refresh"></i> Reset
+            </button>
           </div>
         </div>
+      </div>
+    </eq-window>
 
-        <div v-if="events.length === 0" class="font-weight-bold text-center mt-3">
-          No events found
-        </div>
+    <eq-window
+      v-if="!loading"
+      class="p-1"
+    >
 
+      <div v-if="events.length === 0" class="font-weight-bold text-center p-3">
+        No events found with specified criteria.
+      </div>
+
+      <div
+        style="max-height: 72vh; overflow-y: scroll;  overflow-x: hidden"
+      >
         <table
           class="eq-table eq-highlight-rows bordered player-events"
           v-if="events.length > 0"
         >
           <thead class="eq-table-floating-header">
           <tr>
-            <th>ID</th>
+            <th style="width: 150px">Event ID</th>
             <th style="width: 150px" class="text-center">Player</th>
             <th style="width: 200px">Zone</th>
 
-            <th class="text-right" style="width: 175px">Event</th>
-            <th>Event</th>
+            <th class="text-center" style="width: 175px">Event Type</th>
+            <th class="text-center">Event</th>
             <th>Time</th>
           </tr>
           </thead>
           <tbody>
-          <tr v-for="e in events" :key="e.id">
+          <tr
+            class="fade-in"
+            v-for="e in events"
+            :key="e.id"
+          >
             <td>{{ commify(e.id) }}</td>
             <td>
 
@@ -104,7 +132,7 @@
               </a>({{ e.zone.zoneidnumber }})
             </td>
 
-            <td class="text-right">
+            <td class="text-center">
               <a
                 class="ml-1"
                 @click="eventType = e.event_type_id; updateQueryState()"
@@ -142,6 +170,7 @@ import {Npcs}                      from "@/app/npcs";
 import {Items}                     from "@/app/items";
 import {ROUTE}                     from "@/routes";
 import {PlayerEventLogSettingApi}  from "@/app/api/api/player-event-log-setting-api";
+import Timer                       from "@/app/timer/timer";
 
 // GM_COMMAND           | [x] Implemented Formatter
 // ZONING               | [x] Implemented Formatter
@@ -196,6 +225,15 @@ export default {
       zoneId: null,
       characterId: null,
 
+      refreshInterval: 5000,
+
+      timerOptions: [
+        { timer: 1000 },
+        { timer: 5000 },
+        { timer: 10000 },
+        { timer: 60000 },
+      ],
+
       loading: false,
 
       settings: [],
@@ -205,13 +243,17 @@ export default {
   },
   watch: {
     $route(to, from) {
+      this.reset()
       this.loadQueryState()
+      this.stopTimer()
+      this.startTimer()
       setTimeout(() => {
         this.loadEvents();
       }, 1)
     }
   },
   methods: {
+
     reset() {
       this.search      = "";
       this.eventType   = 0;
@@ -257,6 +299,22 @@ export default {
       if (this.$route.query.characterId && parseInt(this.$route.query.characterId) > 0) {
         this.characterId = parseInt(this.$route.query.characterId)
       }
+    },
+
+    secondsToHumanTime(seconds) {
+      let levels     = [
+        [Math.floor(seconds / 31536000), 'y'],
+        [Math.floor((seconds % 31536000) / 86400), 'd'],
+        [Math.floor(((seconds % 31536000) % 86400) / 3600), 'h'],
+        [Math.floor((((seconds % 31536000) % 86400) % 3600) / 60), 'm'],
+        [(((seconds % 31536000) % 86400) % 3600) % 60, 's'],
+      ];
+      let returntext = '';
+      for (let i = 0, max = levels.length; i < max; i++) {
+        if (levels[i][0] === 0) continue;
+        returntext += ' ' + levels[i][0] + '' + (levels[i][1]);
+      }
+      return returntext.trim();
     },
 
     commify(x) {
@@ -318,38 +376,76 @@ export default {
         events = r.data
       }
 
-      let npcIds  = []
-      let itemIds = []
+      let shouldPreload = false
+      let npcIds        = []
+      let itemIds       = []
       for (let e of events) {
         let d = JSON.parse(e.event_data)
-        if (d && d.npc_id) {
+        if (d && d.npc_id && !Npcs.cacheExists(d.npc_id)) {
           npcIds.push(d.npc_id)
+          shouldPreload = true
         }
-        if (d && d.item_id) {
+        if (d && d.item_id && !Items.cacheExists(d.item_id)) {
           itemIds.push(d.item_id)
+          shouldPreload = true
         }
       }
 
-      await Promise.all(
-        [
-          AA.preLoad(),
-          Zones.getZones(),
-          Npcs.getNpcsBulk(npcIds),
-          Items.loadItemsBulk(itemIds)
-        ]
-      ).then(async (r) => {
-        console.log("Preloading done")
+      if (!AA.isPreloaded() || !Zones.isPreloaded()) {
+        shouldPreload = true
+      }
+
+      if (shouldPreload) {
+        await Promise.all(
+          [
+            AA.preLoad(),
+            Zones.getZones(),
+            Npcs.getNpcsBulk(npcIds),
+            Items.loadItemsBulk(itemIds)
+          ]
+        ).then(async (r) => {
+          console.log("Preloading done")
+          this.events  = events
+          this.loading = false
+        });
+      } else {
         this.events  = events
         this.loading = false
-      });
+      }
+
+    },
+
+    startTimer() {
+      if (Timer.timer['player-event-refresh']) {
+        clearInterval(Timer.timer['player-event-refresh'])
+      }
+
+      Timer.timer['player-event-refresh'] = setInterval(async () => {
+        if (!document.hidden) {
+          this.loadEvents();
+        }
+      }, this.refreshInterval)
+    },
+
+    stopTimer() {
+      if (Timer.timer['player-event-refresh']) {
+        clearInterval(Timer.timer['player-event-refresh'])
+      }
     }
   },
+
+  beforeDestroy() {
+    this.stopTimer()
+  },
+
   async mounted() {
     this.loadQueryState()
     const r = await (new PlayerEventLogSettingApi(...SpireApi.cfg())).listPlayerEventLogSettings()
     if (r.status === 200) {
       this.settings = r.data
     }
+
+    this.startTimer()
 
     this.loading = true
     setTimeout(() => {
@@ -363,6 +459,7 @@ export default {
 .player-events td, .player-events th {
   text-align: center;
 }
+
 .player-events td A {
   color: lightblue !important;
 }

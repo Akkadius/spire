@@ -633,5 +633,9 @@ export class Npcs {
 
     return ''
   }
+
+  static cacheExists(npc_id: any) {
+    return this.npc[npc_id];
+  }
 }
 
