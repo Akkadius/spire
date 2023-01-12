@@ -228,6 +228,7 @@ import EqProgressBar               from "@/components/eq-ui/EQProgressBar.vue";
 import LoaderFakeProgress          from "@/components/LoaderFakeProgress.vue";
 import hljs                        from "highlight.js";
 import {Navbar}                    from "@/app/navbar";
+import {Characters}                from "@/app/characters";
 
 // GM_COMMAND           | [x] Implemented Formatter
 // ZONING               | [x] Implemented Formatter
@@ -323,8 +324,8 @@ export default {
   },
   methods: {
 
-    commify(x) {
-      return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    characterCacheExists(characterId) {
+      return this.characterCache[characterId]
     },
 
     paginate() {
@@ -355,6 +356,7 @@ export default {
       this.zoneId      = null
       this.characterId = null
       this.showRaw     = {}
+      this.currentPage = 0
     },
 
     updateQueryState() {
@@ -501,15 +503,40 @@ export default {
       let shouldPreload = false
       let npcIds        = []
       let itemIds       = []
+      let characterIds  = []
       for (let e of events) {
         let d = JSON.parse(e.event_data)
-        if (d && d.npc_id && !Npcs.cacheExists(d.npc_id)) {
+        if (d && d.npc_id && !Npcs.cacheExists(d.npc_id) && !npcIds.includes(d.npc_id)) {
           npcIds.push(d.npc_id)
           shouldPreload = true
         }
-        if (d && d.item_id && !Items.cacheExists(d.item_id)) {
+        if (d && d.item_id && !Items.cacheExists(d.item_id) && !itemIds.includes(d.item_id)) {
           itemIds.push(d.item_id)
           shouldPreload = true
+        }
+        if (d && d.character_1_id && !Characters.cacheExists(d.character_1_id) && !characterIds.includes(d.character_1_id)) {
+          characterIds.push(parseInt(d.character_1_id))
+          shouldPreload = true
+        }
+        if (d && d.character_2_id && !Characters.cacheExists(d.character_2_id) && !characterIds.includes(d.character_2_id)) {
+          characterIds.push(parseInt(d.character_2_id))
+          shouldPreload = true
+        }
+        if (d && d.character_1_give_items && d.character_1_give_items.length > 0) {
+          for (let i of d.character_1_give_items) {
+            if (!Items.cacheExists(i.item_id) && !itemIds.includes(i.item_id)) {
+              itemIds.push(i.item_id)
+              shouldPreload = true
+            }
+          }
+        }
+        if (d && d.character_2_give_items && d.character_2_give_items.length > 0) {
+          for (let i of d.character_2_give_items) {
+            if (!Items.cacheExists(i.item_id) && !itemIds.includes(i.item_id)) {
+              itemIds.push(i.item_id)
+              shouldPreload = true
+            }
+          }
         }
       }
 
@@ -520,12 +547,14 @@ export default {
       if (shouldPreload) {
         await Promise.all(
           [
+            Characters.bulkLoadCharacters(characterIds),
             AA.preLoad(),
             Zones.getZones(),
             Npcs.getNpcsBulk(npcIds),
             Items.loadItemsBulk(itemIds)
           ]
         ).then(async (r) => {
+
           console.log("Preloading done")
           this.events         = events
           this.initialLoading = false
@@ -567,8 +596,8 @@ export default {
     Navbar.collapse()
 
     // non-reactive
-    this.requesting = false;
-
+    this.requesting     = false;
+    this.characterCache = {}
 
     this.loadQueryState()
     const r = await (new PlayerEventLogSettingApi(...SpireApi.cfg())).listPlayerEventLogSettings()

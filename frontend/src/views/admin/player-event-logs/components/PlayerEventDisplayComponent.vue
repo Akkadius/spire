@@ -225,6 +225,70 @@
       </span>
     </div>
 
+    <div v-if="e.event_type_id === PLAYER_EVENT.TRADE">
+      <span class="font-weight-bold" v-if="characterData[event(e).character_2_id]">
+        {{ characterData[event(e).character_2_id].name }}
+      </span> traded ({{ event(e).character_1_give_items.length }}) items
+      <eq-cash-display
+        class="font-weight-bold"
+        :price="calcMoney(event(e).character_1_give_money)"
+        v-if="calcMoney(event(e).character_1_give_money) > 0"
+      />
+      with
+      <span class="font-weight-bold" v-if="characterData[event(e).character_1_id]">
+        {{ characterData[event(e).character_1_id].name }}
+      </span>
+      who traded ({{ event(e).character_2_give_items.length }}) items
+      <eq-cash-display
+        class="font-weight-bold"
+        :price="calcMoney(event(e).character_2_give_money)"
+        v-if="calcMoney(event(e).character_2_give_money) > 0"
+      />
+
+      <div v-if="expandedTrade[e.id]">
+
+        <div class="row mt-3">
+          <div class="col-6 text-center">
+            <span class="font-weight-bold">{{ characterData[event(e).character_2_id].name }}</span>
+            <hr class="mt-1 mb-3">
+            <div
+              class="text-left"
+              v-for="i in event(e).character_1_give_items">
+              <item-popover
+                :item="itemData[i.item_id]"
+                :class="(i.in_bag ? 'ml-3' : 'ml-0') + ' font-weight-bold d-inline-block'"
+              /> (x{{i.charges ? i.charges : 1}})
+            </div>
+          </div>
+          <div class="col-6 text-center">
+            <span class="font-weight-bold">{{ characterData[event(e).character_1_id].name }}</span>
+            <hr class="mt-1 mb-3">
+            <div
+              class="text-left"
+              v-for="i in event(e).character_2_give_items">
+              <item-popover
+                :item="itemData[i.item_id]"
+                :class="(i.in_bag ? 'ml-3' : 'ml-0') + ' font-weight-bold d-inline-block'"
+              /> (x{{i.charges ? i.charges : 1}})
+            </div>
+          </div>
+        </div>
+
+
+      </div>
+
+      <button
+        title="Show Detail"
+        @click="expandTrade(e)"
+        v-if="!expandedTrade[e.id] && Object.keys(JSON.parse(e.event_data)).length > 0"
+        class="ml-3 btn btn-sm btn-warning"
+        style="font-size: 10px; "
+      >
+        <i class="fa fa-plus"></i>
+      </button>
+
+    </div>
+
 
   </div>
 </template>
@@ -242,6 +306,7 @@ import {Zones}        from "@/app/zones";
 import {AA}           from "@/app/aa";
 import SpellPopover   from "@/components/SpellPopover.vue";
 import {TRADESKILLS}  from "@/app/constants/eq-tradeskill-constants";
+import {Characters}   from "@/app/characters";
 
 export default {
   name: "PlayerEventDisplayComponent",
@@ -259,6 +324,9 @@ export default {
       npcData: {},
       zoneData: {},
       aaData: {},
+      characterData: {},
+
+      expandedTrade: {}
     }
   },
   async mounted() {
@@ -278,10 +346,39 @@ export default {
     if (p.aa_id && p.aa_id > 0) {
       this.aaData[p.aa_id] = await AA.getAARankByRankId(p.aa_id)
     }
+    if (p.character_1_id && p.character_1_id > 0) {
+      this.characterData[p.character_1_id] = await Characters.get(p.character_1_id)
+    }
+    if (p.character_2_id && p.character_2_id > 0) {
+      this.characterData[p.character_2_id] = await Characters.get(p.character_2_id)
+    }
+    if (p && p.character_1_give_items && p.character_1_give_items.length > 0) {
+      for (let i of p.character_1_give_items) {
+        this.itemData[i.item_id] = await Items.getItem(i.item_id)
+      }
+    }
+    if (p && p.character_2_give_items && p.character_2_give_items.length > 0) {
+      for (let i of p.character_2_give_items) {
+        this.itemData[i.item_id] = await Items.getItem(i.item_id)
+      }
+    }
 
     this.$forceUpdate()
   },
   methods: {
+    expandTrade(e) {
+      this.expandedTrade[e.id] = 1
+      this.$forceUpdate()
+    },
+
+    calcMoney(m) {
+      let copper = m.copper
+      copper += (m.platinum * 1000)
+      copper += (m.gold * 100)
+      copper += (m.silver * 10)
+      return copper
+    },
+
     getAADescription(rankId) {
       const r = AA.getAARankByRankId(rankId)
       if (r && r.id > 0) {
