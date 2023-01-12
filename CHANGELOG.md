@@ -1,3 +1,9 @@
+## [2.5.5]
+
+### Item Card Display
+
+- Fix an issue where mods similar to "combat effects" were rendering on the preview card even if the value was 0
+
 ## [2.5.4]
 
 ### Lua Object Return Methods
