@@ -79,7 +79,7 @@
       class="p-1"
     >
       <app-loader
-        style="opacity: .3; top: 300px; left: 10%; position: absolute;"
+        style="opacity: .3; top: 300px; left: 20%; position: absolute;"
         :is-loading="loading"
       />
 
@@ -88,12 +88,11 @@
       </div>
 
       <div
-        style="max-height: 69vh; overflow-y: scroll; overflow-x: hidden; border: 1px solid #ffffff1c !important"
+        style="height: 69vh; overflow-y: scroll; overflow-x: hidden; border: 1px solid #ffffff1c !important"
       >
         <table
           :style="(loading ? 'opacity:.3; pointer-events: none;' : 'opacity: 1; pointer-events: all;') + 'table-layout: fixed !important; '"
           class="eq-table eq-highlight-rows bordered player-events"
-          v-if="events.length > 0"
         >
           <thead class="eq-table-floating-header">
           <tr>
@@ -103,7 +102,7 @@
 
             <th class="text-center" style="width: 175px">Event Type</th>
             <th class="text-center">Event</th>
-            <th style="width: 110px">Time</th>
+            <th style="width: 140px">Time</th>
           </tr>
           </thead>
           <tbody>
@@ -184,14 +183,25 @@
       </div>
 
       <div class="text-center">
+
+        <div class="mr-3 d-inline-block">
+          Pages ({{ commify(Math.round(totalRows / pageLimit)) }})
+        </div>
+
         <b-pagination
+          :disabled="loading"
           class="mb-1 mt-1"
           v-model="currentPage"
           :total-rows="totalRows"
           :hide-ellipsis="true"
-          per-page="20"
+          :per-page="pageLimit"
           @change="paginate"
         />
+
+        <div class="ml-3 d-inline-block">
+          Rows ({{ commify(events.length) }})
+          Total ({{ commify(totalRows) }})
+        </div>
       </div>
 
     </eq-window>
@@ -217,6 +227,7 @@ import Timer                       from "@/app/timer/timer";
 import EqProgressBar               from "@/components/eq-ui/EQProgressBar.vue";
 import LoaderFakeProgress          from "@/components/LoaderFakeProgress.vue";
 import hljs                        from "highlight.js";
+import {Navbar}                    from "@/app/navbar";
 
 // GM_COMMAND           | [x] Implemented Formatter
 // ZONING               | [x] Implemented Formatter
@@ -292,6 +303,7 @@ export default {
       // pagination (all)
       currentPage: 1,
       totalRows: 0,
+      pageLimit: 100,
     }
   },
   watch: {
@@ -308,6 +320,10 @@ export default {
     }
   },
   methods: {
+
+    commify(x) {
+      return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    },
 
     paginate() {
       // models aren't quite updated when we trigger this so queue the pagination
@@ -454,8 +470,9 @@ export default {
         builder.where("zone_id", "=", this.zoneId)
       }
 
-      builder.limit(100)
-      builder.orderBy(["created_at"])
+      builder.page(this.currentPage)
+      builder.limit(this.pageLimit)
+      builder.orderBy(["id"])
       builder.orderDirection("desc")
 
       // @ts-ignore
@@ -471,11 +488,13 @@ export default {
       builder.includes([])
       builder.select(["id"])
       builder.limit(10000000000000)
+      builder.page(0)
 
-      const c = await SpireApi.v1().get(`player_event_logs/count`)
-      if (c.status === 200) {
-        this.totalRows = c.data.count
-      }
+      SpireApi.v1().get(`player_event_logs/count`, { params: builder.get() }).then((r) => {
+        if (r.status === 200) {
+          this.totalRows = r.data.count
+        }
+      })
 
       let shouldPreload = false
       let npcIds        = []
@@ -538,10 +557,12 @@ export default {
   },
 
   beforeDestroy() {
+    Navbar.expand()
     this.stopTimer()
   },
 
   async mounted() {
+    Navbar.collapse()
 
     // non-reactive
     this.requesting = false;

@@ -1,8 +1,5 @@
 <template>
   <div class="d-inline-block">
-    <!--    {{ e.event_data }}-->
-
-    <!--    {{ e.event_data }}-->
 
     <div v-if="e.event_type_id === PLAYER_EVENT.GM_COMMAND">
       Used GM command <span class="font-weight-bold">{{ event(e).message }}</span>
@@ -88,7 +85,6 @@
     </div>
 
     <div
-      style="overflow-wrap: break-word !important; word-break: break-all !important; inline-size: 35vw; "
       v-if="e.event_type_id === PLAYER_EVENT.MERCHANT_SELL"
     >
       Sold
@@ -111,7 +107,6 @@
 
     <div
       v-if="e.event_type_id === PLAYER_EVENT.MERCHANT_PURCHASE"
-      style="overflow-wrap: break-word !important; word-break: break-all !important; inline-size: 35vw; "
     >
       Bought
       <item-popover :item="itemData[event(e).item_id]" class="ml-1 font-weight-bold d-inline-block"/>
