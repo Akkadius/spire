@@ -212,17 +212,21 @@ NAV.eq-tab-box-fancy UL LI.eq-tab-open:hover {
     .eq-window NAV.eq-tab-box-fancy UL {
         display: contents;
     }
+
     .tabs-details {
         margin-top: 20px;
     }
+
     .eq-window NAV.eq-tab-box-fancy UL LI {
         background-image: url(../images/tab_up_l.png),
         url(../images/tab_up_r.png),
         url(../images/tab_up_t.png) !important;
     }
+
     .eq-window NAV.eq-tab-box-fancy UL LI:hover {
         line-height: 36px !important;
     }
+
     .eq-window NAV.eq-tab-box-fancy UL LI a:hover,
     .eq-window NAV.eq-tab-box-fancy UL LI.eq-tab-open a {
         color: yellow !important;
@@ -863,7 +867,8 @@ table.eq-table TFOOT TR TD {
 
 /* makes rows highlight in brown */
 table.eq-highlight-rows TBODY TR:hover {
-    background: linear-gradient(180deg, rgba(123, 113, 74, 1) 0%, rgba(123, 113, 74, 0.4) 50%, rgba(123, 113, 74, 1) 100%);
+    /*background: linear-gradient(180deg, rgba(123, 113, 74, 1) 0%, rgba(123, 113, 74, 0.4) 50%, rgba(123, 113, 74, 1) 100%);*/
+    background: linear-gradient(180deg, rgba(123, 113, 74, 1) 0%, rgba(123, 113, 74, 0) 50%, rgba(123, 113, 74, 1) 100%);
 }
 
 table.bordered tr {
@@ -979,6 +984,8 @@ h6.eq-header {
     border-collapse: separate;
     z-index: 9999;
     border-bottom: 1px solid #ffffff1c;
+
+    filter: drop-shadow(0px 5px 3px rgba(0, 0, 0, .3));
 }
 
 .eq-table-floating-header {

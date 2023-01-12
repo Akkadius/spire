@@ -56,7 +56,7 @@
         <tr>
           <th tabindex="0" style="width: 60px">RID</th>
           <th tabindex="0" style="width: 320px !important">Rule Name</th>
-          <th tabindex="0" style="width: 250px">Value</th>
+          <th tabindex="0" style="width: 250px" class="text-center">Value</th>
           <th tabindex="0">Description</th>
         </tr>
         </thead>
@@ -70,12 +70,11 @@
           <td class="text-center">
 
             <label
-              class="pb-2 pt-2"
               v-if="rule.rule_value === 'true' || rule.rule_value === 'false'"
             >
               <eq-checkbox
                 :fade-when-not-true="true"
-                class="d-inline-block mt-1"
+                class="d-inline-block mt-2"
                 true-value="true"
                 false-value="false"
                 v-model="rule.rule_value"
@@ -86,17 +85,17 @@
             <span
               v-if="!(rule.rule_value === 'true' || rule.rule_value === 'false')"
             >
-                      <input
-                        type="text" class="form-control"
-                        v-model="rule.rule_value"
-                        @change="updateRule(rule)"
-                      >
-                  </span>
+                <input
+                  type="text" class="form-control"
+                  v-model="rule.rule_value"
+                  @change="updateRule(rule)"
+                >
+            </span>
 
             <!-- {{rule.rule_value}} -->
           </td>
 
-          <td class="text-muted" style="overflow: auto; white-space: normal;">
+          <td style="overflow: auto; white-space: normal;">
             {{ rule.notes }}
           </td>
 
