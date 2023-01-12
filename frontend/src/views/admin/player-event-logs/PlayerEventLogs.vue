@@ -88,10 +88,10 @@
       </div>
 
       <div
-        style="max-height: 72vh; overflow-y: scroll;  overflow-x: hidden"
+        style="max-height: 68vh; overflow-y: scroll; overflow-x: hidden"
       >
         <table
-          :style="(loading ? 'opacity:.3; pointer-events: none;' : 'opacity: 1; pointer-events: all;')"
+          :style="(loading ? 'opacity:.3; pointer-events: none;' : 'opacity: 1; pointer-events: all;') + 'table-layout: fixed !important;'"
           class="eq-table eq-highlight-rows bordered player-events"
           v-if="events.length > 0"
         >
@@ -152,7 +152,10 @@
                 @click="eventType = e.event_type_id; updateQueryState()"
               >{{ e.event_type_name }}</a> ({{ e.event_type_id }})
             </td>
-            <td style="vertical-align: middle; text-align: left">
+
+            <td
+              style="vertical-align: middle; text-align: left;"
+            >
               <button
                 title="View raw"
                 @click="showRawEvent(e)"

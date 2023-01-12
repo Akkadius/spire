@@ -71,7 +71,8 @@
       <item-popover
         :item="itemData[event(e).item_id]"
         class="mr-1 font-weight-bold d-inline-block"
-      />({{event(e).charges}})
+      />
+      ({{ event(e).charges }})
     </div>
 
     <div v-if="e.event_type_id === PLAYER_EVENT.DISCOVER_ITEM">
@@ -86,7 +87,10 @@
       Accepted resurrection
     </div>
 
-    <div v-if="e.event_type_id === PLAYER_EVENT.MERCHANT_SELL">
+    <div
+      style="overflow-wrap: break-word !important; word-break: break-all !important; inline-size: 35vw; "
+      v-if="e.event_type_id === PLAYER_EVENT.MERCHANT_SELL"
+    >
       Sold
       <item-popover :item="itemData[event(e).item_id]" class="ml-1 font-weight-bold d-inline-block"/>
       to
@@ -105,7 +109,10 @@
       />
     </div>
 
-    <div v-if="e.event_type_id === PLAYER_EVENT.MERCHANT_PURCHASE">
+    <div
+      v-if="e.event_type_id === PLAYER_EVENT.MERCHANT_PURCHASE"
+      style="overflow-wrap: break-word !important; word-break: break-all !important; inline-size: 35vw; "
+    >
       Bought
       <item-popover :item="itemData[event(e).item_id]" class="ml-1 font-weight-bold d-inline-block"/>
       from
