@@ -36,6 +36,7 @@ func (e *CharacterCorpseItemController) Routes() []*routes.Route {
 	return []*routes.Route{
 		routes.RegisterRoute(http.MethodGet, "character_corpse_item/:corpseId", e.getCharacterCorpseItem, nil),
 		routes.RegisterRoute(http.MethodGet, "character_corpse_items", e.listCharacterCorpseItems, nil),
+		routes.RegisterRoute(http.MethodGet, "character_corpse_items/count", e.getCharacterCorpseItemsCount, nil),
 		routes.RegisterRoute(http.MethodPut, "character_corpse_item", e.createCharacterCorpseItem, nil),
 		routes.RegisterRoute(http.MethodDelete, "character_corpse_item/:corpseId", e.deleteCharacterCorpseItem, nil),
 		routes.RegisterRoute(http.MethodPatch, "character_corpse_item/:corpseId", e.updateCharacterCorpseItem, nil),
@@ -362,4 +363,32 @@ func (e *CharacterCorpseItemController) getCharacterCorpseItemsBulk(c echo.Conte
 	}
 
 	return c.JSON(http.StatusOK, results)
+}
+
+// getCharacterCorpseItemsCount godoc
+// @Id getCharacterCorpseItemsCount
+// @Summary Counts CharacterCorpseItems
+// @Accept json
+// @Produce json
+// @Tags CharacterCorpseItem
+// @Param includes query string false "Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names"
+// @Param where query string false "Filter on specific fields. Multiple conditions [.] separated Example: col_like_value.col2__val2"
+// @Param whereOr query string false "Filter on specific fields (Chained ors). Multiple conditions [.] separated Example: col_like_value.col2__val2"
+// @Param groupBy query string false "Group by field. Multiple conditions [.] separated Example: field1.field2"
+// @Param limit query string false "Rows to limit in response (Default: 10,000)"
+// @Param page query int 0 "Pagination page"
+// @Param orderBy query string false "Order by [field]"
+// @Param orderDirection query string false "Order by field direction"
+// @Param select query string false "Column names [.] separated to fetch specific fields in response"
+// @Success 200 {array} models.CharacterCorpseItem
+// @Failure 500 {string} string "Bad query request"
+// @Router /character_corpse_items/count [get]
+func (e *CharacterCorpseItemController) getCharacterCorpseItemsCount(c echo.Context) error {
+	var count int64
+	err := e.db.QueryContext(models.CharacterCorpseItem{}, c).Count(&count).Error
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err})
+	}
+
+	return c.JSON(http.StatusOK, echo.Map{"count": count})
 }

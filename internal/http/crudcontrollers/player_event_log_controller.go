@@ -36,11 +36,11 @@ func (e *PlayerEventLogController) Routes() []*routes.Route {
 	return []*routes.Route{
 		routes.RegisterRoute(http.MethodGet, "player_event_log/:id", e.getPlayerEventLog, nil),
 		routes.RegisterRoute(http.MethodGet, "player_event_logs", e.listPlayerEventLogs, nil),
+		routes.RegisterRoute(http.MethodGet, "player_event_logs/count", e.getPlayerEventLogsCount, nil),
 		routes.RegisterRoute(http.MethodPut, "player_event_log", e.createPlayerEventLog, nil),
 		routes.RegisterRoute(http.MethodDelete, "player_event_log/:id", e.deletePlayerEventLog, nil),
 		routes.RegisterRoute(http.MethodPatch, "player_event_log/:id", e.updatePlayerEventLog, nil),
 		routes.RegisterRoute(http.MethodPost, "player_event_logs/bulk", e.getPlayerEventLogsBulk, nil),
-		routes.RegisterRoute(http.MethodGet, "player_event_logs/count", e.getPlayerEventLogsCount, nil),
 	}
 }
 

@@ -36,6 +36,7 @@ func (e *CharRecipeListController) Routes() []*routes.Route {
 	return []*routes.Route{
 		routes.RegisterRoute(http.MethodGet, "char_recipe_list/:charId", e.getCharRecipeList, nil),
 		routes.RegisterRoute(http.MethodGet, "char_recipe_lists", e.listCharRecipeLists, nil),
+		routes.RegisterRoute(http.MethodGet, "char_recipe_lists/count", e.getCharRecipeListsCount, nil),
 		routes.RegisterRoute(http.MethodPut, "char_recipe_list", e.createCharRecipeList, nil),
 		routes.RegisterRoute(http.MethodDelete, "char_recipe_list/:charId", e.deleteCharRecipeList, nil),
 		routes.RegisterRoute(http.MethodPatch, "char_recipe_list/:charId", e.updateCharRecipeList, nil),
@@ -362,4 +363,32 @@ func (e *CharRecipeListController) getCharRecipeListsBulk(c echo.Context) error 
 	}
 
 	return c.JSON(http.StatusOK, results)
+}
+
+// getCharRecipeListsCount godoc
+// @Id getCharRecipeListsCount
+// @Summary Counts CharRecipeLists
+// @Accept json
+// @Produce json
+// @Tags CharRecipeList
+// @Param includes query string false "Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names"
+// @Param where query string false "Filter on specific fields. Multiple conditions [.] separated Example: col_like_value.col2__val2"
+// @Param whereOr query string false "Filter on specific fields (Chained ors). Multiple conditions [.] separated Example: col_like_value.col2__val2"
+// @Param groupBy query string false "Group by field. Multiple conditions [.] separated Example: field1.field2"
+// @Param limit query string false "Rows to limit in response (Default: 10,000)"
+// @Param page query int 0 "Pagination page"
+// @Param orderBy query string false "Order by [field]"
+// @Param orderDirection query string false "Order by field direction"
+// @Param select query string false "Column names [.] separated to fetch specific fields in response"
+// @Success 200 {array} models.CharRecipeList
+// @Failure 500 {string} string "Bad query request"
+// @Router /char_recipe_lists/count [get]
+func (e *CharRecipeListController) getCharRecipeListsCount(c echo.Context) error {
+	var count int64
+	err := e.db.QueryContext(models.CharRecipeList{}, c).Count(&count).Error
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err})
+	}
+
+	return c.JSON(http.StatusOK, echo.Map{"count": count})
 }

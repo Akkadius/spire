@@ -36,6 +36,7 @@ func (e *LoginServerListTypeController) Routes() []*routes.Route {
 	return []*routes.Route{
 		routes.RegisterRoute(http.MethodGet, "login_server_list_type/:id", e.getLoginServerListType, nil),
 		routes.RegisterRoute(http.MethodGet, "login_server_list_types", e.listLoginServerListTypes, nil),
+		routes.RegisterRoute(http.MethodGet, "login_server_list_types/count", e.getLoginServerListTypesCount, nil),
 		routes.RegisterRoute(http.MethodPut, "login_server_list_type", e.createLoginServerListType, nil),
 		routes.RegisterRoute(http.MethodDelete, "login_server_list_type/:id", e.deleteLoginServerListType, nil),
 		routes.RegisterRoute(http.MethodPatch, "login_server_list_type/:id", e.updateLoginServerListType, nil),
@@ -329,4 +330,32 @@ func (e *LoginServerListTypeController) getLoginServerListTypesBulk(c echo.Conte
 	}
 
 	return c.JSON(http.StatusOK, results)
+}
+
+// getLoginServerListTypesCount godoc
+// @Id getLoginServerListTypesCount
+// @Summary Counts LoginServerListTypes
+// @Accept json
+// @Produce json
+// @Tags LoginServerListType
+// @Param includes query string false "Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names"
+// @Param where query string false "Filter on specific fields. Multiple conditions [.] separated Example: col_like_value.col2__val2"
+// @Param whereOr query string false "Filter on specific fields (Chained ors). Multiple conditions [.] separated Example: col_like_value.col2__val2"
+// @Param groupBy query string false "Group by field. Multiple conditions [.] separated Example: field1.field2"
+// @Param limit query string false "Rows to limit in response (Default: 10,000)"
+// @Param page query int 0 "Pagination page"
+// @Param orderBy query string false "Order by [field]"
+// @Param orderDirection query string false "Order by field direction"
+// @Param select query string false "Column names [.] separated to fetch specific fields in response"
+// @Success 200 {array} models.LoginServerListType
+// @Failure 500 {string} string "Bad query request"
+// @Router /login_server_list_types/count [get]
+func (e *LoginServerListTypeController) getLoginServerListTypesCount(c echo.Context) error {
+	var count int64
+	err := e.db.QueryContext(models.LoginServerListType{}, c).Count(&count).Error
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err})
+	}
+
+	return c.JSON(http.StatusOK, echo.Map{"count": count})
 }

@@ -304,6 +304,8 @@ export default {
       currentPage: 1,
       totalRows: 0,
       pageLimit: 100,
+
+      objCount: 0,
     }
   },
   watch: {

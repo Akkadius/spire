@@ -36,6 +36,7 @@ func (e *BotHealRotationTargetController) Routes() []*routes.Route {
 	return []*routes.Route{
 		routes.RegisterRoute(http.MethodGet, "bot_heal_rotation_target/:targetIndex", e.getBotHealRotationTarget, nil),
 		routes.RegisterRoute(http.MethodGet, "bot_heal_rotation_targets", e.listBotHealRotationTargets, nil),
+		routes.RegisterRoute(http.MethodGet, "bot_heal_rotation_targets/count", e.getBotHealRotationTargetsCount, nil),
 		routes.RegisterRoute(http.MethodPut, "bot_heal_rotation_target", e.createBotHealRotationTarget, nil),
 		routes.RegisterRoute(http.MethodDelete, "bot_heal_rotation_target/:targetIndex", e.deleteBotHealRotationTarget, nil),
 		routes.RegisterRoute(http.MethodPatch, "bot_heal_rotation_target/:targetIndex", e.updateBotHealRotationTarget, nil),
@@ -329,4 +330,32 @@ func (e *BotHealRotationTargetController) getBotHealRotationTargetsBulk(c echo.C
 	}
 
 	return c.JSON(http.StatusOK, results)
+}
+
+// getBotHealRotationTargetsCount godoc
+// @Id getBotHealRotationTargetsCount
+// @Summary Counts BotHealRotationTargets
+// @Accept json
+// @Produce json
+// @Tags BotHealRotationTarget
+// @Param includes query string false "Relationships [all] for all [number] for depth of relationships to load or [.] separated relationship names"
+// @Param where query string false "Filter on specific fields. Multiple conditions [.] separated Example: col_like_value.col2__val2"
+// @Param whereOr query string false "Filter on specific fields (Chained ors). Multiple conditions [.] separated Example: col_like_value.col2__val2"
+// @Param groupBy query string false "Group by field. Multiple conditions [.] separated Example: field1.field2"
+// @Param limit query string false "Rows to limit in response (Default: 10,000)"
+// @Param page query int 0 "Pagination page"
+// @Param orderBy query string false "Order by [field]"
+// @Param orderDirection query string false "Order by field direction"
+// @Param select query string false "Column names [.] separated to fetch specific fields in response"
+// @Success 200 {array} models.BotHealRotationTarget
+// @Failure 500 {string} string "Bad query request"
+// @Router /bot_heal_rotation_targets/count [get]
+func (e *BotHealRotationTargetController) getBotHealRotationTargetsCount(c echo.Context) error {
+	var count int64
+	err := e.db.QueryContext(models.BotHealRotationTarget{}, c).Count(&count).Error
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err})
+	}
+
+	return c.JSON(http.StatusOK, echo.Map{"count": count})
 }
