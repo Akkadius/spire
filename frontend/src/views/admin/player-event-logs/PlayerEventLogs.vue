@@ -88,10 +88,10 @@
       </div>
 
       <div
-        style="max-height: 68vh; overflow-y: scroll; overflow-x: hidden"
+        style="max-height: 69vh; overflow-y: scroll; overflow-x: hidden; border: 1px solid #ffffff1c !important"
       >
         <table
-          :style="(loading ? 'opacity:.3; pointer-events: none;' : 'opacity: 1; pointer-events: all;') + 'table-layout: fixed !important;'"
+          :style="(loading ? 'opacity:.3; pointer-events: none;' : 'opacity: 1; pointer-events: all;') + 'table-layout: fixed !important; '"
           class="eq-table eq-highlight-rows bordered player-events"
           v-if="events.length > 0"
         >
@@ -181,6 +181,17 @@
           </tr>
           </tbody>
         </table>
+      </div>
+
+      <div class="text-center">
+        <b-pagination
+          class="mb-1 mt-1"
+          v-model="currentPage"
+          :total-rows="totalRows"
+          :hide-ellipsis="true"
+          per-page="20"
+          @change="paginate"
+        />
       </div>
 
     </eq-window>
@@ -277,6 +288,10 @@ export default {
       settings: [],
 
       events: [],
+
+      // pagination (all)
+      currentPage: 1,
+      totalRows: 0,
     }
   },
   watch: {
@@ -294,6 +309,16 @@ export default {
   },
   methods: {
 
+    paginate() {
+      // models aren't quite updated when we trigger this so queue the pagination
+      setTimeout(() => {
+        console.log("We're paginating")
+        console.log(this.currentPage)
+        console.log(this.totalRows)
+        this.updateQueryState()
+      }, 100)
+    },
+
     showRawEvent(e) {
       this.showRaw[e.id] = 1
       this.$forceUpdate()
@@ -304,7 +329,6 @@ export default {
           hljs.highlightBlock(b)
         }
       }, 10)
-
     },
 
     reset() {
@@ -330,6 +354,9 @@ export default {
       if (this.characterId && parseInt(this.characterId) !== 0) {
         q.characterId = parseInt(this.characterId)
       }
+      if (this.currentPage > 0) {
+        q.page = this.currentPage
+      }
 
       this.$router.push(
         {
@@ -352,6 +379,9 @@ export default {
       }
       if (this.$route.query.characterId && parseInt(this.$route.query.characterId) > 0) {
         this.characterId = parseInt(this.$route.query.characterId)
+      }
+      if (typeof this.$route.query.page !== 'undefined' && parseInt(this.$route.query.page) !== 0) {
+        this.currentPage = parseInt(this.$route.query.page);
       }
     },
 
@@ -425,7 +455,6 @@ export default {
       }
 
       builder.limit(100)
-
       builder.orderBy(["created_at"])
       builder.orderDirection("desc")
 
@@ -436,6 +465,16 @@ export default {
       if (r.status === 200) {
         events          = r.data
         this.requesting = false
+      }
+
+      // get total count
+      builder.includes([])
+      builder.select(["id"])
+      builder.limit(10000000000000)
+
+      const c = await SpireApi.v1().get(`player_event_logs/count`)
+      if (c.status === 200) {
+        this.totalRows = c.data.count
       }
 
       let shouldPreload = false

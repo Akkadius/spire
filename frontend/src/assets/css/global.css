@@ -416,7 +416,7 @@ th[role=columnheader]:hover:not(.no-sort):after {
 
 .page, .page-link {
     padding: 0.4rem 0.75rem;
-    border-color: #ffffff1c;
+    border: 1px solid #ffffff6b !important;
 }
 
 .pagination .page-link {
