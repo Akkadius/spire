@@ -421,12 +421,13 @@ th[role=columnheader]:hover:not(.no-sort):after {
 
 .pagination .page-link {
     color: white;
-    background-color: transparent !important;
+    background-color: rgba(255, 255, 255, .03) !important;
 }
 
 .page-item.active .page, .page-item.active .page-link {
     border-color: #f6c343;
     color: #f6c343 !important;
+    background-color: rgba(255, 255, 255, .2) !important;
 }
 
 .pagination .page-item.active .page-link {
