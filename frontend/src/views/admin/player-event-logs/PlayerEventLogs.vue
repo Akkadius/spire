@@ -78,6 +78,11 @@
       v-if="!initialLoading"
       class="p-1"
     >
+      <app-loader
+        style="opacity: .3; top: 300px; left: 10%; position: absolute;"
+        :is-loading="loading"
+      />
+
       <div v-if="events.length === 0" class="font-weight-bold text-center p-3">
         No events found with specified criteria.
       </div>
@@ -86,7 +91,7 @@
         style="max-height: 72vh; overflow-y: scroll;  overflow-x: hidden"
       >
         <table
-          :style="(loading ? 'opacity:.3' : 'opacity:1')"
+          :style="(loading ? 'opacity:.3; pointer-events: none;' : 'opacity: 1; pointer-events: all;')"
           class="eq-table eq-highlight-rows bordered player-events"
           v-if="events.length > 0"
         >
@@ -97,7 +102,6 @@
             <th style="width: 200px">Zone</th>
 
             <th class="text-center" style="width: 175px">Event Type</th>
-            <th class="text-center" style="width: 90px">Raw</th>
             <th class="text-center">Event</th>
             <th style="width: 110px">Time</th>
           </tr>
@@ -112,8 +116,17 @@
             <td>
 
               <div class="avatar-list avatar-list-stacked">
-                <img class="avatar-img rounded-circle" style="width:20px" :src="getClassImage(e.character_datum.class)">
-                <img class="avatar-img rounded-circle" style="width:20px" :src="getRaceImage(e.character_datum.race)">
+                <img
+                  class="avatar-img rounded-circle"
+                  style="width:20px; border: 1px solid gray"
+                  :src="getClassImage(e.character_datum.class)"
+                >
+
+                <img
+                  class="avatar-img rounded-circle"
+                  style="width:20px; border: 1px solid gray"
+                  :src="getRaceImage(e.character_datum.race)"
+                >
 
                 <a
                   class="ml-1"
@@ -139,27 +152,27 @@
                 @click="eventType = e.event_type_id; updateQueryState()"
               >{{ e.event_type_name }}</a> ({{ e.event_type_id }})
             </td>
-
-            <td style="vertical-align: middle; text-align: center">
-              <pre
-                v-if="showRaw[e.id]"
-                class="text-left code fade-in"
-                style="width: 100%; padding: 0 !important; margin-bottom: 0 !important"
-              ><code class="language-json">{{ e.event_data.replaceAll("    ", "  ") }}</code></pre>
+            <td style="vertical-align: middle; text-align: left">
               <button
                 title="View raw"
                 @click="showRawEvent(e)"
                 v-if="!showRaw[e.id] && Object.keys(JSON.parse(e.event_data)).length > 0"
-                class="btn btn-sm btn-warning"
-                style="font-size: 10px"
+                class="mr-3 btn btn-sm btn-warning"
+                style="font-size: 10px; min-width: 50px"
               >
                 <i class="fa fa-search"></i> ({{ Object.keys(JSON.parse(e.event_data)).length }})
               </button>
-            </td>
-            <td style="vertical-align: middle; text-align: left">
+
               <player-event-display-component
                 :e="e"
               />
+
+              <pre
+                v-if="showRaw[e.id]"
+                class="text-left code fade-in mt-2"
+                style="width: 100%; padding: 0 !important; margin-bottom: 0 !important"
+              ><code class="language-json">{{ e.event_data.replaceAll("    ", "  ") }}</code></pre>
+
             </td>
             <td>{{ fromNow(e.created_at) }}</td>
           </tr>
@@ -383,6 +396,10 @@ export default {
       return 'data:image/gif;base64,R0lGODlhAQABAIAAAMLCwgAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw=='
     },
     async loadEvents() {
+      if (this.requesting) {
+        return;
+      }
+
       let builder = (new SpireQueryBuilder())
       builder.includes(
         [
@@ -410,10 +427,12 @@ export default {
       builder.orderDirection("desc")
 
       // @ts-ignore
-      const r    = await (new PlayerEventLogApi(...SpireApi.cfg())).listPlayerEventLogs(builder.get())
-      let events = []
+      this.requesting = true
+      const r         = await (new PlayerEventLogApi(...SpireApi.cfg())).listPlayerEventLogs(builder.get())
+      let events      = []
       if (r.status === 200) {
-        events = r.data
+        events          = r.data
+        this.requesting = false
       }
 
       let shouldPreload = false
@@ -481,6 +500,11 @@ export default {
   },
 
   async mounted() {
+
+    // non-reactive
+    this.requesting = false;
+
+
     this.loadQueryState()
     const r = await (new PlayerEventLogSettingApi(...SpireApi.cfg())).listPlayerEventLogSettings()
     if (r.status === 200) {
