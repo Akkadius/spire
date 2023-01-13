@@ -538,6 +538,14 @@ export default {
             }
           }
         }
+        if (d && d.handin_items && d.handin_items.length > 0) {
+          for (let i of d.handin_items) {
+            if (!Items.cacheExists(i.item_id) && !itemIds.includes(i.item_id)) {
+              itemIds.push(i.item_id)
+              shouldPreload = true
+            }
+          }
+        }
       }
 
       if (!AA.isPreloaded() || !Zones.isPreloaded()) {

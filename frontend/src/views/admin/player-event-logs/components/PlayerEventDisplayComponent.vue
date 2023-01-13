@@ -225,9 +225,75 @@
       </span>
     </div>
 
+    <div v-if="e.event_type_id === PLAYER_EVENT.NPC_HANDIN">
+
+      <div v-if="!expandedEvent[e.id]" class="d-inline-block">
+        Handed in ({{ event(e).handin_items.length }}) items
+        <eq-cash-display
+          class="font-weight-bold"
+          :price="calcMoney(event(e).handin_money)"
+          v-if="calcMoney(event(e).handin_money) > 0"
+        />
+        to <span class="font-weight-bold">{{event(e).npc_name}}</span>
+
+        Returned ({{ event(e).return_items.length }}) item(s)
+      </div>
+
+      <div v-if="expandedEvent[e.id]" style="min-width: 600px" class="eq-window-simple p-3 mb-3">
+        <div class="row">
+          <div class="col-6 text-center">
+            <span class="font-weight-bold">Handed In</span>
+            <hr class="mt-3 mb-3" style="border-top-color: rgba(255, 255, 255, 0.14);">
+            <div
+              class="text-left"
+              v-for="i in event(e).handin_items"
+            >
+              <item-popover
+                :item="itemData[i.item_id]"
+                :class="'font-weight-bold d-inline-block'"
+              />
+              (x{{ i.charges ? i.charges : 1 }})
+            </div>
+
+            <eq-cash-display
+              class="font-weight-bold mr-0 pr-0 mt-3"
+              :price="calcMoney(event(e).handin_money)"
+              v-if="calcMoney(event(e).handin_money) > 0"
+            />
+          </div>
+          <div class="col-6 text-center">
+            <span class="font-weight-bold">Returned</span>
+            <hr class="mt-3 mb-3" style="border-top-color: rgba(255, 255, 255, 0.14);">
+            <div
+              class="text-left"
+              v-for="i in event(e).return_items"
+            >
+              <item-popover
+                :item="itemData[i.item_id]"
+                :class="' font-weight-bold d-inline-block'"
+              />
+              (x{{ i.charges ? i.charges : 1 }})
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+
+      <button
+        title="Show Detail"
+        @click="expandEvent(e)"
+        v-if="!expandedEvent[e.id] && Object.keys(JSON.parse(e.event_data)).length > 0"
+        class="ml-3 btn btn-sm btn-warning"
+        style="font-size: 10px; "
+      >
+        <i class="fa fa-plus"></i>
+      </button>
+    </div>
+
     <div v-if="e.event_type_id === PLAYER_EVENT.TRADE">
 
-      <div v-if="!expandedTrade[e.id]" class="d-inline-block">
+      <div v-if="!expandedEvent[e.id]" class="d-inline-block">
         <span class="font-weight-bold" v-if="characterData[event(e).character_2_id]">
           {{ characterData[event(e).character_2_id].name }}
         </span> traded ({{ event(e).character_1_give_items.length }}) items
@@ -248,7 +314,7 @@
         />
       </div>
 
-      <div v-if="expandedTrade[e.id]" style="min-width: 600px" class="eq-window-simple mb-3">
+      <div v-if="expandedEvent[e.id]" style="min-width: 600px" class="eq-window-simple mb-3">
         <div class="row mt-3">
           <div class="col-6 text-center">
             <span class="font-weight-bold">{{ characterData[event(e).character_2_id].name }}</span>
@@ -300,8 +366,8 @@
 
       <button
         title="Show Detail"
-        @click="expandTrade(e)"
-        v-if="!expandedTrade[e.id] && Object.keys(JSON.parse(e.event_data)).length > 0"
+        @click="expandEvent(e)"
+        v-if="!expandedEvent[e.id] && Object.keys(JSON.parse(e.event_data)).length > 0"
         class="ml-3 btn btn-sm btn-warning"
         style="font-size: 10px; "
       >
@@ -347,7 +413,7 @@ export default {
       aaData: {},
       characterData: {},
 
-      expandedTrade: {}
+      expandedEvent: {}
     }
   },
   async mounted() {
@@ -383,12 +449,17 @@ export default {
         this.itemData[i.item_id] = await Items.getItem(i.item_id)
       }
     }
+    if (p && p.handin_items && p.handin_items.length > 0) {
+      for (let i of p.handin_items) {
+        this.itemData[i.item_id] = await Items.getItem(i.item_id)
+      }
+    }
 
     this.$forceUpdate()
   },
   methods: {
-    expandTrade(e) {
-      this.expandedTrade[e.id] = 1
+    expandEvent(e) {
+      this.expandedEvent[e.id] = 1
       this.$forceUpdate()
     },
 
