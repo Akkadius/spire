@@ -234,13 +234,25 @@
           :price="calcMoney(event(e).handin_money)"
           v-if="calcMoney(event(e).handin_money) > 0"
         />
-        to <span class="font-weight-bold">{{event(e).npc_name}}</span>
+        to <span class="font-weight-bold">{{ event(e).npc_name }}</span>
 
         Returned ({{ event(e).return_items.length }}) item(s)
       </div>
 
       <div v-if="expandedEvent[e.id]" style="min-width: 600px" class="eq-window-simple p-3 mb-3">
         <div class="row">
+          <div class="col-3"></div>
+          <div class="col-6">
+            <npc-popover
+              :npc="npcData[event(e).npc_id]"
+              class="d-inline-block font-weight-bold"
+            />
+
+
+<!--            <span class="font-weight-bold">{{ npcData[event(e).npc_id] }}</span>-->
+          </div>
+        </div>
+        <div class="row mt-3">
           <div class="col-6 text-center">
             <span class="font-weight-bold">Handed In</span>
             <hr class="mt-3 mb-3" style="border-top-color: rgba(255, 255, 255, 0.14);">
@@ -375,8 +387,6 @@
       </button>
 
     </div>
-
-
   </div>
 </template>
 
