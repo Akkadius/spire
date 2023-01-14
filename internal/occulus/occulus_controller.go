@@ -73,6 +73,7 @@ func (a *Controller) occulusProxy(c echo.Context) error {
 				c.Response().Header().Add(key, value)
 			}
 		}
+		c.Response().Header().Del("Access-Control-Allow-Origin")
 		c.Response().Header().Add("Access-Control-Allow-Origin", "*")
 	}
 
