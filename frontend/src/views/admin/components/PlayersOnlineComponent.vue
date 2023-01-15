@@ -276,7 +276,11 @@ export default {
    */
   async created() {
 
-    await this.buildPlayersOnlineList()
+    try {
+      await this.buildPlayersOnlineList()
+    }
+    catch (e) {
+    }
 
     this.loaded = true
 

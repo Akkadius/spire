@@ -2,9 +2,15 @@
   <div>
     <app-loader :is-loading="!loaded"></app-loader>
 
-    <span v-if="zoneList.length === 0 && loaded">Zoneservers are offline</span>
+    <div v-if="zoneList.length === 0 && loaded">
+      <div class="card">
+        <div class="card-body">
+          Zoneservers are offline
+        </div>
+      </div>
+    </div>
 
-    <div class="card mb-3 mr-4">
+    <div class="card mb-3 mr-4" v-if="zoneList.length > 0 && loaded">
       <div class="card-body pt-0 pb-0 pl-3 pr-3">
         <div class="input-group input-group-flush">
           <div class="input-group-prepend">
