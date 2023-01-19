@@ -137,12 +137,7 @@ func (q *QueryController) freeIdRanges(c echo.Context) error {
 
 func (q *QueryController) getTableSchema(c echo.Context) error {
 	table := c.Param("table")
-
-	db, err := q.db.Get(q.getModelFromString(table), c).DB()
-	if err != nil {
-		q.logger.Warn(err)
-	}
-
+	db := q.db.Get(q.getModelFromString(table), c)
 	schema, err := database.GetTableSchema(db, table)
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})

@@ -41,7 +41,7 @@ func (i *Importer) ImportSpells(db *gorm.DB, fileContents string) (ImportResult,
 	rowsDeleted := db.Exec("DELETE FROM spells_new").RowsAffected
 
 	// build column name list
-	dbColumns := database.GetTableColumnsOrdered(i.getDatabase(db), "spells_new")
+	dbColumns := database.GetTableColumnsOrdered(db, "spells_new")
 	dbColumnsStr := "`" + strings.Join(dbColumns, "`, `") + "`"
 
 	// build parameter bindings string

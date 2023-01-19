@@ -32,7 +32,7 @@ func (e *Exporter) ExportSpells(db *gorm.DB) string {
 	var entries []map[string]interface{}
 	db.Model(&models.SpellsNew{}).Find(&entries)
 
-	columns, err := database.GetTableSchema(e.getDatabase(db), "spells_new")
+	columns, err := database.GetTableSchema(db, "spells_new")
 	if err != nil {
 		e.logger.Fatal(err)
 	}
@@ -54,7 +54,7 @@ func (e *Exporter) ExportDbStr(db *gorm.DB) string {
 	var entries []map[string]interface{}
 	db.Model(&models.DbStr{}).Find(&entries)
 
-	columns, err := database.GetTableSchema(e.getDatabase(db), "db_str")
+	columns, err := database.GetTableSchema(db, "db_str")
 	if err != nil {
 		e.logger.Fatal(err)
 	}

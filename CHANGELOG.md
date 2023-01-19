@@ -1,3 +1,9 @@
+## [2.5.6]
+
+### Client Files Export Fix
+
+- Fix an issue where when two or more databases are present client files export will export multiples of the same column
+
 ## [2.5.5]
 
 ### Item Card Display

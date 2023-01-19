@@ -1,9 +1,10 @@
 package database
 
 import (
-	"database/sql"
 	"fmt"
+	"github.com/go-sql-driver/mysql"
 	"github.com/volatiletech/null/v8"
+	gormMysql "gorm.io/driver/mysql"
 	"gorm.io/gorm"
 	"log"
 )
@@ -35,7 +36,7 @@ type DbSchemaRowResult struct {
 	ColumnDefault   null.String `yaml:"column_default"`
 }
 
-func GetTableColumnsOrdered(db *sql.DB, tableName string) []string {
+func GetTableColumnsOrdered(db *gorm.DB, tableName string) []string {
 	columns, err := GetTableSchema(db, tableName)
 	if err != nil {
 		log.Fatal(err)
@@ -49,8 +50,24 @@ func GetTableColumnsOrdered(db *sql.DB, tableName string) []string {
 	return names
 }
 
-func GetTableSchema(db *sql.DB, tableName string) ([]DbSchemaRowResult, error) {
-	rows, err := db.Query(
+func GetTableSchema(db *gorm.DB, tableName string) ([]DbSchemaRowResult, error) {
+	databaseName := ""
+	f, ok := db.Dialector.(*gormMysql.Dialector)
+	if ok {
+		p, err := mysql.ParseDSN(f.DSN)
+		if err != nil {
+			return nil, err
+		}
+
+		databaseName = p.DBName
+	}
+
+	sqlDb, err := db.DB()
+	if err != nil {
+		return nil, err
+	}
+
+	rows, err := sqlDb.Query(
 		fmt.Sprintf(
 			`
 		SELECT
@@ -66,8 +83,11 @@ func GetTableSchema(db *sql.DB, tableName string) ([]DbSchemaRowResult, error) {
 		  INFORMATION_SCHEMA.COLUMNS
 		WHERE
 		  TABLE_NAME = '%v'
+		  AND TABLE_SCHEMA = '%v'
 		ORDER BY ORDINAL_POSITION
-	  `, tableName,
+	  `,
+			tableName,
+			databaseName,
 		),
 	)
 	if err != nil {
