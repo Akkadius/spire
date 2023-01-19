@@ -1,3 +1,9 @@
+## [2.5.7]
+
+### Windows Manifest Fix
+
+- Fix an issue where the executable was getting flagged as suspicious
+
 ## [2.5.6]
 
 ### Client Files Export Fix

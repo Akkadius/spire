@@ -231,7 +231,7 @@ build-binary: ##@build Build and packs release binary
 	packr --compress
 	GOOS=linux GOARCH=amd64 go build -o spire-linux-amd64
 	go install github.com/tc-hib/go-winres@latest
-	go-winres simply --icon ./frontend/src/assets/img/spire.png
+	go-winres make
 	GOOS=windows GOARCH=amd64 go build -o spire-windows-amd64.exe
 	zip spire-linux-amd64.zip spire-linux-amd64
 	zip spire-windows-amd64.exe.zip spire-windows-amd64.exe
