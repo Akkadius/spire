@@ -26,6 +26,14 @@ func WithProgress(destinationPath, downloadUrl string) error {
 		return err
 	}
 
+	// force remove file before creating if exists
+	if _, err := os.Stat(destinationPath); err == nil {
+		err := os.Remove(destinationPath)
+		if err != nil {
+			return err
+		}
+	}
+
 	f, err := os.OpenFile(destinationPath, os.O_CREATE|os.O_WRONLY, 0644)
 	if err != nil {
 		return err
