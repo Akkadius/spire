@@ -1,4 +1,4 @@
-## [2.5.8]
+## [2.5.9]
 
 ### Windows Manifest Fix
 
