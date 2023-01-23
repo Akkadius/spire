@@ -143,6 +143,16 @@ export default new Router({
           meta: {title: "Zones"},
         },
         {
+          path: ROUTE.RELEASES,
+          component: () => import('./views/server-developer/Releases.vue'),
+          meta: {title: "Releases"},
+        },
+        {
+          path: util.format(ROUTE.RELEASE, ":version"),
+          component: () => import('./views/server-developer/Release.vue'),
+          meta: {title: "Release"},
+        },
+        {
           path: ROUTE.MERCHANTS,
           component: () => import('./views/merchants/Merchants.vue'),
           meta: {title: "Merchants"},

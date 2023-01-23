@@ -7,6 +7,7 @@ import (
 	"github.com/labstack/echo/v4"
 	"github.com/sirupsen/logrus"
 	"net/http"
+	"strconv"
 	"strings"
 )
 
@@ -28,6 +29,8 @@ func NewCrashAnalyticsController(
 func (a *CrashAnalyticsController) Routes() []*routes.Route {
 	return []*routes.Route{
 		routes.RegisterRoute(http.MethodPost, "server-crash-report", a.serverCrashReport, nil),
+		routes.RegisterRoute(http.MethodGet, "server-crash-reports", a.listServerCrashReports, nil),
+		routes.RegisterRoute(http.MethodGet, "server-crash-report/counts", a.getServerCrashReportCounts, nil),
 	}
 }
 
@@ -66,4 +69,71 @@ func (a *CrashAnalyticsController) serverCrashReport(c echo.Context) error {
 	a.db.GetSpireDb().Create(r)
 
 	return c.JSON(http.StatusOK, "Invalid request")
+}
+
+func (a *CrashAnalyticsController) listServerCrashReports(c echo.Context) error {
+	var entries []models.CrashReport
+	q := a.db.GetSpireDb()
+
+	// limit
+	paramLimit := c.QueryParam("limit")
+	limit := 1000
+	if len(paramLimit) > 0 {
+		l, err := strconv.Atoi(paramLimit)
+		if err != nil {
+			return c.JSON(http.StatusInternalServerError, err.Error())
+		}
+		limit = l
+	}
+	q = q.Limit(limit)
+
+	// version filters
+	w := c.QueryParam("version")
+	if len(w) > 0 {
+		q = q.Where("version", w)
+	}
+
+	// paging
+	queryParamOffset := c.QueryParam("page")
+	if len(queryParamOffset) > 0 {
+		queryOffset, err := strconv.Atoi(queryParamOffset)
+		if err != nil {
+			return c.JSON(http.StatusInternalServerError, err.Error())
+		}
+		q = q.Offset(queryOffset * limit)
+	}
+
+	q.Find(&entries)
+
+	return c.JSON(http.StatusOK, entries)
+}
+
+type CrashReportCounts struct {
+	ServerVersion string `json:"server_version"`
+	CompileDate   string `json:"compile_date"`
+	CrashCount    int    `json:"crash_count"`
+}
+
+func (a *CrashAnalyticsController) getServerCrashReportCounts(c echo.Context) error {
+	db, err := a.db.GetSpireDb().DB()
+	if err != nil {
+		return err
+	}
+
+	rows, err := db.Query("select server_version, compile_date, count(*) as crash_count from spire_crash_reports group by server_version order by server_version")
+	if err != nil {
+		return err
+	}
+
+	counts := []CrashReportCounts{}
+	for rows.Next() {
+		var r CrashReportCounts
+		err = rows.Scan(&r.ServerVersion, &r.CompileDate, &r.CrashCount)
+		if err != nil {
+			return err
+		}
+		counts = append(counts, r)
+	}
+
+	return c.JSON(http.StatusOK, counts)
 }
