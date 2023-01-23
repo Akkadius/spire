@@ -59,6 +59,9 @@ func (a *CrashAnalyticsController) serverCrashReport(c echo.Context) error {
 		!strings.Contains(r.CrashReport, "Windows") {
 		return c.JSON(http.StatusInternalServerError, "Invalid request")
 	}
+	if strings.Count(r.ServerVersion, ".") != 3 {
+		return c.JSON(http.StatusInternalServerError, "Invalid request")
+	}
 
 	a.db.GetSpireDb().Create(r)
 
