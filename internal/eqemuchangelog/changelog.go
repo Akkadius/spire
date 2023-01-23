@@ -35,6 +35,40 @@ func NewChangelog() *Changelog {
 	return &Changelog{client: client}
 }
 
+func (c *Changelog) getCommitsDaysBack(days time.Duration) []*github.RepositoryCommit {
+	var allCommits []*github.RepositoryCommit
+	for i := 1; i < 10; i++ {
+		commits, _, err := c.client.Repositories.ListCommits(
+			context.Background(),
+			"EQEmu",
+			"server",
+			&github.CommitsListOptions{
+				Since: time.Now().Add(-time.Hour * 24 * days),
+				ListOptions: github.ListOptions{
+					Page:    i,
+					PerPage: 100,
+				},
+			},
+		)
+
+		if err != nil {
+			log.Println(err)
+		}
+
+		if len(commits) == 0 {
+			break
+		}
+
+		allCommits = append(allCommits, commits...)
+
+		if len(commits) != 100 {
+			break
+		}
+	}
+
+	return allCommits
+}
+
 func (c *Changelog) getCommits() []*github.RepositoryCommit {
 	var allCommits []*github.RepositoryCommit
 	for i := 0; i < 10; i++ {
@@ -43,7 +77,7 @@ func (c *Changelog) getCommits() []*github.RepositoryCommit {
 			"EQEmu",
 			"server",
 			&github.CommitsListOptions{
-				Since: time.Now().Add(-time.Hour * 24 * 365),
+				Since: time.Now().Add(-time.Hour * 24 * 90),
 				Until: time.Time{},
 				ListOptions: github.ListOptions{
 					Page:    i,
@@ -74,10 +108,10 @@ type ChangelogEntry struct {
 	Time        time.Time
 }
 
-func (c *Changelog) BuildChangelog() string {
+func (c *Changelog) BuildChangelog(commits []*github.RepositoryCommit) string {
 	var entries []ChangelogEntry
 	var categories []string
-	for _, commit := range c.getCommits() {
+	for _, commit := range commits {
 
 		// username, message
 		username := *commit.Author.Login
@@ -175,29 +209,39 @@ func (c *Changelog) BuildChangelog() string {
 
 	// build message
 	for _, category := range categories {
-		msg += fmt.Sprintf("\n### %v\n\n", category)
-
+		hasCategory := false
 		for _, e := range entries {
 			if e.Category == category {
-				pr := ""
-				if len(e.PullRequest) > 0 {
-					pr = fmt.Sprintf(
-						"([#%v](https://github.com/EQEmu/Server/pull/%v))",
-						e.PullRequest,
-						e.PullRequest,
-					)
-				}
-
-				msg += fmt.Sprintf(
-					"* %v %v ([%v](https://github.com/%v)) %v\n",
-					e.Message,
-					pr,
-					e.Author,
-					e.Author,
-					e.Time.Format("2006-01-02"),
-				)
+				hasCategory = true
 			}
 		}
+
+		if hasCategory {
+			msg += fmt.Sprintf("\n### %v\n\n", category)
+
+			for _, e := range entries {
+				if e.Category == category {
+					pr := ""
+					if len(e.PullRequest) > 0 {
+						pr = fmt.Sprintf(
+							"([#%v](https://github.com/EQEmu/Server/pull/%v))",
+							e.PullRequest,
+							e.PullRequest,
+						)
+					}
+
+					msg += fmt.Sprintf(
+						"* %v %v ([%v](https://github.com/%v)) %v\n",
+						e.Message,
+						pr,
+						e.Author,
+						e.Author,
+						e.Time.Format("2006-01-02"),
+					)
+				}
+			}
+		}
+
 	}
 
 	return strings.TrimSpace(msg)

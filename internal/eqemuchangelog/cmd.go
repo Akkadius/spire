@@ -5,6 +5,8 @@ import (
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
 	"gorm.io/gorm"
+	"strconv"
+	"time"
 )
 
 type ChangelogCommand struct {
@@ -23,7 +25,8 @@ func NewChangelogCommand(db *gorm.DB, logger *logrus.Logger, changelog *Changelo
 		db:     db,
 		logger: logger,
 		command: &cobra.Command{
-			Use: "eqemu-server:changelog",
+			Use:   "eqemu-server:changelog [days-back]",
+			Short: "Generates eqemu changelog",
 		},
 		changelog: changelog,
 	}
@@ -36,7 +39,26 @@ func NewChangelogCommand(db *gorm.DB, logger *logrus.Logger, changelog *Changelo
 
 // Handle implementation of the Command interface
 func (c *ChangelogCommand) Handle(cmd *cobra.Command, args []string) {
-	fmt.Println(c.changelog.BuildChangelog())
+	days := 30
+	if len(args) == 1 {
+		intVar, err := strconv.Atoi(args[0])
+		if err != nil {
+			c.logger.Error(err)
+		}
+		days = intVar
+	}
+
+	fmt.Printf("------------------------------------\n")
+	fmt.Printf("     Listing back [%v] day(s)\n", days)
+	fmt.Printf("      (Copy below the line)\n")
+	fmt.Printf("------------------------------------\n\n")
+
+	fmt.Println(
+		c.changelog.BuildChangelog(
+			c.changelog.getCommitsDaysBack(time.Duration(days)),
+		),
+	)
+
 }
 
 // Validate implementation of the Command interface

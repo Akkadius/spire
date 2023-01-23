@@ -3,6 +3,7 @@ package boot
 import (
 	"github.com/Akkadius/spire/internal/assets"
 	"github.com/Akkadius/spire/internal/eqemuanalytics"
+	"github.com/Akkadius/spire/internal/eqemuchangelog"
 	"github.com/Akkadius/spire/internal/http/controllers"
 	appmiddleware "github.com/Akkadius/spire/internal/http/middleware"
 	"github.com/Akkadius/spire/internal/http/routes"
@@ -35,6 +36,7 @@ var httpSet = wire.NewSet(
 	controllers.NewPermissionsController,
 	controllers.NewUsersController,
 	eqemuanalytics.NewCrashAnalyticsController,
+	eqemuchangelog.NewEqemuChangelogController,
 	staticmaps.NewStaticMapController,
 	provideControllers,
 	NewRouter,
@@ -144,6 +146,7 @@ func provideControllers(
 	permissionsController *controllers.PermissionsController,
 	usersController *controllers.UsersController,
 	crashAnalyticsController *eqemuanalytics.CrashAnalyticsController,
+	changelogController *eqemuchangelog.EqemuChangelogController,
 ) *appControllerGroups {
 	return &appControllerGroups{
 		authControllers: []routes.Controller{
@@ -166,6 +169,7 @@ func provideControllers(
 			questFileApi,
 			staticMaps,
 			assetsController,
+			changelogController,
 		},
 		v1Analytics: []routes.Controller{
 			crashAnalyticsController,

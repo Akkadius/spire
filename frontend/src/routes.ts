@@ -23,6 +23,7 @@ export const ROUTE = {
   QUEST_API_EXPLORER: "/quest-api-explorer",
   RELEASES: "/releases",
   RELEASE: "/release/%s",
+  CHANGELOG: "/changelog",
   RACE_VIEWER: "/race-viewer",
   SPELL_ANIMATION_VIEWER: "/spell-animation-viewer",
   SPELL_EDIT: "/spell/%s",

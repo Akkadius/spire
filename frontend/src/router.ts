@@ -153,6 +153,11 @@ export default new Router({
           meta: {title: "Release"},
         },
         {
+          path: ROUTE.CHANGELOG,
+          component: () => import('./views/server-developer/Changelog.vue'),
+          meta: {title: "Changelog"},
+        },
+        {
           path: ROUTE.MERCHANTS,
           component: () => import('./views/merchants/Merchants.vue'),
           meta: {title: "Merchants"},
