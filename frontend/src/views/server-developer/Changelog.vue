@@ -59,7 +59,7 @@ export default {
   methods: {
     async generate() {
       this.loading = true;
-      const r      = await SpireApi.v1().get(`changelog/${this.daysBack}`)
+      const r      = await SpireApi.v1().get(`analytics/changelog/${this.daysBack}`)
       if (r.status === 200) {
         this.changelog = r.data.data
         this.loading   = false;

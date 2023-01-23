@@ -6,6 +6,7 @@ import (
 	"github.com/Akkadius/spire/internal/clientfiles"
 	"github.com/Akkadius/spire/internal/connection"
 	"github.com/Akkadius/spire/internal/desktop"
+	"github.com/Akkadius/spire/internal/eqemuanalytics"
 	"github.com/Akkadius/spire/internal/eqemuchangelog"
 	"github.com/Akkadius/spire/internal/github"
 	"github.com/Akkadius/spire/internal/influx"
@@ -34,4 +35,5 @@ var serviceSet = wire.NewSet(
 	auditlog.NewUserEvent,
 	assets.NewSpireAssets,
 	eqemuchangelog.NewChangelog,
+	eqemuanalytics.NewReleases,
 )

@@ -4,7 +4,13 @@
       :title="`Release Version (${release})`"
       class="p-0"
     >
-      <div style="height:35vh; overflow-y: scroll;">
+      <div class="p-4 text-center" v-if="crashes.length === 0">
+        <span class="font-weight-bold ">
+          No crashes found
+        </span>
+      </div>
+
+      <div style="height:35vh; overflow-y: scroll;" v-if="crashes.length > 0">
         <table
           class="eq-table bordered eq-highlight-rows mb-0"
           style="overflow-x: scroll; min-width: 80vw"
@@ -96,7 +102,7 @@ export default {
   async mounted() {
     this.loadQueryState()
 
-    const r = await SpireApi.v1().get(`server-crash-reports`, {
+    const r = await SpireApi.v1().get(`analytics/server-crash-reports`, {
       params: {
         version: this.$route.params.version
       }

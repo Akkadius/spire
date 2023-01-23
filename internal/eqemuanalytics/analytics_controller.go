@@ -11,30 +11,34 @@ import (
 	"strings"
 )
 
-type CrashAnalyticsController struct {
-	logger *logrus.Logger
-	db     *database.DatabaseResolver
+type AnalyticsController struct {
+	logger   *logrus.Logger
+	db       *database.DatabaseResolver
+	releases *Releases
 }
 
-func NewCrashAnalyticsController(
+func NewAnalyticsController(
 	logger *logrus.Logger,
 	db *database.DatabaseResolver,
-) *CrashAnalyticsController {
-	return &CrashAnalyticsController{
-		logger: logger,
-		db:     db,
+	releases *Releases,
+) *AnalyticsController {
+	return &AnalyticsController{
+		logger:   logger,
+		db:       db,
+		releases: releases,
 	}
 }
 
-func (a *CrashAnalyticsController) Routes() []*routes.Route {
+func (a *AnalyticsController) Routes() []*routes.Route {
 	return []*routes.Route{
-		routes.RegisterRoute(http.MethodPost, "server-crash-report", a.serverCrashReport, nil),
-		routes.RegisterRoute(http.MethodGet, "server-crash-reports", a.listServerCrashReports, nil),
-		routes.RegisterRoute(http.MethodGet, "server-crash-report/counts", a.getServerCrashReportCounts, nil),
+		routes.RegisterRoute(http.MethodPost, "analytics/server-crash-report", a.serverCrashReport, nil),
+		routes.RegisterRoute(http.MethodGet, "analytics/server-crash-reports", a.listServerCrashReports, nil),
+		routes.RegisterRoute(http.MethodGet, "analytics/server-crash-report/counts", a.getServerCrashReportCounts, nil),
+		routes.RegisterRoute(http.MethodGet, "analytics/releases", a.getReleases, nil),
 	}
 }
 
-func (a *CrashAnalyticsController) serverCrashReport(c echo.Context) error {
+func (a *AnalyticsController) serverCrashReport(c echo.Context) error {
 	r := new(models.CrashReport)
 	if err := c.Bind(r); err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
@@ -71,7 +75,7 @@ func (a *CrashAnalyticsController) serverCrashReport(c echo.Context) error {
 	return c.JSON(http.StatusOK, "Invalid request")
 }
 
-func (a *CrashAnalyticsController) listServerCrashReports(c echo.Context) error {
+func (a *AnalyticsController) listServerCrashReports(c echo.Context) error {
 	var entries []models.CrashReport
 	q := a.db.GetSpireDb()
 
@@ -114,7 +118,7 @@ type CrashReportCounts struct {
 	CrashCount    int    `json:"crash_count"`
 }
 
-func (a *CrashAnalyticsController) getServerCrashReportCounts(c echo.Context) error {
+func (a *AnalyticsController) getServerCrashReportCounts(c echo.Context) error {
 	db, err := a.db.GetSpireDb().DB()
 	if err != nil {
 		return err
@@ -136,4 +140,16 @@ func (a *CrashAnalyticsController) getServerCrashReportCounts(c echo.Context) er
 	}
 
 	return c.JSON(http.StatusOK, counts)
+}
+
+func (a *AnalyticsController) getReleases(c echo.Context) error {
+	r, err := a.releases.getReleases()
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, err.Error())
+	}
+
+	return c.JSON(
+		http.StatusOK,
+		echo.Map{"data": r},
+	)
 }
