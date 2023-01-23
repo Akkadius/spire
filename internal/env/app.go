@@ -38,7 +38,7 @@ func LoadEnvFileIfExists() error {
 		}
 
 		// display env: [LoadEnv] APP_ENV [local] ENV_FILE [.env]
-		if len(os.Getenv("DEBUG")) > 0 {
+		if GetInt("DEBUG", "0") >= 3 {
 			fmt.Println(envLoadMsg)
 		}
 

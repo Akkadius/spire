@@ -2,6 +2,8 @@ package boot
 
 import (
 	"github.com/Akkadius/spire/internal/assets"
+	"github.com/Akkadius/spire/internal/eqemuanalytics"
+	"github.com/Akkadius/spire/internal/eqemuchangelog"
 	"github.com/Akkadius/spire/internal/http/controllers"
 	appmiddleware "github.com/Akkadius/spire/internal/http/middleware"
 	"github.com/Akkadius/spire/internal/http/routes"
@@ -33,6 +35,8 @@ var httpSet = wire.NewSet(
 	controllers.NewAssetsController,
 	controllers.NewPermissionsController,
 	controllers.NewUsersController,
+	eqemuanalytics.NewCrashAnalyticsController,
+	eqemuchangelog.NewEqemuChangelogController,
 	staticmaps.NewStaticMapController,
 	provideControllers,
 	NewRouter,
@@ -43,6 +47,7 @@ type appControllerGroups struct {
 	helloWorldControllers []routes.Controller
 	v1controllers         []routes.Controller
 	v1controllersNoAuth   []routes.Controller
+	v1Analytics           []routes.Controller
 }
 
 func NewRouter(
@@ -106,6 +111,12 @@ func NewRouter(
 			),
 			routes.NewControllerGroup(
 				"/api/v1/",
+				cg.v1Analytics,
+				v1AnalyticsRateLimit(),
+				middleware.GzipWithConfig(middleware.GzipConfig{Level: 1}),
+			),
+			routes.NewControllerGroup(
+				"/api/v1/",
 				crudc.routes,
 				userContextMiddleware.HandleHeader(),
 				readOnlyModeMiddleware.Handle(),
@@ -134,6 +145,8 @@ func provideControllers(
 	assetsController *controllers.AssetsController,
 	permissionsController *controllers.PermissionsController,
 	usersController *controllers.UsersController,
+	crashAnalyticsController *eqemuanalytics.CrashAnalyticsController,
+	changelogController *eqemuchangelog.EqemuChangelogController,
 ) *appControllerGroups {
 	return &appControllerGroups{
 		authControllers: []routes.Controller{
@@ -156,6 +169,10 @@ func provideControllers(
 			questFileApi,
 			staticMaps,
 			assetsController,
+			changelogController,
+		},
+		v1Analytics: []routes.Controller{
+			crashAnalyticsController,
 		},
 	}
 }
@@ -165,7 +182,7 @@ func v1RateLimit() echo.MiddlewareFunc {
 		appmiddleware.RateLimiterConfig{
 			Skipper: func(c echo.Context) bool {
 
-				// if there is a validate user - skip the middleware
+				// if there is a valid user - skip the middleware
 				user, ok := c.Get("user").(models.User)
 				if ok {
 					if user.ID > 0 {
@@ -177,6 +194,23 @@ func v1RateLimit() echo.MiddlewareFunc {
 			},
 			LimitConfig: appmiddleware.LimiterConfig{
 				Max:      5000,
+				Duration: time.Minute * 1,
+				Strategy: "ip",
+				Key:      "",
+			},
+			Prefix:                       "LIMIT",
+			Client:                       nil,
+			SkipRateLimiterInternalError: false,
+			OnRateLimit:                  nil,
+		},
+	)
+}
+
+func v1AnalyticsRateLimit() echo.MiddlewareFunc {
+	return appmiddleware.RateLimiterWithConfig(
+		appmiddleware.RateLimiterConfig{
+			LimitConfig: appmiddleware.LimiterConfig{
+				Max:      5,
 				Duration: time.Minute * 1,
 				Strategy: "ip",
 				Key:      "",

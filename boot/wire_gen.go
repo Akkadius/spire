@@ -15,6 +15,8 @@ import (
 	"github.com/Akkadius/spire/internal/database"
 	"github.com/Akkadius/spire/internal/desktop"
 	"github.com/Akkadius/spire/internal/encryption"
+	"github.com/Akkadius/spire/internal/eqemuanalytics"
+	"github.com/Akkadius/spire/internal/eqemuchangelog"
 	"github.com/Akkadius/spire/internal/github"
 	"github.com/Akkadius/spire/internal/http/controllers"
 	"github.com/Akkadius/spire/internal/http/crudcontrollers"
@@ -77,7 +79,10 @@ func InitializeApplication() (App, error) {
 	assetsController := controllers.NewAssetsController(logger, databaseResolver)
 	permissionsController := controllers.NewPermissionsController(logger, databaseResolver, service)
 	usersController := controllers.NewUsersController(databaseResolver, logger)
-	bootAppControllerGroups := provideControllers(helloWorldController, authController, meController, analyticsController, connectionsController, docsController, questApiController, appController, queryController, questFileApiController, clientFilesController, staticMapController, assetsController, permissionsController, usersController)
+	crashAnalyticsController := eqemuanalytics.NewCrashAnalyticsController(logger, databaseResolver)
+	changelog := eqemuchangelog.NewChangelog()
+	eqemuChangelogController := eqemuchangelog.NewEqemuChangelogController(logger, databaseResolver, changelog)
+	bootAppControllerGroups := provideControllers(helloWorldController, authController, meController, analyticsController, connectionsController, docsController, questApiController, appController, queryController, questFileApiController, clientFilesController, staticMapController, assetsController, permissionsController, usersController, crashAnalyticsController, eqemuChangelogController)
 	userEvent := auditlog.NewUserEvent(databaseResolver, logger, cache)
 	aaAbilityController := crudcontrollers.NewAaAbilityController(databaseResolver, logger, userEvent)
 	aaRankController := crudcontrollers.NewAaRankController(databaseResolver, logger, userEvent)
@@ -291,7 +296,8 @@ func InitializeApplication() (App, error) {
 	questApiParseCommand := cmd.NewQuestApiParseCommand(logger, parseService)
 	questExampleTestCommand := cmd.NewQuestExampleTestCommand(logger, questExamplesGithubSourcer)
 	generateRaceModelMapsCommand := cmd.NewGenerateRaceModelMapsCommand(logger)
-	v := ProvideCommands(helloWorldCommand, generateModelsCommand, generateControllersCommand, httpServeCommand, routesListCommand, generateConfigurationCommand, spireMigrateCommand, questApiParseCommand, questExampleTestCommand, generateRaceModelMapsCommand)
+	changelogCommand := eqemuchangelog.NewChangelogCommand(db, logger, changelog)
+	v := ProvideCommands(helloWorldCommand, generateModelsCommand, generateControllersCommand, httpServeCommand, routesListCommand, generateConfigurationCommand, spireMigrateCommand, questApiParseCommand, questExampleTestCommand, generateRaceModelMapsCommand, changelogCommand)
 	webBoot := desktop.NewWebBoot(logger, router)
 	app := NewApplication(db, logger, cache, v, databaseResolver, connections, router, webBoot)
 	return app, nil

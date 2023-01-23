@@ -2,6 +2,7 @@ package boot
 
 import (
 	"github.com/Akkadius/spire/internal/console/cmd"
+	"github.com/Akkadius/spire/internal/eqemuchangelog"
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/google/wire"
 	"github.com/spf13/cobra"
@@ -19,6 +20,7 @@ var commandSet = wire.NewSet(
 	cmd.NewSpireMigrateCommand,
 	cmd.NewQuestExampleTestCommand,
 	cmd.NewGenerateRaceModelMapsCommand,
+	eqemuchangelog.NewChangelogCommand,
 	ProvideCommands,
 )
 
@@ -34,6 +36,7 @@ func ProvideCommands(
 	questApiParseCommand *cmd.QuestApiParseCommand,
 	questExampleTestCommand *cmd.QuestExampleTestCommand,
 	generateRaceModelMapsCommand *cmd.GenerateRaceModelMapsCommand,
+	changelogCmd *eqemuchangelog.ChangelogCommand,
 ) []*cobra.Command {
 	return []*cobra.Command{
 		helloWorldCommand.Command(),
@@ -46,5 +49,6 @@ func ProvideCommands(
 		questApiParseCommand.Command(),
 		questExampleTestCommand.Command(),
 		generateRaceModelMapsCommand.Command(),
+		changelogCmd.Command(),
 	}
 }
