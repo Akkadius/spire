@@ -3,6 +3,7 @@ package eqemuanalytics
 import (
 	"github.com/Akkadius/spire/internal/database"
 	"github.com/Akkadius/spire/internal/http/routes"
+	"github.com/Akkadius/spire/internal/models"
 	"github.com/labstack/echo/v4"
 	"github.com/sirupsen/logrus"
 	"net/http"
@@ -30,25 +31,8 @@ func (a *CrashAnalyticsController) Routes() []*routes.Route {
 	}
 }
 
-type CrashReport struct {
-	CompileDate     string  `json:"compile_date"`
-	CompileTime     string  `json:"compile_time"`
-	Cpus            int     `json:"cpus"`
-	CrashReport     string  `json:"crash_report"`
-	OsMachine       string  `json:"os_machine"`
-	OsRelease       string  `json:"os_release"`
-	OsSysname       string  `json:"os_sysname"`
-	OsVersion       string  `json:"os_version"`
-	ProcessID       int     `json:"process_id"`
-	RssMemory       float64 `json:"rss_memory"`
-	ServerName      string  `json:"server_name"`
-	ServerShortName string  `json:"server_short_name"`
-	ServerVersion   string  `json:"server_version"`
-	Uptime          int     `json:"uptime"`
-}
-
 func (a *CrashAnalyticsController) serverCrashReport(c echo.Context) error {
-	r := new(CrashReport)
+	r := new(models.CrashReport)
 	if err := c.Bind(r); err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}
@@ -75,6 +59,8 @@ func (a *CrashAnalyticsController) serverCrashReport(c echo.Context) error {
 		!strings.Contains(r.CrashReport, "Windows") {
 		return c.JSON(http.StatusInternalServerError, "Invalid request")
 	}
+
+	a.db.GetSpireDb().Create(r)
 
 	return c.JSON(http.StatusOK, "Invalid request")
 }
