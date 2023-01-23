@@ -2,6 +2,7 @@ package models
 
 type CrashReport struct {
 	ID              uint    `json:"id" gorm:"primary_key,AUTO_INCREMENT"`
+	PlatformName    string  `json:"platform_name" gorm:"platform_name"`
 	CompileDate     string  `json:"compile_date" gorm:"compile_date"`
 	CompileTime     string  `json:"compile_time" gorm:"compile_time"`
 	Cpus            int     `json:"cpus" gorm:"cpus"`
