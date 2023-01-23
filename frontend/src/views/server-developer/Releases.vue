@@ -1,5 +1,5 @@
 <template>
-  <eq-window title="Releases" class="p-3">
+  <eq-window title="Release Crash Reporting" class="p-3">
     <div style="max-height:95vh; overflow-y: scroll">
       <table
         class="eq-table bordered eq-highlight-rows"

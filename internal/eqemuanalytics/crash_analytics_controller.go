@@ -90,7 +90,7 @@ func (a *CrashAnalyticsController) listServerCrashReports(c echo.Context) error 
 	// version filters
 	w := c.QueryParam("version")
 	if len(w) > 0 {
-		q = q.Where("version", w)
+		q = q.Where("server_version", w)
 	}
 
 	// paging

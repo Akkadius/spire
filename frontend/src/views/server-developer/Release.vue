@@ -93,7 +93,11 @@ export default {
   async mounted() {
     this.loadQueryState()
 
-    const r = await SpireApi.v1().get(`server-crash-reports`)
+    const r = await SpireApi.v1().get(`server-crash-reports`, {
+      params: {
+        version: this.$route.params.version
+      }
+    })
     if (r.status === 200) {
       this.crashes = r.data
     }
