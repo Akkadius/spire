@@ -1,65 +1,67 @@
 <template>
-  <div class="row">
-    <div :class="`col-` + (crash ? '6' : '12')">
-      <eq-window
-        :title="`Release Version (${release})`"
-        class="p-0"
-      >
-        <div style="max-height:95vh; overflow-y: scroll;">
-          <table
-            class="eq-table bordered eq-highlight-rows mb-0"
-            style="overflow-x: scroll; min-width: 80vw"
+  <div>
+    <eq-window
+      :title="`Release Version (${release})`"
+      class="p-0"
+    >
+      <div style="height:35vh; overflow-y: scroll;">
+        <table
+          class="eq-table bordered eq-highlight-rows mb-0"
+          style="overflow-x: scroll; min-width: 80vw"
+        >
+          <thead class="eq-table-floating-header">
+          <tr>
+            <th></th>
+            <th>ID</th>
+            <th>Compile Time</th>
+            <th>Server Name</th>
+            <th>Process</th>
+            <th>PID</th>
+            <th>OS</th>
+            <th>Lines</th>
+            <th>Created</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr
+            @click="viewCrash(c)"
+            v-for="(c, index) in crashes"
+            :key="c.id"
+            :class="(highlightedId && c.id === highlightedId ? 'pulsate-highlight-white' : '')"
           >
-            <thead class="eq-table-floating-header">
-            <tr>
-              <th></th>
-              <th>ID</th>
-              <th>Compile Time</th>
-              <th>Server Name</th>
-              <th>Process</th>
-              <th>PID</th>
-              <th>OS</th>
-              <th>Lines</th>
-              <th>Created</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr
-              @click="viewCrash(c)"
-              v-for="(c, index) in crashes"
-              :key="c.id"
-              :class="(highlightedId && c.id === highlightedId ? 'pulsate-highlight-white' : '')"
-            >
-              <td class="text-center">
-                <b-button
-                  variant="primary"
-                  class="btn-dark btn-sm btn-outline-white"
-                  style="padding: 0px 6px;"
-                  title="View Crash"
-                  @click="viewCrash(c)"
-                >
-                  <i class="fa fa-circle-o"></i>
-                </b-button>
-              </td>
-              <td>{{ c.id }}</td>
-              <td>{{ c.compile_date }} {{ c.compile_time }}</td>
-              <td>{{ c.server_name }} ({{ c.server_short_name }})</td>
-              <td>{{ c.platform_name }}</td>
-              <td>{{ c.process_id }}</td>
-              <td>{{ c.os_sysname }} ({{ c.os_machine }})</td>
-              <td>{{ c.crash_report.split("\n").length }}</td>
-              <td>{{ c.created_at ? c.created_at : "" }}</td>
-            </tr>
-            </tbody>
-          </table>
-        </div>
-      </eq-window>
-    </div>
-    <div class="col-6" v-if="crash">
-      <eq-window :title="`Crash Stack (${highlightedId})`">
-        <pre style="width: 100%">{{ crash }}</pre>
-      </eq-window>
-    </div>
+            <td class="text-center">
+              <b-button
+                variant="primary"
+                class="btn-dark btn-sm btn-outline-white"
+                style="padding: 0px 6px;"
+                title="View Crash"
+                @click="viewCrash(c)"
+              >
+                <i class="fa fa-circle-o"></i>
+              </b-button>
+            </td>
+            <td>{{ c.id }}</td>
+            <td>{{ c.compile_date }} {{ c.compile_time }}</td>
+            <td>{{ c.server_name }} ({{ c.server_short_name }})</td>
+            <td>{{ c.platform_name }}</td>
+            <td>{{ c.process_id }}</td>
+            <td>{{ c.os_sysname }} ({{ c.os_machine }})</td>
+            <td>{{ c.crash_report.split("\n").length }}</td>
+            <td>{{ c.created_at ? c.created_at : "" }}</td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+    </eq-window>
+    <eq-window
+      class="mt-4"
+      :title="`Crash Stack (${highlightedId})`"
+      v-if="crash"
+    >
+      <pre
+        style="width: 100%; height: 50vh; overflow-y: scroll"
+      >{{ crash }}</pre>
+    </eq-window>
   </div>
 </template>
 
@@ -85,6 +87,7 @@ export default {
 
   watch: {
     $route(to, from) {
+      this.reset()
       this.loadQueryState()
       this.load()
     }
@@ -107,6 +110,11 @@ export default {
     this.load()
   },
   methods: {
+    reset() {
+      this.crash         = ""
+      this.highlightedId = 0
+    },
+
     async load() {
       for (let r of this.crashes) {
         if (r.id === this.highlightedId) {

@@ -13,7 +13,11 @@
         </tr>
         </thead>
         <tbody>
-        <tr v-for="(c, index) in counts" :key="c.server_version">
+        <tr
+          class="fade-in"
+          v-for="(c, index) in counts"
+          :key="c.server_version"
+        >
           <td class="text-center">
             <b-button
               variant="primary"
