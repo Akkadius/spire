@@ -59,7 +59,7 @@ func (a *CrashAnalyticsController) serverCrashReport(c echo.Context) error {
 		!strings.Contains(r.CrashReport, "Windows") {
 		return c.JSON(http.StatusInternalServerError, "Invalid request")
 	}
-	if strings.Count(r.ServerVersion, ".") != 3 {
+	if strings.Count(r.ServerVersion, ".") != 2 {
 		return c.JSON(http.StatusInternalServerError, "Invalid request")
 	}
 
