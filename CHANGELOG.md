@@ -1,3 +1,9 @@
+## [2.6.1]
+
+### Item Editor
+
+- Fix an issue where charm file ID would not save properly when numbers were used in the field
+
 ## [2.6.0]
 
 ### Auto Update Tweaks

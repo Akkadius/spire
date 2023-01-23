@@ -1160,53 +1160,30 @@
                 class="row"
                 :key="field.field"
                 v-for="field in
-                       [
-                         {
-                           description: 'Charm File',
-                           field: 'charmfile',
-                         },
-                         {
-                           description: 'Charm File ID',
-                           field: 'charmfileid'
-                         },
-                       ]"
+                 [
+                   {
+                     description: 'Charm File',
+                     field: 'charmfile',
+                     type: 'text'
+                   },
+                   {
+                     description: 'Charm File ID',
+                     field: 'charmfileid',
+                     type: 'text'
+                   },
+                 ]"
               >
                 <div class="col-5 text-right mr-3 p-0 mt-2">
                   {{ field.description }}
                 </div>
                 <div class="col-3 p-0 m-0" :style="(item[field.field] === 0 ? 'opacity: .5' : '')">
                   <b-form-input
-                    v-b-tooltip.hover.v-dark.right :title="getFieldDescription(field.field)"
-                    v-if="!field.selectData && !field.type"
+                    v-b-tooltip.hover.v-dark.right
+                    :title="getFieldDescription(field.field)"
+                    v-if="field.type === 'text'"
                     :id="field.field"
-                    v-model.number="item[field.field]"
+                    v-model="item[field.field]"
                   />
-
-                  <eq-checkbox
-                    v-b-tooltip.hover.v-dark.right :title="getFieldDescription(field.field)"
-                    class="d-inline-block mt-2 mb-2"
-                    :true-value="(typeof field.true !== 'undefined' ? field.true : 1)"
-                    :false-value="(typeof field.false !== 'undefined' ? field.false : 0)"
-                    v-model.number="item[field.field]"
-                    @input="item[field.field] = $event"
-                    v-if="field.type === 'bool'"
-                  />
-
-                  <select
-                    v-b-tooltip.hover.v-dark.right :title="getFieldDescription(field.field)"
-                    v-model.number="item[field.field]"
-                    class="form-control"
-                    v-if="field.selectData"
-                  >
-                    <option
-                      v-for="(description, index) in field.selectData"
-                      :key="index"
-                      :value="parseInt(index)"
-                    >
-                      {{ index }}) {{ description }}
-                    </option>
-                  </select>
-
                 </div>
               </div>
             </eq-tab>
