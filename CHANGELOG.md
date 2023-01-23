@@ -1,3 +1,9 @@
+## [2.6.0]
+
+### Auto Update Tweaks
+
+- Added a request timeout to the automatic updater routine
+
 ## [2.5.9]
 
 ### Windows Manifest Fix

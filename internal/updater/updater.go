@@ -10,10 +10,12 @@ import (
 	"github.com/Akkadius/spire/internal/unzip"
 	"github.com/google/go-github/v41/github"
 	"log"
+	"net/http"
 	"os"
 	"path"
 	"path/filepath"
 	"runtime"
+	"time"
 )
 
 type UpdaterService struct {
@@ -93,10 +95,10 @@ func (s UpdaterService) CheckForUpdates() {
 	debug(fmt.Sprintf("[Update] Running as executablePath [%v]\n", executablePath))
 
 	// get releases
-	client := github.NewClient(nil)
+	client := github.NewClient(&http.Client{Timeout: 5 * time.Second})
 	release, _, err := client.Repositories.GetLatestRelease(context.Background(), "Akkadius", "spire")
 	if err != nil {
-		//log.Println(err)
+		log.Println(err)
 		return
 	}
 
