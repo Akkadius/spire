@@ -69,37 +69,6 @@ func (c *Changelog) getCommitsDaysBack(days time.Duration) []*github.RepositoryC
 	return allCommits
 }
 
-func (c *Changelog) getCommits() []*github.RepositoryCommit {
-	var allCommits []*github.RepositoryCommit
-	for i := 0; i < 10; i++ {
-		commits, _, err := c.client.Repositories.ListCommits(
-			context.Background(),
-			"EQEmu",
-			"server",
-			&github.CommitsListOptions{
-				Since: time.Now().Add(-time.Hour * 24 * 90),
-				Until: time.Time{},
-				ListOptions: github.ListOptions{
-					Page:    i,
-					PerPage: 100,
-				},
-			},
-		)
-
-		if err != nil {
-			log.Println(err)
-		}
-
-		if len(commits) == 0 {
-			break
-		}
-
-		allCommits = append(allCommits, commits...)
-	}
-
-	return allCommits
-}
-
 type ChangelogEntry struct {
 	Author      string
 	Message     string
@@ -137,12 +106,15 @@ func (c *Changelog) BuildChangelog(commits []*github.RepositoryCommit) string {
 		category := ""
 		firstWordSplit := strings.Split(message, " ")
 		if len(firstWordSplit) > 0 {
-			firstWord := strings.TrimSpace(firstWordSplit[0])
-			if strings.Contains(firstWord, "]") && strings.Contains(firstWord, "[") {
-				category = firstWord
-				category = strings.ReplaceAll(category, "[", "")
-				category = strings.ReplaceAll(category, "]", "")
-				message = strings.TrimSpace(strings.ReplaceAll(message, firstWord, ""))
+			category = c.GetStringInBetween(message, "[", "]")
+			if len(category) < 20 {
+				message = strings.TrimSpace(
+					strings.ReplaceAll(
+						message,
+						fmt.Sprintf("[%v]", category),
+						"",
+					),
+				)
 
 				// one-off find replace fixes
 				replacements := make(map[string]string, 0)
@@ -151,7 +123,8 @@ func (c *Changelog) BuildChangelog(commits []*github.RepositoryCommit) string {
 				replacements["Command"] = "Commands"
 				replacements["Repository"] = "Repositories"
 				replacements["Rule"] = "Rules"
-				replacements["Fix"] = "Bug Fix"
+				replacements["Bug Fix"] = "Fixes"
+				replacements["Fix"] = "Fixes"
 				replacements["INT64"] = "int64"
 				replacements["Hotfox"] = "Hotfix"
 				replacements["HotFix"] = "Hotfix"
@@ -256,4 +229,16 @@ func contains(slice []string, val string) bool {
 		}
 	}
 	return false
+}
+
+func (c *Changelog) GetStringInBetween(value string, a string, b string) string {
+	firstSplit := strings.Split(value, a)
+	if len(firstSplit) > 1 {
+		secondSplit := strings.Split(firstSplit[1], b)
+		if len(secondSplit) > 0 {
+			return strings.TrimSpace(secondSplit[0])
+		}
+	}
+
+	return ""
 }
