@@ -23,7 +23,7 @@
     <app-loader :is-loading="loading"/>
 
     <eq-window
-      style="height: 80vh; "
+      style="height: 83vh; "
       class="fade-in text-center p-3" v-if="changelog && !loading">
       <button
         class='btn btn-sm btn-outline-warning mb-3'
@@ -32,7 +32,7 @@
         <i class="fa fa-clipboard"></i>
         Copy to Clipboard
       </button>
-      <textarea v-model="changelog" style="width: 100%; height: 70vh; overflow-y: scroll"></textarea>
+      <textarea v-model="changelog" style="width: 100%; height: 75vh; overflow-y: scroll"></textarea>
     </eq-window>
 
   </div>
@@ -59,7 +59,7 @@ export default {
   methods: {
     async generate() {
       this.loading = true;
-      const r      = await SpireApi.v1().get(`analytics/changelog/${this.daysBack}`)
+      const r      = await SpireApi.v1().get(`changelog/${this.daysBack}`)
       if (r.status === 200) {
         this.changelog = r.data.data
         this.loading   = false;

@@ -10,7 +10,10 @@
         </span>
       </div>
 
-      <div style="height:35vh; overflow-y: scroll;" v-if="crashes.length > 0">
+      <div
+        :style="'max-height: ' + (highlightedId ? 35 : 95) + 'vh; overflow-y: scroll'"
+        v-if="crashes.length > 0"
+      >
         <table
           class="eq-table bordered eq-highlight-rows mb-0"
           style="overflow-x: scroll; min-width: 80vw"
@@ -59,6 +62,7 @@
         </table>
       </div>
     </eq-window>
+
     <eq-window
       class="mt-4"
       :title="`Crash Stack (${highlightedId})`"

@@ -1,102 +1,110 @@
 <template>
-  <eq-window title="Release Analytics" class="p-3">
-    <b-modal
-      id="release-notes"
-      centered
-      :title="`Release Notes`"
-      size="lg"
+  <div>
+    <app-loader :is-loading="loading"/>
+
+    <eq-window
+      title="Release Analytics"
+      class="p-3"
+      v-if="!loading"
     >
-      <v-runtime-template class="changelog" :template="releaseNotes"/>
-
-      <template #modal-footer>
-        <div class="">
-
-        </div>
-      </template>
-    </b-modal>
-
-    <div style="max-height:95vh; overflow-y: scroll">
-      <table
-        class="eq-table bordered eq-highlight-rows"
+      <b-modal
+        id="release-notes"
+        centered
+        :title="`Release Notes`"
+        size="lg"
       >
-        <thead class="eq-table-floating-header">
-        <tr>
-          <th style="width: 50px"></th>
-          <th>Release</th>
-          <th>Change Count</th>
-          <th>Released</th>
-          <th>
-            <i class="fa fa-windows"></i>
-            Windows Downloads
-          </th>
-          <th>
-            <i class="fa fa-linux"></i>
-            Linux Downloads
-          </th>
-          <th>
-            <i class="fa fa-download"></i>
-            Download Links
-          </th>
-          <th class="text-center">Crash Count</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr
-          class="fade-in"
-          v-for="(r, index) in releases"
-          :key="r.tag_name"
+        <v-runtime-template class="changelog" :template="releaseNotes"/>
+
+        <template #modal-footer>
+          <div class="">
+
+          </div>
+        </template>
+      </b-modal>
+
+      <div style="max-height:95vh; overflow-y: scroll">
+        <table
+          class="eq-table bordered eq-highlight-rows"
         >
-          <td class="text-center">
-            <b-button
-              variant="primary"
-              class="btn-dark btn-sm btn-outline-warning"
-              style="padding: 0px 6px;"
-              title="View Release Notes"
-              @click="viewReleaseNotes(r)"
-            >
-              <i class="fa fa-sticky-note-o"></i>
-            </b-button>
-          </td>
-          <td>{{ r.name }}</td>
-          <td>{{ countChanges(r) }}</td>
-          <td>{{ formatTime(r.published_at) }} ({{ formatDate(r.published_at) }})</td>
-          <td>{{ getWindowsDownloads(r) }}</td>
-          <td>{{ getLinuxDownloads(r) }}</td>
-          <td>
-            <a
-              :href="getWindowsDownloadLink(r)"
-              v-if="getWindowsDownloadLink(r)"
-              class="text-muted"
-            >
-              <i class="fa fa-windows"></i> Windows (x64)
-            </a>
-            <a
-              :href="getLinuxDownloadLink(r)"
-              v-if="getLinuxDownloadLink(r)"
-              class="text-muted"
-            >
-              <i class="fa fa-linux"></i> Linux (x64)
-            </a>
-          </td>
-          <td class="text-center">
-            {{ getCrashCount(r) }}
+          <thead class="eq-table-floating-header">
+          <tr>
+            <th style="width: 50px"></th>
+            <th>Release</th>
+            <th>Change Count</th>
+            <th>Released</th>
+            <th>
+              <i class="fa fa-windows"></i>
+              Windows Downloads
+            </th>
+            <th>
+              <i class="fa fa-linux"></i>
+              Linux Downloads
+            </th>
+            <th>
+              <i class="fa fa-download"></i>
+              Download Links
+            </th>
+            <th class="text-center">Crash Count</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr
+            class="fade-in"
+            v-for="(r, index) in releases"
+            :key="r.tag_name"
+          >
+            <td class="text-center">
+              <b-button
+                variant="primary"
+                class="btn-dark btn-sm btn-outline-warning"
+                style="padding: 0px 6px;"
+                title="View Release Notes"
+                @click="viewReleaseNotes(r)"
+              >
+                <i class="fa fa-sticky-note-o"></i>
+              </b-button>
+            </td>
+            <td>{{ r.name }}</td>
+            <td>{{ countChanges(r) }}</td>
+            <td>{{ formatTime(r.published_at) }} ({{ formatDate(r.published_at) }})</td>
+            <td>{{ getWindowsDownloads(r) }}</td>
+            <td>{{ getLinuxDownloads(r) }}</td>
+            <td>
+              <a
+                :href="getWindowsDownloadLink(r)"
+                v-if="getWindowsDownloadLink(r)"
+                class="text-muted"
+              >
+                <i class="fa fa-windows"></i> Windows (x64)
+              </a>
+              <a
+                :href="getLinuxDownloadLink(r)"
+                v-if="getLinuxDownloadLink(r)"
+                class="text-muted"
+              >
+                <i class="fa fa-linux"></i> Linux (x64)
+              </a>
+            </td>
+            <td class="text-center">
+              {{ getCrashCount(r) }}
 
-            <b-button
-              variant="primary"
-              class="btn-dark btn-sm btn-outline-warning ml-1"
-              style="padding: 0px 6px;"
-              title="View Release Crashes"
-              @click="goToRelease(r.name.replaceAll('v', ''))"
-            >
-              <i class="fa fa-arrow-right"></i>
-            </b-button>
+              <b-button
+                variant="primary"
+                class="btn-dark btn-sm btn-outline-warning ml-1"
+                style="padding: 0px 6px;"
+                title="View Release Crashes"
+                @click="goToRelease(r.name.replaceAll('v', ''))"
+              >
+                <i class="fa fa-arrow-right"></i>
+              </b-button>
 
-          </td>
-        </tr>
-        </tbody>
-      </table>
-    </div>
-  </eq-window>
+            </td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+    </eq-window>
+  </div>
 </template>
 
 <script>
@@ -114,6 +122,7 @@ export default {
   },
   data() {
     return {
+      loading: false,
 
       releaseNotes: "",
 
@@ -234,8 +243,10 @@ export default {
     }
   },
   async mounted() {
+    this.loading = true;
     this.loadCounts().then((r) => {
       this.loadReleases()
+      this.loading = false
     })
   },
 
