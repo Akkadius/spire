@@ -135,7 +135,7 @@ export default {
   methods: {
     countChanges(r) {
       const count = r.body.split("\n* ").length
-      return this.commify(count > 0 ? count : 0)
+      return this.commify(count > 0 ? (count - 1) : 0)
     },
     commify(x) {
       return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
