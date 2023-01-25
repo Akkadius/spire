@@ -31,7 +31,7 @@
             <th style="width: 50px"></th>
             <th>Release</th>
             <th>Change Count</th>
-            <th>Released fff</th>
+            <th>Released</th>
             <th>
               <i class="fa fa-windows"></i>
               Windows Downloads
