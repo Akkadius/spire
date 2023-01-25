@@ -40,8 +40,7 @@
           >
             <td class="text-center">
               <b-button
-                variant="primary"
-                class="btn-dark btn-sm btn-outline-white"
+                class="btn-dark btn-sm btn-outline-warning"
                 style="padding: 0px 6px;"
                 title="View Crash"
                 @click="viewCrash(c)"

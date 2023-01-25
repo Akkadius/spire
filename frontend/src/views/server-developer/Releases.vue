@@ -45,6 +45,7 @@
               Download Links
             </th>
             <th class="text-center">Crash Count</th>
+            <th></th>
           </tr>
           </thead>
           <tbody>
@@ -87,17 +88,17 @@
             </td>
             <td class="text-center">
               {{ getCrashCount(r) }}
-
+            </td>
+            <td class="text-center">
               <b-button
                 variant="primary"
                 class="btn-dark btn-sm btn-outline-warning ml-1"
-                style="padding: 0px 6px;"
+                style="padding: 0px 6px; width: 50px"
                 title="View Release Crashes"
                 @click="goToRelease(r.name.replaceAll('v', ''))"
               >
                 <i class="fa fa-arrow-right"></i>
               </b-button>
-
             </td>
           </tr>
           </tbody>
