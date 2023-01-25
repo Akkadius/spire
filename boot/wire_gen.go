@@ -13,6 +13,7 @@ import (
 	"github.com/Akkadius/spire/internal/connection"
 	"github.com/Akkadius/spire/internal/console/cmd"
 	"github.com/Akkadius/spire/internal/database"
+	"github.com/Akkadius/spire/internal/deploy"
 	"github.com/Akkadius/spire/internal/desktop"
 	"github.com/Akkadius/spire/internal/encryption"
 	"github.com/Akkadius/spire/internal/eqemuanalytics"
@@ -83,7 +84,8 @@ func InitializeApplication() (App, error) {
 	eqemuanalyticsAnalyticsController := eqemuanalytics.NewAnalyticsController(logger, databaseResolver, releases)
 	changelog := eqemuchangelog.NewChangelog()
 	eqemuChangelogController := eqemuchangelog.NewEqemuChangelogController(logger, databaseResolver, changelog)
-	bootAppControllerGroups := provideControllers(helloWorldController, authController, meController, analyticsController, connectionsController, docsController, questApiController, appController, queryController, questFileApiController, clientFilesController, staticMapController, assetsController, permissionsController, usersController, eqemuanalyticsAnalyticsController, eqemuChangelogController)
+	deployController := deploy.NewDeployController(logger)
+	bootAppControllerGroups := provideControllers(helloWorldController, authController, meController, analyticsController, connectionsController, docsController, questApiController, appController, queryController, questFileApiController, clientFilesController, staticMapController, assetsController, permissionsController, usersController, eqemuanalyticsAnalyticsController, eqemuChangelogController, deployController)
 	userEvent := auditlog.NewUserEvent(databaseResolver, logger, cache)
 	aaAbilityController := crudcontrollers.NewAaAbilityController(databaseResolver, logger, userEvent)
 	aaRankController := crudcontrollers.NewAaRankController(databaseResolver, logger, userEvent)
