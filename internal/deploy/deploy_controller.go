@@ -53,7 +53,8 @@ func (a *DeployController) deploy(c echo.Context) error {
 				return c.JSON(http.StatusInternalServerError, err.Error())
 			}
 		}
+		return c.JSON(http.StatusOK, echo.Map{"data": "Ok"})
 	}
 
-	return c.JSON(http.StatusOK, echo.Map{"data": "Ok"})
+	return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Key failed"})
 }
