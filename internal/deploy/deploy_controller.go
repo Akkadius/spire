@@ -54,7 +54,7 @@ func (a *DeployController) deploy(c echo.Context) error {
 			}
 
 			// run git pull
-			cmd := exec.Command("bash", "-c", "kill -9 1")
+			cmd := exec.Command("bash", "-c", "kill 1")
 			_, err := cmd.Output()
 			if err != nil {
 				log.Println(err)
