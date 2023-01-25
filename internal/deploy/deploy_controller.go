@@ -1,6 +1,7 @@
 package deploy
 
 import (
+	"github.com/Akkadius/spire/internal/discord"
 	"github.com/Akkadius/spire/internal/env"
 	"github.com/Akkadius/spire/internal/http/routes"
 	"github.com/labstack/echo/v4"
@@ -43,6 +44,14 @@ func (a *DeployController) deploy(c echo.Context) error {
 
 		if !strings.Contains(string(output), "Already up to date") {
 			os.Exit(0)
+		}
+
+		webhookUrl := env.Get("DISCORD_DEPLOY_WEBHOOK", "")
+		if len(webhookUrl) > 0 {
+			err := discord.SendDiscordWebhook(webhookUrl, "Hosted Spire has been deployed with latest master")
+			if err != nil {
+				return c.JSON(http.StatusInternalServerError, err.Error())
+			}
 		}
 	}
 
