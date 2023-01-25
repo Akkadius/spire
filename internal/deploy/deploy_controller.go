@@ -42,17 +42,18 @@ func (a *DeployController) deploy(c echo.Context) error {
 			log.Println(err)
 		}
 
-		if !strings.Contains(string(output), "Already up to date") {
-			os.Exit(0)
-		}
-
 		webhookUrl := env.Get("DISCORD_DEPLOY_WEBHOOK", "")
 		if len(webhookUrl) > 0 {
-			err := discord.SendDiscordWebhook(webhookUrl, "Hosted Spire has been deployed with latest master")
+			err := discord.SendDiscordWebhook(webhookUrl, "Hosted Spire is being deployed with latest master")
 			if err != nil {
 				return c.JSON(http.StatusInternalServerError, err.Error())
 			}
 		}
+
+		if !strings.Contains(string(output), "Already up to date") {
+			os.Exit(0)
+		}
+
 		return c.JSON(http.StatusOK, echo.Map{"data": "Ok"})
 	}
 
