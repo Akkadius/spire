@@ -42,15 +42,24 @@ func (a *DeployController) deploy(c echo.Context) error {
 			log.Println(err)
 		}
 
-		webhookUrl := env.Get("DISCORD_DEPLOY_WEBHOOK", "")
-		if len(webhookUrl) > 0 {
-			err := discord.SendDiscordWebhook(webhookUrl, "Hosted Spire is being deployed with latest master")
-			if err != nil {
-				return c.JSON(http.StatusInternalServerError, err.Error())
-			}
-		}
-
 		if !strings.Contains(string(output), "Already up to date") {
+
+			// webhook
+			webhookUrl := env.Get("DISCORD_DEPLOY_WEBHOOK", "")
+			if len(webhookUrl) > 0 {
+				err := discord.SendDiscordWebhook(webhookUrl, "Hosted Spire is being deployed with latest master")
+				if err != nil {
+					return c.JSON(http.StatusInternalServerError, err.Error())
+				}
+			}
+
+			// run git pull
+			cmd := exec.Command("kill", "1")
+			_, err := cmd.Output()
+			if err != nil {
+				log.Println(err)
+			}
+
 			os.Exit(0)
 		}
 
