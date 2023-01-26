@@ -362,7 +362,7 @@ export default {
       SpireApi.v1().post(`/connection/${connectionId}/set-active`).then((response) => {
         if (response.data && response.data.data) {
           EventBus.$emit('DB_CONNECTION_CHANGE', true);
-          this.listConnections()
+          this.reloadConnections()
         }
       })
     },
