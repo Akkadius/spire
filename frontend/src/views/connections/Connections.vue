@@ -333,6 +333,13 @@ export default {
       })
     },
     async listConnections() {
+      // default local
+      SpireApi.v1().get('/connection-default').then((rd) => {
+        if (rd.data && rd.data.data) {
+          this.defaultConnection = rd.data.data
+        }
+      })
+
       // user defined
       const r = await SpireApi.v1().get('/connections')
       if (r.data && r.data.data) {
@@ -355,11 +362,6 @@ export default {
         this.isDefaultActive = isDefaultActive
       }
 
-      // default local
-      const rd = await SpireApi.v1().get('/connection-default')
-      if (rd.data && rd.data.data) {
-        this.defaultConnection = rd.data.data
-      }
 
     },
     createConnection() {
