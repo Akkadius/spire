@@ -1,23 +1,30 @@
 package telnet
 
 import (
+	"fmt"
+	"github.com/Akkadius/spire/internal/env"
+	"github.com/k0kubun/pp/v3"
 	"github.com/sirupsen/logrus"
 	"github.com/ziutek/telnet"
 	"io"
 	"net"
+	"path/filepath"
+	"runtime"
 	"strings"
 	"syscall"
 	"time"
 )
 
 type Client struct {
-	t      *telnet.Conn
-	logger *logrus.Logger
+	debugging bool
+	t         *telnet.Conn
+	logger    *logrus.Logger
 }
 
 func NewClient(logger *logrus.Logger) *Client {
 	return &Client{
-		logger: logger,
+		debugging: env.GetInt("DEBUG", "0") >= 3,
+		logger:    logger,
 	}
 }
 
@@ -35,6 +42,12 @@ func expect(t *telnet.Conn, d ...string) bool {
 }
 
 func sendln(t *telnet.Conn, s string) error {
+	defer func() {
+		if r := recover(); r != nil {
+			t.Close()
+		}
+	}()
+
 	buf := make([]byte, len(s)+1)
 	copy(buf, s)
 	buf[len(s)] = '\n'
@@ -105,6 +118,8 @@ func (c *Client) Connect() error {
 
 	// what the console expects when connecting locally
 	if expect(c.t, "assuming admin") {
+		c.debug("\n###################################\n# Logging into World\n###################################")
+
 		expect(c.t, ">")
 		_ = sendln(c.t, "echo off")
 		expect(c.t, ">")
@@ -123,43 +138,64 @@ func (c *Client) Command(cmd string) (string, error) {
 		return "", err
 	}
 
-	err = c.t.SetReadDeadline(time.Now().Add(10 * time.Second))
+	err = c.t.SetReadDeadline(time.Now().Add(1 * time.Second))
 	if err != nil {
 		return "", err
 	}
-	err = c.t.SetWriteDeadline(time.Now().Add(10 * time.Second))
+	err = c.t.SetWriteDeadline(time.Now().Add(1 * time.Second))
 	if err != nil {
 		return "", err
 	}
 
 	sendln(c.t, cmd)
 
-	buf := make([]byte, 512)
-	output := ""
-	i := 0
-	for {
-		n, _ := c.t.Read(buf) // Use raw read to find issue #15.
-		output += string(buf[:n])
+	defer func() {
+		if r := recover(); r != nil {
+			c.debug("Panic in read, close connection")
+			c.Close()
+		}
+	}()
 
-		// sanity
-		if len(output) == 0 {
-			i++
+	var data []byte
+	var output string
+	for {
+		start := time.Now()
+		data, err = c.t.ReadUntil(linebreak)
+		c.debug("Read operation took %v", time.Since(start))
+		if err != nil {
+			c.logger.Warnf("[telnet] read failed: %s", err)
+			return "", err
 		}
-		if i > 10 {
-			break
-		}
+
+		output += string(data)
 
 		if strings.Contains(output, linebreak) {
-			break
+			output = strings.Replace(output, linebreak, "", 1)
+			c.debug("[Output] %v", output)
+			return output, nil
 		}
 	}
-
-	return strings.Replace(output, linebreak, "", 1), nil
 }
 
 func (c *Client) Close() {
-	err := c.t.Close()
-	if err != nil {
-		c.logger.Error(err)
+	if c.t != nil {
+		err := c.t.Close()
+		if err != nil {
+			c.logger.Error(err)
+		}
+	}
+}
+
+func (c *Client) debug(msg string, a ...interface{}) {
+	if c.debugging {
+		_, file, _, ok := runtime.Caller(1)
+		if ok {
+			file = filepath.Base(file)
+			if len(a) > 0 {
+				pp.Printf(fmt.Sprintf("[%v] ", file) + fmt.Sprintf(msg, a...) + "\n")
+				return
+			}
+			pp.Printf(fmt.Sprintf("[%v] ", file) + fmt.Sprintf(msg) + "\n")
+		}
 	}
 }
