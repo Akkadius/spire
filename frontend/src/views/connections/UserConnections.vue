@@ -346,7 +346,7 @@ export default {
         try {
           const r = await SpireApi.v1().delete(`/connection/${connectionId}`)
           if (r.data && r.data.data) {
-            this.listConnections()
+            this.reloadConnections()
             this.notification = "Connection deleted successfully"
           }
         } catch (err) {
