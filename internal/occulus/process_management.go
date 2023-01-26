@@ -72,43 +72,53 @@ func (m *ProcessManagement) Run() error {
 		"Akkadius",
 		"Occulus",
 	)
+
+	var downloadPath string
+
 	if err != nil {
-		return err
+		m.logger.Error(err)
+		downloadPath, err = m.GetCurrentOcculusBinaryPath()
+		m.logger.Infof("[Occulus.ProcessManagement] Using existing download path @ [%v]\n", downloadPath)
+		if err != nil {
+			return err
+		}
 	}
 
-	// build binary target name from asset name
-	// eg. occulus-v2-1-0
-	tagName := *release.TagName
-	binaryName := fmt.Sprintf("%v-%v", "occulus", tagName)
-	binaryName = strings.ReplaceAll(binaryName, ".", "-")
-	downloadPath := filepath.Join(m.pathmgmt.GetEQEmuServerPath(), "bin", binaryName)
+	if err == nil {
+		// build binary target name from asset name
+		// eg. occulus-v2-1-0
+		tagName := *release.TagName
+		binaryName := fmt.Sprintf("%v-%v", "occulus", tagName)
+		binaryName = strings.ReplaceAll(binaryName, ".", "-")
+		downloadPath := filepath.Join(m.pathmgmt.GetEQEmuServerPath(), "bin", binaryName)
 
-	// kill existing
-	err = m.KillExistingRunningProcesses()
-	if err != nil {
-		return err
-	}
+		// kill existing
+		err = m.KillExistingRunningProcesses()
+		if err != nil {
+			return err
+		}
 
-	// cleanup
-	err = m.CleanupOldVersions(tagName)
-	if err != nil {
-		return err
-	}
+		// cleanup
+		err = m.CleanupOldVersions(tagName)
+		if err != nil {
+			return err
+		}
 
-	// check if binary exists before we try to download it
-	if _, err := os.Stat(downloadPath); err != nil {
+		// check if binary exists before we try to download it
+		if _, err := os.Stat(downloadPath); err != nil {
 
-		// loop through latest release assets
-		for _, asset := range release.Assets {
-			releaseAssetName := *asset.Name
-			releaseDownloadUrl := *asset.BrowserDownloadURL
+			// loop through latest release assets
+			for _, asset := range release.Assets {
+				releaseAssetName := *asset.Name
+				releaseDownloadUrl := *asset.BrowserDownloadURL
 
-			// find asset / release matching the operating system
-			if strings.Contains(releaseAssetName, runtime.GOOS) {
-				m.logger.Infof("[Occulus.ProcessManagement] Downloading new binary @ [%v]\n", downloadPath)
-				err := download.WithProgress(downloadPath, releaseDownloadUrl)
-				if err != nil {
-					return err
+				// find asset / release matching the operating system
+				if strings.Contains(releaseAssetName, runtime.GOOS) {
+					m.logger.Infof("[Occulus.ProcessManagement] Downloading new binary @ [%v]\n", downloadPath)
+					err := download.WithProgress(downloadPath, releaseDownloadUrl)
+					if err != nil {
+						return err
+					}
 				}
 			}
 		}
@@ -179,6 +189,24 @@ func (m *ProcessManagement) FindFreePort() int {
 	}
 
 	return port
+}
+
+func (m *ProcessManagement) GetCurrentOcculusBinaryPath() (string, error) {
+	serverBinDirectory := filepath.Join(m.pathmgmt.GetEQEmuServerPath(), "bin")
+	files, err := ioutil.ReadDir(serverBinDirectory)
+	if err != nil {
+		return "", err
+	}
+
+	for _, file := range files {
+		if strings.Contains(file.Name(), "occulus") {
+			m.logger.Infof("[Occulus.ProcessManagement] Found binary [%v]\n", file.Name())
+			binPath := filepath.Join(serverBinDirectory, file.Name())
+			return binPath, nil
+		}
+	}
+
+	return "", nil
 }
 
 func (m *ProcessManagement) CleanupOldVersions(version string) error {
