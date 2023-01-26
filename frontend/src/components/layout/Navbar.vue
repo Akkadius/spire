@@ -492,7 +492,7 @@ export default {
 
     getUserAvatar() {
       if (this.user && this.user.avatar && this.user.avatar.length > 0) {
-        return this.avatar
+        return this.user.avatar
       }
 
       return require('@/assets/img/spire.png')
