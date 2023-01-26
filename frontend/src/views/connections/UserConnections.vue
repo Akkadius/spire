@@ -206,7 +206,7 @@
 
                   <!-- Menu -->
                   <div class="dropdown-menu dropdown-menu-right" style="">
-                    <a @click="deleteConnection(c.id)" class="dropdown-item">
+                    <a @click="deleteConnection(c.server_database_connection_id)" class="dropdown-item">
                       Delete Connection
                     </a>
                   </div>
