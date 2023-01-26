@@ -68,6 +68,10 @@ export class AppEnv {
   }
 
   static isLocalAuthEnabled() {
+    if (!this.getSettings()) {
+      return;
+    }
+
     for (let s of this.getSettings()) {
       if (s.setting === "AUTH_ENABLED" && s.value === "true") {
         return true
