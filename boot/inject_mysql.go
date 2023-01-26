@@ -211,7 +211,7 @@ func getSpireMySQLConfig() (*MySQLConfig, error) {
 func provideSpireDatabase(serverconfig *serverconfig.EQEmuServerConfig) (*gorm.DB, error) {
 	// if booting from local server folder
 	cfg := serverconfig.Get()
-	if cfg.Server.Database.Db != "" {
+	if cfg.Server.Database != nil && cfg.Server.Database.Db != "" {
 		return nil, nil
 	}
 
