@@ -79,7 +79,7 @@ func getEQEmuLocalMySQLConfig(serverconfig *serverconfig.EQEmuServerConfig) (*My
 
 	// load eqemu config if exists
 	config := serverconfig.Get()
-	if config.Server.Database.Db != "" {
+	if config.Server.Database != nil && config.Server.Database.Db != "" {
 		port, err := strconv.Atoi(config.Server.Database.Port)
 		if err != nil {
 			log.Fatalf("unable to convert string to integer error [%v]", err)
