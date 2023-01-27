@@ -299,7 +299,7 @@ export default {
       successMessage: null,
       defaultConnection: null,
       isDefaultActive: false,
-      connections: null,
+      connections: [],
 
       connectionStatuses: {},
     }
