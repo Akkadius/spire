@@ -18,7 +18,7 @@
       </div>
     </div>
 
-    <div style="max-height: 80vh; overflow-y: scroll; overflow-x: hidden">
+    <div style="max-height: 86vh; overflow-y: scroll; overflow-x: hidden">
 
       <div class="row">
         <div class="col-11">

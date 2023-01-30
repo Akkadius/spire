@@ -36,7 +36,7 @@
         <eq-window
           v-if="zones"
           class="p-3 pt-0"
-          style="height: 80vh; overflow-y: scroll; overflow-x: hidden"
+          style="height: 87vh; overflow-y: scroll; overflow-x: hidden"
         >
           <table
             id="zonetable"

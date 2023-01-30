@@ -283,7 +283,7 @@
         <iframe
           frameborder="0"
           allowtransparency="true"
-          style="width: 100%; height: 69vh; border-radius: 10px"
+          style="width: 100%; height: 75vh; border-radius: 10px"
           src="https://marketplace.visualstudio.com/items?itemName=Akkadius.eqemu-spire-quest-api&ssr=false#overview"
         />
 
