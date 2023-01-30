@@ -305,7 +305,14 @@ func (d *DatabaseResolver) handleJsonWheres(query *gorm.DB, filter string) *gorm
 	// parse where field = value
 	wheres := strings.Split(filter, equalDelimiter)
 	if len(wheres) > 1 {
-		query = query.Where(fmt.Sprintf("JSON_EXTRACT(`%v`, '$%v') = ?", wheres[0], wheres[1]), wheres[2])
+		jsonDataField := wheres[0]
+		jsonLookupField := wheres[1]
+		lookupValue := wheres[2]
+		if strings.Contains(jsonLookupField, "[*]") {
+			query = query.Where(fmt.Sprintf("JSON_CONTAINS(JSON_EXTRACT(`%v`, '$%v'), ?, '$') = 1", jsonDataField, jsonLookupField), lookupValue)
+		} else {
+			query = query.Where(fmt.Sprintf("JSON_EXTRACT(`%v`, '$%v') = ?", jsonDataField, jsonLookupField), lookupValue)
+		}
 	}
 
 	// parse where field contains value

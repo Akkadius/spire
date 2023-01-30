@@ -72,6 +72,56 @@
             ><i class="fa fa-refresh"></i> Reset
             </button>
           </div>
+
+          <div
+            class="col-4 text-center font-weight-bold minified-inputs"
+            v-if="filters && filters.length > 0"
+          >
+            <div>Event Filter(s)</div>
+
+            <div v-for="f in filters" :key="f.key">
+
+              <input
+                type="text"
+                class="form-control"
+                style="width: 250px"
+                v-model="f.key"
+              >
+
+              <select
+                class="form-control form-control-prepended list-search"
+                v-model="f.operator"
+                style="width: 50px"
+                @change="updateQueryState()"
+              >
+                <option
+                  v-for="s in filterOperators"
+                  v-bind:value="s.operator"
+                >
+                  {{ s.operator }}
+                </option>
+              </select>
+
+              <input
+                type="text"
+                class="form-control"
+                style="width: 150px"
+                v-model="f.value"
+              >
+
+              <b-button
+                @click="deleteFilter(f)"
+                size="sm"
+                class="ml-3"
+                variant="outline-danger"
+                title="Remove Filter"
+              >
+                <i class="fa fa-remove"></i>
+              </b-button>
+
+            </div>
+
+          </div>
         </div>
       </div>
     </eq-window>
@@ -181,7 +231,7 @@
                 v-if="showRaw[e.id]"
                 class="text-left code fade-in mt-2"
                 style="width: 100%; padding: 0 !important; margin-bottom: 0 !important"
-              ><code class="language-json"><v-runtime-template :template="'<div>' + formatPayload(e.event_data.replaceAll('    ', '  ')) + '</div>'"/></code></pre>
+              ><code class="language-json"><v-runtime-template :template="'<div>' + formatPayload(e) + '</div>'"/></code></pre>
 
             </td>
             <td>{{ fromNow(e.created_at) }}</td>
@@ -317,6 +367,12 @@ export default {
 
       events: [],
 
+
+      // filters
+      filterOperators: [
+        { operator: "=", desc: "equals" }
+      ],
+
       // state filters
       filters: [],
 
@@ -343,29 +399,38 @@ export default {
   },
   methods: {
 
-    handleClick(e) {
-      if (e.target && e.target.classList.contains("filter-click")) {
-        const filterValue = e.target.getAttribute('filter-value')
-        const filterKey   = e.target.getAttribute('filter-key')
-        if (filterValue && filterKey) {
-          console.log("filter value is ", filterValue)
-          console.log("filter key is ", filterKey)
+    deleteFilter(f) {
+      this.filters = this.filters.filter((e) => {
+        return e.key !== f.key
+      })
+      this.updateQueryState()
+    },
 
+    handleClick(e) {
+      if (e.target && e.target.getAttribute('filter-key')) {
+        const filterValue = e.target.getAttribute('value')
+        const filterKey   = e.target.getAttribute('filter-key')
+        const filterEvent   = e.target.getAttribute('event')
+        if (filterValue && filterKey) {
           this.filters.push(
             {
               key: "." + filterKey,
+              operator: "=",
               value: filterValue
             }
           )
 
+          if (filterEvent) {
+            this.eventType = parseInt(filterEvent)
+          }
         }
         this.updateQueryState()
       }
     },
 
-    formatPayload(payload) {
+    formatPayload(e) {
       const dot = require("dot-object")
-      const f   = JSON.stringify(dot.dot(JSON.parse(payload)));
+      const f   = JSON.stringify(dot.dot(JSON.parse(e.event_data.replaceAll('    ', '  '))));
 
       let lines = []
       for (let line of f.split(",\"")) {
@@ -385,9 +450,38 @@ export default {
           value = util.format('"%s"', value)
         }
 
-        const link = util.format("<a href=\"#\" filter-key=\"%s\" filter-value=\"%s\" class='filter-click'><i class='fa fa-filter'></i> Filter on equals [%s]</a>", key, rawValue, rawValue);
+        let equalLink = util.format(
+          "<a href=\"#\" event=\"%s\" filter-key=\"%s\" value=\"%s\"><i class='fa fa-filter'></i> = [%s]</a>",
+          e.event_type_id,
+          key,
+          rawValue,
+          rawValue
+        );
 
-        lines.push(util.format('  "%s": %s, %s', key, value, link))
+        let anyLink = ""
+        if (key.includes("[")) {
+          let label = key.split("]")[1].trim()
+          const filterKey = key.replace(/\[.*]/, '[*]')
+
+          anyLink = util.format(
+            "<a href=\"#\" event=\"%s\" filter-key=\"%s\" value=\"%s\"><i class='fa fa-filter'></i> Any [%s] = [%s]</a>",
+            e.event_type_id,
+            filterKey,
+            rawValue,
+            label,
+            rawValue
+          );
+        }
+
+        lines.push(
+          util.format(
+            '  "%s": %s, %s %s',
+            key,
+            value,
+            equalLink,
+            anyLink
+          )
+        )
       }
 
       return util.format("{\n%s\n}", lines.join("\n"));
@@ -426,7 +520,7 @@ export default {
       this.zoneId      = null
       this.characterId = null
       this.showRaw     = {}
-      this.currentPage = 0
+      this.currentPage = 1
     },
 
     updateQueryState() {
@@ -694,7 +788,6 @@ export default {
   async mounted() {
     Navbar.collapse()
 
-
     window.addEventListener("click", this.handleClick);
 
     // non-reactive
@@ -706,6 +799,8 @@ export default {
     if (r.status === 200) {
       this.settings = r.data
     }
+
+    console.log(this.filters)
 
     this.startTimer()
 

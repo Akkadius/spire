@@ -830,6 +830,15 @@ table.eq-table A:visited,
 table.eq-table A:active,
 table.eq-table A:hover {
     color: #8aa3ff;
+    -moz-transition: all .05s ease;
+    -o-transition: all .05s ease;
+    -webkit-transition: all .05s ease;
+    transition: all .05s ease;
+}
+
+table.eq-table A:hover {
+
+    color: #073efd;
 }
 
 table.eq-table THEAD TR TH {
