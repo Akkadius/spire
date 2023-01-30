@@ -3,6 +3,8 @@
 
     <app-loader :is-loading="initialLoading"/>
 
+    <v-runtime-template/>
+
     <eq-window
       v-if="!initialLoading"
       class="pb-1"
@@ -92,7 +94,7 @@
       >
         <table
           :style="(loading ? 'opacity:.3; pointer-events: none;' : 'opacity: 1; pointer-events: all;') + 'table-layout: fixed !important; '"
-          class="eq-table eq-highlight-rows bordered player-events"
+          class="eq-table bordered player-events"
         >
           <thead class="eq-table-floating-header">
           <tr>
@@ -169,11 +171,17 @@
                 <i class="fa fa-search"></i> ({{ Object.keys(JSON.parse(e.event_data)).length }})
               </button>
 
+              <!--              <pre-->
+              <!--                v-if="showRaw[e.id]"-->
+              <!--                class="text-left code fade-in mt-2"-->
+              <!--                style="width: 100%; padding: 0 !important; margin-bottom: 0 !important"-->
+              <!--              ><code class="language-json">{{ formatPayload(e.event_data.replaceAll("    ", "  ")) }}</code></pre>-->
+
               <pre
                 v-if="showRaw[e.id]"
                 class="text-left code fade-in mt-2"
                 style="width: 100%; padding: 0 !important; margin-bottom: 0 !important"
-              ><code class="language-json">{{ e.event_data.replaceAll("    ", "  ") }}</code></pre>
+              ><code class="language-json"><v-runtime-template :template="'<div>' + formatPayload(e.event_data.replaceAll('    ', '  ')) + '</div>'"/></code></pre>
 
             </td>
             <td>{{ fromNow(e.created_at) }}</td>
@@ -189,6 +197,7 @@
         </div>
 
         <b-pagination
+          v-if="!loading && currentPage > 0"
           :disabled="loading"
           class="mb-1 mt-1"
           v-model="currentPage"
@@ -229,6 +238,7 @@ import LoaderFakeProgress          from "@/components/LoaderFakeProgress.vue";
 import hljs                        from "highlight.js";
 import {Navbar}                    from "@/app/navbar";
 import {Characters}                from "@/app/characters";
+import util                        from "util";
 
 // GM_COMMAND           | [x] Implemented Formatter
 // ZONING               | [x] Implemented Formatter
@@ -275,7 +285,13 @@ import {Characters}                from "@/app/characters";
 
 export default {
   name: "PlayerEventLogs",
-  components: { LoaderFakeProgress, EqProgressBar, PlayerEventDisplayComponent, EqWindow },
+  components: {
+    "v-runtime-template": () => import("v-runtime-template"),
+    LoaderFakeProgress,
+    EqProgressBar,
+    PlayerEventDisplayComponent,
+    EqWindow
+  },
   data() {
     return {
       search: "",
@@ -301,6 +317,9 @@ export default {
 
       events: [],
 
+      // state filters
+      filters: [],
+
       // pagination (all)
       currentPage: 1,
       totalRows: 0,
@@ -323,6 +342,56 @@ export default {
     }
   },
   methods: {
+
+    handleClick(e) {
+      if (e.target && e.target.classList.contains("filter-click")) {
+        const filterValue = e.target.getAttribute('filter-value')
+        const filterKey   = e.target.getAttribute('filter-key')
+        if (filterValue && filterKey) {
+          console.log("filter value is ", filterValue)
+          console.log("filter key is ", filterKey)
+
+          this.filters.push(
+            {
+              key: "." + filterKey,
+              value: filterValue
+            }
+          )
+
+        }
+        this.updateQueryState()
+      }
+    },
+
+    formatPayload(payload) {
+      const dot = require("dot-object")
+      const f   = JSON.stringify(dot.dot(JSON.parse(payload)));
+
+      let lines = []
+      for (let line of f.split(",\"")) {
+        line       = line.replaceAll("{", "")
+        line       = line.replaceAll("}", "")
+        line       = line.replaceAll("\"", "")
+        const s    = line.split(":")
+        const key  = s[0].trim()
+        let values = []
+        for (let i = 1; i < s.length; i++) {
+          values.push(s[i])
+        }
+
+        let value    = values.join(":")
+        let rawValue = values.join(":")
+        if (!Number.isInteger(value)) {
+          value = util.format('"%s"', value)
+        }
+
+        const link = util.format("<a href=\"#\" filter-key=\"%s\" filter-value=\"%s\" class='filter-click'><i class='fa fa-filter'></i> Filter on equals [%s]</a>", key, rawValue, rawValue);
+
+        lines.push(util.format('  "%s": %s, %s', key, value, link))
+      }
+
+      return util.format("{\n%s\n}", lines.join("\n"));
+    },
 
     characterCacheExists(characterId) {
       return this.characterCache[characterId]
@@ -352,6 +421,7 @@ export default {
 
     reset() {
       this.search      = "";
+      this.filters     = []
       this.eventType   = 0;
       this.zoneId      = null
       this.characterId = null
@@ -376,6 +446,9 @@ export default {
       }
       if (this.currentPage > 0) {
         q.page = this.currentPage
+      }
+      if (this.filters && this.filters.length > 0) {
+        q.filters = JSON.stringify(this.filters)
       }
 
       this.$router.push(
@@ -402,6 +475,9 @@ export default {
       }
       if (typeof this.$route.query.page !== 'undefined' && parseInt(this.$route.query.page) !== 0) {
         this.currentPage = parseInt(this.$route.query.page);
+      }
+      if (typeof this.$route.query.filters !== 'undefined') {
+        this.filters = JSON.parse(this.$route.query.filters)
       }
     },
 
@@ -474,6 +550,17 @@ export default {
         builder.where("zone_id", "=", this.zoneId)
       }
 
+      if (this.filters && this.filters.length > 0) {
+        for (let f of this.filters) {
+          builder.whereJson(
+            "event_data",
+            f.key,
+            "=",
+            f.value
+          );
+        }
+      }
+
       // builder.whereJson("event_data", ".target", "=", 'Dargon_McPherson000');
       // builder.whereJson("event_data", ".target", "like", 'Dargon');
 
@@ -484,7 +571,7 @@ export default {
 
       // @ts-ignore
       this.requesting = true
-      const r         = await (new PlayerEventLogApi(...SpireApi.cfg())).listPlayerEventLogs({}, {params: builder.get()})
+      const r         = await (new PlayerEventLogApi(...SpireApi.cfg())).listPlayerEventLogs({}, { params: builder.get() })
       let events      = []
       if (r.status === 200) {
         events          = r.data
@@ -601,10 +688,14 @@ export default {
   beforeDestroy() {
     Navbar.expand()
     this.stopTimer()
+    window.removeEventListener("click", this.handleClick);
   },
 
   async mounted() {
     Navbar.collapse()
+
+
+    window.addEventListener("click", this.handleClick);
 
     // non-reactive
     this.requesting     = false;

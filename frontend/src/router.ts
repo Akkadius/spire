@@ -4,6 +4,7 @@ import {ROUTE} from "@/routes";
 import * as util from "util";
 import {AppEnv} from "@/app/env/app-env";
 import {EventBus} from "@/app/event-bus/event-bus";
+import qs from "qs";
 
 Vue.use(Router)
 
@@ -11,6 +12,10 @@ const router = new Router({
   mode: 'history',
   linkActiveClass: 'active',
   linkExactActiveClass: 'active',
+  stringifyQuery  : query => {
+    let result = qs.stringify(query, { format: 'RFC1738' })
+    return result ? ('?' + result) : ''
+  },
   scrollBehavior(to, from, savedPosition) {
     // console.log("[scrollBehavior] to, from, savedPosition", to, from, savedPosition)
 
