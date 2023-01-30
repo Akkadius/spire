@@ -301,6 +301,22 @@ func (d *DatabaseResolver) handleWheres(query *gorm.DB, filter string) *gorm.DB 
 	return query
 }
 
+func (d *DatabaseResolver) handleJsonWheres(query *gorm.DB, filter string) *gorm.DB {
+	// parse where field = value
+	wheres := strings.Split(filter, equalDelimiter)
+	if len(wheres) > 1 {
+		query = query.Where(fmt.Sprintf("JSON_EXTRACT(`%v`, '$%v') = ?", wheres[0], wheres[1]), wheres[2])
+	}
+
+	// parse where field contains value
+	wheres = strings.Split(filter, likeDelimiter)
+	if len(wheres) > 1 {
+		query = query.Where(fmt.Sprintf("INSTR(JSON_EXTRACT(`%v`, '$%v'), ?) > 0", wheres[0], wheres[1]), wheres[2])
+	}
+
+	return query
+}
+
 func (d *DatabaseResolver) handleOrWheres(query *gorm.DB, filter string) *gorm.DB {
 	// parse where field = value
 	wheres := strings.Split(filter, equalDelimiter)

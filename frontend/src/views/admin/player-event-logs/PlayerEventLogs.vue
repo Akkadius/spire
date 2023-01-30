@@ -474,6 +474,9 @@ export default {
         builder.where("zone_id", "=", this.zoneId)
       }
 
+      // builder.whereJson("event_data", ".target", "=", 'Dargon_McPherson000');
+      // builder.whereJson("event_data", ".target", "like", 'Dargon');
+
       builder.page(this.currentPage)
       builder.limit(this.pageLimit)
       builder.orderBy(["id"])
@@ -481,7 +484,7 @@ export default {
 
       // @ts-ignore
       this.requesting = true
-      const r         = await (new PlayerEventLogApi(...SpireApi.cfg())).listPlayerEventLogs(builder.get())
+      const r         = await (new PlayerEventLogApi(...SpireApi.cfg())).listPlayerEventLogs({}, {params: builder.get()})
       let events      = []
       if (r.status === 200) {
         events          = r.data

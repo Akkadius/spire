@@ -11,16 +11,17 @@ import (
 )
 
 const (
-	equalDelimiter    = "__"
-	notEqualDelimiter = "_ne_"
-	likeDelimiter     = "_like_"
-	bitwiseAnd        = "_bitwiseand_"
-	notLikeDelimiter  = "_notlike_"
-	selectDelimiter   = "."
-	whereDelimiter    = "."
-	groupByDelimiter  = "."
-	linksDelimiter    = ","
-	orderByDelimiter  = "."
+	equalDelimiter     = "__"
+	notEqualDelimiter  = "_ne_"
+	likeDelimiter      = "_like_"
+	bitwiseAnd         = "_bitwiseand_"
+	notLikeDelimiter   = "_notlike_"
+	selectDelimiter    = "."
+	whereDelimiter     = "."
+	whereJsonDelimiter = "_json_"
+	groupByDelimiter   = "."
+	linksDelimiter     = ","
+	orderByDelimiter   = "."
 )
 
 const (
@@ -59,6 +60,16 @@ func (d *DatabaseResolver) QueryContext(model models.Modelable, c echo.Context) 
 		}
 
 		query = d.handleWheres(query, filter)
+	}
+
+	// where filters
+	whereJsonParam := c.QueryParam("whereJson")
+	for _, filter := range strings.Split(whereJsonParam, whereJsonDelimiter) {
+		if len(filter) == 0 {
+			continue
+		}
+
+		query = d.handleJsonWheres(query, filter)
 	}
 
 	// where filters

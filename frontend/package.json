@@ -17,6 +17,7 @@
     "bootstrap-vue": "^2.21.2",
     "cheerio": "^1.0.0-rc.10",
     "core-js": "^2.6.12",
+    "dot-object": "^2.1.4",
     "fontawesome-4.7": "^4.7.0",
     "highlight.js": "^9.18.3",
     "jquery": "^3.6.0",
