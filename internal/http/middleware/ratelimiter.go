@@ -30,6 +30,8 @@ type (
 
 		//callback OnRateLimit when rate limiting a client
 		OnRateLimit OnRateLimit
+
+		limiter *limiter
 	}
 	// LimiterConfig defines the limitation of middleware
 	LimiterConfig struct {
@@ -124,10 +126,10 @@ func RateLimiterWithConfig(config RateLimiterConfig) echo.MiddlewareFunc {
 
 	//If config.Client omit, the limiter is a memory limiter
 	if config.Client == nil {
-		limiterImp = newMemoryLimiter(&config)
+		config.limiter = newMemoryLimiter(&config)
 	} else {
 		//setup redis client
-		limiterImp = newRedisLimiter(&config)
+		config.limiter = newRedisLimiter(&config)
 	}
 
 	var tokenExtractor TokenExtractor
@@ -147,7 +149,7 @@ func RateLimiterWithConfig(config RateLimiterConfig) echo.MiddlewareFunc {
 			response := c.Response()
 
 			policy := []int{}
-			result, err := limiterImp.Get(tokenExtractor(c), policy...)
+			result, err := config.limiter.Get(tokenExtractor(c), policy...)
 
 			if err != nil {
 

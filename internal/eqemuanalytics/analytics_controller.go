@@ -2,6 +2,7 @@ package eqemuanalytics
 
 import (
 	"github.com/Akkadius/spire/internal/database"
+	appmiddleware "github.com/Akkadius/spire/internal/http/middleware"
 	"github.com/Akkadius/spire/internal/http/routes"
 	"github.com/Akkadius/spire/internal/models"
 	"github.com/labstack/echo/v4"
@@ -9,6 +10,7 @@ import (
 	"net/http"
 	"strconv"
 	"strings"
+	"time"
 )
 
 type AnalyticsController struct {
@@ -29,9 +31,26 @@ func NewAnalyticsController(
 	}
 }
 
+func v1AnalyticsRateLimit() echo.MiddlewareFunc {
+	return appmiddleware.RateLimiterWithConfig(
+		appmiddleware.RateLimiterConfig{
+			LimitConfig: appmiddleware.LimiterConfig{
+				Max:      15,
+				Duration: time.Minute * 1,
+				Strategy: "ip",
+				Key:      "",
+			},
+			Prefix:                       "ANALYTICS-LIMIT",
+			Client:                       nil,
+			SkipRateLimiterInternalError: false,
+			OnRateLimit:                  nil,
+		},
+	)
+}
+
 func (a *AnalyticsController) Routes() []*routes.Route {
 	return []*routes.Route{
-		routes.RegisterRoute(http.MethodPost, "analytics/server-crash-report", a.serverCrashReport, nil),
+		routes.RegisterRoute(http.MethodPost, "analytics/server-crash-report", a.serverCrashReport, []echo.MiddlewareFunc{v1AnalyticsRateLimit()}),
 		routes.RegisterRoute(http.MethodGet, "analytics/server-crash-reports", a.listServerCrashReports, nil),
 		routes.RegisterRoute(http.MethodGet, "analytics/server-crash-report/counts", a.getServerCrashReportCounts, nil),
 		routes.RegisterRoute(http.MethodGet, "analytics/releases", a.getReleases, nil),

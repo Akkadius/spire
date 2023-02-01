@@ -130,7 +130,6 @@ func NewRouter(
 			routes.NewControllerGroup(
 				"/api/v1/",
 				cg.v1Analytics,
-				v1AnalyticsRateLimit(),
 				middleware.GzipWithConfig(middleware.GzipConfig{Level: 1}),
 			),
 			routes.NewControllerGroup(
@@ -221,23 +220,6 @@ func v1RateLimit() echo.MiddlewareFunc {
 			},
 			LimitConfig: appmiddleware.LimiterConfig{
 				Max:      5000,
-				Duration: time.Minute * 1,
-				Strategy: "ip",
-				Key:      "",
-			},
-			Prefix:                       "LIMIT",
-			Client:                       nil,
-			SkipRateLimiterInternalError: false,
-			OnRateLimit:                  nil,
-		},
-	)
-}
-
-func v1AnalyticsRateLimit() echo.MiddlewareFunc {
-	return appmiddleware.RateLimiterWithConfig(
-		appmiddleware.RateLimiterConfig{
-			LimitConfig: appmiddleware.LimiterConfig{
-				Max:      5,
 				Duration: time.Minute * 1,
 				Strategy: "ip",
 				Key:      "",
