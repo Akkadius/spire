@@ -34,18 +34,22 @@ export default {
   },
   watch: {
     'selected'() {
-      this.tabs.forEach(tab => {
-        tab.isActive = tab.name === this.selected;
-      })
+      if (this.selected && this.selected.length > 0) {
+        this.tabs.forEach(tab => {
+          tab.isActive = tab.name === this.selected;
+        })
+      }
     },
   },
   created() {
     this.tabs = this.$children;
   },
   mounted() {
-    this.tabs.forEach(tab => {
-      tab.isActive = tab.name === this.selected;
-    })
+    if (this.selected && this.selected.length > 0) {
+      this.tabs.forEach(tab => {
+        tab.isActive = tab.name === this.selected;
+      })
+    }
   },
   methods: {
     selectTabHover(selectedTab) {
