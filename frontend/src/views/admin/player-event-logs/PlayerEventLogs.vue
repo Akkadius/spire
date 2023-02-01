@@ -105,7 +105,7 @@
               <input
                 type="text"
                 class="form-control"
-                style="width: 150px"
+                style="width: 200px"
                 v-model="f.value"
               >
 
@@ -407,18 +407,29 @@ export default {
     },
 
     handleClick(e) {
+      e.preventDefault()
+
       if (e.target && e.target.getAttribute('filter-key')) {
         const filterValue = e.target.getAttribute('value')
         const filterKey   = e.target.getAttribute('filter-key')
-        const filterEvent   = e.target.getAttribute('event')
+        const filterEvent = e.target.getAttribute('event')
         if (filterValue && filterKey) {
-          this.filters.push(
-            {
-              key: "." + filterKey,
-              operator: "=",
-              value: filterValue
-            }
-          )
+          const a = {
+            key: "." + filterKey,
+            operator: "=",
+            value: filterValue
+          }
+
+          // don't add the same filter
+          const found = this.filters.find((f) => {
+            return f.key === a.key && f.operator === a.operator && f.value === a.value
+          })
+
+          if (found) {
+            return;
+          }
+
+          this.filters.push(a)
 
           if (filterEvent) {
             this.eventType = parseInt(filterEvent)
@@ -460,7 +471,7 @@ export default {
 
         let anyLink = ""
         if (key.includes("[")) {
-          let label = key.split("]")[1].trim()
+          let label       = key.split("]")[1].trim()
           const filterKey = key.replace(/\[.*]/, '[*]')
 
           anyLink = util.format(
@@ -494,9 +505,6 @@ export default {
     paginate() {
       // models aren't quite updated when we trigger this so queue the pagination
       setTimeout(() => {
-        console.log("We're paginating")
-        console.log(this.currentPage)
-        console.log(this.totalRows)
         this.updateQueryState()
       }, 100)
     },
@@ -799,8 +807,6 @@ export default {
     if (r.status === 200) {
       this.settings = r.data
     }
-
-    console.log(this.filters)
 
     this.startTimer()
 

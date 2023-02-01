@@ -50,9 +50,6 @@ func (a *AnalyticsController) serverCrashReport(c echo.Context) error {
 	if len(r.ServerName) == 0 {
 		return c.JSON(http.StatusInternalServerError, "Invalid request")
 	}
-	if r.Uptime == 0 {
-		return c.JSON(http.StatusInternalServerError, "Invalid request")
-	}
 	if len(r.ServerShortName) == 0 {
 		return c.JSON(http.StatusInternalServerError, "Invalid request")
 	}
