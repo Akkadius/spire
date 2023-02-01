@@ -106,6 +106,19 @@
     </div>
 
     <div
+      v-if="e.event_type_id === PLAYER_EVENT.POSSIBLE_HACK"
+    >
+      {{event(e).message}}
+    </div>
+
+    <div
+      v-if="[PLAYER_EVENT.KILLED_NPC, PLAYER_EVENT.KILLED_NAMED_NPC, PLAYER_EVENT.KILLED_RAID_NPC].includes(e.event_type_id)"
+    >
+      Killed
+      <npc-popover :npc="npcData[event(e).npc_id]" :show-image="false" class="d-inline-block font-weight-bold"/>
+    </div>
+
+    <div
       v-if="e.event_type_id === PLAYER_EVENT.MERCHANT_PURCHASE"
     >
       Bought
