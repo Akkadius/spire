@@ -150,7 +150,7 @@
           <tr>
             <th style="width: 150px">Event ID</th>
             <th style="width: 150px" class="text-center">Player</th>
-            <th style="width: 200px">Zone</th>
+            <th style="width: 230px">Zone</th>
 
             <th class="text-center" style="width: 175px">Event Type</th>
             <th class="text-center">Event</th>
