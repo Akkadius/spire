@@ -32,6 +32,13 @@ export default {
   data() {
     return { tabs: [] };
   },
+  watch: {
+    'selected'() {
+      this.tabs.forEach(tab => {
+        tab.isActive = tab.name === this.selected;
+      })
+    },
+  },
   created() {
     this.tabs = this.$children;
   },

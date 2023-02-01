@@ -195,6 +195,12 @@ export default {
       selfBuilt: []
     }
   },
+  watch: {
+    $route(to, from) {
+      this.tabSelected = "Official Releases"
+      this.loadQueryState()
+    }
+  },
   methods: {
     // state
     updateQueryState() {
