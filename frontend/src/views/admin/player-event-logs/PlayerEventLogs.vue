@@ -27,7 +27,7 @@
             </select>
           </div>
 
-          <div class="col-2 text-center font-weight-bold">
+          <div class="col-1 text-center font-weight-bold">
             Zone ID
             <b-form-input
               type="text"
@@ -74,7 +74,7 @@
           </div>
 
           <div
-            class="col-4 text-center font-weight-bold minified-inputs"
+            class="col-5 text-center font-weight-bold minified-inputs p-0"
             v-if="filters && filters.length > 0"
           >
             <div>Event Filter(s)</div>
@@ -84,21 +84,21 @@
               <input
                 type="text"
                 class="form-control"
-                style="width: 250px"
+                style="width: 240px"
                 v-model="f.key"
               >
 
               <select
                 class="form-control form-control-prepended list-search"
                 v-model="f.operator"
-                style="width: 50px"
+                style="width: 100px"
                 @change="updateQueryState()"
               >
                 <option
                   v-for="s in filterOperators"
                   v-bind:value="s.operator"
                 >
-                  {{ s.operator }}
+                  {{ s.desc }}
                 </option>
               </select>
 
@@ -370,7 +370,8 @@ export default {
 
       // filters
       filterOperators: [
-        { operator: "=", desc: "equals" }
+        { operator: "=", desc: "equals" },
+        { operator: "like", desc: "contains" },
       ],
 
       // state filters
@@ -412,11 +413,12 @@ export default {
       if (e.target && e.target.getAttribute('filter-key')) {
         const filterValue = e.target.getAttribute('value')
         const filterKey   = e.target.getAttribute('filter-key')
+        const anyFilter   = e.target.getAttribute('any-filter') ? e.target.getAttribute('any-filter') : 0
         const filterEvent = e.target.getAttribute('event')
         if (filterValue && filterKey) {
           const a = {
             key: "." + filterKey,
-            operator: "=",
+            operator: anyFilter ? "like" : "=",
             value: filterValue
           }
 
@@ -657,7 +659,7 @@ export default {
           builder.whereJson(
             "event_data",
             f.key,
-            "=",
+            f.operator,
             f.value
           );
         }
