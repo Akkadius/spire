@@ -825,10 +825,6 @@ export default {
   text-align: center;
 }
 
-.player-events td A {
-  color: lightblue !important;
-}
-
 .player-events TBODY TR:hover {
   /*background: linear-gradient(180deg, rgba(123, 113, 74, .1) 0%, rgba(123, 113, 74, 0.4) 50%, rgba(123, 113, 74, .1) 100%);*/
 }

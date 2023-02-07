@@ -383,35 +383,18 @@ A.eq-progress-bar DIV:before {
               anchor stylesheets
 ------------------------------------------------- */
 
-A {
-    text-decoration: none;
-    font-weight: none;
-    color: #7b714a;
-}
 
-A:link {
-    text-decoration: none;
-    font-weight: none;
-    color: #7b714a;
-}
 
-A:active {
-    text-decoration: none;
-    font-weight: none;
-    color: #7b714a;
-}
+/*.eq-table a:link,*/
+/*.eq-table a:visited,*/
+/*.eq-table a:active {*/
+/*    color: #8aa3ff;*/
+/*}*/
 
-A:visited {
-    text-decoration: none;
-    font-weight: none;
-    color: #6b614a;
-}
+/*.eq-table a:hover {*/
+/*    color: #073efd;*/
+/*}*/
 
-A:hover {
-    text-decoration: none;
-    font-weight: none;
-    color: #7b714a;
-}
 
 /* ----------------------------------------------
        button styles on most pages
@@ -825,10 +808,10 @@ table.eq-table tr:nth-child(even) {
     background-color: rgba(255, 255, 255, .03);
 }
 
-table.eq-table A:link,
-table.eq-table A:visited,
-table.eq-table A:active,
-table.eq-table A:hover {
+.eq-table a:link,
+.eq-table a:visited,
+.eq-table a:active,
+.eq-table a {
     color: #8aa3ff;
     -moz-transition: all .05s ease;
     -o-transition: all .05s ease;
@@ -836,12 +819,11 @@ table.eq-table A:hover {
     transition: all .05s ease;
 }
 
-table.eq-table A:hover {
-
+.eq-table a:hover {
     color: #073efd;
 }
 
-table.eq-table THEAD TR TH {
+.eq-table THEAD TR TH {
     font-weight: bold;
     color: #8aa3ff;
     vertical-align: top;
@@ -856,7 +838,7 @@ table.eq-table THEAD TR TH {
     border-bottom: 1px solid #ffffff1c;
 }
 
-table.eq-table TBODY TR TD {
+.eq-table TBODY TR TD {
     color: #ffffff;
     vertical-align: top;
     margin: 0px;
@@ -865,7 +847,7 @@ table.eq-table TBODY TR TD {
     text-align: left;
 }
 
-table.eq-table TFOOT TR TD {
+.eq-table TFOOT TR TD {
     color: #ffffff;
     vertical-align: top;
     margin: 0px;
@@ -875,7 +857,7 @@ table.eq-table TFOOT TR TD {
 }
 
 /* makes rows highlight in brown */
-table.eq-highlight-rows TBODY TR:hover {
+.eq-highlight-rows TBODY TR:hover {
     /*background: linear-gradient(180deg, rgba(123, 113, 74, 1) 0%, rgba(123, 113, 74, 0.4) 50%, rgba(123, 113, 74, 1) 100%);*/
     background: linear-gradient(180deg, rgba(123, 113, 74, 1) 0%, rgba(123, 113, 74, 0) 50%, rgba(123, 113, 74, 1) 100%);
 }
