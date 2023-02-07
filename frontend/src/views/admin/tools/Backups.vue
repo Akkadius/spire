@@ -37,7 +37,7 @@
                   {{ Math.round(totalBytes / 1024 / 1024) }}MB
                 </div>
               </td>
-              <td class="td-center">
+              <td>
                 Downloads a ZIP archive of your server {{ ucFirst(backupType) }}
               </td>
             </tr>
@@ -66,7 +66,7 @@
                   {{ Math.round(totalBytes / 1024 / 1024) }}MB
                 </div>
               </td>
-              <td class="td-center">
+              <td>
                 Downloads a ZIP archive of your entire server, including the database
               </td>
             </tr>

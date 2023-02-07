@@ -149,13 +149,13 @@ func (e EQEmuServerConfig) Get() EQEmuConfigJson {
 	return EQEmuConfigJson{}
 }
 
-func (m *EQEmuServerConfig) debug(msg string, a ...interface{}) {
+func (e *EQEmuServerConfig) debug(msg string, a ...interface{}) {
 	if len(os.Getenv("DEBUG")) >= 3 {
 		if len(a) > 0 {
-			m.logger.Debug("[eqemu_server_config.go] " + fmt.Sprintf(msg, a...) + "\n")
+			e.logger.Debug("[eqemu_server_config.go] " + fmt.Sprintf(msg, a...) + "\n")
 			return
 		}
-		m.logger.Debug("[eqemu_server_config.go] " + fmt.Sprintf(msg) + "\n")
+		e.logger.Debug("[eqemu_server_config.go] " + fmt.Sprintf(msg) + "\n")
 	}
 }
 
@@ -164,7 +164,6 @@ func (e EQEmuServerConfig) Exists() bool {
 }
 
 func (e EQEmuServerConfig) Save(c EQEmuConfigJson) error {
-
 	if c.Server.ContentDatabase.Db == "" {
 		c.Server.ContentDatabase = nil
 	}
@@ -177,8 +176,6 @@ func (e EQEmuServerConfig) Save(c EQEmuConfigJson) error {
 	if err != nil {
 		return err
 	}
-
-	fmt.Println(string(file))
 
 	err = os.WriteFile(e.pathmgmt.GetEQEmuServerConfigFilePath(), file, 0755)
 	if err != nil {

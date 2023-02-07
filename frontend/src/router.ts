@@ -308,7 +308,7 @@ const router = new Router({
           meta: {title: "Discord Crash Webhook", occulus: true},
         },
         {
-          path: ROUTE.ADMIN_CONFIG_DISCORD_WEBHOOK_SETTINGS,
+          path: ROUTE.ADMIN_DISCORD_WEBHOOK_SETTINGS,
           component: () => import('./views/admin/configuration/DiscordWebhooks.vue'),
           meta: {title: "Discord Webhook Settings"},
         },
@@ -343,7 +343,7 @@ const router = new Router({
           meta: {title: "Message of the Day", occulus: true},
         },
         {
-          path: ROUTE.ADMIN_CONFIG_LOG_SETTINGS,
+          path: ROUTE.ADMIN_LOG_SETTINGS,
           component: () => import('./views/admin/configuration/LogSettings.vue'),
           meta: {title: "Log Settings" },
         },
@@ -355,12 +355,12 @@ const router = new Router({
 
         // tools
         {
-          path: ROUTE.ADMIN_TOOL_LOGS,
+          path: ROUTE.ADMIN_FILE_LOGS,
           component: () => import('./views/admin/tools/Logs.vue'),
           meta: {title: "Server Logs", occulus: true},
         },
         {
-          path: ROUTE.ADMIN_TOOL_BACKUPS,
+          path: ROUTE.ADMIN_BACKUPS,
           component: () => import('./views/admin/tools/Backups.vue'),
           meta: {title: "Backups", occulus: true},
         },

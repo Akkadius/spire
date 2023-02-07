@@ -58,7 +58,7 @@
             <th>
               <router-link
                 style="color: #8aa3ff"
-                :to="ROUTE.ADMIN_CONFIG_DISCORD_WEBHOOK_SETTINGS"
+                :to="ROUTE.ADMIN_DISCORD_WEBHOOK_SETTINGS"
               >
                 Discord Webhook
                 <i class="fa fa-arrow-right"></i>
