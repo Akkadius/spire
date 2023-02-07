@@ -40,6 +40,14 @@ func (a *Controller) save(c echo.Context) error {
 		return c.JSON(http.StatusBadRequest, "Failed to bind config")
 	}
 
+	if len(config.Server.World.Longname) == 0 {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Configuration long name is empty!"})
+	}
+
+	if len(config.Server.World.Shortname) == 0 {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Configuration short name is empty!"})
+	}
+
 	err = a.serverconfig.Save(config)
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, err.Error())

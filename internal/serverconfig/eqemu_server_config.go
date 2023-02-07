@@ -97,8 +97,8 @@ type EQEmuConfigJson struct {
 			Opcodes string `json:"opcodes"`
 		} `json:"directories"`
 	} `json:"server"`
-	WebAdmin struct {
-		Discord struct {
+	WebAdmin struct { // Occulus
+		Discord *struct {
 			CrashLogWebhook string `json:"crash_log_webhook,omitempty"`
 		} `json:"discord,omitempty"`
 		Application struct {
@@ -164,10 +164,21 @@ func (e EQEmuServerConfig) Exists() bool {
 }
 
 func (e EQEmuServerConfig) Save(c EQEmuConfigJson) error {
+
+	if c.Server.ContentDatabase.Db == "" {
+		c.Server.ContentDatabase = nil
+	}
+
+	if c.WebAdmin.Discord.CrashLogWebhook == "" {
+		c.WebAdmin.Discord = nil
+	}
+
 	file, err := json.MarshalIndent(c, "", " ")
 	if err != nil {
 		return err
 	}
+
+	fmt.Println(string(file))
 
 	err = os.WriteFile(e.pathmgmt.GetEQEmuServerConfigFilePath(), file, 0755)
 	if err != nil {

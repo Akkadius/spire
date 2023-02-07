@@ -2,6 +2,23 @@
   <div class="row">
     <div class="col-lg-12" v-if="Object.keys(serverConfig).length > 0">
 
+      <div
+        class="row justify-content-center"
+        style="position: absolute; top: 0%; z-index: 9999999; width: 100%"
+      >
+        <div class="col-4">
+          <info-error-banner
+            style="width: 100%"
+            :slim="true"
+            :notification="notification"
+            :error="error"
+            @dismiss-error="error = ''"
+            @dismiss-notification="notification = ''"
+            class="mt-3"
+          />
+        </div>
+      </div>
+
       <div class="card">
         <div class="card-body">
           <div class="row justify-content-between align-items-center">
@@ -178,13 +195,20 @@
 
 <script>
 import {OcculusClient} from "@/app/api/eqemu-admin-client-occulus";
+import {SpireApi}      from "@/app/api/spire-api";
+import InfoErrorBanner from "@/components/InfoErrorBanner.vue";
 
 export default {
+  components: { InfoErrorBanner },
   data() {
     return {
       serverConfig: {},
       passwordFieldType: 'password',
-      loaded: false
+      loaded: false,
+
+      // notification / errors
+      notification: "",
+      error: "",
     }
   },
   async created() {
@@ -205,6 +229,20 @@ export default {
   methods: {
     submitServerConfig: async function () {
       const result = await OcculusClient.postServerConfig(this.serverConfig)
+
+
+      try {
+        const r = await SpireApi.v1().post("admin/serverconfig", this.serverConfig)
+        if (r.status === 200) {
+          this.config = r.data
+          this.notification = "Server configuration updated!"
+        }
+      } catch (e) {
+        // error notify
+        if (e.response && e.response.data && e.response.data.error) {
+          this.error = e.response.data.error
+        }
+      }
 
       if (result.success) {
         this.$bvToast.toast(
