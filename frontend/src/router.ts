@@ -375,7 +375,7 @@ const router = new Router({
           meta: {title: "Quests Management", occulus: true},
         },
         {
-          path: ROUTE.ADMIN_TOOL_CLIENT_FILE_DOWNLOADS,
+          path: ROUTE.ADMIN_CLIENT_FILE_DOWNLOADS,
           component: () => import('./views/admin/tools/ClientAssets.vue'),
           meta: {title: "Client Asset Management", occulus: true},
         },

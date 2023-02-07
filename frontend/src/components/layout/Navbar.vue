@@ -336,6 +336,8 @@ export default {
       },
       adminNavs: [
         { label: "Backups", labelIcon: "fa fa-download mr-1", to: ROUTE.ADMIN_BACKUPS },
+        { label: "Client Files", labelIcon: "fa fa-download mr-1", to: ROUTE.ADMIN_CLIENT_FILE_DOWNLOADS, isOcculus: true },
+        { label: "Code", labelIcon: "fa fa-code-fork mr-1", to: ROUTE.ADMIN_TOOL_SERVER_CODE, isOcculus: true },
         {
           label: "Configuration",
           labelIcon: "fa fa-cog mr-1",
@@ -369,17 +371,9 @@ export default {
             { title: "Player Event Log Viewer", to: ROUTE.ADMIN_TOOL_PLAYER_EVENT_LOGS, icon: "ra ra-telescope mr-1" },
           ]
         },
+        { label: "Quests", labelIcon: "fa fa-code-fork mr-1", to: ROUTE.ADMIN_TOOL_SERVER_QUESTS, isOcculus: true },
         { label: "Reloading (Global)", labelIcon: "fa fa-refresh mr-1", routePrefixMatch: "admin/tools/player", to: ROUTE.ADMIN_RELOAD },
-        {
-          label: "Tools",
-          labelIcon: "ra ra-wrench mr-1",
-          routePrefixMatch: "admin/tools",
-          navs: [
-            { title: "Client Downloads", to: ROUTE.ADMIN_TOOL_CLIENT_FILE_DOWNLOADS, icon: "fe fe-download-cloud mr-1", isOcculus: true },
-            { title: "Code", to: ROUTE.ADMIN_TOOL_SERVER_CODE, icon: "fa fa-code-fork mr-1", isOcculus: true },
-            { title: "Quests", to: ROUTE.ADMIN_TOOL_SERVER_QUESTS, icon: "fa fa-code-fork mr-1", isOcculus: true },
-          ]
-        }
+
       ],
       viewerNav: {
         label: "Viewers",

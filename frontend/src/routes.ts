@@ -21,7 +21,7 @@ export const ROUTE = {
   ADMIN_DATABASE_CONFIG: "/admin/database-config",
   ADMIN_RELOAD: "/admin/server-reload",
   ADMIN_BACKUPS: "/admin/backups",
-  ADMIN_TOOL_CLIENT_FILE_DOWNLOADS: "/admin/tools/client-assets",
+  ADMIN_CLIENT_FILE_DOWNLOADS: "/admin/client-file-downloads",
   ADMIN_TOOL_PLAYER_EVENT_LOGS: "/admin/player-event-logs/explorer",
   ADMIN_TOOLS: "/admin/tools",
   ADMIN_OCCULUS_REQUIRED: "/admin/occulus-required",

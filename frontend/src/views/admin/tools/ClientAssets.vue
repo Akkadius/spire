@@ -26,7 +26,7 @@
                   class="fe fe-download mr-2"
                 ></i>spells_us.txt</a>
               </td>
-              <td class="td-center">Generates and zips a spells file for use with an EverQuest client</td>
+              <td>Generates and zips a spells file for use with an EverQuest client</td>
             </tr>
             <tr>
               <td class="text-right">
@@ -34,7 +34,7 @@
                   class="fe fe-download mr-2"
                 ></i>dbstr_us.txt</a>
               </td>
-              <td class="td-center">Generates and zips a strings file for use with an EverQuest client
+              <td>Generates and zips a strings file for use with an EverQuest client
               </td>
             </tr>
             <tr>
@@ -46,7 +46,7 @@
                   class="fe fe-download mr-2"
                 ></i>SkillCaps.txt</a>
               </td>
-              <td class="td-center">Generates and zips a skills file for use with an EverQuest client</td>
+              <td>Generates and zips a skills file for use with an EverQuest client</td>
             </tr>
             <tr>
               <td class="text-right">
@@ -54,7 +54,7 @@
                   class="fe fe-download mr-2"
                 ></i>BaseData.txt</a>
               </td>
-              <td class="td-center">Generates and zips a base data file for use with an EverQuest client
+              <td>Generates and zips a base data file for use with an EverQuest client
               </td>
             </tr>
             </tbody>
