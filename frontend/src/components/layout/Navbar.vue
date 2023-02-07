@@ -70,10 +70,7 @@
                   <i class="fe fe-eye"></i>
                   Occulus
                 </b-badge>
-
               </router-link>
-
-
             </li>
 
             <li class="nav-item" v-if="isInAdmin()">
@@ -81,6 +78,7 @@
                 <i class="ra ra-double-team mr-1"></i> Players Online
               </router-link>
             </li>
+
             <li class="nav-item" v-if="isInAdmin()">
               <router-link class="nav-link" :to="ROUTE.ADMIN_ZONE_SERVERS">
                 <i class="ra ra-tower mr-1"></i> Zone Servers
@@ -94,6 +92,11 @@
 
             <nav-section-component :config="adminConfigurationNav" v-if="isInAdmin()"/>
             <nav-section-component :config="adminToolNav" v-if="isInAdmin()"/>
+
+            <nav-section-component
+              v-for="nav in adminNavs"
+              :config="nav"
+              v-if="isInAdmin()"/>
 
           </ul>
         </div>
@@ -339,11 +342,9 @@ export default {
         routePrefixMatch: "admin/configuration",
         navs: [
           { title: "Crash Webhooks", to: ROUTE.ADMIN_CONFIG_DISCORD_CRASH_WEBHOOK, icon: "ra ra-fire mr-1", isOcculus: true },
-          { title: "Database", to: ROUTE.ADMIN_CONFIG_DATABASE, icon: "ra ra-book mr-1", isOcculus: true },
           { title: "Discord Webhooks", to: ROUTE.ADMIN_CONFIG_DISCORD_WEBHOOK_SETTINGS, icon: "ra ra-cog mr-1" },
           { title: "Log Settings", to: ROUTE.ADMIN_CONFIG_LOG_SETTINGS, icon: "ra ra-scroll-unfurled mr-1" },
           { title: "MOTD", to: ROUTE.ADMIN_CONFIG_MOTD, icon: "ra ra-wooden-sign mr-1", isOcculus: true },
-          { title: "Player Event Settings", to: ROUTE.ADMIN_CONFIG_PLAYER_EVENT_LOGS, icon: "ra ra-telescope mr-1" },
           { title: "Quest Hot Reload", to: ROUTE.ADMIN_CONFIG_QUEST_HOT_RELOAD, icon: "ra ra-alien-fire mr-1", isOcculus: true },
           { title: "Server Rules", to: ROUTE.ADMIN_CONFIG_SERVER_RULES, icon: "ra ra-interdiction mr-1" },
           { title: "UCS", to: ROUTE.ADMIN_CONFIG_UCS, icon: "ra ra-speech-bubbles mr-1", isOcculus: true },
@@ -359,13 +360,36 @@ export default {
           { title: "Backups", to: ROUTE.ADMIN_TOOL_BACKUPS, icon: "fe fe-download-cloud mr-1", isOcculus: true },
           { title: "Client Downloads", to: ROUTE.ADMIN_TOOL_CLIENT_FILE_DOWNLOADS, icon: "fe fe-download-cloud mr-1", isOcculus: true },
           { title: "Code", to: ROUTE.ADMIN_TOOL_SERVER_CODE, icon: "fa fa-code-fork mr-1", isOcculus: true },
-          { title: "Database Backup", to: ROUTE.ADMIN_TOOL_DATABASE_BACKUP, icon: "fa fa-database mr-1"},
           { title: "File Logs", to: ROUTE.ADMIN_TOOL_LOGS, icon: "fe fe-book mr-1", isOcculus: true },
-          { title: "Player Event Log Viewer", to: ROUTE.ADMIN_TOOL_PLAYER_EVENT_LOGS, icon: "ra ra-telescope mr-1" },
           { title: "Quests", to: ROUTE.ADMIN_TOOL_SERVER_QUESTS, icon: "fa fa-code-fork mr-1", isOcculus: true },
-          { title: "Reloading (Global)", to: ROUTE.ADMIN_TOOL_SERVER_RELOAD, icon: "fa fa-refresh mr-1" },
         ]
       },
+      adminNavs: [
+        {
+          label: "Reloading (Global)",
+          labelIcon: "fa fa-refresh mr-1",
+          routePrefixMatch: "admin/tools/player",
+          to: ROUTE.ADMIN_RELOAD
+        },
+        {
+          label: "Database",
+          labelIcon: "fa fa-database mr-1",
+          routePrefixMatch: "admin/database",
+          navs: [
+            { title: "Database Config", to: ROUTE.ADMIN_DATABASE_CONFIG, icon: "fa fa-cog mr-1", isOcculus: true },
+            { title: "Database Backups", to: ROUTE.ADMIN_DATABASE_BACKUP, icon: "fa fa-download mr-1" },
+          ]
+        },
+        {
+          label: "Player Event Logs",
+          labelIcon: "ra ra-telescope mr-1",
+          routePrefixMatch: "admin/tools/player",
+          navs: [
+            { title: "Player Event Settings", to: ROUTE.ADMIN_CONFIG_PLAYER_EVENT_LOGS, icon: "fa fa-cog mr-1" },
+            { title: "Player Event Log Viewer", to: ROUTE.ADMIN_TOOL_PLAYER_EVENT_LOGS, icon: "ra ra-telescope mr-1" },
+          ]
+        }
+      ],
       viewerNav: {
         label: "Viewers",
         labelIcon: "ra ra-bleeding-eye mr-1",

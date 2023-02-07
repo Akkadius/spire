@@ -39,7 +39,7 @@
 
           <div
             v-if="(Object.keys(filteredClientList).length < listLimitSize && !fullList) || fullList"
-            class="m-3"
+            class="card-header"
           >
             <h4 class="card-header-title" v-if="loaded">Players Online ({{ clientList ? clientList.length : 0 }})</h4>
             <h4 class="card-header-title" v-if="!loaded">Loading...</span></h4>

@@ -313,7 +313,7 @@ const router = new Router({
           meta: {title: "Discord Webhook Settings"},
         },
         {
-          path: ROUTE.ADMIN_CONFIG_DATABASE,
+          path: ROUTE.ADMIN_DATABASE_CONFIG,
           component: () => import('./views/admin/configuration/Database.vue'),
           meta: {title: "Database Config", occulus: true},
         },
@@ -328,12 +328,12 @@ const router = new Router({
           meta: {title: "Quest Hot Reload Settings", occulus: true},
         },
         {
-          path: ROUTE.ADMIN_TOOL_DATABASE_BACKUP,
+          path: ROUTE.ADMIN_DATABASE_BACKUP,
           component: () => import('./views/admin/tools/DatabaseBackup.vue'),
           meta: {title: "Database Backup"},
         },
         {
-          path: ROUTE.ADMIN_TOOL_SERVER_RELOAD,
+          path: ROUTE.ADMIN_RELOAD,
           component: () => import('./views/admin/tools/ServerReload.vue'),
           meta: {title: "Server Reload API"},
         },
