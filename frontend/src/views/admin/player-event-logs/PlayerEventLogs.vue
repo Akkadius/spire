@@ -86,6 +86,7 @@
                 class="form-control"
                 style="width: 240px"
                 v-model="f.key"
+                v-on:keyup.enter="updateQueryState()"
               >
 
               <select
@@ -107,6 +108,7 @@
                 class="form-control"
                 style="width: 200px"
                 v-model="f.value"
+                v-on:keyup.enter="updateQueryState()"
               >
 
               <b-button
