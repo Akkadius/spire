@@ -836,6 +836,7 @@ table.eq-table tr:nth-child(even) {
     border-right: 0.1px solid #ffffff1c;
     border-left: 0.1px solid #ffffff1c;
     border-bottom: 1px solid #ffffff1c;
+    border-top: 1px solid #ffffff1c;
 }
 
 .eq-table TBODY TR TD {
@@ -985,4 +986,40 @@ h6.eq-header {
 
 .eq-window-simple .text-muted {
     color: #81959c !important;
+}
+
+/*anchor tags*/
+.eq-window-simple a {
+    text-decoration: none;
+    font-weight: none;
+    color: #7b714a;
+
+    -moz-transition: all .05s ease;
+    -o-transition: all .05s ease;
+    -webkit-transition: all .05s ease;
+    transition: all .05s ease;
+}
+
+.eq-window-simple  a:link{
+    text-decoration: none;
+    font-weight: none;
+    color: #7b714a;
+}
+
+.eq-window-simple a:active {
+    text-decoration: none;
+    font-weight: none;
+    color: #7b714a;
+}
+
+.eq-window-simple a:visited {
+    text-decoration: none;
+    font-weight: none;
+    color: #6b614a;
+}
+
+.eq-window-simple a:hover {
+    text-decoration: none;
+    font-weight: none;
+    color: white;
 }

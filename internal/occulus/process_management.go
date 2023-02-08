@@ -10,6 +10,7 @@ import (
 	"github.com/google/go-github/v41/github"
 	"github.com/shirou/gopsutil/v3/process"
 	"github.com/sirupsen/logrus"
+	"io"
 	"io/ioutil"
 	"net"
 	"os"
@@ -149,14 +150,21 @@ func (m *ProcessManagement) Run() error {
 			m.logger.Infof("[Occulus.ProcessManagement] Running binary/command [%v] via port [%v]\n", runPath, port)
 			cmd := exec.Command(runPath, "web", fmt.Sprintf("%v", port))
 
-			stdout, _ := cmd.StdoutPipe()
-			err := cmd.Start()
+			stdout, err := cmd.StdoutPipe()
+			if err != nil {
+				m.logger.Fatalf("[Occulus.ProcessManagement] could not get stdout pipe: %v", err)
+			}
+			stderr, err := cmd.StderrPipe()
+			if err != nil {
+				m.logger.Fatalf("[Occulus.ProcessManagement] could not get stdout pipe: %v", err)
+			}
+			err = cmd.Start()
 			if err != nil {
 				m.logger.Error(err)
 			}
 
-			scanner := bufio.NewScanner(stdout)
-			scanner.Split(bufio.ScanLines)
+			merged := io.MultiReader(stdout, stderr)
+			scanner := bufio.NewScanner(merged)
 			for scanner.Scan() {
 				m.logger.Printf("[Occulus] %v\n", scanner.Text())
 			}

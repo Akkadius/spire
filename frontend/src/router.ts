@@ -356,7 +356,7 @@ const router = new Router({
         // tools
         {
           path: ROUTE.ADMIN_FILE_LOGS,
-          component: () => import('./views/admin/tools/Logs.vue'),
+          component: () => import('./views/admin/tools/FileLogs.vue'),
           meta: {title: "Server Logs", occulus: true},
         },
         {

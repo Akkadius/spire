@@ -147,6 +147,7 @@
         <table
           :style="(loading ? 'opacity:.3; pointer-events: none;' : 'opacity: 1; pointer-events: all;') + 'table-layout: fixed !important; '"
           class="eq-table bordered player-events"
+          v-if="events.length > 0"
         >
           <thead class="eq-table-floating-header">
           <tr>
@@ -825,6 +826,10 @@ export default {
 <style scoped>
 .player-events td, .player-events th {
   text-align: center;
+}
+
+.player-events td A {
+  color: lightblue !important;
 }
 
 .player-events TBODY TR:hover {

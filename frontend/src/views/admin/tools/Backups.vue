@@ -13,7 +13,7 @@
           <table class="table card-table table-vcenter">
             <tbody>
             <tr v-for="(backupType, index) in simpleDownloadTypes" :key="index">
-              <td>
+              <td style="width: 300px">
                 <button
                   :disabled="awaitingDownload"
                   type="button" class="btn btn-outline-primary mb-2"

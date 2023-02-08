@@ -62,9 +62,10 @@
 
 <script>
 import {OcculusClient} from "@/app/api/eqemu-admin-client-occulus";
+import {ROUTE}         from "@/routes";
 
 export default {
-  name: 'Logs',
+  name: 'FileLogs',
   data() {
     return {
       loaded: false,
@@ -105,7 +106,7 @@ export default {
     viewLogTrigger(log) {
       this.$router.push(
         {
-          path: '/admin/tools/logs',
+          path: ROUTE.ADMIN_FILE_LOGS,
           query: {
             log: log
           }

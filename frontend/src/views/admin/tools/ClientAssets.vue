@@ -5,23 +5,24 @@
       <h4 class="card-header-title">Client Assets</h4>
     </div>
 
-    <div class="card-body">
+    <div class="card-body p-1">
 
       <div class="row">
         <div class="col-lg-12">
 
-          <b-alert show variant="primary">
+          <div class="ml-5 mt-3">
             <i class="fe fe-info"></i>
             All links below can be used publicly for download without login
-          </b-alert>
+          </div>
 
-          <table class="table card-table table-vcenter mt-5">
+
+          <table class="table card-table table-vcenter mt-3">
             <tbody>
             <tr>
-              <td class="text-right">
+              <td class="text-right" style="width: 180px">
                 <a
                   :href="buildLink('/download/spells')" target="spells_download"
-                  class="btn btn-white mb-2"
+                  class="btn btn-outline-primary mb-2"
                 ><i
                   class="fe fe-download mr-2"
                 ></i>spells_us.txt</a>
@@ -30,7 +31,7 @@
             </tr>
             <tr>
               <td class="text-right">
-                <a :href="buildLink('/download/dbstring')" target="dbstr_download" class="btn btn-white mb-2"><i
+                <a :href="buildLink('/download/dbstring')" target="dbstr_download" class="btn btn-outline-primary mb-2"><i
                   class="fe fe-download mr-2"
                 ></i>dbstr_us.txt</a>
               </td>
@@ -41,7 +42,7 @@
               <td class="text-right">
                 <a
                   :href="buildLink('/download/skills')" target="skills_download"
-                  class="btn btn-white mb-2"
+                  class="btn btn-outline-primary mb-2"
                 ><i
                   class="fe fe-download mr-2"
                 ></i>SkillCaps.txt</a>
@@ -50,7 +51,7 @@
             </tr>
             <tr>
               <td class="text-right">
-                <a :href="buildLink('/download/basedata')" target="base_data" class="btn btn-white mb-2"><i
+                <a :href="buildLink('/download/basedata')" target="base_data" class="btn btn-outline-primary mb-2"><i
                   class="fe fe-download mr-2"
                 ></i>BaseData.txt</a>
               </td>
