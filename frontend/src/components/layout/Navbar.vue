@@ -348,15 +348,15 @@ export default {
             { title: "MOTD", to: ROUTE.ADMIN_CONFIG_MOTD, icon: "ra ra-wooden-sign mr-1", isOcculus: true },
             { title: "Quest Hot Reload", to: ROUTE.ADMIN_CONFIG_QUEST_HOT_RELOAD, icon: "ra ra-alien-fire mr-1", isOcculus: true },
             { title: "Server Rules", to: ROUTE.ADMIN_CONFIG_SERVER_RULES, icon: "ra ra-interdiction mr-1" },
-            { title: "UCS", to: ROUTE.ADMIN_CONFIG_UCS, icon: "ra ra-speech-bubbles mr-1", isOcculus: true },
-            { title: "World Server", to: ROUTE.ADMIN_SERVER_CONFIG + '?s=World+Server', icon: "ra ra-double-team mr-1" },
-            { title: "Zone Server", to: ROUTE.ADMIN_CONFIG_ZONESERVER + '?s=Zone+Server', icon: "ra ra-player mr-1" },
+            { title: "UCS", to: ROUTE.ADMIN_SERVER_CONFIG + '?s=UCS', icon: "ra ra-speech-bubbles mr-1", exact: true },
+            { title: "World Server", to: ROUTE.ADMIN_SERVER_CONFIG + '?s=World+Server', icon: "ra ra-double-team mr-1", exact: true },
+            { title: "Zone Server", to: ROUTE.ADMIN_SERVER_CONFIG + '?s=Zone+Server', icon: "ra ra-player mr-1", exact: true },
           ]
         },
         {
           label: "Database", labelIcon: "fa fa-database mr-1", routePrefixMatch: "admin/database",
           navs: [
-            { title: "Database Config", to: ROUTE.ADMIN_SERVER_CONFIG + '?s=Database', icon: "fa fa-cog mr-1"},
+            { title: "Database Config", to: ROUTE.ADMIN_SERVER_CONFIG + '?s=Database', icon: "fa fa-cog mr-1", exact: true},
             { title: "Database Backups", to: ROUTE.ADMIN_DATABASE_BACKUP, icon: "fa fa-download mr-1" },
           ]
         },

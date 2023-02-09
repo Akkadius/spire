@@ -314,27 +314,43 @@
 
         </eq-tabs>
       </eq-tab>
+
+      <eq-tab class="fade-in" name="UCS">
+        <div class="form-row">
+          <div class="form-group col-md-6">
+            <label class="form-label">Chatserver Host</label>
+            <input
+              type="text" class="form-control" placeholder="0.0.0.0"
+              v-model="config.server.chatserver.host"
+            />
+          </div>
+
+          <div class="form-group col-md-6">
+            <label class="form-label">Chatserver Port</label>
+            <input type="text" class="form-control" v-model="config.server.chatserver.port"/>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group col-md-6">
+            <label class="form-label">Mailserver Host</label>
+            <input
+              type="text" class="form-control" placeholder="0.0.0.0"
+              v-model="config.server.mailserver.host"
+            />
+          </div>
+
+          <div class="form-group col-md-6">
+            <label class="form-label">Mailserver Port</label>
+            <input type="text" class="form-control" v-model="config.server.mailserver.port"/>
+          </div>
+        </div>
+      </eq-tab>
+
       <eq-tab
         class="fade-in"
         :name="`Database`"
       >
-        <div
-          class="row justify-content-center"
-          style="position: absolute; top: 0%; z-index: 9999999; width: 100%"
-        >
-          <div class="col-4">
-            <info-error-banner
-              style="width: 100%"
-              :slim="true"
-              :notification="notification"
-              :error="error"
-              @dismiss-error="error = ''"
-              @dismiss-notification="notification = ''"
-              class="mt-3"
-            />
-          </div>
-        </div>
-
         <eq-tabs>
           <eq-tab name="Game" :selected="true">
             <div class="form-row">
@@ -498,6 +514,23 @@
 
     </eq-tabs>
 
+
+    <div
+      class="row justify-content-center"
+      style="position: absolute; bottom: 3%; z-index: 9999999; width: 100%"
+    >
+      <div class="col-4">
+        <info-error-banner
+          style="width: 100%"
+          :slim="true"
+          :notification="notification"
+          :error="error"
+          @dismiss-error="error = ''"
+          @dismiss-notification="notification = ''"
+          class="mt-3"
+        />
+      </div>
+    </div>
   </eq-window>
 </template>
 

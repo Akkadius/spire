@@ -40,6 +40,7 @@
             :class="'nav-link collapse ' + (hasRoute(nav.to) || hasRouteInArray(nav.routes) ? 'active' : 'collapsed')"
             :to="nav.to"
             v-if="!nav.to.includes('http')"
+            :exact="nav.exact ? nav.exact : false"
           >
             <i :class="nav.icon" v-if="nav.icon"></i>{{ nav.title }}
             <b-badge class="ml-3" variant="primary" v-if="nav.isAlpha">ALPHA</b-badge>
