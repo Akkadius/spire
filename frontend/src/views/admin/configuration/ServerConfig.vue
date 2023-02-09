@@ -547,7 +547,7 @@
 
     <div
       class="row justify-content-center"
-      style="position: absolute; bottom: 3%; z-index: 9999999; width: 100%"
+      style="position: absolute; bottom: 5%; z-index: 9999999; width: 100%"
     >
       <div class="col-4">
         <info-error-banner
